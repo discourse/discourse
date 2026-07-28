@@ -187,11 +187,27 @@
   // The roving highlight (keyboard) and hover share one visual treatment.
   &.--active,
   .discourse-no-touch &:hover {
-    background: var(--primary-low);
+    background: var(--d-hover);
   }
 
+  // The surface, which consumer markup cannot reach. `font-weight` alone used to be the
+  // affordance and it is inherited, so any custom `:item` that styled its own label overrode it
+  // and the selection silently stopped being visible — which is every rich row.
+  //
+  // The tokens are the ones the list this replaces uses for the same state, so a reader moving
+  // between them sees one language rather than two.
   &.--selected {
+    background: var(--d-selected);
+    color: var(--d-selected-text-color);
     font-weight: 700;
+  }
+
+  // Selected AND under the cursor. Last, so it wins over both fills above: without it the two
+  // states share one surface and the cursor becomes invisible the moment it lands on the row
+  // that is already chosen — exactly where a reader is most likely to start.
+  &.--selected.--active,
+  .discourse-no-touch &.--selected:hover {
+    background: var(--d-selected-hover);
   }
 
   &[aria-disabled="true"] {
@@ -254,10 +270,14 @@
   border-bottom: 1px solid var(--primary-low);
 }
 
+// Message and recovery on one line, the way a form field states a problem and offers the way
+// out: stacked, the retry read as a second paragraph rather than as the answer to the message
+// above it. Wraps rather than crushing the control when the panel is narrow.
 .d-combobox__error {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
   gap: 0.5em;
 }
 
@@ -265,16 +285,52 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4em;
+
+  // Takes the slack so the retry sits at the far edge, and shrinks before the control does.
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+// Low emphasis: the failure is the message, not the button. Sized down and coloured as a link
+// so it reads as the way out rather than as a call to action competing with the option list.
+.d-combobox__retry {
+  flex: none;
+  padding: 0;
+  color: var(--tertiary);
+  font-size: var(--font-down-1);
+
+  &:hover,
+  &:focus {
+    color: var(--tertiary-hover);
+    background: none;
+  }
 }
 
 // Pinned below the scrolling option list (a flex:none panel child), separated by a top rule.
+// Status reads from the leading edge and any action sits at the trailing one, which is the shape
+// a footer takes whatever a consumer puts in it; packed together they read as one run-on phrase.
 .d-combobox__footer {
   flex: none;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
   gap: 0.5em;
   padding: 0.5em 0.75em;
   border-top: 1px solid var(--primary-low);
+
+  // The footer states something; it is not a call to action competing with the list above it.
+  .btn {
+    padding: 0;
+    color: var(--tertiary);
+    font-size: var(--font-down-1);
+
+    &:hover,
+    &:focus {
+      color: var(--tertiary-hover);
+      background: none;
+    }
+  }
 }
 
 // Multi-select chips (rendered in the trigger)

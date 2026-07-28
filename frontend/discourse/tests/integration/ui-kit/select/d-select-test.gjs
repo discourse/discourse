@@ -4393,6 +4393,34 @@ module(
         .dom("[role='option']")
         .exists({ count: 1 }, "the yielded retry action reloads the source");
     });
+
+    // The guarantee the block shape exists for. `:error` used to replace the whole container,
+    // so supplying one silently dropped the alert role and the failure stopped being announced
+    // — invisible to anyone not listening to it.
+    test("an :error block cannot drop the alert role", async function (assert) {
+      const load = () => Promise.reject(new Error("boom"));
+
+      await render(
+        <template>
+          <DSelect @load={{load}}>
+            <:error>
+              <span class="custom-error">Could not load</span>
+            </:error>
+          </DSelect>
+        </template>
+      );
+      await fillIn("[role='combobox']", "x");
+
+      assert
+        .dom(".d-combobox__error[role='alert']")
+        .exists("the component keeps the alert container around the block");
+      assert
+        .dom(".d-combobox__error .custom-error")
+        .hasText("Could not load", "the block supplies the contents");
+      assert
+        .dom(".d-combobox__error .d-combobox__error-message")
+        .doesNotExist("the default message gives way to the block");
+    });
   }
 );
 
@@ -5977,6 +6005,102 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
 
   hooks.afterEach(function () {
     resetOnerror();
+  });
+
+  // Form integration hangs on these landing where `role="combobox"` actually is, which differs
+  // by variant. Passed as plain attributes they would settle on the wrapper instead, where a
+  // `<label for>` resolves to nothing and a description is never announced.
+  test("@id, @describedBy and @invalid land on the combobox element", async function (assert) {
+    await render(
+      <template>
+        <div id="hint">Pick your language</div>
+        <DSelect
+          class="typeahead"
+          @items={{ITEMS}}
+          @id="lang"
+          @describedBy="hint"
+          @invalid={{true}}
+        />
+        <DSelect
+          class="static"
+          @items={{ITEMS}}
+          @variant="static"
+          @label="Language"
+          @id="lang-static"
+          @describedBy="hint"
+          @invalid={{true}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".typeahead input[role='combobox']")
+      .hasAttribute("id", "lang", "the typeahead carries them on its input")
+      .hasAttribute("aria-describedby", "hint")
+      .hasAttribute("aria-invalid", "true");
+    assert
+      .dom(".static[role='combobox']")
+      .hasAttribute(
+        "id",
+        "lang-static",
+        "a static trigger carries them on its root"
+      )
+      .hasAttribute("aria-describedby", "hint")
+      .hasAttribute("aria-invalid", "true");
+    assert
+      .dom(".typeahead.d-combobox")
+      .doesNotHaveAttribute(
+        "id",
+        "and never on the wrapper, which owns no role"
+      );
+  });
+
+  // The component describes its own state through the same attribute, so a consumer value has to
+  // be merged rather than substituted: whichever side won, the other's description would vanish
+  // silently, audible only to someone using a screen reader.
+  test("@describedBy is merged with the component's own description", async function (assert) {
+    await render(
+      <template>
+        <div id="hint">Required</div>
+        <DSelect
+          @items={{ITEMS}}
+          @multiple={{true}}
+          @value={{array 1}}
+          @describedBy="hint"
+        />
+      </template>
+    );
+
+    const described = find("input[role='combobox']").getAttribute(
+      "aria-describedby"
+    );
+    assert.true(
+      described.split(" ").length > 1,
+      `both descriptions survive: ${described}`
+    );
+    assert.true(
+      described.split(" ").includes("hint"),
+      "the consumer's description is present"
+    );
+  });
+
+  // A bare `disabled` attribute is inert on a div, so without this the control renders fully
+  // interactive while reading as configured — the failure is silent in both directions.
+  test("a bare disabled attribute fires a debug assertion", async function (assert) {
+    let fired = false;
+    setupOnerror((error) => {
+      fired = true;
+      assert.true(
+        error.message.includes("`disabled` is an argument, not an attribute"),
+        "the assertion names the mistake"
+      );
+    });
+
+    await render(
+      <template><DSelect @items={{ITEMS}} disabled={{true}} /></template>
+    );
+
+    assert.true(fired, "the debug assertion fired");
   });
 
   test("@iconOnly suppresses the label on a static single-select", async function (assert) {

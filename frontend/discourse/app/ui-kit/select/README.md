@@ -22,13 +22,12 @@ it costs behaviour (see `:selection` below) and it costs the reader a reason to 
 
 ### What each block replaces
 
-Five of the six land **inside** markup the component keeps, so you supply content, not
-structure — the option's `role`, its selected and disabled state, its ARIA position, the group
-header's id, and the empty state's `role="status"` are all still handled for you.
+All six land **inside** markup the component keeps, so you supply content, not structure — the
+option's `role`, its selected and disabled state, its ARIA position, the group header's id, the
+empty state's `role="status"` and the error state's `role="alert"` are all still handled for you.
 
-`:error` is the exception. It replaces the **entire** error container, including its
-`role="alert"` and its retry control, so a custom one must supply both or the failure stops being
-announced and stops being recoverable.
+`:error` is yielded `reload` alongside the error, so a block that wants its own recovery control
+can render one; the component's retry is shown only when no block is supplied.
 
 ### Blocks that interact
 

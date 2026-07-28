@@ -117,8 +117,13 @@ export interface TooltipOptions {
   /** Whether FloatKit attaches the trigger event listeners itself, rather than the caller driving it through the service API. */
   listeners: boolean;
 
-  /** The maximum width of the content, in pixels. */
-  maxWidth: number;
+  /**
+   * The maximum width of the content: a number in pixels, or any CSS `max-width` value. Pass
+   * `"none"` alongside `matchTriggerWidth` — the two are both applied inline, so a numeric cap
+   * silently wins over the matched width and a trigger wider than the cap gets a narrower
+   * overlay.
+   */
+  maxWidth: number | string;
 
   /** Passed as the `@data` argument to a `component` rendered as the content. */
   data: unknown;

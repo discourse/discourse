@@ -146,6 +146,19 @@ interface DSelectSignature {
     searchPlaceholder?: string;
     noResultsLabel?: string;
     label?: string;
+    /**
+     * Identity and description for the element that actually carries `role="combobox"`, which
+     * differs by variant: the trigger root on `static`, the query input otherwise. Passing them
+     * as `...attributes` instead would land them on the wrapper, where a `<label for>` resolves
+     * to nothing and a description is never announced.
+     *
+     * `@describedBy` is merged with the component's own description ids rather than replacing
+     * them.
+     */
+    id?: string;
+    describedBy?: string;
+    /** Marks the control invalid (`aria-invalid`), for a form that owns the validation. */
+    invalid?: boolean;
     skeletonCount?: number;
     /**
      * Icon marking the selected row(s) in the list. Multi-select always shows it (defaulting to a
@@ -485,6 +498,23 @@ export default class DSelect extends Component<DSelectSignature> {
     return optionRawIndices.length;
   };
 
+  /**
+   * The raw row index the list should open on, so a windowed list reveals what is already
+   * chosen instead of opening at row one. The roving cursor cannot do this alone: it seeds
+   * from the mounted rows, and a selection below the fold is not among them.
+   *
+   * Deliberately a weaker condition than {@link shouldActivateSelected}, which governs where
+   * Enter lands and so excludes `multiple`. Scrolling changes nothing about what Enter does,
+   * and a multi-select's held rows are worth revealing too.
+   */
+  revealRowIndex = (rows: readonly ListRow[]): number | undefined => {
+    if (!this.engine.hasValue || this.engine.filter !== "") {
+      return undefined;
+    }
+    const index = rows.findIndex((row) => this.optionRow(row)?.flags.selected);
+    return index === -1 ? undefined : index;
+  };
+
   optionRow = (row: ListRow): OptionRow | undefined =>
     row.isSkeleton === true ? undefined : row;
 
@@ -706,6 +736,20 @@ export default class DSelect extends Component<DSelectSignature> {
   }
 
   /**
+   * Composes an `aria-describedby` token list from the component's own description ids and the
+   * consumer's `@describedBy`, dropping the empty ones.
+   *
+   * A merge rather than a fallback because both sides are real: the component describes its own
+   * state (the chip-navigation hint, the resting selection) while a form describes the field
+   * (its validation message). Letting either win silently discards the other, and the loss is
+   * inaudible to anyone not using a screen reader.
+   */
+  describedBy(...ids: Array<string | undefined | false>): string | undefined {
+    const tokens = ids.filter(Boolean);
+    return tokens.length ? tokens.join(" ") : undefined;
+  }
+
+  /**
    * Chip-shaped placeholder rows while the held values resolve — one per bound id, so
    * the loading state matches the number of chips about to appear.
    */
@@ -855,6 +899,26 @@ export default class DSelect extends Component<DSelectSignature> {
   /** Whether the control cannot be opened or mutated (disabled or readonly). */
   get isDisabled(): boolean {
     return this.args.disabled ?? false;
+  }
+
+  /**
+   * Catches a bare `disabled` attribute, which does nothing here and fails silently: the trigger
+   * root is a `div`, so the attribute is inert, and the control renders fully interactive while
+   * looking correctly configured. Native form controls take the attribute, so reaching for it is
+   * the obvious mistake.
+   *
+   * The attribute is not read and honoured instead: `...attributes` are not visible to the
+   * component, so doing that means inspecting the DOM after render and mirroring it into tracked
+   * state — a second source of truth for a state the component already owns.
+   */
+  @action
+  assertDisabledIsAnArg(element: HTMLElement): void {
+    assert(
+      "DSelect: `disabled` is an argument, not an attribute — write `@disabled` instead. " +
+        "The trigger is a `div`, so a bare `disabled` attribute is inert and the control stays " +
+        "interactive.",
+      !element.hasAttribute("disabled") || this.args.disabled != null
+    );
   }
 
   get isReadonly(): boolean {
@@ -2004,6 +2068,12 @@ export default class DSelect extends Component<DSelectSignature> {
       @identifier={{@identifier}}
       @modalForMobile={{true}}
       @matchTriggerWidth={{true}}
+      {{! The menu's default 400px cap is applied inline, exactly like the matched width, so it
+        wins over it: a field wider than the cap gets a visibly narrower dropdown. A combobox
+        overlay belongs to its field, so the field's width is the only bound. The CSS floor on
+        `.d-combobox__content` still stops a compact icon-only trigger from being matched down
+        to nothing. }}
+      @maxWidth="none"
       @placement={{@placement}}
       @offset={{@offset}}
       {{! The d-combobox__content class floors the overlay min-width in CSS: matchTriggerWidth pins
@@ -2026,6 +2096,12 @@ export default class DSelect extends Component<DSelectSignature> {
         them on their inner input. }}
       @triggerComponent={{dElement "div"}}
       data-unresolved={{if this.hasUnresolvedSelection "true"}}
+      {{! Identity and description follow the combobox role, which lives here only on the
+        variants without a query input; the typeahead carries them on its input instead. Applied
+        unconditionally would give a typeahead two elements with the same id. }}
+      id={{unless this.isTypeahead @id}}
+      aria-invalid={{unless this.isTypeahead (booleanString @invalid)}}
+      aria-describedby={{unless this.isTypeahead @describedBy}}
       role={{this.triggerRootRole}}
       tabindex={{this.triggerRootTabIndex}}
       aria-label={{this.triggerRootLabel}}
@@ -2037,6 +2113,7 @@ export default class DSelect extends Component<DSelectSignature> {
       {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
       {{on "mousedown" this.preventTriggerBlur}}
       {{didInsert this.registerStaticController}}
+      {{didInsert this.assertDisabledIsAnArg}}
       class="d-combobox"
       ...attributes
     >
@@ -2157,7 +2234,12 @@ export default class DSelect extends Component<DSelectSignature> {
                   @registerInput={{this.registerTriggerInput}}
                   @disabled={{this.isDisabled}}
                   @readonly={{this.isReadonly}}
-                  aria-describedby={{if this.engine.hasValue this.chipHintId}}
+                  id={{@id}}
+                  aria-invalid={{booleanString @invalid}}
+                  aria-describedby={{this.describedBy
+                    (if this.engine.hasValue this.chipHintId)
+                    @describedBy
+                  }}
                   {{on "keydown" this.handleInputKeydown}}
                 />
                 {{#if this.engine.hasValue}}
@@ -2271,13 +2353,18 @@ export default class DSelect extends Component<DSelectSignature> {
                   what carries the value. Once focused the label moves into the input itself, so
                   keeping the description would announce the selection twice. Mirrors the
                   condition that renders the presentation span. }}
-                aria-describedby={{if
-                  (and
-                    (has-block "selection")
-                    this.engine.hasValue
-                    (not this.triggerFocused)
+                id={{@id}}
+                aria-invalid={{booleanString @invalid}}
+                aria-describedby={{this.describedBy
+                  (if
+                    (and
+                      (has-block "selection")
+                      this.engine.hasValue
+                      (not this.triggerFocused)
+                    )
+                    this.selectionId
                   )
-                  this.selectionId
+                  @describedBy
                 }}
                 {{on "keydown" this.handleInputKeydown}}
                 {{on "focus" this.handleTriggerFocus}}
@@ -2423,6 +2510,12 @@ export default class DSelect extends Component<DSelectSignature> {
                       @onReachEnd={{this.engine.revealMore}}
                       @onRegisterApi={{this.registerListboxApi}}
                       @pinnedIndex={{this.activePinnedIndex}}
+                      {{! First render only, so it reveals the held value on open and never
+                      fights a reader who has scrolled. Centred rather than aligned to the top:
+                      a selection pinned to the first row hides the options around it, which are
+                      the reason the list was opened. }}
+                      @initialIndex={{this.revealRowIndex items}}
+                      @initialAlign="center"
                       class="d-combobox__listbox"
                       id={{this.listboxId}}
                       aria-label={{or @label (i18n "d_select.label")}}
@@ -2596,14 +2689,19 @@ export default class DSelect extends Component<DSelectSignature> {
               </:content>
 
               <:error as |error|>
-                {{#if (has-block "error")}}
-                  {{yield error this.engine.reload to="error"}}
-                {{else}}
-                  {{! A muted, recoverable state matching the empty/min-chars language — not a
-                    heavy alert box, but still role=alert so the failure is announced (an inserted
-                    role=status is not reliably spoken). Retry is low-emphasis, hidden when the
-                    source isn't retryable. }}
-                  <div class="d-combobox__error" role="alert">
+                {{! A muted, recoverable state matching the empty/min-chars language — not a
+                  heavy alert box, but still role=alert so the failure is announced (an inserted
+                  role=status is not reliably spoken).
+
+                  The container is the component's, exactly as the empty state's is: a block
+                  supplies the contents, never the wrapper. It used to replace the whole thing,
+                  so supplying one silently dropped both the alert role and the retry control
+                  and the failure stopped being announced or recoverable. `reload` is still
+                  yielded, so a block that wants its own retry control can have one. }}
+                <div class="d-combobox__error" role="alert">
+                  {{#if (has-block "error")}}
+                    {{yield error this.engine.reload to="error"}}
+                  {{else}}
                     <span class="d-combobox__error-message">
                       {{dIcon "triangle-exclamation"}}
                       {{i18n "d_select.load_error"}}
@@ -2615,8 +2713,8 @@ export default class DSelect extends Component<DSelectSignature> {
                         @label="d_select.retry"
                       />
                     {{/if}}
-                  </div>
-                {{/if}}
+                  {{/if}}
+                </div>
               </:error>
             </DAsyncContent>
           {{/if}}
