@@ -1,17 +1,11 @@
 .sidebar-design-wizard {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-4);
   min-height: 0;
   height: 100%;
-  padding: var(--space-3);
+  padding: var(--space-4);
   overflow-y: auto;
-
-  &__title {
-    display: block;
-    font-size: var(--font-up-1);
-    font-weight: var(--token-font-weight-bold);
-  }
 
   &__subtitle {
     display: block;

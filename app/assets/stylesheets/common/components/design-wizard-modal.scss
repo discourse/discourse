@@ -33,11 +33,14 @@
 
   &__section-title {
     display: block;
-    font-size: var(--font-down-2);
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--primary-medium);
+    color: var(--primary);
+  }
+
+  &__section-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
   }
 
   &__theme-cards {
@@ -61,7 +64,8 @@
     cursor: pointer;
 
     &:hover {
-      background: var(--d-hover);
+      border-color: var(--tertiary);
+      box-shadow: 0 0 0 1px var(--tertiary);
     }
 
     &.--selected {
@@ -87,7 +91,6 @@
     display: flex;
     gap: var(--space-1);
     flex-direction: column;
-    padding: var(--space-2);
     font-size: var(--font-down-1);
 
     .theme-card-preview__image-wrapper {
@@ -111,6 +114,7 @@
     &.--selected {
       .theme-card-preview__image-wrapper {
         border-color: var(--tertiary);
+        box-shadow: 0 0 0 1px var(--tertiary);
       }
     }
   }
@@ -163,8 +167,7 @@
   }
 
   &__custom-theme-notice,
-  &__color-note,
-  &__fonts-note {
+  &__color-note {
     font-size: var(--font-down-2);
     color: var(--primary-medium);
   }
@@ -262,14 +265,11 @@
 
   &__font-group-label {
     display: block;
-    font-size: var(--font-down-2);
-    color: var(--primary-medium);
-    margin: var(--space-2) 0 var(--space-1);
   }
 
   &__font-cards {
     display: grid;
-    grid-template-columns: repeat(1, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: var(--space-1);
   }
 
@@ -278,6 +278,13 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-size: var(--font-up-1);
+  }
+
+  &__more-fonts {
+    width: 100%;
+    margin-top: var(--space-2);
+    justify-content: space-between;
   }
 
   &__text-sizes {
@@ -304,10 +311,6 @@
       color: var(--tertiary);
       font-weight: 600;
     }
-  }
-
-  &__fonts-note {
-    margin: var(--space-2) 0 0;
   }
 
   &__category-page-style {
@@ -380,4 +383,9 @@
     flex-direction: row-reverse;
     justify-content: flex-start;
   }
+}
+
+.design-wizard-modal__more-fonts-list {
+  max-height: 40vh;
+  overflow-y: auto;
 }

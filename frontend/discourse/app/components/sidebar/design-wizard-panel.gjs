@@ -89,9 +89,9 @@ export default class SidebarDesignWizardPanel extends Component {
   <template>
     <div class="sidebar-design-wizard">
       <div class="sidebar-design-wizard__header">
-        <span class="sidebar-design-wizard__title">
+        <h2 class="sidebar-design-wizard__title">
           {{i18n "admin_onboarding_banner.design_wizard.title"}}
-        </span>
+        </h2>
         <span class="sidebar-design-wizard__subtitle">
           {{i18n "admin_onboarding_banner.design_wizard.subtitle"}}
         </span>
