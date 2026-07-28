@@ -13,6 +13,7 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import bodyClass from "discourse/helpers/body-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { SEND_SHORTCUT_META_ENTER } from "discourse/lib/constants";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
 import { clipboardHelpers } from "discourse/lib/utilities";
@@ -32,6 +33,7 @@ import { i18n } from "discourse-i18n";
 // the live API surface.
 export default class DockedComposer extends Component {
   @service capabilities;
+  @service currentUser;
   @service keyValueStore;
   @service mediaOptimizationWorker;
   @service siteSettings;
@@ -69,7 +71,9 @@ export default class DockedComposer extends Component {
       return;
     }
 
-    const submitOnEnter = this.args.submitOnEnter ?? true;
+    const submitOnEnter =
+      this.args.submitOnEnter ??
+      this.currentUser?.user_option?.send_shortcut !== SEND_SHORTCUT_META_ENTER;
 
     if (submitOnEnter) {
       if (

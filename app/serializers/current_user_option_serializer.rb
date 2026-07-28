@@ -27,7 +27,8 @@ class CurrentUserOptionSerializer < ApplicationSerializer
              :sidebar_show_count_of_new_items,
              :composition_mode,
              :interface_color_mode,
-             :show_original_content
+             :show_original_content,
+             :send_shortcut
 
   def likes_notifications_disabled
     object.likes_notifications_disabled?

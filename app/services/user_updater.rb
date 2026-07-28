@@ -62,6 +62,7 @@ class UserUpdater
     topics_unread_when_closed
     composition_mode
     show_original_content
+    send_shortcut
   ]
 
   NOTIFICATION_SCHEDULE_ATTRS = -> do
