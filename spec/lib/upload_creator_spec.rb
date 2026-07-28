@@ -319,9 +319,9 @@ RSpec.describe UploadCreator do
       let(:file) { file_from_fixtures(filename, "images") }
 
       it "should store the upload with the right extension" do
-        expect do UploadCreator.new(file, filename).create_for(user.id) end.to change {
-          Upload.count
-        }.by(1)
+        expect do
+          UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
+        end.to change { Upload.count }.by(1)
 
         upload = Upload.last
 

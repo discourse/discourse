@@ -187,6 +187,35 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
         expect(@thread_stub).to have_been_requested.times(0)
       end
 
+      it "sends a standalone message without storing topic thread metadata" do
+        reference_post =
+          DiscourseChatIntegration::ChatIntegrationReferencePost.new(
+            user: Discourse.system_user,
+            kind: :workflow,
+            raw: "Custom alert",
+          )
+
+        expect { described_class.trigger_notification(reference_post, chan1, nil) }.not_to change(
+          TopicCustomField,
+          :count,
+        )
+        expect(@stub2).to have_been_requested.once
+      end
+
+      it "reports when the bot cannot post to the channel" do
+        stub_request(:post, %r{https://slack.com/api/chat.postMessage}).to_return(
+          body: { ok: false, error: "not_in_channel" }.to_json,
+        )
+
+        expect { described_class.trigger_notification(post, chan1, nil) }.to raise_error(
+          DiscourseChatIntegration::ProviderError,
+        ) do |error|
+          expect(error.info[:error_key]).to eq(
+            "chat_integration.provider.slack.errors.action_prohibited",
+          )
+        end
+      end
+
       it "sends thread id for thread" do
         expect(@thread_stub).to have_been_requested.times(0)
 

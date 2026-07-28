@@ -23,6 +23,32 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     output_contract(nodes_by_type, type, output_index).fetch(:fields)
   end
 
+  it "finds the external chat integration action by provider keywords" do
+    SiteSetting.chat_integration_enabled = true
+
+    result = invoke_tool(query: "slack", include_examples: true)
+    node =
+      result[:nodes].find { |candidate| candidate[:type] == "action:send_chat_integration_message" }
+
+    expect(node).to include(
+      available: true,
+      examples: [
+        a_hash_including(
+          parameters:
+            a_hash_including(
+              channel_id: 123,
+              channel_name: "Slack: #general",
+              message: "={{ $json.post.excerpt }}",
+            ),
+        ),
+      ],
+    )
+    expect(node.dig(:output_contracts, 0, :fields)).to eq(
+      "channel_id" => "integer",
+      "provider" => "string",
+    )
+  end
+
   it "exposes post author, topic link, and action output fields", :aggregate_failures do
     result = invoke_tool
     nodes_by_type = result[:nodes].index_by { |node| node[:type] }

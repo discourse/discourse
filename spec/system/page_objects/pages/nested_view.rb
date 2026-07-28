@@ -239,6 +239,41 @@ module PageObjects
         has_css?(".nested-sort-selector__trigger", text: I18n.t("js.nested_replies.sort.#{sort}"))
       end
 
+      def has_root_post_count?(count)
+        has_css?(".nested-view__roots > .nested-post", count: count)
+      end
+
+      def current_scroll_position
+        page.evaluate_script("window.scrollY")
+      end
+
+      def disable_cloaking
+        page.execute_script(
+          'require("discourse/modifiers/post-stream-viewport-tracker").disableCloaking()',
+        )
+        self
+      end
+
+      def scroll_to_bottom
+        page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+        self
+      end
+
+      def wheel_down
+        page.driver.with_playwright_page do |playwright_page|
+          playwright_page.mouse.move(200, 200)
+          playwright_page.mouse.wheel(0, 1000)
+        end
+        self
+      end
+
+      def scroll_to_post(post)
+        page.execute_script(<<~JS)
+          document.querySelector("[data-post-number='#{post.post_number}']").scrollIntoView();
+        JS
+        self
+      end
+
       def has_op_post?
         has_css?(".nested-view__op")
       end
@@ -510,6 +545,32 @@ module PageObjects
         find(".nested-sort-selector__trigger").click
         find(".dropdown-menu .btn", text: I18n.t("js.nested_replies.sort.#{sort}")).click
         self
+      end
+
+      def scroll_to_position(scroll_y)
+        page.evaluate_async_script(<<~JS)
+          const done = arguments[0];
+          window.scrollTo(0, #{scroll_y});
+          setTimeout(done, 50);
+        JS
+        self
+      end
+
+      def scroll_during_pending_restore(distance:)
+        page.evaluate_async_script(<<~JS)
+          const done = arguments[0];
+          const positions = { restored: window.scrollY };
+
+          setTimeout(() => {
+            window.scrollBy(0, #{distance});
+            positions.afterUserScroll = window.scrollY;
+          }, 20);
+
+          setTimeout(() => {
+            positions.afterRetries = window.scrollY;
+            done(positions);
+          }, 250);
+        JS
       end
 
       # ── Deletion/recovery assertions ─────────────────────────────
