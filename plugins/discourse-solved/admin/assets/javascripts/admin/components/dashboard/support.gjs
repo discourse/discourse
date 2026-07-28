@@ -11,7 +11,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { durationTiny } from "discourse/lib/formatter";
 import Category from "discourse/models/category";
-import CategorySelector from "discourse/select-kit/components/category-selector";
+import MultipleCategoriesSelector from "discourse/select-kit/components/multiple-categories-selector";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import SupportResponseTime from "./support/response-time";
@@ -340,7 +340,7 @@ export default class SupportSection extends Component {
 
         {{#if this.showFilter}}
           <div class="db-support__filter">
-            <CategorySelector
+            <MultipleCategoriesSelector
               @categories={{this.selectedCategories}}
               @blockedCategories={{this.blockedCategories}}
               @onChange={{this.onCategoriesChange}}

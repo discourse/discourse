@@ -3223,6 +3223,10 @@ en:
         other: "Select at least %{count} items."
       components:
         filter_for_more: Filter for more…
+        multiple_categories_selector:
+          limited_results_notice:
+            one: "Showing %{shown} of %{count} category. Type to search for more."
+            other: "Showing %{shown} of %{count} categories. Type to search for more."
         categories_admin_dropdown:
           title: "Manage categories"
         tag_category_admin_dropdown:
