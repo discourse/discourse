@@ -12,4 +12,4 @@ zh_CN:
     rss_polling_update_tags: "[RSS 轮询] 当话题更新时更新话题标签。禁用此功能会提取初始标签，但会禁用进一步的标签更改。"
   rss_polling:
     errors:
-      unknown_author_username: "未找到用户名为“%{username}”的用户。"
+      unknown_author_username: "未找到用户名为 '%{username}' 的用户。"

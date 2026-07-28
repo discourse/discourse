@@ -145,7 +145,7 @@ ar:
           highest_priority: "(أعلى درجة أولوية)"
           lowest_priority: "(أدنى درجة أولوية)"
           login: "سجِّل الدخول للتصويت‎!"
-      error_while_toggling_status: "عذرًا، حدث خطأ أدى إلى تبديل حالة استطلاع الرأي هذا."
+      error_while_toggling_status: "عذرًا، حدث خطأ في تبديل حالة استطلاع الرأي هذا."
       error_while_casting_votes: "عذرًا، حدث خطأ في الإدلاء بأصواتك."
       error_while_fetching_voters: "عذرًا، حدث خطأ في عرض الناخبين."
       error_while_exporting_results: "عذرًا، حدث خطأ في أثناء تصدير نتائج استطلاع الرأي هذا."

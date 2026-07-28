@@ -13,7 +13,7 @@ ar:
       title: عدد مرات ظهور الإعلانات في Adplugin
       description: "تقرير مرات ظهور الإعلانات"
     ad_plugin_impressions_by_user:
-      title: مرات ظهور الإعلانات عبر المكون الإضافي حسب المستخدم
+      title: مرات ظهور الإعلانات عبر المكوِّن الإضافي حسب المستخدم
       description: "مرات ظهور الإعلانات مجمّعة حسب المستخدم"
     ad_plugin_click_through_rate:
       title: أداء التحويلات في Adplugin

@@ -10,3 +10,6 @@ de:
     rss_polling_frequency: "[RSS Abfrage] Häufigkeit der Feed-Abfrage (in Minuten)"
     rss_polling_use_pubdate: "[RSS-Abfrage] Erstellungsdatum des Themas auf das im RSS-Feed gefundene pubDate setzen"
     rss_polling_update_tags: "[RSS Abfrage] Aktualisiere Schlagwörter des Themas, wenn es aktualisiert wird. Wenn du diese Option deaktivierst, werden die ursprünglichen Schlagwörter übernommen, aber weitere Änderungen nicht mehr vorgenommen."
+  rss_polling:
+    errors:
+      unknown_author_username: "Es wurde kein Benutzer mit dem Benutzernamen „%{username}“ gefunden."

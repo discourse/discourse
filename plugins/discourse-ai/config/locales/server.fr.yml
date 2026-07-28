@@ -428,7 +428,7 @@ fr:
         github_file_content: "Récupérer le contenu des fichiers depuis un dépôt GitHub"
         random_picker: "Choisissez un nombre aléatoire ou un élément aléatoire d'une liste"
         categories: "Répertorier toutes les catégories visibles publiquement sur le forum"
-        delete_topic: "Supprimez un sujet"
+        delete_topic: "Supprimer un sujet"
         search: "Rechercher dans tous les sujets publics sur le forum"
         tags: "Répertorier toutes les étiquettes du forum"
         time: "Trouver l'heure dans différents fuseaux horaires"
@@ -494,32 +494,32 @@ fr:
           raw: "Lors de ma recherche pour %{query}, vous m'avez montré les informations suivantes :\n\n%{context}\n\nPoursuivons la conversation."
       close_topic:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
       unlist_topic:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
       delete_topic:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
       edit_tags:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
       edit_category:
         errors:
-          not_found: "Sujet non trouvé."
-          category_not_found: "Catégorie non trouvée ."
+          not_found: "Sujet introuvable."
+          category_not_found: "Catégorie introuvable."
       set_topic_timer:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
       set_slow_mode:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
       move_posts:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
       assign:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
     reviewables:
       ai_tool_action:
         approve:

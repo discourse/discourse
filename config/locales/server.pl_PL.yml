@@ -57,6 +57,8 @@ pl_PL:
     added_and_removed: "Dodano %{added} i usunięto %{removed}"
     added: "Dodano %{added}"
     removed: "Usunięto %{removed}"
+  topics_bulk_action:
+    too_many_topic_ids: "Można wykonać akcję zbiorczą maksymalnie dla %{limit} tematów naraz."
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} przez %{username}"
