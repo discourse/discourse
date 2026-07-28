@@ -1810,10 +1810,27 @@ RSpec.describe ApplicationController do
 
   describe "color definition stylesheets" do
     let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"]) }
+    let!(:light_scheme) do
+      ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Solarized Light"])
+    end
 
     before do
       Theme.find_default.update!(dark_color_scheme_id: dark_scheme.id)
       SiteSetting.interface_color_selector = "sidebar_footer"
+    end
+
+    context "when scheme cookies contain HTML" do
+      it "does not add injected links to the page" do
+        injected_link =
+          '<link rel="modulepreload" data-plugin-name="poc" href="https://example.com/xss.js">'
+        cookies[:color_scheme_id] = %(#{light_scheme.id}">#{injected_link})
+        cookies[:dark_scheme_id] = %(#{dark_scheme.id}">#{injected_link})
+
+        get "/"
+
+        injected_links = css_select('link[rel="modulepreload"][data-plugin-name="poc"]')
+        expect(injected_links).to be_empty
+      end
     end
 
     context "with early hints" do

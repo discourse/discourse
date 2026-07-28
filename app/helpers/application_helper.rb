@@ -592,8 +592,9 @@ module ApplicationHelper
 
   def user_scheme_id
     return @user_scheme_id if defined?(@user_scheme_id)
-    scheme_id = cookies[:color_scheme_id] || current_user&.user_option&.color_scheme_id
-    @user_scheme_id = scheme_id if scheme_id && ColorScheme.find_by_id(scheme_id)
+
+    @user_scheme_id =
+      ColorScheme.valid_id(cookies[:color_scheme_id] || current_user&.user_option&.color_scheme_id)
   end
 
   def scheme_id
@@ -607,8 +608,9 @@ module ApplicationHelper
 
   def user_dark_scheme_id
     return @user_dark_scheme_id if defined?(@user_dark_scheme_id)
-    scheme_id = cookies[:dark_scheme_id] || current_user&.user_option&.dark_scheme_id
-    @user_dark_scheme_id = scheme_id if scheme_id && ColorScheme.find_by_id(scheme_id)
+
+    @user_dark_scheme_id =
+      ColorScheme.valid_id(cookies[:dark_scheme_id] || current_user&.user_option&.dark_scheme_id)
   end
 
   def dark_scheme_id
@@ -941,6 +943,7 @@ module ApplicationHelper
   end
 
   def color_scheme_stylesheet_link_tag(href, media, css_class, scheme_id)
+    scheme_id = Integer(scheme_id, exception: false)
     %[<link href="#{href}" media="#{media}" rel="stylesheet" class="#{css_class}"#{scheme_id && scheme_id != -1 ? %[ data-scheme-id="#{scheme_id}"] : ""}/>]
   end
 end
