@@ -178,6 +178,7 @@ class Admin::BackupsController < Admin::AdminController
     current_chunk_size = params.fetch(:resumableCurrentChunkSize).to_i
 
     raise Discourse::InvalidParameters.new(:resumableIdentifier) unless valid_filename?(identifier)
+    raise Discourse::InvalidParameters.new(:resumableFilename) unless valid_filename?(filename)
 
     # path to chunk file
     chunk = BackupRestore::LocalBackupStore.chunk_path(identifier, filename, chunk_number)
