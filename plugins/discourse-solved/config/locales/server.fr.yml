@@ -8,8 +8,8 @@ fr:
   accepted_answer: "Réponse acceptée"
   category_types:
     support:
-      name: "Soutenir"
-      title: "soutenir"
+      name: "Assistance"
+      title: "assistance"
   discourse_solved:
     category_type:
       allow_accepted_answers:

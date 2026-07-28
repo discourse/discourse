@@ -23,3 +23,6 @@ fa_IR:
     filters:
       votes:
         title: "رای‌ها"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "برچسب‌ها"

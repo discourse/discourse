@@ -153,7 +153,6 @@ id:
       exclusion: telah dipratentukan oleh sistem
       greater_than: harus lebih besar dari %{count}
       greater_than_or_equal_to: harus sama dengan atau lebih besar dari %{count}
-      has_already_been_used: "telah digunakan"
       inclusion: tidak dimasukkan kedalam daftar
       invalid: tidak benar
       is_invalid: "tampak tidak jelas, apakah itu sebuah kalimat yang lengkap?"

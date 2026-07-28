@@ -85,6 +85,22 @@ ug:
       translations:
         title: "تەرجىمە"
         category_scope: "سەھىپە"
+        model_progress:
+          detail:
+            retry: "قايتا سىنا"
+            columns:
+              locale: "يەرلىك"
+              pending: "كۈتۈۋاتىدۇ"
+              total: "جەمئىي"
+          targets:
+            post:
+              title: "يازما"
+            topic:
+              title: "تېما"
+            category:
+              title: "سەھىپە"
+            tag:
+              title: "بەلگە"
         stats:
           eta_minutes:
             one: "%{count} مىنۇت"

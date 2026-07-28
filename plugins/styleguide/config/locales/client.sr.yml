@@ -8,7 +8,6 @@ sr:
   js:
     styleguide:
       title: "Uputstvo za stilove"
-      welcome: "Kako biste počeli, odaberite sekciju iz menija sa leve strane."
       categories:
         atoms: Атоми
         molecules: Molekuli

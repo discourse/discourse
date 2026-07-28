@@ -23,3 +23,6 @@ pt:
     filters:
       votes:
         title: "Votos"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Etiquetas"

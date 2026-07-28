@@ -251,6 +251,22 @@ sk:
       translations:
         title: "Preklady"
         category_scope: "Kategórie"
+        model_progress:
+          detail:
+            retry: "Skúsiť znova"
+            columns:
+              locale: "Miestne nastavenie"
+              pending: "Čakajúce"
+              total: "Celkom"
+          targets:
+            post:
+              title: "Príspevky"
+            topic:
+              title: "Témy"
+            category:
+              title: "Kategórie"
+            tag:
+              title: "Značky"
         stats:
           eta_minutes:
             one: "%{count} minútu"

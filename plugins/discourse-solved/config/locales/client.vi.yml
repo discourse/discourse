@@ -20,6 +20,9 @@ vi:
             response_time:
               buckets:
                 lt_1h: "< 1 tiếng"
+                "1_4h": "1–4 giờ"
+                "4_24h": "4–24 giờ"
+                gt_24h: "> 24 giờ"
   js:
     notifications:
       alt:

@@ -52,3 +52,6 @@ pl_PL:
           group_name: "Wydarzenie głosowania na temat"
           topic_upvote: "Gdy użytkownik głosuje na dany temat"
           topic_unvote: "Kiedy użytkownik cofa głos na temat"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Tagi"

@@ -386,16 +386,29 @@ tr_TR:
         title: "Çeviriler"
         description: "Forumunuzdaki tüm içeriği kullanıcının tercih ettiği dile otomatik olarak çevirin"
         supported_locales: "Desteklenen diller"
-        supported_locales_description: "Bu site ayarı, ziyaretçilerin yazı çevirilerine katkıda bulunmalarına da olanak tanır."
         category_scope: "Kategoriler"
+        cached_results_notice: "%{relative_time} tarihinden itibaren önbelleğe alınmış sonuçlar gösteriliyor."
+        model_progress:
+          detail:
+            retry: "Tekrar Dene"
+            columns:
+              locale: "Yerel Ayar"
+              pending: "Beklemede"
+              total: "Toplam"
+          targets:
+            post:
+              title: "Gönderiler"
+            topic:
+              title: "Konular"
+            category:
+              title: "Kategoriler"
+            tag:
+              title: "Etiketler"
         admin_actions:
-          translation_settings: "Çeviri ayarları"
-          localization_settings: "Yerelleştirme ayarları"
           enable_translations: "Otomatik çevirileri etkinleştir"
         stats:
           title: "Çeviri istatistikleri"
           backfill_disabled: "Dolgu devre dışıdır, yalnızca yeni gönderiler çevrilecektir."
-          backfill_message: "<a href='%{settingsUrl}'>Dolgu ayarları</a> %{date} tarihinden sonraki tüm gönderileri çevirmek üzere yapılandırılmıştır — bunun %{eta} süreceği tahmin edilmektedir."
           eta_minutes:
             one: "%{count} dakika"
             other: "%{count} dakika"

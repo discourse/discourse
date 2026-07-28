@@ -2921,7 +2921,7 @@ nl:
     filter_input:
       clear: "Filter wissen"
     filter_controls:
-      reset: "Filter resetten"
+      reset: "Resetten"
       toggle: "Vervolgkeuzemenufilters in-/uitschakelen"
     d_icon_grid_picker:
       select_icon: "Selecteer pictogram"
@@ -7114,6 +7114,8 @@ nl:
         sidebar: "Zijbalk"
         header_dropdown: "Vervolgkeuzelijst kop"
         legacy: "Verouderd"
+      duplicate_topic_titles:
+        allowed: "Toegestaan"
       backups:
         title: "Back-ups"
         files_title: "Back-upbestanden"
@@ -7357,7 +7359,6 @@ nl:
           finish_install: "Thema-installatie voltooien"
           last_attempt: "Installatieproces is niet voltooid, laatste poging:"
           remote_branch: "Branchnaam (optioneel)"
-          public_key: "De volgende openbare sleutel toegang tot de repo verlenen:"
           install: "Installeren"
           installed: "Geïnstalleerd"
           install_popular: "Populair"
@@ -8721,6 +8722,7 @@ nl:
         uploading: "Uploaden…"
         name: "Naam"
         group: "Groep"
+        all_groups: "Alle groepen"
         created_by: "Gemaakt door"
         image: "Afbeelding"
         alt: "voorbeeld van aangepaste emoji"

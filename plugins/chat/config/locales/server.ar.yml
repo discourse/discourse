@@ -365,7 +365,7 @@ ar:
           zero: "‎[%{site_name}] ‎ رسالة جديدة من %{name}"
           one: "‎[%{site_name}] ‎ رسالة جديدة من %{name}"
           two: "‎[%{site_name}] ‎ رسالتان جديدتان من ‎ %{name}"
-          few: "‎[%{site_name}] ‎ رسائل جديدة من ‎ %{name}"
+          few: "‎[%{site_name}] ‎ رسائل جديدة من %{name}"
           many: "‎[%{site_name}] ‎ رسائل جديدة من ‎ %{name}"
           other: "‎ [%{site_name}] ‎رسائل جديدة من ‎ %{name}"
         chat_dm_1_improved:
