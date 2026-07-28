@@ -1223,20 +1223,28 @@ export default class DSelect extends Component<DSelectSignature> {
     // consumers can then treat `@onClose` as exactly one notification per close.
     const wasExpanded = this.isExpanded;
     this.isExpanded = false;
-    if (this.isTypeahead) {
-      this.handleMenuClose();
-    }
+    this.resetQueryOnClose();
     if (wasExpanded) {
       this.args.onClose?.();
     }
   }
 
   /**
-   * Runs on every typeahead menu close, resetting the query so the next open starts clean.
-   * Multi-select also resets on an add because its menu remains open after selection.
+   * Resets the query so the next open starts clean, for every variant.
+   *
+   * A query is draft state that belongs to the session that typed it, and closing ends that
+   * session — so a reopened list must never arrive still narrowed by a term the reader has moved
+   * on from and can no longer see a reason for. That holds wherever the query lives: in the
+   * trigger for a typeahead, or in the panel for a button variant, where it is doubly hidden
+   * because the trigger is showing the value instead.
+   *
+   * Unguarded by the open→closed transition, unlike `@onClose`: a spurious close only fires when
+   * the panel is already shut, where clearing is inert.
+   *
+   * Multi-select also resets on an add, because its menu stays open after selection.
    */
   @action
-  handleMenuClose(): void {
+  resetQueryOnClose(): void {
     this.engine.setFilter("");
     this.queryActive = false;
   }
@@ -2092,7 +2100,8 @@ export default class DSelect extends Component<DSelectSignature> {
       @trapTab={{false}}
       {{! Typeahead: keep DMenu's default click-to-open (the whole trigger root opens the
         overlay) but disable close-on-click so clicking the already-open trigger/input does
-        not toggle it shut. Reset the query on every close; focus the input on open. }}
+        not toggle it shut, and focus the input on open. Resetting the query is not scoped
+        here — every variant clears on close, see resetQueryOnClose. }}
       @untriggers={{if this.isTypeahead this.emptyTriggers}}
       {{! DMenu vetoes its own trigger open while locked, reactively. Keyboard/edit open + all
         mutate paths are gated separately in this component (they are not DMenu listeners). }}

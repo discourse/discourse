@@ -928,6 +928,34 @@ module(
         .exists({ count: 3 }, "the block-free button renders every option")
         .hasText("Apple", "option rows use the item fallback");
     });
+
+    // Here the query lives in the panel, detached from the trigger that displays the value — the
+    // shape every comparable library clears on close. It used to survive, because the reset was
+    // gated on the typeahead variant, so reopening presented a list still narrowed by a term the
+    // reader had moved on from and could no longer see a reason for.
+    test("closing clears the panel filter so the next open starts whole", async function (assert) {
+      await render(
+        <template><DSelect @items={{ITEMS}} @variant="button" /></template>
+      );
+
+      await click(".d-combobox__trigger");
+      await fillIn(".d-combobox__filter", "ban");
+      assert
+        .dom("[role='option']")
+        .exists({ count: 1 }, "the query narrows the list while open");
+
+      await triggerKeyEvent(".d-combobox__filter", "keydown", "Escape");
+      await click(".d-combobox__trigger");
+
+      // Both halves matter: clearing only the visible input would leave the engine still
+      // filtering, so the row count is what proves the query itself is gone.
+      assert
+        .dom(".d-combobox__filter")
+        .hasValue("", "the filter input reopens empty");
+      assert
+        .dom("[role='option']")
+        .exists({ count: ITEMS.length }, "and the whole list is back");
+    });
   }
 );
 
