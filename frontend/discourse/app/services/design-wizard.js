@@ -1,7 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
 import { applyColorScheme } from "discourse/admin/lib/color-scheme-manager";
-import ThemePickerModal from "discourse/components/admin-onboarding/modal/theme-picker";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
@@ -28,7 +27,6 @@ const STEP_COMPLETED_KEY = "onboarding_step_select_theme";
  */
 export default class DesignWizardService extends Service {
   @service keyValueStore;
-  @service modal;
 
   @tracked active = false;
   @tracked data;
@@ -64,7 +62,6 @@ export default class DesignWizardService extends Service {
 
     this.active = true;
     await this.#previewSelections();
-    this.#syncThemeModal();
   }
 
   resumeAfterThemePreview({ onComplete } = {}) {
@@ -143,17 +140,6 @@ export default class DesignWizardService extends Service {
   setStepIndex(stepIndex) {
     this.stepIndex = stepIndex;
     this.#persistState();
-    this.#syncThemeModal();
-  }
-
-  completeThemeStep(themeId) {
-    if (themeId === this.themeId) {
-      this.setStepIndex(1);
-      return;
-    }
-
-    this.stepIndex = 1;
-    this.selectTheme(themeId);
   }
 
   selectBodyFont(fontKey) {
@@ -234,19 +220,6 @@ export default class DesignWizardService extends Service {
 
   get #currentPreviewThemeId() {
     return new URLSearchParams(window.location.search).get("preview_theme_id");
-  }
-
-  #syncThemeModal() {
-    if (!this.active || this.stepIndex !== 0) {
-      return;
-    }
-
-    this.modal.show(ThemePickerModal).then(() => {
-      // dismissing the theme modal without moving forward exits the wizard
-      if (this.active && this.stepIndex === 0) {
-        this.stop();
-      }
-    });
   }
 
   #initFromData() {

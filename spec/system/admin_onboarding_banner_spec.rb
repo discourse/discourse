@@ -112,18 +112,12 @@ describe "Admin Onboarding Banner" do
   end
 
   describe "select theme step" do
-    it "opens the theme picker modal first" do
+    it "opens the design wizard as a sheet" do
       visit("/")
       expect(banner.step_not_completed?("select_theme")).to eq(true)
 
       banner.click_step_action("select_theme")
 
-      expect(design_wizard_sidebar).to have_theme_modal
-      expect(page).to have_no_css(".design-wizard-float")
-
-      design_wizard_sidebar.continue_from_theme_modal
-
-      expect(design_wizard_sidebar).to have_no_theme_modal
       expect(design_wizard_sidebar).to be_visible
       expect(page).to have_css(".design-wizard-float")
       expect(page).to have_css(".sidebar-sections")
@@ -133,9 +127,9 @@ describe "Admin Onboarding Banner" do
       visit("/")
       banner.click_step_action("select_theme")
 
-      expect(design_wizard_sidebar).to have_theme_modal
-      design_wizard_sidebar.continue_from_theme_modal
+      expect(design_wizard_sidebar).to be_visible
 
+      design_wizard_sidebar.next_step
       design_wizard_sidebar.select_palette("default")
       expect(design_wizard_sidebar).to have_palette_preview
 
@@ -150,15 +144,15 @@ describe "Admin Onboarding Banner" do
       visit("/")
       banner.click_step_action("select_theme")
 
-      expect(design_wizard_sidebar).to have_theme_modal
+      expect(design_wizard_sidebar).to be_visible
 
-      # continuing with another theme reloads the page with a theme preview
-      # and the wizard resumes on the colors step
-      design_wizard_sidebar.choose_theme("Horizon")
-      design_wizard_sidebar.continue_from_theme_modal
+      # picking another theme reloads the page with a theme preview and the
+      # wizard resumes in the sheet
+      design_wizard_sidebar.select_theme(Theme.horizon_theme.id)
       expect(page).to have_current_path(/preview_theme_id=#{Theme.horizon_theme.id}/, url: true)
       expect(design_wizard_sidebar).to be_visible
 
+      design_wizard_sidebar.next_step
       design_wizard_sidebar.select_palette("royal")
       expect(design_wizard_sidebar).to have_palette_preview
       design_wizard_sidebar.toggle_user_selectable_palettes
@@ -174,7 +168,12 @@ describe "Admin Onboarding Banner" do
       expect(page).to have_css(".admin-onboarding-banner")
       expect(design_wizard_sidebar).to be_hidden
       expect(banner.step_completed?("select_theme")).to eq(true)
-      expect(Theme.find(SiteSetting.default_theme_id).name).to eq(selected_name)
+
+      expect(SiteSetting.default_theme_id).to eq(Theme.horizon_theme.id)
+      horizon = Theme.horizon_theme
+      expect(horizon.color_scheme.name).to eq("Royal")
+      expect(horizon.color_scheme.user_selectable).to eq(true)
+      expect(SiteSetting.base_font).to eq("lato")
 
       # the reload must not cancel the in-flight audit write
       expect(
@@ -211,9 +210,8 @@ describe "Admin Onboarding Banner" do
       expect(banner.step_completed?("invite_collaborators")).to eq(true)
 
       banner.click_step_action("select_theme")
-      expect(design_wizard_sidebar).to have_theme_modal
-      design_wizard_sidebar.continue_from_theme_modal
       expect(design_wizard_sidebar).to be_visible
+      design_wizard_sidebar.next_step
       design_wizard_sidebar.next_step
       design_wizard_sidebar.save
 

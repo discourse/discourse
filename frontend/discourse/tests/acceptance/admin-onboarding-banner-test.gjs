@@ -62,28 +62,6 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       });
     });
 
-    server.get("/admin/themes.json", () => {
-      return helper.response(200, {
-        themes: [
-          {
-            id: -1,
-            name: "Foundation",
-            default: true,
-            screenshot_light_url: null,
-            screenshot_dark_url: null,
-          },
-          {
-            id: -2,
-            name: "Horizon",
-            default: false,
-            screenshot_light_url: null,
-            screenshot_dark_url: null,
-          },
-        ],
-        extras: { color_schemes: [] },
-      });
-    });
-
     server.get("/color-scheme-stylesheet/:id", () =>
       helper.response(200, {
         color_scheme_id: -1,
@@ -378,25 +356,22 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     await settled();
 
     assert
-      .dom(".theme-picker-modal")
-      .exists("the theme step uses the original theme picker modal");
-    assert
-      .dom(".theme-picker-modal__card")
-      .exists({ count: 2 }, "shows Foundation and Horizon");
-    assert
-      .dom(".theme-picker-modal__card.--selected .theme-card-preview__name")
-      .hasText("Foundation", "preselects the default theme");
-    assert
       .dom(".design-wizard-float")
-      .doesNotExist("the floating panel waits for the theme choice");
+      .exists("the design wizard slides in as a sheet");
+    assert
+      .dom(".design-wizard-modal__theme-card")
+      .exists({ count: 2 }, "the theme step shows Foundation and Horizon");
+    assert
+      .dom(".design-wizard-modal__theme-card.--selected")
+      .hasAttribute("data-theme-id", "-1", "preselects the default theme");
+    assert
+      .dom(".sidebar-design-wizard__back")
+      .isDisabled("cannot go back from the first step");
 
-    await click(".theme-picker-modal__footer .btn-primary");
+    await click(".sidebar-design-wizard__next");
     assert
-      .dom(".theme-picker-modal")
-      .doesNotExist("next closes the theme modal");
-    assert
-      .dom(".design-wizard-float")
-      .exists("the floating panel takes over from the colors step");
+      .dom(".design-wizard-modal__theme-card")
+      .doesNotExist("theme cards are left behind on the colors step");
     assert
       .dom(".design-wizard-modal__swatch")
       .exists({ count: 1 }, "the colors step shows the theme's palette pairs");
@@ -406,15 +381,6 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom("link[data-scheme-id]", document.documentElement)
       .exists("the page's color scheme stylesheet is swapped for the preview");
 
-    await click(".sidebar-design-wizard__back");
-    assert
-      .dom(".design-wizard-float")
-      .doesNotExist("back from colors hides the floating panel");
-    assert
-      .dom(".theme-picker-modal")
-      .exists("back from colors reopens the theme modal");
-
-    await click(".theme-picker-modal__footer .btn-primary");
     await click(".sidebar-design-wizard__next");
     assert
       .dom(".design-wizard-modal__font-card")
@@ -426,10 +392,15 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom(".sidebar-design-wizard__save")
       .exists("the last step offers save");
 
+    await click(".sidebar-design-wizard__back");
+    assert
+      .dom(".design-wizard-modal__swatch")
+      .exists({ count: 1 }, "back returns to the colors step");
+
     await click(".design-wizard-float__close");
     assert
       .dom(".design-wizard-float")
-      .doesNotExist("closing removes the floating panel");
+      .doesNotExist("closing removes the sheet");
     assert
       .dom("link[data-scheme-id]", document.documentElement)
       .doesNotExist("the palette preview is reverted");

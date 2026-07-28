@@ -566,9 +566,6 @@ en:
         title: "Customize your site"
         description: "Choose a starting theme for your community"
         action: "Select theme"
-        modal_title: "Choose a theme"
-        enabled: "Selected"
-        browse_all: "Manage themes"
         show_light_screenshot: "Show light screenshot"
         show_dark_screenshot: "Show dark screenshot"
       design_wizard:

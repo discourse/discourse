@@ -1,19 +1,22 @@
 .design-wizard-float {
   position: fixed;
   z-index: z("usercard");
-  bottom: var(--space-3);
-  left: 50%;
-  transform: translateX(-50%);
+  top: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   flex-direction: column;
-  width: 40em;
+  width: 24em;
   max-width: calc(100vw - var(--space-6));
-  max-height: min(60vh, 34em);
   overflow: hidden;
   background: var(--token-color-surface);
-  border: 1px solid var(--content-border-color);
-  border-radius: var(--d-border-radius-large, 12px);
+  border-left: 1px solid var(--content-border-color);
   box-shadow: var(--shadow-modal);
+  animation: design-wizard-float-slide-in 0.25s ease-out;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 
   &__close {
     position: absolute;
@@ -26,5 +29,15 @@
     flex: 1;
     min-height: 0;
     overflow-y: auto;
+  }
+}
+
+@keyframes design-wizard-float-slide-in {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
   }
 }
