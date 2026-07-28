@@ -4,7 +4,6 @@ describe "Admin Notices" do
   let(:admin_dashboard) { PageObjects::Pages::AdminDashboard.new }
 
   before do
-    SiteSetting.dashboard_improvements = false
     Fabricate(:admin_notice)
 
     I18n.backend.store_translations(:en, dashboard: { problem: { test_notice: "Houston" } })
