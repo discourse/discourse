@@ -2351,6 +2351,11 @@ en:
       bookmark_after_notification:
         title: "After a bookmark reminder notification is sent:"
 
+      send_shortcut:
+        title: "Send messages in chat-style composers with:"
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
+
       like_notification_frequency:
         title: "Notify when liked"
         always: "Always"

@@ -246,6 +246,21 @@ export default <template>
       />
     </div>
     <div
+      class="controls controls-dropdown pref-send-shortcut"
+      data-setting-name="user-send-shortcut"
+    >
+      <label for="user-send-shortcut">{{i18n
+          "user.send_shortcut.title"
+        }}</label>
+      <ComboBox
+        @valueProperty="value"
+        @content={{@controller.sendShortcutOptions}}
+        @value={{@controller.model.user_option.send_shortcut}}
+        @id="user-send-shortcut"
+        @onChange={{fn (mut @controller.model.user_option.send_shortcut)}}
+      />
+    </div>
+    <div
       class="controls controls-dropdown pref-bookmark-after-notification"
       data-setting-name="user-bookmark-after-notification"
     >

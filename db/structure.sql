@@ -11762,7 +11762,8 @@ CREATE TABLE public.user_options (
     enable_upcoming_change_available_notifications boolean DEFAULT true NOT NULL,
     chat_announce_new_messages boolean DEFAULT true NOT NULL,
     chat_new_message_sound boolean DEFAULT false NOT NULL,
-    push_notification_level integer DEFAULT 1 NOT NULL
+    push_notification_level integer DEFAULT 1 NOT NULL,
+    send_shortcut integer DEFAULT 0 NOT NULL
 );
 
 
@@ -23051,6 +23052,8 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260728162521'),
+('20260728162516'),
 ('20260728071552'),
 ('20260728045008'),
 ('20260727085824'),

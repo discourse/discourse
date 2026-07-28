@@ -20,6 +20,7 @@ class UserOption < ActiveRecord::Base
   self.ignored_columns = [
     "enable_experimental_sidebar", # TODO: Remove when 20250804021210_drop_enable_experimental_sidebar_user_option has been promoted to pre-deploy
     "only_chat_push_notifications", # TODO(2027-01): replaced by push_notification_level; drop the column in a follow-up PR once this has shipped
+    "chat_send_shortcut", # TODO(2027-01): replaced by send_shortcut; drop the column in a follow-up PR once this has shipped
   ]
 
   self.primary_key = :user_id
@@ -33,6 +34,7 @@ class UserOption < ActiveRecord::Base
 
   enum :default_calendar, { none_selected: 0, ics: 1, google: 2 }, scopes: false
   enum :push_notification_level, { none: 0, all: 1, chat_only: 2 }, prefix: true, scopes: false
+  enum :send_shortcut, { enter: 0, meta_enter: 1 }, prefix: true, scopes: false
 
   def self.ensure_consistency!
     sql = <<~SQL
@@ -278,7 +280,6 @@ end
 #  chat_new_message_sound                         :boolean          default(FALSE), not null
 #  chat_quick_reaction_type                       :integer          default("frequent"), not null
 #  chat_quick_reactions_custom                    :string
-#  chat_send_shortcut                             :integer          default("enter"), not null
 #  chat_separate_sidebar_mode                     :integer          default("default"), not null
 #  chat_sound                                     :string
 #  composition_mode                               :integer          default(1), not null
@@ -321,6 +322,7 @@ end
 #  policy_email_frequency                         :integer          default("never"), not null
 #  push_notification_level                        :integer          default("all"), not null
 #  seen_popups                                    :integer          is an Array
+#  send_shortcut                                  :integer          default("enter"), not null
 #  show_original_content                          :boolean          default(FALSE), not null
 #  show_thread_title_prompts                      :boolean          default(TRUE), not null
 #  sidebar_link_to_filtered_list                  :boolean          default(FALSE), not null

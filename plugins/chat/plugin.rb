@@ -94,7 +94,6 @@ after_initialize do
   UserUpdater::OPTION_ATTR.push(:chat_email_frequency)
   UserUpdater::OPTION_ATTR.push(:chat_header_indicator_preference)
   UserUpdater::OPTION_ATTR.push(:chat_separate_sidebar_mode)
-  UserUpdater::OPTION_ATTR.push(:chat_send_shortcut)
 
   # When a user opts into chat-only push notifications, suppress every push that
   # isn't a chat message/mention. Registered here (rather than in core) so it's
@@ -338,9 +337,11 @@ after_initialize do
     object.chat_separate_sidebar_mode
   end
 
-  add_to_serializer(:user_option, :chat_send_shortcut) { object.chat_send_shortcut }
+  # TODO(2027-01): compatibility alias for cached JS bundles that still read
+  # chat_send_shortcut; remove alongside the chat_send_shortcut column drop.
+  add_to_serializer(:user_option, :chat_send_shortcut) { object.send_shortcut }
 
-  add_to_serializer(:current_user_option, :chat_send_shortcut) { object.chat_send_shortcut }
+  add_to_serializer(:current_user_option, :chat_send_shortcut) { object.send_shortcut }
 
   add_to_serializer(:user_option, :chat_quick_reaction_type) { object.chat_quick_reaction_type }
   add_to_serializer(:current_user_option, :chat_quick_reaction_type) do

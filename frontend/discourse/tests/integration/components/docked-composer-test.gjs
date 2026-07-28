@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/owner";
 import { fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DockedComposer from "discourse/components/docked-composer";
@@ -32,6 +33,97 @@ module("Integration | Component | DockedComposer", function (hooks) {
     await triggerKeyEvent(".d-editor-input", "keydown", "Enter");
 
     assert.true(submitted, "bare Enter submits when submitOnEnter is default");
+  });
+
+  test("honors the meta_enter send_shortcut user option", async function (assert) {
+    const currentUser = getOwner(this).lookup("service:current-user");
+    currentUser.set("user_option.send_shortcut", "meta_enter");
+
+    let submitted = false;
+    const handleSubmit = async () => {
+      submitted = true;
+      return { ok: true };
+    };
+
+    await render(
+      <template>
+        <DockedComposer
+          @onSubmit={{handleSubmit}}
+          @composerEvents={{false}}
+          @draftKey="test-send-shortcut-option"
+        />
+      </template>
+    );
+
+    await fillIn(".d-editor-input", "hello");
+    await triggerKeyEvent(".d-editor-input", "keydown", "Enter");
+    assert.false(
+      submitted,
+      "bare Enter does not submit for meta_enter send_shortcut"
+    );
+
+    await triggerKeyEvent(".d-editor-input", "keydown", "Enter", {
+      metaKey: true,
+    });
+    assert.true(submitted, "Meta+Enter submits for meta_enter send_shortcut");
+  });
+
+  test("submits on Ctrl+Enter for the meta_enter send_shortcut user option", async function (assert) {
+    const currentUser = getOwner(this).lookup("service:current-user");
+    currentUser.set("user_option.send_shortcut", "meta_enter");
+
+    let submitted = false;
+    const handleSubmit = async () => {
+      submitted = true;
+      return { ok: true };
+    };
+
+    await render(
+      <template>
+        <DockedComposer
+          @onSubmit={{handleSubmit}}
+          @composerEvents={{false}}
+          @draftKey="test-send-shortcut-ctrl"
+        />
+      </template>
+    );
+
+    await fillIn(".d-editor-input", "hello");
+    await triggerKeyEvent(".d-editor-input", "keydown", "Enter", {
+      ctrlKey: true,
+    });
+
+    assert.true(submitted, "Ctrl+Enter submits for meta_enter send_shortcut");
+  });
+
+  test("explicit @submitOnEnter overrides the send_shortcut user option", async function (assert) {
+    const currentUser = getOwner(this).lookup("service:current-user");
+    currentUser.set("user_option.send_shortcut", "meta_enter");
+
+    let submitted = false;
+    const handleSubmit = async () => {
+      submitted = true;
+      return { ok: true };
+    };
+
+    await render(
+      <template>
+        <DockedComposer
+          @onSubmit={{handleSubmit}}
+          @submitOnEnter={{true}}
+          @composerEvents={{false}}
+          @draftKey="test-send-shortcut-override"
+        />
+      </template>
+    );
+
+    await fillIn(".d-editor-input", "hello");
+    await triggerKeyEvent(".d-editor-input", "keydown", "Enter");
+
+    assert.true(
+      submitted,
+      "bare Enter submits when @submitOnEnter is explicitly true"
+    );
   });
 
   test("does not submit on bare Enter when @submitOnEnter is false", async function (assert) {
