@@ -46,7 +46,7 @@ RSpec.describe UpcomingChanges::Action::BackfillNotifiedEvents do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(change_names: change_names) }
+    subject(:result) { described_class.call(upcoming_change_names: change_names) }
 
     it "records every change as added" do
       result

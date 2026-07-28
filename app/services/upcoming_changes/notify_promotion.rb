@@ -44,10 +44,13 @@ class UpcomingChanges::NotifyPromotion
   try do
     transaction do
       step :log_promotion
-      model :existing_notifications, optional: true
-      model :bulk_notification_new_records, optional: true
-      step :notify_admins
-      step :create_event
+      only_if(:notify_admins?) do
+        model :existing_notifications, optional: true
+        model :bulk_notification_new_records, optional: true
+        step :notify_admins
+        step :create_notified_event
+      end
+      step :create_automatically_promoted_event
     end
 
     step :trigger_discourse_event
@@ -74,10 +77,6 @@ class UpcomingChanges::NotifyPromotion
     !params.changes_already_promoted.include?(params.setting_name)
   end
 
-  def notify_admins?(params:)
-    !params.changes_already_notified_about_promotion.include?(params.setting_name)
-  end
-
   def admin_has_not_manually_toggled(params:)
     !SiteSetting.setting_modified_from_default?(params.setting_name)
   end
@@ -102,9 +101,11 @@ class UpcomingChanges::NotifyPromotion
     )
   end
 
-  def fetch_existing_notifications(params:)
-    return if !notify_admins?(params:)
+  def notify_admins?(params:)
+    !params.changes_already_notified_about_promotion.include?(params.setting_name)
+  end
 
+  def fetch_existing_notifications(params:)
     Notification.where(
       notification_type: Notification.types[:upcoming_change_automatically_promoted],
       user_id: params.admin_user_ids,
@@ -113,8 +114,6 @@ class UpcomingChanges::NotifyPromotion
   end
 
   def fetch_bulk_notification_new_records(params:, existing_notifications:)
-    return if !notify_admins?(params:)
-
     existing_by_user = existing_notifications.to_a.index_by(&:user_id)
     params.admin_user_ids.map do |admin_id|
       {
@@ -130,8 +129,6 @@ class UpcomingChanges::NotifyPromotion
   end
 
   def notify_admins(params:, bulk_notification_new_records:, existing_notifications:)
-    return if !notify_admins?(params:)
-
     merge_with_existing = existing_notifications.to_a.any?
 
     Notification.transaction do
@@ -143,15 +140,15 @@ class UpcomingChanges::NotifyPromotion
     end
   end
 
-  def create_event(params:)
-    if notify_admins?(params:)
-      UpcomingChangeEvent.create!(
-        event_type: :admins_notified_automatic_promotion,
-        upcoming_change_name: params.setting_name,
-        acting_user: Discourse.system_user,
-      )
-    end
+  def create_notified_event(params:)
+    UpcomingChangeEvent.create!(
+      event_type: :admins_notified_automatic_promotion,
+      upcoming_change_name: params.setting_name,
+      acting_user: Discourse.system_user,
+    )
+  end
 
+  def create_automatically_promoted_event(params:)
     UpcomingChangeEvent.find_or_create_by(
       event_type: :automatically_promoted,
       upcoming_change_name: params.setting_name,

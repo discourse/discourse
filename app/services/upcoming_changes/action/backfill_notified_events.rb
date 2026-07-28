@@ -19,25 +19,31 @@
 # :upcoming_change_enabled. Promotion still has to happen for real (see
 # UpcomingChanges::NotifyPromotion) -- it is only the notification we suppress.
 class UpcomingChanges::Action::BackfillNotifiedEvents < Service::ActionBase
-  option :change_names, default: -> { SiteSetting.upcoming_change_site_settings }
+  option :upcoming_change_names, default: -> { SiteSetting.upcoming_change_site_settings }
 
   def call
-    return [] if change_names.blank?
+    return [] if upcoming_change_names.blank?
 
-    UpcomingChangeEvent.insert_all(records, unique_by: :idx_upcoming_change_events_unique_once_off)
+    UpcomingChangeEvent.insert_all(
+      event_records_to_insert,
+      unique_by: :idx_upcoming_change_events_unique_once_off,
+    )
 
-    change_names
+    upcoming_change_names
   end
 
   private
 
-  def records
+  def event_records_to_insert
     now = Time.zone.now
 
-    change_names.flat_map do |change_name|
+    upcoming_change_names.flat_map do |change_name|
       event_types_for(change_name).map do |event_type|
         {
           event_type: UpcomingChangeEvent.event_types[event_type],
+          event_data: {
+            backfilled: true,
+          },
           upcoming_change_name: change_name,
           created_at: now,
           updated_at: now,

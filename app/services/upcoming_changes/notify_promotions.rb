@@ -13,18 +13,11 @@ class UpcomingChanges::NotifyPromotions
   private
 
   def fetch_changes_already_notified_about_promotion
-    change_names_with_event(:admins_notified_automatic_promotion)
+    UpcomingChangeEvent.change_names_with_event(:admins_notified_automatic_promotion)
   end
 
   def fetch_changes_already_promoted
-    change_names_with_event(:automatically_promoted)
-  end
-
-  def change_names_with_event(event_type)
-    UpcomingChangeEvent
-      .where(upcoming_change_name: SiteSetting.upcoming_change_site_settings, event_type:)
-      .pluck(:upcoming_change_name)
-      .map(&:to_sym)
+    UpcomingChangeEvent.change_names_with_event(:automatically_promoted)
   end
 
   def fetch_admin_user_ids

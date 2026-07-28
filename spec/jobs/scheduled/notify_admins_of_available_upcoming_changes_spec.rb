@@ -189,7 +189,11 @@ RSpec.describe Jobs::NotifyAdminsOfAvailableUpcomingChanges do
       SiteSetting.promote_upcoming_changes_on_status = :stable
       UpcomingChangeEvent.delete_all
       UpcomingChanges::Action::BackfillNotifiedEvents.call(
-        change_names: %i[test_upcoming_change test_upcoming_change_b test_upcoming_change_c],
+        upcoming_change_names: %i[
+          test_upcoming_change
+          test_upcoming_change_b
+          test_upcoming_change_c
+        ],
       )
     end
 
@@ -210,7 +214,7 @@ RSpec.describe Jobs::NotifyAdminsOfAvailableUpcomingChanges do
           },
         )
         UpcomingChanges::Action::BackfillNotifiedEvents.call(
-          change_names: [:test_upcoming_change_d],
+          upcoming_change_names: [:test_upcoming_change_d],
         )
 
         mock_upcoming_change_metadata(
