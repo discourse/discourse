@@ -293,6 +293,99 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       assert.true(engine.isAsync, "a load source is async");
     });
 
+    // Closing the panel tears down `DAsyncContent`, which aborts the signal it handed to the
+    // source. Reopening before that request settles used to hit the in-flight short-circuit and
+    // hand back the accumulator — empty, on a first page — as if it were the answer. The consumer
+    // resolves on it synchronously and nothing re-asks, so the query is stuck reading "no results"
+    // for rows that exist. An abandoned request must not be observable as a settled empty one.
+    test("reopening after an aborted in-flight load asks again instead of answering empty", async function (assert) {
+      const releases = [];
+      const engine = new SelectEngine({
+        load: () => new Promise((resolve) => releases.push(resolve)),
+      });
+      engine.setFilter("q");
+
+      const closing = new AbortController();
+      const first = engine.loadItems(engine.loadContext, {
+        signal: closing.signal,
+      });
+      assert.strictEqual(
+        releases.length,
+        1,
+        "opening issues the first request"
+      );
+      assert.strictEqual(
+        typeof first?.then,
+        "function",
+        "the first open waits on that request"
+      );
+
+      // The panel closes mid-flight, then reopens before the abort has settled.
+      closing.abort();
+      const reopened = new AbortController();
+      const second = engine.loadItems(engine.loadContext, {
+        signal: reopened.signal,
+      });
+
+      assert.strictEqual(
+        releases.length,
+        2,
+        "reopening issues a fresh request rather than reusing the abandoned one"
+      );
+      assert.strictEqual(
+        typeof second?.then,
+        "function",
+        "the reopened panel waits on a request instead of being handed an empty list"
+      );
+
+      // The abandoned request settling must not win over the live one.
+      releases[0]([{ id: 1, name: "Stale" }]);
+      releases[1]([{ id: 2, name: "Fresh" }]);
+
+      assert.deepEqual(
+        (await second).map((item) => item.id),
+        [2],
+        "the reopened panel receives the rows its own request returned"
+      );
+    });
+
+    // The second route to the same dead end, and the one an abort listener cannot reach. `reset()`
+    // empties the accumulator but deliberately keeps both keys, so coming BACK to a filter that
+    // already settled makes the settled key match the live one again — over rows that were just
+    // discarded. The reuse short-circuit then answers `[]` synchronously and nothing re-asks.
+    // Reachable by the ordinary typeahead close, which restores the empty filter.
+    test("returning to an already-settled filter fetches again instead of answering empty", async function (assert) {
+      let calls = 0;
+      const engine = new SelectEngine({
+        load: () => {
+          calls++;
+          return Promise.resolve([{ id: 1, name: "One" }]);
+        },
+      });
+
+      // The panel opens on the empty filter and its first page settles.
+      await engine.loadItems(engine.loadContext);
+      assert.strictEqual(calls, 1, "opening issues the first request");
+
+      // The reader types, then closes — which restores the empty filter. Both transitions reset
+      // the source, so the rows that answered the empty filter are gone.
+      engine.setFilter("q");
+      engine.setFilter("");
+
+      const rows = await engine.loadItems(engine.loadContext);
+
+      assert.strictEqual(
+        calls,
+        2,
+        "reopening re-asks rather than reusing an accumulator that was emptied"
+      );
+      assert.deepEqual(
+        rows.map((item) => item.id),
+        [1],
+        "the reopened panel shows rows rather than an empty result"
+      );
+    });
+
     test("reload changes loadContext identity so DAsyncContent re-fetches", function (assert) {
       const engine = new SelectEngine({ load: () => Promise.resolve([]) });
 

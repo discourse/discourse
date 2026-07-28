@@ -608,9 +608,15 @@ class PagedSource implements SelectSource {
     this.#state.serverComplete = false;
     this.#state.serverTruncated = false;
     this.#state.serverLoadedCount = 0;
-    // Neither key is cleared: leaving them pointing at the previous load is what makes the
-    // new one read as pending until its first page lands, and what stops the stale
-    // accumulator being reused for it.
+    // `serverCompletedKey` is deliberately left pointing at the previous load: that is what makes
+    // the new one read as pending until its first page lands.
+    //
+    // `serverSettledKey` must go, because it claims the accumulator holds a complete successful
+    // answer for that key — which the line below makes false. Keeping it only looks harmless while
+    // the next key differs; coming BACK to a filter that already settled (the ordinary typeahead
+    // close, which restores the empty query) matches it again over discarded rows, and the reuse
+    // short-circuit then answers `[]` synchronously with nothing left to re-ask.
+    this.#state.serverSettledKey = null;
     this.#serverItems = [];
     this.#serverOffset = 0;
     this.#serverPageSize = undefined;
@@ -654,6 +660,21 @@ class PagedSource implements SelectSource {
       })
     );
     this.#serverRequest = request;
+    // An abandoned request must not keep answering for the one that replaces it. The consumer
+    // aborts on teardown, so a panel closed mid-flight and reopened before the abort settles
+    // would otherwise hit the in-flight short-circuit above and be handed the accumulator —
+    // empty, on a first page — as a synchronous answer, leaving the query reading "no results"
+    // with nothing left to re-ask. Releasing the handle is enough: the generation deliberately
+    // does NOT move, so the settle below still stamps `serverCompletedKey` (see its comment).
+    opts.signal?.addEventListener(
+      "abort",
+      () => {
+        if (this.#serverRequest === request) {
+          this.#serverRequest = undefined;
+        }
+      },
+      { once: true }
+    );
     return this.#settleServerPage(request, key, generation, opts.signal);
   }
 
