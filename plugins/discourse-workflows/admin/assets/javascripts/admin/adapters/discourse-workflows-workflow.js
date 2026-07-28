@@ -1,3 +1,4 @@
+import { underscore } from "@ember/string";
 import RestAdapter from "discourse/adapters/rest";
 
 export default class DiscourseWorkflowsWorkflowAdapter extends RestAdapter {
@@ -8,7 +9,10 @@ export default class DiscourseWorkflowsWorkflowAdapter extends RestAdapter {
   }
 
   pathFor(store, type, findArgs) {
-    return super.pathFor(store, type, findArgs) + ".json";
+    const path =
+      this.basePath() + underscore(store.pluralize(this.apiNameFor()));
+    const result = this.appendQueryParams(path, findArgs, ".json");
+    return result === path ? `${path}.json` : result;
   }
 
   apiNameFor() {

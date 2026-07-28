@@ -59,6 +59,57 @@ RSpec.describe "Discourse Workflows" do
     expect(workflows_page).to have_no_failed_workflow(recovered_workflow)
   end
 
+  context "with workflow tags" do
+    fab!(:ops_workflow) do
+      Fabricate(
+        :discourse_workflows_workflow,
+        name: "Ops workflow",
+        created_by: admin,
+        tags: %w[ops],
+      )
+    end
+    fab!(:billing_workflow) do
+      Fabricate(
+        :discourse_workflows_workflow,
+        name: "Billing workflow",
+        created_by: admin,
+        tags: %w[billing],
+      )
+    end
+
+    it "filters the list by tag from a row chip and from the tag filter" do
+      workflows_page.visit_index
+
+      expect(workflows_page).to have_workflow_tag(ops_workflow, "ops")
+      expect(workflows_page).to have_workflow_tag(billing_workflow, "billing")
+
+      workflows_page.click_workflow_tag(ops_workflow, "ops")
+      expect(workflows_page).to have_workflow("Ops workflow")
+      expect(workflows_page).to have_no_workflow("Billing workflow")
+      expect(page.current_url).to include("tags=ops")
+
+      workflows_page.reset_filters
+      expect(workflows_page).to have_workflow("Billing workflow")
+
+      workflows_page.filter_by_tag("billing")
+      expect(workflows_page).to have_workflow("Billing workflow")
+      expect(workflows_page).to have_no_workflow("Ops workflow")
+    end
+
+    it "adds a tag from the editor header even when core tagging is disabled" do
+      SiteSetting.tagging_enabled = false
+
+      editor_page.visit(billing_workflow.id)
+      editor_page.add_tag("urgent")
+
+      expect(editor_page).to have_header_tag("urgent")
+      expect(billing_workflow.reload.tags.map(&:name)).to eq(%w[billing urgent])
+
+      workflows_page.visit_index
+      expect(workflows_page).to have_workflow_tag(billing_workflow, "urgent")
+    end
+  end
+
   context "when closing the node configurator" do
     fab!(:workflow) { Fabricate(:discourse_workflows_workflow, created_by: admin) }
 

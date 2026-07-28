@@ -321,3 +321,15 @@ en:
               description: "You can find the channel name in the Chat Integration settings"
             provider:
               label: Provider
+
+    discourse_workflows:
+      node_unavailable:
+        requires_chat_integration: "Requires the Chat Integration plugin to be enabled"
+      nodes:
+        "action:send_chat_integration_message": "Send chat-integration message"
+      node_descriptions:
+        "action:send_chat_integration_message": "Send a notification to a chat-integration channel (Slack, Discord, Telegram, etc.)"
+      send_chat_integration_message:
+        channel_id: "Channel"
+        configure: "Configure"
+        message: "Message"
