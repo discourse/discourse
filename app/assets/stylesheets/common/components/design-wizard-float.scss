@@ -1,7 +1,7 @@
 .design-wizard-float {
   position: fixed;
   z-index: z("usercard");
-  top: 0;
+  top: var(--header-offset);
   right: 0;
   bottom: 0;
   display: flex;

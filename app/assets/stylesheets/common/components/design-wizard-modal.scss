@@ -95,6 +95,7 @@
     cursor: pointer;
     position: relative;
     display: flex;
+    gap: var(--space-1);
     flex-direction: column;
     padding: var(--space-2);
     font-size: var(--font-down-1);
