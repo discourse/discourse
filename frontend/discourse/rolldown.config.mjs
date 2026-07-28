@@ -1,7 +1,10 @@
+import { Preprocessor } from "content-tag";
 import * as fs from "fs";
 import { basename, relative } from "path";
 import { viteAliasPlugin, viteImportGlobPlugin } from "rolldown/experimental";
+import createDiskSourceReader from "./lib/disk-source-reader.mjs";
 import discourseChunkNamesPlugin from "./lib/discourse-chunk-names.mjs";
+import discourseSourceImports from "./lib/discourse-source-imports.mjs";
 import dynamicChunkUrlPlugin from "./lib/dynamic-chunk-url-plugin.mjs";
 import writeResolverConfig from "./lib/embroider-vite-resolver-options.mjs";
 import maybeBabel from "./lib/maybe-babel.mjs";
@@ -22,6 +25,9 @@ writeResolverConfig(
 );
 
 const extensions = [".gjs", ".mjs", ".js", ".mts", ".gts", ".ts", ".hbs"];
+
+const preprocessor = new Preprocessor();
+const readSourceFromDisk = createDiskSourceReader(process.cwd());
 
 const aliases = [
   { find: "pretty-text", replacement: "pretty-text/addon" },
@@ -113,6 +119,10 @@ export function buildConfig({ devMode } = {}) {
     plugins: [
       viteAliasPlugin({ entries: aliases }),
       dynamicChunkUrlPlugin(),
+      discourseSourceImports({
+        preprocessor,
+        readSource: readSourceFromDisk,
+      }),
       optimizedEmber(),
       viteImportGlobPlugin(),
       maybeBabel({

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 import SpinnerSmallExample from "../../examples/spinner-small";
-import spinnerSmallSource from "../../examples/spinner-small.gjs?template-source";
+import spinnerSmallSource from "../../examples/spinner-small.gjs?source=template";
 
 export default class Spinners extends Component {
   get spinnerRegularCode() {

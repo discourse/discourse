@@ -78,6 +78,62 @@ RSpec.describe AssetProcessor do
     expect(result).to include("dt7948.n(")
   end
 
+  it "hashes every file outside the asset processor that it imports" do
+    # The processor is cached under a digest of its inputs, so anything it reaches
+    # outside its own directory has to be listed or its changes go unnoticed.
+    processor_dir = File.expand_path("frontend/asset-processor")
+    hashed =
+      AssetProcessor::CACHE_DEPENDENCY_GLOBS
+        .flat_map { |glob| Dir.glob(glob) }
+        .map { |path| File.expand_path(path) }
+        .to_set
+
+    resolve_import = ->(specifier, from) do
+      base = File.expand_path(specifier, File.dirname(from))
+      candidates = [base] + %w[.js .mjs].flat_map { |ext| ["#{base}#{ext}", "#{base}/index#{ext}"] }
+      candidates.find { |candidate| File.file?(candidate) }
+    end
+
+    queue =
+      Dir
+        .glob("frontend/asset-processor/**/*.{js,mjs}")
+        .reject { |path| path.end_with?(".test.mjs") || path.include?("/node_modules/") }
+        .map { |path| File.expand_path(path) }
+    seen = queue.to_set
+    external = {}
+
+    until queue.empty?
+      importer = queue.shift
+
+      File
+        .read(importer)
+        .scan(/(?:from|import|require)\s*\(?\s*["']([^"']+)["']/)
+        .flatten
+        .select { |specifier| specifier.start_with?(".") }
+        .each do |specifier|
+          resolved = resolve_import.call(specifier, importer)
+          next if resolved.nil? || resolved.include?("/node_modules/") || seen.include?(resolved)
+
+          seen << resolved
+          # Reachable core files are themselves scanned, so a transitive import
+          # cannot slip past the digest either.
+          external[resolved] = importer unless resolved.start_with?("#{processor_dir}/")
+          queue << resolved
+        end
+    end
+
+    expect(external).not_to be_empty
+
+    aggregate_failures do
+      external.each do |path, imported_by|
+        expect(hashed).to include(path),
+        "#{Pathname.new(path).relative_path_from(Rails.root)} is imported by " \
+          "#{Pathname.new(imported_by).relative_path_from(Rails.root)} " \
+          "but is not in CACHE_DEPENDENCY_GLOBS"
+      end
+    end
+  end
+
   describe "Transpiler#terser" do
     it "can minify code and provide sourcemaps" do
       sources = {
@@ -132,106 +188,7 @@ RSpec.describe AssetProcessor do
       expect(entrypoint(result, "main")["map"]).not_to be_nil
     end
 
-    it "can import the template from a GJS module as source" do
-      sources = {
-        "discourse/components/example.gjs" => <<~GJS,
-          export default <template>
-            <button type="button">
-              Save
-            </button>
-          </template>;
-        GJS
-        "discourse/initializers/example-source.js" => <<~JS,
-          import exampleSource from "../components/example.gjs?template-source";
-
-          globalThis.exampleSource = exampleSource;
-        JS
-      }
-
-      result =
-        AssetProcessor.new.rollup(
-          sources,
-          { entrypoints: { main: { modules: ["discourse/initializers/example-source.js"] } } },
-        )
-
-      context = MiniRacer::Context.new
-      code = entrypoint(result, "main")["code"].sub(/export \{.*\};\s*\z/, "")
-      context.eval(code)
-
-      expect(context.eval("globalThis.exampleSource")).to eq(<<~HBS.strip)
-        <button type="button">
-          Save
-        </button>
-      HBS
-    ensure
-      context&.dispose
-    end
-
-    it "can import a whole GJS module as source" do
-      example = <<~GJS
-        import DButton from "discourse/ui-kit/d-button";
-
-        const label = "Save";
-
-        export default <template>
-          <DButton @label={{label}} />
-        </template>;
-      GJS
-
-      sources = {
-        "discourse/components/example.gjs" => example,
-        "discourse/initializers/example-source.js" => <<~JS,
-          import exampleSource from "../components/example.gjs?source";
-
-          globalThis.exampleSource = exampleSource;
-        JS
-      }
-
-      result =
-        AssetProcessor.new.rollup(
-          sources,
-          { entrypoints: { main: { modules: ["discourse/initializers/example-source.js"] } } },
-        )
-
-      context = MiniRacer::Context.new
-      code = entrypoint(result, "main")["code"].sub(/export \{.*\};\s*\z/, "")
-      context.eval(code)
-
-      expect(context.eval("globalThis.exampleSource")).to eq(example.strip)
-    ensure
-      context&.dispose
-    end
-
-    it "can import a template-less module as source" do
-      example = <<~JS
-        export const MAX_LENGTH = 50;
-      JS
-
-      sources = {
-        "discourse/lib/example.js" => example,
-        "discourse/initializers/example-source.js" => <<~JS,
-          import exampleSource from "../lib/example.js?source";
-
-          globalThis.exampleSource = exampleSource;
-        JS
-      }
-
-      result =
-        AssetProcessor.new.rollup(
-          sources,
-          { entrypoints: { main: { modules: ["discourse/initializers/example-source.js"] } } },
-        )
-
-      context = MiniRacer::Context.new
-      code = entrypoint(result, "main")["code"].sub(/export \{.*\};\s*\z/, "")
-      context.eval(code)
-
-      expect(context.eval("globalThis.exampleSource")).to eq(example.strip)
-    ensure
-      context&.dispose
-    end
-
-    it "can import the same module with both queries" do
+    it "can import module source" do
       example = <<~GJS
         const label = "Save";
 
@@ -242,12 +199,17 @@ RSpec.describe AssetProcessor do
 
       sources = {
         "discourse/components/example.gjs" => example,
+        "discourse/lib/plain.js" => "export const MAX_LENGTH = 50;\n",
         "discourse/initializers/example-source.js" => <<~JS,
-          import wholeSource from "../components/example.gjs?source";
-          import templateSource from "../components/example.gjs?template-source";
+          import whole from "../components/example.gjs?source=file";
+          import template from "../components/example.gjs?source=template";
+          import extensionless from "../components/example?source=template";
+          import templateless from "../lib/plain.js?source=file";
 
-          globalThis.wholeSource = wholeSource;
-          globalThis.templateSource = templateSource;
+          globalThis.whole = whole;
+          globalThis.template = template;
+          globalThis.extensionless = extensionless;
+          globalThis.templateless = templateless;
         JS
       }
 
@@ -261,115 +223,27 @@ RSpec.describe AssetProcessor do
       code = entrypoint(result, "main")["code"].sub(/export \{.*\};\s*\z/, "")
       context.eval(code)
 
-      expect(context.eval("globalThis.wholeSource")).to eq(example.strip)
-      expect(context.eval("globalThis.templateSource")).to eq(
-        '<button type="button">{{label}}</button>',
-      )
+      aggregate_failures do
+        expect(context.eval("globalThis.whole")).to eq(example.strip)
+        expect(context.eval("globalThis.template")).to eq(
+          '<button type="button">{{label}}</button>',
+        )
+        expect(context.eval("globalThis.extensionless")).to eq(
+          '<button type="button">{{label}}</button>',
+        )
+        expect(context.eval("globalThis.templateless")).to eq("export const MAX_LENGTH = 50;")
+      end
     ensure
       context&.dispose
     end
 
-    it "can import source without a file extension" do
+    it "rejects source imports it cannot read" do
+      # `discourse-colocation` resolves a .js id for a component that only exists as a
+      # colocated .hbs, so this reaches the source plugin with nothing behind it.
       sources = {
-        "discourse/components/example.gjs" => "export default <template>Hello</template>;",
+        "discourse/components/colocated.hbs" => "<div>Example</div>",
         "discourse/initializers/example-source.js" => <<~JS,
-          import exampleSource from "../components/example?template-source";
-
-          globalThis.exampleSource = exampleSource;
-        JS
-      }
-
-      result =
-        AssetProcessor.new.rollup(
-          sources,
-          { entrypoints: { main: { modules: ["discourse/initializers/example-source.js"] } } },
-        )
-
-      context = MiniRacer::Context.new
-      code = entrypoint(result, "main")["code"].sub(/export \{.*\};\s*\z/, "")
-      context.eval(code)
-
-      expect(context.eval("globalThis.exampleSource")).to eq("Hello")
-    ensure
-      context&.dispose
-    end
-
-    it "rejects source imports from unsupported file types" do
-      sources = {
-        "discourse/components/example.hbs" => "<div>Example</div>",
-        "discourse/initializers/example-source.js" => <<~JS,
-          import exampleSource from "../components/example.hbs?source";
-
-          globalThis.exampleSource = exampleSource;
-        JS
-      }
-
-      expect do
-        AssetProcessor.new.rollup(
-          sources,
-          { entrypoints: { main: { modules: ["discourse/initializers/example-source.js"] } } },
-        )
-      end.to raise_error(
-        AssetProcessor::TranspileError,
-        /Source imports only support \.js, \.ts, \.gjs, and \.gts files/,
-      )
-    end
-
-    it "rejects source imports with both query flags" do
-      aggregate_failures do
-        %w[source&template-source template-source&source].each do |query|
-          sources = {
-            "discourse/components/example.gjs" => "export default <template>Hello</template>;",
-            "discourse/initializers/example-source.js" => <<~JS,
-              import exampleSource from "../components/example.gjs?#{query}";
-
-              globalThis.exampleSource = exampleSource;
-            JS
-          }
-
-          expect do
-            AssetProcessor.new.rollup(
-              sources,
-              { entrypoints: { main: { modules: ["discourse/initializers/example-source.js"] } } },
-            )
-          end.to raise_error(
-            AssetProcessor::TranspileError,
-            /Source imports cannot use both \?source and \?template-source/,
-          )
-        end
-      end
-    end
-
-    it "rejects source imports with unsupported query flags" do
-      aggregate_failures do
-        %w[source&unknown source=true].each do |query|
-          sources = {
-            "discourse/components/example.gjs" => "export default <template>Hello</template>;",
-            "discourse/initializers/example-source.js" => <<~JS,
-              import exampleSource from "../components/example.gjs?#{query}";
-
-              globalThis.exampleSource = exampleSource;
-            JS
-          }
-
-          expect do
-            AssetProcessor.new.rollup(
-              sources,
-              { entrypoints: { main: { modules: ["discourse/initializers/example-source.js"] } } },
-            )
-          end.to raise_error(
-            AssetProcessor::TranspileError,
-            /Source imports only support the \?source and \?template-source query flags/,
-          )
-        end
-      end
-    end
-
-    it "rejects source imports for modules without their own file" do
-      sources = {
-        "discourse/components/example.hbs" => "<div>Example</div>",
-        "discourse/initializers/example-source.js" => <<~JS,
-          import exampleSource from "../components/example.js?source";
+          import exampleSource from "../components/colocated.js?source=file";
 
           globalThis.exampleSource = exampleSource;
         JS
@@ -383,9 +257,9 @@ RSpec.describe AssetProcessor do
       end.to raise_error(AssetProcessor::TranspileError, /Cannot import source from/)
     end
 
-    it "rejects missing source imports" do
+    it "rejects source imports from outside the bundle" do
       sources = { "discourse/initializers/example-source.js" => <<~JS }
-          import exampleSource from "../components/missing.gjs?source";
+          import exampleSource from "discourse/components/external.gjs?source=file";
 
           globalThis.exampleSource = exampleSource;
         JS
@@ -396,51 +270,6 @@ RSpec.describe AssetProcessor do
           { entrypoints: { main: { modules: ["discourse/initializers/example-source.js"] } } },
         )
       end.to raise_error(AssetProcessor::TranspileError, /Cannot import source from/)
-    end
-
-    it "rejects external source imports" do
-      sources = { "discourse/initializers/example-source.js" => <<~JS }
-          import exampleSource from "discourse/components/example.gjs?source";
-
-          globalThis.exampleSource = exampleSource;
-        JS
-
-      expect do
-        AssetProcessor.new.rollup(
-          sources,
-          { entrypoints: { main: { modules: ["discourse/initializers/example-source.js"] } } },
-        )
-      end.to raise_error(AssetProcessor::TranspileError, /Cannot import source from/)
-    end
-
-    it "requires exactly one template for template source imports" do
-      sources = {
-        "discourse/components/empty.gjs" => "export const value = 1;",
-        "discourse/components/multiple.gjs" => <<~GJS,
-          export const First = <template>First</template>;
-          export const Second = <template>Second</template>;
-        GJS
-      }
-
-      aggregate_failures do
-        %w[empty multiple].each do |example|
-          importer = <<~JS
-            import exampleSource from "../components/#{example}.gjs?template-source";
-
-            globalThis.exampleSource = exampleSource;
-          JS
-
-          expect do
-            AssetProcessor.new.rollup(
-              sources.merge("discourse/initializers/example-source.js" => importer),
-              { entrypoints: { main: { modules: ["discourse/initializers/example-source.js"] } } },
-            )
-          end.to raise_error(
-            AssetProcessor::TranspileError,
-            /Template source imports require exactly one template/,
-          )
-        end
-      end
     end
 
     it "supports decorators and class properties without error" do

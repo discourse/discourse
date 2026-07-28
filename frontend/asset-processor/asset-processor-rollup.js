@@ -10,20 +10,23 @@ import EmberThisFallback from "ember-this-fallback";
 import StripTestSelectorsPlugin from "strip-test-selectors/src/strip-test-selectors";
 import { browsers } from "../discourse/config/targets";
 import babelTransformModuleRenames from "../discourse/lib/babel-transform-module-renames";
+import discourseSourceImports from "../discourse/lib/discourse-source-imports.mjs";
 import AddThemeGlobals from "./add-theme-globals";
 import BabelResolveCoreImports from "./babel-resolve-core-imports";
 import BabelResolvePluginImports from "./babel-resolve-plugin-imports";
+import { Preprocessor } from "./content-tag";
 import discourseColocation from "./rollup-plugins/discourse-colocation";
 import discourseExternalLoader from "./rollup-plugins/discourse-external-loader";
 import discourseFileSearch from "./rollup-plugins/discourse-file-search";
 import discourseGjs from "./rollup-plugins/discourse-gjs";
 import discourseHbs from "./rollup-plugins/discourse-hbs";
-import discourseSourceImports from "./rollup-plugins/discourse-source-imports";
 import discourseTerser from "./rollup-plugins/discourse-terser";
 import discourseVirtualLoader from "./rollup-plugins/discourse-virtual-loader";
 import buildEmberTemplateManipulatorPlugin from "./theme-hbs-ast-transforms";
 import transformActionSyntax from "./transform-action-syntax";
 import createVirtualFs from "./virtual-fs";
+
+const preprocessor = new Preprocessor();
 
 let lastRollupResult;
 let lastRollupError;
@@ -58,7 +61,13 @@ async function performRollup(modules, opts) {
       console.info(level, message);
     },
     plugins: [
-      discourseSourceImports({ basePath, modules }),
+      discourseSourceImports({
+        preprocessor,
+        readSource: (id) =>
+          id.startsWith(basePath)
+            ? modules[id.slice(basePath.length)]
+            : undefined,
+      }),
       discourseFileSearch(),
       discourseVirtualLoader({
         isTheme: !!opts.themeId,
