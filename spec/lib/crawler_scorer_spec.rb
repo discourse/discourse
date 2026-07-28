@@ -42,6 +42,7 @@ RSpec.describe CrawlerScorer do
     expect(breakdown.velocity_score).to eq(0)
     expect(breakdown.churn_score).to eq(0)
     expect(breakdown.rapid_nav_score).to eq(0)
+    expect(breakdown.ip_rotation_score).to eq(0)
     expect(breakdown.referrer_score).to eq(0)
   end
 
@@ -99,6 +100,65 @@ RSpec.describe CrawlerScorer do
         BrowserPageviewEvent.where(session_id: session_id).pluck(:score).uniq,
       ).to contain_exactly(15)
     end
+  end
+
+  it "scores ip rotation when one session is replayed through several addresses" do
+    base = 30.minutes.ago
+    %w[202.46.62.21 202.46.62.55 202.46.62.97].each_with_index do |ip, i|
+      make_event(ip_address: ip, session_id: "rotating-session", created_at: base + (i * 5).seconds)
+    end
+
+    score!
+
+    expect(
+      BrowserPageviewEvent.where(session_id: "rotating-session").pluck(:score).uniq,
+    ).to contain_exactly(30)
+  end
+
+  it "scores ip rotation the same whether or not the addresses cross ASNs" do
+    base = 30.minutes.ago
+    [
+      ["202.46.62.21", 64_496],
+      ["202.46.62.55", 64_496],
+      ["1.2.3.9", 64_497],
+    ].each_with_index do |(ip, asn), i|
+      make_event(
+        ip_address: ip,
+        asn: asn,
+        session_id: "cross-asn-session",
+        created_at: base + (i * 5).seconds,
+      )
+    end
+
+    score!
+
+    expect(
+      BrowserPageviewEvent.where(session_id: "cross-asn-session").pluck(:score).uniq,
+    ).to contain_exactly(30)
+  end
+
+  it "does not score a session that only ever uses two addresses" do
+    base = 30.minutes.ago
+    %w[10.0.0.1 10.0.0.2].each_with_index do |ip, i|
+      make_event(ip_address: ip, session_id: "handover-session", created_at: base + (i * 5).seconds)
+    end
+
+    score!
+
+    expect(BrowserPageviewEvent.where(session_id: "handover-session").pluck(:score).uniq).to eq(
+      [nil],
+    )
+  end
+
+  it "does not score ip changes slow enough to be a network handover" do
+    base = 40.minutes.ago
+    %w[10.0.0.1 10.0.0.2 10.0.0.3].each_with_index do |ip, i|
+      make_event(ip_address: ip, session_id: "slow-session", created_at: base + (i * 11).minutes)
+    end
+
+    score!
+
+    expect(BrowserPageviewEvent.where(session_id: "slow-session").pluck(:score).uniq).to eq([nil])
   end
 
   it "scores referrer discontinuity when most pageviews have no referrer" do
