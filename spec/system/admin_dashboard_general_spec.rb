@@ -7,7 +7,10 @@ describe "Admin Dashboard General Tab" do
   fab!(:user_visit_2) { Fabricate(:user_visit, user: user, mobile: true) }
   fab!(:user_visit_3) { Fabricate(:user_visit, user: user, visited_at: 1.day.ago) }
 
-  before { sign_in(admin) }
+  before do
+    SiteSetting.dashboard_improvements = false
+    sign_in(admin)
+  end
 
   it "displays correct visit counters combining desktop and mobile visits" do
     visit("/admin")
