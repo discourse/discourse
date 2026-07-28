@@ -77,6 +77,59 @@ RSpec.describe FileStore::LocalStore do
     end
   end
 
+  describe "#purge_tombstone" do
+    let(:tombstone_dir) { Dir.mktmpdir }
+
+    before { store.stubs(:tombstone_dir).returns(tombstone_dir) }
+    after { FileUtils.rm_rf(tombstone_dir) }
+
+    it "deletes only expired regular files throughout the tombstone" do
+      freeze_time Time.zone.parse("2026-01-31 12:00:00")
+      hidden_directory = File.join(tombstone_dir, ".hidden", "nested")
+      FileUtils.mkdir_p(hidden_directory)
+      expired_file = File.join(hidden_directory, "expired.png")
+      boundary_file = File.join(tombstone_dir, "boundary.png")
+      newer_file = File.join(tombstone_dir, "newer.png")
+      symlink = File.join(tombstone_dir, "link.png")
+      [expired_file, boundary_file, newer_file].each { |path| File.write(path, "image") }
+      File.symlink(expired_file, symlink)
+      File.utime(32.days.ago.to_time, 32.days.ago.to_time, expired_file)
+      File.utime(31.days.ago.to_time, 31.days.ago.to_time, boundary_file)
+      File.utime((31.days.ago + 1.second).to_time, (31.days.ago + 1.second).to_time, newer_file)
+
+      store.purge_tombstone(30)
+
+      expect(
+        [
+          File.exist?(expired_file),
+          File.exist?(boundary_file),
+          File.exist?(newer_file),
+          File.symlink?(symlink),
+        ],
+      ).to eq([false, false, true, true])
+    end
+
+    it "continues processing siblings and reports entry failures after traversal" do
+      freeze_time Time.zone.parse("2026-01-31 12:00:00")
+      blocked_file = File.join(tombstone_dir, "blocked.png")
+      vanished_file = File.join(tombstone_dir, "vanished.png")
+      deletable_file = File.join(tombstone_dir, "deletable.png")
+      [blocked_file, vanished_file, deletable_file].each do |path|
+        File.write(path, "image")
+        File.utime(32.days.ago.to_time, 32.days.ago.to_time, path)
+      end
+
+      allow(File).to receive(:delete).and_call_original
+      allow(File).to receive(:delete).with(vanished_file).and_raise(Errno::ENOENT)
+      allow(File).to receive(:delete).with(blocked_file).and_raise(Errno::EACCES)
+
+      expect { store.purge_tombstone(30) }.to raise_error do |error|
+        expect(error.message).to include("No such file or directory", "Permission denied")
+      end
+      expect(File.exist?(deletable_file)).to eq(false)
+    end
+  end
+
   describe "#has_been_uploaded?" do
     it "identifies relatives urls" do
       expect(store.has_been_uploaded?("/#{upload_path}/42/0123456789ABCDEF.jpg")).to eq(true)

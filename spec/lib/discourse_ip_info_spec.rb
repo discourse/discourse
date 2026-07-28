@@ -44,6 +44,26 @@ RSpec.describe DiscourseIpInfo do
   describe ".mmdb_download" do
     before { Discourse::Utils.stubs(:execute_command) }
 
+    it "stages the downloaded archive for extraction" do
+      global_setting :maxmind_mirror_url, "https://b.www.example.com/mirror"
+      stub_request(:get, "https://b.www.example.com/mirror/GeoLite2-City.tar.gz").to_return(
+        status: 200,
+        body: "archive",
+      )
+
+      staged_archive_content = nil
+      Discourse::Utils
+        .expects(:execute_command)
+        .with do |*arguments|
+          staged_archive_content = File.binread(arguments[2])
+          arguments.first(2) == %w[tar -xzvf]
+        end
+
+      described_class.mmdb_download("GeoLite2-City")
+
+      expect(staged_archive_content).to eq("archive")
+    end
+
     it "should download the MaxMind databases from MaxMind's download permalinks when `maxmind_license_key` and `maxmind_account_id` global setting has been set" do
       global_setting :maxmind_license_key, "license_key"
       global_setting :maxmind_account_id, "account_id"
