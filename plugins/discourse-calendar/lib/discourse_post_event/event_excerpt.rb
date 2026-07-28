@@ -24,6 +24,7 @@ module DiscoursePostEvent
     def summary(event_node)
       event_name = event_node["data-name"].presence
       location = event_node["data-location"].presence
+      location = EventParser.inline_text(location) if location
 
       parts = []
       # only repeat the name when it differs from the topic title, which is

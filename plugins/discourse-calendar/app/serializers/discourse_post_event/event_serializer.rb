@@ -26,6 +26,7 @@ module DiscoursePostEvent
     attributes :description
     attributes :description_html
     attributes :location
+    attributes :location_html
     attributes :watching_invitee
     attributes :chat_enabled
     attributes :livestream
@@ -214,9 +215,20 @@ module DiscoursePostEvent
       object.url.present?
     end
 
+    def include_description_html?
+      object.description.present?
+    end
+
     def description_html
-      return if object.description.blank?
-      EventParser.linkify_description(object.description, post: object.post)
+      EventParser.cook_inline(object.description, post: object.post)
+    end
+
+    def include_location_html?
+      object.location.present?
+    end
+
+    def location_html
+      EventParser.cook_inline(object.location, post: object.post)
     end
   end
 end

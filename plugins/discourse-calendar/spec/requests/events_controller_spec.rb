@@ -75,7 +75,7 @@ module DiscoursePostEvent
             "description_html"
           ]
         expect(description_html).to include('<a href="https://example.com"')
-        expect(description_html).to include("<br>")
+        expect(description_html).to include("<p>Bring snacks</p>")
       end
 
       it "should return events in ics format" do
