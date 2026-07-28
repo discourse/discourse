@@ -80,11 +80,13 @@ RSpec.describe FileStore::LocalStore do
   describe "#purge_tombstone" do
     let(:tombstone_dir) { Dir.mktmpdir }
 
+    around { |example| Time.use_zone("America/New_York") { example.run } }
+
     before { store.stubs(:tombstone_dir).returns(tombstone_dir) }
     after { FileUtils.rm_rf(tombstone_dir) }
 
     it "deletes only expired regular files throughout the tombstone" do
-      freeze_time Time.zone.parse("2026-01-31 12:00:00")
+      freeze_time Time.zone.parse("2026-03-20 12:00:00")
       hidden_directory = File.join(tombstone_dir, ".hidden", "nested")
       FileUtils.mkdir_p(hidden_directory)
       expired_file = File.join(hidden_directory, "expired.png")
@@ -113,7 +115,7 @@ RSpec.describe FileStore::LocalStore do
     end
 
     it "continues processing siblings and reports entry failures after traversal" do
-      freeze_time Time.zone.parse("2026-01-31 12:00:00")
+      freeze_time Time.zone.parse("2026-03-20 12:00:00")
       blocked_file = File.join(tombstone_dir, "blocked.png")
       vanished_file = File.join(tombstone_dir, "vanished.png")
       deletable_file = File.join(tombstone_dir, "deletable.png")
