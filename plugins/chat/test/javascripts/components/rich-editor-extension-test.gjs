@@ -65,6 +65,24 @@ haha **ok** _cool_
       assert.strictEqual(value, singleMessageSingleUserMarkdown);
     });
 
+    test("escapes HTML in transcript usernames", async function (assert) {
+      const transcriptWithHtmlUsername = `[chat quote="<b>marker</b>;29856;2025-03-20T07:13:04Z"]
+haha
+[/chat]
+`;
+      await setupRichEditor(assert, transcriptWithHtmlUsername);
+
+      const rootElement = document.querySelector(
+        ".ProseMirror .chat-transcript"
+      );
+      assert
+        .dom(".chat-transcript-user .chat-transcript-username", rootElement)
+        .hasText("<b>marker</b>", "renders transcript username markup as text");
+      assert
+        .dom(".chat-transcript-user .chat-transcript-username b", rootElement)
+        .doesNotExist("does not render markup from transcript usernames");
+    });
+
     test("multiple messages from multiple different users", async function (assert) {
       const multiMessagesMultiUserMarkdown = `[chat quote="martin;29853;2025-03-20T07:12:55Z" channel="design gems :tada:" channelId=95 multiQuote=true chained=true]
 test
