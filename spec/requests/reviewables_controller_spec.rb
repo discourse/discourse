@@ -1269,4 +1269,63 @@ RSpec.describe ReviewablesController do
       end
     end
   end
+
+  shared_context "with a private-message reviewable" do
+    fab!(:pm_author, :user)
+    fab!(:pm_recipient, :user)
+    fab!(:outsider_moderator, :moderator)
+    fab!(:pm_topic) { Fabricate(:private_message_topic, user: pm_author, recipient: pm_recipient) }
+    fab!(:pm_post) do
+      Fabricate(
+        :post,
+        topic: pm_topic,
+        user: pm_author,
+        raw: "the confidential body of a private message xyzsecret481",
+      )
+    end
+
+    fab!(:unescalated_pm_reviewable) do
+      ReviewablePost.needs_review!(
+        target: pm_post,
+        created_by: Discourse.system_user,
+        reviewable_by_moderator: true,
+      )
+    end
+  end
+
+  describe "#index" do
+    context "when a reviewable targets a private message" do
+      include_context "with a private-message reviewable"
+
+      it "returns no private-message reviewable, body, or unseen count to a moderator outside the conversation" do
+        sign_in(outsider_moderator)
+
+        get "/review.json"
+
+        expect(response.status).to eq(200)
+        listed_ids = response.parsed_body["reviewables"].map { |reviewable| reviewable["id"] }
+        expect(listed_ids).not_to include(unescalated_pm_reviewable.id)
+        expect(response.body).not_to include(pm_post.raw)
+        expect(response.parsed_body["meta"]["unseen_reviewable_count"]).to eq(0)
+      end
+    end
+  end
+
+  describe "#perform" do
+    context "when a reviewable targets a private message" do
+      include_context "with a private-message reviewable"
+
+      it "returns 404 and leaves the post intact for a moderator outside the conversation" do
+        sign_in(outsider_moderator)
+
+        put "/review/#{unescalated_pm_reviewable.id}/perform/reject_and_delete.json",
+            params: {
+              version: unescalated_pm_reviewable.version,
+            }
+
+        expect(response.status).to eq(404)
+        expect(pm_post.reload.trashed?).to eq(false)
+      end
+    end
+  end
 end
