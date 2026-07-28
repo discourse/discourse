@@ -116,6 +116,7 @@ RSpec.describe Admin::Config::DesignWizardController do
               palettes_user_selectable: true,
               base_font: "lato",
               heading_font: "merriweather",
+              default_text_size: "larger",
               homepage: "categories",
               category_page_style: "categories_boxes",
             }
@@ -126,6 +127,7 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(horizon.dark_color_scheme_id).to eq(dark.id)
         expect(SiteSetting.base_font).to eq("lato")
         expect(SiteSetting.heading_font).to eq("merriweather")
+        expect(SiteSetting.default_text_size).to eq("larger")
         expect(SiteSetting.default_homepage).to eq("categories")
         expect(SiteSetting.desktop_category_page_style).to eq("categories_boxes")
         expect(light.reload.user_selectable).to eq(true)

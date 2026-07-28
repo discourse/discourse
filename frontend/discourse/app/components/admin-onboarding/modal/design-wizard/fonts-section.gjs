@@ -1,6 +1,6 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { MAIN_FONTS } from "discourse/admin/lib/constants";
+import { DEFAULT_TEXT_SIZES, MAIN_FONTS } from "discourse/admin/lib/constants";
 import { fontClass } from "discourse/lib/design-wizard-preview";
 import getURL from "discourse/lib/get-url";
 import { eq } from "discourse/truth-helpers";
@@ -9,7 +9,7 @@ import { i18n } from "discourse-i18n";
 const DesignWizardFontsSection = <template>
   <div class="design-wizard-modal__font-group">
     <span class="design-wizard-modal__font-group-label">
-      {{i18n "admin_onboarding_banner.design_wizard.fonts.body"}}
+      {{i18n "admin_onboarding_banner.design_wizard.fonts.base_font"}}
     </span>
     <div class="design-wizard-modal__font-cards">
       {{#each MAIN_FONTS as |font|}}
@@ -28,7 +28,7 @@ const DesignWizardFontsSection = <template>
 
   <div class="design-wizard-modal__font-group">
     <span class="design-wizard-modal__font-group-label">
-      {{i18n "admin_onboarding_banner.design_wizard.fonts.headings"}}
+      {{i18n "admin_onboarding_banner.design_wizard.fonts.heading_font"}}
     </span>
     <div class="design-wizard-modal__font-cards">
       {{#each MAIN_FONTS as |font|}}
@@ -40,6 +40,25 @@ const DesignWizardFontsSection = <template>
           {{on "click" (fn @onSelectHeadingFont font.key)}}
         >
           {{font.name}}
+        </button>
+      {{/each}}
+    </div>
+  </div>
+
+  <div class="design-wizard-modal__font-group">
+    <span class="design-wizard-modal__font-group-label">
+      {{i18n "admin_onboarding_banner.design_wizard.fonts.default_text_size"}}
+    </span>
+    <div class="design-wizard-modal__text-sizes">
+      {{#each DEFAULT_TEXT_SIZES as |textSize|}}
+        <button
+          type="button"
+          class="design-wizard-modal__text-size
+            {{if (eq textSize @defaultTextSize) '--selected'}}"
+          data-text-size={{textSize}}
+          {{on "click" (fn @onSelectDefaultTextSize textSize)}}
+        >
+          {{textSize}}
         </button>
       {{/each}}
     </div>

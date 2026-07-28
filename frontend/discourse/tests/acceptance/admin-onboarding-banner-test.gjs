@@ -390,6 +390,9 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom(".design-wizard-modal__font-card")
       .exists("the fonts step shows font cards");
     assert
+      .dom(".design-wizard-modal__text-size")
+      .exists({ count: 5 }, "the fonts step offers the default text sizes");
+    assert
       .dom(".sidebar-design-wizard__next")
       .doesNotExist("no next on the last step");
     assert

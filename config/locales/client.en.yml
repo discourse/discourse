@@ -593,8 +593,9 @@ en:
           user_selectable: "Let members switch palettes"
           user_selectable_description: "Show these palettes in a menu members can pick from"
         fonts:
-          body: "Body"
-          headings: "Headings"
+          base_font: "Base font"
+          heading_font: "Heading font"
+          default_text_size: "Default text size"
           more_fonts: "More fonts are available in your font settings"
         homepage:
           topic_list: "Topic list"

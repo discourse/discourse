@@ -17,6 +17,7 @@ class DesignWizard::Apply
     attribute :palettes_user_selectable, :boolean, default: false
     attribute :base_font, :string
     attribute :heading_font, :string
+    attribute :default_text_size, :string
     attribute :homepage, :string
     attribute :category_page_style, :string
 
@@ -31,6 +32,11 @@ class DesignWizard::Apply
               :heading_font,
               inclusion: {
                 in: BaseFontSetting.values.map { |font| font[:value] },
+              },
+              allow_blank: true
+    validates :default_text_size,
+              inclusion: {
+                in: DefaultTextSizeSetting::DEFAULT_TEXT_SIZES,
               },
               allow_blank: true
     validates :homepage, inclusion: { in: %w[latest categories] }, allow_blank: true
@@ -65,6 +71,9 @@ class DesignWizard::Apply
     end
     only_if :heading_font_provided do
       step :update_heading_font
+    end
+    only_if :default_text_size_provided do
+      step :update_default_text_size
     end
     only_if :homepage_provided do
       step :update_homepage
@@ -129,6 +138,14 @@ class DesignWizard::Apply
 
   def update_heading_font(params:, guardian:)
     SiteSetting.set_and_log(:heading_font, params.heading_font, guardian.user)
+  end
+
+  def default_text_size_provided(params:)
+    params.default_text_size.present?
+  end
+
+  def update_default_text_size(params:, guardian:)
+    SiteSetting.set_and_log(:default_text_size, params.default_text_size, guardian.user)
   end
 
   def homepage_provided(params:)

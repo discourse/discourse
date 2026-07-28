@@ -112,12 +112,55 @@ export function applyPreviewFonts(doc, { bodyFont, headingFont }) {
 }
 
 /**
- * Removes any palette and font previews applied to the given document.
+ * Previews a default text size in the given document by swapping the
+ * text-size class the page was rendered with.
+ *
+ * @param {Document} doc - target document
+ * @param {string} size - text size key, e.g. `larger`
+ */
+export function applyPreviewTextSize(doc, size) {
+  const root = doc?.documentElement;
+  if (!root || !size) {
+    return;
+  }
+
+  const current = [...root.classList].find((klass) =>
+    klass.startsWith("text-size-")
+  );
+  if (root.dataset.designWizardOriginalTextSize === undefined) {
+    root.dataset.designWizardOriginalTextSize = current ?? "";
+  }
+  if (current) {
+    root.classList.remove(current);
+  }
+  root.classList.add(`text-size-${size}`);
+}
+
+/**
+ * Removes any palette, font and text size previews applied to the given
+ * document.
  *
  * @param {Document} doc - target document
  */
 export function clearPreview(doc) {
   doc?.getElementById(SCHEME_LINK_ID)?.remove();
-  doc?.documentElement?.style.removeProperty("--font-family");
-  doc?.documentElement?.style.removeProperty("--heading-font-family");
+
+  const root = doc?.documentElement;
+  if (!root) {
+    return;
+  }
+
+  root.style.removeProperty("--font-family");
+  root.style.removeProperty("--heading-font-family");
+
+  const originalTextSize = root.dataset.designWizardOriginalTextSize;
+  if (originalTextSize !== undefined) {
+    [...root.classList]
+      .filter((klass) => klass.startsWith("text-size-"))
+      .forEach((klass) => root.classList.remove(klass));
+    if (originalTextSize) {
+      root.classList.add(originalTextSize);
+    }
+    delete root.dataset.designWizardOriginalTextSize;
+  }
 }

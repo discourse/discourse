@@ -77,6 +77,11 @@ export default class SidebarDesignWizardPanel extends Component {
   }
 
   @action
+  selectDefaultTextSize(size) {
+    this.designWizard.selectDefaultTextSize(size);
+  }
+
+  @action
   save() {
     this.designWizard.save();
   }
@@ -136,8 +141,10 @@ export default class SidebarDesignWizardPanel extends Component {
             <FontsSection
               @bodyFont={{this.designWizard.bodyFont}}
               @headingFont={{this.designWizard.headingFont}}
+              @defaultTextSize={{this.designWizard.defaultTextSize}}
               @onSelectBodyFont={{this.selectBodyFont}}
               @onSelectHeadingFont={{this.selectHeadingFont}}
+              @onSelectDefaultTextSize={{this.selectDefaultTextSize}}
             />
           </Section>
         {{/if}}

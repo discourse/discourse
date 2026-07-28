@@ -31,23 +31,13 @@
     overflow-y: auto;
   }
 
-  &__section {
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
-  }
-
   &__section-title {
     display: block;
-    padding: var(--space-2) var(--space-3) 0;
     font-size: var(--font-down-2);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--primary-medium);
-  }
-
-  &__section-body {
-    padding: var(--space-2) var(--space-3) var(--space-3);
   }
 
   &__theme-cards {
@@ -279,16 +269,41 @@
 
   &__font-cards {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(1, 1fr);
     gap: var(--space-1);
   }
 
   &__font-card {
     padding: var(--space-1);
-    font-size: var(--font-down-1);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  &__text-sizes {
+    display: flex;
+    gap: var(--space-1);
+  }
+
+  &__text-size {
+    flex: 1;
+    padding: var(--space-1);
+    font-size: var(--font-down-1);
+    background: none;
+    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-border-radius);
+    cursor: pointer;
+
+    &:hover {
+      background: var(--d-hover);
+    }
+
+    &.--selected {
+      border-color: var(--tertiary);
+      box-shadow: 0 0 0 1px var(--tertiary);
+      color: var(--tertiary);
+      font-weight: 600;
+    }
   }
 
   &__fonts-note {

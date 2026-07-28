@@ -159,6 +159,7 @@ describe "Admin Onboarding Banner" do
 
       design_wizard_sidebar.next_step
       design_wizard_sidebar.select_body_font("lato")
+      design_wizard_sidebar.select_text_size("larger")
 
       design_wizard_sidebar.save
 
@@ -172,6 +173,7 @@ describe "Admin Onboarding Banner" do
       expect(horizon.color_scheme.name).to eq("Royal")
       expect(horizon.color_scheme.user_selectable).to eq(true)
       expect(SiteSetting.base_font).to eq("lato")
+      expect(SiteSetting.default_text_size).to eq("larger")
 
       # the reload must not cancel the in-flight audit write
       expect(
