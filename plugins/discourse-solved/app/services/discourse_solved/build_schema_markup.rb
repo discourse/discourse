@@ -53,11 +53,12 @@ class DiscourseSolved::BuildSchemaMarkup
       .select { |p| p.cooked.present? && Nokogiri::HTML5.fragment(p.cooked).text.strip.present? }
   end
 
-  def fetch_html(topic:, accepted_answer:, suggested_answers:)
+  def fetch_html(topic:, guardian:, accepted_answer:, suggested_answers:)
     question_json =
       DiscourseSolved::QuestionSchemaSerializer.new(
         topic,
         root: false,
+        scope: guardian,
         accepted_answer: accepted_answer,
         suggested_answers: suggested_answers,
       ).serializable_hash
