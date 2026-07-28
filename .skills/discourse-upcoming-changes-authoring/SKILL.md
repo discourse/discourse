@@ -188,7 +188,7 @@ Current examples, all of which set `requires_plugin_enabled: false`:
 
 | Change | Why it must work with the plugin off |
 |---|---|
-| `enable_events_category_type_setup` (calendar), `enable_support_category_type_setup` (solved), `enable_ideas_category_type_setup` (topic-voting) | Offers a category type whose `enable_plugin` hook turns the plugin on when an admin picks it. Core registers category types *without* the plugin enabled — see `Categories::Types::Base#enable_plugin`. |
+| `enable_support_category_type_setup` (solved) | Offers a category type whose `enable_plugin` hook turns the plugin on when an admin picks it. Core registers category types *without* the plugin enabled — see `Categories::Types::Base#enable_plugin`. |
 | `enable_discourse_reactions_by_default` (reactions) | An `upcoming_change_default_override` that flips `discourse_reactions_enabled` from `false` to `true`. Gating it on the plugin being enabled means it can never fire. |
 | `enable_discourse_workflows` (workflows) | *Is* the plugin's `enabled_site_setting`. That row is how an admin opts into the plugin at all, so it *must* opt out — otherwise the default gate would gate the change on itself. |
 

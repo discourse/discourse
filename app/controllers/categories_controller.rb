@@ -137,6 +137,9 @@ class CategoriesController < ApplicationController
           Categories::TypeRegistry.counts
         end
 
+    # NOTE: Keep in mind types may not be visible if their visible? method relies
+    # on an upcoming change, and that upcoming change's plugin is not configurable,
+    # as is the case with some discourse hosted sites.
     render json: {
              types: Categories::TypeRegistry.list(only_visible: true, guardian:),
              counts: counts_by_type,
