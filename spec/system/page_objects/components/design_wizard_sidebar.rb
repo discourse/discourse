@@ -29,7 +29,10 @@ module PageObjects
 
       def select_body_font(font_key)
         groups = all("#{WIZARD_SELECTOR} .design-wizard-modal__font-group")
-        groups[0].find(".design-wizard-modal__font-card.body-font-#{font_key.tr("_", "-")}").click
+        groups[0].find(".design-wizard-modal__font-select").click
+        find(
+          "[data-identifier='design-wizard-base-font'] .btn.body-font-#{font_key.tr("_", "-")}",
+        ).click
       end
 
       def select_text_size(size)

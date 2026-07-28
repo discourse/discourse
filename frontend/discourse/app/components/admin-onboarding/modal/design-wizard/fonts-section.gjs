@@ -15,32 +15,32 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-const MoreFontsTrigger = <template>
+const ALL_FONTS = [...MAIN_FONTS, ...MORE_FONTS];
+
+const FontTrigger = <template>
   <button class="btn btn-default btn-icon-text" type="button" ...attributes>
-    <span class="d-button-label">{{@label}}</span>
-    {{dIcon "angle-down" class="design-wizard-modal__more-fonts-caret"}}
+    <span class="d-button-label {{fontClass @fontKey}}">{{@label}}</span>
+    {{dIcon "angle-down" class="design-wizard-modal__font-select-caret"}}
   </button>
 </template>;
 
 export default class DesignWizardFontsSection extends Component {
-  get baseMoreFontsLabel() {
-    return this.#moreFontsLabel(this.args.bodyFont);
+  get baseFontLabel() {
+    return this.#fontName(this.args.bodyFont);
   }
 
-  get headingMoreFontsLabel() {
-    return this.#moreFontsLabel(this.args.headingFont);
+  get headingFontLabel() {
+    return this.#fontName(this.args.headingFont);
   }
 
-  #moreFontsLabel(selectedKey) {
-    const font = MORE_FONTS.find((moreFont) => moreFont.key === selectedKey);
+  #fontName(selectedKey) {
     return (
-      font?.name ??
-      i18n("admin_onboarding_banner.design_wizard.fonts.select_more_fonts")
+      ALL_FONTS.find((font) => font.key === selectedKey)?.name ?? selectedKey
     );
   }
 
   @action
-  async selectMoreFont(onSelect, fontKey, dMenu) {
+  async selectFont(onSelect, fontKey, dMenu) {
     await dMenu.close();
     onSelect(fontKey);
   }
@@ -50,47 +50,32 @@ export default class DesignWizardFontsSection extends Component {
       <h4 class="design-wizard-modal__font-group-label">
         {{i18n "admin_onboarding_banner.design_wizard.fonts.base_font"}}
       </h4>
-      <div class="design-wizard-modal__font-cards">
-        {{#each MAIN_FONTS as |font|}}
-          <button
-            type="button"
-            class="design-wizard-modal__font-card
-              {{fontClass font.key}}
-              {{if (eq font.key @bodyFont) '--selected'}}"
-            {{on "click" (fn @onSelectBodyFont font.key)}}
-          >
-            {{font.name}}
-          </button>
-        {{/each}}
-      </div>
-      <span class="design-wizard-modal__font-group-label">
-        {{i18n "admin_onboarding_banner.design_wizard.fonts.more_fonts"}}
-      </span>
       <DMenu
-        @identifier="design-wizard-modal__more-fonts"
-        @triggerClass="design-wizard-modal__more-fonts"
+        @identifier="design-wizard-base-font"
+        @triggerClass="design-wizard-modal__font-select"
+        @contentClass="design-wizard-modal__font-select-content"
         @modalForMobile={{true}}
         @triggerComponent={{component
-          MoreFontsTrigger
-          label=this.baseMoreFontsLabel
+          FontTrigger
+          label=this.baseFontLabel
+          fontKey=@bodyFont
         }}
       >
         <:content as |dMenu|>
-          <DDropdownMenu
-            class="design-wizard-modal__more-fonts-list"
-            as |dropdown|
-          >
-            {{#each MORE_FONTS as |font|}}
+          <DDropdownMenu class="design-wizard-modal__font-list" as |dropdown|>
+            {{#each ALL_FONTS as |font|}}
               <dropdown.item>
                 <DButton
                   @action={{fn
-                    this.selectMoreFont
+                    this.selectFont
                     @onSelectBodyFont
                     font.key
                     dMenu
                   }}
                   @translatedLabel={{font.name}}
-                  class="btn-flat {{fontClass font.key}}"
+                  class="btn-flat
+                    {{fontClass font.key}}
+                    {{if (eq font.key @bodyFont) '--selected'}}"
                 />
               </dropdown.item>
             {{/each}}
@@ -103,47 +88,32 @@ export default class DesignWizardFontsSection extends Component {
       <h4 class="design-wizard-modal__font-group-label">
         {{i18n "admin_onboarding_banner.design_wizard.fonts.heading_font"}}
       </h4>
-      <div class="design-wizard-modal__font-cards">
-        {{#each MAIN_FONTS as |font|}}
-          <button
-            type="button"
-            class="design-wizard-modal__font-card
-              {{fontClass font.key}}
-              {{if (eq font.key @headingFont) '--selected'}}"
-            {{on "click" (fn @onSelectHeadingFont font.key)}}
-          >
-            {{font.name}}
-          </button>
-        {{/each}}
-      </div>
-      <span class="design-wizard-modal__font-group-label">
-        {{i18n "admin_onboarding_banner.design_wizard.fonts.more_fonts"}}
-      </span>
       <DMenu
-        @identifier="design-wizard-more-heading-fonts"
-        @triggerClass="design-wizard-modal__more-fonts"
+        @identifier="design-wizard-heading-font"
+        @triggerClass="design-wizard-modal__font-select"
+        @contentClass="design-wizard-modal__font-select-content"
         @modalForMobile={{true}}
         @triggerComponent={{component
-          MoreFontsTrigger
-          label=this.headingMoreFontsLabel
+          FontTrigger
+          label=this.headingFontLabel
+          fontKey=@headingFont
         }}
       >
         <:content as |dMenu|>
-          <DDropdownMenu
-            class="design-wizard-modal__more-fonts-list"
-            as |dropdown|
-          >
-            {{#each MORE_FONTS as |font|}}
+          <DDropdownMenu class="design-wizard-modal__font-list" as |dropdown|>
+            {{#each ALL_FONTS as |font|}}
               <dropdown.item>
                 <DButton
                   @action={{fn
-                    this.selectMoreFont
+                    this.selectFont
                     @onSelectHeadingFont
                     font.key
                     dMenu
                   }}
                   @translatedLabel={{font.name}}
-                  class="btn-flat {{fontClass font.key}}"
+                  class="btn-flat
+                    {{fontClass font.key}}
+                    {{if (eq font.key @headingFont) '--selected'}}"
                 />
               </dropdown.item>
             {{/each}}

@@ -387,8 +387,8 @@ acceptance("Admin - Onboarding Banner", function (needs) {
 
     await click(".sidebar-design-wizard__next");
     assert
-      .dom(".design-wizard-modal__font-card")
-      .exists("the fonts step shows font cards");
+      .dom(".design-wizard-modal__font-select")
+      .exists({ count: 2 }, "the fonts step offers font dropdowns");
     assert
       .dom(".design-wizard-modal__text-size")
       .exists({ count: 5 }, "the fonts step offers the default text sizes");

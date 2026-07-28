@@ -22,7 +22,7 @@
     }
   }
 
-  &__more-fonts-content {
+  &__font-select-content {
     z-index: 999;
   }
 
@@ -60,8 +60,7 @@
   }
 
   &__homepage-card,
-  &__swatch,
-  &__font-card {
+  &__swatch {
     background: none;
     border: 1px solid var(--content-border-color);
     border-radius: var(--d-border-radius);
@@ -271,25 +270,11 @@
     display: block;
   }
 
-  &__font-cards {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-1);
+  &__font-select {
+    margin-top: var(--space-1);
   }
 
-  &__font-card {
-    padding: var(--space-1);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: var(--font-up-1);
-  }
-
-  &__more-fonts {
-    margin-top: var(--space-2);
-  }
-
-  &__more-fonts-caret {
+  &__font-select-caret {
     margin-left: var(--space-1);
   }
 
@@ -391,7 +376,16 @@
   }
 }
 
-.design-wizard-modal__more-fonts-list {
+.design-wizard-modal__font-list {
   max-height: 40vh;
   overflow-y: auto;
+
+  .btn {
+    font-size: var(--font-up-1);
+  }
+
+  .btn.--selected {
+    color: var(--tertiary);
+    font-weight: 600;
+  }
 }
