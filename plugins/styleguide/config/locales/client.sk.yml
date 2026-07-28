@@ -13,7 +13,6 @@ sk:
   js:
     styleguide:
       title: "Sprievodca štýlom"
-      welcome: "Ak chcete začať, vyberte si z ponuky na ľavej strane."
       categories:
         syntax: Syntax
         atoms: Atómy

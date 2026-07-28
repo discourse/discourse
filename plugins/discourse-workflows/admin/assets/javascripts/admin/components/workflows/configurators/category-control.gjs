@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { service } from "@ember/service";
 import Category from "discourse/models/category";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import CategorySelector from "discourse/select-kit/components/category-selector";
@@ -19,6 +20,8 @@ function categoryIdsFromValue(value) {
 }
 
 export default class CategoryControl extends Component {
+  @service siteSettings;
+
   @tracked selectedCategories = [];
 
   constructor() {
@@ -35,7 +38,10 @@ export default class CategoryControl extends Component {
   }
 
   get clearable() {
-    return !this.args.schema?.required;
+    return (
+      !this.args.schema?.required &&
+      this.siteSettings.allow_uncategorized_topics
+    );
   }
 
   get categoryIds() {

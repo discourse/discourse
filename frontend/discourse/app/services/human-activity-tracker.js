@@ -1,5 +1,6 @@
 import { cancel } from "@ember/runloop";
 import Service, { service } from "@ember/service";
+import { isAutomationDetected } from "discourse/lib/automation-detection";
 import getURL from "discourse/lib/get-url";
 import discourseLater from "discourse/lib/later";
 import {
@@ -28,6 +29,8 @@ export default class HumanActivityTracker extends Service {
   @service siteSettings;
 
   now = () => performance.now();
+
+  trustedEvent = (event) => event.isTrusted;
 
   transport = (body) => {
     navigator.sendBeacon?.(
@@ -58,6 +61,10 @@ export default class HumanActivityTracker extends Service {
   }
 
   start() {
+    if (isAutomationDetected()) {
+      return;
+    }
+
     this.#sessionId = document.querySelector(
       "meta[name=discourse-track-view-session-id]"
     )?.content;
@@ -130,11 +137,19 @@ export default class HumanActivityTracker extends Service {
   }
 
   #handleActivity(event) {
+    if (!this.trustedEvent(event)) {
+      return;
+    }
+
     this.#counts[EVENT_COUNTERS[event.type]]++;
     this.#markInteraction();
   }
 
   #handleMouseMove(event) {
+    if (!this.trustedEvent(event)) {
+      return;
+    }
+
     const position = { x: event.clientX, y: event.clientY };
 
     if (this.#lastPosition) {

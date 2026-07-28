@@ -8,7 +8,6 @@ nb_NO:
   js:
     styleguide:
       title: "Styleguide"
-      welcome: "For å komme i gang, velg en seksjon fra menyen til venstre."
       categories:
         atoms: Atomer
         molecules: Molekyler

@@ -131,3 +131,7 @@ et:
           fields:
             provider:
               label: Teenusepakkuja
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "Kanal"
+        message: "Sõnum"

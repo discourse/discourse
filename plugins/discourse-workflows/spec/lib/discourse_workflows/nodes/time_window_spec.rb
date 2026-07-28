@@ -398,4 +398,33 @@ RSpec.describe DiscourseWorkflows::Nodes::TimeWindow::V1 do
       expect(errors).to be_empty
     end
   end
+
+  describe "required time fields" do
+    def issues_for(configuration)
+      node =
+        DiscourseWorkflows::WorkflowSnapshot::SnapshotNode.new(
+          id: "n1",
+          type: "condition:time_window",
+          type_version: "1.0",
+          name: "Time window",
+          parameters: configuration,
+        )
+      DiscourseWorkflows::NodeIssues.for_node(node, described_class)
+    end
+
+    it "flags blank times when the time range is enabled" do
+      issues = issues_for("use_time_range" => true, "start_time" => "", "end_time" => "")
+
+      expect(issues).to contain_exactly(
+        { path: "start_time", name: "start_time", message: "required" },
+        { path: "end_time", name: "end_time", message: "required" },
+      )
+    end
+
+    it "ignores blank times when the time range is disabled" do
+      expect(
+        issues_for("use_time_range" => false, "start_time" => "", "end_time" => ""),
+      ).to be_empty
+    end
+  end
 end

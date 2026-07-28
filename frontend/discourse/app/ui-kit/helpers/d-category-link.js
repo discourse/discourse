@@ -134,13 +134,6 @@ function buildTopicCount(count) {
 }
 
 export function defaultCategoryLinkRenderer(category, opts) {
-  // not ideal as we have to call it manually and we pass a fake category object
-  // but there's not way around it for now
-  let descriptionText = applyValueTransformer(
-    "category-description-text",
-    escapeExpression(get(category, "description_text")),
-    { category }
-  );
   let restricted = get(category, "read_restricted");
   let url = opts.url
     ? opts.url
@@ -187,7 +180,6 @@ export function defaultCategoryLinkRenderer(category, opts) {
         ? `style="--category-badge-color: #${category.color}"`
         : ""
     }
-    ${descriptionText ? 'title="' + descriptionText + '" ' : ""}
   >`;
 
   if (opts.styleType === "icon" && opts.icon) {

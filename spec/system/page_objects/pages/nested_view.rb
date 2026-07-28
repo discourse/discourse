@@ -239,6 +239,91 @@ module PageObjects
         has_css?(".nested-sort-selector__trigger", text: I18n.t("js.nested_replies.sort.#{sort}"))
       end
 
+      def has_root_post_count?(count)
+        has_css?(".nested-view__roots > .nested-post", count: count)
+      end
+
+      def current_scroll_position
+        page.evaluate_script("window.scrollY")
+      end
+
+      def with_root_pagination_paused(topic, &block)
+        pattern = %r{/n/#{Regexp.escape(topic.slug)}/#{topic.id}\.json\?.*\bpage=1(?:&|$)}
+        PageObjects::CDP.new.with_paused_request(pattern, &block)
+      end
+
+      def disable_cloaking
+        page.execute_script(
+          'require("discourse/modifiers/post-stream-viewport-tracker").disableCloaking()',
+        )
+        self
+      end
+
+      def scroll_to_bottom
+        page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+        self
+      end
+
+      def user_scroll_by(distance:)
+        start_position = current_scroll_position
+
+        page.driver.with_playwright_page do |playwright_page|
+          viewport = playwright_page.viewport_size
+          playwright_page.mouse.move(viewport[:width] * 0.65, viewport[:height] * 0.5)
+          playwright_page.mouse.wheel(0, distance)
+        end
+
+        page.evaluate_async_script(<<~JS, start_position)
+          const [startPosition, done] = arguments;
+          let previousPosition;
+          let stableFrames = 0;
+
+          const finishWhenStable = () => {
+            const currentPosition = window.scrollY;
+            const hasMoved = currentPosition !== startPosition;
+            stableFrames =
+              hasMoved && currentPosition === previousPosition
+                ? stableFrames + 1
+                : 0;
+            previousPosition = currentPosition;
+
+            if (stableFrames === 2) {
+              done(currentPosition);
+            } else {
+              requestAnimationFrame(finishWhenStable);
+            }
+          };
+
+          requestAnimationFrame(finishWhenStable);
+        JS
+      end
+
+      def centered_root_post_number
+        page.evaluate_script(<<~JS)
+          (() => {
+            const roots = document.querySelector(".nested-view__roots");
+            const rootsRect = roots.getBoundingClientRect();
+            const element = document.elementFromPoint(
+              rootsRect.left + rootsRect.width / 2,
+              window.innerHeight / 2
+            );
+            const root = element?.closest(".nested-post");
+            const article = root?.querySelector(
+              ":scope > .nested-post__main > [data-post-number]"
+            );
+
+            return Number(article?.dataset.postNumber);
+          })()
+        JS
+      end
+
+      def scroll_to_post(post)
+        page.execute_script(<<~JS)
+          document.querySelector("[data-post-number='#{post.post_number}']").scrollIntoView();
+        JS
+        self
+      end
+
       def has_op_post?
         has_css?(".nested-view__op")
       end
@@ -510,6 +595,40 @@ module PageObjects
         find(".nested-sort-selector__trigger").click
         find(".dropdown-menu .btn", text: I18n.t("js.nested_replies.sort.#{sort}")).click
         self
+      end
+
+      def scroll_to_position(scroll_y)
+        page.evaluate_async_script(<<~JS)
+          const done = arguments[0];
+          window.scrollTo(0, #{scroll_y});
+          setTimeout(done, 50);
+        JS
+        self
+      end
+
+      def scroll_during_pending_restore(distance:)
+        page.evaluate_async_script(<<~JS)
+          const done = arguments[0];
+          const positions = { restored: window.scrollY };
+
+          setTimeout(() => {
+            window.scrollBy(0, #{distance});
+            positions.afterUserScroll = window.scrollY;
+          }, 20);
+
+          setTimeout(() => {
+            positions.afterRetries = window.scrollY;
+            done(positions);
+          }, 250);
+        JS
+      end
+
+      def scroll_position_after_restore_window
+        page.evaluate_async_script(<<~JS)
+          const done = arguments[0];
+          const { SCROLL_RESTORE_WINDOW_MS } = require("discourse/components/nested");
+          setTimeout(() => done(window.scrollY), SCROLL_RESTORE_WINDOW_MS + 50);
+        JS
       end
 
       # ── Deletion/recovery assertions ─────────────────────────────

@@ -328,11 +328,7 @@ class TopicOgImageGenerator
 
       File.write(svg_path, svg)
 
-      Discourse::Utils.execute_command(
-        "nice",
-        "-n",
-        "10",
-        "convert",
+      ImageMagick.magick(
         "-background",
         "none",
         "-size",
@@ -343,7 +339,10 @@ class TopicOgImageGenerator
         "-define",
         "png:compression-level=9",
         png_path,
-        timeout: 20_000,
+        read: [svg_path],
+        write: [dir],
+        nice: 10,
+        timeout: 20,
       )
 
       return nil unless File.exist?(png_path)

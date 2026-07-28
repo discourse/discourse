@@ -49,6 +49,25 @@ RSpec.describe SiteSetting do
     end
   end
 
+  describe "pending_users_reminder_delay_minutes" do
+    it "defaults to 30 while the update_pending_users_reminder_default change is enabled" do
+      expect(SiteSetting.pending_users_reminder_delay_minutes).to eq(480)
+
+      SiteSetting.update_pending_users_reminder_default = true
+      expect(SiteSetting.pending_users_reminder_delay_minutes).to eq(30)
+
+      SiteSetting.update_pending_users_reminder_default = false
+      expect(SiteSetting.pending_users_reminder_delay_minutes).to eq(480)
+    end
+
+    it "keeps a value an admin has set when the change is enabled" do
+      SiteSetting.pending_users_reminder_delay_minutes = 60
+
+      SiteSetting.update_pending_users_reminder_default = true
+      expect(SiteSetting.pending_users_reminder_delay_minutes).to eq(60)
+    end
+  end
+
   describe "top_menu" do
     describe "validations" do
       it "always demands latest" do

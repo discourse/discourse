@@ -1,6 +1,5 @@
 import EmberObject from "@ember/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import PostPolicy from "../components/post-policy";
@@ -96,14 +95,14 @@ export default {
         "policy_revoked"
       );
 
-      api.modifyClass(
-        "model:post",
-        (Superclass) =>
-          class extends Superclass {
-            @autoTrackedArray policy_accepted_by = [];
-            @autoTrackedArray policy_not_accepted_by = [];
-          }
-      );
+      api.addModelField("post", "policy_accepted_by", {
+        type: "array",
+        defaultValue: [],
+      });
+      api.addModelField("post", "policy_not_accepted_by", {
+        type: "array",
+        defaultValue: [],
+      });
 
       api.decorateCookedElement(attachPolicy, {
         onlyStream: false,

@@ -787,7 +787,10 @@ export default class NestedController extends Controller {
     const topicId = this.topic?.id;
     try {
       const postData = await ajax(`/posts/${data.id}.json`);
-      if (this.topic?.id !== topicId) {
+      if (
+        this.topic?.id !== topicId ||
+        !this.#postBelongsToTopic(postData, topicId)
+      ) {
         return;
       }
 
@@ -861,6 +864,13 @@ export default class NestedController extends Controller {
     return ancestors.length > maxDepth ? ancestors[maxDepth - 1] : replyTo;
   }
 
+  #postBelongsToTopic(postData, topicId = this.topic?.id) {
+    return (
+      postData?.topic_id != null &&
+      String(postData.topic_id) === String(topicId)
+    );
+  }
+
   #isPostKnown(postId) {
     if (this.rootNodes.some((n) => n.post.id === postId)) {
       return true;
@@ -885,7 +895,10 @@ export default class NestedController extends Controller {
     const topicId = this.topic?.id;
     try {
       const postData = await ajax(`/posts/${data.id}.json`);
-      if (this.topic?.id !== topicId) {
+      if (
+        this.topic?.id !== topicId ||
+        !this.#postBelongsToTopic(postData, topicId)
+      ) {
         return;
       }
 
@@ -943,7 +956,10 @@ export default class NestedController extends Controller {
 
     const newNodes = [];
     for (const result of results) {
-      if (result.status === "fulfilled") {
+      if (
+        result.status === "fulfilled" &&
+        this.#postBelongsToTopic(result.value, topicId)
+      ) {
         newNodes.push(this.#processNode({ ...result.value, children: [] }));
       }
     }

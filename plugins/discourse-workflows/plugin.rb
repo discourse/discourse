@@ -105,6 +105,7 @@ after_initialize do
     require_relative "lib/discourse_workflows/ai/tools/workflow_ask_questions"
     require_relative "lib/discourse_workflows/ai/tools/workflow_resolve_entity"
     require_relative "lib/discourse_workflows/ai/tools/search_chat_channels"
+    require_relative "lib/discourse_workflows/ai/tools/search_chat_integration_channels"
     require_relative "lib/discourse_workflows/ai/tools/workflow_script_context"
     require_relative "lib/discourse_workflows/ai/tools/workflow_validate_script"
     require_relative "lib/discourse_workflows/ai_workflow_author"
@@ -122,6 +123,15 @@ after_initialize do
                     :topic_admin_button_workflows,
                     include_condition: -> { scope.is_admin? } do
     DiscourseWorkflows::WorkflowDependency.cached_topic_admin_buttons
+  end
+
+  add_to_serializer :site,
+                    :post_button_workflows,
+                    include_condition: -> do
+                      scope.user.present? &&
+                        DiscourseWorkflows::WorkflowDependency.cached_post_buttons.present?
+                    end do
+    DiscourseWorkflows::WorkflowDependency.post_buttons_for(scope.user)
   end
 
   add_to_serializer :current_user,

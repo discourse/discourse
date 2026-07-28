@@ -3333,7 +3333,7 @@ uk:
     filter_input:
       clear: "Очистити фільтр"
     filter_controls:
-      reset: "Скинути фільтр"
+      reset: "Скинути"
       toggle: "Перемкнути випадаючі фільтри"
     d_icon_grid_picker:
       select_icon: "Виберіть іконку"
@@ -8443,6 +8443,9 @@ uk:
         sidebar: "Бічна панель"
         header_dropdown: "Випадаючий заголовок"
         legacy: "Стара версія"
+      duplicate_topic_titles:
+        disallowed: "Заборонено"
+        allowed: "Дозволено"
       backups:
         title: "Backups"
         files_title: "Резервні файли"
@@ -8693,7 +8696,6 @@ uk:
           last_attempt: "Процес встановлення не завершено, остання спроба:"
           remote_branch: "Назва гілки (не обов’язково)"
           remote_branch_placeholder: "Виберіть конкретну гілку або залиште поле порожнім"
-          public_key: "Надайте доступ до сховища з наступним відкритим ключем:"
           install: "Install"
           installed: "Встановлена"
           screenshot: "Скріншот %{name}"
@@ -10164,6 +10166,7 @@ uk:
         uploading: "Завантаження…"
         name: "Ім'я"
         group: "Група"
+        all_groups: "Усі групи"
         created_by: "Створено"
         image: "Зображення"
         alt: "попередній перегляд смайлів"

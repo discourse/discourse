@@ -11,6 +11,26 @@ describe DiscoursePostEvent::EventSerializer do
   fab!(:topic) { Fabricate(:topic, category: category) }
   fab!(:post) { Fabricate(:post, topic: topic) }
 
+  context "with a location" do
+    fab!(:event) { Fabricate(:event, post: post, location: "[RSVP](https://zoom.example.com)") }
+
+    it "serializes location_html with rendered links" do
+      json = DiscoursePostEvent::EventSerializer.new(event, scope: Guardian.new).as_json
+
+      expect(json[:event][:location_html]).to eq(
+        DiscoursePostEvent::EventParser.cook_inline(event.location, post: event.post),
+      )
+      expect(json[:event][:location_html]).to include('href="https://zoom.example.com"')
+    end
+
+    it "omits location_html without a location" do
+      event.update_columns(location: nil)
+      json = DiscoursePostEvent::EventSerializer.new(event, scope: Guardian.new).as_json
+
+      expect(json[:event]).not_to have_key(:location_html)
+    end
+  end
+
   context "with a private event" do
     fab!(:private_event) do
       Fabricate(:event, post: post, status: DiscoursePostEvent::Event.statuses[:private])

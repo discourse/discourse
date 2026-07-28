@@ -5,16 +5,41 @@
 # https://translate.discourse.org/
 
 vi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_patreon: "Discourse Patreon"
   js:
     login:
       patreon:
         name: Patreon
         title: Đăng nhập bằng Patreon
     patreon:
+      title: 'Patreon'
+      header:
+        rules: 'Bộ lọc'
       group: 'Nhóm'
+      rewards: 'Phần thưởng'
       filter: 'Lọc'
+      help_text: 'Bạn có thể đồng bộ một nhóm trên Discourse với một hoặc nhiều mức phần thưởng (Reward tier) trên Patreon.'
+      last_synced: 'Đồng bộ lần cuối'
       edit: 'Sửa'
       delete: 'Xóa'
       save: 'Lưu lại'
+      update_data: 'Cập nhật dữ liệu Patreon & Đồng bộ nhóm'
+      refresh_page: 'Dữ liệu mới đã được tải về từ Patreon API. Vui lòng tải lại trang.'
+      select_group: 'Chọn một nhóm'
       field:
-        email: "Email"
+        id: "Mã định danh (ID)"
+        email: "Thư điện tử (Email)"
+        amount_cents: "Số tiền (tính theo Cent)"
+        rewards: "Mức phần thưởng"
+        declined_since: "Bị từ chối thanh toán từ ngày"
+        more_details:
+          label: "Thanh toán & Chi tiết khác"
+          help_text:
+            email_available: "Cuộn xuống góc dưới bên phải trang để xem lịch sử ủng hộ của tài khoản Patreon này."
+            email_not_available: "Chọn thành viên Patreon và cuộn xuống góc dưới bên phải trang để xem lịch sử ủng hộ."
+      donation_prompt:
+        body: "<h1>Xin chào bạn đọc!</h1>\n\n<p>Bạn có yêu thích trang web của chúng tôi? Bạn có muốn đóng góp cho một mục tiêu ý nghĩa?</p>\n\n<p>Nếu cảm thấy trang web hữu ích và yêu thích cộng đồng này, chúng tôi rất mong nhận được sự ủng hộ từ bạn. \nNhững khoản đóng góp giúp hệ thống vận hành ổn định và đảm bảo cộng đồng tiếp tục phát triển bền vững trong nhiều năm tới. \nMọi sự đóng góp đều vô cùng quý giá và sẽ được sử dụng đúng mục đích.</p>\n\n<p>Cảm ơn bạn đã đồng hành và ủng hộ!</p>\n\n<p>  \n<a class=\"btn btn-large btn-danger\" href=\"%{campaignUrl}\">Trở thành nhà tài trợ (Patron)</a>\n</p>\n"

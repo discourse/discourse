@@ -13,7 +13,6 @@ ru:
   js:
     styleguide:
       title: "Руководство по стилю"
-      welcome: "Чтобы начать, выберите раздел в меню слева."
       categories:
         syntax: Синтаксис
         atoms: Атомы

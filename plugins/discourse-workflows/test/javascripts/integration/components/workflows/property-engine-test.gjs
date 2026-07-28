@@ -413,6 +413,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
   });
 
   test("can clear optional category controls", async function (assert) {
+    this.siteSettings.allow_uncategorized_topics = true;
+
     this.setProperties({
       configuration: {
         category_id: 2,
@@ -461,6 +463,57 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await click(header.el().querySelector(".btn-clear"));
 
     assert.strictEqual(this.formApi.get("category_id"), "");
+  });
+
+  test("hides the clear button on category controls when uncategorized topics are disallowed", async function (assert) {
+    this.siteSettings.allow_uncategorized_topics = false;
+
+    this.setProperties({
+      configuration: {
+        category_id: 2,
+      },
+      formApi: null,
+      nodeType: "trigger:topic_created",
+      schema: {
+        category_id: {
+          type: "integer",
+          required: false,
+          ui: {
+            control: "category",
+          },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const categoryChooser = selectKit(".category-chooser");
+    const header = categoryChooser.header();
+
+    assert.strictEqual(header.value(), "2");
+    assert
+      .dom(".btn-clear", header.el())
+      .doesNotExist("clearing would move the topic to uncategorized");
   });
 
   test("can clear optional group controls", async function (assert) {

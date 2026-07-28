@@ -251,6 +251,7 @@ describe AdminDashboardEngagement do
         private_group = Fabricate(:group)
         private_cat = Fabricate(:private_category, group: private_group, read_restricted: true)
         Fabricate(:topic, category: private_cat, created_at: Time.zone.local(2026, 4, 10))
+        Jobs::MaintainCategoryActivityDailyRollups.new.execute
 
         result =
           described_class.build(
@@ -268,6 +269,7 @@ describe AdminDashboardEngagement do
         private_group = Fabricate(:group)
         private_cat = Fabricate(:private_category, group: private_group, read_restricted: true)
         Fabricate(:topic, category: private_cat, created_at: Time.zone.local(2026, 4, 10))
+        Jobs::MaintainCategoryActivityDailyRollups.new.execute
 
         result =
           described_class.build(
@@ -285,6 +287,7 @@ describe AdminDashboardEngagement do
         other = Fabricate(:category)
         Fabricate(:topic, category: selected, created_at: Time.zone.local(2026, 4, 10))
         Fabricate(:topic, category: other, created_at: Time.zone.local(2026, 4, 10))
+        Jobs::MaintainCategoryActivityDailyRollups.new.execute
 
         AdminDashboardSectionConfiguration.update_setting(
           section_id: "engagement",

@@ -772,6 +772,13 @@ module DiscourseTagging
     SQL
   end
 
+  def self.without_pm_only_tags(tags, guardian)
+    return tags if guardian.can_tag_pms?
+
+    topic_count_column = Tag.topic_count_column(guardian)
+    tags.reject { |tag| tag.pm_topic_count > 0 && tag.public_send(topic_count_column) == 0 }
+  end
+
   def self.hidden_tags(guardian = nil)
     if guardian&.is_admin?
       Tag.none

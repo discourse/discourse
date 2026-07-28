@@ -55,6 +55,7 @@ import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
 import { reset as resetLinkLookup } from "discourse/lib/link-lookup";
 import { resetMentions } from "discourse/lib/link-mentions";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
+import { resetModelExtensions } from "discourse/lib/model-extensions";
 import { resetModelTransformers } from "discourse/lib/model-transformers";
 import { resetNotificationTypeRenderers } from "discourse/lib/notification-types-manager";
 import { cloneJSON, deepMerge } from "discourse/lib/object";
@@ -261,6 +262,7 @@ export function testCleanup(container, app) {
   resetItemSelectCallbacks();
   resetUserMenuTabs();
   resetLinkLookup();
+  resetModelExtensions();
   resetModelTransformers();
   resetMentions();
   resetProsemirrorEngine();

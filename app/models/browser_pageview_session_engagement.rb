@@ -2,17 +2,18 @@
 
 class BrowserPageviewSessionEngagement < ActiveRecord::Base
   MAX_SESSION_ID_LENGTH = 32
+  BEACON_SETTLE_PERIOD = 10.minutes
 
-  GREATEST_COLUMNS = %i[
+  INTERACTION_COLUMNS = %i[
     mouse_move_events
     click_events
     key_events
     scroll_events
     touch_events
     back_forward_events
-    engaged_seconds
-    time_to_first_interaction_ms
   ]
+
+  GREATEST_COLUMNS = INTERACTION_COLUMNS + %i[engaged_seconds time_to_first_interaction_ms]
 
   def self.upsert_from_payload(
     session_id:,

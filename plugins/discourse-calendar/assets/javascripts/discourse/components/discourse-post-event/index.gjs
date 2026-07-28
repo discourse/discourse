@@ -22,7 +22,7 @@ import EventStatus from "./event-status";
 import Image from "./image";
 import Invitees from "./invitees";
 import Livestream from "./livestream";
-import Location from "./location";
+import DiscoursePostEventLocation from "./location";
 import MoreMenu from "./more-menu";
 import Status from "./status";
 import Url from "./url";
@@ -352,10 +352,10 @@ export default class DiscoursePostEvent extends Component {
                 Url=(component Url url=event.url)
                 Description=(component
                   Description
-                  description=event.description
+                  descriptionHtml=event.descriptionHtml
                   clamp=this.clampDescription
                 )
-                Location=(component Location location=event.location)
+                Location=(component DiscoursePostEventLocation event=event)
                 Dates=(component
                   Dates event=event expiredAndRecurring=this.expiredAndRecurring
                 )
@@ -385,7 +385,7 @@ export default class DiscoursePostEvent extends Component {
                   {{this.recurrenceLabel}}
                 </InfoSection>
               {{/if}}
-              <Location @location={{event.location}} />
+              <DiscoursePostEventLocation @event={{event}} />
               <Url @url={{event.url}} />
               <ChatChannel @event={{event}} />
 

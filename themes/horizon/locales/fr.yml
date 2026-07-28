@@ -5,7 +5,7 @@
 # https://translate.discourse.org/
 
 fr:
-  solved: "Résolus"
+  solved: "Résolu"
   posted: "publié"
   by_username: "par @%{username}"
   vote_count:

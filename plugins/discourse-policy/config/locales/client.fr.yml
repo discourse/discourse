@@ -28,7 +28,7 @@ fr:
           description: Les groupes associés à cette politique
         version:
           label: Version
-          description: La version de la politique, la modification de la version forcera les utilisateurs à devoir l'accepter à nouveau
+          description: La version de la politique. La modification de la version obligera les utilisateurs à l'accepter à nouveau
         renew:
           label: Renouveler
           description: Renouveler la police tous les x jours

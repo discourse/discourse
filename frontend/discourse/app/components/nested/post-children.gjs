@@ -27,6 +27,7 @@ export default class NestedPostChildren extends Component {
   // Tracks whether we've fetched from the server yet (vs only having preloaded data)
   _fetchedFromServer = false;
   _identityKey = null;
+  _activeCacheKey = null;
 
   constructor() {
     super(...arguments);
@@ -62,8 +63,11 @@ export default class NestedPostChildren extends Component {
     this._hydrateFromArgs();
   }
 
-  _cacheKey(parentPostNumber = this.args.parentPostNumber) {
-    return `${this.args.topic?.id}:${parentPostNumber}`;
+  _cacheKeyFor(
+    parentPostNumber = this.args.parentPostNumber,
+    topicId = this.args.topic?.id
+  ) {
+    return `${topicId}:${parentPostNumber}`;
   }
 
   _hydrateFromArgs() {
@@ -72,6 +76,7 @@ export default class NestedPostChildren extends Component {
     }
 
     this._identityKey = this.identityKey;
+    this._activeCacheKey = this._cacheKeyFor();
     this.childNodes = [];
     this.loading = false;
     this.page = 0;
@@ -80,7 +85,7 @@ export default class NestedPostChildren extends Component {
     this.loaded = false;
     this._fetchedFromServer = false;
 
-    const cached = this.args.fetchedChildrenCache?.get(this._cacheKey());
+    const cached = this.args.fetchedChildrenCache?.get(this._activeCacheKey);
     if (cached) {
       this.childNodes = cached.childNodes;
       this.page = cached.page;
@@ -107,11 +112,11 @@ export default class NestedPostChildren extends Component {
     }
   }
 
-  _reportToCache(parentPostNumber = this.args.parentPostNumber) {
-    if (!this.loaded || !parentPostNumber || !this.args.fetchedChildrenCache) {
+  _reportToCache(cacheKey = this._activeCacheKey) {
+    if (!this.loaded || !cacheKey || !this.args.fetchedChildrenCache) {
       return;
     }
-    this.args.fetchedChildrenCache.set(this._cacheKey(parentPostNumber), {
+    this.args.fetchedChildrenCache.set(cacheKey, {
       childNodes: this.childNodes,
       page: this.page,
       hasMore: this.hasMore,
@@ -162,6 +167,9 @@ export default class NestedPostChildren extends Component {
   }
 
   async loadChildren() {
+    const identityKey = this.identityKey;
+    const topicId = this.args.topic?.id;
+
     this.loading = true;
     try {
       const query = new URLSearchParams({
@@ -171,11 +179,15 @@ export default class NestedPostChildren extends Component {
       const data = await ajax(
         `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.parentPostNumber}.json?${query}`
       );
-      if (this.isDestroying || this.isDestroyed) {
+      if (
+        this.isDestroying ||
+        this.isDestroyed ||
+        this.identityKey !== identityKey
+      ) {
         return;
       }
-      this.childNodes = (data.children || []).map((child) =>
-        this._processNode(child)
+      this.childNodes = this._childrenForTopic(data.children, topicId).map(
+        (child) => this._processNode(child)
       );
       this.page = data.page;
       this.hasMore = data.has_more || false;
@@ -199,6 +211,9 @@ export default class NestedPostChildren extends Component {
       return;
     }
 
+    const identityKey = this.identityKey;
+    const topicId = this.args.topic?.id;
+
     this.loadingMore = true;
     try {
       // First server fetch after preloaded data: get page 0 and merge
@@ -213,11 +228,15 @@ export default class NestedPostChildren extends Component {
       const data = await ajax(
         `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.parentPostNumber}.json?${query}`
       );
-      if (this.isDestroying || this.isDestroyed) {
+      if (
+        this.isDestroying ||
+        this.isDestroyed ||
+        this.identityKey !== identityKey
+      ) {
         return;
       }
-      const newNodes = (data.children || []).map((child) =>
-        this._processNode(child)
+      const newNodes = this._childrenForTopic(data.children, topicId).map(
+        (child) => this._processNode(child)
       );
 
       if (!this._fetchedFromServer) {
@@ -247,6 +266,13 @@ export default class NestedPostChildren extends Component {
         this.loadingMore = false;
       }
     }
+  }
+
+  _childrenForTopic(children, topicId) {
+    return (children || []).filter(
+      (child) =>
+        child.topic_id != null && String(child.topic_id) === String(topicId)
+    );
   }
 
   _processNode(nodeData) {

@@ -38,11 +38,6 @@ export default class ComposerEventEditor extends Component {
   }
 
   @action
-  urlTester(value) {
-    return /^(https?:\/\/|www\.|mailto:)/i.test(value);
-  }
-
-  @action
   onChange(state) {
     this.#pendingState = state;
   }
@@ -90,7 +85,6 @@ export default class ComposerEventEditor extends Component {
       stateToEventInput(state),
       this.siteSettings
     );
-    delete params.description;
 
     const newBlock = buildEventBlock(params, state.description);
     if (newBlock === parsed.full) {
@@ -122,7 +116,6 @@ export default class ComposerEventEditor extends Component {
     >
       <CompactEventEditor
         @initialState={{this.initialState}}
-        @urlTester={{this.urlTester}}
         @onChange={{this.onChange}}
         @onCommit={{this.flush}}
         @onDelete={{this.onDelete}}

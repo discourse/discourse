@@ -84,6 +84,10 @@ nl:
       setting_update_failed: "Instellingen bijwerken mislukt: %{errors}"
     provider:
       slack:
+        errors:
+          auth_error: "Het verstrekte verificatietoken is ongeldig"
+          action_prohibited: "De bot heeft geen toestemming om berichten in dat kanaal te plaatsen"
+          channel_not_found: "Het opgegeven kanaal bestaat niet op Slack"
         status:
           header: |
             *Regels voor dit kanaal*

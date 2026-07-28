@@ -3331,7 +3331,7 @@ pl_PL:
     filter_input:
       clear: "Wyczyść filtr"
     filter_controls:
-      reset: "Zresetuj filtr"
+      reset: "Przywróć"
       toggle: "Przełącz filtry rozwijane"
     d_icon_grid_picker:
       select_icon: "Wybierz ikonę"
@@ -8447,6 +8447,10 @@ pl_PL:
         legacy: "Przestarzały"
       homepage:
         top_menu_default: "Pierwsza pozycja w górnym menu"
+      duplicate_topic_titles:
+        disallowed: "Niedozwolone"
+        allowed_across_categories: "Dozwolone we wszystkich kategoriach"
+        allowed: "Dozwolone"
       backups:
         title: "Kopie zapasowe"
         files_title: "Pliki kopii zapasowej"
@@ -8614,6 +8618,8 @@ pl_PL:
           default: "Motyw domyślny"
           settings_editor: "Edytor ustawień"
           show_advanced: "Pokaż zaawansowane"
+          maximize_editor: "Maksymalizuj edytor"
+          minimize_editor: "Zminimalizuj edytor"
           is_default: "Motyw ustawiony jako domyślny"
           user_selectable: "Motyw może być ustawiany przez użytkowników"
           user_selectable_badge_label: "Możliwe do wyboru przez użytkownika"
@@ -8694,10 +8700,13 @@ pl_PL:
           import_file_tip: "Plik .tar.gz lub .zip zawierający motyw"
           is_private: "Motyw jest w prywatnym repozytorium git"
           finish_install: "Zakończ instalację motywu"
+          placeholder_description: "To prywatny motyw, który wymaga zainstalowania klucza w konfiguracji repozytorium. Po zainstalowaniu kliknij poniższy przycisk, aby zakończyć instalację."
           last_attempt: "Proces instalacji nie został zakończony, ostatnia próba:"
           remote_branch: "Nazwa oddziału (opcjonalnie)"
           remote_branch_placeholder: "Wybierz konkretną gałąź lub pozostaw puste"
-          public_key: "Podaj następujący klucz publiczny pozwalający na dostęp do repozytorium:"
+          public_key: "Udziel następującemu kluczowi publicznemu dostępu tylko do odczytu w repozytorium:"
+          public_key_github: "Przyznaj następującemu kluczowi publicznemu dostęp tylko do odczytu do repozytorium. Instrukcje znajdziesz w %{link}."
+          deploy_key_instructions: "Instrukcje wdrażania kluczy GitHub"
           install: "Zainstaluj"
           installed: "Zainstalowana"
           screenshot: "Zrzut ekranu %{name}"
@@ -9204,6 +9213,9 @@ pl_PL:
             configure_category_type: "skonfiguruj typ kategorii"
             unconfigure_category_type: "usuń konfigurację typu kategorii"
             change_access_control_list_permissions: "zmień uprawnienia listy kontroli dostępu"
+            admin_onboarding_step_completed: "ukończony etap wdrażania administratora"
+            admin_onboarding_completed: "pełne wdrożenie administratora"
+            admin_onboarding_dismissed: "odwołaj wdrożenie administratora"
         screened_emails:
           title: "Sprawdzone e-maile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -10168,6 +10180,9 @@ pl_PL:
         uploading: "Przesyłanie…"
         name: "Nazwa"
         group: "Grupa"
+        all_groups: "Wszystkie grupy"
+        filter_placeholder: "Wyszukaj emoji według nazwy"
+        no_results: "Nie znaleziono żadnych emoji."
         created_by: "Stworzone przez"
         image: "Grafika"
         alt: "podgląd niestandardowego emoji"

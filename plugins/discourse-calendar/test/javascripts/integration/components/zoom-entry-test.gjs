@@ -214,7 +214,7 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
     assert.dom(".discourse-calendar-livestream-zoom-entry").doesNotExist();
   });
 
-  test("renders nothing for anonymous users", async function (assert) {
+  test("renders button for anonymous users", async function (assert) {
     stubCapabilities(getOwner(this), { lg: true });
     getOwner(this).unregister("service:current-user");
 
@@ -222,7 +222,7 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
       <template><LivestreamZoomEntry @event={{this.event}} /></template>
     );
 
-    assert.dom(".discourse-calendar-livestream-zoom-entry").doesNotExist();
+    assert.dom(".discourse-calendar-livestream-zoom-entry").exists();
   });
 
   module("when marking attendance", function (innerHooks) {

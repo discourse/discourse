@@ -2841,6 +2841,8 @@ hr:
       medium_dark_tone: Srednje taman ton kože
       dark_tone: Tamni ton kože
       default: Prilagođeni emojiji
+    filter_controls:
+      reset: "Resetirati"
     shared_drafts:
       title: "Dijeljene skice"
       notice: "Ova je tema vidljiva samo onima koji mogu objaviti zajedničke skice."
@@ -6412,6 +6414,8 @@ hr:
         sidebar: "Bočna traka"
         header_dropdown: "Padajući izbornik zaglavlja"
         legacy: "Naslijeđe"
+      duplicate_topic_titles:
+        allowed: "Dopušteno"
       backups:
         title: "Sigurnosne kopije"
         menu:
@@ -6599,7 +6603,6 @@ hr:
           finish_install: "Završite instalaciju teme"
           last_attempt: "Proces instalacije nije dovršen, posljednji pokušaj:"
           remote_branch: "Naziv podružnice (izborno)"
-          public_key: "Omogućite pristup sljedećem javnom ključu repo:"
           install: "Instaliraj"
           installed: "Instalirano"
           install_popular: "Popularno"
@@ -7617,6 +7620,7 @@ hr:
         uploading: "Prijenos…"
         name: "Ime"
         group: "Grupa"
+        all_groups: "Sve grupe"
         created_by: "Izradio/la"
         image: "Slika"
         alt: "prilagođeni pregled emotikona"

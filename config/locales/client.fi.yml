@@ -2710,6 +2710,8 @@ fi:
       default: Mukautetut emojit
     filter_input:
       clear: "Tyhjennä suodatin"
+    filter_controls:
+      reset: "Palauta"
     shared_drafts:
       title: "Jaetut luonnokset"
       notice: "Tämä ketju näkyy vain niille, jotka voivat julkaista jaettuja luonnoksia."
@@ -6404,6 +6406,8 @@ fi:
         sidebar: "Sivupalkki"
         header_dropdown: "Yläpalkin avattava valikko"
         legacy: "Vanha"
+      duplicate_topic_titles:
+        allowed: "Sallittu"
       backups:
         title: "Varmuuskopiot"
         files_title: "Varmuuskopiotiedostot"
@@ -6634,7 +6638,6 @@ fi:
           finish_install: "Viimeistele teeman asennus"
           last_attempt: "Asennusprosessi ei päättynyt, viimeisin yritys:"
           remote_branch: "Haaran nimi (valinnainen)"
-          public_key: "Anna tietovaraston käyttöoikeus seuraavalle julkiselle avaimelle:"
           install: "Asenna"
           installed: "Asennettu"
           install_popular: "Suosittuja"
@@ -7917,6 +7920,7 @@ fi:
         uploading: "Ladataan…"
         name: "Nimi"
         group: "Ryhmä"
+        all_groups: "Kaikki ryhmät"
         created_by: "Luonut"
         image: "Kuva"
         alt: "mukautetun emojin esikatselu"

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, get, hash } from "@ember/helper";
+import { concat, fn, get, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -14,11 +14,20 @@ import DiscourseURL, {
   applyQueryParams,
   searchParamsFromPath,
 } from "discourse/lib/url";
-import { and, not } from "discourse/truth-helpers";
+import { and, eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DSelect from "discourse/ui-kit/d-select";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+
+const ResetButton = <template>
+  <DButton
+    @icon="arrow-rotate-left"
+    @label="filter_controls.reset"
+    @action={{@action}}
+    class="btn-default d-filter-controls__reset"
+  />
+</template>;
 
 /**
  * filter controls component that support both client-side and server-side filtering
@@ -234,6 +243,8 @@ export default class DFilterControls extends Component {
     return path.split(".").reduce((current, key) => current?.[key], obj);
   }
 
+  // @action so it stays bound to `this` when invoked from the template
+  @action
   defaultValue(key) {
     const defaults =
       typeof this.defaultDropdownValue === "object"
@@ -419,11 +430,18 @@ export default class DFilterControls extends Component {
 
           {{#if this.hasMultipleDropdowns}}
             <DButton
-              class="btn-transparent d-filter-controls__toggle-filters"
-              @icon="filter"
+              class="btn-default d-filter-controls__toggle-filters"
+              @icon={{if
+                this.showDropdownFilter
+                "filter-circle-xmark"
+                "filter"
+              }}
               @title="filter_controls.toggle"
               @action={{this.toggleFilters}}
             />
+            {{#if this.hasActiveFilters}}
+              <ResetButton @action={{this.resetFilters}} />
+            {{/if}}
           {{/if}}
         </div>
 
@@ -435,7 +453,16 @@ export default class DFilterControls extends Component {
                   @value={{get this.dropdownFilters key}}
                   @includeNone={{false}}
                   @onChange={{fn this.onDropdownFilterChange key}}
-                  class="d-filter-controls__dropdown d-filter-controls__dropdown--{{key}}"
+                  class={{dConcatClass
+                    "d-filter-controls__dropdown"
+                    (concat "d-filter-controls__dropdown--" key)
+                    (unless
+                      (eq
+                        (get this.dropdownFilters key) (this.defaultValue key)
+                      )
+                      "--active"
+                    )
+                  }}
                   data-dropdown-key={{key}}
                   as |select|
                 >
@@ -451,7 +478,13 @@ export default class DFilterControls extends Component {
                 @value={{this.dropdownFilter}}
                 @includeNone={{false}}
                 @onChange={{this.onDropdownFilterChange}}
-                class="d-filter-controls__dropdown"
+                class={{dConcatClass
+                  "d-filter-controls__dropdown"
+                  (unless
+                    (eq this.dropdownFilter this.defaultDropdownValue)
+                    "--active"
+                  )
+                }}
                 as |select|
               >
                 {{#each this.dropdownOptions as |option|}}
@@ -464,13 +497,8 @@ export default class DFilterControls extends Component {
           </div>
         {{/if}}
 
-        {{#if (and this.hasActiveFilters (not @loading))}}
-          <DButton
-            @icon="arrow-rotate-left"
-            @label="filter_controls.reset"
-            @action={{this.resetFilters}}
-            class="btn-default d-filter-controls__reset"
-          />
+        {{#if (and (not this.hasMultipleDropdowns) this.hasActiveFilters)}}
+          <ResetButton @action={{this.resetFilters}} />
         {{/if}}
 
         {{yield to="actions"}}
@@ -487,12 +515,7 @@ export default class DFilterControls extends Component {
           {{#if @noResultsMessage}}
             <p>{{@noResultsMessage}}</p>
           {{/if}}
-          <DButton
-            @icon="arrow-rotate-left"
-            @label="filter_controls.reset"
-            @action={{this.resetFilters}}
-            class="btn-default d-filter-controls__reset"
-          />
+          <ResetButton @action={{this.resetFilters}} />
         </div>
       {{/if}}
     {{else}}

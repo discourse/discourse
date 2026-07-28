@@ -301,11 +301,23 @@ he:
         title: "תרגומים"
         description: "תרגום כל התוכן של הפורום שלך לשפת המשתמש המועדפת אוטומטית"
         supported_locales: "שפות נתמכות"
-        supported_locales_description: "הגדרת האתר הזאת מאפשרת גם למבקרים לתרום תרגומים לפוסטים."
         category_scope: "קטגוריות"
+        model_progress:
+          detail:
+            columns:
+              locale: "הגדרות מקומיות"
+              pending: "ממתין"
+              total: "סך הכל"
+          targets:
+            post:
+              title: "פרסומים"
+            topic:
+              title: "נושאים"
+            category:
+              title: "קטגוריות"
+            tag:
+              title: "תגיות"
         admin_actions:
-          translation_settings: "הגדרות תרגום"
-          localization_settings: "הגדרות התאמת שפה"
           enable_translations: "הפעלת תרגומים אוטומטיים"
         stats:
           title: "סטטיסטיקת תרגום"

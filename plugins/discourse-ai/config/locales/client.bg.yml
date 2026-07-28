@@ -70,6 +70,20 @@ bg:
         select_option: "Изберете опция..."
       translations:
         category_scope: "Категории"
+        model_progress:
+          detail:
+            columns:
+              pending: "Чакащи"
+              total: "Общо"
+          targets:
+            post:
+              title: "Публикации"
+            topic:
+              title: "Теми"
+            category:
+              title: "Категории"
+            tag:
+              title: "Етикети"
         stats:
           eta_minutes:
             one: "%{count} минута"

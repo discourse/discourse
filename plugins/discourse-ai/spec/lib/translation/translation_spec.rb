@@ -18,6 +18,46 @@ describe DiscourseAi::Translation do
     end
   end
 
+  describe ".backfill_start_at" do
+    it "returns midnight UTC on the configured date" do
+      SiteSetting.ai_translation_backfill_start_date = "2026-07-01"
+
+      expect(described_class.backfill_start_at.iso8601).to eq("2026-07-01T00:00:00Z")
+    end
+  end
+
+  describe ".backfill_enabled?" do
+    it "uses the start date only for post and topic backfills" do
+      SiteSetting.content_localization_supported_locales = "es"
+      SiteSetting.ai_translation_backfill_hourly_rate = 50
+      SiteSetting.ai_translation_backfill_start_date = ""
+
+      expect(described_class.backfill_enabled?).to eq(true)
+      expect(described_class.backfill_enabled?(target: Category)).to eq(true)
+      expect(described_class.backfill_enabled?(target: Post)).to eq(false)
+      expect(described_class.backfill_enabled?(target: Topic)).to eq(false)
+
+      SiteSetting.ai_translation_backfill_start_date = "2026-07-01"
+
+      expect(described_class.backfill_enabled?(target: Post)).to eq(true)
+      expect(described_class.backfill_enabled?(target: Topic)).to eq(true)
+    end
+  end
+
+  describe ".supported_locale_bases_cte" do
+    it "normalizes and deduplicates supported locale bases" do
+      sql = <<~SQL
+        WITH #{described_class.supported_locale_bases_cte}
+        SELECT bases
+        FROM supported
+      SQL
+
+      result = DB.query_single(sql, supported_locales: %w[en_GB EN-us pt-BR])
+
+      expect(result.first).to contain_exactly("en", "pt")
+    end
+  end
+
   describe ".category_scope_condition" do
     it "filters categories for all and public scopes", :aggregate_failures do
       public_category = Fabricate(:category)

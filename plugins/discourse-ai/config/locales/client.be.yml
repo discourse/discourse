@@ -60,6 +60,20 @@ be:
           name: "Спам"
       translations:
         category_scope: "катэгорыі"
+        model_progress:
+          detail:
+            columns:
+              pending: "У чаканні"
+              total: "Усяго"
+          targets:
+            post:
+              title: "Допісы"
+            topic:
+              title: "Тэмы"
+            category:
+              title: "Катэгорыі"
+            tag:
+              title: "Тэгі"
         stats:
           eta_minutes:
             one: "%{count} хвіліну"

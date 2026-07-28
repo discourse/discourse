@@ -69,6 +69,7 @@ export default class ChatDrawerRoutesChannel extends Component {
                 @channel={{channel}}
                 @isFiltering={{this.isFiltering}}
                 @onToggleFilter={{this.toggleIsFiltering}}
+                @disableKeystrokeCapture={{true}}
               />
             {{/each}}
           </div>

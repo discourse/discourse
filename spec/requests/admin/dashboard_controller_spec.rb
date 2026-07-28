@@ -262,6 +262,11 @@ RSpec.describe Admin::DashboardController do
           country_code = "US"
           normalized_referrer = "sensitive-referrer.example"
           event_date = Time.zone.local(2026, 5, 2, 12)
+          UpcomingChangeEvent.create!(
+            upcoming_change_name: "dashboard_improvements",
+            event_type: :manual_opt_in,
+            created_at: Time.zone.local(2026, 5, 1, 9),
+          )
 
           2.times do
             Fabricate(

@@ -1545,6 +1545,7 @@ module DiscourseDataExplorer
           MAX(s.velocity_score) AS velocity,
           MAX(s.churn_score) AS churn,
           MAX(s.rapid_nav_score) AS rapid_nav,
+          MAX(s.ip_rotation_score) AS ip_rotation,
           MAX(s.referrer_score) AS referrer,
           NULLIF(
               CONCAT_WS(', ',
@@ -1553,6 +1554,7 @@ module DiscourseDataExplorer
                   CASE WHEN MAX(s.velocity_score) > 0 THEN 'high velocity (+' || MAX(s.velocity_score) || ')' END,
                   CASE WHEN MAX(s.churn_score) > 0 THEN 'session churn (+' || MAX(s.churn_score) || ')' END,
                   CASE WHEN MAX(s.rapid_nav_score) > 0 THEN 'rapid navigation' END,
+                  CASE WHEN MAX(s.ip_rotation_score) > 0 THEN 'ip rotation (+' || MAX(s.ip_rotation_score) || ')' END,
                   CASE WHEN MAX(s.referrer_score) > 0 THEN 'bad referrer (+' || MAX(s.referrer_score) || ')' END
               ),
               ''

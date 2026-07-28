@@ -52,6 +52,7 @@ module DiscourseWorkflows
             start_time: {
               type: :string,
               default: "09:00",
+              required: true,
               display_options: {
                 show: {
                   use_time_range: [true],
@@ -64,6 +65,7 @@ module DiscourseWorkflows
             end_time: {
               type: :string,
               default: "17:00",
+              required: true,
               display_options: {
                 show: {
                   use_time_range: [true],
