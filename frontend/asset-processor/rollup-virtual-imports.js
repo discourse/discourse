@@ -24,6 +24,7 @@ const EAGER_DIRECTORIES = [
   "routes",
   "controllers",
   "templates",
+  "discourse-markdown",
 ];
 
 const EAGER_DIRECTORY_REGEX = new RegExp(

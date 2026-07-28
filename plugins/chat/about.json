@@ -10,7 +10,10 @@
     "sharedModules": [
       "discourse/components/channel-title",
       "discourse/components/chat-channel",
-      "discourse/models/chat-channel"
+      "discourse/models/chat-channel",
+      "discourse/components/chat-channel-card",
+      "discourse/lib/fabricators",
+      "discourse/components/chat-channel-preview-card"
     ],
     "splitAtRoutes": {
       "chat/*": "chat.*",
