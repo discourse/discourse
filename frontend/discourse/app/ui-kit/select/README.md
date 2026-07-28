@@ -83,7 +83,12 @@ by mechanism.
   cap; `@filterBy` field or predicate; `@minChars` gate; `@debounce`.
 - Create-on-the-fly (`@allowCreate` + `@createItem`); prepended special rows (`@specialItems`).
 - Async value resolution for held-but-unfetched ids (`@resolveValue` / `@resolveValues`) with a
-  named unresolved fallback (`@createUnresolvedItem`); the `@selected` sync escape hatch.
+  named unresolved fallback (`@createUnresolvedItem`). A resolver may answer synchronously, so a
+  consumer already holding the item just returns it; `@load` answers queries and is never asked
+  "what is this id", so an async source that can mount holding a value needs a resolver.
+- `@valueItems`: already-resolved item(s) for the ids in `@value`, read reactively. It selects
+  nothing itself — entries are looked up BY `@value` — but unlike a resolver it may arrive after
+  mount, so a consumer loading them itself refreshes every selection surface when they land.
 - Multi-select value-type coercion: each emitted id is normalized to its source item's native type
   (so a URL-typed `"5"` and a freshly-picked `3` never emit as a mixed `["5", 3]`); an unresolved id
   passes through unchanged, and `@value` is never mutated (the engine only emits via `@onChange`).

@@ -309,9 +309,9 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
   });
 
   module("selected-value resolution", function () {
-    test("resolves synchronously from the `selected` escape hatch", function (assert) {
+    test("resolves synchronously from `valueItems`", function (assert) {
       const item = { id: 5, name: "Five" };
-      const engine = new SelectEngine({ selected: item });
+      const engine = new SelectEngine({ valueItems: item });
 
       assert.strictEqual(
         engine.resolveSelection(5),
@@ -429,7 +429,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       const calls = [];
       const engine = new SelectEngine({
         multiple: true,
-        selected: [{ id: 1, name: "One" }], // resolves synchronously via the escape hatch
+        valueItems: [{ id: 1, name: "One" }], // resolves synchronously via valueItems
         resolveValues: (values) => {
           calls.push(values);
           return Promise.resolve([{ id: 2, name: "Two" }]); // id 3 omitted

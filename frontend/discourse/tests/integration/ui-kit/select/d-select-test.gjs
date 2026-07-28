@@ -1791,6 +1791,10 @@ module(
 module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
   setupRenderingTest(hooks);
 
+  hooks.afterEach(function () {
+    resetOnerror();
+  });
+
   test("synchronous resolvers supply the desktop typeahead label", async function (assert) {
     const resolveValue = (value) => ({ id: value, name: `Topic #${value}` });
     const resolveValues = (values) =>
@@ -1888,6 +1892,66 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
       );
   });
 
+  // `@load` answers queries; it is never asked "what is id 2". A select that can mount holding a
+  // value therefore needs an identity mechanism, and with none the value can never resolve — the
+  // trigger reads "(unavailable)" for the life of the page. It fails only after a reload, long
+  // after the session that picked the value looked correct, which is why it asserts rather than
+  // degrading quietly.
+  test("asserts when an async source has no way to resolve a held value", async function (assert) {
+    let fired = false;
+    setupOnerror((error) => {
+      fired = true;
+      assert.true(
+        error.message.includes("@resolveValue"),
+        "the assertion names the missing argument"
+      );
+    });
+
+    const load = () => Promise.resolve([{ id: 1, name: "One" }]);
+
+    await render(<template><DSelect @load={{load}} @value={{2}} /></template>);
+
+    assert.true(fired, "the misconfiguration asserts during render");
+  });
+
+  // The assert must be silent wherever the consumer HAS supplied a way to resolve, including
+  // the cases that merely look like the broken one. A false positive here is worse than no
+  // assert at all: it throws on working code.
+  test("does not assert when an identity mechanism is supplied", async function (assert) {
+    let fired = false;
+    setupOnerror(() => (fired = true));
+
+    const load = () => Promise.resolve([{ id: 1, name: "One" }]);
+    const resolveValue = (value) => ({ id: value, name: `Topic #${value}` });
+    // Declared but still empty: the late-arrival pattern mid-flight, which must not be
+    // mistaken for supplying nothing.
+    const pendingValueItems = undefined;
+
+    await render(
+      <template>
+        <DSelect
+          class="with-resolver"
+          @load={{load}}
+          @value={{2}}
+          @resolveValue={{resolveValue}}
+        />
+        <DSelect
+          class="with-pending-value-items"
+          @load={{load}}
+          @value={{2}}
+          @valueItems={{pendingValueItems}}
+        />
+        {{! A client source resolves from its own list, so a missing id is data, not config. }}
+        <DSelect class="client" @items={{ITEMS}} @value={{99}} />
+      </template>
+    );
+
+    assert.false(fired, "no assertion fires when resolution is expressible");
+    assert
+      .dom(".with-resolver [role='combobox']")
+      .hasValue("Topic #2", "the resolver still supplies the label");
+  });
+
   test("multi renders resolved chips plus an unavailable chip for an id that cannot resolve", async function (assert) {
     const resolveValues = (values) =>
       Promise.resolve(
@@ -1922,9 +1986,9 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
       );
   });
 
-  test("@selected seeds part of an async multi selection", async function (assert) {
+  test("@valueItems seeds part of an async multi selection", async function (assert) {
     const resolvedValues = [];
-    const selected = { id: 1, name: "One" };
+    const valueItems = { id: 1, name: "One" };
     const resolveValues = (values) => {
       resolvedValues.push(...values);
       return Promise.resolve(
@@ -1938,7 +2002,7 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
           @items={{array}}
           @multiple={{true}}
           @value={{array 1 2}}
-          @selected={{selected}}
+          @valueItems={{valueItems}}
           @resolveValues={{resolveValues}}
         />
       </template>
@@ -1950,7 +2014,7 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
     assert.deepEqual(
       resolvedValues,
       [2],
-      "only the value missing from @selected is resolved"
+      "only the value missing from @valueItems is resolved"
     );
   });
 

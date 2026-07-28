@@ -1,4 +1,5 @@
 import { cached, tracked } from "@glimmer/tracking";
+import { assert } from "@ember/debug";
 import type Owner from "@ember/owner";
 import { trackedMap } from "@ember/reactive/collections";
 import { bind } from "discourse/lib/decorators";
@@ -196,7 +197,7 @@ export interface SelectEngineOptions {
   getMaximum?: () => number | undefined;
   getMinimum?: () => number | undefined;
   getNoneLabel?: () => string | undefined;
-  getSelected?: () => SelectItem | SelectItem[] | undefined;
+  getValueItems?: () => SelectItem | SelectItem[] | undefined;
   getAllowCreate?: () =>
     | boolean
     | ((filter: string, items: SelectItem[]) => boolean)
@@ -281,10 +282,16 @@ export interface SelectEngineOptions {
   labelField?: string;
 
   /**
-   * Already-resolved item(s) for the current value, so the trigger needs no fetch to
-   * display them.
+   * Already-resolved item(s) for the ids in `value`, so the trigger displays them without a
+   * fetch. It selects nothing on its own: every entry is looked up BY `value`, so supplying
+   * this without a matching `value` shows the placeholder.
+   *
+   * Unlike a resolver, it is read reactively, so items may arrive after mount — a consumer
+   * loading them itself can hand them over when they land and every selection surface
+   * refreshes. A resolver cannot do that: its outcome is cached, including the failure, and
+   * only `reload()` retries it.
    */
-  selected?: SelectItem | SelectItem[];
+  valueItems?: SelectItem | SelectItem[];
 
   /**
    * `(value, { signal }) => item | Promise<item>`, used to resolve a value id to its
@@ -804,13 +811,17 @@ export default class SelectEngine {
   #readNoneLabel: () => string | undefined;
   #valueField: string;
   #labelField: string;
+  // Whether the consumer declared `valueItems` at all, as opposed to it merely being empty
+  // right now. Those are different: an empty-but-declared arg is the late-arrival pattern
+  // mid-flight, and the misconfiguration assert must not fire on it.
+  #valueItemsDeclared: boolean;
   #filterBy?: string | ((item: SelectItem, term: string) => boolean);
   #items?: SelectItem[] | (() => SelectItem[] | null | undefined);
   #load?: (
     filter: string,
     opts: SelectLoadOptions
   ) => SelectLoadResult | Promise<SelectLoadResult>;
-  #readSelected: () => SelectItem | SelectItem[] | undefined;
+  #readValueItems: () => SelectItem | SelectItem[] | undefined;
   #resolveValue?: (
     value: SelectItemId,
     opts: SelectLoadOptions
@@ -860,8 +871,8 @@ export default class SelectEngine {
    *   an already over-cap value.
    * @param opts.minimum - Advisory minimum for a multi-select. Drives messaging only and
    *   never blocks removal.
-   * @param opts.selected - Already-resolved item(s) for the current value, so the
-   *   trigger needs no fetch to display them.
+   * @param opts.valueItems - Already-resolved item(s) for the ids in `value`, read
+   *   reactively so they may arrive after mount. Selects nothing on its own.
    * @param opts.resolveValue - `(value, { signal }) => item | Promise<item>`, used to
    *   resolve a value id to its display item when it isn't already known.
    * @param opts.allowCreate - Enables the create-on-the-fly item; a function
@@ -893,7 +904,9 @@ export default class SelectEngine {
     this.#filterBy = opts.filterBy;
     this.#items = opts.items;
     this.#load = opts.load;
-    this.#readSelected = opts.getSelected ?? (() => opts.selected);
+    this.#readValueItems = opts.getValueItems ?? (() => opts.valueItems);
+    this.#valueItemsDeclared =
+      opts.getValueItems != null || opts.valueItems != null;
     this.#resolveValue = opts.resolveValue;
     this.#resolveValues = opts.resolveValues;
     this.#readAllowCreate = opts.getAllowCreate ?? (() => opts.allowCreate);
@@ -1335,7 +1348,7 @@ export default class SelectEngine {
 
   /**
    * Resolves a value to its display item(s) for the trigger `DAsyncContent`. Returns
-   * synchronously (no skeleton) when every id is covered by the `selected` escape hatch,
+   * synchronously (no skeleton) when every id is covered by `valueItems`,
    * the resolve cache, or the client list; otherwise returns a promise. A held id that
    * cannot resolve maps to a synthetic `__unresolved` fallback (never `undefined`, never a
    * rejection, whether the resolver throws or rejects); only an empty value (null single /
@@ -1442,7 +1455,7 @@ export default class SelectEngine {
    * Records the outcome of an async resolve: real items, so later reads hit the cache
    * instead of refetching, and `__unresolved` fallbacks, so a trigger can tell "resolved and
    * failed" (show the fallback) from "still resolving" (show nothing). A cached fallback
-   * remains a sync hit, but ranks after real selected/cache/list items; `reload()` evicts it
+   * remains a sync hit, but ranks after real valueItems/cache/list items; `reload()` evicts it
    * when the caller explicitly retries.
    *
    * Only ever called from a promise continuation, i.e. a microtask after render, where
@@ -1652,8 +1665,8 @@ export default class SelectEngine {
     return maximum != null && this.#selectedCount >= maximum;
   }
 
-  get #selected(): SelectItem | SelectItem[] | undefined {
-    return this.#readSelected();
+  get #valueItems(): SelectItem | SelectItem[] | undefined {
+    return this.#readValueItems();
   }
 
   get #allowCreate():
@@ -1805,7 +1818,7 @@ export default class SelectEngine {
   }
 
   /**
-   * The item to show for a value: escape hatch → a real recorded outcome → client list →
+   * The item to show for a value: `valueItems` → a real recorded outcome → client list →
    * the fallback left by an earlier failed attempt.
    *
    * An `__unresolved` fallback ranks LAST, so any real source that turns up later — an item
@@ -1821,7 +1834,7 @@ export default class SelectEngine {
     }
     const recorded = this.#recordedOutcomes(key);
     return (
-      this.#matching(makeArray(this.#selected) as SelectItem[], key) ??
+      this.#matching(makeArray(this.#valueItems) as SelectItem[], key) ??
       recorded.find((item) => !item.__unresolved) ??
       this.#matching(this.#knownRows(), key) ??
       recorded[0]
@@ -1945,6 +1958,20 @@ export default class SelectEngine {
   // ("Topic #123"); the default shows the bare id. Either way the engine owns the
   // `__unresolved` marker, so a builder cannot hand back something that reads as resolved.
   #unresolvedItem(value: SelectItemId): SelectItem {
+    // A server source that was never given a way to answer "what is this id" can only ever
+    // fabricate this fallback, so the trigger reads "(unavailable)" for the life of the page.
+    // It looks correct in the session that picked the value — the cache still holds it — and
+    // breaks on the next load, which is why it is worth failing loudly rather than degrading.
+    // Stripped from production builds.
+    assert(
+      `DSelect: no way to resolve the held value \`${String(value)}\`. \`@load\` answers ` +
+        `queries and is never asked what a given id is, so a select that can mount holding a ` +
+        `value needs \`@resolveValue\`, \`@resolveValues\`, or \`@valueItems\`.`,
+      !this.#load ||
+        !!this.#resolveValue ||
+        !!this.#resolveValues ||
+        this.#valueItemsDeclared
+    );
     const built = this.#createUnresolvedItem
       ? this.#attempt(() => this.#createUnresolvedItem!(value))
       : undefined;

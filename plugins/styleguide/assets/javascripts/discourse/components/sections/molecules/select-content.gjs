@@ -317,6 +317,17 @@ export default class SelectContent extends Component {
     );
   }
 
+  // The identity half of an async source: a loader answers "what matches this query", this
+  // answers "what is this id". A select that reopens holding a value has only this to display
+  // it. Synchronous, because the fixture is already in hand.
+  //
+  // The empty and always-failing sources below need no counterpart: nothing is ever selectable
+  // from them, so they can never hold a value to resolve.
+  @action
+  resolvePerson(value) {
+    return this.people.find((person) => person.id === value);
+  }
+
   @action
   async loadEmpty(_filter, { signal }) {
     await delay(signal, 400);
@@ -511,6 +522,7 @@ export default class SelectContent extends Component {
         <DSelect
           @identifier="sg-content-error"
           @load={{this.failingLoader}}
+          @resolveValue={{this.resolvePerson}}
           @value={{this.errorValue}}
           @onChange={{this.updateError}}
           @variant="button"
@@ -721,6 +733,7 @@ export default class SelectContent extends Component {
           <DSelect
             @identifier="sg-footer"
             @load={{this.loadPeople}}
+            @resolveValue={{this.resolvePerson}}
             @value={{this.footerValue}}
             @onChange={{this.updateFooter}}
             @labelField="name"

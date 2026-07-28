@@ -95,6 +95,7 @@ export default class Select extends Component {
 <DSelect
   @load={{this.loadPage}}
   @value={{this.value}}
+  @resolveValue={{this.resolveTopic}}
   @onChange={{this.onChange}}
 />
 
@@ -108,7 +109,12 @@ export default class Select extends Component {
   takes the first response as complete. }}`;
 
   reloadCode = `{{! Nothing to configure: the delay decides which behaviour you get }}
-<DSelect @load={{this.loadPage}} @value={{this.value}} @onChange={{this.onChange}} />
+<DSelect
+  @load={{this.loadPage}}
+  @value={{this.value}}
+  @resolveValue={{this.resolveTopic}}
+  @onChange={{this.onChange}}
+/>
 
 {{! While a NEW query is in flight the previous rows are kept, so a source that answers
   quickly never blinks. Past ~250ms they are dropped for the skeleton instead: those rows
@@ -128,6 +134,7 @@ export default class Select extends Component {
   asyncButtonCode = `<DSelect
   @load={{this.loadOptions}}
   @value={{this.value}}
+  @resolveValue={{this.resolveOption}}
   @onChange={{this.onChange}}
   @variant="button"
 />`;
@@ -231,6 +238,7 @@ export default class Select extends Component {
   minCharsCode = `<DSelect
   @load={{this.loadOptions}}
   @value={{this.value}}
+  @resolveValue={{this.resolveOption}}
   @onChange={{this.onChange}}
   @minChars={{3}}
   @clearable={{true}}
@@ -264,6 +272,7 @@ export default class Select extends Component {
   errorCode = `<DSelect
   @load={{this.loadWithRetry}}
   @value={{this.value}}
+  @resolveValue={{this.resolveLocale}}
   @onChange={{this.onChange}}
   @variant="button"
 />`;
@@ -331,6 +340,29 @@ export default class Select extends Component {
     }
 
     return this.filterItems(this.items, filter);
+  }
+
+  // Every async example pairs its loader with one of these. A loader answers "what matches this
+  // query"; a resolver answers "what is this id", which is a different question against
+  // different data — here a lookup in the same fixture, standing in for the store lookup a real
+  // consumer would do. Without one, a select that reopens holding a value can only show it as
+  // unavailable, since nothing it has been given can turn the id back into a row.
+  //
+  // They return synchronously on purpose: a resolver does not have to be async, and one that
+  // answers from data already in hand costs no request.
+  @action
+  resolveLocale(value) {
+    return this.items.find((item) => item.id === value);
+  }
+
+  @action
+  resolveOption(value) {
+    return this.fourOptions.find((item) => item.id === value);
+  }
+
+  @action
+  resolveTopic(value) {
+    return this.largeListItems.find((item) => item.id === value);
   }
 
   @action
@@ -582,6 +614,7 @@ export default class Select extends Component {
             <DSelect
               @identifier="sg-min-chars"
               @load={{this.loadLocales}}
+              @resolveValue={{this.resolveLocale}}
               @value={{this.minCharsValue}}
               @onChange={{this.updateMinChars}}
               @minChars={{3}}
@@ -621,6 +654,7 @@ export default class Select extends Component {
               <DSelect
                 @identifier="sg-paged"
                 @load={{this.loadPage}}
+                @resolveValue={{this.resolveTopic}}
                 @value={{this.pagedValue}}
                 @onChange={{this.updatePaged}}
                 @placeholder={{i18n "styleguide.sections.select.placeholder"}}
@@ -643,6 +677,7 @@ export default class Select extends Component {
               <DSelect
                 @identifier="sg-paged-cursor"
                 @load={{this.loadPageCursor}}
+                @resolveValue={{this.resolveTopic}}
                 @value={{this.pagedCursorValue}}
                 @onChange={{this.updatePagedCursor}}
                 @placeholder={{i18n "styleguide.sections.select.placeholder"}}
@@ -671,6 +706,7 @@ export default class Select extends Component {
                 <DSelect
                   @identifier="sg-reload-fast"
                   @load={{this.loadPageFast}}
+                  @resolveValue={{this.resolveTopic}}
                   @value={{this.fastReloadValue}}
                   @onChange={{this.updateFastReload}}
                   @placeholder={{i18n "styleguide.sections.select.placeholder"}}
@@ -685,6 +721,7 @@ export default class Select extends Component {
                 <DSelect
                   @identifier="sg-reload-slow"
                   @load={{this.loadPage}}
+                  @resolveValue={{this.resolveTopic}}
                   @value={{this.slowReloadValue}}
                   @onChange={{this.updateSlowReload}}
                   @placeholder={{i18n "styleguide.sections.select.placeholder"}}
@@ -705,6 +742,7 @@ export default class Select extends Component {
             <DSelect
               @identifier="sg-async-button"
               @load={{this.loadOptions}}
+              @resolveValue={{this.resolveOption}}
               @value={{this.asyncButtonValue}}
               @onChange={{this.updateAsyncButton}}
               @variant="button"
@@ -740,6 +778,7 @@ export default class Select extends Component {
             <DSelect
               @identifier="sg-error"
               @load={{this.loadWithRetry}}
+              @resolveValue={{this.resolveLocale}}
               @value={{this.errorValue}}
               @onChange={{this.updateError}}
               @variant="button"

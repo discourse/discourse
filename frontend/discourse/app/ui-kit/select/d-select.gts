@@ -127,7 +127,7 @@ interface DSelectSignature {
     filterBy?: SelectEngineOptions["filterBy"];
     valueField?: string;
     labelField?: string;
-    selected?: SelectItemModel | SelectItemModel[];
+    valueItems?: SelectItemModel | SelectItemModel[];
     resolveValue?: SelectEngineOptions["resolveValue"];
     resolveValues?: SelectEngineOptions["resolveValues"];
     allowCreate?: SelectEngineOptions["allowCreate"];
@@ -381,7 +381,11 @@ export default class DSelect extends Component<DSelectSignature> {
     filterBy: this.args.filterBy,
     valueField: this.args.valueField,
     labelField: this.args.labelField,
-    getSelected: () => this.args.selected,
+    // Passed only when the consumer actually declared the arg. An arg that is present but
+    // still empty is the late-arrival pattern mid-flight; withholding the reader entirely is
+    // what lets the engine tell that apart from "no identity mechanism was ever supplied".
+    getValueItems:
+      "valueItems" in this.args ? () => this.args.valueItems : undefined,
     resolveValue: this.args.resolveValue,
     resolveValues: this.args.resolveValues,
     getAllowCreate: () => this.args.allowCreate,
@@ -1007,6 +1011,22 @@ export default class DSelect extends Component<DSelectSignature> {
   get shouldActivateSelected(): boolean {
     return (
       !this.args.multiple && this.engine.hasValue && this.engine.filter === ""
+    );
+  }
+
+  /**
+   * Whether any held id is displaying as an unresolved fallback, stamped on the trigger as
+   * `data-unresolved`. The state is otherwise expressed differently per variant — a muted span
+   * for a chip or a control, but only the input's value text on a desktop typeahead, where
+   * there is no element to mark — so this is the one hook that reads the same everywhere.
+   */
+  get hasUnresolvedSelection(): boolean {
+    const values = this.args.multiple
+      ? makeArray(this.args.value)
+      : [this.args.value];
+    return values.some(
+      (value) =>
+        value != null && !!this.engine.resolveSingleSync(value)?.__unresolved
     );
   }
 
@@ -2005,6 +2025,7 @@ export default class DSelect extends Component<DSelectSignature> {
       {{! Control variants put ARIA and keyboard behavior on the root; input variants put
         them on their inner input. }}
       @triggerComponent={{dElement "div"}}
+      data-unresolved={{if this.hasUnresolvedSelection "true"}}
       role={{this.triggerRootRole}}
       tabindex={{this.triggerRootTabIndex}}
       aria-label={{this.triggerRootLabel}}

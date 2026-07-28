@@ -25,6 +25,32 @@ describe "UiKit | DSelect page regressions" do
     expect(description).to have_no_text("`")
   end
 
+  # A held value survived selection but not a remount. `@load` answers queries and is never asked
+  # what a given id is, so with no resolver the only thing left to display an id is whatever the
+  # source happened to fetch this session — and `@minChars` means it fetches nothing at rest. The
+  # session that picked the value looked correct; leaving the group and coming back showed
+  # "en (unavailable)".
+  it "keeps a held value readable after leaving and returning to its group" do
+    visit "/styleguide/molecules/select?group=data"
+    trigger = "[data-identifier='sg-min-chars'][data-trigger]"
+    combobox = PageObjects::Components::UiKit::DSelect.by_identifier("sg-min-chars")
+
+    combobox.select("English (US)")
+    expect(page).to have_no_css("#{trigger}[data-unresolved]")
+
+    # Sub-nav clicks, NOT `visit`: a reload would reset the section's own state and leave nothing
+    # selected, so the assertions below would pass against an empty field. Changing the group
+    # keeps the section mounted while tearing down and rebuilding the select, which is what
+    # discards the resolve cache the selection left behind.
+    find("[data-test-styleguide-subnav-link='states']").click
+    expect(page).to have_no_css(trigger)
+    find("[data-test-styleguide-subnav-link='data']").click
+    expect(page).to have_css(trigger)
+
+    expect(page).to have_no_css("#{trigger}[data-unresolved]")
+    expect(combobox.input.value).to eq("English (US)")
+  end
+
   # Closing and reopening is the most ordinary thing a reader does, and it was broken: the panel
   # flashed and shut immediately on the second open.
   # Reopening via the caret after the control has already been used. The caret is the obvious
