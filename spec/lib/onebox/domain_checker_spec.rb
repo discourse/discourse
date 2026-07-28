@@ -19,5 +19,19 @@ RSpec.describe Onebox::DomainChecker do
       it { expect(described_class.is_blocked?("xapi.cat.org")).to be(false) }
       it { expect(described_class.is_blocked?("xkitten.cloud")).to be(false) }
     end
+
+    describe "matches regardless of hostname casing" do
+      it { expect(described_class.is_blocked?("API.CAT.ORG")).to be(true) }
+      it { expect(described_class.is_blocked?("Api.Cat.Org")).to be(true) }
+      it { expect(described_class.is_blocked?("Dev.Api.Cat.Org")).to be(true) }
+      it { expect(described_class.is_blocked?("KITTEN.CLOUD")).to be(true) }
+    end
+
+    describe "matches regardless of blocked entry casing" do
+      before { SiteSetting.blocked_onebox_domains = "API.CAT.ORG" }
+
+      it { expect(described_class.is_blocked?("api.cat.org")).to be(true) }
+      it { expect(described_class.is_blocked?("dev.api.cat.org")).to be(true) }
+    end
   end
 end
