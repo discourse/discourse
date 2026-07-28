@@ -184,8 +184,20 @@
   padding: 0.5em 0.75em;
   cursor: pointer;
 
-  // The roving highlight (keyboard) and hover share one visual treatment.
-  &.--active,
+  // The keyboard cursor is a POSITION, not a state, so it is framed rather than filled. Sharing
+  // the fill channel with the selection made both unreadable: a row just deselected still looked
+  // selected, and on a row that IS selected the cursor vanished — which is exactly where a list
+  // opens, since it reveals the held value. An outline also composes over either fill instead of
+  // replacing it, and it is how the chip cursor is already marked.
+  &.--active {
+    outline: 2px solid var(--tertiary);
+
+    // Drawn inside the row, so it neither overlaps its neighbours nor shifts any layout.
+    outline-offset: -2px;
+  }
+
+  // Hover keeps a fill: the pointer is visibly on the row, so it is never read at the same time
+  // as the keyboard cursor, and a fill is what a list is expected to do under a pointer.
   .discourse-no-touch &:hover {
     background: var(--d-hover);
   }
@@ -202,10 +214,9 @@
     font-weight: 700;
   }
 
-  // Selected AND under the cursor. Last, so it wins over both fills above: without it the two
-  // states share one surface and the cursor becomes invisible the moment it lands on the row
-  // that is already chosen — exactly where a reader is most likely to start.
-  &.--selected.--active,
+  // Selected AND hovered. The cursor needs no such rule now that it is an outline, but a pointer
+  // over a selected row still replaces one fill with another, so it gets the paired token rather
+  // than the plain hover grey.
   .discourse-no-touch &.--selected:hover {
     background: var(--d-selected-hover);
   }

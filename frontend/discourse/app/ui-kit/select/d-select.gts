@@ -1592,8 +1592,17 @@ export default class DSelect extends Component<DSelectSignature> {
    * key via `data-option-key` (stamped in the template).
    */
   @action
-  trackActiveOption(element: HTMLElement | null): void {
-    this.activeOptionKey = element?.dataset.optionKey ?? null;
+  trackActiveOption(
+    element: HTMLElement | null,
+    meta?: { pointer: boolean }
+  ): void {
+    // A pointer press moves the cursor but does not SHOW it, the same distinction `:focus-visible`
+    // draws: someone working with the mouse is looking at what they clicked, and a highlight
+    // appearing on that row reads as a second kind of selection. The cursor still moves, so the
+    // first arrow key continues from the row they acted on rather than jumping back to the top.
+    this.activeOptionKey = meta?.pointer
+      ? null
+      : (element?.dataset.optionKey ?? null);
     this.activePinnedIndex =
       element?.dataset.index == null
         ? undefined

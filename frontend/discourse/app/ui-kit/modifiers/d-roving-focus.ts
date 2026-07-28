@@ -40,7 +40,10 @@ interface DRovingFocusArgs {
   /** Called when an item is activated (Enter / Space). */
   onActivate?: (item: HTMLElement, event: KeyboardEvent) => void;
   /** Called whenever the cursor moves to a new item, or `null` when the highlight is cleared. */
-  onActiveChange?: (item: HTMLElement | null) => void;
+  onActiveChange?: (
+    item: HTMLElement | null,
+    meta?: { pointer: boolean }
+  ) => void;
   /** Called at a horizontal edge when `wrap` is false; wrapping suppresses it. */
   onExit?: (direction: "forward" | "backward") => void;
   /**
@@ -146,7 +149,10 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   itemSelector?: string;
   columnsOverride: number | (() => number) | null = null;
   onActivate?: (item: HTMLElement, event: KeyboardEvent) => void;
-  onActiveChange?: (item: HTMLElement | null) => void;
+  onActiveChange?: (
+    item: HTMLElement | null,
+    meta?: { pointer: boolean }
+  ) => void;
   onExit?: (direction: "forward" | "backward") => void;
   onEdgeReach?: (direction: "forward" | "backward") => void;
   logicalCount?: number;
@@ -160,6 +166,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
 
   /** The element keydown is bound to: the container (focus) or controller (active). */
   #listenElement: HTMLElement | null = null;
+  #pointerElement: HTMLElement | null = null;
 
   // The last `resetKey` seen. The sentinel is a fresh object so the first `modify()` always
   // counts as a change — harmless, since there is no cursor yet to preserve, and it keeps the
@@ -292,6 +299,20 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       this.#listenElement?.removeEventListener("keydown", this.handleKeydown);
       this.#listenElement = listenElement ?? null;
       this.#listenElement?.addEventListener("keydown", this.handleKeydown);
+    }
+
+    // The cursor follows a pointer press onto the item it lands on. Without this, activating an
+    // item by pointer rebuilds the list, and the reconcile below finds no cursor to preserve and
+    // seeds one at the top — marking a row the reader never touched, and pointing
+    // `aria-activedescendant` at it. Bound to the container (items come and go), and on
+    // `mousedown` so the cursor is in place before any consumer click handler rebuilds them.
+    if (this.#pointerElement !== element) {
+      this.#pointerElement?.removeEventListener(
+        "mousedown",
+        this.handlePointerDown
+      );
+      this.#pointerElement = element;
+      element.addEventListener("mousedown", this.handlePointerDown);
     }
 
     if (this.#mode === "active") {
@@ -662,7 +683,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    * and moves DOM focus; in active mode, repoints `aria-activedescendant`, moves
    * `activeClass`, and scrolls the item into view without moving focus.
    */
-  #setActive(target: HTMLElement, items: HTMLElement[]): void {
+  #setActive(target: HTMLElement, items: HTMLElement[], pointer = false): void {
     if (this.#mode === "active") {
       // Sweep all items, not just the usable ones passed in: the previously-active row may have
       // just been disabled, which drops it from that set while it still carries the class.
@@ -680,7 +701,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       }
       target.focus();
     }
-    this.onActiveChange?.(target);
+    this.onActiveChange?.(target, { pointer });
   }
 
   /**
@@ -816,8 +837,32 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     return el.id;
   }
 
+  /**
+   * Moves the cursor onto the item a pointer press landed on, so the keyboard continues from
+   * where the reader last acted rather than from wherever a re-seed would put it. Ignores a
+   * press that missed an item (padding, a group header, a scrollbar) and one on an unusable
+   * item, matching what the keyboard already refuses to land on.
+   */
+  @bind
+  handlePointerDown(event: MouseEvent): void {
+    if (this.#mode !== "active" || !this.itemSelector) {
+      return;
+    }
+    const target = (event.target as HTMLElement | null)?.closest<HTMLElement>(
+      this.itemSelector
+    );
+    if (!target || !this.#isUsable(target)) {
+      return;
+    }
+    this.#setActive(target, this.#items(), true);
+  }
+
   cleanup(): void {
     this.#listenElement?.removeEventListener("keydown", this.handleKeydown);
+    this.#pointerElement?.removeEventListener(
+      "mousedown",
+      this.handlePointerDown
+    );
     if (this.#mode === "active") {
       this.#listenElement?.removeAttribute("aria-activedescendant");
       for (const el of this.element?.querySelectorAll<HTMLElement>(

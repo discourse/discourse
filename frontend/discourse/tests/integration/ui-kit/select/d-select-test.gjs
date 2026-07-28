@@ -6000,6 +6000,46 @@ module("Integration | ui-kit | DSelect (none row)", function (hooks) {
   });
 });
 
+module(
+  "Integration | ui-kit | select | DSelect (pointer and cursor)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    // Clicking a row rebuilds the item list, which re-runs the cursor reconcile; with no cursor
+    // established it fell through to "highlight the first row", so a pointer user saw an
+    // unrelated row marked. `aria-activedescendant` pointed there too, so a screen reader was
+    // told the cursor was somewhere the reader had never been.
+    test("a pointer selection moves the cursor without showing it", async function (assert) {
+      await render(
+        <template>
+          <DSelect @items={{ITEMS}} @multiple={{true}} @value={{array}} />
+        </template>
+      );
+      await click("[role='combobox']");
+
+      const rows = findAll("[role='option']");
+      assert.true(rows.length > 2, "the list has rows to move between");
+      await click(rows[1]);
+
+      // Nothing is highlighted: the reader is looking at the row they just clicked, and a mark
+      // appearing anywhere reads as a second kind of selection.
+      assert
+        .dom("[role='option'].--active")
+        .doesNotExist("a pointer press leaves no visible cursor");
+
+      // But it did move. The first arrow continues from the clicked row rather than restarting
+      // at the top, which is what makes the invisible move worth doing.
+      await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
+      assert
+        .dom("[role='option'].--active")
+        .hasText(
+          findAll("[role='option']")[2].textContent.trim(),
+          "the keyboard resumes from the row the pointer acted on"
+        );
+    });
+  }
+);
+
 module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
   setupRenderingTest(hooks);
 
