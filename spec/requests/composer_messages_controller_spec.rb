@@ -48,6 +48,53 @@ RSpec.describe ComposerMessagesController do
         expect(duplicate_lookup).not_to have_key("example.com/private-doc")
       end
 
+      it "does not include restricted internal links in duplicate_lookup" do
+        user.change_trust_level!(TrustLevel[1])
+        restricted_category = Fabricate(:category)
+        restricted_category.set_permissions(staff: :full)
+        restricted_category.save!
+        restricted_topic =
+          Fabricate(:topic, category: restricted_category, title: "Secured category secret title")
+        Fabricate(:post, topic: restricted_topic, user: restricted_topic.user)
+        private_message = Fabricate(:private_message_topic, title: "Private message secret title")
+        Fabricate(:post, topic: private_message, user: private_message.user)
+        visible_topic = Fabricate(:topic)
+        Fabricate(:post, topic: visible_topic, user: visible_topic.user)
+        hidden_target_post = Fabricate(:post, topic: visible_topic, user: visible_topic.user)
+        hidden_target_post.hide!(PostActionType.types[:spam])
+
+        restricted_url = "#{Discourse.base_url}/t/#{restricted_topic.id}"
+        private_message_url = "#{Discourse.base_url}/t/#{private_message.id}"
+        hidden_target_url = "#{Discourse.base_url}#{hidden_target_post.url}"
+        reply =
+          create_post(
+            user: user,
+            topic: topic,
+            raw: "Check out #{restricted_url}, #{private_message_url}, and #{hidden_target_url}",
+          )
+
+        expect(TopicLink.where(post: reply).pluck(:url)).to contain_exactly(
+          restricted_url,
+          private_message_url,
+          hidden_target_url,
+        )
+        expect(
+          TopicLink.where(
+            topic: [restricted_topic, private_message],
+            link_post: reply,
+            reflection: true,
+          ),
+        ).to be_empty
+
+        get "/composer_messages.json", params: { topic_id: topic.id, composer_action: "reply" }
+        expect(response.status).to eq(200)
+
+        duplicate_lookup = response.parsed_body["extras"]["duplicate_lookup"]
+        expect(duplicate_lookup.keys).to be_empty
+        expect(response.body).not_to include(restricted_topic.slug)
+        expect(response.body).not_to include(private_message.slug)
+      end
+
       it "does not include links from posts converted to whispers in duplicate_lookup" do
         SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
         staff_user = Fabricate(:admin)
