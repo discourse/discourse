@@ -7,9 +7,12 @@
 vi:
   js:
     discourse_captcha:
-      placeholder: chỗ trống
+      missing_token: "Vui lòng hoàn thành xác minh Captcha."
+      verification_failed: "Xác minh Captcha thất bại. Vui lòng thử lại."
+      placeholder: Ô nhập liệu / Chỗ trống
+      contact_system_administrator: "Đã xảy ra sự cố với dịch vụ Captcha. Nếu sự cố vẫn tiếp diễn, vui lòng liên hệ với Quản trị viên hệ thống."
   admin_js:
     admin:
       site_settings:
         categories:
-          discourse_hcaptcha: "Discourse hCaptcha"
+          discourse_hcaptcha: "Tích hợp hCaptcha trên Discourse (Discourse hCaptcha)"

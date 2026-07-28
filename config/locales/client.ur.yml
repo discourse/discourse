@@ -6207,6 +6207,7 @@ ur:
             title: "شراکت"
             fetch_error: "شراکت کی ترتیب نہیں ہو سکی۔ براہِ کرم صفحہ ریفریش کریں۔"
             activity_by_category:
+              title: "زمروں کی سرگرمی"
               category: "زُمرَہ"
               topics: "موضوعات"
               posts: "دھاگے"

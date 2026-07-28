@@ -369,7 +369,7 @@ fr:
         forced_tool_strategy: Stratégie d'outil forcé
         allow_chat_direct_messages: "Autoriser les messages directs de discussion"
         allow_chat_channel_mentions: "Autoriser les mentions du canal de discussion"
-        allow_personal_messages: "Autoriser les messages privés"
+        allow_personal_messages: "Autoriser les messages personnels"
         allow_topic_mentions: "Autoriser les mentions de sujets"
         force_default_llm: "Toujours utiliser le modèle linguistique par défaut"
         save: "Enregistrer"
@@ -410,10 +410,10 @@ fr:
           title: "Options de robots IA"
         filters:
           reset: "Réinitialiser"
-          all_features: "N'importe quelle caractéristique"
+          all_features: "N'importe quelle fonctionnalité"
         features_list:
-          one: "Caractéristique :"
-          other: "Caractéristiques :"
+          one: "Fonctionnalité :"
+          other: "Fonctionnalités :"
         llms_list: "LLM :"
       rag:
         title: "RAG"

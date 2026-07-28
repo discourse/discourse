@@ -460,7 +460,7 @@ zh_CN:
         action_title: "创建新活动"
         all_day: "全天"
         livestream: "直播"
-        livestream_chat_disabled: "启用聊天功能以创建直播频道。"
+        livestream_chat_disabled: "启用聊天以创建直播频道。"
         reminder:
           units:
             minutes:
@@ -471,8 +471,8 @@ zh_CN:
               other: "天"
             weeks:
               other: "周"
-          before: "%{unit} 之前"
-          after: "%{unit} 之后"
+          before: "提前 %{unit}"
+          after: "推后 %{unit}"
           notification_title: "通知与会者"
           bump_topic_title: "自动顶帖话题"
           remove: "移除提醒"
@@ -510,7 +510,7 @@ zh_CN:
           label: "结束日期"
         all_day:
           label: "全天事件"
-          description: "全天活动没有具体时间，只有日期。活动将从当天开始一直持续到结束。"
+          description: "全天活动没有具体时间，只有日期。活动将从当天开始一直持续到当天结束。"
         reminders:
           label: "提醒"
           types:
@@ -525,29 +525,29 @@ zh_CN:
             before: "提前"
             after: "推后"
         recurrence_until:
-          label: "直至（包含此日期）"
+          label: "截至（包含此日期）"
         recurrence:
           label: "重复"
           none: "不重复"
           every_day: "每天"
           every_weekday: "每个工作日"
           every_week: "每个%{weekday}"
-          every_two_weeks: "每隔一个 %{weekday}"
-          every_four_weeks: "每 4 周在 %{weekday}"
-          every_month: "每个月的 %{ordinal} %{weekday}"
+          every_two_weeks: "每隔一个%{weekday}"
+          every_four_weeks: "每 4 周的%{weekday}"
+          every_month: "每个月的%{ordinal}%{weekday}"
           ordinals:
-            first: "第一的"
-            second: "第二"
-            third: "第三"
-            fourth: "第四"
-            last: "最近"
+            first: "第一个"
+            second: "第二个"
+            third: "第三个"
+            fourth: "第四个"
+            last: "最后一个"
         max_attendees:
           label: "最多参与者"
           placeholder: "无限制"
         attendance:
-          label: "本次活动最多可容纳多少位会员？"
+          label: "本次活动最多可容纳多少位成员？"
           unlimited: "无限"
-          up_to: "最多……"
+          up_to: "最多…"
           none: "无"
         allow_chat:
           label: "聊天集成"
@@ -573,7 +573,7 @@ zh_CN:
             description: "任何人都可以参加。"
           private:
             title: "仅限邀请"
-            description: "只有指定团体的成员才能参加。"
+            description: "只有所选群组的成员可以参加。"
         delete_confirmation_message: "删除此活动？"
         image:
           label: "活动图片"

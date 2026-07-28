@@ -101,6 +101,7 @@ de:
           title: "Dialogbox"
           header: "Dialogbox-Titel"
           footer: "Dialogbox-Fußzeile"
+          open: "Dialogbox öffnen"
         user_about:
           title: "Benutzerprofil"
         header_icons:
