@@ -559,12 +559,35 @@ RSpec.describe UserUpdater do
     end
 
     context "when website does not include http" do
-      it "adds http before updating" do
+      it "adds http before updating if no scheme" do
         updater = UserUpdater.new(acting_user, user)
 
         updater.update(website: "example.com")
 
         expect(user.reload.user_profile.website).to eq "http://example.com"
+      end
+
+      it "returns an error for non-http scheme" do
+        updater = UserUpdater.new(acting_user, user)
+
+        expect(updater.update(website: "ftp://example.com")).to eq false
+        expect(updater.update(website: "file://example.com")).to eq false
+        expect(updater.update(website: "mailto://example.com")).to eq false
+        expect(updater.update(website: "something://example.com")).to eq false
+      end
+    end
+
+    context "when website includes http but with uppercase" do
+      it "does not add an additional http:// before" do
+        updater = UserUpdater.new(acting_user, user)
+        updater.update(website: "Http://example.com")
+        expect(user.reload.user_profile.website).to eq "Http://example.com"
+        updater.update(website: "hTtp://example.com")
+        expect(user.reload.user_profile.website).to eq "hTtp://example.com"
+        updater.update(website: "HTTP://example.com")
+        expect(user.reload.user_profile.website).to eq "HTTP://example.com"
+        updater.update(website: "HttpS://example.com")
+        expect(user.reload.user_profile.website).to eq "HttpS://example.com"
       end
     end
 
@@ -572,7 +595,8 @@ RSpec.describe UserUpdater do
       it "returns an error" do
         updater = UserUpdater.new(acting_user, user)
 
-        expect(updater.update(website: "ʔ<")).to eq nil
+        expect(updater.update(website: "ʔ<")).to eq false
+        expect(updater.update(website: "http://bad-domain-no-period")).to eq false
       end
     end
 
