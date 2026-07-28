@@ -93,9 +93,12 @@ RSpec.describe FileStore::LocalStore do
       symlink = File.join(tombstone_dir, "link.png")
       [expired_file, boundary_file, newer_file].each { |path| File.write(path, "image") }
       File.symlink(expired_file, symlink)
-      File.utime(32.days.ago.to_time, 32.days.ago.to_time, expired_file)
-      File.utime(31.days.ago.to_time, 31.days.ago.to_time, boundary_file)
-      File.utime((31.days.ago + 1.second).to_time, (31.days.ago + 1.second).to_time, newer_file)
+      current_time = Time.now.to_time
+      expired_time = current_time - 32 * 1.day.to_i
+      boundary_time = current_time - 31 * 1.day.to_i
+      File.utime(expired_time, expired_time, expired_file)
+      File.utime(boundary_time, boundary_time, boundary_file)
+      File.utime(boundary_time + 1.second, boundary_time + 1.second, newer_file)
 
       store.purge_tombstone(30)
 
@@ -114,9 +117,10 @@ RSpec.describe FileStore::LocalStore do
       blocked_file = File.join(tombstone_dir, "blocked.png")
       vanished_file = File.join(tombstone_dir, "vanished.png")
       deletable_file = File.join(tombstone_dir, "deletable.png")
+      expired_time = Time.now.to_time - 32 * 1.day.to_i
       [blocked_file, vanished_file, deletable_file].each do |path|
         File.write(path, "image")
-        File.utime(32.days.ago.to_time, 32.days.ago.to_time, path)
+        File.utime(expired_time, expired_time, path)
       end
 
       allow(File).to receive(:delete).and_call_original

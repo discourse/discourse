@@ -62,7 +62,7 @@ module FileStore
     def purge_tombstone(grace_period)
       return if !Dir.exist?(tombstone_dir)
 
-      cutoff_time = Time.now - (grace_period + 1).days
+      cutoff_time = Time.now - (grace_period + 1) * 1.day.to_i
       paths = [tombstone_dir]
       failures = []
 
