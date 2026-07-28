@@ -9,6 +9,7 @@ import ReviewableNoteForm from "discourse/components/reviewable/note-form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import escape from "discourse/lib/escape";
+import { sanitize } from "discourse/lib/text";
 import { and, eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
@@ -108,7 +109,7 @@ export default class ReviewableTimeline extends Component {
           user: score.user,
           icon: "flag",
           titleKey: "review.timeline.flagged_as_by",
-          description: trustHTML(flaggedDescription),
+          description: trustHTML(sanitize(flaggedDescription)),
           score: {
             count: 0,
             type: score.score_type.type,
