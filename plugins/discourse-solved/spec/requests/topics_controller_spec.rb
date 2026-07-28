@@ -55,6 +55,25 @@ RSpec.describe TopicsController do
       expect(response.body).to include(expected_schema_json(p2_single_answer_json))
     end
 
+    it "does not include first post text in schema information when the guardian cannot see it" do
+      hidden_text = "super-secret first post body"
+      p1.update!(raw: hidden_text, hidden: true)
+      p1.rebake!
+      Fabricate(:solved_topic, topic:, answer_post: p2)
+
+      get "/t/#{topic.slug}/#{topic.id}"
+
+      schema_json =
+        Nokogiri::HTML5
+          .fragment(response.body)
+          .at_css('script[type="application/ld+json"]')
+          &.content
+
+      expect(response.status).to eq(200)
+      expect(schema_json).to include('"@type":"QAPage"')
+      expect(schema_json).not_to include(hidden_text)
+    end
+
     it "should include quoted content in schema information" do
       Fabricate(:solved_topic, topic:, answer_post: p2)
 
