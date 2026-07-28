@@ -18,6 +18,7 @@ import discourseExternalLoader from "./rollup-plugins/discourse-external-loader"
 import discourseFileSearch from "./rollup-plugins/discourse-file-search";
 import discourseGjs from "./rollup-plugins/discourse-gjs";
 import discourseHbs from "./rollup-plugins/discourse-hbs";
+import discourseSourceImports from "./rollup-plugins/discourse-source-imports";
 import discourseTerser from "./rollup-plugins/discourse-terser";
 import discourseVirtualLoader from "./rollup-plugins/discourse-virtual-loader";
 import buildEmberTemplateManipulatorPlugin from "./theme-hbs-ast-transforms";
@@ -57,6 +58,7 @@ async function performRollup(modules, opts) {
       console.info(level, message);
     },
     plugins: [
+      discourseSourceImports({ basePath, modules }),
       discourseFileSearch(),
       discourseVirtualLoader({
         isTheme: !!opts.themeId,

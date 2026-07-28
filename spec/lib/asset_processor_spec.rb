@@ -132,6 +132,105 @@ RSpec.describe AssetProcessor do
       expect(entrypoint(result, "main")["map"]).not_to be_nil
     end
 
+    it "can import the template from a GJS module as source" do
+      sources = {
+        "discourse/components/example.gjs" => <<~GJS,
+          export default <template>
+            <button type="button">
+              Save
+            </button>
+          </template>;
+        GJS
+        "discourse/initializers/example-source.js" => <<~JS,
+          import exampleSource from "../components/example.gjs?template-source";
+
+          globalThis.exampleSource = exampleSource;
+        JS
+      }
+
+      result =
+        AssetProcessor.new.rollup(
+          sources,
+          { entrypoints: { main: { modules: ["discourse/initializers/example-source.js"] } } },
+        )
+
+      context = MiniRacer::Context.new
+      code = entrypoint(result, "main")["code"].sub(/export \{.*\};\s*\z/, "")
+      context.eval(code)
+
+      expect(context.eval("globalThis.exampleSource")).to eq(<<~HBS.strip)
+        <button type="button">
+          Save
+        </button>
+      HBS
+    ensure
+      context&.dispose
+    end
+
+    it "can import a whole GJS module as source" do
+      example = <<~GJS
+        import DButton from "discourse/ui-kit/d-button";
+
+        const label = "Save";
+
+        export default <template>
+          <DButton @label={{label}} />
+        </template>;
+      GJS
+
+      sources = {
+        "discourse/components/example.gjs" => example,
+        "discourse/initializers/example-source.js" => <<~JS,
+          import exampleSource from "../components/example.gjs?source";
+
+          globalThis.exampleSource = exampleSource;
+        JS
+      }
+
+      result =
+        AssetProcessor.new.rollup(
+          sources,
+          { entrypoints: { main: { modules: ["discourse/initializers/example-source.js"] } } },
+        )
+
+      context = MiniRacer::Context.new
+      code = entrypoint(result, "main")["code"].sub(/export \{.*\};\s*\z/, "")
+      context.eval(code)
+
+      expect(context.eval("globalThis.exampleSource")).to eq(example.strip)
+    ensure
+      context&.dispose
+    end
+
+    it "can import a template-less module as source" do
+      example = <<~JS
+        export const MAX_LENGTH = 50;
+      JS
+
+      sources = {
+        "discourse/lib/example.js" => example,
+        "discourse/initializers/example-source.js" => <<~JS,
+          import exampleSource from "../lib/example.js?source";
+
+          globalThis.exampleSource = exampleSource;
+        JS
+      }
+
+      result =
+        AssetProcessor.new.rollup(
+          sources,
+          { entrypoints: { main: { modules: ["discourse/initializers/example-source.js"] } } },
+        )
+
+      context = MiniRacer::Context.new
+      code = entrypoint(result, "main")["code"].sub(/export \{.*\};\s*\z/, "")
+      context.eval(code)
+
+      expect(context.eval("globalThis.exampleSource")).to eq(example.strip)
+    ensure
+      context&.dispose
+    end
+
     it "supports decorators and class properties without error" do
       script = <<~JS.chomp
         export default class MyClass {
