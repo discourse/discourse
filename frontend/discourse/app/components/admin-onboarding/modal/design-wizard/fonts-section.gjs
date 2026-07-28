@@ -59,8 +59,8 @@ export default class DesignWizardFontsSection extends Component {
         {{i18n "admin_onboarding_banner.design_wizard.fonts.more_fonts"}}
       </span>
       <DMenu
-        @identifier="design-wizard-more-base-fonts"
-        @translatedLabel={{this.baseMoreFontsLabel}}
+        @identifier="design-wizard-modal__more-fonts"
+        @label={{this.baseMoreFontsLabel}}
         @icon="angle-down"
         @triggerClass="btn-default design-wizard-modal__more-fonts"
         @modalForMobile={{true}}
@@ -111,7 +111,7 @@ export default class DesignWizardFontsSection extends Component {
       </span>
       <DMenu
         @identifier="design-wizard-more-heading-fonts"
-        @translatedLabel={{this.headingMoreFontsLabel}}
+        @label={{this.headingMoreFontsLabel}}
         @icon="angle-down"
         @triggerClass="btn-default design-wizard-modal__more-fonts"
         @modalForMobile={{true}}

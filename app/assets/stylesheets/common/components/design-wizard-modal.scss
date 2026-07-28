@@ -22,6 +22,10 @@
     }
   }
 
+  &__more-fonts-content {
+    z-index: 999;
+  }
+
   &__rail {
     display: flex;
     flex-direction: column;
