@@ -4,7 +4,7 @@ describe DiscourseAi::Translation::Progress do
   before do
     Discourse.cache.clear
     SiteSetting.content_localization_supported_locales = "en|fr"
-    SiteSetting.ai_translation_backfill_max_age_days = 30
+    SiteSetting.ai_translation_backfill_start_date = 30.days.ago.utc.to_date.iso8601
     SiteSetting.ai_translation_category_scope = "public"
 
     allow(DiscourseAi::Translation::PostCandidates).to receive(:progress_summary).and_return(

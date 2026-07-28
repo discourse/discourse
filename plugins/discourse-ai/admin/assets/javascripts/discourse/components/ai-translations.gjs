@@ -328,7 +328,7 @@ export default class AiTranslations extends Component {
   backfillStatusMessage(targets) {
     if (
       this.args.model?.backfill_enabled &&
-      this.args.model?.backfill_max_age_days &&
+      this.args.model?.backfill_start_date &&
       this.hourlyRate > 0
     ) {
       const posts = targets?.find(({ target_type }) => target_type === "post");
@@ -337,15 +337,13 @@ export default class AiTranslations extends Component {
         : 0;
 
       if (totalRemaining && totalRemaining > 0) {
-        const cutoffDate = new Date();
-        cutoffDate.setDate(
-          cutoffDate.getDate() - this.args.model.backfill_max_age_days
-        );
-
-        const formattedDate = cutoffDate.toLocaleDateString(undefined, {
+        const formattedDate = new Date(
+          this.args.model.backfill_start_date
+        ).toLocaleDateString(undefined, {
           year: "numeric",
           month: "long",
           day: "numeric",
+          timeZone: "UTC",
         });
 
         return trustHTML(

@@ -172,7 +172,7 @@ en:
     ai_translation_personal_messages: "Controls which personal messages are translated. 'none' disables PM translation. 'group' translates only group PMs. 'all' translates all PMs."
     ai_translation_include_bot_content: "When enabled, content written by bots (user IDs below 0) will also be sent for translation."
     ai_translation_max_post_length: "The maximum number of characters for a post to be translated. Posts longer than this will not be translated."
-    ai_translation_backfill_max_age_days: "The maximum age of a post and topic to be translated. Posts and topics older than this will not be translated. 0 disables backfilling, but will not disable translation of new posts."
+    ai_translation_backfill_start_date: "The UTC date from which historical posts and topics will be sent for translation backfilling. Leave blank to disable backfilling. New content will continue to be translated."
     ai_translation_backfill_hourly_rate: "The number of posts and topics to translate per hour during backfill operations. Set to 0 to disable automatic backfilling of translations for existing content."
     ai_translation_backfill_parallel_jobs: "The number of parallel post localization jobs to run per backfill cycle. Higher values increase throughput but consume more resources."
     ai_usage_rollup_after_days: "Number of days to keep per-request AI usage stats before rolling them into daily aggregates. Set to 0 to disable rollups."
