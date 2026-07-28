@@ -2059,6 +2059,23 @@ RSpec.describe Email::Receiver do
       MD
       end
 
+      it "keeps the lists and only elides the signature from word emails" do
+        expect { process(:word_html_reply) }.to change { topic.posts.count }
+        expect(topic.posts.last.raw).to eq <<~MD.strip
+        This is the **body** of the email.
+
+        - a bullet
+        - another bullet
+
+        And these are the steps to follow:
+
+        1. a first step
+        1. a second step
+
+        That's all folks!
+      MD
+      end
+
       it "doesn't process email with same message-id more than once" do
         expect do
           process(:text_reply)
