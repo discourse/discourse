@@ -1,3 +1,5 @@
+import { localeKeyPart } from "./property-engine";
+
 const OPERATORS = {
   equals: {
     contexts: {
@@ -39,28 +41,28 @@ const OPERATORS = {
   },
   gt: {
     contexts: {
-      workflow: ["number"],
+      workflow: ["number", "string"],
       data_table: ["string", "number", "date"],
     },
     needsValue: true,
   },
   lt: {
     contexts: {
-      workflow: ["number"],
+      workflow: ["number", "string"],
       data_table: ["string", "number", "date"],
     },
     needsValue: true,
   },
   gte: {
     contexts: {
-      workflow: ["number"],
+      workflow: ["number", "string"],
       data_table: ["string", "number", "date"],
     },
     needsValue: true,
   },
   lte: {
     contexts: {
-      workflow: ["number"],
+      workflow: ["number", "string"],
       data_table: ["string", "number", "date"],
     },
     needsValue: true,
@@ -81,6 +83,13 @@ export function operatorsForType(type, { context = "workflow" } = {}) {
   return Object.keys(OPERATORS).filter((op) =>
     OPERATORS[op].contexts[context]?.includes(type || "string")
   );
+}
+
+export function operatorOptionsForType(type, { context = "workflow" } = {}) {
+  return operatorsForType(type, { context }).map((operation) => ({
+    value: operation,
+    label_key: `discourse_workflows.if.operators.${localeKeyPart(operation)}`,
+  }));
 }
 
 export function isSingleValueOperator(operation) {
