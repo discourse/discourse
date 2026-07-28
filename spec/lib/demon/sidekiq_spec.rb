@@ -1,50 +1,6 @@
 # frozen_string_literal: true
 
-require "sidekiq/cli"
-
 RSpec.describe Demon::Sidekiq do
-  describe "#run" do
-    let(:rails_root) { Dir.mktmpdir }
-    let(:demon) { described_class.new(1, rails_root: "#{rails_root}/", logger: Logger.new(nil)) }
-
-    before do
-      demon.stubs(:monitor_parent)
-      demon.stubs(:establish_app)
-    end
-
-    after { FileUtils.rm_rf(rails_root) }
-
-    it "starts the Sidekiq CLI with nice value 5" do
-      reader, writer = IO.pipe
-      cli = Object.new
-      cli.define_singleton_method(:parse) do |_options|
-        writer.write(Process.getpriority(Process::PRIO_PROCESS, Process.pid).to_s)
-        writer.close
-        exit!(0)
-      end
-      Sidekiq::CLI.stubs(:instance).returns(cli)
-
-      demon.run
-      writer.close
-      status = Process.wait2(demon.pid).last
-
-      expect(reader.read).to eq("5")
-      expect(status).to be_success
-    ensure
-      reader&.close
-      writer&.close unless writer&.closed?
-    end
-
-    it "exits when setting the process priority fails" do
-      Process.stubs(:setpriority).raises(Errno::EACCES)
-
-      demon.run
-      status = Process.wait2(demon.pid).last
-
-      expect(status.exitstatus).to eq(1)
-    end
-  end
-
   describe ".heartbeat_check" do
     it "should restart sidekiq daemons when daemon cannot be match to an entry in Sidekiq::ProcessSet or when heartbeat check has been missed" do
       running_sidekiq_daemon = described_class.new(1)

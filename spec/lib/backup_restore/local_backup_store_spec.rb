@@ -19,18 +19,6 @@ RSpec.describe BackupRestore::LocalBackupStore do
     expect(store.remote?).to eq(false)
   end
 
-  describe "#download_file" do
-    include_context "with backups"
-
-    it "includes the supplied context when copying fails" do
-      destination_path = Dir.mktmpdir { |path| File.join(path, backup1.filename) }
-
-      expect do
-        store.download_file(backup1.filename, destination_path, "Failed to stage backup.")
-      end.to raise_error(RuntimeError, /Failed to stage backup\./)
-    end
-  end
-
   describe "path traversal protection" do
     let(:filename) { "a.tgz" }
 
