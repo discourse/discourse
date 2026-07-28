@@ -342,7 +342,7 @@ class TopicOgImageGenerator
         read: [svg_path],
         write: [dir],
         nice: 10,
-        timeout: 20_000,
+        timeout: 20,
       )
 
       return nil unless File.exist?(png_path)
