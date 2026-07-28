@@ -34,7 +34,8 @@ class ReviewableScoreSerializer < ApplicationSerializer
   has_one :reviewed_by, serializer: BasicUserSerializer, root: "users"
 
   def include_reviewable_conversation?
-    object.meta_topic.present? && scope&.can_see?(object.meta_topic)
+    return false if object.meta_topic.blank?
+    scope&.can_see?(object.meta_topic) || object.notify_moderators_flag_message?
   end
 
   def agree_stats
