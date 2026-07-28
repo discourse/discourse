@@ -151,6 +151,20 @@ module DiscoursePostEvent
         expect(response.body).to include("URL:#{event.url}")
       end
 
+      it "strips CR/LF from URL fields so a stored URL cannot inject ICS properties" do
+        Fabricate(
+          :event,
+          original_starts_at: 1.day.from_now,
+          url: "https://example.com/\r\nX-INJECTED:evil\r\n",
+        )
+
+        get "/discourse-post-event/events.ics"
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include("URL:https://example.com/X-INJECTED:evil")
+        expect(response.body).not_to match(/^X-INJECTED:evil$/)
+      end
+
       it "should not HTML-encode ampersands in ics format" do
         Fabricate(
           :event,
