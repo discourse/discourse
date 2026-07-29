@@ -55,14 +55,64 @@ export default class PostTextSelection extends Component {
   @service menu;
   @service modal;
 
+  // Track whether the primary pointer button is currently held so the quote
+  // toolbar can be gated on gesture end instead of appearing mid-drag.
+  // Rendering the toolbar above an in-progress selection perturbs the native
+  // selection endpoint and causes the selection to flicker to end-of-page.
+  // The show is flushed on `pointerup` OR `pointercancel` (the latter is how
+  // mobile long-press selection gestures usually end).
+  pointerDown = false;
+
   setup = modifier(() => {
     document.addEventListener("selectionchange", this.selectionChange);
+
+    this.onPointerDown = (event) => {
+      if (event.button === 0) {
+        this.pointerDown = true;
+      }
+    };
+    this.flushShow = () => {
+      cancel(this.debouncedSelectionChangeHandler);
+      // selection is final on gesture end; flush the (debounced) show now
+      this.debouncedSelectionChangeHandler = discourseDebounce(
+        this.selectionChangeHandler,
+        INPUT_DELAY
+      );
+    };
+    this.onPointerUp = (event) => {
+      if (event.button !== 0 || !this.pointerDown) {
+        return;
+      }
+      this.pointerDown = false;
+      this.flushShow();
+    };
+    this.onPointerCancel = () => {
+      if (!this.pointerDown) {
+        return;
+      }
+      this.pointerDown = false;
+      this.flushShow();
+    };
+    this.onBlur = () => {
+      this.pointerDown = false;
+    };
+
+    document.addEventListener("pointerdown", this.onPointerDown, true);
+    // pointerup/cancel on window so a release outside the viewport still clears
+    window.addEventListener("pointerup", this.onPointerUp);
+    window.addEventListener("pointercancel", this.onPointerCancel);
+    window.addEventListener("blur", this.onBlur);
+
     this.appEvents.on("quote-button:quote", this, "insertQuote");
     this.appEvents.on("quote-button:edit", this, "toggleHeadlessFastEdit");
 
     return () => {
       cancel(this.debouncedSelectionChangeHandler);
       document.removeEventListener("selectionchange", this.selectionChange);
+      document.removeEventListener("pointerdown", this.onPointerDown, true);
+      window.removeEventListener("pointerup", this.onPointerUp);
+      window.removeEventListener("pointercancel", this.onPointerCancel);
+      window.removeEventListener("blur", this.onBlur);
       this.appEvents.off("quote-button:quote", this, "insertQuote");
       this.appEvents.off("quote-button:edit", this, "toggleHeadlessFastEdit");
       this.menuInstance?.close();
@@ -221,6 +271,13 @@ export default class PostTextSelection extends Component {
   @bind
   async selectionChange() {
     await this.hideToolbar();
+    if (this.pointerDown) {
+      // Mid-drag: don't show the toolbar (it would sit on the active drag
+      // endpoint and perturb the native selection). Flush on gesture end
+      // (`pointerup`/`pointercancel`).
+      cancel(this.debouncedSelectionChangeHandler);
+      return;
+    }
     this.debouncedSelectionChangeHandler = discourseDebounce(
       this.selectionChangeHandler,
       INPUT_DELAY
