@@ -1075,19 +1075,22 @@ RSpec.describe PostSerializer do
       expect(entry[:excerpt]).to include("戦わずして勝つ")
     end
 
-    it "is omitted when the reader chose to see original content" do
-      reader.user_option.update!(show_original_content: true)
+    it "is omitted when the reader disables automatic translation" do
+      reader.user_option.update!(automatically_translate: false)
       expect(json_for(reader).key?(:localized_oneboxes)).to eq(false)
     end
 
-    it "is omitted for an anonymous reader with the show-original cookie" do
-      env = create_request_env.merge("HTTP_COOKIE" => ContentLocalization::SHOW_ORIGINAL_COOKIE)
+    it "is omitted for an anonymous reader with automatic translation disabled by cookie" do
+      env =
+        create_request_env.merge(
+          "HTTP_COOKIE" => "#{ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE}=false",
+        )
       anon_scope = Guardian.new(nil, ActionDispatch::Request.new(env))
 
       expect(json_for(nil, scope: anon_scope).key?(:localized_oneboxes)).to eq(false)
     end
 
-    it "is included for an anonymous reader without the show-original cookie" do
+    it "is included for an anonymous reader without an automatic translation cookie" do
       anon_scope = Guardian.new(nil, ActionDispatch::Request.new(create_request_env))
 
       expect(json_for(nil, scope: anon_scope)[:localized_oneboxes].first[:title]).to eq("孫子の兵法")

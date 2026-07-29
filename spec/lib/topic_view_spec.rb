@@ -28,6 +28,30 @@ RSpec.describe TopicView do
     end
   end
 
+  describe "#has_localized_content?" do
+    before { SiteSetting.content_localization_enabled = true }
+
+    it "ignores localizations on posts that are not eligible for translation" do
+      localized_topic = Fabricate(:topic, locale: "en")
+      post = Fabricate(:post, topic: localized_topic, locale: nil)
+      Fabricate(:post_localization, post:, locale: "en")
+
+      expect(TopicView.new(localized_topic.id, user).has_localized_content?).to eq(false)
+    end
+
+    it "detects a site-default post localization when default fallback is enabled" do
+      SiteSetting.default_locale = "en"
+      SiteSetting.content_localization_use_default_locale_when_unsupported = true
+      localized_topic = Fabricate(:topic, locale: "de")
+      post = Fabricate(:post, topic: localized_topic, locale: "ja")
+      Fabricate(:post_localization, post:, locale: "en")
+
+      I18n.with_locale(:de) do
+        expect(TopicView.new(localized_topic.id, user).has_localized_content?).to eq(true)
+      end
+    end
+  end
+
   describe "#reset_post_collection" do
     fab!(:post1) { Fabricate(:post, topic: topic) }
     fab!(:post2) { Fabricate(:post, topic: topic) }

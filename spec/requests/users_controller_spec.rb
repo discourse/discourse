@@ -2701,6 +2701,8 @@ RSpec.describe UsersController do
                 watched_tags: "#{tags[0].name},#{tag_synonym.name}",
                 card_background_upload_url: upload.url,
                 profile_background_upload_url: upload.url,
+                show_original_content: true,
+                understood_languages: ["ja"],
               }
 
           expect(response.status).to eq(200)
@@ -2717,6 +2719,8 @@ RSpec.describe UsersController do
               notification_level: TagUser.notification_levels[:watching],
             ).pluck(:tag_id),
           ).to contain_exactly(tags[0].id, tags[1].id)
+          expect(user.user_option.automatically_translate).to eq(false)
+          expect(user.user_option.understood_languages).to contain_exactly("en", "ja")
 
           theme = Fabricate(:theme, user_selectable: true)
 
@@ -2725,6 +2729,7 @@ RSpec.describe UsersController do
                 muted_usernames: "",
                 theme_ids: [theme.id],
                 email_level: UserOption.email_level_types[:always],
+                automatically_translate: true,
               }
 
           user.reload
@@ -2732,6 +2737,7 @@ RSpec.describe UsersController do
           expect(user.muted_users.pluck(:username).sort).to be_empty
           expect(user.user_option.theme_ids).to eq([theme.id])
           expect(user.user_option.email_level).to eq(UserOption.email_level_types[:always])
+          expect(user.user_option.automatically_translate).to eq(true)
           expect(user.profile_background_upload).to eq(upload)
           expect(user.card_background_upload).to eq(upload)
         end

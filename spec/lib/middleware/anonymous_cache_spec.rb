@@ -145,12 +145,19 @@ RSpec.describe Middleware::AnonymousCache do
       }.not_to raise_error
     end
 
-    it "handles showing original content" do
-      show_orig_key =
-        new_helper("HTTP_COOKIE" => ContentLocalization::SHOW_ORIGINAL_COOKIE).cache_key
+    it "keys only on the resolved automatic translation preference" do
       regular_key = new_helper.cache_key
+      enabled_key =
+        new_helper(
+          "HTTP_COOKIE" => "#{ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE}=true",
+        ).cache_key
+      disabled_key =
+        new_helper(
+          "HTTP_COOKIE" => "#{ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE}=false",
+        ).cache_key
 
-      expect(show_orig_key).not_to eq(regular_key)
+      expect(enabled_key).to eq(regular_key)
+      expect(disabled_key).not_to eq(regular_key)
     end
 
     context "when cached" do

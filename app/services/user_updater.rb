@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UserUpdater
+  LEGACY_SHOW_ORIGINAL_CONTENT_ATTR = :show_original_content
+
   CATEGORY_IDS = {
     watched_first_post_category_ids: :watching_first_post,
     watched_category_ids: :watching,
@@ -61,8 +63,9 @@ class UserUpdater
     watched_precedence_over_muted
     topics_unread_when_closed
     composition_mode
-    show_original_content
     send_shortcut
+    automatically_translate
+    understood_languages
   ]
 
   NOTIFICATION_SCHEDULE_ATTRS = -> do
@@ -82,6 +85,12 @@ class UserUpdater
   end
 
   def update(attributes = {})
+    if attributes.key?(LEGACY_SHOW_ORIGINAL_CONTENT_ATTR)
+      attributes[:automatically_translate] = attributes[LEGACY_SHOW_ORIGINAL_CONTENT_ATTR].to_s !=
+        "true" unless attributes.key?(:automatically_translate)
+      attributes.delete(LEGACY_SHOW_ORIGINAL_CONTENT_ATTR)
+    end
+
     user_profile = user.user_profile
     user_profile.dismissed_banner_key = attributes[:dismissed_banner_key] if attributes[
       :dismissed_banner_key
@@ -180,6 +189,13 @@ class UserUpdater
     if attributes.key?(:text_size)
       user.user_option.text_size_seq += 1 if user.user_option.text_size.to_s !=
         attributes[:text_size]
+    end
+
+    if attributes.key?(:locale) || attributes.key?(:understood_languages)
+      understood_languages =
+        attributes.fetch(:understood_languages) { user.user_option.understood_languages }
+      interface_locale = user.effective_locale
+      attributes[:understood_languages] = [interface_locale, *understood_languages].compact.uniq
     end
 
     OPTION_ATTR.each do |attribute|
