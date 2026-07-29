@@ -13,8 +13,8 @@ describe TopicQuery do
   include_context "with group that is allowed to assign"
 
   before do
-    add_to_assign_allowed_group(user)
-    add_to_assign_allowed_group(user2)
+    assign_allowed_group.add(user)
+    assign_allowed_group.add(user2)
   end
 
   describe "#list_messages_assigned" do

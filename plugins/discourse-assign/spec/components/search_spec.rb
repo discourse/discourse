@@ -20,8 +20,8 @@ describe Search do
     let(:post6) { Fabricate(:post) }
 
     before do
-      add_to_assign_allowed_group(user)
-      add_to_assign_allowed_group(user2)
+      assign_allowed_group.add(user)
+      assign_allowed_group.add(user2)
 
       Assigner.new(post1.topic, user).assign(user)
       Assigner.new(post2.topic, user).assign(user2)

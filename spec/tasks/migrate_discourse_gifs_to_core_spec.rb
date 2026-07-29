@@ -325,8 +325,18 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
     context "with theme translation overrides" do
       it "migrates customised strings (per locale) to the matching core site text",
          :aggregate_failures do
-        add_translation_override(component, "gif.composer_title", "Add a GIF")
-        add_translation_override(component, "gif.modal_title", "Chercher des GIFs", locale: "fr")
+        ThemeTranslationOverride.create!(
+          theme: component,
+          locale: "en",
+          translation_key: "gif.composer_title",
+          value: "Add a GIF",
+        )
+        ThemeTranslationOverride.create!(
+          theme: component,
+          locale: "fr",
+          translation_key: "gif.modal_title",
+          value: "Chercher des GIFs",
+        )
 
         run_migration(component)
 
@@ -342,7 +352,12 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
       end
 
       it "skips overrides of keys with no core equivalent" do
-        add_translation_override(component, "gif.query", "Keyword")
+        ThemeTranslationOverride.create!(
+          theme: component,
+          locale: "en",
+          translation_key: "gif.query",
+          value: "Keyword",
+        )
 
         run_migration(component)
 

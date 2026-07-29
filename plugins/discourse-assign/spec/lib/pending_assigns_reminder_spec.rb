@@ -26,7 +26,7 @@ RSpec.describe PendingAssignsReminder do
     include_context "with group that is allowed to assign"
 
     before do
-      add_to_assign_allowed_group(user)
+      assign_allowed_group.add(user)
 
       secure_category = Fabricate(:private_category, group: Fabricate(:group))
 
@@ -83,7 +83,7 @@ RSpec.describe PendingAssignsReminder do
     it "doesn't delete reminders from a different user" do
       reminder.remind(user)
       another_user = Fabricate(:user)
-      add_to_assign_allowed_group(another_user)
+      assign_allowed_group.add(another_user)
       3.times do
         post = Fabricate(:post)
         Assigner.new(post.topic, user).assign(another_user)

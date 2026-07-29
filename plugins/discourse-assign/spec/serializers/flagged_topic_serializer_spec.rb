@@ -8,7 +8,7 @@ describe FlaggedTopicSerializer do
 
   before do
     SiteSetting.assign_enabled = true
-    add_to_assign_allowed_group(user)
+    assign_allowed_group.add(user)
   end
 
   context "when there are no assignments" do

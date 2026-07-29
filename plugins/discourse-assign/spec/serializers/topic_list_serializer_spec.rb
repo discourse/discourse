@@ -33,7 +33,7 @@ RSpec.describe TopicListSerializer do
 
   before do
     SiteSetting.assign_enabled = true
-    add_to_assign_allowed_group(user)
+    assign_allowed_group.add(user)
   end
 
   describe "#assigned_messages_count" do

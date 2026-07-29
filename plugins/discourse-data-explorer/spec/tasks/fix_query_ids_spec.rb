@@ -18,7 +18,7 @@ describe "fix query ids rake task" do
 
     run_task
 
-    expect(query_id_repair_fixture.find_query(name: query_name).id).to eq(original_query_id)
+    expect(DiscourseDataExplorer::Query.find_by(name: query_name).id).to eq(original_query_id)
   end
 
   it "only fixes queries with unique name" do
@@ -29,7 +29,7 @@ describe "fix query ids rake task" do
 
     run_task
 
-    expect(query_id_repair_fixture.find_query(name: query_name).id).not_to eq(original_query_id)
+    expect(DiscourseDataExplorer::Query.find_by(name: query_name).id).not_to eq(original_query_id)
   end
 
   it "skips queries that already have the same ID" do
@@ -39,7 +39,7 @@ describe "fix query ids rake task" do
 
     run_task
 
-    expect(query_id_repair_fixture.find_query(name: query_name).updated_at).to eq_time(
+    expect(DiscourseDataExplorer::Query.find_by(name: query_name).updated_at).to eq_time(
       last_updated_at,
     )
   end
@@ -53,7 +53,7 @@ describe "fix query ids rake task" do
 
     run_task
 
-    expect(query_id_repair_fixture.find_query(name: different_query_name)).not_to be_nil
+    expect(DiscourseDataExplorer::Query.find_by(name: different_query_name)).not_to be_nil
   end
 
   it "works even if they are additional conflicts" do
@@ -64,10 +64,10 @@ describe "fix query ids rake task" do
 
     run_task
 
-    expect(query_id_repair_fixture.find_query(name: different_query_name).id).not_to eq(
+    expect(DiscourseDataExplorer::Query.find_by(name: different_query_name).id).not_to eq(
       additional_conflict.id,
     )
-    expect(query_id_repair_fixture.find_query(name: query_name).id).to eq(additional_conflict.id)
+    expect(DiscourseDataExplorer::Query.find_by(name: query_name).id).to eq(additional_conflict.id)
   end
 
   describe "query groups" do
@@ -84,7 +84,7 @@ describe "fix query ids rake task" do
 
       run_task
 
-      expect(query_id_repair_fixture.find_query_group(query_id: original_query_id)).not_to be_nil
+      expect(DiscourseDataExplorer::QueryGroup.find_by(query_id: original_query_id)).not_to be_nil
     end
 
     it "works with additional conflicts" do
@@ -100,8 +100,8 @@ describe "fix query ids rake task" do
 
       run_task
 
-      conflict = query_id_repair_fixture.find_query(name: different_query_name).query_groups.first
-      fixed = query_id_repair_fixture.find_query_group(query_id: additional_conflict.id)
+      conflict = DiscourseDataExplorer::Query.find_by(name: different_query_name).query_groups.first
+      fixed = DiscourseDataExplorer::QueryGroup.find_by(query_id: additional_conflict.id)
 
       expect(conflict.query_id).not_to eq(additional_conflict.id)
       expect(fixed.query_id).to eq(additional_conflict.id)

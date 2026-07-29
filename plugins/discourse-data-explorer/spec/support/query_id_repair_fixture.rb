@@ -15,14 +15,6 @@ class QueryIdRepairFixture
       .tap { |query| group_ids.each { |group_id| query.query_groups.create!(group_id:) } }
   end
 
-  def find_query(name:)
-    DiscourseDataExplorer::Query.find_by(name:)
-  end
-
-  def find_query_group(query_id:)
-    DiscourseDataExplorer::QueryGroup.find_by(query_id:)
-  end
-
   private
 
   def attributes(name:)

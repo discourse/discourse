@@ -10,7 +10,7 @@ describe PostSerializer do
 
   before do
     SiteSetting.assign_enabled = true
-    add_to_assign_allowed_group(user)
+    assign_allowed_group.add(user)
   end
 
   it "includes assigned user in serializer" do

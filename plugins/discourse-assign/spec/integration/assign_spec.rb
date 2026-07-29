@@ -26,8 +26,8 @@ describe "integration tests" do
     include_context "with group that is allowed to assign"
 
     before do
-      add_to_assign_allowed_group(user)
-      add_to_assign_allowed_group(user2)
+      assign_allowed_group.add(user)
+      assign_allowed_group.add(user2)
       group.add(user)
       group.add(user2)
       pm.topic_allowed_groups.create!(group: group)
@@ -96,8 +96,8 @@ describe "integration tests" do
     include_context "with group that is allowed to assign"
 
     before do
-      add_to_assign_allowed_group(user1)
-      add_to_assign_allowed_group(user2)
+      assign_allowed_group.add(user1)
+      assign_allowed_group.add(user2)
     end
 
     it "assigns topic" do
@@ -141,7 +141,7 @@ describe "integration tests" do
     include_context "with group that is allowed to assign"
 
     it "allows to assign topic if post is already assigned" do
-      add_to_assign_allowed_group(user)
+      assign_allowed_group.add(user)
 
       assigner = Assigner.new(post, user)
       response = assigner.assign(user)
