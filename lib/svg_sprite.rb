@@ -175,7 +175,6 @@ module SvgSprite
         file-lines
         filter
         filter-circle-xmark
-        fire
         flag
         flask
         folder

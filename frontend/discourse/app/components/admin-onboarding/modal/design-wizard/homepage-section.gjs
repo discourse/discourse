@@ -2,14 +2,9 @@ import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { HORIZON_THEME_ID } from "discourse/lib/theme-selector";
 import { eq } from "discourse/truth-helpers";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-const TOPIC_PAGES = [
-  { key: "latest", icon: "list" },
-  { key: "new", icon: "far-clock" },
-  { key: "hot", icon: "fire" },
-];
+const TOPIC_PAGES = ["latest", "new", "hot"];
 
 function topicPageLabel(page) {
   return i18n(`filters.${page}.title`);
@@ -189,19 +184,16 @@ const DesignWizardHomepageSection = <template>
           <button
             type="button"
             class="design-wizard-modal__topic-page-option
-              {{if (eq page.key @homepage) '--selected'}}"
-            data-topic-page={{page.key}}
-            {{on "click" (fn @onSelectHomepage page.key)}}
+              {{if (eq page @homepage) '--selected'}}"
+            data-topic-page={{page}}
+            {{on "click" (fn @onSelectHomepage page)}}
           >
-            <span class="design-wizard-modal__topic-page-option-icons">
-              {{dIcon page.icon}}
-            </span>
             <span class="design-wizard-modal__topic-page-option-texts">
               <span class="design-wizard-modal__topic-page-option-label">
-                {{topicPageLabel page.key}}
+                {{topicPageLabel page}}
               </span>
               <span class="design-wizard-modal__topic-page-option-description">
-                {{topicPageDescription page.key}}
+                {{topicPageDescription page}}
               </span>
             </span>
           </button>
