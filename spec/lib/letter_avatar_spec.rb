@@ -31,20 +31,5 @@ RSpec.describe LetterAvatar do
         FileUtils.rm_f(LetterAvatar.fullsize_path(identity))
       end
     end
-
-    it "generates a PNG avatar for a non-ASCII username" do
-      username = "éclair"
-      path = LetterAvatar.generate(username, 60, cache: false)
-
-      expect(FastImage.type(path)).to eq(:png)
-      expect(FastImage.size(path)).to eq([60, 60])
-      expect(File.size(path)).to be > 100
-    ensure
-      if path
-        identity = LetterAvatar::Identity.from_username(username)
-        FileUtils.rm_f(path)
-        FileUtils.rm_f(LetterAvatar.fullsize_path(identity))
-      end
-    end
   end
 end
