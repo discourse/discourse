@@ -61,13 +61,7 @@ async function performRollup(modules, opts) {
       console.info(level, message);
     },
     plugins: [
-      discourseSourceImports({
-        preprocessor,
-        readSource: (id) =>
-          id.startsWith(basePath)
-            ? modules[id.slice(basePath.length)]
-            : undefined,
-      }),
+      discourseSourceImports({ preprocessor, fs }),
       discourseFileSearch(),
       discourseVirtualLoader({
         isTheme: !!opts.themeId,

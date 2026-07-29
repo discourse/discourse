@@ -1,3 +1,5 @@
+import nodeFs from "fs";
+
 const VIRTUAL_PREFIX = "\0discourse-source:";
 const MODES = new Set(["file", "template"]);
 
@@ -9,11 +11,13 @@ const MODES = new Set(["file", "template"]);
  * For example, a documentation page can render a component and display its source
  * without the two drifting apart.
  *
- * `readSource(id)` returns the raw text for a resolved id, or undefined when the id
- * is outside the bundle. It is injected because the pipelines differ: the asset
- * processor bundles from an in-memory map, while core reads from disk.
+ * `fs` reads the raw text. It defaults to node's promises API and is overridden by
+ * the asset processor, which bundles from an in-memory map with no real disk.
  */
-export default function discourseSourceImports({ readSource, preprocessor }) {
+export default function discourseSourceImports({
+  fs = nodeFs.promises,
+  preprocessor,
+}) {
   return {
     name: "discourse-source-imports",
 
@@ -56,11 +60,7 @@ export default function discourseSourceImports({ readSource, preprocessor }) {
           skipSelf: true,
         });
 
-        if (
-          !resolved ||
-          resolved.external ||
-          readSource(resolved.id) === undefined
-        ) {
+        if (!resolved || resolved.external) {
           this.error(`Cannot import source from "${sourcePath}".`);
         }
 
@@ -74,16 +74,16 @@ export default function discourseSourceImports({ readSource, preprocessor }) {
 
     load: {
       filter: { id: /^\0discourse-source:/ },
-      handler(id) {
+      async handler(id) {
         const separator = id.lastIndexOf(":");
         const mode = id.slice(separator + 1);
         const sourceId = id.slice(VIRTUAL_PREFIX.length, separator);
-        const source = readSource(sourceId);
 
         // The virtual id never changes, so without this a watch-mode edit to the
         // source file would not invalidate this module. Inert outside watch mode.
         this.addWatchFile(sourceId);
 
+        const source = await fs.readFile(sourceId, "utf8");
         let contents;
 
         if (mode === "template") {

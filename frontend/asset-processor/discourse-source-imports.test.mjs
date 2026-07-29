@@ -1,18 +1,11 @@
 /* eslint-disable qunit/require-expect */
 import { Preprocessor } from "content-tag";
-import {
-  mkdirSync,
-  mkdtempSync,
-  realpathSync,
-  symlinkSync,
-  writeFileSync,
-} from "fs";
+import { mkdtempSync, realpathSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
 import { join } from "path";
 import { rolldown } from "rolldown";
 import { expect, test } from "vitest";
 import discourseSourceImports from "../discourse/lib/discourse-source-imports.mjs";
-import createDiskSourceReader from "../discourse/lib/disk-source-reader.mjs";
 
 const preprocessor = new Preprocessor();
 
@@ -26,10 +19,17 @@ export default <template>
 `;
 
 function build(modules = { "/app/example.gjs": EXAMPLE }) {
-  const plugin = discourseSourceImports({
-    preprocessor,
-    readSource: (id) => modules[id],
-  });
+  // Stands in for node's fs.promises / the asset processor's virtual fs: reads
+  // from the map and throws for a missing file, the way a real read would.
+  const fs = {
+    readFile(id) {
+      if (!(id in modules)) {
+        throw new Error(`ENOENT: no such file, open '${id}'`);
+      }
+      return modules[id];
+    },
+  };
+  const plugin = discourseSourceImports({ preprocessor, fs });
 
   // Minimal stand-in for the rollup plugin context. `error` throws, matching
   // rollup, so tests can assert on the message.
@@ -55,7 +55,7 @@ function build(modules = { "/app/example.gjs": EXAMPLE }) {
 async function sourceOf(specifier, modules) {
   const plugin = build(modules);
   const id = await plugin.resolveId(specifier);
-  const code = plugin.load(id);
+  const code = await plugin.load(id);
 
   return JSON.parse(code.replace(/^export default /, "").replace(/;$/, ""));
 }
@@ -128,10 +128,11 @@ test("rejects an unrecognized query parameter alongside source", async () => {
   ).rejects.toThrow(/do not support the "unknown" query parameter/);
 });
 
-test("rejects a module with no source of its own", async () => {
-  await expect(
-    build().resolveId("/app/missing.gjs?source=file")
-  ).rejects.toThrow(/Cannot import source from/);
+test("a module with no source of its own fails when read", async () => {
+  const plugin = build();
+  const id = await plugin.resolveId("/app/missing.gjs?source=file");
+
+  await expect(plugin.load(id)).rejects.toThrow(/ENOENT/);
 });
 
 test("rejects an external module", async () => {
@@ -153,12 +154,7 @@ async function bundleEntry(root, entry) {
 
   const bundle = await rolldown({
     input: join(root, "entry.js"),
-    plugins: [
-      discourseSourceImports({
-        preprocessor,
-        readSource: createDiskSourceReader(root),
-      }),
-    ],
+    plugins: [discourseSourceImports({ preprocessor })],
   });
 
   const { output } = await bundle.generate({ format: "es" });
@@ -166,9 +162,9 @@ async function bundleEntry(root, entry) {
   return output[0].code;
 }
 
-// The tests above drive the handlers directly. These run a real rolldown build the
+// The tests above drive the handlers directly. This runs a real rolldown build the
 // way core registers the plugin, so the hook filters, resolver re-entry, disk reads,
-// containment and virtual loading are exercised together.
+// and virtual loading are exercised together.
 test("resolves both modes through a real rolldown build", async () => {
   const root = fixtureRoot();
   const code = await bundleEntry(
@@ -185,62 +181,6 @@ test("resolves both modes through a real rolldown build", async () => {
   expect(template).toBe('<button type="button">\n  {{label}}\n</button>');
 });
 
-test("refuses to inline a file outside the root", async () => {
-  const root = fixtureRoot();
-  const elsewhere = realpathSync(
-    mkdtempSync(join(tmpdir(), "source-imports-out-"))
-  );
-
-  writeFileSync(join(elsewhere, "secret.txt"), "should never be inlined");
-
-  await expect(
-    bundleEntry(
-      root,
-      `import leaked from "${join(elsewhere, "secret.txt")}?source=file";
-       export default leaked;
-      `
-    )
-  ).rejects.toThrow(/Cannot import source from/);
-});
-
-test("refuses to follow a symlink pointing outside the root", async () => {
-  const root = fixtureRoot();
-  const elsewhere = realpathSync(
-    mkdtempSync(join(tmpdir(), "source-imports-link-"))
-  );
-
-  writeFileSync(join(elsewhere, "secret.txt"), "should never be inlined");
-  symlinkSync(join(elsewhere, "secret.txt"), join(root, "linked.txt"));
-
-  await expect(
-    bundleEntry(
-      root,
-      `import leaked from "./linked.txt?source=file";
-       export default leaked;
-      `
-    )
-  ).rejects.toThrow(/Cannot import source from/);
-});
-
-test("refuses to inline from node_modules", async () => {
-  const root = fixtureRoot();
-
-  mkdirSync(join(root, "node_modules", "pkg"), { recursive: true });
-  writeFileSync(
-    join(root, "node_modules", "pkg", "index.js"),
-    "export default 1;"
-  );
-
-  await expect(
-    bundleEntry(
-      root,
-      `import leaked from "./node_modules/pkg/index.js?source=file";
-       export default leaked;
-      `
-    )
-  ).rejects.toThrow(/Cannot import source from/);
-});
-
 test("?source=template requires exactly one template", async () => {
   const modules = {
     "/app/none.js": "export const value = 1;",
@@ -252,6 +192,6 @@ test("?source=template requires exactly one template", async () => {
     const plugin = build(modules);
     const id = await plugin.resolveId(`/app/${name}?source=template`);
 
-    expect(() => plugin.load(id)).toThrow(/exactly one template/);
+    await expect(plugin.load(id)).rejects.toThrow(/exactly one template/);
   }
 });

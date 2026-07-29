@@ -279,7 +279,7 @@ RSpec.describe AssetProcessor do
           sources,
           { entrypoints: { main: { modules: ["discourse/initializers/example-source.js"] } } },
         )
-      end.to raise_error(AssetProcessor::TranspileError, /Cannot import source from/)
+      end.to raise_error(AssetProcessor::TranspileError, /ENOENT/)
     end
 
     it "rejects source imports from outside the bundle" do
