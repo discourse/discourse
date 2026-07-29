@@ -5,26 +5,12 @@ import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { makeFailingLoader, PEOPLE } from "../../../../../lib/select-fixtures";
+import { createRetryingPeopleApi } from "../../../../../lib/select-fixtures";
 
 export default class CustomErrorSelectExample extends Component {
   @tracked value = null;
 
-  load = makeFailingLoader({
-    items: PEOPLE,
-    failOn: "first",
-    delayMs: 600,
-  });
-
-  @action
-  reset() {
-    this.load.reset();
-  }
-
-  @action
-  resolveValue(value) {
-    return PEOPLE.find((person) => person.id === value);
-  }
+  api = createRetryingPeopleApi();
 
   @action
   onChange(value) {
@@ -34,9 +20,9 @@ export default class CustomErrorSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-content-error"
-      @load={{this.load}}
-      @onClose={{this.reset}}
-      @resolveValue={{this.resolveValue}}
+      @load={{this.api.search}}
+      @onClose={{this.api.reset}}
+      @resolveValue={{this.api.find}}
       @value={{this.value}}
       @onChange={{this.onChange}}
       @variant="button"

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="select-avatar" viewBox="0 0 48 48">
+    <circle cx="24" cy="24" r="24" fill="var(--avatar-background, #5E6B78)"/>
+    <circle cx="24" cy="19" r="7.5" fill="var(--avatar-head, #E4B897)"/>
+    <path d="M9 43a15 15 0 0 1 30 0z" fill="var(--avatar-body, #2D4658)"/>
+  </symbol>
+</svg>

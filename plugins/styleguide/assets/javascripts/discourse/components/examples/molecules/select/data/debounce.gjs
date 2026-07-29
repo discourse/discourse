@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { delay, LOCALES } from "../../../../../lib/select-fixtures";
+import { localeApi } from "../../../../../lib/select-fixtures";
 
 export default class DebounceSelectExample extends Component {
   @tracked value = null;
@@ -14,20 +14,13 @@ export default class DebounceSelectExample extends Component {
   #sequence = 0;
 
   @action
-  async load(filter, { signal }) {
-    await delay(signal, 250);
+  async load(filter, options) {
+    const items = await localeApi.search(filter, options);
     this.queries = [
       ...this.queries,
       { id: (this.#sequence += 1), query: filter },
     ];
-    return LOCALES.filter((item) =>
-      item.name.toLowerCase().includes(filter.toLowerCase())
-    );
-  }
-
-  @action
-  resolveValue(value) {
-    return LOCALES.find((item) => item.id === value);
+    return items;
   }
 
   @action
@@ -51,7 +44,7 @@ export default class DebounceSelectExample extends Component {
       @identifier="sg-debounce"
       @placement="top-start"
       @load={{this.load}}
-      @resolveValue={{this.resolveValue}}
+      @resolveValue={{localeApi.find}}
       @value={{this.value}}
       @onChange={{this.onChange}}
       @onShow={{this.resetLog}}

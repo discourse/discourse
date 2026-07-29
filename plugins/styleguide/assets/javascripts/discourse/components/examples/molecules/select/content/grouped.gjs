@@ -40,7 +40,16 @@ export default class GroupedSelectExample extends Component {
       </:groupHeader>
       <:item as |person|>
         <span class="select-examples__row select-examples__row--identity">
-          <img class="select-examples__avatar" src={{person.avatar}} alt="" />
+          <svg
+            class="select-examples__avatar"
+            style={{person.avatarStyle}}
+            viewBox="0 0 48 48"
+            aria-hidden="true"
+          >
+            <use
+              href="/plugins/styleguide/images/avatar.svg#select-avatar"
+            ></use>
+          </svg>
           <span class="select-examples__details">
             <span class="select-examples__primary">{{person.name}}</span>
             <span class="select-examples__secondary">

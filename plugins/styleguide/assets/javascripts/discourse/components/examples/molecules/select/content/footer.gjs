@@ -4,7 +4,11 @@ import { action } from "@ember/object";
 import DButton from "discourse/ui-kit/d-button";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { delay, PEOPLE } from "../../../../../lib/select-fixtures";
+import {
+  emptyApi,
+  peopleApi,
+  unavailableApi,
+} from "../../../../../lib/select-fixtures";
 
 const FooterContents = <template>
   {{#if @state.loadedCount}}
@@ -30,39 +34,14 @@ const FooterContents = <template>
 export default class FooterSelectExample extends Component {
   @tracked value = null;
 
-  get load() {
+  get api() {
     if (this.args.state === "empty") {
-      return this.loadEmpty;
+      return emptyApi;
     }
     if (this.args.state === "error") {
-      return this.loadBroken;
+      return unavailableApi;
     }
-    return this.loadPeople;
-  }
-
-  @action
-  async loadPeople(filter, { signal }) {
-    await delay(signal, 400);
-    return PEOPLE.filter((person) =>
-      person.name.toLowerCase().includes(filter.toLowerCase())
-    );
-  }
-
-  @action
-  async loadEmpty(_filter, { signal }) {
-    await delay(signal, 400);
-    return [];
-  }
-
-  @action
-  async loadBroken(_filter, { signal }) {
-    await delay(signal, 400);
-    throw new Error("The source could not be reached.");
-  }
-
-  @action
-  resolveValue(value) {
-    return PEOPLE.find((person) => person.id === value);
+    return peopleApi;
   }
 
   @action
@@ -73,8 +52,8 @@ export default class FooterSelectExample extends Component {
   <template>
     <DSelect
       @identifier={{@identifier}}
-      @load={{this.load}}
-      @resolveValue={{this.resolveValue}}
+      @load={{this.api.search}}
+      @resolveValue={{this.api.find}}
       @value={{this.value}}
       @onChange={{this.onChange}}
       @labelField="name"

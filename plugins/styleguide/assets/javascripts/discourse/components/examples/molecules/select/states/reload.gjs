@@ -3,29 +3,15 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { delay, PAGE_SIZE, topics } from "../../../../../lib/select-fixtures";
+import {
+  fastTopicApi,
+  pagedTopicApi,
+} from "../../../../../lib/select-fixtures";
 
 export default class ReloadSelectExample extends Component {
   @tracked value = null;
 
-  items = topics();
-
-  @action
-  async load(filter, { signal, offset = 0, limit = PAGE_SIZE }) {
-    await delay(signal, this.args.duration);
-    const matches = this.items.filter((item) =>
-      item.name.toLowerCase().includes(filter.toLowerCase())
-    );
-    return {
-      items: matches.slice(offset, offset + limit),
-      total: matches.length,
-    };
-  }
-
-  @action
-  resolveValue(value) {
-    return this.items.find((item) => item.id === value);
-  }
+  api = this.args.speed === "fast" ? fastTopicApi : pagedTopicApi;
 
   @action
   onChange(value) {
@@ -35,8 +21,8 @@ export default class ReloadSelectExample extends Component {
   <template>
     <DSelect
       @identifier={{@identifier}}
-      @load={{this.load}}
-      @resolveValue={{this.resolveValue}}
+      @load={{this.api.search}}
+      @resolveValue={{this.api.find}}
       @value={{this.value}}
       @onChange={{this.onChange}}
       @placeholder={{i18n "styleguide.sections.select.placeholder"}}

@@ -47,6 +47,20 @@ module PageObjects
       def has_no_color_selector?
         has_no_css?(".toggle-color-mode")
       end
+
+      def show_example_source(identifier)
+        find("#{example_selector(identifier)} button.styleguide-example__code-toggle").click
+      end
+
+      def has_example_source?(identifier, text:)
+        has_css?("#{example_selector(identifier)} .styleguide-example__code", text: text)
+      end
+
+      private
+
+      def example_selector(identifier)
+        ".styleguide-example:has([data-identifier='#{identifier}'][data-trigger])"
+      end
     end
   end
 end

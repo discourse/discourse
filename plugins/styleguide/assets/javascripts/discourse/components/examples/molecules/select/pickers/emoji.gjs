@@ -3,10 +3,26 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import DSelect from "discourse/ui-kit/select/d-select";
-import { EMOJI } from "../../../../../lib/select-fixtures";
 
 export default class EmojiSelectExample extends Component {
   @tracked value = "tada";
+
+  items = [
+    { id: "tada", name: "tada", group: "Celebration" },
+    { id: "rocket", name: "rocket", group: "Celebration" },
+    { id: "sparkles", name: "sparkles", group: "Celebration" },
+    { id: "heart", name: "heart", group: "Celebration" },
+    { id: "bug", name: "bug", group: "Development" },
+    { id: "wrench", name: "wrench", group: "Development" },
+    { id: "hammer", name: "hammer", group: "Development" },
+    { id: "bulb", name: "bulb", group: "Development" },
+    { id: "books", name: "books", group: "Writing" },
+    { id: "memo", name: "memo", group: "Writing" },
+    { id: "mag", name: "mag", group: "Writing" },
+    { id: "lock", name: "lock", group: "Moderation" },
+    { id: "warning", name: "warning", group: "Moderation" },
+    { id: "eyes", name: "eyes", group: "Moderation" },
+  ];
 
   @action
   update(value) {
@@ -16,7 +32,7 @@ export default class EmojiSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-emoji"
-      @items={{EMOJI}}
+      @items={{this.items}}
       @value={{this.value}}
       @onChange={{this.update}}
       @groupBy="group"

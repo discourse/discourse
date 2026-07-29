@@ -7,6 +7,8 @@
 describe "UiKit | DSelect page regressions" do
   fab!(:admin)
 
+  let(:styleguide) { PageObjects::Pages::Styleguide.new }
+
   before do
     SiteSetting.styleguide_enabled = true
     sign_in(admin)
@@ -140,6 +142,40 @@ describe "UiKit | DSelect page regressions" do
     expect(marked["background"]).not_to eq(unselected)
   end
 
+  it "lets the user compare timezone offsets without repeating decorative icons" do
+    visit "/styleguide/molecules/select?group=content"
+    examples = PageObjects::Components::SelectExamples.new
+
+    begin
+      examples.open_computed_timezones
+      expect(examples).to have_timezone_offset_badges(minimum: 3)
+      expect(examples).to have_no_timezone_clock_icons
+      expect(examples).to have_no_computed_dividers
+
+      initial_times = examples.computed_times
+      examples.move_computed_clock_near_next_minute
+      sleep 1.5
+      expect(examples.computed_times).not_to eq(initial_times)
+
+      examples.close_open_panel
+    ensure
+      examples.restore_computed_clock
+    end
+
+    examples.open_divided_timezones
+    expect(examples).to have_timezone_dividers(minimum: 2)
+  end
+
+  it "shows each option's icon in the icon-following menu" do
+    visit "/styleguide/molecules/select?group=appearance"
+    combobox = PageObjects::Components::UiKit::DSelect.by_identifier("sg-icon-follows")
+
+    # `open` clicks the query input; this example is a `static` variant, which has none.
+    combobox.open_trigger
+
+    expect(all(combobox.option_selector, minimum: 1)).to all(have_css(".d-icon"))
+  end
+
   it "shows each example module's source across the select groups" do
     examples = {
       "start" => %w[sg-default DefaultSelectExample],
@@ -150,12 +186,9 @@ describe "UiKit | DSelect page regressions" do
 
     examples.each do |group, (identifier, component_name)|
       visit "/styleguide/molecules/select?group=#{group}"
-      control = find("[data-identifier='#{identifier}'][data-trigger]")
-      card = control.ancestor(".styleguide-example")
-
-      card.find("button.styleguide-example__code-toggle").click
-      expect(card).to have_css(
-        ".styleguide-example__code",
+      styleguide.show_example_source(identifier)
+      expect(styleguide).to have_example_source(
+        identifier,
         text: "export default class #{component_name}",
       )
     end

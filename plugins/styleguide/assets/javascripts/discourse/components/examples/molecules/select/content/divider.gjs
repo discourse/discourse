@@ -9,14 +9,16 @@ import { TIMEZONES } from "../../../../../lib/select-fixtures";
 export default class DividerSelectExample extends Component {
   @tracked value = null;
 
-  items = [
-    TIMEZONES.find((zone) => zone.id === "Europe/London"),
-    TIMEZONES.find((zone) => zone.id === "America/New_York"),
-    selectDivider(),
-    ...TIMEZONES.filter(
-      (zone) => !["Europe/London", "America/New_York"].includes(zone.id)
-    ),
-  ];
+  items = TIMEZONES.flatMap((zone, index) => {
+    if (
+      index > 0 &&
+      zone.offsetMinutes !== TIMEZONES[index - 1].offsetMinutes
+    ) {
+      return [selectDivider(), zone];
+    }
+
+    return zone;
+  });
 
   @action
   onChange(value) {

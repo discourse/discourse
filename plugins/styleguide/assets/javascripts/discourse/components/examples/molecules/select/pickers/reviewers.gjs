@@ -3,31 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import {
-  delay,
-  PEOPLE,
-  REVIEWER_IDS,
-} from "../../../../../lib/select-fixtures";
+import { reviewerApi } from "../../../../../lib/select-fixtures";
 
 export default class ReviewersSelectExample extends Component {
-  @tracked value = REVIEWER_IDS;
-
-  @action
-  async load(filter, { signal }) {
-    await delay(signal, 650);
-    const normalizedFilter = filter.toLowerCase();
-    return PEOPLE.filter((person) =>
-      `${person.name} ${person.username} ${person.title ?? ""}`
-        .toLowerCase()
-        .includes(normalizedFilter)
-    );
-  }
-
-  @action
-  async resolveValues(values, { signal }) {
-    await delay(signal, 500);
-    return PEOPLE.filter((person) => values.includes(person.id));
-  }
+  @tracked value = [101, 102, 103, 104, 105, 106, 999];
 
   @action
   createUnresolvedItem(value) {
@@ -51,11 +30,11 @@ export default class ReviewersSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-reviewers"
-      @load={{this.load}}
+      @load={{reviewerApi.search}}
       @value={{this.value}}
       @onChange={{this.update}}
       @multiple={{true}}
-      @resolveValues={{this.resolveValues}}
+      @resolveValues={{reviewerApi.findMany}}
       @createUnresolvedItem={{this.createUnresolvedItem}}
       @labelField="username"
       @placeholder={{i18n
@@ -65,11 +44,16 @@ export default class ReviewersSelectExample extends Component {
       <:selection as |person|>
         <span class="select-examples__row select-examples__row--glyph">
           {{#unless person.__unresolved}}
-            <img
+            <svg
               class="select-examples__avatar --small"
-              src={{person.avatar}}
-              alt=""
-            />
+              style={{person.avatarStyle}}
+              viewBox="0 0 48 48"
+              aria-hidden="true"
+            >
+              <use
+                href="/plugins/styleguide/images/avatar.svg#select-avatar"
+              ></use>
+            </svg>
           {{/unless}}
           {{person.username}}
         </span>
@@ -77,7 +61,16 @@ export default class ReviewersSelectExample extends Component {
 
       <:item as |person|>
         <span class="select-examples__row select-examples__row--identity">
-          <img class="select-examples__avatar" src={{person.avatar}} alt="" />
+          <svg
+            class="select-examples__avatar"
+            style={{person.avatarStyle}}
+            viewBox="0 0 48 48"
+            aria-hidden="true"
+          >
+            <use
+              href="/plugins/styleguide/images/avatar.svg#select-avatar"
+            ></use>
+          </svg>
           <span class="select-examples__details">
             <span class="select-examples__primary">{{person.name}}</span>
             <span class="select-examples__secondary">

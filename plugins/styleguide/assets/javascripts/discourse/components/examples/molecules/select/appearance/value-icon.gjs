@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { notificationLevels } from "../../../../../lib/select-fixtures";
 
@@ -30,6 +31,13 @@ export default class ValueIconSelectExample extends Component {
       @labelField="title"
       @icon={{this.icon}}
       @variant="static"
-    />
+    >
+      <:item as |level|>
+        <span class="select-examples__row select-examples__row--glyph">
+          {{dIcon level.icon}}
+          <span class="select-examples__primary">{{level.title}}</span>
+        </span>
+      </:item>
+    </DSelect>
   </template>
 }

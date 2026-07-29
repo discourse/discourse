@@ -75,7 +75,7 @@ RSpec.describe "Styleguide Smoke Test" do
 
     select = PageObjects::Components::UiKit::DSelect.by_identifier("sg-default")
     select.open
-    expect(page).to have_text("Deutsch")
+    expect(page).to have_text("Draft")
     screenshot_marker(label: "styleguide-select-open", only: :desktop)
   end
 
@@ -125,6 +125,16 @@ RSpec.describe "Styleguide Smoke Test" do
     expect(page).to have_css(categories.in_panel(".select-showcases__category-status .topic-count"))
     expect(page).to have_css(categories.in_panel(".select-showcases__category-desc"))
     screenshot_marker(label: "styleguide-select-category", only: :desktop)
+  end
+
+  it "lets the user compare the color palettes" do
+    visit "/styleguide/molecules/select?group=pickers"
+    colors = PageObjects::Components::UiKit::DSelect.by_identifier("sg-colors")
+
+    colors.open_trigger
+
+    expect(colors).to have_listbox
+    screenshot_marker(label: "styleguide-select-colors", only: :desktop)
   end
 
   it "shows the muted source-error state" do
@@ -208,8 +218,8 @@ RSpec.describe "Styleguide Smoke Test" do
     # The first example is the default typeahead: the chosen label renders inside the input.
     typeahead = first(".select-examples__control")
     typeahead.find(".d-combobox__input").click
-    find("[role='option']", text: "Deutsch").click
-    expect(typeahead).to have_field(with: "Deutsch")
+    find("[role='option']", text: "Draft").click
+    expect(typeahead).to have_field(with: "Draft")
 
     label_fully_selected = lambda { page.evaluate_script(<<~JS) }
           (() => {

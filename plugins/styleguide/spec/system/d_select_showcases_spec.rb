@@ -31,6 +31,9 @@ RSpec.describe "DSelect showcases" do
 
     showcases.close_tag_picker
     expect(showcases).to have_notification_selection("Watching")
+    showcases.open_notifications
+    expect(showcases).to have_notification_icons
+    showcases.close_open_panel
     showcases.use_notification_action
     expect(showcases).to have_notification_selection("Watching")
     expect(showcases).to have_notification_action_count(1)

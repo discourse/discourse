@@ -1,3 +1,4 @@
+import { trustHTML } from "@ember/template";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -22,9 +23,6 @@ import { i18n } from "discourse-i18n";
  *
  *   LOCALES.length >= 15            large enough to scroll a panel; the default set everywhere
  *                                   an example's subject is a mechanism rather than markup
- *   FOUR_OPTIONS.length === 4       d_select_no_probe_spec: `count: 4` and aria-setsize "4"
- *   FOUR_OPTIONS[0..2] labels       d_select_multi_chip_roving_spec: three chips added in order,
- *                                   then asserted by label and by DOM order
  *   ASYNC_BUTTON_DELAY === 1200     d_select_no_probe_spec: its `wait: 10` and `sleep 4` budget
  *   TOPIC_COUNT === 5000            d_select_bounded_reveal_spec: aria-setsize "5000", and
  *                                   reveal_to_index(4999) must reach exactly 4999
@@ -32,11 +30,6 @@ import { i18n } from "discourse-i18n";
  *                                   single row. Any second occurrence breaks `count: 1`
  *   PAGE_SIZE === 50 over 5000      d_select_cursor_source_spec: the first response must be
  *                                   incomplete, so the source reports setsize -1 while paging
- *   MAXIMUM === 3, seeded at cap    smoke_test_spec: renders .d-combobox__limit plus a
- *                                   disabled option
- *   REVIEWER_IDS.length === 7       d_select_showcases_spec: exactly 7 resolved chips, and
- *                                   seven is what makes them wrap in a 28rem control
- *   REVIEWER_IDS includes 999       d_select_showcases_spec: unresolvable -> "deleted-user"
  *   PEOPLE has username "maya"      d_select_showcases_spec: chip label assertion
  *   Taylor Kim is disabled AND      d_select_showcases_spec: asserts a disabled option exists
  *   not pre-selected
@@ -46,7 +39,7 @@ import { i18n } from "discourse-i18n";
  */
 
 /** Rejects when `signal` aborts, otherwise resolves after `ms`. */
-export function delay(signal, ms = 750) {
+function delay(signal, ms = 750) {
   return new Promise((resolve, reject) => {
     // `signal` is optional on purpose: the engine's resolve path may call a source without one
     // (`resolveSelection` defaults its options to `{}`), and a TypeError there is swallowed into
@@ -68,10 +61,9 @@ export function delay(signal, ms = 750) {
   });
 }
 
-export const ASYNC_BUTTON_DELAY = 1200;
-export const MAXIMUM = 3;
-export const PAGE_SIZE = 50;
-export const TOPIC_COUNT = 5000;
+const ASYNC_BUTTON_DELAY = 1200;
+const PAGE_SIZE = 50;
+const TOPIC_COUNT = 5000;
 
 /* Interface languages — the default set for any example whose subject is a mechanism rather
    than markup. Endonyms are literals, not display strings, so they are not translated, and they
@@ -95,54 +87,33 @@ export const LOCALES = [
   { id: "he", name: "עברית" },
 ];
 
-/**
- * The four-row subset the silent-source spec counts. Order matters: the first three are the
- * labels the chip-roving spec adds and then asserts by DOM order.
- *
- * Hand-picked rather than `LOCALES.slice(0, 4)`, because the chip-roving spec *types* these
- * labels through the typeahead. The first four locales include parentheses and non-ASCII
- * ("Português (Brasil)", "Español"), which makes a `send_keys` round-trip a flake waiting to
- * happen. These four are plain ASCII with distinct first letters, so a filter narrows to one row
- * on the first keystroke.
- */
-export const FOUR_OPTIONS = [
-  LOCALES.find((locale) => locale.id === "de"),
-  LOCALES.find((locale) => locale.id === "it"),
-  LOCALES.find((locale) => locale.id === "nl"),
-  LOCALES.find((locale) => locale.id === "pl"),
-];
-
-/* People. Avatars are local SVGs rather than the shared `/images/avatar.png`, because twelve
-   identical grey circles was the single most damaging thing on the old page, and letter avatars
-   are not an option (the avatar proxy is disabled under `Rails.env.test?`, so every screenshot
-   would capture blanks).
+/* Letter avatars are not an option because the avatar proxy is disabled under
+   `Rails.env.test?`, so screenshots would capture blanks.
 
    Optional fields are deliberately uneven — a couple carry a status, one carries no title at
    all, one name is long enough to wrap. A set where every row has every field is the tell of a
    mock; real member lists are ragged. */
-const AVATAR = (name) => `/plugins/styleguide/images/avatars/${name}.svg`;
-
 export const PEOPLE = [
   {
     id: 101,
     username: "maya",
     name: "Maya Alvarez",
     title: "Design lead",
-    avatar: AVATAR("aurora"),
+    avatarColors: ["#E8734A", "#F4C7A1", "#743F93"],
   },
   {
     id: 102,
     username: "devon",
     name: "Devon Park",
     title: "Frontend",
-    avatar: AVATAR("cobalt"),
+    avatarColors: ["#3C6FD1", "#E5B990", "#183F7A"],
   },
   {
     id: 103,
     username: "ines",
     name: "Inés Rojas",
     title: "Accessibility",
-    avatar: AVATAR("moss"),
+    avatarColors: ["#5A8F52", "#C98665", "#315E38"],
     status: "On leave until Friday",
   },
   {
@@ -150,28 +121,28 @@ export const PEOPLE = [
     username: "kwame",
     name: "Kwame Boateng",
     title: "Security",
-    avatar: AVATAR("ember"),
+    avatarColors: ["#C4453F", "#6F412D", "#F3C96B"],
   },
   {
     id: 105,
     username: "sora",
     name: "Sora Tanaka",
     title: "Performance",
-    avatar: AVATAR("indigo"),
+    avatarColors: ["#6B54B8", "#E1B28F", "#393070"],
   },
   {
     id: 106,
     username: "noor",
     name: "Noor Haddad",
     title: "Documentation",
-    avatar: AVATAR("saffron"),
+    avatarColors: ["#C79A22", "#B97855", "#356B75"],
   },
   {
     id: 107,
     username: "taylor",
     name: "Taylor Kim",
     title: "Support",
-    avatar: AVATAR("slate"),
+    avatarColors: ["#5E6B78", "#E4B897", "#2D4658"],
     // Not pre-selected, and disabled: the showcases spec asserts a disabled option renders.
     disabled: true,
   },
@@ -180,7 +151,7 @@ export const PEOPLE = [
     username: "lucia",
     name: "Lucía Ferrer",
     title: "Community",
-    avatar: AVATAR("rose"),
+    avatarColors: ["#BE4A7E", "#DFA582", "#6A2449"],
   },
   // The long-name row. Nothing else on the page forces a two-line name to wrap inside a row or
   // truncate inside a chip.
@@ -189,35 +160,36 @@ export const PEOPLE = [
     username: "annelies",
     name: "Annelies van der Meer-Okonkwo",
     title: "Internationalisation",
-    avatar: AVATAR("teal"),
+    avatarColors: ["#1F8A8A", "#F0C8A7", "#114E5A"],
     status: "Reviewing translations",
   },
   {
     id: 110,
     username: "rafa",
     name: "Rafa Ortiz",
-    avatar: AVATAR("plum"),
+    avatarColors: ["#7D4A9E", "#C98763", "#40305B"],
   },
   {
     id: 111,
     username: "wei",
     name: "Wei Zhang",
     title: "Infrastructure",
-    avatar: AVATAR("sand"),
+    avatarColors: ["#B8860B", "#E0B18E", "#5D3D20"],
   },
   {
     id: 112,
     username: "amara",
     name: "Amara Nwosu",
     title: "Trust and safety",
-    avatar: AVATAR("forest"),
+    avatarColors: ["#2E7D4F", "#74452F", "#E5B84B"],
     status: "Back Monday",
   },
-];
-
-/** Seven seeded reviewer ids, one of which (999) resolves to nothing so the unresolved fallback
- *  is exercised. Seven is also what makes the chips wrap in a 28rem control. */
-export const REVIEWER_IDS = [101, 102, 103, 104, 105, 106, 999];
+].map(({ avatarColors, ...person }) => ({
+  ...person,
+  avatarStyle: trustHTML(
+    `--avatar-background: ${avatarColors[0]}; --avatar-head: ${avatarColors[1]}; --avatar-body: ${avatarColors[2]}`
+  ),
+}));
 
 /* Deliberately uneven: four, three and one. Equal groups make a header look decorative, because
    a reader cannot tell the grouping from the ordering. Taylor is the sole support member and is
@@ -334,46 +306,6 @@ export function categories(store) {
   ].map((attrs) => store.createRecord("category", attrs));
 }
 
-/* Colour schemes. The swatch strip is the clearest case on the page of a block expressing
-   something no argument could: the value is a colour, and only markup can show it. */
-export const COLOR_SCHEMES = [
-  { id: "light", name: "Light", colors: ["FFFFFF", "222222", "0088CC"] },
-  { id: "dark", name: "Dark", colors: ["1E1E1E", "E8E8E8", "0F82AF"] },
-  { id: "neutral", name: "Neutral", colors: ["FFFFFF", "2B2B2B", "51839B"] },
-  {
-    id: "grey-amber",
-    name: "Grey amber",
-    colors: ["1D1D1D", "E5E5E5", "F0B849"],
-  },
-  { id: "latte", name: "Latte", colors: ["FDF6E3", "3B3228", "B58900"] },
-  { id: "summer", name: "Summer", colors: ["FFFAF0", "4D4D4D", "FF7F50"] },
-  {
-    id: "dark-rose",
-    name: "Dark rose",
-    colors: ["2B1B23", "F2E0E6", "C76B8E"],
-  },
-  { id: "wcag", name: "WCAG", colors: ["FFFFFF", "000000", "0033CC"] },
-];
-
-/* Emoji. Grouped, because an emoji picker without groups is a wall, and the shortcode is what a
-   reader actually types — so it belongs in the row, in monospace, beside the glyph. */
-export const EMOJI = [
-  { id: "tada", name: "tada", group: "Celebration" },
-  { id: "rocket", name: "rocket", group: "Celebration" },
-  { id: "sparkles", name: "sparkles", group: "Celebration" },
-  { id: "heart", name: "heart", group: "Celebration" },
-  { id: "bug", name: "bug", group: "Development" },
-  { id: "wrench", name: "wrench", group: "Development" },
-  { id: "hammer", name: "hammer", group: "Development" },
-  { id: "bulb", name: "bulb", group: "Development" },
-  { id: "books", name: "books", group: "Writing" },
-  { id: "memo", name: "memo", group: "Writing" },
-  { id: "mag", name: "mag", group: "Writing" },
-  { id: "lock", name: "lock", group: "Moderation" },
-  { id: "warning", name: "warning", group: "Moderation" },
-  { id: "eyes", name: "eyes", group: "Moderation" },
-];
-
 /* User groups. The trailing element here is a pill rather than a number, which is a different
    shape from the tag and topic rows and the one most admin pickers need. */
 export const USER_GROUPS = [
@@ -431,89 +363,113 @@ export const USER_GROUPS = [
   },
 ];
 
-/* Badges. `dIconOrImage` takes one of these directly and renders `<img alt="">` or an icon, so
-   the row needs no image handling of its own. Rarity drives the colour, exactly as the badge
-   pages do. */
-export const BADGES = [
-  {
-    id: 1,
-    name: "Welcome",
-    icon: "heart",
-    rarity: "bronze",
-    grantCount: 41208,
-  },
-  {
-    id: 2,
-    name: "Nice post",
-    icon: "star",
-    rarity: "bronze",
-    grantCount: 8834,
-  },
-  {
-    id: 3,
-    name: "Good post",
-    icon: "star",
-    rarity: "silver",
-    grantCount: 1206,
-  },
-  { id: 4, name: "Great post", icon: "star", rarity: "gold", grantCount: 94 },
-  { id: 5, name: "Editor", icon: "pencil", rarity: "bronze", grantCount: 6521 },
-  {
-    id: 6,
-    name: "Autobiographer",
-    icon: "user",
-    rarity: "bronze",
-    grantCount: 3390,
-  },
-  {
-    id: 7,
-    name: "Anniversary",
-    icon: "cake-candles",
-    rarity: "silver",
-    grantCount: 712,
-  },
-  {
-    id: 8,
-    name: "Leader",
-    icon: "certificate",
-    rarity: "gold",
-    grantCount: 23,
-  },
-];
-
-/* Timezones. The point of this set is the one thing no other fixture can show: a row whose
-   most useful content is not stored on the item at all. */
-export const TIMEZONES = [
-  { id: "Pacific/Auckland", name: "Auckland" },
-  { id: "Asia/Tokyo", name: "Tokyo" },
-  { id: "Asia/Kolkata", name: "Kolkata" },
-  { id: "Europe/Istanbul", name: "Istanbul" },
-  { id: "Europe/Berlin", name: "Berlin" },
-  { id: "Europe/London", name: "London" },
-  { id: "Atlantic/Reykjavik", name: "Reykjavík" },
-  { id: "America/Sao_Paulo", name: "São Paulo" },
-  { id: "America/New_York", name: "New York" },
-  { id: "America/Chicago", name: "Chicago" },
-  { id: "America/Los_Angeles", name: "Los Angeles" },
-  { id: "Pacific/Honolulu", name: "Honolulu" },
-];
-
-/**
- * The current wall-clock time in a zone, formatted for the reader's locale.
- *
- * Used as a template helper so it is evaluated while the row renders. Plain `Intl` rather than a
- * date library: the zone conversion is the only thing needed and it is native.
- *
- * @param {string} timeZone - an IANA zone id.
- * @returns {string} e.g. "09:41"
- */
-export function localTimeIn(timeZone) {
-  return new Intl.DateTimeFormat(undefined, {
-    hour: "2-digit",
-    minute: "2-digit",
+function currentOffsetMinutes(timeZone, now) {
+  const name = new Intl.DateTimeFormat("en-US", {
     timeZone,
-  }).format(new Date());
+    timeZoneName: "longOffset",
+  })
+    .formatToParts(now)
+    .find((part) => part.type === "timeZoneName").value;
+
+  if (name === "GMT") {
+    return 0;
+  }
+
+  const [, sign, hours, minutes] = name.match(/^GMT([+-])(\d{2}):(\d{2})$/);
+  const magnitude = Number(hours) * 60 + Number(minutes);
+  return sign === "-" ? -magnitude : magnitude;
 }
+
+function offsetLabel(offsetMinutes) {
+  if (offsetMinutes === 0) {
+    return "0";
+  }
+
+  const sign = offsetMinutes < 0 ? "-" : "+";
+  const magnitude = Math.abs(offsetMinutes);
+  const hours = Math.floor(magnitude / 60);
+  const minutes = magnitude % 60;
+
+  return `${sign}${hours}${minutes ? `:${String(minutes).padStart(2, "0")}` : ""}`;
+}
+
+/* Multiple cities per offset keep the divider example from separating every row. */
+const TIMEZONE_NOW = new Date();
+
+export const TIMEZONES = [
+  { id: "honolulu", name: "Honolulu", timeZone: "Pacific/Honolulu" },
+  { id: "papeete", name: "Papeete", timeZone: "Pacific/Tahiti" },
+  { id: "rarotonga", name: "Rarotonga", timeZone: "Pacific/Rarotonga" },
+  { id: "los-angeles", name: "Los Angeles", timeZone: "America/Los_Angeles" },
+  { id: "phoenix", name: "Phoenix", timeZone: "America/Phoenix" },
+  { id: "vancouver", name: "Vancouver", timeZone: "America/Vancouver" },
+  { id: "chicago", name: "Chicago", timeZone: "America/Chicago" },
+  { id: "lima", name: "Lima", timeZone: "America/Lima" },
+  { id: "winnipeg", name: "Winnipeg", timeZone: "America/Winnipeg" },
+  { id: "new-york", name: "New York", timeZone: "America/New_York" },
+  {
+    id: "santo-domingo",
+    name: "Santo Domingo",
+    timeZone: "America/Santo_Domingo",
+  },
+  { id: "toronto", name: "Toronto", timeZone: "America/Toronto" },
+  {
+    id: "buenos-aires",
+    name: "Buenos Aires",
+    timeZone: "America/Argentina/Buenos_Aires",
+  },
+  { id: "montevideo", name: "Montevideo", timeZone: "America/Montevideo" },
+  { id: "sao-paulo", name: "São Paulo", timeZone: "America/Sao_Paulo" },
+  { id: "accra", name: "Accra", timeZone: "Africa/Accra" },
+  { id: "dakar", name: "Dakar", timeZone: "Africa/Dakar" },
+  { id: "reykjavik", name: "Reykjavík", timeZone: "Atlantic/Reykjavik" },
+  { id: "lagos", name: "Lagos", timeZone: "Africa/Lagos" },
+  { id: "lisbon", name: "Lisbon", timeZone: "Europe/Lisbon" },
+  { id: "london", name: "London", timeZone: "Europe/London" },
+  { id: "berlin", name: "Berlin", timeZone: "Europe/Berlin" },
+  {
+    id: "johannesburg",
+    name: "Johannesburg",
+    timeZone: "Africa/Johannesburg",
+  },
+  { id: "paris", name: "Paris", timeZone: "Europe/Paris" },
+  { id: "istanbul", name: "Istanbul", timeZone: "Europe/Istanbul" },
+  { id: "nairobi", name: "Nairobi", timeZone: "Africa/Nairobi" },
+  { id: "riyadh", name: "Riyadh", timeZone: "Asia/Riyadh" },
+  { id: "colombo", name: "Colombo", timeZone: "Asia/Colombo" },
+  { id: "kolkata", name: "Kolkata", timeZone: "Asia/Kolkata" },
+  { id: "mumbai", name: "Mumbai", timeZone: "Asia/Kolkata" },
+  { id: "beijing", name: "Beijing", timeZone: "Asia/Shanghai" },
+  { id: "perth", name: "Perth", timeZone: "Australia/Perth" },
+  { id: "singapore", name: "Singapore", timeZone: "Asia/Singapore" },
+  { id: "osaka", name: "Osaka", timeZone: "Asia/Tokyo" },
+  { id: "seoul", name: "Seoul", timeZone: "Asia/Seoul" },
+  { id: "tokyo", name: "Tokyo", timeZone: "Asia/Tokyo" },
+  { id: "brisbane", name: "Brisbane", timeZone: "Australia/Brisbane" },
+  { id: "guam", name: "Guam", timeZone: "Pacific/Guam" },
+  {
+    id: "port-moresby",
+    name: "Port Moresby",
+    timeZone: "Pacific/Port_Moresby",
+  },
+  { id: "auckland", name: "Auckland", timeZone: "Pacific/Auckland" },
+  { id: "suva", name: "Suva", timeZone: "Pacific/Fiji" },
+  { id: "tarawa", name: "Tarawa", timeZone: "Pacific/Tarawa" },
+]
+  .map((city) => {
+    const offsetMinutes = currentOffsetMinutes(city.timeZone, TIMEZONE_NOW);
+
+    return {
+      ...city,
+      offsetMinutes,
+      offset: offsetLabel(offsetMinutes),
+    };
+  })
+  .sort(
+    (left, right) =>
+      left.offsetMinutes - right.offsetMinutes ||
+      left.name.localeCompare(right.name)
+  );
 
 /**
  * Notification levels, translated, with one disabled row and one action row.
@@ -531,25 +487,25 @@ export function notificationLevels(onManage) {
   return [
     {
       level: "muted",
-      icon: "bell-slash",
+      icon: "d-muted",
       title: t("muted"),
       description: t("muted_description"),
     },
     {
       level: "normal",
-      icon: "bell",
+      icon: "d-regular",
       title: t("normal"),
       description: t("normal_description"),
     },
     {
       level: "tracking",
-      icon: "circle-dot",
+      icon: "d-tracking",
       title: t("tracking"),
       description: t("tracking_description"),
     },
     {
       level: "watching",
-      icon: "eye",
+      icon: "d-watching",
       title: t("watching"),
       description: t("watching_description"),
     },
@@ -571,10 +527,9 @@ export function notificationLevels(onManage) {
 }
 
 /* Topics. Synthesised rather than "Option N" so the windowed list, both paging demos, the
-   minimum-query demo and the topic picker all read as a real forum. The banks are sized to be
-   coprime with each other so titles do not fall into a short repeating cycle, and they produce
-   lengths from roughly 25 to 90 characters. The `#<id>` suffix keeps every title unique, which
-   is what lets the cursor-source spec narrow to a single row. */
+   minimum-query demo and the topic picker all read as a real forum. Each bank advances by a
+   different stride so the combinations vary across pages. The `#<id>` suffix keeps every title
+   unique, which is what lets the cursor-source spec narrow to a single row. */
 const TOPIC_VERBS = [
   "Rethinking",
   "Debugging",
@@ -587,6 +542,19 @@ const TOPIC_VERBS = [
   "Deprecating",
   "Instrumenting",
   "Rewriting",
+  "Hardening",
+  "Profiling",
+  "Untangling",
+  "Shipping",
+  "Testing",
+  "Securing",
+  "Localizing",
+  "Redesigning",
+  "Restoring",
+  "Scaling",
+  "Monitoring",
+  "Modernizing",
+  "Extending",
 ];
 
 const TOPIC_OBJECTS = [
@@ -604,6 +572,26 @@ const TOPIC_OBJECTS = [
   "the tag hierarchy",
   "full-page search",
   "the composer draft store",
+  "onebox previews",
+  "mobile navigation",
+  "the admin sidebar",
+  "topic timers",
+  "bulk user actions",
+  "badge queries",
+  "the plugin outlet API",
+  "theme component settings",
+  "the post revision viewer",
+  "rate-limit telemetry",
+  "the user directory",
+  "category banners",
+  "keyboard navigation",
+  "upload cleanup",
+  "the translation workflow",
+  "real-time topic updates",
+  "the digest scheduler",
+  "group mention rules",
+  "moderation history",
+  "anonymous browsing",
 ];
 
 const TOPIC_QUALIFIERS = [
@@ -614,6 +602,22 @@ const TOPIC_QUALIFIERS = [
   "under sustained load",
   "in a multisite cluster",
   "when the cache is cold",
+  "with strict content security policies",
+  "for keyboard-only navigation",
+  "across light and dark themes",
+  "on unreliable connections",
+  "while preserving old URLs",
+  "with millions of posts",
+  "for multilingual communities",
+  "behind a reverse proxy",
+  "during rolling deploys",
+  "without extra database queries",
+  "on narrow mobile screens",
+  "with custom plugins enabled",
+  "after restoring a backup",
+  "for high-traffic events",
+  "without surprising moderators",
+  "",
   "",
   "",
 ];
@@ -641,16 +645,16 @@ export function topics() {
 
   cachedTopics = Array.from({ length: TOPIC_COUNT }, (_, index) => {
     const id = index + 1;
-    const verb = TOPIC_VERBS[index % TOPIC_VERBS.length];
-    const object = TOPIC_OBJECTS[index % TOPIC_OBJECTS.length];
-    const qualifier = TOPIC_QUALIFIERS[index % TOPIC_QUALIFIERS.length];
+    const verb = TOPIC_VERBS[(index * 5) % TOPIC_VERBS.length];
+    const object = TOPIC_OBJECTS[(index * 7) % TOPIC_OBJECTS.length];
+    const qualifier = TOPIC_QUALIFIERS[(index * 11) % TOPIC_QUALIFIERS.length];
     const title = [verb, object, qualifier].filter(Boolean).join(" ");
 
     return {
       id,
       // The id suffix is what keeps every title unique.
       name: `${title} #${id}`,
-      category: TOPIC_CATEGORIES[index % TOPIC_CATEGORIES.length],
+      category: TOPIC_CATEGORIES[(index * 5) % TOPIC_CATEGORIES.length],
       replies: (index * 7) % 143,
       daysAgo: (index % 90) + 1,
     };
@@ -659,113 +663,172 @@ export function topics() {
   return cachedTopics;
 }
 
-function matches(item, filter, field = "name") {
+function matches(item, filter, fields = ["name"]) {
   if (!filter) {
     return true;
   }
-  return String(item[field] ?? "")
+
+  return fields
+    .map((field) => item[field] ?? "")
+    .join(" ")
     .toLowerCase()
     .includes(filter.toLowerCase());
 }
 
 /**
- * Builds a paginated `@load`.
+ * Builds the API boundary used by the asynchronous select examples.
  *
  * @param {object} options
- * @param {Array} options.items - the full set to page over.
+ * @param {Array} options.items
+ * @param {Array<string>} [options.fields]
+ * @param {"first"|"always"} [options.failOn]
+ * @param {string} [options.message]
  * @param {number} [options.pageSize]
- * @param {number} [options.delayMs]
+ * @param {number} [options.resolveDelayMs]
  * @param {"total"|"hasMore"|"none"} [options.report] - how the source describes what remains.
- *   `none` means silence, which the engine reads as "this page is the whole set".
- * @param {number} [options.fakeTotal] - claim a total the source cannot actually deliver, to
- *   exercise the engine's exhaustion brake.
+ * @param {number} [options.searchDelayMs]
  */
-export function makePagedLoader({
+function createDataSource({
   items,
+  fields = ["name"],
+  failOn = null,
+  message = "The source could not be reached.",
   pageSize = PAGE_SIZE,
-  delayMs = 900,
+  resolveDelayMs = 0,
   report = "total",
-  fakeTotal = null,
+  searchDelayMs = 750,
 }) {
-  return async (filter, { signal, offset = 0, limit = pageSize } = {}) => {
-    await delay(signal, delayMs);
+  let requests = 0;
 
-    const filtered = items.filter((item) => matches(item, filter));
-    const page = filtered.slice(offset, offset + limit);
+  const search = async (
+    filter,
+    { signal, offset = 0, limit = pageSize } = {}
+  ) => {
+    await delay(signal, searchDelayMs);
+    requests += 1;
+
+    if (failOn === "always" || (failOn === "first" && requests === 1)) {
+      throw new Error(message);
+    }
+
+    const filtered = items.filter((item) => matches(item, filter, fields));
 
     if (report === "none") {
-      return page;
+      return filtered;
     }
+
+    const page = filtered.slice(offset, offset + limit);
 
     if (report === "hasMore") {
       return { items: page, hasMore: offset + page.length < filtered.length };
     }
 
-    return { items: page, total: fakeTotal ?? filtered.length };
-  };
-}
-
-/**
- * Builds a `@load` that fails on purpose.
- *
- * @param {object} options
- * @param {Array} options.items - returned by the requests that succeed. Required: without it the
- *   retry the error examples exist to demonstrate would throw instead of recovering.
- * @param {"first"|"alternate"|"always"} [options.failOn] - `first` fails only the opening
- *   request, which is what the smoke test's error-state assertion depends on. `alternate` leaves
- *   the state reachable more than once per page load.
- * @param {number} [options.delayMs]
- * @param {string} [options.message]
- */
-export function makeFailingLoader({
-  items,
-  failOn = "first",
-  delayMs = 750,
-  message = "The source could not be reached.",
-}) {
-  let requests = 0;
-
-  const loader = async (filter, { signal } = {}) => {
-    await delay(signal, delayMs);
-    requests += 1;
-
-    const shouldFail =
-      failOn === "always" ||
-      (failOn === "first" && requests === 1) ||
-      (failOn === "alternate" && requests % 2 === 1);
-
-    if (shouldFail) {
-      throw new Error(message);
-    }
-
-    return items.filter((item) => matches(item, filter));
+    return { items: page, total: filtered.length };
   };
 
-  // Lets an example reset the source so the error state is inspectable more than once per page
-  // load, instead of being a one-shot accident of request ordering.
-  loader.reset = () => (requests = 0);
+  const findItem = (value) => items.find((item) => item.id === value);
+  const findItems = (values) =>
+    items.filter((item) => values.includes(item.id));
 
-  return loader;
+  const find = resolveDelayMs
+    ? async (value, { signal } = {}) => {
+        await delay(signal, resolveDelayMs);
+        return findItem(value);
+      }
+    : findItem;
+
+  const findMany = resolveDelayMs
+    ? async (values, { signal } = {}) => {
+        await delay(signal, resolveDelayMs);
+        return findItems(values);
+      }
+    : findItems;
+
+  const source = { find, findMany, search };
+
+  if (failOn) {
+    source.reset = () => (requests = 0);
+  }
+
+  return source;
 }
 
-/**
- * Builds a slow `@load` alongside a live tally of what happened to each request, so a reader can
- * cause an abort and watch it being honoured rather than taking the claim on trust.
- */
-export function makeInstrumentedLoader({ items, delayMs = 2000 }) {
-  const stats = { started: 0, aborted: 0, resolved: 0 };
-
-  const load = async (filter, { signal } = {}) => {
-    stats.started += 1;
-    try {
-      await delay(signal, delayMs);
-    } catch (error) {
-      stats.aborted += 1;
-      throw error;
-    }
-    stats.resolved += 1;
-    return items.filter((item) => matches(item, filter));
-  };
-
-  return { load, stats };
+export function createRetryingLocaleApi() {
+  return createDataSource({
+    items: LOCALES,
+    failOn: "first",
+    message: i18n("styleguide.sections.select.request_error"),
+    report: "none",
+  });
 }
+
+export function createRetryingPeopleApi() {
+  return createDataSource({
+    items: PEOPLE,
+    failOn: "first",
+    report: "none",
+    searchDelayMs: 600,
+  });
+}
+
+export const activityFilterApi = createDataSource({
+  items: [
+    { id: "all", name: "All activity" },
+    { id: "following", name: "Topics I follow" },
+    { id: "mentions", name: "Mentions" },
+    { id: "unread", name: "Unread topics" },
+  ],
+  report: "none",
+  searchDelayMs: ASYNC_BUTTON_DELAY,
+});
+
+export const cursorTopicApi = createDataSource({
+  items: topics(),
+  report: "hasMore",
+  searchDelayMs: 900,
+});
+
+export const emptyApi = createDataSource({
+  items: [],
+  report: "none",
+  searchDelayMs: 400,
+});
+
+export const fastTopicApi = createDataSource({
+  items: topics(),
+  report: "total",
+  searchDelayMs: 120,
+});
+
+export const localeApi = createDataSource({
+  items: LOCALES,
+  report: "none",
+  searchDelayMs: ASYNC_BUTTON_DELAY,
+});
+
+export const pagedTopicApi = createDataSource({
+  items: topics(),
+  report: "total",
+  searchDelayMs: 900,
+});
+
+export const peopleApi = createDataSource({
+  items: PEOPLE,
+  report: "none",
+  searchDelayMs: 400,
+});
+
+export const reviewerApi = createDataSource({
+  items: PEOPLE,
+  fields: ["name", "username", "title"],
+  report: "none",
+  resolveDelayMs: 500,
+  searchDelayMs: 650,
+});
+
+export const unavailableApi = createDataSource({
+  items: [],
+  failOn: "always",
+  report: "none",
+  searchDelayMs: 400,
+});

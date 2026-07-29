@@ -41,7 +41,16 @@ export default class WholePickerSelectExample extends Component {
       </:groupHeader>
       <:item as |person|>
         <span class="select-examples__row select-examples__row--identity">
-          <img class="select-examples__avatar" src={{person.avatar}} alt="" />
+          <svg
+            class="select-examples__avatar"
+            style={{person.avatarStyle}}
+            viewBox="0 0 48 48"
+            aria-hidden="true"
+          >
+            <use
+              href="/plugins/styleguide/images/avatar.svg#select-avatar"
+            ></use>
+          </svg>
           <span class="select-examples__details">
             <span class="select-examples__primary">{{person.name}}</span>
             <span class="select-examples__secondary">
@@ -52,11 +61,16 @@ export default class WholePickerSelectExample extends Component {
       </:item>
       <:selection as |person|>
         <span class="select-examples__row select-examples__row--glyph">
-          <img
+          <svg
             class="select-examples__avatar --small"
-            src={{person.avatar}}
-            alt=""
-          />
+            style={{person.avatarStyle}}
+            viewBox="0 0 48 48"
+            aria-hidden="true"
+          >
+            <use
+              href="/plugins/styleguide/images/avatar.svg#select-avatar"
+            ></use>
+          </svg>
           {{person.name}}
         </span>
       </:selection>

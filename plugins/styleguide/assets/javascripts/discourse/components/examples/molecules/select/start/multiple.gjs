@@ -3,10 +3,16 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { FOUR_OPTIONS } from "../../../../../lib/select-fixtures";
 
 export default class MultipleSelectExample extends Component {
   @tracked value = [];
+
+  items = [
+    { id: "draft", name: "Draft" },
+    { id: "published", name: "Published" },
+    { id: "archived", name: "Archived" },
+    { id: "scheduled", name: "Scheduled" },
+  ];
 
   @action
   onChange(value) {
@@ -16,7 +22,7 @@ export default class MultipleSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-multi"
-      @items={{FOUR_OPTIONS}}
+      @items={{this.items}}
       @multiple={{true}}
       @value={{this.value}}
       @onChange={{this.onChange}}

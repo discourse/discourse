@@ -3,27 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { delay, PAGE_SIZE, topics } from "../../../../../lib/select-fixtures";
+import { cursorTopicApi } from "../../../../../lib/select-fixtures";
 
 export default class CursorPagedSelectExample extends Component {
   @tracked value = null;
-
-  items = topics();
-
-  @action
-  async load(filter, { signal, offset = 0, limit = PAGE_SIZE }) {
-    await delay(signal, 900);
-    const matches = this.items.filter((item) =>
-      item.name.toLowerCase().includes(filter.toLowerCase())
-    );
-    const items = matches.slice(offset, offset + limit);
-    return { items, hasMore: offset + items.length < matches.length };
-  }
-
-  @action
-  resolveValue(value) {
-    return this.items.find((item) => item.id === value);
-  }
 
   @action
   onChange(value) {
@@ -33,8 +16,8 @@ export default class CursorPagedSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-paged-cursor"
-      @load={{this.load}}
-      @resolveValue={{this.resolveValue}}
+      @load={{cursorTopicApi.search}}
+      @resolveValue={{cursorTopicApi.find}}
       @value={{this.value}}
       @onChange={{this.onChange}}
       @placeholder={{i18n "styleguide.sections.select.placeholder"}}

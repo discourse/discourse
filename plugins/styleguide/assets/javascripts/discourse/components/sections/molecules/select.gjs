@@ -187,19 +187,13 @@ export default class Select extends Component {
               <p class="select-examples__pair-label">
                 {{i18n "styleguide.sections.select.reload_fast_label"}}
               </p>
-              <ReloadSelectExample
-                @identifier="sg-reload-fast"
-                @duration={{120}}
-              />
+              <ReloadSelectExample @identifier="sg-reload-fast" @speed="fast" />
             </div>
             <div class="select-examples__pair-item">
               <p class="select-examples__pair-label">
                 {{i18n "styleguide.sections.select.reload_slow_label"}}
               </p>
-              <ReloadSelectExample
-                @identifier="sg-reload-slow"
-                @duration={{900}}
-              />
+              <ReloadSelectExample @identifier="sg-reload-slow" @speed="slow" />
             </div>
           </div>
         </StyleguideExample>

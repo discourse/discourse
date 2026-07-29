@@ -177,14 +177,9 @@ $styleguide-measure: 70ch;
 
       &__code {
         grid-row: 7;
+        min-width: 0;
         max-width: 100%;
         margin-block-start: 1rem;
-        overflow: auto;
-
-        // Bounded deliberately. `pre` wraps rather than scrolls here and the samples are whole
-        // invocations, so an uncapped block in a narrow track is taller than the demo it
-        // documents — and opening one card stretches every card sharing its row.
-        max-block-size: 30rem;
 
         pre {
           margin: 0;
@@ -629,6 +624,21 @@ $styleguide-measure: 70ch;
 .select-examples__meta {
   margin-inline-start: auto;
   flex: none;
+}
+
+.select-examples__timezone-offset {
+  display: inline-flex;
+  flex: none;
+  justify-content: center;
+  min-width: 1.25rem;
+  padding: 0.125rem 0.2rem;
+  border: 1px solid var(--token-color-border-default);
+  border-radius: var(--d-border-radius);
+  background: var(--token-color-surface-hovered);
+  color: var(--token-color-text-subtle);
+  font-family: var(--d-font-family--monospace);
+  font-size: var(--font-down-2);
+  line-height: var(--line-height-small);
 }
 
 /* The hero --------------------------------------------------------------------------------- */

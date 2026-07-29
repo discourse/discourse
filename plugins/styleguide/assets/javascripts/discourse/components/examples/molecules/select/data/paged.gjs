@@ -3,29 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { delay, PAGE_SIZE, topics } from "../../../../../lib/select-fixtures";
+import { pagedTopicApi } from "../../../../../lib/select-fixtures";
 
 export default class PagedSelectExample extends Component {
   @tracked value = null;
-
-  items = topics();
-
-  @action
-  async load(filter, { signal, offset = 0, limit = PAGE_SIZE }) {
-    await delay(signal, 900);
-    const matches = this.items.filter((item) =>
-      item.name.toLowerCase().includes(filter.toLowerCase())
-    );
-    return {
-      items: matches.slice(offset, offset + limit),
-      total: matches.length,
-    };
-  }
-
-  @action
-  resolveValue(value) {
-    return this.items.find((item) => item.id === value);
-  }
 
   @action
   onChange(value) {
@@ -35,8 +16,8 @@ export default class PagedSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-paged"
-      @load={{this.load}}
-      @resolveValue={{this.resolveValue}}
+      @load={{pagedTopicApi.search}}
+      @resolveValue={{pagedTopicApi.find}}
       @value={{this.value}}
       @onChange={{this.onChange}}
       @placeholder={{i18n "styleguide.sections.select.placeholder"}}
