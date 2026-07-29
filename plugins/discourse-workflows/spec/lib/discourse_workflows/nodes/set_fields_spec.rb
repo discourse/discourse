@@ -7,23 +7,19 @@ RSpec.describe DiscourseWorkflows::Nodes::SetFields::V1 do
 
   describe "#execute" do
     let(:item) { { "json" => { "topic_id" => "42", "username" => "alice" } } }
-
-    def assignments(*rows)
-      { "assignments" => { "assignments" => rows } }
-    end
-
-    def assignment(name, value, type = "string")
-      { "name" => name, "value" => value, "type" => type }
-    end
+    let(:empty_assignments) { { "assignments" => { "assignments" => [] } } }
 
     it "returns typed fields from fixed values" do
-      config = { "include_other_fields" => false }.merge(
-        assignments(
-          assignment("priority", "high"),
-          assignment("days", "7", "integer"),
-          assignment("notify", "true", "boolean"),
-        ),
-      )
+      config = {
+        "include_other_fields" => false,
+        "assignments" => {
+          "assignments" => [
+            { "name" => "priority", "value" => "high", "type" => "string" },
+            { "name" => "days", "value" => "7", "type" => "integer" },
+            { "name" => "notify", "value" => "true", "type" => "boolean" },
+          ],
+        },
+      }
 
       result = execute_node(configuration: config, item: item)
 
@@ -31,7 +27,12 @@ RSpec.describe DiscourseWorkflows::Nodes::SetFields::V1 do
     end
 
     it "merges with item json when include_input is true" do
-      config = { "include_other_fields" => true }.merge(assignments(assignment("priority", "high")))
+      config = {
+        "include_other_fields" => true,
+        "assignments" => {
+          "assignments" => [{ "name" => "priority", "value" => "high", "type" => "string" }],
+        },
+      }
 
       result = execute_node(configuration: config, item: item)
 
@@ -39,7 +40,12 @@ RSpec.describe DiscourseWorkflows::Nodes::SetFields::V1 do
     end
 
     it "set fields win on merge conflict" do
-      config = { "include_other_fields" => true }.merge(assignments(assignment("username", "bob")))
+      config = {
+        "include_other_fields" => true,
+        "assignments" => {
+          "assignments" => [{ "name" => "username", "value" => "bob", "type" => "string" }],
+        },
+      }
 
       result = execute_node(configuration: config, item: item)
 
@@ -47,7 +53,11 @@ RSpec.describe DiscourseWorkflows::Nodes::SetFields::V1 do
     end
 
     it "defaults include_other_fields to true when not specified" do
-      config = assignments(assignment("status", "open"))
+      config = {
+        "assignments" => {
+          "assignments" => [{ "name" => "status", "value" => "open", "type" => "string" }],
+        },
+      }
 
       result = execute_node(configuration: config, item: item)
 
@@ -55,14 +65,17 @@ RSpec.describe DiscourseWorkflows::Nodes::SetFields::V1 do
     end
 
     it "casts boolean falsy values correctly" do
-      config = { "include_other_fields" => false }.merge(
-        assignments(
-          assignment("a", "false", "boolean"),
-          assignment("b", "0", "boolean"),
-          assignment("c", "no", "boolean"),
-          assignment("d", "1", "boolean"),
-        ),
-      )
+      config = {
+        "include_other_fields" => false,
+        "assignments" => {
+          "assignments" => [
+            { "name" => "a", "value" => "false", "type" => "boolean" },
+            { "name" => "b", "value" => "0", "type" => "boolean" },
+            { "name" => "c", "value" => "no", "type" => "boolean" },
+            { "name" => "d", "value" => "1", "type" => "boolean" },
+          ],
+        },
+      }
 
       result = execute_node(configuration: config, item: item)
 
@@ -70,9 +83,15 @@ RSpec.describe DiscourseWorkflows::Nodes::SetFields::V1 do
     end
 
     it "casts float values" do
-      config = { "include_other_fields" => false }.merge(
-        assignments(assignment("score", "3.14", "float"), assignment("whole", "7", "float")),
-      )
+      config = {
+        "include_other_fields" => false,
+        "assignments" => {
+          "assignments" => [
+            { "name" => "score", "value" => "3.14", "type" => "float" },
+            { "name" => "whole", "value" => "7", "type" => "float" },
+          ],
+        },
+      }
 
       result = execute_node(configuration: config, item: item)
 
@@ -80,9 +99,12 @@ RSpec.describe DiscourseWorkflows::Nodes::SetFields::V1 do
     end
 
     it "raises on non-numeric float cast" do
-      config = { "include_other_fields" => false }.merge(
-        assignments(assignment("score", "abc", "float")),
-      )
+      config = {
+        "include_other_fields" => false,
+        "assignments" => {
+          "assignments" => [{ "name" => "score", "value" => "abc", "type" => "float" }],
+        },
+      }
 
       expect { execute_node(configuration: config, item: item) }.to raise_error(
         DiscourseWorkflows::NodeError,
@@ -90,9 +112,12 @@ RSpec.describe DiscourseWorkflows::Nodes::SetFields::V1 do
     end
 
     it "raises on non-numeric integer cast" do
-      config = { "include_other_fields" => false }.merge(
-        assignments(assignment("count", "abc", "integer")),
-      )
+      config = {
+        "include_other_fields" => false,
+        "assignments" => {
+          "assignments" => [{ "name" => "count", "value" => "abc", "type" => "integer" }],
+        },
+      }
 
       expect { execute_node(configuration: config, item: item) }.to raise_error(
         DiscourseWorkflows::NodeError,
@@ -100,7 +125,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SetFields::V1 do
     end
 
     it "returns empty hash when fields are empty and include_input is false" do
-      config = { "include_other_fields" => false }.merge(assignments)
+      config = { "include_other_fields" => false }.merge(empty_assignments)
 
       result = execute_node(configuration: config, item: item)
 
@@ -108,7 +133,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SetFields::V1 do
     end
 
     it "returns item json when fields are empty and include_input is true" do
-      config = { "include_other_fields" => true }.merge(assignments)
+      config = { "include_other_fields" => true }.merge(empty_assignments)
 
       result = execute_node(configuration: config, item: item)
 
@@ -116,9 +141,15 @@ RSpec.describe DiscourseWorkflows::Nodes::SetFields::V1 do
     end
 
     it "skips fields with blank keys" do
-      config = { "include_other_fields" => false }.merge(
-        assignments(assignment("", "ignored"), assignment("kept", "yes")),
-      )
+      config = {
+        "include_other_fields" => false,
+        "assignments" => {
+          "assignments" => [
+            { "name" => "", "value" => "ignored", "type" => "string" },
+            { "name" => "kept", "value" => "yes", "type" => "string" },
+          ],
+        },
+      }
 
       result = execute_node(configuration: config, item: item)
 
@@ -126,9 +157,12 @@ RSpec.describe DiscourseWorkflows::Nodes::SetFields::V1 do
     end
 
     it "sets nested fields with dot notation" do
-      config = { "include_other_fields" => false }.merge(
-        assignments(assignment("profile.name", "Alice")),
-      )
+      config = {
+        "include_other_fields" => false,
+        "assignments" => {
+          "assignments" => [{ "name" => "profile.name", "value" => "Alice", "type" => "string" }],
+        },
+      }
 
       result = execute_node(configuration: config, item: item)
 
@@ -138,7 +172,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SetFields::V1 do
     it "includes only selected input fields" do
       nested_item = { "json" => item["json"].merge("profile" => { "name" => "Alice" }) }
       config = { "include" => "selected", "include_fields" => "topic_id, profile.name" }.merge(
-        assignments,
+        empty_assignments,
       )
 
       result = execute_node(configuration: config, item: nested_item)
@@ -147,7 +181,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SetFields::V1 do
     end
 
     it "excludes selected input fields" do
-      config = { "include" => "except", "exclude_fields" => "username" }.merge(assignments)
+      config = { "include" => "except", "exclude_fields" => "username" }.merge(empty_assignments)
 
       result = execute_node(configuration: config, item: item)
 
@@ -227,7 +261,12 @@ RSpec.describe DiscourseWorkflows::Nodes::SetFields::V1 do
     end
 
     it "defaults to manual mode when no mode key is present" do
-      config = { "include_other_fields" => false }.merge(assignments(assignment("status", "open")))
+      config = {
+        "include_other_fields" => false,
+        "assignments" => {
+          "assignments" => [{ "name" => "status", "value" => "open", "type" => "string" }],
+        },
+      }
 
       result = execute_node(configuration: config, item: item)
 

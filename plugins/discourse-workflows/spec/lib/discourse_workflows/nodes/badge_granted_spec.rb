@@ -6,7 +6,7 @@ RSpec.describe DiscourseWorkflows::Nodes::BadgeGranted::V1 do
   fab!(:other_badge) { Fabricate(:badge, name: "Other badge") }
 
   describe ".load_options_context" do
-    def load_options(filter: nil)
+    subject(:options) do
       context =
         DiscourseWorkflows::LoadOptionsContext.new(
           method_name: "badges",
@@ -17,8 +17,10 @@ RSpec.describe DiscourseWorkflows::Nodes::BadgeGranted::V1 do
       described_class.load_options_context(context)
     end
 
+    let(:filter) { nil }
+
     it "returns enabled badges for the chooser" do
-      expect(load_options).to include(
+      expect(options).to include(
         { id: badge.id, name: badge.name },
         { id: other_badge.id, name: other_badge.name },
       )
@@ -27,13 +29,15 @@ RSpec.describe DiscourseWorkflows::Nodes::BadgeGranted::V1 do
     it "excludes disabled badges" do
       disabled_badge = Fabricate(:badge, name: "Disabled badge", enabled: false)
 
-      expect(load_options).not_to include({ id: disabled_badge.id, name: disabled_badge.name })
+      expect(options).not_to include({ id: disabled_badge.id, name: disabled_badge.name })
     end
 
-    it "filters badges by the filter term" do
-      expect(load_options(filter: "Other badge")).to contain_exactly(
-        { id: other_badge.id, name: other_badge.name },
-      )
+    context "with a filter term" do
+      let(:filter) { "Other badge" }
+
+      it "filters badges" do
+        expect(options).to contain_exactly({ id: other_badge.id, name: other_badge.name })
+      end
     end
   end
 
@@ -73,18 +77,25 @@ RSpec.describe DiscourseWorkflows::Nodes::BadgeGranted::V1 do
     it "matches any badge when badge_id is blank" do
       trigger = described_class.new(badge.id, user.id)
 
-      expect(trigger.matches?(trigger_context({}))).to eq(true)
+      context = DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => {} })
+
+      expect(trigger.matches?(context)).to eq(true)
     end
 
     it "matches only the configured badge" do
       trigger = described_class.new(badge.id, user.id)
 
-      expect(trigger.matches?(trigger_context("badge_id" => badge.id.to_s))).to eq(true)
-      expect(trigger.matches?(trigger_context("badge_id" => other_badge.id.to_s))).to eq(false)
-    end
-  end
+      matching_context =
+        DiscourseWorkflows::TriggerNodeContext.new(
+          { "parameters" => { "badge_id" => badge.id.to_s } },
+        )
+      other_context =
+        DiscourseWorkflows::TriggerNodeContext.new(
+          { "parameters" => { "badge_id" => other_badge.id.to_s } },
+        )
 
-  def trigger_context(parameters)
-    DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => parameters })
+      expect(trigger.matches?(matching_context)).to eq(true)
+      expect(trigger.matches?(other_context)).to eq(false)
+    end
   end
 end
