@@ -126,8 +126,12 @@ export default class AssignmentCollection extends Component {
   handleTypeChange(index, type, { set, name }) {
     set(name, type);
 
+    if (!this.args.formApi) {
+      return;
+    }
+
     const valuePath = `${this.assignmentsPath}.${index}.value`;
-    set(valuePath, valueForType(this.args.formApi?.get(valuePath), type));
+    set(valuePath, valueForType(this.args.formApi.get(valuePath), type));
   }
 
   @action
