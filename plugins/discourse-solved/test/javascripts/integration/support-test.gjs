@@ -246,7 +246,7 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
     );
 
     assert.dom(".db-support__filter").exists("shown with multiple categories");
-    assert.dom(".category-selector").exists();
+    assert.dom(".multiple-categories-selector").exists();
   });
 
   test("prefills the selector with the persisted category selection", async function (assert) {
@@ -268,6 +268,9 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       </template>
     );
 
-    assert.strictEqual(selectKit(".category-selector").header().value(), "1,2");
+    assert.strictEqual(
+      selectKit(".multiple-categories-selector").header().value(),
+      "1,2"
+    );
   });
 });

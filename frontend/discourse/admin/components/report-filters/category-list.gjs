@@ -3,7 +3,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import FilterComponent from "discourse/admin/components/report-filters/filter";
 import Category from "discourse/models/category";
-import CategorySelector from "discourse/select-kit/components/category-selector";
+import MultipleCategoriesSelector from "discourse/select-kit/components/multiple-categories-selector";
 
 export default class CategoryList extends FilterComponent {
   @tracked selectedCategories;
@@ -38,7 +38,7 @@ export default class CategoryList extends FilterComponent {
   }
 
   <template>
-    <CategorySelector
+    <MultipleCategoriesSelector
       @categories={{this.selectedCategories}}
       @onChange={{this.onChange}}
       @onClose={{this.onClose}}
