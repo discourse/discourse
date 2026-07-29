@@ -250,7 +250,8 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
         ClassificationResult.where(
           model_used: "cardiffnlp/twitter-roberta-base-sentiment-latest",
           target: [post_1, post_2],
-        )
+        ).to_a
+      expect(results.map(&:target_id)).to contain_exactly(post_1.id, post_2.id)
       expect(results.map { |result| result.classification.keys }).to all(
         contain_exactly("negative", "neutral", "positive"),
       )
