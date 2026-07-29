@@ -367,6 +367,10 @@
     color: var(--primary-medium);
   }
 
+  &__color-note {
+    margin: 0 0 var(--space-2);
+  }
+
   &__color-modes {
     display: flex;
     justify-content: flex-end;
@@ -429,10 +433,6 @@
       font-size: var(--font-down-3);
       color: var(--primary-medium);
     }
-  }
-
-  &__color-note {
-    margin: var(--space-2) 0;
   }
 
   &__user-selectable {
