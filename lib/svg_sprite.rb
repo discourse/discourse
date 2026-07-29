@@ -275,7 +275,6 @@ module SvgSprite
         toggle-on
         trash-can
         triangle-exclamation
-        trophy
         truck-medical
         unlock
         unlock-keyhole

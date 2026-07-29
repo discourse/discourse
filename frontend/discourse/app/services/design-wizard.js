@@ -387,7 +387,7 @@ export default class DesignWizardService extends Service {
   }
 
   #supportedHomepage(homepage) {
-    return ["latest", "top", "hot", "categories"].includes(homepage)
+    return ["latest", "new", "hot", "categories"].includes(homepage)
       ? homepage
       : "latest";
   }

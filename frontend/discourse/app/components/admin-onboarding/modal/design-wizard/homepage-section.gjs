@@ -12,8 +12,8 @@ import { i18n } from "discourse-i18n";
 
 const TOPIC_PAGES = [
   { key: "latest", icon: "list" },
+  { key: "new", icon: "far-clock" },
   { key: "hot", icon: "fire" },
-  { key: "top", icon: "trophy" },
 ];
 
 function topicPageLabel(page) {

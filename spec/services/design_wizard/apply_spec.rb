@@ -16,7 +16,7 @@ RSpec.describe DesignWizard::Apply do
     end
     it do
       is_expected.to validate_inclusion_of(:homepage).in_array(
-        %w[latest top hot categories],
+        %w[latest new hot categories],
       ).allow_nil
     end
     it do
