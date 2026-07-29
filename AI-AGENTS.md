@@ -46,7 +46,10 @@ bin/lint --fix path/to/file path/to/another/file
 bin/lint --fix --recent # Lint all recently changed files
 ```
 
-ALWAYS lint any changes you make with `bin/lint --fix`
+Run `bin/lint --fix` once after implementation is complete and before handing
+off completed changes, committing, or pushing. During iterative edits, only run
+lint when it helps diagnose an issue. Prefer passing the specific changed files;
+use `bin/lint --fix --recent` only when appropriate.
 
 ## Site Settings
 - Configured in `config/site_settings.yml` or `config/settings.yml` for plugins
