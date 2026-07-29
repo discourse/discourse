@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
+require_relative "../support/discourse_gifs_migration_fixture"
+
 RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
+  include DiscourseGifsMigrationFixture
   before do
     Rake::Task.clear
     silence_warnings { Discourse::Application.load_tasks }
@@ -84,18 +87,6 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
       theme.set_field(target: :settings, name: "yaml", value: SETTINGS_YAML)
       theme.save!
     end
-  end
-
-  def add_overrides(theme, overrides)
-    overrides.each { |name, value| theme.update_setting(name, value) }
-    theme.save!
-    theme.reload
-  end
-
-  def run_migration(theme, enable_gifs: false)
-    expect {
-      DiscourseGifsMigration.migrate_component(theme, enable_gifs: enable_gifs)
-    }.to output.to_stdout
   end
 
   describe ".find_component_in_db" do
@@ -334,10 +325,6 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
     end
 
     context "with theme translation overrides" do
-      def add_translation_override(theme, key, value, locale: "en")
-        ThemeTranslationOverride.create!(theme:, locale:, translation_key: key, value:)
-      end
-
       it "migrates customised strings (per locale) to the matching core site text",
          :aggregate_failures do
         add_translation_override(component, "gif.composer_title", "Add a GIF")

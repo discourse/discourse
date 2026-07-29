@@ -1,18 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Middleware::RequestTracker do
-  def env(opts = {})
-    path = opts.delete(:path) || "/path?bla=1"
-    create_request_env(path: path).merge(
-      "HTTP_HOST" => "http://test.com",
-      "HTTP_USER_AGENT" =>
-        "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36",
-      "REQUEST_METHOD" => "GET",
-      "HTTP_ACCEPT" =>
-        "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-      "rack.input" => StringIO.new,
-    ).merge(opts)
-  end
+  include RequestTrackerHarness
 
   before do
     ApplicationRequest.enable
@@ -85,17 +74,6 @@ RSpec.describe Middleware::RequestTracker do
     before do
       freeze_time
       ApplicationRequest.clear_cache!
-    end
-
-    def log_tracked_view(val)
-      data =
-        Middleware::RequestTracker.get_data(
-          env("HTTP_DISCOURSE_TRACK_VIEW" => val),
-          ["200", { "Content-Type" => "text/html" }],
-          0.2,
-        )
-
-      Middleware::RequestTracker.log_request(data)
     end
 
     it "can exclude/include based on custom header" do
@@ -494,34 +472,8 @@ RSpec.describe Middleware::RequestTracker do
         )
       end
 
-      def log_topic_view(authenticated: false, deferred: false)
-        headers = { "action_dispatch.remote_ip" => "127.0.0.1" }
-
-        headers["HTTP_COOKIE"] = "_t=#{auth_cookie};" if authenticated
-
-        if deferred
-          headers["HTTP_DISCOURSE_TRACK_VIEW"] = "1"
-          headers["HTTP_DISCOURSE_TRACK_VIEW_DEFERRED"] = "1"
-          headers["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"] = topic.id
-          path = "/message-bus/abcde/poll"
-        else
-          headers["HTTP_DISCOURSE_TRACK_VIEW"] = "1"
-          headers["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"] = topic.id
-          path = URI.parse(topic.url).path
-        end
-
-        data =
-          Middleware::RequestTracker.get_data(
-            env(path: path, **headers),
-            ["200", { "Content-Type" => "text/html" }],
-            0.1,
-          )
-        Middleware::RequestTracker.log_request(data)
-        data
-      end
-
       it "logs deferred topic views correctly for logged in users" do
-        data = log_topic_view(authenticated: true, deferred: true)
+        data = log_topic_view(topic:, auth_cookie:, authenticated: true, deferred: true)
 
         expect(data[:topic_id]).to eq(topic.id)
         expect(data[:request_remote_ip]).to eq("127.0.0.1")
@@ -543,7 +495,7 @@ RSpec.describe Middleware::RequestTracker do
 
       it "does not log deferred topic views for topics the user cannot access" do
         topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
-        log_topic_view(authenticated: true, deferred: true)
+        log_topic_view(topic:, auth_cookie:, authenticated: true, deferred: true)
         CachedCounting.flush
         expect(TopicViewItem.exists?(topic_id: topic.id, user_id: user.id, ip_address: nil)).to eq(
           false,
@@ -559,7 +511,7 @@ RSpec.describe Middleware::RequestTracker do
       end
 
       it "logs deferred topic views correctly for anonymous" do
-        data = log_topic_view(authenticated: false, deferred: true)
+        data = log_topic_view(topic:, auth_cookie:, authenticated: false, deferred: true)
 
         expect(data[:topic_id]).to eq(topic.id)
         expect(data[:request_remote_ip]).to eq("127.0.0.1")
@@ -581,7 +533,7 @@ RSpec.describe Middleware::RequestTracker do
 
       it "does not log deferred topic views for topics the anonymous user cannot access" do
         topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
-        log_topic_view(authenticated: false, deferred: true)
+        log_topic_view(topic:, auth_cookie:, authenticated: false, deferred: true)
         CachedCounting.flush
 
         expect(
@@ -598,7 +550,7 @@ RSpec.describe Middleware::RequestTracker do
       end
 
       it "logs explicit topic views correctly for logged in users" do
-        data = log_topic_view(authenticated: true, deferred: false)
+        data = log_topic_view(topic:, auth_cookie:, authenticated: true, deferred: false)
 
         expect(data[:topic_id]).to eq(topic.id)
         expect(data[:request_remote_ip]).to eq("127.0.0.1")
@@ -620,7 +572,7 @@ RSpec.describe Middleware::RequestTracker do
 
       it "does not log explicit topic views for topics the user cannot access" do
         topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
-        log_topic_view(authenticated: true, deferred: false)
+        log_topic_view(topic:, auth_cookie:, authenticated: true, deferred: false)
         CachedCounting.flush
 
         expect(TopicViewItem.exists?(topic_id: topic.id, user_id: user.id, ip_address: nil)).to eq(
@@ -637,7 +589,7 @@ RSpec.describe Middleware::RequestTracker do
       end
 
       it "logs explicit topic views correctly for anonymous" do
-        data = log_topic_view(authenticated: false, deferred: false)
+        data = log_topic_view(topic:, auth_cookie:, authenticated: false, deferred: false)
 
         expect(data[:topic_id]).to eq(topic.id)
         expect(data[:request_remote_ip]).to eq("127.0.0.1")
@@ -659,7 +611,7 @@ RSpec.describe Middleware::RequestTracker do
 
       it "does not log explicit topic views for topics the anonymous user cannot access" do
         topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
-        log_topic_view(authenticated: false, deferred: false)
+        log_topic_view(topic:, auth_cookie:, authenticated: false, deferred: false)
         CachedCounting.flush
 
         expect(
@@ -741,10 +693,6 @@ RSpec.describe Middleware::RequestTracker do
     end
 
     describe "browser_pageview event" do
-      def log_browser_pageview(data)
-        Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] }).log_later(data, {}, nil)
-      end
-
       context "when SiteSetting.trigger_browser_pageview_events is true" do
         before { SiteSetting.trigger_browser_pageview_events = true }
         it "triggers event for anonymous user page views when `login_required` site setting is false" do
@@ -1071,19 +1019,6 @@ RSpec.describe Middleware::RequestTracker do
       ApplicationRequest.clear_cache!
     end
 
-    def beacon_env(body_hash, extra = {})
-      json_body = JSON.generate(body_hash)
-      env(
-        {
-          :path => "/srv/pv",
-          "HTTP_HOST" => "test.localhost",
-          "REQUEST_METHOD" => "POST",
-          "CONTENT_TYPE" => "application/json",
-          "rack.input" => StringIO.new(json_body),
-        }.merge(extra),
-      )
-    end
-
     let(:same_origin) { { "HTTP_ORIGIN" => "http://test.localhost" } }
 
     it "returns 204 and does not call the app" do
@@ -1095,7 +1030,7 @@ RSpec.describe Middleware::RequestTracker do
             [200, {}, ["OK"]]
           end,
         )
-      status, = middleware.call(beacon_env({}, same_origin))
+      status, = middleware.call(beacon_env(body: {}, extra: same_origin))
 
       expect(status).to eq(204)
       expect(app_called).to eq(false)
@@ -1104,7 +1039,8 @@ RSpec.describe Middleware::RequestTracker do
     it "returns 204 for beacon requests in a subfolder setup" do
       set_subfolder "/forum"
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
-      status, = middleware.call(beacon_env({}, same_origin.merge(path: "/forum/srv/pv")))
+      status, =
+        middleware.call(beacon_env(body: {}, extra: same_origin.merge(path: "/forum/srv/pv")))
 
       expect(status).to eq(204)
     end
@@ -1135,13 +1071,13 @@ RSpec.describe Middleware::RequestTracker do
         DiscourseEvent.track_events(:beacon_browser_pageview) do
           middleware.call(
             beacon_env(
-              {
+              body: {
                 url: "https://test.com/t/topic/123",
                 referrer: "https://test.com/",
                 session_id: "abc123",
                 topic_id: 123,
               },
-              same_origin,
+              extra: same_origin,
             ),
           )
         end
@@ -1171,13 +1107,13 @@ RSpec.describe Middleware::RequestTracker do
       expect {
         middleware.call(
           beacon_env(
-            {
+            body: {
               url: "https://test.com/t/topic/123",
               referrer: "https://test.com/",
               session_id: "abc123",
               topic_id: 123,
             },
-            same_origin.merge("action_dispatch.remote_ip" => "1.2.3.4"),
+            extra: same_origin.merge("action_dispatch.remote_ip" => "1.2.3.4"),
           ),
         )
       }.to change { BrowserPageviewEvent.count }.by(1)
@@ -1206,7 +1142,9 @@ RSpec.describe Middleware::RequestTracker do
     it "skips beacon page view when the remote IP resolves to a crawler ASN" do
       DiscourseIpInfo.stubs(:get).returns({ asn: SiteSetting.crawler_asns_map.first.to_i })
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
-      middleware.call(beacon_env({}, same_origin.merge("action_dispatch.remote_ip" => "1.2.3.4")))
+      middleware.call(
+        beacon_env(body: {}, extra: same_origin.merge("action_dispatch.remote_ip" => "1.2.3.4")),
+      )
       CachedCounting.flush
 
       expect(ApplicationRequest.page_view_anon_browser_beacon.first).to be_nil
@@ -1215,7 +1153,9 @@ RSpec.describe Middleware::RequestTracker do
     it "counts beacon page view when the remote IP is not a crawler ASN" do
       DiscourseIpInfo.stubs(:get).returns({ asn: 1 })
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
-      middleware.call(beacon_env({}, same_origin.merge("action_dispatch.remote_ip" => "1.2.3.4")))
+      middleware.call(
+        beacon_env(body: {}, extra: same_origin.merge("action_dispatch.remote_ip" => "1.2.3.4")),
+      )
       CachedCounting.flush
 
       expect(ApplicationRequest.page_view_anon_browser_beacon.first.count).to eq(1)
@@ -1223,7 +1163,8 @@ RSpec.describe Middleware::RequestTracker do
 
     it "returns 403 for cross-origin beacon requests" do
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
-      status, = middleware.call(beacon_env({}, { "HTTP_ORIGIN" => "https://evil.example" }))
+      status, =
+        middleware.call(beacon_env(body: {}, extra: { "HTTP_ORIGIN" => "https://evil.example" }))
       CachedCounting.flush
 
       expect(status).to eq(403)
@@ -1232,7 +1173,7 @@ RSpec.describe Middleware::RequestTracker do
 
     it "returns 403 when Origin and Referer are both absent" do
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
-      status, = middleware.call(beacon_env({}))
+      status, = middleware.call(beacon_env(body: {}))
       CachedCounting.flush
 
       expect(status).to eq(403)
@@ -1244,7 +1185,14 @@ RSpec.describe Middleware::RequestTracker do
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
       status, =
         middleware.call(
-          beacon_env({}, { "HTTP_HOST" => "evil.example", "HTTP_ORIGIN" => "http://evil.example" }),
+          beacon_env(
+            body: {
+            },
+            extra: {
+              "HTTP_HOST" => "evil.example",
+              "HTTP_ORIGIN" => "http://evil.example",
+            },
+          ),
         )
       CachedCounting.flush
 
@@ -1255,7 +1203,9 @@ RSpec.describe Middleware::RequestTracker do
     it "accepts beacon when Origin is absent but Referer is same-origin" do
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
       status, =
-        middleware.call(beacon_env({}, { "HTTP_REFERER" => "http://test.localhost/some/page" }))
+        middleware.call(
+          beacon_env(body: {}, extra: { "HTTP_REFERER" => "http://test.localhost/some/page" }),
+        )
 
       expect(status).to eq(204)
     end
@@ -1272,7 +1222,7 @@ RSpec.describe Middleware::RequestTracker do
               [404, {}, ["unknown app path"]]
             end,
           )
-        status, = middleware.call(beacon_env({}))
+        status, = middleware.call(beacon_env(body: {}))
 
         expect(status).to eq(404)
         expect(app_called).to eq(true)
@@ -1294,7 +1244,7 @@ RSpec.describe Middleware::RequestTracker do
               [404, {}, ["unknown app path"]]
             end,
           )
-        status, = middleware.call(beacon_env({}))
+        status, = middleware.call(beacon_env(body: {}))
 
         expect(status).to eq(404)
         expect(app_called).to eq(true)
@@ -1802,15 +1752,6 @@ RSpec.describe Middleware::RequestTracker do
   end
 
   describe "callbacks" do
-    def app(result, sql_calls: 0, redis_calls: 0)
-      lambda do |env|
-        sql_calls.times { User.where(id: -100).pluck(:id) }
-        redis_calls.times { Discourse.redis.get("x") }
-        yield if block_given?
-        result
-      end
-    end
-
     let(:logger) do
       ->(env, data) do
         @env = env
@@ -1970,18 +1911,6 @@ RSpec.describe Middleware::RequestTracker do
   describe "session engagement tracking via /srv/se" do
     before { SiteSetting.persist_browser_pageview_events = true }
 
-    def engagement_env(body_hash, extra = {})
-      env(
-        {
-          :path => "/srv/se",
-          "HTTP_HOST" => "test.localhost",
-          "REQUEST_METHOD" => "POST",
-          "CONTENT_TYPE" => "application/json",
-          "rack.input" => StringIO.new(JSON.generate(body_hash)),
-        }.merge(extra),
-      )
-    end
-
     let(:same_origin) { { "HTTP_ORIGIN" => "http://test.localhost" } }
     let(:payload) do
       {
@@ -2001,7 +1930,7 @@ RSpec.describe Middleware::RequestTracker do
       middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
 
       expect {
-        status, = middleware.call(engagement_env(payload, same_origin))
+        status, = middleware.call(engagement_env(body: payload, extra: same_origin))
         expect(status).to eq(204)
       }.to change { BrowserPageviewSessionEngagement.count }.by(1)
 
@@ -2014,11 +1943,11 @@ RSpec.describe Middleware::RequestTracker do
 
     it "updates the existing row on a later snapshot for the same session" do
       middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
-      middleware.call(engagement_env(payload, same_origin))
+      middleware.call(engagement_env(body: payload, extra: same_origin))
 
       later = payload.merge(mouse_move_events: 40, engaged_seconds: 900)
 
-      expect { middleware.call(engagement_env(later, same_origin)) }.not_to change {
+      expect { middleware.call(engagement_env(body: later, extra: same_origin)) }.not_to change {
         BrowserPageviewSessionEngagement.count
       }
 
@@ -2031,7 +1960,10 @@ RSpec.describe Middleware::RequestTracker do
       middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
 
       expect {
-        status, = middleware.call(engagement_env(payload, "HTTP_ORIGIN" => "https://evil.example"))
+        status, =
+          middleware.call(
+            engagement_env(body: payload, extra: { "HTTP_ORIGIN" => "https://evil.example" }),
+          )
         expect(status).to eq(403)
       }.not_to change { BrowserPageviewSessionEngagement.count }
     end
@@ -2041,7 +1973,9 @@ RSpec.describe Middleware::RequestTracker do
 
       expect {
         status, =
-          middleware.call(engagement_env({}, same_origin).merge("rack.input" => StringIO.new("x")))
+          middleware.call(
+            engagement_env(body: {}, extra: same_origin).merge("rack.input" => StringIO.new("x")),
+          )
         expect(status).to eq(204)
       }.not_to change { BrowserPageviewSessionEngagement.count }
     end
@@ -2052,7 +1986,9 @@ RSpec.describe Middleware::RequestTracker do
       expect {
         status, =
           middleware.call(
-            engagement_env({}, same_origin).merge("rack.input" => StringIO.new("[1,2,3]")),
+            engagement_env(body: {}, extra: same_origin).merge(
+              "rack.input" => StringIO.new("[1,2,3]"),
+            ),
           )
         expect(status).to eq(204)
       }.not_to change { BrowserPageviewSessionEngagement.count }
@@ -2062,7 +1998,10 @@ RSpec.describe Middleware::RequestTracker do
       middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
 
       middleware.call(
-        engagement_env(payload.merge(click_events: "9", engaged_seconds: 1234.9), same_origin),
+        engagement_env(
+          body: payload.merge(click_events: "9", engaged_seconds: 1234.9),
+          extra: same_origin,
+        ),
       )
 
       expect(BrowserPageviewSessionEngagement.find_by(session_id: "sess-1")).to have_attributes(
@@ -2076,7 +2015,10 @@ RSpec.describe Middleware::RequestTracker do
 
       [nil, ""].each do |value|
         middleware.call(
-          engagement_env(payload.merge(time_to_first_interaction_ms: value), same_origin),
+          engagement_env(
+            body: payload.merge(time_to_first_interaction_ms: value),
+            extra: same_origin,
+          ),
         )
 
         expect(
@@ -2096,7 +2038,7 @@ RSpec.describe Middleware::RequestTracker do
         payload.merge(mouse_move_events: 9_999_999_999),
       ].each do |malformed|
         expect {
-          status, = middleware.call(engagement_env(malformed, same_origin))
+          status, = middleware.call(engagement_env(body: malformed, extra: same_origin))
           expect(status).to eq(204)
         }.not_to change { BrowserPageviewSessionEngagement.count }
       end
@@ -2106,7 +2048,9 @@ RSpec.describe Middleware::RequestTracker do
       SiteSetting.browser_pageview_max_engaged_seconds = 60
       middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
 
-      middleware.call(engagement_env(payload.merge(engaged_seconds: 5000), same_origin))
+      middleware.call(
+        engagement_env(body: payload.merge(engaged_seconds: 5000), extra: same_origin),
+      )
 
       expect(BrowserPageviewSessionEngagement.find_by(session_id: "sess-1").engaged_seconds).to eq(
         60,
@@ -2118,7 +2062,7 @@ RSpec.describe Middleware::RequestTracker do
       middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
 
       expect {
-        status, = middleware.call(engagement_env(payload, same_origin))
+        status, = middleware.call(engagement_env(body: payload, extra: same_origin))
         expect(status).to eq(204)
       }.not_to change { BrowserPageviewSessionEngagement.count }
     end
@@ -2130,7 +2074,7 @@ RSpec.describe Middleware::RequestTracker do
       middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
 
       expect {
-        status, = middleware.call(engagement_env(payload, same_origin))
+        status, = middleware.call(engagement_env(body: payload, extra: same_origin))
         expect(status).to eq(200)
       }.not_to change { BrowserPageviewSessionEngagement.count }
     end

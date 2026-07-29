@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 require "csv"
+require_relative "../support/export_user_archive_csv_helper"
 
 RSpec.describe Jobs::ExportUserArchive do
+  include ExportUserArchiveCsvHelper
   fab!(:user) { Fabricate(:user, username: "john_doe", refresh_auto_groups: true) }
   fab!(:user2, :user)
   let(:extra) { {} }
@@ -13,28 +15,13 @@ RSpec.describe Jobs::ExportUserArchive do
     j
   end
   let(:component) { raise "component not set" }
+  let(:component_csv) { export_user_archive_component_csv(job:, component:) }
 
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:category) { Fabricate(:category_with_definition, name: "User Archive Category") }
   fab!(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
   fab!(:topic) { Fabricate(:topic, category: category) }
   let(:post) { Fabricate(:post, user: user, topic: topic) }
-
-  def make_component_csv
-    data_rows = []
-    csv_out =
-      CSV.generate do |csv|
-        csv << job.get_header(component)
-        job.public_send(:"#{component}_export") do |row|
-          csv << row
-          data_rows << Jobs::ExportUserArchive::HEADER_ATTRS_FOR[component]
-            .zip(row.map(&:to_s))
-            .to_h
-            .with_indifferent_access
-        end
-      end
-    [data_rows, csv_out]
-  end
 
   describe "#execute" do
     before do
@@ -222,7 +209,7 @@ RSpec.describe Jobs::ExportUserArchive do
       cat2_id = cat2.id
       cat2.destroy!
 
-      _, csv_out = make_component_csv
+      _, csv_out = component_csv
       expect(csv_out).to match cat2_id.to_s
     end
 
@@ -230,7 +217,7 @@ RSpec.describe Jobs::ExportUserArchive do
       cat2 = Fabricate(:private_category, group: Fabricate(:group), name: "Secret Cat")
       topic2 = Fabricate(:topic, category: cat2, user: user, title: "This is a test secure topic")
       _post2 = Fabricate(:post, topic: topic2, user: user)
-      data, csv_out = make_component_csv
+      data, csv_out = component_csv
       expect(csv_out).not_to match "Secret Cat"
       expect(data.length).to eq(1)
       expect(data[0][:topic_title]).to eq("This is a test secure topic")
@@ -277,7 +264,7 @@ RSpec.describe Jobs::ExportUserArchive do
     end
 
     it "properly includes session records" do
-      data, _csv_out = make_component_csv
+      data, _csv_out = component_csv
       expect(data.length).to eq(1)
 
       expect(data[0]["user_agent"]).to eq("MyWebBrowser")
@@ -286,7 +273,7 @@ RSpec.describe Jobs::ExportUserArchive do
     context "with auth token logs" do
       let(:component) { "auth_token_logs" }
       it "includes details such as the path" do
-        data, _csv_out = make_component_csv
+        data, _csv_out = component_csv
         expect(data.length).to eq(1)
 
         expect(data[0]["action"]).to eq("generate")
@@ -312,7 +299,7 @@ RSpec.describe Jobs::ExportUserArchive do
       BadgeGranter.grant(badge3, user, post_id: Fabricate(:post).id)
       BadgeGranter.grant(badge3, user, post_id: Fabricate(:post).id)
 
-      data, _csv_out = make_component_csv
+      data, _csv_out = component_csv
       expect(data.length).to eq(6)
 
       expect(data[0]["badge_id"]).to eq(badge1.id.to_s)
@@ -370,7 +357,7 @@ RSpec.describe Jobs::ExportUserArchive do
 
       BookmarkReminderNotificationHandler.new(pending_reminder).send_notification
 
-      data, _csv_out = make_component_csv
+      data, _csv_out = component_csv
 
       expect(data.length).to eq(4)
 
@@ -446,7 +433,7 @@ RSpec.describe Jobs::ExportUserArchive do
     end
 
     it "correctly exports the CategoryUser table, excluding deleted categories" do
-      data, _csv_out = make_component_csv
+      data, _csv_out = component_csv
 
       expect(data.find { |r| r["category_id"] == category.id.to_s }).to be_nil
       expect(data.find { |r| r["category_id"] == deleted_category.id.to_s }).to be_nil
@@ -476,7 +463,7 @@ RSpec.describe Jobs::ExportUserArchive do
         NotificationLevels.all[:muted],
         secure_category.id,
       )
-      data, _csv_out = make_component_csv
+      data, _csv_out = component_csv
 
       expect(data.any? { |r| r["category_id"] == secure_category.id.to_s }).to eq(false)
       expect(data.length).to eq(3)
@@ -489,7 +476,7 @@ RSpec.describe Jobs::ExportUserArchive do
         secure_category.id,
       )
       GroupUser.create!(user: user, group: secure_category_group)
-      data, _csv_out = make_component_csv
+      data, _csv_out = component_csv
 
       expect(data.any? { |r| r["category_id"] == secure_category.id.to_s }).to eq(true)
       expect(data.length).to eq(4)
@@ -511,7 +498,7 @@ RSpec.describe Jobs::ExportUserArchive do
       result3 = PostActionCreator.off_topic(user, post4)
       result3.reviewable.perform(admin, :agree_and_keep)
 
-      data, _csv_out = make_component_csv
+      data, _csv_out = component_csv
       expect(data.length).to eq(4)
       data.sort_by! { |row| row["post_id"].to_i }
 
@@ -543,7 +530,7 @@ RSpec.describe Jobs::ExportUserArchive do
       PostActionDestroyer.destroy(user, post3, :like)
       post3.destroy!
 
-      data, _csv_out = make_component_csv
+      data, _csv_out = component_csv
       expect(data.length).to eq(2)
       data.sort_by! { |row| row["post_id"].to_i }
 
@@ -571,7 +558,7 @@ RSpec.describe Jobs::ExportUserArchive do
       result = reviewable_topic.perform(admin, :approve_post)
       expect(result.success?).to eq(true)
 
-      data, csv_out = make_component_csv
+      data, csv_out = component_csv
       expect(data.length).to eq(2)
       expect(csv_out).to_not match(admin.username)
 
@@ -626,7 +613,7 @@ RSpec.describe Jobs::ExportUserArchive do
         time_read: 50,
       )
 
-      data, _csv_out = make_component_csv
+      data, _csv_out = component_csv
 
       # user2's data is not mixed in
       expect(data.length).to eq(4)

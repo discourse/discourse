@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
+require_relative "../../support/admin_dashboard_test_fixtures"
+
 RSpec.describe Admin::DashboardController do
+  include AdminDashboardTestFixtures
   fab!(:admin)
   fab!(:moderator)
   fab!(:user)
@@ -8,35 +11,6 @@ RSpec.describe Admin::DashboardController do
   before do
     AdminDashboardData.stubs(:fetch_cached_stats).returns(reports: [])
     Jobs::CallDiscourseHub.any_instance.stubs(:execute).returns(true)
-  end
-
-  def configure_dashboard_sections(visible_ids)
-    hidden = AdminDashboardSectionConfiguration::KNOWN_SECTIONS - visible_ids
-    ordered =
-      visible_ids.map { |id| { id: id, visible: true } } +
-        hidden.map { |id| { id: id, visible: false } }
-    AdminDashboardSectionConfiguration.update(ordered, actor: Discourse.system_user)
-  end
-
-  def populate_new_features(date1 = nil, date2 = nil)
-    sample_features = [
-      {
-        "id" => "1",
-        "emoji" => "🤾",
-        "title" => "Cool Beans",
-        "description" => "Now beans are included",
-        "created_at" => date1 || 40.minutes.ago,
-      },
-      {
-        "id" => "2",
-        "emoji" => "🙈",
-        "title" => "Fancy Legumes",
-        "description" => "Legumes too!",
-        "created_at" => date2 || 20.minutes.ago,
-      },
-    ]
-
-    Discourse.redis.set("new_features", MultiJson.dump(sample_features))
   end
 
   describe "#index" do
@@ -263,7 +237,7 @@ RSpec.describe Admin::DashboardController do
         it "does not expose admin-only browser pageview cards to moderators" do
           SiteSetting.use_legacy_pageviews = false
           SiteSetting.persist_browser_pageview_events = true
-          configure_dashboard_sections(%w[traffic])
+          configure_dashboard_sections(visible_ids: %w[traffic])
 
           country_code = "US"
           normalized_referrer = "sensitive-referrer.example"
@@ -320,7 +294,7 @@ RSpec.describe Admin::DashboardController do
         let(:search_data) { section_payloads["search"]&.dig("data") }
 
         it "returns the search payload for the selected dates" do
-          configure_dashboard_sections(%w[search])
+          configure_dashboard_sections(visible_ids: %w[search])
           member = Fabricate(:user)
           Fabricate(:clicked_search_log, term: "ruby", user: member, created_at: "2026-05-02 10:00")
           Fabricate(:search_log, term: "ruby", user: member, created_at: "2026-05-02 11:00")
@@ -415,7 +389,7 @@ RSpec.describe Admin::DashboardController do
       end
 
       it "returns the sections as an ordered array of {id, data}" do
-        configure_dashboard_sections(%w[reports highlights])
+        configure_dashboard_sections(visible_ids: %w[reports highlights])
 
         get "/admin/dashboard.json"
 
@@ -425,7 +399,7 @@ RSpec.describe Admin::DashboardController do
 
       it "returns successful sections when another section fails to build" do
         error = StandardError.new("boom")
-        configure_dashboard_sections(%w[highlights search])
+        configure_dashboard_sections(visible_ids: %w[highlights search])
         AdminDashboardHighlights.stubs(:build).returns({ value: "highlights" })
         AdminDashboardSearch.stubs(:build).raises(error)
         Discourse.expects(:warn_exception).with(
@@ -457,7 +431,7 @@ RSpec.describe Admin::DashboardController do
       end
 
       it "omits hidden sections from the data payload" do
-        configure_dashboard_sections(%w[highlights reports])
+        configure_dashboard_sections(visible_ids: %w[highlights reports])
 
         get "/admin/dashboard.json"
 
@@ -466,7 +440,7 @@ RSpec.describe Admin::DashboardController do
       end
 
       it "includes built engagement data when the section is enabled" do
-        configure_dashboard_sections(%w[highlights engagement])
+        configure_dashboard_sections(visible_ids: %w[highlights engagement])
         get "/admin/dashboard.json"
 
         engagement = response.parsed_body["sections"].find { |s| s["id"] == "engagement" }
@@ -614,7 +588,7 @@ RSpec.describe Admin::DashboardController do
       end
 
       it "is included for admins and lists every known section with a visibility flag" do
-        configure_dashboard_sections(%w[highlights reports])
+        configure_dashboard_sections(visible_ids: %w[highlights reports])
         sign_in(admin)
 
         get "/admin/dashboard.json"
@@ -903,16 +877,7 @@ RSpec.describe Admin::DashboardController do
 
     it "resolves a plugin-registered setting's permit shape and persists it" do
       plugin = Plugin::Instance.new
-      fake_setting =
-        Class.new do
-          def self.permit
-            [:category_id]
-          end
-
-          def self.validate(attrs)
-            { "category_id" => attrs[:category_id].to_i }
-          end
-        end
+      fake_setting = AdminDashboardTestFixtures::CategoryIdSetting
       plugin.register_admin_dashboard_section(
         id: "support",
         enabled: -> { true },
@@ -1075,7 +1040,7 @@ RSpec.describe Admin::DashboardController do
       it "sets/bumps the last viewed feature date for the admin" do
         date1 = 30.minutes.ago
         date2 = 20.minutes.ago
-        populate_new_features(date1, date2)
+        populate_new_features(date1:, date2:)
 
         expect(DiscourseUpdates.get_last_viewed_feature_date(admin.id)).to eq(nil)
 
@@ -1086,7 +1051,7 @@ RSpec.describe Admin::DashboardController do
         )
 
         date2 = 10.minutes.ago
-        populate_new_features(date1, date2)
+        populate_new_features(date1:, date2:)
 
         get "/admin/whats-new.json"
         expect(response.status).to eq(200)
@@ -1098,7 +1063,7 @@ RSpec.describe Admin::DashboardController do
       it "marks new features as seen" do
         date1 = 30.minutes.ago
         date2 = 20.minutes.ago
-        populate_new_features(date1, date2)
+        populate_new_features(date1:, date2:)
 
         expect(DiscourseUpdates.new_features_last_seen(admin.id)).to eq(nil)
         expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(true)
@@ -1210,16 +1175,7 @@ RSpec.describe Admin::DashboardController do
   end
 
   describe "#bulk_reports" do
-    let(:fake_provider) do
-      Class.new(AdminDashboard::Reports::SourceProvider) do
-        def self.source_name = "fake_source"
-        def self.fetch_many(identifiers, guardian:, filters: {})
-          identifiers.each_with_object({}) do |id, h|
-            h[id.to_s] = { id: id.to_s, filters: filters }
-          end
-        end
-      end
-    end
+    let(:fake_provider) { AdminDashboardTestFixtures::BulkReportsProvider }
 
     let(:plugin) { Plugin::Instance.new }
 
@@ -1336,104 +1292,11 @@ RSpec.describe Admin::DashboardController do
   describe "#available_reports" do
     before { AdminDashboardReport.delete_all }
 
-    let(:fake_provider) do
-      Class.new(AdminDashboard::Reports::SourceProvider) do
-        def self.source_name = "a_fake_source"
-        def self.label = "Fake"
+    let(:fake_provider) { AdminDashboardTestFixtures::FakeAvailableReportsProvider }
 
-        def self.universe
-          [%w[banana Banana], %w[date Date], %w[fig Fig]].map do |id, fruit|
-            AdminDashboard::Reports::ResolvedReport.new(
-              source: source_name,
-              identifier: id,
-              title: "Zfruit #{fruit}",
-              description: "Desc #{id}",
-              label: label,
-              url: "/fake/#{id}",
-            )
-          end
-        end
+    let(:alt_provider) { AdminDashboardTestFixtures::AlternateAvailableReportsProvider }
 
-        def self.list_all(search: nil, after: nil, limit: nil)
-          items = universe
-          if search.present?
-            items = items.select { |item| item.title.downcase.include?(search.downcase) }
-          end
-          seek(items, after: after, limit: limit)
-        end
-
-        def self.resolve_many(identifiers, guardian:)
-          universe
-            .select { |item| identifiers.map(&:to_s).include?(item.identifier) }
-            .index_by(&:identifier)
-        end
-      end
-    end
-
-    let(:alt_provider) do
-      Class.new(AdminDashboard::Reports::SourceProvider) do
-        def self.source_name = "b_alt_source"
-        def self.label = "Alt"
-
-        def self.universe
-          [%w[apple Apple], %w[cherry Cherry], %w[egg Egg]].map do |id, fruit|
-            AdminDashboard::Reports::ResolvedReport.new(
-              source: source_name,
-              identifier: id,
-              title: "Zfruit #{fruit}",
-              description: nil,
-              label: label,
-              url: nil,
-            )
-          end
-        end
-
-        def self.list_all(search: nil, after: nil, limit: nil)
-          items = universe
-          if search.present?
-            items = items.select { |item| item.title.downcase.include?(search.downcase) }
-          end
-          seek(items, after: after, limit: limit)
-        end
-
-        def self.resolve_many(_identifiers, guardian:)
-          {}
-        end
-      end
-    end
-
-    let(:wide_provider) do
-      Class.new(AdminDashboard::Reports::SourceProvider) do
-        def self.source_name = "c_wide_source"
-        def self.label = "Wide"
-
-        def self.universe
-          (1..40).map do |index|
-            padded = format("%02d", index)
-            AdminDashboard::Reports::ResolvedReport.new(
-              source: source_name,
-              identifier: "row_#{padded}",
-              title: "Widerow #{padded}",
-              description: nil,
-              label: label,
-              url: nil,
-            )
-          end
-        end
-
-        def self.list_all(search: nil, after: nil, limit: nil)
-          items = universe
-          if search.present?
-            items = items.select { |item| item.title.downcase.include?(search.downcase) }
-          end
-          seek(items, after: after, limit: limit)
-        end
-
-        def self.resolve_many(_identifiers, guardian:)
-          {}
-        end
-      end
-    end
+    let(:wide_provider) { AdminDashboardTestFixtures::WideAvailableReportsProvider }
 
     let(:plugin) { Plugin::Instance.new }
 
@@ -1578,15 +1441,7 @@ RSpec.describe Admin::DashboardController do
   describe "#update_reports_section" do
     before { AdminDashboardReport.delete_all }
 
-    let(:fake_provider) do
-      Class.new(AdminDashboard::Reports::SourceProvider) do
-        def self.source_name = "fake_source"
-        def self.label = "Fake"
-        def self.accessible_ids(identifiers, guardian:)
-          identifiers.map(&:to_s).reject { |id| id == "forbidden" }.to_set
-        end
-      end
-    end
+    let(:fake_provider) { AdminDashboardTestFixtures::LayoutReportsProvider }
 
     let(:plugin) { Plugin::Instance.new }
 

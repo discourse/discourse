@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
+require_relative "../support/personal_message_search_fixture"
+
 RSpec.describe Search do
+  include PersonalMessageSearchFixture
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:topic) { Fabricate(:topic, title: "This is a sample topic") }
 
@@ -780,19 +783,6 @@ RSpec.describe Search do
         group
       end
 
-      def create_pm(users:, group: nil)
-        pm = Fabricate(:private_message_post_one_user, user: users.first).topic
-        users[1..-1].each do |u|
-          pm.invite(users.first, u.username)
-          Fabricate(:post, user: u, topic: pm)
-        end
-        if group
-          pm.invite_group(users.first, group)
-          group.users.each { |u| Fabricate(:post, user: u, topic: pm) }
-        end
-        pm.reload
-      end
-
       context "with personal-direct flag" do
         it "can find all direct PMs of the current user" do
           pm = create_pm(users: [current, participant])
@@ -1343,21 +1333,17 @@ RSpec.describe Search do
     let(:topic) { post.topic }
 
     context "with search within topic" do
-      def new_post(raw, topic = nil, created_at: nil)
-        topic ||= Fabricate(:topic)
-        Fabricate(
-          :post,
-          topic: topic,
-          topic_id: topic.id,
-          user: topic.user,
-          raw: raw,
-          created_at: created_at,
-        )
-      end
-
       it "works in Chinese" do
         SiteSetting.search_tokenize_chinese = true
-        post = new_post("I am not in English 你今天怎麼樣")
+        topic = Fabricate(:topic)
+        post =
+          Fabricate(
+            :post,
+            topic:,
+            topic_id: topic.id,
+            user: topic.user,
+            raw: "I am not in English 你今天怎麼樣",
+          )
 
         results = Search.execute("你今天", search_context: post.topic)
         expect(results.posts.map(&:id)).to eq([post.id])
@@ -1365,7 +1351,15 @@ RSpec.describe Search do
 
       it "works in Japanese" do
         SiteSetting.search_tokenize_japanese = true
-        post = new_post("I am not in English 何点になると思いますか")
+        topic = Fabricate(:topic)
+        post =
+          Fabricate(
+            :post,
+            topic:,
+            topic_id: topic.id,
+            user: topic.user,
+            raw: "I am not in English 何点になると思いますか",
+          )
 
         results = Search.execute("何点になると思", search_context: post.topic)
         expect(results.posts.map(&:id)).to eq([post.id])
@@ -1374,18 +1368,60 @@ RSpec.describe Search do
       it "displays multiple results within a topic" do
         topic2 = Fabricate(:topic)
 
-        new_post("this is the other post I am posting", topic2, created_at: 6.minutes.ago)
-        new_post("this is my fifth post I am posting", topic2, created_at: 5.minutes.ago)
+        Fabricate(
+          :post,
+          topic: topic2,
+          topic_id: topic2.id,
+          user: topic2.user,
+          raw: "this is the other post I am posting",
+          created_at: 6.minutes.ago,
+        )
+        Fabricate(
+          :post,
+          topic: topic2,
+          topic_id: topic2.id,
+          user: topic2.user,
+          raw: "this is my fifth post I am posting",
+          created_at: 5.minutes.ago,
+        )
 
-        post1 = new_post("this is the other post I am posting", topic, created_at: 4.minutes.ago)
-        post2 = new_post("this is my first post I am posting", topic, created_at: 3.minutes.ago)
+        post1 =
+          Fabricate(
+            :post,
+            topic:,
+            topic_id: topic.id,
+            user: topic.user,
+            raw: "this is the other post I am posting",
+            created_at: 4.minutes.ago,
+          )
+        post2 =
+          Fabricate(
+            :post,
+            topic:,
+            topic_id: topic.id,
+            user: topic.user,
+            raw: "this is my first post I am posting",
+            created_at: 3.minutes.ago,
+          )
         post3 =
-          new_post(
-            "this is a real long and complicated bla this is my second post I am Posting birds with more stuff bla bla",
-            topic,
+          Fabricate(
+            :post,
+            topic:,
+            topic_id: topic.id,
+            user: topic.user,
+            raw:
+              "this is a real long and complicated bla this is my second post I am Posting birds with more stuff bla bla",
             created_at: 2.minutes.ago,
           )
-        post4 = new_post("this is my fourth post I am posting", topic, created_at: 1.minute.ago)
+        post4 =
+          Fabricate(
+            :post,
+            topic:,
+            topic_id: topic.id,
+            user: topic.user,
+            raw: "this is my fourth post I am posting",
+            created_at: 1.minute.ago,
+          )
 
         # update posts_count
         topic.reload
@@ -1407,13 +1443,28 @@ RSpec.describe Search do
 
       it "works for unlisted topics" do
         topic.update(visible: false)
-        _post = new_post("discourse is awesome", topic)
+        _post =
+          Fabricate(
+            :post,
+            topic:,
+            topic_id: topic.id,
+            user: topic.user,
+            raw: "discourse is awesome",
+          )
         results = Search.execute("discourse", search_context: topic)
         expect(results.posts.length).to eq(1)
       end
 
       it "finds content only present in cooked HTML" do
-        post = new_post("check out this link")
+        post_topic = Fabricate(:topic)
+        post =
+          Fabricate(
+            :post,
+            topic: post_topic,
+            topic_id: post_topic.id,
+            user: post_topic.user,
+            raw: "check out this link",
+          )
         post.post_search_data.update!(raw_data: "check out this link Example Site Title")
 
         results = Search.execute("Example Site Title", search_context: post.topic)
@@ -1570,10 +1621,6 @@ RSpec.describe Search do
     end
 
     context "with security" do
-      def result(current_user)
-        Search.execute("hello", guardian: Guardian.new(current_user))
-      end
-
       it "secures results correctly" do
         category = Fabricate(:category_with_definition)
 
@@ -1583,9 +1630,11 @@ RSpec.describe Search do
         category.set_permissions(staff: :full)
         category.save
 
-        expect(result(nil).posts).not_to be_present
-        expect(result(Fabricate(:user)).posts).not_to be_present
-        expect(result(admin).posts).to be_present
+        expect(Search.execute("hello", guardian: Guardian.new(nil)).posts).not_to be_present
+        expect(
+          Search.execute("hello", guardian: Guardian.new(Fabricate(:user))).posts,
+        ).not_to be_present
+        expect(Search.execute("hello", guardian: Guardian.new(admin)).posts).to be_present
       end
     end
   end
@@ -1752,14 +1801,12 @@ RSpec.describe Search do
   end
 
   describe "groups" do
-    def search(user = Fabricate(:user))
-      Search.execute(group.name, guardian: Guardian.new(user))
-    end
-
     let!(:group) { Group[:trust_level_0] }
 
     it "shows group" do
-      expect(search.groups.map(&:name)).to eq([group.name])
+      expect(
+        Search.execute(group.name, guardian: Guardian.new(Fabricate(:user))).groups.map(&:name),
+      ).to eq([group.name])
     end
 
     context "with group visibility" do
@@ -1769,7 +1816,9 @@ RSpec.describe Search do
 
       context "with staff logged in" do
         it "shows group" do
-          expect(search(admin).groups.map(&:name)).to eq([group.name])
+          expect(
+            Search.execute(group.name, guardian: Guardian.new(admin)).groups.map(&:name),
+          ).to eq([group.name])
         end
       end
 
@@ -1777,7 +1826,9 @@ RSpec.describe Search do
         fab!(:user)
 
         it "shows doesn't show group" do
-          expect(search(user).groups.map(&:name)).to eq([])
+          expect(Search.execute(group.name, guardian: Guardian.new(user)).groups.map(&:name)).to eq(
+            [],
+          )
         end
       end
     end
@@ -1788,7 +1839,13 @@ RSpec.describe Search do
       context "when :search_groups_set_query_callback is registered" do
         it "changes the search results" do
           # initial result (without applying the plugin callback )
-          expect(search.groups.map(&:name).include?("plugin-special")).to eq(true)
+          expect(
+            Search
+              .execute(group.name, guardian: Guardian.new(Fabricate(:user)))
+              .groups
+              .map(&:name)
+              .include?("plugin-special"),
+          ).to eq(true)
 
           DiscoursePluginRegistry.register_search_groups_set_query_callback(
             Proc.new { |query, term, guardian| query.where.not(name: "plugin-special") },
@@ -1797,7 +1854,13 @@ RSpec.describe Search do
 
           # after using the callback we expect the search result to be changed because the
           # query was altered
-          expect(search.groups.map(&:name).include?("plugin-special")).to eq(false)
+          expect(
+            Search
+              .execute(group.name, guardian: Guardian.new(Fabricate(:user)))
+              .groups
+              .map(&:name)
+              .include?("plugin-special"),
+          ).to eq(false)
 
           DiscoursePluginRegistry.reset_register!(:search_groups_set_query_callbacks)
         end
@@ -1806,9 +1869,7 @@ RSpec.describe Search do
   end
 
   describe "tags" do
-    def search
-      Search.execute(tag.name)
-    end
+    let(:search) { Search.execute(tag.name) }
 
     let!(:tag) { Fabricate(:tag) }
     let!(:uppercase_tag) { Fabricate(:tag, name: "HeLlO") }
@@ -2762,16 +2823,26 @@ RSpec.describe Search do
       fab!(:topic4) { Fabricate(:topic, tags: [tag1, tag2, tag3]) }
       fab!(:topic5) { Fabricate(:topic, tags: [tag2, tag3]) }
 
-      def indexed_post(*args)
+      fab!(:post1) do
         SearchIndexer.enable
-        Fabricate(:post, *args)
+        Fabricate(:post, topic: topic1)
       end
-
-      fab!(:post1) { indexed_post(topic: topic1) }
-      fab!(:post2) { indexed_post(topic: topic2) }
-      fab!(:post3) { indexed_post(topic: topic3) }
-      fab!(:post4) { indexed_post(topic: topic4) }
-      fab!(:post5) { indexed_post(topic: topic5) }
+      fab!(:post2) do
+        SearchIndexer.enable
+        Fabricate(:post, topic: topic2)
+      end
+      fab!(:post3) do
+        SearchIndexer.enable
+        Fabricate(:post, topic: topic3)
+      end
+      fab!(:post4) do
+        SearchIndexer.enable
+        Fabricate(:post, topic: topic4)
+      end
+      fab!(:post5) do
+        SearchIndexer.enable
+        Fabricate(:post, topic: topic5)
+      end
 
       it "can find posts by tag group" do
         expect(Search.execute("#mid-day").posts.map(&:id)).to eq([post5, post4, post3].map(&:id))
@@ -2864,7 +2935,8 @@ RSpec.describe Search do
           Fabricate(:topic, tags: [synonym_tag.target_tag, tag2])
         end
         fab!(:post_in_topic_with_synonym_target_tag) do
-          indexed_post(topic: topic_with_synonym_target_tag)
+          SearchIndexer.enable
+          Fabricate(:post, topic: topic_with_synonym_target_tag)
         end
 
         it "can find posts by tag synonym using comma syntax" do

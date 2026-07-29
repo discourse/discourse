@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
+require_relative "../support/published_assignment_workflow"
+
 RSpec.describe Assigner do
+  include PublishedAssignmentWorkflow
   before do
     SiteSetting.assign_enabled = true
     SiteSetting.enable_assign_status = true
@@ -166,8 +169,19 @@ RSpec.describe Assigner do
       Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
       DiscourseWorkflows::Registry.reset_indexes!
 
-      create_published_workflow("all-assignments")
-      create_published_workflow("topic-assignments", "topic_assignments_only" => true)
+      create_published_assignment_workflow(
+        trigger_node_id: "all-assignments",
+        configuration: {
+        },
+        created_by: moderator_2,
+      )
+      create_published_assignment_workflow(
+        trigger_node_id: "topic-assignments",
+        configuration: {
+          "topic_assignments_only" => true,
+        },
+        created_by: moderator_2,
+      )
 
       post_assignment_topic = Fabricate(:post).topic
       post_assignment_post = Fabricate(:post, topic: post_assignment_topic)
@@ -252,42 +266,13 @@ RSpec.describe Assigner do
       another_mod = Fabricate(:moderator)
 
       Email::Sender.any_instance.expects(:send).once
-      expect(assigned_to?(moderator)).to eq(true)
+      expect(assigner.assign(moderator).fetch(:success)).to eq(true)
 
       Email::Sender.any_instance.expects(:send).never
-      expect(assigned_to?(moderator)).to eq(false)
+      expect(assigner.assign(moderator).fetch(:success)).to eq(false)
 
       Email::Sender.any_instance.expects(:send).once
-      expect(assigned_to?(another_mod)).to eq(true)
-    end
-
-    def assigned_to?(assignee)
-      assigner.assign(assignee).fetch(:success)
-    end
-
-    def create_published_workflow(trigger_node_id, configuration = {})
-      Fabricate(
-        :discourse_workflows_workflow,
-        created_by: moderator_2,
-        published: true,
-        nodes: [
-          {
-            "id" => trigger_node_id,
-            "type" => "trigger:assigned",
-            "typeVersion" => "1.0",
-            "name" => trigger_node_id.humanize,
-            "position" => {
-              "x" => 0,
-              "y" => 0,
-            },
-            "parameters" => configuration.deep_stringify_keys,
-            "credentials" => {
-            },
-          },
-        ],
-        connections: {
-        },
-      )
+      expect(assigner.assign(another_mod).fetch(:success)).to eq(true)
     end
 
     describe "forbidden reasons" do
