@@ -1,9 +1,7 @@
-// @ts-check
-
 import { schema } from "prosemirror-markdown";
+import type { RichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 
-/** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
-const extension = {
+const extension: RichEditorExtension = {
   nodeSpec: {
     hard_break: {
       ...schema.nodes.hard_break.spec,

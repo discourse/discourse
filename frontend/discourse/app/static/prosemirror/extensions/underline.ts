@@ -1,7 +1,6 @@
-// @ts-check
+import type { RichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 
-/** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
-const extension = {
+const extension: RichEditorExtension = {
   markSpec: {
     underline: {
       before: "link",

@@ -1,9 +1,7 @@
-// @ts-check
-
 import codemark from "prosemirror-codemark";
+import type { RichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 
-/** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
-const extension = {
+const extension: RichEditorExtension = {
   plugins({ schema }) {
     return codemark({ markType: schema.marks.code });
   },

@@ -1,8 +1,7 @@
-// @ts-check
-
 import {
   markDefaultExtensionsRegistered,
   registerRichEditorExtension,
+  type RichEditorExtension,
 } from "discourse/lib/composer/rich-editor-extensions";
 import bulletList from "./bullet-list";
 import code from "./code";
@@ -36,10 +35,8 @@ import wrap from "./wrap";
 /**
  * List of default extensions
  * ProsemirrorEditor autoloads them when includeDefault=true (the default)
- *
- * @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension[]}
  */
-const defaultExtensions = [
+const defaultExtensions: RichEditorExtension[] = [
   emoji,
   image,
   onebox,

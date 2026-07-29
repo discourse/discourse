@@ -1,7 +1,7 @@
-// @ts-check
+import type { EditorState, Transaction } from "prosemirror-state";
+import type { RichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 
-/** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
-const extension = {
+const extension: RichEditorExtension = {
   plugins({ pmState: { Plugin, PluginKey } }) {
     const plugin = new PluginKey("trailing-paragraph");
 
@@ -35,11 +35,11 @@ const extension = {
   },
 };
 
-function isLastChildParagraph(state) {
+function isLastChildParagraph(state: EditorState | Transaction): boolean {
   const { doc } = state;
   const lastChild = doc.lastChild;
 
-  return lastChild.type.name === "paragraph";
+  return lastChild!.type.name === "paragraph";
 }
 
 export default extension;

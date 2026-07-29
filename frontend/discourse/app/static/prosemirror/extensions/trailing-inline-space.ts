@@ -1,9 +1,9 @@
-// @ts-check
-
 import { splitBlock } from "prosemirror-commands";
+import type { Node, ResolvedPos } from "prosemirror-model";
 import { TextSelection } from "prosemirror-state";
+import type { RichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 
-function isInlineContainer(node) {
+function isInlineContainer(node: Node): boolean {
   return (
     node.isInline &&
     !node.isText &&
@@ -12,7 +12,7 @@ function isInlineContainer(node) {
   );
 }
 
-function findInlineContainerDepth($from) {
+function findInlineContainerDepth($from: ResolvedPos): number | null {
   for (let depth = $from.depth; depth > 0; depth--) {
     if (isInlineContainer($from.node(depth))) {
       return depth;
@@ -21,8 +21,7 @@ function findInlineContainerDepth($from) {
   return null;
 }
 
-/** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
-const extension = {
+const extension: RichEditorExtension = {
   keymap: () => ({
     Enter: (state, dispatch) => {
       const selection = state.selection;
