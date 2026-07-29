@@ -482,10 +482,21 @@
 
   &__font-group-label {
     display: block;
+    font-size: var(--font-down-1-rem);
+    color: var(--primary);
+    font-weight: 600;
   }
 
   &__font-select {
     margin-top: var(--space-1);
+    border-radius: var(--d-border-radius);
+    background: var(--secondary) !important;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  &__font-select.btn-default .d-icon.d-icon-angle-down {
+    color: var(--primary-medium);
   }
 
   &__topic-page-options {
@@ -620,9 +631,4 @@
   max-height: 40vh;
   overflow-y: auto;
   z-index: 9999;
-
-  .btn.--selected {
-    color: var(--tertiary);
-    background: var(--d-selected);
-  }
 }
