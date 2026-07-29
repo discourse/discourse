@@ -93,6 +93,14 @@ export default class DesignWizardService extends Service {
   }
 
   resumeAfterThemePreview({ onComplete } = {}) {
+    // the caller can remount while the sheet is open (the onboarding banner
+    // renders per-route); an active wizard has nothing to resume, only the
+    // completion callback needs to point at the fresh caller
+    if (this.active) {
+      this.#onComplete = onComplete;
+      return;
+    }
+
     const previewThemeId = new URLSearchParams(window.location.search).get(
       "preview_theme_id"
     );
