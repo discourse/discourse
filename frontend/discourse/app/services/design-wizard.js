@@ -5,7 +5,6 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   applyPreviewFonts,
-  applyPreviewTextSize,
   clearPreview,
 } from "discourse/lib/design-wizard-preview";
 import { isTesting } from "discourse/lib/environment";
@@ -48,10 +47,6 @@ export default class DesignWizardService extends Service {
   @tracked palettesUserSelectable = false;
   @tracked bodyFont;
   @tracked headingFont;
-  @tracked defaultTextSize;
-  // the admin may render at a personal text size, so the default is only
-  // previewed once a size is actively picked in the wizard
-  @tracked textSizeTouched = false;
   @tracked saving = false;
   @tracked selectedPairKeys = new Map();
   @tracked stepIndex = 0;
@@ -182,13 +177,6 @@ export default class DesignWizardService extends Service {
     });
   }
 
-  selectDefaultTextSize(size) {
-    this.defaultTextSize = size;
-    this.textSizeTouched = true;
-    this.#persistState();
-    applyPreviewTextSize(document, size);
-  }
-
   stop() {
     this.active = false;
     this.keyValueStore.remove(STATE_KEY);
@@ -270,7 +258,6 @@ export default class DesignWizardService extends Service {
       palettes_user_selectable: this.palettesUserSelectable,
       base_font: this.bodyFont,
       heading_font: this.headingFont,
-      default_text_size: this.defaultTextSize,
     };
   }
 
@@ -312,8 +299,6 @@ export default class DesignWizardService extends Service {
     this.palettesUserSelectable = this.data.palettes_user_selectable;
     this.bodyFont = this.data.base_font;
     this.headingFont = this.data.heading_font;
-    this.defaultTextSize = this.siteSettings.default_text_size;
-    this.textSizeTouched = false;
     this.stepIndex = 0;
   }
 
@@ -324,9 +309,6 @@ export default class DesignWizardService extends Service {
     this.palettesUserSelectable = stored.palettesUserSelectable;
     this.bodyFont = stored.bodyFont;
     this.headingFont = stored.headingFont;
-    this.defaultTextSize =
-      stored.defaultTextSize ?? this.siteSettings.default_text_size;
-    this.textSizeTouched = stored.textSizeTouched ?? false;
     this.stepIndex = stored.stepIndex ?? 0;
   }
 
@@ -340,8 +322,6 @@ export default class DesignWizardService extends Service {
         palettesUserSelectable: this.palettesUserSelectable,
         bodyFont: this.bodyFont,
         headingFont: this.headingFont,
-        defaultTextSize: this.defaultTextSize,
-        textSizeTouched: this.textSizeTouched,
         stepIndex: this.stepIndex,
       }),
     });
@@ -363,9 +343,6 @@ export default class DesignWizardService extends Service {
       bodyFont: this.bodyFont,
       headingFont: this.headingFont,
     });
-    if (this.textSizeTouched) {
-      applyPreviewTextSize(document, this.defaultTextSize);
-    }
 
     const paletteId = this.previewPalette?.id;
     if (paletteId) {

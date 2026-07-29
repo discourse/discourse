@@ -11,7 +11,7 @@ import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
-const STEPS = ["theme", "colors", "fonts"];
+const STEPS = ["theme", "colors"];
 
 export default class SidebarDesignWizardPanel extends Component {
   @service designWizard;
@@ -98,11 +98,6 @@ export default class SidebarDesignWizardPanel extends Component {
   }
 
   @action
-  selectDefaultTextSize(size) {
-    this.designWizard.selectDefaultTextSize(size);
-  }
-
-  @action
   save() {
     this.designWizard.save();
   }
@@ -133,7 +128,7 @@ export default class SidebarDesignWizardPanel extends Component {
               @onSelect={{this.selectTheme}}
             />
           </Section>
-        {{else if (eq this.currentStep "colors")}}
+        {{else}}
           <Section
             @id="colors"
             @title={{i18n
@@ -152,7 +147,7 @@ export default class SidebarDesignWizardPanel extends Component {
               @onToggleUserSelectable={{this.toggleUserSelectable}}
             />
           </Section>
-        {{else}}
+
           <Section
             @id="fonts"
             @title={{i18n
@@ -162,10 +157,8 @@ export default class SidebarDesignWizardPanel extends Component {
             <FontsSection
               @bodyFont={{this.designWizard.bodyFont}}
               @headingFont={{this.designWizard.headingFont}}
-              @defaultTextSize={{this.designWizard.defaultTextSize}}
               @onSelectBodyFont={{this.selectBodyFont}}
               @onSelectHeadingFont={{this.selectHeadingFont}}
-              @onSelectDefaultTextSize={{this.selectDefaultTextSize}}
             />
           </Section>
         {{/if}}

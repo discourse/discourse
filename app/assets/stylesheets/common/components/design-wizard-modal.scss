@@ -278,33 +278,6 @@
     margin-left: var(--space-1);
   }
 
-  &__text-sizes {
-    display: flex;
-    gap: var(--space-1);
-  }
-
-  &__text-size {
-    flex: 1;
-    padding: var(--space-1);
-    font-size: var(--font-down-1);
-    text-transform: capitalize;
-    background: none;
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
-    cursor: pointer;
-
-    &:hover {
-      background: var(--d-hover);
-    }
-
-    &.--selected {
-      border-color: var(--tertiary);
-      box-shadow: 0 0 0 1px var(--tertiary);
-      color: var(--tertiary);
-      font-weight: 600;
-    }
-  }
-
   &__category-page-style {
     margin-top: var(--space-2);
 

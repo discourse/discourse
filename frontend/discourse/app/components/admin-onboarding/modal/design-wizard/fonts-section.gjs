@@ -1,12 +1,7 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import {
-  DEFAULT_TEXT_SIZES,
-  MAIN_FONTS,
-  MORE_FONTS,
-} from "discourse/admin/lib/constants";
+import { MAIN_FONTS, MORE_FONTS } from "discourse/admin/lib/constants";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { fontClass } from "discourse/lib/design-wizard-preview";
 import { eq } from "discourse/truth-helpers";
@@ -120,25 +115,6 @@ export default class DesignWizardFontsSection extends Component {
           </DDropdownMenu>
         </:content>
       </DMenu>
-    </div>
-
-    <div class="design-wizard-modal__font-group">
-      <h4 class="design-wizard-modal__font-group-label">
-        {{i18n "admin_onboarding_banner.design_wizard.fonts.default_text_size"}}
-      </h4>
-      <div class="design-wizard-modal__text-sizes">
-        {{#each DEFAULT_TEXT_SIZES as |textSize|}}
-          <button
-            type="button"
-            class="design-wizard-modal__text-size
-              {{if (eq textSize @defaultTextSize) '--selected'}}"
-            data-text-size={{textSize}}
-            {{on "click" (fn @onSelectDefaultTextSize textSize)}}
-          >
-            {{textSize}}
-          </button>
-        {{/each}}
-      </div>
     </div>
   </template>
 }

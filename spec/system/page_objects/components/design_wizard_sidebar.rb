@@ -35,10 +35,6 @@ module PageObjects
         ).click
       end
 
-      def select_text_size(size)
-        find("#{WIZARD_SELECTOR} .design-wizard-modal__text-size[data-text-size='#{size}']").click
-      end
-
       def has_palette_preview?
         has_css?("link[data-scheme-id]", visible: :all)
       end

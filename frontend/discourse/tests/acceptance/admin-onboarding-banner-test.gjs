@@ -385,13 +385,9 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom("link[data-scheme-id]", document.documentElement)
       .exists("the page's color scheme stylesheet is swapped for the preview");
 
-    await click(".sidebar-design-wizard__next");
     assert
       .dom(".design-wizard-modal__font-select")
-      .exists({ count: 2 }, "the fonts step offers font dropdowns");
-    assert
-      .dom(".design-wizard-modal__text-size")
-      .exists({ count: 5 }, "the fonts step offers the default text sizes");
+      .exists({ count: 2 }, "the colors step offers the font dropdowns");
     assert
       .dom(".sidebar-design-wizard__next")
       .doesNotExist("no next on the last step");
@@ -401,8 +397,8 @@ acceptance("Admin - Onboarding Banner", function (needs) {
 
     await click(".sidebar-design-wizard__back");
     assert
-      .dom(".design-wizard-modal__swatch")
-      .exists({ count: 1 }, "back returns to the colors step");
+      .dom(".design-wizard-modal__theme-card")
+      .exists({ count: 2 }, "back returns to the theme step");
 
     await click(".design-wizard-float__close");
     assert

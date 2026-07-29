@@ -596,7 +596,6 @@ en:
         fonts:
           base_font: "Base font"
           heading_font: "Heading font"
-          default_text_size: "Default text size"
         homepage:
           topic_list: "Topic list"
           categories: "Categories"
