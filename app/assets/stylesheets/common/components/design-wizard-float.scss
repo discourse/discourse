@@ -51,6 +51,22 @@
   --d-button-primary-bg-color--hover: #069;
   --d-button-primary-icon-color: #fff;
   --d-button-primary-icon-color--hover: #fff;
+  --d-button-flat-text-color: #08c;
+  --d-button-flat-text-color--hover: #222;
+  --d-button-flat-icon-color: #bdbdbd;
+  --d-button-flat-icon-color--hover: #222;
+  --d-button-flat-bg-color: transparent;
+  --d-button-flat-bg-color--hover: #f2f2f2;
+  --d-button-flat-bg-color--focus: #f2f2f2;
+  --d-button-flat-text-color--disabled: #222;
+  --d-button-flat-close-text-color: #646464;
+  --d-button-flat-close-bg-color: transparent;
+  --d-button-flat-close-icon-color: #646464;
+  --d-button-flat-close-icon-color--hover: #222;
+  --d-button-transparent-text-color: #222;
+  --d-button-transparent-text-color--hover: #069;
+  --d-button-transparent-icon-color: #646464;
+  --d-button-transparent-icon-color--hover: #069;
 
   // text color is inherited from the body already resolved against the
   // previewed palette, so it must be re-resolved against the pinned values
