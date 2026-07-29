@@ -310,9 +310,20 @@ export default class A11y extends Service {
 
       // Dedupe identical texts: repeating the same phrase in one atomic announcement
       // conveys nothing to a screen reader. A `Set` preserves first-occurrence order.
+      let messages = [...new Set(announcement.messages)];
+
+      // A message that only restates what the region already says is news to nobody once the
+      // same flush carries something else, and composing it in reads the superseded value
+      // aloud first — a count that moved from one to two would be announced as both. Alone it
+      // is kept, so re-asserting an unchanged state still reaches the reader.
+      if (messages.length > 1) {
+        const current = this.#state.getMessage(type);
+        messages = messages.filter((text) => text !== current);
+      }
+
       this.#state.setMessage(
         type,
-        [...new Set(announcement.messages)].join(". "),
+        messages.join(". "),
         announcement.clearDelay
       );
     });
