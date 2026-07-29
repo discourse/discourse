@@ -19,6 +19,7 @@ class UpcomingChangeEvent < ActiveRecord::Base
        }
 
   default_scope { order(:created_at) }
+  scope :not_backfilled, -> { where("event_data->>'backfilled' IS DISTINCT FROM 'true'") }
 
   def self.change_names_with_event(event_type)
     UpcomingChangeEvent
