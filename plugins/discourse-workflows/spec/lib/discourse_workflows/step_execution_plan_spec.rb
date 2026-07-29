@@ -1,35 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::StepExecutionPlan do
-  def snapshot_for(graph, pin_data: {})
-    DiscourseWorkflows::WorkflowSnapshot.new(
-      "name" => "Test workflow",
-      "nodes" => graph[:nodes],
-      "connections" => graph[:connections],
-      "pinData" => pin_data,
-    )
-  end
-
-  def plan_for(snapshot, node_id, run_data = {})
-    described_class.new(snapshot: snapshot, target: snapshot.find_node(node_id), run_data: run_data)
-  end
-
-  def run_entry(node_id:, node_type:, outputs:, status: "success")
-    { "node_id" => node_id, "node_type" => node_type, "status" => status, "outputs" => outputs }
-  end
-
-  def output_port(index, items)
-    { "index" => index, "items" => items }
-  end
-
-  def source_run(items, status: "success", node_id: "set-1")
-    run_entry(
-      node_id: node_id,
-      node_type: "action:set_fields",
-      status: status,
-      outputs: [output_port(0, items)],
-    )
-  end
+  let(:plan_builder) { DiscourseWorkflows::StepExecutionPlanBuilder.new }
 
   let(:chain_graph) do
     build_workflow_graph do |g|
@@ -40,7 +12,7 @@ RSpec.describe DiscourseWorkflows::StepExecutionPlan do
     end
   end
 
-  let(:chain_snapshot) { snapshot_for(chain_graph) }
+  let(:chain_snapshot) { plan_builder.snapshot(graph: chain_graph) }
 
   it "treats a node with no inbound connections as a reachable standalone target" do
     graph =
@@ -49,16 +21,17 @@ RSpec.describe DiscourseWorkflows::StepExecutionPlan do
         g.node "set-1", "action:set_fields", name: "Standalone"
       end
 
-    plan = plan_for(snapshot_for(graph), "set-1")
+    snapshot = plan_builder.snapshot(graph: graph)
+    plan = plan_builder.plan(snapshot: snapshot, node_id: "set-1")
 
     expect(plan).to be_standalone_target
     expect(plan).to be_target_reachable
   end
 
   it "reuses cached upstream runs and only executes the target" do
-    run_data = { "Source" => [source_run([{ "json" => { "value" => 1 } }])] }
+    run_data = { "Source" => [plan_builder.source_run(items: [{ "json" => { "value" => 1 } }])] }
 
-    plan = plan_for(chain_snapshot, "set-2", run_data)
+    plan = plan_builder.plan(snapshot: chain_snapshot, node_id: "set-2", run_data: run_data)
 
     expect(plan.executable_nodes.map(&:id)).to contain_exactly("set-2")
     expect(plan.cached_frontier.map(&:id)).to contain_exactly("set-1")
@@ -71,26 +44,31 @@ RSpec.describe DiscourseWorkflows::StepExecutionPlan do
 
   it "always executes the target even when it has cached data" do
     run_data = {
-      "Source" => [source_run([{ "json" => { "a" => 1 } }])],
-      "Target" => [source_run([{ "json" => { "b" => 2 } }], node_id: "set-2")],
+      "Source" => [plan_builder.source_run(items: [{ "json" => { "a" => 1 } }])],
+      "Target" => [plan_builder.source_run(items: [{ "json" => { "b" => 2 } }], node_id: "set-2")],
     }
 
-    plan = plan_for(chain_snapshot, "set-2", run_data)
+    plan = plan_builder.plan(snapshot: chain_snapshot, node_id: "set-2", run_data: run_data)
 
     expect(plan.executable_nodes.map(&:id)).to contain_exactly("set-2")
   end
 
   it "is unreachable when the chain is cold and the trigger cannot run manually" do
-    plan = plan_for(chain_snapshot, "set-2")
+    plan = plan_builder.plan(snapshot: chain_snapshot, node_id: "set-2")
 
     expect(plan).not_to be_target_reachable
   end
 
   it "executes the whole un-cached chain from a pinned trigger" do
     snapshot =
-      snapshot_for(chain_graph, pin_data: { "Trigger" => [{ "json" => { "pinned" => true } }] })
+      plan_builder.snapshot(
+        graph: chain_graph,
+        pin_data: {
+          "Trigger" => [{ "json" => { "pinned" => true } }],
+        },
+      )
 
-    plan = plan_for(snapshot, "set-2")
+    plan = plan_builder.plan(snapshot: snapshot, node_id: "set-2")
 
     expect(plan).to be_target_reachable
     expect(plan.executable_nodes.map(&:id)).to contain_exactly("set-1", "set-2")
@@ -106,7 +84,8 @@ RSpec.describe DiscourseWorkflows::StepExecutionPlan do
         g.chain "trigger-1", "set-1"
       end
 
-    plan = plan_for(snapshot_for(graph), "set-1")
+    snapshot = plan_builder.snapshot(graph: graph)
+    plan = plan_builder.plan(snapshot: snapshot, node_id: "set-1")
 
     expect(plan).to be_target_reachable
     expect(plan.trigger_roots_to_run.map(&:id)).to contain_exactly("trigger-1")
@@ -125,17 +104,20 @@ RSpec.describe DiscourseWorkflows::StepExecutionPlan do
     items = [{ "json" => { "branched" => true } }]
     run_data = {
       "If" => [
-        run_entry(
+        plan_builder.run(
           node_id: "if-1",
           node_type: "condition:if",
           status: "filtered",
-          outputs: [output_port(0, []), output_port(1, items)],
+          outputs: [
+            plan_builder.port(index: 0, items: []),
+            plan_builder.port(index: 1, items: items),
+          ],
         ),
       ],
     }
-    snapshot = snapshot_for(graph)
+    snapshot = plan_builder.snapshot(graph: graph)
 
-    plan = plan_for(snapshot, "set-1", run_data)
+    plan = plan_builder.plan(snapshot: snapshot, node_id: "set-1", run_data: run_data)
 
     expect(plan.executable_nodes.map(&:id)).to contain_exactly("set-1")
     expect(plan.cached_outputs(snapshot.find_node("if-1"))).to eq([[], items])
@@ -143,20 +125,32 @@ RSpec.describe DiscourseWorkflows::StepExecutionPlan do
 
   it "re-executes nodes whose cached runs belong to a different node identity" do
     run_data = {
-      "Source" => [source_run([{ "json" => { "stale" => true } }], node_id: "recreated-set-1")],
+      "Source" => [
+        plan_builder.source_run(
+          items: [{ "json" => { "stale" => true } }],
+          node_id: "recreated-set-1",
+        ),
+      ],
     }
     snapshot =
-      snapshot_for(chain_graph, pin_data: { "Trigger" => [{ "json" => { "fresh" => true } }] })
+      plan_builder.snapshot(
+        graph: chain_graph,
+        pin_data: {
+          "Trigger" => [{ "json" => { "fresh" => true } }],
+        },
+      )
 
-    plan = plan_for(snapshot, "set-2", run_data)
+    plan = plan_builder.plan(snapshot: snapshot, node_id: "set-2", run_data: run_data)
 
     expect(plan.executable_nodes.map(&:id)).to contain_exactly("set-1", "set-2")
   end
 
   it "does not treat error runs as cache" do
-    run_data = { "Source" => [source_run([{ "json" => { "a" => 1 } }], status: "error")] }
+    run_data = {
+      "Source" => [plan_builder.source_run(items: [{ "json" => { "a" => 1 } }], status: "error")],
+    }
 
-    plan = plan_for(chain_snapshot, "set-2", run_data)
+    plan = plan_builder.plan(snapshot: chain_snapshot, node_id: "set-2", run_data: run_data)
 
     expect(plan).not_to be_target_reachable
   end
@@ -176,16 +170,18 @@ RSpec.describe DiscourseWorkflows::StepExecutionPlan do
     end
 
     it "is reachable when one branch has data even though the other is dead" do
-      snapshot = snapshot_for(merge_graph, pin_data: { "A" => [{ "json" => { "a" => 1 } }] })
+      snapshot =
+        plan_builder.snapshot(graph: merge_graph, pin_data: { "A" => [{ "json" => { "a" => 1 } }] })
 
-      plan = plan_for(snapshot, "merge-1")
+      plan = plan_builder.plan(snapshot: snapshot, node_id: "merge-1")
 
       expect(plan).to be_target_reachable
       expect(plan.cached_frontier.map(&:id)).to contain_exactly("set-a")
     end
 
     it "is unreachable when no branch can produce data" do
-      plan = plan_for(snapshot_for(merge_graph), "merge-1")
+      snapshot = plan_builder.snapshot(graph: merge_graph)
+      plan = plan_builder.plan(snapshot: snapshot, node_id: "merge-1")
 
       expect(plan).not_to be_target_reachable
     end
@@ -200,9 +196,15 @@ RSpec.describe DiscourseWorkflows::StepExecutionPlan do
         g.chain "trigger-1", "set-a", "set-b"
         g.connect "set-b", "set-a"
       end
-    snapshot = snapshot_for(graph, pin_data: { "Trigger" => [{ "json" => { "go" => true } }] })
+    snapshot =
+      plan_builder.snapshot(
+        graph: graph,
+        pin_data: {
+          "Trigger" => [{ "json" => { "go" => true } }],
+        },
+      )
 
-    plan = plan_for(snapshot, "set-b")
+    plan = plan_builder.plan(snapshot: snapshot, node_id: "set-b")
 
     expect(plan).to be_target_reachable
     expect(plan.executable_nodes.map(&:id)).to contain_exactly("set-a", "set-b")

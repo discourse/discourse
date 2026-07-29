@@ -21,19 +21,19 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowScriptContext do
     )
   end
 
-  def invoke_tool(upstream_node_id)
-    context = DiscourseAi::Agents::BotContext.new(messages: [], user: admin)
+  subject(:result) do
     described_class.new(
       { workflow_id: workflow.id, upstream_node_id: upstream_node_id },
       bot_user: Discourse.system_user,
       llm: nil,
-      context: context,
+      context: bot_context,
     ).invoke
   end
 
-  it "uses the node's declared fields before it has run" do
-    result = invoke_tool("post-created")
+  let(:upstream_node_id) { "post-created" }
+  let(:bot_context) { DiscourseAi::Agents::BotContext.new(messages: [], user: admin) }
 
+  it "uses the node's declared fields before it has run" do
     expect(result.dig(:upstream_fields, :output_fields, 0)).to include(
       "post.id" => "integer",
       "user.username" => "string",
@@ -45,8 +45,6 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowScriptContext do
     node_name = workflow.nodes.find { |node| node["id"] == "post-created" }["name"]
     workflow.update_node_pin_data!(node_name, [{ "json" => { "pinned_only" => true } }])
 
-    result = invoke_tool("post-created")
-
     expect(result.dig(:upstream_fields, :output_fields, 0)).to eq("pinned_only" => "boolean")
   end
 
@@ -54,13 +52,18 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowScriptContext do
     node_name = workflow.nodes.find { |node| node["id"] == "post-created" }["name"]
     workflow.update_node_pin_data!(node_name, [{ "json" => {} }])
 
-    result = invoke_tool("post-created")
-
     expect(result.dig(:upstream_fields, :output_fields)).to eq([{}])
   end
 
   it "resolves inherited fields for pass-through nodes" do
-    result = invoke_tool("filter")
+    upstream_node_id = "filter"
+    result =
+      described_class.new(
+        { workflow_id: workflow.id, upstream_node_id: upstream_node_id },
+        bot_user: Discourse.system_user,
+        llm: nil,
+        context: bot_context,
+      ).invoke
 
     expect(result.dig(:upstream_fields, :output_fields, 0)).to include(
       "post.id" => "integer",
@@ -69,7 +72,14 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowScriptContext do
   end
 
   it "infers fields from pin data when the node has no declaration" do
-    result = invoke_tool("code")
+    upstream_node_id = "code"
+    result =
+      described_class.new(
+        { workflow_id: workflow.id, upstream_node_id: upstream_node_id },
+        bot_user: Discourse.system_user,
+        llm: nil,
+        context: bot_context,
+      ).invoke
 
     expect(result.dig(:upstream_fields, :output_fields, 0)).to eq(
       "custom" => "object",
@@ -84,7 +94,14 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowScriptContext do
       [{ "json" => { "full-name" => "Ada", "a.b" => true, "a" => { "b" => 1 } } }],
     )
 
-    result = invoke_tool("code")
+    upstream_node_id = "code"
+    result =
+      described_class.new(
+        { workflow_id: workflow.id, upstream_node_id: upstream_node_id },
+        bot_user: Discourse.system_user,
+        llm: nil,
+        context: bot_context,
+      ).invoke
 
     expect(result.dig(:upstream_fields, :output_fields, 0)).to eq(
       '["full-name"]' => "string",
