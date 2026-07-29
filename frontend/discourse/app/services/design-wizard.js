@@ -360,7 +360,9 @@ export default class DesignWizardService extends Service {
       stored.homepage ?? this.#supportedHomepage(this.data.homepage);
     this.categoryPageStyle =
       stored.categoryPageStyle ?? this.siteSettings.desktop_category_page_style;
-    this.stepIndex = stored.stepIndex ?? 0;
+    // selections are restored but the flow always restarts from the first
+    // step, so a resumed wizard walks the same path as a fresh one
+    this.stepIndex = 0;
   }
 
   #persistState() {
@@ -375,7 +377,6 @@ export default class DesignWizardService extends Service {
         headingFont: this.headingFont,
         homepage: this.homepage,
         categoryPageStyle: this.categoryPageStyle,
-        stepIndex: this.stepIndex,
       }),
     });
   }
