@@ -529,10 +529,11 @@ class UploadCreator
     doc
       .css("use")
       .each do |use_el|
-        if use_el.attr("href")
-          use_el.remove_attribute("href") unless use_el.attr("href").starts_with?("#")
+        use_el.attribute_nodes.each do |attribute|
+          next if attribute.name != "href" && attribute.name != "xlink:href"
+
+          attribute.remove unless attribute.value.starts_with?("#")
         end
-        use_el.remove_attribute("xlink:href")
       end
 
     File.write(@file.path, doc.to_s)
