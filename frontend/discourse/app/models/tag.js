@@ -1,14 +1,15 @@
-import { computed } from "@ember/object";
+import RestCompatModel from "discourse/data/rest-compat";
+import { TagSchema } from "discourse/data/schemas/tag";
+import { defineFieldForwarders } from "discourse/data/warp-rest-model";
 import getURL from "discourse/lib/get-url";
-import RestModel from "discourse/models/rest";
 
-export default class Tag extends RestModel {
-  @computed("pm_only")
+export default class Tag extends RestCompatModel {
+  static type = "tag";
+
   get pmOnly() {
     return this.pm_only;
   }
 
-  @computed("slug", "id")
   get url() {
     if (this.id) {
       const slugForUrl = this.slug || `${this.id}-tag`;
@@ -18,19 +19,18 @@ export default class Tag extends RestModel {
     return getURL(`/tag/${this.name.replaceAll(".", "%2E")}`);
   }
 
-  @computed("count", "pm_count")
   get totalCount() {
     return this.pm_count ? this.count + this.pm_count : this.count;
   }
 
-  @computed("id", "name")
   get searchContext() {
     return {
       type: "tag",
       id: this.id,
-      /** @type Tag */
       tag: this,
       name: this.name,
     };
   }
 }
+
+defineFieldForwarders(Tag, TagSchema);

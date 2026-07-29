@@ -1,90 +1,137 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
-import { service } from "@ember/service";
-import { ajax } from "discourse/lib/ajax";
-import { removeValueFromArray } from "discourse/lib/array-tools";
-import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import RestModel from "discourse/models/rest";
+import {
+  removeAllowedTopicGroup,
+  removeAllowedTopicUser,
+  updateTopicNotificationLevel,
+} from "discourse/data/builders/topic-details";
+import { normalizeTopicDetailsPayload } from "discourse/data/normalize";
+import RestCompatModel from "discourse/data/rest-compat";
+import { TopicDetailsSchema } from "discourse/data/schemas/topic-details";
+import {
+  defineFieldForwarders,
+  warpStore,
+} from "discourse/data/warp-rest-model";
+import User from "discourse/models/user";
 
-/**
-  A model representing a Topic's details that aren't always present, such as a list of participants.
-  When showing topics in lists and such this information should not be required.
-**/
+export default class TopicDetails extends RestCompatModel {
+  static type = "topic-details";
 
-export default class TopicDetails extends RestModel {
-  @service store;
+  // `store.createRecord("topicDetails", { id, topic, ...attrs })` entry point.
+  // Extras (e.g. tests doing `topic.details = { allowed_users: [...] }`) land
+  // in `#draft` until `updateFromJson` populates the cache record.
+  static create({ id, topic, ...rest } = {}) {
+    const td = new this(id);
+    if (topic !== undefined) {
+      td.topic = topic;
+    }
+    if (Object.keys(rest).length > 0) {
+      td.#draft = rest;
+    }
+    return td;
+  }
 
-  @tracked can_delete;
-  @tracked can_edit_staff_notes;
-  @tracked can_permanently_delete;
-  @tracked can_publish_page;
-  @tracked can_split_merge_topic;
-  @tracked created_by;
-  @tracked notification_level;
-  @autoTrackedArray allowed_groups;
-  @autoTrackedArray allowed_users;
+  @tracked loaded = false;
+  topic = null;
 
-  loaded = false;
+  #topicId;
+  #draft = {};
 
+  constructor(topicId) {
+    super();
+    this.#topicId = topicId == null ? null : String(topicId);
+  }
+
+  // Topic's `_details` field initializer runs before Topic.id is assigned, so
+  // back-fill lazily from `this.topic.id` on first access.
+  #effectiveTopicId() {
+    if (this.#topicId == null && this.topic?.id != null) {
+      this.#topicId = String(this.topic.id);
+    }
+    return this.#topicId;
+  }
+
+  // `#topicId in this` is only true once `super()` has returned and our own
+  // fields and private methods are installed. The base constructor fires plugin
+  // `init` callbacks, which can reach `id` / `__resource` before that — and
+  // touching anything private that early throws. The check has to be inline:
+  // hiding it behind a private helper would trip the same trap.
+  get id() {
+    return #topicId in this ? this.#effectiveTopicId() : null;
+  }
+
+  // Falls back to `#draft` so attrs set via `create({...})` (or assigned
+  // before `updateFromJson`) are readable/writable.
+  get __resource() {
+    // See `id` — nothing private is reachable until `super()` has returned.
+    if (!(#topicId in this)) {
+      return undefined;
+    }
+    const id = this.#effectiveTopicId();
+    if (id != null) {
+      const cached = warpStore().peekRecord({
+        type: "topic-details",
+        id,
+      });
+      if (cached) {
+        return cached;
+      }
+    }
+    return this.#draft;
+  }
+
+  // Wraps user/participant sideloads to match legacy RestModel behavior so
+  // `instanceof User` and EmberObject methods keep working.
   updateFromJson(details) {
-    const topic = this.topic;
-
+    const id = this.#effectiveTopicId();
+    if (id == null || !details) {
+      return;
+    }
+    const wrapped = { ...details };
     if (details.allowed_users) {
-      details.allowed_users = details.allowed_users.map((u) =>
-        this.store.createRecord("user", u)
+      wrapped.allowed_users = details.allowed_users.map((u) => User.create(u));
+    }
+    if (details.participants) {
+      const topic = this.topic;
+      wrapped.participants = details.participants.map((p) =>
+        EmberObject.create({ ...p, topic })
       );
     }
-
-    if (details.participants) {
-      details.participants = details.participants.map((p) => {
-        p.topic = topic;
-        return EmberObject.create(p);
-      });
-    }
-
-    this.setProperties(details);
-    this.set("loaded", true);
+    const store = warpStore();
+    store.push(normalizeTopicDetailsPayload({ topicId: id, details: wrapped }));
+    this._applyExtraAttributes(id);
+    this.loaded = true;
   }
 
   updateNotifications(level) {
-    return ajax(`/t/${this.get("topic.id")}/notifications`, {
-      type: "POST",
-      data: { notification_level: level },
-    }).then(() => {
-      this.setProperties({
-        notification_level: level,
-        notifications_reason_id: null,
-      });
+    const store = warpStore();
+    const id = this.#effectiveTopicId();
+    return store.request(updateTopicNotificationLevel(id, level)).then(() => {
+      this.notification_level = level;
+      this.notifications_reason_id = null;
     });
   }
 
   async removeAllowedGroup(group) {
-    const groups = this.allowed_groups;
-    const name = group.name;
-
-    await ajax(`/t/${this.get("topic.id")}/remove-allowed-group`, {
-      type: "PUT",
-      data: { name },
-    });
-
-    removeValueFromArray(
-      groups,
-      groups.find((item) => item.name === name)
+    const store = warpStore();
+    await store.request(
+      removeAllowedTopicGroup(this.#effectiveTopicId(), group.name)
+    );
+    this.allowed_groups = this.allowed_groups.filter(
+      (g) => g.name !== group.name
     );
   }
 
   async removeAllowedUser(user) {
-    const users = this.allowed_users;
-    const username = user.get("username");
-
-    await ajax(`/t/${this.get("topic.id")}/remove-allowed-user`, {
-      type: "PUT",
-      data: { username },
-    });
-
-    removeValueFromArray(
-      users,
-      users.find((item) => item.username === username)
+    const username = user.username ?? user.get?.("username");
+    const store = warpStore();
+    await store.request(
+      removeAllowedTopicUser(this.#effectiveTopicId(), username)
+    );
+    this.allowed_users = this.allowed_users.filter(
+      (u) => u.username !== username
     );
   }
 }
+
+defineFieldForwarders(TopicDetails, TopicDetailsSchema);
