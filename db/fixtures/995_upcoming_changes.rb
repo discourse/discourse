@@ -8,6 +8,4 @@
 # This intentionally covers every installed plugin's changes, enabled or not, since
 # their settings are registered regardless. A plugin installed *after* the site was
 # created is handled on enable instead, in 015-track-upcoming-change-toggle.rb.
-if Migration::Helpers.new_site? && !Rails.env.development?
-  UpcomingChanges::Action::BackfillNotifiedEvents.call
-end
+UpcomingChanges::Action::BackfillNotifiedEvents.call if Migration::Helpers.new_site?
