@@ -600,6 +600,10 @@ en:
           topics: "Topics"
           categories: "Categories"
           topic_page_type: "Topic page type"
+          topic_pages:
+            latest: "Topics sorted by their most recent activity, newest first."
+            hot: "Topics trending right now, blending overall popularity with recent engagement."
+            top: "The most popular topics of a time period, ranked by views, likes and replies."
           category_page_style: "Category page style"
           styles:
             boxes: "Boxes"

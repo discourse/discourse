@@ -3,7 +3,8 @@
 // not restyle as palettes, fonts and text sizes are previewed. Explicit font
 // classes inside (typeface samples) still apply.
 .design-wizard-float,
-.design-wizard-modal__font-select-content {
+.design-wizard-modal__font-select-content,
+.design-wizard-modal__topic-page-content {
   z-index: 9999;
 
   // literal base light palette values: SCSS color variables cannot be used

@@ -397,7 +397,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom(".design-wizard-modal__homepage-card.--selected")
       .hasAttribute("data-homepage", "topics", "defaults to a topics homepage");
     assert
-      .dom("#design-wizard-topic-page")
+      .dom(".design-wizard-modal__topic-page-select")
       .exists("a topics homepage offers the topic page types");
 
     await click(
@@ -414,7 +414,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
         "defaults to boxes with subcategories"
       );
     assert
-      .dom("#design-wizard-topic-page")
+      .dom(".design-wizard-modal__topic-page-select")
       .doesNotExist("the topic page types are hidden for categories");
 
     assert

@@ -1,15 +1,33 @@
+import Component from "@glimmer/component";
 import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import DMenu from "discourse/float-kit/components/d-menu";
 import { HORIZON_THEME_ID } from "discourse/lib/theme-selector";
 import { eq } from "discourse/truth-helpers";
-import DSelect from "discourse/ui-kit/d-select";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-const TOPIC_PAGES = ["latest", "top", "hot"];
+const TOPIC_PAGES = ["latest", "hot", "top"];
 
 function topicPageLabel(page) {
   return i18n(`filters.${page}.title`);
 }
+
+function topicPageDescription(page) {
+  return i18n(
+    `admin_onboarding_banner.design_wizard.homepage.topic_pages.${page}`
+  );
+}
+
+const TopicPageTrigger = <template>
+  <button class="btn btn-default btn-icon-text" type="button" ...attributes>
+    <span class="d-button-label">{{@label}}</span>
+    {{dIcon "angle-down" class="design-wizard-modal__font-select-caret"}}
+  </button>
+</template>;
 
 function isHorizon(themeId) {
   return themeId === HORIZON_THEME_ID;
@@ -106,89 +124,121 @@ const CategoriesMock = <template>
   {{/each}}
 </template>;
 
-const DesignWizardHomepageSection = <template>
-  <div class="design-wizard-modal__homepage-cards">
-    <button
-      type="button"
-      class="design-wizard-modal__homepage-card
-        {{unless (eq @homepage 'categories') '--selected'}}"
-      data-homepage="topics"
-      {{on "click" (fn @onSelectHomepage "latest")}}
-    >
-      <span
-        class="design-wizard-modal__homepage-thumbnail --topics
-          {{if (isHorizon @themeId) '--horizon' '--foundation'}}"
-      >
-        <TopicsMock @themeId={{@themeId}} />
-      </span>
-      {{i18n "admin_onboarding_banner.design_wizard.homepage.topics"}}
-    </button>
-    <button
-      type="button"
-      class="design-wizard-modal__homepage-card
-        {{if (eq @homepage 'categories') '--selected'}}"
-      data-homepage="categories"
-      {{on "click" (fn @onSelectHomepage "categories")}}
-    >
-      <span class="design-wizard-modal__homepage-thumbnail --categories">
-        <CategoriesMock />
-      </span>
-      {{i18n "admin_onboarding_banner.design_wizard.homepage.categories"}}
-    </button>
-  </div>
+export default class DesignWizardHomepageSection extends Component {
+  get topicPageLabel() {
+    return topicPageLabel(this.args.homepage);
+  }
 
-  {{#if (eq @homepage "categories")}}
-    <div class="design-wizard-modal__homepage-detail">
-      <span class="design-wizard-modal__homepage-detail-label">
-        {{i18n
-          "admin_onboarding_banner.design_wizard.homepage.category_page_style"
-        }}
-      </span>
-      <div class="design-wizard-modal__style-blocks">
-        {{#each CATEGORY_STYLE_OPTIONS as |option|}}
-          <button
-            type="button"
-            class="design-wizard-modal__style-block
-              {{if
-                (eq (categoryStyleKind @categoryPageStyle) option.kind)
-                '--selected'
-              }}"
-            data-style={{option.value}}
-            {{on "click" (fn @onSelectCategoryPageStyle option.value)}}
-          >
-            <span
-              class="design-wizard-modal__homepage-style-preview
-                {{if (eq option.kind 'boxes') '--boxes'}}"
+  @action
+  async selectTopicPage(page, dMenu) {
+    await dMenu.close();
+    this.args.onSelectHomepage(page);
+  }
+
+  <template>
+    <div class="design-wizard-modal__homepage-cards">
+      <button
+        type="button"
+        class="design-wizard-modal__homepage-card
+          {{unless (eq @homepage 'categories') '--selected'}}"
+        data-homepage="topics"
+        {{on "click" (fn @onSelectHomepage "latest")}}
+      >
+        <span
+          class="design-wizard-modal__homepage-thumbnail --topics
+            {{if (isHorizon @themeId) '--horizon' '--foundation'}}"
+        >
+          <TopicsMock @themeId={{@themeId}} />
+        </span>
+        {{i18n "admin_onboarding_banner.design_wizard.homepage.topics"}}
+      </button>
+      <button
+        type="button"
+        class="design-wizard-modal__homepage-card
+          {{if (eq @homepage 'categories') '--selected'}}"
+        data-homepage="categories"
+        {{on "click" (fn @onSelectHomepage "categories")}}
+      >
+        <span class="design-wizard-modal__homepage-thumbnail --categories">
+          <CategoriesMock />
+        </span>
+        {{i18n "admin_onboarding_banner.design_wizard.homepage.categories"}}
+      </button>
+    </div>
+
+    {{#if (eq @homepage "categories")}}
+      <div class="design-wizard-modal__homepage-detail">
+        <span class="design-wizard-modal__homepage-detail-label">
+          {{i18n
+            "admin_onboarding_banner.design_wizard.homepage.category_page_style"
+          }}
+        </span>
+        <div class="design-wizard-modal__style-blocks">
+          {{#each CATEGORY_STYLE_OPTIONS as |option|}}
+            <button
+              type="button"
+              class="design-wizard-modal__style-block
+                {{if
+                  (eq (categoryStyleKind @categoryPageStyle) option.kind)
+                  '--selected'
+                }}"
+              data-style={{option.value}}
+              {{on "click" (fn @onSelectCategoryPageStyle option.value)}}
             >
-              <CategoryStyleMock @style={{option.value}} />
-            </span>
-            {{categoryStyleLabel option.kind}}
-          </button>
-        {{/each}}
+              <span
+                class="design-wizard-modal__homepage-style-preview
+                  {{if (eq option.kind 'boxes') '--boxes'}}"
+              >
+                <CategoryStyleMock @style={{option.value}} />
+              </span>
+              {{categoryStyleLabel option.kind}}
+            </button>
+          {{/each}}
+        </div>
       </div>
-    </div>
-  {{else}}
-    <div class="design-wizard-modal__homepage-detail">
-      <label for="design-wizard-topic-page">
-        {{i18n
-          "admin_onboarding_banner.design_wizard.homepage.topic_page_type"
-        }}
-      </label>
-      <DSelect
-        @value={{@homepage}}
-        @onChange={{@onSelectHomepage}}
-        @includeNone={{false}}
-        id="design-wizard-topic-page"
-        as |select|
-      >
-        {{#each TOPIC_PAGES as |page|}}
-          <select.Option @value={{page}}>
-            {{topicPageLabel page}}
-          </select.Option>
-        {{/each}}
-      </DSelect>
-    </div>
-  {{/if}}
-</template>;
-
-export default DesignWizardHomepageSection;
+    {{else}}
+      <div class="design-wizard-modal__homepage-detail">
+        <span class="design-wizard-modal__homepage-detail-label">
+          {{i18n
+            "admin_onboarding_banner.design_wizard.homepage.topic_page_type"
+          }}
+        </span>
+        <DMenu
+          @identifier="design-wizard-topic-page"
+          @triggerClass="design-wizard-modal__topic-page-select"
+          @contentClass="design-wizard-modal__topic-page-content"
+          @modalForMobile={{true}}
+          @triggerComponent={{component
+            TopicPageTrigger
+            label=this.topicPageLabel
+          }}
+        >
+          <:content as |dMenu|>
+            <DDropdownMenu
+              class="design-wizard-modal__topic-page-list"
+              as |dropdown|
+            >
+              {{#each TOPIC_PAGES as |page|}}
+                <dropdown.item>
+                  <DButton
+                    @action={{fn this.selectTopicPage page dMenu}}
+                    class="btn-flat design-wizard-modal__topic-page-option
+                      {{if (eq page @homepage) '--selected'}}"
+                    data-topic-page={{page}}
+                  >
+                    <span
+                      class="design-wizard-modal__topic-page-option-title"
+                    >{{topicPageLabel page}}</span>
+                    <span
+                      class="design-wizard-modal__topic-page-option-description"
+                    >{{topicPageDescription page}}</span>
+                  </DButton>
+                </dropdown.item>
+              {{/each}}
+            </DDropdownMenu>
+          </:content>
+        </DMenu>
+      </div>
+    {{/if}}
+  </template>
+}

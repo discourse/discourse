@@ -22,7 +22,8 @@
     }
   }
 
-  &__font-select-content {
+  &__font-select-content,
+  &__topic-page-content {
     z-index: 999;
   }
 
@@ -460,8 +461,30 @@
     display: block;
   }
 
-  &__font-select {
+  &__font-select,
+  &__topic-page-select {
     margin-top: var(--space-1);
+  }
+
+  &__topic-page-option {
+    .d-button-label {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+      text-align: left;
+    }
+  }
+
+  &__topic-page-option-title {
+    font-weight: 600;
+  }
+
+  &__topic-page-option-description {
+    font-size: var(--font-down-2);
+    font-weight: 400;
+    color: var(--primary-medium);
+    white-space: normal;
   }
 
   &__font-select-caret {
@@ -552,4 +575,8 @@
     color: var(--tertiary);
     font-weight: 600;
   }
+}
+
+.design-wizard-modal__topic-page-list {
+  max-width: 20em;
 }
