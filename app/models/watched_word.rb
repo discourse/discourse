@@ -3,6 +3,8 @@
 class WatchedWord < ActiveRecord::Base
   MAX_WORDS_PER_ACTION = 2000
 
+  attr_accessor :previous_action_for_post_rebake
+
   before_validation do
     self.word = WatchedWord.normalize_word(word)
     self.replacement = WatchedWord.normalize_word(replacement) if replacement.present?
@@ -66,6 +68,7 @@ class WatchedWord < ActiveRecord::Base
   def self.create_or_update_word(params)
     word = normalize_word(params[:word])
     word = self.for(word: word).first_or_initialize(word: word)
+    previous_action = word.action
     word.replacement = params[:replacement] if params[:replacement]
     word.action_key = params[:action_key] if params[:action_key]
     word.action = params[:action] if params[:action]
@@ -73,7 +76,17 @@ class WatchedWord < ActiveRecord::Base
     word.html = params[:html] if params[:html]
     word.watched_word_group_id = params[:watched_word_group_id]
     word.save
+    word.previous_action_for_post_rebake = previous_action
     word
+  end
+
+  def requires_post_rebake?
+    self.class.post_rebake_action?(action) ||
+      self.class.post_rebake_action?(previous_action_for_post_rebake)
+  end
+
+  def self.post_rebake_action?(action)
+    %i[censor replace link].any? { |action_key| actions[action_key] == action }
   end
 
   def self.has_replacement?(action)
