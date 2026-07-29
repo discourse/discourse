@@ -31,6 +31,8 @@ class SidebarSection < ActiveRecord::Base
               maximum: MAX_TITLE_LENGTH,
             }
 
+  validates :locale, presence: true, length: { maximum: 20 }
+
   scope :public_sections, -> { where("public") }
   scope :custom_sections, -> { where(section_type: nil) }
   enum :section_type, { community: 0 }, scopes: false, suffix: true
@@ -77,7 +79,7 @@ class SidebarSection < ActiveRecord::Base
   end
 
   def set_default_locale
-    self.locale ||= SiteSetting.default_locale.to_s
+    self.locale = SiteSetting.default_locale.to_s if locale.blank?
   end
 end
 
