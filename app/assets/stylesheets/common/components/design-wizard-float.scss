@@ -39,12 +39,17 @@
   --token-color-text-subtlest: #919191;
   --token-color-border-default: #e9e9e9;
   --token-color-background-accent-bolder: #08c;
-  --d-button-default-text-color: #222;
-  --d-button-default-text-color--hover: #fff;
-  --d-button-default-bg-color: #e9e9e9;
-  --d-button-default-bg-color--hover: #919191;
-  --d-button-default-icon-color: #646464;
-  --d-button-default-icon-color--hover: #e9e9e9;
+
+  // default buttons follow the modernized foundation look: white with a
+  // subtle border rather than a gray fill
+  --d-button-default-text-color: #434343;
+  --d-button-default-text-color--hover: #222;
+  --d-button-default-bg-color: #fff;
+  --d-button-default-bg-color--hover: #e9e9e9;
+  --d-button-default-icon-color: #434343;
+  --d-button-default-icon-color--hover: #222;
+  --d-button-default-border: 1px solid #d3d3d3;
+  --d-button-default-border--hover: 1px solid #bdbdbd;
   --d-button-primary-text-color: #fff;
   --d-button-primary-text-color--hover: #fff;
   --d-button-primary-bg-color: #08c;
