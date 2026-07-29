@@ -1,4 +1,6 @@
 import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ColorsSection from "discourse/components/admin-onboarding/modal/design-wizard/colors-section";
@@ -14,6 +16,11 @@ const STEPS = ["theme", "colors", "fonts"];
 export default class SidebarDesignWizardPanel extends Component {
   @service designWizard;
 
+  goToStepLabel = (index) =>
+    i18n("admin_onboarding_banner.design_wizard.step_label", {
+      index: index + 1,
+    });
+
   get steps() {
     return STEPS;
   }
@@ -28,6 +35,20 @@ export default class SidebarDesignWizardPanel extends Component {
 
   get isLastStep() {
     return this.designWizard.stepIndex >= STEPS.length - 1;
+  }
+
+  @action
+  async goToStep(index) {
+    if (index === this.designWizard.stepIndex) {
+      return;
+    }
+
+    if (
+      index < this.designWizard.stepIndex ||
+      (await this.designWizard.saveProgress())
+    ) {
+      this.designWizard.setStepIndex(index);
+    }
   }
 
   @action
@@ -151,14 +172,18 @@ export default class SidebarDesignWizardPanel extends Component {
       </div>
 
       <div class="sidebar-design-wizard__actions">
-        <span class="sidebar-design-wizard__step-dots" aria-hidden="true">
-          {{#each this.steps as |step|}}
-            <span
-              class="sidebar-design-wizard__step-dot
-                {{if (eq step this.currentStep) '--active'}}"
-            ></span>
+        <div class="d-image-carousel__dots sidebar-design-wizard__step-dots">
+          {{#each this.steps as |step index|}}
+            <button
+              type="button"
+              class="d-image-carousel__dot
+                {{if (eq step this.currentStep) 'active'}}"
+              aria-label={{this.goToStepLabel index}}
+              aria-current={{if (eq step this.currentStep) "true"}}
+              {{on "click" (fn this.goToStep index)}}
+            ></button>
           {{/each}}
-        </span>
+        </div>
         <DButton
           @action={{this.back}}
           @label="admin_onboarding_banner.design_wizard.back"

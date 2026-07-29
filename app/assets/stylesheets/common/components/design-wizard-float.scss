@@ -78,7 +78,7 @@
 
 .design-wizard-float {
   position: fixed;
-  z-index: z("usercard");
+  z-index: 9999;
   top: var(--header-offset);
   right: 0;
   bottom: 0;
@@ -91,7 +91,7 @@
   border-left: 1px solid var(--content-border-color);
   border-top-left-radius: var(--d-border-radius-large);
   border-bottom-left-radius: var(--d-border-radius-large);
-  box-shadow: var(--shadow-modal);
+  box-shadow: var(--shadow-card);
   animation: design-wizard-float-slide-in 0.25s ease-out;
 
   @media (prefers-reduced-motion: reduce) {
