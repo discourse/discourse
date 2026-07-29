@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Patreon::Api do
-  def stub_url(status, url)
-    content = { status: status, headers: { "Content-Type" => "application/json" }, body: "{}" }
-    stub_request(:get, url).to_return(content)
-  end
-
   before { SiteSetting.stubs(patreon_enabled: true) }
 
   context "with API v1" do
@@ -16,13 +11,25 @@ RSpec.describe Patreon::Api do
     before { SiteSetting.patreon_api_version = "1" }
 
     it "should add admin warning message for invalid api response" do
-      stub_url(401, url)
+      stub_request(:get, url).to_return(
+        status: 401,
+        headers: {
+          "Content-Type" => "application/json",
+        },
+        body: "{}",
+      )
       described_class.campaign_data
       expect(ProblemCheckTracker[:access_token_invalid].blips).to eq(1)
     end
 
     it "should add warning log" do
-      stub_url(500, url)
+      stub_request(:get, url).to_return(
+        status: 500,
+        headers: {
+          "Content-Type" => "application/json",
+        },
+        body: "{}",
+      )
       Discourse.expects(:warn_exception).once
       described_class.campaign_data
     end
@@ -30,7 +37,13 @@ RSpec.describe Patreon::Api do
     it "does not double the base URL when uri is already absolute" do
       absolute_url =
         "https://api.patreon.com/api/oauth2/api/campaigns/123/pledges?page%5Bcount%5D=100&sort=created"
-      stub_url(200, absolute_url)
+      stub_request(:get, absolute_url).to_return(
+        status: 200,
+        headers: {
+          "Content-Type" => "application/json",
+        },
+        body: "{}",
+      )
 
       result = described_class.get(absolute_url)
       expect(result).to eq({})
@@ -46,7 +59,13 @@ RSpec.describe Patreon::Api do
     before { SiteSetting.patreon_api_version = "2" }
 
     it "should add admin warning message for invalid api response" do
-      stub_url(401, url)
+      stub_request(:get, url).to_return(
+        status: 401,
+        headers: {
+          "Content-Type" => "application/json",
+        },
+        body: "{}",
+      )
       described_class.campaign_data
       expect(ProblemCheckTracker[:access_token_invalid].blips).to eq(1)
       expect(AdminNotice.find_by(identifier: :access_token_invalid).message).to include(
@@ -55,12 +74,24 @@ RSpec.describe Patreon::Api do
     end
 
     it "should not add admin warning message for valid api response" do
-      stub_url(200, url)
+      stub_request(:get, url).to_return(
+        status: 200,
+        headers: {
+          "Content-Type" => "application/json",
+        },
+        body: "{}",
+      )
       expect(ProblemCheckTracker[:access_token_invalid].blips).to eq(0)
     end
 
     it "should add warning log" do
-      stub_url(500, url)
+      stub_request(:get, url).to_return(
+        status: 500,
+        headers: {
+          "Content-Type" => "application/json",
+        },
+        body: "{}",
+      )
       Discourse.expects(:warn_exception).once
       expect(described_class.campaign_data).to eq(error: I18n.t(described_class::INVALID_RESPONSE))
     end
