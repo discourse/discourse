@@ -56,7 +56,14 @@ class LetterAvatar
     end
 
     def cached_path(identity, size)
-      dir = "#{cache_path}/#{identity.letter}/#{identity.color.join("_")}"
+      letter_path =
+        if identity.letter.match?(/\A[\w-]+\z/)
+          identity.letter
+        else
+          identity.letter.bytes.map { |byte| byte.to_s(16).rjust(2, "0") }.join
+        end
+
+      dir = "#{cache_path}/#{letter_path}/#{identity.color.join("_")}"
       FileUtils.mkdir_p(dir)
       File.expand_path "#{dir}/#{size}.png"
     end

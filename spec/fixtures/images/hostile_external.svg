@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="10" height="10" onload="alert(location)">
+  <defs>
+    <path id="mark" d="M0 0h10v10H0z"/>
+  </defs>
+  <use id="safe-use" href="#mark"/>
+  <use id="external-use" xlink:href="https://example.com/evil.svg#mark"/>
+  <image id="external-image" href="https://example.com/evil.png" width="10" height="10"/>
+</svg>

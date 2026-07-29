@@ -22,6 +22,12 @@ RSpec.describe "image_optim Landlock sandbox freedom patch" do
     expect(ImageOptim::Cmd.run({}, "false")).to eq(false)
   end
 
+  it "returns false (keep original) when the sandboxed command times out" do
+    expect(
+      ImageOptim::Cmd.run({ "PATH" => ENV["PATH"] }, "sh", "-c", "sleep 2", timeout: 0.01),
+    ).to eq(false)
+  end
+
   it "allows reading a file passed in argv" do
     skip("Landlock unsupported on this host") unless landlock?
 

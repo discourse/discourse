@@ -1,10 +1,88 @@
 # frozen_string_literal: true
 
+require "base64"
 require "file_store/s3_store"
+require "zlib"
 
 RSpec.describe UploadCreator do
   fab!(:user)
   fab!(:admin)
+
+  def create_tiny_animated_gif_upload
+    file = Tempfile.new(%w[tiny_animated .gif])
+    file.binmode
+    file.write(
+      Base64.strict_decode64(
+        "R0lGODlhAgABAPAAAP8AAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQAAAAAACwAAAAAAgABAAACAgQKACH5BAAKAAAALAAAAAACAAEAgAAA/wAAAAICBAoAOw==",
+      ),
+    )
+    file.rewind
+
+    UploadCreator.new(file, "tiny.gif", force_optimize: true).create_for(user.id)
+  ensure
+    file&.close! unless file&.closed?
+  end
+
+  def create_tiny_transparent_png_upload
+    file = Tempfile.new(%w[tiny_transparent .png])
+    file.binmode
+    file.write(
+      Base64.strict_decode64(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+      ),
+    )
+    file.rewind
+
+    UploadCreator.new(file, "transparent.png").create_for(user.id)
+  ensure
+    file&.close! unless file&.closed?
+  end
+
+  def jpeg_with_orientation(orientation)
+    exif =
+      "Exif\0\0".b + "II*\0".b + [8].pack("V") + [1].pack("v") + [0x0112].pack("v") +
+        [3].pack("v") + [1].pack("V") + [orientation].pack("v") + "\0\0".b + [0].pack("V")
+    source =
+      Base64.strict_decode64(
+        "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/wAALCAACAAMBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AVN//2Q==",
+      )
+    marker = "\xFF\xE1".b + [exif.bytesize + 2].pack("n") + exif
+
+    file = Tempfile.new(["oriented-#{orientation}", ".jpg"])
+    file.binmode
+    file.write(source.byteslice(0, 2) + marker + source.byteslice(2..))
+    file.rewind
+    file
+  end
+
+  def broken_png_file
+    ihdr = [1, 1, 8, 6, 0, 0, 0].pack("NNCCCCC")
+    chunk = [ihdr.bytesize].pack("N") + "IHDR" + ihdr + [Zlib.crc32("IHDR" + ihdr)].pack("N")
+    data = "\x89PNG\r\n\x1A\n".b + chunk + ("\0".b * 80_000)
+
+    file = Tempfile.new(%w[broken .png])
+    file.binmode
+    file.write(data)
+    file.rewind
+    file
+  end
+
+  def png_has_alpha?(path)
+    data = File.binread(path)
+    color_type = data.byteslice(25).unpack1("C")
+    return true if [4, 6].include?(color_type)
+
+    offset = 33
+    while offset < data.bytesize
+      length = data.byteslice(offset, 4).unpack1("N")
+      chunk_type = data.byteslice(offset + 4, 4)
+      return true if chunk_type == "tRNS"
+
+      offset += 12 + length
+    end
+
+    false
+  end
 
   describe "#create_for" do
     describe "when the image is an SVG" do
@@ -123,6 +201,16 @@ RSpec.describe UploadCreator do
         expect(upload.original_filename).to eq("png_as.png")
       end
 
+      it "stores the detected tiny image dimensions" do
+        upload = UploadCreator.new(file, filename).create_for(user.id)
+
+        expect(upload).to be_persisted
+        expect(upload.width).to eq(5)
+        expect(upload.height).to eq(1)
+        expect(FastImage.type(Discourse.store.path_for(upload))).to eq(:png)
+        expect(FastImage.size(Discourse.store.path_for(upload))).to eq([5, 1])
+      end
+
       describe "for tiff format" do
         before { SiteSetting.authorized_extensions = ".tiff|.bin" }
 
@@ -157,6 +245,62 @@ RSpec.describe UploadCreator do
           "#{I18n.t("upload.images.too_large_humanized", max_size: "1 KB")}",
         )
       end
+    end
+
+    it "detects a tiny animated GIF upload" do
+      upload = create_tiny_animated_gif_upload
+
+      expect(upload).to be_persisted
+      expect(upload.extension).to eq("gif")
+      expect(upload.width).to eq(2)
+      expect(upload.height).to eq(1)
+      expect(upload.animated).to eq(true)
+      expect(FastImage.type(Discourse.store.path_for(upload))).to eq(:gif)
+      expect(FastImage.size(Discourse.store.path_for(upload))).to eq([2, 1])
+    end
+
+    it "normalizes EXIF orientations without double-rotating dimensions" do
+      expected_sizes = {
+        1 => [3, 2],
+        2 => [3, 2],
+        3 => [3, 2],
+        4 => [3, 2],
+        5 => [2, 3],
+        6 => [2, 3],
+        7 => [2, 3],
+        8 => [2, 3],
+      }
+
+      expected_sizes.each do |orientation, expected_size|
+        upload =
+          UploadCreator.new(
+            jpeg_with_orientation(orientation),
+            "oriented-#{orientation}.jpg",
+            force_optimize: true,
+          ).create_for(user.id)
+        stored_path = Discourse.store.path_for(upload)
+
+        expect(upload).to be_persisted
+        expect([upload.width, upload.height]).to eq(expected_size)
+        expect(FastImage.size(stored_path)).to eq(expected_size)
+      end
+    end
+
+    it "does not persist an upload when a detected PNG cannot be decoded during conversion" do
+      SiteSetting.png_to_jpg_quality = 1
+      error = nil
+
+      expect do
+        UploadCreator.new(
+          broken_png_file,
+          "broken.png",
+          pasted: true,
+          force_optimize: true,
+        ).create_for(user.id)
+      rescue Discourse::Utils::CommandError => error
+      end.not_to change { Upload.count }
+
+      expect(error).to be_a(Discourse::Utils::CommandError)
     end
 
     describe "pngquant" do
@@ -231,6 +375,8 @@ RSpec.describe UploadCreator do
         expect(upload.extension).to eq("jpeg")
         expect(File.extname(upload.url)).to eq(".jpeg")
         expect(upload.original_filename).to eq("should_be_jpeg.jpg")
+        expect(FastImage.type(Discourse.store.path_for(upload))).to eq(:jpeg)
+        expect(FastImage.size(Discourse.store.path_for(upload))).to eq([303, 231])
       end
 
       it "should not convert to jpeg when the image is uploaded from site setting" do
@@ -681,10 +827,24 @@ RSpec.describe UploadCreator do
 
       expect(upload.persisted?).to eq(true)
       expect(upload.extension).to eq("png")
+      expect(upload.original_filename).to eq("smallest.png")
+      expect(FastImage.type(Discourse.store.path_for(upload))).to eq(:png)
+      expect(FastImage.size(Discourse.store.path_for(upload))).to eq([1, 1])
     end
   end
 
-  describe "#clean_svg!" do
+  describe "#create_for" do
+    it "preserves the alpha channel in a tiny PNG upload" do
+      upload = create_tiny_transparent_png_upload
+
+      expect(upload).to be_persisted
+      expect(upload.extension).to eq("png")
+      expect(FastImage.size(Discourse.store.path_for(upload))).to eq([1, 1])
+      expect(png_has_alpha?(Discourse.store.path_for(upload))).to eq(true)
+    end
+  end
+
+  describe "#create_for" do
     let(:b64) { Base64.encode64('<svg onmouseover="alert(alert)" />') }
 
     let(:file) do
@@ -706,15 +866,55 @@ RSpec.describe UploadCreator do
       file
     end
 
-    it "removes event handlers" do
-      UploadCreator.new(file, "file.svg").clean_svg!
-      file_content = file.read
-      expect(file_content).not_to include("onload")
-      expect(file_content).to include("#pathdef")
+    before { SiteSetting.authorized_extensions = "svg" }
+
+    it "stores a sanitized SVG upload" do
+      upload = UploadCreator.new(file, "file.svg").create_for(user.id)
+      file_content = File.read(Discourse.store.path_for(upload))
+      document = Nokogiri.XML(file_content)
+
+      expect(upload).to be_persisted
+      expect(document.xpath("//@*[starts-with(name(), 'on')]")).to be_empty
+      expect(document.at_css("#valid-use")["href"]).to eq("#pathdef")
+      expect(document.at_css("#invalid-use1").attributes.keys).not_to include("href")
+      expect(document.at_css("#invalid-use2").attributes.keys).not_to include("href")
       expect(file_content).not_to include("evil.svg")
       expect(file_content).not_to include(b64)
     ensure
       file.unlink
+    end
+
+    it "removes external references from a hostile SVG upload" do
+      upload =
+        UploadCreator.new(
+          file_from_fixtures("hostile_external.svg"),
+          "hostile_external.svg",
+        ).create_for(user.id)
+      file_content = File.read(Discourse.store.path_for(upload))
+      document = Nokogiri.XML(file_content)
+
+      expect(upload).to be_persisted
+      expect(document.xpath("//@*[starts-with(name(), 'on')]")).to be_empty
+      expect(document.at_css("#safe-use")["href"]).to eq("#mark")
+      expect(document.at_css("#external-use").attributes.keys).not_to include("href")
+      expect(document.at_css("#external-image")).to eq(nil)
+      expect(file_content).not_to include("example.com")
+    end
+
+    it "removes entity references and subsets from a hostile SVG upload" do
+      upload =
+        UploadCreator.new(
+          file_from_fixtures("hostile_entity.svg"),
+          "hostile_entity.svg",
+        ).create_for(user.id)
+      file_content = File.read(Discourse.store.path_for(upload))
+      document = Nokogiri.XML(file_content)
+
+      expect(upload).to be_persisted
+      expect(document.internal_subset).to eq(nil)
+      expect(document.external_subset).to eq(nil)
+      expect(document.xpath("//text()").map(&:text).join).not_to include("root:")
+      expect(file_content).not_to include("file:///etc/passwd")
     end
   end
 
@@ -736,9 +936,13 @@ RSpec.describe UploadCreator do
 
       expect(upload.width).to be > 50
       expect(upload.height).to be > 50
+      expect(upload.width).to eq(115)
+      expect(upload.height).to eq(86)
 
       expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
       expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
+      expect(upload.thumbnail_width).to eq(115)
+      expect(upload.thumbnail_height).to eq(86)
     end
 
     it "should not be larger than the maximum thumbnail size" do

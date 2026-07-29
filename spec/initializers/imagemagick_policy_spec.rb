@@ -19,4 +19,27 @@ RSpec.describe "ImageMagick security policy" do
       /not (allowed|authorized) by the security policy/,
     )
   end
+
+  it "allows SVG rasterization only through the MSVG coder" do
+    Dir.mktmpdir do |dir|
+      svg = File.join(dir, "source.svg")
+      png = File.join(dir, "output.png")
+      denied_png = File.join(dir, "denied.png")
+
+      File.write(
+        svg,
+        '<svg xmlns="http://www.w3.org/2000/svg" width="2" height="3"><rect width="2" height="3" fill="#ff0000"/></svg>',
+      )
+
+      Discourse::Utils.execute_command("magick", "MSVG:#{svg}", png)
+
+      expect(FastImage.type(png)).to eq(:png)
+      expect(FastImage.size(png)).to eq([2, 3])
+      expect { Discourse::Utils.execute_command("magick", svg, denied_png) }.to raise_error(
+        Discourse::Utils::CommandError,
+        /not (allowed|authorized) by the security policy/,
+      )
+      expect(File.exist?(denied_png)).to eq(false)
+    end
+  end
 end

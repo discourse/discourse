@@ -21,6 +21,22 @@ RSpec.describe TopicOgImageGenerator do
     TopicOgImageGenerator.any_instance.stubs(:fetch_as_data_uri).returns(TINY_PNG_DATA_URI)
   end
 
+  describe "#generate_bytes" do
+    it "renders PNG bytes with the expected canvas dimensions" do
+      png_bytes = described_class.new(topic).generate_bytes
+
+      Tempfile.create(%w[topic-og .png], binmode: true) do |file|
+        file.write(png_bytes)
+        file.flush
+
+        expect(FastImage.type(file.path)).to eq(:png)
+        expect(FastImage.size(file.path)).to eq(
+          [TopicOgImageGenerator::OG_WIDTH, TopicOgImageGenerator::OG_HEIGHT],
+        )
+      end
+    end
+  end
+
   describe "#generate" do
     it "generates a PNG upload for a topic" do
       generator = described_class.new(topic)
