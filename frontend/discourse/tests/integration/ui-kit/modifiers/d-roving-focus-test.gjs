@@ -460,6 +460,108 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     assert.dom(".b").doesNotHaveClass("--active");
   });
 
+  // A windowed list installs this modifier on a container that is still empty: the virtualizer
+  // has not measured its viewport yet, so the rows arrive a frame later. The seed ran against
+  // nothing, found nothing to activate, and no key changes when the rows land — so the list is
+  // presented with no cursor at all, and the reader's first arrow press is spent putting one on
+  // row one instead of moving off it.
+  test("active mode: a container that gains its items after install still seeds", async function (assert) {
+    const state = new (class {
+      @tracked items = [];
+    })();
+
+    await render(
+      <template>
+        <input class="search" role="combobox" />
+        <div
+          role="listbox"
+          {{dRovingFocus
+            selectionMode="active"
+            controllerElement=".search"
+            itemSelector="[role=option]"
+            activeClass="--active"
+            autoActivateFirst=true
+          }}
+        >
+          {{#each state.items key="id" as |item|}}
+            <button
+              class="opt"
+              role="option"
+              id={{item.id}}
+            >{{item.id}}</button>
+          {{/each}}
+        </div>
+      </template>
+    );
+
+    assert.dom(".opt").doesNotExist("the container installs with no items");
+
+    state.items = [{ id: "a" }, { id: "b" }];
+    await settled();
+
+    assert
+      .dom("#a")
+      .hasClass("--active", "the first item is highlighted once items arrive");
+    assert
+      .dom(".search")
+      .hasAttribute(
+        "aria-activedescendant",
+        "a",
+        "the controller points at the first item once items arrive"
+      );
+  });
+
+  // The other half of the rule above, and the reason it cannot simply re-seed whenever the item
+  // set changes: a windowed list republishes its rows on every scroll, so a blanket re-seed would
+  // throw a reader who has arrowed down back to the top of the list.
+  test("active mode: items arriving later never move a cursor the reader has placed", async function (assert) {
+    const state = new (class {
+      @tracked items = [{ id: "a" }, { id: "b" }];
+    })();
+
+    await render(
+      <template>
+        <input class="search" role="combobox" />
+        <div
+          role="listbox"
+          {{dRovingFocus
+            selectionMode="active"
+            controllerElement=".search"
+            itemSelector="[role=option]"
+            activeClass="--active"
+            autoActivateFirst=true
+          }}
+        >
+          {{#each state.items key="id" as |item|}}
+            <button
+              class="opt"
+              role="option"
+              id={{item.id}}
+            >{{item.id}}</button>
+          {{/each}}
+        </div>
+      </template>
+    );
+
+    await focus(".search");
+    await triggerKeyEvent(".search", "keydown", "ArrowDown");
+    assert.dom("#b").hasClass("--active", "the reader moved the cursor to b");
+
+    state.items = [...state.items, { id: "c" }];
+    await settled();
+
+    assert
+      .dom("#b")
+      .hasClass("--active", "a later item set leaves the placed cursor alone");
+    assert
+      .dom(".search")
+      .hasAttribute(
+        "aria-activedescendant",
+        "b",
+        "the controller still points at the reader's row"
+      );
+  });
+
   test("active mode: autoActivateSelected prefers the selected item over the first", async function (assert) {
     await render(
       <template>

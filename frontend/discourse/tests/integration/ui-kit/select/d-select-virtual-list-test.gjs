@@ -559,9 +559,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     await openSelect();
 
     const controller = find("[role='combobox']");
-    const visited = [];
-    for (let i = 0; i < GROUPED_ITEMS.length; i++) {
-      await triggerKeyEvent(controller, "keydown", "ArrowDown");
+    const activeText = () => {
       const id = controller.getAttribute("aria-activedescendant");
       const active = id ? document.getElementById(id) : null;
       assert.strictEqual(
@@ -569,7 +567,15 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
         "option",
         "the active descendant is always an option, never a header"
       );
-      visited.push(active?.textContent.trim());
+      return active?.textContent.trim();
+    };
+
+    // Opening seeds the cursor on the first option, so the walk starts from the row after it
+    // rather than spending a press on the one the list already points at.
+    const visited = [activeText()];
+    for (let i = 1; i < GROUPED_ITEMS.length; i++) {
+      await triggerKeyEvent(controller, "keydown", "ArrowDown");
+      visited.push(activeText());
     }
 
     assert.deepEqual(
@@ -721,6 +727,78 @@ module(
           "data-index",
           String(HELD_INDEX + 1),
           "ArrowDown continues from the selection, not from row one"
+        );
+    });
+  }
+);
+
+// Opening a windowed list with nothing selected. A virtualizer mounts no rows until it has
+// measured its viewport, which lands a tick after the listbox installs, and the open-time cursor
+// seed reads mounted rows — so on a real windowed list it finds nothing to activate and the list
+// opens with no cursor at all. The reader is told the list expanded but never which option it is
+// on, and the first arrow press is spent landing on row one instead of moving off it. Every
+// existing seed test passes because virtualization is disabled suite-wide, which mounts the whole
+// list at install and hides the race.
+module(
+  "Integration | ui-kit | select | DSelect windowed open seed",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      enableVirtualization();
+    });
+
+    hooks.afterEach(function () {
+      disableVirtualization();
+    });
+
+    test("opening a windowed static list activates the first option", async function (assert) {
+      await render(
+        <template>
+          {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+          <style>
+            .d-virtual-list {
+              height: 200px;
+              overflow-y: auto;
+            }
+          </style>
+          <DSelect @items={{LOADED_ITEMS}} @variant="static" />
+        </template>
+      );
+
+      await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
+
+      assert.dom(LISTBOX_SELECTOR).exists("ArrowDown opens the list");
+      // Without this the test says nothing: a viewport that mounted every row is the
+      // non-windowed case the rest of the suite already covers.
+      assert.true(
+        findAll(OPTION_SELECTOR).length < LOADED_ITEMS.length,
+        "the bounded viewport mounts only a window of the options"
+      );
+
+      const first = find(OPTION_SELECTOR);
+      assert
+        .dom(first)
+        .hasClass("--active", "the first option carries the visual cursor");
+      assert
+        .dom("[role='combobox']")
+        .hasAttribute(
+          "aria-activedescendant",
+          first.id,
+          "the controller points at the first option on open"
+        );
+
+      // The symptom a reader actually reports. A seed that lands late still leaves the next
+      // press re-landing on row one, so asserting only the state above would pass while the
+      // list still costs two presses to reach its second option.
+      await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
+
+      assert
+        .dom(`${LISTBOX_SELECTOR} > [role='option'].--active`)
+        .hasAttribute(
+          "data-index",
+          "1",
+          "the next press moves to the second option rather than seeding row one"
         );
     });
   }

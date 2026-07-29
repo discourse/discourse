@@ -183,6 +183,9 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   #listenElement: HTMLElement | null = null;
   #pointerElement: HTMLElement | null = null;
 
+  /** Armed only while a seed is owed to a container that had no items yet. */
+  #pendingSeed: MutationObserver | null = null;
+
   // The last `resetKey` seen. The sentinel is a fresh object so the first `modify()` always
   // counts as a change — harmless, since there is no cursor yet to preserve, and it keeps the
   // "unset" case from colliding with a consumer that legitimately passes `undefined`.
@@ -819,8 +822,20 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
         : undefined;
       const seed = selected ?? this.#autoFirstSeed(items);
       if (seed) {
+        this.#disarmPendingSeed();
         this.#setActive(seed, items);
         return;
+      }
+      // A seed that found no items at all has not been answered yet — a windowed list installs
+      // this modifier on a container the virtualizer has not filled, so the rows land a frame
+      // later and no key changes when they do. Wait for them once, rather than presenting a list
+      // whose cursor the reader has to create with a wasted arrow press.
+      //
+      // Deliberately not a re-seed on every item change: a windowed list republishes its rows on
+      // every scroll, and re-seeding there would throw a reader who has arrowed away back to the
+      // top. An item set that exists and yielded no seed is a decision, not an absence.
+      if (!items.length) {
+        this.#armPendingSeed();
       }
       this.#activeId = null;
       this.#listenElement?.removeAttribute("aria-activedescendant");
@@ -838,6 +853,37 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       target?.classList.add(this.activeClass);
     }
     this.#listenElement?.setAttribute("aria-activedescendant", this.#activeId!);
+  }
+
+  /**
+   * Watches the container for the arrival of its first items, then seeds the cursor once and
+   * stops. One-shot by construction: the observer disconnects before reconciling, so a container
+   * that keeps churning rows is never re-seeded.
+   */
+  #armPendingSeed(): void {
+    if (this.#pendingSeed || !this.element) {
+      return;
+    }
+    if (!this.autoActivateFirst && !this.autoActivateSelected) {
+      return;
+    }
+
+    this.#pendingSeed = new MutationObserver(() => {
+      if (!this.#items().length) {
+        return;
+      }
+      this.#disarmPendingSeed();
+      this.#reconcileActive();
+    });
+    this.#pendingSeed.observe(this.element, {
+      childList: true,
+      subtree: true,
+    });
+  }
+
+  #disarmPendingSeed(): void {
+    this.#pendingSeed?.disconnect();
+    this.#pendingSeed = null;
   }
 
   /**
@@ -891,6 +937,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   }
 
   cleanup(): void {
+    this.#disarmPendingSeed();
     this.#listenElement?.removeEventListener("keydown", this.handleKeydown);
     this.#pointerElement?.removeEventListener(
       "mousedown",
