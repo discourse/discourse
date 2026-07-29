@@ -13,7 +13,6 @@ fr:
   js:
     styleguide:
       title: "Guide de style"
-      welcome: "Pour commencer, choisissez une section dans le menu de gauche."
       categories:
         syntax: Syntaxe
         atoms: Atomes

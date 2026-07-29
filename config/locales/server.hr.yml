@@ -171,7 +171,6 @@ hr:
       exclusion: je rezervirano
       greater_than: mora biti veće od %{count}
       greater_than_or_equal_to: mora biti veće ili jednako %{count}
-      has_already_been_used: "je već korišteno"
       inclusion: nije na listi
       invalid: nije važeće
       is_invalid: "čini se nejasno, jeste li napisali potpunu rečenicu?"
@@ -1254,7 +1253,6 @@ hr:
     staff_edit_locks_post: "Postovi će biti zaključani za uređivanje ako ih uređuju članovi osoblja"
     post_edit_time_limit: "Tl0 ili tl1 autor može uređivati svoju objavu (n) minuta nakon objave. Postavite na 0 zauvijek."
     tl2_post_edit_time_limit: "Tl2+ autor može uređivati svoju objavu (n) minuta nakon objave. Postavite na 0 zauvijek."
-    edit_history_visible_to_public: "Dopustite svima da vide prethodne verzije uređenog posta. Kada je onemogućeno, samo članovi osoblja mogu vidjeti."
     delete_removed_posts_after: "Postovi koje je autor uklonio automatski će se izbrisati nakon (n) sati. Ako je postavljeno na 0, postovi će se odmah izbrisati."
     enable_chunked_encoding: "Omogući odgovore kodiranja u komadima od strane poslužitelja. Ova značajka radi na većini postavki, no neki proxyji mogu raditi u međuspremniku, uzrokujući kašnjenje odgovora"
     long_polling_base_url: "Osnovni URL koji se koristi za dugo ispitivanje (kada CDN poslužuje dinamički sadržaj, svakako ovo postavite na izvorno povlačenje), npr.: http://origin.site.com"

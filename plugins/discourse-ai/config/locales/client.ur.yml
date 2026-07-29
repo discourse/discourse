@@ -101,6 +101,22 @@ ur:
       translations:
         title: "ترجمہ"
         category_scope: "زمرہ جات"
+        model_progress:
+          detail:
+            retry: "دوبارہ کوشش"
+            columns:
+              locale: "لوکیل"
+              pending: "زیراِلتواء"
+              total: "حاصل جمع"
+          targets:
+            post:
+              title: "دھاگے"
+            topic:
+              title: "موضوعات"
+            category:
+              title: "زمرہ جات"
+            tag:
+              title: "ٹیگز"
         stats:
           eta_minutes:
             one: "%{count} منٹ"

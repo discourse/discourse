@@ -149,3 +149,7 @@ hr:
               label: Naziv kanala
             provider:
               label: Pružatelj usluga
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "Kanal"
+        message: "Poruka"

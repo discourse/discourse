@@ -20,7 +20,7 @@ ar:
       add_provider: "إضافة مقدِّم خدمة"
       view_provider_settings: "عرض إعدادات مقدِّم خدمة"
       more_providers: "المزيد"
-      confirm_setup_provider: "هل أنت متأكد أنك تريد تفعيل مقدِّم خدمة %{provider}؟ يمكن تعطيله لاحقًا من تبويب الإعدادات."
+      confirm_setup_provider: "هل أنت متأكد أنك تريد تفعيل مقدِّم خدمة %{provider}؟ يمكن إيقافه لاحقًا من تبويب الإعدادات."
       setup_provider_modal:
         title: "إعداد مقدِّم خدمة %{provider}"
         setup_instructions: "يرجى تقديم التفاصيل التالية لإعداد مقدِّم خدمة %{provider}. %{additionalInstructions}"
@@ -121,7 +121,7 @@ ar:
             invalid_webhook_url: "يجب أن يكون عنوان URL لخطاف الويب الصادر رابطًا صالحًا يبدأ بـ https://hooks.slack.com/services/ ..."
             auth_error: "رمز المصادقة المقدم غير صالح"
             action_prohibited: "لا يملك برنامج الروبوت إذن النشر في هذه القناة"
-            channel_not_found: "القناة المحددة غير موجودة على Slack."
+            channel_not_found: "القناة المحدَّدة غير موجودة على Slack."
         telegram:
           title: "Telegram"
           param:
@@ -273,3 +273,8 @@ ar:
               description: "يمكنك العثور على اسم القناة في إعدادات تكامل الدردشة"
             provider:
               label: مقدِّم الخدمة
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "القناة"
+        configure: "التكوين"
+        message: "الرسالة"

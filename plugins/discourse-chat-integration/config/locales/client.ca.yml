@@ -181,3 +181,7 @@ ca:
           fields:
             provider:
               label: Proveïdor
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "Canal"
+        message: "Missatge"

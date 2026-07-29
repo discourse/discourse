@@ -386,16 +386,29 @@ nl:
         title: "Vertalingen"
         description: "Vertaal automatisch alle con tent op je forum naar de voorkeurstaal van de gebruiker"
         supported_locales: "Ondersteunde talen"
-        supported_locales_description: "Met deze site-instelling kunnen bezoekers ook bijdragen aan vertalingen van berichten."
         category_scope: "Categorieën"
+        cached_results_notice: "Gecachete resultaten van %{relative_time} worden weergegeven."
+        model_progress:
+          detail:
+            retry: "Opnieuw proberen"
+            columns:
+              locale: "Taal"
+              pending: "wachtend"
+              total: "Totaal"
+          targets:
+            post:
+              title: "Berichten"
+            topic:
+              title: "Topics"
+            category:
+              title: "Categorieën"
+            tag:
+              title: "Tags"
         admin_actions:
-          translation_settings: "Vertaalinstellingen"
-          localization_settings: "Lokalisatie-instellingen"
           enable_translations: "Automatische vertalingen inschakelen"
         stats:
           title: "Vertaalstatistieken"
           backfill_disabled: "Aanvullen is uitgeschakeld, alleen nieuwe berichten worden vertaald."
-          backfill_message: "<a href='%{settingsUrl}'>Aanvulinstellingen</a> zijn geconfigureerd om alle berichten na %{date} te vertalen, dit duurt naar schatting %{eta}."
           eta_minutes:
             one: "%{count} minuut"
             other: "%{count} minuten"

@@ -29,3 +29,6 @@ zh_TW:
         help: "您投過票的主題"
     search:
       most_votes: "票數最多"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "標記"

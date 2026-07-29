@@ -3128,7 +3128,7 @@ he:
     filter_input:
       clear: "פינוי המסנן"
     filter_controls:
-      reset: "איפוס המסנן"
+      reset: "איפוס"
     d_icon_grid_picker:
       select_icon: "נא לבחור סמל"
       search_placeholder: "חיפוש סמלים…"
@@ -7488,6 +7488,8 @@ he:
         sidebar: "סרגל צד"
         header_dropdown: "שורת כותרת נגללת"
         legacy: "מיושן"
+      duplicate_topic_titles:
+        allowed: "מותר"
       backups:
         title: "גיבויים"
         files_title: "גיבוי קבצים"
@@ -7732,7 +7734,6 @@ he:
           finish_install: "סיום התקנת ערכת עיצוב"
           last_attempt: "תהליך ההתקנה לא הסתיים, ניסיון אחרון:"
           remote_branch: "שם ענף (רשות)"
-          public_key: "להעניק למפתח הציבורי הבא גישה למאגר:"
           install: "התקנה"
           installed: "הותקן"
           install_popular: "נפוץ"
@@ -9106,6 +9107,7 @@ he:
         uploading: "בהליכי העלאה…"
         name: "שם"
         group: "קבוצה"
+        all_groups: "כל הקבוצות"
         created_by: "נוצר על ידי"
         image: "תמונה"
         alt: "תצוגה מקדימה של אמוג׳י מותאם"

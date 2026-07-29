@@ -40,3 +40,6 @@ he:
           group_name: "אירוע הצבעה בנושא"
           topic_upvote: "כשמשתמש מצביע לנושא"
           topic_unvote: "כשמשתמש מבטל הצבעה לנושא"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "תגיות"

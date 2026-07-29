@@ -84,6 +84,10 @@ ar:
       setting_update_failed: "فشل تحديث الإعدادات: %{errors}"
     provider:
       slack:
+        errors:
+          auth_error: "رمز المصادقة المقدم غير صالح"
+          action_prohibited: "لا يملك برنامج الروبوت إذن النشر في هذه القناة"
+          channel_not_found: "القناة المحدَّدة غير موجودة على Slack."
         status:
           header: |
             *قواعد هذه القناة*

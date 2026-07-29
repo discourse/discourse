@@ -70,6 +70,20 @@ sq:
         select_option: "Zgjidhni një opsion..."
       translations:
         category_scope: "Categories"
+        model_progress:
+          detail:
+            columns:
+              pending: "Në pritje"
+              total: "Total"
+          targets:
+            post:
+              title: "Postime"
+            topic:
+              title: "Topics"
+            category:
+              title: "Categories"
+            tag:
+              title: "Etiketat"
         stats:
           eta_minutes:
             one: "%{count} minutë"

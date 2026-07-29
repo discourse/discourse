@@ -93,7 +93,6 @@ et:
       exclusion: on reserveeritud
       greater_than: peab olema suurem kui %{count}
       greater_than_or_equal_to: peab olema suurem või võrdne kui %{count}
-      has_already_been_used: "on juba kasutusel"
       inclusion: puudub nimekirjas
       invalid: pole korrektne
       is_invalid: "tundub segane. kas see on terve lause?"

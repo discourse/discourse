@@ -188,7 +188,7 @@ fr:
       post: "Publication"
     discourse_workflows:
       nodes:
-        "trigger:assigned": "Attribué(s)"
+        "trigger:assigned": "Attribué(e)"
       assign_topic:
         operations:
           assign: "Attribuer"

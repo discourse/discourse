@@ -18,15 +18,15 @@ fr:
           title: Attributions
           total_assigned_others: "Attribué à %{username}"
         chat_usage:
-          messages: messages directs
+          messages: messages
           author: Vous
           author_others: "%{username}"
           status_online: "● en ligne"
         invites:
           title: Invitations
-          invitee_posts: Messages créés
+          invitee_posts: Publications créées
           invitee_likes: '« J''aime » donnés'
-          label_invitations_sent: "Invitations envoyées:"
+          label_invitations_sent: "Invitations envoyées :"
         new_user_interactions:
           likes_given: '« J''aime » donnés'
           mentions: Mentions

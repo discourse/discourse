@@ -7,4 +7,4 @@
 zh_CN:
   rss_polling:
     errors:
-      unknown_author_username: "未找到用户名为“%{username}”的用户。"
+      unknown_author_username: "未找到用户名为 '%{username}' 的用户。"
