@@ -23,6 +23,10 @@ export default class NestedActivityLog extends Component {
   @tracked page = 0;
   @tracked hasMore = false;
 
+  // Bumped on every refresh so in-flight responses from a superseded fetch
+  // (e.g. a load-more racing a message-bus refresh) are discarded.
+  #requestGeneration = 0;
+
   constructor() {
     super(...arguments);
     this.fetchActivity();
@@ -34,6 +38,7 @@ export default class NestedActivityLog extends Component {
   }
 
   willDestroy() {
+    this.#requestGeneration++;
     this.appEvents.off(
       "nested-replies:activity-changed",
       this,
@@ -52,16 +57,33 @@ export default class NestedActivityLog extends Component {
 
   @action
   async fetchActivity({ announce = false } = {}) {
+    const generation = ++this.#requestGeneration;
     const isInitialLoad = this.smallActions.length === 0;
     if (isInitialLoad) {
       this.loading = true;
     }
 
     try {
-      const data = await this.#fetchPage(0);
-      this.page = 0;
-      this.hasMore = data.has_more;
-      this.smallActions = this.#hydrateActions(data.small_actions);
+      // Re-fetch every page the user had loaded so a refresh doesn't
+      // collapse the list back to the first page.
+      const pagesLoaded = this.page + 1;
+      const actions = [];
+      let page = 0;
+      let hasMore = false;
+
+      do {
+        const data = await this.#fetchPage(page);
+        if (generation !== this.#requestGeneration) {
+          return;
+        }
+        actions.push(...this.#hydrateActions(data.small_actions));
+        hasMore = data.has_more;
+        page += 1;
+      } while (hasMore && page < pagesLoaded);
+
+      this.page = page - 1;
+      this.hasMore = hasMore;
+      this.smallActions = actions;
 
       if (announce) {
         this.a11y.announce(
@@ -70,9 +92,11 @@ export default class NestedActivityLog extends Component {
         );
       }
     } catch (e) {
-      popupAjaxError(e);
+      if (generation === this.#requestGeneration) {
+        popupAjaxError(e);
+      }
     } finally {
-      if (isInitialLoad) {
+      if (isInitialLoad && generation === this.#requestGeneration) {
         this.loading = false;
       }
     }
@@ -84,10 +108,14 @@ export default class NestedActivityLog extends Component {
       return;
     }
 
+    const generation = this.#requestGeneration;
     this.loadingMore = true;
     try {
       const nextPage = this.page + 1;
       const data = await this.#fetchPage(nextPage);
+      if (generation !== this.#requestGeneration) {
+        return;
+      }
       this.page = nextPage;
       this.hasMore = data.has_more;
       this.smallActions = [
@@ -95,7 +123,9 @@ export default class NestedActivityLog extends Component {
         ...this.#hydrateActions(data.small_actions),
       ];
     } catch (e) {
-      popupAjaxError(e);
+      if (generation === this.#requestGeneration) {
+        popupAjaxError(e);
+      }
     } finally {
       this.loadingMore = false;
     }

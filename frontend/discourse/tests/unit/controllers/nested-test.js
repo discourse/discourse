@@ -224,6 +224,54 @@ module("Unit | Controller | nested", function (hooks) {
     );
   });
 
+  test("deleting a tree post does not refresh the activity log", function (assert) {
+    const topic = buildTopic(this.store, 724);
+    topic.set("has_activity_log", true);
+    const post = buildPost(this.store, topic, 2001, 2);
+
+    this.controller.topic = topic;
+    this.controller.postRegistry.set(post.post_number, post);
+
+    let notified = false;
+    const handler = () => (notified = true);
+    this.appEvents.on("nested-replies:activity-changed", handler);
+    try {
+      this.controller._onMessage(
+        { type: "deleted", id: post.id, user_id: this.currentUser.id },
+        null,
+        123
+      );
+    } finally {
+      this.appEvents.off("nested-replies:activity-changed", handler);
+    }
+
+    assert.false(notified, "does not broadcast an activity refresh");
+  });
+
+  test("deleting an activity-log post refreshes the activity log", function (assert) {
+    const topic = buildTopic(this.store, 724);
+    topic.set("has_activity_log", true);
+    const post = buildPost(this.store, topic, 2001, 2);
+
+    this.controller.topic = topic;
+    this.controller.postRegistry.set(post.post_number, post);
+
+    let notified = false;
+    const handler = () => (notified = true);
+    this.appEvents.on("nested-replies:activity-changed", handler);
+    try {
+      this.controller._onMessage(
+        { type: "deleted", id: 9999, user_id: this.currentUser.id },
+        null,
+        123
+      );
+    } finally {
+      this.appEvents.off("nested-replies:activity-changed", handler);
+    }
+
+    assert.true(notified, "broadcasts an activity refresh");
+  });
+
   test("context view ignores queued new root replies", async function (assert) {
     const topic = buildTopic(this.store, 724);
     const contextRoot = buildPost(this.store, topic, 1001, 2);

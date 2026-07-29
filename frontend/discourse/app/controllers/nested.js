@@ -853,12 +853,7 @@ export default class NestedController extends Controller {
 
   #notifyActivityChanged(data) {
     const topicId = this.topic?.id;
-    if (topicId) {
-      this.topic = this.store.createRecord("topic", {
-        id: topicId,
-        has_activity_log: true,
-      });
-    }
+    this.topic?.set("has_activity_log", true);
     this.appEvents.trigger("nested-replies:activity-changed", {
       topicId,
       postId: data.id,
@@ -912,7 +907,9 @@ export default class NestedController extends Controller {
 
   async #handlePostChanged(data) {
     if (data.type === "deleted") {
-      if (this.topic?.has_activity_log) {
+      // "deleted" payloads carry no post_type, so a tree post is the only
+      // deletion we can rule out as activity-log-relevant without a fetch.
+      if (this.topic?.has_activity_log && !this.#isPostKnown(data.id)) {
         this.#notifyActivityChanged(data);
       }
       this.#markPostDeletedLocally(data.id);
