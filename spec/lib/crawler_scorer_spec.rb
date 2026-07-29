@@ -22,7 +22,7 @@ RSpec.describe CrawlerScorer do
   it "scores automation user agents at +100" do
     event = make_event(user_agent: "Mozilla/5.0 (X11; Linux x86_64) HeadlessChrome/120.0.0.0")
     score!
-    expect(event.reload.score).to eq(100)
+    expect(event.reload.score).to eq(140)
   end
 
   it "writes the score breakdown per heuristic to the side table" do
@@ -35,7 +35,7 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(event.reload.score).to eq(115)
+    expect(event.reload.score).to eq(155)
     breakdown = event.browser_pageview_event_score
     expect(breakdown.automation_ua_score).to eq(100)
     expect(breakdown.known_asn_score).to eq(15)
@@ -44,9 +44,10 @@ RSpec.describe CrawlerScorer do
     expect(breakdown.rapid_nav_score).to eq(0)
     expect(breakdown.ip_rotation_score).to eq(0)
     expect(breakdown.referrer_score).to eq(0)
+    expect(breakdown.engagement_score).to eq(40)
   end
 
-  it "does not write a breakdown row for events that score 0" do
+  it "does not score an event whose only signal is missing engagement" do
     event = make_event
     score!
     expect(event.reload.score).to be_nil
@@ -57,7 +58,7 @@ RSpec.describe CrawlerScorer do
     SiteSetting.crawler_asns = "12345"
     event = make_event(asn: 12_345)
     score!
-    expect(event.reload.score).to eq(15)
+    expect(event.reload.score).to eq(55)
   end
 
   it "scores pageview velocity at or above VELOCITY_LOW threshold at +15" do
@@ -70,7 +71,7 @@ RSpec.describe CrawlerScorer do
 
       expect(
         BrowserPageviewEvent.where(session_id: session_id).pluck(:score).uniq,
-      ).to contain_exactly(15)
+      ).to contain_exactly(55)
     end
   end
 
@@ -84,7 +85,7 @@ RSpec.describe CrawlerScorer do
 
       expect(
         BrowserPageviewEvent.where(ip_address: "9.9.9.9").pluck(:score).uniq,
-      ).to contain_exactly(20)
+      ).to contain_exactly(60)
     end
   end
 
@@ -98,7 +99,7 @@ RSpec.describe CrawlerScorer do
 
       expect(
         BrowserPageviewEvent.where(session_id: session_id).pluck(:score).uniq,
-      ).to contain_exactly(15)
+      ).to contain_exactly(55)
     end
   end
 
@@ -112,7 +113,7 @@ RSpec.describe CrawlerScorer do
 
     expect(
       BrowserPageviewEvent.where(session_id: "rotating-session").pluck(:score).uniq,
-    ).to contain_exactly(30)
+    ).to contain_exactly(70)
   end
 
   it "scores ip rotation the same whether or not the addresses cross ASNs" do
@@ -134,7 +135,7 @@ RSpec.describe CrawlerScorer do
 
     expect(
       BrowserPageviewEvent.where(session_id: "cross-asn-session").pluck(:score).uniq,
-    ).to contain_exactly(30)
+    ).to contain_exactly(70)
   end
 
   it "does not score a session that only ever uses two addresses" do
@@ -177,7 +178,7 @@ RSpec.describe CrawlerScorer do
 
       expect(
         BrowserPageviewEvent.where(ip_address: "5.5.5.5").pluck(:score).uniq,
-      ).to contain_exactly(10)
+      ).to contain_exactly(50)
     end
   end
 
@@ -187,7 +188,7 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(event.reload.score).to eq(100)
+    expect(event.reload.score).to eq(140)
   end
 
   it "ignores events outside the window" do
@@ -198,16 +199,7 @@ RSpec.describe CrawlerScorer do
     expect(event.reload.score).to be_nil
   end
 
-  it "only updates the score when the new value is higher" do
-    event = make_event(user_agent: "Mozilla/5.0 HeadlessChrome/120")
-    event.update!(score: 120)
-
-    score!
-
-    expect(event.reload.score).to eq(120)
-  end
-
-  it "discounts events whose session shows human interaction" do
+  it "does not penalise events whose session shows human interaction" do
     event = make_event(user_agent: "Mozilla/5.0 HeadlessChrome/120.0.0.0")
     Fabricate(
       :browser_pageview_session_engagement,
@@ -218,24 +210,24 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(event.reload.score).to eq(60)
-    expect(event.browser_pageview_event_score.engagement_score).to eq(-40)
+    expect(event.reload.score).to eq(100)
+    expect(event.browser_pageview_event_score.engagement_score).to eq(0)
   end
 
-  it "writes a zero score when the discount cancels all bot signals" do
+  it "never scores an event below its bot signals" do
     SiteSetting.crawler_asns = "12345"
     event = make_event(asn: 12_345)
     Fabricate(:browser_pageview_session_engagement, session_id: event.session_id, scroll_events: 3)
 
     score!
 
-    expect(event.reload.score).to eq(0)
+    expect(event.reload.score).to eq(15)
     breakdown = event.browser_pageview_event_score
     expect(breakdown.known_asn_score).to eq(15)
-    expect(breakdown.engagement_score).to eq(-40)
+    expect(breakdown.engagement_score).to eq(0)
   end
 
-  it "does not discount engagement rows crafted without interaction counts" do
+  it "penalises engagement rows crafted without interaction counts" do
     event = make_event(user_agent: "Mozilla/5.0 HeadlessChrome/120.0.0.0")
     Fabricate(
       :browser_pageview_session_engagement,
@@ -245,20 +237,21 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(event.reload.score).to eq(100)
+    expect(event.reload.score).to eq(140)
+    expect(event.browser_pageview_event_score.engagement_score).to eq(40)
   end
 
-  it "does not lower a previously assigned score when engagement arrives later" do
+  it "keeps the higher score when a later run would lower it" do
     SiteSetting.crawler_asns = "12345"
     event = make_event(asn: 12_345)
 
     score!
-    expect(event.reload.score).to eq(15)
+    expect(event.reload.score).to eq(55)
 
     Fabricate(:browser_pageview_session_engagement, session_id: event.session_id, key_events: 4)
     score!
 
-    expect(event.reload.score).to eq(15)
+    expect(event.reload.score).to eq(55)
   end
 
   it "scores each source but partitions velocity so transports do not inflate each other" do
@@ -286,13 +279,13 @@ RSpec.describe CrawlerScorer do
             .where(source: BrowserPageviewEvent::SOURCE_PIGGYBACK)
             .pluck(:score)
             .uniq,
-        ).to contain_exactly(15)
+        ).to contain_exactly(55)
         expect(
           BrowserPageviewEvent
             .where(source: BrowserPageviewEvent::SOURCE_BEACON)
             .pluck(:score)
             .uniq,
-        ).to contain_exactly(15)
+        ).to contain_exactly(55)
       end
     end
   end
