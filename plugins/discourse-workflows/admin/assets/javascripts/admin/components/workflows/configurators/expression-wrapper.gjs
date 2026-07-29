@@ -282,7 +282,10 @@ export default class ExpressionWrapper extends Component {
           @value={{if this.expressionMode "dynamic" "plain"}}
           @onSelect={{this.toggleMode}}
           @size="small"
-          class="workflows-property-engine__mode-control"
+          class={{dConcatClass
+            "workflows-property-engine__mode-control"
+            @modeControlClass
+          }}
         />
       {{/if}}
     </div>

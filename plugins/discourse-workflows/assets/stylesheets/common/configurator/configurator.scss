@@ -156,6 +156,15 @@
       border-color: var(--tertiary) !important;
       background: var(--tertiary-50);
     }
+
+    // Toggles have no input to tint. The class lands on the hidden checkbox
+    // button, so the affordance goes on its visible slider sibling.
+    &.is-drag-over
+      .form-kit__control-toggle
+      + .d-toggle-switch__checkbox-slider {
+      outline: 2px solid var(--tertiary);
+      outline-offset: 2px;
+    }
   }
 
   &__collection-row {

@@ -1,9 +1,6 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import DSegmentedControl from "discourse/components/d-segmented-control";
-import { i18n } from "discourse-i18n";
 import {
   fieldFormat,
   fieldShowDescription,
@@ -14,19 +11,6 @@ import {
   propertyPlaceholder,
 } from "../../../lib/workflows/property-engine";
 import ExpressionWrapper from "./expression-wrapper";
-
-const MODE_ITEMS = [
-  {
-    value: "plain",
-    icon: "paragraph",
-    label: i18n("discourse_workflows.parameter_field.plain"),
-  },
-  {
-    value: "dynamic",
-    icon: "code",
-    label: i18n("discourse_workflows.parameter_field.dynamic"),
-  },
-];
 
 function valueForModeToggle(value) {
   if (value === null || value === undefined) {
@@ -43,13 +27,13 @@ function booleanValueForPlainMode(value) {
 }
 
 export default class BooleanControl extends Component {
-  @tracked expressionMode = this.#initialExpressionMode();
-
-  #initialExpressionMode() {
-    if (!fieldSupportsExpression(this.args.schema)) {
-      return false;
-    }
-    return isExpression(this.args.configuration?.[this.args.fieldName]);
+  // Derived from the value so a variable dropped onto the plain toggle switches
+  // the control into expression mode.
+  get expressionMode() {
+    return (
+      this.supportsExpression &&
+      isExpression(this.args.configuration?.[this.args.fieldName])
+    );
   }
 
   get supportsExpression() {
@@ -85,11 +69,12 @@ export default class BooleanControl extends Component {
   @action
   onModeChange(field, value) {
     const wantsDynamic = value === "dynamic";
-    if (wantsDynamic === this.expressionMode) {
+    // Compared against the field rather than `expressionMode` so a mode click is
+    // never swallowed when no `@configuration` reaches this control.
+    if (wantsDynamic === isExpression(field.value)) {
       return;
     }
 
-    this.expressionMode = wantsDynamic;
     const currentValue = valueForModeToggle(field.value);
 
     if (wantsDynamic) {
@@ -122,7 +107,6 @@ export default class BooleanControl extends Component {
             @supportsExpression={{this.supportsExpression}}
             @dynamicValueHint={{@dynamicValueHint}}
             @session={{@session}}
-            @modeItems={{MODE_ITEMS}}
             @onModeChange={{fn this.onModeChange field}}
           />
         </field.Control>
@@ -138,16 +122,17 @@ export default class BooleanControl extends Component {
         @validation={{this.validation}}
         as |field|
       >
-        <field.Control />
-        {{#if this.supportsExpression}}
-          <DSegmentedControl
-            @items={{MODE_ITEMS}}
-            @value="plain"
-            @onSelect={{fn this.onModeChange field}}
-            @size="small"
-            class="workflows-property-engine__mode-control --toggle"
-          />
-        {{/if}}
+        <ExpressionWrapper
+          @expressionMode={{false}}
+          @field={{field}}
+          @schema={{@schema}}
+          @supportsExpression={{this.supportsExpression}}
+          @session={{@session}}
+          @modeControlClass="--toggle"
+          @onModeChange={{fn this.onModeChange field}}
+        >
+          <field.Control />
+        </ExpressionWrapper>
       </@form.Field>
     {{/if}}
   </template>
