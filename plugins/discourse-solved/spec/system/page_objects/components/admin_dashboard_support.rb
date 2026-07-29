@@ -43,7 +43,7 @@ module PageObjects
         has_no_css?("#{SELECTOR} .db-support__filter")
       end
 
-      CATEGORY_FILTER = "#{SELECTOR} .db-support__filter .category-selector"
+      CATEGORY_FILTER = "#{SELECTOR} .db-support__filter .multiple-categories-selector"
 
       def category_filter
         PageObjects::Components::SelectKit.new(CATEGORY_FILTER)

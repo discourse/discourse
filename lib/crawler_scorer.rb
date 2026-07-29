@@ -34,7 +34,7 @@ class CrawlerScorer
   REFERRER_LOW_SCORE = 5
   REFERRER_HIGH_SCORE = 10
 
-  HUMAN_ACTIVITY_SCORE = -40
+  MISSING_ENGAGEMENT_SCORE = 40
 
   def self.score!(window_start:, window_end:)
     crawler_asns = SiteSetting.crawler_asns_map.map(&:to_i)
@@ -71,7 +71,7 @@ class CrawlerScorer
         referrer_high_ratio: REFERRER_HIGH_RATIO,
         referrer_low_score: REFERRER_LOW_SCORE,
         referrer_high_score: REFERRER_HIGH_SCORE,
-        human_activity_score: HUMAN_ACTIVITY_SCORE,
+        missing_engagement_score: MISSING_ENGAGEMENT_SCORE,
       )
     end
   end
@@ -186,7 +186,7 @@ class CrawlerScorer
           ELSE 0
         END AS referrer_score,
         CASE
-          WHEN se.session_id IS NOT NULL THEN :human_activity_score
+          WHEN se.session_id IS NULL THEN :missing_engagement_score
           ELSE 0
         END AS engagement_score
       FROM events e
