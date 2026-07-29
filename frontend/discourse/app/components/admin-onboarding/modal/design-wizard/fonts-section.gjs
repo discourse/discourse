@@ -42,9 +42,9 @@ export default class DesignWizardFontsSection extends Component {
 
   <template>
     <div class="design-wizard-modal__font-group">
-      <h4 class="design-wizard-modal__font-group-label">
+      <span class="design-wizard-modal__font-group-label">
         {{i18n "admin_onboarding_banner.design_wizard.fonts.base_font"}}
-      </h4>
+      </span>
       <DMenu
         @identifier="design-wizard-base-font"
         @triggerClass="design-wizard-modal__font-select"
@@ -80,9 +80,9 @@ export default class DesignWizardFontsSection extends Component {
     </div>
 
     <div class="design-wizard-modal__font-group">
-      <h4 class="design-wizard-modal__font-group-label">
+      <span class="design-wizard-modal__font-group-label">
         {{i18n "admin_onboarding_banner.design_wizard.fonts.heading_font"}}
-      </h4>
+      </span>
       <DMenu
         @identifier="design-wizard-heading-font"
         @triggerClass="design-wizard-modal__font-select"

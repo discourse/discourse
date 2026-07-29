@@ -46,7 +46,7 @@
   &__section-body {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--space-2);
   }
 
   &__theme-cards {
@@ -368,7 +368,7 @@
   }
 
   &__color-note {
-    margin: 0 0 var(--space-2);
+    margin: 0;
   }
 
   &__color-modes {
@@ -592,13 +592,9 @@
   overflow-y: auto;
   z-index: 9999;
 
-  .btn {
-    font-size: var(--font-up-1);
-  }
-
   .btn.--selected {
     color: var(--tertiary);
-    font-weight: 600;
+    background: var(--d-selected);
   }
 }
 

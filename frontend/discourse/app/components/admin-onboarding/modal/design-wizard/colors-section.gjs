@@ -11,17 +11,6 @@ function swatchPalette(pair) {
 }
 
 const DesignWizardColorsSection = <template>
-  <p class="design-wizard-modal__color-note">
-    {{#if @darkOnly}}
-      {{i18n
-        "admin_onboarding_banner.design_wizard.colors.dark_only"
-        name=@selectedPairName
-      }}
-    {{else}}
-      {{i18n "admin_onboarding_banner.design_wizard.colors.both_modes"}}
-    {{/if}}
-  </p>
-
   <div class="design-wizard-modal__color">
     <div class="design-wizard-modal__color-modes">
       <button
@@ -62,6 +51,16 @@ const DesignWizardColorsSection = <template>
         </button>
       {{/each}}
     </div>
+    <p class="design-wizard-modal__color-note">
+      {{#if @darkOnly}}
+        {{i18n
+          "admin_onboarding_banner.design_wizard.colors.dark_only"
+          name=@selectedPairName
+        }}
+      {{else}}
+        {{i18n "admin_onboarding_banner.design_wizard.colors.both_modes"}}
+      {{/if}}
+    </p>
   </div>
 
   <div

@@ -164,8 +164,8 @@
 
   &__footer {
     flex-direction: column;
-    padding-inline: 1rem;
-    padding-bottom: 1rem;
+    padding-inline: var(--space-4);
+    padding-bottom: var(--space-4);
   }
 
   &__controls {
