@@ -1369,10 +1369,12 @@ export default class DSelect extends Component<DSelectSignature> {
       this.#menu?.show();
       return;
     }
-    // Keyboard clear for the control variants (which have no text input): Backspace/Delete on
-    // the closed trigger empties the selection.
+    // Keyboard clear for the control variants: they have no text input, so the closed trigger
+    // IS their empty-query state and Backspace/Delete empties the selection. Not gated on
+    // `@clearable` — that governs the visible × control only — for the same reason the typeahead
+    // path is not: the family this replaces clears from an empty filter unconditionally, and
+    // gating it here left a static select with no way out at all.
     if (
-      this.args.clearable &&
       this.engine.hasValue &&
       (event.key === "Backspace" || event.key === "Delete")
     ) {
@@ -2104,6 +2106,12 @@ export default class DSelect extends Component<DSelectSignature> {
           "polite"
         );
       }
+    } else if (nextValue == null && this.engine.hasValue) {
+      // Choosing a value is conveyed by the row's own selected state and by the trigger reading
+      // back the new value. Clearing has neither: the row simply stops being selected and the
+      // trigger's name changes, and a name change on an already-focused element is not reliably
+      // re-read. So the one single-select transition that needs saying out loud is this one.
+      this.a11y.announce(i18n("d_select.selection_cleared"), "polite");
     }
     this.args.onChange?.(nextValue, payload);
   }

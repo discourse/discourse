@@ -3310,6 +3310,7 @@ en:
       label_with_value: "%{label}, %{value}"
       footer_label: "Actions"
       clear: "Clear selection"
+      selection_cleared: "Selection cleared"
       clear_all: "Clear all"
       min_chars:
         one: "Keep typing %{count} more character…"

@@ -6950,3 +6950,62 @@ module(
     });
   }
 );
+
+module(
+  "Integration | ui-kit | select | DSelect (control variant keyboard clear)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    // The control variants have no text input, so the closed trigger IS the empty-query state.
+    // Gating their Backspace behind @clearable left a static select with no way out at all —
+    // not even the two-step gesture the typeahead offers.
+    test("Backspace on a closed static trigger clears the value without @clearable", async function (assert) {
+      await render(
+        <template><Host @variant="static" @value={{2}} /></template>
+      );
+
+      await focus(".d-combobox__trigger");
+      await triggerKeyEvent(".d-combobox__trigger", "keydown", "Backspace");
+
+      assert
+        .dom(".d-combobox__placeholder")
+        .exists("the trigger falls back to its placeholder once cleared");
+    });
+
+    test("Delete on a closed button trigger clears the value without @clearable", async function (assert) {
+      await render(
+        <template><Host @variant="button" @value={{2}} /></template>
+      );
+
+      await focus(".d-combobox__trigger");
+      await triggerKeyEvent(".d-combobox__trigger", "keydown", "Delete");
+
+      assert
+        .dom(".d-combobox__placeholder")
+        .exists("the same gesture works on the disclosure trigger");
+    });
+
+    // Clearing a single select has no other signal: the row leaves the list's selected state and
+    // the trigger's accessible name changes, neither of which a reader is reliably told about.
+    test("clearing a single selection is announced", async function (assert) {
+      const announce = sinon.spy(
+        getOwner(this).lookup("service:a11y"),
+        "announce"
+      );
+
+      await render(
+        <template><Host @variant="static" @value={{2}} /></template>
+      );
+
+      await focus(".d-combobox__trigger");
+      await triggerKeyEvent(".d-combobox__trigger", "keydown", "Backspace");
+
+      assert.strictEqual(
+        announce.withArgs(i18n("d_select.selection_cleared"), "polite")
+          .callCount,
+        1,
+        "the reader is told the value is gone"
+      );
+    });
+  }
+);
