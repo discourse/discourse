@@ -180,6 +180,7 @@ export default class SidebarDesignWizardPanel extends Component {
             }}
           >
             <HomepageSection
+              @themeId={{this.designWizard.themeId}}
               @homepage={{this.designWizard.homepage}}
               @categoryPageStyle={{this.designWizard.categoryPageStyle}}
               @categoryPageStyles={{this.designWizard.data.category_page_styles}}

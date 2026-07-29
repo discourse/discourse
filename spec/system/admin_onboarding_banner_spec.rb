@@ -174,6 +174,7 @@ describe "Admin Onboarding Banner" do
       expect(horizon.color_scheme.user_selectable).to eq(true)
       expect(SiteSetting.base_font).to eq("lato")
       expect(SiteSetting.default_homepage).to eq("categories")
+      expect(SiteSetting.desktop_category_page_style).to eq("categories_boxes")
 
       # the reload must not cancel the in-flight audit write
       expect(

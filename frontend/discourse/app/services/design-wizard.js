@@ -182,6 +182,9 @@ export default class DesignWizardService extends Service {
 
   selectHomepage(homepage) {
     this.homepage = homepage;
+    if (homepage === "categories") {
+      this.categoryPageStyle = "categories_boxes";
+    }
     this.#persistState();
 
     // the page behind the sheet is the preview: show the chosen homepage

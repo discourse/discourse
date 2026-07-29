@@ -1,5 +1,6 @@
-import { fn } from "@ember/helper";
+import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { HORIZON_THEME_ID } from "discourse/lib/theme-selector";
 import { eq } from "discourse/truth-helpers";
 import DSelect from "discourse/ui-kit/d-select";
 import { i18n } from "discourse-i18n";
@@ -10,6 +11,41 @@ function topicPageLabel(page) {
   return i18n(`filters.${page}.title`);
 }
 
+function isHorizon(themeId) {
+  return themeId === HORIZON_THEME_ID;
+}
+
+const TopicsMock = <template>
+  {{#if (isHorizon @themeId)}}
+    {{#each (array 1 2) as |card|}}
+      <span class="design-wizard-modal__mock-card" data-card={{card}}>
+        <span class="design-wizard-modal__mock-avatar"></span>
+        <span class="design-wizard-modal__mock-line --title"></span>
+        <span class="design-wizard-modal__mock-line --text"></span>
+        <span class="design-wizard-modal__mock-badge"></span>
+      </span>
+    {{/each}}
+  {{else}}
+    {{#each (array 1 2 3 4) as |row|}}
+      <span class="design-wizard-modal__mock-row" data-row={{row}}>
+        <span class="design-wizard-modal__mock-line --title"></span>
+        <span class="design-wizard-modal__mock-avatar"></span>
+        <span class="design-wizard-modal__mock-line --count"></span>
+      </span>
+    {{/each}}
+  {{/if}}
+</template>;
+
+const CategoriesMock = <template>
+  {{#each (array "c1" "c2" "c3" "c4") as |box|}}
+    <span class="design-wizard-modal__mock-box --{{box}}">
+      <span class="design-wizard-modal__mock-line --title"></span>
+      <span class="design-wizard-modal__mock-line --text"></span>
+      <span class="design-wizard-modal__mock-line --text"></span>
+    </span>
+  {{/each}}
+</template>;
+
 const DesignWizardHomepageSection = <template>
   <div class="design-wizard-modal__homepage-cards">
     <button
@@ -19,7 +55,12 @@ const DesignWizardHomepageSection = <template>
       data-homepage="topics"
       {{on "click" (fn @onSelectHomepage "latest")}}
     >
-      <span class="design-wizard-modal__homepage-thumbnail --topic-list"></span>
+      <span
+        class="design-wizard-modal__homepage-thumbnail --topics
+          {{if (isHorizon @themeId) '--horizon' '--foundation'}}"
+      >
+        <TopicsMock @themeId={{@themeId}} />
+      </span>
       {{i18n "admin_onboarding_banner.design_wizard.homepage.topics"}}
     </button>
     <button
@@ -29,7 +70,9 @@ const DesignWizardHomepageSection = <template>
       data-homepage="categories"
       {{on "click" (fn @onSelectHomepage "categories")}}
     >
-      <span class="design-wizard-modal__homepage-thumbnail --categories"></span>
+      <span class="design-wizard-modal__homepage-thumbnail --categories">
+        <CategoriesMock />
+      </span>
       {{i18n "admin_onboarding_banner.design_wizard.homepage.categories"}}
     </button>
   </div>
