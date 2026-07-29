@@ -183,7 +183,6 @@ export default class SidebarDesignWizardPanel extends Component {
               @themeId={{this.designWizard.themeId}}
               @homepage={{this.designWizard.homepage}}
               @categoryPageStyle={{this.designWizard.categoryPageStyle}}
-              @categoryPageStyles={{this.designWizard.data.category_page_styles}}
               @onSelectHomepage={{this.selectHomepage}}
               @onSelectCategoryPageStyle={{this.selectCategoryPageStyle}}
             />

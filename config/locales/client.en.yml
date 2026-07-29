@@ -602,6 +602,10 @@ en:
           topic_page_type: "Topic page type"
           category_page_style: "Category page style"
           category_page_style_note: "Applied to your site after saving"
+          styles:
+            boxes: "Boxes"
+            with_topics: "Categories with topics"
+            only: "Categories only"
         preview:
           label: "Live preview"
       invite_collaborators:

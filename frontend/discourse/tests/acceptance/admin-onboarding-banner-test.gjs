@@ -404,8 +404,15 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       ".design-wizard-modal__homepage-card[data-homepage='categories']"
     );
     assert
-      .dom("#design-wizard-category-page-style")
-      .exists("a categories homepage offers the category page styles");
+      .dom(".design-wizard-modal__style-block")
+      .exists({ count: 3 }, "a categories homepage offers the page styles");
+    assert
+      .dom(".design-wizard-modal__style-block.--selected")
+      .hasAttribute(
+        "data-style",
+        "categories_boxes",
+        "defaults to boxes with subcategories"
+      );
     assert
       .dom("#design-wizard-topic-page")
       .doesNotExist("the topic page types are hidden for categories");

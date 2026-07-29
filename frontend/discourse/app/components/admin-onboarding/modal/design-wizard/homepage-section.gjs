@@ -36,6 +36,21 @@ const TopicsMock = <template>
   {{/if}}
 </template>;
 
+const CATEGORY_STYLE_OPTIONS = [
+  { value: "categories_boxes", kind: "boxes" },
+  { value: "categories_and_latest_topics", kind: "with-topics" },
+  { value: "categories_only", kind: "only" },
+];
+
+function categoryStyleLabel(kind) {
+  return i18n(
+    `admin_onboarding_banner.design_wizard.homepage.styles.${kind.replaceAll(
+      "-",
+      "_"
+    )}`
+  );
+}
+
 function categoryStyleKind(style) {
   if (style === "categories_only") {
     return "only";
@@ -124,30 +139,33 @@ const DesignWizardHomepageSection = <template>
 
   {{#if (eq @homepage "categories")}}
     <div class="design-wizard-modal__homepage-detail">
-      <label for="design-wizard-category-page-style">
+      <span class="design-wizard-modal__homepage-detail-label">
         {{i18n
           "admin_onboarding_banner.design_wizard.homepage.category_page_style"
         }}
-      </label>
-      <DSelect
-        @value={{@categoryPageStyle}}
-        @onChange={{@onSelectCategoryPageStyle}}
-        @includeNone={{false}}
-        id="design-wizard-category-page-style"
-        as |select|
-      >
-        {{#each @categoryPageStyles as |style|}}
-          <select.Option @value={{style.value}}>
-            {{i18n style.name}}
-          </select.Option>
-        {{/each}}
-      </DSelect>
-      <span
-        class="design-wizard-modal__homepage-style-preview
-          {{if (eq (categoryStyleKind @categoryPageStyle) 'boxes') '--boxes'}}"
-      >
-        <CategoryStyleMock @style={{@categoryPageStyle}} />
       </span>
+      <div class="design-wizard-modal__style-blocks">
+        {{#each CATEGORY_STYLE_OPTIONS as |option|}}
+          <button
+            type="button"
+            class="design-wizard-modal__style-block
+              {{if
+                (eq (categoryStyleKind @categoryPageStyle) option.kind)
+                '--selected'
+              }}"
+            data-style={{option.value}}
+            {{on "click" (fn @onSelectCategoryPageStyle option.value)}}
+          >
+            <span
+              class="design-wizard-modal__homepage-style-preview
+                {{if (eq option.kind 'boxes') '--boxes'}}"
+            >
+              <CategoryStyleMock @style={{option.value}} />
+            </span>
+            {{categoryStyleLabel option.kind}}
+          </button>
+        {{/each}}
+      </div>
       <p class="design-wizard-modal__homepage-note">
         {{i18n
           "admin_onboarding_banner.design_wizard.homepage.category_page_style_note"

@@ -60,6 +60,7 @@
   }
 
   &__homepage-card,
+  &__style-block,
   &__swatch {
     background: none;
     border: 1px solid var(--content-border-color);
@@ -281,12 +282,33 @@
     }
   }
 
+  &__homepage-detail-label {
+    display: block;
+    font-size: var(--font-down-2);
+    color: var(--primary-medium);
+    margin-bottom: var(--space-1);
+  }
+
+  &__style-blocks {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  &__style-block {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-1);
+    padding: var(--space-2);
+    font-size: var(--font-down-1);
+  }
+
   &__homepage-style-preview {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    height: 88px;
-    margin-top: var(--space-2);
+    height: 72px;
     padding: 8px;
     overflow: hidden;
     border: 1px solid var(--content-border-color);
