@@ -23,8 +23,7 @@
     }
   }
 
-  &__font-select-content,
-  &__topic-page-content {
+  &__font-select-content {
     z-index: 999;
   }
 
@@ -485,22 +484,34 @@
     display: block;
   }
 
-  &__font-select,
-  &__topic-page-select {
+  &__font-select {
     margin-top: var(--space-1);
   }
 
-  &__topic-page-caret {
-    margin-left: var(--space-1);
+  &__topic-page-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
   }
 
-  // copied from the notifications tracking menu items so the option rows
-  // render identically without coupling to that component's class names
+  // laid out like the notifications tracking menu items, rendered inline
+  // as bordered selectable rows
   &__topic-page-option {
     display: flex;
-    flex: 1 0 auto;
+    gap: var(--space-2);
     box-sizing: border-box;
     align-items: center;
+    padding: var(--space-2);
+    background: none;
+    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-border-radius);
+    cursor: pointer;
+
+    &:hover,
+    &.--selected {
+      border-color: var(--tertiary);
+      box-shadow: 0 0 0 1px var(--tertiary);
+    }
   }
 
   &__topic-page-option-icons {
@@ -619,8 +630,4 @@
     color: var(--tertiary);
     background: var(--d-selected);
   }
-}
-
-.design-wizard-modal__topic-page-list {
-  max-width: 20em;
 }

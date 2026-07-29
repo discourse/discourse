@@ -397,8 +397,11 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom(".design-wizard-modal__homepage-card.--selected")
       .hasAttribute("data-homepage", "topics", "defaults to a topics homepage");
     assert
-      .dom(".design-wizard-modal__topic-page-select")
-      .exists("a topics homepage offers the topic page types");
+      .dom(".design-wizard-modal__topic-page-option")
+      .exists({ count: 3 }, "a topics homepage offers the topic page types");
+    assert
+      .dom(".design-wizard-modal__topic-page-option.--selected")
+      .hasAttribute("data-topic-page", "latest", "defaults to latest");
 
     await click(
       ".design-wizard-modal__homepage-card[data-homepage='categories']"
@@ -414,7 +417,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
         "defaults to boxes with subcategories"
       );
     assert
-      .dom(".design-wizard-modal__topic-page-select")
+      .dom(".design-wizard-modal__topic-page-option")
       .doesNotExist("the topic page types are hidden for categories");
 
     assert
