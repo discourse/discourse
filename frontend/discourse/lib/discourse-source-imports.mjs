@@ -12,9 +12,6 @@ const preprocessor = new Preprocessor();
  *
  * For example, a documentation page can render a component and display its source
  * without the two drifting apart.
- *
- * `fs` reads the raw text. It defaults to node's promises API and is overridden by
- * the asset processor, which bundles from an in-memory map with no real disk.
  */
 export default function discourseSourceImports({ fs = nodeFs.promises } = {}) {
   return {
