@@ -541,6 +541,21 @@ RSpec.describe CurrentUserSerializer do
       expect(serialize_for(admin)[:has_new_upcoming_changes]).to eq(true)
     end
 
+    it "ignores backfilled `added` events" do
+      Discourse.stubs(:site_creation_date).returns(2.years.ago)
+      admin = Fabricate(:admin)
+      UpcomingChangeEvent.create!(
+        event_type: :added,
+        event_data: {
+          backfilled: true,
+        },
+        upcoming_change_name: "backfilled_setting",
+        created_at: 1.minute.from_now,
+      )
+
+      expect(serialize_for(admin)[:has_new_upcoming_changes]).to eq(false)
+    end
+
     it "honors last_visited_upcoming_changes_at when set" do
       Discourse.stubs(:site_creation_date).returns(2.years.ago)
       admin = Fabricate(:admin)

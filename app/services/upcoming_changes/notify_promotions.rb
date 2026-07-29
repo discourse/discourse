@@ -6,26 +6,29 @@ class UpcomingChanges::NotifyPromotions
   include Service::Base
 
   model :changes_already_notified_about_promotion, optional: true
+  model :changes_already_promoted, optional: true
   model :admin_user_ids
   model :change_notification_statuses
 
   private
 
   def fetch_changes_already_notified_about_promotion
-    UpcomingChangeEvent
-      .where(
-        upcoming_change_name: SiteSetting.upcoming_change_site_settings,
-        event_type: :admins_notified_automatic_promotion,
-      )
-      .pluck(:upcoming_change_name)
-      .map(&:to_sym)
+    UpcomingChangeEvent.change_names_with_event(:admins_notified_automatic_promotion)
+  end
+
+  def fetch_changes_already_promoted
+    UpcomingChangeEvent.change_names_with_event(:automatically_promoted)
   end
 
   def fetch_admin_user_ids
     User.human_users.admins.pluck(:id)
   end
 
-  def fetch_change_notification_statuses(changes_already_notified_about_promotion:, admin_user_ids:)
+  def fetch_change_notification_statuses(
+    changes_already_notified_about_promotion:,
+    changes_already_promoted:,
+    admin_user_ids:
+  )
     SiteSetting.upcoming_change_site_settings.index_with do |setting_name|
       status_hash = {}
 
@@ -35,6 +38,7 @@ class UpcomingChanges::NotifyPromotions
         params: {
           setting_name: setting_name.to_sym,
           changes_already_notified_about_promotion:,
+          changes_already_promoted:,
           admin_user_ids:,
         },
         guardian: Discourse.system_user.guardian,
@@ -65,11 +69,9 @@ class UpcomingChanges::NotifyPromotions
           status_hash[:error_key] = :does_not_meet_or_exceed_promotion_status
         end
 
-        on_failed_policy(:change_has_not_already_been_notified_about_promotion) do |policy|
-          status_hash[
-            :error
-          ] = "Setting #{setting_name} has already notified admins about promotion"
-          status_hash[:error_key] = :already_notified_about_promotion
+        on_failed_policy(:promotion_not_already_handled) do |policy|
+          status_hash[:error] = "Setting #{setting_name} has already been promoted"
+          status_hash[:error_key] = :already_promoted
         end
 
         on_failed_policy(:admin_has_not_manually_toggled) do |policy|
