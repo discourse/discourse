@@ -79,7 +79,7 @@
 .design-wizard-float {
   position: fixed;
   z-index: 9999;
-  top: var(--header-offset);
+  top: calc(var(--header-offset) - var(--space-2));
   right: 0;
   bottom: 0;
   display: flex;
@@ -88,9 +88,9 @@
   max-width: calc(100vw - var(--space-6));
   overflow: hidden;
   background: var(--token-color-surface);
-  border-left: 1px solid var(--content-border-color);
+  border: 1px solid var(--content-border-color);
   border-top-left-radius: var(--d-border-radius-large);
-  border-bottom-left-radius: var(--d-border-radius-large);
+  border-right: none;
   box-shadow: var(--shadow-card);
   animation: design-wizard-float-slide-in 0.25s ease-out;
 

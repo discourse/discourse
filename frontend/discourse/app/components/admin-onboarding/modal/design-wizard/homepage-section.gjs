@@ -36,6 +36,51 @@ const TopicsMock = <template>
   {{/if}}
 </template>;
 
+function categoryStyleKind(style) {
+  if (style === "categories_only") {
+    return "only";
+  }
+
+  if (style?.startsWith("categories_boxes")) {
+    return "boxes";
+  }
+
+  return "with-topics";
+}
+
+const CategoryStyleMock = <template>
+  {{#if (eq (categoryStyleKind @style) "boxes")}}
+    <CategoriesMock />
+  {{else if (eq (categoryStyleKind @style) "only")}}
+    {{#each (array "c1" "c2" "c3" "c4") as |row|}}
+      <span class="design-wizard-modal__mock-row">
+        <span class="design-wizard-modal__mock-cat-badge --{{row}}"></span>
+        <span class="design-wizard-modal__mock-line --title"></span>
+        <span class="design-wizard-modal__mock-line --count"></span>
+      </span>
+    {{/each}}
+  {{else}}
+    <span class="design-wizard-modal__mock-columns">
+      <span class="design-wizard-modal__mock-column">
+        {{#each (array "c1" "c2" "c3") as |row|}}
+          <span class="design-wizard-modal__mock-row">
+            <span class="design-wizard-modal__mock-cat-badge --{{row}}"></span>
+            <span class="design-wizard-modal__mock-line --title"></span>
+          </span>
+        {{/each}}
+      </span>
+      <span class="design-wizard-modal__mock-column">
+        {{#each (array 1 2 3) as |row|}}
+          <span class="design-wizard-modal__mock-row" data-row={{row}}>
+            <span class="design-wizard-modal__mock-avatar"></span>
+            <span class="design-wizard-modal__mock-line --title"></span>
+          </span>
+        {{/each}}
+      </span>
+    </span>
+  {{/if}}
+</template>;
+
 const CategoriesMock = <template>
   {{#each (array "c1" "c2" "c3" "c4") as |box|}}
     <span class="design-wizard-modal__mock-box --{{box}}">
@@ -97,6 +142,12 @@ const DesignWizardHomepageSection = <template>
           </select.Option>
         {{/each}}
       </DSelect>
+      <span
+        class="design-wizard-modal__homepage-style-preview
+          {{if (eq (categoryStyleKind @categoryPageStyle) 'boxes') '--boxes'}}"
+      >
+        <CategoryStyleMock @style={{@categoryPageStyle}} />
+      </span>
       <p class="design-wizard-modal__homepage-note">
         {{i18n
           "admin_onboarding_banner.design_wizard.homepage.category_page_style_note"
