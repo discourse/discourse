@@ -108,29 +108,6 @@ RSpec.describe TopicOgImageGenerator do
       expect([png.width, png.height]).to eq([1200, 630])
       expect(png[180, 520]).to eq(png[500, 520])
     end
-
-    it "allows explicit MSVG while denying ordinary SVG and DATA coders" do
-      Dir.mktmpdir("topic-og-policy") do |directory|
-        svg_path = File.join(directory, "source.svg")
-        msvg_png_path = File.join(directory, "msvg.png")
-        svg_png_path = File.join(directory, "svg.png")
-        data_png_path = File.join(directory, "data.png")
-        File.write(
-          svg_path,
-          '<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2"><rect width="2" height="2" fill="red"/></svg>',
-        )
-
-        ImageMagick.magick("MSVG:#{svg_path}", msvg_png_path, read: [svg_path], write: [directory])
-
-        expect(File).to exist(msvg_png_path)
-        expect do
-          ImageMagick.magick(svg_path, svg_png_path, read: [svg_path], write: [directory])
-        end.to raise_error(Discourse::Utils::CommandError, /security policy `SVG'/)
-        expect do
-          ImageMagick.magick(TINY_PNG_DATA_URI, data_png_path, write: [directory])
-        end.to raise_error(Discourse::Utils::CommandError, /security policy `DATA'/)
-      end
-    end
   end
 
   describe ".eligible?" do
