@@ -48,6 +48,7 @@ const ResetButton = <template>
  * @param {Boolean} [forceShowDropdownFilterToggle=false] - Whether to place a single dropdown behind the filter toggle
  * @param {String} [noResultsMessage] - Message shown when no results found
  * @param {Boolean} [showNoResults=true] - Whether to show the built-in no-results state
+ * @param {Boolean} [showResetButton=true] - Whether to show the reset filters button
  * @param {Boolean} [loading] - Whether data is loading (hides reset button during loading)
  * @param {Number} [minItemsForFilter] - Minimum items before showing filters (default: always show)
  * @param {Function} [onTextFilterChange] - Callback for text changes (enables server-side mode)
@@ -165,10 +166,15 @@ export default class DFilterControls extends Component {
 
   get showFilterResetButton() {
     return (
+      this.showResetButton &&
       !this.hasMultipleDropdowns &&
       !this.args.forceShowDropdownFilterToggle &&
       this.hasActiveFilters
     );
+  }
+
+  get showResetButton() {
+    return this.args.showResetButton ?? true;
   }
 
   get defaultDropdownValue() {
@@ -462,7 +468,7 @@ export default class DFilterControls extends Component {
               @title="filter_controls.toggle"
               @action={{this.toggleFilters}}
             />
-            {{#if this.hasActiveFilters}}
+            {{#if (and this.showResetButton this.hasActiveFilters)}}
               <ResetButton @action={{this.resetFilters}} />
             {{/if}}
           {{/if}}
@@ -538,7 +544,9 @@ export default class DFilterControls extends Component {
           {{#if @noResultsMessage}}
             <p>{{@noResultsMessage}}</p>
           {{/if}}
-          <ResetButton @action={{this.resetFilters}} />
+          {{#if this.showResetButton}}
+            <ResetButton @action={{this.resetFilters}} />
+          {{/if}}
         </div>
       {{/if}}
     {{else}}

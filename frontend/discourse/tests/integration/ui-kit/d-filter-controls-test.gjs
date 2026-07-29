@@ -363,6 +363,27 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       .doesNotExist("does not render the built-in no-results state");
   });
 
+  test("can hide the reset button", async function (assert) {
+    this.set("data", SAMPLE_DATA);
+    this.set("searchableProps", ["name"]);
+
+    await render(
+      <template>
+        <DFilterControls
+          @array={{this.data}}
+          @searchableProps={{this.searchableProps}}
+          @showResetButton={{false}}
+        />
+      </template>
+    );
+
+    await fillIn(".filter-input", "nonexistent");
+
+    assert
+      .dom(".d-filter-controls__reset")
+      .doesNotExist("does not render the reset button");
+  });
+
   test("reset button clears filters", async function (assert) {
     this.set("data", SAMPLE_DATA);
     this.set("searchableProps", ["name"]);

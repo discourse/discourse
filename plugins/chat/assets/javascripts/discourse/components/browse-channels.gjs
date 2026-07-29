@@ -96,12 +96,6 @@ export default class BrowseChannels extends Component {
     this.filter = value;
   }
 
-  @action
-  resetFilters() {
-    this.filter = "";
-    this.selectedJoinedFilter = "all";
-  }
-
   <template>
     <div class="chat-browse-view">
       <div class="chat-browse-view__actions">
@@ -129,9 +123,9 @@ export default class BrowseChannels extends Component {
           @loading={{this.channelsCollection.loading}}
           @onDropdownFilterChange={{this.setJoinedFilter}}
           @forceShowDropdownFilterToggle={{this.capabilities.isMobileDevice}}
-          @onResetFilters={{this.resetFilters}}
           @onTextFilterChange={{this.setFilter}}
           @showNoResults={{false}}
+          @showResetButton={{false}}
         />
       </div>
 
