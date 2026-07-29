@@ -27,22 +27,12 @@ let exampleId = 0;
  * @param {string} [note] - background prose after the demo: what to notice once it has been
  *   used. Quiet on purpose — the accent bar belongs to `tryThis`, the one thing to act on.
  *   Also accepts a block, for a short list.
- * @param {string} [result] - live output the demo produces, such as a counter that moves as the
- *   reader interacts. Emphasised rather than quiet, because watching it change IS the example.
- * @param {string} [code] - a source snippet, revealed by a toggle. Optional, because it is a
- *   hand-maintained copy of the template and drifts from it.
- * @param {unknown} [initialValue] - seeds the value yielded to the default block.
+ * @param {string} [code] - the imported source of the example module, revealed by a toggle.
  */
 export default class StyleguideExample extends Component {
-  @tracked value = null;
   @tracked showCode = false;
 
   codeId = `styleguide-example-code-${(exampleId += 1)}`;
-
-  constructor() {
-    super(...arguments);
-    this.value = this.args.initialValue;
-  }
 
   @action
   toggleCode() {
@@ -105,7 +95,7 @@ export default class StyleguideExample extends Component {
         </p>
       {{/if}}
 
-      <section class="styleguide-example__body">{{yield this.value}}</section>
+      <section class="styleguide-example__body">{{yield}}</section>
 
       {{! The far side of the demo from the instruction: what to notice once it has been used. A
       div rather than a paragraph because a note is as often a short list as a sentence. }}
@@ -119,35 +109,14 @@ export default class StyleguideExample extends Component {
         </div>
       {{/if}}
 
-      {{! Distinct from a note: a note is prose the reader takes in passively, while this is
-      output the component produced. Emphasising it is the point — the reader is meant to watch
-      it change — but it is not an instruction, so it does not wear the instruction's mark. }}
-      {{#if (or @result (has-block "result"))}}
-        <output class="styleguide-example__result" data-test-example-result>
-          {{#if (has-block "result")}}
-            {{yield to="result"}}
-          {{else}}
-            {{@result}}
-          {{/if}}
-        </output>
-      {{/if}}
-
       {{#if this.showCode}}
-        {{! Last, not between the description and the instruction where it used to sit. Cards
-        in a row share their rows, so a code block in the middle of one card pushes the
-        control of every card beside it down the page the moment it is opened. At the end it
-        only makes the row taller and nothing inside any card moves.
-
-        Highlighted as XML rather than as Handlebars, which is absent from the default
-        highlighted-languages bundle and would render with no highlighting at all. Template
-        markup reads correctly as XML; the JavaScript grammar used previously did not. }}
         <div
           class="styleguide-example__code"
           id={{this.codeId}}
           role="region"
           aria-label={{i18n "styleguide.example.code_region"}}
         >
-          <DHighlightedCode @code={{@code}} @lang="xml" />
+          <DHighlightedCode @code={{@code}} @lang="javascript" />
         </div>
       {{/if}}
     </section>

@@ -59,10 +59,13 @@ from being possible.
 ### Layout
 
 ```
-examples/<group>/<section>/<name>.gjs
+examples/<group>/<section>/<tab>/<name>.gjs
 ```
 
 `<group>` is `atoms`, `molecules` or `organisms`; `<section>` is the section
-file name without its numeric prefix; `<name>` is a kebab-case slug for the
-variant. Import with a relative specifier and no file extension, and name the
-bindings `<Name>Example` and `<name>Source`.
+file name without its numeric prefix; `<tab>` is the in-page tab or query-group
+slug; and `<name>` is a kebab-case slug for the variant. A section without
+in-page tabs omits the `<tab>` directory. Grouping modules under the same tab
+slug used by the page keeps the source tree correlated with its navigation.
+Import with a relative specifier and no file extension, and name the bindings
+`<Name>Example` and `<name>Source`.

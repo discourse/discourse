@@ -1981,6 +1981,55 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
       );
   });
 
+  test("a held async value remains readable after the control remounts", async function (assert) {
+    class RemountHost extends Component {
+      @tracked mounted = true;
+      value = "en";
+
+      @action
+      load() {
+        return Promise.resolve([]);
+      }
+
+      @action
+      resolveValue(value) {
+        return { id: value, name: "English (US)" };
+      }
+
+      @action
+      toggle() {
+        this.mounted = !this.mounted;
+      }
+
+      <template>
+        {{#if this.mounted}}
+          <DSelect
+            @load={{this.load}}
+            @value={{this.value}}
+            @resolveValue={{this.resolveValue}}
+            @minChars={{3}}
+          />
+        {{/if}}
+        <button type="button" class="toggle" {{on "click" this.toggle}}>
+          Toggle
+        </button>
+      </template>
+    }
+
+    await render(<template><RemountHost /></template>);
+
+    assert
+      .dom("[role='combobox']")
+      .hasValue("English (US)", "the initial held value resolves");
+
+    await click(".toggle");
+    await click(".toggle");
+
+    assert
+      .dom("[role='combobox']")
+      .hasValue("English (US)", "the held value resolves after remounting");
+  });
+
   test("a synchronous resolver's label follows a later @value change", async function (assert) {
     const resolveValue = (value) => ({ id: value, name: `Topic #${value}` });
 

@@ -25,32 +25,6 @@ describe "UiKit | DSelect page regressions" do
     expect(description).to have_no_text("`")
   end
 
-  # A held value survived selection but not a remount. `@load` answers queries and is never asked
-  # what a given id is, so with no resolver the only thing left to display an id is whatever the
-  # source happened to fetch this session — and `@minChars` means it fetches nothing at rest. The
-  # session that picked the value looked correct; leaving the group and coming back showed
-  # "en (unavailable)".
-  it "keeps a held value readable after leaving and returning to its group" do
-    visit "/styleguide/molecules/select?group=data"
-    trigger = "[data-identifier='sg-min-chars'][data-trigger]"
-    combobox = PageObjects::Components::UiKit::DSelect.by_identifier("sg-min-chars")
-
-    combobox.select("English (US)")
-    expect(page).to have_no_css("#{trigger}[data-unresolved]")
-
-    # Sub-nav clicks, NOT `visit`: a reload would reset the section's own state and leave nothing
-    # selected, so the assertions below would pass against an empty field. Changing the group
-    # keeps the section mounted while tearing down and rebuilding the select, which is what
-    # discards the resolve cache the selection left behind.
-    find("[data-test-styleguide-subnav-link='states']").click
-    expect(page).to have_no_css(trigger)
-    find("[data-test-styleguide-subnav-link='data']").click
-    expect(page).to have_css(trigger)
-
-    expect(page).to have_no_css("#{trigger}[data-unresolved]")
-    expect(combobox.input.value).to eq("English (US)")
-  end
-
   # Closing and reopening is the most ordinary thing a reader does, and it was broken: the panel
   # flashed and shut immediately on the second open.
   # Reopening via the caret after the control has already been used. The caret is the obvious
@@ -166,14 +140,24 @@ describe "UiKit | DSelect page regressions" do
     expect(marked["background"]).not_to eq(unselected)
   end
 
-  # Every example that shows a block should show the source for it; the synthesis card shipped
-  # without one, so the card a reader is most likely to copy was the one they could not read.
-  it "offers the source snippet on the whole-picker example" do
-    visit "/styleguide/molecules/select?group=content"
-    picker = PageObjects::Components::UiKit::DSelect.by_identifier("sg-content-picker")
+  it "shows each example module's source across the select groups" do
+    examples = {
+      "start" => %w[sg-default DefaultSelectExample],
+      "data" => %w[sg-min-chars MinimumCharactersSelectExample],
+      "content" => %w[sg-content-picker WholePickerSelectExample],
+      "pickers" => %w[sg-reviewers ReviewersSelectExample],
+    }
 
-    card = find(".styleguide-example", text: "The whole picker")
-    expect(card).to have_css("button.styleguide-example__code-toggle")
-    expect(picker).to be_present
+    examples.each do |group, (identifier, component_name)|
+      visit "/styleguide/molecules/select?group=#{group}"
+      control = find("[data-identifier='#{identifier}'][data-trigger]")
+      card = control.ancestor(".styleguide-example")
+
+      card.find("button.styleguide-example__code-toggle").click
+      expect(card).to have_css(
+        ".styleguide-example__code",
+        text: "export default class #{component_name}",
+      )
+    end
   end
 end
