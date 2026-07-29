@@ -10,10 +10,10 @@ module PageObjects
       end
 
       def has_understood_languages_login_prompt?
-        body.has_css?(
-          ".content-language-preferences-modal__understood",
-          text: "Languages I understand Log in to set more languages",
-        ) && body.has_no_css?(".form-kit__field[data-name='understoodLanguages']", wait: 0)
+        has_css?(
+          "#{full_modal_selector} " \
+            ".content-language-preferences-modal__understood a[href='/login']",
+        )
       end
 
       def has_logged_in_language_controls?
