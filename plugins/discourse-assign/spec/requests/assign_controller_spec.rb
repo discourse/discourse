@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "../support/assign_allowed_group"
-
 RSpec.describe DiscourseAssign::AssignController do
+  include AssignControllerSpecHelpers
+
   before do
     SiteSetting.assign_enabled = true
     SiteSetting.assign_allowed_on_groups = "#{allowed_group.id}|#{staff_group.id}"
@@ -132,12 +132,6 @@ RSpec.describe DiscourseAssign::AssignController do
       expect(response.parsed_body["assign_allowed_for_groups"]).to contain_exactly(
         scoped_group.name,
       )
-    end
-
-    def assign_user_to_post
-      assignee = Fabricate(:user, groups: [allowed_group])
-      Fabricate(:post_assignment, assigned_to: assignee, assigned_by_user: admin)
-      assignee
     end
   end
 

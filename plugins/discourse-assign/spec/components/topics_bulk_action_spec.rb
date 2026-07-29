@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../support/assign_allowed_group"
-
 describe TopicsBulkAction do
   fab!(:post)
   fab!(:post1, :post)

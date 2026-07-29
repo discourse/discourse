@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "csv"
-require_relative "../support/export_user_archive_csv_helper"
 
 RSpec.describe Jobs::ExportUserArchive do
   include ExportUserArchiveCsvHelper

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../support/assign_allowed_group"
-
 describe UserBookmarkBaseSerializer do
   include_context "with group that is allowed to assign"
 

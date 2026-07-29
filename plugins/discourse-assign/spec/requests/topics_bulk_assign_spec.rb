@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "../support/assign_allowed_group"
-
 RSpec.describe TopicsController do
+  include TopicsBulkAssignSpecHelpers
+
   include_context "with group that is allowed to assign"
 
   fab!(:actor, :user)
@@ -15,10 +15,6 @@ RSpec.describe TopicsController do
     SiteSetting.enable_assign_status = true
     add_to_assign_allowed_group(actor)
     sign_in(actor)
-  end
-
-  def bulk_assign(operation, ids: [topic1.id, topic2.id])
-    put "/topics/bulk.json", params: { topic_ids: ids, operation: operation }
   end
 
   describe "#bulk with the assign operation" do

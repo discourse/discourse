@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "../support/assign_allowed_group"
-
 describe TopicQuery do
+  include TopicQueryAssignSpecHelpers
+
   before { SiteSetting.assign_enabled = true }
 
   fab!(:user)
@@ -24,9 +24,9 @@ describe TopicQuery do
     fab!(:group_topic) { Fabricate(:post, user: user).topic }
 
     before do
-      assign_to(private_message, user, user)
-      assign_to(topic, user, user)
-      assign_to(group_topic, user, assign_allowed_group)
+      assign_to(topic: private_message, user: user, assignee: user)
+      assign_to(topic: topic, user: user, assignee: user)
+      assign_to(topic: group_topic, user: user, assignee: assign_allowed_group)
     end
 
     it "Includes topics and PMs assigned to user" do
@@ -73,9 +73,9 @@ describe TopicQuery do
     fab!(:group_topic) { Fabricate(:post, user: user).topic }
 
     before do
-      assign_to(private_message, user, user)
-      assign_to(topic, user2, user2)
-      assign_to(group_topic, user, assign_allowed_group)
+      assign_to(topic: private_message, user: user, assignee: user)
+      assign_to(topic: topic, user: user2, assignee: user2)
+      assign_to(topic: group_topic, user: user, assignee: assign_allowed_group)
     end
 
     it "Includes topics and PMs assigned to user" do
@@ -108,7 +108,7 @@ describe TopicQuery do
       # Create a new topic with only a post assignment (no topic assignment)
       post_only_topic = Fabricate(:post, user: user).topic
       post_in_topic = Fabricate(:post, topic: post_only_topic)
-      assign_to(post_in_topic, user, user)
+      assign_to(topic: post_in_topic, user: user, assignee: user)
 
       assigned_messages =
         TopicQuery.new(user, { page: 0 }).list_group_topics_assigned(assign_allowed_group).topics
@@ -168,7 +168,7 @@ describe TopicQuery do
           archetype: Archetype.private_message,
         ).topic
 
-      assign_to(topic, user, user)
+      assign_to(topic: topic, user: user, assignee: user)
     end
 
     let(:group2) { Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]) }
@@ -181,7 +181,7 @@ describe TopicQuery do
           archetype: Archetype.private_message,
         ).topic
 
-      assign_to(topic, user, user)
+      assign_to(topic: topic, user: user, assignee: user)
     end
 
     before do
@@ -284,9 +284,5 @@ describe TopicQuery do
 
       expect(query.topics).to contain_exactly(assigned_topic, unassigned_topic)
     end
-  end
-
-  def assign_to(topic, user, assignee)
-    topic.tap { |t| Assigner.new(t, user).assign(assignee) }
   end
 end

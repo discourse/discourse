@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../../support/admin_dashboard_test_fixtures"
-
 RSpec.describe Admin::DashboardController do
   include AdminDashboardTestFixtures
   fab!(:admin)

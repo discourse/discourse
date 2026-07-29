@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../support/query_id_repair_fixture"
-
 describe "fix query ids rake task" do
   subject(:run_task) { Rake::Task["data_explorer:fix_query_ids"].invoke }
 

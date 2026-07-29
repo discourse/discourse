@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "../../../support/sentiment_inference_stubs"
-
 RSpec.describe DiscourseAi::Sentiment::PostClassification do
+  include SentimentPostClassificationHelpers
+
   subject(:post_classification) { described_class.new }
 
   before do
@@ -10,25 +10,6 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
     SiteSetting.ai_sentiment_enabled = true
     SiteSetting.ai_sentiment_model_configs =
       "[{\"model_name\":\"SamLowe/roberta-base-go_emotions\",\"endpoint\":\"http://samlowe-emotion.com\",\"api_key\":\"123\"},{\"model_name\":\"j-hartmann/emotion-english-distilroberta-base\",\"endpoint\":\"http://jhartmann-emotion.com\",\"api_key\":\"123\"},{\"model_name\":\"cardiffnlp/twitter-roberta-base-sentiment-latest\",\"endpoint\":\"http://cardiffnlp-sentiment.com\",\"api_key\":\"123\"}]"
-  end
-
-  def check_classification_for(post)
-    result =
-      ClassificationResult.find_by(
-        model_used: "cardiffnlp/twitter-roberta-base-sentiment-latest",
-        target: post,
-      )
-
-    expect(result.classification.keys).to contain_exactly("negative", "neutral", "positive")
-  end
-
-  def agent_for(response_format, llm_model)
-    Fabricate(
-      :ai_agent,
-      default_llm: llm_model,
-      response_format: response_format,
-      system_prompt: "Classify this post",
-    )
   end
 
   describe ".active_model_name_for" do
@@ -121,8 +102,9 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       llm_model = Fabricate(:fake_model)
       ai_agent =
         agent_for(
-          %w[negative neutral positive].map { |label| { "key" => label, "type" => "number" } },
-          llm_model,
+          response_format:
+            %w[negative neutral positive].map { |label| { "key" => label, "type" => "number" } },
+          llm_model: llm_model,
         )
       SiteSetting.ai_sentiment_model_configs = ""
       SiteSetting.ai_sentiment_sentiment_classification_strategy = "agent"
@@ -145,10 +127,11 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       llm_model = Fabricate(:fake_model)
       ai_agent =
         agent_for(
-          DiscourseAi::Sentiment::Emotions::LIST.map do |label|
-            { "key" => label, "type" => "number" }
-          end,
-          llm_model,
+          response_format:
+            DiscourseAi::Sentiment::Emotions::LIST.map do |label|
+              { "key" => label, "type" => "number" }
+            end,
+          llm_model: llm_model,
         )
       SiteSetting.ai_sentiment_model_configs = ""
       SiteSetting.ai_sentiment_emotion_classification_strategy = "agent"
@@ -176,8 +159,9 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       llm_model = Fabricate(:fake_model)
       ai_agent =
         agent_for(
-          %w[negative neutral positive].map { |label| { "key" => label, "type" => "number" } },
-          llm_model,
+          response_format:
+            %w[negative neutral positive].map { |label| { "key" => label, "type" => "number" } },
+          llm_model: llm_model,
         )
       SiteSetting.ai_sentiment_model_configs = [
         { model_name: "custom/legacy", endpoint: "https://legacy.example.com", api_key: "123" },
@@ -194,8 +178,9 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       llm_model = Fabricate(:fake_model)
       ai_agent =
         agent_for(
-          %w[negative neutral positive].map { |label| { "key" => label, "type" => "number" } },
-          llm_model,
+          response_format:
+            %w[negative neutral positive].map { |label| { "key" => label, "type" => "number" } },
+          llm_model: llm_model,
         )
       SiteSetting.ai_sentiment_model_configs = ""
       SiteSetting.ai_sentiment_sentiment_classification_strategy = "agent"
@@ -341,8 +326,9 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       llm_model = Fabricate(:fake_model)
       ai_agent =
         agent_for(
-          %w[negative neutral positive].map { |label| { "key" => label, "type" => "number" } },
-          llm_model,
+          response_format:
+            %w[negative neutral positive].map { |label| { "key" => label, "type" => "number" } },
+          llm_model: llm_model,
         )
       SiteSetting.ai_sentiment_model_configs = ""
       SiteSetting.ai_sentiment_sentiment_classification_strategy = "agent"

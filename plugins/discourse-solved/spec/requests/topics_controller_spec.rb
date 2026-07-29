@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../support/structured_data_helper"
-
 RSpec.describe TopicsController do
   include DiscourseSolvedStructuredDataHelper
   let(:p1) { Fabricate(:post, like_count: 1) }

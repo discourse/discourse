@@ -3,7 +3,6 @@
 require "fileutils"
 require "open3"
 require "tmpdir"
-require_relative "../support/upcoming_changes_status_report_repository"
 
 RSpec.describe UpcomingChanges::StatusReport do
   subject(:report) do

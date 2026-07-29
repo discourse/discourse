@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../support/assign_allowed_group"
-
 describe ListController do
   before do
     SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]

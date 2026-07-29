@@ -1,12 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "../support/assign_allowed_group"
-
-def assert_reminder_not_created
-  expect { reminder.remind(user) }.not_to change { Post.count }
-end
-
 RSpec.describe PendingAssignsReminder do
+  include PendingAssignsReminderSpecHelpers
+
   subject(:reminder) { described_class.new }
 
   before { SiteSetting.assign_enabled = true }

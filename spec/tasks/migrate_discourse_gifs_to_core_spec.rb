@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../support/discourse_gifs_migration_fixture"
-
 RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
   include DiscourseGifsMigrationFixture
   before do

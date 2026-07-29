@@ -72,3 +72,39 @@ class SentimentInferenceStubs
     end
   end
 end
+
+module SentimentPostClassificationHelpers
+  def check_classification_for(post)
+    result =
+      ClassificationResult.find_by(
+        model_used: "cardiffnlp/twitter-roberta-base-sentiment-latest",
+        target: post,
+      )
+
+    expect(result.classification.keys).to contain_exactly("negative", "neutral", "positive")
+  end
+
+  def agent_for(response_format:, llm_model:)
+    Fabricate(
+      :ai_agent,
+      default_llm: llm_model,
+      response_format: response_format,
+      system_prompt: "Classify this post",
+    )
+  end
+end
+
+module SentimentReportHelpers
+  def sentiment_classification(post:, classification:)
+    Fabricate(:sentiment_classification, target: post, classification: classification)
+  end
+
+  def emotion_classification(post:, classification:)
+    Fabricate(
+      :sentiment_classification,
+      target: post,
+      model_used: model_used,
+      classification: classification,
+    )
+  end
+end

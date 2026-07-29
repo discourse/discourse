@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "../../../support/sentiment_inference_stubs"
-
 RSpec.describe DiscourseAi::Sentiment::EntryPoint do
+  include SentimentReportHelpers
+
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
   before { enable_current_plugin }
@@ -60,14 +60,10 @@ RSpec.describe DiscourseAi::Sentiment::EntryPoint do
       let(:positive_classification) { { negative: 0.2, neutral: 0.3, positive: 0.7 } }
       let(:negative_classification) { { negative: 0.65, neutral: 0.2, positive: 0.1 } }
 
-      def sentiment_classification(post, classification)
-        Fabricate(:sentiment_classification, target: post, classification: classification)
-      end
-
       it "calculate averages using only public posts" do
-        sentiment_classification(post_1, positive_classification)
-        sentiment_classification(post_2, negative_classification)
-        sentiment_classification(pm, positive_classification)
+        sentiment_classification(post: post_1, classification: positive_classification)
+        sentiment_classification(post: post_2, classification: negative_classification)
+        sentiment_classification(post: pm, classification: positive_classification)
 
         report = Report.find("overall_sentiment")
         overall_sentiment = report.data[0][:data][0][:y].to_i
@@ -75,9 +71,9 @@ RSpec.describe DiscourseAi::Sentiment::EntryPoint do
       end
 
       it "exports the report without any errors" do
-        sentiment_classification(post_1, positive_classification)
-        sentiment_classification(post_2, negative_classification)
-        sentiment_classification(pm, positive_classification)
+        sentiment_classification(post: post_1, classification: positive_classification)
+        sentiment_classification(post: post_2, classification: negative_classification)
+        sentiment_classification(post: pm, classification: positive_classification)
 
         exporter = Jobs::ExportCsvFile.new
         exporter.entity = "report"
@@ -156,26 +152,12 @@ RSpec.describe DiscourseAi::Sentiment::EntryPoint do
       end
       let(:model_used) { "SamLowe/roberta-base-go_emotions" }
 
-      def emotion_classification(post, classification)
-        Fabricate(
-          :sentiment_classification,
-          target: post,
-          model_used: model_used,
-          classification: classification,
-        )
-      end
-
-      def strip_emoji_and_downcase(str)
-        stripped_str = str.gsub(/[^\p{L}\p{N}]+/, "") # remove any non-alphanumeric characters
-        stripped_str.downcase
-      end
-
       it "calculate averages using only public posts" do
         threshold = 0.10
 
-        emotion_classification(post_1, emotion_1)
-        emotion_classification(post_2, emotion_2)
-        emotion_classification(pm, emotion_2)
+        emotion_classification(post: post_1, classification: emotion_1)
+        emotion_classification(post: post_2, classification: emotion_2)
+        emotion_classification(post: pm, classification: emotion_2)
 
         report = Report.find("emotion_love")
 

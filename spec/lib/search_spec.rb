@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../support/personal_message_search_fixture"
-
 RSpec.describe Search do
   include PersonalMessageSearchFixture
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }

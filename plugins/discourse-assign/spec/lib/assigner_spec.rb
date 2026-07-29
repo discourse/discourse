@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../support/published_assignment_workflow"
-
 RSpec.describe Assigner do
   include PublishedAssignmentWorkflow
   before do
