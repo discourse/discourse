@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "chunky_png"
+
 RSpec.describe OptimizedImage do
   let(:upload) { build(:upload) }
   before { upload.id = 42 }
@@ -74,21 +76,25 @@ RSpec.describe OptimizedImage do
       end
     end
 
-    it "crops a tiny image to the requested dimensions" do
+    it "crops a tiny image from the top edge" do
       FileHelper.stubs(:optimize_image!).returns(true)
 
       Dir.mktmpdir do |dir|
         output_path = File.join(dir, "cropped.png")
 
         OptimizedImage.crop(
-          "#{Rails.root.join("spec/fixtures/images/resized.png")}",
+          Rails.root.join("spec/fixtures/images/crop_position.png").to_s,
           output_path,
           3,
           2,
         )
+        output_image = ChunkyPNG::Image.from_file(output_path)
 
         expect(FastImage.type(output_path)).to eq(:png)
-        expect(FastImage.size(output_path)).to eq([3, 2])
+        expect([output_image.width, output_image.height]).to eq([3, 2])
+        expect(output_image.pixels).to all(
+          satisfy { |pixel| ChunkyPNG::Color.r(pixel) > ChunkyPNG::Color.b(pixel) },
+        )
       end
     end
 
