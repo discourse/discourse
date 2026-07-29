@@ -76,13 +76,8 @@ RSpec.describe Upload do
         value: site_setting_upload.id,
       )
 
-      upload_ids =
-        Upload
-          .by_users
-          .with_no_non_post_relations
-          .where(id: [post_upload.id, badge_upload.id, avatar_upload.id, site_setting_upload.id])
-          .pluck(:id)
-      expect(upload_ids).to contain_exactly(post_upload.id)
+      upload_ids = Upload.by_users.with_no_non_post_relations.pluck(:id)
+      expect(upload_ids).to eq([post_upload.id])
     end
   end
 
@@ -932,13 +927,9 @@ RSpec.describe Upload do
   end
 
   describe "#dominant_color" do
-    let(:white_image) do
-      Fabricate(:image_upload, color: "white", width: 101, height: 200).tap(&:save!)
-    end
-    let(:red_image) { Fabricate(:image_upload, color: "red").tap(&:save!) }
-    let(:high_color_image) do
-      Fabricate(:image_upload, color: "#000A00F00", color_depth: 16).tap(&:save!)
-    end
+    let(:white_image) { Fabricate(:image_upload, color: "white") }
+    let(:red_image) { Fabricate(:image_upload, color: "red") }
+    let(:high_color_image) { Fabricate(:image_upload, color: "#000A00F00", color_depth: 16) }
     let(:not_an_image) do
       upload = Fabricate(:upload)
 
@@ -990,9 +981,15 @@ RSpec.describe Upload do
         height: 1,
       )
 
-      expect(tiny_image.dominant_color).to eq(nil)
-      expect(tiny_image.dominant_color(calculate_if_missing: true)).to eq("524F40")
-      expect(tiny_image.dominant_color).to eq("524F40")
+      uncached_dominant_color = tiny_image.dominant_color
+
+      expect(uncached_dominant_color).to eq(nil)
+
+      calculated_dominant_color = tiny_image.dominant_color(calculate_if_missing: true)
+      expect(calculated_dominant_color).to eq("524F40")
+
+      cached_dominant_color = tiny_image.dominant_color
+      expect(cached_dominant_color).to eq("524F40")
     end
 
     it "can be backfilled" do
@@ -1028,12 +1025,11 @@ RSpec.describe Upload do
     end
 
     it "stores an empty string when the file is missing from the store" do
-      missing_image = Fabricate(:image_upload, color: "#FEFEFE")
-      File.delete(Discourse.store.path_for(missing_image))
+      File.delete(Discourse.store.path_for(white_image))
 
-      expect(missing_image.dominant_color).to eq(nil)
-      expect(missing_image.dominant_color(calculate_if_missing: true)).to eq("")
-      expect(missing_image.dominant_color).to eq("")
+      expect(white_image.dominant_color).to eq(nil)
+      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(white_image.dominant_color).to eq("")
     end
 
     it "correctly handles invalid image files" do
@@ -1089,11 +1085,18 @@ RSpec.describe Upload do
   end
 
   describe "#target_image_quality" do
-    it "returns the target quality when the source quality is higher" do
-      local_path = Rails.root.join("spec/fixtures/images/logo.jpg").to_s
+    let(:local_path) { Rails.root.join("spec/fixtures/images/logo.jpg").to_s }
 
-      expect(upload.target_image_quality(local_path, 100)).to eq(nil)
-      expect(upload.target_image_quality(local_path, 10)).to eq(10)
+    it "returns nil when the target quality is higher than the source quality" do
+      target_quality = upload.target_image_quality(local_path, 100)
+
+      expect(target_quality).to eq(nil)
+    end
+
+    it "returns the target quality when it is lower than the source quality" do
+      target_quality = upload.target_image_quality(local_path, 10)
+
+      expect(target_quality).to eq(10)
     end
   end
 

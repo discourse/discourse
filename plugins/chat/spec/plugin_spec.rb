@@ -27,10 +27,9 @@ describe Chat do
     it "marks uploads with reference to ChatMessage via UploadReference in use" do
       unused_upload
 
-      expect { Jobs::CleanUpUploads.new.execute({}) }.to change {
-        Upload.exists?(id: unused_upload.id)
-      }.from(true).to(false)
+      expect { Jobs::CleanUpUploads.new.execute({}) }.to change { Upload.count }.by(-1)
       expect(Upload.exists?(id: upload.id)).to eq(true)
+      expect(Upload.exists?(id: unused_upload.id)).to eq(false)
     end
   end
 
@@ -62,11 +61,10 @@ describe Chat do
       draft_upload
       unused_upload
 
-      expect { Jobs::CleanUpUploads.new.execute({}) }.to change {
-        Upload.exists?(id: unused_upload.id)
-      }.from(true).to(false)
+      expect { Jobs::CleanUpUploads.new.execute({}) }.to change { Upload.count }.by(-1)
       expect(Upload.exists?(id: message_upload.id)).to eq(true)
       expect(Upload.exists?(id: draft_upload.id)).to eq(true)
+      expect(Upload.exists?(id: unused_upload.id)).to eq(false)
     end
   end
 
