@@ -6,23 +6,7 @@ RSpec.describe DiscourseWorkflows::Execution::CheckSchedules do
 
     fab!(:user)
 
-    def schedule_config(*rules)
-      { "rule" => { "interval" => rules } }
-    end
-
-    def create_schedule_workflow(configuration:, settings: {})
-      graph =
-        build_workflow_graph do |g|
-          g.node "trigger-1", "trigger:schedule", configuration: configuration
-        end
-      Fabricate(
-        :discourse_workflows_workflow,
-        published: true,
-        created_by: user,
-        settings: settings,
-        **graph,
-      )
-    end
+    let(:schedule_builder) { DiscourseWorkflows::ScheduleWorkflowBuilder.new(user:) }
 
     context "when plugin is disabled" do
       before { SiteSetting.enable_discourse_workflows = false }
@@ -33,8 +17,11 @@ RSpec.describe DiscourseWorkflows::Execution::CheckSchedules do
     it "enqueues matching minute rules through the trigger context" do
       freeze_time Time.utc(2026, 3, 18, 9, 5)
       workflow =
-        create_schedule_workflow(
-          configuration: schedule_config({ "field" => "minutes", "minutesInterval" => 5 }),
+        schedule_builder.create(
+          configuration:
+            DiscourseWorkflows::ScheduleWorkflowBuilder.configuration(
+              { "field" => "minutes", "minutesInterval" => 5 },
+            ),
         )
 
       expect { result }.to change { Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.size }.by(1)
@@ -46,8 +33,11 @@ RSpec.describe DiscourseWorkflows::Execution::CheckSchedules do
 
     it "normalizes scheduler ticks to the current minute" do
       freeze_time Time.utc(2026, 3, 18, 9, 5, 12)
-      create_schedule_workflow(
-        configuration: schedule_config({ "field" => "minutes", "minutesInterval" => 5 }),
+      schedule_builder.create(
+        configuration:
+          DiscourseWorkflows::ScheduleWorkflowBuilder.configuration(
+            { "field" => "minutes", "minutesInterval" => 5 },
+          ),
       )
 
       expect { result }.to change { Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.size }.by(1)
@@ -59,9 +49,11 @@ RSpec.describe DiscourseWorkflows::Execution::CheckSchedules do
 
     it "does not enqueue when a cron rule does not match" do
       freeze_time Time.utc(2026, 3, 18, 10, 0)
-      create_schedule_workflow(
+      schedule_builder.create(
         configuration:
-          schedule_config({ "field" => "cronExpression", "expression" => "0 9 * * *" }),
+          DiscourseWorkflows::ScheduleWorkflowBuilder.configuration(
+            { "field" => "cronExpression", "expression" => "0 9 * * *" },
+          ),
       )
 
       expect { result }.not_to change { Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.size }
@@ -69,12 +61,12 @@ RSpec.describe DiscourseWorkflows::Execution::CheckSchedules do
 
     it "evaluates rules in the workflow timezone" do
       freeze_time Time.utc(2026, 3, 18, 8, 0)
-      create_schedule_workflow(
+      schedule_builder.create(
         settings: {
           "timezone" => "Europe/Paris",
         },
         configuration:
-          schedule_config(
+          DiscourseWorkflows::ScheduleWorkflowBuilder.configuration(
             {
               "field" => "days",
               "daysInterval" => 1,
@@ -98,9 +90,9 @@ RSpec.describe DiscourseWorkflows::Execution::CheckSchedules do
 
     it "supports multiple independent rules" do
       freeze_time Time.utc(2026, 3, 18, 12, 0)
-      create_schedule_workflow(
+      schedule_builder.create(
         configuration:
-          schedule_config(
+          DiscourseWorkflows::ScheduleWorkflowBuilder.configuration(
             {
               "field" => "days",
               "daysInterval" => 1,
@@ -116,9 +108,9 @@ RSpec.describe DiscourseWorkflows::Execution::CheckSchedules do
 
     it "fires overlapping rules on the same node independently" do
       freeze_time Time.utc(2026, 3, 18, 9, 0)
-      create_schedule_workflow(
+      schedule_builder.create(
         configuration:
-          schedule_config(
+          DiscourseWorkflows::ScheduleWorkflowBuilder.configuration(
             { "field" => "minutes", "minutesInterval" => 1 },
             { "field" => "cronExpression", "expression" => "0 9 * * *" },
           ),
@@ -129,9 +121,11 @@ RSpec.describe DiscourseWorkflows::Execution::CheckSchedules do
 
     it "deduplicates repeated ticks for the same scheduled time" do
       freeze_time Time.utc(2026, 3, 18, 9, 0)
-      create_schedule_workflow(
+      schedule_builder.create(
         configuration:
-          schedule_config({ "field" => "cronExpression", "expression" => "0 9 * * *" }),
+          DiscourseWorkflows::ScheduleWorkflowBuilder.configuration(
+            { "field" => "cronExpression", "expression" => "0 9 * * *" },
+          ),
       )
 
       described_class.call
@@ -143,9 +137,11 @@ RSpec.describe DiscourseWorkflows::Execution::CheckSchedules do
 
     it "fires again for a new matching minute" do
       freeze_time Time.utc(2026, 3, 18, 9, 0)
-      create_schedule_workflow(
+      schedule_builder.create(
         configuration:
-          schedule_config({ "field" => "cronExpression", "expression" => "0 * * * *" }),
+          DiscourseWorkflows::ScheduleWorkflowBuilder.configuration(
+            { "field" => "cronExpression", "expression" => "0 * * * *" },
+          ),
       )
 
       described_class.call
@@ -158,9 +154,9 @@ RSpec.describe DiscourseWorkflows::Execution::CheckSchedules do
 
     it "uses recurrence state for multi-day intervals" do
       workflow =
-        create_schedule_workflow(
+        schedule_builder.create(
           configuration:
-            schedule_config(
+            DiscourseWorkflows::ScheduleWorkflowBuilder.configuration(
               {
                 "field" => "days",
                 "daysInterval" => 3,
@@ -191,9 +187,11 @@ RSpec.describe DiscourseWorkflows::Execution::CheckSchedules do
     it "does not enqueue unpublished workflows" do
       freeze_time Time.utc(2026, 3, 18, 9, 0)
       workflow =
-        create_schedule_workflow(
+        schedule_builder.create(
           configuration:
-            schedule_config({ "field" => "cronExpression", "expression" => "0 9 * * *" }),
+            DiscourseWorkflows::ScheduleWorkflowBuilder.configuration(
+              { "field" => "cronExpression", "expression" => "0 9 * * *" },
+            ),
         )
       unpublish_workflow!(workflow)
 

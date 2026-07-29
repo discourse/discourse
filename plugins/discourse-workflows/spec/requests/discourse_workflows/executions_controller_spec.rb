@@ -6,10 +6,6 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
 
   before { sign_in(admin) }
 
-  def workflow_snapshot_data(name)
-    { "name" => name, "nodes" => [], "connections" => {} }
-  end
-
   context "when not logged in as admin" do
     fab!(:user)
 
@@ -76,7 +72,12 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
       Fabricate(
         :discourse_workflows_execution_data,
         execution: execution,
-        workflow_data: workflow_snapshot_data("Original workflow"),
+        workflow_data: {
+          "name" => "Original workflow",
+          "nodes" => [],
+          "connections" => {
+          },
+        },
       )
       workflow.update!(name: "Renamed workflow")
 
@@ -125,7 +126,12 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
       Fabricate(
         :discourse_workflows_execution_data,
         execution: execution,
-        workflow_data: workflow_snapshot_data("Original workflow"),
+        workflow_data: {
+          "name" => "Original workflow",
+          "nodes" => [],
+          "connections" => {
+          },
+        },
       )
       workflow.update!(name: "Renamed workflow")
 
@@ -161,7 +167,7 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
   describe "GET /admin/plugins/discourse-workflows/executions/:id" do
     fab!(:execution) { Fabricate(:discourse_workflows_completed_execution, workflow: workflow) }
 
-    before { Fabricate(:discourse_workflows_execution_data_with_steps, execution: execution) }
+    let!(:execution_data) { Fabricate(:discourse_workflows_execution_data_with_steps, execution:) }
 
     it "returns the execution with steps" do
       get "/admin/plugins/discourse-workflows/executions/#{execution.id}.json"
@@ -218,7 +224,14 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
     end
 
     it "returns the stored snapshot workflow name" do
-      execution.execution_data.update!(workflow_data: workflow_snapshot_data("Original workflow"))
+      execution.execution_data.update!(
+        workflow_data: {
+          "name" => "Original workflow",
+          "nodes" => [],
+          "connections" => {
+          },
+        },
+      )
       workflow.update!(name: "Renamed workflow")
 
       get "/admin/plugins/discourse-workflows/executions/#{execution.id}.json"
