@@ -32,26 +32,9 @@ Discourse uses RSpec for testing. Follow these patterns for all test types.
 
 ## Test Data with Fabricators
 
-Use `fab!` for shared test data, or `Fabricate` inline within the test example:
+Use `fab!` for shared records and `Fabricate` inline for records local to one example. Because `fab!` uses TestProf `let_it_be`, it cannot depend on `let` or other per-example setup; use `let!` when a record must be created per example.
 
-```rb
-fab!(:user)
-fab!(:category)
-fab!(:tag)
-fab!(:topic) { Fabricate(:topic, category: category, tags: [tag]) }
-
-it "displays the topic" do
-  sign_in(user)
-  visit("/")
-end
-
-it "creates a new topic" do
-  new_category = Fabricate(:category, name: "Special")
-  # ... test using new_category
-end
-```
-
-- **Choose test data by lifecycle and role** — use `fab!` for shared records, `let` for lazy per-example values, and `let!` only when a per-example record must exist before the action. Because `fab!` uses TestProf `let_it_be`, it cannot depend on per-example setup. Never call `Fabricate` from a `before` block or bridge incompatible lifecycles with later mutation. Search core or plugin `spec/fabricators` before hand-rolling setup, name records for their role (`fab!(:topic_creator)`), and define a derived fabricator for recurring non-default record shapes.
+Search `spec/fabricators` before creating setup by hand. Define a derived fabricator for a recurring record shape.
 
 ## Test Efficiency
 
