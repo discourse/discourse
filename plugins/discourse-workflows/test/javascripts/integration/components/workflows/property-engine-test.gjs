@@ -2166,8 +2166,63 @@ module("Integration | Component | workflows property engine", function (hooks) {
     assert.dom(".workflows-variable-input").includesText("enabled");
   });
 
-  // Collection rows are keyed by index, so removing one re-renders the survivor
-  // in the deleted row's component instance.
+  test("resets plain assignment values that don't fit the new type", async function (assert) {
+    this.setProperties({
+      configuration: {
+        fields: {
+          assignments: [{ name: "active", type: "string", value: "hello" }],
+        },
+      },
+      formApi: null,
+      nodeType: "action:workflow_call",
+      schema: {
+        fields: {
+          type: "assignment_collection",
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const typeSelect = ".workflows-property-engine__collection-row select";
+
+    await select(typeSelect, "boolean");
+
+    assert.false(
+      this.formApi.get("fields.assignments.0.value"),
+      "a string is not carried into the toggle as truthy"
+    );
+
+    await select(typeSelect, "array");
+
+    assert.strictEqual(
+      this.formApi.get("fields.assignments.0.value"),
+      "",
+      "a boolean is not carried into the JSON editor"
+    );
+  });
+
+  // Rows are keyed by index, so the survivor reuses the deleted row's component.
   test("removing a boolean assignment row keeps the survivor's expression", async function (assert) {
     this.setProperties({
       configuration: {

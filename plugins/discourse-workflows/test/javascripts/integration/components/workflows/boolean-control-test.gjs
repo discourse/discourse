@@ -180,6 +180,43 @@ module("Integration | Component | workflows boolean control", function (hooks) {
     assert.false(this.formApi.get("enabled"));
   });
 
+  test("converts literal expressions back to plain booleans", async function (assert) {
+    this.setProperties({
+      configuration: { enabled: "={{ true }}" },
+      formApi: null,
+      schema: { type: "boolean", ui: { expression: true } },
+      registerApi: (api) => this.set("formApi", api),
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <BooleanControl
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @fieldName="enabled"
+            @label="Enabled"
+            @schema={{this.schema}}
+          />
+        </Form>
+      </template>
+    );
+
+    await click(
+      '.workflows-property-engine__mode-control input[value="plain"]'
+    );
+
+    assert.true(
+      this.formApi.get("enabled"),
+      "unwraps the literal instead of discarding it"
+    );
+  });
+
   test("renders in expression mode when value starts with =", async function (assert) {
     this.setProperties({
       configuration: { enabled: "=true" },

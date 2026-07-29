@@ -54,19 +54,34 @@ RSpec.describe DiscourseWorkflows::Nodes::SetFields::V1 do
       expect(result).to include("topic_id" => "42", "status" => "open")
     end
 
-    it "casts boolean falsy values correctly" do
+    it "casts boolean values from a two-sided vocabulary" do
       config = { "include_other_fields" => false }.merge(
         assignments(
           assignment("a", "false", "boolean"),
           assignment("b", "0", "boolean"),
           assignment("c", "no", "boolean"),
           assignment("d", "1", "boolean"),
+          assignment("e", "yes", "boolean"),
+          assignment("f", " ON ", "boolean"),
         ),
       )
 
       result = execute_node(configuration: config, item: item)
 
-      expect(result).to eq({ "a" => false, "b" => false, "c" => false, "d" => true })
+      expect(result).to eq(
+        { "a" => false, "b" => false, "c" => false, "d" => true, "e" => true, "f" => true },
+      )
+    end
+
+    it "raises on values that are not recognizably boolean" do
+      config = { "include_other_fields" => false }.merge(
+        assignments(assignment("a", "moderator", "boolean")),
+      )
+
+      expect { execute_node(configuration: config, item: item) }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        /moderator/,
+      )
     end
 
     it "casts boolean values resolved from expressions" do

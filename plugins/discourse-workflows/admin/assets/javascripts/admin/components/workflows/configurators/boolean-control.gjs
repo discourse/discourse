@@ -22,13 +22,15 @@ function valueForModeToggle(value) {
 
 function booleanValueForPlainMode(value) {
   const plainValue = value.startsWith("=") ? value.slice(1) : value;
+  // Unwrap literal expressions so "={{ true }}" round-trips to a plain true.
+  const literal =
+    plainValue.trim().match(/^\{\{\s*(.*?)\s*\}\}$/)?.[1] ?? plainValue;
 
-  return ["true", "1"].includes(plainValue.trim().toLowerCase());
+  return ["true", "1"].includes(literal.trim().toLowerCase());
 }
 
 export default class BooleanControl extends Component {
-  // Derived from the value so a variable dropped onto the plain toggle switches
-  // the control into expression mode.
+  // Derived, not tracked, so a dropped variable flips the mode.
   get expressionMode() {
     return (
       this.supportsExpression &&
@@ -69,8 +71,7 @@ export default class BooleanControl extends Component {
   @action
   onModeChange(field, value) {
     const wantsDynamic = value === "dynamic";
-    // Compared against the field rather than `expressionMode` so a mode click is
-    // never swallowed when no `@configuration` reaches this control.
+    // Guards on the field, not `expressionMode`, which is false without a `@configuration`.
     if (wantsDynamic === isExpression(field.value)) {
       return;
     }
