@@ -20,7 +20,10 @@ describe Jobs::UpdateScoresForToday do
     described_class.new.execute
   end
 
-  before { topic_user_2_created.update(created_at: 2.days.ago) }
+  before do
+    SiteSetting.discourse_gamification_enabled = true
+    topic_user_2_created.update(created_at: 2.days.ago)
+  end
 
   it "updates all scores for today" do
     expect(DiscourseGamification::GamificationScore.find_by(user_id: user.id).score).to eq(0)
