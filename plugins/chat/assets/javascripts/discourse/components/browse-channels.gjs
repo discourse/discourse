@@ -24,7 +24,6 @@ export default class BrowseChannels extends Component {
   @service chatApi;
   @service modal;
   @service siteSettings;
-  @service capabilities;
 
   @tracked filter = "";
   @tracked selectedJoinedFilter = "all";
@@ -122,7 +121,6 @@ export default class BrowseChannels extends Component {
           @inputPlaceholder={{i18n "chat.browse.filter_input_placeholder"}}
           @loading={{this.channelsCollection.loading}}
           @onDropdownFilterChange={{this.setJoinedFilter}}
-          @forceShowDropdownFilterToggle={{this.capabilities.isMobileDevice}}
           @onTextFilterChange={{this.setFilter}}
           @showNoResults={{false}}
           @showResetButton={{false}}
