@@ -12,6 +12,7 @@ describe Jobs::UpdateScoresForTenDays do
   end
 
   before do
+    SiteSetting.discourse_gamification_enabled = true
     topic_user_created.update(created_at: 8.days.ago)
     topic_user_2_created.update(created_at: 12.days.ago)
   end
