@@ -438,11 +438,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     // Pasting a url on top of a text is being handled by the link extension
   }
 
-  selectText(
-    from: number,
-    length: number,
-    opts: SelectTextOptions | undefined
-  ): void {
+  selectText(from: number, length: number, opts?: SelectTextOptions): void {
     const tr = this.view.state.tr.setSelection(
       new TextSelection(
         this.view.state.doc.resolve(from),
