@@ -11,6 +11,7 @@ describe "Admin Onboarding Banner" do
   let(:toasts) { PageObjects::Components::Toasts.new }
 
   before do
+    SiteSetting.enable_invite_modal_with_roles = false
     SiteSetting.enable_site_owner_onboarding = true
     SiteSetting.default_theme_id = Theme.foundation_theme.id
 
