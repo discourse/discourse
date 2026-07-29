@@ -192,9 +192,13 @@ interface DSelectSignature {
     showCaret?: boolean;
     /**
      * Show a clear control that empties the whole selection (all variants, whenever there is a
-     * value). It is a pointer affordance (`tabindex="-1"`); keyboard users clear from an empty
-     * query — Backspace removes the last chip in multi-select (repeat to empty it), and
-     * Backspace/Delete clears a single selection.
+     * value). Purely a pointer affordance (`tabindex="-1"`).
+     *
+     * It does NOT gate clearing by keyboard, which is always available from an empty query:
+     * Backspace removes the last chip in multi-select (repeat to empty it), and Backspace or
+     * Delete clears a single selection. That matches the family this replaces, which clears on
+     * Backspace-with-an-empty-filter with no opt-in — so a picker is never a place a reader can
+     * reach a value but not leave.
      */
     clearable?: boolean;
     /** Fully disables the control: not focusable, cannot open, cannot mutate. */
@@ -514,6 +518,23 @@ export default class DSelect extends Component<DSelectSignature> {
     const index = rows.findIndex((row) => this.optionRow(row)?.flags.selected);
     return index === -1 ? undefined : index;
   };
+
+  /**
+   * The row the virtualizer must keep mounted: the roving cursor's row once one exists, and
+   * before that the held selection.
+   *
+   * The seed in `dRovingFocus` can only see MOUNTED rows, and the reveal scroll that brings an
+   * off-window selection into view is deferred a runloop tick — so without this the seed of a
+   * windowed list never sees the selection, activates row zero instead, and then *pins* row
+   * zero. That pin is self-sustaining: the stale cursor stays mounted, so every later reconcile
+   * finds it still present and keeps it. The user-visible result is not a misplaced highlight
+   * but silent data loss — Enter activates row zero and replaces the held value with the first
+   * item, only ever past the fold.
+   *
+   * `??`, never `||`: index 0 is a legitimate pin.
+   */
+  seedPinnedIndex = (rows: readonly ListRow[]): number | undefined =>
+    this.activePinnedIndex ?? this.revealRowIndex(rows);
 
   optionRow = (row: ListRow): OptionRow | undefined =>
     row.isSkeleton === true ? undefined : row;
@@ -856,17 +877,50 @@ export default class DSelect extends Component<DSelectSignature> {
     return this.triggerIsControl ? "0" : undefined;
   }
 
+  /**
+   * `aria-haspopup` names what the trigger opens, and the two control variants open different
+   * things.
+   *
+   * `static` is a select-only combobox: its `aria-controls` points at the listbox, and the
+   * listbox is what a reader is being sent to — so `listbox` is both correct and consistent
+   * with that reference.
+   *
+   * `button` is a disclosure. What it opens is the panel dialog (DMenu renders `DFloatBody
+   * @role="dialog"` inline and `DModal role="dialog"` on mobile), and that dialog holds a
+   * filter input as well as the list. Calling it a listbox told a reader to expect a list and
+   * hid the input they actually land on.
+   */
   get triggerRootHasPopup(): string | undefined {
-    return this.triggerIsControl ? "listbox" : undefined;
+    if (this.isStatic) {
+      return "listbox";
+    }
+    return this.isPanelSearchable ? "dialog" : undefined;
   }
 
   /**
    * The accessible name for the control-variant trigger root — the `role` lives on the `<div>`,
    * so the name must too. The typeahead/multi variants name their inner `role="combobox"` input
    * instead (via `ComboboxQueryInput @label`), so the root stays unnamed there.
+   *
+   * An author-supplied name REPLACES name-from-contents, so naming the root with the field label
+   * alone made the held value unspeakable: a category picker showing "Support" announced only
+   * "Options, button". The value is composed in rather than dropped, because the label still has
+   * to say what the control is FOR — the visible text alone would not.
+   *
+   * Single-select only. A multi trigger renders chips, which are their own subtree rather than
+   * one label, and folding them into a single string would fight the per-chip remove controls.
    */
   get triggerRootLabel(): string | undefined {
-    return this.triggerIsControl ? this.ariaLabelText : undefined;
+    if (!this.triggerIsControl) {
+      return undefined;
+    }
+    if (this.args.multiple || !this.engine.hasValue) {
+      return this.ariaLabelText;
+    }
+    return i18n("d_select.label_with_value", {
+      label: this.ariaLabelText,
+      value: this.fallbackSelectionLabel,
+    });
   }
 
   get triggerRootControls(): string | undefined {
@@ -1224,9 +1278,31 @@ export default class DSelect extends Component<DSelectSignature> {
     const wasExpanded = this.isExpanded;
     this.isExpanded = false;
     this.resetQueryOnClose();
+    this.#releaseAnnouncementSession();
     if (wasExpanded) {
       this.args.onClose?.();
     }
+  }
+
+  /**
+   * Drops the dedupe keys whose subject is the open session rather than a mounted node, so a
+   * reopened panel is a fresh context.
+   *
+   * Deliberately NOT in `releaseListbox`. That runs whenever `<DVirtualList>` unmounts, which
+   * also happens mid-session when a slow re-query swaps in the skeleton — resetting there would
+   * re-read the narrow hint on every reload and throw away a reveal's owed completion. It is the
+   * same distinction `releaseLoadFeedback` already draws for the outgoing row count.
+   *
+   * Unguarded by the open→closed transition, like `resetQueryOnClose`: a spurious close only
+   * fires when the panel is already shut, where clearing is inert.
+   */
+  #releaseAnnouncementSession(): void {
+    // Keyed on the query, and closing resets the query to "" — so without this the next open
+    // compares "" against "" and the hint stays silent for the rest of the component's life.
+    this.#narrowAnnouncedFor = null;
+    // A "loading more" interrupted by a close otherwise leaves its debt standing, and the next
+    // open's first pending→settled transition pays it as a completion nobody started.
+    this.#revealAnnounced = false;
   }
 
   /**
@@ -1272,6 +1348,15 @@ export default class DSelect extends Component<DSelectSignature> {
       this.isLocked ||
       event.isComposing
     ) {
+      return;
+    }
+    // This listener sits on the DMenu trigger, which CONTAINS the chip list. A chip's remove
+    // button is a genuine tab stop on the control variants (the `tabindex="-1"` seeding is gated
+    // on desktop typeahead), so its keys bubble to here. Treating them as trigger keys both
+    // swallows the button's own activation — `preventDefault()` below cancels the native click —
+    // and lets Backspace clear the entire selection instead of acting on the focused chip. Only
+    // a key aimed at the trigger itself is a trigger key.
+    if (event.target !== event.currentTarget) {
       return;
     }
     if (
@@ -1541,8 +1626,14 @@ export default class DSelect extends Component<DSelectSignature> {
 
     // Removing from the selection on an empty query: multi drops the last chip on Backspace
     // (repeat to empty it) — Backspace is the token-input convention, deleting backward toward
-    // the chip before the caret; single clears on Backspace/Delete when `@clearable`, since a
-    // lone value isn't a directional token. Blocked while locked.
+    // the chip before the caret; single clears on Backspace or Delete, since a lone value isn't
+    // a directional token. Blocked while locked.
+    //
+    // Neither is gated on `@clearable`, which governs the visible × control only. The family
+    // this replaces clears on Backspace-with-an-empty-filter unconditionally
+    // (`select-kit/components/select-kit/select-kit-filter.gjs`), so gating it here left a
+    // reader able to reach a value but not leave it, and contradicted the multi path directly
+    // below, which was never gated.
     if (
       !event.isComposing &&
       input.value === "" &&
@@ -1556,7 +1647,6 @@ export default class DSelect extends Component<DSelectSignature> {
       }
       if (
         !this.args.multiple &&
-        this.args.clearable &&
         (event.key === "Backspace" || event.key === "Delete")
       ) {
         event.preventDefault();
@@ -1752,6 +1842,34 @@ export default class DSelect extends Component<DSelectSignature> {
   ): void {
     this.#lastAnnouncedCountMessage = null;
     this.announceCount(element, args);
+  }
+
+  /**
+   * Politely announces an empty result set — the count announcement for a count of zero.
+   *
+   * {@link announceCount} hangs off the list, which `{{#if items.length}}` unmounts the moment
+   * a query matches nothing, so the one outcome a reader most needs reported was the only one
+   * nothing reported. Shares the count's dedupe slot and its suppression flag rather than
+   * owning new ones: "no results" and "3 results" answer the same question about the same
+   * query, and a suppressed refilter must swallow either identically.
+   *
+   * Unlike {@link announceCount} there is no `serverPending` bail. A stale *count* is possible
+   * mid-flight because retention keeps the previous rows on screen; a stale *empty* is not —
+   * the empty branch renders only once a load has resolved to nothing.
+   */
+  @action
+  announceNoResults(): void {
+    // `||`, not `??`, to match the template's `{{or}}`: an empty label is not a label.
+    const message = this.args.noResultsLabel || i18n("d_select.no_results");
+
+    if (this.#suppressNextCount) {
+      this.#suppressNextCount = false;
+      this.#lastAnnouncedCountMessage = message;
+      return;
+    }
+
+    this.#lastAnnouncedCountMessage = message;
+    this.a11y.announce(message, "polite");
   }
 
   /**
@@ -2434,6 +2552,10 @@ export default class DSelect extends Component<DSelectSignature> {
               aria-controls={{this.activeListboxId}}
               aria-autocomplete="list"
               autocomplete="off"
+              {{! The disclosure trigger hands focus straight here on open, so this is the first
+                thing a reader meets. A placeholder is a last-resort name source that screen
+                readers treat inconsistently — name it after the field it narrows. }}
+              aria-label={{this.ariaLabelText}}
               placeholder={{this.searchPlaceholderText}}
               @value={{this.engine.filter}}
               @filterAction={{this.onFilterInput}}
@@ -2527,7 +2649,7 @@ export default class DSelect extends Component<DSelectSignature> {
                       @estimateSize={{this.estimateRowSize}}
                       @onReachEnd={{this.engine.revealMore}}
                       @onRegisterApi={{this.registerListboxApi}}
-                      @pinnedIndex={{this.activePinnedIndex}}
+                      @pinnedIndex={{this.seedPinnedIndex items}}
                       {{! First render only, so it reveals the held value on open and never
                       fights a reader who has scrolled. Centred rather than aligned to the top:
                       a selection pinned to the first row hides the options around it, which are
@@ -2692,10 +2814,21 @@ export default class DSelect extends Component<DSelectSignature> {
                     {{! Recorded here too, not only on the list: a query that found nothing is a
                       rendered state with a row count of zero, and leaving the previous count
                       standing would size the next reload's skeleton to a list that is gone. }}
+                    {{! The update hook is load-bearing, not belt-and-braces. The async content
+                      wrapper reports the same render mode for both the resolved and the
+                      retained-pending phase, so Glimmer keeps this node mounted across two
+                      successive empty queries — an insert-only announcement would report the
+                      first and then stay silent for the rest of the session.
+
+                      Keyed on the resolved filter, never the engine filter, which advances on
+                      the keystroke. That would report an empty result for a query still in
+                      flight, over rows that still belong to the previous one. }}
                     <div
                       class="d-combobox__empty"
                       role="status"
                       {{didInsert this.recordRowCount 0}}
+                      {{didInsert this.announceNoResults}}
+                      {{didUpdate this.announceNoResults content.filter}}
                     >
                       {{#if (has-block "empty")}}
                         {{yield to="empty"}}

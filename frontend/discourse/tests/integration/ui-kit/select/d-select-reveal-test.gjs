@@ -135,6 +135,121 @@ module(
       );
     });
 
+    // `#narrowAnnouncedFor` is keyed on the query so the hint does not re-read as the window
+    // grows within one session. Closing resets the query to "", so without a reset on close the
+    // key still matches on the next open and the hint is silent for the rest of the page's life.
+    test("reopening a capped list announces the keep-filtering hint again", async function (assert) {
+      let engine;
+      const announce = sinon.spy(
+        getOwner(this).lookup("service:a11y"),
+        "announce"
+      );
+      const allItems = buildItems(500, (value) => (engine = value));
+      const load = (_filter, { offset = 0 }) => ({
+        items: allItems.slice(offset, offset + 50),
+        total: allItems.length,
+      });
+
+      await render(
+        <template><DSelect @load={{load}} @debounce={{false}} /></template>
+      );
+      await openSelect();
+      await click(findAll(OPTION_SELECTOR)[0]);
+
+      for (let index = 0; index < 6; index++) {
+        engine.revealMore();
+        await settled();
+      }
+
+      const narrowCalls = () =>
+        announce.withArgs(i18n("d_select.filter_to_narrow"), "polite", 5000)
+          .callCount;
+
+      assert.strictEqual(
+        narrowCalls(),
+        1,
+        "the hint announces on the first cap"
+      );
+
+      await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
+      await openSelect();
+
+      assert
+        .dom(".d-combobox__narrow")
+        .exists("the reopened list is still capped, so the hint is on screen");
+      assert.strictEqual(
+        narrowCalls(),
+        2,
+        "a reopened list is a fresh session and re-announces the hint"
+      );
+    });
+
+    // `#revealAnnounced` records that a "loading more" still owes its completion. Closing the
+    // panel abandons that reveal, so without a reset on close the debt survives and the next
+    // open's first pending→settled transition pays it — a completion for a load nobody started.
+    test("closing during a reveal does not pay its completion on the next open", async function (assert) {
+      let engine;
+      let releaseReveal;
+      let revealRequested = false;
+      const announce = sinon.spy(
+        getOwner(this).lookup("service:a11y"),
+        "announce"
+      );
+      const allItems = buildItems(500, (value) => (engine = value));
+      const revealPromise = new Promise((resolve) => (releaseReveal = resolve));
+      // Async even for page one, so a later re-query gives an observable pending→settled
+      // transition with the previous rows retained — the only shape in which the reveal
+      // modifier's `didUpdate` fires at all.
+      const load = (_filter, { offset = 0 }) => {
+        if (offset === 0) {
+          return Promise.resolve({
+            items: allItems.slice(0, 50),
+            total: allItems.length,
+          });
+        }
+
+        revealRequested = true;
+        return revealPromise;
+      };
+
+      await render(
+        <template><DSelect @load={{load}} @debounce={{false}} /></template>
+      );
+      await openSelect();
+      await click(findAll(OPTION_SELECTOR)[0]);
+
+      engine.revealMore();
+      await waitUntil(() => revealRequested);
+
+      assert.true(
+        announce
+          .getCalls()
+          .some(({ args }) => /loading more/i.test(String(args[0]))),
+        "the held reveal announces that it started, so a completion is owed"
+      );
+
+      // Dispatched raw rather than through `triggerKeyEvent`, which awaits `settled()` and
+      // would deadlock on the still-held reveal. Closing while the debt stands is the point.
+      find("[role='combobox']").dispatchEvent(
+        new KeyboardEvent("keydown", { key: "Escape", bubbles: true })
+      );
+
+      releaseReveal({ items: allItems.slice(50, 100), total: allItems.length });
+      await settled();
+
+      await openSelect();
+      // A re-query is what actually flips `serverPending` with rows retained, so this is the
+      // moment a surviving debt would be paid out as a completion nobody started.
+      await fillIn("[role='combobox']", "Item 1");
+
+      assert.strictEqual(
+        announce.withArgs(i18n("d_select.loading_complete"), "polite")
+          .callCount,
+        0,
+        "the abandoned reveal's completion is never announced"
+      );
+    });
+
     test("a filter change re-renders a client list without pinning a cap", async function (assert) {
       const items = buildItems(210);
 

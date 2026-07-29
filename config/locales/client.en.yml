@@ -3307,6 +3307,7 @@ en:
       search_placeholder: "Search…"
       no_results: "No results found"
       label: "Options"
+      label_with_value: "%{label}, %{value}"
       footer_label: "Actions"
       clear: "Clear selection"
       clear_all: "Clear all"

@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import booleanString from "discourse/helpers/boolean-string";
-import { or } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import SelectEngine, {
@@ -73,12 +72,20 @@ export default class SelectItem extends Component<SelectItemSignature> {
       {{on "click" this.handleClick}}
       ...attributes
     >
-      {{! Multi-select always shows a selected indicator (a default check); single-select opts in
-      via the selectedIcon arg, so an ordinary single-select gets no icon column. }}
-      {{#if (or @multiple @selectedIcon)}}
+      {{! Both glyphs stay hidden from assistive tech deliberately: an option row takes its
+      accessible name from its contents, so a screen-reader-only selected label here would land
+      inside every row's name. The row's aria-selected attribute is the state channel.
+
+      A consumer-supplied glyph keeps the show-when-selected behaviour — there is no unselected
+      counterpart to pair it with. }}
+      {{#if @selectedIcon}}
+        {{dIcon @selectedIcon class="d-combobox__option-selected-icon"}}
+      {{else if @multiple}}
+        {{! The outline pair reads as a checkbox, and the solid variant is absent from the
+        icon sprite. }}
         {{dIcon
-          (or @selectedIcon "check")
-          class="d-combobox__option-selected-icon"
+          (if @descriptor.flags.selected "far-square-check" "far-square")
+          class="d-combobox__option-selected-icon --checkbox"
         }}
       {{/if}}
       {{yield @descriptor.item}}

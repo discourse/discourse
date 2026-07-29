@@ -28,7 +28,9 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { resetLegacyBridge } from "discourse/ui-kit/select/-internals/modify-select-kit-bridge";
 import SelectItem from "discourse/ui-kit/select/-internals/select-item";
 import DSelect from "discourse/ui-kit/select/d-select";
-import SelectEngine from "discourse/ui-kit/select/select-engine";
+import SelectEngine, {
+  selectDivider,
+} from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
 const ITEMS = [
@@ -745,6 +747,67 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
       .doesNotExist("counts/empties are announced politely, never assertively");
   });
 
+  test("an empty result set is announced politely, not left to role=status", async function (assert) {
+    const announce = sinon.spy(
+      getOwner(this).lookup("service:a11y"),
+      "announce"
+    );
+
+    await render(<template><Host /></template>);
+    await fillIn("[role='combobox']", "a");
+    await fillIn("[role='combobox']", "zzzz");
+
+    assert.strictEqual(
+      announce.withArgs(i18n("d_select.no_results"), "polite").callCount,
+      1,
+      "landing on no matches announces through the a11y service"
+    );
+
+    await fillIn("[role='combobox']", "ban");
+    assert.strictEqual(
+      announce.withArgs(i18n("d_select.results_count", { count: 1 }), "polite")
+        .callCount,
+      1,
+      "recovering from empty announces the new count"
+    );
+
+    await fillIn("[role='combobox']", "zzzz");
+    assert.strictEqual(
+      announce.withArgs(i18n("d_select.no_results"), "polite").callCount,
+      2,
+      "re-entering the empty state announces again"
+    );
+  });
+
+  // `DAsyncContent` reports `mode: "content"` for both the resolved and the retained-pending
+  // phase, so the empty node stays mounted across two successive empty queries. A
+  // `didInsert`-only announcement announces the first and is then silent forever; only the
+  // `didUpdate` on the resolved filter catches the second.
+  test("a second empty query re-announces even though the empty node never remounts", async function (assert) {
+    const announce = sinon.spy(
+      getOwner(this).lookup("service:a11y"),
+      "announce"
+    );
+
+    await render(<template><Host /></template>);
+
+    await fillIn("[role='combobox']", "zzzz");
+    const emptyNode = find(".d-combobox__empty");
+
+    await fillIn("[role='combobox']", "yyyy");
+
+    assert.strictEqual(
+      find(".d-combobox__empty"),
+      emptyNode,
+      "the empty node is the same element across both queries (no remount to ride on)"
+    );
+    assert.strictEqual(
+      announce.withArgs(i18n("d_select.no_results"), "polite").callCount,
+      2,
+      "each empty query announces its own result"
+    );
+  });
+
   test("mid-composition input does not open or filter (IME)", async function (assert) {
     await render(<template><Host /></template>);
     const input = document.querySelector("[role='combobox']");
@@ -844,7 +907,11 @@ module(
       assert
         .dom(".d-combobox__trigger")
         .hasAttribute("role", "button", "the trigger is a disclosure button")
-        .hasAttribute("aria-haspopup", "listbox")
+        .hasAttribute(
+          "aria-haspopup",
+          "dialog",
+          "haspopup names the popup container, which is a dialog holding the filter and the list"
+        )
         .hasAttribute("tabindex", "0", "the trigger is focusable")
         .hasAttribute("aria-expanded", "false");
 
@@ -3832,12 +3899,23 @@ module(
         </template>
       );
 
+      // Both roots hold a value here, and an author-supplied name replaces name-from-contents —
+      // so naming them "Category" alone left the chosen value unspeakable. The name composes the
+      // field with its current value; see the (control trigger naming) module for the empty case.
       assert
         .dom(".lbl-static[role='combobox']")
-        .hasAria("label", "Category", "the static combobox root is named");
+        .hasAria(
+          "label",
+          "Category, Apple",
+          "the static combobox root names the field and its value"
+        );
       assert
         .dom(".lbl-button[role='button']")
-        .hasAria("label", "Category", "the button disclosure root is named");
+        .hasAria(
+          "label",
+          "Category, Apple",
+          "the button disclosure root names the field and its value"
+        );
     });
 
     test("a readonly button variant is announced aria-disabled (buttons have no readonly)", async function (assert) {
@@ -6558,3 +6636,317 @@ module("Integration | ui-kit | select | DSelect (refilter)", function (hooks) {
     );
   });
 });
+
+// The trigger-root keydown handler runs on the DMenu trigger, which CONTAINS the chip list in
+// every variant. Chip remove buttons are native tab stops on the control variants (the
+// `tabindex="-1"` seeding is gated on desktop typeahead), so without a target guard their keys
+// bubble into the handler and are treated as trigger keys.
+module(
+  "Integration | ui-kit | select | DSelect (chip keys, control variants)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    class ChipHost extends Component {
+      @tracked value = [1, 2];
+
+      @action
+      onChange(value) {
+        this.value = value;
+      }
+
+      <template>
+        <DSelect
+          @items={{ITEMS}}
+          @value={{this.value}}
+          @onChange={{this.onChange}}
+          @variant="static"
+          @multiple={{true}}
+          @clearable={{true}}
+          @identifier="test-select"
+        />
+      </template>
+    }
+
+    test("Enter on a chip's remove button does not open the menu", async function (assert) {
+      await render(<template><ChipHost /></template>);
+
+      assert
+        .dom(".d-combobox__chip")
+        .exists({ count: 2 }, "the held values render as chips");
+
+      const remove = findAll(".d-combobox__chip-remove")[0];
+      await focus(remove);
+      await triggerKeyEvent(remove, "keydown", "Enter");
+
+      assert
+        .dom("[role='listbox']")
+        .doesNotExist(
+          "activating a chip's remove button is not a trigger activation"
+        );
+    });
+
+    test("Backspace on a chip's remove button does not clear the whole selection", async function (assert) {
+      await render(<template><ChipHost /></template>);
+
+      const remove = findAll(".d-combobox__chip-remove")[0];
+      await focus(remove);
+      await triggerKeyEvent(remove, "keydown", "Backspace");
+
+      assert
+        .dom(".d-combobox__chip")
+        .exists(
+          { count: 2 },
+          "a key aimed at one chip never empties the selection"
+        );
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (panel filter naming)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    // The button variant's trigger is a disclosure, so the in-panel filter is the first thing a
+    // reader lands on after opening. Without a name it announces as a bare edit field and the
+    // reader is never told what it filters — the placeholder is a last-resort name source that
+    // screen readers treat inconsistently.
+    test("the in-panel filter input carries the field's accessible name", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @variant="button"
+            @label="Category"
+            @identifier="test-select"
+          />
+        </template>
+      );
+      await click(".d-combobox__trigger");
+
+      assert
+        .dom("input.d-combobox__filter")
+        .hasAttribute(
+          "aria-label",
+          "Category",
+          "the filter names the field it narrows"
+        );
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (control trigger naming)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    // An author-supplied name REPLACES name-from-contents on `role="button"`/`role="combobox"`,
+    // so labelling the trigger with the field name alone made the chosen value unspeakable: a
+    // category picker holding "Banana" announced only "Category, button".
+    test("a control trigger announces the field and its current value", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @variant="static"
+            @label="Category"
+            @value={{2}}
+            @identifier="test-select"
+          />
+        </template>
+      );
+
+      assert
+        .dom(".d-combobox__trigger")
+        .hasAttribute(
+          "aria-label",
+          "Category, Banana",
+          "the name carries both the field and the held value"
+        );
+    });
+
+    test("a control trigger with no value announces just the field", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @variant="static"
+            @label="Category"
+            @identifier="test-select"
+          />
+        </template>
+      );
+
+      assert
+        .dom(".d-combobox__trigger")
+        .hasAttribute(
+          "aria-label",
+          "Category",
+          "an empty select names only the field"
+        );
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (multi checkbox indicator)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    // A check that appears out of blank space read as an awkward gap and gave no hint the row
+    // was toggleable. The pair carries its own unselected state; both glyphs stay aria-hidden
+    // because `aria-selected` on the row is the state channel.
+    test("multi rows draw an empty box unselected and a checked box selected", async function (assert) {
+      await render(
+        <template>
+          <DefaultHost @multiple={{true}} @value={{array 1}} />
+        </template>
+      );
+      await click("[role='combobox']");
+
+      assert
+        .dom("[role='option'][aria-selected='true'] .d-icon-far-square-check")
+        .exists("the selected row draws a checked box");
+      assert
+        .dom("[role='option'][aria-selected='false'] .d-icon-far-square")
+        .exists("an unselected row draws an empty box rather than a gap");
+      assert
+        .dom("svg.d-combobox__option-selected-icon")
+        .hasAttribute(
+          "aria-hidden",
+          "true",
+          "the glyphs stay hidden from assistive tech, leaving aria-selected as the state channel"
+        );
+    });
+
+    test("a consumer @selectedIcon keeps its show-when-selected behaviour", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @multiple={{true}}
+            @value={{array 1}}
+            @selectedIcon="star"
+            @identifier="test-select"
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+
+      assert
+        .dom(".d-combobox__option-selected-icon.--checkbox")
+        .doesNotExist("a supplied glyph is not replaced by the checkbox pair");
+      assert
+        .dom("[role='option'][aria-selected='true'] .d-icon-star")
+        .exists("the supplied glyph still marks the selection");
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (divider rows)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    const DIVIDED = [ITEMS[0], selectDivider(), ITEMS[1], ITEMS[2]];
+
+    test("selectDivider builds a structural row that is drawn but never navigable", async function (assert) {
+      await render(
+        <template>
+          <DSelect @items={{DIVIDED}} @identifier="test-select" />
+        </template>
+      );
+      await click("[role='combobox']");
+
+      assert
+        .dom(".d-combobox__divider")
+        .exists({ count: 1 }, "the divider renders");
+      assert
+        .dom("[role='option']")
+        .exists({ count: 3 }, "a divider is not an option");
+      assert
+        .dom(".d-combobox__divider")
+        .hasAttribute(
+          "aria-hidden",
+          "true",
+          "a rule carries no meaning for a reader"
+        );
+    });
+
+    test("a divider is filtered out with everything else that does not match", async function (assert) {
+      await render(
+        <template>
+          <DSelect @items={{DIVIDED}} @identifier="test-select" />
+        </template>
+      );
+      await fillIn("[role='combobox']", "Banana");
+
+      assert
+        .dom(".d-combobox__divider")
+        .doesNotExist("a labelless row cannot match a query");
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (keyboard clear parity)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    // select-kit clears on Backspace-with-an-empty-filter unconditionally
+    // (select-kit-filter.gjs), and DSelect's own multi path already matches it. Gating only the
+    // single path behind @clearable left a picker a reader could reach a value in but not leave.
+    test("Backspace on an empty query clears a single selection without @clearable", async function (assert) {
+      await render(<template><Host @value={{2}} /></template>);
+
+      await click("[role='combobox']");
+      await fillIn("[role='combobox']", "");
+      await triggerKeyEvent("[role='combobox']", "keydown", "Backspace");
+
+      assert
+        .dom("[role='listbox']")
+        .exists("the list is still open after clearing");
+      assert
+        .dom("[role='option'][aria-selected='true']")
+        .doesNotExist("the held value is gone, matching select-kit's gesture");
+    });
+
+    test("Backspace with text still in the query only edits the query", async function (assert) {
+      await render(<template><Host @value={{2}} /></template>);
+
+      await click("[role='combobox']");
+      await fillIn("[role='combobox']", "Ban");
+      await triggerKeyEvent("[role='combobox']", "keydown", "Backspace");
+
+      assert
+        .dom("[role='option'][aria-selected='true']")
+        .exists("a non-empty query means Backspace is ordinary text editing");
+    });
+
+    // The typeahead merges the value display and the query into ONE field, so unlike select-kit
+    // (whose filter is a separate, always-empty input) the query is not empty while a value is
+    // shown. Clearing is therefore a two-step gesture: empty the field, then Backspace.
+    test("the typeahead input holds the label, so clearing takes emptying it first", async function (assert) {
+      await render(<template><Host @value={{2}} /></template>);
+      await click("[role='combobox']");
+
+      assert
+        .dom("[role='combobox']")
+        .hasValue(
+          "Banana",
+          "the input shows the held value, not an empty query"
+        );
+
+      await triggerKeyEvent("[role='combobox']", "keydown", "Backspace");
+      assert
+        .dom("[role='option'][aria-selected='true']")
+        .exists("a Backspace aimed at the label text is ordinary editing");
+
+      await fillIn("[role='combobox']", "");
+      await triggerKeyEvent("[role='combobox']", "keydown", "Backspace");
+      assert
+        .dom("[role='option'][aria-selected='true']")
+        .doesNotExist("once the query is empty, Backspace clears the value");
+    });
+  }
+);

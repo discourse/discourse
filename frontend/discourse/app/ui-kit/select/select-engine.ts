@@ -55,7 +55,11 @@ export interface SelectItem {
    */
   __header?: boolean;
 
-  /** Marks a synthetic divider row. Structural, like a header, but with no label. */
+  /**
+   * Marks a divider row. Structural like a header, but with no label — and unlike a header it
+   * is placed by the consumer, so build it with {@link selectDivider} rather than writing this
+   * marker by hand.
+   */
   __divider?: boolean;
 
   /**
@@ -121,6 +125,21 @@ export function selectItemLabel(
   labelField = "name"
 ): string {
   return String(item?.[labelField] ?? "");
+}
+
+/**
+ * Builds a divider row for an `@items` list.
+ *
+ * Dividers are the one structural row a consumer places themselves: `groupBy` injects headers
+ * because grouping implies where they go, but nothing can infer where a plain rule belongs.
+ * Constructing it here keeps the `__`-prefixed marker an implementation detail instead of a
+ * shape consumers hand-write — which would freeze it into the public contract by usage.
+ *
+ * A divider carries no label, so any non-empty query filters it out along with every other
+ * non-matching row: a list reads as divided only while unfiltered.
+ */
+export function selectDivider(): SelectItem {
+  return { __divider: true };
 }
 
 /** Options threaded into a source (`load` / `resolveValue`) call. */

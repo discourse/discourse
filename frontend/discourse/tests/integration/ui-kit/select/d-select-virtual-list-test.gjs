@@ -658,3 +658,70 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       );
   });
 });
+
+// The roving seed only sees MOUNTED rows, and the reveal scroll that would mount an off-window
+// selection is deferred a tick — so a selection past the window loses the seed to row zero, which
+// then gets PINNED, keeping it mounted and surviving every later reconcile. The visible outcome
+// is worse than a misplaced highlight: Enter activates the pinned row, silently replacing the
+// held value with the first item.
+module(
+  "Integration | ui-kit | select | DSelect windowed selection seed",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      enableVirtualization();
+    });
+
+    hooks.afterEach(function () {
+      disableVirtualization();
+    });
+
+    const HELD_INDEX = 30;
+
+    test("opening with an off-window selection activates the selection, not row zero", async function (assert) {
+      await render(
+        <template>
+          {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+          <style>
+            .d-virtual-list {
+              height: 200px;
+              overflow-y: auto;
+            }
+          </style>
+          <DSelect
+            @items={{LOADED_ITEMS}}
+            @value={{HELD_INDEX}}
+            @variant="static"
+          />
+        </template>
+      );
+      await openSelect();
+
+      const active = find(`${LISTBOX_SELECTOR} > [role='option'].--active`);
+      assert.true(Boolean(active), "an option is active on open");
+      assert.strictEqual(
+        active?.dataset.index,
+        String(HELD_INDEX),
+        "the active row is the held selection, not the first mounted row"
+      );
+      assert
+        .dom("[role='combobox']")
+        .hasAttribute(
+          "aria-activedescendant",
+          active?.id,
+          "the controller points at the selected row"
+        );
+
+      await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
+
+      assert
+        .dom(`${LISTBOX_SELECTOR} > [role='option'].--active`)
+        .hasAttribute(
+          "data-index",
+          String(HELD_INDEX + 1),
+          "ArrowDown continues from the selection, not from row one"
+        );
+    });
+  }
+);
