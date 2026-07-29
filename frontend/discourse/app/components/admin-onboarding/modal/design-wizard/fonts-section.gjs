@@ -70,7 +70,7 @@ export default class DesignWizardFontsSection extends Component {
                   @translatedLabel={{font.name}}
                   class="btn-flat
                     {{fontClass font.key}}
-                    {{if (eq font.key @bodyFont) '--selected'}}"
+                    {{if (eq font.key @bodyFont) '-selected'}}"
                 />
               </dropdown.item>
             {{/each}}
@@ -108,7 +108,7 @@ export default class DesignWizardFontsSection extends Component {
                   @translatedLabel={{font.name}}
                   class="btn-flat
                     {{fontClass font.key}}
-                    {{if (eq font.key @headingFont) '--selected'}}"
+                    {{if (eq font.key @headingFont) '-selected'}}"
                 />
               </dropdown.item>
             {{/each}}
