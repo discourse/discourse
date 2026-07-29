@@ -58,6 +58,10 @@ fr:
         access_permission_viewer: "Lecteur"
         access_permission_viewer_description: "Peut consulter le contenu de cette entité"
         access_permission_remove: "Supprimer"
+        access_permission_remove_description: "Supprimer la permission pour ce bénéficiaire"
+        add_group: "Ajouter un utilisateur ou un groupe"
+        mandatory_acl_tooltip: "Cette permission est obligatoire pour %{name} et ne peut pas être supprimée."
+        mandatory: "Obligatoire"
     carousel:
       go_to_slide: "Accéder à la diapositive %{index}"
       previous: "Diapositive précédente"
@@ -2203,6 +2207,9 @@ fr:
         contextual: "Nouveau contenu de la page"
       bookmark_after_notification:
         title: "Après l'envoi d'une notification de rappel de signet :"
+      send_shortcut:
+        enter: "Entrée"
+        meta_enter: "%{meta_key} + Entrée"
       like_notification_frequency:
         title: "Envoyer une notification si un « J'aime » est attribué"
         always: "Toujours"
@@ -4577,6 +4584,7 @@ fr:
         modal:
           title: "Traductions"
           confirm_delete: "Voulez-vous vraiment supprimer les traductions de « %{languageCode} » ?"
+          post_language: "Langue de la publication"
           discard_language_change: "Annuler la modification"
         success: "Les traductions ont été mises à jour avec succès"
         post_language_selector:
@@ -6272,6 +6280,7 @@ fr:
             stats_and_thresholds:
               title: "Statistiques et seuils"
         category_management:
+          create_category: "Créer une catégorie"
           tabs:
             settings: "Paramètres"
           types:

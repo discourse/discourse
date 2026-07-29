@@ -74,6 +74,10 @@ pl_PL:
     errors:
       send_chat_integration_message:
         channel_not_found: "Nie znaleziono kanału: %{channel_id}"
+        provider_disabled: "Dostawca integracji czatu jest wyłączony lub brakuje go: %{provider}"
+        provider_failed: "Dostawca %{provider} nie mógł wysłać wiadomości"
+        provider_failed_with_details: "Dostawca %{provider} nie mógł wysłać wiadomości: %{details}"
+        message_required: "Wymagana jest wiadomość"
   chat_integration:
     all_categories: "(wszystkie kategorie)"
     deleted_category: "(usunięta kategoria)"

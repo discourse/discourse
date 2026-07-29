@@ -1793,6 +1793,9 @@ zh_TW:
         contextual: "新的頁面內容"
       bookmark_after_notification:
         title: "發送書籤提醒通知後："
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "使用者被讚時通知提醒"
         always: "總是"

@@ -1276,6 +1276,8 @@ bs_BA:
         title: "Naslov pozadinske stranice prikazuje broj:"
         notifications: "Nove obavijesti"
         contextual: "Novi sadržaj stranice"
+      send_shortcut:
+        enter: "Naprijed"
       like_notification_frequency:
         title: "Obavijesti ukoliko se nekome sviđa"
         always: "Uvijek"

@@ -2138,6 +2138,9 @@ es:
         contextual: "Contenido nuevo en la página"
       bookmark_after_notification:
         title: "Después de enviar una notificación de recordatorio de marcador:"
+      send_shortcut:
+        enter: "Intro"
+        meta_enter: "%{meta_key} + Intro"
       like_notification_frequency:
         title: "Notificar cuando me dan me gusta"
         always: "Siempre"

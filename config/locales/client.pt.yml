@@ -1956,6 +1956,9 @@ pt:
         contextual: "Conteúdo da nova página"
       bookmark_after_notification:
         title: "Após o envio de uma notificação de lembrete de marcador:"
+      send_shortcut:
+        enter: "Entrar"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Notificar quando alguém gostar"
         always: "Sempre"

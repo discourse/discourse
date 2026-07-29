@@ -2625,6 +2625,9 @@ ar:
         contextual: "محتوى الصفحة الجديد"
       bookmark_after_notification:
         title: "بعد إرسال إشعار التذكير بإشارة مرجعية:"
+      send_shortcut:
+        enter: "مفتاح Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "إرسال إشعار عند تسجيل الإعجاب"
         always: "دائمًا"

@@ -142,9 +142,6 @@ fa_IR:
         dm_and_mentions: "پیام‌های مستقیم، منشن‌ها و موضوعات تماشا شده"
         only_mentions: "فقط منشن‌ها"
         never: "هرگز"
-      send_shortcut:
-        enter:
-          label: "ارسال با Enter"
       enable: "فعال کردن گفتگو"
       flag: "پرچم"
       emoji: "درج ایموجی"

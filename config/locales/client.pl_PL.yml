@@ -2426,6 +2426,10 @@ pl_PL:
         contextual: "Nowa zawartość strony"
       bookmark_after_notification:
         title: "Po wysłaniu przypomnienia o zakładce:"
+      send_shortcut:
+        title: "Wysyłaj wiadomości w kompozytorach w stylu czatu za pomocą:"
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Powiadom o polubieniach"
         always: "Zawsze"
@@ -2885,10 +2889,15 @@ pl_PL:
     home: "Strona główna"
     read_only_mode:
       enabled: "Strona jest w trybie tylko-do-odczytu. Możesz ją nadal przeglądać, ale operacje takie jak publikowanie postów, polubianie i inne są wyłączone."
+      enabled_anonymous: "Ta witryna jest w trybie tylko do odczytu. Proszę kontynuować przeglądanie, ale rejestracja i logowanie są na razie niedostępne."
       login_disabled: "Logowanie jest zablokowane, gdy strona jest w trybie tylko do odczytu."
       logout_disabled: "Wylogowanie jest zablokowane gdy strona jest w trybie tylko do odczytu."
+      signup_disabled: "Rejestracja jest wyłączona, gdy witryna działa w trybie tylko do odczytu."
     staff_writes_only_mode:
       enabled: "Ta strona jest w trybie tylko dla personelu. Kontynuuj przeglądanie, ale odpowiadanie, polubienia i inne działania są ograniczone tylko do członków personelu."
+      enabled_anonymous: "Ta witryna jest dostępna tylko dla personelu. Proszę kontynuować przeglądanie, ale rejestracja jest niedostępna i tylko pracownicy mogą się zalogować."
+      login_disabled: "Gdy witryna działa w trybie tylko dla personelu, zalogować się mogą tylko członkowie personelu."
+      signup_disabled: "Rejestracja jest niemożliwa, gdy witryna jest w trybie wyłącznie dla personelu."
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
@@ -3290,6 +3299,12 @@ pl_PL:
         other: "Wybierz co najmniej %{count} elementów."
       components:
         filter_for_more: Filtruj po więcej...
+        multiple_categories_selector:
+          limited_results_notice:
+            one: "Wyświetlanie %{shown} z kategorii %{count} . Wpisz, aby wyszukać więcej."
+            few: "Wyświetlanie %{shown} z kategorii %{count} . Wpisz, aby wyszukać więcej."
+            many: "Wyświetlanie %{shown} z kategorii %{count} . Wpisz, aby wyszukać więcej."
+            other: "Wyświetlanie %{shown} z kategorii %{count} . Wpisz, aby wyszukać więcej."
         categories_admin_dropdown:
           title: "Zarządzaj kategoriami"
         tag_category_admin_dropdown:

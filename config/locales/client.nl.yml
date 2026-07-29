@@ -2140,6 +2140,9 @@ nl:
         contextual: "Nieuwe pagina-inhoud"
       bookmark_after_notification:
         title: "Nadat een herinneringsmelding voor een bladwijzer is verzonden:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Melding sturen bij like"
         always: "Altijd"

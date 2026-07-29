@@ -1698,6 +1698,8 @@ ro:
         title: "Titlul paginii în fundal afișează numărul de:"
         notifications: "Notificări noi"
         contextual: "Conținut nou al paginii"
+      send_shortcut:
+        enter: "Enter"
       like_notification_frequency:
         title: "Notificare atunci când se primește apreciere"
         always: "Întotdeauna"

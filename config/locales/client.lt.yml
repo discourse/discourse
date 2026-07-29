@@ -1786,6 +1786,9 @@ lt:
         contextual: "Naujas puslapio turinys"
       bookmark_after_notification:
         title: "Išsiuntus priminimo apie žymę pranešimą:"
+      send_shortcut:
+        enter: "Įeiti"
+        meta_enter: "%{meta_key} + Įveskite"
       like_notification_frequency:
         title: "Perspėti susiejus"
         always: "Visada"

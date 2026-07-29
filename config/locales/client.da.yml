@@ -1755,6 +1755,9 @@ da:
         contextual: "Nyt side indhold"
       bookmark_after_notification:
         title: "Når der er sendt en notifikation om bogmærkepåmindelse:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Giv besked når andre 'Synes godt godt'"
         always: "Altid"

@@ -1952,6 +1952,9 @@ fi:
         contextual: "Uusi sivusisältö"
       bookmark_after_notification:
         title: "Kun kirjanmerkkimuistutusilmoitus on lähetetty:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Ilmoita, kun viestistäni tykätään"
         always: "Aina"

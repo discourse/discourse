@@ -1348,6 +1348,8 @@ gl:
         title: "O título da páxina de fondo presenta a conta de:"
         notifications: "Novas notificacións"
         contextual: "Contido novo da páxina"
+      send_shortcut:
+        enter: "Intro"
       like_notification_frequency:
         title: "Notificar cando reciba gústames"
         always: "Sempre"

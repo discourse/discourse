@@ -1538,6 +1538,9 @@ ko:
         title: "배경 페이지 제목에 다음 개수가 표시됩니다."
         notifications: "새 알림"
         contextual: "새 페이지 콘텐츠"
+      send_shortcut:
+        enter: "시작하다"
+        meta_enter: "%{meta_key} + 엔터"
       like_notification_frequency:
         title: "좋아요 받았을 때 알림"
         always: "항상"

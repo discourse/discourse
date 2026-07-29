@@ -1583,6 +1583,9 @@ te:
         contextual: "కొత్త పేజీ కంటెంట్"
       bookmark_after_notification:
         title: "బుక్‌మార్క్ రిమైండర్ నోటిఫికేషన్ పంపిన తర్వాత:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "ఇష్టపడినప్పుడు తెలియజేయండి"
         always: "ఎల్లప్పుడూ"

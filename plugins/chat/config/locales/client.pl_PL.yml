@@ -174,12 +174,6 @@ pl_PL:
         never: "Nigdy"
       separate_sidebar_mode:
         title: "Pokaż oddzielne tryby paska bocznego dla forum i czatu"
-      send_shortcut:
-        title: "Wyślij skrót"
-        enter:
-          label: "Wyślij przez Enter"
-        meta_enter:
-          label: "Wyślij przez %{meta_key} + Enter"
       enable: "Włącz czat"
       flag: "Oflaguj"
       emoji: "Wstaw emoji"

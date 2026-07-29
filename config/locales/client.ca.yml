@@ -1298,6 +1298,8 @@ ca:
         title: "El títol de la pàgina de fons mostra el recompte de:"
         notifications: "Notificacions noves"
         contextual: "Nou contingut de la pàgina"
+      send_shortcut:
+        enter: "Retorn"
       like_notification_frequency:
         title: "Notifica'm quan tingui 'm'agrada'"
         always: "Sempre"
