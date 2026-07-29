@@ -39,6 +39,7 @@ const STEP_COMPLETED_KEY = "onboarding_step_select_theme";
  */
 export default class DesignWizardService extends Service {
   @service keyValueStore;
+  @service router;
   @service siteSettings;
 
   @tracked active = false;
@@ -58,9 +59,12 @@ export default class DesignWizardService extends Service {
   @tracked animateEntrance = true;
 
   #onComplete;
+  #originalCategoryPageStyle;
 
   async start({ onComplete } = {}) {
     this.#onComplete = onComplete;
+    this.#originalCategoryPageStyle ??=
+      this.siteSettings.desktop_category_page_style;
 
     // always fetch fresh: progress saves change the settings this payload
     // reflects, so a cached copy would preview stale selections
@@ -81,6 +85,11 @@ export default class DesignWizardService extends Service {
     this.animateEntrance = !stored;
     this.active = true;
     this.#sizeChromeFromSettings();
+
+    if (stored && this.homepage === "categories") {
+      this.siteSettings.desktop_category_page_style = this.categoryPageStyle;
+    }
+
     await this.#previewSelections();
   }
 
@@ -184,6 +193,7 @@ export default class DesignWizardService extends Service {
     this.homepage = homepage;
     if (homepage === "categories") {
       this.categoryPageStyle = "categories_boxes";
+      this.siteSettings.desktop_category_page_style = this.categoryPageStyle;
     }
     this.#persistState();
 
@@ -194,12 +204,23 @@ export default class DesignWizardService extends Service {
   selectCategoryPageStyle(value) {
     this.categoryPageStyle = value;
     this.#persistState();
+
+    // the client copy of the setting drives how the categories page renders,
+    // so mutating it and re-rendering previews the style live
+    this.siteSettings.desktop_category_page_style = value;
+    this.#refreshCategoriesPage();
   }
 
   stop() {
     this.active = false;
     this.keyValueStore.remove(STATE_KEY);
     clearPreview(document);
+
+    if (this.#originalCategoryPageStyle) {
+      this.siteSettings.desktop_category_page_style =
+        this.#originalCategoryPageStyle;
+      this.#refreshCategoriesPage();
+    }
     document.documentElement.style.removeProperty(
       "--design-wizard-chrome-font-size"
     );
@@ -355,6 +376,12 @@ export default class DesignWizardService extends Service {
         stepIndex: this.stepIndex,
       }),
     });
+  }
+
+  #refreshCategoriesPage() {
+    if (this.router.currentRouteName?.startsWith("discovery.categories")) {
+      this.router.refresh();
+    }
   }
 
   #supportedHomepage(homepage) {

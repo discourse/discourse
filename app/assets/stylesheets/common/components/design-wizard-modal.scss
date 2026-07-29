@@ -471,8 +471,7 @@
   &__homepage-detail {
     margin-top: var(--space-2);
 
-    label,
-    .design-wizard-modal__homepage-note {
+    label {
       display: block;
       font-size: var(--font-down-2);
       color: var(--primary-medium);
@@ -543,6 +542,7 @@
 .design-wizard-modal__font-list {
   max-height: 40vh;
   overflow-y: auto;
+  z-index: 9999;
 
   .btn {
     font-size: var(--font-up-1);

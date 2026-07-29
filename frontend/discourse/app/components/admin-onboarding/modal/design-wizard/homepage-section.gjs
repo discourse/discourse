@@ -166,11 +166,6 @@ const DesignWizardHomepageSection = <template>
           </button>
         {{/each}}
       </div>
-      <p class="design-wizard-modal__homepage-note">
-        {{i18n
-          "admin_onboarding_banner.design_wizard.homepage.category_page_style_note"
-        }}
-      </p>
     </div>
   {{else}}
     <div class="design-wizard-modal__homepage-detail">
