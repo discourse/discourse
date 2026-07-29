@@ -49,6 +49,9 @@ export default class DesignWizardService extends Service {
   @tracked bodyFont;
   @tracked headingFont;
   @tracked defaultTextSize;
+  // the admin may render at a personal text size, so the default is only
+  // previewed once a size is actively picked in the wizard
+  @tracked textSizeTouched = false;
   @tracked saving = false;
   @tracked selectedPairKeys = new Map();
   @tracked stepIndex = 0;
@@ -181,6 +184,7 @@ export default class DesignWizardService extends Service {
 
   selectDefaultTextSize(size) {
     this.defaultTextSize = size;
+    this.textSizeTouched = true;
     this.#persistState();
     applyPreviewTextSize(document, size);
   }
@@ -309,6 +313,7 @@ export default class DesignWizardService extends Service {
     this.bodyFont = this.data.base_font;
     this.headingFont = this.data.heading_font;
     this.defaultTextSize = this.siteSettings.default_text_size;
+    this.textSizeTouched = false;
     this.stepIndex = 0;
   }
 
@@ -321,6 +326,7 @@ export default class DesignWizardService extends Service {
     this.headingFont = stored.headingFont;
     this.defaultTextSize =
       stored.defaultTextSize ?? this.siteSettings.default_text_size;
+    this.textSizeTouched = stored.textSizeTouched ?? false;
     this.stepIndex = stored.stepIndex ?? 0;
   }
 
@@ -335,6 +341,7 @@ export default class DesignWizardService extends Service {
         bodyFont: this.bodyFont,
         headingFont: this.headingFont,
         defaultTextSize: this.defaultTextSize,
+        textSizeTouched: this.textSizeTouched,
         stepIndex: this.stepIndex,
       }),
     });
@@ -356,7 +363,9 @@ export default class DesignWizardService extends Service {
       bodyFont: this.bodyFont,
       headingFont: this.headingFont,
     });
-    applyPreviewTextSize(document, this.defaultTextSize);
+    if (this.textSizeTouched) {
+      applyPreviewTextSize(document, this.defaultTextSize);
+    }
 
     const paletteId = this.previewPalette?.id;
     if (paletteId) {
