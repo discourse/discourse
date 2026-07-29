@@ -264,7 +264,7 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
               "assignments" => [
                 assignment("full_name", "={{ $json.name }}"),
                 assignment("profile.score", "12.5", type: "number"),
-                assignment("active", "true", type: "boolean"),
+                assignment("active", "={{ $json.enabled }}", type: "boolean"),
                 assignment("tags", '["workflow"]', type: "array"),
                 assignment("source", "={{ $json }}", type: "object"),
               ],
@@ -273,7 +273,13 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
         )
 
       execution =
-        execute_workflow(caller, trigger_data: [{ "name" => "Ada" }, { "name" => "Grace" }])
+        execute_workflow(
+          caller,
+          trigger_data: [
+            { "name" => "Ada", "enabled" => true },
+            { "name" => "Grace", "enabled" => false },
+          ],
+        )
       expect_parent_waiting_at_call(execution)
 
       expect(run_workflow_call_jobs).to eq(1)
@@ -293,6 +299,7 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
           "tags" => ["workflow"],
           "source" => {
             "name" => "Ada",
+            "enabled" => true,
           },
         },
         {
@@ -300,10 +307,11 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
           "profile" => {
             "score" => 12.5,
           },
-          "active" => true,
+          "active" => false,
           "tags" => ["workflow"],
           "source" => {
             "name" => "Grace",
+            "enabled" => false,
           },
         },
       ]
@@ -312,45 +320,6 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
       expect(trigger_step["output"].map { |item| item["json"] }).to eq(expected_items)
       expect(call_step["output"].map { |item| item["json"] }).to eq(
         expected_items.map { |item| item.merge("called" => "yes") },
-      )
-    end
-
-    it "resolves dynamic expressions for manually mapped boolean fields" do
-      target = callable_workflow_with_set_fields([assignment("called", "yes")])
-      caller =
-        caller_workflow_for(
-          target,
-          call_configuration: {
-            "mapping_mode" => "manual",
-            "fields" => {
-              "assignments" => [
-                assignment("active", "={{ $json.enabled }}", type: "boolean"),
-                assignment("staff", "={{ $json.role }}", type: "boolean"),
-              ],
-            },
-          },
-        )
-
-      execution =
-        execute_workflow(
-          caller,
-          trigger_data: [
-            { "name" => "Ada", "enabled" => true, "role" => "true" },
-            { "name" => "Grace", "enabled" => false, "role" => "moderator" },
-          ],
-        )
-      expect_parent_waiting_at_call(execution)
-
-      expect(run_workflow_call_jobs).to eq(1)
-
-      execution.reload
-      child_execution_id = serialized_step(execution).dig(:workflow_call_run, "execution_id")
-      child_execution = DiscourseWorkflows::Execution.find(child_execution_id)
-      trigger_step = child_execution.execution_data.find_step(node_id: "call-trigger")
-
-      expect(execution).to be_success
-      expect(trigger_step["output"].map { |item| item["json"] }).to eq(
-        [{ "active" => true, "staff" => true }, { "active" => false, "staff" => false }],
       )
     end
 

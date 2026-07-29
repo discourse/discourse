@@ -2043,14 +2043,21 @@ module("Integration | Component | workflows property engine", function (hooks) {
       </template>
     );
 
-    assert.dom(".form-kit__control-toggle").exists("starts as a plain toggle");
+    const row = ".workflows-property-engine__collection-row";
+
+    assert
+      .dom(`${row} .form-kit__control-toggle`)
+      .exists("starts as a plain toggle");
+    assert
+      .dom(`${row} .workflows-property-engine__mode-control`)
+      .exists("offers a dynamic mode for boolean assignments");
 
     await click(
-      '.workflows-property-engine__mode-control input[value="dynamic"]'
+      `${row} .workflows-property-engine__mode-control input[value="dynamic"]`
     );
 
     assert
-      .dom(".workflows-variable-input")
+      .dom(`${row} .workflows-variable-input`)
       .exists("swaps the toggle for an expression input");
     assert.strictEqual(
       this.formApi.get("fields.assignments.0.value"),
@@ -2059,12 +2066,12 @@ module("Integration | Component | workflows property engine", function (hooks) {
     );
 
     await click(
-      '.workflows-property-engine__mode-control input[value="plain"]'
+      `${row} .workflows-property-engine__mode-control input[value="plain"]`
     );
 
     assert.false(
       this.formApi.get("fields.assignments.0.value"),
-      "converts the expression back into a fixed boolean"
+      "converts the expression back into a fixed boolean, not the string 'false'"
     );
   });
 
@@ -2100,6 +2107,118 @@ module("Integration | Component | workflows property engine", function (hooks) {
     );
 
     assert.dom(".form-kit__control-toggle").doesNotExist();
+    assert.dom(".workflows-variable-input").includesText("enabled");
+  });
+
+  test("switching an assignment to boolean keeps an expression it already holds", async function (assert) {
+    this.setProperties({
+      configuration: {
+        fields: {
+          assignments: [
+            { name: "active", type: "string", value: "={{ $json.enabled }}" },
+          ],
+        },
+      },
+      formApi: null,
+      nodeType: "action:workflow_call",
+      schema: {
+        fields: {
+          type: "assignment_collection",
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    await select(
+      ".workflows-property-engine__collection-row select",
+      "boolean"
+    );
+
+    assert.strictEqual(
+      this.formApi.get("fields.assignments.0.value"),
+      "={{ $json.enabled }}",
+      "keeps the expression when the type changes"
+    );
+    assert
+      .dom(".form-kit__control-toggle")
+      .doesNotExist("does not fall back to a toggle over an expression");
+    assert.dom(".workflows-variable-input").includesText("enabled");
+  });
+
+  // Collection rows are keyed by index, so removing one re-renders the survivor
+  // in the deleted row's component instance.
+  test("removing a boolean assignment row keeps the survivor's expression", async function (assert) {
+    this.setProperties({
+      configuration: {
+        fields: {
+          assignments: [
+            { name: "flagged", type: "boolean", value: false },
+            { name: "active", type: "boolean", value: "={{ $json.enabled }}" },
+          ],
+        },
+      },
+      formApi: null,
+      nodeType: "action:workflow_call",
+      schema: {
+        fields: {
+          type: "assignment_collection",
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    await click(findAll(".workflows-property-engine__collection-delete")[0]);
+
+    assert.strictEqual(
+      this.formApi.get("fields.assignments.0.value"),
+      "={{ $json.enabled }}",
+      "leaves the surviving expression untouched"
+    );
+    assert
+      .dom(".form-kit__control-toggle")
+      .doesNotExist("does not offer a toggle that would overwrite it");
     assert.dom(".workflows-variable-input").includesText("enabled");
   });
 });
