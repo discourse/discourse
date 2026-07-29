@@ -78,6 +78,8 @@
   overflow: hidden;
   background: var(--token-color-surface);
   border-left: 1px solid var(--content-border-color);
+  border-top-left-radius: var(--d-border-radius-large);
+  border-bottom-left-radius: var(--d-border-radius-large);
   box-shadow: var(--shadow-modal);
   animation: design-wizard-float-slide-in 0.25s ease-out;
 

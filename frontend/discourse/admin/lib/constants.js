@@ -128,9 +128,9 @@ export const MORE_FONTS = [
 ];
 
 export const DEFAULT_TEXT_SIZES = [
-  "smallest",
-  "smaller",
-  "normal",
-  "larger",
-  "largest",
+  "Smallest",
+  "Smaller",
+  "Normal",
+  "Larger",
+  "Largest",
 ];

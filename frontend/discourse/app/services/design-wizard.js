@@ -8,7 +8,9 @@ import {
   applyPreviewTextSize,
   clearPreview,
 } from "discourse/lib/design-wizard-preview";
+import { isTesting } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
+import discourseLater from "discourse/lib/later";
 import { HORIZON_THEME_ID, setLocalTheme } from "discourse/lib/theme-selector";
 
 const STATE_KEY = "design_wizard_sidebar_state";
@@ -50,13 +52,13 @@ export default class DesignWizardService extends Service {
   async start({ onComplete } = {}) {
     this.#onComplete = onComplete;
 
-    if (!this.data) {
-      try {
-        this.data = await ajax("/admin/config/design-wizard.json");
-      } catch (error) {
-        popupAjaxError(error);
-        return;
-      }
+    // always fetch fresh: progress saves change the settings this payload
+    // reflects, so a cached copy would preview stale selections
+    try {
+      this.data = await ajax("/admin/config/design-wizard.json");
+    } catch (error) {
+      popupAjaxError(error);
+      return;
     }
 
     const stored = this.#storedState;
@@ -221,6 +223,19 @@ export default class DesignWizardService extends Service {
         type: "PUT",
         data: this.#selectionsPayload,
       });
+
+      // saving recompiles stylesheets and the live reloader swaps them in,
+      // which can momentarily replace the previewed palette with the saved
+      // theme's default; re-assert the preview now and once more after the
+      // late-arriving swap
+      await this.#previewSelections();
+      if (!isTesting()) {
+        discourseLater(() => {
+          if (this.active) {
+            this.#previewSelections();
+          }
+        }, 1000);
+      }
       return true;
     } catch (error) {
       popupAjaxError(error);
