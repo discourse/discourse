@@ -145,11 +145,6 @@ fr:
         never: "Jamais"
       separate_sidebar_mode:
         title: "Afficher des modes de barre latérale distincts pour le forum et la discussion"
-      send_shortcut:
-        enter:
-          label: "Envoyer par Entrée"
-        meta_enter:
-          label: "Envoyer avec %{meta_key} + Entrée"
       enable: "Activer la discussion"
       flag: "Signalement"
       emoji: "Insérer un émoji"

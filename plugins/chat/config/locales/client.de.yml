@@ -166,12 +166,6 @@ de:
         never: "niemals"
       separate_sidebar_mode:
         title: "Separate Seitenleisten-Modi für Forum und Chat anzeigen"
-      send_shortcut:
-        title: "Tastenkombinationen zum Absenden"
-        enter:
-          label: "Senden mit Enter"
-        meta_enter:
-          label: "Senden mit %{meta_key} + Enter"
       enable: "Chat aktivieren"
       flag: "Melden"
       emoji: "Emoji einfügen"

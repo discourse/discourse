@@ -1715,6 +1715,9 @@ nb_NO:
         contextual: "Nytt sideinnhold"
       bookmark_after_notification:
         title: "Etter at en påminnelse om bokmerke er sendt:"
+      send_shortcut:
+        enter: "Angi"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Varsle når likt"
         always: "Alltid"

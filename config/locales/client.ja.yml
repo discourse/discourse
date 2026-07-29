@@ -1936,6 +1936,9 @@ ja:
         contextual: "新しいページのコンテンツ"
       bookmark_after_notification:
         title: "ブックマークのリマインダー通知が送信された後:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "「いいね！」された時に通知する"
         always: "常時"

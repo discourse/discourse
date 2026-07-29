@@ -2051,6 +2051,9 @@ sk:
         contextual: "Nový obsah stránky"
       bookmark_after_notification:
         title: "Po odoslaní upozornenia na pripomenutie záložky:"
+      send_shortcut:
+        enter: "Zadajte"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Oznámiť pri lajknutí"
         always: "Vždy"

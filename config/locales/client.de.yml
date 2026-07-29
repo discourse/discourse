@@ -2203,6 +2203,9 @@ de:
         contextual: "Neuer Seiteninhalt"
       bookmark_after_notification:
         title: "Nachdem eine Lesezeichen-Erinnerungsbenachrichtigung gesendet wurde:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Eingabetaste"
       like_notification_frequency:
         title: "Benachrichtigung für erhaltene „Gefällt mir“ anzeigen"
         always: "Immer"

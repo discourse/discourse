@@ -1821,6 +1821,9 @@ fa_IR:
         contextual: "محتوای تازه ی صفحه"
       bookmark_after_notification:
         title: "پس از ارسال آگاه‌سازی یادآوری نشانک:"
+      send_shortcut:
+        enter: "وارد شدن "
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "وقتی پسندیده شد اعلام کن"
         always: "همیشه"

@@ -2294,6 +2294,9 @@ he:
         contextual: "תוכן חדש בדף"
       bookmark_after_notification:
         title: "לאחר שליחת התראה על תזכורת סימניה:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "‎%{meta_key} + Enter"
       like_notification_frequency:
         title: "התראה כשנאהב"
         always: "תמיד"

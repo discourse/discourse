@@ -146,11 +146,6 @@ ur:
         never: "کبھی نہیں"
       separate_sidebar_mode:
         title: "فورم اور چیٹ کے لیے علیحدہ سائڈبار موڈز دکھائیں"
-      send_shortcut:
-        enter:
-          label: "Enter کے ذریعے بھیجیں"
-        meta_enter:
-          label: "%{meta_key} + Enter کے ذریعے بھیجیں"
       enable: "گفتگو کو فعال کریں"
       flag: "نشان دہی"
       emoji: "ایموجی داخل کریں"

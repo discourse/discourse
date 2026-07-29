@@ -1710,6 +1710,8 @@ hy:
         contextual: "Նոր էջի բովանդակությունը"
       bookmark_after_notification:
         title: "Էջանիշի հիշեցման ծանուցում ուղարկելուց հետո՝"
+      send_shortcut:
+        enter: "Մուտք"
       like_notification_frequency:
         title: "Ծանուցել հավանելու դեպքում"
         always: "Միշտ"

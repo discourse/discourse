@@ -2132,6 +2132,9 @@ el:
         contextual: "Νέου περιεχομένου σελίδας"
       bookmark_after_notification:
         title: "Μετά την αποστολή ειδοποίησης υπενθύμισης σελιδοδείκτη:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Ειδοποίησέ με όταν έχω \"μου αρέσει\""
         always: "Πάντα"

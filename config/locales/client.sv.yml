@@ -1620,6 +1620,9 @@ sv:
         contextual: "Nytt sidinnehåll"
       bookmark_after_notification:
         title: "Efter att en bokmärkespåminnelse har skickats:"
+      send_shortcut:
+        enter: "Retur"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Avisera vid gillning"
         always: "Alltid"

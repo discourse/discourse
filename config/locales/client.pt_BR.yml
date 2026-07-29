@@ -2157,6 +2157,9 @@ pt_BR:
         contextual: "Novo conteúdo da página"
       bookmark_after_notification:
         title: "Depois que uma notificação de lembrete de marcador é enviada:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Notificar ao receber curtida"
         always: "Sempre"

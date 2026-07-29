@@ -7,22 +7,74 @@
 vi:
   admin_js:
     admin:
+      api:
+        scopes:
+          descriptions:
+            ai:
+              search: "Cho phép tìm kiếm bằng Trí tuệ nhân tạo (AI Search)"
+              stream_completion: "Cho phép phát luồng phản hồi từ Đại lý Trí tuệ nhân tạo (AI Agent Stream Completions)"
+              update_agents: "Cho phép cập nhật Đại lý Trí tuệ nhân tạo (AI Agent)"
+              manage_artifacts: "Cho phép quản lý Chân thể Trí tuệ nhân tạo (AI Artifacts - danh sách, xem, tạo, cập nhật, xóa)"
+      site_settings:
+        categories:
+          discourse_ai: "Discourse AI"
       dashboard:
         emotion:
+          title: "Cảm xúc (Emotion)"
           description: "Bảng liệt kê số lượng bình luận được phân loại theo cảm xúc. Tùy thuộc vào phương pháp phân loại cảm xúc được chọn, các bình luận sẽ được phân loại bằng mô hình phân loại cảm xúc đã cấu hình ('SamLowe/roberta-base-go_emotions') hoặc đại lý (Agent) phân loại cảm xúc đã cấu hình.\n"
         reports:
           filters:
+            group_by:
+              label: "Nhóm theo"
             sort_by:
               label: "Sắp xếp theo"
+            tag:
+              label: "Thẻ"
+      logs:
+        staff_actions:
+          actions:
+            create_ai_llm_model: "Tạo Mô hình Ngôn ngữ lớn (LLM Model)"
+            update_ai_llm_model: "Cập nhật Mô hình Ngôn ngữ lớn (LLM Model)"
+            delete_ai_llm_model: "Xóa Mô hình Ngôn ngữ lớn (LLM Model)"
+            create_ai_agent: "Tạo Đại lý Trí tuệ nhân tạo (AI Agent)"
+            update_ai_agent: "Cập nhật Đại lý Trí tuệ nhân tạo (AI Agent)"
+            delete_ai_agent: "Xóa Đại lý Trí tuệ nhân tạo (AI Agent)"
+            create_ai_tool: "Tạo Công cụ Trí tuệ nhân tạo (AI Tool)"
+            update_ai_tool: "Cập nhật Công cụ Trí tuệ nhân tạo (AI Tool)"
+            delete_ai_tool: "Xóa Công cụ Trí tuệ nhân tạo (AI Tool)"
+            create_ai_embedding: "Tạo Nhúng dữ liệu Trí tuệ nhân tạo (AI Embedding)"
+            update_ai_embedding: "Cập nhật Nhúng dữ liệu Trí tuệ nhân tạo (AI Embedding)"
+            delete_ai_embedding: "Xóa Nhúng dữ liệu Trí tuệ nhân tạo (AI Embedding)"
+            create_ai_secret: "Tạo Mã bảo mật Trí tuệ nhân tạo (AI Secret)"
+            update_ai_secret: "Cập nhật Mã bảo mật Trí tuệ nhân tạo (AI Secret)"
+            delete_ai_secret: "Xóa Mã bảo mật Trí tuệ nhân tạo (AI Secret)"
+            update_ai_spam_settings: "Cập nhật Cài đặt Chống thư rác Trí tuệ nhân tạo"
   js:
+    discourse_workflows:
+      nodes:
+        "action:ai_agent": "Đại lí trí tuệ nhân tạo (AI Agent)"
+      node_descriptions:
+        "action:ai_agent": "Chạy Đại lý Trí tuệ nhân tạo (AI Agent) để xử lý dữ liệu hoặc tạo nội dung"
     discourse_automation:
       scriptables:
         llm_report:
           fields:
+            sender:
+              label: "Người gửi"
+              description: "Tài khoản sẽ gửi báo cáo"
+            receivers:
+              label: "Người nhận"
+              description: "Danh sách nhận báo cáo (Thư điện tử (Email) sẽ gửi trực tiếp, Tên tài khoản  sẽ nhận qua Tin nhắn riêng)"
             topic_id:
               label: "ID Chủ đề"
+              description: "Mã bài viết (Topic ID) để đăng báo cáo"
             title:
               label: "Tiêu đề"
+              description: "Tiêu đề của báo cáo"
+            days:
+              label: "Ngày"
+            model:
+              label: "Mô hình"
             categories:
               label: "Chuyên mục"
             tags:

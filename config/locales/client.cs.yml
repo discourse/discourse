@@ -2246,6 +2246,9 @@ cs:
         contextual: "Nového obsahu stránky"
       bookmark_after_notification:
         title: "Po odeslání upozornění na připomenutí záložky:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Upozornit mě na \"Líbí se\""
         always: "Vždy"

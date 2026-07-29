@@ -1952,6 +1952,9 @@ it:
         contextual: "Nuovo contenuto nella pagina"
       bookmark_after_notification:
         title: "Dopo l'invio di una notifica di promemoria per segnalibri:"
+      send_shortcut:
+        enter: "Invio"
+        meta_enter: "%{meta_key} + Invio"
       like_notification_frequency:
         title: "Notifica alla ricezione di \"Mi piace\"."
         always: "Sempre"
