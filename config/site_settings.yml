@@ -4821,7 +4821,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "experimental"
+      status: "beta"
       impact: "feature,admins"
       learn_more_url: "https://meta.discourse.org/t/-/407727"
   update_pending_users_reminder_default:
