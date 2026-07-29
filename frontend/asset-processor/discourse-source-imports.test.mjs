@@ -79,17 +79,29 @@ test("?source=file works on a module with no template", async () => {
 });
 
 test("imports without a source query are left alone", async () => {
-  expect(await build().resolveId("/app/example.gjs?other=1")).toBeNull();
+  expect(
+    await build().resolveId("/app/example.gjs?other=?source=1")
+  ).toBeNull();
 });
 
-test("the resolveId filter is a superset of what the handler accepts", () => {
+test("the resolveId filter keeps every other module off the handler", () => {
   const { resolveId } = build().filters;
 
-  // Percent-encoded keys still parse as `source`, so the filter must not try to
-  // match the key itself or they would bypass the handler's error.
-  expect(resolveId.id.test("/app/example.gjs?%73ource=file")).toBe(true);
+  // Every specifier the handler reports on has to reach it, including the ones it
+  // rejects, so the value is left open and a bare `?source` still matches.
   expect(resolveId.id.test("/app/example.gjs?source=file")).toBe(true);
+  expect(resolveId.id.test("/app/example.gjs?source=bogus")).toBe(true);
+  expect(resolveId.id.test("/app/example.gjs?source")).toBe(true);
+  expect(resolveId.id.test("/app/example.gjs?other=1&source=file")).toBe(true);
+
   expect(resolveId.id.test("/app/example.gjs")).toBe(false);
+  expect(resolveId.id.test("/app/example.gjs?other=1")).toBe(false);
+  expect(resolveId.id.test("/app/example.gjs?sourcemap=1")).toBe(false);
+  expect(resolveId.id.test("/app/resource.gjs")).toBe(false);
+
+  // A percent-encoded key parses back to `source`, but matching that costs every
+  // module in the build a decode. A typo here fails as an unresolved import.
+  expect(resolveId.id.test("/app/example.gjs?%73ource=file")).toBe(false);
 });
 
 test("rejects an unknown source value", async () => {

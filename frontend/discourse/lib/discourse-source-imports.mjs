@@ -18,12 +18,16 @@ export default function discourseSourceImports({ readSource, preprocessor }) {
     name: "discourse-source-imports",
 
     resolveId: {
-      // Deliberately broader than the `source` key: URLSearchParams decodes
-      // percent-escapes, so a tighter regex would let `?%73ource=file` slip past the
-      // filter and skip the error the handler would otherwise raise.
-      filter: { id: /\?/ },
+      // The value is deliberately left open so a bad one still reaches the error
+      // below rather than being filtered out into an unresolved import.
+      filter: { id: /[?&]source(=|&|$)/ },
       async handler(source, importer) {
         const queryStart = source.indexOf("?");
+
+        if (queryStart === -1) {
+          return null;
+        }
+
         const query = new URLSearchParams(source.slice(queryStart + 1));
         const modes = query.getAll("source");
 
