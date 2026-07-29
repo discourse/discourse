@@ -11,7 +11,6 @@ import { isTesting } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import discourseLater from "discourse/lib/later";
 import { HORIZON_THEME_ID, setLocalTheme } from "discourse/lib/theme-selector";
-import DiscourseURL from "discourse/lib/url";
 
 const STATE_KEY = "design_wizard_sidebar_state";
 // px equivalents of the base-font-size variables, used to size the wizard
@@ -198,9 +197,10 @@ export default class DesignWizardService extends Service {
     this.#persistState();
 
     // the page behind the sheet is the preview: show the chosen homepage.
-    // Explicit paths, because "/" resolves to the currently saved default
-    // homepage rather than the one being selected
-    DiscourseURL.routeTo(getURL(`/${homepage}`));
+    // Explicit routes, because "/" resolves to the currently saved default
+    // homepage, and a router transition (unlike DiscourseURL.routeTo) can
+    // never escalate to a full page load, which would dismiss the sheet
+    this.router.transitionTo(`discovery.${homepage}`);
   }
 
   selectCategoryPageStyle(value) {
