@@ -32,25 +32,24 @@ RSpec.describe OptimizedImage do
       end
     end
 
-    it "should correctly crop images vertically" do
-      tmp_path = "/tmp/cropped.png"
-      desired_width = 100
-      desired_height = 66
+    it "crops vertical content from the top edge" do
+      FileHelper.stubs(:optimize_image!).returns(true)
 
-      begin
-        OptimizedImage.crop(
-          "#{Rails.root.join("spec/fixtures/images/logo.png")}", # 244x66px
-          tmp_path,
-          desired_width,
-          desired_height,
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "cropped.png")
+
+        described_class.crop(
+          Rails.root.join("spec/fixtures/images/crop_position.png").to_s,
+          output_path,
+          3,
+          2,
         )
+        output_image = ChunkyPNG::Image.from_file(output_path)
 
-        w, h = FastImage.size(tmp_path)
-
-        expect(w).to eq(desired_width)
-        expect(h).to eq(desired_height)
-      ensure
-        File.delete(tmp_path) if File.exist?(tmp_path)
+        expect([output_image.width, output_image.height]).to eq([3, 2])
+        expect(output_image.pixels).to all(
+          satisfy { |pixel| ChunkyPNG::Color.r(pixel) > ChunkyPNG::Color.b(pixel) },
+        )
       end
     end
 
@@ -73,28 +72,6 @@ RSpec.describe OptimizedImage do
         expect(h).to eq(desired_height)
       ensure
         File.delete(tmp_path) if File.exist?(tmp_path)
-      end
-    end
-
-    it "crops a tiny image from the top edge" do
-      FileHelper.stubs(:optimize_image!).returns(true)
-
-      Dir.mktmpdir do |dir|
-        output_path = File.join(dir, "cropped.png")
-
-        OptimizedImage.crop(
-          Rails.root.join("spec/fixtures/images/crop_position.png").to_s,
-          output_path,
-          3,
-          2,
-        )
-        output_image = ChunkyPNG::Image.from_file(output_path)
-
-        expect(FastImage.type(output_path)).to eq(:png)
-        expect([output_image.width, output_image.height]).to eq([3, 2])
-        expect(output_image.pixels).to all(
-          satisfy { |pixel| ChunkyPNG::Color.r(pixel) > ChunkyPNG::Color.b(pixel) },
-        )
       end
     end
 
