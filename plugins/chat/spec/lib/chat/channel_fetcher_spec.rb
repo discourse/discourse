@@ -12,13 +12,8 @@ describe Chat::ChannelFetcher do
   fab!(:user1) { Fabricate(:user, group_ids: [chatters.id]) }
   fab!(:user2, :user)
 
-  def guardian
-    Guardian.new(user1)
-  end
-
-  def memberships
-    Chat::UserChatChannelMembership.where(user: user1)
-  end
+  let(:guardian) { user1.guardian }
+  let(:memberships) { Chat::UserChatChannelMembership.where(user: user1) }
 
   before { SiteSetting.chat_allowed_groups = chatters }
 

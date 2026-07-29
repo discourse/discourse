@@ -11,11 +11,6 @@ describe "Recurring" do
     )
   end
 
-  def upsert_period_field!(interval, frequency)
-    metadata = { value: { interval: interval, frequency: frequency } }
-    automation.upsert_field!("recurrence", "period", metadata, target: "trigger")
-  end
-
   it "allows manual trigger" do
     triggerable = DiscourseAutomation::Triggerable.new(automation.trigger)
     expect(triggerable.settings[DiscourseAutomation::Triggerable::MANUAL_TRIGGER_KEY]).to eq(true)
@@ -277,7 +272,12 @@ describe "Recurring" do
             { value: 2.hours.from_now },
             target: "trigger",
           )
-          upsert_period_field!(1, "hour")
+          automation.upsert_field!(
+            "recurrence",
+            "period",
+            { value: { interval: 1, frequency: "hour" } },
+            target: "trigger",
+          )
         }.to change { automation.pending_automations.count }.by(1)
 
         expect(automation.pending_automations.last.execute_at).to be_within_one_second_of(
@@ -317,7 +317,12 @@ describe "Recurring" do
         { value: 2.hours.from_now },
         target: "trigger",
       )
-      upsert_period_field!(1, "week")
+      automation.upsert_field!(
+        "recurrence",
+        "period",
+        { value: { interval: 1, frequency: "week" } },
+        target: "trigger",
+      )
 
       automation.upsert_field!("test", "text", { value: "something" }, target: "script")
     end
@@ -336,7 +341,12 @@ describe "Recurring" do
         end
 
         it "recreates pending automation with execute_at set to start_date" do
-          upsert_period_field!(4, "week")
+          automation.upsert_field!(
+            "recurrence",
+            "period",
+            { value: { interval: 4, frequency: "week" } },
+            target: "trigger",
+          )
 
           expect(automation.pending_automations.count).to eq(1)
           expect(automation.pending_automations.last.execute_at).to be_within_one_second_of(
@@ -356,7 +366,12 @@ describe "Recurring" do
         end
 
         it "recreates pending automation with execute_at set to the first occurrence date after the current time" do
-          upsert_period_field!(3, "day")
+          automation.upsert_field!(
+            "recurrence",
+            "period",
+            { value: { interval: 3, frequency: "day" } },
+            target: "trigger",
+          )
 
           expect(automation.pending_automations.count).to eq(1)
           expect(automation.pending_automations.last.execute_at).to be_within_one_second_of(
@@ -380,7 +395,12 @@ describe "Recurring" do
         end
 
         it "recreates pending automation with execute_at set to start_date" do
-          upsert_period_field!(1, "hour")
+          automation.upsert_field!(
+            "recurrence",
+            "period",
+            { value: { interval: 1, frequency: "hour" } },
+            target: "trigger",
+          )
 
           expect(automation.pending_automations.count).to eq(1)
           expect(automation.pending_automations.last.execute_at).to be_within_one_second_of(
@@ -400,7 +420,12 @@ describe "Recurring" do
         end
 
         it "recreates pending automation with execute_at set to the first occurrence date after the current time" do
-          upsert_period_field!(2, "hour")
+          automation.upsert_field!(
+            "recurrence",
+            "period",
+            { value: { interval: 2, frequency: "hour" } },
+            target: "trigger",
+          )
 
           expect(automation.pending_automations.count).to eq(1)
           expect(automation.pending_automations.last.execute_at).to be_within_one_second_of(
@@ -468,7 +493,14 @@ describe "Recurring" do
     end
 
     describe "every_month" do
-      before { upsert_period_field!(1, "month") }
+      before do
+        automation.upsert_field!(
+          "recurrence",
+          "period",
+          { value: { interval: 1, frequency: "month" } },
+          target: "trigger",
+        )
+      end
 
       it "creates the next iteration one month later" do
         automation.trigger!
@@ -488,7 +520,12 @@ describe "Recurring" do
           { value: 1.minute.from_now },
           target: "trigger",
         )
-        upsert_period_field!(1, "day")
+        automation.upsert_field!(
+          "recurrence",
+          "period",
+          { value: { interval: 1, frequency: "day" } },
+          target: "trigger",
+        )
       end
 
       it "creates the next iteration one day later" do
@@ -502,7 +539,12 @@ describe "Recurring" do
 
     describe "every_weekday" do
       it "creates the next iteration one day after without Saturday/Sunday" do
-        upsert_period_field!(1, "weekday")
+        automation.upsert_field!(
+          "recurrence",
+          "period",
+          { value: { interval: 1, frequency: "weekday" } },
+          target: "trigger",
+        )
         automation.trigger!
 
         pending_automation = automation.pending_automations.last
@@ -522,7 +564,12 @@ describe "Recurring" do
           { value: start_date },
           target: "trigger",
         )
-        upsert_period_field!(3, "weekday")
+        automation.upsert_field!(
+          "recurrence",
+          "period",
+          { value: { interval: 3, frequency: "weekday" } },
+          target: "trigger",
+        )
 
         automation.trigger!
 
@@ -532,7 +579,14 @@ describe "Recurring" do
     end
 
     describe "every_hour" do
-      before { upsert_period_field!(1, "hour") }
+      before do
+        automation.upsert_field!(
+          "recurrence",
+          "period",
+          { value: { interval: 1, frequency: "hour" } },
+          target: "trigger",
+        )
+      end
 
       it "creates the next iteration one hour later" do
         automation.trigger!
@@ -545,7 +599,14 @@ describe "Recurring" do
     end
 
     describe "every_minute" do
-      before { upsert_period_field!(1, "minute") }
+      before do
+        automation.upsert_field!(
+          "recurrence",
+          "period",
+          { value: { interval: 1, frequency: "minute" } },
+          target: "trigger",
+        )
+      end
 
       it "creates the next iteration one minute later" do
         automation.trigger!
@@ -558,7 +619,14 @@ describe "Recurring" do
     end
 
     describe "every_year" do
-      before { upsert_period_field!(1, "year") }
+      before do
+        automation.upsert_field!(
+          "recurrence",
+          "period",
+          { value: { interval: 1, frequency: "year" } },
+          target: "trigger",
+        )
+      end
 
       it "creates the next iteration one year later" do
         automation.trigger!
@@ -570,7 +638,14 @@ describe "Recurring" do
     end
 
     describe "every_other_week" do
-      before { upsert_period_field!(2, "week") }
+      before do
+        automation.upsert_field!(
+          "recurrence",
+          "period",
+          { value: { interval: 2, frequency: "week" } },
+          target: "trigger",
+        )
+      end
 
       it "creates the next iteration two weeks later" do
         automation.trigger!

@@ -3,18 +3,14 @@
 RSpec.describe DiscourseAutomation::Statistics do
   before { freeze_time(Time.utc(2026, 6, 15, 12, 0)) }
 
-  def create_stat(automation_id, date:, runs: 1)
-    DiscourseAutomation::Stat.create!(
-      automation_id: automation_id,
-      date: date,
-      last_run_at: date.to_time + 10.hours,
+  let(:stat_attributes) do
+    {
       total_time: 1.0,
       average_run_time: 1.0,
       min_run_time: 1.0,
       max_run_time: 1.0,
-      total_runs: runs,
       total_errors: 0,
-    )
+    }
   end
 
   describe ".total" do
@@ -63,9 +59,19 @@ RSpec.describe DiscourseAutomation::Statistics do
 
   describe ".executed" do
     it "counts distinct automations with runs in each window" do
-      create_stat(1, date: Date.current, runs: 3)
-      create_stat(1, date: 10.days.ago.to_date, runs: 2)
-      create_stat(2, date: 45.days.ago.to_date, runs: 5)
+      [
+        [1, Date.current, 3],
+        [1, 10.days.ago.to_date, 2],
+        [2, 45.days.ago.to_date, 5],
+      ].each do |automation_id, date, total_runs|
+        DiscourseAutomation::Stat.create!(
+          **stat_attributes,
+          automation_id:,
+          date:,
+          last_run_at: date.to_time + 10.hours,
+          total_runs:,
+        )
+      end
 
       expect(described_class.executed).to eq(
         last_day: 1,
@@ -78,9 +84,19 @@ RSpec.describe DiscourseAutomation::Statistics do
 
   describe ".executions" do
     it "sums runs in each window plus a lifetime count" do
-      create_stat(1, date: Date.current, runs: 3)
-      create_stat(1, date: 10.days.ago.to_date, runs: 2)
-      create_stat(1, date: 45.days.ago.to_date, runs: 5)
+      [
+        [1, Date.current, 3],
+        [1, 10.days.ago.to_date, 2],
+        [1, 45.days.ago.to_date, 5],
+      ].each do |automation_id, date, total_runs|
+        DiscourseAutomation::Stat.create!(
+          **stat_attributes,
+          automation_id:,
+          date:,
+          last_run_at: date.to_time + 10.hours,
+          total_runs:,
+        )
+      end
 
       expect(described_class.executions).to eq(
         last_day: 3,
