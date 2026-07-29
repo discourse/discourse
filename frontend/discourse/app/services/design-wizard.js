@@ -14,6 +14,15 @@ import discourseLater from "discourse/lib/later";
 import { HORIZON_THEME_ID, setLocalTheme } from "discourse/lib/theme-selector";
 
 const STATE_KEY = "design_wizard_sidebar_state";
+// px equivalents of the base-font-size variables, used to size the wizard
+// chrome absolutely so text size previews cannot resize it
+const TEXT_SIZE_PX = {
+  smallest: "13px",
+  smaller: "14px",
+  normal: "16px",
+  larger: "18px",
+  largest: "20px",
+};
 // the stylesheet endpoint falls back to the base light palette for unknown
 // ids, which is exactly what a theme without an assigned palette renders
 const BASE_LIGHT_PALETTE_ID = -1;
@@ -70,6 +79,7 @@ export default class DesignWizardService extends Service {
 
     this.animateEntrance = !stored;
     this.active = true;
+    this.#sizeChromeFromSettings();
     await this.#previewSelections();
   }
 
@@ -179,6 +189,9 @@ export default class DesignWizardService extends Service {
     this.active = false;
     this.keyValueStore.remove(STATE_KEY);
     clearPreview(document);
+    document.documentElement.style.removeProperty(
+      "--design-wizard-chrome-font-size"
+    );
 
     if (this.#currentPreviewThemeId !== null) {
       window.location.assign(getURL("/"));
@@ -272,6 +285,16 @@ export default class DesignWizardService extends Service {
 
   get #currentPreviewThemeId() {
     return new URLSearchParams(window.location.search).get("preview_theme_id");
+  }
+
+  #sizeChromeFromSettings() {
+    const size = TEXT_SIZE_PX[this.siteSettings.default_text_size];
+    if (size) {
+      document.documentElement.style.setProperty(
+        "--design-wizard-chrome-font-size",
+        size
+      );
+    }
   }
 
   #initFromData() {

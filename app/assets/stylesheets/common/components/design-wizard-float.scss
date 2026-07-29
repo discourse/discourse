@@ -52,8 +52,9 @@
     Arial,
     sans-serif;
 
-  // text-size-normal baseline, immune to text size previews
-  font-size: 15px;
+  // set from the default_text_size site setting while the wizard is open,
+  // in absolute units so text size previews don't resize the chrome
+  font-size: var(--design-wizard-chrome-font-size, 16px);
 
   h1,
   h2,
