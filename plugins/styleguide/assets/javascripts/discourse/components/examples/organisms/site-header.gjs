@@ -1,0 +1,7 @@
+import Header from "discourse/components/header";
+
+export default <template>
+  <div inert class="d-header-wrap">
+    <Header @sidebarEnabled={{@sidebarEnabled}} />
+  </div>
+</template>

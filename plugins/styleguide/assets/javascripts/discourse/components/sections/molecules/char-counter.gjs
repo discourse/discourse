@@ -1,9 +1,9 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import CharCounterExample from "../../examples/char-counter";
-import charCounterSource from "../../examples/char-counter.gjs?source=file";
+import CharCounterExample from "../../examples/molecules/char-counter";
+import charCounterSource from "../../examples/molecules/char-counter?source=file";
 
 export default <template>
   <StyleguideExample @title="<DCharCounter>" @code={{charCounterSource}}>
-    <CharCounterExample @dummy={{@dummy}} />
+    <CharCounterExample />
   </StyleguideExample>
 </template>

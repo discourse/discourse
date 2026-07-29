@@ -1,145 +1,53 @@
-import Component from "@glimmer/component";
-import TopicStatus from "discourse/components/topic-status";
-import dTopicLink from "discourse/ui-kit/helpers/d-topic-link";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
+import NoStatusExample from "../../examples/atoms/topic-link-status/no-status";
+import noStatusSource from "../../examples/atoms/topic-link-status/no-status?source=file";
+import WithStatusExample from "../../examples/atoms/topic-link-status/with-status";
+import withStatusSource from "../../examples/atoms/topic-link-status/with-status?source=file";
 
-export default class TopicStatuses extends Component {
-  get noStatusCode() {
-    return `
-import topicLink from "discourse/helpers/topic-link";
+export default <template>
+  <StyleguideExample @title="topic-link (no status)" @code={{noStatusSource}}>
+    <NoStatusExample @topic={{@dummy.topic}} />
+  </StyleguideExample>
 
-<template>
-  {{topicLink @dummy.topic}}
+  <StyleguideExample
+    @title="topic-link (status: invisible)"
+    @code={{withStatusSource}}
+  >
+    <WithStatusExample @topic={{@dummy.invisibleTopic}} />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="topic-link (status: closed)"
+    @code={{withStatusSource}}
+  >
+    <WithStatusExample @topic={{@dummy.closedTopic}} />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="topic-link (status: pinned)"
+    @code={{withStatusSource}}
+  >
+    <WithStatusExample @topic={{@dummy.pinnedTopic}} />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="topic-link (status: unpinned)"
+    @code={{withStatusSource}}
+  >
+    <WithStatusExample @topic={{@dummy.unpinnedTopic}} />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="topic-link (status: archived)"
+    @code={{withStatusSource}}
+  >
+    <WithStatusExample @topic={{@dummy.archivedTopic}} />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="topic-link (status: warning)"
+    @code={{withStatusSource}}
+  >
+    <WithStatusExample @topic={{@dummy.warningTopic}} />
+  </StyleguideExample>
 </template>
-    `;
-  }
-
-  get invisibleCode() {
-    return `
-import topicLink from "discourse/helpers/topic-link";
-import TopicStatus from "discourse/components/topic-status";
-
-<template>
-  <TopicStatus @topic={{@dummy.invisibleTopic}} />
-  {{topicLink @dummy.invisibleTopic}}
-</template>
-    `;
-  }
-
-  get closedCode() {
-    return `
-import topicLink from "discourse/helpers/topic-link";
-import TopicStatus from "discourse/components/topic-status";
-
-<template>
-  <TopicStatus @topic={{@dummy.closedTopic}} />
-  {{topicLink @dummy.closedTopic}}
-</template>
-    `;
-  }
-
-  get pinnedCode() {
-    return `
-import topicLink from "discourse/helpers/topic-link";
-import TopicStatus from "discourse/components/topic-status";
-
-<template>
-  <TopicStatus @topic={{@dummy.pinnedTopic}} />
-  {{topicLink @dummy.pinnedTopic}}
-</template>
-    `;
-  }
-
-  get unpinnedCode() {
-    return `
-import topicLink from "discourse/helpers/topic-link";
-import TopicStatus from "discourse/components/topic-status";
-
-<template>
-  <TopicStatus @topic={{@dummy.unpinnedTopic}} />
-  {{topicLink @dummy.unpinnedTopic}}
-</template>
-    `;
-  }
-
-  get archivedCode() {
-    return `
-import topicLink from "discourse/helpers/topic-link";
-import TopicStatus from "discourse/components/topic-status";
-
-<template>
-  <TopicStatus @topic={{@dummy.archivedTopic}} />
-  {{topicLink @dummy.archivedTopic}}
-</template>
-    `;
-  }
-
-  get warningCode() {
-    return `
-import topicLink from "discourse/helpers/topic-link";
-import TopicStatus from "discourse/components/topic-status";
-
-<template>
-  <TopicStatus @topic={{@dummy.warningTopic}} />
-  {{topicLink @dummy.warningTopic}}
-</template>
-    `;
-  }
-
-  <template>
-    <StyleguideExample
-      @title="topic-link (no status)"
-      @code={{this.noStatusCode}}
-    >
-      {{dTopicLink @dummy.topic}}
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="topic-link (status: invisible)"
-      @code={{this.invisibleCode}}
-    >
-      <TopicStatus @topic={{@dummy.invisibleTopic}} />
-      {{dTopicLink @dummy.invisibleTopic}}
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="topic-link (status: closed)"
-      @code={{this.closedCode}}
-    >
-      <TopicStatus @topic={{@dummy.closedTopic}} />
-      {{dTopicLink @dummy.closedTopic}}
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="topic-link (status: pinned)"
-      @code={{this.pinnedCode}}
-    >
-      <TopicStatus @topic={{@dummy.pinnedTopic}} />
-      {{dTopicLink @dummy.pinnedTopic}}
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="topic-link (status: unpinned)"
-      @code={{this.unpinnedCode}}
-    >
-      <TopicStatus @topic={{@dummy.unpinnedTopic}} />
-      {{dTopicLink @dummy.unpinnedTopic}}
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="topic-link (status: archived)"
-      @code={{this.archivedCode}}
-    >
-      <TopicStatus @topic={{@dummy.archivedTopic}} />
-      {{dTopicLink @dummy.archivedTopic}}
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="topic-link (status: warning)"
-      @code={{this.warningCode}}
-    >
-      <TopicStatus @topic={{@dummy.warningTopic}} />
-      {{dTopicLink @dummy.warningTopic}}
-    </StyleguideExample>
-  </template>
-}
