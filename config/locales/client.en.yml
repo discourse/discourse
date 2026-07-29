@@ -2351,6 +2351,11 @@ en:
       bookmark_after_notification:
         title: "After a bookmark reminder notification is sent:"
 
+      send_shortcut:
+        title: "Send messages in chat-style composers with:"
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
+
       like_notification_frequency:
         title: "Notify when liked"
         always: "Always"
@@ -2810,10 +2815,15 @@ en:
     home: "Home"
     read_only_mode:
       enabled: "This site is in read only mode. Please continue to browse, but replying, likes, and other actions are disabled for now."
+      enabled_anonymous: "This site is in read only mode. Please continue to browse, but signing up and logging in are unavailable for now."
       login_disabled: "Login is disabled while the site is in read only mode."
       logout_disabled: "Logout is disabled while the site is in read only mode."
+      signup_disabled: "Signing up is disabled while the site is in read only mode."
     staff_writes_only_mode:
       enabled: "This site is in staff only mode. Please continue to browse, but replying, likes, and other actions are limited to staff members only."
+      enabled_anonymous: "This site is in staff only mode. Please continue to browse, but signing up is unavailable and only staff members can log in."
+      login_disabled: "Only staff members can log in while the site is in staff only mode."
+      signup_disabled: "Signing up is disabled while the site is in staff only mode."
 
     logs_error_rate_notice:
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.

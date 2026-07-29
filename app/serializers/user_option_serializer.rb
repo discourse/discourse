@@ -50,7 +50,8 @@ class UserOptionSerializer < ApplicationSerializer
              :topics_unread_when_closed,
              :composition_mode,
              :interface_color_mode,
-             :show_original_content
+             :show_original_content,
+             :send_shortcut
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs

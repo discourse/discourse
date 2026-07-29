@@ -70,7 +70,6 @@ sl:
     messages:
       taken: "je že uporabljeno"
       exclusion: je rezervirano
-      has_already_been_used: "je že v uporabi"
       inclusion: ni vključeno na seznam
       invalid: je neveljavno
       is_invalid_meaningful: "zdi se nejasno, večina besed vsebuje iste črke znova in znova?"

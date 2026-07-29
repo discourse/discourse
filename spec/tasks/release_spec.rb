@@ -515,7 +515,7 @@ RSpec.describe "tasks/release" do
         capture: true,
       ).and_return(pr_list_json)
 
-      ENV["SECURITY_FIX_GHSA_IDS"] = "GHSA-1111-2222-3333,GHSA-aaaa-bbbb-cccc"
+      ENV["SECURITY_FIX_GHSA_IDS"] = "ghsa-1111-2222-3333,GHSA-aaaa-bbbb-cccc"
 
       Dir.chdir(origin_path) do
         git "checkout", "-b", "security-fix-one"

@@ -275,3 +275,8 @@ pl_PL:
               description: "Nazwę kanału znajdziesz w ustawieniach integracji czatu"
             provider:
               label: Dostawca
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "Kanał"
+        configure: "Konfiguruj"
+        message: "Wiadomość"

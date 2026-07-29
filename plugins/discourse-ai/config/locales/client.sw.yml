@@ -65,6 +65,20 @@ sw:
         select_option: "Chagua chaguo moja..."
       translations:
         category_scope: "Kategoria"
+        model_progress:
+          detail:
+            columns:
+              pending: "Inasubiri"
+              total: "Jumla"
+          targets:
+            post:
+              title: "Machapisho"
+            topic:
+              title: "Mada"
+            category:
+              title: "Kategoria"
+            tag:
+              title: "Lebo"
         stats:
           eta_hours:
             one: "saa %{count}"

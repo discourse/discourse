@@ -4,18 +4,6 @@ RSpec.describe DiscourseCalendar::Categories::Types::Events do
   fab!(:admin)
   fab!(:category)
 
-  describe ".visible?" do
-    it "returns true when enable_events_category_type_setup is true" do
-      SiteSetting.enable_events_category_type_setup = true
-      expect(described_class.visible?).to eq(true)
-    end
-
-    it "returns false when enable_events_category_type_setup is false" do
-      SiteSetting.enable_events_category_type_setup = false
-      expect(described_class.visible?).to eq(false)
-    end
-  end
-
   describe ".enable_plugin" do
     it "enables calendar and post-event site settings" do
       SiteSetting.calendar_enabled = false
@@ -182,8 +170,6 @@ RSpec.describe DiscourseCalendar::Categories::Types::Events do
 
   describe "via Categories::Configure" do
     it "wires plugin enable, site settings, and category configuration end-to-end" do
-      SiteSetting.enable_events_category_type_setup = true
-
       result =
         Categories::Configure.call(
           guardian: admin.guardian,

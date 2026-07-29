@@ -61,4 +61,18 @@ RSpec.describe IcalEncoder do
       expect(result).to include("& special chars")
     end
   end
+
+  describe ".encode_uri" do
+    it "preserves URI delimiters and removes newlines" do
+      result =
+        described_class.encode_uri(
+          "https://example.com/events?tags=one,two;sort=asc&amp;name=Tom\r\nATTACH:https://bad.example",
+        )
+
+      expect(result).to eq(
+        "https://example.com/events?tags=one,two;sort=asc&name=TomATTACH:https://bad.example",
+      )
+      expect(result).to be_html_safe
+    end
+  end
 end

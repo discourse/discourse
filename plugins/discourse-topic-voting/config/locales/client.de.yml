@@ -50,3 +50,6 @@ de:
           group_name: "Themenabstimmungsereignis"
           topic_upvote: "Wenn ein Benutzer über ein Thema abstimmt"
           topic_unvote: "Wenn ein Benutzer seine Stimme für ein Thema zurücknimmt"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Schlagwörter"

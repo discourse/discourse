@@ -75,6 +75,20 @@ sv:
       translations:
         title: "Översättningar"
         category_scope: "Kategorier"
+        model_progress:
+          detail:
+            columns:
+              pending: "Väntande"
+              total: "Totalt"
+          targets:
+            post:
+              title: "Inlägg"
+            topic:
+              title: "Ämnen"
+            category:
+              title: "Kategorier"
+            tag:
+              title: "Taggar"
         stats:
           eta_minutes:
             one: "%{count} minut"

@@ -275,3 +275,8 @@ zh_CN:
               description: "您可以在聊天集成设置中找到频道名称"
             provider:
               label: 提供程序
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "频道"
+        configure: "配置"
+        message: "发送私信"

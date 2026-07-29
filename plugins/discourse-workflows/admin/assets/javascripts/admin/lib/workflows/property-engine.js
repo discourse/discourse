@@ -316,6 +316,8 @@ export function propertyOptionLabel(nodeDefinitionOrType, fieldName, option) {
     translatedOrNull(`${base}.${key}_${valueKey}`) ||
     translatedOrNull(`${base}.${key}s.${valueKey}`) ||
     (option.label_key ? translatedOrNull(option.label_key) : null) ||
+    translatedOrNull(`${SHARED_FIELDS_BASE}.${key}_${valueKey}`) ||
+    translatedOrNull(`${SHARED_FIELDS_BASE}.${key}s.${valueKey}`) ||
     option.label ||
     option.name ||
     option.value

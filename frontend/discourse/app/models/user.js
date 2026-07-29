@@ -145,6 +145,7 @@ let userOptionFields = [
   "notify_on_linked_posts",
   "push_notification_level",
   "seen_popups",
+  "send_shortcut",
   "show_original_content",
   "sidebar_link_to_filtered_list",
   "sidebar_show_count_of_new_items",

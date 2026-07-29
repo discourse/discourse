@@ -154,13 +154,13 @@ fr:
     discourse_ai:
       title: "IA"
       ai_tool_approval:
-        loading: "Chargement…"
+        loading: "Chargement..."
         tool: "Action"
         user: "Utilisateur"
         approve: "Approuver"
         reject: "Rejeter"
-        approved: "Acceptés"
-        rejected: "Rejetés"
+        approved: "Approuvé"
+        rejected: "Rejeté"
       default_llm:
         title: "Modèle LLM par défaut"
       llm_selector:
@@ -258,6 +258,22 @@ fr:
       translations:
         title: "Traductions"
         category_scope: "Catégories"
+        model_progress:
+          detail:
+            retry: "Réessayer"
+            columns:
+              locale: "Paramètre régional"
+              pending: "En attente"
+              total: "Total"
+          targets:
+            post:
+              title: "Publications"
+            topic:
+              title: "Sujets"
+            category:
+              title: "Catégories"
+            tag:
+              title: "Étiquettes"
         stats:
           eta_minutes:
             one: "%{count} minute"
@@ -377,7 +393,7 @@ fr:
         forced_tool_strategy: Stratégie d'outil forcé
         allow_chat_direct_messages: "Autoriser les messages directs de discussion"
         allow_chat_channel_mentions: "Autoriser les mentions du canal de discussion"
-        allow_personal_messages: "Autoriser les messages privés"
+        allow_personal_messages: "Autoriser les messages personnels"
         allow_topic_mentions: "Autoriser les mentions de sujets"
         force_default_llm: "Toujours utiliser le modèle linguistique par défaut"
         save: "Enregistrer"
@@ -396,8 +412,8 @@ fr:
         thinking_effort_options:
           none: "Jamais"
           low: "Faible"
-          medium: "Moyenne"
-          high: "Élevée"
+          medium: "Moyen"
+          high: "Élevé"
           max: "Max"
         priority: "Priorité"
         tool_options: "Options de l'outil"
@@ -424,10 +440,10 @@ fr:
           title: "Options de robots IA"
         filters:
           reset: "Réinitialiser"
-          all_features: "N'importe quelle caractéristique"
+          all_features: "N'importe quelle fonctionnalité"
         features_list:
-          one: "Caractéristique :"
-          other: "Caractéristiques :"
+          one: "Fonctionnalité :"
+          other: "Fonctionnalités :"
         llms_list: "LLM :"
       rag:
         title: "RAG"
@@ -737,7 +753,7 @@ fr:
         click_to_run_label: "Exécuter l'artefact"
       ai_bot:
         title: "Robot IA"
-        llm: "Modèle:"
+        llm: "Modèle :"
         pm_warning: "Les messages du chatbot IA sont surveillés régulièrement par les modérateurs."
         cancel_streaming: "Arrêter de répondre"
         try_again: "Réessayer"

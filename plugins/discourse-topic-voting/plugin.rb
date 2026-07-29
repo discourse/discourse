@@ -34,9 +34,22 @@ require_relative "lib/discourse_topic_voting/topic_votes_filter"
 after_initialize do
   SeedFu.fixture_paths << Rails.root.join("plugins/discourse-topic-voting/db/fixtures").to_s
 
+  if respond_to?(:register_discourse_workflows_node)
+    register_discourse_workflows_node do
+      require_relative "lib/discourse_workflows/nodes/topic_received_vote/v1"
+      DiscourseWorkflows::Nodes::TopicReceivedVote::V1
+    end
+
+    on(:topic_voting_vote_created) do |vote|
+      DiscourseWorkflows::EventListener.handle(
+        DiscourseWorkflows::Nodes::TopicReceivedVote::V1,
+        vote,
+      )
+    end
+  end
+
   reloadable_patch do
     register_category_type(DiscourseTopicVoting::Categories::Types::Ideas)
-    CategoriesController.prepend(DiscourseTopicVoting::CategoriesControllerExtension)
     Category.prepend(DiscourseTopicVoting::CategoryExtension)
     ListController.prepend(DiscourseTopicVoting::ListControllerExtension)
     Topic.prepend(DiscourseTopicVoting::TopicExtension)

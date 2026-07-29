@@ -40,3 +40,6 @@ hu:
           group_name: "Téma szavazási esemény"
           topic_upvote: "Amikor egy felhasználó szavaz egy témában"
           topic_unvote: "Amikor egy felhasználó visszavonja a szavazatát egy témában"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Címkék"

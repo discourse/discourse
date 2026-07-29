@@ -123,7 +123,27 @@ describe DiscoursePostEvent::EventParser do
     expect(events[0][:image]).to eq("upload://6c4fsAgNM6Npo7raNCPqVm2whzz.jpeg")
   end
 
-  it "extracts description as plain text" do
+  it "doesn't escape location" do
+    post_event = build_post user, <<~TXT
+        [event start="2020" location="Joe & Sons (downtown)"]
+        [/event]
+      TXT
+
+    events = parser.extract_events(post_event)
+    expect(events[0][:location]).to eq("Joe & Sons (downtown)")
+  end
+
+  it "decodes entities in location so escaped legacy raws self-heal" do
+    post_event = build_post user, <<~TXT
+        [event start="2020" location="Joe &amp; Sons"]
+        [/event]
+      TXT
+
+    events = parser.extract_events(post_event)
+    expect(events[0][:location]).to eq("Joe & Sons")
+  end
+
+  it "extracts description as inline markdown" do
     post_event = build_post user, <<~TXT
       [event start="2020"]
       Check out https://example.com for details
@@ -134,45 +154,91 @@ describe DiscoursePostEvent::EventParser do
     expect(events[0][:description]).to eq("Check out https://example.com for details")
   end
 
-  describe ".linkify_description" do
-    it "wraps URLs in anchor tags" do
-      expect(parser.linkify_description("Visit https://example.com for info")).to eq(
-        'Visit <a href="https://example.com" rel="noopener nofollow ugc">https://example.com</a> for info',
+  it "preserves markdown links, emoji and mentions in the description" do
+    post_event = build_post user, <<~TXT
+      [event start="2020"]
+      See [the agenda](https://agenda.example.com) :tada: with @system
+      [/event]
+    TXT
+
+    events = parser.extract_events(post_event)
+    expect(events[0][:description]).to eq(
+      "See [the agenda](https://agenda.example.com) :tada: with @system",
+    )
+  end
+
+  describe ".cook_inline" do
+    it "keeps plain text as plain text" do
+      expect(parser.cook_inline("Conference Room A")).to eq("Conference Room A")
+    end
+
+    it "renders markdown links" do
+      expect(parser.cook_inline("[RSVP](https://zoom.example.com/j/123)")).to eq(
+        '<a href="https://zoom.example.com/j/123" rel="noopener nofollow ugc">RSVP</a>',
       )
     end
 
-    it "handles multiple URLs" do
-      expect(parser.linkify_description("See https://a.com and https://b.com")).to eq(
-        'See <a href="https://a.com" rel="noopener nofollow ugc">https://a.com</a> and <a href="https://b.com" rel="noopener nofollow ugc">https://b.com</a>',
+    it "supports urls with balanced parentheses" do
+      result = parser.cook_inline("[Map](https://en.wikipedia.org/wiki/Sting_(musician))")
+
+      expect(Nokogiri::HTML5.fragment(result).at_css("a")["href"]).to eq(
+        "https://en.wikipedia.org/wiki/Sting_(musician)",
       )
     end
 
-    it "leaves text without URLs unchanged" do
-      expect(parser.linkify_description("No links here")).to eq("No links here")
+    it "links bare urls without onebox markup" do
+      result = parser.cook_inline("https://www.youtube.com/watch?v=abc")
+
+      link = Nokogiri::HTML5.fragment(result).at_css("a")
+      expect(link["href"]).to eq("https://www.youtube.com/watch?v=abc")
+      expect(link["class"]).to be_blank
     end
 
-    it "escapes HTML in description text" do
-      expect(parser.linkify_description("Use <b>bold</b> & more at https://example.com")).to eq(
-        'Use &lt;b&gt;bold&lt;/b&gt; &amp; more at <a href="https://example.com" rel="noopener nofollow ugc">https://example.com</a>',
-      )
+    it "links scheme-less urls" do
+      result = parser.cook_inline("zoom.us/j/123")
+
+      expect(Nokogiri::HTML5.fragment(result).at_css("a")["href"]).to eq("http://zoom.us/j/123")
     end
 
-    it "omits nofollow for staff posts" do
+    it "does not render markdown beyond links and emoji" do
+      expect(parser.cook_inline("**Room 4** # not a heading")).to eq("**Room 4** # not a heading")
+    end
+
+    it "renders emoji" do
+      expect(parser.cook_inline("Party :tada:")).to include("images/emoji")
+    end
+
+    it "renders newlines as line breaks" do
+      expect(parser.cook_inline("line one\nline two")).to eq("line one<br>\nline two")
+    end
+
+    it "escapes html" do
+      result = parser.cook_inline("<script>alert(1)</script> & <b>Room</b>")
+
+      expect(result).not_to include("<script>")
+      expect(result).not_to include("<b>")
+      expect(result).to include("&amp;")
+    end
+
+    it "rejects non-http link destinations" do
+      expect(parser.cook_inline("[click](javascript:alert(1))")).not_to include("href")
+    end
+
+    it "omits nofollow for posts that do not require it" do
       staff_user = Fabricate(:admin)
       post = Fabricate(:post, user: staff_user)
 
-      expect(parser.linkify_description("See https://example.com", post: post)).to eq(
+      expect(parser.cook_inline("See https://example.com", post: post)).to eq(
         'See <a href="https://example.com">https://example.com</a>',
       )
     end
+  end
 
-    it "does not leak markup out of the generated href when a url is followed by html" do
-      result = parser.linkify_description('http://example.com/"><script>alert(1)</script>')
-
-      doc = Nokogiri::HTML5.fragment(result)
-      expect(doc.css("script")).to be_empty
-      expect(doc.at_css("a")["href"]).to eq("http://example.com/")
-      expect(result).not_to include("<script>")
+  describe ".inline_text" do
+    it "flattens markdown links to their label" do
+      expect(parser.inline_text("[RSVP](https://zoom.example.com) at Joe & Sons :tada:")).to eq(
+        "RSVP at Joe & Sons :tada:",
+      )
     end
   end
 

@@ -352,12 +352,10 @@ export default class DiscoursePostEvent extends Component {
                 Url=(component Url url=event.url)
                 Description=(component
                   Description
-                  description=event.description
+                  descriptionHtml=event.descriptionHtml
                   clamp=this.clampDescription
                 )
-                Location=(component
-                  DiscoursePostEventLocation event=event location=event.location
-                )
+                Location=(component DiscoursePostEventLocation event=event)
                 Dates=(component
                   Dates event=event expiredAndRecurring=this.expiredAndRecurring
                 )

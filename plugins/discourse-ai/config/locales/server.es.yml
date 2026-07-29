@@ -132,7 +132,6 @@ es:
     ai_translation_personal_messages: "Controla qué mensajes personales se traducen. «none» desactiva la traducción de MP. «group» traduce solo los MP de grupo. «all» traduce todos los MP."
     ai_translation_include_bot_content: "Si está activada, el contenido escrito por bots (ID de usuario inferiores a 0) también se enviará para su traducción."
     ai_translation_max_post_length: "El número máximo de caracteres de una publicación para traducir. Las publicaciones más largas no se traducirán."
-    ai_translation_backfill_max_age_days: "La antigüedad máxima de una publicación y tema que se traducirá. Las publicaciones y temas más antiguos no se traducirán. 0 desactiva el relleno, pero no desactivará la traducción de publicaciones nuevas."
     ai_translation_backfill_hourly_rate: "El número de publicaciones y temas para traducir por hora durante las operaciones de relleno. Déjalo en 0 para desactivar el relleno automático de las traducciones para el contenido existente."
     ai_translation_backfill_parallel_jobs: "El número de trabajos paralelos de postlocalización que se deben ejecutar por ciclo de relleno. Los valores más altos aumentan el rendimiento, pero consumen más recursos."
     ai_usage_rollup_after_days: "Número de días que se conservarán las estadísticas de uso de IA por solicitud antes de incluirlas en los agregados diarios. Deja el valor en 0 para desactivar la agregación."

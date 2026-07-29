@@ -54,12 +54,9 @@ module DiscourseAi
       end
 
       def self.progress_details
+        backfill_start_at = DiscourseAi::Translation.backfill_start_at
         main_posts =
-          Post
-            .where(
-              "posts.created_at > ?",
-              SiteSetting.ai_translation_backfill_max_age_days.days.ago,
-            )
+          (backfill_start_at ? Post.where("posts.created_at >= ?", backfill_start_at) : Post.none)
             .where(deleted_at: nil)
             .where.not(raw: [nil, ""])
             .where("LENGTH(posts.raw) <= ?", SiteSetting.ai_translation_max_post_length)
@@ -225,12 +222,9 @@ module DiscourseAi
       # all posts that are eligible for translation based on site settings,
       # including those without locale detected yet.
       def self.get
+        backfill_start_at = DiscourseAi::Translation.backfill_start_at
         posts =
-          Post
-            .where(
-              "posts.created_at > ?",
-              SiteSetting.ai_translation_backfill_max_age_days.days.ago,
-            )
+          (backfill_start_at ? Post.where("posts.created_at >= ?", backfill_start_at) : Post.none)
             .where(deleted_at: nil)
             .where.not(raw: [nil, ""])
             .where("LENGTH(posts.raw) <= ?", SiteSetting.ai_translation_max_post_length)

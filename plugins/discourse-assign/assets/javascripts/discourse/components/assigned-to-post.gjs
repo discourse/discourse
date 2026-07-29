@@ -56,7 +56,7 @@ export default class AssignedToPost extends Component {
       <DMenu
         @identifier="post-assign-menu"
         @icon="ellipsis"
-        class="btn-flat more-button"
+        class="btn-transparent more-button"
         @autofocus={{true}}
       >
         <DDropdownMenu as |dropdown|>

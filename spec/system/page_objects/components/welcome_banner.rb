@@ -15,6 +15,19 @@ module PageObjects
         has_css?(".welcome-banner", visible: false)
       end
 
+      def open_search_menu
+        find(".welcome-banner #welcome-banner-search-input").click
+        self
+      end
+
+      def has_search_menu?
+        has_css?(".welcome-banner .search-menu-panel", visible: false)
+      end
+
+      def has_no_search_menu?
+        has_no_css?(".welcome-banner .search-menu-panel", visible: false)
+      end
+
       def has_anonymous_title?
         has_css?(
           ".welcome-banner .welcome-banner__title",

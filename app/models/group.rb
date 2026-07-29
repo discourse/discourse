@@ -483,6 +483,13 @@ class Group < ActiveRecord::Base
       result = result.where("topics.category_id = ?", opts[:category_id].to_i)
     end
 
+    result =
+      result.where.not(
+        topics: {
+          id: SharedDraft.select(:topic_id),
+        },
+      ) if !guardian.can_see_shared_draft?
+
     result = guardian.filter_allowed_categories(result)
     result = guardian.filter_hidden_posts(result)
     result = result.where("posts.id < ?", opts[:before_post_id].to_i) if opts[:before_post_id]

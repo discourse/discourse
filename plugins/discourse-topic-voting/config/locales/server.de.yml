@@ -11,6 +11,7 @@ de:
       title: "Ideen"
       description: "Hier können Mitglieder Ideen einreichen und für die abstimmen, die ihnen am besten gefallen."
   site_settings:
+    enable_ideas_category_type_setup: "Aktiviert die Option „Ideen“ als Kategorietyp bei der Einrichtung der Kategorieerstellung."
     topic_voting_enabled: 'Benutzern erlauben, für Themen zu stimmen?'
     topic_voting_enable_vote_limits: 'Begrenze die Anzahl der Stimmen pro Benutzer auf Basis der Vertrauensstufe'
     topic_voting_tl0_vote_limit: 'Wie viele aktive Stimmen sind für VS0-Benutzer erlaubt?'

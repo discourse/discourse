@@ -7755,6 +7755,20 @@ RSpec.describe UsersController do
       expect(body).to include("SUMMARY:Tom & Jerry")
     end
 
+    it "preserves URI delimiters in .ics feed URL fields" do
+      bookmark2.bookmarkable.update_column(:slug, "bookmark,url;with-delimiters")
+      bookmark2.update!(name: "Reminder, with; delimiters", reminder_at: 1.day.from_now)
+
+      sign_in(user1)
+      get "/u/#{user1.username}/bookmarks.ics"
+
+      expect(response.status).to eq(200)
+      bookmarkable_url = bookmark2.bookmarkable.url
+      expect(response.body).to include("SUMMARY:Reminder\\, with\\; delimiters")
+      expect(response.body).to include("DESCRIPTION:#{IcalEncoder.encode(bookmarkable_url)}")
+      expect(response.body).to include("URL:#{bookmarkable_url}")
+    end
+
     it "does not show another user's bookmarks" do
       sign_in(Fabricate(:user))
       get "/u/#{bookmark3.user.username}/bookmarks.json"

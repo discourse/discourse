@@ -142,7 +142,7 @@ acceptance("Composer Form Template", function (needs) {
       .dom("#reply-control")
       .hasClass("draft", "reply control is minimized into draft mode");
 
-    await click(".toggle-fullscreen");
+    await click("#reply-control");
 
     assert
       .dom("#reply-control")

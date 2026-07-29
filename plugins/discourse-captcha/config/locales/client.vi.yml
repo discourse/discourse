@@ -7,4 +7,12 @@
 vi:
   js:
     discourse_captcha:
+      missing_token: "Vui lòng hoàn thành xác minh Captcha."
+      verification_failed: "Xác minh Captcha thất bại. Vui lòng thử lại."
       placeholder: chỗ trống
+      contact_system_administrator: "Đã xảy ra lỗi với nhà cung cấp Captcha. Nếu sự cố vẫn tiếp diễn, vui lòng liên hệ với Quản trị viên hệ thống."
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_captcha: "Discourse Captcha"

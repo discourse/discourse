@@ -114,12 +114,17 @@ class NewPostManager
 
     return :category if post_needs_approval_in_its_category?(manager)
 
-    if manager.args[:image_sizes].present? &&
-         !user.in_any_groups?(SiteSetting.skip_review_media_groups_map)
-      return :contains_media
+    unless user.in_any_groups?(SiteSetting.skip_review_media_groups_map)
+      return :contains_media if contains_embedded_media?(manager.args)
     end
 
     :skip
+  end
+
+  def self.contains_embedded_media?(args)
+    return true if args[:image_sizes].present?
+
+    Post.new(raw: args[:raw], topic_id: args[:topic_id]).embedded_media_count.positive?
   end
 
   def self.post_needs_approval_in_its_category?(manager)

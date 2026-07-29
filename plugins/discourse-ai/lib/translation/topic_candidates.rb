@@ -54,10 +54,14 @@ module DiscourseAi
       end
 
       def self.progress_details
+        backfill_start_at = DiscourseAi::Translation.backfill_start_at
         main_topics =
-          Topic.where(
-            "topics.created_at > ?",
-            SiteSetting.ai_translation_backfill_max_age_days.days.ago,
+          (
+            if backfill_start_at
+              Topic.where("topics.created_at >= ?", backfill_start_at)
+            else
+              Topic.none
+            end
           ).where(deleted_at: nil)
         main_topics =
           main_topics.where(
@@ -208,10 +212,14 @@ module DiscourseAi
       # all topics that are eligible for translation based on site settings,
       # including those without locale detected yet.
       def self.get
+        backfill_start_at = DiscourseAi::Translation.backfill_start_at
         topics =
-          Topic.where(
-            "topics.created_at > ?",
-            SiteSetting.ai_translation_backfill_max_age_days.days.ago,
+          (
+            if backfill_start_at
+              Topic.where("topics.created_at >= ?", backfill_start_at)
+            else
+              Topic.none
+            end
           ).where(deleted_at: nil)
 
         topics =
