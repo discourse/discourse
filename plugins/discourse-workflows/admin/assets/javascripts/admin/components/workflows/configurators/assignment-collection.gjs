@@ -109,7 +109,7 @@ export default class AssignmentCollection extends Component {
       case "number":
         return { type: "number" };
       case "boolean":
-        return { type: "boolean" };
+        return { type: "boolean", ui: { expression: true } };
       case "array":
       case "object":
         return {
@@ -194,6 +194,7 @@ export default class AssignmentCollection extends Component {
             <Field
               @form={{object}}
               @formApi={{@formApi}}
+              @configuration={{item}}
               @connections={{@connections}}
               @credentials={{@credentials}}
               @fieldName="value"

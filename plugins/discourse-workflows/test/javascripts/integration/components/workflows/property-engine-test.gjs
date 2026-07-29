@@ -2004,4 +2004,102 @@ module("Integration | Component | workflows property engine", function (hooks) {
       "converts the dynamic expression back into a fixed list"
     );
   });
+
+  test("boolean assignment values convert between fixed and dynamic", async function (assert) {
+    this.setProperties({
+      configuration: {
+        fields: {
+          assignments: [{ name: "active", type: "boolean", value: false }],
+        },
+      },
+      formApi: null,
+      nodeType: "action:workflow_call",
+      schema: {
+        fields: {
+          type: "assignment_collection",
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".form-kit__control-toggle").exists("starts as a plain toggle");
+
+    await click(
+      '.workflows-property-engine__mode-control input[value="dynamic"]'
+    );
+
+    assert
+      .dom(".workflows-variable-input")
+      .exists("swaps the toggle for an expression input");
+    assert.strictEqual(
+      this.formApi.get("fields.assignments.0.value"),
+      "=false",
+      "seeds the expression with the previous fixed value"
+    );
+
+    await click(
+      '.workflows-property-engine__mode-control input[value="plain"]'
+    );
+
+    assert.false(
+      this.formApi.get("fields.assignments.0.value"),
+      "converts the expression back into a fixed boolean"
+    );
+  });
+
+  test("boolean assignment values saved as expressions render in dynamic mode", async function (assert) {
+    this.setProperties({
+      configuration: {
+        fields: {
+          assignments: [
+            { name: "active", type: "boolean", value: "={{ $json.enabled }}" },
+          ],
+        },
+      },
+      nodeType: "action:workflow_call",
+      schema: {
+        fields: {
+          type: "assignment_collection",
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".form-kit__control-toggle").doesNotExist();
+    assert.dom(".workflows-variable-input").includesText("enabled");
+  });
 });

@@ -315,6 +315,45 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
       )
     end
 
+    it "resolves dynamic expressions for manually mapped boolean fields" do
+      target = callable_workflow_with_set_fields([assignment("called", "yes")])
+      caller =
+        caller_workflow_for(
+          target,
+          call_configuration: {
+            "mapping_mode" => "manual",
+            "fields" => {
+              "assignments" => [
+                assignment("active", "={{ $json.enabled }}", type: "boolean"),
+                assignment("staff", "={{ $json.role }}", type: "boolean"),
+              ],
+            },
+          },
+        )
+
+      execution =
+        execute_workflow(
+          caller,
+          trigger_data: [
+            { "name" => "Ada", "enabled" => true, "role" => "true" },
+            { "name" => "Grace", "enabled" => false, "role" => "moderator" },
+          ],
+        )
+      expect_parent_waiting_at_call(execution)
+
+      expect(run_workflow_call_jobs).to eq(1)
+
+      execution.reload
+      child_execution_id = serialized_step(execution).dig(:workflow_call_run, "execution_id")
+      child_execution = DiscourseWorkflows::Execution.find(child_execution_id)
+      trigger_step = child_execution.execution_data.find_step(node_id: "call-trigger")
+
+      expect(execution).to be_success
+      expect(trigger_step["output"].map { |item| item["json"] }).to eq(
+        [{ "active" => true, "staff" => true }, { "active" => false, "staff" => false }],
+      )
+    end
+
     it "returns the last node output" do
       target_graph =
         build_workflow_graph do |workflow_graph|
