@@ -1,4 +1,5 @@
 @use "lib/viewport";
+@import "common/foundation/mixins";
 
 .design-wizard-modal {
   .d-modal__container {
@@ -464,6 +465,51 @@
   &__font-select,
   &__topic-page-select {
     margin-top: var(--space-1);
+  }
+
+  &__topic-page-caret {
+    margin-left: var(--space-1);
+  }
+
+  // copied from the notifications tracking menu items so the option rows
+  // render identically without coupling to that component's class names
+  &__topic-page-option {
+    display: flex;
+    flex: 1 0 auto;
+    box-sizing: border-box;
+    align-items: center;
+  }
+
+  &__topic-page-option-icons {
+    display: flex;
+    align-self: flex-start;
+  }
+
+  &__topic-page-option-texts {
+    line-height: var(--line-height-medium);
+    flex: 1 1 0%;
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
+
+  &__topic-page-option-label {
+    flex: 1 1 auto;
+    font-weight: bold;
+    font-size: var(--font-0);
+    color: var(--primary);
+    max-width: 100%;
+
+    @include ellipsis;
+  }
+
+  &__topic-page-option-description {
+    flex: 1 1 auto;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    white-space: normal;
+    text-align: left;
   }
 
   &__font-select-caret {

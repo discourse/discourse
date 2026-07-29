@@ -30,7 +30,7 @@ const TopicPageTrigger = <template>
   <button class="btn btn-default btn-icon-text" type="button" ...attributes>
     {{dIcon @icon}}
     <span class="d-button-label">{{@label}}</span>
-    {{dIcon "angle-down" class="notifications-tracking-btn__caret"}}
+    {{dIcon "angle-down" class="design-wizard-modal__topic-page-caret"}}
   </button>
 </template>;
 
@@ -235,18 +235,22 @@ export default class DesignWizardHomepageSection extends Component {
                 <dropdown.item>
                   <DButton
                     @action={{fn this.selectTopicPage page.key dMenu}}
-                    class="notifications-tracking-btn
+                    class="design-wizard-modal__topic-page-option --with-description
                       {{if (eq page.key @homepage) '-selected'}}"
                     data-topic-page={{page.key}}
                   >
-                    <div class="notifications-tracking-btn__icons">
+                    <div class="design-wizard-modal__topic-page-option-icons">
                       {{dIcon page.icon}}
                     </div>
-                    <div class="notifications-tracking-btn__texts">
-                      <span class="notifications-tracking-btn__label">
+                    <div class="design-wizard-modal__topic-page-option-texts">
+                      <span
+                        class="design-wizard-modal__topic-page-option-label"
+                      >
                         {{topicPageLabel page.key}}
                       </span>
-                      <span class="notifications-tracking-btn__description">
+                      <span
+                        class="design-wizard-modal__topic-page-option-description"
+                      >
                         {{topicPageDescription page.key}}
                       </span>
                     </div>
