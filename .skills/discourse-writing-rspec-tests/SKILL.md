@@ -17,7 +17,7 @@ Discourse uses RSpec for testing. Follow these patterns for all test types.
 - **Capture infrastructure side effects without mocking internals** — use `DiscourseEvent.track_events` and `MessageBus.track_publish` when asserting emitted events or published messages instead of expecting calls to `trigger` or `publish`.
 - **Prefer readability over DRYness** — tests are documentation. Some duplication is fine. Avoid deep `shared_examples`/`let` chains that hurt readability.
 - **Never define Ruby methods within RSpec scope** — no form of Ruby method definition may appear beneath an example group, shared example, or shared context, including definitions nested in examples, hooks, or inline fixture/interface classes, modules, and singleton classes.
-- **Give substantial test abstractions an owner** — reusable interfaces, external boundaries, multi-step fixtures, and assertion protocols belong in focused support objects, page objects, custom matchers, or fabricators. Keep their public surface small and remove abstractions that no longer carry meaningful responsibility.
+- **Put reusable test behavior in the appropriate support type** — use page objects for UI interactions, custom matchers for repeated assertions, fabricators for reusable record shapes, and support classes for fake interfaces or multi-step workflows. Files under `spec/support` are auto-loaded in core and plugins. Keep simple setup and actions inline with RSpec primitives or direct calls.
 - **Test edge cases** — nil inputs, empty collections, boundary values, permission failures — not just happy paths.
 - **Keep tests independent** — no test should depend on another test's execution or shared mutable state.
 - **Verify placement in parent context** — before adding a new test, always read the surrounding `describe`/`context` block to confirm the test belongs there. Check that the parent context's description, `let`/`fab!` setup, and `before` hooks match the scenario being tested. A misplaced test inherits the wrong setup and produces misleading results.
@@ -52,11 +52,7 @@ it "creates a new topic" do
 end
 ```
 
-Never use `before` blocks for Fabricate calls. Use `let!` only when absolutely necessary.
-
-Choose the fixture primitive whose lifecycle matches the data. `fab!` uses TestProf `let_it_be`, so it is for data that can be established outside per-example setup. Use `let` for lazy per-example values and `let!` only when a per-example record must exist before the action. Do not bridge incompatible lifecycles with hooks or later mutation.
-
-Fabricators live in `spec/fabricators/` in core and each plugin. Search for an existing fabricator before hand-rolling setup. Name shared data for the role it plays (`fab!(:topic_creator)`, not `fab!(:user)`). For recurring non-default data, define a derived fabricator (`Fabricator(:variant, from: :base)`) named for its data state rather than adding a scenario-specific helper.
+- **Choose test data by lifecycle and role** — use `fab!` for shared records, `let` for lazy per-example values, and `let!` only when a per-example record must exist before the action. Because `fab!` uses TestProf `let_it_be`, it cannot depend on per-example setup. Never call `Fabricate` from a `before` block or bridge incompatible lifecycles with later mutation. Search core or plugin `spec/fabricators` before hand-rolling setup, name records for their role (`fab!(:topic_creator)`), and define a derived fabricator for recurring non-default record shapes.
 
 ## Test Efficiency
 
