@@ -8,7 +8,6 @@ lt:
   js:
     styleguide:
       title: "Stiliaus vadovas"
-      welcome: "Norėdami pradėti, kairėje esančiame meniu pasirinkite skyrių."
       categories:
         atoms: Atomai
         molecules: Molekulės

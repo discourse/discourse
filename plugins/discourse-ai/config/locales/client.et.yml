@@ -68,6 +68,20 @@ et:
         select_option: "Vali võimalus..."
       translations:
         category_scope: "Liigid"
+        model_progress:
+          detail:
+            columns:
+              pending: "Ootel"
+              total: "Kokku"
+          targets:
+            post:
+              title: "Postitust"
+            topic:
+              title: "Teemasid"
+            category:
+              title: "Kategooriad"
+            tag:
+              title: "Sildid"
         stats:
           eta_minutes:
             one: "%{count} minut"

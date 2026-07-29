@@ -380,15 +380,28 @@ ru:
         title: "Переводы"
         description: "Автоматически переводить весь контент вашего форума на предпочитаемый пользователем язык"
         supported_locales: "Поддерживаемые языки"
-        supported_locales_description: "Эта настройка сайта также позволяет посетителям добавлять переводы к сообщениям."
         category_scope: "Категории"
+        cached_results_notice: "Отображение кэшированных результатов из %{relative_time}."
+        model_progress:
+          detail:
+            retry: "Повторить"
+            columns:
+              locale: "Локаль"
+              pending: "Ожидают одобрения"
+              total: "Всего"
+          targets:
+            post:
+              title: "Количество сообщений"
+            topic:
+              title: "Темы"
+            category:
+              title: "Категории"
+            tag:
+              title: "Теги"
         admin_actions:
-          translation_settings: "Настройки перевода"
-          localization_settings: "Настройки перевода"
           enable_translations: "Включить автоматический перевод"
         stats:
           title: "Статистика переводов"
-          backfill_message: "<a href='%{settingsUrl}'>Настройки заполнения</a> настроены таким образом, чтобы переводить все сообщения после %{date} — по оценкам, это займет %{eta}."
           eta_minutes:
             one: "%{count} минута"
             few: "%{count} минуты"

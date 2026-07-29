@@ -87,7 +87,6 @@ fr:
     ai_discord_app_public_key: "La clé publique de l'application Discord à laquelle vous souhaitez connecter la recherche Discord"
     ai_discord_search_mode: "Sélectionnez le mode de recherche à utiliser pour la recherche Discord"
     ai_discord_allowed_guilds: "Guildes Discord (serveurs) dans lesquelles le robot est autorisé à effectuer des recherches"
-    ai_translation_backfill_max_age_days: "L'âge maximal des publications et sujets à traduire. Les publications et sujets antérieurs à cette date ne seront pas traduits. 0 désactive le remplissage, mais ne désactive pas la traduction des nouvelles publications."
   reviewables:
     reasons:
       flagged_by_toxicity: L'extension IA l'a signalé après l'avoir classé comme toxique.
@@ -426,7 +425,7 @@ fr:
         github_file_content: "Récupérer le contenu des fichiers depuis un dépôt GitHub"
         random_picker: "Choisissez un nombre aléatoire ou un élément aléatoire d'une liste"
         categories: "Répertorier toutes les catégories visibles publiquement sur le forum"
-        delete_topic: "Supprimez un sujet"
+        delete_topic: "Supprimer un sujet"
         search: "Rechercher dans tous les sujets publics sur le forum"
         tags: "Répertorier toutes les étiquettes du forum"
         time: "Trouver l'heure dans différents fuseaux horaires"
@@ -492,32 +491,32 @@ fr:
           raw: "Lors de ma recherche pour %{query}, vous m'avez montré les informations suivantes :\n\n%{context}\n\nPoursuivons la conversation."
       close_topic:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
       unlist_topic:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
       delete_topic:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
       edit_tags:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
       edit_category:
         errors:
-          not_found: "Sujet non trouvé."
-          category_not_found: "Catégorie non trouvée ."
+          not_found: "Sujet introuvable."
+          category_not_found: "Catégorie introuvable."
       set_topic_timer:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
       set_slow_mode:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
       move_posts:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
       assign:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
     reviewables:
       ai_tool_action:
         approve:

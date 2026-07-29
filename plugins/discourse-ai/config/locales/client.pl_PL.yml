@@ -427,17 +427,124 @@ pl_PL:
         title: "Tłumaczenia"
         description: "Automatycznie tłumacz całą zawartość swojego forum na język preferowany przez użytkownika"
         supported_locales: "Obsługiwane języki"
-        supported_locales_description: "To ustawienie witryny pozwala również odwiedzającym na dodawanie tłumaczeń wpisów."
         category_scope: "Kategorie"
-        category_scope_description: "Wybierz, czy automatyczne tłumaczenia mają wykorzystywać wszystkie kategorie, kategorie publiczne czy wybrane kategorie."
+        category_scope_description: "Wybierz, czy automatyczne tłumaczenia mają dotyczyć treści we wszystkich kategoriach, kategoriach publicznych czy wybranych kategoriach."
+        cached_results_notice: "Wyświetlanie wyników z pamięci podręcznej z %{relative_time}."
+        model_progress:
+          loading: "Ładowanie postępu tłumaczenia"
+          overview_label: "Postęp tłumaczenia według typu treści"
+          detail:
+            loading: "Ładowanie szczegółów %{target}..."
+            load_error: "Nie można załadować szczegółów %{target}."
+            retry: "Ponów"
+            empty: "Postępy językowe są niedostępne."
+            progress_label: "%{translated} z %{total} przetłumaczone na %{language}"
+            columns:
+              locale: "Ustawienia regionalne"
+              translated: "Przetłumaczone"
+              pending: "Oczekujący"
+              eligible: "Kwalifikujące się"
+              total: "Wszystkie"
+              progress: "Postęp"
+            eligible_help: "Treści już w tym języku są wykluczone."
+            pending_help: "Zawiera treści, które nadal wymagają wykrycia języka."
+          targets:
+            post:
+              title: "Wpisów"
+              eligible_total:
+                one: "Jest %{count} wpisów kwalifikujących się do przetłumaczenia."
+                few: "Są %{count} wpisy kwalifikujące się do przetłumaczenia."
+                many: "Jest %{count} wpisów kwalifikujących się do przetłumaczenia."
+                other: "Jest %{count} wpisów kwalifikujących się do przetłumaczenia."
+              translated:
+                one: "%{count} wpis został w całości przetłumaczony."
+                few: "%{count} wpisy zostały w całości przetłumaczone."
+                many: "%{count} wpisów zostało w całości przetłumaczonych."
+                other: "%{count} wpisów zostało w całości przetłumaczonych."
+              needs_language_detection:
+                one: "%{count} wpis nadal wymaga wykrycia języka."
+                few: "%{count} wpisy nadal wymagają wykrycia języka."
+                many: "%{count} wpisów nadal wymaga wykrycia języka."
+                other: "%{count} wpisów nadal wymaga wykrycia języka."
+              all_translated:
+                one: "Wpis spełniający kryteria został w pełni przetłumaczony."
+                few: "Wszystkie %{count} spełniające kryteria wpisy zostały w pełni przetłumaczone."
+                many: "Wszystkie %{count} spełniających kryteria wpisów zostało w pełni przetłumaczonych."
+                other: "Wszystkie %{count} spełniających kryteria wpisów zostało w pełni przetłumaczonych."
+            topic:
+              title: "Tematy"
+              eligible_total:
+                one: "Istnieje %{count} spełniający kryteria temat do tłumaczenia."
+                few: "Istnieją %{count} spełniające kryteria tematy do tłumaczenia."
+                many: "Istnieje %{count} spełniających kryteria tematów do tłumaczenia."
+                other: "Istnieje %{count} spełniających kryteria tematów do tłumaczenia."
+              translated:
+                one: "%{count} temat został w pełni przetłumaczony."
+                few: "%{count} tematy zostały w pełni przetłumaczone."
+                many: "%{count} tematów zostało w pełni przetłumaczonych."
+                other: "%{count} tematów zostało w pełni przetłumaczonych."
+              needs_language_detection:
+                one: "%{count} temat nadal wymaga wykrycia języka."
+                few: "%{count} tematy nadal wymagają wykrycia języka."
+                many: "%{count} tematów nadal wymaga wykrycia języka."
+                other: "%{count} tematów nadal wymaga wykrycia języka."
+              all_translated:
+                one: "Temat spełniający kryteria został w pełni przetłumaczony."
+                few: "Wszystkie %{count} spełniające kryteria tematy zostały w pełni przetłumaczone."
+                many: "Wszystkie %{count} spełniających kryteria tematów zostało w pełni przetłumaczonych."
+                other: "Wszystkie %{count} spełniających kryteria tematów zostało w pełni przetłumaczonych."
+            category:
+              title: "Kategorie"
+              eligible_total:
+                one: "Istnieje %{count} spełniająca kryteria kategoria do tłumaczenia."
+                few: "Istnieją %{count} spełniające kryteria kategoria do tłumaczenia."
+                many: "Istnieje %{count} spełniających kryteria kategorii do tłumaczenia."
+                other: "Istnieje %{count} spełniających kryteria kategorii do tłumaczenia."
+              translated:
+                one: "%{count} kategoria została w pełni przetłumaczona."
+                few: "%{count} kategorie zostały w pełni przetłumaczone."
+                many: "%{count} kategorii zostało w pełni przetłumaczonych."
+                other: "%{count} kategorii zostało w pełni przetłumaczonych."
+              needs_language_detection:
+                one: "%{count} kategoria nadal wymaga wykrycia języka."
+                few: "%{count} kategorie nadal wymagają wykrycia języka."
+                many: "%{count} kategorii nadal wymaga wykrycia języka."
+                other: "%{count} kategorii nadal wymaga wykrycia języka."
+              all_translated:
+                one: "Kategoria spełniająca kryteria została w pełni przetłumaczona."
+                few: "Wszystkie %{count} spełniające kryteria kategorie zostały w pełni przetłumaczone."
+                many: "Wszystkie %{count} spełniających kryteria kategorii zostało w pełni przetłumaczonych."
+                other: "Wszystkie %{count} spełniających kryteria kategorii zostało w pełni przetłumaczonych."
+            tag:
+              title: "Tagi"
+              total:
+                one: "Jest %{count} tag do przetłumaczenia."
+                few: "Są %{count} tagi do przetłumaczenia."
+                many: "Jest %{count} tagów do przetłumaczenia."
+                other: "Jest %{count} tagów do przetłumaczenia."
+              translated:
+                one: "%{count} tag został w pełni przetłumaczony."
+                few: "%{count} tagi zostały w pełni przetłumaczone."
+                many: "%{count} tagów zostało w pełni przetłumaczonych."
+                other: "%{count} tagów zostało w pełni przetłumaczonych."
+              needs_language_detection:
+                one: "%{count} tag nadal wymaga wykrycia języka."
+                few: "%{count} tagi nadal wymagają wykrycia języka."
+                many: "%{count} tagów nadal wymaga wykrycia języka."
+                other: "%{count} tagów nadal wymaga wykrycia języka."
+              all_translated:
+                one: "Tag został w pełni przetłumaczony."
+                few: "Wszystkie %{count} tagi zostały w pełni przetłumaczone."
+                many: "Wszystkie %{count} tagów zostało w pełni przetłumaczonych."
+                other: "Wszystkie %{count} tagów zostało w pełni przetłumaczonych."
         admin_actions:
-          translation_settings: "Ustawienia tłumaczenia"
-          localization_settings: "Ustawienia lokalizacji"
+          translation_settings: "Ustawienia AI"
+          localization_settings: "Ustawienia języka aplikacji"
           enable_translations: "Włącz automatyczne tłumaczenia"
         stats:
           title: "Statystyki tłumaczeń"
           backfill_disabled: "Uzupełnianie jest wyłączone, tłumaczone będą tylko nowe wpisy."
-          backfill_message: "<a href='%{settingsUrl}'>Ustawienia uzupełniania</a> są skonfigurowane tak, aby tłumaczyć wszystkie posty po %{date} — szacuje się, że zajmie to %{eta}."
+          backfill_message: "<a href='%{settingsUrl}'>Ustawienia uzupełniania</a> są skonfigurowane tak, aby tłumaczyć wszystkie posty po %{date}."
           eta_minutes:
             one: "%{count} minuta"
             few: "%{count} minuty"

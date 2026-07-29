@@ -14,19 +14,96 @@ vi:
     rss_polling:
       title: RSS Polling
     admin:
+      logs:
+        staff_actions:
+          actions:
+            create_rss_polling_feed: Tạo nguồn cấp dữ liệu RSS (RSS feed)
+            update_rss_polling_feed: Cập nhật nguồn cấp dữ liệu RSS
+            destroy_rss_polling_feed: Xóa nguồn cấp dữ liệu RSS
+            enable_rss_polling_feed: Bật nguồn cấp dữ liệu RSS
+            disable_rss_polling_feed: Tắt nguồn cấp dữ liệu RSS
+            poll_rss_polling_feed: Kiểm tra nguồn cấp RSS ngay
       rss_polling:
+        feed_settings: Cài đặt nguồn cấp
+        discourse_settings: Cài đặt Discourse
         author: Tác giả
         feed_url: URL
+        feed_url_must_be_http: Nhập đường dẫn (URL) nguồn cấp hợp lệ bắt đầu bằng http:// hoặc https://.
         discourse_category: Chuyên mục
         discourse_tags: Thẻ
+        required_tags_hint: "Chuyên mục này yêu cầu ít nhất một trong các thẻ sau — hãy thêm thẻ nếu không bài viết nhập vào sẽ bị từ chối:\njs.admin.rss_polling.required_tags_hint"
+        required_tag_error: 'Thêm ít nhất %{count} thẻ từ nhóm "%{tag_group}", nếu không các bài viết nhập vào sẽ bị từ chối.'
+        feed_category_filter: Bộ lọc chuyên mục
+        feed_category_filter_description: Chỉ nhập các mục có chuyên mục nguồn chứa đoạn văn bản này (không phân biệt chữ hoa/thường). Để trống nếu muốn nhập tất cả.
+        showing: "Hiển thị %{count} trên tổng số %{total} mục đầu tiên."
         feeds:
+          title: Nguồn cấp dữ liệu
+          nav_description: Quản lý các nguồn cấp RSS/Atom được nhập vào Discourse.
+          description: Cấu hình các nguồn cấp RSS/Atom được tự động lấy dữ liệu và nhập thành bài viết.
+          add: Thêm nguồn cấp
+          add_header: Thêm nguồn cấp
+          edit_header: Chỉnh sửa nguồn cấp
+          empty: Chưa có nguồn cấp dữ liệu nào được cấu hình.
           edit: Sửa
           delete: Xóa
+          enable: Bật nguồn cấp
+          disable: Tắt nguồn cấp
+          back: Quay lại danh sách nguồn cấp
           save: Lưu lại
           confirm_delete: "Bạn có chắc chắn muốn xóa nguồn cấp này?"
+          delete_success: Đã xóa nguồn cấp
+          save_success: Đã lưu nguồn cấp
+          enable_success: Đã bật nguồn cấp
+          disable_success: Đã tắt nguồn cấp
         test:
+          button: Kiểm tra nguồn cấp
           title: Xem trước
+          empty: Nguồn cấp này không phản hồi mục dữ liệu nào.
           dismiss: Bỏ qua
+          would_import: Sẽ nhập vào
+          summary:
+            would_import: "Sẽ nhập %{count} mục"
+            already_imported: "Đã nhập %{count} mục"
+            skipped: "Sẽ bỏ qua %{count} mục"
+          already_imported: "Đã nhập trước đó — tiến trình lấy dữ liệu sẽ cập nhật <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>bài viết hiện có</a>."
+          already_imported_plain: "Đã nhập trước đó — tiến trình lấy dữ liệu sẽ cập nhật bài viết hiện có."
+          skip_reasons:
+            missing_content: Đã bỏ qua — mục này không có nội dung.
+            missing_title: Đã bỏ qua — mục này không có tiêu đề.
+            invalid_url: Đã bỏ qua — mục này không có liên kết hợp lệ để nhập dữ liệu.
+            category_filter_mismatch: "Đã bỏ qua — chuyên mục của mục: %{categories}"
+            category_filter_mismatch_none: Đã bỏ qua — mục này không có chuyên mục.
+          errors:
+            fetch_failed: Không thể tải nguồn cấp. Vui lòng kiểm tra lại đường dẫn (URL) xem đã chính xác và truy cập được chưa.
+            parse_failed: Dữ liệu phản hồi không đúng định dạng RSS hoặc Atom hợp lệ.
+            invalid_feed: Không thể đọc nguồn cấp vì cấu trúc dữ liệu bị lỗi.
+            blank_feed_url: Nhập đường dẫn (URL) nguồn cấp để kiểm tra.
+            category_deleted: Chuyên mục đích của nguồn cấp này không còn tồn tại. Vui lòng chỉnh sửa nguồn cấp và chọn một chuyên mục mới.
+            unknown: Không thể đọc nguồn cấp này. Dịch vụ có thể tạm thời gián đoạn hoặc phản hồi nội dung không hợp lệ. Vui lòng chạy kiểm tra để chẩn đoán hoặc xem nhật ký (log) để biết chi tiết.
         status:
           enabled: Đã bật
           disabled: Vô hiệu hóa
+          disabled_note: Sẽ không tự động lấy dữ liệu theo lịch
+        history:
+          recent: Lượt kiểm tra gần đây
+          show_older: "Hiển thị %{count} mục cũ hơn"
+          poll_now: Kiểm tra ngay
+          poll_now_dirty: Vui lòng lưu các thay đổi trước khi kiểm tra.
+          poll_now_disabled: Hãy bật nguồn cấp dữ liệu trước khi kiểm tra.
+          poll_confirm: Tiến trình kiểm tra sẽ tải nguồn cấp này để nhập mới hoặc cập nhật các bài viết. Bạn có muốn tiếp tục?
+          poll_started: Đã bắt đầu kiểm tra — kết quả mới nhất sẽ hiển thị tại đây trong giây lát.
+          empty: Nguồn cấp này chưa từng được kiểm tra.
+          no_items: Không có mục dữ liệu nào được xử lý trong lần kiểm tra này.
+          no_changes: Không có thay đổi
+          imported_count: "Đã nhập %{count}"
+          updated_count: "Đã cập nhật %{count}"
+          skipped_count: "Đã bỏ qua %{count}"
+          failed_count: "Thất bại %{count}"
+          imported: "Đã nhập thành một <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>bài viết</a> mới."
+          imported_plain: "Đã nhập thành bài viết mới."
+          updated: "Đã cập nhật <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>bài viết hiện có</a>."
+          updated_plain: "Đã cập nhật bài viết hiện có."
+          failed: Nhập dữ liệu thất bại.
+          failed_reasons:
+            import_rejected: "Không thể nhập — mục dữ liệu không chứa liên kết hợp lệ."
+            import_error: "Không thể nhập: %{error}"

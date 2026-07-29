@@ -345,16 +345,28 @@ pt_BR:
         title: "Traduções"
         description: "Traduzir automaticamente todo o conteúdo no seu fórum para a linguagem preferida do usuário"
         supported_locales: "Idiomas suportados"
-        supported_locales_description: "Esta configuração do site também permite que os visitantes contribuam com traduções das postagens."
         category_scope: "Categorias"
+        model_progress:
+          detail:
+            retry: "Tentar novamente"
+            columns:
+              locale: "Idioma"
+              pending: "Pendentes"
+              total: "Total"
+          targets:
+            post:
+              title: "Postagens"
+            topic:
+              title: "Tópicos"
+            category:
+              title: "Categorias"
+            tag:
+              title: "Tags"
         admin_actions:
-          translation_settings: "Configurações de tradução"
-          localization_settings: "Configurações de localização"
           enable_translations: "Ativar traduções automáticas"
         stats:
           title: "Estatísticas de tradução"
           backfill_disabled: "O backfilling está desativado; apenas novas postagens serão traduzidas."
-          backfill_message: "<a href='%{settingsUrl}'>As configurações de backfill</a> estão configuradas para traduzir todas as postagens após %{date} — estima-se que isso leve %{eta}."
           eta_minutes:
             one: "%{count} minuto"
             other: "%{count} minutos"

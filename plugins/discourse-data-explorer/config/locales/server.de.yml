@@ -16,14 +16,23 @@ de:
           description: "Erstellt SQL-Abfragen für den Daten-Explorer aus natürlicher Sprache"
       tool_help:
         run_sql: "Führt eine SQL-Abfrage aus und gibt die Ergebnisse zurück"
+        submit_query: "Sendet die endgültig generierte Abfrage ab"
       tool_summary:
         run_sql: "Ausführen der SQL-Abfrage"
+        submit_query: "Generierte Anfrage wird übermittelt"
       tool_description:
         run_sql: "SQL-Abfrage ausgeführt"
+        submit_query: "Generierte Abfrage %{name} wurde übermittelt"
   discourse_data_explorer:
     ai:
       error_agent_not_configured: "Der KI-Agent ist nicht konfiguriert. Bitte überprüfe die Einstellungen für die KI-Funktionen."
       error_no_sql_returned: "Die KI hat keine gültige SQL-Abfrage zurückgegeben. Bitte versuche es erneut oder gib die Abfrage manuell ein."
+    errors:
+      tool_not_allowed: "Du darfst dieses Tool nicht verwenden"
+    discourse_workflows:
+      sql_action:
+        no_query_selected: "Keine Abfrage ausgewählt."
+        no_sql_provided: "Es wurde keine SQL-Abfrage angegeben."
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:

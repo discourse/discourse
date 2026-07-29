@@ -8,7 +8,6 @@ ko:
   js:
     styleguide:
       title: "스타일 가이드"
-      welcome: "시작하려면 왼쪽 메뉴에서 섹션을 선택하세요."
       categories:
         atoms: Atoms
         molecules: 분자

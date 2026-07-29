@@ -2670,6 +2670,7 @@ ja:
     filter_input:
       clear: "フィルタをクリア"
     filter_controls:
+      reset: "リセット"
       toggle: "ドロップダウンのフィルタを切り替える"
     shared_drafts:
       title: "共有の下書き"
@@ -6477,6 +6478,8 @@ ja:
         sidebar: "サイドバー"
         header_dropdown: "ヘッダードロップダウン"
         legacy: "レガシー"
+      duplicate_topic_titles:
+        allowed: "許可"
       backups:
         title: "バックアップ"
         files_title: "バックアップファイル"
@@ -6714,7 +6717,6 @@ ja:
           finish_install: "テーマのインストールを終了"
           last_attempt: "インストールプロセスが終了しませんでした。最終試行:"
           remote_branch: "ブランチ名 (オプション)"
-          public_key: "次の公開鍵アクセスをリポジトリに許可する:"
           install: "インストール"
           installed: "インストール済み"
           install_popular: "人気"
@@ -8028,6 +8030,7 @@ ja:
         uploading: "アップロード中…"
         name: "名前"
         group: "グループ"
+        all_groups: "すべてのグループ"
         created_by: "作成者"
         image: "画像"
         alt: "カスタム絵文字のプレビュー"

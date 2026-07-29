@@ -2870,6 +2870,8 @@ sk:
       default: Vlastné emotikony
     filter_input:
       clear: "Vymazať filter"
+    filter_controls:
+      reset: "Resetovať"
     shared_drafts:
       title: "Zdieľané návrhy"
       notice: "Táto téma je viditeľná len pre tých, ktorí môžu zverejňovať zdieľané návrhy."
@@ -6831,6 +6833,8 @@ sk:
         sidebar: "Bočný panel"
         header_dropdown: "Rozbaľovacia ponuka hlavičky"
         legacy: "Odkaz"
+      duplicate_topic_titles:
+        allowed: "Povolené"
       backups:
         title: "Zálohy"
         files_title: "Súbory zálohy"
@@ -7058,7 +7062,6 @@ sk:
           finish_install: "Dokončiť inštaláciu témy"
           last_attempt: "Proces inštalácie sa nedokončil, posledný pokus:"
           remote_branch: "Názov pobočky (voliteľné)"
-          public_key: "Poskytnite prístup k repo nasledujúcemu verejnému kľúču:"
           install: "Inštalácia"
           installed: "Nainštalované"
           install_popular: "Populárne"
@@ -8383,6 +8386,7 @@ sk:
         uploading: "Nahrávanie..."
         name: "Meno"
         group: "Skupina"
+        all_groups: "Všetky skupiny"
         created_by: "Vytvoril"
         image: "Obrázok"
         alt: "náhľad vlastných emoji"

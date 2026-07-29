@@ -316,7 +316,6 @@ cs:
       exclusion: je rezervováno
       greater_than: musí být větší než %{count}
       greater_than_or_equal_to: musí být větší nebo rovno %{count}
-      has_already_been_used: "již byl použit"
       in: musí být v %{count}
       inclusion: není zahrnutý v seznamu
       invalid: je neplatný
@@ -1870,7 +1869,6 @@ cs:
     staff_edit_locks_post: "Příspěvky budou zablokovány pro úpravy, pokud je upraví členové redakce."
     post_edit_time_limit: "Autor úrovně důvěry 0 nebo 1 může svůj příspěvek upravovat po dobu (n) minut po zveřejnění. Nastavte na 0 pro neomezené úpravy."
     tl2_post_edit_time_limit: "Autor úrovně důvěry 2 a vyšší může svůj příspěvek upravovat po dobu (n) minut po zveřejnění. Nastavte na 0 pro neomezené úpravy."
-    edit_history_visible_to_public: "Umožnit všem zobrazit předchozí verze upraveného příspěvku. Pokud je tato možnost zakázána, mohou je zobrazit pouze členové redakce."
     delete_removed_posts_after: "Příspěvky odstraněné autorem budou automaticky smazány po (n) hodinách. Pokud je nastaveno na 0, příspěvky budou smazány okamžitě."
     notify_users_after_responses_deleted_on_flagged_post: "Když je příspěvek nahlášen a poté odstraněn, budou o tom informováni všichni uživatelé, kteří na příspěvek reagovali a jejichž reakce byly odstraněny."
     max_image_width: "Maximální šířka miniatur obrázků v příspěvku. Šiřší obrázky budou zmenšeny a zobrazeny jako lightbox."

@@ -2850,6 +2850,7 @@ ug:
     filter_input:
       clear: "سۈزگۈچنى تازىلا"
     filter_controls:
+      reset: "ئەسلىگە قايتۇر"
       toggle: "تارتما سۈزگۈچنى ئالماشتۇرىدۇ"
     shared_drafts:
       title: "دەسلەپكى نۇسخا ھەمبەھىر"
@@ -6716,6 +6717,8 @@ ug:
         sidebar: "يانبالداق"
         header_dropdown: "ماۋزۇ تارتما تىزىملىك"
         legacy: "كونا نەشرى"
+      duplicate_topic_titles:
+        allowed: "يول قويغان"
       backups:
         title: "زاپاس"
         files_title: "ھۆججەت زاپاسلايدۇ"
@@ -6954,7 +6957,6 @@ ug:
           finish_install: "ئۆرنەك ئورنىتىش تامام"
           last_attempt: "ئورنىتىش جەريانى تاماملانمىدى، ئاخىرقى سىنىغىنى:"
           remote_branch: "شاخ ئىسمى (تاللاشچان)"
-          public_key: "تۆۋەندىكى ئاممىۋى ئاچقۇچقا خەزىنە زىيارەت ئىجازىتىنى بېرىدۇ:"
           install: "ئورنات"
           installed: "ئورنىتىلدى"
           install_popular: "ئالقىشلىق"
@@ -8257,6 +8259,7 @@ ug:
         uploading: "يۈكلەۋاتىدۇ…"
         name: "ئىسمى"
         group: "گۇرۇپپا"
+        all_groups: "بارلىق گۇرۇپپىلار"
         created_by: "قۇرغۇچى"
         image: "سۈرەت"
         alt: "ئىختىيارى چىراي ئىپادەنى ئالدىن كۆزەت"

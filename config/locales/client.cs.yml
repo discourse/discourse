@@ -3087,6 +3087,7 @@ cs:
     filter_input:
       clear: "Vymazat filtr"
     filter_controls:
+      reset: "obnovit výchozí"
       toggle: "Přepnout rozbalovací filtry"
     shared_drafts:
       title: "Sdílené koncepty"
@@ -7357,6 +7358,8 @@ cs:
         sidebar: "Postranní panel"
         header_dropdown: "Rozbalovací nabídka záhlaví"
         legacy: "Zastaralé"
+      duplicate_topic_titles:
+        allowed: "Povolené"
       backups:
         title: "Zálohy"
         files_title: "Soubory záloh"
@@ -7600,7 +7603,6 @@ cs:
           finish_install: "Dokončit instalaci motivu"
           last_attempt: "Proces instalace nebyl dokončen, poslední pokus:"
           remote_branch: "Název větve (nepovinné)"
-          public_key: "Udělte následujícímu veřejnému klíči přístup k repozitáři:"
           install: "Instalovat"
           installed: "Nainstalováno"
           install_popular: "Populární"
@@ -9003,6 +9005,7 @@ cs:
         uploading: "Nahrávání…"
         name: "Název"
         group: "Skupina"
+        all_groups: "Všechny skupiny"
         created_by: "Vytvořil/a"
         image: "Obrázek"
         alt: "náhled vlastních emoji"

@@ -3183,7 +3183,7 @@ ru:
     filter_input:
       clear: "Очистить фильтр"
     filter_controls:
-      reset: "Сбросить фильтры"
+      reset: "Сбросить"
     d_icon_grid_picker:
       select_icon: "Выбрать иконки"
       search_placeholder: "Искать иконки..."
@@ -7515,6 +7515,8 @@ ru:
         sidebar: "Боковая панель"
         header_dropdown: "Выпадающий список заголовка"
         legacy: "Старая версия"
+      duplicate_topic_titles:
+        allowed: "Разрешённые"
       backups:
         title: "Резервные копии"
         files_title: "Резервные файлы"
@@ -7764,7 +7766,6 @@ ru:
           finish_install: "Завершить установку темы"
           last_attempt: "Процесс установки не завершен, последняя попытка:"
           remote_branch: "Имя ветки (необязательно)"
-          public_key: "Предоставьте доступ к репозиторию со следующим открытым ключом:"
           install: "Установить"
           installed: "Установленные"
           install_popular: "Популярные"
@@ -9180,6 +9181,7 @@ ru:
         uploading: "Загрузка…"
         name: "Название"
         group: "Группа"
+        all_groups: "Все группы"
         created_by: "Создано"
         image: "Изображение"
         alt: "предпросмотр пользовательских эмодзи"
