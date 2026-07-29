@@ -6,6 +6,7 @@ import { trustHTML } from "@ember/template";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelect from "discourse/ui-kit/select/d-select";
+import { selectDivider } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 import {
   delay,
@@ -75,6 +76,7 @@ export default class SelectContent extends Component {
   @tracked glyphValue = null;
   @tracked rowIconValue = "tracking";
   @tracked statusValue = null;
+  @tracked dividedValue = null;
   @tracked groupedValue = null;
   @tracked pickerValue = [];
   @tracked selectionValue = 101;
@@ -83,6 +85,18 @@ export default class SelectContent extends Component {
   userGroups = USER_GROUPS;
   teamMembers = TEAM_MEMBERS;
   timezones = TIMEZONES;
+
+  // A rule between two runs of the same kind of row. `groupBy` cannot express this: there is no
+  // field the two runs differ on — "recent" is about how the consumer ordered the list, not about
+  // the rows themselves — so the separator is placed rather than inferred.
+  dividedTimezones = [
+    TIMEZONES.find((zone) => zone.id === "Europe/London"),
+    TIMEZONES.find((zone) => zone.id === "America/New_York"),
+    selectDivider(),
+    ...TIMEZONES.filter(
+      (zone) => !["Europe/London", "America/New_York"].includes(zone.id)
+    ),
+  ];
   glyphTopics = GLYPH_TOPICS;
 
   // `first` paired with a reset on close, rather than `alternate`. Alternating made the failure
@@ -266,6 +280,13 @@ export default class SelectContent extends Component {
     </span>
   </:selection>
 </DSelect>`;
+
+  dividedCode = `{{! selectDivider() builds the row; nothing infers where a plain rule belongs }}
+import { selectDivider } from "discourse/ui-kit/select/select-engine";
+
+const items = [recentA, recentB, selectDivider(), ...rest];
+
+<DSelect @items={{this.items}} @value={{this.value}} @onChange={{this.onChange}} />`;
 
   groupedCode = `<DSelect
   @items={{this.members}}
@@ -475,6 +496,11 @@ export default class SelectContent extends Component {
   @action
   updateGlyph(value) {
     this.glyphValue = value;
+  }
+
+  @action
+  updateDivided(value) {
+    this.dividedValue = value;
   }
 
   @action
@@ -747,6 +773,30 @@ export default class SelectContent extends Component {
           </:error>
         </DSelect>
       </div>
+    </StyleguideExample>
+
+    <StyleguideExample
+      @title={{i18n "styleguide.sections.select.content.divided_example"}}
+      @description={{i18n
+        "styleguide.sections.select.content.divided_description"
+      }}
+      @tryThis={{i18n "styleguide.sections.select.content.divided_try_this"}}
+      @code={{this.dividedCode}}
+    >
+      <:default>
+        <div class="select-examples__control">
+          <DSelect
+            @identifier="sg-divided"
+            @items={{this.dividedTimezones}}
+            @value={{this.dividedValue}}
+            @onChange={{this.updateDivided}}
+            @placeholder={{i18n
+              "styleguide.sections.select.content.divided_placeholder"
+            }}
+          />
+        </div>
+      </:default>
+      <:note>{{i18n "styleguide.sections.select.content.divided_note"}}</:note>
     </StyleguideExample>
 
     <StyleguideExample

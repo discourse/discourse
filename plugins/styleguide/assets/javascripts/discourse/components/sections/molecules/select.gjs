@@ -17,6 +17,7 @@ import {
 } from "../../../lib/select-fixtures";
 import StyleguideExample from "../../styleguide-example";
 import StyleguideGroups from "../../styleguide-groups";
+import SelectAriaProbe from "./select-aria-probe";
 import SelectContent from "./select-content";
 import SelectHero from "./select-hero";
 import SelectKeyboard from "./select-keyboard";
@@ -53,6 +54,7 @@ export default class Select extends Component {
   @tracked errorValue = null;
 
   @tracked multiValue = [];
+  @tracked toggleValue = ["en", "pt-BR"];
 
   @tracked maximumValue = ["en", "es", "pt-BR"];
 
@@ -142,6 +144,16 @@ export default class Select extends Component {
   @onChange={{this.onChange}}
   @variant="static"
 />`;
+  toggleCode = `{{! Nothing here turns it into a panel of toggles: a multi-select already keeps
+  the list open on a pick, and each row draws its own checked/unchecked box }}
+<DSelect
+  @items={{this.items}}
+  @multiple={{true}}
+  @variant="button"
+  @value={{this.value}}
+  @onChange={{this.onChange}}
+/>`;
+
   multiCode = `<DSelect
   @items={{this.items}}
   @multiple={{true}}
@@ -518,6 +530,11 @@ export default class Select extends Component {
   }
 
   @action
+  updateToggle(value) {
+    this.toggleValue = value;
+  }
+
+  @action
   updateNone(value) {
     this.noneValue = value;
   }
@@ -601,6 +618,8 @@ export default class Select extends Component {
     <p class="section-description">
       {{i18n "styleguide.sections.select.description"}}
     </p>
+
+    <SelectAriaProbe />
 
     <SelectHero />
 
@@ -1036,6 +1055,30 @@ export default class Select extends Component {
               }}
             />
           </div>
+        </StyleguideExample>
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.toggle_example"}}
+          @description={{i18n "styleguide.sections.select.toggle_description"}}
+          @tryThis={{i18n "styleguide.sections.select.toggle_try_this"}}
+          @code={{this.toggleCode}}
+        >
+          <:default>
+            <div class="select-examples__control">
+              <DSelect
+                @identifier="sg-toggle"
+                @items={{this.items}}
+                @multiple={{true}}
+                @variant="button"
+                @value={{this.toggleValue}}
+                @onChange={{this.updateToggle}}
+                @label={{i18n "styleguide.sections.select.toggle_label"}}
+                @placeholder={{i18n
+                  "styleguide.sections.select.multi_placeholder"
+                }}
+              />
+            </div>
+          </:default>
+          <:note>{{i18n "styleguide.sections.select.toggle_note"}}</:note>
         </StyleguideExample>
         <StyleguideExample
           @title={{i18n "styleguide.sections.select.none_example"}}
