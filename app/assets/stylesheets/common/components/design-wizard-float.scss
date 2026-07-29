@@ -1,43 +1,43 @@
-@import "common/foundation/colors";
-@import "common/foundation/color_transformations";
-
 // pins a neutral light skin on the wizard chrome (the sheet and its floating
 // menus): the page behind it is the live preview, but the tool itself should
 // not restyle as palettes, fonts and text sizes are previewed. Explicit font
 // classes inside (typeface samples) still apply.
 .design-wizard-float,
 .design-wizard-modal__font-select-content {
-  --primary: #{$primary};
-  --secondary: #{$secondary};
-  --tertiary: #{$tertiary};
-  --tertiary-hover: #{$tertiary-hover};
-  --tertiary-low: #{$tertiary-low};
-  --primary-very-low: #{$primary-very-low};
-  --primary-low: #{$primary-low};
-  --primary-low-mid: #{$primary-low-mid};
-  --primary-medium: #{$primary-medium};
-  --primary-high: #{$primary-high};
-  --primary-very-high: #{$primary-very-high};
-  --d-hover: #{$hover};
-  --content-border-color: #{$primary-low};
-  --token-color-surface: #{$secondary};
-  --token-color-text-default: #{$primary};
-  --token-color-text-subtle: #{$primary-high};
-  --token-color-text-subtlest: #{$primary-medium};
-  --token-color-border-default: #{$primary-low};
-  --token-color-background-accent-bolder: #{$tertiary};
-  --d-button-default-text-color: #{$primary};
-  --d-button-default-text-color--hover: #{$secondary};
-  --d-button-default-bg-color: #{$primary-low};
-  --d-button-default-bg-color--hover: #{$primary-medium};
-  --d-button-default-icon-color: #{$primary-high};
-  --d-button-default-icon-color--hover: #{$primary-low};
-  --d-button-primary-text-color: #{$secondary};
-  --d-button-primary-text-color--hover: #{$secondary};
-  --d-button-primary-bg-color: #{$tertiary};
-  --d-button-primary-bg-color--hover: #{$tertiary-hover};
-  --d-button-primary-icon-color: #{$secondary};
-  --d-button-primary-icon-color--hover: #{$secondary};
+  // literal base light palette values: SCSS color variables cannot be used
+  // here because the common stylesheet compiles with the active scheme's
+  // values injected, which would snapshot that scheme into the pin
+  --primary: #222;
+  --secondary: #fff;
+  --tertiary: #08c;
+  --tertiary-hover: #069;
+  --tertiary-low: #d1f0ff;
+  --primary-very-low: #f8f8f8;
+  --primary-low: #e9e9e9;
+  --primary-low-mid: #bdbdbd;
+  --primary-medium: #919191;
+  --primary-high: #646464;
+  --primary-very-high: #434343;
+  --d-hover: #f2f2f2;
+  --content-border-color: #e9e9e9;
+  --token-color-surface: #fff;
+  --token-color-text-default: #222;
+  --token-color-text-subtle: #646464;
+  --token-color-text-subtlest: #919191;
+  --token-color-border-default: #e9e9e9;
+  --token-color-background-accent-bolder: #08c;
+  --d-button-default-text-color: #222;
+  --d-button-default-text-color--hover: #fff;
+  --d-button-default-bg-color: #e9e9e9;
+  --d-button-default-bg-color--hover: #919191;
+  --d-button-default-icon-color: #646464;
+  --d-button-default-icon-color--hover: #e9e9e9;
+  --d-button-primary-text-color: #fff;
+  --d-button-primary-text-color--hover: #fff;
+  --d-button-primary-bg-color: #08c;
+  --d-button-primary-bg-color--hover: #069;
+  --d-button-primary-icon-color: #fff;
+  --d-button-primary-icon-color--hover: #fff;
 
   // text color is inherited from the body already resolved against the
   // previewed palette, so it must be re-resolved against the pinned values
