@@ -40,6 +40,44 @@ module DiscoursePostEvent
         end
       end
 
+      context "for a private event in a public topic" do
+        fab!(:event_owner, :admin)
+        fab!(:public_topic) { Fabricate(:topic, user: event_owner) }
+        fab!(:public_post) { Fabricate(:post, user: event_owner, topic: public_topic) }
+        fab!(:viewer, :user)
+        fab!(:invitee_user, :user)
+        fab!(:restricted_group) do
+          Fabricate(
+            :group,
+            visibility_level: Group.visibility_levels[:owners],
+            members_visibility_level: Group.visibility_levels[:owners],
+          ).tap { |group| group.add(invitee_user) }
+        end
+        fab!(:private_event) do
+          Fabricate(
+            :event,
+            post: public_post,
+            status: DiscoursePostEvent::Event.statuses[:private],
+            raw_invitees: [restricted_group.name],
+          )
+        end
+
+        before do
+          private_event.create_invitees(
+            [{ user_id: invitee_user.id, status: Invitee.statuses[:going] }],
+          )
+        end
+
+        it "does not disclose private event invitees to uninvited users" do
+          sign_in(viewer)
+
+          get "/discourse-post-event/events/#{private_event.id}/invitees.json"
+
+          expect(response.body).not_to include(invitee_user.username)
+          expect(response.status).to eq(403)
+        end
+      end
+
       context "when params are included" do
         let(:invitee1) { Fabricate(:user, username: "Francis", name: "Francis") }
         let(:invitee2) { Fabricate(:user, username: "Francisco", name: "Francisco") }
@@ -395,6 +433,49 @@ module DiscoursePostEvent
             end
           end
         end
+      end
+    end
+  end
+
+  describe "anonymous access to InviteesController" do
+    before do
+      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_post_event_enabled = true
+    end
+
+    fab!(:admin_user) { Fabricate(:user, admin: true) }
+    fab!(:anon_topic) { Fabricate(:topic, user: admin_user) }
+    fab!(:invitee_user, :user)
+
+    context "for a private event in a public topic" do
+      fab!(:private_event_post) { Fabricate(:post, user: admin_user, topic: anon_topic) }
+      fab!(:restricted_group) do
+        Fabricate(
+          :group,
+          visibility_level: Group.visibility_levels[:owners],
+          members_visibility_level: Group.visibility_levels[:owners],
+        ).tap { |group| group.add(invitee_user) }
+      end
+      fab!(:private_event) do
+        Fabricate(
+          :event,
+          post: private_event_post,
+          status: DiscoursePostEvent::Event.statuses[:private],
+          raw_invitees: [restricted_group.name],
+        )
+      end
+
+      before do
+        private_event.create_invitees(
+          [{ user_id: invitee_user.id, status: DiscoursePostEvent::Invitee.statuses[:going] }],
+        )
+      end
+
+      it "does not disclose private event invitees to anonymous viewers" do
+        get "/discourse-post-event/events/#{private_event.id}/invitees.json"
+
+        expect(response.body).not_to include(invitee_user.username)
+        expect(response.status).to eq(403)
       end
     end
   end

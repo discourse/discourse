@@ -5,6 +5,7 @@ module DiscoursePostEvent
     def index
       event = Event.find(params[:post_id])
       guardian.ensure_can_see!(event.post)
+      raise Discourse::InvalidAccess if !guardian.can_display_invitee_details?(event)
 
       filter = params[:filter].downcase if params[:filter]
 
