@@ -1,7 +1,9 @@
+import { Preprocessor } from "content-tag";
 import nodeFs from "fs";
 
 const VIRTUAL_PREFIX = "\0discourse-source:";
 const MODES = new Set(["file", "template"]);
+const preprocessor = new Preprocessor();
 
 /*
  * Importing `<specifier>?source=file` resolves to that module's raw, untranspiled
@@ -14,10 +16,7 @@ const MODES = new Set(["file", "template"]);
  * `fs` reads the raw text. It defaults to node's promises API and is overridden by
  * the asset processor, which bundles from an in-memory map with no real disk.
  */
-export default function discourseSourceImports({
-  fs = nodeFs.promises,
-  preprocessor,
-}) {
+export default function discourseSourceImports({ fs = nodeFs.promises } = {}) {
   return {
     name: "discourse-source-imports",
 

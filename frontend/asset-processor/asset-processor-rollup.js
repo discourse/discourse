@@ -14,7 +14,6 @@ import discourseSourceImports from "../discourse/lib/discourse-source-imports.mj
 import AddThemeGlobals from "./add-theme-globals";
 import BabelResolveCoreImports from "./babel-resolve-core-imports";
 import BabelResolvePluginImports from "./babel-resolve-plugin-imports";
-import { Preprocessor } from "./content-tag";
 import discourseColocation from "./rollup-plugins/discourse-colocation";
 import discourseExternalLoader from "./rollup-plugins/discourse-external-loader";
 import discourseFileSearch from "./rollup-plugins/discourse-file-search";
@@ -25,8 +24,6 @@ import discourseVirtualLoader from "./rollup-plugins/discourse-virtual-loader";
 import buildEmberTemplateManipulatorPlugin from "./theme-hbs-ast-transforms";
 import transformActionSyntax from "./transform-action-syntax";
 import createVirtualFs from "./virtual-fs";
-
-const preprocessor = new Preprocessor();
 
 let lastRollupResult;
 let lastRollupError;
@@ -61,7 +58,7 @@ async function performRollup(modules, opts) {
       console.info(level, message);
     },
     plugins: [
-      discourseSourceImports({ preprocessor, fs }),
+      discourseSourceImports({ fs }),
       discourseFileSearch(),
       discourseVirtualLoader({
         isTheme: !!opts.themeId,

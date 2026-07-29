@@ -1,4 +1,3 @@
-import { Preprocessor } from "content-tag";
 import * as fs from "fs";
 import { basename, relative } from "path";
 import { viteAliasPlugin, viteImportGlobPlugin } from "rolldown/experimental";
@@ -24,8 +23,6 @@ writeResolverConfig(
 );
 
 const extensions = [".gjs", ".mjs", ".js", ".mts", ".gts", ".ts", ".hbs"];
-
-const preprocessor = new Preprocessor();
 
 const aliases = [
   { find: "pretty-text", replacement: "pretty-text/addon" },
@@ -117,7 +114,7 @@ export function buildConfig({ devMode } = {}) {
     plugins: [
       viteAliasPlugin({ entries: aliases }),
       dynamicChunkUrlPlugin(),
-      discourseSourceImports({ preprocessor }),
+      discourseSourceImports(),
       optimizedEmber(),
       viteImportGlobPlugin(),
       maybeBabel({

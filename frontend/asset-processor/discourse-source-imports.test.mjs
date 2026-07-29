@@ -1,13 +1,10 @@
 /* eslint-disable qunit/require-expect */
-import { Preprocessor } from "content-tag";
 import { mkdtempSync, realpathSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
 import { join } from "path";
 import { rolldown } from "rolldown";
 import { expect, test } from "vitest";
 import discourseSourceImports from "../discourse/lib/discourse-source-imports.mjs";
-
-const preprocessor = new Preprocessor();
 
 const EXAMPLE = `const label = "Save";
 
@@ -29,7 +26,7 @@ function build(modules = { "/app/example.gjs": EXAMPLE }) {
       return modules[id];
     },
   };
-  const plugin = discourseSourceImports({ preprocessor, fs });
+  const plugin = discourseSourceImports({ fs });
 
   // Minimal stand-in for the rollup plugin context. `error` throws, matching
   // rollup, so tests can assert on the message.
@@ -154,7 +151,7 @@ async function bundleEntry(root, entry) {
 
   const bundle = await rolldown({
     input: join(root, "entry.js"),
-    plugins: [discourseSourceImports({ preprocessor })],
+    plugins: [discourseSourceImports()],
   });
 
   const { output } = await bundle.generate({ format: "es" });
