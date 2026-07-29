@@ -366,6 +366,14 @@ module PageObjects
         has_css?(".nested-view__topic-actions + .nested-view__controls")
       end
 
+      def has_activity_log_link?
+        has_css?(".nested-view__activity-link", wait: 10)
+      end
+
+      def has_no_activity_log_link?
+        has_no_css?(".nested-view__activity-link")
+      end
+
       def has_share_topic_action?
         has_css?(".nested-view__topic-actions #topic-footer-button-share-and-invite")
       end
@@ -418,6 +426,11 @@ module PageObjects
 
       def click_edit_topic
         find(".nested-view__title .fancy-title").click
+        self
+      end
+
+      def open_activity_log
+        find(".nested-view__activity-link").click
         self
       end
 

@@ -1052,29 +1052,68 @@
 
 // ── Activity log modal ────────────────────────────────────────────
 .nested-activity-log-modal {
-  .d-modal__body {
-    display: flex;
-    flex-direction: column-reverse;
-  }
+  --activity-log-row-padding-block: var(--space-3);
+  --activity-log-row-gap: var(--space-2);
+  --activity-log-icon-color: var(--primary-medium);
+  --activity-log-description-color: var(--primary-700);
 
   &__list {
     @include unstyled-list;
   }
 
   &__item {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5em;
-    padding: 0.65em 0;
-
     &:not(:last-child) {
       border-bottom: 1px solid var(--primary-low);
+    }
+
+    &.--synthetic {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--activity-log-row-gap);
+      padding-block: var(--activity-log-row-padding-block);
+      color: var(--activity-log-description-color);
+    }
+  }
+
+  &__post {
+    .small-action {
+      align-items: stretch;
+    }
+
+    .small-action .topic-avatar {
+      align-items: flex-start;
+      width: auto;
+      padding: var(--activity-log-row-padding-block) 0 0;
+      border-top: 0;
+
+      .d-icon {
+        font-size: var(--font-0);
+        color: var(--activity-log-icon-color);
+      }
+    }
+
+    .small-action .small-action-desc {
+      flex: 1;
+      width: auto;
+      padding: 0 0 var(--activity-log-row-padding-block)
+        var(--activity-log-row-gap);
+      border-top: 0;
+      color: var(--activity-log-description-color);
+    }
+
+    .small-action .small-action-contents,
+    .small-action .small-action-buttons {
+      padding-top: var(--activity-log-row-padding-block);
+    }
+
+    .small-action .small-action-custom-message {
+      font-size: var(--font-down-1);
     }
   }
 
   &__icon {
     flex-shrink: 0;
-    color: var(--primary-medium);
+    color: var(--activity-log-icon-color);
     margin-top: 0.15em;
   }
 
@@ -1100,6 +1139,12 @@
     color: var(--primary-medium);
     text-align: center;
     padding: 1em 0;
+  }
+
+  &__load-more {
+    display: flex;
+    justify-content: center;
+    padding-top: var(--space-3);
   }
 }
 
