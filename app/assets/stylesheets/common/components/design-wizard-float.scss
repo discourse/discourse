@@ -4,6 +4,8 @@
 // classes inside (typeface samples) still apply.
 .design-wizard-float,
 .design-wizard-modal__font-select-content {
+  z-index: 9999;
+
   // literal base light palette values: SCSS color variables cannot be used
   // here because the common stylesheet compiles with the active scheme's
   // values injected, which would snapshot that scheme into the pin

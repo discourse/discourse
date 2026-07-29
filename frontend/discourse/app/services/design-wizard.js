@@ -197,8 +197,10 @@ export default class DesignWizardService extends Service {
     }
     this.#persistState();
 
-    // the page behind the sheet is the preview: show the chosen homepage
-    DiscourseURL.routeTo(getURL(`/${homepage === "latest" ? "" : homepage}`));
+    // the page behind the sheet is the preview: show the chosen homepage.
+    // Explicit paths, because "/" resolves to the currently saved default
+    // homepage rather than the one being selected
+    DiscourseURL.routeTo(getURL(`/${homepage}`));
   }
 
   selectCategoryPageStyle(value) {
