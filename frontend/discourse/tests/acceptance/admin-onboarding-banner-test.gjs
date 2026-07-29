@@ -429,6 +429,9 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     assert
       .dom("link[data-scheme-id]", document.documentElement)
       .doesNotExist("the palette preview is reverted");
+
+    // previewing a categories homepage routed away from the banner's page
+    await visit("/");
     step.isNotChecked();
   });
 });
