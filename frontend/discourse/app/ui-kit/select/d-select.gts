@@ -1836,6 +1836,20 @@ export default class DSelect extends Component<DSelectSignature> {
    * A freshly mounted listbox is a fresh context, so the count always announces on open even
    * when it matches what the previous open announced. Updates while the list stays mounted
    * keep deduping through {@link announceCount}.
+   *
+   * Except when opening seeds a cursor. The seeded row is announced with its own position in the
+   * set, from `aria-posinset`/`aria-setsize` — "1 of 15" — so a count fired in the same moment
+   * restates it through a second channel, and assistive tech speaks one of the two and drops the
+   * other. Observed against VoiceOver on both the select-only and query-input variants: the open
+   * that spoke the count never spoke the row, and the open that spoke the row never spoke the
+   * count, alternating between opens. The row wins because it says strictly more, and in the
+   * reader's own verbosity settings rather than ours.
+   *
+   * Only the count at *entry* is affected. A count that changes while the list stays open has no
+   * row announcement to compete with, and remains the only thing reporting the new set size.
+   *
+   * Recorded rather than skipped outright, so a later count change while the list stays open is
+   * still a change and still announces.
    */
   @action
   announceCountOnEntry(
@@ -1843,6 +1857,11 @@ export default class DSelect extends Component<DSelectSignature> {
     args: [number, number | undefined]
   ): void {
     this.#lastAnnouncedCountMessage = null;
+
+    if (this.shouldActivateSelected || this.shouldAutoActivateFirst) {
+      this.#suppressNextCount = true;
+    }
+
     this.announceCount(element, args);
   }
 

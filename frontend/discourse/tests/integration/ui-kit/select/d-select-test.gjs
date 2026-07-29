@@ -20,10 +20,12 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { forceMobile } from "discourse/lib/mobile";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { clearCallbacks } from "discourse/select-kit/lib/plugin-api";
+import { disableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { resetLegacyBridge } from "discourse/ui-kit/select/-internals/modify-select-kit-bridge";
 import SelectItem from "discourse/ui-kit/select/-internals/select-item";
@@ -747,6 +749,49 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
       .doesNotExist("counts/empties are announced politely, never assertively");
   });
 
+  // Two announcements racing for one voice. A seeded row is announced with its position in the
+  // set ("1 of 15", from aria-posinset/aria-setsize), so a live-region count fired at the same
+  // moment restates it through a second channel — and assistive tech speaks one and drops the
+  // other. Observed against VoiceOver: the open that spoke the count never spoke the row, and the
+  // open that spoke the row never spoke the count, alternating between opens.
+  test("opening does not announce a count when it seeds a cursor", async function (assert) {
+    const announce = sinon.spy(
+      getOwner(this).lookup("service:a11y"),
+      "announce"
+    );
+
+    await render(<template><Host @variant="static" /></template>);
+    await click("[role='combobox']");
+
+    assert
+      .dom("[role='option'].--active")
+      .exists("opening seeds the cursor on a row");
+    assert.strictEqual(
+      announce.withArgs(sinon.match(/result/), "polite").callCount,
+      0,
+      "the row's own position carries the count, so nothing is announced over it"
+    );
+  });
+
+  test("opening announces the count when no cursor is seeded", async function (assert) {
+    const announce = sinon.spy(
+      getOwner(this).lookup("service:a11y"),
+      "announce"
+    );
+
+    await render(<template><Host @variant="button" /></template>);
+    await click(".d-combobox__trigger");
+
+    assert
+      .dom("[role='option'].--active")
+      .doesNotExist("the button variant waits for the reader to move");
+    assert.strictEqual(
+      announce.withArgs(sinon.match(/result/), "polite").callCount,
+      1,
+      "with no row spoken, the count is the only thing describing the list"
+    );
+  });
+
   test("an empty result set is announced politely, not left to role=status", async function (assert) {
     const announce = sinon.spy(
       getOwner(this).lookup("service:a11y"),
@@ -764,11 +809,21 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
     );
 
     await fillIn("[role='combobox']", "ban");
+    // Recovering from empty remounts the listbox and seeds a cursor, so the match reaches the
+    // reader as the row itself — "Banana, 1 of 1" — rather than as a count announced over it.
+    assert
+      .dom("[role='option'].--active")
+      .hasAttribute("aria-posinset", "1")
+      .hasAttribute(
+        "aria-setsize",
+        "1",
+        "the match describes itself and its set"
+      );
     assert.strictEqual(
       announce.withArgs(i18n("d_select.results_count", { count: 1 }), "polite")
         .callCount,
-      1,
-      "recovering from empty announces the new count"
+      0,
+      "recovery is carried by the row, not by a count over it"
     );
 
     await fillIn("[role='combobox']", "zzzz");
@@ -5668,6 +5723,34 @@ module(
   "Integration | ui-kit | select | DSelect (multi limits messages)",
   function (hooks) {
     setupRenderingTest(hooks);
+
+    // The case that justifies the service composing same-type announcements in one flush.
+    // Adding the item that reaches the cap produces two messages at once, and they are different
+    // facts: what was added, and why nothing more can be. Without composition one clobbers the
+    // other and the reader hears only half of it. Asserted on the region text rather than on
+    // `announce` call counts, because the spy records calls that a single slot may never deliver.
+    test("adding the item that reaches the cap announces both the addition and the cap", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+
+      await render(
+        <template>
+          <A11yLiveRegions />
+          <MultiLimitsHost @value={{array 1}} @maximum={{2}} />
+        </template>
+      );
+      await click(".d-combobox__input");
+      await click("[role='option']:not([aria-selected='true'])");
+
+      assert
+        .dom("#a11y-announcements-polite")
+        .hasText(
+          `${i18n("d_select.item_added", { item: "Banana" })}. ${i18n(
+            "d_select.max_reached",
+            { count: 2 }
+          )}`,
+          "both facts reach the reader in one announcement"
+        );
+    });
 
     test("the maximum limit message renders as a status above the listbox", async function (assert) {
       await render(

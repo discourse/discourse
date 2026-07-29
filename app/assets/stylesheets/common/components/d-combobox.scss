@@ -196,15 +196,6 @@
     outline-offset: -2px;
   }
 
-  // In active-descendant mode the row does NOT hold DOM focus — the controller does, and it
-  // draws the same 2px tertiary ring — so an identically styled cursor reads as two focused
-  // things at once. Dashed marks this as the virtual cursor it is. Scoped by `:focus-visible`
-  // because the mobile static list roves by real focus, where the row genuinely is focused and
-  // must keep the focus language.
-  &.--active:not(:focus-visible) {
-    outline-style: dashed;
-  }
-
   // Hover keeps a fill: the pointer is visibly on the row, so it is never read at the same time
   // as the keyboard cursor, and a fill is what a list is expected to do under a pointer.
   .discourse-no-touch &:hover {

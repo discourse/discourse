@@ -408,6 +408,17 @@ module(
         <template><DSelect @load={{load}} @debounce={{false}} /></template>
       );
       await openSelect();
+
+      // On open the seeded row carries the size, and an unsized source reports it honestly as
+      // indeterminate rather than passing off the loaded count as a total.
+      assert
+        .dom(`${OPTION_SELECTOR}.--active`)
+        .hasAttribute(
+          "aria-setsize",
+          "-1",
+          "an unsized source reports an indeterminate set, not its loaded count"
+        );
+
       await click(findAll(OPTION_SELECTOR)[0]);
 
       assert.strictEqual(
@@ -415,8 +426,8 @@ module(
           i18n("d_select.results_loaded", { count: 3 }),
           "polite"
         ).callCount,
-        1,
-        "an unsized source announces only what it has loaded"
+        0,
+        "and announces no count over the seeded row"
       );
 
       engine.revealMore();
@@ -570,12 +581,26 @@ module(
 
       await render(<template><DSelect @items={{items}} /></template>);
       await openSelect();
+
+      // Opening seeds a cursor, so the set size reaches the reader through the seeded row's own
+      // position rather than a competing live-region count — the two in one moment leave
+      // assistive tech speaking only one of them. Read before the click below, which closes the
+      // list and takes the cursor with it.
+      assert
+        .dom(`${OPTION_SELECTOR}.--active`)
+        .hasAttribute("aria-posinset", "1")
+        .hasAttribute(
+          "aria-setsize",
+          "60",
+          "the seeded row carries the true client total"
+        );
+
       await click(findAll(OPTION_SELECTOR)[0]);
 
       assert.strictEqual(
         announce.withArgs(trueCountMessage, "polite").callCount,
-        1,
-        "opening announces the true client total"
+        0,
+        "opening does not announce a count over the row"
       );
 
       assert.false(engine.revealMore(), "a client reveal is an inert no-op");
@@ -583,8 +608,8 @@ module(
 
       assert.strictEqual(
         announce.withArgs(trueCountMessage, "polite").callCount,
-        1,
-        "the inert reveal does not re-announce the unchanged total"
+        0,
+        "the inert reveal does not announce the unchanged total either"
       );
     });
 
@@ -669,7 +694,11 @@ module(
       assert.dom(OPTION_SELECTOR).exists({ count: 100 }, "the page appended");
     });
 
-    test("reopening the list announces the result count again", async function (assert) {
+    // A reopen has to describe the list again rather than inherit the previous open's silence.
+    // The set size travels with the seeded row, so what must survive a reopen is the seed — a
+    // reopen that restored no cursor would leave the reader with a list and no way to know what
+    // is in it, which is the failure a count-based assertion here used to stand in for.
+    test("reopening the list describes it again through the seeded row", async function (assert) {
       const a11y = getOwner(this).lookup("service:a11y");
       const announce = sinon.spy(a11y, "announce");
       const items = buildItems(60);
@@ -677,22 +706,26 @@ module(
 
       await render(<template><DSelect @items={{items}} /></template>);
       await openSelect();
-      assert.strictEqual(
-        announce.withArgs(message, "polite").callCount,
-        1,
-        "opening announces the count"
-      );
+      assert
+        .dom(`${OPTION_SELECTOR}.--active`)
+        .hasAttribute("aria-setsize", "60", "opening describes the set");
 
       await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
       assert.dom("ul[role='listbox']").doesNotExist("the overlay closed");
       await openSelect();
 
-      // A fresh listbox is a fresh context: the count describes what just appeared, so the
-      // dedupe from the previous open must not silence it.
+      assert
+        .dom(`${OPTION_SELECTOR}.--active`)
+        .hasAttribute("aria-posinset", "1")
+        .hasAttribute(
+          "aria-setsize",
+          "60",
+          "reopening seeds a cursor that describes the set again"
+        );
       assert.strictEqual(
         announce.withArgs(message, "polite").callCount,
-        2,
-        "reopening announces the count again"
+        0,
+        "and does not announce a count over it"
       );
     });
 
