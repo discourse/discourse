@@ -9,10 +9,6 @@ RSpec.describe Email::Receiver do
     SiteSetting.alternative_reply_by_email_addresses = "alt+%{reply_key}@bar.com"
   end
 
-  def process(email_name, opts = {})
-    Email::Receiver.new(email(email_name), opts).process!
-  end
-
   describe "reply" do
     let(:reply_key) { "4f97315cc828096c9cb34c6f1a0d6fe8" }
     fab!(:category)
@@ -30,7 +26,7 @@ RSpec.describe Email::Receiver do
 
       DiscourseEvent.on(:topic_created, &handler)
 
-      expect { process(:html_reply) }.to change { topic.posts.count }
+      expect { described_class.new(email(:html_reply)).process! }.to change { topic.posts.count }
       last_post = topic.posts.last
       expect(last_post.raw).to eq("This is a **HTML** reply ;)")
       expect(last_post.reply_to_post_number).to be_nil
