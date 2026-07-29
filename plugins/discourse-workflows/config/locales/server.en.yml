@@ -52,6 +52,7 @@ en:
       webhook_timed_out: "Webhook timed out"
       schedule_rules_required: "At least one schedule rule is required."
       invalid_schedule_rule: "One or more schedule rules are invalid."
+      invalid_timezone: "Invalid timezone: %{timezone}."
       not_enabled: "The discourse-workflows plugin is not enabled."
       no_permission_to_manage: "You don't have permission to manage workflows."
       node_preview_failed: "Something went wrong while previewing this step."
@@ -114,7 +115,6 @@ en:
         invalid_time_range: "Start and end times must use the HH:MM format."
         start_end_equal: "Start and end times cannot be the same."
         invalid_time: "'%{field}' is not a valid HH:MM time: '%{value}'."
-        invalid_timezone: "Invalid timezone: %{timezone}."
       modal:
         no_target_user: "No target user is available for the modal."
         user_not_found: "User '%{username}' not found."
@@ -125,6 +125,15 @@ en:
         operation_failed: "Category change failed."
         private_message: "Personal messages cannot have a category."
         uncategorized_not_allowed: "This site does not allow topics without a category."
+      topic_pin:
+        unknown_operation: "Unknown operation: %{operation}."
+        unknown_pin_type: "Unknown pin type: %{pin_type}."
+        invalid_timestamp: "'%{field}' is not a valid date and time: '%{value}'."
+        pin_not_allowed: "'%{username}' cannot pin or unpin topic %{topic_id}. Pinning requires staff, trust level 4, or moderator access to the topic's category."
+        pin_globally_not_allowed: "'%{username}' cannot pin topic %{topic_id} globally. Pinning globally requires staff or trust level 4."
+        banner_not_allowed: "'%{username}' cannot make topic %{topic_id} a banner. Banner topics can only be managed by staff."
+        banner_private_message: "Personal messages cannot be made into banner topics."
+        banner_restricted_category: "Topics in a restricted category cannot be made into banner topics."
       sort:
         code_missing_return: "Code must contain a return statement."
       summarize:

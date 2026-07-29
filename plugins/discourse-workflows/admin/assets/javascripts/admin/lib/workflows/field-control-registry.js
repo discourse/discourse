@@ -79,6 +79,11 @@ const FIELD_CONTROL_REGISTRY = {
   checkbox: { kind: "field", type: "checkbox", renderer: DefaultInputControl },
   textarea: { kind: "field", type: "textarea", renderer: DefaultInputControl },
   time: { kind: "field", type: "input-time", renderer: DefaultInputControl },
+  date_time: {
+    kind: "field",
+    type: "input-datetime-local",
+    renderer: DefaultInputControl,
+  },
   timezone: { kind: "field", type: "custom", renderer: TimezoneControl },
 
   default: {
