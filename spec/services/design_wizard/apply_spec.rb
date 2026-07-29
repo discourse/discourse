@@ -14,7 +14,11 @@ RSpec.describe DesignWizard::Apply do
         BaseFontSetting.values.map { |font| font[:value] },
       ).allow_nil
     end
-    it { is_expected.to validate_inclusion_of(:homepage).in_array(%w[latest categories]).allow_nil }
+    it do
+      is_expected.to validate_inclusion_of(:homepage).in_array(
+        %w[latest top hot categories],
+      ).allow_nil
+    end
     it do
       is_expected.to validate_inclusion_of(:category_page_style).in_array(
         CategoryPageStyle.values.map { |style| style[:value] },

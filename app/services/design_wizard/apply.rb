@@ -39,7 +39,7 @@ class DesignWizard::Apply
                 in: DefaultTextSizeSetting::DEFAULT_TEXT_SIZES,
               },
               allow_blank: true
-    validates :homepage, inclusion: { in: %w[latest categories] }, allow_blank: true
+    validates :homepage, inclusion: { in: %w[latest top hot categories] }, allow_blank: true
     validates :category_page_style,
               inclusion: {
                 in: CategoryPageStyle.values.map { |style| style[:value] },

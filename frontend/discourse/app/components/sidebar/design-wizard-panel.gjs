@@ -5,13 +5,14 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ColorsSection from "discourse/components/admin-onboarding/modal/design-wizard/colors-section";
 import FontsSection from "discourse/components/admin-onboarding/modal/design-wizard/fonts-section";
+import HomepageSection from "discourse/components/admin-onboarding/modal/design-wizard/homepage-section";
 import Section from "discourse/components/admin-onboarding/modal/design-wizard/section";
 import ThemeSection from "discourse/components/admin-onboarding/modal/design-wizard/theme-section";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
-const STEPS = ["theme", "colors"];
+const STEPS = ["theme", "colors", "homepage"];
 
 export default class SidebarDesignWizardPanel extends Component {
   @service designWizard;
@@ -98,6 +99,16 @@ export default class SidebarDesignWizardPanel extends Component {
   }
 
   @action
+  selectHomepage(homepage) {
+    this.designWizard.selectHomepage(homepage);
+  }
+
+  @action
+  selectCategoryPageStyle(value) {
+    this.designWizard.selectCategoryPageStyle(value);
+  }
+
+  @action
   save() {
     this.designWizard.save();
   }
@@ -128,7 +139,7 @@ export default class SidebarDesignWizardPanel extends Component {
               @onSelect={{this.selectTheme}}
             />
           </Section>
-        {{else}}
+        {{else if (eq this.currentStep "colors")}}
           <Section
             @id="colors"
             @title={{i18n
@@ -159,6 +170,21 @@ export default class SidebarDesignWizardPanel extends Component {
               @headingFont={{this.designWizard.headingFont}}
               @onSelectBodyFont={{this.selectBodyFont}}
               @onSelectHeadingFont={{this.selectHeadingFont}}
+            />
+          </Section>
+        {{else}}
+          <Section
+            @id="homepage"
+            @title={{i18n
+              "admin_onboarding_banner.design_wizard.sections.homepage"
+            }}
+          >
+            <HomepageSection
+              @homepage={{this.designWizard.homepage}}
+              @categoryPageStyle={{this.designWizard.categoryPageStyle}}
+              @categoryPageStyles={{this.designWizard.data.category_page_styles}}
+              @onSelectHomepage={{this.selectHomepage}}
+              @onSelectCategoryPageStyle={{this.selectCategoryPageStyle}}
             />
           </Section>
         {{/if}}

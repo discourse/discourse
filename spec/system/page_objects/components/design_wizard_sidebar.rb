@@ -27,6 +27,10 @@ module PageObjects
         find("#{WIZARD_SELECTOR} .design-wizard-modal__user-selectable").click
       end
 
+      def select_homepage(key)
+        find("#{WIZARD_SELECTOR} .design-wizard-modal__homepage-card[data-homepage='#{key}']").click
+      end
+
       def select_body_font(font_key)
         groups = all("#{WIZARD_SELECTOR} .design-wizard-modal__font-group")
         groups[0].find(".design-wizard-modal__font-select").click

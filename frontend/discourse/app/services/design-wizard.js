@@ -11,6 +11,7 @@ import { isTesting } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import discourseLater from "discourse/lib/later";
 import { HORIZON_THEME_ID, setLocalTheme } from "discourse/lib/theme-selector";
+import DiscourseURL from "discourse/lib/url";
 
 const STATE_KEY = "design_wizard_sidebar_state";
 // px equivalents of the base-font-size variables, used to size the wizard
@@ -47,6 +48,8 @@ export default class DesignWizardService extends Service {
   @tracked palettesUserSelectable = false;
   @tracked bodyFont;
   @tracked headingFont;
+  @tracked homepage;
+  @tracked categoryPageStyle;
   @tracked saving = false;
   @tracked selectedPairKeys = new Map();
   @tracked stepIndex = 0;
@@ -177,6 +180,19 @@ export default class DesignWizardService extends Service {
     });
   }
 
+  selectHomepage(homepage) {
+    this.homepage = homepage;
+    this.#persistState();
+
+    // the page behind the sheet is the preview: show the chosen homepage
+    DiscourseURL.routeTo(getURL(`/${homepage === "latest" ? "" : homepage}`));
+  }
+
+  selectCategoryPageStyle(value) {
+    this.categoryPageStyle = value;
+    this.#persistState();
+  }
+
   stop() {
     this.active = false;
     this.keyValueStore.remove(STATE_KEY);
@@ -258,6 +274,9 @@ export default class DesignWizardService extends Service {
       palettes_user_selectable: this.palettesUserSelectable,
       base_font: this.bodyFont,
       heading_font: this.headingFont,
+      homepage: this.homepage,
+      category_page_style:
+        this.homepage === "categories" ? this.categoryPageStyle : null,
     };
   }
 
@@ -299,6 +318,8 @@ export default class DesignWizardService extends Service {
     this.palettesUserSelectable = this.data.palettes_user_selectable;
     this.bodyFont = this.data.base_font;
     this.headingFont = this.data.heading_font;
+    this.homepage = this.#supportedHomepage(this.data.homepage);
+    this.categoryPageStyle = this.siteSettings.desktop_category_page_style;
     this.stepIndex = 0;
   }
 
@@ -309,6 +330,10 @@ export default class DesignWizardService extends Service {
     this.palettesUserSelectable = stored.palettesUserSelectable;
     this.bodyFont = stored.bodyFont;
     this.headingFont = stored.headingFont;
+    this.homepage =
+      stored.homepage ?? this.#supportedHomepage(this.data.homepage);
+    this.categoryPageStyle =
+      stored.categoryPageStyle ?? this.siteSettings.desktop_category_page_style;
     this.stepIndex = stored.stepIndex ?? 0;
   }
 
@@ -322,9 +347,17 @@ export default class DesignWizardService extends Service {
         palettesUserSelectable: this.palettesUserSelectable,
         bodyFont: this.bodyFont,
         headingFont: this.headingFont,
+        homepage: this.homepage,
+        categoryPageStyle: this.categoryPageStyle,
         stepIndex: this.stepIndex,
       }),
     });
+  }
+
+  #supportedHomepage(homepage) {
+    return ["latest", "top", "hot", "categories"].includes(homepage)
+      ? homepage
+      : "latest";
   }
 
   #currentPairKey(theme) {

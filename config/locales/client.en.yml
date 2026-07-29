@@ -597,8 +597,9 @@ en:
           base_font: "Base font"
           heading_font: "Heading font"
         homepage:
-          topic_list: "Topic list"
+          topics: "Topics"
           categories: "Categories"
+          topic_page_type: "Topic page type"
           category_page_style: "Category page style"
           category_page_style_note: "Applied to your site after saving"
         preview:

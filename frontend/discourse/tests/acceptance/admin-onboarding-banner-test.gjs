@@ -388,6 +388,28 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     assert
       .dom(".design-wizard-modal__font-select")
       .exists({ count: 2 }, "the colors step offers the font dropdowns");
+
+    await click(".sidebar-design-wizard__next");
+    assert
+      .dom(".design-wizard-modal__homepage-card")
+      .exists({ count: 2 }, "the homepage step offers topics and categories");
+    assert
+      .dom(".design-wizard-modal__homepage-card.--selected")
+      .hasAttribute("data-homepage", "topics", "defaults to a topics homepage");
+    assert
+      .dom("#design-wizard-topic-page")
+      .exists("a topics homepage offers the topic page types");
+
+    await click(
+      ".design-wizard-modal__homepage-card[data-homepage='categories']"
+    );
+    assert
+      .dom("#design-wizard-category-page-style")
+      .exists("a categories homepage offers the category page styles");
+    assert
+      .dom("#design-wizard-topic-page")
+      .doesNotExist("the topic page types are hidden for categories");
+
     assert
       .dom(".sidebar-design-wizard__next")
       .doesNotExist("no next on the last step");
@@ -397,8 +419,8 @@ acceptance("Admin - Onboarding Banner", function (needs) {
 
     await click(".sidebar-design-wizard__back");
     assert
-      .dom(".design-wizard-modal__theme-card")
-      .exists({ count: 2 }, "back returns to the theme step");
+      .dom(".design-wizard-modal__swatch")
+      .exists({ count: 1 }, "back returns to the colors step");
 
     await click(".design-wizard-float__close");
     assert

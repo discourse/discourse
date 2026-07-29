@@ -158,6 +158,9 @@ describe "Admin Onboarding Banner" do
       design_wizard_sidebar.toggle_user_selectable_palettes
       design_wizard_sidebar.select_body_font("lato")
 
+      design_wizard_sidebar.next_step
+      design_wizard_sidebar.select_homepage("categories")
+
       design_wizard_sidebar.save
 
       # Page reloads after saving; wait for it to complete
@@ -170,6 +173,7 @@ describe "Admin Onboarding Banner" do
       expect(horizon.color_scheme.name).to eq("Royal")
       expect(horizon.color_scheme.user_selectable).to eq(true)
       expect(SiteSetting.base_font).to eq("lato")
+      expect(SiteSetting.default_homepage).to eq("categories")
 
       # the reload must not cancel the in-flight audit write
       expect(
@@ -207,6 +211,7 @@ describe "Admin Onboarding Banner" do
 
       banner.click_step_action("select_theme")
       expect(design_wizard_sidebar).to be_visible
+      design_wizard_sidebar.next_step
       design_wizard_sidebar.next_step
       design_wizard_sidebar.save
 
