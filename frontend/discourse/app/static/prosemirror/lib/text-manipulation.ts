@@ -450,7 +450,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       )
     );
 
-    if (opts!.scroll) {
+    if (opts?.scroll) {
       tr.scrollIntoView();
     }
 

@@ -477,7 +477,6 @@ export default class TextareaTextManipulation implements TextManipulation {
     insertAtTextarea(this.textarea, start, end, text, opts);
   }
 
-  extractTable(text: string): string | null;
   extractTable(text: string): string | null {
     if (text.endsWith("\n")) {
       text = text.substring(0, text.length - 1);
