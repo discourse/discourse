@@ -1,13 +1,7 @@
 @use "sass:map";
 @use "breakpoints";
 
-// Containers add an `xs` breakpoint step, since containers can be narrower than any viewport
-$breakpoints: map.merge(
-  (
-    xs: 20rem,
-  ),
-  breakpoints.$breakpoints
-);
+$breakpoints: breakpoints.$breakpoints;
 
 @function _get-breakpoint($bp) {
   @if not map.has-key($breakpoints, $bp) {
