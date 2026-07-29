@@ -1,9 +1,5 @@
 @use "lib/viewport";
 
-.filter-input.d-filter-controls__input {
-  padding-left: 0;
-}
-
 .d-filter-controls {
   display: flex;
   gap: var(--space-2);
@@ -13,7 +9,7 @@
     flex: 1 1 auto;
   }
 
-  &.--dropdowns-in-filter-drawer {
+  &.--multiple-dropdowns {
     display: flex;
     flex-direction: column;
   }

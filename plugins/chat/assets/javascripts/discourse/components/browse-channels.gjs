@@ -1,14 +1,17 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { concat } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { eq } from "discourse/truth-helpers";
 import DEmptyState from "discourse/ui-kit/d-empty-state";
-import DFilterControls from "discourse/ui-kit/d-filter-controls";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
+import DSelect from "discourse/ui-kit/d-select";
 import { i18n } from "discourse-i18n";
 import List from "discourse/plugins/chat/discourse/components/chat/list";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
@@ -24,7 +27,6 @@ export default class BrowseChannels extends Component {
   @service chatApi;
   @service modal;
   @service siteSettings;
-  @service capabilities;
 
   @tracked filter = "";
   @tracked selectedJoinedFilter = "all";
@@ -83,23 +85,18 @@ export default class BrowseChannels extends Component {
 
   @action
   setFilter(event) {
-    discourseDebounce(
-      this,
-      this.debouncedSetFilter,
-      event.target.value,
-      INPUT_DELAY
-    );
+    this.filter = event.target.value;
+    discourseDebounce(this.debouncedLoad, INPUT_DELAY);
   }
 
   @action
-  debouncedSetFilter(value) {
-    this.filter = value;
+  debouncedLoad() {
+    this.channelsCollection.load({ limit: 10 });
   }
 
   @action
-  resetFilters() {
-    this.filter = "";
-    this.selectedJoinedFilter = "all";
+  focusFilterInput(input) {
+    schedule("afterRender", () => input?.focus());
   }
 
   <template>
@@ -121,18 +118,27 @@ export default class BrowseChannels extends Component {
           </ul>
         </nav>
 
-        <DFilterControls
-          @array={{this.channelsCollection.items}}
-          @dropdownOptions={{this.joinedFilters}}
-          @dropdownValue={{this.selectedJoinedFilter}}
-          @inputPlaceholder={{i18n "chat.browse.filter_input_placeholder"}}
-          @loading={{this.channelsCollection.loading}}
-          @onDropdownFilterChange={{this.setJoinedFilter}}
-          @forceShowDropdownFilterToggle={{this.capabilities.isMobileDevice}}
-          @onResetFilters={{this.resetFilters}}
-          @onTextFilterChange={{this.setFilter}}
-          @showNoResults={{false}}
-        />
+        <div class="chat-browse-view__filter-controls">
+          <DSelect
+            @value={{this.selectedJoinedFilter}}
+            @onChange={{this.setJoinedFilter}}
+            @includeNone={{false}}
+            class="chat-browse-view__filter-select"
+            as |select|
+          >
+            {{#each this.joinedFilters as |filter|}}
+              <select.Option @value={{filter.value}}>
+                {{filter.label}}
+              </select.Option>
+            {{/each}}
+          </DSelect>
+          <DFilterInput
+            {{didInsert this.focusFilterInput}}
+            @filterAction={{this.setFilter}}
+            @icons={{hash right="magnifying-glass"}}
+            placeholder={{i18n "chat.browse.filter_input_placeholder"}}
+          />
+        </div>
       </div>
 
       <div class="chat-browse-view__content_wrapper">
