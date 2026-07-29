@@ -175,6 +175,7 @@ module SvgSprite
         file-lines
         filter
         filter-circle-xmark
+        fire
         flag
         flask
         folder
@@ -274,6 +275,7 @@ module SvgSprite
         toggle-on
         trash-can
         triangle-exclamation
+        trophy
         truck-medical
         unlock
         unlock-keyhole

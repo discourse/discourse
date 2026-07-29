@@ -10,7 +10,11 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-const TOPIC_PAGES = ["latest", "hot", "top"];
+const TOPIC_PAGES = [
+  { key: "latest", icon: "list" },
+  { key: "hot", icon: "fire" },
+  { key: "top", icon: "trophy" },
+];
 
 function topicPageLabel(page) {
   return i18n(`filters.${page}.title`);
@@ -24,8 +28,9 @@ function topicPageDescription(page) {
 
 const TopicPageTrigger = <template>
   <button class="btn btn-default btn-icon-text" type="button" ...attributes>
+    {{dIcon @icon}}
     <span class="d-button-label">{{@label}}</span>
-    {{dIcon "angle-down" class="design-wizard-modal__font-select-caret"}}
+    {{dIcon "angle-down" class="notifications-tracking-btn__caret"}}
   </button>
 </template>;
 
@@ -129,6 +134,13 @@ export default class DesignWizardHomepageSection extends Component {
     return topicPageLabel(this.args.homepage);
   }
 
+  get topicPageIcon() {
+    return (
+      TOPIC_PAGES.find((page) => page.key === this.args.homepage)?.icon ??
+      "list"
+    );
+  }
+
   @action
   async selectTopicPage(page, dMenu) {
     await dMenu.close();
@@ -205,12 +217,13 @@ export default class DesignWizardHomepageSection extends Component {
         </span>
         <DMenu
           @identifier="design-wizard-topic-page"
-          @triggerClass="design-wizard-modal__topic-page-select"
+          @triggerClass="btn-default btn-icon design-wizard-modal__topic-page-select"
           @contentClass="design-wizard-modal__topic-page-content"
           @modalForMobile={{true}}
           @triggerComponent={{component
             TopicPageTrigger
             label=this.topicPageLabel
+            icon=this.topicPageIcon
           }}
         >
           <:content as |dMenu|>
@@ -221,17 +234,22 @@ export default class DesignWizardHomepageSection extends Component {
               {{#each TOPIC_PAGES as |page|}}
                 <dropdown.item>
                   <DButton
-                    @action={{fn this.selectTopicPage page dMenu}}
-                    class="btn-flat design-wizard-modal__topic-page-option
-                      {{if (eq page @homepage) '--selected'}}"
-                    data-topic-page={{page}}
+                    @action={{fn this.selectTopicPage page.key dMenu}}
+                    class="notifications-tracking-btn
+                      {{if (eq page.key @homepage) '-selected'}}"
+                    data-topic-page={{page.key}}
                   >
-                    <span
-                      class="design-wizard-modal__topic-page-option-title"
-                    >{{topicPageLabel page}}</span>
-                    <span
-                      class="design-wizard-modal__topic-page-option-description"
-                    >{{topicPageDescription page}}</span>
+                    <div class="notifications-tracking-btn__icons">
+                      {{dIcon page.icon}}
+                    </div>
+                    <div class="notifications-tracking-btn__texts">
+                      <span class="notifications-tracking-btn__label">
+                        {{topicPageLabel page.key}}
+                      </span>
+                      <span class="notifications-tracking-btn__description">
+                        {{topicPageDescription page.key}}
+                      </span>
+                    </div>
                   </DButton>
                 </dropdown.item>
               {{/each}}
