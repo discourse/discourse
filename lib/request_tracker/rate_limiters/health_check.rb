@@ -26,7 +26,7 @@ module RequestTracker
       end
 
       def active?
-        @request.path == "/srv/status"
+        @request.path_info == "/srv/status"
       end
     end
   end

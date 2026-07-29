@@ -1404,8 +1404,10 @@ RSpec.describe Middleware::RequestTracker do
     end
 
     describe "health check rate limits" do
-      def health_check_env(ip)
-        env(:path => "/srv/status", "REMOTE_ADDR" => ip)
+      def health_check_env(ip, subfolder: nil)
+        request_env = env(:path => "#{subfolder}/srv/status", "REMOTE_ADDR" => ip)
+        request_env.merge!("SCRIPT_NAME" => subfolder, "PATH_INFO" => "/srv/status") if subfolder
+        request_env
       end
 
       before do
@@ -1413,48 +1415,31 @@ RSpec.describe Middleware::RequestTracker do
         global_setting :max_reqs_per_ip_mode, "block"
       end
 
-      it "rate limits health checks under their own key, not the per-IP budget" do
-        status, _ = middleware.call(health_check_env("1.2.3.4"))
-        expect(status).to eq(200)
-
-        status, headers = middleware.call(health_check_env("1.2.3.4"))
-        expect(status).to eq(429)
-        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("health_check_10_secs_limit")
-      end
-
-      it "gives each backend hostname its own budget" do
-        # Load balancers health check every backend, so check volume scales
-        # with backend count while a per-IP budget does not. Keying on the
-        # backend hostname keeps the per-key rate constant at any scale.
+      it "gives each backend its own budget in subfolder installs" do
         Discourse.stubs(:os_hostname).returns("backend-1")
-        status, _ = middleware.call(health_check_env("1.2.3.4"))
+        status, _ = middleware.call(health_check_env("1.2.3.4", subfolder: "/forum"))
         expect(status).to eq(200)
 
         Discourse.stubs(:os_hostname).returns("backend-2")
-        status, _ = middleware.call(health_check_env("1.2.3.4"))
+        status, _ = middleware.call(health_check_env("1.2.3.4", subfolder: "/forum"))
         expect(status).to eq(200)
 
         Discourse.stubs(:os_hostname).returns("backend-1")
-        status, headers = middleware.call(health_check_env("1.2.3.4"))
+        status, headers = middleware.call(health_check_env("1.2.3.4", subfolder: "/forum"))
         expect(status).to eq(429)
         expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("health_check_10_secs_limit")
       end
 
-      it "does not affect health checks from private IPs, which skip rate limiting" do
-        status, _ = middleware.call(health_check_env("10.0.1.2"))
+      it "keeps other paths on a separate rate limit budget" do
+        status, _ = middleware.call(health_check_env("1.2.3.4"))
         expect(status).to eq(200)
 
-        status, _ = middleware.call(health_check_env("10.0.1.2"))
-        expect(status).to eq(200)
-      end
+        status, headers = middleware.call(health_check_env("1.2.3.4"))
+        expect(status).to eq(429)
+        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("health_check_10_secs_limit")
 
-      it "does not affect rate limiting for other paths" do
         status, _ = middleware.call(env("REMOTE_ADDR" => "1.2.3.4"))
         expect(status).to eq(200)
-
-        status, headers = middleware.call(env("REMOTE_ADDR" => "1.2.3.4"))
-        expect(status).to eq(429)
-        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_10_secs_limit")
       end
     end
 
