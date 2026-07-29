@@ -93,18 +93,3 @@ module SentimentPostClassificationHelpers
     )
   end
 end
-
-module SentimentReportHelpers
-  def sentiment_classification(post:, classification:)
-    Fabricate(:sentiment_classification, target: post, classification: classification)
-  end
-
-  def emotion_classification(post:, classification:)
-    Fabricate(
-      :sentiment_classification,
-      target: post,
-      model_used: model_used,
-      classification: classification,
-    )
-  end
-end
