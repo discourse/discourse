@@ -154,6 +154,12 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     (still `app/ui-kit/d-multi-select.gjs`) as a thin `@multiple` alias.
   - ☐ Styleguide `@variant="button"`+`@multiple` and 6+-chip wrap examples; RFC line-123 vs
     238-242 mobile contradiction.
+- ◐ **Sandbox screen-reader and design feedback** (dev topic #188731) — tracked separately in
+  [`SANDBOX-A11Y-REMEDIATION.md`](SANDBOX-A11Y-REMEDIATION.md), which carries the item table,
+  the "express states, announce events" rule that governs every `DSelect` announcement, the
+  per-announcement inventory, and the diagnoses that were published and then disproved. Read it
+  before adding or moving any announcement.
+
 - ☐ **Post-showcase UX follow-ups** — address after the concurrent implementation work lands:
   - Selecting an already-selected item does not close the dropdown. Define and implement
     consistent re-selection behavior across variants.

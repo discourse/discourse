@@ -912,3 +912,75 @@ $styleguide-measure: 70ch;
     margin: 0;
   }
 }
+
+// Fixed, not sticky: only one styleguide group renders at a time and sticky is bounded by its
+// container, so anything scoped to a group vanishes the moment you switch away from it.
+.select-aria-probe {
+  position: fixed;
+  right: 1em;
+  bottom: 1em;
+  z-index: 100;
+  max-width: 28em;
+  padding: 0.75em 1em;
+  border: 1px solid var(--primary-low);
+  border-radius: var(--d-border-radius);
+  background: var(--secondary);
+  font-size: var(--font-down-1);
+
+  &__title {
+    font-weight: 700;
+    margin: 0;
+  }
+
+  &__hint {
+    color: var(--primary-medium);
+    margin: 0.25em 0 0.75em;
+  }
+
+  &__rows {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.15em 1em;
+    margin: 0;
+
+    dt {
+      color: var(--primary-medium);
+      font-family: var(--d-font-family--monospace);
+    }
+
+    dd {
+      margin: 0;
+      font-family: var(--d-font-family--monospace);
+      word-break: break-all;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.25em;
+    margin-bottom: 0.75em;
+  }
+
+  &__timeline {
+    list-style: none;
+    max-height: 12em;
+    overflow-y: auto;
+    margin: 0.75em 0 0;
+    padding: 0.5em 0 0;
+    border-top: 1px solid var(--primary-low);
+    font-family: var(--d-font-family--monospace);
+    word-break: break-all;
+
+    li {
+      margin-bottom: 0.25em;
+    }
+  }
+
+  &__seq {
+    color: var(--primary-medium);
+  }
+
+  &__label {
+    font-weight: 700;
+  }
+}

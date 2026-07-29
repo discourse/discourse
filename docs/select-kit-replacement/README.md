@@ -19,6 +19,13 @@ Status legend: ☐ pending · ◐ in progress · ☑ done
 | [4](PHASE-4.md) | Bespoke dropdowns + test infrastructure | ☐ |
 | [5](PHASE-5.md) | Ban from core/bundled + finalize deprecation | ☐ |
 
+## Side trackers
+
+- [`SANDBOX-A11Y-REMEDIATION.md`](SANDBOX-A11Y-REMEDIATION.md) — screen-reader and design
+  feedback on the sandbox (dev topic #188731), tracked within Phase 1. Read it before touching
+  `DSelect` announcements: it carries the "express states, announce events" rule, the
+  announcement inventory, and the diagnoses that turned out to be wrong.
+
 ## Roadmap-numbering note
 
 This tracker follows the RFC/plan's **Phase 0–5** roadmap. The public dev topic #187302
