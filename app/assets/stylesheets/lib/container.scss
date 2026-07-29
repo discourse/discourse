@@ -1,15 +1,6 @@
-@use "sass:map";
 @use "breakpoints";
 
 $breakpoints: breakpoints.$breakpoints;
-
-@function _get-breakpoint($bp) {
-  @if not map.has-key($breakpoints, $bp) {
-    @error "Invalid container breakpoint: #{$bp}";
-  }
-
-  @return map.get($breakpoints, $bp);
-}
 
 @function _container-name($name) {
   @if $name {
@@ -20,19 +11,19 @@ $breakpoints: breakpoints.$breakpoints;
 }
 
 @mixin from($bp, $name: null) {
-  @container #{_container-name($name)}(width >= #{_get-breakpoint($bp)}) {
+  @container #{_container-name($name)}(width >= #{breakpoints.get($bp)}) {
     @content;
   }
 }
 
 @mixin until($bp, $name: null) {
-  @container #{_container-name($name)}(width < #{_get-breakpoint($bp)}) {
+  @container #{_container-name($name)}(width < #{breakpoints.get($bp)}) {
     @content;
   }
 }
 
 @mixin between($from, $until, $name: null) {
-  @container #{_container-name($name)}(#{_get-breakpoint($from)} <= width < #{_get-breakpoint($until)}) {
+  @container #{_container-name($name)}(#{breakpoints.get($from)} <= width < #{breakpoints.get($until)}) {
     @content;
   }
 }
