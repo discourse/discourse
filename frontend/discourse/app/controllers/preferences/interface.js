@@ -130,7 +130,7 @@ export default class InterfaceController extends Controller {
 
   @computed()
   get availableLocales() {
-    return this.siteSettings.available_locales.map((locale) => ({
+    return (this.siteSettings.available_locales ?? []).map((locale) => ({
       ...locale,
       id: locale.value,
     }));
