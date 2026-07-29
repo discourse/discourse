@@ -108,7 +108,7 @@ RSpec.describe UpcomingChanges::Action::BackfillNotifiedEvents do
     end
 
     context "when no change names are given" do
-      subject(:result) { described_class.call(change_names: []) }
+      subject(:result) { described_class.call(upcoming_change_names: []) }
 
       it "does nothing" do
         expect { result }.not_to change { UpcomingChangeEvent.count }

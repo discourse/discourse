@@ -30,6 +30,7 @@ RSpec.describe "Upcoming change toggles" do
       )
 
       Discourse.plugins_by_name["my-plugin"] = plugin
+      SiteSetting.plugins[:enable_upload_debug_mode] = "my-plugin"
       SiteSetting.plugins[:show_user_menu_avatars] = "my-plugin"
 
       UpcomingChangeEvent.delete_all
@@ -37,6 +38,7 @@ RSpec.describe "Upcoming change toggles" do
 
     after do
       Discourse.plugins_by_name.delete("my-plugin")
+      SiteSetting.plugins.delete(:enable_upload_debug_mode)
       SiteSetting.plugins.delete(:show_user_menu_avatars)
     end
 

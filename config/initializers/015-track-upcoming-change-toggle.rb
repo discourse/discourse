@@ -49,6 +49,9 @@ DiscourseEvent.on(:site_setting_changed) do |name, _old_value, new_value|
   plugin_name = SiteSetting.plugins[name]
   next if plugin_name.blank?
 
+  plugin = Discourse.plugins_by_name[plugin_name]
+  next if plugin&.enabled_site_setting&.to_sym != name.to_sym
+
   all_plugin_upcoming_changes =
     SiteSetting.upcoming_change_site_settings.select do |change_name|
       SiteSetting.plugins[change_name] == plugin_name
