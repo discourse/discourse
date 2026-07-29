@@ -2157,14 +2157,14 @@ RSpec.describe Search do
       let!(:bookmark_post1) { Fabricate(:post, raw: "boom this is a bookmarked post") }
       let!(:bookmark_post2) { Fabricate(:post, raw: "wow some other cool thing") }
 
-      def search_with_bookmarks
-        Search.execute("boom in:bookmarks", guardian: Guardian.new(user))
-      end
-
       it "can filter by posts in the user's bookmarks" do
-        expect(search_with_bookmarks.posts.map(&:id)).to eq([])
+        search = Search.execute("boom in:bookmarks", guardian: Guardian.new(user))
+        expect(search.posts.map(&:id)).to eq([])
+
         Fabricate(:bookmark, user: user, bookmarkable: bookmark_post1)
-        expect(search_with_bookmarks.posts.map(&:id)).to match_array([bookmark_post1.id])
+
+        search = Search.execute("boom in:bookmarks", guardian: Guardian.new(user))
+        expect(search.posts.map(&:id)).to match_array([bookmark_post1.id])
       end
     end
 

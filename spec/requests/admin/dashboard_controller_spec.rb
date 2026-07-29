@@ -474,11 +474,13 @@ RSpec.describe Admin::DashboardController do
       end
 
       describe "reports section data" do
-        before { AdminDashboardReport.delete_all }
-
-        def reports_data
-          response.parsed_body["sections"].find { |s| s["id"] == "reports" }&.dig("data")
+        let(:reports_data) do
+          response.parsed_body["sections"]
+            .find { |section| section["id"] == "reports" }
+            &.dig("data")
         end
+
+        before { AdminDashboardReport.delete_all }
 
         it "returns an empty items list when no rows exist" do
           get "/admin/dashboard.json"

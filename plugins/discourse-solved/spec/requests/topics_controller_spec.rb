@@ -4,6 +4,9 @@ RSpec.describe TopicsController do
   let(:p1) { Fabricate(:post, like_count: 1) }
   let(:topic) { p1.topic }
   let(:p2) { Fabricate(:post, like_count: 2, topic:, user: Fabricate(:user)) }
+  let(:p2_single_answer_json) do
+    ',"acceptedAnswer":[%{answer_json}]' % { answer_json: answer_json(p2) }
+  end
 
   def answer_json(post)
     '{"@type":"Answer","author":{"@type":"Person","name":"%{username2}","url":"%{user2_url}"},"dateModified":"%{answer_modified}","datePublished":"%{answered_at}","text":"%{answer_text}","upvoteCount":%{answer_likes},"url":"%{answer_url}"}' %
@@ -16,10 +19,6 @@ RSpec.describe TopicsController do
         username2: post.user&.username,
         user2_url: post.user&.full_url,
       }
-  end
-
-  def p2_single_answer_json
-    ',"acceptedAnswer":[%{answer_json}]' % { answer_json: answer_json(p2) }
   end
 
   def expected_schema_json(answer_json, answer_count = 1)

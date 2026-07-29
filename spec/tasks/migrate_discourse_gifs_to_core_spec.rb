@@ -401,9 +401,7 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
   end
 
   describe "the themes:discourse_gifs:migrate task" do
-    def run_task
-      capture_stdout { Rake::Task["themes:discourse_gifs:migrate"].invoke }
-    end
+    subject(:run_task) { capture_stdout { Rake::Task["themes:discourse_gifs:migrate"].invoke } }
 
     before { allow(DiscourseGifsMigration).to receive(:migrate_all) }
 

@@ -58,9 +58,7 @@ describe ConvertAiTranslationBackfillMaxAgeToStartDate do
     DB.query("SELECT data_type, value FROM site_settings WHERE name = :name", name:).first
   end
 
-  def utc_date
-    DB.query_single("SELECT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')::date").first
-  end
+  let(:utc_date) { DB.query_single("SELECT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')::date").first }
 
   describe "#up" do
     it "converts a positive max age override to a fixed UTC date" do

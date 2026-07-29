@@ -174,16 +174,21 @@ RSpec.describe Assigner do
 
       described_class.new(post_assignment_post, moderator_2).assign(moderator)
 
-      expect(enqueued_workflow_trigger_node_ids).to contain_exactly("all-assignments")
+      trigger_node_ids =
+        Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.map do |job|
+          job["args"].first["trigger_node_id"]
+        end
+      expect(trigger_node_ids).to contain_exactly("all-assignments")
 
       Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
 
       described_class.new(topic, moderator_2).assign(moderator)
 
-      expect(enqueued_workflow_trigger_node_ids).to contain_exactly(
-        "all-assignments",
-        "topic-assignments",
-      )
+      trigger_node_ids =
+        Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.map do |job|
+          job["args"].first["trigger_node_id"]
+        end
+      expect(trigger_node_ids).to contain_exactly("all-assignments", "topic-assignments")
 
       trigger_data =
         Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"].first["trigger_data"]
@@ -283,12 +288,6 @@ RSpec.describe Assigner do
         connections: {
         },
       )
-    end
-
-    def enqueued_workflow_trigger_node_ids
-      Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.map do |job|
-        job["args"].first["trigger_node_id"]
-      end
     end
 
     describe "forbidden reasons" do

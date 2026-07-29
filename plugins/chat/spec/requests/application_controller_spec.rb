@@ -4,7 +4,7 @@ RSpec.describe ApplicationController do
   fab!(:user)
   fab!(:admin)
 
-  def preloaded_json
+  let(:preloaded_json) do
     JSON.parse(Nokogiri::HTML5.fragment(response.body).css("script#data-preloaded").first.text)
   end
 

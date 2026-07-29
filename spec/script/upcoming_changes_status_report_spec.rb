@@ -35,7 +35,7 @@ RSpec.describe UpcomingChanges::StatusReport do
       author_email: "alice@example.com",
     )
 
-    remove_plugin_settings
+    FileUtils.rm_rf(File.join(repo_path, "plugins/chat"))
     commit_shas[:plugin_removed] = commit(
       "DEV: Remove plugin settings",
       date: "2026-04-15T12:00:00Z",
@@ -246,9 +246,5 @@ RSpec.describe UpcomingChanges::StatusReport do
         file.write("      learn_more_url: \"https://meta.discourse.org/t/-/123\"\n")
       end
     end
-  end
-
-  def remove_plugin_settings
-    FileUtils.rm_rf(File.join(repo_path, "plugins/chat"))
   end
 end

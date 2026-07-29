@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "fix query ids rake task" do
+  subject(:run_task) { Rake::Task["data_explorer:fix_query_ids"].invoke }
+
   before do
     Rake::Task.clear
     silence_warnings { Discourse::Application.load_tasks }
@@ -105,10 +107,6 @@ describe "fix query ids rake task" do
     post_fix_query = create_query(query_name)
 
     expect(post_fix_query.id).to eq(original_query_id + 1)
-  end
-
-  def run_task
-    Rake::Task["data_explorer:fix_query_ids"].invoke
   end
 
   def create_plugin_store_row(name, id, group_ids = [])

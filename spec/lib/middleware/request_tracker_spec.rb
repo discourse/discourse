@@ -908,10 +908,6 @@ RSpec.describe Middleware::RequestTracker do
           Discourse.clear_readonly!
         end
 
-        def flush_browser_pageview_events
-          Jobs::FlushBrowserPageviewEvents.new.execute({})
-        end
-
         it "creates a BrowserPageviewEvent row and does not fire the :browser_pageview event" do
           session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
           DiscourseIpInfo.stubs(:get).returns(country_code: "AU")
@@ -1058,7 +1054,9 @@ RSpec.describe Middleware::RequestTracker do
 
           Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
 
-          expect { flush_browser_pageview_events }.to change { BrowserPageviewEvent.count }.by(1)
+          expect { Jobs::FlushBrowserPageviewEvents.new.execute({}) }.to change {
+            BrowserPageviewEvent.count
+          }.by(1)
           expect(BrowserPageviewEvent.queued_count).to eq(0)
         end
       end

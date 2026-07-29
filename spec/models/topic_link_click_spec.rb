@@ -5,10 +5,6 @@ RSpec.describe TopicLinkClick do
   it { is_expected.to belong_to :user }
   it { is_expected.to validate_presence_of :topic_link_id }
 
-  def test_uri
-    URI.parse("http://test.host")
-  end
-
   describe "topic_links" do
     fab!(:topic) { Fabricate(:topic, user: Fabricate(:user, refresh_auto_groups: true)) }
     fab!(:post) { Fabricate(:post_with_external_links, user: topic.user, topic:) }

@@ -8,6 +8,11 @@ describe RemoveImageCaptionFromAiHelperEnabledFeatures do
   subject(:migration) { described_class.new }
 
   let(:connection) { ActiveRecord::Base.connection }
+  let(:enabled_features) do
+    DB.query_single(
+      "SELECT value FROM site_settings WHERE name = 'ai_helper_enabled_features'",
+    ).first
+  end
 
   around { |example| ActiveRecord::Migration.suppress_messages { example.run } }
 
@@ -26,20 +31,15 @@ describe RemoveImageCaptionFromAiHelperEnabledFeatures do
     SQL
   end
 
-  def enabled_features
-    DB.query_single(
-      "SELECT value FROM site_settings WHERE name = 'ai_helper_enabled_features'",
-    ).first
-  end
-
-  it "removes the image caption feature from stored helper features", :aggregate_failures do
+  it "removes the image caption feature from stored helper features" do
     store_enabled_features("suggestions|image_caption|context_menu")
 
     migration.up
 
     expect(enabled_features).to eq("suggestions|context_menu")
+  end
 
-    delete_setting
+  it "stores an empty value when image caption is the only helper feature" do
     store_enabled_features("image_caption")
 
     migration.up
