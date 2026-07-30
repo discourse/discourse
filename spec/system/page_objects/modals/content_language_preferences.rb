@@ -40,6 +40,18 @@ module PageObjects
         )
       end
 
+      def has_understood_language_option?(locale)
+        understood_languages_dropdown.expand
+        result =
+          has_css?(
+            "#{full_modal_selector} " \
+              ".form-kit__field[data-name='understoodLanguages'] " \
+              ".select-kit-row[data-value='#{locale}']",
+          )
+        understood_languages_dropdown.collapse
+        result
+      end
+
       def has_locked_understood_language?
         understood_languages_dropdown.expand
         result =

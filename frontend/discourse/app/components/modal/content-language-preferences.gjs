@@ -10,7 +10,6 @@ import {
   AUTOMATICALLY_TRANSLATE_COOKIE,
   AUTOMATICALLY_TRANSLATE_COOKIE_EXPIRY,
   automaticallyTranslate,
-  contentLanguageOptions,
   normalizeUnderstoodLanguages,
 } from "discourse/lib/content-localization";
 import cookie from "discourse/lib/cookie";
@@ -49,19 +48,6 @@ export default class ContentLanguagePreferencesModal extends Component {
       value,
       id: value,
     }));
-  }
-
-  get understoodLanguageOptions() {
-    const interfaceLanguage =
-      this.formApi?.get("interfaceLanguage") ?? this.data.interfaceLanguage;
-    const understoodLanguages =
-      this.formApi?.get("understoodLanguages") ?? this.data.understoodLanguages;
-
-    return contentLanguageOptions(
-      this.interfaceLanguageOptions,
-      this.siteSettings.available_content_localization_locales,
-      [interfaceLanguage, ...understoodLanguages]
-    );
   }
 
   get canChangeInterfaceLanguage() {
@@ -211,7 +197,7 @@ export default class ContentLanguagePreferencesModal extends Component {
                 <MultiSelect
                   @valueProperty="value"
                   @langProperty="value"
-                  @content={{this.understoodLanguageOptions}}
+                  @content={{this.interfaceLanguageOptions}}
                   @value={{field.value}}
                   @onChange={{field.set}}
                   @mandatoryValues={{transientData.interfaceLanguage}}

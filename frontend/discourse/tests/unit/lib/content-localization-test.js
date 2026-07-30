@@ -3,7 +3,6 @@ import { module, test } from "qunit";
 import {
   AUTOMATICALLY_TRANSLATE_COOKIE,
   automaticallyTranslate,
-  contentLanguageOptions,
   normalizeUnderstoodLanguages,
 } from "discourse/lib/content-localization";
 import cookie, { removeCookie } from "discourse/lib/cookie";
@@ -61,35 +60,6 @@ module("Unit | Lib | content-localization", function (hooks) {
       normalizeUnderstoodLanguages(["en"], "ja"),
       ["ja", "en"],
       "it inserts a missing interface language"
-    );
-  });
-
-  test("limits understood language choices without hiding retained values", function (assert) {
-    const availableLocales = [
-      { name: "English", value: "en", id: "en" },
-      { name: "Deutsch", value: "de", id: "de" },
-      { name: "Français", value: "fr", id: "fr" },
-      { name: "日本語", value: "ja", id: "ja" },
-    ];
-
-    assert.deepEqual(
-      contentLanguageOptions(
-        availableLocales,
-        [{ value: "en" }, { value: "ja" }],
-        ["de", "fr"]
-      ),
-      availableLocales,
-      "it includes the interface language and saved values outside the current site setting"
-    );
-
-    assert.deepEqual(
-      contentLanguageOptions(
-        availableLocales,
-        [{ value: "en" }, { value: "ja" }],
-        ["de"]
-      ).map(({ value }) => value),
-      ["en", "de", "ja"],
-      "a removed saved value is no longer offered"
     );
   });
 });
