@@ -39,8 +39,7 @@ en:
         flagged_post: |
           %{score_reason}
           %{response}
-        flagged_post_response: |
-          <p>Response from the model: %{llm_response}</p>
+        flagged_post_response: "Response from the model: %{llm_response}"
         flagged_post_score_reason: |
           <b>Triggered by the <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> rule.</b>
         notify_author_pm:
