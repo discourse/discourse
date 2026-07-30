@@ -499,10 +499,6 @@ RSpec.describe CurrentUserSerializer do
   end
 
   describe "#has_new_upcoming_changes" do
-    def serialize_for(user)
-      described_class.new(user, scope: user.guardian, root: false).as_json
-    end
-
     it "is false for an admin created during the new-site window, regardless of `added` events" do
       Discourse.stubs(:site_creation_date).returns(10.minutes.ago)
       admin = Fabricate(:admin)
@@ -516,7 +512,9 @@ RSpec.describe CurrentUserSerializer do
         upcoming_change_name: "future_setting",
         created_at: 1.minute.from_now,
       )
-      expect(serialize_for(admin)[:has_new_upcoming_changes]).to eq(false)
+      serialized_admin = described_class.new(admin, scope: admin.guardian, root: false).as_json
+
+      expect(serialized_admin[:has_new_upcoming_changes]).to eq(false)
     end
 
     it "ignores `added` events that predate the user when no last_visited is set" do
@@ -527,7 +525,9 @@ RSpec.describe CurrentUserSerializer do
         created_at: 1.year.ago,
       )
       admin = Fabricate(:admin)
-      expect(serialize_for(admin)[:has_new_upcoming_changes]).to eq(false)
+      serialized_admin = described_class.new(admin, scope: admin.guardian, root: false).as_json
+
+      expect(serialized_admin[:has_new_upcoming_changes]).to eq(false)
     end
 
     it "shows `added` events created after the user when no last_visited is set" do
@@ -538,7 +538,9 @@ RSpec.describe CurrentUserSerializer do
         upcoming_change_name: "fresh_setting",
         created_at: 1.minute.from_now,
       )
-      expect(serialize_for(admin)[:has_new_upcoming_changes]).to eq(true)
+      serialized_admin = described_class.new(admin, scope: admin.guardian, root: false).as_json
+
+      expect(serialized_admin[:has_new_upcoming_changes]).to eq(true)
     end
 
     it "honors last_visited_upcoming_changes_at when set" do
@@ -552,14 +554,16 @@ RSpec.describe CurrentUserSerializer do
         upcoming_change_name: "before_visit",
         created_at: 2.hours.ago,
       )
-      expect(serialize_for(admin)[:has_new_upcoming_changes]).to eq(false)
+      serialized_admin = described_class.new(admin, scope: admin.guardian, root: false).as_json
+      expect(serialized_admin[:has_new_upcoming_changes]).to eq(false)
 
       UpcomingChangeEvent.create!(
         event_type: :added,
         upcoming_change_name: "after_visit",
         created_at: 1.minute.ago,
       )
-      expect(serialize_for(admin)[:has_new_upcoming_changes]).to eq(true)
+      serialized_admin = described_class.new(admin, scope: admin.guardian, root: false).as_json
+      expect(serialized_admin[:has_new_upcoming_changes]).to eq(true)
     end
   end
 end
