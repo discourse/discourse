@@ -77,6 +77,74 @@ module("Unit | Controller | admin-dashboard", function (hooks) {
     });
   });
 
+  test("the loading indicator tracks nearby section refreshes", async function (assert) {
+    const controller = this.owner.lookup("controller:admin/dashboard");
+    const startDate = new Date("2026-07-18T00:00:00Z");
+    const endDate = new Date("2026-07-24T23:59:59Z");
+    controller.loadedSections = {
+      period: "last_30_days",
+      startDate,
+      endDate,
+      sections: [
+        {
+          id: "highlights",
+          data: { signups: 30 },
+          loaded: true,
+          loading: false,
+          error: false,
+          stale: false,
+        },
+        {
+          id: "traffic",
+          data: { pageviews: 30 },
+          loaded: true,
+          loading: false,
+          error: false,
+          stale: false,
+        },
+      ],
+    };
+    const pendingRequests = [];
+    sinon.stub(AdminDashboard, "fetchSection").callsFake(
+      () =>
+        new Promise((resolve) => {
+          pendingRequests.push(resolve);
+        })
+    );
+
+    controller.setPeriod("last_7_days");
+    const highlightsRequest = controller.loadSection("highlights", {
+      isIntersecting: true,
+    });
+    const trafficRequest = controller.loadSection("traffic", {
+      isIntersecting: true,
+    });
+
+    assert.strictEqual(
+      pendingRequests.length,
+      2,
+      "only intersecting sections start requests"
+    );
+    assert.true(
+      controller.loadingSlider.loading,
+      "the indicator remains active while requests are pending"
+    );
+
+    pendingRequests[0]({ data: { signups: 7 } });
+    await highlightsRequest;
+    assert.true(
+      controller.loadingSlider.loading,
+      "the indicator remains active until every section finishes"
+    );
+
+    pendingRequests[1]({ data: { pageviews: 7 } });
+    await trafficRequest;
+    assert.false(
+      controller.loadingSlider.loading,
+      "the indicator ends after the final section finishes"
+    );
+  });
+
   test("a section refresh supersedes an in-flight request", async function (assert) {
     const controller = this.owner.lookup("controller:admin/dashboard");
     const startDate = new Date("2026-06-25T00:00:00Z");
