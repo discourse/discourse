@@ -75,6 +75,7 @@ class UserOption < ActiveRecord::Base
   validates :email_level, inclusion: { in: UserOption.email_level_types.values }
   validates :email_messages_level, inclusion: { in: UserOption.email_level_types.values }
   validates :timezone, timezone: true
+  validate :understood_languages_are_supported, if: :will_save_change_to_understood_languages?
 
   def set_defaults
     self.mailing_list_mode = SiteSetting.default_email_mailing_list_mode
@@ -248,6 +249,14 @@ class UserOption < ActiveRecord::Base
 
   private
 
+  def understood_languages_are_supported
+    if understood_languages.all? { |locale| LocaleSiteSetting.supported_locales.include?(locale) }
+      return
+    end
+
+    errors.add(:understood_languages, :invalid)
+  end
+
   def update_hide_profile_and_presence
     if hide_profile_changed? || hide_presence_changed?
       self.hide_profile_and_presence = hide_profile || hide_presence
@@ -271,6 +280,7 @@ end
 #  allow_private_messages                         :boolean          default(TRUE), not null
 #  auto_image_caption                             :boolean          default(FALSE), not null
 #  auto_track_topics_after_msecs                  :integer
+#  automatically_translate                        :boolean          default(TRUE), not null
 #  automatically_unpin_topics                     :boolean          default(TRUE), not null
 #  bookmark_auto_delete_preference                :integer          default(3), not null
 #  chat_announce_new_messages                     :boolean          default(TRUE), not null
@@ -335,6 +345,7 @@ end
 #  timezone                                       :string
 #  title_count_mode_key                           :integer          default(0), not null
 #  topics_unread_when_closed                      :boolean          default(TRUE), not null
+#  understood_languages                           :string           default([]), not null, is an Array
 #  watched_precedence_over_muted                  :boolean          default(FALSE), not null
 #  color_scheme_id                                :integer
 #  dark_scheme_id                                 :integer

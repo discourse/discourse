@@ -227,11 +227,13 @@ RSpec.describe Tag do
         )
       end
 
-      it "returns localized names when localization enabled and user not in tag locale" do
+      it "returns localized tag names independently of topic and post translation preferences" do
         SiteSetting.content_localization_enabled = true
         I18n.locale = "ja"
+        user = Fabricate(:user, locale: "ja")
+        user.user_option.update!(automatically_translate: false)
 
-        expect(Tag.top_tags).to include(
+        expect(Tag.top_tags(guardian: Guardian.new(user))).to include(
           { id: localized_tag.id, name: "猫", slug: localized_tag.slug },
         )
       end

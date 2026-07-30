@@ -3527,8 +3527,8 @@ RSpec.describe TopicsController do
           expect(entry["excerpt"]).to include("戦わずして勝つ")
         end
 
-        it "omits localized onebox data when the reader chose to see original content" do
-          reader.user_option.update!(show_original_content: true)
+        it "omits localized onebox data when the reader disables automatic translation" do
+          reader.user_option.update!(automatically_translate: false)
           sign_in(reader)
 
           expect(host_post_json.key?("localized_oneboxes")).to eq(false)
@@ -4849,8 +4849,8 @@ RSpec.describe TopicsController do
         end
       end
 
-      context "when show_original cookie is set" do
-        before { cookies[ContentLocalization::SHOW_ORIGINAL_COOKIE] = "true" }
+      context "when automatic translation is disabled by cookie" do
+        before { cookies[ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE] = "false" }
 
         it "returns original posts" do
           get "/t/#{localized_topic.id}/posts.json"

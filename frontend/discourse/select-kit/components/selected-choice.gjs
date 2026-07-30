@@ -46,11 +46,18 @@ export default class SelectedChoice extends Component {
     return this.mandatoryValuesArray.includes(this.item.id);
   }
 
+  @computed("mandatoryValueTitle")
+  get readOnlyTitle() {
+    return (
+      this.mandatoryValueTitle || i18n("admin.site_settings.mandatory_group")
+    );
+  }
+
   <template>
     {{#if this.readOnly}}
       <button
         class="btn btn-default disabled tag-choice"
-        title={{i18n "admin.site_settings.mandatory_group"}}
+        title={{this.readOnlyTitle}}
       >{{this.itemName}}</button>
     {{else}}
       <button

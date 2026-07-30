@@ -1818,7 +1818,11 @@ en:
       enable_smart_lists: "Enable smart lists when writing in the composer"
       enable_defer: "Enable mark topics as unread"
       enable_markdown_monospace_font: "Use monospace font in composer's Markdown mode"
-      show_original_content: "Show original content instead of translated content."
+      automatically_translate: "Automatically translate topics and posts in other languages"
+      content_languages:
+        title: "Content languages"
+        understood: "Languages I understand"
+        understood_description: "Topics and posts in these languages won’t be translated. Your interface language is always included."
       experimental_sidebar:
         enable: "Enable sidebar"
         options: "Options"
@@ -5205,6 +5209,12 @@ en:
       click_to_show_translation: "Click to show translation"
       tap_to_show_translation: "Tap here to show translation"
       ai_translation_disclaimer: "AI-generated translations may be inaccurate."
+
+    content_localization:
+      preferences:
+        title: "Content language preferences"
+        login_to_set_languages: "Log in to set more languages"
+        interface_language_mandatory: "Your interface language is always included."
 
     category:
       none: "(no category)"

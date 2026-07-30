@@ -285,6 +285,18 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
+  describe "content localization preferences" do
+    it "computes the legacy JSON preference from automatically_translate" do
+      user.user_option.automatically_translate = false
+      user.user_option.show_original_content = false
+
+      expect(serializer.as_json[:user_option]).to include(
+        automatically_translate: false,
+        show_original_content: true,
+      )
+    end
+  end
+
   describe "#associated_account_ids" do
     before do
       UserAssociatedAccount.create(
