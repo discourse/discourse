@@ -14,8 +14,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     # A digit run past 18 characters overflows the signed 64-bit integers ids are
-    # stored in — and names no real record: it's a numeric topic title, like the
-    # meta.discourse.org post about exactly that, which crashed the insert.
+    # stored in — and names no real record: it's a numeric topic title, a shape a
+    # real forum turned out to have, which crashed the insert.
     context "with a digit run too long to be an id" do
       # A route-less numeric-title URL on the source's own host parses no id, so it
       # becomes a SITE link (origin rewrite). SITE stores no id, so the overflowing
