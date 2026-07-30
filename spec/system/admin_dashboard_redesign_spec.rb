@@ -124,6 +124,38 @@ describe "Admin Dashboard Redesign" do
       expect(dashboard).to have_no_section_error("highlights")
       expect(dashboard).to have_highlights_content
     end
+
+    it "waits for a newly enabled section to save before loading it after a date change" do
+      AdminDashboardSectionConfiguration.update(
+        [
+          { id: "highlights", visible: true },
+          { id: "reports", visible: false },
+          { id: "traffic", visible: false },
+          { id: "engagement", visible: false },
+          { id: "search", visible: false },
+        ],
+        actor: current_user,
+      )
+
+      dashboard.track_section_requests.visit
+
+      expect(dashboard).to have_no_section("search")
+
+      dashboard
+        .open_configure_menu
+        .hold_configuration_save
+        .toggle_section_while_request_pending("search")
+        .close_configure_menu_while_request_pending
+        .select_preset_while_request_pending("last_7_days")
+        .scroll_to_section_while_request_pending("search")
+
+      expect(dashboard.requested_section_ids).not_to include("search")
+
+      dashboard.release_configuration_saves.wait_for_section_request("search")
+
+      expect(dashboard).to have_no_section_error("search")
+      expect(dashboard).to have_no_section_loading("search")
+    end
   end
 
   it "allows a user to use a preset range or select a custom range",

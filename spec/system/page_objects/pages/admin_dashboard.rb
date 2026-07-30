@@ -215,6 +215,24 @@ module PageObjects
         self
       end
 
+      def toggle_section_while_request_pending(id)
+        page.driver.with_playwright_page do |playwright_page|
+          playwright_page
+            .locator(
+              ".db-configure__row[data-section-id='#{id}'] .d-toggle-switch__label",
+            )
+            .click
+        end
+        self
+      end
+
+      def close_configure_menu_while_request_pending
+        page.driver.with_playwright_page do |playwright_page|
+          playwright_page.keyboard.press("Escape")
+        end
+        self
+      end
+
       def move_section_down(id)
         within(".db-configure__row[data-section-id='#{id}']") do
           find(".db-configure__arrow:last-child").click
@@ -307,6 +325,40 @@ module PageObjects
 
       def scroll_to_section(id)
         scroll_to(find("[data-section-id='#{id}']"))
+        self
+      end
+
+      def scroll_to_section_while_request_pending(id)
+        page.driver.with_playwright_page do |playwright_page|
+          playwright_page.locator("[data-section-id='#{id}']").scroll_into_view_if_needed
+          playwright_page.evaluate(
+            "() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))",
+          )
+        end
+        self
+      end
+
+      def hold_configuration_save
+        @held_configuration_routes = []
+        page.driver.with_playwright_page do |playwright_page|
+          playwright_page.route(
+            %r{/admin/dashboard/configuration\.json},
+            lambda do |route, _request|
+              @held_configuration_routes << route
+            end,
+          )
+        end
+        self
+      end
+
+      def release_configuration_saves
+        page.driver.with_playwright_page do |playwright_page|
+          @held_configuration_routes.each do |route|
+            response = route.fetch
+            route.fulfill(response:)
+          end
+          playwright_page.unroute(%r{/admin/dashboard/configuration\.json})
+        end
         self
       end
 
