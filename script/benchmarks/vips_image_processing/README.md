@@ -6,6 +6,10 @@ inside the updated Discourse runtime image and invokes the real
 `OptimizedImage`, `UploadCreator`, `Upload`, `Vips`, and `ImageMagick`
 implementations.
 
+The definitive migration run is summarized in [report.md](report.md). Its
+checksummed raw evidence and representative outputs are preserved in
+`results/vips-image-processing-benchmark-664bd02c.tar.gz`.
+
 The corpus and operations cover:
 
 - optimized resize of a photographic JPEG;
