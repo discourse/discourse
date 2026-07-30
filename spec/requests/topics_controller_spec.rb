@@ -376,6 +376,44 @@ RSpec.describe TopicsController do
           expect(result["url"]).to be_present
         end
 
+        describe "moving a post to a restricted topic" do
+          fab!(:post_author) { Fabricate(:user, last_seen_at: 1.minute.ago) }
+          fab!(:source_topic) { Fabricate(:topic, user: post_author) }
+          fab!(:source_post) { Fabricate(:post, topic: source_topic, user: post_author) }
+          fab!(:restricted_destination_category) do
+            Fabricate(:private_category, group: Group[:staff])
+          end
+          fab!(:restricted_destination_topic) do
+            Fabricate(
+              :topic,
+              category: restricted_destination_category,
+              title: "Restricted destination",
+              user: admin,
+            )
+          end
+
+          it "does not publish the restricted destination title to the post author" do
+            expect(post_author.guardian.can_see?(restricted_destination_topic)).to eq(false)
+
+            messages =
+              MessageBus.track_publish("/notification/#{post_author.id}") do
+                Jobs.with_immediate_jobs do
+                  post "/t/#{source_topic.id}/move-posts.json",
+                       params: {
+                         post_ids: [source_post.id],
+                         destination_topic_id: restricted_destination_topic.id,
+                       }
+                end
+              end
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["success"]).to eq(true)
+            expect(messages.map { |message| message.data.to_json }.join).not_to include(
+              restricted_destination_topic.title,
+            )
+          end
+        end
+
         describe "with freeze_original param" do
           it "duplicates post to topic and keeps original post in place" do
             expect do
