@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
-  include DiscourseGifsMigrationFixture
   before do
     Rake::Task.clear
     silence_warnings { Discourse::Application.load_tasks }
@@ -85,6 +84,16 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
       theme.set_field(target: :settings, name: "yaml", value: SETTINGS_YAML)
       theme.save!
     end
+  end
+
+  def add_overrides(theme, overrides)
+    overrides.each { |name, value| theme.update_setting(name, value) }
+    theme.save!
+    theme.reload
+  end
+
+  def run_migration(theme, enable_gifs: false)
+    expect { DiscourseGifsMigration.migrate_component(theme, enable_gifs:) }.to output.to_stdout
   end
 
   describe ".find_component_in_db" do

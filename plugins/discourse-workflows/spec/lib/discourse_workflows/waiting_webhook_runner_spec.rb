@@ -21,21 +21,6 @@ RSpec.describe DiscourseWorkflows::WaitingWebhookRunner do
     Fabricate(:discourse_workflows_workflow, name: "Published workflow", published: true, **graph)
   end
 
-  subject(:result) do
-    described_class.call(
-      execution_id: execution.id,
-      signature: signature,
-      http_method: "GET",
-      path: "",
-      node_type: "form",
-      params: {
-      },
-      service_params: {
-        guardian: guardian,
-      },
-    )
-  end
-
   let(:guardian) { Guardian.new(user) }
 
   before { allow(MessageBus).to receive(:publish) }
@@ -65,27 +50,31 @@ RSpec.describe DiscourseWorkflows::WaitingWebhookRunner do
     )
   end
 
+  def dispatch(http_method:, path: "", params: {}, signature: self.signature)
+    described_class.call(
+      execution_id: execution.id,
+      signature: signature,
+      http_method: http_method,
+      path: path,
+      node_type: "form",
+      params: params,
+      service_params: {
+        guardian: guardian,
+      },
+    )
+  end
+
   describe ".call" do
     it "serves waiting form status through the node webhook descriptor" do
-      result =
-        described_class.call(
-          execution_id: execution.id,
-          signature: signature,
-          http_method: "GET",
-          path: "status",
-          node_type: "form",
-          params: {
-          },
-          service_params: {
-            guardian: guardian,
-          },
-        )
+      result = dispatch(http_method: "GET", path: "status")
 
       expect(result.status).to eq(:ok)
       expect(result.body).to eq(status: "form_waiting")
     end
 
     it "serves waiting form data through the node webhook context" do
+      result = dispatch(http_method: "GET")
+
       expect(result.status).to eq(:ok)
       expect(result.body[:form_title]).to eq("Published workflow")
       expect(result.body[:form_description]).to eq("Counter was 42")
@@ -113,25 +102,13 @@ RSpec.describe DiscourseWorkflows::WaitingWebhookRunner do
     it "uses trigger query parameters as waiting form defaults" do
       execution.update!(trigger_data: { "form_query_parameters" => { "feedback" => "Prefill" } })
 
+      result = dispatch(http_method: "GET")
+
       expect(result.body[:data]["feedback"]).to eq("Prefill")
     end
 
     it "returns structured validation errors from the waiting form webhook" do
-      result =
-        described_class.call(
-          execution_id: execution.id,
-          signature: signature,
-          http_method: "POST",
-          path: "",
-          node_type: "form",
-          params: {
-            form_data: {
-            },
-          },
-          service_params: {
-            guardian: guardian,
-          },
-        )
+      result = dispatch(http_method: "POST", params: { form_data: {} })
 
       expect(result.status).to eq(:unprocessable_entity)
       expect(result.body[:errors]).to contain_exactly(field_label: "Feedback", code: :missing)
@@ -140,22 +117,7 @@ RSpec.describe DiscourseWorkflows::WaitingWebhookRunner do
     it "resumes the execution with node returned workflow data" do
       freeze_time Time.utc(2026, 1, 1)
 
-      result =
-        described_class.call(
-          execution_id: execution.id,
-          signature: signature,
-          http_method: "POST",
-          path: "",
-          node_type: "form",
-          params: {
-            form_data: {
-              "feedback" => "Approved",
-            },
-          },
-          service_params: {
-            guardian: guardian,
-          },
-        )
+      result = dispatch(http_method: "POST", params: { form_data: { "feedback" => "Approved" } })
 
       expect(result.status).to eq(:ok)
       expect(result.body[:status]).to eq("success")
@@ -169,38 +131,14 @@ RSpec.describe DiscourseWorkflows::WaitingWebhookRunner do
     end
 
     it "returns not_found when the signature does not match" do
-      result =
-        described_class.call(
-          execution_id: execution.id,
-          signature: "invalid",
-          http_method: "GET",
-          path: "",
-          node_type: "form",
-          params: {
-          },
-          service_params: {
-            guardian: guardian,
-          },
-        )
+      result = dispatch(http_method: "GET", signature: "invalid")
 
       expect(result.status).to eq(:not_found)
       expect(result.body).to eq(error: "not_found")
     end
 
     it "returns not_found for paths the waiting node did not declare" do
-      result =
-        described_class.call(
-          execution_id: execution.id,
-          signature: signature,
-          http_method: "GET",
-          path: "unknown",
-          node_type: "form",
-          params: {
-          },
-          service_params: {
-            guardian: guardian,
-          },
-        )
+      result = dispatch(http_method: "GET", path: "unknown")
 
       expect(result.status).to eq(:not_found)
       expect(result.body).to eq(error: "not_found")
@@ -211,21 +149,7 @@ RSpec.describe DiscourseWorkflows::WaitingWebhookRunner do
     it "detects waiting executions handled by form restart webhooks" do
       expect(described_class.waiting_for?(execution, node_type: "form")).to eq(true)
 
-      described_class.call(
-        execution_id: execution.id,
-        signature: signature,
-        http_method: "POST",
-        path: "",
-        node_type: "form",
-        params: {
-          form_data: {
-            "feedback" => "Approved",
-          },
-        },
-        service_params: {
-          guardian: guardian,
-        },
-      )
+      dispatch(http_method: "POST", params: { form_data: { "feedback" => "Approved" } })
 
       expect(described_class.waiting_for?(execution.reload, node_type: "form")).to eq(false)
     end

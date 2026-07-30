@@ -66,98 +66,83 @@ RSpec.describe DiscourseWorkflows::Nodes::PostMoved::V1 do
   describe "#matches?" do
     it "returns true when destination category and tags are blank" do
       trigger = described_class.new(moved_post, source_topic.id)
-      trigger_context = DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => {} })
 
-      expect(trigger.matches?(trigger_context)).to eq(true)
+      expect(trigger.matches?(trigger_context({}))).to eq(true)
     end
 
     it "returns true when the destination topic matches the configured category and tags" do
       trigger = described_class.new(moved_post, source_topic.id)
-      trigger_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          {
-            "parameters" => {
-              "category_ids" => [destination_category.id.to_s],
-              "tag_names" => [tag.name],
-            },
-          },
-        )
 
-      expect(trigger.matches?(trigger_context)).to eq(true)
+      expect(
+        trigger.matches?(
+          trigger_context(
+            "category_ids" => [destination_category.id.to_s],
+            "tag_names" => [tag.name],
+          ),
+        ),
+      ).to eq(true)
     end
 
     it "matches any of the configured destination categories" do
       trigger = described_class.new(moved_post, source_topic.id)
-      trigger_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          {
-            "parameters" => {
-              "category_ids" => [Fabricate(:category).id.to_s, destination_category.id.to_s],
-            },
-          },
-        )
 
-      expect(trigger.matches?(trigger_context)).to eq(true)
+      expect(
+        trigger.matches?(
+          trigger_context(
+            "category_ids" => [Fabricate(:category).id.to_s, destination_category.id.to_s],
+          ),
+        ),
+      ).to eq(true)
     end
 
     it "matches destination subcategories by default but not when excluded" do
       parent_category = Fabricate(:category)
       destination_category.update!(parent_category: parent_category)
       trigger = described_class.new(moved_post, source_topic.id)
-      default_trigger_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          { "parameters" => { "category_ids" => [parent_category.id.to_s] } },
-        )
-      strict_trigger_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          {
-            "parameters" => {
-              "category_ids" => [parent_category.id.to_s],
-              "include_subcategories" => false,
-            },
-          },
-        )
 
-      expect(trigger.matches?(default_trigger_context)).to eq(true)
-      expect(trigger.matches?(strict_trigger_context)).to eq(false)
+      expect(trigger.matches?(trigger_context("category_ids" => [parent_category.id.to_s]))).to eq(
+        true,
+      )
+      expect(
+        trigger.matches?(
+          trigger_context(
+            "category_ids" => [parent_category.id.to_s],
+            "include_subcategories" => false,
+          ),
+        ),
+      ).to eq(false)
     end
 
     it "supports the legacy scalar category_id parameter" do
       trigger = described_class.new(moved_post, source_topic.id)
-      trigger_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          { "parameters" => { "category_id" => destination_category.id.to_s } },
-        )
 
-      expect(trigger.matches?(trigger_context)).to eq(true)
+      expect(
+        trigger.matches?(trigger_context("category_id" => destination_category.id.to_s)),
+      ).to eq(true)
     end
 
     it "matches subcategories by default for legacy category_id-only nodes" do
       parent_category = Fabricate(:category)
       destination_category.update!(parent_category: parent_category)
       trigger = described_class.new(moved_post, source_topic.id)
-      trigger_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          { "parameters" => { "category_id" => parent_category.id.to_s } },
-        )
 
-      expect(trigger.matches?(trigger_context)).to eq(true)
+      expect(trigger.matches?(trigger_context("category_id" => parent_category.id.to_s))).to eq(
+        true,
+      )
     end
 
     it "returns false when the destination topic does not match category or tags" do
       other_category = Fabricate(:category)
       trigger = described_class.new(moved_post, source_topic.id)
-      category_trigger_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          { "parameters" => { "category_ids" => [other_category.id.to_s] } },
-        )
-      tag_trigger_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          { "parameters" => { "tag_names" => ["missing"] } },
-        )
 
-      expect(trigger.matches?(category_trigger_context)).to eq(false)
-      expect(trigger.matches?(tag_trigger_context)).to eq(false)
+      expect(trigger.matches?(trigger_context("category_ids" => [other_category.id.to_s]))).to eq(
+        false,
+      )
+      expect(trigger.matches?(trigger_context("tag_names" => ["missing"]))).to eq(false)
     end
+  end
+
+  def trigger_context(parameters)
+    DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => parameters })
   end
 end

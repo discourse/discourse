@@ -9,6 +9,23 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
     SiteSetting.discourse_workflows_workflow_authoring_agent = ai_agent.id
   end
 
+  def authoring_result_raw_context(payload, tool_call_id: "tool-call-id")
+    [
+      [
+        { arguments: payload }.to_json,
+        tool_call_id,
+        "tool_call",
+        DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult.name,
+      ],
+      [
+        payload.to_json,
+        tool_call_id,
+        "tool",
+        DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult.name,
+      ],
+    ]
+  end
+
   it "passes persisted messages to the AI bot with valid types" do
     session =
       Fabricate(
@@ -37,20 +54,7 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
 
     allow(fake_bot).to receive(:reply) do |context|
       captured_messages = context.messages
-      [
-        [
-          { arguments: response }.to_json,
-          "tool-call-id",
-          "tool_call",
-          DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult.name,
-        ],
-        [
-          response.to_json,
-          "tool-call-id",
-          "tool",
-          DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult.name,
-        ],
-      ]
+      authoring_result_raw_context(response)
     end
     allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
 
@@ -87,20 +91,7 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
         nil,
         :thinking,
       )
-      [
-        [
-          { arguments: response }.to_json,
-          "tool-call-id",
-          "tool_call",
-          DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult.name,
-        ],
-        [
-          response.to_json,
-          "tool-call-id",
-          "tool",
-          DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult.name,
-        ],
-      ]
+      authoring_result_raw_context(response)
     end
     allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
 
@@ -136,20 +127,7 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
 
     allow(fake_bot).to receive(:reply) do |context|
       captured_custom_instructions = context.custom_instructions
-      [
-        [
-          { arguments: response }.to_json,
-          "tool-call-id",
-          "tool_call",
-          DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult.name,
-        ],
-        [
-          response.to_json,
-          "tool-call-id",
-          "tool",
-          DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult.name,
-        ],
-      ]
+      authoring_result_raw_context(response)
     end
     allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
     allow(DiscourseWorkflows::Ai::Tools::SearchChatChannels).to receive(:available?).and_return(
@@ -221,22 +199,7 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
     }
     fake_bot = double
 
-    allow(fake_bot).to receive(:reply).and_return(
-      [
-        [
-          { arguments: response }.to_json,
-          "tool-call-id",
-          "tool_call",
-          DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult.name,
-        ],
-        [
-          response.to_json,
-          "tool-call-id",
-          "tool",
-          DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult.name,
-        ],
-      ],
-    )
+    allow(fake_bot).to receive(:reply).and_return(authoring_result_raw_context(response))
     allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
 
     described_class.new.execute(
@@ -480,22 +443,7 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
     }
     fake_bot = double
 
-    allow(fake_bot).to receive(:reply).and_return(
-      [
-        [
-          { arguments: response }.to_json,
-          "tool-call-id",
-          "tool_call",
-          DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult.name,
-        ],
-        [
-          response.to_json,
-          "tool-call-id",
-          "tool",
-          DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult.name,
-        ],
-      ],
-    )
+    allow(fake_bot).to receive(:reply).and_return(authoring_result_raw_context(response))
     allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
 
     described_class.new.execute(

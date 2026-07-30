@@ -3,7 +3,9 @@
 RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
   fab!(:admin)
 
-  subject(:result) do
+  subject(:result) { invoke_tool(query:, include_examples:) }
+
+  def invoke_tool(query: nil, include_examples: false)
     described_class.new(
       { query: query, include_examples: include_examples }.compact,
       bot_user: Discourse.system_user,
@@ -28,13 +30,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
   it "finds the external chat integration action by provider keywords" do
     SiteSetting.chat_integration_enabled = true
 
-    result =
-      described_class.new(
-        { query: "slack", include_examples: true },
-        bot_user: Discourse.system_user,
-        llm: nil,
-        context: bot_context,
-      ).invoke
+    result = invoke_tool(query: "slack", include_examples: true)
     node =
       result[:nodes].find { |candidate| candidate[:type] == "action:send_chat_integration_message" }
 

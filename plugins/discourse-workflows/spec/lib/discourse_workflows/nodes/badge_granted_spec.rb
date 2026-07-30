@@ -77,25 +77,18 @@ RSpec.describe DiscourseWorkflows::Nodes::BadgeGranted::V1 do
     it "matches any badge when badge_id is blank" do
       trigger = described_class.new(badge.id, user.id)
 
-      context = DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => {} })
-
-      expect(trigger.matches?(context)).to eq(true)
+      expect(trigger.matches?(trigger_context({}))).to eq(true)
     end
 
     it "matches only the configured badge" do
       trigger = described_class.new(badge.id, user.id)
 
-      matching_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          { "parameters" => { "badge_id" => badge.id.to_s } },
-        )
-      other_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          { "parameters" => { "badge_id" => other_badge.id.to_s } },
-        )
-
-      expect(trigger.matches?(matching_context)).to eq(true)
-      expect(trigger.matches?(other_context)).to eq(false)
+      expect(trigger.matches?(trigger_context("badge_id" => badge.id.to_s))).to eq(true)
+      expect(trigger.matches?(trigger_context("badge_id" => other_badge.id.to_s))).to eq(false)
     end
+  end
+
+  def trigger_context(parameters)
+    DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => parameters })
   end
 end

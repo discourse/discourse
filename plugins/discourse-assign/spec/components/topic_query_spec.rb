@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 describe TopicQuery do
-  include TopicQueryAssignSpecHelpers
-
   before { SiteSetting.assign_enabled = true }
 
   fab!(:user)
@@ -15,6 +13,10 @@ describe TopicQuery do
   before do
     assign_allowed_group.add(user)
     assign_allowed_group.add(user2)
+  end
+
+  def assign_to(topic:, user:, assignee:)
+    topic.tap { |assigned_topic| Assigner.new(assigned_topic, user).assign(assignee) }
   end
 
   describe "#list_messages_assigned" do

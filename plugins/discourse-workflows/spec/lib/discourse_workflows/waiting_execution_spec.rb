@@ -10,9 +10,13 @@ RSpec.describe DiscourseWorkflows::WaitingExecution do
     )
   end
 
+  def signature_from(url)
+    Rack::Utils.parse_query(URI.parse(url).query).fetch("signature")
+  end
+
   it "uses a derived signature in waiting form URLs" do
     url = described_class.form_waiting_url(execution)
-    signature = Rack::Utils.parse_query(URI.parse(url).query).fetch("signature")
+    signature = signature_from(url)
 
     expect(signature).to be_present
     expect(url).not_to include(execution.resume_token)
@@ -24,8 +28,9 @@ RSpec.describe DiscourseWorkflows::WaitingExecution do
       described_class.webhook_url(execution_id: execution.id, resume_token: execution.resume_token)
 
     expect(url).not_to include(execution.resume_token)
-    signature = Rack::Utils.parse_query(URI.parse(url).query).fetch("signature")
-    expect(described_class.find(execution_id: execution.id, signature: signature)).to eq(execution)
+    expect(described_class.find(execution_id: execution.id, signature: signature_from(url))).to eq(
+      execution,
+    )
   end
 
   it "does not accept the raw resume token as a signature" do
@@ -35,8 +40,7 @@ RSpec.describe DiscourseWorkflows::WaitingExecution do
   end
 
   it "claims an execution using a derived signature" do
-    url = described_class.form_waiting_url(execution)
-    signature = Rack::Utils.parse_query(URI.parse(url).query).fetch("signature")
+    signature = signature_from(described_class.form_waiting_url(execution))
 
     expect(described_class.claim(execution, signature: signature)).to be_present
     expect(execution.reload.status).to eq("running")

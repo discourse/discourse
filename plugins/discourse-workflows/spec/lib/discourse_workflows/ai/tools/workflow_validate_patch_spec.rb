@@ -3,7 +3,15 @@
 RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
   fab!(:admin)
 
-  let(:bot_context) { DiscourseAi::Agents::BotContext.new(messages: [], user: admin) }
+  def invoke_tool(operations)
+    context = DiscourseAi::Agents::BotContext.new(messages: [], user: admin)
+    described_class.new(
+      { operations: operations },
+      bot_user: Discourse.system_user,
+      llm: nil,
+      context: context,
+    ).invoke
+  end
 
   it "returns inferred fields for a dry-run graph", :aggregate_failures do
     operations = [
@@ -53,13 +61,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
       },
     ]
 
-    result =
-      described_class.new(
-        { operations: operations.map(&:to_json) },
-        bot_user: Discourse.system_user,
-        llm: nil,
-        context: bot_context,
-      ).invoke
+    result = invoke_tool(operations.map(&:to_json))
     fields_by_name = result[:node_fields].index_by { |fields| fields[:node_name] }
 
     expect(result).to include(status: "success", valid: true, errors: [])
@@ -173,13 +175,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
       },
     ]
 
-    result =
-      described_class.new(
-        { operations: operations },
-        bot_user: Discourse.system_user,
-        llm: nil,
-        context: bot_context,
-      ).invoke
+    result = invoke_tool(operations)
     fields_by_name = result[:node_fields].index_by { |fields| fields[:node_name] }
 
     expect(result).to include(status: "success", valid: true, errors: [])
@@ -315,13 +311,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
       },
     ]
 
-    result =
-      described_class.new(
-        { operations: operations },
-        bot_user: Discourse.system_user,
-        llm: nil,
-        context: bot_context,
-      ).invoke
+    result = invoke_tool(operations)
     fields_by_name = result[:node_fields].index_by { |fields| fields[:node_name] }
 
     expect(result).to include(status: "success", valid: true, errors: [])
@@ -419,13 +409,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
       },
     ]
 
-    result =
-      described_class.new(
-        { operations: operations },
-        bot_user: Discourse.system_user,
-        llm: nil,
-        context: bot_context,
-      ).invoke
+    result = invoke_tool(operations)
     fields_by_name = result[:node_fields].index_by { |fields| fields[:node_name] }
 
     expect(result[:valid]).to eq(false)
@@ -510,13 +494,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
       },
     ]
 
-    result =
-      described_class.new(
-        { operations: operations },
-        bot_user: Discourse.system_user,
-        llm: nil,
-        context: bot_context,
-      ).invoke
+    result = invoke_tool(operations)
 
     expect(result[:valid]).to eq(false)
     expect(result[:expression_errors]).to contain_exactly(
@@ -590,13 +568,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
       },
     ]
 
-    result =
-      described_class.new(
-        { operations: operations },
-        bot_user: Discourse.system_user,
-        llm: nil,
-        context: bot_context,
-      ).invoke
+    result = invoke_tool(operations)
 
     expect(result[:valid]).to eq(false)
     expect(result[:expression_errors]).to contain_exactly(
@@ -681,13 +653,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
       },
     ]
 
-    result =
-      described_class.new(
-        { operations: operations },
-        bot_user: Discourse.system_user,
-        llm: nil,
-        context: bot_context,
-      ).invoke
+    result = invoke_tool(operations)
 
     expect(result[:valid]).to eq(false)
     expect(result[:graph_errors]).to contain_exactly(
@@ -784,13 +750,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
       },
     ]
 
-    result =
-      described_class.new(
-        { operations: operations },
-        bot_user: Discourse.system_user,
-        llm: nil,
-        context: bot_context,
-      ).invoke
+    result = invoke_tool(operations)
     fields_by_name = result[:node_fields].index_by { |fields| fields[:node_name] }
 
     expect(result).to include(status: "success", valid: true, errors: [])
@@ -914,13 +874,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
       },
     ]
 
-    result =
-      described_class.new(
-        { operations: operations },
-        bot_user: Discourse.system_user,
-        llm: nil,
-        context: bot_context,
-      ).invoke
+    result = invoke_tool(operations)
     fields_by_name = result[:node_fields].index_by { |fields| fields[:node_name] }
 
     expect(result[:valid]).to eq(false)
@@ -1026,13 +980,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
       },
     ]
 
-    result =
-      described_class.new(
-        { operations: operations },
-        bot_user: Discourse.system_user,
-        llm: nil,
-        context: bot_context,
-      ).invoke
+    result = invoke_tool(operations)
     output_fields =
       result[:node_fields].find { |fields| fields[:node_name] == "Converted output" }[
         :output_fields

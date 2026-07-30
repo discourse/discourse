@@ -3,8 +3,6 @@
 require_relative "../fabricators/assign_hook_fabricator"
 
 describe "integration tests" do
-  include AssignmentPublishSpecHelpers
-
   before { SiteSetting.assign_enabled = true }
 
   it "preloads data in topic list" do
@@ -31,6 +29,15 @@ describe "integration tests" do
       group.add(user)
       group.add(user2)
       pm.topic_allowed_groups.create!(group: group)
+    end
+
+    def assert_publish_topic_state(topic, user: nil, group: nil)
+      messages = MessageBus.track_publish { yield }
+      message = messages.find { |published_message| published_message.channel == channel }
+
+      expect(message.data[:topic_id]).to eq(topic.id)
+      expect(message.user_ids).to eq([user.id]) if user
+      expect(message.group_ids).to eq([group.id]) if group
     end
 
     it "publishes the right message on archive and move to inbox" do

@@ -53,15 +53,32 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
     )
   end
 
+  def build_query(
+    filter: nil,
+    limit: nil,
+    offset: nil,
+    sort_by: nil,
+    sort_direction: nil,
+    optional_filter: true
+  )
+    facade.build_query(
+      filter: filter,
+      limit: limit,
+      offset: offset,
+      sort_by: sort_by,
+      sort_direction: sort_direction,
+      optional_filter: optional_filter,
+    )
+  end
+
   describe "#build_query" do
     it "returns an invalid query when the filter is invalid" do
       query =
-        facade.build_query(
+        build_query(
           filter: {
             "type" => "and",
             "filters" => [{ "columnName" => "missing", "condition" => "eq", "value" => "x" }],
           },
-          optional_filter: true,
         )
 
       expect(query).to be_invalid
@@ -71,7 +88,7 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
 
   describe "#query" do
     it "returns all rows without a filter" do
-      result = facade.query(facade.build_query(optional_filter: true))
+      result = facade.query(build_query)
 
       expect(result[:count]).to eq(4)
       expect(result[:rows].map { |row| row["id"] }).to eq(
@@ -82,14 +99,13 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
     it "supports filtering" do
       result =
         facade.query(
-          facade.build_query(
+          build_query(
             filter: {
               "type" => "and",
               "filters" => [
                 { "columnName" => "email", "condition" => "ilike", "value" => "ALICE" },
               ],
             },
-            optional_filter: true,
           ),
         )
 
@@ -97,21 +113,13 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
     end
 
     it "sorts and limits deterministically" do
-      result =
-        facade.query(
-          facade.build_query(
-            sort_by: "score",
-            sort_direction: "desc",
-            limit: 2,
-            optional_filter: true,
-          ),
-        )
+      result = facade.query(build_query(sort_by: "score", sort_direction: "desc", limit: 2))
 
       expect(result[:rows].map { |row| row["id"] }).to eq([row_1["id"], row_2["id"]])
     end
 
     it "supports pagination with offset" do
-      result = facade.query(facade.build_query(limit: 1, offset: 1, optional_filter: true))
+      result = facade.query(build_query(limit: 1, offset: 1))
 
       expect(result[:count]).to eq(4)
       expect(result[:rows].size).to eq(1)
@@ -124,12 +132,11 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
       it "matches exact values" do
         result =
           facade.query(
-            facade.build_query(
+            build_query(
               filter: {
                 "type" => "and",
                 "filters" => [{ "columnName" => "score", "condition" => "eq", "value" => 90 }],
               },
-              optional_filter: true,
             ),
           )
 
@@ -139,12 +146,11 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
       it "matches nil values" do
         result =
           facade.query(
-            facade.build_query(
+            build_query(
               filter: {
                 "type" => "and",
                 "filters" => [{ "columnName" => "score", "condition" => "eq", "value" => nil }],
               },
-              optional_filter: true,
             ),
           )
 
@@ -156,12 +162,11 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
       it "excludes matching values and includes nulls" do
         result =
           facade.query(
-            facade.build_query(
+            build_query(
               filter: {
                 "type" => "and",
                 "filters" => [{ "columnName" => "score", "condition" => "neq", "value" => 90 }],
               },
-              optional_filter: true,
             ),
           )
 
@@ -175,12 +180,11 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
       it "excludes nil values" do
         result =
           facade.query(
-            facade.build_query(
+            build_query(
               filter: {
                 "type" => "and",
                 "filters" => [{ "columnName" => "score", "condition" => "neq", "value" => nil }],
               },
-              optional_filter: true,
             ),
           )
 
@@ -196,12 +200,11 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
       it "gt filters strictly greater" do
         result =
           facade.query(
-            facade.build_query(
+            build_query(
               filter: {
                 "type" => "and",
                 "filters" => [{ "columnName" => "score", "condition" => "gt", "value" => 60 }],
               },
-              optional_filter: true,
             ),
           )
 
@@ -211,12 +214,11 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
       it "gte includes equal values" do
         result =
           facade.query(
-            facade.build_query(
+            build_query(
               filter: {
                 "type" => "and",
                 "filters" => [{ "columnName" => "score", "condition" => "gte", "value" => 60 }],
               },
-              optional_filter: true,
             ),
           )
 
@@ -226,12 +228,11 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
       it "lt filters strictly less" do
         result =
           facade.query(
-            facade.build_query(
+            build_query(
               filter: {
                 "type" => "and",
                 "filters" => [{ "columnName" => "score", "condition" => "lt", "value" => 90 }],
               },
-              optional_filter: true,
             ),
           )
 
@@ -241,12 +242,11 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
       it "lte includes equal values" do
         result =
           facade.query(
-            facade.build_query(
+            build_query(
               filter: {
                 "type" => "and",
                 "filters" => [{ "columnName" => "score", "condition" => "lte", "value" => 60 }],
               },
-              optional_filter: true,
             ),
           )
 
@@ -258,14 +258,13 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
       it "case-sensitive like match" do
         result =
           facade.query(
-            facade.build_query(
+            build_query(
               filter: {
                 "type" => "and",
                 "filters" => [
                   { "columnName" => "email", "condition" => "like", "value" => "alice" },
                 ],
               },
-              optional_filter: true,
             ),
           )
 
@@ -275,14 +274,13 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
       it "case-insensitive ilike match" do
         result =
           facade.query(
-            facade.build_query(
+            build_query(
               filter: {
                 "type" => "and",
                 "filters" => [
                   { "columnName" => "email", "condition" => "ilike", "value" => "ALICE" },
                 ],
               },
-              optional_filter: true,
             ),
           )
 
@@ -292,14 +290,13 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
       it "not_ilike excludes matches" do
         result =
           facade.query(
-            facade.build_query(
+            build_query(
               filter: {
                 "type" => "and",
                 "filters" => [
                   { "columnName" => "email", "condition" => "not_ilike", "value" => "alice" },
                 ],
               },
-              optional_filter: true,
             ),
           )
 
@@ -309,14 +306,13 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
       it "escapes underscore in like patterns" do
         result =
           facade.query(
-            facade.build_query(
+            build_query(
               filter: {
                 "type" => "and",
                 "filters" => [
                   { "columnName" => "email", "condition" => "ilike", "value" => "a_ice" },
                 ],
               },
-              optional_filter: true,
             ),
           )
 
@@ -326,14 +322,13 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
       it "escapes percent in like patterns" do
         result =
           facade.query(
-            facade.build_query(
+            build_query(
               filter: {
                 "type" => "and",
                 "filters" => [
                   { "columnName" => "email", "condition" => "ilike", "value" => "50%off" },
                 ],
               },
-              optional_filter: true,
             ),
           )
 
@@ -345,7 +340,7 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
       it "AND requires all conditions to match" do
         result =
           facade.query(
-            facade.build_query(
+            build_query(
               filter: {
                 "type" => "and",
                 "filters" => [
@@ -353,7 +348,6 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
                   { "columnName" => "active", "condition" => "eq", "value" => false },
                 ],
               },
-              optional_filter: true,
             ),
           )
 
@@ -363,7 +357,7 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
       it "OR requires any condition to match" do
         result =
           facade.query(
-            facade.build_query(
+            build_query(
               filter: {
                 "type" => "or",
                 "filters" => [
@@ -371,7 +365,6 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
                   { "columnName" => "active", "condition" => "eq", "value" => false },
                 ],
               },
-              optional_filter: true,
             ),
           )
 
@@ -382,7 +375,7 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
 
   describe "ordering" do
     it "defaults to id ascending when sort_by is blank" do
-      result = facade.query(facade.build_query(optional_filter: true))
+      result = facade.query(build_query)
 
       expect(result[:rows].map { |r| r["id"] }).to eq(
         [row_1["id"], row_2["id"], row_3["id"], row_4["id"]],
@@ -390,20 +383,14 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
     end
 
     it "sorts ascending with nulls last" do
-      result =
-        facade.query(
-          facade.build_query(sort_by: "score", sort_direction: "asc", optional_filter: true),
-        )
+      result = facade.query(build_query(sort_by: "score", sort_direction: "asc"))
       ids = result[:rows].map { |r| r["id"] }
 
       expect(ids).to eq([row_4["id"], row_2["id"], row_1["id"], row_3["id"]])
     end
 
     it "sorts descending with nulls last" do
-      result =
-        facade.query(
-          facade.build_query(sort_by: "score", sort_direction: "desc", optional_filter: true),
-        )
+      result = facade.query(build_query(sort_by: "score", sort_direction: "desc"))
       ids = result[:rows].map { |r| r["id"] }
 
       expect(ids.first).to eq(row_1["id"])
@@ -411,10 +398,7 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
     end
 
     it "defaults to ASC for invalid direction" do
-      result =
-        facade.query(
-          facade.build_query(sort_by: "score", sort_direction: "invalid", optional_filter: true),
-        )
+      result = facade.query(build_query(sort_by: "score", sort_direction: "invalid"))
       ids = result[:rows].map { |r| r["id"] }
 
       expect(ids).to eq([row_4["id"], row_2["id"], row_1["id"], row_3["id"]])
@@ -427,10 +411,7 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
           { "email" => "dave@example.com", "score" => 60, "active" => true },
         )
 
-      result =
-        facade.query(
-          facade.build_query(sort_by: "score", sort_direction: "asc", optional_filter: true),
-        )
+      result = facade.query(build_query(sort_by: "score", sort_direction: "asc"))
       ids = result[:rows].map { |r| r["id"] }
       bob_idx = ids.index(row_2["id"])
       dave_idx = ids.index(row_4["id"])
@@ -439,51 +420,52 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
     end
 
     it "raises ArgumentError for unknown sort column" do
-      expect {
-        facade.query(facade.build_query(sort_by: "'; DROP TABLE users; --", optional_filter: true))
-      }.to raise_error(ArgumentError, /Invalid sort column/)
+      expect { facade.query(build_query(sort_by: "'; DROP TABLE users; --")) }.to raise_error(
+        ArgumentError,
+        /Invalid sort column/,
+      )
     end
   end
 
   describe "pagination" do
     it "limits results" do
-      result = facade.query(facade.build_query(limit: 2, optional_filter: true))
+      result = facade.query(build_query(limit: 2))
 
       expect(result[:rows].size).to eq(2)
     end
 
     it "offsets results" do
-      all_ids = facade.query(facade.build_query(optional_filter: true))[:rows].map { |r| r["id"] }
+      all_ids = facade.query(build_query)[:rows].map { |r| r["id"] }
 
-      result = facade.query(facade.build_query(offset: 2, optional_filter: true))
+      result = facade.query(build_query(offset: 2))
 
       expect(result[:rows].map { |r| r["id"] }).to eq(all_ids[2..])
     end
 
     it "combines limit and offset" do
-      all_ids = facade.query(facade.build_query(optional_filter: true))[:rows].map { |r| r["id"] }
+      all_ids = facade.query(build_query)[:rows].map { |r| r["id"] }
 
-      result = facade.query(facade.build_query(limit: 1, offset: 1, optional_filter: true))
+      result = facade.query(build_query(limit: 1, offset: 1))
 
       expect(result[:rows].map { |r| r["id"] }).to eq([all_ids[1]])
     end
 
     it "caps limit at MAX_LIMIT" do
-      result = facade.query(facade.build_query(limit: 999, optional_filter: true))
+      result = facade.query(build_query(limit: 999))
 
       expect(result[:rows].size).to be <= described_class::MAX_LIMIT
     end
 
     it "ignores zero limit" do
-      result = facade.query(facade.build_query(limit: 0, optional_filter: true))
+      result = facade.query(build_query(limit: 0))
 
       expect(result[:rows].size).to eq(4)
     end
 
     it "ignores zero offset" do
-      all_ids = facade.query(facade.build_query(optional_filter: true))[:rows].map { |r| r["id"] }
+      all_ids = facade.query(build_query)[:rows].map { |r| r["id"] }
 
-      result = facade.query(facade.build_query(offset: 0, optional_filter: true))
+      result = facade.query(build_query(offset: 0))
 
       expect(result[:rows].map { |r| r["id"] }).to eq(all_ids)
     end
@@ -557,14 +539,13 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
       updated_count =
         facade.update(
           query:
-            facade.build_query(
+            build_query(
               filter: {
                 "type" => "and",
                 "filters" => [
                   { "columnName" => "email", "condition" => "eq", "value" => "alice@example.com" },
                 ],
               },
-              optional_filter: true,
             ),
           row_input: facade.build_row_input(data: { "score" => 99 }),
         )
@@ -601,14 +582,13 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
       deleted_count =
         facade.delete(
           query:
-            facade.build_query(
+            build_query(
               filter: {
                 "type" => "and",
                 "filters" => [
                   { "columnName" => "email", "condition" => "eq", "value" => "bob@example.com" },
                 ],
               },
-              optional_filter: true,
             ),
         )
 
@@ -622,14 +602,13 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
       deleted_count =
         facade.delete(
           query:
-            facade.build_query(
+            build_query(
               filter: {
                 "type" => "and",
                 "filters" => [
                   { "columnName" => "email", "condition" => "eq", "value" => "bob@example.com" },
                 ],
               },
-              optional_filter: true,
             ),
         )
 

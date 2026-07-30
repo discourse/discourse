@@ -6,7 +6,7 @@ RSpec.describe DiscourseWorkflows::Nodes::UserSeen::V1 do
   fab!(:other_group) { Fabricate(:group, name: "workflow_other_grp") }
 
   describe ".load_options_context" do
-    subject(:options) do
+    def load_options(filter: nil)
       context =
         DiscourseWorkflows::LoadOptionsContext.new(
           method_name: "groups",
@@ -17,21 +17,17 @@ RSpec.describe DiscourseWorkflows::Nodes::UserSeen::V1 do
       described_class.load_options_context(context)
     end
 
-    let(:filter) { nil }
-
     it "returns groups for the chooser" do
-      expect(options).to include(
+      expect(load_options).to include(
         { id: group.id, name: group.name },
         { id: other_group.id, name: other_group.name },
       )
     end
 
-    context "with a filter term" do
-      let(:filter) { group.name }
-
-      it "filters groups" do
-        expect(options).to contain_exactly({ id: group.id, name: group.name })
-      end
+    it "filters groups by the filter term" do
+      expect(load_options(filter: group.name)).to contain_exactly(
+        { id: group.id, name: group.name },
+      )
     end
   end
 
@@ -89,136 +85,122 @@ RSpec.describe DiscourseWorkflows::Nodes::UserSeen::V1 do
     it "matches first seen events by default" do
       seen_at = Time.zone.now
       user.update_columns(first_seen_at: seen_at, last_seen_at: seen_at)
-      context = DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => {} })
 
-      expect(described_class.new(user).matches?(context)).to eq(true)
+      expect(described_class.new(user).matches?(trigger_context({}))).to eq(true)
     end
 
     it "does not match later seen events by default" do
       user.update_columns(first_seen_at: 2.days.ago, last_seen_at: Time.zone.now)
-      context = DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => {} })
 
-      expect(described_class.new(user, 2.hours.ago).matches?(context)).to eq(false)
+      expect(described_class.new(user, 2.hours.ago).matches?(trigger_context({}))).to eq(false)
     end
 
     it "matches only users in the selected groups" do
       seen_at = Time.zone.now
       user.update_columns(first_seen_at: seen_at, last_seen_at: seen_at)
       group.add(user)
-      selected_group_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          { "parameters" => { "group_ids" => [group.id.to_s] } },
-        )
-      other_group_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          { "parameters" => { "group_ids" => [other_group.id.to_s] } },
-        )
 
-      expect(described_class.new(user).matches?(selected_group_context)).to eq(true)
-      expect(described_class.new(user).matches?(other_group_context)).to eq(false)
+      expect(
+        described_class.new(user).matches?(trigger_context("group_ids" => [group.id.to_s])),
+      ).to eq(true)
+      expect(
+        described_class.new(user).matches?(trigger_context("group_ids" => [other_group.id.to_s])),
+      ).to eq(false)
     end
 
     it "does not match malformed group filters" do
       seen_at = Time.zone.now
       user.update_columns(first_seen_at: seen_at, last_seen_at: seen_at)
-      context =
-        DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => { "group_ids" => ["bogus"] } })
 
-      expect(described_class.new(user).matches?(context)).to eq(false)
+      expect(described_class.new(user).matches?(trigger_context("group_ids" => ["bogus"]))).to eq(
+        false,
+      )
     end
 
     it "does not match first seen events when first seen is disabled" do
       seen_at = Time.zone.now
       user.update_columns(first_seen_at: seen_at, last_seen_at: seen_at)
-      context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          { "parameters" => { "trigger_on_first_seen" => false } },
-        )
 
-      expect(described_class.new(user).matches?(context)).to eq(false)
+      expect(
+        described_class.new(user).matches?(trigger_context("trigger_on_first_seen" => false)),
+      ).to eq(false)
     end
 
     it "matches returning users who have not been seen for more than the configured time" do
       user.update_columns(first_seen_at: 1.month.ago, last_seen_at: Time.zone.now)
-      context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          {
-            "parameters" => {
-              "trigger_on_not_seen_for_more_than" => true,
-              "not_seen_for_amount" => 1,
-              "not_seen_for_unit" => "days",
-            },
-          },
-        )
 
-      expect(described_class.new(user, 2.days.ago).matches?(context)).to eq(true)
+      expect(
+        described_class.new(user, 2.days.ago).matches?(
+          trigger_context(
+            "trigger_on_not_seen_for_more_than" => true,
+            "not_seen_for_amount" => 1,
+            "not_seen_for_unit" => "days",
+          ),
+        ),
+      ).to eq(true)
     end
 
     it "does not match returning users seen within the configured time" do
       user.update_columns(first_seen_at: 1.month.ago, last_seen_at: Time.zone.now)
-      context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          {
-            "parameters" => {
-              "trigger_on_not_seen_for_more_than" => true,
-              "not_seen_for_amount" => 1,
-              "not_seen_for_unit" => "days",
-            },
-          },
-        )
 
-      expect(described_class.new(user, 2.hours.ago).matches?(context)).to eq(false)
+      expect(
+        described_class.new(user, 2.hours.ago).matches?(
+          trigger_context(
+            "trigger_on_not_seen_for_more_than" => true,
+            "not_seen_for_amount" => 1,
+            "not_seen_for_unit" => "days",
+          ),
+        ),
+      ).to eq(false)
     end
 
     it "does not match first seen events with only the not seen threshold enabled" do
       seen_at = Time.zone.now
       user.update_columns(first_seen_at: seen_at, last_seen_at: seen_at)
-      context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          {
-            "parameters" => {
-              "trigger_on_first_seen" => false,
-              "trigger_on_not_seen_for_more_than" => true,
-              "not_seen_for_amount" => 1,
-              "not_seen_for_unit" => "days",
-            },
-          },
-        )
 
-      expect(described_class.new(user).matches?(context)).to eq(false)
+      expect(
+        described_class.new(user).matches?(
+          trigger_context(
+            "trigger_on_first_seen" => false,
+            "trigger_on_not_seen_for_more_than" => true,
+            "not_seen_for_amount" => 1,
+            "not_seen_for_unit" => "days",
+          ),
+        ),
+      ).to eq(false)
     end
 
     it "matches when either enabled condition matches" do
       user.update_columns(first_seen_at: 1.month.ago, last_seen_at: Time.zone.now)
-      context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          {
-            "parameters" => {
-              "trigger_on_first_seen" => true,
-              "trigger_on_not_seen_for_more_than" => true,
-              "not_seen_for_amount" => 1,
-              "not_seen_for_unit" => "days",
-            },
-          },
-        )
 
-      expect(described_class.new(user, 2.days.ago).matches?(context)).to eq(true)
+      expect(
+        described_class.new(user, 2.days.ago).matches?(
+          trigger_context(
+            "trigger_on_first_seen" => true,
+            "trigger_on_not_seen_for_more_than" => true,
+            "not_seen_for_amount" => 1,
+            "not_seen_for_unit" => "days",
+          ),
+        ),
+      ).to eq(true)
     end
 
     it "does not match when no conditions are enabled" do
       seen_at = Time.zone.now
       user.update_columns(first_seen_at: seen_at, last_seen_at: seen_at)
-      context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          {
-            "parameters" => {
-              "trigger_on_first_seen" => false,
-              "trigger_on_not_seen_for_more_than" => false,
-            },
-          },
-        )
 
-      expect(described_class.new(user).matches?(context)).to eq(false)
+      expect(
+        described_class.new(user).matches?(
+          trigger_context(
+            "trigger_on_first_seen" => false,
+            "trigger_on_not_seen_for_more_than" => false,
+          ),
+        ),
+      ).to eq(false)
     end
+  end
+
+  def trigger_context(parameters)
+    DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => parameters })
   end
 end

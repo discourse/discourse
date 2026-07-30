@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe PendingAssignsReminder do
-  include PendingAssignsReminderSpecHelpers
-
   subject(:reminder) { described_class.new }
+
+  def assert_reminder_not_created
+    expect { reminder.remind(user) }.not_to change { Post.count }
+  end
 
   before { SiteSetting.assign_enabled = true }
 

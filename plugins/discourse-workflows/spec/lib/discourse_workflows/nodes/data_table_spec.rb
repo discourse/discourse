@@ -12,7 +12,27 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
     )
   end
 
-  let(:data_table_harness) { DiscourseWorkflows::DataTableNodeExecutionHarness.new(example: self) }
+  def execute_data_table(configuration)
+    execute_node_output(configuration: configuration).first
+  end
+
+  def execute_data_table_with_item(configuration, item)
+    execute_node_output(configuration: configuration, item: item).first
+  end
+
+  def filter_condition(column_name, operation, value: nil, type: "string")
+    single_value = %w[empty notEmpty true false].include?(operation)
+
+    {
+      "columnName" => column_name,
+      "operator" => {
+        "type" => type,
+        "operation" => operation,
+        "singleValue" => single_value,
+      },
+      "value" => value,
+    }
+  end
 
   describe ".load_options_context" do
     subject(:options) do
@@ -50,13 +70,11 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
   describe "error handling" do
     it "raises when data table does not exist" do
       expect {
-        data_table_harness.execute(
-          configuration: {
-            "operation" => "insert",
-            "data_table_id" => "-1",
-            "columns" => {
-              "email" => "x",
-            },
+        execute_data_table(
+          "operation" => "insert",
+          "data_table_id" => "-1",
+          "columns" => {
+            "email" => "x",
           },
         )
       }.to raise_error(ActiveRecord::RecordNotFound)
@@ -64,13 +82,11 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
 
     it "raises for unknown column names" do
       expect {
-        data_table_harness.execute(
-          configuration: {
-            "operation" => "insert",
-            "data_table_id" => data_table.id.to_s,
-            "columns" => {
-              "nonexistent" => "test",
-            },
+        execute_data_table(
+          "operation" => "insert",
+          "data_table_id" => data_table.id.to_s,
+          "columns" => {
+            "nonexistent" => "test",
           },
         )
       }.to raise_error(DiscourseWorkflows::NodeError, /Unknown column name/)
@@ -78,13 +94,11 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
 
     it "raises invalid row errors with the node error prefix" do
       expect {
-        data_table_harness.execute(
-          configuration: {
-            "operation" => "insert",
-            "data_table_id" => data_table.id.to_s,
-            "columns" => {
-              "score" => "not-a-number",
-            },
+        execute_data_table(
+          "operation" => "insert",
+          "data_table_id" => data_table.id.to_s,
+          "columns" => {
+            "score" => "not-a-number",
           },
         )
       }.to raise_error(DiscourseWorkflows::NodeError, /Invalid row: Value 'not-a-number'/)
@@ -92,34 +106,17 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
 
     it "raises invalid query errors with the node error prefix" do
       expect {
-        data_table_harness.execute(
-          configuration: {
-            "operation" => "get",
-            "data_table_id" => data_table.id.to_s,
-            "filter" => [
-              {
-                "columnName" => "nonexistent",
-                "operator" => {
-                  "type" => "string",
-                  "operation" => "equals",
-                  "singleValue" => false,
-                },
-                "value" => "test",
-              },
-            ],
-          },
+        execute_data_table(
+          "operation" => "get",
+          "data_table_id" => data_table.id.to_s,
+          "filter" => [filter_condition("nonexistent", "equals", value: "test")],
         )
       }.to raise_error(DiscourseWorkflows::NodeError, /Invalid query: Unknown column name/)
     end
 
     it "raises for unknown operations" do
       expect {
-        data_table_harness.execute(
-          configuration: {
-            "operation" => "truncate",
-            "data_table_id" => data_table.id.to_s,
-          },
-        )
+        execute_data_table("operation" => "truncate", "data_table_id" => data_table.id.to_s)
       }.to raise_error(DiscourseWorkflows::NodeError, /Unknown operation/)
     end
   end
@@ -131,14 +128,12 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       )
 
       expect {
-        data_table_harness.execute(
-          configuration: {
-            "operation" => "insert",
-            "data_table_id" => data_table.id.to_s,
-            "columns" => {
-              "email" => "test@example.com",
-              "score" => "42",
-            },
+        execute_data_table(
+          "operation" => "insert",
+          "data_table_id" => data_table.id.to_s,
+          "columns" => {
+            "email" => "test@example.com",
+            "score" => "42",
           },
         )
       }.to raise_error(DiscourseWorkflows::NodeError, "Data table storage limit exceeded")
@@ -147,19 +142,13 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
     context "when mapping_mode is auto" do
       it "picks matching keys from the incoming item JSON" do
         items =
-          data_table_harness.execute(
-            configuration: {
+          execute_data_table_with_item(
+            {
               "operation" => "insert",
               "data_table_id" => data_table.id.to_s,
               "mapping_mode" => "auto",
             },
-            item: {
-              "json" => {
-                "email" => "auto@example.com",
-                "score" => 7,
-                "ignored" => "value",
-              },
-            },
+            { "json" => { "email" => "auto@example.com", "score" => 7, "ignored" => "value" } },
           )
 
         expect(items[0]["json"]).to include("email" => "auto@example.com", "score" => 7)
@@ -168,18 +157,13 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
 
       it "ignores keys whose case does not match a column name" do
         items =
-          data_table_harness.execute(
-            configuration: {
+          execute_data_table_with_item(
+            {
               "operation" => "insert",
               "data_table_id" => data_table.id.to_s,
               "mapping_mode" => "auto",
             },
-            item: {
-              "json" => {
-                "Email" => "mismatch@example.com",
-                "email" => "ok@example.com",
-              },
-            },
+            { "json" => { "Email" => "mismatch@example.com", "email" => "ok@example.com" } },
           )
 
         expect(items[0]["json"]).to include("email" => "ok@example.com")
@@ -188,7 +172,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
 
       it "inserts each input item and preserves item pairing" do
         items =
-          data_table_harness.execute(
+          execute_node_output(
             configuration: {
               "operation" => "insert",
               "data_table_id" => data_table.id.to_s,
@@ -198,7 +182,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
               { "json" => { "email" => "first@example.com", "score" => 1 } },
               { "json" => { "email" => "second@example.com", "score" => 2 } },
             ],
-          )
+          ).first
 
         expect(items.map { |item| item["json"].slice("email", "score") }).to eq(
           [
@@ -220,21 +204,11 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
 
     it "resolves filters for each input item and preserves item pairing" do
       items =
-        data_table_harness.execute(
+        execute_node_output(
           configuration: {
             "operation" => "get",
             "data_table_id" => data_table.id.to_s,
-            "filter" => [
-              {
-                "columnName" => "email",
-                "operator" => {
-                  "type" => "string",
-                  "operation" => "contains",
-                  "singleValue" => false,
-                },
-                "value" => "={{ $json.domain }}",
-              },
-            ],
+            "filter" => [filter_condition("email", "contains", value: "={{ $json.domain }}")],
             "sort_column" => "email",
             "sort_direction" => "asc",
           },
@@ -242,7 +216,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
             { "json" => { "domain" => "example.com" } },
             { "json" => { "domain" => "test.com" } },
           ],
-        )
+        ).first
 
       expect(items.map { |item| item["json"]["email"] }).to eq(%w[alice@example.com bob@test.com])
       expect(items.map { |item| item["pairedItem"] }).to eq([{ "item" => 0 }, { "item" => 1 }])
@@ -250,7 +224,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
 
     it "preserves item pairing when one input item returns multiple rows" do
       items =
-        data_table_harness.execute(
+        execute_node_output(
           configuration: {
             "operation" => "get",
             "data_table_id" => data_table.id.to_s,
@@ -258,7 +232,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
             "sort_direction" => "asc",
           },
           input_items: [{ "json" => {} }],
-        )
+        ).first
 
       expect(items.map { |item| item["json"]["email"] }).to eq(%w[alice@example.com bob@test.com])
       expect(items.map { |item| item["pairedItem"] }).to eq([{ "item" => 0 }, { "item" => 0 }])
@@ -270,13 +244,11 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       end
 
       items =
-        data_table_harness.execute(
-          configuration: {
-            "operation" => "get",
-            "data_table_id" => data_table.id.to_s,
-            "sort_column" => "email",
-            "sort_direction" => "asc",
-          },
+        execute_data_table(
+          "operation" => "get",
+          "data_table_id" => data_table.id.to_s,
+          "sort_column" => "email",
+          "sort_direction" => "asc",
         )
 
       expect(items.size).to eq(DiscourseWorkflows::DataTables::Facade::MAX_LIMIT)
@@ -287,22 +259,10 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       insert_data_table_row(data_table, "email" => "", "score" => 40)
 
       items =
-        data_table_harness.execute(
-          configuration: {
-            "operation" => "get",
-            "data_table_id" => data_table.id.to_s,
-            "filter" => [
-              {
-                "columnName" => "email",
-                "operator" => {
-                  "type" => "string",
-                  "operation" => "empty",
-                  "singleValue" => true,
-                },
-                "value" => nil,
-              },
-            ],
-          },
+        execute_data_table(
+          "operation" => "get",
+          "data_table_id" => data_table.id.to_s,
+          "filter" => [filter_condition("email", "empty")],
         )
 
       expect(items.map { |item| item["json"]["email"] }).to contain_exactly(nil)
@@ -313,22 +273,10 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       insert_data_table_row(data_table, "email" => "", "score" => 40)
 
       items =
-        data_table_harness.execute(
-          configuration: {
-            "operation" => "get",
-            "data_table_id" => data_table.id.to_s,
-            "filter" => [
-              {
-                "columnName" => "email",
-                "operator" => {
-                  "type" => "string",
-                  "operation" => "notEmpty",
-                  "singleValue" => true,
-                },
-                "value" => nil,
-              },
-            ],
-          },
+        execute_data_table(
+          "operation" => "get",
+          "data_table_id" => data_table.id.to_s,
+          "filter" => [filter_condition("email", "notEmpty")],
         )
 
       expect(items.map { |item| item["json"]["email"] }).to contain_exactly(
@@ -346,13 +294,11 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       insert_data_table_row(data_table, "email" => "second@test.com", "score" => 2)
 
       expect {
-        data_table_harness.execute(
-          configuration: {
-            "operation" => "update",
-            "data_table_id" => data_table.id.to_s,
-            "columns" => {
-              "score" => "77",
-            },
+        execute_data_table(
+          "operation" => "update",
+          "data_table_id" => data_table.id.to_s,
+          "columns" => {
+            "score" => "77",
           },
         )
       }.to raise_error(DiscourseWorkflows::NodeError, /Filter must not be empty/)
@@ -362,24 +308,12 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       insert_data_table_row(data_table, "email" => "second@test.com", "score" => 2)
 
       items =
-        data_table_harness.execute(
-          configuration: {
-            "operation" => "update",
-            "data_table_id" => data_table.id.to_s,
-            "filter" => [
-              {
-                "columnName" => "email",
-                "operator" => {
-                  "type" => "string",
-                  "operation" => "equals",
-                  "singleValue" => false,
-                },
-                "value" => "up@test.com",
-              },
-            ],
-            "columns" => {
-              "score" => "77",
-            },
+        execute_data_table(
+          "operation" => "update",
+          "data_table_id" => data_table.id.to_s,
+          "filter" => [filter_condition("email", "equals", value: "up@test.com")],
+          "columns" => {
+            "score" => "77",
           },
         )
 
@@ -395,24 +329,12 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       )
 
       expect {
-        data_table_harness.execute(
-          configuration: {
-            "operation" => "update",
-            "data_table_id" => data_table.id.to_s,
-            "filter" => [
-              {
-                "columnName" => "email",
-                "operator" => {
-                  "type" => "string",
-                  "operation" => "equals",
-                  "singleValue" => false,
-                },
-                "value" => "up@test.com",
-              },
-            ],
-            "columns" => {
-              "score" => "99",
-            },
+        execute_data_table(
+          "operation" => "update",
+          "data_table_id" => data_table.id.to_s,
+          "filter" => [filter_condition("email", "equals", value: "up@test.com")],
+          "columns" => {
+            "score" => "99",
           },
         )
       }.to raise_error(DiscourseWorkflows::NodeError, "Data table storage limit exceeded")
@@ -426,12 +348,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       insert_data_table_row(data_table, "email" => "del2@test.com", "score" => 10)
 
       expect {
-        data_table_harness.execute(
-          configuration: {
-            "operation" => "delete",
-            "data_table_id" => data_table.id.to_s,
-          },
-        )
+        execute_data_table("operation" => "delete", "data_table_id" => data_table.id.to_s)
       }.to raise_error(DiscourseWorkflows::NodeError, /Filter must not be empty/)
     end
 
@@ -439,22 +356,10 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       insert_data_table_row(data_table, "email" => "del2@test.com", "score" => 10)
 
       items =
-        data_table_harness.execute(
-          configuration: {
-            "operation" => "delete",
-            "data_table_id" => data_table.id.to_s,
-            "filter" => [
-              {
-                "columnName" => "email",
-                "operator" => {
-                  "type" => "string",
-                  "operation" => "equals",
-                  "singleValue" => false,
-                },
-                "value" => "del@test.com",
-              },
-            ],
-          },
+        execute_data_table(
+          "operation" => "delete",
+          "data_table_id" => data_table.id.to_s,
+          "filter" => [filter_condition("email", "equals", value: "del@test.com")],
         )
 
       expect(items.map { |item| item["json"].slice("email", "score") }).to eq(
@@ -469,22 +374,10 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       )
 
       items =
-        data_table_harness.execute(
-          configuration: {
-            "operation" => "delete",
-            "data_table_id" => data_table.id.to_s,
-            "filter" => [
-              {
-                "columnName" => "email",
-                "operator" => {
-                  "type" => "string",
-                  "operation" => "equals",
-                  "singleValue" => false,
-                },
-                "value" => "del@test.com",
-              },
-            ],
-          },
+        execute_data_table(
+          "operation" => "delete",
+          "data_table_id" => data_table.id.to_s,
+          "filter" => [filter_condition("email", "equals", value: "del@test.com")],
         )
 
       expect(items.map { |item| item["json"].slice("email", "score") }).to eq(
@@ -499,27 +392,13 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
 
     it "emits the input item unchanged when at least one row matches" do
       items =
-        data_table_harness.execute(
-          configuration: {
+        execute_data_table_with_item(
+          {
             "operation" => "row_exists",
             "data_table_id" => data_table.id.to_s,
-            "filter" => [
-              {
-                "columnName" => "email",
-                "operator" => {
-                  "type" => "string",
-                  "operation" => "equals",
-                  "singleValue" => false,
-                },
-                "value" => "alice@example.com",
-              },
-            ],
+            "filter" => [filter_condition("email", "equals", value: "alice@example.com")],
           },
-          item: {
-            "json" => {
-              "input_marker" => "keep-me",
-            },
-          },
+          { "json" => { "input_marker" => "keep-me" } },
         )
 
       expect(items.length).to eq(1)
@@ -530,27 +409,13 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
 
     it "drops the input item when no row matches" do
       items =
-        data_table_harness.execute(
-          configuration: {
+        execute_data_table_with_item(
+          {
             "operation" => "row_exists",
             "data_table_id" => data_table.id.to_s,
-            "filter" => [
-              {
-                "columnName" => "email",
-                "operator" => {
-                  "type" => "string",
-                  "operation" => "equals",
-                  "singleValue" => false,
-                },
-                "value" => "missing@test.com",
-              },
-            ],
+            "filter" => [filter_condition("email", "equals", value: "missing@test.com")],
           },
-          item: {
-            "json" => {
-              "input_marker" => "drop-me",
-            },
-          },
+          { "json" => { "input_marker" => "drop-me" } },
         )
 
       expect(items).to eq([])
@@ -558,23 +423,16 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
 
     it "raises when the filter is missing" do
       expect {
-        data_table_harness.execute(
-          configuration: {
-            "operation" => "row_exists",
-            "data_table_id" => data_table.id.to_s,
-          },
-        )
+        execute_data_table("operation" => "row_exists", "data_table_id" => data_table.id.to_s)
       }.to raise_error(DiscourseWorkflows::NodeError, /Filter must not be empty/)
     end
 
     it "raises when the filter is an empty array" do
       expect {
-        data_table_harness.execute(
-          configuration: {
-            "operation" => "row_exists",
-            "data_table_id" => data_table.id.to_s,
-            "filter" => [],
-          },
+        execute_data_table(
+          "operation" => "row_exists",
+          "data_table_id" => data_table.id.to_s,
+          "filter" => [],
         )
       }.to raise_error(DiscourseWorkflows::NodeError, /Filter must not be empty/)
     end
@@ -585,27 +443,13 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
 
     it "emits the input item unchanged when no row matches" do
       items =
-        data_table_harness.execute(
-          configuration: {
+        execute_data_table_with_item(
+          {
             "operation" => "row_not_exists",
             "data_table_id" => data_table.id.to_s,
-            "filter" => [
-              {
-                "columnName" => "email",
-                "operator" => {
-                  "type" => "string",
-                  "operation" => "equals",
-                  "singleValue" => false,
-                },
-                "value" => "missing@test.com",
-              },
-            ],
+            "filter" => [filter_condition("email", "equals", value: "missing@test.com")],
           },
-          item: {
-            "json" => {
-              "input_marker" => "keep-me",
-            },
-          },
+          { "json" => { "input_marker" => "keep-me" } },
         )
 
       expect(items.length).to eq(1)
@@ -615,27 +459,13 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
 
     it "drops the input item when at least one row matches" do
       items =
-        data_table_harness.execute(
-          configuration: {
+        execute_data_table_with_item(
+          {
             "operation" => "row_not_exists",
             "data_table_id" => data_table.id.to_s,
-            "filter" => [
-              {
-                "columnName" => "email",
-                "operator" => {
-                  "type" => "string",
-                  "operation" => "equals",
-                  "singleValue" => false,
-                },
-                "value" => "alice@example.com",
-              },
-            ],
+            "filter" => [filter_condition("email", "equals", value: "alice@example.com")],
           },
-          item: {
-            "json" => {
-              "input_marker" => "drop-me",
-            },
-          },
+          { "json" => { "input_marker" => "drop-me" } },
         )
 
       expect(items).to eq([])
@@ -643,12 +473,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
 
     it "raises when the filter is missing" do
       expect {
-        data_table_harness.execute(
-          configuration: {
-            "operation" => "row_not_exists",
-            "data_table_id" => data_table.id.to_s,
-          },
-        )
+        execute_data_table("operation" => "row_not_exists", "data_table_id" => data_table.id.to_s)
       }.to raise_error(DiscourseWorkflows::NodeError, /Filter must not be empty/)
     end
   end
@@ -658,14 +483,12 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       insert_data_table_row(data_table, "email" => "existing@test.com", "score" => 1)
 
       expect {
-        data_table_harness.execute(
-          configuration: {
-            "operation" => "upsert",
-            "data_table_id" => data_table.id.to_s,
-            "columns" => {
-              "email" => "nf@test.com",
-              "score" => "10",
-            },
+        execute_data_table(
+          "operation" => "upsert",
+          "data_table_id" => data_table.id.to_s,
+          "columns" => {
+            "email" => "nf@test.com",
+            "score" => "10",
           },
         )
       }.to raise_error(DiscourseWorkflows::NodeError, /Filter must not be empty/)
@@ -675,25 +498,13 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       insert_data_table_row(data_table, "email" => "existing@test.com", "score" => 1)
 
       items =
-        data_table_harness.execute(
-          configuration: {
-            "operation" => "upsert",
-            "data_table_id" => data_table.id.to_s,
-            "filter" => [
-              {
-                "columnName" => "email",
-                "operator" => {
-                  "type" => "string",
-                  "operation" => "equals",
-                  "singleValue" => false,
-                },
-                "value" => "nf@test.com",
-              },
-            ],
-            "columns" => {
-              "email" => "nf@test.com",
-              "score" => "10",
-            },
+        execute_data_table(
+          "operation" => "upsert",
+          "data_table_id" => data_table.id.to_s,
+          "filter" => [filter_condition("email", "equals", value: "nf@test.com")],
+          "columns" => {
+            "email" => "nf@test.com",
+            "score" => "10",
           },
         )
 
@@ -707,24 +518,12 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       insert_data_table_row(data_table, "email" => "existing@test.com", "score" => 1)
 
       items =
-        data_table_harness.execute(
-          configuration: {
-            "operation" => "upsert",
-            "data_table_id" => data_table.id.to_s,
-            "filter" => [
-              {
-                "columnName" => "email",
-                "operator" => {
-                  "type" => "string",
-                  "operation" => "equals",
-                  "singleValue" => false,
-                },
-                "value" => "existing@test.com",
-              },
-            ],
-            "columns" => {
-              "score" => "10",
-            },
+        execute_data_table(
+          "operation" => "upsert",
+          "data_table_id" => data_table.id.to_s,
+          "filter" => [filter_condition("email", "equals", value: "existing@test.com")],
+          "columns" => {
+            "score" => "10",
           },
         )
 
@@ -740,25 +539,13 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       )
 
       expect {
-        data_table_harness.execute(
-          configuration: {
-            "operation" => "upsert",
-            "data_table_id" => data_table.id.to_s,
-            "filter" => [
-              {
-                "columnName" => "email",
-                "operator" => {
-                  "type" => "string",
-                  "operation" => "equals",
-                  "singleValue" => false,
-                },
-                "value" => "new@test.com",
-              },
-            ],
-            "columns" => {
-              "email" => "new@test.com",
-              "score" => "50",
-            },
+        execute_data_table(
+          "operation" => "upsert",
+          "data_table_id" => data_table.id.to_s,
+          "filter" => [filter_condition("email", "equals", value: "new@test.com")],
+          "columns" => {
+            "email" => "new@test.com",
+            "score" => "50",
           },
         )
       }.to raise_error(DiscourseWorkflows::NodeError, "Data table storage limit exceeded")

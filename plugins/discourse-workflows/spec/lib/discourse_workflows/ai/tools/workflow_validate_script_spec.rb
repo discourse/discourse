@@ -3,20 +3,25 @@
 RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidateScript do
   fab!(:admin)
 
-  let(:bot_context) { DiscourseAi::Agents::BotContext.new(messages: [], user: admin) }
+  def invoke_tool(parameters)
+    context = DiscourseAi::Agents::BotContext.new(messages: [], user: admin)
+    described_class.new(
+      parameters,
+      bot_user: Discourse.system_user,
+      llm: nil,
+      context: context,
+    ).invoke
+  end
 
   it "validates a run-once script and returns sample output" do
     result =
-      described_class.new(
+      invoke_tool(
         {
           mode: "runOnceForAllItems",
           code: "var items = $input.all(); items[0].json.added = true; return items;",
           sample_input_items: [{ "json" => { "id" => 1 } }],
         },
-        bot_user: Discourse.system_user,
-        llm: nil,
-        context: bot_context,
-      ).invoke
+      )
 
     expect(result).to include(
       status: "success",
@@ -28,15 +33,12 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidateScript do
 
   it "rejects all-items access in per-item mode" do
     result =
-      described_class.new(
+      invoke_tool(
         {
           mode: "runOnceForEachItem",
           code: "var items = $input.all(); return { json: { count: items.length } };",
         },
-        bot_user: Discourse.system_user,
-        llm: nil,
-        context: bot_context,
-      ).invoke
+      )
 
     expect(result).to include(
       status: "success",
@@ -47,12 +49,9 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidateScript do
 
   it "rejects output that mixes reserved item keys with plain fields" do
     result =
-      described_class.new(
+      invoke_tool(
         { mode: "runOnceForAllItems", code: "return [{ json: { id: 1 }, extra: true }];" },
-        bot_user: Discourse.system_user,
-        llm: nil,
-        context: bot_context,
-      ).invoke
+      )
 
     expect(result).to include(
       status: "success",

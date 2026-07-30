@@ -3,54 +3,15 @@
 RSpec.describe DiscourseWorkflows::Webhook::Action::ActivateWebhooks do
   fab!(:admin)
 
-  let(:workflow) do
+  def build_published_workflow(path:, http_method:, webhook_id: nil)
     graph =
       build_workflow_graph do |g|
         g.node "webhook-1",
                "trigger:webhook",
+               webhook_id: webhook_id,
                configuration: {
-                 "path" => "hooks/inbound",
-                 "http_method" => "POST",
-               }
-      end
-    Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
-  end
-
-  let(:dynamic_workflow) do
-    graph =
-      build_workflow_graph do |g|
-        g.node "webhook-1",
-               "trigger:webhook",
-               webhook_id: "abcd-1234",
-               configuration: {
-                 "path" => "users/:id/posts",
-                 "http_method" => "GET",
-               }
-      end
-    Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
-  end
-
-  let(:route_owner) do
-    graph =
-      build_workflow_graph do |g|
-        g.node "webhook-1",
-               "trigger:webhook",
-               configuration: {
-                 "path" => "shared",
-                 "http_method" => "POST",
-               }
-      end
-    Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
-  end
-
-  let(:workflow_with_old_route) do
-    graph =
-      build_workflow_graph do |g|
-        g.node "webhook-1",
-               "trigger:webhook",
-               configuration: {
-                 "path" => "old",
-                 "http_method" => "POST",
+                 "path" => path,
+                 "http_method" => http_method,
                }
       end
     Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
@@ -58,6 +19,7 @@ RSpec.describe DiscourseWorkflows::Webhook::Action::ActivateWebhooks do
 
   describe ".call" do
     it "stores a row per webhook trigger in the active version" do
+      workflow = build_published_workflow(path: "hooks/inbound", http_method: "POST")
       version = workflow.workflow_versions.find_by(version_id: workflow.version_id)
 
       described_class.call(workflow: workflow, workflow_version: version)
@@ -74,17 +36,24 @@ RSpec.describe DiscourseWorkflows::Webhook::Action::ActivateWebhooks do
     end
 
     it "marks rows as dynamic when the path contains :placeholder segments" do
-      version = dynamic_workflow.workflow_versions.find_by(version_id: dynamic_workflow.version_id)
+      workflow =
+        build_published_workflow(
+          path: "users/:id/posts",
+          http_method: "GET",
+          webhook_id: "abcd-1234",
+        )
+      version = workflow.workflow_versions.find_by(version_id: workflow.version_id)
 
-      described_class.call(workflow: dynamic_workflow, workflow_version: version)
+      described_class.call(workflow: workflow, workflow_version: version)
 
-      row = DiscourseWorkflows::Webhook.production.find_by(workflow_id: dynamic_workflow.id)
+      row = DiscourseWorkflows::Webhook.production.find_by(workflow_id: workflow.id)
       expect(row).to have_attributes(webhook_id: "abcd-1234", path_length: 3)
     end
 
     it "raises CollisionError when another workflow already owns the route" do
-      owner_version = route_owner.workflow_versions.find_by(version_id: route_owner.version_id)
-      described_class.call(workflow: route_owner, workflow_version: owner_version)
+      owner = build_published_workflow(path: "shared", http_method: "POST")
+      owner_version = owner.workflow_versions.find_by(version_id: owner.version_id)
+      described_class.call(workflow: owner, workflow_version: owner_version)
 
       conflicting_graph =
         build_workflow_graph do |g|
@@ -115,23 +84,18 @@ RSpec.describe DiscourseWorkflows::Webhook::Action::ActivateWebhooks do
     end
 
     it "replaces this workflow's prior rows on re-activation" do
-      version =
-        workflow_with_old_route.workflow_versions.find_by(
-          version_id: workflow_with_old_route.version_id,
-        )
-      described_class.call(workflow: workflow_with_old_route, workflow_version: version)
+      workflow = build_published_workflow(path: "old", http_method: "POST")
+      version = workflow.workflow_versions.find_by(version_id: workflow.version_id)
+      described_class.call(workflow: workflow, workflow_version: version)
 
       updated_nodes = version.nodes.deep_dup
       updated_nodes.first["parameters"]["path"] = "new"
       version.update!(nodes: updated_nodes)
 
-      described_class.call(workflow: workflow_with_old_route, workflow_version: version.reload)
+      described_class.call(workflow: workflow, workflow_version: version.reload)
 
       expect(
-        DiscourseWorkflows::Webhook
-          .production
-          .where(workflow_id: workflow_with_old_route.id)
-          .pluck(:webhook_path),
+        DiscourseWorkflows::Webhook.production.where(workflow_id: workflow.id).pluck(:webhook_path),
       ).to eq(["new"])
     end
   end

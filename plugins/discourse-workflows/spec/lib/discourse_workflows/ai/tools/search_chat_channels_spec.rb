@@ -3,9 +3,17 @@
 RSpec.describe DiscourseWorkflows::Ai::Tools::SearchChatChannels do
   fab!(:admin)
 
-  let(:bot_context) { DiscourseAi::Agents::BotContext.new(messages: [], user: admin) }
-
   before { SiteSetting.chat_enabled = true if defined?(SiteSetting.chat_enabled) }
+
+  def invoke_tool(query:)
+    context = DiscourseAi::Agents::BotContext.new(messages: [], user: admin)
+    described_class.new(
+      { query: query },
+      bot_user: Discourse.system_user,
+      llm: nil,
+      context: context,
+    ).invoke
+  end
 
   it "searches open public chat channels by partial hashtag name" do
     skip "Chat plugin is not available" if !defined?(::Chat::Channel)
@@ -13,13 +21,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::SearchChatChannels do
     category = Fabricate(:category, name: "General", slug: "general")
     channel = Fabricate(:category_channel, chatable: category, name: "general")
 
-    result =
-      described_class.new(
-        { query: "#genera" },
-        bot_user: Discourse.system_user,
-        llm: nil,
-        context: bot_context,
-      ).invoke
+    result = invoke_tool(query: "#genera")
 
     expect(result).to include(status: "success", query: "genera")
     expect(result[:matches]).to contain_exactly(
@@ -42,13 +44,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::SearchChatChannels do
     Fabricate(:category_channel, name: "general closed", status: :closed)
     Fabricate(:direct_message_channel, name: nil)
 
-    result =
-      described_class.new(
-        { query: "general" },
-        bot_user: Discourse.system_user,
-        llm: nil,
-        context: bot_context,
-      ).invoke
+    result = invoke_tool(query: "general")
 
     expect(result[:matches].map { |match| match[:id] }).to contain_exactly(open_channel.id)
   end

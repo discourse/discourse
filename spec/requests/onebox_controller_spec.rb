@@ -105,9 +105,13 @@ RSpec.describe OneboxController do
     end
 
     describe "missing onebox" do
-      it "returns preview-error if the onebox is nil" do
+      def stub_request_to_onebox_url(response_body)
         stub_request(:head, url)
-        stub_request(:get, url).to_return(body: nil).then.to_raise
+        stub_request(:get, url).to_return(body: response_body).then.to_raise
+      end
+
+      it "returns preview-error if the onebox is nil" do
+        stub_request_to_onebox_url(nil)
         get "/onebox.json", params: { url: url, refresh: "true" }
         expect(response.body).to include(
           "Sorry, we were unable to generate a preview for this web page",
@@ -115,8 +119,7 @@ RSpec.describe OneboxController do
       end
 
       it "returns preview-error if the onebox is an empty string" do
-        stub_request(:head, url)
-        stub_request(:get, url).to_return(body: " \t ").then.to_raise
+        stub_request_to_onebox_url(" \t ")
         get "/onebox.json", params: { url: url, refresh: "true" }
         expect(response.response_code).to eq(200)
         expect(response.body).to include(

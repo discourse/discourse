@@ -1,6 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::Sort::V1 do
+  def execute(input_items, configuration = {})
+    config = { "type" => "simple" }.merge(configuration)
+    execute_node_output(configuration: config, input_items: input_items).first
+  end
+
+  def sort_fields(*fields)
+    { "values" => fields }
+  end
+
   describe "simple mode" do
     it "sorts items ascending by a single field" do
       input = [
@@ -8,13 +17,11 @@ RSpec.describe DiscourseWorkflows::Nodes::Sort::V1 do
         { "json" => { "name" => "Alice" } },
         { "json" => { "name" => "Bob" } },
       ]
-      configuration = {
-        "type" => "simple",
-        "sort_fields" => {
-          "values" => [{ "field_name" => "name", "order" => "ascending" }],
-        },
-      }
-      result = execute_node_output(configuration: configuration, input_items: input).first
+      result =
+        execute(
+          input,
+          "sort_fields" => sort_fields({ "field_name" => "name", "order" => "ascending" }),
+        )
 
       expect(result.map { |i| i["json"]["name"] }).to eq(%w[Alice Bob Charlie])
     end
@@ -25,13 +32,11 @@ RSpec.describe DiscourseWorkflows::Nodes::Sort::V1 do
         { "json" => { "score" => 30 } },
         { "json" => { "score" => 20 } },
       ]
-      configuration = {
-        "type" => "simple",
-        "sort_fields" => {
-          "values" => [{ "field_name" => "score", "order" => "descending" }],
-        },
-      }
-      result = execute_node_output(configuration: configuration, input_items: input).first
+      result =
+        execute(
+          input,
+          "sort_fields" => sort_fields({ "field_name" => "score", "order" => "descending" }),
+        )
 
       expect(result.map { |i| i["json"]["score"] }).to eq([30, 20, 10])
     end
@@ -42,13 +47,11 @@ RSpec.describe DiscourseWorkflows::Nodes::Sort::V1 do
         { "json" => { "name" => "Apple" } },
         { "json" => { "name" => "cherry" } },
       ]
-      configuration = {
-        "type" => "simple",
-        "sort_fields" => {
-          "values" => [{ "field_name" => "name", "order" => "ascending" }],
-        },
-      }
-      result = execute_node_output(configuration: configuration, input_items: input).first
+      result =
+        execute(
+          input,
+          "sort_fields" => sort_fields({ "field_name" => "name", "order" => "ascending" }),
+        )
 
       expect(result.map { |i| i["json"]["name"] }).to eq(%w[Apple banana cherry])
     end
@@ -59,13 +62,11 @@ RSpec.describe DiscourseWorkflows::Nodes::Sort::V1 do
         { "json" => { "other" => "no name field" } },
         { "json" => { "name" => "Alice" } },
       ]
-      configuration = {
-        "type" => "simple",
-        "sort_fields" => {
-          "values" => [{ "field_name" => "name", "order" => "ascending" }],
-        },
-      }
-      result = execute_node_output(configuration: configuration, input_items: input).first
+      result =
+        execute(
+          input,
+          "sort_fields" => sort_fields({ "field_name" => "name", "order" => "ascending" }),
+        )
 
       expect(result[0]["json"]).not_to have_key("name")
       expect(result[1]["json"]["name"]).to eq("Alice")
@@ -79,16 +80,15 @@ RSpec.describe DiscourseWorkflows::Nodes::Sort::V1 do
         { "json" => { "dept" => "Sales", "name" => "Alice" } },
         { "json" => { "dept" => "Engineering", "name" => "Alice" } },
       ]
-      configuration = {
-        "type" => "simple",
-        "sort_fields" => {
-          "values" => [
-            { "field_name" => "dept", "order" => "ascending" },
-            { "field_name" => "name", "order" => "ascending" },
-          ],
-        },
-      }
-      result = execute_node_output(configuration: configuration, input_items: input).first
+      result =
+        execute(
+          input,
+          "sort_fields" =>
+            sort_fields(
+              { "field_name" => "dept", "order" => "ascending" },
+              { "field_name" => "name", "order" => "ascending" },
+            ),
+        )
 
       expect(result.map { |i| [i["json"]["dept"], i["json"]["name"]] }).to eq(
         [%w[Engineering Alice], %w[Engineering Bob], %w[Sales Alice], %w[Sales Charlie]],
@@ -101,21 +101,18 @@ RSpec.describe DiscourseWorkflows::Nodes::Sort::V1 do
         { "json" => { "address" => { "city" => "Boston" } } },
         { "json" => { "address" => { "city" => "Chicago" } } },
       ]
-      configuration = {
-        "type" => "simple",
-        "sort_fields" => {
-          "values" => [{ "field_name" => "address.city", "order" => "ascending" }],
-        },
-      }
-      result = execute_node_output(configuration: configuration, input_items: input).first
+      result =
+        execute(
+          input,
+          "sort_fields" => sort_fields({ "field_name" => "address.city", "order" => "ascending" }),
+        )
 
       expect(result.map { |i| i["json"]["address"]["city"] }).to eq(%w[Boston Chicago New\ York])
     end
 
     it "returns items unchanged when sort_fields is empty" do
       input = [{ "json" => { "a" => 2 } }, { "json" => { "a" => 1 } }]
-      configuration = { "type" => "simple", "sort_fields" => { "values" => [] } }
-      result = execute_node_output(configuration: configuration, input_items: input).first
+      result = execute(input, "sort_fields" => sort_fields)
 
       expect(result.map { |i| i["json"]["a"] }).to eq([2, 1])
     end
@@ -124,8 +121,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Sort::V1 do
   describe "random mode" do
     it "returns all items in a shuffled order" do
       input = (1..20).map { |i| { "json" => { "n" => i } } }
-      configuration = { "type" => "random" }
-      result = execute_node_output(configuration: configuration, input_items: input).first
+      result = execute(input, "type" => "random")
 
       expect(result.map { |i| i["json"]["n"] }).to contain_exactly(*(1..20))
     end
@@ -134,16 +130,14 @@ RSpec.describe DiscourseWorkflows::Nodes::Sort::V1 do
   describe "code mode" do
     it "sorts items using a custom JavaScript comparator" do
       input = [{ "json" => { "n" => 3 } }, { "json" => { "n" => 1 } }, { "json" => { "n" => 2 } }]
-      configuration = { "type" => "code", "code" => "return a.json.n - b.json.n;" }
-      result = execute_node_output(configuration: configuration, input_items: input).first
+      result = execute(input, "type" => "code", "code" => "return a.json.n - b.json.n;")
 
       expect(result.map { |i| i["json"]["n"] }).to eq([1, 2, 3])
     end
 
     it "supports descending sort via custom comparator" do
       input = [{ "json" => { "n" => 1 } }, { "json" => { "n" => 3 } }, { "json" => { "n" => 2 } }]
-      configuration = { "type" => "code", "code" => "return b.json.n - a.json.n;" }
-      result = execute_node_output(configuration: configuration, input_items: input).first
+      result = execute(input, "type" => "code", "code" => "return b.json.n - a.json.n;")
 
       expect(result.map { |i| i["json"]["n"] }).to eq([3, 2, 1])
     end
@@ -151,19 +145,18 @@ RSpec.describe DiscourseWorkflows::Nodes::Sort::V1 do
     it "raises when code is missing a return statement" do
       input = [{ "json" => { "n" => 1 } }]
 
-      configuration = { "type" => "code", "code" => "a.json.n - b.json.n;" }
-      expect {
-        execute_node_output(configuration: configuration, input_items: input)
-      }.to raise_error(DiscourseWorkflows::NodeError, /return/)
+      expect { execute(input, "type" => "code", "code" => "a.json.n - b.json.n;") }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        /return/,
+      )
     end
 
     it "raises on invalid JavaScript" do
       input = [{ "json" => { "n" => 1 } }]
 
-      configuration = { "type" => "code", "code" => "return {{{invalid;" }
-      expect {
-        execute_node_output(configuration: configuration, input_items: input)
-      }.to raise_error(DiscourseWorkflows::JsSandbox::SandboxError)
+      expect { execute(input, "type" => "code", "code" => "return {{{invalid;") }.to raise_error(
+        DiscourseWorkflows::JsSandbox::SandboxError,
+      )
     end
 
     it "raises node errors for task runner failures without exception objects" do

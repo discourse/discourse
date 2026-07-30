@@ -15,19 +15,15 @@ RSpec.describe DirectoryItemSerializer do
       user.user_custom_fields.create!(name: "user_field_1", value: "Value 1")
       user.user_custom_fields.create!(name: "user_field_2", value: "Value 2")
 
-      serializer_opts = {
-        attributes: DirectoryColumn.active_column_names,
-        user_custom_field_map: {
-          "user_field_1" => user_field_1.id,
-          "user_field_2" => user_field_2.id,
-        },
-        searchable_fields: [user_field_1],
-      }
       user_fields =
-        described_class
-          .new(DirectoryItem.find_by(user:), serializer_opts.merge(scope: Guardian.new(user)))
-          .as_json
-          .dig(:directory_item, :user, :user_fields)
+        serialized_payload(
+          attributes: DirectoryColumn.active_column_names,
+          user_custom_field_map: {
+            "user_field_1" => user_field_1.id,
+            "user_field_2" => user_field_2.id,
+          },
+          searchable_fields: [user_field_1],
+        )
 
       expect(user_fields).to eq(
         user_field_1.id => {
@@ -45,18 +41,14 @@ RSpec.describe DirectoryItemSerializer do
       user.user_custom_fields.create!(name: "user_field_1", value: "Value 1")
       user.user_custom_fields.create!(name: "user_field_1", value: "Another Value")
 
-      serializer_opts = {
-        attributes: DirectoryColumn.active_column_names,
-        user_custom_field_map: {
-          "user_field_1" => user_field_1.id,
-        },
-        searchable_fields: [],
-      }
       user_fields =
-        described_class
-          .new(DirectoryItem.find_by(user:), serializer_opts.merge(scope: Guardian.new(user)))
-          .as_json
-          .dig(:directory_item, :user, :user_fields)
+        serialized_payload(
+          attributes: DirectoryColumn.active_column_names,
+          user_custom_field_map: {
+            "user_field_1" => user_field_1.id,
+          },
+          searchable_fields: [],
+        )
 
       expect(user_fields[user_field_1.id]).to eq(
         value: ["Value 1", "Another Value"],
@@ -94,5 +86,16 @@ RSpec.describe DirectoryItemSerializer do
       expect(payload[:directory_item]).to have_key(:user)
       expect(payload[:directory_item]).to have_key(:time_read)
     end
+  end
+
+  private
+
+  def serialized_payload(serializer_opts)
+    serializer =
+      DirectoryItemSerializer.new(
+        DirectoryItem.find_by(user: user),
+        serializer_opts.merge(scope: Guardian.new(user)),
+      )
+    serializer.as_json.dig(:directory_item, :user, :user_fields)
   end
 end

@@ -21,7 +21,9 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowScriptContext do
     )
   end
 
-  subject(:result) do
+  subject(:result) { invoke_tool(upstream_node_id) }
+
+  def invoke_tool(upstream_node_id)
     described_class.new(
       { workflow_id: workflow.id, upstream_node_id: upstream_node_id },
       bot_user: Discourse.system_user,
@@ -56,14 +58,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowScriptContext do
   end
 
   it "resolves inherited fields for pass-through nodes" do
-    upstream_node_id = "filter"
-    result =
-      described_class.new(
-        { workflow_id: workflow.id, upstream_node_id: upstream_node_id },
-        bot_user: Discourse.system_user,
-        llm: nil,
-        context: bot_context,
-      ).invoke
+    result = invoke_tool("filter")
 
     expect(result.dig(:upstream_fields, :output_fields, 0)).to include(
       "post.id" => "integer",
@@ -72,14 +67,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowScriptContext do
   end
 
   it "infers fields from pin data when the node has no declaration" do
-    upstream_node_id = "code"
-    result =
-      described_class.new(
-        { workflow_id: workflow.id, upstream_node_id: upstream_node_id },
-        bot_user: Discourse.system_user,
-        llm: nil,
-        context: bot_context,
-      ).invoke
+    result = invoke_tool("code")
 
     expect(result.dig(:upstream_fields, :output_fields, 0)).to eq(
       "custom" => "object",
@@ -94,14 +82,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowScriptContext do
       [{ "json" => { "full-name" => "Ada", "a.b" => true, "a" => { "b" => 1 } } }],
     )
 
-    upstream_node_id = "code"
-    result =
-      described_class.new(
-        { workflow_id: workflow.id, upstream_node_id: upstream_node_id },
-        bot_user: Discourse.system_user,
-        llm: nil,
-        context: bot_context,
-      ).invoke
+    result = invoke_tool("code")
 
     expect(result.dig(:upstream_fields, :output_fields, 0)).to eq(
       '["full-name"]' => "string",

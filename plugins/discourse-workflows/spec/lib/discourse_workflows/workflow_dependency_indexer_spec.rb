@@ -3,6 +3,15 @@
 RSpec.describe DiscourseWorkflows::WorkflowDependencyIndexer do
   fab!(:admin)
 
+  def index(workflow)
+    version = workflow.workflow_versions.find_by(version_id: workflow.version_id)
+    described_class.call(workflow, version: version)
+  end
+
+  def dependency_rows(workflow)
+    DiscourseWorkflows::WorkflowDependency.where(workflow_id: workflow.id)
+  end
+
   describe ".call" do
     it "extracts node_type dependencies for every node" do
       graph =
@@ -12,14 +21,9 @@ RSpec.describe DiscourseWorkflows::WorkflowDependencyIndexer do
         end
       workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
 
-      version = workflow.workflow_versions.find_by(version_id: workflow.version_id)
-      described_class.call(workflow, version: version)
+      index(workflow)
 
-      node_types =
-        DiscourseWorkflows::WorkflowDependency
-          .where(workflow_id: workflow.id)
-          .of_type("node_type")
-          .pluck(:dependency_key, :node_id)
+      node_types = dependency_rows(workflow).of_type("node_type").pluck(:dependency_key, :node_id)
       expect(node_types).to contain_exactly(%w[trigger:webhook t1], %w[action:topic a1])
     end
 
@@ -42,14 +46,9 @@ RSpec.describe DiscourseWorkflows::WorkflowDependencyIndexer do
         end
       workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
 
-      version = workflow.workflow_versions.find_by(version_id: workflow.version_id)
-      described_class.call(workflow, version: version)
+      index(workflow)
 
-      creds =
-        DiscourseWorkflows::WorkflowDependency
-          .where(workflow_id: workflow.id)
-          .of_type("credential_id")
-          .pluck(:dependency_key, :node_id)
+      creds = dependency_rows(workflow).of_type("credential_id").pluck(:dependency_key, :node_id)
       expect(creds).to contain_exactly([credential.id.to_s, "t1"])
     end
 
@@ -83,14 +82,9 @@ RSpec.describe DiscourseWorkflows::WorkflowDependencyIndexer do
         end
       workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
 
-      version = workflow.workflow_versions.find_by(version_id: workflow.version_id)
-      described_class.call(workflow, version: version)
+      index(workflow)
 
-      expect(
-        DiscourseWorkflows::WorkflowDependency.where(workflow_id: workflow.id).of_type(
-          "credential_id",
-        ),
-      ).to be_empty
+      expect(dependency_rows(workflow).of_type("credential_id")).to be_empty
     end
 
     it "extracts data_table_id dependencies" do
@@ -101,14 +95,9 @@ RSpec.describe DiscourseWorkflows::WorkflowDependencyIndexer do
         end
       workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
 
-      version = workflow.workflow_versions.find_by(version_id: workflow.version_id)
-      described_class.call(workflow, version: version)
+      index(workflow)
 
-      tables =
-        DiscourseWorkflows::WorkflowDependency
-          .where(workflow_id: workflow.id)
-          .of_type("data_table_id")
-          .pluck(:dependency_key, :node_id)
+      tables = dependency_rows(workflow).of_type("data_table_id").pluck(:dependency_key, :node_id)
       expect(tables).to contain_exactly([data_table.id.to_s, "a1"])
     end
 
@@ -120,14 +109,10 @@ RSpec.describe DiscourseWorkflows::WorkflowDependencyIndexer do
         end
       workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
 
-      version = workflow.workflow_versions.find_by(version_id: workflow.version_id)
-      described_class.call(workflow, version: version)
+      index(workflow)
 
       workflow_calls =
-        DiscourseWorkflows::WorkflowDependency
-          .where(workflow_id: workflow.id)
-          .of_type("workflow_call")
-          .pluck(:dependency_key, :node_id)
+        dependency_rows(workflow).of_type("workflow_call").pluck(:dependency_key, :node_id)
       expect(workflow_calls).to contain_exactly([target.id.to_s, "a1"])
     end
 
@@ -142,14 +127,10 @@ RSpec.describe DiscourseWorkflows::WorkflowDependencyIndexer do
           **graph,
         )
 
-      version = workflow.workflow_versions.find_by(version_id: workflow.version_id)
-      described_class.call(workflow, version: version)
+      index(workflow)
 
       error_deps =
-        DiscourseWorkflows::WorkflowDependency
-          .where(workflow_id: workflow.id)
-          .of_type("error_workflow")
-          .pluck(:dependency_key, :node_id)
+        dependency_rows(workflow).of_type("error_workflow").pluck(:dependency_key, :node_id)
       expect(error_deps).to contain_exactly([error_wf.id.to_s, nil])
     end
 
@@ -162,10 +143,8 @@ RSpec.describe DiscourseWorkflows::WorkflowDependencyIndexer do
         end
       workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
 
-      version = workflow.workflow_versions.find_by(version_id: workflow.version_id)
-      described_class.call(workflow, version: version)
-      dependency_rows = DiscourseWorkflows::WorkflowDependency.where(workflow_id: workflow.id)
-      expect(dependency_rows.of_type("data_table_id").pluck(:dependency_key)).to eq(
+      index(workflow)
+      expect(dependency_rows(workflow).of_type("data_table_id").pluck(:dependency_key)).to eq(
         [first_table.id.to_s],
       )
 
@@ -175,14 +154,12 @@ RSpec.describe DiscourseWorkflows::WorkflowDependencyIndexer do
       updated_nodes = snapshot.nodes.deep_dup
       updated_nodes.first["parameters"]["data_table_id"] = second_table.id
       snapshot.update!(nodes: updated_nodes)
-      version = workflow.workflow_versions.find_by(version_id: workflow.version_id)
-      described_class.call(workflow, version: version)
-      dependency_rows = DiscourseWorkflows::WorkflowDependency.where(workflow_id: workflow.id)
+      index(workflow)
 
-      expect(dependency_rows.of_type("data_table_id").pluck(:dependency_key)).to eq(
+      expect(dependency_rows(workflow).of_type("data_table_id").pluck(:dependency_key)).to eq(
         [second_table.id.to_s],
       )
-      expect(dependency_rows.of_type("node_type").count).to eq(1)
+      expect(dependency_rows(workflow).of_type("node_type").count).to eq(1)
     end
 
     it "scopes dependency rows per version" do
@@ -193,8 +170,7 @@ RSpec.describe DiscourseWorkflows::WorkflowDependencyIndexer do
           g.node "a1", "action:data_table", configuration: { "data_table_id" => first_table.id }
         end
       workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
-      version = workflow.workflow_versions.find_by(version_id: workflow.version_id)
-      described_class.call(workflow, version: version)
+      index(workflow)
       old_version_id = workflow.version_id
 
       updated =
@@ -203,25 +179,24 @@ RSpec.describe DiscourseWorkflows::WorkflowDependencyIndexer do
         end
       workflow.update!(nodes: updated[:nodes])
       workflow.snapshot!(user: workflow.created_by)
-      version = workflow.workflow_versions.find_by(version_id: workflow.version_id)
-      described_class.call(workflow, version: version)
-      dependency_rows = DiscourseWorkflows::WorkflowDependency.where(workflow_id: workflow.id)
+      index(workflow)
 
       expect(
-        dependency_rows.where(workflow_version_id: old_version_id).pluck(:dependency_key),
+        dependency_rows(workflow).where(workflow_version_id: old_version_id).pluck(:dependency_key),
       ).to include(first_table.id.to_s)
       expect(
-        dependency_rows.where(workflow_version_id: workflow.version_id).pluck(:dependency_key),
+        dependency_rows(workflow).where(workflow_version_id: workflow.version_id).pluck(
+          :dependency_key,
+        ),
       ).to include(second_table.id.to_s)
     end
 
     it "handles workflows with no nodes" do
       workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, nodes: [])
 
-      version = workflow.workflow_versions.find_by(version_id: workflow.version_id)
-      described_class.call(workflow, version: version)
+      index(workflow)
 
-      expect(DiscourseWorkflows::WorkflowDependency.where(workflow_id: workflow.id).count).to eq(0)
+      expect(dependency_rows(workflow).count).to eq(0)
     end
   end
 end

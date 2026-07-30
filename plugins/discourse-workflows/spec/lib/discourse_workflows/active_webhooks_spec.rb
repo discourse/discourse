@@ -9,14 +9,16 @@ RSpec.describe DiscourseWorkflows::ActiveWebhooks do
   let(:webhook_path) { "hooks/inbound" }
   let(:http_method) { "POST" }
   let(:webhook_id) { nil }
-  let(:workflow) do
+  let(:workflow) { activate_workflow(path: webhook_path, http_method:, webhook_id:) }
+
+  def activate_workflow(path:, http_method:, webhook_id: nil)
     graph =
       build_workflow_graph do |g|
         g.node "webhook-1",
                "trigger:webhook",
                webhook_id: webhook_id,
                configuration: {
-                 "path" => webhook_path,
+                 "path" => path,
                  "http_method" => http_method,
                }
       end
@@ -96,22 +98,7 @@ RSpec.describe DiscourseWorkflows::ActiveWebhooks do
     end
 
     it "is invalidated when webhook rows change" do
-      graph =
-        build_workflow_graph do |g|
-          g.node "webhook-1",
-                 "trigger:webhook",
-                 configuration: {
-                   "path" => "hooks/before",
-                   "http_method" => "POST",
-                 }
-        end
-      workflow =
-        Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
-      version = workflow.workflow_versions.find_by(version_id: workflow.version_id)
-      DiscourseWorkflows::Webhook::Action::ActivateWebhooks.call(
-        workflow: workflow,
-        workflow_version: version,
-      )
+      activate_workflow(path: "hooks/before", http_method: "POST")
       expect(
         described_class.find(method: "POST", path: "hooks/before", test_webhook: false),
       ).to be_present

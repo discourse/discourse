@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAssign::AssignController do
-  include AssignControllerSpecHelpers
-
   before do
     SiteSetting.assign_enabled = true
     SiteSetting.assign_allowed_on_groups = "#{allowed_group.id}|#{staff_group.id}"
@@ -49,6 +47,12 @@ RSpec.describe DiscourseAssign::AssignController do
 
   describe "#suggestions" do
     before { sign_in(admin) }
+
+    def assign_user_to_post
+      assignee = Fabricate(:user, groups: [allowed_group])
+      Fabricate(:post_assignment, assigned_to: assignee, assigned_by_user: admin)
+      assignee
+    end
 
     it "only includes users in allowed groups and not disallowed groups" do
       Assigner.new(post.topic, admin).assign(allowed_user)

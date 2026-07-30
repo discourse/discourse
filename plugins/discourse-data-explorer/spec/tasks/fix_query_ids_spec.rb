@@ -9,12 +9,11 @@ describe "fix query ids rake task" do
   end
 
   let(:query_name) { "Awesome query" }
-  let(:query_id_repair_fixture) { QueryIdRepairFixture.new }
 
   it "fixes the ID of the query if they share the same name" do
     original_query_id = 4
-    query_id_repair_fixture.create_plugin_store_row(name: query_name, id: original_query_id)
-    query_id_repair_fixture.create_query(name: query_name)
+    create_plugin_store_row(name: query_name, id: original_query_id)
+    create_query(name: query_name)
 
     run_task
 
@@ -23,9 +22,9 @@ describe "fix query ids rake task" do
 
   it "only fixes queries with unique name" do
     original_query_id = 4
-    query_id_repair_fixture.create_plugin_store_row(name: query_name, id: original_query_id)
-    query_id_repair_fixture.create_query(name: query_name)
-    query_id_repair_fixture.create_query(name: query_name)
+    create_plugin_store_row(name: query_name, id: original_query_id)
+    create_query(name: query_name)
+    create_query(name: query_name)
 
     run_task
 
@@ -33,9 +32,9 @@ describe "fix query ids rake task" do
   end
 
   it "skips queries that already have the same ID" do
-    db_query = query_id_repair_fixture.create_query(name: query_name)
+    db_query = create_query(name: query_name)
     last_updated_at = db_query.updated_at
-    query_id_repair_fixture.create_plugin_store_row(name: query_name, id: db_query.id)
+    create_plugin_store_row(name: query_name, id: db_query.id)
 
     run_task
 
@@ -47,9 +46,9 @@ describe "fix query ids rake task" do
   it "keeps queries the rest of the queries" do
     original_query_id = 4
     different_query_name = "Another query"
-    query_id_repair_fixture.create_plugin_store_row(name: query_name, id: original_query_id)
-    query_id_repair_fixture.create_query(name: query_name)
-    query_id_repair_fixture.create_query(name: different_query_name)
+    create_plugin_store_row(name: query_name, id: original_query_id)
+    create_query(name: query_name)
+    create_query(name: different_query_name)
 
     run_task
 
@@ -58,9 +57,9 @@ describe "fix query ids rake task" do
 
   it "works even if they are additional conflicts" do
     different_query_name = "Another query"
-    additional_conflict = query_id_repair_fixture.create_query(name: different_query_name)
-    query_id_repair_fixture.create_query(name: query_name)
-    query_id_repair_fixture.create_plugin_store_row(name: query_name, id: additional_conflict.id)
+    additional_conflict = create_query(name: different_query_name)
+    create_query(name: query_name)
+    create_plugin_store_row(name: query_name, id: additional_conflict.id)
 
     run_task
 
@@ -75,12 +74,8 @@ describe "fix query ids rake task" do
 
     it "fixes the query group's query_id" do
       original_query_id = 4
-      query_id_repair_fixture.create_query(name: query_name, group_ids: [group.id])
-      query_id_repair_fixture.create_plugin_store_row(
-        name: query_name,
-        id: original_query_id,
-        group_ids: [group.id],
-      )
+      create_query(name: query_name, group_ids: [group.id])
+      create_plugin_store_row(name: query_name, id: original_query_id, group_ids: [group.id])
 
       run_task
 
@@ -89,14 +84,9 @@ describe "fix query ids rake task" do
 
     it "works with additional conflicts" do
       different_query_name = "Another query"
-      additional_conflict =
-        query_id_repair_fixture.create_query(name: different_query_name, group_ids: [group.id])
-      query_id_repair_fixture.create_query(name: query_name, group_ids: [group.id])
-      query_id_repair_fixture.create_plugin_store_row(
-        name: query_name,
-        id: additional_conflict.id,
-        group_ids: [group.id],
-      )
+      additional_conflict = create_query(name: different_query_name, group_ids: [group.id])
+      create_query(name: query_name, group_ids: [group.id])
+      create_plugin_store_row(name: query_name, id: additional_conflict.id, group_ids: [group.id])
 
       run_task
 
@@ -110,12 +100,39 @@ describe "fix query ids rake task" do
 
   it "changes the serial sequence for future queries" do
     original_query_id = 4
-    query_id_repair_fixture.create_plugin_store_row(name: query_name, id: original_query_id)
-    query_id_repair_fixture.create_query(name: query_name)
+    create_plugin_store_row(name: query_name, id: original_query_id)
+    create_query(name: query_name)
 
     run_task
-    post_fix_query = query_id_repair_fixture.create_query(name: query_name)
+    post_fix_query = create_query(name: query_name)
 
     expect(post_fix_query.id).to eq(original_query_id + 1)
+  end
+
+  def create_plugin_store_row(name:, id:, group_ids: [])
+    PluginStore.set(
+      DiscourseDataExplorer::PLUGIN_NAME,
+      "q:#{id}",
+      attributes(name:).merge(group_ids:, id:),
+    )
+  end
+
+  def create_query(name:, group_ids: [])
+    DiscourseDataExplorer::Query
+      .create!(attributes(name:))
+      .tap { |query| group_ids.each { |group_id| query.query_groups.create!(group_id:) } }
+  end
+
+  def attributes(name:)
+    {
+      id:
+        DiscourseDataExplorer::Query.count == 0 ? 5 : DiscourseDataExplorer::Query.maximum(:id) + 1,
+      name:,
+      description: "A Query",
+      sql: "SELECT 1",
+      created_at: 3.hours.ago,
+      last_run_at: 1.hour.ago,
+      hidden: false,
+    }
   end
 end

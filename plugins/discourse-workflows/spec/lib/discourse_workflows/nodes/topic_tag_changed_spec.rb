@@ -67,33 +67,26 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTagChanged::V1 do
   describe "#matches?" do
     it "returns true when no category parameter is configured" do
       trigger = described_class.new(topic, old_tag_names: ["bug"], new_tag_names: %w[bug urgent])
-      trigger_context = DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => {} })
 
-      expect(trigger.matches?(trigger_context)).to eq(true)
+      expect(trigger.matches?(trigger_context({}))).to eq(true)
     end
 
     it "returns true when the category parameter matches the topic category" do
       trigger = described_class.new(topic, old_tag_names: ["bug"], new_tag_names: %w[bug urgent])
-      trigger_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          { "parameters" => { "category_ids" => [topic.category_id.to_s] } },
-        )
 
-      expect(trigger.matches?(trigger_context)).to eq(true)
+      expect(trigger.matches?(trigger_context("category_ids" => [topic.category_id.to_s]))).to eq(
+        true,
+      )
     end
 
     it "matches topics in any of the configured categories" do
       trigger = described_class.new(topic, old_tag_names: ["bug"], new_tag_names: %w[bug urgent])
-      trigger_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          {
-            "parameters" => {
-              "category_ids" => [Fabricate(:category).id.to_s, topic.category_id.to_s],
-            },
-          },
-        )
 
-      expect(trigger.matches?(trigger_context)).to eq(true)
+      expect(
+        trigger.matches?(
+          trigger_context("category_ids" => [Fabricate(:category).id.to_s, topic.category_id.to_s]),
+        ),
+      ).to eq(true)
     end
 
     it "matches subcategories by default but not when excluded" do
@@ -101,32 +94,24 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTagChanged::V1 do
       subcategory_topic = Fabricate(:topic, category: subcategory)
       trigger =
         described_class.new(subcategory_topic, old_tag_names: ["bug"], new_tag_names: %w[urgent])
-      default_trigger_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          { "parameters" => { "category_ids" => [topic.category_id.to_s] } },
-        )
-      strict_trigger_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          {
-            "parameters" => {
-              "category_ids" => [topic.category_id.to_s],
-              "include_subcategories" => false,
-            },
-          },
-        )
 
-      expect(trigger.matches?(default_trigger_context)).to eq(true)
-      expect(trigger.matches?(strict_trigger_context)).to eq(false)
+      expect(trigger.matches?(trigger_context("category_ids" => [topic.category_id.to_s]))).to eq(
+        true,
+      )
+      expect(
+        trigger.matches?(
+          trigger_context(
+            "category_ids" => [topic.category_id.to_s],
+            "include_subcategories" => false,
+          ),
+        ),
+      ).to eq(false)
     end
 
     it "supports the legacy scalar category_id parameter" do
       trigger = described_class.new(topic, old_tag_names: ["bug"], new_tag_names: %w[bug urgent])
-      trigger_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          { "parameters" => { "category_id" => topic.category_id.to_s } },
-        )
 
-      expect(trigger.matches?(trigger_context)).to eq(true)
+      expect(trigger.matches?(trigger_context("category_id" => topic.category_id.to_s))).to eq(true)
     end
 
     it "matches subcategories by default for legacy category_id-only nodes" do
@@ -134,23 +119,21 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTagChanged::V1 do
       subcategory_topic = Fabricate(:topic, category: subcategory)
       trigger =
         described_class.new(subcategory_topic, old_tag_names: ["bug"], new_tag_names: %w[urgent])
-      trigger_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          { "parameters" => { "category_id" => topic.category_id.to_s } },
-        )
 
-      expect(trigger.matches?(trigger_context)).to eq(true)
+      expect(trigger.matches?(trigger_context("category_id" => topic.category_id.to_s))).to eq(true)
     end
 
     it "returns false when the category parameter does not match the topic category" do
       other_category = Fabricate(:category)
       trigger = described_class.new(topic, old_tag_names: ["bug"], new_tag_names: %w[bug urgent])
-      trigger_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          { "parameters" => { "category_ids" => [other_category.id.to_s] } },
-        )
 
-      expect(trigger.matches?(trigger_context)).to eq(false)
+      expect(trigger.matches?(trigger_context("category_ids" => [other_category.id.to_s]))).to eq(
+        false,
+      )
     end
+  end
+
+  def trigger_context(parameters)
+    DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => parameters })
   end
 end

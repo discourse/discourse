@@ -9,14 +9,16 @@ RSpec.describe SeedData::Topics do
 
   before { SiteSetting.general_category_id = general_category.id }
 
+  def create_topic(name = "welcome_topic_id")
+    seeder.create(site_setting_names: [name])
+  end
+
   describe "#create" do
     it "creates a missing topic" do
       staff_category = Fabricate(:category, name: "Feedback")
       SiteSetting.meta_category_id = staff_category.id
 
-      expect { seeder.create(site_setting_names: ["welcome_topic_id"]) }.to change {
-        Topic.count
-      }.by(1).and change { Post.count }.by(1)
+      expect { create_topic }.to change { Topic.count }.by(1).and change { Post.count }.by(1)
 
       topic = Topic.last
       expect(topic.title).to eq(
@@ -44,9 +46,9 @@ RSpec.describe SeedData::Topics do
       staff_category = Fabricate(:category, name: "Staff")
       SiteSetting.staff_category_id = staff_category.id
 
-      expect { seeder.create(site_setting_names: ["guidelines_topic_id"]) }.to change {
-        Topic.count
-      }.by(1).and change { Post.count }.by(2)
+      expect { create_topic("guidelines_topic_id") }.to change { Topic.count }.by(1).and change {
+              Post.count
+            }.by(2)
 
       topic = Topic.last
       expect(topic.category_id).to eq(SiteSetting.staff_category_id)
@@ -65,17 +67,13 @@ RSpec.describe SeedData::Topics do
       topic = Fabricate(:topic)
       SiteSetting.welcome_topic_id = topic.id
 
-      expect { seeder.create(site_setting_names: ["welcome_topic_id"]) }.to_not change {
-        Topic.count
-      }
+      expect { create_topic }.to_not change { Topic.count }
     end
 
     it "does not create a topic when the site setting points to non-existent topic" do
       SiteSetting.welcome_topic_id = (Topic.maximum(:id) || 0) + 1
 
-      expect { seeder.create(site_setting_names: ["welcome_topic_id"]) }.to_not change {
-        Topic.count
-      }
+      expect { create_topic }.to_not change { Topic.count }
     end
 
     it "does not create a legal topic when company_name is set" do
@@ -90,7 +88,7 @@ RSpec.describe SeedData::Topics do
       SiteSetting.title = "My Awesome Community"
       SiteSetting.site_description = ""
 
-      seeder.create(site_setting_names: ["welcome_topic_id"])
+      create_topic
 
       post = Post.find_by(topic_id: SiteSetting.welcome_topic_id, post_number: 1)
       expect(post.raw).not_to include("> ## My Awesome Community")
@@ -99,7 +97,7 @@ RSpec.describe SeedData::Topics do
     it "doesn't create a welcome topic when the 'General' category is missing" do
       SiteSetting.general_category_id = ""
 
-      seeder.create(site_setting_names: ["welcome_topic_id"])
+      create_topic("welcome_topic_id")
 
       expect(SiteSetting.welcome_topic_id).to eq(-1)
     end
@@ -108,7 +106,7 @@ RSpec.describe SeedData::Topics do
       SiteSetting.title = "My Awesome Community"
       SiteSetting.site_description = "The best community"
 
-      seeder.create(site_setting_names: ["welcome_topic_id"])
+      create_topic
 
       post = Post.find_by(topic_id: SiteSetting.welcome_topic_id, post_number: 1)
       expect(post.raw).to include("> ## My Awesome Community")
@@ -120,7 +118,7 @@ RSpec.describe SeedData::Topics do
       staff_category = Fabricate(:category, name: "Feedback")
       SiteSetting.meta_category_id = meta_category.id
       SiteSetting.staff_category_id = staff_category.id
-      seeder.create(site_setting_names: ["guidelines_topic_id"])
+      create_topic("guidelines_topic_id")
       topic = Topic.find(SiteSetting.guidelines_topic_id)
       post = Post.find_by(topic_id: SiteSetting.guidelines_topic_id, post_number: 1)
       expect(topic.title).to_not include("Translation missing")
@@ -129,14 +127,18 @@ RSpec.describe SeedData::Topics do
   end
 
   describe "#update" do
+    def update_topic(name = "welcome_topic_id", skip_changed: false)
+      seeder.update(site_setting_names: [name], skip_changed: skip_changed)
+    end
+
     it "updates the changed topic" do
-      seeder.create(site_setting_names: ["welcome_topic_id"])
+      create_topic
 
       topic = Topic.last
       topic.update!(title: "New topic title")
       topic.first_post.revise(Discourse.system_user, raw: "New text of first post.")
 
-      seeder.update(site_setting_names: ["welcome_topic_id"], skip_changed: false)
+      update_topic
       topic.reload
 
       expect(topic.title).to eq(
@@ -155,38 +157,38 @@ RSpec.describe SeedData::Topics do
     end
 
     it "updates an existing first reply when `static_first_reply` is true" do
-      seeder.create(site_setting_names: ["guidelines_topic_id"])
+      create_topic("guidelines_topic_id")
 
       post = Post.last
       post.revise(Discourse.system_user, raw: "New text of first reply.")
 
-      seeder.update(site_setting_names: ["guidelines_topic_id"], skip_changed: false)
+      update_topic("guidelines_topic_id")
       post.reload
 
       expect(post.raw).to eq(I18n.t("static_topic_first_reply", page_name: post.topic.title).rstrip)
     end
 
     it "does not update a change topic and `skip_changed` is true" do
-      seeder.create(site_setting_names: ["welcome_topic_id"])
+      create_topic
 
       topic = Topic.last
       topic.update!(title: "New topic title")
       topic.first_post.revise(Fabricate(:admin), raw: "New text of first post.")
 
-      seeder.update(site_setting_names: ["welcome_topic_id"], skip_changed: true)
+      update_topic(skip_changed: true)
 
       expect(topic.title).to eq("New topic title")
       expect(topic.first_post.raw).to eq("New text of first post.")
     end
 
     it "updates 'Welcome Topic' even when `general_category_id` doesn't exist" do
-      seeder.create(site_setting_names: ["welcome_topic_id"])
+      create_topic("welcome_topic_id")
       SiteSetting.general_category_id = ""
 
       post = Post.last
       post.revise(Discourse.system_user, raw: "New text of first post.")
 
-      seeder.update(site_setting_names: ["welcome_topic_id"], skip_changed: false)
+      update_topic
       post.reload
 
       expect(post.raw).to eq(
@@ -203,32 +205,32 @@ RSpec.describe SeedData::Topics do
   end
 
   describe "#delete" do
+    def delete_topic(name = "welcome_topic_id", skip_changed: false)
+      seeder.delete(site_setting_names: [name], skip_changed: skip_changed)
+    end
+
     it "deletes the topic" do
-      seeder.create(site_setting_names: ["welcome_topic_id"])
+      create_topic
 
       topic = Topic.last
 
-      expect {
-        seeder.delete(site_setting_names: ["welcome_topic_id"], skip_changed: false)
-      }.to change { Topic.count }.by(-1)
+      expect { delete_topic }.to change { Topic.count }.by(-1)
     end
 
     it "does not delete the topic if changed" do
-      seeder.create(site_setting_names: ["welcome_topic_id"])
+      create_topic
 
       topic = Topic.last
       topic.first_post.revise(Fabricate(:admin), raw: "New text of first post.")
 
-      expect {
-        seeder.delete(site_setting_names: ["welcome_topic_id"], skip_changed: true)
-      }.not_to change { Topic.count }
+      expect { delete_topic(skip_changed: true) }.not_to change { Topic.count }
     end
   end
 
   describe "#reseed_options" do
     it "returns only existing topics as options" do
-      seeder.create(site_setting_names: ["guidelines_topic_id"])
-      seeder.create(site_setting_names: ["welcome_topic_id"])
+      create_topic("guidelines_topic_id")
+      create_topic("welcome_topic_id")
       Post.last.revise(Fabricate(:admin), title: "Changed Topic Title", raw: "Hello world")
 
       expected_options = [
@@ -244,7 +246,7 @@ RSpec.describe SeedData::Topics do
     end
 
     it "returns 'Welcome Topic' even when `general_category_id` doesn't exist" do
-      seeder.create(site_setting_names: ["welcome_topic_id"])
+      create_topic("welcome_topic_id")
       SiteSetting.general_category_id = ""
 
       expected_options = [

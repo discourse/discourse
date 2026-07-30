@@ -14,6 +14,13 @@ RSpec.describe DiscourseWorkflows::DataTables::NodeProxy do
 
   subject(:proxy) { described_class.new(data_table_facade(data_table)) }
 
+  def email_filter(email)
+    {
+      "type" => "and",
+      "filters" => [{ "columnName" => "email", "condition" => "eq", "value" => email }],
+    }
+  end
+
   it "returns user columns without system columns" do
     expect(proxy.get_columns).to eq(
       [
@@ -57,18 +64,7 @@ RSpec.describe DiscourseWorkflows::DataTables::NodeProxy do
     insert_data_table_row(data_table, "email" => "a@example.com", "score" => 1)
     insert_data_table_row(data_table, "email" => "b@example.com", "score" => 2)
 
-    rows =
-      proxy.update_rows(
-        filter: {
-          "type" => "and",
-          "filters" => [
-            { "columnName" => "email", "condition" => "eq", "value" => "a@example.com" },
-          ],
-        },
-        data: {
-          "score" => "10",
-        },
-      )
+    rows = proxy.update_rows(filter: email_filter("a@example.com"), data: { "score" => "10" })
 
     expect(rows.map { |row| row.slice("email", "score") }).to eq(
       [{ "email" => "a@example.com", "score" => 10 }],
@@ -79,25 +75,10 @@ RSpec.describe DiscourseWorkflows::DataTables::NodeProxy do
     insert_data_table_row(data_table, "email" => "a@example.com", "score" => 1)
 
     updated_rows =
-      proxy.upsert_row(
-        filter: {
-          "type" => "and",
-          "filters" => [
-            { "columnName" => "email", "condition" => "eq", "value" => "a@example.com" },
-          ],
-        },
-        data: {
-          "score" => "10",
-        },
-      )
+      proxy.upsert_row(filter: email_filter("a@example.com"), data: { "score" => "10" })
     inserted_rows =
       proxy.upsert_row(
-        filter: {
-          "type" => "and",
-          "filters" => [
-            { "columnName" => "email", "condition" => "eq", "value" => "b@example.com" },
-          ],
-        },
+        filter: email_filter("b@example.com"),
         data: {
           "email" => "b@example.com",
           "score" => "2",
@@ -116,15 +97,7 @@ RSpec.describe DiscourseWorkflows::DataTables::NodeProxy do
     insert_data_table_row(data_table, "email" => "a@example.com", "score" => 1)
     insert_data_table_row(data_table, "email" => "b@example.com", "score" => 2)
 
-    rows =
-      proxy.delete_rows(
-        filter: {
-          "type" => "and",
-          "filters" => [
-            { "columnName" => "email", "condition" => "eq", "value" => "a@example.com" },
-          ],
-        },
-      )
+    rows = proxy.delete_rows(filter: email_filter("a@example.com"))
 
     expect(rows.map { |row| row.slice("email", "score") }).to eq(
       [{ "email" => "a@example.com", "score" => 1 }],

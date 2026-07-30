@@ -10,65 +10,60 @@ RSpec.describe UpcomingChanges::StatusReport do
   end
 
   let(:repo_path) { Dir.mktmpdir("upcoming-changes-status-report") }
-  let(:repository) { UpcomingChangesStatusReportRepository.new(path: repo_path) }
   let(:commit_shas) { {} }
 
   before do
-    repository.git("init")
-    repository.git("config", "user.name", "Discourse CI")
-    repository.git("config", "user.email", "ci@ci.invalid")
+    git("init")
+    git("config", "user.name", "Discourse CI")
+    git("config", "user.email", "ci@ci.invalid")
 
-    repository.write_settings(
-      statuses: {
-        "experimental_change" => "experimental",
-        "alpha_change" => "alpha",
-        "beta_change" => "beta",
-        "recent_change" => "alpha",
-        "stable_change" => "stable",
-        "conceptual_change" => "conceptual",
-        "permanent_change" => "permanent",
-        "never_change" => "never",
-      },
+    write_settings(
+      "experimental_change" => "experimental",
+      "alpha_change" => "alpha",
+      "beta_change" => "beta",
+      "recent_change" => "alpha",
+      "stable_change" => "stable",
+      "conceptual_change" => "conceptual",
+      "permanent_change" => "permanent",
+      "never_change" => "never",
     )
-    repository.write_plugin_settings(statuses: { "plugin_alpha_change" => "alpha" })
-    commit_shas[:original] = repository.commit(
-      message: "FEATURE: Add upcoming changes (#123)",
+    write_plugin_settings("plugin_alpha_change" => "alpha")
+    commit_shas[:original] = commit(
+      "FEATURE: Add upcoming changes (#123)",
       date: "2026-04-01T12:00:00Z",
       author_name: "Alice Example",
       author_email: "alice@example.com",
     )
 
-    FileUtils.rm_rf(File.join(repo_path, "plugins/chat"))
-    commit_shas[:plugin_removed] = repository.commit(
-      message: "DEV: Remove plugin settings",
+    remove_plugin_settings
+    commit_shas[:plugin_removed] = commit(
+      "DEV: Remove plugin settings",
       date: "2026-04-15T12:00:00Z",
       author_name: "Alice Example",
       author_email: "alice@example.com",
     )
 
-    repository.write_plugin_settings(statuses: { "plugin_alpha_change" => "alpha" })
-    commit_shas[:plugin_restored] = repository.commit(
-      message: "DEV: Restore plugin settings",
+    write_plugin_settings("plugin_alpha_change" => "alpha")
+    commit_shas[:plugin_restored] = commit(
+      "DEV: Restore plugin settings",
       date: "2026-04-20T12:00:00Z",
       author_name: "Alice Example",
       author_email: "alice@example.com",
     )
 
-    repository.write_settings(
-      statuses: {
-        "experimental_change" => "experimental",
-        "alpha_change" => "alpha",
-        "beta_change" => "beta",
-        "recent_change" => "beta",
-        "stable_change" => "stable",
-        "conceptual_change" => "conceptual",
-        "permanent_change" => "permanent",
-        "never_change" => "never",
-      },
+    write_settings(
+      "experimental_change" => "experimental",
+      "alpha_change" => "alpha",
+      "beta_change" => "beta",
+      "recent_change" => "beta",
+      "stable_change" => "stable",
+      "conceptual_change" => "conceptual",
+      "permanent_change" => "permanent",
+      "never_change" => "never",
     )
-    repository.write_plugin_settings(statuses: { "plugin_alpha_change" => "alpha" })
-    commit_shas[:recent] = repository.commit(
-      message: "DEV: Bump recent upcoming change (#456)",
+    write_plugin_settings("plugin_alpha_change" => "alpha")
+    commit_shas[:recent] = commit(
+      "DEV: Bump recent upcoming change (#456)",
       date: "2026-05-20T12:00:00Z",
       author_name: "Bob Example",
       author_email: "bob@example.com",
@@ -190,5 +185,70 @@ RSpec.describe UpcomingChanges::StatusReport do
         updater.update!(change_name: "malformed_change", next_status: "beta")
       }.to raise_error(RuntimeError, /Could not parse status line/)
     end
+  end
+
+  def git(*args, env: {})
+    stdout, stderr, status = Open3.capture3(env, "git", "-C", repo_path, *args)
+    raise "git #{args.join(" ")} failed: #{stderr}" if !status.success?
+
+    stdout
+  end
+
+  def commit(message, date:, author_name:, author_email:)
+    git("add", ".")
+    git(
+      "commit",
+      "-m",
+      message,
+      env: {
+        "GIT_AUTHOR_DATE" => date,
+        "GIT_COMMITTER_DATE" => date,
+        "GIT_AUTHOR_NAME" => author_name,
+        "GIT_AUTHOR_EMAIL" => author_email,
+        "GIT_COMMITTER_NAME" => "Discourse CI",
+        "GIT_COMMITTER_EMAIL" => "ci@ci.invalid",
+      },
+    )
+    git("rev-parse", "HEAD").strip
+  end
+
+  def write_settings(statuses)
+    FileUtils.mkdir_p(File.join(repo_path, "config"))
+    File.write(File.join(repo_path, "config/site_settings.yml"), "experimental:\n")
+
+    File.open(File.join(repo_path, "config/site_settings.yml"), "a") do |file|
+      statuses.each do |name, status|
+        file.write("  #{name}:\n")
+        file.write("    default: false\n")
+        file.write("    client: true\n")
+        file.write("    hidden: true\n")
+        file.write("    upcoming_change:\n")
+        file.write("      status: #{status}\n")
+        file.write("      impact: \"feature,all_members\"\n")
+        file.write("      learn_more_url: \"https://meta.discourse.org/t/-/123\"\n")
+      end
+    end
+  end
+
+  def write_plugin_settings(statuses)
+    FileUtils.mkdir_p(File.join(repo_path, "plugins/chat/config"))
+    File.write(File.join(repo_path, "plugins/chat/config/settings.yml"), "chat:\n")
+
+    File.open(File.join(repo_path, "plugins/chat/config/settings.yml"), "a") do |file|
+      statuses.each do |name, status|
+        file.write("  #{name}:\n")
+        file.write("    default: false\n")
+        file.write("    client: true\n")
+        file.write("    hidden: true\n")
+        file.write("    upcoming_change:\n")
+        file.write("      status: #{status}\n")
+        file.write("      impact: \"feature,all_members\"\n")
+        file.write("      learn_more_url: \"https://meta.discourse.org/t/-/123\"\n")
+      end
+    end
+  end
+
+  def remove_plugin_settings
+    FileUtils.rm_rf(File.join(repo_path, "plugins/chat"))
   end
 end

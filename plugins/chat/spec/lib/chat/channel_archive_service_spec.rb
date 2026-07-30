@@ -84,6 +84,17 @@ describe Chat::ChannelArchiveService do
   end
 
   describe "#execute" do
+    def create_messages(count)
+      Fabricate.times(count, :chat_message, chat_channel: channel)
+    end
+
+    def create_threaded_messages(count, title: nil)
+      original_message = Fabricate(:chat_message, chat_channel: channel)
+      thread = Fabricate(:chat_thread, channel:, title:, original_message:)
+      Fabricate.times(count - 1, :chat_message, chat_channel: channel, thread:)
+      thread.update!(replies_count: count - 1)
+    end
+
     let(:channel_archive) do
       described_class.create_archive_process(
         chat_channel: channel,
@@ -98,7 +109,7 @@ describe Chat::ChannelArchiveService do
       end
 
       it "makes a topic, deletes all the messages, creates posts for batches of messages, and changes the channel to archived" do
-        Fabricate.times(50, :chat_message, chat_channel: channel)
+        create_messages(50)
         channel_archive
         reaction_message = Chat::Message.last
         Chat::MessageReaction.create!(
@@ -140,24 +151,12 @@ describe Chat::ChannelArchiveService do
       it "creates the correct posts for a channel with messages and threads" do
         channel.update!(threading_enabled: true)
 
-        Fabricate.times(2, :chat_message, chat_channel: channel)
-        original_message = Fabricate(:chat_message, chat_channel: channel)
-        thread = Fabricate(:chat_thread, channel:, title: "a new thread", original_message:)
-        Fabricate.times(5, :chat_message, chat_channel: channel, thread:)
-        thread.update!(replies_count: 5)
-
-        Fabricate.times(7, :chat_message, chat_channel: channel)
-        original_message = Fabricate(:chat_message, chat_channel: channel)
-        thread = Fabricate(:chat_thread, channel:, original_message:)
-        Fabricate.times(2, :chat_message, chat_channel: channel, thread:)
-        thread.update!(replies_count: 2)
-
-        original_message = Fabricate(:chat_message, chat_channel: channel)
-        thread = Fabricate(:chat_thread, channel:, title: "another long thread", original_message:)
-        Fabricate.times(26, :chat_message, chat_channel: channel, thread:)
-        thread.update!(replies_count: 26)
-
-        Fabricate.times(10, :chat_message, chat_channel: channel)
+        create_messages(2)
+        create_threaded_messages(6, title: "a new thread")
+        create_messages(7)
+        create_threaded_messages(3)
+        create_threaded_messages(27, title: "another long thread")
+        create_messages(10)
 
         channel_archive
 
@@ -207,7 +206,7 @@ describe Chat::ChannelArchiveService do
       end
 
       it "does not stop the process if the post length is too high (validations disabled)" do
-        Fabricate.times(50, :chat_message, chat_channel: channel)
+        create_messages(50)
         channel_archive
         SiteSetting.max_post_length = 1
         described_class.new(channel_archive).execute
@@ -215,7 +214,7 @@ describe Chat::ChannelArchiveService do
       end
 
       it "successfully links uploads from messages to the post" do
-        Fabricate.times(3, :chat_message, chat_channel: channel)
+        create_messages(3)
         channel_archive
         UploadReference.create!(target: Chat::Message.last, upload: Fabricate(:upload))
         described_class.new(channel_archive).execute
@@ -224,7 +223,7 @@ describe Chat::ChannelArchiveService do
       end
 
       it "successfully sends a private message to the archiving user" do
-        Fabricate.times(3, :chat_message, chat_channel: channel)
+        create_messages(3)
         channel_archive
         described_class.new(channel_archive).execute
         expect(channel_archive.reload.complete?).to eq(true)
@@ -238,7 +237,7 @@ describe Chat::ChannelArchiveService do
       it "does not continue archiving if the destination topic fails to be created" do
         SiteSetting.max_emojis_in_title = 1
 
-        Fabricate.times(3, :chat_message, chat_channel: channel)
+        create_messages(3)
         channel_archive
         channel_archive.update!(destination_topic_title: "Wow this is the new title :tada: :joy:")
         Discourse.expects(:warn_exception).once
@@ -255,7 +254,7 @@ describe Chat::ChannelArchiveService do
       end
 
       it "uses the channel slug to autolink a hashtag for the channel in the PM" do
-        Fabricate.times(3, :chat_message, chat_channel: channel)
+        create_messages(3)
         channel_archive
         described_class.new(channel_archive).execute
         expect(channel_archive.reload.complete?).to eq(true)
@@ -278,7 +277,7 @@ describe Chat::ChannelArchiveService do
 
       describe "channel members" do
         before do
-          Fabricate.times(3, :chat_message, chat_channel: channel)
+          create_messages(3)
           channel
             .chat_messages
             .map(&:user)
@@ -321,7 +320,7 @@ describe Chat::ChannelArchiveService do
           before { SiteSetting.chat_archive_destination_topic_status = "archived" }
 
           it "archives the topic" do
-            Fabricate.times(3, :chat_message, chat_channel: channel)
+            create_messages(3)
             channel_archive
             described_class.new(channel_archive).execute
             topic = channel_archive.destination_topic
@@ -334,7 +333,7 @@ describe Chat::ChannelArchiveService do
           before { SiteSetting.chat_archive_destination_topic_status = "open" }
 
           it "leaves the topic open" do
-            Fabricate.times(3, :chat_message, chat_channel: channel)
+            create_messages(3)
             channel_archive
             described_class.new(channel_archive).execute
             topic = channel_archive.destination_topic
@@ -348,7 +347,7 @@ describe Chat::ChannelArchiveService do
           before { SiteSetting.chat_archive_destination_topic_status = "closed" }
 
           it "closes the topic" do
-            Fabricate.times(3, :chat_message, chat_channel: channel)
+            create_messages(3)
             channel_archive
             described_class.new(channel_archive).execute
             topic = channel_archive.destination_topic
@@ -360,7 +359,7 @@ describe Chat::ChannelArchiveService do
 
         context "when archiving to an existing topic" do
           it "does not change the status of the topic" do
-            Fabricate.times(3, :chat_message, chat_channel: channel)
+            create_messages(3)
             channel_archive
             channel_archive.update(
               destination_topic_title: nil,
@@ -383,7 +382,7 @@ describe Chat::ChannelArchiveService do
       let(:topic_params) { { topic_id: topic.id } }
 
       it "deletes all the messages, creates posts for batches of messages, and changes the channel to archived" do
-        Fabricate.times(50, :chat_message, chat_channel: channel)
+        create_messages(50)
         channel_archive
         reaction_message = Chat::Message.last
         Chat::MessageReaction.create!(
@@ -424,7 +423,7 @@ describe Chat::ChannelArchiveService do
       end
 
       it "handles errors gracefully, sends a private message to the archiving user, and is idempotent on retry" do
-        Fabricate.times(35, :chat_message, chat_channel: channel)
+        create_messages(35)
         channel_archive
 
         Chat::ChannelArchiveService

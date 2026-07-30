@@ -39,75 +39,58 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicClosed::V1 do
   describe "#matches?" do
     it "returns true when no category is configured" do
       trigger = described_class.new(topic, "closed", true)
-      blank_trigger_context = DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => {} })
-      empty_categories_trigger_context =
-        DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => { "category_ids" => [] } })
 
-      expect(trigger.matches?(blank_trigger_context)).to eq(true)
-      expect(trigger.matches?(empty_categories_trigger_context)).to eq(true)
+      expect(trigger.matches?(trigger_context({}))).to eq(true)
+      expect(trigger.matches?(trigger_context("category_ids" => []))).to eq(true)
     end
 
     it "matches topics in any of the configured categories" do
       trigger = described_class.new(topic, "closed", true)
-      matching_trigger_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          {
-            "parameters" => {
-              "category_ids" => [Fabricate(:category).id.to_s, topic.category_id.to_s],
-            },
-          },
-        )
-      nonmatching_trigger_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          { "parameters" => { "category_ids" => [Fabricate(:category).id.to_s] } },
-        )
 
-      expect(trigger.matches?(matching_trigger_context)).to eq(true)
-      expect(trigger.matches?(nonmatching_trigger_context)).to eq(false)
+      expect(
+        trigger.matches?(
+          trigger_context("category_ids" => [Fabricate(:category).id.to_s, topic.category_id.to_s]),
+        ),
+      ).to eq(true)
+      expect(
+        trigger.matches?(trigger_context("category_ids" => [Fabricate(:category).id.to_s])),
+      ).to eq(false)
     end
 
     it "matches subcategories by default but not when excluded" do
       subcategory = Fabricate(:category, parent_category: topic.category)
       subcategory_topic = Fabricate(:topic, category: subcategory)
       trigger = described_class.new(subcategory_topic, "closed", true)
-      default_trigger_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          { "parameters" => { "category_ids" => [topic.category_id.to_s] } },
-        )
-      strict_trigger_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          {
-            "parameters" => {
-              "category_ids" => [topic.category_id.to_s],
-              "include_subcategories" => false,
-            },
-          },
-        )
 
-      expect(trigger.matches?(default_trigger_context)).to eq(true)
-      expect(trigger.matches?(strict_trigger_context)).to eq(false)
+      expect(trigger.matches?(trigger_context("category_ids" => [topic.category_id.to_s]))).to eq(
+        true,
+      )
+      expect(
+        trigger.matches?(
+          trigger_context(
+            "category_ids" => [topic.category_id.to_s],
+            "include_subcategories" => false,
+          ),
+        ),
+      ).to eq(false)
     end
 
     it "supports the legacy scalar category_id parameter" do
       trigger = described_class.new(topic, "closed", true)
-      trigger_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          { "parameters" => { "category_id" => topic.category_id.to_s } },
-        )
 
-      expect(trigger.matches?(trigger_context)).to eq(true)
+      expect(trigger.matches?(trigger_context("category_id" => topic.category_id.to_s))).to eq(true)
     end
 
     it "matches subcategories by default for legacy category_id-only nodes" do
       subcategory = Fabricate(:category, parent_category: topic.category)
       subcategory_topic = Fabricate(:topic, category: subcategory)
       trigger = described_class.new(subcategory_topic, "closed", true)
-      trigger_context =
-        DiscourseWorkflows::TriggerNodeContext.new(
-          { "parameters" => { "category_id" => topic.category_id.to_s } },
-        )
 
-      expect(trigger.matches?(trigger_context)).to eq(true)
+      expect(trigger.matches?(trigger_context("category_id" => topic.category_id.to_s))).to eq(true)
     end
+  end
+
+  def trigger_context(parameters)
+    DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => parameters })
   end
 end

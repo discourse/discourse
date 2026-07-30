@@ -64,6 +64,10 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
   describe "#execute" do
     let(:item) { { "json" => {} } }
 
+    def custom_field_entries(*rows)
+      { "values" => rows }
+    end
+
     context "with operation 'create'" do
       it "creates a topic for the configured actor" do
         result = nil
@@ -350,15 +354,19 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
       end
       fab!(:post_2) { Fabricate(:post, topic: topic_2, user: user) }
 
+      def execute_list(configuration:)
+        execute_node_output(configuration: configuration).first
+      end
+
       it "returns topics matching the query" do
         result =
-          execute_node_output(
+          execute_list(
             configuration: {
               "operation" => "list",
               "query" => "category:#{category.slug}",
               "limit" => "10",
             },
-          ).first
+          )
 
         expect(result.length).to eq(2)
         expect(result.map { |r| r["json"]["topic"]["id"] }).to contain_exactly(
@@ -368,8 +376,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
       end
 
       it "returns topics when query is not provided" do
-        result =
-          execute_node_output(configuration: { "operation" => "list", "limit" => "10" }).first
+        result = execute_list(configuration: { "operation" => "list", "limit" => "10" })
 
         expect(result.map { |output_item| output_item["json"]["topic"]["id"] }).to include(
           topic_1.id,
@@ -384,13 +391,13 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         Fabricate(:post, topic: private_topic, user: admin)
 
         result =
-          execute_node_output(
+          execute_list(
             configuration: {
               "operation" => "list",
               "limit" => "50",
               "actor_username" => DiscourseWorkflows::AnonymousActor::USERNAME,
             },
-          ).first
+          )
 
         ids = result.map { |output_item| output_item["json"]["topic"]["id"] }
         expect(ids).to include(topic_1.id, topic_2.id)
@@ -399,35 +406,35 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
 
       it "respects the limit parameter" do
         result =
-          execute_node_output(
+          execute_list(
             configuration: {
               "operation" => "list",
               "query" => "category:#{category.slug}",
               "limit" => "1",
             },
-          ).first
+          )
 
         expect(result.length).to eq(1)
       end
 
       it "respects the offset parameter" do
         unoffset_result =
-          execute_node_output(
+          execute_list(
             configuration: {
               "operation" => "list",
               "query" => "category:#{category.slug}",
               "limit" => "2",
             },
-          ).first
+          )
         offset_result =
-          execute_node_output(
+          execute_list(
             configuration: {
               "operation" => "list",
               "query" => "category:#{category.slug}",
               "limit" => "1",
               "offset" => "1",
             },
-          ).first
+          )
 
         expect(offset_result.map { |output_item| output_item["json"]["topic"]["id"] }).to eq(
           [unoffset_result[1]["json"]["topic"]["id"]],
@@ -436,12 +443,12 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
 
       it "defaults limit to 30 when not provided" do
         result =
-          execute_node_output(
+          execute_list(
             configuration: {
               "operation" => "list",
               "query" => "category:#{category.slug}",
             },
-          ).first
+          )
 
         expect(result.length).to eq(2)
       end
@@ -450,13 +457,13 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         topic_1.tags << tag
 
         result =
-          execute_node_output(
+          execute_list(
             configuration: {
               "operation" => "list",
               "query" => "category:#{category.slug}",
               "limit" => "10",
             },
-          ).first
+          )
 
         topic_entry = result.find { |r| r["json"]["topic"]["id"] == topic_1.id }.dig("json")
         topic_data = topic_entry["topic"]
@@ -493,14 +500,14 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         custom_field_queries =
           track_sql_queries do
             result =
-              execute_node_output(
+              execute_list(
                 configuration: {
                   "operation" => "list",
                   "query" => "category:#{category.slug}",
                   "limit" => "10",
                   "custom_field_names" => ["workflow_key"],
                 },
-              ).first
+              )
 
             custom_fields =
               result.map { |output_item| output_item.dig("json", "topic", "custom_fields") }
@@ -520,13 +527,13 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
 
       it "returns empty array when no topics match" do
         result =
-          execute_node_output(
+          execute_list(
             configuration: {
               "operation" => "list",
               "query" => "category:#{other_category.slug}",
               "limit" => "10",
             },
-          ).first
+          )
 
         expect(result).to eq([])
       end
@@ -539,13 +546,13 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
           original_new.call(*args)
         end
 
-        execute_node_output(
+        execute_list(
           configuration: {
             "operation" => "list",
             "query" => "category:#{category.slug}",
             "limit" => "200",
           },
-        ).first
+        )
 
         expect(captured_opts[:per_page]).to eq(100)
       end
@@ -556,12 +563,12 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         Fabricate(:topic, category: restricted)
 
         result =
-          execute_node_output(
+          execute_list(
             configuration: {
               "operation" => "list",
               "query" => "category:#{restricted.slug}",
             },
-          ).first
+          )
 
         expect(result.length).to eq(1)
       end
@@ -572,13 +579,13 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         Fabricate(:topic, category: restricted)
 
         result =
-          execute_node_output(
+          execute_list(
             configuration: {
               "operation" => "list",
               "query" => "category:#{restricted.slug}",
               "actor_username" => other_user.username,
             },
-          ).first
+          )
 
         expect(result.length).to eq(0)
       end
@@ -644,12 +651,11 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
             configuration: {
               "operation" => "set_custom_fields",
               "topic_id" => topic.id.to_s,
-              "custom_fields" => {
-                "values" => [
+              "custom_fields" =>
+                custom_field_entries(
                   { "key" => "foo", "value" => "bar" },
                   { "key" => "answer", "value" => "42" },
-                ],
-              },
+                ),
               "actor_username" => admin.username,
             },
             item: item,
@@ -665,9 +671,8 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
           configuration: {
             "operation" => "set_custom_fields",
             "topic_id" => topic.id.to_s,
-            "custom_fields" => {
-              "values" => [{ "key" => "foo", "value" => "={{ $json.value }}" }],
-            },
+            "custom_fields" =>
+              custom_field_entries({ "key" => "foo", "value" => "={{ $json.value }}" }),
           },
           item: {
             "json" => {
@@ -685,9 +690,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
             configuration: {
               "operation" => "set_custom_fields",
               "topic_id" => topic.id.to_s,
-              "custom_fields" => {
-                "values" => [{ "key" => "foo", "value" => "bar" }],
-              },
+              "custom_fields" => custom_field_entries({ "key" => "foo", "value" => "bar" }),
               "actor_username" => other_user.username,
             },
             item: item,

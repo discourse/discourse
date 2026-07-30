@@ -7,6 +7,31 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::BuildExpressionPreviewConte
 
   let(:node_id) { nil }
 
+  def run_data_for(
+    node_id,
+    node_name:,
+    node_type:,
+    items:,
+    inputs: nil,
+    outputs: nil,
+    status: "success"
+  )
+    {
+      node_name => [
+        {
+          "node_id" => node_id.to_s,
+          "node_name" => node_name,
+          "node_type" => node_type,
+          "status" => status,
+          "run_index" => 0,
+          "inputs" => inputs || [],
+          "outputs" =>
+            outputs || [{ "index" => 0, "items" => items, "item_count" => items.length }],
+        },
+      ],
+    }
+  end
+
   describe ".call" do
     context "without a workflow" do
       let(:workflow) { nil }
@@ -76,8 +101,8 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::BuildExpressionPreviewConte
                 "node_contexts" => {
                 },
                 "run_data" =>
-                  DiscourseWorkflows::WorkflowExecutionDataBuilder.run_data_for(
-                    node_id: "trigger-1",
+                  run_data_for(
+                    "trigger-1",
                     node_name: "Topic created",
                     node_type: "trigger:topic_created",
                     items: items,
@@ -125,14 +150,14 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::BuildExpressionPreviewConte
                   "node_contexts" => {
                   },
                   "run_data" =>
-                    DiscourseWorkflows::WorkflowExecutionDataBuilder.run_data_for(
-                      node_id: "trigger-1",
+                    run_data_for(
+                      "trigger-1",
                       node_name: "Topic created",
                       node_type: "trigger:topic_created",
                       items: items,
                     ).deep_merge(
-                      DiscourseWorkflows::WorkflowExecutionDataBuilder.run_data_for(
-                        node_id: "action-1",
+                      run_data_for(
+                        "action-1",
                         node_name: "Tag topic",
                         node_type: "action:topic_tags",
                         items: items,
@@ -167,14 +192,14 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::BuildExpressionPreviewConte
                   "node_contexts" => {
                   },
                   "run_data" =>
-                    DiscourseWorkflows::WorkflowExecutionDataBuilder.run_data_for(
-                      node_id: "trigger-1",
+                    run_data_for(
+                      "trigger-1",
                       node_name: "Topic created",
                       node_type: "trigger:topic_created",
                       items: items,
                     ).deep_merge(
-                      DiscourseWorkflows::WorkflowExecutionDataBuilder.run_data_for(
-                        node_id: "action-1",
+                      run_data_for(
+                        "action-1",
                         node_name: "Tag topic",
                         node_type: "action:topic_tags",
                         items: [],
@@ -219,14 +244,14 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::BuildExpressionPreviewConte
                   "node_contexts" => {
                   },
                   "run_data" =>
-                    DiscourseWorkflows::WorkflowExecutionDataBuilder.run_data_for(
-                      node_id: "trigger-1",
+                    run_data_for(
+                      "trigger-1",
                       node_name: "Topic created",
                       node_type: "trigger:topic_created",
                       items: items,
                     ).deep_merge(
-                      DiscourseWorkflows::WorkflowExecutionDataBuilder.run_data_for(
-                        node_id: "action-1",
+                      run_data_for(
+                        "action-1",
                         node_name: "Tag topic",
                         node_type: "action:topic_tags",
                         items: [],
@@ -288,8 +313,8 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::BuildExpressionPreviewConte
                 "node_contexts" => {
                 },
                 "run_data" =>
-                  DiscourseWorkflows::WorkflowExecutionDataBuilder.run_data_for(
-                    node_id: "filter-1",
+                  run_data_for(
+                    "filter-1",
                     node_name: "Filter",
                     node_type: "condition:filter",
                     items: primary_items,
@@ -306,8 +331,8 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::BuildExpressionPreviewConte
                       },
                     ],
                   ).deep_merge(
-                    DiscourseWorkflows::WorkflowExecutionDataBuilder.run_data_for(
-                      node_id: "action-1",
+                    run_data_for(
+                      "action-1",
                       node_name: "Log",
                       node_type: "action:log",
                       items: [],
@@ -352,8 +377,8 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::BuildExpressionPreviewConte
                 "node_contexts" => {
                 },
                 "run_data" =>
-                  DiscourseWorkflows::WorkflowExecutionDataBuilder.run_data_for(
-                    node_id: "action-1",
+                  run_data_for(
+                    "action-1",
                     node_name: "Tag topic",
                     node_type: "action:topic_tags",
                     items: [{ "json" => { "tagged" => true } }],
@@ -384,8 +409,8 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::BuildExpressionPreviewConte
                 "node_contexts" => {
                 },
                 "run_data" =>
-                  DiscourseWorkflows::WorkflowExecutionDataBuilder.run_data_for(
-                    node_id: "trigger-1",
+                  run_data_for(
+                    "trigger-1",
                     node_name: "Topic created",
                     node_type: "trigger:topic_created",
                     items: [{ "json" => { "title" => "Should not appear" } }],

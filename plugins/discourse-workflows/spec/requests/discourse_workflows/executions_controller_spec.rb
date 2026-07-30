@@ -6,6 +6,10 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
 
   before { sign_in(admin) }
 
+  def workflow_snapshot_data(name)
+    { "name" => name, "nodes" => [], "connections" => {} }
+  end
+
   context "when not logged in as admin" do
     fab!(:user)
 
@@ -72,12 +76,7 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
       Fabricate(
         :discourse_workflows_execution_data,
         execution: execution,
-        workflow_data: {
-          "name" => "Original workflow",
-          "nodes" => [],
-          "connections" => {
-          },
-        },
+        workflow_data: workflow_snapshot_data("Original workflow"),
       )
       workflow.update!(name: "Renamed workflow")
 
@@ -126,12 +125,7 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
       Fabricate(
         :discourse_workflows_execution_data,
         execution: execution,
-        workflow_data: {
-          "name" => "Original workflow",
-          "nodes" => [],
-          "connections" => {
-          },
-        },
+        workflow_data: workflow_snapshot_data("Original workflow"),
       )
       workflow.update!(name: "Renamed workflow")
 
@@ -224,14 +218,7 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
     end
 
     it "returns the stored snapshot workflow name" do
-      execution.execution_data.update!(
-        workflow_data: {
-          "name" => "Original workflow",
-          "nodes" => [],
-          "connections" => {
-          },
-        },
-      )
+      execution.execution_data.update!(workflow_data: workflow_snapshot_data("Original workflow"))
       workflow.update!(name: "Renamed workflow")
 
       get "/admin/plugins/discourse-workflows/executions/#{execution.id}.json"
