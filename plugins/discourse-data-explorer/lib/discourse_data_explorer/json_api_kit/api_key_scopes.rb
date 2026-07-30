@@ -45,8 +45,18 @@ module DiscourseDataExplorer
         # `resource:action`, the scope a caller needs for this endpoint action —
         # the same pair the admin UI shows. Consumed by the docs generator.
         def scope_name(controller_class, action)
-          scope_action = SCOPE_ACTIONS[action.to_s] or return
+          scope_action = scope_action_for(controller_class, action) or return
           "#{controller_class.api_scope_resource}:#{scope_action}"
+        end
+
+        # The controller's grouping wins when it declares one (`api_scopes`), so an
+        # endpoint that needs a coarser or different split says so once.
+        def scope_action_for(controller_class, action)
+          groups = controller_class.api_scope_groups
+          if groups.present?
+            return groups.find { |_, actions| actions.include?(action.to_sym) }&.first
+          end
+          SCOPE_ACTIONS[action.to_s]
         end
 
         # Memoized: `ApiKeyScope.scope_mappings` runs on every request made with a
@@ -61,8 +71,9 @@ module DiscourseDataExplorer
 
         def build
           kit_routes.each_with_object({}) do |(controller, action), mappings|
-            scope_action = SCOPE_ACTIONS[action] or next
-            resource = controller_class(controller).api_scope_resource
+            klass = controller_class(controller)
+            scope_action = scope_action_for(klass, action) or next
+            resource = klass.api_scope_resource
             entry = ((mappings[resource] ||= {})[scope_action] ||= { actions: [] })
             entry[:actions] |= ["#{controller}##{action}"]
             entry[:params] = %i[id] if MEMBER_ACTIONS.include?(action)

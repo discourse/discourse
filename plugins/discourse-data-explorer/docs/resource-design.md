@@ -248,10 +248,17 @@ Conventions:
 | `actions:` | `"<controller_path>#<action>"` per routed action |
 | `params:` | `[:id]` on member routes — gives admins the existing "restrict this key to specific ids" feature for free |
 
-An override hook (a different scope resource name for an admin variant, or coarser grouping
-such as `read: %i[index show], write: %i[create update destroy]`) is designed but not built —
-nothing in the spike needs it yet. The seam exists: `BaseController.api_scope_resource`
-returns the resource type and is where an override would land.
+**`api_scopes` overrides the derivation** where the defaults don't fit — a different scope
+name (an admin variant of a type) and/or a different grouping of actions:
+
+```ruby
+api_scopes :admin_queries
+api_scopes read: %i[index show], write: %i[create update destroy]
+```
+
+A declared grouping wins over the default table, and the resource name defaults to the
+JSON:API type when only a grouping is given. Member actions keep `params: [:id]` under
+whatever name they end up in, since that follows the route, not the grouping.
 
 **Granularity is compatibility-first, not a fix.** Most of the API is far coarser today:
 chat exposes exactly one scope (`create_message`), Data Explorer one (`run_queries`). Per

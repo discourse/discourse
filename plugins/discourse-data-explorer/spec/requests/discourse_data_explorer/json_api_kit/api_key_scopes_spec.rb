@@ -73,6 +73,44 @@ RSpec.describe "JSON:API Kit API key scopes" do
     end
   end
 
+  # An endpoint that shouldn't take the defaults — an admin variant of a type, or a
+  # coarser read/write split — says so on the controller.
+  describe "overrides" do
+    subject(:mapping) { DiscourseDataExplorer::JsonApiKit::ApiKeyScopes.mappings }
+
+    let(:controller) { DiscourseDataExplorer::JsonApiKit::QueriesController }
+
+    around do |example|
+      controller.api_scopes(:admin_queries, read: %i[index], write: %i[create show])
+      DiscourseDataExplorer::JsonApiKit::ApiKeyScopes.reset!
+      example.run
+    ensure
+      controller.api_scopes(nil)
+      DiscourseDataExplorer::JsonApiKit::ApiKeyScopes.reset!
+    end
+
+    it "renames the scope resource" do
+      expect(mapping.keys).to eq([:admin_queries])
+    end
+
+    it "groups the actions as declared" do
+      expect(mapping[:admin_queries][:read][:actions]).to eq(
+        ["discourse_data_explorer/json_api_kit/queries#index"],
+      )
+    end
+
+    it "puts the regrouped actions under their new name" do
+      expect(mapping[:admin_queries][:write][:actions]).to contain_exactly(
+        "discourse_data_explorer/json_api_kit/queries#create",
+        "discourse_data_explorer/json_api_kit/queries#show",
+      )
+    end
+
+    it "still allows restricting member actions by id" do
+      expect(mapping[:admin_queries][:write][:params]).to eq(%i[id])
+    end
+  end
+
   context "with a key scoped to reading queries" do
     before { scope!("queries", "read") }
 

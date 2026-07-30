@@ -41,6 +41,7 @@ module DiscourseDataExplorer
       before_action :announce_deprecation
 
       class_attribute :_jsonapi_config, instance_writer: false
+      class_attribute :_api_scope_resource, :_api_scope_groups, instance_writer: false
 
       # Endpoint wiring: the resource class (docs/resource-design.md) carries all
       # declarations; the controller only names which resource it serves.
@@ -48,12 +49,24 @@ module DiscourseDataExplorer
         self._jsonapi_config = resource_class.jsonapi_config
       end
 
-      # The name this endpoint's API key scopes are grouped under — the resource's
-      # public type, so scopes read like the API vocabulary (`queries` / `read`).
-      # See docs/resource-design.md §8.
-      def self.api_scope_resource
-        _jsonapi_config.serializer_class.record_type.to_sym
+      # API key scopes are derived (docs/resource-design.md §8); this overrides the
+      # derivation where the defaults don't fit — a different scope name for an admin
+      # variant of a type, and/or a different grouping of actions:
+      #
+      #   api_scopes :admin_queries
+      #   api_scopes read: %i[index show], write: %i[create update destroy]
+      def self.api_scopes(resource = nil, **groups)
+        self._api_scope_resource = resource
+        self._api_scope_groups = groups.transform_values { |actions| Array(actions).map(&:to_sym) }
       end
+
+      # The name this endpoint's scopes are grouped under — by default the resource's
+      # public type, so scopes read like the API vocabulary (`queries` / `read`).
+      def self.api_scope_resource
+        _api_scope_resource || _jsonapi_config.serializer_class.record_type.to_sym
+      end
+
+      def self.api_scope_groups = _api_scope_groups
 
       # Machine-readable contract descriptor derived from the DSL config + serializer.
       # The backwards-compat guard (spec/integration/
