@@ -138,14 +138,18 @@ RSpec.describe PrettyText do
       [/poll]
     MD
 
-    html = PrettyText.format_for_email(post.cooked, post)
-    expect(html).to include("Tabs")
-    expect(html).to include("Spaces")
-    expect(html).to include("Whatever my cat walks on the keyboard")
-    expect(html).to include(I18n.t("poll.email.link_to_poll"))
+    expect(PrettyText.format_for_email(post.cooked, post)).to match_html(<<~HTML)
+      <p>A post with a poll</p>
+      <ul>
+      <li>Tabs</li>
+      <li>Spaces</li>
+      <li>Whatever my cat walks on the keyboard</li>
+      </ul>
+      <p><a href="#{post.full_url}">#{I18n.t("poll.email.link_to_poll")}</a></p>
+    HTML
   end
 
-  it "includes poll title when formatting for email" do
+  it "includes the poll title only once when formatting for email" do
     post = Fabricate(:post, raw: <<~MD)
       [poll]
       # Best bug fix excuse?
@@ -154,11 +158,45 @@ RSpec.describe PrettyText do
       [/poll]
     MD
 
-    html = PrettyText.format_for_email(post.cooked, post)
-    expect(html).to include("Best bug fix excuse?")
-    expect(html).to include("It works on my machine")
-    expect(html).to include("That is not a bug, it is a feature")
-    expect(html).to include(I18n.t("poll.email.link_to_poll"))
+    expect(PrettyText.format_for_email(post.cooked, post)).to match_html(<<~HTML)
+      <div class="poll-title">Best bug fix excuse?</div>
+      <ul>
+      <li>It works on my machine</li>
+      <li>That is not a bug, it is a feature</li>
+      </ul>
+      <p><a href="#{post.full_url}">#{I18n.t("poll.email.link_to_poll")}</a></p>
+    HTML
+  end
+
+  it "includes every poll of a multi-poll post when formatting for email" do
+    post = Fabricate(:post, raw: <<~MD)
+      [poll name=first]
+      # Tabs or spaces?
+      * Tabs
+      * Spaces
+      [/poll]
+
+      [poll name=second type=multiple]
+      # Cats or dogs?
+      * Cats
+      * Dogs
+      [/poll]
+    MD
+
+    expect(PrettyText.format_for_email(post.cooked, post)).to match_html(<<~HTML)
+      <div class="poll-title">Tabs or spaces?</div>
+      <ul>
+      <li>Tabs</li>
+      <li>Spaces</li>
+      </ul>
+      <p><a href="#{post.full_url}">#{I18n.t("poll.email.link_to_poll")}</a></p>
+      <div class="poll-title">Cats or dogs?</div>
+      <ul>
+      <li>Cats</li>
+      <li>Dogs</li>
+      </ul>
+      <p><a href="#{post.full_url}">#{I18n.t("poll.email.link_to_poll")}</a></p>
+    HTML
   end
 
   it "can reduce excerpts" do
