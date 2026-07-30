@@ -28,11 +28,13 @@ describe "Admin Dashboard Redesign" do
       dashboard
         .resize_viewport(height: 400)
         .track_section_requests
+        .track_general_dashboard_requests
         .visit
 
       dashboard.wait_for_section_request("highlights")
 
       expect(dashboard).to have_highlights_content
+      expect(dashboard.general_dashboard_request_count).to eq(0)
       expect(dashboard).to have_section_loading("reports")
       expect(dashboard).to have_section_loading("search")
       expect(dashboard.requested_section_ids).not_to include("reports", "search")

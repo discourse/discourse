@@ -270,8 +270,27 @@ module PageObjects
         self
       end
 
+      def track_general_dashboard_requests
+        @general_dashboard_request_count = 0
+        page.driver.with_playwright_page do |playwright_page|
+          playwright_page.on(
+            "request",
+            lambda do |request|
+              if request.url.match?(%r{/admin/dashboard/general\.json})
+                @general_dashboard_request_count += 1
+              end
+            end,
+          )
+        end
+        self
+      end
+
       def requested_section_ids
         Array(@section_requests).dup
+      end
+
+      def general_dashboard_request_count
+        @general_dashboard_request_count || 0
       end
 
       def reports_bulk_request_count
