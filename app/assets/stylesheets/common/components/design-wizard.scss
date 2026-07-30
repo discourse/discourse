@@ -8,6 +8,7 @@
   // with the active scheme injected, which would otherwise restyle the tool.
   --primary: #222;
   --secondary: #fff;
+  --d-content-background: #fff;
   --tertiary: #08c;
   --tertiary-hover: #069;
   --tertiary-low: #d1f0ff;
@@ -409,13 +410,18 @@
     color: var(--primary);
   }
 
-  &__font-select {
+  &__font-select.btn-default.btn {
     justify-content: space-between;
     width: 100%;
     border-radius: var(--d-border-radius);
+    background: var(--content-background);
+
+    &:hover {
+      background: var(--content-background);
+    }
   }
 
-  &__font-select-caret {
+  &__font-select-caret.d-icon.d-icon-angle-down.svg-icon {
     margin-inline-start: var(--space-1);
     color: var(--primary-medium);
   }
