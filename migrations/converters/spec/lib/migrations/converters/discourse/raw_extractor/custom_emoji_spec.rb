@@ -4,7 +4,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   include_context "with raw extractor"
 
   describe "custom emoji" do
-    subject(:extractor) { described_class.new(embeds: buffer, custom_emoji_names: %w[parrot +1]) }
+    subject(:extractor) do
+      described_class.new(embeds: buffer, mention_names:, custom_emoji_names: %w[parrot +1])
+    end
 
     it "defers a shortcode that names a source custom emoji" do
       result = extract("nice :parrot: work")
@@ -105,7 +107,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     it "skips emoji detection entirely when the source has no custom emoji" do
-      plain_extractor = described_class.new(embeds: buffer)
+      plain_extractor = described_class.new(embeds: buffer, mention_names:)
       raw = "a :parrot: and :smile:"
 
       expect(plain_extractor.extract(raw)).to eq(raw)

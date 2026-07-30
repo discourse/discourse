@@ -123,6 +123,81 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
   end
 
+  # Core runs mentions, hashtags and emoji through the text-post-process engine,
+  # which skips any text token inside a link — and a link's destination is not a
+  # text token at all. So nothing is detected inside a link, and a `@name` there
+  # stays somebody else's URL instead of being rewritten to a destination
+  # username. Every expectation here was checked against PrettyText.
+  describe "links" do
+    let(:hashtag_names) do
+      Migrations::SortedStringSet.new([Migrations::NameNormalizer.normalize("general")])
+    end
+    let(:link_extractor) do
+      described_class.new(
+        embeds: buffer,
+        mention_names:,
+        hashtag_names:,
+        internal_link_hosts: {
+          "forum.example.com" => nil,
+        },
+      )
+    end
+
+    [
+      "[link](https://external.com/@bob)",
+      "see https://external.com/x/@bob now",
+      "<https://external.com/@bob>",
+      "https://external.com/?a=1&t=@bob",
+      "[hi @bob](https://external.com/)",
+      "![alt @bob](https://external.com/p.png)",
+      "//external.com/@bob",
+      # `_` is a linkify boundary, so core links this one too.
+      "x_https://external.com/@bob",
+    ].each do |raw|
+      it "leaves a mention inside #{raw} alone" do
+        expect(link_extractor.extract(raw)).to eq(raw)
+        expect(buffer.mentions).to be_empty
+      end
+    end
+
+    it "leaves a hashtag inside a link alone" do
+      raw = "see https://external.com/x/#general now"
+
+      expect(link_extractor.extract(raw)).to eq(raw)
+      expect(buffer.hashtags).to be_empty
+    end
+
+    it "still defers a mention in prose next to a link" do
+      link_extractor.extract("hi @bob see https://external.com/@carol now")
+
+      expect(buffer.mentions.map { |mention| mention[:name] }).to eq(%w[bob])
+    end
+
+    # The skip must not swallow a link another detector wants, or the embed it
+    # carries would go unrecorded.
+    it "still defers an internal link" do
+      link_extractor.extract("[t](https://forum.example.com/t/slug/5)")
+
+      expect(buffer.links.size).to eq(1)
+    end
+
+    it "still defers an upload inside a link" do
+      sha1 = "0123456789abcdef0123456789abcdef01234567"
+      link_extractor.extract("[f](https://cdn.example.com/uploads/default/original/1X/#{sha1}.png)")
+
+      expect(buffer.uploads.size).to eq(1)
+    end
+
+    # The outer bracket must not match, or the walk would never reach the inner
+    # image and the upload would be lost.
+    it "still defers the inner image of a linked image on a foreign host" do
+      link_extractor.extract("[![alt](upload://abc.png)](https://external.com/@bob)")
+
+      expect(buffer.uploads.size).to eq(1)
+      expect(buffer.mentions).to be_empty
+    end
+  end
+
   # An unpaired backtick is literal text in CommonMark, so it must not open a code
   # span that swallows the rest of the post. A span exists only when a matching
   # closer follows within the same paragraph. Every expectation here was checked
@@ -131,8 +206,10 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     let(:hashtag_names) do
       Migrations::SortedStringSet.new([Migrations::NameNormalizer.normalize("general")])
     end
-    let(:hashtag_extractor) { described_class.new(embeds: buffer, hashtag_names:) }
-    let(:emoji_extractor) { described_class.new(embeds: buffer, custom_emoji_names: %w[parrot]) }
+    let(:hashtag_extractor) { described_class.new(embeds: buffer, mention_names:, hashtag_names:) }
+    let(:emoji_extractor) do
+      described_class.new(embeds: buffer, mention_names:, custom_emoji_names: %w[parrot])
+    end
 
     it "extracts a mention after an unpaired backtick" do
       extract("a`@alice here")
@@ -193,7 +270,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # `extract` builds its detectors internally and never produces an unknown
     # node, so this guard is unreachable through the public API; open up the
     # private method deliberately to exercise it.
-    seam = Class.new(described_class) { public :defer }.new(embeds: buffer)
+    seam = Class.new(described_class) { public :defer }.new(embeds: buffer, mention_names:)
 
     expect { seam.defer(Object.new) }.to raise_error(NotImplementedError, /Object/)
   end
@@ -283,14 +360,21 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
         # An absolute bare URL still detects in prose, so it exercises the
         # byte-offset look-back with multibyte text before it.
         host_extractor =
-          described_class.new(embeds: buffer, internal_link_hosts: { "forum.example.com" => nil })
+          described_class.new(
+            embeds: buffer,
+            mention_names:,
+            internal_link_hosts: {
+              "forum.example.com" => nil,
+            },
+          )
         host_extractor.extract("Höhe https://forum.example.com/t/thema/9 an")
 
         expect(buffer.links.first).to include(target_id: 9)
       end
 
       it "still defers a custom emoji" do
-        emoji_extractor = described_class.new(embeds: buffer, custom_emoji_names: %w[parrot])
+        emoji_extractor =
+          described_class.new(embeds: buffer, mention_names:, custom_emoji_names: %w[parrot])
         emoji_extractor.extract("schön :parrot:")
 
         expect(buffer.emojis.first[:name]).to eq("parrot")

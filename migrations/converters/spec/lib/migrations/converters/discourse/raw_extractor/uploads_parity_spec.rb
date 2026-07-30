@@ -10,6 +10,10 @@
 # an anchor for the URL. Needs a booted Rails environment, so it is tagged `:rails`
 # and runs only under `MIGRATIONS_RAILS=1`.
 RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
+  # This spec is not about mentions; the extractor needs the set anyway.
+  def mention_names
+    Migrations::SortedStringSet.new([])
+  end
   before { SiteSetting.enable_markdown_linkify = true }
 
   def url
@@ -51,7 +55,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
       )
-    described_class.new(embeds: buffer).extract(raw)
+    described_class.new(embeds: buffer, mention_names:).extract(raw)
     buffer.uploads.any?
   end
 

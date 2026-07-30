@@ -105,6 +105,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     subject(:extractor) do
       described_class.new(
         embeds: buffer,
+        mention_names:,
         hashtag_names: Migrations::SortedStringSet.new(%w[announcements support:billing]),
       )
     end
@@ -155,6 +156,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       dotted =
         described_class.new(
           embeds: buffer,
+          mention_names:,
           hashtag_names: Migrations::SortedStringSet.new(%w[v2.0]),
         )
       dotted.extract("ship #v2.0 today")
@@ -164,7 +166,11 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     it "does not truncate a dotted name to a shorter prefix that is in the set" do
       dotted =
-        described_class.new(embeds: buffer, hashtag_names: Migrations::SortedStringSet.new(%w[v2]))
+        described_class.new(
+          embeds: buffer,
+          mention_names:,
+          hashtag_names: Migrations::SortedStringSet.new(%w[v2]),
+        )
       raw = "ship #v2.0 today"
 
       expect(dotted.extract(raw)).to eq(raw)

@@ -52,11 +52,11 @@ module Migrations
         #   (a `MentionType` enum value for `here` / `all` / `group` / `user`).
         #   Defaults to a classifier with no group knowledge (so only `@here` / `@all`
         #   are special-cased).
-        # @param mention_names [Migrations::SortedStringSet, nil] the source's
-        #   mention names (usernames, group names, the `here_mention` value and
-        #   `all`, normalized). When given, only a mention naming one of them is
-        #   deferred; anything else stays literal text. `nil` defers every `@word`
-        #   that parses (the old syntactic behavior).
+        # @param mention_names [Migrations::SortedStringSet] the source's mention
+        #   names (usernames, group names, the `here_mention` value and `all`,
+        #   normalized). Only a mention naming one of them is deferred; anything else
+        #   stays literal text. Required: without the names every `@word` that parses
+        #   is rewritten, including the ones that name nobody.
         # @param hashtag_names [Migrations::SortedStringSet, nil] the source's
         #   category slug paths and tag names (normalized). When given, only a
         #   hashtag naming one of them is extracted; anything else stays literal
@@ -87,8 +87,8 @@ module Migrations
         #   default) skips the signal.
         def initialize(
           embeds:,
+          mention_names:,
           mention_classifier: MentionClassifier.new,
-          mention_names: nil,
           hashtag_names: nil,
           custom_emoji_names: nil,
           internal_link_hosts: {},
@@ -106,6 +106,10 @@ module Migrations
             base_prefix: internal_link_base_prefix,
             on_foreign_host:,
           )
+          # Last of the detectors that share its triggers, so a link one of them wants
+          # is still theirs; it only swallows what nothing else claimed, which stops
+          # the walk from reaching a `@name` or `#tag` inside somebody's URL.
+          detectors << Detectors::LinkSpan.new
           detectors << Detectors::Mention.new(names: mention_names)
           detectors << Detectors::Hashtag.new(names: hashtag_names)
           if custom_emoji_names.present?

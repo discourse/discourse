@@ -17,6 +17,10 @@
 # inline in a sentence, so no onebox block path. Needs a booted Rails environment,
 # so it is tagged `:rails` and runs only under `MIGRATIONS_RAILS=1`.
 RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
+  # This spec is not about mentions; the extractor needs the set anyway.
+  def mention_names
+    Migrations::SortedStringSet.new([])
+  end
   before { SiteSetting.enable_markdown_linkify = true }
 
   # The detector treats an absolute URL as internal only when its host is one it
@@ -65,7 +69,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
       )
-    described_class.new(embeds: buffer, internal_link_hosts: { host => nil }).extract(raw)
+    described_class.new(
+      embeds: buffer,
+      mention_names:,
+      internal_link_hosts: {
+        host => nil,
+      },
+    ).extract(raw)
     buffer.links.any?
   end
 
@@ -117,7 +127,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
       )
-    described_class.new(embeds: buffer, internal_link_hosts: { host => nil }).extract(raw)
+    described_class.new(
+      embeds: buffer,
+      mention_names:,
+      internal_link_hosts: {
+        host => nil,
+      },
+    ).extract(raw)
 
     expect(buffer.links.first).to include(
       target_type: Migrations::Database::IntermediateDB::Enums::LinkTarget::SITE,

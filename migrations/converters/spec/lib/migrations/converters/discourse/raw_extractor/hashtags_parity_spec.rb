@@ -7,6 +7,10 @@
 # environment (PrettyText's server-side markdown-it and a real category to look
 # up), so it is tagged `:rails` and runs only under `MIGRATIONS_RAILS=1`.
 RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
+  # This spec is not about mentions; the extractor needs the set anyway.
+  def mention_names
+    Migrations::SortedStringSet.new([])
+  end
   # The category the battery looks up. A hashtag whose name resolves to a real
   # category is what core cooks into a `hashtag-cooked` link.
   let!(:category) do
@@ -52,7 +56,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
       )
-    described_class.new(embeds: buffer, hashtag_names:).extract(raw)
+    described_class.new(embeds: buffer, mention_names:, hashtag_names:).extract(raw)
     buffer.hashtags.any?
   end
 

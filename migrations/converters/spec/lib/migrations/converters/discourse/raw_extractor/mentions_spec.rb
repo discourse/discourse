@@ -79,7 +79,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
           here_mention: "here",
           group_names: %w[admins],
         )
-      extractor = described_class.new(embeds: buffer, mention_classifier: classifier)
+      extractor =
+        described_class.new(embeds: buffer, mention_names:, mention_classifier: classifier)
 
       extractor.extract("@gerhard @admins @here all there")
 
@@ -93,16 +94,12 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
   end
 
-  describe "mentions with an existence gate" do
-    subject(:extractor) do
-      described_class.new(
-        embeds: buffer,
-        mention_names:
-          Migrations::SortedStringSet.new(
-            %w[alice bob john.doe staff here all café_team].map do |name|
-              Migrations::NameNormalizer.normalize(name)
-            end,
-          ),
+  describe "the mention name gate" do
+    let(:mention_names) do
+      Migrations::SortedStringSet.new(
+        %w[alice bob john.doe staff here all café_team].map do |name|
+          Migrations::NameNormalizer.normalize(name)
+        end,
       )
     end
 
@@ -150,11 +147,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.mentions.first[:name]).to eq("john.doe")
     end
 
-    it "defers every parsed @word when no gate is given" do
-      ungated = described_class.new(embeds: buffer)
-      ungated.extract("meet at @3pm please")
-
-      expect(buffer.mentions.first[:name]).to eq("3pm")
+    it "requires the names, so no caller can defer every @word by accident" do
+      expect { described_class.new(embeds: buffer) }.to raise_error(ArgumentError, /mention_names/)
     end
   end
 end

@@ -179,7 +179,9 @@ module Migrations
           end
 
           def handle_match(match)
-            replacement = @on_node.call(match.node)
+            # A node-less match consumes its span without producing anything, so the
+            # caller is never asked about it (see {Detectors::Match}).
+            replacement = match.node.nil? ? nil : @on_node.call(match.node)
             # A block declines a match by returning nil: the matched span passes
             # through unchanged (the byte slice, since positions are byte offsets)
             # instead of being replaced. Anything else is stringified and spliced in.

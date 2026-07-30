@@ -19,12 +19,16 @@ require "cgi"
 # accepted divergences rather than parity; they are pinned separately below so a
 # future change in our behavior is noticed.
 RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
+  # This spec is not about mentions; the extractor needs the set anyway.
+  def mention_names
+    Migrations::SortedStringSet.new([])
+  end
   def detector_quote(raw)
     buffer =
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
       )
-    described_class.new(embeds: buffer).extract(raw)
+    described_class.new(embeds: buffer, mention_names:).extract(raw)
     buffer.quotes.first
   end
 

@@ -11,11 +11,11 @@ module Migrations
           # later by the converter's MentionClassifier (it needs the source's groups
           # and `here_mention` setting), so the node just carries the name.
           #
-          # When the caller supplies the source's mention names (every username,
-          # group name, the `here_mention` value and `all`), only a mention naming
-          # one of them is deferred; anything else (`@3pm`) stays literal text.
-          # Without a name set, every `@word` that parses is deferred (purely
-          # syntactic), for callers with no source metadata.
+          # Only a mention naming one of the source's mention names (every username,
+          # group name, the `here_mention` value and `all`) is deferred; anything
+          # else (`@3pm`) stays literal text. The names are required: deferring every
+          # `@word` that parses rewrites text that names nobody, and the importer
+          # then resolves it against the destination.
           #
           # This mirrors what core actually renders, which is core's markdown-it
           # mentions rule (`discourse-markdown-it/src/features/mentions.js`) as applied
@@ -36,10 +36,10 @@ module Migrations
           class Mention < Base
             TRIGGERS = ["@"].freeze
 
-            # @param names [Migrations::SortedStringSet, nil] the source's mention
-            #   names, already normalized. When given, a mention is deferred only if
-            #   its (normalized) name is in the set. `nil` means no gate.
-            def initialize(names: nil)
+            # @param names [Migrations::SortedStringSet] the source's mention names,
+            #   already normalized. A mention is deferred only if its (normalized)
+            #   name is in the set.
+            def initialize(names:)
               @names = names
             end
 
@@ -51,9 +51,13 @@ module Migrations
 
               end_pos = pos + 1 + name.bytesize # +1 for the `@` (one byte)
               return nil unless mention_boundary_after?(input, end_pos)
-              return nil if @names && !@names.include?(normalize(name))
 
-              Match.new(start_pos: pos, end_pos:, node: Markbridge::AST::Mention.new(name:))
+              # Phrased positively on purpose: `unless @names.include?(…)` gets
+              # autocorrected to ActiveSupport's `exclude?`, which SortedStringSet
+              # does not have.
+              if @names.include?(normalize(name))
+                Match.new(start_pos: pos, end_pos:, node: Markbridge::AST::Mention.new(name:))
+              end
             end
           end
         end

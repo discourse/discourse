@@ -5,7 +5,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
   describe "internal links" do
     subject(:extractor) do
-      described_class.new(embeds: buffer, internal_link_hosts: { "forum.example.com" => nil })
+      described_class.new(
+        embeds: buffer,
+        mention_names:,
+        internal_link_hosts: {
+          "forum.example.com" => nil,
+        },
+      )
     end
 
     def link_for(raw)
@@ -411,7 +417,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     it "detects a relative link only in link form when no host set is given" do
-      plain_extractor = described_class.new(embeds: buffer)
+      plain_extractor = described_class.new(embeds: buffer, mention_names:)
 
       result = plain_extractor.extract("bare /t/slug/12 and linked [x](/t/slug/34)")
 
@@ -426,6 +432,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     subject(:extractor) do
       described_class.new(
         embeds: buffer,
+        mention_names:,
         internal_link_hosts: {
           "forum.example.com" => nil,
         },
@@ -474,7 +481,11 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     it "treats every absolute route-shaped link as foreign when no host is configured" do
       no_host =
-        described_class.new(embeds: buffer, on_foreign_host: ->(host) { foreign_hosts << host })
+        described_class.new(
+          embeds: buffer,
+          mention_names:,
+          on_foreign_host: ->(host) { foreign_hosts << host },
+        )
       no_host.extract("read https://any.example.com/t/slug/99 now")
 
       expect(foreign_hosts).to eq(["any.example.com"])
@@ -482,7 +493,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     it "is a no-op when no callback is given" do
       plain =
-        described_class.new(embeds: buffer, internal_link_hosts: { "forum.example.com" => nil })
+        described_class.new(
+          embeds: buffer,
+          mention_names:,
+          internal_link_hosts: {
+            "forum.example.com" => nil,
+          },
+        )
 
       expect(plain.extract("elsewhere https://old-forum.example.com/t/slug/99 done")).to eq(
         "elsewhere https://old-forum.example.com/t/slug/99 done",
@@ -495,7 +512,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   # suffix. A relative route-less URL stays literal (it's domain-free already).
   describe "SITE targets on a root install" do
     subject(:extractor) do
-      described_class.new(embeds: buffer, internal_link_hosts: { "forum.example.com" => nil })
+      described_class.new(
+        embeds: buffer,
+        mention_names:,
+        internal_link_hosts: {
+          "forum.example.com" => nil,
+        },
+      )
     end
 
     def link_for(raw)
@@ -544,6 +567,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     subject(:extractor) do
       described_class.new(
         embeds: buffer,
+        mention_names:,
         internal_link_hosts: {
           "www.example.com" => "/forum",
         },
@@ -599,6 +623,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       signalling =
         described_class.new(
           embeds: buffer,
+          mention_names:,
           internal_link_hosts: {
             "www.example.com" => "/forum",
           },

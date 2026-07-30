@@ -1,7 +1,19 @@
 # frozen_string_literal: true
 
 RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::Scanner do
-  let(:detectors) { [Migrations::Converters::Discourse::MarkdownScanner::Detectors::Mention.new] }
+  let(:mention_names) do
+    Migrations::SortedStringSet.new(
+      %w[alice bob café].map { |name| Migrations::NameNormalizer.normalize(name) },
+    )
+  end
+
+  let(:detectors) do
+    [
+      Migrations::Converters::Discourse::MarkdownScanner::Detectors::Mention.new(
+        names: mention_names,
+      ),
+    ]
+  end
 
   def scan(input, &block)
     described_class.new(detectors:, &block).scan(input)
