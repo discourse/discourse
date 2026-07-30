@@ -46,7 +46,7 @@ module Migrations
             # `\G` anchors each match at `pos` so scanning stays linear. The alt
             # class excludes `[` for the same reason as `LINK` below: a nested image
             # `![![…](…)](…)` must not match from the outer `!`.
-            IMAGE = /\G!\[[^\[\]]*\]\(#{URL}\)/
+            IMAGE = /\G!\[[^\[\]]*\]\(#{Base::LINK_GAP}#{URL}#{Base::LINK_TAIL}/
             private_constant :IMAGE
 
             # The text class excludes `[` so the `[` of a nested image
@@ -55,7 +55,7 @@ module Migrations
             # the inner `)`, swallowing the image and leaving a dangling `](…)`. With
             # `[` excluded the outer bracket fails here and the inner image is deferred
             # on its own at the `!` trigger.
-            LINK = /\G\[[^\[\]]*\]\(#{URL}\)/
+            LINK = /\G\[[^\[\]]*\]\(#{Base::LINK_GAP}#{URL}#{Base::LINK_TAIL}/
             private_constant :LINK
 
             BARE = /\G#{URL}/

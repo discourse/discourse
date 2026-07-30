@@ -80,6 +80,33 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       )
     end
 
+    # A destination can carry a title, padding, or angle brackets and still be a
+    # link core resolves. Missing those left such a link pointing at the source
+    # site after the migration. Each of these cooks to href="/t/slug/5".
+    {
+      "a title" => %([t](/t/slug/5 "title")),
+      "a single-quoted title" => "[t](/t/slug/5 'title')",
+      "a parenthesized title" => "[t](/t/slug/5 (title))",
+      "padding" => "[t](  /t/slug/5  )",
+      "angle brackets" => "[t](</t/slug/5>)",
+      "angle brackets and a title" => %([t](</t/slug/5> "ti")),
+      "an absolute URL and a title" => %([t](https://forum.example.com/t/slug/5 "ti")),
+    }.each do |label, raw|
+      it "defers a topic link written with #{label}" do
+        link, = link_for(raw)
+
+        expect(link).to include(target_type: link_target::TOPIC, target_id: 5)
+      end
+    end
+
+    # Core builds no link for either of these, so neither may be rewritten.
+    ["[t](/t/slug/5 not-a-title)", %([t](/t/slug/5 "unclosed))].each do |raw|
+      it "leaves #{raw} literal, since core makes no link of it" do
+        expect(extract(raw)).to eq(raw)
+        expect(buffer.links).to be_empty
+      end
+    end
+
     it "defers the id-only topic form" do
       link, = link_for("[x](/t/123)")
 

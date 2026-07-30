@@ -115,6 +115,23 @@ module Migrations
             # (`[^/#{URL_TERMINATORS}]`) to match a single path segment.
             URL_TERMINATORS = "\\s)\"'<>"
 
+            # The padding CommonMark allows inside a link's parentheses. The
+            # destination and the title may sit on separate lines, but not across a
+            # blank one, so at most one newline.
+            LINK_GAP = /[^\S\n]*\n?[^\S\n]*/
+
+            # A link title, which core turns into the anchor's `title` attribute:
+            # `[text](url "title")`. Kept to a single line — a title spanning lines is
+            # rare, and not matching one leaves the link undetected rather than
+            # wrongly detected.
+            LINK_TITLE = /(?:"[^"\n]*"|'[^'\n]*'|\([^()\n]*\))/
+
+            # Everything a markdown link allows after its destination: an optional
+            # title, padding, and the closing paren. Shared so every detector that
+            # reads `[text](url)` accepts the same shapes — a link carrying a title
+            # is still a link, and one that doesn't match here is never rewritten.
+            LINK_TAIL = /(?:#{LINK_GAP}#{LINK_TITLE})?#{LINK_GAP}\)/
+
             # A mention (`@name`) opens only when the `@` sits on a boundary: the
             # start of input, whitespace, or a punctuation/symbol character. Verified
             # against PrettyText: the engine's boundary is punctuation-or-space, not

@@ -62,7 +62,14 @@ module Migrations
             # The text class excludes `[` for the same reason as `UploadUrl::LINK` (see
             # the comment there): the `[` of a nested image `[![…](…)](…)` must not
             # start a match at the outer bracket.
-            LINK = /\G\[(?<text>[^\[\]]*)\]\((?<url>#{URL_BODY}+)\)/
+            #
+            # The destination takes the padding, optional title and `<…>` form
+            # CommonMark allows (see `Base::LINK_TAIL`). Without those an internal
+            # link written with a title was left alone and kept pointing at the
+            # source site. The `<…>` alternative repeats the `url` group name, which
+            # Ruby allows: whichever branch matches is the one `match[:url]` reads.
+            LINK =
+              /\G\[(?<text>[^\[\]]*)\]\(#{Base::LINK_GAP}(?:<(?<url>[^<>\n]+)>|(?<url>#{URL_BODY}+))#{Base::LINK_TAIL}/
             private_constant :LINK
 
             # The bare form fires at every whitespace-preceded `h` and `/` the scanner

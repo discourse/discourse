@@ -79,6 +79,29 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.uploads.first[:upload_id]).to eq(sha1)
     end
 
+    # A destination carrying a title is still a link core resolves, so the upload
+    # behind it has to be carried over like any other.
+    it "recognizes an upload URL in an image with a title" do
+      url = "https://cdn.example.com/uploads/default/original/2X/a/ab/#{sha1}.png"
+      extract(%(![x](#{url} "a title")))
+
+      expect(buffer.uploads.first[:upload_id]).to eq(sha1)
+    end
+
+    it "recognizes an upload URL in a link with a title" do
+      url = "https://cdn.example.com/uploads/default/original/2X/a/ab/#{sha1}.pdf"
+      extract(%([report](#{url} 'a title')))
+
+      expect(buffer.uploads.first[:upload_id]).to eq(sha1)
+    end
+
+    it "recognizes an upload URL with padding around it" do
+      url = "/uploads/default/original/2X/a/ab/#{sha1}.png"
+      extract("![x](  #{url}  )")
+
+      expect(buffer.uploads.first[:upload_id]).to eq(sha1)
+    end
+
     # linkify-it reads the scheme case-insensitively, so core links these too.
     %w[HTTPS Https HTTP].each do |scheme|
       it "recognizes an upload URL with a #{scheme} scheme" do
