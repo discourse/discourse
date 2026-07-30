@@ -117,6 +117,36 @@ RSpec.describe Vips do
     end
   end
 
+  describe ".convert" do
+    it "drops PNG XMP metadata while preserving its EXIF and ICC profiles" do
+      Dir.mktmpdir("vips-convert-metadata") do |directory|
+        input = File.join(directory, "input.png")
+        output = File.join(directory, "output.jpg")
+        Vips.call(
+          "copy",
+          high_detail_input,
+          "#{input}[compression=0]",
+          read: [high_detail_input],
+          write: [directory],
+        )
+
+        described_class.convert(
+          from: input,
+          to: output,
+          source_format: "png",
+          target_format: "jpeg",
+          flatten: true,
+        )
+
+        expect { Vips.header(output, field: "xmp-data") }.to raise_error(
+          Discourse::Utils::CommandError,
+        )
+        expect(Vips.header(output, field: "exif-data")).not_to be_empty
+        expect(Vips.header(output, field: "icc-profile-data")).not_to be_empty
+      end
+    end
+  end
+
   describe ".crop" do
     it "produces an exact north-gravity crop for uncommon aspect ratios" do
       Dir.mktmpdir("vips-crop") do |directory|

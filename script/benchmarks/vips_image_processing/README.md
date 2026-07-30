@@ -13,6 +13,8 @@ The corpus and operations cover:
 - shrink-only downsize of an 8900×8900 JPEG;
 - qualifying uncompressed transparent PNG conversion through the production
   eligibility, target-quality, keep/discard, and replacement path;
+- JPEG recompression through the production source-quality, target-quality,
+  keep/discard, and replacement path;
 - HEIC conversion through the production upload path;
 - EXIF orientation correction;
 - SVG dimensions;
@@ -29,9 +31,12 @@ Every recorded sample is compared with the preserved ImageMagick reference
 before it is written to `samples.jsonl`. Raster comparisons require exact
 dimensions and encoded format, the declared normalized mean RGBA error
 threshold including alpha, the declared encoded-size bound, and any applicable
-orientation and metadata-stripping requirement. ICC-profile presence must match
-ImageMagick, and XMP presence is recorded for every raster result. Scalar probes
-require exact equality.
+orientation and metadata-stripping requirement. EXIF, XMP, IPTC, and
+ICC-profile presence must match ImageMagick for every raster result. XMP
+contents and user-meaningful EXIF camera, capture-time, and GPS fields must also
+match. Opaque MakerNote blobs and structural EXIF fields are recorded but are
+not equality requirements because libvips reconstructs those records when it
+encodes a new image. Scalar probes require exact equality.
 
 The optimized resize and north crop derive their target quality with the same
 `Upload#target_image_quality` policy used by `OptimizedImage.create_for`.

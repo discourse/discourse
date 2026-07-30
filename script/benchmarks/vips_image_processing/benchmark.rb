@@ -101,6 +101,24 @@ end
 
 class VipsImageProcessingBenchmark
   CANDIDATES = %w[image_magick vips].freeze
+  SEMANTIC_EXIF_FIELDS = %w[
+    exif-ifd0-Make
+    exif-ifd0-Model
+    exif-ifd2-DateTimeOriginal
+    exif-ifd3-GPSLatitudeRef
+    exif-ifd3-GPSLatitude
+    exif-ifd3-GPSLongitudeRef
+    exif-ifd3-GPSLongitude
+    exif-ifd3-GPSAltitudeRef
+    exif-ifd3-GPSAltitude
+    exif-ifd3-GPSSpeedRef
+    exif-ifd3-GPSSpeed
+    exif-ifd3-GPSImgDirectionRef
+    exif-ifd3-GPSImgDirection
+    exif-ifd3-GPSDestBearingRef
+    exif-ifd3-GPSDestBearing
+    exif-ifd3-GPSHPositioningError
+  ].freeze
   SOURCE_FILES = %w[
     app/models/optimized_image.rb
     app/models/upload.rb
@@ -209,6 +227,19 @@ class VipsImageProcessingBenchmark
         size_ratio: (0.5..2.0),
         expected_format: :jpeg,
         expected_orientation: nil,
+        metadata_stripped: true,
+      ),
+      BenchmarkOperation.new(
+        key: "jpeg_recompression",
+        label: "JPEG recompression",
+        input: "recompress.jpg",
+        output_extension: ".jpg",
+        type: "image",
+        expected: [2032, 1312],
+        mean_error_limit: 0.03,
+        size_ratio: (0.5..2.0),
+        expected_format: :jpeg,
+        expected_orientation: 1,
         metadata_stripped: nil,
       ),
       BenchmarkOperation.new(
@@ -347,6 +378,15 @@ class VipsImageProcessingBenchmark
       "copy",
       File.join(@inputs_dir, "high-detail.png"),
       "#{transparent}[compression=0]",
+      read: [File.join(@inputs_dir, "high-detail.png")],
+      write: [@inputs_dir],
+    )
+
+    recompress = File.join(@inputs_dir, "recompress.jpg")
+    Vips.call(
+      "copy",
+      File.join(@inputs_dir, "high-detail.png"),
+      "#{recompress}[Q=100]",
       read: [File.join(@inputs_dir, "high-detail.png")],
       write: [@inputs_dir],
     )
@@ -602,7 +642,8 @@ class VipsImageProcessingBenchmark
     case operation.key
     when "optimized_resize", "optimized_north_crop"
       Upload.new.target_image_quality(input, SiteSetting.ImageQuality.image_preview_jpg_quality)
-    when "png_to_jpeg", "heic_to_jpeg", "orientation_correction", "ico_conversion"
+    when "png_to_jpeg", "jpeg_recompression", "heic_to_jpeg", "orientation_correction",
+         "ico_conversion"
       file = File.open(input, "r+b")
       creator = UploadCreator.new(file, File.basename(input), force_optimize: true)
       creator.extract_image_info!
@@ -632,6 +673,12 @@ class VipsImageProcessingBenchmark
     when "png_to_jpeg"
       if !context.convert_png_to_jpeg?
         raise "PNG fixture does not qualify for production conversion"
+      end
+      context.convert_to_jpeg!
+      context.instance_variable_get(:@file).path
+    when "jpeg_recompression"
+      if !context.should_alter_quality?
+        raise "JPEG fixture does not qualify for production recompression"
       end
       context.convert_to_jpeg!
       context.instance_variable_get(:@file).path
@@ -706,12 +753,22 @@ class VipsImageProcessingBenchmark
           "expected #{operation.expected_orientation}",
       )
     end
-    metadata = metadata_presence(output)
-    reference_metadata = metadata_presence(reference.fetch(:output))
-    if metadata.fetch(:icc_profile) != reference_metadata.fetch(:icc_profile)
-      raise "#{operation.key} ICC profile presence differs from ImageMagick"
+    metadata = metadata_details(output)
+    reference_metadata = metadata_details(reference.fetch(:output))
+    metadata
+      .fetch(:presence)
+      .each do |name, present|
+        if present != reference_metadata.fetch(:presence).fetch(name)
+          raise "#{operation.key} #{name.to_s.upcase} metadata presence differs from ImageMagick"
+        end
+      end
+    if metadata.fetch(:xmp_sha256) != reference_metadata.fetch(:xmp_sha256)
+      raise "#{operation.key} XMP metadata content differs from ImageMagick"
     end
-    if operation.metadata_stripped && metadata.fetch(:xmp)
+    if metadata.fetch(:semantic_exif) != reference_metadata.fetch(:semantic_exif)
+      raise "#{operation.key} semantic EXIF metadata differs from ImageMagick"
+    end
+    if operation.metadata_stripped && metadata.dig(:presence, :xmp)
       raise "#{operation.key} retained XMP metadata"
     end
 
@@ -724,6 +781,12 @@ class VipsImageProcessingBenchmark
     if operation.size_ratio && !operation.size_ratio.cover?(size_ratio)
       raise "#{operation.key} size ratio #{size_ratio} is outside #{operation.size_ratio}"
     end
+    jpeg_quality = Vips.jpeg_quality(output) if operation.key == "jpeg_recompression"
+    reference_jpeg_quality = Vips.jpeg_quality(reference.fetch(:output)) if operation.key ==
+      "jpeg_recompression"
+    if jpeg_quality != reference_jpeg_quality
+      raise "#{operation.key} JPEG quality #{jpeg_quality} differs from #{reference_jpeg_quality}"
+    end
 
     {
       dimensions:,
@@ -733,6 +796,7 @@ class VipsImageProcessingBenchmark
       rgba_parity_including_alpha: true,
       normalized_mean_rgba_error: mean_error,
       file_size_ratio_vs_image_magick: size_ratio,
+      jpeg_quality:,
     }
   end
 
@@ -742,14 +806,36 @@ class VipsImageProcessingBenchmark
     nil
   end
 
-  def metadata_presence(path)
-    { xmp: image_header?(path, "xmp-data"), icc_profile: image_header?(path, "icc-profile-data") }
+  def metadata_details(path)
+    xmp = image_header(path, "xmp-data")
+    {
+      presence: {
+        exif: image_header?(path, "exif-data"),
+        xmp: xmp.present?,
+        iptc: image_header?(path, "iptc-data"),
+        icc_profile: image_header?(path, "icc-profile-data"),
+      },
+      xmp_sha256: xmp.present? ? Digest::SHA256.hexdigest(xmp) : nil,
+      semantic_exif:
+        SEMANTIC_EXIF_FIELDS
+          .to_h { |field| [field, canonical_header_value(image_header(path, field))] }
+          .compact,
+      opaque_maker_note_present: image_header?(path, "exif-ifd2-MakerNote"),
+    }
+  end
+
+  def canonical_header_value(value)
+    value&.split(" (", 2)&.first&.strip
+  end
+
+  def image_header(path, field)
+    Vips.header(path, field:)
+  rescue Discourse::Utils::CommandError
+    nil
   end
 
   def image_header?(path, field)
-    Vips.header(path, field:).present?
-  rescue Discourse::Utils::CommandError
-    false
+    image_header(path, field).present?
   end
 
   def normalized_mean_error(reference, candidate)
@@ -817,6 +903,8 @@ class VipsImageProcessingBenchmark
       settings: {
         strip_image_metadata: SiteSetting.strip_image_metadata,
         image_preview_jpg_quality: SiteSetting.ImageQuality.image_preview_jpg_quality,
+        png_to_jpg_quality: SiteSetting.ImageQuality.png_to_jpg_quality,
+        recompress_original_jpg_quality: SiteSetting.ImageQuality.recompress_original_jpg_quality,
         vip_concurrency_present: ENV.key?("VIPS_CONCURRENCY"),
       },
       benchmark: {

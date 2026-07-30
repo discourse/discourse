@@ -153,6 +153,7 @@ class Vips
     failure_message: ""
   )
     quality ||= DEFAULT_JPEG_QUALITY if %w[jpeg jpg].include?(target_format.to_s.downcase)
+    keep = "exif:icc" if source_format.to_s.casecmp?("png")
 
     with_output(to, target_format:) do |output|
       Vips.call(
@@ -163,6 +164,7 @@ class Vips
           format: target_format,
           quality:,
           strip: false,
+          keep:,
           background: flatten ? 255 : nil,
         ),
         read: [from],
@@ -328,12 +330,14 @@ class Vips
     quality: nil,
     colors: nil,
     strip:,
+    keep: nil,
     profile: nil,
     background: nil
   )
     format = format.to_s.downcase
     options = []
     options << "strip=true" if strip
+    options << "keep=#{keep}" if keep
     options << "profile=#{profile}" if profile
     options << "Q=#{quality}" if quality && %w[avif heic heif jpeg jpg jxl webp].include?(format)
     options << "background=#{background}" if background && %w[jpeg jpg].include?(format)

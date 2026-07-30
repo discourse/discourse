@@ -21,6 +21,32 @@ RSpec.describe UploadCreator do
     File.binwrite(target, jpeg.byteslice(0, 2) + segment + jpeg.byteslice(2..))
   end
 
+  def create_metadata_png_upload
+    tempfile = Tempfile.new(%w[metadata .png])
+    source = Rails.root.join("spec/fixtures/images/large_and_unoptimized.png").to_s
+    Vips.call(
+      "copy",
+      source,
+      "#{tempfile.path}[compression=0]",
+      read: [source],
+      write: [File.dirname(tempfile.path)],
+    )
+    tempfile.rewind
+
+    described_class.new(tempfile, "metadata.png", pasted: true, force_optimize: true).create_for(
+      user.id,
+    )
+  end
+
+  def metadata_presence(path)
+    %w[exif-data xmp-data iptc-data icc-profile-data].to_h do |field|
+      present = Vips.header(path, field:).present?
+      [field, present]
+    rescue Discourse::Utils::CommandError
+      [field, false]
+    end
+  end
+
   before do
     SiteSetting.use_vips_for_image_processing = true
     ImageMagick.stubs(:magick).raises("ImageMagick must not run")
@@ -59,6 +85,32 @@ RSpec.describe UploadCreator do
           quality: 1,
         },
       )
+    end
+
+    it "matches final ImageMagick metadata handling with stripping enabled and disabled" do
+      SiteSetting.png_to_jpg_quality = 80
+      SiteSetting.composer_media_optimization_image_enabled = false
+
+      [true, false].each do |strip_metadata|
+        SiteSetting.strip_image_metadata = strip_metadata
+        SiteSetting.use_vips_for_image_processing = false
+        ImageMagick.unstub(:magick)
+        ImageMagick.unstub(:identify)
+        image_magick_upload = create_metadata_png_upload
+        image_magick_metadata = metadata_presence(Discourse.store.path_for(image_magick_upload))
+        image_magick_upload.destroy!
+
+        SiteSetting.use_vips_for_image_processing = true
+        ImageMagick.stubs(:magick).raises("ImageMagick must not run")
+        ImageMagick.stubs(:identify).raises("ImageMagick must not run")
+        vips_upload = create_metadata_png_upload
+        vips_metadata = metadata_presence(Discourse.store.path_for(vips_upload))
+
+        expect(vips_metadata).to eq(image_magick_metadata)
+        expect(vips_metadata.fetch("xmp-data")).to eq(false)
+        expect(vips_metadata.fetch("icc-profile-data")).to eq(!strip_metadata)
+        expect(vips_metadata.fetch("exif-data")).to eq(!strip_metadata)
+      end
     end
 
     it "converts HEIC uploads to JPEG with vips" do
