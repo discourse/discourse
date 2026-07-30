@@ -31,7 +31,7 @@ RSpec.describe Chat::ParsedMentions do
 
   describe "#global_mentions" do
     it "returns all members of the channel" do
-      message = create_message("mentioning @all")
+      message = Fabricate(:chat_message, chat_channel:, message: "mentioning @all")
 
       mentions = described_class.new(message)
       result = mentions.global_mentions.pluck(:username)
@@ -44,7 +44,12 @@ RSpec.describe Chat::ParsedMentions do
     end
 
     it "doesn't include users that were also mentioned directly" do
-      message = create_message("mentioning @all and @#{channel_member_1.username}")
+      message =
+        Fabricate(
+          :chat_message,
+          chat_channel:,
+          message: "mentioning @all and @#{channel_member_1.username}",
+        )
 
       mentions = described_class.new(message)
       result = mentions.global_mentions.pluck(:username)
@@ -53,7 +58,7 @@ RSpec.describe Chat::ParsedMentions do
     end
 
     it "returns an empty list if there are no global mentions" do
-      message = create_message("not mentioning anybody")
+      message = Fabricate(:chat_message, chat_channel:, message: "not mentioning anybody")
 
       mentions = described_class.new(message)
       result = mentions.global_mentions.pluck(:username)
@@ -62,7 +67,8 @@ RSpec.describe Chat::ParsedMentions do
     end
 
     it "returns an empty list when quoting a message with global mentions" do
-      message = create_message(message_quote_with_mentions(["all"]))
+      message =
+        Fabricate(:chat_message, chat_channel:, message: message_quote_with_mentions(["all"]))
 
       mentions = described_class.new(message)
       result = mentions.global_mentions.pluck(:username)
@@ -71,7 +77,7 @@ RSpec.describe Chat::ParsedMentions do
     end
 
     it "returns an empty list when quoting a post with global mentions" do
-      message = create_message(post_quote_with_mentions(["all"]))
+      message = Fabricate(:chat_message, chat_channel:, message: post_quote_with_mentions(["all"]))
 
       mentions = described_class.new(message)
       result = mentions.global_mentions.pluck(:username)
@@ -89,7 +95,7 @@ RSpec.describe Chat::ParsedMentions do
     end
 
     it "returns all members of the channel who were online in the last 5 minutes" do
-      message = create_message("mentioning @here")
+      message = Fabricate(:chat_message, chat_channel:, message: "mentioning @here")
 
       mentions = described_class.new(message)
       result = mentions.here_mentions.pluck(:username)
@@ -98,7 +104,12 @@ RSpec.describe Chat::ParsedMentions do
     end
 
     it "doesn't include users that were also mentioned directly" do
-      message = create_message("mentioning @here and @#{channel_member_1.username}")
+      message =
+        Fabricate(
+          :chat_message,
+          chat_channel:,
+          message: "mentioning @here and @#{channel_member_1.username}",
+        )
 
       mentions = described_class.new(message)
       result = mentions.here_mentions.pluck(:username)
@@ -107,7 +118,7 @@ RSpec.describe Chat::ParsedMentions do
     end
 
     it "returns an empty list if there are no here mentions" do
-      message = create_message("not mentioning anybody")
+      message = Fabricate(:chat_message, chat_channel:, message: "not mentioning anybody")
 
       mentions = described_class.new(message)
       result = mentions.here_mentions.pluck(:username)
@@ -116,7 +127,8 @@ RSpec.describe Chat::ParsedMentions do
     end
 
     it "returns an empty list when quoting a message with here mentions" do
-      message = create_message(message_quote_with_mentions(["here"]))
+      message =
+        Fabricate(:chat_message, chat_channel:, message: message_quote_with_mentions(["here"]))
 
       mentions = described_class.new(message)
       result = mentions.here_mentions.pluck(:username)
@@ -125,7 +137,7 @@ RSpec.describe Chat::ParsedMentions do
     end
 
     it "returns an empty list when quoting a post with here mentions" do
-      message = create_message(post_quote_with_mentions(["here"]))
+      message = Fabricate(:chat_message, chat_channel:, message: post_quote_with_mentions(["here"]))
 
       mentions = described_class.new(message)
       result = mentions.here_mentions.pluck(:username)
@@ -137,7 +149,11 @@ RSpec.describe Chat::ParsedMentions do
   describe "#direct_mentions" do
     it "returns users who were mentioned directly" do
       message =
-        create_message("mentioning @#{channel_member_1.username} and @#{channel_member_2.username}")
+        Fabricate(
+          :chat_message,
+          chat_channel:,
+          message: "mentioning @#{channel_member_1.username} and @#{channel_member_2.username}",
+        )
 
       mentions = described_class.new(message)
       result = mentions.direct_mentions.pluck(:username)
@@ -146,7 +162,7 @@ RSpec.describe Chat::ParsedMentions do
     end
 
     it "returns bots who were mentioned directly" do
-      message = create_message("mentioning @system")
+      message = Fabricate(:chat_message, chat_channel:, message: "mentioning @system")
 
       mentions = described_class.new(message)
       result = mentions.direct_mentions.pluck(:username)
@@ -155,7 +171,13 @@ RSpec.describe Chat::ParsedMentions do
     end
 
     it "returns a user when self-mentioning" do
-      message = create_message("Hey @#{channel_member_1.username}", user: channel_member_1)
+      message =
+        Fabricate(
+          :chat_message,
+          chat_channel:,
+          message: "Hey @#{channel_member_1.username}",
+          user: channel_member_1,
+        )
 
       mentions = described_class.new(message)
 
@@ -164,7 +186,12 @@ RSpec.describe Chat::ParsedMentions do
     end
 
     it "returns a mentioned user even if he's not a member of the channel" do
-      message = create_message("mentioning @#{not_a_channel_member.username}")
+      message =
+        Fabricate(
+          :chat_message,
+          chat_channel:,
+          message: "mentioning @#{not_a_channel_member.username}",
+        )
 
       mentions = described_class.new(message)
       result = mentions.direct_mentions.pluck(:username)
@@ -173,7 +200,7 @@ RSpec.describe Chat::ParsedMentions do
     end
 
     it "returns an empty list if no one was mentioned directly" do
-      message = create_message("not mentioning anybody")
+      message = Fabricate(:chat_message, chat_channel:, message: "not mentioning anybody")
 
       mentions = described_class.new(message)
       result = mentions.direct_mentions.pluck(:username)
@@ -183,8 +210,11 @@ RSpec.describe Chat::ParsedMentions do
 
     it "returns an empty list when quoting a message with mentioned users" do
       message =
-        create_message(
-          message_quote_with_mentions([channel_member_1.username, channel_member_2.username]),
+        Fabricate(
+          :chat_message,
+          chat_channel:,
+          message:
+            message_quote_with_mentions([channel_member_1.username, channel_member_2.username]),
         )
 
       mentions = described_class.new(message)
@@ -195,8 +225,10 @@ RSpec.describe Chat::ParsedMentions do
 
     it "returns an empty list when quoting a post with mentioned users" do
       message =
-        create_message(
-          post_quote_with_mentions([channel_member_1.username, channel_member_2.username]),
+        Fabricate(
+          :chat_message,
+          chat_channel:,
+          message: post_quote_with_mentions([channel_member_1.username, channel_member_2.username]),
         )
 
       mentions = described_class.new(message)
@@ -218,7 +250,7 @@ RSpec.describe Chat::ParsedMentions do
     end
 
     it "returns members of a mentioned group even if some of them is not members of the channel" do
-      message = create_message("mentioning @#{group1.name}")
+      message = Fabricate(:chat_message, chat_channel:, message: "mentioning @#{group1.name}")
 
       mentions = described_class.new(message)
       result = mentions.group_mentions.pluck(:username)
@@ -231,7 +263,7 @@ RSpec.describe Chat::ParsedMentions do
     end
 
     it "returns an empty list if no group was mentioned" do
-      message = create_message("not mentioning anyone")
+      message = Fabricate(:chat_message, chat_channel:, message: "not mentioning anyone")
 
       mentions = described_class.new(message)
       result = mentions.group_mentions.pluck(:username)
@@ -242,7 +274,7 @@ RSpec.describe Chat::ParsedMentions do
     it "returns an empty list when mentioning an unmentionable group" do
       group1.mentionable_level = Group::ALIAS_LEVELS[:nobody]
       group1.save!
-      message = create_message("mentioning @#{group1.name}")
+      message = Fabricate(:chat_message, chat_channel:, message: "mentioning @#{group1.name}")
 
       mentions = described_class.new(message)
       result = mentions.group_mentions.pluck(:username)
@@ -251,7 +283,8 @@ RSpec.describe Chat::ParsedMentions do
     end
 
     it "returns an empty list when quoting a message with a mentioned group" do
-      message = create_message(message_quote_with_mentions([group1.name]))
+      message =
+        Fabricate(:chat_message, chat_channel:, message: message_quote_with_mentions([group1.name]))
 
       mentions = described_class.new(message)
       result = mentions.group_mentions.pluck(:username)
@@ -260,16 +293,13 @@ RSpec.describe Chat::ParsedMentions do
     end
 
     it "returns an empty list when quoting a post with a mentioned group" do
-      message = create_message(post_quote_with_mentions([group1.name]))
+      message =
+        Fabricate(:chat_message, chat_channel:, message: post_quote_with_mentions([group1.name]))
 
       mentions = described_class.new(message)
       result = mentions.group_mentions.pluck(:username)
 
       expect(result).to be_empty
     end
-  end
-
-  def create_message(text, **extra_args)
-    Fabricate(:chat_message, chat_channel: chat_channel, message: text, **extra_args)
   end
 end
