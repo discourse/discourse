@@ -99,6 +99,10 @@ describe TopicViewSerializer do
     fab!(:reaction_user_heart_ignored) do
       Fabricate(:reaction_user, reaction: heart, user: another_ignored)
     end
+    fab!(:ignored_user_record) { Fabricate(:ignored_user, user: viewer, ignored_user: ignored) }
+    fab!(:another_ignored_user_record) do
+      Fabricate(:ignored_user, user: viewer, ignored_user: another_ignored)
+    end
     fab!(:like_other_post_2) do
       Fabricate(
         :post_action,
@@ -128,8 +132,6 @@ describe TopicViewSerializer do
     before do
       SiteSetting.discourse_reactions_like_icon = "heart"
       SiteSetting.discourse_reactions_enabled_reactions = "otter|heart"
-      Fabricate(:ignored_user, user: viewer, ignored_user: ignored)
-      Fabricate(:ignored_user, user: viewer, ignored_user: another_ignored)
     end
 
     it "excludes ignored users from preloaded :reactions" do
