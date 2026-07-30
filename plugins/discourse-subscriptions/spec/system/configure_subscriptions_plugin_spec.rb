@@ -4,9 +4,11 @@ describe "Configure subscriptions plugin", allow_network: ["js.stripe.com"] do
   fab!(:admin)
 
   let(:config_page) { PageObjects::Pages::AdminSubscriptionsConfig.new }
+  let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   before do
     SiteSetting.discourse_subscriptions_enabled = true
+    SiteSetting.navigation_menu = "sidebar"
     sign_in(admin)
   end
 
@@ -34,5 +36,14 @@ describe "Configure subscriptions plugin", allow_network: ["js.stripe.com"] do
 
     expect(page).to have_current_path("/admin/plugins/discourse-subscriptions/products")
     expect(config_page).to have_stripe_unconfigured_notice
+  end
+
+  it "takes the admin to the settings tab when arriving from another plugin's page" do
+    visit("/admin/plugins/poll/settings")
+
+    sidebar.click_section_header("admin-plugins")
+    sidebar.click_link_in_section("admin-plugins", "admin_plugin_discourse-subscriptions")
+
+    expect(page).to have_current_path("/admin/plugins/discourse-subscriptions/settings")
   end
 end

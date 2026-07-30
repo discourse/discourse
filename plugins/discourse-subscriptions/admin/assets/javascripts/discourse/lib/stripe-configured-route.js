@@ -1,11 +1,9 @@
 import Route from "@ember/routing/route";
 import { service } from "@ember/service";
 
-const PLUGIN_ROUTE_PREFIX = "adminPlugins.show.";
+const PLUGIN_ID = "discourse-subscriptions";
+const SHOW_ROUTE = "adminPlugins.show";
 
-// Without Stripe keys none of these pages have anything to show, so landing on
-// the plugin goes straight to the settings tab. Clicking a tab is left alone —
-// the page explains itself there, which a silent redirect cannot do.
 export default class StripeConfiguredRoute extends Route {
   @service router;
   @service siteSettings;
@@ -15,13 +13,24 @@ export default class StripeConfiguredRoute extends Route {
       return;
     }
 
-    if (transition.from?.name?.startsWith(PLUGIN_ROUTE_PREFIX)) {
+    if (this.#cameFromThisPlugin(transition.from)) {
       return;
     }
 
-    this.router.replaceWith(
-      "adminPlugins.show.settings",
-      "discourse-subscriptions"
-    );
+    this.router.replaceWith("adminPlugins.show.settings", PLUGIN_ID);
+  }
+
+  #cameFromThisPlugin(from) {
+    let routeInfo = from;
+
+    while (routeInfo) {
+      if (routeInfo.name === SHOW_ROUTE) {
+        return routeInfo.params?.plugin_id === PLUGIN_ID;
+      }
+
+      routeInfo = routeInfo.parent;
+    }
+
+    return false;
   }
 }
