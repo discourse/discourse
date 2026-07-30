@@ -1745,6 +1745,27 @@ module("Integration | ui-kit | DEditor | Rich Editor", function (hooks) {
       .hasText("Hello world", "the whole line becomes small");
   });
 
+  test("small toggles off from a collapsed caret", async function (assert) {
+    const view = await setupRichEditor(this, "Hello world");
+
+    view.dispatch(
+      view.state.tr.setSelection(TextSelection.create(view.state.doc, 3))
+    );
+    await toggleSmall();
+
+    assert.dom(".ProseMirror p > small").hasText("Hello world");
+    assert.true(
+      this.textManipulation.state.inSmall,
+      "the caret stays inside the wrapper, so small reports itself active"
+    );
+
+    await toggleSmall();
+
+    assert
+      .dom(".ProseMirror small")
+      .doesNotExist("a second click removes it without reselecting");
+  });
+
   test("imported small text inside a heading exposes both active formats", async function (assert) {
     const view = await setupRichEditor(
       this,

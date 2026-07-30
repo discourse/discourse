@@ -444,6 +444,26 @@ const extension = {
         schema
       );
 
+      // Keep the caret inside the wrapper, so the option reports itself as
+      // active and toggles back off without needing a new selection. Absorbing
+      // an inner wrapper shortens the line, hence the clamp.
+      if (state.selection.empty) {
+        const contentStart = tr.mapping.map(lines[0].pos) + 2;
+        const wrapper = tr.doc.nodeAt(contentStart - 1);
+
+        if (wrapper) {
+          tr.setSelection(
+            TextSelection.create(
+              tr.doc,
+              Math.min(
+                state.selection.from + 1,
+                contentStart + wrapper.content.size
+              )
+            )
+          );
+        }
+      }
+
       dispatch?.(tr);
       return true;
     },
