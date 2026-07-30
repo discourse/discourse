@@ -167,6 +167,38 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.hashtags).to be_empty
     end
 
+    # A destination may be followed by a title, and padded, and wrapped in angle
+    # brackets. Core cooks all of these as links, so nothing inside them counts.
+    [
+      %([x](https://external.com/@bob "title")),
+      "[x](https://external.com/@bob 'title')",
+      "[x](https://external.com/@bob (title))",
+      %([x](<https://external.com/@bob> "title")),
+      "[x](https://external.com/@bob   )",
+      "[x](   https://external.com/@bob   )",
+      %([x](https://external.com/@bob\n"title")),
+      %(![a](https://external.com/@bob/p.png "t")),
+      # The title itself is an attribute, never text.
+      %([x](/some/path "@bob title")),
+      # Malformed enough that core builds no markdown link — but then linkify
+      # takes the destination, so the mention is still inside a link.
+      %([x](https://external.com/@bob "unclosed)),
+      %([x](https://external.com/@bob extra "t")),
+    ].each do |raw|
+      it "leaves a mention alone in #{raw.inspect}" do
+        expect(link_extractor.extract(raw)).to eq(raw)
+        expect(buffer.mentions).to be_empty
+      end
+    end
+
+    # Core builds no link here and does not linkify anything, so the mention is
+    # ordinary text and must still be deferred.
+    it "still defers a mention in parentheses that are not a link" do
+      link_extractor.extract("[x](not a link @bob)")
+
+      expect(buffer.mentions.map { |mention| mention[:name] }).to eq(%w[bob])
+    end
+
     it "still defers a mention in prose next to a link" do
       link_extractor.extract("hi @bob see https://external.com/@carol now")
 

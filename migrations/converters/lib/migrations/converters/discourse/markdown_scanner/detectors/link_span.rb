@@ -28,11 +28,30 @@ module Migrations
             URL_BODY = /[^#{Base::URL_TERMINATORS}]/
             private_constant :URL_BODY
 
-            # A markdown link or image. The text class excludes `[` for the same
-            # reason as `UploadUrl::LINK`: a nested image `[![…](…)](…)` must not
-            # match at the outer bracket, or the walk would never reach the inner
-            # upload and it would go unrecorded.
-            LINK = /\G!?\[[^\[\]]*\]\(#{URL_BODY}*\)/
+            # Whitespace inside the parentheses. CommonMark lets the destination and
+            # title sit on separate lines but not across a blank one, so at most one
+            # newline.
+            GAP = /[^\S\n]*\n?[^\S\n]*/
+            private_constant :GAP
+
+            # A link title, the part core turns into the anchor's `title` attribute.
+            # Kept to a single line: a title spanning lines is rare, and failing to
+            # match one only falls through to the bare-URL branch, which still covers
+            # the destination.
+            TITLE = /(?:"[^"\n]*"|'[^'\n]*'|\([^()\n]*\))/
+            private_constant :TITLE
+
+            # The destination, plain or wrapped in angle brackets (`<…>`, which is how
+            # CommonMark carries a destination containing spaces).
+            DESTINATION = /(?:<[^<>\n]*>|#{URL_BODY}*)/
+            private_constant :DESTINATION
+
+            # A markdown link or image, `[text](dest)`, with the optional title and
+            # padding CommonMark allows: `[text](dest "title")`. The text class
+            # excludes `[` for the same reason as `UploadUrl::LINK`: a nested image
+            # `[![…](…)](…)` must not match at the outer bracket, or the walk would
+            # never reach the inner upload and it would go unrecorded.
+            LINK = /\G!?\[[^\[\]]*\]\(#{GAP}#{DESTINATION}(?:#{GAP}#{TITLE})?#{GAP}\)/
             private_constant :LINK
 
             # A bare URL, schemed or protocol-relative, matched only where linkify
@@ -59,12 +78,27 @@ module Migrations
             private
 
             def detect_bare(input, pos)
-              return nil unless bare_url_boundary_before?(input, pos)
+              return nil unless boundary_before?(input, pos)
 
               match = match_at(BARE, input, pos)
               return nil if match.nil? || inadmissible_protocol_relative?(input, pos, match[0])
 
               skip_at(pos, match)
+            end
+
+            def boundary_before?(input, pos)
+              link_destination_before?(input, pos) || bare_url_boundary_before?(input, pos)
+            end
+
+            # A URL right after a `](` is a link destination, and when the link is
+            # malformed — an unclosed title, a stray word after the destination —
+            # core linkifies that URL instead. Either way it is inside a link and
+            # nothing in it is detected, so this admits every `](`, unlike the
+            # detectors that rewrite what they match and take only the `)](` shape.
+            #
+            # 0x28 = `(`, 0x5d = `]`
+            def link_destination_before?(input, pos)
+              pos >= 2 && input.getbyte(pos - 1) == 0x28 && input.getbyte(pos - 2) == 0x5d
             end
 
             # A node-less match: the {Scanner} appends the span as it stands and
