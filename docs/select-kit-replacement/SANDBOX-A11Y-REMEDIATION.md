@@ -18,7 +18,7 @@ Status legend: ☐ pending · ◐ partial · ☑ done · ⊘ deferred to its own
 |---|---|---|
 | K1 | No way to tell you can type in the combobox, or that existing text is highlighted | ◐ trigger naming shipped; typing ⊘ |
 | K2 | Results not announced as results; "no results" never spoken; inconsistent re-announcement | ☑ |
-| K3 | "selected" not announced when navigating, but "not selected" is | ☐ needs a re-listen |
+| K3 | "selected" not announced when navigating, but "not selected" is | ☐ not markup; see below |
 | K4 | Tag chips not read on focus or arrow navigation | ☐ own unit |
 | K5 | Notification dropdown announces the held value on open, but arrow-nav starts at row one | ☑ |
 | K6 | Empty gap where no check appears; wants empty box / checked box | ☑ |
@@ -88,6 +88,27 @@ Recorded so nobody re-derives them.
   `role="dialog"` as a hard boundary (it cannot be — the *second* option is read fine through
   the same boundary); the roving modifier's visibility filter (disabling it changed nothing);
   and `aria-owns` on the select-only trigger (added, no audible effect, reverted).
+- **K3 is not a markup defect.** The accessibility tree exposes it correctly:
+  `option "Watching" selected: true`, inside a named listbox, with `multiselectable: false`
+  computed exactly as in react-aria. VoiceOver reads the attribute (unselected rows announce
+  "not selected") but voices nothing in the positive case, on open *and* on arrival by
+  navigation. Removing float-kit's `dialog` wrapper made our tree structurally identical to an
+  implementation that does voice it, and changed nothing audible. Stop proposing attribute
+  changes on the option or the listbox.
+
+  Our input-based typeahead is silent in the positive case too, so the controller element is not
+  the difference either. **Closed by reading the reference implementation:** react-aria announces
+  it artificially. `useComboBox` carries `// Announce when a selection occurs for VoiceOver.
+  Other screen readers typically do this automatically.` and pushes an announcement through a
+  live region, gated on `isAppleDevice()`; its `focusAnnouncement` does the same on every cursor
+  move, bundling the option text with its selected state. That is the double reading a listener
+  hears. So VoiceOver genuinely does not voice this state, our markup is correct, and the only
+  remedy is an announcement — see the deferred cycle.
+- **`aria-multiselectable` is not the K3 difference.** A working combobox (react-aria) reads
+  "selected" where ours does not, and its Chrome accessibility tree shows
+  `multiselectable: false`, which looks like the missing attribute. It is not: `useListBox`
+  emits the attribute only for multiple selection, exactly as we do, so the tree was showing a
+  computed default — as the neighbouring `required: false` should have suggested. Do not add it.
 - **K1's original premise was wrong.** `aria-expanded` and `aria-haspopup` were already
   emitted. The real defect was `aria-label` on the trigger replacing name-from-contents, so a
   chosen value went unspoken. Fixed separately via `label_with_value`.
@@ -133,6 +154,16 @@ select-specific — chat, topic tracking and the AI plugin all announce through 
 The port needs the visual-cursor field generalised off `.d-combobox__option.--active`, and the
 container role read rather than assumed to be `listbox`.
 
+## Known flake
+
+`DSelect grouping: options carry contiguous logical indices and absolute positions across
+headers` failed once with **zero** options rendered, then passed under the same seed, so it is
+timing rather than order. Its module runs with virtualization enabled, and the assertion reads
+mounted rows immediately after opening, so the likely cause is the same asynchrony the open-time
+seed fix is about: a windowed list publishes its rows a frame after the listbox exists. Worth
+fixing by waiting on a published row rather than by retrying, since a retry would hide exactly
+the race the suite is otherwise blind to.
+
 ## Deferred to their own planning cycles
 
 1. **Printable-character type-to-jump** on the select-only variant. VoiceOver announces "type
@@ -145,7 +176,20 @@ container role read rather than assumed to be `listbox`.
    a control without `@clearable` has no path to an empty value. Before changing any default,
    map what select-kit does per component and what native `<select>` does; they will likely
    disagree, and that disagreement is the decision.
-3. **A multi-select `button` trigger that shows no chips.** Today the trigger's content is one
+3. **Announcing selection state where VoiceOver will not.** Settled above: the state is exposed
+   correctly and VoiceOver ignores it, so conveying it needs a live region. The reference
+   implementation gates this on `isAppleDevice()` because other screen readers announce it
+   automatically — which matters here more than usual, since the report that started this cycle
+   came from NVDA. An unguarded announcement would fix one reader by making another hear it
+   twice, so the cycle has to decide what to key the behaviour on, and whether narrating every
+   cursor move is acceptable when the same channel is already carrying counts and reveals.
+
+   Re-examine the entry-count suppression at the same time. It was justified by an experiment
+   where VoiceOver clearly dropped one of two simultaneous announcements, but react-aria
+   announces the count on open *even with a focused item* on Apple devices, on the grounds that
+   VoiceOver's row announcement omits it. Both cannot be simply true; the difference may be that
+   their announcements are serialised through a single announcer.
+4. **A multi-select `button` trigger that shows no chips.** Today the trigger's content is one
    branch chain testing `@multiple` first, so chips are unconditional for a multi-select and
    `@iconOnly` is unreachable there. Reordering the branches or adding an argument is the small
    part. The design work is that the chips carry three things at once, and dropping them drops
@@ -176,6 +220,29 @@ container role read rather than assumed to be `listbox`.
 - **A3 (count debounce)** — re-derive whether it is still needed. Much of what made
   re-announcement feel erratic was the entry count and the service swallowing identical
   repeats; both are addressed.
+- **A skipped row still occupies a position.** On the notification picker VoiceOver reads
+  "Watching, 4 of 6", and one ArrowDown lands on "Manage notification settings, 6 of 6" — the
+  reader hears a position vanish and reasonably concludes the list misbehaved. The set size is
+  wrong for two independent reasons, and `#isStructural`
+  (`select-engine.ts`) is the common cause: it treats only headers and dividers as
+  non-options, so both of these are counted.
+  1. **A disabled row is counted but unreachable.** `dRovingFocus`'s `#isUsable` skips
+     `aria-disabled="true"`, so the position exists and nothing can land on it.
+  2. **An action row is counted as a choice.** A row carrying `onSelect` is a command, not a
+     value, yet it occupies the last position — so the size claims one more choice than exists.
+
+  The fork on (1): hide the disabled row from the set, or make it navigable and announce it as
+  unavailable. Prefer **navigable**. Hiding it removes the row from the accessibility tree while
+  leaving it on screen, so a reader cannot learn that an option they can see exists — and when a
+  row is disabled conditionally, its existence is the actionable part. Renumbering to cover only
+  navigable rows is coherent but produces the same blind spot. Note the costs before committing:
+  `#isUsable` is shared with focus mode and mirrors `d-tab-to-sibling`, so this reaches past
+  select, and native `<select>` does skip disabled options — check what browsers actually report
+  for `aria-posinset` there rather than assuming native is the reference.
+
+  (2) is a separate decision about the action-row API, not a numbering fix: a command in the
+  option set is arguably in the wrong place entirely, and the footer slot already exists for
+  controls that are not choices.
 - **C3** — the active-option outline and the trigger focus ring were both
   `2px solid var(--tertiary)`, so active-descendant mode read as two focused things. A dashed
   treatment was tried and reverted as an unrequested design invention; the differentiation is
