@@ -21,6 +21,7 @@ import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
 import DPageHeader from "discourse/ui-kit/d-page-header";
 import dObserveIntersection from "discourse/ui-kit/modifiers/d-observe-intersection";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 const sectionComponentFor = (id) => lookupAdminDashboardSection(id);
@@ -104,6 +105,7 @@ export default class RedesignedAdminDashboard extends Component {
           <div
             class={{concat "db-section-container --" section.id}}
             data-section-id={{section.id}}
+            aria-busy={{if section.loading "true" "false"}}
             {{dObserveIntersection
               (fn @loadSection section.id)
               threshold=0
@@ -111,6 +113,17 @@ export default class RedesignedAdminDashboard extends Component {
               isLoading=(sectionObservationPaused section @loadingSections)
             }}
           >
+            {{#if (and section.loading section.loaded)}}
+              <div class="db-section-container__loading">
+                {{dLoadingSpinner size="small"}}
+                <span>
+                  {{i18n
+                    "admin.dashboard.loading_section"
+                    section=(sectionTitleFor section.id)
+                  }}
+                </span>
+              </div>
+            {{/if}}
             {{#if (and section.error (not section.loaded))}}
               <DashboardSection @title={{sectionTitleFor section.id}}>
                 <div class="db-section__error" role="alert">

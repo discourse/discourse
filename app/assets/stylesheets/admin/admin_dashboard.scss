@@ -232,6 +232,15 @@ $db-bar-height: var(--space-2);
 }
 
 .db-section-container {
+  &__loading {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-block-end: var(--space-2);
+    color: var(--primary-medium);
+    font-size: var(--font-down-1-rem);
+  }
+
   &__refresh-error {
     display: flex;
     align-items: center;

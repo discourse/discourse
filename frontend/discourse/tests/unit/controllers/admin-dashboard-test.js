@@ -77,7 +77,7 @@ module("Unit | Controller | admin-dashboard", function (hooks) {
     });
   });
 
-  test("the loading indicator tracks nearby section refreshes", async function (assert) {
+  test("section refreshes do not use the page loading indicator", async function (assert) {
     const controller = this.owner.lookup("controller:admin/dashboard");
     const startDate = new Date("2026-07-18T00:00:00Z");
     const endDate = new Date("2026-07-24T23:59:59Z");
@@ -125,23 +125,23 @@ module("Unit | Controller | admin-dashboard", function (hooks) {
       2,
       "only intersecting sections start requests"
     );
-    assert.true(
+    assert.false(
       controller.loadingSlider.loading,
-      "the indicator remains active while requests are pending"
+      "section requests do not start the page loading indicator"
     );
 
     pendingRequests[0]({ data: { signups: 7 } });
     await highlightsRequest;
-    assert.true(
+    assert.false(
       controller.loadingSlider.loading,
-      "the indicator remains active until every section finishes"
+      "the page loading indicator remains inactive while another section loads"
     );
 
     pendingRequests[1]({ data: { pageviews: 7 } });
     await trafficRequest;
     assert.false(
       controller.loadingSlider.loading,
-      "the indicator ends after the final section finishes"
+      "the page loading indicator remains inactive after sections finish"
     );
   });
 

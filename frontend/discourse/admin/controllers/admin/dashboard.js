@@ -37,11 +37,11 @@ export default class AdminDashboardController extends Controller {
 
   isLoading = false;
   dashboardFetchedAt = null;
+  #metadataLoadingCount = 0;
   _sectionsLoadId = 0;
   _configSaveId = 0;
   _sectionCache = new Map();
   _sectionRequestIds = new Map();
-  #loadingRequestCount = 0;
 
   get safePeriod() {
     if (!VALID_PERIODS.includes(this.range)) {
@@ -237,7 +237,7 @@ export default class AdminDashboardController extends Controller {
     this.sectionsFetchError = false;
     this.#markSectionsStaleForDateRange();
 
-    this.#startLoadingRequest();
+    this.#startMetadataLoading();
 
     try {
       const model = await AdminDashboard.fetch({
@@ -278,7 +278,7 @@ export default class AdminDashboardController extends Controller {
       }
       this.sectionsFetchError = true;
     } finally {
-      this.#finishLoadingRequest();
+      this.#finishMetadataLoading();
 
       if (id === this._sectionsLoadId) {
         this.loadingSections = false;
@@ -308,7 +308,6 @@ export default class AdminDashboardController extends Controller {
     const requestId = (this._sectionRequestIds.get(sectionId) ?? 0) + 1;
     this._sectionRequestIds.set(sectionId, requestId);
     this.#updateSection(sectionId, { loading: true, error: false });
-    this.#startLoadingRequest();
 
     try {
       const result = await AdminDashboard.fetchSection(sectionId, {
@@ -354,21 +353,19 @@ export default class AdminDashboardController extends Controller {
         }
         this.#updateSection(sectionId, failedSection);
       }
-    } finally {
-      this.#finishLoadingRequest();
     }
   }
 
-  #startLoadingRequest() {
-    this.#loadingRequestCount += 1;
-    if (this.#loadingRequestCount === 1) {
+  #startMetadataLoading() {
+    this.#metadataLoadingCount += 1;
+    if (this.#metadataLoadingCount === 1) {
       this.loadingSlider.transitionStarted();
     }
   }
 
-  #finishLoadingRequest() {
-    this.#loadingRequestCount = Math.max(this.#loadingRequestCount - 1, 0);
-    if (this.#loadingRequestCount === 0) {
+  #finishMetadataLoading() {
+    this.#metadataLoadingCount = Math.max(this.#metadataLoadingCount - 1, 0);
+    if (this.#metadataLoadingCount === 0) {
       this.loadingSlider.transitionEnded();
     }
   }
