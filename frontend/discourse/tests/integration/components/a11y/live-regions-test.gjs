@@ -184,6 +184,58 @@ module("Integration | Component | A11y | LiveRegions", function (hooks) {
       );
   });
 
+  // The reason the regions idle on a non-breaking space instead of on nothing. Blanking and
+  // rewriting is enough for the DOM to record a change, but not for VoiceOver to speak one: it
+  // compares what the region ends up saying with what it said before, and an empty middle state
+  // leaves those identical. Idling on a character makes the middle state a real text — so a
+  // reader who keeps typing a query that keeps matching nothing is told each time.
+  //
+  // The measure is "not whitespace-only", never "not empty". A region's text always carries the
+  // template's own newlines and indentation, so an emptiness check passes whatever the component
+  // renders — the first draft of this test did exactly that, and stayed green against a build
+  // with no idle character at all. Ordinary whitespace collapses to nothing for a reader; a
+  // non-breaking space is what survives, which is the whole reason it is the character chosen.
+  REGIONS.forEach(({ type, selector }) => {
+    test(`the ${type} region never falls silent, so an identical repeat is a change`, async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      await render(<template><A11yLiveRegions /></template>);
+
+      const spoken = (text) => text.replace(/[\t\n\r ]+/g, "");
+      const element = find(selector);
+      assert.notStrictEqual(
+        spoken(element.textContent),
+        "",
+        "a region with nothing to say still holds something a reader can notice leaving"
+      );
+
+      const a11y = getOwner(this).lookup("service:a11y");
+      const seen = [];
+      const observer = new MutationObserver(() =>
+        seen.push(element.textContent)
+      );
+      observer.observe(element, {
+        childList: true,
+        characterData: true,
+        subtree: true,
+      });
+      observers.push(observer);
+
+      a11y.announce("no results", type);
+      await settled();
+      a11y.announce("no results", type);
+      await settled();
+
+      assert.true(
+        seen.every((text) => spoken(text) !== ""),
+        "and never falls silent on its way between two identical messages"
+      );
+      assert.true(
+        seen.filter((text) => text.includes("no results")).length > 1,
+        "so the second one is a text change rather than a rewrite of what was already there"
+      );
+    });
+  });
+
   test("a repeat already in flight is never spoken once a newer announcement arrives", async function (assert) {
     disableClearA11yAnnouncementsInTests();
     await render(<template><A11yLiveRegions /></template>);
@@ -195,14 +247,19 @@ module("Integration | Component | A11y | LiveRegions", function (hooks) {
 
     const mutations = watchTextMutations("#a11y-announcements-polite");
 
-    // Advance one tick so the repeat has blanked the region but has not restored it yet.
+    // Advance one tick so the repeat has cleared the region but has not restored it yet.
     // A newer announcement arriving in that window has to win outright: asserting only the
     // final text would miss the region speaking the stale message on the way there.
+    // Asserted as the absence of the message rather than as an empty region: a cleared region
+    // idles on a non-breaking space rather than on nothing — see `A11yLiveRegions`.
     a11y.announce("1 result", "polite");
     await new Promise((resolve) => next(resolve));
     assert
       .dom("#a11y-announcements-polite")
-      .hasNoText("the repeat blanks the region before restoring it");
+      .doesNotIncludeText(
+        "1 result",
+        "the repeat clears the region before restoring it"
+      );
 
     a11y.announce("2 results", "polite");
     await settled();
