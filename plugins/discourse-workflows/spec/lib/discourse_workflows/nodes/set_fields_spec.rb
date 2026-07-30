@@ -54,46 +54,19 @@ RSpec.describe DiscourseWorkflows::Nodes::SetFields::V1 do
       expect(result).to include("topic_id" => "42", "status" => "open")
     end
 
-    it "casts boolean values from a strict vocabulary" do
+    it "casts boolean falsy values correctly" do
       config = { "include_other_fields" => false }.merge(
         assignments(
           assignment("a", "false", "boolean"),
           assignment("b", "0", "boolean"),
-          assignment("c", false, "boolean"),
-          assignment("d", "", "boolean"),
-          assignment("e", "1", "boolean"),
-          assignment("f", "TRUE", "boolean"),
-          assignment("g", true, "boolean"),
+          assignment("c", "no", "boolean"),
+          assignment("d", "1", "boolean"),
         ),
       )
 
       result = execute_node(configuration: config, item: item)
 
-      expect(result).to eq(
-        {
-          "a" => false,
-          "b" => false,
-          "c" => false,
-          "d" => false,
-          "e" => true,
-          "f" => true,
-          "g" => true,
-        },
-      )
-    end
-
-    it "raises on values outside the boolean vocabulary" do
-      %w[t y yes on moderator].each do |value|
-        config = { "include_other_fields" => false }.merge(
-          assignments(assignment("a", value, "boolean")),
-        )
-        expected_error = I18n.t("discourse_workflows.errors.invalid_boolean", value: value.inspect)
-
-        expect { execute_node(configuration: config, item: item) }.to raise_error(
-          DiscourseWorkflows::NodeError,
-          /#{Regexp.escape(expected_error)}/,
-        )
-      end
+      expect(result).to eq({ "a" => false, "b" => false, "c" => false, "d" => true })
     end
 
     it "casts boolean values resolved from expressions" do

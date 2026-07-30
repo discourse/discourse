@@ -207,7 +207,9 @@ module DiscourseWorkflows
           when "number"
             Float(value)
           when "boolean"
-            BooleanCast.cast!(value)
+            return value if value == true || value == false
+
+            %w[true 1].include?(value.to_s.downcase)
           when "array"
             cast_json_value(value, Array)
           when "object"
