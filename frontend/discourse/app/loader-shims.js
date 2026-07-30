@@ -74,6 +74,9 @@ loaderShim("@uppy/utils", () => importSync("@uppy/utils"));
 loaderShim("@uppy/xhr-upload", () => importSync("@uppy/xhr-upload"));
 loaderShim("a11y-dialog", () => importSync("a11y-dialog"));
 loaderShim("discourse-i18n", () => importSync("discourse-i18n"));
+loaderShim("discourse-markdown-it/features/bbcode-block", () =>
+  importSync("discourse-markdown-it/features/bbcode-block")
+);
 loaderShim("ember-curry-component", () => importSync("ember-curry-component"));
 loaderShim("ember-modifier", () => importSync("ember-modifier"));
 loaderShim("ember-route-template", () => importSync("ember-route-template"));
