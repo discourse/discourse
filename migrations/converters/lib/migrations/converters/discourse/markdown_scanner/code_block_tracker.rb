@@ -66,7 +66,7 @@ module Migrations
             # A blank line doesn't end an indented block — CommonMark lets blank
             # lines separate chunks of one block — so only a non-blank line without
             # the code indent closes it.
-            if indented || whitespace_only_line?(input, pos, line_end)
+            if indented || blank_line?(input, pos, line_end)
               pos_after_line(line_end, input_length)
             else
               @in_indented_block = false
@@ -180,6 +180,8 @@ module Migrations
             end
           end
 
+          # CommonMark's blank line: empty, or spaces and tabs only. Ends a paragraph
+          # and separates the chunks of one indented block.
           def blank_line?(input, line_start, line_end)
             pos = line_start
             while pos < line_end
@@ -200,20 +202,6 @@ module Migrations
 
             pos + 3 < input_length && input.getbyte(pos + 1) == 0x20 &&
               input.getbyte(pos + 2) == 0x20 && input.getbyte(pos + 3) == 0x20
-          end
-
-          # Wider than {#blank_line?}, which is CommonMark's blank line: this also
-          # admits the CR of a CRLF input and the rare form feed and vertical tab,
-          # keeping the indented block's continuation rule as it was.
-          def whitespace_only_line?(input, pos, line_end)
-            while pos < line_end
-              byte = input.getbyte(pos)
-              unless byte == 0x20 || byte == 0x09 || byte == 0x0d || byte == 0x0c || byte == 0x0b
-                return false
-              end
-              pos += 1
-            end
-            true
           end
 
           def line_end_at(input, pos, input_length)
