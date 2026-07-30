@@ -7,6 +7,8 @@ class CrawlerScorer
 
   KNOWN_ASN_SCORE = 30
   DATACENTER_ASN_SCORE = 10
+  SINGLE_REQUEST_NO_REFERRER_SCORE = 10
+  SINGLE_REQUEST_LOCALE_PARAM_BONUS = 5
 
   VELOCITY_LOW = 150
   VELOCITY_MEDIUM = 300
@@ -40,6 +42,8 @@ class CrawlerScorer
   def self.score!(window_start:, window_end:)
     crawler_asns = SiteSetting.crawler_asns_map.map(&:to_i)
     datacenter_asns = SiteSetting.crawler_datacenter_asns_map.map(&:to_i)
+    content_localization_locales =
+      SiteSetting.content_localization_supported_locales.to_s.split("|")
 
     ActiveRecord::Base.transaction do
       DB.exec(
@@ -53,6 +57,9 @@ class CrawlerScorer
         automation_ua_score: AUTOMATION_UA_SCORE,
         known_asn_score: KNOWN_ASN_SCORE,
         datacenter_asn_score: DATACENTER_ASN_SCORE,
+        single_request_no_referrer_score: SINGLE_REQUEST_NO_REFERRER_SCORE,
+        single_request_locale_param_bonus: SINGLE_REQUEST_LOCALE_PARAM_BONUS,
+        content_localization_locales: content_localization_locales,
         velocity_low: VELOCITY_LOW,
         velocity_medium: VELOCITY_MEDIUM,
         velocity_high: VELOCITY_HIGH,
@@ -82,7 +89,7 @@ class CrawlerScorer
 
   SQL = <<~SQL
     WITH events AS (
-      SELECT id, session_id, ip_address, user_agent, referrer, asn, created_at, source
+      SELECT id, session_id, ip_address, user_agent, referrer, asn, url, created_at, source
       FROM browser_pageview_events
       WHERE created_at >= :window_start
         AND created_at <  :window_end
@@ -159,6 +166,20 @@ class CrawlerScorer
           ELSE 0
         END AS datacenter_asn_score,
         CASE
+          WHEN iu.pageviews = 1
+            AND e.referrer IS NULL
+            AND se.session_id IS NULL
+            AND EXISTS (
+              SELECT 1
+              FROM unnest(ARRAY[:content_localization_locales]::text[]) locale
+              WHERE e.url ~ ('[?&]#{Discourse::LOCALE_PARAM}=' || locale || '(&|$)')
+            ) THEN :single_request_no_referrer_score + :single_request_locale_param_bonus
+          WHEN iu.pageviews = 1
+            AND e.referrer IS NULL
+            AND se.session_id IS NULL THEN :single_request_no_referrer_score
+          ELSE 0
+        END AS single_request_no_referrer_score,
+        CASE
           WHEN iu.pageviews >= :velocity_high   THEN :velocity_high_score
           WHEN iu.pageviews >= :velocity_medium THEN :velocity_medium_score
           WHEN iu.pageviews >= :velocity_low    THEN :velocity_low_score
@@ -214,6 +235,7 @@ class CrawlerScorer
         automation_ua_score,
         known_asn_score,
         datacenter_asn_score,
+        single_request_no_referrer_score,
         velocity_score,
         churn_score,
         rapid_nav_score,
@@ -222,11 +244,11 @@ class CrawlerScorer
         engagement_score,
         GREATEST(
           0,
-          automation_ua_score + known_asn_score + datacenter_asn_score + velocity_score + churn_score
+          automation_ua_score + known_asn_score + datacenter_asn_score + single_request_no_referrer_score + velocity_score + churn_score
             + rapid_nav_score + ip_rotation_score + referrer_score + engagement_score
         ) AS score
       FROM breakdown
-      WHERE automation_ua_score + known_asn_score + datacenter_asn_score + velocity_score + churn_score
+      WHERE automation_ua_score + known_asn_score + datacenter_asn_score + single_request_no_referrer_score + velocity_score + churn_score
         + rapid_nav_score + ip_rotation_score + referrer_score + engagement_score > 0
     ),
 
@@ -240,6 +262,7 @@ class CrawlerScorer
                 t.automation_ua_score,
                 t.known_asn_score,
                 t.datacenter_asn_score,
+                t.single_request_no_referrer_score,
                 t.velocity_score,
                 t.churn_score,
                 t.rapid_nav_score,
@@ -253,6 +276,7 @@ class CrawlerScorer
       automation_ua_score,
       known_asn_score,
       datacenter_asn_score,
+      single_request_no_referrer_score,
       velocity_score,
       churn_score,
       rapid_nav_score,
@@ -265,6 +289,7 @@ class CrawlerScorer
       automation_ua_score,
       known_asn_score,
       datacenter_asn_score,
+      single_request_no_referrer_score,
       velocity_score,
       churn_score,
       rapid_nav_score,
@@ -276,6 +301,7 @@ class CrawlerScorer
     SET automation_ua_score = EXCLUDED.automation_ua_score,
         known_asn_score     = EXCLUDED.known_asn_score,
         datacenter_asn_score = EXCLUDED.datacenter_asn_score,
+        single_request_no_referrer_score = EXCLUDED.single_request_no_referrer_score,
         velocity_score      = EXCLUDED.velocity_score,
         churn_score         = EXCLUDED.churn_score,
         rapid_nav_score     = EXCLUDED.rapid_nav_score,

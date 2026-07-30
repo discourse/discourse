@@ -1542,6 +1542,7 @@ module DiscourseDataExplorer
           MAX(s.automation_ua_score) AS automation_ua,
           MAX(s.known_asn_score) AS known_asn,
           MAX(s.datacenter_asn_score) AS datacenter_asn,
+          MAX(s.single_request_no_referrer_score) AS single_request_no_referrer,
           MAX(s.velocity_score) AS velocity,
           MAX(s.churn_score) AS churn,
           MAX(s.rapid_nav_score) AS rapid_nav,
@@ -1553,6 +1554,12 @@ module DiscourseDataExplorer
                   CASE WHEN MAX(s.automation_ua_score) > 0 THEN 'automation UA' END,
                   CASE WHEN MAX(s.known_asn_score) > 0 THEN 'known crawler ASN' END,
                   CASE WHEN MAX(s.datacenter_asn_score) > 0 THEN 'datacenter ASN' END,
+                  CASE
+                    WHEN MAX(s.single_request_no_referrer_score) = 15
+                      THEN 'single direct locale request (+15)'
+                    WHEN MAX(s.single_request_no_referrer_score) > 0
+                      THEN 'single direct request (+' || MAX(s.single_request_no_referrer_score) || ')'
+                  END,
                   CASE WHEN MAX(s.velocity_score) > 0 THEN 'high velocity (+' || MAX(s.velocity_score) || ')' END,
                   CASE WHEN MAX(s.churn_score) > 0 THEN 'session churn (+' || MAX(s.churn_score) || ')' END,
                   CASE WHEN MAX(s.rapid_nav_score) > 0 THEN 'rapid navigation' END,

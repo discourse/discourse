@@ -40,6 +40,7 @@ RSpec.describe CrawlerScorer do
     expect(breakdown.automation_ua_score).to eq(100)
     expect(breakdown.known_asn_score).to eq(30)
     expect(breakdown.datacenter_asn_score).to eq(0)
+    expect(breakdown.single_request_no_referrer_score).to eq(0)
     expect(breakdown.velocity_score).to eq(0)
     expect(breakdown.churn_score).to eq(0)
     expect(breakdown.rapid_nav_score).to eq(0)
@@ -73,6 +74,35 @@ RSpec.describe CrawlerScorer do
 
     expect(event.reload.score).to eq(50)
     expect(event.browser_pageview_event_score.datacenter_asn_score).to eq(10)
+  end
+
+  it "scores unengaged single direct requests at +10" do
+    event = make_event(referrer: nil)
+
+    score!
+
+    expect(event.reload.score).to eq(50)
+    expect(event.browser_pageview_event_score.single_request_no_referrer_score).to eq(10)
+  end
+
+  it "scores unengaged single direct requests to a supported translation locale at +15" do
+    SiteSetting.content_localization_supported_locales = "en|pt_BR"
+    event = make_event(url: "/t/topic/1?source=bot&tl=pt_BR", referrer: nil)
+
+    score!
+
+    expect(event.reload.score).to eq(55)
+    expect(event.browser_pageview_event_score.single_request_no_referrer_score).to eq(15)
+  end
+
+  it "does not add the locale parameter bonus for an unsupported locale" do
+    SiteSetting.content_localization_supported_locales = "en|pt_BR"
+    event = make_event(url: "/t/topic/1?tl=de", referrer: nil)
+
+    score!
+
+    expect(event.reload.score).to eq(50)
+    expect(event.browser_pageview_event_score.single_request_no_referrer_score).to eq(10)
   end
 
   it "scores pageview velocity at or above VELOCITY_LOW threshold at +15" do

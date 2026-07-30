@@ -1993,7 +1993,8 @@ CREATE TABLE public.browser_pageview_event_scores (
     referrer_score smallint DEFAULT 0 NOT NULL,
     engagement_score smallint DEFAULT 0 NOT NULL,
     ip_rotation_score smallint DEFAULT 0 NOT NULL,
-    datacenter_asn_score smallint DEFAULT 0 NOT NULL
+    datacenter_asn_score smallint DEFAULT 0 NOT NULL,
+    single_request_no_referrer_score smallint DEFAULT 0 NOT NULL
 );
 
 
@@ -23073,6 +23074,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260730073722'),
 ('20260730064920'),
 ('20260729153343'),
 ('20260728162521'),
