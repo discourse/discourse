@@ -12,6 +12,7 @@ ur:
           spoiler_alert: "ڈسکورس سپوئلر الرٹ"
   js:
     spoiler:
+      title: دھندلا اسپوئلر
       label:
         show: "چھپا ہوا مواد دکھائیں"
     composer:

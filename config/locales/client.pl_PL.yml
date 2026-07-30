@@ -1892,7 +1892,11 @@ pl_PL:
       enable_smart_lists: "Włącz inteligentne listy podczas pisania w kompozytorze"
       enable_defer: "Włącz opcję oznaczania tematów jako nieprzeczytanych"
       enable_markdown_monospace_font: "Użyj czcionki o stałej szerokości w trybie Markdown kompozytora"
-      show_original_content: "Pokaż oryginalną treść zamiast przetłumaczonej."
+      automatically_translate: "Automatyczne tłumaczenie tematów i postów w innych językach"
+      content_languages:
+        title: "Języki treści"
+        understood: "Języki, które rozumiem"
+        understood_description: "Tematy i wpisy w tych językach nie będą tłumaczone. Język interfejsu jest zawsze uwzględniany."
       experimental_sidebar:
         enable: "Włącz pasek boczny"
         options: "Opcje"
@@ -4475,6 +4479,8 @@ pl_PL:
         link: "Dziennik aktywności"
         title: "Dziennik aktywności tematu"
         empty: "Brak aktywności tematu do wyświetlenia."
+        load_more: "Załaduj więcej aktywności"
+        updated: "Zaktualizowano aktywność tematu."
       context:
         banner: "Przeglądasz pojedynczy wątek z tego tematu."
         view_full_topic: "Zobacz cały temat"
@@ -5393,6 +5399,11 @@ pl_PL:
       click_to_show_translation: "Kliknij, aby wyświetlić tłumaczenie"
       tap_to_show_translation: "Stuknij tutaj, aby wyświetlić tłumaczenie"
       ai_translation_disclaimer: "Tłumaczenia wygenerowane przez AI mogą być niedokładne."
+    content_localization:
+      preferences:
+        title: "Preferencje językowe treści"
+        login_to_set_languages: "Zaloguj się, aby ustawić więcej języków"
+        interface_language_mandatory: "Język interfejsu jest zawsze uwzględniony."
     category:
       none: "(brak kategorii)"
       all: "Wszystkie kategorie"

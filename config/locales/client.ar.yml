@@ -2058,7 +2058,6 @@ ar:
       enable_smart_lists: "تفعيل القوائم الذكية عند الكتابة في أداة الإنشاء"
       enable_defer: "تفعيل وضع علامة على الموضوعات كغير مقروءة"
       enable_markdown_monospace_font: "اعرض النص بخط ثابت العرض عند استخدام وضع Markdown في أداة الإنشاء"
-      show_original_content: "اعرض المحتوى الأصلي بدلًا من المحتوى المُترجَم."
       experimental_sidebar:
         enable: "تفعيل الشريط الجانبي"
         options: "الخيارات"
