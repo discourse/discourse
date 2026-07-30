@@ -1,5 +1,12 @@
+import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
-import { render, settled, triggerEvent, waitUntil } from "@ember/test-helpers";
+import {
+  fillIn,
+  render,
+  settled,
+  triggerEvent,
+  waitUntil,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import FormComposer from "discourse/components/form-template-field/composer";
@@ -325,6 +332,60 @@ module(
         "![image|10x10, 75%](upload://abc.png) and ![image|10x10](upload://abc.png)";
       assert.dom("input[name='field-1']").hasValue(expected);
       assert.dom(".d-editor-input").hasValue(expected);
+    });
+
+    test("marks the backing input as required when the field is required", async function (assert) {
+      stubAllowUpload(this, true);
+
+      await render(
+        <template>
+          <FormComposer
+            @id="field-1"
+            @onChange={{noop}}
+            @validations={{hash required=true}}
+          />
+        </template>
+      );
+
+      assert
+        .dom("input[name='field-1']")
+        .hasAttribute(
+          "required",
+          { any: true },
+          "the backing input is required"
+        );
+    });
+
+    test("does not mark the backing input as required when the field is not required", async function (assert) {
+      stubAllowUpload(this, true);
+
+      await render(
+        <template><FormComposer @id="field-1" @onChange={{noop}} /></template>
+      );
+
+      assert
+        .dom("input[name='field-1']")
+        .doesNotHaveAttribute("required", "the backing input is not required");
+    });
+
+    test("typing in the editor dispatches an input event on the backing input", async function (assert) {
+      stubAllowUpload(this, true);
+
+      await render(
+        <template><FormComposer @id="field-1" @onChange={{noop}} /></template>
+      );
+
+      const inputEvents = [];
+      document
+        .querySelector("input[name='field-1']")
+        .addEventListener("input", () => inputEvents.push(true));
+
+      await fillIn(".d-editor-input", "some content");
+
+      assert.true(
+        inputEvents.length >= 1,
+        "an input event is dispatched on the backing input so validation state can refresh"
+      );
     });
 
     test("composer:replace-text is a no-op when the field does not contain the markdown", async function (assert) {

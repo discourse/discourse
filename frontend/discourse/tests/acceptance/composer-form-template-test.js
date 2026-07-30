@@ -1,7 +1,8 @@
-import { click, fillIn, settled, visit } from "@ember/test-helpers";
+import { click, currentURL, fillIn, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import TopicFixtures from "discourse/tests/fixtures/topic";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -40,6 +41,34 @@ const FORM_TEMPLATES = [
           type: date
     `,
   },
+  {
+    id: 3,
+    name: "Required Composer Only",
+    template: `
+      - type: composer
+        id: md-description
+        attributes:
+          label: "Description"
+        validations:
+          required: true
+    `,
+  },
+  {
+    id: 4,
+    name: "Required Composer With Other Field",
+    template: `
+      - type: input
+        id: other-field
+        attributes:
+          label: "Other field"
+      - type: composer
+        id: md-description
+        attributes:
+          label: "Description"
+        validations:
+          required: true
+    `,
+  },
 ];
 
 acceptance("Composer Form Template", function (needs) {
@@ -62,7 +91,7 @@ acceptance("Composer Form Template", function (needs) {
         slug: "general",
         permission: 1,
         topic_template: null,
-        form_template_ids: [1, 2],
+        form_template_ids: [1, 2, 3, 4],
       },
       {
         id: 2,
@@ -82,7 +111,7 @@ acceptance("Composer Form Template", function (needs) {
       });
     });
 
-    [1, 2].forEach((id) => {
+    [1, 2, 3, 4].forEach((id) => {
       server.get(`/form-templates/${id}.json`, () => {
         const index = id - 1;
 
@@ -179,5 +208,57 @@ acceptance("Composer Form Template", function (needs) {
     assert
       .dom(".form-template-field__input[name='activity-date']")
       .exists("it renders form template field");
+  });
+
+  test("blocks topic creation and shows a validation message when a required composer field is left empty", async function (assert) {
+    pretender.post("/posts", () => {
+      assert.true(
+        false,
+        "a topic should not be created while the required field is empty"
+      );
+      return response(200, { success: true });
+    });
+
+    await visit("/");
+
+    const composer = this.owner.lookup("service:composer");
+    await composer.openNewTopic({ formTemplate: FORM_TEMPLATES[2] });
+    await settled();
+
+    await fillIn("#reply-title", "A title that is long enough to be valid");
+    await click("#reply-control button.create");
+
+    assert.strictEqual(currentURL(), "/", "the topic is not created");
+    assert
+      .dom(".form-template-field__error")
+      .exists("a validation error message is shown");
+  });
+
+  test("blocks topic creation when a required composer field is empty even if other fields are filled", async function (assert) {
+    pretender.post("/posts", () => {
+      assert.true(
+        false,
+        "a topic should not be created while the required field is empty"
+      );
+      return response(200, { success: true });
+    });
+
+    await visit("/");
+
+    const composer = this.owner.lookup("service:composer");
+    await composer.openNewTopic({ formTemplate: FORM_TEMPLATES[3] });
+    await settled();
+
+    await fillIn("#reply-title", "A title that is long enough to be valid");
+    await fillIn(
+      ".form-template-field__input[name='other-field']",
+      "some content"
+    );
+    await click("#reply-control button.create");
+
+    assert.strictEqual(currentURL(), "/", "the topic is not created");
+    assert
+      .dom(".form-template-field__error")
+      .exists("a validation error message is shown");
   });
 });

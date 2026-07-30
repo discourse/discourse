@@ -70,7 +70,8 @@
     color: var(--primary-medium);
   }
 
-  &__upload-hidden-input {
+  &__upload-hidden-input,
+  &__composer-hidden-input {
     position: absolute;
     opacity: 0;
     pointer-events: none;
