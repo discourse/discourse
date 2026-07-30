@@ -3,7 +3,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-acceptance("Admin - Discourse Calendar - Holidays", function (needs) {
+acceptance("Admin - Events - Holidays", function (needs) {
   needs.user();
   needs.settings({
     calendar_enabled: true,
@@ -17,7 +17,7 @@ acceptance("Admin - Discourse Calendar - Holidays", function (needs) {
         name: "discourse-events",
         enabled: true,
         has_settings: true,
-        humanized_name: "Calendar and Events",
+        humanized_name: "Events",
         is_discourse_owned: true,
         admin_route: {
           label: "admin.calendar",
