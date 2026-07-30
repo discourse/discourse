@@ -86,9 +86,6 @@ export default class EmbeddableChat extends Service {
     return this.topic?.has_livestream;
   }
 
-  // Drives the `livestream-topic` body class. Keyed on the topic rather than on
-  // the event card, which the post-stream cloaks once it is a viewport out of
-  // view — taking the class, and the chat panel's layout, with it.
   get useLivestreamLayout() {
     return (
       this.router.currentRouteName?.startsWith("topic.") &&
