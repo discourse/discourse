@@ -112,6 +112,10 @@
     position: relative;
     width: 100%;
 
+    > .d-toggle-switch {
+      justify-content: flex-end;
+    }
+
     > .combo-box,
     > .d-select,
     > .icon-picker,
@@ -130,7 +134,7 @@
     transform: translateY(-100%);
     inset-inline-end: 0;
 
-    &.--toggle {
+    .form-kit__field-toggle & {
       inset-block-start: 50%;
       transform: translateY(-50%);
       inset-inline-end: 50px;
