@@ -10,7 +10,8 @@ module DiscourseWorkflows
       return true if TRUE_VALUES.include?(normalized)
       return false if FALSE_VALUES.include?(normalized)
 
-      raise ArgumentError, "Expected a boolean, got #{value.inspect}"
+      raise ArgumentError,
+            I18n.t("discourse_workflows.errors.invalid_boolean", value: value.inspect)
     end
   end
 end
