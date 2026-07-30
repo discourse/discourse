@@ -14,10 +14,7 @@ import {
   SEND_SHORTCUT_ENTER,
   SEND_SHORTCUT_META_ENTER,
 } from "discourse/lib/constants";
-import {
-  contentLanguageOptions,
-  normalizeUnderstoodLanguages,
-} from "discourse/lib/content-localization";
+import { normalizeUnderstoodLanguages } from "discourse/lib/content-localization";
 import { deepEqual } from "discourse/lib/object";
 import {
   currentThemeId,
@@ -134,19 +131,6 @@ export default class InterfaceController extends Controller {
       ...locale,
       id: locale.value,
     }));
-  }
-
-  @computed(
-    "model.locale",
-    "model.user_option.understood_languages.[]",
-    "siteSettings.available_content_localization_locales"
-  )
-  get understoodLanguageOptions() {
-    return contentLanguageOptions(
-      this.availableLocales,
-      this.siteSettings.available_content_localization_locales,
-      this.understoodLanguages
-    );
   }
 
   @action

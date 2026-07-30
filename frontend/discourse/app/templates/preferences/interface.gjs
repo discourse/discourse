@@ -177,7 +177,7 @@ export default <template>
           @id="understood-languages-selector"
           @valueProperty="value"
           @langProperty="value"
-          @content={{@controller.understoodLanguageOptions}}
+          @content={{@controller.availableLocales}}
           @value={{@controller.understoodLanguages}}
           @onChange={{@controller.setUnderstoodLanguages}}
           @mandatoryValues={{@controller.interfaceLanguage}}
