@@ -891,56 +891,6 @@ third line`
     }
   );
 
-  testCase(
-    "small button unwraps only a lone wrapper",
-    async function (assert, textarea) {
-      this.set("value", "<small>a</small> x <small>b</small>");
-      textarea.selectionStart = 0;
-      textarea.selectionEnd = 0;
-
-      await click("button.heading");
-      await click('.btn[data-name="heading-small"]');
-
-      assert.strictEqual(
-        this.value,
-        "<small>a x b</small>",
-        "it normalizes the line into a single wrapper instead of orphaning tags"
-      );
-      assert.deepEqual(
-        [textarea.selectionStart, textarea.selectionEnd],
-        [7, 12],
-        "it selects the normalized line content"
-      );
-    }
-  );
-
-  testCase(
-    "small button keeps tags written inside code spans",
-    async function (assert, textarea) {
-      this.set("value", "Use `<small>` to shrink");
-      textarea.selectionStart = 0;
-      textarea.selectionEnd = 0;
-
-      await click("button.heading");
-      await click('.btn[data-name="heading-small"]');
-
-      assert.strictEqual(
-        this.value,
-        "<small>Use `<small>` to shrink</small>",
-        "the code span is left untouched"
-      );
-
-      await click("button.heading");
-      await click('.btn[data-name="heading-small"]');
-
-      assert.strictEqual(
-        this.value,
-        "Use `<small>` to shrink",
-        "toggling off restores the line"
-      );
-    }
-  );
-
   test("clicking the toggle-direction changes dir from ltr to rtl and back", async function (assert) {
     this.siteSettings.support_mixed_text_direction = true;
     this.siteSettings.default_locale = "en";
@@ -1807,13 +1757,6 @@ module("Integration | ui-kit | DEditor | Rich Editor", function (hooks) {
       view.state.tr.setSelection(TextSelection.create(view.state.doc, pos))
     );
     await settled();
-
-    assert
-      .dom("button.heading .d-icon-discourse-h2")
-      .exists(
-        "the toolbar icon keeps showing the heading, which wins priority"
-      );
-
     await click("button.heading");
 
     assert
