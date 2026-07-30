@@ -66,7 +66,7 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
 
     [
       {
-        url: "/landing?campaign=private",
+        url: "/latest?campaign=private",
         country_code: "US",
         ip_address: "192.0.2.1",
         user_agent: chrome,
@@ -78,19 +78,19 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
         created_at: "2026-05-10 10:00:00",
       },
       {
-        url: "/popular?token=private",
+        url: "/top?token=private",
         country_code: "US",
         ip_address: "192.0.2.1",
         user_agent: chrome,
         user_id: admin.id,
         session_id: "logged-in-session",
-        referrer: "https://test.localhost/landing",
-        normalized_referrer: "test.localhost/landing",
+        referrer: "https://test.localhost/latest",
+        normalized_referrer: "test.localhost/latest",
         normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
         created_at: "2026-05-10 10:01:00",
       },
       {
-        url: "/popular",
+        url: "/top",
         country_code: "US",
         ip_address: "192.0.2.1",
         user_agent: chrome,
@@ -99,7 +99,7 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
         created_at: "2026-05-10 10:02:00",
       },
       {
-        url: "/other",
+        url: "/hot",
         country_code: "GB",
         ip_address: "198.51.100.2",
         user_agent: chrome,
@@ -108,7 +108,7 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
         created_at: "2026-05-11 10:00:00",
       },
       {
-        url: "/t/public-topic/#{topic.id}",
+        url: "/t/#{topic.slug}/#{topic.id}",
         topic_id: topic.id,
         country_code: "CA",
         ip_address: "203.0.113.3",
@@ -159,8 +159,8 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
     )
     expect(traffic).to have_crawler_scope_disclosure
     expect(traffic).to have_session_scope_disclosure
-    expect(traffic).to have_breakdown_row(title: "Top URLs", label: "/popular", pageviews: "2")
-    expect(traffic).to have_breakdown_row(title: "Entry URLs", label: "/landing", pageviews: "1")
+    expect(traffic).to have_breakdown_row(title: "Top URLs", label: "/top", pageviews: "2")
+    expect(traffic).to have_breakdown_row(title: "Entry URLs", label: "/latest", pageviews: "1")
     expect(traffic).to have_breakdown_row(
       title: "Traffic Sources",
       label: "search.example",
@@ -184,9 +184,9 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
       average_duration: "20s",
     )
 
-    traffic.click_breakdown_row(title: "Top URLs", label: "/popular")
+    traffic.click_breakdown_row(title: "Top URLs", label: "/top")
 
-    expect(traffic).to have_filter_chip(dimension: "url", value: "/popular")
+    expect(traffic).to have_filter_chip(dimension: "url", value: "/top")
     expect(traffic).to have_pageview_summary(
       total: "2",
       logged_in_human: "2",
@@ -208,7 +208,7 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
     page.refresh
 
     expect(traffic).to have_filter_chip(dimension: "ip", value: "192.0.2.1")
-    expect(traffic).to have_no_sensitive_url_state?("192.0.2.1", "/popular")
+    expect(traffic).to have_no_sensitive_url_state?("192.0.2.1", "/top")
 
     traffic.remove_filter("ip")
     traffic.click_breakdown_row(title: "Countries", label: "Canada")
@@ -235,15 +235,15 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
 
     expect(traffic).to have_filter_chip(dimension: "country", value: "Canada")
     expect(traffic).to have_safe_shareable_state(country: "CA", browser: nil)
-    expect(traffic).to have_no_sensitive_url_state?("192.0.2.1", "/popular")
+    expect(traffic).to have_no_sensitive_url_state?("192.0.2.1", "/top")
   end
 
   it "keeps cards bounded and makes the expanded table accessible",
      time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
-    9.times do |index|
+    %w[/ /categories /latest /hot /top /search /about /privacy /tos].each_with_index do |url, index|
       Fabricate(
         :browser_pageview_event,
-        url: "/page-#{index}",
+        url: url,
         session_id: "session-#{index}",
         created_at: Time.zone.local(2026, 5, 10, 10, index),
       )
