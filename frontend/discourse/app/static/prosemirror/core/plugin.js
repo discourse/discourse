@@ -17,6 +17,13 @@ import GlimmerNodeView from "../lib/glimmer-node-view";
   - `name: "customName"` - CSS class suffix (defaults to the key)
   - `hasContent: true` - for nodes with editable content inside
   - `shouldRender: ({ node, view, getPos, pluginParams }) => boolean` - for conditional rendering
+  - `tag: "aside"` - tag for the root element (defaults to div/span)
+  - `contentTag: "blockquote"` - tag for the editable content element, implies hasContent
+  - `attrs: (node) => ({ class: "quote", ... })` - attributes applied to the root element
+
+  Components with content receive the editable content as their block, and
+  `{{yield}}` moves it to the position it should be rendered. It stays appended
+  to the root element when they don't.
 */
 export function extractNodeViews(extensions, pluginParams) {
   /** @type {Record<string, import('prosemirror-view').NodeViewConstructor>} */
@@ -42,6 +49,9 @@ export function extractNodeViews(extensions, pluginParams) {
               component: nodeView.component,
               name: nodeView.name || name,
               hasContent: nodeView.hasContent,
+              tag: nodeView.tag,
+              contentTag: nodeView.contentTag,
+              attrs: nodeView.attrs,
             });
           };
           continue;

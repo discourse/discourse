@@ -53,7 +53,7 @@ export default class GridNodeView extends Component {
   }
 
   <template>
-    {{~! strip whitespace ~}}<div
+    {{~yield~}}{{~! strip whitespace ~}}<div
       class="composer-image-gallery__mode-buttons"
       role="group"
       contenteditable="false"

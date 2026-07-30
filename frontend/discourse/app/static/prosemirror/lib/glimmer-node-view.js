@@ -10,11 +10,16 @@ import { next } from "@ember/runloop";
  * @property {import("discourse/lib/composer/rich-editor-extensions").PluginParams} pluginParams
  * @property {any} component
  * @property {string} name
+ * @property {boolean} [hasContent]
+ * @property {string} [tag]
+ * @property {string} [contentTag]
+ * @property {(node: import("prosemirror-model").Node) => Record<string, string>} [attrs]
  */
 export default class GlimmerNodeView {
   @tracked node;
 
   #componentInstance;
+  #attrs;
 
   /**
    * @param {GlimmerNodeViewArgs} args
@@ -28,19 +33,31 @@ export default class GlimmerNodeView {
     component,
     name,
     hasContent = false,
+    tag,
+    contentTag,
+    attrs,
   }) {
     this.node = node;
     this.view = view;
     this.getPos = getPos;
     this.pluginParams = pluginParams ?? { getContext };
     this.component = component;
+    this.#attrs = attrs;
 
     this.pluginParams.getContext().addGlimmerNodeView(this);
 
-    this.dom = document.createElement(node.isInline ? "span" : "div");
-    this.dom.classList.add(`composer-${name}-node`);
-    if (hasContent) {
-      this.contentDOM = document.createElement(node.isInline ? "span" : "div");
+    this.dom = document.createElement(tag ?? (node.isInline ? "span" : "div"));
+
+    const attrValues = attrs?.(node);
+    this.dom.className = attrValues?.class ?? `composer-${name}-node`;
+    this.#applyAttrs(attrValues);
+
+    // attached up front so the editor can render and place a selection in it
+    // before the component renders; yielding it only moves it into position
+    if (contentTag || hasContent) {
+      this.contentDOM = document.createElement(
+        contentTag ?? (node.isInline ? "span" : "div")
+      );
       this.dom.appendChild(this.contentDOM);
     }
   }
@@ -59,17 +76,34 @@ export default class GlimmerNodeView {
   }
 
   update(node) {
+    if (node.type !== this.node.type) {
+      return false;
+    }
+
     this.node = node;
+    this.#applyAttrs();
 
     return true;
   }
 
   selectNode() {
-    next(() => this.#componentInstance?.selectNode?.());
+    next(() => {
+      if (this.#componentInstance?.selectNode) {
+        this.#componentInstance.selectNode();
+      } else {
+        this.dom.classList.add("ProseMirror-selectednode");
+      }
+    });
   }
 
   deselectNode() {
-    next(() => this.#componentInstance?.deselectNode?.());
+    next(() => {
+      if (this.#componentInstance?.deselectNode) {
+        this.#componentInstance.deselectNode();
+      } else {
+        this.dom.classList.remove("ProseMirror-selectednode");
+      }
+    });
   }
 
   stopEvent(event) {
@@ -85,5 +119,24 @@ export default class GlimmerNodeView {
     this.#componentInstance = null;
 
     this.pluginParams.getContext().removeGlimmerNodeView(this);
+  }
+
+  #applyAttrs(attrValues = this.#attrs?.(this.node)) {
+    if (!attrValues) {
+      return;
+    }
+
+    for (const [name, value] of Object.entries(attrValues)) {
+      // class is set once, as the editor also manages classes on this element
+      if (name === "class") {
+        continue;
+      }
+
+      if (value == null) {
+        this.dom.removeAttribute(name);
+      } else {
+        this.dom.setAttribute(name, value);
+      }
+    }
   }
 }

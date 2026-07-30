@@ -218,4 +218,21 @@ module("Integration | Component | ProsemirrorEditor", function (hooks) {
     assert.true(state.plugin2, "plugin2's view fn was called");
     assert.true(state.plugin3, "plugin3's view fn was called");
   });
+
+  test("node view content is kept when the component doesn't yield", async function (assert) {
+    const NoYield = <template>
+      <span class="chrome-only"></span>
+    </template>;
+
+    withPluginApi((api) => {
+      api.registerRichEditorExtension({
+        nodeViews: { paragraph: { component: NoYield, hasContent: true } },
+      });
+    });
+
+    await render(<template><ProsemirrorEditor @value="hello" /></template>);
+
+    assert.dom(".ProseMirror .chrome-only").exists("the component rendered");
+    assert.dom(".ProseMirror").hasText("hello", "the content is not dropped");
+  });
 });
