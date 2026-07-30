@@ -1034,7 +1034,19 @@ function insertAtTextarea(
   if (start !== end && text === "") {
     document.execCommand("delete", false);
   } else {
+    const before = textarea.value;
     document.execCommand("insertText", false, text);
+
+    // some browsers apply smart substitutions (curly quotes, em-dashes) to
+    // text inserted via execCommand, which breaks exact syntax like
+    // [quote="..."] — repair to the requested text if that happened
+    const expected = before.slice(0, start) + text + before.slice(end);
+    if (textarea.value !== expected) {
+      const insertedLength =
+        textarea.value.length - before.length + (end - start);
+      textarea.setRangeText(text, start, start + insertedLength, "end");
+      textarea.dispatchEvent(new InputEvent("input", { bubbles: true }));
+    }
   }
 }
 

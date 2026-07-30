@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import TextareaTextManipulation from "discourse/lib/textarea-text-manipulation";
 
 module("Unit | Utility | text-area-manipulation", function (hooks) {
@@ -92,6 +93,32 @@ module("Unit | Utility | text-area-manipulation", function (hooks) {
     manipulation.emojiSelected("smile");
 
     assert.strictEqual(textarea.value, "hello :smile:");
+  });
+
+  test("insertText - repairs browser smart substitutions", function (assert) {
+    const textarea = document.createElement("textarea");
+    document.body.appendChild(textarea);
+    const manipulation = new TextareaTextManipulation(getOwner(this), {
+      textarea,
+    });
+
+    sinon.stub(document, "execCommand").callsFake((command, ui, value) => {
+      textarea.setRangeText(
+        value.replace(/"/g, "”").replace(/--/g, "—"),
+        textarea.selectionStart,
+        textarea.selectionEnd,
+        "end"
+      );
+      return true;
+    });
+
+    const quote = '[quote="user, post:1, topic:2"]\nsome -- text\n[/quote]';
+    textarea.value = "before ";
+    textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+    manipulation.insertText(quote);
+
+    assert.strictEqual(textarea.value, `before ${quote}`);
+    assert.strictEqual(textarea.selectionStart, textarea.value.length);
   });
 
   test("falls back to plain text when rich HTML converts to empty markdown", async function (assert) {
