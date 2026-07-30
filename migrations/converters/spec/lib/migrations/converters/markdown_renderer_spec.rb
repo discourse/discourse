@@ -86,7 +86,8 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
     end
 
     it "drops a quote id too large for an id column" do
-      # Meta really has a post titled like this; SQLite raises binding a bignum.
+      # A real forum turned out to have a post titled like this; SQLite raises
+      # binding a bignum.
       raw = renderer.to_markdown('[quote="A, post:77777777777777777789999, topic:2"]q[/quote]')
 
       descriptor = buffer.quotes.first
