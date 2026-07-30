@@ -73,7 +73,7 @@ describe DiscourseAi::Translation::Progress do
       %w[post topic category tag],
     )
     expect(cache).to have_received(:fetch).with(
-      a_string_starting_with("discourse-ai:translation-progress-overview:v1:"),
+      a_string_starting_with("discourse-ai:translation-progress-overview:v2:"),
       expires_in: 2.hours,
     ).twice
     expect(DiscourseAi::Translation::PostCandidates).to have_received(:progress_summary).once
@@ -124,18 +124,18 @@ describe DiscourseAi::Translation::Progress do
       expect(first_post[:cached_at]).to eq(cached_at.utc.iso8601)
       expect(topic[:cached_at]).to eq((cached_at + 1.hour).utc.iso8601)
       expect(cache).to have_received(:fetch).with(
-        a_string_starting_with("discourse-ai:translation-progress-detail:v1:post:"),
+        a_string_starting_with("discourse-ai:translation-progress-detail:v2:post:"),
         expires_in: 2.hours,
       ).once
       expect(cache).to have_received(:fetch).with(
-        a_string_starting_with("discourse-ai:translation-progress-detail:v1:topic:"),
+        a_string_starting_with("discourse-ai:translation-progress-detail:v2:topic:"),
         expires_in: 2.hours,
       ).once
       expect(cache).to have_received(:read).with(
-        a_string_starting_with("discourse-ai:translation-progress-detail:v1:post:"),
+        a_string_starting_with("discourse-ai:translation-progress-detail:v2:post:"),
       ).twice
       expect(cache).to have_received(:read).with(
-        a_string_starting_with("discourse-ai:translation-progress-detail:v1:topic:"),
+        a_string_starting_with("discourse-ai:translation-progress-detail:v2:topic:"),
       ).once
       expect(DiscourseAi::Translation::PostCandidates).to have_received(:progress_details).once
       expect(DiscourseAi::Translation::TopicCandidates).to have_received(:progress_details).once
