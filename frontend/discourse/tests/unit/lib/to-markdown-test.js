@@ -447,7 +447,11 @@ helloWorld();</code>consectetur.`;
   test("drops the lang spans a publishing tool wraps each sentence in", async function (assert) {
     const html = `<p><span class="sentence" lang="en">So I have heard.</span> <span class="sentence" lang="en">At one time.</span></p>`;
 
-    assert.strictEqual(await toMarkdown(html), "So I have heard. At one time.");
+    assert.strictEqual(
+      await toMarkdown(html),
+      "So I have heard. At one time.",
+      "removes generated lang spans"
+    );
   });
 
   test("keeps the markup a dropped lang span wrapped", async function (assert) {
@@ -455,7 +459,8 @@ helloWorld();</code>consectetur.`;
 
     assert.strictEqual(
       await toMarkdown(html),
-      'A **bold** <mark>marked</mark> <ruby lang="ja">漢<rt>かん</rt></ruby> line.'
+      'A **bold** <mark>marked</mark> <ruby lang="ja">漢<rt>かん</rt></ruby> line.',
+      "preserves nested markup"
     );
   });
 

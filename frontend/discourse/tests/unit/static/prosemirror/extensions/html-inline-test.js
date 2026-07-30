@@ -16,7 +16,8 @@ module(
         this.transformPastedHTML(
           `<p><span class="sentence" lang="en">Text</span></p>`
         ),
-        `<p><span class="sentence">Text</span></p>`
+        `<p><span class="sentence">Text</span></p>`,
+        "removes lang while preserving other span attributes"
       );
     });
 
@@ -24,27 +25,44 @@ module(
       assert.false(
         this.transformPastedHTML(`<span lang = "en">Text</span>`).includes(
           "lang"
-        )
+        ),
+        "removes a spaced lang attribute"
+      );
+    });
+
+    test("strips a valueless lang attribute", function (assert) {
+      assert.false(
+        this.transformPastedHTML(`<span lang>Text</span>`).includes("lang"),
+        "removes a valueless lang attribute"
       );
     });
 
     test("keeps lang in a slice copied out of the editor", function (assert) {
       const html = `<p data-pm-slice="1 1 []"><span lang="ja">日本語</span></p>`;
 
-      assert.strictEqual(this.transformPastedHTML(html), html);
+      assert.strictEqual(
+        this.transformPastedHTML(html),
+        html,
+        "preserves internal clipboard markup"
+      );
     });
 
     test("leaves HTML without a lang attribute untouched", function (assert) {
       const html = `<p><span class="sentence">Text</span></p>`;
 
-      assert.strictEqual(this.transformPastedHTML(html), html);
+      assert.strictEqual(
+        this.transformPastedHTML(html),
+        html,
+        "avoids reserializing unrelated HTML"
+      );
     });
 
     test("keeps lang on a ruby annotation", function (assert) {
       assert.true(
         this.transformPastedHTML(
           `<ruby lang="ja">漢<rt>かん</rt></ruby>`
-        ).includes(`lang="ja"`)
+        ).includes(`lang="ja"`),
+        "preserves lang on non-span elements"
       );
     });
   }

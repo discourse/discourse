@@ -62,18 +62,15 @@ function serializeHtmlAttrs(htmlAttrs) {
 
 const ALL_ALLOWED_TAGS = [...Object.keys(HTML_INLINE_MARKS), ...ALLOWED_INLINE];
 
-// Publishing tools stamp `lang` on the spans they emit, so a `lang` arriving as
-// DOM carries no authoring intent. Stripping it leaves the span with no allowed
-// attribute, so it unwraps. A `lang` the author wrote arrives as a token, not as
-// DOM, and still round-trips.
+// External tools often add `lang` to every span. Markdown-authored attributes
+// use the token parser, so removing it here does not affect them.
 function stripLangFromExternalSpans(root) {
   root
     .querySelectorAll("span[lang]")
     .forEach((el) => el.removeAttribute("lang"));
 }
 
-// worth a parse-and-reserialize pass?
-const HAS_LANG_ATTR = /\slang\s*=/i;
+const HAS_SPAN_LANG_ATTRIBUTE = /<span\b[^>]*\slang(?:\s*=|[\s/>])/i;
 
 /** @type {RichEditorExtension} */
 const extension = {
@@ -209,8 +206,11 @@ const extension = {
     return new Plugin({
       props: {
         transformPastedHTML(html) {
-          // a slice carries markup copied out of our own editor, so it stays
-          if (!HAS_LANG_ATTR.test(html) || html.includes("data-pm-slice")) {
+          // Preserve internal slices so authored `lang` attributes round-trip.
+          if (
+            !HAS_SPAN_LANG_ATTRIBUTE.test(html) ||
+            html.includes("data-pm-slice")
+          ) {
             return html;
           }
 
