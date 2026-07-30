@@ -7,8 +7,57 @@ RSpec.describe UploadCreator do
   fab!(:user)
   fab!(:admin)
 
+  def with_jpeg_orientation(source_path:, orientation:)
+    exif =
+      "Exif\0\0".b + "II*\0".b + [8].pack("V") + [1].pack("v") + [0x0112].pack("v") +
+        [3].pack("v") + [1].pack("V") + [orientation].pack("v") + "\0\0".b + [0].pack("V")
+    marker = "\xFF\xE1".b + [exif.bytesize + 2].pack("n") + exif
+    source = File.binread(source_path)
+    oriented_file = Tempfile.new(["oriented-#{orientation}", ".jpg"])
+    oriented_file.binmode
+    oriented_file.write(source.byteslice(0, 2) + marker + source.byteslice(2..))
+    oriented_file.rewind
+
+    yield oriented_file
+  ensure
+    oriented_file&.close!
+  end
+
+  def stored_color_grid(upload:, rows:, columns:, palette:)
+    stored_path = Discourse.store.path_for(upload)
+
+    Dir.mktmpdir do |directory|
+      png_path = File.join(directory, "stored.png")
+      ImageMagick.magick(stored_path, png_path, read: [stored_path], write: [directory])
+      stored_image = ChunkyPNG::Image.from_file(png_path)
+
+      Array.new(rows) do |row_index|
+        Array.new(columns) do |column_index|
+          x = (column_index * stored_image.width + stored_image.width / 2) / columns
+          y = (row_index * stored_image.height + stored_image.height / 2) / rows
+
+          nearest_palette_color(pixel: stored_image[x, y], palette: palette)
+        end
+      end
+    end
+  end
+
+  def nearest_palette_color(pixel:, palette:)
+    actual_rgb = [ChunkyPNG::Color.r(pixel), ChunkyPNG::Color.g(pixel), ChunkyPNG::Color.b(pixel)]
+
+    palette
+      .min_by do |_name, expected_rgb|
+        expected_rgb
+          .zip(actual_rgb)
+          .sum { |expected_channel, actual_channel| (expected_channel - actual_channel)**2 }
+      end
+      .first
+  end
+
   describe "#create_for" do
-    describe "when the image is an SVG" do
+    context "when the upload is an SVG" do
+      before { SiteSetting.authorized_extensions = "svg" }
+
       it "removes external use references while preserving local fragments" do
         xlink_namespace = "http://www.w3.org/1999/xlink"
         svg = <<~XML
@@ -37,6 +86,57 @@ RSpec.describe UploadCreator do
         expect(
           document.at_css("#external-xlink-href").attribute_with_ns("href", xlink_namespace)&.value,
         ).to eq(nil)
+      end
+
+      it "stores an SVG upload without event handlers" do
+        file = Tempfile.new
+        file.write(<<~XML)
+          <?xml version="1.0" encoding="UTF-8"?>
+          <svg xmlns="http://www.w3.org/2000/svg" onload="alert(location)"></svg>
+        XML
+        file.rewind
+
+        upload = UploadCreator.new(file, "file.svg").create_for(user.id)
+        file_content = File.read(Discourse.store.path_for(upload))
+        document = Nokogiri.XML(file_content)
+
+        expect(upload).to be_persisted
+        expect(document.xpath("//@*[starts-with(name(), 'on')]")).to be_empty
+      ensure
+        file&.close!
+      end
+
+      it "removes entity references and subsets from a hostile SVG upload" do
+        upload =
+          UploadCreator.new(
+            file_from_fixtures("hostile_entity.svg"),
+            "hostile_entity.svg",
+          ).create_for(user.id)
+        file_content = File.read(Discourse.store.path_for(upload))
+        document = Nokogiri.XML(file_content)
+
+        expect(upload).to be_persisted
+        expect(document.internal_subset).to eq(nil)
+        expect(document.external_subset).to eq(nil)
+        expect(document.xpath("//text()").map(&:text).join).not_to include("root:")
+        expect(file_content).not_to include("file:///etc/passwd")
+      end
+    end
+
+    context "when the PNG contains transparency" do
+      let(:filename) { "transparent.png" }
+      let(:file) { file_from_fixtures(filename) }
+
+      it "preserves the transparent pixel in the stored image" do
+        upload = described_class.new(file, filename).create_for(user.id)
+        stored_path = Discourse.store.path_for(upload)
+        stored_image = ChunkyPNG::Image.from_file(stored_path)
+
+        expect(upload).to be_persisted
+        expect(upload.extension).to eq("png")
+        expect(FastImage.type(stored_path)).to eq(:png)
+        expect(FastImage.size(stored_path)).to eq([1, 1])
+        expect(ChunkyPNG::Color.a(stored_image[0, 0])).to eq(127)
       end
     end
 
@@ -159,11 +259,11 @@ RSpec.describe UploadCreator do
     end
 
     context "when optimization is forced for an animated GIF" do
+      # Regenerate from the repository root with:
+      # ruby -rbase64 -e 'File.binwrite("spec/fixtures/images/tiny_animated.gif", Base64.strict_decode64("R0lGODlhAgABAPAAAP8AAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQAAAAAACwAAAAAAgABAAACAgQKACH5BAAKAAAALAAAAAACAAEAgAAA/wAAAAICBAoAOw=="))'
       let(:file) { file_from_fixtures("tiny_animated.gif") }
 
       it "preserves the GIF and records its animation metadata" do
-        # Regenerate from the repository root with:
-        # ruby -rbase64 -e 'File.binwrite("spec/fixtures/images/tiny_animated.gif", Base64.strict_decode64("R0lGODlhAgABAPAAAP8AAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQAAAAAACwAAAAAAgABAAACAgQKACH5BAAKAAAALAAAAAACAAEAgAAA/wAAAAICBAoAOw=="))'
         upload =
           described_class.new(file, "tiny_animated.gif", force_optimize: true).create_for(user.id)
         stored_path = Discourse.store.path_for(upload)
@@ -207,82 +307,54 @@ RSpec.describe UploadCreator do
 
       it "stores pixels in their normalized positions for every orientation" do
         expected_color_grids.each do |orientation, expected_color_grid|
-          exif =
-            "Exif\0\0".b + "II*\0".b + [8].pack("V") + [1].pack("v") + [0x0112].pack("v") +
-              [3].pack("v") + [1].pack("V") + [orientation].pack("v") + "\0\0".b + [0].pack("V")
-          marker = "\xFF\xE1".b + [exif.bytesize + 2].pack("n") + exif
-          source = File.binread(source_path)
-          oriented_file = Tempfile.new(["oriented-#{orientation}", ".jpg"])
-          oriented_file.binmode
-          oriented_file.write(source.byteslice(0, 2) + marker + source.byteslice(2..))
-          oriented_file.rewind
+          with_jpeg_orientation(
+            source_path: source_path,
+            orientation: orientation,
+          ) do |oriented_file|
+            upload =
+              described_class.new(
+                oriented_file,
+                "oriented-#{orientation}.jpg",
+                force_optimize: true,
+              ).create_for(user.id)
+            actual_color_grid =
+              stored_color_grid(
+                upload: upload,
+                rows: expected_color_grid.length,
+                columns: expected_color_grid.first.length,
+                palette: palette,
+              )
 
-          upload =
-            described_class.new(
-              oriented_file,
-              "oriented-#{orientation}.jpg",
-              force_optimize: true,
-            ).create_for(user.id)
-          stored_path = Discourse.store.path_for(upload)
-
-          actual_color_grid =
-            Dir.mktmpdir do |directory|
-              png_path = File.join(directory, "stored.png")
-              ImageMagick.magick(stored_path, png_path, read: [stored_path], write: [directory])
-              stored_image = ChunkyPNG::Image.from_file(png_path)
-              row_count = expected_color_grid.length
-              column_count = expected_color_grid.first.length
-
-              expected_color_grid.each_index.map do |row_index|
-                expected_color_grid.first.each_index.map do |column_index|
-                  x = (column_index * stored_image.width + stored_image.width / 2) / column_count
-                  y = (row_index * stored_image.height + stored_image.height / 2) / row_count
-                  pixel = stored_image[x, y]
-                  actual_rgb = [
-                    ChunkyPNG::Color.r(pixel),
-                    ChunkyPNG::Color.g(pixel),
-                    ChunkyPNG::Color.b(pixel),
-                  ]
-
-                  palette
-                    .min_by do |_name, expected_rgb|
-                      expected_rgb
-                        .zip(actual_rgb)
-                        .sum do |expected_channel, actual_channel|
-                          (expected_channel - actual_channel)**2
-                        end
-                    end
-                    .first
-                end
-              end
-            end
-
-          expect(upload).to be_persisted
-          expect([upload.width, upload.height]).to eq(
-            [expected_color_grid.first.length * 20, expected_color_grid.length * 20],
-          )
-          expect(actual_color_grid).to eq(expected_color_grid)
-        ensure
-          oriented_file&.close!
+            expect(upload).to be_persisted
+            expect(upload).to have_attributes(
+              width: expected_color_grid.first.length * 20,
+              height: expected_color_grid.length * 20,
+            )
+            expect(actual_color_grid).to eq(expected_color_grid)
+          end
         end
       end
     end
 
-    it "does not persist an upload when a detected PNG cannot be decoded during conversion" do
-      SiteSetting.png_to_jpg_quality = 1
-
+    context "when a detected PNG cannot be decoded during conversion" do
       # Regenerate from the repository root with:
       # ruby -rzlib -e 'ihdr = [1, 1, 8, 6, 0, 0, 0].pack("NNCCCCC"); chunk = [ihdr.bytesize].pack("N") + "IHDR" + ihdr + [Zlib.crc32("IHDR" + ihdr)].pack("N"); File.binwrite("spec/fixtures/images/broken.png", "\x89PNG\r\n\x1A\n".b + chunk + ("\0".b * 80_000))'
-      expect do
+      let(:broken_png_file) { file_from_fixtures("broken.png") }
+
+      it "does not persist the upload" do
+        SiteSetting.png_to_jpg_quality = 1
+
         expect do
-          UploadCreator.new(
-            file_from_fixtures("broken.png"),
-            "broken.png",
-            pasted: true,
-            force_optimize: true,
-          ).create_for(user.id)
-        end.to raise_error(Discourse::Utils::CommandError)
-      end.not_to change(Upload, :count)
+          expect do
+            UploadCreator.new(
+              broken_png_file,
+              "broken.png",
+              pasted: true,
+              force_optimize: true,
+            ).create_for(user.id)
+          end.to raise_error(Discourse::Utils::CommandError)
+        end.not_to change(Upload, :count)
+      end
     end
 
     describe "pngquant" do
@@ -813,66 +885,6 @@ RSpec.describe UploadCreator do
         expect(FastImage.type(stored_path)).to eq(:png)
         expect(FastImage.size(stored_path)).to eq([1, 1])
       end
-    end
-  end
-
-  describe "#create_for" do
-    context "when the PNG contains transparency" do
-      let(:filename) { "transparent.png" }
-      let(:file) { file_from_fixtures(filename) }
-
-      it "preserves the transparent pixel in the stored image" do
-        upload = described_class.new(file, filename).create_for(user.id)
-        stored_path = Discourse.store.path_for(upload)
-        stored_image = ChunkyPNG::Image.from_file(stored_path)
-
-        expect(upload).to be_persisted
-        expect(upload.extension).to eq("png")
-        expect(FastImage.type(stored_path)).to eq(:png)
-        expect(FastImage.size(stored_path)).to eq([1, 1])
-        expect(ChunkyPNG::Color.a(stored_image[0, 0])).to eq(127)
-      end
-    end
-  end
-
-  describe "#create_for" do
-    let(:file) do
-      file = Tempfile.new
-      file.write(<<~XML)
-        <?xml version="1.0" encoding="UTF-8"?>
-        <svg xmlns="http://www.w3.org/2000/svg" onload="alert(location)"></svg>
-      XML
-      file.rewind
-      file
-    end
-
-    before { SiteSetting.authorized_extensions = "svg" }
-
-    it "stores an SVG upload without event handlers" do
-      upload = UploadCreator.new(file, "file.svg").create_for(user.id)
-      file_content = File.read(Discourse.store.path_for(upload))
-      document = Nokogiri.XML(file_content)
-
-      expect(upload).to be_persisted
-      expect(document.xpath("//@*[starts-with(name(), 'on')]")).to be_empty
-    ensure
-      file.unlink
-    end
-
-    it "removes entity references and subsets from a hostile SVG upload" do
-      upload =
-        UploadCreator.new(
-          file_from_fixtures("hostile_entity.svg"),
-          "hostile_entity.svg",
-        ).create_for(user.id)
-      file_content = File.read(Discourse.store.path_for(upload))
-      document = Nokogiri.XML(file_content)
-
-      expect(upload).to be_persisted
-      expect(document.internal_subset).to eq(nil)
-      expect(document.external_subset).to eq(nil)
-      expect(document.xpath("//text()").map(&:text).join).not_to include("root:")
-      expect(file_content).not_to include("file:///etc/passwd")
     end
   end
 
