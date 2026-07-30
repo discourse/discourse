@@ -392,8 +392,9 @@ class Upload < ActiveRecord::Base
           Discourse.store.download_safe(self)&.path
         end
 
-      if local_path.nil?
-        # Download failed. Could be too large to download, or file could be missing in s3
+      if local_path.nil? || !File.exist?(local_path)
+        # Download failed, or the file is gone from the store. Could be too large
+        # to download, or file could be missing in s3
         color = ""
       end
 
