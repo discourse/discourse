@@ -54,34 +54,46 @@ RSpec.describe DiscourseWorkflows::Nodes::SetFields::V1 do
       expect(result).to include("topic_id" => "42", "status" => "open")
     end
 
-    it "casts boolean values from a two-sided vocabulary" do
+    it "casts boolean values from a strict vocabulary" do
       config = { "include_other_fields" => false }.merge(
         assignments(
           assignment("a", "false", "boolean"),
           assignment("b", "0", "boolean"),
-          assignment("c", "no", "boolean"),
-          assignment("d", "1", "boolean"),
-          assignment("e", "yes", "boolean"),
-          assignment("f", " ON ", "boolean"),
+          assignment("c", false, "boolean"),
+          assignment("d", "", "boolean"),
+          assignment("e", "1", "boolean"),
+          assignment("f", "TRUE", "boolean"),
+          assignment("g", true, "boolean"),
         ),
       )
 
       result = execute_node(configuration: config, item: item)
 
       expect(result).to eq(
-        { "a" => false, "b" => false, "c" => false, "d" => true, "e" => true, "f" => true },
+        {
+          "a" => false,
+          "b" => false,
+          "c" => false,
+          "d" => false,
+          "e" => true,
+          "f" => true,
+          "g" => true,
+        },
       )
     end
 
-    it "raises on values that are not recognizably boolean" do
-      config = { "include_other_fields" => false }.merge(
-        assignments(assignment("a", "moderator", "boolean")),
-      )
+    it "raises on values outside the boolean vocabulary" do
+      %w[t y yes on moderator].each do |value|
+        config = { "include_other_fields" => false }.merge(
+          assignments(assignment("a", value, "boolean")),
+        )
+        expected_error = I18n.t("discourse_workflows.errors.invalid_boolean", value: value.inspect)
 
-      expect { execute_node(configuration: config, item: item) }.to raise_error(
-        DiscourseWorkflows::NodeError,
-        /moderator/,
-      )
+        expect { execute_node(configuration: config, item: item) }.to raise_error(
+          DiscourseWorkflows::NodeError,
+          /#{Regexp.escape(expected_error)}/,
+        )
+      end
     end
 
     it "casts boolean values resolved from expressions" do
