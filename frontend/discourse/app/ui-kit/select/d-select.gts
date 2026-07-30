@@ -890,6 +890,20 @@ export default class DSelect extends Component<DSelectSignature> {
    * filter input as well as the list. Calling it a listbox told a reader to expect a list and
    * hid the input they actually land on.
    */
+  /**
+   * The ARIA role for the floated panel. A select-only panel holds nothing but the list, so a
+   * `dialog` there would put a container between the combobox and the options its
+   * `aria-activedescendant` points at — the one structural difference from implementations that
+   * voice the selected state correctly. `none` keeps the element as a presentational wrapper.
+   *
+   * Every other variant keeps `dialog`: its panel holds a query input as well as the list, which
+   * is what {@link triggerRootHasPopup} promises, and dropping the role would make that promise
+   * false. Mobile is unaffected either way, since there the panel is a `DModal`.
+   */
+  get panelContentRole(): string {
+    return this.isStatic ? "none" : "dialog";
+  }
+
   get triggerRootHasPopup(): string | undefined {
     if (this.isStatic) {
       return "listbox";
@@ -2229,6 +2243,7 @@ export default class DSelect extends Component<DSelectSignature> {
     <DMenu
       @identifier={{@identifier}}
       @modalForMobile={{true}}
+      @contentRole={{this.panelContentRole}}
       @matchTriggerWidth={{true}}
       {{! The menu's default 400px cap is applied inline, exactly like the matched width, so it
         wins over it: a field wider than the cap gets a visibly narrower dropdown. A combobox

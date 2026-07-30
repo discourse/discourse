@@ -169,11 +169,18 @@ export interface TooltipOptions {
 }
 
 /**
- * The options for a menu: every tooltip option plus the menu-only extras (focus
- * management, the mobile modal, identifier grouping, and the class/width overrides
+ * The options for a menu: every tooltip option plus the menu-only extras (the content role,
+ * focus management, the mobile modal, identifier grouping, and the class/width overrides
  * the menu template forwards to its trigger and content).
  */
 export interface MenuOptions extends TooltipOptions {
+  /**
+   * The ARIA role for the content element. `dialog` suits a panel that holds its own widgets.
+   * A popup that is only a list should pass `none`, so the container does not sit between the
+   * control and the items its `aria-activedescendant` points at.
+   */
+  contentRole: string;
+
   /** Whether to focus the content when the menu opens. */
   autofocus: boolean;
 
@@ -349,6 +356,7 @@ export const MENU: { options: MenuOptions; portalOutletId: string } = {
     fallbackPlacements: FLOAT_UI_PLACEMENTS,
     autoUpdate: true,
     trapTab: true,
+    contentRole: "dialog",
     onClose: null,
     onShow: null,
     onRegisterApi: null,

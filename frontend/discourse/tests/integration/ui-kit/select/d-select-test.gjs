@@ -1081,6 +1081,48 @@ module(
   }
 );
 
+module("Integration | ui-kit | select | DSelect popup role", function (hooks) {
+  setupRenderingTest(hooks);
+
+  // A select-only combobox sends the reader to a listbox, and its panel holds nothing else — no
+  // query input, no other widget. Wrapping that listbox in a dialog puts a container between the
+  // combobox and the options it points at, which is not the structure APG describes and is the
+  // one structural difference from implementations that voice the selected state correctly.
+  test("a select-only panel does not wrap its listbox in a dialog", async function (assert) {
+    await render(<template><Host @variant="static" /></template>);
+    await click("[role='combobox']");
+
+    assert.dom("[role='listbox']").exists("the list is open");
+    assert
+      .dom(".d-combobox__content")
+      .hasAttribute(
+        "role",
+        "none",
+        "the panel is a presentational container, not a dialog"
+      );
+    assert
+      .dom("[role='dialog']")
+      .doesNotExist("nothing between the combobox and its options is a dialog");
+  });
+
+  // The other half of the rule: a panel that holds a query input as well as the list IS a
+  // disclosure onto a composite surface, and `aria-haspopup="dialog"` on its trigger promises
+  // exactly that. Removing the role there would make the promise false.
+  test("a panel with a query input keeps its dialog role", async function (assert) {
+    await render(<template><Host @variant="button" /></template>);
+    await click(".d-combobox__trigger");
+
+    assert.dom("[role='listbox']").exists("the list is open");
+    assert
+      .dom(".d-combobox__content")
+      .hasAttribute(
+        "role",
+        "dialog",
+        "a searchable panel stays a dialog, matching aria-haspopup"
+      );
+  });
+});
+
 module("Integration | ui-kit | select | DSelect (static)", function (hooks) {
   setupRenderingTest(hooks);
 

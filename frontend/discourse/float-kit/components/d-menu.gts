@@ -304,7 +304,7 @@ export default class DMenu<Data = unknown> extends Component<
             @contentClass
           }}
           @innerClass="fk-d-menu__inner-content"
-          @role="dialog"
+          @role={{this.options.contentRole}}
           @inline={{this.options.inline}}
           {{this.registerFloatBody}}
         >
