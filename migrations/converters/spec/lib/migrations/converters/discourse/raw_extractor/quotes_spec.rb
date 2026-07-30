@@ -49,6 +49,19 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.quotes.first).to include(quoted_topic_id: 77, quoted_post_number: 12)
     end
 
+    # The importer resolves a quoted post from the pair, so a topic on its own is
+    # no use to it. The containing topic id is passed here to show it is not
+    # substituted either: half a coordinate is dropped rather than guessed at.
+    it "drops both coordinates when the header names a topic but no post" do
+      extract(%([quote="bob, topic:5"]\nbody\n[/quote]), topic_id: 77)
+
+      expect(buffer.quotes.first).to include(
+        quoted_username: "bob",
+        quoted_topic_id: nil,
+        quoted_post_number: nil,
+      )
+    end
+
     it "records no coordinates for a username-only quote" do
       extract(%([quote="alice"]\nhello\n[/quote]), topic_id: 77)
 
