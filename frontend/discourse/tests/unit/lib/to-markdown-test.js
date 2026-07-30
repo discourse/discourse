@@ -444,6 +444,21 @@ helloWorld();</code>consectetur.`;
     assert.false(markdown.includes("old removed phrase"));
   });
 
+  test("drops the lang spans a publishing tool wraps each sentence in", async function (assert) {
+    const html = `<p><span class="sentence" lang="en">So I have heard.</span> <span class="sentence" lang="en">At one time.</span></p>`;
+
+    assert.strictEqual(await toMarkdown(html), "So I have heard. At one time.");
+  });
+
+  test("keeps the markup a dropped lang span wrapped", async function (assert) {
+    const html = `<p><span lang="en">A <b>bold</b> <mark>marked</mark> <ruby lang="ja">漢<rt>かん</rt></ruby> line.</span></p>`;
+
+    assert.strictEqual(
+      await toMarkdown(html),
+      'A **bold** <mark>marked</mark> <ruby lang="ja">漢<rt>かん</rt></ruby> line.'
+    );
+  });
+
   test("drops the document-language spans Word for the web stamps on runs", async function (assert) {
     const html = `<div class="OutlineElement"><p class="Paragraph">
       <span class="TextRun" lang="EN-GB"><span class="NormalTextRun" lang="EN-GB">Note:</span></span>

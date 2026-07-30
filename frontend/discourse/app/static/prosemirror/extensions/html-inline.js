@@ -62,6 +62,19 @@ function serializeHtmlAttrs(htmlAttrs) {
 
 const ALL_ALLOWED_TAGS = [...Object.keys(HTML_INLINE_MARKS), ...ALLOWED_INLINE];
 
+// Publishing tools stamp `lang` on the spans they emit, so a `lang` arriving as
+// DOM carries no authoring intent. Stripping it leaves the span with no allowed
+// attribute, so it unwraps. A `lang` the author wrote arrives as a token, not as
+// DOM, and still round-trips.
+function stripLangFromExternalSpans(root) {
+  root
+    .querySelectorAll("span[lang]")
+    .forEach((el) => el.removeAttribute("lang"));
+}
+
+// worth a parse-and-reserialize pass?
+const HAS_LANG_ATTR = /\slang\s*=/i;
+
 /** @type {RichEditorExtension} */
 const extension = {
   nodeSpec: {
@@ -188,6 +201,26 @@ const extension = {
       state.renderInline(node);
       state.write(`</${node.attrs.tag}>`);
     },
+  },
+  transformParsedHTML(doc) {
+    stripLangFromExternalSpans(doc);
+  },
+  plugins({ pmState: { Plugin } }) {
+    return new Plugin({
+      props: {
+        transformPastedHTML(html) {
+          // a slice carries markup copied out of our own editor, so it stays
+          if (!HAS_LANG_ATTR.test(html) || html.includes("data-pm-slice")) {
+            return html;
+          }
+
+          const doc = new DOMParser().parseFromString(html, "text/html");
+          stripLangFromExternalSpans(doc);
+
+          return doc.body.innerHTML;
+        },
+      },
+    });
   },
   inputRules: {
     match: new RegExp(`<(${ALL_ALLOWED_TAGS.join("|")})>$`, "i"),
