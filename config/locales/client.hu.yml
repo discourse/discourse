@@ -2111,6 +2111,9 @@ hu:
         contextual: "Új oldal tartalma"
       bookmark_after_notification:
         title: "Könyvjelző-emlékeztető értesítés elküldése után:"
+      send_shortcut:
+        enter: "Belépés"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Értesítés kedvelés esetén"
         always: "Mindig"

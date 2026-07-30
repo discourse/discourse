@@ -2431,6 +2431,9 @@ uk:
         contextual: "Зміст нової сторінки"
       bookmark_after_notification:
         title: "Після нагадування про закладку буде надіслано сповіщення:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Повідомляти при отриманні вподобайки"
         always: "Завжди"

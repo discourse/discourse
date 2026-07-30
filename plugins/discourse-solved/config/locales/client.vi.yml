@@ -13,6 +13,7 @@ vi:
       dashboard:
         sections:
           support:
+            save_error: "Không thể lưu lựa chọn cho lần sau."
             answerers:
               staff: "Nhân viên"
               member: "Thành viên kênh"

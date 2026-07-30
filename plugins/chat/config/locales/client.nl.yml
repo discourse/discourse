@@ -166,12 +166,6 @@ nl:
         never: "Nooit"
       separate_sidebar_mode:
         title: "Afzonderlijke zijbalkmodussen weergeven voor forum en chat"
-      send_shortcut:
-        title: "Snelkoppeling verzenden"
-        enter:
-          label: "Verzenden met Enter"
-        meta_enter:
-          label: "Verzenden met %{meta_key} + Enter"
       enable: "Chat inschakelen"
       flag: "Markeren"
       emoji: "Emoji invoegen"

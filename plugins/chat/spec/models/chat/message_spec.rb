@@ -201,7 +201,85 @@ describe Chat::Message do
     end
   end
 
+  describe "#cook" do
+    fab!(:editor, :user)
+
+    it "uses the message author for a /me command after another user edits it" do
+      message.message = "/me waves"
+      message.last_editor = editor
+      message.cook
+
+      expect(message.cooked).to match_html(
+        %(<p><em class="chat-message-action">#{message.user.username} waves</em></p>),
+      )
+    end
+  end
+
   describe ".cook" do
+    context "with a /me command" do
+      it "renders the action with the author's username" do
+        cooked = described_class.cook("/me waves", author_username: "ducks")
+
+        expect(cooked).to match_html('<p><em class="chat-message-action">ducks waves</em></p>')
+      end
+
+      it "supports inline Markdown in the action" do
+        cooked = described_class.cook("/me waves **enthusiastically**", author_username: "ducks")
+
+        expect(cooked).to match_html(
+          '<p><em class="chat-message-action">ducks waves <strong>enthusiastically</strong></em></p>',
+        )
+      end
+
+      it "keeps links inline with the action" do
+        cooked = described_class.cook("/me visits https://example.com", author_username: "ducks")
+
+        expect(cooked).to match_html(
+          '<p><em class="chat-message-action">ducks visits <a href="https://example.com" rel="noopener nofollow ugc">https://example.com</a></em></p>',
+        )
+      end
+
+      it "does not match other commands or multiline messages" do
+        expect(described_class.cook("/message waves", author_username: "ducks")).to match_html(
+          "<p>/message waves</p>",
+        )
+        expect(described_class.cook("hello /me waves", author_username: "ducks")).to match_html(
+          "<p>hello /me waves</p>",
+        )
+        expect(described_class.cook("/me waves\nhello", author_username: "ducks")).to match_html(
+          "<p>/me waves<br>\nhello</p>",
+        )
+      end
+    end
+
+    context "with text expansion slash commands" do
+      it "expands /shrug with or without preceding text" do
+        expect(described_class.cook("/shrug")).to match_html("<p>¯\\_(ツ)_/¯</p>")
+        expect(described_class.cook("/shrug not sure")).to match_html("<p>not sure ¯\\_(ツ)_/¯</p>")
+      end
+
+      it "expands /tableflip with or without preceding text" do
+        expect(described_class.cook("/tableflip")).to match_html("<p>(╯°□°)╯︵ ┻━┻</p>")
+        expect(described_class.cook("/tableflip enough")).to match_html(
+          "<p>enough (╯°□°)╯︵ ┻━┻</p>",
+        )
+      end
+
+      it "supports inline Markdown in preceding text" do
+        expect(described_class.cook("/shrug **maybe**")).to match_html(
+          "<p><strong>maybe</strong> ¯\\_(ツ)_/¯</p>",
+        )
+      end
+
+      it "only matches commands at the start of single-line messages" do
+        expect(described_class.cook("hello /shrug")).to match_html("<p>hello /shrug</p>")
+        expect(described_class.cook("/shrugging")).to match_html("<p>/shrugging</p>")
+        expect(described_class.cook("/tableflip\nhello")).to match_html(
+          "<p>/tableflip<br>\nhello</p>",
+        )
+      end
+    end
+
     context "with enable_emoji_shortcuts site setting" do
       context "when enabled" do
         before { SiteSetting.enable_emoji_shortcuts = true }

@@ -77,7 +77,7 @@ module Jobs
                 :info
               when :should_not_be_displayed
                 :debug
-              when :already_notified_about_promotion
+              when :already_promoted
                 :debug
               when :already_manually_toggled
                 :debug

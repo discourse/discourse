@@ -184,6 +184,72 @@ RSpec.describe Jobs::NotifyAdminsOfAvailableUpcomingChanges do
     end
   end
 
+  context "when the changes were backfilled as already notified about" do
+    before do
+      SiteSetting.promote_upcoming_changes_on_status = :stable
+      UpcomingChangeEvent.delete_all
+      UpcomingChanges::Action::BackfillNotifiedEvents.call(
+        upcoming_change_names: %i[
+          test_upcoming_change
+          test_upcoming_change_b
+          test_upcoming_change_c
+        ],
+      )
+    end
+
+    it "sends no notifications, even once the site is no longer new" do
+      expect { result }.not_to change { Notification.count }
+    end
+
+    context "when a backfilled change later reaches the available status" do
+      before do
+        mock_upcoming_change_metadata(
+          {
+            test_upcoming_change_d: {
+              impact: "feature,all_members",
+              status: :experimental,
+              impact_type: "feature",
+              impact_role: "all_members",
+            },
+          },
+        )
+        UpcomingChanges::Action::BackfillNotifiedEvents.call(
+          upcoming_change_names: [:test_upcoming_change_d],
+        )
+
+        mock_upcoming_change_metadata(
+          {
+            test_upcoming_change_d: {
+              impact: "feature,all_members",
+              status: :beta,
+              impact_type: "feature",
+              impact_role: "all_members",
+            },
+          },
+        )
+        UpcomingChangeEvent.create!(
+          event_type: :status_changed,
+          upcoming_change_name: :test_upcoming_change_d,
+          event_data: {
+            previous_value: :experimental,
+            new_value: :beta,
+          },
+        )
+      end
+
+      it "notifies admins about it" do
+        result
+
+        expect(
+          Notification
+            .where(notification_type: Notification.types[:upcoming_change_available])
+            .where("data::text LIKE ?", "%test_upcoming_change_d%")
+            .count,
+        ).to eq(2)
+      end
+    end
+  end
+
   context "when an upcoming change has an old added event" do
     before { new_change_log.update!(created_at: 2.weeks.ago) }
 

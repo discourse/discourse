@@ -1934,6 +1934,9 @@ vi:
         contextual: "Trang nội dung mới"
       bookmark_after_notification:
         title: "Sau khi thông báo lời nhắc được gửi:"
+      send_shortcut:
+        enter: "Nhập"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Thông báo khi được thích"
         always: "Luôn luôn"

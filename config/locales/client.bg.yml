@@ -1519,6 +1519,9 @@ bg:
         contextual: "Ново съдържание на страницата"
       bookmark_after_notification:
         title: "След изпращане на известие за напомняне за отметка:"
+      send_shortcut:
+        enter: "Въведете"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Информирай ме когато е харесан"
         always: "Винаги"

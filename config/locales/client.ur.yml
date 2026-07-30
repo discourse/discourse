@@ -2162,6 +2162,9 @@ ur:
         contextual: "نیا صفحہ کا مواد"
       bookmark_after_notification:
         title: "بُک مارک یاد دہانی کی اطلاع بھیجے جانے کے بعد:"
+      send_shortcut:
+        enter: "اَینٹر"
+        meta_enter: "%{meta_key} + درج کریں"
       like_notification_frequency:
         title: "جب لائک کیا جائے تو مطلع کریں"
         always: "ہمیشہ"

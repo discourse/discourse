@@ -1,17 +1,15 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
-import { not } from "discourse/truth-helpers";
+import { action } from "@ember/object";
 import DButton from "discourse/ui-kit/d-button";
 import DHighlightedCode from "discourse/ui-kit/d-highlighted-code";
 
 export default class StyleguideExample extends Component {
-  @tracked value = null;
   @tracked showCode = false;
 
-  constructor() {
-    super(...arguments);
-    this.value = this.args.initialValue;
+  @action
+  toggleCode() {
+    this.showCode = !this.showCode;
   }
 
   <template>
@@ -24,7 +22,7 @@ export default class StyleguideExample extends Component {
         {{#if @code}}
           <DButton
             @icon="code"
-            @action={{fn (mut this.showCode) (not this.showCode)}}
+            @action={{this.toggleCode}}
             class="btn-flat btn-transparent"
           />
         {{/if}}
@@ -36,7 +34,7 @@ export default class StyleguideExample extends Component {
         </div>
       {{/if}}
 
-      <section class="rendered">{{yield this.value}}</section>
+      <section class="rendered">{{yield}}</section>
     </section>
   </template>
 }

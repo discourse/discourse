@@ -146,11 +146,6 @@ ug:
         never: "ھەرگىز"
       separate_sidebar_mode:
         title: "مۇنبەر ۋە سۆھبەتكە ئايرىم يان بالداق ھالىتىنى كۆرسىتىدۇ"
-      send_shortcut:
-        enter:
-          label: "Enter بېسىلسا يوللايدۇ"
-        meta_enter:
-          label: "%{meta_key} + Enter بېسىلسا يوللايدۇ"
       enable: "سۆھبەتنى قوزغات"
       flag: "پاش قىل"
       emoji: "چىراي ئىپادە قىستۇر"

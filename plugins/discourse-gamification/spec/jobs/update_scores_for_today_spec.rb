@@ -14,7 +14,10 @@ describe Jobs::UpdateScoresForToday do
   let(:leaderboard_1_positions) { DiscourseGamification::LeaderboardCachedView.new(leaderboard_1) }
   let(:leaderboard_2_positions) { DiscourseGamification::LeaderboardCachedView.new(leaderboard_2) }
 
-  before { topic_user_2_created.update(created_at: 2.days.ago) }
+  before do
+    SiteSetting.discourse_gamification_enabled = true
+    topic_user_2_created.update(created_at: 2.days.ago)
+  end
 
   it "updates all scores for today" do
     run_job

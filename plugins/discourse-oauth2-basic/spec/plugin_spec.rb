@@ -98,6 +98,12 @@ describe OAuth2BasicAuthenticator do
         expect(result.failed).to eq(true)
       end
 
+      it "returns a standardised result if the request times out" do
+        stub_request(:get, SiteSetting.oauth2_user_json_url).to_timeout
+        result = authenticator.after_authenticate(auth)
+        expect(result.failed).to eq(true)
+      end
+
       describe "fetch custom attributes" do
         after { DiscoursePluginRegistry.reset_register!(:oauth2_basic_additional_json_paths) }
 

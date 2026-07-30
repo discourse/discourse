@@ -2153,6 +2153,9 @@ tr_TR:
         contextual: "Yeni sayfa içeriği"
       bookmark_after_notification:
         title: "Bir yer imi anımsatıcı bildirimi gönderildikten sonra:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Beğenildiğinde bildir"
         always: "Her zaman"

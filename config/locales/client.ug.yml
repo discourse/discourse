@@ -2073,6 +2073,9 @@ ug:
         contextual: "يېڭى بەت مەزمۇنى"
       bookmark_after_notification:
         title: "خەتكۈچ ئەسكەرتىش ئۇقتۇرۇشى يوللىغاندىن كېيىن:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "ياقتۇرغاندا ئۇقتۇر"
         always: "ھەمىشە"

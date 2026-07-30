@@ -227,7 +227,11 @@ namespace :release do
     selected =
       if (ghsa_ids = ENV["SECURITY_FIX_GHSA_IDS"])
         requested = ghsa_ids.split(",").map(&:strip).map(&:downcase)
-        choices.select { |pr| pr["ghsa_id"] && requested.include?(pr["ghsa_id"].downcase) }
+        matched =
+          choices.select { |pr| pr["ghsa_id"] && requested.include?(pr["ghsa_id"].downcase) }
+        missing = requested - matched.map { |pr| pr["ghsa_id"].downcase }
+        raise "No matching PR found for requested GHSA(s): #{missing.join(", ")}" if missing.any?
+        matched
       else
         prompt = TTY::Prompt.new
         prompt_choices =

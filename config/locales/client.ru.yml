@@ -2333,6 +2333,9 @@ ru:
         contextual: "Количество контента новой страницы"
       bookmark_after_notification:
         title: "После отправки напоминания о закладке:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Уведомлять при получении лайка"
         always: "Всегда"

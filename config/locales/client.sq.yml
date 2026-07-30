@@ -1745,6 +1745,9 @@ sq:
         contextual: "Përmbajtja e faqes së re"
       bookmark_after_notification:
         title: "Pasi të dërgohet një njoftim rikujtues për faqeshënuesit:"
+      send_shortcut:
+        enter: "Hyni"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Njoftimet e pëlqimeve"
         always: "Gjithmonë"

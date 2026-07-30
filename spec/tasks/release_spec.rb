@@ -444,8 +444,8 @@ RSpec.describe "tasks/release" do
         expect(versions_json["2026.1"]).to eq(
           {
             "developmentStartDate" => "2025-12-28",
-            "releaseDate" => "2026-01",
-            "supportEndDate" => "2026-09",
+            "releaseDate" => "2026-01-27",
+            "supportEndDate" => "2026-09-29",
             "released" => false,
             "esr" => true,
             "supported" => true,

@@ -2057,6 +2057,9 @@ hr:
         contextual: "Sadržaj nove stranice"
       bookmark_after_notification:
         title: "Nakon slanja obavijesti o podsjetniku za oznake:"
+      send_shortcut:
+        enter: "Unesi"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Obavijesti o reakcijama"
         always: "uvijek"

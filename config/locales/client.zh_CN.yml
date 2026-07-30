@@ -2098,6 +2098,9 @@ zh_CN:
         contextual: "新页面内容"
       bookmark_after_notification:
         title: "发送书签提醒通知后："
+      send_shortcut:
+        enter: "进入"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "被赞时通知"
         always: "始终"
@@ -2267,6 +2270,7 @@ zh_CN:
           admin_email_label: "电子邮件地址"
           member_email_help: "我们将向该邮箱地址发送邀请链接。"
           email_placeholder: "name@example.com"
+          invite_by_link: "分享链接"
           invite_by_email: "电子邮件"
           restrict_domain: "仅限网域"
           restrict_domain_help: "只有拥有此域名邮箱地址的用户才能接受此链接。如需邀请特定人员，请使用上方的“邮箱”选项。"
@@ -2496,10 +2500,15 @@ zh_CN:
     home: "首页"
     read_only_mode:
       enabled: "此网站处于只读模式。您可以继续浏览，但是回复、点赞和其他操作暂时被禁用。"
+      enabled_anonymous: "本网站目前处于只读模式。请继续浏览，但暂时无法注册和登录。"
       login_disabled: "网站处于只读模式时登录被禁用。"
       logout_disabled: "网站处于只读模式时退出登录被禁用。"
+      signup_disabled: "网站处于只读模式时，注册功能被禁用。"
     staff_writes_only_mode:
       enabled: "此网站处于管理人员专用模式。请继续浏览，但回复、赞和其他操作仅限于管理人员。"
+      enabled_anonymous: "本网站目前仅供管理人员访问。请继续浏览，但注册功能暂不可用，且只有管理人员才能登录。"
+      login_disabled: "网站处于管理人员专用模式时，只有管理人员才能登录。"
+      signup_disabled: "当网站处于 “仅限管理人员” 模式时，注册被禁用。"
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href="{url}" target="_blank">{rate, plural, other {# 个错误/小时}}</a>达到了 {limit, plural, other {# 个错误/小时}}的站点设置上限。
@@ -6499,6 +6508,7 @@ zh_CN:
               share: "分享"
               vs_prior: "与之前相比"
               empty: "所选时间段内无任何活动。"
+              save_error: "无法保存此设置。"
             whos_posting:
               title: "谁在发帖？"
               new_members: "新成员"

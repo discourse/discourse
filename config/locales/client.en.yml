@@ -4316,6 +4316,8 @@ en:
         link: "Activity log"
         title: "Topic activity log"
         empty: "No topic activity to show."
+        load_more: "Load more activity"
+        updated: "Topic activity updated."
       context:
         banner: "You are viewing a single thread from this topic."
         view_full_topic: "View full topic"

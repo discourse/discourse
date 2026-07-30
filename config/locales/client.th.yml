@@ -1097,6 +1097,8 @@ th:
         largest: "ใหญ่ที่สุด"
       title_count_mode:
         notifications: "การแจ้งเตือนใหม่"
+      send_shortcut:
+        enter: "เอ็นเทอร์"
       like_notification_frequency:
         title: "แจ้งเตือนเมื่อมีคนกดถูกใจ"
         always: "เสมอ"

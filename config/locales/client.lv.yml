@@ -1269,6 +1269,8 @@ lv:
         title: "Fona lapas nosaukumā ir redzams:"
         notifications: "Jauni paziņojumi"
         contextual: "Jauns lapas saturs"
+      send_shortcut:
+        enter: "Ievadīt"
       like_notification_frequency:
         title: "Paziņot, ja saņemta atzinība"
         always: "Vienmēr"

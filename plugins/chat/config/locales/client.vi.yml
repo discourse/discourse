@@ -31,6 +31,9 @@ vi:
       chat_channels: "Các kênh"
       pinned: "Đã ghim"
       browse_all_channels: "Xem tất cả kênh"
+      delete_messages:
+        confirm:
+          other: "Bạn có chắc chắn muốn xoá %{count} tin nhắn không vậy?"
       channel_settings:
         edit: "Sửa"
         add: "Thêm"
@@ -63,12 +66,6 @@ vi:
         never: "Không bao giờ"
       separate_sidebar_mode:
         title: "Tác riêng thanh bên cho diễn đàn và chat"
-      send_shortcut:
-        title: "Gửi lối tắt"
-        enter:
-          label: "Gửi bằng cách nhấn Enter"
-        meta_enter:
-          label: "Gửi bằng %{meta_key} + Enter"
       enable: "Bật chat"
       flag: "Báo cáo"
       join: "Tham gia"
