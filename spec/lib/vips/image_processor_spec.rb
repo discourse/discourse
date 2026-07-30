@@ -223,6 +223,62 @@ RSpec.describe Vips do
         )
       end
     end
+
+    it "preserves opaque HEIC color channels" do
+      Dir.mktmpdir("vips-convert") do |directory|
+        input = fixture_directory.join("should_be_jpeg.heic").to_s
+        image_magick = File.join(directory, "image-magick.jpg")
+        vips = File.join(directory, "vips.jpg")
+        difference = File.join(directory, "difference.v")
+        absolute = File.join(directory, "absolute.v")
+
+        ImageMagick.magick(
+          input,
+          "-auto-orient",
+          "-background",
+          "white",
+          "-interlace",
+          "none",
+          "-flatten",
+          image_magick,
+          read: [input],
+          write: [directory],
+          timeout: 20,
+        )
+        described_class.convert(
+          from: input,
+          to: vips,
+          source_format: "heic",
+          target_format: "jpg",
+          flatten: true,
+        )
+        Vips.call(
+          "subtract",
+          image_magick,
+          vips,
+          difference,
+          read: [image_magick, vips],
+          write: [directory],
+          allow_untrusted: true,
+        )
+        Vips.call(
+          "abs",
+          difference,
+          absolute,
+          read: [difference],
+          write: [directory],
+          allow_untrusted: true,
+        )
+
+        expect(
+          {
+            normalized_channel_error:
+              Vips.call("avg", absolute, read: [absolute], allow_untrusted: true).to_f / 255,
+            quality: Vips.jpeg_quality(vips),
+          },
+        ).to match(normalized_channel_error: be <= 0.03, quality: 92)
+      end
+    end
   end
 
   describe ".autorot" do

@@ -4,6 +4,7 @@ class Vips
   PROFILE = Rails.root.join("vendor/data/RT_sRGB.icm").to_s
   UNTRUSTED_FORMATS = %w[jxl svg v vips].freeze
   MAX_PROCESS_SECONDS = 20
+  DEFAULT_JPEG_QUALITY = 92
 
   def self.resize(
     from:,
@@ -151,6 +152,8 @@ class Vips
     quality: nil,
     failure_message: ""
   )
+    quality ||= DEFAULT_JPEG_QUALITY if %w[jpeg jpg].include?(target_format.to_s.downcase)
+
     Dir.mktmpdir("vips-convert") do |directory|
       upright = File.join(directory, "upright.v")
 
@@ -166,12 +169,12 @@ class Vips
       )
 
       with_output(to, target_format:) do |output|
-        operation = flatten ? "flatten" : "copy"
+        operation = flatten && alpha?(from: upright, format: source_format) ? "flatten" : "copy"
         arguments = [
           upright,
           output_argument(output, format: target_format, quality:, strip: false),
         ]
-        arguments.concat(%w[--background 255]) if flatten
+        arguments.concat(%w[--background 255]) if operation == "flatten"
 
         Vips.call(
           operation,
@@ -379,5 +382,12 @@ class Vips
   end
   private_class_method :untrusted_format?
 
-  private_constant :PROFILE, :UNTRUSTED_FORMATS, :MAX_PROCESS_SECONDS
+  def self.alpha?(from:, format:)
+    return false if !%w[avif heic heif png webp].include?(format.to_s.downcase)
+
+    header(from, field: "bands", allow_untrusted: true).to_i.even?
+  end
+  private_class_method :alpha?
+
+  private_constant :PROFILE, :UNTRUSTED_FORMATS, :MAX_PROCESS_SECONDS, :DEFAULT_JPEG_QUALITY
 end
