@@ -161,7 +161,7 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
   describe "GET /admin/plugins/discourse-workflows/executions/:id" do
     fab!(:execution) { Fabricate(:discourse_workflows_completed_execution, workflow: workflow) }
 
-    before { Fabricate(:discourse_workflows_execution_data_with_steps, execution: execution) }
+    let!(:execution_data) { Fabricate(:discourse_workflows_execution_data_with_steps, execution:) }
 
     it "returns the execution with steps" do
       get "/admin/plugins/discourse-workflows/executions/#{execution.id}.json"

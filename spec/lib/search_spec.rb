@@ -1806,9 +1806,7 @@ RSpec.describe Search do
   end
 
   describe "tags" do
-    def search
-      Search.execute(tag.name)
-    end
+    let(:search) { Search.execute(tag.name) }
 
     let!(:tag) { Fabricate(:tag) }
     let!(:uppercase_tag) { Fabricate(:tag, name: "HeLlO") }

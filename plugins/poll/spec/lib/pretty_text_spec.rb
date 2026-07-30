@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe PrettyText do
-  def n(html)
-    html.strip
-  end
-
   it "supports multi choice polls" do
     cooked = PrettyText.cook <<~MD
       [poll type=multiple min=1 max=3 public=true]
@@ -112,7 +108,7 @@ RSpec.describe PrettyText do
     HTML
 
     # note, hashes should remain stable even if emoji changes cause text content is hashed
-    expect(n cooked).to eq(n expected)
+    expect(cooked.strip).to eq(expected.strip)
   end
 
   it "can onebox posts" do

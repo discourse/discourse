@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe Jobs::UpdateScoresForToday do
+  subject(:run_job) { described_class.new.execute }
+
   fab!(:user)
   fab!(:user_2, :user)
   fab!(:post) { Fabricate(:post, user: user, post_number: 2) }
@@ -11,10 +13,6 @@ describe Jobs::UpdateScoresForToday do
   fab!(:leaderboard_2) { Fabricate(:gamification_leaderboard, created_by_id: user.id) }
   let(:leaderboard_1_positions) { DiscourseGamification::LeaderboardCachedView.new(leaderboard_1) }
   let(:leaderboard_2_positions) { DiscourseGamification::LeaderboardCachedView.new(leaderboard_2) }
-
-  def run_job
-    described_class.new.execute
-  end
 
   before do
     SiteSetting.discourse_gamification_enabled = true

@@ -61,6 +61,8 @@ require_relative "helpers/redis_snapshot_helper"
 if ENV["LOAD_PLUGINS"] == "1"
   Dir[Rails.root.join("plugins/*/spec/plugin_helper.rb")].each { |f| require f }
 
+  Dir[Rails.root.join("plugins/*/spec/support/**/*.rb")].sort.each { |f| require f }
+
   Dir[Rails.root.join("plugins/*/spec/fabricators/**/*.rb")].each { |f| require f }
 
   Dir[Rails.root.join("plugins/*/spec/system/page_objects/**/*.rb")].each { |f| require f }

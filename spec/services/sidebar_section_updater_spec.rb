@@ -5,9 +5,10 @@ describe SidebarSectionUpdater do
   fab!(:sidebar_section) { Fabricate(:sidebar_section, public: true) }
   fab!(:first_url) { Fabricate(:sidebar_url, name: "First", value: "/first") }
   fab!(:second_url) { Fabricate(:sidebar_url, name: "Second", value: "/second") }
-
-  before do
+  fab!(:first_section_link) do
     Fabricate(:sidebar_section_link, sidebar_section:, linkable: first_url, position: 0)
+  end
+  fab!(:second_section_link) do
     Fabricate(:sidebar_section_link, sidebar_section:, linkable: second_url, position: 1)
   end
 

@@ -42,23 +42,19 @@ RSpec.describe OneboxController do
       html
     end
 
-    def bypass_limiting
-      Oneboxer.onebox_previewed!(user.id)
-    end
-
     before { sign_in(user) }
 
     it "invalidates the cache if refresh is passed" do
       stub_request(:head, url)
       stub_request(:get, url).to_return(status: 200, body: html).then.to_raise
 
-      bypass_limiting
+      Oneboxer.onebox_previewed!(user.id)
       Discourse.cache.delete("onebox__#{url}")
       get "/onebox.json", params: { url: url }
       expect(response.status).to eq(200)
       expect(response.body).to include("Onebox1")
 
-      bypass_limiting
+      Oneboxer.onebox_previewed!(user.id)
       stub_request(:get, url).to_return(status: 200, body: html2).then.to_raise
       get "/onebox.json", params: { url: url, refresh: "true" }
       expect(response.status).to eq(200)

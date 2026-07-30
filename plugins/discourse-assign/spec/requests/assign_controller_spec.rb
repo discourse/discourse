@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../support/assign_allowed_group"
-
 RSpec.describe DiscourseAssign::AssignController do
   before do
     SiteSetting.assign_enabled = true
@@ -49,6 +47,12 @@ RSpec.describe DiscourseAssign::AssignController do
 
   describe "#suggestions" do
     before { sign_in(admin) }
+
+    def assign_user_to_post
+      assignee = Fabricate(:user, groups: [allowed_group])
+      Fabricate(:post_assignment, assigned_to: assignee, assigned_by_user: admin)
+      assignee
+    end
 
     it "only includes users in allowed groups and not disallowed groups" do
       Assigner.new(post.topic, admin).assign(allowed_user)
@@ -133,12 +137,6 @@ RSpec.describe DiscourseAssign::AssignController do
         scoped_group.name,
       )
     end
-
-    def assign_user_to_post
-      assignee = Fabricate(:user, groups: [allowed_group])
-      Fabricate(:post_assignment, assigned_to: assignee, assigned_by_user: admin)
-      assignee
-    end
   end
 
   describe "#unassign" do
@@ -212,7 +210,7 @@ RSpec.describe DiscourseAssign::AssignController do
       restricted_group = Fabricate(:group)
       private_category = Fabricate(:private_category, group: restricted_group)
       private_topic = Fabricate(:topic, category: private_category)
-      add_to_assign_allowed_group(allowed_user)
+      assign_allowed_group.add(allowed_user)
 
       sign_in(allowed_user)
 
@@ -227,7 +225,7 @@ RSpec.describe DiscourseAssign::AssignController do
 
     it "returns 404 when the acting user cannot see the target PM" do
       pm_topic = Fabricate(:private_message_topic)
-      add_to_assign_allowed_group(allowed_user)
+      assign_allowed_group.add(allowed_user)
 
       sign_in(allowed_user)
 
@@ -390,7 +388,7 @@ RSpec.describe DiscourseAssign::AssignController do
 
     it "fails to assign topic to the user if they already reached the max assigns limit" do
       another_user = Fabricate(:user)
-      add_to_assign_allowed_group(another_user)
+      assign_allowed_group.add(another_user)
       another_post = Fabricate(:post)
       max_assigns = 1
       SiteSetting.max_assigned_topics = max_assigns
@@ -416,7 +414,7 @@ RSpec.describe DiscourseAssign::AssignController do
     it "fails with a specific error message if the topic is a PM and the assignee can not see it" do
       pm = Fabricate(:private_message_post, user: admin).topic
       another_user = Fabricate(:user)
-      add_to_assign_allowed_group(another_user)
+      assign_allowed_group.add(another_user)
       put "/assign/assign.json",
           params: {
             target_id: pm.id,
@@ -494,7 +492,7 @@ RSpec.describe DiscourseAssign::AssignController do
     it "fails with a specific error message if the topic is not a PM and the assignee can not see it" do
       topic = Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
       another_user = Fabricate(:user)
-      add_to_assign_allowed_group(another_user)
+      assign_allowed_group.add(another_user)
       put "/assign/assign.json",
           params: {
             target_id: topic.id,

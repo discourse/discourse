@@ -4,10 +4,17 @@ RSpec.describe DiscourseRssPolling::RssFeed::Action::BuildPreview do
   subject(:preview) { described_class.call(feed_items:, feed_category_filter:) }
 
   let(:feed_category_filter) { nil }
+  let(:title) { "Hello" }
+  let(:content) { "Body" }
+  let(:categories) { [] }
+  let(:url) { "https://example.com/post" }
+  let(:feed_item) do
+    instance_double(DiscourseRssPolling::FeedItem, title:, content:, categories:, url:)
+  end
+  let(:feed_items) { [feed_item] }
 
-  def feed_item(title:, content:, categories: [], url: "https://example.com/post")
-    item = instance_double(DiscourseRssPolling::FeedItem, title:, content:, categories:, url:)
-    allow(item).to receive(:outcome) do |status:, reason: nil, topic_url: nil|
+  before do
+    allow(feed_item).to receive(:outcome) do |status:, reason: nil, topic_url: nil|
       {
         "title" => title,
         "status" => status.to_s,
@@ -15,19 +22,16 @@ RSpec.describe DiscourseRssPolling::RssFeed::Action::BuildPreview do
         "topic_url" => topic_url,
       }
     end
-    item
   end
 
   context "when an item would be imported" do
-    let(:feed_items) { [feed_item(title: "Hello", content: "Body")] }
-
     it "marks the item as would_import" do
       expect(preview.first).to include("status" => "would_import", "topic_url" => nil)
     end
   end
 
   context "when an item is skipped" do
-    let(:feed_items) { [feed_item(title: nil, content: "Body")] }
+    let(:title) { nil }
 
     it "marks the item as skipped with a reason" do
       expect(preview.first).to include("status" => "skipped", "reason" => "missing_title")
@@ -36,8 +40,7 @@ RSpec.describe DiscourseRssPolling::RssFeed::Action::BuildPreview do
 
   context "when an item has already been imported" do
     let(:imported_url) { "https://blog.discourse.org/2017/09/poll-feed-spec-fixture/" }
-
-    let(:feed_items) { [feed_item(title: "Hello", content: "Body", url: imported_url)] }
+    let(:url) { imported_url }
 
     before do
       TopicEmbed.import(Discourse.system_user, imported_url, "Poll Feed Spec Fixture", "content")

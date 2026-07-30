@@ -5,14 +5,6 @@ RSpec.describe DiscourseWorkflows::Statistics do
 
   fab!(:user)
 
-  def log_runs(workflow, date:, runs: 1)
-    DiscourseWorkflows::ExecutionStat.create!(
-      workflow_id: workflow.id,
-      date: date,
-      total_runs: runs,
-    )
-  end
-
   describe ".total" do
     it "counts every workflow" do
       Fabricate(:discourse_workflows_workflow)
@@ -66,9 +58,21 @@ RSpec.describe DiscourseWorkflows::Statistics do
       one = Fabricate(:discourse_workflows_workflow)
       two = Fabricate(:discourse_workflows_workflow)
 
-      log_runs(one, date: Date.current, runs: 3)
-      log_runs(one, date: 10.days.ago.to_date, runs: 2)
-      log_runs(two, date: 45.days.ago.to_date, runs: 5)
+      DiscourseWorkflows::ExecutionStat.create!(
+        workflow_id: one.id,
+        date: Date.current,
+        total_runs: 3,
+      )
+      DiscourseWorkflows::ExecutionStat.create!(
+        workflow_id: one.id,
+        date: 10.days.ago.to_date,
+        total_runs: 2,
+      )
+      DiscourseWorkflows::ExecutionStat.create!(
+        workflow_id: two.id,
+        date: 45.days.ago.to_date,
+        total_runs: 5,
+      )
 
       expect(described_class.executed).to eq(
         last_day: 1,
@@ -83,9 +87,21 @@ RSpec.describe DiscourseWorkflows::Statistics do
     it "sums runs in each window plus a lifetime count" do
       workflow = Fabricate(:discourse_workflows_workflow)
 
-      log_runs(workflow, date: Date.current, runs: 3)
-      log_runs(workflow, date: 10.days.ago.to_date, runs: 2)
-      log_runs(workflow, date: 45.days.ago.to_date, runs: 5)
+      DiscourseWorkflows::ExecutionStat.create!(
+        workflow_id: workflow.id,
+        date: Date.current,
+        total_runs: 3,
+      )
+      DiscourseWorkflows::ExecutionStat.create!(
+        workflow_id: workflow.id,
+        date: 10.days.ago.to_date,
+        total_runs: 2,
+      )
+      DiscourseWorkflows::ExecutionStat.create!(
+        workflow_id: workflow.id,
+        date: 45.days.ago.to_date,
+        total_runs: 5,
+      )
 
       expect(described_class.executions).to eq(
         last_day: 3,

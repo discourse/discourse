@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
 describe Jobs::UpdateScoresForTenDays do
+  subject(:run_job) { described_class.new.execute }
+
   fab!(:user)
   fab!(:user_2, :user)
   fab!(:leaderboard, :gamification_leaderboard)
   let!(:topic_user_created) { Fabricate(:topic, user: user) }
   let!(:topic_user_2_created) { Fabricate(:topic, user: user_2) }
-
-  def run_job
-    described_class.new.execute
-  end
 
   before do
     SiteSetting.discourse_gamification_enabled = true
