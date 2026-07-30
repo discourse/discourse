@@ -344,7 +344,7 @@ class OptimizedImage < ActiveRecord::Base
       source_format = image_format!(path: from, ext_path: to, opts:)
       target_format = image_format!(path: to, ext_path: to, opts:)
       instructions = ["vips", operation, from, to, dimensions]
-      Vips::ImageProcessor.public_send(
+      Vips.public_send(
         operation,
         from:,
         to:,

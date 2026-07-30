@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Vips::JpegQuality
+class Vips
   COLOR_HASH = [
     1020,
     1015,
@@ -480,7 +480,7 @@ class Vips::JpegQuality
     63,
   ].freeze
 
-  def self.read(path)
+  def self.jpeg_quality(path)
     tables = quantization_tables(path)
     luminance = tables[0]
     return 0 if luminance.nil?

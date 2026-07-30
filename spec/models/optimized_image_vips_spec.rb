@@ -54,7 +54,7 @@ RSpec.describe OptimizedImage do
     it "keeps the ImageMagick path when the setting is disabled" do
       Dir.mktmpdir("optimized-image-selector") do |directory|
         output = File.join(directory, "output.png")
-        Vips::ImageProcessor.stubs(:resize).raises("vips must not run")
+        Vips.stubs(:resize).raises("vips must not run")
 
         expect(described_class.resize(input, output, 321, 123)).to eq(true)
         expect(FastImage.size(output)).to eq([321, 123])

@@ -47,7 +47,7 @@ RSpec.describe UploadCreator do
           filename: upload.original_filename,
           format: FastImage.type(path),
           dimensions: FastImage.size(path),
-          quality: Vips::JpegQuality.read(path),
+          quality: Vips.jpeg_quality(path),
         },
       ).to eq(
         {
@@ -147,10 +147,7 @@ RSpec.describe UploadCreator do
           path = Discourse.store.path_for(upload)
           [
             filename,
-            {
-              animated: upload.animated,
-              frames: Vips::ImageProcessor.frame_count(path, format: upload.extension),
-            },
+            { animated: upload.animated, frames: Vips.frame_count(path, format: upload.extension) },
           ]
         end
 
@@ -177,10 +174,7 @@ RSpec.describe UploadCreator do
       path = Discourse.store.path_for(upload)
 
       expect(
-        {
-          dimensions: FastImage.size(path),
-          rotated: Vips::ImageProcessor.rotated?(path, format: "jpeg"),
-        },
+        { dimensions: FastImage.size(path), rotated: Vips.rotated?(path, format: "jpeg") },
       ).to eq(dimensions: [1312, 2032], rotated: false)
     end
 
@@ -200,11 +194,11 @@ RSpec.describe UploadCreator do
       upload =
         described_class.new(tempfile, "quality.jpg", force_optimize: true).create_for(user.id)
 
-      expect(Vips::JpegQuality.read(Discourse.store.path_for(upload))).to eq(40)
+      expect(Vips.jpeg_quality(Discourse.store.path_for(upload))).to eq(40)
     end
 
     it "propagates a vips conversion failure without a debug retry or ImageMagick fallback" do
-      Vips::ImageProcessor.stubs(:convert).raises(Discourse::Utils::CommandError.new("vips failed"))
+      Vips.stubs(:convert).raises(Discourse::Utils::CommandError.new("vips failed"))
 
       expect do
         described_class.new(

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Vips::Ico do
+RSpec.describe Vips do
   def ico(entries:)
     offset = 6 + (entries.length * 16)
     directory = +""
@@ -35,12 +35,12 @@ RSpec.describe Vips::Ico do
     header + palette + pixels + mask
   end
 
-  describe ".convert" do
+  describe ".ico_to_png" do
     it "decodes the existing true-color DIB fixture" do
       Dir.mktmpdir("vips-ico") do |directory|
         output = File.join(directory, "output.png")
 
-        described_class.convert(
+        described_class.ico_to_png(
           path: Rails.root.join("spec/fixtures/images/smallest.ico").to_s,
           output:,
         )
@@ -68,7 +68,7 @@ RSpec.describe Vips::Ico do
           ),
         )
 
-        described_class.convert(path: input, output:)
+        described_class.ico_to_png(path: input, output:)
 
         image = ChunkyPNG::Image.from_file(output)
         expect({ dimensions: [image.width, image.height], pixel: image[0, 0] }).to eq(
@@ -86,7 +86,7 @@ RSpec.describe Vips::Ico do
           ico(entries: [{ width: 2, height: 1, colors: 2, bits: 1, bytes: indexed_dib }]),
         )
 
-        described_class.convert(path: input, output:)
+        described_class.ico_to_png(path: input, output:)
 
         image = ChunkyPNG::Image.from_file(output)
         expect([image[0, 0], image[1, 0]]).to eq(
@@ -103,10 +103,10 @@ RSpec.describe Vips::Ico do
         File.binwrite(malformed, "not an icon")
         File.binwrite(truncated, [0, 1, 1].pack("v3") + [1, 1, 0, 0, 1, 32, 100, 22].pack("C4v2V2"))
 
-        expect do described_class.convert(path: malformed, output:) end.to raise_error(
+        expect do described_class.ico_to_png(path: malformed, output:) end.to raise_error(
           Discourse::InvalidAccess,
         )
-        expect do described_class.convert(path: truncated, output:) end.to raise_error(
+        expect do described_class.ico_to_png(path: truncated, output:) end.to raise_error(
           Discourse::InvalidAccess,
         )
         expect(File.exist?(output)).to eq(false)

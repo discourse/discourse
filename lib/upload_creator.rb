@@ -196,7 +196,7 @@ class UploadCreator
           # consistently whether it's running from our docker container or not
           begin
             if SiteSetting.use_vips_for_image_processing
-              w, h = Vips::ImageProcessor.dimensions(@file.path, format: "svg")
+              w, h = Vips.dimensions(@file.path, format: "svg")
             else
               w, h =
                 ImageMagick
@@ -343,7 +343,7 @@ class UploadCreator
     png_tempfile = Tempfile.new(%w[image .png])
 
     if SiteSetting.use_vips_for_image_processing
-      Vips::Ico.convert(path: @file.path, output: png_tempfile.path)
+      Vips.ico_to_png(path: @file.path, output: png_tempfile.path)
       @file.respond_to?(:close!) ? @file.close! : @file.close
       @file = png_tempfile
       extract_image_info!
@@ -437,7 +437,7 @@ class UploadCreator
     if SiteSetting.use_vips_for_image_processing
       source_format, source_path = vips_path(from)
       target_format, target_path = vips_path(to)
-      Vips::ImageProcessor.convert(
+      Vips.convert(
         from: source_path,
         to: target_path,
         source_format:,
@@ -565,8 +565,8 @@ class UploadCreator
     OptimizedImage.ensure_safe_paths!(path)
     if SiteSetting.use_vips_for_image_processing
       format = @image_info.type.to_s
-      quality = Vips::JpegQuality.read(path) if %w[jpeg jpg].include?(format)
-      Vips::ImageProcessor.autorot(path:, format:, quality:, timeout: MAX_FIX_ORIENTATION_TIME)
+      quality = Vips.jpeg_quality(path) if %w[jpeg jpg].include?(format)
+      Vips.autorot(path:, format:, quality:, timeout: MAX_FIX_ORIENTATION_TIME)
     else
       path = OptimizedImage.prepend_decoder!(path, nil, filename: "image.#{@image_info.type}")
 
@@ -714,7 +714,7 @@ class UploadCreator
           frames =
             begin
               if SiteSetting.use_vips_for_image_processing
-                Vips::ImageProcessor.frame_count(@file.path, format: type)
+                Vips.frame_count(@file.path, format: type)
               else
                 ImageMagick.identify(
                   "-ping",

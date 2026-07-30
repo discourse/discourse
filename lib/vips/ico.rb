@@ -2,11 +2,11 @@
 
 require "zlib"
 
-class Vips::Ico
+class Vips
   PNG_SIGNATURE = "\x89PNG\r\n\x1A\n".b
   MAX_FILE_SIZE = 100.megabytes
 
-  def self.convert(path:, output:)
+  def self.ico_to_png(path:, output:)
     data = File.binread(path, MAX_FILE_SIZE + 1)
     raise Discourse::InvalidAccess if data.bytesize > MAX_FILE_SIZE || data.bytesize < 22
 

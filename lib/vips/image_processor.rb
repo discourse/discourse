@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Vips::ImageProcessor
+class Vips
   PROFILE = Rails.root.join("vendor/data/RT_sRGB.icm").to_s
   UNTRUSTED_FORMATS = %w[jxl svg v vips].freeze
   MAX_PROCESS_SECONDS = 20

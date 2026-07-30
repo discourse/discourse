@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe Vips::JpegQuality do
-  describe ".read" do
+RSpec.describe Vips do
+  describe ".jpeg_quality" do
     it "returns the encoder quality across the supported range" do
       Dir.mktmpdir("vips-jpeg-quality") do |directory|
         source = Rails.root.join("spec/fixtures/images/logo.jpg").to_s
@@ -14,7 +14,7 @@ RSpec.describe Vips::JpegQuality do
             [
               quality,
               {
-                parser: described_class.read(output),
+                parser: described_class.jpeg_quality(output),
                 image_magick:
                   ImageMagick.identify(
                     "-ping",
@@ -43,8 +43,8 @@ RSpec.describe Vips::JpegQuality do
 
         expect(
           {
-            malformed: described_class.read(malformed),
-            truncated: described_class.read(truncated),
+            malformed: described_class.jpeg_quality(malformed),
+            truncated: described_class.jpeg_quality(truncated),
           },
         ).to eq(malformed: 0, truncated: 0)
       end

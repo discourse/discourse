@@ -307,7 +307,7 @@ class Upload < ActiveRecord::Base
         w, h =
           begin
             if SiteSetting.use_vips_for_image_processing
-              Vips::ImageProcessor.dimensions(path, format: "svg")
+              Vips.dimensions(path, format: "svg")
             else
               ImageMagick.identify(
                 "-ping",
@@ -450,7 +450,7 @@ class Upload < ActiveRecord::Base
     @file_quality ||=
       begin
         if SiteSetting.use_vips_for_image_processing
-          Vips::JpegQuality.read(local_path)
+          Vips.jpeg_quality(local_path)
         else
           ImageMagick.identify(
             "-ping",

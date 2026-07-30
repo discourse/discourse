@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Vips::ImageProcessor do
+RSpec.describe Vips do
   let(:fixture_directory) { Rails.root.join("spec/fixtures/images") }
   let(:high_detail_input) { fixture_directory.join("large_and_unoptimized.png").to_s }
   let(:transparent_input) { fixture_directory.join("logo.png").to_s }
@@ -210,7 +210,7 @@ RSpec.describe Vips::ImageProcessor do
             format: FastImage.type(output),
             bands: Vips.header(output, field: "bands").to_i,
             corner: corner,
-            quality: Vips::JpegQuality.read(output),
+            quality: Vips.jpeg_quality(output),
           },
         ).to match(
           {
@@ -269,7 +269,7 @@ RSpec.describe Vips::ImageProcessor do
               {
                 dimensions: [FastImage.size(image_magick), FastImage.size(vips)],
                 orientation: Vips.header(vips, field: "orientation").to_i,
-                quality: Vips::JpegQuality.read(vips),
+                quality: Vips.jpeg_quality(vips),
                 normalized_channel_error:
                   Vips.call("avg", absolute, read: [absolute], allow_untrusted: true).to_f / 255,
               },
