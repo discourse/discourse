@@ -90,6 +90,57 @@ RSpec.describe "Chat pinned messages" do
     expect(page).to have_no_css(".chat-pinned-message__pinned-by-icon")
   end
 
+  context "when unpinning from the pinned messages panel" do
+    fab!(:pin) do
+      Fabricate(:chat_pinned_message, chat_message: message, chat_channel: channel, user: admin)
+    end
+
+    it "lets a pin manager unpin a message from the panel" do
+      chat_page.visit_channel(channel)
+      find(".c-navbar__pinned-messages-btn").click
+      expect(page).to have_css(".c-routes.--channel-pins")
+
+      find(".chat-pinned-message").hover
+      find(".chat-pinned-message__unpin").click
+
+      expect(page).to have_no_css(".chat-pinned-message")
+      expect(page).to have_content(I18n.t("js.chat.no_pinned_messages"))
+
+      find(".c-navbar__close-pins-button").click
+
+      expect(page).to have_no_css(".chat-message-info__pinned")
+      expect(page).to have_no_css(".c-navbar__pinned-messages-btn")
+    end
+
+    context "when the user cannot manage pins" do
+      fab!(:member, :user)
+
+      before do
+        channel.add(member)
+        sign_in(member)
+      end
+
+      it "shows them pinned messages without an unpin button" do
+        chat_page.visit_channel(channel)
+        find(".c-navbar__pinned-messages-btn").click
+
+        expect(page).to have_css(".c-routes.--channel-pins")
+        expect(page).to have_css(".chat-pinned-message")
+        expect(page).to have_no_css(".chat-pinned-message__unpin")
+      end
+
+      it "takes them to the message when they click a pinned message" do
+        chat_page.visit_channel(channel)
+        find(".c-navbar__pinned-messages-btn").click
+        expect(page).to have_css(".c-routes.--channel-pins")
+
+        find(".chat-pinned-message__link").click
+
+        expect(channel_page.messages).to have_message(id: message.id)
+      end
+    end
+  end
+
   context "when viewing pinned messages attribution" do
     it "shows 'Pinned by you' when current user pinned the message" do
       chat_page.visit_channel(channel)

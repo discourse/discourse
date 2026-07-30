@@ -29,6 +29,7 @@ register_svg_icon "circle-stop"
 register_svg_icon "filter"
 register_svg_icon "filter-circle-xmark"
 register_svg_icon "sort"
+register_svg_icon "thumbtack-slash"
 
 # route: /admin/plugins/chat
 add_admin_route "chat.admin.title", "chat", use_new_show_route: true

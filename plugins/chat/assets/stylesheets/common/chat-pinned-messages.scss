@@ -27,16 +27,41 @@
 }
 
 .chat-pinned-message {
+  position: relative;
   display: block;
   margin-inline: 1rem 0.75rem;
   border-bottom: 1px solid var(--content-border-color);
 
-  &,
-  &:hover,
-  &:visited,
-  &:active {
-    color: var(--primary);
-    text-decoration: none;
+  &__link {
+    display: block;
+
+    &,
+    &:hover,
+    &:visited,
+    &:active {
+      color: var(--primary);
+      text-decoration: none;
+    }
+  }
+
+  &__unpin {
+    position: absolute;
+    z-index: 1;
+    top: 0.25em;
+    right: 0;
+
+    .no-touch & {
+      opacity: 0;
+    }
+
+    .no-touch .chat-pinned-message:hover & {
+      opacity: 1;
+      right: 0.75rem;
+    }
+
+    &:focus-visible {
+      opacity: 1;
+    }
   }
 
   .chat-message-container {
