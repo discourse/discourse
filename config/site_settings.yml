@@ -4330,9 +4330,6 @@ user_preferences:
   default_other_enable_quoting:
     default: true
     area: "user_defaults"
-  default_other_enable_defer:
-    default: false
-    area: "user_defaults"
   default_other_enable_smart_lists:
     default: true
     area: "user_defaults"

@@ -235,12 +235,6 @@ export default <template>
       data-setting-name="user-enable-smart-lists"
       class="pref-enable-smart-lists"
     />
-    <PreferenceCheckbox
-      @labelKey="user.enable_defer"
-      @checked={{@controller.model.user_option.enable_defer}}
-      data-setting-name="user-enable-defer"
-      class="pref-defer-unread"
-    />
     {{#if @controller.siteSettings.automatically_unpin_topics}}
       <PreferenceCheckbox
         @labelKey="user.automatically_unpin_topics"
