@@ -1023,6 +1023,10 @@ function insertAtTextarea(
   text,
   { skipFocus = false } = {}
 ) {
+  // match the textarea's own line-ending normalization, so the
+  // smart-substitution check below can't misfire on CRLF input
+  text = text.replace(/\r\n?/g, "\n");
+
   if (skipFocus && document.activeElement !== textarea) {
     textarea.setRangeText(text, start, end, "preserve");
     textarea.dispatchEvent(new InputEvent("input", { bubbles: true }));

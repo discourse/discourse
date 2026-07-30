@@ -121,6 +121,26 @@ module("Unit | Utility | text-area-manipulation", function (hooks) {
     assert.strictEqual(textarea.selectionStart, textarea.value.length);
   });
 
+  test("insertText - CRLF input does not trigger the substitution repair", function (assert) {
+    const textarea = document.createElement("textarea");
+    document.body.appendChild(textarea);
+    const manipulation = new TextareaTextManipulation(getOwner(this), {
+      textarea,
+    });
+
+    const repairSpy = sinon.spy(textarea, "setRangeText");
+
+    textarea.value = "";
+    textarea.setSelectionRange(0, 0);
+    manipulation.insertText("line1\r\nline2\rline3");
+
+    assert.strictEqual(textarea.value, "line1\nline2\nline3");
+    assert.false(
+      repairSpy.called,
+      "normalized CRLF insertion is not treated as a smart substitution"
+    );
+  });
+
   test("falls back to plain text when rich HTML converts to empty markdown", async function (assert) {
     const textarea = document.createElement("textarea");
     document.body.appendChild(textarea);
