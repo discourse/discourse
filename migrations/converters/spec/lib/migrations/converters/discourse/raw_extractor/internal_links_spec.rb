@@ -593,6 +593,41 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(extract(raw)).to eq(raw)
       expect(buffer.links).to be_empty
     end
+
+    # A bare URL on the source's own host is a link once cooked, whatever its
+    # path, so it gets the same origin rewrite the bracketed form does. Before,
+    # only a path carrying a route segment was recognized bare, and a plain
+    # `/faq` in prose survived the migration pointing at the dead origin.
+    {
+      "a route-less page" => %w[https://forum.example.com/faq /faq],
+      "a page mid-sentence" => ["see https://forum.example.com/faq here", "/faq"],
+      "a query string" => %w[https://forum.example.com/search?q=cats /search?q=cats],
+      "a fragment" => %w[https://forum.example.com/about#team /about#team],
+      "a protocol-relative URL" => %w[//forum.example.com/faq /faq],
+      "the site root" => %w[https://forum.example.com/ /],
+    }.each do |label, (raw, suffix)|
+      it "records a bare URL with #{label} as a SITE link" do
+        link, = link_for(raw)
+
+        expect(link).to include(target_type: link_target::SITE, target_suffix: suffix)
+      end
+    end
+
+    it "still leaves a bare URL on a foreign host alone" do
+      raw = "read https://other.example.org/faq here"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.links).to be_empty
+    end
+
+    # Nothing in the body names the source's host or a route, so the post never
+    # reaches the walk — the gate has to stay that selective.
+    it "leaves a body of foreign URLs untouched" do
+      raw = "See https://other.example.org/x and https://elsewhere.net/y please."
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.links).to be_empty
+    end
   end
 
   describe "subdirectory installs" do

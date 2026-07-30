@@ -32,8 +32,11 @@ module Migrations
           # An absolute internal URL whose path parses no known route — a real site
           # page (`/faq`, `/search?q=…`) or junk (`/t/slug/5a`) — is still recorded, as
           # a `:site` target: only its origin is rewritten to the destination, and the
-          # path/query/fragment ride along in the suffix. A relative route-less URL
-          # stays literal: it is domain-free and already correct on the destination.
+          # path/query/fragment ride along in the suffix. That holds in either syntax,
+          # bare or bracketed; an origin left un-rewritten points at a forum that is
+          # being retired. A relative route-less URL stays literal: it is domain-free
+          # and already correct on the destination. So is an absolute URL with no path
+          # at all (`https://host`), which `split_host` declines.
           #
           # The full original URL is kept (`url`) as the importer's fallback; the
           # route reveals the target, and everything after the route (further path,
@@ -50,8 +53,8 @@ module Migrations
             # A relative link (`/t/5`) contains no character of the scanner's
             # built-in skip check, so route segments contribute their own (see
             # {Base#presence_pattern}).
-            PRESENCE_PATTERN = %r{/(?:#{ROUTE_SEGMENT})/}
-            private_constant :PRESENCE_PATTERN
+            ROUTE_PRESENCE = %r{/(?:#{ROUTE_SEGMENT})/}
+            private_constant :ROUTE_PRESENCE
 
             # A URL-body character (see `Base::URL_TERMINATORS`). The trailing `\w` on
             # the bare form keeps a sentence's `.`/`,` after the URL out of the match
@@ -73,25 +76,40 @@ module Migrations
             private_constant :LINK
 
             # The bare form fires at every whitespace-preceded `h` and `/` the scanner
-            # walks past, so it must reject ordinary words inside the regex engine —
-            # an optional scheme+host, then a `/` and a route segment, before anything
-            # is captured. A permissive capture-everything pattern here (with the
-            # rejection left to `split_host`/`parse_route`) costs a MatchData and a
-            # string per h-word of every scanned post, which is measurable across a
-            # whole conversion.
+            # walks past, so it must reject ordinary words inside the regex engine. A
+            # permissive capture-everything pattern here (with the rejection left to
+            # `split_host`/`parse_route`) costs a MatchData and a string per h-word of
+            # every scanned post, which is measurable across a whole conversion. Each
+            # branch below therefore starts with something an ordinary word fails on.
             #
-            # The lazy `(?:/…)*?` admits the leading path segments of a subfolder
-            # install (`//host/forum/t/5`) before the route segment, the way
-            # `UploadUrl::URL` does. It stays lazy and demands a real route segment
-            # after, so a plain h-word (no `/`) still fails at the first required `/`
-            # without the group ever expanding.
+            # An absolute URL needs no route segment: the `//` already rejects a plain
+            # word, and every path on a configured host belongs to the forum, so a
+            # route-less one (`/faq`, `/search?q=…`) becomes a `:site` link exactly
+            # like the same URL in link syntax. Whatever follows the host is the path,
+            # which also covers a subfolder install (`//host/forum/t/5`) — the prefix
+            # comes off in `strip_prefix`.
             #
             # The scheme is case-insensitive because linkify-it reads it that way, so
             # core links `HTTPS://…` too. The insensitivity stops at the scheme: route
             # segments stay literal, since Rails routing is case-sensitive and `/T/5`
             # is not a topic on the destination either.
-            BARE =
-              %r{\G(?<url>(?:(?i:https?:)?//[^/#{Base::URL_TERMINATORS}]+)?(?:/[^/#{Base::URL_TERMINATORS}]+)*?/(?:#{ROUTE_SEGMENT})/#{URL_BODY}*\w)}
+            #
+            # The path may be a bare `/` (the forum's own root), so the body ending on
+            # a word character — what keeps a sentence's `.` outside the URL — is
+            # optional. Without that the bare form and the link form disagreed about
+            # `https://host/`.
+            ABSOLUTE = %r{(?:(?i:https?:)?//[^/#{Base::URL_TERMINATORS}]+/(?:#{URL_BODY}*\w)?)}
+            private_constant :ABSOLUTE
+
+            # A relative URL has no host to reject on, and the walk stops at every `/`
+            # in prose (`and/or`, `50/50`), so here a route segment is what tells a
+            # link apart from a slash. The lazy `(?:/…)*?` admits a subfolder install's
+            # leading segments before it, and demands a real route segment after, so a
+            # plain `/` still fails without the group ever expanding.
+            RELATIVE = %r{(?:/[^/#{Base::URL_TERMINATORS}]+)*?/(?:#{ROUTE_SEGMENT})/#{URL_BODY}*\w}
+            private_constant :RELATIVE
+
+            BARE = /\G(?<url>#{ABSOLUTE}|#{RELATIVE})/
             private_constant :BARE
 
             # Splits a URL into its host (nil when relative) and the rest (path, query
@@ -188,10 +206,11 @@ module Migrations
               @hosts = hosts
               @base_prefix = base_prefix
               @on_foreign_host = on_foreign_host
+              @presence_pattern = build_presence_pattern
             end
 
             def presence_pattern
-              PRESENCE_PATTERN
+              @presence_pattern
             end
 
             def detect(input, pos, byte)
@@ -205,6 +224,19 @@ module Migrations
             end
 
             private
+
+            # A route-less absolute URL (`https://host/faq`) carries none of the
+            # scanner's built-in signals and no route segment, so without an
+            # alternative here a post holding nothing else would skip the walk and
+            # keep pointing at the old origin. The hosts themselves are the gate: they
+            # are the only ones an absolute URL can be internal on, which is far more
+            # selective than gating on `//` and every URL in every post. Matched
+            # case-insensitively, since a host may be written in any case.
+            def build_presence_pattern
+              return ROUTE_PRESENCE if @hosts.empty?
+
+              Regexp.union(ROUTE_PRESENCE, /#{Regexp.union(@hosts.keys)}/i)
+            end
 
             # A markdown link, unless it's the `[` of an image `![…](…)`, whose `[`
             # sits right after the `!`.
