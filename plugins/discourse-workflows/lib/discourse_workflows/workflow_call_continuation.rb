@@ -122,7 +122,11 @@ module DiscourseWorkflows
           )
         execution = executor.run
 
-        claimed.update!(child_execution_id: execution.id, status: :waiting) if execution.waiting?
+        if execution.waiting?
+          claimed.update!(child_execution_id: execution.id, status: :waiting)
+        elsif execution.error? || execution.rate_limited? || execution.skipped?
+          child_failed!(execution)
+        end
       rescue => e
         fail_run!(claimed || run, e.message)
       end
