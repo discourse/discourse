@@ -19,8 +19,13 @@ require "cgi"
 # accepted divergences rather than parity; they are pinned separately below so a
 # future change in our behavior is noticed.
 RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
-  # This spec is not about mentions; the extractor needs the set anyway.
+  # This spec is about neither mentions nor hashtags; the extractor requires
+  # both name sets anyway, and an empty one defers nothing.
   def mention_names
+    Migrations::SortedStringSet.new([])
+  end
+
+  def hashtag_names
     Migrations::SortedStringSet.new([])
   end
   def detector_quote(raw)

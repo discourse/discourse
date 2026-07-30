@@ -29,6 +29,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     Migrations::SortedStringSet.new([Migrations::NameNormalizer.normalize("someuser")])
   end
 
+  # This spec is not about hashtags; the extractor requires the set anyway.
+  let(:hashtag_names) { Migrations::SortedStringSet.new([]) }
+
   # The 32 ASCII punctuation characters (CommonMark), which already include the
   # ASCII symbols `$ + < = > ^ \` | ~`, plus letters, whitespace, and Unicode
   # punctuation/symbol characters that exercise the boundary from both sides. The

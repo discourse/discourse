@@ -10,8 +10,13 @@
 # an anchor for the URL. Needs a booted Rails environment, so it is tagged `:rails`
 # and runs only under `MIGRATIONS_RAILS=1`.
 RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
-  # This spec is not about mentions; the extractor needs the set anyway.
+  # This spec is about neither mentions nor hashtags; the extractor requires
+  # both name sets anyway, and an empty one defers nothing.
   def mention_names
+    Migrations::SortedStringSet.new([])
+  end
+
+  def hashtag_names
     Migrations::SortedStringSet.new([])
   end
   before { SiteSetting.enable_markdown_linkify = true }
