@@ -136,7 +136,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
     expect(traffic).to have_chart
   end
 
-  it "takes staff to the full site traffic report scoped to the same period when they click See details",
+  it "takes an admin to Site traffic details scoped to the same period",
      time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
     Fabricate(:logged_in_browser_application_request, date: "2026-05-05", count: 10)
 
@@ -149,8 +149,21 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
     traffic.click_see_details
 
     expect(page).to have_current_path(
-      "/admin/reports/site_traffic?end_date=2026-05-12&start_date=2026-05-01",
+      "/admin/dashboard/traffic?end_date=2026-05-12&start_date=2026-05-01",
     )
+  end
+
+  it "keeps Site traffic details unavailable to a moderator",
+     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+    sign_in(Fabricate(:moderator))
+
+    dashboard.visit
+
+    expect(dashboard.site_traffic).to have_no_see_details_link
+
+    visit("/admin/dashboard/traffic?end_date=2026-05-12&start_date=2026-05-01")
+
+    expect(page).to have_current_path("/404")
   end
 
   context "with top countries and top referrers cards" do

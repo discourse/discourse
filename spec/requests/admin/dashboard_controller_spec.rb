@@ -648,6 +648,239 @@ RSpec.describe Admin::DashboardController do
     end
   end
 
+  describe "#traffic" do
+    let(:request_body) do
+      {
+        start_date: 2.days.ago.to_date.iso8601,
+        end_date: Date.current.iso8601,
+        filters: {},
+      }
+    end
+
+    before do
+      SiteSetting.dashboard_improvements = true
+      SiteSetting.persist_browser_pageview_events = true
+      SiteSetting.use_legacy_pageviews = false
+      SiteSetting.experimental_detect_crawler_pageviews = false
+      Discourse.cache.clear
+    end
+
+    it "returns retained pageviews to an admin through a closed POST contract" do
+      sign_in(admin)
+      topic = Fabricate(:topic)
+      event =
+        Fabricate(
+          :browser_pageview_event,
+          url: "/t/#{topic.slug}/#{topic.id}?token=private",
+          topic_id: topic.id,
+          country_code: "US",
+          asn: 64_496,
+          ip_address: "192.0.2.1",
+          user_agent: "Mozilla/5.0 Firefox/126.0",
+          session_id: "retained-session",
+          referrer: "https://search.example/results?q=private",
+          normalized_referrer: "search.example/results?q=private",
+          normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
+          created_at: 1.day.ago,
+        )
+
+      post "/admin/dashboard/traffic.json", params: request_body, as: :json
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.fetch("analysis").keys).to include(
+        "available_start_at",
+        "available_end_at",
+        "analyzed_start_at",
+        "analyzed_end_at",
+      )
+      expect(response.parsed_body).to include(
+        "analysis" => include(
+          "requested_start_date" => request_body[:start_date],
+          "requested_end_date" => request_body[:end_date],
+          "analyzed_event_count" => 1,
+          "event_cap" => 1_000_000,
+          "retention_truncated" => false,
+          "cap_truncated" => false,
+          "capture_scope" => "retained_browser_pageviews",
+          "crawler_classification" => "likely_crawler_score",
+          "crawler_scoring_state" => "disabled",
+          "crawler_score_threshold" => CrawlerScorer::BOT_SCORE_THRESHOLD,
+          "unscored_event_count" => 1,
+          "session_scope" => "capped_base_unfiltered",
+        ),
+        "filters" => {},
+        "summary" => {
+          "pageviews" => 1,
+          "logged_in_human_pageviews" => 0,
+          "anonymous_human_pageviews" => 1,
+          "likely_crawler_pageviews" => 0,
+          "distinct_sessions" => 1,
+          "bounce_rate" => 100,
+          "average_session_duration_seconds" => 0,
+        },
+      )
+      expect(response.parsed_body.dig("dimensions", "top_urls")).to include(
+        include(
+          "value" => "/t/#{topic.slug}/#{topic.id}",
+          "label" => "/t/#{topic.slug}/#{topic.id}",
+          "pageviews" => 1,
+          "filterable" => true,
+        ),
+      )
+      expect(response.parsed_body.dig("dimensions", "traffic_sources")).to include(
+        include("label" => "search.example", "pageviews" => 1),
+      )
+      expect(response.parsed_body.dig("dimensions", "ip_addresses")).to include(
+        include("value" => event.ip_address.to_s, "filterable" => true),
+      )
+      expect(response.parsed_body["series"]).to include(
+        {
+          "date" => 1.day.ago.to_date.iso8601,
+          "pageviews" => 1,
+          "logged_in_human_pageviews" => 0,
+          "anonymous_human_pageviews" => 1,
+          "likely_crawler_pageviews" => 0,
+        },
+      )
+      expect(response.body).not_to include(event.url)
+      expect(response.body).not_to include(event.referrer)
+    end
+
+    it "fails closed for moderators, non-staff users, and anonymous requests" do
+      [moderator, user, nil].each do |actor|
+        sign_in(actor) if actor
+
+        post "/admin/dashboard/traffic.json", params: request_body, as: :json
+
+        expect(response.status).to eq(404)
+        sign_out
+      end
+
+      SiteSetting.dashboard_improvements = false
+      sign_in(admin)
+
+      post "/admin/dashboard/traffic.json", params: request_body, as: :json
+
+      expect(response.status).to eq(404)
+    end
+
+    it "rejects GET requests and noncanonical or unknown JSON input" do
+      sign_in(admin)
+
+      get "/admin/dashboard/traffic.json", params: request_body
+      expect(response.status).to eq(404)
+
+      invalid_bodies = [
+        request_body.merge(unknown: "value"),
+        request_body.merge(filters: []),
+        request_body.merge(filters: { country: ["US"] }),
+        request_body.merge(filters: { country: "us" }),
+        request_body.merge(filters: { asn: "64496" }),
+        request_body.merge(filters: { ip: "192.0.2.0/24" }),
+        request_body.merge(filters: { ip: nil }),
+        request_body.merge(filters: { browser: "Firefox*" }),
+        request_body.merge(filters: { url: "/admin/secret" }),
+        request_body.merge(filters: { url: "/safe\ninjected" }),
+        request_body.merge(filters: { unknown: "value" }),
+        request_body.merge(start_date: "2026-5-1"),
+        request_body.merge(end_date: "not-a-date"),
+      ]
+
+      invalid_bodies.each do |invalid_body|
+        post "/admin/dashboard/traffic.json", params: invalid_body, as: :json
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body).to eq("error_type" => "invalid_request")
+      end
+    end
+
+    it "redacts sensitive and attacker-controlled page and source values before aggregation" do
+      sign_in(admin)
+      private_message = Fabricate(:private_message_topic, user: admin, recipient: user)
+      events = [
+        Fabricate(
+          :browser_pageview_event,
+          url: "/t/#{private_message.slug}/#{private_message.id}",
+          topic_id: private_message.id,
+          created_at: 1.day.ago,
+        ),
+        Fabricate(
+          :browser_pageview_event,
+          url: "/admin/users/list/active",
+          created_at: 1.day.ago,
+        ),
+        Fabricate(
+          :browser_pageview_event,
+          url: "/session/email-login/reset-secret",
+          created_at: 1.day.ago,
+        ),
+        Fabricate(
+          :browser_pageview_event,
+          url: "/invites/private-token",
+          created_at: 1.day.ago,
+        ),
+        Fabricate(
+          :browser_pageview_event,
+          url: "/<img src=x onerror=alert(1)>?token=private\r\ninjected=true",
+          referrer: "https://user:password@evil.example:8443/high-entropy-0123456789abcdef?q=secret",
+          normalized_referrer: "evil.example/high-entropy-0123456789abcdef?q=secret",
+          normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
+          created_at: 1.day.ago,
+        ),
+      ]
+
+      post "/admin/dashboard/traffic.json", params: request_body, as: :json
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("dimensions", "top_urls")).to include(
+        {
+          "value" => nil,
+          "label" => "Private or sensitive page",
+          "pageviews" => events.size,
+          "filterable" => false,
+        },
+      )
+      events.each do |event|
+        expect(response.body).not_to include(event.url)
+        expect(response.body).not_to include(event.referrer) if event.referrer
+      end
+      expect(response.body).not_to include(private_message.slug)
+
+      guessed_hidden_filter = request_body.merge(filters: { url: "/admin/users/list/active" })
+      post "/admin/dashboard/traffic.json", params: guessed_hidden_filter, as: :json
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body).to eq("error_type" => "invalid_request")
+    end
+
+    it "includes newer eligible events on a later uncached request" do
+      sign_in(admin)
+      event_attributes = {
+        url: "/latest",
+        country_code: "US",
+        user_agent: "Mozilla/5.0 Firefox/126.0",
+      }
+      Fabricate(:browser_pageview_event, **event_attributes, created_at: 1.day.ago)
+
+      post(
+        "/admin/dashboard/traffic.json",
+        params: request_body.merge(filters: { country: "US" }),
+        as: :json,
+      )
+      first_count = response.parsed_body.dig("summary", "pageviews")
+
+      Fabricate(:browser_pageview_event, **event_attributes, created_at: 1.minute.ago)
+      post(
+        "/admin/dashboard/traffic.json",
+        params: request_body.merge(filters: { country: "US", browser: "firefox" }),
+        as: :json,
+      )
+
+      expect(first_count).to eq(1)
+      expect(response.parsed_body.dig("summary", "pageviews")).to eq(2)
+    end
+  end
+
   describe "#update_configuration" do
     before { SiteSetting.dashboard_improvements = true }
 
