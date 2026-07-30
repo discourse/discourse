@@ -11,6 +11,7 @@ require "fileutils"
 require "letter_avatar"
 require "optparse"
 
+# Compare representative A-Z renders with Linux baselines and highlight pixel drift.
 module LetterAvatarPixelDiff
   LETTERS = ("A".."Z").to_a.freeze
   AVATAR_SIZE = 45
@@ -28,12 +29,7 @@ module LetterAvatarPixelDiff
       end
 
       LETTERS.each do |letter|
-        generated_paths[letter] = LetterAvatar.generate(
-          letter,
-          AVATAR_SIZE,
-          identity: letter_avatar_identity(letter),
-          cache: false,
-        )
+        generated_paths[letter] = LetterAvatar.generate(letter, AVATAR_SIZE, cache: false)
       end
 
       if options[:update_baselines]
@@ -79,12 +75,6 @@ module LetterAvatarPixelDiff
     end
 
     private
-
-    def letter_avatar_identity(letter)
-      identity = LetterAvatar::Identity.from_username("letter-avatar-pixel-regression")
-      identity.letter = letter
-      identity
-    end
 
     def parse_options(arguments)
       options = { update_baselines: false }
@@ -235,7 +225,7 @@ module LetterAvatarPixelDiff
     def remove_generated_avatars(generated_paths)
       generated_paths&.each do |letter, generated_path|
         FileUtils.rm_f(generated_path)
-        FileUtils.rm_f(LetterAvatar.fullsize_path(letter_avatar_identity(letter)))
+        FileUtils.rm_f(LetterAvatar.fullsize_path(LetterAvatar::Identity.from_username(letter)))
       end
     end
   end
