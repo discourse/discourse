@@ -1,3 +1,5 @@
+import { parseBBCodeTag } from "discourse-markdown-it/features/bbcode-block";
+
 const CHAR_CODES = {
   DOLLAR: 36,
   PERCENT: 37,
@@ -260,6 +262,23 @@ function isBracketBlockEnd(state, start, max, md) {
   return hasOnlyWhitespaceAfter(state.src, start + 2, max, md);
 }
 
+// A `\[..\]` line whose bracketed content is a registered bbcode tag is
+// almost certainly escaped bbcode (serializers escape literal brackets),
+// not display math. Skip it so the escapes render as literal brackets.
+function isEscapedBBCodeTag(line, md) {
+  const candidate = `[${line.slice(2, -2)}]`;
+  const parsed = parseBBCodeTag(candidate, 0, candidate.length);
+
+  if (!parsed?.tag || parsed.length !== candidate.length) {
+    return false;
+  }
+
+  return !!(
+    md.block.bbcode?.ruler.getRuleForTag(parsed.tag) ||
+    md.inline.bbcode?.ruler.getRuleForTag(parsed.tag)
+  );
+}
+
 function trySingleLineBlockMath(
   state,
   startLine,
@@ -279,6 +298,10 @@ function trySingleLineBlockMath(
       line.endsWith(end) &&
       line.length > start.length + end.length
     ) {
+      if (start === "\\[" && isEscapedBBCodeTag(line, state.md)) {
+        return null;
+      }
+
       if (silent) {
         return true;
       }

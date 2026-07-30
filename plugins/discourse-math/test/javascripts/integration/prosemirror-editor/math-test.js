@@ -47,6 +47,43 @@ module(
       );
     });
 
+    test("renders latex-delimited block math", async function (assert) {
+      this.siteSettings.discourse_math_enabled = true;
+      this.siteSettings.discourse_math_enable_latex_delimiters = true;
+
+      const markdown = "\\[E=mc^2\\]";
+      const expectedMarkdown = "$$\nE=mc^2\n$$\n\n";
+
+      await testMarkdown(
+        assert,
+        markdown,
+        () => {
+          assert.dom("div.composer-math-node").exists();
+          assert
+            .dom("div.composer-math-node .math-node-content")
+            .hasText("E=mc^2");
+        },
+        expectedMarkdown
+      );
+    });
+
+    test("keeps escaped bbcode as text instead of display math", async function (assert) {
+      this.siteSettings.discourse_math_enabled = true;
+      this.siteSettings.discourse_math_enable_latex_delimiters = true;
+
+      const markdown = "\\[quote=user, post:1, topic:1\\]";
+
+      await testMarkdown(
+        assert,
+        markdown,
+        () => {
+          assert.dom(".composer-math-node").doesNotExist();
+          assert.dom(".ProseMirror p").hasText("[quote=user, post:1, topic:1]");
+        },
+        markdown
+      );
+    });
+
     test("edits math via modal", async function (assert) {
       this.siteSettings.discourse_math_enabled = true;
 

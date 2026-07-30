@@ -135,6 +135,21 @@ describe PrettyText do
       it "does not render \\[...\\] inline within text" do
         expect(PrettyText.cook('test \[a^2\] test')).to match_html("<p>test [a^2] test</p>")
       end
+
+      it "does not consume escaped bbcode tags as block math" do
+        expect(PrettyText.cook('\[quote="user, post:1, topic:1"\]')).to match_html(
+          "<p>[quote=“user, post:1, topic:1”]</p>",
+        )
+        expect(PrettyText.cook('\[/quote\]')).to match_html("<p>[/quote]</p>")
+        expect(PrettyText.cook('\[details="Summary"\]')).to match_html("<p>[details=“Summary”]</p>")
+        expect(PrettyText.cook('\[/details\]')).to match_html("<p>[/details]</p>")
+        expect(PrettyText.cook('\[poll type=regular\]')).to match_html("<p>[poll type=regular]</p>")
+      end
+
+      it "still renders \\[...\\] as block math when the content is not a registered bbcode tag" do
+        expect(PrettyText.cook('\[E=mc^2\]')).to match_html("<div class=\"math\">\nE=mc^2\n</div>")
+        expect(PrettyText.cook('\[matrix\]')).to match_html("<div class=\"math\">\nmatrix\n</div>")
+      end
     end
   end
 
