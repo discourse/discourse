@@ -9,13 +9,12 @@ RSpec.describe NotificationEmailer do
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
 
-  # something is off with fabricator
-  def create_notification(type, user = nil)
-    user ||= Fabricate(:user)
+  let(:notification_user) { Fabricate(:user) }
+  let(:notification) do
     Notification.create(
       data: "{\"a\": 1}",
-      user: user,
-      notification_type: Notification.types[type],
+      user: notification_user,
+      notification_type: Notification.types[notification_kind],
       topic: topic,
       post_number: post.post_number,
       skip_send_email: true,
@@ -144,7 +143,7 @@ RSpec.describe NotificationEmailer do
       let(:no_delay) { no_delay }
       let(:type) { :user_mentioned }
       let(:delay) { SiteSetting.email_time_window_mins.minutes }
-      let!(:notification) { create_notification(:mentioned) }
+      let(:notification_kind) { :mentioned }
 
       include_examples "enqueue_public"
 
@@ -163,7 +162,7 @@ RSpec.describe NotificationEmailer do
       let(:no_delay) { no_delay }
       let(:type) { :user_replied }
       let(:delay) { SiteSetting.email_time_window_mins.minutes }
-      let!(:notification) { create_notification(:replied) }
+      let(:notification_kind) { :replied }
 
       include_examples "enqueue_public"
     end
@@ -172,7 +171,7 @@ RSpec.describe NotificationEmailer do
       let(:no_delay) { no_delay }
       let(:type) { :user_quoted }
       let(:delay) { SiteSetting.email_time_window_mins.minutes }
-      let!(:notification) { create_notification(:quoted) }
+      let(:notification_kind) { :quoted }
 
       include_examples "enqueue_public"
     end
@@ -181,7 +180,7 @@ RSpec.describe NotificationEmailer do
       let(:no_delay) { no_delay }
       let(:type) { :user_linked }
       let(:delay) { SiteSetting.email_time_window_mins.minutes }
-      let!(:notification) { create_notification(:linked) }
+      let(:notification_kind) { :linked }
 
       include_examples "enqueue_public"
     end
@@ -190,7 +189,7 @@ RSpec.describe NotificationEmailer do
       let(:no_delay) { no_delay }
       let(:type) { :user_posted }
       let(:delay) { SiteSetting.email_time_window_mins.minutes }
-      let!(:notification) { create_notification(:posted) }
+      let(:notification_kind) { :posted }
 
       include_examples "enqueue_public"
     end
@@ -199,7 +198,7 @@ RSpec.describe NotificationEmailer do
       let(:no_delay) { no_delay }
       let(:type) { :user_posted }
       let(:delay) { SiteSetting.email_time_window_mins.minutes }
-      let!(:notification) { create_notification(:watching_category_or_tag) }
+      let(:notification_kind) { :watching_category_or_tag }
 
       include_examples "enqueue_public"
     end
@@ -208,7 +207,7 @@ RSpec.describe NotificationEmailer do
       let(:no_delay) { no_delay }
       let(:type) { :user_private_message }
       let(:delay) { SiteSetting.personal_email_time_window_seconds }
-      let!(:notification) { create_notification(:private_message) }
+      let(:notification_kind) { :private_message }
 
       include_examples "enqueue_private"
 
@@ -225,7 +224,7 @@ RSpec.describe NotificationEmailer do
       let(:no_delay) { no_delay }
       let(:type) { :user_invited_to_private_message }
       let(:delay) { SiteSetting.personal_email_time_window_seconds }
-      let!(:notification) { create_notification(:invited_to_private_message) }
+      let(:notification_kind) { :invited_to_private_message }
 
       include_examples "enqueue_public"
     end
@@ -234,7 +233,7 @@ RSpec.describe NotificationEmailer do
       let(:no_delay) { no_delay }
       let(:type) { :user_invited_to_topic }
       let(:delay) { SiteSetting.personal_email_time_window_seconds }
-      let!(:notification) { create_notification(:invited_to_topic) }
+      let(:notification_kind) { :invited_to_topic }
 
       include_examples "enqueue_public"
     end
@@ -243,7 +242,7 @@ RSpec.describe NotificationEmailer do
       let(:no_delay) { no_delay }
       let(:type) { :user_watching_first_post }
       let(:delay) { SiteSetting.email_time_window_mins.minutes }
-      let!(:notification) { create_notification(:watching_first_post) }
+      let(:notification_kind) { :watching_first_post }
 
       include_examples "enqueue_public"
     end
@@ -252,14 +251,22 @@ RSpec.describe NotificationEmailer do
       let(:no_delay) { no_delay }
       let(:type) { :post_approved }
       let(:delay) { SiteSetting.email_time_window_mins.minutes }
-      let!(:notification) { create_notification(:post_approved) }
+      let(:notification_kind) { :post_approved }
 
       include_examples "enqueue_public"
     end
   end
 
   it "has translations for each sendable notification type" do
-    notification = create_notification(:mentioned)
+    notification =
+      Notification.create(
+        data: "{\"a\": 1}",
+        user: Fabricate(:user),
+        notification_type: Notification.types[:mentioned],
+        topic: topic,
+        post_number: post.post_number,
+        skip_send_email: true,
+      )
     email_user = NotificationEmailer::EmailUser.new(notification, no_delay: true)
     subkeys = %w[title subject_template text_body_template]
 
@@ -290,7 +297,7 @@ RSpec.describe NotificationEmailer do
 
   describe "with plugin-added email_notification_filters" do
     let!(:plugin) { Plugin::Instance.new }
-    let!(:notification) { create_notification(:quoted) }
+    let(:notification_kind) { :quoted }
     let(:no_delay) { true }
     let(:type) { :user_quoted }
 
@@ -319,8 +326,23 @@ RSpec.describe NotificationEmailer do
     context "when notification is mentioned or group_mentioned type" do
       it "doesn't enqueue the job to send user email" do
         staged_user = Fabricate(:staged)
-        mentioned = create_notification(:mentioned, staged_user)
-        group_mentioned = create_notification(:group_mentioned, staged_user)
+        notification_attributes = {
+          data: "{\"a\": 1}",
+          user: staged_user,
+          topic: topic,
+          post_number: post.post_number,
+          skip_send_email: true,
+        }
+        mentioned =
+          Notification.create(
+            **notification_attributes,
+            notification_type: Notification.types[:mentioned],
+          )
+        group_mentioned =
+          Notification.create(
+            **notification_attributes,
+            notification_type: Notification.types[:group_mentioned],
+          )
 
         expect_not_enqueued_with(job: :user_email) do
           NotificationEmailer.process_notification(mentioned, no_delay: Time.zone.now)

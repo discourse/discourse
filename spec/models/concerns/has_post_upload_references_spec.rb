@@ -87,7 +87,7 @@ RSpec.describe HasPostUploadReferences do
         end
 
         it "sets the access_control_post_id on uploads that don't already have the value set" do
-          other_target = create_target_with_different_access_control_id
+          other_target = Fabricate(:post)
           upload2.update(access_control_post_id: other_target.id)
 
           FileStore::S3Store.any_instance.stubs(:has_been_uploaded?).returns(true)
@@ -181,10 +181,6 @@ RSpec.describe HasPostUploadReferences do
     let(:subject) { post }
     let(:expected_access_control_post_id) { post.id }
 
-    def create_target_with_different_access_control_id
-      Fabricate(:post)
-    end
-
     include_examples "has upload references"
 
     context "when handling video thumbnails" do
@@ -236,10 +232,6 @@ RSpec.describe HasPostUploadReferences do
 
     let(:subject) { localization }
     let(:expected_access_control_post_id) { post.id }
-
-    def create_target_with_different_access_control_id
-      Fabricate(:post)
-    end
 
     include_examples "has upload references"
 

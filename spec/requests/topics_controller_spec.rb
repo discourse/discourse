@@ -2939,16 +2939,11 @@ RSpec.describe TopicsController do
     end
 
     describe "featured links" do
-      def fabricate_topic(user, category = nil)
-        topic = Fabricate(:topic, user: user, category: category)
-        Fabricate(:post, user: post_author1, topic: topic)
-        topic
-      end
-
       it "allows to update topic featured link" do
         sign_in(trust_level_1)
 
-        tl1_topic = fabricate_topic(trust_level_1)
+        tl1_topic = Fabricate(:topic, user: trust_level_1)
+        Fabricate(:post, user: post_author1, topic: tl1_topic)
         put "/t/#{tl1_topic.slug}/#{tl1_topic.id}.json",
             params: {
               featured_link: "https://discourse.org",
@@ -2960,7 +2955,8 @@ RSpec.describe TopicsController do
       it "doesn't allow TL0 users to update topic featured link" do
         sign_in(trust_level_0)
 
-        tl0_topic = fabricate_topic(trust_level_0)
+        tl0_topic = Fabricate(:topic, user: trust_level_0)
+        Fabricate(:post, user: post_author1, topic: tl0_topic)
         put "/t/#{tl0_topic.slug}/#{tl0_topic.id}.json",
             params: {
               featured_link: "https://discourse.org",
@@ -2973,7 +2969,8 @@ RSpec.describe TopicsController do
         sign_in(trust_level_1)
 
         SiteSetting.topic_featured_link_enabled = false
-        tl1_topic = fabricate_topic(trust_level_1)
+        tl1_topic = Fabricate(:topic, user: trust_level_1)
+        Fabricate(:post, user: post_author1, topic: tl1_topic)
         put "/t/#{tl1_topic.slug}/#{tl1_topic.id}.json",
             params: {
               featured_link: "https://discourse.org",
@@ -2986,7 +2983,8 @@ RSpec.describe TopicsController do
         sign_in(trust_level_1)
 
         category = Fabricate(:category, topic_featured_link_allowed: false)
-        tl1_topic_in_category = fabricate_topic(trust_level_1, category)
+        tl1_topic_in_category = Fabricate(:topic, user: trust_level_1, category:)
+        Fabricate(:post, user: post_author1, topic: tl1_topic_in_category)
         put "/t/#{tl1_topic_in_category.slug}/#{tl1_topic_in_category.id}.json",
             params: {
               featured_link: "https://discourse.org",
