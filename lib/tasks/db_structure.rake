@@ -5,7 +5,7 @@
 module DbStructure
   BOOKKEEPING_TABLES = %w[schema_migrations schema_migration_details ar_internal_metadata].freeze
 
-  PG_DUMP_VERSIONS = (18..18)
+  PG_DUMP_VERSION = 18
 
   def self.temp_db_env
     bundled = `script/list_bundled_plugins`.split.map { |p| File.basename(p) }.join(",")
@@ -20,7 +20,11 @@ module DbStructure
   def self.with_temp_db
     require "temporary_db"
 
-    db = TemporaryDb.new(versions: PG_DUMP_VERSIONS, port: ENV["TEMPORARY_DB_PORT"]&.to_i)
+    db =
+      TemporaryDb.new(
+        versions: PG_DUMP_VERSION..PG_DUMP_VERSION,
+        port: ENV["TEMPORARY_DB_PORT"]&.to_i,
+      )
     db.start
     begin
       db.with_env { yield }
