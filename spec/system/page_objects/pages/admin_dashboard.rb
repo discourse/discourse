@@ -217,11 +217,9 @@ module PageObjects
 
       def toggle_section_while_request_pending(id)
         page.driver.with_playwright_page do |playwright_page|
-          playwright_page
-            .locator(
-              ".db-configure__row[data-section-id='#{id}'] .d-toggle-switch__label",
-            )
-            .click
+          playwright_page.locator(
+            ".db-configure__row[data-section-id='#{id}'] .d-toggle-switch__label",
+          ).click
         end
         self
       end
@@ -343,9 +341,7 @@ module PageObjects
         page.driver.with_playwright_page do |playwright_page|
           playwright_page.route(
             %r{/admin/dashboard/configuration\.json},
-            lambda do |route, _request|
-              @held_configuration_routes << route
-            end,
+            lambda { |route, _request| @held_configuration_routes << route },
           )
         end
         self
