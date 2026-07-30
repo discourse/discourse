@@ -33,10 +33,11 @@ dimensions and encoded format, the declared normalized mean RGBA error
 threshold including alpha, the declared encoded-size bound, and any applicable
 orientation and metadata-stripping requirement. EXIF, XMP, IPTC, and
 ICC-profile presence must match ImageMagick for every raster result. XMP
-contents and user-meaningful EXIF camera, capture-time, and GPS fields must also
-match. Opaque MakerNote blobs and structural EXIF fields are recorded but are
-not equality requirements because libvips reconstructs those records when it
-encodes a new image. Scalar probes require exact equality.
+contents, IPTC contents, JPEG comments, and user-meaningful EXIF camera,
+capture-time, and GPS fields must also match. Opaque MakerNote blobs and
+structural EXIF fields are recorded but are not equality requirements because
+libvips reconstructs those records when it encodes a new image. Scalar probes
+require exact equality.
 
 The optimized resize and north crop derive their target quality with the same
 `Upload#target_image_quality` policy used by `OptimizedImage.create_for`.

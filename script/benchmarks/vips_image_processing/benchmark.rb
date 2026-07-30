@@ -7,6 +7,7 @@ require "fileutils"
 require "json"
 require "open3"
 require "time"
+require "zlib"
 
 BenchmarkConfig =
   Data.define(
@@ -136,6 +137,7 @@ class VipsImageProcessingBenchmark
     lib/vips/ico.rb
     lib/vips/image_processor.rb
     lib/vips/jpeg_quality.rb
+    lib/vips/png_metadata.rb
     script/benchmarks/vips_image_processing/benchmark.rb
     vendor/data/RT_sRGB.icm
   ].freeze
@@ -297,7 +299,7 @@ class VipsImageProcessingBenchmark
       ),
       BenchmarkOperation.new(
         key: "jpeg_quality",
-        label: "JPEG source-quality probe",
+        label: "JPEG target-quality decision",
         input: "photograph.jpg",
         output_extension: ".json",
         type: "scalar",
@@ -381,6 +383,17 @@ class VipsImageProcessingBenchmark
       "#{transparent}[compression=0]",
       read: [File.join(@inputs_dir, "high-detail.png")],
       write: [@inputs_dir],
+    )
+    xmp = Base64.decode64(Vips.header(transparent, field: "xmp-data"))
+    append_png_chunks(
+      transparent,
+      [
+        png_chunk(
+          "zTXt",
+          "Raw profile type xmp\0\0" + Zlib::Deflate.deflate(raw_png_profile("xmp", xmp)),
+        ),
+        png_chunk("tEXt", "comment\0metadata-parity-comment"),
+      ],
     )
 
     recompress = File.join(@inputs_dir, "recompress.jpg")
@@ -766,6 +779,12 @@ class VipsImageProcessingBenchmark
     if metadata.fetch(:xmp_sha256) != reference_metadata.fetch(:xmp_sha256)
       raise "#{operation.key} XMP metadata content differs from ImageMagick"
     end
+    if metadata.fetch(:iptc_sha256) != reference_metadata.fetch(:iptc_sha256)
+      raise "#{operation.key} IPTC metadata content differs from ImageMagick"
+    end
+    if metadata.fetch(:comments) != reference_metadata.fetch(:comments)
+      raise "#{operation.key} JPEG comments differ from ImageMagick"
+    end
     if metadata.fetch(:semantic_exif) != reference_metadata.fetch(:semantic_exif)
       raise "#{operation.key} semantic EXIF metadata differs from ImageMagick"
     end
@@ -809,14 +828,19 @@ class VipsImageProcessingBenchmark
 
   def metadata_details(path)
     xmp = image_header(path, "xmp-data")
+    iptc = image_header(path, "iptc-data")
+    comments = jpeg_comments(path)
     {
       presence: {
         exif: image_header?(path, "exif-data"),
         xmp: xmp.present?,
-        iptc: image_header?(path, "iptc-data"),
+        iptc: iptc.present?,
         icc_profile: image_header?(path, "icc-profile-data"),
+        comment: comments.any?,
       },
       xmp_sha256: xmp.present? ? Digest::SHA256.hexdigest(Base64.decode64(xmp).rstrip) : nil,
+      iptc_sha256: iptc.present? ? Digest::SHA256.hexdigest(Base64.decode64(iptc)) : nil,
+      comments:,
       semantic_exif:
         SEMANTIC_EXIF_FIELDS
           .to_h { |field| [field, canonical_header_value(image_header(path, field))] }
@@ -837,6 +861,50 @@ class VipsImageProcessingBenchmark
 
   def image_header?(path, field)
     image_header(path, field).present?
+  end
+
+  def jpeg_comments(path)
+    comments = []
+
+    File.open(path, "rb") do |file|
+      raise "invalid JPEG signature" if file.read(2) != "\xFF\xD8".b
+
+      loop do
+        raise "invalid JPEG marker" if file.read(1)&.getbyte(0) != 0xFF
+
+        marker = file.read(1)&.getbyte(0)
+        raise "truncated JPEG marker" if marker.nil?
+        marker = file.read(1)&.getbyte(0) while marker == 0xFF
+        break if marker == 0xD9 || marker == 0xDA
+        next if marker == 0x01 || marker.between?(0xD0, 0xD7)
+
+        length = file.read(2)&.unpack1("n")
+        raise "invalid JPEG segment length" if length.nil? || length < 2
+
+        payload = file.read(length - 2)
+        raise "truncated JPEG segment" if payload.nil? || payload.bytesize != length - 2
+        comments << payload if marker == 0xFE
+      end
+    end
+
+    comments
+  end
+
+  def png_chunk(type, data)
+    type = type.b
+    [data.bytesize].pack("N") + type + data + [Zlib.crc32(type + data)].pack("N")
+  end
+
+  def append_png_chunks(path, chunks)
+    png = File.binread(path)
+    iend = png_chunk("IEND", "")
+    raise "invalid PNG fixture" if png.byteslice(-iend.bytesize, iend.bytesize) != iend
+
+    File.binwrite(path, png.byteslice(0...-iend.bytesize) + chunks.join + iend)
+  end
+
+  def raw_png_profile(type, data)
+    "\n#{type}\n#{data.bytesize.to_s.rjust(8)}\n#{data.unpack1("H*")}\n"
   end
 
   def normalized_mean_error(reference, candidate)

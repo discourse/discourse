@@ -53,5 +53,6 @@ class Vips
 end
 
 require_relative "vips/ico"
+require_relative "vips/png_metadata"
 require_relative "vips/image_processor"
 require_relative "vips/jpeg_quality"
