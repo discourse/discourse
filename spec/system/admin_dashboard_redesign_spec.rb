@@ -13,7 +13,7 @@ describe "Admin Dashboard Redesign" do
   end
 
   context "with progressive section loading" do
-    it "lets staff use fast sections while a nearby section is pending and defers distant work" do
+    it "loads sections only when they enter the viewport" do
       AdminDashboardSectionConfiguration.update(
         [
           { id: "highlights", visible: true },
@@ -26,25 +26,25 @@ describe "Admin Dashboard Redesign" do
       )
 
       dashboard
-        .resize_viewport(height: 600)
-        .hold_next_section_request("reports")
+        .resize_viewport(height: 400)
         .track_section_requests
-        .visit_while_request_pending
+        .visit
 
-      dashboard.wait_for_section_request("highlights").wait_for_section_request("reports")
+      dashboard.wait_for_section_request("highlights")
 
       expect(dashboard).to have_highlights_content
       expect(dashboard).to have_section_loading("reports")
       expect(dashboard).to have_section_loading("search")
-      expect(dashboard.requested_section_ids).not_to include("search")
+      expect(dashboard.requested_section_ids).not_to include("reports", "search")
 
-      dashboard.release_section_requests("reports")
-
+      dashboard.scroll_to_section("reports").wait_for_section_request("reports")
       expect(dashboard).to have_no_section_loading("reports")
 
       dashboard.scroll_to_section("search").wait_for_section_request("search")
 
       expect(dashboard).to have_no_section_loading("search")
+      expect(dashboard.section_request_count("reports")).to eq(1)
+      expect(dashboard.section_request_count("search")).to eq(1)
       expect(dashboard.reports_bulk_request_count).to eq(0)
     end
 

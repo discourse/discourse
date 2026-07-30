@@ -125,7 +125,7 @@ export default class RedesignedAdminDashboard extends Component {
             {{dObserveIntersection
               (fn @loadSection section.id)
               threshold=0
-              rootMargin="0px 0px 600px 0px"
+              rootMargin="0px"
               isLoading=(sectionObservationPaused section @loadingSections)
             }}
           >
