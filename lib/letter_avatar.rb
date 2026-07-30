@@ -31,7 +31,7 @@ class LetterAvatar
       "tmp/letter_avatars/#{version}"
     end
 
-    # Run `LETTER_AVATAR_VISUAL=1 bin/rspec spec/lib/letter_avatar_visual_spec.rb` to inspect rendering changes.
+    # Run `LETTER_AVATAR_PIXEL_DIFF_DEBUG=1 bin/rspec spec/lib/letter_avatar_spec.rb` to inspect rendering changes.
     def generate(username, size, opts = nil)
       DistributedMutex.synchronize("letter_avatar_#{version}_#{username}") do
         identity = (opts && opts[:identity]) || LetterAvatar::Identity.from_username(username)
