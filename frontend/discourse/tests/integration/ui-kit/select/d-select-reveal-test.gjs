@@ -273,8 +273,9 @@ module(
         .doesNotExist("filtering a client list never pins a cap");
     });
 
-    // A source that declares no paging is taken to have returned the whole set, so its row
-    // count is a truthful `aria-setsize` rather than the -1 unknown-size encoding.
+    // A source that declares no paging is taken to have returned the whole set, so its row count
+    // is an exact `aria-setsize` — the same number a still-paging source would report, but here it
+    // is the true total rather than a running count.
     test("a bare-array server source exposes an exact set size", async function (assert) {
       const load = () => buildItems(3);
 
@@ -294,9 +295,8 @@ module(
       });
     });
 
-    test("the create row has no position when the set size is unknown", async function (assert) {
-      // Unknown size now requires a source that is actively mid-paging: it has told us more
-      // exists without saying how much.
+    test("the create row closes a set sized by what has loaded", async function (assert) {
+      // A source actively mid-paging: it has told us more exists without saying how much.
       const load = () => ({ items: buildItems(2), hasMore: true });
       const createItem = (filter) => ({ id: `new:${filter}`, name: filter });
 
@@ -314,18 +314,20 @@ module(
 
       const createRow = findAll(OPTION_SELECTOR).at(-1);
       assert.dom(createRow).hasText(/Something new/, "the create row is last");
-      // It is appended after an unknown number of source rows, so unlike a prefix row its
-      // slot genuinely cannot be derived.
+      // Sizing by the loaded rows gives the appended row a slot it could not derive from an
+      // unsized set, so it closes the set the reader can currently reach rather than dropping
+      // its position.
       assert
         .dom(createRow)
-        .hasAttribute("aria-setsize", "-1")
-        .doesNotHaveAttribute(
-          "aria-posinset",
-          "the appended create row has no derivable slot in an unsized set"
-        );
+        .hasAttribute(
+          "aria-setsize",
+          "3",
+          "two loaded rows plus the create row"
+        )
+        .hasAttribute("aria-posinset", "3", "the create row closes that set");
     });
 
-    test("a partially-loaded server response reports an unknown set size", async function (assert) {
+    test("a partially-loaded server response reports the declared total as its set size", async function (assert) {
       const allItems = buildItems(500);
       const load = (_filter, { offset = 0 }) => ({
         items: allItems.slice(offset, offset + 50),
@@ -341,19 +343,22 @@ module(
       assert.strictEqual(options.length, 50, "the first server page renders");
       assert
         .dom(options[49])
+        // 500 rather than 50 is the whole point: a size equal to the loaded count would tell the
+        // reader they had reached the end of the list at every page boundary.
         .hasAttribute("aria-posinset", "50", "the page tail has position 50")
         .hasAttribute(
           "aria-setsize",
-          "-1",
-          "a source that declares 500 but has loaded 50 cannot honestly size its set — the reader can only reach loaded rows, so the size stays unknown until it completes"
+          "500",
+          "the declared total sizes the set while its tail is still loading"
         );
     });
 
-    // A cursor source knows there is more without knowing how many. The set size must stay
-    // honestly unknown while it pages, then become exact the moment the source declares
-    // completeness — through the template, not merely on the getter: a value already read in
-    // a render has to be invalidated to reach the DOM.
-    test("a cursor source's set size stays unknown until it declares completeness", async function (assert) {
+    // A cursor source knows there is more without knowing how many. No number is true there, so
+    // the set is sized by what has loaded — the rows the reader can actually reach — and becomes
+    // exact the moment the source declares completeness. That last step must reach the template,
+    // not merely the getter: a value already read in a render has to be invalidated to reach the
+    // DOM.
+    test("a cursor source sizes its set by what has loaded until it declares completeness", async function (assert) {
       let engine;
       const allItems = buildItems(5, (value) => (engine = value));
       const load = (_filter, { offset = 0 }) =>
@@ -371,8 +376,8 @@ module(
         .dom(findAll(OPTION_SELECTOR)[0])
         .hasAttribute(
           "aria-setsize",
-          "-1",
-          "a source still paging cannot size its set"
+          "3",
+          "a source still paging sizes its set by the rows it has loaded"
         );
 
       engine.revealMore();
@@ -409,14 +414,15 @@ module(
       );
       await openSelect();
 
-      // On open the seeded row carries the size, and an unsized source reports it honestly as
-      // indeterminate rather than passing off the loaded count as a total.
+      // On open the seeded row carries the size, which for an unsized source is the rows loaded
+      // so far. The count *announcement* below is the channel that must not pass 3 off as the
+      // total — the two are deliberately different answers to different questions.
       assert
         .dom(`${OPTION_SELECTOR}.--active`)
         .hasAttribute(
           "aria-setsize",
-          "-1",
-          "an unsized source reports an indeterminate set, not its loaded count"
+          "3",
+          "the seeded row is sized by the rows loaded so far"
         );
 
       await click(findAll(OPTION_SELECTOR)[0]);

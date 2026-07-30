@@ -113,9 +113,11 @@ export interface SelectDescriptor {
    */
   posInSet?: number;
   /**
-   * Size of the whole result set, or `-1` when it cannot be reported or derived — which now
-   * means a source mid-paging under `hasMore: true` with no `total`, or one stopped by the
-   * barren-page brake.
+   * Size of the whole result set when a source reports or derives one, and otherwise the count
+   * of rows loaded so far — a source mid-paging under `hasMore: true` with no `total`, or one
+   * stopped by the barren-page brake. Never `-1`: the ARIA sentinel for an unknown size has no
+   * consistent implementation, so an honest count of the reachable rows is preferred and the
+   * "more exists" half is announced instead.
    */
   setSize?: number;
 }
@@ -1331,16 +1333,21 @@ export default class SelectEngine {
     createCount: number
   ): readonly SelectDescriptor[] {
     const total = this.total;
-    const knownComplete = this.#source.knownComplete();
-    // A transformer or the legacy bridge can add rows absent from a reported or derived
-    // total, so trusting that total blindly could emit a position past the set.
-    const sourceTotal =
-      total == null || !knownComplete ? null : Math.max(total, sourceCount);
-    const setSize =
-      sourceTotal == null ? -1 : specialCount + sourceTotal + createCount;
+    // `aria-setsize` describes the complete set rather than the rendered rows, so a source that
+    // declares its total has already answered; withholding it until the last page lands would
+    // report "unknown" about something known.
+    //
+    // A source that declares no total is sized by what it has loaded, never by `-1`. That sentinel
+    // is unusable in practice: no two engines interpret it alike, and its own AAM tells user agents
+    // to substitute 1. The loaded rows are the ones the reader can reach anyway, and "there is
+    // more" is carried by the announcements that can express it.
+    //
+    // The floor keeps a transformer or the legacy bridge, which can add rows absent from a reported
+    // total, from pushing a position past the set.
+    const sourceTotal = Math.max(total ?? sourceCount, sourceCount);
+    const setSize = specialCount + sourceTotal + createCount;
 
-    // Loaded source rows are a prefix, so positions are known even while the set size is not.
-    // `-1` with real positions is the unknown-size encoding ARIA describes.
+    // Loaded source rows are a prefix, so their positions hold whatever sizes the set.
     const lastOptionOrdinal = specialCount + sourceCount;
 
     // Hoisted: the cap is a property of the selection, not of a row, and `#atMaximum` reads the
@@ -1359,14 +1366,9 @@ export default class SelectEngine {
         return {
           ...descriptor,
           setSize,
-          posInSet:
-            ordinal < lastOptionOrdinal
-              ? ordinal + 1
-              : // The create row closes the set, wherever the window ends — but only a known
-                // set has a last slot to close.
-                sourceTotal == null
-                ? undefined
-                : setSize,
+          // The create row is appended after the source rows, so it closes the set wherever the
+          // window ends.
+          posInSet: ordinal < lastOptionOrdinal ? ordinal + 1 : setSize,
         };
       })
     );
