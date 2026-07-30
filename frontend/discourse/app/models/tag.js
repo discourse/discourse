@@ -27,7 +27,7 @@ export default class Tag extends RestCompatModel {
     return {
       type: "tag",
       id: this.id,
-      tag: this,
+      tag: /** @type {Tag} */ (this),
       name: this.name,
     };
   }
