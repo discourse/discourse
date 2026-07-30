@@ -1780,12 +1780,17 @@ module("Integration | ui-kit | DEditor | Rich Editor", function (hooks) {
     await settled();
     await click("button.heading");
 
+    // The check icon renders for every option with showActiveIcon and is only
+    // hidden with CSS, so --active is the assertable signal.
     assert
-      .dom('.btn[data-name="heading-2"] .d-button-label__active-icon')
-      .exists("the heading is active");
+      .dom('.btn[data-name="heading-2"]')
+      .hasClass("--active", "the heading is active");
     assert
-      .dom('.btn[data-name="heading-small"] .d-button-label__active-icon')
-      .exists("small is active at the cursor");
+      .dom('.btn[data-name="heading-small"]')
+      .hasClass("--active", "small is active at the cursor");
+    assert
+      .dom('.btn[data-name="heading-paragraph"]')
+      .doesNotHaveClass("--active", "paragraph is not reported as the size");
 
     await click('.btn[data-name="heading-small"]');
 
