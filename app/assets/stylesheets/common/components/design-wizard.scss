@@ -271,8 +271,7 @@
     }
   }
 
-  &__custom-theme-notice,
-  &__color-note {
+  &__custom-theme-notice {
     font-size: var(--font-down-2);
     color: var(--primary-medium);
   }
@@ -371,6 +370,8 @@
 
   &__color-note {
     margin: 0;
+    font-size: var(--font-down-2);
+    color: var(--primary-medium);
   }
 
   &__user-selectable {

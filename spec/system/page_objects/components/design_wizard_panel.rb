@@ -32,7 +32,9 @@ module PageObjects
       end
 
       def toggle_user_selectable_palettes
-        find("#{WIZARD_SELECTOR}__user-selectable [role='switch']").click
+        PageObjects::Components::DToggleSwitch.new(
+          "#{WIZARD_SELECTOR}__user-selectable [role='switch']",
+        ).toggle
       end
 
       def select_homepage(key)
