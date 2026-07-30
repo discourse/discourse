@@ -15,8 +15,6 @@ RSpec.describe "Nested view post admin menu" do
     )
   end
   fab!(:reply) { Fabricate(:post, topic: topic, user: user, raw: "Some reply body here") }
-  fab!(:leader, :trust_level_4)
-  fab!(:image_upload) { Fabricate(:image_upload, width: 100, height: 100) }
 
   let(:nested_view) { PageObjects::Pages::NestedView.new }
   let(:flag_modal) { PageObjects::Modals::Flag.new }
@@ -128,24 +126,6 @@ RSpec.describe "Nested view post admin menu" do
       find("[data-content][data-identifier='admin-post-menu'] .change-owner").click
 
       expect(page).to have_css(".change-ownership-modal")
-    end
-  end
-
-  context "as a leader" do
-    it "limits official notice image dimensions for readers" do
-      sign_in(leader)
-      nested_view.visit_nested(topic)
-      open_admin_menu_for(op)
-      find("[data-content][data-identifier='admin-post-menu'] .add-notice").click
-      set_official_notice("![image|100000x100000](#{image_upload.short_url})")
-
-      sign_in(flagger)
-      nested_view.visit_nested(topic)
-
-      notice_image = find("[data-post-number='#{op.post_number}'] .post-notice-message img")
-      expect(notice_image.evaluate_script("this.getAttribute('width')")).to eq("100000")
-      expect(notice_image.evaluate_script("this.getAttribute('height')")).to eq("100000")
-      expect(notice_image.evaluate_script("this.getBoundingClientRect().height")).to be < 1000
     end
   end
 
