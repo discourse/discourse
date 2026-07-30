@@ -1270,6 +1270,24 @@ RSpec.describe Admin::UsersController do
         before { SiteSetting.moderators_change_trust_levels = true }
 
         include_examples "trust level updates possible"
+      end
+
+      context "when moderators_change_trust_levels setting is disabled" do
+        before { SiteSetting.moderators_change_trust_levels = false }
+
+        include_examples "trust level updates possible"
+      end
+    end
+
+    context "when logged in as a moderator" do
+      let(:acting_user) { moderator }
+
+      before { sign_in(moderator) }
+
+      context "when moderators_change_trust_levels setting is enabled" do
+        before { SiteSetting.moderators_change_trust_levels = true }
+
+        include_examples "trust level updates possible"
 
         it "prevents changing or locking a staff user's trust level" do
           another_admin.update!(trust_level: TrustLevel[4], manual_locked_trust_level: nil)
@@ -1297,24 +1315,6 @@ RSpec.describe Admin::UsersController do
             expect(manual_locked_trust_level).to eq(nil)
           end
         end
-      end
-
-      context "when moderators_change_trust_levels setting is disabled" do
-        before { SiteSetting.moderators_change_trust_levels = false }
-
-        include_examples "trust level updates possible"
-      end
-    end
-
-    context "when logged in as a moderator" do
-      let(:acting_user) { moderator }
-
-      before { sign_in(moderator) }
-
-      context "when moderators_change_trust_levels setting is enabled" do
-        before { SiteSetting.moderators_change_trust_levels = true }
-
-        include_examples "trust level updates possible"
       end
 
       context "when moderators_change_trust_levels setting is disabled" do
