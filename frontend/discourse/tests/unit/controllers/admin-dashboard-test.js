@@ -12,6 +12,71 @@ module("Unit | Controller | admin-dashboard", function (hooks) {
     sinon.restore();
   });
 
+  test("changing dates refreshes nearby sections without fetching dashboard metadata", async function (assert) {
+    const controller = this.owner.lookup("controller:admin/dashboard");
+    const oldStartDate = new Date("2026-06-25T00:00:00Z");
+    const oldEndDate = new Date("2026-07-24T23:59:59Z");
+    controller.loadedSections = {
+      period: "last_30_days",
+      startDate: oldStartDate,
+      endDate: oldEndDate,
+      sections: [
+        {
+          id: "traffic",
+          data: { pageviews: 30 },
+          loaded: true,
+          loading: false,
+          error: false,
+          stale: false,
+          period: "last_30_days",
+          startDate: oldStartDate,
+          endDate: oldEndDate,
+        },
+        {
+          id: "search",
+          data: null,
+          loaded: false,
+          loading: false,
+          error: false,
+          stale: false,
+        },
+      ],
+    };
+    const fetch = sinon.stub(AdminDashboard, "fetch");
+    const fetchSection = sinon
+      .stub(AdminDashboard, "fetchSection")
+      .resolves({ data: { pageviews: 7 } });
+
+    controller.setCustomDateRange(
+      new Date("2026-07-18T00:00:00Z"),
+      new Date("2026-07-24T00:00:00Z")
+    );
+
+    assert.strictEqual(fetch.callCount, 0);
+    assert.true(controller.loadedSections.sections[0].stale);
+    assert.strictEqual(
+      controller.loadedSections.sections[0].startDate,
+      oldStartDate
+    );
+
+    await controller.loadSection("search", { isIntersecting: false });
+    assert.strictEqual(fetchSection.callCount, 0);
+
+    await controller.loadSection("traffic", { isIntersecting: true });
+    assert.strictEqual(fetchSection.callCount, 1);
+    assert.strictEqual(
+      fetchSection.firstCall.args[1].startDate,
+      controller.loadedSections.startDate
+    );
+    assert.strictEqual(
+      fetchSection.firstCall.args[1].endDate,
+      controller.loadedSections.endDate
+    );
+    assert.deepEqual(controller.loadedSections.sections[0].data, {
+      pageviews: 7,
+    });
+  });
+
   test("a section refresh supersedes an in-flight request", async function (assert) {
     const controller = this.owner.lookup("controller:admin/dashboard");
     const startDate = new Date("2026-06-25T00:00:00Z");

@@ -79,7 +79,7 @@ export default class AdminDashboardController extends Controller {
     this.range = period;
     this.start_date = null;
     this.end_date = null;
-    this.fetchSections();
+    this.#refreshSectionsForDateRange();
   }
 
   @action
@@ -87,7 +87,50 @@ export default class AdminDashboardController extends Controller {
     this.range = PERIOD_CUSTOM;
     this.start_date = moment(startDate).format("YYYY-MM-DD");
     this.end_date = moment(endDate).format("YYYY-MM-DD");
-    this.fetchSections();
+    this.#refreshSectionsForDateRange();
+  }
+
+  #refreshSectionsForDateRange() {
+    if (!this.loadedSections) {
+      this.fetchSections();
+      return;
+    }
+
+    this._sectionsLoadId += 1;
+    this._sectionCache.clear();
+    this.loadingSections = false;
+    this.sectionsFetchError = false;
+    this.#markSectionsStaleForDateRange();
+  }
+
+  #markSectionsStaleForDateRange() {
+    if (!this.loadedSections) {
+      return;
+    }
+
+    this.loadedSections = {
+      ...this.loadedSections,
+      period: this.safePeriod,
+      startDate: this.startDate,
+      endDate: this.endDate,
+      sections: this.loadedSections.sections.map((section) =>
+        section.loaded
+          ? {
+              ...section,
+              loading: false,
+              error: false,
+              stale: true,
+            }
+          : {
+              id: section.id,
+              data: null,
+              loaded: false,
+              loading: false,
+              error: false,
+              stale: false,
+            }
+      ),
+    };
   }
 
   @action
@@ -192,32 +235,7 @@ export default class AdminDashboardController extends Controller {
     this._sectionCache.clear();
     this.loadingSections = true;
     this.sectionsFetchError = false;
-
-    if (this.loadedSections) {
-      this.loadedSections = {
-        ...this.loadedSections,
-        period,
-        startDate,
-        endDate,
-        sections: this.loadedSections.sections.map((section) =>
-          section.loaded
-            ? {
-                ...section,
-                loading: false,
-                error: false,
-                stale: true,
-              }
-            : {
-                id: section.id,
-                data: null,
-                loaded: false,
-                loading: false,
-                error: false,
-                stale: false,
-              }
-        ),
-      };
-    }
+    this.#markSectionsStaleForDateRange();
 
     this._sectionsLoadingCount += 1;
     if (this._sectionsLoadingCount === 1) {
