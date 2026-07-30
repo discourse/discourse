@@ -60,6 +60,8 @@ export async function setupRichEditor(assert, markdown, multiToggle = false) {
     .replace('<br class="ProseMirror-trailingBreak">', "")
     // or artifacts
     .replace(' class=""', "")
+    // or glimmer's empty dynamic content markers from node view components
+    .replaceAll("<!---->", "")
     // or a trailing-paragraph with an optional <br class="ProseMirror-trailingBreak"> inside
     .replace(/<p>(<br class="ProseMirror-trailingBreak">)?<\/p>$/, "")
     // or the codemark fake cursor
