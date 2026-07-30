@@ -12,9 +12,8 @@ module Migrations
         #
         # Positions in and out are BYTE offsets, to match the {Scanner}'s byte-offset
         # walk. Every structural character it inspects (backtick, tilde, space, tab,
-        # newline) is ASCII, so it works in bytes throughout; the one place it touches
-        # arbitrary content, the indented-code line, is byteslice'd into a proper
-        # UTF-8 string before the whitespace/indent checks run on it.
+        # newline) is ASCII, so it works in bytes throughout and never materializes a
+        # line — this runs at every line start of every post.
         class CodeBlockTracker
           def initialize
             @in_fenced_block = false
@@ -51,26 +50,27 @@ module Migrations
             return nil if @in_fenced_block
 
             input_length = input.bytesize
-            line_end = input.byteindex("\n", pos) || input_length
-            line_content = input.byteslice(pos...line_end)
-            is_blank = line_content.match?(/\A\s*\z/)
-            # CommonMark opens (and continues) indented code at four leading spaces or
-            # a tab; a smaller indent is an ordinary line.
-            has_code_indent = line_content.start_with?("    ") || line_content.start_with?("\t")
+            indented = code_indent?(input, pos, input_length)
 
-            if @in_indented_block
-              # A blank line doesn't end an indented block — CommonMark lets blank
-              # lines separate chunks of one block — so only a non-blank line without
-              # the code indent closes it.
-              if is_blank || has_code_indent
-                pos_after_line(line_end, input_length)
-              else
-                @in_indented_block = false
-                nil
-              end
-            elsif has_code_indent
+            # Outside a block only the indent can open one, and the first byte settles
+            # that for nearly every line — so the ordinary line is neither sliced nor
+            # searched for its end.
+            unless @in_indented_block
+              return nil unless indented
+
               @in_indented_block = true
+              return pos_after_line(line_end_at(input, pos, input_length), input_length)
+            end
+
+            line_end = line_end_at(input, pos, input_length)
+            # A blank line doesn't end an indented block — CommonMark lets blank
+            # lines separate chunks of one block — so only a non-blank line without
+            # the code indent closes it.
+            if indented || whitespace_only_line?(input, pos, line_end)
               pos_after_line(line_end, input_length)
+            else
+              @in_indented_block = false
+              nil
             end
           end
 
@@ -188,6 +188,36 @@ module Migrations
               pos += 1
             end
             true
+          end
+
+          # CommonMark opens (and continues) indented code at four leading spaces or
+          # a tab; a smaller indent is an ordinary line. Four spaces can't straddle a
+          # line end, so reading them as bytes needs no line boundary.
+          def code_indent?(input, pos, input_length)
+            byte = input.getbyte(pos)
+            return true if byte == 0x09 # tab
+            return false unless byte == 0x20 # space
+
+            pos + 3 < input_length && input.getbyte(pos + 1) == 0x20 &&
+              input.getbyte(pos + 2) == 0x20 && input.getbyte(pos + 3) == 0x20
+          end
+
+          # Wider than {#blank_line?}, which is CommonMark's blank line: this also
+          # admits the CR of a CRLF input and the rare form feed and vertical tab,
+          # keeping the indented block's continuation rule as it was.
+          def whitespace_only_line?(input, pos, line_end)
+            while pos < line_end
+              byte = input.getbyte(pos)
+              unless byte == 0x20 || byte == 0x09 || byte == 0x0d || byte == 0x0c || byte == 0x0b
+                return false
+              end
+              pos += 1
+            end
+            true
+          end
+
+          def line_end_at(input, pos, input_length)
+            input.byteindex("\n", pos) || input_length
           end
 
           # Matches the opener rule of {#check_fenced_boundary}: up to three leading
