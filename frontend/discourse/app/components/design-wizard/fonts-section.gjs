@@ -42,7 +42,7 @@ export default class DesignWizardFontsSection extends Component {
 
   <template>
     <div class="design-wizard__font-group">
-      <span class="design-wizard__font-group-label">
+      <span class="design-wizard__label">
         {{i18n "admin_onboarding_banner.design_wizard.fonts.base_font"}}
       </span>
       <DMenu
@@ -80,7 +80,7 @@ export default class DesignWizardFontsSection extends Component {
     </div>
 
     <div class="design-wizard__font-group">
-      <span class="design-wizard__font-group-label">
+      <span class="design-wizard__label">
         {{i18n "admin_onboarding_banner.design_wizard.fonts.heading_font"}}
       </span>
       <DMenu

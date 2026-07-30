@@ -146,7 +146,7 @@ const DesignWizardHomepageSection = <template>
 
   {{#if (eq @homepage "categories")}}
     <div class="design-wizard__homepage-detail">
-      <span class="design-wizard__homepage-detail-label">
+      <span class="design-wizard__label">
         {{i18n
           "admin_onboarding_banner.design_wizard.homepage.category_page_style"
         }}
@@ -181,7 +181,7 @@ const DesignWizardHomepageSection = <template>
     </div>
   {{else}}
     <div class="design-wizard__homepage-detail">
-      <span class="design-wizard__homepage-detail-label">
+      <span class="design-wizard__label">
         {{i18n
           "admin_onboarding_banner.design_wizard.homepage.topic_page_type"
         }}

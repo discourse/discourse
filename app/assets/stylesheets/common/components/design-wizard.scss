@@ -206,7 +206,6 @@
     position: relative;
     display: flex;
     align-items: center;
-    height: 10em;
     overflow: hidden;
     border: 1px solid var(--content-border-color);
     border-radius: var(--d-border-radius);
@@ -249,6 +248,7 @@
   &__theme-description {
     display: block;
     margin: 0;
+    font-weight: normal;
   }
 
   &__theme-enabled-badge {
@@ -396,7 +396,13 @@
     color: var(--primary-medium);
   }
 
-  &__font-group-label {
+  &__font-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  &__label {
     display: block;
     font-size: var(--font-down-1-rem);
     font-weight: 600;
@@ -406,7 +412,6 @@
   &__font-select {
     justify-content: space-between;
     width: 100%;
-    margin-block-start: var(--space-1);
     border-radius: var(--d-border-radius);
   }
 
@@ -453,14 +458,9 @@
   }
 
   &__homepage-detail {
-    margin-block-start: var(--space-2);
-  }
-
-  &__homepage-detail-label {
-    display: block;
-    margin-block-end: var(--space-1);
-    font-size: var(--font-down-2);
-    color: var(--primary-medium);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
   }
 
   &__style-blocks,
