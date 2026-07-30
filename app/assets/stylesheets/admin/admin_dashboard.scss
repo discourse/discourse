@@ -241,7 +241,7 @@ $db-bar-height: var(--space-2);
     font-size: var(--font-down-1-rem);
   }
 
-  &__refresh-error {
+  &__error {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -249,7 +249,7 @@ $db-bar-height: var(--space-2);
     margin-block-end: var(--space-2);
   }
 
-  &__refresh-error-message {
+  &__error-message {
     margin: 0;
   }
 }

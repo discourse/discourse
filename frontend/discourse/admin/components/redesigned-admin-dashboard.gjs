@@ -7,7 +7,6 @@ import DashboardEngagement from "discourse/admin/components/dashboard/engagement
 import DashboardHighlights from "discourse/admin/components/dashboard/highlights";
 import DashboardReports from "discourse/admin/components/dashboard/reports";
 import DashboardSearch from "discourse/admin/components/dashboard/search";
-import DashboardSection from "discourse/admin/components/dashboard/section";
 import DashboardSectionSkeleton from "discourse/admin/components/dashboard/section-skeleton";
 import DashboardSiteAdvice from "discourse/admin/components/dashboard/site-advice";
 import DashboardSkeleton from "discourse/admin/components/dashboard/skeleton";
@@ -16,7 +15,7 @@ import { lookupAdminDashboardSection } from "discourse/admin/lib/admin-dashboard
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { and, eq, not, or } from "discourse/truth-helpers";
+import { and, eq, or } from "discourse/truth-helpers";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
 import DPageHeader from "discourse/ui-kit/d-page-header";
@@ -141,33 +140,22 @@ export default class RedesignedAdminDashboard extends Component {
                 </span>
               </div>
             {{/if}}
-            {{#if (and section.error (not section.loaded))}}
-              <DashboardSection @title={{sectionTitleFor section.id}}>
-                <div class="db-section__error" role="alert">
-                  <p>{{i18n "admin.dashboard.section_fetch_error"}}</p>
-                  <DButton
-                    @action={{fn @retrySection section.id}}
-                    @label="admin.dashboard.retry_section"
-                    class="btn-default"
-                  />
-                </div>
-              </DashboardSection>
-            {{else if section.loaded}}
-              {{#if section.error}}
-                <div
-                  class="alert alert-error db-section-container__refresh-error"
-                  role="alert"
-                >
-                  <p class="db-section-container__refresh-error-message">
-                    {{i18n "admin.dashboard.section_refresh_error"}}
-                  </p>
-                  <DButton
-                    @action={{fn @retrySection section.id}}
-                    @label="admin.dashboard.retry_section"
-                    class="btn-default btn-small"
-                  />
-                </div>
-              {{/if}}
+            {{#if section.error}}
+              <div
+                class="alert alert-error db-section-container__error"
+                role="alert"
+              >
+                <p class="db-section-container__error-message">
+                  {{i18n "admin.dashboard.section_fetch_error"}}
+                </p>
+                <DButton
+                  @action={{fn @retrySection section.id}}
+                  @label="admin.dashboard.retry_section"
+                  class="btn-default btn-small"
+                />
+              </div>
+            {{/if}}
+            {{#if section.loaded}}
               {{#if (eq section.id "highlights")}}
                 <DashboardHighlights
                   class={{concat "--" section.id}}

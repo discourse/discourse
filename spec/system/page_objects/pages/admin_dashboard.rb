@@ -308,7 +308,8 @@ module PageObjects
 
       def has_section_error?(id)
         within("[data-section-id='#{id}']") do
-          has_css?("[role='alert']") && has_button?("Retry", exact: true)
+          has_css?("[role='alert']", text: "Couldn't load this section.") &&
+            has_button?("Retry", exact: true)
         end
       end
 
