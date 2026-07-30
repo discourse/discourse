@@ -66,4 +66,69 @@ module("Integration | Component | RedesignedAdminDashboard", function (hooks) {
       .dom(".db-section__header")
       .hasText("Reports", "the loaded section content remains visible");
   });
+
+  test("renders only visible configured sections", async function (assert) {
+    const startDate = new Date("2026-07-18T00:00:00Z");
+    const endDate = new Date("2026-07-24T23:59:59Z");
+    const loadedSections = {
+      period: "last_7_days",
+      startDate,
+      endDate,
+      sections: [
+        {
+          id: "reports",
+          data: { items: [] },
+          loaded: true,
+          loading: false,
+          error: false,
+          stale: false,
+        },
+        {
+          id: "search",
+          data: { searches: 10 },
+          loaded: true,
+          loading: false,
+          error: false,
+          stale: false,
+        },
+      ],
+      configuration: {
+        sections: [
+          { id: "reports", visible: true },
+          { id: "search", visible: false },
+        ],
+      },
+    };
+    const noop = () => {};
+
+    await render(
+      <template>
+        <RedesignedAdminDashboard
+          @requestedPeriod="last_7_days"
+          @requestedStartDate={{startDate}}
+          @requestedEndDate={{endDate}}
+          @setPeriod={{noop}}
+          @setCustomDateRange={{noop}}
+          @loadedSections={{loadedSections}}
+          @toggleSection={{noop}}
+          @reorderSections={{noop}}
+          @refreshSection={{noop}}
+          @loadSection={{noop}}
+          @retrySection={{noop}}
+          @loadingSections={{false}}
+          @sectionsFetchError={{false}}
+          @problems={{array}}
+          @onRefreshProblems={{noop}}
+          @onIgnoreProblem={{noop}}
+        />
+      </template>
+    );
+
+    assert
+      .dom('[data-section-id="reports"]')
+      .exists("the visible section renders");
+    assert
+      .dom('[data-section-id="search"]')
+      .doesNotExist("the hidden section does not render");
+  });
 });

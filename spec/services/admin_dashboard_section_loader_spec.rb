@@ -4,7 +4,7 @@ describe AdminDashboardSectionLoader do
   fab!(:admin)
 
   describe ".build" do
-    it "ensures the sections are built in order with current user and dates" do
+    it "builds a section with the current user and dates" do
       AdminDashboardSiteTraffic
         .expects(:build)
         .with do |kwargs|
@@ -12,29 +12,14 @@ describe AdminDashboardSectionLoader do
             kwargs[:guardian].is_a?(Guardian) && kwargs[:guardian].user.id == admin.id
         end
         .returns({ value: "traffic" })
-      AdminDashboardEngagement
-        .expects(:build)
-        .with(start_date: "2026-05-01", end_date: "2026-05-07", current_user: admin)
-        .returns({ value: "engagement" })
-      AdminDashboardSearch
-        .expects(:build)
-        .with(start_date: "2026-05-01", end_date: "2026-05-07")
-        .returns({ value: "search" })
-
       expect(
         described_class.build(
-          section_ids: %w[traffic engagement search],
+          section_id: "traffic",
           current_user: admin,
           start_date: "2026-05-01",
           end_date: "2026-05-07",
         ),
-      ).to eq(
-        [
-          { id: "traffic", data: { value: "traffic" } },
-          { id: "engagement", data: { value: "engagement" } },
-          { id: "search", data: { value: "search" } },
-        ],
-      )
+      ).to eq({ id: "traffic", data: { value: "traffic" } })
     end
 
     it "includes report card payloads in the reports section data" do
@@ -71,38 +56,36 @@ describe AdminDashboardSectionLoader do
 
       result =
         described_class.build(
-          section_ids: ["reports"],
+          section_id: "reports",
           current_user: admin,
           start_date: "2026-05-01",
           end_date: "2026-05-07",
         )
 
       expect(result).to eq(
-        [
-          {
-            id: "reports",
-            data: {
-              items: [
-                {
-                  source: provider.source_name,
+        {
+          id: "reports",
+          data: {
+            items: [
+              {
+                source: provider.source_name,
+                identifier: "activity",
+                title: "Report activity",
+                description: nil,
+                label: "Test",
+                url: "/reports/activity",
+                key: "#{provider.source_name}:activity",
+                payload: {
                   identifier: "activity",
-                  title: "Report activity",
-                  description: nil,
-                  label: "Test",
-                  url: "/reports/activity",
-                  key: "#{provider.source_name}:activity",
-                  payload: {
-                    identifier: "activity",
-                    filters: {
-                      start_date: "2026-05-01",
-                      end_date: "2026-05-07",
-                    },
+                  filters: {
+                    start_date: "2026-05-01",
+                    end_date: "2026-05-07",
                   },
                 },
-              ],
-            },
+              },
+            ],
           },
-        ],
+        },
       )
     ensure
       DiscoursePluginRegistry._raw_admin_dashboard_report_sources.reject! do |entry|
@@ -110,9 +93,8 @@ describe AdminDashboardSectionLoader do
       end
     end
 
-    it "returns partial section data when a section fails to build" do
+    it "returns an error result when a section fails to build" do
       error = StandardError.new("boom")
-      AdminDashboardSiteTraffic.stubs(:build).returns({ value: "traffic" })
       AdminDashboardSearch.stubs(:build).raises(error)
       Discourse.expects(:warn_exception).with(
         error,
@@ -124,14 +106,12 @@ describe AdminDashboardSectionLoader do
 
       expect(
         described_class.build(
-          section_ids: %w[traffic search],
+          section_id: "search",
           current_user: admin,
           start_date: "2026-05-01",
           end_date: "2026-05-07",
         ),
-      ).to eq(
-        [{ id: "traffic", data: { value: "traffic" } }, { id: "search", data: nil, error: true }],
-      )
+      ).to eq({ id: "search", data: nil, error: true })
     end
   end
 
@@ -146,12 +126,12 @@ describe AdminDashboardSectionLoader do
 
       expect(
         described_class.build(
-          section_ids: ["support"],
+          section_id: "support",
           current_user: admin,
           start_date: "2026-05-01",
           end_date: "2026-05-07",
         ),
-      ).to eq([{ id: "support", data: { value: "support", user: admin.id } }])
+      ).to eq({ id: "support", data: { value: "support", user: admin.id } })
     end
 
     it "returns nil data for an unknown section id" do
@@ -159,12 +139,12 @@ describe AdminDashboardSectionLoader do
 
       expect(
         described_class.build(
-          section_ids: ["frobnitz"],
+          section_id: "frobnitz",
           current_user: admin,
           start_date: "2026-05-01",
           end_date: "2026-05-07",
         ),
-      ).to eq([{ id: "frobnitz", data: nil }])
+      ).to eq({ id: "frobnitz", data: nil })
     end
   end
 end

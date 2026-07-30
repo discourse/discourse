@@ -193,7 +193,7 @@ module("Unit | Controller | admin-dashboard", function (hooks) {
     });
   });
 
-  test("a newly enabled section waits for its configuration to persist", async function (assert) {
+  test("a newly enabled section waits for its configuration to persist across a date change", async function (assert) {
     const controller = this.owner.lookup("controller:admin/dashboard");
     controller.loadedSections = {
       period: "last_30_days",
@@ -208,7 +208,11 @@ module("Unit | Controller | admin-dashboard", function (hooks) {
       .resolves({ data: { searches: 10 } });
 
     controller.toggleSection("search");
-    await controller.loadSection("search");
+    controller.setCustomDateRange(
+      new Date("2026-07-18T00:00:00Z"),
+      new Date("2026-07-24T00:00:00Z")
+    );
+    controller.loadSection("search");
 
     assert.true(controller.loadedSections.sections[0].configurationPending);
     assert.strictEqual(fetchSection.callCount, 0);

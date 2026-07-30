@@ -20,8 +20,8 @@ import { and, eq, not, or } from "discourse/truth-helpers";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
 import DPageHeader from "discourse/ui-kit/d-page-header";
-import dObserveIntersection from "discourse/ui-kit/modifiers/d-observe-intersection";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
+import dObserveIntersection from "discourse/ui-kit/modifiers/d-observe-intersection";
 import { i18n } from "discourse-i18n";
 
 const sectionComponentFor = (id) => lookupAdminDashboardSection(id);
@@ -38,6 +38,23 @@ export default class RedesignedAdminDashboard extends Component {
 
   get configurationSections() {
     return this.args.loadedSections?.configuration?.sections ?? [];
+  }
+
+  get visibleSections() {
+    const sections = this.args.loadedSections?.sections ?? [];
+    const configuration = this.args.loadedSections?.configuration;
+
+    if (!configuration) {
+      return sections;
+    }
+
+    const sectionsById = new Map(
+      sections.map((section) => [section.id, section])
+    );
+    return configuration.sections
+      .filter((section) => section.visible)
+      .map((section) => sectionsById.get(section.id))
+      .filter(Boolean);
   }
 
   <template>
@@ -101,7 +118,7 @@ export default class RedesignedAdminDashboard extends Component {
           @onIgnore={{@onIgnoreProblem}}
         />
 
-        {{#each @loadedSections.sections key="id" as |section|}}
+        {{#each this.visibleSections key="id" as |section|}}
           <div
             class={{concat "db-section-container --" section.id}}
             data-section-id={{section.id}}
@@ -216,7 +233,7 @@ export default class RedesignedAdminDashboard extends Component {
           </div>
         {{/each}}
 
-        {{#unless @loadedSections.sections.length}}
+        {{#unless this.visibleSections.length}}
           <div class="db-main__empty" role="status" aria-live="polite">
             {{#if this.currentUser.admin}}
               {{i18n "admin.dashboard.configure.empty_state_admin"}}

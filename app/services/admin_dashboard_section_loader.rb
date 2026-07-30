@@ -1,29 +1,29 @@
 # frozen_string_literal: true
 
 class AdminDashboardSectionLoader
-  def self.build(section_ids:, current_user:, start_date:, end_date:)
+  def self.build(section_id:, current_user:, start_date:, end_date:)
     new(
-      section_ids: section_ids,
+      section_id: section_id,
       current_user: current_user,
       start_date: start_date,
       end_date: end_date,
     ).build
   end
 
-  def initialize(section_ids:, current_user:, start_date:, end_date:)
-    @section_ids = section_ids
+  def initialize(section_id:, current_user:, start_date:, end_date:)
+    @section_id = section_id
     @current_user = current_user
     @start_date = start_date
     @end_date = end_date
   end
 
   def build
-    section_ids.map { |id| build_section(id) }
+    build_section(section_id)
   end
 
   private
 
-  attr_reader :section_ids, :current_user, :start_date, :end_date
+  attr_reader :section_id, :current_user, :start_date, :end_date
 
   def build_section(id)
     { id: id, data: section_data(id, current_user) }

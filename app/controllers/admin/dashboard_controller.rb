@@ -167,11 +167,11 @@ class Admin::DashboardController < Admin::StaffController
   def render_dashboard_section(section_id)
     result =
       AdminDashboardSectionLoader.build(
-        section_ids: [section_id],
+        section_id: section_id,
         current_user: current_user,
         start_date: params[:start_date],
         end_date: params[:end_date],
-      ).first
+      )
 
     if result[:error]
       render_json_dump({ id: section_id, error: true }, status: :internal_server_error)

@@ -40,7 +40,6 @@ export default class AdminDashboardController extends Controller {
   #metadataLoadingCount = 0;
   _sectionsLoadId = 0;
   _configSaveId = 0;
-  _sectionCache = new Map();
   _sectionRequestIds = new Map();
 
   get safePeriod() {
@@ -97,7 +96,6 @@ export default class AdminDashboardController extends Controller {
     }
 
     this._sectionsLoadId += 1;
-    this._sectionCache.clear();
     this.loadingSections = false;
     this.sectionsFetchError = false;
     this.#markSectionsStaleForDateRange();
@@ -113,23 +111,12 @@ export default class AdminDashboardController extends Controller {
       period: this.safePeriod,
       startDate: this.startDate,
       endDate: this.endDate,
-      sections: this.loadedSections.sections.map((section) =>
-        section.loaded
-          ? {
-              ...section,
-              loading: false,
-              error: false,
-              stale: true,
-            }
-          : {
-              id: section.id,
-              data: null,
-              loaded: false,
-              loading: false,
-              error: false,
-              stale: false,
-            }
-      ),
+      sections: this.loadedSections.sections.map((section) => ({
+        ...section,
+        loading: false,
+        error: false,
+        stale: section.loaded,
+      })),
     };
   }
 
@@ -161,38 +148,15 @@ export default class AdminDashboardController extends Controller {
   }
 
   #applyConfigOptimistically(nextConfig) {
-    const currentSections = new Map(
-      this.loadedSections?.sections.map((section) => [section.id, section])
+    const sectionsById = new Map(
+      this.loadedSections.sections.map((section) => [section.id, section])
     );
-
-    for (const section of currentSections.values()) {
-      if (section.loaded) {
-        this._sectionCache.set(section.id, section);
-      }
-    }
 
     this.loadedSections = {
       ...this.loadedSections,
-      sections: nextConfig
-        .filter((section) => section.visible)
-        .map((section) => {
-          const currentSection = currentSections.get(section.id);
-          if (currentSection) {
-            return currentSection;
-          }
-
-          const cachedSection = this._sectionCache.get(section.id);
-          return (
-            cachedSection ?? {
-              id: section.id,
-              data: null,
-              loaded: false,
-              loading: false,
-              error: false,
-              stale: false,
-            }
-          );
-        }),
+      sections: nextConfig.map(
+        ({ id }) => sectionsById.get(id) ?? this.#newSection(id)
+      ),
       configuration: { sections: nextConfig },
     };
   }
@@ -232,7 +196,6 @@ export default class AdminDashboardController extends Controller {
     const startDate = this.startDate;
     const endDate = this.endDate;
 
-    this._sectionCache.clear();
     this.loadingSections = true;
     this.sectionsFetchError = false;
     this.#markSectionsStaleForDateRange();
@@ -250,24 +213,22 @@ export default class AdminDashboardController extends Controller {
         return;
       }
 
-      const currentSections = new Map(
+      const sectionsById = new Map(
         this.loadedSections?.sections.map((section) => [section.id, section])
       );
+      const configurationSectionIds = model.configuration?.sections.map(
+        (section) => section.id
+      );
+      const sectionIds =
+        configurationSectionIds ?? model.sections.map((section) => section.id);
 
       this.loadedSections = {
         period,
         startDate,
         endDate,
-        sections: model.sections.map(
-          (section) =>
-            currentSections.get(section.id) ?? {
-              id: section.id,
-              data: null,
-              loaded: false,
-              loading: false,
-              error: false,
-              stale: false,
-            }
+        sections: sectionIds.map(
+          (sectionId) =>
+            sectionsById.get(sectionId) ?? this.#newSection(sectionId)
         ),
         configuration: model.configuration,
       };
@@ -334,7 +295,6 @@ export default class AdminDashboardController extends Controller {
         startDate: this.loadedSections.startDate,
         endDate: this.loadedSections.endDate,
       };
-      this._sectionCache.set(sectionId, loadedSection);
       this.#updateSection(sectionId, loadedSection);
     } catch {
       if (
@@ -348,9 +308,6 @@ export default class AdminDashboardController extends Controller {
           error: true,
           stale: section.loaded,
         };
-        if (this._sectionCache.has(sectionId)) {
-          this._sectionCache.set(sectionId, failedSection);
-        }
         this.#updateSection(sectionId, failedSection);
       }
     }
@@ -392,6 +349,17 @@ export default class AdminDashboardController extends Controller {
       sections: this.loadedSections.sections.map((section) =>
         section.id === sectionId ? { ...section, ...attributes } : section
       ),
+    };
+  }
+
+  #newSection(id) {
+    return {
+      id,
+      data: null,
+      loaded: false,
+      loading: false,
+      error: false,
+      stale: false,
     };
   }
 
