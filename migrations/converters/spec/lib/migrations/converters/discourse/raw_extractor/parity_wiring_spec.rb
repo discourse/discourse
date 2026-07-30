@@ -11,14 +11,20 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # or not it is about mentions or hashtags.
     let(:name_set_helpers) { %i[mention_names hashtag_names] }
 
+    # Only the groups RSpec has already loaded — running this file on its own
+    # loads no parity spec, and there is nothing to check then.
     let(:parity_groups) do
       RSpec.world.example_groups.select do |group|
         group.metadata[:absolute_file_path].to_s.end_with?("_parity_spec.rb")
       end
     end
 
+    let(:parity_files) { Dir[File.expand_path("*_parity_spec.rb", __dir__)] }
+
     it "defines the name-set helpers each of them hands to the extractor" do
-      expect(parity_groups).not_to be_empty
+      skip "no parity spec is loaded — run the suite, not this file alone" if parity_groups.empty?
+      # Whoever adds a parity spec gets it checked too, rather than silently not.
+      expect(parity_groups.size).to eq(parity_files.size)
 
       failures =
         parity_groups.flat_map do |group|
