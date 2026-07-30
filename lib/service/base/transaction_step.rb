@@ -8,14 +8,17 @@ module Service
 
       attr_reader :steps
 
-      def initialize(&block)
+      def initialize(**options, &block)
         super("")
         @steps = []
+        @options = options
         instance_exec(&block)
       end
 
       def run_step
-        ActiveRecord::Base.transaction { steps.each { |step| step.call(instance, context) } }
+        ActiveRecord::Base.transaction(**@options) do
+          steps.each { |step| step.call(instance, context) }
+        end
       end
     end
   end

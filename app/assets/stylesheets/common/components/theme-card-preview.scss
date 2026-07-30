@@ -36,10 +36,11 @@
   }
 
   &__content {
+    padding-inline: 1rem;
+    padding-top: 1rem;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    padding: var(--space-4) var(--space-4) 0;
   }
 
   &__name {

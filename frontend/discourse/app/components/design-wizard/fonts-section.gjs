@@ -15,7 +15,7 @@ const ALL_FONTS = [...MAIN_FONTS, ...MORE_FONTS];
 const FontTrigger = <template>
   <button class="btn btn-default btn-icon-text" type="button" ...attributes>
     <span class="d-button-label {{fontClass @fontKey}}">{{@label}}</span>
-    {{dIcon "angle-down" class="design-wizard-modal__font-select-caret"}}
+    {{dIcon "angle-down" class="design-wizard__font-select-caret"}}
   </button>
 </template>;
 
@@ -41,14 +41,14 @@ export default class DesignWizardFontsSection extends Component {
   }
 
   <template>
-    <div class="design-wizard-modal__font-group">
-      <span class="design-wizard-modal__font-group-label">
+    <div class="design-wizard__font-group">
+      <span class="design-wizard__font-group-label">
         {{i18n "admin_onboarding_banner.design_wizard.fonts.base_font"}}
       </span>
       <DMenu
         @identifier="design-wizard-base-font"
-        @triggerClass="design-wizard-modal__font-select"
-        @contentClass="design-wizard-modal__font-select-content"
+        @triggerClass="design-wizard__font-select"
+        @contentClass="design-wizard__font-select-content"
         @modalForMobile={{true}}
         @triggerComponent={{component
           FontTrigger
@@ -57,7 +57,7 @@ export default class DesignWizardFontsSection extends Component {
         }}
       >
         <:content as |dMenu|>
-          <DDropdownMenu class="design-wizard-modal__font-list" as |dropdown|>
+          <DDropdownMenu class="design-wizard__font-list" as |dropdown|>
             {{#each ALL_FONTS as |font|}}
               <dropdown.item>
                 <DButton
@@ -79,14 +79,14 @@ export default class DesignWizardFontsSection extends Component {
       </DMenu>
     </div>
 
-    <div class="design-wizard-modal__font-group">
-      <span class="design-wizard-modal__font-group-label">
+    <div class="design-wizard__font-group">
+      <span class="design-wizard__font-group-label">
         {{i18n "admin_onboarding_banner.design_wizard.fonts.heading_font"}}
       </span>
       <DMenu
         @identifier="design-wizard-heading-font"
-        @triggerClass="design-wizard-modal__font-select"
-        @contentClass="design-wizard-modal__font-select-content"
+        @triggerClass="design-wizard__font-select"
+        @contentClass="design-wizard__font-select-content"
         @modalForMobile={{true}}
         @triggerComponent={{component
           FontTrigger
@@ -95,7 +95,7 @@ export default class DesignWizardFontsSection extends Component {
         }}
       >
         <:content as |dMenu|>
-          <DDropdownMenu class="design-wizard-modal__font-list" as |dropdown|>
+          <DDropdownMenu class="design-wizard__font-list" as |dropdown|>
             {{#each ALL_FONTS as |font|}}
               <dropdown.item>
                 <DButton

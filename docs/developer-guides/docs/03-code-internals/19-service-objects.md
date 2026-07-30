@@ -385,9 +385,14 @@ The step will fail if the policy returns a falsy value. Its result object can be
 
 - _reason_: the reason why the policy failed if a policy class was used.
 
-### `transaction(&block)`
+### `transaction(**options, &block)`
 
 This step is a bit special as its only purpose is to wrap other steps inside a SQL transaction. It cannot fail by itself but if a step fails inside the transaction block, the transaction will rollback.
+
+Options are forwarded to `ActiveRecord::Base.transaction`. For example, use
+`transaction(requires_new: true)` when rollback callbacks must run at this
+service's transaction boundary even if the caller already has an open
+transaction.
 
 ### `try(*exceptions, &block)`
 

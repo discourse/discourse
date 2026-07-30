@@ -12,7 +12,7 @@ import getURL from "discourse/lib/get-url";
 import discourseLater from "discourse/lib/later";
 import { HORIZON_THEME_ID, setLocalTheme } from "discourse/lib/theme-selector";
 
-const STATE_KEY = "design_wizard_sidebar_state";
+const STATE_KEY = "design_wizard_panel_state";
 // px equivalents of the base-font-size variables, used to size the wizard
 // chrome absolutely so text size previews cannot resize it
 const TEXT_SIZE_PX = {
@@ -31,10 +31,9 @@ const BASE_LIGHT_PALETTE_ID = -1;
 const STEP_COMPLETED_KEY = "onboarding_step_select_theme";
 
 /**
- * Drives the sidebar variant of the design wizard: the sidebar is taken
- * over by customization controls while the current page acts as the live
- * preview. Selections only touch the page's color/font variables; nothing
- * is persisted until save.
+ * Drives the design wizard panel while the current page acts as the live
+ * preview. Each completed step is persisted so the flow can survive the theme
+ * preview reloads required by a different asset build.
  */
 export default class DesignWizardService extends Service {
   @service keyValueStore;
@@ -59,6 +58,8 @@ export default class DesignWizardService extends Service {
 
   #onComplete;
   #originalCategoryPageStyle;
+  #originalColorMode;
+  #originalColorSchemeMedia;
 
   async start({ onComplete } = {}) {
     this.#onComplete = onComplete;
@@ -81,9 +82,20 @@ export default class DesignWizardService extends Service {
       this.#initFromData();
     }
 
+    if (
+      !stored &&
+      this.data.current_theme &&
+      this.#currentPreviewThemeId === null
+    ) {
+      this.#persistState();
+      this.#navigateToThemePreview(this.themeId);
+      return;
+    }
+
     this.animateEntrance = !stored;
     this.active = true;
     this.#sizeChromeFromSettings();
+    this.#captureColorSchemeMedia();
 
     if (stored && this.homepage === "categories") {
       this.siteSettings.desktop_category_page_style = this.categoryPageStyle;
@@ -148,9 +160,7 @@ export default class DesignWizardService extends Service {
 
     // a different theme is a different asset build, so previewing it means
     // reloading the page; state is restored from the store afterwards
-    window.location.assign(
-      getURL(`/?preview_theme_id=${encodeURIComponent(themeId)}`)
-    );
+    this.#navigateToThemePreview(themeId);
   }
 
   async selectPair(pairKey) {
@@ -231,6 +241,7 @@ export default class DesignWizardService extends Service {
         this.#originalCategoryPageStyle;
       this.#refreshCategoriesPage();
     }
+    this.#restoreColorSchemeMedia();
     document.documentElement.style.removeProperty(
       "--design-wizard-chrome-font-size"
     );
@@ -352,6 +363,7 @@ export default class DesignWizardService extends Service {
     this.palettesUserSelectable = this.data.palettes_user_selectable;
     this.bodyFont = this.data.base_font;
     this.headingFont = this.data.heading_font;
+    this.colorMode = this.#renderedColorMode;
     this.homepage = this.#supportedHomepage(this.data.homepage);
     this.categoryPageStyle = this.siteSettings.desktop_category_page_style;
     this.stepIndex = 0;
@@ -360,7 +372,7 @@ export default class DesignWizardService extends Service {
   #restore(stored) {
     this.themeId = stored.themeId;
     this.selectedPairKeys = new Map(stored.selectedPairKeys);
-    this.colorMode = stored.colorMode;
+    this.colorMode = stored.colorMode ?? this.#renderedColorMode;
     this.palettesUserSelectable = stored.palettesUserSelectable;
     this.bodyFont = stored.bodyFont;
     this.headingFont = stored.headingFont;
@@ -395,6 +407,66 @@ export default class DesignWizardService extends Service {
     }
   }
 
+  #navigateToThemePreview(themeId) {
+    window.location.assign(
+      getURL(`/?preview_theme_id=${encodeURIComponent(themeId)}`)
+    );
+  }
+
+  #captureColorSchemeMedia() {
+    const lightTag = document.querySelector("link.light-scheme");
+    const darkTag = document.querySelector("link.dark-scheme");
+
+    this.#originalColorMode = this.#renderedColorMode;
+    this.#originalColorSchemeMedia = {
+      light: lightTag?.media,
+      dark: darkTag?.media,
+    };
+  }
+
+  #restoreColorSchemeMedia() {
+    if (!this.#originalColorSchemeMedia) {
+      return;
+    }
+
+    const lightTag = document.querySelector("link.light-scheme");
+    const darkTag = document.querySelector("link.dark-scheme");
+
+    if (lightTag) {
+      lightTag.media = this.#originalColorSchemeMedia.light ?? "";
+    }
+    if (darkTag) {
+      darkTag.media = this.#originalColorSchemeMedia.dark ?? "";
+    }
+  }
+
+  get #renderedColorMode() {
+    const lightTag = document.querySelector("link.light-scheme");
+    const darkTag = document.querySelector("link.dark-scheme");
+    const lightIsActive =
+      lightTag &&
+      lightTag.media !== "none" &&
+      window.matchMedia(lightTag.media || "all").matches;
+    const darkIsActive =
+      darkTag &&
+      darkTag.media !== "none" &&
+      window.matchMedia(darkTag.media || "all").matches;
+
+    return darkIsActive && !lightIsActive ? "dark" : "light";
+  }
+
+  #showColorMode(mode) {
+    const lightTag = document.querySelector("link.light-scheme");
+    const darkTag = document.querySelector("link.dark-scheme");
+
+    if (lightTag && darkTag) {
+      lightTag.media = mode === "light" ? "all" : "none";
+      darkTag.media = mode === "dark" ? "all" : "none";
+    } else {
+      (lightTag ?? darkTag)?.setAttribute("media", "all");
+    }
+  }
+
   #supportedHomepage(homepage) {
     return ["latest", "new", "hot", "categories"].includes(homepage)
       ? homepage
@@ -418,28 +490,35 @@ export default class DesignWizardService extends Service {
       headingFont: this.headingFont,
     });
 
+    const mode = this.effectiveColorMode;
     const paletteId = this.previewPalette?.id;
     if (paletteId) {
       try {
         await applyColorScheme(
           { id: paletteId },
-          { replace: true, themeId: this.themeId }
+          { replace: true, themeId: this.themeId, mode }
         );
       } catch {
         // the manager already reports failures; a failed preview should not
         // break the wizard
       }
     }
+
+    this.#showColorMode(mode);
   }
 
   async #revertPalette() {
     const renderedTheme = this.data?.themes.find((theme) => theme.default);
+    const mode = this.#originalColorMode ?? "light";
+    const paletteId =
+      mode === "dark"
+        ? (renderedTheme?.dark_color_scheme_id ??
+          renderedTheme?.color_scheme_id ??
+          BASE_LIGHT_PALETTE_ID)
+        : (renderedTheme?.color_scheme_id ?? BASE_LIGHT_PALETTE_ID);
 
     try {
-      await applyColorScheme(
-        { id: renderedTheme?.color_scheme_id ?? BASE_LIGHT_PALETTE_ID },
-        { replace: true }
-      );
+      await applyColorScheme({ id: paletteId }, { replace: true, mode });
     } catch {
       // a failed revert only leaves the previewed colors in place
     }

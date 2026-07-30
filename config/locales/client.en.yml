@@ -571,7 +571,6 @@ en:
       design_wizard:
         title: "Set up your design"
         subtitle: "You can change all of this later in your admin settings"
-        skip: "Skip for now"
         step_label: "Go to step %{index}"
         save: "Save and finish"
         back: "Back"
@@ -609,8 +608,6 @@ en:
             boxes: "Boxes"
             with_topics: "Categories with topics"
             only: "Categories only"
-        preview:
-          label: "Live preview"
       invite_collaborators:
         title: "Invite Collaborators"
         description: "Early members help bring your community to life"

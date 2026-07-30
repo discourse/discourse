@@ -42,7 +42,7 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(dracula["light"]).to be_nil
       end
 
-      it "returns the current fonts, homepage and category page styles" do
+      it "returns the current fonts and homepage" do
         SiteSetting.base_font = "lato"
         SiteSetting.heading_font = "merriweather"
         SiteSetting.default_homepage = "categories"
@@ -52,9 +52,6 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(response.parsed_body["base_font"]).to eq("lato")
         expect(response.parsed_body["heading_font"]).to eq("merriweather")
         expect(response.parsed_body["homepage"]).to eq("categories")
-        expect(response.parsed_body["category_page_styles"].map { |style| style["value"] }).to eq(
-          CategoryPageStyle.values.map { |style| style[:value] },
-        )
       end
 
       it "does not include current_theme when the default theme is a core theme" do
@@ -116,7 +113,6 @@ RSpec.describe Admin::Config::DesignWizardController do
               palettes_user_selectable: true,
               base_font: "lato",
               heading_font: "merriweather",
-              default_text_size: "larger",
               homepage: "categories",
               category_page_style: "categories_boxes",
             }
@@ -127,7 +123,6 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(horizon.dark_color_scheme_id).to eq(dark.id)
         expect(SiteSetting.base_font).to eq("lato")
         expect(SiteSetting.heading_font).to eq("merriweather")
-        expect(SiteSetting.default_text_size).to eq("larger")
         expect(SiteSetting.default_homepage).to eq("categories")
         expect(SiteSetting.desktop_category_page_style).to eq("categories_boxes")
         expect(light.reload.user_selectable).to eq(true)

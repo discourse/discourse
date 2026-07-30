@@ -26,7 +26,7 @@ function themeDescription(themeId) {
   }
 }
 
-class ThemeScreenshot extends Component {
+class ThemeCard extends Component {
   @service interfaceColor;
   @service session;
 
@@ -70,54 +70,68 @@ class ThemeScreenshot extends Component {
   }
 
   <template>
-    <span class="design-wizard-modal__theme-screenshot">
-      {{#if this.currentScreenshotUrl}}
-        <img
-          class="design-wizard-modal__theme-screenshot-image"
-          src={{this.currentScreenshotUrl}}
-          alt={{@theme.name}}
-        />
-        {{#if this.hasBothScreenshots}}
-          <DButton
-            @action={{this.toggleScreenshot}}
-            @translatedAriaLabel={{this.toggleLabel}}
-            @icon={{this.toggleIcon}}
-            @preventFocus={{true}}
-            @translatedTitle={{this.toggleLabel}}
-            class="btn-flat design-wizard-modal__theme-screenshot-toggle"
-          />
-        {{/if}}
-      {{/if}}
-    </span>
-  </template>
-}
-
-const DesignWizardThemeSection = <template>
-  <div class="design-wizard-modal__theme-cards">
-    {{#each @themes as |theme|}}
-      <div
-        class="design-wizard-modal__theme-card
-          {{if (eq theme.id @selectedThemeId) '--selected'}}"
-        data-theme-id={{theme.id}}
-        role="button"
-        {{on "click" (fn @onSelect theme.id)}}
+    <div class="design-wizard__theme-card-wrapper">
+      <label
+        class="design-wizard__theme-card
+          {{if (eq @theme.id @selectedThemeId) '--selected'}}"
+        data-theme-id={{@theme.id}}
       >
-        {{#if (eq theme.id @selectedThemeId)}}
-          <span class="design-wizard-modal__theme-enabled-badge">
+        <input
+          type="radio"
+          name="design-wizard-theme"
+          value={{@theme.id}}
+          checked={{eq @theme.id @selectedThemeId}}
+          class="sr-only"
+          {{on "change" (fn @onSelect @theme.id)}}
+        />
+        {{#if (eq @theme.id @selectedThemeId)}}
+          <span class="design-wizard__theme-enabled-badge">
             {{dIcon "check"}}
             {{i18n "admin_onboarding_banner.design_wizard.theme.selected"}}
           </span>
         {{/if}}
-        <ThemeScreenshot @theme={{theme}} />
-        <span class="design-wizard-modal__theme-name">{{theme.name}}</span>
-        <p class="design-wizard-modal__theme-description">
-          {{themeDescription theme.id}}
-        </p>
-      </div>
+        <span class="design-wizard__theme-screenshot">
+          {{#if this.currentScreenshotUrl}}
+            <img
+              class="design-wizard__theme-screenshot-image"
+              src={{this.currentScreenshotUrl}}
+              alt=""
+            />
+          {{/if}}
+        </span>
+        <span class="design-wizard__theme-name">{{@theme.name}}</span>
+        <span class="design-wizard__theme-description">
+          {{themeDescription @theme.id}}
+        </span>
+      </label>
+      {{#if this.hasBothScreenshots}}
+        <DButton
+          @action={{this.toggleScreenshot}}
+          @translatedAriaLabel={{this.toggleLabel}}
+          @icon={{this.toggleIcon}}
+          @translatedTitle={{this.toggleLabel}}
+          class="btn-flat design-wizard__theme-screenshot-toggle"
+        />
+      {{/if}}
+    </div>
+  </template>
+}
+
+const DesignWizardThemeSection = <template>
+  <fieldset class="design-wizard__theme-cards">
+    <legend class="sr-only">
+      {{i18n "admin_onboarding_banner.design_wizard.sections.theme"}}
+    </legend>
+    {{#each @themes as |theme|}}
+      <ThemeCard
+        @theme={{theme}}
+        @selectedThemeId={{@selectedThemeId}}
+        @onSelect={{@onSelect}}
+      />
     {{/each}}
-  </div>
+  </fieldset>
   {{#if @currentTheme}}
-    <p class="design-wizard-modal__custom-theme-notice">
+    <p class="design-wizard__custom-theme-notice">
       {{i18n
         "admin_onboarding_banner.design_wizard.theme.custom_theme_notice"
         name=@currentTheme.name

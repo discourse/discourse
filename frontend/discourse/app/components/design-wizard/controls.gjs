@@ -3,18 +3,18 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ColorsSection from "discourse/components/admin-onboarding/modal/design-wizard/colors-section";
-import FontsSection from "discourse/components/admin-onboarding/modal/design-wizard/fonts-section";
-import HomepageSection from "discourse/components/admin-onboarding/modal/design-wizard/homepage-section";
-import Section from "discourse/components/admin-onboarding/modal/design-wizard/section";
-import ThemeSection from "discourse/components/admin-onboarding/modal/design-wizard/theme-section";
+import ColorsSection from "discourse/components/design-wizard/colors-section";
+import FontsSection from "discourse/components/design-wizard/fonts-section";
+import HomepageSection from "discourse/components/design-wizard/homepage-section";
+import Section from "discourse/components/design-wizard/section";
+import ThemeSection from "discourse/components/design-wizard/theme-section";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 const STEPS = ["theme", "colors", "homepage"];
 
-export default class SidebarDesignWizardPanel extends Component {
+export default class DesignWizardControls extends Component {
   @service designWizard;
 
   goToStepLabel = (index) =>
@@ -114,20 +114,19 @@ export default class SidebarDesignWizardPanel extends Component {
   }
 
   <template>
-    <div class="sidebar-design-wizard">
-      <div class="sidebar-design-wizard__header">
-        <h2 class="sidebar-design-wizard__title">
+    <div class="design-wizard__content">
+      <header>
+        <h2 id="design-wizard-title">
           {{i18n "admin_onboarding_banner.design_wizard.title"}}
         </h2>
-        <span class="sidebar-design-wizard__subtitle">
+        <span class="design-wizard__subtitle">
           {{i18n "admin_onboarding_banner.design_wizard.subtitle"}}
         </span>
-      </div>
+      </header>
 
-      <div class="sidebar-design-wizard__sections">
+      <div class="design-wizard__sections">
         {{#if (eq this.currentStep "theme")}}
           <Section
-            @id="theme"
             @title={{i18n
               "admin_onboarding_banner.design_wizard.sections.theme"
             }}
@@ -141,7 +140,6 @@ export default class SidebarDesignWizardPanel extends Component {
           </Section>
         {{else if (eq this.currentStep "colors")}}
           <Section
-            @id="colors"
             @title={{i18n
               "admin_onboarding_banner.design_wizard.sections.colors"
             }}
@@ -160,7 +158,6 @@ export default class SidebarDesignWizardPanel extends Component {
           </Section>
 
           <Section
-            @id="fonts"
             @title={{i18n
               "admin_onboarding_banner.design_wizard.sections.fonts"
             }}
@@ -174,7 +171,6 @@ export default class SidebarDesignWizardPanel extends Component {
           </Section>
         {{else}}
           <Section
-            @id="homepage"
             @title={{i18n
               "admin_onboarding_banner.design_wizard.sections.homepage"
             }}
@@ -190,8 +186,8 @@ export default class SidebarDesignWizardPanel extends Component {
         {{/if}}
       </div>
 
-      <div class="sidebar-design-wizard__actions">
-        <div class="d-image-carousel__dots sidebar-design-wizard__step-dots">
+      <footer class="design-wizard__actions">
+        <div class="d-image-carousel__dots design-wizard__step-dots">
           {{#each this.steps as |step index|}}
             <button
               type="button"
@@ -207,24 +203,24 @@ export default class SidebarDesignWizardPanel extends Component {
           @action={{this.back}}
           @label="admin_onboarding_banner.design_wizard.back"
           @disabled={{this.isFirstStep}}
-          class="btn-flat sidebar-design-wizard__back"
+          class="btn-flat design-wizard__back"
         />
         {{#if this.isLastStep}}
           <DButton
             @action={{this.save}}
             @label="admin_onboarding_banner.design_wizard.save"
             @isLoading={{this.designWizard.saving}}
-            class="btn-primary sidebar-design-wizard__save"
+            class="btn-primary design-wizard__save"
           />
         {{else}}
           <DButton
             @action={{this.next}}
             @label="admin_onboarding_banner.design_wizard.next"
             @isLoading={{this.designWizard.saving}}
-            class="btn-primary sidebar-design-wizard__next"
+            class="btn-primary design-wizard__next"
           />
         {{/if}}
-      </div>
+      </footer>
     </div>
   </template>
 }

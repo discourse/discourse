@@ -10,11 +10,17 @@ import { ajax } from "discourse/lib/ajax";
  * @param {boolean} options.save - save changes to the server? (default: false)
  * @param {number} options.themeId - compile against this theme's color
  *   definitions instead of the default theme's (default: none)
+ * @param {"light" | "dark"} options.mode - stylesheet to replace
  * @returns {Promise}
  */
 
 export async function applyColorScheme(scheme, options = {}) {
-  const { replace = false, save = false, themeId = null } = options;
+  const {
+    replace = false,
+    save = false,
+    themeId = null,
+    mode = "light",
+  } = options;
 
   try {
     if (save && scheme?.save) {
@@ -76,11 +82,14 @@ export async function applyColorScheme(scheme, options = {}) {
       `/color-scheme-stylesheet/${id}${themeSegment}.json`
     );
 
-    if (data?.new_href && lightTag) {
-      lightTag.href = data.new_href;
+    const targetTag =
+      mode === "dark" ? (darkTag ?? lightTag) : (lightTag ?? darkTag);
+
+    if (data?.new_href && targetTag) {
+      targetTag.href = data.new_href;
 
       if (replace) {
-        lightTag.setAttribute("data-scheme-id", id);
+        targetTag.setAttribute("data-scheme-id", id);
       }
     }
 
@@ -112,7 +121,7 @@ export async function setDefaultColorScheme(
 
   try {
     if (previewMode === "live") {
-      await applyColorScheme(scheme, { replace: true });
+      await applyColorScheme(scheme, { replace: true, mode });
     }
 
     if (!defaultTheme) {

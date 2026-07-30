@@ -54,7 +54,6 @@ module DesignWizard
         key: key,
         name: name,
         dark_only: light.nil?,
-        user_selectable: [light, dark].compact.all?(&:user_selectable),
         light: serialize_scheme(light),
         dark: serialize_scheme(dark),
       }

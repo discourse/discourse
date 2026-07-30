@@ -5,7 +5,7 @@ describe "Admin Onboarding Banner" do
 
   let(:banner) { PageObjects::Components::AdminOnboardingBanner.new }
   let(:predefined_topics_modal) { PageObjects::Modals::AdminOnboardingPredefinedTopics.new }
-  let(:design_wizard_sidebar) { PageObjects::Components::DesignWizardSidebar.new }
+  let(:design_wizard_panel) { PageObjects::Components::DesignWizardPanel.new }
   let(:create_invite_modal) { PageObjects::Modals::CreateInvite.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:toasts) { PageObjects::Components::Toasts.new }
@@ -118,25 +118,36 @@ describe "Admin Onboarding Banner" do
 
       banner.click_step_action("select_theme")
 
-      expect(design_wizard_sidebar).to be_visible
-      expect(page).to have_css(".design-wizard-float")
-      expect(page).to have_css(".sidebar-sections")
+      expect(design_wizard_panel).to be_visible
+      expect(design_wizard_panel).to have_site_sidebar
+    end
+
+    it "previews a core theme before opening when the current default is custom" do
+      custom_theme = Fabricate(:theme)
+      custom_theme.set_default!
+
+      visit("/")
+      banner.click_step_action("select_theme")
+
+      expect(page).to have_current_path("/?preview_theme_id=#{Theme.horizon_theme.id}")
+      expect(design_wizard_panel).to be_visible
+      expect(design_wizard_panel).to have_selected_theme(Theme.horizon_theme)
     end
 
     it "does not mark the step complete when closed without saving" do
       visit("/")
       banner.click_step_action("select_theme")
 
-      expect(design_wizard_sidebar).to be_visible
+      expect(design_wizard_panel).to be_visible
 
-      design_wizard_sidebar.next_step
-      design_wizard_sidebar.select_palette("default")
-      expect(design_wizard_sidebar).to have_palette_preview
+      design_wizard_panel.next_step
+      design_wizard_panel.select_palette("default")
+      expect(design_wizard_panel).to have_palette_preview
 
-      design_wizard_sidebar.close
+      design_wizard_panel.close
 
-      expect(design_wizard_sidebar).to be_hidden
-      expect(design_wizard_sidebar).to have_no_palette_preview
+      expect(design_wizard_panel).to be_hidden
+      expect(design_wizard_panel).to have_no_palette_preview
       expect(banner.step_not_completed?("select_theme")).to eq(true)
     end
 
@@ -144,28 +155,28 @@ describe "Admin Onboarding Banner" do
       visit("/")
       banner.click_step_action("select_theme")
 
-      expect(design_wizard_sidebar).to be_visible
+      expect(design_wizard_panel).to be_visible
 
       # picking another theme reloads the page with a theme preview and the
       # wizard resumes in the sheet
-      design_wizard_sidebar.select_theme(Theme.horizon_theme.id)
-      expect(page).to have_current_path(/preview_theme_id=#{Theme.horizon_theme.id}/, url: true)
-      expect(design_wizard_sidebar).to be_visible
+      design_wizard_panel.select_theme(Theme.horizon_theme.id)
+      expect(page).to have_current_path("/?preview_theme_id=#{Theme.horizon_theme.id}")
+      expect(design_wizard_panel).to be_visible
 
-      design_wizard_sidebar.next_step
-      design_wizard_sidebar.select_palette("royal")
-      expect(design_wizard_sidebar).to have_palette_preview
-      design_wizard_sidebar.toggle_user_selectable_palettes
-      design_wizard_sidebar.select_body_font("lato")
+      design_wizard_panel.next_step
+      design_wizard_panel.select_palette("royal")
+      expect(design_wizard_panel).to have_palette_preview
+      design_wizard_panel.toggle_user_selectable_palettes
+      design_wizard_panel.select_body_font("lato")
 
-      design_wizard_sidebar.next_step
-      design_wizard_sidebar.select_homepage("categories")
+      design_wizard_panel.next_step
+      design_wizard_panel.select_homepage("categories")
 
-      design_wizard_sidebar.save
+      design_wizard_panel.save
 
       # Page reloads after saving; wait for it to complete
-      expect(page).to have_css(".admin-onboarding-banner")
-      expect(design_wizard_sidebar).to be_hidden
+      expect(banner).to be_visible
+      expect(design_wizard_panel).to be_hidden
       expect(banner.step_completed?("select_theme")).to eq(true)
 
       expect(SiteSetting.default_theme_id).to eq(Theme.horizon_theme.id)
@@ -211,10 +222,10 @@ describe "Admin Onboarding Banner" do
       expect(banner.step_completed?("invite_collaborators")).to eq(true)
 
       banner.click_step_action("select_theme")
-      expect(design_wizard_sidebar).to be_visible
-      design_wizard_sidebar.next_step
-      design_wizard_sidebar.next_step
-      design_wizard_sidebar.save
+      expect(design_wizard_panel).to be_visible
+      design_wizard_panel.next_step
+      design_wizard_panel.next_step
+      design_wizard_panel.save
 
       # Page reloads after saving; banner disappears when all steps complete
       expect(banner).to be_not_visible

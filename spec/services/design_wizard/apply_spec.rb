@@ -71,6 +71,35 @@ RSpec.describe DesignWizard::Apply do
       let(:params) { { theme_id:, base_font: "not_a_font" } }
 
       it { is_expected.to fail_a_contract }
+
+      it "does not change the design state" do
+        expect { result }.not_to change {
+          [
+            SiteSetting.default_theme_id,
+            SiteSetting.base_font,
+            ColorScheme.where(via_wizard: true).count,
+          ]
+        }
+      end
+    end
+
+    context "when a palette id isn't a valid built-in palette" do
+      let(:params) do
+        { theme_id:, dark_palette_id: -99, palettes_user_selectable: true, base_font: "arial" }
+      end
+
+      it { is_expected.to fail_a_contract }
+
+      it "does not materialize palettes or change the design state" do
+        expect { result }.not_to change {
+          [
+            foundation_theme.reload.dark_color_scheme_id,
+            SiteSetting.default_theme_id,
+            SiteSetting.base_font,
+            ColorScheme.where(via_wizard: true).count,
+          ]
+        }
+      end
     end
 
     context "when the current user is not an admin" do
@@ -90,15 +119,46 @@ RSpec.describe DesignWizard::Apply do
     context "when a provided palette belongs to another theme" do
       fab!(:horizon_palette) { Fabricate(:color_scheme, theme_id: Theme::CORE_THEMES["horizon"]) }
 
-      let(:params) { { theme_id:, light_palette_id: horizon_palette.id } }
+      let(:params) do
+        {
+          theme_id:,
+          light_palette_id: horizon_palette.id,
+          palettes_user_selectable: true,
+          base_font: "arial",
+        }
+      end
 
       it { is_expected.to fail_a_policy(:palettes_available_to_theme) }
+
+      it "does not resolve palettes or change the design state" do
+        expect { result }.not_to change {
+          [
+            foundation_theme.reload.color_scheme_id,
+            SiteSetting.default_theme_id,
+            SiteSetting.base_font,
+            ColorScheme.where(via_wizard: true).count,
+          ]
+        }
+      end
     end
 
     context "when a provided palette does not exist" do
-      let(:params) { { theme_id:, dark_palette_id: 999_999 } }
+      let(:params) do
+        { theme_id:, dark_palette_id: 999_999, palettes_user_selectable: true, base_font: "arial" }
+      end
 
       it { is_expected.to fail_a_policy(:palettes_available_to_theme) }
+
+      it "does not materialize palettes or change the design state" do
+        expect { result }.not_to change {
+          [
+            foundation_theme.reload.dark_color_scheme_id,
+            SiteSetting.default_theme_id,
+            SiteSetting.base_font,
+            ColorScheme.where(via_wizard: true).count,
+          ]
+        }
+      end
     end
 
     context "when applying a theme with fonts, homepage and category page style" do
@@ -133,6 +193,51 @@ RSpec.describe DesignWizard::Apply do
         expect { result }.to change { SiteSetting.default_homepage }.to("categories").and change {
                 SiteSetting.desktop_category_page_style
               }.to("categories_boxes")
+      end
+    end
+
+    context "when a later site setting change raises an exception" do
+      let(:params) do
+        {
+          theme_id: Theme::CORE_THEMES["horizon"],
+          base_font: "arial",
+          heading_font: "oxanium",
+          homepage: "categories",
+        }
+      end
+
+      it "rolls back database writes and restores in-process site settings" do
+        setting_names = %i[default_theme_id base_font heading_font default_homepage]
+        original_values = setting_names.index_with { |name| SiteSetting.public_send(name) }
+        original_theme_palettes =
+          horizon_theme.attributes.slice("color_scheme_id", "dark_color_scheme_id")
+        setting_history =
+          UserHistory.where(
+            action: UserHistory.actions[:change_site_setting],
+            subject: setting_names.map(&:to_s),
+          )
+        original_history_count = setting_history.count
+        raise_on_homepage_change = true
+        handler =
+          proc do |name, *_args|
+            next if name != :default_homepage || !raise_on_homepage_change
+
+            raise_on_homepage_change = false
+            raise "later site setting change failed"
+          end
+        DiscourseEvent.on(:site_setting_changed, &handler)
+
+        begin
+          expect { result }.to raise_error(RuntimeError, "later site setting change failed")
+
+          expect(setting_names.index_with { |name| SiteSetting.public_send(name) }).to eq(
+            original_values,
+          )
+          expect(horizon_theme.reload).to have_attributes(original_theme_palettes)
+          expect(setting_history.count).to eq(original_history_count)
+        ensure
+          DiscourseEvent.off(:site_setting_changed, &handler)
+        end
       end
     end
 

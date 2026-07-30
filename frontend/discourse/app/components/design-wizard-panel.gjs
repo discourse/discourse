@@ -2,12 +2,12 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import DesignWizardPanel from "discourse/components/sidebar/design-wizard-panel";
+import DesignWizardControls from "discourse/components/design-wizard/controls";
 import { isTesting } from "discourse/lib/environment";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 
-export default class DesignWizardFloat extends Component {
+export default class DesignWizardPanel extends Component {
   @service designWizard;
 
   element;
@@ -20,9 +20,17 @@ export default class DesignWizardFloat extends Component {
   @action
   async close() {
     if (this.element && !isTesting() && !prefersReducedMotion()) {
+      const slideOffset =
+        getComputedStyle(this.element)
+          .getPropertyValue("--design-wizard-slide-offset")
+          .trim() || "100%";
+
       await this.element
         .animate(
-          [{ transform: "translateX(0)" }, { transform: "translateX(100%)" }],
+          [
+            { transform: "translateX(0)" },
+            { transform: `translateX(${slideOffset})` },
+          ],
           { duration: 250, easing: "ease-in", fill: "forwards" }
         )
         .finished.catch(() => {});
@@ -33,19 +41,21 @@ export default class DesignWizardFloat extends Component {
 
   <template>
     {{#if this.designWizard.active}}
-      <div
-        class="design-wizard-float
+      <aside
+        class="design-wizard
           {{unless this.designWizard.animateEntrance '--no-entrance'}}"
+        aria-labelledby="design-wizard-title"
         {{didInsert this.registerElement}}
+        ...attributes
       >
         <DButton
           @action={{this.close}}
           @icon="xmark"
           @title="modal.close"
-          class="btn-transparent design-wizard-float__close"
+          class="btn-transparent design-wizard__close"
         />
-        <DesignWizardPanel />
-      </div>
+        <DesignWizardControls />
+      </aside>
     {{/if}}
   </template>
 }

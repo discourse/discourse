@@ -24,7 +24,6 @@ class Admin::Config::DesignWizardController < Admin::AdminController
              base_font: SiteSetting.base_font,
              heading_font: SiteSetting.heading_font,
              homepage: SiteSetting.homepage,
-             category_page_styles: CategoryPageStyle.values,
              palettes_user_selectable: palettes_user_selectable?(default_theme),
            }
   end
