@@ -3243,7 +3243,8 @@ class _PluginApi {
    * api.registerAdminDashboardSection("my_section", MySection);
    * ```
    *
-   * @param {string} id - The section id, matching the server-side registration.
+   * @param {string} id - The section id, which must contain only lowercase
+   * ASCII letters, digits, and underscores and match the server-side registration.
    * @param {Component} componentClass - A Glimmer component for the section.
    */
   registerAdminDashboardSection(id, componentClass) {

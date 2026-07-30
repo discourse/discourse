@@ -1185,11 +1185,20 @@ TEXT
       end
     end
 
-    it "registers a section without settings" do
+    it "registers a section with a valid id without settings" do
       plugin.register_admin_dashboard_section(id: "fake_section") { {} }
 
       entry = DiscoursePluginRegistry.admin_dashboard_sections.find { |s| s[:id] == "fake_section" }
       expect(entry[:settings]).to be_nil
+    end
+
+    it "rejects section ids with URL-significant characters" do
+      %w[support/metrics support%2Fmetrics support?period=weekly].each do |id|
+        expect { plugin.register_admin_dashboard_section(id: id) { {} } }.to raise_error(
+          ArgumentError,
+          "Dashboard section id must contain only lowercase ASCII letters, digits, and underscores",
+        )
+      end
     end
 
     it "registers a section with settings, normalizing keys to strings" do
