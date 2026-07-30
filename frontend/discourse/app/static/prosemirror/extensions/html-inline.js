@@ -90,6 +90,8 @@ function withoutSmall(fragment, schema) {
   return nodes;
 }
 
+// Whitespace kept inside the wrapper survives a markdown round-trip, so each
+// toggle cycle would grow the line.
 function splitTrailingWhitespace(content) {
   const main = [...content];
   const lastNode = main.at(-1);
@@ -194,14 +196,18 @@ function containsSmall(node, schema) {
   return found;
 }
 
-function replaceLines(state, lines, replacement, schema) {
+// A line of nothing but whitespace would wrap to an empty <small></small>.
+function hasWrappableContent(node, schema) {
+  const [content] = splitTrailingWhitespace(withoutSmall(node.content, schema));
+  return content.length > 0;
+}
+
+function replaceLines(state, lines, replacement, { dropHeading = false } = {}) {
   const tr = state.tr;
 
   for (const { node, pos } of lines) {
-    const mappedPos = tr.mapping.map(pos);
-
-    if (schema && node.type === schema.nodes.heading) {
-      tr.setNodeMarkup(mappedPos, schema.nodes.paragraph, {});
+    if (dropHeading && node.type === state.schema.nodes.heading) {
+      tr.setNodeMarkup(tr.mapping.map(pos), state.schema.nodes.paragraph, {});
     }
 
     tr.replaceWith(
@@ -398,8 +404,8 @@ const extension = {
         return true;
       }
 
-      const lines = selectedLines(state).filter(
-        ({ node }) => node.content.size > 0
+      const lines = selectedLines(state).filter(({ node }) =>
+        hasWrappableContent(node, schema)
       );
 
       if (!lines.length && state.selection.empty) {
@@ -441,7 +447,7 @@ const extension = {
             ...trailing,
           ]);
         },
-        schema
+        { dropHeading: true }
       );
 
       dispatch?.(tr);

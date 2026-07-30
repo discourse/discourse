@@ -105,6 +105,18 @@ function getHead(
   }
 }
 
+// Delimiters inside a code span are content the user typed, not markup.
+function stripOutsideCode(text: string, delimiters: string[]): string {
+  return text
+    .split(/(`[^`]*`)/)
+    .map((part) =>
+      part.startsWith("`")
+        ? part
+        : delimiters.reduce((acc, d) => acc.replaceAll(d, ""), part)
+    )
+    .join("");
+}
+
 export default class TextareaTextManipulation implements TextManipulation {
   @service declare appEvents: AppEventsService;
 
@@ -373,31 +385,34 @@ export default class TextareaTextManipulation implements TextManipulation {
   ): void {
     const [hval, hlen] = getHead(head);
     const lines = sel.value.split("\n");
-    const formattedLines = lines.filter(
-      (line) => opts.applyEmptyLines || line.length > 0
-    );
+    const applies = (line: string) =>
+      Boolean(opts.applyEmptyLines) || line.length > 0;
+    const delimiters = [hval, tail].filter(Boolean);
+    const strip = (text: string) => stripOutsideCode(text, delimiters);
+
+    // Only a lone wrapper counts as applied, or unwrapping a line like
+    // `<small>a</small> x <small>b</small>` would orphan the inner delimiters.
+    const unwrapped = (line: string) => {
+      if (!hval || !tail || !line.startsWith(hval) || !line.endsWith(tail)) {
+        return null;
+      }
+      const inner = line.slice(hlen, -tail.length);
+      return strip(inner) === inner ? inner : null;
+    };
+
+    const formattedLines = lines.filter(applies);
     const removing =
       formattedLines.length > 0 &&
-      formattedLines.every(
-        (line) => line.startsWith(hval) && line.endsWith(tail)
-      );
+      formattedLines.every((line) => unwrapped(line) !== null);
 
     const contents = lines
       .map((line) => {
-        if (!opts.applyEmptyLines && line.length === 0) {
+        if (!applies(line)) {
           return line;
         }
-        if (removing) {
-          return line.slice(hlen, tail.length ? -tail.length : undefined);
-        }
-        let content = line;
-        if (hval) {
-          content = content.replaceAll(hval, "");
-        }
-        if (tail) {
-          content = content.replaceAll(tail, "");
-        }
-        return `${hval}${content}${tail}`;
+        return removing
+          ? (unwrapped(line) ?? line)
+          : `${hval}${strip(line)}${tail}`;
       })
       .join("\n");
 
@@ -429,7 +444,7 @@ export default class TextareaTextManipulation implements TextManipulation {
       value: value.slice(start, end),
       pre: value.slice(0, start),
       post: value.slice(end),
-      lineVal: value.slice(start, end),
+      lineVal: sel.lineVal,
     };
   }
 
