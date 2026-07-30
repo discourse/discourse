@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::PropertySchemaValidator do
-  def validate(schema)
-    described_class.call("test:node", schema).map(&:to_s)
-  end
-
   describe ".call" do
     it "accepts a valid schema" do
       schema = {
@@ -28,32 +24,34 @@ RSpec.describe DiscourseWorkflows::PropertySchemaValidator do
           },
         },
       }
-      expect(validate(schema)).to eq([])
+      expect(described_class.call("test:node", schema).map(&:to_s)).to eq([])
     end
 
     it "flags unknown field types" do
-      errors = validate(age: { type: :age })
+      errors = described_class.call("test:node", age: { type: :age }).map(&:to_s)
       expect(errors.first).to include("age.type")
       expect(errors.first).to include("unknown type: :age")
     end
 
     it "rejects camelCase field type aliases" do
-      expect(validate(rows: { type: :fixedCollection }).first).to include(
-        "unknown type: :fixedCollection",
-      )
-      expect(validate(rows: { type: :assignmentCollection }).first).to include(
-        "unknown type: :assignmentCollection",
-      )
+      expect(
+        described_class.call("test:node", rows: { type: :fixedCollection }).map(&:to_s).first,
+      ).to include("unknown type: :fixedCollection")
+      expect(
+        described_class.call("test:node", rows: { type: :assignmentCollection }).map(&:to_s).first,
+      ).to include("unknown type: :assignmentCollection")
     end
 
     it "flags unknown top-level field keys" do
-      errors = validate(title: { type: :string, expression: true })
+      errors =
+        described_class.call("test:node", title: { type: :string, expression: true }).map(&:to_s)
       expect(errors.first).to include("[:expression]")
     end
 
     it "rejects camelCase field option aliases" do
       errors =
-        validate(
+        described_class.call(
+          "test:node",
           title: {
             type: :string,
             displayOptions: {
@@ -64,13 +62,14 @@ RSpec.describe DiscourseWorkflows::PropertySchemaValidator do
               maxAllowedFields: 1,
             },
           },
-        )
+        ).map(&:to_s)
       expect(errors.first).to include(":displayOptions")
       expect(errors.first).to include(":typeOptions")
     end
 
     it "flags unknown ui keys" do
-      errors = validate(title: { type: :string, ui: { rowz: 6 } })
+      errors =
+        described_class.call("test:node", title: { type: :string, ui: { rowz: 6 } }).map(&:to_s)
       expect(errors.first).to include("title.ui")
       expect(errors.first).to include(":rowz")
     end
@@ -78,13 +77,13 @@ RSpec.describe DiscourseWorkflows::PropertySchemaValidator do
     it "accepts filter query ui metadata" do
       schema = { query: { type: :string, ui: { control: :filter_query, filter: :posts } } }
 
-      expect(validate(schema)).to eq([])
+      expect(described_class.call("test:node", schema).map(&:to_s)).to eq([])
     end
 
     it "accepts checkbox controls" do
       schema = { enabled: { type: :boolean, ui: { control: :checkbox } } }
 
-      expect(validate(schema)).to eq([])
+      expect(described_class.call("test:node", schema).map(&:to_s)).to eq([])
     end
 
     it "accepts user seen trigger option controls" do
@@ -97,11 +96,14 @@ RSpec.describe DiscourseWorkflows::PropertySchemaValidator do
         },
       }
 
-      expect(validate(schema)).to eq([])
+      expect(described_class.call("test:node", schema).map(&:to_s)).to eq([])
     end
 
     it "flags unknown ui.control values" do
-      errors = validate(title: { type: :string, ui: { control: :neon } })
+      errors =
+        described_class.call("test:node", title: { type: :string, ui: { control: :neon } }).map(
+          &:to_s
+        )
       expect(errors.first).to include("title.ui.control")
       expect(errors.first).to include(":neon")
     end
@@ -124,18 +126,28 @@ RSpec.describe DiscourseWorkflows::PropertySchemaValidator do
           },
         },
       }
-      expect(validate(schema)).to eq([])
+      expect(described_class.call("test:node", schema).map(&:to_s)).to eq([])
     end
 
     it "flags unknown control_options keys" do
-      errors = validate(picker: { type: :integer, control_options: { rowz: 3 } })
+      errors =
+        described_class.call(
+          "test:node",
+          picker: {
+            type: :integer,
+            control_options: {
+              rowz: 3,
+            },
+          },
+        ).map(&:to_s)
       expect(errors.first).to include("picker.control_options")
       expect(errors.first).to include(":rowz")
     end
 
     it "rejects camelCase type_options keys" do
       errors =
-        validate(
+        described_class.call(
+          "test:node",
           rows: {
             type: :fixed_collection,
             options: [{ name: "values", values: { cell: { type: :string } } }],
@@ -143,13 +155,14 @@ RSpec.describe DiscourseWorkflows::PropertySchemaValidator do
               maxAllowedFields: 3,
             },
           },
-        )
+        ).map(&:to_s)
       expect(errors.first).to include("rows.type_options")
       expect(errors.first).to include(":maxAllowedFields")
     end
 
     it "requires :options for option-typed fields" do
-      errors = validate(choice: { type: :options, default: "a" })
+      errors =
+        described_class.call("test:node", choice: { type: :options, default: "a" }).map(&:to_s)
       expect(errors.first).to include("type :options requires")
     end
 
@@ -164,16 +177,23 @@ RSpec.describe DiscourseWorkflows::PropertySchemaValidator do
         },
       }
 
-      expect(validate(schema)).to eq([])
+      expect(described_class.call("test:node", schema).map(&:to_s)).to eq([])
     end
 
     it "allows credential_type on credential fields" do
       schema = { credential_id: { type: :credential, credential_type: :basic_auth } }
-      expect(validate(schema)).to eq([])
+      expect(described_class.call("test:node", schema).map(&:to_s)).to eq([])
     end
 
     it "rejects credential_type on non-credential fields" do
-      errors = validate(title: { type: :string, credential_type: :basic_auth })
+      errors =
+        described_class.call(
+          "test:node",
+          title: {
+            type: :string,
+            credential_type: :basic_auth,
+          },
+        ).map(&:to_s)
       expect(errors.first).to include(":credential_type")
     end
 
@@ -203,68 +223,89 @@ RSpec.describe DiscourseWorkflows::PropertySchemaValidator do
           ],
         },
       }
-      expect(validate(schema)).to eq([])
+      expect(described_class.call("test:node", schema).map(&:to_s)).to eq([])
     end
 
     it "requires :options for multi_options fields" do
-      errors = validate(choices: { type: :multi_options })
+      errors = described_class.call("test:node", choices: { type: :multi_options }).map(&:to_s)
       expect(errors.first).to include(":multi_options")
     end
 
     it "requires :options for collection fields" do
-      errors = validate(rows: { type: :collection })
+      errors = described_class.call("test:node", rows: { type: :collection }).map(&:to_s)
       expect(errors.first).to include("type :collection requires")
     end
 
     it "requires :options for fixed collection fields" do
-      errors = validate(rows: { type: :fixed_collection })
+      errors = described_class.call("test:node", rows: { type: :fixed_collection }).map(&:to_s)
       expect(errors.first).to include("type :fixed_collection requires")
     end
 
     it "recurses into fixed collection group values" do
       errors =
-        validate(
+        described_class.call(
+          "test:node",
           rows: {
             type: :fixed_collection,
             options: [{ name: "values", values: { cell: { type: :unknown } } }],
           },
-        )
+        ).map(&:to_s)
       expect(errors.first).to include("rows.options.0.values.cell.type")
     end
 
     it "recurses into collection option bag fields" do
-      errors = validate(rows: { type: :collection, options: [{ name: "enabled", type: :unknown }] })
+      errors =
+        described_class.call(
+          "test:node",
+          rows: {
+            type: :collection,
+            options: [{ name: "enabled", type: :unknown }],
+          },
+        ).map(&:to_s)
       expect(errors.first).to include("rows.options.enabled.type")
     end
 
     it "rejects camelCase display names in collection definitions" do
       option_errors =
-        validate(
+        described_class.call(
+          "test:node",
           rows: {
             type: :collection,
             options: [{ name: "enabled", type: :boolean, displayName: "Enabled" }],
           },
-        )
+        ).map(&:to_s)
 
       expect(option_errors.first).to include("rows.options.enabled")
       expect(option_errors.first).to include(":displayName")
 
       group_errors =
-        validate(
+        described_class.call(
+          "test:node",
           rows: {
             type: :fixed_collection,
             options: [
               { name: "values", displayName: "Values", values: { cell: { type: :string } } },
             ],
           },
-        )
+        ).map(&:to_s)
 
       expect(group_errors.first).to include("rows.options.0")
       expect(group_errors.first).to include(":displayName")
     end
 
     it "flags display_options references to nonexistent sibling fields" do
-      errors = validate(body: { type: :string, display_options: { show: { methud: %w[POST] } } })
+      errors =
+        described_class.call(
+          "test:node",
+          body: {
+            type: :string,
+            display_options: {
+              show: {
+                methud: %w[POST],
+              },
+            },
+          },
+        ).map(&:to_s)
       expect(errors.first).to include("display_options")
       expect(errors.first).to include(":methud")
     end
@@ -284,7 +325,7 @@ RSpec.describe DiscourseWorkflows::PropertySchemaValidator do
           },
         },
       }
-      expect(validate(schema)).to eq([])
+      expect(described_class.call("test:node", schema).map(&:to_s)).to eq([])
     end
 
     it "accepts display_options hide rules" do
@@ -302,18 +343,28 @@ RSpec.describe DiscourseWorkflows::PropertySchemaValidator do
           },
         },
       }
-      expect(validate(schema)).to eq([])
+      expect(described_class.call("test:node", schema).map(&:to_s)).to eq([])
     end
 
     it "requires visibility rules to be a hash" do
-      errors = validate(body: { type: :string, display_options: { show: "yes" } })
+      errors =
+        described_class.call(
+          "test:node",
+          body: {
+            type: :string,
+            display_options: {
+              show: "yes",
+            },
+          },
+        ).map(&:to_s)
       expect(errors.first).to include("display_options.show")
       expect(errors.first).to include("Hash")
     end
 
     it "requires display_options rule values to be arrays" do
       errors =
-        validate(
+        described_class.call(
+          "test:node",
           method: {
             type: :options,
             options: %w[GET POST],
@@ -326,7 +377,7 @@ RSpec.describe DiscourseWorkflows::PropertySchemaValidator do
               },
             },
           },
-        )
+        ).map(&:to_s)
 
       expect(errors.first).to include("display_options.show.method")
       expect(errors.first).to include("Array")
@@ -357,7 +408,7 @@ RSpec.describe DiscourseWorkflows::PropertySchemaValidator do
           ],
         },
       }
-      expect(validate(schema)).to eq([])
+      expect(described_class.call("test:node", schema).map(&:to_s)).to eq([])
     end
   end
 
