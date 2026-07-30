@@ -5,6 +5,7 @@
 `UserResource`/`GroupResource` replaced the Kit serializers and the controller's `jsonapi`
 block, with the full suite green throughout (behavior-preserving by construction). Still
 open from the plan: types in the contract-guard baseline, the real resource registry.
+**API key scopes** designed and built 2026-07-30 (§8).
 **References:** [versioning design](./versioning-design.md) · [plugins design](./plugins-design.md) · [API docs generation](./api-docs-generation.md).
 
 Guiding principle, stated once for the whole Kit: this is a **new API** — every case the
@@ -183,3 +184,170 @@ up-migrated) write document instead of raw params. Endpoint-specific args
    regenerated with **types** added.
 4. Still open: the extension registry's `serializer_for` stand-in becomes a real resource
    registry.
+
+## 8. API key scopes (designed and built 2026-07-30)
+
+Origin: a review comment on the RFC draft — *"we should probably try to integrate the API
+Scopes system into our DSL and docs. Try to plug into the existing system, but with a nicer
+DSL."* The brief is explicitly **plug in, don't redesign**: core's scope model, table,
+matcher and admin UI stay exactly as they are, and the centralized mapping hash keeps
+serving everything that isn't a Kit endpoint.
+
+### How core's system works (verified in-repo)
+
+- The atom is **`controller#action`**, not a resource and not a URL. A scope row is
+  `(resource, action, allowed_parameters)` (`app/models/api_key_scope.rb`) pointing into a
+  central mapping: `ApiKeyScope.default_mappings` deep-merged with plugin registrations
+  from `add_api_key_scope` (`DiscoursePluginRegistry.api_key_scope_mappings`).
+- A mapping entry is `{ actions: %w[ctrl#act …], params: %i[id], methods:, formats:,
+  aliases: }`. Enforcement is `ApiKey#request_allowed?` → `ApiKeyScope#permits?` →
+  `RouteMatcher#match?`, which checks `controller#action`, HTTP method, format, and *flat*
+  param values.
+- The admin UI derives its "allowed URLs" list by introspecting the route table
+  (`find_urls`), engine route sets included.
+- **A key with no scopes bypasses all of this** (global); scopes only constrain granular
+  keys.
+
+**The finding that makes this necessary:** a granular key currently *cannot call the Kit
+endpoints at all*. `request_allowed?` is `scopes.blank? || scopes.any?(&:permits?)`, so with
+no mapping covering our routes, every granular key is denied. Global keys work. Plugging in
+is a prerequisite for the new API, not a nicety.
+
+### Decision: declare per endpoint, name after the resource
+
+Scopes gate **routes**, not documents, so the controller is the right home:
+
+- One resource type can be served by several routes at different privilege (an admin
+  variant, a nested route under a parent). Declared per resource, one grant would cover all
+  of them.
+- The resource class doesn't know which actions exist; the controller and the route table
+  do. Writes are per-controller in the Kit by design (§5).
+- Declaring per resource inverts the Kit's dependency direction (the controller names its
+  resource, never the reverse).
+
+What the resource contributes is the **name**, so scope names read like the public
+vocabulary (`queries` / `read`, not `json_api_kit/queries#index`).
+
+### Derivation, and why it is route-driven
+
+Nothing is declared by default. The mapping is assembled **lazily from the route table**:
+keep the routes whose controller is a Kit controller, constantize it (which triggers
+autoload), read its resource type and any override. Deliberately *not* executed in the
+class body, and *not* from `BaseController.descendants`: at class-definition time the routes
+aren't necessarily loaded, and in development with lazy autoloading `descendants` is
+incomplete — a scope would silently be missing from the admin UI in dev only. Route-driven
+derivation also means a new Kit endpoint is scoped the moment it is routed, so there is
+nothing to forget and no boot-time check to write.
+
+Conventions:
+
+| Derived from | Value |
+| --- | --- |
+| scope resource | the JSON:API type (`queries`) |
+| scope actions | `index`/`show` → `read`; `create` → `create`; `update` → `update`; `destroy` → `delete` |
+| `actions:` | `"<controller_path>#<action>"` per routed action |
+| `params:` | `[:id]` on member routes — gives admins the existing "restrict this key to specific ids" feature for free |
+
+An override hook (a different scope resource name for an admin variant, or coarser grouping
+such as `read: %i[index show], write: %i[create update destroy]`) is designed but not built —
+nothing in the spike needs it yet. The seam exists: `BaseController.api_scope_resource`
+returns the resource type and is where an override would land.
+
+**Granularity is compatibility-first, not a fix.** Most of the API is far coarser today:
+chat exposes exactly one scope (`create_message`), Data Explorer one (`run_queries`). Per
+action is already finer than that, and finer grants remain additive later.
+
+**The seam into core** is one addition to `ApiKeyScope.scope_mappings`, which already merges
+`default_mappings` with the plugin registry: Kit-derived mappings join that merge. Plugin
+-owned Kit endpoints keep going through `add_api_key_scope`, so the enabled/disabled
+filtering still applies.
+
+### Built in the spike (2026-07-30, TDD — 16 acceptance examples)
+
+`JsonApiKit::ApiKeyScopes` derives the mapping and registers it; `BaseController
+.api_scope_resource` supplies the name; descriptions live in the plugin's client locale.
+Zero core changes: the spike registers through the existing plugin API, which is the same
+shape core-hosted endpoints will use via the `scope_mappings` seam above. The derived
+mapping, verified at runtime:
+
+```ruby
+{ read:   { actions: %w[…/queries#index …/queries#show], params: [:id],
+            urls: ["/data-explorer/api/queries (GET)", "/data-explorer/api/queries/:id (GET)"] },
+  create: { actions: %w[…/queries#create],
+            urls: ["/data-explorer/api/queries (POST)"] } }
+```
+
+`urls` is filled by core's own `parse_resources!`, so the admin UI lists our routes with no
+work on our side.
+
+**Finding that changed the design — registration timing.** Plugin `after_initialize` runs
+*before* Rails loads the route table (probed: `Rails.application.routes.routes` is **empty**
+there), so registering from `after_initialize` derives nothing and fails silently. The
+registration therefore happens **from the routes file, immediately after the Kit's routes are
+drawn** (`ApiKeyScopes.register!`), which also keeps the two facts in one place. `register!`
+resets the memo first, so a dev route reload recomputes. The real-phase `jsonapi_resources`
+route helper would do exactly this as it draws the routes.
+
+The acceptance spec (`spec/requests/…/api_key_scopes_spec.rb`) pins the whole chain: a key
+scoped `queries:read` reads but cannot create; a key scoped `queries:create` creates but
+cannot read; a key scoped to another resource is refused; `allowed_parameters` restricted to
+one id serves that query, refuses another, and refuses the listing (documented consequence,
+same as core's id-restricted scopes); an unscoped key is unaffected; and every derived scope
+action has its admin-UI translation (client keys are visible server-side, so `I18n.exists?`
+is a valid guard).
+
+### Admin UI descriptions: reuse the existing convention
+
+Per-action descriptions already exist and already render as the checkbox tooltip
+(`admin_js.admin.api.scopes.descriptions.<resource>.<action>`, read in
+`admin/components/admin-config-areas/api-keys-new.gjs` and `api-keys-show.gjs`). Since the
+derived scope resource *is* the key segment, a Kit resource needs no new namespace:
+`descriptions.queries.read` and friends, with plugin-owned endpoints putting theirs in the
+plugin's own client locale file.
+
+Two consequences:
+
+- **A resource-level description has nowhere to render.** The UI shows the resource name as
+  a plain table header plus per-action tooltips. Adding a slot would mean changing the
+  system we agreed not to touch, so the prose lives in the per-action strings.
+- **Those keys are client-side**, so the docs generator (server-side) can't read them. The
+  documentation uses what the Kit already declares (the resource `description`, plus
+  per-action prose); the admin UI uses i18n. Two audiences, two sources — worth stating so
+  nobody wires them together later.
+
+The guardrail is a spec asserting every derived scope has its translation key present —
+same shape as the contract guard: the declaration exists, so a missing string is provable
+rather than discovered by an admin staring at an empty tooltip.
+
+### Documentation integration
+
+The generated document currently has no security section at all. It gains an `apiKey`
+scheme (`Api-Key` / `Api-Username`) and, per operation, the scope that permits it — derived,
+so it cannot drift. Constraint: OpenAPI 3.1 requires the scopes array to be **empty** for
+non-OAuth2 schemes, so the scope name goes in a vendor extension (`x-api-scope:
+queries:read`) plus the operation description rather than in `security` proper.
+
+### Traps found while reading core
+
+- **Never set `formats:`** in Kit mappings. `application/vnd.api+json` is not a registered
+  Mime type, so `request.formats.first.symbol` is not `:json` and the matcher would reject
+  every request. No core mapping uses `formats:` today, so this is a warning for us only.
+- **`params:` matching is flat** (`request.parameters[param]`), so `filter[...]`-based
+  restrictions are impossible without touching `RouteMatcher`. Member-route `:id` works.
+- **`scope_mappings` runs per request** for a granular key, `deep_dup`s the whole default
+  hash, and re-walks every route set through `find_urls` for each plugin mapping. That is a
+  pre-existing cost we must not add to: the Kit's derived hash is memoized once per boot
+  (cleared on reload), never recomputed per call.
+
+### Open questions
+
+- **Admin variants of one type.** Two controllers serving `queries` at different privilege
+  need distinct scope names; the override handles it, but the naming convention is undecided.
+- **Plugin scope names.** `add_api_key_scope` does not namespace today, so plugin resources
+  share one flat namespace and can collide. Defaulting a plugin endpoint's scope resource to
+  its Kit namespace would fix it for Kit endpoints.
+- **`include` versus scopes.** A key scoped to `queries:read` can `include=user` and receive
+  user records, because scopes gate routes and `include` is not a route. Guardian still
+  applies row-level, so nothing leaks that the caller couldn't otherwise read. Cheapest
+  defensible position: `include` is part of the endpoint's contract, so the endpoint's scope
+  covers it — decide before someone asks.

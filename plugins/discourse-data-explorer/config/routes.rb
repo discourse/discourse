@@ -39,6 +39,8 @@ Discourse::Application.routes.draw do
         }
     post "queries" => "discourse_data_explorer/json_api_kit/queries#create"
   end
+  # API key scopes for the routes just drawn (docs/resource-design.md §8).
+  DiscourseDataExplorer::JsonApiKit::ApiKeyScopes.register!
 
   mount DiscourseDataExplorer::Engine, at: "/admin/plugins/discourse-data-explorer"
   get "/admin/plugins/explorer" => redirect("/admin/plugins/discourse-data-explorer")

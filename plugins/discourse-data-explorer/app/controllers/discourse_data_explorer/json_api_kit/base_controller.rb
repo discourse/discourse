@@ -48,6 +48,13 @@ module DiscourseDataExplorer
         self._jsonapi_config = resource_class.jsonapi_config
       end
 
+      # The name this endpoint's API key scopes are grouped under — the resource's
+      # public type, so scopes read like the API vocabulary (`queries` / `read`).
+      # See docs/resource-design.md §8.
+      def self.api_scope_resource
+        _jsonapi_config.serializer_class.record_type.to_sym
+      end
+
       # Machine-readable contract descriptor derived from the DSL config + serializer.
       # The backwards-compat guard (spec/integration/
       # json_api_kit_contract_spec.rb) diffs it against a committed baseline and fails on
