@@ -4,7 +4,6 @@ import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import moment from "moment";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import bodyClass from "discourse/helpers/body-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -83,7 +82,6 @@ const StatusPlaceholder = <template>
 export default class DiscoursePostEvent extends Component {
   @service currentUser;
   @service discoursePostEventApi;
-  @service embeddableChat;
   @service messageBus;
   @service siteSettings;
 
@@ -114,14 +112,6 @@ export default class DiscoursePostEvent extends Component {
 
   get event() {
     return this.fetchedEvent ?? this.args.event;
-  }
-
-  get useLivestreamLayout() {
-    return (
-      this.event.livestream &&
-      this.embeddableChat.chatChannelId &&
-      !this.embeddableChat.isChannelOpenInDrawer
-    );
   }
 
   get isPartialEvent() {
@@ -409,9 +399,6 @@ export default class DiscoursePostEvent extends Component {
               {{/if}}
 
               {{#unless @hideLivestreamVideo}}
-                {{#if this.useLivestreamLayout}}
-                  {{bodyClass "livestream-topic"}}
-                {{/if}}
                 <Livestream @event={{event}} />
               {{/unless}}
             </PluginOutlet>
