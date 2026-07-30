@@ -264,7 +264,7 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
               "assignments" => [
                 assignment("full_name", "={{ $json.name }}"),
                 assignment("profile.score", "12.5", type: "number"),
-                assignment("active", "true", type: "boolean"),
+                assignment("active", "={{ $json.enabled }}", type: "boolean"),
                 assignment("tags", '["workflow"]', type: "array"),
                 assignment("source", "={{ $json }}", type: "object"),
               ],
@@ -273,7 +273,13 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
         )
 
       execution =
-        execute_workflow(caller, trigger_data: [{ "name" => "Ada" }, { "name" => "Grace" }])
+        execute_workflow(
+          caller,
+          trigger_data: [
+            { "name" => "Ada", "enabled" => true },
+            { "name" => "Grace", "enabled" => false },
+          ],
+        )
       expect_parent_waiting_at_call(execution)
 
       expect(run_workflow_call_jobs).to eq(1)
@@ -293,6 +299,7 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
           "tags" => ["workflow"],
           "source" => {
             "name" => "Ada",
+            "enabled" => true,
           },
         },
         {
@@ -300,10 +307,11 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
           "profile" => {
             "score" => 12.5,
           },
-          "active" => true,
+          "active" => false,
           "tags" => ["workflow"],
           "source" => {
             "name" => "Grace",
+            "enabled" => false,
           },
         },
       ]

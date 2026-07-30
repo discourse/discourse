@@ -405,7 +405,7 @@ export default class FixedCollection extends Component {
                           >
                             <subCollection.Object
                               class="workflows-property-engine__nested-collection-item"
-                              as |subObject|
+                              as |subObject subItem|
                             >
 
                               {{#each
@@ -415,6 +415,7 @@ export default class FixedCollection extends Component {
                                 <Field
                                   @form={{subObject}}
                                   @formApi={{@formApi}}
+                                  @configuration={{subItem}}
                                   @connections={{@connections}}
                                   @credentials={{@credentials}}
                                   @fieldName={{subField.name}}
@@ -459,6 +460,7 @@ export default class FixedCollection extends Component {
                         <Field
                           @form={{object}}
                           @formApi={{@formApi}}
+                          @configuration={{item}}
                           @connections={{@connections}}
                           @credentials={{@credentials}}
                           @fieldName={{extraField.name}}
