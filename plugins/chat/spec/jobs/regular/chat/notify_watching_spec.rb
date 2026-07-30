@@ -270,7 +270,9 @@ RSpec.describe Jobs::Chat::NotifyWatching do
     end
 
     context "when the target user cannot see the chat channel" do
-      before { channel.update!(chatable: Fabricate(:private_category, group: group)) }
+      fab!(:private_category) { Fabricate(:private_category, group: group) }
+
+      before { channel.update!(chatable: private_category) }
 
       it "does not send a desktop notification" do
         expect(notification_messages.count).to be_zero

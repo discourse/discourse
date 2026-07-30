@@ -385,10 +385,10 @@ describe ListController do
     fab!(:topic) { Fabricate(:topic, user: user) }
     fab!(:pm_post) { Fabricate(:post, topic: pm) }
     fab!(:post) { Fabricate(:post, topic: topic) }
+    fab!(:private_message_allowed_user) { Fabricate(:topic_allowed_user, user: user, topic: pm) }
 
     before do
       SiteSetting.assign_allowed_on_groups = "#{group.id}"
-      Fabricate(:topic_allowed_user, user: user, topic: pm)
       Assigner.new(pm, user).assign(user)
       Assigner.new(topic, user).assign(user)
     end

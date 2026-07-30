@@ -63,10 +63,8 @@ describe "Solved" do
   end
 
   describe "hidden overflow" do
-    before do
-      solved_topic = Fabricate(:solved_topic, topic:)
-      Fabricate(:topic_answer, solved_topic:, post: solver_post, accepter:)
-    end
+    fab!(:solved_topic) { Fabricate(:solved_topic, topic:) }
+    fab!(:topic_answer) { Fabricate(:topic_answer, solved_topic:, post: solver_post, accepter:) }
 
     describe "when solved_quote_length = 0" do
       before { SiteSetting.solved_quote_length = 0 }
