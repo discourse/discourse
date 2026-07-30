@@ -1110,8 +1110,7 @@ class TopicsController < ApplicationController
   def timings
     allowed_params = topic_params
 
-    topic_id = allowed_params[:topic_id].to_i
-    find_visible_topic_from_topic_id
+    topic_id = find_visible_topic_from_topic_id.id
     topic_time = allowed_params[:topic_time].to_i
     timings = allowed_params[:timings].to_h || {}
 
