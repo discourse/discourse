@@ -124,7 +124,7 @@ module DiscourseWorkflows
 
         if execution.waiting?
           claimed.update!(child_execution_id: execution.id, status: :waiting)
-        elsif execution.error? || execution.rate_limited? || execution.skipped?
+        elsif execution.error? || execution.rate_limited?
           child_failed!(execution)
         end
       rescue => e

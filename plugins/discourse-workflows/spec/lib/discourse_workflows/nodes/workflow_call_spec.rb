@@ -503,6 +503,8 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
       execution.reload
       call_step = execution.execution_data.find_step(node_id: "call-1")
       run = DiscourseWorkflows::WorkflowCallRun.last
+      child_execution = run.child_execution
+      expect(child_execution).to be_error
       expect(execution).to be_error
       expect(execution.error).to include("finished with status 'error'")
       expect(call_step["status"]).to eq("error")
