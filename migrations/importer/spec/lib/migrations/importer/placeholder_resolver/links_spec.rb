@@ -157,6 +157,31 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(resolved).to eq("x https://dest.example.com/c/support/billing/20 y")
     end
 
+    it "reattaches a category's filter tail after the destination id" do
+      maps =
+        FakePlaceholderMaps.new(
+          category_id: {
+            2 => 20,
+          },
+          category_slug_path: {
+            2 => "support:billing",
+          },
+        )
+
+      resolved =
+        render(
+          {
+            url: "/c/support/billing/2/l/latest",
+            target_type: link_target::CATEGORY,
+            target_id: 2,
+            target_suffix: "/l/latest",
+          },
+          maps:,
+        )
+
+      expect(resolved).to eq("x https://dest.example.com/c/support/billing/20/l/latest y")
+    end
+
     it "renders a badge target with the destination id and slug" do
       maps = FakePlaceholderMaps.new(badge: { 9 => { id: 90, slug: "great-work" } })
 

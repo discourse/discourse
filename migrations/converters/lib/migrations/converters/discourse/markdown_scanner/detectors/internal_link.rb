@@ -110,10 +110,6 @@ module Migrations
             PREFIX_BOUNDARY = %r{\A[/?#]}
             private_constant :PREFIX_BOUNDARY
 
-            # A path segment that is entirely an id (see `Base::ID_PATTERN`).
-            NUMERIC_SEGMENT = /\A#{Base::ID_PATTERN}\z/
-            private_constant :NUMERIC_SEGMENT
-
             # `/t/<id>` (topic) or `/t/<id>/<post_number>` (post by coordinates), the
             # id-only forms where the first `/t/` component is all digits. The id
             # bound (see `Base::ID_PATTERN`) keeps a 19+-digit numeric title literal:
@@ -134,11 +130,25 @@ module Migrations
             USER = %r{\A/u(?:sers)?/(?<name>#{WORD})}
             private_constant :USER
 
-            # `/c/<slug-path>/<id>` (id wins) or the legacy `/c/<slug-path>`. The
-            # segments are split in Ruby: a trailing all-digits segment is the id,
-            # otherwise the segments join with `:` into a `parent:child` slug path.
-            CATEGORY = %r{\A/c/(?<path>#{SEGMENT}(?:/#{SEGMENT})*)(?=[/?#]|\z)}
-            private_constant :CATEGORY
+            # `/c/<slug-path>/<id>`, or `/c/<id>` with no slug. Anchored on the id the
+            # way the topic routes are, so the route ends there and a category's
+            # filter tail (`/l/latest`, the ordinary URL of a category's Latest tab)
+            # rides along in the suffix instead of being read as more slug.
+            #
+            # The slug path is lazy so the id is the first numeric segment that ends a
+            # path component: greedy, `/c/support/6/l/latest` would fold the tail into
+            # the slug and resolve nothing. With no tail the lazy path still stops on
+            # the last segment, so `/c/2015/6` reads id 6, not slug `2015`.
+            CATEGORY_ID =
+              %r{\A/c/(?:(?<path>#{SEGMENT}(?:/#{SEGMENT})*?)/)?(?<id>#{Base::ID_PATTERN})(?=[/?#]|\z)}
+            private_constant :CATEGORY_ID
+
+            # The legacy id-less form, `/c/<slug>` or `/c/<parent>/<child>`, whose
+            # segments join with `:` into a slug path. Only reached when no segment
+            # parses as an id — including an overlong digit run, which is a numeric
+            # slug rather than an id (see `Base::ID_PATTERN`).
+            CATEGORY_SLUG = %r{\A/c/(?<path>#{SEGMENT}(?:/#{SEGMENT})*)(?=[/?#]|\z)}
+            private_constant :CATEGORY_SLUG
 
             # `/tag/<name>` / `/tags/<name>`. The `(?!c/)` guard leaves the
             # `/tags/c/<category>/<tag>` intersection form undetected (out of scope).
@@ -370,16 +380,10 @@ module Migrations
             end
 
             def category(rest)
-              match = CATEGORY.match(rest)
-              return nil unless match
-
-              segments = match[:path].split("/")
-              # The id bound (see `Base::ID_PATTERN`): a longer digit run can't be a
-              # real id, so it reads as a (numeric) slug and fails name resolution.
-              if segments.last.match?(NUMERIC_SEGMENT)
-                target(match, :category, target_id: segments.last.to_i)
-              else
-                target(match, :category, target_name: segments.join(":"))
+              if (match = CATEGORY_ID.match(rest))
+                target(match, :category, target_id: match[:id].to_i)
+              elsif (match = CATEGORY_SLUG.match(rest))
+                target(match, :category, target_name: match[:path].tr("/", ":"))
               end
             end
 

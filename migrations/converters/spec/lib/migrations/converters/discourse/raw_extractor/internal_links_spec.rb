@@ -131,6 +131,50 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(link).to include(target_type: link_target::CATEGORY, target_id: 6, target_name: nil)
     end
 
+    it "defers a category link with no slug at all" do
+      link, = link_for("[x](/c/6)")
+
+      expect(link).to include(target_type: link_target::CATEGORY, target_id: 6, target_name: nil)
+    end
+
+    # `/c/<slug>/<id>/l/latest` is what a category's Latest tab links to, so the
+    # route has to stop at the id and let the tail ride in the suffix — otherwise
+    # the tail reads as more slug and the category never resolves.
+    it "keeps a category's filter tail out of the slug path" do
+      link, = link_for("[x](/c/support/6/l/latest)")
+
+      expect(link).to include(
+        target_type: link_target::CATEGORY,
+        target_id: 6,
+        target_name: nil,
+        target_suffix: "/l/latest",
+      )
+    end
+
+    it "keeps a filter tail out of a parent/child category path" do
+      link, = link_for("[x](/c/parent/child/6/l/top)")
+
+      expect(link).to include(target_id: 6, target_name: nil, target_suffix: "/l/top")
+    end
+
+    it "keeps a filter tail out of a slugless category link" do
+      link, = link_for("[x](/c/6/l/latest)")
+
+      expect(link).to include(target_id: 6, target_name: nil, target_suffix: "/l/latest")
+    end
+
+    it "reads the trailing id when a category slug is itself numeric" do
+      link, = link_for("[x](/c/2015/6)")
+
+      expect(link).to include(target_id: 6, target_name: nil)
+    end
+
+    it "keeps a category link's query string in the suffix" do
+      link, = link_for("[x](/c/support/6?ascending=false)")
+
+      expect(link).to include(target_id: 6, target_suffix: "?ascending=false")
+    end
+
     it "defers a legacy category link by its parent:child slug path" do
       link, = link_for("[x](/c/support/billing)")
 
