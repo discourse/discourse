@@ -94,7 +94,7 @@ export default class AdminPluginsPatreonController extends Controller {
 
       this.set("updatingData", false);
 
-      const refreshUrl = getURL("/admin/plugins/patreon");
+      const refreshUrl = getURL("/admin/plugins/discourse-patreon/filters");
       this.dialog.alert({
         message: i18n("patreon.refresh_page"),
         didConfirm: () => (window.location.pathname = refreshUrl),

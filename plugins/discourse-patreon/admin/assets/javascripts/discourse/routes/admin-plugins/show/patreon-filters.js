@@ -17,6 +17,10 @@ export default class AdminPluginsPatreon extends DiscourseRoute {
       Group.findAll({ ignore_automatic: true }),
     ])
       .then(([result, groups]) => {
+        if (result.unconfigured) {
+          return { unconfigured: true };
+        }
+
         groups = groups.map((g) => {
           return { id: g.id, name: g.name };
         });
@@ -32,6 +36,19 @@ export default class AdminPluginsPatreon extends DiscourseRoute {
   }
 
   setupController(controller, model) {
+    // popupAjaxError swallows the rejection, so a failed request arrives here
+    // as an undefined model rather than as an error substate.
+    if (!model || model.unconfigured) {
+      controller.setProperties({
+        unconfigured: !!model?.unconfigured,
+        model: trackedArray([]),
+        groups: [],
+        rewards: {},
+        last_sync_at: null,
+      });
+      return;
+    }
+
     const rewards = model.rewards;
     const groups = model.groups;
     const filtersArray = Object.entries(model.filters).map(([k, v]) => {
@@ -51,6 +68,7 @@ export default class AdminPluginsPatreon extends DiscourseRoute {
     });
 
     controller.setProperties({
+      unconfigured: false,
       model: trackedArray(filtersArray),
       groups,
       rewards,
