@@ -108,8 +108,9 @@ module DiscoursePostEvent
     end
 
     def watching_invitee
-      if scope.current_user
-        watching_invitee = Invitee.find_by(user_id: scope.current_user.id, post_id: object.id)
+      user = scope.current_user
+      if user && can_display_current_user_invitee?(user)
+        watching_invitee = Invitee.find_by(user_id: user.id, post_id: object.id)
       end
 
       InviteeSerializer.new(watching_invitee, root: false, scope:) if watching_invitee
@@ -129,7 +130,17 @@ module DiscoursePostEvent
     end
 
     def include_stats?
-      scope.can_display_invitee_details?(object)
+      can_display_invitee_details?
+    end
+
+    def can_display_current_user_invitee?(user)
+      !object.private? || scope.can_act_on_discourse_post_event?(object) ||
+        object.user_in_invited_group?(user)
+    end
+
+    def can_display_invitee_details?
+      return @can_display_invitee_details if defined?(@can_display_invitee_details)
+      @can_display_invitee_details = scope.can_display_invitee_details?(object)
     end
 
     def should_display_invitees

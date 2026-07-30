@@ -305,15 +305,22 @@ module DiscoursePostEvent
       self.invitees.where.not(user_id: fetch_users.select(:id)).delete_all
     end
 
-    def can_user_update_attendance?(user)
-      return false if self.closed || self.expired?
-      return true if self.public?
+    def user_in_invited_group?(user, group_names: nil)
+      return false if user.blank? || raw_invitees.blank?
 
-      self.private? &&
-        (
-          self.invitees.exists?(user_id: user.id) ||
-            (user.groups.pluck(:name) & self.raw_invitees).any?
-        )
+      return (Array(raw_invitees) & Array(group_names)).any? unless group_names.nil?
+
+      GroupUser.where(
+        user_id: user.id,
+        group_id: Group.where(name: raw_invitees).select(:id),
+      ).exists?
+    end
+
+    def can_user_update_attendance?(user, group_names: nil)
+      return false if user.blank? || closed || expired?
+      return true if public?
+
+      private? && user_in_invited_group?(user, group_names:)
     end
 
     def self.update_from_raw(post)

@@ -192,10 +192,7 @@ after_initialize do
 
     raw_invitees = Array(event.raw_invitees).uniq
 
-    if user &&
-         (event.invitees.exists?(user_id: user.id) || user.groups.where(name: raw_invitees).exists?)
-      return true
-    end
+    return true if user && event.user_in_invited_group?(user)
 
     return false if raw_invitees.blank?
 
@@ -523,6 +520,14 @@ after_initialize do
   end
 
   on(:user_destroyed) { |user| DiscoursePostEvent::Invitee.where(user_id: user.id).destroy_all }
+
+  on(:user_removed_from_group) do |user, group|
+    DiscoursePostEvent::Event
+      .where(id: DiscoursePostEvent::Invitee.unscoped.where(user_id: user.id).select(:post_id))
+      .where(status: DiscoursePostEvent::Event.statuses[:private])
+      .where("? = ANY(discourse_post_event_events.raw_invitees)", group.name)
+      .find_each(&:enforce_private_invitees!)
+  end
 
   add_post_revision_notifier_recipients do |post_revision|
     # next if no modifications
