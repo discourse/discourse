@@ -718,6 +718,16 @@ module(
           active?.id,
           "the controller points at the selected row"
         );
+      // The precondition for hearing "selected" on open: the row the cursor lands on has to
+      // carry the state, not merely be the row that happens to be chosen. Assistive tech voices
+      // state when the cursor arrives, so a seeded cursor on a row without it is silent.
+      assert
+        .dom(active)
+        .hasAttribute(
+          "aria-selected",
+          "true",
+          "the seeded row exposes its selected state for the cursor to voice"
+        );
 
       await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
 
