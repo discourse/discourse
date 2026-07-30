@@ -261,7 +261,7 @@ RSpec.describe UploadCreator do
         }
       end
 
-      it "stores pixels in their normalized positions for every orientation" do
+      it "honors every EXIF orientation when storing JPEG uploads" do
         expected_color_grids.each do |orientation, expected_color_grid|
           with_jpeg_orientation(
             source_path: source_path,
