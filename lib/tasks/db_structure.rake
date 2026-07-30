@@ -5,8 +5,7 @@
 module DbStructure
   BOOKKEEPING_TABLES = %w[schema_migrations schema_migration_details ar_internal_metadata].freeze
 
-  # PG 17+ pg_dump changes output format. Pin to 15/16 for now:
-  PG_DUMP_VERSIONS = (15..16)
+  PG_DUMP_VERSIONS = (18..18)
 
   def self.temp_db_env
     bundled = `script/list_bundled_plugins`.split.map { |p| File.basename(p) }.join(",")

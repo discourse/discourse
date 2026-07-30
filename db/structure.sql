@@ -1,6 +1,7 @@
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -436,38 +437,38 @@ ALTER SEQUENCE public.ai_agent_mcp_servers_id_seq OWNED BY public.ai_agent_mcp_s
 --
 
 CREATE TABLE public.ai_agents (
-    id bigint NOT NULL,
-    name character varying(100) NOT NULL,
-    description character varying(2000) NOT NULL,
-    system_prompt character varying(10000000) NOT NULL,
-    allowed_group_ids integer[] DEFAULT '{}'::integer[] NOT NULL,
+    id bigint CONSTRAINT ai_personas_id_not_null NOT NULL,
+    name character varying(100) CONSTRAINT ai_personas_name_not_null NOT NULL,
+    description character varying(2000) CONSTRAINT ai_personas_description_not_null NOT NULL,
+    system_prompt character varying(10000000) CONSTRAINT ai_personas_system_prompt_not_null NOT NULL,
+    allowed_group_ids integer[] DEFAULT '{}'::integer[] CONSTRAINT ai_personas_allowed_group_ids_not_null NOT NULL,
     created_by_id integer,
-    enabled boolean DEFAULT true NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    system boolean DEFAULT false NOT NULL,
-    priority boolean DEFAULT false NOT NULL,
+    enabled boolean DEFAULT true CONSTRAINT ai_personas_enabled_not_null NOT NULL,
+    created_at timestamp(6) without time zone CONSTRAINT ai_personas_created_at_not_null NOT NULL,
+    updated_at timestamp(6) without time zone CONSTRAINT ai_personas_updated_at_not_null NOT NULL,
+    system boolean DEFAULT false CONSTRAINT ai_personas_system_not_null NOT NULL,
+    priority boolean DEFAULT false CONSTRAINT ai_personas_priority_not_null NOT NULL,
     temperature double precision,
     top_p double precision,
     user_id integer,
-    vision_enabled boolean DEFAULT false NOT NULL,
-    vision_max_pixels integer DEFAULT 1048576 NOT NULL,
-    rag_chunk_tokens integer DEFAULT 374 NOT NULL,
-    rag_chunk_overlap_tokens integer DEFAULT 10 NOT NULL,
-    rag_conversation_chunks integer DEFAULT 10 NOT NULL,
-    tools json DEFAULT '[]'::json NOT NULL,
-    forced_tool_count integer DEFAULT '-1'::integer NOT NULL,
-    allow_chat_channel_mentions boolean DEFAULT false NOT NULL,
-    allow_chat_direct_messages boolean DEFAULT false NOT NULL,
-    allow_topic_mentions boolean DEFAULT false NOT NULL,
-    allow_personal_messages boolean DEFAULT true NOT NULL,
-    force_default_llm boolean DEFAULT false NOT NULL,
+    vision_enabled boolean DEFAULT false CONSTRAINT ai_personas_vision_enabled_not_null NOT NULL,
+    vision_max_pixels integer DEFAULT 1048576 CONSTRAINT ai_personas_vision_max_pixels_not_null NOT NULL,
+    rag_chunk_tokens integer DEFAULT 374 CONSTRAINT ai_personas_rag_chunk_tokens_not_null NOT NULL,
+    rag_chunk_overlap_tokens integer DEFAULT 10 CONSTRAINT ai_personas_rag_chunk_overlap_tokens_not_null NOT NULL,
+    rag_conversation_chunks integer DEFAULT 10 CONSTRAINT ai_personas_rag_conversation_chunks_not_null NOT NULL,
+    tools json DEFAULT '[]'::json CONSTRAINT ai_personas_tools_not_null NOT NULL,
+    forced_tool_count integer DEFAULT '-1'::integer CONSTRAINT ai_personas_forced_tool_count_not_null NOT NULL,
+    allow_chat_channel_mentions boolean DEFAULT false CONSTRAINT ai_personas_allow_chat_channel_mentions_not_null NOT NULL,
+    allow_chat_direct_messages boolean DEFAULT false CONSTRAINT ai_personas_allow_chat_direct_messages_not_null NOT NULL,
+    allow_topic_mentions boolean DEFAULT false CONSTRAINT ai_personas_allow_topic_mentions_not_null NOT NULL,
+    allow_personal_messages boolean DEFAULT true CONSTRAINT ai_personas_allow_personal_messages_not_null NOT NULL,
+    force_default_llm boolean DEFAULT false CONSTRAINT ai_personas_force_default_llm_not_null NOT NULL,
     rag_llm_model_id bigint,
     default_llm_id bigint,
     question_consolidator_llm_id bigint,
     response_format jsonb,
     examples jsonb,
-    show_thinking boolean DEFAULT true NOT NULL,
+    show_thinking boolean DEFAULT true CONSTRAINT ai_personas_show_thinking_not_null NOT NULL,
     max_turn_tokens integer,
     compression_threshold integer DEFAULT 80 NOT NULL,
     require_approval boolean DEFAULT false NOT NULL,
@@ -699,7 +700,7 @@ ALTER SEQUENCE public.ai_artifacts_id_seq OWNED BY public.ai_artifacts.id;
 --
 
 CREATE TABLE public.ai_document_fragments_embeddings (
-    rag_document_fragment_id bigint NOT NULL,
+    rag_document_fragment_id bigint CONSTRAINT ai_document_fragments_embeddi_rag_document_fragment_id_not_null NOT NULL,
     model_id bigint NOT NULL,
     model_version integer NOT NULL,
     strategy_id integer NOT NULL,
@@ -788,7 +789,7 @@ CREATE TABLE public.ai_mcp_servers (
     oauth_authorization_params jsonb DEFAULT '{}'::jsonb NOT NULL,
     oauth_token_params jsonb DEFAULT '{}'::jsonb NOT NULL,
     oauth_require_refresh_token boolean DEFAULT false NOT NULL,
-    oauth_token_endpoint_auth_methods_supported jsonb DEFAULT '[]'::jsonb NOT NULL
+    oauth_token_endpoint_auth_methods_supported jsonb DEFAULT '[]'::jsonb CONSTRAINT ai_mcp_servers_oauth_token_endpoint_auth_methods_suppo_not_null NOT NULL
 );
 
 
@@ -822,7 +823,7 @@ CREATE TABLE public.ai_moderation_settings (
     llm_model_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    ai_agent_id bigint DEFAULT '-31'::integer NOT NULL
+    ai_agent_id bigint DEFAULT '-31'::integer CONSTRAINT ai_moderation_settings_ai_persona_id_not_null NOT NULL
 );
 
 
@@ -1534,7 +1535,7 @@ CREATE TABLE public.categories (
     name character varying(50) NOT NULL,
     color character varying(6) DEFAULT '0088CC'::character varying NOT NULL,
     topic_id integer,
-    topic_count integer DEFAULT 0 NOT NULL,
+    topic_count integer DEFAULT 0 CONSTRAINT categories_forum_thread_count_not_null NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     user_id integer NOT NULL,
@@ -1544,7 +1545,7 @@ CREATE TABLE public.categories (
     slug character varying NOT NULL,
     description text,
     text_color character varying(6) DEFAULT 'FFFFFF'::character varying NOT NULL,
-    read_restricted boolean DEFAULT false NOT NULL,
+    read_restricted boolean DEFAULT false CONSTRAINT categories_secure_not_null NOT NULL,
     auto_close_hours double precision,
     post_count integer DEFAULT 0 NOT NULL,
     latest_post_id integer,
@@ -1601,28 +1602,28 @@ CREATE TABLE public.categories (
 CREATE TABLE public.posts (
     id integer NOT NULL,
     user_id integer,
-    topic_id integer NOT NULL,
+    topic_id integer CONSTRAINT posts_forum_thread_id_not_null NOT NULL,
     post_number integer NOT NULL,
-    raw text NOT NULL,
-    cooked text NOT NULL,
+    raw text CONSTRAINT posts_content_not_null NOT NULL,
+    cooked text CONSTRAINT posts_formatted_content_not_null NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     reply_to_post_number integer,
     reply_count integer DEFAULT 0 NOT NULL,
     quote_count integer DEFAULT 0 NOT NULL,
     deleted_at timestamp without time zone,
-    off_topic_count integer DEFAULT 0 NOT NULL,
-    like_count integer DEFAULT 0 NOT NULL,
+    off_topic_count integer DEFAULT 0 CONSTRAINT posts_expression1_count_not_null NOT NULL,
+    like_count integer DEFAULT 0 CONSTRAINT posts_expression3_count_not_null NOT NULL,
     incoming_link_count integer DEFAULT 0 NOT NULL,
     bookmark_count integer DEFAULT 0 NOT NULL,
     score double precision,
-    reads integer DEFAULT 0 NOT NULL,
+    reads integer DEFAULT 0 CONSTRAINT posts_views_not_null NOT NULL,
     post_type integer DEFAULT 1 NOT NULL,
     sort_order integer,
     last_editor_id integer,
     hidden boolean DEFAULT false NOT NULL,
     hidden_reason_id integer,
-    notify_moderators_count integer DEFAULT 0 NOT NULL,
+    notify_moderators_count integer DEFAULT 0 CONSTRAINT posts_custom_flag_count_not_null NOT NULL,
     spam_count integer DEFAULT 0 NOT NULL,
     illegal_count integer DEFAULT 0 NOT NULL,
     inappropriate_count integer DEFAULT 0 NOT NULL,
@@ -1702,33 +1703,33 @@ COMMENT ON COLUMN public.posts.reply_quoted IS 'This column is true if the post 
 --
 
 CREATE TABLE public.topics (
-    id integer NOT NULL,
-    title character varying NOT NULL,
+    id integer CONSTRAINT forum_threads_id_not_null NOT NULL,
+    title character varying CONSTRAINT forum_threads_title_not_null NOT NULL,
     last_posted_at timestamp without time zone,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    views integer DEFAULT 0 NOT NULL,
-    posts_count integer DEFAULT 0 NOT NULL,
+    created_at timestamp without time zone CONSTRAINT forum_threads_created_at_not_null NOT NULL,
+    updated_at timestamp without time zone CONSTRAINT forum_threads_updated_at_not_null NOT NULL,
+    views integer DEFAULT 0 CONSTRAINT forum_threads_views_not_null NOT NULL,
+    posts_count integer DEFAULT 0 CONSTRAINT forum_threads_posts_count_not_null NOT NULL,
     user_id integer,
-    last_post_user_id integer NOT NULL,
-    reply_count integer DEFAULT 0 NOT NULL,
+    last_post_user_id integer CONSTRAINT forum_threads_last_post_user_id_not_null NOT NULL,
+    reply_count integer DEFAULT 0 CONSTRAINT forum_threads_reply_count_not_null NOT NULL,
     featured_user1_id integer,
     featured_user2_id integer,
     featured_user3_id integer,
     deleted_at timestamp without time zone,
-    highest_post_number integer DEFAULT 0 NOT NULL,
-    like_count integer DEFAULT 0 NOT NULL,
-    incoming_link_count integer DEFAULT 0 NOT NULL,
+    highest_post_number integer DEFAULT 0 CONSTRAINT forum_threads_highest_post_number_not_null NOT NULL,
+    like_count integer DEFAULT 0 CONSTRAINT forum_threads_expression3_count_not_null NOT NULL,
+    incoming_link_count integer DEFAULT 0 CONSTRAINT forum_threads_incoming_link_count_not_null NOT NULL,
     category_id integer,
-    visible boolean DEFAULT true NOT NULL,
-    moderator_posts_count integer DEFAULT 0 NOT NULL,
-    closed boolean DEFAULT false NOT NULL,
-    archived boolean DEFAULT false NOT NULL,
-    bumped_at timestamp without time zone NOT NULL,
-    has_summary boolean DEFAULT false NOT NULL,
-    archetype character varying DEFAULT 'regular'::character varying NOT NULL,
+    visible boolean DEFAULT true CONSTRAINT forum_threads_visible_not_null NOT NULL,
+    moderator_posts_count integer DEFAULT 0 CONSTRAINT forum_threads_moderator_posts_count_not_null NOT NULL,
+    closed boolean DEFAULT false CONSTRAINT forum_threads_closed_not_null NOT NULL,
+    archived boolean DEFAULT false CONSTRAINT forum_threads_archived_not_null NOT NULL,
+    bumped_at timestamp without time zone CONSTRAINT forum_threads_bumped_at_not_null NOT NULL,
+    has_summary boolean DEFAULT false CONSTRAINT forum_threads_has_best_of_not_null NOT NULL,
+    archetype character varying DEFAULT 'regular'::character varying CONSTRAINT forum_threads_archetype_not_null NOT NULL,
     featured_user4_id integer,
-    notify_moderators_count integer DEFAULT 0 NOT NULL,
+    notify_moderators_count integer DEFAULT 0 CONSTRAINT topics_custom_flag_count_not_null NOT NULL,
     spam_count integer DEFAULT 0 NOT NULL,
     pinned_at timestamp without time zone,
     score double precision,
@@ -2066,7 +2067,7 @@ CREATE TABLE public.browser_pageview_referrer_daily_rollups (
     date date NOT NULL,
     normalized_referrer character varying(2000),
     count bigint NOT NULL,
-    logged_in_count bigint NOT NULL
+    logged_in_count bigint CONSTRAINT browser_pageview_referrer_daily_rollup_logged_in_count_not_null NOT NULL
 );
 
 
@@ -2096,10 +2097,10 @@ ALTER SEQUENCE public.browser_pageview_referrer_daily_rollups_id_seq OWNED BY pu
 CREATE TABLE public.browser_pageview_session_engagement_daily_rollups (
     id bigint NOT NULL,
     date date NOT NULL,
-    logged_in boolean NOT NULL,
-    sessions bigint NOT NULL,
-    bounced bigint NOT NULL,
-    engaged_seconds_total bigint NOT NULL
+    logged_in boolean CONSTRAINT browser_pageview_session_engagement_daily_ro_logged_in_not_null NOT NULL,
+    sessions bigint CONSTRAINT browser_pageview_session_engagement_daily_rol_sessions_not_null NOT NULL,
+    bounced bigint CONSTRAINT browser_pageview_session_engagement_daily_roll_bounced_not_null NOT NULL,
+    engaged_seconds_total bigint CONSTRAINT browser_pageview_session_engagem_engaged_seconds_total_not_null NOT NULL
 );
 
 
@@ -2134,7 +2135,7 @@ CREATE TABLE public.browser_pageview_session_engagements (
     key_events integer DEFAULT 0 NOT NULL,
     scroll_events integer DEFAULT 0 NOT NULL,
     touch_events integer DEFAULT 0 NOT NULL,
-    back_forward_events integer DEFAULT 0 NOT NULL,
+    back_forward_events integer DEFAULT 0 CONSTRAINT browser_pageview_session_engagemen_back_forward_events_not_null NOT NULL,
     engaged_seconds integer DEFAULT 0 NOT NULL,
     time_to_first_interaction_ms integer,
     created_at timestamp(6) without time zone NOT NULL,
@@ -2304,10 +2305,10 @@ ALTER SEQUENCE public.category_custom_fields_id_seq OWNED BY public.category_cus
 --
 
 CREATE TABLE public.category_featured_topics (
-    category_id integer NOT NULL,
-    topic_id integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
+    category_id integer CONSTRAINT category_featured_threads_category_id_not_null NOT NULL,
+    topic_id integer CONSTRAINT category_featured_threads_forum_thread_id_not_null NOT NULL,
+    created_at timestamp without time zone CONSTRAINT category_featured_threads_created_at_not_null NOT NULL,
+    updated_at timestamp without time zone CONSTRAINT category_featured_threads_updated_at_not_null NOT NULL,
     rank integer DEFAULT 0 NOT NULL,
     id integer NOT NULL
 );
@@ -2537,7 +2538,7 @@ ALTER SEQUENCE public.category_required_tag_groups_id_seq OWNED BY public.catego
 --
 
 CREATE TABLE public.category_search_data (
-    category_id integer NOT NULL,
+    category_id integer CONSTRAINT categories_search_id_not_null NOT NULL,
     search_data tsvector,
     raw_data text,
     locale text,
@@ -2790,8 +2791,8 @@ ALTER SEQUENCE public.chat_channel_custom_fields_id_seq OWNED BY public.chat_cha
 --
 
 CREATE TABLE public.chat_channels (
-    id bigint NOT NULL,
-    chatable_id bigint NOT NULL,
+    id bigint CONSTRAINT topic_chats_id_not_null NOT NULL,
+    chatable_id bigint CONSTRAINT topic_chats_topic_id_not_null NOT NULL,
     deleted_at timestamp without time zone,
     deleted_by_id integer,
     featured_in_category_id integer,
@@ -2874,7 +2875,7 @@ ALTER SEQUENCE public.chat_drafts_id_seq OWNED BY public.chat_drafts.id;
 
 CREATE TABLE public.chat_mention_notifications (
     chat_mention_id bigint NOT NULL,
-    notification_id bigint NOT NULL
+    notification_id bigint CONSTRAINT chat_mention_notifications_new_notification_id_not_null NOT NULL
 );
 
 
@@ -3145,11 +3146,11 @@ ALTER SEQUENCE public.chat_message_search_data_chat_message_id_seq OWNED BY publ
 --
 
 CREATE TABLE public.chat_messages (
-    id bigint NOT NULL,
-    chat_channel_id bigint NOT NULL,
+    id bigint CONSTRAINT topic_chat_messages_id_not_null NOT NULL,
+    chat_channel_id bigint CONSTRAINT topic_chat_messages_topic_id_not_null NOT NULL,
     user_id integer,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
+    created_at timestamp(6) without time zone CONSTRAINT topic_chat_messages_created_at_not_null NOT NULL,
+    updated_at timestamp(6) without time zone CONSTRAINT topic_chat_messages_updated_at_not_null NOT NULL,
     deleted_at timestamp without time zone,
     deleted_by_id integer,
     in_reply_to_id bigint,
@@ -4118,9 +4119,9 @@ ALTER SEQUENCE public.discourse_calendar_post_event_dates_id_seq OWNED BY public
 --
 
 CREATE TABLE public.discourse_post_event_events (
-    id bigint NOT NULL,
-    status integer DEFAULT 0 NOT NULL,
-    original_starts_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    id bigint CONSTRAINT discourse_calendar_post_events_id_not_null NOT NULL,
+    status integer DEFAULT 0 CONSTRAINT discourse_calendar_post_events_status_not_null NOT NULL,
+    original_starts_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP CONSTRAINT discourse_calendar_post_events_starts_at_not_null NOT NULL,
     original_ends_at timestamp without time zone,
     deleted_at timestamp without time zone,
     raw_invitees character varying[],
@@ -4169,13 +4170,13 @@ ALTER SEQUENCE public.discourse_post_event_events_id_seq OWNED BY public.discour
 --
 
 CREATE TABLE public.discourse_post_event_invitees (
-    id bigint NOT NULL,
-    post_id integer NOT NULL,
-    user_id integer NOT NULL,
+    id bigint CONSTRAINT discourse_calendar_invitees_id_not_null NOT NULL,
+    post_id integer CONSTRAINT discourse_calendar_invitees_post_id_not_null NOT NULL,
+    user_id integer CONSTRAINT discourse_calendar_invitees_user_id_not_null NOT NULL,
     status integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    notified boolean DEFAULT false NOT NULL,
+    created_at timestamp without time zone CONSTRAINT discourse_calendar_invitees_created_at_not_null NOT NULL,
+    updated_at timestamp without time zone CONSTRAINT discourse_calendar_invitees_updated_at_not_null NOT NULL,
+    notified boolean DEFAULT false CONSTRAINT discourse_calendar_invitees_notified_not_null NOT NULL,
     recurring boolean DEFAULT false NOT NULL
 );
 
@@ -4580,8 +4581,8 @@ CREATE TABLE public.discourse_workflows_ai_authoring_sessions (
     status character varying(40) DEFAULT 'drafting'::character varying NOT NULL,
     messages jsonb DEFAULT '[]'::jsonb NOT NULL,
     latest_request text,
-    latest_response jsonb DEFAULT '{}'::jsonb NOT NULL,
-    proposed_patch jsonb DEFAULT '{}'::jsonb NOT NULL,
+    latest_response jsonb DEFAULT '{}'::jsonb CONSTRAINT discourse_workflows_ai_authoring_sessi_latest_response_not_null NOT NULL,
+    proposed_patch jsonb DEFAULT '{}'::jsonb CONSTRAINT discourse_workflows_ai_authoring_sessio_proposed_patch_not_null NOT NULL,
     base_workflow_version_id character varying(36),
     base_graph_digest character varying(64),
     risk_level character varying(20),
@@ -4875,12 +4876,12 @@ ALTER SEQUENCE public.discourse_workflows_webhooks_id_seq OWNED BY public.discou
 
 CREATE TABLE public.discourse_workflows_workflow_call_runs (
     id bigint NOT NULL,
-    parent_execution_id bigint NOT NULL,
+    parent_execution_id bigint CONSTRAINT discourse_workflows_workflow_call__parent_execution_id_not_null NOT NULL,
     parent_node_id character varying(100) NOT NULL,
-    parent_resume_token character varying(64) NOT NULL,
+    parent_resume_token character varying(64) CONSTRAINT discourse_workflows_workflow_call__parent_resume_token_not_null NOT NULL,
     child_execution_id bigint,
-    target_workflow_id bigint NOT NULL,
-    target_workflow_version_id character varying(36) NOT NULL,
+    target_workflow_id bigint CONSTRAINT discourse_workflows_workflow_call_r_target_workflow_id_not_null NOT NULL,
+    target_workflow_version_id character varying(36) CONSTRAINT discourse_workflows_workflo_target_workflow_version_id_not_null NOT NULL,
     user_id bigint,
     trigger_data jsonb DEFAULT '{}'::jsonb NOT NULL,
     status integer DEFAULT 0 NOT NULL,
@@ -4916,8 +4917,8 @@ ALTER SEQUENCE public.discourse_workflows_workflow_call_runs_id_seq OWNED BY pub
 CREATE TABLE public.discourse_workflows_workflow_dependencies (
     id bigint NOT NULL,
     workflow_id bigint NOT NULL,
-    dependency_type character varying(50) NOT NULL,
-    dependency_key character varying(500) NOT NULL,
+    dependency_type character varying(50) CONSTRAINT discourse_workflows_workflow_dependenc_dependency_type_not_null NOT NULL,
+    dependency_key character varying(500) CONSTRAINT discourse_workflows_workflow_dependenci_dependency_key_not_null NOT NULL,
     node_id character varying(100),
     workflow_version_id character varying(36),
     created_at timestamp(6) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
@@ -4949,11 +4950,11 @@ ALTER SEQUENCE public.discourse_workflows_workflow_dependencies_id_seq OWNED BY 
 
 CREATE TABLE public.discourse_workflows_workflow_publish_history (
     id bigint NOT NULL,
-    workflow_id bigint NOT NULL,
+    workflow_id bigint CONSTRAINT discourse_workflows_workflow_publish_histo_workflow_id_not_null NOT NULL,
     version_id character varying(36),
     event character varying(32) NOT NULL,
     user_id integer,
-    created_at timestamp(6) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+    created_at timestamp(6) without time zone DEFAULT CURRENT_TIMESTAMP CONSTRAINT discourse_workflows_workflow_publish_histor_created_at_not_null NOT NULL
 );
 
 
@@ -5874,7 +5875,7 @@ CREATE TABLE public.group_category_notification_defaults (
     id bigint NOT NULL,
     group_id integer NOT NULL,
     category_id integer NOT NULL,
-    notification_level integer NOT NULL
+    notification_level integer CONSTRAINT group_category_notification_default_notification_level_not_null NOT NULL
 );
 
 
@@ -7151,7 +7152,7 @@ CREATE TABLE public.notifications (
     post_number integer,
     post_action_id integer,
     high_priority boolean DEFAULT false NOT NULL,
-    id bigint NOT NULL
+    id bigint CONSTRAINT notifications_new_id_not_null NOT NULL
 );
 
 
@@ -7248,8 +7249,8 @@ ALTER SEQUENCE public.onceoff_logs_id_seq OWNED BY public.onceoff_logs.id;
 
 CREATE TABLE public.optimized_images (
     id integer NOT NULL,
-    sha1 character varying(40) NOT NULL,
-    extension character varying(10) NOT NULL,
+    sha1 character varying(40) CONSTRAINT optimized_images_sha_not_null NOT NULL,
+    extension character varying(10) CONSTRAINT optimized_images_ext_not_null NOT NULL,
     width integer NOT NULL,
     height integer NOT NULL,
     upload_id integer NOT NULL,
@@ -7522,7 +7523,7 @@ ALTER SEQUENCE public.polls_id_seq OWNED BY public.polls.id;
 --
 
 CREATE TABLE public.post_action_types (
-    name_key character varying(50) NOT NULL,
+    name_key character varying(50) CONSTRAINT post_action_types_name_not_null NOT NULL,
     is_flag boolean DEFAULT false NOT NULL,
     icon character varying(20),
     created_at timestamp without time zone NOT NULL,
@@ -7929,7 +7930,7 @@ ALTER SEQUENCE public.post_revisions_id_seq OWNED BY public.post_revisions.id;
 --
 
 CREATE TABLE public.post_search_data (
-    post_id integer NOT NULL,
+    post_id integer CONSTRAINT posts_search_id_not_null NOT NULL,
     search_data tsvector,
     raw_data text,
     locale character varying,
@@ -7981,7 +7982,7 @@ ALTER SEQUENCE public.post_stats_id_seq OWNED BY public.post_stats.id;
 --
 
 CREATE TABLE public.post_timings (
-    topic_id integer NOT NULL,
+    topic_id integer CONSTRAINT post_timings_thread_id_not_null NOT NULL,
     post_number integer NOT NULL,
     user_id integer NOT NULL,
     msecs integer NOT NULL
@@ -7994,7 +7995,7 @@ CREATE TABLE public.post_timings (
 
 CREATE TABLE public.post_voting_comment_custom_fields (
     id bigint NOT NULL,
-    post_voting_comment_id bigint NOT NULL,
+    post_voting_comment_id bigint CONSTRAINT post_voting_comment_custom_fiel_post_voting_comment_id_not_null NOT NULL,
     name character varying(256) NOT NULL,
     value text,
     created_at timestamp(6) without time zone NOT NULL,
@@ -8026,16 +8027,16 @@ ALTER SEQUENCE public.post_voting_comment_custom_fields_id_seq OWNED BY public.p
 --
 
 CREATE TABLE public.post_voting_comments (
-    id bigint NOT NULL,
-    post_id integer NOT NULL,
-    user_id integer NOT NULL,
-    raw text NOT NULL,
-    cooked text NOT NULL,
+    id bigint CONSTRAINT question_answer_comments_id_not_null NOT NULL,
+    post_id integer CONSTRAINT question_answer_comments_post_id_not_null NOT NULL,
+    user_id integer CONSTRAINT question_answer_comments_user_id_not_null NOT NULL,
+    raw text CONSTRAINT question_answer_comments_raw_not_null NOT NULL,
+    cooked text CONSTRAINT question_answer_comments_cooked_not_null NOT NULL,
     cooked_version integer,
     deleted_at timestamp without time zone,
     deleted_by_id integer,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
+    created_at timestamp(6) without time zone CONSTRAINT question_answer_comments_created_at_not_null NOT NULL,
+    updated_at timestamp(6) without time zone CONSTRAINT question_answer_comments_updated_at_not_null NOT NULL,
     qa_vote_count integer DEFAULT 0,
     last_editor_id integer NOT NULL,
     CONSTRAINT qa_vote_count_positive CHECK ((qa_vote_count >= 0))
@@ -8066,12 +8067,12 @@ ALTER SEQUENCE public.post_voting_comments_id_seq OWNED BY public.post_voting_co
 --
 
 CREATE TABLE public.post_voting_votes (
-    id bigint NOT NULL,
-    user_id integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    direction character varying NOT NULL,
-    votable_type character varying NOT NULL,
-    votable_id bigint NOT NULL
+    id bigint CONSTRAINT question_answer_votes_id_not_null NOT NULL,
+    user_id integer CONSTRAINT question_answer_votes_user_id_not_null NOT NULL,
+    created_at timestamp without time zone CONSTRAINT question_answer_votes_created_at_not_null NOT NULL,
+    direction character varying CONSTRAINT question_answer_votes_direction_not_null NOT NULL,
+    votable_type character varying CONSTRAINT question_answer_votes_votable_type_not_null NOT NULL,
+    votable_id bigint CONSTRAINT question_answer_votes_votable_id_not_null NOT NULL
 );
 
 
@@ -8647,13 +8648,13 @@ CREATE TABLE public.schema_migrations (
 --
 
 CREATE TABLE public.screened_emails (
-    id integer NOT NULL,
-    email character varying NOT NULL,
-    action_type integer NOT NULL,
-    match_count integer DEFAULT 0 NOT NULL,
+    id integer CONSTRAINT blocked_emails_id_not_null NOT NULL,
+    email character varying CONSTRAINT blocked_emails_email_not_null NOT NULL,
+    action_type integer CONSTRAINT blocked_emails_action_type_not_null NOT NULL,
+    match_count integer DEFAULT 0 CONSTRAINT blocked_emails_match_count_not_null NOT NULL,
     last_match_at timestamp without time zone,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone CONSTRAINT blocked_emails_created_at_not_null NOT NULL,
+    updated_at timestamp without time zone CONSTRAINT blocked_emails_updated_at_not_null NOT NULL,
     ip_address inet
 );
 
@@ -8863,7 +8864,7 @@ ALTER SEQUENCE public.shared_drafts_id_seq OWNED BY public.shared_drafts.id;
 
 CREATE TABLE public.shelved_notifications (
     id bigint NOT NULL,
-    notification_id bigint NOT NULL
+    notification_id bigint CONSTRAINT shelved_notifications_new_notification_id_not_null NOT NULL
 );
 
 
@@ -9631,7 +9632,7 @@ CREATE TABLE public.tags_web_hooks (
 CREATE TABLE public.theme_fields (
     id integer NOT NULL,
     theme_id integer NOT NULL,
-    target_id integer NOT NULL,
+    target_id integer CONSTRAINT theme_fields_target_not_null NOT NULL,
     name character varying(255) NOT NULL,
     value text NOT NULL,
     value_baked text,
@@ -9715,7 +9716,7 @@ CREATE TABLE public.theme_settings (
     theme_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    json_value jsonb
+    "json_value" jsonb
 );
 
 
@@ -9878,12 +9879,12 @@ ALTER SEQUENCE public.theme_translation_overrides_id_seq OWNED BY public.theme_t
 --
 
 CREATE TABLE public.themes (
-    id integer NOT NULL,
-    name character varying NOT NULL,
-    user_id integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    compiler_version integer DEFAULT 0 NOT NULL,
+    id integer CONSTRAINT site_customizations_id_not_null NOT NULL,
+    name character varying CONSTRAINT site_customizations_name_not_null NOT NULL,
+    user_id integer CONSTRAINT site_customizations_user_id_not_null NOT NULL,
+    created_at timestamp without time zone CONSTRAINT site_customizations_created_at_not_null NOT NULL,
+    updated_at timestamp without time zone CONSTRAINT site_customizations_updated_at_not_null NOT NULL,
+    compiler_version integer DEFAULT 0 CONSTRAINT site_customizations_compiler_version_not_null NOT NULL,
     user_selectable boolean DEFAULT false NOT NULL,
     hidden boolean DEFAULT false NOT NULL,
     color_scheme_id integer,
@@ -10213,11 +10214,11 @@ ALTER SEQUENCE public.topic_invites_id_seq OWNED BY public.topic_invites.id;
 --
 
 CREATE TABLE public.topic_link_clicks (
-    id integer NOT NULL,
-    topic_link_id integer NOT NULL,
+    id integer CONSTRAINT forum_thread_link_clicks_id_not_null NOT NULL,
+    topic_link_id integer CONSTRAINT forum_thread_link_clicks_forum_thread_link_id_not_null NOT NULL,
     user_id integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone CONSTRAINT forum_thread_link_clicks_created_at_not_null NOT NULL,
+    updated_at timestamp without time zone CONSTRAINT forum_thread_link_clicks_updated_at_not_null NOT NULL,
     ip_address inet
 );
 
@@ -10247,18 +10248,18 @@ ALTER SEQUENCE public.topic_link_clicks_id_seq OWNED BY public.topic_link_clicks
 --
 
 CREATE TABLE public.topic_links (
-    id integer NOT NULL,
-    topic_id integer NOT NULL,
+    id integer CONSTRAINT forum_thread_links_id_not_null NOT NULL,
+    topic_id integer CONSTRAINT forum_thread_links_forum_thread_id_not_null NOT NULL,
     post_id integer,
-    user_id integer NOT NULL,
-    url character varying NOT NULL,
-    domain character varying(100) NOT NULL,
-    internal boolean DEFAULT false NOT NULL,
+    user_id integer CONSTRAINT forum_thread_links_user_id_not_null NOT NULL,
+    url character varying CONSTRAINT forum_thread_links_url_not_null NOT NULL,
+    domain character varying(100) CONSTRAINT forum_thread_links_domain_not_null NOT NULL,
+    internal boolean DEFAULT false CONSTRAINT forum_thread_links_internal_not_null NOT NULL,
     link_topic_id integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone CONSTRAINT forum_thread_links_created_at_not_null NOT NULL,
+    updated_at timestamp without time zone CONSTRAINT forum_thread_links_updated_at_not_null NOT NULL,
     reflection boolean DEFAULT false,
-    clicks integer DEFAULT 0 NOT NULL,
+    clicks integer DEFAULT 0 CONSTRAINT forum_thread_links_clicks_not_null NOT NULL,
     link_post_id integer,
     title character varying,
     crawled_at timestamp without time zone,
@@ -10426,16 +10427,16 @@ ALTER SEQUENCE public.topic_thumbnails_id_seq OWNED BY public.topic_thumbnails.i
 --
 
 CREATE TABLE public.topic_timers (
-    id integer NOT NULL,
-    execute_at timestamp without time zone NOT NULL,
-    status_type integer NOT NULL,
-    user_id integer NOT NULL,
+    id integer CONSTRAINT topic_status_updates_id_not_null NOT NULL,
+    execute_at timestamp without time zone CONSTRAINT topic_status_updates_execute_at_not_null NOT NULL,
+    status_type integer CONSTRAINT topic_status_updates_status_type_not_null NOT NULL,
+    user_id integer CONSTRAINT topic_status_updates_user_id_not_null NOT NULL,
     topic_id integer,
-    based_on_last_post boolean DEFAULT false NOT NULL,
+    based_on_last_post boolean DEFAULT false CONSTRAINT topic_status_updates_based_on_last_post_not_null NOT NULL,
     deleted_at timestamp without time zone,
     deleted_by_id integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone CONSTRAINT topic_status_updates_created_at_not_null NOT NULL,
+    updated_at timestamp without time zone CONSTRAINT topic_status_updates_updated_at_not_null NOT NULL,
     category_id integer,
     public_type boolean DEFAULT true,
     duration_minutes integer,
@@ -10469,9 +10470,9 @@ ALTER SEQUENCE public.topic_timers_id_seq OWNED BY public.topic_timers.id;
 --
 
 CREATE TABLE public.topic_users (
-    user_id integer NOT NULL,
-    topic_id integer NOT NULL,
-    posted boolean DEFAULT false NOT NULL,
+    user_id integer CONSTRAINT forum_thread_users_user_id_not_null NOT NULL,
+    topic_id integer CONSTRAINT forum_thread_users_forum_thread_id_not_null NOT NULL,
+    posted boolean DEFAULT false CONSTRAINT forum_thread_users_posted_not_null NOT NULL,
     last_read_post_number integer,
     last_visited_at timestamp without time zone,
     first_visited_at timestamp without time zone,
@@ -10545,8 +10546,8 @@ ALTER SEQUENCE public.topic_view_stats_id_seq OWNED BY public.topic_view_stats.i
 --
 
 CREATE TABLE public.topic_views (
-    topic_id integer NOT NULL,
-    viewed_at date NOT NULL,
+    topic_id integer CONSTRAINT views_parent_id_not_null NOT NULL,
+    viewed_at date CONSTRAINT views_viewed_at_not_null NOT NULL,
     user_id integer,
     ip_address inet
 );
@@ -10557,10 +10558,10 @@ CREATE TABLE public.topic_views (
 --
 
 CREATE TABLE public.topic_voting_category_settings (
-    id bigint NOT NULL,
+    id bigint CONSTRAINT discourse_voting_category_settings_id_not_null NOT NULL,
     category_id integer,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    created_at timestamp(6) without time zone CONSTRAINT discourse_voting_category_settings_created_at_not_null NOT NULL,
+    updated_at timestamp(6) without time zone CONSTRAINT discourse_voting_category_settings_updated_at_not_null NOT NULL
 );
 
 
@@ -10588,11 +10589,11 @@ ALTER SEQUENCE public.topic_voting_category_settings_id_seq OWNED BY public.topi
 --
 
 CREATE TABLE public.topic_voting_topic_vote_count (
-    id bigint NOT NULL,
+    id bigint CONSTRAINT discourse_voting_topic_vote_count_id_not_null NOT NULL,
     topic_id integer,
     votes_count integer,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    created_at timestamp(6) without time zone CONSTRAINT discourse_voting_topic_vote_count_created_at_not_null NOT NULL,
+    updated_at timestamp(6) without time zone CONSTRAINT discourse_voting_topic_vote_count_updated_at_not_null NOT NULL
 );
 
 
@@ -10620,12 +10621,12 @@ ALTER SEQUENCE public.topic_voting_topic_vote_count_id_seq OWNED BY public.topic
 --
 
 CREATE TABLE public.topic_voting_votes (
-    id bigint NOT NULL,
+    id bigint CONSTRAINT discourse_voting_votes_id_not_null NOT NULL,
     topic_id integer,
     user_id integer,
     archive boolean DEFAULT false,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    created_at timestamp(6) without time zone CONSTRAINT discourse_voting_votes_created_at_not_null NOT NULL,
+    updated_at timestamp(6) without time zone CONSTRAINT discourse_voting_votes_updated_at_not_null NOT NULL
 );
 
 
@@ -10709,10 +10710,10 @@ ALTER SEQUENCE public.translation_overrides_id_seq OWNED BY public.translation_o
 --
 
 CREATE TABLE public.unsubscribe_keys (
-    key character varying(64) NOT NULL,
-    user_id integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
+    key character varying(64) CONSTRAINT digest_unsubscribe_keys_key_not_null NOT NULL,
+    user_id integer CONSTRAINT digest_unsubscribe_keys_user_id_not_null NOT NULL,
+    created_at timestamp without time zone CONSTRAINT digest_unsubscribe_keys_created_at_not_null NOT NULL,
+    updated_at timestamp without time zone CONSTRAINT digest_unsubscribe_keys_updated_at_not_null NOT NULL,
     unsubscribe_key_type character varying,
     topic_id integer,
     post_id integer
@@ -10843,15 +10844,15 @@ ALTER SEQUENCE public.uploads_id_seq OWNED BY public.uploads.id;
 --
 
 CREATE TABLE public.user_actions (
-    id integer NOT NULL,
-    action_type integer NOT NULL,
-    user_id integer NOT NULL,
+    id integer CONSTRAINT actions_id_not_null NOT NULL,
+    action_type integer CONSTRAINT actions_action_type_not_null NOT NULL,
+    user_id integer CONSTRAINT actions_user_id_not_null NOT NULL,
     target_topic_id integer,
     target_post_id integer,
     target_user_id integer,
     acting_user_id integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone CONSTRAINT actions_created_at_not_null NOT NULL,
+    updated_at timestamp without time zone CONSTRAINT actions_updated_at_not_null NOT NULL
 );
 
 
@@ -11280,8 +11281,8 @@ CREATE TABLE public.user_chat_channel_memberships (
     last_read_message_id bigint,
     following boolean DEFAULT false NOT NULL,
     muted boolean DEFAULT false NOT NULL,
-    desktop_notification_level integer DEFAULT 1 NOT NULL,
-    mobile_notification_level integer DEFAULT 1 NOT NULL,
+    desktop_notification_level integer DEFAULT 1 CONSTRAINT user_chat_channel_membershi_desktop_notification_level_not_null NOT NULL,
+    mobile_notification_level integer DEFAULT 1 CONSTRAINT user_chat_channel_membership_mobile_notification_level_not_null NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     last_unread_mention_when_emailed_id bigint,
@@ -11422,11 +11423,11 @@ ALTER SEQUENCE public.user_emails_id_seq OWNED BY public.user_emails.id;
 --
 
 CREATE TABLE public.user_exports (
-    id integer NOT NULL,
-    file_name character varying NOT NULL,
-    user_id integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
+    id integer CONSTRAINT csv_export_logs_id_not_null NOT NULL,
+    file_name character varying CONSTRAINT csv_export_logs_export_type_not_null NOT NULL,
+    user_id integer CONSTRAINT csv_export_logs_user_id_not_null NOT NULL,
+    created_at timestamp without time zone CONSTRAINT csv_export_logs_created_at_not_null NOT NULL,
+    updated_at timestamp without time zone CONSTRAINT csv_export_logs_updated_at_not_null NOT NULL,
     upload_id integer,
     topic_id integer
 );
@@ -11535,13 +11536,13 @@ ALTER SEQUENCE public.user_fields_id_seq OWNED BY public.user_fields.id;
 --
 
 CREATE TABLE public.user_histories (
-    id integer NOT NULL,
-    action integer NOT NULL,
+    id integer CONSTRAINT admin_logs_id_not_null NOT NULL,
+    action integer CONSTRAINT admin_logs_action_not_null NOT NULL,
     acting_user_id integer,
     target_user_id integer,
     details text,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone CONSTRAINT admin_logs_created_at_not_null NOT NULL,
+    updated_at timestamp without time zone CONSTRAINT admin_logs_updated_at_not_null NOT NULL,
     context character varying,
     ip_address character varying,
     email character varying,
@@ -11763,7 +11764,7 @@ CREATE TABLE public.user_options (
     discourse_rewind_enabled boolean DEFAULT true NOT NULL,
     notify_on_solved boolean DEFAULT true NOT NULL,
     show_original_content boolean DEFAULT false NOT NULL,
-    enable_upcoming_change_available_notifications boolean DEFAULT true NOT NULL,
+    enable_upcoming_change_available_notifications boolean DEFAULT true CONSTRAINT user_options_enable_upcoming_change_available_notifica_not_null NOT NULL,
     chat_announce_new_messages boolean DEFAULT true NOT NULL,
     chat_new_message_sound boolean DEFAULT false NOT NULL,
     push_notification_level integer DEFAULT 1 NOT NULL,
@@ -11897,7 +11898,7 @@ ALTER SEQUENCE public.user_required_fields_versions_id_seq OWNED BY public.user_
 --
 
 CREATE TABLE public.user_search_data (
-    user_id integer NOT NULL,
+    user_id integer CONSTRAINT users_search_id_not_null NOT NULL,
     search_data tsvector,
     raw_data text,
     locale text,
@@ -12144,12 +12145,12 @@ ALTER SEQUENCE public.user_visits_id_seq OWNED BY public.user_visits.id;
 --
 
 CREATE TABLE public.user_warnings (
-    id integer NOT NULL,
-    topic_id integer NOT NULL,
-    user_id integer NOT NULL,
-    created_by_id integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    id integer CONSTRAINT warnings_id_not_null NOT NULL,
+    topic_id integer CONSTRAINT warnings_topic_id_not_null NOT NULL,
+    user_id integer CONSTRAINT warnings_user_id_not_null NOT NULL,
+    created_by_id integer CONSTRAINT warnings_created_by_id_not_null NOT NULL,
+    created_at timestamp without time zone CONSTRAINT warnings_created_at_not_null NOT NULL,
+    updated_at timestamp without time zone CONSTRAINT warnings_updated_at_not_null NOT NULL
 );
 
 
@@ -12189,7 +12190,7 @@ CREATE TABLE public.users (
     last_seen_at timestamp without time zone,
     admin boolean DEFAULT false NOT NULL,
     last_emailed_at timestamp without time zone,
-    trust_level integer NOT NULL,
+    trust_level integer CONSTRAINT users_trust_level_id_not_null NOT NULL,
     approved boolean DEFAULT false NOT NULL,
     approved_by_id integer,
     approved_at timestamp without time zone,
@@ -12215,7 +12216,7 @@ CREATE TABLE public.users (
     flair_group_id integer,
     last_seen_reviewable_id integer,
     required_fields_version integer,
-    seen_notification_id bigint DEFAULT 0 NOT NULL
+    seen_notification_id bigint DEFAULT 0 CONSTRAINT users_new_seen_notification_id_not_null NOT NULL
 );
 
 
