@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "chunky_png"
+require "base64"
 require "digest"
 require "fileutils"
 require "json"
@@ -815,7 +816,7 @@ class VipsImageProcessingBenchmark
         iptc: image_header?(path, "iptc-data"),
         icc_profile: image_header?(path, "icc-profile-data"),
       },
-      xmp_sha256: xmp.present? ? Digest::SHA256.hexdigest(xmp) : nil,
+      xmp_sha256: xmp.present? ? Digest::SHA256.hexdigest(Base64.decode64(xmp).rstrip) : nil,
       semantic_exif:
         SEMANTIC_EXIF_FIELDS
           .to_h { |field| [field, canonical_header_value(image_header(path, field))] }
