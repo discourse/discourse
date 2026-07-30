@@ -1,10 +1,12 @@
 import { click, currentURL, fillIn, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
 import TopicFixtures from "discourse/tests/fixtures/topic";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { i18n } from "discourse-i18n";
 
 const FORM_TEMPLATES = [
   {
@@ -222,6 +224,8 @@ acceptance("Composer Form Template", function (needs) {
     await visit("/");
 
     const composer = this.owner.lookup("service:composer");
+    const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
+
     await composer.openNewTopic({ formTemplate: FORM_TEMPLATES[2] });
     await settled();
 
@@ -232,6 +236,40 @@ acceptance("Composer Form Template", function (needs) {
     assert
       .dom(".form-template-field__error")
       .exists("a validation error message is shown");
+
+    assert
+      .dom(".d-editor-input")
+      .hasAttribute("aria-invalid", "true", "the editor is marked invalid");
+
+    const describedBy = document
+      .querySelector(".d-editor-input")
+      .getAttribute("aria-describedby");
+    assert
+      .dom(`#${describedBy}`)
+      .hasText(
+        i18n("form_templates.errors.value_missing.default"),
+        "the editor is connected to the visible error"
+      );
+
+    assert.true(
+      announce.calledWith(
+        i18n("form_templates.errors.value_missing.default"),
+        "assertive"
+      ),
+      "the error is announced to screen readers"
+    );
+
+    await fillIn(".d-editor-input", "some content");
+
+    assert
+      .dom(".d-editor-input")
+      .hasAttribute("aria-invalid", "false", "the invalid state is cleared");
+    assert
+      .dom(".d-editor-input")
+      .doesNotHaveAttribute(
+        "aria-describedby",
+        "the error reference is cleared"
+      );
   });
 
   test("blocks topic creation when a required composer field is empty even if other fields are filled", async function (assert) {
