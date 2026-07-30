@@ -2075,6 +2075,8 @@ en:
     allowed_iframes: "A list of iframe src URL prefixes that Discourse can safely allow in posts. * can be used to match any number of non-/ characters."
     allowed_crawler_user_agents: "User agents of web crawlers that should be allowed to access the site. WARNING! SETTING THIS WILL DISALLOW ALL CRAWLERS NOT LISTED HERE!"
     blocked_crawler_user_agents: "Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if allowlist is defined."
+    crawler_asns: "ASNs operated by verified web crawlers. Traffic from these networks is excluded from browser pageview reporting and receives a high crawler score."
+    crawler_datacenter_asns: "ASNs that provide cloud, hosting, or data center services. Traffic from these networks receives a low-confidence crawler score but is still counted as browser traffic."
     slow_down_crawler_user_agents: "User agents of web crawlers that should be rate limited as configured in the {{setting:slow_down_crawler_rate}} setting. Each value must be at least 3 characters long."
     slow_down_crawler_rate: "If {{setting:slow_down_crawler_user_agents}} is specified this rate will apply to all the crawlers (number of seconds delay between requests)"
     llms_txt: "Upload a text file to be served at /llms.txt for LLM crawlers. See <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> for more information."

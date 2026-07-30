@@ -35,10 +35,11 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(event.reload.score).to eq(155)
+    expect(event.reload.score).to eq(170)
     breakdown = event.browser_pageview_event_score
     expect(breakdown.automation_ua_score).to eq(100)
-    expect(breakdown.known_asn_score).to eq(15)
+    expect(breakdown.known_asn_score).to eq(30)
+    expect(breakdown.datacenter_asn_score).to eq(0)
     expect(breakdown.velocity_score).to eq(0)
     expect(breakdown.churn_score).to eq(0)
     expect(breakdown.rapid_nav_score).to eq(0)
@@ -56,11 +57,22 @@ RSpec.describe CrawlerScorer do
     expect(event.browser_pageview_event_score.engagement_score).to eq(40)
   end
 
-  it "scores known crawler ASNs at +15" do
+  it "scores known crawler ASNs at +30" do
     SiteSetting.crawler_asns = "12345"
     event = make_event(asn: 12_345)
     score!
-    expect(event.reload.score).to eq(55)
+    expect(event.reload.score).to eq(70)
+  end
+
+  it "scores datacenter ASNs at +10" do
+    SiteSetting.crawler_asns = ""
+    SiteSetting.crawler_datacenter_asns = "12345"
+    event = make_event(asn: 12_345)
+
+    score!
+
+    expect(event.reload.score).to eq(50)
+    expect(event.browser_pageview_event_score.datacenter_asn_score).to eq(10)
   end
 
   it "scores pageview velocity at or above VELOCITY_LOW threshold at +15" do
@@ -223,9 +235,10 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(event.reload.score).to eq(15)
+    expect(event.reload.score).to eq(30)
     breakdown = event.browser_pageview_event_score
-    expect(breakdown.known_asn_score).to eq(15)
+    expect(breakdown.known_asn_score).to eq(30)
+    expect(breakdown.datacenter_asn_score).to eq(0)
     expect(breakdown.engagement_score).to eq(0)
   end
 
@@ -248,12 +261,12 @@ RSpec.describe CrawlerScorer do
     event = make_event(asn: 12_345)
 
     score!
-    expect(event.reload.score).to eq(55)
+    expect(event.reload.score).to eq(70)
 
     Fabricate(:browser_pageview_session_engagement, session_id: event.session_id, key_events: 4)
     score!
 
-    expect(event.reload.score).to eq(55)
+    expect(event.reload.score).to eq(70)
   end
 
   it "scores each source but partitions velocity so transports do not inflate each other" do

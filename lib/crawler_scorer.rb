@@ -5,7 +5,8 @@ class CrawlerScorer
 
   AUTOMATION_UA_SCORE = 100
 
-  KNOWN_ASN_SCORE = 15
+  KNOWN_ASN_SCORE = 30
+  DATACENTER_ASN_SCORE = 10
 
   VELOCITY_LOW = 150
   VELOCITY_MEDIUM = 300
@@ -38,6 +39,7 @@ class CrawlerScorer
 
   def self.score!(window_start:, window_end:)
     crawler_asns = SiteSetting.crawler_asns_map.map(&:to_i)
+    datacenter_asns = SiteSetting.crawler_datacenter_asns_map.map(&:to_i)
 
     ActiveRecord::Base.transaction do
       DB.exec(
@@ -46,9 +48,11 @@ class CrawlerScorer
         window_end: window_end,
         ua_regex: SiteSetting.crawler_automation_user_agents,
         crawler_asns: crawler_asns,
+        datacenter_asns: datacenter_asns,
         hostname: Discourse.current_hostname,
         automation_ua_score: AUTOMATION_UA_SCORE,
         known_asn_score: KNOWN_ASN_SCORE,
+        datacenter_asn_score: DATACENTER_ASN_SCORE,
         velocity_low: VELOCITY_LOW,
         velocity_medium: VELOCITY_MEDIUM,
         velocity_high: VELOCITY_HIGH,
@@ -151,6 +155,10 @@ class CrawlerScorer
           ELSE 0
         END AS known_asn_score,
         CASE
+          WHEN e.asn = ANY(ARRAY[:datacenter_asns]::int[]) THEN :datacenter_asn_score
+          ELSE 0
+        END AS datacenter_asn_score,
+        CASE
           WHEN iu.pageviews >= :velocity_high   THEN :velocity_high_score
           WHEN iu.pageviews >= :velocity_medium THEN :velocity_medium_score
           WHEN iu.pageviews >= :velocity_low    THEN :velocity_low_score
@@ -205,6 +213,7 @@ class CrawlerScorer
         id,
         automation_ua_score,
         known_asn_score,
+        datacenter_asn_score,
         velocity_score,
         churn_score,
         rapid_nav_score,
@@ -213,11 +222,11 @@ class CrawlerScorer
         engagement_score,
         GREATEST(
           0,
-          automation_ua_score + known_asn_score + velocity_score + churn_score
+          automation_ua_score + known_asn_score + datacenter_asn_score + velocity_score + churn_score
             + rapid_nav_score + ip_rotation_score + referrer_score + engagement_score
         ) AS score
       FROM breakdown
-      WHERE automation_ua_score + known_asn_score + velocity_score + churn_score
+      WHERE automation_ua_score + known_asn_score + datacenter_asn_score + velocity_score + churn_score
         + rapid_nav_score + ip_rotation_score + referrer_score + engagement_score > 0
     ),
 
@@ -230,6 +239,7 @@ class CrawlerScorer
       RETURNING e.id,
                 t.automation_ua_score,
                 t.known_asn_score,
+                t.datacenter_asn_score,
                 t.velocity_score,
                 t.churn_score,
                 t.rapid_nav_score,
@@ -242,6 +252,7 @@ class CrawlerScorer
       event_id,
       automation_ua_score,
       known_asn_score,
+      datacenter_asn_score,
       velocity_score,
       churn_score,
       rapid_nav_score,
@@ -253,6 +264,7 @@ class CrawlerScorer
       id,
       automation_ua_score,
       known_asn_score,
+      datacenter_asn_score,
       velocity_score,
       churn_score,
       rapid_nav_score,
@@ -263,6 +275,7 @@ class CrawlerScorer
     ON CONFLICT (event_id) DO UPDATE
     SET automation_ua_score = EXCLUDED.automation_ua_score,
         known_asn_score     = EXCLUDED.known_asn_score,
+        datacenter_asn_score = EXCLUDED.datacenter_asn_score,
         velocity_score      = EXCLUDED.velocity_score,
         churn_score         = EXCLUDED.churn_score,
         rapid_nav_score     = EXCLUDED.rapid_nav_score,
