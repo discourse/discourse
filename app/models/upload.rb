@@ -306,14 +306,18 @@ class Upload < ActiveRecord::Base
       if extension == "svg"
         w, h =
           begin
-            ImageMagick.identify(
-              "-ping",
-              "-format",
-              "%w %h",
-              "MSVG:#{path}",
-              read: [path],
-              timeout: MAX_IDENTIFY_SECONDS,
-            ).split(" ")
+            if SiteSetting.use_vips_for_image_processing
+              Vips::ImageProcessor.dimensions(path, format: "svg")
+            else
+              ImageMagick.identify(
+                "-ping",
+                "-format",
+                "%w %h",
+                "MSVG:#{path}",
+                read: [path],
+                timeout: MAX_IDENTIFY_SECONDS,
+              ).split(" ")
+            end
           rescue StandardError
             [0, 0]
           end
@@ -445,14 +449,18 @@ class Upload < ActiveRecord::Base
   def target_image_quality(local_path, test_quality)
     @file_quality ||=
       begin
-        ImageMagick.identify(
-          "-ping",
-          "-format",
-          "%Q",
-          local_path,
-          read: [local_path],
-          timeout: MAX_IDENTIFY_SECONDS,
-        ).to_i
+        if SiteSetting.use_vips_for_image_processing
+          Vips::JpegQuality.read(local_path)
+        else
+          ImageMagick.identify(
+            "-ping",
+            "-format",
+            "%Q",
+            local_path,
+            read: [local_path],
+            timeout: MAX_IDENTIFY_SECONDS,
+          ).to_i
+        end
       rescue StandardError
         0
       end

@@ -6,7 +6,12 @@ class OptimizedImage < ActiveRecord::Base
 
   # BUMP UP if optimized image algorithm changes
   VERSION = 2
+  VIPS_VERSION = 3
   URL_REGEX = %r{(/optimized/\dX[/\.\w]*/([a-zA-Z0-9]+)[\.\w]*)}
+
+  def self.version
+    SiteSetting.use_vips_for_image_processing ? VIPS_VERSION : VERSION
+  end
 
   def self.lock(upload_id, width, height)
     @hostname ||= Discourse.os_hostname
@@ -53,7 +58,7 @@ class OptimizedImage < ActiveRecord::Base
     thumbnail = find_by(upload_id: upload.id, width: width, height: height, extension: extension)
 
     # correct bad thumbnail if needed
-    if thumbnail && (thumbnail.url.blank? || thumbnail.version != VERSION)
+    if thumbnail && (thumbnail.url.blank? || thumbnail.version != version)
       thumbnail.destroy!
       thumbnail = nil
     end
@@ -82,6 +87,11 @@ class OptimizedImage < ActiveRecord::Base
     lock(upload.id, width, height) do
       # may have been generated since we got the lock
       thumbnail = find_by(upload_id: upload.id, width: width, height: height, extension: extension)
+
+      if thumbnail && (thumbnail.url.blank? || thumbnail.version != version)
+        thumbnail.destroy!
+        thumbnail = nil
+      end
 
       # return the previous thumbnail if any
       return thumbnail if thumbnail
@@ -125,7 +135,7 @@ class OptimizedImage < ActiveRecord::Base
               height: height,
               url: "",
               filesize: File.size(temp_path),
-              version: VERSION,
+              version: version,
             )
 
           # store the optimized image and update its url
@@ -198,6 +208,10 @@ class OptimizedImage < ActiveRecord::Base
   IM_DECODERS = /\A(jpe?g|png|ico|gif|webp|avif|svg)\z/i
 
   def self.prepend_decoder!(path, ext_path = nil, opts = nil)
+    "#{image_format!(path:, ext_path:, opts:)}:#{path}"
+  end
+
+  def self.image_format!(path:, ext_path: nil, opts: nil)
     opts ||= {}
 
     # This logic is a little messy but the result of using mocks for most
@@ -215,7 +229,7 @@ class OptimizedImage < ActiveRecord::Base
     if !extension || !extension.match?(IM_DECODERS)
       raise Discourse::InvalidAccess.new("Unsupported extension: #{extension}")
     end
-    "#{extension}:#{path}"
+    extension.downcase
   end
 
   def self.thumbnail_or_resize
@@ -326,23 +340,31 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.optimize(operation, from, to, dimensions, opts = {})
-    method_name = "#{operation}_instructions"
-
-    instructions = public_send(method_name.to_sym, from, to, dimensions, opts)
-    convert_with(instructions, from, to, opts)
-  end
-
-  MAX_PNGQUANT_SIZE = 500_000
-  MAX_CONVERT_SECONDS = 20
-
-  def self.convert_with(instructions, from, to, opts = {})
-    ImageMagick.magick(
-      *instructions,
-      read: [from],
-      write: [File.dirname(to)],
-      nice: 10,
-      timeout: MAX_CONVERT_SECONDS,
-    )
+    if SiteSetting.use_vips_for_image_processing
+      source_format = image_format!(path: from, ext_path: to, opts:)
+      target_format = image_format!(path: to, ext_path: to, opts:)
+      instructions = ["vips", operation, from, to, dimensions]
+      Vips::ImageProcessor.public_send(
+        operation,
+        from:,
+        to:,
+        dimensions:,
+        source_format:,
+        target_format:,
+        quality: opts[:quality],
+        colors: opts[:colors],
+      )
+    else
+      method_name = "#{operation}_instructions"
+      instructions = public_send(method_name.to_sym, from, to, dimensions, opts)
+      ImageMagick.magick(
+        *instructions,
+        read: [from],
+        write: [File.dirname(to)],
+        nice: 10,
+        timeout: MAX_CONVERT_SECONDS,
+      )
+    end
 
     allow_pngquant = to.downcase.ends_with?(".png") && File.size(to) < MAX_PNGQUANT_SIZE
     FileHelper.optimize_image!(to, allow_pngquant: allow_pngquant)
@@ -369,6 +391,11 @@ class OptimizedImage < ActiveRecord::Base
       false
     end
   end
+
+  MAX_PNGQUANT_SIZE = 500_000
+  MAX_CONVERT_SECONDS = 20
+
+  private_class_method :image_format!
 end
 
 # == Schema Information

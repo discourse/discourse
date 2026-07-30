@@ -195,18 +195,22 @@ class UploadCreator
           # 'MSVG:' forces ImageMagick to use internal routines and behave
           # consistently whether it's running from our docker container or not
           begin
-            w, h =
-              ImageMagick
-                .identify(
-                  "-ping",
-                  "-format",
-                  "%w %h",
-                  "MSVG:#{@file.path}",
-                  read: [@file.path],
-                  timeout: Upload::MAX_IDENTIFY_SECONDS,
-                )
-                .split(" ")
-                .map(&:to_i)
+            if SiteSetting.use_vips_for_image_processing
+              w, h = Vips::ImageProcessor.dimensions(@file.path, format: "svg")
+            else
+              w, h =
+                ImageMagick
+                  .identify(
+                    "-ping",
+                    "-format",
+                    "%w %h",
+                    "MSVG:#{@file.path}",
+                    read: [@file.path],
+                    timeout: Upload::MAX_IDENTIFY_SECONDS,
+                  )
+                  .split(" ")
+                  .map(&:to_i)
+            end
           rescue StandardError
             # use default 0, 0
           end
@@ -338,6 +342,14 @@ class UploadCreator
   def convert_favicon_to_png!
     png_tempfile = Tempfile.new(%w[image .png])
 
+    if SiteSetting.use_vips_for_image_processing
+      Vips::Ico.convert(path: @file.path, output: png_tempfile.path)
+      @file.respond_to?(:close!) ? @file.close! : @file.close
+      @file = png_tempfile
+      extract_image_info!
+      return
+    end
+
     from = @file.path
     to = png_tempfile.path
 
@@ -353,12 +365,7 @@ class UploadCreator
     read = [@file.path]
     write = [File.dirname(png_tempfile.path)]
 
-    begin
-      execute_convert(from, to, opts, read:, write:)
-    rescue StandardError
-      # retry with debugging enabled
-      execute_convert(from, to, opts.merge(debug: true), read:, write:)
-    end
+    execute_convert_with_debug_retry(from:, to:, opts:, read:, write:)
 
     @file.respond_to?(:close!) ? @file.close! : @file.close
     @file = png_tempfile
@@ -393,12 +400,7 @@ class UploadCreator
     read = [@file.path]
     write = [File.dirname(jpeg_tempfile.path)]
 
-    begin
-      execute_convert(from, to, opts, read:, write:)
-    rescue StandardError
-      # retry with debugging enabled
-      execute_convert(from, to, opts.merge(debug: true), read:, write:)
-    end
+    execute_convert_with_debug_retry(from:, to:, opts:, read:, write:)
 
     new_size = File.size(jpeg_tempfile.path)
 
@@ -423,12 +425,7 @@ class UploadCreator
     read = [@file.path]
     write = [File.dirname(jpeg_tempfile.path)]
 
-    begin
-      execute_convert(from, to, {}, read:, write:)
-    rescue StandardError
-      # retry with debugging enabled
-      execute_convert(from, to, { debug: true }, read:, write:)
-    end
+    execute_convert_with_debug_retry(from:, to:, opts: {}, read:, write:)
 
     @file.respond_to?(:close!) ? @file.close! : @file.close
     @file = jpeg_tempfile
@@ -437,6 +434,21 @@ class UploadCreator
 
   MAX_CONVERT_FORMAT_SECONDS = 20
   def execute_convert(from, to, opts = {}, read: [], write: [])
+    if SiteSetting.use_vips_for_image_processing
+      source_format, source_path = vips_path(from)
+      target_format, target_path = vips_path(to)
+      Vips::ImageProcessor.convert(
+        from: source_path,
+        to: target_path,
+        source_format:,
+        target_format:,
+        flatten: opts[:flatten] != false,
+        quality: opts[:quality],
+        failure_message: I18n.t("upload.png_to_jpg_conversion_failure_message"),
+      )
+      return
+    end
+
     command = [from, "-auto-orient", "-background", "white", "-interlace", "none"]
     command << "-flatten" unless opts[:flatten] == false
     command << "-debug" << "all" if opts[:debug]
@@ -551,16 +563,22 @@ class UploadCreator
     path = @file.path
 
     OptimizedImage.ensure_safe_paths!(path)
-    path = OptimizedImage.prepend_decoder!(path, nil, filename: "image.#{@image_info.type}")
+    if SiteSetting.use_vips_for_image_processing
+      format = @image_info.type.to_s
+      quality = Vips::JpegQuality.read(path) if %w[jpeg jpg].include?(format)
+      Vips::ImageProcessor.autorot(path:, format:, quality:, timeout: MAX_FIX_ORIENTATION_TIME)
+    else
+      path = OptimizedImage.prepend_decoder!(path, nil, filename: "image.#{@image_info.type}")
 
-    ImageMagick.magick(
-      path,
-      "-auto-orient",
-      path,
-      read: [@file.path],
-      write: [@file.path, File.dirname(@file.path)],
-      timeout: MAX_FIX_ORIENTATION_TIME,
-    )
+      ImageMagick.magick(
+        path,
+        "-auto-orient",
+        path,
+        read: [@file.path],
+        write: [@file.path, File.dirname(@file.path)],
+        timeout: MAX_FIX_ORIENTATION_TIME,
+      )
+    end
 
     extract_image_info!
   end
@@ -695,14 +713,18 @@ class UploadCreator
 
           frames =
             begin
-              ImageMagick.identify(
-                "-ping",
-                "-format",
-                "%n\\n",
-                @file.path,
-                read: [@file.path],
-                timeout: Upload::MAX_IDENTIFY_SECONDS,
-              ).to_i
+              if SiteSetting.use_vips_for_image_processing
+                Vips::ImageProcessor.frame_count(@file.path, format: type)
+              else
+                ImageMagick.identify(
+                  "-ping",
+                  "-format",
+                  "%n\\n",
+                  @file.path,
+                  read: [@file.path],
+                  timeout: Upload::MAX_IDENTIFY_SECONDS,
+                ).to_i
+              end
             rescue StandardError
               1
             end
@@ -716,5 +738,18 @@ class UploadCreator
 
   def generate_fake_sha1_hash
     SecureRandom.hex(20)
+  end
+
+  def vips_path(value)
+    match = value.match(/\A([a-z0-9]+):(.*?)(?:\[-1\])?\z/i)
+    return File.extname(value).delete_prefix(".").downcase, value if match.nil?
+    [match[1].downcase, match[2]]
+  end
+
+  def execute_convert_with_debug_retry(from:, to:, opts:, read:, write:)
+    execute_convert(from, to, opts, read:, write:)
+  rescue StandardError
+    raise if SiteSetting.use_vips_for_image_processing
+    execute_convert(from, to, opts.merge(debug: true), read:, write:)
   end
 end

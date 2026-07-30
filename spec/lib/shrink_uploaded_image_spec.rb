@@ -30,31 +30,34 @@ RSpec.describe ShrinkUploadedImage do
     end
 
     it "updates HotlinkedMedia records when there is an upload for downsized image" do
-      OptimizedImage.downsize(
-        Discourse.store.path_for(upload),
-        "/tmp/smaller.png",
-        "10000@",
-        filename: upload.original_filename,
-      )
-      smaller_sha1 = Upload.generate_digest("/tmp/smaller.png")
-      smaller_upload = Fabricate(:image_upload, sha1: smaller_sha1)
-
-      post = create_post_with_upload
-      post_hotlinked_media =
-        PostHotlinkedMedia.create!(
-          post: post,
-          url: "http://example.com/images/2/2e/Longcat1.png",
-          upload: upload,
-          status: :downloaded,
+      Dir.mktmpdir("smaller-upload") do |directory|
+        smaller_path = File.join(directory, "smaller.png")
+        OptimizedImage.downsize(
+          Discourse.store.path_for(upload),
+          smaller_path,
+          "10000@",
+          filename: upload.original_filename,
         )
+        smaller_sha1 = Upload.generate_digest(smaller_path)
+        smaller_upload = Fabricate(:image_upload, sha1: smaller_sha1)
 
-      ShrinkUploadedImage.new(
-        upload: upload,
-        path: Discourse.store.path_for(upload),
-        max_pixels: 10_000,
-      ).perform
+        post = create_post_with_upload
+        post_hotlinked_media =
+          PostHotlinkedMedia.create!(
+            post: post,
+            url: "http://example.com/images/2/2e/Longcat1.png",
+            upload: upload,
+            status: :downloaded,
+          )
 
-      expect(post_hotlinked_media.reload.upload).to eq(smaller_upload)
+        ShrinkUploadedImage.new(
+          upload: upload,
+          path: Discourse.store.path_for(upload),
+          max_pixels: 10_000,
+        ).perform
+
+        expect(post_hotlinked_media.reload.upload).to eq(smaller_upload)
+      end
     end
 
     it "returns false if the image is not used by any models" do
