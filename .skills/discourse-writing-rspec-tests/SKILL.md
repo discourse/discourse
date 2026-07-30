@@ -17,6 +17,7 @@ Discourse uses RSpec for testing. Follow these patterns for all test types.
 - **Capture infrastructure side effects without mocking internals** — use `DiscourseEvent.track_events` and `MessageBus.track_publish` when asserting emitted events or published messages instead of expecting calls to `trigger` or `publish`.
 - **Prefer readability over DRYness** — tests are documentation. Some duplication is fine. Avoid deep `shared_examples`/`let` chains that hurt readability.
 - **Avoid arbitrary helper methods** — first express shared records with `fab!`, lazy per-example values with `let`, eager per-example values with `let!`, and the operation under test with `subject`. `let` should represent a value, not hide a parameterized helper in a Proc or lambda. If a method is still necessary, prefer a focused module under the auto-loaded `spec/support` directory and include it only where needed. Define a method directly in an example group only as a last resort when it is tightly scoped and extracting it would make the test harder to understand.
+- **Choose test data by lifecycle** — use `fab!` for shared records and inline `Fabricate` for records local to one example. Because `fab!` uses TestProf `let_it_be`, it cannot depend on `let` or other per-example setup; use `let!` when a record must be created per example. Search `spec/fabricators` before creating setup by hand, and define a derived fabricator for a recurring record shape.
 - **Test edge cases** — nil inputs, empty collections, boundary values, permission failures — not just happy paths.
 - **Keep tests independent** — no test should depend on another test's execution or shared mutable state.
 - **Verify placement in parent context** — before adding a new test, always read the surrounding `describe`/`context` block to confirm the test belongs there. Check that the parent context's description, `let`/`fab!` setup, and `before` hooks match the scenario being tested. A misplaced test inherits the wrong setup and produces misleading results.
@@ -29,12 +30,6 @@ Discourse uses RSpec for testing. Follow these patterns for all test types.
 - **Optimise for human readability** — minimise context overload when reading an example. Avoid too many indirections.
 - **Limit nesting to 2 levels** — avoid more than 2 levels of `describe`/`context` nesting. Instead of deeply nested contexts, put the full scenario description in the `it` block itself. Flat tests are easier to read and maintain.
 - **Avoid double negatives in descriptions** — write test descriptions that state the positive condition. For example, prefer `"returns true when topic_approval_type is approval or pre_approval"` over `"returns true when topic_approval_type is not none"`. Be specific about the values being tested.
-
-## Test Data with Fabricators
-
-Use `fab!` for shared records and `Fabricate` inline for records local to one example. Because `fab!` uses TestProf `let_it_be`, it cannot depend on `let` or other per-example setup; use `let!` when a record must be created per example.
-
-Search `spec/fabricators` before creating setup by hand. Define a derived fabricator for a recurring record shape.
 
 ## Test Efficiency
 

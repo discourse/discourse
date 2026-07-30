@@ -1,17 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::Log::V1 do
-  def entries(*rows)
-    { "values" => rows }
-  end
-
   describe "#execute" do
     it "passes input items through" do
       items = [{ "json" => { "name" => "Alice" } }, { "json" => { "count" => 42 } }]
       result =
         execute_node_output(
           configuration: {
-            "entries" => entries({ "key" => "tag", "value" => "hello" }),
+            "entries" => {
+              "values" => [{ "key" => "tag", "value" => "hello" }],
+            },
           },
           input_items: items,
         )
@@ -20,8 +18,12 @@ RSpec.describe DiscourseWorkflows::Nodes::Log::V1 do
 
     it "records structured key/value logs" do
       items = [{ "json" => { "id" => 1 } }]
-      log_entries =
-        entries({ "key" => "user_id", "value" => "1" }, { "key" => "status", "value" => "ok" })
+      log_entries = {
+        "values" => [
+          { "key" => "user_id", "value" => "1" },
+          { "key" => "status", "value" => "ok" },
+        ],
+      }
       execute_node_output(configuration: { "entries" => log_entries }, input_items: items) do |ctx|
         expect(ctx.log.entries.size).to eq(2)
         expect(ctx.log.entries.first).to include(
@@ -42,7 +44,9 @@ RSpec.describe DiscourseWorkflows::Nodes::Log::V1 do
       result =
         execute_node_output(
           configuration: {
-            "entries" => entries({ "key" => "name", "value" => "={{ $json.user_name }}" }),
+            "entries" => {
+              "values" => [{ "key" => "name", "value" => "={{ $json.user_name }}" }],
+            },
           },
           input_items: items,
         ) do |ctx|
@@ -58,9 +62,14 @@ RSpec.describe DiscourseWorkflows::Nodes::Log::V1 do
     it "handles empty entries gracefully" do
       items = [{ "json" => { "x" => 1 } }]
       result =
-        execute_node_output(configuration: { "entries" => entries }, input_items: items) do |ctx|
-          expect(ctx.log.entries).to be_empty
-        end
+        execute_node_output(
+          configuration: {
+            "entries" => {
+              "values" => [],
+            },
+          },
+          input_items: items,
+        ) { |ctx| expect(ctx.log.entries).to be_empty }
       expect(result.first).to eq(items)
     end
 
@@ -81,7 +90,9 @@ RSpec.describe DiscourseWorkflows::Nodes::Log::V1 do
       ]
       execute_node_output(
         configuration: {
-          "entries" => entries({ "key" => "name", "value" => "={{ $json.name }}" }),
+          "entries" => {
+            "values" => [{ "key" => "name", "value" => "={{ $json.name }}" }],
+          },
         },
         input_items: items,
       ) do |ctx|
@@ -92,11 +103,12 @@ RSpec.describe DiscourseWorkflows::Nodes::Log::V1 do
 
     it "emits items.size * entries.size logs in runOnceForEachItem mode" do
       items = [{ "json" => { "id" => 1 } }, { "json" => { "id" => 2 } }]
-      log_entries =
-        entries(
+      log_entries = {
+        "values" => [
           { "key" => "id", "value" => "={{ $json.id }}" },
           { "key" => "tag", "value" => "static" },
-        )
+        ],
+      }
       execute_node_output(
         configuration: {
           "mode" => "runOnceForEachItem",
@@ -120,7 +132,9 @@ RSpec.describe DiscourseWorkflows::Nodes::Log::V1 do
       execute_node_output(
         configuration: {
           "mode" => "runOnceForAllItems",
-          "entries" => entries({ "key" => "name", "value" => "={{ $json.name }}" }),
+          "entries" => {
+            "values" => [{ "key" => "name", "value" => "={{ $json.name }}" }],
+          },
         },
         input_items: items,
       ) do |ctx|
@@ -133,7 +147,9 @@ RSpec.describe DiscourseWorkflows::Nodes::Log::V1 do
       result =
         execute_node_output(
           configuration: {
-            "entries" => entries({ "key" => "marker", "value" => "ran" }),
+            "entries" => {
+              "values" => [{ "key" => "marker", "value" => "ran" }],
+            },
           },
           input_items: [],
         ) do |ctx|

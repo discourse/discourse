@@ -1,82 +1,76 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::If::V1 do
-  def build_config(conditions:, combinator: "and", options: {})
-    { "conditions" => conditions, "combinator" => combinator, "options" => options }
-  end
-
-  def wrap_items(*jsons)
-    jsons.map { |json| { "json" => json } }
-  end
-
   describe "#execute" do
     context "with combinators" do
       it "and: all conditions must pass" do
-        config =
-          build_config(
-            conditions: [
-              {
-                "id" => "1",
-                "leftValue" => "={{ $json.status }}",
-                "rightValue" => "closed",
-                "operator" => {
-                  "type" => "string",
-                  "operation" => "equals",
-                },
+        config = {
+          "conditions" => [
+            {
+              "id" => "1",
+              "leftValue" => "={{ $json.status }}",
+              "rightValue" => "closed",
+              "operator" => {
+                "type" => "string",
+                "operation" => "equals",
               },
-              {
-                "id" => "2",
-                "leftValue" => "={{ $json.enabled }}",
-                "operator" => {
-                  "type" => "boolean",
-                  "operation" => "true",
-                  "singleValue" => true,
-                },
+            },
+            {
+              "id" => "2",
+              "leftValue" => "={{ $json.enabled }}",
+              "operator" => {
+                "type" => "boolean",
+                "operation" => "true",
+                "singleValue" => true,
               },
-            ],
-            combinator: "and",
-          )
+            },
+          ],
+          "combinator" => "and",
+          "options" => {
+          },
+        }
 
-        items = wrap_items({ "status" => "closed", "enabled" => true })
+        items = [{ "json" => { "status" => "closed", "enabled" => true } }]
         result = execute_node_output(configuration: config, input_items: items)
         expect(result[0]).to eq(items)
 
-        items = wrap_items({ "status" => "closed", "enabled" => false })
+        items = [{ "json" => { "status" => "closed", "enabled" => false } }]
         result = execute_node_output(configuration: config, input_items: items)
         expect(result[1]).to eq(items)
       end
 
       it "or: any condition passing is enough" do
-        config =
-          build_config(
-            conditions: [
-              {
-                "id" => "1",
-                "leftValue" => "={{ $json.status }}",
-                "rightValue" => "closed",
-                "operator" => {
-                  "type" => "string",
-                  "operation" => "equals",
-                },
+        config = {
+          "conditions" => [
+            {
+              "id" => "1",
+              "leftValue" => "={{ $json.status }}",
+              "rightValue" => "closed",
+              "operator" => {
+                "type" => "string",
+                "operation" => "equals",
               },
-              {
-                "id" => "2",
-                "leftValue" => "={{ $json.status }}",
-                "rightValue" => "archived",
-                "operator" => {
-                  "type" => "string",
-                  "operation" => "equals",
-                },
+            },
+            {
+              "id" => "2",
+              "leftValue" => "={{ $json.status }}",
+              "rightValue" => "archived",
+              "operator" => {
+                "type" => "string",
+                "operation" => "equals",
               },
-            ],
-            combinator: "or",
-          )
+            },
+          ],
+          "combinator" => "or",
+          "options" => {
+          },
+        }
 
-        items = wrap_items({ "status" => "archived" })
+        items = [{ "json" => { "status" => "archived" } }]
         result = execute_node_output(configuration: config, input_items: items)
         expect(result[0]).to eq(items)
 
-        items = wrap_items({ "status" => "open" })
+        items = [{ "json" => { "status" => "open" } }]
         result = execute_node_output(configuration: config, input_items: items)
         expect(result[1]).to eq(items)
       end
@@ -84,22 +78,27 @@ RSpec.describe DiscourseWorkflows::Nodes::If::V1 do
 
     context "with per-item routing" do
       it "routes items to different outputs based on condition" do
-        config =
-          build_config(
-            conditions: [
-              {
-                "id" => "1",
-                "leftValue" => "={{ $json.status }}",
-                "rightValue" => "closed",
-                "operator" => {
-                  "type" => "string",
-                  "operation" => "equals",
-                },
+        config = {
+          "conditions" => [
+            {
+              "id" => "1",
+              "leftValue" => "={{ $json.status }}",
+              "rightValue" => "closed",
+              "operator" => {
+                "type" => "string",
+                "operation" => "equals",
               },
-            ],
-          )
+            },
+          ],
+          "combinator" => "and",
+          "options" => {
+          },
+        }
 
-        items = wrap_items({ "status" => "closed", "id" => 1 }, { "status" => "open", "id" => 2 })
+        items = [
+          { "json" => { "status" => "closed", "id" => 1 } },
+          { "json" => { "status" => "open", "id" => 2 } },
+        ]
         result = execute_node_output(configuration: config, input_items: items)
         expect(result[0].length).to eq(1)
         expect(result[0].first["json"]["id"]).to eq(1)
@@ -110,22 +109,24 @@ RSpec.describe DiscourseWorkflows::Nodes::If::V1 do
 
     context "with missing context values" do
       it "treats missing fields as nil" do
-        config =
-          build_config(
-            conditions: [
-              {
-                "id" => "1",
-                "leftValue" => "={{ $json.nonexistent }}",
-                "rightValue" => "something",
-                "operator" => {
-                  "type" => "string",
-                  "operation" => "equals",
-                },
+        config = {
+          "conditions" => [
+            {
+              "id" => "1",
+              "leftValue" => "={{ $json.nonexistent }}",
+              "rightValue" => "something",
+              "operator" => {
+                "type" => "string",
+                "operation" => "equals",
               },
-            ],
-          )
+            },
+          ],
+          "combinator" => "and",
+          "options" => {
+          },
+        }
 
-        items = wrap_items({ "status" => "closed" })
+        items = [{ "json" => { "status" => "closed" } }]
         result = execute_node_output(configuration: config, input_items: items)
         expect(result[1]).to eq(items)
       end
