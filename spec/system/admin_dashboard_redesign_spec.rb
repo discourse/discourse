@@ -35,6 +35,7 @@ describe "Admin Dashboard Redesign" do
 
       expect(dashboard).to have_highlights_content
       expect(dashboard.general_dashboard_request_count).to eq(0)
+      expect(dashboard.pageview_request_count).to eq(1)
       expect(dashboard).to have_section_loading("reports")
       expect(dashboard).to have_section_loading("search")
       expect(dashboard.requested_section_ids).not_to include("reports", "search")
@@ -48,6 +49,7 @@ describe "Admin Dashboard Redesign" do
       expect(dashboard.section_request_count("reports")).to eq(1)
       expect(dashboard.section_request_count("search")).to eq(1)
       expect(dashboard.reports_bulk_request_count).to eq(0)
+      expect(dashboard.pageview_request_count).to eq(1)
     end
 
     it "keeps loaded content stable through date changes and ignores an older response that finishes last",

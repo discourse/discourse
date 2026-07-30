@@ -255,6 +255,7 @@ module PageObjects
       def track_section_requests
         @section_requests = []
         @reports_bulk_request_count = 0
+        @pageview_request_count = 0
         page.driver.with_playwright_page do |playwright_page|
           playwright_page.on(
             "request",
@@ -264,6 +265,7 @@ module PageObjects
               if request.url.match?(%r{/admin/dashboard/reports/bulk(?:\.json)?})
                 @reports_bulk_request_count += 1
               end
+              @pageview_request_count += 1 if request.url.match?(%r{/srv/pv(?:\?|$)})
             end,
           )
         end
@@ -291,6 +293,10 @@ module PageObjects
 
       def general_dashboard_request_count
         @general_dashboard_request_count || 0
+      end
+
+      def pageview_request_count
+        @pageview_request_count || 0
       end
 
       def reports_bulk_request_count
