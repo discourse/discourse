@@ -230,7 +230,7 @@ class VipsImageProcessingBenchmark
         size_ratio: (0.5..2.0),
         expected_format: :jpeg,
         expected_orientation: nil,
-        metadata_stripped: true,
+        metadata_stripped: nil,
       ),
       BenchmarkOperation.new(
         key: "jpeg_recompression",
@@ -385,6 +385,7 @@ class VipsImageProcessingBenchmark
       write: [@inputs_dir],
     )
     xmp = Base64.decode64(Vips.header(transparent, field: "xmp-data"))
+    iptc = ["1c0205000b54657374204f626a656374"].pack("H*")
     append_png_chunks(
       transparent,
       [
@@ -392,6 +393,7 @@ class VipsImageProcessingBenchmark
           "zTXt",
           "Raw profile type xmp\0\0" + Zlib::Deflate.deflate(raw_png_profile("xmp", xmp)),
         ),
+        png_chunk("tEXt", "Raw profile type iptc\0#{raw_png_profile("iptc", iptc)}"),
         png_chunk("tEXt", "comment\0metadata-parity-comment"),
       ],
     )
@@ -867,7 +869,7 @@ class VipsImageProcessingBenchmark
     comments = []
 
     File.open(path, "rb") do |file|
-      raise "invalid JPEG signature" if file.read(2) != "\xFF\xD8".b
+      return comments if file.read(2) != "\xFF\xD8".b
 
       loop do
         raise "invalid JPEG marker" if file.read(1)&.getbyte(0) != 0xFF

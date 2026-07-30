@@ -261,7 +261,68 @@ RSpec.describe Vips do
             target_format: "jpeg",
             flatten: true,
           )
-        end.to raise_error(Discourse::Utils::CommandError, /oversized decompressed PNG metadata/)
+        end.to raise_error(Discourse::Utils::CommandError, /PNG metadata limit exceeded/)
+        expect(File.exist?(output)).to eq(false)
+      end
+    end
+
+    it "applies the PNG metadata limit cumulatively across compressed chunks" do
+      Dir.mktmpdir("vips-convert-metadata-total-limit") do |directory|
+        base = File.join(directory, "base.png")
+        input = File.join(directory, "input.png")
+        output = File.join(directory, "output.jpg")
+        Vips.call(
+          "copy",
+          high_detail_input,
+          "#{base}[strip=true]",
+          read: [high_detail_input],
+          write: [directory],
+        )
+        comment = "x" * (2 * 1024 * 1024)
+        chunks = 2.times.map { png_chunk("zTXt", "comment\0\0" + Zlib::Deflate.deflate(comment)) }
+        write_png_with_chunks(source: base, target: input, chunks:)
+
+        expect do
+          described_class.convert(
+            from: input,
+            to: output,
+            source_format: "png",
+            target_format: "jpeg",
+            flatten: true,
+          )
+        end.to raise_error(Discourse::Utils::CommandError, /PNG metadata limit exceeded/)
+        expect(File.exist?(output)).to eq(false)
+      end
+    end
+
+    it "rejects an unbounded PNG raw-profile length token" do
+      Dir.mktmpdir("vips-convert-metadata-length") do |directory|
+        base = File.join(directory, "base.png")
+        input = File.join(directory, "input.png")
+        output = File.join(directory, "output.jpg")
+        Vips.call(
+          "copy",
+          high_detail_input,
+          "#{base}[strip=true]",
+          read: [high_detail_input],
+          write: [directory],
+        )
+        profile = "\nxmp\n#{"9" * 1000}\n00\n"
+        write_png_with_chunks(
+          source: base,
+          target: input,
+          chunks: [png_chunk("tEXt", "Raw profile type xmp\0#{profile}")],
+        )
+
+        expect do
+          described_class.convert(
+            from: input,
+            to: output,
+            source_format: "png",
+            target_format: "jpeg",
+            flatten: true,
+          )
+        end.to raise_error(Discourse::Utils::CommandError, /invalid PNG raw profile length/)
         expect(File.exist?(output)).to eq(false)
       end
     end

@@ -20,6 +20,7 @@ class Vips
 
   def self.png_metadata(path)
     metadata = { exif: false, xmp: nil, iptc: nil, comments: [] }
+    budget = { remaining: MAX_PNG_METADATA_BYTES }
 
     File.open(path, "rb") do |file|
       if file.read(PNG_FILE_SIGNATURE.bytesize) != PNG_FILE_SIGNATURE
@@ -38,7 +39,7 @@ class Vips
 
         data =
           if %w[eXIf tEXt zTXt iTXt].include?(type)
-            raise_metadata_error("oversized PNG metadata chunk") if length > MAX_PNG_METADATA_BYTES
+            consume_metadata_budget!(budget, length)
             read_exact(file, length, "PNG metadata chunk")
           else
             file.seek(length, IO::SEEK_CUR)
@@ -47,7 +48,7 @@ class Vips
         read_exact(file, 4, "PNG chunk checksum")
 
         metadata[:exif] = true if type == "eXIf"
-        capture_png_text_metadata(metadata, type, data) if data && type != "eXIf"
+        capture_png_text_metadata(metadata, type, data, budget) if data && type != "eXIf"
         return metadata if type == "IEND"
       end
     end
@@ -58,29 +59,31 @@ class Vips
   end
   private_class_method :png_metadata
 
-  def self.capture_png_text_metadata(metadata, type, data)
-    keyword, text = png_text(type, data)
+  def self.capture_png_text_metadata(metadata, type, data, budget)
+    keyword, text = png_text(type, data, budget)
     return if keyword.nil?
 
     if keyword == "XML:com.adobe.xmp" && type == "iTXt"
       metadata[:xmp] = text
     elsif keyword.casecmp?("comment")
-      metadata[:comments] << text
+      metadata[:comments] = [text]
     elsif (profile_type = keyword[/\ARaw profile type (xmp|iptc)\z/i, 1])
-      profile = decode_png_raw_profile(text, profile_type)
+      profile = decode_png_raw_profile(text, profile_type, budget)
       metadata[profile_type.downcase.to_sym] = profile
     end
   end
   private_class_method :capture_png_text_metadata
 
-  def self.png_text(type, data)
+  def self.png_text(type, data, budget)
     case type
     when "tEXt"
-      data.split("\0", 2)
+      keyword, text = data.split("\0", 2)
+      consume_metadata_budget!(budget, text.bytesize) if text
+      [keyword, text]
     when "zTXt"
       keyword, compressed = data.split("\0", 2)
       return if compressed.nil? || compressed.getbyte(0) != 0
-      [keyword, inflate_bounded(compressed.byteslice(1..))]
+      [keyword, inflate_bounded(compressed.byteslice(1..), budget)]
     when "iTXt"
       keyword, remainder = data.split("\0", 2)
       return if remainder.nil? || remainder.bytesize < 4
@@ -94,7 +97,11 @@ class Vips
 
       text = remainder.byteslice((translated_end + 1)..)
       return if compression_flag == 1 && compression_method != 0
-      text = inflate_bounded(text) if compression_flag == 1
+      if compression_flag == 1
+        text = inflate_bounded(text, budget)
+      else
+        consume_metadata_budget!(budget, text.bytesize)
+      end
       [keyword, text]
     end
   rescue Zlib::Error
@@ -102,45 +109,55 @@ class Vips
   end
   private_class_method :png_text
 
-  def self.inflate_bounded(compressed)
+  def self.inflate_bounded(compressed, budget)
     inflater = Zlib::Inflate.new
     output = +"".b
     offset = 0
 
     while offset < compressed.bytesize
-      append_bounded(output, inflater.inflate(compressed.byteslice(offset, 256)))
+      append_bounded(output, inflater.inflate(compressed.byteslice(offset, 256)), budget)
       offset += 256
     end
-    append_bounded(output, inflater.finish)
+    append_bounded(output, inflater.finish, budget)
     output
   ensure
     inflater&.close
   end
   private_class_method :inflate_bounded
 
-  def self.append_bounded(output, value)
+  def self.append_bounded(output, value, budget)
+    consume_metadata_budget!(budget, value.bytesize)
     output << value
-    if output.bytesize > MAX_PNG_METADATA_BYTES
-      raise_metadata_error("oversized decompressed PNG metadata")
-    end
   end
   private_class_method :append_bounded
 
-  def self.decode_png_raw_profile(text, expected_type)
+  def self.decode_png_raw_profile(text, expected_type, budget)
     match = text.match(/\A\s*([a-z0-9]+)\s+(\d+)\s+([0-9a-f\s]+)\z/i)
     if match.nil? || !match[1].casecmp?(expected_type)
       raise_metadata_error("invalid PNG raw profile")
     end
 
-    expected_length = match[2].to_i
+    length_token = match[2]
+    if length_token.length > MAX_PNG_METADATA_BYTES.to_s.length
+      raise_metadata_error("invalid PNG raw profile length")
+    end
+
+    expected_length = length_token.to_i
     raise_metadata_error("oversized PNG raw profile") if expected_length > MAX_PNG_METADATA_BYTES
 
     hex = match[3].delete(" \t\r\n")
     raise_metadata_error("invalid PNG raw profile length") if hex.bytesize != expected_length * 2
 
+    consume_metadata_budget!(budget, expected_length)
     [hex].pack("H*")
   end
   private_class_method :decode_png_raw_profile
+
+  def self.consume_metadata_budget!(budget, bytes)
+    budget[:remaining] -= bytes
+    raise_metadata_error("PNG metadata limit exceeded") if budget[:remaining].negative?
+  end
+  private_class_method :consume_metadata_budget!
 
   def self.rewrite_jpeg_metadata(path, metadata)
     mode = File.stat(path).mode
