@@ -47,11 +47,13 @@ RSpec.describe CrawlerScorer do
     expect(breakdown.engagement_score).to eq(40)
   end
 
-  it "does not score an event whose only signal is missing engagement" do
+  it "scores an event with missing engagement at +40" do
     event = make_event
+
     score!
-    expect(event.reload.score).to be_nil
-    expect(event.browser_pageview_event_score).to be_nil
+
+    expect(event.reload.score).to eq(40)
+    expect(event.browser_pageview_event_score.engagement_score).to eq(40)
   end
 
   it "scores known crawler ASNs at +15" do
@@ -138,7 +140,7 @@ RSpec.describe CrawlerScorer do
     ).to contain_exactly(70)
   end
 
-  it "does not score a session that only ever uses two addresses" do
+  it "does not add an IP rotation score to a session that only uses two addresses" do
     base = 30.minutes.ago
     %w[10.0.0.1 10.0.0.2].each_with_index do |ip, i|
       make_event(ip_address: ip, session_id: "handover-session", created_at: base + (i * 5).seconds)
@@ -147,11 +149,11 @@ RSpec.describe CrawlerScorer do
     score!
 
     expect(BrowserPageviewEvent.where(session_id: "handover-session").pluck(:score).uniq).to eq(
-      [nil],
+      [40],
     )
   end
 
-  it "does not score ip changes slow enough to be a network handover" do
+  it "does not add an IP rotation score to a slow network handover" do
     base = 40.minutes.ago
     %w[10.0.0.1 10.0.0.2 10.0.0.3].each_with_index do |ip, i|
       make_event(ip_address: ip, session_id: "slow-session", created_at: base + (i * 11).minutes)
@@ -159,7 +161,7 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(BrowserPageviewEvent.where(session_id: "slow-session").pluck(:score).uniq).to eq([nil])
+    expect(BrowserPageviewEvent.where(session_id: "slow-session").pluck(:score).uniq).to eq([40])
   end
 
   it "scores referrer discontinuity when most pageviews have no referrer" do

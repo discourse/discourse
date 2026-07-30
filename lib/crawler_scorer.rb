@@ -218,7 +218,7 @@ class CrawlerScorer
         ) AS score
       FROM breakdown
       WHERE automation_ua_score + known_asn_score + velocity_score + churn_score
-        + rapid_nav_score + ip_rotation_score + referrer_score > 0
+        + rapid_nav_score + ip_rotation_score + referrer_score + engagement_score > 0
     ),
 
     updated AS (
