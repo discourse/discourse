@@ -101,12 +101,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
   end
 
-  describe "hashtags with an existence gate" do
-    subject(:extractor) do
-      described_class.new(
-        embeds: buffer,
-        mention_names:,
-        hashtag_names: Migrations::SortedStringSet.new(%w[announcements support:billing]),
+  describe "the hashtag name gate" do
+    let(:hashtag_names) { Migrations::SortedStringSet.new(%w[announcements support:billing]) }
+
+    it "requires the names, so no caller can defer every hashtag by accident" do
+      expect { described_class.new(embeds: buffer, mention_names:) }.to raise_error(
+        ArgumentError,
+        /hashtag_names/,
       )
     end
 

@@ -208,7 +208,12 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
     let(:hashtag_extractor) { described_class.new(embeds: buffer, mention_names:, hashtag_names:) }
     let(:emoji_extractor) do
-      described_class.new(embeds: buffer, mention_names:, custom_emoji_names: %w[parrot])
+      described_class.new(
+        embeds: buffer,
+        mention_names:,
+        hashtag_names:,
+        custom_emoji_names: %w[parrot],
+      )
     end
 
     it "extracts a mention after an unpaired backtick" do
@@ -270,7 +275,10 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # `extract` builds its detectors internally and never produces an unknown
     # node, so this guard is unreachable through the public API; open up the
     # private method deliberately to exercise it.
-    seam = Class.new(described_class) { public :defer }.new(embeds: buffer, mention_names:)
+    seam =
+      Class
+        .new(described_class) { public :defer }
+        .new(embeds: buffer, mention_names:, hashtag_names:)
 
     expect { seam.defer(Object.new) }.to raise_error(NotImplementedError, /Object/)
   end
@@ -363,6 +371,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
           described_class.new(
             embeds: buffer,
             mention_names:,
+            hashtag_names:,
             internal_link_hosts: {
               "forum.example.com" => nil,
             },
@@ -374,7 +383,12 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       it "still defers a custom emoji" do
         emoji_extractor =
-          described_class.new(embeds: buffer, mention_names:, custom_emoji_names: %w[parrot])
+          described_class.new(
+            embeds: buffer,
+            mention_names:,
+            hashtag_names:,
+            custom_emoji_names: %w[parrot],
+          )
         emoji_extractor.extract("schön :parrot:")
 
         expect(buffer.emojis.first[:name]).to eq("parrot")

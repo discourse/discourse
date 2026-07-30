@@ -28,7 +28,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
       )
-    described_class.new(embeds: buffer, mention_names:).extract(raw)
+    described_class.new(embeds: buffer, mention_names:, hashtag_names:).extract(raw)
     buffer.quotes.first
   end
 

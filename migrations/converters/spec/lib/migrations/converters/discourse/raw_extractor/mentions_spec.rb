@@ -80,7 +80,12 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
           group_names: %w[admins],
         )
       extractor =
-        described_class.new(embeds: buffer, mention_names:, mention_classifier: classifier)
+        described_class.new(
+          embeds: buffer,
+          mention_names:,
+          hashtag_names:,
+          mention_classifier: classifier,
+        )
 
       extractor.extract("@gerhard @admins @here all there")
 

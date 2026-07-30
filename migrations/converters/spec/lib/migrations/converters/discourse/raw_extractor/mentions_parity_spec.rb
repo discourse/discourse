@@ -66,7 +66,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
       )
-    described_class.new(embeds: buffer, mention_names:).extract(raw)
+    described_class.new(embeds: buffer, mention_names:, hashtag_names:).extract(raw)
     buffer.mentions.any?
   end
 
@@ -115,7 +115,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
           owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
         )
       names = Migrations::SortedStringSet.new([Migrations::NameNormalizer.normalize(name)])
-      described_class.new(embeds: buffer, mention_names: names).extract(raw)
+      described_class.new(embeds: buffer, mention_names:, hashtag_names: names).extract(raw)
       buffer.mentions.first&.[](:name)
     end
 
@@ -153,7 +153,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
       )
-    described_class.new(embeds: buffer, mention_names: names).extract("hi @#{long} x")
+    described_class.new(embeds: buffer, mention_names:, hashtag_names: names).extract(
+      "hi @#{long} x",
+    )
 
     expect(buffer.mentions.first[:name]).to eq(long)
     expect(core_cooks?("hi @#{long} x")).to be(false)

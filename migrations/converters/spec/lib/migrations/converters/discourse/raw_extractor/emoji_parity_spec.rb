@@ -79,7 +79,12 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
       )
-    described_class.new(embeds: buffer, mention_names:, custom_emoji_names: [name]).extract(raw)
+    described_class.new(
+      embeds: buffer,
+      mention_names:,
+      hashtag_names:,
+      custom_emoji_names: [name],
+    ).extract(raw)
     buffer.emojis.any? { |emoji| emoji[:name] == name }
   end
 

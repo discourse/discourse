@@ -57,10 +57,10 @@ module Migrations
         #   normalized). Only a mention naming one of them is deferred; anything else
         #   stays literal text. Required: without the names every `@word` that parses
         #   is rewritten, including the ones that name nobody.
-        # @param hashtag_names [Migrations::SortedStringSet, nil] the source's
-        #   category slug paths and tag names (normalized). When given, only a
-        #   hashtag naming one of them is extracted; anything else stays literal
-        #   text. `nil` defers every hashtag that parses (the old syntactic behavior).
+        # @param hashtag_names [Migrations::SortedStringSet] the source's category
+        #   slug paths and tag names (normalized). Only a hashtag naming one of them
+        #   is extracted; anything else stays literal text. Required for the same
+        #   reason as `mention_names`.
         # @param custom_emoji_names [Enumerable<String>, nil] the source's custom
         #   emoji names. When given (and non-empty) a `:name:` shortcode naming one
         #   of them is extracted; standard shortcodes always stay plain text. Without
@@ -88,8 +88,8 @@ module Migrations
         def initialize(
           embeds:,
           mention_names:,
+          hashtag_names:,
           mention_classifier: MentionClassifier.new,
-          hashtag_names: nil,
           custom_emoji_names: nil,
           internal_link_hosts: {},
           internal_link_base_prefix: nil,

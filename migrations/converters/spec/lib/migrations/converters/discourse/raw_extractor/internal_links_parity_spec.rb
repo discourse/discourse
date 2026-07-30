@@ -72,6 +72,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     described_class.new(
       embeds: buffer,
       mention_names:,
+      hashtag_names:,
       internal_link_hosts: {
         host => nil,
       },
@@ -130,6 +131,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     described_class.new(
       embeds: buffer,
       mention_names:,
+      hashtag_names:,
       internal_link_hosts: {
         host => nil,
       },

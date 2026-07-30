@@ -51,13 +51,9 @@ module Migrations
 
               end_pos = pos + 1 + name.bytesize # +1 for the `@` (one byte)
               return nil unless mention_boundary_after?(input, end_pos)
+              return nil unless @names.include?(normalize(name))
 
-              # Phrased positively on purpose: `unless @names.include?(…)` gets
-              # autocorrected to ActiveSupport's `exclude?`, which SortedStringSet
-              # does not have.
-              if @names.include?(normalize(name))
-                Match.new(start_pos: pos, end_pos:, node: Markbridge::AST::Mention.new(name:))
-              end
+              Match.new(start_pos: pos, end_pos:, node: Markbridge::AST::Mention.new(name:))
             end
           end
         end

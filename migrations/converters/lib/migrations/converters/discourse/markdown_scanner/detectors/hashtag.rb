@@ -10,11 +10,11 @@ module Migrations
           # resolved at import (its slug/name can change), so the node just carries
           # the name and any forced type.
           #
-          # When the caller supplies the source's category and tag names, only a
-          # hashtag whose name is one of them is deferred; anything else (`PR #123`,
-          # `channel #general`) stays literal text. Without a name set, every hashtag
-          # that parses is deferred (purely syntactic), for callers with no source
-          # metadata.
+          # Only a hashtag naming one of the source's categories or tags is deferred;
+          # anything else (`PR #123`, `channel #general`) stays literal text. The
+          # names are required: deferring every hashtag that parses rewrites text
+          # that names nothing, and the importer then resolves it against the
+          # destination.
           #
           # This mirrors what core actually renders, which is core's markdown-it
           # hashtag rule (`discourse-markdown-it/src/features/hashtag-autocomplete.js`)
@@ -71,11 +71,10 @@ module Migrations
               /\G#(?<name>#{SEGMENT}(?::#{SEGMENT})?)(?:::(?<type>tag|category))?(?!#{CONTINUATION}|\.#{CONTINUATION}|::)/i
             private_constant :PATTERN
 
-            # @param names [Migrations::SortedStringSet, nil] the source's category
-            #   slug paths and tag names, already normalized. When given, a hashtag is
-            #   deferred only if its (normalized) name is in the set. `nil` means no
-            #   gate.
-            def initialize(names: nil)
+            # @param names [Migrations::SortedStringSet] the source's category slug
+            #   paths and tag names, already normalized. A hashtag is deferred only
+            #   if its (normalized) name is in the set.
+            def initialize(names:)
               @names = names
             end
 
@@ -86,7 +85,7 @@ module Migrations
               return nil unless match
 
               name = match[:name]
-              return nil if @names && !@names.include?(normalize(name))
+              return nil unless @names.include?(normalize(name))
 
               Match.new(
                 start_pos: pos,
