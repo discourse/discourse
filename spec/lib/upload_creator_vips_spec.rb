@@ -21,6 +21,10 @@ RSpec.describe UploadCreator do
     File.binwrite(target, jpeg.byteslice(0, 2) + segment + jpeg.byteslice(2..))
   end
 
+  def jpeg_quality(path)
+    Discourse::Utils.execute_command("identify", "-ping", "-format", "%Q", path).to_i
+  end
+
   def create_metadata_png_upload
     tempfile = Tempfile.new(%w[metadata .png])
     source = Rails.root.join("spec/fixtures/images/large_and_unoptimized.png").to_s
@@ -73,7 +77,7 @@ RSpec.describe UploadCreator do
           filename: upload.original_filename,
           format: FastImage.type(path),
           dimensions: FastImage.size(path),
-          quality: Vips.jpeg_quality(path),
+          quality: jpeg_quality(path),
         },
       ).to eq(
         {
@@ -141,28 +145,13 @@ RSpec.describe UploadCreator do
       )
     end
 
-    it "converts ICO uploads to PNG without ImageMagick" do
+    it "propagates the stock-vips ICO loader failure without ImageMagick fallback" do
       SiteSetting.authorized_extensions = "png|jpg|ico"
+      Vips.stubs(:convert).raises(Discourse::Utils::CommandError.new("vips has no ICO loader"))
 
-      upload =
+      expect do
         described_class.new(file_from_fixtures("smallest.ico"), "smallest.ico").create_for(user.id)
-      image = ChunkyPNG::Image.from_file(Discourse.store.path_for(upload))
-
-      expect(
-        {
-          persisted: upload.persisted?,
-          extension: upload.extension,
-          dimensions: [image.width, image.height],
-          pixel: image[0, 0],
-        },
-      ).to eq(
-        {
-          persisted: true,
-          extension: "png",
-          dimensions: [1, 1],
-          pixel: ChunkyPNG::Color.rgba(255, 0, 0, 255),
-        },
-      )
+      end.to raise_error(Discourse::Utils::CommandError, "vips has no ICO loader")
     end
 
     it "preserves ImageMagick-compatible SVG dimensions" do
@@ -226,11 +215,15 @@ RSpec.describe UploadCreator do
       path = Discourse.store.path_for(upload)
 
       expect(
-        { dimensions: FastImage.size(path), rotated: Vips.rotated?(path, format: "jpeg") },
-      ).to eq(dimensions: [1312, 2032], rotated: false)
+        {
+          dimensions: FastImage.size(path),
+          rotated: Vips.rotated?(path, format: "jpeg"),
+          quality: jpeg_quality(path),
+        },
+      ).to eq(dimensions: [1312, 2032], rotated: false, quality: 90)
     end
 
-    it "uses the source JPEG quality when re-encoding" do
+    it "uses the configured JPEG quality when re-encoding" do
       tempfile = Tempfile.new(%w[quality .jpg])
       source = Rails.root.join("spec/fixtures/images/large_and_unoptimized.png").to_s
       Vips.call(
@@ -246,7 +239,7 @@ RSpec.describe UploadCreator do
       upload =
         described_class.new(tempfile, "quality.jpg", force_optimize: true).create_for(user.id)
 
-      expect(Vips.jpeg_quality(Discourse.store.path_for(upload))).to eq(40)
+      expect(jpeg_quality(Discourse.store.path_for(upload))).to eq(40)
     end
 
     it "propagates a vips conversion failure without a debug retry or ImageMagick fallback" do

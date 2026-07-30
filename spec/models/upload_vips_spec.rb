@@ -26,7 +26,7 @@ RSpec.describe Upload do
   end
 
   describe "#target_image_quality" do
-    it "uses JPEG quantization tables without ImageMagick" do
+    it "uses the requested target without probing the source through ImageMagick" do
       ImageMagick.expects(:identify).never
 
       Dir.mktmpdir("upload-jpeg-quality") do |directory|
@@ -40,7 +40,7 @@ RSpec.describe Upload do
             lower_target: upload.target_image_quality(path, 50),
             higher_target: upload.target_image_quality(path, 70),
           },
-        ).to eq(lower_target: 50, higher_target: nil)
+        ).to eq(lower_target: 50, higher_target: 70)
       end
     end
 

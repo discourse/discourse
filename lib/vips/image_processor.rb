@@ -153,8 +153,7 @@ class Vips
     failure_message: ""
   )
     quality ||= DEFAULT_JPEG_QUALITY if %w[jpeg jpg].include?(target_format.to_s.downcase)
-    png_source = source_format.to_s.casecmp?("png")
-    keep = "exif:icc" if png_source
+    keep = "exif:icc" if source_format.to_s.casecmp?("png")
 
     with_output(to, target_format:) do |output|
       Vips.call(
@@ -174,7 +173,6 @@ class Vips
         allow_untrusted: untrusted_format?(source_format) || untrusted_format?(target_format),
         failure_message:,
       )
-      preserve_png_metadata(source: from, output:) if png_source
     end
   end
 

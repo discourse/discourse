@@ -23,20 +23,8 @@ RSpec.describe Vips do
     File.binwrite(target, jpeg.byteslice(0, 2) + segment + jpeg.byteslice(2..))
   end
 
-  def png_chunk(type, data)
-    type = type.b
-    [data.bytesize].pack("N") + type + data + [Zlib.crc32(type + data)].pack("N")
-  end
-
-  def write_png_with_chunks(source:, target:, chunks:)
-    png = File.binread(source)
-    raise "invalid PNG fixture" if png.byteslice(-12, 12) != png_chunk("IEND", "")
-
-    File.binwrite(target, png.byteslice(0...-12) + chunks.join + png.byteslice(-12, 12))
-  end
-
-  def raw_png_profile(type, data)
-    "\n#{type}\n#{data.bytesize.to_s.rjust(8)}\n#{data.unpack1("H*")}\n"
+  def jpeg_quality(path)
+    Discourse::Utils.execute_command("identify", "-ping", "-format", "%Q", path).to_i
   end
 
   describe ".resize" do
@@ -161,171 +149,6 @@ RSpec.describe Vips do
         expect(Vips.header(output, field: "icc-profile-data")).not_to be_empty
       end
     end
-
-    it "preserves standard and legacy PNG profiles recognized by ImageMagick" do
-      Dir.mktmpdir("vips-convert-profiles") do |directory|
-        base = File.join(directory, "base.png")
-        Vips.call(
-          "copy",
-          high_detail_input,
-          "#{base}[strip=true]",
-          read: [high_detail_input],
-          write: [directory],
-        )
-
-        xmp =
-          '<x:xmpmeta xmlns:x="adobe:ns:meta/"><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmp:Label="metadata-parity"/></rdf:RDF></x:xmpmeta>'
-        iptc = ["1c0205000b54657374204f626a656374"].pack("H*")
-        fixtures = {
-          "standard-xmp" => {
-            chunks: [png_chunk("iTXt", "XML:com.adobe.xmp\0\0\0\0\0#{xmp}")],
-            expected: [xmp],
-          },
-          "raw-xmp-comment" => {
-            chunks: [
-              png_chunk(
-                "zTXt",
-                "Raw profile type xmp\0\0" + Zlib::Deflate.deflate(raw_png_profile("xmp", xmp)),
-              ),
-              png_chunk("tEXt", "comment\0metadata-parity-comment"),
-            ],
-            expected: [xmp, "metadata-parity-comment"],
-          },
-          "raw-iptc-comment" => {
-            chunks: [
-              png_chunk("tEXt", "Raw profile type iptc\0#{raw_png_profile("iptc", iptc)}"),
-              png_chunk("tEXt", "comment\0iptc-comment"),
-            ],
-            expected: [iptc, "iptc-comment"],
-          },
-        }
-
-        fixtures.each do |name, fixture|
-          input = File.join(directory, "#{name}.png")
-          output = File.join(directory, "#{name}.jpg")
-          write_png_with_chunks(source: base, target: input, chunks: fixture.fetch(:chunks))
-
-          described_class.convert(
-            from: input,
-            to: output,
-            source_format: "png",
-            target_format: "jpeg",
-            flatten: true,
-          )
-
-          encoded = File.binread(output)
-          expect(fixture.fetch(:expected)).to all(satisfy { |value| encoded.include?(value) })
-          expect { Vips.header(output, field: "exif-data") }.to raise_error(
-            Discourse::Utils::CommandError,
-          )
-        end
-
-        expect(
-          Vips.header(File.join(directory, "standard-xmp.jpg"), field: "xmp-data"),
-        ).not_to be_empty
-        expect(
-          Vips.header(File.join(directory, "raw-xmp-comment.jpg"), field: "xmp-data"),
-        ).not_to be_empty
-        expect(
-          Vips.header(File.join(directory, "raw-iptc-comment.jpg"), field: "iptc-data"),
-        ).not_to be_empty
-      end
-    end
-
-    it "rejects oversized compressed PNG metadata without publishing output" do
-      Dir.mktmpdir("vips-convert-metadata-limit") do |directory|
-        base = File.join(directory, "base.png")
-        input = File.join(directory, "input.png")
-        output = File.join(directory, "output.jpg")
-        Vips.call(
-          "copy",
-          high_detail_input,
-          "#{base}[strip=true]",
-          read: [high_detail_input],
-          write: [directory],
-        )
-        oversized = "x" * (4 * 1024 * 1024 + 1)
-        write_png_with_chunks(
-          source: base,
-          target: input,
-          chunks: [
-            png_chunk("zTXt", "Raw profile type xmp\0\0" + Zlib::Deflate.deflate(oversized)),
-          ],
-        )
-
-        expect do
-          described_class.convert(
-            from: input,
-            to: output,
-            source_format: "png",
-            target_format: "jpeg",
-            flatten: true,
-          )
-        end.to raise_error(Discourse::Utils::CommandError, /PNG metadata limit exceeded/)
-        expect(File.exist?(output)).to eq(false)
-      end
-    end
-
-    it "applies the PNG metadata limit cumulatively across compressed chunks" do
-      Dir.mktmpdir("vips-convert-metadata-total-limit") do |directory|
-        base = File.join(directory, "base.png")
-        input = File.join(directory, "input.png")
-        output = File.join(directory, "output.jpg")
-        Vips.call(
-          "copy",
-          high_detail_input,
-          "#{base}[strip=true]",
-          read: [high_detail_input],
-          write: [directory],
-        )
-        comment = "x" * (2 * 1024 * 1024)
-        chunks = 2.times.map { png_chunk("zTXt", "comment\0\0" + Zlib::Deflate.deflate(comment)) }
-        write_png_with_chunks(source: base, target: input, chunks:)
-
-        expect do
-          described_class.convert(
-            from: input,
-            to: output,
-            source_format: "png",
-            target_format: "jpeg",
-            flatten: true,
-          )
-        end.to raise_error(Discourse::Utils::CommandError, /PNG metadata limit exceeded/)
-        expect(File.exist?(output)).to eq(false)
-      end
-    end
-
-    it "rejects an unbounded PNG raw-profile length token" do
-      Dir.mktmpdir("vips-convert-metadata-length") do |directory|
-        base = File.join(directory, "base.png")
-        input = File.join(directory, "input.png")
-        output = File.join(directory, "output.jpg")
-        Vips.call(
-          "copy",
-          high_detail_input,
-          "#{base}[strip=true]",
-          read: [high_detail_input],
-          write: [directory],
-        )
-        profile = "\nxmp\n#{"9" * 1000}\n00\n"
-        write_png_with_chunks(
-          source: base,
-          target: input,
-          chunks: [png_chunk("tEXt", "Raw profile type xmp\0#{profile}")],
-        )
-
-        expect do
-          described_class.convert(
-            from: input,
-            to: output,
-            source_format: "png",
-            target_format: "jpeg",
-            flatten: true,
-          )
-        end.to raise_error(Discourse::Utils::CommandError, /invalid PNG raw profile length/)
-        expect(File.exist?(output)).to eq(false)
-      end
-    end
   end
 
   describe ".crop" do
@@ -421,7 +244,7 @@ RSpec.describe Vips do
             format: FastImage.type(output),
             bands: Vips.header(output, field: "bands").to_i,
             corner: corner,
-            quality: Vips.jpeg_quality(output),
+            quality: jpeg_quality(output),
           },
         ).to match(
           {
@@ -485,7 +308,7 @@ RSpec.describe Vips do
           {
             normalized_channel_error:
               Vips.call("avg", absolute, read: [absolute], allow_untrusted: true).to_f / 255,
-            quality: Vips.jpeg_quality(vips),
+            quality: jpeg_quality(vips),
           },
         ).to match(normalized_channel_error: be <= 0.03, quality: 92)
       end
@@ -536,7 +359,7 @@ RSpec.describe Vips do
               {
                 dimensions: [FastImage.size(image_magick), FastImage.size(vips)],
                 orientation: Vips.header(vips, field: "orientation").to_i,
-                quality: Vips.jpeg_quality(vips),
+                quality: jpeg_quality(vips),
                 normalized_channel_error:
                   Vips.call("avg", absolute, read: [absolute], allow_untrusted: true).to_f / 255,
               },

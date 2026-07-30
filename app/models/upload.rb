@@ -447,20 +447,18 @@ class Upload < ActiveRecord::Base
   end
 
   def target_image_quality(local_path, test_quality)
+    return test_quality if SiteSetting.use_vips_for_image_processing
+
     @file_quality ||=
       begin
-        if SiteSetting.use_vips_for_image_processing
-          Vips.jpeg_quality(local_path)
-        else
-          ImageMagick.identify(
-            "-ping",
-            "-format",
-            "%Q",
-            local_path,
-            read: [local_path],
-            timeout: MAX_IDENTIFY_SECONDS,
-          ).to_i
-        end
+        ImageMagick.identify(
+          "-ping",
+          "-format",
+          "%Q",
+          local_path,
+          read: [local_path],
+          timeout: MAX_IDENTIFY_SECONDS,
+        ).to_i
       rescue StandardError
         0
       end

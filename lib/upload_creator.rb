@@ -343,29 +343,31 @@ class UploadCreator
     png_tempfile = Tempfile.new(%w[image .png])
 
     if SiteSetting.use_vips_for_image_processing
-      Vips.ico_to_png(path: @file.path, output: png_tempfile.path)
-      @file.respond_to?(:close!) ? @file.close! : @file.close
-      @file = png_tempfile
-      extract_image_info!
-      return
+      Vips.convert(
+        from: @file.path,
+        to: png_tempfile.path,
+        source_format: "ico",
+        target_format: "png",
+        flatten: false,
+      )
+    else
+      from = @file.path
+      to = png_tempfile.path
+
+      OptimizedImage.ensure_safe_paths!(from, to)
+
+      from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")
+      to = OptimizedImage.prepend_decoder!(to)
+
+      from = "#{from}[-1]" # We only want the last(largest) image of the .ico file
+
+      opts = { flatten: false } # Preserve transparency
+
+      read = [@file.path]
+      write = [File.dirname(png_tempfile.path)]
+
+      execute_convert_with_debug_retry(from:, to:, opts:, read:, write:)
     end
-
-    from = @file.path
-    to = png_tempfile.path
-
-    OptimizedImage.ensure_safe_paths!(from, to)
-
-    from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")
-    to = OptimizedImage.prepend_decoder!(to)
-
-    from = "#{from}[-1]" # We only want the last(largest) image of the .ico file
-
-    opts = { flatten: false } # Preserve transparency
-
-    read = [@file.path]
-    write = [File.dirname(png_tempfile.path)]
-
-    execute_convert_with_debug_retry(from:, to:, opts:, read:, write:)
 
     @file.respond_to?(:close!) ? @file.close! : @file.close
     @file = png_tempfile
@@ -565,7 +567,9 @@ class UploadCreator
     OptimizedImage.ensure_safe_paths!(path)
     if SiteSetting.use_vips_for_image_processing
       format = @image_info.type.to_s
-      quality = Vips.jpeg_quality(path) if %w[jpeg jpg].include?(format)
+      if %w[jpeg jpg].include?(format)
+        quality = SiteSetting.ImageQuality.recompress_original_jpg_quality
+      end
       Vips.autorot(path:, format:, quality:, timeout: MAX_FIX_ORIENTATION_TIME)
     else
       path = OptimizedImage.prepend_decoder!(path, nil, filename: "image.#{@image_info.type}")
