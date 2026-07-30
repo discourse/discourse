@@ -154,38 +154,23 @@ class Vips
   )
     quality ||= DEFAULT_JPEG_QUALITY if %w[jpeg jpg].include?(target_format.to_s.downcase)
 
-    Dir.mktmpdir("vips-convert") do |directory|
-      upright = File.join(directory, "upright.v")
-
+    with_output(to, target_format:) do |output|
       Vips.call(
         "autorot",
         from,
-        upright,
+        output_argument(
+          output,
+          format: target_format,
+          quality:,
+          strip: false,
+          background: flatten ? 255 : nil,
+        ),
         read: [from],
-        write: [directory],
+        write: [File.dirname(output)],
         timeout: MAX_PROCESS_SECONDS,
-        allow_untrusted: untrusted_format?(source_format),
+        allow_untrusted: untrusted_format?(source_format) || untrusted_format?(target_format),
         failure_message:,
       )
-
-      with_output(to, target_format:) do |output|
-        operation = flatten && alpha?(from: upright, format: source_format) ? "flatten" : "copy"
-        arguments = [
-          upright,
-          output_argument(output, format: target_format, quality:, strip: false),
-        ]
-        arguments.concat(%w[--background 255]) if operation == "flatten"
-
-        Vips.call(
-          operation,
-          *arguments,
-          read: [upright],
-          write: [File.dirname(output)],
-          timeout: MAX_PROCESS_SECONDS,
-          allow_untrusted: true,
-          failure_message:,
-        )
-      end
     end
   end
 
@@ -209,20 +194,13 @@ class Vips
       width, height = svg_dimensions(path)
     else
       allow_untrusted = untrusted_format?(format)
-      width =
-        Vips.header(
+      width, height =
+        headers(
           path,
-          field: "width",
+          fields: %w[width height],
           timeout: Upload::MAX_IDENTIFY_SECONDS,
           allow_untrusted:,
-        ).to_i
-      height =
-        Vips.header(
-          path,
-          field: "height",
-          timeout: Upload::MAX_IDENTIFY_SECONDS,
-          allow_untrusted:,
-        ).to_i
+        ).map(&:to_i)
     end
 
     if auto_orient && rotated?(path, format:)
@@ -263,8 +241,7 @@ class Vips
     root = document.root
     raise Discourse::InvalidAccess if root.nil? || root.name != "svg"
 
-    vips_width = svg_header(path, field: "width")
-    vips_height = svg_header(path, field: "height")
+    vips_width, vips_height = svg_headers(path)
     view_box = root["viewBox"].to_s.split.map { |value| Float(value, exception: false) }
 
     [
@@ -273,12 +250,17 @@ class Vips
     ]
   end
 
-  def self.svg_header(path, field:)
-    Vips.header(path, field:, timeout: Upload::MAX_IDENTIFY_SECONDS, allow_untrusted: true).to_i
+  def self.svg_headers(path)
+    headers(
+      path,
+      fields: %w[width height],
+      timeout: Upload::MAX_IDENTIFY_SECONDS,
+      allow_untrusted: true,
+    ).map(&:to_i)
   rescue Discourse::Utils::CommandError
-    0
+    [0, 0]
   end
-  private_class_method :svg_header
+  private_class_method :svg_headers
 
   def self.svg_dimension(value:, vips_value:, view_box_value:)
     match = value.to_s.strip.match(/\A([+-]?(?:\d+(?:\.\d*)?|\.\d+))(.*)\z/)
@@ -340,12 +322,21 @@ class Vips
   end
   private_class_method :parse_box
 
-  def self.output_argument(path, format:, quality: nil, colors: nil, strip:, profile: nil)
+  def self.output_argument(
+    path,
+    format:,
+    quality: nil,
+    colors: nil,
+    strip:,
+    profile: nil,
+    background: nil
+  )
     format = format.to_s.downcase
     options = []
     options << "strip=true" if strip
     options << "profile=#{profile}" if profile
     options << "Q=#{quality}" if quality && %w[avif heic heif jpeg jpg jxl webp].include?(format)
+    options << "background=#{background}" if background && %w[jpeg jpg].include?(format)
     if colors && format == "png"
       options << "palette=true"
       options << "colours=#{colors}"
@@ -381,13 +372,6 @@ class Vips
     UNTRUSTED_FORMATS.include?(format.to_s.downcase)
   end
   private_class_method :untrusted_format?
-
-  def self.alpha?(from:, format:)
-    return false if !%w[avif heic heif png webp].include?(format.to_s.downcase)
-
-    header(from, field: "bands", allow_untrusted: true).to_i.even?
-  end
-  private_class_method :alpha?
 
   private_constant :PROFILE, :UNTRUSTED_FORMATS, :MAX_PROCESS_SECONDS, :DEFAULT_JPEG_QUALITY
 end
