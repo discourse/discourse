@@ -445,17 +445,20 @@ export default class Toolbar extends ToolbarBase {
             name: "heading-small",
             icon: "discourse-text",
             label: "composer.heading_level_small",
+            title: "composer.heading_level_small_title",
             shortcut: "Alt+5",
             condition: true,
             showActiveIcon: true,
             active: ({ state }) => state?.inSmall,
             action: (toolbarEvent) =>
-              toolbarEvent.applySurround(
-                "<small>",
-                "</small>",
-                "heading_level_small_text",
-                { multiline: false }
-              ),
+              toolbarEvent.commands?.toggleSmall
+                ? toolbarEvent.commands.toggleSmall()
+                : toolbarEvent.applySurround(
+                    "<small>",
+                    "</small>",
+                    "heading_level_small_text",
+                    { multiline: true, wholeLine: true }
+                  ),
           });
           return headingOptions;
         },

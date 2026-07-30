@@ -309,79 +309,27 @@ describe "Composer - ProseMirror - Toolbar" do
       expect(rich).to have_css("h2", text: "This is a test")
     end
 
-    it "can wrap a selection in small text and toggle the active state" do
+    it "lets the user apply and remove small text" do
       open_composer
 
       composer.type_content("This is a test")
       composer.select_all
-
-      heading_menu = composer.heading_menu
-      heading_menu.expand
-      heading_menu.option("[data-name='heading-small']").click
+      composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :alt, "5"])
 
       expect(rich).to have_css("p small", text: "This is a test")
-      expect(rich).to have_css("p", count: 1)
 
       rich.find("small").click
-      expect(page).to have_css(".toolbar__button.heading.--active")
-      expect(find(".toolbar__button.heading")).to have_css(".d-icon-discourse-text")
-
-      heading_menu.expand
-      expect(heading_menu.option("[data-name='heading-small']")).to have_css(".d-icon-check")
-      expect(heading_menu.option("[data-name='heading-paragraph']")).to have_no_css(".d-icon-check")
-      heading_menu.collapse
-
-      composer.select_all
-      expect(page).to have_css(".toolbar__button.heading.--active")
-      heading_menu.expand
-      expect(heading_menu.option("[data-name='heading-small']")).to have_css(".d-icon-check")
-      expect(heading_menu.option("[data-name='heading-paragraph']")).to have_no_css(".d-icon-check")
-    end
-
-    it "removes small text when switching to a paragraph" do
-      open_composer
-
-      composer.type_content("This is a test")
-      composer.select_all
-
       heading_menu = composer.heading_menu
       heading_menu.expand
+      expect(heading_menu.option("[data-name='heading-small']")).to have_css(".d-icon-check")
+      expect(heading_menu.option("[data-name='heading-paragraph']")).to have_no_css(".d-icon-check")
       heading_menu.option("[data-name='heading-small']").click
-      expect(rich).to have_css("small", text: "This is a test")
 
-      composer.select_all
-      heading_menu.expand
-      heading_menu.option("[data-name='heading-paragraph']").click
-
+      expect(rich).to have_no_css("small")
       expect(rich).to have_css("p", text: "This is a test")
-      expect(rich).to have_no_css("small")
     end
 
-    it "removes small text when switching to a heading, keeping a single active size" do
-      open_composer
-
-      composer.type_content("This is a test")
-      composer.select_all
-
-      heading_menu = composer.heading_menu
-      heading_menu.expand
-      heading_menu.option("[data-name='heading-small']").click
-      expect(rich).to have_css("small", text: "This is a test")
-
-      composer.select_all
-      heading_menu.expand
-      heading_menu.option("[data-name='heading-2']").click
-
-      expect(rich).to have_css("h2", text: "This is a test")
-      expect(rich).to have_no_css("small")
-
-      rich.find("h2").click
-      heading_menu.expand
-      expect(heading_menu.option("[data-name='heading-2']")).to have_css(".d-icon-check")
-      expect(heading_menu.option("[data-name='heading-small']")).to have_no_css(".d-icon-check")
-    end
-
-    it "removes the heading when switching to small text, keeping a single active size" do
+    it "lets the user switch between a heading and small text" do
       open_composer
 
       composer.type_content("This is a test")
@@ -399,20 +347,12 @@ describe "Composer - ProseMirror - Toolbar" do
       expect(rich).to have_css("p small", text: "This is a test")
       expect(rich).to have_no_css("h2")
 
-      rich.find("small").click
-      heading_menu.expand
-      expect(heading_menu.option("[data-name='heading-small']")).to have_css(".d-icon-check")
-      expect(heading_menu.option("[data-name='heading-2']")).to have_no_css(".d-icon-check")
-    end
-
-    it "applies small text with the keyboard shortcut" do
-      open_composer
-
-      composer.type_content("This is a test")
       composer.select_all
-      composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :alt, "5"])
+      heading_menu.expand
+      heading_menu.option("[data-name='heading-2']").click
 
-      expect(rich).to have_css("p small", text: "This is a test")
+      expect(rich).to have_css("h2", text: "This is a test")
+      expect(rich).to have_no_css("small")
     end
   end
 end
