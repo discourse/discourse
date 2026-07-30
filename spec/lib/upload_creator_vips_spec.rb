@@ -91,29 +91,23 @@ RSpec.describe UploadCreator do
       )
     end
 
-    it "matches final ImageMagick metadata handling with stripping enabled and disabled" do
+    it "keeps only EXIF and ICC when metadata stripping is disabled" do
       SiteSetting.png_to_jpg_quality = 80
       SiteSetting.composer_media_optimization_image_enabled = false
 
       [true, false].each do |strip_metadata|
         SiteSetting.strip_image_metadata = strip_metadata
-        SiteSetting.use_vips_for_image_processing = false
-        ImageMagick.unstub(:magick)
-        ImageMagick.unstub(:identify)
-        image_magick_upload = create_metadata_png_upload
-        image_magick_metadata = metadata_presence(Discourse.store.path_for(image_magick_upload))
-        image_magick_upload.destroy!
-
-        SiteSetting.use_vips_for_image_processing = true
-        ImageMagick.stubs(:magick).raises("ImageMagick must not run")
-        ImageMagick.stubs(:identify).raises("ImageMagick must not run")
         vips_upload = create_metadata_png_upload
         vips_metadata = metadata_presence(Discourse.store.path_for(vips_upload))
 
-        expect(vips_metadata).to eq(image_magick_metadata)
-        expect(vips_metadata.fetch("xmp-data")).to eq(false)
-        expect(vips_metadata.fetch("icc-profile-data")).to eq(!strip_metadata)
-        expect(vips_metadata.fetch("exif-data")).to eq(!strip_metadata)
+        expect(vips_metadata).to eq(
+          {
+            "exif-data" => !strip_metadata,
+            "xmp-data" => false,
+            "iptc-data" => false,
+            "icc-profile-data" => !strip_metadata,
+          },
+        )
       end
     end
 
