@@ -541,6 +541,9 @@ importers:
       ansi-to-html:
         specifier: ^0.7.2
         version: 0.7.2
+      axe-core:
+        specifier: ^4.12.1
+        version: 4.12.1
       babel-plugin-debug-macros:
         specifier: ^2.0.0
         version: 2.0.0(@babel/core@7.29.7)
@@ -559,6 +562,12 @@ importers:
       discourse-markdown-it:
         specifier: workspace:1.0.0
         version: link:../discourse-markdown-it
+      dom-accessibility-api:
+        specifier: ^0.7.1
+        version: 0.7.1
+      ember-a11y-testing:
+        specifier: ^8.0.1
+        version: 8.0.1(@babel/core@7.29.7)(@ember/test-helpers@5.4.3(@babel/core@7.29.7)(@glint/template@1.7.8))(@ember/test-waiters@4.1.1(@babel/core@7.29.7)(@glint/template@1.7.8))(axe-core@4.12.1)(qunit@2.25.0)
       ember-async-data:
         specifier: ^2.0.1
         version: 2.0.1(@babel/core@7.29.7)(@glint/template@1.7.8)
@@ -3322,6 +3331,10 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
+  axe-core@4.12.1:
+    resolution: {integrity: sha512-s7iGf5GaVMxEG0ENN9x+xTr7GFZCb1ZP/1uATUpCEK2X78nDB3RwbtFCo9pGAf9ru+VwoQ464DkaLEeRM08wJA==}
+    engines: {node: '>=4'}
+
   axobject-query@4.1.0:
     resolution: {integrity: sha512-qIj0G9wZbMGNLjLmg1PT6v2mE9AH2zlnADJD/2tC6E00hgmhUOfEB6greHPAfLRSufHqROIUTkw6E+M3lH0PTQ==}
     engines: {node: '>= 0.4'}
@@ -4222,6 +4235,9 @@ packages:
     resolution: {integrity: sha512-NqTbaYeE4gA/wU1hdKFdU+AFahpDOpgGLzHP42k6H6DKExJd0A55KEVWYhL9FEmHmgeLvEU2vuKXDuU+4yToOw==}
     engines: {node: '>=0.10.0'}
 
+  dom-accessibility-api@0.7.1:
+    resolution: {integrity: sha512-vdnCeZD+3wZ+8h8xXL/ZtBlvvoobOFyPzSiIfO6sGOZDqjFx4aLMAjZhl4rawj5xYz3UwP6Tgvyh0iH4IOCVnQ==}
+
   dom-element-descriptors@0.5.1:
     resolution: {integrity: sha512-DLayMRQ+yJaziF4JJX1FMjwjdr7wdTr1y9XvZ+NfHELfOMcYDnCHneAYXAS4FT1gLILh4V0juMZohhH1N5FsoQ==}
 
@@ -4265,6 +4281,18 @@ packages:
 
   electron-to-chromium@1.5.373:
     resolution: {integrity: sha512-G2Hym8JIf/QreuseqkDibgH8Ci8KfJzqGDKdakbhSx9UltwRBH2cBLAWU/lBX0sCdv0TlhyxQyDCnSfxgMWsjA==}
+
+  ember-a11y-testing@8.0.1:
+    resolution: {integrity: sha512-irO7yrqz3nnJrBPFlMw4xvdPL7ElwC7fuQYSL4TbtMGk4gqnY+4dkKiNOqCIAg+AF7tBrjXDASkvpHrAHnmVMg==}
+    engines: {node: '>= 18', pnpm: '>= 10'}
+    peerDependencies:
+      '@ember/test-helpers': ^3.0.3 || ^4.0.2 || ^5.0.0
+      '@ember/test-waiters': 4.1.1
+      axe-core: ^4.0.0
+      qunit: '>= 2'
+    peerDependenciesMeta:
+      qunit:
+        optional: true
 
   ember-async-data@2.0.1:
     resolution: {integrity: sha512-yCQlVR3NLgjGA09LMc1NYX0XiAd0tHTM4/AmIHD0wq87QpHGmWcpMxyKGEe/TBczyCwBEJifaZNtAjMDsW1YdA==}
@@ -11266,6 +11294,8 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.1.0
 
+  axe-core@4.12.1: {}
+
   axobject-query@4.1.0: {}
 
   babel-import-util@2.1.1: {}
@@ -12210,6 +12240,8 @@ snapshots:
 
   docopt@0.6.2: {}
 
+  dom-accessibility-api@0.7.1: {}
+
   dom-element-descriptors@0.5.1: {}
 
   dot-case@3.0.4:
@@ -12257,6 +12289,19 @@ snapshots:
       jake: 10.9.4
 
   electron-to-chromium@1.5.373: {}
+
+  ember-a11y-testing@8.0.1(@babel/core@7.29.7)(@ember/test-helpers@5.4.3(@babel/core@7.29.7)(@glint/template@1.7.8))(@ember/test-waiters@4.1.1(@babel/core@7.29.7)(@glint/template@1.7.8))(axe-core@4.12.1)(qunit@2.25.0):
+    dependencies:
+      '@ember/test-helpers': 5.4.3(@babel/core@7.29.7)(@glint/template@1.7.8)
+      '@ember/test-waiters': 4.1.1(@babel/core@7.29.7)(@glint/template@1.7.8)
+      '@embroider/addon-shim': 1.10.3
+      axe-core: 4.12.1
+      decorator-transforms: 2.3.2(@babel/core@7.29.7)
+    optionalDependencies:
+      qunit: 2.25.0
+    transitivePeerDependencies:
+      - '@babel/core'
+      - supports-color
 
   ember-async-data@2.0.1(@babel/core@7.29.7)(@glint/template@1.7.8):
     dependencies:

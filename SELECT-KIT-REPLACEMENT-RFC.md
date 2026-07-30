@@ -1345,7 +1345,11 @@ and the editor branch on the `dRovingFocus`/`DSkeleton` rebase.
   a Phase-0 follow-up) before any real picker binds a string id.
 - **Verification**:
   - Phase 0 unit/integration: `bin/qunit` on the new component + engine + modifier
-    tests; the a11y acceptance suite (keyboard + axe-core) must pass.
+    tests; the a11y acceptance suite (keyboard + axe-core) must pass. **Delivered** as four
+    tiers — see `docs/select-kit-replacement/A11Y-TEST-TIERS.md`. Note axe landed as a
+    narrowly-gated floor rather than a blanket gate: it has no rule for a wrong-but-valid
+    role, and its whole `aria-activedescendant` check is that the id resolves to something,
+    so it cannot carry the weight this line implies. The APG pattern suite does that.
   - **Manual SR matrix before each phase ships**: NVDA + JAWS (Firefox/Chrome),
     VoiceOver (Safari desktop + **iOS**), TalkBack (**Android**) — each completing
     the four historically-broken flows (pick a category, add/remove a PM recipient,
