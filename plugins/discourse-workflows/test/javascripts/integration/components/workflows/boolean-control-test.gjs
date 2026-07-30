@@ -66,8 +66,8 @@ module("Integration | Component | workflows boolean control", function (hooks) {
 
     assert.dom(".form-kit__control-toggle").exists();
     assert
-      .dom(".workflows-property-engine__mode-control")
-      .hasClass("--toggle", "positions the switcher alongside the toggle");
+      .dom(".form-kit__field-toggle .workflows-property-engine__mode-control")
+      .exists("positions the switcher inside the toggle field");
   });
 
   test("switches to expression mode", async function (assert) {
