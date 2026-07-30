@@ -33,6 +33,11 @@ module(
         "<p>Text with <sub>subscript</sub> and <sup>superscript</sup> </p>",
         "Text with <sub>subscript</sub> and <sup>superscript</sup> ",
       ],
+      "several blocks ending in inline HTML": [
+        "a <sup>1</sup>\n\nb <mark>m</mark>\n\nc <del>d</del>",
+        "<p>a <sup>1</sup> </p><p>b <mark>m</mark> </p><p>c <del>d</del> </p>",
+        "a <sup>1</sup> \n\nb <mark>m</mark> \n\nc <del>d</del> ",
+      ],
       "HTML mark aliases": [
         "<b>bold</b> and <i>italic</i>",
         "<p><strong>bold</strong> and <em>italic</em></p>",
