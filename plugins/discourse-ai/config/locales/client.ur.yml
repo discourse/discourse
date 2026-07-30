@@ -261,6 +261,8 @@ ur:
           copy: "کاپی"
           copied: "کاپی کر لیا!"
           cancel: "منسوخ"
+          insert_footnote: "حوالہ درج کریں"
+          footnote_disabled: "خودکار اندراج غیر فعال، کاپی بٹن پر کلک کریں اور اسے اپنے طور پر ترمیم کریں۔"
         thumbnail_suggestions:
           try_again: "دوبارہ کوشش کریں"
       embeddings:
