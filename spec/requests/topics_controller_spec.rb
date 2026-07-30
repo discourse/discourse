@@ -1749,6 +1749,29 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(403)
     end
 
+    it "does not delete timings for a topic the user cannot see" do
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      private_topic = Fabricate(:topic, category: private_category)
+      private_post = Fabricate(:post, topic: private_topic)
+      PostTiming.create!(
+        topic: private_topic,
+        user: user,
+        post_number: private_post.post_number,
+        msecs: 1000,
+      )
+      TopicUser.create!(topic: private_topic, user: user)
+
+      sign_in(user)
+      delete "/t/#{private_topic.id}/timings.json"
+
+      aggregate_failures do
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["error_type"]).to eq("not_found")
+        expect(PostTiming.where(topic: private_topic, user: user)).to exist
+        expect(TopicUser.where(topic: private_topic, user: user)).to exist
+      end
+    end
+
     def topic_user_post_timings_count(user, topic)
       [TopicUser, PostTiming].map { |klass| klass.where(user: user, topic: topic).count }
     end
@@ -6477,6 +6500,28 @@ RSpec.describe TopicsController do
 
       tu = TopicUser.find_by(user: admin, topic: topic)
       expect(tu.last_read_post_number).to eq(whisper.post_number)
+    end
+
+    it "does not record timings for a topic the user cannot see" do
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      private_topic = Fabricate(:topic, category: private_category)
+      private_post = Fabricate(:post, topic: private_topic)
+
+      sign_in(user)
+      post "/t/#{private_post.topic_id}/timings.json",
+           params: {
+             topic_time: 5,
+             timings: {
+               private_post.post_number => 2,
+             },
+           }
+
+      aggregate_failures do
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["error_type"]).to eq("not_found")
+        expect(PostTiming.where(topic: private_post.topic, user: user)).to be_empty
+        expect(user.user_stat.reload.posts_read_count).to eq(0)
+      end
     end
 
     it "should record the timing" do
