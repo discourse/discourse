@@ -42,6 +42,87 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
   end
 
+  # An indented code block is only recognized where the line before it settles it:
+  # a blank line, and before that a line that is neither a list item nor itself
+  # indented. Inside a list the threshold is the item's content indent plus four,
+  # which would need real block parsing, so those lines stay ordinary content —
+  # extracting from something meant as code only rewrites text, while treating
+  # content as code drops the upload entirely. Checked against PrettyText.
+  describe "indented code blocks" do
+    let(:upload) { "![shot](upload://abc.png)" }
+
+    it "does not extract from an indented block after a blank line" do
+      raw = "Intro\n\n    #{upload}\n"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+
+    it "does not extract from an indented block at the start of the input" do
+      raw = "    #{upload}\n"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+
+    it "does not extract from an indented block after a heading" do
+      raw = "# Title\n\n    #{upload}\n"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+
+    it "does not extract from a tab-indented block" do
+      raw = "Intro\n\n\t#{upload}\n"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+
+    it "reopens a block after an unindented line interrupts it" do
+      raw = "Intro\n\n    a\ntext\n\n    #{upload}\n"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+
+    # An indented line straight after a paragraph line is a lazy continuation, so
+    # core renders the image rather than a code block.
+    it "extracts from an indent that cannot interrupt a paragraph" do
+      extract("Intro line\n    #{upload}\n")
+
+      expect(buffer.uploads.size).to eq(1)
+    end
+
+    it "extracts from an indent under a bullet" do
+      extract("- item\n    #{upload}\n")
+
+      expect(buffer.uploads.size).to eq(1)
+    end
+
+    # Four spaces against a numbered item's content indent of three is one past
+    # it, not four, so this renders as the list item's image in core. An indented
+    # screenshot under a numbered step is ordinary post formatting.
+    it "extracts from an indent under a numbered step" do
+      extract("1. Step one\n\n    #{upload}\n\n2. Step two\n")
+
+      expect(buffer.uploads.size).to eq(1)
+    end
+
+    it "extracts from a deeper indent inside a list, where the threshold is unknown" do
+      extract("- item\n\n      #{upload}\n")
+
+      expect(buffer.uploads.size).to eq(1)
+    end
+
+    it "recognizes a block again once the list has ended" do
+      raw = "- item\n\ntext\n\n    #{upload}\n"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+  end
+
   # An unpaired backtick is literal text in CommonMark, so it must not open a code
   # span that swallows the rest of the post. A span exists only when a matching
   # closer follows within the same paragraph. Every expectation here was checked

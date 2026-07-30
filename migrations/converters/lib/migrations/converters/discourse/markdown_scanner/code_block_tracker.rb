@@ -56,7 +56,7 @@ module Migrations
             # that for nearly every line — so the ordinary line is neither sliced nor
             # searched for its end.
             unless @in_indented_block
-              return nil unless indented
+              return nil unless indented && opens_indented_block?(input, pos, input_length)
 
               @in_indented_block = true
               return pos_after_line(line_end_at(input, pos, input_length), input_length)
@@ -206,6 +206,80 @@ module Migrations
 
           def line_end_at(input, pos, input_length)
             input.byteindex("\n", pos) || input_length
+          end
+
+          # Whether an indent at +pos+ really opens a code block. Only the shapes
+          # that can be read from the line before are treated as code:
+          #
+          #  * the line before must be blank (or absent) — CommonMark does not let
+          #    indented code interrupt a paragraph; and
+          #  * the last line with content on it must be neither a list item nor
+          #    itself indented, because inside a list the threshold is the item's
+          #    content indent plus four (`- ` needs six spaces, `1. ` seven), which
+          #    can't be known without tracking list nesting.
+          #
+          # Anything less clear is left as ordinary content. The two mistakes are not
+          # equal: reading real code as content only rewrites text inside a code
+          # sample, while reading content as code drops the upload, so the file is
+          # never carried over and its URL resolves to nothing.
+          #
+          # Only reached on a line that already starts with four spaces or a tab, so
+          # the walk backwards is rare.
+          def opens_indented_block?(input, pos, input_length)
+            line_start = previous_line_start(input, pos)
+            return true if line_start.nil? # start of input
+
+            line_end = line_end_at(input, line_start, input_length)
+            return false unless blank_line?(input, line_start, line_end)
+
+            loop do
+              line_start = previous_line_start(input, line_start)
+              return true if line_start.nil?
+
+              line_end = line_end_at(input, line_start, input_length)
+              next if blank_line?(input, line_start, line_end)
+
+              byte = input.getbyte(line_start)
+              return false if byte == 0x20 || byte == 0x09 # indented: list content
+              return !list_item_line?(input, line_start, line_end)
+            end
+          end
+
+          # The start of the line before +pos+, or nil when +pos+ is on the first
+          # line. +pos+ is always a line start, so the byte before it is that line's
+          # newline.
+          def previous_line_start(input, pos)
+            return nil if pos.zero?
+            # The previous line is the first one; searching from a negative offset
+            # would wrap around to the end of the input.
+            return 0 if pos < 2
+
+            newline = input.byterindex("\n", pos - 2)
+            newline ? newline + 1 : 0
+          end
+
+          # A bullet (`-`, `*`, `+`) or ordered (`1.`, `1)`) list marker, under the
+          # four-space indent that would make the line code itself.
+          def list_item_line?(input, line_start, line_end)
+            pos = skip_leading_spaces(input, line_start)
+            byte = input.getbyte(pos)
+            return false if byte.nil?
+
+            if byte == 0x2d || byte == 0x2a || byte == 0x2b # - * +
+              pos += 1
+            else
+              digits = 0
+              digits += 1 while (b = input.getbyte(pos + digits)) && b >= 0x30 && b <= 0x39
+              return false if digits.zero? || digits > 9
+
+              pos += digits
+              delimiter = input.getbyte(pos)
+              return false unless delimiter == 0x2e || delimiter == 0x29 # . )
+              pos += 1
+            end
+
+            # The marker needs whitespace after it, or to be the whole line.
+            pos >= line_end || input.getbyte(pos) == 0x20 || input.getbyte(pos) == 0x09
           end
 
           # Matches the opener rule of {#check_fenced_boundary}: up to three leading
