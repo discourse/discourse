@@ -40,7 +40,7 @@ module Migrations
           # query string, fragment) becomes the suffix, reattached verbatim at render.
           # For a `:site` target the suffix is the whole path (after the prefix).
           class InternalLink < Base
-            TRIGGERS = ["[", "h", "/"].freeze
+            TRIGGERS = ["[", "h", "H", "/"].freeze
 
             # The route segments this detector understands, shared by the presence
             # gate and the bare-URL pattern.
@@ -78,8 +78,13 @@ module Migrations
             # `UploadUrl::URL` does. It stays lazy and demands a real route segment
             # after, so a plain h-word (no `/`) still fails at the first required `/`
             # without the group ever expanding.
+            #
+            # The scheme is case-insensitive because linkify-it reads it that way, so
+            # core links `HTTPS://…` too. The insensitivity stops at the scheme: route
+            # segments stay literal, since Rails routing is case-sensitive and `/T/5`
+            # is not a topic on the destination either.
             BARE =
-              %r{\G(?<url>(?:(?:https?:)?//[^/#{Base::URL_TERMINATORS}]+)?(?:/[^/#{Base::URL_TERMINATORS}]+)*?/(?:#{ROUTE_SEGMENT})/#{URL_BODY}*\w)}
+              %r{\G(?<url>(?:(?i:https?:)?//[^/#{Base::URL_TERMINATORS}]+)?(?:/[^/#{Base::URL_TERMINATORS}]+)*?/(?:#{ROUTE_SEGMENT})/#{URL_BODY}*\w)}
             private_constant :BARE
 
             # Splits a URL into its host (nil when relative) and the rest (path, query
@@ -87,7 +92,7 @@ module Migrations
             # and an explicit `http(s)://host` both yield the host; a leading `/` (but
             # not `//`) is relative. Anything else (`mailto:`, `#anchor`, a bare word)
             # returns nil and isn't an internal link.
-            SPLIT = %r{\A(?:(?:https?:)?//(?<host>[^/]+))?(?<rest>/\S*)?\z}
+            SPLIT = %r{\A(?:(?i:https?:)?//(?<host>[^/]+))?(?<rest>/\S*)?\z}
             private_constant :SPLIT
 
             # A `/u/<name>` segment, read like a username (see `Base::WORD_SOURCE`)
@@ -176,8 +181,8 @@ module Migrations
               case byte
               when 0x5b # `[`
                 detect_link(input, pos)
-              when 0x68, 0x2f
-                # 0x68 = `h`, 0x2f = `/`
+              when 0x68, 0x48, 0x2f
+                # 0x68 = `h`, 0x48 = `H`, 0x2f = `/`
                 detect_bare(input, pos)
               end
             end

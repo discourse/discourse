@@ -189,6 +189,32 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(link).to include(target_type: link_target::TOPIC, target_id: 99)
     end
 
+    # linkify-it reads the scheme case-insensitively, so core links these too;
+    # older forums carried over uppercase schemes.
+    %w[HTTPS Https HTTP hTTp].each do |scheme|
+      it "recognizes a bare link with a #{scheme} scheme" do
+        link, = link_for("read #{scheme}://forum.example.com/t/slug/99 now")
+
+        expect(link).to include(
+          url: "#{scheme}://forum.example.com/t/slug/99",
+          target_type: link_target::TOPIC,
+          target_id: 99,
+        )
+      end
+
+      it "recognizes a markdown link with a #{scheme} scheme" do
+        link, = link_for("[the topic](#{scheme}://forum.example.com/t/slug/99)")
+
+        expect(link).to include(target_type: link_target::TOPIC, target_id: 99)
+      end
+    end
+
+    it "recognizes an uppercase scheme with an uppercase host" do
+      link, = link_for("read HTTPS://FORUM.EXAMPLE.COM/t/slug/99 now")
+
+      expect(link).to include(target_type: link_target::TOPIC, target_id: 99)
+    end
+
     it "leaves an absolute link on a foreign host literal" do
       raw = "elsewhere https://other.example.com/t/slug/99 done"
 

@@ -22,16 +22,17 @@ module Migrations
           # nothing at import and comes back verbatim (see `UploadUrlReference`), so
           # there's no risk in matching it here.
           class UploadUrl < Base
-            TRIGGERS = ["!", "[", "h", "/"].freeze
+            TRIGGERS = ["!", "[", "h", "H", "/"].freeze
 
             # A full upload URL, from an optional scheme/host down to the sha1 at the
             # start of the basename. `[^/#{Base::URL_TERMINATORS}]` is a path-segment
             # character (a URL-body character minus the slash; see
             # `Base::URL_TERMINATORS`). The trailing `\w` keeps a sentence's `.`/`,`
-            # after a bare URL out of the match.
+            # after a bare URL out of the match. The scheme is case-insensitive
+            # because linkify-it reads it that way, so core links `HTTPS://…` too.
             URL =
               %r{
-                (?: (?:https?:)? // [^/#{Base::URL_TERMINATORS}]+ )?   # optional scheme + host
+                (?: (?i:https?:)? // [^/#{Base::URL_TERMINATORS}]+ )?  # optional scheme + host
                 (?: / [^/#{Base::URL_TERMINATORS}]+ )*?                # optional leading path (subfolder installs)
                 / (?:secure-)? uploads /
                 (?: [^/#{Base::URL_TERMINATORS}]+ / )*?                # site name and any segments before original/
@@ -66,8 +67,8 @@ module Migrations
                 match_with(IMAGE, input, pos)
               when 0x5b # `[`
                 match_with(LINK, input, pos)
-              when 0x68, 0x2f
-                # 0x68 = `h`, 0x2f = `/`
+              when 0x68, 0x48, 0x2f
+                # 0x68 = `h`, 0x48 = `H`, 0x2f = `/`
                 detect_bare(input, pos)
               end
             end

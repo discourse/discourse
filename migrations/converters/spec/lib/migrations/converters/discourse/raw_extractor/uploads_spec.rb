@@ -79,6 +79,23 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.uploads.first[:upload_id]).to eq(sha1)
     end
 
+    # linkify-it reads the scheme case-insensitively, so core links these too.
+    %w[HTTPS Https HTTP].each do |scheme|
+      it "recognizes an upload URL with a #{scheme} scheme" do
+        url = "#{scheme}://cdn.example.com/uploads/default/original/2X/a/ab/#{sha1}.png"
+        extract("![x](#{url})")
+
+        expect(buffer.uploads.first[:upload_id]).to eq(sha1)
+      end
+
+      it "recognizes a bare upload URL with a #{scheme} scheme" do
+        url = "#{scheme}://cdn.example.com/uploads/default/original/2X/a/ab/#{sha1}.png"
+        extract("see #{url} here")
+
+        expect(buffer.uploads.first[:upload_id]).to eq(sha1)
+      end
+    end
+
     it "keeps a bare URL's trailing sentence punctuation out of the match" do
       url = "https://cdn.example.com/uploads/default/original/2X/a/ab/#{sha1}.png"
       result = extract("look at #{url}.")
