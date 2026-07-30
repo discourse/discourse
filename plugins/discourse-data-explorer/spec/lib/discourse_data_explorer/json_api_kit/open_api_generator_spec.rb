@@ -24,6 +24,26 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
       expect(document["openapi"]).to eq("3.1.0")
     end
 
+    it "declares the API key credentials as security schemes" do
+      expect(document.dig("components", "securitySchemes")).to eq(
+        "ApiKey" => {
+          "type" => "apiKey",
+          "in" => "header",
+          "name" => "Api-Key",
+        },
+        "ApiUsername" => {
+          "type" => "apiKey",
+          "in" => "header",
+          "name" => "Api-Username",
+        },
+      )
+    end
+
+    # Both headers, so one requirement listing both (AND, per OpenAPI).
+    it "requires both credentials on every operation" do
+      expect(document["security"]).to eq([{ "ApiKey" => [], "ApiUsername" => [] }])
+    end
+
     it "stamps the advertised API version" do
       expect(document.dig("info", "version")).to eq("2026-07-08")
     end
@@ -151,6 +171,12 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
 
     it "carries an operation id" do
       expect(index_operation["operationId"]).to eq("listQueries")
+    end
+
+    # OpenAPI reserves the `security` scopes array for OAuth2, so the API key
+    # scope that permits this operation is documented as an extension.
+    it "names the API key scope that permits it" do
+      expect(index_operation["x-api-scope"]).to eq("queries:read")
     end
 
     it "declares the filter with its value type and description" do
@@ -873,6 +899,10 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
         "properties",
         "attributes",
       )
+    end
+
+    it "names its own API key scope" do
+      expect(create_operation["x-api-scope"]).to eq("queries:create")
     end
 
     it "carries a summary and operation id" do

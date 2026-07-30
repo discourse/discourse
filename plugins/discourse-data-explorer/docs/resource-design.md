@@ -319,13 +319,14 @@ The guardrail is a spec asserting every derived scope has its translation key pr
 same shape as the contract guard: the declaration exists, so a missing string is provable
 rather than discovered by an admin staring at an empty tooltip.
 
-### Documentation integration
+### Documentation integration (built 2026-07-30)
 
-The generated document currently has no security section at all. It gains an `apiKey`
-scheme (`Api-Key` / `Api-Username`) and, per operation, the scope that permits it — derived,
-so it cannot drift. Constraint: OpenAPI 3.1 requires the scopes array to be **empty** for
-non-OAuth2 schemes, so the scope name goes in a vendor extension (`x-api-scope:
-queries:read`) plus the operation description rather than in `security` proper.
+The document declares both credentials as `apiKey` security schemes (`Api-Key`,
+`Api-Username`) with a single document-level requirement listing both (OpenAPI reads a
+combined requirement as AND), and every operation carries `x-api-scope` — `queries:read`,
+`queries:create` — derived from the same declarations the runtime enforces, so it cannot
+drift. The extension is needed because OpenAPI 3.1 requires the `security` scopes array to
+be **empty** for non-OAuth2 schemes, leaving nowhere standard to name a scope.
 
 ### Traps found while reading core
 

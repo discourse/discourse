@@ -57,6 +57,20 @@ module DiscourseDataExplorer
         },
       }.freeze
 
+      # The existing API key credentials, unchanged by the Kit.
+      SECURITY_SCHEMES = {
+        "ApiKey" => {
+          "type" => "apiKey",
+          "in" => "header",
+          "name" => "Api-Key",
+        },
+        "ApiUsername" => {
+          "type" => "apiKey",
+          "in" => "header",
+          "name" => "Api-Username",
+        },
+      }.freeze
+
       ERRORS_SCHEMA = {
         "type" => "object",
         "properties" => {
@@ -181,10 +195,13 @@ module DiscourseDataExplorer
           "openapi" => "3.1.0",
           "info" => info,
           "x-changelog" => changelog_entries,
+          # Both credentials are required, so one requirement listing both.
+          "security" => [{ "ApiKey" => [], "ApiUsername" => [] }],
           "tags" => tags,
           "paths" => paths,
           "components" => {
             "schemas" => schemas,
+            "securitySchemes" => SECURITY_SCHEMES,
           },
         }
       end
@@ -546,20 +563,24 @@ module DiscourseDataExplorer
 
       def paths
         @endpoints.each_with_object({}) do |endpoint, result|
-          resource = primary_resource(endpoint)
-          collection = { "get" => finalize(index_operation(endpoint), resource, :index) }
+          collection = { "get" => finalize(index_operation(endpoint), endpoint, :index) }
           if endpoint[:create]
-            collection["post"] = finalize(create_operation(endpoint), resource, :create)
+            collection["post"] = finalize(create_operation(endpoint), endpoint, :create)
           end
           result[endpoint[:path]] = collection
           result["#{endpoint[:path]}/{id}"] = {
-            "get" => finalize(show_operation(endpoint), resource, :show),
+            "get" => finalize(show_operation(endpoint), endpoint, :show),
           }
         end
       end
 
-      def finalize(operation, resource, action)
-        operation["deprecated"] = true if deprecated?(resource, action)
+      def finalize(operation, endpoint, action)
+        operation["deprecated"] = true if deprecated?(primary_resource(endpoint), action)
+        # The API key scope a caller needs, derived from the same declarations the
+        # runtime enforces (docs/resource-design.md §8). OpenAPI reserves the
+        # `security` scopes array for OAuth2, so it rides an extension instead.
+        scope = ApiKeyScopes.scope_name(endpoint[:controller], action)
+        operation["x-api-scope"] = scope if scope
         with_examples(operation)
       end
 

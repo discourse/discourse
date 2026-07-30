@@ -37,6 +37,12 @@
       ]
     }
   ],
+  "security": [
+    {
+      "ApiKey": [],
+      "ApiUsername": []
+    }
+  ],
   "tags": [
     {
       "name": "Queries",
@@ -420,7 +426,8 @@
               }
             }
           }
-        }
+        },
+        "x-api-scope": "queries:read"
       },
       "post": {
         "tags": [
@@ -580,7 +587,8 @@
               }
             }
           }
-        }
+        },
+        "x-api-scope": "queries:create"
       }
     },
     "/data-explorer/api/queries/{id}": {
@@ -674,7 +682,8 @@
           "404": {
             "description": "Not found"
           }
-        }
+        },
+        "x-api-scope": "queries:read"
       }
     }
   },
@@ -952,6 +961,18 @@
           "errors"
         ],
         "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "ApiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Api-Key"
+      },
+      "ApiUsername": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Api-Username"
       }
     }
   }

@@ -42,6 +42,13 @@ module DiscourseDataExplorer
           end
         end
 
+        # `resource:action`, the scope a caller needs for this endpoint action —
+        # the same pair the admin UI shows. Consumed by the docs generator.
+        def scope_name(controller_class, action)
+          scope_action = SCOPE_ACTIONS[action.to_s] or return
+          "#{controller_class.api_scope_resource}:#{scope_action}"
+        end
+
         # Memoized: `ApiKeyScope.scope_mappings` runs on every request made with a
         # granular key, so walking the route table there would be paid per request.
         def mappings
