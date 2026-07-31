@@ -24,11 +24,17 @@ module Migrations
             IMAGE_PATTERN =
               %r{\G!\[(?<alt>[^|\[\]]*)(?:\|(?<dimensions>[^\]]*))?\]\(upload://(?<url>[^)]+)\)}
 
+            # The marker folds case but the scheme does not, which is core's own
+            # split: `[r.pdf|ATTACHMENT](upload://…)` still cooks a link carrying
+            # `data-orig-href`, so the upload is real and has to be recorded, while
+            # `UPLOAD://` cooks a link with no `data-orig-href` at all — nothing the
+            # importer could resolve, and matching it would replace text core left
+            # alone. Hence `/i` on the pattern with the scheme opted out.
             ATTACHMENT_PATTERN =
               %r{
               \G
               \[(?<filename>[^|\]]*)\|attachment\]
-              \(upload://(?<url>[^)]+)\)
+              \((?-i:upload)://(?<url>[^)]+)\)
               # Discourse writes the size right after the link, on the same line.
               # `\s*` here would let the group cross a line end — even a blank one —
               # and swallow a following parenthesized line into the match. Only the

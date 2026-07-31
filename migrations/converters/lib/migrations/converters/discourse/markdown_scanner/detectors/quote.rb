@@ -26,7 +26,10 @@ module Migrations
           class Quote < Base
             TRIGGERS = ["["].freeze
 
-            OPENING = /\G\[quote=(?<header>[^\]]*)\]/
+            # Case-insensitive because core's bbcode rules are: `[QUOTE=bob]` renders
+            # the same block, and missing it leaves the header's source numbering in
+            # the imported raw.
+            OPENING = /\G\[quote=(?<header>[^\]]*)\]/i
             private_constant :OPENING
 
             def detect(input, pos, _byte)
