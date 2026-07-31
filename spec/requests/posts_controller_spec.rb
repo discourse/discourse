@@ -1940,6 +1940,35 @@ RSpec.describe PostsController do
         end
       end
 
+      it "does not persist HTML from an untrusted oEmbed provider" do
+        Jobs.run_immediately!
+        url = "https://attacker.example.com/onebox"
+        malicious_html =
+          '<div class="onebox-attack" style="position: fixed; inset: 0; z-index: 9999">overlay</div>'
+
+        stub_request(:head, url).to_return(status: 200)
+        stub_request(:get, url).to_return(
+          status: 200,
+          body:
+            '<html><head><link type="application/json+oembed" href="https://attacker.example.com/oembed"></head></html>',
+        )
+        stub_request(:get, "https://attacker.example.com/oembed").to_return(
+          status: 200,
+          body: {
+            title: "Attacker onebox",
+            type: "rich",
+            provider_name: "Flickr",
+            html: malicious_html,
+          }.to_json,
+        )
+
+        post "/posts.json", params: { raw: url, title: "Untrusted oEmbed provider" }
+
+        expect(response.status).to eq(200)
+        cooked = Nokogiri::HTML5.fragment(Post.find(response.parsed_body["id"]).cooked)
+        expect(cooked.at_css(".onebox-attack")).to be_nil
+      end
+
       it "creates the topic and post with the right attributes" do
         post "/posts.json",
              params: {
