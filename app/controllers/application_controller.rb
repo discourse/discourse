@@ -144,7 +144,7 @@ class ApplicationController < ActionController::Base
     if e.message == "string contains null byte"
       raise Discourse::InvalidParameters, e.message
     else
-      raise e
+      render_json_error e.message, status: :unprocessable_entity
     end
   end
 

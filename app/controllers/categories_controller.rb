@@ -300,14 +300,7 @@ class CategoriesController < ApplicationController
       old_permissions = cat.permissions_params
       old_permissions = { Group[:everyone].name => 1 } if old_permissions.empty?
 
-      result =
-        begin
-          cat.update(category_params)
-        rescue ArgumentError => e
-          return render json: { errors: [e.message] }, status: :unprocessable_entity
-        end
-
-      if result
+      if result = cat.update(category_params)
         Category.preload_user_fields!(guardian, [cat])
 
         Scheduler::Defer.later "Log staff action change category settings" do
