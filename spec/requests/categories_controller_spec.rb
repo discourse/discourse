@@ -51,6 +51,21 @@ RSpec.describe CategoriesController do
       expect(response).to redirect_to(%r{/c/#{category.slug}})
     end
 
+    it "does not disclose restricted topic titles through legacy category permalinks" do
+      group = Fabricate(:group)
+      private_category = Fabricate(:private_category, group: group)
+      private_topic =
+        Fabricate(:topic, category: private_category, title: "Restricted fallback topic title")
+      Permalink.create!(url: "category/old-category", topic: private_topic)
+
+      get "/category/old-category"
+
+      expect(response).to have_http_status(:found)
+      expect(response).to redirect_to("/c/old-category")
+      expect(response.headers["Location"]).not_to include(private_topic.title)
+      expect(response.body).not_to include(private_topic.title)
+    end
+
     it "returns the right response for a normal user" do
       sign_in(user)
 
