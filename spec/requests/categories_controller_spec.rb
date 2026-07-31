@@ -1311,6 +1311,25 @@ RSpec.describe CategoriesController do
           expect(category.reply_posting_review_group_ids).to contain_exactly(mod_group_3.id)
         end
 
+        it "returns 422 for invalid posting review modes" do
+          %w[topic_posting_review_mode reply_posting_review_mode].each do |review_mode|
+            expect do
+              put "/categories/#{category.id}.json",
+                  params: {
+                    category_setting_attributes: {
+                      review_mode => "invalid",
+                    },
+                  }
+            end.not_to raise_error
+
+            expect(response.status).to eq(422)
+            expect(response.parsed_body["errors"]).to contain_exactly(
+              a_string_including("not a valid #{review_mode}"),
+            )
+            expect(category.reload.category_setting.public_send(review_mode)).to eq("no_one")
+          end
+        end
+
         it "can correctly convert blank strings to appropriate null values" do
           put "/categories/#{category.id}.json", params: { email_in: "", minimum_required_tags: "" }
           expect(response.status).to eq(200)
