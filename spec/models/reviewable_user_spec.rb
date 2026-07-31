@@ -17,6 +17,90 @@ RSpec.describe ReviewableUser, type: :model do
       expect(actions.has?(:approve_user)).to eq(true)
       expect(actions.has?(:delete_user)).to eq(true)
       expect(actions.has?(:delete_user_block)).to eq(true)
+      expect(actions.has?(:silence_user)).to eq(false)
+      expect(actions.has?(:suspend_user)).to eq(false)
+    end
+
+    context "when the user was flagged as a possible spammer" do
+      fab!(:reviewable, :suspect_user_reviewable)
+
+      it "returns silence and suspend actions before the delete actions in the confirm-spam bundle" do
+        actions = reviewable.actions_for(Guardian.new(moderator))
+        bundle = actions.bundles.find { |b| b.id == "#{reviewable.id}-confirm-spam" }
+
+        expect(bundle.actions.map(&:server_action)).to eq(
+          %w[silence_user suspend_user delete_user delete_user_block],
+        )
+      end
+
+      it "doesn't return the silence action when the user is already silenced" do
+        reviewable.target.update!(silenced_till: 1.year.from_now)
+
+        actions = reviewable.actions_for(Guardian.new(moderator))
+        expect(actions.has?(:silence_user)).to eq(false)
+        expect(actions.has?(:suspend_user)).to eq(true)
+      end
+
+      it "doesn't return the suspend action when the user is already suspended" do
+        reviewable.target.update!(suspended_till: 1.year.from_now, suspended_at: Time.zone.now)
+
+        actions = reviewable.actions_for(Guardian.new(moderator))
+        expect(actions.has?(:silence_user)).to eq(true)
+        expect(actions.has?(:suspend_user)).to eq(false)
+      end
+
+      it "doesn't return silence or suspend actions when the user can't be suspended" do
+        reviewable.target.update!(moderator: true)
+
+        actions = reviewable.actions_for(Guardian.new(moderator))
+        expect(actions.has?(:silence_user)).to eq(false)
+        expect(actions.has?(:suspend_user)).to eq(false)
+      end
+    end
+
+    context "when the reviewable is rejected" do
+      before do
+        reviewable.update!(
+          status: Reviewable.statuses[:rejected],
+          payload: {
+            "username" => reviewable.target.username,
+          },
+        )
+      end
+
+      it "doesn't return the scrub action when the payload still matches the user" do
+        actions = reviewable.actions_for(Guardian.new(admin))
+        expect(actions.has?(:scrub)).to eq(false)
+      end
+
+      it "returns the scrub action when the user has been deleted" do
+        reviewable.target.destroy!
+
+        actions = reviewable.reload.actions_for(Guardian.new(admin))
+        expect(actions.has?(:scrub)).to eq(true)
+      end
+
+      it "returns the scrub action when the payload no longer matches the user, like after an anonymization" do
+        UserAnonymizer.new(reviewable.target, admin).make_anonymous
+
+        actions = reviewable.reload.actions_for(Guardian.new(admin))
+        expect(actions.has?(:scrub)).to eq(true)
+      end
+
+      it "doesn't return the scrub action for moderators since the endpoint is admin-only" do
+        reviewable.target.destroy!
+
+        actions = reviewable.reload.actions_for(Guardian.new(moderator))
+        expect(actions.has?(:scrub)).to eq(false)
+      end
+
+      it "doesn't return the scrub action when there is no payload to scrub" do
+        reviewable.update!(payload: nil)
+        reviewable.target.destroy!
+
+        actions = reviewable.reload.actions_for(Guardian.new(admin))
+        expect(actions.has?(:scrub)).to eq(false)
+      end
     end
 
     it "doesn't return anything in the approved state" do
@@ -231,6 +315,29 @@ RSpec.describe ReviewableUser, type: :model do
             reviewable_id: reviewable.id,
           ).count
         }.by(1)
+      end
+    end
+
+    context "when suspending or silencing" do
+      fab!(:reviewable, :suspect_user_reviewable)
+
+      it "rejects the reviewable and keeps the user, letting the client apply the suspension" do
+        result = reviewable.perform(moderator, :suspend_user)
+        expect(result.success?).to eq(true)
+
+        expect(reviewable.rejected?).to eq(true)
+        expect(reviewable.reload.target).to be_present
+        expect(reviewable.target.approved).to eq(false)
+        expect(reviewable.target.suspended?).to eq(false)
+      end
+
+      it "rejects the reviewable and keeps the user, letting the client apply the silencing" do
+        result = reviewable.perform(moderator, :silence_user)
+        expect(result.success?).to eq(true)
+
+        expect(reviewable.rejected?).to eq(true)
+        expect(reviewable.reload.target).to be_present
+        expect(reviewable.target.silenced?).to eq(false)
       end
     end
   end

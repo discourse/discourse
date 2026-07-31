@@ -76,11 +76,11 @@ module PageObjects
       end
 
       def has_scrub_button?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_css?(".scrub-rejected-user button") }
+        within(reviewable_by_id(reviewable.id)) { page.has_css?(".user-scrub") }
       end
 
       def has_no_scrub_button?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_no_css?(".scrub-rejected-user button") }
+        within(reviewable_by_id(reviewable.id)) { page.has_no_css?(".user-scrub") }
       end
 
       def click_scrub_user_button

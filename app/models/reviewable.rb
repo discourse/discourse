@@ -446,13 +446,20 @@ class Reviewable < ActiveRecord::Base
       ]
       target_associations << :localizations if SiteSetting.content_localization_enabled
 
+      target_created_by_associations = [:user_custom_fields]
+
+      if SiteSetting.allow_anonymous_mode
+        target_associations << { anonymous_user_master: :master_user }
+        target_created_by_associations << { anonymous_user_master: :master_user }
+      end
+
       result =
         result
           .includes(
             { created_by: :user_stat },
             :topic,
             { target: target_associations },
-            { target_created_by: [:user_custom_fields] },
+            { target_created_by: target_created_by_associations },
             :reviewable_histories,
           )
           .includes(reviewable_scores: { user: :user_stat, meta_topic: :posts })
