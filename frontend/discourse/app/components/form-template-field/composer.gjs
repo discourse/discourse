@@ -86,9 +86,8 @@ export default class FormTemplateFieldComposer extends Component {
     }
   }
 
-  // the editor is not a form control, so it carries the state of the input
-  // standing in for it. switching between markdown and rich modes replaces the
-  // editor element, so this reapplies the full state rather than toggling it.
+  // reapplies the full state rather than toggling it, because switching
+  // between markdown and rich modes replaces the editor element
   #syncEditorAccessibility() {
     const editor = this._editorTarget;
 
@@ -96,8 +95,7 @@ export default class FormTemplateFieldComposer extends Component {
       return;
     }
 
-    // the label is only rendered when the template defines one, so pointing at
-    // it unconditionally would leave a dangling reference
+    // the label is only rendered when the template defines one
     if (this.args.attributes?.label) {
       editor.setAttribute("aria-labelledby", this.labelId);
     } else {
@@ -118,8 +116,8 @@ export default class FormTemplateFieldComposer extends Component {
     this.composerValue = event.target.value;
     next(this, () => {
       this.args.onChange?.(event);
-      // the editor is not a form control, so the field backing it has to
-      // announce the change for validation state to refresh
+      // the editor emits no form events of its own, so the input standing in
+      // for it has to report the change
       this._validatedInput?.dispatchEvent(
         new Event("input", { bubbles: true })
       );
@@ -181,7 +179,9 @@ export default class FormTemplateFieldComposer extends Component {
         @placeholder={{@attributes.placeholder}}
         @onSetup={{this.onEditorSetup}}
       />
-      {{! must stay last: the error tip is only inserted after a field with no next sibling }}
+      {{! the editor is not a form control, so this stands in for it to carry the
+      value and native validation. must stay last: the error tip is only
+      inserted after a field with no next sibling }}
       <input
         id={{this.validationInputId}}
         type="text"

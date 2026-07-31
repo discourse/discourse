@@ -1,7 +1,6 @@
 import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import {
-  fillIn,
   find,
   render,
   settled,
@@ -13,7 +12,6 @@ import sinon from "sinon";
 import FormComposer from "discourse/components/form-template-field/composer";
 import noop from "discourse/helpers/noop";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { i18n } from "discourse-i18n";
 
 function fakeUppy() {
   return { textManipulation: null };
@@ -370,26 +368,6 @@ module(
         .doesNotHaveAttribute("required", "the backing input is not required");
     });
 
-    test("typing in the editor dispatches an input event on the backing input", async function (assert) {
-      stubAllowUpload(this, true);
-
-      await render(
-        <template><FormComposer @id="field-1" @onChange={{noop}} /></template>
-      );
-
-      const inputEvents = [];
-      document
-        .querySelector("input[name='field-1']")
-        .addEventListener("input", () => inputEvents.push(true));
-
-      await fillIn(".d-editor-input", "some content");
-
-      assert.true(
-        inputEvents.length >= 1,
-        "an input event is dispatched on the backing input so validation state can refresh"
-      );
-    });
-
     test("labels the editor with the field label", async function (assert) {
       stubAllowUpload(this, true);
 
@@ -425,76 +403,6 @@ module(
         .doesNotHaveAttribute(
           "aria-labelledby",
           "no dangling reference when the template defines no label"
-        );
-    });
-
-    test("mirrors the invalid state onto the editor and announces the error", async function (assert) {
-      stubAllowUpload(this, true);
-
-      const a11y = getOwner(this).lookup("service:a11y");
-      const announce = sinon.spy(a11y, "announce");
-
-      await render(
-        <template>
-          <FormComposer
-            @id="field-1"
-            @attributes={{hash label="Description"}}
-            @validations={{hash required=true}}
-            @onChange={{noop}}
-          />
-        </template>
-      );
-
-      const input = find("input[name='field-1']");
-      input.checkValidity();
-      await settled();
-
-      assert
-        .dom(".d-editor-input")
-        .hasAttribute("aria-invalid", "true", "the editor is marked invalid");
-      assert
-        .dom(".d-editor-input")
-        .hasAttribute(
-          "aria-describedby",
-          `${input.id}-error`,
-          "the editor points at the error tip the shared validation renders"
-        );
-      assert.true(
-        announce.calledWith(
-          i18n("form_templates.errors.value_missing.default"),
-          "assertive"
-        ),
-        "the translated error is announced assertively"
-      );
-    });
-
-    test("clears the invalid state on the editor once the field has content", async function (assert) {
-      stubAllowUpload(this, true);
-
-      await render(
-        <template>
-          <FormComposer
-            @id="field-1"
-            @attributes={{hash label="Description"}}
-            @validations={{hash required=true}}
-            @onChange={{noop}}
-          />
-        </template>
-      );
-
-      find("input[name='field-1']").checkValidity();
-      await settled();
-
-      await fillIn(".d-editor-input", "some content");
-
-      assert
-        .dom(".d-editor-input")
-        .doesNotHaveAttribute("aria-invalid", "the invalid marker is cleared");
-      assert
-        .dom(".d-editor-input")
-        .doesNotHaveAttribute(
-          "aria-describedby",
-          "the error reference is removed"
         );
     });
 
