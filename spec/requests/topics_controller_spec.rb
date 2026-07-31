@@ -3239,7 +3239,7 @@ RSpec.describe TopicsController do
       )
     end
 
-    it "does not expose stale reflections from unlisted topics to anonymous viewers" do
+    it "does not expose links from unlisted topics to anonymous viewers" do
       public_post = Fabricate(:post, user: post_author1)
       public_topic = public_post.topic
       public_source_topic = Fabricate(:topic, user: post_author1, title: "Public source topic")
@@ -3268,10 +3268,17 @@ RSpec.describe TopicsController do
       get "/t/#{public_topic.slug}/#{public_topic.id}.json"
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include(public_source_topic.title)
-      expect(response.body).not_to include(unlisted_source_topic.title)
-      expect(response.body).not_to include(
-        "#{Discourse.base_url_no_prefix}#{unlisted_source_topic.relative_url(unlisted_source_post.post_number)}",
+      serialized_public_post =
+        response
+          .parsed_body
+          .dig("post_stream", "posts")
+          .find { |post| post["id"] == public_post.id }
+      expect(serialized_public_post["link_counts"]).to contain_exactly(
+        a_hash_including(
+          "url" =>
+            "#{Discourse.base_url_no_prefix}#{public_source_topic.relative_url(public_source_post.post_number)}",
+          "title" => public_source_topic.title,
+        ),
       )
     end
 
