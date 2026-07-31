@@ -1110,6 +1110,37 @@ RSpec.describe PostsController do
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
     end
 
+    it "prevents regular users from publishing a global banner while creating a topic" do
+      ApplicationLayoutPreloader.banner_json_cache.clear
+      sign_in(user_trust_level_1)
+
+      post "/posts.json",
+           params: {
+             raw: "this is a test banner topic body",
+             title: "this is a test banner topic title",
+             category: category.id,
+             archetype: Archetype.banner,
+           }
+
+      creation_status = response.status
+      creation_body = response.parsed_body
+      created_topic = Topic.find(creation_body["topic_id"])
+
+      sign_in(user)
+      get "/site/banner.json"
+      banner_status = response.status
+      banner_body = response.parsed_body
+      ApplicationLayoutPreloader.banner_json_cache.clear
+
+      aggregate_failures do
+        expect(creation_status).to eq(200)
+        expect(creation_body["topic_id"]).to eq(created_topic.id)
+        expect(created_topic.archetype).to eq(Archetype.default)
+        expect(banner_status).to eq(200)
+        expect(banner_body).to eq({})
+      end
+    end
+
     context "with api" do
       it "memoizes duplicate requests" do
         raw = "this is a test post 123 #{SecureRandom.hash}"
