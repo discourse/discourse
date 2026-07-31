@@ -501,6 +501,22 @@ anchor :ran_at, :datetime                      # value anchors, typed for valida
 anchor :never_run { |scope| scope.where(last_run_at: nil) }   # symbolic, server-computed
 ```
 
+**Three forms, because there are three kinds of knowledge about a position** — and none collapses into
+another:
+
+| Form | Wire | The client knows… |
+| --- | --- | --- |
+| identity | `page[anchor][id]=42` | the row |
+| value | `page[anchor][ran_at]=2026-07-01` | a value in the ordering |
+| symbolic | `page[anchor]=first_unread` | nothing — only the server can compute it |
+
+The symbolic form is the one that earns the block. `first_unread` is how Discourse enters a topic today: the
+position depends on per-user read state, so the client cannot know the post id in advance — if it could, it
+would not need to ask. Same for "jump to the never-run queries", where identity only helps if you already
+hold an id from that group, which means paging to the end first. Consequence for the implementation: a
+symbolic anchor's block must be `instance_exec`'d in the controller, like `base_scope`, filters and sorts,
+so it can read guardian and `current_user`. That is also why it is a block rather than a typed value.
+
 The type is not needed for the SQL (AR would cast) but earns its place twice: a garbage value becomes a
 typed 400 instead of a cast error, and the parameter is documented.
 
@@ -525,6 +541,11 @@ Parked decisions:
 3. **Profile conformance.** The registered profile defines no such member, so this is an extension: either
    document it as one, or publish our own profile URI. Adding a `page` member quietly would break our own
    strict-parameter rule (`page` accepts exactly `size`/`after`/`before` today).
+4. **Two wire shapes for one parameter.** A symbolic anchor has no value — the key *is* the position — so
+   `page[anchor][never_run]=1` reads badly and the natural form is the scalar `page[anchor]=never_run`
+   (Zulip's shape: their `anchor` takes an id *or* a symbolic name). Proposed rule: scalar means "a declared
+   symbolic anchor", keyed (`page[anchor][key]=value`) means "a value for this key". Cheap to parse, and it
+   keeps the keyed form's disambiguation where it is actually needed.
 4. **Cost.** A centred window is a position seek plus two windows (~3 index seeks) — no `OFFSET`, no
    counting. Acceptable, but it is 2–3 queries where a normal page is one.
 
