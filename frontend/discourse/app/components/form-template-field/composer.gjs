@@ -137,9 +137,7 @@ export default class FormTemplateFieldComposer extends Component {
 
     this.args.uppyComposerUpload.textManipulation = textManipulation;
 
-    const editorTarget = this._editorTarget;
-
-    if (!editorTarget) {
+    if (!this._editorTarget) {
       return;
     }
 
@@ -152,7 +150,7 @@ export default class FormTemplateFieldComposer extends Component {
     };
 
     for (const event of ["focusin", "dragenter", "dragover"]) {
-      editorTarget.addEventListener(event, claimUploadTarget, { signal });
+      this._editorTarget.addEventListener(event, claimUploadTarget, { signal });
     }
   }
 
