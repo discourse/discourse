@@ -18,7 +18,7 @@ module Onebox
       # include the entire page HTML. However for some providers like Flickr it allows us
       # to return gifv and galleries.
       def self.default_html_providers
-        %w[Flickr Meetup]
+        { "Flickr" => ["flickr.com"], "Meetup" => ["meetup.com"] }
       end
 
       def self.html_providers
@@ -229,7 +229,8 @@ module Onebox
 
       def is_embedded?
         return false if data[:html].blank?
-        return true if AllowlistedGenericOnebox.html_providers.include?(data[:provider_name])
+        provider_hosts = AllowlistedGenericOnebox.html_providers[data[:provider_name]]
+        return true if provider_hosts && AllowlistedGenericOnebox.host_matches(uri, provider_hosts)
         return false unless data[:html]["iframe"]
 
         fragment = Nokogiri::HTML5.fragment(data[:html])
