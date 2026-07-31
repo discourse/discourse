@@ -179,9 +179,9 @@ class CrawlerScorer
         END AS single_request_no_referrer_score,
         CASE
           WHEN se.session_id IS NULL
-            AND e.user_agent ~ 'Chrome/[0-9]+'
+            AND e.user_agent ~ 'Chrome/[0-9]{1,3}'
             AND e.user_agent !~* '(HeadlessChrome|Edg/|OPR/)'
-            AND (substring(e.user_agent FROM 'Chrome/([0-9]+)'))::int
+            AND (substring(e.user_agent FROM 'Chrome/([0-9]{1,3})'))::int
               <= :current_chrome_major_version - :stale_chrome_major_version_lag
             THEN :stale_browser_score
           ELSE 0
@@ -257,7 +257,7 @@ class CrawlerScorer
         ) AS score
       FROM breakdown
       WHERE automation_ua_score + known_asn_score + datacenter_asn_score + single_request_no_referrer_score + stale_browser_score + velocity_score + churn_score
-        + rapid_nav_score + ip_rotation_score + referrer_score + engagement_score > 0
+        + rapid_nav_score + ip_rotation_score + referrer_score > 0
     ),
 
     updated AS (

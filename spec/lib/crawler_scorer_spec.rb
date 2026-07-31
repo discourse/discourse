@@ -50,13 +50,13 @@ RSpec.describe CrawlerScorer do
     expect(breakdown.engagement_score).to eq(40)
   end
 
-  it "scores an event with missing engagement at +40" do
+  it "does not score an event whose only signal is missing engagement" do
     event = make_event
 
     score!
 
-    expect(event.reload.score).to eq(40)
-    expect(event.browser_pageview_event_score.engagement_score).to eq(40)
+    expect(event.reload.score).to be_nil
+    expect(event.browser_pageview_event_score).to be_nil
   end
 
   it "scores known crawler ASNs at +30" do
@@ -113,8 +113,17 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(event.reload.score).to eq(40)
-    expect(event.browser_pageview_event_score.stale_browser_score).to eq(0)
+    expect(event.reload.score).to be_nil
+    expect(event.browser_pageview_event_score).to be_nil
+  end
+
+  it "does not score oversized Chrome major versions as stale" do
+    event = make_event(user_agent: "Mozilla/5.0 Chrome/99999999999.0.0.0 Safari/537.36")
+
+    score!
+
+    expect(event.reload.score).to be_nil
+    expect(event.browser_pageview_event_score).to be_nil
   end
 
   it "does not score stale Chrome versions when the session has interaction" do
@@ -133,8 +142,8 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(event.reload.score).to eq(40)
-    expect(event.browser_pageview_event_score.stale_browser_score).to eq(0)
+    expect(event.reload.score).to be_nil
+    expect(event.browser_pageview_event_score).to be_nil
   end
 
   it "scores pageview velocity at or above VELOCITY_LOW threshold at +15" do
@@ -223,7 +232,7 @@ RSpec.describe CrawlerScorer do
     score!
 
     expect(BrowserPageviewEvent.where(session_id: "handover-session").pluck(:score).uniq).to eq(
-      [40],
+      [nil],
     )
   end
 
@@ -235,7 +244,7 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(BrowserPageviewEvent.where(session_id: "slow-session").pluck(:score).uniq).to eq([40])
+    expect(BrowserPageviewEvent.where(session_id: "slow-session").pluck(:score).uniq).to eq([nil])
   end
 
   it "scores referrer discontinuity when most pageviews have no referrer" do

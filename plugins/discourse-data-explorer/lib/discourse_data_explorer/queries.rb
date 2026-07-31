@@ -1556,8 +1556,8 @@ module DiscourseDataExplorer
                   CASE WHEN MAX(s.known_asn_score) > 0 THEN 'known crawler ASN' END,
                   CASE WHEN MAX(s.datacenter_asn_score) > 0 THEN 'datacenter ASN' END,
                   CASE
-                    WHEN MAX(s.single_request_no_referrer_score) = 15
-                      THEN 'single direct locale request (+15)'
+                    WHEN MAX(s.single_request_no_referrer_score) = #{CrawlerScorer::SINGLE_REQUEST_NO_REFERRER_SCORE + CrawlerScorer::SINGLE_REQUEST_LOCALE_PARAM_BONUS}
+                      THEN 'single direct locale request (+' || MAX(s.single_request_no_referrer_score) || ')'
                     WHEN MAX(s.single_request_no_referrer_score) > 0
                       THEN 'single direct request (+' || MAX(s.single_request_no_referrer_score) || ')'
                   END,
