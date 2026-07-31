@@ -23,6 +23,12 @@ module Migrations
           # is rebuilt where it stands. The one thing the forward check gives up is
           # core's single-line inline form `[quote=bob]body[/quote]`, whose body is
           # not spaces-only; that stays literal here. Verified against PrettyText.
+          #
+          # A header whose first slot is not a name — `[quote="post:5, topic:9"]` —
+          # is also left literal. That slot is the username to core, whatever it
+          # holds: it cooks `data-username="post:5"` and no `data-post` at all, so
+          # there are no coordinates there to remap. Rewriting it would mean giving
+          # the header a reading core does not have.
           class Quote < Base
             TRIGGERS = ["["].freeze
 
