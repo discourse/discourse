@@ -5,7 +5,8 @@
 `UserResource`/`GroupResource` replaced the Kit serializers and the controller's `jsonapi`
 block, with the full suite green throughout (behavior-preserving by construction). Still
 open from the plan: types in the contract-guard baseline, the real resource registry.
-**API key scopes** designed and built 2026-07-30 (§8).
+**API key scopes** designed and built 2026-07-30 (§8). **Publication and support** (the
+`internal` keyword) decided 2026-07-31 from the RFC discussion (§9), unbuilt.
 **References:** [versioning design](./versioning-design.md) · [plugins design](./plugins-design.md) · [API docs generation](./api-docs-generation.md).
 
 Guiding principle, stated once for the whole Kit: this is a **new API** — every case the
@@ -359,3 +360,64 @@ be **empty** for non-OAuth2 schemes, leaving nowhere standard to name a scope.
   applies row-level, so nothing leaks that the caller couldn't otherwise read. Cheapest
   defensible position: `include` is part of the endpoint's contract, so the endpoint's scope
   covers it — decide before someone asks.
+
+## 9. Publication and support — the `internal` keyword (decided 2026-07-31, unbuilt)
+
+Decided in design review. "Convert everything" plus "documentation is generated from the
+declarations" read together imply that *every* endpoint becomes a documented, versioned,
+compatibility-promised public contract — a bigger commitment than intended, and one the design
+did not previously state either way.
+
+**What framed the decision.** The published reference has never been the whole surface that
+integrators actually depend on, and documentation status has not matched stability in either
+direction: documented endpoints have changed, and undocumented ones have had dependents. So
+the useful distinction is not documented-vs-hidden but **what we promise**, stated explicitly.
+
+**The stance.** Documented, versioned and supported is the **default**. An `internal` keyword
+opts an endpoint out: no generated docs, no version obligation, and no mandatory
+`Api-Version` header (nothing to pin). The customer-facing contract becomes one sentence: *if
+it's in the docs, it's supported; if it isn't, you're on your own.* Intended for endpoints
+shaped for our own client — admin dashboard data, registration, honeypot, pageview tracking.
+
+**What `internal` does NOT change:** types stay mandatory, descriptions still exist, the
+contract guard still runs, the framework still supplies pagination, errors and scopes. The
+keyword removes *publication and the promise*, never the quality bar — otherwise it becomes
+the new place to dump endpoints nobody maintains, which is the habit this whole project
+exists to break.
+
+**Route grouping.** Internal endpoints sit under one prefix — `internal`, matching the
+codebase convention of keeping non-public code under `internal` folders, so the URL and the
+code use the same word. The keyword *derives* the prefix rather than being declared twice, so
+the boundary is visible in the URL, in logs and in the network tab, not only in the docs.
+
+**Enforcement as a ratchet.** Omitting endpoints from the documentation is not enough on its
+own: integrators depend on undocumented endpoints, which is the situation this is meant to
+improve. The mechanism under consideration is to make internal routes unreachable with
+`Api-Key` authentication (cookie/session only), which turns "we don't promise" into "you
+cannot depend on it" — and makes the versioning exemption *provable*, since nothing can pin
+what it cannot call. `is_api?` / `is_user_api?` exist on controllers, so the check itself is
+trivial. Three consequences to handle before switching it on:
+
+1. **CSRF.** Cookie-authenticated endpoints need `verify_authenticity_token`; the Kit's blanket
+   skip (safe for API-key auth, where there is no ambient credential) has to become
+   conditional before any endpoint becomes cookie-only.
+2. **Where the boundary sits.** Cookie-only also excludes `User-Api-Key`, i.e. user-api-key
+   consumers such as mobile clients, not just server-side integrations — and registration or
+   pageview tracking are exactly what a mobile client calls. Needs a decision: session only,
+   or session plus user API keys?
+3. **Flipping an *existing* endpoint to internal is itself a breaking change**, since people
+   call those with API keys today. That transition wants the endpoint lifecycle (deprecate →
+   meter usage → dated cutover with a teaching error), not a switch. New endpoints can be
+   internal from day one for free.
+
+If enforcement lands, scopes for internal endpoints become meaningless (no API key can reach
+them), so the scope derivation (§8) should skip them.
+
+**Considered and rejected: a backend-for-the-frontend layer** serving the app privately. It
+means a second surface to maintain, and our own client would stop consuming the public API.
+Having the app depend on the same endpoints integrators use is the feedback loop that keeps
+their quality high, so it's worth keeping.
+
+**Transition rule worth stating in the contract:** internal → public is additive and safe
+(start documenting, start honouring pins from that date); public → internal is a breaking
+change and needs the lifecycle above.

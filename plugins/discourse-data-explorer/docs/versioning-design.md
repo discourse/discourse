@@ -432,14 +432,134 @@ The spec reference doc surfaced that the Kit's keyset pagination (invented `page
   (`expression:`/`joins:`) remains designed-not-built for the real implementation phase;
   blocks-wrapped-in-subqueries are the sketched escape hatch for the weird cases.
 - `stats[total]=count` still works (one COUNT on request, merged into cursor-mode meta); `meta.page.total`
-  (MAY) remains unemitted.
+  (MAY) remains unemitted. **Dropped from the stated contract 2026-07-30:** `stats` is ours rather than the
+  profile's, and it invites an unbounded `COUNT` per page (the profile's own answer for expensive counts is
+  the optional `estimatedTotal.bestGuess`). Left in the spike code, not offered as API.
+
+## 2c. Positional entry — the anchor (designed 2026-07-31, unbuilt)
+
+Requirement identified in design review: enter an ordered list at an arbitrary position and page **both
+ways** from there, without a filter clamping every page. Treated as required rather than optional — the
+post stream and chat both need mid-list entry, and more generally **any list that exposes its position in a
+URL needs it**. Permalinks imply positional entry.
+
+**Why cursors alone can't do it.** `page[after]`/`page[before]` take opaque cursors, and by profile
+contract a client cannot construct one — it can only replay a cursor it has already received. So "start at
+post 4217", "from this date", "users beginning with M" is inexpressible today. The gap is the *entry
+point*, not the navigation: once a position is held, our machinery already does everything asked
+(bidirectional windows, per-item cursors, `EXISTS`-probed prev/next links).
+
+### Prior art (verified from primary sources 2026-07-31)
+
+| API | Shape | Note |
+| --- | --- | --- |
+| **Stripe** | `starting_after` / `ending_before` take **an existing object ID** ("a cursor… an object ID that defines your place in the list"), mutually exclusive | Their cursor *is* a domain identifier, so arbitrary entry is free and no anchor concept is needed |
+| **Zulip** | `anchor` (message ID **or** `newest` / `oldest` / `first_unread` / `date`) + `num_before` + `num_after` + `include_anchor` (default true) | The canonical centred-window shape, from a product whose core case is permalinks into long streams |
+| **Matrix** | opaque `from`/`to` + `dir=b\|f` for continuation, plus a separate `/rooms/{id}/context/{eventId}` endpoint for entry | Keeps token opacity, pays for it with a second endpoint duplicating the query surface |
+
+Two families overall: *value-as-position* (Stripe et al., entry is inherent) and *opaque tokens plus a
+separate entry affordance* (Matrix). The JSON:API profile mandates opaque, server-defined cursors, which is
+exactly what creates our gap. **Chosen direction: an anchor parameter (Zulip's shape), not a context
+endpoint** — it composes with the existing filters, sorts and fieldsets instead of duplicating them.
+
+### Mechanics: an anchor resolves to a RECORD; the cursor is minted from the record
+
+The load-bearing rule, and the answer to "how does one value become a multi-part keyset tuple" — it never
+does. The value only bounds the leading sort column; the tuple comes from the row that bound finds:
+
+```ruby
+value    = ActiveModel::Type.lookup(definition[:type]).cast(raw_value)
+column   = cfg.sorts[active_sort_key][:column] || active_sort_key
+operator = active_direction == :desc ? "<=" : ">="        # follows the SORT, not the word "after"
+record   = keyset_ordered_scope.where("#{column} #{operator} ?", value).first
+paginator.cursor_for(record)                              # → [0, <row's value>, <row's id>]
+```
+
+Consequences, worked through on the spike's own nullable sort (`sort :ran_at, column: :last_run_at,
+nulls: :last`, keyset `(last_run_at_is_null, last_run_at, id)`):
+
+- **`>=`/`<=` follows the sort direction.** `default_sort ran_at: :desc` means "start at 2026-07-01" is
+  `last_run_at <= '2026-07-01'`. Hardcoding the operator is the obvious bug here.
+- **A missing anchor row is fine**: the bound lands on the next row in order, which is what a permalink to
+  a deleted post should do rather than 404. Same mechanism serves values that are not rows at all
+  (`page[anchor]=M` on a name sort).
+- **The null group excludes itself for free.** `last_run_at <= X` is never true for NULL, so a date anchor
+  cannot land among never-run rows — no explicit `is_null = 0` needed.
+- **…which means value anchors cannot reach a null group at all**, since no value names NULL. Symbolic
+  anchors are therefore *required*, not sugar — and they take the identical path (select a record, mint
+  from it). Zulip's `first_unread` is the same discovery from the other end, and it maps directly onto how
+  Discourse enters a topic today.
+- **Anchoring only makes sense on the leading sort column** (the only one a single value can bound), and
+  only on paginatable sorts (§2b) — the anchor is resolved in the *sort-key* vocabulary, so renames stay
+  invisible to clients.
+
+Declaration sketch, in the Kit idiom (declare the fact, machinery derives the rest):
+
+```ruby
+sort   :ran_at, column: :last_run_at, nulls: :last
+anchor :ran_at, :datetime                      # value anchors, typed for validation + docs
+anchor :never_run { |scope| scope.where(last_run_at: nil) }   # symbolic, server-computed
+```
+
+The type is not needed for the SQL (AR would cast) but earns its place twice: a garbage value becomes a
+typed 400 instead of a cast error, and the parameter is documented.
+
+### Wire shape and open decisions
+
+```
+GET /api/posts?filter[topic_id]=1234&sort=post_number
+    &page[anchor]=4217&page[before_size]=5&page[after_size]=20
+```
+
+Response: the concatenated window, `links.prev`/`links.next` as ordinary opaque cursors from the existing
+probes (so navigation reverts to the standard params immediately — the anchor is *only* the entry), and
+`meta.page.anchor` echoing the resolved cursor, which matters given the "next row in order" fallback.
+
+Parked decisions:
+
+1. **`page[anchor]` + two counts (Zulip) versus a single `page[size]` split in half.** Permalinks want
+   asymmetric context; Zulip's experience says you end up wanting both numbers. Two counts also make the
+   centred nature explicit rather than a convention.
+2. **`include_anchor`** — "around post 42" nearly always includes 42, "after 42" doesn't. Explicit flag
+   beats an implicit rule.
+3. **Profile conformance.** The registered profile defines no such member, so this is an extension: either
+   document it as one, or publish our own profile URI. Adding a `page` member quietly would break our own
+   strict-parameter rule (`page` accepts exactly `size`/`after`/`before` today).
+4. **Cost.** A centred window is a position seek plus two windows (~3 index seeks) — no `OFFSET`, no
+   counting. Acceptable, but it is 2–3 queries where a normal page is one.
+
+### The unifying rule this exposed
+
+The null-flag helper (§2b), the designed `expression:`/`joins:` sorts, and the anchor are all the same
+mechanism: **a sort is paginatable if its ordering value can be projected as a stable per-row column** —
+then the keyset comparison, the cursor minting and the anchor seek all work unchanged. Virtual sorts are
+rejected today not because they join, but because the block is *opaque*: it applies an `ORDER BY` the
+paginator cannot see, so there is no value to encode. Making the value declarative fixes all three at once:
+
+```ruby
+# opaque — pagination refuses it
+sort("user.username") { |scope, dir| scope.joins(…).order(Arel.sql("users.username #{dir} NULLS LAST")) }
+
+# declarative — keyset `(user_username_is_null, user_username, id)`, and anchorable
+sort "user.username", joins: :user, value: "users.username", type: :string, nulls: :last
+```
+
+Boundaries worth keeping: **correctness is not performance** (a keyset over a joined column may not be
+served by one index, and the subquery wrapping can block index use in the outer query — so declaring one
+stays a deliberate act, not something sprinkled on every relationship), and **unstable orderings stay
+unpaginatable by design** (`random()`, live-recomputed trending scores — the cursor would point at a
+position that no longer exists, which is a semantic failure, not a mechanical one). Those keep earning the
+profile's typed `unsupported-sort`.
+
+> Related: endpoints declared `internal` (see [resource design](./resource-design.md) §9) carry
+> no version obligation and no mandatory version header — there is nothing to pin.
 
 ## 3. Open questions (discovered, deliberately parked)
 
-- **Non-representational breaking changes — per-kind direction sketched** (raised by David in the topic
-  review, 2026-07-13; all contract-visible — the guard fires on each — but not reproducible by a document
+- **Non-representational breaking changes — per-kind direction sketched** (raised in design review,
+  2026-07-13; all contract-visible — the guard fires on each — but not reproducible by a document
   transform). Per kind:
-  - *Endpoint removal — designed via pin-gating (2026-07-16, from a discussion with David); no Rails
+  - *Endpoint removal — designed via pin-gating (2026-07-16, from a design discussion); no Rails
     routing involvement. **BUILT 2026-07-23** with one refinement: removals target the
     endpoint in the **Rails route dialect** — `removed_endpoint controller:
     "…/queries", action: :show, replacement: { controller: "…/queries", action: :index }`
@@ -497,7 +617,7 @@ The spec reference doc surfaced that the Kit's keyset pagination (invented `page
     scoped, dated, and grep-able, unlike conditionals in app code.
   None built. Context: the spike changed `default_sort` twice with no `VersionChange`, silently reordering
   bare listings for pinned clients — the incident that named this class.
-- **Query-surface scoping: per-resource, by convention** (from the same review — David's
+- **Query-surface scoping: per-resource, by convention** (from the same review — the
   `/users` vs `/leaderboard` example). Position: the spec scopes *document vocabulary* by type and leaves
   *query capability* per-endpoint, so this is a design choice — and the coherent choice is per-resource,
   matching Graphiti and our type-keyed renames: **same primary type ⇒ same collection semantics ⇒ same
