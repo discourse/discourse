@@ -56,6 +56,6 @@ class NotificationSerializer < ApplicationSerializer
   end
 
   def include_acting_user_name?
-    object.acting_user.present?
+    object.acting_user.present? && SiteSetting.enable_names?
   end
 end
