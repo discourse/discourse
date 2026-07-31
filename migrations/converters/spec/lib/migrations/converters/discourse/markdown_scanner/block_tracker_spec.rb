@@ -197,6 +197,17 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::BlockTracker 
       expect(code_text(raw)).to eq(raw)
     end
 
+    # These two drive the close memo: the failed scan from the first opener
+    # already settles the second one's fate, and the block (or its absence)
+    # must come out the same when that answer is replayed.
+    it "pairs a lone closer with the innermost opener" do
+      expect(code_text("[code]\n[code]\nbody\n[/code]\nafter\n")).to eq("[code]\nbody\n[/code]\n")
+    end
+
+    it "declines every opener when none is ever closed" do
+      expect(code_regions("[code]\n[code]\nbody\n")).to be_empty
+    end
+
     it "claims a whole line that opens and closes on itself" do
       expect(code_text("[code]body[/code]\nafter\n")).to eq("[code]body[/code]\n")
     end

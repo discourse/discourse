@@ -49,6 +49,9 @@ module Migrations
             @bound_hi = 0
             @no_code_close_from = nil
             @no_pre_close_from = nil
+            @code_close_hit = nil
+            @code_close_scanned_from = nil
+            @code_close_memo = nil
           end
 
           # Called at every line start. Returns the byte offset just past the
@@ -539,21 +542,36 @@ module Migrations
           end
 
           # Scans forward for the `[/code]` LINE that closes a block opened on the
-          # line ending at +line_end+, counting nested openers, and returns the byte
-          # offset just past it. A line that no longer matches the opener's
+          # line ending at +line_end+, tracking nested openers, and returns the
+          # byte offset just past it. A line that no longer matches the opener's
           # containers gives up: core's scoping there is murkier than this, and
           # giving up leaves the block as prose.
+          #
+          # Every nested opener passed over is remembered with its outcome — the
+          # close line that paired with it, or the give-up that stranded it. When
+          # this block does not form, those openers get processed as lines
+          # themselves and would each rescan the same tail; answering them from
+          # the memo instead keeps a post full of `[code]` lines linear. The
+          # outcome only holds under the container stack it was scanned in, so
+          # entries carry it and a lookup must match it.
           def code_block_close(input, line_end, length)
+            if (memo = @code_close_memo&.[](line_end)) && memo[0] == @containers
+              return memo[1]
+            end
+
             depth = @containers.size
-            nesting = 0
+            containers = @containers.frozen? ? @containers : @containers.dup
+            openers = [line_end]
             scan_end = line_end
 
             loop do
               line_start = scan_end + 1
-              return nil if line_start >= length
+              return memoize_code_closes(containers, openers, nil) if line_start >= length
 
               scan_end = input.byteindex("\n", line_start) || length
-              return nil if match_containers(input, line_start, scan_end) < depth
+              if match_containers(input, line_start, scan_end) < depth
+                return memoize_code_closes(containers, openers, nil)
+              end
 
               content_pos = skip_whitespace(input, @scan_pos, @scan_col, scan_end)
               # Core skips over-indented lines rather than closing on them.
@@ -563,15 +581,33 @@ module Migrations
               close_end = LineClassifier.code_tag_close_end(input, content_pos, scan_end)
               if close_end
                 next unless LineClassifier.whitespace_only?(input, close_end, scan_end)
-                return pos_after_line(scan_end, length) if nesting.zero?
 
-                nesting -= 1
+                result = pos_after_line(scan_end, length)
+                memoize_code_close(containers, openers.pop, result)
+                return result if openers.empty?
+
                 next
               end
 
               open_end = LineClassifier.code_tag_open_end(input, content_pos, scan_end)
-              nesting += 1 if open_end && LineClassifier.whitespace_only?(input, open_end, scan_end)
+              if open_end && LineClassifier.whitespace_only?(input, open_end, scan_end)
+                openers << scan_end
+              end
             end
+          end
+
+          # A close pairs with the newest pending opener; a scan that gives up
+          # strands all of them, and a scan started from a stranded opener would
+          # retrace this one's tail to the same end.
+          def memoize_code_close(containers, opener_line_end, result)
+            (@code_close_memo ||= {})[opener_line_end] = [containers, result]
+          end
+
+          def memoize_code_closes(containers, openers, result)
+            openers.each do |opener_line_end|
+              memoize_code_close(containers, opener_line_end, result)
+            end
+            result
           end
 
           # Consumes a `<pre>` HTML block: through the first line holding `</pre>`,
@@ -600,13 +636,23 @@ module Migrations
 
           # Both lookaheads remember the offset from which their closer is missing
           # for good, so a post full of unclosed openers still scans in one pass.
+          # A hit is remembered too: finding it proves the gap between the search
+          # start and the hit holds no earlier one, so a later search from inside
+          # that gap can answer without rescanning it.
           def find_code_close(input, from, bound)
             return nil if @no_code_close_from && from >= @no_code_close_from
 
-            index = input.byteindex(CODE_CLOSE_PATTERN, from)
-            if index.nil?
-              @no_code_close_from = from
-              return nil
+            if @code_close_hit && from >= @code_close_scanned_from && from <= @code_close_hit
+              index = @code_close_hit
+            else
+              index = input.byteindex(CODE_CLOSE_PATTERN, from)
+              if index.nil?
+                @no_code_close_from = from
+                return nil
+              end
+
+              @code_close_scanned_from = from
+              @code_close_hit = index
             end
 
             index < bound ? index : nil

@@ -56,6 +56,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       ["[code] closer indented four", "[code]\n#{mention}\n    [/code]"],
       ["[code] closer indented three", "[code]\n#{mention}\n   [/code]"],
       ["nested [code] blocks", "[code]\n[code]\n#{mention}\n[/code]\n[/code]"],
+      ["unbalanced [code] openers", "[code]\n[code]\n#{mention}\n[/code]"],
+      ["unbalanced [code] openers, all unclosed", "[code]\n[code]\n#{mention}\n"],
       ["[code] inside a list item", "- item\n\n  [code]\n  #{mention}\n  [/code]"],
       ["[code] inside a blockquote", "> [code]\n> #{mention}\n> [/code]"],
       ["[code] closer outside the blockquote", "> [code]\n> #{mention}\n[/code]"],
