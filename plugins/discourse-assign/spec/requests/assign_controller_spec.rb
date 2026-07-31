@@ -282,6 +282,23 @@ RSpec.describe DiscourseAssign::AssignController do
       expect(post.topic.reload.assignment).to be_nil
     end
 
+    it "rejects assignment notes longer than the maximum post length" do
+      oversized_note = "a" * (SiteSetting.max_post_length + 1)
+
+      put "/assign/assign.json",
+          params: {
+            target_id: post.topic_id,
+            target_type: "Topic",
+            username: allowed_user.username,
+            note: oversized_note,
+          }
+
+      expect(response.status).to eq(400)
+      expect(response.body).not_to include(oversized_note)
+      expect(post.topic.reload.assignment).to be_nil
+      expect(post.topic.posts.pluck(:raw)).not_to include(oversized_note)
+    end
+
     it "assigns topic with note to a user" do
       put "/assign/assign.json",
           params: {
