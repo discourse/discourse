@@ -12,6 +12,8 @@ module Migrations
               original_id: item[:id],
               created_at: item[:created_at],
               description: item[:description],
+              description_cooked: item[:description_cooked],
+              description_cooked_version: item[:description_cooked_version],
               name: item[:name],
               locale: item[:locale],
               slug: item[:slug],
