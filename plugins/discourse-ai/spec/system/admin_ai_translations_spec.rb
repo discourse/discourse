@@ -81,9 +81,7 @@ describe "Admin AI translations" do
       )
       expect(page).to have_css(".ai-translations__locale-input-row .multi-select")
       expect(page).to have_css(".ai-translations__category-input-row .combo-box")
-      expect(page).to have_css(
-        ".ai-translations__settings-panel > .setting:first-child .d-toggle-switch",
-      )
+      expect(translations_page).to have_toggle
       expect(page).to have_no_css(".ai-translations__settings-panel.alert-info")
 
       expect(translations_page).to have_overview_cards
