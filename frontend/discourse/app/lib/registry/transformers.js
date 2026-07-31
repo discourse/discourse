@@ -141,6 +141,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "topic-list-item-mobile-layout",
   "topic-list-item-style",
   "topic-list-topics-from",
+  "topic-navigation-render-timeline",
   "topic-reply-count",
   "topic-show-footer-buttons",
   "user-field-components",

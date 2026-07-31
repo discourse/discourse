@@ -94,4 +94,11 @@ export default class EmbeddableChat extends Service {
       !this.isChannelOpenInDrawer
     );
   }
+
+  get isChatDocked() {
+    return (
+      this.useLivestreamLayout &&
+      (this.canRenderChatChannel(false) || this.canRenderChatChannel(true))
+    );
+  }
 }

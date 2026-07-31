@@ -969,6 +969,20 @@ after_initialize do
 
   add_to_serializer(:topic_view, :has_livestream) { object.topic.first_post&.event&.livestream? }
 
+  add_to_serializer(
+    :topic_view,
+    :event_watching_invitee_status,
+    include_condition: -> { scope.user.present? && object.topic.first_post&.event.present? },
+  ) do
+    invitee =
+      DiscoursePostEvent::Invitee.find_by(
+        post_id: object.topic.first_post.event.id,
+        user_id: scope.user.id,
+      )
+
+    DiscoursePostEvent::Invitee.statuses[invitee.status] if invitee
+  end
+
   Chat::ChannelSerializer.include(DiscourseCalendar::Livestream::ChannelSerializerExtension)
 
   register_modifier(:chat_channel_fetcher_public_includes) do |includes|
