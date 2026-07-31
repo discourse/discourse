@@ -1,4 +1,11 @@
-import { click, currentURL, fillIn, settled, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  fillIn,
+  find,
+  settled,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
@@ -241,9 +248,8 @@ acceptance("Composer Form Template", function (needs) {
       .dom(".d-editor-input")
       .hasAttribute("aria-invalid", "true", "the editor is marked invalid");
 
-    const describedBy = document
-      .querySelector(".d-editor-input")
-      .getAttribute("aria-describedby");
+    const describedBy =
+      find(".d-editor-input").getAttribute("aria-describedby");
     assert
       .dom(`#${describedBy}`)
       .hasText(
@@ -263,7 +269,7 @@ acceptance("Composer Form Template", function (needs) {
 
     assert
       .dom(".d-editor-input")
-      .hasAttribute("aria-invalid", "false", "the invalid state is cleared");
+      .doesNotHaveAttribute("aria-invalid", "the invalid state is cleared");
     assert
       .dom(".d-editor-input")
       .doesNotHaveAttribute(
@@ -296,9 +302,8 @@ acceptance("Composer Form Template", function (needs) {
         "the replacement editor is still marked invalid"
       );
 
-    const describedBy = document
-      .querySelector(".d-editor-input")
-      .getAttribute("aria-describedby");
+    const describedBy =
+      find(".d-editor-input").getAttribute("aria-describedby");
     assert
       .dom(`#${describedBy}`)
       .hasText(

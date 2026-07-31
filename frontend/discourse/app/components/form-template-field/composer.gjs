@@ -70,7 +70,7 @@ export default class FormTemplateFieldComposer extends Component {
   @action
   handleInvalid() {
     this._invalid = true;
-    this.#markEditorInvalid();
+    this.#syncEditorAccessibility();
 
     this.a11y.announce(
       i18n("form_templates.errors.value_missing.default"),
@@ -82,14 +82,35 @@ export default class FormTemplateFieldComposer extends Component {
   handleValidationInput(event) {
     if (event.currentTarget.validity.valid) {
       this._invalid = false;
-      this._editorTarget?.setAttribute("aria-invalid", "false");
-      this._editorTarget?.removeAttribute("aria-describedby");
+      this.#syncEditorAccessibility();
     }
   }
 
-  #markEditorInvalid() {
-    this._editorTarget?.setAttribute("aria-invalid", "true");
-    this._editorTarget?.setAttribute("aria-describedby", this.errorId);
+  // the editor is not a form control, so it carries the state of the input
+  // standing in for it. switching between markdown and rich modes replaces the
+  // editor element, so this reapplies the full state rather than toggling it.
+  #syncEditorAccessibility() {
+    const editor = this._editorTarget;
+
+    if (!editor) {
+      return;
+    }
+
+    // the label is only rendered when the template defines one, so pointing at
+    // it unconditionally would leave a dangling reference
+    if (this.args.attributes?.label) {
+      editor.setAttribute("aria-labelledby", this.labelId);
+    } else {
+      editor.removeAttribute("aria-labelledby");
+    }
+
+    if (this._invalid) {
+      editor.setAttribute("aria-invalid", "true");
+      editor.setAttribute("aria-describedby", this.errorId);
+    } else {
+      editor.removeAttribute("aria-invalid");
+      editor.removeAttribute("aria-describedby");
+    }
   }
 
   @action
@@ -110,17 +131,7 @@ export default class FormTemplateFieldComposer extends Component {
     this._editorTarget =
       textManipulation.textarea || textManipulation.view?.dom;
 
-    // the label is only rendered when the template defines one, so pointing at
-    // it unconditionally would leave a dangling reference
-    if (this.args.attributes?.label) {
-      this._editorTarget?.setAttribute("aria-labelledby", this.labelId);
-    }
-
-    // switching between markdown and rich modes swaps the editor element, so
-    // an already-failed validation has to be reapplied to the replacement
-    if (this._invalid) {
-      this.#markEditorInvalid();
-    }
+    this.#syncEditorAccessibility();
 
     if (!this.args.uppyComposerUpload || !this.composer.allowUpload) {
       return;

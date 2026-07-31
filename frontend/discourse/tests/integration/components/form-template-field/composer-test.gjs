@@ -2,6 +2,7 @@ import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import {
   fillIn,
+  find,
   render,
   settled,
   triggerEvent,
@@ -402,7 +403,7 @@ module(
         </template>
       );
 
-      const label = document.querySelector(".form-template-field__label");
+      const label = find(".form-template-field__label");
       assert
         .dom(".d-editor-input")
         .hasAttribute(
@@ -444,7 +445,7 @@ module(
         </template>
       );
 
-      const input = document.querySelector("input[name='field-1']");
+      const input = find("input[name='field-1']");
       input.checkValidity();
       await settled();
 
@@ -481,14 +482,14 @@ module(
         </template>
       );
 
-      document.querySelector("input[name='field-1']").checkValidity();
+      find("input[name='field-1']").checkValidity();
       await settled();
 
       await fillIn(".d-editor-input", "some content");
 
       assert
         .dom(".d-editor-input")
-        .hasAttribute("aria-invalid", "false", "the invalid marker is cleared");
+        .doesNotHaveAttribute("aria-invalid", "the invalid marker is cleared");
       assert
         .dom(".d-editor-input")
         .doesNotHaveAttribute(
