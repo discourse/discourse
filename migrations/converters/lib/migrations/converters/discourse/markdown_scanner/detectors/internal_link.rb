@@ -236,10 +236,15 @@ module Migrations
             # are the only ones an absolute URL can be internal on, which is far more
             # selective than gating on `//` and every URL in every post. Matched
             # case-insensitively, since a host may be written in any case.
+            # Each host gets its own case-insensitive alternative. Wrapping a
+            # `Regexp.union` of them in one `/i` does not work: union serializes what
+            # it is given as `(?-mix:…)`, which turns the flag back off inside its own
+            # scope, so the hosts end up case-sensitive and an upper-cased one never
+            # passes the gate.
             def build_presence_pattern
               return ROUTE_PRESENCE if @hosts.empty?
 
-              Regexp.union(ROUTE_PRESENCE, /#{Regexp.union(@hosts.keys)}/i)
+              Regexp.union(ROUTE_PRESENCE, *@hosts.keys.map { |host| /#{Regexp.escape(host)}/i })
             end
 
             # A markdown link, unless it's the `[` of an image `![…](…)`, whose `[`

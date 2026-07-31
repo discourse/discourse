@@ -625,6 +625,11 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       "a fragment" => %w[https://forum.example.com/about#team /about#team],
       "a protocol-relative URL" => %w[//forum.example.com/faq /faq],
       "the site root" => %w[https://forum.example.com/ /],
+      # Route-less on purpose: with no route segment the host is the only thing
+      # that gets this body past the presence gate, so an upper-cased one only
+      # works if that alternative is genuinely case-insensitive.
+      "an upper-cased host and no route" => %w[HTTPS://FORUM.EXAMPLE.COM/faq /faq],
+      "a mixed-case host and no route" => %w[https://FORUM.example.com/faq /faq],
     }.each do |label, (raw, suffix)|
       it "records a bare URL with #{label} as a SITE link" do
         link, = link_for(raw)
