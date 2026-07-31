@@ -133,7 +133,7 @@ class TopicCreator
       visible: @opts[:visible],
     }
 
-    %i[subtype archetype import_mode advance_draft locale].each do |key|
+    %i[subtype import_mode advance_draft locale].each do |key|
       topic_params[key] = @opts[key] if @opts[key].present?
     end
 
@@ -161,6 +161,15 @@ class TopicCreator
     topic_params[:pinned_globally] = @opts[:pinned_globally] if @opts[:pinned_globally].present?
     topic_params[:external_id] = @opts[:external_id] if @opts[:external_id].present?
     topic_params[:featured_link] = @opts[:featured_link]
+
+    if @opts[:archetype].present?
+      topic = Topic.new(topic_params)
+
+      if @opts[:archetype] == Archetype.private_message ||
+           @guardian.can_change_archetype?(topic, @opts[:archetype])
+        topic_params[:archetype] = @opts[:archetype]
+      end
+    end
 
     topic_params
   end
