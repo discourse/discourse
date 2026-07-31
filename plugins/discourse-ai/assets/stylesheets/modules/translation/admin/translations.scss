@@ -1,6 +1,6 @@
 .ai-translations {
   &__settings-panel {
-    background: var(--primary-very-low);
+    border: 1px solid var(--content-border-color);
     margin-block: var(--space-4);
     padding: var(--space-2);
     border-radius: var(--d-border-radius);
@@ -71,15 +71,6 @@
       width: auto;
       margin-right: 0;
       padding-right: 0;
-    }
-
-    .setting-value {
-      max-width: 100%;
-
-      .select-kit {
-        // Not ideal, but upstream .select-kit gets a width: 100% !important that is too eager
-        max-width: calc(100% - 100px);
-      }
     }
   }
 
