@@ -171,10 +171,16 @@ RSpec.describe UploadCreator do
               force_optimize: true,
             ).create_for(user.id)
           path = Discourse.store.path_for(upload)
-          [
-            filename,
-            { animated: upload.animated, frames: Vips.frame_count(path, format: upload.extension) },
-          ]
+          frames =
+            Vips.run(
+              "vipsheader",
+              "--field",
+              "n-pages",
+              path,
+              read: [path],
+              timeout: Upload::MAX_IDENTIFY_SECONDS,
+            ).to_i
+          [filename, { animated: upload.animated, frames: }]
         end
 
       expect(uploads).to eq(
@@ -189,19 +195,111 @@ RSpec.describe UploadCreator do
       )
     end
 
-    it "rewrites EXIF-oriented JPEG pixels upright with vips" do
-      tempfile = Tempfile.new(%w[oriented .jpg])
+    it "rewrites every EXIF orientation to upright pixels" do
       source = Rails.root.join("spec/fixtures/images/large_and_unoptimized.png").to_s
-      write_oriented_jpeg(source:, target: tempfile.path, orientation: 6)
-      tempfile.rewind
+      SiteSetting.composer_media_optimization_image_enabled = false
+      SiteSetting.strip_image_metadata = false
 
+      results =
+        (2..8).to_h do |orientation|
+          tempfile = Tempfile.new(["oriented-#{orientation}", ".jpg"])
+          write_oriented_jpeg(source:, target: tempfile.path, orientation:)
+          tempfile.rewind
+
+          upload =
+            described_class.new(
+              tempfile,
+              "oriented-#{orientation}.jpg",
+              force_optimize: true,
+            ).create_for(user.id)
+          path = Discourse.store.path_for(upload)
+          output_orientation =
+            Vips.run("vipsheader", "--field", "orientation", path, read: [path]).to_i
+
+          [
+            orientation,
+            {
+              dimensions: FastImage.size(path),
+              upload_dimensions: [upload.width, upload.height],
+              orientation: output_orientation,
+              digest_matches: Upload.generate_digest(path) == upload.sha1,
+            },
+          ]
+        end
+
+      expect(results).to eq(
+        {
+          2 => {
+            dimensions: [2032, 1312],
+            upload_dimensions: [2032, 1312],
+            orientation: 1,
+            digest_matches: true,
+          },
+          3 => {
+            dimensions: [2032, 1312],
+            upload_dimensions: [2032, 1312],
+            orientation: 1,
+            digest_matches: true,
+          },
+          4 => {
+            dimensions: [2032, 1312],
+            upload_dimensions: [2032, 1312],
+            orientation: 1,
+            digest_matches: true,
+          },
+          5 => {
+            dimensions: [1312, 2032],
+            upload_dimensions: [1312, 2032],
+            orientation: 1,
+            digest_matches: true,
+          },
+          6 => {
+            dimensions: [1312, 2032],
+            upload_dimensions: [1312, 2032],
+            orientation: 1,
+            digest_matches: true,
+          },
+          7 => {
+            dimensions: [1312, 2032],
+            upload_dimensions: [1312, 2032],
+            orientation: 1,
+            digest_matches: true,
+          },
+          8 => {
+            dimensions: [1312, 2032],
+            upload_dimensions: [1312, 2032],
+            orientation: 1,
+            digest_matches: true,
+          },
+        },
+      )
+    end
+
+    it "keeps cropped upload metadata and content addressing in sync" do
       upload =
-        described_class.new(tempfile, "oriented.jpg", force_optimize: true).create_for(user.id)
+        described_class.new(
+          file_from_fixtures("large_and_unoptimized.png"),
+          "avatar.png",
+          type: "avatar",
+          force_optimize: true,
+        ).create_for(user.id)
       path = Discourse.store.path_for(upload)
 
       expect(
-        { dimensions: FastImage.size(path), rotated: Vips.rotated?(path, format: "jpeg") },
-      ).to eq(dimensions: [1312, 2032], rotated: false)
+        {
+          persisted: upload.persisted?,
+          upload_dimensions: [upload.width, upload.height],
+          file_dimensions: FastImage.size(path),
+          digest_matches: Upload.generate_digest(path) == upload.sha1,
+        },
+      ).to eq(
+        {
+          persisted: true,
+          upload_dimensions: [288, 288],
+          file_dimensions: [288, 288],
+          digest_matches: true,
+        },
+      )
     end
 
     it "produces smaller files at lower configured JPEG quality" do
@@ -233,7 +331,7 @@ RSpec.describe UploadCreator do
     end
 
     it "propagates a vips conversion failure without a debug retry or ImageMagick fallback" do
-      Vips.stubs(:convert).raises(Discourse::Utils::CommandError.new("vips failed"))
+      Vips.stubs(:run).raises(Discourse::Utils::CommandError.new("vips failed"))
 
       expect do
         described_class.new(

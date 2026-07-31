@@ -51,5 +51,3 @@ class Vips
     end
   end
 end
-
-require_relative "vips/image_processor"

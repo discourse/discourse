@@ -59,5 +59,4 @@ Rails.autoloaders.main.ignore(
   "lib/i18n/backend",
   "lib/release_utils",
   "lib/pitchfork_logstash_patch.rb",
-  "lib/vips",
 )

@@ -29,35 +29,67 @@ RSpec.describe ShrinkUploadedImage do
       expect(upload.filesize).to be < filesize_before
     end
 
-    it "updates HotlinkedMedia records when there is an upload for downsized image" do
-      Dir.mktmpdir("smaller-upload") do |directory|
-        smaller_path = File.join(directory, "smaller.png")
-        OptimizedImage.downsize(
-          Discourse.store.path_for(upload),
-          smaller_path,
-          "10000@",
-          filename: upload.original_filename,
+    it "writes a valid resized image with vips" do
+      SiteSetting.use_vips_for_image_processing = true
+      source = file_from_fixtures("large_and_unoptimized.png")
+      source_upload =
+        Fabricate(
+          :upload,
+          width: 2032,
+          height: 1312,
+          filesize: File.size(source.path),
+          sha1: Upload.generate_digest(source.path),
         )
-        smaller_sha1 = Upload.generate_digest(smaller_path)
-        smaller_upload = Fabricate(:image_upload, sha1: smaller_sha1)
+      source_upload.update!(url: Discourse.store.store_upload(source, source_upload))
+      post = Fabricate(:post, raw: "<img src='#{source_upload.url}'>", user: user)
+      post.link_post_uploads
 
-        post = create_post_with_upload
-        post_hotlinked_media =
-          PostHotlinkedMedia.create!(
-            post: post,
-            url: "http://example.com/images/2/2e/Longcat1.png",
-            upload: upload,
-            status: :downloaded,
-          )
-
+      result =
         ShrinkUploadedImage.new(
-          upload: upload,
-          path: Discourse.store.path_for(upload),
+          upload: source_upload,
+          path: Discourse.store.path_for(source_upload),
           max_pixels: 10_000,
         ).perform
+      path = Discourse.store.path_for(source_upload)
 
-        expect(post_hotlinked_media.reload.upload).to eq(smaller_upload)
-      end
+      expect(
+        {
+          result:,
+          upload_dimensions: [source_upload.width, source_upload.height],
+          file_dimensions: FastImage.size(path),
+          format: FastImage.type(path),
+        },
+      ).to eq(
+        { result: true, upload_dimensions: [124, 80], file_dimensions: [124, 80], format: :png },
+      )
+    end
+
+    it "updates HotlinkedMedia records when there is an upload for downsized image" do
+      OptimizedImage.downsize(
+        Discourse.store.path_for(upload),
+        "/tmp/smaller.png",
+        "10000@",
+        filename: upload.original_filename,
+      )
+      smaller_sha1 = Upload.generate_digest("/tmp/smaller.png")
+      smaller_upload = Fabricate(:image_upload, sha1: smaller_sha1)
+
+      post = create_post_with_upload
+      post_hotlinked_media =
+        PostHotlinkedMedia.create!(
+          post: post,
+          url: "http://example.com/images/2/2e/Longcat1.png",
+          upload: upload,
+          status: :downloaded,
+        )
+
+      ShrinkUploadedImage.new(
+        upload: upload,
+        path: Discourse.store.path_for(upload),
+        max_pixels: 10_000,
+      ).perform
+
+      expect(post_hotlinked_media.reload.upload).to eq(smaller_upload)
     end
 
     it "returns false if the image is not used by any models" do

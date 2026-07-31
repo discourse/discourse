@@ -58,5 +58,11 @@ RSpec.describe Upload do
         expect(described_class.new.target_image_quality(path, 70)).to eq(70)
       end
     end
+
+    it "uses the configured target when jhead returns no quality estimate" do
+      Vips.stubs(:run).returns("File name : image.jpg\n")
+
+      expect(described_class.new.target_image_quality("image.jpg", 70)).to eq(70)
+    end
   end
 end
