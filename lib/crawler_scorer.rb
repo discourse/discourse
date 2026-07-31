@@ -42,7 +42,8 @@ class CrawlerScorer
 
   def self.score!(window_start:, window_end:)
     crawler_asns = SiteSetting.crawler_asns_map.map(&:to_i)
-    datacenter_asns = SiteSetting.datacenter_asns_map.map(&:to_i)
+    crawler_detection_datacenter_asns =
+      SiteSetting.crawler_detection_datacenter_asns_map.map(&:to_i)
 
     ActiveRecord::Base.transaction do
       DB.exec(
@@ -51,7 +52,7 @@ class CrawlerScorer
         window_end: window_end,
         ua_regex: SiteSetting.crawler_automation_user_agents,
         crawler_asns: crawler_asns,
-        datacenter_asns: datacenter_asns,
+        crawler_detection_datacenter_asns: crawler_detection_datacenter_asns,
         hostname: Discourse.current_hostname,
         automation_ua_score: AUTOMATION_UA_SCORE,
         known_asn_score: KNOWN_ASN_SCORE,
@@ -163,7 +164,7 @@ class CrawlerScorer
           ELSE 0
         END AS known_asn_score,
         CASE
-          WHEN e.asn = ANY(ARRAY[:datacenter_asns]::int[]) THEN :datacenter_asn_score
+          WHEN e.asn = ANY(ARRAY[:crawler_detection_datacenter_asns]::int[]) THEN :datacenter_asn_score
           ELSE 0
         END AS datacenter_asn_score,
         CASE

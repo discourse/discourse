@@ -68,7 +68,7 @@ RSpec.describe CrawlerScorer do
 
   it "scores datacenter ASNs at +10" do
     SiteSetting.crawler_asns = ""
-    SiteSetting.datacenter_asns = "12345"
+    SiteSetting.crawler_detection_datacenter_asns = "12345"
     event = make_event(asn: 12_345)
 
     score!

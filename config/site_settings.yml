@@ -3138,7 +3138,7 @@ security:
   # 63835=China Telecom Changsha IDC, 58540=China Telecom Jinan IDC,
   # 58541=China Telecom Qingdao IDC, 58563=China Telecom Hubei IDC,
   # 58461=China Telecom Hangzhou IDC
-  datacenter_asns:
+  crawler_detection_datacenter_asns:
     hidden: true
     default: "16509|16276|14618|136907|24940|396982|8075|51747|13335|45090|55990|23724|37963|55960|203020|63835|58540|58541|58563|58461"
     type: list
