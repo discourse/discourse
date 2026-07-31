@@ -5506,8 +5506,12 @@ fr:
         title: "Menu de recherche"
         prev_next: "Déplacer la sélection vers le haut ou vers le bas"
         insert_url: "Insérer la sélection dans l'éditeur ouvert"
+        full_page_search: "Lance la recherche en pleine page"
       admin:
         title: "Administrateur"
+        search_prev_next: "Déplacer la sélection vers le haut ou vers le bas"
+        search_open: "Ouvrir la recherche pour l'interface d'administration"
+        search_full_page: "Ouvrir la recherche d'administration en pleine page"
     badges:
       earned_n_times:
         one: "A reçu ce badge %{count} fois"
@@ -5557,6 +5561,7 @@ fr:
       add_to_calendar: "Ajouter au calendrier"
       google: "Google Agenda"
       ics: "ICS"
+      default_title: "Événement programmé"
     tagging:
       all_tags: "Toutes les étiquettes"
       other_tags: "Autres étiquettes"
@@ -5564,17 +5569,34 @@ fr:
       selector_no_tags: "aucune étiquette"
       selector_remove_filter: "supprimer le filtre"
       tags: "Étiquettes"
+      choose_for_topic: "Étiquettes optionnelles…"
       choose_for_topic_required:
         one: "sélectionnez au moins %{count} étiquette…"
         other: "sélectionnez au moins %{count} étiquettes…"
       choose_for_topic_required_group:
         one: "sélectionnez %{count} étiquette de « %{name} »…"
         other: "sélectionnez %{count} étiquettes de « %{name} »…"
+      info: "Afficher les informations de l'étiquette"
       default_info: "Cette étiquette n'est pas limitée à une catégorie et n'a aucun synonyme."
       staff_info: "Pour y définir des restrictions d'utilisation, placez cette étiquette dans un <a href=%{basePath}/tag_groups>groupe d'étiquettes</a>."
       category_restricted: "Cette étiquette est limitée à des catégories auxquelles vous n'avez pas la permission d'accéder."
       synonyms: "Synonymes"
+      synonyms_description:
+        one: "Le synonyme %{synonyms} sera remplacé par %{base_tag_name}."
+        other: "Les synonymes %{synonyms} seront remplacés par %{base_tag_name}."
+      synonyms_inline: "Ces synonymes seront remplacés par %{base_tag_name} :"
+      synonym_hint: "→ %{tag_name}"
       save: "Enregistrer le nom et la description de l'étiquette"
+      tag_groups_info:
+        one: 'Cette étiquette appartient au groupe d''étiquettes « %{tag_groups} ».'
+        other: "Cette étiquette appartient à ces groupes d'étiquettes : « %{tag_groups} »."
+      tag_groups_info_prefix:
+        one: "Cette étiquette appartient au groupe d'étiquettes "
+        other: "Cette étiquette appartient à ces groupes d'étiquettes : "
+      category_restrictions:
+        one: "Elle ne peut être utilisée que dans la catégorie %{categories}."
+        other: "Elle ne peut être utilisée que dans ces catégories : %{categories}."
+      no_synonyms: "Cette étiquette n'a pas de synonymes."
       edit_synonyms: "Modifier les synonymes"
       add_synonyms_label: "Ajoutez des synonymes :"
       add_synonyms: "Ajouter"
@@ -5593,20 +5615,36 @@ fr:
         one: "Son synonyme sera aussi supprimé."
         other: "Ses %{count} synonymes seront aussi supprimés."
       edit_tag: "Modifier le nom et la description de l'étiquette"
+      edit: "Modifier cette étiquette"
       description: "Description"
       settings:
         title: "Paramètres"
+        edit_title: "Modifier l'étiquette : %{name}"
+        edit_tag_prefix: "Modifier l'étiquette :"
+        select_tag: "Sélectionnez une étiquette à modifier"
         general: "Général"
         localizations: "Localisations"
         back: "Retour"
         name: "Nom"
         slug: "Identifiant"
         name_placeholder: "Nom de l'étiquette"
+        slug_placeholder: "Slug de l'étiquette (facultatif, généré automatiquement à partir du nom)"
+        invalid_slug: "Utilisez des lettres minuscules, des chiffres et un seul trait d'union entre les mots."
+        saved: "Paramètres des étiquettes enregistrés"
+        no_synonyms: "Aucun synonyme n'est défini pour cette étiquette."
+        add_synonym_placeholder: "Rechercher des étiquettes à ajouter comme synonymes..."
         synonyms_subtitle: "Quand les étiquettes suivantes sont utilisées, elles sont remplacées par %{name}"
+        save: "Enregistrer l'étiquette"
+        delete: "Supprimer l'étiquette"
+        synonyms_hint: "Quand les étiquettes ci-dessus sont utilisées, elles sont remplacées par %{baseTagName}."
+        add_synonyms_confirm: "Tous les éléments utilisant %{synonymNames} seront changés pour utiliser %{tagName}. Voulez-vous vraiment effectuer ce changement ?"
       localization:
+        hint: "Ajouter des localisations pour afficher des noms de balises différents pour les utilisateurs dans différentes langues."
         locale: "Paramètre régional"
         name: "Nom"
         description: "Description"
+        add: "Ajouter une localisation"
+        remove: "Supprimer la localisation"
       sort_by: "Trier par :"
       sort_by_count: "nombre"
       sort_by_name: "nom"
@@ -5616,7 +5654,15 @@ fr:
       upload_description: "Téléverser un fichier CSV pour créer des étiquettes en bloc"
       upload_instructions: "Une par ligne, éventuellement avec un groupe d'étiquettes sous la forme « tag_name,tag_group »."
       upload_successful: "Étiquettes envoyées avec succès"
+      bulk_create_inline_placeholder: "Créer des étiquettes (séparées par des virgules)"
       bulk_create_button: "Créer"
+      bulk_create_success:
+        one: "%{count} étiquette créée :"
+        other: "%{count} étiquettes créées :"
+      bulk_create_already_exist:
+        one: "%{count} étiquette existe déjà :"
+        other: "%{count} étiquettes existent déjà :"
+      bulk_create_some_failed: "La création de certaines étiquettes a échoué :"
       delete_unused_confirmation:
         one: "%{count} étiquette sera supprimée : %{tags}"
         other: "%{count} étiquettes seront supprimées : %{tags}"
@@ -5650,13 +5696,18 @@ fr:
           description: "Vous ne recevrez aucune notification concernant les nouveaux sujets ayant cette étiquette et ces sujets n'apparaîtront pas sur votre page des sujets non lus."
       groups:
         back_btn: "Retour à toutes les étiquettes"
+        title: "Groupes d'étiquettes"
         about_heading: "Sélectionnez un groupe d'étiquettes ou créez-en un nouveau"
         about_heading_empty: "Pour commencer, créez un nouveau groupe d'étiquettes"
         about_description: "Les groupes d'étiquettes permettent de gérer les permissions d'accès de plusieurs étiquettes de façon centralisée."
+        new: "Nouveau groupe"
+        new_title: "Créer un nouveau groupe"
+        edit_title: "Modifier un groupe d'étiquettes"
         tags_label: "Étiquettes appartenant à ce groupe"
         parent_tag_label: "Étiquette-mère"
         parent_tag_description: "Les étiquettes de ce groupe ne pourront être attribuées que si leur étiquette-mère est également attribuée."
         one_per_topic_label: "Limiter à une étiquette de ce groupe par sujet"
+        new_name: "Nouveau groupe d'étiquettes"
         name_placeholder: "Nom"
         save: "Enregistrer"
         delete: "Supprimer"
@@ -5698,6 +5749,7 @@ fr:
     safe_mode:
       enabled: "Le mode sans échec est activé ; fermez cette fenêtre de navigateur pour le quitter"
     theme_preview_notice: "Vous prévisualisez actuellement un thème. Fermez cet onglet ou cette fenêtre de navigateur pour revenir à la configuration normale de votre site."
+    theme_preview_failed: "Impossible de prévisualiser le thème, car il n'existe pas ou vous n'avez pas l'autorisation d'y accéder."
     image_removed: "(image supprimée)"
     pause_notifications:
       title: "Suspendre les notifications pour…"
@@ -5765,6 +5817,7 @@ fr:
       tags_form_modal:
         title: "Modifier la navigation des étiquettes"
         filter_placeholder: "Filtrer les étiquettes"
+        no_tags: "Aucune étiquette ne correspond aux filtres actuels."
         subtitle:
           text: "et nous afficherons automatiquement les meilleures étiquettes de ce site"
       edit_navigation_modal_form:
@@ -5792,7 +5845,12 @@ fr:
             title: "Traductions"
             locale: "Langue "
             title_label: "Titre de la section"
+            link_label: "Nom du lien"
+            add_section: "Ajouter la traduction du titre de la section"
+            add_link: "Ajouter la traduction du nom du lien"
+            remove: "Supprimer la traduction"
           links:
+            title: "Liens de section"
             add: "Ajouter un autre lien"
             delete: "Supprimer le lien"
             reset: "Rétablir les valeurs par défaut"
@@ -5849,6 +5907,8 @@ fr:
           click_to_get_started: "Cliquez ici pour commencer."
           header_link_text: "Catégories"
           header_action_title: "Modifier les catégories de votre barre latérale"
+          header_action_new: "Nouvelle catégorie"
+          header_action_edit_sidebar: "Modifier les catégories de la barre latérale"
           configure_defaults: "Configurer les valeurs par défaut"
         community:
           edit_section:
