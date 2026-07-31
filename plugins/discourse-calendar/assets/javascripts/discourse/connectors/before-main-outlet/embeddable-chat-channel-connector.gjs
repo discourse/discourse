@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import bodyClass from "discourse/helpers/body-class";
 import EmbeddableChatChannel from "../../components/livestream/embeddable-chat-channel";
 
 export default class EmbedableChatChannelConnector extends Component {
@@ -29,6 +30,9 @@ export default class EmbedableChatChannelConnector extends Component {
   }
 
   <template>
+    {{#if this.embeddableChat.useLivestreamLayout}}
+      {{bodyClass "livestream-topic"}}
+    {{/if}}
     {{#if this.shouldRender}}
       <EmbeddableChatChannel
         @chatChannelId={{this.embeddableChat.chatChannelId}}
