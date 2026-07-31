@@ -729,9 +729,16 @@ class PostsController < ApplicationController
     guardian.ensure_can_change_post_type!
     post = find_post_from_params
     params.require(:post_type)
-    raise Discourse::InvalidParameters.new(:post_type) if Post.types[params[:post_type].to_i].blank?
+    post_type = params[:post_type].to_i
+    unless PostRevisor.valid_post_type?(post_type)
+      raise Discourse::InvalidParameters.new(:post_type)
+    end
 
-    post.revise(current_user, post_type: params[:post_type].to_i)
+    if post.is_first_post? && post_type == Post.types[:whisper]
+      raise Discourse::InvalidParameters.new(:post_type)
+    end
+
+    post.revise(current_user, post_type: post_type)
 
     render body: nil
   end

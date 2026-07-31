@@ -1195,6 +1195,46 @@ RSpec.describe PostsController do
         expect(response.status).to eq(400)
       end
 
+      it "rejects changing a reply to a small action" do
+        put "/posts/#{post.id}/post_type.json", params: { post_type: Post.types[:small_action] }
+
+        expect(response).to be_bad_request
+        expect(post.reload.post_type).to eq(Post.types[:regular])
+      end
+
+      it "rejects changing an opening post to a whisper" do
+        opening_post = Fabricate(:post)
+
+        put "/posts/#{opening_post.id}/post_type.json", params: { post_type: Post.types[:whisper] }
+
+        expect(response).to be_bad_request
+        expect(opening_post.reload.post_type).to eq(Post.types[:regular])
+      end
+
+      it "rejects changing a nested topic's opening post to a small action" do
+        nested_view_topic = Fabricate(:topic, user: user)
+        opening_post = Fabricate(:post, topic: nested_view_topic, user: user, post_number: 1)
+        Fabricate(:nested_topic, topic: nested_view_topic)
+        SiteSetting.nested_replies_enabled = true
+
+        put "/posts/#{opening_post.id}/post_type.json",
+            params: {
+              post_type: Post.types[:small_action],
+            }
+
+        aggregate_failures do
+          expect(response).to be_bad_request
+          expect(response.body).to include("post_type")
+          expect(opening_post.reload.post_type).to eq(Post.types[:regular])
+
+          sign_out
+          get "/n/#{nested_view_topic.slug}/#{nested_view_topic.id}.json"
+
+          expect(response).to be_ok
+          expect(response.parsed_body.dig("op_post", "id")).to eq(opening_post.id)
+        end
+      end
+
       it "can change the post type" do
         put "/posts/#{post.id}/post_type.json", params: { post_type: 2 }
 
