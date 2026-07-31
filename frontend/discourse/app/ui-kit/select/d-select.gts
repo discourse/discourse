@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
-import { fn, hash } from "@ember/helper";
+import { associateDestroyableChild } from "@ember/destroyable";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
@@ -9,119 +9,40 @@ import Owner, { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { cancel, next as nextRunloop, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import type { MenuOptions } from "discourse/float-kit/lib/constants";
-import type DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import type Menu from "discourse/float-kit/services/menu";
 import booleanString from "discourse/helpers/boolean-string";
-import { INPUT_DELAY } from "discourse/lib/environment";
-import { makeArray } from "discourse/lib/helpers";
-import discourseLater from "discourse/lib/later";
 import type A11y from "discourse/services/a11y";
 import type { CapabilitiesService } from "discourse/services/capabilities";
-import { and, eq, not, or } from "discourse/truth-helpers";
-import DAsyncContent from "discourse/ui-kit/d-async-content";
-import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
-import DSkeleton from "discourse/ui-kit/d-skeleton";
-import DVirtualList, {
-  type DVirtualListApi,
-} from "discourse/ui-kit/d-virtual-list";
 import dElement from "discourse/ui-kit/helpers/d-element";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
-import dRovingFocus, {
-  type DRovingFocusApi,
-} from "discourse/ui-kit/modifiers/d-roving-focus";
-import ComboboxQueryInput from "discourse/ui-kit/select/-internals/combobox-query-input";
-import SelectItem from "discourse/ui-kit/select/-internals/select-item";
-import SelectionLabel from "discourse/ui-kit/select/-internals/selection-label";
-import TriggerFrame from "discourse/ui-kit/select/-internals/trigger-frame";
+import InteractionCoordinator from "discourse/ui-kit/select/-internals/coordinators/interaction-coordinator";
+import LoadFeedbackTracker from "discourse/ui-kit/select/-internals/coordinators/load-feedback";
+import SelectAnnouncer from "discourse/ui-kit/select/-internals/coordinators/select-announcer";
+import VariantPresenter, {
+  type SelectVariant,
+} from "discourse/ui-kit/select/-internals/coordinators/variant-presenter";
+import WindowedListCoordinator from "discourse/ui-kit/select/-internals/coordinators/windowed-list-coordinator";
+import keepAboveKeyboard from "discourse/ui-kit/select/-internals/modifiers/keep-above-keyboard";
+import ComboboxQueryInput from "discourse/ui-kit/select/-internals/parts/combobox-query-input";
+import MultiChips from "discourse/ui-kit/select/-internals/parts/multi-chips";
+import SelectListbox, {
+  type SelectListContent,
+} from "discourse/ui-kit/select/-internals/parts/select-listbox";
+import SingleTriggerDisplay from "discourse/ui-kit/select/-internals/parts/single-trigger-display";
+import TriggerFrame from "discourse/ui-kit/select/-internals/parts/trigger-frame";
 import SelectEngine, {
   type SelectDescriptor,
   type SelectEngineOptions,
   type SelectItem as SelectItemModel,
-  selectItemLabel,
   type SelectLoadOptions,
   type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
-const SELECT_VARIANTS = {
-  typeahead: "typeahead",
-  button: "button",
-  static: "static",
-} as const;
-// A source that answers faster than this never shows a placeholder, so a quick server does
-// not flash one; only a wait long enough to read as "stuck" gets visible feedback.
-const LOADING_FEEDBACK_DELAY = 250;
-// How long a settled query waits before it is reported. Long, and deliberately so: a screen
-// reader echoes what is being typed, and that echo interrupts anything the page says underneath
-// it — so a report fired promptly is begun and then abandoned mid-word, which is worse than one
-// that arrives late. The wait has to outlast the echo, not merely the typing. This value matches
-// what long-standing accessible autocomplete implementations have converged on for the same
-// collision. Client filtering stays un-debounced, so the list itself never lags a keystroke.
-const RESULT_REPORT_DELAY = 1400;
-
-export type SelectVariant =
-  (typeof SELECT_VARIANTS)[keyof typeof SELECT_VARIANTS];
-
-interface SelectListContent {
-  rawItems: SelectItemModel[];
-  /**
-   * The query these rows answer, captured when the load resolved. `@retainWhileReloading` keeps
-   * the previous rows mounted while a new query is in flight, so `engine.filter` is the query
-   * being *asked* while this is the query being *shown* — they differ for the whole debounce
-   * plus fetch. Anything reacting to "the results changed" has to key on this one.
-   */
-  filter: string;
-}
-
-// A row's estimated height before measurement (~2.4em option). Windowing refines it from
-// the real DOM; a reasonable estimate only reduces the initial scroll jump.
-const ROW_HEIGHT_ESTIMATE = 38;
-// Placeholder rows appended at the loading frontier while a server page is in flight, so a
-// pending fetch reads as "more coming" in the list rather than a silent stop.
-// How far the query input may sit under the keyboard before it is worth scrolling. A pixel or
-// two is rounding, not occlusion.
-const KEYBOARD_OCCLUSION_TOLERANCE = 4;
-
-// Breathing room above the keyboard once corrected, so the input does not end up flush against
-// it. An allowance, not a measurement.
-const KEYBOARD_OCCLUSION_MARGIN = 24;
-
-const FRONTIER_SKELETON_COUNT = 3;
-// Placeholders for a load with nothing on screen to size it: enough to fill the listbox
-// viewport and overflow it slightly.
-const FULL_SKELETON_COUNT = 10;
-// A reload mirrors the outgoing list, stopping only at nothing: a panel with no placeholders at
-// all reads as broken rather than busy.
-const MIN_RELOAD_SKELETON_COUNT = 1;
-
-/** A pending-fetch placeholder row mixed into the windowed list at the loading frontier. */
-interface SkeletonRow {
-  key: string;
-  isSkeleton: true;
-}
-
-/**
- * An engine descriptor stamped for rendering. `logicalIndex` is the option's ordinal among
- * `[role=option]` rows (undefined for a structural header/divider), so the roving modifier can
- * address options independently of the virtualizer's raw `data-index`.
- */
-interface OptionRow extends SelectDescriptor {
-  isSkeleton: false;
-  logicalIndex?: number;
-  // Ties an option to its group's header for `aria-describedby`: a header carries `headerId`,
-  // each option in the group carries the same value as `groupHeaderId`, so a screen reader
-  // announces the group name — membership a flat listbox can't convey by structure alone.
-  headerId?: string;
-  groupHeaderId?: string;
-}
-
-/** A rendered list row: a navigable engine descriptor or a frontier skeleton. */
-type ListRow = OptionRow | SkeletonRow;
+export type { SelectVariant } from "discourse/ui-kit/select/-internals/coordinators/variant-presenter";
 
 interface DSelectSignature {
   Args: {
@@ -343,45 +264,8 @@ export default class DSelect extends Component<DSelectSignature> {
   @service declare capabilities: CapabilitiesService;
   @service declare menu: Menu;
 
-  /**
-   * The filter input element, handed to `dRovingFocus` as the combobox controller
-   * (keydown binds to it; `aria-activedescendant` is written on it). In `typeahead` it is
-   * the trigger input; in `button` it is the in-panel filter.
-   */
-  @tracked filterInput: HTMLElement | null = null;
-
-  /** Whether a server load has run long enough to deserve a visible placeholder. */
-  @tracked loadFeedbackDue = false;
-
-  /**
-   * The `key` of the currently roving-highlighted option, tracked so the `--active` class is
-   * rendered from state by each option (see {@link SelectItem}) instead of relying on the
-   * modifier's imperative `classList` toggle — which the windowed list wipes when it
-   * re-renders a row. The modifier still owns `aria-activedescendant` and navigation.
-   */
-  @tracked activeOptionKey: string | null = null;
-
-  // The active row's RAW array index (its virtualizer `data-index`), fed to `@pinnedIndex` to
-  // keep that row mounted. Not a logical option ordinal: with group headers the two diverge, and
-  // the roving modifier addresses options by `data-logical-index` instead (see #optionRawIndices).
-  @tracked activePinnedIndex: number | undefined = undefined;
-
-  @tracked queryActive = false;
-
-  // Whether focus is anywhere within the widget (the trigger input, or the open panel's
-  // footer/options). A custom `:selection` block is a resting adornment, shown only while the
-  // field is unfocused; focusing it — by Tab or by opening — reveals the plain editable label,
-  // so keyboard focus and a click behave alike.
-  @tracked triggerFocused = false;
-
-  @tracked isExpanded = false;
-
-  /**
-   * Empty `@untriggers` for `typeahead`: keeps DMenu's default click-to-open on the whole
-   * trigger while disabling close-on-click, so clicking the open trigger/input doesn't
-   * toggle it shut (see template).
-   */
-  emptyTriggers: string[] = [];
+  announcer: SelectAnnouncer;
+  interaction: InteractionCoordinator;
 
   // Constructed once from the (stable) args; never exposed to consumers — internal
   // parts receive it but touch only its public API.
@@ -424,8 +308,8 @@ export default class DSelect extends Component<DSelectSignature> {
     // moved on to. Reachable from the compat bridge, which exposes both `close()` and a
     // `select()` that consumers call asynchronously long after dismissing the overlay.
     requestClose: () => {
-      if (this.isExpanded) {
-        this.#menu?.close();
+      if (this.interaction.isExpanded) {
+        this.interaction.closeMenu();
       }
     },
     // Handles for the `modifySelectKit` compat bridge. The element must be the trigger
@@ -436,310 +320,61 @@ export default class DSelect extends Component<DSelectSignature> {
       // The bridge anchor must be a real host-DOM node (legacy callbacks walk up from it,
       // e.g. `.closest("#reply-control")`). `triggerElement` is the instance's trigger
       // narrowed to `HTMLElement` (null for a virtual trigger — never our case).
-      getElement: () => this.#menu?.triggerElement ?? null,
+      getElement: () => this.interaction.triggerElement,
       isDestroyed: () => this.isDestroying || this.isDestroyed,
     },
   });
 
-  /**
-   * The rows handed to the windowed list: the engine's descriptors, plus frontier skeleton
-   * placeholders appended while a server source is fetching MORE rows at the tail (a reveal),
-   * so the pending page reads as "more coming" in the list. Gated on `showRevealPlaceholder`,
-   * which also carries the fast-source delay (no flash) and excludes a re-query (which
-   * replaces the set rather than extending it). `buildItems` is recomputed per render on
-   * purpose — its output reflects live selection/create/special state, not just `rawItems`.
-   */
-  buildListItems = (rawItems: SelectItemModel[]): readonly ListRow[] => {
-    // Stamp each option with its logical ordinal (its position among *navigable* options), so the
-    // roving modifier can address it independently of the virtualizer's raw `data-index`. A
-    // structural header/divider gets none — and neither does a disabled option, which the modifier
-    // skips: counting it would make jump keys (Home/End/Page) target an index no reachable row
-    // carries. This keeps the stamp in lockstep with {@link navigableCount}.
-    let logicalIndex = 0;
-    let groupIndex = 0;
-    // Headers and their options are contiguous, so the last header seen names the current
-    // group; each option points back at it via `aria-describedby`. A divider ends the run.
-    let currentGroupHeaderId: string | undefined;
-    const items: OptionRow[] = this.engine
-      .buildItems(rawItems)
-      .map((descriptor) => {
-        if (descriptor.flags.group) {
-          const headerId = `${this.listboxId}-group-${groupIndex++}`;
-          currentGroupHeaderId = headerId;
-          return { ...descriptor, isSkeleton: false, headerId };
-        }
-        if (descriptor.flags.divider) {
-          currentGroupHeaderId = undefined;
-          return { ...descriptor, isSkeleton: false };
-        }
-        return {
-          ...descriptor,
-          isSkeleton: false,
-          logicalIndex: descriptor.flags.disabled ? undefined : logicalIndex++,
-          groupHeaderId: currentGroupHeaderId,
-        };
-      });
-    if (this.showRevealPlaceholder) {
-      return [...items, ...this.#frontierSkeletons];
-    }
-    return items;
-  };
+  presenter = new VariantPresenter({
+    getArgs: () => this.args,
+    engine: this.engine,
+    shouldRenderInModal: (modalForMobile) =>
+      this.menu.shouldRenderInModal(modalForMobile),
+    isExpanded: () => this.interaction.isExpanded,
+    activeListboxId: () => this.activeListboxId,
+  });
 
-  /**
-   * The count of navigable options — structural headers/dividers, frontier skeletons, and
-   * disabled options are excluded, so this equals the number of rows the roving modifier can
-   * actually land on. Also records the option→raw index map: a logical jump target is translated
-   * back to the row's raw array index for the virtualizer scroll.
-   */
-  navigableCount = (rows: readonly ListRow[]): number => {
-    const optionRawIndices: number[] = [];
-    rows.forEach((row, index) => {
-      const option = this.optionRow(row);
-      if (
-        option &&
-        !option.flags.group &&
-        !option.flags.divider &&
-        !option.flags.disabled
-      ) {
-        optionRawIndices.push(index);
-      }
-    });
-    this.#optionRawIndices = optionRawIndices;
-    this.#logicalNavCount = optionRawIndices.length;
-    return optionRawIndices.length;
-  };
+  feedback = new LoadFeedbackTracker({
+    engine: this.engine,
+    getDebounce: () => this.presenter.debounce,
+    getSkeletonCountArg: () => this.args.skeletonCount,
+  });
 
-  /**
-   * The raw row index the list should open on, so a windowed list reveals what is already
-   * chosen instead of opening at row one. The roving cursor cannot do this alone: it seeds
-   * from the mounted rows, and a selection below the fold is not among them.
-   *
-   * Deliberately a weaker condition than {@link shouldActivateSelected}, which governs where
-   * Enter lands and so excludes `multiple`. Scrolling changes nothing about what Enter does,
-   * and a multi-select's held rows are worth revealing too.
-   */
-  revealRowIndex = (rows: readonly ListRow[]): number | undefined => {
-    if (!this.engine.hasValue || this.engine.filter !== "") {
-      return undefined;
-    }
-    const index = rows.findIndex((row) => this.optionRow(row)?.flags.selected);
-    return index === -1 ? undefined : index;
-  };
-
-  /**
-   * The row the virtualizer must keep mounted: the roving cursor's row once one exists, and
-   * before that the held selection.
-   *
-   * The seed in `dRovingFocus` can only see MOUNTED rows, and the reveal scroll that brings an
-   * off-window selection into view is deferred a runloop tick — so without this the seed of a
-   * windowed list never sees the selection, activates row zero instead, and then *pins* row
-   * zero. That pin is self-sustaining: the stale cursor stays mounted, so every later reconcile
-   * finds it still present and keeps it. The user-visible result is not a misplaced highlight
-   * but silent data loss — Enter activates row zero and replaces the held value with the first
-   * item, only ever past the fold.
-   *
-   * `??`, never `||`: index 0 is a legitimate pin.
-   */
-  seedPinnedIndex = (rows: readonly ListRow[]): number | undefined =>
-    this.activePinnedIndex ?? this.revealRowIndex(rows);
-
-  optionRow = (row: ListRow): OptionRow | undefined =>
-    row.isSkeleton === true ? undefined : row;
-
-  /** Estimated row height for the windowing engine before a row is measured. */
-  estimateRowSize = (): number => ROW_HEIGHT_ESTIMATE;
-
-  // The DMenu instance, captured on register so the engine can close the overlay and
-  // the compat bridge can reach the trigger element.
-  #menu: DMenuInstance | null = null;
-
-  // Controls for moving focus into the multi-select chip group, registered by the
-  // chips' `dRovingFocus` (desktop only). Read imperatively from the keyboard handlers,
-  // so a plain field rather than tracked; `null` while unregistered (mobile / single).
-  #chipRoving: DRovingFocusApi | null = null;
-
-  #listboxApi: DVirtualListApi | null = null;
-  #listboxRoving: DRovingFocusApi | null = null;
-  #jumpTimer?: ReturnType<typeof nextRunloop>;
-  // Maps a logical option ordinal to its raw index in the rendered row array, so a jump target
-  // (logical) can be scrolled through the virtualizer (which addresses rows by raw index).
-  #optionRawIndices: number[] = [];
-
-  // The navigable option count, written by `navigableCount` as the list renders and read by
-  // the jump handler to clamp a target. Kept off the template so a jump never clamps against a
-  // stale window.
-  #logicalNavCount = 0;
+  listbox = new WindowedListCoordinator({
+    engine: this.engine,
+    feedback: this.feedback,
+    getListboxId: () => this.listboxId,
+    isStaticModal: () =>
+      this.presenter.isStatic && this.presenter.overlayIsModal,
+  });
 
   #listboxId = `d-combobox-listbox-${guidFor(this)}`;
 
-  // The last keep-typing "characters remaining" announced, so a repeat isn't re-read.
-  #lastAnnouncedRemaining: number | null = null;
-
-  // Deduping on the message rather than a count keeps a reveal silent whenever it does not
-  // change what the message says — the usual case, since a reported total does not move as
-  // rows mount. A cursor source is the exception: it has no count to report until its last
-  // page declares completeness, so that one reveal legitimately announces.
-  //
-  // Scoped to the query as well, because the same count for a *different* query is news: a reader
-  // who types on and hears nothing has no way to tell a settled search from a dropped keystroke.
-  #lastAnnouncedCount: { query: string; message: string } | null = null;
-
-  // A count waiting to learn whether the cursor moved — see `announceCount`. Holds the message,
-  // the query it describes, where the cursor sat when it was scheduled, and what was last known,
-  // so the resolve can tell a new search from more rows for the same one.
-  #pendingCount?: {
-    timer: ReturnType<typeof discourseLater>;
-    query: string;
-    message: string;
-    activeKey: string | null;
-    previous: { query: string; message: string } | null;
-  };
-
-  // Keyed on the query, not a flag: the hint unmounts and remounts as the window grows, and
-  // only a new query should re-read it.
-  #narrowAnnouncedFor: string | null = null;
-
-  // Whether a "loading more" was announced and still owes its completion.
-  #revealAnnounced = false;
-
-  // The last limit message announced, so re-crossing the cap boundary does not re-read it.
-  #lastAnnouncedLimit: string | null = null;
-
-  #loadFeedbackTimer?: ReturnType<typeof discourseLater>;
-
-  #suppressNextCount = false;
-
-  // True only for the synchronous span of a programmatic focus whose caret is owned by
-  // something other than the select-on-focus rule (opening from a pointer, or a label
-  // activation), so the query input can tell those from a genuine keyboard focus (Tab-in,
-  // which selects the label for replacement).
-  #suppressSelectOnFocus = false;
-
-  // Stable placeholder rows for the loading frontier — a fixed identity so a persisting
-  // pending state does not remount them each render.
-  #frontierSkeletons: readonly SkeletonRow[] = Array.from(
-    { length: FRONTIER_SKELETON_COUNT },
-    (_, i) => ({ key: `__skeleton:${i}`, isSkeleton: true })
-  );
-
-  /**
-   * A pointer press anywhere outside the widget ends the interaction: revert a focused
-   * custom-selection field to its resting markup and drop DOM focus. Escape and option-select
-   * keep focus (and the editable label); a click into another focusable element blurs on its
-   * own. The overlay's own close-on-click-outside still fires in parallel.
-   */
-  #handleOutsidePointerDown = (event: PointerEvent): void => {
-    if (!this.triggerFocused) {
-      return;
-    }
-    if (this.#focusEscapedWidget(event.target)) {
-      this.triggerFocused = false;
-      this.filterInput?.blur();
-    }
-  };
-  /**
-   * Keeps the focused query input above the iOS software keyboard.
-   *
-   * WebKit decides where to scroll when the keyboard opens, and it does not account for the
-   * overlay this component renders: it intermittently leaves the input underneath the keyboard,
-   * with the panel still correctly positioned against it. Nothing in CSS prevents that — Safari
-   * has already scrolled by then — so the only remedy is to measure afterwards and correct,
-   * which is what `setupComposerPosition` does for the composer.
-   *
-   * The measurement is the whole of it: `visualViewport.height` is the bottom of the visible
-   * area in client coordinates, which is what `getBoundingClientRect()` returns, so the two are
-   * directly comparable and their difference is how far the input is buried.
-   *
-   * `offsetTop` is deliberately NOT added. Treating the visible band as
-   * `[offsetTop, offsetTop + height]` is the correct reading for a pinch-zoomed viewport, but
-   * with the keyboard raised iPadOS reports an `offsetTop` matching nothing clipped off the top.
-   * Adding it pushes the computed bottom below the keyboard's accessory bar, so an input sitting
-   * under that bar measures as clear and no correction runs. The two readings agree whenever
-   * `offsetTop` is zero, which is why the input was hidden only sometimes: same page, same
-   * input, and only the reported offset differing between a working case and a broken one.
-   *
-   * Runs only while the widget holds focus, only where the bug exists, and only when the input
-   * is genuinely occluded, so a correctly-behaving browser is never scrolled.
-   */
-  #keepQueryInputAboveKeyboard = () => {
-    // `isIOS` covers iPadOS.
-    if (!this.capabilities.isIOS || !this.triggerFocused) {
-      return;
-    }
-
-    const viewport = window.visualViewport;
-    const input = this.filterInput;
-    if (!viewport || !input?.isConnected) {
-      return;
-    }
-
-    const hidden = input.getBoundingClientRect().bottom - viewport.height;
-    if (hidden <= KEYBOARD_OCCLUSION_TOLERANCE) {
-      return;
-    }
-
-    window.scrollTo({
-      top: window.scrollY + hidden + KEYBOARD_OCCLUSION_MARGIN,
-      behavior: "instant",
-    });
-  };
-
-  /**
-   * Rows the list last rendered, sizing a reload's skeleton. `null` means no list has rendered
-   * in this panel session, which is a different case from one that rendered none.
-   *
-   * Tracked, and therefore recorded from a modifier rather than during render: a plain field
-   * gives {@link skeletonRows} no dependency at all, so it computes once against the initial
-   * `null` and Glimmer never recomputes it — the skeleton would stay at its opening size
-   * forever.
-   */
-  @tracked _lastRenderedRowCount: number | null = null;
-
-  // True only for the synchronous span of `focusTriggerInput`, so the query input can tell
-  // an open-driven programmatic focus (which must NOT select the label) from a genuine
-
-  // Stable placeholder rows for the loading frontier — a fixed identity so a persisting
-
   constructor(owner: Owner, args: DSelectSignature["Args"]) {
     super(owner, args);
-    // A pointer press outside the widget ends the interaction, so a focused custom-selection
-    // field reverts to its resting markup. The browser leaves DOM focus on the input when the
-    // press lands on a non-focusable element, so revert explicitly rather than waiting for a
-    // blur that never comes; the overlay's own close-on-click-outside runs in parallel.
-    document.addEventListener(
-      "pointerdown",
-      this.#handleOutsidePointerDown,
-      true
-    );
-
-    // Both events matter: `resize` is the keyboard opening or closing, `scroll` is WebKit
-    // moving the page underneath it afterwards.
-    window.visualViewport?.addEventListener(
-      "resize",
-      this.#keepQueryInputAboveKeyboard
-    );
-    window.visualViewport?.addEventListener(
-      "scroll",
-      this.#keepQueryInputAboveKeyboard
-    );
-  }
-
-  willDestroy() {
-    super.willDestroy();
-    this.#cancelPendingCount();
-    document.removeEventListener(
-      "pointerdown",
-      this.#handleOutsidePointerDown,
-      true
-    );
-    window.visualViewport?.removeEventListener(
-      "resize",
-      this.#keepQueryInputAboveKeyboard
-    );
-    window.visualViewport?.removeEventListener(
-      "scroll",
-      this.#keepQueryInputAboveKeyboard
-    );
+    this.announcer = new SelectAnnouncer({
+      a11y: this.a11y,
+      engine: this.engine,
+      getActiveOptionKey: () => this.listbox.activeOptionKey,
+      reannounceActive: () => this.listbox.reannounceActive(),
+      getNoResultsLabel: () => this.args.noResultsLabel,
+      getShouldSuppressEntryCount: () =>
+        this.presenter.shouldActivateSelected ||
+        this.presenter.shouldAutoActivateFirst,
+    });
+    this.interaction = new InteractionCoordinator({
+      engine: this.engine,
+      presenter: this.presenter,
+      announcer: this.announcer,
+      capabilities: this.capabilities,
+      onShow: () => this.args.onShow?.(),
+      onClose: () => this.args.onClose?.(),
+      isMultiple: () => this.args.multiple,
+    });
+    associateDestroyableChild(this, this.feedback);
+    associateDestroyableChild(this, this.listbox);
+    associateDestroyableChild(this, this.announcer);
+    associateDestroyableChild(this, this.interaction);
   }
 
   /** The listbox id, wiring `aria-controls`/`aria-activedescendant`. */
@@ -757,16 +392,6 @@ export default class DSelect extends Component<DSelectSignature> {
     return this.engine.belowMinChars ? undefined : this.listboxId;
   }
 
-  /** Stable prefix for the per-chip element ids (label + remove button). */
-  get chipIdPrefix() {
-    return `d-combobox-chip-${guidFor(this)}`;
-  }
-
-  /** Stable id for the query input's `aria-describedby` chip-navigation hint. */
-  get chipHintId() {
-    return `d-combobox-chip-hint-${guidFor(this)}`;
-  }
-
   /**
    * Stable id for the resting selection markup, so the combobox can point at it.
    *
@@ -776,220 +401,6 @@ export default class DSelect extends Component<DSelectSignature> {
    */
   get selectionId() {
     return `d-combobox-selection-${guidFor(this)}`;
-  }
-
-  /**
-   * Composes an `aria-describedby` token list from the component's own description ids and the
-   * consumer's `@describedBy`, dropping the empty ones.
-   *
-   * A merge rather than a fallback because both sides are real: the component describes its own
-   * state (the chip-navigation hint, the resting selection) while a form describes the field
-   * (its validation message). Letting either win silently discards the other, and the loss is
-   * inaudible to anyone not using a screen reader.
-   */
-  describedBy(...ids: Array<string | undefined | false>): string | undefined {
-    const tokens = ids.filter(Boolean);
-    return tokens.length ? tokens.join(" ") : undefined;
-  }
-
-  /**
-   * Chip-shaped placeholder rows while the held values resolve — one per bound id, so
-   * the loading state matches the number of chips about to appear.
-   */
-  get chipSkeletons(): Array<{ key: number }> {
-    const count = makeArray(this.args.value).length;
-    return Array.from({ length: count }, (_, key) => ({ key }));
-  }
-
-  /**
-   * Distinct-keyed placeholder rows for the loading skeleton (`@skeletonCount` overrides).
-   */
-  get skeletonRows(): Array<{ key: number }> {
-    const count = this.args.skeletonCount ?? this.#skeletonCount;
-    return Array.from({ length: count }, (_, key) => ({ key }));
-  }
-
-  /**
-   * How many placeholders a load should stand up.
-   *
-   * Opening onto an empty panel, the skeleton describes an unknown list, so it fills the
-   * viewport (20em against a ~2.4em row) and overflows slightly — a clipped last placeholder
-   * reads as more content rather than as a short list.
-   *
-   * Replacing rows already on screen is a different claim. The list had a height and is about
-   * to have another, and a four-row list that becomes nine placeholders and then two rows has
-   * moved everything under the pointer twice for no reason. Mirroring what it replaces keeps
-   * the panel at its own size, so the only movement is the one the new results actually cause.
-   *
-   * The floor is one, not zero, and exists solely for the outgoing list that was *empty*:
-   * mirroring it exactly would swap the empty message for a blank panel, which reads as a
-   * broken list rather than a loading one.
-   */
-  get #skeletonCount(): number {
-    if (this._lastRenderedRowCount == null) {
-      return FULL_SKELETON_COUNT;
-    }
-    return Math.min(
-      Math.max(this._lastRenderedRowCount, MIN_RELOAD_SKELETON_COUNT),
-      FULL_SKELETON_COUNT
-    );
-  }
-
-  /** The trigger style; defaults to `typeahead`. */
-  get variant(): SelectVariant {
-    return this.args.variant ?? SELECT_VARIANTS.typeahead;
-  }
-
-  /** Whether the selected variant uses the typeahead query-input machinery. */
-  get isTypeahead(): boolean {
-    return this.variant === SELECT_VARIANTS.typeahead;
-  }
-
-  get triggerClass(): string {
-    const classes = ["d-combobox__trigger"];
-    if (this.isTypeahead) {
-      classes.push("--typeahead");
-    }
-    if (this.args.multiple) {
-      classes.push("--multiple");
-    }
-    if (this.triggerIsControl) {
-      classes.push("--control");
-    }
-    if (this.iconOnly) {
-      classes.push("--icon-only");
-    }
-    if (this.isDisabled) {
-      classes.push("--disabled");
-    } else if (this.isReadonly) {
-      classes.push("--readonly");
-    }
-    return classes.join(" ");
-  }
-
-  /** Static/simple mode: a short unsearchable list; a WAI-ARIA select-only combobox. */
-  get isStatic(): boolean {
-    return this.variant === SELECT_VARIANTS.static;
-  }
-
-  /** Whether the search input lives in the panel rather than the trigger or nowhere. */
-  get isPanelSearchable(): boolean {
-    return !this.isTypeahead && !this.isStatic;
-  }
-
-  get triggerIsControl(): boolean {
-    return this.isStatic || this.isPanelSearchable;
-  }
-
-  get triggerRootRole(): string | undefined {
-    if (this.isStatic) {
-      return "combobox";
-    }
-    if (this.isPanelSearchable) {
-      return "button";
-    }
-    return undefined;
-  }
-
-  get triggerRootTabIndex(): string | undefined {
-    // Disabled drops the control from the tab order; readonly stays focusable.
-    if (this.isDisabled) {
-      return undefined;
-    }
-    return this.triggerIsControl ? "0" : undefined;
-  }
-
-  /**
-   * The ARIA role for the floated panel, decided by whether the panel owns a controller of its
-   * own. Only the panel-searchable variant does; a select-only trigger is itself the combobox and
-   * a typeahead keeps its query input in the trigger, so both leave the panel holding nothing but
-   * the list. Wrapping that in a `dialog` puts a container between the combobox and the options
-   * its `aria-activedescendant` points at, which is not the structure APG describes; `none` keeps
-   * the element a presentational wrapper.
-   *
-   * A searchable panel is a genuine composite surface, which is what
-   * {@link triggerRootHasPopup} promises there — dropping the role would make that promise false.
-   * Mobile is unaffected either way, since there the panel is a `DModal`.
-   */
-  get panelContentRole(): string {
-    return this.isPanelSearchable ? "dialog" : "none";
-  }
-
-  /**
-   * `aria-haspopup` names what the trigger opens, and the two control variants open different
-   * things.
-   *
-   * `static` is a select-only combobox: its `aria-controls` points at the listbox, and the
-   * listbox is what a reader is being sent to — so `listbox` is both correct and consistent
-   * with that reference.
-   *
-   * `button` is a disclosure. What it opens is the panel dialog, and that dialog holds a filter
-   * input as well as the list. Calling it a listbox told a reader to expect a list and hid the
-   * input they actually land on.
-   */
-  get triggerRootHasPopup(): string | undefined {
-    if (this.isStatic) {
-      return "listbox";
-    }
-    return this.isPanelSearchable ? "dialog" : undefined;
-  }
-
-  /**
-   * The accessible name for the control-variant trigger root — the `role` lives on the `<div>`,
-   * so the name must too. The typeahead/multi variants name their inner `role="combobox"` input
-   * instead (via `ComboboxQueryInput @label`), so the root stays unnamed there.
-   *
-   * An author-supplied name REPLACES name-from-contents, so naming the root with the field label
-   * alone made the held value unspeakable: a category picker showing "Support" announced only
-   * "Options, button". The value is composed in rather than dropped, because the label still has
-   * to say what the control is FOR — the visible text alone would not.
-   *
-   * Single-select only. A multi trigger renders chips, which are their own subtree rather than
-   * one label, and folding them into a single string would fight the per-chip remove controls.
-   */
-  get triggerRootLabel(): string | undefined {
-    if (!this.triggerIsControl) {
-      return undefined;
-    }
-    if (this.args.multiple || !this.engine.hasValue) {
-      return this.ariaLabelText;
-    }
-    return i18n("d_select.label_with_value", {
-      label: this.ariaLabelText,
-      value: this.fallbackSelectionLabel,
-    });
-  }
-
-  get triggerRootControls(): string | undefined {
-    return this.triggerIsControl && this.isExpanded
-      ? this.activeListboxId
-      : undefined;
-  }
-
-  /**
-   * `aria-disabled` / `aria-readonly` on the control-variant trigger root (the
-   * `role="combobox"`/`role="button"` `<div>`). The typeahead/multi input carries the native
-   * `disabled`/`readonly` attributes instead — a roleless `<div>`'s native attrs mean nothing.
-   * A `role="button"` has no `aria-readonly` state, so a readonly button is announced
-   * unavailable with `aria-disabled` instead.
-   */
-  get triggerRootDisabled(): string | undefined {
-    const readonlyButton = this.isReadonly && this.isPanelSearchable;
-    return this.triggerIsControl && (this.isDisabled || readonlyButton)
-      ? "true"
-      : undefined;
-  }
-
-  get triggerRootReadonly(): string | undefined {
-    // Only the `role="combobox"` static trigger: `aria-readonly` is not a valid state for the
-    // `role="button"` panel-searchable trigger (a button announces unavailability with
-    // `aria-disabled`), so it is never emitted there.
-    return this.isStatic && this.isReadonly ? "true" : undefined;
-  }
-
-  /** Whether the control cannot be opened or mutated (disabled or readonly). */
-  get isDisabled(): boolean {
-    return this.args.disabled ?? false;
   }
 
   /**
@@ -1012,590 +423,18 @@ export default class DSelect extends Component<DSelectSignature> {
     );
   }
 
-  get isReadonly(): boolean {
-    return this.args.readonly ?? false;
-  }
-
-  get isLocked(): boolean {
-    return this.isDisabled || this.isReadonly;
-  }
-
-  /** The resolved caret icon for the current open/closed state. */
-  get caretIcon(): string {
-    const arg = this.args.caretIcon;
-    if (typeof arg === "string") {
-      return arg;
-    }
-    return this.isExpanded
-      ? (arg?.open ?? "angle-up")
-      : (arg?.closed ?? "angle-down");
-  }
-
-  /** The caret shows unless a consumer explicitly opts out (icon-only triggers). */
-  get showCaret(): boolean {
-    return this.args.showCaret ?? true;
-  }
-
   /**
-   * Whether to render a label-less trigger. Effective only on the `button`/`static` single-select
-   * variants; on a `typeahead` (editable input) or `multiple` (chips are the display) the arg is
-   * inert. Asserts `@label` is present, since a suppressed label leaves the accessible name with no
-   * visible text to fall back on.
-   */
-  get iconOnly(): boolean {
-    const requested = this.args.iconOnly ?? false;
-    assert(
-      "DSelect: `@iconOnly` requires `@label` — the trigger's visible text is suppressed, so `@label` provides its accessible name.",
-      !requested || !!this.args.label
-    );
-    return requested && this.triggerIsControl && !this.args.multiple;
-  }
-
-  /** A source error offers a retry action unless a consumer opts out. */
-  get retryable(): boolean {
-    return this.args.retryable ?? true;
-  }
-
-  /** Whether the clear control renders: opted in, something selected, and not locked. */
-  get showClear(): boolean {
-    return !!this.args.clearable && this.engine.hasValue && !this.isLocked;
-  }
-
-  /** The clear control's accessible name — `"Clear all"` for multi, `"Clear selection"` otherwise. */
-  get clearLabel(): string {
-    return this.args.multiple
-      ? i18n("d_select.clear_all")
-      : i18n("d_select.clear");
-  }
-
-  /**
-   * The list debounce forwarded to `DAsyncContent`. Defaults to whether the source is
-   * server-backed (`engine.isAsync`) so a client source never flashes a skeleton, while a
-   * consumer can force a delay with `true`/a number or disable it with `false`.
-   */
-  get debounce(): boolean | number {
-    return this.args.debounce ?? this.engine.isAsync;
-  }
-
-  /**
-   * Whether the overlay renders as a mobile modal (an `aria-modal` dialog) rather than an
-   * inline popover. Delegates to the `menu` service — the exact decision `<DMenu>` makes — so
-   * the trigger's mobile/desktop behavior can never drift from what the overlay actually
-   * renders. DSelect always opts into `@modalForMobile`, so it asks with `true`.
-   */
-  get overlayIsModal(): boolean {
-    return this.menu.shouldRenderInModal(true);
-  }
-
-  /** Desktop typeahead: the query input lives in the trigger (host DOM). */
-  get isDesktopTypeahead(): boolean {
-    return this.isTypeahead && !this.overlayIsModal;
-  }
-
-  /** Mobile typeahead: the query input lives inside the modal (the trigger only shows the value). */
-  get isMobileTypeahead(): boolean {
-    return this.isTypeahead && this.overlayIsModal;
-  }
-
-  /**
-   * Whether roving runs in `active` mode — the combobox controller keeps DOM focus and
-   * `aria-activedescendant` drives the highlight — rather than `focus` mode (a roving tabindex
-   * through the options). The controller is the query input for `typeahead` and the trigger
-   * `<div>` for desktop `static` (a WAI-ARIA select-only combobox). Only **static in the mobile
-   * modal** uses focus mode: its list lives in an `aria-modal` dialog, so DOM focus must move
-   * into the listbox rather than stay on the out-of-modal trigger.
-   */
-  get usesActiveRoving(): boolean {
-    return !(this.isStatic && this.overlayIsModal);
-  }
-
-  /**
-   * Whether to auto-highlight the first option on open. True for `typeahead`
-   * (match-as-you-type) and desktop `static` (a select-only combobox — APG expects the
-   * first/selected option active on open); static in the mobile modal instead moves DOM focus
-   * onto the first option (see `focusListboxIfSimple`), and `button` waits for the user to
-   * filter or arrow.
+   * Composes an `aria-describedby` token list from the component's own description ids and the
+   * consumer's `@describedBy`, dropping the empty ones.
    *
-   * Suppressed at the cap: there every unselected option is disabled, so the only navigable rows
-   * are the selected ones, and auto-highlighting one would arm Enter to `deselect` and silently
-   * drop a value — the same hazard {@link shouldActivateSelected} avoids for `multiple`.
+   * A merge rather than a fallback because both sides are real: the component describes its own
+   * state (the chip-navigation hint, the resting selection) while a form describes the field
+   * (its validation message). Letting either win silently discards the other, and the loss is
+   * inaudible to anyone not using a screen reader.
    */
-  get shouldAutoActivateFirst(): boolean {
-    return (
-      !this.engine.atMaximum &&
-      (this.isTypeahead || (this.isStatic && !this.overlayIsModal))
-    );
-  }
-
-  /**
-   * The reconcile key for a non-typeahead surface, where re-running on every render would reset
-   * the user's arrow position. Typeahead keys on its freshly rebuilt items array instead (it
-   * re-seeds on each keystroke), but a `button`/`static` list only needs to re-reconcile when the
-   * navigable set changes: the filter, or the cap closing off the unselected options. Keying on
-   * the cap state is what drops a stale `aria-activedescendant` off a now-disabled row.
-   */
-  get rovingNonTypeaheadKey(): string {
-    return `${this.engine.filter}::${this.engine.atMaximum}`;
-  }
-
-  /**
-   * The built-in limit hint, or `undefined` when neither bound applies. At-max wins over
-   * below-min so a `minimum > maximum` misconfiguration still reads sensibly. Rendered in the
-   * panel's top zone (a sibling of the list, not inside it), so it never competes with the
-   * footer or an error body for the same edge.
-   */
-  get limitMessage(): string | undefined {
-    if (this.engine.atMaximum) {
-      return i18n("d_select.max_reached", { count: this.engine.maximum });
-    }
-    if (this.engine.belowMinimum) {
-      return i18n("d_select.min_not_reached", { count: this.engine.minimum });
-    }
-    return undefined;
-  }
-
-  /**
-   * Whether to restore the cursor to the already-selected option on open. This outranks
-   * {@link shouldAutoActivateFirst} and so also applies to `button`, whose "wait for the user"
-   * rule exists to avoid pre-highlighting an *arbitrary* row — the user's own choice is not one.
-   *
-   * Excluded while filtering (the first match is what Enter should take, not a row the user
-   * already holds) and for `multiple`, where activating a selected row would make Enter call
-   * `deselect` and silently drop a value.
-   */
-  get shouldActivateSelected(): boolean {
-    return (
-      !this.args.multiple && this.engine.hasValue && this.engine.filter === ""
-    );
-  }
-
-  /**
-   * Whether any held id is displaying as an unresolved fallback, stamped on the trigger as
-   * `data-unresolved`. The state is otherwise expressed differently per variant — a muted span
-   * for a chip or a control, but only the input's value text on a desktop typeahead, where
-   * there is no element to mark — so this is the one hook that reads the same everywhere.
-   */
-  get hasUnresolvedSelection(): boolean {
-    const values = this.args.multiple
-      ? makeArray(this.args.value)
-      : [this.args.value];
-    return values.some(
-      (value) =>
-        value != null && !!this.engine.resolveSingleSync(value)?.__unresolved
-    );
-  }
-
-  get fallbackSelectionLabel(): string {
-    const resolved = this.engine.resolveSingleSync(this.args.value);
-    if (resolved?.__unresolved) {
-      // The plain input can't render the icon/muted treatment chips get, so the label has to
-      // carry the state itself. A consumer-named fallback ("Topic #123") already reads as
-      // one; only the bare-id default needs the suffix to not look like a real label.
-      return this.engine.isCustomUnresolvedItem(resolved)
-        ? this.engine.getItemLabel(resolved)
-        : i18n("d_select.unresolved_value", { value: this.args.value });
-    }
-    return this.engine.getSingleSelectionLabel(this.args.value);
-  }
-
-  get labelField(): string {
-    return this.args.labelField ?? "name";
-  }
-
-  get queryPlaceholder(): string {
-    if (this.engine.hasValue) {
-      return "";
-    }
-    return this.args.placeholder || i18n("d_select.add_placeholder");
-  }
-
-  /** The filter input's placeholder (the consumer's `@searchPlaceholder` or a default). */
-  get searchPlaceholderText(): string {
-    return this.args.searchPlaceholder ?? i18n("d_select.search_placeholder");
-  }
-
-  /** The combobox/listbox accessible name (the consumer's `@label` or a default). */
-  get ariaLabelText(): string {
-    return this.args.label ?? i18n("d_select.label");
-  }
-
-  /**
-   * Captures the DMenu instance so the engine can close the overlay on select.
-   *
-   * @param api - The DMenu instance.
-   */
-  @action
-  registerMenu(api: DMenuInstance): void {
-    this.#menu = api;
-  }
-
-  /**
-   * Captures the chip group's roving-focus controls so the query input can move focus
-   * into the chips (ArrowLeft) and a keyboard removal can restore focus to a neighbor.
-   * The modifier passes `null` on teardown.
-   *
-   * @param api - The roving-focus controls, or `null` on teardown.
-   */
-  @action
-  registerChipRoving(api: DRovingFocusApi | null): void {
-    this.#chipRoving = api;
-  }
-
-  /**
-   * Captures the filter input and focuses it synchronously on open (before any async
-   * results arrive — iOS only honors focus requested during the opening gesture).
-   */
-  @action
-  captureFilter(element: HTMLElement): void {
-    this.filterInput = element;
-    element.focus({ preventScroll: true });
-  }
-
-  /**
-   * For **desktop** `static` (a select-only combobox), captures the trigger `<div>` root as
-   * the roving controller — `aria-activedescendant` is written on it and focus stays on it.
-   * Attached to the DMenu root for every variant, so it self-gates: typeahead/multi keep the
-   * input as their controller, `button`'s controller is the panel filter, and static in the
-   * mobile modal uses focus mode (no controller — DOM focus moves into the listbox instead).
-   */
-  @action
-  registerStaticController(element: HTMLElement): void {
-    if (this.isStatic && !this.overlayIsModal) {
-      this.filterInput = element;
-    }
-  }
-
-  /**
-   * Static in the mobile modal: on open, move DOM focus onto the first (or the roving-`0`)
-   * option, since the list lives in an `aria-modal` dialog the out-of-modal trigger can't
-   * control. A no-op for every other variant/surface, which keep focus on their controller.
-   */
-  @action
-  focusListboxIfSimple(element: HTMLElement): void {
-    if (!(this.isStatic && this.overlayIsModal)) {
-      return;
-    }
-    schedule("afterRender", () => {
-      // Resolve the target inside the flush: `dRovingFocus` stamps `tabindex="0"` on the
-      // selected (or first) option during this same afterRender, so reading it earlier could
-      // capture the fallback first option before roving has chosen the real tab stop.
-      const target =
-        element.querySelector<HTMLElement>('[role="option"][tabindex="0"]') ??
-        element.querySelector<HTMLElement>('[role="option"]');
-      if (target?.isConnected) {
-        target.focus({ preventScroll: true });
-        // Focus is placed directly here, not through the roving modifier's `#setActive`, so
-        // `onActiveChange` never fires to seed the pin. Seed it now: a Home/End/Page jump
-        // before the first arrow keypress would otherwise scroll with nothing pinned, unmount
-        // the focused row, and drop focus to `<body>`.
-        this.activeOptionKey = target.dataset.optionKey ?? null;
-        this.activePinnedIndex =
-          target.dataset.index == null
-            ? undefined
-            : Number(target.dataset.index);
-      }
-    });
-  }
-
-  /**
-   * Captures the desktop typeahead trigger input as the roving controller WITHOUT focusing
-   * it — the trigger input is always present (not opened-into like the panel/modal input),
-   * so focusing on insert would steal focus on page load.
-   */
-  @action
-  registerTriggerInput(element: HTMLElement): void {
-    this.filterInput = element;
-  }
-
-  @action
-  handleClose(): void {
-    // DMenu can invoke its close hook without a real state change (closing an already-closed
-    // instance, teardown), so gate the consumer callback on an actual open→closed transition —
-    // consumers can then treat `@onClose` as exactly one notification per close.
-    const wasExpanded = this.isExpanded;
-    this.isExpanded = false;
-    this.resetQueryOnClose();
-    this.#releaseAnnouncementSession();
-    if (wasExpanded) {
-      this.args.onClose?.();
-    }
-  }
-
-  /**
-   * Drops the dedupe keys whose subject is the open session rather than a mounted node, so a
-   * reopened panel is a fresh context.
-   *
-   * Deliberately NOT in `releaseListbox`. That runs whenever `<DVirtualList>` unmounts, which
-   * also happens mid-session when a slow re-query swaps in the skeleton — resetting there would
-   * re-read the narrow hint on every reload and throw away a reveal's owed completion. It is the
-   * same distinction `releaseLoadFeedback` already draws for the outgoing row count.
-   *
-   * Unguarded by the open→closed transition, like `resetQueryOnClose`: a spurious close only
-   * fires when the panel is already shut, where clearing is inert.
-   */
-  #releaseAnnouncementSession(): void {
-    // A count still waiting on the cursor describes a list the reader has closed, and would be
-    // read out over whatever they moved on to.
-    this.#cancelPendingCount();
-    // Keyed on the query, and closing resets the query to "" — so without this the next open
-    // compares "" against "" and the hint stays silent for the rest of the component's life.
-    this.#narrowAnnouncedFor = null;
-    // A "loading more" interrupted by a close otherwise leaves its debt standing, and the next
-    // open's first pending→settled transition pays it as a completion nobody started.
-    this.#revealAnnounced = false;
-  }
-
-  /**
-   * Resets the query so the next open starts clean, for every variant.
-   *
-   * A query is draft state that belongs to the session that typed it, and closing ends that
-   * session — so a reopened list must never arrive still narrowed by a term the reader has moved
-   * on from and can no longer see a reason for. That holds wherever the query lives: in the
-   * trigger for a typeahead, or in the panel for a button variant, where it is doubly hidden
-   * because the trigger is showing the value instead.
-   *
-   * Unguarded by the open→closed transition, unlike `@onClose`: a spurious close only fires when
-   * the panel is already shut, where clearing is inert.
-   *
-   * Multi-select also resets on an add, because its menu stays open after selection.
-   */
-  @action
-  resetQueryOnClose(): void {
-    this.engine.setFilter("");
-    this.queryActive = false;
-  }
-
-  @action
-  handleShow(): void {
-    // DMenu can invoke its show hook without a real state change (clicking an already-open
-    // trigger re-enters `show`), so gate the consumer callback on an actual closed→open
-    // transition. The input still re-focuses on every click, which is the desired behavior.
-    const wasExpanded = this.isExpanded;
-    this.isExpanded = true;
-    if (this.isTypeahead) {
-      this.focusTriggerInput();
-    }
-    if (!wasExpanded) {
-      this.args.onShow?.();
-    }
-  }
-
-  @action
-  handleTriggerRootKeydown(event: KeyboardEvent): void {
-    if (
-      !this.triggerIsControl ||
-      this.isExpanded ||
-      this.isLocked ||
-      event.isComposing
-    ) {
-      return;
-    }
-    // This listener sits on the DMenu trigger, which CONTAINS the chip list. A chip's remove
-    // button is a genuine tab stop on the control variants (the `tabindex="-1"` seeding is gated
-    // on desktop typeahead), so its keys bubble to here. Treating them as trigger keys both
-    // swallows the button's own activation — `preventDefault()` below cancels the native click —
-    // and lets Backspace clear the entire selection instead of acting on the focused chip. Only
-    // a key aimed at the trigger itself is a trigger key.
-    if (event.target !== event.currentTarget) {
-      return;
-    }
-    if (
-      event.key === "Enter" ||
-      event.key === " " ||
-      event.key === "ArrowDown" ||
-      event.key === "ArrowUp"
-    ) {
-      event.preventDefault();
-      this.#menu?.show();
-      return;
-    }
-    // Keyboard clear for the control variants: they have no text input, so the closed trigger
-    // IS their empty-query state and Backspace/Delete empties the selection. Not gated on
-    // `@clearable` — that governs the visible × control only — for the same reason the typeahead
-    // path is not: the family this replaces clears from an empty filter unconditionally, and
-    // gating it here left a static select with no way out at all.
-    if (
-      this.engine.hasValue &&
-      (event.key === "Backspace" || event.key === "Delete")
-    ) {
-      event.preventDefault();
-      this.engine.clear();
-    }
-  }
-
-  /**
-   * Clears the whole selection from the trigger clear control, stopping the click from toggling
-   * the overlay, then returns focus to the controller (the query input, or the trigger itself).
-   */
-  @action
-  handleClear(event: MouseEvent): void {
-    event.stopPropagation();
-    if (this.isLocked) {
-      return;
-    }
-    this.engine.clear();
-    (this.filterInput ?? this.#menu?.triggerElement)?.focus();
-  }
-
-  @action
-  beginQuery(): void {
-    this.queryActive = true;
-  }
-
-  /**
-   * On open, move focus into the query input so a click anywhere on the trigger (label,
-   * caret, gaps — all open the menu via DMenu's trigger-root click) lands the caret in the
-   * input on desktop. Null-safe on mobile: the query input lives in the modal and self-
-   * focuses via `captureFilter` once it mounts (after this runs).
-   */
-  @action
-  focusTriggerInput(): void {
-    this.#suppressSelectOnFocus = true;
-    this.filterInput?.focus();
-    this.#suppressSelectOnFocus = false;
-  }
-
-  /**
-   * Focuses the control when a wrapping label forwards its activation to the trigger's label
-   * sink, so a caption behaves the way it does over a native field.
-   *
-   * The click is stopped short of the trigger root, which would otherwise read it as a trigger
-   * press and open the overlay — a caption should put the user in the field, not in the list.
-   * The caret is placed after the label rather than selecting it: overtype is what a keyboard
-   * focus earns, and this is a pointer.
-   */
-  @action
-  focusFromLabel(event: MouseEvent): void {
-    event.stopPropagation();
-    if (this.isLocked) {
-      return;
-    }
-
-    const input = this.filterInput;
-    if (!input) {
-      this.#menu?.triggerElement?.focus();
-      return;
-    }
-
-    this.#suppressSelectOnFocus = true;
-    input.focus();
-    this.#suppressSelectOnFocus = false;
-
-    if (input instanceof HTMLInputElement) {
-      const end = input.value.length;
-      input.setSelectionRange(end, end);
-    }
-  }
-
-  /**
-   * Whether a focus landing on the query input should select the displayed label (for
-   * overtype). True for a genuine keyboard focus; false for a programmatic focus whose caret
-   * belongs to the pointer that caused it.
-   */
-  @action
-  shouldSelectOnFocus(): boolean {
-    return !this.#suppressSelectOnFocus;
-  }
-
-  /**
-   * Keeps focus in the trigger input when an option is pointer-selected: preventing the
-   * `mousedown` default stops the input blurring, which would otherwise close the menu
-   * before the option's `click` resolves. This matters for action rows and multi-select,
-   * which keep the menu open.
-   */
-  @action
-  preventPointerBlur(event: MouseEvent): void {
-    if (this.isTypeahead) {
-      event.preventDefault();
-    }
-  }
-
-  /**
-   * Keeps focus in the query input when a press lands on the trigger but outside that input —
-   * the caret indicator, the leading icon, or the padding around them.
-   *
-   * Without this the input blurs on `mousedown` and is refocused by the open that follows, and
-   * that churn swallows the open entirely: pressing the caret did nothing whenever the input
-   * already held focus, which is every time after the first use. A press that starts on the
-   * input itself is left alone, so the browser still places the text caret where it was clicked.
-   */
-  @action
-  preventTriggerBlur(event: MouseEvent): void {
-    if (!this.isTypeahead || this.isLocked) {
-      return;
-    }
-
-    const input = this.filterInput;
-    const target = event.target as Node | null;
-    if (input && target && (target === input || input.contains(target))) {
-      return;
-    }
-
-    event.preventDefault();
-  }
-
-  /**
-   * Desktop typeahead: focus left the trigger input. Close ONLY when focus genuinely moved
-   * to a focusable element OUTSIDE the widget (a Tab-out / click into another field). A
-   * `null` relatedTarget (clicking any non-focusable element) is deliberately ignored: an
-   * in-trigger click on the label/caret must keep the menu open, and a truly-outside
-   * non-focusable click is dismissed by close-on-click-outside instead. (Edge: a focus
-   * loss with a null relatedTarget and no accompanying pointerdown — Tab into the browser's
-   * own UI, a programmatic blur — won't close here; rare and accepted.)
-   */
-  @action
-  handleTriggerBlur(event: FocusEvent): void {
-    if (this.#focusEscapedWidget(event.relatedTarget)) {
-      this.triggerFocused = false;
-      this.#menu?.close();
-    }
-  }
-
-  /**
-   * Focus entered the trigger input. Reveal the editable label in place of any custom
-   * `:selection` resting markup (a locked control never becomes editable, so it keeps its
-   * markup). Paired with {@link handleTriggerBlur}, which restores the markup once focus leaves
-   * the whole widget.
-   */
-  @action
-  handleTriggerFocus(): void {
-    if (!this.isLocked) {
-      this.triggerFocused = true;
-    }
-  }
-
-  /**
-   * A focusable footer control lost focus. Mirrors {@link handleTriggerBlur} — close when focus
-   * leaves the whole widget — but DESKTOP ONLY: on mobile the overlay is a modal that owns its
-   * dismissal (and whose `content` is undefined, so the containment guard can't run), and closes
-   * with `focusTrigger: false` so a Tab-forward off the last footer control lands on the next page
-   * control rather than being yanked back to the trigger.
-   */
-  @action
-  handleFooterFocusOut(event: FocusEvent): void {
-    if (this.overlayIsModal) {
-      return;
-    }
-    if (this.#focusEscapedWidget(event.relatedTarget)) {
-      this.triggerFocused = false;
-      this.#menu?.close({ focusTrigger: false });
-    }
-  }
-
-  // True when focus moved to a real element outside both the trigger and the overlay content — the
-  // signal that the whole widget lost focus. A `null` relatedTarget is treated as "stayed" (an
-  // in-widget non-focusable click; a truly-outside non-focusable click is caught by
-  // close-on-click-outside), matching the documented trigger-blur edge above.
-  #focusEscapedWidget(next: EventTarget | null): boolean {
-    if (!(next instanceof Node)) {
-      return false;
-    }
-    const trigger = this.#menu?.triggerElement;
-    const content = this.#menu?.content;
-    return !(
-      (trigger && trigger.contains(next)) ||
-      (content && content.contains(next))
-    );
+  describedBy(...ids: Array<string | undefined | false>): string | undefined {
+    const tokens = ids.filter(Boolean);
+    return tokens.length ? tokens.join(" ") : undefined;
   }
 
   @action
@@ -1612,22 +451,6 @@ export default class DSelect extends Component<DSelectSignature> {
           filter: this.engine.filter,
         }))
       : { rawItems, filter: this.engine.filter };
-  }
-
-  /**
-   * Resolves the single bound value to its one display item for the trigger
-   * `DAsyncContent`. Narrows the engine's arity-union return to the single form; a `null`
-   * value returns `undefined` (routed to `:empty`), while a held value that can't resolve
-   * comes back as an `__unresolved` fallback item rather than `undefined`.
-   */
-  @action
-  resolveSingle(
-    value: unknown,
-    opts?: SelectLoadOptions
-  ): SelectItemModel | Promise<SelectItemModel> {
-    return this.engine.resolveSelection(value as SelectValue, opts) as
-      | SelectItemModel
-      | Promise<SelectItemModel>;
   }
 
   /**
@@ -1657,576 +480,20 @@ export default class DSelect extends Component<DSelectSignature> {
     return this.engine.describeItems(resolved as SelectItemModel[]);
   }
 
-  @action
-  onFilterInput(event: Event): void {
-    this.engine.setFilter((event.target as HTMLInputElement).value);
-  }
-
-  @action
-  handleInputKeydown(event: KeyboardEvent): void {
-    const input = event.target as HTMLInputElement;
-
-    // Removing from the selection on an empty query: multi drops the last chip on Backspace
-    // (repeat to empty it) — Backspace is the token-input convention, deleting backward toward
-    // the chip before the caret; single clears on Backspace or Delete, since a lone value isn't
-    // a directional token. Blocked while locked.
-    //
-    // Neither is gated on `@clearable`, which governs the visible × control only. The family
-    // this replaces clears on Backspace-with-an-empty-filter unconditionally
-    // (`select-kit/components/select-kit/select-kit-filter.gjs`), so gating it here left a
-    // reader able to reach a value but not leave it, and contradicted the multi path directly
-    // below, which was never gated.
-    if (
-      !event.isComposing &&
-      input.value === "" &&
-      this.engine.hasValue &&
-      !this.isLocked
-    ) {
-      if (this.args.multiple && event.key === "Backspace") {
-        event.preventDefault();
-        this.engine.deselectLast();
-        return;
-      }
-      if (
-        !this.args.multiple &&
-        (event.key === "Backspace" || event.key === "Delete")
-      ) {
-        event.preventDefault();
-        this.engine.clear();
-        return;
-      }
-    }
-
-    // Desktop multi: ArrowLeft at the very start of the query moves focus into the chip
-    // group (the chip nearest the input). Only the desktop trigger hosts the chips inline;
-    // the mobile input lives in the modal, so entering the trigger chips would break out of
-    // it. `preventDefault` only when a chip actually took focus, so an empty control (or a
-    // loading re-flash) leaves ArrowLeft as a plain no-op caret move.
-    if (
-      this.isDesktopTypeahead &&
-      event.key === "ArrowLeft" &&
-      !event.isComposing &&
-      input.selectionStart === 0 &&
-      input.selectionEnd === 0 &&
-      this.engine.hasValue &&
-      this.#chipRoving?.focusLast()
-    ) {
-      event.preventDefault();
-    }
-  }
-
   /**
-   * `dRovingFocus` hands `onActivate` the active option element; clicking it runs the
-   * same handler as a pointer click, so keyboard and pointer share one selection path.
+   * Resolves the single bound value to its one display item for the trigger
+   * `DAsyncContent`. Narrows the engine's arity-union return to the single form; a `null`
+   * value returns `undefined` (routed to `:empty`), while a held value that can't resolve
+   * comes back as an `__unresolved` fallback item rather than `undefined`.
    */
   @action
-  activateElement(element: HTMLElement): void {
-    element.click();
-  }
-
-  /**
-   * `dRovingFocus` reports the highlighted option element on every cursor move (and the
-   * initial auto-seed), or `null` when the highlight is cleared — e.g. the active row was
-   * disabled by the cap. We record its `key` so each option renders its own `--active` from
-   * state; a `null` clears it, so no disabled row keeps the highlight. The element carries the
-   * key via `data-option-key` (stamped in the template).
-   */
-  @action
-  trackActiveOption(
-    element: HTMLElement | null,
-    meta?: { pointer: boolean }
-  ): void {
-    // A pointer press moves the cursor but does not SHOW it, the same distinction `:focus-visible`
-    // draws: someone working with the mouse is looking at what they clicked, and a highlight
-    // appearing on that row reads as a second kind of selection. The cursor still moves, so the
-    // first arrow key continues from the row they acted on rather than jumping back to the top.
-    this.activeOptionKey = meta?.pointer
-      ? null
-      : (element?.dataset.optionKey ?? null);
-    this.activePinnedIndex =
-      element?.dataset.index == null
-        ? undefined
-        : Number(element.dataset.index);
-  }
-
-  /**
-   * Records how many rows the list is showing, so a reload's skeleton can be sized to what it
-   * replaces. Runs from a render modifier, after render, which is what makes writing a tracked
-   * field here safe.
-   */
-  @action
-  recordRowCount(_element: HTMLElement, [count]: [number]): void {
-    this._lastRenderedRowCount = count;
-  }
-
-  @action
-  registerListboxApi(api: DVirtualListApi): void {
-    this.#listboxApi = api;
-  }
-
-  @action
-  registerListboxRoving(api: DRovingFocusApi | null): void {
-    this.#listboxRoving = api;
-  }
-
-  @action
-  resetListScroll(): void {
-    cancel(this.#jumpTimer);
-    this.#listboxApi?.scrollToIndex(0, {
-      align: "start",
-      behavior: "auto",
-    });
-  }
-
-  @action
-  handleJump(target: number, direction: "forward" | "backward"): void {
-    cancel(this.#jumpTimer);
-    if (this.#logicalNavCount === 0) {
-      return;
-    }
-
-    target = this.#clampJumpTarget(target);
-    this.#scrollToJumpTarget(target, direction);
-    this.#jumpTimer = nextRunloop(() =>
-      this.#reconcileJump(target, direction, 0)
-    );
-  }
-
-  #clampJumpTarget(target: number): number {
-    return Math.max(0, Math.min(target, this.#logicalNavCount - 1));
-  }
-
-  #scrollToJumpTarget(target: number, direction: "forward" | "backward"): void {
-    // `target` is a logical option ordinal; the virtualizer scrolls by raw row index, which
-    // diverges once headers/dividers are interleaved. Translate before scrolling.
-    const rawIndex = this.#optionRawIndices[target] ?? target;
-    this.#listboxApi?.scrollToIndex(rawIndex, {
-      align: direction === "forward" ? "end" : "start",
-      behavior: "auto",
-    });
-  }
-
-  #reconcileJump(
-    target: number,
-    direction: "forward" | "backward",
-    attempt: number
-  ): void {
-    if (this.#listboxRoving?.focusLogicalIndex(target)) {
-      this.#jumpTimer = undefined;
-      return;
-    }
-
-    if (attempt < 1 && this.#logicalNavCount > 0) {
-      target = this.#clampJumpTarget(target);
-      this.#scrollToJumpTarget(target, direction);
-      this.#jumpTimer = nextRunloop(() =>
-        this.#reconcileJump(target, direction, attempt + 1)
-      );
-      return;
-    }
-
-    this.#jumpTimer = undefined;
-    if (direction === "forward") {
-      this.#listboxRoving?.focusLast();
-    } else {
-      this.#listboxRoving?.focusFirst();
-    }
-  }
-
-  /**
-   * Politely announces the result count to screen readers via the shared `a11y`
-   * service (never a per-component live region, never assertive), skipping repeats.
-   *
-   * Reports the true total when the source can supply one, not how many rows happen to be
-   * mounted, so a 5000-result query does not announce "50 results". Only a source still
-   * paging under `hasMore` lacks a total; it announces the loaded count until its last page
-   * declares completeness and the real count becomes knowable.
-   */
-  @action
-  announceCount(
-    _element: HTMLElement,
-    [rendered, total, query]: [number, number | undefined, string?]
-  ): void {
-    // Mid-load the rows on screen are the previous query's and the total is already cleared,
-    // so any count now describes stale rows. Settling re-fires this with the real numbers.
-    if (this.engine.serverPending) {
-      return;
-    }
-
-    const settledQuery = query ?? "";
-    const message =
-      total == null
-        ? i18n("d_select.results_loaded", { count: rendered })
-        : i18n("d_select.results_count", { count: total });
-
-    if (this.#suppressNextCount) {
-      this.#suppressNextCount = false;
-      // Record the suppressed message as last-known, or a later run of the same query would be
-      // treated as fresh news and announce what was deliberately swallowed.
-      this.#lastAnnouncedCount = { query: settledQuery, message };
-      return;
-    }
-    // A query that lands on exactly the set it already had is not news, whatever the reader typed
-    // to get there — and there is no honest way to say it. Announcing the unchanged count is
-    // audible only when the region's clear timer happens to have fired since it was last spoken,
-    // so it comes and goes with the reader's typing rhythm, which is the erratic re-announcement
-    // this work set out to remove. The typing echo already confirms the keystroke landed.
-    if (this.#lastAnnouncedCount?.message === message) {
-      return;
-    }
-
-    // Whether this count is worth saying depends on something that has not happened yet: the
-    // roving cursor re-seeds later in this same render, and a cursor that moves takes the voice
-    // with it. So hold the message and decide once it has settled.
-    this.#scheduleReport(settledQuery, message);
-  }
-
-  /**
-   * Holds a report until the reader has stopped typing and the cursor has settled, capturing what
-   * the decision in {@link #resolvePendingCount} will be made against.
-   */
-  #scheduleReport(query: string, message: string): void {
-    this.#cancelPendingCount();
-    this.#pendingCount = {
-      query,
-      message,
-      activeKey: this.activeOptionKey,
-      previous: this.#lastAnnouncedCount,
-      timer: discourseLater(
-        () => this.#resolvePendingCount(),
-        RESULT_REPORT_DELAY
-      ),
-    };
-  }
-
-  /**
-   * Decides what a held count should do, now that the cursor has settled. Three outcomes, and
-   * only one of them is the count.
-   *
-   * **The cursor moved.** The row that became active announced itself along with its position in
-   * the set — "Banana, 1 of 1" — so a count fired for the same change restates it through a
-   * second channel and assistive tech speaks one of the two and drops the other. That is the
-   * collision {@link announceCountOnEntry} resolves at the open, arriving here through every
-   * later query.
-   *
-   * **A new search left the cursor where it was.** Narrowing two matches to the first one keeps
-   * the cursor on that row while its `aria-setsize` goes from 2 to 1, and nothing re-reads it — so
-   * the reader learns the count changed but never which option survived. Ask for the row again
-   * instead: it reports the match and the new set together, and in the reader's own verbosity
-   * settings. A count reaching here always describes a set that changed, since an unchanged one
-   * never gets this far.
-   *
-   * **The count, for the cases with no row to carry it.** No cursor at all (a variant that waits
-   * for the reader to move), or more rows arriving under a stationary cursor, where the set grew
-   * without the reader's question changing.
-   */
-  #resolvePendingCount(): void {
-    const pending = this.#pendingCount;
-    this.#pendingCount = undefined;
-    if (!pending || this.isDestroying || this.isDestroyed) {
-      return;
-    }
-
-    this.#lastAnnouncedCount = {
-      query: pending.query,
-      message: pending.message,
-    };
-
-    if (
-      this.activeOptionKey != null &&
-      this.activeOptionKey !== pending.activeKey
-    ) {
-      return;
-    }
-
-    // Only when the reader's question changed. More rows arriving for the *same* question already
-    // have their own announcement, and re-reading the row would compete with it.
-    const isNewSearch = pending.previous?.query !== pending.query;
-    if (
-      isNewSearch &&
-      this.activeOptionKey != null &&
-      this.#listboxRoving?.reannounceActive()
-    ) {
-      return;
-    }
-
-    this.a11y.announce(pending.message, "polite");
-  }
-
-  #cancelPendingCount(): void {
-    if (this.#pendingCount) {
-      cancel(this.#pendingCount.timer);
-      this.#pendingCount = undefined;
-    }
-  }
-
-  /**
-   * A freshly mounted listbox is a fresh context, so the count always announces on open even
-   * when it matches what the previous open announced. Updates while the list stays mounted
-   * keep deduping through {@link announceCount}.
-   *
-   * Except when opening seeds a cursor. The seeded row is announced with its own position in the
-   * set, from `aria-posinset`/`aria-setsize` — "1 of 15" — so a count fired in the same moment
-   * restates it through a second channel, and assistive tech speaks one of the two and drops the
-   * other. Observed against VoiceOver on both the select-only and query-input variants: the open
-   * that spoke the count never spoke the row, and the open that spoke the row never spoke the
-   * count, alternating between opens. The row wins because it says strictly more, and in the
-   * reader's own verbosity settings rather than ours.
-   *
-   * Only the count at *entry* is affected. A count that changes while the list stays open has no
-   * row announcement to compete with, and remains the only thing reporting the new set size.
-   *
-   * Recorded rather than skipped outright, so a later count change while the list stays open is
-   * still a change and still announces.
-   */
-  @action
-  announceCountOnEntry(
-    element: HTMLElement,
-    args: [number, number | undefined, string?]
-  ): void {
-    this.#lastAnnouncedCount = null;
-
-    if (this.shouldActivateSelected || this.shouldAutoActivateFirst) {
-      this.#suppressNextCount = true;
-    }
-
-    this.announceCount(element, args);
-  }
-
-  /**
-   * Politely announces an empty result set — the count announcement for a count of zero.
-   *
-   * {@link announceCount} hangs off the list, which `{{#if items.length}}` unmounts the moment
-   * a query matches nothing, so the one outcome a reader most needs reported was the only one
-   * nothing reported. Shares the count's dedupe slot and its suppression flag rather than
-   * owning new ones: "no results" and "3 results" answer the same question about the same
-   * query, and a suppressed refilter must swallow either identically.
-   *
-   * Unlike {@link announceCount} there is no `serverPending` bail. A stale *count* is possible
-   * mid-flight because retention keeps the previous rows on screen; a stale *empty* is not —
-   * the empty branch renders only once a load has resolved to nothing.
-   *
-   * Held for the same delay as a count, and for a sharper reason. Emptying the list destroys the
-   * element the query input's `aria-controls` names, so the control momentarily points at nothing
-   * and its `aria-activedescendant` is stripped; a screen reader answers that by re-introducing the
-   * whole combobox, and that speech preempts anything said underneath it. Reported immediately,
-   * this was begun and abandoned — heard as "no results" arriving only sometimes.
-   *
-   * Both row branches in {@link #resolvePendingCount} are inert here by construction: with no rows
-   * the cursor cannot have moved to one, and the roving API is released along with the listbox, so
-   * there is nothing to ask for a re-read.
-   */
-  @action
-  announceNoResults(_element: HTMLElement, [query]: [string?] = []): void {
-    // `||`, not `??`, to match the template's `{{or}}`: an empty label is not a label.
-    const message = this.args.noResultsLabel || i18n("d_select.no_results");
-    const settledQuery = query ?? "";
-
-    if (this.#suppressNextCount) {
-      this.#suppressNextCount = false;
-      this.#cancelPendingCount();
-      this.#lastAnnouncedCount = { query: settledQuery, message };
-      return;
-    }
-
-    // Replaces any held count rather than queueing behind it: the rows that count described are
-    // gone, and reporting them now would describe a list the reader can no longer reach.
-    this.#scheduleReport(settledQuery, message);
-  }
-
-  /**
-   * Whether to append frontier skeleton placeholders for a pending reveal (a server page
-   * fetched at the tail). Gated on the load-feedback delay so a fast source shows none, and
-   * on `serverRevealPending` so a re-query — which replaces the set — does not.
-   */
-  get showRevealPlaceholder(): boolean {
-    return this.loadFeedbackDue && this.engine.serverRevealPending;
-  }
-
-  /**
-   * Whether a re-query has been in flight long enough that the previous rows should give way to
-   * the loading skeleton. Excludes a reveal, whose rows are still correct and stay put.
-   */
-  get #replaceRowsWhileReloading(): boolean {
-    return (
-      this.loadFeedbackDue &&
-      this.engine.serverPending &&
-      !this.engine.serverRevealPending
-    );
-  }
-
-  /**
-   * Whether to keep the previous rows mounted while a load is in flight.
-   *
-   * Retention exists to absorb a fast source, where dropping to a skeleton and back reads as a
-   * flicker. Past {@link LOADING_FEEDBACK_DELAY} it stops paying for itself and starts lying: a
-   * re-query's rows are not merely old but *wrong* for what the input now says, and they remain
-   * clickable with the cursor on one of them, so an Enter lands on a row the query excludes.
-   * The skeleton has nothing to select and cannot be mistaken for an answer.
-   */
-  get retainRowsWhileReloading(): boolean {
-    return !this.#replaceRowsWhileReloading;
-  }
-
-  /**
-   * Arms the placeholder only once a load has been pending past the threshold, so a source
-   * that answers quickly shows nothing at all.
-   *
-   * Tracked from the panel rather than the listbox because the flag decides whether the listbox
-   * exists at all ({@link retainRowsWhileReloading}). Armed from the listbox, raising it would
-   * unmount the element carrying the timer, whose teardown lowers the flag again and remounts
-   * it — a strobe rather than a load state. The panel spans both.
-   */
-  @action
-  trackLoadFeedback(_element: HTMLElement, [pending]: [boolean]): void {
-    cancel(this.#loadFeedbackTimer);
-    if (!pending) {
-      this.loadFeedbackDue = false;
-      return;
-    }
-    this.#loadFeedbackTimer = discourseLater(
-      this,
-      () => (this.loadFeedbackDue = true),
-      this.#loadFeedbackDelay
-    );
-  }
-
-  /**
-   * How long a load may run before it earns visible feedback.
-   *
-   * The wait being measured is the source's, but pending starts at the keystroke and the
-   * request does not start until the debounce elapses. Counting from the keystroke charges the
-   * source for the debounce, and since the default debounce already exceeds the threshold, every
-   * re-query would trip it — retention would never apply and no source could be "fast".
-   */
-  get #loadFeedbackDelay(): number {
-    const debounce = this.debounce;
-    const debounceDelay =
-      debounce === true ? INPUT_DELAY : debounce === false ? 0 : debounce;
-    return LOADING_FEEDBACK_DELAY + debounceDelay;
-  }
-
-  /**
-   * Cancels the load-feedback timer when the panel closes, so a torn-down instance cannot have
-   * the flag flipped under it.
-   */
-  @action
-  releaseLoadFeedback(): void {
-    cancel(this.#loadFeedbackTimer);
-    this.loadFeedbackDue = false;
-    // Reset here rather than in `releaseListbox`: the listbox also unmounts mid-session when a
-    // reload swaps in the skeleton, which is precisely when the outgoing count is needed.
-    this._lastRenderedRowCount = null;
-  }
-
-  /**
-   * Drops the roving highlight key when the list unmounts, so a reopened list does not render a
-   * stale `--active`. The list also unmounts mid-session when a slow re-query swaps in the
-   * skeleton, which is exactly when the old highlight must not survive.
-   */
-  @action
-  releaseListbox(): void {
-    cancel(this.#jumpTimer);
-    // Drop the roving highlight key on close so a reopened list does not render a stale
-    // `--active` (the modifier reports the active option only while it moves the cursor, so
-    // it never reports the clearing on teardown).
-    this.activeOptionKey = null;
-    this.activePinnedIndex = undefined;
-    this.#listboxApi = null;
-    this.#listboxRoving = null;
-    this.#jumpTimer = undefined;
-  }
-
-  /**
-   * Politely reports a server reveal, which is otherwise silent: the rows stay put while the
-   * next page is in flight, so nothing visibly changes until it lands.
-   */
-  @action
-  announceReveal(): void {
-    // A new query is also pending and also retains its rows, but it is not more results — its
-    // own count announcement covers it when it lands.
-    if (this.engine.serverRevealPending) {
-      this.#revealAnnounced = true;
-      this.a11y.announce(i18n("d_select.loading_more"), "polite");
-      return;
-    }
-
-    if (this.#revealAnnounced && !this.engine.serverPending) {
-      this.#revealAnnounced = false;
-      this.a11y.announce(i18n("d_select.loading_complete"), "polite");
-    }
-  }
-
-  /**
-   * Announces the keep-filtering hint once per query. The visible status node stays for
-   * sighted users; a live region announces unreliably on the render that mounts it.
-   */
-  @action
-  announceNarrow(): void {
-    const filter = this.engine.filter;
-    if (filter === this.#narrowAnnouncedFor) {
-      return;
-    }
-    this.#narrowAnnouncedFor = filter;
-    // Longer than the default window: the cap is typically reached while scrolling, when a
-    // screen reader is still voicing option changes and would miss a short-lived message.
-    this.a11y.announce(i18n("d_select.filter_to_narrow"), "polite", 5000);
-  }
-
-  /**
-   * Politely announces the keep-typing hint as the query grows below `@minChars`. Routed through
-   * the shared `a11y` service (like the count) rather than the visible `role="status"` node,
-   * which a freshly-mounted live region announces unreliably. Deduped on the remaining count.
-   */
-  @action
-  announceMinChars(_element: HTMLElement, [remaining]: [number]): void {
-    if (remaining === this.#lastAnnouncedRemaining) {
-      return;
-    }
-    this.#lastAnnouncedRemaining = remaining;
-    this.a11y.announce(
-      i18n("d_select.min_chars", { count: remaining }),
-      "polite"
-    );
-  }
-
-  /**
-   * Announces the limit hint through the shared `a11y` service — the visible node keeps
-   * `role="status"` for sighted users, but a freshly-mounted live region announces unreliably,
-   * so the message is spoken here instead. Deduped on the text while the hint stays mounted, so an
-   * in-place message swap that repeats reads only once.
-   */
-  @action
-  announceLimit(_element: HTMLElement, [message]: [string]): void {
-    if (message === this.#lastAnnouncedLimit) {
-      return;
-    }
-    this.#lastAnnouncedLimit = message;
-    this.a11y.announce(message, "polite");
-  }
-
-  /**
-   * A fresh entry into a limit state (the hint mounting) always announces, even when the message
-   * matches what was last announced before the hint briefly unmounted — otherwise re-reaching the
-   * cap, or reopening a select that is still at the cap, would stay silent. Later in-place updates
-   * keep deduping through {@link announceLimit}.
-   */
-  @action
-  announceLimitOnEntry(element: HTMLElement, args: [string]): void {
-    this.#lastAnnouncedLimit = null;
-    this.announceLimit(element, args);
-  }
-
-  /**
-   * A fresh entry into the below-threshold state (the hint mounting) always announces, even when
-   * the remaining count matches what was last announced before the user briefly rose above the
-   * threshold — otherwise re-entering the same partial query would stay silent. Updates while the
-   * hint stays mounted keep deduping through {@link announceMinChars}.
-   */
-  @action
-  announceMinCharsOnEntry(element: HTMLElement, args: [number]): void {
-    this.#lastAnnouncedRemaining = null;
-    this.announceMinChars(element, args);
+  resolveSingle(
+    value: unknown,
+    opts?: SelectLoadOptions
+  ): SelectItemModel | Promise<SelectItemModel> {
+    return this.engine.resolveSelection(value as SelectValue, opts) as
+      | SelectItemModel
+      | Promise<SelectItemModel>;
   }
 
   @action
@@ -2234,149 +501,33 @@ export default class DSelect extends Component<DSelectSignature> {
     nextValue: SelectValue,
     payload: SelectItemModel | SelectItemModel[] | null
   ): void {
-    if (this.args.multiple) {
-      // This must be read before forwarding because the parent applies nextValue synchronously.
-      const oldValues = makeArray(this.args.value);
-      const nextValues = makeArray(nextValue);
-      const oldKeys = new Set(oldValues.map(String));
-      const nextKeys = new Set(nextValues.map(String));
-      const added = nextValues.find((value) => !oldKeys.has(String(value)));
-      const removed = oldValues.find((value) => !nextKeys.has(String(value)));
-
-      if (added !== undefined) {
-        const item = this.engine.resolveSingleSync(added);
-        this.a11y.announce(
-          i18n("d_select.item_added", {
-            item: item ? this.engine.getItemLabel(item) : String(added),
-          }),
-          "polite"
-        );
-        if (this.engine.filter !== "") {
-          this.#suppressNextCount = true;
-          this.engine.setFilter("");
-          this.queryActive = false;
-          nextRunloop(() => (this.#suppressNextCount = false));
-        }
-      } else if (removed !== undefined) {
-        const item = this.engine.resolveSingleSync(removed);
-        this.a11y.announce(
-          i18n("d_select.item_removed", {
-            item: item ? this.engine.getItemLabel(item) : String(removed),
-          }),
-          "polite"
-        );
-      }
-    } else if (nextValue == null && this.engine.hasValue) {
-      // Choosing a value is conveyed by the row's own selected state and by the trigger reading
-      // back the new value. Clearing has neither: the row simply stops being selected and the
-      // trigger's name changes, and a name change on an already-focused element is not reliably
-      // re-read. So the one single-select transition that needs saying out loud is this one.
-      this.a11y.announce(i18n("d_select.selection_cleared"), "polite");
-    }
+    // This must be read before forwarding because the parent applies nextValue synchronously.
+    const oldValues = this.args.value;
+    this.announcer.valueChanged(oldValues, nextValue, {
+      onAddedWithQuery: () => {
+        this.engine.setFilter("");
+        this.interaction.queryActive = false;
+      },
+    });
     this.args.onChange?.(nextValue, payload);
   }
 
-  /**
-   * Removes a chip's item, stops the click from opening the menu, and restores input focus
-   * after the focused remove button unmounts. Handles a pointer click and the button's
-   * native Enter/Space activation; Backspace/Delete go through `handleChipKeydown`.
-   */
   @action
-  removeItem(item: SelectItemModel, event?: MouseEvent): void {
-    event?.stopPropagation();
-    if (this.isLocked) {
-      return;
-    }
-    this.engine.deselect(item);
-    this.filterInput?.focus();
-  }
-
-  /**
-   * Returns focus to the query input when the roving cursor steps off the right (input-side)
-   * edge of the chip group. At the left edge (`backward`) it stays on the first chip.
-   *
-   * @param direction - The travel direction that hit the edge.
-   */
-  @action
-  exitChipsToInput(direction: "forward" | "backward"): void {
-    if (direction === "forward") {
-      this.filterInput?.focus();
-    }
-  }
-
-  /**
-   * Desktop multi: keyboard handling for a focused chip.
-   *
-   * - **ArrowDown / ArrowUp** move focus back to the query input and open the overlay — the same
-   *   "go to the options" gesture the input itself uses. Focus has to land on the input because
-   *   the listbox highlight is driven by `aria-activedescendant` on the input (active mode), not
-   *   on the chip; this is also how the control is reopened after Escape.
-   * - **Backspace / Delete** remove the chip and keep the cursor in the group, landing on the
-   *   previous chip (or the input when the first/last one goes or a loading re-flash leaves no
-   *   button to focus).
-   * - **Enter / Space** are left to the button's native activation (→ `removeItem`, which returns
-   *   focus to the input), so there is a single removal path and no synthesized-click race.
-   * - **Escape** is not handled here — float-kit's document-level capture listener closes the
-   *   overlay first; focus stays on the chip (still arrow-navigable, reopen with ArrowDown).
-   *
-   * @param item - The chip's item.
-   * @param index - The chip's position, for restoring focus to a neighbor.
-   * @param event - The keydown event.
-   */
-  @action
-  handleChipKeydown(
-    item: SelectItemModel,
-    index: number,
-    event: KeyboardEvent
-  ): void {
-    if (!this.isDesktopTypeahead) {
-      return;
-    }
-
-    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-      event.preventDefault();
-      this.filterInput?.focus();
-      if (!this.isLocked) {
-        this.#menu?.show();
-      }
-      return;
-    }
-
-    if (this.isLocked) {
-      return;
-    }
-
-    if (event.key === "Backspace" || event.key === "Delete") {
-      event.preventDefault();
-      event.stopPropagation();
-      this.engine.deselect(item);
-      // The chip DOM re-renders on the value change; restore focus once it settles. A
-      // macrotask lands after the render flush, and the boolean guard falls back to the
-      // input if the group is momentarily empty.
-      nextRunloop(() => {
-        const remaining = makeArray(this.args.value).length;
-        if (
-          remaining > 0 &&
-          this.#chipRoving?.focusIndex(Math.max(0, index - 1))
-        ) {
-          return;
-        }
-        this.filterInput?.focus();
-      });
-    }
+  onFilterInput(event: Event): void {
+    this.engine.setFilter((event.target as HTMLInputElement).value);
   }
 
   <template>
     <DMenu
       @identifier={{@identifier}}
       @modalForMobile={{true}}
-      @contentRole={{this.panelContentRole}}
+      @contentRole={{this.presenter.panelContentRole}}
       @matchTriggerWidth={{true}}
       {{! The menu's default 400px cap is applied inline, exactly like the matched width, so it
         wins over it: a field wider than the cap gets a visibly narrower dropdown. A combobox
         overlay belongs to its field, so the field's width is the only bound. The CSS floor on
-        `.d-combobox__content` still stops a compact icon-only trigger from being matched down
-        to nothing. }}
+        the combobox content class still stops a compact icon-only trigger from being matched
+        down to nothing. }}
       @maxWidth="none"
       @placement={{@placement}}
       @offset={{@offset}}
@@ -2388,36 +539,43 @@ export default class DSelect extends Component<DSelectSignature> {
       {{! Typeahead: keep DMenu's default click-to-open (the whole trigger root opens the
         overlay) but disable close-on-click so clicking the already-open trigger/input does
         not toggle it shut, and focus the input on open. Resetting the query is not scoped
-        here — every variant clears on close, see resetQueryOnClose. }}
-      @untriggers={{if this.isTypeahead this.emptyTriggers}}
+        here — every variant clears on close, inside the interaction coordinator's close
+        handler. }}
+      @untriggers={{if
+        this.presenter.isTypeahead
+        this.interaction.emptyTriggers
+      }}
       {{! DMenu vetoes its own trigger open while locked, reactively. Keyboard/edit open + all
         mutate paths are gated separately in this component (they are not DMenu listeners). }}
-      @disabled={{this.isLocked}}
-      @onClose={{this.handleClose}}
-      @onShow={{this.handleShow}}
-      @onRegisterApi={{this.registerMenu}}
-      @triggerClass={{this.triggerClass}}
+      @disabled={{this.presenter.isLocked}}
+      @onClose={{this.interaction.handleClose}}
+      @onShow={{this.interaction.handleShow}}
+      @onRegisterApi={{this.interaction.registerMenu}}
+      @triggerClass={{this.presenter.triggerClass}}
       {{! Control variants put ARIA and keyboard behavior on the root; input variants put
         them on their inner input. }}
       @triggerComponent={{dElement "div"}}
-      data-unresolved={{if this.hasUnresolvedSelection "true"}}
+      data-unresolved={{if this.presenter.hasUnresolvedSelection "true"}}
       {{! Identity and description follow the combobox role, which lives here only on the
         variants without a query input; the typeahead carries them on its input instead. Applied
         unconditionally would give a typeahead two elements with the same id. }}
-      id={{unless this.isTypeahead @id}}
-      aria-invalid={{unless this.isTypeahead (booleanString @invalid)}}
-      aria-describedby={{unless this.isTypeahead @describedBy}}
-      role={{this.triggerRootRole}}
-      tabindex={{this.triggerRootTabIndex}}
-      aria-label={{this.triggerRootLabel}}
-      aria-haspopup={{this.triggerRootHasPopup}}
-      aria-controls={{this.triggerRootControls}}
-      aria-disabled={{this.triggerRootDisabled}}
-      aria-readonly={{this.triggerRootReadonly}}
-      {{on "keydown" this.handleTriggerRootKeydown}}
+      id={{unless this.presenter.isTypeahead @id}}
+      aria-invalid={{unless
+        this.presenter.isTypeahead
+        (booleanString @invalid)
+      }}
+      aria-describedby={{unless this.presenter.isTypeahead @describedBy}}
+      role={{this.presenter.triggerRootRole}}
+      tabindex={{this.presenter.triggerRootTabIndex}}
+      aria-label={{this.presenter.triggerRootLabel}}
+      aria-haspopup={{this.presenter.triggerRootHasPopup}}
+      aria-controls={{this.presenter.triggerRootControls}}
+      aria-disabled={{this.presenter.triggerRootDisabled}}
+      aria-readonly={{this.presenter.triggerRootReadonly}}
+      {{on "keydown" this.interaction.handleTriggerRootKeydown}}
       {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
-      {{on "mousedown" this.preventTriggerBlur}}
-      {{didInsert this.registerStaticController}}
+      {{on "mousedown" this.interaction.preventTriggerBlur}}
+      {{didInsert this.interaction.registerStaticController}}
       {{didInsert this.assertDisabledIsAnArg}}
       class="d-combobox"
       ...attributes
@@ -2428,280 +586,70 @@ export default class DSelect extends Component<DSelectSignature> {
           it resolves, so a bare id never flashes. }}
         <TriggerFrame
           @icon={{@icon}}
-          @caret={{this.caretIcon}}
-          @showCaret={{this.showCaret}}
-          @showClear={{this.showClear}}
-          @clearLabel={{this.clearLabel}}
-          @onClear={{this.handleClear}}
-          @onLabelActivate={{this.focusFromLabel}}
+          @caret={{this.presenter.caretIcon}}
+          @showCaret={{this.presenter.showCaret}}
+          @showClear={{this.presenter.showClear}}
+          @clearLabel={{this.presenter.clearLabel}}
+          @onClear={{this.interaction.handleClear}}
+          @onLabelActivate={{this.interaction.focusFromLabel}}
         >
           {{#if @multiple}}
-            {{! Desktop multi: the chips are a horizontal arrow-roving group whose remove buttons
-            are the navigable items (`tabindex=-1` below), so the query input stays the sole tab
-            stop. Gated to desktop — the mobile trigger has no inline input to enter the chips
-            from (Mobile M5 is separate). }}
-            {{! The chips are a real list (ul/li) so assistive tech announces them as a
-            navigable collection; display:contents keeps the items flowing inline with the
-            query input, which is a sibling of the list (an input cannot be a child of a ul). }}
-            <div class="d-combobox__chips">
-              <ul
-                class="d-combobox__chip-list"
-                aria-label={{i18n "d_select.selected_items"}}
-                {{(if
-                  this.isDesktopTypeahead
-                  (modifier
-                    dRovingFocus
-                    tabStop=false
-                    orientation="horizontal"
-                    itemSelector=".d-combobox__chip-remove"
-                    onExit=this.exitChipsToInput
-                    onRegisterApi=this.registerChipRoving
-                  )
-                )}}
-              >
-                <DAsyncContent
-                  @asyncData={{this.resolveMulti}}
-                  @context={{@value}}
-                >
-                  <:loading>
-                    {{#each this.chipSkeletons key="key" as |row|}}
-                      <li class="d-combobox__chip" data-key={{row.key}}>
-                        <DSkeleton @variant="text" @width="6ch" />
-                      </li>
-                    {{/each}}
-                  </:loading>
-                  <:content as |chips|>
-                    {{#each chips key="key" as |chip index|}}
-                      <li class="d-combobox__chip">
-                        {{! Hidden from assistive tech: the remove button's accessible name
-                      already carries this label (via aria-labelledby), so exposing the
-                      text again would double every chip during item-by-item navigation. }}
-                        <span
-                          class="d-combobox__chip-label"
-                          id="{{this.chipIdPrefix}}-{{index}}-label"
-                          aria-hidden="true"
-                        >
-                          {{#if (has-block "selection")}}
-                            {{yield chip.item to="selection"}}
-                          {{else}}
-                            <SelectionLabel
-                              @item={{chip.item}}
-                              @labelField={{this.labelField}}
-                            />
-                          {{/if}}
-                        </span>
-                        <button
-                          type="button"
-                          class="d-combobox__chip-remove"
-                          disabled={{this.isLocked}}
-                          {{! Desktop: never a tab stop — reached by arrow-roving from the input.
-                        A static -1 keeps every newly-rendered chip out of the tab order with
-                        no dependence on the modifier re-seeding. Mobile keeps native tab stops. }}
-                          tabindex={{if this.isDesktopTypeahead "-1"}}
-                          {{! Name leads with the item, then how to remove it (e.g. "Orange, Press
-                          Backspace or Delete to remove") so it reads as a selected item rather
-                          than a bare action. }}
-                          aria-labelledby="{{this.chipIdPrefix}}-{{index}}-label {{this.chipIdPrefix}}-{{index}}-remove"
-                          {{on "click" (fn this.removeItem chip.item)}}
-                          {{on
-                            "keydown"
-                            (fn this.handleChipKeydown chip.item index)
-                          }}
-                        >
-                          <span
-                            class="sr-only"
-                            id="{{this.chipIdPrefix}}-{{index}}-remove"
-                          >
-                            {{i18n "d_select.remove_hint"}}
-                          </span>
-                          {{dIcon "xmark"}}
-                        </button>
-                      </li>
-                    {{/each}}
-                  </:content>
-                </DAsyncContent>
-              </ul>
-              {{#if this.isDesktopTypeahead}}
-                <ComboboxQueryInput
-                  @engine={{this.engine}}
-                  @listboxId={{this.activeListboxId}}
-                  @expanded={{menuArgs.expanded}}
-                  @label={{this.ariaLabelText}}
-                  @displayValue=""
-                  @placeholder={{this.queryPlaceholder}}
-                  @editing={{this.queryActive}}
-                  @ariaOwns={{true}}
-                  @shouldSelectOnFocus={{this.shouldSelectOnFocus}}
-                  @onOpen={{menuArgs.show}}
-                  @onRequestClose={{menuArgs.close}}
-                  @onBlur={{this.handleTriggerBlur}}
-                  @onEdit={{this.beginQuery}}
-                  @registerInput={{this.registerTriggerInput}}
-                  @disabled={{this.isDisabled}}
-                  @readonly={{this.isReadonly}}
-                  id={{@id}}
-                  aria-invalid={{booleanString @invalid}}
-                  aria-describedby={{this.describedBy
-                    (if this.engine.hasValue this.chipHintId)
-                    @describedBy
-                  }}
-                  {{on "keydown" this.handleInputKeydown}}
-                />
-                {{#if this.engine.hasValue}}
-                  <span id={{this.chipHintId}} class="sr-only">
-                    {{i18n "d_select.chips_hint"}}
-                  </span>
-                {{/if}}
-              {{/if}}
-            </div>
-          {{else if this.isTypeahead}}
-            {{! Composite box: [selection presentation] · [query input] · [caret]. The input
-            displays either the selected-label fallback or the query; custom selection markup
-            is a sibling, hidden from the first edit until close. A click anywhere on the
-            trigger opens the overlay (DMenu's trigger-root click; onShow focuses the input).
-            On mobile the query input lives in the modal (below), so tapping the trigger opens
-            it there. }}
-            {{#unless this.queryActive}}
-              {{#if this.isMobileTypeahead}}
-                <span class="d-combobox__presentation">
-                  {{#if this.engine.hasValue}}
-                    <DAsyncContent
-                      @asyncData={{this.resolveSingle}}
-                      @context={{@value}}
-                    >
-                      <:loading><DSkeleton
-                          @variant="text"
-                          @width="8ch"
-                        /></:loading>
-                      <:content as |selected|>
-                        {{#if (has-block "selection")}}
-                          {{yield selected to="selection"}}
-                        {{else}}
-                          <SelectionLabel
-                            @item={{selected}}
-                            @labelField={{this.labelField}}
-                          />
-                        {{/if}}
-                      </:content>
-                    </DAsyncContent>
-                  {{else}}
-                    <span class="d-combobox__placeholder">
-                      {{or @placeholder (i18n "d_select.placeholder")}}
-                    </span>
-                  {{/if}}
-                </span>
-              {{else if (has-block "selection")}}
-                {{#if (and this.engine.hasValue (not this.triggerFocused))}}
-                  <span
-                    class="d-combobox__presentation"
-                    id={{this.selectionId}}
-                  >
-                    <DAsyncContent
-                      @asyncData={{this.resolveSingle}}
-                      @context={{@value}}
-                    >
-                      <:loading><DSkeleton
-                          @variant="text"
-                          @width="8ch"
-                        /></:loading>
-                      <:content as |selected|>{{yield
-                          selected
-                          to="selection"
-                        }}</:content>
-                    </DAsyncContent>
-                  </span>
-                {{/if}}
-              {{else if this.engine.hasValue}}
-                <DAsyncContent
-                  @asyncData={{this.resolveSingle}}
-                  @context={{@value}}
-                >
-                  <:loading>
-                    <span class="d-combobox__presentation">
-                      <DSkeleton @variant="text" @width="8ch" />
-                    </span>
-                  </:loading>
-                  <:content></:content>
-                </DAsyncContent>
-              {{/if}}
-            {{/unless}}
-            {{#if this.isDesktopTypeahead}}
-              <ComboboxQueryInput
-                @engine={{this.engine}}
-                @listboxId={{this.activeListboxId}}
-                @expanded={{menuArgs.expanded}}
-                @label={{this.ariaLabelText}}
-                {{! No placeholder once a value is chosen: the value is shown either in this input
-                  (default) or in the sibling selection presentation (with a `:selection` block),
-                  so a placeholder would otherwise sit next to it. }}
-                @placeholder={{unless
-                  this.engine.hasValue
-                  (or @placeholder (i18n "d_select.placeholder"))
-                }}
-                @displayValue={{if
-                  (and (has-block "selection") (not this.triggerFocused))
-                  ""
-                  this.fallbackSelectionLabel
-                }}
-                @selectLabelOnAppear={{has-block "selection"}}
-                @editing={{this.queryActive}}
-                @ariaOwns={{true}}
-                @shouldSelectOnFocus={{this.shouldSelectOnFocus}}
-                @onOpen={{menuArgs.show}}
-                @onRequestClose={{menuArgs.close}}
-                @onBlur={{this.handleTriggerBlur}}
-                @onEdit={{this.beginQuery}}
-                @registerInput={{this.registerTriggerInput}}
-                @disabled={{this.isDisabled}}
-                @readonly={{this.isReadonly}}
-                {{! Points at the sibling selection markup for exactly as long as that markup is
-                  what carries the value. Once focused the label moves into the input itself, so
-                  keeping the description would announce the selection twice. Mirrors the
-                  condition that renders the presentation span. }}
-                id={{@id}}
-                aria-invalid={{booleanString @invalid}}
-                aria-describedby={{this.describedBy
-                  (if
-                    (and
-                      (has-block "selection")
-                      this.engine.hasValue
-                      (not this.triggerFocused)
-                    )
-                    this.selectionId
-                  )
-                  @describedBy
-                }}
-                {{on "keydown" this.handleInputKeydown}}
-                {{on "focus" this.handleTriggerFocus}}
-              />
-            {{/if}}
-          {{else if this.iconOnly}}
-            {{! Icon-only trigger: the leading icon and caret (from TriggerFrame) are the whole
-            control; the selected value and placeholder text are intentionally suppressed. }}
-          {{else}}
-            <DAsyncContent
-              @asyncData={{this.resolveSingle}}
-              @context={{@value}}
+            <MultiChips
+              @value={{@value}}
+              @engine={{this.engine}}
+              @presenter={{this.presenter}}
+              @listboxId={{this.activeListboxId}}
+              @expanded={{menuArgs.expanded}}
+              @editing={{this.interaction.queryActive}}
+              @id={{@id}}
+              @invalid={{@invalid}}
+              @describedBy={{@describedBy}}
+              @hasSelectionBlock={{has-block "selection"}}
+              @resolveSelection={{this.resolveMulti}}
+              @composeDescribedBy={{this.describedBy}}
+              @showMenu={{menuArgs.show}}
+              @closeMenu={{menuArgs.close}}
+              @focusInput={{this.interaction.focusInput}}
+              @focusChip={{this.interaction.focusChip}}
+              @onRegisterChipRoving={{this.interaction.registerChipRoving}}
+              @shouldSelectOnFocus={{this.interaction.shouldSelectOnFocus}}
+              @onEdit={{this.interaction.beginQuery}}
+              @registerInput={{this.interaction.registerTriggerInput}}
+              @onBlur={{this.interaction.handleTriggerBlur}}
+              @onInputKeydown={{this.interaction.handleInputKeydown}}
+              @shouldCorrectKeyboardOcclusion={{this.interaction.shouldCorrectKeyboardOcclusion}}
             >
-              <:loading><DSkeleton @variant="text" @width="8ch" /></:loading>
-              <:content as |selected|>
-                <span class="d-combobox__value">
-                  {{#if (has-block "selection")}}
-                    {{yield selected to="selection"}}
-                  {{else}}
-                    <SelectionLabel
-                      @item={{selected}}
-                      @labelField={{this.labelField}}
-                    />
-                  {{/if}}
-                </span>
-              </:content>
-              <:empty>
-                <span class="d-combobox__placeholder">
-                  {{or @placeholder (i18n "d_select.placeholder")}}
-                </span>
-              </:empty>
-            </DAsyncContent>
+              <:selection as |item|>{{yield item to="selection"}}</:selection>
+            </MultiChips>
+          {{else}}
+            <SingleTriggerDisplay
+              @value={{@value}}
+              @engine={{this.engine}}
+              @presenter={{this.presenter}}
+              @listboxId={{this.activeListboxId}}
+              @expanded={{menuArgs.expanded}}
+              @placeholder={{@placeholder}}
+              @editing={{this.interaction.queryActive}}
+              @triggerFocused={{this.interaction.triggerFocused}}
+              @id={{@id}}
+              @invalid={{@invalid}}
+              @describedBy={{@describedBy}}
+              @selectionId={{this.selectionId}}
+              @hasSelectionBlock={{has-block "selection"}}
+              @resolveSelection={{this.resolveSingle}}
+              @composeDescribedBy={{this.describedBy}}
+              @showMenu={{menuArgs.show}}
+              @closeMenu={{menuArgs.close}}
+              @shouldSelectOnFocus={{this.interaction.shouldSelectOnFocus}}
+              @onBlur={{this.interaction.handleTriggerBlur}}
+              @onEdit={{this.interaction.beginQuery}}
+              @registerInput={{this.interaction.registerTriggerInput}}
+              @onInputKeydown={{this.interaction.handleInputKeydown}}
+              @onFocus={{this.interaction.handleTriggerFocus}}
+              @shouldCorrectKeyboardOcclusion={{this.interaction.shouldCorrectKeyboardOcclusion}}
+            >
+              <:selection as |item|>{{yield item to="selection"}}</:selection>
+            </SingleTriggerDisplay>
           {{/if}}
         </TriggerFrame>
       </:trigger>
@@ -2709,11 +657,17 @@ export default class DSelect extends Component<DSelectSignature> {
       <:content as |menuArgs|>
         <div
           class="d-combobox__panel"
-          {{didInsert this.trackLoadFeedback this.engine.serverPending}}
-          {{didUpdate this.trackLoadFeedback this.engine.serverPending}}
-          {{willDestroy this.releaseLoadFeedback}}
+          {{didInsert
+            this.feedback.trackLoadFeedback
+            this.engine.serverPending
+          }}
+          {{didUpdate
+            this.feedback.trackLoadFeedback
+            this.engine.serverPending
+          }}
+          {{willDestroy this.feedback.releaseLoadFeedback}}
         >
-          {{#if this.isPanelSearchable}}
+          {{#if this.presenter.isPanelSearchable}}
             <DFilterInput
               class="d-combobox__filter"
               role="combobox"
@@ -2724,14 +678,14 @@ export default class DSelect extends Component<DSelectSignature> {
               {{! The disclosure trigger hands focus straight here on open, so this is the first
                 thing a reader meets. A placeholder is a last-resort name source that screen
                 readers treat inconsistently — name it after the field it narrows. }}
-              aria-label={{this.ariaLabelText}}
-              placeholder={{this.searchPlaceholderText}}
+              aria-label={{this.presenter.ariaLabelText}}
+              placeholder={{this.presenter.searchPlaceholderText}}
               @value={{this.engine.filter}}
               @filterAction={{this.onFilterInput}}
               @icons={{hash left="magnifying-glass"}}
-              {{didInsert this.captureFilter}}
+              {{didInsert this.interaction.captureFilter}}
             />
-          {{else if this.isMobileTypeahead}}
+          {{else if this.presenter.isMobileTypeahead}}
             {{! Mobile: the query input lives inside the modal (an external host input can't
               function behind an aria-modal). No aria-owns (input + listbox share the modal
               subtree); no blur-close (the modal owns dismissal). }}
@@ -2740,20 +694,23 @@ export default class DSelect extends Component<DSelectSignature> {
               @engine={{this.engine}}
               @listboxId={{this.activeListboxId}}
               @expanded={{menuArgs.expanded}}
-              @label={{this.ariaLabelText}}
-              @placeholder={{this.searchPlaceholderText}}
+              @label={{this.presenter.ariaLabelText}}
+              @placeholder={{this.presenter.searchPlaceholderText}}
               @onOpen={{menuArgs.show}}
               @onRequestClose={{menuArgs.close}}
-              @editing={{this.queryActive}}
-              @onEdit={{this.beginQuery}}
-              @registerInput={{this.captureFilter}}
-              @disabled={{this.isDisabled}}
-              @readonly={{this.isReadonly}}
-              {{on "keydown" this.handleInputKeydown}}
+              @editing={{this.interaction.queryActive}}
+              @onEdit={{this.interaction.beginQuery}}
+              @registerInput={{this.interaction.captureFilter}}
+              @disabled={{this.presenter.isDisabled}}
+              @readonly={{this.presenter.isReadonly}}
+              {{keepAboveKeyboard
+                this.interaction.shouldCorrectKeyboardOcclusion
+              }}
+              {{on "keydown" this.interaction.handleInputKeydown}}
             />
           {{/if}}
 
-          {{#if this.limitMessage}}
+          {{#if this.presenter.limitMessage}}
             {{#unless this.engine.belowMinChars}}
               {{! A pinned top zone (sibling of the list, above it), so the cap/floor hint never
                 stacks with the footer or an error body. Suppressed while below the query minimum:
@@ -2762,287 +719,66 @@ export default class DSelect extends Component<DSelectSignature> {
               <div
                 class="d-combobox__limit"
                 role="status"
-                {{didInsert this.announceLimitOnEntry this.limitMessage}}
-                {{didUpdate this.announceLimit this.limitMessage}}
+                {{didInsert
+                  this.announcer.announceLimitOnEntry
+                  this.presenter.limitMessage
+                }}
+                {{didUpdate
+                  this.announcer.announceLimit
+                  this.presenter.limitMessage
+                }}
               >
-                {{this.limitMessage}}
+                {{this.presenter.limitMessage}}
               </div>
             {{/unless}}
           {{/if}}
 
           {{#if this.engine.belowMinChars}}
             {{! Below the minimum query length: no source call (no request, no skeleton flash),
-              and the truthy-`[]` routing / stray create-row are sidestepped by not rendering the
-              list at all. The hint is announced through the a11y service (see announceMinChars);
+              and the truthy-empty-array routing / stray create-row are sidestepped by not
+              rendering the list at all. The hint is announced through the a11y service (see announceMinChars);
               the visible node stays a status region for sighted users. }}
             <div
               class="d-combobox__min-chars"
               role="status"
               {{didInsert
-                this.announceMinCharsOnEntry
+                this.announcer.announceMinCharsOnEntry
                 this.engine.remainingMinChars
               }}
-              {{didUpdate this.announceMinChars this.engine.remainingMinChars}}
+              {{didUpdate
+                this.announcer.announceMinChars
+                this.engine.remainingMinChars
+              }}
             >
               {{i18n "d_select.min_chars" count=this.engine.remainingMinChars}}
             </div>
           {{else}}
-            <DAsyncContent
-              @asyncData={{this.loadListContent}}
-              @context={{this.engine.loadContext}}
-              @debounce={{this.debounce}}
-              @retainWhileReloading={{this.retainRowsWhileReloading}}
+            <SelectListbox
+              @engine={{this.engine}}
+              @presenter={{this.presenter}}
+              @feedback={{this.feedback}}
+              @listbox={{this.listbox}}
+              @announcer={{this.announcer}}
+              @loadListContent={{this.loadListContent}}
+              @filterInput={{this.interaction.filterInput}}
+              @listboxId={{this.listboxId}}
+              @selectedIcon={{@selectedIcon}}
+              @multiple={{@multiple}}
+              @label={{@label}}
+              @noResultsLabel={{@noResultsLabel}}
+              @hasItemBlock={{has-block "item"}}
+              @hasGroupHeaderBlock={{has-block "groupHeader"}}
+              @hasEmptyBlock={{has-block "empty"}}
+              @hasErrorBlock={{has-block "error"}}
+              @onOptionMousedown={{this.interaction.preventPointerBlur}}
             >
-              <:loading>
-                <ul
-                  class="d-combobox__listbox d-combobox__listbox--loading"
-                  aria-busy="true"
-                >
-                  {{#each this.skeletonRows key="key" as |row|}}
-                    <li class="d-combobox__skeleton" data-key={{row.key}}>
-                      <DSkeleton @variant="text" />
-                    </li>
-                  {{/each}}
-                </ul>
-              </:loading>
-
-              <:content as |content|>
-                {{#let (this.buildListItems content.rawItems) as |items|}}
-                  {{#if items.length}}
-                    <DVirtualList
-                      @as="ul"
-                      @role="listbox"
-                      @ownedRow={{true}}
-                      @key="key"
-                      @items={{items}}
-                      @estimateSize={{this.estimateRowSize}}
-                      @onReachEnd={{this.engine.revealMore}}
-                      @onRegisterApi={{this.registerListboxApi}}
-                      @pinnedIndex={{this.seedPinnedIndex items}}
-                      {{! First render only, so it reveals the held value on open and never
-                      fights a reader who has scrolled. Centred rather than aligned to the top:
-                      a selection pinned to the first row hides the options around it, which are
-                      the reason the list was opened. }}
-                      @initialIndex={{this.revealRowIndex items}}
-                      @initialAlign="center"
-                      class="d-combobox__listbox"
-                      id={{this.listboxId}}
-                      aria-label={{or @label (i18n "d_select.label")}}
-                      aria-multiselectable={{booleanString @multiple}}
-                      {{! A reveal or re-query keeps its rows mounted, so aria-busy reports the
-                    fetch itself; the frontier skeleton is the sighted counterpart. }}
-                      aria-busy={{booleanString
-                        this.engine.serverPending
-                        omitFalse=false
-                      }}
-                      {{! Keyed on the engine's filter, NOT the resolved payload's. This
-                    modifier does no value comparison; it re-runs whenever a tag it consumed
-                    is dirtied, and reading the payload entangles the async resolution itself,
-                    which dirties on every load. Keyed that way a reveal counts as a change and
-                    throws the reader back to row one at the moment they scrolled for more. The
-                    filter's own tag dirties only on a real query change. }}
-                      {{didUpdate this.resetListScroll this.engine.filter}}
-                      {{willDestroy this.releaseListbox}}
-                      {{didInsert this.recordRowCount items.length}}
-                      {{didUpdate this.recordRowCount items.length}}
-                      {{didInsert
-                        this.announceCountOnEntry
-                        items.length
-                        this.engine.total
-                        content.filter
-                      }}
-                      {{! The resolved filter is a key as much as an argument: a query that lands
-                    on the rows it already had changes neither count, so without it this never
-                    re-runs and a reader typing on hears nothing at all. }}
-                      {{didUpdate
-                        this.announceCount
-                        items.length
-                        this.engine.total
-                        content.filter
-                      }}
-                      {{didUpdate
-                        this.announceReveal
-                        this.engine.serverPending
-                      }}
-                      {{! Static in the mobile modal moves DOM focus into the listbox; every other
-                    surface keeps focus on its controller (no-op there). }}
-                      {{didInsert this.focusListboxIfSimple}}
-                      {{! active mode: the controller (query input, or the desktop-static trigger
-                    div) keeps focus and drives the highlight via aria-activedescendant. Static
-                    in the mobile modal uses focus mode (roving tabindex through the options),
-                    since its out-of-modal trigger cannot be the controller. Typeahead and
-                    desktop static auto-highlight the first option; re-seed when async lands. }}
-                      {{dRovingFocus
-                        selectionMode=(if
-                          this.usesActiveRoving "active" "focus"
-                        )
-                        controllerElement=(if
-                          this.usesActiveRoving this.filterInput
-                        )
-                        itemSelector="[role=option]"
-                        itemsKey=(if
-                          this.isTypeahead items this.rovingNonTypeaheadKey
-                        )
-                        resetKey=content.filter
-                        logicalCount=(this.navigableCount items)
-                        onActivate=this.activateElement
-                        onActiveChange=this.trackActiveOption
-                        onJump=this.handleJump
-                        onRegisterApi=this.registerListboxRoving
-                        autoActivateFirst=this.shouldAutoActivateFirst
-                        autoActivateSelected=this.shouldActivateSelected
-                        activationRemovesSelected=@multiple
-                      }}
-                      as |descriptor row|
-                    >
-                      {{! A windowed list can yield a row whose backing item briefly does not
-                      exist: when the items array shrinks, the virtualizer's last published
-                      window still references the old indices until it re-flushes. Render
-                      nothing for that transient slot rather than dereferencing an absent
-                      descriptor. }}
-                      {{#if descriptor}}
-                        {{#let (this.optionRow descriptor) as |option|}}
-                          {{#if option.flags.group}}
-                            {{! A group header: presentational, so it is skipped by roving
-                            navigation and carries no option position. }}
-                            <li
-                              class="d-combobox__group-header"
-                              role="presentation"
-                              id={{option.headerId}}
-                              data-option-key={{option.key}}
-                              {{row.place row.start row.index}}
-                              {{row.measure}}
-                            >
-                              {{#if (has-block "groupHeader")}}
-                                {{yield option.item to="groupHeader"}}
-                              {{else}}
-                                {{selectItemLabel option.item "label"}}
-                              {{/if}}
-                            </li>
-                          {{else if option.flags.divider}}
-                            <li
-                              class="d-combobox__divider"
-                              role="presentation"
-                              aria-hidden="true"
-                              {{row.place row.start row.index}}
-                              {{row.measure}}
-                            ></li>
-                          {{else if option}}
-                            <SelectItem
-                              @descriptor={{option}}
-                              @engine={{this.engine}}
-                              @multiple={{@multiple}}
-                              @selectedIcon={{@selectedIcon}}
-                              @locked={{this.isLocked}}
-                              @active={{eq option.key this.activeOptionKey}}
-                              aria-posinset={{option.posInSet}}
-                              aria-setsize={{option.setSize}}
-                              aria-describedby={{option.groupHeaderId}}
-                              data-option-key={{option.key}}
-                              data-logical-index={{option.logicalIndex}}
-                              {{row.place row.start row.index}}
-                              {{row.measure}}
-                              {{! Keep focus in the trigger input on pointer-select so the input
-                          does not blur-close the menu before the click resolves (needed for
-                          action rows, which keep the menu open). mousedown is required:
-                          blur fires before click; the handler no-ops for non-typeahead. }}
-                              {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
-                              {{on "mousedown" this.preventPointerBlur}}
-                            >
-                              {{#if (has-block "item")}}
-                                {{yield option.item to="item"}}
-                              {{else}}
-                                {{selectItemLabel option.item this.labelField}}
-                              {{/if}}
-                            </SelectItem>
-                          {{else}}
-                            {{! Frontier placeholder for an in-flight reveal: presentation, no
-                        posinset, so pending rows never enter the option set. }}
-                            <li
-                              class="d-combobox__skeleton"
-                              role="presentation"
-                              aria-hidden="true"
-                              {{row.place row.start row.index}}
-                              {{row.measure}}
-                            >
-                              <DSkeleton @variant="text" />
-                            </li>
-                          {{/if}}
-                        {{/let}}
-                      {{/if}}
-                    </DVirtualList>
-
-                    {{#if this.engine.atCapWithMore}}
-                      {{! Sits outside the listbox, which admits only list items. The text also
-                    goes through the a11y service because a live region announces unreliably on
-                    the render that mounts it. }}
-                      <div
-                        class="d-combobox__narrow"
-                        role="status"
-                        {{didInsert this.announceNarrow}}
-                      >
-                        {{i18n "d_select.filter_to_narrow"}}
-                      </div>
-                    {{/if}}
-                  {{else}}
-                    {{! Recorded here too, not only on the list: a query that found nothing is a
-                      rendered state with a row count of zero, and leaving the previous count
-                      standing would size the next reload's skeleton to a list that is gone. }}
-                    {{! The update hook is load-bearing, not belt-and-braces. The async content
-                      wrapper reports the same render mode for both the resolved and the
-                      retained-pending phase, so Glimmer keeps this node mounted across two
-                      successive empty queries — an insert-only announcement would report the
-                      first and then stay silent for the rest of the session.
-
-                      Keyed on the resolved filter, never the engine filter, which advances on
-                      the keystroke. That would report an empty result for a query still in
-                      flight, over rows that still belong to the previous one. }}
-                    <div
-                      class="d-combobox__empty"
-                      role="status"
-                      {{didInsert this.recordRowCount 0}}
-                      {{didInsert this.announceNoResults content.filter}}
-                      {{didUpdate this.announceNoResults content.filter}}
-                    >
-                      {{#if (has-block "empty")}}
-                        {{yield to="empty"}}
-                      {{else}}
-                        {{or @noResultsLabel (i18n "d_select.no_results")}}
-                      {{/if}}
-                    </div>
-                  {{/if}}
-                {{/let}}
-              </:content>
-
-              <:error as |error|>
-                {{! A muted, recoverable state matching the empty/min-chars language — not a
-                  heavy alert box, but still role=alert so the failure is announced (an inserted
-                  role=status is not reliably spoken).
-
-                  The container is the component's, exactly as the empty state's is: a block
-                  supplies the contents, never the wrapper. It used to replace the whole thing,
-                  so supplying one silently dropped both the alert role and the retry control
-                  and the failure stopped being announced or recoverable. `reload` is still
-                  yielded, so a block that wants its own retry control can have one. }}
-                <div class="d-combobox__error" role="alert">
-                  {{#if (has-block "error")}}
-                    {{yield error this.engine.reload to="error"}}
-                  {{else}}
-                    <span class="d-combobox__error-message">
-                      {{dIcon "triangle-exclamation"}}
-                      {{i18n "d_select.load_error"}}
-                    </span>
-                    {{#if this.retryable}}
-                      <DButton
-                        class="d-combobox__retry btn-flat"
-                        @action={{this.engine.reload}}
-                        @label="d_select.retry"
-                      />
-                    {{/if}}
-                  {{/if}}
-                </div>
-              </:error>
-            </DAsyncContent>
+              <:item as |item|>{{yield item to="item"}}</:item>
+              <:groupHeader as |item|>
+                {{yield item to="groupHeader"}}
+              </:groupHeader>
+              <:empty>{{yield to="empty"}}</:empty>
+              <:error as |error retry|>{{yield error retry to="error"}}</:error>
+            </SelectListbox>
           {{/if}}
           {{#if (has-block "footer")}}
             {{! A labeled region pinned below the list (a sibling of the listbox, never inside it).
@@ -3051,7 +787,7 @@ export default class DSelect extends Component<DSelectSignature> {
               class="d-combobox__footer"
               role="group"
               aria-label={{i18n "d_select.footer_label"}}
-              {{on "focusout" this.handleFooterFocusOut}}
+              {{on "focusout" this.interaction.handleFooterFocusOut}}
             >
               {{yield
                 (hash

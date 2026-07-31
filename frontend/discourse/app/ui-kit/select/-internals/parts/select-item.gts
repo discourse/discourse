@@ -81,8 +81,8 @@ export default class SelectItem extends Component<SelectItemSignature> {
       {{#if @selectedIcon}}
         {{dIcon @selectedIcon class="d-combobox__option-selected-icon"}}
       {{else if @multiple}}
-        {{! The outline pair reads as a checkbox, and the solid variant is absent from the
-        icon sprite. }}
+        {{! The hollow square pair reads as a checkbox, and the solid variant is absent from
+        the icon sprite. }}
         {{dIcon
           (if @descriptor.flags.selected "far-square-check" "far-square")
           class="d-combobox__option-selected-icon --checkbox"

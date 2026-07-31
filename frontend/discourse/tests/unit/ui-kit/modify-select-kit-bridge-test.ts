@@ -225,6 +225,41 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     assert.strictEqual(seen.size, 1, "the same facade instance is reused");
   });
 
+  test("the facade survives a runtime multiple flip (engine identity is stable)", function (assert) {
+    const seen = new Set();
+    withPluginApi((api) => {
+      api.modifySelectKit("test-select").appendContent((component) => {
+        seen.add(component);
+        return { id: "x", name: "X" };
+      });
+    });
+
+    let multiple = false;
+    const element = document.createElement("div");
+    const engine = new SelectEngine({
+      identifiers: ["test-select"],
+      items: [],
+      getMultiple: () => multiple,
+      getValue: () => (multiple ? [] : null),
+      legacy: {
+        owner: getOwner(this),
+        getElement: () => element,
+        isDestroyed: () => false,
+      },
+    });
+
+    engine.buildItems([]);
+    multiple = true;
+    engine.buildItems([]);
+
+    assert.true(engine.multiple, "the flip is live on the engine");
+    assert.strictEqual(
+      seen.size,
+      1,
+      "the same facade instance is reused across the flip"
+    );
+  });
+
   test("suppressed identifiers are not bridged (no double-insert with a native path)", function (assert) {
     withPluginApi((api) => {
       api

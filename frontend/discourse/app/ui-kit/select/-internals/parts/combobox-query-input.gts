@@ -93,11 +93,6 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
       : (this.args.displayValue ?? this.args.engine.filter);
   }
 
-  /** No typing, no open when disabled or readonly. */
-  get locked(): boolean {
-    return !!(this.args.disabled || this.args.readonly);
-  }
-
   /** `aria-controls` only resolves to a live element while the listbox is rendered. */
   get controlsId(): string | undefined {
     return this.args.expanded ? this.args.listboxId : undefined;
@@ -172,7 +167,7 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
       (event.key === "ArrowDown" || event.key === "ArrowUp")
     ) {
       event.preventDefault();
-      if (!this.locked) {
+      if (!this.#locked) {
         this.args.onOpen();
       }
       return;
@@ -206,6 +201,11 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
     }
   }
 
+  /** No typing, no open when disabled or readonly. */
+  get #locked(): boolean {
+    return !!(this.args.disabled || this.args.readonly);
+  }
+
   #selectDisplayValue(element: HTMLInputElement): void {
     if (
       !this.args.editing &&
@@ -217,7 +217,7 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
   }
 
   #commitQuery(value: string): void {
-    if (this.locked) {
+    if (this.#locked) {
       return;
     }
     this.args.onEdit?.();

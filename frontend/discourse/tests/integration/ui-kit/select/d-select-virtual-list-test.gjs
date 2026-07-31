@@ -490,6 +490,11 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       <template><DSelect @items={{GROUPED_ITEMS}} @groupBy="group" /></template>
     );
     await openSelect();
+    // The windowed list publishes its first window off a ResizeObserver measurement, which
+    // `settled()` does not await — wait for the window before asserting its contents.
+    await waitUntil(
+      () => findAll(OPTION_SELECTOR).length === GROUPED_ITEMS.length
+    );
 
     assert
       .dom(GROUP_HEADER_SELECTOR)

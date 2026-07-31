@@ -10,6 +10,33 @@ what `@onChange` reports.
 See the arg reference in `d-select.gts` (`Args` block) and the option reference in
 `select-engine.ts` (`SelectEngineOptions`).
 
+## Architecture
+
+Both public modules are facades over focused collaborators in `-internals/`, organized by
+kind. Consumers and tests never import from `-internals/`; the public API surface lives
+entirely on `d-select.gts` and `select-engine.ts`.
+
+- `-internals/engine/` — the headless layer behind `SelectEngine`, which stays the single
+  stable identity (the legacy bridge and plugin hooks key on the engine instance):
+  `select-sources.ts` (reactive state + local/paged sources), `select-options.ts` (live
+  option readers with cross-option defaults), `list-composer.ts` (the ordered `buildItems`
+  compiler and descriptor stamping), `selection-actions.ts` (selection operations, limits,
+  and change-emission ordering), `value-resolver.ts` (value→item resolution and its caches).
+- `-internals/coordinators/` — non-rendering component-side classes constructed once by
+  `DSelect` and configured downward with thunks (never holding a component reference):
+  `variant-presenter.ts` (variant/ARIA policy), `select-announcer.ts` (screen-reader
+  announcement arbitration), `windowed-list-coordinator.ts` (windowing, pinning, and jump
+  navigation), `interaction-coordinator.ts` (open/close, focus, and pointer session),
+  `load-feedback.ts` (loading timers and skeleton sizing).
+- `-internals/parts/` — the rendering subcomponents: trigger pieces (`trigger-frame`,
+  `combobox-query-input`, `multi-chips`, `single-trigger-display`, `selection-label`) and
+  the list (`select-listbox`, `select-item`). Parts receive the stable helper objects
+  (`@engine`, `@presenter`, …) plus per-slot inputs; they add no wrapper DOM.
+- `-internals/modifiers/` — element-attached behavior (`keep-above-keyboard.ts`, the iOS
+  keyboard-occlusion correction).
+- `-internals/modify-select-kit-bridge.ts` — the deprecated legacy compatibility bridge,
+  slated for removal.
+
 ## Custom row content
 
 Six named blocks control what the component renders: `:item`, `:selection`, `:groupHeader`,
@@ -143,6 +170,20 @@ by mechanism.
   arg produces one yet; it is groundwork for the panel-region work below.
 - **Misc knobs** — hidden native form input; hidden-value exclusion; autofocus / open-on-render;
   a consumer keydown boundary hook; configurable render cap and filter icon.
+
+### Deferred decisions
+
+- **Engine visibility** — `SelectEngine` stays a public headless entry point for now. Whether
+  to narrow the sanctioned surface (keep this module exporting only the types and item
+  helpers, move the class behind `-internals/engine/`) is deferred until a second renderer
+  with real requirements exists: an internal class can be promoted later with one deliberate
+  re-export, while a public one cannot be demoted once external code imports it. Revisit in a
+  follow-up before external consumers appear.
+- **`DIconGridPicker` as the first headless consumer** — the most concrete candidate for a
+  second engine renderer: it currently re-implements filtering and result-count announcements
+  by hand and shares the roving-focus and announcement infrastructure already, while its grid
+  rendering stays its own concern. A spike porting it onto the engine would answer the
+  visibility question above with a second real consumer instead of a hypothesis.
 
 ### Deferred / out of scope
 

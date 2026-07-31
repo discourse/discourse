@@ -822,11 +822,11 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
   });
 });
 
-// Oracle for U-D change B2 (F1): aria-setsize is indeterminate (-1) while a source still
-// has unloaded rows. A server that declares more than it has loaded cannot honestly say
-// "option N of TOTAL", so setSize is -1 while each loaded row keeps its known position. A
-// COMPLETE server, and a CLIENT source (all rows in memory), both keep their true, knowable
-// size.
+// aria-setsize describes the complete set, never the mounted window, and never the -1
+// sentinel (no two engines interpret it alike, and its own AAM tells user agents to
+// substitute 1). A source that declares a total is sized by it while its tail loads; a
+// source with no total is sized by the rows loaded so far — the ones a reader can reach —
+// and "more exists" is carried by the announcements able to say so.
 module("Unit | ui-kit | SelectEngine | setSize", function (hooks) {
   setupTest(hooks);
 
@@ -837,7 +837,7 @@ module("Unit | ui-kit | SelectEngine | setSize", function (hooks) {
     }));
   }
 
-  test("a partially-loaded server source reports an indeterminate setSize", async function (assert) {
+  test("a partially-loaded server source with a declared total is sized by it", async function (assert) {
     const load = () => ({ items: rows(10), total: 900 });
     const engine = new SelectEngine({ load });
 
@@ -851,8 +851,8 @@ module("Unit | ui-kit | SelectEngine | setSize", function (hooks) {
     );
     assert.strictEqual(
       first.setSize,
-      -1,
-      "size is indeterminate while the source has rows it has not loaded"
+      900,
+      "the declared total sizes the set while its tail loads"
     );
     assert.strictEqual(
       first.posInSet,

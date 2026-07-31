@@ -1,19 +1,23 @@
-import { cached, tracked } from "@glimmer/tracking";
-import { assert } from "@ember/debug";
+import { cached } from "@glimmer/tracking";
 import type Owner from "@ember/owner";
-import { trackedMap } from "@ember/reactive/collections";
 import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
+import ListComposer from "discourse/ui-kit/select/-internals/engine/list-composer";
+import SelectOptionsView from "discourse/ui-kit/select/-internals/engine/select-options";
 import {
-  applyBehaviorTransformer,
-  applyValueTransformer,
-} from "discourse/lib/transformer";
+  filterLocal,
+  localItems,
+  LocalSource,
+  PagedSource,
+  type SelectSource,
+  SelectState,
+} from "discourse/ui-kit/select/-internals/engine/select-sources";
+import SelectionActions from "discourse/ui-kit/select/-internals/engine/selection-actions";
+import ValueResolver from "discourse/ui-kit/select/-internals/engine/value-resolver";
 import {
   applyLegacySelectKitContent,
   applyLegacySelectKitOnChange,
 } from "discourse/ui-kit/select/-internals/modify-select-kit-bridge";
-
-const MAX_RENDERED = 200;
 
 /**
  * A single item's value id. Items carry arbitrary, dynamically-keyed fields, so the
@@ -107,6 +111,16 @@ export interface SelectDescriptor {
     __none: boolean;
   };
   /**
+   * Zero-based position among navigable list options. Structural and disabled rows leave it
+   * undefined, as does the trigger/chip descriptor path.
+   */
+  logicalIndex?: number;
+  /**
+   * Zero-based group-header ordinal. A header carries its own ordinal and following options
+   * inherit it until a divider or another header ends the run. Ungrouped rows leave it undefined.
+   */
+  groupOrdinal?: number;
+  /**
    * 1-based position in the whole result set, independent of how many rows are mounted.
    * Stamped by {@link SelectEngine#buildItems} only; the trigger/chip path leaves it
    * undefined.
@@ -196,7 +210,19 @@ export interface SelectLegacyContext {
   isDestroyed?: () => boolean;
 }
 
-/** Constructor options for a {@link SelectEngine}. */
+/**
+ * Constructor options for a {@link SelectEngine}.
+ *
+ * Function-valued options are invoked with an unspecified receiver — read the provided
+ * arguments, never `this`. Where a callback needs the engine, it is passed explicitly
+ * (see {@link SelectItem#onSelect}).
+ *
+ * The `get*` reader options are the live counterparts of the plain option beside each: when
+ * supplied they are read on every access, so a runtime change to the underlying `@arg`
+ * propagates, while the plain static option is a construction-time snapshot for direct,
+ * non-reactive consumers. A component wires these to its live args; the engine re-applies
+ * each default on read.
+ */
 export interface SelectEngineOptions {
   /** Multi-select when true (drives value shape, chips, and close-on-select). */
   multiple?: boolean;
@@ -207,18 +233,25 @@ export interface SelectEngineOptions {
    */
   getValue?: () => SelectValue;
 
-  /**
-   * Live readers for the reactive inputs. When supplied they are read on every access, so a
-   * runtime change to the underlying `@arg` propagates (the plain static option beside each is
-   * a construction-time snapshot for direct, non-reactive consumers). A component wires these
-   * to its live args; the engine re-applies each default on read. See {@link getValue}.
-   */
+  /** Live reader for {@link multiple}. */
   getMultiple?: () => boolean | undefined;
+
+  /** Live reader for {@link minChars}. */
   getMinChars?: () => number | undefined;
+
+  /** Live reader for {@link maximum}. */
   getMaximum?: () => number | undefined;
+
+  /** Live reader for {@link minimum}. */
   getMinimum?: () => number | undefined;
+
+  /** Live reader for {@link noneLabel}. */
   getNoneLabel?: () => string | undefined;
+
+  /** Live reader for {@link valueItems}. */
   getValueItems?: () => SelectItem | SelectItem[] | undefined;
+
+  /** Live reader for {@link allowCreate}. */
   getAllowCreate?: () =>
     | boolean
     | ((filter: string, items: SelectItem[]) => boolean)
@@ -397,418 +430,6 @@ export interface SelectEngineOptions {
 }
 
 /**
- * Private, fixed-shape reactive state for a {@link SelectEngine}. Declaring the fields
- * on a small class (rather than a `trackedObject`) enforces the shape and keeps
- * standard `@tracked` semantics; the instance is held in a `#`-private field, so it is
- * unreachable from outside the engine. Note there is deliberately no `selection` here:
- * the value is controlled by the parent (see {@link SelectEngine}).
- */
-class SelectState {
-  /** The current filter/search term. */
-  @tracked filter = "";
-
-  /** Advances the paginated source's request context. */
-  @tracked reveal = 0;
-
-  /** The server's true result count when it reports one. */
-  @tracked serverTotal?: number;
-
-  /** Whether the paginated source has no page left to reveal. */
-  @tracked serverExhausted = false;
-
-  /**
-   * Whether the source asserted that what it returned is the whole set — by declaring no
-   * more pages, or by staying silent, which the contract treats as the same claim. Kept
-   * distinct from {@link serverExhausted} because paging can also stop for reasons that say
-   * nothing about size (the barren-page brake, a reported ceiling), and those must never
-   * become a factual set size for assistive technology.
-   */
-  @tracked serverComplete = false;
-
-  /**
-   * Whether a row not already held was discarded at the render cap. Merely filling the cap
-   * exactly does not make the result truncated.
-   */
-  @tracked serverTruncated = false;
-
-  /**
-   * How many deduped rows the accumulator holds. Mirrors the untracked buffer's length so
-   * the gating getters depend on real tracked state rather than reading the buffer.
-   */
-  @tracked serverLoadedCount = 0;
-
-  /**
-   * The load context whose page **succeeded**, or `null` before the first one. Gates
-   * reusing the accumulator, so a failed load never passes its empty buffer off as a
-   * result. Written only after an await, never during render.
-   */
-  @tracked serverSettledKey: string | null = null;
-
-  /**
-   * The load context that last **finished**, successfully or not. Deliberately distinct
-   * from {@link serverSettledKey}: a rejection has to stop reading as in-flight (or
-   * `aria-busy` pins on and reveal dies), but must not imply there is data to show.
-   */
-  @tracked serverCompletedKey: string | null = null;
-
-  /**
-   * Bumped by {@link SelectEngine#reload} to force the list to re-fetch even when the
-   * filter is unchanged (e.g. an "AI suggestions" flow).
-   */
-  @tracked nonce = 0;
-}
-
-interface SelectSource {
-  rows(opts: SelectLoadOptions): SelectItem[] | Promise<SelectItem[]>;
-  total(): number | undefined;
-  canRevealMore(): boolean;
-  atCapWithMore(): boolean;
-  pending(): boolean;
-  revealPending(): boolean;
-  revealMore(): boolean;
-  knownRows(): SelectItem[];
-  reset(): void;
-  revealToken(): number;
-  reactiveItems(): readonly SelectItem[];
-  knownComplete(): boolean;
-}
-
-class LocalSource implements SelectSource {
-  #filtered: () => readonly SelectItem[];
-  #all: () => SelectItem[];
-
-  constructor(opts: {
-    filtered: () => readonly SelectItem[];
-    all: () => SelectItem[];
-  }) {
-    this.#filtered = opts.filtered;
-    this.#all = opts.all;
-  }
-
-  rows(): SelectItem[] {
-    return this.#filtered() as SelectItem[];
-  }
-
-  total(): number {
-    return this.#filtered().length;
-  }
-
-  canRevealMore(): boolean {
-    return false;
-  }
-
-  atCapWithMore(): boolean {
-    return false;
-  }
-
-  pending(): boolean {
-    return false;
-  }
-
-  revealPending(): boolean {
-    return false;
-  }
-
-  revealMore(): boolean {
-    return false;
-  }
-
-  knownRows(): SelectItem[] {
-    return this.#all();
-  }
-
-  reset(): void {}
-
-  revealToken(): number {
-    return 0;
-  }
-
-  reactiveItems(): readonly SelectItem[] {
-    return this.#all();
-  }
-
-  knownComplete(): boolean {
-    return true;
-  }
-}
-
-class PagedSource implements SelectSource {
-  #load: NonNullable<SelectEngineOptions["load"]>;
-  #state: SelectState;
-  #keyOf: (item: SelectItem) => string | null;
-  #serverItems: SelectItem[] = [];
-  #serverOffset = 0;
-  #serverPageSize?: number;
-  #serverGeneration = 0;
-  #serverBarrenPages = 0;
-  #serverRequest?: Promise<SelectLoadResult>;
-
-  constructor(opts: {
-    load: NonNullable<SelectEngineOptions["load"]>;
-    state: SelectState;
-    keyOf: (item: SelectItem) => string | null;
-  }) {
-    this.#load = opts.load;
-    this.#state = opts.state;
-    this.#keyOf = opts.keyOf;
-  }
-
-  /**
-   * Identifies the load the accumulator is (or should be) holding. Any change to it means
-   * the accumulated pages no longer answer the current question.
-   */
-  get #loadKey(): string {
-    const { filter, nonce, reveal } = this.#state;
-    return JSON.stringify([filter, nonce, reveal]);
-  }
-
-  rows(opts: SelectLoadOptions): SelectItem[] | Promise<SelectItem[]> {
-    return this.#loadServerItems(this.#state.filter, opts);
-  }
-
-  total(): number | undefined {
-    const { serverComplete, serverLoadedCount, serverTotal, serverTruncated } =
-      this.#state;
-    return serverComplete && !serverTruncated ? serverLoadedCount : serverTotal;
-  }
-
-  canRevealMore(): boolean {
-    return (
-      !this.pending() &&
-      !this.#state.serverExhausted &&
-      this.#state.serverLoadedCount < MAX_RENDERED
-    );
-  }
-
-  atCapWithMore(): boolean {
-    const { serverLoadedCount, serverExhausted, serverTotal, serverTruncated } =
-      this.#state;
-    return (
-      serverTruncated ||
-      (serverLoadedCount >= MAX_RENDERED &&
-        !serverExhausted &&
-        (serverTotal == null || serverLoadedCount < serverTotal))
-    );
-  }
-
-  pending(): boolean {
-    const completed = this.#state.serverCompletedKey;
-    return completed != null && completed !== this.#loadKey;
-  }
-
-  revealPending(): boolean {
-    const completed = this.#state.serverCompletedKey;
-    if (!this.pending() || completed == null) {
-      return false;
-    }
-    // The key is `[filter, nonce, reveal]`: same query, different cursor means a reveal.
-    const [filter, nonce] = JSON.parse(completed) as [string, number, number];
-    return filter === this.#state.filter && nonce === this.#state.nonce;
-  }
-
-  revealMore(): boolean {
-    // `#serverRequest` is the authoritative in-flight check and is read directly because
-    // this runs from an action, never during render. `canRevealMore` is its reactive
-    // counterpart for gating the sentinel.
-    if (this.#serverRequest || !this.canRevealMore()) {
-      return false;
-    }
-
-    this.#state.reveal++;
-    return true;
-  }
-
-  knownRows(): SelectItem[] {
-    return this.#serverItems;
-  }
-
-  reset(): void {
-    this.#state.reveal = 0;
-    this.#state.serverTotal = undefined;
-    this.#state.serverExhausted = false;
-    this.#state.serverComplete = false;
-    this.#state.serverTruncated = false;
-    this.#state.serverLoadedCount = 0;
-    // `serverCompletedKey` is deliberately left pointing at the previous load: that is what makes
-    // the new one read as pending until its first page lands.
-    //
-    // `serverSettledKey` must go, because it claims the accumulator holds a complete successful
-    // answer for that key — which the line below makes false. Keeping it only looks harmless while
-    // the next key differs; coming BACK to a filter that already settled (the ordinary typeahead
-    // close, which restores the empty query) matches it again over discarded rows, and the reuse
-    // short-circuit then answers `[]` synchronously with nothing left to re-ask.
-    this.#state.serverSettledKey = null;
-    this.#serverItems = [];
-    this.#serverOffset = 0;
-    this.#serverPageSize = undefined;
-    this.#serverBarrenPages = 0;
-    this.#serverGeneration++;
-    this.#serverRequest = undefined;
-  }
-
-  revealToken(): number {
-    return this.#state.reveal;
-  }
-
-  reactiveItems(): readonly SelectItem[] {
-    return [];
-  }
-
-  knownComplete(): boolean {
-    return this.#state.serverComplete && !this.#state.serverTruncated;
-  }
-
-  #loadServerItems(
-    filter: string,
-    opts: SelectLoadOptions
-  ): SelectItem[] | Promise<SelectItem[]> {
-    if (
-      this.#serverRequest ||
-      this.#state.serverExhausted ||
-      this.#serverItems.length >= MAX_RENDERED ||
-      this.#state.serverSettledKey === this.#loadKey
-    ) {
-      return this.#serverItems.slice(0, MAX_RENDERED);
-    }
-
-    const generation = this.#serverGeneration;
-    const key = this.#loadKey;
-    const request = Promise.resolve(
-      this.#load(filter, {
-        ...opts,
-        offset: this.#serverOffset,
-        limit: this.#serverPageSize,
-      })
-    );
-    this.#serverRequest = request;
-    // An abandoned request must not keep answering for the one that replaces it. The consumer
-    // aborts on teardown, so a panel closed mid-flight and reopened before the abort settles
-    // would otherwise hit the in-flight short-circuit above and be handed the accumulator —
-    // empty, on a first page — as a synchronous answer, leaving the query reading "no results"
-    // with nothing left to re-ask. Releasing the handle is enough: the generation deliberately
-    // does NOT move, so the settle below still stamps `serverCompletedKey` (see its comment).
-    opts.signal?.addEventListener(
-      "abort",
-      () => {
-        if (this.#serverRequest === request) {
-          this.#serverRequest = undefined;
-        }
-      },
-      { once: true }
-    );
-    return this.#settleServerPage(request, key, generation, opts.signal);
-  }
-
-  async #settleServerPage(
-    request: Promise<SelectLoadResult>,
-    key: string,
-    generation: number,
-    signal?: AbortSignal
-  ): Promise<SelectItem[]> {
-    let settled = false;
-    try {
-      const response = await request;
-      if (signal?.aborted || generation !== this.#serverGeneration) {
-        return this.#serverItems.slice(0, MAX_RENDERED);
-      }
-
-      const { items, total, hasMore } = this.#unwrapLoadResult(response);
-      const knownTotal = total ?? this.#state.serverTotal;
-      const before = this.#serverItems.length;
-      this.#serverOffset += items.length;
-      this.#serverPageSize ??= items.length || undefined;
-      const truncated = this.#appendServerItems(items);
-      const added = this.#serverItems.length - before;
-
-      // Reachable only under `hasMore: true`, since silence now ends paging on its own. It is
-      // the residual brake on a source that claims more forever: tolerating one barren page
-      // still supports overlapping pages, and the second stops it.
-      this.#serverBarrenPages = added === 0 ? this.#serverBarrenPages + 1 : 0;
-
-      // Against *deduped* rows: the raw cursor outruns them whenever pages overlap, and
-      // comparing it here would strand the tail.
-      const ceilingReached =
-        knownTotal != null && this.#serverItems.length >= knownTotal;
-
-      // Silence means the set is complete, so only an affirmative signal buys another fetch.
-      // An explicit `hasMore: false` is terminal whatever `total` says: a source may report 99
-      // matches while permitting only 5, and those 5 are all the user can ever navigate to.
-      const moreDeclared =
-        hasMore === true ||
-        (hasMore == null &&
-          knownTotal != null &&
-          this.#serverItems.length < knownTotal);
-
-      this.#state.serverTotal = knownTotal;
-      // Silence is an assertion of completeness, so it may size the set. The extra guard is
-      // narrower than it looks: it only catches a source that replayed pages and *then*
-      // declared completeness, which has already proven it cannot be trusted to count.
-      this.#state.serverComplete = !moreDeclared && this.#serverBarrenPages < 2;
-      // Assigned rather than accumulated: filling the cap stops the next fetch outright, so
-      // no page can follow a truncating one within a query.
-      this.#state.serverTruncated = truncated;
-      this.#state.serverExhausted =
-        !moreDeclared || ceilingReached || this.#serverBarrenPages >= 2;
-      this.#state.serverLoadedCount = this.#serverItems.length;
-      settled = true;
-
-      return this.#serverItems.slice(0, MAX_RENDERED);
-    } finally {
-      if (this.#serverRequest === request) {
-        this.#serverRequest = undefined;
-      }
-      if (generation === this.#serverGeneration) {
-        // Completion covers rejection AND abort: this request is over either way. Skipping
-        // it on abort left the key behind the live one forever, pinning `aria-busy` on and
-        // making `canRevealMore` permanently false — the list could never be revealed
-        // again. The cost is that a same-key retry reads as settled while it is genuinely
-        // in flight, which is a brief missing busy signal rather than a dead control.
-        this.#state.serverCompletedKey = key;
-        if (settled) {
-          // Only a success may authorise reusing the accumulator. Marking a failed key
-          // settled would make the next `loadItems` hand back the empty buffer instead of
-          // the rejection, replacing the error UI (and its retry) with an empty list.
-          this.#state.serverSettledKey = key;
-        }
-      }
-    }
-  }
-
-  #appendServerItems(items: SelectItem[]): boolean {
-    const keys = new Set(
-      this.#serverItems
-        .map((item) => this.#keyOf(item))
-        .filter((key): key is string => key != null)
-    );
-    for (const item of items) {
-      const key = this.#keyOf(item);
-      if (key != null && keys.has(key)) {
-        continue;
-      }
-
-      if (this.#serverItems.length >= MAX_RENDERED) {
-        // The accumulator can no longer grow and `keys` is never read again, so one
-        // discarded row settles the question. Returning here also keeps the scan bounded by
-        // the cap rather than by the page, which a pre-pagination source sizes at the whole
-        // dataset.
-        return true;
-      }
-
-      this.#serverItems.push(item);
-      if (key != null) {
-        keys.add(key);
-      }
-    }
-
-    return false;
-  }
-
-  #unwrapLoadResult(response: SelectLoadResult): SelectLoadResponse {
-    return Array.isArray(response) ? { items: response } : response;
-  }
-}
-
-/**
  * Headless, DOM-free controller for the ui-kit select family. It is **controlled**:
  * the parent owns the value (`@value`), which the engine reads live via a `getValue`
  * thunk and never stores. The engine owns only internal UI state — the filter, a
@@ -825,157 +446,53 @@ class PagedSource implements SelectSource {
 export default class SelectEngine {
   #state = new SelectState();
 
-  /**
-   * value → resolved item, so a re-render or reopen never re-fetches a label. Keyed by the
-   * normalized value (see `#valueKey`) so a string/number id mismatch is a cache hit.
-   */
-  #resolvedCache = trackedMap<string, SelectItem>();
-
-  /**
-   * The same, for outcomes a synchronous resolver produced, which the trigger still has to
-   * read later in the same render. Deliberately untracked: `#resolveMany` runs during a
-   * render that already consumed `#resolvedCache`, so writing that tracked map here would
-   * invalidate the very computation performing the write.
-   */
-  #synchronousOutcomes = new Map<string, SelectItem>();
-
-  // Fallback items that were actually produced by `createUnresolvedItem`.
-  #customUnresolvedItems = new WeakSet<SelectItem>();
-
   // Fires the `@items`+`@load` misconfiguration warning at most once per engine.
   #dualSourceWarned = false;
 
-  #readMultiple: () => boolean | undefined;
-  #identifiers: string[];
-  #readMinChars: () => number | undefined;
-  #readMaximum: () => number | undefined;
-  #readMinimum: () => number | undefined;
-  #readNoneLabel: () => string | undefined;
-  #valueField: string;
-  #labelField: string;
-  // Whether the consumer declared `valueItems` at all, as opposed to it merely being empty
-  // right now. Those are different: an empty-but-declared arg is the late-arrival pattern
-  // mid-flight, and the misconfiguration assert must not fire on it.
-  #valueItemsDeclared: boolean;
-  #filterBy?: string | ((item: SelectItem, term: string) => boolean);
-  #items?: SelectItem[] | (() => SelectItem[] | null | undefined);
-  #load?: (
-    filter: string,
-    opts: SelectLoadOptions
-  ) => SelectLoadResult | Promise<SelectLoadResult>;
-  #readValueItems: () => SelectItem | SelectItem[] | undefined;
-  #resolveValue?: (
-    value: SelectItemId,
-    opts: SelectLoadOptions
-  ) => SelectItem | Promise<SelectItem | undefined> | undefined;
-  #resolveValues?: (
-    values: SelectItemId[],
-    opts: SelectLoadOptions
-  ) => SelectItem[] | Promise<SelectItem[]>;
-  #readAllowCreate: () =>
-    | boolean
-    | ((filter: string, items: SelectItem[]) => boolean)
-    | undefined;
-  #createItem?: (filter: string) => SelectItem;
-  #createUnresolvedItem?: (value: SelectItemId) => SelectItem;
-  #specialItems?: (snapshot: SelectSnapshot) => SelectItem[];
-  #groupBy?: string | ((item: SelectItem) => SelectItemId);
-  #groupLabelFn?: (key: SelectItemId) => string;
-  #readCloseOnSelect: boolean | undefined;
-  #onChange?: (
-    nextValue: SelectValue,
-    item: SelectItem | SelectItem[] | null
-  ) => void;
-  #requestClose?: () => void;
-  #readValue: () => SelectValue;
-  #isAsync: boolean;
-  #legacy: SelectLegacyContext | null;
+  #options: SelectOptionsView;
+  #valueResolver: ValueResolver;
+  #selectionActions: SelectionActions;
+  #listComposer: ListComposer;
   #source!: SelectSource;
 
   /**
-   * @param opts.multiple - Multi-select when true (drives value shape, chips, and
-   *   close-on-select).
-   * @param opts.getValue - `() => value` — reads the controlled value live (single: an
-   *   id or `null`; multi: an id array). Defaults to always-`null`.
-   * @param opts.identifiers - Keys plugin `select-content` transformers match on.
-   * @param opts.items - A static array (or `() => array`) of items — the client-only
-   *   source. Provide this or `load`, not both.
-   * @param opts.load - `(filter, { signal, offset, limit }) => items | { items, total?,
-   *   hasMore? }`, synchronously or as a promise. Pagination starts without a limit so the
-   *   source defines its page size. Declaring neither `total` nor `hasMore` means the
-   *   response is the complete set.
-   * @param opts.filterBy - Client-filter field name or `(item, term) => boolean`.
-   *   Defaults to a substring match on `labelField`.
-   * @param opts.valueField - Field holding an item's value. Defaults to `"id"`.
-   * @param opts.labelField - Field holding an item's label. Defaults to `"name"`.
-   * @param opts.maximum - Hard cap on a multi-select's selection count (multi-only, unset
-   *   below `1`). Blocks additions and disables unselected options at the cap; never trims
-   *   an already over-cap value.
-   * @param opts.minimum - Advisory minimum for a multi-select. Drives messaging only and
-   *   never blocks removal.
-   * @param opts.valueItems - Already-resolved item(s) for the ids in `value`, read
-   *   reactively so they may arrive after mount. Selects nothing on its own.
-   * @param opts.resolveValue - `(value, { signal }) => item | Promise<item>`, used to
-   *   resolve a value id to its display item when it isn't already known.
-   * @param opts.allowCreate - Enables the create-on-the-fly item; a function
-   *   `(filter, items) => boolean` gates it dynamically.
-   * @param opts.createItem - `(filter) => item` producing the synthetic "create" item
-   *   (conventionally marked `__create: true`).
-   * @param opts.specialItems - `(snapshot) => item[]` prepended to the list (e.g. a
-   *   "none"/"uncategorized" item).
-   * @param opts.closeOnSelect - Whether choosing an item closes the overlay. Defaults to
-   *   `!multiple`.
-   * @param opts.onChange - `(nextValue, item|items) => void`, where `nextValue` is the
-   *   id(s) and the second arg is the resolved item(s), each matching the arity. The
-   *   parent applies `nextValue` to `@value`.
-   * @param opts.requestClose - Called by the engine to ask the overlay to close (wired
-   *   by the component to the menu instance).
-   * @param opts.legacy - Handles for the `modifySelectKit` compat bridge, supplied by
-   *   the component: `{ owner, getElement, isDestroyed }`. Only needed when the select
-   *   carries identifiers that legacy extensions may target.
+   * @param opts - The engine's configuration; every field is documented on
+   *   {@link SelectEngineOptions}.
    */
   constructor(opts: SelectEngineOptions = {}) {
-    this.#readMultiple = opts.getMultiple ?? (() => opts.multiple);
-    this.#identifiers = makeArray(opts.identifiers) as string[];
-    this.#readMinChars = opts.getMinChars ?? (() => opts.minChars);
-    this.#readMaximum = opts.getMaximum ?? (() => opts.maximum);
-    this.#readMinimum = opts.getMinimum ?? (() => opts.minimum);
-    this.#readNoneLabel = opts.getNoneLabel ?? (() => opts.noneLabel);
-    this.#valueField = opts.valueField ?? "id";
-    this.#labelField = opts.labelField ?? "name";
-    this.#filterBy = opts.filterBy;
-    this.#items = opts.items;
-    this.#load = opts.load;
-    this.#readValueItems = opts.getValueItems ?? (() => opts.valueItems);
-    this.#valueItemsDeclared =
-      opts.getValueItems != null || opts.valueItems != null;
-    this.#resolveValue = opts.resolveValue;
-    this.#resolveValues = opts.resolveValues;
-    this.#readAllowCreate = opts.getAllowCreate ?? (() => opts.allowCreate);
-    this.#createItem = opts.createItem;
-    this.#createUnresolvedItem = opts.createUnresolvedItem;
-    this.#specialItems = opts.specialItems;
-    this.#groupBy = opts.groupBy;
-    this.#groupLabelFn = opts.groupLabel;
-    // Kept raw (not defaulted here): `#closeOnSelect` re-derives `!multiple` live, so a
-    // runtime `multiple` flip flips the default close behavior with it.
-    this.#readCloseOnSelect = opts.closeOnSelect;
-    this.#onChange = opts.onChange;
-    this.#requestClose = opts.requestClose;
-    this.#legacy = opts.legacy ?? null;
-    // The controlled value is read live via this thunk, so the engine reflects the
-    // parent's `@value` without storing any selection of its own.
-    this.#readValue = opts.getValue ?? (() => null);
-    this.#isAsync = typeof opts.load === "function";
-    this.#source = this.#load
+    this.#options = new SelectOptionsView(opts);
+    this.#valueResolver = new ValueResolver({
+      options: this.#options,
+      knownRows: () => this.#source.knownRows(),
+    });
+    this.#selectionActions = new SelectionActions({
+      options: this.#options,
+      runActionItem: (item) => item.onSelect!(this, item),
+      cacheResolved: (item) => this.#valueResolver.cacheResolved(item),
+      resolveOneSync: (value) => this.#valueResolver.resolveOneSync(value),
+      applyLegacyOnChange: (value, payload) =>
+        applyLegacySelectKitOnChange(this, value, payload),
+    });
+    this.#listComposer = new ListComposer({
+      options: this.#options,
+      getFilter: () => this.#state.filter,
+      getValue: () => this.value,
+      getHasValue: () => this.hasValue,
+      isSelected: (item) => this.isSelected(item),
+      getAtMaximum: () => this.atMaximum,
+      getTotal: () => this.total,
+      applyLegacyContent: (items) => applyLegacySelectKitContent(this, items),
+    });
+    this.#source = this.#options.load
       ? new PagedSource({
-          load: this.#load,
+          load: this.#options.load,
           state: this.#state,
-          keyOf: (item) => this.#valueKey(this.#itemValue(item)),
+          keyOf: (item) =>
+            this.#options.valueKey(this.#options.itemValue(item)),
         })
       : new LocalSource({
           filtered: () => this.filteredItems,
-          all: () => this.#localItems(),
+          all: () => localItems(this.#options),
         });
     // Catch a both-sources misconfiguration up front (before any menu opens); the same
     // check also runs per load for a live `items` source that turns non-empty later.
@@ -996,25 +513,33 @@ export default class SelectEngine {
    * @returns A frozen id array (multiple) or a single id / `null`.
    */
   get value(): SelectValue {
-    const raw = this.#readValue();
-    return this.#multiple
-      ? Object.freeze(this.#dedupeValues(makeArray(raw) as SelectItemId[]))
-      : (raw ?? null);
+    return this.#selectionActions.value;
   }
 
   /** Whether anything is selected. */
   get hasValue(): boolean {
-    return this.#multiple ? this.#valueArray.length > 0 : this.value != null;
+    return this.#selectionActions.hasValue;
+  }
+
+  /** Whether any non-null id in the normalized selection currently resolves as unresolved. */
+  get hasUnresolvedSelection(): boolean {
+    const value = this.value;
+    const values = this.multiple
+      ? [...(value as readonly SelectItemId[])]
+      : value == null
+        ? []
+        : [value];
+    return this.#valueResolver.hasUnresolved(values);
   }
 
   /** Whether the source is server-backed (drives debouncing). */
   get isAsync(): boolean {
-    return this.#isAsync;
+    return this.#options.isAsync;
   }
 
   /** The minimum filter length before the list searches (`0` = no minimum). */
   get minChars(): number {
-    return this.#minChars;
+    return this.#options.minChars;
   }
 
   /**
@@ -1024,22 +549,25 @@ export default class SelectEngine {
    * minimum set, opening should prompt for input, not load (and then hide) the whole list.
    */
   get belowMinChars(): boolean {
-    return this.#minChars > 0 && this.#state.filter.length < this.#minChars;
+    return (
+      this.#options.minChars > 0 &&
+      this.#state.filter.length < this.#options.minChars
+    );
   }
 
   /** How many more characters are needed to reach {@link minChars} (reactive). */
   get remainingMinChars(): number {
-    return Math.max(0, this.#minChars - this.#state.filter.length);
+    return Math.max(0, this.#options.minChars - this.#state.filter.length);
   }
 
   /** The multi-select selection cap, or `null` when uncapped (always `null` for single). */
   get maximum(): number | null {
-    return this.#maximum;
+    return this.#selectionActions.maximum;
   }
 
   /** The advisory multi-select minimum (`0` = none, and always `0` for single). */
   get minimum(): number {
-    return this.#minimum;
+    return this.#selectionActions.minimum;
   }
 
   /**
@@ -1047,56 +575,27 @@ export default class SelectEngine {
    * added, and every unselected ordinary option reports itself disabled.
    */
   get atMaximum(): boolean {
-    return this.#atMaximum;
+    return this.#selectionActions.atMaximum;
   }
 
   /** Whether the selection is still short of the advisory {@link minimum}. */
   get belowMinimum(): boolean {
-    const minimum = this.#minimum;
-    return minimum > 0 && this.#selectedCount < minimum;
+    return this.#selectionActions.belowMinimum;
   }
 
   /** How many more items may still be added, or `undefined` when uncapped. */
   get remaining(): number | undefined {
-    const maximum = this.#maximum;
-    return maximum == null
-      ? undefined
-      : Math.max(0, maximum - this.#selectedCount);
-  }
-
-  getItemLabel(item: SelectItem | null | undefined): string {
-    return selectItemLabel(item, this.#labelField);
-  }
-
-  getSingleSelectionLabel(value: SelectValue): string {
-    if (value == null || Array.isArray(value)) {
-      return "";
-    }
-
-    return this.getItemLabel(this.#resolveOneSync(value));
-  }
-
-  /**
-   * Whether this fallback came from `createUnresolvedItem` rather than the built-in bare-id
-   * default. Lets a trigger that can only render a string decide whether to append its own
-   * "unavailable" wording: a named fallback ("Topic #123") already reads as one, a bare id
-   * does not. Identity-based, so a builder that throws — caught, yielding the default — is
-   * correctly reported as NOT custom.
-   *
-   * @param item - The item to test; only meaningful for an `__unresolved` fallback.
-   */
-  isCustomUnresolvedItem(item: SelectItem): boolean {
-    return this.#customUnresolvedItems.has(item);
+    return this.#selectionActions.remaining;
   }
 
   /** Whether this is a multi-select. */
   get multiple(): boolean {
-    return this.#multiple;
+    return this.#options.multiple;
   }
 
   /** The transformer identifiers. */
   get identifiers(): string[] {
-    return this.#identifiers;
+    return this.#options.identifiers;
   }
 
   /**
@@ -1105,7 +604,7 @@ export default class SelectEngine {
    * part of the consumer-facing API.
    */
   get legacyContext(): SelectLegacyContext | null {
-    return this.#legacy;
+    return this.#options.legacy;
   }
 
   /**
@@ -1141,12 +640,12 @@ export default class SelectEngine {
    */
   @cached
   get filteredItems(): readonly SelectItem[] {
-    // Copied AND frozen. With no filter `#filterLocal` passes the consumer's own array
+    // Copied AND frozen. With no filter `filterLocal` passes the consumer's own array
     // straight through, and `readonly` is erased at runtime — but copying alone is not
     // enough either, because `@cached` hands the same array to every reader in the render,
     // so mutating it would corrupt what the engine itself reads next. Matches `buildItems`,
     // which also yields a frozen projection.
-    return Object.freeze([...this.#filterLocal(this.#state.filter)]);
+    return Object.freeze([...filterLocal(this.#options, this.#state.filter)]);
   }
 
   /** Whether the current source has another page available below the cap. */
@@ -1178,7 +677,9 @@ export default class SelectEngine {
    * error), unlike a render-time count of navigable rows.
    */
   get loadedCount(): number {
-    return this.#isAsync ? this.#state.serverLoadedCount : (this.total ?? 0);
+    return this.#options.isAsync
+      ? this.#state.serverLoadedCount
+      : (this.total ?? 0);
   }
 
   /**
@@ -1205,24 +706,26 @@ export default class SelectEngine {
   }
 
   /**
+   * Finds the first value added and removed between two selections, comparing ids by
+   * `String(value)`.
+   */
+  diffValues(
+    previous: SelectItemId[],
+    next: SelectItemId[]
+  ): {
+    added: SelectItemId | undefined;
+    removed: SelectItemId | undefined;
+  } {
+    return this.#selectionActions.diffValues(previous, next);
+  }
+
+  /**
    * Whether an item is currently selected, comparing its `valueField` id against the
    * controlled value.
    */
   @bind
   isSelected(item: SelectItem): boolean {
-    // The "none" row stands in for the empty selection, so it reads as selected exactly when
-    // nothing else is. Single-select only, and resolved before the key lookup — its value is
-    // `null`, which the comparison below would otherwise reject as unselectable.
-    if (item.__none && !this.#multiple) {
-      return !this.hasValue;
-    }
-    const key = this.#valueKey(this.#itemValue(item));
-    if (key == null) {
-      return false;
-    }
-    return this.#multiple
-      ? this.#valueArray.some((v) => this.#valueKey(v) === key)
-      : this.#valueKey(this.value) === key;
+    return this.#selectionActions.isSelected(item);
   }
 
   /**
@@ -1261,117 +764,7 @@ export default class SelectEngine {
    */
   @bind
   buildItems(rawItems: SelectItem[] = []): readonly SelectDescriptor[] {
-    let items: SelectItem[] = [...(makeArray(rawItems) as SelectItem[])];
-
-    items = applyValueTransformer("select-content", items, {
-      identifiers: this.#identifiers,
-      filter: this.#state.filter,
-      value: this.value,
-    });
-
-    // Legacy `modifySelectKit(id).{prepend,append,replace}Content` extensions run in
-    // their own stage, after the native transformer, so ordering is deterministic and
-    // does not depend on global transformer registration order.
-    items = applyLegacySelectKitContent(this, items);
-
-    // The option count never includes structural rows (headers/dividers), whether they come
-    // from grouping below or an upstream injector.
-    const sourceCount = items.filter(
-      (item) => !this.#isStructural(item)
-    ).length;
-
-    const createItem = this.#shouldOfferCreate(items)
-      ? // `#shouldOfferCreate` already guaranteed a `#createItem` is present.
-        this.#createItem!(this.#state.filter)
-      : null;
-
-    // Group the source options before appending create, so the create row is never grouped
-    // and headers never enter the option count.
-    const grouped = this.#shouldGroup() ? this.#groupItems(items) : items;
-
-    const noneRow = this.#noneRow();
-    const consumerSpecial = makeArray(
-      this.#specialItems?.(this.#snapshot()) ?? []
-    ) as SelectItem[];
-    // The none row leads the specials so it is the first option (Home lands on it) and flows
-    // through the same counting path below, keeping its `posInSet`/`setSize`/`logicalIndex` in
-    // lockstep with the rest of the set.
-    const specialItems = noneRow
-      ? [noneRow, ...consumerSpecial]
-      : consumerSpecial;
-    const finalItems = createItem
-      ? [...specialItems, ...grouped, createItem]
-      : [...specialItems, ...grouped];
-
-    // Only option rows count toward the set; a special that is itself structural (a seam
-    // escape hatch) is prepended but never numbered.
-    const specialCount = specialItems.filter(
-      (item) => !this.#isStructural(item)
-    ).length;
-
-    // Normalize as the final step: everything above operates on raw items (so the
-    // transformer / bridge / onSelect pipeline is unchanged); only the render array is wrapped.
-    return this.#describeList(
-      finalItems,
-      specialCount,
-      sourceCount,
-      createItem ? 1 : 0
-    );
-  }
-
-  /**
-   * Normalizes the list rows — specials, then source rows (with any injected group headers),
-   * then create — and stamps each OPTION with its position in the whole result set. Positions
-   * come from the engine's own totals rather than the DOM index, so they stay correct while
-   * only a window is mounted, and they count options only: an interleaved header/divider
-   * shifts no option's `posInSet` and never enters `setSize`.
-   */
-  #describeList(
-    items: SelectItem[],
-    specialCount: number,
-    sourceCount: number,
-    createCount: number
-  ): readonly SelectDescriptor[] {
-    const total = this.total;
-    // `aria-setsize` describes the complete set rather than the rendered rows, so a source that
-    // declares its total has already answered; withholding it until the last page lands would
-    // report "unknown" about something known.
-    //
-    // A source that declares no total is sized by what it has loaded, never by `-1`. That sentinel
-    // is unusable in practice: no two engines interpret it alike, and its own AAM tells user agents
-    // to substitute 1. The loaded rows are the ones the reader can reach anyway, and "there is
-    // more" is carried by the announcements that can express it.
-    //
-    // The floor keeps a transformer or the legacy bridge, which can add rows absent from a reported
-    // total, from pushing a position past the set.
-    const sourceTotal = Math.max(total ?? sourceCount, sourceCount);
-    const setSize = specialCount + sourceTotal + createCount;
-
-    // Loaded source rows are a prefix, so their positions hold whatever sizes the set.
-    const lastOptionOrdinal = specialCount + sourceCount;
-
-    // Hoisted: the cap is a property of the selection, not of a row, and `#atMaximum` reads the
-    // deduped value array — so evaluating it per row would repeat that work for every option.
-    const atMaximum = this.#atMaximum;
-
-    let optionOrdinal = 0;
-    return Object.freeze(
-      items.map((item, index) => {
-        const descriptor = this.#normalize(item, index, atMaximum);
-        if (descriptor.flags.group || descriptor.flags.divider) {
-          // A structural row carries no ARIA position and does not advance the option count.
-          return { ...descriptor, setSize: undefined, posInSet: undefined };
-        }
-        const ordinal = optionOrdinal++;
-        return {
-          ...descriptor,
-          setSize,
-          // The create row is appended after the source rows, so it closes the set wherever the
-          // window ends.
-          posInSet: ordinal < lastOptionOrdinal ? ordinal + 1 : setSize,
-        };
-      })
-    );
+    return this.#listComposer.buildItems(rawItems);
   }
 
   /**
@@ -1381,11 +774,7 @@ export default class SelectEngine {
    */
   @bind
   describeItems(items: SelectItem[]): readonly SelectDescriptor[] {
-    return Object.freeze(
-      // Never cap-disabled: these describe the held selection for the trigger, and the cap only
-      // ever closes off rows that are *not* selected.
-      items.map((item, index) => this.#normalize(item, index, false))
-    );
+    return this.#listComposer.describeItems(items);
   }
 
   /**
@@ -1412,21 +801,7 @@ export default class SelectEngine {
     | Promise<SelectItem>
     | Promise<SelectItem[]>
     | undefined {
-    if (!this.#multiple) {
-      if (value == null) {
-        return undefined;
-      }
-      const resolved = this.#resolveMany([value], opts);
-      return this.#isPromise<SelectItem[]>(resolved)
-        ? this.#firstOf(resolved)
-        : resolved[0]!;
-    }
-    const values = this.#dedupeValues(makeArray(value) as SelectItemId[]);
-    // Empty multi → undefined so the trigger shows its placeholder (not an empty list).
-    if (values.length === 0) {
-      return undefined;
-    }
-    return this.#resolveMany(values, opts);
+    return this.#valueResolver.resolveSelection(value, opts);
   }
 
   /**
@@ -1437,79 +812,32 @@ export default class SelectEngine {
    * @param value - The single value; an array or `null` yields `undefined`.
    */
   resolveSingleSync(value: SelectValue): SelectItem | undefined {
+    return this.#valueResolver.resolveSingleSync(value);
+  }
+
+  getItemLabel(item: SelectItem | null | undefined): string {
+    return selectItemLabel(item, this.#options.labelField);
+  }
+
+  getSingleSelectionLabel(value: SelectValue): string {
     if (value == null || Array.isArray(value)) {
-      return undefined;
+      return "";
     }
-    return this.#resolveOneSync(value);
-  }
 
-  // Narrows a resolved batch back to the single arity. `#resolveMany` always yields at least
-  // one item per requested id, so index 0 is present.
-  async #firstOf(items: Promise<SelectItem[]>): Promise<SelectItem> {
-    return (await items)[0]!;
+    return this.getItemLabel(this.#valueResolver.resolveOneSync(value));
   }
 
   /**
-   * Ordered items for `values`: the sync ladder for what is already known, one batch call
-   * for the rest, and an `__unresolved` fallback for whatever still doesn't resolve. Order
-   * follows the bound ids, not the response. Never rejects.
-   */
-  #resolveMany(
-    values: SelectItemId[],
-    opts: SelectLoadOptions
-  ): SelectItem[] | Promise<SelectItem[]> {
-    const synced = values.map((v) => this.#resolveOneSync(v));
-    if (synced.every((item) => item != null)) {
-      return synced as SelectItem[];
-    }
-    const uncached = values.filter((_v, index) => synced[index] == null);
-    const batch = this.#resolveBatch(uncached, opts);
-    if (this.#isPromise(batch)) {
-      return batch.then((resolved) => {
-        const items = this.#assemble(values, synced, resolved);
-        this.#cacheOutcome(values, items);
-        return items;
-      });
-    }
-    const items = this.#assemble(values, synced, batch);
-    // A synchronous resolve runs *during* render, and this render already read the tracked
-    // cache via `#resolveOneSync`. Preserve the result in an untracked map so the desktop
-    // input can read its label later in this render without dirtying the consumed tag.
-    this.#rememberSynchronousOutcomes(values, synced, items);
-    return items;
-  }
-
-  #rememberSynchronousOutcomes(
-    values: SelectItemId[],
-    synced: Array<SelectItem | undefined>,
-    items: SelectItem[]
-  ): void {
-    values.forEach((value, index) => {
-      const key = this.#valueKey(value);
-      const item = items[index];
-      if (synced[index] == null && key != null && item) {
-        this.#synchronousOutcomes.set(key, item);
-      }
-    });
-  }
-
-  /**
-   * Records the outcome of an async resolve: real items, so later reads hit the cache
-   * instead of refetching, and `__unresolved` fallbacks, so a trigger can tell "resolved and
-   * failed" (show the fallback) from "still resolving" (show nothing). A cached fallback
-   * remains a sync hit, but ranks after real valueItems/cache/list items; `reload()` evicts it
-   * when the caller explicitly retries.
+   * Whether this fallback came from `createUnresolvedItem` rather than the built-in bare-id
+   * default. Lets a trigger that can only render a string decide whether to append its own
+   * "unavailable" wording: a named fallback ("Topic #123") already reads as one, a bare id
+   * does not. Identity-based, so a builder that throws — caught, yielding the default — is
+   * correctly reported as NOT custom.
    *
-   * Only ever called from a promise continuation, i.e. a microtask after render, where
-   * writing tracked state cannot dirty what the render already read.
+   * @param item - The item to test; only meaningful for an `__unresolved` fallback.
    */
-  #cacheOutcome(values: SelectItemId[], items: SelectItem[]): void {
-    values.forEach((value, index) => {
-      const item = items[index];
-      if (item) {
-        this.#cacheResolvedValue(value, item);
-      }
-    });
+  isCustomUnresolvedItem(item: SelectItem): boolean {
+    return this.#valueResolver.isCustomUnresolvedItem(item);
   }
 
   /**
@@ -1532,11 +860,7 @@ export default class SelectEngine {
    */
   @bind
   activate(item: SelectItem): void {
-    if (typeof item?.onSelect === "function") {
-      item.onSelect(this, item);
-      return;
-    }
-    this.toggle(item);
+    this.#selectionActions.activate(item);
   }
 
   /**
@@ -1544,11 +868,7 @@ export default class SelectEngine {
    */
   @bind
   toggle(item: SelectItem): void {
-    if (this.#multiple && this.isSelected(item)) {
-      this.deselect(item);
-    } else {
-      this.select(item);
-    }
+    this.#selectionActions.toggle(item);
   }
 
   /**
@@ -1558,31 +878,7 @@ export default class SelectEngine {
    */
   @bind
   select(item: SelectItem): void {
-    if (this.isSelected(item)) {
-      // Re-picking the current value is a confirmation, not a change: emit nothing, but still
-      // close. Since the list restores the cursor to the selected option, this is the first
-      // keystroke after opening, and leaving it inert would read as a broken control.
-      if (!this.#multiple && this.#closeOnSelect) {
-        this.#requestClose?.();
-      }
-      return;
-    }
-    // The item is known to be unselected here, so this rejects genuine additions only. It is
-    // the single chokepoint every add reaches — pointer, keyboard, create-on-the-fly, and the
-    // compat bridge — so the cap cannot be walked around, and rejecting before the resolve
-    // cache leaves no trace of a selection that never happened.
-    if (this.#atMaximum) {
-      return;
-    }
-    this.#cacheResolved(item);
-    if (this.#multiple) {
-      this.#emitChange([...this.#valueArray, this.#itemValue(item)]);
-    } else {
-      this.#emitChange(this.#itemValue(item));
-      if (this.#closeOnSelect) {
-        this.#requestClose?.();
-      }
-    }
+    this.#selectionActions.select(item);
   }
 
   /**
@@ -1590,25 +886,13 @@ export default class SelectEngine {
    */
   @bind
   deselect(item: SelectItem): void {
-    if (!this.#multiple) {
-      this.#emitChange(null);
-      return;
-    }
-    const key = this.#valueKey(this.#itemValue(item));
-    this.#emitChange(this.#valueArray.filter((v) => this.#valueKey(v) !== key));
+    this.#selectionActions.deselect(item);
   }
 
   /** Removes the last held value from a multi-select selection. */
   @bind
   deselectLast(): void {
-    if (!this.#multiple) {
-      return;
-    }
-    const values = this.#valueArray;
-    if (values.length === 0) {
-      return;
-    }
-    this.#emitChange(values.slice(0, -1));
+    this.#selectionActions.deselectLast();
   }
 
   /**
@@ -1616,7 +900,7 @@ export default class SelectEngine {
    */
   @bind
   clear(): void {
-    this.#emitChange(this.#multiple ? [] : null);
+    this.#selectionActions.clear();
   }
 
   /**
@@ -1626,16 +910,7 @@ export default class SelectEngine {
    */
   @bind
   reload(): void {
-    for (const [key, item] of [...this.#resolvedCache.entries()]) {
-      if (item.__unresolved) {
-        this.#resolvedCache.delete(key);
-      }
-    }
-    for (const [key, item] of this.#synchronousOutcomes) {
-      if (item.__unresolved) {
-        this.#synchronousOutcomes.delete(key);
-      }
-    }
+    this.#valueResolver.evictUnresolved();
     this.#source.reset();
     this.#state.nonce++;
   }
@@ -1646,179 +921,20 @@ export default class SelectEngine {
    */
   @bind
   requestClose(): void {
-    this.#requestClose?.();
-  }
-
-  /**
-   * Live-resolved reactive inputs. Each reads its thunk on every access (so a runtime change
-   * to the wired `@arg` propagates) and re-applies the default the constructor used to bake in.
-   * Read-site code uses `this.#multiple` etc. unchanged — these getters stand in for the former
-   * plain fields.
-   */
-  get #multiple(): boolean {
-    return this.#readMultiple() ?? false;
-  }
-
-  get #minChars(): number {
-    return this.#readMinChars() ?? 0;
-  }
-
-  // Single-select only: the label for the prepended "none" row, or `null` when unset/empty or on a
-  // multi-select (there "none" is the placeholder, not a row). Gating multi here keeps every
-  // downstream consumer — injection and the `isSelected` special-case — inert on multi.
-  get #noneLabel(): string | null {
-    if (this.#multiple) {
-      return null;
-    }
-    const label = this.#readNoneLabel();
-    return label ? label : null;
-  }
-
-  // Multi-only, and `null` for anything below one — which also absorbs `0`, negatives, and
-  // `NaN`, all of which mean "no cap" rather than "cap of nothing".
-  get #maximum(): number | null {
-    if (!this.#multiple) {
-      return null;
-    }
-    const raw = this.#readMaximum();
-    return raw != null && raw >= 1 ? Math.floor(raw) : null;
-  }
-
-  get #minimum(): number {
-    if (!this.#multiple) {
-      return 0;
-    }
-    const raw = this.#readMinimum();
-    return raw != null && raw >= 1 ? Math.floor(raw) : 0;
-  }
-
-  /**
-   * The count the limits are measured against: every held id, deduped. A nullish entry counts
-   * like any other — it still resolves to a displayed, removable chip, so excluding it would
-   * let the visible selection exceed the cap, and the user can always reclaim its slot by
-   * removing that chip.
-   */
-  get #selectedCount(): number {
-    return this.#valueArray.length;
-  }
-
-  get #atMaximum(): boolean {
-    const maximum = this.#maximum;
-    return maximum != null && this.#selectedCount >= maximum;
-  }
-
-  get #valueItems(): SelectItem | SelectItem[] | undefined {
-    return this.#readValueItems();
-  }
-
-  get #allowCreate():
-    | boolean
-    | ((filter: string, items: SelectItem[]) => boolean)
-    | undefined {
-    return this.#readAllowCreate();
-  }
-
-  // Defaults to `!multiple`, re-derived live so a runtime `multiple` flip flips it too.
-  get #closeOnSelect(): boolean {
-    return this.#readCloseOnSelect ?? !this.#multiple;
-  }
-
-  /**
-   * The current value coerced to its multi-select array form. Only meaningful when
-   * `#multiple` (the single-select value is never read through here); it centralizes
-   * the one place the union `value` is treated as an array so the multi-only call sites
-   * stay narrowing-free.
-   */
-  get #valueArray(): readonly SelectItemId[] {
-    return this.value as readonly SelectItemId[];
-  }
-
-  // Emits the next value plus the best-effort resolved item(s) for it. Controlled: the
-  // engine never stores the value — the parent applies `nextValue` to `@value`.
-  #emitChange(rawNextValue: SelectValue): void {
-    // Coerce ids to their source item's native type up front, so the payload, the
-    // `select-on-change` transformer context, and the legacy bridge all emit one consistent,
-    // single-typed value rather than a parent/URL-typed held id mixed with a freshly-picked
-    // native one.
-    const nextValue = this.#coerceValue(rawNextValue);
-    const items = this.#itemsFor(nextValue);
-    const payload = this.#multiple ? items : (items[0] ?? null);
-
-    // The selection-side-effect extension point: the default behavior emits the
-    // controlled `onChange`; registered `select-on-change` transformers wrap it (and
-    // may run `next()` to proceed or skip it).
-    applyBehaviorTransformer(
-      "select-on-change",
-      () => this.#onChange?.(nextValue, payload),
-      { identifiers: this.#identifiers, value: nextValue, items: payload }
-    );
-
-    // Legacy `modifySelectKit(id).onChange` extensions (side effects only, run after
-    // the value has changed — matching the old ordering).
-    applyLegacySelectKitOnChange(this, nextValue, payload);
-  }
-
-  // Best-effort synchronous resolution of a value to its item(s), from the escape
-  // hatch / cache / client list — never async (this feeds the `onChange` payload).
-  #itemsFor(value: SelectValue): SelectItem[] {
-    const values: SelectItemId[] =
-      value == null
-        ? []
-        : this.#multiple
-          ? (makeArray(value) as SelectItemId[])
-          : [value];
-    return values
-      .map((v) => this.#resolveOneSync(v))
-      .filter((item): item is SelectItem => item != null);
-  }
-
-  // Multi-select only: re-emit each id in its resolved source item's native type, so a held
-  // parent/URL-typed id (a string `"5"`) and a freshly-picked native id (`3`) never leave as a
-  // mixed-type array. An id that resolves to no known item passes through unchanged — its type is
-  // unknowable — and order is preserved. Single-select already emits the native id, so its value
-  // is returned untouched. Matching is by string form, so coercion never changes which option is
-  // selected, only the emitted type.
-  #coerceValue(value: SelectValue): SelectValue {
-    if (!this.#multiple || value == null) {
-      return value;
-    }
-    return (makeArray(value) as SelectItemId[]).map((id) => {
-      const item = this.#resolveOneSync(id);
-      return item ? this.#itemValue(item) : id;
-    });
-  }
-
-  #filterLocal(filter: string): SelectItem[] {
-    const all = this.#localItems();
-    if (!filter) {
-      return all;
-    }
-    const term = filter.toLowerCase();
-    return all.filter((item) => this.#matchesFilter(item, term));
-  }
-
-  // The full client-side item set (empty for a server source), used both for local
-  // filtering and to resolve a value's display item without a fetch.
-  #localItems(): SelectItem[] {
-    if (this.#isAsync) {
-      return [];
-    }
-    // `makeArray` normalizes whatever the source yields — a thunk that returns null, or a
-    // non-array value — into a real array, so downstream array reads never see a non-array.
-    const resolved =
-      typeof this.#items === "function" ? this.#items() : this.#items;
-    return makeArray(resolved) as SelectItem[];
+    this.#options.requestClose?.();
   }
 
   // `items` and `load` are mutually exclusive; the construction-time source kind wins.
   // Warns once when both are supplied — checked here rather than only in the constructor
   // because a live `items` source can turn non-empty after construction.
   #assertSingleSource(): void {
-    if (this.#dualSourceWarned || !this.#isAsync) {
+    if (this.#dualSourceWarned || !this.#options.isAsync) {
       return;
     }
     const local =
-      typeof this.#items === "function" ? this.#items() : this.#items;
+      typeof this.#options.items === "function"
+        ? this.#options.items()
+        : this.#options.items;
     if (local != null && (makeArray(local) as SelectItem[]).length > 0) {
       this.#dualSourceWarned = true;
       // eslint-disable-next-line no-console
@@ -1826,372 +942,5 @@ export default class SelectEngine {
         "DSelect: `@items` and `@load` are mutually exclusive; `@load` takes precedence and `@items` is ignored."
       );
     }
-  }
-
-  #matchesFilter(item: SelectItem, term: string): boolean {
-    if (typeof this.#filterBy === "function") {
-      return this.#filterBy(item, term);
-    }
-    const field = this.#filterBy ?? this.#labelField;
-    return String(item?.[field] ?? "")
-      .toLowerCase()
-      .includes(term);
-  }
-
-  #shouldOfferCreate(items: SelectItem[]): boolean {
-    const filter = this.#state.filter;
-    if (!filter || !this.#createItem) {
-      return false;
-    }
-    const allowed =
-      typeof this.#allowCreate === "function"
-        ? this.#allowCreate(filter, items)
-        : !!this.#allowCreate;
-    if (!allowed) {
-      return false;
-    }
-    // Don't offer to create a value that already exists (by label or value).
-    const term = filter.toLowerCase();
-    return !items.some(
-      (item) =>
-        String(this.#itemLabel(item) ?? "").toLowerCase() === term ||
-        String(this.#itemValue(item) ?? "").toLowerCase() === term
-    );
-  }
-
-  /**
-   * The item to show for a value: `valueItems` → a real recorded outcome → client list →
-   * the fallback left by an earlier failed attempt.
-   *
-   * An `__unresolved` fallback ranks LAST, so any real source that turns up later — an item
-   * landing in the client list, a re-resolve — supersedes it instead of being masked by it.
-   * But it is still a hit, deliberately: a resolve records its outcome, and a read that
-   * missed would re-resolve, record again, invalidate the render that read it, and never
-   * settle. "Failed" has to be a terminal answer; `reload` is what retries it.
-   */
-  #resolveOneSync(value: SelectItemId): SelectItem | undefined {
-    const key = this.#valueKey(value);
-    if (key == null) {
-      return undefined;
-    }
-    const recorded = this.#recordedOutcomes(key);
-    return (
-      this.#matching(makeArray(this.#valueItems) as SelectItem[], key) ??
-      recorded.find((item) => !item.__unresolved) ??
-      this.#matching(this.#knownRows(), key) ??
-      recorded[0]
-    );
-  }
-
-  // The rows already in hand for the current source, whichever kind it is. A paginated
-  // source returns its untracked accumulator; without this rung it would refetch a value
-  // whose row is already on screen. Read untracked on purpose — this runs during render,
-  // and the fetch path already covers the case where the row has not landed yet.
-  #knownRows(): SelectItem[] {
-    return this.#source.knownRows();
-  }
-
-  /**
-   * What past resolves recorded for a value, across both stores. Async resolves record into
-   * the tracked cache — their landing has to re-render the trigger — while synchronous ones
-   * record into the untracked map, because writing tracked state during render would
-   * invalidate the very render doing the write. A value normally lands in one or the other;
-   * both are read the same way, so neither store's ordering is load-bearing.
-   */
-  #recordedOutcomes(key: string): SelectItem[] {
-    return [
-      this.#resolvedCache.get(key),
-      this.#synchronousOutcomes.get(key),
-    ].filter((item) => item != null);
-  }
-
-  #matching(items: SelectItem[], key: string): SelectItem | undefined {
-    return items.find((i) => this.#valueKey(this.#itemValue(i)) === key);
-  }
-
-  // Resolves ids to a key→item map, containing only what genuinely resolved. Never throws
-  // and never rejects. One batch call via `resolveValues` when given; otherwise per-id via
-  // `resolveValue` (fans out — only when no batch resolver is supplied).
-  #resolveBatch(
-    values: SelectItemId[],
-    opts: SelectLoadOptions
-  ): Map<string, SelectItem> | Promise<Map<string, SelectItem>> {
-    if (this.#resolveValues) {
-      const result = this.#attempt(() => this.#resolveValues!(values, opts));
-      return this.#isPromise(result)
-        ? result.then(
-            (items) => this.#toResolvedMap(items),
-            () => new Map<string, SelectItem>()
-          )
-        : this.#toResolvedMap(result);
-    }
-    const per = values.map((v) => {
-      const result = this.#attempt(() => this.#resolveValue?.(v, opts));
-      return this.#isPromise(result)
-        ? result.then(
-            (item) => [v, item] as const,
-            () => [v, undefined] as const
-          )
-        : ([v, result] as const);
-    });
-    return per.some((r) => this.#isPromise(r))
-      ? Promise.all(per).then((pairs) => this.#pairsToMap(pairs))
-      : this.#pairsToMap(
-          per as ReadonlyArray<readonly [SelectItemId, SelectItem | undefined]>
-        );
-  }
-
-  // Runs a resolver, turning a synchronous throw into "nothing resolved" — the same shape a
-  // rejection produces. Without this a sync resolver's exception escapes mid-render, which
-  // the "never rejects, never blanks" contract promises it cannot.
-  #attempt<T>(fn: () => T): T | undefined {
-    try {
-      return fn();
-    } catch {
-      return undefined;
-    }
-  }
-
-  // Keys the batch response by each item's OWN id, so a resolver that answers with an item
-  // whose id differs from the one requested leaves the requested id unresolved rather than
-  // silently mis-pairing the two.
-  #toResolvedMap(
-    items: SelectItem[] | null | undefined
-  ): Map<string, SelectItem> {
-    return this.#pairsToMap(
-      (makeArray(items) as SelectItem[]).map(
-        (item) => [this.#itemValue(item), item] as const
-      )
-    );
-  }
-
-  #pairsToMap(
-    pairs: ReadonlyArray<readonly [SelectItemId, SelectItem | undefined]>
-  ): Map<string, SelectItem> {
-    const map = new Map<string, SelectItem>();
-    for (const [value, item] of pairs) {
-      const key = this.#valueKey(value);
-      if (key != null && item) {
-        map.set(key, item);
-      }
-    }
-    return map;
-  }
-
-  // Builds the ordered array from the sync hits and the batch results, filling any id that
-  // still did not resolve with an `__unresolved` fallback. Order follows `values`, not the
-  // response. Pure — caching the outcome is `#cacheOutcome`'s job, and only off-render.
-  #assemble(
-    values: SelectItemId[],
-    synced: Array<SelectItem | undefined>,
-    resolved: Map<string, SelectItem>
-  ): SelectItem[] {
-    return values.map((v, index) => {
-      const key = this.#valueKey(v);
-      return (
-        synced[index] ??
-        (key == null ? undefined : resolved.get(key)) ??
-        this.#unresolvedItem(v)
-      );
-    });
-  }
-
-  // The fallback for a held id that could not be resolved. `createUnresolvedItem` names it
-  // ("Topic #123"); the default shows the bare id. Either way the engine owns the
-  // `__unresolved` marker, so a builder cannot hand back something that reads as resolved.
-  #unresolvedItem(value: SelectItemId): SelectItem {
-    // A server source that was never given a way to answer "what is this id" can only ever
-    // fabricate this fallback, so the trigger reads "(unavailable)" for the life of the page.
-    // It looks correct in the session that picked the value — the cache still holds it — and
-    // breaks on the next load, which is why it is worth failing loudly rather than degrading.
-    // Stripped from production builds.
-    assert(
-      `DSelect: no way to resolve the held value \`${String(value)}\`. \`@load\` answers ` +
-        `queries and is never asked what a given id is, so a select that can mount holding a ` +
-        `value needs \`@resolveValue\`, \`@resolveValues\`, or \`@valueItems\`.`,
-      !this.#load ||
-        !!this.#resolveValue ||
-        !!this.#resolveValues ||
-        this.#valueItemsDeclared
-    );
-    const built = this.#createUnresolvedItem
-      ? this.#attempt(() => this.#createUnresolvedItem!(value))
-      : undefined;
-    if (built) {
-      const item = {
-        ...built,
-        [this.#valueField]: value,
-        __unresolved: true,
-      };
-      this.#customUnresolvedItems.add(item);
-      return item;
-    }
-    const item: SelectItem = { [this.#valueField]: value, __unresolved: true };
-    // Show the value as the label so an unresolved row renders the id, not a blank — unless
-    // the label field IS the value field, where it is already present (keeping the raw type).
-    if (this.#labelField !== this.#valueField) {
-      item[this.#labelField] = String(value ?? "");
-    }
-    return item;
-  }
-
-  #cacheResolved(item: SelectItem | null | undefined): void {
-    if (item) {
-      this.#cacheResolvedValue(this.#itemValue(item), item);
-    }
-  }
-
-  #cacheResolvedValue(
-    value: SelectItemId,
-    item: SelectItem | null | undefined
-  ): void {
-    const key = this.#valueKey(value);
-    if (key != null && item && this.#resolvedCache.get(key) !== item) {
-      this.#resolvedCache.set(key, item);
-    }
-  }
-
-  #normalize(
-    item: SelectItem,
-    index: number,
-    atMaximum: boolean
-  ): SelectDescriptor {
-    const value = this.#itemValue(item);
-    // An action row runs a callback and never becomes a value, so it cannot be the selection even
-    // when its id collides with a held one — `isSelected` compares values and cannot tell the two
-    // apart. The public `isSelected` is deliberately left alone: it answers a question about
-    // values, and `activate` short-circuits on `onSelect` before any path that consults it.
-    const selected =
-      this.isSelected(item) && typeof item.onSelect !== "function";
-    return {
-      // A value-less synthetic row (e.g. a null-id special) has no natural key; fall back to
-      // its position, which is stable within the ordered special/create prefix.
-      key: this.#valueKey(value) ?? `__row:${index}`,
-      value,
-      item,
-      flags: {
-        selected,
-        // At the cap only rows that could actually grow the selection are closed off. A
-        // selected row stays open (deselecting it is how the user gets back under the cap), and
-        // so do action rows and structural rows, neither of which ever becomes a value.
-        disabled:
-          !!item.disabled ||
-          (atMaximum &&
-            !selected &&
-            !this.#isStructural(item) &&
-            typeof item.onSelect !== "function"),
-        group: !!item.__header,
-        divider: !!item.__divider,
-        __create: !!item.__create,
-        __unresolved: !!item.__unresolved,
-        __none: !!item.__none,
-      },
-    };
-  }
-
-  #itemValue(item: SelectItem | null | undefined): SelectItemId {
-    return item?.[this.#valueField];
-  }
-
-  #isStructural(item: SelectItem): boolean {
-    return !!item.__header || !!item.__divider;
-  }
-
-  // The synthetic single-select "none" row: a selectable option carrying a `null` value. Shown only
-  // while the filter is empty — a "none" row that survived filtering would sit at the top of a
-  // non-matching result and, being auto-highlighted, turn "type a non-match, press Enter" into a
-  // silent clear (and would suppress the empty state). Selecting it routes through the normal
-  // `select()` path, which emits `null` because the row's value field is `null`.
-  #noneRow(): SelectItem | null {
-    if (this.#noneLabel == null || this.#state.filter !== "") {
-      return null;
-    }
-    return {
-      [this.#valueField]: null,
-      [this.#labelField]: this.#noneLabel,
-      __none: true,
-    };
-  }
-
-  // Client sources only: a paginating source can split a group across pages, so grouping a
-  // single page would fragment it. Deferred for server sources.
-  #shouldGroup(): boolean {
-    return this.#groupBy != null && !this.#isAsync;
-  }
-
-  #groupKey(item: SelectItem): SelectItemId {
-    return typeof this.#groupBy === "function"
-      ? this.#groupBy(item)
-      : item[this.#groupBy as string];
-  }
-
-  #groupLabel(key: SelectItemId): string {
-    return this.#groupLabelFn ? this.#groupLabelFn(key) : String(key);
-  }
-
-  // Segments options by group key — first-appearance order, preserved by the Map — and injects
-  // a header row before each group. Filtering already ran, so every group here is non-empty and
-  // no header is ever orphaned.
-  #groupItems(options: SelectItem[]): SelectItem[] {
-    const groups = new Map<SelectItemId, SelectItem[]>();
-    for (const item of options) {
-      // Grouping addresses options only. A structural row that reached the source (e.g. an
-      // upstream transformer) is skipped rather than passed to `groupBy`, which would throw on
-      // a synthetic row or spawn an option-less phantom group.
-      if (this.#isStructural(item)) {
-        continue;
-      }
-      const key = this.#groupKey(item);
-      const bucket = groups.get(key);
-      if (bucket) {
-        bucket.push(item);
-      } else {
-        groups.set(key, [item]);
-      }
-    }
-
-    const out: SelectItem[] = [];
-    for (const [key, groupItems] of groups) {
-      out.push({ __header: true, groupKey: key, label: this.#groupLabel(key) });
-      out.push(...groupItems);
-    }
-    return out;
-  }
-
-  // Two ids denote the same option iff their string forms match, so a bound "5" selects
-  // item id 5 (and vice-versa). Nullish never matches an id.
-  #valueKey(value: SelectItemId): string | null {
-    return value == null ? null : String(value);
-  }
-
-  /** Removes duplicate normalized ids while preserving first-occurrence order. */
-  #dedupeValues(values: SelectItemId[]): SelectItemId[] {
-    const seen = new Set<string | null>();
-    return values.filter((value) => {
-      const key = this.#valueKey(value);
-      if (seen.has(key)) {
-        return false;
-      }
-      seen.add(key);
-      return true;
-    });
-  }
-
-  #itemLabel(item: SelectItem | null | undefined): unknown {
-    return item?.[this.#labelField];
-  }
-
-  #snapshot(): SelectSnapshot {
-    return Object.freeze({
-      filter: this.#state.filter,
-      value: this.value,
-      hasValue: this.hasValue,
-    });
-  }
-
-  #isPromise<T>(value: T | Promise<T>): value is Promise<T> {
-    return (
-      value != null && typeof (value as { then?: unknown }).then === "function"
-    );
   }
 }
