@@ -34,6 +34,7 @@ module DiscourseWorkflows
         "slug": { "type": "string" },
         "posts_count": { "type": "integer" },
         "category_id": { "type": ["integer", "null"] },
+        "user_id": { "type": "integer" },
         "tags": {
           "type": "array",
           "items": {

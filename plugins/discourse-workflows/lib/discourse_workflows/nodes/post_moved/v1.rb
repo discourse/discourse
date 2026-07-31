@@ -93,10 +93,6 @@ module DiscourseWorkflows
           serialize_post(post)
         end
 
-        def topic_data(topic)
-          serialize_record(topic, TopicListItemSerializer)
-        end
-
         def destination_topic
           @destination_topic ||= ::Topic.find_by(id: @post&.topic_id)
         end
