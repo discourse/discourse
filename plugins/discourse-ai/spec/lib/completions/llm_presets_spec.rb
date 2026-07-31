@@ -17,6 +17,20 @@ RSpec.describe DiscourseAi::Completions::LlmPresets do
       expect(model).not_to have_key(:provider_params)
     end
 
+    it "uses the Gemini Interactions API for all Google models" do
+      preset = described_class.find_provider("google")
+
+      expect(preset).to include(
+        provider: "gemini_interactions",
+        endpoint: "https://generativelanguage.googleapis.com/v1/interactions",
+      )
+      expect(preset[:models].pluck(:name)).to eq(%w[gemini-3.1-pro-preview gemini-3.6-flash])
+      expect(preset[:models].first[:endpoint]).to eq(
+        "https://generativelanguage.googleapis.com/v1beta/interactions",
+      )
+      expect(preset[:models].last).not_to have_key(:endpoint)
+    end
+
     it "includes a Google Vertex AI preset" do
       preset = described_class.find_provider("google_vertex_ai")
       model = preset[:models].first

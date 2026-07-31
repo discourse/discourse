@@ -282,7 +282,7 @@ module DiscourseAi
       private
 
       def enable_gemini_thought_summaries!(llm_kwargs, current_llm, context)
-        return if current_llm.llm_model.provider != "google"
+        return if !%w[google gemini_interactions].include?(current_llm.llm_model.provider)
         return if context.skip_show_thinking != false
 
         extra_model_params = (llm_kwargs[:extra_model_params] || {}).dup

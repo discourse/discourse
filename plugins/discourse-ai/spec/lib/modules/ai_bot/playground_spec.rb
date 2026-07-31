@@ -199,6 +199,34 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       )
     end
 
+    it "closes a fenced thinking block before rendering visible content" do
+      ai_agent.update!(show_thinking: true)
+      agent_klass = AiAgent.all_agents.find { |agent_class| agent_class.name == ai_agent.name }
+      bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent_klass.new)
+      playground = described_class.new(bot)
+      responses = [
+        [
+          DiscourseAi::Completions::Thinking.new(
+            message: "Code execution:\n\n```python\nprint(42)\n```",
+          ),
+          "![image](https://example.com/image.png)",
+        ],
+      ]
+
+      reply_post = nil
+      DiscourseAi::Completions::Llm.with_prepared_responses(responses) do
+        new_post = Fabricate(:post, raw: "Render a chart")
+        reply_post = playground.reply_to(new_post)
+      end
+
+      expect(reply_post.raw).to include(
+        "```python\nprint(42)\n```\n</details>\n\n![image](https://example.com/image.png)",
+      )
+      expect(reply_post.cooked).to include(
+        "</code></pre>\n</details>\n<p><img src=\"https://example.com/image.png\"",
+      )
+    end
+
     it "keeps trailing thinking outside the response text" do
       ai_agent.update!(show_thinking: true)
       agent_klass = AiAgent.all_agents.find { |agent_class| agent_class.name == ai_agent.name }
