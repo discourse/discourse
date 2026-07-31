@@ -1,6 +1,32 @@
 # frozen_string_literal: true
 
 describe DiscourseDataExplorer::DataExplorer do
+  describe ".strip_comments" do
+    it "removes line comments, keeping the newline" do
+      expect(described_class.strip_comments("SELECT 1 -- hi\nFROM t")).to eq("SELECT 1 \nFROM t")
+    end
+
+    it "removes nested block comments" do
+      expect(described_class.strip_comments("SELECT /* a /* b */ c */ 1")).to eq("SELECT   1")
+    end
+
+    it "keeps comment markers inside quoted identifiers" do
+      expect(described_class.strip_comments(%{SELECT 1 AS "-- a"})).to eq(%{SELECT 1 AS "-- a"})
+    end
+
+    it "keeps comment markers inside dollar-quoted strings" do
+      expect(described_class.strip_comments("SELECT $q$-- a$q$")).to eq("SELECT $q$-- a$q$")
+    end
+
+    it "does not let an escaped quote in an E'' string swallow a comment" do
+      expect(described_class.strip_comments("SELECT E'a\\'b' -- c")).to eq("SELECT E'a\\'b' ")
+    end
+
+    it "passes unterminated literals through" do
+      expect(described_class.strip_comments("SELECT 'a -- b")).to eq("SELECT 'a -- b")
+    end
+  end
+
   describe ".run_query" do
     fab!(:topic)
 
@@ -56,6 +82,102 @@ describe DiscourseDataExplorer::DataExplorer do
       expect(result[:error]).to eq(nil)
       expect(result[:pg_result].to_a.size).to eq(1)
       expect(result[:pg_result][0]["id"]).to eq(topic2.id)
+    end
+
+    it "adds query instrumentation after removing stored comments" do
+      user = Fabricate(:user)
+      query =
+        DiscourseDataExplorer::Query.create!(
+          name: "instrumented query",
+          sql: "-- removable annotation\nSELECT current_query() AS sql",
+        )
+
+      result = described_class.run_query(query, {}, { current_user: user })
+      executed_sql = result[:pg_result][0]["sql"]
+
+      expect(result[:error]).to eq(nil)
+      expect(executed_sql).to include(
+        "DiscourseDataExplorer Query",
+        "/admin/plugins/discourse-data-explorer/queries/#{query.id}",
+        "Started by: #{user.username}",
+      )
+      expect(executed_sql).not_to include("removable annotation")
+    end
+
+    it "keeps comment markers that are part of a string literal" do
+      query =
+        DiscourseDataExplorer::Query.create!(
+          name: "some query",
+          sql: "SELECT '-- not /* a comment' AS value",
+        )
+
+      result = described_class.run_query(query)
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result][0]["value"]).to eq("-- not /* a comment")
+    end
+
+    it "interpolates each parameter once" do
+      query = DiscourseDataExplorer::Query.create!(name: "parameterized query", sql: <<~SQL)
+            -- [params]
+            -- string :selected
+            -- string :other
+            SELECT :selected AS value
+          SQL
+
+      result =
+        described_class.run_query(query, { "selected" => ":other", "other" => "other value" })
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result][0]["value"]).to eq(":other")
+    end
+
+    it "interpolates a parameter whose name is a prefix of another" do
+      query = DiscourseDataExplorer::Query.create!(name: "parameterized query", sql: <<~SQL)
+            -- [params]
+            -- int :topic
+            -- int :topic_id
+            SELECT :topic AS a, :topic_id AS b
+          SQL
+
+      result = described_class.run_query(query, { "topic" => "1", "topic_id" => "2" })
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result].to_a).to eq([{ "a" => 1, "b" => 2 }])
+    end
+
+    it "leaves undeclared parameters alone" do
+      query = DiscourseDataExplorer::Query.create!(name: "parameterized query", sql: <<~SQL)
+            -- [params]
+            -- string :declared
+            SELECT :declared AS a, ':undeclared' AS b
+          SQL
+
+      result = described_class.run_query(query, { "declared" => "value" })
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result].to_a).to eq([{ "a" => "value", "b" => ":undeclared" }])
+    end
+
+    it "does not let a parameter break out of a string literal via another parameter" do
+      query = DiscourseDataExplorer::Query.create!(name: "parameterized query", sql: <<~SQL)
+            -- [params]
+            -- string :selected
+            -- string :other
+            SELECT :selected AS value
+          SQL
+
+      result =
+        described_class.run_query(
+          query,
+          {
+            "selected" => "x:other",
+            "other" => "'||(SELECT users.username FROM users LIMIT 1)||'",
+          },
+        )
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result][0]["value"]).to eq("x:other")
     end
 
     describe "current_user_id parameter" do
