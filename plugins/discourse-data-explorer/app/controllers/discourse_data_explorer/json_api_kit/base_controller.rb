@@ -357,7 +357,8 @@ module DiscourseDataExplorer
           params[:sort].to_s.split(",").map { it.delete_prefix("-") }.reject { cfg.sorts.key?(it) }
         bad += requested_include_paths - cfg.allowed_includes - plugin_namespaces
         if params[:page].respond_to?(:keys)
-          bad += (params[:page].keys.map(&:to_s) - %w[size after before]).map { "page[#{it}]" }
+          bad +=
+            (params[:page].keys.map(&:to_s) - %w[size after before anchor]).map { "page[#{it}]" }
         end
         return if bad.empty?
 
@@ -431,6 +432,20 @@ module DiscourseDataExplorer
         return if performed?
 
         scope = apply_filters(base_scope)
+        if params.dig(:page, :anchor).present?
+          if after || before
+            return(
+              render_profile_error(
+                title: "An anchor cannot be combined with a cursor.",
+                source: {
+                  parameter: "page[anchor]",
+                },
+              )
+            )
+          end
+          after = resolve_anchor_cursor(scope, order:, nulls_last:)
+          return if performed?
+        end
         meta = params.dig(:stats, :total) == "count" ? stats_meta(scope.count) : {}
         paginator = CursorPaginator.new(scope, order:, size:, after:, before:, nulls_last:)
         records = paginator.records
@@ -493,6 +508,45 @@ module DiscourseDataExplorer
         end
 
         size
+      end
+
+      # Positional entry (docs/versioning-design.md §2c): resolve `page[anchor][key]`
+      # to the cursor of the row *preceding* the anchored one, so the ordinary window
+      # starts AT it. An anchor selects a RECORD — identity anchors work under any
+      # ordering, value anchors bound the leading sort column and so must name the
+      # active sort.
+      def resolve_anchor_cursor(scope, order:, nulls_last:)
+        anchor = params[:page][:anchor]
+        if !anchor.respond_to?(:each_pair)
+          return anchor_error("page[anchor]", "An anchor must name a key.")
+        end
+
+        key, raw = anchor.to_unsafe_h.first
+        parameter = "page[anchor][#{key}]"
+        definition = cfg.anchors[key.to_s]
+        return anchor_error(parameter, "Unknown anchor `#{key}`.") if definition.nil?
+
+        value = ActiveModel::Type.lookup(definition[:type]).cast(raw)
+        return anchor_error(parameter, "Invalid value for `#{key}`.") if value.nil?
+
+        resolver = CursorPaginator.new(scope, order:, size: 1, nulls_last:)
+        if definition[:identity]
+          resolver.anchor_cursor { |records| records.where(id: value) }
+        else
+          column = (cfg.sorts.dig(key.to_s, :column) || key).to_sym
+          if column != order.keys.first
+            return(anchor_error(parameter, "`#{key}` is not the sort this list is ordered by."))
+          end
+          operator = order.values.first == :desc ? "<=" : ">="
+          resolver.anchor_cursor { |records| records.where("#{column} #{operator} ?", value) }
+        end
+      rescue CursorPaginator::AnchorNotFound
+        anchor_error(parameter, "No item at that position.")
+      end
+
+      def anchor_error(parameter, detail)
+        render_profile_error(title: "Invalid anchor.", detail:, source: { parameter: })
+        nil
       end
 
       def cursor_page_url(page_params, size:)

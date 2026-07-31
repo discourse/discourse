@@ -205,4 +205,60 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::CursorPaginator do
       expect { paginator }.to raise_error(described_class::InvalidCursor)
     end
   end
+
+  # The shape core PR #36065 uses for `/latest`: ordering values projected as
+  # virtual CASE columns (a synthetic priority flag plus a coalesced date), mixed
+  # directions, wrapped in a subquery so the outer query can reference them, keyset
+  # over the virtual columns. The anchor has to work against THAT to be useful:
+  # note the leading column is synthetic, so no client could ever supply a value
+  # for it — which is why anchoring resolves a record rather than building a tuple.
+  describe "anchoring into a composed virtual-column keyset (core PR #36065 shape)" do
+    subject(:window) { described_class.new(wrapped, order: composed_order, size: 2, after: cursor) }
+
+    let(:projected) do
+      DiscourseDataExplorer::Query.where(
+        id: [first_query, second_query, third_query, fourth_query, fifth_query],
+      ).select(
+        "*",
+        "CASE WHEN hidden THEN 0 ELSE 1 END AS sort_priority",
+        "CASE WHEN hidden THEN created_at ELSE last_run_at END AS sort_date",
+      )
+    end
+    let(:wrapped) do
+      DiscourseDataExplorer::Query.select("*").from(projected, :data_explorer_queries)
+    end
+    let(:composed_order) { { sort_priority: :asc, sort_date: :desc, id: :desc } }
+    let(:resolver) { described_class.new(wrapped, order: composed_order, size: 1) }
+    let(:cursor) { resolver.anchor_cursor { |scope| scope.where(id: third_query.id) } }
+
+    before do
+      [
+        first_query,
+        second_query,
+        third_query,
+        fourth_query,
+        fifth_query,
+      ].each_with_index do |query, index|
+        query.update!(hidden: index.even?, last_run_at: Time.utc(2026, 7, 10 - index, 12))
+      end
+    end
+
+    it "starts the window at the anchored record" do
+      expect(window.records.first.id).to eq(third_query.id)
+    end
+
+    it "keeps the composed ordering across the anchored window" do
+      expect(window.records.map(&:sort_priority).uniq.size).to be <= 2
+    end
+
+    it "still offers a way back" do
+      expect(window.prev_page_params).to be_present
+    end
+
+    it "raises when nothing matches the anchor" do
+      expect { resolver.anchor_cursor { |scope| scope.where(id: -1) } }.to raise_error(
+        described_class::AnchorNotFound,
+      )
+    end
+  end
 end

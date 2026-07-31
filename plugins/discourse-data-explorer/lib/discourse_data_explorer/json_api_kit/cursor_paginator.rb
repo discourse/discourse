@@ -25,6 +25,7 @@ module DiscourseDataExplorer
     # and keeps them reachable. See docs/jsonapi-spec-reference.md §8.2.
     class CursorPaginator
       InvalidCursor = Class.new(StandardError)
+      AnchorNotFound = Class.new(StandardError)
 
       # Stock Pagy composes equality with `=`, so a cursor minted on a NULL-valued
       # row stops matching and the NULL tail becomes unreachable. Same predicate,
@@ -72,7 +73,17 @@ module DiscourseDataExplorer
         # Mirrors Pagy's own cutoff derivation (keyset attribute values → JSON →
         # B64), so an item cursor is interchangeable with a page cursor.
         def encode_cursor(record, order:)
-          Pagy::B64.urlsafe_encode(record.slice(*order.keys).values.to_json)
+          Pagy::B64.urlsafe_encode(
+            record.slice(*order.keys).values.map { encode_value(it) }.to_json,
+          )
+        end
+
+        # `Time#to_json` truncates to milliseconds while Postgres keeps
+        # microseconds, so a cursor minted from a sub-millisecond timestamp
+        # compares as *earlier* than its own row — the row repeats, or its
+        # neighbour is skipped. Encode timestamps at full precision instead.
+        def encode_value(value)
+          value.is_a?(Time) || value.is_a?(DateTime) ? value.iso8601(6) : value
         end
       end
 
@@ -83,6 +94,30 @@ module DiscourseDataExplorer
         @size = size
         @after = validate_cursor!(after)
         @before = validate_cursor!(before)
+        # Kept so an anchor can spawn a sibling paginator (see #anchor_cursor).
+        @source_scope = scope
+        @source_options = { order:, nulls_last: }
+      end
+
+      # Positional entry (docs/versioning-design.md §2c). The block selects the
+      # anchor ROW — by identity, by a bound on the leading ordering column, or by
+      # anything else the resource declares — and the cursor is minted from that
+      # row, never built from the supplied value. That is what makes anchoring work
+      # against composed keysets whose leading column is synthetic (core PR #36065's
+      # `sort_priority`), and against groups no value can name (the NULL tail).
+      #
+      # Returns the cursor of the row *preceding* the anchor, so feeding it back as
+      # `after:` yields a window starting AT the anchor with the ordinary window,
+      # link and probe machinery untouched. `nil` means the anchor is the first row.
+      def anchor_cursor
+        record = yield(@scope).reorder(@order).first or raise AnchorNotFound
+        predecessor =
+          self
+            .class
+            .new(@source_scope, **@source_options, size: 1, before: cursor_for(record))
+            .records
+            .first
+        predecessor && cursor_for(predecessor)
       end
 
       def records = window[:records]
@@ -108,7 +143,7 @@ module DiscourseDataExplorer
             if (column = @null_helpers.key(key))
               record.public_send(column).nil? ? 1 : 0
             else
-              record.public_send(key)
+              self.class.encode_value(record.public_send(key))
             end
           end
         Pagy::B64.urlsafe_encode(values.to_json)

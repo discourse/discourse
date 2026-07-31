@@ -436,7 +436,7 @@ The spec reference doc surfaced that the Kit's keyset pagination (invented `page
   profile's, and it invites an unbounded `COUNT` per page (the profile's own answer for expensive counts is
   the optional `estimatedTotal.bestGuess`). Left in the spike code, not offered as API.
 
-## 2c. Positional entry — the anchor (designed 2026-07-31, unbuilt)
+## 2c. Positional entry — the anchor (designed and spiked 2026-07-31)
 
 Requirement identified in design review: enter an ordered list at an arbitrary position and page **both
 ways** from there, without a filter clamping every page. Treated as required rather than optional — the
@@ -550,6 +550,48 @@ stays a deliberate act, not something sprinkled on every relationship), and **un
 unpaginatable by design** (`random()`, live-recomputed trending scores — the cursor would point at a
 position that no longer exists, which is a semantic failure, not a mechanical one). Those keep earning the
 profile's typed `unsupported-sort`.
+
+### Spiked 2026-07-31 — what the code proved, and what it changed
+
+Built: `anchor name, type` on the resource, `page[anchor][<key>]` on listings,
+`CursorPaginator#anchor_cursor { … }`. 11 request examples plus 4 unit examples over a composed
+virtual-column keyset.
+
+**No `identity:` flag — the kind follows the key.** `id` is an identity anchor because that is what
+identity *means* in JSON:API (a resource is `type` + `id`); every other key is a value anchor on the sort
+it names. Rejected alternatives: inferring from the schema (primary or unique-indexed column) would need
+AR introspection, which the design refuses for types — and the model is only reachable through
+`base_scope` at request time anyway; inferring "not a declared sort ⇒ identity" silently turns a mistaken
+`anchor :created_at` into an exact timestamp match instead of the teaching 400. Note foreign keys are
+*not* identity anchors: many rows share one, so anchoring on a foreign key is filtering. An alternate-key
+identity anchor (a slug, an external id) would need an explicit declaration again — no case for it yet.
+
+**Design change the spike forced: identity anchoring is the GENERAL case, value anchoring the special
+one.** Checked against the shape core PR #36065 uses for `/latest` (two projected `CASE` columns —
+`sort_priority` for pinning and a coalesced `sort_date` — mixed directions, subquery-wrapped, keyset over
+the virtual columns). Its *leading* keyset column is synthetic: no client can ever supply a value for a pin
+flag. So the useful form is "start at this record" (`page[anchor][id]=…`), which works under **any**
+ordering, while a value anchor bounds the leading sort column and therefore must name the active sort
+(otherwise: typed 400). Identity anchoring also reaches groups no value can name — proven on the spike's
+NULL tail, where `page[anchor][id]=<never-run query>` lands in the group a date anchor cannot address.
+
+**Implementation trick that kept it small.** The anchor resolves to a record, then returns the cursor of
+the row *preceding* it; feeding that back as `after:` yields a window starting at the anchor, leaving the
+window, link and probe machinery completely untouched. Cost: the seek plus one 1-row reverse window. No
+inclusive-comparison variant of the keyset predicate was needed.
+
+**Bug found in existing pagination (not in the anchor).** Cursors encoded timestamps through
+`Time#to_json`, which truncates to milliseconds, while Postgres stores microseconds — so a cursor minted
+from a sub-millisecond timestamp compares as *earlier than its own row*: the row repeats, or its neighbour
+is skipped. It surfaced because the composed keyset's `sort_date` is a `created_at` (microsecond-precise),
+where every existing spec used whole-second fixtures. Fixed by encoding `Time`/`DateTime` keyset values as
+`iso8601(6)`. Worth remembering as a class of bug: **keyset correctness depends on the cursor round-tripping
+the ordering value exactly**, so any lossy encoding (timestamps, floats, collated strings) is a silent
+paging fault.
+
+Not built, still as designed above: the centred window (`page[before_size]`/`page[after_size]`),
+`include_anchor`, symbolic anchors (`first_unread`-style), and emitting the anchor parameters into the
+generated documentation.
 
 > Related: endpoints declared `internal` (see [resource design](./resource-design.md) §9) carry
 > no version obligation and no mandatory version header — there is nothing to pin.

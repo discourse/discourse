@@ -26,6 +26,7 @@ module DiscourseDataExplorer
             @attribute_definitions
             @relationship_definitions
             @filter_definitions
+            @anchor_definitions
             @sort_definitions
             @stat_definitions
             @default_sort
@@ -83,6 +84,19 @@ module DiscourseDataExplorer
           super(name, options.merge(serializer: resource, lazy_load_data: true), &block)
         end
 
+        # Positional entry (docs/versioning-design.md §2c). The type is not needed
+        # for the SQL (AR casts) but earns its place twice: a garbage value becomes a
+        # typed 400 rather than a cast error, and the parameter can be documented.
+        # Whether an anchor selects a row (identity) or bounds the ordering follows
+        # from the key: `id` is identity, because that is what identity means in
+        # JSON:API — every other key is a value anchor on the sort it names.
+        def anchor(name, value_type)
+          ActiveModel::Type.lookup(value_type)
+          anchor_definitions[name.to_sym] = { type: value_type }
+        end
+
+        def anchor_definitions = @anchor_definitions ||= {}
+
         def filter(name, value_type, description: nil, &block)
           ActiveModel::Type.lookup(value_type)
           filter_definitions[name.to_sym] = { type: value_type, description:, block: }
@@ -123,6 +137,7 @@ module DiscourseDataExplorer
             Config.new.tap do |config|
               config.serializer(self)
               filter_definitions.each { |name, defn| config.filter(name, &defn[:block]) }
+              anchor_definitions.each { |name, defn| config.anchor(name, defn[:type]) }
               sort_definitions.each do |name, defn|
                 config.sort(name, column: defn[:column], nulls: defn[:nulls], &defn[:block])
               end

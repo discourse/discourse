@@ -60,6 +60,12 @@ module DiscourseDataExplorer
         )
       end
 
+      # Positional entry: `id` anchors a row under any sort; the others bound the
+      # sort key they name.
+      anchor :id, :integer
+      anchor :name, :string
+      anchor :ran_at, :datetime
+
       sort :name
       # Derived from the `ran_at` attribute (renamed from `last_run_at`, 2026-07-08);
       # the wire name moved with the attribute, the ORDER BY column did not. The

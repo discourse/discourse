@@ -13,6 +13,7 @@ module DiscourseDataExplorer
                   :sorts,
                   :stats,
                   :allowed_includes,
+                  :anchors,
                   :max_page_size,
                   :default_page_size
 
@@ -20,6 +21,7 @@ module DiscourseDataExplorer
         @filters = {}
         @sorts = {}
         @stats = {}
+        @anchors = {}
         @allowed_includes = []
         @max_page_size = 100
         @default_page_size = 20
@@ -42,6 +44,13 @@ module DiscourseDataExplorer
       def filter(name, &block) = @filters[name.to_s] = block
       def sort(name, column: nil, nulls: nil, &block)
         @sorts[name.to_s] = { block:, column:, nulls: }
+      end
+
+      # Positional entry (docs/versioning-design.md §2c): which keys a client may
+      # anchor a window at. `id` selects a row and so works under any ordering; any
+      # other key bounds the leading sort column and must name the active sort.
+      def anchor(name, value_type)
+        @anchors[name.to_s] = { type: value_type, identity: name.to_s == "id" }
       end
 
       def virtual_sort_keys = @sorts.filter_map { |name, entry| name if entry[:block] }
