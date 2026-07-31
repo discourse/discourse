@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UserUpdater
+  LEGACY_SHOW_ORIGINAL_CONTENT_ATTR = :show_original_content
+
   CATEGORY_IDS = {
     watched_first_post_category_ids: :watching_first_post,
     watched_category_ids: :watching,
@@ -61,7 +63,9 @@ class UserUpdater
     watched_precedence_over_muted
     topics_unread_when_closed
     composition_mode
-    show_original_content
+    send_shortcut
+    automatically_translate
+    understood_languages
   ]
 
   NOTIFICATION_SCHEDULE_ATTRS = -> do
@@ -81,6 +85,12 @@ class UserUpdater
   end
 
   def update(attributes = {})
+    if attributes.key?(LEGACY_SHOW_ORIGINAL_CONTENT_ATTR)
+      attributes[:automatically_translate] = attributes[LEGACY_SHOW_ORIGINAL_CONTENT_ATTR].to_s !=
+        "true" unless attributes.key?(:automatically_translate)
+      attributes.delete(LEGACY_SHOW_ORIGINAL_CONTENT_ATTR)
+    end
+
     user_profile = user.user_profile
     user_profile.dismissed_banner_key = attributes[:dismissed_banner_key] if attributes[
       :dismissed_banner_key
@@ -181,6 +191,13 @@ class UserUpdater
         attributes[:text_size]
     end
 
+    if attributes.key?(:locale) || attributes.key?(:understood_languages)
+      understood_languages =
+        attributes.fetch(:understood_languages) { user.user_option.understood_languages }
+      interface_locale = user.effective_locale
+      attributes[:understood_languages] = [interface_locale, *understood_languages].compact.uniq
+    end
+
     OPTION_ATTR.each do |attribute|
       if attributes.key?(attribute)
         save_options = true
@@ -260,10 +277,8 @@ class UserUpdater
           attributes.fetch(:name) { "" },
         )
       end
+
       DiscourseEvent.trigger(:within_user_updater_transaction, user, attributes)
-    rescue Addressable::URI::InvalidURIError
-      # Prevent 500 for crazy url input
-      return saved
     end
 
     if saved
@@ -375,6 +390,10 @@ class UserUpdater
 
   def format_url(website)
     return nil if website.blank?
-    website =~ /\Ahttp/ ? website : "http://#{website}"
+
+    uri = URI.parse(website)
+    "#{"http://" if uri.scheme.blank?}#{website}"
+  rescue URI::Error
+    website
   end
 end

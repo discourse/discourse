@@ -4,6 +4,7 @@ const displayUtils = require("testem/lib/utils/displayutils");
 const colors = require("@colors/colors/safe");
 
 require("./patch-testem-output")();
+require("./patch-testem-browser-watchdog")();
 
 const SANDBOX_DISABLE_VALUES = ["1", "true"];
 const sandboxDisabled =
@@ -71,17 +72,12 @@ class Reporter extends TapReporter {
         this.strictSpecCompliance
       );
 
-      const string = this.reformatTapLine(rawString, prefix);
+      let string = this.reformatTapLine(rawString, prefix);
 
       const color = this.colorForResult(result);
-      const matches = string.match(/([\S\s]+?)(\n\s+browser\slog:[\S\s]+)/);
+      string = string.replace(/\n\s+---\n\s+browser\slog:[\S\s]+/, "\n");
 
-      if (matches) {
-        this.out.write(color(matches[1]));
-        this.out.write(colors.cyan(matches[2]));
-      } else {
-        this.out.write(color(string));
-      }
+      this.out.write(color(string));
     }
   }
 
@@ -269,8 +265,12 @@ module.exports = {
   socket_server_options: {
     maxHttpBufferSize: 1e8, // 100MB
   },
-  browser_start_timeout: 120,
+  browser_start_timeout:
+    process.env.QUNIT_BROWSER_WATCHDOG === "1"
+      ? parseInt(process.env.QUNIT_BROWSER_START_TIMEOUT, 10)
+      : 120,
   browser_disconnect_timeout: 30,
+  chrome_stderr_info_only: true,
   browser_args: {
     Chromium: [
       // --no-sandbox is needed when running Chromium inside a container or when explicitly requested

@@ -2250,7 +2250,7 @@ he:
         default: "(ברירת מחדל)"
         any: "כלשהו"
       homepage:
-        default: "(ברירת מחדל)"
+        default: "ברירת מחדל"
       password_confirmation:
         title: "סיסמה שוב"
       invite_code:
@@ -2294,6 +2294,9 @@ he:
         contextual: "תוכן חדש בדף"
       bookmark_after_notification:
         title: "לאחר שליחת התראה על תזכורת סימניה:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "‎%{meta_key} + Enter"
       like_notification_frequency:
         title: "התראה כשנאהב"
         always: "תמיד"
@@ -3128,7 +3131,7 @@ he:
     filter_input:
       clear: "פינוי המסנן"
     filter_controls:
-      reset: "איפוס המסנן"
+      reset: "איפוס"
     d_icon_grid_picker:
       select_icon: "נא לבחור סמל"
       search_placeholder: "חיפוש סמלים…"
@@ -6730,7 +6733,6 @@ he:
               posts: "פרסומים"
               share: "שיתוף"
             whos_posting:
-              all_categories: "כל הקטגוריות"
               new_members: "חברים חדשים"
               staff: "סגל"
             trust_level_pipeline:
@@ -7489,6 +7491,8 @@ he:
         sidebar: "סרגל צד"
         header_dropdown: "שורת כותרת נגללת"
         legacy: "מיושן"
+      duplicate_topic_titles:
+        allowed: "מותר"
       backups:
         title: "גיבויים"
         files_title: "גיבוי קבצים"
@@ -7733,7 +7737,6 @@ he:
           finish_install: "סיום התקנת ערכת עיצוב"
           last_attempt: "תהליך ההתקנה לא הסתיים, ניסיון אחרון:"
           remote_branch: "שם ענף (רשות)"
-          public_key: "להעניק למפתח הציבורי הבא גישה למאגר:"
           install: "התקנה"
           installed: "הותקן"
           install_popular: "נפוץ"
@@ -9107,6 +9110,7 @@ he:
         uploading: "בהליכי העלאה…"
         name: "שם"
         group: "קבוצה"
+        all_groups: "כל הקבוצות"
         created_by: "נוצר על ידי"
         image: "תמונה"
         alt: "תצוגה מקדימה של אמוג׳י מותאם"

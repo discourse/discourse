@@ -15,11 +15,10 @@ de:
           kpi:
             accepted_solutions:
               label: "Akzeptierte Lösungen"
+              tooltip: "Die Anzahl der Themen, bei denen ein Beitrag als Lösung markiert wurde."
         sections:
           support:
             title: "Support"
-            filter:
-              all_categories: "Alle Kategorien"
             answerers:
               staff: "Team"
               member: "Mitglieder"
@@ -41,6 +40,7 @@ de:
       allow_accepted_answers: "Erlaube dem Ersteller des Themas und Team-Mitgliedern, eine Antwort als Lösung zu markieren"
       solved_topics_auto_close_hours: "Thema automatisch (n) Stunden nach der letzten Antwort schließen, sobald das Thema als gelöst markiert wurde."
       notify_on_staff_accept_solved: "Benachrichtige den Themenersteller, wenn ein Team-Mitglied eine Lösung auswählt"
+      empty_box_on_unsolved: "Den Status ungelöster Themen für unterstützte Themes in der Themenliste anzeigen"
       accept_answer: "Auswählen, wenn diese Antwort das Problem löst"
       accepted_description: "Dies ist die für dieses Thema akzeptierte Lösung"
       has_no_accepted_answer: "Dieses Thema hat keine Lösung"
@@ -75,7 +75,10 @@ de:
       confirm_solved_removal_confirm: "Bestätigen"
       confirm_solved_removal_cancel: "Abbrechen"
       shared_issue:
+        label: "Ich auch"
         label_with_count: "%{label} (%{count})"
+        title: "Ich habe dasselbe Problem"
+        author_title: "Du hast dieses Thema erstellt"
       no_answer:
         title: Wurde deine Frage beantwortet?
         description: "Hebe die Antwort hervor und hilf anderen, indem du die Lösungsschaltfläche unter der richtigen Antwort verwendest."

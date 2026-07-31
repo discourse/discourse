@@ -434,17 +434,92 @@ en:
         title: "Translations"
         description: "Automatically translate all content on your forum to the user's preferred language"
         supported_locales: "Supported languages"
-        supported_locales_description: "This site setting also allows visitors to contribute post translations."
         category_scope: "Categories"
-        category_scope_description: "Choose whether automatic translations use all categories, public categories, or selected categories."
+        category_scope_description: "Choose whether automatic translations apply to content in all categories, public categories, or selected categories."
+        cached_results_notice: "Showing cached results from %{relative_time}."
+        model_progress:
+          loading: "Loading translation progress"
+          overview_label: "Translation progress by content type"
+          detail:
+            loading: "Loading %{target} details..."
+            load_error: "%{target} details could not be loaded."
+            retry: "Retry"
+            empty: "No language progress is available."
+            progress_label: "%{translated} of %{total} translated into %{language}"
+            columns:
+              locale: "Locale"
+              translated: "Translated"
+              pending: "Pending"
+              eligible: "Eligible"
+              total: "Total"
+              progress: "Progress"
+            eligible_help: "Content already in this language is excluded."
+            pending_help: "Includes content that still needs language detection."
+          targets:
+            post:
+              title: "Posts"
+              eligible_total:
+                one: "There is %{count} eligible post for translation."
+                other: "There are %{count} eligible posts for translation."
+              translated:
+                one: "%{count} post has been fully translated."
+                other: "%{count} posts have been fully translated."
+              needs_language_detection:
+                one: "%{count} post still needs language detection."
+                other: "%{count} posts still need language detection."
+              all_translated:
+                one: "The eligible post is fully translated."
+                other: "All %{count} eligible posts are fully translated."
+            topic:
+              title: "Topics"
+              eligible_total:
+                one: "There is %{count} eligible topic for translation."
+                other: "There are %{count} eligible topics for translation."
+              translated:
+                one: "%{count} topic has been fully translated."
+                other: "%{count} topics have been fully translated."
+              needs_language_detection:
+                one: "%{count} topic still needs language detection."
+                other: "%{count} topics still need language detection."
+              all_translated:
+                one: "The eligible topic is fully translated."
+                other: "All %{count} eligible topics are fully translated."
+            category:
+              title: "Categories"
+              eligible_total:
+                one: "There is %{count} eligible category for translation."
+                other: "There are %{count} eligible categories for translation."
+              translated:
+                one: "%{count} category has been fully translated."
+                other: "%{count} categories have been fully translated."
+              needs_language_detection:
+                one: "%{count} category still needs language detection."
+                other: "%{count} categories still need language detection."
+              all_translated:
+                one: "The eligible category is fully translated."
+                other: "All %{count} eligible categories are fully translated."
+            tag:
+              title: "Tags"
+              total:
+                one: "There is %{count} tag for translation."
+                other: "There are %{count} tags for translation."
+              translated:
+                one: "%{count} tag has been fully translated."
+                other: "%{count} tags have been fully translated."
+              needs_language_detection:
+                one: "%{count} tag still needs language detection."
+                other: "%{count} tags still need language detection."
+              all_translated:
+                one: "The tag is fully translated."
+                other: "All %{count} tags are fully translated."
         admin_actions:
-          translation_settings: "Translation settings"
-          localization_settings: "Localization settings"
+          translation_settings: "AI settings"
+          localization_settings: "App language settings"
           enable_translations: "Enable automatic translations"
         stats:
           title: "Translation statistics"
           backfill_disabled: "Backfilling is disabled, only new posts will be translated."
-          backfill_message: "<a href='%{settingsUrl}'>Backfill settings</a> are configured to translate all posts after %{date} — this is estimated to take %{eta}."
+          backfill_message: "<a href='%{settingsUrl}'>Backfill settings</a> are configured to translate all posts after %{date}."
           eta_minutes:
             one: "%{count} minute"
             other: "%{count} minutes"

@@ -245,8 +245,8 @@ RSpec.describe Jobs::ExportCsvFile do
     end
 
     it "works with single-column reports" do
-      user.user_visits.create!(visited_at: "2010-01-01", posts_read: 42)
-      Fabricate(:user).user_visits.create!(visited_at: "2010-01-03", posts_read: 420)
+      Fabricate(:user_visit_daily_rollup, date: Date.new(2010, 1, 1))
+      Fabricate(:user_visit_daily_rollup, date: Date.new(2010, 1, 3), mau: 2)
       exporter.extra["name"] = "dau_by_mau"
 
       report = export_report

@@ -1667,7 +1667,7 @@ hy:
         default: "(լռելյայն)"
         any: "ցանկացած"
       homepage:
-        default: "(լռելյայն)"
+        default: "Լռելյայն"
       password_confirmation:
         title: "Կրկնել Գաղտաբառը "
       invite_code:
@@ -1710,6 +1710,8 @@ hy:
         contextual: "Նոր էջի բովանդակությունը"
       bookmark_after_notification:
         title: "Էջանիշի հիշեցման ծանուցում ուղարկելուց հետո՝"
+      send_shortcut:
+        enter: "Մուտք"
       like_notification_frequency:
         title: "Ծանուցել հավանելու դեպքում"
         always: "Միշտ"
@@ -2249,6 +2251,8 @@ hy:
       medium_dark_tone: Շերտի միջինից մուգ գույն
       dark_tone: Շերտի մուգ գույն
       default: Մասնավոր էմոջիներ
+    filter_controls:
+      reset: "Վերահաստատե;"
     shared_drafts:
       title: "Կիսված Սևագրեր"
       destination_category: "Նպատակային Կատեգորիա"
@@ -4060,7 +4064,6 @@ hy:
               posts: "Գրառումներ"
               share: "Կիսվել"
             whos_posting:
-              all_categories: "Բոլոր կատեգորիաները"
               staff: "Անձնակազմ"
             trust_level_pipeline:
               trust_levels:
@@ -4402,6 +4405,8 @@ hy:
           all: "Բոլոր"
           disabled: "Անջատված"
           reset: "Վերահաստատե;"
+      duplicate_topic_titles:
+        allowed: "Թույլատրված"
       backups:
         title: "Պահուստներ"
         menu:
@@ -4566,7 +4571,6 @@ hy:
           import_web_tip: "Թեմա պարունակող ռեպոզիտորիա"
           is_private: "Թեման մասնավոր git ռեպոզիտորիայում է:"
           remote_branch: "Ճյուղի անունը (ըստ ցանկության)"
-          public_key: "Շնորհել հետևյալ public key թույլտվություն ռեպոյին՝ "
           install: "Տեղադրել"
           installed: "Տեղադրված"
           install_popular: "Ճանաչված"
@@ -5348,6 +5352,7 @@ hy:
         uploading: "Վերբեռնվում է…"
         name: "Անուն"
         group: "Խումբ"
+        all_groups: "Բոլոր խմբերը"
         created_by: "Ստեղծել է՝"
         image: "Նկար"
         alt: "մասնավոր էմոջիի նախնական դիտում "

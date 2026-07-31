@@ -40,6 +40,10 @@ module("Unit | Utility | workflows property engine", function () {
     assert.strictEqual(propertyLabel("action:topic", "title"), "Title");
     assert.strictEqual(propertyLabel(ifNodeType, "combinator"), "Match mode");
     assert.strictEqual(
+      propertyLabel("condition:filter", "combinator"),
+      "Match mode"
+    );
+    assert.strictEqual(
       propertyLabel("trigger:schedule", "minutesInterval"),
       "Minutes between triggers"
     );
@@ -64,6 +68,35 @@ module("Unit | Utility | workflows property engine", function () {
     assert.strictEqual(
       propertyPlaceholder("trigger:reviewable_approved", "reviewable_types"),
       "All types"
+    );
+  });
+
+  test("falls back to the shared property_engine.fields scope", function (assert) {
+    assert.strictEqual(
+      propertyLabel("trigger:topic_created", "category_ids"),
+      "Categories"
+    );
+    assert.strictEqual(
+      propertyDescription("trigger:topic_created", "category_ids"),
+      "Only trigger for topics in these categories. Leave empty to match all categories."
+    );
+    assert.strictEqual(
+      propertyPlaceholder("trigger:topic_closed", "category_ids"),
+      "All categories"
+    );
+    assert.strictEqual(
+      propertyLabel("trigger:topic_tag_changed", "include_subcategories"),
+      "Include subcategories"
+    );
+
+    // node-scoped keys win over the shared scope
+    assert.strictEqual(
+      propertyLabel("trigger:post_moved", "category_ids"),
+      "Destination categories"
+    );
+    assert.strictEqual(
+      propertyDescription("trigger:stale_topic", "category_ids"),
+      "Only consider topics in these categories. Leave empty to match all categories."
     );
   });
 
@@ -164,6 +197,14 @@ module("Unit | Utility | workflows property engine", function () {
       "GET"
     );
     assert.strictEqual(
+      propertyOptionLabel(ifNodeType, "combinator", { value: "and" }),
+      "All conditions must pass"
+    );
+    assert.strictEqual(
+      propertyOptionLabel("condition:filter", "combinator", { value: "or" }),
+      "Any condition can pass"
+    );
+    assert.strictEqual(
       propertyOptionLabel(dataTableNodeType, "operation", {
         value: "insert",
       }),
@@ -253,6 +294,10 @@ module("Unit | Utility | workflows property engine", function () {
     );
     assert.true(
       fieldSupportsExpression({ type: "options", ui: { expression: true } })
+    );
+    assert.false(fieldSupportsExpression({ type: "boolean" }));
+    assert.true(
+      fieldSupportsExpression({ type: "boolean", ui: { expression: true } })
     );
   });
 

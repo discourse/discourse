@@ -446,13 +446,20 @@ class Reviewable < ActiveRecord::Base
       ]
       target_associations << :localizations if SiteSetting.content_localization_enabled
 
+      target_created_by_associations = [:user_custom_fields]
+
+      if SiteSetting.allow_anonymous_mode
+        target_associations << { anonymous_user_master: :master_user }
+        target_created_by_associations << { anonymous_user_master: :master_user }
+      end
+
       result =
         result
           .includes(
             { created_by: :user_stat },
             :topic,
             { target: target_associations },
-            { target_created_by: [:user_custom_fields] },
+            { target_created_by: target_created_by_associations },
             :reviewable_histories,
           )
           .includes(reviewable_scores: { user: :user_stat, meta_topic: :posts })
@@ -463,18 +470,37 @@ class Reviewable < ActiveRecord::Base
     group_ids =
       SiteSetting.enable_category_group_moderation? ? user.group_users.pluck(:group_id) : []
 
-    result
-      .left_joins(category: :category_moderation_groups)
-      .where(
-        "(reviewables.reviewable_by_moderator AND :moderator) OR (category_moderation_groups.group_id IN (:group_ids))",
-        moderator: user.moderator?,
-        group_ids: group_ids,
-      )
-      .where(
-        "reviewables.category_id IS NULL OR reviewables.category_id IN (?)",
-        Guardian.new(user).allowed_category_ids,
-      )
+    result =
+      result
+        .left_joins(category: :category_moderation_groups)
+        .where(
+          "(reviewables.reviewable_by_moderator AND :moderator) OR (category_moderation_groups.group_id IN (:group_ids))",
+          moderator: user.moderator?,
+          group_ids: group_ids,
+        )
+        .where(
+          "reviewables.category_id IS NULL OR reviewables.category_id IN (?)",
+          Guardian.new(user).allowed_category_ids,
+        )
+
+    exclude_private_messages_hidden_from(result, user)
   end
+
+  def self.exclude_private_messages_hidden_from(result, user)
+    visible_private_message_ids =
+      Guardian.new(user).private_message_topic_scope(Topic.unscoped).select(:id)
+
+    result.where(<<~SQL, private_message: Archetype.private_message)
+        NOT EXISTS (
+          SELECT 1
+          FROM topics private_message
+          WHERE private_message.id = reviewables.topic_id
+            AND private_message.archetype = :private_message
+            AND private_message.id NOT IN (#{visible_private_message_ids.to_sql})
+        )
+      SQL
+  end
+  private_class_method :exclude_private_messages_hidden_from
 
   def self.pending_count(user)
     list_for(user).count

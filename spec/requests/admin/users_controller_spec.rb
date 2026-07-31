@@ -1288,6 +1288,33 @@ RSpec.describe Admin::UsersController do
         before { SiteSetting.moderators_change_trust_levels = true }
 
         include_examples "trust level updates possible"
+
+        it "prevents changing or locking a staff user's trust level" do
+          another_admin.update!(trust_level: TrustLevel[4], manual_locked_trust_level: nil)
+
+          put "/admin/users/#{another_admin.id}/trust_level.json", params: { level: TrustLevel[0] }
+
+          trust_level_status = response.status
+          trust_level_errors = response.parsed_body["errors"]
+          trust_level = another_admin.reload.trust_level
+
+          another_admin.update!(trust_level: TrustLevel[4], manual_locked_trust_level: nil)
+
+          put "/admin/users/#{another_admin.id}/trust_level_lock.json", params: { locked: "true" }
+
+          trust_level_lock_status = response.status
+          trust_level_lock_errors = response.parsed_body["errors"] if response.body.present?
+          manual_locked_trust_level = another_admin.reload.manual_locked_trust_level
+
+          aggregate_failures do
+            expect(trust_level_status).to eq(422)
+            expect(trust_level_errors).to be_present
+            expect(trust_level).to eq(TrustLevel[4])
+            expect(trust_level_lock_status).to eq(403)
+            expect(trust_level_lock_errors).to be_present
+            expect(manual_locked_trust_level).to eq(nil)
+          end
+        end
       end
 
       context "when moderators_change_trust_levels setting is disabled" do
@@ -2650,6 +2677,16 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(200)
       end
 
+      it "handles a payload whose base64 contains a '+'" do
+        encoded = Base64.strict_encode64("external_id=1&email=bob@bob.com&username=bob&name=Bob~~~")
+        expect(encoded).to include("+")
+        sig = OpenSSL::HMAC.hexdigest("sha256", sso_secret, encoded)
+
+        post "/admin/users/sync_sso.json", params: { sso: encoded, sig: sig }
+        expect(response.status).to eq(200)
+        expect(User.find_by(username: "bob").name).to eq("Bob~~~")
+      end
+
       it "should create new users" do
         sso.name = "Dr. Claw"
         sso.username = "dr_claw"
@@ -2715,6 +2752,18 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(422)
         expect(response.parsed_body["message"]).to include(
           I18n.t("discourse_connect.blank_id_error"),
+        )
+      end
+
+      it "returns the right message if the external id is banned" do
+        sso.name = "Dr. Claw"
+        sso.username = "dr_claw"
+        sso.email = "dr@claw.com"
+        sso.external_id = "none"
+        post "/admin/users/sync_sso.json", params: Rack::Utils.parse_query(sso.payload)
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["message"]).to include(
+          I18n.t("discourse_connect.banned_id_error"),
         )
       end
     end

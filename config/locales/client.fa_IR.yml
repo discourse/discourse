@@ -1777,7 +1777,7 @@ fa_IR:
         default: "(پیش‌فرض)"
         any: "هر"
       homepage:
-        default: "(پیش‌فرض)"
+        default: "پیش‌فرض"
       password_confirmation:
         title: "رمز عبور را مجدد وارد نمایید"
       invite_code:
@@ -1821,6 +1821,9 @@ fa_IR:
         contextual: "محتوای تازه ی صفحه"
       bookmark_after_notification:
         title: "پس از ارسال آگاه‌سازی یادآوری نشانک:"
+      send_shortcut:
+        enter: "وارد شدن "
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "وقتی پسندیده شد اعلام کن"
         always: "همیشه"
@@ -2542,6 +2545,8 @@ fa_IR:
       default: ایموجی های مخصوص
     filter_input:
       clear: "حذف کردن فیلتر"
+    filter_controls:
+      reset: "بازنشانی"
     shared_drafts:
       title: "پیش‌نویس‌های اشتراک‌گذاشته شده"
       notice: "این موضوع تنها برای کسانی قابل مشاهده است، که می‌توانند پیش‌نویس‌های اشتراک‌گذاشته شده را منتشر کنند."
@@ -5193,7 +5198,6 @@ fa_IR:
               posts: "فرسته‌ها"
               share: "اشتراک‌گذاری"
             whos_posting:
-              all_categories: "همه‌ی دسته‌بندی‌ها"
               staff: "همکاران"
             trust_level_pipeline:
               trust_levels:
@@ -5840,6 +5844,8 @@ fa_IR:
         sidebar: "نوار کناری"
         header_dropdown: "فهرست کشویی سربرگ"
         legacy: "حالت قدیمی"
+      duplicate_topic_titles:
+        allowed: "مجاز"
       backups:
         title: "پشتیبان گیری"
         files_title: "فایل‌های پشتیبان"
@@ -6051,7 +6057,6 @@ fa_IR:
           finish_install: "پایان نصب پوسته"
           last_attempt: "مراحل نصب تمام نشد، آخرین تلاش:"
           remote_branch: "نام شاخه (اختیاری)"
-          public_key: "به کلید عمومی زیر اجازه دسترسی به مخزن بدهید:"
           install: "نصب"
           installed: "نصب"
           install_popular: "محبوب"
@@ -7177,6 +7182,7 @@ fa_IR:
         uploading: "در حال بارگذاری…"
         name: "نام"
         group: "گروه"
+        all_groups: "همه گروه‌ها"
         created_by: "ایجاد شده توسط"
         image: "تصویر"
         alt: "پیش نمایش ایموجی سفارشی"

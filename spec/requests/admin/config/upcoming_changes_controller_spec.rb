@@ -187,6 +187,15 @@ RSpec.describe Admin::Config::UpcomingChangesController do
   end
 
   describe "#toggle_change" do
+    before do
+      mock_upcoming_change_metadata(
+        enable_form_templates: {
+          impact: "feature,all_members",
+          status: :experimental,
+        },
+      )
+    end
+
     let(:setting_name) { "enable_form_templates" }
 
     context "when logged in as non-admin" do
@@ -255,6 +264,23 @@ RSpec.describe Admin::Config::UpcomingChangesController do
             }
 
         expect(response.status).to eq(404)
+      end
+
+      it "rejects SiteSetting methods that are not upcoming changes" do
+        messages =
+          MessageBus.track_publish(SiteSettingExtension::SITE_SETTINGS_CHANNEL) do
+            put "/admin/config/upcoming-changes/toggle.json",
+                params: {
+                  setting_name: "notify_changed!",
+                  enabled: true,
+                }
+          end
+
+        aggregate_failures do
+          expect(response.status).to eq(404)
+          expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+          expect(messages).to be_empty
+        end
       end
     end
   end

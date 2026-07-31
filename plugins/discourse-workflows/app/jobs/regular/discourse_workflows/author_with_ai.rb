@@ -129,6 +129,11 @@ module Jobs
             :search_chat_channels
           ] = "Call this before asking the admin to choose a chat channel or before setting action:send_chat_message channel_id. Use returned matches; never invent channel names or IDs."
         end
+        if ::DiscourseWorkflows::Ai::Tools::SearchChatIntegrationChannels.available?
+          context_tools[
+            :search_chat_integration_channels
+          ] = "Call this before asking the admin to choose an external chat integration channel or before setting action:send_chat_integration_message channel_id. Use returned matches; never invent provider names, channel labels, or IDs."
+        end
 
         payload = {
           workflow: workflow_summary,

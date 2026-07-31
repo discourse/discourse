@@ -145,11 +145,6 @@ it:
         never: "Mai"
       separate_sidebar_mode:
         title: "Mostra modalità separate della barra laterale per forum e chat"
-      send_shortcut:
-        enter:
-          label: "Invia tramite Invio"
-        meta_enter:
-          label: "Invia tramite %{meta_key} + Invio"
       enable: "Abilita chat"
       flag: "Segnala"
       emoji: "Inserisci emoji"

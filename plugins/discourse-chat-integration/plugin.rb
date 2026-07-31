@@ -13,6 +13,7 @@ register_asset "stylesheets/chat-integration.scss"
 
 register_svg_icon "rocket"
 register_svg_icon "arrow-circle-o-right"
+register_svg_icon "paper-plane"
 
 module ::DiscourseChatIntegration
   PLUGIN_NAME = "discourse-chat-integration"
@@ -20,6 +21,7 @@ end
 
 # Site setting validators must be loaded before initialize
 require_relative "lib/discourse_chat_integration/provider/slack/slack_enabled_setting_validator"
+require_relative "lib/discourse_chat_integration/provider/telegram/telegram_api_base_url_setting_validator"
 require_relative "lib/discourse_chat_integration/chat_integration_reference_post"
 
 after_initialize do
@@ -41,6 +43,15 @@ after_initialize do
   add_admin_route "chat_integration.menu_title",
                   "discourse-chat-integration",
                   use_new_show_route: true
+
+  if respond_to?(:register_discourse_workflows_node)
+    register_discourse_workflows_node do
+      require_relative "lib/discourse_workflows/nodes/channel_selection"
+      require_relative "lib/discourse_workflows/nodes/send_chat_integration_message/v1"
+
+      [DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1]
+    end
+  end
 
   DiscourseChatIntegration::Provider.mount_engines
 

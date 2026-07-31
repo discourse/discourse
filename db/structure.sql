@@ -1990,7 +1990,9 @@ CREATE TABLE public.browser_pageview_event_scores (
     velocity_score smallint DEFAULT 0 NOT NULL,
     churn_score smallint DEFAULT 0 NOT NULL,
     rapid_nav_score smallint DEFAULT 0 NOT NULL,
-    referrer_score smallint DEFAULT 0 NOT NULL
+    referrer_score smallint DEFAULT 0 NOT NULL,
+    engagement_score smallint DEFAULT 0 NOT NULL,
+    ip_rotation_score smallint DEFAULT 0 NOT NULL
 );
 
 
@@ -2228,6 +2230,39 @@ CREATE TABLE public.categories_web_hooks (
     web_hook_id integer NOT NULL,
     category_id integer NOT NULL
 );
+
+
+--
+-- Name: category_activity_daily_rollups; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.category_activity_daily_rollups (
+    id bigint NOT NULL,
+    date date NOT NULL,
+    category_id integer NOT NULL,
+    topics integer DEFAULT 0 NOT NULL,
+    posts integer DEFAULT 0 NOT NULL,
+    page_views bigint DEFAULT 0 NOT NULL
+);
+
+
+--
+-- Name: category_activity_daily_rollups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.category_activity_daily_rollups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: category_activity_daily_rollups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.category_activity_daily_rollups_id_seq OWNED BY public.category_activity_daily_rollups.id;
 
 
 --
@@ -4730,6 +4765,37 @@ ALTER SEQUENCE public.discourse_workflows_executions_id_seq OWNED BY public.disc
 
 
 --
+-- Name: discourse_workflows_tags; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_tags (
+    id bigint NOT NULL,
+    name character varying(100) NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_workflows_tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_workflows_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_workflows_tags_id_seq OWNED BY public.discourse_workflows_tags.id;
+
+
+--
 -- Name: discourse_workflows_variables; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4908,6 +4974,37 @@ CREATE SEQUENCE public.discourse_workflows_workflow_publish_history_id_seq
 --
 
 ALTER SEQUENCE public.discourse_workflows_workflow_publish_history_id_seq OWNED BY public.discourse_workflows_workflow_publish_history.id;
+
+
+--
+-- Name: discourse_workflows_workflow_tags; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_workflow_tags (
+    id bigint NOT NULL,
+    workflow_id bigint NOT NULL,
+    workflow_tag_id bigint NOT NULL,
+    created_at timestamp(6) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_workflow_tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_workflows_workflow_tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_workflows_workflow_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_workflows_workflow_tags_id_seq OWNED BY public.discourse_workflows_workflow_tags.id;
 
 
 --
@@ -9384,7 +9481,9 @@ CREATE TABLE public.tag_localizations (
     name character varying NOT NULL,
     description character varying(1000),
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    description_cooked character varying(2000),
+    description_cooked_version integer
 );
 
 
@@ -9489,7 +9588,9 @@ CREATE TABLE public.tags (
     public_topic_count integer DEFAULT 0 NOT NULL,
     staff_topic_count integer DEFAULT 0 NOT NULL,
     locale character varying(20),
-    slug character varying DEFAULT ''::character varying NOT NULL
+    slug character varying DEFAULT ''::character varying NOT NULL,
+    description_cooked character varying(2000),
+    description_cooked_version integer
 );
 
 
@@ -11665,7 +11766,10 @@ CREATE TABLE public.user_options (
     enable_upcoming_change_available_notifications boolean DEFAULT true NOT NULL,
     chat_announce_new_messages boolean DEFAULT true NOT NULL,
     chat_new_message_sound boolean DEFAULT false NOT NULL,
-    push_notification_level integer DEFAULT 1 NOT NULL
+    push_notification_level integer DEFAULT 1 NOT NULL,
+    automatically_translate boolean DEFAULT true NOT NULL,
+    understood_languages character varying[] DEFAULT '{}'::character varying[] NOT NULL,
+    send_shortcut integer DEFAULT 0 NOT NULL
 );
 
 
@@ -11968,6 +12072,37 @@ CREATE SEQUENCE public.user_uploads_id_seq
 --
 
 ALTER SEQUENCE public.user_uploads_id_seq OWNED BY public.user_uploads.id;
+
+
+--
+-- Name: user_visit_daily_rollups; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_visit_daily_rollups (
+    id bigint NOT NULL,
+    date date NOT NULL,
+    dau bigint NOT NULL,
+    mau bigint NOT NULL
+);
+
+
+--
+-- Name: user_visit_daily_rollups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.user_visit_daily_rollups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_visit_daily_rollups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.user_visit_daily_rollups_id_seq OWNED BY public.user_visit_daily_rollups.id;
 
 
 --
@@ -12672,6 +12807,13 @@ ALTER TABLE ONLY public.categories ALTER COLUMN id SET DEFAULT nextval('public.c
 
 
 --
+-- Name: category_activity_daily_rollups id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.category_activity_daily_rollups ALTER COLUMN id SET DEFAULT nextval('public.category_activity_daily_rollups_id_seq'::regclass);
+
+
+--
 -- Name: category_custom_fields id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -13169,6 +13311,13 @@ ALTER TABLE ONLY public.discourse_workflows_executions ALTER COLUMN id SET DEFAU
 
 
 --
+-- Name: discourse_workflows_tags id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_tags ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_tags_id_seq'::regclass);
+
+
+--
 -- Name: discourse_workflows_variables id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -13201,6 +13350,13 @@ ALTER TABLE ONLY public.discourse_workflows_workflow_dependencies ALTER COLUMN i
 --
 
 ALTER TABLE ONLY public.discourse_workflows_workflow_publish_history ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_workflow_publish_history_id_seq'::regclass);
+
+
+--
+-- Name: discourse_workflows_workflow_tags id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_workflow_tags ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_workflow_tags_id_seq'::regclass);
 
 
 --
@@ -14506,6 +14662,13 @@ ALTER TABLE ONLY public.user_uploads ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: user_visit_daily_rollups id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_visit_daily_rollups ALTER COLUMN id SET DEFAULT nextval('public.user_visit_daily_rollups_id_seq'::regclass);
+
+
+--
 -- Name: user_visits id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -14949,6 +15112,14 @@ ALTER TABLE ONLY public.categories
 
 ALTER TABLE ONLY public.category_search_data
     ADD CONSTRAINT categories_search_pkey PRIMARY KEY (category_id);
+
+
+--
+-- Name: category_activity_daily_rollups category_activity_daily_rollups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.category_activity_daily_rollups
+    ADD CONSTRAINT category_activity_daily_rollups_pkey PRIMARY KEY (id);
 
 
 --
@@ -15528,6 +15699,14 @@ ALTER TABLE ONLY public.discourse_workflows_executions
 
 
 --
+-- Name: discourse_workflows_tags discourse_workflows_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_tags
+    ADD CONSTRAINT discourse_workflows_tags_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: discourse_workflows_variables discourse_workflows_variables_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -15565,6 +15744,14 @@ ALTER TABLE ONLY public.discourse_workflows_workflow_dependencies
 
 ALTER TABLE ONLY public.discourse_workflows_workflow_publish_history
     ADD CONSTRAINT discourse_workflows_workflow_publish_history_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_workflows_workflow_tags discourse_workflows_workflow_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_workflow_tags
+    ADD CONSTRAINT discourse_workflows_workflow_tags_pkey PRIMARY KEY (id);
 
 
 --
@@ -17104,6 +17291,14 @@ ALTER TABLE ONLY public.user_uploads
 
 
 --
+-- Name: user_visit_daily_rollups user_visit_daily_rollups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_visit_daily_rollups
+    ADD CONSTRAINT user_visit_daily_rollups_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: user_visits user_visits_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -17640,6 +17835,13 @@ CREATE INDEX idx_dwf_publish_history_on_workflow_created_at_id_desc ON public.di
 
 
 --
+-- Name: idx_dwf_tags_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_tags_on_name ON public.discourse_workflows_tags USING btree (name);
+
+
+--
 -- Name: idx_dwf_variables_on_created_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -17707,6 +17909,20 @@ CREATE INDEX idx_dwf_webhooks_on_workflow_id ON public.discourse_workflows_webho
 --
 
 CREATE INDEX idx_dwf_webhooks_on_workflow_version_id ON public.discourse_workflows_webhooks USING btree (workflow_version_id);
+
+
+--
+-- Name: idx_dwf_workflow_tags_on_tag_workflow; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_workflow_tags_on_tag_workflow ON public.discourse_workflows_workflow_tags USING btree (workflow_tag_id, workflow_id);
+
+
+--
+-- Name: idx_dwf_workflow_tags_on_workflow_tag; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_workflow_tags_on_workflow_tag ON public.discourse_workflows_workflow_tags USING btree (workflow_id, workflow_tag_id);
 
 
 --
@@ -18680,6 +18896,13 @@ CREATE INDEX index_categories_on_topic_count ON public.categories USING btree (t
 --
 
 CREATE UNIQUE INDEX index_categories_web_hooks_on_web_hook_id_and_category_id ON public.categories_web_hooks USING btree (web_hook_id, category_id);
+
+
+--
+-- Name: index_category_activity_daily_rollups_on_date_and_category_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_category_activity_daily_rollups_on_date_and_category_id ON public.category_activity_daily_rollups USING btree (date, category_id);
 
 
 --
@@ -21154,6 +21377,13 @@ CREATE UNIQUE INDEX index_tag_groups_on_lower_name ON public.tag_groups USING bt
 
 
 --
+-- Name: index_tag_localizations_on_description_cooked_version; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tag_localizations_on_description_cooked_version ON public.tag_localizations USING btree (description_cooked_version);
+
+
+--
 -- Name: index_tag_localizations_on_tag_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21186,6 +21416,13 @@ CREATE UNIQUE INDEX index_tag_users_on_user_id_and_tag_id ON public.tag_users US
 --
 
 CREATE INDEX index_tag_users_on_user_id_and_tag_id_and_notification_level ON public.tag_users USING btree (user_id, tag_id, notification_level);
+
+
+--
+-- Name: index_tags_on_description_cooked_version; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tags_on_description_cooked_version ON public.tags USING btree (description_cooked_version);
 
 
 --
@@ -22288,6 +22525,13 @@ CREATE INDEX index_user_uploads_on_user_id_and_upload_id ON public.user_uploads 
 
 
 --
+-- Name: index_user_visit_daily_rollups_on_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_user_visit_daily_rollups_on_date ON public.user_visit_daily_rollups USING btree (date);
+
+
+--
 -- Name: index_user_visits_on_user_id_and_visited_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -22828,6 +23072,22 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260729153343'),
+('20260728162521'),
+('20260728162516'),
+('20260728134532'),
+('20260728071552'),
+('20260728045008'),
+('20260727085824'),
+('20260727035337'),
+('20260723183001'),
+('20260723100008'),
+('20260723094850'),
+('20260723013754'),
+('20260722140539'),
+('20260722140536'),
+('20260721122254'),
+('20260721110018'),
 ('20260721080424'),
 ('20260721080420'),
 ('20260721043536'),
@@ -22848,6 +23108,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260707184146'),
 ('20260707013407'),
 ('20260706151932'),
+('20260706050124'),
 ('20260703164430'),
 ('20260703163425'),
 ('20260702102111'),

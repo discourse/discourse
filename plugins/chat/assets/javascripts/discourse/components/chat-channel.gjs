@@ -110,7 +110,7 @@ export default class ChatChannel extends Component {
 
   @action
   teardown() {
-    document.removeEventListener("keydown", this._autoFocus);
+    document.removeEventListener("keydown", this._captureKeystroke);
     this.#cancelHandlers();
     this.paneState.teardown();
     this.subscriptionManager.teardown();
@@ -138,7 +138,10 @@ export default class ChatChannel extends Component {
   @action
   setup(element) {
     this.uploadDropZone = element;
-    document.addEventListener("keydown", this._autoFocus);
+
+    if (!this.args.disableKeystrokeCapture) {
+      document.addEventListener("keydown", this._captureKeystroke);
+    }
 
     this.messagesManager.clear();
 
@@ -155,7 +158,10 @@ export default class ChatChannel extends Component {
         user: this.currentUser,
       });
 
-    this.composer.focus();
+    if (!this.args.disableAutoFocus) {
+      this.composer.focus();
+    }
+
     this.loadMessages();
 
     // We update this value server-side when we load the Channel
@@ -700,11 +706,7 @@ export default class ChatChannel extends Component {
   }
 
   @bind
-  _autoFocus(event) {
-    if (this.chatStateManager.isDrawerActive) {
-      return;
-    }
-
+  _captureKeystroke(event) {
     const { key, metaKey, ctrlKey, code, target } = event;
 
     if (

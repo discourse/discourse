@@ -2096,7 +2096,7 @@ nl:
         default: "(standaard)"
         any: "alle"
       homepage:
-        default: "(standaard)"
+        default: "Standaard"
       password_confirmation:
         title: "Wachtwoord opnieuw"
       invite_code:
@@ -2140,6 +2140,9 @@ nl:
         contextual: "Nieuwe pagina-inhoud"
       bookmark_after_notification:
         title: "Nadat een herinneringsmelding voor een bladwijzer is verzonden:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Melding sturen bij like"
         always: "Altijd"
@@ -2921,7 +2924,7 @@ nl:
     filter_input:
       clear: "Filter wissen"
     filter_controls:
-      reset: "Filter resetten"
+      reset: "Resetten"
       toggle: "Vervolgkeuzemenufilters in-/uitschakelen"
     d_icon_grid_picker:
       select_icon: "Selecteer pictogram"
@@ -6386,7 +6389,6 @@ nl:
               posts: "Berichten"
               share: "Delen"
             whos_posting:
-              all_categories: "Alle categorieën"
               staff: "Medewerker"
             trust_level_pipeline:
               trust_levels:
@@ -7115,6 +7117,8 @@ nl:
         sidebar: "Zijbalk"
         header_dropdown: "Vervolgkeuzelijst kop"
         legacy: "Verouderd"
+      duplicate_topic_titles:
+        allowed: "Toegestaan"
       backups:
         title: "Back-ups"
         files_title: "Back-upbestanden"
@@ -7358,7 +7362,6 @@ nl:
           finish_install: "Thema-installatie voltooien"
           last_attempt: "Installatieproces is niet voltooid, laatste poging:"
           remote_branch: "Branchnaam (optioneel)"
-          public_key: "De volgende openbare sleutel toegang tot de repo verlenen:"
           install: "Installeren"
           installed: "Geïnstalleerd"
           install_popular: "Populair"
@@ -8722,6 +8725,7 @@ nl:
         uploading: "Uploaden…"
         name: "Naam"
         group: "Groep"
+        all_groups: "Alle groepen"
         created_by: "Gemaakt door"
         image: "Afbeelding"
         alt: "voorbeeld van aangepaste emoji"

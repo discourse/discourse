@@ -164,12 +164,6 @@ en:
         never: "Never"
       separate_sidebar_mode:
         title: "Show separate sidebar modes for forum and chat"
-      send_shortcut:
-        title: "Send shortcut"
-        enter:
-          label: "Send by Enter"
-        meta_enter:
-          label: "Send by %{meta_key} + Enter"
       enable: "Enable chat"
       flag: "Flag"
       emoji: "Insert emoji"

@@ -278,7 +278,6 @@ nl:
       exclusion: is gereserveerd
       greater_than: moet groter zijn dan %{count}
       greater_than_or_equal_to: moet groter zijn dan of gelijk zijn aan %{count}
-      has_already_been_used: "is al gebruikt"
       in: moet tussen %{count} zijn
       inclusion: komt niet voor in de lijst
       invalid: is ongeldig
@@ -1749,7 +1748,6 @@ nl:
     staff_edit_locks_post: "Berichten worden vergrendeld voor bewerking als ze door medewerkers worden bewerkt"
     post_edit_time_limit: "Een TL0- of TL1-schrijver kan een eigen bericht (n) minuten na plaatsing bewerken. Stel dit in op 0 voor altijd."
     tl2_post_edit_time_limit: "Een TL2+-schrijver kan een eigen bericht (n) minuten na plaatsing bewerken. Stel dit in op 0 voor altijd."
-    edit_history_visible_to_public: "Toestaan dat iedereen vorige versies van een bewerkt bericht kan zien. Als dit is uitgeschakeld, kunnen alleen medewerkers dat bekijken."
     delete_removed_posts_after: "Door de schrijver verwijderde berichten worden na (n) uur automatisch verwijderd. Als dit ingesteld is op 0, worden berichten direct verwijderd."
     notify_users_after_responses_deleted_on_flagged_post: "Wanneer een bericht wordt gemarkeerd en vervolgens wordt verwijderd, worden alle gebruikers die op het bericht hebben gereageerd en waarvan de reacties zijn verwijderd hiervan op de hoogte gesteld."
     max_image_width: "Maximale miniatuurbreedte van afbeeldingen in een bericht. Afbeeldingen met een grotere breedte worden verkleind en in een lightbox geplaatst."
@@ -1856,7 +1854,6 @@ nl:
     suppress_secured_categories_from_admin: "Onderdruk privétopics en PB's in sommige delen van de gebruikersinterface voor beheerders. Content zal op sommige plaatsen nog zichtbaar zijn. Dit is geen beveiligingsfunctie: beheerders hebben altijd toegang tot alle content op de site."
     include_secure_categories_in_tag_counts: "Indien ingeschakeld, omvat het aantal topics voor een tag ook topics die in leesbeperkte categorieën staan voor alle gebruikers. Indien uitgeschakeld, krijgen normale gebruikers alleen het aantal topics voor een tag te zien waarbij alle topics in openbare categorieën staan."
     display_personal_messages_tag_counts: "Indien ingeschakeld, wordt het aantal persoonlijke berichten weergegeven dat is getagd met een bepaalde tag."
-    top_menu: "Bepaal welke items in de startpaginanavigatie worden weergegeven en in welke volgorde."
     post_menu: "Configureer de zichtbaarheid en volgorde van standaardopties in het plaatsingsmenu. Aanvullende opties die zijn toegevoegd door plug-ins of thema's worden afzonderlijk beheerd en komen niet voor in deze lijst."
     post_menu_hidden_items: "De menuopties die standaard worden verborgen in het plaatsingsmenu tenzij er op een uitvouwellips wordt geklikt. Aanvullende opties die zijn toegevoegd door plug-ins of thema's worden afzonderlijk beheerd en komen niet voor in deze lijst."
     share_links: "Bepaal welke items in de deeldialoog worden weergegeven en in welke volgorde."
@@ -2469,7 +2466,6 @@ nl:
     about_page_extra_groups_order: "Volgorde van de extra groepen op de Over-pagina."
     adobe_analytics_tags_url: "URL Adobe Analytics-tags ('https://assets.adobedtm.com/...')"
     view_raw_email_allowed_groups: "Groepen die de ruwe e-mailinhoud van een bericht kunnen bekijken als het is gemaakt door een inkomende e-mail. Dit omvat e-mailheaders en andere technische gegevens."
-    rich_editor: "Schakel de rich text editor in, zodat alle gebruikers kunnen schakelen tussen de huidige Markdown-modus en de nieuwe rich text editor voor intuïtiever en gebruiksvriendelijker schrijven."
     default_composition_mode: "Stel de standaardmodus in voor de editor van je community. De rich text modus biedt een modernere, vertrouwde schrijfervaring voor de meeste gebruikers, terwijl de Markdown-modus geschikter kan zijn voor een technischer publiek. Leden kunnen van modus wisselen met een schakelaar op de editorwerkbalk."
     reviewable_ui_refresh: "Groepen die de experimentele nieuwe gebruikersinterface in de beoordelingswachtrij kunnen gebruiken."
     content_localization_use_default_locale_when_unsupported: "Bied gelokaliseerde content in de standaardtaal van de site aan gebruikers aan van wie de voorkeurstaal niet is opgenomen in 'content localization supported locales'."

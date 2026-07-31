@@ -50,22 +50,24 @@ module ReleaseUtils
     git "commit", "-m", message
   end
 
+  def self.last_tuesday_of_month(date)
+    date.beginning_of_month.next_month.prev_occurring(:tuesday)
+  end
+
   def self.update_versions_json(new_version)
-    today_date = DateTime.now.utc.strftime("%Y-%m-%d")
+    today = Date.current.to_s
 
     version_year, version_month = new_version.split(".").map(&:to_i)
-    esr = [1, 7].include?(version_month)
-
-    support_period = esr ? 8.months : 2.months
-    support_end_date = (Date.new(version_year, version_month, 1) + support_period).strftime("%Y-%m")
+    version_start = Date.new(version_year, version_month)
+    esr = version_month.in?([1, 7])
 
     new_version_info = {
       new_version => {
-        developmentStartDate: today_date,
-        releaseDate: "#{version_year}-#{version_month.to_s.rjust(2, "0")}",
-        supportEndDate: support_end_date,
+        developmentStartDate: today,
+        releaseDate: last_tuesday_of_month(version_start).to_s,
+        supportEndDate: last_tuesday_of_month(version_start + (esr ? 8.months : 2.months)).to_s,
         released: false,
-        esr: esr,
+        esr:,
         supported: true,
       },
     }
@@ -74,13 +76,12 @@ module ReleaseUtils
     data.transform_values! do |v|
       if !v["released"]
         v["released"] = true
-        v["releaseDate"] = today_date
+        v["releaseDate"] = today
       end
 
-      if v["supported"] &&
-           Date.parse(v["supportEndDate"] + "-01") < Date.new(version_year, version_month, 1)
+      if v["supported"] && Date.parse(v["supportEndDate"]) < version_start
         v["supported"] = false
-        v["supportEndDate"] = today_date
+        v["supportEndDate"] = today
       end
 
       v

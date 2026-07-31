@@ -13,7 +13,6 @@ ar:
   js:
     styleguide:
       title: "دليل الأنماط"
-      welcome: "اختر قسمًا من القائمة على اليمين لتبدأ."
       categories:
         syntax: بناء الجملة
         atoms: الذرّات (Atoms)
@@ -120,4 +119,4 @@ ar:
           title: "عداد الأحرف"
           placeholder: "أدخل نصك هنا..."
         segmented_control:
-          title: "عنصر تحكم مُقسَّم (مجموعة أزرار تبديل)"
+          title: "عنصر تحكم مقسَّم (مجموعة أزرار تبديل)"

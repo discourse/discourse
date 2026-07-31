@@ -10,6 +10,7 @@ class AssetProcessor
     node_modules/.pnpm/lock.yaml
     frontend/asset-processor/**/*.{js,mjs}
     frontend/discourse/lib/babel-transform-module-renames.js
+    frontend/discourse/lib/discourse-source-imports.mjs
     frontend/discourse/config/targets.js
   ]
 

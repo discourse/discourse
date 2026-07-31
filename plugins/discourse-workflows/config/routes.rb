@@ -27,6 +27,7 @@ DiscourseWorkflows::Engine.routes.draw do
     scope format: :json do
       get "/workflows" => "workflows#index"
       post "/workflows" => "workflows#create"
+      get "/workflow-tags" => "workflow_tags#index"
       post "/workflows/ai/author" => "ai_authoring#create"
       post "/workflows/:workflow_id/ai/author" => "ai_authoring#create"
       post "/workflows/:workflow_id/ai/apply" => "ai_authoring#apply"
@@ -85,6 +86,7 @@ DiscourseWorkflows::Engine.routes.draw do
 
   scope "/discourse-workflows", defaults: { format: :json } do
     post "/trigger-topic-admin-button" => "topic_admin_button#create"
+    post "/trigger-post-button" => "post_button#create"
     post "/modal-responses" => "modal_responses#create"
   end
 

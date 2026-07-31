@@ -3,7 +3,6 @@
 describe "Discourse Livestream - Topic Livestream - Desktop - Authenticated" do
   fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:category)
-  fab!(:livestream_tag) { Fabricate(:tag, name: "livestream") }
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:topic_livestream) { PageObjects::Pages::TopicLivestream.new }
@@ -19,7 +18,7 @@ describe "Discourse Livestream - Topic Livestream - Desktop - Authenticated" do
 
   context "when in a topic view" do
     it "creates a chat channel for livestream topics" do
-      topic_livestream.create_livestream_topic(composer, topic_page, livestream_tag)
+      topic_livestream.create_livestream_event_topic(composer, topic_page)
 
       expect(topic_page).to have_css("#custom-chat-container")
       expect(topic_page).to have_css("#custom-chat-container .chat-channel-preview-card")

@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import { Promise } from "rsvp";
 import MenuPanel from "discourse/components/menu-panel";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -55,6 +56,7 @@ export default class SearchMenu extends Component {
   searchInputId = this.args.searchInputId ?? "search-term";
   searchInputPlaceholder = this.args.searchInputPlaceholder || "search.title";
 
+  closeWhenHidden = modifier((_element, [hidden]) => hidden && this.close());
   _debouncer = null;
   _activeSearch = null;
 
@@ -153,6 +155,10 @@ export default class SearchMenu extends Component {
 
   @action
   open() {
+    if (this.args.hideResults) {
+      return;
+    }
+
     if (!this.menuPanelOpen) {
       this.appEvents.trigger("search-menu:search_menu_opened");
     }
@@ -194,7 +200,7 @@ export default class SearchMenu extends Component {
   }
 
   get displayMenuPanelResults() {
-    if (this.args.inlineResults) {
+    if (this.args.inlineResults || this.args.hideResults) {
       return false;
     }
 
@@ -407,6 +413,7 @@ export default class SearchMenu extends Component {
     <div
       class={{this.classNames}}
       {{didInsert this.setupEventListeners}}
+      {{this.closeWhenHidden @hideResults}}
       {{on "keydown" this.onKeydown}}
     >
       <div class="search-input-wrapper">

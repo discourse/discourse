@@ -1100,7 +1100,7 @@ et:
         default: "(vaikimisi)"
         any: "iga"
       homepage:
-        default: "(vaikimisi)"
+        default: "Vaikimisi"
       password_confirmation:
         title: "Salasõna uuesti"
       auth_tokens:
@@ -1483,6 +1483,8 @@ et:
       medium_dark_tone: Keskmiselt tume nahatoon
       dark_tone: Tume nahatoon
       default: Kohandatud emodži
+    filter_controls:
+      reset: "Nulli"
     shared_drafts:
       destination_category: "Sihtkategooria"
     composer:
@@ -2967,7 +2969,6 @@ et:
               posts: "Postitust"
               share: "Jaga"
             whos_posting:
-              all_categories: "Kõik foorumid"
               staff: "Meeskond"
             trust_level_pipeline:
               trust_levels:
@@ -3242,6 +3243,8 @@ et:
           enabled: "Sisse lülitatud"
           disabled: "Välja lülitatud"
           reset: "Nulli"
+      duplicate_topic_titles:
+        allowed: "Lubatud"
       backups:
         title: "Varukoopiad"
         menu:
@@ -3973,6 +3976,7 @@ et:
         uploading: "Laadin üles..."
         name: "Nimi"
         group: "Rühm"
+        all_groups: "Kõik rühmad"
         image: "Pilt"
         delete_confirm: "Kas oled kindel, et soovid kustutada emotikoni :%{name}:?"
         settings: "Sätted"

@@ -161,14 +161,18 @@ module("Integration | Component | workflows property engine", function (hooks) {
   test("renders checkbox controls from metadata", async function (assert) {
     this.setProperties({
       configuration: {
-        category_id: 1,
+        category_ids: [1],
         include_subcategories: true,
       },
       formApi: null,
       nodeType: "trigger:topic_created",
       schema: {
-        category_id: {
-          type: "integer",
+        category_ids: {
+          type: "array",
+          ui: {
+            control: "category",
+            multiple: true,
+          },
         },
         include_subcategories: {
           type: "boolean",
@@ -177,7 +181,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
           },
           display_options: {
             show: {
-              category_id: [{ condition: { exists: true } }],
+              category_ids: [{ condition: { exists: true } }],
             },
           },
         },
@@ -211,6 +215,53 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await click("input[type='checkbox']");
 
     assert.false(this.formApi.get("include_subcategories"));
+  });
+
+  test("hides fields conditioned on a category list when it is empty", async function (assert) {
+    this.setProperties({
+      configuration: {
+        category_ids: [],
+        include_subcategories: true,
+      },
+      nodeType: "trigger:topic_created",
+      schema: {
+        category_ids: {
+          type: "array",
+          ui: {
+            control: "category",
+            multiple: true,
+          },
+        },
+        include_subcategories: {
+          type: "boolean",
+          ui: {
+            control: "checkbox",
+          },
+          display_options: {
+            show: {
+              category_ids: [{ condition: { exists: true } }],
+            },
+          },
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".category-selector").exists();
+    assert.dom("input[type='checkbox']").doesNotExist();
   });
 
   test("renders user seen trigger options as a compact condition group", async function (assert) {
@@ -362,6 +413,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
   });
 
   test("can clear optional category controls", async function (assert) {
+    this.siteSettings.allow_uncategorized_topics = true;
+
     this.setProperties({
       configuration: {
         category_id: 2,
@@ -410,6 +463,57 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await click(header.el().querySelector(".btn-clear"));
 
     assert.strictEqual(this.formApi.get("category_id"), "");
+  });
+
+  test("hides the clear button on category controls when uncategorized topics are disallowed", async function (assert) {
+    this.siteSettings.allow_uncategorized_topics = false;
+
+    this.setProperties({
+      configuration: {
+        category_id: 2,
+      },
+      formApi: null,
+      nodeType: "trigger:topic_created",
+      schema: {
+        category_id: {
+          type: "integer",
+          required: false,
+          ui: {
+            control: "category",
+          },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const categoryChooser = selectKit(".category-chooser");
+    const header = categoryChooser.header();
+
+    assert.strictEqual(header.value(), "2");
+    assert
+      .dom(".btn-clear", header.el())
+      .doesNotExist("clearing would move the topic to uncategorized");
   });
 
   test("can clear optional group controls", async function (assert) {
@@ -1899,5 +2003,277 @@ module("Integration | Component | workflows property engine", function (hooks) {
       ["12", "34"],
       "converts the dynamic expression back into a fixed list"
     );
+  });
+
+  test("boolean assignment values convert between fixed and dynamic", async function (assert) {
+    this.setProperties({
+      configuration: {
+        fields: {
+          assignments: [{ name: "active", type: "boolean", value: false }],
+        },
+      },
+      formApi: null,
+      nodeType: "action:workflow_call",
+      schema: {
+        fields: {
+          type: "assignment_collection",
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const row = ".workflows-property-engine__collection-row";
+
+    assert
+      .dom(`${row} .form-kit__control-toggle`)
+      .exists("starts as a plain toggle");
+    assert
+      .dom(`${row} .workflows-property-engine__mode-control`)
+      .exists("offers a dynamic mode for boolean assignments");
+
+    await click(
+      `${row} .workflows-property-engine__mode-control input[value="dynamic"]`
+    );
+
+    assert
+      .dom(`${row} .workflows-variable-input`)
+      .exists("swaps the toggle for an expression input");
+    assert.strictEqual(
+      this.formApi.get("fields.assignments.0.value"),
+      "=false",
+      "seeds the expression with the previous fixed value"
+    );
+
+    await click(
+      `${row} .workflows-property-engine__mode-control input[value="plain"]`
+    );
+
+    assert.false(
+      this.formApi.get("fields.assignments.0.value"),
+      "converts the expression back into a fixed boolean, not the string 'false'"
+    );
+  });
+
+  test("boolean assignment values saved as expressions render in dynamic mode", async function (assert) {
+    this.setProperties({
+      configuration: {
+        fields: {
+          assignments: [
+            { name: "active", type: "boolean", value: "={{ $json.enabled }}" },
+          ],
+        },
+      },
+      nodeType: "action:workflow_call",
+      schema: {
+        fields: {
+          type: "assignment_collection",
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".form-kit__control-toggle").doesNotExist();
+    assert.dom(".workflows-variable-input").includesText("enabled");
+  });
+
+  test("switching an assignment to boolean keeps an expression it already holds", async function (assert) {
+    this.setProperties({
+      configuration: {
+        fields: {
+          assignments: [
+            { name: "active", type: "string", value: "={{ $json.enabled }}" },
+          ],
+        },
+      },
+      formApi: null,
+      nodeType: "action:workflow_call",
+      schema: {
+        fields: {
+          type: "assignment_collection",
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    await select(
+      ".workflows-property-engine__collection-row select",
+      "boolean"
+    );
+
+    assert.strictEqual(
+      this.formApi.get("fields.assignments.0.value"),
+      "={{ $json.enabled }}",
+      "keeps the expression when the type changes"
+    );
+    assert
+      .dom(".form-kit__control-toggle")
+      .doesNotExist("does not fall back to a toggle over an expression");
+    assert.dom(".workflows-variable-input").includesText("enabled");
+  });
+
+  test("resets plain assignment values that don't fit the new type", async function (assert) {
+    this.setProperties({
+      configuration: {
+        fields: {
+          assignments: [{ name: "active", type: "string", value: "hello" }],
+        },
+      },
+      formApi: null,
+      nodeType: "action:workflow_call",
+      schema: {
+        fields: {
+          type: "assignment_collection",
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const typeSelect = ".workflows-property-engine__collection-row select";
+
+    await select(typeSelect, "boolean");
+
+    assert.false(
+      this.formApi.get("fields.assignments.0.value"),
+      "a string is not carried into the toggle as truthy"
+    );
+
+    await select(typeSelect, "array");
+
+    assert.strictEqual(
+      this.formApi.get("fields.assignments.0.value"),
+      "",
+      "a boolean is not carried into the JSON editor"
+    );
+  });
+
+  // Rows are keyed by index, so the survivor reuses the deleted row's component.
+  test("removing a boolean assignment row keeps the survivor's expression", async function (assert) {
+    this.setProperties({
+      configuration: {
+        fields: {
+          assignments: [
+            { name: "flagged", type: "boolean", value: false },
+            { name: "active", type: "boolean", value: "={{ $json.enabled }}" },
+          ],
+        },
+      },
+      formApi: null,
+      nodeType: "action:workflow_call",
+      schema: {
+        fields: {
+          type: "assignment_collection",
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    await click(findAll(".workflows-property-engine__collection-delete")[0]);
+
+    assert.strictEqual(
+      this.formApi.get("fields.assignments.0.value"),
+      "={{ $json.enabled }}",
+      "leaves the surviving expression untouched"
+    );
+    assert
+      .dom(".form-kit__control-toggle")
+      .doesNotExist("does not offer a toggle that would overwrite it");
+    assert.dom(".workflows-variable-input").includesText("enabled");
   });
 });

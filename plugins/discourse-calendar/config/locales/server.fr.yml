@@ -46,7 +46,7 @@ fr:
     discourse_post_event_allowed_on_groups: "Groupes autorisés à créer des événements."
     discourse_post_event_allowed_custom_fields: "Permet à chaque événement de définir la valeur des champs personnalisés."
     discourse_post_event_edit_notifications_time_extension: "Prolonge (en minutes) la période suivant la fin d'un événement pendant laquelle les invités « participants » sont toujours notifiés de la modification du message original."
-    holiday_calendar_topic_id: "ID du sujet du calendrier des vacances/absences du personnel."
+    holiday_calendar_topic_id: "ID du sujet du calendrier des congés et des absences des responsables"
     holiday_status_emoji: Définit l’émoji utilisé pour le statut de vacances.
     delete_expired_event_posts_after: "Les messages comprenant des événements expirés seront automatiquement supprimés après (n) heures. Fixez cette valeur sur -1 pour désactiver la suppression."
     all_day_event_start_time: "Les événements qui n'ont pas d'heure de début spécifiée commenceront à cette heure. Le format est HH:mm. Pour indiquer 6:00 heures, saisissez 06:00"

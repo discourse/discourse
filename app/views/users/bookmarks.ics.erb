@@ -10,7 +10,7 @@ DTSTART:<%= bookmark.reminder_at_ics_start %>
 DTEND:<%= bookmark.reminder_at_ics_end %>
 SUMMARY:<%= IcalEncoder.encode(bookmark.name.presence || bookmark.title) %>
 DESCRIPTION:<%= IcalEncoder.encode(bookmark.bookmarkable_url) %>
-URL:<%= IcalEncoder.encode(bookmark.bookmarkable_url) %>
+URL:<%= IcalEncoder.encode_uri(bookmark.bookmarkable_url) %>
 END:VEVENT
 <% end %>
 END:VCALENDAR

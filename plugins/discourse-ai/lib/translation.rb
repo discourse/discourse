@@ -11,6 +11,20 @@ module DiscourseAi
       SiteSetting.content_localization_locales
     end
 
+    def self.supported_locale_bases_cte
+      <<~SQL
+        supported AS MATERIALIZED (
+          SELECT COALESCE(
+            array_agg(
+              DISTINCT split_part(lower(replace(locale, '-', '_')), '_', 1)
+            ) FILTER (WHERE locale IS NOT NULL),
+            ARRAY[]::text[]
+          ) AS bases
+          FROM unnest(ARRAY[:supported_locales]::text[]) configured(locale)
+        )
+      SQL
+    end
+
     def self.has_llm_model?
       agent_ids = [
         SiteSetting.ai_translation_locale_detector_agent,
@@ -33,9 +47,17 @@ module DiscourseAi
       end
     end
 
-    def self.backfill_enabled?
+    def self.backfill_enabled?(target: nil)
       enabled? && SiteSetting.ai_translation_backfill_hourly_rate > 0 &&
-        SiteSetting.ai_translation_backfill_max_age_days > 0
+        (![Post, Topic].include?(target) || backfill_start_at.present?)
+    end
+
+    def self.backfill_start_at
+      value = SiteSetting.ai_translation_backfill_start_date
+      return if value.blank?
+
+      date = Date.iso8601(value)
+      Time.utc(date.year, date.month, date.day)
     end
 
     def self.category_ids

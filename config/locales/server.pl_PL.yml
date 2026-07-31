@@ -57,6 +57,8 @@ pl_PL:
     added_and_removed: "Dodano %{added} i usunięto %{removed}"
     added: "Dodano %{added}"
     removed: "Usunięto %{removed}"
+  topics_bulk_action:
+    too_many_topic_ids: "Można wykonać akcję zbiorczą maksymalnie dla %{limit} tematów naraz."
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} przez %{username}"
@@ -89,6 +91,10 @@ pl_PL:
       asset_too_big: "Zasób %{filename} jest większy niż limit %{limit}"
       theme_too_big: "Motyw jest większy niż limit %{limit}"
       git: "Podczas klonowania repozytorium git wystąpił błąd: dostęp jest zabroniony albo repozytorium nie istnieje"
+      git_authentication: "Repozytorium Git odrzuciło klucz wdrożenia. Sprawdź, czy klucz publiczny ma dostęp do repozytorium i spróbuj ponownie. (Jeśli nie masz już klucza wdrożenia, usuń ten motyw i zainstaluj go ponownie)."
+      git_timeout: "Połączenie z repozytorium Git przekroczyło limit czasu. Spróbuj ponownie później."
+      git_repository_not_found: "Nie znaleziono repozytorium Git. Sprawdź adres URL repozytorium."
+      git_branch_not_found: "Nie znaleziono gałęzi git. Sprawdź nazwę gałęzi."
       git_ref_not_found: "Nie można sprawdzić odwołania git: %{ref}"
       git_unsupported_scheme: "Nie można sklonować repozytorium git: schemat nieobsługiwany"
       unpack_failed: "Błąd przy rozpakowywaniu pliku"
@@ -324,7 +330,7 @@ pl_PL:
       exclusion: jest zarezerwowane
       greater_than: musi być większe niż %{count}
       greater_than_or_equal_to: musi być większe lub równe %{count}
-      has_already_been_used: "został już użyty"
+      topic_title_already_used: "Ten tytuł został już użyty przez <a href='%{url}'>inny temat</a>."
       in: musi być w %{count}
       inclusion: nie jest zawarty w liście
       invalid: jest nieprawidłowy
@@ -1888,6 +1894,7 @@ pl_PL:
       group_email_credentials: 'Wystąpił problem z poświadczeniami e-mail dla grupy <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Wiadomości e-mail nie będą wysyłane z grupowej skrzynki odbiorczej do czasu rozwiązania tego problemu. %{error}'
       upcoming_change_stable_opted_out: 'Twoja witryna zrezygnowała z nadchodzącej zmiany „%{upcoming_change}”. Zmiana ta uzyskała status „Stabilna” i może wkrótce zostać usunięta lub wprowadzona na stałe. Odwiedź <a href="%{base_path}/admin/config/upcoming-changes">stronę nadchodzących zmian</a> , aby zapoznać się ze szczegółowymi informacjami na temat tej zmiany.'
       content_security_policy_disabled: "Funkcja Content-Security-Policy została wyłączona. To ważna funkcja bezpieczeństwa, której nigdy nie należy wyłączać w środowiskach produkcyjnych. <a href='%{base_path}/admin/site_settings/category/all_results?filter=content_security_policy'>Włącz ją ponownie tutaj</a>."
+      landlock: "Sandboxing Landlock jest niedostępny w tym środowisku hostingowym, dlatego polecenia zewnętrzne działają bez izolacji systemu plików i sieci. To ważne zabezpieczenie, którego nie powinno brakować w środowisku produkcyjnym. Aby je przywrócić, użyj jądra Linux z obsługą Landlock (wersja 5.13 lub nowsza)."
       rails_env: "Twój serwer działa w trybie %{env}"
       host_names: "Twój plik config/database.yml używa domyślnej nazwy serwera localhost. Zmień go by używał nazwy serwera Twojej strony."
       sidekiq_check: 'Sidekiq nie działa. Wiele zadań, takich jak wysyłanie e-maili, jest wykonywanych asynchronicznie przez Sidekiq. Upewnij się, że co najmniej jeden proces Sidekiq jest uruchomiony. <a href="https://github.com/mperham/sidekiq" target="_blank">Dowiedz się więcej o Sidekiq tutaj</a>.'
@@ -1971,6 +1978,7 @@ pl_PL:
     default_composer_category: "Kategoria używana do wstępnego wypełnienia listy wyboru kategorii podczas tworzenia nowego tematu."
     allow_uncategorized_topics: "Zezwól na tworzenie tematów bez kategorii. UWAGA: jeśli jest jakiś nieskategoryzowany temat, musisz go przypisać do kategorii, zanim wyłączysz tę opcję."
     remove_and_replace_uncategorized: "Zastępuje specjalną kategorię Bez kategorii standardową kategorią o tej samej nazwie i migruje do niej wszystkie tematy."
+    duplicate_topic_titles: "Czy temat może zostać utworzony z tytułem już używanym w innym temacie. Jeśli jest to dozwolone w różnych kategoriach, tytuł może być ponownie użyty, o ile tematy należą do różnych kategorii. Tematy, których autor nie widzi, nigdy nie są liczone jako duplikaty."
     allow_duplicate_topic_titles: "Pozwól na tworzenie tematów o identycznych tytułach."
     allow_duplicate_topic_titles_category: "Zezwól na tematy z identycznymi, zduplikowanymi tytułami, jeśli kategoria jest inna. {{setting:allow_duplicate_topic_titles}} musi być wyłączone."
     unique_posts_mins: "Ile minut musi upłynąć zanim użytkownik będzie mógł/mogła ponownie zrobić wpis z tą samą treścią"
@@ -1992,7 +2000,7 @@ pl_PL:
     staff_edit_locks_post: "Wpisy zostaną zablokowane przed edycją, jeśli będą edytowane przez członków personelu"
     post_edit_time_limit: "Autor tl0 lub tl1 może edytować swój wpis przez (n) minut po opublikowaniu. Ustaw na zawsze na 0."
     tl2_post_edit_time_limit: "Autor tl2 + może edytować swój wpis przez (n) minut po opublikowaniu. Ustaw na zawsze na 0."
-    edit_history_visible_to_public: "Pozwól wszystkim zobaczyć poprzednie wersje edytowanego posta. Gdy wyłączone, tylko członkowie personelu mogą je przeglądać."
+    edit_history_visible_to_public: "Zezwól wszystkim na przeglądanie poprzednich wersji edytowanego wpisu. Po wyłączeniu tej opcji tylko członkowie zespołu i moderatorzy grup kategorii (w przypadku wpisów w moderowanych przez nich kategoriach) będą mogli je przeglądać."
     delete_removed_posts_after: "Wpisy usunięte przez autora będą automatycznie zlikwidowane po (n) godzinach. Jeżeli liczba godzin będzie wynosić 0, to zostaną usunięte natychmiast. "
     notify_users_after_responses_deleted_on_flagged_post: "Gdy wpis zostanie oflagowany, a następnie usunięty, wszyscy użytkownicy, którzy na niego odpowiedzieli, a ich odpowiedzi zostały usunięte, zostaną powiadomieni."
     max_image_width: "Maksymalna szerokość miniatur obrazów w poście. Obrazy o większej szerokości zostaną przeskalowane i podświetlone."
@@ -2127,7 +2135,8 @@ pl_PL:
     suppress_secured_categories_from_admin: "Ogranicz prywatne tematy i prywatne wiadomości w niektórych częściach interfejsu użytkownika dla administratorów. Treść nadal będzie widoczna w niektórych miejscach. To nie jest funkcja bezpieczeństwa: administratorzy zawsze mają dostęp do całej zawartości na stronie."
     include_secure_categories_in_tag_counts: "Gdy opcja ta jest włączona, liczba tematów dla tagu będzie obejmować tematy, które znajdują się w kategoriach z ograniczeniami odczytu dla wszystkich użytkowników. Gdy opcja ta jest wyłączona, zwykłym użytkownikom wyświetlana jest tylko liczba tematów dla tagu, w którym wszystkie tematy znajdują się w kategoriach publicznych."
     display_personal_messages_tag_counts: "Gdy ta opcja jest włączona, zostanie wyświetlona liczba prywatnych wiadomości oznaczonych danym tagiem."
-    top_menu: "Określ, które elementy pojawiają się w nawigacji na stronie głównej i w jakiej kolejności."
+    default_homepage: "Strona, na której użytkownicy lądują po wejściu na witrynę. Jeśli nie jest ustawiona, używany jest pierwszy element w {{setting:top_menu}} . Użytkownicy mogą zmienić to ustawienie w swoich preferencjach."
+    top_menu: "Określ, które elementy nawigacyjne będą wyświetlane na stronach odkrywania i w jakiej kolejności."
     custom_homepage_crawler_route: "Trasa pokazywana robotom sieciowym, gdy włączona jest niestandardowa strona główna."
     post_menu: "Skonfiguruj widoczność i kolejność domyślnych elementów menu postów. Dodatkowe elementy dodane przez wtyczki lub motywy są zarządzane osobno i nie pojawią się na tej liście."
     post_menu_hidden_items: "Elementy menu, które mają być domyślnie ukrywane w menu posta, chyba że zostanie kliknięty wielokropek. Dodatkowe elementy dodane przez wtyczki lub motywy są zarządzane osobno i nie pojawią się na tej liście."
@@ -2640,6 +2649,7 @@ pl_PL:
     emoji_autocomplete_min_chars: "Minimalna liczba znaków wymagana do wywołania wyskakującego okienka z autouzupełnianiem"
     enable_inline_emoji_translation: "Włącza tłumaczenie wbudowanych emoji (bez spacji i znaków interpunkcyjnych przed)"
     emoji_deny_list: "Tych emoji nie będzie można używać w menu ani w shortcodes."
+    emoji_picker_pinned_groups: "Grupy emoji do przypięcia na górze selektora emoji. Wszystkie pozostałe grupy pojawią się po przypięciu."
     enable_gifs: "Dodaje przycisk umożliwiający łatwe wyszukiwanie i wstawianie plików GIF do wpisów."
     klipy_api_key: "Klucz API Klipy. Wymagany do obsługi wyszukiwania GIF-ów."
     klipy_file_detail: "Format obrazu do użycia. WebP ma mniejsze pliki, które ładują się szybciej, natomiast GIF zapewnia zgodność ze starszymi przeglądarkami."
@@ -2810,7 +2820,6 @@ pl_PL:
     about_page_extra_groups_order: "Kolejność dodatkowych grup na stronie „O nas”."
     adobe_analytics_tags_url: "Adres URL znaczników Adobe Analytics (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Grupy, które mogą wyświetlać nieprzetworzoną treść wiadomości e-mail, jeśli została ona utworzona przez przychodzącą wiadomość e-mail. Obejmuje to nagłówki wiadomości e-mail i inne informacje techniczne."
-    rich_editor: "Włącz wzbogacony edytor dla kompozytora, aby wszyscy użytkownicy mogli przełączać się między obecnym trybem Markdown a nowym edytorem tekstu wzbogaconego, co zapewni bardziej intuicyjne i łatwiejsze w obsłudze tworzenie treści."
     default_composition_mode: "Ustaw domyślny tryb dla kompozytora w swojej społeczności. Tryb RTF zapewnia bardziej nowoczesne i znajome środowisko pisania dla większości użytkowników, natomiast tryb Markdown może być odpowiedni dla odbiorców o bardziej technicznym zacięciu. Członkowie mogą przełączać się między trybami za pomocą przełącznika na pasku narzędzi kompozytora."
     reviewable_ui_refresh: "Grupy, które mogą korzystać z nowego eksperymentalnego interfejsu użytkownika w kolejce recenzji."
     content_localization_enabled: "Wyświetla zlokalizowaną treść dla użytkowników na podstawie ich przeglądarki lub preferencji językowych. Taka treść może obejmować kategorie, tagi, posty i tematy. Obsługiwane ustawienia regionalne są ustawione w {{setting:content_localization_supported_locales}}."
@@ -2856,8 +2865,10 @@ pl_PL:
     granular_anonymous_and_logged_in_groups_permissions: "Wprowadza uprawnienia witryn oparte na grupach, które traktują „wszystkich” jako „wszystkich zalogowanych użytkowników” oraz włącza nowe pseudogrupy „anonimowi_użytkownicy” i „zalogowani_użytkownicy”, dzięki czemu administratorzy mogą wyraźnie określać mianem anonimowych odwiedzających i uwierzytelnionych użytkowników."
     dashboard_improvements: "Umożliwia dostęp do przeprojektowanego pulpitu administracyjnego, który umożliwia przypinanie niestandardowych raportów i obejmuje ulepszone dane dotyczące ruchu w witrynie, zaangażowania i inne analizy powiązane z sukcesem i wartością społeczności."
     enable_invite_modal_with_roles: "Umożliwia przeprojektowany proces zapraszania, który pozwala administratorom zapraszać kogoś bezpośrednio jako administratora. Zaproszona osoba staje się moderatorem po rejestracji, a administratorem po potwierdzeniu zaproszenia przez osobę zapraszającą e-mailem."
+    update_pending_users_reminder_default: "Aktualizujemy domyślną wartość ustawienia {{setting:pending_users_reminder_delay_minutes}} na 30 minut, aby personel był szybko powiadamiany o oczekiwaniu na zatwierdzenie nowego członka. Jeśli to ustawienie zostało już wcześniej zmienione, ta zmiana nie będzie miała żadnego efektu."
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
+      invalid_date: "Nieprawidłowy format daty. Wpisz poprawną datę."
       invalid_datetime: "Nieprawidłowy format daty i godziny. Upewnij się, że wprowadzono prawidłową datę i godzinę."
       invalid_email: "Nieprawidłowy adres e-mail."
       invalid_username: "Użytkownik o takiej nazwie nie istnieje."
@@ -2871,6 +2882,11 @@ pl_PL:
       invalid_integer_max: "Wartość nie może być wyższa niż %{max}."
       invalid_integer: "Wartość musi być liczbą całkowitą."
       regex_mismatch: "Wartość nie jest zgodna z wymaganym formatem."
+      emoji_picker_pinned_groups_invalid:
+        one: "Nieznana grupa emoji: %{groups}."
+        few: "Nieznane grupy emoji: %{groups}."
+        many: "Nieznane grupy emoji: %{groups}."
+        other: "Nieznane grupy emoji: %{groups}."
       must_include_latest: "Górne menu musi zawierać zakładkę 'aktualne'."
       top_menu_unread_not_allowed_with_unified_new: "Pozycji menu „nieprzeczytane” nie można użyć, gdy włączona jest opcja ujednoliconych nowych."
       invalid_string: "Nieprawidłowa wartość."
@@ -3113,6 +3129,7 @@ pl_PL:
     timeout_expired: "Upłynął limit czasu logowania, spróbuj zalogować się ponownie."
     no_email: "Nie podano adresu e-mail. Skontaktuj się z administratorem witryny."
     blank_id_error: "`external_id` jest wymagane, ale jest puste"
+    banned_id_error: "Wartość `external_id` jest niedozwolona"
     email_error: "Konto nie może być zarejestrowane pod adresem e-mail <b>%{email}</b>. Skontaktuj się z administratorem witryny."
     missing_secret: "Uwierzytelnianie nie powiodło się z powodu braku sekretnego klucza. Skontaktuj się z administratorami, aby rozwiązać ten problem."
     invite_redeem_failed: "Zaproszenie nie powiodło się. Skontaktuj się z administratorem serwisu."
@@ -3122,6 +3139,7 @@ pl_PL:
   original_poster: "Autor pierwszego wpisu"
   most_recent_poster: "Autor najnowszego wpisu"
   frequent_poster: "Aktywny uczestnik"
+  recent_poster: "Autor ostatniego wpisu"
   poster_description_joiner: ", "
   redirected_to_top_reasons:
     new_user: "Witamy w naszej społeczności! Oto najpopularniejsze najnowsze tematy."

@@ -10,6 +10,7 @@ import StartPostingOptions from "discourse/components/admin-onboarding/modal/sta
 import ThemePickerModal from "discourse/components/admin-onboarding/modal/theme-picker";
 import PredefinedTopicOption from "discourse/components/admin-onboarding/predefined-topics-option";
 import OnboardingStep from "discourse/components/admin-onboarding/step";
+import { logOnboardingEvent } from "discourse/lib/admin-onboarding";
 import { showCreateInviteModal } from "discourse/lib/invite-modal";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { defaultHomepage } from "discourse/lib/utilities";
@@ -163,6 +164,7 @@ export default class AdminOnboardingBanner extends Component {
   @action
   async endOnboarding({ skipped = true } = {}) {
     await SiteSetting.update("enable_site_owner_onboarding", false);
+    await logOnboardingEvent(skipped ? "dismissed" : "completed");
     this.dismissed = true;
     STEPS.forEach((Step) => {
       this.keyValueStore.remove(`onboarding_step_${Step.name}`);

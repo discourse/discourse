@@ -87,9 +87,17 @@ function loadNext(ajax) {
         if (result?.jqXHR?.status === 429) {
           timeoutMs = 2000;
           removeLoading = false;
-          loadingQueue.unshift({ url, refresh, elem, categoryId, topicId });
+          loadingQueue.unshift({
+            url,
+            refresh,
+            elem,
+            categoryId,
+            topicId,
+            onResolve,
+          });
         } else {
           setFailedCache(normalize(url), true);
+          onResolve?.(null);
         }
       }
     )

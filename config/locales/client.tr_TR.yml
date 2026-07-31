@@ -2109,7 +2109,7 @@ tr_TR:
         default: "(varsayılan)"
         any: "herhangi"
       homepage:
-        default: "(varsayılan)"
+        default: "Varsayılan"
       password_confirmation:
         title: "Şifreyi Tekrarlayın"
       invite_code:
@@ -2153,6 +2153,9 @@ tr_TR:
         contextual: "Yeni sayfa içeriği"
       bookmark_after_notification:
         title: "Bir yer imi anımsatıcı bildirimi gönderildikten sonra:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Beğenildiğinde bildir"
         always: "Her zaman"
@@ -2935,7 +2938,7 @@ tr_TR:
     filter_input:
       clear: "Filtreyi temizle"
     filter_controls:
-      reset: "Filtreyi sıfırla"
+      reset: "Sıfırla"
       toggle: "Açılır filtreleri değiştir"
     d_icon_grid_picker:
       select_icon: "Simgeyi seç"
@@ -6412,7 +6415,6 @@ tr_TR:
               posts: "Gönderi"
               share: "Paylaş"
             whos_posting:
-              all_categories: "Tüm kategoriler"
               staff: "Personel"
             trust_level_pipeline:
               trust_levels:
@@ -7141,6 +7143,8 @@ tr_TR:
         sidebar: "Kenar çubuğu"
         header_dropdown: "Başlık Açılır Menüsü"
         legacy: "Eski"
+      duplicate_topic_titles:
+        allowed: "İzin Verildi"
       backups:
         title: "Yedeklemeler"
         files_title: "Yedekleme dosyaları"
@@ -7384,7 +7388,6 @@ tr_TR:
           finish_install: "Tema Yüklemesini Bitir"
           last_attempt: "Yükleme işlemi bitmedi, son deneme zamanı:"
           remote_branch: "Şube adı (isteğe bağlı)"
-          public_key: "Depoya aşağıdaki herkese açık anahtar erişimini verin:"
           install: "Yükle"
           installed: "Yüklendi"
           install_popular: "Popüler"
@@ -8748,6 +8751,7 @@ tr_TR:
         uploading: "Yükleniyor…"
         name: "Ad"
         group: "Grup"
+        all_groups: "Tüm gruplar"
         created_by: "Oluşturan:"
         image: "Görüntü"
         alt: "özel emoji ön izlemesi"

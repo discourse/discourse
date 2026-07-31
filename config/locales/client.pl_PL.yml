@@ -62,6 +62,7 @@ pl_PL:
         add_group: "Dodaj użytkownika lub grupę"
         mandatory_acl_tooltip: "To uprawnienie jest obowiązkowe dla %{name} i nie można go usunąć"
         mandatory: "Obowiązkowe"
+        disallowed: "Niedozwolone"
     carousel:
       go_to_slide: "Przejdź do slajdu %{index}"
       previous: "Poprzedni slajd"
@@ -1891,7 +1892,11 @@ pl_PL:
       enable_smart_lists: "Włącz inteligentne listy podczas pisania w kompozytorze"
       enable_defer: "Włącz opcję oznaczania tematów jako nieprzeczytanych"
       enable_markdown_monospace_font: "Użyj czcionki o stałej szerokości w trybie Markdown kompozytora"
-      show_original_content: "Pokaż oryginalną treść zamiast przetłumaczonej."
+      automatically_translate: "Automatyczne tłumaczenie tematów i postów w innych językach"
+      content_languages:
+        title: "Języki treści"
+        understood: "Języki, które rozumiem"
+        understood_description: "Tematy i wpisy w tych językach nie będą tłumaczone. Język interfejsu jest zawsze uwzględniany."
       experimental_sidebar:
         enable: "Włącz pasek boczny"
         options: "Opcje"
@@ -2381,7 +2386,7 @@ pl_PL:
         default: "(domyślny)"
         any: "każdy"
       homepage:
-        default: "(domyślny)"
+        default: "Domyślna"
       password_confirmation:
         title: "Powtórz hasło"
       invite_code:
@@ -2425,6 +2430,10 @@ pl_PL:
         contextual: "Nowa zawartość strony"
       bookmark_after_notification:
         title: "Po wysłaniu przypomnienia o zakładce:"
+      send_shortcut:
+        title: "Wysyłaj wiadomości w kompozytorach w stylu czatu za pomocą:"
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Powiadom o polubieniach"
         always: "Zawsze"
@@ -2884,10 +2893,15 @@ pl_PL:
     home: "Strona główna"
     read_only_mode:
       enabled: "Strona jest w trybie tylko-do-odczytu. Możesz ją nadal przeglądać, ale operacje takie jak publikowanie postów, polubianie i inne są wyłączone."
+      enabled_anonymous: "Ta witryna jest w trybie tylko do odczytu. Proszę kontynuować przeglądanie, ale rejestracja i logowanie są na razie niedostępne."
       login_disabled: "Logowanie jest zablokowane, gdy strona jest w trybie tylko do odczytu."
       logout_disabled: "Wylogowanie jest zablokowane gdy strona jest w trybie tylko do odczytu."
+      signup_disabled: "Rejestracja jest wyłączona, gdy witryna działa w trybie tylko do odczytu."
     staff_writes_only_mode:
       enabled: "Ta strona jest w trybie tylko dla personelu. Kontynuuj przeglądanie, ale odpowiadanie, polubienia i inne działania są ograniczone tylko do członków personelu."
+      enabled_anonymous: "Ta witryna jest dostępna tylko dla personelu. Proszę kontynuować przeglądanie, ale rejestracja jest niedostępna i tylko pracownicy mogą się zalogować."
+      login_disabled: "Gdy witryna działa w trybie tylko dla personelu, zalogować się mogą tylko członkowie personelu."
+      signup_disabled: "Rejestracja jest niemożliwa, gdy witryna jest w trybie wyłącznie dla personelu."
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
@@ -3289,6 +3303,12 @@ pl_PL:
         other: "Wybierz co najmniej %{count} elementów."
       components:
         filter_for_more: Filtruj po więcej...
+        multiple_categories_selector:
+          limited_results_notice:
+            one: "Wyświetlanie %{shown} z kategorii %{count} . Wpisz, aby wyszukać więcej."
+            few: "Wyświetlanie %{shown} z kategorii %{count} . Wpisz, aby wyszukać więcej."
+            many: "Wyświetlanie %{shown} z kategorii %{count} . Wpisz, aby wyszukać więcej."
+            other: "Wyświetlanie %{shown} z kategorii %{count} . Wpisz, aby wyszukać więcej."
         categories_admin_dropdown:
           title: "Zarządzaj kategoriami"
         tag_category_admin_dropdown:
@@ -3330,7 +3350,7 @@ pl_PL:
     filter_input:
       clear: "Wyczyść filtr"
     filter_controls:
-      reset: "Zresetuj filtr"
+      reset: "Przywróć"
       toggle: "Przełącz filtry rozwijane"
     d_icon_grid_picker:
       select_icon: "Wybierz ikonę"
@@ -4459,6 +4479,8 @@ pl_PL:
         link: "Dziennik aktywności"
         title: "Dziennik aktywności tematu"
         empty: "Brak aktywności tematu do wyświetlenia."
+        load_more: "Załaduj więcej aktywności"
+        updated: "Zaktualizowano aktywność tematu."
       context:
         banner: "Przeglądasz pojedynczy wątek z tego tematu."
         view_full_topic: "Zobacz cały temat"
@@ -5377,6 +5399,11 @@ pl_PL:
       click_to_show_translation: "Kliknij, aby wyświetlić tłumaczenie"
       tap_to_show_translation: "Stuknij tutaj, aby wyświetlić tłumaczenie"
       ai_translation_disclaimer: "Tłumaczenia wygenerowane przez AI mogą być niedokładne."
+    content_localization:
+      preferences:
+        title: "Preferencje językowe treści"
+        login_to_set_languages: "Zaloguj się, aby ustawić więcej języków"
+        interface_language_mandatory: "Język interfejsu jest zawsze uwzględniony."
     category:
       none: "(brak kategorii)"
       all: "Wszystkie kategorie"
@@ -7484,12 +7511,11 @@ pl_PL:
               save_error: "Nie udało się zapisać wyboru na następny raz."
             whos_posting:
               title: "Kto publikuje?"
-              all_categories: "Wszystkie kategorie"
-              include_subcategories: "Uwzględnij podkategorie"
               new_members: "Nowi członkowie"
               returning: "Powracający"
               staff: "Zespół"
               empty: "Brak wpisów w wybranym okresie."
+              save_error: "Nie udało się zapisać wyboru na następny raz."
             trust_level_pipeline:
               title: "Potok poziomu zaufania"
               trust_levels:
@@ -8445,6 +8471,12 @@ pl_PL:
         sidebar: "Pasek boczny"
         header_dropdown: "Lista rozwijana nagłówka"
         legacy: "Przestarzały"
+      homepage:
+        top_menu_default: "Pierwsza pozycja w górnym menu"
+      duplicate_topic_titles:
+        disallowed: "Niedozwolone"
+        allowed_across_categories: "Dozwolone we wszystkich kategoriach"
+        allowed: "Dozwolone"
       backups:
         title: "Kopie zapasowe"
         files_title: "Pliki kopii zapasowej"
@@ -8612,6 +8644,8 @@ pl_PL:
           default: "Motyw domyślny"
           settings_editor: "Edytor ustawień"
           show_advanced: "Pokaż zaawansowane"
+          maximize_editor: "Maksymalizuj edytor"
+          minimize_editor: "Zminimalizuj edytor"
           is_default: "Motyw ustawiony jako domyślny"
           user_selectable: "Motyw może być ustawiany przez użytkowników"
           user_selectable_badge_label: "Możliwe do wyboru przez użytkownika"
@@ -8692,10 +8726,13 @@ pl_PL:
           import_file_tip: "Plik .tar.gz lub .zip zawierający motyw"
           is_private: "Motyw jest w prywatnym repozytorium git"
           finish_install: "Zakończ instalację motywu"
+          placeholder_description: "To prywatny motyw, który wymaga zainstalowania klucza w konfiguracji repozytorium. Po zainstalowaniu kliknij poniższy przycisk, aby zakończyć instalację."
           last_attempt: "Proces instalacji nie został zakończony, ostatnia próba:"
           remote_branch: "Nazwa oddziału (opcjonalnie)"
           remote_branch_placeholder: "Wybierz konkretną gałąź lub pozostaw puste"
-          public_key: "Podaj następujący klucz publiczny pozwalający na dostęp do repozytorium:"
+          public_key: "Udziel następującemu kluczowi publicznemu dostępu tylko do odczytu w repozytorium:"
+          public_key_github: "Przyznaj następującemu kluczowi publicznemu dostęp tylko do odczytu do repozytorium. Instrukcje znajdziesz w %{link}."
+          deploy_key_instructions: "Instrukcje wdrażania kluczy GitHub"
           install: "Zainstaluj"
           installed: "Zainstalowana"
           screenshot: "Zrzut ekranu %{name}"
@@ -9202,6 +9239,9 @@ pl_PL:
             configure_category_type: "skonfiguruj typ kategorii"
             unconfigure_category_type: "usuń konfigurację typu kategorii"
             change_access_control_list_permissions: "zmień uprawnienia listy kontroli dostępu"
+            admin_onboarding_step_completed: "ukończony etap wdrażania administratora"
+            admin_onboarding_completed: "pełne wdrożenie administratora"
+            admin_onboarding_dismissed: "odwołaj wdrożenie administratora"
         screened_emails:
           title: "Sprawdzone e-maile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -10166,6 +10206,9 @@ pl_PL:
         uploading: "Przesyłanie…"
         name: "Nazwa"
         group: "Grupa"
+        all_groups: "Wszystkie grupy"
+        filter_placeholder: "Wyszukaj emoji według nazwy"
+        no_results: "Nie znaleziono żadnych emoji."
         created_by: "Stworzone przez"
         image: "Grafika"
         alt: "podgląd niestandardowego emoji"

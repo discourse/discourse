@@ -10,7 +10,7 @@ fr:
       pr_status:
         draft: "Brouillon"
         open: "Ouvert"
-        approved: "Acceptés"
+        approved: "Approuvé "
         closed: "Fermé"
   admin_js:
     admin:

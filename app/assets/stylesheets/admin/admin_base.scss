@@ -698,6 +698,10 @@ $mobile-breakpoint: 700px;
 
   .admin-actions {
     margin-left: auto;
+
+    @include viewport.until(md) {
+      margin-left: 10px;
+    }
   }
 
   nav {
@@ -714,51 +718,6 @@ $mobile-breakpoint: 700px;
       padding-left: 10px;
       margin-left: -10px;
       margin-right: -10px;
-    }
-
-    &::before {
-      // Fade out sides of horizontal nav
-      content: "";
-      position: absolute;
-      width: 10px;
-      left: 0;
-      height: calc(100% - 5px);
-      background: linear-gradient(
-        to right,
-        rgb(var(--primary-low-rgb), 1),
-        rgb(var(--primary-low-rgb), 0)
-      );
-    }
-
-    &::after {
-      content: "";
-      position: absolute;
-      right: 0;
-      width: 15px;
-      height: calc(100% - 5px);
-      background: linear-gradient(
-        to right,
-        rgb(var(--primary-low-rgb), 0),
-        rgb(var(--primary-low-rgb), 1)
-      );
-    }
-  }
-
-  .nav-pills {
-    width: 100%;
-    display: inline-flex;
-    padding: 0.5em;
-    margin: 0;
-    white-space: nowrap;
-    overflow-x: auto;
-
-    @include viewport.until(md) {
-      margin-left: -10px;
-      overflow-x: scroll;
-    }
-
-    &::before {
-      display: none;
     }
   }
 
@@ -831,12 +790,6 @@ $mobile-breakpoint: 700px;
   label {
     display: inline-block;
     margin-right: 5px;
-  }
-
-  .horizontal-overflow-nav__scroll-right,
-  .horizontal-overflow-nav__scroll-left {
-    --fade-color: var(--primary-low-rgb);
-    background: var(--primary-low);
   }
 }
 

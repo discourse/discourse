@@ -223,7 +223,7 @@ fr:
     incoming:
       default_subject: "Ce sujet a besoin d'un titre"
       show_trimmed_content: "Montrer le contenu raccourci"
-      maximum_staged_user_per_email_reached: "Vous avez atteint le nombre maximal d'utilisateurs distants qui peuvent être créés par e-mail."
+      maximum_staged_user_per_email_reached: "Vous avez atteint le nombre maximal de comptes provisoires qui peuvent être créés par e-mail."
       no_subject: "(aucun objet)"
       no_body: "(aucun texte)"
       attachments: "(pièces jointes)"
@@ -274,7 +274,6 @@ fr:
       exclusion: est réservé
       greater_than: doit être supérieur à %{count}
       greater_than_or_equal_to: doit être supérieur ou égal à %{count}
-      has_already_been_used: "a déjà été utilisée"
       inclusion: n'est pas inclus dans la liste
       invalid: est invalide
       is_invalid: "ne semble pas clair, est-ce une phrase complète ?"
@@ -290,7 +289,7 @@ fr:
       must_all_be_positive: toutes les valeurs doivent être positives
       odd: doit être impair
       record_invalid: ! "Validation échouée : %{errors}"
-      max_emojis: "ne peut pas contenir plus de %{max_emojis_count} émojis"
+      max_emojis: "ne peut pas contenir plus de %{max_emojis_count} émoji"
       emojis_disabled: "ne peut pas contenir des émojis"
       ip_address_already_screened: "est déjà inclus dans une règle existante"
       restrict_dependent_destroy:
@@ -612,7 +611,7 @@ fr:
       everyone: "Tout le monde"
       admins: "Administrateurs "
       moderators: "Modérateurs"
-      staff: "Responsable"
+      staff: "Responsables"
       anonymous_users: "Utilisateurs anonymes"
       logged_in_users: "Utilisateurs connectés"
     default_descriptions:
@@ -639,13 +638,13 @@ fr:
 
       Avant de publier, veuillez sélectionner une catégorie ou une étiquette pour regrouper ce sujet avec les discussions connexes afin que les autres utilisateurs puissent le retrouver facilement.
 
-      Pour obtenir plus d'astuces et de conseils sur la façon de participer à notre communauté, [consultez notre charte communautaire] (%{base_path}/guidelines).
+      Pour obtenir plus d'astuces et de conseils sur la façon de participer à notre communauté, [consultez les règles de la communauté] (%{base_path}/guidelines).
     "new-reply": |
       Merci de votre contribution à %{site_name} !
 
       Souvenez-vous que nous sommes des personnes réelles. Faites preuve de bienveillance à l'égard des autres membres de votre communauté.
 
-      Pour obtenir plus d'astuces et de conseils sur la façon de participer à notre communauté, [consultez notre charte communautaire] (%{base_path}/guidelines).
+      Pour obtenir plus d'astuces et de conseils sur la façon de participer à notre communauté, [consultez les règles de la communauté] (%{base_path}/guidelines).
     dominating_topic: Vous avez publié beaucoup de choses dans ce sujet ! Envisagez de donner aux autres utilisateurs la possibilité de participer également.
     get_a_room:
       one: Vous avez répondu une fois à @%{reply_username}, saviez-vous que vous pouvez lui envoyer un message privé à la place ?
@@ -784,7 +783,7 @@ fr:
 
       :open_book: **Apprenez à connaître la communauté** en [parcourant les discussions](%{base_path}/latest) qui ont déjà lieu ici. Lorsque vous trouvez un message intéressant, informatif ou divertissant, utilisez le :heart: pour montrer votre intérêt ou votre soutien !
 
-      :handshake: **Contribuez** en commentant, en partageant votre propre point de vue, en posant des questions ou en publiant des commentaires dans la discussion. Avant de répondre ou de commencer de nouveaux sujets, veuillez consulter les [Lignes directrices de notre communauté](%{base_path}/faq).
+      :handshake: **Contribuez** en commentant, en partageant votre propre point de vue, en posant des questions ou en publiant des commentaires dans la discussion. Avant de répondre ou de commencer de nouveaux sujets, veuillez consulter les [règles de la communauté](%{base_path}/faq).
 
       Si vous avez besoin d'aide ou si vous avez des suggestions à apporter, n'hésitez pas à poser vos questions dans %{feedback_category} ou à [contacter les administrateurs](%{base_path}/about).
   admin_quick_start_title: "Guide de l'administrateur : premiers pas"
@@ -819,7 +818,7 @@ fr:
     uncategorized_description: "Les sujets qui n'ont pas besoin d'une catégorie ou qui ne correspondent à aucune catégorie existante."
   trust_levels:
     admin: "Administrateur"
-    staff: "Responsable"
+    staff: "Responsables"
     change_failed_explanation: "Vous avez essayé de rétrograder %{user_name} au niveau %{new_trust_level}. Cependant son niveau de confiance est déjà %{current_trust_level}. %{user_name} restera au niveau %{current_trust_level}. Si vous souhaitez rétrograder un utilisateur, vous devez verrouiller le niveau de confiance au préalable"
   post:
     image_placeholder:
@@ -972,7 +971,7 @@ fr:
   change_email:
     error: "Une erreur s'est produite lors de la modification de votre adresse e-mail. L'adresse est peut-être déjà utilisée ?"
     doesnt_exist: "Cette adresse e-mail n'est pas associée à votre compte."
-    error_staged: "Une erreur est survenue lors de la modification de votre adresse e-mail. Cette adresse est déjà utilisée par un utilisateur distant."
+    error_staged: "Une erreur est survenue lors de la modification de votre adresse e-mail. Cette adresse est déjà utilisée par un compte provisoire."
     already_done: "Nous sommes désolés, ce lien de confirmation n'est plus valide. Votre adresse e-mail a peut-être déjà été modifiée ?"
     confirm: "Confirmer"
     max_secondary_emails_error: "Vous avez atteint la limite autorisée du nombre d'adresses e-mail secondaires."
@@ -1006,17 +1005,17 @@ fr:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Inapproprié"
-      description: 'Le contenu de ce message serait jugé offensant, injurieux, haineux ou en infraction avec les <a href="%{base_path}/guidelines">lignes directrices de la communauté</a> par une personne raisonnable.'
-      short_description: 'Une transgression des <a href="%{base_path}/guidelines">lignes directrices de notre communauté</a>'
+      description: 'Le contenu de ce message serait jugé offensant, injurieux, haineux ou en infraction avec les <a href="%{base_path}/guidelines">règles de la communauté</a> par une personne raisonnable.'
+      short_description: 'Une infraction aux <a href="%{base_path}/guidelines">règles de la communauté</a>'
     illegal:
       title: "Illégal"
-      description: "Cette publication requiert l'attention du personnel, car je pense qu'elle contient du contenu illégal."
+      description: "Cette publication requiert l'attention des responsables, car je pense qu'elle contient du contenu illégal."
       short_description: "C'est illégal"
-      email_title: 'Une publication dans « %{title} » nécessite l''attention du personnel'
+      email_title: 'Une publication dans « %{title} » nécessite l''attention des responsables'
       email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Envoyer un message à @%{username}"
-      description: "J'aimerais m'adresser à cette personne directement et personnellement au sujet de son message."
+      description: "Je souhaite m'entretenir directement et personnellement avec cette personne au sujet de sa publication."
       short_description: "J'aimerais m'adresser à cette personne directement et personnellement au sujet de son message."
       email_title: 'Votre message sur « %{title} »'
       email_body: "%{link}\n\n%{message}"
@@ -1079,21 +1078,21 @@ fr:
       short_description: "Ceci est une publicité"
     inappropriate:
       title: "Inapproprié"
-      description: 'Le contenu de ce sujet serait jugé offensant, injurieux, haineux ou en infraction avec les <a href="%{base_path}/guidelines">lignes directrices de notre communauté</a> par une personne raisonnable.'
+      description: 'Le contenu de ce sujet serait jugé offensant, injurieux, haineux ou en infraction avec les <a href="%{base_path}/guidelines">règles de la communauté</a> par une personne raisonnable.'
       long_form: "signalé comme étant inapproprié"
-      short_description: 'Une transgression des <a href="%{base_path}/guidelines">lignes directrices de notre communauté</a>'
+      short_description: 'Une infraction aux <a href="%{base_path}/guidelines">règles de la communauté</a>'
     notify_moderators:
       title: "Autre chose"
-      description: 'Ce sujet nécessite l''intervention du personnel, selon les <a href="%{base_path}/guidelines">lignes directrices de la communauté</a>, <a href="%{tos_url}">les conditions d''utilisation</a> ou pour une autre raison.'
+      description: 'Ce sujet nécessite l''attention des responsables en général, que ce soit en raison des <a href="%{base_path}/guidelines">lignes directrices</a>, <a href="%{tos_url}">des conditions d''utilisation</a> ou pour une autre raison qui ne figure pas dans la liste ci-dessus.'
       long_form: "signalé pour modération"
       short_description: "Nécessite l'attention des responsables pour une autre raison"
       email_title: 'Le sujet « %{title} » nécessite l''attention d''un modérateur'
       email_body: "%{link}\n\n%{message}"
     illegal:
       title: "Illégal"
-      description: "Ce sujet requiert l'attention du personnel, car je pense qu'il contient du contenu illégal."
+      description: "Ce sujet requiert l'attention des responsables, car je pense qu'elle contient du contenu illégal."
       short_description: "C'est illégal"
-      email_title: 'Une publication dans « %{title} » nécessite l''attention du personnel'
+      email_title: 'Une publication dans « %{title} » nécessite l''attention des responsables'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Votre message a été signalé par la communauté. Veuillez <a href="%{path}">consulter vos messages directs</a>.</p>'
@@ -1227,7 +1226,7 @@ fr:
     visits:
       title: "Visites d'utilisateurs"
       xaxis:
-        desktop: "Bureau"
+        desktop: "Ordinateur"
         mobile: "Mobile"
       yaxis: "Nombre de visites"
     signups:
@@ -1251,7 +1250,7 @@ fr:
         count: "Publications"
         share: "Partager"
       types:
-        staff: "Responsable"
+        staff: "Responsables"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1261,10 +1260,10 @@ fr:
         signups: "Inscriptions"
       levels:
         "0": "Nouveau"
-        "1": "Actif"
+        "1": "Basique"
         "2": "Membre"
         "3": "Normal"
-        "4": "Meneur"
+        "4": "Leader"
     trust_level_growth:
       title: "Progression du niveau de confiance"
       xaxis:
@@ -1308,7 +1307,7 @@ fr:
     site_traffic:
       title: "Trafic du site"
       xaxis:
-        page_view_anon_browser: "Anonymes"
+        page_view_anon_browser: "Anonyme"
         page_view_crawler: "Robots d'indexation"
         page_view_other: "Autre trafic"
       yaxis: "Jour"
@@ -1560,7 +1559,7 @@ fr:
       labels:
         user: Utilisateur
         location: Emplacement
-        login_at: Heure de connexion
+        login_at: Connexion à
       description: "Liste des heures et localisations des connexions des administrateurs."
     top_uploads:
       title: "Principaux fichiers envoyés"
@@ -1700,7 +1699,6 @@ fr:
     staff_edit_locks_post: "Les messages seront verrouillés à la modification s'ils sont modifiés par des responsables"
     post_edit_time_limit: "Un auteur du niveau de confiance 0 ou 1 peut modifier ses messages pendant (n) minutes après leur publication. Mettre à 0 pour retirer cette limite."
     tl2_post_edit_time_limit: "Un auteur de niveau de confiance 2 ou supérieur peut modifier ses messages pendant (n) minutes après leur publication. Mettre à 0 pour retirer cette limite."
-    edit_history_visible_to_public: "Autoriser tout le monde à voir les versions précédentes d'un message modifié. Quand cette option est désactivée, seuls les responsables peuvent voir l'historique."
     delete_removed_posts_after: "Les messages retirés par leur auteur seront automatiquement supprimés après (n) heures. Si cette valeur est à 0, les messages seront supprimés immédiatement."
     notify_users_after_responses_deleted_on_flagged_post: "Lorsqu'un message fait l'objet d'un signalement, puis d'une suppression, envoyer une notification à tous les utilisateurs qui avaient répondu à ce message."
     max_image_width: "Largeur maximale des vignettes d'images dans un message. Les images dont la largeur est supérieure seront redimensionnées et placées dans un encadré lumineux."
@@ -1799,7 +1797,6 @@ fr:
     suppress_secured_categories_from_admin: "Supprimez les sujets privés et les messages privés dans certaines parties de l'interface utilisateur pour les administrateurs. Le contenu sera toujours visible à certains endroits. Il ne s'agit pas d'une fonctionnalité de sécurité : les administrateurs peuvent toujours accéder à l'ensemble du contenu du site."
     include_secure_categories_in_tag_counts: "Lorsque cette option est activée, le nombre de sujets pour une étiquette inclut les sujets appartenant à des catégories dont la lecture est limitée pour tous les utilisateurs. Lorsque cette option est désactivée, les utilisateurs normaux ne voient apparaître que le nombre de sujets pour une étiquette dont tous les sujets se trouvent dans des catégories publiques."
     display_personal_messages_tag_counts: "Lorsque cette option est activée, le nombre de messages privés marqués d'une étiquette donnée s'affiche."
-    top_menu: "Déterminez quels éléments apparaissent dans la navigation de la page d'accueil et dans quel ordre."
     post_menu: "Configurez la visibilité et l'ordre des éléments de menu de publication par défaut. Les éléments supplémentaires ajoutés par des extensions ou des thèmes sont gérés séparément et n'apparaîtront pas dans cette liste."
     post_menu_hidden_items: "Les éléments de menu à masquer par défaut dans le menu de publication, à moins que l'on clique sur une ellipse d'extension. Les éléments supplémentaires ajoutés par des extensions ou des thèmes sont gérés séparément et n'apparaîtront pas dans cette liste."
     share_links: "Choisissez les éléments qui apparaissent dans la fenêtre de partage, ainsi que leur ordre."
@@ -2094,8 +2091,8 @@ fr:
     delete_email_logs_after_days: "Effacer les journaux de messagerie après (N) jours. 0 pour conserver indéfiniment."
     disallow_reply_by_email_after_days: "Interdire la réponse par e-mail après (N) jours. 0 pour permettre indéfiniment."
     max_emails_per_day_per_user: "Nombre maximal d'e-mails à envoyer aux utilisateurs par jour. 0 pour désactiver la limite"
-    enable_staged_users: "Créer automatiquement des utilisateurs distants lors du traitement des e-mails entrants."
-    maximum_staged_users_per_email: "Nombre maximal d'utilisateurs distants créés lors du traitement d'un e-mail entrant."
+    enable_staged_users: "Créer automatiquement des comptes provisoires lors du traitement des e-mails entrants."
+    maximum_staged_users_per_email: "Nombre maximal de comptes provisoires créés lors du traitement d'un e-mail entrant."
     maximum_recipients_per_new_group_email: "Bloquez les e-mails entrants contenant trop de destinataires."
     auto_generated_allowlist: "Liste des adresses e-mail qui ne seront pas vérifiées pour du contenu généré automatiquement. Exemple : foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Bloquer les e-mails entrants identifiés comme étant générés automatiquement."
@@ -2180,7 +2177,7 @@ fr:
     ignored_users_count_message_threshold: "Notifier les modérateurs si un utilisateur est ignoré par ce nombre d'utilisateurs."
     ignored_users_message_gap_days: "Délai d'attente avant de notifier à nouveau les modérateurs d'un utilisateur ignoré par beaucoup d'autres."
     clean_up_inactive_users_after_days: "Nombre de jours avant qu'un utilisateur inactif (niveau de confiance 0 sans aucun message) soit supprimé. Pour désactiver le nettoyage, saisir 0."
-    clean_up_unused_staged_users_after_days: "Nombre de jours avant de supprimer un utilisateur distant inutilisé (sans aucun message). 0 pour désactiver le nettoyage."
+    clean_up_unused_staged_users_after_days: "Nombre de jours avant de supprimer un compte provisoire inutilisé (sans aucun message). 0 pour désactiver le nettoyage."
     user_selected_primary_groups: "Autoriser les utilisateurs à définir leur groupe principal"
     max_notifications_per_user: "Volume maximal de notifications par utilisateur. Si ce seuil est dépassé, les notifications les plus anciennes seront supprimées. Applicable chaque semaine. La valeur 0 permet de désactiver cette fonction."
     allow_profile_backgrounds: "Autoriser les utilisateurs à envoyer des arrière-plans de profil."
@@ -2241,7 +2238,7 @@ fr:
     approve_post_count: "Le nombre de messages d'un utilisateur nouveau ou basique devant être approuvés"
     approve_unless_allowed_groups: "Les publications créées par des utilisateurs ne faisant pas partie de ces groupes doivent être approuvées. Les publications créées par les administrateurs et les modérateurs sont toujours approuvées."
     approve_new_topics_unless_allowed_groups: "Les nouveaux sujets créés par des utilisateurs ne faisant pas partie de ces groupes doivent être approuvés. Les sujets créés par les administrateurs et les modérateurs sont toujours approuvés."
-    approve_unless_staged: "Les nouveaux sujets et publications créés par les utilisateurs distants doivent être approuvés"
+    approve_unless_staged: "Les nouveaux sujets et publications créés par les comptes provisoires doivent être approuvés"
     notify_about_queued_posts_after: "Après tant d'heures écoulées, envoyer un e-mail à tous les modérateurs si des messages sont en attente d'examen. Désactiver l'envoi de ces e-mails en renseignant la valeur « 0 »."
     reviewable_revision_reasons: "Liste des raisons qui peuvent être sélectionnées lors du rejet d'un message révisable en file d'attente avec une révision. L'option Autre est également toujours disponible, ce qui permet de saisir une raison personnalisée."
     auto_close_messages_post_count: "Nombre maximal de messages dans un message privé avant qu'il soit automatiquement fermé (0 pour désactiver)"
@@ -2254,7 +2251,7 @@ fr:
     new_user_notice_tl: "Niveau de confiance minimal requis pour voir les nouveaux avis de publication d'utilisateur."
     returning_user_notice_tl: "Niveau de confiance minimum requis pour voir les avis postés par les utilisateurs de retour."
     returning_users_days: "Combien de jours doivent s'écouler avant qu'un utilisateur soit considéré comme étant de retour."
-    skip_review_media_groups: "Les publications des utilisateurs qui ne font partie d'aucun de ces groupes seront envoyées au personnel pour examen si elles contiennent des éléments multimédias intégrés. Les publications créées par les administrateurs et les modérateurs sont toujours autorisées."
+    skip_review_media_groups: "Les publications des utilisateurs qui ne font partie d'aucun de ces groupes seront envoyées aux responsables pour examen si elles contiennent des éléments multimédias intégrés. Les publications créées par les administrateurs et les modérateurs sont toujours autorisées."
     blur_tl0_flagged_posts_media: "Flouter les images des messages signalés pour masquer du contenu potentiellement NSFW."
     enable_page_publishing: "Autoriser les responsables de publier des sujets vers de nouvelles URL utilisant leur propre style."
     show_published_pages_login_required: "Les utilisateurs anonymes peuvent voir les pages publiées, même quand la connexion est nécessaire."
@@ -2352,7 +2349,7 @@ fr:
     gravatar_base_url: "Spécifiez l'URL d'accès à l'API du fournisseur Gravatar. Ce paramètre est essentiel pour convertir les adresses e-mail en URL Gravatar dans lesquelles les images d'avatar sont stockées."
     share_quote_buttons: "Choisissez les éléments qui apparaissent dans le bouton de partage de citation, ainsi que leur ordre."
     share_quote_visibility: "Choisissez quand afficher le bouton de partage de citation : jamais, uniquement aux utilisateurs anonymes ou à tous les utilisateurs. "
-    allow_changing_staged_user_tracking: "Permettre aux administrateurs de modifier les préférences de notification relatives aux catégories et aux étiquettes, pour les comptes d'utilisateurs distants."
+    allow_changing_staged_user_tracking: "Permettre aux administrateurs de modifier les préférences de notification relatives aux catégories et aux étiquettes, pour les comptes provisoires."
     use_email_for_username_and_name_suggestions: "Utilisez la première partie des adresses e-mail pour suggérer des noms d'utilisateur et des noms de famille. Attention : cela peut faciliter la découverte de l'adresse e-mail de vos membres par des personnes malintentionnées (car de nombreuses personnes utilisent des fournisseurs de messagerie courants comme « gmail.com »)."
     suggest_weekends_in_date_pickers: "Inclure les week-ends dans les suggestions du sélectionneur de date (désactivez ce paramètre si vous n'utilisez Discourse que les jours de semaine)."
     show_bottom_topic_map: "Affiche la carte du sujet en bas du sujet lorsqu'il contient 10 réponses ou plus."
@@ -2376,7 +2373,6 @@ fr:
     about_page_extra_groups_order: "Classement des groupes supplémentaires sur la page À propos."
     adobe_analytics_tags_url: "URL des balises Adobe Analytics (https://assets.adobedtm.com/...)"
     view_raw_email_allowed_groups: "Groupes qui peuvent consulter le contenu brut d'un e-mail s'il a été créé par un e-mail entrant. Cela inclut les en-têtes des e-mails et d'autres informations techniques."
-    rich_editor: "Activer l'éditeur enrichi pour l'éditeur de rédaction afin que tous les utilisateurs puissent basculer entre le mode Markdown actuel et le nouvel éditeur de texte enrichi, pour une composition plus intuitive et conviviale."
     default_composition_mode: "Définir le mode par défaut de l'éditeur de rédaction de votre communauté. Le mode texte enrichi offre une expérience de rédaction plus moderne et familière pour la plupart des utilisateurs, tandis que le mode Markdown peut convenir à un public plus technique. Les membres peuvent utiliser un bouton dans la barre d'outils de l'éditeur pour basculer entre les modes."
     reviewable_ui_refresh: "Groupes pouvant utiliser la nouvelle interface utilisateur expérimentale dans la file d'attente de révision."
     errors:
@@ -2753,8 +2749,8 @@ fr:
       domain_not_allowed: "Site Web invalide. Les domaines autorisés sont : %{domains}"
     auto_rejected: "Refusé automatiquement en raison de l'âge. Voir le paramètre de site « auto_handle_queued_age »."
     destroy_reasons:
-      unused_staged_user: "Utilisateur distant inutilisé"
-      fixed_primary_email: "Correction de l'e-mail principal pour l'utilisateur distant"
+      unused_staged_user: "Compte provisoire inutilisé"
+      fixed_primary_email: "Correction de l'e-mail principal pour le compte provisoire"
       same_ip_address: "Même adresse IP (%{ip_address}) que d'autres utilisateurs"
       inactive_user: "Utilisateur inactif"
       reviewable_reject_auto: "Traiter automatiquement les éléments à examiner en file d'attente"
@@ -2910,13 +2906,13 @@ fr:
     subject_template: "[%{email_prefix}] Mise à jour disponible"
   flag_reasons:
     off_topic: "Votre message a été signalé comme étant **hors sujet** : la communauté considère qu'il ne correspond pas au sujet en question qui est défini par son titre et son premier message."
-    inappropriate: "Votre message a été signalé comme étant **inapproprié** : la communauté estime qu'il est offensant, abusif, qu'il s'agit d'un comportement haineux ou qu'il enfreint les [lignes directrices de notre communauté](%{base_path}/guidelines)."
+    inappropriate: "Votre message a été signalé comme étant **inapproprié** : la communauté estime qu'il est offensant, abusif, qu'il s'agit d'un comportement haineux ou qu'il enfreint les [règles de la communauté](%{base_path}/guidelines)."
     illegal: "Votre publication a été signalée comme **illégale** : la communauté pense qu'elle enfreint peut-être la loi."
     spam: "Votre publication a été signalée comme étant du **contenu indésirable** : la communauté considère qu'il s'agit d'une publicité ou du contenu trop promotionnel au lieu d'être utile et pertinent au regard du sujet."
     notify_moderators: "Votre message a été **signalé aux modérateurs** : la communauté considère qu'il nécessite l'intervention d'un responsable."
     responder:
       off_topic: "Ce message a été signalé comme étant **hors sujet** : la communauté considère qu'il ne correspond pas au sujet en question tel que défini par son titre et son premier message."
-      inappropriate: "Le message a été signalé comme étant **inapproprié** : la communauté estime qu'il est offensant, abusif, qu'il s'agit d'un comportement haineux ou qu'il enfreint les [lignes directrices de notre communauté](%{base_path}/guidelines)."
+      inappropriate: "Le message a été signalé comme étant **inapproprié** : la communauté estime qu'il est offensant, abusif, qu'il s'agit d'un comportement haineux ou qu'il enfreint les [règles de la communauté](%{base_path}/guidelines)."
       spam: "Ce message a été signalé comme étant du **courrier indésirable** : la communauté considère qu'il s'agit d'une publicité, c'est-à-dire d'un message de nature trop promotionnelle au lieu d'être utile et pertinent au regard du sujet."
       notify_moderators: "Ce message a été **signalé aux modérateurs** : la communauté considère qu'il nécessite l'intervention d'un responsable."
   flags_dispositions:
@@ -2952,7 +2948,7 @@ fr:
 
         Toutefois, si ce message était masqué par la communauté une seconde fois, il le resterait jusqu'à ce qu'il soit examiné par des responsables.
 
-        Pour obtenir davantage de conseils, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
+        Pour obtenir davantage de conseils, nous vous invitons à consulter les [règles de la communauté](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject:
       title: "Commentaires sur votre message"
       subject_template: "Commentaires sur votre message dans %{topic_title}"
@@ -2973,7 +2969,7 @@ fr:
 
         La communauté a signalé ce message et il est maintenant masqué. **Ce message ayant été masqué plus d'une fois, il le restera jusqu'à ce qu'un responsable intervienne.**
 
-        Pour obtenir davantage de conseils, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
+        Pour obtenir davantage de conseils, nous vous invitons à consulter les [règles de la communauté](%{base_url}/guidelines).
     queued_by_staff:
       title: "Message en attente de vérification"
       subject_template: "Message masqué par un responsable, en attente de vérification"
@@ -2986,7 +2982,7 @@ fr:
 
         Votre message restera masqué jusqu'à ce qu'un responsable en prenne connaissance et l'examine.
 
-        Pour obtenir davantage de conseils, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
+        Pour obtenir davantage de conseils, nous vous invitons à consulter les [règles de la communauté](%{base_url}/guidelines).
     flags_disagreed:
       title: "Le message signalé a été rétabli par un responsable"
       subject_template: "Le message signalé a été rétabli par un responsable"
@@ -3018,7 +3014,7 @@ fr:
         %{flagged_post_raw_content}
         ```
 
-        Pour plus d'informations, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
+        Pour plus d'informations, nous vous invitons à consulter les [règles de la communauté](%{base_url}/guidelines).
     flags_agreed_and_post_deleted_for_responders:
       title: "Cette réponse à un message signalé a été supprimée par un responsable."
       subject_template: "Cette réponse à un message signalé a été supprimée par un responsable."
@@ -3041,7 +3037,7 @@ fr:
         %{flagged_post_response_raw_content}
         ```
 
-        Pour plus d'informations, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
+        Pour plus d'informations, nous vous invitons à consulter les [règles de la communauté](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Pour connaître quelques astuces qui vous aideront à démarrer en tant que nouveau membre, [rendez-vous sur cette page](https://meta.discourse.org/t/fr-trucs-et-astuces-pour-nouveaux-utilisateurs/84100/).
@@ -3321,7 +3317,7 @@ fr:
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre e-mail à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
-        La clé de réponse est invalide ou inconnue et nous ne pouvons pas savoir à quel message s'adresse cette réponse. [Contactez un membre du personnel](%{base_url}/about).
+        La clé de réponse est invalide ou inconnue et nous ne pouvons pas savoir à quel message s'adresse cette réponse. [Contactez un responsable](%{base_url}/about).
     email_reject_bad_destination_address:
       title: "E-mail rejeté - Mauvaise adresse de destination"
       subject_template: "[%{email_prefix}] Problème d'e-mail - Adresse de destinataire inconnue"
@@ -3433,7 +3429,7 @@ fr:
     ignored_users_summary:
       title: "Un utilisateur ignoré a dépassé le seuil"
       subject_template: "Un utilisateur a été ignoré par de nombreux utilisateurs"
-      text_body_template: "Bonjour, \n\nCe message vous est envoyé de manière automatisée par %{site_name} pour vous informer que @%{username} a été ignoré par %{ignores_threshold} utilisateurs. Cela pourrait être le signe qu'un problème est en train de se développer au sein de votre communauté.\n\nVous souhaiterez peut-être [examiner les messages récents](%{base_url}/u/%{username}/summary) de cet utilisateur et, éventuellement, examiner la situation des autres utilisateurs figurant dans le [rapport des utilisateurs ignorés et mis en sourdine](%{base_url}/admin/reports/top_ignored_users).\n\nPour obtenir davantage de conseils, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).\n"
+      text_body_template: "Bonjour, \n\nCe message vous est envoyé de manière automatisée par %{site_name} pour vous informer que @%{username} a été ignoré par %{ignores_threshold} utilisateurs. Cela pourrait être le signe qu'un problème est en train de se développer au sein de votre communauté.\n\nVous souhaiterez peut-être [examiner les messages récents](%{base_url}/u/%{username}/summary) de cet utilisateur et, éventuellement, examiner la situation des autres utilisateurs figurant dans le [rapport des utilisateurs ignorés et mis en sourdine](%{base_url}/admin/reports/top_ignored_users).\n\nPour obtenir davantage de conseils, nous vous invitons à consulter les [règles de la communauté](%{base_url}/guidelines).\n"
     too_many_spam_flags:
       title: "Trop de signalements de contenu indésirable"
       subject_template: "Nouveau compte bloqué"
@@ -3444,7 +3440,7 @@ fr:
 
         Par mesure de précaution, votre nouveau compte a été mis en sourdine. Vous ne pourrez plus publier de réponses ni de nouveaux sujets tant qu'un responsable n'aura pas examiné la situation de votre compte. Nous vous prions de nous excuser pour la gêne occasionnée.
 
-        Pour obtenir davantage de conseils, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
+        Pour obtenir davantage de conseils, nous vous invitons à consulter les [règles de la communauté](%{base_url}/guidelines).
     too_many_tl3_flags:
       title: "Trop de signalements en provenance d'utilisateurs de niveau de confiance 3"
       subject_template: "Nouveau compte bloqué"
@@ -3455,7 +3451,7 @@ fr:
 
         Par mesure de précaution, votre nouveau compte a été mis en sourdine. Vous ne pourrez pas publier de réponses ni de nouveaux sujets tant qu'un responsable n'aura pas examiné la situation de votre compte. Nous vous prions de nous excuser pour la gêne occasionnée.
 
-        Pour obtenir davantage de conseils, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
+        Pour obtenir davantage de conseils, nous vous invitons à consulter les [règles de la communauté](%{base_url}/guidelines).
     silenced_by_staff:
       title: "Mis en sourdine par un responsable"
       subject_template: "Compte temporairement bloqué"
@@ -3466,7 +3462,7 @@ fr:
 
         Vous pouvez continuer de consulter le forum, mais vous ne pourrez plus répondre ni créer de sujets tant qu'[un responsable](%{base_url}/about) n'aura pas examiné vos messages récents. Nous vous prions de nous excuser pour la gêne occasionnée.
 
-        Pour obtenir davantage de conseils, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
+        Pour obtenir davantage de conseils, nous vous invitons à consulter les [règles de la communauté](%{base_url}/guidelines).
     user_automatically_silenced:
       title: "Utilisateur automatiquement mis en sourdine"
       subject_template: "Nouvel utilisateur %{username} mis en sourdine suite à des signalements de la communauté"
@@ -3620,7 +3616,7 @@ fr:
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
-      title: "Utilisateur distant invité au MP"
+      title: "Compte provisoire invité au MP"
       subject_template: "[%{email_prefix}] %{username} vous a invité(e) dans la conversation « %{topic_title} »"
       text_body_template: |
         %{header_instructions}
@@ -3781,7 +3777,7 @@ fr:
 
         %{respond_instructions}
     user_posted_pm_staged:
-      title: "Utilisateur distant a publié un MP"
+      title: "Compte provisoire a publié un MP"
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
@@ -3820,11 +3816,11 @@ fr:
       text_body_template: |
         Bonjour,
 
-        Il s'agit d'un message automatique de [%{site_name}](%{base_url}) pour vous informer que le compte d'utilisateur associé à cette adresse e-mail a été supprimé par un membre du personnel.
+        Il s'agit d'un message automatique de [%{site_name}](%{base_url}) pour vous informer que le compte d'utilisateur associé à cette adresse e-mail a été supprimé par un responsable.
 
         %{flag_reason}
 
-        Veuillez consulter notre [charte communautaire](%{base_url}/guidelines) pour obtenir plus de détails.
+        Veuillez consulter les [règles de la communauté](%{base_url}/guidelines) pour obtenir plus de détails.
     account_exists:
       title: "Le compte existe déjà"
       subject_template: "[%{email_prefix}] Le compte existe déjà"
@@ -4268,7 +4264,7 @@ fr:
       long_description: |
         Ce badge est accordé la première fois que vous modifiez un message wiki.
     basic_user:
-      name: Actif
+      name: Basique
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Accès accordé</a> à toutes les fonctions communautaires essentielles
       long_description: |
         Ce badge est accordé lorsque vous atteignez le niveau de confiance 1. Merci d'être resté(e) sur le forum et d'avoir lu quelques sujets pour en apprendre plus sur notre communauté. Les restrictions liées au nouveaux utilisateurs ont été levées et vous avez accès aux fonctionnalités essentielles telles que la messagerie personnelle, le signalement, l'édition des wikis et la possibilité de publier plusieurs images et liens.
@@ -4383,9 +4379,9 @@ fr:
         Ce badge est accordé la première fois que vous citez un message dans votre réponse. La citation des sections pertinentes des messages précédents dans votre réponse permet de maintenir les discussions reliées entre elles et reliées au sujet. La meilleure façon de citer est de sélectionner une section d'un message, puis d'appuyer sur le bouton de réponse. Citez généreusement !
     read_guidelines:
       name: Règlement lu
-      description: A lu le <a href="%{base_uri}/guidelines">règlement de la communauté</a>
+      description: Lisez les <a href="%{base_uri}/guidelines">règles de la communauté</a>
       long_description: |
-        Ce badge est accordé après <a href="%{base_uri}/guidelines">la lecture des lignes directrices de la communauté</a>. Le respect et le partage de ces règles simples permettent de construire une communauté sûre, agréable et durable. Souvenez-vous toujours qu'il y a une autre personne, tout comme vous, de l'autre côté de l'écran. Faites preuve de courtoisie !
+        Ce badge est accordé après <a href="%{base_uri}/guidelines">la lecture des règles de la communauté</a>. Le respect et le partage de ces règles simples permettent de construire une communauté sûre, agréable et durable. Souvenez-vous toujours qu'il y a une autre personne, tout comme vous, de l'autre côté de l'écran. Faites preuve de courtoisie !
     reader:
       name: Lecteur
       description: A lu tous les messages d'un sujet contenant plus de 100 messages
@@ -4589,7 +4585,7 @@ fr:
     discourse:
       user_joined_community: "S'est inscrit(e) le %{date}"
     google_meet:
-      meeting_code: "Code:"
+      meeting_code: "Code :"
     gitlab:
       truncated_file: "Ce fichier a été tronqué."
       show_original: "afficher l'original"
@@ -4674,7 +4670,7 @@ fr:
       watched_word:
         one: "Cette publication contient un mot surveillé : %{words}. Consultez le %{link} pour en savoir plus."
         other: "Cette publication contient des mots surveillés : %{words}. Consultez le %{link} pour en savoir plus."
-      staged: "Tout nouveau sujet ou message pour les utilisateurs distants doit être approuvé par les responsables. Voir %{link}."
+      staged: "Tout nouveau sujet ou message pour les comptes provisoires doit être approuvé par un responsable. Voir %{link}."
       category: "Les messages de cette catégorie doivent être approuvés manuellement par un responsable. Voir %{link}."
       must_approve_users: "Tous les nouveaux utilisateurs doivent être approuvés par un responsable. Voir %{link}."
       invite_only: "Tous les nouveaux utilisateurs doivent être invités. Voir %{link}."
@@ -4700,7 +4696,7 @@ fr:
         description: "Accepter le signalement et maintenir le message masqué."
         complete: "Publication maintenue cachée."
       agree_and_keep_deleted:
-        title: "Laisser ce message à l'état supprimé"
+        title: "Conserver la suppression de la publication"
       agree_and_suspend:
         title: "Suspendre l'utilisateur"
         description: "Accepter le signalement et suspendre l'utilisateur."
@@ -4738,12 +4734,12 @@ fr:
         confirm: "Voulez-vous vraiment supprimer les réponses à ce message ?"
         complete: "Publication et réponses supprimées."
       disagree_and_restore:
-        title: "Rétablir le message"
+        title: "Rétablir la publication"
         complete: "Publication restaurée."
       disagree_bundle:
         title: "Non"
       disagree:
-        title: "Conserver le message"
+        title: "Conserver la publication"
         complete: "Signalement ignoré."
       discard_post:
         title: "Supprimer le message"
@@ -4804,7 +4800,7 @@ fr:
         title: "Laisser ce message à l'état supprimé"
         complete: "Publication rejetée et maintenue supprimée."
       scrub:
-        title: Effacer l'enregistrement
+        title: Effacer les données personnelles
       approve_and_restore:
         title: "Oui"
         complete: "Publication approuvée et restaurée."
@@ -4815,13 +4811,13 @@ fr:
         title: "Supprimer la publication"
         complete: "Publication supprimée"
       hide_post:
-        title: "Masquer le message"
+        title: "Masquer la publication"
       restore_post:
-        title: "Rétablir le message"
+        title: "Rétablir la publication"
         complete: "Publication restaurée"
       silence_user:
         title: "Désactiver l'utilisateur"
-        complete: "Utilisateur mis en sourdine"
+        complete: "Utilisateur désactivé"
       suspend_user:
         title: "Suspendre l'utilisateur"
         complete: "Utilisateur suspendu"

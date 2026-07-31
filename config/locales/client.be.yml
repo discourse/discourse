@@ -1083,7 +1083,7 @@ be:
         default: "(Прадвызначаная)"
         any: "любая"
       homepage:
-        default: "(Прадвызначаная)"
+        default: "Прадвызначаная"
       password_confirmation:
         title: "Пароль яшчэ раз"
       auth_tokens:
@@ -1346,6 +1346,8 @@ be:
       to: Да
     emoji_picker:
       flags: Сцягі
+    filter_controls:
+      reset: "Скінуць"
     composer:
       options: "Параметры"
       posting_not_on_topic: "У якой тэме вы хочаце адказаць?"
@@ -2242,7 +2244,6 @@ be:
               posts: "Допісы"
               share: "Абагуліць"
             whos_posting:
-              all_categories: "Усе катэгорыі"
               staff: "Персанал"
             trust_level_pipeline:
               trust_levels:
@@ -2965,6 +2966,7 @@ be:
         delete: "выдаляць"
         name: "Імя"
         group: "Група"
+        all_groups: "Усе групы"
         image: "Выява"
         settings: "Налады"
         export: "Экспарт"

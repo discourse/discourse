@@ -375,8 +375,8 @@ RSpec.describe UsersController do
         )
 
         expect(response.status).to eq(200)
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           expect(json["password_reset"]).to include(
             '{"is_developer":false,"admin":false,"second_factor_required":false,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}',
           )
@@ -532,8 +532,8 @@ RSpec.describe UsersController do
 
           get "/u/password-reset/#{email_token.token}"
 
-          expect(response.body).to have_tag("div#data-preloaded") do |element|
-            json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+          expect(response.body).to have_tag("script#data-preloaded") do |element|
+            json = JSON.parse(element.current_scope.text)
             expect(json["password_reset"]).to include(
               '{"is_developer":false,"admin":false,"second_factor_required":true,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}',
             )
@@ -589,8 +589,8 @@ RSpec.describe UsersController do
         end
 
         it "preloads with a security key challenge and allowed credential ids" do
-          expect(response.body).to have_tag("div#data-preloaded") do |element|
-            json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+          expect(response.body).to have_tag("script#data-preloaded") do |element|
+            json = JSON.parse(element.current_scope.text)
             password_reset = JSON.parse(json["password_reset"])
             expect(password_reset["challenge"]).not_to eq(nil)
             expect(password_reset["allowed_credential_ids"]).to eq(
@@ -2701,6 +2701,8 @@ RSpec.describe UsersController do
                 watched_tags: "#{tags[0].name},#{tag_synonym.name}",
                 card_background_upload_url: upload.url,
                 profile_background_upload_url: upload.url,
+                show_original_content: true,
+                understood_languages: ["ja"],
               }
 
           expect(response.status).to eq(200)
@@ -2717,6 +2719,8 @@ RSpec.describe UsersController do
               notification_level: TagUser.notification_levels[:watching],
             ).pluck(:tag_id),
           ).to contain_exactly(tags[0].id, tags[1].id)
+          expect(user.user_option.automatically_translate).to eq(false)
+          expect(user.user_option.understood_languages).to contain_exactly("en", "ja")
 
           theme = Fabricate(:theme, user_selectable: true)
 
@@ -2725,6 +2729,7 @@ RSpec.describe UsersController do
                 muted_usernames: "",
                 theme_ids: [theme.id],
                 email_level: UserOption.email_level_types[:always],
+                automatically_translate: true,
               }
 
           user.reload
@@ -2732,6 +2737,7 @@ RSpec.describe UsersController do
           expect(user.muted_users.pluck(:username).sort).to be_empty
           expect(user.user_option.theme_ids).to eq([theme.id])
           expect(user.user_option.email_level).to eq(UserOption.email_level_types[:always])
+          expect(user.user_option.automatically_translate).to eq(true)
           expect(user.profile_background_upload).to eq(upload)
           expect(user.card_background_upload).to eq(upload)
         end
@@ -4520,6 +4526,22 @@ RSpec.describe UsersController do
       expect(response.parsed_body["error_type"]).to eq("not_logged_in")
     end
 
+    it "prevents a moderator from destroying another user's secondary email" do
+      SiteSetting.email_editable = true
+      admin_secondary_email = Fabricate(:secondary_email, user: admin)
+      sign_in(moderator)
+
+      expect {
+        delete "/u/#{admin.username}/preferences/email.json",
+               params: {
+                 email: admin_secondary_email.email,
+               }
+      }.not_to change { UserEmail.exists?(admin_secondary_email.id) }
+
+      expect(response).to be_forbidden
+      expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+    end
+
     context "when logged in" do
       before do
         SiteSetting.email_editable = true
@@ -5447,6 +5469,54 @@ RSpec.describe UsersController do
     end
   end
 
+  describe "staged user email visibility" do
+    fab!(:staged_user) { Fabricate(:staged, email: "staged-primary@example.com") }
+    fab!(:secondary_email) do
+      Fabricate(:secondary_email, user: staged_user, email: "staged-secondary@example.com")
+    end
+    fab!(:email_change_request) do
+      Fabricate(
+        :email_change_request,
+        user: staged_user,
+        new_email: "staged-unconfirmed@example.com",
+      )
+    end
+
+    before do
+      SiteSetting.moderators_view_emails = false
+      sign_in(moderator)
+    end
+
+    it "respects email visibility for staged users" do
+      paths = ["/u/#{staged_user.username}.json", "/u/#{staged_user.username}/card.json"]
+
+      paths.each do |path|
+        get path
+
+        expect(response).to have_http_status(:ok)
+        user_json = response.parsed_body["user"]
+        expect(user_json["email"]).to eq(nil)
+        expect(user_json["secondary_emails"]).to eq(nil)
+        expect(user_json["unconfirmed_emails"]).to eq(nil)
+        expect(response.body).not_to include(staged_user.email)
+        expect(response.body).not_to include(secondary_email.email)
+        expect(response.body).not_to include(email_change_request.new_email)
+      end
+
+      SiteSetting.moderators_view_emails = true
+
+      paths.each do |path|
+        get path
+
+        expect(response).to have_http_status(:ok)
+        user_json = response.parsed_body["user"]
+        expect(user_json["email"]).to eq(staged_user.email)
+        expect(user_json["secondary_emails"]).to contain_exactly(secondary_email.email)
+        expect(user_json["unconfirmed_emails"]).to contain_exactly(email_change_request.new_email)
+      end
+    end
+  end
+
   describe "#cards" do
     fab!(:user) { Discourse.system_user }
     fab!(:user2, :user)
@@ -5544,8 +5614,8 @@ RSpec.describe UsersController do
 
         expect(response.status).to eq(200)
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           expect(json["accountCreated"]).to include(
             "{\"message\":\"#{I18n.t("login.activate_email", email: user1.email).gsub!("</", "<\\/")}\",\"show_controls\":true,\"username\":\"#{user1.username}\",\"email\":\"#{user1.email}\"}",
           )
@@ -7482,6 +7552,18 @@ RSpec.describe UsersController do
         expect(response.status).to eq(403)
       end
 
+      it "returns not found for missing and inaccessible topics" do
+        sign_in(user1)
+
+        put "/u/#{user1.username}/feature-topic.json", params: { topic_id: private_message.id }
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["error_type"]).to eq("not_found")
+
+        put "/u/#{user1.username}/feature-topic.json", params: { topic_id: Topic.maximum(:id) + 1 }
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["error_type"]).to eq("not_found")
+      end
+
       it "returns an error if the topic is not visible" do
         sign_in(user1)
         topic.update_status("visible", false, user1)
@@ -7489,12 +7571,25 @@ RSpec.describe UsersController do
         expect(response.status).to eq(403)
       end
 
-      it "returns an error if the topic's category is read_restricted" do
+      it "returns an error if the user can see the topic's read-restricted category" do
         sign_in(user1)
-        category.set_permissions({})
+        group = Fabricate(:group)
+        group.add(user1)
+        category.set_permissions(group => :readonly)
+        category.save!
         topic.update(category_id: category.id)
-        put "/u/#{another_user.username}/feature-topic.json", params: { topic_id: topic.id }
+        put "/u/#{user1.username}/feature-topic.json", params: { topic_id: topic.id }
         expect(response.status).to eq(403)
+      end
+
+      it "returns not found if the user cannot see the topic's category" do
+        sign_in(user1)
+        category.set_permissions(staff: :full)
+        category.save!
+        topic.update(category_id: category.id)
+        put "/u/#{user1.username}/feature-topic.json", params: { topic_id: topic.id }
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["error_type"]).to eq("not_found")
       end
 
       it "sets featured_topic correctly for user created topic" do
@@ -7689,6 +7784,20 @@ RSpec.describe UsersController do
       body = response.body
       expect(body).not_to include("&amp;")
       expect(body).to include("SUMMARY:Tom & Jerry")
+    end
+
+    it "preserves URI delimiters in .ics feed URL fields" do
+      bookmark2.bookmarkable.update_column(:slug, "bookmark,url;with-delimiters")
+      bookmark2.update!(name: "Reminder, with; delimiters", reminder_at: 1.day.from_now)
+
+      sign_in(user1)
+      get "/u/#{user1.username}/bookmarks.ics"
+
+      expect(response.status).to eq(200)
+      bookmarkable_url = bookmark2.bookmarkable.url
+      expect(response.body).to include("SUMMARY:Reminder\\, with\\; delimiters")
+      expect(response.body).to include("DESCRIPTION:#{IcalEncoder.encode(bookmarkable_url)}")
+      expect(response.body).to include("URL:#{bookmarkable_url}")
     end
 
     it "does not show another user's bookmarks" do

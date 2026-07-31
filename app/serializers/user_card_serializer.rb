@@ -95,7 +95,8 @@ class UserCardSerializer < BasicUserSerializer
   end
 
   def include_email?
-    (object.id && object.id == scope.user.try(:id)) || (scope.is_staff? && object.staged?)
+    (object.id && object.id == scope.user.try(:id)) ||
+      (object.staged? && scope.can_check_emails?(object))
   end
 
   alias_method :include_secondary_emails?, :include_email?

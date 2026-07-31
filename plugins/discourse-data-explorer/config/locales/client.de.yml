@@ -24,12 +24,17 @@ de:
     data_explorer:
       admin_dashboard_card:
         no_results: "Keine Ergebnisse"
+      manage_reports_hint:
+        title: "Erstelle eine Daten-Explorer-Abfrage"
+        description: "Schreibe eine benutzerdefinierte SQL-Abfrage, um etwas Spezifisches für deine Community zu finden."
     explorer:
       default_query: "Standard"
       default_query_notice: "Dies ist eine Standardabfrage, deren SQL-Code nicht bearbeitet werden kann. Erstelle eine neue Abfrage, um den SQL-Code zu bearbeiten."
       queries: "Anfragen"
       query_created: "Anfrage erstellt!"
       mode:
+        label: "Abfragemodus"
+        manual: "SQL schreiben"
         ai: "Mit KI generieren"
       or: "oder"
       admins_only: "Der Daten-Explorer ist nur für Administratoren verfügbar."
@@ -42,6 +47,8 @@ de:
         description_title: "Mit KI generieren"
         description_hint: "Beschreibe in einfachen Worten, was du möchtest. Wir erstellen dann die SQL-Anweisung, den Namen und die Beschreibung für dich."
         description_placeholder: "z. B. Zeig mir die Registrierungen im Zeitverlauf"
+        regenerate_placeholder: "z. B. Passe die Abfrage so an, dass nur 50 Ergebnisse angezeigt werden"
+        prompt_label: "Aufforderung"
         generate: "Erzeugen"
         generating: "Abfrage wird mit KI generiert …"
         generation_timeout: "Eine Zeitüberschreitung ist bei der Generierung der KI-Abfrage aufgetreten. Du kannst die SQL-Abfrage manuell eingeben."
@@ -64,6 +71,9 @@ de:
       schema:
         title: "Datenbank-Schema"
         filter: "Suche …"
+        search_tables: "Tabellen durchsuchen"
+        hide: "Schema ausblenden"
+        show: "Schema anzeigen"
         sensitive: "Die Inhalte dieser Spalte enthalten möglicherweise besonders sensible oder persönliche Informationen. Bitte gehe behutsam mit den Inhalten dieser Spalte um."
       types:
         bool:
@@ -78,10 +88,31 @@ de:
       delete: "Löschen"
       recover: "Anfrage wiederherstellen"
       sql_label: "SQL"
+      run_with_explain: "Mit Abfrageplan ausführen"
+      run_options: "Weitere Ausführungsoptionen"
+      view:
+        label: "Ergebnisansicht"
       chart:
         form:
           label: "Diagrammtyp"
+          line: "Linien"
           bar: "Balken"
+          stacked: "Gestapelt"
+          dual_axis: "Zweiachsig"
+        tooltip:
+          total: "Gesamt: %{count}"
+      chart_empty:
+        no_rows: "Keine Zeilen zum Darstellen."
+        no_numeric: "Diese Abfrage enthält keine numerischen Spalten, die in einem Diagramm dargestellt werden könnten."
+        no_numeric_with_columns: "Diese Abfrage enthält keine numerischen Spalten, die grafisch dargestellt werden könnten (ignoriert: %{columns})."
+        view_as_table: "Als Tabelle anzeigen"
+      chart_footnote:
+        ignored: "Nicht dargestellte Spalten: %{columns}"
+      export_as:
+        label: "Exportieren als …"
+        results_json: "Ergebnisse (JSON)"
+        results_csv: "Ergebnisse (CSV)"
+        query_json: "Abfragedefinition (JSON)"
       others_dirty: "Eine Anfrage hat nicht gespeicherte Änderungen, die verloren gehen, wenn du woanders hin navigierst."
       run_time: "Anfrage in %{value} ms abgeschlossen."
       cached_result_notice: "Zeigt zwischengespeicherte Ergebnisse von %{relative_time}."
@@ -119,12 +150,27 @@ de:
             data_explorer:
               run_queries: "Daten-Explorer-Anfragen ausführen. Schränke den API-Schlüssel auf eine Reihe von Anfragen ein, indem du Anfrage-IDs angibst."
     discourse_workflows:
+      node_unavailable:
+        requires_data_explorer: "Erfordert die Aktivierung des Daten-Explorer-Plug-ins."
       nodes:
         "action:sql": "Daten-Explorer"
+      node_descriptions:
+        "action:sql": "Führe eine schreibgeschützte SQL-Abfrage in der Datenbank aus"
       sql:
+        operation: "Aktion"
+        operation_description: "So führst du die Abfrage aus"
         queries: "Anfragen"
+        raw: "Rohes SQL"
         query_id: "Anfrage"
+        query_id_description: "Wähle eine gespeicherte Abfrage aus, um sie auszuführen"
+        query_params: "Abfrageparameter"
+        query_params_description: "Gib die Parameter für die ausgewählte Abfrage ein"
+        query: "SQL-Abfrage"
+        query_description: "Schreibe eine schreibgeschützte SQL-Abfrage. Deklariere die Parameter mit der Daten-Explorer-Syntax und ordne ihre Werte unten zu."
+        params: "Abfrageparameter"
+        params_description: "Parameter können in der SQL-Abfrage als :my_param verwendet werden."
         add_param: "Parameter hinzufügen"
+        param_name: "Param"
         param_value: "Wert"
         output:
           results: "Ergebnisse"

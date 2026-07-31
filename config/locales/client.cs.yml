@@ -2202,7 +2202,7 @@ cs:
         default: "(výchozí)"
         any: "jakýkoliv"
       homepage:
-        default: "(výchozí)"
+        default: "Výchozí"
       password_confirmation:
         title: "Heslo znovu"
       invite_code:
@@ -2246,6 +2246,9 @@ cs:
         contextual: "Nového obsahu stránky"
       bookmark_after_notification:
         title: "Po odeslání upozornění na připomenutí záložky:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Upozornit mě na \"Líbí se\""
         always: "Vždy"
@@ -3087,6 +3090,7 @@ cs:
     filter_input:
       clear: "Vymazat filtr"
     filter_controls:
+      reset: "obnovit výchozí"
       toggle: "Přepnout rozbalovací filtry"
     shared_drafts:
       title: "Sdílené koncepty"
@@ -6613,7 +6617,6 @@ cs:
               posts: "Příspěvky"
               share: "Sdílet"
             whos_posting:
-              all_categories: "Všechny kategorie"
               staff: "Redakce"
             trust_level_pipeline:
               trust_levels:
@@ -7358,6 +7361,8 @@ cs:
         sidebar: "Postranní panel"
         header_dropdown: "Rozbalovací nabídka záhlaví"
         legacy: "Zastaralé"
+      duplicate_topic_titles:
+        allowed: "Povolené"
       backups:
         title: "Zálohy"
         files_title: "Soubory záloh"
@@ -7601,7 +7606,6 @@ cs:
           finish_install: "Dokončit instalaci motivu"
           last_attempt: "Proces instalace nebyl dokončen, poslední pokus:"
           remote_branch: "Název větve (nepovinné)"
-          public_key: "Udělte následujícímu veřejnému klíči přístup k repozitáři:"
           install: "Instalovat"
           installed: "Nainstalováno"
           install_popular: "Populární"
@@ -9004,6 +9008,7 @@ cs:
         uploading: "Nahrávání…"
         name: "Název"
         group: "Skupina"
+        all_groups: "Všechny skupiny"
         created_by: "Vytvořil/a"
         image: "Obrázek"
         alt: "náhled vlastních emoji"

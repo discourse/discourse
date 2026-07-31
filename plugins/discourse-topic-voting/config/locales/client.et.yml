@@ -18,3 +18,6 @@ et:
     filters:
       votes:
         title: "HInnangud"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Sildid"

@@ -112,12 +112,17 @@
     position: relative;
     width: 100%;
 
+    > .d-toggle-switch {
+      justify-content: flex-end;
+    }
+
     > .combo-box,
     > .d-select,
     > .icon-picker,
     > .select-kit.combo-box.category-chooser,
     > .user-chooser,
-    > .mini-tag-chooser {
+    > .mini-tag-chooser,
+    > .select-kit.category-selector {
       width: 100%;
       min-width: 0;
     }
@@ -129,7 +134,7 @@
     transform: translateY(-100%);
     inset-inline-end: 0;
 
-    &.--toggle {
+    .form-kit__field-toggle & {
       inset-block-start: 50%;
       transform: translateY(-50%);
       inset-inline-end: 50px;
@@ -154,6 +159,14 @@
     &.is-drag-over input {
       border-color: var(--tertiary) !important;
       background: var(--tertiary-50);
+    }
+
+    // The toggle class lands on the hidden checkbox, so target its visible sibling.
+    &.is-drag-over
+      .form-kit__control-toggle
+      + .d-toggle-switch__checkbox-slider {
+      outline: 2px solid var(--tertiary);
+      outline-offset: 2px;
     }
   }
 

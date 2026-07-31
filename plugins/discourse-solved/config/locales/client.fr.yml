@@ -17,13 +17,11 @@ fr:
               label: "Solutions acceptées"
         sections:
           support:
-            title: "Soutenir"
-            filter:
-              all_categories: "Toutes les catégories"
+            title: "Assistance"
             answerers:
-              staff: "Responsable"
+              staff: "Responsables"
               member: "Membres"
-              basic: "Actif"
+              basic: "Basique"
             response_time:
               buckets:
                 lt_1h: "< 1 heure"
@@ -48,7 +46,7 @@ fr:
       solution_summary:
         one: "solution"
         other: "solutions"
-      accepted_answer_post_number: "message %{post_number}"
+      accepted_answer_post_number: "publication %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "tous"
@@ -69,7 +67,7 @@ fr:
       notification:
         title: "votre message a été marqué comme solution"
       category_type_support:
-        title: "Soutenir"
+        title: "Assistance"
     topic_statuses:
       solved:
         help: "Ce sujet a une solution"

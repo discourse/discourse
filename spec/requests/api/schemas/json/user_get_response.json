@@ -853,8 +853,20 @@
             "interface_color_mode": {
               "type": "integer"
             },
+            "automatically_translate": {
+              "type": "boolean"
+            },
+            "understood_languages": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
             "show_original_content": {
               "type": "boolean"
+            },
+            "send_shortcut": {
+              "type": "string"
             }
           },
           "required": [
@@ -899,7 +911,10 @@
             "skip_new_user_tips",
             "topics_unread_when_closed",
             "interface_color_mode",
-            "show_original_content"
+            "show_original_content",
+            "send_shortcut",
+            "automatically_translate",
+            "understood_languages"
           ]
         }
       },

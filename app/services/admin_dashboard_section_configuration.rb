@@ -4,6 +4,7 @@ class AdminDashboardSectionConfiguration
   KNOWN_SECTIONS = %w[highlights reports traffic engagement search].freeze
 
   ACTIVITY_BY_CATEGORY_MAX = 10
+  WHOS_POSTING_MAX = 10
 
   SUPPORTED_SETTINGS = {
     "engagement" => {
@@ -16,6 +17,26 @@ class AdminDashboardSectionConfiguration
           parsed = ids.map { |id| Integer(id, exception: false) }
 
           if parsed.size > ACTIVITY_BY_CATEGORY_MAX || parsed.any?(&:nil?) ||
+               parsed.uniq.size != parsed.size
+            raise Discourse::InvalidParameters.new(:category_ids)
+          end
+
+          if parsed.present? && Category.where(id: parsed).count != parsed.size
+            raise Discourse::InvalidParameters.new(:category_ids)
+          end
+
+          { "category_ids" => parsed }
+        end,
+      },
+      "whos_posting" => {
+        permit: [{ category_ids: [] }],
+        validate: ->(attrs) do
+          ids = attrs[:category_ids]
+          raise Discourse::InvalidParameters.new(:category_ids) if !ids.is_a?(Array)
+
+          parsed = ids.map { |id| Integer(id, exception: false) }
+
+          if parsed.size > WHOS_POSTING_MAX || parsed.any?(&:nil?) ||
                parsed.uniq.size != parsed.size
             raise Discourse::InvalidParameters.new(:category_ids)
           end
@@ -64,7 +85,21 @@ class AdminDashboardSectionConfiguration
   end
 
   def self.setting_definition(section_id, key)
-    SUPPORTED_SETTINGS.dig(section_id.to_s, key.to_s)
+    section_id = section_id.to_s
+    key = key.to_s
+
+    SUPPORTED_SETTINGS.dig(section_id, key) || plugin_setting_definition(section_id, key)
+  end
+
+  def self.plugin_setting_definition(section_id, key)
+    entry = DiscoursePluginRegistry.admin_dashboard_sections.find { |s| s[:id] == section_id }
+    return nil if entry.nil?
+    return nil if entry[:enabled].respond_to?(:call) && !entry[:enabled].call
+
+    klass = entry[:settings]&.dig(key)
+    return nil if klass.nil?
+
+    { permit: klass.permit, validate: ->(attrs) { klass.validate(attrs) } }
   end
 
   def self.update_setting(section_id:, key:, attrs:)
@@ -76,8 +111,11 @@ class AdminDashboardSectionConfiguration
 
     value = definition[:validate].call(attrs.to_h.with_indifferent_access)
 
-    record = AdminDashboardSection.find_by(section_id:)
-    raise Discourse::InvalidParameters.new(:section_id) if record.nil?
+    record =
+      AdminDashboardSection.find_or_create_by!(section_id:) do |r|
+        r.position = (AdminDashboardSection.maximum(:position) || -1) + 1
+        r.visible = true
+      end
 
     record.with_lock { record.update!(settings: record.settings.to_h.deep_merge(key => value)) }
 

@@ -315,6 +315,13 @@ basic:
     upcoming_change_default_override:
       upcoming_change: "enable_unified_new"
       new_default: "latest|new|hot|categories"
+  default_homepage:
+    client: true
+    refresh: true
+    type: enum
+    default: ""
+    enum: "HomepageSiteSetting"
+    area: "interface"
   custom_homepage_crawler_route:
     type: enum
     default: "latest"
@@ -711,6 +718,7 @@ login:
       status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/407068"
+      permanent_warning: false
       allow_enabled_for:
         - everyone
   enable_passkeys:
@@ -973,6 +981,9 @@ login:
     min: -1
     default: 480
     area: "login"
+    upcoming_change_default_override:
+      upcoming_change: "update_pending_users_reminder_default"
+      new_default: 30
   persistent_sessions:
     default: true
     area: "login"
@@ -1413,12 +1424,17 @@ posting:
         - allow_uncategorized_topics
         - suppress_uncategorized_badge
       learn_more_url: "https://meta.discourse.org/t/-/406373"
+  duplicate_topic_titles:
+    default: "disallowed"
+    type: enum
+    enum: "DuplicateTopicTitlesSiteSetting"
+    area: "posts_and_topics"
   allow_duplicate_topic_titles:
     default: false
-    area: "posts_and_topics"
+    hidden: true
   allow_duplicate_topic_titles_category:
     default: false
-    area: "posts_and_topics"
+    hidden: true
   min_title_similar_length:
     client: true
     default: 10
@@ -1695,6 +1711,15 @@ posting:
     client: true
     refresh: true
     area: "emojis"
+  emoji_picker_pinned_groups:
+    type: list
+    list_type: simple
+    allow_any: true
+    default: ""
+    client: true
+    refresh: true
+    validator: "EmojiPickerPinnedGroupsValidator"
+    area: "emojis"
   enable_gifs:
     default: false
     client: true
@@ -1902,11 +1927,6 @@ posting:
     type: integer
     min: 1
     hidden: true
-  rich_editor:
-    client: true
-    default: true
-    hidden: true
-    area: "posts_and_topics"
 
 content_localization:
   content_localization_enabled:
@@ -3104,9 +3124,10 @@ security:
   # 16276=OVH, 24940=Hetzner, 136907=Huawei Cloud, 51747=Internet Vikings,
   # 4134/4837=China Telecom/Unicom, 5089=Virgin, 55836=Reliance Jio,
   # 5410=Bouygues, 701=Verizon, 6805=Telefonica, 45899=VNPT
+  # 55967=Baidu
   crawler_asns:
     hidden: true
-    default: "16509|16276|714|13238|14618|136907|32934|15169|4134|4837|24940|396982|8075|51747|140577|45899|210743|13335|36040|5089|55836|5410|701|7941|6805"
+    default: "16509|16276|714|13238|14618|136907|32934|15169|4134|4837|24940|396982|8075|51747|140577|45899|210743|13335|36040|5089|55836|5410|701|7941|6805|55967"
     type: list
     list_type: compact
   cors_origins:
@@ -3214,6 +3235,7 @@ security:
     area: "group_permissions"
   cache_control_bfcache_compatibility:
     default: false
+    client: true
     hidden: true
 
 onebox:
@@ -4671,7 +4693,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403635"
   prioritize_recently_used_tags:
@@ -4703,7 +4725,7 @@ experimental:
     client: true
     refresh: true
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/404728"
   enable_rich_text_paste:
@@ -4789,7 +4811,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,admins"
       learn_more_url: "https://meta.discourse.org/t/-/404528"
   admin_dashboard_reports_seeded:
@@ -4800,6 +4822,17 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "experimental"
+      status: "beta"
       impact: "feature,admins"
       learn_more_url: "https://meta.discourse.org/t/-/407727"
+  update_pending_users_reminder_default:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "site_setting_default,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/408429"
+      permanent_warning: false
+      allow_enabled_for:
+        - everyone

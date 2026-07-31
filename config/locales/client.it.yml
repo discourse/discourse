@@ -1908,7 +1908,7 @@ it:
         default: "(default)"
         any: "tutti"
       homepage:
-        default: "(predefinita)"
+        default: "Predefinito"
       password_confirmation:
         title: "Ripeti la password"
       invite_code:
@@ -1952,6 +1952,9 @@ it:
         contextual: "Nuovo contenuto nella pagina"
       bookmark_after_notification:
         title: "Dopo l'invio di una notifica di promemoria per segnalibri:"
+      send_shortcut:
+        enter: "Invio"
+        meta_enter: "%{meta_key} + Invio"
       like_notification_frequency:
         title: "Notifica alla ricezione di \"Mi piace\"."
         always: "Sempre"
@@ -2710,6 +2713,8 @@ it:
       default: Emoji personalizzate
     filter_input:
       clear: "Cancella il filtro"
+    filter_controls:
+      reset: "Reimposta"
     shared_drafts:
       title: "Bozze condivise"
       notice: "Questo argomento è visibile solo a coloro che possono pubblicare bozze condivise."
@@ -5686,7 +5691,6 @@ it:
               posts: "Messaggi"
               share: "Condividi"
             whos_posting:
-              all_categories: "Tutte le categorie"
               staff: "Staff"
             trust_level_pipeline:
               trust_levels:
@@ -6403,6 +6407,8 @@ it:
         sidebar: "Barra laterale"
         header_dropdown: "Intestazione a discesa"
         legacy: "Compatibile"
+      duplicate_topic_titles:
+        allowed: "Consentito"
       backups:
         title: "Backup"
         files_title: "File di backup"
@@ -6631,7 +6637,6 @@ it:
           finish_install: "Completa l'installazione del tema"
           last_attempt: "Il processo di installazione non si è concluso, ultimo tentativo:"
           remote_branch: "Nome del branch (opzionale)"
-          public_key: "Concedi l'accesso all'archivio con la seguente chiave pubblica:"
           install: "Installa"
           installed: "Installato"
           install_popular: "Popolare"
@@ -7909,6 +7914,7 @@ it:
         uploading: "Caricamento…"
         name: "Nome"
         group: "Gruppo"
+        all_groups: "Tutti i gruppi"
         created_by: "Creato da"
         image: "Immagine"
         alt: "anteprima emoji personalizzata"

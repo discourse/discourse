@@ -1,0 +1,25 @@
+Return-Path: <discourse@bar.com>
+From: Foo Bar <discourse@bar.com>
+To: reply+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com
+Date: Fri, 15 Jan 2017 00:12:43 +0100
+Message-ID: <181@foo.bar.mail>
+Mime-Version: 1.0
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div class="WordSection1">
+  <p class="MsoNormal">This is the <b>body</b> of the email.</p>
+  <ul>
+    <li>a bullet</li>
+    <li>another bullet</li>
+  </ul>
+  <p class="MsoNormal">And these are the steps to follow:</p>
+  <ol>
+    <li>a first step</li>
+    <li>a second step</li>
+  </ol>
+  <p class="MsoNormal">That's all folks!</p>
+  <div style="border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0in 0in 0in">
+    <p class="MsoNormal">This is the <i>elided</i> part!</p>
+  </div>
+</div>

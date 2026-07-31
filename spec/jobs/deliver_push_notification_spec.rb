@@ -18,7 +18,7 @@ RSpec.describe Jobs::DeliverPushNotification do
   end
 
   describe "time window gate" do
-    before { Fabricate(:push_subscription, user: user) }
+    fab!(:time_window_push_subscription) { Fabricate(:push_subscription, user: user) }
 
     it "does not deliver when user is missing" do
       PushNotificationPusher.expects(:push).never

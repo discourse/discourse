@@ -6,7 +6,7 @@
 
 de:
   site_settings:
-    assign_enabled: "Zuordnungs-Plug-in aktivieren"
+    assign_enabled: "Zuordnen-Plug-in aktivieren"
     assigns_public: "Zuordnung von Themen öffentlich sichtbar machen"
     assigns_user_url_path: "Pfad zu Themen, die einem Benutzer zugeordnet sind (verwende {username}, um den Benutzernamen zu ersetzen)"
     assigns_by_staff_mention: "Wenn ein Team-Mitglied ein anderes Team-Mitglied erwähnt, wird das Thema automatisch zugeordnet"
@@ -22,6 +22,7 @@ de:
     remind_assigns_frequency: "Häufigkeit, mit der Benutzer an zugeordnete Themen erinnert werden."
     pending_assign_reminder_threshold: "Anzahl ausstehender Zuweisungen zum Auslösen einer Erinnerungsbenachrichtigung."
     max_assigned_topics: "Maximale Anzahl an Themen, die einem Benutzer zugeordnet werden können."
+    assign_allowed_on_groups: "Benutzer in diesen Gruppen dürfen Themen zuordnen. Weitere Gruppen mit Zuordnungsberechtigung können in den Kategorie-Einstellungen festgelegt werden."
     enable_assign_status: "Füge zu jeder Zuordnung ein anpassbares Statusfeld hinzu."
     assign_statuses: "Liste der Status, die für jede Zuordnung verfügbar sind. Der erste Status ist der Standardstatus, der für jede neue Zuordnung verwendet wird."
     ignore_solved_topics_in_assigned_reminder: "Verhindere, dass Erinnerungen für Zuordnungen gelöste Themen betreffen. Nur relevant, wenn das Plugin „Discourse Gelöst“ verwendet wird."
@@ -44,6 +45,7 @@ de:
     already_assigned: "Thema ist bereits @%{username} zugeordnet"
     too_many_assigns: "@%{username} hat bereits die maximale Anzahl der zugeordneten Themen erreicht (%{max})."
     too_many_assigns_for_topic: "Das Limit von %{limit} Zuordnungen pro Thema wurde erreicht."
+    forbidden_assigner_not_allowed: "Du kannst Themen nur in Kategorien zuordnen, die für deine Gruppen zugelassen sind."
     forbidden_assign_to: "@%{username} kann nicht zugeordnet werden, da die Person nicht zu den zugeordneten zulässigen Gruppen gehört."
     forbidden_assignee_not_pm_participant: "@%{username} kann nicht zugeordnet werden, da die Person keinen Zugriff auf diese PN hat. Du kannst @%{username} Zugriff gewähren, indem du die Person zu dieser PN einlädst."
     forbidden_assignee_cant_see_topic: "@%{username} kann nicht zugeordnet werden, da die Person keinen Zugriff auf dieses Thema hat."
@@ -61,6 +63,9 @@ de:
       weekly: "wöchentlich"
       monthly: "monatlich"
       quarterly: "vierteljährlich"
+    discourse_workflows:
+      assign_topic:
+        error: "Thema konnte nicht zugeordnet werden: %{reason}"
   assign_mailer:
     title: "Mailer zuordnen"
     subject_template: "[%{email_prefix}] %{assignee_name} hat dir „%{topic_title}“ zugeordnet!"

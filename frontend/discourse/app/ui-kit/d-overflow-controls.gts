@@ -146,11 +146,22 @@ export default class DOverflowControls extends Component<DOverflowControlsSignat
       return;
     }
 
-    element.scrollBy({
-      left: dx * element.offsetWidth,
-      top: dy * element.offsetHeight,
-      behavior: "smooth",
-    });
+    // iOS Safari doesn't clamp smooth programmatic scrolls, so an
+    // out-of-bounds target rubber-bands into blank overscroll space
+    const options: ScrollToOptions = { behavior: "smooth" };
+
+    if (dx) {
+      const max = element.scrollWidth - element.offsetWidth;
+      const target = element.scrollLeft + dx * element.offsetWidth;
+      const [lower, upper] = isDocumentRTL() ? [-max, 0] : [0, max];
+      options.left = Math.max(lower, Math.min(target, upper));
+    } else {
+      const max = element.scrollHeight - element.offsetHeight;
+      const target = element.scrollTop + dy * element.offsetHeight;
+      options.top = Math.max(0, Math.min(target, max));
+    }
+
+    element.scrollTo(options);
   }
 
   <template>

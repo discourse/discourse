@@ -1177,6 +1177,53 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       end
     end
 
+    it "only streams the reply to the PM's participants" do
+      messages =
+        DiscourseAi::Completions::Llm.with_prepared_responses(["the secret bot reply"]) do
+          MessageBus.track_publish("discourse-ai/ai-bot/topic/#{pm.id}") do
+            playground.reply_to(third_post)
+          end
+        end
+
+      message = messages.first
+      expect(message.user_ids).to contain_exactly(user.id, bot_user.id)
+      expect(message.group_ids).to be_nil
+    end
+
+    it "streams the reply to a participant authorized through an allowed group" do
+      group = Fabricate(:group)
+      group_pm =
+        Fabricate(
+          :private_message_topic,
+          user: user,
+          topic_allowed_users: [
+            Fabricate.build(:topic_allowed_user, user: user),
+            Fabricate.build(:topic_allowed_user, user: bot_user),
+          ],
+          topic_allowed_groups: [Fabricate.build(:topic_allowed_group, group: group)],
+        )
+      Fabricate(:post, topic: group_pm, user: user, post_number: 1, raw: "group opening message")
+      group_post =
+        Fabricate(
+          :post,
+          topic: group_pm,
+          user: user,
+          post_number: 2,
+          raw: "a private group question",
+        )
+
+      messages =
+        DiscourseAi::Completions::Llm.with_prepared_responses(["a reply to the group"]) do
+          MessageBus.track_publish("discourse-ai/ai-bot/topic/#{group_pm.id}") do
+            playground.reply_to(group_post)
+          end
+        end
+
+      message = messages.first
+      expect(message.user_ids).to contain_exactly(user.id, bot_user.id)
+      expect(message.group_ids).to contain_exactly(group.id)
+    end
+
     it "supports multiple function calls" do
       tool_call1 =
         DiscourseAi::Completions::ToolCall.new(

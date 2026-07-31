@@ -1908,7 +1908,7 @@ fi:
         default: "(oletus)"
         any: "mikä tahansa"
       homepage:
-        default: "(oletus)"
+        default: "Oletus"
       password_confirmation:
         title: "Salasana uudelleen"
       invite_code:
@@ -1952,6 +1952,9 @@ fi:
         contextual: "Uusi sivusisältö"
       bookmark_after_notification:
         title: "Kun kirjanmerkkimuistutusilmoitus on lähetetty:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Ilmoita, kun viestistäni tykätään"
         always: "Aina"
@@ -2710,6 +2713,8 @@ fi:
       default: Mukautetut emojit
     filter_input:
       clear: "Tyhjennä suodatin"
+    filter_controls:
+      reset: "Palauta"
     shared_drafts:
       title: "Jaetut luonnokset"
       notice: "Tämä ketju näkyy vain niille, jotka voivat julkaista jaettuja luonnoksia."
@@ -5689,7 +5694,6 @@ fi:
               posts: "Viestejä"
               share: "Jaa"
             whos_posting:
-              all_categories: "Kaikki alueet"
               staff: "Henkilökunta"
             trust_level_pipeline:
               trust_levels:
@@ -6405,6 +6409,8 @@ fi:
         sidebar: "Sivupalkki"
         header_dropdown: "Yläpalkin avattava valikko"
         legacy: "Vanha"
+      duplicate_topic_titles:
+        allowed: "Sallittu"
       backups:
         title: "Varmuuskopiot"
         files_title: "Varmuuskopiotiedostot"
@@ -6635,7 +6641,6 @@ fi:
           finish_install: "Viimeistele teeman asennus"
           last_attempt: "Asennusprosessi ei päättynyt, viimeisin yritys:"
           remote_branch: "Haaran nimi (valinnainen)"
-          public_key: "Anna tietovaraston käyttöoikeus seuraavalle julkiselle avaimelle:"
           install: "Asenna"
           installed: "Asennettu"
           install_popular: "Suosittuja"
@@ -7918,6 +7923,7 @@ fi:
         uploading: "Ladataan…"
         name: "Nimi"
         group: "Ryhmä"
+        all_groups: "Kaikki ryhmät"
         created_by: "Luonut"
         image: "Kuva"
         alt: "mukautetun emojin esikatselu"

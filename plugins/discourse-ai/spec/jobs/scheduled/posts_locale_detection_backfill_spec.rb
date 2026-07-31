@@ -11,6 +11,7 @@ describe Jobs::PostsLocaleDetectionBackfill do
     enable_current_plugin
     SiteSetting.ai_translation_enabled = true
     SiteSetting.ai_translation_backfill_hourly_rate = 100
+    SiteSetting.ai_translation_backfill_start_date = 1.day.ago.utc.to_date.iso8601
     SiteSetting.content_localization_supported_locales = "en"
     SiteSetting.ai_translation_category_scope = "all"
     SiteSetting.ai_translation_categories = ""
@@ -140,13 +141,13 @@ describe Jobs::PostsLocaleDetectionBackfill do
     end
   end
 
-  describe "with max age limit" do
+  describe "with a backfill start date" do
     fab!(:old_post) { Fabricate(:post, locale: nil, created_at: 10.days.ago) }
     fab!(:new_post) { Fabricate(:post, locale: nil, created_at: 2.days.ago) }
 
-    before { SiteSetting.ai_translation_backfill_max_age_days = 5 }
+    before { SiteSetting.ai_translation_backfill_start_date = 5.days.ago.utc.to_date.iso8601 }
 
-    it "only processes posts within the age limit" do
+    it "only processes posts created after the start date" do
       # other posts
       DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).at_least_once
 
@@ -156,8 +157,8 @@ describe Jobs::PostsLocaleDetectionBackfill do
       job.execute({})
     end
 
-    it "processes all posts when setting is large" do
-      SiteSetting.ai_translation_backfill_max_age_days = 100
+    it "processes older posts when the start date is earlier" do
+      SiteSetting.ai_translation_backfill_start_date = 100.days.ago.utc.to_date.iso8601
 
       # other posts
       DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).at_least_once

@@ -21,3 +21,6 @@ ug:
     filters:
       votes:
         title: "بېلەت"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "بەلگە"

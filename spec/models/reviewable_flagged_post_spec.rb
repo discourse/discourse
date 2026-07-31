@@ -140,6 +140,15 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(actions.has?(:agree_and_suspend)).to eq(true)
       end
 
+      it "doesn't return the suspend action if the user is already suspended" do
+        post.user.update!(suspended_till: 1.year.from_now, suspended_at: Time.zone.now)
+
+        actions = reviewable.actions_for(guardian)
+
+        expect(actions.has?(:agree_and_suspend)).to eq(false)
+        expect(actions.has?(:agree_and_silence)).to eq(true)
+      end
+
       it "doesn't end up with an empty ignore bundle when the post is already hidden and deleted" do
         post.update!(hidden: true)
         post.topic.trash!

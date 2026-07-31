@@ -144,8 +144,8 @@ ar:
       bulk:
         unassign: "إلغاء تعيين الموضوعات"
         assign: "تعيين الموضوعات"
-        assign_description: "تعيين الموضوعات المحددة إلى المستخدم التالي:"
-        unassign_description: "هل تريد إلغاء تعيين الموضوعات المحددة؟"
+        assign_description: "تعيين الموضوعات المحدَّدة إلى المستخدم التالي:"
+        unassign_description: "هل تريد إلغاء تعيين الموضوعات المحدَّدة؟"
         confirm_assign_topics:
           zero: "تعيين %{count} من الموضوعات"
           one: "تعيين موضوع واحد (%{count})"
@@ -219,7 +219,7 @@ ar:
     discourse_workflows:
       nodes:
         "action:assign_topic": "تعيين موضوع"
-        "trigger:assigned": "تم تعيينك"
+        "trigger:assigned": "تم التعيين"
       assign_topic:
         operations:
           assign: "تعيين"

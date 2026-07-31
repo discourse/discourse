@@ -182,12 +182,6 @@ ar:
         never: "أبدًا"
       separate_sidebar_mode:
         title: "إظهار أوضاع الشريط الجانبي المنفصلة للمنتدى والدردشة"
-      send_shortcut:
-        title: "إرسال اختصار"
-        enter:
-          label: "الإرسال بواسطة مفتاح Enter"
-        meta_enter:
-          label: "الإرسال بواسطة مفتاحَي %{meta_key} + Enter"
       enable: "تفعيل الدردشة"
       flag: "الإبلاغ"
       emoji: "إدراج رمز تعبيري"
@@ -883,7 +877,7 @@ ar:
           composer_bold: "%{shortcut} غامق (أداة الإنشاء فقط)"
           composer_italic: "%{shortcut} مائل (أداة الإنشاء فقط)"
           composer_code: "%{shortcut} رمز برمجي (أداة الإنشاء فقط)"
-          drawer_toggle: "%{shortcut} لتبديل لوحة الدردشة"
+          drawer_toggle: "%{shortcut} لتفعيل/إيقاف لوحة الدردشة"
           drawer_close: "%{shortcut} إغلاق درج الدردشة"
           mark_all_channels_read: "%{shortcut} وضع علامة \"مقروءة\" على كل القنوات"
     topic_statuses:
@@ -926,7 +920,7 @@ ar:
         channel_id: "القناة"
       send_chat_message:
         channel_id: "القناة"
-        message: "رسالة"
+        message: "الرسالة"
       chat_approval:
-        message: "رسالة"
+        message: "الرسالة"
         channel_id: "القناة"

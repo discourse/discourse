@@ -93,23 +93,19 @@ module DiscoursePostEvent
       location = event_node["data-location"]
       return "" if location.blank?
 
-      muted_row(PrettyText.cook(location))
+      muted_row(EventParser.cook_inline(location, post:))
     end
 
     def url_row
       url = event_node["data-url"].to_s.strip
       return "" if url.blank?
 
-      href = web_url?(url) ? url : "https://#{url}"
+      href = EventParser.linkable_url?(url) ? url : "https://#{url}"
       <<~HTML
         <tr>
           <td style="padding: 0 12px 12px;"><a href="#{CGI.escape_html(href)}">#{CGI.escape_html(url)}</a></td>
         </tr>
       HTML
-    end
-
-    def web_url?(url)
-      url.match?(%r{\A(?:https?://|mailto:)}i)
     end
 
     def invitees_row
@@ -123,7 +119,7 @@ module DiscoursePostEvent
     def description_row
       return "" if @event&.description.blank?
 
-      muted_row(DiscoursePostEvent::EventParser.linkify_description(@event.description, post:))
+      muted_row(EventParser.cook_inline(@event.description, post:))
     end
 
     def dates

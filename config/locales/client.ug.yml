@@ -2029,7 +2029,7 @@ ug:
         default: "(كۆڭۈلدىكى)"
         any: "خالىغان"
       homepage:
-        default: "(كۆڭۈلدىكى)"
+        default: "كۆڭۈلدىكى"
       password_confirmation:
         title: "ئىم تەكرار"
       invite_code:
@@ -2073,6 +2073,9 @@ ug:
         contextual: "يېڭى بەت مەزمۇنى"
       bookmark_after_notification:
         title: "خەتكۈچ ئەسكەرتىش ئۇقتۇرۇشى يوللىغاندىن كېيىن:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "ياقتۇرغاندا ئۇقتۇر"
         always: "ھەمىشە"
@@ -2850,6 +2853,7 @@ ug:
     filter_input:
       clear: "سۈزگۈچنى تازىلا"
     filter_controls:
+      reset: "ئەسلىگە قايتۇر"
       toggle: "تارتما سۈزگۈچنى ئالماشتۇرىدۇ"
     shared_drafts:
       title: "دەسلەپكى نۇسخا ھەمبەھىر"
@@ -6001,7 +6005,6 @@ ug:
               posts: "يازما"
               share: "ھەمبەھىر"
             whos_posting:
-              all_categories: "ھەممە سەھىپە"
               staff: "باشقۇرغۇچى خادىم"
             trust_level_pipeline:
               trust_levels:
@@ -6717,6 +6720,8 @@ ug:
         sidebar: "يانبالداق"
         header_dropdown: "ماۋزۇ تارتما تىزىملىك"
         legacy: "كونا نەشرى"
+      duplicate_topic_titles:
+        allowed: "يول قويغان"
       backups:
         title: "زاپاس"
         files_title: "ھۆججەت زاپاسلايدۇ"
@@ -6955,7 +6960,6 @@ ug:
           finish_install: "ئۆرنەك ئورنىتىش تامام"
           last_attempt: "ئورنىتىش جەريانى تاماملانمىدى، ئاخىرقى سىنىغىنى:"
           remote_branch: "شاخ ئىسمى (تاللاشچان)"
-          public_key: "تۆۋەندىكى ئاممىۋى ئاچقۇچقا خەزىنە زىيارەت ئىجازىتىنى بېرىدۇ:"
           install: "ئورنات"
           installed: "ئورنىتىلدى"
           install_popular: "ئالقىشلىق"
@@ -8258,6 +8262,7 @@ ug:
         uploading: "يۈكلەۋاتىدۇ…"
         name: "ئىسمى"
         group: "گۇرۇپپا"
+        all_groups: "بارلىق گۇرۇپپىلار"
         created_by: "قۇرغۇچى"
         image: "سۈرەت"
         alt: "ئىختىيارى چىراي ئىپادەنى ئالدىن كۆزەت"

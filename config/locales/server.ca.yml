@@ -124,7 +124,6 @@ ca:
       exclusion: és reservat
       greater_than: ha de ser més gran que %{count}
       greater_than_or_equal_to: ha de ser més gran o igual que %{count}
-      has_already_been_used: "ja s'ha fet servir"
       inclusion: no és inclòs en la llista
       invalid: no és vàlid
       is_invalid: "no sembla clar. És una frase sencera?"
@@ -1188,7 +1187,6 @@ ca:
     staff_edit_locks_post: "Les publicacions seran blocades per a edició si són editades per membres de l'equip responsable."
     post_edit_time_limit: "Un autor tl0 o tl1 pot editar la seva publicació durant (n) minuts després de la publicació. Establiu el valor 0 perquè sigui per a sempre."
     tl2_post_edit_time_limit: "Un autor de nivell de confiança 2 pot editar la seva publicació durant (n) minuts després de publicar. Establiu el valor 0 perquè sigui per a sempre."
-    edit_history_visible_to_public: "Permet que qualsevol miri les versions prèvies d'una publicació editada. Si està desactivat, només seran visibles per a membres de l'equip responsable."
     delete_removed_posts_after: "Les publicacions eliminades per l'autor se suprimiran automàticament al cap de (n) hores. Si es posa 0, se suprimiran immediatament."
     responsive_post_image_sizes: "Redimensiona les imatges de previsualització lightbox per a permetre pantalles de PPP (DPI) elevats de les següents relacions de píxels. Elimineu tots els valors per a inhabilitar les imatges responsives."
     fixed_category_positions: "Si és activat, podreu arranjar les categories en un ordre fix. Si no és activat, les categories es llisten segons l'ordre d'activitat."

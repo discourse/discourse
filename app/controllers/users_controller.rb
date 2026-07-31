@@ -393,7 +393,7 @@ class UsersController < ApplicationController
     params.require(:email)
 
     user = fetch_user_from_params
-    guardian.ensure_can_edit!(user)
+    guardian.ensure_can_edit_email!(user)
 
     ActiveRecord::Base.transaction do
       if change_requests = user.email_change_requests.where(new_email: params[:email]).presence
@@ -1901,7 +1901,8 @@ class UsersController < ApplicationController
 
   def feature_topic
     user = fetch_user_from_params
-    topic = Topic.find(params[:topic_id].to_i)
+    topic = Topic.find_by(id: params[:topic_id].to_i)
+    raise Discourse::NotFound unless guardian.can_see?(topic)
 
     if !guardian.can_feature_topic?(user, topic)
       return(
@@ -2208,7 +2209,9 @@ class UsersController < ApplicationController
 
     editable_custom_fields = User.editable_user_custom_fields(by_staff: current_user.try(:staff?))
     permitted << { custom_fields: editable_custom_fields } if editable_custom_fields.present?
-    permitted.concat UserUpdater::OPTION_ATTR
+    permitted.concat(UserUpdater::OPTION_ATTR - [:understood_languages])
+    permitted << UserUpdater::LEGACY_SHOW_ORIGINAL_CONTENT_ATTR
+    permitted << { understood_languages: [] }
     permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
     permitted.concat UserUpdater::TAG_NAMES.keys
     permitted << UserUpdater::NOTIFICATION_SCHEDULE_ATTRS

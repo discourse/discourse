@@ -2088,7 +2088,7 @@ el:
         default: "(προεπιλογή)"
         any: "καθένα"
       homepage:
-        default: "(προεπιλογή)"
+        default: "Προεπιλογή"
       password_confirmation:
         title: "Επανάληψη του κωδικού πρόσβασης"
       invite_code:
@@ -2132,6 +2132,9 @@ el:
         contextual: "Νέου περιεχομένου σελίδας"
       bookmark_after_notification:
         title: "Μετά την αποστολή ειδοποίησης υπενθύμισης σελιδοδείκτη:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Ειδοποίησέ με όταν έχω \"μου αρέσει\""
         always: "Πάντα"
@@ -2905,7 +2908,7 @@ el:
     filter_input:
       clear: "Καθαρισμός φίλτρου"
     filter_controls:
-      reset: "Επαναφορά φίλτρου"
+      reset: "Επαναφορά"
       toggle: "Εναλλαγή αναπτυσσόμενων φίλτρων"
     d_icon_grid_picker:
       select_icon: "Επιλογή εικονιδίου"
@@ -6311,8 +6314,6 @@ el:
               empty: "Δεν υπάρχει δραστηριότητα στην επιλεγμένη περίοδο."
             whos_posting:
               title: "Ποιός δημοσιεύει;"
-              all_categories: "Όλες οι κατηγορίες"
-              include_subcategories: "Συμπερίληψη υποκατηγοριών"
               new_members: "Νέα μέλη"
               returning: "Επιστρέφοντες"
               staff: "Προσωπικό"
@@ -7069,6 +7070,8 @@ el:
       navigation_menu:
         sidebar: "Πλαϊνή μπάρα"
         header_dropdown: "Αναπτυσσόμενο μενού επικεφαλίδας"
+      duplicate_topic_titles:
+        allowed: "Επιτρέπεται"
       backups:
         title: "Αντίγραφα ασφαλείας"
         files_title: "Αρχεία αντιγράφου ασφαλείας"
@@ -7291,7 +7294,6 @@ el:
           direct_install_tip: "Σίγουρα θέλετε να εγκαταστήσετε το <strong>%{name}</strong> από το αποθετήριο που αναφέρεται παρακάτω;"
           is_private: "Το θέμα βρίσκεται σε ένα ιδιωτικό αποθετήριο git"
           remote_branch: "Όνομα διακλάδωσης (προαιρετικό)"
-          public_key: "Παραχωρήστε στο ακόλουθο δημόσιο κλειδί πρόσβαση στο αποθετήριο:"
           install: "Εγκατάσταση"
           installed: "Εγκατεστημένα"
           screenshot: "Στιγμιότυπο οθόνης %{name}"
@@ -8515,6 +8517,7 @@ el:
         uploading: "Μεταφορτώνεται…"
         name: "Όνομα"
         group: "Ομάδα"
+        all_groups: "Όλες οι ομάδες"
         created_by: "Δημιουργήθηκε από"
         image: "Εικόνα"
         alt: "προεπισκόπηση προσαρμοσμένου emoji"

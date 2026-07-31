@@ -82,7 +82,7 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
             expect(serialized[:ai_topic_gist]).to be_present
           end
 
-          it "selects the localized gist and respects the show-original preference" do
+          it "selects the localized gist and respects the automatic-translation preference" do
             topic_ai_gist.target.update!(locale: "en")
             english_gist =
               topic_ai_gist.tap { |gist| gist.update!(summarized_text: "English gist") }
@@ -109,7 +109,7 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
 
             expect(serialized[:ai_topic_gist]).to eq(japanese_gist.summarized_text)
 
-            user.user_option.update!(show_original_content: true)
+            user.user_option.update!(automatically_translate: false)
             original_serialized =
               TopicListItemSerializer.new(
                 gist_topic,

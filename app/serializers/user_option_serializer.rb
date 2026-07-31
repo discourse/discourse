@@ -50,7 +50,10 @@ class UserOptionSerializer < ApplicationSerializer
              :topics_unread_when_closed,
              :composition_mode,
              :interface_color_mode,
-             :show_original_content
+             :show_original_content,
+             :send_shortcut,
+             :automatically_translate,
+             :understood_languages
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs
@@ -67,5 +70,9 @@ class UserOptionSerializer < ApplicationSerializer
 
   def theme_ids
     object.theme_ids.presence || [SiteSetting.default_theme_id]
+  end
+
+  def show_original_content
+    !object.automatically_translate
   end
 end

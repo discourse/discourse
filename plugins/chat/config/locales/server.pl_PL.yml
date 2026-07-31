@@ -68,6 +68,7 @@ pl_PL:
       users_cant_be_added_to_channel: "Użytkownicy nie mogą być dodawani do tego kanału."
       user_cant_be_removed_from_channel: "Użytkownik nie może zostać usunięty z tego kanału"
       channel_exists_for_category: "Istnieje już kanał dla tej kategorii i nazwy"
+      public_channels_disabled: "Nie można utworzyć kanału, ponieważ kanały publiczne są wyłączone. Administrator może włączyć ustawienie witryny „Włącz kanały publiczne”."
       channel_new_message_disallowed:
         archived: "Kanał jest zarchiwizowany, nie można wysyłać nowych wiadomości"
         closed: "Kanał jest zamknięty, nie można wysyłać nowych wiadomości"

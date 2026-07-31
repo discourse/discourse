@@ -177,8 +177,10 @@ export default class CategorySectionLink {
     return "discovery.unreadCategory discovery.hotCategory discovery.topCategory discovery.newCategory discovery.latestCategory discovery.category discovery.categoryNone discovery.categoryAll";
   }
 
+  // The link text already names the category. A title here would only repeat
+  // the description as a mouse-only tooltip that screen readers announce.
   get title() {
-    return this.category.descriptionText;
+    return null;
   }
 
   get text() {

@@ -1,13 +1,9 @@
-import Component from "@glimmer/component";
-import DEmptyState from "discourse/ui-kit/d-empty-state";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
+import EmptyStateExample from "../../examples/molecules/empty-state";
+import emptyStateSource from "../../examples/molecules/empty-state?source=file";
 
-export default class EmptyStateMolecule extends Component {
-  emptyStateCode = `<EmptyState @title={{@dummy.sentence}} @body={{@dummy.short_sentence}} />`;
-
-  <template>
-    <StyleguideExample @title="<EmptyState>" @code={{this.emptyStateCode}}>
-      <DEmptyState @title={{@dummy.sentence}} @body={{@dummy.short_sentence}} />
-    </StyleguideExample>
-  </template>
-}
+export default <template>
+  <StyleguideExample @title="<DEmptyState>" @code={{emptyStateSource}}>
+    <EmptyStateExample />
+  </StyleguideExample>
+</template>

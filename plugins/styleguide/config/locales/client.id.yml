@@ -8,7 +8,6 @@ id:
   js:
     styleguide:
       title: "Styleguide"
-      welcome: "Untuk memulai, pilih bagian dari menu di sebelah kiri."
       categories:
         atoms: Atom
         molecules: Molekul

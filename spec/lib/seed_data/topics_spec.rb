@@ -5,10 +5,9 @@ require "seed_data/topics"
 RSpec.describe SeedData::Topics do
   subject(:seeder) { SeedData::Topics.with_default_locale }
 
-  before do
-    general_category = Fabricate(:category, name: "General")
-    SiteSetting.general_category_id = general_category.id
-  end
+  fab!(:general_category) { Fabricate(:category, name: "General") }
+
+  before { SiteSetting.general_category_id = general_category.id }
 
   def create_topic(name = "welcome_topic_id")
     seeder.create(site_setting_names: [name])

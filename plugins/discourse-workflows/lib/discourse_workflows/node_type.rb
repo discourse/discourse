@@ -78,15 +78,15 @@ module DiscourseWorkflows
     def self.unavailable_reason_key(configuration = nil)
       return nil unless description.key?(:unavailable_reason_key)
 
-      description_value(:unavailable_reason_key, configuration: configuration)
+      description_value(:unavailable_reason_key, configuration:)
     end
 
     def self.inputs(configuration = {})
-      description_value(:inputs, configuration: configuration)
+      description_value(:inputs, configuration:)
     end
 
     def self.outputs(configuration = {})
-      description_value(:outputs, configuration: configuration)
+      description_value(:outputs, configuration:)
     end
 
     def self.properties
@@ -98,7 +98,7 @@ module DiscourseWorkflows
     end
 
     def self.webhooks(configuration = {})
-      Array(description_value(:webhooks, configuration: configuration)).map do |webhook|
+      Array(description_value(:webhooks, configuration:)).map do |webhook|
         webhook.deep_symbolize_keys
       end
     end
@@ -119,11 +119,7 @@ module DiscourseWorkflows
       input_schema = Schema.union(*input_schemas.compact)
 
       active_output_contracts(configuration).map do |contract|
-        Schema.resolve(
-          contract.fetch(:schema),
-          mode: contract.fetch(:mode),
-          input_schema: input_schema,
-        )
+        Schema.resolve(contract.fetch(:schema), mode: contract.fetch(:mode), input_schema:)
       end
     end
 
@@ -208,7 +204,7 @@ module DiscourseWorkflows
 
       {
         schema: Schema.normalize(contract.fetch(:schema, {})),
-        mode: mode,
+        mode:,
         display_options: contract.fetch(:display_options, {}),
       }
     end
@@ -219,6 +215,29 @@ module DiscourseWorkflows
         .wrap(value)
         .flat_map { |name| name.to_s.split(",") }
         .filter_map { |name| name.strip.presence }
+    end
+
+    def self.normalize_category_ids(value)
+      Array.wrap(value).filter_map { |entry| entry.to_s.strip.presence&.to_i }.uniq
+    end
+
+    # TODO JOFFREY (01-2027): drop the category_id fallback once the post_migrate
+    # stripping the legacy key has been promoted.
+    def self.category_ids_parameter(trigger_ctx)
+      value = trigger_ctx.get_node_parameter("category_ids")
+      value = trigger_ctx.get_node_parameter("category_id") if value.nil?
+      normalize_category_ids(value)
+    end
+
+    def self.expand_subcategory_ids(category_ids)
+      category_ids.flat_map { |id| ::Category.subcategory_ids(id) }.uniq
+    end
+
+    def self.matches_category_ids?(topic_category_id, category_ids, include_subcategories: true)
+      return true if category_ids.empty?
+
+      category_ids = expand_subcategory_ids(category_ids) if include_subcategories != false
+      category_ids.include?(topic_category_id)
     end
 
     def self.trust_level_options
@@ -260,6 +279,14 @@ module DiscourseWorkflows
       self.class.normalize_tag_names(value)
     end
 
+    def category_ids_parameter(trigger_ctx)
+      self.class.category_ids_parameter(trigger_ctx)
+    end
+
+    def matches_category_ids?(topic_category_id, category_ids, include_subcategories: true)
+      self.class.matches_category_ids?(topic_category_id, category_ids, include_subcategories:)
+    end
+
     def wrap(data, paired_item: nil)
       Item.wrap(data, paired_item:)
     end
@@ -282,22 +309,26 @@ module DiscourseWorkflows
     )
       DiscourseWorkflows::Executor::NodeExecutionContext.serialize_post(
         post,
-        guardian: guardian,
-        include_raw: include_raw,
-        include_cooked: include_cooked,
+        guardian:,
+        include_raw:,
+        include_cooked:,
       )
     end
 
     def serialize_topic(topic, guardian: Discourse.system_user.guardian, custom_field_names: [])
       DiscourseWorkflows::Executor::NodeExecutionContext.serialize_topic(
         topic,
-        guardian: guardian,
-        custom_field_names: custom_field_names,
+        guardian:,
+        custom_field_names:,
       )
     end
 
+    def topic_data(topic, scope: Discourse.system_user.guardian)
+      serialize_record(topic, DiscourseWorkflows::TopicListItemSerializer, scope:)
+    end
+
     def serialize_user(user, guardian: Discourse.system_user.guardian)
-      DiscourseWorkflows::Executor::NodeExecutionContext.serialize_user(user, guardian: guardian)
+      DiscourseWorkflows::Executor::NodeExecutionContext.serialize_user(user, guardian:)
     end
 
     def with_paired_item(item, paired_item)

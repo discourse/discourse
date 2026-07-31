@@ -23,15 +23,15 @@ fr:
     direct_message_enabled_groups: "Permettre aux utilisateurs de ces groupes de créer des discussions privées entre utilisateurs. Remarque : les responsables peuvent toujours créer des conversations privées et les utilisateurs pourront répondre aux conversations privées initiées par les utilisateurs qui sont autorisés à les créer."
     chat_message_flag_allowed_groups: "Les utilisateurs de ces groupes sont autorisés à signaler les messages de discussion. Notez que les administrateurs et les modérateurs peuvent toujours signaler les messages de discussion."
     max_mentions_per_chat_message: "Nombre maximum de notifications @name qu'un utilisateur peut utiliser dans un message de discussion."
-    chat_max_direct_message_users: "Les utilisateurs ne peuvent pas ajouter plus que ce nombre d'autres utilisateurs lors de la création d'un nouveau message direct. Fixez cette valeur à 0 pour n'autoriser les messages que pour vous-même. Le personnel n'est pas soumis à ce paramètre."
-    chat_allow_archiving_channels: "Autoriser le personnel à archiver les messages dans un sujet lors de la fermeture d'un canal."
+    chat_max_direct_message_users: "Les utilisateurs ne peuvent pas ajouter plus que ce nombre d'autres utilisateurs lors de la création d'un nouveau message direct. Fixez cette valeur à 0 pour n'autoriser les messages que pour vous-même. Les responsables ne sont pas soumis à ce paramètre."
+    chat_allow_archiving_channels: "Autoriser les responsables à archiver les messages dans un sujet lors de la fermeture d'un canal."
     chat_editing_grace_period: "Pendant (n) secondes après l'envoi d'une discussion, la modification n'affichera pas l'étiquette (modifiée) à côté du message de discussion."
     chat_editing_grace_period_max_diff_low_trust: "Nombre maximal de modifications de caractères autorisées pendant la période de grâce de modification de la discussion. Si d'autres modifications sont apportées, l'étiquette (modifiée) est affichée à côté du message de discussion (niveaux de confiance 0 et 1)."
     chat_editing_grace_period_max_diff_high_trust: "Nombre maximal de modifications de caractères autorisées pendant la période de grâce de modification de la discussion. Si d'autres modifications sont apportées, l'étiquette (modifiée) est affichée à côté du message de discussion (niveaux de confiance 2 et supérieurs)."
     chat_preferred_index: "Onglet préféré lors du chargement de /chat."
     errors:
       chat_default_channel: "Le canal de discussion par défaut doit être un canal public."
-      direct_message_enabled_groups_invalid: "Vous devez spécifier au moins un groupe pour ce paramètre. Si vous ne souhaitez pas que quiconque, à l'exception du personnel, envoie des messages directs, choisissez le groupe des responsables."
+      direct_message_enabled_groups_invalid: "Vous devez spécifier au moins un groupe pour ce paramètre. Si vous ne souhaitez pas que quiconque, à l'exception des responsables, envoie des messages directs, choisissez le groupe des responsables."
       chat_upload_not_allowed_secure_uploads: "Les téléversements de discussion ne sont pas autorisés lorsque le paramètre du site de téléversement sécurisé est activé."
       allow_chat_in_anonymous_mode_invalid: "Ce paramètre nécessite que le paramètre « Autoriser le mode anonyme » soit activé au préalable."
   system_messages:
@@ -212,11 +212,11 @@ fr:
       new_direct_chat_message: "%{username} a envoyé un message dans la discussion privée"
     actions:
       chat_reply:
-        title: Réponse
+        title: Répondre
   discourse_automation:
     scriptables:
       send_chat_message:
-        title: Envoyer un message de chat
+        title: Envoyer un message de discussion
   discourse_workflows:
     chat_approval:
       default_approve_label: "Approuver"

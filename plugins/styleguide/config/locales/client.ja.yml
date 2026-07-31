@@ -13,7 +13,6 @@ ja:
   js:
     styleguide:
       title: "スタイルガイド"
-      welcome: "開始するには、左側のメニューからセクションを選択します。"
       categories:
         syntax: 構文
         atoms: 原子

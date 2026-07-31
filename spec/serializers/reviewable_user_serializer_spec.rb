@@ -69,5 +69,29 @@ RSpec.describe ReviewableUserSerializer do
       expect(json[:target_user][:id]).to eq(user.id)
       expect(json[:target_user][:username]).to eq(user.username)
     end
+
+    it "exposes an active penalty with its reason" do
+      user.update!(silenced_till: 1.month.from_now)
+      UserHistory.create!(
+        action: UserHistory.actions[:silence_user],
+        acting_user_id: admin.id,
+        target_user_id: user.id,
+        details: "Promotional links in bio",
+      )
+
+      json = ReviewableUserSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
+      expect(json[:target_user][:silenced_till]).to be_present
+      expect(json[:target_user][:silence_reason]).to eq("Promotional links in bio")
+      expect(json[:target_user]).not_to have_key(:suspended_till)
+      expect(json[:target_user]).not_to have_key(:suspend_reason)
+    end
+
+    it "doesn't expose expired penalties" do
+      user.update!(suspended_till: 1.day.ago, suspended_at: 1.month.ago)
+
+      json = ReviewableUserSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
+      expect(json[:target_user]).not_to have_key(:suspended_till)
+      expect(json[:target_user]).not_to have_key(:suspend_reason)
+    end
   end
 end

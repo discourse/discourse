@@ -1242,7 +1242,7 @@ lv:
         default: "(noklusējums)"
         any: "jebkura"
       homepage:
-        default: "(noklusējums)"
+        default: "Noklusējums"
       password_confirmation:
         title: "Parole vēlreiz"
       invite_code:
@@ -1269,6 +1269,8 @@ lv:
         title: "Fona lapas nosaukumā ir redzams:"
         notifications: "Jauni paziņojumi"
         contextual: "Jauns lapas saturs"
+      send_shortcut:
+        enter: "Ievadīt"
       like_notification_frequency:
         title: "Paziņot, ja saņemta atzinība"
         always: "Vienmēr"
@@ -1699,6 +1701,8 @@ lv:
       medium_dark_tone: Vidēji tumša ādas krāsa
       dark_tone: Tumša ādas krāsa
       default: Lietotāja emoji
+    filter_controls:
+      reset: "Atlikt"
     shared_drafts:
       title: "Kopīgotie melnraksti"
       notice: "Šī tēma ir redzama tikai tiem, kuri var publicēt koplietotos melnrakstus."
@@ -3095,7 +3099,6 @@ lv:
               posts: "Ieraksti"
               share: "Dalīties"
             whos_posting:
-              all_categories: "Visas sadaļas"
               staff: "Personāls"
             trust_level_pipeline:
               trust_levels:
@@ -3335,6 +3338,8 @@ lv:
           enabled: "Ieslēgts"
           disabled: "Atslēgt"
           reset: "Atlikt"
+      duplicate_topic_titles:
+        allowed: "Atļauts"
       backups:
         title: "Rezerves kopijas"
         menu:
@@ -4004,6 +4009,7 @@ lv:
         delete: "Dzēst"
         name: "Nosaukums"
         group: "Grupa"
+        all_groups: "Visas grupas"
         image: "Attēls"
         delete_confirm: "Vai tiešām vēlies dzēst šo :%{name}: smaidiņu?"
         settings: "Iestatījumi"

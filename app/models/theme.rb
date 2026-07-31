@@ -542,7 +542,7 @@ class Theme < ActiveRecord::Base
     targets = %i[common_theme mobile_theme desktop_theme]
 
     if with_scheme
-      targets.prepend(:common, :desktop, :mobile, :admin)
+      targets.prepend(:common, :admin)
       targets.append(
         *Discourse.find_plugin_css_assets(
           mobile_view: true,

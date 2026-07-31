@@ -2067,7 +2067,7 @@ hu:
         default: "(alapértelmezett)"
         any: "bármely"
       homepage:
-        default: "(alapértelmezett)"
+        default: "Alapértelmezett"
       password_confirmation:
         title: "Jelszó újra"
       invite_code:
@@ -2111,6 +2111,9 @@ hu:
         contextual: "Új oldal tartalma"
       bookmark_after_notification:
         title: "Könyvjelző-emlékeztető értesítés elküldése után:"
+      send_shortcut:
+        enter: "Belépés"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Értesítés kedvelés esetén"
         always: "Mindig"
@@ -2889,7 +2892,7 @@ hu:
     filter_input:
       clear: "Szűrő kiürítése"
     filter_controls:
-      reset: "Szűrő visszaállítása"
+      reset: "Alaphelyzetbe állítás"
       toggle: "Legördülő szűrők be- és kikapcsolása"
     shared_drafts:
       title: "Megosztott vázlatok"
@@ -6195,7 +6198,6 @@ hu:
               posts: "Bejegyzések"
               share: "Megosztás"
             whos_posting:
-              all_categories: "Minden kategória"
               staff: "Stáb"
             trust_level_pipeline:
               trust_levels:
@@ -6921,6 +6923,8 @@ hu:
         sidebar: "Oldalsáv"
         header_dropdown: "Fejléc legördülő menü"
         legacy: "Hagyaték"
+      duplicate_topic_titles:
+        allowed: "Engedélyezett"
       backups:
         title: "Biztonsági mentések"
         files_title: "Biztonsági mentés fájlok"
@@ -7162,7 +7166,6 @@ hu:
           finish_install: "Téma telepítésének befejezése"
           last_attempt: "A telepítési folyamat nem fejeződött be, utolsó próbálkozás:"
           remote_branch: "Branch neve (nem kötelező)"
-          public_key: "Adja meg a következő nyilvános kulcsú hozzáférést a repóhoz:"
           install: "Telepítés"
           installed: "Telepítve"
           install_popular: "Népszerű"
@@ -8515,6 +8518,7 @@ hu:
         uploading: "Feltöltés…"
         name: "Név"
         group: "Csoport"
+        all_groups: "Összes csoport"
         created_by: "Készítette:"
         image: "Kép"
         alt: "egyéni emodzsi előnézete"
