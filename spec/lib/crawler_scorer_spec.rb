@@ -68,7 +68,7 @@ RSpec.describe CrawlerScorer do
 
   it "scores datacenter ASNs at +10" do
     SiteSetting.crawler_asns = ""
-    SiteSetting.crawler_datacenter_asns = "12345"
+    SiteSetting.datacenter_asns = "12345"
     event = make_event(asn: 12_345)
 
     score!
@@ -95,9 +95,8 @@ RSpec.describe CrawlerScorer do
     expect(event.browser_pageview_event_score.single_request_no_referrer_score).to eq(15)
   end
 
-  it "scores unengaged Chrome versions at least the configured release lag behind Stable at +5" do
-    SiteSetting.crawler_current_chrome_major_version = 150
-    SiteSetting.crawler_stale_chrome_major_version_lag = 12
+  it "scores unengaged Chromium versions at or below the configured cutoff at +5" do
+    SiteSetting.crawler_stale_chromium_major_version_cutoff = 138
     event = make_event(user_agent: "Mozilla/5.0 Chrome/138.0.0.0 Safari/537.36")
 
     score!
@@ -106,9 +105,8 @@ RSpec.describe CrawlerScorer do
     expect(event.browser_pageview_event_score.stale_browser_score).to eq(5)
   end
 
-  it "does not score Chrome versions within the configured Stable release lag" do
-    SiteSetting.crawler_current_chrome_major_version = 150
-    SiteSetting.crawler_stale_chrome_major_version_lag = 12
+  it "does not score Chromium versions above the configured cutoff" do
+    SiteSetting.crawler_stale_chromium_major_version_cutoff = 138
     event = make_event(user_agent: "Mozilla/5.0 Chrome/139.0.0.0 Safari/537.36")
 
     score!
@@ -117,7 +115,7 @@ RSpec.describe CrawlerScorer do
     expect(event.browser_pageview_event_score).to be_nil
   end
 
-  it "does not score oversized Chrome major versions as stale" do
+  it "does not score oversized Chromium major versions as stale" do
     event = make_event(user_agent: "Mozilla/5.0 Chrome/99999999999.0.0.0 Safari/537.36")
 
     score!
@@ -126,7 +124,7 @@ RSpec.describe CrawlerScorer do
     expect(event.browser_pageview_event_score).to be_nil
   end
 
-  it "does not score stale Chrome versions when the session has interaction" do
+  it "does not score stale Chromium versions when the session has interaction" do
     SiteSetting.crawler_asns = "12345"
     event = make_event(asn: 12_345, user_agent: "Mozilla/5.0 Chrome/125.0.0.0 Safari/537.36")
     Fabricate(:browser_pageview_session_engagement, session_id: event.session_id, click_events: 1)
@@ -137,13 +135,20 @@ RSpec.describe CrawlerScorer do
     expect(event.browser_pageview_event_score.stale_browser_score).to eq(0)
   end
 
-  it "does not score Edge's embedded Chrome version" do
-    event = make_event(user_agent: "Mozilla/5.0 Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0")
+  it "scores stale Chromium versions reported by Edge and Opera" do
+    SiteSetting.crawler_stale_chromium_major_version_cutoff = 138
+    edge_event = make_event(user_agent: "Mozilla/5.0 Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0")
+    opera_event = make_event(user_agent: "Mozilla/5.0 Chrome/125.0.0.0 Safari/537.36 OPR/110.0.0.0")
 
     score!
 
-    expect(event.reload.score).to be_nil
-    expect(event.browser_pageview_event_score).to be_nil
+    expect([edge_event.reload.score, opera_event.reload.score]).to eq([45, 45])
+    expect(
+      [
+        edge_event.browser_pageview_event_score.stale_browser_score,
+        opera_event.browser_pageview_event_score.stale_browser_score,
+      ],
+    ).to eq([5, 5])
   end
 
   it "scores pageview velocity at or above VELOCITY_LOW threshold at +15" do

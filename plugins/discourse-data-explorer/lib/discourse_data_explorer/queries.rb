@@ -1561,7 +1561,7 @@ module DiscourseDataExplorer
                     WHEN MAX(s.single_request_no_referrer_score) > 0
                       THEN 'single direct request (+' || MAX(s.single_request_no_referrer_score) || ')'
                   END,
-                  CASE WHEN MAX(s.stale_browser_score) > 0 THEN 'stale Chrome (+' || MAX(s.stale_browser_score) || ')' END,
+                  CASE WHEN MAX(s.stale_browser_score) > 0 THEN 'stale Chromium (+' || MAX(s.stale_browser_score) || ')' END,
                   CASE WHEN MAX(s.velocity_score) > 0 THEN 'high velocity (+' || MAX(s.velocity_score) || ')' END,
                   CASE WHEN MAX(s.churn_score) > 0 THEN 'session churn (+' || MAX(s.churn_score) || ')' END,
                   CASE WHEN MAX(s.rapid_nav_score) > 0 THEN 'rapid navigation' END,

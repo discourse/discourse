@@ -42,7 +42,7 @@ class CrawlerScorer
 
   def self.score!(window_start:, window_end:)
     crawler_asns = SiteSetting.crawler_asns_map.map(&:to_i)
-    datacenter_asns = SiteSetting.crawler_datacenter_asns_map.map(&:to_i)
+    datacenter_asns = SiteSetting.datacenter_asns_map.map(&:to_i)
 
     ActiveRecord::Base.transaction do
       DB.exec(
@@ -59,8 +59,8 @@ class CrawlerScorer
         single_request_no_referrer_score: SINGLE_REQUEST_NO_REFERRER_SCORE,
         single_request_locale_param_bonus: SINGLE_REQUEST_LOCALE_PARAM_BONUS,
         stale_browser_score: STALE_BROWSER_SCORE,
-        current_chrome_major_version: SiteSetting.crawler_current_chrome_major_version,
-        stale_chrome_major_version_lag: SiteSetting.crawler_stale_chrome_major_version_lag,
+        stale_chromium_major_version_cutoff:
+          SiteSetting.crawler_stale_chromium_major_version_cutoff,
         velocity_low: VELOCITY_LOW,
         velocity_medium: VELOCITY_MEDIUM,
         velocity_high: VELOCITY_HIGH,
@@ -180,9 +180,9 @@ class CrawlerScorer
         CASE
           WHEN se.session_id IS NULL
             AND e.user_agent ~ 'Chrome/[0-9]{1,3}'
-            AND e.user_agent !~* '(HeadlessChrome|Edg/|OPR/)'
+            AND e.user_agent !~* 'HeadlessChrome'
             AND (substring(e.user_agent FROM 'Chrome/([0-9]{1,3})'))::int
-              <= :current_chrome_major_version - :stale_chrome_major_version_lag
+              <= :stale_chromium_major_version_cutoff
             THEN :stale_browser_score
           ELSE 0
         END AS stale_browser_score,

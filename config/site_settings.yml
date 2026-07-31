@@ -659,14 +659,8 @@ basic:
   crawler_automation_user_agents:
     default: "HeadlessChrome|Playwright|Puppeteer|Selenium|PhantomJS|jsdom"
     hidden: true
-  crawler_current_chrome_major_version:
-    default: 150
-    type: integer
-    min: 1
-    max: 999
-    hidden: true
-  crawler_stale_chrome_major_version_lag:
-    default: 12
+  crawler_stale_chromium_major_version_cutoff:
+    default: 138
     type: integer
     min: 1
     max: 999
@@ -3144,7 +3138,7 @@ security:
   # 63835=China Telecom Changsha IDC, 58540=China Telecom Jinan IDC,
   # 58541=China Telecom Qingdao IDC, 58563=China Telecom Hubei IDC,
   # 58461=China Telecom Hangzhou IDC
-  crawler_datacenter_asns:
+  datacenter_asns:
     hidden: true
     default: "16509|16276|14618|136907|24940|396982|8075|51747|13335|45090|55990|23724|37963|55960|203020|63835|58540|58541|58563|58461"
     type: list
