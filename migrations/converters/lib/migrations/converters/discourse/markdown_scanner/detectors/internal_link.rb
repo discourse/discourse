@@ -159,6 +159,26 @@ module Migrations
             USER = %r{\A/u(?:sers)?/(?<name>#{WORD})}
             private_constant :USER
 
+            # The list filters a category's tabs are addressed by (core's
+            # `Discourse.filters`).
+            CATEGORY_FILTER = "latest|unread|new|unseen|top|read|posted|bookmarks|hot"
+            private_constant :CATEGORY_FILTER
+
+            # Where a category's slug path stops. Core routes all of these *inside*
+            # `c/*category_slug_path_with_id`, so Rails takes the tail off before the
+            # glob is resolved and `Category.find_by_slug_path_with_id` never sees it —
+            # the tail is not slug. `/l/top/<period>` and the tag-intersection forms
+            # below `/none` and `/all` open with one of these segments, so matching the
+            # opening one is enough; the rest rides along in the suffix either way.
+            CATEGORY_TAIL = %r{/(?:l/(?:#{CATEGORY_FILTER})|none|all|subcategories)(?=[/?#]|\z)}
+            private_constant :CATEGORY_TAIL
+
+            # A further slug segment, unless it opens the tail. Only guards the segments
+            # after the first, so a category whose own slug is `all` (`/c/all`) still
+            # reads as a slug — `none` is the one core reserves.
+            CATEGORY_SLUG_SEGMENT = %r{(?!#{CATEGORY_TAIL})/#{SEGMENT}}
+            private_constant :CATEGORY_SLUG_SEGMENT
+
             # `/c/<slug-path>/<id>`, or `/c/<id>` with no slug. Anchored on the id the
             # way the topic routes are, so the route ends there and a category's
             # filter tail (`/l/latest`, the ordinary URL of a category's Latest tab)
@@ -167,16 +187,20 @@ module Migrations
             # The slug path is lazy so the id is the first numeric segment that ends a
             # path component: greedy, `/c/support/6/l/latest` would fold the tail into
             # the slug and resolve nothing. With no tail the lazy path still stops on
-            # the last segment, so `/c/2015/6` reads id 6, not slug `2015`.
+            # the last segment, so `/c/2015/6` reads id 6, not slug `2015`. It also
+            # can't run past the tail, which keeps the tag id of an intersection URL
+            # (`/c/support/none/<tag>/<tag-id>`) from being read as the category's.
             CATEGORY_ID =
-              %r{\A/c/(?:(?<path>#{SEGMENT}(?:/#{SEGMENT})*?)/)?(?<id>#{Base::ID_PATTERN})(?=[/?#]|\z)}
+              %r{\A/c/(?:(?<path>#{SEGMENT}#{CATEGORY_SLUG_SEGMENT}*?)/)?(?<id>#{Base::ID_PATTERN})(?=[/?#]|\z)}
             private_constant :CATEGORY_ID
 
             # The legacy id-less form, `/c/<slug>` or `/c/<parent>/<child>`, whose
             # segments join with `:` into a slug path. Only reached when no segment
             # parses as an id — including an overlong digit run, which is a numeric
-            # slug rather than an id (see `Base::ID_PATTERN`).
-            CATEGORY_SLUG = %r{\A/c/(?<path>#{SEGMENT}(?:/#{SEGMENT})*)(?=[/?#]|\z)}
+            # slug rather than an id (see `Base::ID_PATTERN`). Stops at the filter tail
+            # like the id form, so `/c/support/l/latest` names `support` instead of a
+            # `support:l:latest` that resolves to nothing.
+            CATEGORY_SLUG = %r{\A/c/(?<path>#{SEGMENT}#{CATEGORY_SLUG_SEGMENT}*)(?=[/?#]|\z)}
             private_constant :CATEGORY_SLUG
 
             # `/tag/<name>` / `/tags/<name>`. The `(?!c/)` guard leaves the

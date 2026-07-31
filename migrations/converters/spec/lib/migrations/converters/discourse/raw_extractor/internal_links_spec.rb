@@ -235,6 +235,54 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       )
     end
 
+    # Core routes every tab (`/l/<filter>`, `/none`, `/all`, `/subcategories`)
+    # inside `c/*category_slug_path_with_id`, so Rails strips the tail before
+    # `Category.find_by_slug_path_with_id` sees the glob. The id-less form has to
+    # stop there too, or the tab name folds into the slug and names no category.
+    describe "filter tails on the legacy id-less form" do
+      {
+        "/c/support/l/latest" => %w[support /l/latest],
+        "/c/support/l/top/weekly" => %w[support /l/top/weekly],
+        "/c/parent/child/l/hot" => %w[parent:child /l/hot],
+        "/c/support/none" => %w[support /none],
+        "/c/support/all" => %w[support /all],
+        "/c/support/subcategories" => %w[support /subcategories],
+      }.each do |url, (name, suffix)|
+        it "reads #{url} as #{name.inspect} with the tail in the suffix" do
+          link, = link_for("[x](#{url})")
+
+          expect(link).to include(
+            target_type: enums::LinkTarget::CATEGORY,
+            target_id: nil,
+            target_name: name,
+            target_suffix: suffix,
+          )
+        end
+      end
+
+      # Only `/l/<filter>` is a tab; a bare segment that happens to spell a filter
+      # is an ordinary subcategory slug, so it stays part of the path.
+      it "keeps a subcategory slug that merely spells a filter in the path" do
+        link, = link_for("[x](/c/support/latest)")
+
+        expect(link).to include(target_name: "support:latest", target_suffix: nil)
+      end
+
+      # `/c/<slug>/none/<tag-slug>/<tag-id>` is a category+tag intersection. The
+      # trailing number is the tag's id, so the slug path must not run through the
+      # tail and read it as the category's.
+      it "does not read an intersection URL's tag id as the category id" do
+        link, = link_for("[x](/c/support/none/bug/12)")
+
+        expect(link).to include(
+          target_type: enums::LinkTarget::CATEGORY,
+          target_id: nil,
+          target_name: "support",
+          target_suffix: "/none/bug/12",
+        )
+      end
+    end
+
     it "defers a tag link for both `/tag/` and `/tags/`" do
       expect(link_for("[x](/tag/release)").first).to include(
         target_type: enums::LinkTarget::TAG,
