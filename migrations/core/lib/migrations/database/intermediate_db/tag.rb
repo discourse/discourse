@@ -13,47 +13,32 @@ module Migrations
             original_id,
             created_at,
             description,
-            description_cooked,
-            description_cooked_version,
             locale,
             name,
             slug
           )
           VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
 
         # Creates a new `tags` record in the IntermediateDB.
         #
-        # @param original_id                  [Integer, String]
-        # @param created_at                   [Time, nil]
-        # @param description                  [String, nil]
-        # @param description_cooked           [String, nil]
-        # @param description_cooked_version   [Integer, nil]
-        # @param locale                       [String, nil]
-        # @param name                         [String]
-        # @param slug                         [String]
+        # @param original_id   [Integer, String]
+        # @param created_at    [Time, nil]
+        # @param description   [String, nil]
+        # @param locale        [String, nil]
+        # @param name          [String]
+        # @param slug          [String]
         #
         # @return [void]
-        def self.create(
-          original_id:,
-          created_at: nil,
-          description: nil,
-          description_cooked: nil,
-          description_cooked_version: nil,
-          locale: nil,
-          name:,
-          slug:
-        )
+        def self.create(original_id:, created_at: nil, description: nil, locale: nil, name:, slug:)
           Migrations::Database::IntermediateDB.insert(
             SQL,
             original_id,
             Migrations::Database.format_datetime(created_at),
             description,
-            description_cooked,
-            description_cooked_version,
             locale,
             name,
             slug,

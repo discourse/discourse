@@ -338,14 +338,12 @@ CREATE TABLE tag_users
 
 CREATE TABLE tags
 (
-    original_id                NUMERIC  NOT NULL PRIMARY KEY,
-    created_at                 DATETIME,
-    description                TEXT,
-    description_cooked         TEXT,
-    description_cooked_version INTEGER,
-    locale                     TEXT,
-    name                       TEXT     NOT NULL,
-    slug                       TEXT     NOT NULL
+    original_id NUMERIC  NOT NULL PRIMARY KEY,
+    created_at  DATETIME,
+    description TEXT,
+    locale      TEXT,
+    name        TEXT     NOT NULL,
+    slug        TEXT     NOT NULL
 );
 
 
