@@ -3239,6 +3239,49 @@ RSpec.describe TopicsController do
       )
     end
 
+    it "does not expose links from unlisted topics to anonymous viewers" do
+      public_post = Fabricate(:post, user: post_author1)
+      public_topic = public_post.topic
+      public_source_topic = Fabricate(:topic, user: post_author1, title: "Public source topic")
+      public_source_post =
+        Fabricate(
+          :post,
+          topic: public_source_topic,
+          user: post_author1,
+          raw:
+            "#{Discourse.base_url_no_prefix}#{public_topic.relative_url(public_post.post_number)}",
+        )
+      unlisted_source_topic = Fabricate(:topic, user: post_author1, title: "Unlisted source topic")
+      unlisted_source_post =
+        Fabricate(
+          :post,
+          topic: unlisted_source_topic,
+          user: post_author1,
+          raw:
+            "#{Discourse.base_url_no_prefix}#{public_topic.relative_url(public_post.post_number)}",
+        )
+
+      TopicLink.extract_from(public_source_post)
+      TopicLink.extract_from(unlisted_source_post)
+      unlisted_source_topic.update_column(:visible, false)
+
+      get "/t/#{public_topic.slug}/#{public_topic.id}.json"
+
+      expect(response).to have_http_status(:ok)
+      serialized_public_post =
+        response
+          .parsed_body
+          .dig("post_stream", "posts")
+          .find { |post| post["id"] == public_post.id }
+      expect(serialized_public_post["link_counts"]).to contain_exactly(
+        a_hash_including(
+          "url" =>
+            "#{Discourse.base_url_no_prefix}#{public_source_topic.relative_url(public_source_post.post_number)}",
+          "title" => public_source_topic.title,
+        ),
+      )
+    end
+
     it "does not expose hidden post link counts", :aggregate_failures do
       first_post = Fabricate(:post, user: post_author1)
       test_topic = first_post.topic
