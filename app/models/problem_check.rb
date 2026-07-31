@@ -160,6 +160,12 @@ class ProblemCheck
   end
 
   def self.cleanup_trackers
+    # A disabled check never runs, so it can't clear its own trackers/notices.
+    unless enabled?
+      ProblemCheckTracker.where(identifier:).destroy_all
+      return
+    end
+
     current_targets = targets.call
     return if current_targets.empty?
 
