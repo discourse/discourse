@@ -42,9 +42,9 @@ RSpec.shared_context "with raw extractor" do
     )
   end
 
-  let(:link_target) { Migrations::Database::IntermediateDB::Enums::LinkTarget }
-  let(:hashtag_type) { Migrations::Database::IntermediateDB::Enums::HashtagType }
-  let(:mention_type) { Migrations::Database::IntermediateDB::Enums::MentionType }
+  # The intermediate DB enums, referenced through the namespace so a call site
+  # names the enum it means: `enums::MentionType::USER`.
+  let(:enums) { Migrations::Database::IntermediateDB::Enums }
 
   let(:buffer) do
     Migrations::Converters::EmbedBuffer.new(

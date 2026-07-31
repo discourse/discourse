@@ -9,7 +9,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       expect(buffer.mentions.size).to eq(1)
       mention = buffer.mentions.first
-      expect(mention).to include(mention_type: mention_type::USER, name: "alice")
+      expect(mention).to include(mention_type: enums::MentionType::USER, name: "alice")
       expect(result).to eq("hey #{mention[:placeholder]}, welcome")
     end
 
@@ -91,9 +91,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       expect(buffer.mentions.map { |m| [m[:name], m[:mention_type]] }).to eq(
         [
-          ["gerhard", mention_type::USER],
-          ["admins", mention_type::GROUP],
-          ["here", mention_type::HERE],
+          ["gerhard", enums::MentionType::USER],
+          ["admins", enums::MentionType::GROUP],
+          ["here", enums::MentionType::HERE],
         ],
       )
     end

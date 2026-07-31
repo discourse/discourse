@@ -36,7 +36,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
         link, result = link_for(raw)
 
         expect(link).to include(
-          target_type: link_target::SITE,
+          target_type: enums::LinkTarget::SITE,
           target_id: nil,
           target_suffix: "/t/77777777777777777789999/",
         )
@@ -78,7 +78,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       expect(link).to include(
         url: "/t/some-slug/123",
-        target_type: link_target::TOPIC,
+        target_type: enums::LinkTarget::TOPIC,
         target_id: 123,
         target_suffix: nil,
       )
@@ -99,7 +99,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       it "defers a topic link written with #{label}" do
         link, = link_for(raw)
 
-        expect(link).to include(target_type: link_target::TOPIC, target_id: 5)
+        expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
       end
     end
 
@@ -114,20 +114,20 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "defers the id-only topic form" do
       link, = link_for("[x](/t/123)")
 
-      expect(link).to include(target_type: link_target::TOPIC, target_id: 123)
+      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 123)
     end
 
     it "defers the slugless `/t/-/<id>` topic form" do
       link, = link_for("[x](/t/-/77)")
 
-      expect(link).to include(target_type: link_target::TOPIC, target_id: 77)
+      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 77)
     end
 
     it "defers a post link by coordinates, recording no target_id" do
       link, = link_for("[x](/t/some-slug/123/4)")
 
       expect(link).to include(
-        target_type: link_target::POST,
+        target_type: enums::LinkTarget::POST,
         target_id: nil,
         target_topic_id: 123,
         target_post_number: 4,
@@ -138,7 +138,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       link, = link_for("[x](/t/12/3)")
 
       expect(link).to include(
-        target_type: link_target::POST,
+        target_type: enums::LinkTarget::POST,
         target_topic_id: 12,
         target_post_number: 3,
       )
@@ -147,18 +147,22 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "defers a `/p/<id>` post link" do
       link, = link_for("[x](/p/55)")
 
-      expect(link).to include(target_type: link_target::POST, target_id: 55, target_topic_id: nil)
+      expect(link).to include(
+        target_type: enums::LinkTarget::POST,
+        target_id: 55,
+        target_topic_id: nil,
+      )
     end
 
     it "defers a user link by name, for both `/u/` and `/users/`" do
       expect(link_for("[x](/u/bob)").first).to include(
-        target_type: link_target::USER,
+        target_type: enums::LinkTarget::USER,
         target_name: "bob",
       )
 
       buffer.clear
       expect(link_for("[x](/users/alice)").first).to include(
-        target_type: link_target::USER,
+        target_type: enums::LinkTarget::USER,
         target_name: "alice",
       )
     end
@@ -166,13 +170,21 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "defers a category link by id when the path ends in a number" do
       link, = link_for("[x](/c/support/billing/6)")
 
-      expect(link).to include(target_type: link_target::CATEGORY, target_id: 6, target_name: nil)
+      expect(link).to include(
+        target_type: enums::LinkTarget::CATEGORY,
+        target_id: 6,
+        target_name: nil,
+      )
     end
 
     it "defers a category link with no slug at all" do
       link, = link_for("[x](/c/6)")
 
-      expect(link).to include(target_type: link_target::CATEGORY, target_id: 6, target_name: nil)
+      expect(link).to include(
+        target_type: enums::LinkTarget::CATEGORY,
+        target_id: 6,
+        target_name: nil,
+      )
     end
 
     # `/c/<slug>/<id>/l/latest` is what a category's Latest tab links to, so the
@@ -182,7 +194,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       link, = link_for("[x](/c/support/6/l/latest)")
 
       expect(link).to include(
-        target_type: link_target::CATEGORY,
+        target_type: enums::LinkTarget::CATEGORY,
         target_id: 6,
         target_name: nil,
         target_suffix: "/l/latest",
@@ -217,7 +229,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       link, = link_for("[x](/c/support/billing)")
 
       expect(link).to include(
-        target_type: link_target::CATEGORY,
+        target_type: enums::LinkTarget::CATEGORY,
         target_id: nil,
         target_name: "support:billing",
       )
@@ -225,13 +237,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     it "defers a tag link for both `/tag/` and `/tags/`" do
       expect(link_for("[x](/tag/release)").first).to include(
-        target_type: link_target::TAG,
+        target_type: enums::LinkTarget::TAG,
         target_name: "release",
       )
 
       buffer.clear
       expect(link_for("[x](/tags/release)").first).to include(
-        target_type: link_target::TAG,
+        target_type: enums::LinkTarget::TAG,
         target_name: "release",
       )
     end
@@ -246,13 +258,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "defers a group link by name" do
       link, = link_for("[x](/g/team)")
 
-      expect(link).to include(target_type: link_target::GROUP, target_name: "team")
+      expect(link).to include(target_type: enums::LinkTarget::GROUP, target_name: "team")
     end
 
     it "defers a badge link by id" do
       link, = link_for("[x](/badges/9/great)")
 
-      expect(link).to include(target_type: link_target::BADGE, target_id: 9)
+      expect(link).to include(target_type: enums::LinkTarget::BADGE, target_id: 9)
     end
 
     it "recognizes an absolute link on a configured host" do
@@ -260,7 +272,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       expect(link).to include(
         url: "https://forum.example.com/t/slug/99",
-        target_type: link_target::TOPIC,
+        target_type: enums::LinkTarget::TOPIC,
         target_id: 99,
       )
     end
@@ -268,7 +280,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "recognizes a protocol-relative link on a configured host" do
       link, = link_for("//forum.example.com/t/slug/99")
 
-      expect(link).to include(target_type: link_target::TOPIC, target_id: 99)
+      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 99)
     end
 
     # linkify-it reads the scheme case-insensitively, so core links these too;
@@ -279,7 +291,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
         expect(link).to include(
           url: "#{scheme}://forum.example.com/t/slug/99",
-          target_type: link_target::TOPIC,
+          target_type: enums::LinkTarget::TOPIC,
           target_id: 99,
         )
       end
@@ -287,14 +299,14 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       it "recognizes a markdown link with a #{scheme} scheme" do
         link, = link_for("[the topic](#{scheme}://forum.example.com/t/slug/99)")
 
-        expect(link).to include(target_type: link_target::TOPIC, target_id: 99)
+        expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 99)
       end
     end
 
     it "recognizes an uppercase scheme with an uppercase host" do
       link, = link_for("read HTTPS://FORUM.EXAMPLE.COM/t/slug/99 now")
 
-      expect(link).to include(target_type: link_target::TOPIC, target_id: 99)
+      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 99)
     end
 
     it "leaves an absolute link on a foreign host literal" do
@@ -307,7 +319,11 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "captures the link text of a markdown link" do
       link, result = link_for("[the topic](/t/slug/12)")
 
-      expect(link).to include(text: "the topic", target_type: link_target::TOPIC, target_id: 12)
+      expect(link).to include(
+        text: "the topic",
+        target_type: enums::LinkTarget::TOPIC,
+        target_id: 12,
+      )
       expect(result).to eq(link[:placeholder])
     end
 
@@ -359,14 +375,14 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "rewrites an absolute self-host URL inside a prose paren group" do
       link, result = link_for("(https://forum.example.com/t/slug/5)")
 
-      expect(link).to include(target_type: link_target::TOPIC, target_id: 5)
+      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
       expect(result).to eq("(#{link[:placeholder]})")
     end
 
     it "rewrites an absolute self-host bare URL in prose" do
       link, result = link_for("look at https://forum.example.com/t/slug/5 please")
 
-      expect(link).to include(target_type: link_target::TOPIC, target_id: 5)
+      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
       expect(result).to eq("look at #{link[:placeholder]} please")
     end
 
@@ -376,7 +392,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "rewrites a bare URL glued to preceding punctuation" do
       link, result = link_for("see,https://forum.example.com/t/slug/5 ok")
 
-      expect(link).to include(target_type: link_target::TOPIC, target_id: 5)
+      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
       expect(result).to eq("see,#{link[:placeholder]} ok")
     end
 
@@ -386,7 +402,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "rewrites a bare URL glued to a preceding underscore" do
       link, = link_for("x_https://forum.example.com/t/slug/5 ok")
 
-      expect(link).to include(target_type: link_target::TOPIC, target_id: 5)
+      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
     end
 
     # A URL glued right after an ASCII letter isn't linkified by core, and neither
@@ -417,7 +433,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       link = buffer.links.first
       expect(link).to include(
         url: "https://forum.example.com/t/some-topic/5",
-        target_type: link_target::TOPIC,
+        target_type: enums::LinkTarget::TOPIC,
         target_id: 5,
       )
       expect(result).to eq("[#{buffer.uploads.first[:placeholder]}](#{link[:placeholder]})")
@@ -429,7 +445,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       expect(buffer.uploads.first[:upload_id]).to eq(sha1)
       link = buffer.links.first
-      expect(link).to include(url: "/t/slug/5", target_type: link_target::TOPIC, target_id: 5)
+      expect(link).to include(url: "/t/slug/5", target_type: enums::LinkTarget::TOPIC, target_id: 5)
       expect(result).to eq("[#{buffer.uploads.first[:placeholder]}](#{link[:placeholder]})")
     end
 
@@ -567,7 +583,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       expect(link).to include(
         url: "https://forum.example.com/t/slug/5a",
-        target_type: link_target::SITE,
+        target_type: enums::LinkTarget::SITE,
         target_id: nil,
         target_suffix: "/t/slug/5a",
       )
@@ -576,19 +592,19 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "records a real route-less page as a SITE link" do
       link, = link_for("[faq](https://forum.example.com/faq)")
 
-      expect(link).to include(target_type: link_target::SITE, target_suffix: "/faq")
+      expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: "/faq")
     end
 
     it "keeps a query string in a SITE link's suffix" do
       link, = link_for("[search](https://forum.example.com/search?q=cats)")
 
-      expect(link).to include(target_type: link_target::SITE, target_suffix: "/search?q=cats")
+      expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: "/search?q=cats")
     end
 
     it "keeps a fragment in a SITE link's suffix" do
       link, = link_for("[about](https://forum.example.com/about#team)")
 
-      expect(link).to include(target_type: link_target::SITE, target_suffix: "/about#team")
+      expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: "/about#team")
     end
 
     it "leaves a relative route-less URL literal" do
@@ -613,7 +629,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       it "records a bare URL with #{label} as a SITE link" do
         link, = link_for(raw)
 
-        expect(link).to include(target_type: link_target::SITE, target_suffix: suffix)
+        expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: suffix)
       end
     end
 
@@ -632,7 +648,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       it "records #{label} as a SITE link" do
         link, = link_for(raw)
 
-        expect(link).to include(target_type: link_target::SITE, target_suffix: suffix)
+        expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: suffix)
       end
     end
 
@@ -690,14 +706,18 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "detects a subfolder absolute link, stripping the prefix before the route" do
       link, = link_for("[x](https://www.example.com/forum/t/slug/5)")
 
-      expect(link).to include(target_type: link_target::TOPIC, target_id: 5, target_suffix: nil)
+      expect(link).to include(
+        target_type: enums::LinkTarget::TOPIC,
+        target_id: 5,
+        target_suffix: nil,
+      )
     end
 
     # The prefix is what belongs to the forum, so `/forum` is the front page here.
     it "records the prefix itself as the front page" do
       link, = link_for("https://www.example.com/forum")
 
-      expect(link).to include(target_type: link_target::SITE, target_suffix: nil)
+      expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: nil)
     end
 
     # The host's own root is somebody else's app, not the forum, so rewriting its
@@ -712,19 +732,19 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "detects a subfolder absolute bare URL in prose" do
       link, = link_for("look https://www.example.com/forum/t/slug/5 now")
 
-      expect(link).to include(target_type: link_target::TOPIC, target_id: 5)
+      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
     end
 
     it "detects a relative link carrying the base prefix" do
       link, = link_for("[x](/forum/t/slug/5)")
 
-      expect(link).to include(target_type: link_target::TOPIC, target_id: 5)
+      expect(link).to include(target_type: enums::LinkTarget::TOPIC, target_id: 5)
     end
 
     it "records a route-less path inside the prefix as a SITE link with the rest" do
       link, = link_for("[faq](https://www.example.com/forum/faq)")
 
-      expect(link).to include(target_type: link_target::SITE, target_suffix: "/faq")
+      expect(link).to include(target_type: enums::LinkTarget::SITE, target_suffix: "/faq")
     end
 
     it "leaves a sibling app's path on the same host literal" do

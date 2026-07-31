@@ -22,7 +22,10 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "records a forced ::tag suffix as the tag type, dropping the suffix from the name" do
       extract("tagged #release::tag today")
 
-      expect(buffer.hashtags.first).to include(name: "release", hashtag_type: hashtag_type::TAG)
+      expect(buffer.hashtags.first).to include(
+        name: "release",
+        hashtag_type: enums::HashtagType::TAG,
+      )
     end
 
     it "records a forced ::category suffix case-insensitively" do
@@ -30,7 +33,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       expect(buffer.hashtags.first).to include(
         name: "Support",
-        hashtag_type: hashtag_type::CATEGORY,
+        hashtag_type: enums::HashtagType::CATEGORY,
       )
     end
 
@@ -149,7 +152,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       expect(buffer.hashtags.first).to include(
         name: "announcements",
-        hashtag_type: hashtag_type::CATEGORY,
+        hashtag_type: enums::HashtagType::CATEGORY,
       )
     end
 
