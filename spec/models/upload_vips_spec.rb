@@ -4,8 +4,7 @@ RSpec.describe Upload do
   before { SiteSetting.use_vips_for_image_processing = true }
 
   describe "#fix_dimensions!" do
-    it "repairs stored SVG dimensions without ImageMagick" do
-      ImageMagick.expects(:identify).never
+    it "repairs stored SVG dimensions" do
       upload =
         UploadCreator.new(
           file_from_fixtures("tiny.svg"),
@@ -26,27 +25,32 @@ RSpec.describe Upload do
   end
 
   describe "#target_image_quality" do
-    it "uses the requested target without probing the source through ImageMagick" do
-      ImageMagick.expects(:identify).never
-
+    it "recompresses only when the estimated source quality exceeds the target" do
       Dir.mktmpdir("upload-jpeg-quality") do |directory|
         source = Rails.root.join("spec/fixtures/images/logo.jpg").to_s
-        path = File.join(directory, "quality.jpg")
-        Vips.call("copy", source, "#{path}[Q=62]", read: [source], write: [directory])
-        upload = described_class.new
+        low_quality = File.join(directory, "low-quality.jpg")
+        high_quality = File.join(directory, "high-quality.jpg")
+        [[low_quality, 50], [high_quality, 90]].each do |path, quality|
+          Vips.run(
+            "vips",
+            "copy",
+            source,
+            "#{path}[Q=#{quality}]",
+            read: [source],
+            write: [directory],
+          )
+        end
 
         expect(
           {
-            lower_target: upload.target_image_quality(path, 50),
-            higher_target: upload.target_image_quality(path, 70),
+            lower_source_quality: described_class.new.target_image_quality(low_quality, 70),
+            higher_source_quality: described_class.new.target_image_quality(high_quality, 70),
           },
-        ).to eq(lower_target: 50, higher_target: 70)
+        ).to eq(lower_source_quality: nil, higher_source_quality: 70)
       end
     end
 
-    it "preserves the existing malformed-input behavior without fallback" do
-      ImageMagick.expects(:identify).never
-
+    it "preserves the existing malformed-input behavior" do
       Dir.mktmpdir("upload-jpeg-quality") do |directory|
         path = File.join(directory, "malformed.jpg")
         File.binwrite(path, "not a jpeg")

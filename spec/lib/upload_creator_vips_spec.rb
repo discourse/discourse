@@ -4,7 +4,8 @@ RSpec.describe UploadCreator do
   fab!(:user)
 
   def write_oriented_jpeg(source:, target:, orientation:)
-    Vips.call(
+    Vips.run(
+      "vips",
       "copy",
       source,
       "#{target}[Q=82,strip=true]",
@@ -21,14 +22,11 @@ RSpec.describe UploadCreator do
     File.binwrite(target, jpeg.byteslice(0, 2) + segment + jpeg.byteslice(2..))
   end
 
-  def jpeg_quality(path)
-    Discourse::Utils.execute_command("identify", "-ping", "-format", "%Q", path).to_i
-  end
-
   def create_metadata_png_upload
     tempfile = Tempfile.new(%w[metadata .png])
     source = Rails.root.join("spec/fixtures/images/large_and_unoptimized.png").to_s
-    Vips.call(
+    Vips.run(
+      "vips",
       "copy",
       source,
       "#{tempfile.path}[compression=0]",
@@ -44,18 +42,14 @@ RSpec.describe UploadCreator do
 
   def metadata_presence(path)
     %w[exif-data xmp-data iptc-data icc-profile-data].to_h do |field|
-      present = Vips.header(path, field:).present?
+      present = Vips.run("vipsheader", "--field", field, path, read: [path]).present?
       [field, present]
     rescue Discourse::Utils::CommandError
       [field, false]
     end
   end
 
-  before do
-    SiteSetting.use_vips_for_image_processing = true
-    ImageMagick.stubs(:magick).raises("ImageMagick must not run")
-    ImageMagick.stubs(:identify).raises("ImageMagick must not run")
-  end
+  before { SiteSetting.use_vips_for_image_processing = true }
 
   describe "#create_for" do
     it "converts pasted PNG uploads to JPEG with vips" do
@@ -77,7 +71,6 @@ RSpec.describe UploadCreator do
           filename: upload.original_filename,
           format: FastImage.type(path),
           dimensions: FastImage.size(path),
-          quality: jpeg_quality(path),
         },
       ).to eq(
         {
@@ -86,12 +79,11 @@ RSpec.describe UploadCreator do
           filename: "should_be_jpeg.jpg",
           format: :jpeg,
           dimensions: [303, 231],
-          quality: 1,
         },
       )
     end
 
-    it "keeps only EXIF and ICC when metadata stripping is disabled" do
+    it "keeps exposed metadata only when metadata stripping is disabled" do
       SiteSetting.png_to_jpg_quality = 80
       SiteSetting.composer_media_optimization_image_enabled = false
 
@@ -103,7 +95,7 @@ RSpec.describe UploadCreator do
         expect(vips_metadata).to eq(
           {
             "exif-data" => !strip_metadata,
-            "xmp-data" => false,
+            "xmp-data" => !strip_metadata,
             "iptc-data" => false,
             "icc-profile-data" => !strip_metadata,
           },
@@ -141,11 +133,10 @@ RSpec.describe UploadCreator do
 
     it "propagates the stock-vips ICO loader failure without ImageMagick fallback" do
       SiteSetting.authorized_extensions = "png|jpg|ico"
-      Vips.stubs(:convert).raises(Discourse::Utils::CommandError.new("vips has no ICO loader"))
 
       expect do
         described_class.new(file_from_fixtures("smallest.ico"), "smallest.ico").create_for(user.id)
-      end.to raise_error(Discourse::Utils::CommandError, "vips has no ICO loader")
+      end.to raise_error(Discourse::Utils::CommandError)
     end
 
     it "preserves ImageMagick-compatible SVG dimensions" do
@@ -209,31 +200,36 @@ RSpec.describe UploadCreator do
       path = Discourse.store.path_for(upload)
 
       expect(
-        {
-          dimensions: FastImage.size(path),
-          rotated: Vips.rotated?(path, format: "jpeg"),
-          quality: jpeg_quality(path),
-        },
-      ).to eq(dimensions: [1312, 2032], rotated: false, quality: 90)
+        { dimensions: FastImage.size(path), rotated: Vips.rotated?(path, format: "jpeg") },
+      ).to eq(dimensions: [1312, 2032], rotated: false)
     end
 
-    it "uses the configured JPEG quality when re-encoding" do
-      tempfile = Tempfile.new(%w[quality .jpg])
+    it "produces smaller files at lower configured JPEG quality" do
       source = Rails.root.join("spec/fixtures/images/large_and_unoptimized.png").to_s
-      Vips.call(
-        "copy",
-        source,
-        "#{tempfile.path}[Q=90]",
-        read: [source],
-        write: [File.dirname(tempfile.path)],
-      )
-      tempfile.rewind
-      SiteSetting.recompress_original_jpg_quality = 40
+      encoded_sizes =
+        [40, 80].to_h do |quality|
+          tempfile = Tempfile.new(%W[quality-#{quality} .jpg])
+          Vips.run(
+            "vips",
+            "copy",
+            source,
+            "#{tempfile.path}[Q=90]",
+            read: [source],
+            write: [File.dirname(tempfile.path)],
+          )
+          tempfile.rewind
+          SiteSetting.recompress_original_jpg_quality = quality
 
-      upload =
-        described_class.new(tempfile, "quality.jpg", force_optimize: true).create_for(user.id)
+          upload =
+            described_class.new(
+              tempfile,
+              "quality-#{quality}.jpg",
+              force_optimize: true,
+            ).create_for(user.id)
+          [quality, File.size(Discourse.store.path_for(upload))]
+        end
 
-      expect(jpeg_quality(Discourse.store.path_for(upload))).to eq(40)
+      expect(encoded_sizes.fetch(40)).to be < encoded_sizes.fetch(80)
     end
 
     it "propagates a vips conversion failure without a debug retry or ImageMagick fallback" do

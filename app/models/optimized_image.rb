@@ -343,7 +343,6 @@ class OptimizedImage < ActiveRecord::Base
     if SiteSetting.use_vips_for_image_processing
       source_format = image_format!(path: from, ext_path: to, opts:)
       target_format = image_format!(path: to, ext_path: to, opts:)
-      instructions = ["vips", operation, from, to, dimensions]
       Vips.public_send(
         operation,
         from:,

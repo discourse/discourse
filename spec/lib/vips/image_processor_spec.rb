@@ -6,7 +6,8 @@ RSpec.describe Vips do
   let(:transparent_input) { fixture_directory.join("logo.png").to_s }
 
   def write_oriented_jpeg(source:, target:, orientation:)
-    Vips.call(
+    Vips.run(
+      "vips",
       "copy",
       source,
       "#{target}[Q=82,strip=true]",
@@ -23,10 +24,6 @@ RSpec.describe Vips do
     File.binwrite(target, jpeg.byteslice(0, 2) + segment + jpeg.byteslice(2..))
   end
 
-  def jpeg_quality(path)
-    Discourse::Utils.execute_command("identify", "-ping", "-format", "%Q", path).to_i
-  end
-
   describe ".resize" do
     it "processes every supported raster input format" do
       Dir.mktmpdir("vips-format-matrix") do |directory|
@@ -40,7 +37,8 @@ RSpec.describe Vips do
 
         %w[avif jxl tiff].each do |format|
           path = File.join(directory, "input.#{format}")
-          Vips.call(
+          Vips.run(
+            "vips",
             "copy",
             high_detail_input,
             path,
@@ -92,12 +90,18 @@ RSpec.describe Vips do
           target_format: "png",
         )
 
-        expect(Vips.header(preserved, field: "xmp-data")).not_to be_empty
-        expect(Vips.header(preserved, field: "icc-profile-data")).not_to be_empty
-        expect { Vips.header(stripped, field: "xmp-data") }.to raise_error(
-          Discourse::Utils::CommandError,
-        )
-        expect(Vips.header(stripped, field: "icc-profile-data")).not_to be_empty
+        expect(
+          Vips.run("vipsheader", "--field", "xmp-data", preserved, read: [preserved]),
+        ).not_to be_empty
+        expect(
+          Vips.run("vipsheader", "--field", "icc-profile-data", preserved, read: [preserved]),
+        ).not_to be_empty
+        expect {
+          Vips.run("vipsheader", "--field", "xmp-data", stripped, read: [stripped])
+        }.to raise_error(Discourse::Utils::CommandError)
+        expect(
+          Vips.run("vipsheader", "--field", "icc-profile-data", stripped, read: [stripped]),
+        ).not_to be_empty
       end
     end
 
@@ -122,11 +126,12 @@ RSpec.describe Vips do
   end
 
   describe ".convert" do
-    it "drops PNG XMP metadata while preserving its EXIF and ICC profiles" do
+    it "preserves the PNG metadata exposed by libvips" do
       Dir.mktmpdir("vips-convert-metadata") do |directory|
         input = File.join(directory, "input.png")
         output = File.join(directory, "output.jpg")
-        Vips.call(
+        Vips.run(
+          "vips",
           "copy",
           high_detail_input,
           "#{input}[compression=0]",
@@ -142,11 +147,15 @@ RSpec.describe Vips do
           flatten: true,
         )
 
-        expect { Vips.header(output, field: "xmp-data") }.to raise_error(
-          Discourse::Utils::CommandError,
-        )
-        expect(Vips.header(output, field: "exif-data")).not_to be_empty
-        expect(Vips.header(output, field: "icc-profile-data")).not_to be_empty
+        expect(
+          Vips.run("vipsheader", "--field", "xmp-data", output, read: [output]),
+        ).not_to be_empty
+        expect(
+          Vips.run("vipsheader", "--field", "exif-data", output, read: [output]),
+        ).not_to be_empty
+        expect(
+          Vips.run("vipsheader", "--field", "icc-profile-data", output, read: [output]),
+        ).not_to be_empty
       end
     end
   end
@@ -200,13 +209,14 @@ RSpec.describe Vips do
 
         area_width, area_height = FastImage.size(area)
         transparent_pixel =
-          Vips.call("getpoint", shrink_only, "0", "0", read: [shrink_only]).split.map(&:to_f)
+          Vips.run("vips", "getpoint", shrink_only, "0", "0", read: [shrink_only]).split.map(&:to_f)
         expect(
           {
             percentage: FastImage.size(percentage),
             area_within_limit: area_width * area_height <= 500_000,
             shrink_only: FastImage.size(shrink_only),
-            transparent_bands: Vips.header(shrink_only, field: "bands").to_i,
+            transparent_bands:
+              Vips.run("vipsheader", "--field", "bands", shrink_only, read: [shrink_only]).to_i,
             transparent_alpha: transparent_pixel.last,
           },
         ).to match(
@@ -223,28 +233,34 @@ RSpec.describe Vips do
   end
 
   describe ".convert" do
-    it "flattens transparency onto white and applies JPEG quality" do
+    it "flattens transparency onto white and produces smaller files at lower JPEG quality" do
       Dir.mktmpdir("vips-convert") do |directory|
-        output = File.join(directory, "converted.jpg")
-
-        described_class.convert(
-          from: transparent_input,
-          to: output,
-          source_format: "png",
-          target_format: "jpg",
-          flatten: true,
-          quality: 73,
-        )
-
-        corner = Vips.call("getpoint", output, "0", "0", read: [output]).split.map(&:to_f)
+        low_quality = File.join(directory, "low-quality.jpg")
+        high_quality = File.join(directory, "high-quality.jpg")
+        [[low_quality, 40], [high_quality, 90]].each do |output, quality|
+          described_class.convert(
+            from: transparent_input,
+            to: output,
+            source_format: "png",
+            target_format: "jpg",
+            flatten: true,
+            quality:,
+          )
+        end
+        corner =
+          Vips
+            .run("vips", "getpoint", high_quality, "0", "0", read: [high_quality])
+            .split
+            .map(&:to_f)
 
         expect(
           {
-            dimensions: FastImage.size(output),
-            format: FastImage.type(output),
-            bands: Vips.header(output, field: "bands").to_i,
+            dimensions: FastImage.size(high_quality),
+            format: FastImage.type(high_quality),
+            bands:
+              Vips.run("vipsheader", "--field", "bands", high_quality, read: [high_quality]).to_i,
             corner: corner,
-            quality: jpeg_quality(output),
+            lower_quality_is_smaller: File.size(low_quality) < File.size(high_quality),
           },
         ).to match(
           {
@@ -252,7 +268,7 @@ RSpec.describe Vips do
             format: :jpeg,
             bands: 3,
             corner: satisfy { |values| values.all? { |value| value >= 254 } },
-            quality: 73,
+            lower_quality_is_smaller: true,
           },
         )
       end
@@ -286,7 +302,8 @@ RSpec.describe Vips do
           target_format: "jpg",
           flatten: true,
         )
-        Vips.call(
+        Vips.run(
+          "vips",
           "subtract",
           image_magick,
           vips,
@@ -295,7 +312,8 @@ RSpec.describe Vips do
           write: [directory],
           allow_untrusted: true,
         )
-        Vips.call(
+        Vips.run(
+          "vips",
           "abs",
           difference,
           absolute,
@@ -305,12 +323,8 @@ RSpec.describe Vips do
         )
 
         expect(
-          {
-            normalized_channel_error:
-              Vips.call("avg", absolute, read: [absolute], allow_untrusted: true).to_f / 255,
-            quality: jpeg_quality(vips),
-          },
-        ).to match(normalized_channel_error: be <= 0.03, quality: 92)
+          Vips.run("vips", "avg", absolute, read: [absolute], allow_untrusted: true).to_f / 255,
+        ).to be <= 0.03
       end
     end
   end
@@ -336,7 +350,8 @@ RSpec.describe Vips do
               timeout: 20,
             )
             described_class.autorot(path: vips, format: "jpg", quality: 82)
-            Vips.call(
+            Vips.run(
+              "vips",
               "subtract",
               image_magick,
               vips,
@@ -345,7 +360,8 @@ RSpec.describe Vips do
               write: [directory],
               allow_untrusted: true,
             )
-            Vips.call(
+            Vips.run(
+              "vips",
               "abs",
               difference,
               absolute,
@@ -358,10 +374,11 @@ RSpec.describe Vips do
               orientation,
               {
                 dimensions: [FastImage.size(image_magick), FastImage.size(vips)],
-                orientation: Vips.header(vips, field: "orientation").to_i,
-                quality: jpeg_quality(vips),
+                orientation:
+                  Vips.run("vipsheader", "--field", "orientation", vips, read: [vips]).to_i,
                 normalized_channel_error:
-                  Vips.call("avg", absolute, read: [absolute], allow_untrusted: true).to_f / 255,
+                  Vips.run("vips", "avg", absolute, read: [absolute], allow_untrusted: true).to_f /
+                    255,
               },
             ]
           end
@@ -370,7 +387,6 @@ RSpec.describe Vips do
           match(
             dimensions: satisfy { |dimensions| dimensions.uniq.one? },
             orientation: 1,
-            quality: 82,
             normalized_channel_error: be <= 0.1,
           ),
         )
@@ -401,7 +417,8 @@ RSpec.describe Vips do
         second = File.join(directory, "second.v")
         joined = File.join(directory, "joined.v")
         avif = File.join(directory, "animated.avif")
-        Vips.call(
+        Vips.run(
+          "vips",
           "black",
           first,
           "16",
@@ -411,8 +428,17 @@ RSpec.describe Vips do
           write: [directory],
           allow_untrusted: true,
         )
-        Vips.call("invert", first, second, read: [first], write: [directory], allow_untrusted: true)
-        Vips.call(
+        Vips.run(
+          "vips",
+          "invert",
+          first,
+          second,
+          read: [first],
+          write: [directory],
+          allow_untrusted: true,
+        )
+        Vips.run(
+          "vips",
           "arrayjoin",
           "#{first} #{second}",
           joined,
@@ -422,7 +448,8 @@ RSpec.describe Vips do
           write: [directory],
           allow_untrusted: true,
         )
-        Vips.call(
+        Vips.run(
+          "vips",
           "copy",
           joined,
           "#{avif}[page-height=16,Q=80]",

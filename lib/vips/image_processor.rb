@@ -18,7 +18,8 @@ class Vips
     width, height = parse_box(dimensions)
 
     with_output(to, target_format:) do |output|
-      Vips.call(
+      Vips.run(
+        "vips",
         "thumbnail",
         from,
         output_argument(
@@ -57,7 +58,8 @@ class Vips
     Dir.mktmpdir("vips-crop") do |directory|
       intermediate = File.join(directory, "cover.v")
 
-      Vips.call(
+      Vips.run(
+        "vips",
         "thumbnail",
         from,
         intermediate,
@@ -76,7 +78,8 @@ class Vips
       )
 
       with_output(to, target_format:) do |output|
-        Vips.call(
+        Vips.run(
+          "vips",
           "gravity",
           intermediate,
           output_argument(
@@ -116,7 +119,8 @@ class Vips
     width, height, size = downsize_box(path: from, geometry: dimensions, source_format:)
 
     with_output(to, target_format:) do |output|
-      Vips.call(
+      Vips.run(
+        "vips",
         "thumbnail",
         from,
         output_argument(
@@ -153,10 +157,10 @@ class Vips
     failure_message: ""
   )
     quality ||= DEFAULT_JPEG_QUALITY if %w[jpeg jpg].include?(target_format.to_s.downcase)
-    keep = "exif:icc" if source_format.to_s.casecmp?("png")
 
     with_output(to, target_format:) do |output|
-      Vips.call(
+      Vips.run(
+        "vips",
         "autorot",
         from,
         output_argument(
@@ -164,7 +168,6 @@ class Vips
           format: target_format,
           quality:,
           strip: false,
-          keep:,
           background: flatten ? 255 : nil,
         ),
         read: [from],
@@ -178,7 +181,8 @@ class Vips
 
   def self.autorot(path:, format:, quality: nil, timeout: MAX_PROCESS_SECONDS)
     with_output(path, target_format: format) do |output|
-      Vips.call(
+      Vips.run(
+        "vips",
         "autorot",
         path,
         output_argument(output, format:, quality:, strip: false),
@@ -197,12 +201,20 @@ class Vips
     else
       allow_untrusted = untrusted_format?(format)
       width, height =
-        headers(
-          path,
-          fields: %w[width height],
-          timeout: Upload::MAX_IDENTIFY_SECONDS,
-          allow_untrusted:,
-        ).map(&:to_i)
+        Vips
+          .run(
+            "vipsheader",
+            "--field",
+            "width",
+            "--field",
+            "height",
+            path,
+            read: [path],
+            timeout: Upload::MAX_IDENTIFY_SECONDS,
+            allow_untrusted:,
+          )
+          .lines(chomp: true)
+          .map(&:to_i)
     end
 
     if auto_orient && rotated?(path, format:)
@@ -214,9 +226,12 @@ class Vips
 
   def self.frame_count(path, format: nil)
     format ||= File.extname(path).delete_prefix(".")
-    Vips.header(
+    Vips.run(
+      "vipsheader",
+      "--field",
+      "n-pages",
       path,
-      field: "n-pages",
+      read: [path],
       timeout: Upload::MAX_IDENTIFY_SECONDS,
       allow_untrusted: untrusted_format?(format),
     ).to_i
@@ -227,9 +242,12 @@ class Vips
   def self.rotated?(path, format: nil)
     format ||= File.extname(path).delete_prefix(".")
     orientation =
-      Vips.header(
+      Vips.run(
+        "vipsheader",
+        "--field",
+        "orientation",
         path,
-        field: "orientation",
+        read: [path],
         timeout: Upload::MAX_IDENTIFY_SECONDS,
         allow_untrusted: untrusted_format?(format),
       ).to_i
@@ -253,12 +271,20 @@ class Vips
   end
 
   def self.svg_headers(path)
-    headers(
-      path,
-      fields: %w[width height],
-      timeout: Upload::MAX_IDENTIFY_SECONDS,
-      allow_untrusted: true,
-    ).map(&:to_i)
+    Vips
+      .run(
+        "vipsheader",
+        "--field",
+        "width",
+        "--field",
+        "height",
+        path,
+        read: [path],
+        timeout: Upload::MAX_IDENTIFY_SECONDS,
+        allow_untrusted: true,
+      )
+      .lines(chomp: true)
+      .map(&:to_i)
   rescue Discourse::Utils::CommandError
     [0, 0]
   end
@@ -330,14 +356,12 @@ class Vips
     quality: nil,
     colors: nil,
     strip:,
-    keep: nil,
     profile: nil,
     background: nil
   )
     format = format.to_s.downcase
     options = []
     options << "strip=true" if strip
-    options << "keep=#{keep}" if keep
     options << "profile=#{profile}" if profile
     options << "Q=#{quality}" if quality && %w[avif heic heif jpeg jpg jxl webp].include?(format)
     options << "background=#{background}" if background && %w[jpeg jpg].include?(format)
