@@ -304,7 +304,7 @@ class ApplicationController < ActionController::Base
 
       # there are some cases where we have a permalink but no url
       # cause category / topic was deleted
-      if permalink.present? && permalink.target_url
+      if permalink.present? && guardian.can_see_permalink_target?(permalink) && permalink.target_url
         # permalink present, redirect to that URL
         redirect_with_client_support permalink.target_url,
                                      status: :moved_permanently,
@@ -590,7 +590,7 @@ class ApplicationController < ActionController::Base
 
   def handle_permalink(path)
     permalink = Permalink.find_by_url(path)
-    if permalink && permalink.target_url
+    if permalink && guardian.can_see_permalink_target?(permalink) && permalink.target_url
       redirect_to permalink.target_url, status: :moved_permanently
     end
   end
