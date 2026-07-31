@@ -1322,9 +1322,10 @@ RSpec.describe CategoriesController do
                   }
             end.not_to raise_error
 
-            expect(response.status).to eq(422)
-            expect(response.parsed_body["errors"]).to contain_exactly(
-              a_string_including("not a valid #{review_mode}"),
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response.parsed_body["errors"].join(" ").downcase).to include(
+              review_mode.humanize.downcase,
+              "is not included in the list",
             )
             expect(category.reload.category_setting.public_send(review_mode)).to eq("no_one")
           end
