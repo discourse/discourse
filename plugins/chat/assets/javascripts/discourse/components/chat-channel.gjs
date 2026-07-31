@@ -832,6 +832,7 @@ export default class ChatChannel extends Component {
             (not @channel.isDirectMessageChannel)
             @channel.canModerate
           }}
+          @channel={{@channel}}
           @pane={{this.pane}}
           @messagesManager={{this.messagesManager}}
         />
