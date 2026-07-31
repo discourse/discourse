@@ -97,14 +97,15 @@ class ApplicationController < ActionController::Base
     response.cache_control[:extras] = ["immutable"]
   end
 
+  def bfcache_compatibility_mode?
+    SiteSetting.cache_control_bfcache_compatibility
+  end
+  helper_method :bfcache_compatibility_mode?
+
   def dont_cache_page
     if !response.headers["Cache-Control"] && response.cache_control.blank?
-      if SiteSetting.cache_control_bfcache_compatibility
-        response.cache_control[:no_cache] = true
-      else
-        response.cache_control[:no_cache] = true
-        response.cache_control[:extras] = ["no-store"]
-      end
+      response.cache_control[:no_cache] = true
+      response.cache_control[:extras] = [bfcache_compatibility_mode? ? "private" : "no-store"]
     end
     response.headers["Discourse-No-Onebox"] = "1" if SiteSetting.login_required
   end
