@@ -171,10 +171,6 @@ module DiscourseWorkflows
         def post_data(post)
           serialize_post(post)
         end
-
-        def topic_data(topic)
-          serialize_record(topic, TopicListItemSerializer)
-        end
       end
     end
   end

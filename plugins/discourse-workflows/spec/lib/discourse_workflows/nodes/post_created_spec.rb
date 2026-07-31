@@ -82,6 +82,7 @@ RSpec.describe DiscourseWorkflows::Nodes::PostCreated::V1 do
       expect(output[:topic][:title]).to eq(topic.title)
       expect(output[:topic][:tags].map { |topic_tag| topic_tag[:name] }).to eq(["test-tag"])
       expect(output[:topic][:category_id]).to eq(topic.category_id)
+      expect(output[:topic][:user_id]).to eq(topic.user_id)
       expect(output[:topic][:archetype]).to eq(topic.archetype)
       expect(output).to match_node_output_schema(described_class)
     end
