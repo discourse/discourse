@@ -15,6 +15,13 @@ module DiscourseUserNotes
     end
 
     def create
+      raw = params[:user_note][:raw]
+      if raw.to_s.length > SiteSetting.max_post_length
+        return(
+          render_json_error(I18n.t("user_notes.note_too_long", max: SiteSetting.max_post_length))
+        )
+      end
+
       user = User.where(id: params[:user_note][:user_id]).first
       raise Discourse::NotFound if user.blank?
       extras = {}
@@ -26,8 +33,7 @@ module DiscourseUserNotes
         extras[:reviewable_id] = reviewable_id
       end
 
-      user_note =
-        DiscourseUserNotes.add_note(user, params[:user_note][:raw], current_user.id, extras)
+      user_note = DiscourseUserNotes.add_note(user, raw, current_user.id, extras)
 
       render json: create_json(user_note)
     end
