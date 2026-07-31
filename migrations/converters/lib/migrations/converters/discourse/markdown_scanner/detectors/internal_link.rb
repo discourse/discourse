@@ -16,6 +16,13 @@ module Migrations
           # An image `![](…)` is not our concern, and a raw HTML `<a>` is out of scope
           # (as with the upload detector), so neither is matched.
           #
+          # `/filter?q=…` is out of scope too, and deliberately so: it names its
+          # categories and tags inside the query string rather than in the path
+          # (`list#filter`, `config/routes.rb`), so rewriting one means parsing and
+          # rebuilding a query language rather than a route. A link to an ad-hoc
+          # filter survives as a link to the source, which is the same thing that
+          # happens to any URL we don't recognize.
+          #
           # An absolute URL qualifies when its host is one the caller allowlisted (the
           # source's base URL and any former domains); the host match is
           # scheme-insensitive, so `http://`, `https://` and protocol-relative `//host`
