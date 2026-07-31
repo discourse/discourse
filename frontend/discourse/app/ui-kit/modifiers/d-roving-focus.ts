@@ -1,6 +1,7 @@
 import { registerDestructor } from "@ember/destroyable";
 import { guidFor } from "@ember/object/internals";
 import type Owner from "@ember/owner";
+import { cancel, next as nextRunloop } from "@ember/runloop";
 import Modifier, { type ArgsFor } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
 
@@ -26,6 +27,17 @@ export interface DRovingFocusApi {
    * {@link focusIndex}.
    */
   focusLogicalIndex(index: number): boolean;
+  /**
+   * Active mode only — makes assistive tech read the active item again without moving the
+   * cursor, by dropping `aria-activedescendant` and restoring it a tick later. Re-asserting
+   * the same value is a no-op, so a change is the only thing that can be observed.
+   *
+   * For when the item itself is unchanged but what it says about its context is not: a row
+   * whose `aria-setsize` moved from 2 to 1 under a stationary cursor reports a different
+   * position in a different set, and nothing re-reads it. Returns `false` when there is no
+   * cursor to re-read.
+   */
+  reannounceActive(): boolean;
 }
 
 interface DRovingFocusArgs {
@@ -186,6 +198,9 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   /** Armed only while a seed is owed to a container that had no items yet. */
   #pendingSeed: MutationObserver | null = null;
 
+  /** Pending restore of a dropped `aria-activedescendant` — see `reannounceActive`. */
+  #reannounceTimer?: ReturnType<typeof nextRunloop>;
+
   // The last `resetKey` seen. The sentinel is a fresh object so the first `modify()` always
   // counts as a change — harmless, since there is no cursor yet to preserve, and it keeps the
   // "unset" case from colliding with a consumer that legitimately passes `undefined`.
@@ -248,6 +263,30 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
         return this.#api.focusIndex(index);
       }
       return false;
+    },
+    reannounceActive: () => {
+      const id = this.#activeId;
+      const listenElement = this.#listenElement;
+      if (this.#mode !== "active" || !id || !listenElement) {
+        return false;
+      }
+      // The item has to still be there. A cursor id outlives its row — a re-render can drop every
+      // item before this is reconciled — and dropping the attribute for a row that no longer
+      // exists reads as success to the caller while reading nothing to anyone.
+      if (!this.#items().some((el) => el.id === id)) {
+        return false;
+      }
+
+      listenElement.removeAttribute("aria-activedescendant");
+      this.#reannounceTimer = nextRunloop(() => {
+        this.#reannounceTimer = undefined;
+        // A real cursor move in the meantime has already pointed the attribute somewhere, and
+        // restoring the old id would drag the reader back.
+        if (this.#activeId === id && this.#items().some((el) => el.id === id)) {
+          listenElement.setAttribute("aria-activedescendant", id);
+        }
+      });
+      return true;
     },
   };
 
@@ -938,6 +977,10 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
 
   cleanup(): void {
     this.#disarmPendingSeed();
+    if (this.#reannounceTimer) {
+      cancel(this.#reannounceTimer);
+      this.#reannounceTimer = undefined;
+    }
     this.#listenElement?.removeEventListener("keydown", this.handleKeydown);
     this.#pointerElement?.removeEventListener(
       "mousedown",

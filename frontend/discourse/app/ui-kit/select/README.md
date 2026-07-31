@@ -134,9 +134,10 @@ by mechanism.
 - **Server-side grouping** — `@groupBy` covers client sources; a group that spans fetched pages
   is deferred (a paginating source ignores `@groupBy`).
 - **Nested `role="group"` grouping semantics** — the APG-sanctioned optgroup structure (a
-  `role="group"` + `aria-labelledby` wrapping each group's options, kept even under virtualization
-  the way react-aria does). Requires the windowing primitive to position nested group containers;
-  the current flat list uses the `aria-describedby` fallback instead.
+  `role="group"` + `aria-labelledby` wrapping each group's options, kept even under virtualization,
+  which is what a windowed listbox has to preserve for the structure to mean anything). Requires
+  the windowing primitive to position nested group containers; the current flat list uses the
+  `aria-describedby` fallback instead.
 - **Dividers** — the structural divider row-kind exists in the descriptor seam (excluded from
   selection, navigation, and ARIA position), but `@groupBy` does not emit dividers and no public
   arg produces one yet; it is groundwork for the panel-region work below.

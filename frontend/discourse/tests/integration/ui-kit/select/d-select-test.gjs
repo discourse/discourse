@@ -792,6 +792,158 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
     );
   });
 
+  // The same collision as opening, at the other trigger: a query change re-seeds the cursor (the
+  // roving modifier resets on the resolved filter), so the new first match announces itself with
+  // its own position while the count describes the same set. The reader heard "2 results" and
+  // never heard the match, then arrowed onto the second row wondering where the first went.
+  test("narrowing does not announce a count when it moves the cursor", async function (assert) {
+    const announce = sinon.spy(
+      getOwner(this).lookup("service:a11y"),
+      "announce"
+    );
+
+    await render(<template><Host /></template>);
+    await click("[role='combobox']");
+    announce.resetHistory();
+
+    await fillIn("[role='combobox']", "an");
+
+    assert
+      .dom("[role='option'].--active")
+      .hasText("Banana", "the match is the cursor's new home")
+      .hasAttribute("aria-posinset", "1")
+      .hasAttribute("aria-setsize", "1", "and it carries the set size itself");
+    assert.strictEqual(
+      announce.withArgs(sinon.match(/result/), "polite").callCount,
+      0,
+      "the row describes the narrowed set, so no count is announced over it"
+    );
+  });
+
+  // Between the two cases above sits the one that needs neither answer. Narrowing three matches
+  // to two keeps the cursor on the same row, so no row announces itself — but that row now
+  // reports "1 of 2" where it reported "1 of 3", and nothing re-reads it. A count would say the
+  // size and not the match. Asking for the row again says both, so the cursor is dropped and
+  // restored a tick later; re-asserting the same value is a no-op no reader can observe.
+  test("narrowing that leaves the cursor put asks for the row again", async function (assert) {
+    const announce = sinon.spy(
+      getOwner(this).lookup("service:a11y"),
+      "announce"
+    );
+
+    await render(<template><Host /></template>);
+    await click("[role='combobox']");
+
+    const input = find("[role='combobox']");
+    assert
+      .dom(input)
+      .hasAttribute("aria-activedescendant", /.+/, "opening seeds the cursor");
+
+    // The restore lands within the runloop `fillIn` awaits, so the attribute is back by the time
+    // any assertion runs. Only a mutation record can show it was ever gone: a `null` oldValue on
+    // a set means the attribute was absent immediately before it.
+    const cleared = [];
+    const observer = new MutationObserver((records) => {
+      for (const record of records) {
+        if (record.oldValue === null) {
+          cleared.push(record);
+        }
+      }
+    });
+    observer.observe(input, {
+      attributes: true,
+      attributeOldValue: true,
+      attributeFilter: ["aria-activedescendant"],
+    });
+
+    const before = input.getAttribute("aria-activedescendant");
+    await fillIn("[role='combobox']", "a");
+    observer.disconnect();
+
+    assert
+      .dom("[role='option'].--active")
+      .hasText("Apple", "the same row is still the cursor's home")
+      .hasAttribute("aria-setsize", "2", "in a set that just changed size");
+    assert.strictEqual(
+      input.getAttribute("aria-activedescendant"),
+      before,
+      "and the cursor is pointing at it again once the dust settles"
+    );
+    assert.strictEqual(
+      cleared.length,
+      1,
+      "the cursor was dropped and restored, so the row is read again"
+    );
+    assert.strictEqual(
+      announce.withArgs(sinon.match(/result/), "polite").callCount,
+      0,
+      "the row reports the new set, so no count is announced over it"
+    );
+  });
+
+  // The third case: a query that lands on exactly the set it already had. There is nothing to
+  // report and no honest way to report it — announcing the unchanged count is audible only when
+  // the live region's clear timer happens to have fired since it was last spoken, so it comes and
+  // goes with the reader's typing rhythm. That erratic re-announcement is the original complaint,
+  // and it was heard again on a build that did announce here. The typed character is echoed by the
+  // screen reader itself, so the keystroke is never in doubt.
+  test("a new query with unchanged results says nothing", async function (assert) {
+    const announce = sinon.spy(
+      getOwner(this).lookup("service:a11y"),
+      "announce"
+    );
+
+    await render(<template><Host /></template>);
+    await click("[role='combobox']");
+
+    await fillIn("[role='combobox']", "an");
+    const active = find("[role='option'].--active");
+    const input = find("[role='combobox']");
+    const pointedAt = input.getAttribute("aria-activedescendant");
+    // Only the second query is under test; the first one legitimately reports itself.
+    announce.resetHistory();
+
+    // Counting mutations would prove nothing: the roving modifier re-asserts the same id on every
+    // query, and re-asserting an unchanged value is the no-op that leaves this case silent. A
+    // `null` oldValue is the thing to look for — it means the attribute was absent just before,
+    // which only a deliberate drop-and-restore does.
+    let cursorDropped = 0;
+    const observer = new MutationObserver((records) => {
+      for (const record of records) {
+        if (record.oldValue === null) {
+          cursorDropped++;
+        }
+      }
+    });
+    observer.observe(input, {
+      attributes: true,
+      attributeOldValue: true,
+      attributeFilter: ["aria-activedescendant"],
+    });
+
+    await fillIn("[role='combobox']", "ana");
+    observer.disconnect();
+
+    assert.strictEqual(
+      find("[role='option'].--active"),
+      active,
+      "the same row still holds the cursor"
+    );
+    assert.strictEqual(
+      input.getAttribute("aria-activedescendant"),
+      pointedAt,
+      "pointing where it already pointed"
+    );
+    // Both channels have to be silent, not just the count: re-reading the row would repeat what
+    // the reader heard a keystroke ago, and it is the same row in the same set.
+    assert.strictEqual(cursorDropped, 0, "the row is not read again");
+    assert.strictEqual(
+      announce.withArgs(sinon.match(/result/), "polite").callCount,
+      0,
+      "and no count is announced over the silence"
+    );
+  });
+
   test("an empty result set is announced politely, not left to role=status", async function (assert) {
     const announce = sinon.spy(
       getOwner(this).lookup("service:a11y"),
@@ -1093,6 +1245,29 @@ module("Integration | ui-kit | select | DSelect popup role", function (hooks) {
     await click("[role='combobox']");
 
     assert.dom("[role='listbox']").exists("the list is open");
+    assert
+      .dom(".d-combobox__content")
+      .hasAttribute(
+        "role",
+        "none",
+        "the panel is a presentational container, not a dialog"
+      );
+    assert
+      .dom("[role='dialog']")
+      .doesNotExist("nothing between the combobox and its options is a dialog");
+  });
+
+  // A typeahead is the same shape for the same reason: its query input lives in the trigger, so
+  // the panel holds nothing but the list either. The criterion is whether the panel owns a
+  // controller of its own, not which variant produced it.
+  test("a typeahead panel does not wrap its listbox in a dialog", async function (assert) {
+    await render(<template><Host /></template>);
+    await click(".d-combobox__input");
+
+    assert.dom("[role='listbox']").exists("the list is open");
+    assert
+      .dom(".d-combobox__filter")
+      .doesNotExist("the query input is in the trigger, not the panel");
     assert
       .dom(".d-combobox__content")
       .hasAttribute(

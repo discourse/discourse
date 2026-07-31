@@ -776,13 +776,16 @@ module(
       await querying;
       await settled();
 
-      assert.true(
-        announce
-          .getCalls()
-          .slice(before)
-          .some(({ args }) => /7 results/i.test(String(args[0]))),
-        "the settled query announces its own true count"
-      );
+      // Reported by the row, not by a count over it. The query keeps the cursor on the first
+      // row, so the set it changed is announced by asking for that row again — which reports
+      // the match and the new size together.
+      assert
+        .dom("[role='option'].--active")
+        .hasAttribute(
+          "aria-setsize",
+          "7",
+          "the settled query reports its own true count"
+        );
     });
 
     test("a reload's skeleton stands in for the list it replaces", async function (assert) {

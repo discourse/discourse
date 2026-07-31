@@ -62,7 +62,6 @@ export default class DIconGridPickerContent extends Component {
     /* Fill the spanned grid area (inline style overrides the CSS cell width) */
     element.style.width = "100%";
   });
-
   /**
    * Modifier that registers a hover tooltip showing the icon ID on each grid cell.
    * Skips the selected-chip element since it already displays the name inline.
@@ -86,6 +85,9 @@ export default class DIconGridPickerContent extends Component {
 
     return () => instance.destroy();
   });
+
+  /** The last result count announced, so an unchanged one is not narrated again. */
+  #lastAnnouncedResults = null;
 
   /**
    * Returns the list of favorite icon IDs to display, with the currently
@@ -278,11 +280,19 @@ export default class DIconGridPickerContent extends Component {
 
   // Politely announces the result count via the shared a11y service (one app-wide
   // live region) rather than a component-local aria-live element.
+  //
+  // Only when it changes. This runs on every resolved search, including the ones a reader
+  // reaches by typing another character that narrows nothing, and the live region is built to
+  // make a repeated message audible rather than swallow it — so without this, refining a search
+  // is narrated with the same count over and over.
   #announceResults(count) {
-    this.a11y.announce(
-      i18n("d_icon_grid_picker.results_count", { count }),
-      "polite"
-    );
+    const message = i18n("d_icon_grid_picker.results_count", { count });
+    if (message === this.#lastAnnouncedResults) {
+      return;
+    }
+
+    this.#lastAnnouncedResults = message;
+    this.a11y.announce(message, "polite");
   }
 
   <template>

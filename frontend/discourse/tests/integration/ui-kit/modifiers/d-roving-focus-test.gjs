@@ -294,6 +294,113 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     assert.deepEqual(activated, ["a", "a"], "other keys do not activate");
   });
 
+  // For a caller whose item is unchanged but whose context is not — a row reporting a different
+  // position in a different set. Re-asserting the same `aria-activedescendant` is a no-op, so the
+  // attribute has to actually change for anything to observe it.
+  test("active mode: reannounceActive drops and restores the cursor", async function (assert) {
+    let api;
+    const register = (value) => (api = value);
+
+    await render(
+      <template>
+        <input class="search" role="combobox" />
+        <div
+          role="listbox"
+          {{dRovingFocus
+            selectionMode="active"
+            controllerElement=".search"
+            itemSelector="[role=option]"
+            onRegisterApi=register
+          }}
+        >
+          <button class="a" role="option">A</button>
+          <button class="b" role="option">B</button>
+        </div>
+      </template>
+    );
+
+    const search = document.querySelector(".search");
+    assert.false(
+      api.reannounceActive(),
+      "with no cursor there is nothing to read again"
+    );
+
+    await focus(".search");
+    await triggerKeyEvent(".search", "keydown", "ArrowDown");
+    const activeId = search.getAttribute("aria-activedescendant");
+
+    assert.true(api.reannounceActive(), "reports that it acted");
+    assert
+      .dom(".search")
+      .doesNotHaveAttribute(
+        "aria-activedescendant",
+        "the cursor is dropped synchronously"
+      );
+
+    await settled();
+    assert
+      .dom(".search")
+      .hasAttribute(
+        "aria-activedescendant",
+        activeId,
+        "and restored to the same row a tick later"
+      );
+
+    // A cursor id outlives its row. Acting here would drop the attribute and report success while
+    // reading nothing, and a caller that treats success as "the row said it" would go silent.
+    document.querySelectorAll("[role=option]").forEach((el) => el.remove());
+    assert.false(
+      api.reannounceActive(),
+      "a cursor whose row is gone is not read again"
+    );
+    assert
+      .dom(".search")
+      .hasAttribute(
+        "aria-activedescendant",
+        activeId,
+        "and the attribute is left alone rather than dropped for nothing"
+      );
+  });
+
+  // The restore is owed to the row that was active when it was requested. A reader who moves in
+  // the meantime must not be dragged back.
+  test("active mode: a cursor move outruns a pending reannounce", async function (assert) {
+    let api;
+    const register = (value) => (api = value);
+
+    await render(
+      <template>
+        <input class="search" role="combobox" />
+        <div
+          role="listbox"
+          {{dRovingFocus
+            selectionMode="active"
+            controllerElement=".search"
+            itemSelector="[role=option]"
+            onRegisterApi=register
+          }}
+        >
+          <button class="a" role="option">A</button>
+          <button class="b" role="option">B</button>
+        </div>
+      </template>
+    );
+
+    await focus(".search");
+    await triggerKeyEvent(".search", "keydown", "ArrowDown");
+
+    api.reannounceActive();
+    await triggerKeyEvent(".search", "keydown", "ArrowDown");
+
+    assert
+      .dom(".search")
+      .hasAttribute(
+        "aria-activedescendant",
+        document.querySelector(".b").id,
+        "the cursor sits where the reader moved it, not where it was asked to be restored"
+      );
+  });
+
   test("active mode: focus stays on the controller, aria-activedescendant tracks", async function (assert) {
     await render(
       <template>

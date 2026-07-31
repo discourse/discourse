@@ -238,7 +238,11 @@ module("Integration | ui-kit | select | DSelect multi flip", function (hooks) {
       );
   });
 
-  test("the count-suppress flag does not leak: add with an empty query, then filtering still announces the count", async function (assert) {
+  // Named for what it observes. It was written to prove the count-suppress flag cannot leak past
+  // an add made with an empty query, but it cannot: the add re-enters the listbox, and re-entry
+  // consumes the flag itself, so an armed one never survives to be seen. What it does hold is
+  // that adding never silences the reader's NEXT query, which is the failure that would be felt.
+  test("a query made after an add still reports its outcome", async function (assert) {
     disableClearA11yAnnouncementsInTests();
 
     await render(
@@ -249,19 +253,20 @@ module("Integration | ui-kit | select | DSelect multi flip", function (hooks) {
     );
 
     assert.dom(TRIGGER_INPUT).exists("inline input is present");
-    // Add with an EMPTY query — setFilter("") is a no-op, so announceCount never fires to
-    // consume a one-shot flag. A leaked flag would swallow the NEXT genuine count.
+    // Add with an EMPTY query, the case where the add resets no filter of its own.
     await triggerKeyEvent(TRIGGER_INPUT, "keydown", "ArrowDown");
     await click("[role='option']");
 
-    // Now a real user query: its result count MUST be announced (the flag did not leak).
-    await fillIn(TRIGGER_INPUT, "cherry");
+    // A query matching nothing, because an empty set has no row to speak and so announces
+    // unconditionally. A query WITH matches proves nothing here — it re-seeds the cursor, so the
+    // row carries the result and the count is dropped by design.
+    await fillIn(TRIGGER_INPUT, "zzzz");
 
     assert
       .dom("#a11y-announcements-polite")
       .includesText(
-        "result",
-        "a genuine post-add filter still announces its count"
+        "No results",
+        "a genuine post-add filter still reports its outcome"
       );
   });
 

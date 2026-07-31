@@ -56,6 +56,13 @@ const SELECT_VARIANTS = {
 // A source that answers faster than this never shows a placeholder, so a quick server does
 // not flash one; only a wait long enough to read as "stuck" gets visible feedback.
 const LOADING_FEEDBACK_DELAY = 250;
+// How long a settled query waits before it is reported. Long, and deliberately so: a screen
+// reader echoes what is being typed, and that echo interrupts anything the page says underneath
+// it — so a report fired promptly is begun and then abandoned mid-word, which is worse than one
+// that arrives late. The wait has to outlast the echo, not merely the typing. This value matches
+// what long-standing accessible autocomplete implementations have converged on for the same
+// collision. Client filtering stays un-debounced, so the list itself never lags a keystroke.
+const RESULT_REPORT_DELAY = 1400;
 
 export type SelectVariant =
   (typeof SELECT_VARIANTS)[keyof typeof SELECT_VARIANTS];
@@ -572,7 +579,21 @@ export default class DSelect extends Component<DSelectSignature> {
   // change what the message says — the usual case, since a reported total does not move as
   // rows mount. A cursor source is the exception: it has no count to report until its last
   // page declares completeness, so that one reveal legitimately announces.
-  #lastAnnouncedCountMessage: string | null = null;
+  //
+  // Scoped to the query as well, because the same count for a *different* query is news: a reader
+  // who types on and hears nothing has no way to tell a settled search from a dropped keystroke.
+  #lastAnnouncedCount: { query: string; message: string } | null = null;
+
+  // A count waiting to learn whether the cursor moved — see `announceCount`. Holds the message,
+  // the query it describes, where the cursor sat when it was scheduled, and what was last known,
+  // so the resolve can tell a new search from more rows for the same one.
+  #pendingCount?: {
+    timer: ReturnType<typeof discourseLater>;
+    query: string;
+    message: string;
+    activeKey: string | null;
+    previous: { query: string; message: string } | null;
+  };
 
   // Keyed on the query, not a flag: the hint unmounts and remounts as the window grows, and
   // only a new query should re-read it.
@@ -705,6 +726,7 @@ export default class DSelect extends Component<DSelectSignature> {
 
   willDestroy() {
     super.willDestroy();
+    this.#cancelPendingCount();
     document.removeEventListener(
       "pointerdown",
       this.#handleOutsidePointerDown,
@@ -878,6 +900,22 @@ export default class DSelect extends Component<DSelectSignature> {
   }
 
   /**
+   * The ARIA role for the floated panel, decided by whether the panel owns a controller of its
+   * own. Only the panel-searchable variant does; a select-only trigger is itself the combobox and
+   * a typeahead keeps its query input in the trigger, so both leave the panel holding nothing but
+   * the list. Wrapping that in a `dialog` puts a container between the combobox and the options
+   * its `aria-activedescendant` points at, which is not the structure APG describes; `none` keeps
+   * the element a presentational wrapper.
+   *
+   * A searchable panel is a genuine composite surface, which is what
+   * {@link triggerRootHasPopup} promises there — dropping the role would make that promise false.
+   * Mobile is unaffected either way, since there the panel is a `DModal`.
+   */
+  get panelContentRole(): string {
+    return this.isPanelSearchable ? "dialog" : "none";
+  }
+
+  /**
    * `aria-haspopup` names what the trigger opens, and the two control variants open different
    * things.
    *
@@ -885,25 +923,10 @@ export default class DSelect extends Component<DSelectSignature> {
    * listbox is what a reader is being sent to — so `listbox` is both correct and consistent
    * with that reference.
    *
-   * `button` is a disclosure. What it opens is the panel dialog (DMenu renders `DFloatBody
-   * @role="dialog"` inline and `DModal role="dialog"` on mobile), and that dialog holds a
-   * filter input as well as the list. Calling it a listbox told a reader to expect a list and
-   * hid the input they actually land on.
+   * `button` is a disclosure. What it opens is the panel dialog, and that dialog holds a filter
+   * input as well as the list. Calling it a listbox told a reader to expect a list and hid the
+   * input they actually land on.
    */
-  /**
-   * The ARIA role for the floated panel. A select-only panel holds nothing but the list, so a
-   * `dialog` there would put a container between the combobox and the options its
-   * `aria-activedescendant` points at — the one structural difference from implementations that
-   * voice the selected state correctly. `none` keeps the element as a presentational wrapper.
-   *
-   * Every other variant keeps `dialog`: its panel holds a query input as well as the list, which
-   * is what {@link triggerRootHasPopup} promises, and dropping the role would make that promise
-   * false. Mobile is unaffected either way, since there the panel is a `DModal`.
-   */
-  get panelContentRole(): string {
-    return this.isStatic ? "none" : "dialog";
-  }
-
   get triggerRootHasPopup(): string | undefined {
     if (this.isStatic) {
       return "listbox";
@@ -1311,6 +1334,9 @@ export default class DSelect extends Component<DSelectSignature> {
    * fires when the panel is already shut, where clearing is inert.
    */
   #releaseAnnouncementSession(): void {
+    // A count still waiting on the cursor describes a list the reader has closed, and would be
+    // read out over whatever they moved on to.
+    this.#cancelPendingCount();
     // Keyed on the query, and closing resets the query to "" — so without this the next open
     // compares "" against "" and the hint stays silent for the rest of the component's life.
     this.#narrowAnnouncedFor = null;
@@ -1819,7 +1845,7 @@ export default class DSelect extends Component<DSelectSignature> {
   @action
   announceCount(
     _element: HTMLElement,
-    [rendered, total]: [number, number | undefined]
+    [rendered, total, query]: [number, number | undefined, string?]
   ): void {
     // Mid-load the rows on screen are the previous query's and the total is already cleared,
     // so any count now describes stale rows. Settling re-fires this with the real numbers.
@@ -1827,6 +1853,7 @@ export default class DSelect extends Component<DSelectSignature> {
       return;
     }
 
+    const settledQuery = query ?? "";
     const message =
       total == null
         ? i18n("d_select.results_loaded", { count: rendered })
@@ -1834,16 +1861,103 @@ export default class DSelect extends Component<DSelectSignature> {
 
     if (this.#suppressNextCount) {
       this.#suppressNextCount = false;
-      // Record the suppressed message as last-known, or a later genuine search that lands on
-      // the same count would be treated as a repeat and never announced.
-      this.#lastAnnouncedCountMessage = message;
+      // Record the suppressed message as last-known, or a later run of the same query would be
+      // treated as fresh news and announce what was deliberately swallowed.
+      this.#lastAnnouncedCount = { query: settledQuery, message };
       return;
     }
-    if (message === this.#lastAnnouncedCountMessage) {
+    // A query that lands on exactly the set it already had is not news, whatever the reader typed
+    // to get there — and there is no honest way to say it. Announcing the unchanged count is
+    // audible only when the region's clear timer happens to have fired since it was last spoken,
+    // so it comes and goes with the reader's typing rhythm, which is the erratic re-announcement
+    // this work set out to remove. The typing echo already confirms the keystroke landed.
+    if (this.#lastAnnouncedCount?.message === message) {
       return;
     }
-    this.#lastAnnouncedCountMessage = message;
-    this.a11y.announce(message, "polite");
+
+    // Whether this count is worth saying depends on something that has not happened yet: the
+    // roving cursor re-seeds later in this same render, and a cursor that moves takes the voice
+    // with it. So hold the message and decide once it has settled.
+    this.#scheduleReport(settledQuery, message);
+  }
+
+  /**
+   * Holds a report until the reader has stopped typing and the cursor has settled, capturing what
+   * the decision in {@link #resolvePendingCount} will be made against.
+   */
+  #scheduleReport(query: string, message: string): void {
+    this.#cancelPendingCount();
+    this.#pendingCount = {
+      query,
+      message,
+      activeKey: this.activeOptionKey,
+      previous: this.#lastAnnouncedCount,
+      timer: discourseLater(
+        () => this.#resolvePendingCount(),
+        RESULT_REPORT_DELAY
+      ),
+    };
+  }
+
+  /**
+   * Decides what a held count should do, now that the cursor has settled. Three outcomes, and
+   * only one of them is the count.
+   *
+   * **The cursor moved.** The row that became active announced itself along with its position in
+   * the set — "Banana, 1 of 1" — so a count fired for the same change restates it through a
+   * second channel and assistive tech speaks one of the two and drops the other. That is the
+   * collision {@link announceCountOnEntry} resolves at the open, arriving here through every
+   * later query.
+   *
+   * **A new search left the cursor where it was.** Narrowing two matches to the first one keeps
+   * the cursor on that row while its `aria-setsize` goes from 2 to 1, and nothing re-reads it — so
+   * the reader learns the count changed but never which option survived. Ask for the row again
+   * instead: it reports the match and the new set together, and in the reader's own verbosity
+   * settings. A count reaching here always describes a set that changed, since an unchanged one
+   * never gets this far.
+   *
+   * **The count, for the cases with no row to carry it.** No cursor at all (a variant that waits
+   * for the reader to move), or more rows arriving under a stationary cursor, where the set grew
+   * without the reader's question changing.
+   */
+  #resolvePendingCount(): void {
+    const pending = this.#pendingCount;
+    this.#pendingCount = undefined;
+    if (!pending || this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    this.#lastAnnouncedCount = {
+      query: pending.query,
+      message: pending.message,
+    };
+
+    if (
+      this.activeOptionKey != null &&
+      this.activeOptionKey !== pending.activeKey
+    ) {
+      return;
+    }
+
+    // Only when the reader's question changed. More rows arriving for the *same* question already
+    // have their own announcement, and re-reading the row would compete with it.
+    const isNewSearch = pending.previous?.query !== pending.query;
+    if (
+      isNewSearch &&
+      this.activeOptionKey != null &&
+      this.#listboxRoving?.reannounceActive()
+    ) {
+      return;
+    }
+
+    this.a11y.announce(pending.message, "polite");
+  }
+
+  #cancelPendingCount(): void {
+    if (this.#pendingCount) {
+      cancel(this.#pendingCount.timer);
+      this.#pendingCount = undefined;
+    }
   }
 
   /**
@@ -1868,9 +1982,9 @@ export default class DSelect extends Component<DSelectSignature> {
   @action
   announceCountOnEntry(
     element: HTMLElement,
-    args: [number, number | undefined]
+    args: [number, number | undefined, string?]
   ): void {
-    this.#lastAnnouncedCountMessage = null;
+    this.#lastAnnouncedCount = null;
 
     if (this.shouldActivateSelected || this.shouldAutoActivateFirst) {
       this.#suppressNextCount = true;
@@ -1891,20 +2005,33 @@ export default class DSelect extends Component<DSelectSignature> {
    * Unlike {@link announceCount} there is no `serverPending` bail. A stale *count* is possible
    * mid-flight because retention keeps the previous rows on screen; a stale *empty* is not —
    * the empty branch renders only once a load has resolved to nothing.
+   *
+   * Held for the same delay as a count, and for a sharper reason. Emptying the list destroys the
+   * element the query input's `aria-controls` names, so the control momentarily points at nothing
+   * and its `aria-activedescendant` is stripped; a screen reader answers that by re-introducing the
+   * whole combobox, and that speech preempts anything said underneath it. Reported immediately,
+   * this was begun and abandoned — heard as "no results" arriving only sometimes.
+   *
+   * Both row branches in {@link #resolvePendingCount} are inert here by construction: with no rows
+   * the cursor cannot have moved to one, and the roving API is released along with the listbox, so
+   * there is nothing to ask for a re-read.
    */
   @action
-  announceNoResults(): void {
+  announceNoResults(_element: HTMLElement, [query]: [string?] = []): void {
     // `||`, not `??`, to match the template's `{{or}}`: an empty label is not a label.
     const message = this.args.noResultsLabel || i18n("d_select.no_results");
+    const settledQuery = query ?? "";
 
     if (this.#suppressNextCount) {
       this.#suppressNextCount = false;
-      this.#lastAnnouncedCountMessage = message;
+      this.#cancelPendingCount();
+      this.#lastAnnouncedCount = { query: settledQuery, message };
       return;
     }
 
-    this.#lastAnnouncedCountMessage = message;
-    this.a11y.announce(message, "polite");
+    // Replaces any held count rather than queueing behind it: the rows that count described are
+    // gone, and reporting them now would describe a list the reader can no longer reach.
+    this.#scheduleReport(settledQuery, message);
   }
 
   /**
@@ -2722,11 +2849,16 @@ export default class DSelect extends Component<DSelectSignature> {
                         this.announceCountOnEntry
                         items.length
                         this.engine.total
+                        content.filter
                       }}
+                      {{! The resolved filter is a key as much as an argument: a query that lands
+                    on the rows it already had changes neither count, so without it this never
+                    re-runs and a reader typing on hears nothing at all. }}
                       {{didUpdate
                         this.announceCount
                         items.length
                         this.engine.total
+                        content.filter
                       }}
                       {{didUpdate
                         this.announceReveal
@@ -2869,7 +3001,7 @@ export default class DSelect extends Component<DSelectSignature> {
                       class="d-combobox__empty"
                       role="status"
                       {{didInsert this.recordRowCount 0}}
-                      {{didInsert this.announceNoResults}}
+                      {{didInsert this.announceNoResults content.filter}}
                       {{didUpdate this.announceNoResults content.filter}}
                     >
                       {{#if (has-block "empty")}}
