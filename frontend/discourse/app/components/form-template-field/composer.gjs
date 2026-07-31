@@ -23,6 +23,7 @@ export default class FormTemplateFieldComposer extends Component {
   _claimAbortController = null;
   _validatedInput = null;
   _editorTarget = null;
+  _invalid = false;
 
   constructor() {
     super(...arguments);
@@ -68,8 +69,8 @@ export default class FormTemplateFieldComposer extends Component {
 
   @action
   handleInvalid() {
-    this._editorTarget?.setAttribute("aria-invalid", "true");
-    this._editorTarget?.setAttribute("aria-describedby", this.errorId);
+    this._invalid = true;
+    this.#markEditorInvalid();
 
     this.a11y.announce(
       i18n("form_templates.errors.value_missing.default"),
@@ -80,9 +81,15 @@ export default class FormTemplateFieldComposer extends Component {
   @action
   handleValidationInput(event) {
     if (event.currentTarget.validity.valid) {
+      this._invalid = false;
       this._editorTarget?.setAttribute("aria-invalid", "false");
       this._editorTarget?.removeAttribute("aria-describedby");
     }
+  }
+
+  #markEditorInvalid() {
+    this._editorTarget?.setAttribute("aria-invalid", "true");
+    this._editorTarget?.setAttribute("aria-describedby", this.errorId);
   }
 
   @action
@@ -107,6 +114,12 @@ export default class FormTemplateFieldComposer extends Component {
     // it unconditionally would leave a dangling reference
     if (this.args.attributes?.label) {
       this._editorTarget?.setAttribute("aria-labelledby", this.labelId);
+    }
+
+    // switching between markdown and rich modes swaps the editor element, so
+    // an already-failed validation has to be reapplied to the replacement
+    if (this._invalid) {
+      this.#markEditorInvalid();
     }
 
     if (!this.args.uppyComposerUpload || !this.composer.allowUpload) {

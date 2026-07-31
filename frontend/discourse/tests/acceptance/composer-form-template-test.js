@@ -272,6 +272,41 @@ acceptance("Composer Form Template", function (needs) {
       );
   });
 
+  test("keeps the editor marked invalid after switching editor modes", async function (assert) {
+    await visit("/");
+
+    const composer = this.owner.lookup("service:composer");
+    await composer.openNewTopic({ formTemplate: FORM_TEMPLATES[2] });
+    await settled();
+
+    await fillIn("#reply-title", "A title that is long enough to be valid");
+    await click("#reply-control button.create");
+
+    assert
+      .dom(".d-editor-input")
+      .hasAttribute("aria-invalid", "true", "the editor starts out invalid");
+
+    await click(".composer-toggle-switch");
+
+    assert
+      .dom(".d-editor-input")
+      .hasAttribute(
+        "aria-invalid",
+        "true",
+        "the replacement editor is still marked invalid"
+      );
+
+    const describedBy = document
+      .querySelector(".d-editor-input")
+      .getAttribute("aria-describedby");
+    assert
+      .dom(`#${describedBy}`)
+      .hasText(
+        i18n("form_templates.errors.value_missing.default"),
+        "the replacement editor is still connected to the visible error"
+      );
+  });
+
   test("blocks topic creation when a required composer field is empty even if other fields are filled", async function (assert) {
     pretender.post("/posts", () => {
       assert.true(
