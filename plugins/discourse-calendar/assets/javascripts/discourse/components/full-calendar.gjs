@@ -8,6 +8,7 @@ import { trustHTML } from "@ember/template";
 import { modifier as modifierFn } from "ember-modifier";
 import { iconHTML } from "discourse/lib/icon-library";
 import loadFullCalendar from "discourse/lib/load-full-calendar";
+import { sanitize } from "discourse/lib/text";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 import DiscoursePostEvent from "discourse/plugins/discourse-calendar/discourse/components/discourse-post-event";
@@ -138,7 +139,7 @@ export default class FullCalendar extends Component {
             triggers: ["hover"],
             content: trustHTML(
               // this is a workaround to allow linebreaks in the tooltip
-              "<div>" + htmlContent + "</div>"
+              "<div>" + sanitize(htmlContent) + "</div>"
             ),
           });
         }
