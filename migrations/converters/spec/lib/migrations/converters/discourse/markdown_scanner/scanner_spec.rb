@@ -84,4 +84,55 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::Scanner do
       expect(detected_names("`@alice\n\n@bob`")).to eq(%w[alice bob])
     end
   end
+
+  # Block structure is decided before inline spans, so a line that starts a new
+  # block ends the paragraph and the backtick before it never pairs. Checked
+  # against PrettyText.
+  describe "a backtick run a new block interrupts" do
+    ["# h", "===", "- b", "1. b", "> b", "***", "[quote=\"b\"]"].each do |line|
+      it "leaves the run literal across a #{line.inspect} line" do
+        expect(detected_names("`x\n#{line}\n@bob`")).to eq(%w[bob])
+      end
+    end
+
+    # The run stays literal here too, but the block those two open is code, so
+    # what follows is suppressed by the block phase rather than by the span.
+    %w[``` <pre>].each do |line|
+      it "leaves the run literal across a #{line.inspect} line, which opens code" do
+        expect(detected_names("`x\n#{line}\n@bob`")).to eq([])
+        expect(detected_names("`x\n#{line}")).to eq([])
+      end
+    end
+
+    it "pairs across an ordinary line, which continues the paragraph" do
+      expect(detected_names("`x\nplain\n@bob`")).to eq([])
+    end
+
+    # An indented line cannot interrupt a paragraph, so it is a lazy continuation
+    # rather than code.
+    it "pairs across an indented line" do
+      expect(detected_names("`x\n    y\n@bob`")).to eq([])
+    end
+  end
+
+  # `[` is always a stop character, so an inline `[code]` span suppresses
+  # detection even for a detector set that has no `[`-triggered detector of its
+  # own.
+  describe "an inline [code] span" do
+    it "suppresses a mention inside it" do
+      expect(detected_names("see [code]@bob[/code] ok")).to eq([])
+    end
+
+    it "keeps detecting after it" do
+      expect(detected_names("see [code]x[/code] @bob")).to eq(%w[bob])
+    end
+
+    it "leaves an unclosed [code] literal" do
+      expect(detected_names("see [code]@bob ok")).to eq(%w[bob])
+    end
+
+    it "passes an unclaimed bracket through unchanged" do
+      expect(scan("see [x] @bob") { |node| "<#{node.name}>" }).to eq("see [x] <bob>")
+    end
+  end
 end

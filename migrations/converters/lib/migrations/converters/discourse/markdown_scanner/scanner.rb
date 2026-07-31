@@ -17,7 +17,7 @@ module Migrations
         #
         # Every byte offset the walk touches lands on a character boundary: jumps land
         # on regex-match starts, single-character advances step over an ASCII trigger
-        # (one byte), matches advance by their byte length, and the code tracker's
+        # (one byte), matches advance by their byte length, and the block tracker's
         # returns come from `byteindex`/ASCII scans. `byteindex` raises `IndexError` on
         # an off-boundary offset, so a logic bug here raises instead of producing a
         # wrong result.
@@ -63,10 +63,10 @@ module Migrations
             @dispatch.freeze
 
             # Everything the walk must stop at: the trigger characters, a backtick
-            # (possible inline-code-span opener) and the newline that re-arms the
-            # line-start code checks. Runs of anything else are skipped in one
-            # regex jump and appended as one slice.
-            chars = (detectors.flat_map(&:triggers) + ["`", "\n"]).uniq
+            # and a `[` (the two inline-code-span openers) and the newline that
+            # re-arms the line-start block checks. Runs of anything else are skipped
+            # in one regex jump and appended as one slice.
+            chars = (detectors.flat_map(&:triggers) + ["`", "\n", "["]).uniq
             @stop_pattern = Regexp.new("[#{chars.map { |char| Regexp.escape(char) }.join}]")
           end
 
@@ -77,7 +77,7 @@ module Migrations
             # it makes) and return the body untouched.
             return input unless input.match?(@gate)
 
-            @code_tracker = CodeBlockTracker.new
+            @block_tracker = BlockTracker.new
             @result = +""
             @pos = 0
             @input = input
@@ -89,27 +89,18 @@ module Migrations
 
           private
 
-          # Inside a fenced or indented block every character is literal content
-          # until a line start, so only a newline (which re-arms the line-start
-          # checks that can close the block) can change anything. Backticks there
-          # are content — a block closes on its own line, not on an inline run.
-          CODE_STOP_PATTERN = /\n/
-          private_constant :CODE_STOP_PATTERN
-
           def scan_input
             length = @input.bytesize
 
             while @pos < length
-              if @line_start
-                next if advance_past_code_line(@code_tracker.check_fenced_boundary(@input, @pos))
-                next if advance_past_code_line(@code_tracker.check_indented_boundary(@input, @pos))
-              end
+              # The tracker consumes a code line — or a whole `[code]` / `<pre>`
+              # block — in one go, so the walk below only ever runs over prose.
+              next if @line_start && advance_past_code(@block_tracker.process_line(@input, @pos))
 
               # Jump straight to the next position anything can react to; the run
               # of plain characters before it is appended as one slice. Walking
               # char-by-char instead costs a one-character string per position.
-              stop_pattern = @code_tracker.in_code? ? CODE_STOP_PATTERN : @stop_pattern
-              index = @input.byteindex(stop_pattern, @pos)
+              index = @input.byteindex(@stop_pattern, @pos)
 
               unless index
                 @result << @input.byteslice(@pos..)
@@ -127,22 +118,34 @@ module Migrations
 
               byte = @input.getbyte(@pos)
 
-              # Only reachable outside a block code context: inside one the walk
-              # stops at newlines only (see {CODE_STOP_PATTERN}), so a backtick here
-              # opens an inline span or a literal run. Either way the tracker returns
-              # where to resume, and the run through there is appended verbatim.
+              # A backtick here opens an inline span or is a literal run. Either way
+              # the tracker returns where to resume, and the run through there is
+              # appended verbatim.
               if byte == 0x60 # 0x60 = backtick
-                new_pos = @code_tracker.inline_span_end(@input, @pos)
+                new_pos = @block_tracker.backtick_span_end(@input, @pos)
                 @result << @input.byteslice(@pos...new_pos)
                 @pos = new_pos
                 @line_start = false
                 next
               end
 
-              if !@code_tracker.in_code? && (candidates = @dispatch[byte])
+              if (candidates = @dispatch[byte])
                 match = detect_at_position(candidates, byte)
                 if match
                   handle_match(match)
+                  next
+                end
+              end
+
+              # A `[` no detector claimed may still open an inline `[code]` span.
+              # It is asked last because markdown-it runs the link rule before the
+              # inline bbcode rule, so `[code](url)` mid-line is a link.
+              if byte == 0x5b # 0x5b = [
+                new_pos = @block_tracker.code_tag_span_end(@input, @pos)
+                if new_pos
+                  @result << @input.byteslice(@pos...new_pos)
+                  @pos = new_pos
+                  @line_start = false
                   next
                 end
               end
@@ -157,11 +160,11 @@ module Migrations
             end
           end
 
-          # Takes the position a line-start code check returned (or nil). On nil the
-          # check didn't apply and we report that so the caller falls through. On a
-          # position the line is code: append its slice, advance past it, and stay
+          # Takes the position the line-start block check returned (or nil). On nil
+          # the line is prose and we report that so the caller falls through. On a
+          # position the region is code: append its slice, advance past it, and stay
           # armed at the next line start.
-          def advance_past_code_line(new_pos)
+          def advance_past_code(new_pos)
             return false unless new_pos
 
             @result << @input.byteslice(@pos...new_pos)

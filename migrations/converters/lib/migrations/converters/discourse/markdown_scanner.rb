@@ -6,12 +6,12 @@ module Migrations
       # Single-pass scanner for Discourse Markdown that extracts specific constructs
       # (uploads, internal links, quote references, mentions, hashtags, custom
       # emoji) while leaving everything else untouched — including anything inside
-      # fenced, indented or inline code.
+      # code, whether fenced, indented, inline, a `[code]` block or a `<pre>` block.
       #
       # {Scanner} walks the input; on a successful match it asks the supplied block
       # for the replacement text (a placeholder token) and skips past the matched
-      # span. The pieces live in `markdown_scanner/`: {Scanner}, {CodeBlockTracker}
-      # and the {Detectors}.
+      # span. The pieces live in `markdown_scanner/`: {Scanner}, the {BlockTracker}
+      # (with its {LineClassifier}) that decides what is code, and the {Detectors}.
       module MarkdownScanner
       end
     end

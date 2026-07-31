@@ -42,12 +42,10 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
   end
 
-  # An indented code block is only recognized where the line before it settles it:
-  # a blank line, and before that a line that is neither a list item nor itself
-  # indented. Inside a list the threshold is the item's content indent plus four,
-  # which would need real block parsing, so those lines stay ordinary content —
-  # extracting from something meant as code only rewrites text, while treating
-  # content as code drops the upload entirely. Checked against PrettyText.
+  # Indented code opens wherever no paragraph is open and the line reaches four
+  # columns past its container's content column — under a bullet that is six
+  # columns, under `1.` seven. An indented line inside an open paragraph is a lazy
+  # continuation instead. Checked against PrettyText.
   describe "indented code blocks" do
     let(:upload) { "![shot](upload://abc.png)" }
 
@@ -67,6 +65,22 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     it "does not extract from an indented block after a heading" do
       raw = "# Title\n\n    #{upload}\n"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+
+    # Nothing needs a blank line before it: a heading is a leaf block that closes
+    # itself, so the next line opens code straight away.
+    it "does not extract from an indented block right under a heading" do
+      raw = "# Title\n    #{upload}\n"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+
+    it "does not extract from an indented block right after a closed fence" do
+      raw = "```\nx\n```\n    #{upload}\n"
 
       expect(extract(raw)).to eq(raw)
       expect(buffer.uploads).to be_empty
@@ -109,10 +123,27 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.uploads.size).to eq(1)
     end
 
-    it "extracts from a deeper indent inside a list, where the threshold is unknown" do
-      extract("- item\n\n      #{upload}\n")
+    # Six columns is the bullet's content indent of two plus four, so core does
+    # render this one as code.
+    it "does not extract from a deeper indent inside a list" do
+      raw = "- item\n\n      #{upload}\n"
 
-      expect(buffer.uploads.size).to eq(1)
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+
+    it "does not extract from a tab-indented block inside a list" do
+      raw = "-\titem\n\n\t\t#{upload}\n"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+
+    it "does not extract from an indented block inside a blockquote" do
+      raw = "> Intro\n>\n>     #{upload}\n"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
     end
 
     it "recognizes a block again once the list has ended" do
@@ -120,6 +151,112 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       expect(extract(raw)).to eq(raw)
       expect(buffer.uploads).to be_empty
+    end
+  end
+
+  # `[code]` is a bbcode tag core renders as code in two shapes: a block, when the
+  # opener stands alone on its line and a `[/code]` line closes it, and an inline
+  # span otherwise. Every expectation here was checked against PrettyText.
+  describe "[code] tags" do
+    let(:upload) { "![shot](upload://abc.png)" }
+
+    it "does not extract from a [code] block" do
+      raw = "[code]\n#{upload}\n[/code]\n"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+
+    it "does not extract from a [code=lang] block" do
+      raw = "[code=ruby]\n#{upload}\n[/code]\n"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+
+    it "does not extract from an inline [code] span" do
+      raw = "see [code]#{upload}[/code] there"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+
+    # The block form declines a closer that does not fill its line, and the inline
+    # form — which is bounded by the paragraph, not the line — takes over.
+    it "does not extract from a span whose closer has text after it" do
+      raw = "[code]\n#{upload}\n[/code] x\n"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+
+    it "does not extract from a [code] block inside a blockquote" do
+      raw = "> [code]\n> #{upload}\n> [/code]\n"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+
+    it "extracts from an unclosed [code], which core leaves as prose" do
+      extract("[code]\n#{upload}\n")
+
+      expect(buffer.uploads.size).to eq(1)
+    end
+
+    it "extracts after a [code] block has closed" do
+      extract("[code]\nx\n[/code]\n\n#{upload}\n")
+
+      expect(buffer.uploads.size).to eq(1)
+    end
+
+    # A `[` that a detector claims never reaches the bbcode check, mirroring
+    # markdown-it running the link rule before the inline bbcode rule.
+    it "extracts from a link whose label happens to be code" do
+      extract("z [code](https://external.com/x) #{upload} y[/code]")
+
+      expect(buffer.uploads.size).to eq(1)
+    end
+  end
+
+  # A `<pre>` at the start of a line is an HTML block, and everything through the
+  # line holding `</pre>` is raw HTML. Checked against PrettyText.
+  describe "<pre> blocks" do
+    let(:upload) { "![shot](upload://abc.png)" }
+
+    it "does not extract from a <pre> block" do
+      raw = "<pre>\n#{upload}\n</pre>\n"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+
+    it "does not extract from a one-line <pre>" do
+      raw = "<pre>#{upload}</pre>\n"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+
+    # Core's HTML block runs to the end of the input when it is never closed, so
+    # the rest of the post is code too.
+    it "does not extract from an unclosed <pre>" do
+      raw = "<pre>\n#{upload}\n"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+
+    it "extracts after a <pre> block has closed" do
+      extract("<pre>\nx\n</pre>\n\n#{upload}\n")
+
+      expect(buffer.uploads.size).to eq(1)
+    end
+
+    # Mid-line it is inline HTML, not a block, so core cooks what is inside it.
+    it "extracts from a <pre> in the middle of a line" do
+      extract("x <pre>#{upload}</pre> y")
+
+      expect(buffer.uploads.size).to eq(1)
     end
   end
 
