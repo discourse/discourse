@@ -213,6 +213,43 @@ RSpec.describe EmbedController do
 
         expect(response.status).to eq(200)
       end
+
+      fab!(:attacker, :trust_level_1)
+      fab!(:existing_post) { Fabricate(:post, topic: topic) }
+
+      it "does not reinterpret an allowlisted non-Vimeo iframe as Vimeo content" do
+        iframe_source = "https://www.instagram.com/?x=player.vimeo.com/<img src=x onerror=alert(1)>"
+        sign_in(attacker)
+
+        post "/posts.json",
+             params: {
+               raw: %(<iframe src="#{iframe_source}"></iframe>),
+               topic_id: topic.id,
+             }
+
+        expect(response.status).to eq(200)
+
+        created_post = Post.find(response.parsed_body["id"])
+        cooked_iframe = Nokogiri::HTML5.fragment(created_post.cooked).at_css("iframe")
+
+        aggregate_failures do
+          expect(created_post).to have_attributes(hidden: false, deleted_at: nil)
+          expect(cooked_iframe["src"]).to eq(iframe_source)
+        end
+
+        sign_out
+        get "/embed/comments", params: { topic_id: topic.id }
+
+        document = Nokogiri.HTML5(response.body)
+        rendered_iframe = document.at_css("article#post-#{created_post.id} .cooked > iframe")
+
+        aggregate_failures do
+          expect(response.status).to eq(200)
+          expect(rendered_iframe).to be_present
+          expect(rendered_iframe&.[]("src")).to eq(iframe_source)
+          expect(document.css("img[onerror]")).to be_empty
+        end
+      end
     end
 
     describe "full_app redirect" do
