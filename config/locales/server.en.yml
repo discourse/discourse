@@ -2077,6 +2077,8 @@ en:
     blocked_crawler_user_agents: "Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if allowlist is defined."
     crawler_asns: "ASNs operated by verified web crawlers. Traffic from these networks is excluded from browser pageview reporting and receives a high crawler score."
     crawler_datacenter_asns: "ASNs that provide cloud, hosting, or data center services. Traffic from these networks receives a low-confidence crawler score but is still counted as browser traffic."
+    crawler_current_chrome_major_version: "Current Chrome Stable major version used to identify stale browser fingerprints. Update this hidden setting as Chrome Stable advances."
+    crawler_stale_chrome_major_version_lag: "Number of Chrome major releases an unengaged browser fingerprint must trail {{setting:crawler_current_chrome_major_version}} before it receives a crawler score."
     slow_down_crawler_user_agents: "User agents of web crawlers that should be rate limited as configured in the {{setting:slow_down_crawler_rate}} setting. Each value must be at least 3 characters long."
     slow_down_crawler_rate: "If {{setting:slow_down_crawler_user_agents}} is specified this rate will apply to all the crawlers (number of seconds delay between requests)"
     llms_txt: "Upload a text file to be served at /llms.txt for LLM crawlers. See <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> for more information."

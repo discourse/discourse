@@ -41,6 +41,7 @@ RSpec.describe CrawlerScorer do
     expect(breakdown.known_asn_score).to eq(30)
     expect(breakdown.datacenter_asn_score).to eq(0)
     expect(breakdown.single_request_no_referrer_score).to eq(0)
+    expect(breakdown.stale_browser_score).to eq(0)
     expect(breakdown.velocity_score).to eq(0)
     expect(breakdown.churn_score).to eq(0)
     expect(breakdown.rapid_nav_score).to eq(0)
@@ -103,6 +104,48 @@ RSpec.describe CrawlerScorer do
 
     expect(event.reload.score).to eq(50)
     expect(event.browser_pageview_event_score.single_request_no_referrer_score).to eq(10)
+  end
+
+  it "scores unengaged Chrome versions at least the configured release lag behind Stable at +5" do
+    SiteSetting.crawler_current_chrome_major_version = 150
+    SiteSetting.crawler_stale_chrome_major_version_lag = 12
+    event = make_event(user_agent: "Mozilla/5.0 Chrome/138.0.0.0 Safari/537.36")
+
+    score!
+
+    expect(event.reload.score).to eq(45)
+    expect(event.browser_pageview_event_score.stale_browser_score).to eq(5)
+  end
+
+  it "does not score Chrome versions within the configured Stable release lag" do
+    SiteSetting.crawler_current_chrome_major_version = 150
+    SiteSetting.crawler_stale_chrome_major_version_lag = 12
+    event = make_event(user_agent: "Mozilla/5.0 Chrome/139.0.0.0 Safari/537.36")
+
+    score!
+
+    expect(event.reload.score).to eq(40)
+    expect(event.browser_pageview_event_score.stale_browser_score).to eq(0)
+  end
+
+  it "does not score stale Chrome versions when the session has interaction" do
+    SiteSetting.crawler_asns = "12345"
+    event = make_event(asn: 12_345, user_agent: "Mozilla/5.0 Chrome/125.0.0.0 Safari/537.36")
+    Fabricate(:browser_pageview_session_engagement, session_id: event.session_id, click_events: 1)
+
+    score!
+
+    expect(event.reload.score).to eq(30)
+    expect(event.browser_pageview_event_score.stale_browser_score).to eq(0)
+  end
+
+  it "does not score Edge's embedded Chrome version" do
+    event = make_event(user_agent: "Mozilla/5.0 Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0")
+
+    score!
+
+    expect(event.reload.score).to eq(40)
+    expect(event.browser_pageview_event_score.stale_browser_score).to eq(0)
   end
 
   it "scores pageview velocity at or above VELOCITY_LOW threshold at +15" do

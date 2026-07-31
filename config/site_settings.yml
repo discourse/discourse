@@ -659,6 +659,18 @@ basic:
   crawler_automation_user_agents:
     default: "HeadlessChrome|Playwright|Puppeteer|Selenium|PhantomJS|jsdom"
     hidden: true
+  crawler_current_chrome_major_version:
+    default: 150
+    type: integer
+    min: 1
+    max: 999
+    hidden: true
+  crawler_stale_chrome_major_version_lag:
+    default: 12
+    type: integer
+    min: 1
+    max: 999
+    hidden: true
   interface_color_selector:
     client: true
     enum: "InterfaceColorSelectorSetting"

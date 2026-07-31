@@ -9,6 +9,7 @@ class CrawlerScorer
   DATACENTER_ASN_SCORE = 10
   SINGLE_REQUEST_NO_REFERRER_SCORE = 10
   SINGLE_REQUEST_LOCALE_PARAM_BONUS = 5
+  STALE_BROWSER_SCORE = 5
 
   VELOCITY_LOW = 150
   VELOCITY_MEDIUM = 300
@@ -60,6 +61,9 @@ class CrawlerScorer
         single_request_no_referrer_score: SINGLE_REQUEST_NO_REFERRER_SCORE,
         single_request_locale_param_bonus: SINGLE_REQUEST_LOCALE_PARAM_BONUS,
         content_localization_locales: content_localization_locales,
+        stale_browser_score: STALE_BROWSER_SCORE,
+        current_chrome_major_version: SiteSetting.crawler_current_chrome_major_version,
+        stale_chrome_major_version_lag: SiteSetting.crawler_stale_chrome_major_version_lag,
         velocity_low: VELOCITY_LOW,
         velocity_medium: VELOCITY_MEDIUM,
         velocity_high: VELOCITY_HIGH,
@@ -180,6 +184,15 @@ class CrawlerScorer
           ELSE 0
         END AS single_request_no_referrer_score,
         CASE
+          WHEN se.session_id IS NULL
+            AND e.user_agent ~ 'Chrome/[0-9]+'
+            AND e.user_agent !~* '(HeadlessChrome|Edg/|OPR/)'
+            AND (substring(e.user_agent FROM 'Chrome/([0-9]+)'))::int
+              <= :current_chrome_major_version - :stale_chrome_major_version_lag
+            THEN :stale_browser_score
+          ELSE 0
+        END AS stale_browser_score,
+        CASE
           WHEN iu.pageviews >= :velocity_high   THEN :velocity_high_score
           WHEN iu.pageviews >= :velocity_medium THEN :velocity_medium_score
           WHEN iu.pageviews >= :velocity_low    THEN :velocity_low_score
@@ -236,6 +249,7 @@ class CrawlerScorer
         known_asn_score,
         datacenter_asn_score,
         single_request_no_referrer_score,
+        stale_browser_score,
         velocity_score,
         churn_score,
         rapid_nav_score,
@@ -244,11 +258,11 @@ class CrawlerScorer
         engagement_score,
         GREATEST(
           0,
-          automation_ua_score + known_asn_score + datacenter_asn_score + single_request_no_referrer_score + velocity_score + churn_score
+          automation_ua_score + known_asn_score + datacenter_asn_score + single_request_no_referrer_score + stale_browser_score + velocity_score + churn_score
             + rapid_nav_score + ip_rotation_score + referrer_score + engagement_score
         ) AS score
       FROM breakdown
-      WHERE automation_ua_score + known_asn_score + datacenter_asn_score + single_request_no_referrer_score + velocity_score + churn_score
+      WHERE automation_ua_score + known_asn_score + datacenter_asn_score + single_request_no_referrer_score + stale_browser_score + velocity_score + churn_score
         + rapid_nav_score + ip_rotation_score + referrer_score + engagement_score > 0
     ),
 
@@ -263,6 +277,7 @@ class CrawlerScorer
                 t.known_asn_score,
                 t.datacenter_asn_score,
                 t.single_request_no_referrer_score,
+                t.stale_browser_score,
                 t.velocity_score,
                 t.churn_score,
                 t.rapid_nav_score,
@@ -277,6 +292,7 @@ class CrawlerScorer
       known_asn_score,
       datacenter_asn_score,
       single_request_no_referrer_score,
+      stale_browser_score,
       velocity_score,
       churn_score,
       rapid_nav_score,
@@ -290,6 +306,7 @@ class CrawlerScorer
       known_asn_score,
       datacenter_asn_score,
       single_request_no_referrer_score,
+      stale_browser_score,
       velocity_score,
       churn_score,
       rapid_nav_score,
@@ -302,6 +319,7 @@ class CrawlerScorer
         known_asn_score     = EXCLUDED.known_asn_score,
         datacenter_asn_score = EXCLUDED.datacenter_asn_score,
         single_request_no_referrer_score = EXCLUDED.single_request_no_referrer_score,
+        stale_browser_score = EXCLUDED.stale_browser_score,
         velocity_score      = EXCLUDED.velocity_score,
         churn_score         = EXCLUDED.churn_score,
         rapid_nav_score     = EXCLUDED.rapid_nav_score,

@@ -1543,6 +1543,7 @@ module DiscourseDataExplorer
           MAX(s.known_asn_score) AS known_asn,
           MAX(s.datacenter_asn_score) AS datacenter_asn,
           MAX(s.single_request_no_referrer_score) AS single_request_no_referrer,
+          MAX(s.stale_browser_score) AS stale_browser,
           MAX(s.velocity_score) AS velocity,
           MAX(s.churn_score) AS churn,
           MAX(s.rapid_nav_score) AS rapid_nav,
@@ -1560,6 +1561,7 @@ module DiscourseDataExplorer
                     WHEN MAX(s.single_request_no_referrer_score) > 0
                       THEN 'single direct request (+' || MAX(s.single_request_no_referrer_score) || ')'
                   END,
+                  CASE WHEN MAX(s.stale_browser_score) > 0 THEN 'stale Chrome (+' || MAX(s.stale_browser_score) || ')' END,
                   CASE WHEN MAX(s.velocity_score) > 0 THEN 'high velocity (+' || MAX(s.velocity_score) || ')' END,
                   CASE WHEN MAX(s.churn_score) > 0 THEN 'session churn (+' || MAX(s.churn_score) || ')' END,
                   CASE WHEN MAX(s.rapid_nav_score) > 0 THEN 'rapid navigation' END,

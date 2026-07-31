@@ -18,6 +18,7 @@ end
 #  rapid_nav_score                  :integer          default(0), not null
 #  referrer_score                   :integer          default(0), not null
 #  single_request_no_referrer_score :integer          default(0), not null
+#  stale_browser_score              :integer          default(0), not null
 #  velocity_score                   :integer          default(0), not null
 #  event_id                         :bigint           not null
 #
