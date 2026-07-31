@@ -228,8 +228,35 @@ RSpec.describe OneboxController do
         expect(response.body).not_to include("secret.example.com")
       end
 
+      it "does not expose a no-post user's hidden profile fields to a trust level 1 viewer" do
+        new_user = Fabricate(:user, trust_level: TrustLevel[1])
+        new_user.user_stat.update!(post_count: 0)
+        new_user.user_profile.update!(
+          bio_raw: "private new user biography",
+          location: "private new user location",
+          website: "https://private-new-user.example.com",
+        )
+        SiteSetting.hide_new_user_profiles = true
+
+        get "/u/#{new_user.username}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("user", "profile_hidden")).to eq(true)
+        expect(response.body).not_to include(new_user.user_profile.bio_raw)
+        expect(response.body).not_to include(new_user.user_profile.location)
+        expect(response.body).not_to include(new_user.user_profile.website)
+
+        get "/onebox.json", params: { url: "#{Discourse.base_url}/u/#{new_user.username}" }
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include(new_user.user_profile.bio_raw)
+        expect(response.body).not_to include(new_user.user_profile.location)
+        expect(response.body).not_to include(new_user.user_profile.website)
+      end
+
       it "oneboxes a user profile when the viewer can see the profile" do
         visible_user = Fabricate(:user)
+        visible_user.user_stat.update!(post_count: 1)
         visible_user.user_profile.update!(location: "visible location")
         url = "#{Discourse.base_url}/u/#{visible_user.username}"
 

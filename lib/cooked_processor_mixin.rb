@@ -34,7 +34,7 @@ module CookedProcessorMixin
           Oneboxer.onebox(
             url,
             invalidate_oneboxes: !!@opts[:invalidate_oneboxes],
-            user_id: @model&.user_id,
+            user_id: @model&.last_editor_id,
             category_id: @category_id,
             locale: @opts[:locale],
           )
