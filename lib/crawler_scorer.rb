@@ -43,8 +43,6 @@ class CrawlerScorer
   def self.score!(window_start:, window_end:)
     crawler_asns = SiteSetting.crawler_asns_map.map(&:to_i)
     datacenter_asns = SiteSetting.crawler_datacenter_asns_map.map(&:to_i)
-    content_localization_locales =
-      SiteSetting.content_localization_supported_locales.to_s.split("|")
 
     ActiveRecord::Base.transaction do
       DB.exec(
@@ -60,7 +58,6 @@ class CrawlerScorer
         datacenter_asn_score: DATACENTER_ASN_SCORE,
         single_request_no_referrer_score: SINGLE_REQUEST_NO_REFERRER_SCORE,
         single_request_locale_param_bonus: SINGLE_REQUEST_LOCALE_PARAM_BONUS,
-        content_localization_locales: content_localization_locales,
         stale_browser_score: STALE_BROWSER_SCORE,
         current_chrome_major_version: SiteSetting.crawler_current_chrome_major_version,
         stale_chrome_major_version_lag: SiteSetting.crawler_stale_chrome_major_version_lag,
@@ -173,11 +170,8 @@ class CrawlerScorer
           WHEN iu.pageviews = 1
             AND e.referrer IS NULL
             AND se.session_id IS NULL
-            AND EXISTS (
-              SELECT 1
-              FROM unnest(ARRAY[:content_localization_locales]::text[]) locale
-              WHERE e.url ~ ('[?&]#{Discourse::LOCALE_PARAM}=' || locale || '(&|$)')
-            ) THEN :single_request_no_referrer_score + :single_request_locale_param_bonus
+            AND e.url ~ '[?&]#{Discourse::LOCALE_PARAM}(=|&|$)'
+            THEN :single_request_no_referrer_score + :single_request_locale_param_bonus
           WHEN iu.pageviews = 1
             AND e.referrer IS NULL
             AND se.session_id IS NULL THEN :single_request_no_referrer_score

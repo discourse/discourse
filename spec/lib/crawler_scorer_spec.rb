@@ -86,24 +86,13 @@ RSpec.describe CrawlerScorer do
     expect(event.browser_pageview_event_score.single_request_no_referrer_score).to eq(10)
   end
 
-  it "scores unengaged single direct requests to a supported translation locale at +15" do
-    SiteSetting.content_localization_supported_locales = "en|pt_BR"
-    event = make_event(url: "/t/topic/1?source=bot&tl=pt_BR", referrer: nil)
+  it "scores unengaged single direct requests with any translation parameter at +15" do
+    event = make_event(url: "/t/topic/1?source=bot&tl=made-up-locale", referrer: nil)
 
     score!
 
     expect(event.reload.score).to eq(55)
     expect(event.browser_pageview_event_score.single_request_no_referrer_score).to eq(15)
-  end
-
-  it "does not add the locale parameter bonus for an unsupported locale" do
-    SiteSetting.content_localization_supported_locales = "en|pt_BR"
-    event = make_event(url: "/t/topic/1?tl=de", referrer: nil)
-
-    score!
-
-    expect(event.reload.score).to eq(50)
-    expect(event.browser_pageview_event_score.single_request_no_referrer_score).to eq(10)
   end
 
   it "scores unengaged Chrome versions at least the configured release lag behind Stable at +5" do
