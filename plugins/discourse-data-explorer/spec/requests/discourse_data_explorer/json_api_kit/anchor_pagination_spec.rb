@@ -107,4 +107,54 @@ RSpec.describe "JSON:API Kit anchored pagination" do
       expect(response.status).to eq(400)
     end
   end
+
+  # The shape core's `/latest` needs: a keyset whose leading expression is computed
+  # PER REQUEST (there, whether a topic is pinned depends on the category param and
+  # on who is asking; here, whether a query is mine), composed with a second,
+  # nullable ordering key. Declared, not hand-rolled.
+  describe "per-request SQL-backed sorts" do
+    let(:resource) { DiscourseDataExplorer::JsonApiKit::QueryResource }
+    let(:controller) { DiscourseDataExplorer::JsonApiKit::QueriesController }
+
+    around do |example|
+      resource.sort(
+        :mine,
+        value: -> do
+          "CASE WHEN data_explorer_queries.user_id = #{Integer(current_user.id)} THEN 0 ELSE 1 END"
+        end,
+      )
+      resource.remove_instance_variable(:@jsonapi_config)
+      controller.resource(resource)
+      example.run
+    ensure
+      resource.send(:sort_definitions).delete(:mine)
+      resource.remove_instance_variable(:@jsonapi_config)
+      controller.resource(resource)
+    end
+
+    before do
+      mango.update!(user: admin)
+      zulu.update!(user: admin)
+    end
+
+    it "orders by the per-request expression, then the second key" do
+      get_queries(sort: "mine,-ran_at", page: { size: 3 })
+      # Admin's own queries first (Mango has a run date, Zulu none), then Alpha.
+      expect(returned_names).to eq(%w[Mango Zulu Alpha])
+    end
+
+    it "walks to the next page without repeating or skipping" do
+      get_queries(sort: "mine,-ran_at", page: { size: 2 })
+      first_page = returned_names
+      cursor = parsed_document["data"].last.dig("meta", "page", "cursor")
+      get_queries(sort: "mine,-ran_at", page: { size: 2, after: cursor })
+      names = JSON.parse(response.body)["data"].map { it.dig("attributes", "name") }
+      expect(first_page + names).to eq(%w[Mango Zulu Alpha])
+    end
+
+    it "anchors into it by identity" do
+      get_queries(sort: "mine,-ran_at", page: { anchor: { id: zulu.id }, size: 2 })
+      expect(returned_names).to eq(%w[Zulu Alpha])
+    end
+  end
 end

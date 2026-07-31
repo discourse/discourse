@@ -306,13 +306,13 @@ module DiscourseDataExplorer
       def plugin_filters = JsonApiKit.plugin_filters_for(primary_resource_type)
       def plugin_namespaces = JsonApiKit.plugin_namespaces_for(primary_resource_type)
 
-      # The keyset for the request: the requested derived sorts (or the default
-      # sort), plus an `id` tiebreak to make the order total. Virtual (block)
-      # sorts have no keyset columns — the profile's typed unsupported-sort. NB:
-      # keyset columns must not hold NULLs (app-enforced for ours); NULLS-aware
-      # expression keysets are future work.
-      # Requested sorts and `default_sort` resolve through the same sort-key
-      # vocabulary — one path for column mapping and nulls-last declarations.
+      # The keyset for the request, resolved through the sort-key vocabulary: which
+      # keys, in which direction, which of them are SQL-backed (and the joins that
+      # SQL needs), and which are nullable. Block sorts are the only unpaginatable
+      # kind left — SQL-backed ones project into the keyset (docs/versioning-design.md
+      # §2b/§2c).
+      Keyset = Data.define(:order, :nulls_last, :expressions, :joins)
+
       def cursor_order
         entries =
           if params[:sort].present?
@@ -324,11 +324,11 @@ module DiscourseDataExplorer
             (cfg.default_sort_value || {}).map { |key, direction| [key.to_s, direction.to_sym] }
           end
 
-        virtual = entries.find { |name, _| cfg.sorts.dig(name, :block) }&.first
-        if virtual
+        blocked = entries.find { |name, _| cfg.sorts.dig(name, :block) }&.first
+        if blocked
           render_profile_error(
             title: "Unsupported sort for cursor pagination.",
-            detail: "The `#{virtual}` sort cannot be used with cursor pagination.",
+            detail: "The `#{blocked}` sort cannot be used with cursor pagination.",
             source: {
               parameter: "sort",
             },
@@ -338,15 +338,34 @@ module DiscourseDataExplorer
         end
 
         nulls_last = []
+        expressions = {}
+        joins = []
         order =
           entries.to_h do |name, direction|
             entry = cfg.sorts[name] || {}
-            column = (entry[:column] || name).to_sym
-            nulls_last << column if entry[:nulls] == :last
-            [column, direction]
+            key = keyset_key(name, entry)
+            if entry[:value]
+              # A `value:`/`joins:` may be a callable, evaluated in the controller so
+              # the SQL can depend on the request (the asking user, a param) — the
+              # same execution context filters, sorts and `base_scope` already get.
+              expressions[key] = resolve_sql(entry[:value])
+              joins.concat(Array(resolve_sql(entry[:joins])))
+            end
+            nulls_last << key if entry[:nulls] == :last
+            [key, direction]
           end
         order[:id] ||= order.values.first || :desc
-        [order, nulls_last]
+        Keyset.new(order:, nulls_last:, expressions:, joins: joins.uniq)
+      end
+
+      def resolve_sql(sql) = sql.respond_to?(:call) ? instance_exec(&sql) : sql
+
+      # A SQL-backed sort keysets on an alias derived from its public key, so
+      # `user.username` becomes `user_username` — readable in cursors and usable as a
+      # column reference.
+      def keyset_key(name, entry)
+        return name.to_s.gsub(/[^a-z0-9]+/i, "_").to_sym if entry[:value]
+        (entry[:column] || name).to_sym
       end
 
       # JSON:API: an unsupported filter/sort/include MUST 400. The page family is
@@ -414,7 +433,7 @@ module DiscourseDataExplorer
       # ── Cursor pagination (JSON:API cursor-pagination profile) ──
 
       def render_cursor_page
-        order, nulls_last = cursor_order
+        keyset = cursor_order
         return if performed?
 
         after = params.dig(:page, :after).presence
@@ -443,11 +462,11 @@ module DiscourseDataExplorer
               )
             )
           end
-          after = resolve_anchor_cursor(scope, order:, nulls_last:)
+          after = resolve_anchor_cursor(scope, keyset)
           return if performed?
         end
         meta = params.dig(:stats, :total) == "count" ? stats_meta(scope.count) : {}
-        paginator = CursorPaginator.new(scope, order:, size:, after:, before:, nulls_last:)
+        paginator = CursorPaginator.new(scope, size:, after:, before:, **keyset.to_h)
         records = paginator.records
         item_cursors = records.to_h { |record| [record.id.to_s, paginator.cursor_for(record)] }
 
@@ -515,7 +534,7 @@ module DiscourseDataExplorer
       # starts AT it. An anchor selects a RECORD — identity anchors work under any
       # ordering, value anchors bound the leading sort column and so must name the
       # active sort.
-      def resolve_anchor_cursor(scope, order:, nulls_last:)
+      def resolve_anchor_cursor(scope, keyset)
         anchor = params[:page][:anchor]
         if !anchor.respond_to?(:each_pair)
           return anchor_error("page[anchor]", "An anchor must name a key.")
@@ -529,16 +548,19 @@ module DiscourseDataExplorer
         value = ActiveModel::Type.lookup(definition[:type]).cast(raw)
         return anchor_error(parameter, "Invalid value for `#{key}`.") if value.nil?
 
-        resolver = CursorPaginator.new(scope, order:, size: 1, nulls_last:)
+        resolver = CursorPaginator.new(scope, size: 1, **keyset.to_h)
         if definition[:identity]
           resolver.anchor_cursor { |records| records.where(id: value) }
         else
-          column = (cfg.sorts.dig(key.to_s, :column) || key).to_sym
-          if column != order.keys.first
+          # The bound applies to the leading keyset key — a column for a plain sort, the
+          # projected alias for a SQL-backed one. Both are readable on the prepared
+          # scope, so anchoring works the same either way.
+          anchored = keyset_key(key.to_s, cfg.sorts[key.to_s] || {})
+          if anchored != keyset.order.keys.first
             return(anchor_error(parameter, "`#{key}` is not the sort this list is ordered by."))
           end
-          operator = order.values.first == :desc ? "<=" : ">="
-          resolver.anchor_cursor { |records| records.where("#{column} #{operator} ?", value) }
+          operator = keyset.order.values.first == :desc ? "<=" : ">="
+          resolver.anchor_cursor { |records| records.where("#{anchored} #{operator} ?", value) }
         end
       rescue CursorPaginator::AnchorNotFound
         anchor_error(parameter, "No item at that position.")

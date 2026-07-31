@@ -42,8 +42,12 @@ module DiscourseDataExplorer
       # `nulls: :last` marks a derived sort's column as nullable: the paginator
       # keysets it through a NULL-grouping helper so NULL rows stay reachable.
       def filter(name, &block) = @filters[name.to_s] = block
-      def sort(name, column: nil, nulls: nil, &block)
-        @sorts[name.to_s] = { block:, column:, nulls: }
+      # `value:` makes the sort SQL-backed (a joined column, a CASE expression): the
+      # paginator projects it as a keyset column, so it paginates and anchors like any
+      # other key. `joins:` supplies whatever that SQL needs. A block remains the
+      # escape hatch of last resort and cannot be keyset-paginated.
+      def sort(name, column: nil, nulls: nil, value: nil, joins: nil, &block)
+        @sorts[name.to_s] = { block:, column:, nulls:, value:, joins: }
       end
 
       # Positional entry (docs/versioning-design.md §2c): which keys a client may
@@ -53,7 +57,11 @@ module DiscourseDataExplorer
         @anchors[name.to_s] = { type: value_type, identity: name.to_s == "id" }
       end
 
-      def virtual_sort_keys = @sorts.filter_map { |name, entry| name if entry[:block] }
+      # Keys that are their own contract surface (not derived from an attribute), so
+      # attribute renames must not move them — SQL-backed and block sorts alike.
+      def virtual_sort_keys
+        @sorts.filter_map { |name, entry| name if entry[:block] || entry[:value] }
+      end
       def virtual_filter_keys = @filters.keys
 
       def page(max: 100, default: 20)

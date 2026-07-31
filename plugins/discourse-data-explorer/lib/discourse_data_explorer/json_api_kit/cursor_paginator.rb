@@ -18,11 +18,18 @@ module DiscourseDataExplorer
     # derivation (item and page cursors are interchangeable). `order` must be a
     # total order (append a unique tiebreak such as `id`).
     #
-    # Nullable keyset columns are handled by `nulls_last:`: each listed column
-    # gets a `<column>_is_null` CASE helper prepended to the keyset (the scope
-    # is wrapped in a subquery aliased as the table so the helper is orderable,
-    # predicable and readable — core PR #36065's trick), which sorts NULLs last
-    # and keeps them reachable. See docs/jsonapi-spec-reference.md §8.2.
+    # Any keyset key may be backed by SQL rather than a column: pass
+    # `expressions: { key => "<sql>" }` (plus `joins:` if the SQL needs them) and
+    # the value is projected as `<sql> AS key` behind a subquery, so ordering,
+    # keyset predicates and cursor minting all work on it unchanged. That covers
+    # joined values (`users.username`), computed ones (a `CASE` expression), and
+    # the composed mixed-direction keysets core PR #36065 builds by hand.
+    #
+    # Nullable keys are handled by `nulls_last:`: each listed key gets a
+    # `<key>_is_null` CASE helper prepended to the keyset, which sorts NULLs last
+    # and keeps them reachable. The helper is computed from the key's SQL when it
+    # has one — an alias cannot be referenced in the SELECT that defines it.
+    # See docs/jsonapi-spec-reference.md §8.2.
     class CursorPaginator
       InvalidCursor = Class.new(StandardError)
       AnchorNotFound = Class.new(StandardError)
@@ -87,7 +94,18 @@ module DiscourseDataExplorer
         end
       end
 
-      def initialize(scope, order:, size:, after: nil, before: nil, nulls_last: [])
+      def initialize(
+        scope,
+        order:,
+        size:,
+        after: nil,
+        before: nil,
+        nulls_last: [],
+        expressions: {},
+        joins: []
+      )
+        @expressions = expressions.transform_keys(&:to_sym)
+        @joins = Array(joins)
         @null_helpers = (nulls_last.map(&:to_sym) & order.keys).to_h { [it, :"#{it}_is_null"] }
         @order = expand_order(order)
         @scope = prepare_scope(scope)
@@ -96,7 +114,7 @@ module DiscourseDataExplorer
         @before = validate_cursor!(before)
         # Kept so an anchor can spawn a sibling paginator (see #anchor_cursor).
         @source_scope = scope
-        @source_options = { order:, nulls_last: }
+        @source_options = { order:, nulls_last:, expressions:, joins: }
       end
 
       # Positional entry (docs/versioning-design.md §2c). The block selects the
@@ -161,18 +179,28 @@ module DiscourseDataExplorer
         end
       end
 
+      # One subquery projects every keyset value that isn't already a column of the
+      # table — expression-backed keys and NULL helpers alike — aliased as the table
+      # so the outer query can order, predicate and read them.
       def prepare_scope(scope)
-        return scope if @null_helpers.empty?
+        return scope if @null_helpers.empty? && @expressions.empty?
 
         model = scope.klass
         connection = model.connection
         table = connection.quote_table_name(model.table_name)
-        helper_selects =
-          @null_helpers.map do |column, helper|
-            "CASE WHEN #{table}.#{connection.quote_column_name(column)} IS NULL " \
+        selects = @expressions.map { |key, sql| "#{sql} AS #{connection.quote_column_name(key)}" }
+        selects +=
+          @null_helpers.map do |key, helper|
+            "CASE WHEN #{key_sql(key, table:, connection:)} IS NULL " \
               "THEN 1 ELSE 0 END AS #{connection.quote_column_name(helper)}"
           end
-        model.select("*").from(scope.select("#{table}.*", *helper_selects), model.table_name)
+        inner = @joins.empty? ? scope : scope.joins(*@joins)
+        inner = inner.select("#{table}.*", *selects)
+        model.select("*").from(inner, model.table_name)
+      end
+
+      def key_sql(key, table:, connection:)
+        @expressions[key] || "#{table}.#{connection.quote_column_name(key)}"
       end
 
       def window

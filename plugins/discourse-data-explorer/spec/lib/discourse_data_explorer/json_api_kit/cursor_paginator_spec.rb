@@ -261,4 +261,176 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::CursorPaginator do
       )
     end
   end
+
+  # The same composed shape, but expressed as OPTIONS rather than a hand-built
+  # scope: two SQL-backed keys with mixed directions, one of them nullable. This is
+  # what a declarative virtual sort compiles to, so if it holds here, `/latest`'s
+  # pinning keyset is a declaration rather than bespoke query code.
+  describe "SQL-backed keyset keys" do
+    subject(:paginator) do
+      described_class.new(
+        scope,
+        order: {
+          sort_priority: :asc,
+          sort_date: :desc,
+          id: :desc,
+        },
+        expressions: {
+          sort_priority: "CASE WHEN hidden THEN 0 ELSE 1 END",
+          sort_date: "CASE WHEN hidden THEN created_at ELSE last_run_at END",
+        },
+        nulls_last: %i[sort_date],
+        size: 2,
+      )
+    end
+
+    before do
+      first_query.update!(hidden: true, last_run_at: nil)
+      second_query.update!(hidden: false, last_run_at: Time.utc(2026, 7, 9, 12))
+      third_query.update!(hidden: false, last_run_at: nil)
+      fourth_query.update!(hidden: false, last_run_at: Time.utc(2026, 7, 7, 12))
+      fifth_query.update!(hidden: true, last_run_at: nil)
+    end
+
+    it "orders by the projected expressions" do
+      # hidden first (priority 0) by created_at desc, then the rest by last_run_at desc
+      expect(paginator.records.map(&:id)).to eq([fifth_query.id, first_query.id])
+    end
+
+    it "exposes the projected values on the records" do
+      expect(paginator.records.first.sort_priority).to eq(0)
+    end
+
+    it "walks to the next page without repeating or skipping" do
+      first_page = paginator.records
+      cursor = paginator.cursor_for(first_page.last)
+      second_page =
+        described_class.new(
+          scope,
+          order: {
+            sort_priority: :asc,
+            sort_date: :desc,
+            id: :desc,
+          },
+          expressions: {
+            sort_priority: "CASE WHEN hidden THEN 0 ELSE 1 END",
+            sort_date: "CASE WHEN hidden THEN created_at ELSE last_run_at END",
+          },
+          nulls_last: %i[sort_date],
+          size: 3,
+          after: cursor,
+        ).records
+      expect(first_page.map(&:id) + second_page.map(&:id)).to eq(
+        [
+          fifth_query.id,
+          first_query.id,
+          second_query.id,
+          fourth_query.id,
+          third_query.id, # NULL last_run_at, reachable at the tail
+        ],
+      )
+    end
+
+    it "anchors into it by identity" do
+      cursor = paginator.anchor_cursor { |records| records.where(id: fourth_query.id) }
+      window =
+        described_class.new(
+          scope,
+          order: {
+            sort_priority: :asc,
+            sort_date: :desc,
+            id: :desc,
+          },
+          expressions: {
+            sort_priority: "CASE WHEN hidden THEN 0 ELSE 1 END",
+            sort_date: "CASE WHEN hidden THEN created_at ELSE last_run_at END",
+          },
+          nulls_last: %i[sort_date],
+          size: 1,
+          after: cursor,
+        )
+      expect(window.records.map(&:id)).to eq([fourth_query.id])
+    end
+  end
+
+  # Discourse is full of hand-rolled SQL written for speed. The paginator has to work
+  # over whatever that produces, so: a scope whose FROM is raw SQL with a UNION, and
+  # a grouped/having scope with a join. Both keyset-walked and anchored into.
+  describe "over hand-rolled scopes" do
+    let(:ids) { [first_query, second_query, third_query, fourth_query, fifth_query].map(&:id) }
+    let(:order) { { id: :desc } }
+
+    def walk(scope, size: 2)
+      page = described_class.new(scope, order:, size:)
+      collected = page.records.to_a
+      while (params = page.next_page_params)
+        page = described_class.new(scope, order:, size:, after: params[:after])
+        collected += page.records.to_a
+      end
+      collected.map(&:id)
+    end
+
+    context "with a raw FROM carrying a UNION" do
+      let(:scope) do
+        DiscourseDataExplorer::Query.from(
+          DiscourseDataExplorer::Query.sanitize_sql_array(
+            [
+              "(SELECT * FROM data_explorer_queries WHERE id IN (?) " \
+                "UNION ALL SELECT * FROM data_explorer_queries WHERE FALSE) AS data_explorer_queries",
+              ids,
+            ],
+          ),
+        )
+      end
+
+      it "walks every row exactly once" do
+        expect(walk(scope)).to eq(ids.sort.reverse)
+      end
+
+      it "anchors into it" do
+        cursor =
+          described_class
+            .new(scope, order:, size: 1)
+            .anchor_cursor { |records| records.where(id: third_query.id) }
+        window = described_class.new(scope, order:, size: 1, after: cursor)
+        expect(window.records.map(&:id)).to eq([third_query.id])
+      end
+    end
+
+    context "with a grouped and joined scope" do
+      before do
+        [first_query, third_query, fifth_query].each do |query|
+          DiscourseDataExplorer::QueryGroup.create!(query:, group: Fabricate(:group))
+        end
+      end
+
+      let(:scope) do
+        DiscourseDataExplorer::Query
+          .joins(:query_groups)
+          .where(id: ids)
+          .group("data_explorer_queries.id")
+          .having("COUNT(data_explorer_query_groups.id) >= 1")
+      end
+
+      it "walks every matching row exactly once" do
+        expect(walk(scope)).to eq([fifth_query.id, third_query.id, first_query.id])
+      end
+
+      it "keysets an expression over it" do
+        paginator =
+          described_class.new(
+            scope,
+            order: {
+              has_many_groups: :desc,
+              id: :desc,
+            },
+            expressions: {
+              has_many_groups: "COUNT(data_explorer_query_groups.id) > 1",
+            },
+            size: 3,
+          )
+        expect(paginator.records.map(&:id)).to eq([fifth_query.id, third_query.id, first_query.id])
+      end
+    end
+  end
 end

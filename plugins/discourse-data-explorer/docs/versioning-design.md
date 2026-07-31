@@ -614,6 +614,65 @@ Not built, still as designed above: the centred window (`page[before_size]`/`pag
 `include_anchor`, symbolic anchors (`first_unread`-style), and emitting the anchor parameters into the
 generated documentation.
 
+### Declarative SQL-backed sorts — built 2026-07-31
+
+The unifying rule above is now code, which retires the "virtual sorts cannot be keyset-paginated"
+limitation for everything except blocks:
+
+```ruby
+sort "user.username",
+     joins: "LEFT JOIN users ON users.id = data_explorer_queries.user_id",
+     value: "users.username",
+     nulls: :last
+```
+
+`value:` makes a sort SQL-backed; the paginator projects it as `<sql> AS <key>` (the key derived from the
+public sort name — `user.username` → `user_username`) behind the same subquery the NULL helpers use, and
+then ordering, keyset predicates, cursor minting and anchoring all work on it unchanged. `joins:` supplies
+whatever the SQL needs. The paginator's new options are `expressions:` and `joins:`, so a caller can also
+pass a keyset built entirely from SQL without any resource declaration.
+
+Generality checked against three shapes, all spec'd: a **joined column** (the spike's `user.username`,
+which lost its hand-rolled block — it now paginates *and* anchors, and an old client's `username` still
+renames onto it first); **computed expressions with mixed directions** (`CASE WHEN hidden THEN 0 ELSE 1
+END` ascending plus a coalesced date descending — core PR #36065's `/latest` keyset, expressed as options
+rather than bespoke query code, walked across pages with no repeats or skips); and a **nullable
+expression** (`nulls: :last` on a coalesced date, reachable at the tail). The NULL helper is computed from
+the key's SQL rather than its alias, because Postgres cannot reference an alias in the `SELECT` that
+defines it.
+
+`value:` and `joins:` also accept a **callable**, evaluated in the controller like filters, sorts and
+`base_scope`, so the SQL may depend on the request. That was not optional: `/latest`'s pinning clause
+(`lib/topic_query.rb`) is built per request from the category param, from whether there is a current user,
+and it references a join alias — none of which a string fixed at declaration time can express. Spec'd with
+the same shape in miniature: a leading `CASE` that depends on *who is asking* (`user_id = <current user>`)
+composed with a nullable date key, paginated across pages and anchored into.
+
+**Hand-rolled scopes keep working.** Discourse has a lot of SQL written by hand for speed, so the
+paginator was tried against the shapes that produces, not only against tidy relations: a scope whose
+`FROM` is raw SQL containing a `UNION ALL`, and a joined scope with `GROUP BY` + `HAVING` (including an
+aggregate as a keyset expression). Both walk every row exactly once and anchor correctly — the subquery
+wrapping composes with whatever is underneath. The honest limits: the scope must be an
+`ActiveRecord::Relation` (a `find_by_sql` array has nothing to paginate — core PR #36065 hit this and had
+to branch on `is_a?(ActiveRecord::Relation)`), the ordering value must be projectable *and stable across
+requests* (a window function over the filtered set is projectable but not stable, so keyset semantics break
+exactly as they do for `random()`), and the extra subquery level is a planner consideration rather than a
+correctness one.
+
+What is deliberately still rejected: **block sorts**, which remain the escape hatch for orderings that
+cannot be projected as a stable per-row column, and which keep earning the profile's typed
+`unsupported-sort` (spec'd with a throwaway block declaration, since the spike no longer ships one).
+
+Two gaps the comparison exposed in that PR's keyset, both of which the declarative path closes: it carries
+**no tiebreak** (`{sort_priority: :asc, sort_date: :desc}`), so rows sharing a `sort_date` have no defined
+order and a cursor between them is ambiguous — ours always appends `id`, per the profile's total-order
+requirement; and its `apply_pinning ? … : …` branch is unnecessary, since with nothing pinned the composed
+expression degenerates to `bumped_at desc` on its own.
+
+Consequence for `/latest`: if it migrates to the Kit, its pinning keyset is two sort declarations rather
+than hand-rolled projections plus a pagy call. What that does *not* cover is the rest of that PR — the
+offset fallback and the legacy `TopicList` link plumbing — which belong to the old serialization path.
+
 > Related: endpoints declared `internal` (see [resource design](./resource-design.md) §9) carry
 > no version obligation and no mandatory version header — there is nothing to pin.
 

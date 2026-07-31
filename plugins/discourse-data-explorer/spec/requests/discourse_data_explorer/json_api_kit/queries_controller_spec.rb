@@ -216,12 +216,31 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::QueriesController do
       expect(second_page["links"]["next"]).to be_nil
     end
 
-    it "rejects a virtual sort with the typed error" do
+    it "paginates a joined sort" do
       doc = get_page(page: { size: 2 }, sort: "user.username")
+
+      expect(response.status).to eq(200)
+      expect(doc["data"].size).to eq(2)
+      expect(doc["data"].last.dig("meta", "page", "cursor")).to be_present
+    end
+
+    # Blocks remain the escape hatch for orderings that cannot be projected as a
+    # column, and those still cannot be keyset-paginated.
+    it "rejects a block sort with the typed error" do
+      resource = DiscourseDataExplorer::JsonApiKit::QueryResource
+      resource.sort(:unpaginatable) { |scope, _dir| scope }
+      resource.remove_instance_variable(:@jsonapi_config)
+      DiscourseDataExplorer::JsonApiKit::QueriesController.resource(resource)
+
+      doc = get_page(page: { size: 2 }, sort: "unpaginatable")
 
       expect(response.status).to eq(400)
       expect(doc["errors"].first.dig("links", "type")).to eq("#{profile_uri}/unsupported-sort")
       expect(doc["errors"].first.dig("source", "parameter")).to eq("sort")
+    ensure
+      resource.send(:sort_definitions).delete(:unpaginatable)
+      resource.remove_instance_variable(:@jsonapi_config)
+      DiscourseDataExplorer::JsonApiKit::QueriesController.resource(resource)
     end
 
     it "rejects offset pagination" do

@@ -71,16 +71,15 @@ module DiscourseDataExplorer
       # the wire name moved with the attribute, the ORDER BY column did not. The
       # column is nullable — nulls: :last keeps never-run queries reachable.
       sort :ran_at, column: :last_run_at, nulls: :last
-      # The associated user's username — a hand-rolled LEFT JOIN sort. Dotted per the
+      # The associated user's username — a joined value, declared rather than
+      # hand-rolled, so it keysets (and anchors) like any other sort. Dotted per the
       # JSON:API recommendation for relationship-based sort fields (and matching our
-      # include paths); renamed from `username` (2026-07-08 breaking change) — virtual
-      # key, so the rename is declared via `renamed_sort` in the version change.
-      sort "user.username" do |scope, dir|
-        direction = dir == :desc ? "DESC" : "ASC"
-        scope.joins("LEFT JOIN users ON users.id = data_explorer_queries.user_id").order(
-          Arel.sql("users.username #{direction} NULLS LAST"),
-        )
-      end
+      # include paths); renamed from `username` (2026-07-08 breaking change) — its own
+      # contract surface, so the rename is declared via `renamed_sort`.
+      sort "user.username",
+           joins: "LEFT JOIN users ON users.id = data_explorer_queries.user_id",
+           value: "users.username",
+           nulls: :last
     end
   end
 end

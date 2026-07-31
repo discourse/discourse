@@ -102,8 +102,8 @@ module DiscourseDataExplorer
           filter_definitions[name.to_sym] = { type: value_type, description:, block: }
         end
 
-        def sort(name, column: nil, nulls: nil, description: nil, &block)
-          sort_definitions[name.to_sym] = { column:, nulls:, description:, block: }
+        def sort(name, column: nil, nulls: nil, value: nil, joins: nil, description: nil, &block)
+          sort_definitions[name.to_sym] = { column:, nulls:, value:, joins:, description:, block: }
         end
 
         # Advisory and reversible (docs/versioning-design.md §3): callers of a
@@ -139,7 +139,14 @@ module DiscourseDataExplorer
               filter_definitions.each { |name, defn| config.filter(name, &defn[:block]) }
               anchor_definitions.each { |name, defn| config.anchor(name, defn[:type]) }
               sort_definitions.each do |name, defn|
-                config.sort(name, column: defn[:column], nulls: defn[:nulls], &defn[:block])
+                config.sort(
+                  name,
+                  column: defn[:column],
+                  nulls: defn[:nulls],
+                  value: defn[:value],
+                  joins: defn[:joins],
+                  &defn[:block]
+                )
               end
               config.default_sort(@default_sort) if @default_sort
               config.includes(*@includes) if @includes
