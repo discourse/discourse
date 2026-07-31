@@ -1734,6 +1734,16 @@ RSpec.describe Admin::UsersController do
       before { sign_in(moderator) }
 
       include_examples "user deletion possible"
+
+      it "prevents deleting another moderator" do
+        target_moderator = Fabricate(:moderator)
+
+        delete "/admin/users/#{target_moderator.id}.json"
+
+        expect(User.exists?(target_moderator.id)).to eq(true)
+        expect(response).to be_forbidden
+        expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+      end
     end
 
     context "when logged in as a non-staff user" do

@@ -68,16 +68,17 @@ module UserGuardian
     return false if user.nil? || user.admin?
 
     if is_me?(user)
-      !SiteSetting.enable_discourse_connect &&
-        !user.has_more_posts_than?(SiteSetting.delete_user_self_max_post_count)
-    else
-      is_staff? &&
-        (
-          user.first_post_created_at.nil? ||
-            !user.has_more_posts_than?(User::MAX_STAFF_DELETE_POST_COUNT) ||
-            user.first_post_created_at > SiteSetting.delete_user_max_post_age.to_i.days.ago
-        )
+      return false if SiteSetting.enable_discourse_connect
+
+      return !user.has_more_posts_than?(SiteSetting.delete_user_self_max_post_count)
     end
+
+    return false unless is_staff?
+    return false if user.moderator? && !is_admin?
+    return true if user.first_post_created_at.nil?
+    return true unless user.has_more_posts_than?(User::MAX_STAFF_DELETE_POST_COUNT)
+
+    user.first_post_created_at > SiteSetting.delete_user_max_post_age.to_i.days.ago
   end
 
   def can_anonymize_user?(user)
