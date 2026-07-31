@@ -27,6 +27,10 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       # A route-less numeric-title URL on the source's own host parses no id, so it
       # becomes a SITE link (origin rewrite). SITE stores no id, so the overflowing
       # digit run never reaches an integer bind — it rides along in the suffix.
+      #
+      # The trailing `/` belongs to the URL — core linkifies it into the href — so
+      # it goes in the suffix too, rather than being left dangling after the
+      # rewritten link.
       it "records a numeric-title topic URL as a SITE link, not an overflowing id" do
         raw = "this one - https://forum.example.com/t/77777777777777777789999/ fails"
         link, result = link_for(raw)
@@ -34,9 +38,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
         expect(link).to include(
           target_type: link_target::SITE,
           target_id: nil,
-          target_suffix: "/t/77777777777777777789999",
+          target_suffix: "/t/77777777777777777789999/",
         )
-        expect(result).to eq("this one - #{link[:placeholder]}/ fails")
+        expect(result).to eq("this one - #{link[:placeholder]} fails")
       end
 
       it "leaves an oversized /p/ id as literal text" do
@@ -613,8 +617,43 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       end
     end
 
+    # A URL with no path is the forum's own front page, and its origin needs
+    # rewriting like any other — otherwise it survives pointing at the site being
+    # retired. A query or fragment with no path is the same page.
+    {
+      "the front page" => ["https://forum.example.com", nil],
+      "the front page in link syntax" => ["[home](https://forum.example.com)", nil],
+      "the front page mid-sentence" => ["see https://forum.example.com here", nil],
+      "a query with no path" => %w[https://forum.example.com?ref=x&a=1 ?ref=x&a=1],
+      "a fragment with no path" => %w[https://forum.example.com#top #top],
+      "a protocol-relative front page" => ["//forum.example.com", nil],
+      "a front page with a port" => ["https://forum.example.com:3000", nil],
+    }.each do |label, (raw, suffix)|
+      it "records #{label} as a SITE link" do
+        link, = link_for(raw)
+
+        expect(link).to include(target_type: link_target::SITE, target_suffix: suffix)
+      end
+    end
+
+    # The host stops at `?`, so the query is the path here and not part of a host
+    # named `forum.example.com?ref=x`.
+    it "keeps a sentence's punctuation out of a front-page URL" do
+      link, result = link_for("see https://forum.example.com. Thanks")
+
+      expect(link).to include(url: "https://forum.example.com", target_suffix: nil)
+      expect(result).to eq("see #{link[:placeholder]}. Thanks")
+    end
+
     it "still leaves a bare URL on a foreign host alone" do
       raw = "read https://other.example.org/faq here"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.links).to be_empty
+    end
+
+    it "leaves a bare front-page URL on a foreign host alone" do
+      raw = "read https://other.example.org here"
 
       expect(extract(raw)).to eq(raw)
       expect(buffer.links).to be_empty
@@ -652,6 +691,22 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       link, = link_for("[x](https://www.example.com/forum/t/slug/5)")
 
       expect(link).to include(target_type: link_target::TOPIC, target_id: 5, target_suffix: nil)
+    end
+
+    # The prefix is what belongs to the forum, so `/forum` is the front page here.
+    it "records the prefix itself as the front page" do
+      link, = link_for("https://www.example.com/forum")
+
+      expect(link).to include(target_type: link_target::SITE, target_suffix: nil)
+    end
+
+    # The host's own root is somebody else's app, not the forum, so rewriting its
+    # origin would move a link that never pointed at us.
+    %w[https://www.example.com https://www.example.com/ https://www.example.com?ref=x].each do |raw|
+      it "leaves #{raw} alone, since only the prefix belongs to the forum" do
+        expect(extract(raw)).to eq(raw)
+        expect(buffer.links).to be_empty
+      end
     end
 
     it "detects a subfolder absolute bare URL in prose" do

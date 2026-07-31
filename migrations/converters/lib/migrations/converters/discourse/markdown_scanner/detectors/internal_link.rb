@@ -33,10 +33,11 @@ module Migrations
           # page (`/faq`, `/search?q=…`) or junk (`/t/slug/5a`) — is still recorded, as
           # a `:site` target: only its origin is rewritten to the destination, and the
           # path/query/fragment ride along in the suffix. That holds in either syntax,
-          # bare or bracketed; an origin left un-rewritten points at a forum that is
-          # being retired. A relative route-less URL stays literal: it is domain-free
-          # and already correct on the destination. So is an absolute URL with no path
-          # at all (`https://host`), which `split_host` declines.
+          # bare or bracketed, and down to a URL with no path at all: `https://host`
+          # is the forum's front page and `https://host?ref=x` the same with a query,
+          # both of which point at a site being retired unless their origin is
+          # rewritten. A relative route-less URL stays literal: it is domain-free and
+          # already correct on the destination.
           #
           # The full original URL is kept (`url`) as the importer's fallback; the
           # route reveals the target, and everything after the route (further path,
@@ -94,11 +95,12 @@ module Migrations
             # segments stay literal, since Rails routing is case-sensitive and `/T/5`
             # is not a topic on the destination either.
             #
-            # The path may be a bare `/` (the forum's own root), so the body ending on
-            # a word character — what keeps a sentence's `.` outside the URL — is
-            # optional. Without that the bare form and the link form disagreed about
-            # `https://host/`.
-            ABSOLUTE = %r{(?:(?i:https?:)?//[^/#{Base::URL_TERMINATORS}]+/(?:#{URL_BODY}*\w)?)}
+            # There need be no path at all: `https://host` is the forum's front page
+            # and `https://host?ref=x` the same with a query, and both point at the
+            # site being retired unless their origin is rewritten. So the host and
+            # everything after it are one run, ending on a word character — which
+            # keeps a sentence's `.` outside the URL — or on a `/`, for the root path.
+            ABSOLUTE = %r{(?:(?i:https?:)?//#{URL_BODY}*[\w/])}
             private_constant :ABSOLUTE
 
             # A relative URL has no host to reject on, and the walk stops at every `/`
@@ -112,12 +114,14 @@ module Migrations
             BARE = /\G(?<url>#{ABSOLUTE}|#{RELATIVE})/
             private_constant :BARE
 
-            # Splits a URL into its host (nil when relative) and the rest (path, query
-            # and fragment, starting at the first `/`). A protocol-relative `//host`
-            # and an explicit `http(s)://host` both yield the host; a leading `/` (but
-            # not `//`) is relative. Anything else (`mailto:`, `#anchor`, a bare word)
-            # returns nil and isn't an internal link.
-            SPLIT = %r{\A(?:(?i:https?:)?//(?<host>[^/]+))?(?<rest>/\S*)?\z}
+            # Splits a URL into its host (nil when relative) and the rest — the path,
+            # query and fragment, starting at whichever of `/`, `?` or `#` comes
+            # first. A protocol-relative `//host` and an explicit `http(s)://host`
+            # both yield the host; a leading `/` (but not `//`) is relative. The host
+            # stops at `?` and `#` so `https://host?ref=x` is the site root with a
+            # query, not a host with a `?` in its name. Anything the pattern can't
+            # take whole (`mailto:…`, a bare word) isn't an internal link.
+            SPLIT = %r{\A(?:(?i:https?:)?//(?<host>[^/?\#]+))?(?<rest>[/?\#]\S*)?\z}
             private_constant :SPLIT
 
             # A `/u/<name>` segment, read like a username (see `Base::WORD_SOURCE`)
@@ -377,11 +381,14 @@ module Migrations
               match = SPLIT.match(url)
               return nil unless match
 
-              rest = match[:rest]
-              return nil if rest.nil? # `//host` with no path is nothing we route
-
               host = match[:host]&.sub(/:\d+\z/, "")&.downcase
-              [host, rest]
+              rest = match[:rest]
+              # A host with no path at all is the site's front page, and its origin
+              # needs rewriting like any other. Without a host there is nothing to
+              # rewrite, so a URL that is neither stays literal.
+              return nil if host.nil? && rest.nil?
+
+              [host, rest || ""]
             end
 
             # Matches `rest` (the path onwards) against the known routes in turn.
