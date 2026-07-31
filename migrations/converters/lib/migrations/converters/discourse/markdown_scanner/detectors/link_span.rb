@@ -55,7 +55,7 @@ module Migrations
             private_constant :LINK
 
             # A bare URL, schemed or protocol-relative, matched only where linkify
-            # would make a link of it (see {Base#bare_url_boundary_before?}).
+            # would make a link of it (see {Boundaries#bare_url_boundary_before?}).
             #
             # Unlike the other bare-URL patterns this doesn't trim trailing sentence
             # punctuation with a closing `\w`: the span is passed through unchanged

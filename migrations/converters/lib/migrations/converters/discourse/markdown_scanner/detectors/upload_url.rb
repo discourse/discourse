@@ -76,7 +76,7 @@ module Migrations
             private
 
             # A bare URL starts at a bare-URL boundary (line start, whitespace, or the
-            # right kind of `(…)`; see {Base#bare_url_boundary_before?}). A normal
+            # right kind of `(…)`; see {Boundaries#bare_url_boundary_before?}). A normal
             # `[text](url)` is consumed whole at its `[` trigger, so the walk reaches an
             # inner URL only when the outer bracket wasn't a handled link — a nested
             # image `[![…](…)](url)` or an old lightbox, where rewriting the outer URL

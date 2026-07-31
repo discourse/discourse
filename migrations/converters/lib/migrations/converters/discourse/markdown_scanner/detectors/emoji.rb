@@ -14,7 +14,7 @@ module Migrations
           # emoji.js`): the opening `:` must sit on the rule's boundary — start of
           # input, a tab/space/newline, a Unicode punctuation or symbol (which
           # includes the closing colon of an adjacent shortcode, `:smile::wink:`),
-          # or a zero-width space (see {Base#emoji_boundary_before?}). The rule
+          # or a zero-width space (see {Boundaries#emoji_boundary_before?}). The rule
           # imposes no boundary after the closing `:` (verified against PrettyText:
           # `:name:x` still renders), so neither do we. We diverge in one small way:
           # the name is restricted to real emoji-name characters rather than

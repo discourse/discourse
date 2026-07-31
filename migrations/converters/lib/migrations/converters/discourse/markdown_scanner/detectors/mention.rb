@@ -23,8 +23,8 @@ module Migrations
           # (`discourse-markdown-it/src/features/text-post-process.js`). The engine
           # runs the rule only when the character before *and* after the whole `@name`
           # match is whitespace or, per markdown-it's `isPunctChar`, a punctuation or
-          # symbol character — see {Base#mention_boundary_before?} and
-          # {Base#mention_boundary_after?}, both verified against PrettyText. A mention
+          # symbol character — see {Boundaries#mention_boundary_before?} and
+          # {Boundaries#mention_boundary_after?}, both verified against PrettyText. A mention
           # whose name doesn't resolve to a real user or group renders as an inert
           # `<span class="mention">` in core, never a cooked link, so gating on the
           # source's names keeps extraction in step with what core cooks.
