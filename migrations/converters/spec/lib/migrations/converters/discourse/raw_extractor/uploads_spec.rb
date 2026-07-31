@@ -19,6 +19,29 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.uploads.first[:upload_id]).to eq("Zm9vYmFy")
     end
 
+    it "takes the size Discourse writes after an attachment" do
+      result = extract("[report.pdf|attachment](upload://Zm9vYmFy.pdf) (1.2 MB)")
+
+      expect(buffer.uploads.first[:upload_id]).to eq("Zm9vYmFy")
+      expect(result).to eq(buffer.uploads.first[:placeholder])
+    end
+
+    # Only the sha1 is recorded, so whatever the match covers is re-rendered from
+    # the destination's metadata and the rest is dropped. The size group must not
+    # reach past the line end, or a parenthesized line of the author's own text
+    # disappears from the post.
+    {
+      "the next line" => "\n(this may take a while)",
+      "a line after a blank one" => "\n\n(a caption)",
+    }.each do |label, tail|
+      it "leaves #{label} alone after an attachment" do
+        result = extract("[report.pdf|attachment](upload://Zm9vYmFy.pdf)#{tail}")
+
+        expect(buffer.uploads.first[:upload_id]).to eq("Zm9vYmFy")
+        expect(result).to eq("#{buffer.uploads.first[:placeholder]}#{tail}")
+      end
+    end
+
     it "records no original_markdown for an upload:// reference" do
       extract("![alt](upload://abc123.png)")
 
