@@ -4815,7 +4815,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "experimental"
+      status: "conceptual"
       impact: "other,all_members"
       allow_enabled_for:
         - everyone
