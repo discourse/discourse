@@ -512,6 +512,7 @@ CREATE TABLE user_options
     user_id                                        NUMERIC  NOT NULL PRIMARY KEY,
     allow_private_messages                         BOOLEAN,
     auto_track_topics_after_msecs                  INTEGER,
+    automatically_translate                        BOOLEAN,
     automatically_unpin_topics                     BOOLEAN,
     bookmark_auto_delete_preference                INTEGER,
     color_scheme_id                                NUMERIC,
@@ -548,6 +549,7 @@ CREATE TABLE user_options
     oldest_search_log_date                         DATETIME,
     push_notification_level                        INTEGER,
     seen_popups                                    INTEGER,
+    send_shortcut                                  INTEGER,
     show_original_content                          BOOLEAN,
     sidebar_link_to_filtered_list                  BOOLEAN,
     sidebar_show_count_of_new_items                BOOLEAN,
@@ -559,6 +561,7 @@ CREATE TABLE user_options
     timezone                                       TEXT,
     title_count_mode_key                           INTEGER,
     topics_unread_when_closed                      BOOLEAN,
+    understood_languages                           TEXT,
     watched_precedence_over_muted                  BOOLEAN
 );
 
