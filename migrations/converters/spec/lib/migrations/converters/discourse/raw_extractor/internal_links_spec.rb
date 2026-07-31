@@ -207,6 +207,45 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(link).to include(target_id: 6, target_name: nil, target_suffix: "/l/top")
     end
 
+    # Categories nest three deep, so the slug path has to survive a third level
+    # with the tab tail still coming off it.
+    {
+      "no tail" => ["/c/gp/parent/child", "gp:parent:child", nil],
+      "a filter tail" => %w[/c/gp/parent/child/l/latest gp:parent:child /l/latest],
+      "a period tail" => %w[/c/gp/parent/child/l/top/weekly gp:parent:child /l/top/weekly],
+      "a /none tail" => %w[/c/gp/parent/child/none gp:parent:child /none],
+    }.each do |label, (path, name, suffix)|
+      it "reads a three-level category slug path with #{label}" do
+        link, = link_for("[x](#{path})")
+
+        expect(link).to include(target_name: name, target_id: nil, target_suffix: suffix)
+      end
+    end
+
+    it "reads a three-level category by id, with the tail in the suffix" do
+      link, = link_for("[x](/c/gp/parent/child/6/l/latest)")
+
+      expect(link).to include(target_id: 6, target_name: nil, target_suffix: "/l/latest")
+    end
+
+    # A tag name is a single segment, so anything after it is already suffix —
+    # the tab tails that needed guarding on the category routes cost nothing here.
+    {
+      "a filter tail" => %w[/tag/release/l/latest /l/latest],
+      "a period tail" => %w[/tags/release/l/top/weekly /l/top/weekly],
+      "a /none tail" => %w[/tag/release/none /none],
+    }.each do |label, (path, suffix)|
+      it "keeps #{label} out of a tag name" do
+        link, = link_for("[x](#{path})")
+
+        expect(link).to include(
+          target_type: enums::LinkTarget::TAG,
+          target_name: "release",
+          target_suffix: suffix,
+        )
+      end
+    end
+
     it "keeps a filter tail out of a slugless category link" do
       link, = link_for("[x](/c/6/l/latest)")
 
