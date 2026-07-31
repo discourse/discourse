@@ -5,26 +5,10 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import {
-  FOUNDATION_THEME_ID,
-  HORIZON_THEME_ID,
-} from "discourse/lib/theme-selector";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-
-function themeDescription(themeId) {
-  if (themeId === HORIZON_THEME_ID) {
-    return i18n(
-      "admin_onboarding_banner.design_wizard.theme.horizon_description"
-    );
-  } else if (themeId === FOUNDATION_THEME_ID) {
-    return i18n(
-      "admin_onboarding_banner.design_wizard.theme.foundation_description"
-    );
-  }
-}
 
 class ThemeCard extends Component {
   @service interfaceColor;
@@ -101,7 +85,7 @@ class ThemeCard extends Component {
         </span>
         <span class="design-wizard__theme-name">{{@theme.name}}</span>
         <span class="design-wizard__theme-description">
-          {{themeDescription @theme.id}}
+          {{@theme.description}}
         </span>
       </label>
       {{#if this.hasBothScreenshots}}

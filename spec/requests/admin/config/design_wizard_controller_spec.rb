@@ -10,6 +10,18 @@ RSpec.describe Admin::Config::DesignWizardController do
       before { sign_in(admin) }
 
       it "returns the core themes with their palette pairs" do
+        ThemeField.create!(
+          theme_id: Theme::CORE_THEMES["horizon"],
+          name: "en",
+          type_id: ThemeField.types[:yaml],
+          target_id: Theme.targets[:translations],
+          value: <<~YAML,
+            en:
+              theme_metadata:
+                description: "A simple, beautiful theme"
+          YAML
+        )
+
         get "/admin/config/design-wizard.json"
 
         expect(response.status).to eq(200)
@@ -21,6 +33,7 @@ RSpec.describe Admin::Config::DesignWizardController do
         )
 
         horizon = themes.find { |theme| theme["id"] == Theme::CORE_THEMES["horizon"] }
+        expect(horizon["description"]).to eq("A simple, beautiful theme")
         expect(horizon["palette_pairs"].map { |pair| pair["key"] }).to include(
           "horizon",
           "royal",

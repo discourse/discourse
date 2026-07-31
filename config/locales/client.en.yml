@@ -582,8 +582,6 @@ en:
           homepage: "Homepage"
         theme:
           selected: "Selected"
-          horizon_description: "Modern and rounded, with a homepage built around conversation cards"
-          foundation_description: "The classic Discourse look — compact, information-dense and familiar"
           custom_theme_notice: "Your site currently uses %{name} as its default theme. Saving will replace it with the selected theme."
         colors:
           light: "Light"
