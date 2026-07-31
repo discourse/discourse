@@ -94,25 +94,12 @@ class ReviewableFlaggedPost < Reviewable
       end
     end
 
-    if guardian.can_suspend?(target_created_by)
-      if !target_created_by.silenced?
-        build_action(
-          actions,
-          :agree_and_silence,
-          icon: "microphone-slash",
-          bundle: agree_bundle,
-          client_action: "silence",
-        )
-      end
-
-      build_action(
-        actions,
-        :agree_and_suspend,
-        icon: "ban",
-        bundle: agree_bundle,
-        client_action: "suspend",
-      )
-    end
+    build_penalty_actions(
+      actions,
+      bundle: agree_bundle,
+      silence: :agree_and_silence,
+      suspend: :agree_and_suspend,
+    )
 
     if (potential_spam? || potentially_illegal?) && guardian.can_delete_user?(target_created_by)
       delete_user_actions(actions, agree_bundle)

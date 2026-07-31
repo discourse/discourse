@@ -441,28 +441,31 @@ export default class ReviewableItem extends Component {
             reviewable
           )
         )
-        .catch(popupAjaxError)
         .finally(() => {
           this.set("updating", false);
           this.disabled = false;
         });
     };
 
-    if (performableAction.client_action) {
-      let actionMethod =
-        this[`client${classify(performableAction.client_action)}`];
-      if (actionMethod) {
-        if (await this.#claimReviewable()) {
-          await actionMethod.call(this, reviewable, performAction);
+    try {
+      if (performableAction.client_action) {
+        let actionMethod =
+          this[`client${classify(performableAction.client_action)}`];
+        if (actionMethod) {
+          if (await this.#claimReviewable()) {
+            await actionMethod.call(this, reviewable, performAction);
+          }
+        } else {
+          // eslint-disable-next-line no-console
+          console.error(
+            `No handler for ${performableAction.client_action} found`
+          );
         }
       } else {
-        // eslint-disable-next-line no-console
-        console.error(
-          `No handler for ${performableAction.client_action} found`
-        );
+        await performAction();
       }
-    } else {
-      await performAction();
+    } catch (error) {
+      popupAjaxError(error);
     }
 
     return this.#unclaimAutomaticReviewable();
@@ -561,7 +564,7 @@ export default class ReviewableItem extends Component {
     if (adminTools) {
       let createdBy = reviewable.get("target_created_by");
       let postId = reviewable.get("post_id");
-      let postEdit = reviewable.get("raw");
+      let postEdit = reviewable.get("raw") ?? reviewable.get("payload.raw");
 
       return adminTools[adminToolMethod](createdBy, {
         postId,
