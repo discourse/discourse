@@ -7552,6 +7552,13 @@ RSpec.describe UsersController do
         expect(response.status).to eq(403)
       end
 
+      it "returns not found if the user cannot see the topic" do
+        sign_in(user1)
+        put "/u/#{user1.username}/feature-topic.json", params: { topic_id: private_message.id }
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["error_type"]).to eq("not_found")
+      end
+
       it "returns an error if the topic is not visible" do
         sign_in(user1)
         topic.update_status("visible", false, user1)
@@ -7559,12 +7566,13 @@ RSpec.describe UsersController do
         expect(response.status).to eq(403)
       end
 
-      it "returns an error if the topic's category is read_restricted" do
+      it "returns not found if the user cannot see the topic's category" do
         sign_in(user1)
-        category.set_permissions({})
-        topic.update(category_id: category.id)
-        put "/u/#{another_user.username}/feature-topic.json", params: { topic_id: topic.id }
-        expect(response.status).to eq(403)
+        restricted_category = Fabricate(:category, read_restricted: true)
+        topic.update(category: restricted_category)
+        put "/u/#{user1.username}/feature-topic.json", params: { topic_id: topic.id }
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["error_type"]).to eq("not_found")
       end
 
       it "sets featured_topic correctly for user created topic" do

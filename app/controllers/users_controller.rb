@@ -1901,7 +1901,8 @@ class UsersController < ApplicationController
 
   def feature_topic
     user = fetch_user_from_params
-    topic = Topic.find(params[:topic_id].to_i)
+    topic = Topic.find_by(id: params[:topic_id].to_i)
+    raise Discourse::NotFound if topic.blank? || !guardian.can_see_topic?(topic)
 
     if !guardian.can_feature_topic?(user, topic)
       return(
