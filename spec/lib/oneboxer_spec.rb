@@ -165,6 +165,7 @@ RSpec.describe Oneboxer do
 
     it "links to an user profile" do
       user = Fabricate(:user)
+      user.user_stat.update!(post_count: 1)
 
       expect(preview("/u/does-not-exist")).to match_html(link("/u/does-not-exist"))
       expect(preview("/u/#{user.username}")).to include(user.name)
@@ -172,6 +173,7 @@ RSpec.describe Oneboxer do
 
     it "should respect enable_names site setting" do
       user = Fabricate(:user)
+      user.user_stat.update!(post_count: 1)
 
       SiteSetting.enable_names = true
       expect(preview("/u/#{user.username}")).to include(user.name)
@@ -189,6 +191,7 @@ RSpec.describe Oneboxer do
 
     it "strips HTML from user profile location" do
       user = Fabricate(:user)
+      user.user_stat.update!(post_count: 1)
       profile = user.reload.user_profile
 
       expect(preview("/u/#{user.username}")).not_to include("<span class=\"location\">")
