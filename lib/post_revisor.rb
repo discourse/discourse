@@ -109,10 +109,8 @@ class PostRevisor
     @@tracked_topic_fields
   end
 
-  def self.valid_post_type?(post, post_type)
-    allowed_post_types = [Post.types[:regular], Post.types[:moderator_action]]
-    allowed_post_types << Post.types[:whisper] unless post.is_first_post?
-    allowed_post_types.include?(post_type)
+  def self.valid_post_type?(post_type)
+    [Post.types[:regular], Post.types[:moderator_action], Post.types[:whisper]].include?(post_type)
   end
 
   def self.track_topic_field(field, &block)
@@ -920,7 +918,7 @@ class PostRevisor
   private
 
   def validate_post_type
-    return true if self.class.valid_post_type?(@post, @fields[:post_type])
+    return true if self.class.valid_post_type?(@fields[:post_type])
 
     @post.errors.add(:post_type, :invalid)
     false

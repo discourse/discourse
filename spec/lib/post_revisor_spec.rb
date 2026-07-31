@@ -447,18 +447,16 @@ describe PostRevisor do
       let!(:opening_post) { Fabricate(:post, topic: topic) }
       let!(:reply) { Fabricate(:post, topic: topic) }
 
-      it "rejects unsupported transitions" do
-        expect(opening_post.revise(admin, post_type: Post.types[:whisper])).to eq(false)
+      it "rejects changing a post to a small action" do
         expect(reply.revise(admin, post_type: Post.types[:small_action])).to eq(false)
 
-        expect(opening_post.reload.post_type).to eq(Post.types[:regular])
         expect(reply.reload.post_type).to eq(Post.types[:regular])
       end
 
-      it "allows changing a reply to a whisper" do
-        expect(reply.revise(admin, post_type: Post.types[:whisper])).to eq(true)
+      it "allows changing a post to a whisper" do
+        expect(opening_post.revise(admin, post_type: Post.types[:whisper])).to eq(true)
 
-        expect(reply.reload).to be_whisper
+        expect(opening_post.reload).to be_whisper
       end
     end
 

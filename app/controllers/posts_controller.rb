@@ -730,7 +730,11 @@ class PostsController < ApplicationController
     post = find_post_from_params
     params.require(:post_type)
     post_type = params[:post_type].to_i
-    unless PostRevisor.valid_post_type?(post, post_type)
+    unless PostRevisor.valid_post_type?(post_type)
+      raise Discourse::InvalidParameters.new(:post_type)
+    end
+
+    if post.is_first_post? && post_type == Post.types[:whisper]
       raise Discourse::InvalidParameters.new(:post_type)
     end
 

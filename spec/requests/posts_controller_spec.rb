@@ -1202,6 +1202,15 @@ RSpec.describe PostsController do
         expect(post.reload.post_type).to eq(Post.types[:regular])
       end
 
+      it "rejects changing an opening post to a whisper" do
+        opening_post = Fabricate(:post)
+
+        put "/posts/#{opening_post.id}/post_type.json", params: { post_type: Post.types[:whisper] }
+
+        expect(response).to be_bad_request
+        expect(opening_post.reload.post_type).to eq(Post.types[:regular])
+      end
+
       it "rejects changing a nested topic's opening post to a small action" do
         nested_view_topic = Fabricate(:topic, user: user)
         opening_post = Fabricate(:post, topic: nested_view_topic, user: user, post_number: 1)
