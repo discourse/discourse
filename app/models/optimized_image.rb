@@ -7,6 +7,7 @@ class OptimizedImage < ActiveRecord::Base
   # BUMP UP if optimized image algorithm changes
   VERSION = 2
   VIPS_VERSION = 3
+  MAX_VERSION = [VERSION, VIPS_VERSION].max
   URL_REGEX = %r{(/optimized/\dX[/\.\w]*/([a-zA-Z0-9]+)[\.\w]*)}
 
   def self.version
