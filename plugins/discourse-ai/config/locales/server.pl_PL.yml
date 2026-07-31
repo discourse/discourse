@@ -47,8 +47,7 @@ pl_PL:
         flagged_post: |
           %{score_reason}
           %{response}
-        flagged_post_response: |
-          <p>Odpowiedź modelu: %{llm_response}</p>
+        flagged_post_response: "Odpowiedź modelu: %{llm_response}"
         flagged_post_score_reason: |
           <b>Wyzwalane przez regułę <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> .</b>
         notify_author_pm:
@@ -167,7 +166,6 @@ pl_PL:
     ai_translation_categories: "Kategorie używane, gdy zakres kategorii tłumaczenia AI jest ustawiony na <strong>dołącz</strong> lub <strong>wyklucz</strong>."
     ai_translation_personal_messages: "Kontroluje, które prywatne wiadomości są tłumaczone. 'none' wyłącza tłumaczenie wiadomości prywatnych. 'group' tłumaczy tylko wiadomości prywatne grupy. 'all' tłumaczy wszystkie wiadomości prywatne."
     ai_translation_include_bot_content: "Po włączeniu tej opcji treści tworzone przez boty (identyfikatory użytkowników poniżej 0) będą również wysyłane do tłumaczenia."
-    ai_translation_max_post_length: "Maksymalna liczba znaków w poście do przetłumaczenia. Posty dłuższe niż ta liczba nie będą tłumaczone."
     ai_translation_backfill_start_date: "Data UTC, od której historyczne wpisy i tematy będą wysyłane do uzupełnienia tłumaczeń. Pozostaw puste, aby wyłączyć uzupełnianie. Nowe treści będą nadal tłumaczone."
     ai_translation_backfill_hourly_rate: "Liczba wpisów i tematów do przetłumaczenia na godzinę podczas operacji uzupełniania. Ustaw na 0, aby wyłączyć automatyczne uzupełnianie tłumaczeń dla istniejących treści."
     ai_translation_backfill_parallel_jobs: "Liczba równoległych zadań postlokalizacyjnych uruchamianych w każdym cyklu uzupełniania. Wyższe wartości zwiększają przepustowość, ale zużywają więcej zasobów."
