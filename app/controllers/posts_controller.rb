@@ -730,9 +730,7 @@ class PostsController < ApplicationController
     post = find_post_from_params
     params.require(:post_type)
     post_type = params[:post_type].to_i
-    raise Discourse::InvalidParameters.new(:post_type) if Post.types[post_type].blank?
-
-    if post.is_first_post? && !post_type.in?([Post.types[:regular], Post.types[:moderator_action]])
+    unless PostRevisor.valid_post_type?(post, post_type)
       raise Discourse::InvalidParameters.new(:post_type)
     end
 
