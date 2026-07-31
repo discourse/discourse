@@ -41,7 +41,13 @@
   }
 
   // the timeline is swapped for the progress bar while chat is docked, so the
-  // navigation is placed below the posts rather than in its own column
+  // navigation is placed below the posts and the column it occupied is
+  // reclaimed for them
+  .container.posts {
+    // outranks themes and components sizing the timeline column themselves
+    grid-template-columns: minmax(0, 1fr) 0;
+  }
+
   .container.posts .topic-navigation {
     grid-area: posts;
     grid-row: 3;
