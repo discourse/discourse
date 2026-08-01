@@ -6,13 +6,11 @@
 # and optimizer paths are not exercised on every run — so check the method
 # signatures directly.
 RSpec.describe Migrations::Importer::Uploads::Pipeline do
-  TASKS = [
+  [
     Migrations::Importer::Uploads::Tasks::Uploader,
     Migrations::Importer::Uploads::Tasks::Optimizer,
     Migrations::Importer::Uploads::Tasks::Fixer,
-  ]
-
-  TASKS.each do |task_class|
+  ].each do |task_class|
     it "#{task_class.name.demodulize} accepts the pipeline's produce keywords" do
       parameters = task_class.instance_method(:produce).parameters
       accepted = parameters.filter_map { |type, name| name if %i[keyreq key].include?(type) }
