@@ -1,132 +1,140 @@
 # frozen_string_literal: true
 
+# Records what the pipeline reports so tests can assert on batching and outcome
+# without a real terminal. Mirrors the small surface the pipeline uses:
+# start_step -> step, step.with_progress { |progress| ... }, notice, finish.
+class FakeProgress
+  attr_reader :updates
+
+  def initialize
+    @updates = []
+    @mutex = Mutex.new
+  end
+
+  def update(increment_by:, skip_count: 0, warning_count: 0, error_count: 0)
+    @mutex.synchronize { @updates << { increment_by:, skip_count:, warning_count:, error_count: } }
+  end
+
+  def total
+    @updates.sum { |u| u[:increment_by] }
+  end
+end
+
+class FakeStep
+  attr_reader :progress, :notices, :finished_outcome, :max_progress, :concurrencies
+
+  def initialize
+    @notices = []
+    @concurrencies = []
+  end
+
+  def notice(message)
+    @notices << message
+  end
+
+  def report_concurrency(count)
+    @concurrencies << count
+  end
+
+  def with_progress(max_progress:)
+    @max_progress = max_progress
+    @progress = FakeProgress.new
+    yield @progress
+  end
+
+  def finish(outcome: nil)
+    @finished_outcome = outcome
+  end
+end
+
+class FakeReporter
+  attr_reader :step, :closed
+
+  def start_step(_title)
+    @step = FakeStep.new
+  end
+
+  def close
+    @closed = true
+  end
+end
+
+# A pipeline task driven entirely from plain data, so the engine can be tested
+# without Rails. `rows` are the work items; `process` and `write` decide the
+# per-row result and its outcome.
+class FakeTask
+  attr_accessor :reporter
+  attr_reader :written, :before_run_called, :after_run_called
+
+  def initialize(rows:, worker_count: 4, skip_ids: [], process: nil, write: nil)
+    @rows = rows
+    @worker_count = worker_count
+    @skip_ids = skip_ids
+    @process = process || ->(row, _resource) { row }
+    @write = write || ->(_result) { :ok }
+    @written = []
+    @write_mutex = Mutex.new
+  end
+
+  def title
+    "Fake"
+  end
+
+  attr_reader :worker_count
+
+  def store_external?
+    false
+  end
+
+  def max_count
+    @rows.size
+  end
+
+  def before_run
+    @before_run_called = true
+  end
+
+  def after_run
+    @after_run_called = true
+  end
+
+  def build_worker_resource
+    nil
+  end
+
+  def produce(emit_work:, emit_result:)
+    @rows.each do |row|
+      if @skip_ids.include?(row[:id])
+        emit_result.call(row.merge(skipped: true))
+      else
+        emit_work.call(row)
+      end
+    end
+  end
+
+  def process(row, resource)
+    @process.call(row, resource)
+  end
+
+  # Runs only on the writer thread, so appending without a lock would be safe;
+  # the mutex just keeps the intent obvious.
+  def write(result)
+    @write_mutex.synchronize { @written << result }
+    @write.call(result)
+  end
+end
+
+# A sampler that always says the box is idle with plenty of memory, so the
+# controller is free to probe the target upward while the run is going.
+class IdleSampler
+  Reading = Migrations::Importer::Uploads::ResourceSampler::Reading
+
+  def sample
+    Reading.new(cpu_busy: 0.1, memory_fraction: 0.9, memory_bytes: 32 * 1024**3)
+  end
+end
+
 RSpec.describe Migrations::Importer::Uploads::Pipeline do
-  # Records what the pipeline reports so tests can assert on batching and outcome
-  # without a real terminal. Mirrors the small surface the pipeline uses:
-  # start_step -> step, step.with_progress { |progress| ... }, notice, finish.
-  class FakeProgress
-    attr_reader :updates
-
-    def initialize
-      @updates = []
-      @mutex = Mutex.new
-    end
-
-    def update(increment_by:, skip_count: 0, warning_count: 0, error_count: 0)
-      @mutex.synchronize do
-        @updates << { increment_by:, skip_count:, warning_count:, error_count: }
-      end
-    end
-
-    def total
-      @updates.sum { |u| u[:increment_by] }
-    end
-  end
-
-  class FakeStep
-    attr_reader :progress, :notices, :finished_outcome, :max_progress, :concurrencies
-
-    def initialize
-      @notices = []
-      @concurrencies = []
-    end
-
-    def notice(message)
-      @notices << message
-    end
-
-    def report_concurrency(count)
-      @concurrencies << count
-    end
-
-    def with_progress(max_progress:)
-      @max_progress = max_progress
-      @progress = FakeProgress.new
-      yield @progress
-    end
-
-    def finish(outcome: nil)
-      @finished_outcome = outcome
-    end
-  end
-
-  class FakeReporter
-    attr_reader :step, :closed
-
-    def start_step(_title)
-      @step = FakeStep.new
-    end
-
-    def close
-      @closed = true
-    end
-  end
-
-  # A pipeline task driven entirely from plain data, so the engine can be tested
-  # without Rails. `rows` are the work items; `process` and `write` decide the
-  # per-row result and its outcome.
-  class FakeTask
-    attr_accessor :reporter
-    attr_reader :written, :before_run_called, :after_run_called
-
-    def initialize(rows:, worker_count: 4, skip_ids: [], process: nil, write: nil)
-      @rows = rows
-      @worker_count = worker_count
-      @skip_ids = skip_ids
-      @process = process || ->(row, _resource) { row }
-      @write = write || ->(_result) { :ok }
-      @written = []
-      @write_mutex = Mutex.new
-    end
-
-    def title
-      "Fake"
-    end
-
-    attr_reader :worker_count
-
-    def store_external?
-      false
-    end
-
-    def max_count
-      @rows.size
-    end
-
-    def before_run
-      @before_run_called = true
-    end
-
-    def after_run
-      @after_run_called = true
-    end
-
-    def build_worker_resource
-      nil
-    end
-
-    def produce(emit_work:, emit_result:)
-      @rows.each do |row|
-        if @skip_ids.include?(row[:id])
-          emit_result.call(row.merge(skipped: true))
-        else
-          emit_work.call(row)
-        end
-      end
-    end
-
-    def process(row, resource)
-      @process.call(row, resource)
-    end
-
-    # Runs only on the writer thread, so appending without a lock would be safe;
-    # the mutex just keeps the intent obvious.
-    def write(result)
-      @write_mutex.synchronize { @written << result }
-      @write.call(result)
-    end
-  end
-
   let(:reporter) { FakeReporter.new }
 
   # A fixed plan pinned to the task's worker_count keeps concurrency deterministic
@@ -232,16 +240,6 @@ RSpec.describe Migrations::Importer::Uploads::Pipeline do
   end
 
   describe "under the adaptive controller" do
-    # A sampler that always says the box is idle with plenty of memory, so the
-    # controller is free to probe the target upward while the run is going.
-    class IdleSampler
-      Reading = Migrations::Importer::Uploads::ResourceSampler::Reading
-
-      def sample
-        Reading.new(cpu_busy: 0.1, memory_fraction: 0.9, memory_bytes: 32 * 1024**3)
-      end
-    end
-
     it "processes every row while the controller tunes the gate, staying in bounds" do
       ceiling = 6
       plan =
