@@ -36,12 +36,12 @@ module Migrations
               \[(?<filename>[^|\]]*)\|attachment\]
               \((?-i:upload)://(?<url>[^)]+)\)
               # Discourse writes the size right after the link, on the same line.
-              # `\s*` here would let the group cross a line end — even a blank one —
-              # and swallow a following parenthesized line into the match. Only the
-              # sha1 is recorded, so the importer re-renders the attachment from the
-              # destination's metadata and everything else the match covered is
-              # dropped from the post.
-              (?:[^\S\n]*\((?<size>[^)]+)\))?
+              # Neither the gap nor the size itself may cross a line end — even a
+              # blank one — or a following parenthesized line is swallowed into the
+              # match. Only the sha1 is recorded, so the importer re-renders the
+              # attachment from the destination's metadata and everything else the
+              # match covered is dropped from the post.
+              (?:[^\S\n]*\((?<size>[^)\n]+)\))?
             }xi
             private_constant :IMAGE_PATTERN, :ATTACHMENT_PATTERN
 

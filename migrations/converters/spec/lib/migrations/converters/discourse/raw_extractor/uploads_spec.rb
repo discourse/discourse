@@ -33,6 +33,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     {
       "the next line" => "\n(this may take a while)",
       "a line after a blank one" => "\n\n(a caption)",
+      "a same-line parenthesis running onto the next line" => " (see\nnote)",
     }.each do |label, tail|
       it "leaves #{label} alone after an attachment" do
         result = extract("[report.pdf|attachment](upload://Zm9vYmFy.pdf)#{tail}")
