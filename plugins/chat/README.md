@@ -6,4 +6,4 @@ The Discourse Chat plugin adds chat functionality to your Discourse so it can na
 
 For user documentation, see [Discourse Chat](https://meta.discourse.org/t/discourse-chat/230881).
 
-For developer documentation, see [Discourse Documentation](https://discourse.github.io/discourse/).
+For developer documentation, see [Discourse Documentation](https://meta.discourse.org/c/documentation/10).
