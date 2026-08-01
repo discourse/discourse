@@ -186,7 +186,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       ["upload after a closed [code] block", "[code]\nx\n[/code]\n\n#{upload}"],
     ]
   end
-  # rubocop:enable Layout/LineLength
 
   # Whether the extractor left the sentinel alone, i.e. read it as code.
   def detector_treats_as_code?(raw)
