@@ -135,6 +135,5 @@ RSpec.describe Migrations::Importer::Uploads::InlineImportTask do
       expect(reporter).to have_received(:notice)
       expect(mapped_ids).to be_empty
     end
-
   end
 end
