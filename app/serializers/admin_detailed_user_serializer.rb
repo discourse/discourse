@@ -203,6 +203,6 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   end
 
   def groups
-    scope.user.visible_groups
+    object.groups.visible_groups(scope.user)
   end
 end
