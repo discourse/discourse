@@ -1,29 +1,31 @@
 # frozen_string_literal: true
 
 RSpec.describe Migrations::Importer::Uploads::AdaptiveController do
-  Reading = Migrations::Importer::Uploads::ResourceSampler::Reading
-  WorkerGate = Migrations::Importer::Uploads::WorkerGate
-  GB = 1024**3
+  let(:gb) { 1024**3 }
 
   # A sampler whose reading the test sets before each tick.
-  class ScriptedSampler
-    attr_accessor :reading
-
-    def sample
-      @reading
+  let(:scripted_sampler_class) do
+    Struct.new(:reading) do
+      def sample
+        reading
+      end
     end
   end
 
-  def reading(cpu:, mem_fraction: 0.9, mem_bytes: 32 * GB)
-    Reading.new(cpu_busy: cpu, memory_fraction: mem_fraction, memory_bytes: mem_bytes)
+  def reading(cpu:, mem_fraction: 0.9, mem_bytes: 32 * gb)
+    Migrations::Importer::Uploads::ResourceSampler::Reading.new(
+      cpu_busy: cpu,
+      memory_fraction: mem_fraction,
+      memory_bytes: mem_bytes,
+    )
   end
 
   # Builds a controller wired to a real gate, a scripted sampler, and mutable
   # `state` (time, completed, work) the test drives by hand — no real thread, no
   # sleeping. Returns everything the tests poke at.
   def build(target:, ceiling:, **reading_opts)
-    gate = WorkerGate.new(target:, max: ceiling)
-    sampler = ScriptedSampler.new
+    gate = Migrations::Importer::Uploads::WorkerGate.new(target:, max: ceiling)
+    sampler = scripted_sampler_class.new
     sampler.reading = reading(cpu: 0.1, **reading_opts)
     step = instance_double(Migrations::Reporting::Reporter::StepHandle)
     allow(step).to receive(:report_concurrency)
@@ -119,7 +121,7 @@ RSpec.describe Migrations::Importer::Uploads::AdaptiveController do
   describe "memory policy" do
     it "halves the target below the normal floor and freezes increases in an emergency" do
       h = build(target: 3, ceiling: 16)
-      h[:sampler].reading = reading(cpu: 0.1, mem_fraction: 0.05, mem_bytes: GB / 2)
+      h[:sampler].reading = reading(cpu: 0.1, mem_fraction: 0.05, mem_bytes: gb / 2)
 
       h[:controller].tick
       expect(h[:gate].target).to eq(1) # 3 / 2 = 1, below the floor of 2 on purpose
@@ -139,7 +141,7 @@ RSpec.describe Migrations::Importer::Uploads::AdaptiveController do
     end
 
     it "blocks increases while memory is merely low, without shrinking" do
-      h = build(target: 4, ceiling: 16, mem_fraction: 0.20, mem_bytes: GB)
+      h = build(target: 4, ceiling: 16, mem_fraction: 0.20, mem_bytes: gb)
 
       advance(h[:state], rate: 100)
       h[:controller].tick
@@ -150,7 +152,7 @@ RSpec.describe Migrations::Importer::Uploads::AdaptiveController do
     it "ignores a low fraction while plenty of memory is absolutely available" do
       # A huge-RAM server: 5% free is still 8 GB — not pressure. The fraction
       # threshold only binds when the absolute one agrees.
-      h = build(target: 4, ceiling: 16, mem_fraction: 0.05, mem_bytes: 8 * GB)
+      h = build(target: 4, ceiling: 16, mem_fraction: 0.05, mem_bytes: 8 * gb)
 
       advance(h[:state], rate: 100)
       h[:controller].tick
