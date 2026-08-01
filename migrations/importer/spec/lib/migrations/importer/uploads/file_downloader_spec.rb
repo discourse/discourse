@@ -26,11 +26,15 @@ RSpec.describe Migrations::Importer::Uploads::FileDownloader do
     end
 
     it "sanitizes the id into the cache path" do
-      downloader = described_class.new(cache_path: @cache, filename_store: {})
+      # A cache file at the sanitized location must be found for the raw id.
+      cached_path = File.join(@cache, "a_b-c")
+      File.binwrite(cached_path, "x")
 
-      path = downloader.send(:cache_path_for, "a/b=c")
+      downloader = described_class.new(cache_path: @cache, filename_store: { "a/b=c" => "a.png" })
 
-      expect(path).to eq(File.join(@cache, "a_b-c"))
+      result = downloader.download(url: "https://example.com/a.png", id: "a/b=c")
+
+      expect(result.path).to eq(cached_path)
     end
   end
 
