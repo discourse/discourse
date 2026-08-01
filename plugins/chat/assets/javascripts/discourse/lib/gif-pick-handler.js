@@ -1,12 +1,3 @@
-// Builds the customPickHandler passed to GifsModal from the chat composer's
-// GIF button. Extracted so the send + draft-reset interplay can be unit tested.
-//
-// The returned handler:
-//   - Sends the picked GIF as a chat message in the active context (channel or
-//     thread, with inReplyTo when replying in a channel).
-//   - On a successful send, resets the *correct* draft (thread when in a
-//     thread context, channel otherwise) for the given user.
-//   - On send failure, leaves the draft intact so the user can retry.
 export function buildGifPickHandler({ api, draft, isThread, currentUser }) {
   const draftHolder = isThread ? draft.thread : draft.channel;
 
@@ -21,5 +12,21 @@ export function buildGifPickHandler({ api, draft, isThread, currentUser }) {
       return;
     }
     draftHolder?.resetDraft?.(currentUser);
+  };
+}
+
+export function buildChatPickerSelectHandler({ api, composer, currentUser }) {
+  return (value, tab) => {
+    if (tab.id === "emoji") {
+      composer.onSelectEmoji(value);
+      return;
+    }
+
+    buildGifPickHandler({
+      api,
+      draft: composer.draft,
+      isThread: composer.context === "thread",
+      currentUser,
+    })(value);
   };
 }
