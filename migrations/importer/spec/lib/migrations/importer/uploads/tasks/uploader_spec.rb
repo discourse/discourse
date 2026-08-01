@@ -17,7 +17,7 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
 
   # Stands in for an ActiveRecord `Upload` without booting Rails; only `attributes`
   # is read off it.
-  FakeUpload = Data.define(:attributes)
+  let(:fake_upload_class) { Data.define(:attributes) }
 
   let(:status) { described_class::Status }
   let(:skip_reason) { described_class::SkipReason }
@@ -28,92 +28,39 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
     allow(Migrations::Database::FilesDB::Download).to receive(:create)
   end
 
-  describe "result builders" do
-    it "builds a file-not-found skip result" do
-      result = uploader.send(:missing_result, { id: "abc" })
-
-      expect(result).to include(
-        id: "abc",
-        status: status::SKIPPED,
-        skip_reason: skip_reason::FILE_NOT_FOUND,
-        markdown: nil,
-        upload: nil,
+  describe "#write (dedup by staging id)" do
+    def result_for(source_id, upload_id)
+      {
+        id: source_id,
+        status: status::OK,
+        skip_reason: nil,
+        skip_details: nil,
+        markdown: "![](x)",
+        upload: {
+          id: upload_id,
+          sha1: "abc",
+          url: "//x.png",
+          filesize: 1,
+          original_filename: "x.png",
+        },
         download: nil,
-      )
+      }
     end
 
-    it "builds an error result carrying the reason and details" do
-      result =
-        uploader.send(
-          :error_result,
-          { id: "abc" },
-          skip_reason: skip_reason::DOWNLOAD_ERROR,
-          skip_details: "boom",
-          download: nil,
-        )
-
-      expect(result).to include(
-        id: "abc",
-        status: status::ERROR,
-        skip_reason: skip_reason::DOWNLOAD_ERROR,
-        skip_details: "boom",
-        upload: nil,
-      )
-    end
-  end
-
-  describe "#upload_attributes" do
-    it "slices the upload down to the columns the files DB keeps" do
-      upload =
-        FakeUpload.new(
-          attributes: {
-            "id" => 7,
-            "sha1" => "deadbeef",
-            "url" => "//example/x.png",
-            "filesize" => 10,
-            "original_filename" => "x.png",
-            "user_id" => 5,
-            "updated_at" => "2026-01-01",
-            "retain_hours" => 3,
-          },
-        )
-
-      attributes = uploader.send(:upload_attributes, upload)
-
-      expect(attributes).to include(id: 7, sha1: "deadbeef", url: "//example/x.png")
-      expect(attributes.keys).not_to include(:user_id, :updated_at, :retain_hours)
-    end
-  end
-
-  describe "#outcome_for" do
-    it "maps the result status onto the progress outcome" do
-      expect(uploader.send(:outcome_for, status::OK)).to eq(:ok)
-      expect(uploader.send(:outcome_for, status::SKIPPED)).to eq(:skip)
-      expect(uploader.send(:outcome_for, status::ERROR)).to eq(:error)
-    end
-  end
-
-  describe "#write_upload (dedup by staging id)" do
-    let(:attributes) do
-      { id: 42, sha1: "abc", url: "//x.png", filesize: 1, original_filename: "x.png" }
-    end
-
-    it "inserts the uploads row once per staging id and always returns the id" do
+    it "inserts the uploads row once per staging id but records every result" do
       seen = []
       allow(Migrations::Database::FilesDB::Upload).to receive(:create) { |**kwargs|
         seen << kwargs[:id]
       }
 
-      expect(uploader.send(:write_upload, attributes)).to eq(42)
-      expect(uploader.send(:write_upload, attributes)).to eq(42)
-      expect(uploader.send(:write_upload, attributes.merge(id: 43))).to eq(43)
+      uploader.write(result_for("hash-1", 42))
+      uploader.write(result_for("hash-2", 42))
+      uploader.write(result_for("hash-3", 43))
 
       expect(seen).to eq([42, 43])
-    end
-
-    it "writes nothing and returns nil when there is no upload" do
-      expect(uploader.send(:write_upload, nil)).to be_nil
-      expect(Migrations::Database::FilesDB::Upload).not_to have_received(:create)
+      expect(Migrations::Database::FilesDB::UploadResult).to have_received(:create).with(
+        hash_including(id: "hash-2", upload_id: 42),
+      )
     end
   end
 
