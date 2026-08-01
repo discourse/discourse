@@ -589,6 +589,27 @@ describe DiscourseReactions::CustomReactionsController do
       expect(user_4_rows.first["reaction"]).to eq("hugs")
     end
 
+    it "includes legacy main-reaction ReactionUser rows when filtering by the main reaction" do
+      legacy_post = Fabricate(:post)
+      main_reaction =
+        Fabricate(
+          :reaction,
+          post: legacy_post,
+          reaction_value: DiscourseReactions::Reaction.main_reaction_id,
+        )
+      # Legacy main-reaction reactions created a ReactionUser but no shadow like.
+      Fabricate(:reaction_user, reaction: main_reaction, user: user_3, post: legacy_post)
+
+      get "/discourse-reactions/posts/#{legacy_post.id}/reactions-users-list.json",
+          params: {
+            reaction_value: DiscourseReactions::Reaction.main_reaction_id,
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |u| u["username"] }).to include(user_3.username)
+      expect(response.parsed_body["total_rows"]).to eq(1)
+    end
+
     context "with ignored users" do
       it "hides reactions and likes from users the current user has ignored" do
         sign_in(user_1)
@@ -679,6 +700,40 @@ describe DiscourseReactions::CustomReactionsController do
       get "/discourse-reactions/posts/#{post_2.id}/reactions-users.json?reaction_value=#{DiscourseReactions::Reaction.main_reaction_id}"
       parsed = response.parsed_body
       expect(parsed["reaction_users"][0]["count"]).to eq(like_count + reaction_count)
+    end
+
+    it "returns legacy main-reaction users even when no plain likes remain" do
+      legacy_post = Fabricate(:post)
+      main_reaction =
+        Fabricate(
+          :reaction,
+          post: legacy_post,
+          reaction_value: DiscourseReactions::Reaction.main_reaction_id,
+        )
+      # Legacy main-reaction reactions created a ReactionUser but no shadow like.
+      Fabricate(:reaction_user, reaction: main_reaction, user: user_3, post: legacy_post)
+
+      get "/discourse-reactions/posts/#{legacy_post.id}/reactions-users.json"
+      main_entry =
+        response.parsed_body["reaction_users"].find do |reaction|
+          reaction["id"] == DiscourseReactions::Reaction.main_reaction_id
+        end
+
+      expect(response.status).to eq(200)
+      expect(main_entry).to be_present
+      expect(main_entry["count"]).to eq(1)
+      expect(main_entry["users"].map { |u| u["username"] }).to eq([user_3.username])
+
+      get "/discourse-reactions/posts/#{legacy_post.id}/reactions-users.json",
+          params: {
+            reaction_value: DiscourseReactions::Reaction.main_reaction_id,
+          }
+      main_entry = response.parsed_body["reaction_users"].first
+
+      expect(response.status).to eq(200)
+      expect(main_entry["id"]).to eq(DiscourseReactions::Reaction.main_reaction_id)
+      expect(main_entry["count"]).to eq(1)
+      expect(main_entry["users"].map { |u| u["username"] }).to eq([user_3.username])
     end
 
     it "does not show reaction_users on PMs without permission" do
