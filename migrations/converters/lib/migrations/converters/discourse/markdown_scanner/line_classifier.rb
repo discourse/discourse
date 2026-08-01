@@ -94,13 +94,11 @@ module Migrations
               pos + level >= line_end || byte == 0x20 || byte == 0x09 || byte == 0x0d
             end
 
-            # A thematic break (`***`, `---`, `___`) or a setext underline (`---`,
-            # `===`) — both end an open paragraph and hold nothing to detect.
-            def break_or_underline?(input, pos, line_end)
+            # A thematic break: at least three of one of `-`, `*` or `_`, with
+            # nothing but whitespace between and after them.
+            def thematic_break?(input, pos, line_end)
               byte = input.getbyte(pos)
-              unless byte == 0x2d || byte == 0x2a || byte == 0x5f || byte == 0x3d # - * _ =
-                return false
-              end
+              return false unless byte == 0x2d || byte == 0x2a || byte == 0x5f # - * _
 
               count = 0
               scan = pos
@@ -114,9 +112,18 @@ module Migrations
                 scan += 1
               end
 
-              # A setext underline is any run of `-` or `=`; a thematic break needs
-              # three of its character.
-              byte == 0x2d || byte == 0x3d ? count >= 1 : count >= 3
+              count >= 3
+            end
+
+            # A setext underline: one unbroken run of `-` or `=` with nothing but
+            # whitespace after it. Such a line only IS an underline below an open
+            # paragraph, which is the caller's question to settle.
+            def setext_underline?(input, pos, line_end)
+              byte = input.getbyte(pos)
+              return false unless byte == 0x2d || byte == 0x3d # - =
+
+              run_end = pos + run_length(input, pos, line_end, byte)
+              whitespace_only?(input, run_end, line_end)
             end
 
             # The byte just past a list marker at +pos+ (`-`, `*`, `+`, `1.`, `1)`),

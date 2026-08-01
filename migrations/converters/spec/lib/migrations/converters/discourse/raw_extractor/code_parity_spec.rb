@@ -37,7 +37,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     "![shot](upload://abc.png)"
   end
 
-  # Each row is [label, raw]. Verified against PrettyText, 2026-07-31.
+  # Each row is [label, raw]. Verified against PrettyText, 2026-08-01.
   def rows
     [
       # --- <code>, which core does NOT treat as code for mentions ---
@@ -117,6 +117,37 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       ["indented after a closed fence without a blank line", "```\nx\n```\n    #{mention}"],
       ["indented after a thematic break", "Intro\n***\n\n    #{mention}"],
       ["indented after a setext heading", "Intro\n===\n    #{mention}"],
+      ["indented after a dash underline", "Intro\n-\n    #{mention}"],
+      ["indented after a two-dash underline", "Intro\n--\n    #{mention}"],
+      ["indented after an underline in a blockquote", "> Intro\n> -\n>     #{mention}"],
+      ["indented after a lone dash", "-\n    #{mention}"],
+      ["indented after a lone equals", "=\n    #{mention}"],
+      ["indented after two dashes alone", "--\n    #{mention}"],
+      ["indented after two equals alone", "==\n    #{mention}"],
+      ["indented after a lone star", "*\n    #{mention}"],
+      ["indented after a spaced break", "- - -\n    #{mention}"],
+      ["indented after spaced equals under a paragraph", "Intro\n= =\n    #{mention}"],
+      ["indented after spaced dashes under a paragraph", "Intro\n- -\n    #{mention}"],
+      ["indented after a lazy dash in a blockquote", "> Intro\n-\n      #{mention}"],
+      ["indented after a lazy equals in a blockquote", "> Intro\n=\n    #{mention}"],
+      ["indented after lazy dashes in a blockquote", "> Intro\n--\n    #{mention}"],
+      ["indented after a break leaving a blockquote", "> Intro\n---\n    #{mention}"],
+      ["indented after a lazy equals in a list", "- Intro\n=\n      #{mention}"],
+      ["lazy [code] in a blockquote", "> Intro\n[code]\n#{mention}\n[/code]"],
+      ["two columns after a lazy dash in a blockquote", "> Intro\n-\n    #{mention}"],
+      ["indented after a lazy dash in a list", "- Intro\n-\n      #{mention}"],
+      ["indented after a lazy star in a blockquote", "> Intro\n*\n      #{mention}"],
+      ["indented after a lazy star under a paragraph", "Intro\n*\n    #{mention}"],
+      ["indented after a lazy ordered item under a paragraph", "Intro\n2. x\n    #{mention}"],
+      ["indented after a lazy ordered item in a blockquote", "> Intro\n2. x\n       #{mention}"],
+      ["indented after a lazy heading in a list", "- Intro\n# h\n    #{mention}"],
+      ["lazy <pre> in a list", "- Intro\n<pre>\n#{mention}\n</pre>"],
+      ["lazy [code] in a list", "- Intro\n[code]\n#{mention}\n[/code]"],
+      ["indented after an underline with trailing spaces", "Intro\n-  \n    #{mention}"],
+      ["two columns after a lazy dash in a list", "- Intro\n-\n    #{mention}"],
+      ["indented after a lazy star in a list", "- Intro\n*\n      #{mention}"],
+      ["indented in a lazy ordered item's second block", "- Intro\n2. x\n\n      #{mention}"],
+      ["two columns in a lazy ordered item's second block", "> Intro\n2. x\n\n     #{mention}"],
       ["tab-indented after a blank line", "Intro\n\n\t#{mention}"],
       ["space then tab reaching column four", "Intro\n\n \t#{mention}"],
       ["two columns is not enough", "Intro\n\n  #{mention}"],
@@ -235,6 +266,17 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
         expect(detector_treats_as_code?(raw)).to be false
         expect(core_treats_as_code?(raw)).to be true
       end
+    end
+
+    # Tables are not modelled in the block phase — a delimiter row only bounds
+    # inline spans. A table interrupting a paragraph therefore leaves the
+    # paragraph open, and an indented line right below the table reads as
+    # prose rather than code.
+    it "extracts from an indented line below a table that interrupts a paragraph" do
+      raw = "Intro\na|b\n-|-\nc|d\n    @alice"
+
+      expect(detector_treats_as_code?(raw)).to be false
+      expect(core_treats_as_code?(raw)).to be true
     end
   end
 end

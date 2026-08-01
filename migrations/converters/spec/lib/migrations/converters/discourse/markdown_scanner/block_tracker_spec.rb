@@ -278,6 +278,68 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::BlockTracker 
     end
   end
 
+  describe "setext underlines, thematic breaks and empty list items" do
+    it "closes the paragraph at an underline, so indented code opens below" do
+      expect(code_text("Intro\n-\n    body\n")).to eq("    body\n")
+      expect(code_text("Intro\n--\n    body\n")).to eq("    body\n")
+      expect(code_text("Intro\n===\n    body\n")).to eq("    body\n")
+      expect(code_text("Intro\n-  \n    body\n")).to eq("    body\n")
+    end
+
+    it "closes the paragraph at a thematic break, spaced or not" do
+      expect(code_text("Intro\n***\n    body\n")).to eq("    body\n")
+      expect(code_text("- - -\n    body\n")).to eq("    body\n")
+    end
+
+    it "reads a lone dash with no paragraph above as an empty list item" do
+      expect(code_regions("-\n    body\n")).to be_empty
+      expect(code_text("-\n      body\n")).to eq("      body\n")
+    end
+
+    it "reads an underline-shaped line with no paragraph above as prose" do
+      expect(code_regions("=\n    body\n")).to be_empty
+      expect(code_regions("--\n    body\n")).to be_empty
+      expect(code_regions("==\n    body\n")).to be_empty
+    end
+
+    it "does not read a spaced run as an underline" do
+      expect(code_regions("Intro\n= =\n    body\n")).to be_empty
+      expect(code_regions("Intro\n- -\n    body\n")).to be_empty
+    end
+
+    # A setext underline is not one of core's container terminator rules, so
+    # such a line continues the paragraph lazily.
+    it "keeps an underline-shaped line lazy where the containers stop matching" do
+      expect(code_regions("> Intro\n=\n    body\n")).to be_empty
+      expect(code_regions("> Intro\n--\n    body\n")).to be_empty
+      expect(code_regions("- Intro\n=\n      body\n")).to be_empty
+    end
+
+    # The terminator rules run with the container as the parent, so the list
+    # paragraph restrictions do not apply: even an empty item ends the
+    # containers, and its content column decides what is indented below it.
+    it "ends a blockquote at an empty list item" do
+      expect(code_regions("> Intro\n-\n    body\n")).to be_empty
+      expect(code_text("> Intro\n-\n      body\n")).to eq("      body\n")
+      expect(code_text("> Intro\n*\n      body\n")).to eq("      body\n")
+    end
+
+    it "ends a list item at an empty item with another marker" do
+      expect(code_regions("- Intro\n-\n    body\n")).to be_empty
+      expect(code_text("- Intro\n*\n      body\n")).to eq("      body\n")
+    end
+
+    it "ends a blockquote at an ordered item not starting at one" do
+      expect(code_regions("> Intro\n2. x\n\n     body\n")).to be_empty
+      expect(code_text("> Intro\n2. x\n\n       body\n")).to eq("       body\n")
+    end
+
+    it "keeps such a list item lazy at the paragraph's own level" do
+      expect(code_regions("Intro\n*\n    body\n")).to be_empty
+      expect(code_regions("Intro\n2. x\n    body\n")).to be_empty
+    end
+  end
+
   describe "CRLF bodies" do
     it "reads a blank line, a fence closer and a [code] closer through the CR" do
       expect(code_text("```\r\nbody\r\n```\r\n")).to eq("```\r\nbody\r\n```\r\n")
@@ -325,6 +387,10 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::BlockTracker 
 
     it "crosses an indented line, which cannot interrupt a paragraph" do
       expect(span_end("`a\n    b\nc` x")).to eq(11)
+    end
+
+    it "crosses a spaced run, which is no underline and no break" do
+      expect(span_end("`a\n= =\nc` x")).to eq(9)
     end
   end
 

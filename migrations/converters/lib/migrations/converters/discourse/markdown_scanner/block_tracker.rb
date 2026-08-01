@@ -84,7 +84,8 @@ module Migrations
             # including an indented one — which is why indented code cannot open in
             # the middle of a paragraph, and why an unmatched container prefix is
             # still a lazy continuation.
-            lazy = @paragraph_open && !interrupts_paragraph?(input, content_pos, line_end, indent)
+            lazy =
+              @paragraph_open && lazy_continuation?(input, content_pos, line_end, indent, matched)
 
             if matched < @containers.size
               return nil if lazy
@@ -308,9 +309,15 @@ module Migrations
               end
 
               # Checked before the list marker, as core's block ruler does, so that
-              # `---` is a break rather than an empty bullet.
+              # `---` is a break rather than an empty bullet. A setext underline
+              # only counts under an open paragraph; a lone `-` with none above it
+              # falls through to the list marker instead.
               if byte == 0x2d || byte == 0x2a || byte == 0x5f || byte == 0x3d # - * _ =
-                if LineClassifier.break_or_underline?(input, content_pos, line_end)
+                if LineClassifier.thematic_break?(input, content_pos, line_end) ||
+                     (
+                       @paragraph_open &&
+                         LineClassifier.setext_underline?(input, content_pos, line_end)
+                     )
                   @paragraph_open = false
                   return nil
                 end
@@ -354,14 +361,65 @@ module Migrations
             after
           end
 
-          # Whether a line starts a block that ends the open paragraph. An indented
-          # line never does, and neither does anything not modelled here: leaving the
-          # paragraph open makes a following indented line read as prose, which is
-          # the direction that cannot lose an embed.
+          # Whether the open paragraph swallows a line whose container prefix
+          # matched +matched+ entries. At the paragraph's own level, any line no
+          # block rule interrupts it with continues it. A line that stopped
+          # matching the containers continues lazily unless it ends them, which
+          # core decides with the containers' terminator rules — where the list
+          # restrictions are off and a setext underline is no terminator at all.
+          def lazy_continuation?(input, pos, line_end, indent, matched)
+            if matched < @containers.size
+              !ends_containers?(input, pos, line_end, indent)
+            else
+              !interrupts_paragraph?(input, pos, line_end, indent)
+            end
+          end
+
+          # Whether a line starts a block that ends the open paragraph at the
+          # paragraph's own level: a setext underline does, and a list only within
+          # core's restrictions — an empty item or an ordered item not starting at
+          # 1 cannot interrupt. Anything not modelled here leaves the paragraph
+          # open, which makes a following indented line read as prose — the
+          # direction that cannot lose an embed.
           def interrupts_paragraph?(input, pos, line_end, indent)
             return false if indent >= 4
 
             byte = input.getbyte(pos)
+            return true if LineClassifier.setext_underline?(input, pos, line_end)
+            return true if starts_block?(input, pos, line_end, byte)
+
+            if byte == 0x2d || byte == 0x2a || byte == 0x2b || (byte >= 0x30 && byte <= 0x39)
+              marker_end = LineClassifier.list_marker_end(input, pos, line_end)
+              return(
+                !!marker_end && LineClassifier.list_interrupts?(input, pos, marker_end, line_end)
+              )
+            end
+
+            false
+          end
+
+          # Whether a line that stopped matching the open containers terminates
+          # them. Core's terminator rules run with the container as the parent, so
+          # the paragraph-interruption restrictions on lists do not apply: any
+          # list marker line ends the containers, even an empty item.
+          def ends_containers?(input, pos, line_end, indent)
+            return false if indent >= 4
+
+            byte = input.getbyte(pos)
+            return true if starts_block?(input, pos, line_end, byte)
+
+            if byte == 0x2d || byte == 0x2a || byte == 0x2b || (byte >= 0x30 && byte <= 0x39)
+              return !!LineClassifier.list_marker_end(input, pos, line_end)
+            end
+
+            false
+          end
+
+          # The block starts that end a paragraph no matter where it sits: as the
+          # terminator arms above differ only on lists and underlines, these are
+          # their shared arms. A `-` or `*` line that is not a break falls back to
+          # the caller's list handling.
+          def starts_block?(input, pos, line_end, byte)
             return true if byte == 0x3e # 0x3e = >
 
             if byte == 0x60 || byte == 0x7e # 0x60 = `, 0x7e = ~
@@ -372,15 +430,8 @@ module Migrations
             if byte == 0x5b # 0x5b = [
               return LineClassifier.block_bbcode_opener?(input, pos, line_end)
             end
-
-            if (byte == 0x2d || byte == 0x2a || byte == 0x5f || byte == 0x3d) && # - * _ =
-                 LineClassifier.break_or_underline?(input, pos, line_end)
-              return true
-            end
-
-            if byte == 0x2d || byte == 0x2a || byte == 0x2b || (byte >= 0x30 && byte <= 0x39)
-              marker_end = LineClassifier.list_marker_end(input, pos, line_end)
-              return marker_end && LineClassifier.list_interrupts?(input, pos, marker_end, line_end)
+            if byte == 0x2d || byte == 0x2a || byte == 0x5f # - * _
+              return LineClassifier.thematic_break?(input, pos, line_end)
             end
 
             false
