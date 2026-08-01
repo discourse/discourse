@@ -104,12 +104,12 @@ class Auth::Result
   end
 
   def apply_associated_attributes!
-    if authenticator&.provides_groups? && !associated_groups.nil?
+    if should_apply_associated_groups?
       associated_group_ids = []
 
       associated_groups.uniq.each do |associated_group|
         begin
-          associated_group =
+          associated_group_record =
             AssociatedGroup.find_or_create_by(
               name: associated_group[:name],
               provider_id: associated_group[:id],
@@ -119,8 +119,16 @@ class Auth::Result
           retry
         end
 
-        associated_group_ids.push(associated_group.id)
+        associated_group_ids.push(associated_group_record.id)
       end
+
+      DiscoursePluginRegistry.apply_modifier(
+        :auth_result_after_associated_groups_created,
+        nil,
+        associated_groups,
+        user,
+        extra_data,
+      )
 
       user.update(associated_group_ids: associated_group_ids)
       AssociatedGroup.where(id: associated_group_ids).update_all("last_used = CURRENT_TIMESTAMP")
@@ -204,6 +212,10 @@ class Auth::Result
 
   def authenticator
     @authenticator ||= Discourse.enabled_authenticators.find { |a| a.name == authenticator_name }
+  end
+
+  def should_apply_associated_groups?
+    !associated_groups.nil?
   end
 
   def resolve_username
