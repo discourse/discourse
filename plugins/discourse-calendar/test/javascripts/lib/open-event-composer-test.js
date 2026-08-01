@@ -153,8 +153,8 @@ module("Unit | Lib | open-event-composer", function (hooks) {
     );
     assert.strictEqual(
       params.end,
-      "2026-05-25 00:00",
-      "uses the exclusive end of the all-day selection"
+      "2026-05-24 00:00",
+      "converts FC's exclusive end to an inclusive end date"
     );
     assert.strictEqual(params.allDay, "true", "emits the allDay flag");
   });
