@@ -87,6 +87,14 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
         %([quote="Bob Jones, post:1, username:bjones"]\nx\n[/quote]),
         "bjones",
       ],
+      "explicit username with a comma name" => [
+        %([quote="Doe, John, post:1, username:jd"]\nx\n[/quote]),
+        "jd",
+      ],
+      "comma name without explicit username" => [
+        %([quote="Doe, John, post:1"]\nx\n[/quote]),
+        "Doe",
+      ],
       "mismatched double-single" => [%([quote="bob']\nx\n[/quote]), %("bob')],
       "mismatched single-double" => [%([quote='bob"]\nx\n[/quote]), %('bob")],
       "one-sided opening mark" => [%([quote="bob]\nx\n[/quote]), %("bob)],
@@ -140,6 +148,14 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     raw = %([quote="bob"]\nx\n[/quote])
     expect(detector_extracts?(raw)).to eq(core_renders_quote?(raw))
     expect(detector_username(raw)).to eq(core_username(raw))
+  end
+
+  it "reads a comma-containing display name back the way core joins it" do
+    # quotes.js splits the header on commas and joins everything before the
+    # `post:` part back together as the display name.
+    raw = %([quote="Doe, John, post:1, username:jd"]\nx\n[/quote])
+    expect(detector_quote(raw)).to include(quoted_username: "jd", quoted_name: "Doe, John")
+    expect(core_html(raw)).to include("Doe, John")
   end
 
   it "treats a CRLF after the tag as a bare line end, matching core" do

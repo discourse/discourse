@@ -365,6 +365,24 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.uploads.size).to eq(1)
       expect(buffer.mentions).to be_empty
     end
+
+    # A `@name` in a relative destination is inside a link just like an
+    # absolute one; a placeholder spliced into the URL would corrupt it.
+    it "leaves a mention alone in a nested-text link's relative destination" do
+      raw = "[see [1]](/x/@bob) end"
+
+      expect(link_extractor.extract(raw)).to eq(raw)
+      expect(buffer.mentions).to be_empty
+    end
+
+    # Text nested too deep for any link pattern still leaves its `](…)`
+    # destination consumed, not walked into.
+    it "leaves a mention alone in the destination of a link too nested to match" do
+      raw = "[a [b [c]]](/x/@bob) end"
+
+      expect(link_extractor.extract(raw)).to eq(raw)
+      expect(buffer.mentions).to be_empty
+    end
   end
 
   # An unpaired backtick is literal text in CommonMark, so it must not open a code

@@ -342,6 +342,22 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.links).to be_empty
     end
 
+    it "leaves the `/tags/intersection/...` form undetected" do
+      # `/tags/intersection/<t1>/<t2>` is a reserved route, not the page of a
+      # tag named `intersection` — reading it as one would rewrite the link to
+      # a single tag's page.
+      raw = "browse [tags](/tags/intersection/food/wine) here"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.links).to be_empty
+    end
+
+    it "still reads a bare /tags/intersection as a tag with that name" do
+      link, = link_for("[x](/tags/intersection)")
+
+      expect(link).to include(target_type: enums::LinkTarget::TAG, target_name: "intersection")
+    end
+
     it "defers a group link by name" do
       link, = link_for("[x](/g/team)")
 
@@ -412,6 +428,29 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
         target_id: 12,
       )
       expect(result).to eq(link[:placeholder])
+    end
+
+    # Core allows one level of balanced brackets in link text, so a
+    # citation-style link is still a link and must be rewritten.
+    it "captures link text holding a balanced bracket pair" do
+      link, result = link_for("[see [1]](/t/slug/12)")
+
+      expect(link).to include(text: "see [1]", target_id: 12)
+      expect(result).to eq(link[:placeholder])
+    end
+
+    it "captures link text that is only a bracket pair" do
+      link, = link_for("[[1]](/t/slug/12)")
+
+      expect(link).to include(text: "[1]", target_id: 12)
+    end
+
+    # Links don't nest in core: the inner `[…](…)` wins and the outer bracket
+    # stays literal, so the outer text must not match around it.
+    it "defers the inner link when the text holds a nested link" do
+      link, = link_for("[see [1](/t/nine/9)](/t/slug/12)")
+
+      expect(link).to include(text: "1", target_id: 9)
     end
 
     it "keeps a bare URL bare (no captured text)" do

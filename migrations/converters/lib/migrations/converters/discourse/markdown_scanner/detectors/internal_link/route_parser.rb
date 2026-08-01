@@ -84,9 +84,13 @@ module Migrations
               CATEGORY_SLUG = %r{\A/c/(?<path>#{SEGMENT}#{CATEGORY_SLUG_SEGMENT}*)(?=[/?#]|\z)}
               private_constant :CATEGORY_SLUG
 
-              # `/tag/<name>` / `/tags/<name>`. The `(?!c/)` guard leaves the
-              # `/tags/c/<category>/<tag>` intersection form undetected (out of scope).
-              TAG = %r{\A/tags?/(?!c/)(?<name>#{SEGMENT})}
+              # `/tag/<name>` / `/tags/<name>`. The guard leaves the two reserved
+              # multi-tag forms undetected (out of scope; see LIMITATIONS.md):
+              # `/tags/c/<category>/<tag>` and `/tags/intersection/<t1>/<t2>` name
+              # several records, not a tag called `c` or `intersection`. The guard
+              # needs the trailing `/` because a bare `/tags/intersection` IS the
+              # page of a tag with that name.
+              TAG = %r{\A/tags?/(?!(?:c|intersection)/)(?<name>#{SEGMENT})}
               private_constant :TAG
 
               GROUP = %r{\A/g/(?<name>#{SEGMENT})}

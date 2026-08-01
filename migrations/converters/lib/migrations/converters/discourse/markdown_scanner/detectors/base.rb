@@ -92,6 +92,15 @@ module Migrations
             # (`[^/#{URL_TERMINATORS}]`) to match a single path segment.
             URL_TERMINATORS = "\\s)\"'<>"
 
+            # Link text, with the one level of balanced brackets CommonMark allows
+            # (`[see [1]](/t/5)` links with text `see [1]`). The nested bracket
+            # must not itself open a link or image — the `(?!\()` — so the `[` of a
+            # nested image `[![…](…)](…)` never matches at the outer bracket, which
+            # would swallow the inner construct unrecorded (see `UploadUrl::LINK`).
+            # Failing there matches core too: links don't nest, so the inner
+            # `[…](…)` wins and the outer bracket stays literal.
+            LINK_TEXT = /[^\[\]]*(?:\[[^\[\]]*\](?!\()[^\[\]]*)*/
+
             # The padding CommonMark allows inside a link's parentheses. The
             # destination and the title may sit on separate lines, but not across a
             # blank one, so at most one newline.

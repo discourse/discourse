@@ -33,7 +33,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     {
       "the next line" => "\n(this may take a while)",
       "a line after a blank one" => "\n\n(a caption)",
-      "a same-line parenthesis running onto the next line" => " (see\nnote)",
     }.each do |label, tail|
       it "leaves #{label} alone after an attachment" do
         result = extract("[report.pdf|attachment](upload://Zm9vYmFy.pdf)#{tail}")
@@ -47,6 +46,17 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       extract("![alt](upload://abc123.png)")
 
       expect(buffer.uploads.first[:original_markdown]).to be_nil
+    end
+
+    # Core's link parse fails at the unmatched outer `[` and renders the
+    # attachment from the inner bracket, keeping `[foo` literal — so the match
+    # must not start one bracket too early and swallow that text.
+    it "matches from the inner bracket when an unmatched `[` precedes an attachment" do
+      result = extract("[foo[bar|attachment](upload://Zm9vYmFy.pdf)")
+
+      expect(buffer.uploads.size).to eq(1)
+      expect(buffer.uploads.first[:upload_id]).to eq("Zm9vYmFy")
+      expect(result).to eq("[foo#{buffer.uploads.first[:placeholder]}")
     end
   end
 

@@ -43,6 +43,26 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.quotes.first).to include(quoted_username: "jane", quoted_name: nil)
     end
 
+    # A display name containing a comma splits into several header parts; core's
+    # quotes.js joins everything before the `post:` part back together, so the
+    # whole name has to survive here too.
+    it "keeps a comma-containing display name whole" do
+      extract(%([quote="Doe, John, post:1, topic:2, username:jd"]\nhi\n[/quote]))
+
+      expect(buffer.quotes.first).to include(
+        quoted_username: "jd",
+        quoted_name: "Doe, John",
+        quoted_post_number: 1,
+        quoted_topic_id: 2,
+      )
+    end
+
+    it "keeps a bare comma tail out of the username when username: is omitted" do
+      extract(%([quote="Doe, John, post:1"]\nhi\n[/quote]))
+
+      expect(buffer.quotes.first).to include(quoted_username: "Doe", quoted_name: nil)
+    end
+
     it "fills the containing topic id when the header names a post but no topic" do
       extract(%([quote="bob, post:12"]\nbody\n[/quote]), topic_id: 77)
 

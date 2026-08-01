@@ -122,36 +122,45 @@ module Migrations
             # and topic id; keep them as integers so the importer can look up the
             # quoted post by them.
             #
-            # With an explicit `username:` part, that is the username and the leading
-            # bare token is the display name (kept only when it differs). Without one,
-            # the leading token IS the username: Discourse omits `username:` exactly
-            # when the display name equals the username, so a lone token is not a
-            # distinct name.
+            # With an explicit `username:` part, that is the username and the bare
+            # tokens before the first recognized part are the display name, joined
+            # back with a comma: a name containing one splits into several parts,
+            # which core (quotes.js) reassembles the same way. Kept only when it
+            # differs from the username. Without a `username:` part, the leading
+            # token IS the username and any comma tail is dropped, as core does:
+            # Discourse omits `username:` exactly when the display name equals the
+            # username, so a lone token is not a distinct name.
             def parse_header(string)
-              explicit_username = name = nil
+              explicit_username = nil
               post_number = topic_id = nil
+              name_parts = []
+              leading = true
 
               string
                 .split(",")
                 .map(&:strip)
-                .each_with_index do |part, index|
+                .each do |part|
                   case part
                   when POST_PART
                     post_number = Regexp.last_match(1).to_i
+                    leading = false
                   when TOPIC_PART
                     topic_id = Regexp.last_match(1).to_i
+                    leading = false
                   when USERNAME_PART
                     explicit_username = Regexp.last_match(1)
+                    leading = false
                   else
-                    name = part if index.zero? && part.present?
+                    name_parts << part if leading && part.present?
                   end
                 end
 
               if explicit_username
+                name = name_parts.join(", ").presence
                 display_name = name if name && name != explicit_username
                 [explicit_username, display_name, post_number, topic_id]
               else
-                [name, nil, post_number, topic_id]
+                [name_parts.first, nil, post_number, topic_id]
               end
             end
           end

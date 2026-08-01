@@ -34,7 +34,10 @@ module Migrations
           # walk reaches at a `](…)` link target; a subfolder site writes its relative
           # links with the prefix (`/forum/t/5`), stripped via `base_prefix`. A
           # relative URL bare in prose is left alone, because it stays plain text when
-          # the post is cooked, so rewriting it would turn text into a link.
+          # the post is cooked, so rewriting it would turn text into a link. A bare
+          # URL with no scheme at all (`forum.example.com/t/5`), which core's linkify
+          # also links, is never detected: the walk has nothing to trigger on there
+          # (see LIMITATIONS.md).
           #
           # An absolute internal URL whose path parses no known route — a real site
           # page (`/faq`, `/search?q=…`) or junk (`/t/slug/5a`) — is still recorded, as
@@ -70,9 +73,10 @@ module Migrations
             URL_BODY = /[^#{Base::URL_TERMINATORS}]/
             private_constant :URL_BODY
 
-            # The text class excludes `[` for the same reason as `UploadUrl::LINK` (see
-            # the comment there): the `[` of a nested image `[![…](…)](…)` must not
-            # start a match at the outer bracket.
+            # The text takes one level of balanced brackets but no nested link or
+            # image (see `Base::LINK_TEXT`), so a citation-style `[see [1]](/t/5)`
+            # is rewritten while the `[` of a nested image `[![…](…)](…)` never
+            # starts a match at the outer bracket.
             #
             # The destination takes the padding, optional title and `<…>` form
             # CommonMark allows (see `Base::LINK_TAIL`). Without those an internal
@@ -80,7 +84,7 @@ module Migrations
             # source site. The `<…>` alternative repeats the `url` group name, which
             # Ruby allows: whichever branch matches is the one `match[:url]` reads.
             LINK =
-              /\G\[(?<text>[^\[\]]*)\]\(#{Base::LINK_GAP}(?:<(?<url>[^<>\n]+)>|(?<url>#{URL_BODY}+))#{Base::LINK_TAIL}/
+              /\G\[(?<text>#{Base::LINK_TEXT})\]\(#{Base::LINK_GAP}(?:<(?<url>[^<>\n]+)>|(?<url>#{URL_BODY}+))#{Base::LINK_TAIL}/
             private_constant :LINK
 
             # The bare form fires at every whitespace-preceded `h` and `/` the scanner

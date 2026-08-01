@@ -28,30 +28,18 @@ module Migrations
             URL_BODY = /[^#{Base::URL_TERMINATORS}]/
             private_constant :URL_BODY
 
-            # Whitespace inside the parentheses. CommonMark lets the destination and
-            # title sit on separate lines but not across a blank one, so at most one
-            # newline.
-            GAP = /[^\S\n]*\n?[^\S\n]*/
-            private_constant :GAP
-
-            # A link title, the part core turns into the anchor's `title` attribute.
-            # Kept to a single line: a title spanning lines is rare, and failing to
-            # match one only falls through to the bare-URL branch, which still covers
-            # the destination.
-            TITLE = /(?:"[^"\n]*"|'[^'\n]*'|\([^()\n]*\))/
-            private_constant :TITLE
-
             # The destination, plain or wrapped in angle brackets (`<…>`, which is how
             # CommonMark carries a destination containing spaces).
             DESTINATION = /(?:<[^<>\n]*>|#{URL_BODY}*)/
             private_constant :DESTINATION
 
             # A markdown link or image, `[text](dest)`, with the optional title and
-            # padding CommonMark allows: `[text](dest "title")`. The text class
-            # excludes `[` for the same reason as `UploadUrl::LINK`: a nested image
-            # `[![…](…)](…)` must not match at the outer bracket, or the walk would
-            # never reach the inner upload and it would go unrecorded.
-            LINK = /\G!?\[[^\[\]]*\]\(#{GAP}#{DESTINATION}(?:#{GAP}#{TITLE})?#{GAP}\)/
+            # padding CommonMark allows: `[text](dest "title")`. The text takes one
+            # level of balanced brackets but no nested link or image (see
+            # `Base::LINK_TEXT`): a nested image `[![…](…)](…)` must not match at
+            # the outer bracket, or the walk would never reach the inner upload and
+            # it would go unrecorded.
+            LINK = /\G!?\[#{Base::LINK_TEXT}\]\(#{Base::LINK_GAP}#{DESTINATION}#{Base::LINK_TAIL}/
             private_constant :LINK
 
             # A bare URL, schemed or protocol-relative, matched only where linkify
@@ -63,6 +51,15 @@ module Migrations
             # anything trailing is punctuation that holds no construct.
             BARE = %r{\G(?:(?i:https?:)?//#{URL_BODY}+)}
             private_constant :BARE
+
+            # What the walk reaches right after a `](`: the destination of a link
+            # whose bracket no pattern took whole. Consumed even when relative,
+            # unlike {BARE}: when the link forms in core nothing inside its
+            # destination is detected, and when it doesn't, skipping a path
+            # nobody's placeholder gets spliced into is the safe reading (see the
+            # class comment for the corruption this avoids).
+            DESTINATION_RUN = /\G#{URL_BODY}+/
+            private_constant :DESTINATION_RUN
 
             def detect(input, pos, byte)
               case byte
@@ -78,16 +75,16 @@ module Migrations
             private
 
             def detect_bare(input, pos)
-              return nil unless boundary_before?(input, pos)
+              if link_destination_before?(input, pos)
+                return skip_at(pos, match_at(DESTINATION_RUN, input, pos))
+              end
+
+              return nil unless bare_url_boundary_before?(input, pos)
 
               match = match_at(BARE, input, pos)
               return nil if match.nil? || inadmissible_protocol_relative?(input, pos, match[0])
 
               skip_at(pos, match)
-            end
-
-            def boundary_before?(input, pos)
-              link_destination_before?(input, pos) || bare_url_boundary_before?(input, pos)
             end
 
             # A URL right after a `](` is a link destination, and when the link is
