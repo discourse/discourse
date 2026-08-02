@@ -7422,6 +7422,7 @@ en:
           add: "Add report"
           remove: "Remove report"
           no_data: "No data to display"
+          report_error: "Couldn't load this report"
           modal:
             title: "Manage reports"
             search_placeholder: "Search reports"
