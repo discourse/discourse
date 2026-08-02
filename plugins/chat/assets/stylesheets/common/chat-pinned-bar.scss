@@ -1,0 +1,159 @@
+.chat-channel {
+  // shared by the bar (its height) and the floating notices (their top offset)
+  --chat-pinned-bar-height: 2.75rem;
+}
+
+.chat-pinned-bar {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-1);
+  min-width: 0; // allow the bar to shrink instead of forcing a min width on the channel/drawer
+  min-height: var(--chat-pinned-bar-height);
+  box-sizing: border-box;
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--content-border-color);
+  background: var(--secondary);
+  flex-shrink: 0;
+  z-index: 2;
+
+  &.--loading,
+  &.--dismissed {
+    display: none;
+  }
+
+  &__main {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+    padding: var(--space-1) var(--space-2);
+    background: transparent;
+    border: 0;
+    border-radius: 4px;
+    text-align: start;
+    cursor: pointer;
+
+    .no-touch &:hover {
+      background: var(--d-hover);
+    }
+  }
+
+  &__indicator {
+    align-self: center;
+    flex-shrink: 0;
+    width: 3px;
+    height: var(--chat-pinned-bar-indicator-height, 1.875rem);
+    overflow: hidden;
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      black var(--chat-pinned-bar-fade-top, 0),
+      black calc(100% - var(--chat-pinned-bar-fade-bottom, 0px)),
+      transparent 100%
+    );
+  }
+
+  &__indicator-track {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--chat-pinned-bar-gap, 2px);
+
+    // scroll by one slot (bar + gap) per step
+    transform: translateY(
+      calc(
+        var(--chat-pinned-bar-indicator-top, 0) *
+          (var(--chat-pinned-bar-seg, 6px) + var(--chat-pinned-bar-gap, 2px)) *
+          -1
+      )
+    );
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: transform 150ms ease;
+    }
+  }
+
+  &__indicator-segment {
+    flex: 0 0 auto;
+    height: var(--chat-pinned-bar-seg, 6px);
+
+    // translucent tint of the active colour so dim bars keep contrast in both
+    // schemes (--tertiary-low collapses into the dark-mode background)
+    background: var(--tertiary);
+    opacity: 0.4;
+    border-radius: 3px;
+  }
+
+  &__indicator-thumb {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 0;
+    height: var(--chat-pinned-bar-seg, 6px);
+    background: var(--tertiary);
+    border-radius: 3px;
+    transform: translateY(
+      calc(
+        var(--chat-pinned-bar-active, 0) *
+          (var(--chat-pinned-bar-seg, 6px) + var(--chat-pinned-bar-gap, 2px))
+      )
+    );
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: transform 150ms ease;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--tertiary);
+    font-size: var(--font-down-2);
+    font-weight: 700;
+
+    .d-icon {
+      font-size: var(--font-down-2);
+      transform: rotate(45deg);
+    }
+  }
+
+  &__excerpt {
+    @include ellipsis;
+    color: var(--primary);
+    font-size: var(--font-down-1);
+  }
+
+  &__see-all,
+  &__dismiss {
+    position: relative;
+    align-self: center;
+    flex-shrink: 0;
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+  }
+
+  &__see-all {
+    &.--active .d-icon {
+      color: var(--tertiary);
+    }
+  }
+
+  &__unread-indicator {
+    @include chat-unread-indicator;
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    transform: translate(calc(-50% + 2px), calc(50% - 2px));
+    border: 2px solid var(--secondary);
+  }
+}

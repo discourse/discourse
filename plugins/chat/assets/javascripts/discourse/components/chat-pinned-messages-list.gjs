@@ -1,16 +1,27 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
+import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ChatMessage from "discourse/plugins/chat/discourse/components/chat-message";
+import {
+  dismissPinsUpTo,
+  hasPinsDismissal,
+  newestPinId,
+  resetPinsDismissal,
+} from "discourse/plugins/chat/discourse/lib/chat-pinned-bar-dismissal";
 
 export default class ChatPinnedMessagesList extends Component {
   @service messageBus;
   @service chatApi;
   @service currentUser;
+  @service router;
 
   @tracked pinnedMessages = this.args.pinnedMessages || [];
 
@@ -30,7 +41,6 @@ export default class ChatPinnedMessagesList extends Component {
       this.#markPinsAsRead(channel);
     };
   });
-
   onMessage = (busData) => {
     switch (busData.type) {
       case "pin":
@@ -41,7 +51,6 @@ export default class ChatPinnedMessagesList extends Component {
         break;
     }
   };
-
   isUnseen = (pin) => {
     if (pin.pinned_by?.id === this.currentUser?.id) {
       return false;
@@ -55,12 +64,10 @@ export default class ChatPinnedMessagesList extends Component {
     const lastViewed = new Date(this.#lastViewedPinsAtSnapshot);
     return pinnedAt > lastViewed;
   };
-
   decorateMessage = (pin) => {
     pin.message.isUnseen = this.isUnseen(pin);
     return pin.message;
   };
-
   pinnedByText = (pin) => {
     if (pin.pinned_by?.id === this.currentUser?.id) {
       return i18n("chat.pinned_messages.pinned_by_you");
@@ -69,13 +76,40 @@ export default class ChatPinnedMessagesList extends Component {
       username: pin.pinned_by?.username,
     });
   };
-
   routeModels = (pin) => {
     return [...this.args.channel.routeModels, pin.message.id];
   };
-
   #lastViewedPinsAtSnapshot =
     this.args.channel.currentUserMembership?.lastViewedPinsAt;
+
+  // not managers — "Dismiss pinned messages" would read as unpinning for all
+  get canToggleDismissal() {
+    return this.pinnedMessages.length > 0 && !this.args.channel.canManagePins;
+  }
+
+  get barDismissed() {
+    return hasPinsDismissal(this.args.channel);
+  }
+
+  // mirror the visited pin in the bar (the jump's scroll wouldn't update it)
+  @action
+  visitPin(pin) {
+    this.args.channel.activePinnedMessageId = pin.message.id;
+  }
+
+  @action
+  dismissBar() {
+    const channel = this.args.channel;
+    dismissPinsUpTo(channel, newestPinId(this.pinnedMessages));
+    this.router.transitionTo("chat.channel", ...channel.routeModels);
+  }
+
+  @action
+  showBar() {
+    const channel = this.args.channel;
+    resetPinsDismissal(channel);
+    this.router.transitionTo("chat.channel", ...channel.routeModels);
+  }
 
   handlePinMessage(data) {
     const existingPin = this.pinnedMessages.find(
@@ -124,6 +158,7 @@ export default class ChatPinnedMessagesList extends Component {
             @route="chat.channel.near-message"
             @models={{this.routeModels pin}}
             class="chat-pinned-message"
+            {{on "click" (fn this.visitPin pin)}}
           >
             <ChatMessage
               @message={{this.decorateMessage pin}}
@@ -150,6 +185,24 @@ export default class ChatPinnedMessagesList extends Component {
           </div>
         {{/each}}
       </div>
+
+      {{#if this.canToggleDismissal}}
+        <div class="chat-pinned-messages-list__footer">
+          {{#if this.barDismissed}}
+            <DButton
+              @action={{this.showBar}}
+              @label="chat.pinned_messages.show"
+              class="btn-flat chat-pinned-messages-list__show"
+            />
+          {{else}}
+            <DButton
+              @action={{this.dismissBar}}
+              @label="chat.pinned_messages.dismiss"
+              class="btn-flat chat-pinned-messages-list__dismiss"
+            />
+          {{/if}}
+        </div>
+      {{/if}}
     </div>
   </template>
 }
