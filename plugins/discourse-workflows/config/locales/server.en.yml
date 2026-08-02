@@ -54,6 +54,7 @@ en:
       invalid_schedule_rule: "One or more schedule rules are invalid."
       not_enabled: "The discourse-workflows plugin is not enabled."
       no_permission_to_manage: "You don't have permission to manage workflows."
+      node_preview_failed: "Something went wrong while previewing this step."
       invalid_form_submission: "The form submission has invalid or missing fields."
       invalid_form_token: "The form token is invalid or has expired."
       webhook_test_listener_active: "A webhook test listener is already active for this URL."
@@ -126,6 +127,12 @@ en:
         uncategorized_not_allowed: "This site does not allow topics without a category."
       sort:
         code_missing_return: "Code must contain a return statement."
+      summarize:
+        no_aggregations: "No aggregations configured."
+        no_aggregations_help: "Add at least one aggregation, for example a count or a sum."
+        invalid_aggregation: "Unknown aggregation: %{aggregation}."
+        duplicate_output_field: "Two aggregations write to the same output field '%{field}'."
+        duplicate_output_field_help: "Set a different output field name on one of them."
       split_out:
         destination_count_mismatch: "Destination field name count must match field count."
         fields_to_include_required: "No fields specified."

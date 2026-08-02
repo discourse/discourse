@@ -23,6 +23,7 @@ module DiscourseWorkflows
       output_contracts: [],
       palette_visible: true,
       available: true,
+      previewable: false,
     }.freeze
 
     def self.inherited(subclass)
@@ -69,6 +70,10 @@ module DiscourseWorkflows
 
     def self.palette_visible?
       description_value(:palette_visible)
+    end
+
+    def self.previewable?
+      description_value(:previewable)
     end
 
     def self.available?
