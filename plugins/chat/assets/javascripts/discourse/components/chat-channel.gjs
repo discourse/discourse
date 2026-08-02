@@ -453,6 +453,9 @@ export default class ChatChannel extends Component {
   }
 
   highlightOrFetchMessage(messageId, options = {}) {
+    // this jump's own scrolling must not drop a pinned-bar override set for it,
+    // so clear any stale user-scroll flag before it starts
+    this.#userScrolled = false;
     const message = this.messagesManager.findMessage(messageId);
     if (message) {
       this.scrollToMessageId(
