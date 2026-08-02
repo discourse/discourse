@@ -291,7 +291,7 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
 
     const dateRange = `created-after:${moment(startDate).format(
       "YYYY-MM-DD"
-    )} created-before:${moment(endDate).format("YYYY-MM-DD")}`;
+    )} created-before:${moment(endDate).add(1, "day").format("YYYY-MM-DD")}`;
 
     assert
       .dom(".db-support-outcomes__row:nth-child(1) a")
@@ -345,7 +345,7 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       .dom(".db-support-outcomes__row:nth-child(1) a")
       .hasAttribute(
         "href",
-        /category%3Abug%2Cfeature/,
+        /%3Dcategory%3Abug%2Cfeature/,
         "restricts to every support category when none is selected"
       );
   });
@@ -375,7 +375,7 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       .dom(".db-support-outcomes__row:nth-child(1) a")
       .hasAttribute(
         "href",
-        /category%3Ameta(?!%2C)/,
+        /%3Dcategory%3Ameta(?!%2C)/,
         "restricts to only the selected category"
       );
   });
@@ -406,7 +406,9 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
         `/filter?q=${encodeURIComponent(
           `status:solved created-after:${moment(startDate).format(
             "YYYY-MM-DD"
-          )} created-before:${moment(endDate).format("YYYY-MM-DD")}`
+          )} created-before:${moment(endDate)
+            .add(1, "day")
+            .format("YYYY-MM-DD")}`
         )}`,
         "resolved links to its full filter query"
       );
