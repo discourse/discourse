@@ -103,6 +103,22 @@ test("internals outside a ui-kit group are not this rule's business", () => {
   assert.deepEqual(messages, []);
 });
 
+test("a literal dynamic import cannot bypass the boundary", () => {
+  const messages = messagesFor(
+    `${APP}/components/composer.js`,
+    `const chassis = import("discourse/ui-kit/panel-dock/-internals/panel");`
+  );
+  assert.deepEqual(messages, ["discourse/no-cross-group-internals"]);
+});
+
+test("traversal after an internals segment cannot escape into another group", () => {
+  const messages = messagesFor(
+    `${APP}/ui-kit/select/index.js`,
+    `import chassis from "./-internals/../../panel-dock/-internals/panel";`
+  );
+  assert.deepEqual(messages, ["discourse/no-cross-group-internals"]);
+});
+
 test("imports without an internals segment are untouched", () => {
   const messages = messagesFor(
     `${APP}/components/composer.js`,
