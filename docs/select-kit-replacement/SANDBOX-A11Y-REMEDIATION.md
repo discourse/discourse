@@ -277,6 +277,13 @@ select-specific — chat, topic tracking and the AI plugin all announce through 
 The port needs the visual-cursor field generalised off `.d-combobox__option.--active`, and the
 container role read rather than assumed to be `listbox`.
 
+The probe no longer renders on the styleguide select page: in the system-spec environment its
+styles do not apply, so it rendered as full-width in-flow content that pushed every example
+below the fold. The component file stays until the dev-tool port lands — to use it, render
+`<SelectAriaProbe />` locally in `molecules/select.gjs`. Note the page's system specs run
+against the current source either way; `d_select_cursor_source_spec` turned out to be red from
+a stale `-1` expectation predating the set-size fix, not from the probe.
+
 ## Known flake
 
 Two tests in `DSelect grouping`, both timing rather than order — the second one failed in a

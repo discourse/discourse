@@ -52,7 +52,6 @@ import ReloadSelectExample from "../../examples/molecules/select/states/reload";
 import reloadSelectSource from "../../examples/molecules/select/states/reload?source=file";
 import StyleguideExample from "../../styleguide-example";
 import StyleguideGroups from "../../styleguide-groups";
-import SelectAriaProbe from "./select-aria-probe";
 import SelectContent from "./select-content";
 import SelectHero from "./select-hero";
 import SelectKeyboard from "./select-keyboard";
@@ -84,7 +83,6 @@ export default class Select extends Component {
       {{i18n "styleguide.sections.select.description"}}
     </p>
 
-    <SelectAriaProbe />
     <SelectHero />
 
     <StyleguideGroups
