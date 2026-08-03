@@ -189,7 +189,7 @@ module DiscourseChatIntegration::Provider::SlackProvider
       text: excerpt(post),
       mrkdwn_in: ["text"],
       title:
-        "#{topic.title} #{category} #{topic.tags.present? ? topic.tags.map(&:name).join(", ") : ""}",
+        "#{topic.title} #{category} #{DiscourseChatIntegration::Provider.display_tag_names(topic)}",
       title_link: post.full_url,
       thumb_url: post.full_url,
     }
