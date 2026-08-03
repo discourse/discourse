@@ -23,6 +23,7 @@ class UserBadgesController < ApplicationController
     grant_count = nil
 
     if params[:username]
+      guardian.ensure_public_can_see_profiles!
       user = fetch_user_from_params(include_inactive: true)
       raise Discourse::NotFound unless guardian.can_see_profile?(user)
 
@@ -55,6 +56,7 @@ class UserBadgesController < ApplicationController
   def username
     params.permit [:grouped]
 
+    guardian.ensure_public_can_see_profiles!
     user =
       fetch_user_from_params(
         include_inactive:

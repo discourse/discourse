@@ -39,6 +39,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
 
   def reactions_given
     params.require(:username)
+    guardian.ensure_public_can_see_profiles!
     user =
       fetch_user_from_params(
         include_inactive:
