@@ -4057,6 +4057,18 @@ RSpec.describe PostsController do
       expect(body).to include(public_post.topic.slug)
     end
 
+    it "does not disclose a user's posts when public profiles are hidden" do
+      public_post
+      SiteSetting.hide_user_profiles_from_public = true
+
+      %w[rss json].each do |format|
+        get "/u/#{user.username}/activity.#{format}"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).not_to include(public_post.raw)
+      end
+    end
+
     it "excludes ignored users' likes from JSON like counts" do
       viewer = Fabricate(:user, refresh_auto_groups: true)
       ignored_liker = Fabricate(:user, refresh_auto_groups: true)

@@ -159,6 +159,7 @@ module UserGuardian
 
   def can_see_profile?(user)
     return false if user.blank?
+    return false unless public_can_see_profiles?
     return true if is_me?(user) || is_staff?
 
     profile_hidden = SiteSetting.allow_users_to_hide_profile && user.user_option&.hide_profile?
