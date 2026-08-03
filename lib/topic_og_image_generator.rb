@@ -319,33 +319,53 @@ class TopicOgImageGenerator
 
     content_type = match[1]
     bytes = Base64.strict_decode64(match[2])
+    format =
+      {
+        "image/gif" => %w[gif gifload],
+        "image/jpeg" => %w[jpeg jpegload],
+        "image/png" => %w[png pngload],
+        "image/svg+xml" => %w[svg svgload],
+        "image/webp" => %w[webp webpload],
+      }[
+        content_type
+      ]
+    return nil if format.nil?
 
-    if content_type == "image/svg+xml"
-      svg_path = File.join(directory, "#{basename}.svg")
-      png_path = File.join(directory, "#{basename}.png")
-      File.binwrite(svg_path, bytes)
-      ImageMagick.magick(
-        "MSVG:#{svg_path}",
-        png_path,
-        read: [svg_path],
-        write: [directory],
-        timeout: 10,
-      )
-      return png_path if File.exist?(png_path)
+    extension, loader = format
+    source = File.join(directory, "#{basename}.source.#{extension}")
+    output = File.join(directory, "#{basename}.png")
+    File.binwrite(source, bytes)
+    if extension == "svg"
+      document = Nokogiri.XML(bytes) { |config| config.strict.nonet }
+      return nil if document.root&.name != "svg"
+      if document.xpath(
+           "//*[local-name()='filter' or starts-with(local-name(),'fe') or local-name()='image' or local-name()='style']",
+         ).present?
+        return nil
+      end
+      return nil if document.xpath("//@*[local-name()='filter']").present?
 
+      references = document.xpath("//@*[local-name()='href']").map(&:value)
+      return nil if references.any? { |reference| !reference.start_with?("#") }
+
+      styles = document.xpath("//@*[local-name()='style']").map(&:value)
+      return nil if styles.any? { |style| style.match?(/filter\s*:|url\(\s*(?!['\"]?#)/i) }
+    elsif FastImage.type(source).to_s != extension
       return nil
     end
 
-    extension =
-      { "image/gif" => "gif", "image/jpeg" => "jpg", "image/png" => "png", "image/webp" => "webp" }[
-        content_type
-      ]
-    return nil if extension.nil?
-
-    path = File.join(directory, "#{basename}.#{extension}")
-    File.binwrite(path, bytes)
-    path
-  rescue ArgumentError, Discourse::Utils::CommandError => error
+    Vips.run(
+      "vips",
+      loader,
+      source,
+      "#{output}[compression=9]",
+      read: [source],
+      write: [directory],
+      timeout: 1,
+      allow_untrusted: loader == "svgload",
+    )
+    File.exist?(output) ? output : nil
+  rescue ArgumentError, Discourse::Utils::CommandError, Nokogiri::XML::SyntaxError => error
     Discourse.warn(
       "Failed to materialize topic OG image asset",
       topic_id: @topic.id,
@@ -372,21 +392,16 @@ class TopicOgImageGenerator
 
       File.write(svg_path, build_svg(asset_directory: dir))
 
-      ImageMagick.magick(
-        "-background",
-        "none",
-        "-size",
-        "#{OG_WIDTH}x#{OG_HEIGHT}",
-        "MSVG:#{svg_path}",
-        "-depth",
-        "8",
-        "-define",
-        "png:compression-level=9",
-        png_path,
+      Vips.run(
+        "vips",
+        "svgload",
+        svg_path,
+        "#{png_path}[compression=9]",
         read: [dir],
         write: [dir],
         nice: 10,
         timeout: 20,
+        allow_untrusted: true,
       )
 
       return nil unless File.exist?(png_path)
