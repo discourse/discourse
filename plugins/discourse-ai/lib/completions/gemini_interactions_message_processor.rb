@@ -257,14 +257,18 @@ module DiscourseAi
       def thought_outputs(step, partial:)
         return [] if !@output_thinking
 
-        text =
+        message =
           Array(step[:summary])
             .filter_map do |content|
               content = normalize(content)
-              content[:text] if thought_summary_text?(content)
+              if thought_summary_text?(content)
+                content[:text]
+              else
+                @content_decoder.call(content)&.strip
+              end
             end
             .join("\n\n")
-        text.present? ? [Thinking.new(message: text, partial:)] : []
+        message.present? ? [Thinking.new(message:, partial:)] : []
       end
 
       def thought_summary_text?(content)
@@ -351,8 +355,9 @@ module DiscourseAi
       end
 
       def context_thinking(steps)
-        return if !@output_thinking || steps.blank?
+        return if steps.blank?
 
+        # Stateless continuation requires signed steps even when thinking is hidden.
         Thinking.new(message: nil, partial: false, provider_info: { PROVIDER_KEY => { steps: } })
       end
 

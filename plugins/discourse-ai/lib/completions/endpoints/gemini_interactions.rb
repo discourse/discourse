@@ -4,6 +4,9 @@ module DiscourseAi
   module Completions
     module Endpoints
       class GeminiInteractions < Gemini
+        MINIMAL_HIGH_THINKING_LEVEL_BY_EFFORT =
+          THINKING_LEVEL_BY_EFFORT.merge("low" => "minimal", "medium" => "high").freeze
+
         def self.can_contact?(llm_model)
           llm_model.provider == "gemini_interactions"
         end
@@ -69,9 +72,7 @@ module DiscourseAi
 
           generation_config = model_params.except(:response_format)
           apply_thinking_config!(generation_config)
-          if @include_thought_summaries && !thinking_config&.explicit_none?
-            generation_config[:thinking_summaries] = "auto"
-          end
+          generation_config[:thinking_summaries] = "auto" if @include_thought_summaries
           has_function_tools = tools&.any? { |tool| tool[:type] == "function" }
           apply_tool_choice!(generation_config, dialect, tools:) if has_function_tools
           payload[:generation_config] = generation_config if generation_config.present?
@@ -117,13 +118,19 @@ module DiscourseAi
         def thinking_level_for_interactions(effort)
           return if !THINKING_LEVEL_BY_EFFORT.key?(effort)
 
-          if gemini_model_id.include?("image") || gemini_3_pro_preview_model?
+          if gemini_3_1_flash_lite_image_model?
+            MINIMAL_HIGH_THINKING_LEVEL_BY_EFFORT[effort]
+          elsif gemini_model_id.include?("image") || gemini_3_pro_preview_model?
             LOW_HIGH_THINKING_LEVEL_BY_EFFORT[effort]
           elsif gemini_2_5_model? || (gemini_3_model? && !supports_interactions_minimal_thinking?)
             THINKING_LEVEL_WITHOUT_MINIMAL_BY_EFFORT[effort]
           else
             THINKING_LEVEL_BY_EFFORT[effort]
           end
+        end
+
+        def gemini_3_1_flash_lite_image_model?
+          gemini_model_id.include?("gemini-3.1-flash-lite-image")
         end
 
         def gemini_2_5_model?

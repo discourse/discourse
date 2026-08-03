@@ -105,7 +105,19 @@ RSpec.describe DiscourseAi::Completions::Endpoints::GeminiInteractions do
         stop_sequences: ["STOP"],
       )
 
-    expect(result).to eq("Hello world")
+    expect(result).to eq(
+      [
+        "Hello world",
+        DiscourseAi::Completions::Thinking.new(
+          message: nil,
+          provider_info: {
+            gemini_interactions: {
+              steps: [{ type: "thought", signature: "signed-thought" }],
+            },
+          },
+        ),
+      ],
+    )
     expect(request).to have_been_requested.once
     expect(request_body).to eq(
       {
@@ -174,6 +186,36 @@ RSpec.describe DiscourseAi::Completions::Endpoints::GeminiInteractions do
     expect(request_body).not_to have_key(:generation_config)
   end
 
+  it "requests summaries when Gemini 2.5 cannot honor disabled thinking" do
+    request_body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |body|
+          request_body = JSON.parse(body, symbolize_names: true)
+          true
+        end,
+    ).to_return(
+      status: 200,
+      body:
+        interaction_response(
+          steps: [{ type: "model_output", content: [{ type: "text", text: "Done" }] }],
+        ).to_json,
+    )
+
+    expect(
+      llm.generate(
+        "Think",
+        user:,
+        thinking_effort: "none",
+        output_thinking: true,
+        extra_model_params: {
+          include_thought_summaries: true,
+        },
+      ),
+    ).to eq("Done")
+    expect(request_body[:generation_config]).to eq(thinking_summaries: "auto")
+  end
+
   it "maps the provider-level minimal setting to low for Gemini 2.5" do
     model.update!(provider_params: { thinking_level: "minimal" })
     request_body = nil
@@ -195,13 +237,13 @@ RSpec.describe DiscourseAi::Completions::Endpoints::GeminiInteractions do
     expect(request_body.dig(:generation_config, :thinking_level)).to eq("low")
   end
 
-  it "maps thinking effort to the levels supported by image models" do
-    model.update!(name: "gemini-3.1-flash-image")
-    request_body = nil
+  it "maps thinking effort to the levels supported by Flash Lite image models" do
+    model.update!(name: "gemini-3.1-flash-lite-image")
+    request_bodies = []
     stub_request(:post, url).with(
       body:
         proc do |body|
-          request_body = JSON.parse(body, symbolize_names: true)
+          request_bodies << JSON.parse(body, symbolize_names: true)
           true
         end,
     ).to_return(
@@ -212,8 +254,13 @@ RSpec.describe DiscourseAi::Completions::Endpoints::GeminiInteractions do
         ).to_json,
     )
 
-    expect(llm.generate("Draw", user:, thinking_effort: "minimal")).to eq("Done")
-    expect(request_body.dig(:generation_config, :thinking_level)).to eq("low")
+    %w[minimal low medium high].each do |thinking_effort|
+      expect(llm.generate("Draw", user:, thinking_effort:)).to eq("Done")
+    end
+
+    expect(request_bodies.map { |body| body.dig(:generation_config, :thinking_level) }).to eq(
+      %w[minimal minimal high high],
+    )
   end
 
   it "streams text and thought summaries from fragmented SSE records" do
@@ -314,7 +361,155 @@ RSpec.describe DiscourseAi::Completions::Endpoints::GeminiInteractions do
     expect(AiApiAuditLog.last.response_tokens).to eq(3)
   end
 
-  it "replays signed thought steps and reconstructs model output for stateless conversations" do
+  it "renders and preserves non-streamed text and image thought summaries" do
+    image_data =
+      Base64.strict_encode64(
+        File.binread(File.expand_path("../../../fixtures/images/100x100.jpg", __dir__)),
+      )
+    thought_step = {
+      type: "thought",
+      signature: "signed-image-thought",
+      summary: [
+        { type: "text", text: "Visualizing" },
+        { type: "image", mime_type: "image/jpeg", data: image_data },
+      ],
+    }
+    request_body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |body|
+          request_body = JSON.parse(body, symbolize_names: true)
+          true
+        end,
+    ).to_return(
+      status: 200,
+      body:
+        interaction_response(
+          steps: [
+            thought_step,
+            { type: "model_output", content: [{ type: "text", text: "Done" }] },
+          ],
+        ).to_json,
+    )
+
+    result = nil
+    expect do
+      result =
+        llm.generate(
+          "Think visually",
+          user:,
+          output_thinking: true,
+          extra_model_params: {
+            include_thought_summaries: true,
+          },
+        )
+    end.to change(Upload, :count).by(1)
+
+    expect(request_body.dig(:generation_config, :thinking_summaries)).to eq("auto")
+    expect(result.first.message).to start_with("Visualizing\n\n![image](upload://")
+    expect(result.last.provider_info.dig(:gemini_interactions, :steps)).to eq([thought_step])
+  end
+
+  it "renders streamed image thought summaries and preserves their signature" do
+    image_data =
+      Base64.strict_encode64(
+        File.binread(File.expand_path("../../../fixtures/images/100x100.jpg", __dir__)),
+      )
+    stream = +""
+    stream << sse_event("step.start", index: 0, step: { type: "thought" })
+    stream << sse_event(
+      "step.delta",
+      index: 0,
+      delta: {
+        type: "thought_summary",
+        content: {
+          type: "image",
+          mime_type: "image/jpeg",
+          data: image_data,
+        },
+      },
+    )
+    stream << sse_event(
+      "step.delta",
+      index: 0,
+      delta: {
+        type: "thought_signature",
+        signature: "streamed-image-signature",
+      },
+    )
+    stream << sse_event("step.stop", index: 0)
+    stream << sse_event("step.start", index: 1, step: { type: "model_output" })
+    stream << sse_event("step.delta", index: 1, delta: { type: "text", text: "Done" })
+    stream << sse_event("step.stop", index: 1)
+    stream << sse_event(
+      "interaction.completed",
+      interaction: {
+        status: "completed",
+        usage: {
+          total_input_tokens: 1,
+          total_cached_tokens: 0,
+          total_output_tokens: 1,
+          total_thought_tokens: 1,
+          total_tool_use_tokens: 0,
+        },
+      },
+    )
+    stub_request(:post, url).to_return(status: 200, body: stream)
+    partials = []
+
+    expect do
+      expect(
+        llm.generate("Think visually", user:, output_thinking: true) do |partial|
+          partials << partial
+        end,
+      ).to eq("Done")
+    end.to change(Upload, :count).by(1)
+
+    visible_thinking =
+      partials.find do |partial|
+        partial.is_a?(DiscourseAi::Completions::Thinking) && partial.message.present?
+      end
+    context_thinking =
+      partials.find do |partial|
+        partial.is_a?(DiscourseAi::Completions::Thinking) && partial.provider_info.present?
+      end
+    expect(visible_thinking.message).to start_with("![image](upload://")
+    expect(context_thinking.provider_info.dig(:gemini_interactions, :steps, 0, :signature)).to eq(
+      "streamed-image-signature",
+    )
+  end
+
+  it "preserves signature-only thought steps without rendering a summary" do
+    thought_step = { type: "thought", signature: "signature-only" }
+    stub_request(:post, url).to_return(
+      status: 200,
+      body:
+        interaction_response(
+          steps: [
+            thought_step,
+            { type: "model_output", content: [{ type: "text", text: "Done" }] },
+          ],
+        ).to_json,
+    )
+
+    result = llm.generate("Think", user:, output_thinking: true)
+
+    expect(result).to eq(
+      [
+        "Done",
+        DiscourseAi::Completions::Thinking.new(
+          message: nil,
+          provider_info: {
+            gemini_interactions: {
+              steps: [thought_step],
+            },
+          },
+        ),
+      ],
+    )
+  end
+
+  it "replays signed thought steps when summaries are not returned to the caller" do
     prompt =
       DiscourseAi::Completions::Prompt.new(messages: [{ type: :user, content: "Remember PLUM" }])
     thought_step = { type: "thought", signature: "signed-history" }
@@ -347,17 +542,82 @@ RSpec.describe DiscourseAi::Completions::Endpoints::GeminiInteractions do
       },
     )
 
-    first = llm.generate(prompt, user:, output_thinking: true)
+    first = llm.generate(prompt, user:)
     prompt.push_model_response(first)
     prompt.push(type: :user, content: "Repeat it")
+    model.update!(name: "gemini-3.6-flash")
     expect(llm.generate(prompt, user:)).to eq("PLUM")
 
+    expect(second_request[:model]).to eq("gemini-3.6-flash")
     expect(second_request[:input]).to eq(
       [
         { type: "user_input", content: [{ type: "text", text: "Remember PLUM" }] },
         thought_step,
         { type: "model_output", content: [{ type: "text", text: "OK" }] },
         { type: "user_input", content: [{ type: "text", text: "Repeat it" }] },
+      ],
+    )
+  end
+
+  it "replays signed built-in tool steps when thinking output is hidden" do
+    prompt = DiscourseAi::Completions::Prompt.new(messages: [{ type: :user, content: "Search" }])
+    search_call = {
+      type: "google_search_call",
+      id: "search-1",
+      arguments: {
+        queries: ["Discourse"],
+      },
+      signature: "call-signature",
+    }
+    search_result = {
+      type: "google_search_result",
+      call_id: "search-1",
+      result: {
+        snippets: [],
+      },
+      signature: "result-signature",
+    }
+    second_request = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |body|
+          parsed = JSON.parse(body, symbolize_names: true)
+          second_request = parsed if parsed[:input].length > 1
+          true
+        end,
+    ).to_return(
+      {
+        status: 200,
+        body:
+          interaction_response(
+            steps: [
+              search_call,
+              search_result,
+              { type: "model_output", content: [{ type: "text", text: "Found" }] },
+            ],
+          ).to_json,
+      },
+      {
+        status: 200,
+        body:
+          interaction_response(
+            steps: [{ type: "model_output", content: [{ type: "text", text: "Done" }] }],
+          ).to_json,
+      },
+    )
+
+    first = llm.generate(prompt, user:)
+    prompt.push_model_response(first)
+    prompt.push(type: :user, content: "Continue")
+    expect(llm.generate(prompt, user:)).to eq("Done")
+
+    expect(second_request[:input]).to eq(
+      [
+        { type: "user_input", content: [{ type: "text", text: "Search" }] },
+        search_call,
+        search_result,
+        { type: "model_output", content: [{ type: "text", text: "Found" }] },
+        { type: "user_input", content: [{ type: "text", text: "Continue" }] },
       ],
     )
   end
