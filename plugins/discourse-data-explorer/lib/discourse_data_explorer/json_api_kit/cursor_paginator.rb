@@ -102,8 +102,10 @@ module DiscourseDataExplorer
         before: nil,
         nulls_last: [],
         expressions: {},
-        joins: []
+        joins: [],
+        around: nil
       )
+        @around = around
         @expressions = expressions.transform_keys(&:to_sym)
         @joins = Array(joins)
         @null_helpers = (nulls_last.map(&:to_sym) & order.keys).to_h { [it, :"#{it}_is_null"] }
@@ -118,7 +120,13 @@ module DiscourseDataExplorer
       end
 
       # Positional entry (docs/versioning-design.md §2c). The block selects the
-      # anchor ROW — by identity, by a bound on the leading ordering column, or by
+      # anchor ROW, which the caller hands back as `around:` to get a window centred
+      # on it (`before`/`after` counts, `include` for the row itself).
+      def anchor_record
+        yield(@scope).reorder(@order).first or raise AnchorNotFound
+      end
+
+      # The block selects the anchor ROW — by identity, by a bound on the leading ordering column, or by
       # anything else the resource declares — and the cursor is minted from that
       # row, never built from the supplied value. That is what makes anchoring work
       # against composed keysets whose leading column is synthetic (core PR #36065's
@@ -204,7 +212,40 @@ module DiscourseDataExplorer
       end
 
       def window
-        @window ||= @before ? before_window : after_window
+        @window ||=
+          if @around
+            around_window
+          elsif @before
+            before_window
+          else
+            after_window
+          end
+      end
+
+      # Two ordinary windows hugging the anchor from either side, concatenated —
+      # so a permalink gets its context in one request. Each side's own probe answers
+      # whether there is more beyond it.
+      def around_window
+        anchor = @around[:record]
+        cursor = cursor_for(anchor)
+        before_records, prev_exists = side(size: @around[:before], before: cursor)
+        after_records, next_exists = side(size: @around[:after], after: cursor)
+        {
+          records: before_records + (@around[:include] ? [anchor] : []) + after_records,
+          prev_exists:,
+          next_exists:,
+        }
+      end
+
+      # A zero-sized side is not a query: probe whether anything lies that way.
+      def side(size:, before: nil, after: nil)
+        if size.to_i.zero?
+          order = before ? reversed_order : @order
+          return [], probe_exists?(order, before || after)
+        end
+        sibling = self.class.new(@source_scope, **@source_options, size:, before:, after:)
+        exists = before ? sibling.prev_page_params.present? : sibling.next_page_params.present?
+        [sibling.records.to_a, exists]
       end
 
       def after_window

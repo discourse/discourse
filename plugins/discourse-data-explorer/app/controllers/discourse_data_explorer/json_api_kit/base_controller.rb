@@ -376,8 +376,8 @@ module DiscourseDataExplorer
           params[:sort].to_s.split(",").map { it.delete_prefix("-") }.reject { cfg.sorts.key?(it) }
         bad += requested_include_paths - cfg.allowed_includes - plugin_namespaces
         if params[:page].respond_to?(:keys)
-          bad +=
-            (params[:page].keys.map(&:to_s) - %w[size after before anchor]).map { "page[#{it}]" }
+          allowed = %w[size after before anchor before_size after_size include_anchor]
+          bad += (params[:page].keys.map(&:to_s) - allowed).map { "page[#{it}]" }
         end
         return if bad.empty?
 
@@ -451,6 +451,7 @@ module DiscourseDataExplorer
         return if performed?
 
         scope = apply_filters(base_scope)
+        around = nil
         if params.dig(:page, :anchor).present?
           if after || before
             return(
@@ -462,11 +463,21 @@ module DiscourseDataExplorer
               )
             )
           end
-          after = resolve_anchor_cursor(scope, keyset)
+          around = resolve_around(scope, keyset, size:)
           return if performed?
+        elsif window_counts.any? { |_, count| count }
+          return(
+            render_profile_error(
+              title: "A window size needs an anchor.",
+              detail: "`page[before_size]`/`page[after_size]` only apply with `page[anchor]`.",
+              source: {
+                parameter: "page[before_size]",
+              },
+            )
+          )
         end
         meta = params.dig(:stats, :total) == "count" ? stats_meta(scope.count) : {}
-        paginator = CursorPaginator.new(scope, size:, after:, before:, **keyset.to_h)
+        paginator = CursorPaginator.new(scope, size:, after:, before:, around:, **keyset.to_h)
         records = paginator.records
         item_cursors = records.to_h { |record| [record.id.to_s, paginator.cursor_for(record)] }
 
@@ -529,12 +540,51 @@ module DiscourseDataExplorer
         size
       end
 
+      # `page[before_size]`/`page[after_size]` (Zulip's shape): how many rows either
+      # side of the anchor. Omitting one gives the one-sided cases, so before, after
+      # and around need no separate parameters.
+      def window_counts
+        {
+          before: params.dig(:page, :before_size).presence&.to_i,
+          after: params.dig(:page, :after_size).presence&.to_i,
+        }
+      end
+
       # Positional entry (docs/versioning-design.md §2c): resolve `page[anchor][key]`
-      # to the cursor of the row *preceding* the anchored one, so the ordinary window
-      # starts AT it. An anchor selects a RECORD — identity anchors work under any
-      # ordering, value anchors bound the leading sort column and so must name the
-      # active sort.
-      def resolve_anchor_cursor(scope, keyset)
+      # to the anchored ROW plus the window wanted around it. Identity anchors work
+      # under any ordering; value anchors bound the leading sort column and so must
+      # name the active sort.
+      def resolve_around(scope, keyset, size:)
+        record = resolve_anchor_record(scope, keyset)
+        return if record.nil?
+
+        include_anchor = params.dig(:page, :include_anchor).to_s != "false"
+        counts = window_counts
+        # Plain `page[anchor]` keeps its meaning: `size` rows starting at the anchor.
+        before = counts[:before] || 0
+        after = counts[:after] || (counts[:before] ? 0 : size - (include_anchor ? 1 : 0))
+        total = before + after + (include_anchor ? 1 : 0)
+        if total > cfg.max_page_size
+          return(
+            render_profile_error(
+              title: "Page size requested is too large.",
+              detail: "You requested #{total} items, but #{cfg.max_page_size} is the maximum.",
+              source: {
+                parameter: "page[before_size]",
+              },
+              error_type: "max-size-exceeded",
+              meta: {
+                page: {
+                  maxSize: cfg.max_page_size,
+                },
+              },
+            )
+          )
+        end
+        { record:, before:, after:, include: include_anchor }
+      end
+
+      def resolve_anchor_record(scope, keyset)
         anchor = params[:page][:anchor]
         if !anchor.respond_to?(:each_pair)
           return anchor_error("page[anchor]", "An anchor must name a key.")
@@ -550,7 +600,7 @@ module DiscourseDataExplorer
 
         resolver = CursorPaginator.new(scope, size: 1, **keyset.to_h)
         if definition[:identity]
-          resolver.anchor_cursor { |records| records.where(id: value) }
+          resolver.anchor_record { |records| records.where(id: value) }
         else
           # The bound applies to the leading keyset key — a column for a plain sort, the
           # projected alias for a SQL-backed one. Both are readable on the prepared
@@ -560,7 +610,7 @@ module DiscourseDataExplorer
             return(anchor_error(parameter, "`#{key}` is not the sort this list is ordered by."))
           end
           operator = keyset.order.values.first == :desc ? "<=" : ">="
-          resolver.anchor_cursor { |records| records.where("#{anchored} #{operator} ?", value) }
+          resolver.anchor_record { |records| records.where("#{anchored} #{operator} ?", value) }
         end
       rescue CursorPaginator::AnchorNotFound
         anchor_error(parameter, "No item at that position.")

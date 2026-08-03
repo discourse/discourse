@@ -157,4 +157,52 @@ RSpec.describe "JSON:API Kit anchored pagination" do
       expect(returned_names).to eq(%w[Zulu Alpha])
     end
   end
+
+  # A permalink wants context on both sides in ONE request: `page[before_size]` and
+  # `page[after_size]` (Zulip's shape). Omitting one gives the one-sided cases, so
+  # before/after/around need no separate parameters.
+  # Default order: Mango (2026-07-02), Alpha (2026-07-01), Zulu (never run).
+  describe "centred windows" do
+    it "returns rows on both sides of the anchor" do
+      get_queries(page: { anchor: { id: alpha.id }, before_size: 1, after_size: 1 })
+      expect(returned_names).to eq(%w[Mango Alpha Zulu])
+    end
+
+    it "looks only backwards when no rows are asked for after" do
+      get_queries(page: { anchor: { id: zulu.id }, before_size: 1 })
+      expect(returned_names).to eq(%w[Alpha Zulu])
+    end
+
+    it "can exclude the anchor itself" do
+      get_queries(
+        page: {
+          anchor: {
+            id: alpha.id,
+          },
+          before_size: 1,
+          after_size: 1,
+          include_anchor: false,
+        },
+      )
+      expect(returned_names).to eq(%w[Mango Zulu])
+    end
+
+    it "reports accurate links at the edges of the list" do
+      get_queries(page: { anchor: { id: mango.id }, before_size: 2, after_size: 1 })
+      expect(returned_names).to eq(%w[Mango Alpha])
+      expect(parsed_document.dig("links", "prev")).to be_nil
+      expect(parsed_document.dig("links", "next")).to be_present
+    end
+
+    it "caps the two counts together, not separately" do
+      get_queries(page: { anchor: { id: alpha.id }, before_size: 60, after_size: 60 })
+      expect(response.status).to eq(400)
+      expect(parsed_document["errors"].first.dig("links", "type")).to end_with("max-size-exceeded")
+    end
+
+    it "rejects the counts without an anchor" do
+      get_queries(page: { before_size: 1, after_size: 1 })
+      expect(response.status).to eq(400)
+    end
+  end
 end

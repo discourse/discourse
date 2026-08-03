@@ -610,9 +610,34 @@ where every existing spec used whole-second fixtures. Fixed by encoding `Time`/`
 the ordering value exactly**, so any lossy encoding (timestamps, floats, collated strings) is a silent
 paging fault.
 
-Not built, still as designed above: the centred window (`page[before_size]`/`page[after_size]`),
-`include_anchor`, symbolic anchors (`first_unread`-style), and emitting the anchor parameters into the
-generated documentation.
+### Centred windows — built 2026-08-03
+
+`page[before_size]` / `page[after_size]` (Zulip's shape) plus `page[include_anchor]`, which settles parked
+decisions 1, 2 and 4 by building them:
+
+| Want | Params |
+| --- | --- |
+| around | `page[anchor][id]=42&page[before_size]=5&page[after_size]=20` |
+| after (unchanged) | `page[anchor][id]=42&page[size]=20` |
+| before | `page[anchor][id]=42&page[before_size]=20` |
+
+So before/after/around need no separate parameter names — two counts, and omitting one gives the one-sided
+cases. `include_anchor` defaults to true, since "around row 42" almost always wants 42 while "after 42"
+does not.
+
+Implementation: `around: { record:, before:, after:, include: }` on the paginator runs two ordinary
+windows hugging the anchor and concatenates them, each side's own probe answering whether there is more
+beyond it — so links stay accurate at the ends of a list (spec'd: anchoring the first row yields a null
+`prev` and a live `next`). A zero-sized side is a probe rather than a query. The plain
+`page[anchor]` + `page[size]` path was folded onto the same code path rather than kept beside it, and the
+eleven pre-existing anchor examples stayed green, which is what proves the refactor behaviour-preserving.
+
+Decisions this forced, both worth keeping: the max-page-size cap applies to **`before + after + 1`**, not
+to each count (spec'd — 60 + 60 against a cap of 100 is one `max-size-exceeded` error), and the window
+counts **require an anchor** (they mean nothing without a position, so they get a teaching 400).
+
+Still not built: symbolic anchors (`first_unread`-style, which need the declaration form and the scalar
+wire shape from parked decision 4), and emitting the anchor parameters into the generated documentation.
 
 ### Declarative SQL-backed sorts — built 2026-07-31
 
