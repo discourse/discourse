@@ -176,13 +176,11 @@ class Tag < ActiveRecord::Base
     end
 
     tags_by_id = Tag.where(id: tag_data.map(&:tag_id)).includes(:localizations).index_by(&:id)
-    show_localized = !ContentLocalization.show_original?(guardian)
-
     tag_data.filter_map do |row|
       tag = tags_by_id[row.tag_id]
       next unless tag
 
-      name = show_localized ? (tag.get_localization&.name || tag.name) : tag.name
+      name = tag.get_localization&.name || tag.name
       slug = row.tag_slug.presence || "#{row.tag_id}-tag"
       { id: tag.id, name:, slug: }
     end

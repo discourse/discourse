@@ -14,6 +14,7 @@ RSpec.describe DiscourseAi::AgentExporter do
 
       it "returns JSON containing the agent and its custom tool" do
         expect(export_json["agent"]["name"]).to eq(ai_agent.name)
+        expect(export_json["agent"]["allowed_group_ids"]).to eq(ai_agent.allowed_group_ids)
         expect(export_json["agent"]["tools"].first.first).to eq("custom-#{ai_tool.tool_name}")
 
         custom_tool = export_json["custom_tools"].first

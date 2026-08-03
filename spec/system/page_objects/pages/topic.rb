@@ -449,6 +449,23 @@ module PageObjects
         all(tags_selector).map(&:text)
       end
 
+      def has_topic_tag?(name)
+        has_css?(".title-wrapper .discourse-tag", text: name)
+      end
+
+      def has_content_language_preferences_launcher?
+        has_css?(".topic-content-language-preferences")
+      end
+
+      def has_no_topic_admin_menu?
+        has_no_css?(".topic-admin-menu-trigger")
+      end
+
+      def open_content_language_preferences
+        find(".topic-content-language-preferences").click
+        PageObjects::Modals::ContentLanguagePreferences.new
+      end
+
       private
 
       def within_topic_footer_buttons

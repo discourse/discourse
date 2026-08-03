@@ -5124,11 +5124,9 @@ tr_TR:
         title: "Hayır"
         delete:
           title: "Kullanıcıyı Sil"
-          description: "Engellemeden kullanıcıyı sil"
           complete: "Kullanıcı silindi."
         block:
           title: "Kullanıcıyı Sil ve Engelle"
-          description: "Kullanıcı silinecek ve IP ve e-posta adresini engelleyeceğiz."
           complete: "Kullanıcı silindi ve engellendi."
       confirm_spam:
         title: "Evet"
@@ -5188,12 +5186,10 @@ tr_TR:
         bundle_title: "Kullanıcıyla ne yapmak istiyorsunuz?"
       silence_user:
         title: "Kullanıcıyı sustur"
-        description: "Kullanıcının gönderi yapmasını engelle"
         complete: "Kullanıcı susturuldu"
         reason: "Kullanıcı inceleme kuyruğu aracılığıyla susturuldu"
       suspend_user:
         title: "Kullanıcıyı askıya al"
-        description: "Kullanıcı hesabını askıya al"
         complete: "Kullanıcı askıya alındı"
         reason: "İnceleme kuyruğu aracılığıyla askıya alınan kullanıcı"
       delete_user:

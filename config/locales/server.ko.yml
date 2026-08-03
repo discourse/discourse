@@ -3661,7 +3661,6 @@ ko:
           complete: "사용자 삭제됨."
         block:
           title: "사용자 삭제 및 차단"
-          description: "사용자가 삭제되고 IP 및 이메일 주소가 차단됩니다."
       confirm_spam:
         title: "예"
       not_spam:

@@ -585,6 +585,7 @@ nb_NO:
         email: "E-post"
         name: "Navn"
         fields: "Felter"
+        penalty_forever: "For alltid"
         reject_reason: "Begrunnelse"
         scrubbed_reason: "Begrunnelse"
         scrub_record:

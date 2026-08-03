@@ -808,6 +808,8 @@ ug:
         email: "ئېلخەت"
         name: "ئىسمى"
         fields: "بۆلەك"
+        silence_reason: "ئۈنسىز قىلىش سەۋەبى"
+        penalty_forever: "مەڭگۈ"
         reject_reason: "سەۋەبى"
         scrubbed_by: "خاتىرە ئۆچۈرگۈچى"
         scrubbed_reason: "سەۋەبى"

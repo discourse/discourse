@@ -13,6 +13,9 @@ fr:
       editing:
         one: "en train de modifier"
         other: "en train de modifier le message"
+      translating:
+        one: "en cours de traduction"
+        other: "en cours de traduction"
       replying_to_topic:
         one: "en train de répondre"
         other: "en train de répondre"

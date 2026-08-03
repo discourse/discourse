@@ -1027,6 +1027,8 @@ uk:
         email: "Електронна пошта"
         name: "Імʼя"
         fields: "Поля"
+        silence_reason: "Причина заморожування"
+        penalty_forever: "Назавжди"
         reject_reason: "Причина"
         scrubbed_by: "Запис стерто"
         scrubbed_reason: "Причина"
@@ -1896,7 +1898,6 @@ uk:
       enable_smart_lists: "Увімкніть розумні списки під час запису в композитор"
       enable_defer: "Увімкнути позначення тем як непрочитані"
       enable_markdown_monospace_font: "Використовувати моноширинний шрифт у режимі Markdown редактора тексту"
-      show_original_content: "Показати оригінальний текст замість перекладеного."
       experimental_sidebar:
         enable: "Увімкнути бічну панель"
         options: "Параметри"

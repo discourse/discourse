@@ -503,6 +503,7 @@ bg:
         email: "Имейл"
         name: "Име"
         fields: "Полета"
+        penalty_forever: "Завинаги"
         reject_reason: "Причина"
         scrubbed_reason: "Причина"
         scrub_record:

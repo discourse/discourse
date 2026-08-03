@@ -898,6 +898,8 @@ de:
         email: "E-Mail"
         name: "Name"
         fields: "Felder"
+        silence_reason: "Grund der Stummschaltung"
+        penalty_forever: "Für immer"
         reject_reason: "Grund"
         scrubbed_by: "Datensatz bereinigt von"
         scrubbed_reason: "Grund"
@@ -1710,7 +1712,6 @@ de:
       enable_smart_lists: "Aktiviere intelligente Listen beim Schreiben im Composer"
       enable_defer: "„Themen als ungelesen markieren“ aktivieren"
       enable_markdown_monospace_font: "Monospace-Schriftart im Markdown-Modus des Editors verwenden"
-      show_original_content: "Zeige den Originalinhalt anstelle des übersetzten Inhalts an."
       experimental_sidebar:
         enable: "Seitenleiste aktivieren"
         options: "Optionen"

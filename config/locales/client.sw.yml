@@ -320,6 +320,7 @@ sw:
         username: "Jina la mtumiaji"
         email: "Barua Pepe"
         name: "Jina"
+        penalty_forever: "Milele"
         reject_reason: "Sababu"
         scrubbed_reason: "Sababu"
         scrub_record:

@@ -39,8 +39,7 @@ de:
         flagged_post: |
           %{score_reason}
           %{response}
-        flagged_post_response: |
-          <p>Antwort des Modells: %{llm_response}</p>
+        flagged_post_response: "Antwort des Modells: %{llm_response}"
         flagged_post_score_reason: |
           <b>Ausgelöst durch die Regel <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> .</b>
         notify_author_pm:
@@ -148,7 +147,6 @@ de:
     ai_translation_enabled: "KI-Übersetzungsfunktion aktivieren"
     ai_translation_personal_messages: "Legt fest, welche persönlichen Nachrichten übersetzt werden. „none“ deaktiviert die Übersetzung von privaten Nachrichten. „group“ übersetzt nur private Gruppennachrichten. „all“ übersetzt alle privaten Nachrichten."
     ai_translation_include_bot_content: "Wenn diese Option aktiviert ist, werden auch Inhalte, die von Bots (Benutzer-IDs unter 0) geschrieben wurden, zur Übersetzung gesendet."
-    ai_translation_max_post_length: "Die maximale Zeichenanzahl eines zu übersetzenden Beitrags. Längere Beiträge werden nicht übersetzt."
     ai_translation_backfill_hourly_rate: "Die Anzahl der Beiträge und Themen, die bei der rückwirkenden Übersetzung pro Stunde übersetzt werden. Setze den Wert auf 0, um rückwirkende Übersetzungen zu deaktivieren."
     ai_translation_backfill_parallel_jobs: "Die Anzahl der parallel auszuführenden Beitragslokalisierungsaufträge pro Backfill-Zyklus. Höhere Werte steigern den Durchsatz, verbrauchen aber mehr Ressourcen."
     ai_usage_rollup_after_days: "Anzahl der Tage, für die KI-Nutzungsstatistiken pro Anfrage gespeichert werden, bevor sie in tägliche Aggregatwerte einfließen. Auf 0 setzen, um die Aggregation zu deaktivieren."

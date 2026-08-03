@@ -516,6 +516,7 @@ en:
           translation_settings: "AI settings"
           localization_settings: "App language settings"
           enable_translations: "Enable automatic translations"
+          enable_translations_disabled: "You must add a supported language to enable translations"
         stats:
           title: "Translation statistics"
           backfill_disabled: "Backfilling is disabled, only new posts will be translated."

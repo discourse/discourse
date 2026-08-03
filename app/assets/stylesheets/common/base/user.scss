@@ -1081,7 +1081,11 @@
     margin-top: 0.5em;
   }
 
-  .pref-show-original-content {
+  .pref-understood-languages {
+    margin-top: var(--space-2);
+  }
+
+  .pref-automatically-translate {
     margin-top: var(--space-4);
     margin-bottom: var(--space-4);
   }

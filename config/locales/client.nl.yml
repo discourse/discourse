@@ -847,6 +847,8 @@ nl:
         email: "E-mailadres"
         name: "Naam"
         fields: "Velden"
+        silence_reason: "Reden van dempen"
+        penalty_forever: "Voor altijd"
         reject_reason: "Reden"
         scrubbed_by: "Record gescrubd door"
         scrubbed_reason: "Reden"

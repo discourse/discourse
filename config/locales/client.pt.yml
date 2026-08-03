@@ -742,6 +742,7 @@ pt:
         email: "E-mail"
         name: "Nome"
         fields: "campos"
+        penalty_forever: "Para Sempre"
         reject_reason: "Motivo"
         scrubbed_by: "Registo apagado por"
         scrubbed_reason: "Motivo"

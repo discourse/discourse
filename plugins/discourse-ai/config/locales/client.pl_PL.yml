@@ -541,6 +541,7 @@ pl_PL:
           translation_settings: "Ustawienia AI"
           localization_settings: "Ustawienia języka aplikacji"
           enable_translations: "Włącz automatyczne tłumaczenia"
+          enable_translations_disabled: "Aby włączyć tłumaczenia, musisz dodać obsługiwany język"
         stats:
           title: "Statystyki tłumaczeń"
           backfill_disabled: "Uzupełnianie jest wyłączone, tłumaczone będą tylko nowe wpisy."

@@ -9,6 +9,16 @@ RSpec.describe UpcomingChanges::Toggle do
     subject(:result) { described_class.call(params:, **dependencies, options:) }
 
     fab!(:admin)
+
+    before do
+      mock_upcoming_change_metadata(
+        enable_form_templates: {
+          impact: "feature,all_members",
+          status: :experimental,
+        },
+      )
+    end
+
     let(:params) { { setting_name:, enabled: } }
     let(:enabled) { true }
     let(:setting_name) { :enable_form_templates }
@@ -24,6 +34,12 @@ RSpec.describe UpcomingChanges::Toggle do
 
     context "when setting_name is invalid" do
       let(:setting_name) { "wrong_value" }
+
+      it { is_expected.to fail_a_policy(:setting_is_available) }
+    end
+
+    context "when setting_name is not an upcoming change" do
+      let(:setting_name) { :notify_changed! }
 
       it { is_expected.to fail_a_policy(:setting_is_available) }
     end

@@ -860,6 +860,8 @@ pt_BR:
         email: "E-mail"
         name: "Nome"
         fields: "Campos"
+        silence_reason: "Motivo do silêncio"
+        penalty_forever: "Para sempre"
         reject_reason: "Motivo"
         scrubbed_by: "Registro removido por"
         scrubbed_reason: "Motivo"
@@ -1667,7 +1669,6 @@ pt_BR:
       enable_smart_lists: "Ativar listas inteligentes ao escrever no compositor"
       enable_defer: "Ativar tópicos marcados como não lidos"
       enable_markdown_monospace_font: "Usar fonte monoespacial no modo Markdown do compositor"
-      show_original_content: "Exibir conteúdo original em vez de conteúdo traduzido."
       experimental_sidebar:
         enable: "Ativar barra lateral"
         options: "Opções"

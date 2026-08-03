@@ -1,0 +1,1387 @@
+import { type default as Owner, getOwner, setOwner } from "@ember/owner";
+import { trackedObject } from "@ember/reactive/collections";
+import { next, schedule } from "@ember/runloop";
+import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
+import { caretCoordinates } from "discourse/lib/caret-position";
+import type {
+  AddTextOptions,
+  AutocompleteHandler,
+  AutocompleteOptions,
+  PlaceholderHandler,
+  ReplaceTextOptions,
+  SelectedText,
+  SelectionOptions,
+  SelectTextOptions,
+  SurroundOptions,
+  TextManipulation,
+  ToolbarState,
+  UppyFile,
+} from "discourse/lib/composer/text-manipulation";
+import { bind } from "discourse/lib/decorators";
+import { isTesting } from "discourse/lib/environment";
+import escapeRegExp from "discourse/lib/escape-regexp";
+import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
+import { generateLinkifyFunction } from "discourse/lib/text";
+import { siteDir } from "discourse/lib/text-direction";
+import toMarkdown from "discourse/lib/to-markdown";
+import {
+  caretPosition,
+  clipboardHelpers,
+  determinePostReplaceSelection,
+  inCodeBlock,
+  setCaretPosition,
+} from "discourse/lib/utilities";
+import type AppEventsService from "discourse/services/app-events";
+import type { CapabilitiesService } from "discourse/services/capabilities";
+import type ComposerService from "discourse/services/composer";
+import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
+import { i18n } from "discourse-i18n";
+
+type SiteSettings = {
+  enable_rich_text_paste: boolean;
+  code_formatting_style: string;
+};
+
+type ComposerServiceWithModel = ComposerService & {
+  model: {
+    reply: string;
+  };
+};
+
+interface TextareaTextManipulationOptions {
+  markdownOptions?: Record<string, unknown>;
+  textarea: HTMLTextAreaElement;
+  eventPrefix?: string;
+}
+
+interface InsertAtOptions {
+  skipFocus?: boolean;
+}
+
+interface PlaceholderData {
+  uploadPlaceholder: string;
+  processingPlaceholder?: string;
+}
+
+interface LinkifyMatch {
+  index: number;
+  lastIndex: number;
+  raw: string;
+  url: string;
+}
+
+interface Linkify {
+  test(text: string): boolean;
+  match(text: string): LinkifyMatch[] | null;
+}
+
+const INDENT_DIRECTION_LEFT = "left";
+const INDENT_DIRECTION_RIGHT = "right";
+
+// Supports '- ', '* ', '1. ', '- [ ]', '- [x]', `* [ ] `, `* [x] `, '1. [ ] ', '1. [x] '
+const LIST_REGEXP = /^(\s*)([*-]|(\d+)\.)\s(\[[\sx]\]\s)?/;
+
+const OP = {
+  NONE: 0,
+  REMOVED: 1,
+  ADDED: 2,
+};
+
+const FOUR_SPACES_INDENT = "4-spaces-indent";
+
+/**
+ * Our head can be a static string or a function that returns a string
+ * based on input (like for numbered lists).
+ */
+function getHead(
+  head: string | ((previous?: string) => string),
+  prev?: string
+): [string, number] {
+  if (typeof head === "string") {
+    return [head, head.length];
+  } else {
+    return getHead(head(prev));
+  }
+}
+
+export default class TextareaTextManipulation implements TextManipulation {
+  @service declare appEvents: AppEventsService;
+
+  // TODO(devxp-typescript-pending): use the canonical typed site-settings
+  // registry once dynamic client settings are represented in core.
+  @service declare siteSettings: SiteSettings;
+
+  @service declare capabilities: CapabilitiesService;
+
+  allowPreview = true;
+
+  eventPrefix: string;
+  textarea: HTMLTextAreaElement;
+
+  autocompleteHandler: TextareaAutocompleteHandler;
+  placeholder: PlaceholderHandler;
+
+  state = trackedObject<ToolbarState & Record<string, unknown>>({});
+
+  _cachedLinkify?: Linkify;
+
+  constructor(
+    owner: Owner,
+    {
+      markdownOptions,
+      textarea,
+      eventPrefix = "composer",
+    }: TextareaTextManipulationOptions
+  ) {
+    setOwner(this, owner);
+    this.placeholder = new TextareaPlaceholderHandler(owner, this);
+
+    this.eventPrefix = eventPrefix;
+    this.textarea = textarea;
+
+    this.autocompleteHandler = new TextareaAutocompleteHandler(textarea);
+
+    generateLinkifyFunction(markdownOptions || {}).then((linkify) => {
+      // When pasting links, we should use the same rules to match links as we do when creating links for a cooked post.
+      this._cachedLinkify = linkify;
+    });
+  }
+
+  get value(): string {
+    return this.textarea.value;
+  }
+
+  // ensures textarea scroll position is correct
+  blurAndFocus(): void {
+    this.textarea?.blur();
+    this.textarea?.focus({ preventScroll: true });
+  }
+
+  focus(): void {
+    this.textarea.focus({ preventScroll: true });
+  }
+
+  insertBlock(text: string): void {
+    this._addBlock(this.getSelected(), text);
+  }
+
+  insertText(text: string, options?: AddTextOptions): void {
+    this.addText(this.getSelected(), text, options);
+  }
+
+  getSelected(
+    trimLeading?: boolean | null | "",
+    opts?: SelectionOptions
+  ): SelectedText {
+    const value = this.value;
+    let start = this.textarea.selectionStart;
+    let end = this.textarea.selectionEnd;
+
+    // trim trailing spaces cause **test ** would be invalid
+    while (end > start && /\s/.test(value.charAt(end - 1))) {
+      end--;
+    }
+
+    if (trimLeading) {
+      // trim leading spaces cause ** test** would be invalid
+      while (end > start && /\s/.test(value.charAt(start))) {
+        start++;
+      }
+    }
+
+    const selVal = value.substring(start, end);
+    const pre = value.slice(0, start);
+    const post = value.slice(end);
+
+    if (opts && opts.lineVal) {
+      const lineVal =
+        value.split("\n")[
+          value.slice(0, this.textarea.selectionStart).split("\n").length - 1
+        ];
+      return { start, end, value: selVal, pre, post, lineVal };
+    } else {
+      return { start, end, value: selVal, pre, post };
+    }
+  }
+
+  selectText(
+    from: number,
+    length: number,
+    opts: SelectTextOptions = { scroll: true }
+  ): void {
+    this.textarea.selectionStart = from;
+    this.textarea.selectionEnd = from + length;
+    if (opts.scroll === true || typeof opts.scroll === "number") {
+      const oldScrollPos =
+        typeof opts.scroll === "number" ? opts.scroll : this.textarea.scrollTop;
+      if (!this.capabilities.isIOS) {
+        this.textarea.focus();
+      }
+      this.textarea.scrollTop = oldScrollPos;
+    }
+  }
+
+  replaceText(
+    oldVal: string,
+    newVal: string,
+    opts: ReplaceTextOptions = {}
+  ): void {
+    const val = this.value;
+    const needleStart = val.indexOf(oldVal);
+
+    if (needleStart === -1) {
+      // Nothing to replace.
+      return;
+    }
+
+    // Determine post-replace selection.
+    const newSelection = determinePostReplaceSelection({
+      selection: {
+        start: this.textarea.selectionStart,
+        end: this.textarea.selectionEnd,
+      },
+      needle: { start: needleStart, end: needleStart + oldVal.length },
+      replacement: { start: needleStart, end: needleStart + newVal.length },
+    });
+
+    if (opts.index && opts.regex) {
+      if (!opts.regex.global) {
+        throw new Error("Regex must be global");
+      }
+
+      const regex = new RegExp(opts.regex);
+      let match;
+      for (let i = 0; i <= opts.index; i++) {
+        match = regex.exec(val);
+      }
+
+      if (match) {
+        this._insertAt(
+          match.index,
+          match.index + match[0].length,
+          newVal,
+          opts
+        );
+      }
+    } else {
+      this._insertAt(needleStart, needleStart + oldVal.length, newVal, opts);
+    }
+
+    if (
+      (opts.forceFocus || this.textarea === document.activeElement) &&
+      !opts.skipNewSelection
+    ) {
+      // Restore cursor.
+      this.selectText(
+        newSelection.start,
+        newSelection.end - newSelection.start
+      );
+    }
+  }
+
+  applySurroundSelection(
+    head: string | ((previous?: string) => string),
+    tail: string,
+    exampleKey: string,
+    opts?: SurroundOptions
+  ): void {
+    this.applySurround(this.getSelected(), head, tail, exampleKey, opts);
+  }
+
+  applySurround(
+    sel: SelectedText,
+    head: string | ((previous?: string) => string),
+    tail: string,
+    exampleKey: string,
+    opts?: SurroundOptions
+  ): void {
+    if (opts?.wholeLine) {
+      sel = this.#expandToLines(sel);
+    }
+
+    const pre = sel.pre;
+    const post = sel.post;
+
+    const tlen = tail.length;
+    if (sel.start === sel.end) {
+      if (tlen === 0) {
+        return;
+      }
+
+      const [hval, hlen] = getHead(head);
+      const example = i18n(`composer.${exampleKey}`);
+      this._insertAt(sel.start, sel.end, `${hval}${example}${tail}`);
+      this.selectText(pre.length + hlen, example.length);
+    } else if (opts?.wholeLine) {
+      this.#applyWholeLineSurround(sel, head, tail, opts);
+    } else if (opts && !opts.multiline) {
+      let [hval, hlen] = getHead(head);
+
+      if (opts.useBlockMode && sel.value.split("\n").length > 1) {
+        hval += "\n";
+        hlen += 1;
+        tail = `\n${tail}`;
+      }
+
+      if (pre.slice(-hlen) === hval && post.slice(0, tail.length) === tail) {
+        // Already wrapped in the surround. Remove it.
+        this._insertAt(sel.start - hlen, sel.end + tail.length, sel.value);
+        this.selectText(sel.start - hlen, sel.value.length);
+      } else {
+        this._insertAt(sel.start, sel.end, `${hval}${sel.value}${tail}`);
+        this.selectText(sel.start + hlen, sel.value.length);
+      }
+    } else {
+      const lines = sel.value.split("\n");
+
+      const [hval, hlen] = getHead(head);
+      if (
+        lines.length === 1 &&
+        pre.slice(-tlen) === tail &&
+        post.slice(0, hlen) === hval
+      ) {
+        // Already wrapped in the surround. Remove it.
+        this._insertAt(sel.start - hlen, sel.end + tlen, sel.value);
+        this.selectText(sel.start - hlen, sel.value.length);
+      } else {
+        const contents = this._getMultilineContents(
+          lines,
+          head,
+          hval,
+          hlen,
+          tail,
+          tlen,
+          opts
+        );
+
+        this._insertAt(sel.start, sel.end, contents);
+        if (lines.length === 1 && tlen > 0) {
+          this.selectText(sel.start + hlen, sel.value.length);
+        } else {
+          this.selectText(sel.start, contents.length);
+        }
+      }
+    }
+  }
+
+  #applyWholeLineSurround(
+    sel: SelectedText,
+    head: string | ((previous?: string) => string),
+    tail: string,
+    opts: SurroundOptions
+  ): void {
+    const [hval, hlen] = getHead(head);
+    const lines = sel.value.split("\n");
+    const formattedLines = lines.filter(
+      (line) => opts.applyEmptyLines || line.length > 0
+    );
+    const removing =
+      formattedLines.length > 0 &&
+      formattedLines.every(
+        (line) => line.startsWith(hval) && line.endsWith(tail)
+      );
+
+    const contents = lines
+      .map((line) => {
+        if (!opts.applyEmptyLines && line.length === 0) {
+          return line;
+        }
+        if (removing) {
+          return line.slice(hlen, tail.length ? -tail.length : undefined);
+        }
+        let content = line;
+        if (hval) {
+          content = content.replaceAll(hval, "");
+        }
+        if (tail) {
+          content = content.replaceAll(tail, "");
+        }
+        return `${hval}${content}${tail}`;
+      })
+      .join("\n");
+
+    this._insertAt(sel.start, sel.end, contents);
+
+    if (lines.length === 1) {
+      this.selectText(
+        sel.start + (removing ? 0 : hlen),
+        removing ? contents.length : contents.length - hlen - tail.length
+      );
+    } else {
+      this.selectText(sel.start, contents.length);
+    }
+  }
+
+  #expandToLines(sel: SelectedText): SelectedText {
+    const value = this.value;
+    const start = value.lastIndexOf("\n", sel.start - 1) + 1;
+    const endAnchor =
+      sel.end > sel.start && value[sel.end - 1] === "\n"
+        ? sel.end - 1
+        : sel.end;
+    const nextNewline = value.indexOf("\n", endAnchor);
+    const end = nextNewline === -1 ? value.length : nextNewline;
+
+    return {
+      start,
+      end,
+      value: value.slice(start, end),
+      pre: value.slice(0, start),
+      post: value.slice(end),
+      lineVal: value.slice(start, end),
+    };
+  }
+
+  // perform the same operation over many lines of text
+  _getMultilineContents(
+    lines: string[],
+    head: string | ((previous?: string) => string),
+    hval: string,
+    hlen: number,
+    tail: string,
+    tlen: number,
+    opts?: SurroundOptions
+  ): string {
+    let operation = OP.NONE;
+
+    const applyEmptyLines = opts && opts.applyEmptyLines;
+
+    return lines
+      .map((l) => {
+        if (!applyEmptyLines && l.length === 0) {
+          return l;
+        }
+
+        if (
+          operation !== OP.ADDED &&
+          l.slice(0, hlen) === hval &&
+          (tlen === 0 || l.slice(-tlen) === tail)
+        ) {
+          operation = OP.REMOVED;
+          if (tlen === 0) {
+            const result = l.slice(hlen);
+            [hval, hlen] = getHead(head, hval);
+            return result;
+          } else if (l.slice(-tlen) === tail) {
+            const result = l.slice(hlen, -tlen);
+            [hval, hlen] = getHead(head, hval);
+            return result;
+          }
+        } else if (operation === OP.NONE) {
+          operation = OP.ADDED;
+        } else if (operation === OP.REMOVED) {
+          return l;
+        }
+
+        const result = `${hval}${l}${tail}`;
+        [hval, hlen] = getHead(head, hval);
+        return result;
+      })
+      .join("\n");
+  }
+
+  _addBlock(sel: SelectedText, text: string): void {
+    text = (text || "").trim();
+    if (text.length === 0) {
+      return;
+    }
+
+    let start = sel.start;
+    let end = sel.end;
+
+    const newLinesBeforeSelection = sel.pre?.match(/\n*$/)?.[0]?.length;
+    if (newLinesBeforeSelection) {
+      start -= newLinesBeforeSelection;
+    }
+
+    if (sel.pre.length > 0) {
+      text = `\n\n${text}`;
+    }
+
+    const newLinesAfterSelection = sel.post?.match(/^\n*/)?.[0]?.length;
+    if (newLinesAfterSelection) {
+      end += newLinesAfterSelection;
+    }
+
+    if (sel.post.length > 0) {
+      text = `${text}\n\n`;
+    } else {
+      text = `${text}\n`;
+    }
+
+    this._insertAt(start, end, text);
+    this.textarea.setSelectionRange(start + text.length, start + text.length);
+    schedule("afterRender", this, this.blurAndFocus);
+  }
+
+  applyLink(url: string): void {
+    const sel = this.getSelected();
+    if (sel.start === sel.end) {
+      return;
+    }
+    this._insertAt(sel.start, sel.end, `[${sel.value}](${url})`);
+    this.blurAndFocus();
+  }
+
+  addText(sel: SelectedText, text: string, options?: AddTextOptions): void {
+    if (options && options.ensureSpace) {
+      if ((sel.pre + "").length > 0) {
+        if (!sel.pre.match(/\s$/)) {
+          text = " " + text;
+        }
+      }
+      if ((sel.post + "").length > 0) {
+        if (!sel.post.match(/^\s/)) {
+          text = text + " ";
+        }
+      }
+    }
+
+    this._insertAt(sel.start, sel.end, text);
+    this.blurAndFocus();
+  }
+
+  _insertAt(
+    start: number,
+    end: number,
+    text: string,
+    opts: InsertAtOptions = {}
+  ): void {
+    insertAtTextarea(this.textarea, start, end, text, opts);
+  }
+
+  extractTable(text: string): string | null {
+    if (text.endsWith("\n")) {
+      text = text.substring(0, text.length - 1);
+    }
+
+    const characters = text.split("");
+    let cell = false;
+    characters.forEach((char, index) => {
+      if (char === "\n" && cell) {
+        characters[index] = "\r";
+      }
+      if (char === '"') {
+        characters[index] = "";
+        cell = !cell;
+      }
+    });
+
+    const rows = characters.join("").replace(/\r/g, "<br>").split("\n");
+
+    if (rows.length > 1) {
+      const columns = rows.map((r) => r.split("\t").length);
+      const isTable =
+        columns
+          .slice(1)
+          .reduce<
+            number | boolean
+          >((a, b) => a && columns[0] === b && b > 1, columns[0]) &&
+        !(columns[0] === 2 && rows[0].split("\t")[0].match(/^•$|^\d+.$/)); // to skip tab delimited lists
+
+      if (isTable) {
+        const splitterRow = [...Array(columns[0])].map(() => "---").join("\t");
+        rows.splice(1, 0, splitterRow);
+
+        return (
+          "|" + rows.map((r) => r.split("\t").join("|")).join("|\n|") + "|\n"
+        );
+      }
+    }
+    return null;
+  }
+
+  isInside(text: string, regex: RegExp): number | null {
+    const matches = text.match(regex);
+    return matches && matches.length % 2;
+  }
+
+  @bind
+  async paste(e: ClipboardEvent): Promise<void> {
+    const isComposer = this.textarea === e.target;
+
+    if (!isComposer && !isTesting()) {
+      return;
+    }
+
+    // eslint-disable-next-line prefer-const
+    let { clipboard, canPasteHtml, canUpload } = clipboardHelpers(e, {
+      siteSettings: this.siteSettings,
+      canUpload: isComposer,
+    });
+
+    let plainText = clipboard.getData("text/plain");
+    // eslint-disable-next-line prefer-const
+    let html = clipboard.getData("text/html");
+    let handled = false;
+
+    const selected = this.getSelected(null, { lineVal: true });
+    const { pre, value: selectedValue, lineVal } = selected;
+    const isInlinePasting = pre.match(/[^\n]$/);
+    const isCodeBlock = this.#isAfterStartedCodeFence(pre);
+
+    if (
+      plainText &&
+      this.siteSettings.enable_rich_text_paste &&
+      !isInlinePasting &&
+      !isCodeBlock
+    ) {
+      plainText = plainText.replace(/\r/g, "");
+      const table = this.extractTable(plainText);
+      if (table) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this.eventPrefix
+          ? this.appEvents.trigger(`${this.eventPrefix}:insert-text`, table)
+          : this.insertText(table);
+        handled = true;
+      }
+    }
+
+    if (canPasteHtml && plainText) {
+      if (isInlinePasting) {
+        canPasteHtml = !(
+          lineVal.match(/^```/) ||
+          this.isInside(pre, /`/g) ||
+          lineVal.match(/^    /)
+        );
+      } else {
+        canPasteHtml = !isCodeBlock;
+      }
+    }
+
+    if (
+      this._cachedLinkify &&
+      plainText &&
+      !handled &&
+      selected.end > selected.start &&
+      // text selection does not contain url
+      !this._cachedLinkify.test(selectedValue) &&
+      // text selection does not contain a bbcode-like tag
+      !selectedValue.match(/\[\/?[a-z =]+?\]/g)
+    ) {
+      if (this._cachedLinkify.test(plainText)) {
+        const match = this._cachedLinkify.match(plainText)[0];
+        if (
+          match &&
+          match.index === 0 &&
+          match.lastIndex === match.raw.length
+        ) {
+          // When specified, linkify supports fuzzy links and emails. Prefer providing the protocol.
+          // eg: pasting "example@discourse.org" may apply a link format of "mailto:example@discourse.org"
+          this.addText(selected, `[${selectedValue}](${match.url})`);
+          handled = true;
+        }
+      }
+    }
+
+    if (canPasteHtml && !handled) {
+      e.preventDefault();
+
+      let markdown = await toMarkdown(html);
+
+      if (!plainText || plainText.length < markdown.length) {
+        if (isInlinePasting) {
+          markdown = markdown.replace(/^#+/, "").trim();
+          markdown = pre.match(/\S$/) ? ` ${markdown}` : markdown;
+        }
+
+        if (isComposer) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          this.eventPrefix
+            ? this.appEvents.trigger(
+                `${this.eventPrefix}:insert-text`,
+                markdown
+              )
+            : this.insertText(markdown);
+          handled = true;
+        }
+      } else if (plainText && isComposer) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this.eventPrefix
+          ? this.appEvents.trigger(`${this.eventPrefix}:insert-text`, plainText)
+          : this.insertText(plainText);
+        handled = true;
+      }
+    }
+
+    if (handled || (canUpload && !plainText)) {
+      e.preventDefault();
+    }
+  }
+
+  /**
+   * Removes the provided char from the provided str up
+   * until the limit, or until a character that is _not_
+   * the provided one is encountered.
+   */
+  _deindentLine(str: string, char: string, limit: number): string {
+    let eaten = 0;
+    for (let i = 0; i < str.length; i++) {
+      if (eaten < limit && str[i] === char) {
+        eaten += 1;
+      } else {
+        return str.slice(eaten);
+      }
+    }
+    return str;
+  }
+
+  _updateListNumbers(text: string, currentNumber: number): string {
+    return text
+      .split("\n")
+      .map((line) => {
+        if (line.replace(/^\s+/, "").startsWith(`${currentNumber}.`)) {
+          const result = line.replace(
+            `${currentNumber}`,
+            `${currentNumber + 1}`
+          );
+          currentNumber += 1;
+          return result;
+        }
+        return line;
+      })
+      .join("\n");
+  }
+
+  #isAfterStartedCodeFence(beforeText: string): number | null {
+    return this.isInside(beforeText, /(^|\n)```/g);
+  }
+
+  maybeContinueList(): void {
+    const offset = caretPosition(this.textarea);
+    const text = this.value;
+    const lines = text.substring(0, offset).split("\n");
+
+    // Only continue if the previous line was a list item.
+    const previousLine = lines[lines.length - 2];
+    const match = previousLine?.match(LIST_REGEXP);
+    if (!match) {
+      return;
+    }
+
+    if (this.#isAfterStartedCodeFence(text.substring(0, offset - 1))) {
+      return;
+    }
+
+    const listPrefix = match[0];
+    const indentationLevel = match[1];
+    const bullet = match[2];
+    const hasCheckbox = Boolean(match[4]);
+    const numericBullet = parseInt(match[3], 10);
+    const isNumericBullet = !isNaN(numericBullet);
+    const newBullet = isNumericBullet ? `${numericBullet + 1}.` : bullet;
+    let newPrefix = `${newBullet} ${hasCheckbox ? "[ ] " : ""}`;
+
+    // Do not append list item if there already is one on this line.
+    let currentLineEnd = text.indexOf("\n", offset);
+    if (currentLineEnd < 0) {
+      currentLineEnd = text.length;
+    }
+    const currentLine = text.substring(offset, currentLineEnd);
+    if (currentLine.startsWith(newPrefix)) {
+      newPrefix = "";
+    }
+
+    /*
+      Autocomplete list element on next line if current line has list element containing text.
+      or there's text on the line after the cursor (|):
+
+      - | some text
+
+      Becomes:
+
+      -
+      - | some text
+
+      And
+
+      - some text|
+
+      Becomes:
+
+      - some text
+      - |
+    */
+    const shouldAutocomplete =
+      previousLine.replace(listPrefix, "").trim().length > 0 ||
+      currentLine.trim().length > 0;
+
+    if (shouldAutocomplete) {
+      let autocompletePrefix = `${indentationLevel}${newPrefix}`;
+      let autocompletePostfix;
+      const autocompletePrefixLength = autocompletePrefix.length;
+      let scrollPosition;
+
+      /*
+        For numeric items, we have to also replace the rest of the
+        numbered items in the list with their new values. Cursor is |.
+
+        1. foo|
+        2. bar
+
+        Becomes
+
+        1. foo
+        2.
+        3. bar
+      */
+      if (isNumericBullet && !text.substring(offset).match(/^\s*$/g)) {
+        autocompletePostfix = this._updateListNumbers(
+          text.substring(offset),
+          numericBullet + 1
+        );
+        autocompletePrefix += autocompletePostfix;
+        scrollPosition = this.textarea.scrollTop;
+
+        this.replaceText(
+          text.substring(offset, offset + autocompletePrefix.length),
+          autocompletePrefix,
+          {
+            skipNewSelection: true,
+          }
+        );
+      } else {
+        this._insertAt(offset, offset, autocompletePrefix);
+      }
+
+      this.selectText(offset + autocompletePrefixLength, 0, {
+        scroll: scrollPosition,
+      });
+    } else {
+      // Clear the new autocompleted list item if there is no other text.
+      const offsetWithoutPrefix = offset - `\n${listPrefix}`.length;
+      this._insertAt(offsetWithoutPrefix, offset, "");
+      this.selectText(offsetWithoutPrefix, 0);
+    }
+  }
+
+  indentSelection(direction: "left" | "right"): boolean | void {
+    if (![INDENT_DIRECTION_LEFT, INDENT_DIRECTION_RIGHT].includes(direction)) {
+      return;
+    }
+
+    const selected = this.getSelected(null, { lineVal: true });
+    const { lineVal } = selected;
+    let value = selected.value;
+
+    /*
+      Perhaps this is a bit simplistic, but it is a fairly reliable
+      guess to say whether we are indenting with tabs or spaces. for
+      example some programming languages prefer tabs, others prefer
+      spaces, and for the cases with no tabs it's safer to use spaces
+    */
+    let indentationSteps, indentationChar;
+    const linesStartingWithTabCount = value.match(/^\t/gm)?.length || 0;
+    const linesStartingWithSpaceCount = value.match(/^ /gm)?.length || 0;
+    if (linesStartingWithTabCount > linesStartingWithSpaceCount) {
+      indentationSteps = 1;
+      indentationChar = "\t";
+    } else {
+      indentationChar = " ";
+      indentationSteps = 2;
+    }
+
+    /*
+      We want to include all the spaces on the selected line as
+      well, no matter where the cursor begins on the first line,
+      because we want to indent those too. * is the cursor/selection
+      and . are spaces:
+
+      BEFORE               AFTER
+
+          *                *
+      ....text here        ....text here
+      ....some more text   ....some more text
+                       *                    *
+
+      BEFORE               AFTER
+
+       *                   *
+      ....text here        ....text here
+      ....some more text   ....some more text
+                       *                    *
+    */
+    const indentationRegexp = new RegExp(`^${indentationChar}+`);
+    const lineStartsWithIndentationChar = lineVal.match(indentationRegexp);
+    const indentationCharsBeforeSelection = value.match(indentationRegexp);
+    if (lineStartsWithIndentationChar) {
+      const charsToSubtract = indentationCharsBeforeSelection
+        ? indentationCharsBeforeSelection[0]
+        : "";
+      value =
+        lineStartsWithIndentationChar[0].replace(charsToSubtract, "") + value;
+    }
+
+    const splitSelection = value.split("\n");
+    const newValue = splitSelection
+      .map((line) => {
+        if (direction === INDENT_DIRECTION_LEFT) {
+          return this._deindentLine(line, indentationChar, indentationSteps);
+        } else {
+          return `${Array(indentationSteps + 1).join(indentationChar)}${line}`;
+        }
+      })
+      .join("\n");
+
+    if (newValue.trim() !== "") {
+      this.replaceText(value, newValue, { skipNewSelection: true });
+      this.selectText(this.value.indexOf(newValue), newValue.length);
+
+      return true;
+    }
+  }
+
+  @bind
+  emojiSelected(code: string): void {
+    const selected = this.getSelected();
+    const captures = selected.pre.match(/\B:([\p{L}\p{N}_]*)$/u);
+
+    if (isEmpty(captures)) {
+      if (selected.pre.match(/\S$/)) {
+        this.addText(selected, ` :${code}:`);
+      } else {
+        this.addText(selected, `:${code}:`);
+      }
+    } else {
+      const numOfRemovedChars = captures[1].length;
+      this._insertAt(
+        selected.start - numOfRemovedChars,
+        selected.end,
+        `${code}:`
+      );
+    }
+  }
+
+  async inCodeBlock(): Promise<boolean> {
+    return await this.autocompleteHandler.inCodeBlock();
+  }
+
+  @bind
+  toggleDirection(): void {
+    const currentDir = this.textarea.getAttribute("dir") || siteDir();
+    const newDir = currentDir === "ltr" ? "rtl" : "ltr";
+
+    this.textarea.setAttribute("dir", newDir);
+    this.textarea.focus();
+  }
+
+  @bind
+  applyList(
+    sel: SelectedText,
+    head: string | ((previous?: string) => string),
+    exampleKey: string,
+    opts?: SurroundOptions
+  ): void {
+    if (sel.value.includes("\n")) {
+      this.applySurround(sel, head, "", exampleKey, opts);
+    } else {
+      const [hval, hlen] = getHead(head);
+      if (sel.start === sel.end) {
+        sel.value = i18n(`composer.${exampleKey}`);
+      }
+
+      // Special handling for markdown headings starting with #,
+      // they are "list-like" in that they have a character at
+      // the start and a level, rather than having a surrounding format.
+      let number;
+      if (hval.includes("#")) {
+        const currentHeadingLevel = sel.value.search(/[^#]/);
+
+        // Remove existing heading level if same as the new one,
+        // mirrors list behavior.
+        if (sel.value.startsWith(hval) && currentHeadingLevel + 1 === hlen) {
+          number = sel.value.slice(hlen);
+        } else {
+          // Replace the existing heading level with the new one, or
+          // if there is no heading level, add the new one.
+          if (currentHeadingLevel > 0) {
+            number =
+              hval +
+              sel.value.slice("#".repeat(currentHeadingLevel).length + 1);
+          } else {
+            number = hval + sel.value;
+          }
+        }
+      } else {
+        // Remove existing list item if it's the same as the new
+        // head, e.g. if a line is "* list item", then it converts
+        // it to "list item"
+        if (sel.value.startsWith(hval)) {
+          number = sel.value.slice(hlen);
+        } else {
+          number = `${hval}${sel.value}`;
+        }
+      }
+
+      const preNewlines = sel.pre.trim() && "\n\n";
+      const postNewlines = sel.post.trim() && "\n\n";
+
+      const textToInsert = `${preNewlines}${number}${postNewlines}`;
+
+      const preChars = sel.pre.length - sel.pre.trimEnd().length;
+      const postChars = sel.post.length - sel.post.trimStart().length;
+
+      this._insertAt(sel.start - preChars, sel.end + postChars, textToInsert);
+
+      if (opts?.excludeHeadInSelection) {
+        this.selectText(
+          sel.start + (preNewlines.length - preChars) + hval.length,
+          number.length - hval.length
+        );
+      } else {
+        this.selectText(
+          sel.start + (preNewlines.length - preChars),
+          number.length
+        );
+      }
+    }
+  }
+
+  @bind
+  applyHeading(sel: SelectedText, level: number): void {
+    if (level > 0) {
+      this.applyList(sel, "#".repeat(level) + " ", "heading_text", {
+        excludeHeadInSelection: true,
+      });
+    } else {
+      // Remove heading when the Paragraph level (0) is selected.
+      const currentHeadingLevel = sel.lineVal!.search(/[^#]/);
+      if (currentHeadingLevel >= 0) {
+        // When you apply the list with the same head chars, then they
+        // are removed, so we can use the same function.
+        this.applyList(
+          sel,
+          "#".repeat(currentHeadingLevel) + " ",
+          "heading_text"
+        );
+      }
+    }
+  }
+
+  @bind
+  formatCode(): void {
+    const sel = this.getSelected("", { lineVal: true });
+    const selValue = sel.value;
+    const hasNewLine = selValue.includes("\n");
+    const isBlankLine = sel.lineVal.trim().length === 0;
+    const isFourSpacesIndent =
+      this.siteSettings.code_formatting_style === FOUR_SPACES_INDENT;
+
+    if (!hasNewLine) {
+      if (selValue.length === 0 && isBlankLine) {
+        if (isFourSpacesIndent) {
+          const example = i18n(`composer.code_text`);
+          this._insertAt(sel.start, sel.end, `    ${example}`);
+          return this.selectText(sel.pre.length + 4, example.length);
+        } else {
+          return this.applySurround(sel, "```\n", "\n```", "paste_code_text");
+        }
+      } else {
+        return this.applySurround(sel, "`", "`", "code_title");
+      }
+    } else {
+      if (isFourSpacesIndent) {
+        return this.applySurround(sel, "    ", "", "code_text");
+      } else {
+        const preNewline = sel.pre[-1] !== "\n" && sel.pre !== "" ? "\n" : "";
+        const postNewline = sel.post[0] !== "\n" ? "\n" : "";
+        return this.addText(
+          sel,
+          `${preNewline}\`\`\`\n${sel.value}\n\`\`\`${postNewline}`
+        );
+      }
+    }
+  }
+
+  putCursorAtEnd(): void {
+    if (this.capabilities.isIOS) {
+      putCursorAtEnd(this.textarea);
+    } else {
+      // in some browsers, the focus() called by putCursorAtEnd doesn't bubble the event to set
+      // isEditorFocused=true and bring the focus indicator to the wrapper, unless we do it on next tick
+      next(() => putCursorAtEnd(this.textarea));
+    }
+  }
+
+  /**
+   * Wraps consecutive upload placeholders in grid tags.
+   *
+   * @param consecutiveImages - Consecutive image filenames to wrap.
+   */
+  autoGridImages(consecutiveImages: string[]): void {
+    if (isEmpty(consecutiveImages)) {
+      return;
+    }
+
+    const reply = this.value;
+    const imagesToWrapGrid = new Set(consecutiveImages);
+
+    const uploadingText = i18n("uploading_filename", {
+      filename: "%placeholder%",
+    });
+    const uploadingTextMatch = uploadingText.match(
+      /^.*(?=: %placeholder%\s?…)/
+    );
+
+    if (!uploadingTextMatch || !uploadingTextMatch[0]) {
+      return;
+    }
+
+    const uploadingImagePattern = new RegExp(
+      "\\[" +
+        uploadingTextMatch[0].trim() +
+        "\\s?: ([^\\]]+?)\\.\\w+\\s?…\\]\\(\\)",
+      "g"
+    );
+
+    const matches: string[] = reply.match(uploadingImagePattern) || [];
+    const foundImages: string[] = [];
+
+    const existingGridPattern = /\[grid\]([\s\S]*?)\[\/grid\]/g;
+    const gridMatches = reply.match(existingGridPattern);
+
+    matches.forEach((imagePlaceholder) => {
+      imagePlaceholder = imagePlaceholder.trim();
+
+      const filenamePattern = new RegExp(
+        "\\[" +
+          uploadingTextMatch[0].trim() +
+          "\\s?: ([^\\]]+?)\\s?\\…\\]\\(\\)"
+      );
+
+      const filenameMatch = imagePlaceholder.match(filenamePattern);
+
+      if (filenameMatch && filenameMatch[1]) {
+        const filename = filenameMatch[1];
+
+        const isWithinGrid = gridMatches?.some((gridContent) =>
+          gridContent.includes(imagePlaceholder)
+        );
+
+        if (!isWithinGrid && imagesToWrapGrid.has(filename)) {
+          foundImages.push(imagePlaceholder);
+          imagesToWrapGrid.delete(filename);
+
+          // Check if we've found all the images
+          if (imagesToWrapGrid.size === 0) {
+            return;
+          }
+        }
+      }
+    });
+
+    // Check if all consecutive images have been found
+    if (foundImages.length === consecutiveImages.length) {
+      const firstImageMarkdown = foundImages[0];
+      const lastImageMarkdown = foundImages[foundImages.length - 1];
+
+      const startIndex = reply.indexOf(firstImageMarkdown);
+      const endIndex =
+        reply.indexOf(lastImageMarkdown) + lastImageMarkdown.length;
+
+      if (startIndex !== -1 && endIndex !== -1) {
+        this.textarea.focus();
+        this.selectText(startIndex, endIndex - startIndex);
+        this.applySurroundSelection("[grid]", "[/grid]", "grid_surround", {
+          useBlockMode: true,
+        });
+      }
+    }
+  }
+
+  autocomplete(options: AutocompleteOptions): unknown {
+    return dAutocomplete.setupAutocomplete(
+      getOwner(this),
+      this.textarea,
+      this.autocompleteHandler,
+      options
+    );
+  }
+}
+
+function insertAtTextarea(
+  textarea: HTMLTextAreaElement,
+  start: number,
+  end: number,
+  text: string,
+  { skipFocus = false }: InsertAtOptions = {}
+): void {
+  if (skipFocus && document.activeElement !== textarea) {
+    textarea.setRangeText(text, start, end, "preserve");
+    textarea.dispatchEvent(new InputEvent("input", { bubbles: true }));
+    return;
+  }
+
+  textarea.setSelectionRange(start, end);
+  textarea.focus();
+  if (start !== end && text === "") {
+    document.execCommand("delete", false);
+  } else {
+    document.execCommand("insertText", false, text);
+  }
+}
+
+export class TextareaAutocompleteHandler implements AutocompleteHandler {
+  textarea: HTMLTextAreaElement;
+
+  constructor(textarea: HTMLTextAreaElement) {
+    this.textarea = textarea;
+  }
+
+  getValue(): string {
+    return this.textarea.value;
+  }
+
+  replaceTerm(start: number, end: number, term: string): void {
+    const space =
+      this.getValue().substring(end + 1, end + 2) === " " ? "" : " ";
+    insertAtTextarea(this.textarea, start, end + 1, term + space);
+    setCaretPosition(this.textarea, start + 1 + term.trim().length);
+  }
+
+  getCaretPosition(): number {
+    return caretPosition(this.textarea);
+  }
+
+  getCaretCoords(start: number): { left: number; top: number } {
+    return caretCoordinates(this.textarea, { pos: start + 1 });
+  }
+
+  async inCodeBlock(): Promise<boolean> {
+    return await inCodeBlock(this.textarea.value, caretPosition(this.textarea));
+  }
+}
+
+class TextareaPlaceholderHandler implements PlaceholderHandler {
+  // TODO(devxp-typescript-pending): remove the local model refinement once the
+  // composer service exposes its current model type.
+  @service declare composer: ComposerServiceWithModel;
+
+  textManipulation: TextareaTextManipulation;
+
+  #placeholders: Record<string, PlaceholderData> = {};
+
+  constructor(owner: Owner, textManipulation: TextareaTextManipulation) {
+    setOwner(this, owner);
+
+    this.textManipulation = textManipulation;
+  }
+
+  #uploadPlaceholder(file: UppyFile, currentMarkdown: string): string {
+    const clipboard = i18n("clipboard");
+    const uploadFilenamePlaceholder = this.#uploadFilenamePlaceholder(
+      file,
+      currentMarkdown
+    );
+    const filename = uploadFilenamePlaceholder
+      ? uploadFilenamePlaceholder
+      : clipboard;
+
+    let placeholder = `[${i18n("uploading_filename", { filename })}]()\n`;
+    if (!this.#cursorIsOnEmptyLine()) {
+      placeholder = `\n${placeholder}`;
+    }
+
+    return placeholder;
+  }
+
+  #cursorIsOnEmptyLine(): boolean {
+    const selectionStart = this.textManipulation.textarea.selectionStart;
+    return (
+      selectionStart === 0 ||
+      this.textManipulation.value.charAt(selectionStart - 1) === "\n"
+    );
+  }
+
+  #uploadFilenamePlaceholder(file: UppyFile, currentMarkdown: string): string {
+    const filename = this.#filenamePlaceholder(file);
+
+    // when adding two separate files with the same filename search for matching
+    // placeholder already existing in the editor ie [Uploading: test.png…]
+    // and add order nr to the next one: [Uploading: test.png(1)…]
+    const escapedFilename = escapeRegExp(filename);
+    const regexString = `\\[${i18n("uploading_filename", {
+      filename: escapedFilename + "(?:\\()?([0-9])?(?:\\))?",
+    })}\\]\\(\\)`;
+    const globalRegex = new RegExp(regexString, "g");
+    const matchingPlaceholder = currentMarkdown.match(globalRegex);
+    if (matchingPlaceholder) {
+      // get last matching placeholder and its consecutive nr in regex
+      // capturing group and apply +1 to the placeholder
+      const lastMatch = matchingPlaceholder[matchingPlaceholder.length - 1];
+      const regex = new RegExp(regexString);
+      const orderNr = regex.exec(lastMatch)![1]
+        ? parseInt(regex.exec(lastMatch)![1]!, 10) + 1
+        : 1;
+      return `${filename}(${orderNr})`;
+    }
+
+    return filename;
+  }
+
+  #filenamePlaceholder(data: UppyFile): string {
+    return data.name.replace(/\u200B-\u200D\uFEFF]/g, "");
+  }
+
+  insert(file: UppyFile): void {
+    const placeholder = this.#uploadPlaceholder(
+      file,
+      this.composer.model.reply
+    );
+
+    this.textManipulation.insertText(placeholder);
+
+    this.#placeholders[file.id] = { uploadPlaceholder: placeholder };
+  }
+
+  progress(file: UppyFile): void {
+    const placeholderData = this.#placeholders[file.id]!;
+    placeholderData.processingPlaceholder = `[${i18n("processing_filename", {
+      filename: file.name,
+    })}]()\n`;
+
+    this.textManipulation.replaceText(
+      placeholderData.uploadPlaceholder,
+      placeholderData.processingPlaceholder
+    );
+
+    // Safari applies user-defined replacements to text inserted programmatically.
+    // One of the most common replacements is ... -> …, so we take care of the case
+    // where that transformation has been applied to the original placeholder
+    this.textManipulation.replaceText(
+      placeholderData.uploadPlaceholder.replace("...", "…"),
+      placeholderData.processingPlaceholder
+    );
+  }
+
+  progressComplete(file: UppyFile): void {
+    const placeholderData = this.#placeholders[file.id]!;
+    this.textManipulation.replaceText(
+      placeholderData.processingPlaceholder,
+      placeholderData.uploadPlaceholder
+    );
+  }
+
+  cancelAll(): void {
+    Object.values(this.#placeholders).forEach((data) => {
+      this.textManipulation.replaceText(data.uploadPlaceholder, "");
+    });
+  }
+
+  cancel(file: UppyFile): void {
+    if (this.#placeholders[file.id]) {
+      this.textManipulation.replaceText(
+        this.#placeholders[file.id].uploadPlaceholder,
+        ""
+      );
+    }
+  }
+
+  success(file: UppyFile, markdown: string): void {
+    this.textManipulation.replaceText(
+      this.#placeholders[file.id].uploadPlaceholder.trim(),
+      markdown
+    );
+  }
+}

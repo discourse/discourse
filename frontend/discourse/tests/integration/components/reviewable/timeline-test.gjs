@@ -21,7 +21,7 @@ module("Integration | Component | Reviewable | Timeline", function (hooks) {
 
   test("sanitizes dangerous markup in a flag reason but preserves safe links", async function (assert) {
     const reviewable = reviewableWithReason(
-      `Spam detected <img src=x onerror=alert(1)> <a href="javascript:alert(2)">phish</a> <a href="/admin">see settings</a>`
+      `<p>Spam detected <img src=x onerror=alert(1)> <a href="javascript:alert(2)">phish</a> <a href="/admin">see settings</a></p>`
     );
 
     await render(
@@ -33,6 +33,23 @@ module("Integration | Component | Reviewable | Timeline", function (hooks) {
       .hasHtml(
         '<p>Spam detected <img src=""> <a>phish</a> <a href="/admin">see settings</a></p>',
         "renders the sanitized flag reason"
+      );
+  });
+
+  test("renders a cooked flag reason without altering its structure", async function (assert) {
+    const reviewable = reviewableWithReason(
+      "<p>First line<br>Second line</p><p>Fourth line</p>"
+    );
+
+    await render(
+      <template><ReviewableTimeline @reviewable={{reviewable}} /></template>
+    );
+
+    assert
+      .dom(".timeline-event__description")
+      .hasHtml(
+        "<p>First line<br>Second line</p><p>Fourth line</p>",
+        "renders the cooked HTML directly"
       );
   });
 });

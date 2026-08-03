@@ -13,6 +13,7 @@ module Migrations
             user_id,
             allow_private_messages,
             auto_track_topics_after_msecs,
+            automatically_translate,
             automatically_unpin_topics,
             bookmark_auto_delete_preference,
             color_scheme_id,
@@ -49,6 +50,7 @@ module Migrations
             oldest_search_log_date,
             push_notification_level,
             seen_popups,
+            send_shortcut,
             show_original_content,
             sidebar_link_to_filtered_list,
             sidebar_show_count_of_new_items,
@@ -60,10 +62,11 @@ module Migrations
             timezone,
             title_count_mode_key,
             topics_unread_when_closed,
+            understood_languages,
             watched_precedence_over_muted
           )
           VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
@@ -73,6 +76,7 @@ module Migrations
         # @param user_id                                          [Integer, String]
         # @param allow_private_messages                           [Boolean, nil]
         # @param auto_track_topics_after_msecs                    [Integer, nil]
+        # @param automatically_translate                          [Boolean, nil]
         # @param automatically_unpin_topics                       [Boolean, nil]
         # @param bookmark_auto_delete_preference                  [Integer, nil]
         # @param color_scheme_id                                  [Integer, String, nil]
@@ -109,6 +113,7 @@ module Migrations
         # @param oldest_search_log_date                           [Time, nil]
         # @param push_notification_level                          [Integer, nil]
         # @param seen_popups                                      [Integer, nil]
+        # @param send_shortcut                                    [Integer, nil]
         # @param show_original_content                            [Boolean, nil]
         # @param sidebar_link_to_filtered_list                    [Boolean, nil]
         # @param sidebar_show_count_of_new_items                  [Boolean, nil]
@@ -120,6 +125,7 @@ module Migrations
         # @param timezone                                         [String, nil]
         # @param title_count_mode_key                             [Integer, nil]
         # @param topics_unread_when_closed                        [Boolean, nil]
+        # @param understood_languages                             [String, nil]
         # @param watched_precedence_over_muted                    [Boolean, nil]
         #
         # @return [void]
@@ -127,6 +133,7 @@ module Migrations
           user_id:,
           allow_private_messages: nil,
           auto_track_topics_after_msecs: nil,
+          automatically_translate: nil,
           automatically_unpin_topics: nil,
           bookmark_auto_delete_preference: nil,
           color_scheme_id: nil,
@@ -163,6 +170,7 @@ module Migrations
           oldest_search_log_date: nil,
           push_notification_level: nil,
           seen_popups: nil,
+          send_shortcut: nil,
           show_original_content: nil,
           sidebar_link_to_filtered_list: nil,
           sidebar_show_count_of_new_items: nil,
@@ -174,6 +182,7 @@ module Migrations
           timezone: nil,
           title_count_mode_key: nil,
           topics_unread_when_closed: nil,
+          understood_languages: nil,
           watched_precedence_over_muted: nil
         )
           Migrations::Database::IntermediateDB.insert(
@@ -181,6 +190,7 @@ module Migrations
             user_id,
             Migrations::Database.format_boolean(allow_private_messages),
             auto_track_topics_after_msecs,
+            Migrations::Database.format_boolean(automatically_translate),
             Migrations::Database.format_boolean(automatically_unpin_topics),
             bookmark_auto_delete_preference,
             color_scheme_id,
@@ -217,6 +227,7 @@ module Migrations
             Migrations::Database.format_datetime(oldest_search_log_date),
             push_notification_level,
             seen_popups,
+            send_shortcut,
             Migrations::Database.format_boolean(show_original_content),
             Migrations::Database.format_boolean(sidebar_link_to_filtered_list),
             Migrations::Database.format_boolean(sidebar_show_count_of_new_items),
@@ -228,6 +239,7 @@ module Migrations
             timezone,
             title_count_mode_key,
             Migrations::Database.format_boolean(topics_unread_when_closed),
+            understood_languages,
             Migrations::Database.format_boolean(watched_precedence_over_muted),
           )
         end

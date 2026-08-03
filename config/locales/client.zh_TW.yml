@@ -676,6 +676,8 @@ zh_TW:
         email: "電子信箱"
         name: "名稱"
         fields: "欄位"
+        silence_reason: "禁言原因"
+        penalty_forever: "永久"
         reject_reason: "原因"
         scrubbed_reason: "原因"
         scrub_record:

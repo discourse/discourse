@@ -5069,11 +5069,9 @@ es:
         title: "No"
         delete:
           title: "Eliminar usuario"
-          description: "Eliminar usuario sin bloquearlo"
           complete: "Usuario eliminado."
         block:
           title: "Eliminar y bloquear usuario"
-          description: "El usuario será eliminado y bloquearemos su IP y su dirección de correo electrónico."
           complete: "Usuario eliminado y bloqueado."
       confirm_spam:
         title: "Sí"
@@ -5133,12 +5131,10 @@ es:
         bundle_title: "¿Qué quieres hacer con el usuario?"
       silence_user:
         title: "Silenciar al usuario"
-        description: "Evitar que el usuario siga publicando"
         complete: "Usuario silenciado"
         reason: "Usuario silenciado a través de la cola de revisión"
       suspend_user:
         title: "Suspender al usuario"
-        description: "Suspender la cuenta del usuario"
         complete: "Usuario suspendido"
         reason: "Usuario suspendido a través de la cola de revisión"
       delete_user:

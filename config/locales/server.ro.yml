@@ -2402,12 +2402,10 @@ ro:
         bundle_title: "Ce vrei să faci cu utilizatorul?"
       silence_user:
         title: "Redu la tăcere utilizatorul"
-        description: "Împiedică utilizatorul să posteze"
         complete: "Utilizatorul a fost redus la tăcere"
         reason: "Utilizator redus la tăcere prin coada de examinare"
       suspend_user:
         title: "Suspendă utilizatorul"
-        description: "Suspendă contul de utilizator"
         complete: "Utilizatorul a fost suspendat"
         reason: "Utilizator suspendat prin coada de examinare"
       delete_user:

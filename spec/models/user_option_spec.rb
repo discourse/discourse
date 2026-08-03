@@ -32,6 +32,11 @@ RSpec.describe UserOption do
       expect(user.user_option.hide_presence).to eq(false)
     end
 
+    it "enables automatic translation without assuming understood languages" do
+      expect(user.user_option.automatically_translate).to eq(true)
+      expect(user.user_option.understood_languages).to eq([])
+    end
+
     it "should correctly set digest frequency" do
       SiteSetting.default_email_digest_frequency = 1440
       user = Fabricate(:user)
@@ -74,6 +79,27 @@ RSpec.describe UserOption do
       SiteSetting.default_composition_mode = UserOption.composition_mode_types[:markdown]
       user = Fabricate(:user)
       expect(user.user_option.composition_mode).to eq(UserOption.composition_mode_types[:markdown])
+    end
+  end
+
+  describe "understood languages" do
+    fab!(:user)
+
+    it "accepts supported locales" do
+      expect(user.user_option.update(understood_languages: %w[en ja])).to eq(true)
+    end
+
+    it "rejects unsupported locales" do
+      expect(user.user_option.update(understood_languages: ["not-a-locale"])).to eq(false)
+      expect(user.user_option.errors[:understood_languages]).to be_present
+    end
+
+    it "allows unrelated preferences to be saved after a language provider is removed" do
+      user.user_option.update!(understood_languages: ["en"])
+      LocaleSiteSetting.stubs(:supported_locales).returns(["ja"])
+
+      expect(user.user_option.update(automatically_translate: false)).to eq(true)
+      expect(user.user_option.reload.automatically_translate).to eq(false)
     end
   end
 

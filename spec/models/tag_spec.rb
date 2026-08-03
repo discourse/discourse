@@ -1,14 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Tag do
-  def make_some_tags(count: 3, tag_a_topic: false)
-    if tag_a_topic
-      Fabricate.times(count, :tag, topics: [Fabricate(:topic)])
-    else
-      Fabricate.times(count, :tag)
-    end
-  end
-
   let(:tag) { Fabricate(:tag) }
   let(:tag2) { Fabricate(:tag) }
   let(:topic) { Fabricate(:topic, tags: [tag]) }
@@ -84,7 +76,7 @@ RSpec.describe Tag do
 
   describe "#top_tags" do
     context "when nothing has been tagged" do
-      let!(:tags) { make_some_tags(tag_a_topic: false) }
+      let!(:tags) { Fabricate.times(3, :tag) }
 
       it "returns nothing" do
         expect(Tag.top_tags.sort).to be_empty
@@ -92,7 +84,8 @@ RSpec.describe Tag do
     end
 
     context "when something has been tagged" do
-      let!(:tags) { make_some_tags(tag_a_topic: true) }
+      let!(:tagged_topic) { Fabricate(:topic) }
+      let!(:tags) { Fabricate.times(3, :tag, topics: [tagged_topic]) }
 
       it "returns all tags" do
         expect(Tag.top_tags).to contain_exactly(
@@ -102,7 +95,7 @@ RSpec.describe Tag do
     end
 
     context "with categories" do
-      let(:tags) { make_some_tags(count: 4) }
+      let(:tags) { Fabricate.times(4, :tag) }
       let(:category1) { Fabricate(:category) }
       let(:private_category) { Fabricate(:category) }
       let!(:topics) do
@@ -147,7 +140,7 @@ RSpec.describe Tag do
     end
 
     context "with category-specific tags" do
-      let(:tags) { make_some_tags(count: 3) }
+      let(:tags) { Fabricate.times(3, :tag) }
       let(:category1) { Fabricate(:category, tags: [tags[0]]) } # only one tag allowed in this category
       let(:category2) { Fabricate(:category) }
       let!(:topics) do
@@ -234,11 +227,13 @@ RSpec.describe Tag do
         )
       end
 
-      it "returns localized names when localization enabled and user not in tag locale" do
+      it "returns localized tag names independently of topic and post translation preferences" do
         SiteSetting.content_localization_enabled = true
         I18n.locale = "ja"
+        user = Fabricate(:user, locale: "ja")
+        user.user_option.update!(automatically_translate: false)
 
-        expect(Tag.top_tags).to include(
+        expect(Tag.top_tags(guardian: Guardian.new(user))).to include(
           { id: localized_tag.id, name: "猫", slug: localized_tag.slug },
         )
       end
@@ -277,7 +272,9 @@ RSpec.describe Tag do
       )
     end
 
-    before { 2.times { |i| Fabricate(:tag, topics: [personal_message], name: "tag-#{i}") } }
+    let!(:personal_message_tags) do
+      2.times { |i| Fabricate(:tag, topics: [personal_message], name: "tag-#{i}") }
+    end
 
     it "returns nothing if user is not a staff" do
       expect(Tag.pm_tags(guardian: Guardian.new(regular_user))).to be_empty

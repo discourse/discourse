@@ -22,7 +22,7 @@ fr:
         refresh: "Actualiser"
         modal:
           title: "Comment fonctionne le classement ?"
-          text: "Des points sont attribués pour l'engagement auprès de la communauté, par exemple pour les visites, les mentions J'aime et les publications. Votre score est mis à jour toutes les quelques minutes. Veillez donc à être aimable, actif(ve) et solidaire, et gravissez les échelons !"
+          text: "Des points sont attribués pour votre participation à la communauté : visites, mentions « J'aime », publications… Votre score est mis à jour régulièrement. Veillez donc à être aimable, actif et encourageant, et progressez dans le classement !"
         name: "Nom"
         name_placeholder: "Nom…"
         new: "Nouveau classement"

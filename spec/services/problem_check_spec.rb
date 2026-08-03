@@ -280,5 +280,15 @@ RSpec.describe ProblemCheck do
         expect { multi_target_check.cleanup_trackers }.not_to change { ProblemCheckTracker.count }
       end
     end
+
+    context "when the check is disabled" do
+      before { ProblemCheckTracker.create!(identifier: "disabled_check").problem! }
+
+      it "deletes its trackers together with any admin notices" do
+        expect { disabled_check.cleanup_trackers }.to change {
+          ProblemCheckTracker.where(identifier: "disabled_check").count
+        }.from(1).to(0).and change { AdminNotice.count }.by(-1)
+      end
+    end
   end
 end

@@ -729,6 +729,9 @@ sr:
         delete:
           title: "Obriši Korisnika"
           complete: "Korisnik izbrisan."
+        block:
+          title: "Obriši i blokiraj korisnika"
+          description: "Obrišite korisnika i blokirajte njihovu email i IP adresu"
       confirm_spam:
         title: "Da"
       not_spam:

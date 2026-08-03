@@ -14,6 +14,7 @@ import {
   SEND_SHORTCUT_ENTER,
   SEND_SHORTCUT_META_ENTER,
 } from "discourse/lib/constants";
+import { normalizeUnderstoodLanguages } from "discourse/lib/content-localization";
 import { deepEqual } from "discourse/lib/object";
 import {
   currentThemeId,
@@ -28,7 +29,7 @@ import {
 } from "discourse/lib/utilities";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
-import { i18n } from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 // same as UserOption::HOMEPAGES
 const USER_HOMES = {
@@ -70,7 +71,6 @@ export default class InterfaceController extends Controller {
   @computed("makeThemeDefault")
   get saveAttrNames() {
     let attrs = [
-      "locale",
       "external_links_in_new_tab",
       "dynamic_favicon",
       "enable_quoting",
@@ -90,9 +90,14 @@ export default class InterfaceController extends Controller {
       "bookmark_auto_delete_preference",
       "interface_color_mode",
       "enable_markdown_monospace_font",
-      "show_original_content",
       "send_shortcut",
+      "automatically_translate",
+      "understood_languages",
     ];
+
+    if (this.siteSettings.allow_user_locale) {
+      attrs.push("locale");
+    }
 
     if (this.makeThemeDefault) {
       attrs.push("theme_ids");
@@ -103,9 +108,43 @@ export default class InterfaceController extends Controller {
     });
   }
 
+  @computed("model.locale")
+  get interfaceLanguage() {
+    if (!this.siteSettings.allow_user_locale) {
+      return this.siteSettings.default_locale ?? I18n.locale;
+    }
+
+    return this.model.locale ?? this.siteSettings.default_locale ?? I18n.locale;
+  }
+
+  @computed("model.locale", "model.user_option.understood_languages.[]")
+  get understoodLanguages() {
+    return normalizeUnderstoodLanguages(
+      this.model.user_option.understood_languages,
+      this.interfaceLanguage
+    );
+  }
+
   @computed()
   get availableLocales() {
-    return this.siteSettings.available_locales;
+    return (this.siteSettings.available_locales ?? []).map((locale) => ({
+      ...locale,
+      id: locale.value,
+    }));
+  }
+
+  @action
+  setInterfaceLanguage(locale) {
+    this.model.set("locale", locale);
+    this.setUnderstoodLanguages(this.model.user_option.understood_languages);
+  }
+
+  @action
+  setUnderstoodLanguages(locales) {
+    this.model.set(
+      "user_option.understood_languages",
+      normalizeUnderstoodLanguages(locales, this.interfaceLanguage)
+    );
   }
 
   @computed("currentThemeId")

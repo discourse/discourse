@@ -2826,7 +2826,6 @@ vi:
           complete: "Người dùng đã bị xóa."
         block:
           title: "Xóa và Chặn Người Dùng"
-          description: "Người dùng sẽ bị xóa và chúng tôi sẽ chặn IP và địa chỉ email của họ."
       confirm_spam:
         title: "Đồng ý"
       not_spam:

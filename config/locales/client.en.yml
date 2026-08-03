@@ -974,6 +974,11 @@ en:
         email: "Email"
         name: "Name"
         fields: "Fields"
+        silenced_until: "Silenced until"
+        silence_reason: "Silence reason"
+        suspended_until: "Suspended until"
+        suspend_reason: "Suspension reason"
+        penalty_forever: "Forever"
         reject_reason: "Reason"
         scrubbed_by: "Record scrubbed by"
         scrubbed_reason: "Reason"
@@ -1818,7 +1823,11 @@ en:
       enable_smart_lists: "Enable smart lists when writing in the composer"
       enable_defer: "Enable mark topics as unread"
       enable_markdown_monospace_font: "Use monospace font in composer's Markdown mode"
-      show_original_content: "Show original content instead of translated content."
+      automatically_translate: "Automatically translate topics and posts in other languages"
+      content_languages:
+        title: "Content languages"
+        understood: "Languages I understand"
+        understood_description: "Topics and posts in these languages won’t be translated. Your interface language is always included."
       experimental_sidebar:
         enable: "Enable sidebar"
         options: "Options"
@@ -3523,11 +3532,14 @@ en:
       italic_label: "I"
       italic_title: "Emphasis"
       italic_text: "emphasized text"
-      heading_title: "Headings"
+      text_size_title: "Text sizes"
       heading_level_n: "Heading %{levelNumber}"
       heading_level_n_title: "Heading %{levelNumber}"
       heading_level_paragraph: "Paragraph"
       heading_level_paragraph_title: "Paragraph"
+      heading_level_small: "Small"
+      heading_level_small_title: "Small text"
+      heading_level_small_text: "Small text"
       link_title: "Link"
       link_description: "enter link description here"
       link_dialog_title: "Insert link"
@@ -5206,6 +5218,12 @@ en:
       tap_to_show_translation: "Tap here to show translation"
       ai_translation_disclaimer: "AI-generated translations may be inaccurate."
 
+    content_localization:
+      preferences:
+        title: "Content language preferences"
+        login_to_set_languages: "Log in to set more languages"
+        interface_language_mandatory: "Your interface language is always included."
+
     category:
       none: "(no category)"
       all: "All categories"
@@ -6234,13 +6252,26 @@ en:
           always_public: "Content in this section is always public"
           more_menu: "More menu"
           localizations:
-            title: "Translations"
             locale: "Language"
+            language: "Section language"
+            language_description: "The primary language of this section's title and link names."
             title_label: "Section title"
-            link_label: "Link name"
-            add_section: "Add section title translation"
-            add_link: "Add link name translation"
-            remove: "Remove translation"
+            link_label: "Link names"
+            back: "Section content"
+            add_first: "Add translations"
+            manage:
+              one: "Manage translations (%{count} language)"
+              other: "Manage translations (%{count} languages)"
+            incomplete:
+              one: "%{count} string missing"
+              other: "%{count} strings missing"
+            add_language: "Add language"
+            remove_language: "Remove"
+            remove_language_confirm: "Remove every %{language} translation for this section?"
+            remove_cleared_confirm:
+              one: "You cleared %{count} saved translation. It will be removed. Continue?"
+              other: "You cleared %{count} saved translations. They will be removed. Continue?"
+            untranslated: "Not translated yet"
           links:
             title: "Section links"
             add: "Add another link"

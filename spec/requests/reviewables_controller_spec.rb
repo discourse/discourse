@@ -1282,18 +1282,22 @@ RSpec.describe ReviewablesController do
     end
 
     describe "#scrub" do
-      it "only allows admins to scrub reviewables" do
-        moderator = Fabricate(:moderator)
+      let(:user) { Fabricate(:user).tap(&:activate) }
+      let(:reviewable) { ReviewableUser.find_by(target: user) }
 
+      before do
         Jobs.run_immediately!
         SiteSetting.must_approve_users = true
-        user = Fabricate(:user)
-        user.activate
-        reviewable = ReviewableUser.find_by(target: user)
+      end
 
-        sign_in(moderator)
+      def reject_user
         put "/review/#{reviewable.id}/perform/delete_user.json?version=0"
         expect(response.status).to eq(200)
+      end
+
+      it "only allows admins to scrub reviewables" do
+        sign_in(Fabricate(:moderator))
+        reject_user
 
         put "/review/#{reviewable.id}/scrub.json?reason=spam"
         expect(response.status).to eq(403)
@@ -1304,12 +1308,6 @@ RSpec.describe ReviewablesController do
       end
 
       it "doesn't allow scrubbing of reviewables that haven't been rejected" do
-        Jobs.run_immediately!
-        SiteSetting.must_approve_users = true
-        user = Fabricate(:user)
-        user.activate
-        reviewable = ReviewableUser.find_by(target: user)
-
         sign_in(admin)
         put "/review/#{reviewable.id}/scrub.json?reason=spam"
         expect(response.status).to eq(404)
@@ -1331,21 +1329,25 @@ RSpec.describe ReviewablesController do
       end
 
       it "doesn't allow scrubbing of reviewables that have already been scrubbed" do
-        Jobs.run_immediately!
-        SiteSetting.must_approve_users = true
-        user = Fabricate(:user)
-        user.activate
-        reviewable = ReviewableUser.find_by(target: user)
-
         sign_in(admin)
-        put "/review/#{reviewable.id}/perform/delete_user.json?version=0"
-        expect(response.status).to eq(200)
+        reject_user
 
         put "/review/#{reviewable.id}/scrub.json?reason=spam"
         expect(response.status).to eq(200)
 
         put "/review/#{reviewable.id}/scrub.json?reason=spam"
         expect(response.status).to eq(403)
+      end
+
+      it "allows scrubbing of rejected reviewables whose user couldn't be deleted" do
+        Fabricate(:post, user: user)
+
+        sign_in(admin)
+        reject_user
+        expect(User.exists?(user.id)).to eq(true)
+
+        put "/review/#{reviewable.id}/scrub.json?reason=spam"
+        expect(response.status).to eq(200)
       end
     end
 

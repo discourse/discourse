@@ -551,6 +551,7 @@ sv:
         email: "E-post"
         name: "Namn"
         fields: "Fält"
+        penalty_forever: "För alltid"
         reject_reason: "Anledning"
         scrubbed_reason: "Anledning"
         scrub_record:

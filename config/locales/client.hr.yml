@@ -801,6 +801,7 @@ hr:
         email: "Email"
         name: "Ime"
         fields: "Polja"
+        penalty_forever: "Zauvijek"
         reject_reason: "Razlog"
         scrubbed_by: "Zapis je obrisao"
         scrubbed_reason: "Razlog"

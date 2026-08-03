@@ -571,16 +571,29 @@ fr:
         choose_model: "Définissez d'abord 'ai embeddings selected model'."
     llm_models:
       missing_provider_param: "%{param} ne peut pas être vide"
+      secret_not_found: "L'identifiant sélectionné n'existe pas."
       bedrock_invalid_url: "Veuillez remplir tous les champs pour utiliser ce modèle."
+      bedrock_missing_auth: "AWS Bedrock nécessite la configuration d'un ID de clé d'accès ou d'un ARN de rôle."
     ai_staff_action_logger:
       updated: "mis à jour"
       set: "défini"
       removed: "supprimé"
+    translation:
+      errors:
+        disabled: "La fonctionnalité de traduction par IA n'est pas entièrement configurée."
+        all_posts_translated: "Toutes les publications de ce sujet sont déjà traduites."
+    llm_credit_allocation:
+      limit_exceeded_user: "Cette communauté a atteint sa limite de crédits IA pour aujourd'hui. Veuillez réessayer dans %{reset_time} ou contactez l'administrateur de votre site pour obtenir plus d'informations."
+      limit_exceeded_admin: "Vous avez atteint votre limite de crédit IA. Veuillez réessayer après %{reset_time}."
     errors:
       quota_exceeded: "Vous avez dépassé le quota pour ce modèle. Veuillez réessayer dans %{relative_time}."
+      quota_required: "Vous devez spécifier le nombre maximal de jetons, d'utilisations ou le coût pour ce modèle."
       no_query_specified: Le paramètre de requête est obligatoire, veuillez le spécifier.
+      no_user_for_agent: Aucun utilisateur n'est associé à l'agent spécifié.
+      agent_not_found: "L'agent spécifié n'existe pas. Vérifiez les paramètres agent_name ou agent_id (anciens : persona_name ou persona_id)."
       no_user_specified: Le nom d'utilisateur ou le paramètre user_unique_id est obligatoire. Veuillez le préciser.
       user_not_found: L'utilisateur spécifié n'existe pas. Vérifiez le paramètre du nom d'utilisateur.
+      agent_disabled: "L'agent spécifié est désactivé. Vérifiez les paramètres agent_name ou agent_id (anciennement : persona_name ou persona_id)."
       user_not_allowed: L'utilisateur n'est pas autorisé à participer au sujet.
       prompt_message_length: Le message %{idx} dépasse la limite de 1 000 caractères.
       custom_tool_exists:

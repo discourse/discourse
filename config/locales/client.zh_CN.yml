@@ -58,7 +58,11 @@ zh_CN:
         access_permission_viewer: "查看者"
         access_permission_viewer_description: "可以查看此实体的内容"
         access_permission_remove: "移除"
+        access_permission_remove_description: "移除此授权对象的权限"
+        add_group: "选择用户或群组"
         mandatory_acl_tooltip: "此权限是 %{name} 的必要权限，无法移除"
+        mandatory: "必需"
+        disallowed: "不允许"
     carousel:
       go_to_slide: "转到幻灯片 %{index}"
       previous: "上一张幻灯片"
@@ -840,6 +844,11 @@ zh_CN:
         email: "电子邮件"
         name: "姓名"
         fields: "字段"
+        silenced_until: "禁言至"
+        silence_reason: "禁言原因"
+        suspended_until: "封禁至"
+        suspend_reason: "封禁原因"
+        penalty_forever: "永远"
         reject_reason: "原因"
         scrubbed_by: "记录清除者"
         scrubbed_reason: "原因"
@@ -1562,8 +1571,10 @@ zh_CN:
       desktop_notifications:
         label: "实时通知"
         push_level:
+          title: "推送通知…"
           none: "已禁用"
           all: "已启用"
+          chat_only: "仅为聊天启用"
         not_supported: "抱歉，此浏览器不支持通知。"
         perm_default: "启用通知"
         perm_denied_btn: "权限被拒绝"
@@ -1626,7 +1637,6 @@ zh_CN:
       enable_smart_lists: "在编辑器中编写时启用智能列表"
       enable_defer: "启用将话题标记为未读"
       enable_markdown_monospace_font: "在输入框的 Markdown 模式下使用等宽字体"
-      show_original_content: "显示原文内容，而非翻译内容。"
       experimental_sidebar:
         enable: "启用边栏"
         options: "选项"
@@ -2260,18 +2270,26 @@ zh_CN:
           invite_saved_with_sending_email: "邀请电子邮件已发送。您也可以复制下面的链接并分享，立即授予此网站的访问权限。"
         invite_roles:
           member_title: "邀请成员"
+          admin_title: "邀请管理人员"
           edit_title: "编辑邀请"
           created_title: "邀请已创建"
           sent_title: "邀请已发送"
           member_tab: "成员"
           admin_tab: "管理人员"
+          member_description: "邀请他人加入本网站。分享链接或发送电子邮件邀请。"
+          admin_description: "邀请他人加入您的团队。管理员拥有此网站的完整访问权限。"
+          moderator_description: "邀请他人加入您的团队。版主可以帮助管理内容和成员。"
+          staff_role_label: "邀请身份"
           staff_role_admin: "管理员"
           staff_role_moderator: "版主"
           admin_email_label: "电子邮件地址"
+          member_email_label: "发送至"
           member_email_help: "我们将向该邮箱地址发送邀请链接。"
           email_placeholder: "name@example.com"
+          invite_by: "邀请方式"
           invite_by_link: "分享链接"
           invite_by_email: "电子邮件"
+          role_label: "邀请身份"
           restrict_domain: "仅限网域"
           restrict_domain_help: "只有拥有此域名邮箱地址的用户才能接受此链接。如需邀请特定人员，请使用上方的“邮箱”选项。"
           domain_placeholder: "example.com"
@@ -2285,6 +2303,7 @@ zh_CN:
           role_locked: "创建邀请后，邀请类型无法更改。"
           summary:
             sent_to: "已向 %{email} 发送邀请邮件。您也可以直接分享此链接："
+            role: "角色"
             role_member: "成员"
             role_admin: "管理员"
             role_moderator: "版主"
@@ -2796,6 +2815,13 @@ zh_CN:
       disabled: "不显示"
       sidebar_footer: "在边栏页脚中显示"
       header: "在页眉中显示"
+    category_scope:
+      all: "所有公开和私密类别"
+      public: "公开类别"
+      include: "包含所选类别（含子类别）"
+      include_strict: "包含所选类别（不包含子类别）"
+      exclude: "排除所选类别（含子类别）"
+      exclude_strict: "排除所选类别（不包括子类别）"
     welcome_banner_location:
       above_topic_content: "话题内容上方"
       below_site_header: "站点标题下方"
@@ -2841,6 +2867,9 @@ zh_CN:
         other: "至少选择 %{count} 个条目。"
       components:
         filter_for_more: 筛选更多…
+        multiple_categories_selector:
+          limited_results_notice:
+            other: "显示 %{shown} 中的 %{count} 分类。输入关键词以搜索更多内容。"
         categories_admin_dropdown:
           title: "管理类别"
         tag_category_admin_dropdown:
@@ -2903,6 +2932,7 @@ zh_CN:
     gifs:
       modal_title: "搜索 GIF"
       composer_title: "插入 GIF"
+      placeholder: "搜索 KLIPY"
       powered_by: "由 Klipy 提供支持"
       no_results: "在上方输入关键字以搜索 GIF。"
       browse_categories: "按类别浏览"
@@ -4352,8 +4382,14 @@ zh_CN:
         modal:
           title: "翻译"
           confirm_delete: "确定要删除 '%{languageCode}' 的翻译吗？"
+          language_notice: "请设置原帖子的语言，以便向读者显示翻译内容。"
           post_language: "帖子语言"
+          topic_language: "话题标题语言"
+          save_post_language: "保存帖子语言"
+          save_topic_language: "保存话题标题语言"
           discard_language_change: "舍弃更改"
+          post_language_updated: "帖子语言已更新"
+          topic_language_updated: "话题标题语言已更新"
         success: "翻译已成功更新"
         post_language_selector:
           title: "帖子语言"
@@ -6266,6 +6302,7 @@ zh_CN:
             stats_and_thresholds:
               title: "统计数据和阈值"
         category_management:
+          title: "类别管理"
           create_category: "创建类别"
           tabs:
             settings: "设置"

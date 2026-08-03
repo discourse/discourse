@@ -9,13 +9,21 @@ fr:
     discourse_reactions_like_icon: "Définit l'icône utilisée pour le bouton de réaction principal. Il doit s'agir d'un nom d'icône <a href='https://fontawesome.com/v6/search?o=r&m=free' target='_blank'>Font Awesome</a> et non d'un nom d'émoji."
     discourse_reactions_reaction_for_like: "Définit la réaction associée à l'action J'aime. Les enregistrements historiques ne seront pas modifiés si ce paramètre change, il est <strong>fortement recommandé</strong> de ne jamais modifier ce paramètre."
     discourse_reactions_enabled: "Activer l'extension discourse-reactions."
+    enable_new_post_reply_count_position: "Déplace le récapitulatif des réactions à la publication avant le nombre de réponses dans les commandes de la publication."
     discourse_reactions_enabled_reactions: "Définit une liste de réactions activées, n'importe quel émoji est autorisé ici."
     discourse_reactions_desaturated_reaction_panel: "Réduit le bruit visuel des réactions en les affichant désaturées lorsqu'elles ne sont pas survolées."
     discourse_reactions_excluded_from_like: "Les réactions qui ne sont pas considérées comme des « J'aime ». Toute réaction ne figurant pas sur cette liste sera considérée comme un J'aime pour les badges, les rapports et à d'autres fins."
+    discourse_reactions_like_sync_enabled: "Si ce paramètre est activé, des mentions J'aime correspondantes seront créées pour les réactions existantes, à l'exception de celles définies dans {{setting:discourse_reactions_excluded_from_like}}. Cette synchronisation s'effectuera régulièrement en arrière-plan, ainsi que lors de toute modification de {{setting:discourse_reactions_excluded_from_like}}."
+    discourse_reactions_allow_any_emoji: "Lorsque ce paramètre est activé, un bouton permet aux utilisateurs de sélectionner n'importe quel émoji dans le sélecteur de réactions. Les membres peuvent choisir n'importe quel émoji, y compris des émojis personnalisés, pour réagir. Pour limiter les réactions disponibles, utilisez le paramètre de site {{setting:emoji_deny_list}}."
+    enable_discourse_reactions_by_default: "Lorsque cette modification à venir est activée, la valeur par défaut du paramètre {{setting:discourse_reactions_enabled}} passe de « désactivé » à « activé »."
+    errors:
+      invalid_excluded_emoji: "Vous ne pouvez pas exclure des émojis qui ne figurent pas dans « réactions activées dans Discourse Reactions » (à l'exception des exclusions intégrées par défaut), ni exclure l'émoji utilisé pour « réaction Discourse Reactions pour J'aime »."
   badges:
     first_reaction:
       name: Première réaction
       description: A réagi au message
+      long_description: |
+        Ce badge est attribué la première fois que vous utilisez le sélecteur de réactions par émoji pour réagir à une publication. Cette réaction est différente d'une mention J'aime standard : elle permet d'indiquer aux autres membres de la communauté que leur publication était intéressante, utile, remarquable ou amusante.
   reports:
     reactions:
       title: "Réactions"

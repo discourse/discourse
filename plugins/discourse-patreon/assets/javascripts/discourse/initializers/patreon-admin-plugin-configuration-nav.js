@@ -13,6 +13,12 @@ export default {
 
     withPluginApi((api) => {
       api.setAdminPluginIcon(PLUGIN_ID, "fab-patreon");
+      api.addAdminPluginConfigurationNav(PLUGIN_ID, [
+        {
+          label: "patreon.header.rules",
+          route: "adminPlugins.show.patreon-filters",
+        },
+      ]);
     });
   },
 };

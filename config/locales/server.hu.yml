@@ -4918,11 +4918,9 @@ hu:
         title: "Nem"
         delete:
           title: "Felhasználó törlése"
-          description: "Felhasználó törlése blokkolás nélkül"
           complete: "Felhasználó törölve."
         block:
           title: "Felhasználó törlése és blokkolása"
-          description: "A felhasználót töröljük, IP-címét és e-mail címét pedig blokkoljuk."
           complete: "Felhasználó törölve és letiltva."
       confirm_spam:
         title: "Igen"
@@ -4982,12 +4980,10 @@ hu:
         bundle_title: "Mit szeretnél csinálni a felhasználóval?"
       silence_user:
         title: "Felhasználó némítása"
-        description: "Felhasználó letiltása a posztolásról"
         complete: "Felhasználó elnémítva"
         reason: "Felhasználó elnémítva a felülvizsgálati soron keresztül"
       suspend_user:
         title: "Felhasználó felfüggesztése"
-        description: "Felhasználói fiók felfüggesztése"
         complete: "Felhasználó felfüggesztve"
         reason: "Felhasználó felfüggesztve a felülvizsgálati sor miatt"
       delete_user:

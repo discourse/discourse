@@ -724,6 +724,7 @@ ro:
         email: "Email"
         name: "Nume"
         fields: "Câmpuri"
+        penalty_forever: "Pentru totdeanua"
         reject_reason: "Motiv"
         scrubbed_reason: "Motiv"
         scrubbed_reject_reason: "Motiv respingere utilizator"

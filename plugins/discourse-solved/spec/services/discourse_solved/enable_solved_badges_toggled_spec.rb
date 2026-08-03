@@ -2,10 +2,7 @@
 
 RSpec.describe DiscourseSolved::EnableSolvedBadgesToggled do
   let(:badge_names) { DiscourseSolved::EnableSolvedBadgesToggled::BADGE_NAMES }
-
-  def solved_badges
-    Badge.where(name: badge_names)
-  end
+  let(:solved_badges) { Badge.where(name: badge_names) }
 
   describe "enabling" do
     before { solved_badges.update_all(enabled: false) }

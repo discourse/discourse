@@ -521,6 +521,7 @@ ca:
         email: "Correu electrònic"
         name: "Nom"
         fields: "Camps"
+        penalty_forever: "Sempre"
         reject_reason: "Motiu"
         scrubbed_reason: "Motiu"
         scrub_record:

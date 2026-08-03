@@ -5,8 +5,7 @@ RSpec.describe IgnoredUser do
     fab!(:user)
     fab!(:target, :user)
     fab!(:admin) { Fabricate(:user, admin: true) }
-
-    before { Fabricate(:ignored_user, user: user, ignored_user: target) }
+    fab!(:ignored_target) { Fabricate(:ignored_user, user: user, ignored_user: target) }
 
     it "returns ids of users ignored by the given user" do
       expect(described_class.ignored_ids_for(user)).to contain_exactly(target.id)

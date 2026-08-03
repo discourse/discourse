@@ -404,7 +404,7 @@ ar:
         description: "تفعيل الترجمة التلقائية لجميع محتويات المنتدى وفقًا للغة المفضلة لدى كل مستخدم"
         supported_locales: "اللغات المدعومة"
         category_scope: "الفئات"
-        cached_results_notice: "عرض النتائج المخزنة مؤقتًا منذ %{relative_time}"
+        cached_results_notice: "يتم عرض النتائج المخزَّنة مؤقتًا منذ %{relative_time}."
         model_progress:
           detail:
             columns:

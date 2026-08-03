@@ -17,6 +17,12 @@ module PageObjects
         self
       end
 
+      def reload_with_pending_pagination
+        # Capybara's refresh waits for AJAX to settle, but pagination is intentionally held open.
+        page.driver.with_playwright_page(&:reload)
+        self
+      end
+
       # In-app navigation via DiscourseURL.routeTo — exercises the same
       # routing code path a notification or in-page link click would,
       # rather than doing a full page reload like visit_nested_context.

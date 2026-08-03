@@ -8,10 +8,12 @@ class CategorySetting < ActiveRecord::Base
 
   enum :topic_posting_review_mode,
        { no_one: 0, everyone: 1, everyone_except: 2, no_one_except: 3 },
-       prefix: true
+       prefix: true,
+       validate: true
   enum :reply_posting_review_mode,
        { no_one: 0, everyone: 1, everyone_except: 2, no_one_except: 3 },
-       prefix: true
+       prefix: true,
+       validate: true
 
   after_save :clear_nested_replies_conversion_completed,
              if: :saved_change_to_nested_replies_default?

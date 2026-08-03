@@ -1138,6 +1138,8 @@ ar:
         email: "البريد الإلكتروني"
         name: "الاسم"
         fields: "الحقول"
+        silence_reason: "سبب الكتم"
+        penalty_forever: "للأبد"
         reject_reason: "السبب"
         scrubbed_by: "تم تنقيح السجل من طرف"
         scrubbed_reason: "السبب"
@@ -2058,7 +2060,6 @@ ar:
       enable_smart_lists: "تفعيل القوائم الذكية عند الكتابة في أداة الإنشاء"
       enable_defer: "تفعيل وضع علامة على الموضوعات كغير مقروءة"
       enable_markdown_monospace_font: "اعرض النص بخط ثابت العرض عند استخدام وضع Markdown في أداة الإنشاء"
-      show_original_content: "اعرض المحتوى الأصلي بدلًا من المحتوى المُترجَم."
       experimental_sidebar:
         enable: "تفعيل الشريط الجانبي"
         options: "الخيارات"

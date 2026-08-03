@@ -53,26 +53,33 @@ RSpec.describe ApplicationController do
     context "when cache_control_bfcache_compatibility is enabled" do
       before { SiteSetting.cache_control_bfcache_compatibility = true }
 
-      it "sets bfcache-compatible cache control headers" do
+      it "sets bfcache-compatible cache control headers and includes the stale document reload script" do
         get "/latest"
 
         expect(response.status).to eq(200)
-        expect(response.headers["Cache-Control"]).to eq("no-cache")
+        expect(response.headers["Cache-Control"]).to eq("no-cache, private")
+        expect(response.body).to include("bfcache-stale-document-check")
       end
 
       it "sets bfcache-compatible cache control headers on 404" do
         get "/invalid-urlllllllllll"
 
         expect(response.status).to eq(404)
-        expect(response.headers["Cache-Control"]).to eq("no-cache")
+        expect(response.headers["Cache-Control"]).to eq("no-cache, private")
       end
 
       it "sets bfcache-compatible cache control headers on 403" do
         get "/latest.json", headers: { HTTP_API_KEY: "invalid-api-key" }
 
         expect(response.status).to eq(403)
-        expect(response.headers["Cache-Control"]).to eq("no-cache")
+        expect(response.headers["Cache-Control"]).to eq("no-cache, private")
       end
+    end
+
+    it "does not include the stale document reload script in the HTML document by default" do
+      get "/latest"
+
+      expect(response.body).not_to include("bfcache-stale-document-check")
     end
   end
 
