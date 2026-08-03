@@ -109,6 +109,8 @@ describe "Creating invites with roles" do
       modal.save_button.click
 
       expect(modal).to have_summary
+      cdp.clipboard_has_text?(Invite.last.link)
+      expect(page).to have_css(".copy-button.ok")
       screenshot_marker(label: "invite-created", only: :desktop)
 
       invite = Invite.last
@@ -143,8 +145,7 @@ describe "Creating invites with roles" do
 
       modal.edit_button.click
 
-      expect(modal.selected_role).to eq("admin")
-      expect(modal.role_option_disabled?("member")).to eq(true)
+      expect(modal).to have_no_role_toggle
       expect(modal.save_button).to have_text(I18n.t("js.user.invited.invite_roles.update"))
 
       modal.cancel_button.click

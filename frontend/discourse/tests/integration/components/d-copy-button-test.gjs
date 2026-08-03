@@ -1,4 +1,5 @@
-import { render } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import { render, rerender } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DCopyButton from "discourse/ui-kit/d-copy-button";
@@ -23,5 +24,36 @@ module("Integration | Component | DCopyButton", function (hooks) {
       .exists(
         "a visually-hidden polite live region is rendered so screen readers can announce copy success"
       );
+  });
+
+  test("@isCopied shows the confirmation for a copy made by the caller", async function (assert) {
+    const state = new (class {
+      @tracked isCopied = false;
+    })();
+
+    await render(
+      <template>
+        <input class="test-input" value="hello" readonly />
+        <DCopyButton
+          @selector="input.test-input"
+          @translatedLabel="Copy"
+          @translatedLabelAfterCopy="Copied!"
+          @isCopied={{state.isCopied}}
+        />
+      </template>
+    );
+
+    assert.dom(".copy-button").hasText("Copy");
+    assert.dom(".copy-button").doesNotHaveClass("ok");
+
+    state.isCopied = true;
+
+    await rerender();
+
+    assert.dom(".copy-button").hasText("Copied!");
+    assert.dom(".copy-button").hasClass("ok");
+    assert
+      .dom(".sr-only[aria-live='polite']")
+      .hasText("Copied!", "the confirmation is announced");
   });
 });
