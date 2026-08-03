@@ -875,6 +875,7 @@ en:
         api_key:
           base:
             at_least_one_granular_scope: "at least one must be selected"
+            read_only_scope: "must be the global read scope"
 
   uncategorized_category_name: "Uncategorized"
 

@@ -36,4 +36,22 @@ module("Integration | Component | AdvancedModeToggle", function (hooks) {
         "shows 'Simple mode' once active"
       );
   });
+
+  test("keeps an accessible name for when the label is hidden", async function (assert) {
+    const noop = () => {};
+
+    await render(
+      <template>
+        <AdvancedModeToggle @active={{false}} @onToggle={{noop}} />
+      </template>
+    );
+
+    assert
+      .dom(".advanced-mode-btn")
+      .hasAria(
+        "label",
+        i18n("advanced_mode_toggle.advanced_mode"),
+        "below the sm breakpoint the label is hidden, so the name has to come from aria-label"
+      );
+  });
 });
