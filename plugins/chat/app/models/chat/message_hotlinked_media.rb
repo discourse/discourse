@@ -37,4 +37,5 @@ end
 # Indexes
 #
 #  index_chat_message_hotlinked_media_on_message_and_url_md5  (chat_message_id, md5((url)::text)) UNIQUE
+#  index_chat_message_hotlinked_media_on_upload_id            (upload_id)
 #

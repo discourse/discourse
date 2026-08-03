@@ -243,6 +243,29 @@ describe Jobs::Chat::PullHotlinkedImages do
       expect(message.reload.message).to eq(raw)
     end
 
+    context "with secure upload proxy URLs" do
+      # Downloading these would sign an S3 path for the underlying upload, and a
+      # chat message has no access-control post to authorize the reader against.
+      %w[
+        /secure-uploads/original/1X/1234567890abcdef1234567890abcdef12345678.png
+        /secure-uploads/optimized/1X/1234567890abcdef1234567890abcdef12345678_2_100x100.png
+        /secure-uploads/original/1X/deadbeef.png
+      ].each do |path|
+        it "never downloads #{path}" do
+          secure_url = "#{Discourse.base_url}#{path}"
+          message = fabricate_chat_message("![](#{secure_url})")
+
+          Upload.expects(:signed_url_from_secure_uploads_url).never
+          FileHelper.expects(:download).never
+
+          expect { described_class.new.execute(chat_message_id: message.id) }.not_to change {
+            Upload.count
+          }
+          expect(message.reload.hotlinked_media).to be_empty
+        end
+      end
+    end
+
     it "skips local URLs even if the host string is a prefix of the src" do
       attacker_url = "#{Discourse.base_url}.attacker.example/foo.png"
       stub_request(:get, attacker_url).to_return(

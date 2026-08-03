@@ -97,6 +97,10 @@ module Jobs
         return false if src.blank?
         return false if !SiteSetting.download_remote_images_to_local?
         return false if src.start_with?("data:")
+        # Downloading these means signing an S3 path for the underlying upload.
+        # Posts gate that on the author seeing the access-control post; chat
+        # messages have none, so there is nothing to authorize against.
+        return false if Upload.secure_uploads_url?(src)
 
         local_bases =
           [
@@ -108,9 +112,8 @@ module Jobs
         if Discourse.store.has_been_uploaded?(src) ||
              ::Chat::MessageHotlinkedMedia.normalize_src(src).start_with?(*local_bases) ||
              src =~ %r{\A/[^/]}i
-          return false if !(src =~ %r{/uploads/} || Upload.secure_uploads_url?(src))
-          # Skip if we already have this upload locally. Chat messages have no
-          # access-control-post, so pass nil (don't reuse a post's secured copy).
+          return false if src !~ %r{/uploads/}
+          # pass nil: chat messages have no access-control post to reuse against
           upload = Upload.consider_for_reuse(Upload.get_from_url(src), nil)
           return !upload.present?
         end
