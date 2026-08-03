@@ -166,7 +166,7 @@ module PageObjects
       def has_selected_translation_language?(locale)
         page.has_css?(
           "#{translation_language_selector(locale)} " \
-            ".sidebar-section-translations__language-select option[value='#{locale}'][selected]",
+            ".sidebar-section-translations__language-select option[value='#{locale}']:checked",
           visible: :all,
         )
       end
@@ -208,7 +208,7 @@ module PageObjects
 
       def has_source_language?(locale)
         page.has_css?(
-          ".sidebar-section-form__source-locale-select option[value='#{locale}'][selected]",
+          ".sidebar-section-form__source-locale-select option[value='#{locale}']:checked",
           visible: :all,
         )
       end
