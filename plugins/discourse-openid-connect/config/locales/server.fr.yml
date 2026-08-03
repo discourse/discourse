@@ -13,6 +13,7 @@ fr:
     openid_connect_authorize_scope: "Les autorisations envoyées au point de terminaison d'autorisation. Cela doit inclure « openid »."
     openid_connect_rp_initiated_logout: "Rediriger l'utilisateur vers end_session_endpoint après la déconnexion. Doit être supporté par votre fournisseur d'identité et inclus dans le document de découverte."
     openid_connect_rp_initiated_logout_redirect: "(facultatif) Le post_logout_redirect_uri qui sera transmis au point de terminaison de déconnexion. S'il est fourni, il doit être enregistré auprès du fournisseur d'identité."
+    openid_connect_rp_initiated_logout_include_client_id: "(Facultatif) Ajoute le client_id (paramètre openid_connect_client_id) comme paramètre de requête au point de terminaison de déconnexion."
     openid_connect_token_scope: "Les autorisations envoyées lors de la demande du point de terminaison du jeton. Les spécifications officielles ne l'exigent pas."
     openid_connect_error_redirects: "Si le rappel error_reason contient le premier paramètre, l'utilisateur sera redirigé vers l'adresse URL reprise dans le deuxième paramètre"
     openid_connect_allow_association_change: "Autoriser les utilisateurs à déconnecter et à reconnecter leurs comptes Discourse du fournisseur OpenID Connect"
