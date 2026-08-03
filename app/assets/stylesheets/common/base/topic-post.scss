@@ -2159,62 +2159,6 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
   }
 }
 
-.liked-users-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-
-  &__list {
-    margin: 0;
-    list-style: none;
-    display: flex;
-    justify-content: end;
-    gap: var(--space-1);
-
-    // avatar width + gap * (max amount of users per row + 1)
-    max-width: calc((var(--liked-users-list-avatar-size) + var(--space-1)) * 9);
-    flex-wrap: wrap;
-  }
-
-  &__item,
-  &__item .avatar {
-    width: var(--liked-users-list-avatar-size);
-    height: var(--liked-users-list-avatar-size);
-  }
-
-  &__container {
-    --liked-users-list-avatar-size: 22px;
-    padding: var(--space-2);
-    display: flex;
-    align-items: flex-start;
-    gap: var(--space-2);
-  }
-
-  &__count {
-    display: flex;
-    gap: var(--space-2);
-    color: var(--primary-medium);
-    font-weight: 300;
-    align-items: center;
-  }
-
-  &__count-icon {
-    color: var(--love);
-  }
-
-  &__more {
-    font-size: var(--font-down-1);
-    color: var(--primary-medium);
-  }
-
-  &__more-button.btn-flat.btn {
-    padding: 0;
-    width: var(--liked-users-list-avatar-size);
-    border-radius: var(--d-button-border-radius);
-    height: var(--liked-users-list-avatar-size);
-  }
-}
-
 span.post-count {
   background: var(--primary);
   color: var(--secondary);
