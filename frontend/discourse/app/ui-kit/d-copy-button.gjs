@@ -18,6 +18,25 @@ export default class DCopyButton extends Component {
     this.copyTranslatedLabel = this.translatedLabel;
   }
 
+  didReceiveAttrs() {
+    super.didReceiveAttrs(...arguments);
+
+    if (this.isCopied && !this._wasCopied) {
+      this._showCopied();
+    }
+
+    this._wasCopied = this.isCopied;
+  }
+
+  _showCopied() {
+    this.set("copyIcon", "check");
+    this.set("copyClass", "btn-primary ok");
+    this.set("copyTranslatedLabel", this.translatedLabelAfterCopy);
+    this.set("announcement", this.translatedLabelAfterCopy);
+
+    discourseDebounce(this._restoreButton, 3000);
+  }
+
   @bind
   _restoreButton() {
     if (this.isDestroying || this.isDestroyed) {
@@ -43,12 +62,7 @@ export default class DCopyButton extends Component {
         this.copied();
       }
 
-      this.set("copyIcon", "check");
-      this.set("copyClass", "btn-primary ok");
-      this.set("copyTranslatedLabel", this.translatedLabelAfterCopy);
-      this.set("announcement", this.translatedLabelAfterCopy);
-
-      discourseDebounce(this._restoreButton, 3000);
+      this._showCopied();
     } catch {}
   }
 
