@@ -6252,13 +6252,26 @@ en:
           always_public: "Content in this section is always public"
           more_menu: "More menu"
           localizations:
-            title: "Translations"
             locale: "Language"
+            language: "Section language"
+            language_description: "The primary language of this section's title and link names."
             title_label: "Section title"
-            link_label: "Link name"
-            add_section: "Add section title translation"
-            add_link: "Add link name translation"
-            remove: "Remove translation"
+            link_label: "Link names"
+            back: "Section content"
+            add_first: "Add translations"
+            manage:
+              one: "Manage translations (%{count} language)"
+              other: "Manage translations (%{count} languages)"
+            incomplete:
+              one: "%{count} string missing"
+              other: "%{count} strings missing"
+            add_language: "Add language"
+            remove_language: "Remove"
+            remove_language_confirm: "Remove every %{language} translation for this section?"
+            remove_cleared_confirm:
+              one: "You cleared %{count} saved translation. It will be removed. Continue?"
+              other: "You cleared %{count} saved translations. They will be removed. Continue?"
+            untranslated: "Not translated yet"
           links:
             title: "Section links"
             add: "Add another link"
