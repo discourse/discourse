@@ -152,6 +152,26 @@ RSpec.describe TopicOgImageGenerator do
       end
     end
 
+    it "rejects SVG assets that exceed the dimension limit" do
+      svg = <<~SVG
+        <svg xmlns="http://www.w3.org/2000/svg" width="65537" height="1">
+          <rect width="1" height="1"/>
+        </svg>
+      SVG
+      data_uri = "data:image/svg+xml;base64,#{Base64.strict_encode64(svg)}"
+
+      Dir.mktmpdir("topic-og-spec") do |directory|
+        expect(
+          described_class.new(topic).send(
+            :materialize_asset,
+            data_uri,
+            directory:,
+            basename: "logo",
+          ),
+        ).to eq(nil)
+      end
+    end
+
     it "rejects raster assets whose content does not match their media type" do
       data_uri =
         "data:image/png;base64,#{Base64.strict_encode64(File.binread(file_from_fixtures("tiff_as.bin").path))}"

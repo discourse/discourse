@@ -11,6 +11,8 @@ class TopicOgImageGenerator
   AVATAR_SIZE = 72
   SIDE_MARGIN = 80
   FONT_FAMILY = "sans-serif"
+  MAX_ASSET_DIMENSION = 64 * 1024
+  private_constant :MAX_ASSET_DIMENSION
 
   # OG images are embedded in public topic pages for external crawlers and
   # link previewers, so we must not generate them for content that is not
@@ -353,6 +355,13 @@ class TopicOgImageGenerator
     elsif FastImage.type(source).to_s != extension
       return nil
     end
+
+    dimensions = FastImage.size(source)
+    return nil if dimensions.nil?
+    return nil if dimensions.any? { |dimension| dimension <= 0 || dimension > MAX_ASSET_DIMENSION }
+
+    max_pixels = SiteSetting.max_image_megapixels.to_i * 1_000_000
+    return nil if max_pixels.positive? && dimensions.inject(:*) >= max_pixels
 
     Vips.run(
       "vips",
