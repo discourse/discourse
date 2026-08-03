@@ -71,11 +71,54 @@ RSpec.describe Jobs::RebakePostsForWatchedWords do
             after_post_id: first_post.id,
             max_post_id: second_post.id,
           },
-        ) { described_class.new.execute(words: ["target"], max_post_id: second_post.id) }
+        ) do
+          described_class.new.execute(
+            words: ["target"],
+            after_post_id: first_post.id - 1,
+            max_post_id: second_post.id,
+          )
+        end
       end
 
       expect(first_post.reload.cooked).not_to include("target")
       expect(second_post.reload.cooked).to include("target")
+    end
+
+    it "advances to the end of a scan window when fewer than a full batch match" do
+      window_post = Fabricate(:post, raw: "window target")
+      later_post = Fabricate(:post, raw: "later target")
+      Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: "target")
+
+      stub_const(described_class, "SCAN_WINDOW_SIZE", 1) do
+        expect_enqueued_with(
+          job: described_class,
+          args: {
+            words: ["target"],
+            after_post_id: window_post.id,
+            max_post_id: later_post.id,
+          },
+        ) do
+          described_class.new.execute(
+            words: ["target"],
+            after_post_id: window_post.id - 1,
+            max_post_id: later_post.id,
+          )
+        end
+      end
+
+      expect(window_post.reload.cooked).not_to include("target")
+      expect(later_post.reload.cooked).to include("target")
+    end
+
+    it "finds matches across bounded groups of word predicates" do
+      matching_post = Fabricate(:post, raw: "contains the second word")
+      Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: "second")
+
+      stub_const(described_class, "PATTERN_BATCH_SIZE", 1) do
+        described_class.new.execute(words: %w[absent second])
+      end
+
+      expect(matching_post.reload.cooked).not_to include("second")
     end
   end
 end
