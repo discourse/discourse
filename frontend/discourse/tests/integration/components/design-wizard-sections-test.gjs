@@ -1,4 +1,4 @@
-import { find, render } from "@ember/test-helpers";
+import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ColorsSection from "discourse/components/design-wizard/colors-section";
 import HomepageSection from "discourse/components/design-wizard/homepage-section";
@@ -12,7 +12,7 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("theme choices are native radios and the screenshot toggle is focusable", async function (assert) {
+    test("theme choices are native radios", async function (assert) {
       this.setProperties({
         themes: [
           {
@@ -57,15 +57,6 @@ module(
           ".design-wizard__theme-card[data-theme-id='-2'] input[type='radio']"
         )
         .isNotChecked("leaves the other theme unchecked");
-
-      const screenshotToggle = find(".design-wizard__theme-screenshot-toggle");
-      screenshotToggle.focus();
-
-      assert.strictEqual(
-        document.activeElement,
-        screenshotToggle,
-        "the screenshot toggle can receive keyboard focus"
-      );
     });
   }
 );

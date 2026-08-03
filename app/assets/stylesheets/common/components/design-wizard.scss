@@ -136,6 +136,7 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    align-items: center;
   }
 
   &__section {
@@ -208,24 +209,6 @@
     object-position: top left;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
-  }
-
-  &__theme-screenshot-toggle {
-    position: absolute;
-    inset-block-start: calc(10em - var(--space-2));
-    inset-inline-end: var(--space-2);
-    transform: translateY(-100%);
-    opacity: 1;
-    transition: opacity 0.2s ease-in-out;
-
-    html.discourse-no-touch & {
-      opacity: 0;
-    }
-
-    html.discourse-no-touch .design-wizard__theme-card-wrapper:hover &,
-    html.discourse-no-touch &:focus-visible {
-      opacity: 1;
-    }
   }
 
   &__theme-name {
