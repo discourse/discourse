@@ -477,6 +477,9 @@ const GROUPED_ITEMS = [
 module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
   setupRenderingTest(hooks);
 
+  // Header behavior is opt-in: `groupBy` alone renders unlabeled splitters.
+  const identityLabel = (key) => key;
+
   hooks.beforeEach(function () {
     enableVirtualization();
   });
@@ -487,7 +490,13 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
 
   test("groupBy renders a presentational header before each group, outside the option set", async function (assert) {
     await render(
-      <template><DSelect @items={{GROUPED_ITEMS}} @groupBy="group" /></template>
+      <template>
+        <DSelect
+          @items={{GROUPED_ITEMS}}
+          @groupBy="group"
+          @groupLabel={{identityLabel}}
+        />
+      </template>
     );
     await openSelect();
     // The windowed list publishes its first window off a ResizeObserver measurement, which
@@ -523,7 +532,13 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
 
   test("options carry contiguous logical indices and absolute positions across headers", async function (assert) {
     await render(
-      <template><DSelect @items={{GROUPED_ITEMS}} @groupBy="group" /></template>
+      <template>
+        <DSelect
+          @items={{GROUPED_ITEMS}}
+          @groupBy="group"
+          @groupLabel={{identityLabel}}
+        />
+      </template>
     );
     await openSelect();
 
@@ -559,7 +574,13 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
 
   test("keyboard navigation steps through options and never lands on a header", async function (assert) {
     await render(
-      <template><DSelect @items={{GROUPED_ITEMS}} @groupBy="group" /></template>
+      <template>
+        <DSelect
+          @items={{GROUPED_ITEMS}}
+          @groupBy="group"
+          @groupLabel={{identityLabel}}
+        />
+      </template>
     );
     await openSelect();
 
@@ -590,9 +611,15 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     );
   });
 
-  test("each option names its own group header via aria-describedby", async function (assert) {
+  test("each option names its own group via aria-describedby into the persistent label store", async function (assert) {
     await render(
-      <template><DSelect @items={{GROUPED_ITEMS}} @groupBy="group" /></template>
+      <template>
+        <DSelect
+          @items={{GROUPED_ITEMS}}
+          @groupBy="group"
+          @groupLabel={{identityLabel}}
+        />
+      </template>
     );
     await openSelect();
 
@@ -603,20 +630,205 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       assert.notStrictEqual(
         headerId,
         null,
-        "the option references a group header"
+        "the option references a group label"
       );
-      const header = headerId ? document.getElementById(headerId) : null;
-      assert.strictEqual(
-        header?.getAttribute("role"),
-        "presentation",
-        "aria-describedby points at the presentational header"
+      const label = headerId ? document.getElementById(headerId) : null;
+      assert.true(
+        !!label?.closest(".d-combobox__group-labels"),
+        "the description lives in the persistent label store, not on a windowed row"
+      );
+      assert.false(
+        !!label?.closest("[role='listbox']"),
+        "the description node is outside the listbox"
       );
       assert.strictEqual(
-        header?.textContent.trim(),
+        label?.textContent.trim(),
         expectedGroup[index],
-        "the referenced header is the option's own group, so a screen reader names the group"
+        "the referenced label is the option's own group, so a screen reader names the group"
       );
     });
+  });
+
+  test("the persistent label store mirrors the groups and owns their ids", async function (assert) {
+    await render(
+      <template>
+        <DSelect
+          @items={{GROUPED_ITEMS}}
+          @groupBy="group"
+          @groupLabel={{identityLabel}}
+        />
+      </template>
+    );
+    await openSelect();
+    await waitUntil(
+      () => findAll(OPTION_SELECTOR).length === GROUPED_ITEMS.length
+    );
+
+    assert
+      .dom(".d-combobox__group-labels")
+      .exists("the label store renders alongside the windowed list")
+      .hasAttribute(
+        "hidden",
+        "",
+        "the store is invisible; only aria-describedby reads it"
+      );
+    assert.deepEqual(
+      [...find(".d-combobox__group-labels").children].map((label) =>
+        label.textContent.trim()
+      ),
+      ["Vegetables", "Fruits"],
+      "the store holds one label per group, in group order"
+    );
+    findAll(OPTION_SELECTOR).forEach((option) => {
+      const headerId = option.getAttribute("aria-describedby");
+      assert.strictEqual(
+        document.querySelectorAll(`[id="${CSS.escape(headerId)}"]`).length,
+        1,
+        "the group id has a single owner, so the reference is unambiguous"
+      );
+    });
+  });
+
+  test("group descriptions stay resolvable after windowing scrolls the headers out", async function (assert) {
+    const items = Array.from({ length: 60 }, (_, index) => ({
+      id: index,
+      name: `Item ${index}`,
+      group: index < 30 ? "First" : "Second",
+    }));
+
+    await render(
+      <template>
+        {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+        <style>
+          .d-virtual-list {
+            height: 200px;
+            overflow-y: auto;
+          }
+        </style>
+        <DSelect
+          @items={{items}}
+          @groupBy="group"
+          @groupLabel={{identityLabel}}
+          @variant="static"
+        />
+      </template>
+    );
+    await openSelect();
+    await triggerKeyEvent("[role='combobox']", "keydown", "End");
+
+    assert.true(
+      findAll(GROUP_HEADER_SELECTOR).length < 2,
+      "at least one in-list header row is unmounted at the bottom of the window"
+    );
+    findAll(OPTION_SELECTOR).forEach((option) => {
+      const expected =
+        Number(option.dataset.logicalIndex) < 30 ? "First" : "Second";
+      const headerId = option.getAttribute("aria-describedby");
+      const label = headerId ? document.getElementById(headerId) : null;
+      assert.strictEqual(
+        label?.textContent.trim(),
+        expected,
+        "a mounted option's group description resolves even with its header row unmounted"
+      );
+    });
+  });
+
+  test("groupBy without groupLabel renders splitters between groups", async function (assert) {
+    await render(
+      <template><DSelect @items={{GROUPED_ITEMS}} @groupBy="group" /></template>
+    );
+    await openSelect();
+    await waitUntil(
+      () => findAll(OPTION_SELECTOR).length === GROUPED_ITEMS.length
+    );
+
+    assert
+      .dom(`${LISTBOX_SELECTOR} > .d-combobox__divider`)
+      .exists(
+        { count: 1 },
+        "two groups draw one splitter: boundaries only separate, never lead"
+      );
+    assert
+      .dom(GROUP_HEADER_SELECTOR)
+      .doesNotExist("no header rows render without labels");
+    findAll(OPTION_SELECTOR).forEach((option) => {
+      assert
+        .dom(option)
+        .doesNotHaveAttribute(
+          "aria-describedby",
+          "a splitter-bounded option carries no group description"
+        );
+    });
+    assert.deepEqual(
+      findAll(OPTION_SELECTOR).map((option) =>
+        option.getAttribute("aria-posinset")
+      ),
+      ["1", "2", "3", "4"],
+      "positions stay global and contiguous across splitters"
+    );
+  });
+
+  test("a mixed groupLabel renders a header for the labeled group and a splitter for the rest", async function (assert) {
+    const onlyVegetables = (key) => (key === "Vegetables" ? key : null);
+
+    await render(
+      <template>
+        <DSelect
+          @items={{GROUPED_ITEMS}}
+          @groupBy="group"
+          @groupLabel={{onlyVegetables}}
+        />
+      </template>
+    );
+    await openSelect();
+    await waitUntil(
+      () => findAll(OPTION_SELECTOR).length === GROUPED_ITEMS.length
+    );
+
+    assert
+      .dom(GROUP_HEADER_SELECTOR)
+      .exists({ count: 1 }, "only the labeled group draws a header")
+      .hasText("Vegetables");
+    assert
+      .dom(`${LISTBOX_SELECTOR} > .d-combobox__divider`)
+      .exists({ count: 1 }, "the unlabeled boundary draws a splitter");
+    const described = findAll(OPTION_SELECTOR).filter((option) =>
+      option.hasAttribute("aria-describedby")
+    );
+    assert.deepEqual(
+      described.map((option) => option.textContent.trim()),
+      ["Carrot", "Pea"],
+      "only the labeled group's options carry a group description"
+    );
+  });
+
+  test("the create row carries no group description", async function (assert) {
+    const createItem = (filter) => ({
+      id: `new:${filter}`,
+      name: `Create ${filter}`,
+      __create: true,
+    });
+
+    await render(
+      <template>
+        <DSelect
+          @items={{GROUPED_ITEMS}}
+          @groupBy="group"
+          @groupLabel={{identityLabel}}
+          @allowCreate={{true}}
+          @createItem={{createItem}}
+        />
+      </template>
+    );
+    await fillIn("[role='combobox']", "Pe");
+
+    assert
+      .dom("[role='option'].--create")
+      .exists("the create row is offered for the unmatched query")
+      .doesNotHaveAttribute(
+        "aria-describedby",
+        "the trailing create row is not announced as part of the last group"
+      );
   });
 
   test("End lands the last logical option across interleaved headers after scrolling it in", async function (assert) {
@@ -636,7 +848,12 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
             overflow-y: auto;
           }
         </style>
-        <DSelect @items={{items}} @groupBy="group" @variant="static" />
+        <DSelect
+          @items={{items}}
+          @groupBy="group"
+          @groupLabel={{identityLabel}}
+          @variant="static"
+        />
       </template>
     );
     await openSelect();

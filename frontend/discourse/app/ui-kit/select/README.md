@@ -145,29 +145,47 @@ by mechanism.
   error body), and the limit state is exposed on the engine and yielded to `:footer`.
 - Value transformers and behavior hooks keyed on `@identifiers` (`select-content` /
   `select-on-change`), plus richer screen-reader announcements than the legacy family.
-- Group / section headers via `@groupBy` (a field name or `(item) => key`) with `@groupLabel`
-  for the header text and a `:groupHeader` block for custom markup. The engine segments the
-  filtered options and injects a non-selectable header before each group; an empty group
-  produces no header. Client (`@items`) sources only. Headers are `role="presentation"`, and
-  each option references its group via `aria-describedby`, so a screen reader announces the group
-  name. (The APG-sanctioned structure nests a `role="group"` with `aria-labelledby` between the
+- Groups via `@groupBy` (a field name or `(item) => key`). The engine segments the filtered
+  options and renders a structural boundary before each segment, and the boundary's presentation
+  is label-driven: where `@groupLabel` yields text the boundary is a non-selectable header
+  (custom markup via the `:groupHeader` block); where it yields nullish — or when `@groupLabel`
+  is omitted entirely — the boundary is an unlabeled splitter, a purely visual rule that is
+  suppressed at the head of the list. Grouping runs after filtering on every render, so
+  boundaries are always recomputed: an empty group draws nothing, and a query keeps exactly the
+  splitters that still separate two surviving groups. Client (`@items`) sources only.
+  Headers are `role="presentation"` rows in the windowed list, and the header text also renders
+  into a hidden label store (`.d-combobox__group-labels`) outside the listbox; each option in a
+  *labeled* group references its group through `aria-describedby` into that store
+  (splitter-bounded options carry no group description — an unlabeled boundary has nothing to
+  announce). The store exists because windowing can unmount a header row while its options are
+  still visible — a description that lives outside the window always resolves. It carries the
+  group's label *text*, not the `:groupHeader` block's markup, so the announcement is stable
+  whatever the header renders. The store scales with labeled-group count — deliberately the one
+  unwindowed surface, since windowing it would re-couple the ids to scroll timing — so a
+  near-unique group key is consumer error: the engine asserts when a string `@groupBy` names
+  the value field, and warns in dev builds when grouping degenerates toward one group per row.
+  `aria-posinset`/`aria-setsize` stay global across groups: per-group numbering carries no
+  meaning without nested `role="group"` semantics, which a windowed flat list cannot preserve.
+  (The APG-sanctioned structure nests a `role="group"` with `aria-labelledby` between the
   listbox and its options; our flat virtualizer can't window nested group containers, so the
-  `aria-describedby` association is the sanctioned flat fallback — nested groups are a follow-up.)
-  **Invariant:** structural rows are engine-injected — never put `__header`/`__divider` markers in
-  `@items`, `@load`, or `@specialItems`; those inputs must be selectable options.
+  flat association is the sanctioned fallback — nested groups are a follow-up.)
+  **Invariant:** all structural rows are engine-injected. The `__header`/`__divider` fields on
+  `SelectItem` are engine plumbing with no public constructor — never supply them in `@items`,
+  `@load`, or `@specialItems` (grouping discards upstream structural rows and derives its own
+  structure); those inputs must be selectable options.
 
 ### Missing (scheduled)
 
 - **Server-side grouping** — `@groupBy` covers client sources; a group that spans fetched pages
-  is deferred (a paginating source ignores `@groupBy`).
+  is deferred (a paginating source ignores `@groupBy`, splitters included).
 - **Nested `role="group"` grouping semantics** — the APG-sanctioned optgroup structure (a
   `role="group"` + `aria-labelledby` wrapping each group's options, kept even under virtualization,
   which is what a windowed listbox has to preserve for the structure to mean anything). Requires
   the windowing primitive to position nested group containers; the current flat list uses the
   `aria-describedby` fallback instead.
-- **Dividers** — the structural divider row-kind exists in the descriptor seam (excluded from
-  selection, navigation, and ARIA position), but `@groupBy` does not emit dividers and no public
-  arg produces one yet; it is groundwork for the panel-region work below.
+- **Group-exclusive (radio) selection** — a multi-select where picking an option evicts its
+  group-mates from the value. Designed, not implemented: see
+  `docs/select-kit-replacement/RADIO-GROUPS-DESIGN.md`.
 - **Misc knobs** — hidden native form input; hidden-value exclusion; autofocus / open-on-render;
   a consumer keydown boundary hook; configurable render cap and filter icon.
 

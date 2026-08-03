@@ -19,7 +19,6 @@ import {
   optionWithText,
 } from "discourse/tests/helpers/d-select-hosts";
 import DSelect from "discourse/ui-kit/select/d-select";
-import { selectDivider } from "discourse/ui-kit/select/select-engine";
 
 class NoneRowHost extends Component {
   @tracked value = this.args.value ?? null;
@@ -500,26 +499,34 @@ module(
 );
 
 module(
-  "Integration | ui-kit | select | DSelect (divider rows)",
+  "Integration | ui-kit | select | DSelect (splitter rows)",
   function (hooks) {
     setupRenderingTest(hooks);
 
-    const DIVIDED = [ITEMS[0], selectDivider(), ITEMS[1], ITEMS[2]];
+    const SECTIONED = [
+      { id: 1, name: "Apple", section: "fruit" },
+      { id: 2, name: "Apricot", section: "fruit" },
+      { id: 3, name: "Beet", section: "vegetable" },
+    ];
 
-    test("selectDivider builds a structural row that is drawn but never navigable", async function (assert) {
+    test("an unlabeled group boundary draws a splitter that is never an option", async function (assert) {
       await render(
         <template>
-          <DSelect @items={{DIVIDED}} @identifier="test-select" />
+          <DSelect
+            @items={{SECTIONED}}
+            @groupBy="section"
+            @identifier="test-select"
+          />
         </template>
       );
       await click("[role='combobox']");
 
       assert
         .dom(".d-combobox__divider")
-        .exists({ count: 1 }, "the divider renders");
+        .exists({ count: 1 }, "one splitter separates the two sections");
       assert
         .dom("[role='option']")
-        .exists({ count: 3 }, "a divider is not an option");
+        .exists({ count: 3 }, "a splitter is not an option");
       assert
         .dom(".d-combobox__divider")
         .hasAttribute(
@@ -527,19 +534,56 @@ module(
           "true",
           "a rule carries no meaning for a reader"
         );
+      assert.deepEqual(
+        findAll("[role='option']").map((option) =>
+          option.getAttribute("data-logical-index")
+        ),
+        ["0", "1", "2"],
+        "navigation indices stay contiguous across the splitter"
+      );
     });
 
-    test("a divider is filtered out with everything else that does not match", async function (assert) {
+    test("a splitter survives a query while both of its groups do", async function (assert) {
       await render(
         <template>
-          <DSelect @items={{DIVIDED}} @identifier="test-select" />
+          <DSelect
+            @items={{SECTIONED}}
+            @groupBy="section"
+            @identifier="test-select"
+          />
         </template>
       );
-      await fillIn("[role='combobox']", "Banana");
+      await fillIn("[role='combobox']", "e");
 
       assert
+        .dom("[role='option']")
+        .exists({ count: 2 }, "one option per section matches the query");
+      assert
         .dom(".d-combobox__divider")
-        .doesNotExist("a labelless row cannot match a query");
+        .exists(
+          { count: 1 },
+          "the boundary is recomputed from the filtered rows, not dropped"
+        );
+    });
+
+    test("a splitter disappears when the query leaves a single group", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @items={{SECTIONED}}
+            @groupBy="section"
+            @identifier="test-select"
+          />
+        </template>
+      );
+      await fillIn("[role='combobox']", "ap");
+
+      assert
+        .dom("[role='option']")
+        .exists({ count: 2 }, "only the fruit section matches");
+      assert
+        .dom(".d-combobox__divider")
+        .doesNotExist("nothing is left for a rule to separate");
     });
   }
 );

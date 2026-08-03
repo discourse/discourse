@@ -63,11 +63,15 @@ interface DSelectSignature {
     createUnresolvedItem?: SelectEngineOptions["createUnresolvedItem"];
     specialItems?: SelectEngineOptions["specialItems"];
     /**
-     * Groups the options under injected, non-selectable headers: a field name or
-     * `(item) => key`. Client sources only. Empty groups produce no header.
+     * Groups the options: a field name or `(item) => key`. A boundary renders as a labeled
+     * header where `@groupLabel` yields text and as an unlabeled splitter otherwise. Client
+     * sources only. Recomputed after filtering, so an empty group draws nothing.
      */
     groupBy?: SelectEngineOptions["groupBy"];
-    /** `(key) => string` mapping a group key to its header text. Defaults to `String(key)`. */
+    /**
+     * Maps a group key to its header text. Nullish for a key renders that boundary as an
+     * unlabeled splitter; omitted entirely, every boundary is a splitter.
+     */
     groupLabel?: SelectEngineOptions["groupLabel"];
     onChange?: SelectEngineOptions["onChange"];
     placeholder?: string;

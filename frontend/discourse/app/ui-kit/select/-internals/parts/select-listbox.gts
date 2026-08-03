@@ -120,6 +120,14 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
     <:content as |content|>
       {{#let (@listbox.buildListItems content.rawItems) as |items|}}
         {{#if items.length}}
+          <div class="d-combobox__group-labels" hidden>
+            {{#each (@listbox.groupLabelRows items) key="key" as |header|}}
+              <span id={{header.headerId}}>
+                {{selectItemLabel header.item "label"}}
+              </span>
+            {{/each}}
+          </div>
+
           <DVirtualList
             @as="ul"
             @role="listbox"
@@ -209,7 +217,6 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
                   <li
                     class="d-combobox__group-header"
                     role="presentation"
-                    id={{option.headerId}}
                     data-option-key={{option.key}}
                     {{row.place row.start row.index}}
                     {{row.measure}}

@@ -1,3 +1,4 @@
+import { warn } from "@ember/debug";
 import { makeArray } from "discourse/lib/helpers";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import type SelectOptionsView from "discourse/ui-kit/select/-internals/engine/select-options";
@@ -9,8 +10,13 @@ import type {
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
+// Below this many filtered options the degenerate-grouping warning never fires: a small or
+// heavily-filtered list can legitimately land on one group per row.
+const DEGENERATE_GROUPING_FLOOR = 50;
+
 export default class ListComposer {
   #options: SelectOptionsView;
+  #degenerateGroupingWarned = false;
   #getFilter: () => string;
   #getValue: () => SelectValue;
   #getHasValue: () => boolean;
@@ -187,7 +193,9 @@ export default class ListComposer {
         return {
           ...descriptor,
           logicalIndex: descriptor.flags.disabled ? undefined : logicalIndex++,
-          groupOrdinal: currentGroupOrdinal,
+          groupOrdinal: descriptor.flags.__create
+            ? undefined
+            : currentGroupOrdinal,
           setSize,
           // The create row is appended after the source rows, so it closes the set wherever the
           // window ends.
@@ -260,11 +268,13 @@ export default class ListComposer {
     return !!item.__header || !!item.__divider;
   }
 
-  // The synthetic single-select "none" row: a selectable option carrying a `null` value. Shown only
-  // while the filter is empty — a "none" row that survived filtering would sit at the top of a
-  // non-matching result and, being auto-highlighted, turn "type a non-match, press Enter" into a
-  // silent clear (and would suppress the empty state). Selecting it routes through the normal
-  // `select()` path, which emits `null` because the row's value field is `null`.
+  /**
+   * The synthetic single-select "none" row: a selectable option carrying a `null` value. Shown only
+   * while the filter is empty — a "none" row that survived filtering would sit at the top of a
+   * non-matching result and, being auto-highlighted, turn "type a non-match, press Enter" into a
+   * silent clear (and would suppress the empty state). Selecting it routes through the normal
+   * `select()` path, which emits `null` because the row's value field is `null`.
+   */
   #noneRow(): SelectItem | null {
     if (this.#options.noneLabel == null || this.#getFilter() !== "") {
       return null;
@@ -276,8 +286,10 @@ export default class ListComposer {
     };
   }
 
-  // Client sources only: a paginating source can split a group across pages, so grouping a
-  // single page would fragment it. Deferred for server sources.
+  /**
+   * Client sources only: a paginating source can split a group across pages, so grouping a
+   * single page would fragment it. Deferred for server sources.
+   */
   #shouldGroup(): boolean {
     return this.#options.groupBy != null && !this.#options.isAsync;
   }
@@ -288,15 +300,14 @@ export default class ListComposer {
       : item[this.#options.groupBy as string];
   }
 
-  #groupLabel(key: SelectItemId): string {
-    return this.#options.groupLabel
-      ? this.#options.groupLabel(key)
-      : String(key);
+  #groupLabel(key: SelectItemId): string | null | undefined {
+    return this.#options.groupLabel?.(key);
   }
 
-  // Segments options by group key — first-appearance order, preserved by the Map — and injects
-  // a header row before each group. Filtering already ran, so every group here is non-empty and
-  // no header is ever orphaned.
+  /**
+   * Labels turn group boundaries into headers; nullish labels use splitters, with a leading
+   * splitter suppressed because it separates nothing.
+   */
   #groupItems(options: SelectItem[]): SelectItem[] {
     const groups = new Map<SelectItemId, SelectItem[]>();
     for (const item of options) {
@@ -316,11 +327,42 @@ export default class ListComposer {
     }
 
     const out: SelectItem[] = [];
+    let optionCount = 0;
     for (const [key, groupItems] of groups) {
-      out.push({ __header: true, groupKey: key, label: this.#groupLabel(key) });
+      const label = this.#groupLabel(key);
+      if (label != null) {
+        out.push({ __header: true, groupKey: key, label });
+      } else if (out.length > 0) {
+        out.push({ __divider: true, groupKey: key });
+      }
       out.push(...groupItems);
+      optionCount += groupItems.length;
     }
+    this.#warnDegenerateGrouping(groups.size, optionCount);
     return out;
+  }
+
+  /**
+   * The value-field assert catches the one statically knowable misuse; a function `groupBy` or
+   * any other unique-ish field can only be judged by its outcome. Judged once per composer: the
+   * point is a dev-time signal, not per-keystroke telemetry.
+   */
+  #warnDegenerateGrouping(groupCount: number, optionCount: number): void {
+    if (
+      this.#degenerateGroupingWarned ||
+      optionCount < DEGENERATE_GROUPING_FLOOR ||
+      groupCount * 2 <= optionCount
+    ) {
+      return;
+    }
+    this.#degenerateGroupingWarned = true;
+    warn(
+      `DSelect: \`groupBy\` produced ${groupCount} groups over ${optionCount} options — nearly ` +
+        `one group per row. Each labeled group renders a persistent hidden label node, so a ` +
+        `near-unique key scales the DOM with the list. Group by a coarser key.`,
+      false,
+      { id: "discourse.d-select.degenerate-group-by" }
+    );
   }
 
   #snapshot(): SelectSnapshot {

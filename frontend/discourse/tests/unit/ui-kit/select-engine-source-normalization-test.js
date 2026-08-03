@@ -1,3 +1,4 @@
+import { registerWarnHandler } from "@ember/debug";
 import { trackedObject } from "@ember/reactive/collections";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
@@ -266,6 +267,10 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       return engine.buildItems(engine.loadItems(engine.loadContext));
     }
 
+    // Header tests opt into labels explicitly: `groupBy` alone means splitter
+    // boundaries, so a labeled group always names its label source.
+    const identityLabel = (key) => key;
+
     function kinds(rows) {
       return rows.map((row) =>
         row.flags.group
@@ -288,6 +293,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
           { id: 3, name: "Pea", group: "Vegetables" },
         ],
         groupBy: "group",
+        groupLabel: identityLabel,
       });
 
       assert.deepEqual(
@@ -304,6 +310,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
           { id: 2, name: "Pear", group: "Fruits" },
         ],
         groupBy: "group",
+        groupLabel: identityLabel,
       });
       const header = descriptors(engine).find((row) => row.flags.group);
 
@@ -325,6 +332,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
           { id: 3, name: "Pea", group: "Vegetables" },
         ],
         groupBy: "group",
+        groupLabel: identityLabel,
       });
       const opts = options(descriptors(engine));
 
@@ -367,6 +375,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
           { id: 2, name: "Carrot", group: "Vegetables" },
         ],
         groupBy: "group",
+        groupLabel: identityLabel,
       });
       engine.setFilter("apple");
       const rows = descriptors(engine);
@@ -434,6 +443,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
           { id: 2, name: "Carrot", group: "Vegetables" },
         ],
         groupBy: "group",
+        groupLabel: identityLabel,
         specialItems: () => [{ id: 0, name: "None" }],
       });
       const rows = descriptors(engine);
@@ -470,6 +480,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
           { id: 2, name: "Beet", group: "Vegetables" },
         ],
         groupBy: "group",
+        groupLabel: identityLabel,
         allowCreate: true,
         createItem: (filter) => ({
           id: `new:${filter}`,
@@ -502,6 +513,311 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
         rows.filter((row) => row.flags.group).map((row) => row.item.label),
         ["Fruits"],
         "only the surviving group keeps a header"
+      );
+    });
+
+    test("groupBy without groupLabel renders splitter boundaries, not headers", function (assert) {
+      const engine = new SelectEngine({
+        items: [
+          { id: 1, name: "Carrot", group: "Vegetables" },
+          { id: 2, name: "Apple", group: "Fruits" },
+          { id: 3, name: "Pea", group: "Vegetables" },
+        ],
+        groupBy: "group",
+      });
+      const rows = descriptors(engine);
+
+      assert.deepEqual(
+        kinds(rows),
+        [1, 3, "DIV", 2],
+        "group boundaries render as splitters; the leading boundary is suppressed"
+      );
+      assert.true(
+        rows.every((row) => !row.flags.group),
+        "no header row exists without groupLabel"
+      );
+      assert.deepEqual(
+        options(rows).map((option) => option.groupOrdinal),
+        [undefined, undefined, undefined],
+        "splitter-bounded options carry no group tagging"
+      );
+      assert.deepEqual(
+        options(rows).map((option) => option.posInSet),
+        [1, 2, 3],
+        "positions stay global and contiguous across splitters"
+      );
+      options(rows).forEach((option) =>
+        assert.strictEqual(
+          option.setSize,
+          3,
+          "setSize counts options only, never splitters"
+        )
+      );
+    });
+
+    test("a nullish groupLabel turns that boundary into a splitter", function (assert) {
+      const engine = new SelectEngine({
+        items: [
+          { id: 1, name: "Apple", group: "Fruits" },
+          { id: 2, name: "Carrot", group: "Vegetables" },
+          { id: 3, name: "Oat", group: "Grains" },
+        ],
+        groupBy: "group",
+        groupLabel: (key) => (key === "Vegetables" ? key : null),
+      });
+      const rows = descriptors(engine);
+
+      assert.deepEqual(
+        kinds(rows),
+        [1, "H:Vegetables", 2, "DIV", 3],
+        "unlabeled first boundary is suppressed; labeled boundary is a header; later unlabeled boundary is a splitter"
+      );
+      assert.deepEqual(
+        rows.filter((row) => row.flags.group).map((row) => row.groupOrdinal),
+        [0],
+        "header ordinals stay dense over headers only"
+      );
+      assert.deepEqual(
+        options(rows).map((option) => option.groupOrdinal),
+        [undefined, 0, undefined],
+        "only options under a labeled header carry its ordinal"
+      );
+    });
+
+    test("a labeled group may lead; the next unlabeled boundary is a splitter", function (assert) {
+      const engine = new SelectEngine({
+        items: [
+          { id: 1, name: "Apple", group: "Fruits" },
+          { id: 2, name: "Carrot", group: "Vegetables" },
+        ],
+        groupBy: "group",
+        groupLabel: (key) => (key === "Fruits" ? key : null),
+      });
+
+      assert.deepEqual(
+        kinds(descriptors(engine)),
+        ["H:Fruits", 1, "DIV", 2],
+        "a leading header renders; only splitters are suppressed at the head"
+      );
+    });
+
+    test("splitters are recomputed from the filtered list", function (assert) {
+      const engine = new SelectEngine({
+        items: [
+          { id: 1, name: "Apple", group: "a" },
+          { id: 2, name: "Banana", group: "b" },
+          { id: 3, name: "Apricot", group: "c" },
+        ],
+        groupBy: "group",
+      });
+      engine.setFilter("ap");
+
+      assert.deepEqual(
+        kinds(descriptors(engine)),
+        [1, "DIV", 3],
+        "one splitter separates the two surviving groups; none is orphaned"
+      );
+    });
+
+    test("the create row is never tagged with the last group", function (assert) {
+      const engine = new SelectEngine({
+        items: [
+          { id: 1, name: "Apple", group: "Fruits" },
+          { id: 2, name: "Beet", group: "Vegetables" },
+        ],
+        groupBy: "group",
+        groupLabel: identityLabel,
+        allowCreate: true,
+        createItem: (filter) => ({
+          id: `new:${filter}`,
+          name: filter,
+          __create: true,
+        }),
+      });
+      engine.setFilter("Ap");
+      const rows = descriptors(engine);
+      const createRow = rows.at(-1);
+
+      assert.true(
+        createRow.flags.__create,
+        "the trailing row is the create row"
+      );
+      assert.strictEqual(
+        createRow.groupOrdinal,
+        undefined,
+        "the create row belongs to no group"
+      );
+      assert.strictEqual(
+        options(rows)[0].groupOrdinal,
+        0,
+        "the surviving grouped option keeps its group tagging"
+      );
+    });
+
+    test("an empty-string label is a header; only a nullish label is a splitter", function (assert) {
+      const engine = new SelectEngine({
+        items: [
+          { id: 1, name: "Apple", group: "Fruits" },
+          { id: 2, name: "Carrot", group: "Vegetables" },
+        ],
+        groupBy: "group",
+        groupLabel: () => "",
+      });
+
+      assert.deepEqual(
+        kinds(descriptors(engine)),
+        ["H:", 1, "H:", 2],
+        "an empty string is a deliberate (if blank) header, never a splitter"
+      );
+    });
+
+    test("an upstream structural row is dropped while grouping is active", function (assert) {
+      const engine = new SelectEngine({
+        items: [
+          { id: 1, name: "Apple", group: "Fruits" },
+          { id: 2, name: "Carrot", group: "Vegetables" },
+        ],
+        groupBy: "group",
+        groupLabel: identityLabel,
+      });
+      const rows = engine.buildItems([
+        { __divider: true },
+        ...engine.loadItems(engine.loadContext),
+      ]);
+
+      assert.deepEqual(
+        kinds(rows),
+        ["H:Fruits", 1, "H:Vegetables", 2],
+        "grouping re-derives all structure; an injected structural row is not grouped or kept"
+      );
+    });
+
+    test("header ordinals stay dense across an interleaved splitter", function (assert) {
+      const engine = new SelectEngine({
+        items: [
+          { id: 1, name: "Apple", group: "Fruits" },
+          { id: 2, name: "Carrot", group: "Vegetables" },
+          { id: 3, name: "Oat", group: "Grains" },
+        ],
+        groupBy: "group",
+        groupLabel: (key) => (key === "Vegetables" ? null : key),
+      });
+      const rows = descriptors(engine);
+
+      assert.deepEqual(
+        kinds(rows),
+        ["H:Fruits", 1, "DIV", 2, "H:Grains", 3],
+        "labeled, unlabeled, and labeled boundaries render in order"
+      );
+      assert.deepEqual(
+        rows.filter((row) => row.flags.group).map((row) => row.groupOrdinal),
+        [0, 1],
+        "a splitter consumes no header ordinal"
+      );
+      assert.deepEqual(
+        options(rows).map((option) => option.groupOrdinal),
+        [0, undefined, 1],
+        "options resume the next dense ordinal after a splitter-bounded group"
+      );
+    });
+
+    test("groupBy matching the value field is rejected outright", function (assert) {
+      assert.throws(
+        () => new SelectEngine({ items: items(2), groupBy: "id" }),
+        /value field/,
+        "grouping by the default value field is certain misuse"
+      );
+      assert.throws(
+        () =>
+          new SelectEngine({
+            items: [{ slug: "a", name: "A" }],
+            valueField: "slug",
+            groupBy: "slug",
+          }),
+        /value field/,
+        "a custom value field is guarded the same way"
+      );
+    });
+
+    test("degenerate group cardinality warns once in dev builds", function (assert) {
+      const warnings = [];
+      registerWarnHandler((message, warnOptions, next) => {
+        if (warnOptions?.id === "discourse.d-select.degenerate-group-by") {
+          warnings.push(message);
+        } else {
+          next(message, warnOptions);
+        }
+      });
+
+      const degenerate = new SelectEngine({
+        items: Array.from({ length: 60 }, (_, index) => ({
+          id: index,
+          name: `Item ${index}`,
+          section: `section-${index}`,
+        })),
+        groupBy: "section",
+      });
+      descriptors(degenerate);
+      assert.strictEqual(
+        warnings.length,
+        1,
+        "a near-unique group key warns in dev"
+      );
+      descriptors(degenerate);
+      assert.strictEqual(
+        warnings.length,
+        1,
+        "the warning fires once per engine"
+      );
+
+      const coarse = new SelectEngine({
+        items: Array.from({ length: 60 }, (_, index) => ({
+          id: index,
+          name: `Item ${index}`,
+          section: `section-${index % 6}`,
+        })),
+        groupBy: "section",
+      });
+      descriptors(coarse);
+      assert.strictEqual(warnings.length, 1, "coarse grouping stays silent");
+
+      const small = new SelectEngine({
+        items: Array.from({ length: 10 }, (_, index) => ({
+          id: index,
+          name: `Item ${index}`,
+          section: `section-${index}`,
+        })),
+        groupBy: "section",
+      });
+      descriptors(small);
+      assert.strictEqual(
+        warnings.length,
+        1,
+        "a small list never trips the floor, even fully degenerate"
+      );
+    });
+
+    test("a paging source ignores groupBy entirely", async function (assert) {
+      const engine = new SelectEngine({
+        load: () =>
+          Promise.resolve({
+            items: [
+              { id: 1, name: "Apple", group: "Fruits" },
+              { id: 2, name: "Carrot", group: "Vegetables" },
+            ],
+            total: 2,
+            hasMore: false,
+          }),
+        groupBy: "group",
+        groupLabel: identityLabel,
+      });
+      const loaded = await engine.loadItems(engine.loadContext);
+      const rows = engine.buildItems(loaded);
+
+      assert.deepEqual(
+        kinds(rows),
+        [1, 2],
+        "a paged list stays flat: no headers and no splitters"
       );
     });
   });

@@ -60,9 +60,8 @@ export interface SelectItem {
   __header?: boolean;
 
   /**
-   * Marks a divider row. Structural like a header, but with no label — and unlike a header it
-   * is placed by the consumer, so build it with {@link selectDivider} rather than writing this
-   * marker by hand.
+   * Marks an engine-injected divider for an unlabeled group boundary. `groupBy` injects it when
+   * `groupLabel` returns nullish for the segment; consumers never set it.
    */
   __divider?: boolean;
 
@@ -141,21 +140,6 @@ export function selectItemLabel(
   labelField = "name"
 ): string {
   return String(item?.[labelField] ?? "");
-}
-
-/**
- * Builds a divider row for an `@items` list.
- *
- * Dividers are the one structural row a consumer places themselves: `groupBy` injects headers
- * because grouping implies where they go, but nothing can infer where a plain rule belongs.
- * Constructing it here keeps the `__`-prefixed marker an implementation detail instead of a
- * shape consumers hand-write — which would freeze it into the public contract by usage.
- *
- * A divider carries no label, so any non-empty query filters it out along with every other
- * non-matching row: a list reads as divided only while unfiltered.
- */
-export function selectDivider(): SelectItem {
-  return { __divider: true };
 }
 
 /** Options threaded into a source (`load` / `resolveValue`) call. */
@@ -392,15 +376,18 @@ export interface SelectEngineOptions {
   specialItems?: (snapshot: SelectSnapshot) => SelectItem[];
 
   /**
-   * Groups the (filtered) options and injects a non-selectable header row before each
-   * group: a field name, or `(item) => key`. Client sources only; a source that pages
-   * ignores it (a group can span pages). Empty groups produce no header, since filtering
-   * runs before grouping.
+   * Groups the filtered options by a field name or `(item) => key`. Each group's label
+   * determines whether its boundary is a header or an unlabeled splitter; a leading splitter
+   * is suppressed. Client sources only; a source that pages ignores it because a group can
+   * span pages.
    */
   groupBy?: string | ((item: SelectItem) => SelectItemId);
 
-  /** `(key) => string` mapping a group key to its header text. Defaults to `String(key)`. */
-  groupLabel?: (key: SelectItemId) => string;
+  /**
+   * Maps a group key to its header text. A nullish result renders that boundary as an
+   * unlabeled splitter; when omitted, every boundary is a splitter.
+   */
+  groupLabel?: (key: SelectItemId) => string | null | undefined;
 
   /** Whether choosing an item closes the overlay. Defaults to `!multiple`. */
   closeOnSelect?: boolean;

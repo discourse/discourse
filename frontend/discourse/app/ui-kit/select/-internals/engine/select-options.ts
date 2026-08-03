@@ -1,3 +1,4 @@
+import { assert } from "@ember/debug";
 import { makeArray } from "discourse/lib/helpers";
 import type {
   SelectEngineOptions,
@@ -73,6 +74,14 @@ export default class SelectOptionsView {
     this.#noneLabel = opts.noneLabel;
     this.#valueField = opts.valueField ?? "id";
     this.#labelField = opts.labelField ?? "name";
+    // Values are unique by contract (selection identity, row keys), so grouping by the value
+    // field deterministically yields one group per row. Certain misuse fails loudly; the
+    // heuristic cases a static check cannot see are caught by the composer's cardinality warning.
+    assert(
+      `DSelect: \`@groupBy\` ("${String(opts.groupBy)}") is the value field, so every row ` +
+        `would become its own group. Group by a coarser key.`,
+      typeof opts.groupBy !== "string" || opts.groupBy !== this.#valueField
+    );
     this.#filterBy = opts.filterBy;
     this.#items = opts.items;
     this.#load = opts.load;

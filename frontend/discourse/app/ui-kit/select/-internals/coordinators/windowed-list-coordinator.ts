@@ -79,6 +79,14 @@ export default class WindowedListCoordinator {
     }
     return items;
   };
+  /**
+   * Group labels need a persistent home because windowed header rows can unmount while their
+   * options remain visible.
+   */
+  groupLabelRows = (rows: readonly ListRow[]): OptionRow[] =>
+    rows.filter(
+      (row): row is OptionRow => row.isSkeleton === false && row.flags.group
+    );
   /** Estimated row height for the windowing engine before a row is measured. */
   estimateRowSize = (): number => ROW_HEIGHT_ESTIMATE;
   /**
