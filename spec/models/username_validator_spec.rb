@@ -324,7 +324,7 @@ RSpec.describe UsernameValidator do
 
       expect_invalid(
         "blocked",
-        error_message: I18n.t(:"user.username.contains_blocked_word", word: "blocked"),
+        error_message: I18n.t(:"user.username.contains_blocked_words", count: 1, words: "blocked"),
       )
     end
 
@@ -349,7 +349,8 @@ RSpec.describe UsernameValidator do
 
       expect_invalid(
         "censor_user",
-        error_message: I18n.t(:"user.username.contains_blocked_word", word: "censor_user"),
+        error_message:
+          I18n.t(:"user.username.contains_blocked_words", count: 1, words: "censor_user"),
       )
     end
 
@@ -358,7 +359,8 @@ RSpec.describe UsernameValidator do
 
       expect_invalid(
         "flag_user",
-        error_message: I18n.t(:"user.username.contains_blocked_word", word: "flag_user"),
+        error_message:
+          I18n.t(:"user.username.contains_blocked_words", count: 1, words: "flag_user"),
       )
     end
 
@@ -367,7 +369,8 @@ RSpec.describe UsernameValidator do
 
       expect_invalid(
         "silence_user",
-        error_message: I18n.t(:"user.username.contains_blocked_word", word: "silence_user"),
+        error_message:
+          I18n.t(:"user.username.contains_blocked_words", count: 1, words: "silence_user"),
       )
     end
 
@@ -376,7 +379,8 @@ RSpec.describe UsernameValidator do
 
       expect_invalid(
         "approve_user",
-        error_message: I18n.t(:"user.username.contains_blocked_word", word: "approve_user"),
+        error_message:
+          I18n.t(:"user.username.contains_blocked_words", count: 1, words: "approve_user"),
       )
     end
 
@@ -395,12 +399,36 @@ RSpec.describe UsernameValidator do
       expect_valid("gooduser", "nice_name")
     end
 
+    it "is valid when username matches non-moderation watched word actions" do
+      Fabricate(
+        :watched_word,
+        word: "teh",
+        replacement: "the",
+        action: WatchedWord.actions[:replace],
+      )
+      Fabricate(
+        :watched_word,
+        word: "github",
+        replacement: "https://github.com",
+        action: WatchedWord.actions[:link],
+      )
+      Fabricate(:tag, name: "supporttag")
+      Fabricate(
+        :watched_word,
+        word: "support",
+        replacement: "supporttag",
+        action: WatchedWord.actions[:tag],
+      )
+
+      expect_valid("teh", "github", "support")
+    end
+
     it "is invalid when username matches watched word with word boundaries" do
       WatchedWord.create!(word: "test", action: WatchedWord.actions[:block])
 
       expect_invalid(
         "test",
-        error_message: I18n.t(:"user.username.contains_blocked_word", word: "test"),
+        error_message: I18n.t(:"user.username.contains_blocked_words", count: 1, words: "test"),
       )
     end
 
@@ -410,7 +438,7 @@ RSpec.describe UsernameValidator do
       expect_valid("testing", "mytest", "protest")
     end
 
-    it "is invalid when username contains watched word from any action type" do
+    it "is invalid when username contains a watched word from a moderation action" do
       WatchedWord.create!(word: "*block*", action: WatchedWord.actions[:block])
       WatchedWord.create!(word: "*censor*", action: WatchedWord.actions[:censor])
       WatchedWord.create!(word: "*flag*", action: WatchedWord.actions[:flag])
