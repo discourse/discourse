@@ -31,6 +31,15 @@ RSpec.describe UserActionsController do
         expect(actions.first).not_to include "email"
       end
 
+      it "does not disclose activity when public profiles are hidden" do
+        SiteSetting.hide_user_profiles_from_public = true
+
+        user_actions
+
+        expect(response).to have_http_status :not_found
+        expect(response.body).not_to include(post.raw)
+      end
+
       it "returns categories when lazy load categories is enabled" do
         SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:anonymous_users]}"
         user_actions
