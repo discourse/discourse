@@ -1,5 +1,6 @@
 import "./styles.css";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { i18n } from "discourse-i18n";
 import { patchBlockRendering } from "./block-debug/patch";
 import { registerDockPanel } from "./dock";
 import { install as observeMessageBus } from "./message-bus/instrumentation";
@@ -9,7 +10,7 @@ import Toolbar from "./toolbar";
 
 export function init() {
   registerDockPanel("message-bus", {
-    label: "MessageBus",
+    label: i18n("dev_tools.message_bus.title"),
     component: MessageBusPanel,
   });
 
