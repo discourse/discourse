@@ -33,11 +33,12 @@ access.
 chassis, coordinators, parts. Modules under a group's `-internals/` directory
 are importable only from within that group (and from test files). The
 `discourse-local/no-cross-group-internals` ESLint rule enforces this
-boundary for every statically analyzable import — including re-exports and
-literal dynamic imports — so a violation is a lint failure, not a review
-comment. An import whose specifier is computed at runtime is beyond static
-analysis; writing one against an internals path is the same violation, just
-one only review can catch.
+boundary wherever the specifier's fixed text already proves the reach-in:
+static imports, re-exports, literal dynamic imports, and interpolated
+dynamic imports whose fixed prefix names an `-internals` path. A specifier
+whose *group* is only known at runtime is beyond static analysis; writing
+one against an internals path is the same violation, just one only review
+can catch.
 
 Note the enforcement split between the tiers: the lint rule guards the
 *group boundary* (tier 3). The facade constraint (tier 2) is a review-time

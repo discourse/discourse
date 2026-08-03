@@ -66,9 +66,14 @@ function mayImportInternals(filename, specifier) {
 
 /**
  * The statically known module specifier of an import/export source, covering
- * string literals and no-substitution template literals. An interpolated
- * source has no static value and returns undefined; that limit is deliberate
- * and pinned by the tests.
+ * string literals and no-substitution template literals.
+ *
+ * An interpolated template has no full static value, but its FIXED PREFIX can
+ * already prove an internals reach-in — `.../-internals/${name}` names the
+ * group before any expression runs. In that case the prefix is returned with
+ * a placeholder leaf, so the ordinary containment check applies. A specifier
+ * whose group is itself interpolated stays undecidable and returns undefined;
+ * that limit is deliberate and pinned by the tests.
  */
 function staticSpecifierOf(source) {
   if (!source) {
@@ -79,12 +84,21 @@ function staticSpecifierOf(source) {
     return source.value;
   }
 
-  if (
-    source.type === "TemplateLiteral" &&
-    source.expressions.length === 0 &&
-    source.quasis.length === 1
-  ) {
+  if (source.type !== "TemplateLiteral") {
+    return;
+  }
+
+  if (source.expressions.length === 0 && source.quasis.length === 1) {
     return source.quasis[0].value.cooked;
+  }
+
+  const prefix = source.quasis[0]?.value.cooked ?? "";
+  // Only complete segments count: a prefix ending mid-segment ("-inter…")
+  // proves nothing about where the specifier lands.
+  const completeSegments = prefix.split("/").slice(0, -1);
+
+  if (completeSegments.includes(INTERNALS_SEGMENT)) {
+    return [...completeSegments, "dynamic-leaf"].join("/");
   }
 }
 

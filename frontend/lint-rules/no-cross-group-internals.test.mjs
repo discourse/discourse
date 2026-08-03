@@ -127,10 +127,34 @@ test("a template-literal dynamic import cannot bypass the boundary", () => {
   assert.deepEqual(messages, ["discourse/no-cross-group-internals"]);
 });
 
-test("an interpolated dynamic import is beyond static analysis and skipped", () => {
+test("an interpolation cannot launder a fixed internals prefix", () => {
+  const messages = messagesFor(
+    `${APP}/components/composer.js`,
+    "const chassis = import(`discourse/ui-kit/panel-dock/-internals/${name}`);"
+  );
+  assert.deepEqual(messages, ["discourse/no-cross-group-internals"]);
+});
+
+test("a fixed internals prefix stays importable from its own group", () => {
+  const messages = messagesFor(
+    `${APP}/ui-kit/panel-dock/index.js`,
+    "const part = import(`./-internals/${name}`);"
+  );
+  assert.deepEqual(messages, []);
+});
+
+test("an interpolated group is beyond static analysis and skipped", () => {
   const messages = messagesFor(
     `${APP}/components/composer.js`,
     "const chassis = import(`discourse/ui-kit/${name}/-internals/panel`);"
+  );
+  assert.deepEqual(messages, []);
+});
+
+test("a partial trailing segment is not mistaken for an internals prefix", () => {
+  const messages = messagesFor(
+    `${APP}/components/composer.js`,
+    "const chassis = import(`discourse/ui-kit/panel-dock/-inter${nals}`);"
   );
   assert.deepEqual(messages, []);
 });
