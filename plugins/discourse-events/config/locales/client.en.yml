@@ -46,9 +46,9 @@ en:
           rsvp_body: "Connect with other attendees before, during, and after the event."
       invite_user_notification: "%{username} invited you to: %{description}"
       preferences:
-        all_events: "Events - All events"
+        all_events: "Discourse Events - All events"
         all_events_description: "All forum events"
-        my_events: "Events - My events"
+        my_events: "Discourse Events - My events"
         my_events_description: "Events you are going to or interested in"
       on_holiday: "On Holiday"
       disable_holiday: "Disable"
