@@ -104,6 +104,20 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
       expect(json["executions"].length).to eq(1)
       expect(json["executions"][0]["id"]).to eq(execution_1.id)
     end
+
+    it "returns load more meta when more executions exist" do
+      Fabricate(:discourse_workflows_execution, workflow: workflow)
+      execution_2 = Fabricate(:discourse_workflows_execution, workflow: workflow)
+
+      get "/admin/plugins/discourse-workflows/executions.json", params: { limit: 1 }
+
+      json = response.parsed_body
+      expect(json["executions"].map { |execution| execution["id"] }).to eq([execution_2.id])
+      expect(json["meta"]).to eq(
+        "load_more_executions" =>
+          "/admin/plugins/discourse-workflows/executions.json?cursor=#{execution_2.id}&limit=1",
+      )
+    end
   end
 
   describe "GET /admin/plugins/discourse-workflows/workflows/:workflow_id/executions" do
