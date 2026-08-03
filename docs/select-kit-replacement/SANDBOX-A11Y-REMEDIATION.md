@@ -363,6 +363,21 @@ the race the suite is otherwise blind to.
    multi-select that puts no chips in the trigger sidesteps that without the roleless-wrapper
    restructure proposed below. Settle this cycle before committing to that one.
 
+## Fixed in the unified grouping rework
+
+- **The create row no longer inherits the last group.** `#describeList` used to leave
+  `currentGroupOrdinal` set when it reached the appended create row, so "Create 'foo'" carried
+  the last group's `aria-describedby` and a reader heard it announced as a member of that group.
+  The create row now stamps `groupOrdinal: undefined` and carries no group description.
+- **Group `aria-describedby` no longer dangles under windowing.** The header `<li>` used to own
+  the group id, and the windowed list unmounts a header row while its options are still visible —
+  the reference then named a nonexistent element and the group context silently vanished. The
+  ids now live on hidden `<span>`s in a `.d-combobox__group-labels` store rendered outside the
+  listbox, which windowing never touches, so a mounted option's description always resolves.
+  This is distinct from the **still-open** `aria-controls` dangling reference above (the empty
+  result set destroying the element the combobox names): same defect class, different reference,
+  and that one still needs its structural decision.
+
 ## Still open
 
 - **K3** — whether a held row now announces "selected". The seed fix may already have resolved

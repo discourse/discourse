@@ -370,10 +370,11 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
   roving-focus scrolls the listbox not the page, and DAsyncContent assimilates sync sources.
   **Deferred:** `@openOn` (needs a float-kit `focus` trigger), `@focusWrap`, create-on-the-fly
   (`@validateCreate`).
-- ☑ **Group/section-aware model** (Decision 2, `1204ec45981`): `@groupBy` segments a client
-  source into sections with a non-selectable header row per group, each option associated to
-  its header via `aria-describedby`, plus the structural divider seam. Still to be exercised by
-  the category family; grouping a *server* source is untested.
+- ☑ **Group/section-aware model** (Decision 2, `1204ec45981`, unified later in this phase):
+  `@groupBy` segments a client source into sections; a boundary renders as a non-selectable
+  header where `@groupLabel` yields text and as an unlabeled splitter otherwise, with each
+  option associated to its group via `aria-describedby` into a persistent hidden label store.
+  Still to be exercised by the category family; grouping a *server* source is untested.
 - ☑ **Capability parity pass** — three commits of select-kit feature catch-up that predate any
   tracker line of their own:
   - `1204ec45981`: `@selectedIcon` (selected indicator in single-select), `@showCaret` to
