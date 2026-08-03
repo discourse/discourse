@@ -355,7 +355,6 @@ class TopicOgImageGenerator
     )
     nil
   end
-
   def escape_xml(text)
     text
       .to_s
@@ -373,22 +372,16 @@ class TopicOgImageGenerator
 
       File.write(svg_path, build_svg(asset_directory: dir))
 
-      ImageMagick.magick(
-        "-background",
-        "none",
-        "-size",
-        "#{OG_WIDTH}x#{OG_HEIGHT}",
-        "MSVG:#{svg_path}",
-        "-depth",
-        "8",
-        "-define",
-        "png:compression-level=9",
-        png_path,
-        operation: :topic_og_render,
+      Vips.run(
+        "vips",
+        "flatten",
+        svg_path,
+        "#{png_path}[compression=9]",
         read: [dir],
         write: [dir],
         nice: 10,
         timeout: 20,
+        allow_untrusted: true,
       )
 
       return nil unless File.exist?(png_path)
