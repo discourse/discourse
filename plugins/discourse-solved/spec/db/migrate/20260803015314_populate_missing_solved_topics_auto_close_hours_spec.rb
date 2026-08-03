@@ -23,9 +23,9 @@ RSpec.describe PopulateMissingSolvedTopicsAutoCloseHours do
 
     described_class.new.up
 
-    expect(
-      CategoryCustomField.exists?(category:, name: "solved_topics_auto_close_hours"),
-    ).to eq(false)
+    expect(CategoryCustomField.exists?(category:, name: "solved_topics_auto_close_hours")).to eq(
+      false,
+    )
   end
 
   context "when the site is an existing install" do
@@ -42,16 +42,27 @@ RSpec.describe PopulateMissingSolvedTopicsAutoCloseHours do
         "enable_accepted_answers" => "true",
         "solved_topics_auto_close_hours" => "72",
       )
+      null_category = Fabricate(:category)
+      null_category.upsert_custom_fields("enable_accepted_answers" => "true")
+      CategoryCustomField.create!(
+        category: null_category,
+        name: "solved_topics_auto_close_hours",
+        value: nil,
+      )
       regular_category = Fabricate(:category)
 
       2.times { described_class.new.up }
 
       expect(
         CategoryCustomField.where(
-          category: [solved_category, configured_category, regular_category],
+          category: [solved_category, configured_category, null_category, regular_category],
           name: "solved_topics_auto_close_hours",
         ).pluck(:category_id, :value),
-      ).to contain_exactly([solved_category.id, "0"], [configured_category.id, "72"])
+      ).to contain_exactly(
+        [solved_category.id, "0"],
+        [configured_category.id, "72"],
+        [null_category.id, "0"],
+      )
     end
 
     it "sets missing fields to zero for every category when solved is allowed globally" do
@@ -63,15 +74,25 @@ RSpec.describe PopulateMissingSolvedTopicsAutoCloseHours do
       first_category = Fabricate(:category)
       second_category = Fabricate(:category)
       second_category.upsert_custom_fields("solved_topics_auto_close_hours" => "24")
+      null_category = Fabricate(:category)
+      CategoryCustomField.create!(
+        category: null_category,
+        name: "solved_topics_auto_close_hours",
+        value: nil,
+      )
 
       described_class.new.up
 
       expect(
         CategoryCustomField.where(
-          category: [first_category, second_category],
+          category: [first_category, second_category, null_category],
           name: "solved_topics_auto_close_hours",
         ).pluck(:category_id, :value),
-      ).to contain_exactly([first_category.id, "0"], [second_category.id, "24"])
+      ).to contain_exactly(
+        [first_category.id, "0"],
+        [second_category.id, "24"],
+        [null_category.id, "0"],
+      )
     end
   end
 end
