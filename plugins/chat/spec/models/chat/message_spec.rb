@@ -675,7 +675,9 @@ describe Chat::Message do
           height: 300,
           extension: "jpg",
         )
-      message.update!(message: "look ![](#{image.short_url})")
+      message.message = "look ![](#{image.short_url})"
+      message.cook
+      message.save!
       message.uploads = [image]
       expect(message.to_markdown).to eq("look ![](#{image.short_url})")
     end
@@ -1024,14 +1026,14 @@ describe Chat::Message do
     end
   end
 
-  describe "#inline_upload_ids" do
-    it "returns only uploads referenced inline in the body, not attachments" do
+  describe "#attachment_uploads" do
+    it "returns only uploads not rendered inline in cooked" do
       inline = Fabricate(:upload)
       attachment = Fabricate(:upload)
       message = Fabricate(:chat_message, message: "see ![](#{inline.short_url})")
       UploadReference.create!(target: message, upload: inline)
       UploadReference.create!(target: message, upload: attachment)
-      expect(message.reload.inline_upload_ids).to contain_exactly(inline.id)
+      expect(message.reload.attachment_uploads).to contain_exactly(attachment)
     end
   end
 end

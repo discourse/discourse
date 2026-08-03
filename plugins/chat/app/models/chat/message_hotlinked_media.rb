@@ -17,12 +17,7 @@ module Chat
          scopes: false
 
     def self.normalize_src(src, reset_scheme: true)
-      uri = Addressable::URI.heuristic_parse(src)
-      uri.normalize!
-      uri.scheme = nil if reset_scheme
-      uri.to_s
-    rescue URI::Error, Addressable::URI::InvalidURIError
-      src
+      PostHotlinkedMedia.normalize_src(src, reset_scheme: reset_scheme)
     end
   end
 end

@@ -20,10 +20,76 @@ module Chat
 
     def run!
       post_process_oneboxes
+      process_hotlinked_images
       process_thumbnails
       post_process_videos
       add_lightbox_to_images
+      reconcile_upload_references
       DiscourseEvent.trigger(:chat_message_processed, @doc, @model)
+    end
+
+    # Swaps external img srcs for uploads recorded in chat_message_hotlinked_media.
+    # Replaces the mixin implementation, which requires @post; post_process_oneboxes
+    # also dispatches here for onebox-injected images. Unlike posts, a failed or
+    # oversized download keeps the hotlinked src rather than a placeholder.
+    def process_hotlinked_image(img)
+      normalized_src =
+        Chat::MessageHotlinkedMedia.normalize_src(
+          img["src"] || img[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR],
+        )
+      info = hotlinked_map[normalized_src]
+
+      if info&.downloaded? && (upload = info.upload)
+        img["src"] = UrlHelper.cook_url(upload.url, secure: @should_secure_uploads)
+        img["data-base62-sha1"] = upload.base62_sha1
+        img["data-dominant-color"] = upload.dominant_color(calculate_if_missing: true).presence
+        img.delete(PrettyText::BLOCKED_HOTLINKED_SRC_ATTR)
+      end
+
+      true
+    end
+
+    def process_hotlinked_images
+      extract_images.each { |img| process_hotlinked_image(img) }
+    end
+
+    # Uploads rendered inline in the processed doc need an UploadReference to
+    # survive Jobs::CleanUpUploads; a hotlinked-media upload that dropped out of
+    # the doc no longer needs one. Attachment references are never touched here.
+    # Runs last: post_process_videos' ensure_exist! calls prune concurrently-held
+    # references.
+    def reconcile_upload_references
+      in_doc_sha1s =
+        @doc
+          .css("img[data-base62-sha1]")
+          .filter_map { |img| Upload.sha1_from_base62_encoded(img["data-base62-sha1"]) }
+          .uniq
+      in_doc_ids = in_doc_sha1s.empty? ? [] : Upload.where(sha1: in_doc_sha1s).pluck(:id)
+
+      existing_ids = UploadReference.where(target: @model).pluck(:upload_id)
+      to_add = in_doc_ids - existing_ids
+      to_remove = (existing_ids & hotlinked_upload_ids) - in_doc_ids
+      return if to_add.empty? && to_remove.empty?
+
+      if to_add.any?
+        now = Time.zone.now
+        UploadReference.insert_all(
+          to_add.map do |upload_id|
+            {
+              upload_id: upload_id,
+              target_type: Chat::Message.polymorphic_name,
+              target_id: @model.id,
+              created_at: now,
+              updated_at: now,
+            }
+          end,
+        )
+      end
+
+      UploadReference.where(target: @model, upload_id: to_remove).delete_all if to_remove.any?
+
+      @model.association(:upload_references).reset
+      @model.association(:uploads).reset
     end
 
     def process_thumbnails
@@ -77,6 +143,14 @@ module Chat
             img["class"] = "#{img["class"]} lightbox".strip
           end
         end
+    end
+
+    def hotlinked_map
+      @hotlinked_map ||= @model.hotlinked_media.preload(:upload).index_by(&:url)
+    end
+
+    def hotlinked_upload_ids
+      hotlinked_map.values.select(&:downloaded?).filter_map(&:upload_id)
     end
 
     def large_images

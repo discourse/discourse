@@ -26,11 +26,11 @@ module Jobs
       def pull
         chat_message = ::Chat::Message.find_by(id: @chat_message_id)
         return if chat_message.nil? || chat_message.cooked.blank?
-        # Don't wipe content for system/webhook messages where cooked is hand-written.
+        # Don't re-cook system/webhook messages whose cooked is hand-written.
         return if chat_message.message.blank?
 
         hotlinked_map = chat_message.hotlinked_media.preload(:upload).index_by(&:url)
-        uploads_this_run = []
+        needs_recook = false
 
         extract_images(::Nokogiri::HTML5.fragment(chat_message.cooked)).each do |img|
           original_src = img["src"].presence || img[::PrettyText::BLOCKED_HOTLINKED_SRC_ATTR]
@@ -38,77 +38,35 @@ module Jobs
           next if !should_download?(download_src)
 
           normalized_src = ::Chat::MessageHotlinkedMedia.normalize_src(download_src)
-          next if hotlinked_map[normalized_src] # already attempted (success or terminal failure)
+          if (existing = hotlinked_map[normalized_src])
+            # A still-external img matching a downloaded row means the localizing
+            # re-cook was lost (or hasn't run) — trigger it again. Terminal
+            # failures aren't retried.
+            needs_recook = true if existing.downloaded?
+            next
+          end
 
           status, upload = attempt_download(download_src, chat_message.last_editor_id)
           record = upsert_record(chat_message, normalized_src, status, upload)
           hotlinked_map[normalized_src] = record if record
-          uploads_this_run << upload if upload && record&.downloaded?
+          needs_recook = true if upload && record&.downloaded?
         rescue => e
           Rails.logger.error(
             "Failed to pull hotlinked image (#{download_src}) for chat message #{@chat_message_id}\n#{e.message}\n#{e.backtrace.join("\n")}",
           )
         end
 
-        # Build the rewrite map from ALL successful records (this run + prior),
-        # so a re-introduced URL gets rewritten from cache too.
-        uploads_by_url =
-          hotlinked_map.each_with_object({}) do |(url, record), acc|
-            acc[url] = record.upload if record.downloaded? && record.upload
-          end
-        return cleanup_orphans(uploads_this_run) if uploads_by_url.empty?
+        return if !needs_recook
 
-        new_raw =
-          ::InlineUploads.replace_hotlinked_image_urls(raw: chat_message.message) do |src|
-            uploads_by_url[::Chat::MessageHotlinkedMedia.normalize_src(src)]
-          end
-
-        # No raw change means the rewrite couldn't reference what we downloaded
-        # (e.g. the image came from an onebox/raw HTML img, not markdown). Destroy
-        # any upload we created this run so we don't leak an unreferenced upload;
-        # the terminal tracking row stays so we don't re-download on every edit.
-        return cleanup_orphans(uploads_this_run) if new_raw == chat_message.message
-
-        # Conditional update — bail if the message changed under us (concurrent
-        # user edit). The next ProcessMessage from that edit re-enqueues us, and
-        # it will reuse the uploads we created via the cached tracking rows.
-        affected =
-          ::Chat::Message.where(id: chat_message.id, message: chat_message.message).update_all(
-            message: new_raw,
-            updated_at: Time.zone.now,
-          )
-        return if affected.zero?
-
-        new_upload_ids = uploads_by_url.values.compact.map(&:id)
-        if new_upload_ids.any?
-          # Reload to pick up any concurrently-added UploadReferences before
-          # ensure_exist!'s destructive prune.
-          chat_message.reload
-          ::UploadReference.ensure_exist!(
-            upload_ids: (chat_message.upload_ids + new_upload_ids).uniq,
-            target_type: ::Chat::Message.polymorphic_name,
-            target_id: chat_message.id,
-          )
-        end
-
-        # Re-cook through ProcessMessage so cooked reflects the rewritten raw —
-        # both for fresh downloads and for cache-only rewrites of a re-introduced
-        # URL. skip_pull_hotlinked_images prevents an enqueue loop.
+        # MessageProcessor localizes the downloaded images in cooked and
+        # reconciles upload references. skip_pull_hotlinked_images prevents an
+        # enqueue loop.
         ::Jobs.enqueue(
           ::Jobs::Chat::ProcessMessage,
           chat_message_id: chat_message.id,
           skip_pull_hotlinked_images: true,
           skip_notifications: true,
         )
-      end
-
-      # Destroy uploads created this run that never got referenced (the rewrite
-      # couldn't place them). Returns nil so callers can `return cleanup_orphans(...)`.
-      def cleanup_orphans(uploads)
-        uploads.each do |upload|
-          upload.destroy if ::UploadReference.where(upload_id: upload.id).none?
-        end
-        nil
       end
 
       # Insert tracking row, tolerating a concurrent run that inserted it first.

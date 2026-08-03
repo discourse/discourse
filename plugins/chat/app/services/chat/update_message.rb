@@ -115,9 +115,7 @@ module Chat
 
       return if uploads&.size != params.upload_ids.to_a.size
 
-      # Client sends only attachment ids; union in inline body uploads so an edit
-      # can't prune their references (dropping the image from the body drops it).
-      new_upload_ids = (uploads.map(&:id) + message.inline_upload_ids).uniq
+      new_upload_ids = uploads.map(&:id)
       existing_upload_ids = message.upload_ids
       difference = (existing_upload_ids + new_upload_ids) - (existing_upload_ids & new_upload_ids)
       return if !difference.any?

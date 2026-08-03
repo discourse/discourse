@@ -164,6 +164,7 @@ after_initialize do
     Category.prepend Chat::CategoryExtension
     Reviewable.prepend Chat::ReviewableExtension
     Bookmark.prepend Chat::BookmarkExtension
+    Upload.prepend Chat::UploadExtension
     User.prepend Chat::UserExtension
     Group.prepend Chat::GroupExtension
     Plugin::Instance.prepend Chat::PluginInstanceExtension
