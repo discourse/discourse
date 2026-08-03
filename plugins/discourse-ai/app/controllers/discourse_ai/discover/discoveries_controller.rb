@@ -70,7 +70,7 @@ module DiscourseAi
       end
 
       def check_permissions
-        if ai_discover_agent.nil? || current_user.nil? ||
+        if !SiteSetting.ai_discover_enabled || ai_discover_agent.nil? || current_user.nil? ||
              !current_user.in_any_groups?(ai_discover_agent.allowed_group_ids.to_a)
           raise Discourse::InvalidAccess.new
         end
