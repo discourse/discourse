@@ -531,6 +531,7 @@ te:
         email: "ఈమెయిల్"
         name: "పేరు"
         fields: "ఫీల్డ్స్"
+        penalty_forever: "ఎప్పటికీ"
         reject_reason: "కారణం"
         scrubbed_reason: "కారణం"
         scrub_record:

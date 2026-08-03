@@ -534,6 +534,7 @@ sl:
         email: "E-naslov"
         name: "Polno ime"
         fields: "Polja"
+        penalty_forever: "Za vedno"
         reject_reason: "Razlog"
         scrubbed_reason: "Razlog"
         scrub_record:

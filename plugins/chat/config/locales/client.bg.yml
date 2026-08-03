@@ -44,6 +44,8 @@ bg:
       cancel: "Прекрати"
       cancel_reply: "Отмяна на отговора"
       chat_channels: "Канали"
+      pinned_bar:
+        title: "Закована"
       pinned: "Закована"
       browse_all_channels: "Преглед на всички канали"
       move_to_channel:

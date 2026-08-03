@@ -697,6 +697,7 @@ sr:
         email: "E-mail"
         name: "Ime foruma"
         fields: "Polja"
+        penalty_forever: "Zauvek"
         reject_reason: "Razlog"
         scrubbed_reason: "Razlog"
         scrub_record:

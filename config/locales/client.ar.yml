@@ -1138,6 +1138,8 @@ ar:
         email: "البريد الإلكتروني"
         name: "الاسم"
         fields: "الحقول"
+        silence_reason: "سبب الكتم"
+        penalty_forever: "للأبد"
         reject_reason: "السبب"
         scrubbed_by: "تم تنقيح السجل من طرف"
         scrubbed_reason: "السبب"

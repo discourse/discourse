@@ -964,6 +964,8 @@ ru:
         email: "Эл. почта"
         name: "Имя"
         fields: "Поля"
+        silence_reason: "Причина заморозки"
+        penalty_forever: "Навсегда"
         reject_reason: "Причина"
         scrubbed_by: "Запись удалена пользователем"
         scrubbed_reason: "Причина"

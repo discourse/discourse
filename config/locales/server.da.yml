@@ -3245,7 +3245,6 @@ da:
           complete: "Bruger slettet."
         block:
           title: "Slet og Blokér Bruger"
-          description: "Brugeren vil blive slettet, og vi vil blokere deres IP og e-mail-adresse."
       confirm_spam:
         title: "Ja"
       not_spam:

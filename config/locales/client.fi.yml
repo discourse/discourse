@@ -735,6 +735,8 @@ fi:
         email: "Sähköposti"
         name: "Nimi"
         fields: "Kentät"
+        silence_reason: "Hiljennyksen syy"
+        penalty_forever: "Ikuisesti"
         reject_reason: "Syy"
         scrubbed_by: "Tietueen puhdisti"
         scrubbed_reason: "Syy"

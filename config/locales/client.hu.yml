@@ -831,6 +831,8 @@ hu:
         email: "E-mail"
         name: "Név"
         fields: "Mezők"
+        silence_reason: "Némítás oka"
+        penalty_forever: "Örökké"
         reject_reason: "Ok"
         scrubbed_by: "Rekordot törölte:"
         scrubbed_reason: "Ok"

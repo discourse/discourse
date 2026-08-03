@@ -450,6 +450,7 @@ th:
         username: "ชื่อผู้ใช้"
         email: "อีเมล"
         name: "ชื่อ"
+        penalty_forever: "ตลอดไป"
         reject_reason: "เหตุผล"
         scrubbed_reason: "เหตุผล"
         scrub_record:

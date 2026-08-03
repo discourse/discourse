@@ -79,6 +79,8 @@ ar:
         close: "إغلاق الرسائل المثبتة"
         pinned_by_you: "أنت ثبتها"
         pinned_by_user: "ثبتها %{username}"
+      pinned_bar:
+        title: "مثبَّت"
       no_pinned_messages: "لا توجد رسائل مثبتة في هذه القناة."
       pin_message: "تثبيت الرسالة"
       unpin_message: "إلغاء تثبيت الرسالة"

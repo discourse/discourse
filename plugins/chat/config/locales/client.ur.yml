@@ -75,6 +75,8 @@ ur:
         close: "پن کیے گئے پیغامات بند کریں"
         pinned_by_you: "آپ نے پن کیا"
         pinned_by_user: "%{username} نے پن کیا"
+      pinned_bar:
+        title: "پِن ہوا"
       no_pinned_messages: "اس چینل میں کوئی پن کیے گئے پیغامات نہیں ہیں۔"
       pin_message: "پن کیا پیغام"
       unpin_message: "پیغام کو ان پن کریں"

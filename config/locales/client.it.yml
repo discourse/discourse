@@ -735,6 +735,8 @@ it:
         email: "Email"
         name: "Nome"
         fields: "Campi"
+        silence_reason: "Motivo del silenzio"
+        penalty_forever: "Per sempre"
         reject_reason: "Motivo"
         scrubbed_by: "Record cancellato da"
         scrubbed_reason: "Motivo"

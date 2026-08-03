@@ -704,6 +704,7 @@ lt:
         email: "Epaštas"
         name: "Vardas"
         fields: "Laukai"
+        penalty_forever: "Am-inai"
         reject_reason: "Priežastis"
         scrubbed_by: "Įrašas išvalytas pagal"
         scrubbed_reason: "Priežastis"

@@ -8,7 +8,10 @@ fr:
   site_settings:
     chat_separate_sidebar_mode: "Afficher des modes de barre latérale distincts pour le forum et la discussion."
     chat_enabled: "Activer la discussion."
+    chat_pinned_messages: "Active les messages épinglés dans les canaux de chat."
+    enable_new_chat_reactions_popup: "Active la fenêtre contextuelle repensée des réactions aux messages du chat, qui indique qui a réagi et offre un défilement infini ainsi qu'une expérience mobile native."
     enable_public_channels: "Activer les canaux publics en fonction des catégories."
+    chat_allowed_groups: "Les utilisateurs de ces groupes peuvent utiliser le chat, à l'exception des utilisateurs anonymes, qui peuvent uniquement le consulter lorsqu'ils sont ajoutés à ce paramètre. Notez que les administrateurs et les modérateurs peuvent toujours accéder au chat."
     chat_channel_retention_days: "Les messages de discussion dans les canaux ordinaires seront conservés pendant ce nombre de jours. Fixez cette valeur sur « 0 » pour conserver les messages indéfiniment."
     chat_dm_retention_days: "Les messages de discussion dans les discussions privées seront conservés pendant ce nombre de jours. Fixez cette valeur sur « 0 » pour conserver les messages indéfiniment."
     chat_auto_silence_duration: "Nombre de minutes pendant lesquelles les utilisateurs seront mis en sourdine lorsqu'ils dépasseront la limite de création de messages de discussion. Réglez cette valeur sur « 0 » pour désactiver la mise en sourdine automatique."
@@ -19,9 +22,11 @@ fr:
     chat_duplicate_message_sensitivity: "Probabilité qu'un message dupliqué du même expéditeur soit bloqué dans un court laps de temps. Nombre décimal compris entre 0 et 1,0, 1,0 étant le paramètre le plus élevé (bloque les messages plus fréquemment dans un laps de temps plus court). Réglez cette valeur sur « 0 » pour autoriser les messages dupliqués."
     chat_minimum_message_length: "Nombre minimal de caractères pour un message de discussion."
     chat_allow_uploads: "Autoriser les téléversements dans les canaux de discussion publics et les canaux de messagerie directe."
+    chat_show_copy_button_on_codeblocks: "Affiche un bouton de copie sur les blocs de code dans les messages du chat."
     chat_archive_destination_topic_status: "Le statut que doit avoir le sujet de destination une fois l'archivage du canal terminé. Cela s'applique uniquement lorsque le sujet de destination est un nouveau sujet, et non un sujet existant."
     direct_message_enabled_groups: "Permettre aux utilisateurs de ces groupes de créer des discussions privées entre utilisateurs. Remarque : les responsables peuvent toujours créer des conversations privées et les utilisateurs pourront répondre aux conversations privées initiées par les utilisateurs qui sont autorisés à les créer."
     chat_message_flag_allowed_groups: "Les utilisateurs de ces groupes sont autorisés à signaler les messages de discussion. Notez que les administrateurs et les modérateurs peuvent toujours signaler les messages de discussion."
+    chat_pinning_messages_allowed_groups: "Les utilisateurs de ces groupes sont autorisés à épingler des messages de chat dans les canaux auxquels ils ont accès. Notez que les administrateurs et les modérateurs peuvent toujours épingler des messages de chat. Tout membre d'un chat de groupe ou d'un message direct peut y épingler des messages."
     max_mentions_per_chat_message: "Nombre maximum de notifications @name qu'un utilisateur peut utiliser dans un message de discussion."
     chat_max_direct_message_users: "Les utilisateurs ne peuvent pas ajouter plus que ce nombre d'autres utilisateurs lors de la création d'un nouveau message direct. Fixez cette valeur à 0 pour n'autoriser les messages que pour vous-même. Les responsables ne sont pas soumis à ce paramètre."
     chat_allow_archiving_channels: "Autoriser les responsables à archiver les messages dans un sujet lors de la fermeture d'un canal."
@@ -29,6 +34,8 @@ fr:
     chat_editing_grace_period_max_diff_low_trust: "Nombre maximal de modifications de caractères autorisées pendant la période de grâce de modification de la discussion. Si d'autres modifications sont apportées, l'étiquette (modifiée) est affichée à côté du message de discussion (niveaux de confiance 0 et 1)."
     chat_editing_grace_period_max_diff_high_trust: "Nombre maximal de modifications de caractères autorisées pendant la période de grâce de modification de la discussion. Si d'autres modifications sont apportées, l'étiquette (modifiée) est affichée à côté du message de discussion (niveaux de confiance 2 et supérieurs)."
     chat_preferred_index: "Onglet préféré lors du chargement de /chat."
+    allow_chat_in_anonymous_mode: "Activez ce paramètre pour permettre aux utilisateurs qui parcourent votre site de manière anonyme d'utiliser le chat. Ce paramètre nécessite l'activation de {{setting:allow_anonymous_mode}}."
+    chat_search_enabled: "Activez ce paramètre pour permettre aux utilisateurs de rechercher des messages de chat."
     errors:
       chat_default_channel: "Le canal de discussion par défaut doit être un canal public."
       direct_message_enabled_groups_invalid: "Vous devez spécifier au moins un groupe pour ce paramètre. Si vous ne souhaitez pas que quiconque, à l'exception des responsables, envoie des messages directs, choisissez le groupe des responsables."
@@ -61,6 +68,7 @@ fr:
       users_cant_be_added_to_channel: "Les utilisateurs ne peuvent pas être ajoutés à ce canal."
       user_cant_be_removed_from_channel: "L'utilisateur ne peut pas être supprimé de ce canal"
       channel_exists_for_category: "Un canal existe déjà pour cette catégorie et ce nom"
+      public_channels_disabled: "Impossible de créer le canal, car les canaux publics sont désactivés. Un administrateur peut activer le paramètre de site « Activer les canaux publics »."
       channel_new_message_disallowed:
         archived: "Le canal est archivé, aucun nouveau message ne peut être envoyé"
         closed: "Le canal est fermé, aucun nouveau message ne peut être envoyé"
@@ -70,6 +78,7 @@ fr:
         closed: "Le canal est fermé, aucun message ne peut être modifié ou supprimé"
         read_only: "Le canal est en lecture seule, aucun message ne peut être modifié ou supprimé"
       user_cannot_send_message: "Vous ne pouvez pas envoyer de messages pour le moment."
+      user_not_in_channel: "Vous devez être membre de ce canal."
       rate_limit_exceeded: "Dépassement de la limite de messages de discussion pouvant être envoyés dans les 30 secondes"
       auto_silence_from_flags: "Message de discussion signalé avec un score suffisamment élevé pour désactiver l'utilisateur."
       channel_cannot_be_archived: "Le canal ne peut pas être archivé pour le moment, il doit être soit fermé, soit ouvert à l'archivage."
@@ -101,12 +110,22 @@ fr:
       thread_invalid_for_channel: "Le fil ne fait pas partie du canal fourni."
       thread_does_not_match_parent: "Le fil ne correspond pas au message parent."
       invalid_direct_message: "Vous n'avez pas l'autorisation de créer ce message direct."
+      pin_limit_reached: "Ce canal a atteint le nombre maximal de messages épinglés (%{limit})."
+      message_already_pinned: "Ce message est déjà épinglé."
+      message_not_pinned: "Ce message n'est pas épinglé."
     reviewables:
       message_already_handled: "Merci, mais nous avons déjà examiné ce message et déterminé qu'il n'a pas besoin d'être signalé à nouveau."
       actions:
+        message_actions:
+          bundle_title: "Que souhaitez-vous faire du message ?"
         no_action_message:
           title: "Aucune action"
+          description: "Laisser le message en l'état."
+        delete_message:
+          title: "Supprimer le message"
+          description: "Supprimer définitivement le message."
         restore_message:
+          title: "Restaurer le message"
           description: "Restaurer le message pour que les utilisateurs puissent le voir."
         agree:
           title: "D'accord…"
@@ -129,12 +148,17 @@ fr:
           title: "Supprimer le message"
           description: "Supprimer le message pour que les utilisateurs ne puissent pas le voir."
         delete_and_agree:
+          title: "Ignorer le signalement et supprimer le message"
           description: "Ignorez le signalement en le supprimant de la file d'attente et supprimez le message."
         disagree_and_restore:
           title: "Refuser et restaurer le message"
           description: "Restaurer le message pour que tous les utilisateurs puissent le voir."
+        disagree:
+          title: "Conserver le message"
+          description: "Rejeter le signalement et laisser le message inchangé."
         ignore:
           title: "Ignorer le signalement"
+          description: "Retirer l'élément de la file d'attente sans intervenir."
       direct_messages:
         transcript_title: "Transcription des messages précédents dans le canal %{channel_name}"
         transcript_body: "Pour vous donner plus de contexte, nous avons inclus une transcription des messages précédents de cette conversation (jusqu'à dix) :\n\n%{transcript}"
@@ -183,6 +207,7 @@ fr:
         is_already_in_use: "est déjà utilisé"
     bookmarkable:
       notification_title_channel: "message dans %{channel_name}"
+      notification_title_direct_message: "message avec %{channel_name}"
     personal_chat: "discussion privée"
     onebox:
       inline_to_message: "Message #%{message_id} par %{username} - #%{chat_channel}"
@@ -213,6 +238,7 @@ fr:
     actions:
       chat_reply:
         title: Répondre
+        placeholder: Répondre...
   discourse_automation:
     scriptables:
       send_chat_message:
@@ -221,6 +247,16 @@ fr:
     chat_approval:
       default_approve_label: "Approuver"
       default_deny_label: "Refuser"
+    errors:
+      send_chat_message:
+        invalid_params: "Paramètres non valides : %{errors}"
+        channel_not_found: "Canal introuvable : %{channel_id}"
+        failed: "Échec de l'envoi du message de chat."
+      chat_approval:
+        channel_not_found: "Échec de l'envoi du message de chat : canal %{channel_id} introuvable."
+        invalid_params: "Échec de l'envoi du message de chat : %{errors}"
+        failed: "Échec de l'envoi du message de chat : %{steps}"
+        timeout_must_be_positive: "Le délai d'expiration, en minutes, doit être supérieur à 0."
   reviewable_score_types:
     needs_review:
       title: "Nécessite un examen"
@@ -244,18 +280,43 @@ fr:
         private_email:
           one: "[%{site_name}] Nouveau message"
           other: "[%{site_name}] Nouveaux messages"
+        private_email_improved:
+          one: "Nouveau message"
+          other: "Nouveaux messages"
         watched_thread:
           one: "[%{site_name}] Nouveau message dans le fil %{channel}"
           other: "[%{site_name}] Nouveaux messages dans le fil %{channel}"
+        watched_thread_improved:
+          one: "Nouveau message dans le fil de %{channel}"
+          other: "Nouveaux messages dans le fil de %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Nouveaux messages dans le fil de %{channel} et dans %{count} autre canal"
+          other: "[%{site_name}] Nouveaux messages dans le fil de %{channel} et dans %{count} autres canaux"
+        watched_threads_improved:
+          one: "Nouveaux messages dans le fil de %{channel} et dans %{count} autre canal"
+          other: "Nouveaux messages dans le fil de %{channel} et dans %{count} autres canaux"
         chat_dm_1:
           one: "[%{site_name}] Nouveau message de %{name}"
           other: "[%{site_name}] Nouveaux messages de %{name}"
+        chat_dm_1_improved:
+          one: "Nouveau message de %{name}"
+          other: "Nouveaux messages de %{name}"
         chat_dm_2: "[%{site_name}] Nouveaux messages de %{name_1} et de %{name_2}"
+        chat_dm_2_improved: "Nouveaux messages de %{name_1} et %{name_2}"
+        chat_dm_3_or_more: "[%{site_name}] Nouveaux messages de %{name} et de %{count} autres canaux de messagerie directe"
+        chat_dm_3_or_more_improved: "Nouveaux messages de %{name} et de %{count} autres canaux de messagerie directe"
         chat_channel_1:
           one: "[%{site_name}] Nouveau message dans %{channel}"
           other: "[%{site_name}] Nouveaux messages dans %{channel}"
+        chat_channel_1_improved:
+          one: "Nouveau message dans %{channel}"
+          other: "Nouveaux messages dans %{channel}"
         chat_channel_2: "[%{site_name}] Nouveaux messages dans %{channel_1} et %{channel_2}"
+        chat_channel_2_improved: "Nouveaux messages dans %{channel_1} et %{channel_2}"
+        chat_channel_3_or_more: "[%{site_name}] Nouveaux messages dans %{channel} et %{count} autres canaux"
+        chat_channel_3_or_more_improved: "Nouveaux messages dans %{channel} et %{count} autres canaux"
         chat_channel_and_dm: "[%{site_name}] Nouveaux messages dans %{channel} de la part de %{name}"
+        chat_channel_and_dm_improved: "Nouveaux messages dans %{channel} et provenant de %{name}"
       unsubscribe: "Ce résumé de discussion est envoyé à partir de %{site_link} lorsque vous vous absentez. Changez vos %{email_preferences_link} ou %{unsubscribe_link} pour vous désabonner."
       unsubscribe_no_link: "Ce résumé de discussion est envoyé à partir de %{site_link} lorsque vous vous absentez. Changez vos %{email_preferences_link}."
       view_messages:
@@ -264,8 +325,10 @@ fr:
       view_more:
         one: "Voir %{count} message supplémentaire"
         other: "Voir %{count} messages supplémentaires"
+      your_chat_settings: "préférences d'e-mail du chat"
   unsubscribe:
     chat_summary:
+      select_title: "Définir la fréquence des e-mails récapitulatifs du chat :"
       never: Jamais
       when_away: Seulement en cas d'absence
   category:

@@ -29,6 +29,8 @@ vi:
       create: "Tạo"
       cancel: "Hủy"
       chat_channels: "Các kênh"
+      pinned_bar:
+        title: "Đã ghim"
       pinned: "Đã ghim"
       browse_all_channels: "Xem tất cả kênh"
       delete_messages:

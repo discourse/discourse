@@ -4997,7 +4997,6 @@ sk:
           complete: "Používateľ odstránený."
         block:
           title: "Odstránenie a blokovanie používateľa"
-          description: "Používateľ bude vymazaný a my zablokujeme jeho IP a e-mailovú adresu."
           complete: "Používateľ vymazaný a zablokovaný."
       confirm_spam:
         title: "Áno"

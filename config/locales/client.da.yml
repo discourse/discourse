@@ -687,6 +687,7 @@ da:
         email: "Email"
         name: "Navn"
         fields: "Felter"
+        penalty_forever: "Forevigt"
         reject_reason: "Årsag"
         scrubbed_reason: "Begrundelse"
         scrubbed_reject_reason: "Årsag til brugerafvisning"

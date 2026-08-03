@@ -75,6 +75,8 @@ de:
         close: "Angeheftete Nachrichten schließen"
         pinned_by_you: "Angeheftet von dir"
         pinned_by_user: "Angeheftet von %{username}"
+      pinned_bar:
+        title: "Angeheftet"
       no_pinned_messages: "Keine angehefteten Nachrichten in diesem Kanal."
       pin_message: "Nachricht anheften"
       unpin_message: "Nachricht loslösen"

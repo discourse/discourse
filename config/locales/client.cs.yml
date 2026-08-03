@@ -885,6 +885,8 @@ cs:
         email: "Email"
         name: "Jméno"
         fields: "Pole"
+        silence_reason: "Důvod ztišení"
+        penalty_forever: "Navždy"
         reject_reason: "Důvod"
         scrubbed_by: "Záznam očistil/a"
         scrubbed_reason: "Reason"

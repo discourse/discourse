@@ -706,6 +706,8 @@ vi:
         email: "Email"
         name: "Tên"
         fields: "Trường tùy biến"
+        silence_reason: "Lý do hạn chế"
+        penalty_forever: "Vĩnh viễn"
         reject_reason: "Lý do"
         scrubbed_by: "Bản ghi đã bị xóa bởi"
         scrubbed_reason: "Lý do"

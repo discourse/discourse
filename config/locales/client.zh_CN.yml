@@ -844,6 +844,11 @@ zh_CN:
         email: "电子邮件"
         name: "姓名"
         fields: "字段"
+        silenced_until: "禁言至"
+        silence_reason: "禁言原因"
+        suspended_until: "封禁至"
+        suspend_reason: "封禁原因"
+        penalty_forever: "永远"
         reject_reason: "原因"
         scrubbed_by: "记录清除者"
         scrubbed_reason: "原因"
@@ -4380,7 +4385,11 @@ zh_CN:
           language_notice: "请设置原帖子的语言，以便向读者显示翻译内容。"
           post_language: "帖子语言"
           topic_language: "话题标题语言"
+          save_post_language: "保存帖子语言"
+          save_topic_language: "保存话题标题语言"
           discard_language_change: "舍弃更改"
+          post_language_updated: "帖子语言已更新"
+          topic_language_updated: "话题标题语言已更新"
         success: "翻译已成功更新"
         post_language_selector:
           title: "帖子语言"
@@ -6293,6 +6302,7 @@ zh_CN:
             stats_and_thresholds:
               title: "统计数据和阈值"
         category_management:
+          title: "类别管理"
           create_category: "创建类别"
           tabs:
             settings: "设置"

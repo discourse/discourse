@@ -13,14 +13,22 @@ fr:
     openid_connect_authorize_scope: "Les autorisations envoyées au point de terminaison d'autorisation. Cela doit inclure « openid »."
     openid_connect_rp_initiated_logout: "Rediriger l'utilisateur vers end_session_endpoint après la déconnexion. Doit être supporté par votre fournisseur d'identité et inclus dans le document de découverte."
     openid_connect_rp_initiated_logout_redirect: "(facultatif) Le post_logout_redirect_uri qui sera transmis au point de terminaison de déconnexion. S'il est fourni, il doit être enregistré auprès du fournisseur d'identité."
+    openid_connect_rp_initiated_logout_include_client_id: "(Facultatif) Ajoute le client_id (paramètre openid_connect_client_id) comme paramètre de requête au point de terminaison de déconnexion."
     openid_connect_token_scope: "Les autorisations envoyées lors de la demande du point de terminaison du jeton. Les spécifications officielles ne l'exigent pas."
     openid_connect_error_redirects: "Si le rappel error_reason contient le premier paramètre, l'utilisateur sera redirigé vers l'adresse URL reprise dans le deuxième paramètre"
     openid_connect_allow_association_change: "Autoriser les utilisateurs à déconnecter et à reconnecter leurs comptes Discourse du fournisseur OpenID Connect"
     openid_connect_verbose_logging: "Consigne les informations d'authentification détaillées d'openid-connect dans « /logs ». Maintenez cette option désactivée pendant l'utilisation normale."
     openid_connect_authorize_parameters: "Paramètres de l'adresse URL qui seront inclus dans la redirection de /auth/oidc vers le point de terminaison d'autorisation de l'IDP"
+    openid_connect_overrides_email: "À chaque connexion, remplace l'adresse e-mail de l'utilisateur par la valeur fournie par OpenID Connect. Fonctionne comme le paramètre {{setting:auth_overrides_email}}, mais s'applique uniquement aux connexions OpenID Connect."
     openid_connect_claims: "Définir explicitement les revendications à utiliser avec les fournisseurs qui ne retransmettent pas les données en fonction des autorisations. (JSON)"
+    openid_connect_groups_claim: "Nom de la revendication du jeton OIDC contenant les groupes de l'utilisateur sous forme de tableau de chaînes. Laissez ce champ vide pour désactiver la synchronisation des groupes."
+    openid_connect_user_field_mappings: "Associe les revendications OIDC aux champs utilisateur de Discourse. Chaque entrée associe le nom d'une revendication OIDC à l'identifiant numérique d'un champ utilisateur de Discourse."
     openid_connect_match_by_email: "Utilisez l'adresse e-mail pour associer les authentifications OpenID Connect aux comptes utilisateur Discourse existants."
     openid_connect_use_pkce: "Activez la clé de preuve pour l'échange de codes (PKCE) pour l'authentification OpenID Connect."
+    openid_connect_mtls_client_cert: "Certificat client X.509 pour l'authentification client mTLS auprès du fournisseur OIDC. Pour activer mTLS, {{setting:openid_connect_mtls_client_key}} doit également être défini."
+    openid_connect_mtls_client_key: "Clé privée X.509 du certificat client mTLS. Pour activer mTLS, {{setting:openid_connect_mtls_client_cert}} doit également être défini."
+    openid_connect_mtls_client_key_passcode: "Phrase secrète de la clé privée mTLS (facultatif)"
   login:
     omniauth_error:
       openid_connect_discovery_error: Impossible de récupérer la configuration du fournisseur d'identité. Veuillez réessayer.
+      openid_connect_mtls_error: La configuration du certificat client mTLS présente un problème. Contactez un administrateur.
