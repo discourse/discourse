@@ -1,7 +1,21 @@
 import DiscourseRecommended from "@discourse/lint-configs/eslint";
+import noCrossGroupInternals from "./frontend/lint-rules/no-cross-group-internals.mjs";
 
 export default [
   ...DiscourseRecommended,
+  {
+    files: ["**/*.{js,gjs,ts,gts}"],
+    plugins: {
+      "discourse-local": {
+        rules: {
+          "no-cross-group-internals": noCrossGroupInternals,
+        },
+      },
+    },
+    rules: {
+      "discourse-local/no-cross-group-internals": "error",
+    },
+  },
   {
     rules: {
       "ember/template-no-capital-arguments": "off",
