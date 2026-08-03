@@ -35,7 +35,7 @@ import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
-import { and, or } from "discourse/truth-helpers";
+import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DPopupInputTip from "discourse/ui-kit/d-popup-input-tip";
 import DTextField from "discourse/ui-kit/d-text-field";
@@ -703,40 +703,6 @@ export default class ComposerContainer extends Component {
                         @outletArgs={{lazyHash model=this.composer.model}}
                       />
                     </span>
-
-                    {{#if this.composer.allowPreview}}
-                      <a
-                        href
-                        class="btn btn-default no-text mobile-preview"
-                        title={{i18n "composer.show_preview"}}
-                        {{on "click" this.composer.togglePreview}}
-                        aria-label={{i18n "composer.show_preview"}}
-                      >
-                        {{dIcon "desktop"}}
-                      </a>
-                    {{/if}}
-
-                    {{#if this.composer.isPreviewVisible}}
-                      <DButton
-                        @action={{this.composer.togglePreview}}
-                        @title="composer.hide_preview"
-                        @ariaLabel="composer.hide_preview"
-                        @icon="pencil"
-                        class="hide-preview"
-                      />
-                    {{/if}}
-                  {{/if}}
-
-                  {{#if (and this.composer.allowPreview this.site.desktopView)}}
-                    <DButton
-                      @action={{this.composer.togglePreview}}
-                      @translatedTitle={{this.composer.toggleText}}
-                      @icon="angles-left"
-                      class={{dConcatClass
-                        "btn-transparent btn-mini-toggle toggle-preview"
-                        (unless this.composer.isPreviewVisible "active")
-                      }}
-                    />
                   {{/if}}
                 </div>
               </div>
@@ -855,18 +821,6 @@ export default class ComposerContainer extends Component {
                       {{/if}}
                     </span>
                   </div>
-                {{/if}}
-
-                {{#if (and this.composer.allowPreview this.site.desktopView)}}
-                  <DButton
-                    @action={{this.composer.togglePreview}}
-                    @translatedTitle={{this.composer.toggleText}}
-                    @icon="angles-left"
-                    class={{dConcatClass
-                      "btn-transparent btn-small toggle-preview"
-                      (unless this.composer.isPreviewVisible "active")
-                    }}
-                  />
                 {{/if}}
               </div>
             {{/if}}

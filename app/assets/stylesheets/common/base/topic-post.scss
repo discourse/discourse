@@ -1866,6 +1866,17 @@ a.reply-to-tab {
     color: var(--primary-high);
   }
 
+  .post-notice-message {
+    flex: 1;
+    min-width: 0;
+
+    img:not(.emoji) {
+      max-width: 100%;
+      height: auto;
+      display: inline-block;
+    }
+  }
+
   p {
     display: inline;
     margin: 0;

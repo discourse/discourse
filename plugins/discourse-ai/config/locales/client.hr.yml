@@ -74,6 +74,21 @@ hr:
       translations:
         title: "Prijevodi"
         category_scope: "Kategorije"
+        model_progress:
+          detail:
+            columns:
+              locale: "Lokalizacija"
+              pending: "Na čekanju"
+              total: "Ukupno"
+          targets:
+            post:
+              title: "Postovi"
+            topic:
+              title: "Tema"
+            category:
+              title: "Kategorije"
+            tag:
+              title: "Oznake"
         stats:
           eta_minutes:
             one: "%{count} minuta"

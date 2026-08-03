@@ -26,6 +26,7 @@ module DiscoursePostEvent
     attributes :description
     attributes :description_html
     attributes :location
+    attributes :location_html
     attributes :watching_invitee
     attributes :chat_enabled
     attributes :livestream
@@ -148,8 +149,9 @@ module DiscoursePostEvent
     end
 
     def watching_invitee
-      if scope.current_user
-        watching_invitee = Invitee.find_by(user_id: scope.current_user.id, post_id: object.id)
+      user = scope.current_user
+      if user && can_display_current_user_invitee?(user)
+        watching_invitee = Invitee.find_by(user_id: user.id, post_id: object.id)
       end
 
       InviteeSerializer.new(watching_invitee, root: false, scope:) if watching_invitee
@@ -172,37 +174,14 @@ module DiscoursePostEvent
       can_display_invitee_details?
     end
 
+    def can_display_current_user_invitee?(user)
+      !object.private? || scope.can_act_on_discourse_post_event?(object) ||
+        object.user_in_invited_group?(user)
+    end
+
     def can_display_invitee_details?
       return @can_display_invitee_details if defined?(@can_display_invitee_details)
-
-      @can_display_invitee_details =
-        if !object.private? || scope.can_act_on_discourse_post_event?(object)
-          true
-        else
-          user = scope.current_user
-          if user && invited_user?(user)
-            true
-          else
-            visible_invited_groups?(user)
-          end
-        end
-    end
-
-    def visible_invited_groups?(user)
-      raw_invitees = Array(object.raw_invitees).uniq
-      return false if raw_invitees.blank?
-
-      Group
-        .visible_groups(user)
-        .members_visible_groups(user)
-        .where(name: raw_invitees)
-        .distinct
-        .count == raw_invitees.length
-    end
-
-    def invited_user?(user)
-      object.invitees.exists?(user_id: user.id) ||
-        user.groups.where(name: Array(object.raw_invitees)).exists?
+      @can_display_invitee_details = scope.can_display_invitee_details?(object)
     end
 
     def should_display_invitees
@@ -214,9 +193,20 @@ module DiscoursePostEvent
       object.url.present?
     end
 
+    def include_description_html?
+      object.description.present?
+    end
+
     def description_html
-      return if object.description.blank?
-      EventParser.linkify_description(object.description, post: object.post)
+      EventParser.cook_inline(object.description, post: object.post)
+    end
+
+    def include_location_html?
+      object.location.present?
+    end
+
+    def location_html
+      EventParser.cook_inline(object.location, post: object.post)
     end
   end
 end

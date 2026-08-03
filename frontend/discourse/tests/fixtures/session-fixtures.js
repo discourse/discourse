@@ -51,6 +51,7 @@ const sessionFixtures = {
         skip_new_user_tips: false,
         should_be_redirected_to_top: false,
         composition_mode: 0,
+        send_shortcut: "enter",
       },
       sidebar_sections: [
         {

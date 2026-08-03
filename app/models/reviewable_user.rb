@@ -12,9 +12,7 @@ class ReviewableUser < Reviewable
   end
 
   def build_combined_actions(actions, guardian, args)
-    if status == "rejected" && !payload&.dig("scrubbed_by")
-      build_action(actions, :scrub, client_action: "scrub")
-    end
+    build_action(actions, :scrub, client_action: "scrub") if guardian.is_admin? && scrubbable?
 
     suspect_pending = status == "pending" && is_a_suspect_user?
 
@@ -27,6 +25,9 @@ class ReviewableUser < Reviewable
           icon: "user-xmark",
           label: "reviewables.actions.confirm_spam.title",
         )
+
+      build_penalty_actions(actions, bundle:, silence: :silence_user, suspend: :suspend_user)
+
       delete_user_actions(actions, bundle, require_reject_reason: false)
     end
 
@@ -87,9 +88,9 @@ class ReviewableUser < Reviewable
         )
 
       self.payload = {
-        scrubbed_by: guardian.current_user.username,
-        scrubbed_reason: reason,
-        scrubbed_at:,
+        "scrubbed_by" => guardian.current_user.username,
+        "scrubbed_reason" => reason,
+        "scrubbed_at" => scrubbed_at,
       }
       save!
 
@@ -159,6 +160,15 @@ class ReviewableUser < Reviewable
 
   def is_a_suspect_user?
     reviewable_scores.any? { |rs| rs.reason == "suspect_user" }
+  end
+
+  private
+
+  def scrubbable?
+    username = payload&.dig("username")
+    return false if !rejected? || username.blank?
+
+    target.blank? || username != target.username
   end
 end
 

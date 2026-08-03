@@ -460,9 +460,7 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
       </template>
     );
 
-    assert
-      .dom("[data-name='my_enum'] select option[value='5']")
-      .hasAttribute("selected");
+    assert.form().field("my_enum").hasValue("5");
   });
 
   test("compact_list offers created entries again after they are removed", async function (assert) {

@@ -59,6 +59,13 @@ module UpcomingChanges
       SiteSetting.enable_local_logins && SiteSetting.enable_local_logins_via_email &&
         !SiteSetting.enable_discourse_connect
     end
+
+    # Pending-user reminders only fire when must_approve_users is on, so the
+    # change is irrelevant elsewhere, including when enabled: the overridden
+    # default has no effect on a site where nobody can be pending.
+    def self.should_display_update_pending_users_reminder_default?
+      SiteSetting.must_approve_users
+    end
   end
 
   def self.user_enabled_reasons

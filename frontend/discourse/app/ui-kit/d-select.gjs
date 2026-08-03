@@ -3,32 +3,45 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { isNone } from "@ember/utils";
-import { eq } from "discourse/truth-helpers";
+import { modifier } from "ember-modifier";
 import { i18n } from "discourse-i18n";
 
 export const NO_VALUE_OPTION = "__NONE__";
 
+function optionValue(value) {
+  return isNone(value) ? NO_VALUE_OPTION : String(value);
+}
+
+const claimSelectedAfterRender = modifier((element, [selected]) => {
+  if (selected) {
+    element.selected = true;
+  }
+});
+
 export class DSelectOption extends Component {
   get value() {
-    return isNone(this.args.value) ? NO_VALUE_OPTION : this.args.value;
+    return optionValue(this.args.value);
+  }
+
+  get isSelected() {
+    return optionValue(this.args.selected) === this.value;
   }
 
   <template>
     {{! https://github.com/emberjs/ember.js/issues/19115 }}
-    {{#if (eq @selected @value)}}
-      <option
-        class="d-select__option --selected"
-        value={{this.value}}
-        selected
-        ...attributes
-      >
-        {{yield}}
-      </option>
-    {{else}}
-      <option class="d-select__option" value={{this.value}} ...attributes>
-        {{yield}}
-      </option>
-    {{/if}}
+    <option
+      class={{if
+        this.isSelected
+        "d-select__option --selected"
+        "d-select__option"
+      }}
+      value={{this.value}}
+      selected={{this.isSelected}}
+      {{claimSelectedAfterRender this.isSelected}}
+      ...attributes
+    >
+      {{yield}}
+    </option>
   </template>
 }
 
@@ -69,7 +82,10 @@ export default class DSelect extends Component {
       {{on "input" this.handleInput}}
     >
       {{#if this.includeNone}}
-        <DSelectOption @value={{NO_VALUE_OPTION}}>
+        <DSelectOption
+          @value={{NO_VALUE_OPTION}}
+          @selected={{this.htmlSelectValue}}
+        >
           {{#if @nonePlaceholder}}
             {{@nonePlaceholder}}
           {{else}}

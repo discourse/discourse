@@ -145,6 +145,8 @@ let userOptionFields = [
   "notify_on_linked_posts",
   "push_notification_level",
   "seen_popups",
+  "send_shortcut",
+  "automatically_translate",
   "show_original_content",
   "sidebar_link_to_filtered_list",
   "sidebar_show_count_of_new_items",
@@ -154,6 +156,7 @@ let userOptionFields = [
   "timezone",
   "title_count_mode",
   "topics_unread_when_closed",
+  "understood_languages",
   "watched_precedence_over_muted",
 ];
 

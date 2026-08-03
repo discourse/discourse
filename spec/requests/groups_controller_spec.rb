@@ -743,6 +743,39 @@ RSpec.describe GroupsController do
     end
   end
 
+  describe "shared draft visibility" do
+    it "omits shared draft posts from posts and mentions endpoints", :aggregate_failures do
+      SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:staff]
+      shared_drafts_category = Fabricate(:category)
+      SiteSetting.shared_drafts_category = shared_drafts_category.id
+      shared_draft_topic =
+        Fabricate(
+          :topic,
+          title: "Secret Shared Draft Group Topic",
+          category: shared_drafts_category,
+        )
+      shared_draft_post =
+        Fabricate(
+          :post,
+          user: user,
+          topic: shared_draft_topic,
+          raw: "secret shared draft group post",
+        )
+      Fabricate(:shared_draft, topic: shared_draft_topic, category: Fabricate(:category))
+      GroupMention.create!(post: shared_draft_post, group: group)
+
+      sign_in(user2)
+      ["/groups/#{group.name}/posts.json", "/groups/#{group.name}/mentions.json"].each do |path|
+        get path
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["posts"]).to be_empty
+        expect(response.body).not_to include(shared_draft_topic.title)
+        expect(response.body).not_to include(shared_draft_post.raw)
+      end
+    end
+  end
+
   describe "#posts" do
     it "ensures the group can be seen" do
       sign_in(user)

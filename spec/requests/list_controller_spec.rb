@@ -1570,6 +1570,19 @@ RSpec.describe ListController do
       expect(response.status).to eq(200)
     end
 
+    it "does not disclose restricted topic titles through category route permalink fallbacks" do
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      private_topic =
+        Fabricate(:topic, category: private_category, title: "Restricted list fallback topic title")
+      Permalink.create!(url: "c/old-category/999", topic: private_topic)
+
+      get "/c/old-category/999"
+
+      expect(response).to have_http_status(:not_found)
+      expect(response.headers["Location"]).to be_nil
+      expect(response.body).not_to include(private_topic.title)
+    end
+
     context "with encoded slugs" do
       it "does not create a redirect loop" do
         category = Fabricate(:category)

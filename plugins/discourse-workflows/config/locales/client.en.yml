@@ -128,6 +128,14 @@ en:
       create_first_workflow: "Create your first workflow"
       empty_title: "%{username}, let's set up a workflow"
       empty_description: "Workflows automate tasks by connecting triggers, conditions, and actions into a visual flow"
+      search_placeholder: "Filter by name"
+      no_workflows_found: "No workflows match your filters"
+      tags:
+        manage: "Manage tags"
+        filter_label: "Filter by tags"
+        filter_by: "Filter the list by this tag"
+        no_results: "No tags found"
+        placeholder: "Search or create tags…"
       delete_confirm: "Are you sure you want to delete the workflow \"%{name}\"?"
       in_use_title: "Workflow in use"
       in_use_description: "This workflow cannot be deleted because it is called by the following workflows:"
@@ -371,10 +379,6 @@ en:
         field: "Field"
         operator: "Operator"
         value: "Value"
-        combinator:
-          title: "Match mode"
-          all: "All conditions must pass"
-          any: "Any condition can pass"
         operators:
           equals: "equals"
           not_equals: "does not equal"
@@ -653,6 +657,9 @@ en:
           category_ids: "Categories"
           category_ids_description: "Only trigger for topics in these categories. Leave empty to match all categories."
           category_ids_placeholder: "All categories"
+          combinator: "Match mode"
+          combinator_and: "All conditions must pass"
+          combinator_or: "Any condition can pass"
           include_subcategories: "Include subcategories"
         dynamic_values:
           badge_id: "a badge ID"

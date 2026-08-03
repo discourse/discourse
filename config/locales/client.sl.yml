@@ -1480,6 +1480,8 @@ sl:
         title: "Stran v ozadju prikazuje števec kot:"
         notifications: "Nova obvestila"
         contextual: "Nova vsebina na strani"
+      send_shortcut:
+        enter: "Enter"
       like_notification_frequency:
         title: "Obvesti o všečkih"
         always: "Vedno"
@@ -2013,6 +2015,8 @@ sl:
       medium_dark_tone: Srednje temna barva kože
       dark_tone: Temna barva kože
       default: Emojiji po meri
+    filter_controls:
+      reset: "Ponastavi"
     shared_drafts:
       title: "Skupni osnutki"
       destination_category: "Ciljna kategorija"
@@ -4265,6 +4269,8 @@ sl:
           enabled: "Vključeno"
           disabled: "Onemogočeno"
           reset: "Ponastavi"
+      duplicate_topic_titles:
+        allowed: "Dovoljeni"
       backups:
         title: "Varnostne kopije"
         menu:
@@ -4952,6 +4958,7 @@ sl:
         uploading: "Nalagam..."
         name: "Ime"
         group: "Skupina"
+        all_groups: "Vse skupine"
         image: "Slika"
         delete_confirm: "Ali ste prepričani, da hočete izbrisati emoji :%{name}:?"
         settings: "Nastavitve"

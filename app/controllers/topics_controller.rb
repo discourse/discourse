@@ -366,7 +366,8 @@ class TopicsController < ApplicationController
   end
 
   def destroy_timings
-    topic_id = params[:topic_id].to_i
+    topic = find_visible_topic_from_topic_id
+    topic_id = topic.id
 
     if params[:last].to_s == "1"
       PostTiming.destroy_last_for(current_user, topic_id: topic_id)
@@ -1109,7 +1110,7 @@ class TopicsController < ApplicationController
   def timings
     allowed_params = topic_params
 
-    topic_id = allowed_params[:topic_id].to_i
+    topic_id = find_visible_topic_from_topic_id.id
     topic_time = allowed_params[:topic_time].to_i
     timings = allowed_params[:timings].to_h || {}
 

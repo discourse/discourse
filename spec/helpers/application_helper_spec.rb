@@ -1407,4 +1407,14 @@ RSpec.describe ApplicationHelper do
       end
     end
   end
+
+  describe "#can_sign_up?" do
+    it "returns false when the site is in read only mode" do
+      expect(helper.can_sign_up?).to eq(true)
+
+      helper.instance_variable_set(:@readonly_mode, true)
+
+      expect(helper.can_sign_up?).to eq(false)
+    end
+  end
 end

@@ -3,6 +3,22 @@
   transform: rotate(45deg);
 }
 
+.c-navbar__pinned-messages-btn {
+  position: relative;
+
+  .d-icon {
+    transform: rotate(45deg);
+  }
+
+  &__unread-indicator {
+    @include chat-unread-indicator;
+    position: absolute;
+    inset-block-start: 5px;
+    inset-inline-end: 5px;
+    border: 2px solid var(--secondary);
+  }
+}
+
 .chat-pinned-messages-list {
   display: flex;
   flex-direction: column;
@@ -23,6 +39,21 @@
 .chat-pinned-messages-list__empty {
   padding: 2rem;
   text-align: center;
+  color: var(--primary-medium);
+}
+
+.chat-pinned-messages-list__footer {
+  position: sticky;
+  inset-block-end: 0;
+  margin-block-start: auto;
+  padding: var(--space-2);
+  background: var(--secondary);
+  border-top: 1px solid var(--content-border-color);
+}
+
+.chat-pinned-messages-list__dismiss,
+.chat-pinned-messages-list__show {
+  width: 100%;
   color: var(--primary-medium);
 }
 
@@ -80,24 +111,5 @@
   .d-icon {
     font-size: var(--font-down-2);
     transform: rotate(45deg);
-  }
-}
-
-.c-navbar__pinned-messages-btn {
-  position: relative;
-
-  .d-icon {
-    transform: rotate(45deg);
-  }
-
-  &__unread-indicator {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    width: 8px;
-    height: 8px;
-    background: var(--tertiary);
-    border-radius: 50%;
-    border: 2px solid var(--secondary);
   }
 }

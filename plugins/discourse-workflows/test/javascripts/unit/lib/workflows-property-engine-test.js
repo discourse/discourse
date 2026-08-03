@@ -40,6 +40,10 @@ module("Unit | Utility | workflows property engine", function () {
     assert.strictEqual(propertyLabel("action:topic", "title"), "Title");
     assert.strictEqual(propertyLabel(ifNodeType, "combinator"), "Match mode");
     assert.strictEqual(
+      propertyLabel("condition:filter", "combinator"),
+      "Match mode"
+    );
+    assert.strictEqual(
       propertyLabel("trigger:schedule", "minutesInterval"),
       "Minutes between triggers"
     );
@@ -193,6 +197,14 @@ module("Unit | Utility | workflows property engine", function () {
       "GET"
     );
     assert.strictEqual(
+      propertyOptionLabel(ifNodeType, "combinator", { value: "and" }),
+      "All conditions must pass"
+    );
+    assert.strictEqual(
+      propertyOptionLabel("condition:filter", "combinator", { value: "or" }),
+      "Any condition can pass"
+    );
+    assert.strictEqual(
       propertyOptionLabel(dataTableNodeType, "operation", {
         value: "insert",
       }),
@@ -282,6 +294,10 @@ module("Unit | Utility | workflows property engine", function () {
     );
     assert.true(
       fieldSupportsExpression({ type: "options", ui: { expression: true } })
+    );
+    assert.false(fieldSupportsExpression({ type: "boolean" }));
+    assert.true(
+      fieldSupportsExpression({ type: "boolean", ui: { expression: true } })
     );
   });
 

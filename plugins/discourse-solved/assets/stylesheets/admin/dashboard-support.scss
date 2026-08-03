@@ -5,7 +5,7 @@
 $db-bar-height: var(--space-2);
 
 .db-support__filter {
-  .select-kit.multi-select.category-selector {
+  .select-kit.multi-select.multiple-categories-selector {
     max-width: 220px;
   }
 }
@@ -45,8 +45,17 @@ $db-bar-height: var(--space-2);
     align-items: center;
     gap: var(--space-1);
     min-width: 0;
-    color: var(--primary);
-    cursor: help;
+    color: var(--primary-medium);
+
+    &:visited {
+      color: var(--primary-medium);
+    }
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: var(--primary);
+    }
 
     @container db-support-outcomes (width < 22rem) {
       grid-column: 1 / -1;

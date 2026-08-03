@@ -1793,6 +1793,9 @@ zh_TW:
         contextual: "新的頁面內容"
       bookmark_after_notification:
         title: "發送書籤提醒通知後："
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "使用者被讚時通知提醒"
         always: "總是"
@@ -2473,6 +2476,8 @@ zh_TW:
       default: 自訂表情符號
     filter_input:
       clear: "清除篩選"
+    filter_controls:
+      reset: "重置"
     shared_drafts:
       title: "共享草稿"
       notice: "此話題只對可以發布共享草稿的使用者可見。"
@@ -5718,6 +5723,8 @@ zh_TW:
         sidebar: "側選單"
         header_dropdown: "標題下拉選單"
         legacy: "舊版"
+      duplicate_topic_titles:
+        allowed: "允許的"
       backups:
         title: "備份"
         files_title: "備份檔案"
@@ -5934,7 +5941,6 @@ zh_TW:
           finish_install: "完成佈景主題安裝"
           last_attempt: "安裝過程未完成，最後一次嘗試："
           remote_branch: "分支名稱 (選填)"
-          public_key: "授予公鑰以進入Repo（倉庫）的訪問權限："
           install: "安裝"
           installed: "已安裝"
           install_popular: "熱門"
@@ -7134,6 +7140,7 @@ zh_TW:
         uploading: "上傳中..."
         name: "名稱"
         group: "群組"
+        all_groups: "所有群組"
         created_by: "建立者"
         image: "圖片"
         alt: "自訂表情符號預覽"

@@ -109,6 +109,10 @@ class PostRevisor
     @@tracked_topic_fields
   end
 
+  def self.valid_post_type?(post_type)
+    [Post.types[:regular], Post.types[:moderator_action], Post.types[:whisper]].include?(post_type)
+  end
+
   def self.track_topic_field(field, &block)
     tracked_topic_fields[field] = block
 
@@ -288,6 +292,10 @@ class PostRevisor
     @fields[:raw] = cleanup_whitespaces(@fields[:raw]) if @fields.has_key?(:raw)
     @fields[:user_id] = @fields[:user_id].to_i if @fields.has_key?(:user_id)
     @fields[:category_id] = @fields[:category_id].to_i if @fields.has_key?(:category_id)
+    if @fields.has_key?(:post_type)
+      @fields[:post_type] = @fields[:post_type].to_i
+      return false unless validate_post_type
+    end
     if @fields.has_key?(:tags) && PostRevisor.tag_change_noop?(@topic, @fields[:tags])
       @fields.delete(:tags)
     end
@@ -908,6 +916,13 @@ class PostRevisor
   end
 
   private
+
+  def validate_post_type
+    return true if self.class.valid_post_type?(@fields[:post_type])
+
+    @post.errors.add(:post_type, :invalid)
+    false
+  end
 
   def resolve_reply_to_change
     new_post_number = @fields[:reply_to_post_number]

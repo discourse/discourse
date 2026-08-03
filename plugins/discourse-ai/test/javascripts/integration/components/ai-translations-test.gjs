@@ -167,4 +167,65 @@ module("Integration | Component | AiTranslations", function (hooks) {
       .dom(".ai-translation-locale-progress__translated-value")
       .hasText("8", "the refreshed response is rendered");
   });
+
+  test("disables the toggle as soon as every supported language is removed", async function (assert) {
+    this.model = {
+      ...this.model,
+      enabled: false,
+      translation_enabled: false,
+    };
+    pretender.put(
+      "/admin/site_settings/content_localization_supported_locales",
+      () => response({})
+    );
+
+    await render(<template><AiTranslations @model={{this.model}} /></template>);
+
+    const toggle =
+      ".ai-translations__toggle-container .d-toggle-switch__checkbox";
+    assert
+      .dom(toggle)
+      .isNotDisabled("the toggle is usable while locales exist");
+
+    await click(".ai-translations__locale-input-row .setting-controls__undo");
+    assert
+      .dom(toggle)
+      .isDisabled("clearing the locale selection disables the toggle");
+    assert.dom(".ai-translations__toggle-disabled-tooltip").exists();
+
+    await click(".ai-translations__locale-input-row .setting-controls__ok");
+    assert
+      .dom(toggle)
+      .isDisabled("the toggle stays disabled after saving no locales");
+  });
+
+  test("shows the fixed backfill start date", async function (assert) {
+    this.owner.lookup("service:router").urlFor = () =>
+      "/admin/plugins/discourse-ai/ai-features/6/edit";
+    const backfillStartDate = "2026-07-01";
+    const formattedDate = new Date(backfillStartDate).toLocaleDateString(
+      undefined,
+      {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        timeZone: "UTC",
+      }
+    );
+    this.model = {
+      ...this.model,
+      backfill_enabled: true,
+      backfill_start_date: backfillStartDate,
+      hourly_rate: 50,
+    };
+
+    await render(<template><AiTranslations @model={{this.model}} /></template>);
+
+    assert
+      .dom(".ai-translations__stat-label")
+      .includesText(
+        formattedDate,
+        "the status uses the configured fixed cutoff date"
+      );
+  });
 });

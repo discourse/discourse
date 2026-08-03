@@ -1667,7 +1667,6 @@ pt_BR:
       enable_smart_lists: "Ativar listas inteligentes ao escrever no compositor"
       enable_defer: "Ativar tópicos marcados como não lidos"
       enable_markdown_monospace_font: "Usar fonte monoespacial no modo Markdown do compositor"
-      show_original_content: "Exibir conteúdo original em vez de conteúdo traduzido."
       experimental_sidebar:
         enable: "Ativar barra lateral"
         options: "Opções"
@@ -2157,6 +2156,9 @@ pt_BR:
         contextual: "Novo conteúdo da página"
       bookmark_after_notification:
         title: "Depois que uma notificação de lembrete de marcador é enviada:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Notificar ao receber curtida"
         always: "Sempre"
@@ -2957,7 +2959,7 @@ pt_BR:
     filter_input:
       clear: "Limpar filtro"
     filter_controls:
-      reset: "Redefinir filtro"
+      reset: "Redefinir"
       toggle: "Alternar filtros suspensos"
     d_icon_grid_picker:
       select_icon: "Selecionar ícone"
@@ -7012,6 +7014,8 @@ pt_BR:
         sidebar: "Barra lateral"
         header_dropdown: "Menu dropdown de cabeçalho"
         legacy: "Legado"
+      duplicate_topic_titles:
+        allowed: "Permitido(a)"
       backups:
         title: "Backups"
         files_title: "Arquivos de cópia de segurança"
@@ -7255,7 +7259,6 @@ pt_BR:
           finish_install: "Concluir a instalação do tema"
           last_attempt: "O processo de instalação não foi concluído, última tentativa:"
           remote_branch: "Nome da unidade (opcional)"
-          public_key: "Conceder o seguinte acesso da chave pública ao repo:"
           install: "Instalar"
           installed: "Instalado(a)"
           install_popular: "Mais acessados(as)"
@@ -8611,6 +8614,7 @@ pt_BR:
         uploading: "Enviando…"
         name: "Nome"
         group: "Grupo"
+        all_groups: "Todos os grupos"
         created_by: "Criador(a):"
         image: "Imagem"
         alt: "pré-visualização do emoji personalizado"

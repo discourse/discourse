@@ -1786,6 +1786,9 @@ lt:
         contextual: "Naujas puslapio turinys"
       bookmark_after_notification:
         title: "Išsiuntus priminimo apie žymę pranešimą:"
+      send_shortcut:
+        enter: "Įeiti"
+        meta_enter: "%{meta_key} + Įveskite"
       like_notification_frequency:
         title: "Perspėti susiejus"
         always: "Visada"
@@ -2429,6 +2432,8 @@ lt:
       medium_dark_tone: Vidutinio tamsumo odos tonas
       dark_tone: Tamsus odos tonas
       default: Individualūs jaustukai
+    filter_controls:
+      reset: "Atstatyti"
     shared_drafts:
       title: "Bendrinami juodraščiai"
       notice: "Ši tema matoma tik tiems, kurie gali skelbti bendrinamus juodraščius."
@@ -4786,6 +4791,8 @@ lt:
           enabled: "Galimas"
           disabled: "Uždrausta"
           reset: "Atstatyti"
+      duplicate_topic_titles:
+        allowed: "Leidžiama"
       backups:
         title: "Atsarginės kopijos"
         menu:
@@ -5758,6 +5765,7 @@ lt:
         delete: "Pašalinti"
         name: "Vardas"
         group: "Grupė"
+        all_groups: "Visos grupės"
         image: "Paveiksliukas"
         delete_confirm: "Ar tikrai nori ištrinti :%{name}: šypsenėlę?"
         settings: "Nustatymai"

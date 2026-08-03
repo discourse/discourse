@@ -545,10 +545,8 @@ module Email
     def extract_from_word(doc)
       # Word (?) keeps the content in the 'WordSection1' class and uses <p> tags
       # When there's something else (<table>, <div>, etc..) there's high chance it's a signature or forwarded email
-      elided =
-        doc.css(
-          ".WordSection1 > :not(p):not(ul):first-of-type, .WordSection1 > :not(p):not(ul):first-of-type ~ *",
-        ).remove
+      signature_start = ".WordSection1 > :not(p):not(ul):not(ol):first-of-type"
+      elided = doc.css("#{signature_start}, #{signature_start} ~ *").remove
       to_markdown(doc.at(".WordSection1").to_html, elided.to_html)
     end
 

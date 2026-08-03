@@ -10,6 +10,20 @@ module Chat
 
     BAKED_VERSION = 2
     EXCERPT_LENGTH = 150
+    SLASH_COMMAND_PATTERNS = {
+      me: {
+        pattern: %r{\A/me[ \t]+([^\r\n]+)\z},
+        formatter: :action,
+      },
+      shrug: {
+        pattern: %r{\A/shrug(?:[ \t]+([^\r\n]+))?\z},
+        text: "¯\\_(ツ)_/¯",
+      },
+      tableflip: {
+        pattern: %r{\A/tableflip(?:[ \t]+([^\r\n]+))?\z},
+        text: "(╯°□°)╯︵ ┻━┻",
+      },
+    }.freeze
 
     attribute :has_oneboxes, default: false
 
@@ -191,7 +205,8 @@ module Chat
     def cook
       ensure_last_editor_id
 
-      self.cooked = self.class.cook(message, user_id: last_editor_id)
+      self.cooked =
+        self.class.cook(message, user_id: last_editor_id, author_username: user&.username)
       self.cooked_version = BAKED_VERSION
 
       invalidate_parsed_mentions
@@ -252,6 +267,8 @@ module Chat
 
     def self.cook(message, opts = {})
       bot = opts[:user_id] && opts[:user_id].negative?
+      slash_command = match_slash_command(message, opts[:author_username])
+      message_to_cook = slash_command ? slash_command[:content] : message
 
       features = MARKDOWN_FEATURES.dup
       features << "image-grid" if bot
@@ -268,13 +285,14 @@ module Chat
       # is referencing.
       cooked =
         PrettyText.cook(
-          message,
+          message_to_cook,
           features_override: features + DiscoursePluginRegistry.chat_markdown_features.to_a,
           markdown_it_rules: rules,
           force_quote_link: true,
           user_id: opts[:user_id],
           hashtag_context: "chat-composer",
         )
+      cooked = format_slash_command(cooked, slash_command, opts[:author_username]) if slash_command
 
       result =
         Oneboxer.apply(cooked) do |url|
@@ -289,6 +307,60 @@ module Chat
       cooked = result.to_html if result.changed?
       cooked
     end
+
+    def self.match_slash_command(message, author_username)
+      return if message.blank?
+
+      SLASH_COMMAND_PATTERNS.each do |name, command|
+        next if command[:formatter] == :action && author_username.blank?
+        next if !(match = message.match(command[:pattern]))
+
+        return { name:, content: match[1].to_s, **command }
+      end
+
+      nil
+    end
+    private_class_method :match_slash_command
+
+    def self.format_slash_command(cooked, command, author_username)
+      if command[:formatter] == :action
+        format_action(cooked, author_username)
+      else
+        append_command_text(cooked, command[:text])
+      end
+    end
+    private_class_method :format_slash_command
+
+    def self.format_action(cooked, author_username)
+      fragment = Loofah.html5_fragment(cooked)
+      elements = fragment.children.select(&:element?)
+      return cooked if elements.length != 1 || elements.first.name != "p"
+
+      paragraph = elements.first
+      emphasis = Nokogiri::XML::Node.new("em", fragment.document)
+      emphasis["class"] = "chat-message-action"
+      emphasis.add_child(Nokogiri::XML::Text.new("#{author_username} ", fragment.document))
+      paragraph.children.to_a.each { |child| emphasis.add_child(child) }
+      paragraph.add_child(emphasis)
+
+      fragment.to_html
+    end
+    private_class_method :format_action
+
+    def self.append_command_text(cooked, text)
+      fragment = Loofah.html5_fragment(cooked)
+      elements = fragment.children.select(&:element?)
+      return cooked if elements.length > 1
+      return cooked if elements.one? && elements.first.name != "p"
+
+      paragraph = elements.first || Nokogiri::XML::Node.new("p", fragment.document)
+      fragment.add_child(paragraph) if elements.empty?
+      separator = paragraph.children.empty? ? "" : " "
+      paragraph.add_child(Nokogiri::XML::Text.new("#{separator}#{text}", fragment.document))
+
+      fragment.to_html
+    end
+    private_class_method :append_command_text
 
     def full_url
       "#{Discourse.base_url_no_prefix}#{url}"

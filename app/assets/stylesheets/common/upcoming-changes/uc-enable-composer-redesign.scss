@@ -36,6 +36,14 @@
 
   .reply-area {
     padding: 0 !important;
+
+    @include viewport.until(sm) {
+      &:has(.d-editor-textarea-wrapper.in-focus) {
+        .reply-to {
+          pointer-events: none;
+        }
+      }
+    }
   }
 
   .composer-controls {

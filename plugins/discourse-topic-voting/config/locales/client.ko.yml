@@ -23,3 +23,6 @@ ko:
     filters:
       votes:
         title: "투표"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "태그"

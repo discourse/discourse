@@ -47,8 +47,7 @@ pl_PL:
         flagged_post: |
           %{score_reason}
           %{response}
-        flagged_post_response: |
-          <p>Odpowiedź modelu: %{llm_response}</p>
+        flagged_post_response: "Odpowiedź modelu: %{llm_response}"
         flagged_post_score_reason: |
           <b>Wyzwalane przez regułę <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> .</b>
         notify_author_pm:
@@ -140,7 +139,7 @@ pl_PL:
     ai_summarization_agent: "Agent do wykorzystania w funkcji podsumowania"
     ai_pm_summarization_allowed_groups: "Grupy mogą tworzyć i przeglądać podsumowania w wiadomościach prywatnych."
     ai_summary_gists_enabled: "Automatycznie generuj krótkie podsumowania najnowszych odpowiedzi w tematach"
-    ai_summary_gists_agent: "Agent służy do generowania krótkich podsumowań tematów. Generowanie Gist zawsze korzysta z wbudowanego narzędzia do generowania podsumowań końcowych; inne narzędzia i formaty odpowiedzi strukturalnych skonfigurowane w agencie są ignorowane."
+    ai_summary_gists_agent: "Agent służący do generowania krótkich podsumowań tematów. Podczas ich generowania zawsze wykorzystywane jest wbudowane narzędzie „final-summary”; inne narzędzia oraz skonfigurowane w agencie formaty odpowiedzi strukturalnych są ignorowane."
     ai_summary_backfill_maximum_topics_per_hour: "Liczba podsumowań tematów do uzupełnienia na godzinę. Każde zlokalizowane streszczenie wlicza się do tego limitu."
     ai_bot_enabled: "Włącz moduł bota AI."
     ai_bot_enabled_llms: "Dostępne do wyboru LLM-y do rozmów z botami AI"
@@ -167,8 +166,7 @@ pl_PL:
     ai_translation_categories: "Kategorie używane, gdy zakres kategorii tłumaczenia AI jest ustawiony na <strong>dołącz</strong> lub <strong>wyklucz</strong>."
     ai_translation_personal_messages: "Kontroluje, które prywatne wiadomości są tłumaczone. 'none' wyłącza tłumaczenie wiadomości prywatnych. 'group' tłumaczy tylko wiadomości prywatne grupy. 'all' tłumaczy wszystkie wiadomości prywatne."
     ai_translation_include_bot_content: "Po włączeniu tej opcji treści tworzone przez boty (identyfikatory użytkowników poniżej 0) będą również wysyłane do tłumaczenia."
-    ai_translation_max_post_length: "Maksymalna liczba znaków w poście do przetłumaczenia. Posty dłuższe niż ta liczba nie będą tłumaczone."
-    ai_translation_backfill_max_age_days: "Maksymalny wiek posta i tematu do przetłumaczenia. Posty i tematy starsze niż ten wiek nie będą tłumaczone. Wartość 0 wyłącza uzupełnianie, ale nie wyłącza tłumaczenia nowych postów."
+    ai_translation_backfill_start_date: "Data UTC, od której historyczne wpisy i tematy będą wysyłane do uzupełnienia tłumaczeń. Pozostaw puste, aby wyłączyć uzupełnianie. Nowe treści będą nadal tłumaczone."
     ai_translation_backfill_hourly_rate: "Liczba wpisów i tematów do przetłumaczenia na godzinę podczas operacji uzupełniania. Ustaw na 0, aby wyłączyć automatyczne uzupełnianie tłumaczeń dla istniejących treści."
     ai_translation_backfill_parallel_jobs: "Liczba równoległych zadań postlokalizacyjnych uruchamianych w każdym cyklu uzupełniania. Wyższe wartości zwiększają przepustowość, ale zużywają więcej zasobów."
     ai_usage_rollup_after_days: "Liczba dni przechowywania statystyk użycia AI dla każdego żądania przed ich przekształceniem w dzienne agregaty. Ustaw na 0, aby wyłączyć agregacje."

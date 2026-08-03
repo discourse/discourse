@@ -1319,6 +1319,8 @@ id:
         normal: "normal"
         larger: "Lebih Besar"
         largest: "Terbesar"
+      send_shortcut:
+        enter: "Enter"
       like_notification_frequency:
         title: "Beritahu jika disukai"
         always: "Selalu"
@@ -1647,6 +1649,8 @@ id:
       filter_placeholder: Cari emoji
       objects: Objek
       flags: Flags
+    filter_controls:
+      reset: "Reset"
     composer:
       emoji: "Emoji :)"
       options: "Pilihan"
@@ -2716,6 +2720,8 @@ id:
           enabled: "Diaktifkan"
           disabled: "Dinonaktifkan"
           reset: "Reset"
+      duplicate_topic_titles:
+        allowed: "Diizinkan"
       backups:
         menu:
           logs: "Log"

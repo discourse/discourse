@@ -41,6 +41,8 @@ RSpec.describe Admin::DashboardController do
 
   describe "#index" do
     shared_examples "version info present" do
+      before { SiteSetting.dashboard_improvements = false }
+
       it "returns discourse version info" do
         get "/admin/dashboard.json"
 
@@ -50,7 +52,10 @@ RSpec.describe Admin::DashboardController do
     end
 
     shared_examples "version info absent" do
-      before { SiteSetting.version_checks = false }
+      before do
+        SiteSetting.dashboard_improvements = false
+        SiteSetting.version_checks = false
+      end
 
       it "does not return discourse version info" do
         get "/admin/dashboard.json"
@@ -256,6 +261,7 @@ RSpec.describe Admin::DashboardController do
         end
 
         it "does not expose admin-only browser pageview cards to moderators" do
+          SiteSetting.use_legacy_pageviews = false
           SiteSetting.persist_browser_pageview_events = true
           configure_dashboard_sections(%w[traffic])
 

@@ -12,7 +12,10 @@ module Chat
       @size_cache = {}
       @opts = opts
 
-      cook_opts = { user_id: chat_message.last_editor_id }
+      cook_opts = {
+        user_id: chat_message.last_editor_id,
+        author_username: chat_message.user&.username,
+      }
       cook_opts[:invalidate_oneboxes] = true if opts[:invalidate_oneboxes] == true
       cooked = Chat::Message.cook(chat_message.message, **cook_opts)
       @doc = Loofah.html5_fragment(cooked)

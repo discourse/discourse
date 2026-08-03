@@ -15,9 +15,12 @@ module DiscourseWorkflows
     private
 
     def fetch_workflow(params:)
-      DiscourseWorkflows::Workflow.includes(:created_by, :updated_by, :error_workflow).find_by(
-        id: params.workflow_id,
-      )
+      DiscourseWorkflows::Workflow.includes(
+        :created_by,
+        :updated_by,
+        :error_workflow,
+        :tags,
+      ).find_by(id: params.workflow_id)
     end
   end
 end

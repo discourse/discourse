@@ -50,3 +50,6 @@ tr_TR:
           group_name: "Konu Oylama Etkinliği"
           topic_upvote: "Bir kullanıcı bir konuya oy verdiğinde"
           topic_unvote: "Bir kullanıcı bir konuya ilişkin oyu iptal ettiğinde"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Etiketler"

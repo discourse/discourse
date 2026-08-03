@@ -57,7 +57,7 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
       .dom("a.db-section__row-block-title.--label")
       .hasText("Who's posting?")
       .hasAttribute("href", /\/admin\/reports\/posters_by_member_type/);
-    assert.dom(".category-selector").exists();
+    assert.dom(".multiple-categories-selector").exists();
   });
 
   test("shows an 'All categories' placeholder when nothing is selected", async function (assert) {
@@ -72,7 +72,7 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
     );
 
     assert.strictEqual(
-      selectKit(".category-selector").header().label(),
+      selectKit(".multiple-categories-selector").header().label(),
       i18n("category.all")
     );
   });
@@ -90,7 +90,10 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
       </template>
     );
 
-    assert.strictEqual(selectKit(".category-selector").header().value(), "1,2");
+    assert.strictEqual(
+      selectKit(".multiple-categories-selector").header().value(),
+      "1,2"
+    );
   });
 
   test("falls back to an empty-state message when there are no posts", async function (assert) {

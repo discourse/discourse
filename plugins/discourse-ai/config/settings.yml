@@ -577,14 +577,9 @@ discourse_ai:
     default: false
     client: false
     area: "ai-features/translation"
-  ai_translation_max_post_length:
-    default: 10000
-    client: false
-    area: "ai-features/translation"
-  ai_translation_backfill_max_age_days:
-    default: 5
-    min: 0
-    max: 20000
+  ai_translation_backfill_start_date:
+    default: ""
+    type: "date"
     client: false
     area: "ai-features/translation"
 

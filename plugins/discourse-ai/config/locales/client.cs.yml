@@ -83,6 +83,22 @@ cs:
       translations:
         title: "Překlady"
         category_scope: "Kategorie"
+        model_progress:
+          detail:
+            retry: "Zkuste znovu"
+            columns:
+              locale: "Jazyk"
+              pending: "Čeká na schválení"
+              total: "Celkem"
+          targets:
+            post:
+              title: "Příspěvky"
+            topic:
+              title: "Témata"
+            category:
+              title: "Kategorie"
+            tag:
+              title: "Štítky"
         stats:
           eta_minutes:
             one: "%{count} minutu"

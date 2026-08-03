@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe Jobs::Chat::ChannelArchive do
+  subject(:run_job) { described_class.new.execute(chat_channel_archive_id: chat_archive.id) }
+
   fab!(:chat_channel, :category_channel)
   fab!(:user) { Fabricate(:user, admin: true) }
   fab!(:category)
@@ -15,10 +17,6 @@ describe Jobs::Chat::ChannelArchive do
   end
 
   before { 10.times { Fabricate(:chat_message, chat_channel: chat_channel) } }
-
-  def run_job
-    described_class.new.execute(chat_channel_archive_id: chat_archive.id)
-  end
 
   it "does nothing if the archive is already complete" do
     chat_channel.chat_messages.destroy_all

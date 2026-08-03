@@ -6,12 +6,20 @@ import PreloadStore, { readPreloadedData } from "discourse/lib/preload-store";
 module("Unit | Utility | preload-store", function (hooks) {
   setupTest(hooks);
 
+  let realPreloadElement;
+
   hooks.beforeEach(function () {
     PreloadStore.store("bane", "evil");
+
+    realPreloadElement = document.getElementById("data-preloaded");
+    realPreloadElement?.remove();
   });
 
   hooks.afterEach(function () {
     document.getElementById("data-preloaded")?.remove();
+    if (realPreloadElement) {
+      document.head.append(realPreloadElement);
+    }
   });
 
   test("readPreloadedData reads JSON script content", function (assert) {

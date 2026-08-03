@@ -18,10 +18,6 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     Jobs.run_immediately!
   end
 
-  def accept_policy(post)
-    [user1, user2].each { |u| PolicyUser.add!(u, post.post_policy) }
-  end
-
   it "correctly renews policies with no renew-start" do
     freeze_time Time.utc(2019)
 
@@ -34,7 +30,7 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     post = create_post(raw: raw, user: Fabricate(:admin))
 
     freeze_time Time.utc(2021)
-    accept_policy(post)
+    [user1, user2].each { |policy_user| PolicyUser.add!(policy_user, post.post_policy) }
 
     freeze_time Time.utc(2022)
     job.execute
@@ -61,7 +57,7 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     post = create_post(raw: raw, user: Fabricate(:admin))
 
     freeze_time Time.utc(2021)
-    accept_policy(post)
+    [user1, user2].each { |policy_user| PolicyUser.add!(policy_user, post.post_policy) }
 
     freeze_time Time.utc(2022)
     PolicyUser.where(user_id: user2.id).update(accepted_at: Time.now)
@@ -90,8 +86,8 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     post2 = create_post(raw: raw2, user: Fabricate(:admin))
 
     freeze_time Time.utc(2021)
-    accept_policy(post)
-    accept_policy(post2)
+    [user1, user2].each { |policy_user| PolicyUser.add!(policy_user, post.post_policy) }
+    [user1, user2].each { |policy_user| PolicyUser.add!(policy_user, post2.post_policy) }
 
     freeze_time Time.utc(2022)
     job.execute
@@ -112,7 +108,7 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
 
     post = create_post(raw: raw, user: Fabricate(:admin))
 
-    accept_policy(post)
+    [user1, user2].each { |policy_user| PolicyUser.add!(policy_user, post.post_policy) }
 
     freeze_time Time.utc(2020)
     job.execute
@@ -128,7 +124,7 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     post.reload
     expect(post.post_policy.accepted_by).to be_empty
 
-    accept_policy(post)
+    [user1, user2].each { |policy_user| PolicyUser.add!(policy_user, post.post_policy) }
 
     freeze_time(Time.utc(2020, 10, 17) + 101.days)
 
@@ -161,7 +157,7 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
 
       post = create_post(raw: raw, user: Fabricate(:admin))
 
-      accept_policy(post)
+      [user1, user2].each { |policy_user| PolicyUser.add!(policy_user, post.post_policy) }
 
       freeze_time Time.utc(2020, 10, 17)
 
@@ -201,7 +197,7 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
 
       post = create_post(raw: raw, user: Fabricate(:admin))
 
-      accept_policy(post)
+      [user1, user2].each { |policy_user| PolicyUser.add!(policy_user, post.post_policy) }
 
       freeze_time Time.utc(2020, 10, 30)
 

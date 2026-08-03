@@ -285,6 +285,18 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
+  describe "content localization preferences" do
+    it "computes the legacy JSON preference from automatically_translate" do
+      user.user_option.automatically_translate = false
+      user.user_option.show_original_content = false
+
+      expect(serializer.as_json[:user_option]).to include(
+        automatically_translate: false,
+        show_original_content: true,
+      )
+    end
+  end
+
   describe "#associated_account_ids" do
     before do
       UserAssociatedAccount.create(
@@ -539,6 +551,21 @@ RSpec.describe CurrentUserSerializer do
         created_at: 1.minute.from_now,
       )
       expect(serialize_for(admin)[:has_new_upcoming_changes]).to eq(true)
+    end
+
+    it "ignores backfilled `added` events" do
+      Discourse.stubs(:site_creation_date).returns(2.years.ago)
+      admin = Fabricate(:admin)
+      UpcomingChangeEvent.create!(
+        event_type: :added,
+        event_data: {
+          backfilled: true,
+        },
+        upcoming_change_name: "backfilled_setting",
+        created_at: 1.minute.from_now,
+      )
+
+      expect(serialize_for(admin)[:has_new_upcoming_changes]).to eq(false)
     end
 
     it "honors last_visited_upcoming_changes_at when set" do

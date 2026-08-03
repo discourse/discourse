@@ -55,4 +55,27 @@ RSpec.describe "Livestream channel list serialization" do
       event_related_query_count(queries_for_one),
     )
   end
+
+  it "omits private livestream metadata for a stale invitee" do
+    channel = create_livestream_channel
+    event = channel.livestream_topic_chat_channel.topic.first_post.event
+    event.create_invitees(
+      [{ user_id: user.id, status: DiscoursePostEvent::Invitee.statuses[:going] }],
+    )
+    group.remove(user)
+    DiscoursePostEvent::Invitee
+      .unscoped
+      .find_or_create_by!(post_id: event.id, user_id: user.id) do |invitee|
+        invitee.status = DiscoursePostEvent::Invitee.statuses[:going]
+      end
+
+    get "/chat/api/channels.json", params: { filter: "" }
+
+    expect(response.status).to eq(200)
+    serialized_channel =
+      response.parsed_body["channels"].find do |candidate_channel|
+        candidate_channel["id"] == channel.id
+      end
+    expect(serialized_channel).not_to have_key("livestream_topic")
+  end
 end

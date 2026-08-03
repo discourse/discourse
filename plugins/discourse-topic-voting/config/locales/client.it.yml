@@ -36,3 +36,6 @@ it:
           group_name: "Evento di votazione dell'argomento"
           topic_upvote: "Quando un utente vota su un argomento"
           topic_unvote: "Quando un utente annulla il voto su un argomento"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Etichette"

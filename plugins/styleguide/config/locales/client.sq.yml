@@ -8,7 +8,6 @@ sq:
   js:
     styleguide:
       title: "Udhëzues stili"
-      welcome: "Për të filluar, zgjidhni një seksion nga menyja në të majtë."
       categories:
         syntax: Sintaksë
       sections:

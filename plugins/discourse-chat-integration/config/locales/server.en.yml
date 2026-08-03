@@ -124,6 +124,15 @@ en:
       send_chat_integration_message:
         title: Send Chat-Integration message
 
+  discourse_workflows:
+    errors:
+      send_chat_integration_message:
+        channel_not_found: "Channel not found: %{channel_id}"
+        provider_disabled: "Chat integration provider is disabled or missing: %{provider}"
+        provider_failed: "The %{provider} provider could not send the message"
+        provider_failed_with_details: "The %{provider} provider could not send the message: %{details}"
+        message_required: "A message is required"
+
   chat_integration:
     all_categories: "(all categories)"
     deleted_category: "(deleted category)"
@@ -148,6 +157,10 @@ en:
       ########## SLACK STRINGS ##############
       #######################################
       slack:
+        errors:
+          auth_error: "The provided authentication token is invalid"
+          action_prohibited: "The bot does not have permission to post to that channel"
+          channel_not_found: "The specified channel does not exist on Slack"
         status:
           header: |
             *Rules for this channel*

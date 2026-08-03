@@ -16,3 +16,6 @@ th:
     filters:
       votes:
         title: "โหวต"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "ป้าย"

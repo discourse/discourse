@@ -1097,6 +1097,8 @@ th:
         largest: "ใหญ่ที่สุด"
       title_count_mode:
         notifications: "การแจ้งเตือนใหม่"
+      send_shortcut:
+        enter: "เอ็นเทอร์"
       like_notification_frequency:
         title: "แจ้งเตือนเมื่อมีคนกดถูกใจ"
         always: "เสมอ"
@@ -3580,6 +3582,7 @@ th:
         delete: "ลบ"
         name: "ชื่อ"
         group: "กลุ่ม"
+        all_groups: "กลุ่มทั้งหมด"
         image: "ภาพ"
         delete_confirm: "คุณแน่ใจหรือว่าจะลบอีโมจิ :%{name}: ออก"
         settings: "การตั้งค่า"

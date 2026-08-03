@@ -1348,6 +1348,8 @@ gl:
         title: "O título da páxina de fondo presenta a conta de:"
         notifications: "Novas notificacións"
         contextual: "Contido novo da páxina"
+      send_shortcut:
+        enter: "Intro"
       like_notification_frequency:
         title: "Notificar cando reciba gústames"
         always: "Sempre"
@@ -1819,6 +1821,8 @@ gl:
       medium_dark_tone: Tono de pel medio escuro
       dark_tone: Ton de pel escuro
       default: Emojis personalizados
+    filter_controls:
+      reset: "Restabelecer"
     shared_drafts:
       title: "Borradores compartidos"
       notice: "Este tema só é visíbel para aqueles que poden ver a categoría <b>%{category}</b>."
@@ -4029,6 +4033,8 @@ gl:
           enabled: "Activado"
           disabled: "Desactivado"
           reset: "Restabelecer"
+      duplicate_topic_titles:
+        allowed: "Permitidas"
       backups:
         title: "Copias de seguranza"
         menu:
@@ -4197,7 +4203,6 @@ gl:
           direct_install_tip: "Confirma que quere instalar <strong>%{name}</strong> desde o repositorio que se lista a seguir?"
           is_private: "O tema está nun repositorio privado de git"
           remote_branch: "Nome da ramificación (opcional)"
-          public_key: "Conceder á seguinte clave pública acceso ao repositorio:"
           install: "Instalar"
           installed: "Instalado"
           install_popular: "Destacados"
@@ -5047,6 +5052,7 @@ gl:
         delete: "Eliminar"
         name: "Nome"
         group: "Grupo"
+        all_groups: "Todos os grupos"
         image: "Imaxe"
         alt: "visualización do emoji personalizado"
         delete_confirm: "Confirma a eliminación do emoji :%{name}:?"

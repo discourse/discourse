@@ -7,26 +7,30 @@ RSpec.describe DiscourseAutomation::Action::LogAutomationUpdate do
   let(:guardian) { admin.guardian }
   let(:empty_value) { I18n.t("discourse_automation.staff_action_logs.empty_value") }
 
-  def call(previous_overrides = {})
-    previous = {
+  let(:previous_automation_attributes) do
+    {
       name: automation.name,
       script: automation.script,
       trigger: automation.trigger,
       enabled: automation.enabled,
       fields: automation.serialized_fields,
-    }.merge(previous_overrides)
-
-    described_class.call(automation, previous, guardian)
+    }
   end
 
   it "does not log when nothing changed" do
-    expect { call }.not_to change { UserHistory.count }
+    expect {
+      described_class.call(automation, previous_automation_attributes, guardian)
+    }.not_to change { UserHistory.count }
   end
 
   it "logs attribute changes with automation id" do
     automation.update!(name: "New Name", enabled: false)
 
-    expect { call(name: "Old Name", enabled: true) }.to change { UserHistory.count }.by(1)
+    previous = previous_automation_attributes.merge(name: "Old Name", enabled: true)
+
+    expect { described_class.call(automation, previous, guardian) }.to change {
+      UserHistory.count
+    }.by(1)
     expect(UserHistory.last).to have_attributes(
       custom_type: "update_automation",
       details:
@@ -40,11 +44,15 @@ RSpec.describe DiscourseAutomation::Action::LogAutomationUpdate do
 
   it "formats empty values" do
     automation.update!(name: "New Name")
-    call(name: nil)
+    described_class.call(automation, previous_automation_attributes.merge(name: nil), guardian)
     expect(UserHistory.last.details).to include("name: #{empty_value} → New Name")
 
     automation.update!(name: "")
-    call(name: "Old Name")
+    described_class.call(
+      automation,
+      previous_automation_attributes.merge(name: "Old Name"),
+      guardian,
+    )
     expect(UserHistory.last.details).to include("name: Old Name → #{empty_value}")
   end
 
@@ -63,7 +71,18 @@ RSpec.describe DiscourseAutomation::Action::LogAutomationUpdate do
         { "value" => new_time },
         target: "trigger",
       )
-      call(fields: { "execute_at" => { "value" => original_time, "target" => "trigger" } })
+      described_class.call(
+        automation,
+        previous_automation_attributes.merge(
+          fields: {
+            "execute_at" => {
+              "value" => original_time,
+              "target" => "trigger",
+            },
+          },
+        ),
+        guardian,
+      )
 
       expect(UserHistory.last.details).to include("execute_at: #{original_time} → #{new_time}")
     end

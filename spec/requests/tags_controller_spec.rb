@@ -700,6 +700,17 @@ RSpec.describe TagsController do
 
       fab!(:topic_out_of_category) { Fabricate(:topic, tags: [tag]) }
 
+      it "does not disclose restricted category names through category permalink fallbacks" do
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        Permalink.create!(url: "c/old-category", category: private_category)
+
+        get "/tags/c/old-category/#{tag.name}.json"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.headers["Location"]).to be_nil
+        expect(response.body).not_to include(private_category.name)
+      end
+
       it "should produce the topic inside the category and not the topic outside of it" do
         get "/tags/c/#{category.slug}/#{tag.name}.json"
 

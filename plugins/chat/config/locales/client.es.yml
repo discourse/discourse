@@ -166,12 +166,6 @@ es:
         never: "Nunca"
       separate_sidebar_mode:
         title: "Mostrar modos separados en la barra lateral para el foro y el chat"
-      send_shortcut:
-        title: "Enviar atajo"
-        enter:
-          label: "Enviar mediante Intro"
-        meta_enter:
-          label: "Enviar por %{meta_key} + Intro"
       enable: "Activar chat"
       flag: "Denunciar"
       emoji: "Insertar emoji"

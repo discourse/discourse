@@ -78,6 +78,10 @@ module("Unit | Lib | ai-feature-setting-groups", function () {
     const groups = getSettingGroupsForFeature("translation");
 
     assert.strictEqual(groups.length, 3, "translation should have 3 groups");
+    assert.true(
+      groups[2].settings.includes("ai_translation_backfill_start_date"),
+      "backfill should include the fixed start date"
+    );
   });
 
   test("returns correct groups for discord", function (assert) {

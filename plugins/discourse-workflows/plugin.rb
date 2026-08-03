@@ -105,6 +105,7 @@ after_initialize do
     require_relative "lib/discourse_workflows/ai/tools/workflow_ask_questions"
     require_relative "lib/discourse_workflows/ai/tools/workflow_resolve_entity"
     require_relative "lib/discourse_workflows/ai/tools/search_chat_channels"
+    require_relative "lib/discourse_workflows/ai/tools/search_chat_integration_channels"
     require_relative "lib/discourse_workflows/ai/tools/workflow_script_context"
     require_relative "lib/discourse_workflows/ai/tools/workflow_validate_script"
     require_relative "lib/discourse_workflows/ai_workflow_author"

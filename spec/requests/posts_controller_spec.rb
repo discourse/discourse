@@ -599,6 +599,46 @@ RSpec.describe PostsController do
       }
     end
 
+    context "when a trust level 1 user edits a public wiki post" do
+      it "does not publish a hidden new user profile onebox" do
+        author = Fabricate(:user, trust_level: TrustLevel[3], refresh_auto_groups: true)
+        editor = Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true)
+        profile_user = Fabricate(:user, trust_level: TrustLevel[1])
+        profile_user.user_stat.update!(post_count: 0)
+        profile_user.user_profile.update!(
+          bio_raw: "private new user biography",
+          location: "private new user location",
+          website: "https://private-new-user.example.com",
+        )
+        wiki_post = create_post(user: author, raw: "public wiki post")
+        wiki_post.update!(wiki: true)
+        Group[:trust_level_1].add(editor)
+        editor.reload
+        SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
+        SiteSetting.hide_new_user_profiles = true
+        CookedPostProcessor.any_instance.stubs(:get_size).returns([100, 100])
+        Jobs.run_immediately!
+
+        sign_in(editor)
+        put "/posts/#{wiki_post.id}.json",
+            params: {
+              post: {
+                raw: "#{Discourse.base_url}/u/#{profile_user.username}",
+              },
+            }
+
+        expect(response.status).to eq(200), response.body
+
+        sign_out
+        get "/posts/#{wiki_post.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include(profile_user.user_profile.bio_raw)
+        expect(response.body).not_to include(profile_user.user_profile.location)
+        expect(response.body).not_to include(profile_user.user_profile.website)
+      end
+    end
+
     describe "when logged in as a regular user" do
       before { sign_in(user) }
 
@@ -1195,6 +1235,46 @@ RSpec.describe PostsController do
         expect(response.status).to eq(400)
       end
 
+      it "rejects changing a reply to a small action" do
+        put "/posts/#{post.id}/post_type.json", params: { post_type: Post.types[:small_action] }
+
+        expect(response).to be_bad_request
+        expect(post.reload.post_type).to eq(Post.types[:regular])
+      end
+
+      it "rejects changing an opening post to a whisper" do
+        opening_post = Fabricate(:post)
+
+        put "/posts/#{opening_post.id}/post_type.json", params: { post_type: Post.types[:whisper] }
+
+        expect(response).to be_bad_request
+        expect(opening_post.reload.post_type).to eq(Post.types[:regular])
+      end
+
+      it "rejects changing a nested topic's opening post to a small action" do
+        nested_view_topic = Fabricate(:topic, user: user)
+        opening_post = Fabricate(:post, topic: nested_view_topic, user: user, post_number: 1)
+        Fabricate(:nested_topic, topic: nested_view_topic)
+        SiteSetting.nested_replies_enabled = true
+
+        put "/posts/#{opening_post.id}/post_type.json",
+            params: {
+              post_type: Post.types[:small_action],
+            }
+
+        aggregate_failures do
+          expect(response).to be_bad_request
+          expect(response.body).to include("post_type")
+          expect(opening_post.reload.post_type).to eq(Post.types[:regular])
+
+          sign_out
+          get "/n/#{nested_view_topic.slug}/#{nested_view_topic.id}.json"
+
+          expect(response).to be_ok
+          expect(response.parsed_body.dig("op_post", "id")).to eq(opening_post.id)
+        end
+      end
+
       it "can change the post type" do
         put "/posts/#{post.id}/post_type.json", params: { post_type: 2 }
 
@@ -1242,6 +1322,37 @@ RSpec.describe PostsController do
     before do
       SiteSetting.fast_typing_threshold = "disabled"
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+    end
+
+    it "prevents regular users from publishing a global banner while creating a topic" do
+      ApplicationLayoutPreloader.banner_json_cache.clear
+      sign_in(user_trust_level_1)
+
+      post "/posts.json",
+           params: {
+             raw: "this is a test banner topic body",
+             title: "this is a test banner topic title",
+             category: category.id,
+             archetype: Archetype.banner,
+           }
+
+      creation_status = response.status
+      creation_body = response.parsed_body
+      created_topic = Topic.find(creation_body["topic_id"])
+
+      sign_in(user)
+      get "/site/banner.json"
+      banner_status = response.status
+      banner_body = response.parsed_body
+      ApplicationLayoutPreloader.banner_json_cache.clear
+
+      aggregate_failures do
+        expect(creation_status).to eq(200)
+        expect(creation_body["topic_id"]).to eq(created_topic.id)
+        expect(created_topic.archetype).to eq(Archetype.default)
+        expect(banner_status).to eq(200)
+        expect(banner_body).to eq({})
+      end
     end
 
     context "with api" do
@@ -1986,6 +2097,35 @@ RSpec.describe PostsController do
           expect(response.status).to eq(200)
           expect(Post.last.topic.tags).to contain_exactly(localized_tag)
         end
+      end
+
+      it "does not persist HTML from an untrusted oEmbed provider" do
+        Jobs.run_immediately!
+        url = "https://attacker.example.com/onebox"
+        malicious_html =
+          '<div class="onebox-attack" style="position: fixed; inset: 0; z-index: 9999">overlay</div>'
+
+        stub_request(:head, url).to_return(status: 200)
+        stub_request(:get, url).to_return(
+          status: 200,
+          body:
+            '<html><head><link type="application/json+oembed" href="https://attacker.example.com/oembed"></head></html>',
+        )
+        stub_request(:get, "https://attacker.example.com/oembed").to_return(
+          status: 200,
+          body: {
+            title: "Attacker onebox",
+            type: "rich",
+            provider_name: "Flickr",
+            html: malicious_html,
+          }.to_json,
+        )
+
+        post "/posts.json", params: { raw: url, title: "Untrusted oEmbed provider" }
+
+        expect(response.status).to eq(200)
+        cooked = Nokogiri::HTML5.fragment(Post.find(response.parsed_body["id"]).cooked)
+        expect(cooked.at_css(".onebox-attack")).to be_nil
       end
 
       it "creates the topic and post with the right attributes" do

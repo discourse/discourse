@@ -84,3 +84,7 @@ sr:
               label: Privatna poruka
             url:
               label: URL
+    discourse_workflows:
+      send_chat_integration_message:
+        configure: "Konfiguriši"
+        message: "Privatna poruka"

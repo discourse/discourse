@@ -19,12 +19,13 @@ module DiscourseTopicVoting
       policy :current_user_can_vote
 
       transaction do
-        step :create_vote
+        model :vote, :create_vote
         step :refresh_vote_count
       end
 
       step :enqueue_backfill_badges
       step :enqueue_topic_upvote_webhook
+      step :publish_vote_created_event
 
       private
 
@@ -71,6 +72,10 @@ module DiscourseTopicVoting
         }
 
         WebHook.enqueue_topic_voting_hooks(:topic_upvote, topic, payload.to_json)
+      end
+
+      def publish_vote_created_event(vote:)
+        DiscourseEvent.trigger(:topic_voting_vote_created, vote)
       end
     end
   end

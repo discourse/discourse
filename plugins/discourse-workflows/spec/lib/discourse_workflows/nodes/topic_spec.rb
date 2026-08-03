@@ -14,15 +14,15 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
     fab!(:topic_with_custom_fields) { Fabricate(:topic, category: category) }
     fab!(:other_topic_with_custom_fields) { Fabricate(:topic, category: category) }
 
-    def load_options(filter: nil)
-      context =
-        DiscourseWorkflows::LoadOptionsContext.new(
-          method_name: "topic_custom_fields",
-          filter: filter,
-          node_class: described_class,
-        )
+    subject(:options) { described_class.load_options_context(load_options_context) }
 
-      described_class.load_options_context(context)
+    let(:filter) { nil }
+    let(:load_options_context) do
+      DiscourseWorkflows::LoadOptionsContext.new(
+        method_name: "topic_custom_fields",
+        filter: filter,
+        node_class: described_class,
+      )
     end
 
     before do
@@ -34,16 +34,18 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
     end
 
     it "returns distinct topic custom field names for the chooser" do
-      expect(load_options).to contain_exactly(
+      expect(options).to contain_exactly(
         { id: "other_key", name: "other_key" },
         { id: "workflow_key", name: "workflow_key" },
       )
     end
 
-    it "filters topic custom field names by the filter term" do
-      expect(load_options(filter: "workflow")).to contain_exactly(
-        { id: "workflow_key", name: "workflow_key" },
-      )
+    context "with a filter" do
+      let(:filter) { "workflow" }
+
+      it "filters topic custom field names by the filter term" do
+        expect(options).to contain_exactly({ id: "workflow_key", name: "workflow_key" })
+      end
     end
 
     it "limits topic custom field names returned to the chooser" do
@@ -55,7 +57,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         )
       end
 
-      expect(load_options.length).to eq(described_class::CUSTOM_FIELD_OPTIONS_LIMIT)
+      expect(options.length).to eq(described_class::CUSTOM_FIELD_OPTIONS_LIMIT)
     end
   end
 
