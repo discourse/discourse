@@ -191,5 +191,12 @@
         font-size: var(--font-down-1-rem);
       }
     }
+
+    .btn[data-name="heading-small"] {
+      .d-button-label__text,
+      .d-icon {
+        font-size: var(--font-down-2-rem);
+      }
+    }
   }
 }

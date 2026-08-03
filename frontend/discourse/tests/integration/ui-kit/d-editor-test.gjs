@@ -11,6 +11,7 @@ import {
   triggerEvent,
   triggerKeyEvent,
 } from "@ember/test-helpers";
+import { AllSelection, TextSelection } from "prosemirror-state";
 import { module, test } from "qunit";
 import DMenus from "discourse/float-kit/components/d-menus";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
@@ -781,6 +782,115 @@ third line`
     }
   );
 
+  testCase("small button with no selection", async function (assert, textarea) {
+    this.set("value", "");
+    textarea.selectionStart = 0;
+    textarea.selectionEnd = 0;
+
+    await click("button.heading");
+    await click('.btn[data-name="heading-small"]');
+
+    assert.strictEqual(
+      this.value,
+      "<small>Small text</small>",
+      "it adds a placeholder and selects it"
+    );
+    assert.strictEqual(textarea.selectionStart, 7);
+    assert.strictEqual(textarea.selectionEnd, 17);
+  });
+
+  testCase("small button with a selection", async function (assert, textarea) {
+    this.set("value", "Before\nHello world\nAfter");
+    textarea.selectionStart = 13;
+    textarea.selectionEnd = 18;
+
+    await click("button.heading");
+    await click('.btn[data-name="heading-small"]');
+
+    assert.strictEqual(
+      this.value,
+      "Before\n<small>Hello world</small>\nAfter",
+      "it wraps the whole line and reselects its text"
+    );
+    assert.strictEqual(textarea.selectionStart, 14);
+    assert.strictEqual(textarea.selectionEnd, 25);
+  });
+
+  testCase(
+    "small button with a selection already wrapped",
+    async function (assert, textarea) {
+      this.set("value", "<small>Hello world</small>");
+      textarea.selectionStart = 7;
+      textarea.selectionEnd = 18;
+
+      await click("button.heading");
+      await click('.btn[data-name="heading-small"]');
+
+      assert.strictEqual(this.value, "Hello world", "it unwraps the selection");
+      assert.strictEqual(textarea.selectionStart, 0);
+      assert.strictEqual(textarea.selectionEnd, 11);
+    }
+  );
+
+  testCase(
+    "small button with the cursor in a non-empty line",
+    async function (assert, textarea) {
+      this.set("value", "Before\nHello world\nAfter");
+      textarea.selectionStart = 12;
+      textarea.selectionEnd = 12;
+
+      await click("button.heading");
+      await click('.btn[data-name="heading-small"]');
+
+      assert.strictEqual(
+        this.value,
+        "Before\n<small>Hello world</small>\nAfter",
+        "it wraps the whole line"
+      );
+    }
+  );
+
+  testCase(
+    "small button with a multi-line selection",
+    async function (assert, textarea) {
+      this.set("value", "First\nSecond\nThird");
+      textarea.selectionStart = 2;
+      textarea.selectionEnd = 13;
+
+      await click("button.heading");
+      await click('.btn[data-name="heading-small"]');
+
+      assert.strictEqual(
+        this.value,
+        "<small>First</small>\n<small>Second</small>\nThird",
+        "it wraps every selected line without dropping content"
+      );
+    }
+  );
+
+  testCase(
+    "small button normalizes inline small text in a line",
+    async function (assert, textarea) {
+      this.set("value", "Before <small>small</small> after");
+      textarea.selectionStart = 2;
+      textarea.selectionEnd = 2;
+
+      await click("button.heading");
+      await click('.btn[data-name="heading-small"]');
+
+      assert.strictEqual(
+        this.value,
+        "<small>Before small after</small>",
+        "it produces one whole-line wrapper"
+      );
+      assert.deepEqual(
+        [textarea.selectionStart, textarea.selectionEnd],
+        [7, 25],
+        "it selects the normalized line content"
+      );
+    }
+  );
+
   test("clicking the toggle-direction changes dir from ltr to rtl and back", async function (assert) {
     this.siteSettings.support_mixed_text_direction = true;
     this.siteSettings.default_locale = "en";
@@ -1483,6 +1593,31 @@ third line`
 module("Integration | ui-kit | DEditor | Rich Editor", function (hooks) {
   setupRenderingTest(hooks);
 
+  async function setupRichEditor(context, value) {
+    context.set("value", value);
+    context.onSetup = (textManipulation) => {
+      context.textManipulation = textManipulation;
+    };
+
+    await render(
+      <template>
+        <DEditor @value={{context.value}} @onSetup={{context.onSetup}} />
+      </template>
+    );
+    await click(".composer-toggle-switch");
+
+    return context.textManipulation.view;
+  }
+
+  function selectAll(view) {
+    view.dispatch(view.state.tr.setSelection(new AllSelection(view.state.doc)));
+  }
+
+  async function toggleSmall() {
+    await click("button.heading");
+    await click('.btn[data-name="heading-small"]');
+  }
+
   test("hides preview when rich editor is enabled", async function (assert) {
     await render(<template><DEditor /></template>);
     await click(".composer-toggle-switch");
@@ -1519,5 +1654,165 @@ module("Integration | ui-kit | DEditor | Rich Editor", function (hooks) {
     await click("button.replace-text");
 
     assert.dom(".ProseMirror p").hasText("goodbye");
+  });
+
+  test("small applies to every selected line and toggles off", async function (assert) {
+    const view = await setupRichEditor(this, "First\n\nSecond");
+
+    selectAll(view);
+    await toggleSmall();
+
+    assert
+      .dom(".ProseMirror p > small")
+      .exists({ count: 2 }, "both paragraphs are small");
+    assert
+      .dom(".ProseMirror")
+      .hasText("First Second", "all selected content is preserved");
+
+    selectAll(view);
+    await toggleSmall();
+
+    assert
+      .dom(".ProseMirror small")
+      .doesNotExist("small formatting is removed");
+    assert.dom(".ProseMirror p").exists({ count: 2 }, "both paragraphs remain");
+  });
+
+  test("small does not accumulate trailing spaces when repeatedly toggled", async function (assert) {
+    const view = await setupRichEditor(this, "First");
+
+    selectAll(view);
+    await toggleSmall();
+    selectAll(view);
+    await toggleSmall();
+    const valueAfterOneToggleCycle = this.value;
+
+    selectAll(view);
+    await toggleSmall();
+    selectAll(view);
+    await toggleSmall();
+
+    assert.strictEqual(
+      this.value,
+      valueAfterOneToggleCycle,
+      "a second toggle cycle does not add another space"
+    );
+  });
+
+  test("small applies to the whole line for a partial selection", async function (assert) {
+    const view = await setupRichEditor(this, "Hello world");
+
+    view.dispatch(
+      view.state.tr.setSelection(TextSelection.create(view.state.doc, 7, 12))
+    );
+    await toggleSmall();
+
+    assert
+      .dom(".ProseMirror p > small")
+      .hasText("Hello world", "the entire line becomes small");
+  });
+
+  test("small normalizes inline small text when applied to its line", async function (assert) {
+    const view = await setupRichEditor(
+      this,
+      "Before <small>small</small> after"
+    );
+
+    view.dispatch(
+      view.state.tr.setSelection(TextSelection.create(view.state.doc, 3))
+    );
+    await toggleSmall();
+
+    assert
+      .dom(".ProseMirror p > small")
+      .exists({ count: 1 }, "the line has one small wrapper");
+    assert
+      .dom(".ProseMirror p > small")
+      .hasText("Before small after", "the whole line becomes small");
+  });
+
+  test("small replaces a heading at line granularity", async function (assert) {
+    const view = await setupRichEditor(this, "## Hello world");
+
+    view.dispatch(
+      view.state.tr.setSelection(TextSelection.create(view.state.doc, 3))
+    );
+    await toggleSmall();
+
+    assert.dom(".ProseMirror h2").doesNotExist("the heading is removed");
+    assert
+      .dom(".ProseMirror p > small")
+      .hasText("Hello world", "the whole line becomes small");
+  });
+
+  test("small toggles off from a collapsed caret", async function (assert) {
+    const view = await setupRichEditor(this, "Hello world");
+
+    view.dispatch(
+      view.state.tr.setSelection(TextSelection.create(view.state.doc, 3))
+    );
+    await toggleSmall();
+
+    assert.dom(".ProseMirror p > small").hasText("Hello world");
+    assert.true(
+      this.textManipulation.state.inSmall,
+      "the caret stays inside the wrapper, so small reports itself active"
+    );
+
+    await toggleSmall();
+
+    assert
+      .dom(".ProseMirror small")
+      .doesNotExist("a second click removes it without reselecting");
+  });
+
+  test("imported small text inside a heading exposes both active formats", async function (assert) {
+    const view = await setupRichEditor(
+      this,
+      "## Before <small>small</small> after"
+    );
+    const textNode = find(".ProseMirror small").firstChild;
+    const pos = view.posAtDOM(textNode, 2);
+
+    view.dispatch(
+      view.state.tr.setSelection(TextSelection.create(view.state.doc, pos))
+    );
+    await settled();
+    await click("button.heading");
+
+    // The check icon renders for every option with showActiveIcon and is only
+    // hidden with CSS, so --active is the assertable signal.
+    assert
+      .dom('.btn[data-name="heading-2"]')
+      .hasClass("--active", "the heading is active");
+    assert
+      .dom('.btn[data-name="heading-small"]')
+      .hasClass("--active", "small is active at the cursor");
+    assert
+      .dom('.btn[data-name="heading-paragraph"]')
+      .doesNotHaveClass("--active", "paragraph is not reported as the size");
+
+    await click('.btn[data-name="heading-small"]');
+
+    assert.dom(".ProseMirror h2").exists("the heading remains");
+    assert.dom(".ProseMirror small").doesNotExist("small is removed");
+  });
+
+  test("small inserts and selects a placeholder in an empty line", async function (assert) {
+    const view = await setupRichEditor(this, "");
+
+    await toggleSmall();
+
+    assert
+      .dom(".ProseMirror p > small")
+      .hasText("Small text", "a small placeholder is inserted");
+    assert.strictEqual(
+      view.state.doc.textBetween(
+        view.state.selection.from,
+        view.state.selection.to
+      ),
+      "Small text",
+      "the placeholder is selected"
+    );
   });
 });
