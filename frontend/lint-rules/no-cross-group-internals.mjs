@@ -64,6 +64,30 @@ function mayImportInternals(filename, specifier) {
   return Boolean(importerModuleId) && isWithin(importerModuleId, groupId);
 }
 
+/**
+ * The statically known module specifier of an import/export source, covering
+ * string literals and no-substitution template literals. An interpolated
+ * source has no static value and returns undefined; that limit is deliberate
+ * and pinned by the tests.
+ */
+function staticSpecifierOf(source) {
+  if (!source) {
+    return;
+  }
+
+  if (typeof source.value === "string") {
+    return source.value;
+  }
+
+  if (
+    source.type === "TemplateLiteral" &&
+    source.expressions.length === 0 &&
+    source.quasis.length === 1
+  ) {
+    return source.quasis[0].value.cooked;
+  }
+}
+
 export default {
   meta: {
     type: "problem",
@@ -81,7 +105,7 @@ export default {
     }
 
     function checkSource(node) {
-      const specifier = node.source?.value;
+      const specifier = staticSpecifierOf(node.source);
 
       if (typeof specifier !== "string") {
         return;

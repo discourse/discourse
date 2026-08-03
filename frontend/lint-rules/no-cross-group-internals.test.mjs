@@ -119,6 +119,22 @@ test("traversal after an internals segment cannot escape into another group", ()
   assert.deepEqual(messages, ["discourse/no-cross-group-internals"]);
 });
 
+test("a template-literal dynamic import cannot bypass the boundary", () => {
+  const messages = messagesFor(
+    `${APP}/components/composer.js`,
+    "const chassis = import(`discourse/ui-kit/panel-dock/-internals/panel`);"
+  );
+  assert.deepEqual(messages, ["discourse/no-cross-group-internals"]);
+});
+
+test("an interpolated dynamic import is beyond static analysis and skipped", () => {
+  const messages = messagesFor(
+    `${APP}/components/composer.js`,
+    "const chassis = import(`discourse/ui-kit/${name}/-internals/panel`);"
+  );
+  assert.deepEqual(messages, []);
+});
+
 test("imports without an internals segment are untouched", () => {
   const messages = messagesFor(
     `${APP}/components/composer.js`,
