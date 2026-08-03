@@ -13,7 +13,7 @@ RSpec.describe Vips do
       end
     end
 
-    it "allows untrusted loaders only when explicitly requested" do
+    it "uses an untrusted loader only with explicit permission" do
       Dir.mktmpdir("vips-spec") do |directory|
         input = File.join(directory, "input.svg")
         output = File.join(directory, "output.png")

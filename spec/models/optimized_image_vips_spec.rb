@@ -59,7 +59,7 @@ RSpec.describe OptimizedImage do
   end
 
   describe ".resize" do
-    it "keeps the ImageMagick path when the setting is disabled" do
+    it "keeps the ImageMagick path under the disabled setting" do
       Dir.mktmpdir("optimized-image-selector") do |directory|
         output = File.join(directory, "output.png")
 
@@ -68,7 +68,7 @@ RSpec.describe OptimizedImage do
       end
     end
 
-    it "uses vips when the setting is enabled" do
+    it "uses vips under the enabled setting" do
       Dir.mktmpdir("optimized-image-selector") do |directory|
         output = File.join(directory, "output.png")
         SiteSetting.use_vips_for_image_processing = true
@@ -147,7 +147,7 @@ RSpec.describe OptimizedImage do
       end
     end
 
-    it "honors output format, quality, and palette options" do
+    it "uses the output format, quality, and palette options" do
       Dir.mktmpdir("optimized-image-options") do |directory|
         low_quality = File.join(directory, "low-quality.jpg")
         high_quality = File.join(directory, "high-quality.jpg")

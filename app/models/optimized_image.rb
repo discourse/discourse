@@ -419,7 +419,7 @@ class OptimizedImage < ActiveRecord::Base
     when "downsize"
       downsize_with_vips(from:, to:, dimensions:, source_format:, target_format:, quality:, colors:)
     else
-      raise ArgumentError, "Unsupported image operation: #{operation}"
+      raise ArgumentError, "Discourse does not support this image operation: #{operation}"
     end
   end
 
@@ -646,13 +646,15 @@ class OptimizedImage < ActiveRecord::Base
         geometry.end_with?(">") ? "down" : "both",
       ]
     else
-      raise ArgumentError, "Unsupported image geometry: #{geometry}"
+      raise ArgumentError, "Discourse does not support this image geometry: #{geometry}"
     end
   end
 
   def self.parse_vips_box(dimensions)
     match = dimensions.match(/\A(\d+)x(\d+)\z/)
-    raise ArgumentError, "Unsupported image geometry: #{dimensions}" if match.nil?
+    if match.nil?
+      raise ArgumentError, "Discourse does not support this image geometry: #{dimensions}"
+    end
     [match[1].to_i, match[2].to_i]
   end
 

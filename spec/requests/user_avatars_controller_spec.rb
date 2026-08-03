@@ -290,7 +290,7 @@ RSpec.describe UserAvatarsController do
       upload.destroy
     end
 
-    it "serves vips avatar urls after the setting is disabled" do
+    it "serves vips avatar URLs after the setting is disabled" do
       user = Fabricate(:user)
       SiteSetting.avatar_sizes = "45"
 

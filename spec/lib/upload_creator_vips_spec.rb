@@ -83,7 +83,7 @@ RSpec.describe UploadCreator do
       )
     end
 
-    it "keeps exposed metadata only when metadata stripping is disabled" do
+    it "keeps exposed metadata under the disabled metadata-stripping setting" do
       SiteSetting.png_to_jpg_quality = 80
       SiteSetting.composer_media_optimization_image_enabled = false
 
@@ -131,7 +131,7 @@ RSpec.describe UploadCreator do
       )
     end
 
-    it "propagates the stock-vips ICO loader failure without ImageMagick fallback" do
+    it "raises the stock-vips ICO loader error and does not start ImageMagick" do
       SiteSetting.authorized_extensions = "png|jpg|ico"
 
       expect do
@@ -159,7 +159,7 @@ RSpec.describe UploadCreator do
       expect(dimensions).to eq(expected_dimensions)
     end
 
-    it "uses vips frame counts when FastImage cannot classify animations" do
+    it "uses vips frame counts for animations that FastImage cannot classify" do
       FastImage.stubs(:animated?).returns(nil)
 
       uploads =
@@ -275,7 +275,7 @@ RSpec.describe UploadCreator do
       )
     end
 
-    it "keeps cropped upload metadata and content addressing in sync" do
+    it "keeps the cropped upload metadata consistent with the stored file" do
       upload =
         described_class.new(
           file_from_fixtures("large_and_unoptimized.png"),
@@ -330,7 +330,7 @@ RSpec.describe UploadCreator do
       expect(encoded_sizes.fetch(40)).to be < encoded_sizes.fetch(80)
     end
 
-    it "propagates a vips conversion failure without a debug retry or ImageMagick fallback" do
+    it "raises the first vips conversion error and does not start ImageMagick" do
       Vips.stubs(:run).raises(Discourse::Utils::CommandError.new("vips failed"))
 
       expect do
