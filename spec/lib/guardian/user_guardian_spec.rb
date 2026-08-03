@@ -232,6 +232,18 @@ RSpec.describe UserGuardian do
 
     before { tl2_user.user_stat.update!(post_count: 1) }
 
+    context "when public profiles are hidden" do
+      before { SiteSetting.hide_user_profiles_from_public = true }
+
+      it "does not allow anonymous users to view profiles" do
+        expect(Guardian.new.can_see_profile?(tl2_user)).to eq(false)
+      end
+
+      it "allows logged-in users to view profiles" do
+        expect(Guardian.new(tl1_user).can_see_profile?(tl2_user)).to eq(true)
+      end
+    end
+
     context "when viewing the profile of a user with 0 posts" do
       before { user.user_stat.update!(post_count: 0) }
 

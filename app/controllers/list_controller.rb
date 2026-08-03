@@ -523,7 +523,6 @@ class ListController < ApplicationController
   end
 
   def ensure_can_see_profile!(target_user = nil)
-    guardian.ensure_public_can_see_profiles!
     raise Discourse::NotFound unless guardian.can_see_profile?(target_user)
   end
 

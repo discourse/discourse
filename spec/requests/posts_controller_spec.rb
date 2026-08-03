@@ -4064,7 +4064,7 @@ RSpec.describe PostsController do
       %w[rss json].each do |format|
         get "/u/#{user.username}/activity.#{format}"
 
-        expect(response).to have_http_status(:forbidden)
+        expect(response).to have_http_status(:not_found)
         expect(response.body).not_to include(public_post.raw)
       end
     end

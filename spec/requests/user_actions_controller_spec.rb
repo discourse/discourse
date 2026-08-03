@@ -36,7 +36,7 @@ RSpec.describe UserActionsController do
 
         user_actions
 
-        expect(response).to have_http_status :forbidden
+        expect(response).to have_http_status :not_found
         expect(response.body).not_to include(post.raw)
       end
 

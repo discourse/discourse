@@ -1349,7 +1349,7 @@ RSpec.describe ListController do
     it "does not disclose a user's topics to anonymous users" do
       get "/topics/created-by/#{profile_user.username}.json"
 
-      expect(response).to have_http_status(:forbidden)
+      expect(response).to have_http_status(:not_found)
       expect(response.body).not_to include(profile_topic.title)
     end
   end

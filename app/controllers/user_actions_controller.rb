@@ -59,7 +59,6 @@ class UserActionsController < ApplicationController
   private
 
   def ensure_user_actions_visible!(user, action_types)
-    guardian.ensure_public_can_see_profiles!
     raise Discourse::NotFound unless guardian.can_see_profile?(user)
     raise Discourse::NotFound unless guardian.can_see_user_actions?(user, action_types)
   end

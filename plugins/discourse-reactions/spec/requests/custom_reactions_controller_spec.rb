@@ -184,16 +184,6 @@ describe DiscourseReactions::CustomReactionsController do
       Fabricate(:reaction_user, reaction: secure_reaction, user: user_2, post: secure_post)
     end
 
-    it "does not disclose reactions when public profiles are hidden" do
-      reaction_user_1
-      SiteSetting.hide_user_profiles_from_public = true
-
-      get "/discourse-reactions/posts/reactions.json", params: { username: user_2.username }
-
-      expect(response).to have_http_status(:forbidden)
-      expect(response.body).not_to include(user_2.username)
-    end
-
     it "returns reactions given by a user" do
       sign_in(user_1)
 

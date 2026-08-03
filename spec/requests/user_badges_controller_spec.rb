@@ -53,7 +53,7 @@ RSpec.describe UserBadgesController do
 
       get "/user_badges.json", params: { badge_id: badge.id, username: user.username }
 
-      expect(response).to have_http_status(:forbidden)
+      expect(response).to have_http_status(:not_found)
       expect(response.body).not_to include(user.username)
     end
 
@@ -115,7 +115,7 @@ RSpec.describe UserBadgesController do
 
       get "/user-badges/#{user.username}.json"
 
-      expect(response).to have_http_status(:forbidden)
+      expect(response).to have_http_status(:not_found)
       expect(response.body).not_to include(user_badge.badge.name)
     end
 
