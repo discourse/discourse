@@ -38,7 +38,11 @@ export default class ChatNavbarChannelTitle extends Component {
   }
 
   get showStarButton() {
-    return this.currentUser && this.args.channel?.isFollowing;
+    return (
+      this.currentUser &&
+      this.args.channel?.isFollowing &&
+      !this.chatStateManager.isDrawerCollapsed
+    );
   }
 
   @action
