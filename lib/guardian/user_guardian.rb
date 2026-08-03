@@ -105,6 +105,14 @@ module UserGuardian
   end
 
   def can_check_sso_details?(user)
+    user && (is_admin? || (is_moderator? && SiteSetting.moderators_view_sso_details))
+  end
+
+  def can_check_sso_email?(user)
+    user && is_admin?
+  end
+
+  def can_check_sso_payload?(user)
     user && is_admin?
   end
 
@@ -151,6 +159,7 @@ module UserGuardian
 
   def can_see_profile?(user)
     return false if user.blank?
+    return false unless public_can_see_profiles?
     return true if is_me?(user) || is_staff?
 
     profile_hidden = SiteSetting.allow_users_to_hide_profile && user.user_option&.hide_profile?

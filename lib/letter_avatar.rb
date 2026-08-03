@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "erb"
-
 class LetterAvatar
   class Identity
     attr_accessor :color, :letter
@@ -18,19 +16,15 @@ class LetterAvatar
   end
 
   # BUMP UP if avatar algorithm changes
-  VERSION = 6
+  VERSION = 5
 
   # CHANGE these values to support more pixel ratios
   FULLSIZE = 120 * 3
   POINTSIZE = 280
-  SVG_TEXT_BASELINE = 245
-  private_constant :SVG_TEXT_BASELINE
-  FONT_LIST_TIMEOUT_SECONDS = 10
-  private_constant :FONT_LIST_TIMEOUT_SECONDS
 
   class << self
     def version
-      "#{VERSION}_#{vips_version}"
+      "#{VERSION}_#{image_magick_version}"
     end
 
     def cache_path
@@ -53,7 +47,10 @@ class LetterAvatar
         fullsize = fullsize_path(identity)
         generate_fullsize(identity) if !cache || !File.exist?(fullsize)
 
-        resize(fullsize, filename, size)
+        # Optimizing here is dubious, it can save up to 2x for large images (eg 359px)
+        # BUT... we are talking 2400 bytes down to 1200 bytes, both fit in one packet
+        # The cost of this is huge, its a 40% perf hit
+        OptimizedImage.resize(fullsize, filename, size, size)
 
         filename
       end
@@ -71,50 +68,57 @@ class LetterAvatar
 
     def generate_fullsize(identity)
       color = identity.color
+      letter = identity.letter
+
       filename = fullsize_path(identity)
 
-      Tempfile.create(%w[letter-avatar .svg]) do |svg|
-        svg.write(svg_for(identity))
-        svg.flush
+      # Use NimbusSans-Regular, except for macOS where it is unavailable, use Helvetica there
+      font = RbConfig::CONFIG["host_os"].match?(/darwin/i) ? "Helvetica" : "NimbusSans-Regular"
+      # and adjust vertical offset accordingly
+      vertical_offset = font == "Helvetica" ? 26 : 34
 
-        Vips.run(
-          "vips",
-          "flatten",
-          svg.path,
-          filename,
-          "--background",
-          color.join(" "),
-          read: [svg.path],
-          write: [File.dirname(filename)],
-          allow_untrusted: true,
-        )
-      end
+      instructions = %W[
+        -size
+        #{FULLSIZE}x#{FULLSIZE}
+        xc:#{to_rgb(color)}
+        -pointsize
+        #{POINTSIZE}
+        -fill
+        #FFFFFFCC
+        -font
+        #{font}
+        -gravity
+        Center
+        -annotate
+        -0+#{vertical_offset}
+        #{letter}
+        -depth
+        8
+        #{filename}
+      ]
+
+      ImageMagick.magick(*instructions, write: [File.dirname(filename)])
+
+      ## do not optimize image, it will end up larger than original
       filename
     end
 
-    def vips_version
-      return @vips_version if @vips_version
+    def to_rgb(color)
+      r, g, b = color
+      "rgb(#{r},#{g},#{b})"
+    end
 
-      fonts =
-        Discourse::Utils
-          .execute_command(
-            "fc-list",
-            "--format",
-            "%{file}\t%{family}\t%{style}\t%{fontversion}\n",
-            timeout: FONT_LIST_TIMEOUT_SECONDS,
+    def image_magick_version
+      @image_magick_version ||=
+        begin
+          Thread.new do
+            sleep 2
+            cleanup_old
+          end
+          Digest::MD5.hexdigest(
+            ImageMagick.magick("--version") << ImageMagick.magick("-list", "font"),
           )
-          .lines
-          .sort
-          .join
-      @vips_version =
-        Digest::MD5.hexdigest([VERSION.to_s, Vips.run("vips", "--version"), fonts].join("\0"))
-
-      Thread.new do
-        sleep 2
-        cleanup_old
-      end
-
-      @vips_version
+        end
     end
 
     def cleanup_old
@@ -127,71 +131,6 @@ class LetterAvatar
         end
     rescue Errno::ENOENT
       # no worries, folder doesn't exists
-    end
-
-    private
-
-    def resize(from, to, size)
-      profile = Rails.root.join("vendor/data/RT_sRGB.icm").to_s
-      output = "#{to}[palette,Q=100,compression=6,strip]"
-
-      Tempfile.create(%w[letter-avatar-resized .png], binmode: true) do |resized|
-        resized.close
-        Vips.run(
-          "vips",
-          "thumbnail",
-          from,
-          "#{resized.path}[compression=6,strip]",
-          size.to_s,
-          "--height",
-          size.to_s,
-          "--size",
-          "both",
-          "--crop",
-          "centre",
-          "--output-profile",
-          profile,
-          read: [from, profile],
-          write: [resized.path],
-          nice: 10,
-        )
-        Vips.run(
-          "vips",
-          "sharpen",
-          resized.path,
-          output,
-          "--sigma",
-          "0.5",
-          "--m1",
-          "0.7",
-          read: [resized.path],
-          write: [File.dirname(to)],
-          nice: 10,
-        )
-      end
-    end
-
-    def svg_for(identity)
-      color = identity.color.join(",")
-      letter = ERB::Util.html_escape(identity.letter)
-      baseline = SVG_TEXT_BASELINE + vertical_offset
-
-      <<~SVG
-        <svg xmlns="http://www.w3.org/2000/svg" width="#{FULLSIZE}" height="#{FULLSIZE}" viewBox="0 0 #{FULLSIZE} #{FULLSIZE}">
-          <rect width="#{FULLSIZE}" height="#{FULLSIZE}" fill="rgb(#{color})"/>
-          <text x="#{FULLSIZE / 2}" y="#{baseline}" fill="white" fill-opacity="0.8" font-family="#{font_family}" font-size="#{POINTSIZE}" text-anchor="middle" dominant-baseline="central">#{letter}</text>
-        </svg>
-      SVG
-    end
-
-    # Use Helvetica on macOS because Nimbus Sans is unavailable there.
-    def font_family
-      RbConfig::CONFIG["host_os"].match?(/darwin/i) ? "Helvetica" : "Nimbus Sans"
-    end
-
-    # Helvetica needs a larger offset to keep the glyph vertically centered.
-    def vertical_offset
-      font_family == "Helvetica" ? 26 : 34
     end
   end
 

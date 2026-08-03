@@ -395,38 +395,31 @@ class Upload < ActiveRecord::Base
 
       color ||=
         begin
-          Dir.mktmpdir("dominant-color") do |directory|
-            pixel = File.join(directory, "pixel.raw")
-
-            # Produce one raw pixel whose color channels represent the image's dominant color.
-            Vips.run(
-              "vips",
-              "thumbnail",
+          data =
+            ImageMagick.magick(
               local_path,
-              pixel,
-              "1",
-              "--height",
-              "1",
-              "--size",
-              "force",
+              "-depth",
+              "8",
+              "-resize",
+              "1x1",
+              "-define",
+              "histogram:unique-colors=true",
+              "-format",
+              "%c",
+              "histogram:info:",
               read: [local_path],
-              write: [directory],
               nice: 10,
               timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS,
             )
 
-            components = File.binread(pixel).bytes
-            rgb =
-              case components.length
-              when 1, 2
-                [components.first] * 3
-              when 3, 4
-                components.first(3)
-              end
-            raise "Calculated dominant color but unable to read the output pixel" if rgb.nil?
+          # Output format:
+          # 1: (110.873,116.226,93.8821) #6F745E srgb(43.4798%,45.5789%,36.8165%)
 
-            rgb.map { |component| component.to_s(16).rjust(2, "0") }.join.upcase
-          end
+          color = data[/#([0-9A-F]{6})/, 1]
+
+          raise "Calculated dominant color but unable to parse output:\n#{data}" if color.nil?
+
+          color
         rescue Discourse::Utils::CommandError
           # Timeout or unable to parse image
           # This can happen due to bad user input - ignore and save

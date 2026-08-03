@@ -1337,6 +1337,23 @@ RSpec.describe ListController do
     end
   end
 
+  describe "topics_by with public profiles hidden" do
+    fab!(:profile_user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:profile_topic) { Fabricate(:topic, user: profile_user) }
+
+    before do
+      profile_user.user_stat.update!(post_count: 1)
+      SiteSetting.hide_user_profiles_from_public = true
+    end
+
+    it "does not disclose a user's topics to anonymous users" do
+      get "/topics/created-by/#{profile_user.username}.json"
+
+      expect(response).to have_http_status(:not_found)
+      expect(response.body).not_to include(profile_topic.title)
+    end
+  end
+
   describe "private_messages" do
     it "returns 403 error when the user can't see private message" do
       sign_in(Fabricate(:user))

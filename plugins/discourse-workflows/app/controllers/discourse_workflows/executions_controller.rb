@@ -26,7 +26,7 @@ module DiscourseWorkflows
 
     def index
       DiscourseWorkflows::Execution::List.call(service_params) do |result|
-        on_success do |executions:, load_more_url: nil|
+        on_success do |executions:, load_more_url:|
           render json: {
                    executions:
                      serialize_data(executions, DiscourseWorkflows::ExecutionListSerializer),

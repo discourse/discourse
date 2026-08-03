@@ -324,8 +324,8 @@ class UsersController < ApplicationController
   def check_sso_email
     user = fetch_user_from_params(include_inactive: true)
 
-    unless user == current_user
-      guardian.ensure_can_check_sso_details!(user)
+    guardian.ensure_can_check_sso_email!(user)
+    if user != current_user
       StaffActionLogger.new(current_user).log_check_email(user, context: params[:context])
     end
 
@@ -340,7 +340,7 @@ class UsersController < ApplicationController
   def check_sso_payload
     user = fetch_user_from_params(include_inactive: true)
 
-    guardian.ensure_can_check_sso_details!(user)
+    guardian.ensure_can_check_sso_payload!(user)
     unless user == current_user
       StaffActionLogger.new(current_user).log_check_email(user, context: params[:context])
     end

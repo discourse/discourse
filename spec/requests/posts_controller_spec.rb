@@ -125,6 +125,39 @@ RSpec.describe PostsController do
         expect(response.parsed_body["cooked"]).to eq("<p>BEFORE</p>")
       end
 
+      it "rejects a version restored from a hidden revision" do
+        hidden_raw = "hidden moderator-redacted secret"
+        hidden_cooked = "<p>#{hidden_raw}</p>"
+        post_with_hidden_revision =
+          Fabricate(:post, user: user, version: 3, raw: "public current version")
+        Fabricate(
+          :post_revision,
+          post: post_with_hidden_revision,
+          number: 2,
+          hidden: true,
+          modifications: {
+            "cooked" => ["<p>public first version</p>", hidden_cooked],
+            "raw" => ["public first version", hidden_raw],
+          },
+        )
+        Fabricate(
+          :post_revision,
+          post: post_with_hidden_revision,
+          number: 3,
+          modifications: {
+            "cooked" => [hidden_cooked, "<p>public current version</p>"],
+            "raw" => [hidden_raw, "public current version"],
+          },
+        )
+
+        get "/posts/#{post_with_hidden_revision.id}.json", params: { version: 2 }
+
+        aggregate_failures do
+          expect(response).to be_forbidden
+          expect(response.body).not_to include(hidden_raw)
+        end
+      end
+
       context "when the revision is hidden" do
         before { post_revision.update!(hidden: true) }
 
@@ -4022,6 +4055,18 @@ RSpec.describe PostsController do
 
       expect(body).to_not include(private_post.topic.slug)
       expect(body).to include(public_post.topic.slug)
+    end
+
+    it "does not disclose a user's posts when public profiles are hidden" do
+      public_post
+      SiteSetting.hide_user_profiles_from_public = true
+
+      %w[rss json].each do |format|
+        get "/u/#{user.username}/activity.#{format}"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).not_to include(public_post.raw)
+      end
     end
 
     it "excludes ignored users' likes from JSON like counts" do
