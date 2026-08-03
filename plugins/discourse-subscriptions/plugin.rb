@@ -89,6 +89,12 @@ after_initialize do
     )
   end
 
+  add_to_serializer(
+    :site,
+    :discourse_subscriptions_stripe_configured,
+    include_condition: -> { scope.is_admin? },
+  ) { DiscourseSubscriptions::Stripe.configured? }
+
   add_to_serializer(:site, :show_campaign_banner) do
     enabled = SiteSetting.discourse_subscriptions_enabled
     campaign_enabled = SiteSetting.discourse_subscriptions_campaign_enabled

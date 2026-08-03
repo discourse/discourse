@@ -6,10 +6,10 @@ const SHOW_ROUTE = "adminPlugins.show";
 
 export default class StripeConfiguredRoute extends Route {
   @service router;
-  @service siteSettings;
+  @service site;
 
   beforeModel(transition) {
-    if (this.siteSettings.discourse_subscriptions_public_key) {
+    if (this.site.discourse_subscriptions_stripe_configured) {
       return;
     }
 

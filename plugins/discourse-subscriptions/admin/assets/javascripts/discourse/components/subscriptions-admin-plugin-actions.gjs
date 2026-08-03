@@ -11,12 +11,13 @@ import { i18n } from "discourse-i18n";
 export default class SubscriptionsAdminPluginActions extends Component {
   @service dialog;
   @service router;
+  @service site;
   @service siteSettings;
 
   @tracked loading = false;
 
   get stripeConfigured() {
-    return !!this.siteSettings.discourse_subscriptions_public_key;
+    return this.site.discourse_subscriptions_stripe_configured;
   }
 
   get campaignEnabled() {

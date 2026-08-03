@@ -30,7 +30,33 @@ describe "Configure subscriptions plugin", allow_network: ["js.stripe.com"] do
     expect(config_page).to have_tabs("Settings", "Products", "Coupons", "Subscriptions")
   end
 
+  it "takes the admin to the settings tab when only the publishable key is set" do
+    SiteSetting.discourse_subscriptions_public_key = "pk_test_51xuu"
+
+    config_page.visit
+
+    expect(page).to have_current_path("/admin/plugins/discourse-subscriptions/settings")
+  end
+
+  it "takes the admin to the settings tab when only the secret key is set" do
+    SiteSetting.discourse_subscriptions_secret_key = "sk_test_51xuu"
+
+    config_page.visit
+
+    expect(page).to have_current_path("/admin/plugins/discourse-subscriptions/settings")
+  end
+
   it "tells the admin why the products tab is empty rather than sending them back to settings" do
+    config_page.visit
+    config_page.click_tab("Products")
+
+    expect(page).to have_current_path("/admin/plugins/discourse-subscriptions/products")
+    expect(config_page).to have_stripe_unconfigured_notice
+  end
+
+  it "tells the admin why the products tab is empty when only the publishable key is set" do
+    SiteSetting.discourse_subscriptions_public_key = "pk_test_51xuu"
+
     config_page.visit
     config_page.click_tab("Products")
 
