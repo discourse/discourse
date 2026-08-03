@@ -21,15 +21,23 @@ function moduleIdFor(filename) {
   return ["discourse", ...segments.slice(appIndex + 1)].join("/");
 }
 
-function mayImportInternals(filename, specifier, internalsIndex) {
+function mayImportInternals(filename, specifier) {
   const specifierSegments = specifier.split("/");
 
+  // Locate the internals segment on the NORMALIZED target, never on the raw
+  // specifier: `./-internals/../../other-group/-internals/x` names this
+  // group's internals as a prefix while resolving into another group's.
   if (specifierSegments[0] === "." || specifierSegments[0] === "..") {
     const importerPath = path.resolve(filename);
-    const groupDirectory = path.resolve(
-      path.dirname(importerPath),
-      specifierSegments.slice(0, internalsIndex).join("/")
-    );
+    const resolved = path.resolve(path.dirname(importerPath), specifier);
+    const segments = resolved.split("/");
+    const internalsIndex = segments.indexOf(INTERNALS_SEGMENT);
+
+    if (internalsIndex === -1) {
+      return true;
+    }
+
+    const groupDirectory = segments.slice(0, internalsIndex).join("/");
 
     if (!groupDirectory.split("/").includes("ui-kit")) {
       return true;
@@ -38,14 +46,22 @@ function mayImportInternals(filename, specifier, internalsIndex) {
     return isWithin(importerPath, groupDirectory);
   }
 
-  const groupId = specifierSegments.slice(0, internalsIndex).join("/");
-  const importerModuleId = moduleIdFor(filename);
+  const segments = path.normalize(specifier).split("/");
+  const internalsIndex = segments.indexOf(INTERNALS_SEGMENT);
+
+  if (internalsIndex === -1) {
+    return true;
+  }
+
+  const groupId = segments.slice(0, internalsIndex).join("/");
 
   if (!groupId.split("/").includes("ui-kit")) {
     return true;
   }
 
-  return importerModuleId && isWithin(importerModuleId, groupId);
+  const importerModuleId = moduleIdFor(filename);
+
+  return Boolean(importerModuleId) && isWithin(importerModuleId, groupId);
 }
 
 export default {
@@ -71,11 +87,11 @@ export default {
         return;
       }
 
-      const internalsIndex = specifier.split("/").indexOf(INTERNALS_SEGMENT);
-
+      // A target can only land inside an internals directory by naming the
+      // segment, so a specifier without it needs no resolution at all.
       if (
-        internalsIndex === -1 ||
-        mayImportInternals(filename, specifier, internalsIndex)
+        !specifier.split("/").includes(INTERNALS_SEGMENT) ||
+        mayImportInternals(filename, specifier)
       ) {
         return;
       }
@@ -90,6 +106,7 @@ export default {
       ExportAllDeclaration: checkSource,
       ExportNamedDeclaration: checkSource,
       ImportDeclaration: checkSource,
+      ImportExpression: checkSource,
     };
   },
 };
