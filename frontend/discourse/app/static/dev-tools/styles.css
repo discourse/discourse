@@ -23,18 +23,20 @@
   --dev-tools-shadow: 1px 1px 2px rgb(0 0 0 / 0.5);
   --dev-tools-bg-opacity: 0.05;
   --dev-tools-container-margin: 2px;
-  --dev-tools-mono-font:
-    "Courier New", courier, "Lucida Console", monaco, monospace;
+  /* The same stack the app uses for code, so dev tooling matches the product. */
+  --dev-tools-mono-font: var(--d-font-family--monospace, monospace);
 }
 
 /* Dev Tools Toolbar */
 .dev-tools-toolbar {
   position: fixed;
   z-index: 999999;
+  inset-inline-start: 0;
   display: flex;
   flex-direction: column;
   background-color: var(--primary-200);
-  border-radius: 0 5px 5px 0;
+  border-start-end-radius: 5px;
+  border-end-end-radius: 5px;
   box-shadow: var(--dev-tools-shadow);
   opacity: 0.8;
   transition: opacity 0.2s ease-in-out;
@@ -43,7 +45,9 @@
     opacity: 0.5;
   }
 
-  button {
+  /* Strip buttons only: a docked panel renders inside this subtree and its
+     buttons carry their own styling. */
+  & > button {
     background: none;
     border: none;
     padding: 5px;
@@ -416,6 +420,10 @@
   z-index: 1000001;
 }
 
+.fk-d-menu[data-identifier="message-bus-settings"] {
+  z-index: 1000001;
+}
+
 /*
  * Shared Outlet Components
  * Used by both PluginOutlet and BlockOutlet debug overlays.
@@ -670,4 +678,639 @@ pre.outlet-info__error-message {
 
 .outlet-args-table__deprecation-version {
   opacity: 0.7;
+}
+
+/* MessageBus inspector */
+/* The panel renders inside the toolbar's subtree to share its stacking
+   context, and opacity composites a whole subtree - no descendant rule can
+   undo it. The fade is therefore lifted while a panel is open, or everything
+   in it renders translucent over the page. This developer-only interface can
+   safely use :has(), so the parent can react without production overhead. */
+.dev-tools-toolbar:has(.d-panel-dock-layer) {
+  opacity: 1;
+}
+
+.dev-tools-toolbar:has(.d-panel-dock.--dock-start) {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+  border-start-start-radius: 5px;
+  border-start-end-radius: 0;
+  border-end-start-radius: 5px;
+  border-end-end-radius: 0;
+}
+
+.dev-tools-message-bus {
+  /* em font tokens compound. This root sizes the panel controls; the channels
+     table and the stream step down once more for data density, and leaves
+     may add at most one further step below whichever context they sit in. */
+  font-size: var(--font-down-1);
+  container: message-bus / inline-size;
+}
+
+.d-panel-dock.--context-dev-tools:has(.dev-tools-message-bus)
+  .d-panel-dock__body {
+  padding: 0;
+  overflow-anchor: none;
+}
+
+.dev-tools-message-bus__top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-block-end: 1px solid var(--content-border-color);
+}
+
+.dev-tools-message-bus__heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.dev-tools-message-bus__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.dev-tools-message-bus__chip {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  gap: var(--space-1);
+  padding: var(--space-half) var(--space-2);
+  border-radius: 3px;
+  background: var(--primary-low);
+  color: var(--primary-high);
+  font-size: var(--font-down-1);
+  white-space: nowrap;
+
+  &.--success {
+    background: var(--success-low);
+    color: var(--success-hover);
+  }
+
+  &.--critical {
+    background: var(--danger-low);
+    color: var(--danger-hover);
+  }
+}
+
+.dev-tools-message-bus__action-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-half);
+  padding-inline-start: var(--space-1);
+  border-inline-start: 1px solid var(--content-border-color);
+}
+
+.dev-tools-message-bus__action,
+.dev-tools-message-bus__log-source,
+.dev-tools-message-bus__message-toggle,
+.dev-tools-message-bus__copy-payload {
+  border-radius: var(--d-button-border-radius);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  padding: var(--space-half);
+  border: 0;
+  background: none;
+  color: var(--primary-high);
+  cursor: pointer;
+
+  & .d-icon {
+    font-size: var(--font-down-1);
+  }
+
+  /* The same hover treatment core gives flat buttons, e.g. in the composer
+     toolbar. */
+  &:hover,
+  &:focus-visible {
+    background: var(--d-hover);
+    color: var(--primary);
+  }
+}
+
+.dev-tools-message-bus__live-dot {
+  width: 0.6em;
+  height: 0.6em;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--success);
+
+  &.--paused {
+    background: var(--primary-medium);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dev-tools-message-bus__live-dot:not(.--paused) {
+    animation: dev-tools-message-bus-pulse 2s ease-in-out infinite;
+  }
+}
+
+@keyframes dev-tools-message-bus-pulse {
+  50% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
+}
+
+.dev-tools-message-bus__eviction-warning {
+  padding: var(--space-2) var(--space-3);
+  border-block: 1px solid var(--danger);
+  background: var(--danger-low);
+  color: var(--danger);
+}
+
+.dev-tools-message-bus__toolbar {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-block: 1px solid var(--content-border-color);
+  background: var(--secondary);
+
+  & .filter-input-container {
+    min-width: 0;
+    flex: 1 1 10em;
+  }
+}
+
+.dev-tools-message-bus__views {
+  flex: 0 0 auto;
+
+  & .nav-pills {
+    gap: var(--space-half);
+    margin: 0;
+
+    & > li > button {
+      min-height: 1.5rem;
+      padding: var(--space-half) var(--space-1);
+    }
+  }
+}
+
+.dev-tools-message-bus__channels,
+.dev-tools-message-bus__closed {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: var(--font-down-1);
+
+  & tbody {
+    border-top: 0;
+  }
+}
+
+.dev-tools-message-bus__closed-section {
+  margin-block-start: var(--space-3);
+}
+
+.dev-tools-message-bus__stream {
+  font-size: var(--font-down-1);
+}
+
+.dev-tools-message-bus__column,
+.dev-tools-message-bus__cell {
+  padding: var(--space-1) var(--space-2);
+  text-align: start;
+
+  &.--subscribers,
+  &.--messages,
+  &.--errors {
+    width: 5ch;
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &:last-child {
+    padding-inline-end: var(--space-3);
+  }
+
+  &.--slowest {
+    width: 5ch;
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &.--last-message {
+    width: 5ch;
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &.--closed-ago {
+    width: 8ch;
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.dev-tools-message-bus__column {
+  /* The header button fills the padded th so its label shares the exact
+     text edge of the cells below it. */
+  & > button {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--space-1);
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    overflow: hidden;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    font-weight: 600;
+    text-align: inherit;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+
+    & .d-icon {
+      flex: 0 0 auto;
+      font-size: inherit;
+    }
+
+    &:hover {
+      color: var(--primary-high);
+    }
+  }
+
+  /* End-aligned columns pack the label against the shared text edge, with
+     the direction icon on its inner side. */
+  &.--subscribers > button,
+  &.--messages > button,
+  &.--errors > button,
+  &.--slowest > button,
+  &.--last-message > button {
+    flex-direction: row-reverse;
+  }
+
+  &.is-current-sort > button {
+    color: var(--tertiary);
+
+    & .d-icon {
+      color: var(--tertiary);
+    }
+  }
+
+  &:not(.is-current-sort) > button .d-icon {
+    visibility: hidden;
+  }
+}
+
+.dev-tools-message-bus__row {
+  cursor: pointer;
+
+  &:hover {
+    background: var(--primary-very-low);
+  }
+
+  &.--duplicated {
+    background: color-mix(
+      in srgb,
+      var(--dev-tools-block-color) 15%,
+      transparent
+    );
+  }
+
+  &.--failing {
+    background: var(--danger-low);
+  }
+
+  /* An open row fuses with its detail block: same fill, no divider, and the
+     accent bar continues through both. The accent is an inset shadow because
+     a real border on a collapsed table's edge cell straddles the table edge
+     and breaks the line. */
+  &.--expanded {
+    border-bottom: 0;
+    background: var(--primary-very-low);
+
+    & > .dev-tools-message-bus__cell.--channel {
+      box-shadow: inset 3px 0 0 var(--tertiary);
+    }
+  }
+}
+
+.dev-tools-message-bus__cell {
+  /* Must stay a real table-cell: a display swap here stops the cell from
+     spanning the row's full height, cutting the --expanded accent short. */
+  &.--channel {
+    min-width: 0;
+  }
+
+  &.--zero {
+    color: var(--primary-medium);
+  }
+
+  &.--danger {
+    color: var(--danger);
+  }
+
+  &.--over-budget {
+    color: var(--danger-medium);
+  }
+}
+
+.dev-tools-message-bus__channel-name {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  text-align: start;
+  border: 0;
+  background: none;
+  overflow: hidden;
+  color: inherit;
+  cursor: pointer;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dev-tools-message-bus__detail-row {
+  & > td {
+    padding: 0;
+  }
+}
+
+.dev-tools-message-bus__detail {
+  padding: var(--space-2);
+  box-shadow: inset 3px 0 0 var(--tertiary);
+  background: var(--primary-very-low);
+}
+
+[dir="rtl"] .dev-tools-message-bus__detail,
+[dir="rtl"]
+  .dev-tools-message-bus__row.--expanded
+  > .dev-tools-message-bus__cell.--channel {
+  box-shadow: inset -3px 0 0 var(--tertiary);
+}
+
+.dev-tools-message-bus__detail-heading,
+.dev-tools-message-bus__live-heading,
+.dev-tools-message-bus__closed-heading {
+  margin: 0 0 var(--space-1);
+  color: var(--primary);
+  font-size: inherit;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.dev-tools-message-bus__live-heading,
+.dev-tools-message-bus__closed-heading {
+  margin: var(--space-2) var(--space-3) var(--space-1);
+}
+
+.dev-tools-message-bus__live-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+
+  & .dev-tools-message-bus__chip {
+    font-size: var(--font-down-1);
+    font-weight: normal;
+    letter-spacing: normal;
+    text-transform: none;
+  }
+}
+
+.dev-tools-message-bus__detail .dev-tools-message-bus__empty {
+  padding: var(--space-1) 0;
+  text-align: start;
+}
+
+.dev-tools-message-bus__subscribers,
+.dev-tools-message-bus__messages {
+  margin: 0 0 var(--space-2);
+  padding: 0;
+  list-style: none;
+}
+
+.dev-tools-message-bus__detail .dev-tools-message-bus__messages {
+  & .dev-tools-message-bus__message {
+    padding-inline: 0;
+  }
+}
+
+.dev-tools-message-bus__subscriber {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-1) var(--space-2);
+  padding-block: var(--space-1);
+}
+
+.dev-tools-message-bus__subscriber-id,
+.dev-tools-message-bus__message-id {
+  font-family: var(--dev-tools-mono-font);
+}
+
+.dev-tools-message-bus__subscriber-id,
+.dev-tools-message-bus__source {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dev-tools-message-bus__source,
+.dev-tools-message-bus__subscribed,
+.dev-tools-message-bus__lifetime,
+.dev-tools-message-bus__stats {
+  color: var(--primary-high);
+}
+
+.dev-tools-message-bus__stats {
+  display: inline-flex;
+  gap: var(--space-1);
+
+  & .dev-tools-message-bus__chip {
+    font-size: inherit;
+    font-weight: 600;
+  }
+}
+
+.dev-tools-message-bus__log-source {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  justify-self: end;
+}
+
+.dev-tools-message-bus__message {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border-block-end: 1px solid var(--content-border-color);
+  transition: background-color 1s ease-out;
+  cursor: pointer;
+
+  &.--fresh {
+    background: color-mix(in srgb, var(--tertiary) 14%, transparent);
+  }
+}
+
+.dev-tools-message-bus__message-channel {
+  max-width: 30%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dev-tools-message-bus__message-id {
+  flex: 0 0 auto;
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+}
+
+.dev-tools-message-bus__message-preview {
+  min-width: 0;
+  flex: 1 1 8em;
+  overflow: hidden;
+  color: var(--primary);
+  font-family: var(--dev-tools-mono-font);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dev-tools-message-bus__message-size {
+  flex: 0 0 auto;
+  color: var(--primary-high);
+  font-size: var(--font-down-1);
+}
+
+.dev-tools-message-bus__message-time {
+  flex: 0 0 auto;
+  color: var(--primary-high);
+  font-size: var(--font-down-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.dev-tools-message-bus__payload {
+  position: relative;
+  min-width: 0;
+  flex: 1 0 100%;
+  font-family: var(--dev-tools-mono-font);
+
+  /* Core gives `code` an absolute rem size; overridden so the payload shares
+     the data tier. The scroll cap stays on the code block itself, so a long
+     payload scrolls inside its own box rather than dragging the row along. */
+  & pre code {
+    max-height: 18em;
+    padding: var(--space-2);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    font-size: inherit;
+  }
+
+  & pre {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-family: var(--dev-tools-mono-font);
+    font-size: inherit;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+}
+
+.dev-tools-message-bus__copy-payload {
+  position: absolute;
+  inset-block-start: var(--space-1);
+
+  /* Clear of the code block's (thinned) scrollbar track. */
+  inset-inline-end: var(--space-3);
+}
+
+.dev-tools-message-bus__show-older {
+  margin: 0 var(--space-3) var(--space-2);
+}
+
+.dev-tools-message-bus__empty {
+  padding: var(--space-4) var(--space-3);
+  color: var(--primary-medium);
+  text-align: center;
+}
+
+.dev-tools-message-bus__settings {
+  display: flex;
+  min-width: 16em;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2);
+
+  /* The menu portals to the body, so the panel root's size never reaches
+     this form and it must set its own. */
+  font-size: var(--font-down-1);
+
+  & .form-kit__field {
+    margin: 0;
+    gap: var(--space-half);
+  }
+
+  & .form-kit__container-title {
+    font-size: inherit;
+    font-weight: 600;
+  }
+
+  & .form-kit__control-input {
+    min-width: 0;
+    max-width: 10em;
+    height: auto;
+    padding: var(--space-half) var(--space-1);
+    font-size: inherit;
+  }
+
+  & .form-kit__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-1);
+    margin: 0;
+  }
+}
+
+/* Dialogs sit at the modal layer, far below the toolbar's stacking context,
+   so any confirm the dev tools raise must be lifted above the panel. */
+.dialog-container.dev-tools-message-bus__confirm-dialog,
+.dialog-container.dev-tools-confirm-dialog {
+  z-index: 1000002;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dev-tools-message-bus__message {
+    transition: none;
+  }
+}
+
+@container message-bus (max-width: 379px) {
+  .dev-tools-message-bus__column.--col-extra,
+  .dev-tools-message-bus__cell.--col-extra {
+    display: none;
+  }
+}
+
+@container message-bus (max-width: 279px) {
+  .dev-tools-message-bus__column.--subscribers,
+  .dev-tools-message-bus__cell.--subscribers {
+    display: none;
+  }
 }

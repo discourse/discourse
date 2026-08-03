@@ -20,6 +20,7 @@ const EXPECTED_ORDER = [
   "upcoming-changes-debug",
   "safe-mode",
   "verbose-localization",
+  "message-bus",
   "disable-dev-tools",
 ];
 
@@ -31,6 +32,7 @@ const SELECTORS = {
   "upcoming-changes-debug": ".toggle-upcoming-changes-menu",
   "safe-mode": ".toggle-safe-mode",
   "verbose-localization": ".toggle-verbose-localization",
+  "message-bus": ".toggle-message-bus",
   "disable-dev-tools": ".disable-dev-tools",
 };
 
