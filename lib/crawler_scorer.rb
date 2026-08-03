@@ -42,6 +42,7 @@ class CrawlerScorer
   MISSING_ENGAGEMENT_HIGH_RATIO = 0.9
   MISSING_ENGAGEMENT_LOW_SCORE = 20
   MISSING_ENGAGEMENT_HIGH_SCORE = 40
+  ENGAGEMENT_LOOKBACK = 6.hours
 
   def self.score!(window_start:, window_end:)
     crawler_asns = SiteSetting.crawler_asns_map.map(&:to_i)
@@ -87,6 +88,7 @@ class CrawlerScorer
         referrer_high_ratio: REFERRER_HIGH_RATIO,
         referrer_low_score: REFERRER_LOW_SCORE,
         referrer_high_score: REFERRER_HIGH_SCORE,
+        engagement_lookback_start: window_end - ENGAGEMENT_LOOKBACK,
         missing_engagement_low_ratio: MISSING_ENGAGEMENT_LOW_RATIO,
         missing_engagement_high_ratio: MISSING_ENGAGEMENT_HIGH_RATIO,
         missing_engagement_low_score: MISSING_ENGAGEMENT_LOW_SCORE,
@@ -111,11 +113,30 @@ class CrawlerScorer
       FROM browser_pageview_events e
       LEFT JOIN browser_pageview_session_engagements se
         ON se.session_id = e.session_id
-        AND (
-          #{BrowserPageviewSessionEngagement::INTERACTION_COLUMNS.map { |column| "se.#{column} > 0" }.join(" OR ")}
-        )
       WHERE e.created_at >= :window_start
         AND e.created_at <  :window_end
+    ),
+
+    ipua_engagement AS (
+      SELECT
+        e.ip_address,
+        e.user_agent,
+        e.source,
+        AVG(CASE WHEN se.session_id IS NOT NULL THEN 0.0 ELSE 1.0 END)
+          AS no_engagement_ratio
+      FROM browser_pageview_events e
+      LEFT JOIN browser_pageview_session_engagements se
+        ON se.session_id = e.session_id
+      WHERE e.created_at >= :engagement_lookback_start
+        AND e.created_at <  :window_end
+        AND EXISTS (
+          SELECT 1
+          FROM events w
+          WHERE w.ip_address = e.ip_address
+            AND w.user_agent = e.user_agent
+            AND w.source = e.source
+        )
+      GROUP BY e.ip_address, e.user_agent, e.source
     ),
 
     -- Per-heuristic stats are partitioned by source as well as ip/ua so that
@@ -134,8 +155,7 @@ class CrawlerScorer
             WHEN substring(referrer from '^https?://([^/]+)') = :hostname THEN 0.0
             ELSE 1.0
           END
-        ) AS bad_referrer_ratio,
-        AVG(CASE WHEN engaged THEN 0.0 ELSE 1.0 END) AS no_engagement_ratio
+        ) AS bad_referrer_ratio
       FROM events
       GROUP BY ip_address, user_agent, source
     ),
@@ -246,14 +266,15 @@ class CrawlerScorer
         END AS referrer_score,
         CASE
           WHEN e.engaged THEN 0
-          WHEN iu.no_engagement_ratio >= :missing_engagement_high_ratio
+          WHEN ie.no_engagement_ratio >= :missing_engagement_high_ratio
             THEN :missing_engagement_high_score
-          WHEN iu.no_engagement_ratio >= :missing_engagement_low_ratio
+          WHEN ie.no_engagement_ratio >= :missing_engagement_low_ratio
             THEN :missing_engagement_low_score
           ELSE 0
         END AS engagement_score
       FROM events e
       LEFT JOIN ipua_stats iu USING (ip_address, user_agent, source)
+      LEFT JOIN ipua_engagement ie USING (ip_address, user_agent, source)
       LEFT JOIN median_gap mg USING (ip_address, user_agent, source)
       LEFT JOIN session_stats ss USING (session_id, source)
     ),

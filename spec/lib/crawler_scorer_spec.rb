@@ -318,7 +318,7 @@ RSpec.describe CrawlerScorer do
     expect(breakdown.engagement_score).to eq(0)
   end
 
-  it "penalises engagement rows crafted without interaction counts" do
+  it "treats any engagement row as engagement, since the client only beacons on activity" do
     event = make_event(user_agent: "Mozilla/5.0 HeadlessChrome/120.0.0.0")
     Fabricate(
       :browser_pageview_session_engagement,
@@ -328,8 +328,8 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(event.reload.score).to eq(140)
-    expect(event.browser_pageview_event_score.engagement_score).to eq(40)
+    expect(event.reload.score).to eq(100)
+    expect(event.browser_pageview_event_score.engagement_score).to eq(0)
   end
 
   it "lowers the score when an engagement beacon arrives after an earlier run" do
@@ -361,6 +361,50 @@ RSpec.describe CrawlerScorer do
 
     expect(abandoned_tab.reload.score).to eq(30)
     expect(abandoned_tab.browser_pageview_event_score.engagement_score).to eq(0)
+  end
+
+  it "dilutes the ratio with engaged traffic that precedes the scoring window" do
+    SiteSetting.crawler_asns = "12345"
+    engaged_session = "earlier-engaged"
+    10.times do |i|
+      make_event(asn: 12_345, session_id: engaged_session, created_at: 3.hours.ago + i.minutes)
+    end
+    Fabricate(:browser_pageview_session_engagement, session_id: engaged_session, scroll_events: 8)
+
+    tail = 3.times.map { |i| make_event(asn: 12_345, created_at: 30.minutes.ago + i.minutes) }
+
+    score!
+
+    tail.each do |event|
+      expect(event.reload.score).to eq(30)
+      expect(event.browser_pageview_event_score.engagement_score).to eq(0)
+    end
+  end
+
+  it "still penalises a single unengaged request with no other traffic on the horizon" do
+    SiteSetting.crawler_asns = "12345"
+    event = make_event(asn: 12_345)
+
+    score!
+
+    expect(event.reload.score).to eq(70)
+    expect(event.browser_pageview_event_score.engagement_score).to eq(40)
+  end
+
+  it "ignores engaged traffic older than the lookback horizon" do
+    SiteSetting.crawler_asns = "12345"
+    engaged_session = "long-ago-engaged"
+    10.times do |i|
+      make_event(asn: 12_345, session_id: engaged_session, created_at: 7.hours.ago + i.minutes)
+    end
+    Fabricate(:browser_pageview_session_engagement, session_id: engaged_session, scroll_events: 8)
+
+    event = make_event(asn: 12_345)
+
+    score!
+
+    expect(event.reload.score).to eq(70)
+    expect(event.browser_pageview_event_score.engagement_score).to eq(40)
   end
 
   it "scores partially engaged ip+ua traffic at the lower band" do
