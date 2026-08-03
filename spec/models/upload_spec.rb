@@ -931,6 +931,30 @@ RSpec.describe Upload do
       secure_url = Upload.secure_uploads_url_from_upload_url(url)
       expect(secure_url).not_to include(SiteSetting.Upload.absolute_base_url)
     end
+
+    it "includes the logical upload identity when provided" do
+      upload = Fabricate(:upload_s3, secure: true)
+      secure_url =
+        Upload.secure_uploads_url_from_upload_url(upload.url, base62_sha1: upload.base62_sha1)
+
+      expect(secure_url).to end_with("?base62_sha1=#{upload.base62_sha1}")
+    end
+  end
+
+  describe ".signed_url_from_secure_uploads_url" do
+    before { enable_secure_uploads }
+
+    it "does not include the logical upload identity in the storage path" do
+      url =
+        "/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png?base62_sha1=1Eg9p8rrCURq4T3a6iJUk0ri6"
+      signed_url =
+        Upload.signed_url_from_secure_uploads_url(url, include_content_disposition: false)
+
+      expect(URI.parse(signed_url).path).to end_with(
+        "/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png",
+      )
+      expect(signed_url).not_to include("base62_sha1")
+    end
   end
 
   describe ".secure_uploads_url?" do
@@ -942,6 +966,13 @@ RSpec.describe Upload do
       expect(Upload.secure_uploads_url?(url)).to eq(true)
       url =
         "http://localhost:3000/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
+      expect(Upload.secure_uploads_url?(url)).to eq(true)
+    end
+
+    it "works when the secure uploads url includes a logical upload identity" do
+      url =
+        "/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png?base62_sha1=1Eg9p8rrCURq4T3a6iJUk0ri6"
+
       expect(Upload.secure_uploads_url?(url)).to eq(true)
     end
 

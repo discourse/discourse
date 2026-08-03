@@ -300,27 +300,24 @@ class Upload < ActiveRecord::Base
     route = UrlHelper.rails_route_from_url(url)
     return false if route.blank?
     route[:action] == "show_secure" && route[:controller] == "uploads" &&
-      FileHelper.is_supported_media?(url)
+      FileHelper.is_supported_media?(url.split("?", 2).first)
   rescue ActionController::RoutingError
     false
   end
 
   def self.signed_url_from_secure_uploads_url(url, include_content_disposition:)
     route = UrlHelper.rails_route_from_url(url)
-    url = Rails.application.routes.url_for(route.merge(only_path: true))
+    url = Rails.application.routes.url_for(route.merge(only_path: true)).split("?", 2).first
     secure_upload_s3_path = url[url.index(route[:path])..-1]
     Discourse.store.signed_url_for_path(secure_upload_s3_path, include_content_disposition:)
   end
 
-  def self.secure_uploads_url_from_upload_url(url)
+  def self.secure_uploads_url_from_upload_url(url, base62_sha1: nil)
     return url if !url.include?(SiteSetting.Upload.absolute_base_url)
     uri = URI.parse(url)
-    Rails.application.routes.url_for(
-      controller: "uploads",
-      action: "show_secure",
-      path: uri.path[1..-1],
-      only_path: true,
-    )
+    route = { controller: "uploads", action: "show_secure", path: uri.path[1..-1], only_path: true }
+    route[:base62_sha1] = base62_sha1 if base62_sha1.present?
+    Rails.application.routes.url_for(route)
   end
 
   def self.short_path(sha1:, extension:)

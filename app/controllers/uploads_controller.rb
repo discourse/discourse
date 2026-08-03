@@ -176,11 +176,26 @@ class UploadsController < ApplicationController
     path_with_ext =
       params[:extension].nil? ? params[:path] : "#{params[:path]}.#{params[:extension]}"
     upload = upload_from_path_and_extension(path_with_ext)
+    permission_upload = upload
+
+    if params[:base62_sha1].present?
+      return render_404 if !params[:base62_sha1].match?(/\A[a-zA-Z0-9]+\z/)
+
+      permission_upload =
+        Upload.find_by(sha1: Upload.sha1_from_base62_encoded(params[:base62_sha1]))
+      storage_upload = permission_upload&.primary_upload || permission_upload
+
+      return render_404 if !secure_upload_path_matches?(storage_upload, path_with_ext)
+
+      upload = storage_upload
+    end
 
     return render_404 if upload.blank?
 
     return render_404 if SiteSetting.prevent_anons_from_downloading_files && current_user.nil?
-    return handle_secure_upload_request(upload, path_with_ext) if SiteSetting.secure_uploads?
+    if SiteSetting.secure_uploads?
+      return handle_secure_upload_request(upload, path_with_ext, permission_upload:)
+    end
 
     # we don't want to 404 here if secure uploads gets disabled
     # because all posts with secure uploads will show broken media
@@ -199,8 +214,8 @@ class UploadsController < ApplicationController
                 allow_other_host: true
   end
 
-  def handle_secure_upload_request(upload, path_with_ext = nil)
-    check_secure_upload_permission(upload)
+  def handle_secure_upload_request(upload, path_with_ext = nil, permission_upload: upload)
+    check_secure_upload_permission(permission_upload)
 
     # defaults to public: false, so only cached by the client browser
     cache_seconds =
@@ -220,10 +235,17 @@ class UploadsController < ApplicationController
                   path_with_ext,
                   expires_in: SiteSetting.s3_presigned_get_url_expires_after_seconds,
                   force_download: force_download?,
-                  filename: upload.original_filename,
+                  filename: permission_upload.original_filename,
                   include_content_disposition: true,
                 ),
                 allow_other_host: true
+  end
+
+  def secure_upload_path_matches?(upload, path_with_ext)
+    return false if upload.blank?
+
+    secure_url = Upload.secure_uploads_url_from_upload_url(upload.url)
+    URI.parse(secure_url).path == "/secure-uploads/#{path_with_ext}"
   end
 
   def metadata
