@@ -42,6 +42,8 @@ module DiscourseDataExplorer
 
       class_attribute :_jsonapi_config, instance_writer: false
       class_attribute :_api_scope_resource, :_api_scope_groups, instance_writer: false
+      class_attribute :_internal, instance_writer: false, default: false
+      class_attribute :_services, instance_writer: false, default: {}
 
       # Endpoint wiring: the resource class (docs/resource-design.md) carries all
       # declarations; the controller only names which resource it serves.
@@ -59,6 +61,27 @@ module DiscourseDataExplorer
         self._api_scope_resource = resource
         self._api_scope_groups = groups.transform_values { |actions| Array(actions).map(&:to_sym) }
       end
+
+      # Which service implements a write action. The endpoint already calls it; saying
+      # so lets the documentation derive request-body constraints from its contract
+      # (validators → `required`/`maxLength`) instead of being handed a map of
+      # endpoints. `from_resource` will invert this edge in core — see
+      # docs/api-docs-generation.md §7.
+      def self.service_for(action, service)
+        self._services = _services.merge(action.to_sym => service)
+      end
+
+      def self.service_for?(action) = _services.key?(action.to_sym)
+      def self.service(action) = _services[action.to_sym]
+
+      # Publication and support (docs/resource-design.md §9): an endpoint shaped for
+      # our own client. It is left out of the generated documentation and out of the
+      # versioning contract — there is nothing to pin, so the version header is not
+      # required and any pin sent is ignored. Everything else (types, filters,
+      # pagination, errors, guardian scoping) is unchanged: the keyword removes the
+      # promise, never the quality bar.
+      def self.internal! = self._internal = true
+      def self.internal? = _internal
 
       # The name this endpoint's scopes are grouped under — by default the resource's
       # public type, so scopes read like the API vocabulary (`queries` / `read`).
@@ -127,6 +150,10 @@ module DiscourseDataExplorer
       # is echoed back — clients store it verbatim. Failure: 400 whose body
       # teaches the current version. See docs/plugins-design.md (C).
       def resolve_api_version
+        # Internal endpoints carry no version obligation, so there is nothing to
+        # resolve, nothing to echo, and the pipeline stays a no-op for them.
+        return if self.class.internal?
+
         base, overrides = parse_version_header(request.headers[API_VERSION_HEADER])
         @api_version = JsonApiKit.api_versions.resolve(base)
         @api_version_overrides =
@@ -216,6 +243,8 @@ module DiscourseDataExplorer
       # current clients, so the pipeline is a no-op on the hot path. Overridden
       # plugins are governed by their own resolved dates.
       def api_version_gap
+        return [] if self.class.internal?
+
         @api_version_gap ||=
           JsonApiKit.api_versions.gap_for(@api_version, overrides: @api_version_overrides)
       end

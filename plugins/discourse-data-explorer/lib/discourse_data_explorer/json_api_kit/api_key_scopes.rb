@@ -99,9 +99,12 @@ module DiscourseDataExplorer
             .uniq
         end
 
+        # Internal endpoints grant no scope: they are not part of the published
+        # surface, and once they stop accepting API keys entirely there would be
+        # nothing left to scope (docs/resource-design.md §9).
         def kit_controller?(controller)
           klass = controller_class(controller)
-          klass.present? && klass < BaseController
+          klass.present? && klass < BaseController && !klass.internal?
         end
 
         def controller_class(controller)

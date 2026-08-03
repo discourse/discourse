@@ -7,6 +7,7 @@ module DiscourseDataExplorer
     # logic, via Service::Base.
     class QueriesController < BaseController
       resource QueryResource
+      service_for :create, DiscourseDataExplorer::Query::Create
 
       # Writes stay explicit and bespoke (Service::Base owns validation/policy/persistence).
       def create

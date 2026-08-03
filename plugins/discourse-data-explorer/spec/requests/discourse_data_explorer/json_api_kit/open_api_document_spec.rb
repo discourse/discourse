@@ -16,17 +16,7 @@ RSpec.describe "JSON:API Kit OpenAPI document" do
   fab!(:never_run_query) { Fabricate(:query, user: admin, hidden: false, last_run_at: nil) }
 
   let(:current_version) { "2026-07-08" }
-  let(:document) do
-    DiscourseDataExplorer::JsonApiKit::OpenApiGenerator.new(
-      endpoints: [
-        {
-          path: "/data-explorer/api/queries",
-          controller: DiscourseDataExplorer::JsonApiKit::QueriesController,
-          create: DiscourseDataExplorer::Query::Create,
-        },
-      ],
-    ).document
-  end
+  let(:document) { DiscourseDataExplorer::JsonApiKit::OpenApiGenerator.new.document }
   let(:collection_schema) do
     document.dig(
       "paths",

@@ -421,3 +421,60 @@ their quality high, so it's worth keeping.
 **Transition rule worth stating in the contract:** internal → public is additive and safe
 (start documenting, start honouring pins from that date); public → internal is a breaking
 change and needs the lifecycle above.
+
+### Spiked 2026-08-03 — `internal!`, and one consequence worth keeping
+
+Built: `internal!` / `internal?` on the controller, plus a second endpoint in the spike
+(`InternalQueriesController`, serving the *same* `QueryResource` at
+`/data-explorer/api/internal/queries`) — which is itself the point: publication is a
+per-endpoint decision, not a property of a resource. Nine acceptance examples.
+
+What the keyword does, all spec'd: the endpoint serves **without a version header**,
+advertises no resolved version, and **ignores a pin** (an old date still gets the latest
+shape — there is no promise to keep); it is **absent from the generated document**; and it
+grants **no API key scope**. Everything else is untouched — an unknown filter is still a
+teaching 400, so the quality bar really is independent of the promise.
+
+**Partial enforcement falls out for free.** With no scope covering it, a *granular* API key
+cannot reach an internal endpoint at all (403), while an unscoped key still can. That is a
+weaker version of the cookie-only proposal above, achieved without touching authentication —
+and it arrives in the right order: new internal endpoints are unreachable by scoped keys from
+day one, while the stricter rule can follow once existing consumers have been metered and
+deprecated.
+
+**Route derivation — built 2026-08-03.** A `jsonapi_resource` route helper draws an
+endpoint from the controller's own declarations, so the routes file names it once:
+
+```ruby
+scope "/data-explorer/api", defaults: { format: :json } do
+  jsonapi_resource "queries", controller: "…/json_api_kit/queries"
+  jsonapi_resource "queries", controller: "…/json_api_kit/internal_queries"
+end
+```
+
+which draws:
+
+```
+GET  /data-explorer/api/queries            GET /data-explorer/api/internal/queries
+GET  /data-explorer/api/queries/:id        GET /data-explorer/api/internal/queries/:id
+POST /data-explorer/api/queries
+```
+
+Two things are derived rather than repeated. The **`internal/` segment** comes from
+`internal!` — the routes file never mentions it, so the boundary cannot be declared in one
+place and forgotten in the other (both endpoints are even named `"queries"`; only their
+publication differs). And the **verbs** come from what the endpoint implements: reads are
+always routed because the framework provides them, while `create`/`update`/`destroy` are
+routed only when the controller defines them — spec'd by `POST` to the internal endpoint
+raising a routing error.
+
+One dev-mode caveat worth knowing: Rails reloads routes when route files change, not when a
+controller changes, so flipping `internal!` needs a route file touch or a restart before the
+URL follows. CI catches any mismatch, since the derivation is the only thing drawing routes.
+
+This helper is also the seam the docs generator's `endpoints:` map eventually reads from (see
+[API docs generation](./api-docs-generation.md) §6, the generalization path): once routes are
+drawn from declarations, `paths` and `operations` can be introspected rather than passed in.
+
+Not built, still as designed: the cookie-only enforcement with its CSRF and user-api-key
+consequences.

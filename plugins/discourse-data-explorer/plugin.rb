@@ -42,6 +42,8 @@ require "jsonapi/serializer"
 require_relative "lib/discourse_data_explorer/json_api_kit"
 # Patch jsonapi-serializer's nested-include linkage bug (lazy_load_data + nested leaf drops
 # the leaf's linkage). Small, owned, on a frozen gem. See the patch file + Part 9.
+require_relative "lib/discourse_data_explorer/json_api_kit/routes"
+ActionDispatch::Routing::Mapper.include(DiscourseDataExplorer::JsonApiKit::Routes)
 require_relative "lib/discourse_data_explorer/json_api_kit/lazy_nested_linkage_patch"
 FastJsonapi::SerializationCore::ClassMethods.prepend(
   DiscourseDataExplorer::JsonApiKit::LazyNestedLinkagePatch,

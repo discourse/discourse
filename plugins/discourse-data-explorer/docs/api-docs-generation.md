@@ -126,6 +126,17 @@ document's intro prose would confuse both audiences.
 
   End state: the generator **self-assembles** — `BaseController` descendants + routes, no
   arguments. Everything else it reads is already declarations.
+
+  **Reached 2026-08-03.** The `endpoints:` map is gone: `OpenApiGenerator.new` takes only the
+  intro prose and the captured examples. Paths, member paths and which actions exist come
+  from the route table (filtered to Kit controllers, `internal!` ones excluded), and the one
+  fact routes cannot supply — which service implements a write — is declared on the
+  controller as `service_for :create, Query::Create`, replacing an external map with a local
+  statement of something the endpoint already does. Regenerating produced byte-identical
+  documents, which is the proof the derivation matches what the map said. Remaining from the
+  chain above: `update`/`destroy` operation builders (nothing routes them yet, so nothing
+  documents them), and `from_resource`, which would invert the contract edge and retire
+  `service_for` too.
 - **Emission built (2026-07-22):** `bin/rake data_explorer:json_api_docs` writes
   `openapi-jsonapi.json` (JSON directly — Redoc consumes it; core's YAML→`tojson.js` step
   exists only because rswag emits YAML). The file is **committed** as a contract artifact:

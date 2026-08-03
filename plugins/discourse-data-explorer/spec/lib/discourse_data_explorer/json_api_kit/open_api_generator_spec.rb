@@ -1,24 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
-  subject(:document) { described_class.new(endpoints:).document }
+  subject(:document) { described_class.new.document }
 
-  let(:endpoints) do
-    [
-      {
-        path: "/data-explorer/api/queries",
-        controller: DiscourseDataExplorer::JsonApiKit::QueriesController,
-        create: DiscourseDataExplorer::Query::Create,
-      },
-    ]
-  end
   let(:schemas) { document.dig("components", "schemas") }
   let(:index_operation) { document.dig("paths", "/data-explorer/api/queries", "get") }
   let(:show_operation) { document.dig("paths", "/data-explorer/api/queries/{id}", "get") }
   let(:create_operation) { document.dig("paths", "/data-explorer/api/queries", "post") }
 
   describe "the document" do
-    let(:intro_document) { described_class.new(endpoints:, intro: "# Welcome").document }
+    let(:intro_document) { described_class.new(intro: "# Welcome").document }
 
     it "targets OpenAPI 3.1" do
       expect(document["openapi"]).to eq("3.1.0")
@@ -409,7 +400,7 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
         removed_endpoint controller: "discourse_data_explorer/json_api_kit/queries", action: :show
       end
     end
-    let(:generator) { described_class.new(endpoints:) }
+    let(:generator) { described_class.new }
 
     around do |example|
       DiscourseDataExplorer::JsonApiKit.api_versions.register(removal_change)
@@ -439,7 +430,6 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
 
     let(:generator) do
       described_class.new(
-        endpoints:,
         examples: {
           "listQueries" => {
             "200" => {
@@ -615,7 +605,7 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
   # document carries only what every site serves; each plugin gets its own
   # document — an ownership projection over the same declarations.
   describe "the core-scoped document" do
-    subject(:core_document) { described_class.new(endpoints:, scope: :core).document }
+    subject(:core_document) { described_class.new(scope: :core).document }
 
     let(:core_index_parameters) do
       core_document.dig("paths", "/data-explorer/api/queries", "get", "parameters")
@@ -653,7 +643,7 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
   end
 
   describe "#document_for" do
-    subject(:plugin_document) { described_class.new(endpoints:).document_for("run-stats") }
+    subject(:plugin_document) { described_class.new.document_for("run-stats") }
 
     let(:fragment) { plugin_document.dig("paths", "/data-explorer/api/queries", "get") }
     let(:parameter_names) { fragment["parameters"].map { it["name"] } }
@@ -736,7 +726,6 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
     context "with a captured example for the fragment" do
       subject(:plugin_document) do
         described_class.new(
-          endpoints:,
           examples: {
             "listQueriesRunStats" => {
               "200" => {
@@ -771,7 +760,6 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
     context "when pinned before the plugin's change" do
       subject(:plugin_document) do
         described_class.new(
-          endpoints:,
           examples: {
             "listQueriesRunStats" => {
               "200" => {
@@ -837,7 +825,6 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
   describe "captured examples" do
     let(:documented) do
       described_class.new(
-        endpoints:,
         examples: {
           "listQueries" => {
             "200" => {

@@ -117,13 +117,6 @@ module DiscourseDataExplorer
 
       def openapi_generator(scope: :site)
         OpenApiGenerator.new(
-          endpoints: [
-            {
-              path: "/data-explorer/api/queries",
-              controller: QueriesController,
-              create: DiscourseDataExplorer::Query::Create,
-            },
-          ],
           intro: File.read(File.expand_path("../../docs/api-intro.md", __dir__)),
           examples: openapi_examples,
           scope:,

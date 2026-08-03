@@ -11,8 +11,10 @@ module DiscourseDataExplorer
     # validates live responses against the generated schemas.
     # See docs/api-docs-generation.md.
     #
-    # Spike input shape: `endpoints: [{ path:, controller:, create: }]` — route
-    # introspection and the create-service linkage are real-phase concerns.
+    # The document self-assembles: endpoints come from the route table (paths, member
+    # paths and which actions exist), each endpoint's shape from its resource class,
+    # and request-body constraints from the service a controller declares with
+    # `service_for`. Nothing is passed in but the intro prose and captured examples.
     class OpenApiGenerator
       CONTENT_TYPE = "application/vnd.api+json"
 
@@ -116,11 +118,35 @@ module DiscourseDataExplorer
       # `:site` composes everything registered — what this installation serves;
       # `:core` keeps only core-owned surfaces — true for every Discourse.
       # Plugin documents are the third projection, via #document_for.
-      def initialize(endpoints:, intro: nil, examples: {}, scope: :site)
-        @endpoints = endpoints
+      def initialize(intro: nil, examples: {}, scope: :site)
         @intro = intro
         @examples = examples
         @scope = scope
+      end
+
+      # Every routed Kit endpoint, keyed by controller: its collection path, its member
+      # path, and the actions the routes actually expose. Internal endpoints are not
+      # part of the published surface (docs/resource-design.md §9), so the document
+      # never sees them.
+      def endpoints
+        @endpoints ||=
+          Rails
+            .application
+            .routes
+            .routes
+            .each_with_object({}) do |route, found|
+              controller = route.defaults[:controller].to_s
+              action = route.defaults[:action].to_s
+              next if !controller.include?("json_api_kit")
+              klass = "#{controller}_controller".camelize.safe_constantize
+              next if klass.nil? || !(klass < BaseController) || klass.internal?
+
+              path = route.path.spec.to_s.sub("(.:format)", "").gsub(":id", "{id}")
+              endpoint = (found[klass] ||= { controller: klass, actions: [] })
+              endpoint[:actions] |= [action.to_sym]
+              endpoint[path.include?("{id}") ? :member_path : :path] = path
+            end
+            .values
       end
 
       # Removed operations are absent from the latest document — new integrators
@@ -146,7 +172,7 @@ module DiscourseDataExplorer
             gap,
           )
         end
-        @endpoints.each { downgrade_endpoint!(versioned, it, gap) }
+        endpoints.each { downgrade_endpoint!(versioned, it, gap) }
         downgrade_examples!(versioned, gap)
         apply_removals(versioned, gap:)
       end
@@ -210,16 +236,16 @@ module DiscourseDataExplorer
       # caller's gap (pinned before it) stays, marked deprecated; otherwise it
       # disappears from the document — mirroring the runtime gate exactly.
       def apply_removals(document, gap:)
-        @endpoints.each do |endpoint|
+        endpoints.each do |endpoint|
           {
             endpoint[:path] => {
               "get" => :index,
               "post" => :create,
             },
-            "#{endpoint[:path]}/{id}" => {
+            endpoint[:member_path] => {
               "get" => :show,
             },
-          }.each do |path, actions|
+          }.compact.each do |path, actions|
             operations = document["paths"][path]
             next if operations.nil?
 
@@ -249,7 +275,7 @@ module DiscourseDataExplorer
         @resources ||=
           begin
             found = {}
-            queue = @endpoints.map { primary_resource(it) }
+            queue = endpoints.map { primary_resource(it) }
             while (resource = queue.shift)
               type = resource.record_type.to_s
               next if found.key?(type)
@@ -278,7 +304,7 @@ module DiscourseDataExplorer
 
       # One tag per endpoint primary, described by the resource itself.
       def tags
-        @endpoints
+        endpoints
           .map do |endpoint|
             resource = primary_resource(endpoint)
             tag = { "name" => tag_name(resource) }
@@ -368,7 +394,7 @@ module DiscourseDataExplorer
       end
 
       def plugin_tags(plugin)
-        @endpoints
+        endpoints
           .filter_map do |endpoint|
             resource = primary_resource(endpoint)
             next if !plugin.attached_types.include?(resource.record_type.to_s)
@@ -378,7 +404,7 @@ module DiscourseDataExplorer
       end
 
       def plugin_paths(plugin)
-        @endpoints.each_with_object({}) do |endpoint, result|
+        endpoints.each_with_object({}) do |endpoint, result|
           resource = primary_resource(endpoint)
           next if !plugin.attached_types.include?(resource.record_type.to_s)
           result[endpoint[:path]] = { "get" => contribution_operation(endpoint, plugin) }
@@ -466,7 +492,7 @@ module DiscourseDataExplorer
               gap,
             )
           end
-        @endpoints.each do |endpoint|
+        endpoints.each do |endpoint|
           operation = document.dig("paths", endpoint[:path], "get")
           next if operation.nil?
           downgrade_parameters!(
@@ -562,15 +588,17 @@ module DiscourseDataExplorer
       end
 
       def paths
-        @endpoints.each_with_object({}) do |endpoint, result|
+        endpoints.each_with_object({}) do |endpoint, result|
           collection = { "get" => finalize(index_operation(endpoint), endpoint, :index) }
-          if endpoint[:create]
+          if endpoint[:actions].include?(:create)
             collection["post"] = finalize(create_operation(endpoint), endpoint, :create)
           end
           result[endpoint[:path]] = collection
-          result["#{endpoint[:path]}/{id}"] = {
-            "get" => finalize(show_operation(endpoint), endpoint, :show),
-          }
+          if endpoint[:actions].include?(:show)
+            result[endpoint[:member_path]] = {
+              "get" => finalize(show_operation(endpoint), endpoint, :show),
+            }
+          end
         end
       end
 
@@ -678,7 +706,7 @@ module DiscourseDataExplorer
       # with validators contributing constraints (presence → required, length →
       # maxLength).
       def create_request_schema(endpoint, resource)
-        contract = endpoint[:create].const_get(:Contract)
+        contract = endpoint[:controller].service(:create).const_get(:Contract)
         relationship_params =
           relationship_definitions(resource).keys.flat_map do
             ["#{it.to_s.singularize}_id", "#{it.to_s.singularize}_ids"]
