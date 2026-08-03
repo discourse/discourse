@@ -862,6 +862,38 @@ RSpec.describe Chat::UpdateMessage do
         expect(chat_message.reload.upload_ids).to contain_exactly(upload1.id)
       end
 
+      it "restores an inline upload's reference through the async job when not processing inline" do
+        chat_message =
+          create_chat_message(
+            user1,
+            "look ![](#{upload1.short_url})",
+            public_chat_channel,
+            upload_ids: [upload1.id],
+          )
+
+        Jobs.run_later!
+        described_class.call(
+          guardian: guardian,
+          params: {
+            message_id: chat_message.id,
+            channel_id: chat_message.chat_channel_id,
+            message: "look now ![](#{upload1.short_url})",
+            upload_ids: [],
+          },
+          options: {
+            process_inline: false,
+          },
+        )
+
+        # The edit prunes the reference; production restores it when the
+        # enqueued processing job runs.
+        expect(chat_message.reload.upload_ids).to be_empty
+
+        Jobs::Chat::ProcessMessage.new.execute(chat_message_id: chat_message.id)
+
+        expect(chat_message.reload.upload_ids).to contain_exactly(upload1.id)
+      end
+
       it "keeps an inline upload when a different user edits the message" do
         chat_message =
           create_chat_message(
