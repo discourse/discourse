@@ -31,8 +31,19 @@ access.
 
 **3. Private collaborators in `-internals/`.** Everything else — engines,
 chassis, coordinators, parts. Modules under a group's `-internals/` directory
-are importable only from within that group (and from test files). An ESLint
-rule enforces this; a violation is a build failure, not a review comment.
+are importable only from within that group (and from test files). The
+`discourse-local/no-cross-group-internals` ESLint rule enforces this
+boundary for every statically analyzable import — including re-exports and
+literal dynamic imports — so a violation is a lint failure, not a review
+comment. An import whose specifier is computed at runtime is beyond static
+analysis; writing one against an internals path is the same violation, just
+one only review can catch.
+
+Note the enforcement split between the tiers: the lint rule guards the
+*group boundary* (tier 3). The facade constraint (tier 2) is a review-time
+rule — a facade lives inside its group, where internals imports are
+lexically legal, so keeping recipes on the public API is the reviewer's
+gate until a structural convention for recipe placement exists.
 
 ## Second core or facade?
 
