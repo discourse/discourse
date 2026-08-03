@@ -1,11 +1,11 @@
 en:
   admin_js:
     admin:
-      calendar: "Calendar and Events"
+      calendar: "Events"
       site_settings:
         categories:
           discourse_post_event: "Discourse Event"
-          discourse_calendar: "Calendar and Events"
+          discourse_calendar: "Events"
       web_hooks:
         calendar_event:
           group_name: "Calendar Event"
@@ -46,9 +46,9 @@ en:
           rsvp_body: "Connect with other attendees before, during, and after the event."
       invite_user_notification: "%{username} invited you to: %{description}"
       preferences:
-        all_events: "Discourse Calendar - All Events"
+        all_events: "Events - All events"
         all_events_description: "All forum events"
-        my_events: "Discourse Calendar - My Events"
+        my_events: "Events - My events"
         my_events_description: "Events you are going to or interested in"
       on_holiday: "On Holiday"
       disable_holiday: "Disable"

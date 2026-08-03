@@ -1,4 +1,4 @@
-# Discourse Calendar
+# Discourse Events
 
 Adds the ability to create a dynamic calendar in the first post of a topic.
 
