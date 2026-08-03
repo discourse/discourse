@@ -525,6 +525,19 @@ RSpec.describe PostDestroyer do
       expect(history.created_by).to eq(Discourse.system_user)
     end
 
+    it "does not queue the restored post for media review" do
+      SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_3]
+      reply = create_post(topic: post.topic, raw: "look: ![image](upload://sherlock.jpeg)")
+
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect { PostDestroyer.new(reply.user, reply.reload).recover }.not_to change(
+        ReviewablePost,
+        :count,
+      )
+      expect(reply.reload.raw).to include("upload://sherlock.jpeg")
+    end
+
     it "does not restore reviewable when manually ignored by moderator" do
       reply = create_post(topic: post.topic)
       result = PostActionCreator.spam(coding_horror, reply)

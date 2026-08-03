@@ -3,6 +3,104 @@
 RSpec.describe ReviewablePost do
   fab!(:admin)
 
+  describe ".queue_for_media_review_if_possible" do
+    fab!(:author) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:post) { Fabricate(:post, user: author, raw: "this is a plain text post") }
+
+    let(:image_markdown) { "![image](upload://sherlock.jpeg)" }
+    let(:other_image_markdown) { "![image](upload://moriarty.jpeg)" }
+
+    before { SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_3] }
+
+    def queue(raw, editor: author, previous_raw: post.raw)
+      post.raw = raw
+      described_class.queue_for_media_review_if_possible(post, editor, previous_raw:)
+    end
+
+    it "queues the post when an edit adds media" do
+      expect { queue("#{post.raw}\n\n#{image_markdown}") }.to change(ReviewablePost, :count).by(1)
+
+      reviewable = ReviewablePost.last
+      expect(reviewable.target).to eq(post)
+      expect(reviewable).to be_pending
+      expect(reviewable.reviewable_scores.last.reason).to eq("contains_media")
+    end
+
+    it "queues the post when an edit replaces the media" do
+      expect { queue(other_image_markdown, previous_raw: image_markdown) }.to change(
+        ReviewablePost,
+        :count,
+      ).by(1)
+    end
+
+    it "queues the post even when a flag is already pending" do
+      Fabricate(:reviewable_flagged_post, target: post, topic: post.topic)
+
+      expect { queue("#{post.raw}\n\n#{image_markdown}") }.to change(ReviewablePost, :count).by(1)
+    end
+
+    it "does not queue the post when the raw is unchanged" do
+      expect { queue(post.raw) }.not_to change(ReviewablePost, :count)
+    end
+
+    it "does not queue the post when the edit leaves the media alone" do
+      expect {
+        queue("behold: #{image_markdown}", previous_raw: "look: #{image_markdown}")
+      }.not_to change(ReviewablePost, :count)
+    end
+
+    it "does not queue the post when the edit removes the media" do
+      expect { queue("no more media", previous_raw: image_markdown) }.not_to change(
+        ReviewablePost,
+        :count,
+      )
+    end
+
+    it "does not queue the post when the editor is a staff member" do
+      expect { queue("#{post.raw}\n\n#{image_markdown}", editor: admin) }.not_to change(
+        ReviewablePost,
+        :count,
+      )
+    end
+
+    it "does not queue the post when the editor is a bot" do
+      expect { queue("#{post.raw}\n\n#{image_markdown}", editor: Fabricate(:bot)) }.not_to change(
+        ReviewablePost,
+        :count,
+      )
+    end
+
+    it "does not queue the post when the editor is in a skip group" do
+      SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_1]
+
+      expect { queue("#{post.raw}\n\n#{image_markdown}") }.not_to change(ReviewablePost, :count)
+    end
+
+    it "does not score the post again when a media reviewable is already pending" do
+      reviewable = described_class.queue_for_review(post)
+
+      expect { queue("#{post.raw}\n\n#{image_markdown}") }.not_to change {
+        reviewable.reload.reviewable_scores.count
+      }
+    end
+
+    it "does not queue the post when it is not a regular post" do
+      post.update!(post_type: Post.types[:whisper])
+
+      expect { queue("#{post.raw}\n\n#{image_markdown}") }.not_to change(ReviewablePost, :count)
+    end
+
+    it "does not queue the post when it is in a private message" do
+      pm_post = Fabricate(:private_message_post, user: author)
+      previous_raw = pm_post.raw
+      pm_post.raw = "#{previous_raw}\n\n#{image_markdown}"
+
+      expect {
+        described_class.queue_for_media_review_if_possible(pm_post, author, previous_raw:)
+      }.not_to change(ReviewablePost, :count)
+    end
+  end
+
   describe "#build_actions" do
     let(:post) { Fabricate.build(:post) }
     let(:reviewable) { ReviewablePost.new(target: post, target_created_by: post.user) }

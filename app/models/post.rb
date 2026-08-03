@@ -305,6 +305,7 @@ class Post < ActiveRecord::Base
     raw_mentions
     linked_hosts
     embedded_media_count
+    embedded_media_keys
     attachment_count
     link_count
     raw_links

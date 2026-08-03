@@ -14,7 +14,23 @@ class ReviewablePost < Reviewable
     queue_for_review(post)
   end
 
-  def self.queue_for_review(post)
+  def self.queue_for_media_review_if_possible(post, edited_by, previous_raw:)
+    return if post.raw == previous_raw
+    return if edited_by.staff? || edited_by.bot?
+    return if post.post_type != Post.types[:regular] || post.topic.private_message?
+    return if edited_by.in_any_groups?(SiteSetting.skip_review_media_groups_map)
+    return if pending.where(target: post).exists?
+
+    media = post.embedded_media_keys
+    return if media.empty?
+
+    previous_media = Post.new(raw: previous_raw, topic_id: post.topic_id).embedded_media_keys
+    return if (media - previous_media).empty?
+
+    queue_for_review(post, reason: :contains_media)
+  end
+
+  def self.queue_for_review(post, reason: nil)
     system_user = Discourse.system_user
 
     needs_review!(
@@ -24,7 +40,12 @@ class ReviewablePost < Reviewable
       reviewable_by_moderator: true,
       potential_spam: false,
     ).tap do |reviewable|
-      reviewable.add_score(system_user, ReviewableScore.types[:needs_approval], force_review: true)
+      reviewable.add_score(
+        system_user,
+        ReviewableScore.types[:needs_approval],
+        reason:,
+        force_review: true,
+      )
     end
   end
 

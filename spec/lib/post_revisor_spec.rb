@@ -1876,6 +1876,37 @@ describe PostRevisor do
     end
   end
 
+  context "when skip_review_media_groups requires media review" do
+    fab!(:post) { Fabricate(:post, user:, raw: "this is a plain text post") }
+
+    let(:revisor) { PostRevisor.new(post) }
+    let(:raw_with_image) { "#{post.raw}\n\n![image](upload://sherlock.jpeg)" }
+
+    before do
+      SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_3]
+      SiteSetting.editing_grace_period = 1.minute
+    end
+
+    it "queues the post for review when a grace period edit adds media" do
+      expect {
+        revisor.revise!(
+          post.user,
+          { raw: raw_with_image },
+          revised_at: post.updated_at + 10.seconds,
+        )
+      }.to change(ReviewablePost, :count).by(1)
+
+      expect(post.reload.revisions).to be_empty
+      expect(ReviewablePost.last.reviewable_scores.last.reason).to eq("contains_media")
+    end
+
+    it "does not queue the post when the revision restores content the author deleted" do
+      expect {
+        revisor.revise!(post.user, { raw: raw_with_image }, recovering_post: true)
+      }.not_to change(ReviewablePost, :count)
+    end
+  end
+
   describe "topic bumping" do
     subject(:post_revisor) { PostRevisor.new(post) }
 
