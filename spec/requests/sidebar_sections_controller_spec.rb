@@ -629,6 +629,28 @@ RSpec.describe SidebarSectionsController do
       expect(SidebarUrlLocalization.exists?(url_localization.id)).to eq(false)
     end
 
+    it "enforces the total link limit when adding links" do
+      SiteSetting.max_sidebar_section_links = 5
+      sign_in(user)
+
+      put "/sidebar_sections/#{sidebar_section.id}.json",
+          params: {
+            title: "custom section",
+            links: [
+              { icon: "link", name: "latest", value: "/latest" },
+              { icon: "link", name: "new", value: "/new" },
+              { icon: "link", name: "top", value: "/top" },
+              { icon: "link", name: "hot", value: "/hot" },
+            ],
+          }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq(
+        ["Maximum 5 records are allowed. Got 6 records instead."],
+      )
+      expect(sidebar_section.reload.sidebar_urls.count).to eq(2)
+    end
+
     it "validates limit of links" do
       SiteSetting.max_sidebar_section_links = 5
 
