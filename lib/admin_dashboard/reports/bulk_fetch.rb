@@ -13,12 +13,13 @@ module AdminDashboard
             .zip(payloads)
             .map do |item, payload|
               failed = payload == FETCH_FAILED
+              errored = failed || (payload.is_a?(Hash) && payload[:error].present?)
               {
                 source: item[:source],
                 identifier: item[:identifier],
                 key: item_key(item),
                 data: failed ? nil : payload,
-                error: failed,
+                error: errored,
               }
             end
 

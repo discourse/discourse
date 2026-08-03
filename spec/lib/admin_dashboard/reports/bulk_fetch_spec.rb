@@ -70,5 +70,30 @@ RSpec.describe AdminDashboard::Reports::BulkFetch do
     it "returns no items for an empty items array" do
       expect(described_class.call(items: [], filters: {}, guardian: guardian)).to eq(items: [])
     end
+
+    it "treats a payload carrying its own error key as failed, without discarding the payload" do
+      soft_failing_provider =
+        Class.new(AdminDashboard::Reports::SourceProvider) do
+          define_singleton_method(:source_name) { "soft_failing_source" }
+          define_singleton_method(:fetch_many) do |identifiers, guardian:, filters: {}|
+            identifiers.each_with_object({}) do |identifier, hash|
+              hash[identifier] = { error: "syntax error at or near \"selct\"", empty: true }
+            end
+          end
+        end
+      register_provider(soft_failing_provider)
+
+      result =
+        described_class.call(
+          items: [{ source: "soft_failing_source", identifier: "broken_query" }],
+          filters: {
+          },
+          guardian: guardian,
+        )
+
+      item = result[:items].first
+      expect(item[:error]).to eq(true)
+      expect(item[:data]).to eq(error: "syntax error at or near \"selct\"", empty: true)
+    end
   end
 end
