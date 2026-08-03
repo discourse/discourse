@@ -92,7 +92,10 @@ module DiscourseAi
           return if thinking_config.blank? || thinking_config.unsupported?
 
           if thinking_config.explicit_none?
-            # Interactions exposes levels rather than a zero-token budget.
+            # Interactions has no disabled thinking level for Gemini 2.5; omission preserves the
+            # model default, including disabled thinking for Flash Lite.
+            return if gemini_2_5_model?
+
             generation_config[:thinking_level] = thinking_level_for_interactions("minimal")
           elsif thinking_config.provider_effort.present?
             generation_config[:thinking_level] = thinking_config.provider_effort
@@ -116,11 +119,15 @@ module DiscourseAi
 
           if gemini_model_id.include?("image") || gemini_3_pro_preview_model?
             LOW_HIGH_THINKING_LEVEL_BY_EFFORT[effort]
-          elsif gemini_3_model? && !supports_interactions_minimal_thinking?
+          elsif gemini_2_5_model? || (gemini_3_model? && !supports_interactions_minimal_thinking?)
             THINKING_LEVEL_WITHOUT_MINIMAL_BY_EFFORT[effort]
           else
             THINKING_LEVEL_BY_EFFORT[effort]
           end
+        end
+
+        def gemini_2_5_model?
+          gemini_model_id.include?("gemini-2.5")
         end
 
         def supports_interactions_minimal_thinking?

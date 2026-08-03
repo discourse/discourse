@@ -129,6 +129,72 @@ RSpec.describe DiscourseAi::Completions::Endpoints::GeminiInteractions do
     expect(log.response_tokens).to eq(12)
   end
 
+  it "maps Gemini 2.5 thinking efforts to supported Interactions API levels" do
+    request_bodies = []
+    stub_request(:post, url).with(
+      body:
+        proc do |body|
+          request_bodies << JSON.parse(body, symbolize_names: true)
+          true
+        end,
+    ).to_return(
+      status: 200,
+      body:
+        interaction_response(
+          steps: [{ type: "model_output", content: [{ type: "text", text: "Done" }] }],
+        ).to_json,
+    )
+
+    %w[minimal low medium high].each do |thinking_effort|
+      expect(llm.generate("Think", user:, thinking_effort:)).to eq("Done")
+    end
+
+    expect(request_bodies.map { |body| body.dig(:generation_config, :thinking_level) }).to eq(
+      %w[low low medium high],
+    )
+  end
+
+  it "omits the unsupported disabled thinking override for Gemini 2.5" do
+    request_body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |body|
+          request_body = JSON.parse(body, symbolize_names: true)
+          true
+        end,
+    ).to_return(
+      status: 200,
+      body:
+        interaction_response(
+          steps: [{ type: "model_output", content: [{ type: "text", text: "Done" }] }],
+        ).to_json,
+    )
+
+    expect(llm.generate("Think", user:, thinking_effort: "none")).to eq("Done")
+    expect(request_body).not_to have_key(:generation_config)
+  end
+
+  it "maps the provider-level minimal setting to low for Gemini 2.5" do
+    model.update!(provider_params: { thinking_level: "minimal" })
+    request_body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |body|
+          request_body = JSON.parse(body, symbolize_names: true)
+          true
+        end,
+    ).to_return(
+      status: 200,
+      body:
+        interaction_response(
+          steps: [{ type: "model_output", content: [{ type: "text", text: "Done" }] }],
+        ).to_json,
+    )
+
+    expect(llm.generate("Think", user:)).to eq("Done")
+    expect(request_body.dig(:generation_config, :thinking_level)).to eq("low")
+  end
+
   it "maps thinking effort to the levels supported by image models" do
     model.update!(name: "gemini-3.1-flash-image")
     request_body = nil
