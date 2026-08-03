@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { type ModifierLike } from "@glint/template";
+import DevToolsDockHost from "discourse/static/dev-tools/dock-host";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDraggableUntyped from "discourse/ui-kit/modifiers/d-draggable";
@@ -112,6 +113,7 @@ export default class Toolbar extends Component {
       >
         {{dIcon "xmark"}}
       </button>
+      <DevToolsDockHost />
     </div>
   </template>
 }
