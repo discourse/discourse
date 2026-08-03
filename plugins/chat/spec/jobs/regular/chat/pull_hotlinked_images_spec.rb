@@ -244,24 +244,34 @@ describe Jobs::Chat::PullHotlinkedImages do
     end
 
     context "with secure upload proxy URLs" do
-      # Downloading these would sign an S3 path for the underlying upload, and a
-      # chat message has no access-control post to authorize the reader against.
+      before do
+        setup_s3
+        SiteSetting.secure_uploads = true
+        # rehosting a secure upload would fetch its bytes from a signed S3 path
+        stub_request(:get, /s3-upload-bucket.*amazonaws\.com/).to_return(
+          body: gif,
+          headers: {
+            "Content-Type" => "image/gif",
+          },
+        )
+      end
+
+      # A chat message has no access-control post, so there is nothing to
+      # authorize the reader against — these must never be rehosted.
       %w[
         /secure-uploads/original/1X/1234567890abcdef1234567890abcdef12345678.png
         /secure-uploads/optimized/1X/1234567890abcdef1234567890abcdef12345678_2_100x100.png
         /secure-uploads/original/1X/deadbeef.png
       ].each do |path|
-        it "never downloads #{path}" do
-          secure_url = "#{Discourse.base_url}#{path}"
-          message = fabricate_chat_message("![](#{secure_url})")
-
-          Upload.expects(:signed_url_from_secure_uploads_url).never
-          FileHelper.expects(:download).never
+        it "does not rehost #{path}" do
+          stub_image_size
+          message = fabricate_chat_message("![](#{Discourse.base_url}#{path})")
 
           expect { described_class.new.execute(chat_message_id: message.id) }.not_to change {
             Upload.count
           }
           expect(message.reload.hotlinked_media).to be_empty
+          expect(WebMock).not_to have_requested(:get, /amazonaws\.com/)
         end
       end
     end
