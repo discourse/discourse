@@ -332,7 +332,7 @@ RSpec.describe CrawlerScorer do
     expect(event.browser_pageview_event_score.engagement_score).to eq(40)
   end
 
-  it "keeps the higher score when a later run would lower it" do
+  it "lowers the score when an engagement beacon arrives after an earlier run" do
     SiteSetting.crawler_asns = "12345"
     event = make_event(asn: 12_345)
 
@@ -342,7 +342,48 @@ RSpec.describe CrawlerScorer do
     Fabricate(:browser_pageview_session_engagement, session_id: event.session_id, key_events: 4)
     score!
 
-    expect(event.reload.score).to eq(70)
+    expect(event.reload.score).to eq(30)
+    expect(event.browser_pageview_event_score.engagement_score).to eq(0)
+  end
+
+  it "does not penalise an unengaged session when most of the ip+ua traffic is engaged" do
+    SiteSetting.crawler_asns = "12345"
+    base = 30.minutes.ago
+    engaged_session = "engaged-session"
+    10.times do |i|
+      make_event(asn: 12_345, session_id: engaged_session, created_at: base + i.minutes)
+    end
+    Fabricate(:browser_pageview_session_engagement, session_id: engaged_session, scroll_events: 8)
+
+    abandoned_tab = make_event(asn: 12_345, session_id: "abandoned-tab", created_at: base)
+
+    score!
+
+    expect(abandoned_tab.reload.score).to eq(30)
+    expect(abandoned_tab.browser_pageview_event_score.engagement_score).to eq(0)
+  end
+
+  it "scores partially engaged ip+ua traffic at the lower band" do
+    SiteSetting.crawler_asns = "12345"
+    base = 30.minutes.ago
+    engaged_session = "partly-engaged"
+    make_event(asn: 12_345, session_id: engaged_session, created_at: base)
+    Fabricate(:browser_pageview_session_engagement, session_id: engaged_session, click_events: 2)
+
+    3.times do |i|
+      make_event(asn: 12_345, session_id: "unengaged-#{i}", created_at: base + (i + 1).minutes)
+    end
+
+    score!
+
+    expect(BrowserPageviewEvent.where(session_id: "unengaged-0").first.score).to eq(50)
+    expect(
+      BrowserPageviewEvent
+        .where(session_id: "unengaged-0")
+        .first
+        .browser_pageview_event_score
+        .engagement_score,
+    ).to eq(20)
   end
 
   it "scores each source but partitions velocity so transports do not inflate each other" do
