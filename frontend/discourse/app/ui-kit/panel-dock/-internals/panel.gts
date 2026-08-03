@@ -11,7 +11,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dResizeEdge from "discourse/ui-kit/modifiers/d-resize-edge";
 import { i18n } from "discourse-i18n";
 
-const STORE_NAMESPACE = "d_dock_panel_";
+const STORE_NAMESPACE = "d_panel_dock_";
 const DEFAULT_WIDTH = 320;
 const MIN_WIDTH = 240;
 const MAX_WIDTH = 720;
@@ -26,12 +26,19 @@ export type DockSide = (typeof SIDES)[number];
 
 /** The panel's placement and sizes, as persisted between visits. */
 interface DockLayout {
+  mode: "docked" | "window";
   side: DockSide;
   width: number;
   height: number;
+  window?: {
+    width: number;
+    height: number;
+    left: number;
+    top: number;
+  };
 }
 
-interface DDockPanelSignature {
+interface PanelDockChassisSignature {
   /** The panel itself; the surrounding layer is not addressable. */
   Element: HTMLDivElement;
   Args: {
@@ -95,20 +102,20 @@ interface DDockPanelSignature {
  * only establishes the layer that lets clicks through.
  *
  * ```hbs
- * <DDockPanel @isOpen={{this.isOpen}} @storageKey="my-feature" @dockable={{true}}>
+ * <PanelDockChassis @isOpen={{this.isOpen}} @storageKey="my-feature" @dockable={{true}}>
  *   <:header>Title</:header>
  *   <:actions><button type="button">Close</button></:actions>
  *   <:body>Content</:body>
- * </DDockPanel>
+ * </PanelDockChassis>
  * ```
  */
-export default class DDockPanel extends Component<DDockPanelSignature> {
+export default class PanelDockChassis extends Component<PanelDockChassisSignature> {
   #store = new KeyValueStore(STORE_NAMESPACE);
   @tracked _side: DockSide;
   @tracked _width: number;
   @tracked _height: number;
 
-  constructor(owner: Owner, args: DDockPanelSignature["Args"]) {
+  constructor(owner: Owner, args: PanelDockChassisSignature["Args"]) {
     super(owner, args);
 
     // Read once at construction rather than in getters. The stored layout is
@@ -183,7 +190,7 @@ export default class DDockPanel extends Component<DDockPanelSignature> {
    */
   get style() {
     return trustHTML(
-      `--d-dock-panel-width: ${this.width}px; --d-dock-panel-height: ${this.height}px;`
+      `--d-panel-dock-width: ${this.width}px; --d-panel-dock-height: ${this.height}px;`
     );
   }
 
@@ -238,6 +245,7 @@ export default class DDockPanel extends Component<DDockPanelSignature> {
     this.#store.setObject({
       key: this.args.storageKey,
       value: {
+        mode: "docked",
         side: this.side,
         width: this.width,
         height: this.height,
@@ -255,6 +263,7 @@ export default class DDockPanel extends Component<DDockPanelSignature> {
    */
   #restoreLayout(): DockLayout {
     const fallback: DockLayout = {
+      mode: "docked",
       side: this.args.defaultSide ?? "start",
       width: this.args.defaultWidth ?? DEFAULT_WIDTH,
       height: DEFAULT_HEIGHT,
@@ -265,7 +274,13 @@ export default class DDockPanel extends Component<DDockPanelSignature> {
     }
 
     const stored = this.#store.getObject(this.args.storageKey) as
-      | Partial<DockLayout>
+      | {
+          side?: unknown;
+          width?: unknown;
+          height?: unknown;
+          mode?: unknown;
+          window?: unknown;
+        }
       | number
       | undefined;
 
@@ -276,7 +291,12 @@ export default class DDockPanel extends Component<DDockPanelSignature> {
       typeof stored.width === "number" &&
       typeof stored.height === "number"
     ) {
-      return stored as DockLayout;
+      return {
+        mode: "docked",
+        side: stored.side as DockSide,
+        width: stored.width,
+        height: stored.height,
+      };
     }
 
     return fallback;
@@ -287,9 +307,9 @@ export default class DDockPanel extends Component<DDockPanelSignature> {
       {{! The layer spans the viewport so the panel can be positioned against
           its edges, but lets pointer events through so the page underneath
           stays usable. The panel itself takes them back. }}
-      <div class="d-dock-panel-layer">
+      <div class="d-panel-dock-layer">
         <div
-          class={{dConcatClass "d-dock-panel" (concat "--dock-" this.side)}}
+          class={{dConcatClass "d-panel-dock" (concat "--dock-" this.side)}}
           style={{this.style}}
           ...attributes
         >
@@ -298,26 +318,26 @@ export default class DDockPanel extends Component<DDockPanelSignature> {
               otherwise a headerless dockable panel would silently lose its
               controls. }}
           {{#if (or (has-block "header") @dockable (has-block "actions"))}}
-            <div class="d-dock-panel__header">
+            <div class="d-panel-dock__header">
               {{yield to="header"}}
 
-              <div class="d-dock-panel__actions">
+              <div class="d-panel-dock__actions">
                 {{#if @dockable}}
                   <div
-                    class="d-dock-panel__dock-picker"
+                    class="d-panel-dock__dock-picker"
                     role="group"
-                    aria-label={{i18n "dock_panel.dock"}}
+                    aria-label={{i18n "panel_dock.dock"}}
                   >
                     {{#each SIDES as |side|}}
                       <button
                         type="button"
                         class={{dConcatClass
-                          "d-dock-panel__dock-button"
+                          "d-panel-dock__dock-button"
                           (concat "--" side)
                         }}
                         aria-pressed={{if (this.isSide side) "true" "false"}}
-                        aria-label={{i18n (concat "dock_panel.dock_" side)}}
-                        title={{i18n (concat "dock_panel.dock_" side)}}
+                        aria-label={{i18n (concat "panel_dock.dock_" side)}}
+                        title={{i18n (concat "panel_dock.dock_" side)}}
                         {{on "click" (fn this.setSide side)}}
                       >
                         <svg
@@ -375,15 +395,15 @@ export default class DDockPanel extends Component<DDockPanelSignature> {
             </div>
           {{/if}}
 
-          <div class="d-dock-panel__body">
+          <div class="d-panel-dock__body">
             {{yield to="body"}}
           </div>
 
           <div
-            class="d-dock-panel__resizer"
+            class="d-panel-dock__resizer"
             role="separator"
             aria-orientation={{if this.isBottom "horizontal" "vertical"}}
-            aria-label={{i18n "dock_panel.resize"}}
+            aria-label={{i18n "panel_dock.resize"}}
             aria-valuenow={{this.size}}
             aria-valuemin={{this.minSize}}
             aria-valuemax={{this.maxSize}}

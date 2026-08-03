@@ -3288,12 +3288,14 @@ en:
       dark_tone: Dark skin tone
       default: Custom emojis
 
-    dock_panel:
+    panel_dock:
+      close: "Close panel"
       dock: "Dock side"
       dock_bottom: "Dock to the bottom"
       dock_end: "Dock to the right"
       dock_start: "Dock to the left"
       resize: "Resize panel"
+      tabs: "Panel tabs"
 
     filter_input:
       clear: "Clear filter"
