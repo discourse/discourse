@@ -5,7 +5,11 @@ class CrawlerScorer
 
   AUTOMATION_UA_SCORE = 100
 
-  KNOWN_ASN_SCORE = 15
+  KNOWN_ASN_SCORE = 30
+  DATACENTER_ASN_SCORE = 10
+  SINGLE_REQUEST_NO_REFERRER_SCORE = 10
+  SINGLE_REQUEST_LOCALE_PARAM_BONUS = 5
+  STALE_BROWSER_SCORE = 5
 
   VELOCITY_LOW = 150
   VELOCITY_MEDIUM = 300
@@ -38,6 +42,8 @@ class CrawlerScorer
 
   def self.score!(window_start:, window_end:)
     crawler_asns = SiteSetting.crawler_asns_map.map(&:to_i)
+    crawler_detection_datacenter_asns =
+      SiteSetting.crawler_detection_datacenter_asns_map.map(&:to_i)
 
     ActiveRecord::Base.transaction do
       DB.exec(
@@ -46,9 +52,16 @@ class CrawlerScorer
         window_end: window_end,
         ua_regex: SiteSetting.crawler_automation_user_agents,
         crawler_asns: crawler_asns,
+        crawler_detection_datacenter_asns: crawler_detection_datacenter_asns,
         hostname: Discourse.current_hostname,
         automation_ua_score: AUTOMATION_UA_SCORE,
         known_asn_score: KNOWN_ASN_SCORE,
+        datacenter_asn_score: DATACENTER_ASN_SCORE,
+        single_request_no_referrer_score: SINGLE_REQUEST_NO_REFERRER_SCORE,
+        single_request_locale_param_bonus: SINGLE_REQUEST_LOCALE_PARAM_BONUS,
+        stale_browser_score: STALE_BROWSER_SCORE,
+        stale_chromium_major_version_cutoff:
+          SiteSetting.crawler_stale_chromium_major_version_cutoff,
         velocity_low: VELOCITY_LOW,
         velocity_medium: VELOCITY_MEDIUM,
         velocity_high: VELOCITY_HIGH,
@@ -78,7 +91,7 @@ class CrawlerScorer
 
   SQL = <<~SQL
     WITH events AS (
-      SELECT id, session_id, ip_address, user_agent, referrer, asn, created_at, source
+      SELECT id, session_id, ip_address, user_agent, referrer, asn, url, created_at, source
       FROM browser_pageview_events
       WHERE created_at >= :window_start
         AND created_at <  :window_end
@@ -151,6 +164,30 @@ class CrawlerScorer
           ELSE 0
         END AS known_asn_score,
         CASE
+          WHEN e.asn = ANY(ARRAY[:crawler_detection_datacenter_asns]::int[]) THEN :datacenter_asn_score
+          ELSE 0
+        END AS datacenter_asn_score,
+        CASE
+          WHEN iu.pageviews = 1
+            AND e.referrer IS NULL
+            AND se.session_id IS NULL
+            AND e.url ~ '[?&]#{Discourse::LOCALE_PARAM}(=|&|$)'
+            THEN :single_request_no_referrer_score + :single_request_locale_param_bonus
+          WHEN iu.pageviews = 1
+            AND e.referrer IS NULL
+            AND se.session_id IS NULL THEN :single_request_no_referrer_score
+          ELSE 0
+        END AS single_request_no_referrer_score,
+        CASE
+          WHEN se.session_id IS NULL
+            AND e.user_agent ~ 'Chrome/[0-9]{1,3}'
+            AND e.user_agent !~* 'HeadlessChrome'
+            AND (substring(e.user_agent FROM 'Chrome/([0-9]{1,3})'))::int
+              <= :stale_chromium_major_version_cutoff
+            THEN :stale_browser_score
+          ELSE 0
+        END AS stale_browser_score,
+        CASE
           WHEN iu.pageviews >= :velocity_high   THEN :velocity_high_score
           WHEN iu.pageviews >= :velocity_medium THEN :velocity_medium_score
           WHEN iu.pageviews >= :velocity_low    THEN :velocity_low_score
@@ -205,6 +242,9 @@ class CrawlerScorer
         id,
         automation_ua_score,
         known_asn_score,
+        datacenter_asn_score,
+        single_request_no_referrer_score,
+        stale_browser_score,
         velocity_score,
         churn_score,
         rapid_nav_score,
@@ -213,11 +253,11 @@ class CrawlerScorer
         engagement_score,
         GREATEST(
           0,
-          automation_ua_score + known_asn_score + velocity_score + churn_score
+          automation_ua_score + known_asn_score + datacenter_asn_score + single_request_no_referrer_score + stale_browser_score + velocity_score + churn_score
             + rapid_nav_score + ip_rotation_score + referrer_score + engagement_score
         ) AS score
       FROM breakdown
-      WHERE automation_ua_score + known_asn_score + velocity_score + churn_score
+      WHERE automation_ua_score + known_asn_score + datacenter_asn_score + single_request_no_referrer_score + stale_browser_score + velocity_score + churn_score
         + rapid_nav_score + ip_rotation_score + referrer_score > 0
     ),
 
@@ -230,6 +270,9 @@ class CrawlerScorer
       RETURNING e.id,
                 t.automation_ua_score,
                 t.known_asn_score,
+                t.datacenter_asn_score,
+                t.single_request_no_referrer_score,
+                t.stale_browser_score,
                 t.velocity_score,
                 t.churn_score,
                 t.rapid_nav_score,
@@ -242,6 +285,9 @@ class CrawlerScorer
       event_id,
       automation_ua_score,
       known_asn_score,
+      datacenter_asn_score,
+      single_request_no_referrer_score,
+      stale_browser_score,
       velocity_score,
       churn_score,
       rapid_nav_score,
@@ -253,6 +299,9 @@ class CrawlerScorer
       id,
       automation_ua_score,
       known_asn_score,
+      datacenter_asn_score,
+      single_request_no_referrer_score,
+      stale_browser_score,
       velocity_score,
       churn_score,
       rapid_nav_score,
@@ -263,6 +312,9 @@ class CrawlerScorer
     ON CONFLICT (event_id) DO UPDATE
     SET automation_ua_score = EXCLUDED.automation_ua_score,
         known_asn_score     = EXCLUDED.known_asn_score,
+        datacenter_asn_score = EXCLUDED.datacenter_asn_score,
+        single_request_no_referrer_score = EXCLUDED.single_request_no_referrer_score,
+        stale_browser_score = EXCLUDED.stale_browser_score,
         velocity_score      = EXCLUDED.velocity_score,
         churn_score         = EXCLUDED.churn_score,
         rapid_nav_score     = EXCLUDED.rapid_nav_score,
