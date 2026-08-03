@@ -6,7 +6,7 @@ import {
 } from "discourse/lib/bbcode-attributes";
 import { generateIcsData } from "discourse/lib/download-calendar";
 
-module("Unit | Discourse Calendar | ICS Generation", function () {
+module("Unit | Events | ICS Generation", function () {
   test("generates valid ICS data", function (assert) {
     const title = "Test Event";
     const dates = [

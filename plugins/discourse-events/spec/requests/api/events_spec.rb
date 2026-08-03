@@ -10,7 +10,7 @@ RSpec.describe "events" do
 
   path "/discourse-post-event/events.json" do
     get "List calendar events" do
-      tags "Discourse Calendar - Events"
+      tags "Events"
       operationId "listEvents"
       consumes "application/json"
       expected_request_schema = nil
@@ -127,7 +127,7 @@ RSpec.describe "events" do
 
   path "/discourse-post-event/events.ics" do
     get "Export calendar events in iCalendar format" do
-      tags "Discourse Calendar - Events"
+      tags "Events"
       operationId "exportEventsICS"
       consumes "application/json"
       expected_request_schema = nil

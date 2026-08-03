@@ -8,7 +8,7 @@ import ChatChannelPreviewCard from "discourse/plugins/chat/discourse/components/
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { LIVESTREAM_CHAT_CONTEXT } from "discourse/plugins/discourse-events/discourse/components/livestream/embeddable-chat-channel";
 
-module("Discourse Calendar | Component | LivestreamRsvp", function (hooks) {
+module("Events | Component | LivestreamRsvp", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
