@@ -38,7 +38,10 @@ class CrawlerScorer
   REFERRER_LOW_SCORE = 5
   REFERRER_HIGH_SCORE = 10
 
-  MISSING_ENGAGEMENT_SCORE = 40
+  MISSING_ENGAGEMENT_LOW_RATIO = 0.5
+  MISSING_ENGAGEMENT_HIGH_RATIO = 0.9
+  MISSING_ENGAGEMENT_LOW_SCORE = 20
+  MISSING_ENGAGEMENT_HIGH_SCORE = 40
 
   def self.score!(window_start:, window_end:)
     crawler_asns = SiteSetting.crawler_asns_map.map(&:to_i)
@@ -84,17 +87,35 @@ class CrawlerScorer
         referrer_high_ratio: REFERRER_HIGH_RATIO,
         referrer_low_score: REFERRER_LOW_SCORE,
         referrer_high_score: REFERRER_HIGH_SCORE,
-        missing_engagement_score: MISSING_ENGAGEMENT_SCORE,
+        missing_engagement_low_ratio: MISSING_ENGAGEMENT_LOW_RATIO,
+        missing_engagement_high_ratio: MISSING_ENGAGEMENT_HIGH_RATIO,
+        missing_engagement_low_score: MISSING_ENGAGEMENT_LOW_SCORE,
+        missing_engagement_high_score: MISSING_ENGAGEMENT_HIGH_SCORE,
       )
     end
   end
 
   SQL = <<~SQL
     WITH events AS (
-      SELECT id, session_id, ip_address, user_agent, referrer, asn, url, created_at, source
-      FROM browser_pageview_events
-      WHERE created_at >= :window_start
-        AND created_at <  :window_end
+      SELECT
+        e.id,
+        e.session_id,
+        e.ip_address,
+        e.user_agent,
+        e.referrer,
+        e.asn,
+        e.url,
+        e.created_at,
+        e.source,
+        (se.session_id IS NOT NULL) AS engaged
+      FROM browser_pageview_events e
+      LEFT JOIN browser_pageview_session_engagements se
+        ON se.session_id = e.session_id
+        AND (
+          #{BrowserPageviewSessionEngagement::INTERACTION_COLUMNS.map { |column| "se.#{column} > 0" }.join(" OR ")}
+        )
+      WHERE e.created_at >= :window_start
+        AND e.created_at <  :window_end
     ),
 
     -- Per-heuristic stats are partitioned by source as well as ip/ua so that
@@ -113,7 +134,8 @@ class CrawlerScorer
             WHEN substring(referrer from '^https?://([^/]+)') = :hostname THEN 0.0
             ELSE 1.0
           END
-        ) AS bad_referrer_ratio
+        ) AS bad_referrer_ratio,
+        AVG(CASE WHEN engaged THEN 0.0 ELSE 1.0 END) AS no_engagement_ratio
       FROM events
       GROUP BY ip_address, user_agent, source
     ),
@@ -170,16 +192,16 @@ class CrawlerScorer
         CASE
           WHEN iu.pageviews = 1
             AND e.referrer IS NULL
-            AND se.session_id IS NULL
+            AND NOT e.engaged
             AND e.url ~ '[?&]#{Discourse::LOCALE_PARAM}(=|&|$)'
             THEN :single_request_no_referrer_score + :single_request_locale_param_bonus
           WHEN iu.pageviews = 1
             AND e.referrer IS NULL
-            AND se.session_id IS NULL THEN :single_request_no_referrer_score
+            AND NOT e.engaged THEN :single_request_no_referrer_score
           ELSE 0
         END AS single_request_no_referrer_score,
         CASE
-          WHEN se.session_id IS NULL
+          WHEN NOT e.engaged
             AND e.user_agent ~ 'Chrome/[0-9]{1,3}'
             AND e.user_agent !~* 'HeadlessChrome'
             AND (substring(e.user_agent FROM 'Chrome/([0-9]{1,3})'))::int
@@ -223,18 +245,17 @@ class CrawlerScorer
           ELSE 0
         END AS referrer_score,
         CASE
-          WHEN se.session_id IS NULL THEN :missing_engagement_score
+          WHEN e.engaged THEN 0
+          WHEN iu.no_engagement_ratio >= :missing_engagement_high_ratio
+            THEN :missing_engagement_high_score
+          WHEN iu.no_engagement_ratio >= :missing_engagement_low_ratio
+            THEN :missing_engagement_low_score
           ELSE 0
         END AS engagement_score
       FROM events e
       LEFT JOIN ipua_stats iu USING (ip_address, user_agent, source)
       LEFT JOIN median_gap mg USING (ip_address, user_agent, source)
       LEFT JOIN session_stats ss USING (session_id, source)
-      LEFT JOIN browser_pageview_session_engagements se
-        ON se.session_id = e.session_id
-        AND (
-          #{BrowserPageviewSessionEngagement::INTERACTION_COLUMNS.map { |column| "se.#{column} > 0" }.join(" OR ")}
-        )
     ),
 
     totals AS (
@@ -266,7 +287,7 @@ class CrawlerScorer
       SET score = t.score
       FROM totals t
       WHERE e.id = t.id
-        AND (e.score IS NULL OR t.score > e.score)
+        AND e.score IS DISTINCT FROM t.score
       RETURNING e.id,
                 t.automation_ua_score,
                 t.known_asn_score,
