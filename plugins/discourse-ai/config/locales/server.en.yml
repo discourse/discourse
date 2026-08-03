@@ -424,6 +424,9 @@ en:
       logging_subject: "Spam detection"
 
     ai_bot:
+      errors:
+        invalid_agent_id: "The specified AI agent does not exist or you do not have access to it"
+        cannot_send_pm_to_agent: "You cannot send personal messages to this AI agent"
       reply_error: "Sorry, it looks like our system encountered an unexpected issue while trying to reply.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Untitled AI bot PM]"
       thinking: "Thinking"
