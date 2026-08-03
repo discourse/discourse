@@ -664,6 +664,8 @@ fa_IR:
         email: "ایمیل"
         name: "نام"
         fields: "فیلدها"
+        silence_reason: "دلیل سکوت"
+        penalty_forever: "همیشه"
         reject_reason: "دلیل"
         scrubbed_reason: "دلیل"
         scrub_record:

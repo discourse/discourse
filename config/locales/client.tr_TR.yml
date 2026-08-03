@@ -860,6 +860,8 @@ tr_TR:
         email: "E-posta"
         name: "Ad"
         fields: "Alanlar"
+        silence_reason: "Susturulma sebebi"
+        penalty_forever: "Sonsuza dek"
         reject_reason: "Sebep"
         scrubbed_by: "Kaydı temizleyen:"
         scrubbed_reason: "Sebep"

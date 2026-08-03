@@ -2122,6 +2122,9 @@ pl_PL:
     allowed_iframes: "Lista prefiksów adresów URL iframe, które Discourse może bezpiecznie dopuszczać w postach. Znak * można użyć w celu dopasowania dowolnej liczby znaków innych niż /."
     allowed_crawler_user_agents: "Agenci użytkowników dla robotów indeksujących, które powinny mieć dostęp do strony. OSTRZEŻENIE! USTAWIENIE TEGO SPOWODUJE BLOKADE ROBOTÓW, KTÓRE NIE SĄ NA LIŚCIE!"
     blocked_crawler_user_agents: "Unikalne słowo bez rozróżniania wielkości liter w ciągu znaków, które identyfikują crawlery internetowe, które nie powinny mieć dostępu do witryny. Nie ma zastosowania, jeśli dozwolona lista jest zdefiniowana."
+    crawler_asns: "Sieci ASN obsługiwane przez zweryfikowane roboty indeksujące. Ruch z tych sieci jest wykluczany z raportów dotyczących wyświetleń stron w przeglądarce i otrzymuje wysoką ocenę robota indeksującego."
+    crawler_detection_datacenter_asns: "Sieci ASN świadczące usługi w chmurze, hostingu lub centrów danych. Sieci te niekoniecznie są robotami indeksującymi: ich ruch otrzymuje ocenę niskiego poziomu zaufania robota indeksującego i nadal jest liczony jako ruch przeglądarki."
+    crawler_stale_chromium_major_version_cutoff: "Główne wersje Chromium o wartości równej lub niższej w sesjach bez zaangażowania otrzymują wynik robota indeksującego. Aktualizuj go dopiero po przeanalizowaniu ruchu; nieaktualny próg staje się mniej wrażliwy, a nie bardziej agresywny."
     slow_down_crawler_user_agents: "Agenty użytkownika robotów indeksujących sieć, które powinny mieć ograniczenie przepustowości zgodnie z konfiguracją w ustawieniu {{setting:slow_down_crawler_rate}} . Każda wartość musi mieć co najmniej 3 znaki."
     slow_down_crawler_rate: "Jeżeli określono {{setting:slow_down_crawler_user_agents}} , ta szybkość będzie dotyczyć wszystkich robotów indeksujących (liczba sekund opóźnienia między żądaniami)"
     llms_txt: "Prześlij plik tekstowy, który będzie udostępniany w katalogu /llms.txt robotom LLM. Więcej informacji znajdziesz na stronie <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> ."
@@ -6016,11 +6019,11 @@ pl_PL:
         title: "Nie"
         delete:
           title: "Usuń użytkownika"
-          description: "Usuń użytkownika bez blokowania"
+          description: "Usuń użytkownika bez blokowania jego adresu e-mail lub adresu IP"
           complete: "Użytkownik usunięty."
         block:
           title: "Usuń i zablokuj użytkownika"
-          description: "Użytkownik zostanie usunięty, a my zablokujemy jego adres IP i e-mail."
+          description: "Usuń użytkownika i zablokuj jego adres e-mail i adres IP"
           complete: "Użytkownik usunięty i zablokowany."
       confirm_spam:
         title: "Tak"
@@ -6032,9 +6035,11 @@ pl_PL:
         bundle_title: "Odrzuć…"
       reject_and_suspend:
         title: "Odrzuć i zawieś użytkownika"
+        description: "Odrzuć wpis i zablokuj użytkownikowi możliwość logowania się do czasu zakończenia zawieszenia"
         complete: "Post odrzucony, a użytkownik zawieszony."
       reject_and_silence:
         title: "Odrzuć i wycisz użytkownika"
+        description: "Odrzuć wpis i zablokuj użytkownikowi możliwość publikowania wpisów lub wysyłania wiadomości"
         complete: "Post odrzucony, a użytkownik wyciszony."
       reject_and_delete:
         title: "Odrzuć i usuń post"
@@ -6080,12 +6085,12 @@ pl_PL:
         bundle_title: "Co chcesz zrobić z użytkownikiem?"
       silence_user:
         title: "Wycisz użytkownika"
-        description: "Zablokuj użytkownikowi możliwość tworzenia wpisów"
+        description: "Zablokuj użytkownikowi możliwość publikowania lub wysyłania wiadomości"
         complete: "Użytkownik wyciszony"
         reason: "Użytkownik uciszony przez kolejkę recenzji"
       suspend_user:
         title: "Zawieś użytkownika"
-        description: "Zawieś konto użytkownika"
+        description: "Zablokuj użytkownikowi możliwość logowania się do momentu zakończenia zawieszenia"
         complete: "Użytkownik zawieszony"
         reason: "Użytkownik zawieszony przez kolejkę recenzji"
       delete_user:

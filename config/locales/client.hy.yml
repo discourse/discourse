@@ -596,6 +596,7 @@ hy:
         email: "Էլ. հասցե"
         name: "Անուն"
         fields: "Դաշտեր"
+        penalty_forever: "Ընդմիշտ"
         reject_reason: "Պատճառ"
         scrubbed_reason: "Պատճառ"
         scrub_record:

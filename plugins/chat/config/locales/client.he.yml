@@ -72,6 +72,8 @@ he:
         close: "סגירת הודעות נעוצות"
         pinned_by_you: "ננעץ על ידיך"
         pinned_by_user: "ננעץ על ידי %{username}"
+      pinned_bar:
+        title: "נעוץ"
       no_pinned_messages: "אין הודעות נעוצות בערוץ הזה."
       pin_message: "נעיצת הודעה"
       unpin_message: "שליפת הודעה"

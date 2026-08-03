@@ -2860,7 +2860,6 @@ ca:
           complete: "Usuari suprimit."
         block:
           title: "Suprimeix i bloca l'usuari"
-          description: "Se suprimirà l'usuari i es blocarà la seva adreça IP i adreça de correu electrònic."
       confirm_spam:
         title: "Sí"
       not_spam:

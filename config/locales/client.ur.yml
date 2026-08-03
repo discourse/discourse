@@ -865,6 +865,7 @@ ur:
         email: "ای میل"
         name: "نام"
         fields: "خانے"
+        penalty_forever: "ہمیشہ کیلئے"
         reject_reason: "وجہ"
         scrubbed_by: "نے ریکارڈصاف کر دیا"
         scrubbed_reason: "وجہ"

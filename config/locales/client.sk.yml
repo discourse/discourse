@@ -749,6 +749,8 @@ sk:
         email: "Email"
         name: "Meno"
         fields: "Polia"
+        silence_reason: "Dôvod ticha"
+        penalty_forever: "Vždy"
         reject_reason: "Dôvod"
         scrubbed_by: "Záznam vymazaný"
         scrubbed_reason: "Dôvod"

@@ -64,6 +64,8 @@ fi:
       cancel: "Peruuta"
       cancel_reply: "Peruuta vastaus"
       chat_channels: "Kanavat"
+      pinned_bar:
+        title: "Kiinnitetty"
       pinned: "Kiinnitetty"
       browse_all_channels: "Selaa kaikkia kanavia"
       see_in: "Katso:"

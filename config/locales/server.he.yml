@@ -5159,7 +5159,6 @@ he:
           complete: "משתמש נמחק."
         block:
           title: "מחיקה וחסימת המשתמש"
-          description: "המשתמש יימחק ואנו נחסום את כתובת ה־IP והדוא״ל שלו."
           complete: "המשתמש נמחק ונחסם."
       confirm_spam:
         title: "כן"
@@ -5212,12 +5211,10 @@ he:
         bundle_title: "מה לעשות עם המשתמש/ת?"
       silence_user:
         title: "השתקת משתמש"
-        description: "למנוע מהמשתמש/ת לפרסם"
         complete: "משתמש הושתק"
         reason: "המשתמש/ת הושתקו דרך תור הסקירה"
       suspend_user:
         title: "השעיית משתמש"
-        description: "השעיית חשבון המשתמש/ת"
         complete: "משתמש הושעה"
         reason: "המשתמש/ת הושעו דרך תור הסקירה"
       delete_user:

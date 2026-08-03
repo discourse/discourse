@@ -845,6 +845,8 @@ es:
         email: "Correo electrónico"
         name: "Nombre"
         fields: "Campos"
+        silence_reason: "Motivo para silenciar"
+        penalty_forever: "Para siempre"
         reject_reason: "Motivo"
         scrubbed_by: "Registro borrado por"
         scrubbed_reason: "Motivo"

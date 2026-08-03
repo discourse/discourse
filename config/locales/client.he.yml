@@ -940,6 +940,8 @@ he:
         email: "דוא״ל"
         name: "שם"
         fields: "שדות"
+        silence_reason: "סיבת השתקה"
+        penalty_forever: "לנצח"
         reject_reason: "סיבה"
         scrubbed_reason: "סיבה"
         scrubbed_reject_reason: "סיבת דחיית המשתמש"

@@ -461,6 +461,7 @@ bs_BA:
         email: "Email"
         name: "Ime"
         fields: "Polja"
+        penalty_forever: "Zauvijek"
         reject_reason: "Reason"
         scrubbed_reason: "Reason"
         scrub_record:

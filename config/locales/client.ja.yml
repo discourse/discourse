@@ -709,6 +709,8 @@ ja:
         email: "メール"
         name: "名前"
         fields: "フィールド"
+        silence_reason: "投稿禁止の理由"
+        penalty_forever: "永遠"
         reject_reason: "理由"
         scrubbed_by: "レコードを削除したユーザー:"
         scrubbed_reason: "理由"

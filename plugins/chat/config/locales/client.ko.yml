@@ -37,6 +37,8 @@ ko:
       create: "글"
       cancel: "취소"
       chat_channels: "채널"
+      pinned_bar:
+        title: "핀 지정됨"
       pinned: "핀 지정됨"
       move_to_channel:
         instructions:

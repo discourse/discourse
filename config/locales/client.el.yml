@@ -871,6 +871,7 @@ el:
         email: "Email"
         name: "Όνομα"
         fields: "Πεδία"
+        penalty_forever: "Για πάντα"
         reject_reason: "Αιτία"
         scrubbed_by: "Η εγγραφή αφαιρέθηκε από"
         scrubbed_reason: "Αιτία"

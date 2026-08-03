@@ -5418,11 +5418,10 @@ de:
         title: "Nein"
         delete:
           title: "Benutzer löschen"
-          description: "Benutzer löschen, ohne ihn zu blockieren"
           complete: "Benutzer gelöscht."
         block:
           title: "Benutzer löschen und blockieren"
-          description: "Der Benutzer wird gelöscht und wir blockieren seine IP- und E-Mail-Adresse."
+          description: "Benutzer löschen und seine E-Mail- und IP-Adresse blockieren"
           complete: "Benutzer gelöscht und gesperrt."
       confirm_spam:
         title: "Ja"
@@ -5482,12 +5481,10 @@ de:
         bundle_title: "Was willst du mit dem Benutzer machen?"
       silence_user:
         title: "Benutzer stummschalten"
-        description: "Benutzer daran hindern Beiträge zu veröffentlichen"
         complete: "Benutzer stummgeschaltet"
         reason: "Benutzer von der Warteschlange zur Überprüfung aus stummgeschaltet"
       suspend_user:
         title: "Benutzer sperren"
-        description: "Das Benutzerkonto sperren"
         complete: "Benutzer gesperrt"
         reason: "Benutzer von der Warteschlange zur Überprüfung aus gesperrt"
       delete_user:

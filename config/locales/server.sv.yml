@@ -3938,7 +3938,6 @@ sv:
           complete: "Användare raderad."
         block:
           title: "Radera och blockera användare"
-          description: "Användaren kommer att raderas, och vi blockerar också hens IP och e-postadress."
       confirm_spam:
         title: "Ja"
       not_spam:

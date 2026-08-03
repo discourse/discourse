@@ -64,6 +64,8 @@ it:
       cancel: "Annulla"
       cancel_reply: "Annulla risposta"
       chat_channels: "Canali"
+      pinned_bar:
+        title: "Appuntato"
       pinned: "Appuntato"
       browse_all_channels: "Sfoglia tutti i canali"
       see_in: "Da' un'occhiata"

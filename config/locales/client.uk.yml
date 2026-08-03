@@ -1027,6 +1027,8 @@ uk:
         email: "Електронна пошта"
         name: "Імʼя"
         fields: "Поля"
+        silence_reason: "Причина заморожування"
+        penalty_forever: "Назавжди"
         reject_reason: "Причина"
         scrubbed_by: "Запис стерто"
         scrubbed_reason: "Причина"

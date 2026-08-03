@@ -443,6 +443,7 @@ gl:
         email: "Correo electrónico"
         name: "Nome"
         fields: "Campos"
+        penalty_forever: "Sempre"
         reject_reason: "Razón"
         scrubbed_reason: "Motivo"
         scrub_record:

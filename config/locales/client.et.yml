@@ -413,6 +413,7 @@ et:
         email: "E-post"
         name: "Nimi"
         fields: "Väljad"
+        penalty_forever: "Igavesti"
         reject_reason: "Põhjus"
         scrubbed_reason: "Põhjus"
         scrub_record:

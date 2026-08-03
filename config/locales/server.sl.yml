@@ -2055,7 +2055,6 @@ sl:
           complete: "Uporabnik izbrisan."
         block:
           title: "Izbriši in blokiraj uporabnika"
-          description: "Ta uporabnik bo izbrisan in njegov IP naslov in e-naslov bo blokiran."
       confirm_spam:
         title: "Da"
       not_spam:

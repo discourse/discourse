@@ -22,6 +22,8 @@ ca:
         yesterday: "Ahir"
       create: "Crea"
       cancel: "Cancel·la"
+      pinned_bar:
+        title: "Afixat"
       pinned: "Afixat"
       channel_settings:
         edit: "Edita"

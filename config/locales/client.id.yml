@@ -490,6 +490,7 @@ id:
         email: "Email"
         name: "Nama"
         fields: "bidang"
+        penalty_forever: "Selamanya"
         reject_reason: "Alasan"
         scrubbed_reason: "Alasan"
         scrub_record:

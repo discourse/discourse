@@ -10,6 +10,10 @@ fr:
       site_settings:
         categories:
           discourse_openid_connect: "Discours OpenID Connect"
+      config:
+        login:
+          sub_pages:
+            oidc: "OIDC"
   js:
     login:
       oidc:

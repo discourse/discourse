@@ -597,6 +597,7 @@ sq:
         email: "Email"
         name: "Emri"
         fields: "Fushat"
+        penalty_forever: "Përgjithmonë"
         reject_reason: "Arsye"
         scrubbed_reason: "Arsye"
         scrub_record:

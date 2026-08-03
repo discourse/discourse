@@ -860,6 +860,8 @@ pt_BR:
         email: "E-mail"
         name: "Nome"
         fields: "Campos"
+        silence_reason: "Motivo do silêncio"
+        penalty_forever: "Para sempre"
         reject_reason: "Motivo"
         scrubbed_by: "Registro removido por"
         scrubbed_reason: "Motivo"
