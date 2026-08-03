@@ -66,6 +66,20 @@ describe Chat do
       expect(Upload.exists?(id: draft_upload.id)).to eq(true)
       expect(Upload.exists?(id: unused_upload.id)).to eq(false)
     end
+
+    it "marks uploads tracked as hotlinked media in use, even while unreferenced" do
+      hotlinked_upload = Fabricate(:upload, user: user, created_at: 1.month.ago)
+      Chat::MessageHotlinkedMedia.create!(
+        chat_message: chat_message,
+        url: "//example.com/image.png",
+        status: :downloaded,
+        upload: hotlinked_upload,
+      )
+
+      Jobs::CleanUpUploads.new.execute({})
+
+      expect(Upload.exists?(id: hotlinked_upload.id)).to eq(true)
+    end
   end
 
   describe "user card serializer extension #can_chat_user" do

@@ -40,7 +40,7 @@ module Chat
       info = hotlinked_map[normalized_src]
 
       if info&.downloaded? && (upload = info.upload)
-        img["src"] = UrlHelper.cook_url(upload.url, secure: @should_secure_uploads)
+        img["src"] = UrlHelper.cook_url(upload.url, secure: upload.secure?)
         img["data-base62-sha1"] = upload.base62_sha1
         img["data-dominant-color"] = upload.dominant_color(calculate_if_missing: true).presence
         img.delete(PrettyText::BLOCKED_HOTLINKED_SRC_ATTR)
@@ -53,22 +53,24 @@ module Chat
       extract_images.each { |img| process_hotlinked_image(img) }
     end
 
-    # Uploads rendered inline in the processed doc need an UploadReference to
+    # Uploads rendered inline (upload:// tokens in the body, plus localized
+    # hotlinked images that only exist in the doc) need an UploadReference to
     # survive Jobs::CleanUpUploads; a hotlinked-media upload that dropped out of
-    # the doc no longer needs one. Attachment references are never touched here.
-    # Runs last: post_process_videos' ensure_exist! calls prune concurrently-held
-    # references.
+    # the doc no longer needs one. Attachment references are never pruned here —
+    # except an upload that is simultaneously an attachment and a hotlinked-media
+    # record of this message (accepted edge). Runs after post_process_videos,
+    # whose ensure_exist! calls prune references they don't know about.
     def reconcile_upload_references
+      inline_base62s =
+        @model.message.to_s.scan(%r{upload://([a-zA-Z0-9]+)}).flatten +
+          @doc.css("img[data-base62-sha1]").map { |img| img["data-base62-sha1"] }
       in_doc_sha1s =
-        @doc
-          .css("img[data-base62-sha1]")
-          .filter_map { |img| Upload.sha1_from_base62_encoded(img["data-base62-sha1"]) }
-          .uniq
+        inline_base62s.uniq.filter_map { |base62| Upload.sha1_from_base62_encoded(base62) }
       in_doc_ids = in_doc_sha1s.empty? ? [] : Upload.where(sha1: in_doc_sha1s).pluck(:id)
 
       existing_ids = UploadReference.where(target: @model).pluck(:upload_id)
       to_add = in_doc_ids - existing_ids
-      to_remove = (existing_ids & hotlinked_upload_ids) - in_doc_ids
+      to_remove = existing_ids.empty? ? [] : (existing_ids & hotlinked_upload_ids) - in_doc_ids
       return if to_add.empty? && to_remove.empty?
 
       if to_add.any?
@@ -130,7 +132,7 @@ module Chat
         .css("img")
         .each do |img|
           if img["class"]&.include?("emoji") || img["class"]&.include?("avatar") ||
-               img["data-base62-sha1"].blank?
+               img["data-base62-sha1"].blank? || img.ancestors(".onebox, .onebox-body").any?
             next
           end
 

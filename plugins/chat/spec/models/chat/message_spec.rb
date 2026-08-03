@@ -681,6 +681,16 @@ describe Chat::Message do
       message.uploads = [image]
       expect(message.to_markdown).to eq("look ![](#{image.short_url})")
     end
+
+    it "does not re-append an upload embedded as inline video markdown" do
+      SiteSetting.authorized_extensions += "|mp4"
+      video = Fabricate(:upload, original_filename: "clip.mp4", extension: "mp4")
+      message.message = "![clip|video](#{video.short_url})"
+      message.cook
+      message.save!
+      message.uploads = [video]
+      expect(message.to_markdown).to eq("![clip|video](#{video.short_url})")
+    end
   end
 
   describe ".push_notification_excerpt" do

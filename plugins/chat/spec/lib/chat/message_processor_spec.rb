@@ -60,7 +60,7 @@ RSpec.describe Chat::MessageProcessor do
       expect(img["class"]).to include("lightbox")
     end
 
-    it "swaps an image inside a onebox" do
+    it "swaps an image inside a onebox without lightboxing it" do
       create_downloaded_record(message)
       Chat::Message.stubs(:cook).returns(
         "<aside class=\"onebox\"><img src=\"#{image_url}\" width=\"100\" height=\"100\"></aside>",
@@ -71,6 +71,7 @@ RSpec.describe Chat::MessageProcessor do
 
       img = processor.instance_variable_get(:@doc).at_css("img")
       expect(img["src"]).to eq(UrlHelper.cook_url(upload.url, secure: false))
+      expect(img["class"].to_s).not_to include("lightbox")
     end
 
     it "consumes the blocked-hotlinked attribute when localizing" do
@@ -85,6 +86,32 @@ RSpec.describe Chat::MessageProcessor do
       img = processor.instance_variable_get(:@doc).at_css("img")
       expect(img["src"]).to eq(UrlHelper.cook_url(upload.url, secure: false))
       expect(img[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR]).to be_nil
+    end
+
+    context "with secure uploads enabled" do
+      before do
+        setup_s3
+        SiteSetting.secure_uploads = true
+      end
+
+      it "localizes to the secure proxy URL when the upload is secure" do
+        secure_upload = Fabricate(:secure_upload_s3, width: 100, height: 100)
+        secure_upload.update_columns(dominant_color: "000000")
+        Chat::MessageHotlinkedMedia.create!(
+          chat_message: message,
+          url: Chat::MessageHotlinkedMedia.normalize_src(image_url),
+          status: :downloaded,
+          upload: secure_upload,
+        )
+        Chat::Message.stubs(:cook).returns("<p><img src=\"#{image_url}\"></p>")
+
+        processor = described_class.new(message)
+        processor.run!
+
+        img = processor.instance_variable_get(:@doc).at_css("img")
+        expect(img["src"]).to include("secure-uploads")
+        expect(img["src"]).not_to include("s3-upload-bucket")
+      end
     end
 
     it "leaves the hotlinked src for failed or oversized downloads" do

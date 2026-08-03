@@ -42,7 +42,7 @@ module Jobs
             # A still-external img matching a downloaded row means the localizing
             # re-cook was lost (or hasn't run) — trigger it again. Terminal
             # failures aren't retried.
-            needs_recook = true if existing.downloaded?
+            needs_recook = true if existing.downloaded? && existing.upload
             next
           end
 

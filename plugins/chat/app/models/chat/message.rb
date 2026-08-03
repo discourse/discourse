@@ -182,13 +182,15 @@ module Chat
       message.blank? && uploads.present?
     end
 
-    # Base62 sha1 tokens of the uploads rendered inline in cooked (upload://
-    # images and localized hotlinked images both carry data-base62-sha1).
-    # Callers intersect this with whatever upload collection they already have
-    # loaded, so no surface needs an extra query to de-dup inline uploads.
+    # Base62 sha1 tokens of the uploads rendered inline: upload:// short URLs
+    # authored in the body (images, video, audio, attachments) plus localized
+    # hotlinked images, which only exist in cooked (data-base62-sha1). Callers
+    # intersect this with whatever upload collection they already have loaded,
+    # so no surface needs an extra query to de-dup inline uploads.
     def inline_upload_base62s
-      return Set.new if cooked.blank?
-      cooked.scan(/data-base62-sha1="([a-zA-Z0-9]+)"/).flatten.to_set
+      tokens = message.to_s.scan(%r{upload://([a-zA-Z0-9]+)}).flatten
+      tokens.concat(cooked.scan(/data-base62-sha1="([a-zA-Z0-9]+)"/).flatten) if cooked.present?
+      tokens.to_set
     end
 
     # Uploads shown as separate tiles: everything except those already inline.

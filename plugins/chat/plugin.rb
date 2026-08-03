@@ -190,7 +190,7 @@ after_initialize do
         "data LIKE ? OR data LIKE ?",
         "%#{upload.sha1}%",
         "%#{upload.base62_sha1}%",
-      ).exists?
+      ).exists? || Chat::MessageHotlinkedMedia.where(upload_id: upload.id).exists?
   end
 
   add_to_serializer(:user_card, :can_chat_user) do
