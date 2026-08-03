@@ -14,18 +14,45 @@ fr:
     rss_polling:
       title: Sondage RSS
     admin:
+      logs:
+        staff_actions:
+          actions:
+            create_rss_polling_feed: créer un flux RSS
+            update_rss_polling_feed: mettre à jour le flux RSS
+            destroy_rss_polling_feed: supprimer le flux RSS
+            enable_rss_polling_feed: activer le flux RSS
+            disable_rss_polling_feed: désactiver le flux RSS
       rss_polling:
+        feed_settings: Paramètres du flux
+        discourse_settings: Paramètres Discourse
         author: Auteur
         feed_url: URL
+        feed_url_must_be_http: Saisissez une URL de flux valide commençant par http:// ou https://.
         discourse_category: Catégorie
         discourse_tags: Étiquettes
+        required_tags_hint: "Cette catégorie requiert l'une de ces étiquettes. Ajoutez-en une, sinon les sujets importés seront rejetés :"
+        feed_category_filter: Filtre de catégorie
         feeds:
+          title: Flux
+          add: Ajouter un flux
+          add_header: Ajouter un flux
+          edit_header: Modifier le flux
+          empty: Vous n'avez encore configuré aucun flux.
           edit: Modifier
           delete: Supprimer
+          enable: Activer le flux
+          disable: Désactiver le flux
+          back: Retour aux flux
           save: Enregistrer
           confirm_delete: "Voulez-vous vraiment supprimer ce flux ?"
+          delete_success: Flux supprimé
+          save_success: Flux enregistré
+          enable_success: Flux activé
+          disable_success: Flux désactivé
         test:
+          button: Tester le flux
           title: Aperçu
+          empty: Ce flux n'a renvoyé aucun élément.
           dismiss: Rejeter
         status:
           enabled: Activé

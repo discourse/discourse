@@ -30,7 +30,7 @@ fr:
         generate: "Générer"
         optional: "facultatif"
       import:
-        label: "Importer"
+        label: "Téléverser"
         unparseable_json: "Fichier JSON non analysable."
         wrong_json: "Fichier JSON incorrect. Un fichier JSON doit contenir un objet « query », qui doit au moins avoir une propriété « sql »."
       help:
