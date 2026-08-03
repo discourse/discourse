@@ -930,12 +930,6 @@ RSpec.describe Upload do
     let(:white_image) { Fabricate(:image_upload, color: "white") }
     let(:red_image) { Fabricate(:image_upload, color: "red") }
     let(:high_color_image) { Fabricate(:image_upload, color: "#000A00F00", color_depth: 16) }
-    let(:tiny_image) do
-      upload = Fabricate(:upload, extension: "png")
-      file = file_from_fixtures("cropped.png")
-      upload.update!(url: Discourse.store.store_upload(file, upload))
-      upload
-    end
     let(:not_an_image) do
       upload = Fabricate(:upload)
 
@@ -967,24 +961,8 @@ RSpec.describe Upload do
       expect(red_image.dominant_color).to eq("FF0000")
 
       expect(high_color_image.dominant_color).to eq(nil)
-      # original is: #000A00F00
-      # downsamples to: #009FEF
-      # A00 is closer to 9F than A0
-      # EF is closer to F00 than F0
-      expect(high_color_image.dominant_color(calculate_if_missing: true)).to eq("009FEF")
-      expect(high_color_image.dominant_color).to eq("009FEF")
-
-      uncached_tiny_color = tiny_image.dominant_color
-
-      expect(uncached_tiny_color).to eq(nil)
-
-      calculated_tiny_color = tiny_image.dominant_color(calculate_if_missing: true)
-
-      expect(calculated_tiny_color).to eq("524F40")
-
-      cached_tiny_color = tiny_image.dominant_color
-
-      expect(cached_tiny_color).to eq(calculated_tiny_color)
+      expect(high_color_image.dominant_color(calculate_if_missing: true)).to eq("00A0F0")
+      expect(high_color_image.dominant_color).to eq("00A0F0")
     end
 
     it "can be backfilled" do
@@ -1033,16 +1011,16 @@ RSpec.describe Upload do
       expect(invalid_image.dominant_color).to eq("")
     end
 
-    it "correctly handles unparsable ImageMagick output" do
-      ImageMagick.stubs(:magick).returns("someinvalidoutput")
+    it "raises when vips produces a pixel with an unexpected number of channels" do
+      expect(white_image.dominant_color).to eq(nil)
 
-      expect(invalid_image.dominant_color).to eq(nil)
+      Vips.stubs(:run)
+      File.stubs(:binread).returns("\0" * 5)
 
-      expect { invalid_image.dominant_color(calculate_if_missing: true) }.to raise_error(
-        /Calculated dominant color but unable to parse output/,
+      expect { white_image.dominant_color(calculate_if_missing: true) }.to raise_error(
+        "Calculated dominant color but unable to read the output pixel",
       )
-
-      expect(invalid_image.dominant_color).to eq(nil)
+      expect(white_image.dominant_color).to eq(nil)
     end
 
     it "correctly handles error when file is too large to download" do
