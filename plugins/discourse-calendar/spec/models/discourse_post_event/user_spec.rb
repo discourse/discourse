@@ -82,6 +82,28 @@ describe User do
             expect(user_1.can_act_on_discourse_post_event?(post_event_1)).to eq(true)
           end
         end
+
+        context "with multiple events in the same request" do
+          let(:user_2) { Fabricate(:user) }
+
+          let(:own_topic) { Fabricate(:topic, user: user_1) }
+          let(:own_post) { Fabricate(:post, topic: own_topic, user: user_1) }
+          let(:own_event) { Fabricate(:event, post: own_post) }
+
+          let(:other_topic) { Fabricate(:topic, user: user_2) }
+          let(:other_post) { Fabricate(:post, topic: other_topic, user: user_2) }
+          let(:other_event) { Fabricate(:event, post: other_post) }
+
+          it "does not leak the answer from one event to another" do
+            expect(user_1.can_act_on_discourse_post_event?(own_event)).to eq(true)
+            expect(user_1.can_act_on_discourse_post_event?(other_event)).to eq(false)
+          end
+
+          it "does not leak a negative answer either" do
+            expect(user_1.can_act_on_discourse_post_event?(other_event)).to eq(false)
+            expect(user_1.can_act_on_discourse_post_event?(own_event)).to eq(true)
+          end
+        end
       end
 
       context "when user is not in list of allowed groups" do
