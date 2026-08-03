@@ -659,6 +659,12 @@ basic:
   crawler_automation_user_agents:
     default: "HeadlessChrome|Playwright|Puppeteer|Selenium|PhantomJS|jsdom"
     hidden: true
+  crawler_stale_chromium_major_version_cutoff:
+    default: 138
+    type: integer
+    min: 1
+    max: 999
+    hidden: true
   interface_color_selector:
     client: true
     enum: "InterfaceColorSelectorSetting"
@@ -3118,16 +3124,23 @@ security:
   crawler_check_bypass_agents:
     hidden: true
     default: "cubot|MetaIAB"
-  # 16509/14618=AWS, 396982=Google Cloud, 15169/36040=Google, 8075=Microsoft,
-  # 714=Apple, 13238=Yandex, 32934=Meta, 13335=Cloudflare,
-  # 140577=Ahrefs, 210743=Babbar, 7941=Internet Archive,
-  # 16276=OVH, 24940=Hetzner, 136907=Huawei Cloud, 51747=Internet Vikings,
-  # 4134/4837=China Telecom/Unicom, 5089=Virgin, 55836=Reliance Jio,
-  # 5410=Bouygues, 701=Verizon, 6805=Telefonica, 45899=VNPT
-  # 55967=Baidu
+  # 38365/55967=Baidu, 140577=Ahrefs, 210743=Babbar, 7941=Internet Archive,
+  # 13238=Yandex
   crawler_asns:
     hidden: true
-    default: "16509|16276|714|13238|14618|136907|32934|15169|4134|4837|24940|396982|8075|51747|140577|45899|210743|13335|36040|5089|55836|5410|701|7941|6805|55967"
+    default: "38365|55967|140577|210743|7941|13238"
+    type: list
+    list_type: compact
+  # 16509/14618=AWS, 16276=OVH, 136907/55990=Huawei Cloud,
+  # 24940=Hetzner, 396982=Google Cloud, 8075=Microsoft, 51747=Internet Vikings,
+  # 13335=Cloudflare, 45090=Tencent Cloud, 23724=China Telecom IDC,
+  # 37963=Alibaba Cloud, 55960=Sinnet, 203020=HostRoyale,
+  # 63835=China Telecom Changsha IDC, 58540=China Telecom Jinan IDC,
+  # 58541=China Telecom Qingdao IDC, 58563=China Telecom Hubei IDC,
+  # 58461=China Telecom Hangzhou IDC
+  crawler_detection_datacenter_asns:
+    hidden: true
+    default: "16509|16276|14618|136907|24940|396982|8075|51747|13335|45090|55990|23724|37963|55960|203020|63835|58540|58541|58563|58461"
     type: list
     list_type: compact
   cors_origins:

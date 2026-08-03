@@ -35,10 +35,13 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(event.reload.score).to eq(155)
+    expect(event.reload.score).to eq(170)
     breakdown = event.browser_pageview_event_score
     expect(breakdown.automation_ua_score).to eq(100)
-    expect(breakdown.known_asn_score).to eq(15)
+    expect(breakdown.known_asn_score).to eq(30)
+    expect(breakdown.datacenter_asn_score).to eq(0)
+    expect(breakdown.single_request_no_referrer_score).to eq(0)
+    expect(breakdown.stale_browser_score).to eq(0)
     expect(breakdown.velocity_score).to eq(0)
     expect(breakdown.churn_score).to eq(0)
     expect(breakdown.rapid_nav_score).to eq(0)
@@ -49,16 +52,103 @@ RSpec.describe CrawlerScorer do
 
   it "does not score an event whose only signal is missing engagement" do
     event = make_event
+
     score!
+
     expect(event.reload.score).to be_nil
     expect(event.browser_pageview_event_score).to be_nil
   end
 
-  it "scores known crawler ASNs at +15" do
+  it "scores known crawler ASNs at +30" do
     SiteSetting.crawler_asns = "12345"
     event = make_event(asn: 12_345)
     score!
+    expect(event.reload.score).to eq(70)
+  end
+
+  it "scores datacenter ASNs at +10" do
+    SiteSetting.crawler_asns = ""
+    SiteSetting.crawler_detection_datacenter_asns = "12345"
+    event = make_event(asn: 12_345)
+
+    score!
+
+    expect(event.reload.score).to eq(50)
+    expect(event.browser_pageview_event_score.datacenter_asn_score).to eq(10)
+  end
+
+  it "scores unengaged single direct requests at +10" do
+    event = make_event(referrer: nil)
+
+    score!
+
+    expect(event.reload.score).to eq(50)
+    expect(event.browser_pageview_event_score.single_request_no_referrer_score).to eq(10)
+  end
+
+  it "scores unengaged single direct requests with any translation parameter at +15" do
+    event = make_event(url: "/t/topic/1?source=bot&tl=made-up-locale", referrer: nil)
+
+    score!
+
     expect(event.reload.score).to eq(55)
+    expect(event.browser_pageview_event_score.single_request_no_referrer_score).to eq(15)
+  end
+
+  it "scores unengaged Chromium versions at or below the configured cutoff at +5" do
+    SiteSetting.crawler_stale_chromium_major_version_cutoff = 138
+    event = make_event(user_agent: "Mozilla/5.0 Chrome/138.0.0.0 Safari/537.36")
+
+    score!
+
+    expect(event.reload.score).to eq(45)
+    expect(event.browser_pageview_event_score.stale_browser_score).to eq(5)
+  end
+
+  it "does not score Chromium versions above the configured cutoff" do
+    SiteSetting.crawler_stale_chromium_major_version_cutoff = 138
+    event = make_event(user_agent: "Mozilla/5.0 Chrome/139.0.0.0 Safari/537.36")
+
+    score!
+
+    expect(event.reload.score).to be_nil
+    expect(event.browser_pageview_event_score).to be_nil
+  end
+
+  it "does not score oversized Chromium major versions as stale" do
+    event = make_event(user_agent: "Mozilla/5.0 Chrome/99999999999.0.0.0 Safari/537.36")
+
+    score!
+
+    expect(event.reload.score).to be_nil
+    expect(event.browser_pageview_event_score).to be_nil
+  end
+
+  it "does not score stale Chromium versions when the session has interaction" do
+    SiteSetting.crawler_asns = "12345"
+    event = make_event(asn: 12_345, user_agent: "Mozilla/5.0 Chrome/125.0.0.0 Safari/537.36")
+    Fabricate(:browser_pageview_session_engagement, session_id: event.session_id, click_events: 1)
+
+    score!
+
+    expect(event.reload.score).to eq(30)
+    expect(event.browser_pageview_event_score.stale_browser_score).to eq(0)
+  end
+
+  it "scores stale Chromium versions reported by Edge and Opera" do
+    SiteSetting.crawler_stale_chromium_major_version_cutoff = 138
+    edge_event = make_event(user_agent: "Mozilla/5.0 Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0")
+    opera_event = make_event(user_agent: "Mozilla/5.0 Chrome/125.0.0.0 Safari/537.36 OPR/110.0.0.0")
+
+    score!
+
+    expect([edge_event.reload.score, opera_event.reload.score]).to eq([45, 45])
+    expect(
+      [
+        edge_event.browser_pageview_event_score.stale_browser_score,
+        opera_event.browser_pageview_event_score.stale_browser_score,
+      ],
+    ).to eq([5, 5])
   end
 
   it "scores pageview velocity at or above VELOCITY_LOW threshold at +15" do
@@ -138,7 +228,7 @@ RSpec.describe CrawlerScorer do
     ).to contain_exactly(70)
   end
 
-  it "does not score a session that only ever uses two addresses" do
+  it "does not add an IP rotation score to a session that only uses two addresses" do
     base = 30.minutes.ago
     %w[10.0.0.1 10.0.0.2].each_with_index do |ip, i|
       make_event(ip_address: ip, session_id: "handover-session", created_at: base + (i * 5).seconds)
@@ -151,7 +241,7 @@ RSpec.describe CrawlerScorer do
     )
   end
 
-  it "does not score ip changes slow enough to be a network handover" do
+  it "does not add an IP rotation score to a slow network handover" do
     base = 40.minutes.ago
     %w[10.0.0.1 10.0.0.2 10.0.0.3].each_with_index do |ip, i|
       make_event(ip_address: ip, session_id: "slow-session", created_at: base + (i * 11).minutes)
@@ -221,9 +311,10 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(event.reload.score).to eq(15)
+    expect(event.reload.score).to eq(30)
     breakdown = event.browser_pageview_event_score
-    expect(breakdown.known_asn_score).to eq(15)
+    expect(breakdown.known_asn_score).to eq(30)
+    expect(breakdown.datacenter_asn_score).to eq(0)
     expect(breakdown.engagement_score).to eq(0)
   end
 
@@ -246,12 +337,12 @@ RSpec.describe CrawlerScorer do
     event = make_event(asn: 12_345)
 
     score!
-    expect(event.reload.score).to eq(55)
+    expect(event.reload.score).to eq(70)
 
     Fabricate(:browser_pageview_session_engagement, session_id: event.session_id, key_events: 4)
     score!
 
-    expect(event.reload.score).to eq(55)
+    expect(event.reload.score).to eq(70)
   end
 
   it "scores each source but partitions velocity so transports do not inflate each other" do
