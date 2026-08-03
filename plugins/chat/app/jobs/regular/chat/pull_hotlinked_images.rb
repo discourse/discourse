@@ -39,9 +39,8 @@ module Jobs
 
           normalized_src = ::Chat::MessageHotlinkedMedia.normalize_src(download_src)
           if (existing = hotlinked_map[normalized_src])
-            # A still-external img matching a downloaded row means the localizing
-            # re-cook was lost (or hasn't run) — trigger it again. Terminal
-            # failures aren't retried.
+            # still external despite a downloaded row: the localizing re-cook
+            # was lost — trigger it again; terminal failures aren't retried
             needs_recook = true if existing.downloaded? && existing.upload
             next
           end
@@ -58,9 +57,7 @@ module Jobs
 
         return if !needs_recook
 
-        # MessageProcessor localizes the downloaded images in cooked and
-        # reconciles upload references. skip_pull_hotlinked_images prevents an
-        # enqueue loop.
+        # the re-cook localizes the images; skip_pull prevents an enqueue loop
         ::Jobs.enqueue(
           ::Jobs::Chat::ProcessMessage,
           chat_message_id: chat_message.id,

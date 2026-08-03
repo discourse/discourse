@@ -28,10 +28,8 @@ module Chat
       DiscourseEvent.trigger(:chat_message_processed, @doc, @model)
     end
 
-    # Swaps external img srcs for uploads recorded in chat_message_hotlinked_media.
-    # Replaces the mixin implementation, which requires @post; post_process_oneboxes
-    # also dispatches here for onebox-injected images. Unlike posts, a failed or
-    # oversized download keeps the hotlinked src rather than a placeholder.
+    # Replaces the mixin implementation, which requires @post. Unlike posts, a
+    # failed or oversized download keeps the hotlinked src, not a placeholder.
     def process_hotlinked_image(img)
       normalized_src =
         Chat::MessageHotlinkedMedia.normalize_src(
@@ -53,13 +51,10 @@ module Chat
       extract_images.each { |img| process_hotlinked_image(img) }
     end
 
-    # Uploads rendered inline (upload:// tokens in the body, plus localized
-    # hotlinked images that only exist in the doc) need an UploadReference to
-    # survive Jobs::CleanUpUploads; a hotlinked-media upload that dropped out of
-    # the doc no longer needs one. Attachment references are never pruned here —
-    # except an upload that is simultaneously an attachment and a hotlinked-media
-    # record of this message (accepted edge). Runs after post_process_videos,
-    # whose ensure_exist! calls prune references they don't know about.
+    # Keeps upload references matching what actually renders; a pruned hotlinked
+    # upload stays retained via its tracking row for cached reintroduction, for
+    # the message's lifetime. Runs after post_process_videos, whose ensure_exist!
+    # calls prune other references.
     def reconcile_upload_references
       inline_base62s =
         @model.message.to_s.scan(%r{upload://([a-zA-Z0-9]+)}).flatten +

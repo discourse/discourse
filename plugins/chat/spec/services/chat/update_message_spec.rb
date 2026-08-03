@@ -863,12 +863,14 @@ RSpec.describe Chat::UpdateMessage do
       end
 
       it "restores an inline upload's reference through the async job when not processing inline" do
+        SiteSetting.authorized_extensions += "|mp4"
+        video = Fabricate(:upload, user: user1, original_filename: "clip.mp4", extension: "mp4")
         chat_message =
           create_chat_message(
             user1,
-            "look ![](#{upload1.short_url})",
+            "![clip|video](#{video.short_url})",
             public_chat_channel,
-            upload_ids: [upload1.id],
+            upload_ids: [video.id],
           )
 
         Jobs.run_later!
@@ -877,7 +879,7 @@ RSpec.describe Chat::UpdateMessage do
           params: {
             message_id: chat_message.id,
             channel_id: chat_message.chat_channel_id,
-            message: "look now ![](#{upload1.short_url})",
+            message: "edited ![clip|video](#{video.short_url})",
             upload_ids: [],
           },
           options: {
@@ -891,7 +893,7 @@ RSpec.describe Chat::UpdateMessage do
 
         Jobs::Chat::ProcessMessage.new.execute(chat_message_id: chat_message.id)
 
-        expect(chat_message.reload.upload_ids).to contain_exactly(upload1.id)
+        expect(chat_message.reload.upload_ids).to contain_exactly(video.id)
       end
 
       it "keeps an inline upload when a different user edits the message" do

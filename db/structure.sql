@@ -18988,6 +18988,13 @@ CREATE UNIQUE INDEX index_chat_message_hotlinked_media_on_message_and_url_md5 ON
 
 
 --
+-- Name: index_chat_message_hotlinked_media_on_upload_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_chat_message_hotlinked_media_on_upload_id ON public.chat_message_hotlinked_media USING btree (upload_id);
+
+
+--
 -- Name: index_chat_message_interactions_on_chat_message_id; Type: INDEX; Schema: public; Owner: -
 --
 

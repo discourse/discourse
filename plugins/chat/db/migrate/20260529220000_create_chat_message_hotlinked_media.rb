@@ -16,5 +16,8 @@ class CreateChatMessageHotlinkedMedia < ActiveRecord::Migration[8.0]
               unique: true,
               name: "index_chat_message_hotlinked_media_on_message_and_url_md5",
               if_not_exists: true
+
+    # the upload-in-use hook looks rows up by upload
+    add_index :chat_message_hotlinked_media, :upload_id, if_not_exists: true
   end
 end
