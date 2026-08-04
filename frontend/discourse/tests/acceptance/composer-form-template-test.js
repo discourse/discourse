@@ -292,7 +292,19 @@ acceptance("Composer Form Template", function (needs) {
       .dom(".d-editor-input")
       .hasAttribute("aria-invalid", "true", "the editor starts out invalid");
 
+    assert
+      .dom(".d-editor-input")
+      .hasAttribute("aria-required", "true", "the editor starts out required");
+
     await click(".composer-toggle-switch");
+
+    assert
+      .dom(".d-editor-input")
+      .hasAttribute(
+        "aria-required",
+        "true",
+        "the replacement editor is still marked required"
+      );
 
     assert
       .dom(".d-editor-input")

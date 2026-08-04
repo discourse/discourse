@@ -391,6 +391,40 @@ module(
         );
     });
 
+    test("marks the editor required when the field is required", async function (assert) {
+      stubAllowUpload(this, true);
+
+      await render(
+        <template>
+          <FormComposer
+            @id="field-1"
+            @validations={{hash required=true}}
+            @onChange={{noop}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".d-editor-input")
+        .hasAttribute(
+          "aria-required",
+          "true",
+          "the editor announces that it is required before submitting"
+        );
+    });
+
+    test("does not mark the editor required when the field is optional", async function (assert) {
+      stubAllowUpload(this, true);
+
+      await render(
+        <template><FormComposer @id="field-1" @onChange={{noop}} /></template>
+      );
+
+      assert
+        .dom(".d-editor-input")
+        .doesNotHaveAttribute("aria-required", "the editor is not required");
+    });
+
     test("does not label the editor when the field has no label", async function (assert) {
       stubAllowUpload(this, true);
 

@@ -95,6 +95,14 @@ export default class FormTemplateFieldComposer extends Component {
       editor.removeAttribute("aria-labelledby");
     }
 
+    // the asterisk marking the field required is decorative, and the input
+    // carrying `required` is hidden, so the editor has to state it itself
+    if (this.args.validations?.required) {
+      editor.setAttribute("aria-required", "true");
+    } else {
+      editor.removeAttribute("aria-required");
+    }
+
     if (this.#validationFailed) {
       editor.setAttribute("aria-invalid", "true");
       editor.setAttribute("aria-describedby", this.errorId);
