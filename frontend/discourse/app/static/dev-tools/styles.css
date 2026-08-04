@@ -734,6 +734,15 @@ pre.outlet-info__error-message {
   border-inline-start: 1px solid var(--content-border-color);
 }
 
+/* Splits an action group into clusters, matching the group's own leading
+   separator. */
+.dev-tools-panel__action-divider {
+  align-self: stretch;
+  width: 1px;
+  margin-inline: var(--space-half);
+  background: var(--content-border-color);
+}
+
 .dev-tools-panel__action {
   border-radius: var(--d-button-border-radius);
   display: inline-flex;

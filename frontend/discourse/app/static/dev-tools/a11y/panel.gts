@@ -319,6 +319,26 @@ export default class A11yPanel extends Component<A11yPanelSignature> {
         <div class="dev-tools-panel__action-group">
           <button
             type="button"
+            class="dev-tools-panel__action dev-tools-a11y__test-channel"
+            title={{i18n "dev_tools.a11y.test_channel"}}
+            aria-label={{i18n "dev_tools.a11y.test_channel"}}
+            {{on "click" this.testChannel}}
+          >
+            {{dIcon "bullhorn"}}
+          </button>
+          <span class="dev-tools-panel__action-divider"></span>
+          <button
+            type="button"
+            class="dev-tools-panel__action dev-tools-a11y__copy"
+            title={{i18n "dev_tools.a11y.copy_trace"}}
+            aria-label={{i18n "dev_tools.a11y.copy_trace"}}
+            {{on "click" this.copy}}
+          >
+            {{dIcon (if this.copied "check" "far-clipboard")}}
+          </button>
+          <span class="dev-tools-panel__action-divider"></span>
+          <button
+            type="button"
             class="dev-tools-panel__action dev-tools-a11y__pause"
             aria-pressed={{if this.paused "true" "false"}}
             title={{if
@@ -334,24 +354,6 @@ export default class A11yPanel extends Component<A11yPanelSignature> {
             {{on "click" this.togglePaused}}
           >
             {{dIcon (if this.paused "play" "pause")}}
-          </button>
-          <button
-            type="button"
-            class="dev-tools-panel__action dev-tools-a11y__test-channel"
-            title={{i18n "dev_tools.a11y.test_channel"}}
-            aria-label={{i18n "dev_tools.a11y.test_channel"}}
-            {{on "click" this.testChannel}}
-          >
-            {{dIcon "bullhorn"}}
-          </button>
-          <button
-            type="button"
-            class="dev-tools-panel__action dev-tools-a11y__copy"
-            title={{i18n "dev_tools.a11y.copy_trace"}}
-            aria-label={{i18n "dev_tools.a11y.copy_trace"}}
-            {{on "click" this.copy}}
-          >
-            {{dIcon (if this.copied "check" "far-clipboard")}}
           </button>
           <button
             type="button"
