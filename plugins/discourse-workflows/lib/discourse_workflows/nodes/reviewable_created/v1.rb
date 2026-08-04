@@ -2,17 +2,17 @@
 
 module DiscourseWorkflows
   module Nodes
-    module ReviewableApproved
+    module ReviewableCreated
       class V1 < NodeType
         description(
-          name: "trigger:reviewable_approved",
+          name: "trigger:reviewable_created",
           version: "1.0",
           defaults: {
-            icon: "user-check",
-            color: "green",
+            icon: "flag",
+            color: "orange",
           },
           group: "discourse_triggers",
-          events: [:reviewable_transitioned_to],
+          events: [:reviewable_created],
           output_contracts: [{ schema: Schema::REVIEWABLE_EVENT_SCHEMA }],
           properties: -> do
             {
@@ -35,14 +35,13 @@ module DiscourseWorkflows
           end
         end
 
-        def initialize(status, reviewable)
+        def initialize(reviewable, *)
           super(parameters: {})
-          @status = status
           @reviewable = reviewable
         end
 
         def valid?
-          @status.to_s == "approved" && @reviewable.present?
+          @reviewable.present?
         end
 
         def output
