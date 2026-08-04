@@ -34,14 +34,8 @@ module Jobs
             post,
             feature_name: "bot",
             existing_reply_post: reply_post,
+            authorization_user_id: authorization_user.id,
           )
-
-        if reply_post
-          reply_post.custom_fields[
-            DiscourseAi::AiBot::POST_AI_AGENT_AUTHORIZATION_USER_ID_FIELD
-          ] = authorization_user.id
-          reply_post.save_custom_fields
-        end
       rescue DiscourseAi::Agents::Bot::BOT_NOT_FOUND
         Rails.logger.warn(
           "Bot not found for post #{post.id} - perhaps agent was deleted or bot was disabled",

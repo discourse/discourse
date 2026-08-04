@@ -480,6 +480,7 @@ module DiscourseAi
         cancel_manager: nil,
         attributed_user: nil,
         feature_context: nil,
+        authorization_user_id: nil,
         &blk
       )
         # this is a multithreading issue
@@ -578,15 +579,11 @@ module DiscourseAi
                 skip_jobs: true,
                 post_type: post_type,
                 skip_guardian: true,
-                custom_fields: {
-                  DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD => bot.llm.llm_model.display_name,
-                  DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD => bot.llm.llm_model.id,
-                  DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD => bot.agent.id,
-                },
+                custom_fields: ai_custom_fields(authorization_user_id: authorization_user_id),
               )
           end
 
-          save_ai_custom_fields(reply_post)
+          save_ai_custom_fields(reply_post, authorization_user_id: authorization_user_id)
 
           stream_user_ids = reply_post.topic.allowed_users.pluck(:id)
           stream_group_ids = reply_post.topic.allowed_groups.pluck(:id)
@@ -695,7 +692,7 @@ module DiscourseAi
             skip_validations: true,
             force_new_version: true,
           )
-          save_ai_custom_fields(reply_post)
+          save_ai_custom_fields(reply_post, authorization_user_id: authorization_user_id)
         else
           reply_post =
             PostCreator.create!(
@@ -705,11 +702,7 @@ module DiscourseAi
               skip_validations: true,
               post_type: post_type,
               skip_guardian: true,
-              custom_fields: {
-                DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD => bot.llm.llm_model.display_name,
-                DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD => bot.llm.llm_model.id,
-                DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD => bot.agent.id,
-              },
+              custom_fields: ai_custom_fields(authorization_user_id: authorization_user_id),
             )
         end
 
@@ -747,6 +740,7 @@ module DiscourseAi
             raw: error_message,
             skip_validations: true,
             skip_guardian: true,
+            custom_fields: ai_custom_fields(authorization_user_id: authorization_user_id),
           )
         end
 
@@ -805,16 +799,22 @@ module DiscourseAi
 
       private
 
-      def save_ai_custom_fields(reply_post)
-        reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD] = bot
-          .llm
-          .llm_model
-          .display_name
-        reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD] = bot
-          .llm
-          .llm_model
-          .id
-        reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD] = bot.agent.id
+      def ai_custom_fields(authorization_user_id: nil)
+        fields = {
+          DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD => bot.llm.llm_model.display_name,
+          DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD => bot.llm.llm_model.id,
+          DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD => bot.agent.id,
+        }
+        if authorization_user_id
+          fields[
+            DiscourseAi::AiBot::POST_AI_AGENT_AUTHORIZATION_USER_ID_FIELD
+          ] = authorization_user_id
+        end
+        fields
+      end
+
+      def save_ai_custom_fields(reply_post, authorization_user_id: nil)
+        reply_post.custom_fields.merge!(ai_custom_fields(authorization_user_id:))
         reply_post.save_custom_fields
       end
 
