@@ -17,6 +17,15 @@ RSpec.describe SvgSpriteController do
       expect(response.status).to eq(200)
     end
 
+    it "does not include a username in the cacheable response" do
+      sign_in(user)
+
+      get "/svg-sprite/#{Discourse.current_hostname}/svg--#{SvgSprite.version}.js"
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Discourse-Username"]).to be_nil
+    end
+
     it "should redirect to current version" do
       random_hash = Digest::SHA1.hexdigest("somerandomstring")
       get "/svg-sprite/#{Discourse.current_hostname}/svg--#{random_hash}.js"

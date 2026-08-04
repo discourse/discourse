@@ -4,6 +4,8 @@ RSpec.describe StaticController do
   fab!(:upload)
 
   describe "#favicon" do
+    fab!(:user)
+
     let(:filename) { "smallest.png" }
     let(:file) { file_from_fixtures(filename) }
 
@@ -18,6 +20,15 @@ RSpec.describe StaticController do
         expect(response.status).to eq(200)
         expect(response.media_type).to eq("image/png")
         expect(response.body.bytesize).to eq(SiteIconManager.favicon.filesize)
+      end
+
+      it "does not include a username in the cacheable response" do
+        sign_in(user)
+
+        get "/favicon/proxied"
+
+        expect(response.status).to eq(200)
+        expect(response.headers["X-Discourse-Username"]).to be_nil
       end
 
       it "returns the configured favicon" do
@@ -615,11 +626,22 @@ RSpec.describe StaticController do
   end
 
   describe "#service_worker_asset" do
+    fab!(:user)
+
     it "works" do
       get "/service-worker.js"
       expect(response.status).to eq(200)
       expect(response.content_type).to start_with("text/javascript")
       expect(response.body).to include("addEventListener")
+    end
+
+    it "does not include a username in the cacheable response" do
+      sign_in(user)
+
+      get "/service-worker.js"
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Discourse-Username"]).to be_nil
     end
   end
 

@@ -1994,6 +1994,37 @@ RSpec.describe ApplicationController do
   describe "#set_current_user_for_logs" do
     fab!(:admin)
 
+    it "sets the X-Discourse-Username header for responses that cannot be stored" do
+      sign_in(admin)
+
+      get "/u/#{admin.username}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.headers["Cache-Control"]).to include("no-store")
+      expect(response.headers["X-Discourse-Username"]).to eq(admin.username)
+    end
+
+    it "does not set the X-Discourse-Username header for responses that can be stored" do
+      SiteSetting.cache_control_bfcache_compatibility = true
+      sign_in(admin)
+
+      get "/u/#{admin.username}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.headers["Cache-Control"]).to eq("no-cache")
+      expect(response.headers["X-Discourse-Username"]).to be_nil
+    end
+
+    it "sets the X-Discourse-Username header for private cached responses" do
+      sign_in(admin)
+
+      get "/manifest.webmanifest"
+
+      expect(response.status).to eq(200)
+      expect(response.headers["Cache-Control"]).to eq("max-age=60, private")
+      expect(response.headers["X-Discourse-Username"]).to eq(admin.username)
+    end
+
     it "sets the X-Discourse-Route header to the controller name and action including namespace" do
       sign_in(admin)
 
