@@ -11,7 +11,7 @@ import {
   createElementVirtualizer,
   isVirtualizationEnabled,
   keyFor,
-  rangeExtractorWithPinned,
+  rangeExtractorWithPins,
   updateElementVirtualizer,
 } from "discourse/ui-kit/lib/virtualizer";
 
@@ -31,6 +31,16 @@ interface VisibleRange {
   startIndex: number;
   endIndex: number;
 }
+
+interface VirtualRange extends VisibleRange {
+  overscan: number;
+  count: number;
+}
+
+type PinnedIndices = (
+  indices: readonly number[],
+  range: VirtualRange
+) => readonly number[];
 
 /** The visible range plus the total item count, handed to an edge callback. */
 interface EdgeInfo extends VisibleRange {
@@ -69,12 +79,7 @@ interface VirtualizerOptions {
   getItemKey: (index: number) => VirtualKey;
   overscan: number;
   onChange: () => void;
-  rangeExtractor?: (range: {
-    startIndex: number;
-    endIndex: number;
-    overscan: number;
-    count: number;
-  }) => number[];
+  rangeExtractor?: (range: VirtualRange) => number[];
 }
 
 interface VirtualizerApi {
@@ -128,12 +133,11 @@ interface DVirtualizerSignature<T> {
       anchor?: "top" | "bottom";
 
       /**
-       * An absolute index kept rendered even when scrolled out of the window, so
-       * a keyboard-active row never unmounts (its `aria-activedescendant` id
-       * cannot dangle). Merged into the window in ascending index order — see
-       * {@link rangeExtractorWithPinned}.
+       * Extends the default window with extra absolute indices to keep mounted.
+       * Invalid and duplicate extras are discarded, and the result stays in
+       * ascending index order. See {@link rangeExtractorWithPins}.
        */
-      pinnedIndex?: number;
+      pinnedIndices?: PinnedIndices;
 
       /** Receives newly published virtualizer state. */
       onState?: (state: PublishedState) => void;
@@ -247,7 +251,7 @@ export default class DVirtualizer<T> extends Modifier<
       named.estimateSize,
       named.overscan,
       named.key,
-      named.pinnedIndex
+      named.pinnedIndices
     );
 
     if (!this.#virtualizer) {
@@ -271,7 +275,7 @@ export default class DVirtualizer<T> extends Modifier<
   // longer has: shrinking the list makes the browser clamp `scrollTop`, but that
   // clamp does not reach the engine's offset observer, so it keeps computing the
   // window from a stale, now out-of-range offset. On its own that only mis-scrolls
-  // the window; combined with `pinnedIndex` it surfaces as a visible gap — the
+  // the window; combined with pinned indices it surfaces as a visible gap — the
   // pinned row renders at its true offset while the window sits far below it, and
   // the rows between are absent. Re-read the element's real `scrollTop` whenever
   // the two disagree so the window tracks the actual position. A no-op when they
@@ -369,7 +373,7 @@ export default class DVirtualizer<T> extends Modifier<
     estimateSize: (item: T, index: number) => number,
     overscan?: number,
     key?: string,
-    pinnedIndex?: number
+    pinnedIndices?: PinnedIndices
   ): VirtualizerOptions {
     const options: VirtualizerOptions = {
       // Despite the name, this does NOT set where the list rests — resting
@@ -391,8 +395,8 @@ export default class DVirtualizer<T> extends Modifier<
     // Only override the range when there is something to pin: passing an explicit
     // `rangeExtractor: undefined` through `setOptions` would replace the engine's
     // own default with undefined and crash the next measure.
-    if (pinnedIndex != null) {
-      options.rangeExtractor = rangeExtractorWithPinned(pinnedIndex);
+    if (pinnedIndices != null) {
+      options.rangeExtractor = rangeExtractorWithPins(pinnedIndices);
     }
 
     return options;

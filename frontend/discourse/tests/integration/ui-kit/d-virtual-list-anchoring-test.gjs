@@ -184,6 +184,7 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
 
   test("an off-window pinned row stays mounted in ascending DOM order", async function (assert) {
     const items = buildRows(100);
+    const pinFirst = () => [0];
 
     await render(
       <template>
@@ -199,7 +200,7 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
           @key="id"
           @estimateSize={{estimate}}
           @itemRole="option"
-          @pinnedIndex={{0}}
+          @pinnedIndices={{pinFirst}}
           @overscan={{0}}
           as |item|
         >
@@ -233,6 +234,7 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
 
   test("a pinned row inside the visible window is not duplicated", async function (assert) {
     const items = buildRows(100);
+    const pinFifth = () => [5];
 
     await render(
       <template>
@@ -247,7 +249,7 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
           @items={{items}}
           @key="id"
           @estimateSize={{estimate}}
-          @pinnedIndex={{5}}
+          @pinnedIndices={{pinFifth}}
           @overscan={{0}}
           as |item|
         >
@@ -264,7 +266,7 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
       );
   });
 
-  test("a null pinnedIndex renders no extra off-window row", async function (assert) {
+  test("a null pinnedIndices callback renders no extra off-window row", async function (assert) {
     const items = buildRows(100);
 
     await render(
@@ -280,7 +282,7 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
           @items={{items}}
           @key="id"
           @estimateSize={{estimate}}
-          @pinnedIndex={{null}}
+          @pinnedIndices={{null}}
           @overscan={{0}}
           as |item|
         >
@@ -293,6 +295,6 @@ module("Integration | ui-kit | DVirtualList | anchoring", function (hooks) {
 
     assert
       .dom(".d-virtual-list__item[data-index='0']")
-      .doesNotExist("no off-window row is added when pinnedIndex is null");
+      .doesNotExist("no off-window row is added when pinnedIndices is null");
   });
 });

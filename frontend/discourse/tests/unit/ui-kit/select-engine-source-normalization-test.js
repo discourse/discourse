@@ -1,4 +1,3 @@
-import { registerWarnHandler } from "@ember/debug";
 import { trackedObject } from "@ember/reactive/collections";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
@@ -736,64 +735,6 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
           }),
         /value field/,
         "a custom value field is guarded the same way"
-      );
-    });
-
-    test("degenerate group cardinality warns once in dev builds", function (assert) {
-      const warnings = [];
-      registerWarnHandler((message, warnOptions, next) => {
-        if (warnOptions?.id === "discourse.d-select.degenerate-group-by") {
-          warnings.push(message);
-        } else {
-          next(message, warnOptions);
-        }
-      });
-
-      const degenerate = new SelectEngine({
-        items: Array.from({ length: 60 }, (_, index) => ({
-          id: index,
-          name: `Item ${index}`,
-          section: `section-${index}`,
-        })),
-        groupBy: "section",
-      });
-      descriptors(degenerate);
-      assert.strictEqual(
-        warnings.length,
-        1,
-        "a near-unique group key warns in dev"
-      );
-      descriptors(degenerate);
-      assert.strictEqual(
-        warnings.length,
-        1,
-        "the warning fires once per engine"
-      );
-
-      const coarse = new SelectEngine({
-        items: Array.from({ length: 60 }, (_, index) => ({
-          id: index,
-          name: `Item ${index}`,
-          section: `section-${index % 6}`,
-        })),
-        groupBy: "section",
-      });
-      descriptors(coarse);
-      assert.strictEqual(warnings.length, 1, "coarse grouping stays silent");
-
-      const small = new SelectEngine({
-        items: Array.from({ length: 10 }, (_, index) => ({
-          id: index,
-          name: `Item ${index}`,
-          section: `section-${index}`,
-        })),
-        groupBy: "section",
-      });
-      descriptors(small);
-      assert.strictEqual(
-        warnings.length,
-        1,
-        "a small list never trips the floor, even fully degenerate"
       );
     });
 

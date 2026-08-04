@@ -41,7 +41,7 @@ export default class VirtualListMolecule extends Component {
 
   // Whether the pinned/selected row currently falls inside the rendered window. When
   // false the row is scrolled off-screen yet still in the DOM — which is exactly what
-  // `@pinnedIndex` guarantees, so a keyboard cursor on it never dangles.
+  // `@pinnedIndices` guarantees, so a keyboard cursor on it never dangles.
   get pinnedInView() {
     const range = this.visibleRange;
     return (
@@ -49,6 +49,11 @@ export default class VirtualListMolecule extends Component {
       this.selectedIndex >= range.startIndex &&
       this.selectedIndex <= range.endIndex
     );
+  }
+
+  get selectedPins() {
+    const selectedIndex = this.selectedIndex;
+    return () => (selectedIndex == null ? [] : [selectedIndex]);
   }
 
   @action
@@ -76,7 +81,7 @@ export default class VirtualListMolecule extends Component {
 import DVirtualList from "discourse/ui-kit/d-virtual-list";
 
 // @initialIndex opens the list already scrolled to the selection (first render only,
-// so a later @items change never re-fights the user). @pinnedIndex keeps that row
+// so a later @items change never re-fights the user). @pinnedIndices keeps that row
 // mounted even when it scrolls out of the window, merged in ascending DOM order, so
 // aria-activedescendant can point at it without it ever unmounting.
 <template>
@@ -88,7 +93,7 @@ import DVirtualList from "discourse/ui-kit/d-virtual-list";
     @itemRole="option"
     @initialIndex={{this.selectedIndex}}
     @initialAlign="center"
-    @pinnedIndex={{this.selectedIndex}}
+    @pinnedIndices={{this.selectedPins}}
     @onVisibleRangeChange={{this.trackRange}}
     @onRegisterApi={{this.registerApi}}
     as |item row|
@@ -103,7 +108,7 @@ import DVirtualList from "discourse/ui-kit/d-virtual-list";
 
   <template>
     <StyleguideExample
-      @title="<DVirtualList> — per-row translate, with @pinnedIndex + @initialIndex"
+      @title="<DVirtualList> — per-row translate, with @pinnedIndices + @initialIndex"
       @code={{this.pinnedCode}}
     >
       <div class="styleguide-virtual-list">
@@ -113,8 +118,8 @@ import DVirtualList from "discourse/ui-kit/d-virtual-list";
           opens scrolled to the selected row (@initialIndex). Scroll away from
           it and inspect the DOM: the selected row keeps its
           <code>[data-index]</code>
-          element mounted (@pinnedIndex) so a keyboard cursor on it never points
-          at a removed node.
+          element mounted (@pinnedIndices) so a keyboard cursor on it never
+          points at a removed node.
         </p>
 
         <div class="styleguide-virtual-list__controls">
@@ -143,7 +148,7 @@ import DVirtualList from "discourse/ui-kit/d-virtual-list";
           @itemRole="option"
           @initialIndex={{this.selectedIndex}}
           @initialAlign="center"
-          @pinnedIndex={{this.selectedIndex}}
+          @pinnedIndices={{this.selectedPins}}
           @onVisibleRangeChange={{this.trackRange}}
           @onRegisterApi={{this.registerApi}}
           aria-label="Pinned virtual list"

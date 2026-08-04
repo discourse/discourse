@@ -2,6 +2,7 @@ import { module, test } from "qunit";
 import {
   createElementVirtualizer,
   keyFor,
+  rangeExtractorWithPins,
   stableKeyFor,
 } from "discourse/ui-kit/lib/virtualizer";
 
@@ -165,6 +166,90 @@ module("Unit | ui-kit | virtualizer", function () {
       "primitive is its own key"
     );
     assert.strictEqual(stableKeyFor(42), 42, "number is its own key");
+  });
+
+  module("rangeExtractorWithPins", function () {
+    // The window this range yields from the engine's default extractor is exactly
+    // [10..15]: overscan 0 keeps the expected arrays literal.
+    const RANGE = { startIndex: 10, endIndex: 15, overscan: 0, count: 100 };
+    const WINDOW = [10, 11, 12, 13, 14, 15];
+
+    test("extras merge into the window in ascending index order", function (assert) {
+      const extract = rangeExtractorWithPins(() => [20, 3]);
+
+      assert.deepEqual(
+        extract(RANGE),
+        [3, ...WINDOW, 20],
+        "unsorted extras land sorted around the window"
+      );
+    });
+
+    test("the callback receives the default window indices and the range", function (assert) {
+      let received;
+      const extract = rangeExtractorWithPins((indices, range) => {
+        received = { indices, range };
+        return [];
+      });
+
+      extract(RANGE);
+
+      assert.deepEqual(
+        [...received.indices],
+        WINDOW,
+        "the callback sees the overscan-expanded window"
+      );
+      assert.strictEqual(
+        received.range.count,
+        RANGE.count,
+        "the callback sees the range it is extending"
+      );
+    });
+
+    test("duplicate extras and window collisions never yield a duplicate index", function (assert) {
+      // The engine publishes one measurement per index with zero dedup of its own,
+      // so a surviving duplicate becomes a duplicate {{#each}} key downstream. The
+      // wall dedupes unconditionally: within the extras and against the window.
+      const extract = rangeExtractorWithPins(() => [3, 3, 12, 20, 20]);
+
+      assert.deepEqual(
+        extract(RANGE),
+        [3, ...WINDOW, 20],
+        "each index appears exactly once"
+      );
+    });
+
+    test("invalid extras are dropped, not merged", function (assert) {
+      const extract = rangeExtractorWithPins(() => [
+        1.5,
+        -1,
+        100,
+        Number.NaN,
+        Number.POSITIVE_INFINITY,
+        "7",
+        null,
+        undefined,
+        3,
+      ]);
+
+      assert.deepEqual(
+        extract(RANGE),
+        [3, ...WINDOW],
+        "only the integer in [0, count) survives"
+      );
+    });
+
+    test("an empty or nullish extras result leaves the window unchanged", function (assert) {
+      assert.deepEqual(
+        rangeExtractorWithPins(() => [])(RANGE),
+        WINDOW,
+        "no extras → the default window"
+      );
+      assert.deepEqual(
+        rangeExtractorWithPins(() => null)(RANGE),
+        WINDOW,
+        "a nullish result is treated as no extras"
+      );
+    });
   });
 
   module("keyFor (@key field)", function () {

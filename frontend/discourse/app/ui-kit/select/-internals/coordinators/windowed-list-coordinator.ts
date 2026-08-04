@@ -79,14 +79,6 @@ export default class WindowedListCoordinator {
     }
     return items;
   };
-  /**
-   * Group labels need a persistent home because windowed header rows can unmount while their
-   * options remain visible.
-   */
-  groupLabelRows = (rows: readonly ListRow[]): OptionRow[] =>
-    rows.filter(
-      (row): row is OptionRow => row.isSkeleton === false && row.flags.group
-    );
   /** Estimated row height for the windowing engine before a row is measured. */
   estimateRowSize = (): number => ROW_HEIGHT_ESTIMATE;
   /**
@@ -126,8 +118,8 @@ export default class WindowedListCoordinator {
     return index === -1 ? undefined : index;
   };
   /**
-   * The row the virtualizer must keep mounted: the roving cursor's row once one exists, and
-   * before that the held selection.
+   * Extends the virtualizer's window with the roving cursor's row once one exists (or the held
+   * selection before that), plus the group header for every mounted option.
    *
    * The seed in `dRovingFocus` can only see MOUNTED rows, and the reveal scroll that brings an
    * off-window selection into view is deferred a runloop tick — so without this the seed of a
@@ -139,8 +131,28 @@ export default class WindowedListCoordinator {
    *
    * `??`, never `||`: index 0 is a legitimate pin.
    */
-  seedPinnedIndex = (rows: readonly ListRow[]): number | undefined =>
-    this._activePinnedIndex ?? this.revealRowIndex(rows);
+  windowPins = (rows: readonly ListRow[]) => {
+    const pin = this._activePinnedIndex ?? this.revealRowIndex(rows);
+    const headerIndices = this.#headerIndices(rows);
+
+    return (indices: readonly number[]) => {
+      const extras: Array<number | undefined> = pin == null ? [] : [pin];
+      const collectHeader = (index: number) => {
+        const row = rows[index];
+        const option = row && this.optionRow(row);
+        if (!option || option.groupOrdinal == null) {
+          return;
+        }
+        extras.push(headerIndices.get(option.groupOrdinal));
+      };
+
+      indices.forEach(collectHeader);
+      if (pin != null) {
+        collectHeader(pin);
+      }
+      return extras.filter((index): index is number => index != null);
+    };
+  };
 
   #engine: SelectEngine;
   #feedback: LoadFeedbackTracker;
@@ -149,6 +161,8 @@ export default class WindowedListCoordinator {
   #listboxApi: DVirtualListApi | null = null;
   #listboxRoving: DRovingFocusApi | null = null;
   #jumpTimer?: ReturnType<typeof nextRunloop>;
+  #lastRows?: readonly ListRow[];
+  #lastHeaderIndices = new Map<number, number>();
 
   // Maps a logical option ordinal to its raw index in the rendered row array, so a jump target
   // (logical) can be scrolled through the virtualizer (which addresses rows by raw index).
@@ -159,9 +173,10 @@ export default class WindowedListCoordinator {
   // stale window.
   #logicalNavCount = 0;
 
-  // The active row's RAW array index (its virtualizer `data-index`), fed to `@pinnedIndex` to
-  // keep that row mounted. Not a logical option ordinal: with group headers the two diverge, and
-  // the roving modifier addresses options by `data-logical-index` instead (see #optionRawIndices).
+  // The active row's RAW array index (its virtualizer `data-index`), fed to the window extension
+  // alongside the headers for mounted groups. Not a logical option ordinal: with group headers
+  // the two diverge, and the roving modifier addresses options by `data-logical-index` instead
+  // (see #optionRawIndices).
   @tracked _activePinnedIndex: number | undefined = undefined;
 
   constructor({
@@ -337,5 +352,20 @@ export default class WindowedListCoordinator {
       align: direction === "forward" ? "end" : "start",
       behavior: "auto",
     });
+  }
+
+  #headerIndices(rows: readonly ListRow[]): Map<number, number> {
+    if (rows !== this.#lastRows) {
+      const headerIndices = new Map<number, number>();
+      rows.forEach((row, index) => {
+        const option = this.optionRow(row);
+        if (option?.flags.group) {
+          headerIndices.set(option.groupOrdinal!, index);
+        }
+      });
+      this.#lastRows = rows;
+      this.#lastHeaderIndices = headerIndices;
+    }
+    return this.#lastHeaderIndices;
   }
 }

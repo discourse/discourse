@@ -50,8 +50,9 @@ it costs behaviour (see `:selection` below) and it costs the reader a reason to 
 ### What each block replaces
 
 All six land **inside** markup the component keeps, so you supply content, not structure — the
-option's `role`, its selected and disabled state, its ARIA position, the group header's id, the
-empty state's `role="status"` and the error state's `role="alert"` are all still handled for you.
+option's `role`, its selected and disabled state, its ARIA position, the group header's label id,
+the empty state's `role="status"` and the error state's `role="alert"` are all still handled for
+you.
 
 `:error` is yielded `reload` alongside the error, so a block that wants its own recovery control
 can render one; the component's retry is shown only when no block is supplied.
@@ -64,9 +65,9 @@ Two behaviours only appear once blocks are used together, and both are easy to g
   so it renders in every panel state — while loading, when populated, when empty, and when the
   source has failed. Gate its contents on the yielded `total`/`loadedCount` rather than assuming
   there are rows, or a footer will read "12 results" underneath "Nothing matches".
-- **A `:groupHeader`'s text is read after every option beneath it.** Each option is
-  `aria-describedby` its header, so a count or hint added to the header is announced on every
-  row in the group. Keep headers to a short name.
+- **A `:groupHeader` does not replace the option description.** Each option is
+  `aria-describedby` a dedicated label span containing the group's label; arbitrary custom
+  markup, counts, and hints remain visible in the header without being repeated for every row.
 
 ### Accessibility rules for block content
 
@@ -153,17 +154,21 @@ by mechanism.
   suppressed at the head of the list. Grouping runs after filtering on every render, so
   boundaries are always recomputed: an empty group draws nothing, and a query keeps exactly the
   splitters that still separate two surviving groups. Client (`@items`) sources only.
-  Headers are `role="presentation"` rows in the windowed list, and the header text also renders
-  into a hidden label store (`.d-combobox__group-labels`) outside the listbox; each option in a
-  *labeled* group references its group through `aria-describedby` into that store
+  Headers are `role="presentation"` rows in the windowed list. Each option in a *labeled* group
+  references the id-bearing label span in its header through `aria-describedby`
   (splitter-bounded options carry no group description — an unlabeled boundary has nothing to
-  announce). The store exists because windowing can unmount a header row while its options are
-  still visible — a description that lives outside the window always resolves. It carries the
-  group's label *text*, not the `:groupHeader` block's markup, so the announcement is stable
-  whatever the header renders. The store scales with labeled-group count — deliberately the one
-  unwindowed surface, since windowing it would re-couple the ids to scroll timing — so a
-  near-unique group key is consumer error: the engine asserts when a string `@groupBy` names
-  the value field, and warns in dev builds when grouping degenerates toward one group per row.
+  announce). The window extension pins a group's header while any of its rows are mounted, so
+  descriptions resolve for every published window and the description DOM stays bounded by the
+  window size by construction, even under near-unique `@groupBy`. The label span contains only
+  the group's label text and is hidden when a custom `:groupHeader` renders, keeping arbitrary
+  block markup out of option descriptions. The engine still rejects a string `@groupBy` that
+  names the value field outright.
+
+  The previous mechanism resolved ID references on every rendered frame; header pins guarantee
+  them for every published window. During the one-runloop transient after an items change (the
+  same stale-window interval covered by the `{{#if descriptor}}` row guard), a regrouped option
+  can briefly reference a header outside the stale mounted set. Assistive technology treats that
+  unresolvable ID reference as no description for that runloop.
   `aria-posinset`/`aria-setsize` stay global across groups: per-group numbering carries no
   meaning without nested `role="group"` semantics, which a windowed flat list cannot preserve.
   (The APG-sanctioned structure nests a `role="group"` with `aria-labelledby` between the

@@ -75,6 +75,11 @@ interface VisibleRange {
   endIndex: number;
 }
 
+interface VirtualRange extends VisibleRange {
+  overscan: number;
+  count: number;
+}
+
 /** The visible range plus the total item count, passed to an edge callback. */
 interface EdgeInfo extends VisibleRange {
   count: number;
@@ -141,12 +146,21 @@ interface DVirtualListSignature<T> {
     /** Alignment for `@initialIndex` within the viewport. Default `"start"`. */
     initialAlign?: "start" | "center" | "end" | "auto";
     /**
-     * An absolute index kept mounted even when scrolled out of the window, so a
-     * keyboard-active row's `aria-activedescendant` id never dangles. The pinned
-     * row is merged into the window in ascending index order (DOM order stays
-     * monotonic by `data-index`).
+     * Extends the default window with extra absolute indices to keep mounted.
+     *
+     * REACTIVITY CONTRACT: pass a NEW function whenever any closed-over input
+     * changes (normally by invoking a template helper). Function identity is what
+     * re-triggers the modifier and updates the engine options.
+     *
+     * PURITY CONTRACT: the engine invokes this during its own flush, outside any
+     * tracking frame, and memoizes by extractor identity plus range. Tracked state
+     * read inside the callback is silently non-reactive; it must be pure over its
+     * arguments and a closed-over snapshot.
      */
-    pinnedIndex?: number;
+    pinnedIndices?: (
+      indices: readonly number[],
+      range: VirtualRange
+    ) => readonly number[];
     /**
      * Role for the inner container (the semantic element), e.g. `"listbox"` or
      * `"feed"`. Omitted by default: a role is a promise about keyboard behaviour
@@ -403,7 +417,7 @@ export default class DVirtualList<T> extends Component<
         key=@key
         overscan=@overscan
         anchor=@anchor
-        pinnedIndex=@pinnedIndex
+        pinnedIndices=@pinnedIndices
         onState=this.onState
         onRegisterApi=this.onRegisterApi
         onVisibleRangeChange=@onVisibleRangeChange

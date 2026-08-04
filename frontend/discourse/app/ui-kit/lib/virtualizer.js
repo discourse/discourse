@@ -149,36 +149,35 @@ const ELEMENT_ADAPTER = {
 };
 
 /**
- * A `rangeExtractor` that keeps ONE otherwise-out-of-window row rendered — the
- * pinned row — merged into the window in ASCENDING index order.
+ * A `rangeExtractor` extended with consumer-selected, otherwise-out-of-window
+ * indices.
+ *
+ * Full-set deduplication is unconditional at this library wall because the engine
+ * publishes one measurement per index with zero deduplication of its own. A
+ * surviving duplicate becomes a duplicate `{{#each}}` key and a hard Glimmer
+ * assertion.
  *
  * Ascending order is load-bearing, not cosmetic: `DVirtualList` positions rows by
- * absolute `translateY`, so an APPENDED pinned row would paint in the visually
- * correct spot while leaving the DOM sequence non-monotonic — silently corrupting
- * `aria-posinset` order, screen-reader browse order, and the roving-focus
- * NodeList. Inserting in index order keeps DOM order === visual order.
+ * absolute `translateY`, so appended extras would paint in the visually correct
+ * spot while leaving the DOM sequence non-monotonic. DOM order === visual order;
+ * `aria-posinset` order, screen-reader browse order, and the roving-focus NodeList
+ * all depend on it.
  *
- * Returns the engine default unchanged when there is nothing to pin (nullish,
- * out of range, or already inside the window), so the option is inert by default.
- *
- * @param {number | null | undefined} pinnedIndex
+ * @param {(indices: readonly number[], range: { startIndex: number, endIndex: number, overscan: number, count: number }) => readonly number[] | null | undefined} pins Returns extra indices to keep mounted.
  * @returns {(range: { startIndex: number, endIndex: number, overscan: number, count: number }) => number[]}
  */
-export function rangeExtractorWithPinned(pinnedIndex) {
+export function rangeExtractorWithPins(pins) {
   return (range) => {
     const indices = defaultRangeExtractor(range);
-    // `Number.isInteger` also rejects null/undefined/NaN/fractional/Infinity in
-    // one check: any of those would otherwise be spliced into the render set and
-    // index the engine's measurements with an invalid key, yielding `undefined`.
-    if (
-      !Number.isInteger(pinnedIndex) ||
-      pinnedIndex < 0 ||
-      pinnedIndex >= range.count ||
-      indices.includes(pinnedIndex)
-    ) {
-      return indices;
+    const merged = new Set(indices);
+
+    for (const index of pins(indices, range) ?? []) {
+      if (Number.isInteger(index) && index >= 0 && index < range.count) {
+        merged.add(index);
+      }
     }
-    return [...indices, pinnedIndex].sort((a, b) => a - b);
+
+    return [...merged].sort((a, b) => a - b);
   };
 }
 

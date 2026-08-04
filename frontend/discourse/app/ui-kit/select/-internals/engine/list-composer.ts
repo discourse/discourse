@@ -1,4 +1,3 @@
-import { warn } from "@ember/debug";
 import { makeArray } from "discourse/lib/helpers";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import type SelectOptionsView from "discourse/ui-kit/select/-internals/engine/select-options";
@@ -10,13 +9,8 @@ import type {
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
-// Below this many filtered options the degenerate-grouping warning never fires: a small or
-// heavily-filtered list can legitimately land on one group per row.
-const DEGENERATE_GROUPING_FLOOR = 50;
-
 export default class ListComposer {
   #options: SelectOptionsView;
-  #degenerateGroupingWarned = false;
   #getFilter: () => string;
   #getValue: () => SelectValue;
   #getHasValue: () => boolean;
@@ -327,7 +321,6 @@ export default class ListComposer {
     }
 
     const out: SelectItem[] = [];
-    let optionCount = 0;
     for (const [key, groupItems] of groups) {
       const label = this.#groupLabel(key);
       if (label != null) {
@@ -336,33 +329,8 @@ export default class ListComposer {
         out.push({ __divider: true, groupKey: key });
       }
       out.push(...groupItems);
-      optionCount += groupItems.length;
     }
-    this.#warnDegenerateGrouping(groups.size, optionCount);
     return out;
-  }
-
-  /**
-   * The value-field assert catches the one statically knowable misuse; a function `groupBy` or
-   * any other unique-ish field can only be judged by its outcome. Judged once per composer: the
-   * point is a dev-time signal, not per-keystroke telemetry.
-   */
-  #warnDegenerateGrouping(groupCount: number, optionCount: number): void {
-    if (
-      this.#degenerateGroupingWarned ||
-      optionCount < DEGENERATE_GROUPING_FLOOR ||
-      groupCount * 2 <= optionCount
-    ) {
-      return;
-    }
-    this.#degenerateGroupingWarned = true;
-    warn(
-      `DSelect: \`groupBy\` produced ${groupCount} groups over ${optionCount} options — nearly ` +
-        `one group per row. Each labeled group renders a persistent hidden label node, so a ` +
-        `near-unique key scales the DOM with the list. Group by a coarser key.`,
-      false,
-      { id: "discourse.d-select.degenerate-group-by" }
-    );
   }
 
   #snapshot(): SelectSnapshot {

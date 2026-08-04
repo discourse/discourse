@@ -120,14 +120,6 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
     <:content as |content|>
       {{#let (@listbox.buildListItems content.rawItems) as |items|}}
         {{#if items.length}}
-          <div class="d-combobox__group-labels" hidden>
-            {{#each (@listbox.groupLabelRows items) key="key" as |header|}}
-              <span id={{header.headerId}}>
-                {{selectItemLabel header.item "label"}}
-              </span>
-            {{/each}}
-          </div>
-
           <DVirtualList
             @as="ul"
             @role="listbox"
@@ -137,7 +129,7 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
             @estimateSize={{@listbox.estimateRowSize}}
             @onReachEnd={{@engine.revealMore}}
             @onRegisterApi={{@listbox.registerListboxApi}}
-            @pinnedIndex={{@listbox.seedPinnedIndex items}}
+            @pinnedIndices={{@listbox.windowPins items}}
             {{! First render only, so it reveals the held value on open and never
             fights a reader who has scrolled. Centred rather than aligned to the top:
             a selection pinned to the first row hides the options around it, which are
@@ -223,9 +215,13 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
                   >
                     {{#if @hasGroupHeaderBlock}}
                       {{yield option.item to="groupHeader"}}
-                    {{else}}
-                      {{selectItemLabel option.item "label"}}
                     {{/if}}
+                    <span
+                      id={{option.headerId}}
+                      hidden={{@hasGroupHeaderBlock}}
+                    >
+                      {{selectItemLabel option.item "label"}}
+                    </span>
                   </li>
                 {{else if option.flags.divider}}
                   <li

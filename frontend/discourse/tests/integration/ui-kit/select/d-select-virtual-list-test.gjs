@@ -611,7 +611,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     );
   });
 
-  test("each option names its own group via aria-describedby into the persistent label store", async function (assert) {
+  test("each option names its own group via aria-describedby on its header's label span", async function (assert) {
     await render(
       <template>
         <DSelect
@@ -622,6 +622,10 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       </template>
     );
     await openSelect();
+
+    assert
+      .dom(".d-combobox__group-labels")
+      .doesNotExist("no separate label store renders");
 
     // Grouped order is [Vegetables] Carrot, Pea, [Fruits] Apple, Pear.
     const expectedGroup = ["Vegetables", "Vegetables", "Fruits", "Fruits"];
@@ -634,12 +638,12 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       );
       const label = headerId ? document.getElementById(headerId) : null;
       assert.true(
-        !!label?.closest(".d-combobox__group-labels"),
-        "the description lives in the persistent label store, not on a windowed row"
+        !!label?.closest(".d-combobox__group-header"),
+        "the description lives on the group's own header row"
       );
-      assert.false(
+      assert.true(
         !!label?.closest("[role='listbox']"),
-        "the description node is outside the listbox"
+        "the description node is inside the listbox"
       );
       assert.strictEqual(
         label?.textContent.trim(),
@@ -649,7 +653,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     });
   });
 
-  test("the persistent label store mirrors the groups and owns their ids", async function (assert) {
+  test("the header label span owns the group id", async function (assert) {
     await render(
       <template>
         <DSelect
@@ -666,18 +670,13 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
 
     assert
       .dom(".d-combobox__group-labels")
-      .exists("the label store renders alongside the windowed list")
-      .hasAttribute(
-        "hidden",
-        "",
-        "the store is invisible; only aria-describedby reads it"
-      );
+      .doesNotExist("no separate label store renders");
     assert.deepEqual(
-      [...find(".d-combobox__group-labels").children].map((label) =>
+      findAll(`${GROUP_HEADER_SELECTOR} [id]`).map((label) =>
         label.textContent.trim()
       ),
       ["Vegetables", "Fruits"],
-      "the store holds one label per group, in group order"
+      "each header carries one id-bearing label, in group order"
     );
     findAll(OPTION_SELECTOR).forEach((option) => {
       const headerId = option.getAttribute("aria-describedby");
@@ -689,7 +688,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     });
   });
 
-  test("group descriptions stay resolvable after windowing scrolls the headers out", async function (assert) {
+  test("a pinned header keeps descriptions resolvable after its group scrolls past the window", async function (assert) {
     const items = Array.from({ length: 60 }, (_, index) => ({
       id: index,
       name: `Item ${index}`,
@@ -716,10 +715,64 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     await openSelect();
     await triggerKeyEvent("[role='combobox']", "keydown", "End");
 
-    assert.true(
-      findAll(GROUP_HEADER_SELECTOR).length < 2,
-      "at least one in-list header row is unmounted at the bottom of the window"
+    // The window sits deep inside the second group, far past its header row —
+    // only the pin keeps that header mounted. The first group has no mounted
+    // options, so its header is correctly unmounted: description DOM stays
+    // bounded by the window instead of scaling with the group count.
+    const headers = findAll(GROUP_HEADER_SELECTOR);
+    assert.strictEqual(
+      headers.length,
+      1,
+      "only the group with mounted options keeps its header mounted"
     );
+    assert
+      .dom(headers[0])
+      .hasText("Second", "the pinned header is the window's group");
+    findAll(OPTION_SELECTOR).forEach((option) => {
+      const headerId = option.getAttribute("aria-describedby");
+      const label = headerId ? document.getElementById(headerId) : null;
+      assert.strictEqual(
+        label?.textContent.trim(),
+        "Second",
+        "a mounted option's group description resolves through the pinned header"
+      );
+    });
+  });
+
+  test("a window straddling a group boundary mounts both groups' headers", async function (assert) {
+    const items = Array.from({ length: 60 }, (_, index) => ({
+      id: index,
+      name: `Item ${index}`,
+      group: index < 30 ? "First" : "Second",
+    }));
+    const heldId = 29;
+
+    await render(
+      <template>
+        {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+        <style>
+          .d-virtual-list {
+            height: 200px;
+            overflow-y: auto;
+          }
+        </style>
+        <DSelect
+          @items={{items}}
+          @value={{heldId}}
+          @groupBy="group"
+          @groupLabel={{identityLabel}}
+          @variant="static"
+        />
+      </template>
+    );
+    await openSelect();
+    await waitUntil(() => findAll(OPTION_SELECTOR).length > 0);
+
+    // The reveal centers the held last-of-First option, so the window covers the
+    // boundary: First options via the pinned/revealed rows, Second options below.
+    assert
+      .dom(GROUP_HEADER_SELECTOR)
+      .exists({ count: 2 }, "both groups touching the window keep a header");
     findAll(OPTION_SELECTOR).forEach((option) => {
       const expected =
         Number(option.dataset.logicalIndex) < 30 ? "First" : "Second";
@@ -728,9 +781,90 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       assert.strictEqual(
         label?.textContent.trim(),
         expected,
-        "a mounted option's group description resolves even with its header row unmounted"
+        "every mounted option resolves to its own group across the boundary"
       );
     });
+  });
+
+  test("a custom groupHeader block never leaks into option descriptions", async function (assert) {
+    await render(
+      <template>
+        <DSelect
+          @items={{GROUPED_ITEMS}}
+          @groupBy="group"
+          @groupLabel={{identityLabel}}
+        >
+          <:groupHeader as |item|>
+            <strong class="fancy-header">▸ {{item.label}} ◂</strong>
+          </:groupHeader>
+        </DSelect>
+      </template>
+    );
+    await openSelect();
+    await waitUntil(
+      () => findAll(OPTION_SELECTOR).length === GROUPED_ITEMS.length
+    );
+
+    assert
+      .dom(`${GROUP_HEADER_SELECTOR} .fancy-header`)
+      .exists({ count: 2 }, "the custom block renders visibly in the header");
+    findAll(OPTION_SELECTOR).forEach((option, index) => {
+      const expected = index < 2 ? "Vegetables" : "Fruits";
+      const headerId = option.getAttribute("aria-describedby");
+      const label = headerId ? document.getElementById(headerId) : null;
+      assert.true(
+        !!label?.closest(".d-combobox__group-header"),
+        "the id-bearing label stays inside the header row"
+      );
+      assert.true(
+        label?.hasAttribute("hidden"),
+        "the label span hides when the block supplies the visible header"
+      );
+      assert.strictEqual(
+        label?.textContent.trim(),
+        expected,
+        "the description is the plain group label, never the block markup"
+      );
+    });
+  });
+
+  test("near-unique groups keep the mounted DOM bounded by the window", async function (assert) {
+    const items = Array.from({ length: 120 }, (_, index) => ({
+      id: index,
+      name: `Item ${index}`,
+      group: `Group ${index}`,
+    }));
+
+    await render(
+      <template>
+        {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+        <style>
+          .d-virtual-list {
+            height: 200px;
+            overflow-y: auto;
+          }
+        </style>
+        <DSelect
+          @items={{items}}
+          @groupBy="group"
+          @groupLabel={{identityLabel}}
+          @variant="static"
+        />
+      </template>
+    );
+    await openSelect();
+    await waitUntil(() => findAll(OPTION_SELECTOR).length > 0);
+
+    assert
+      .dom(".d-combobox__group-labels")
+      .doesNotExist("no unwindowed label surface scales with the group count");
+    // 120 labeled groups produce 240 rows; the mounted DOM must stay a window.
+    assert.true(
+      findAll(`${LISTBOX_SELECTOR} > li`).length < 60,
+      `one row per group stays windowed (got ${
+        findAll(`${LISTBOX_SELECTOR} > li`).length
+      } of 240 rows)`
+    );
   });
 
   test("groupBy without groupLabel renders splitters between groups", async function (assert) {

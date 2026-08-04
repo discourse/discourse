@@ -75,8 +75,8 @@ export default class SelectOptionsView {
     this.#valueField = opts.valueField ?? "id";
     this.#labelField = opts.labelField ?? "name";
     // Values are unique by contract (selection identity, row keys), so grouping by the value
-    // field deterministically yields one group per row. Certain misuse fails loudly; the
-    // heuristic cases a static check cannot see are caught by the composer's cardinality warning.
+    // field deterministically yields one group per row. This certain misuse fails loudly; a
+    // function `groupBy` can express the same mapping, but its outcome has no static tell.
     assert(
       `DSelect: \`@groupBy\` ("${String(opts.groupBy)}") is the value field, so every row ` +
         `would become its own group. Group by a coarser key.`,
