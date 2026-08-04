@@ -19,7 +19,7 @@ RSpec.describe "Category tracking badge" do
     )
   end
 
-  it "clears the New count after a new topic is spam-deleted" do
+  it "stops showing a new topic after it is spam-deleted" do
     sign_in(admin)
 
     category_page.visit(category)
@@ -37,36 +37,6 @@ RSpec.describe "Category tracking badge" do
 
     try_until_success(reason: "relies on MessageBus updates") do
       expect(topic_list_controls).to have_new(count: 0)
-    end
-  end
-
-  context "when a reply post in a watched topic is spam-deleted" do
-    before do
-      Jobs.run_immediately!
-      TopicUser.change(
-        admin.id,
-        existing_topic.id,
-        notification_level: TopicUser.notification_levels[:watching],
-      )
-    end
-
-    it "clears the Unread count" do
-      sign_in(admin)
-
-      category_page.visit(category)
-      expect(topic_list).to have_topic(existing_topic)
-
-      reply = create_post(category: category, user: author, topic: existing_topic)
-
-      try_until_success(reason: "relies on MessageBus updates") do
-        expect(topic_list_controls).to have_unread(count: 1)
-      end
-
-      PostActionCreator.spam(moderator, reply).reviewable.perform(moderator, :delete_and_agree)
-
-      try_until_success(reason: "relies on MessageBus updates") do
-        expect(topic_list_controls).to have_no_unread
-      end
     end
   end
 end

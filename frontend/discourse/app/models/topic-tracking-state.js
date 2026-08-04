@@ -13,6 +13,7 @@ import Site from "discourse/models/site";
 
 function isNew(topic) {
   return (
+    !topic.deleted &&
     topic.last_read_post_number === null &&
     ((topic.notification_level !== 0 && !topic.notification_level) ||
       topic.notification_level >= NotificationLevels.TRACKING) &&
@@ -23,6 +24,7 @@ function isNew(topic) {
 
 function isUnread(topic) {
   return (
+    !topic.deleted &&
     topic.last_read_post_number !== null &&
     topic.last_read_post_number < topic.highest_post_number &&
     topic.notification_level >= NotificationLevels.TRACKING
@@ -598,10 +600,6 @@ export default class TopicTrackingState extends EmberObject {
     }
 
     return Array.from(this.states.values()).filter((topic) => {
-      if (topic.deleted) {
-        return false;
-      }
-
       if (!filterFn(topic)) {
         return false;
       }
@@ -1060,10 +1058,6 @@ export default class TopicTrackingState extends EmberObject {
   _trackedTopics(opts = {}) {
     return Array.from(this.states.values())
       .map((topic) => {
-        if (topic.deleted) {
-          return;
-        }
-
         let newTopic = isNew(topic);
         let unreadTopic = isUnread(topic);
         if (newTopic || unreadTopic || opts.includeAll) {
