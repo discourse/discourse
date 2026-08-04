@@ -177,7 +177,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
     )
   end
 
-  context "with top countries and top referrers cards" do
+  context "with top countries, top referrers, and top entry URLs cards" do
     let(:browser_pageview_source) { BrowserPageviewEvent::SOURCE_BEACON }
 
     before do
@@ -199,6 +199,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
 
       expect(traffic).to have_no_top_countries_card
       expect(traffic).to have_no_top_referrers_card
+      expect(traffic).to have_no_top_entry_urls_card
       expect(traffic).to have_no_metric("Direct traffic")
     end
 
@@ -273,15 +274,202 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
       )
     end
 
-    it "shows an empty state in both cards but keeps the headers as drill-down links when no events qualify",
+    it "lets admins identify the URLs that started the most browser entries in the selected period",
+       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      Fabricate(
+        :browser_pageview_event,
+        session_id: "viral-topic-visit-1",
+        url: "https://test.localhost/t/viral-topic/1?utm_source=newsletter#post_1",
+        created_at: "2026-05-12 10:00:00",
+        source: browser_pageview_source,
+      )
+      Fabricate(
+        :browser_pageview_event,
+        session_id: "search-entry-visit",
+        url: "https://test.localhost/search?q=private",
+        created_at: "2026-05-12 10:05:00",
+        source: browser_pageview_source,
+      )
+      Fabricate(
+        :browser_pageview_event,
+        session_id: "search-entry-visit",
+        url: "https://test.localhost/t/should-not-count-after-search/98",
+        created_at: "2026-05-12 10:10:00",
+        source: browser_pageview_source,
+      )
+      Fabricate(
+        :browser_pageview_event,
+        session_id: "viral-topic-visit-2",
+        url: "https://test.localhost/t/viral-topic/1",
+        created_at: "2026-05-12 11:00:00",
+        source: browser_pageview_source,
+      )
+      Fabricate(
+        :browser_pageview_event,
+        session_id: "categories-visit",
+        url: "https://test.localhost/categories",
+        created_at: "2026-05-12 12:00:00",
+        source: browser_pageview_source,
+      )
+      %w[faq guidelines new unread].each do |path|
+        Fabricate(
+          :browser_pageview_event,
+          session_id: "#{path}-visit",
+          url: "https://test.localhost/#{path}",
+          created_at: "2026-05-12 12:30:00",
+          source: browser_pageview_source,
+        )
+      end
+      Fabricate(
+        :browser_pageview_event,
+        session_id: "cross-midnight-visit",
+        url: "https://test.localhost/top",
+        created_at: "2026-05-11 23:59:00",
+        source: browser_pageview_source,
+      )
+      Fabricate(
+        :browser_pageview_event,
+        session_id: "cross-midnight-visit",
+        url: "https://test.localhost/latest",
+        created_at: "2026-05-12 00:01:00",
+        source: browser_pageview_source,
+      )
+      sensitive_entry_paths = %w[
+        /associate/secret-token
+        /email/unsubscribe/secret-key
+        /session/email-login/secret-token
+        /session/otp/deadbeef
+        /u/activate-account/secret-token
+        /u/confirm-email-token/secret-token
+        /u/password-reset/secret-token
+      ]
+      sensitive_entry_paths.each_with_index do |path, index|
+        Fabricate(
+          :browser_pageview_event,
+          session_id: "sensitive-path-visit-#{index}",
+          url: "https://test.localhost#{path}",
+          created_at: "2026-05-12 13:00:00",
+          source: browser_pageview_source,
+        )
+        Fabricate(
+          :browser_pageview_event,
+          session_id: "sensitive-path-visit-#{index}",
+          url: "https://test.localhost/t/should-not-count/#{index}",
+          created_at: "2026-05-12 13:05:00",
+          source: browser_pageview_source,
+        )
+      end
+
+      Jobs::MaintainBrowserPageviewRollups.new.execute({})
+
+      dashboard.visit_with_query(
+        range: "custom",
+        start_date: "2026-05-12",
+        end_date: "2026-05-12",
+      )
+      traffic = dashboard.site_traffic
+
+      expect(traffic).to have_top_entry_url_rows(
+        [
+          { path: "/t/viral-topic/1", percent: 33, count: 2 },
+          { path: "/categories", percent: 17, count: 1 },
+          { path: "/faq", percent: 17, count: 1 },
+          { path: "/guidelines", percent: 17, count: 1 },
+          { path: "/new", percent: 17, count: 1 },
+        ],
+      )
+      expect(traffic).to have_no_top_entry_url("/search")
+      expect(traffic).to have_no_top_entry_url("/t/should-not-count-after-search/98")
+      expect(traffic).to have_no_top_entry_url("/latest")
+      expect(traffic).to have_no_top_entry_url("/unread")
+      sensitive_entry_paths.each do |path|
+        expect(traffic).to have_no_top_entry_url(path)
+      end
+      expect(traffic).to have_no_top_entry_url("/t/should-not-count")
+
+      traffic.hover_top_entry_urls_tooltip
+      expect(traffic).to have_top_entry_urls_tooltip(
+        "The first page recorded for each Discourse browser session in the available analytics period.",
+      )
+
+      traffic.click_top_entry_urls_drilldown
+      expect(page).to have_current_path(
+        "/admin/reports/top_entry_urls?end_date=2026-05-12&start_date=2026-05-12",
+      )
+    end
+
+    it "keeps entry URL analytics private from moderators",
+       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      Fabricate(
+        :browser_pageview_event,
+        url: "https://test.localhost/t/private-analytics/1",
+        created_at: "2026-05-12",
+        source: browser_pageview_source,
+      )
+      Jobs::MaintainBrowserPageviewRollups.new.execute({})
+      sign_in(Fabricate(:moderator))
+
+      dashboard.visit
+
+      expect(dashboard.site_traffic).to have_no_top_entry_urls_card
+    end
+
+    it "shows admins when the selected period predates the available entry URL analytics",
+       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      Fabricate(
+        :browser_pageview_event,
+        url: "https://test.localhost/latest",
+        created_at: "2026-05-12",
+        source: browser_pageview_source,
+      )
+      Jobs::MaintainBrowserPageviewRollups.new.execute({})
+
+      dashboard.visit_with_query(
+        range: "custom",
+        start_date: "2025-05-14",
+        end_date: "2026-05-14",
+      )
+
+      expect(dashboard.site_traffic).to have_top_entry_urls_unavailable_state(
+        "Entry URL data is available from May 12, 2026. Choose a date range within the available period.",
+      )
+      expect(dashboard.site_traffic).to have_no_top_entry_url_rows
+      expect(dashboard.site_traffic).to have_top_referrers_empty_state
+      expect(dashboard.site_traffic).to have_top_countries_empty_state
+    end
+
+    it "shows admins that entry URL analytics start with new traffic",
        time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
       dashboard.visit
+
+      expect(dashboard.site_traffic).to have_top_entry_urls_pending_state(
+        "Entry URL analytics will appear after new traffic is recorded.",
+      )
+    end
+
+    it "shows empty states but keeps the report headers as drill-down links when no events qualify",
+       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      Fabricate(
+        :browser_pageview_event,
+        url: "https://test.localhost/latest",
+        created_at: "2026-05-01",
+        source: browser_pageview_source,
+      )
+      Jobs::MaintainBrowserPageviewRollups.new.execute({})
+
+      dashboard.visit_with_query(
+        range: "custom",
+        start_date: "2026-05-02",
+        end_date: "2026-05-14",
+      )
       traffic = dashboard.site_traffic
 
       expect(traffic).to have_top_countries_empty_state
       expect(traffic).to have_top_referrers_empty_state
+      expect(traffic).to have_top_entry_urls_empty_state
       expect(traffic).to have_top_referrers_drilldown
       expect(traffic).to have_top_countries_drilldown
+      expect(traffic).to have_top_entry_urls_drilldown
       expect(traffic).to have_no_metric("Direct traffic")
     end
 
