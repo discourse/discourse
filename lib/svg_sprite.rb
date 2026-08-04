@@ -272,6 +272,7 @@ module SvgSprite
         tippy-rounded-arrow
         toggle-off
         toggle-on
+        tower-broadcast
         trash-can
         triangle-exclamation
         truck-medical

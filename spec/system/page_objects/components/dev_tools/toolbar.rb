@@ -12,12 +12,26 @@ module PageObjects
 
         def disable
           find(".dev-tools-toolbar .disable-dev-tools").click
+          PageObjects::Components::Dialog.new.click_yes
           self
         end
 
         def toggle_plugin_outlets
           find(".dev-tools-toolbar .toggle-plugin-outlets").click
           self
+        end
+
+        def open_message_bus
+          find(".dev-tools-toolbar .toggle-message-bus").click
+          self
+        end
+
+        def has_active_message_bus?
+          page.has_css?(".dev-tools-toolbar .toggle-message-bus.--active")
+        end
+
+        def has_no_active_message_bus?
+          page.has_no_css?(".dev-tools-toolbar .toggle-message-bus.--active")
         end
 
         def open_upcoming_changes_menu
