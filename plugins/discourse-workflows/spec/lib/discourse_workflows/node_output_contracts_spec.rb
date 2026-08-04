@@ -81,6 +81,62 @@ RSpec.describe DiscourseWorkflows::NodeType do
     )
   end
 
+  it "unions the group variants in contention when the operation is an expression" do
+    node_class = DiscourseWorkflows::Nodes::Group::V1
+    add_remove_schema =
+      DiscourseWorkflows::Schema.merge(
+        DiscourseWorkflows::Schema::GROUP_SCHEMA,
+        DiscourseWorkflows::Schema::BASIC_USER_SCHEMA,
+      )
+
+    expect(
+      node_class.output_schemas({ "operation" => "add" }, input_schemas: [input_schema]),
+    ).to eq([add_remove_schema])
+
+    expect(
+      node_class.output_schemas(
+        { "operation" => "={{ $json.op }}" },
+        input_schemas: [input_schema],
+      ),
+    ).to eq(
+      [
+        DiscourseWorkflows::Schema.union(
+          add_remove_schema,
+          DiscourseWorkflows::Schema::GROUP_SCHEMA,
+          DiscourseWorkflows::Schema.resolve(
+            DiscourseWorkflows::Schema::GROUP_MEMBERSHIP_SCHEMA,
+            mode: :merge,
+            input_schema: input_schema,
+          ),
+        ),
+      ],
+    )
+  end
+
+  it "keeps the fallbacks that declare something and drops the ones that do not",
+     :aggregate_failures do
+    expect(
+      DiscourseWorkflows::Nodes::Wait::V1.output_schemas(
+        { "resume" => "={{ $json.kind }}" },
+        input_schemas: [input_schema],
+      ),
+    ).to eq(
+      [
+        DiscourseWorkflows::Schema.union(
+          DiscourseWorkflows::Schema::WEBHOOK_REQUEST_SCHEMA,
+          input_schema,
+        ),
+      ],
+    )
+
+    expect(
+      DiscourseWorkflows::Nodes::Merge::V1.output_schemas(
+        { "mode" => "={{ $json.mode }}", "resolve_clash" => "add_suffix" },
+        input_schemas: [input_schema],
+      ),
+    ).to eq([input_schema])
+  end
+
   it "accepts every JSON body shape produced by webhook requests" do
     request =
       DiscourseWorkflows::WebhookRequest.new(

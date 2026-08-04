@@ -329,6 +329,36 @@ RSpec.describe DiscourseWorkflows::Schema do
         false,
       )
     end
+
+    it "keeps targets visible when a controlling parameter is an expression" do
+      display_options = { show: { operation: %w[add remove] } }
+
+      expect(described_class.visible?(display_options, operation: "={{ $json.op }}")).to eq(true)
+    end
+  end
+
+  describe ".display_state" do
+    let(:expression) { "={{ $json.op }}" }
+
+    it "treats an expression anchor as indeterminate rather than a failed rule",
+       :aggregate_failures do
+      shown = { show: { operation: %w[add remove] } }
+
+      expect(described_class.display_state(shown, operation: "add")).to eq(:visible)
+      expect(described_class.display_state(shown, operation: "get")).to eq(:hidden)
+      expect(described_class.display_state(shown, operation: expression)).to eq(:indeterminate)
+
+      hidden = { hide: { operation: %w[get] } }
+      expect(described_class.display_state(hidden, operation: expression)).to eq(:indeterminate)
+
+      two_rules = { show: { operation: %w[add], source: %w[csv] } }
+      expect(described_class.display_state(two_rules, operation: expression, source: "json")).to eq(
+        :hidden,
+      )
+      expect(described_class.display_state(two_rules, operation: expression, source: "csv")).to eq(
+        :indeterminate,
+      )
+    end
   end
 
   describe ".resolve_graph" do

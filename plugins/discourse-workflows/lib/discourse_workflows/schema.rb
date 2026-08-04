@@ -288,9 +288,13 @@ module DiscourseWorkflows
         schemas.reduce({}) { |combined, schema| merge_pair(combined, schema) }
       end
 
+      def unknown?(schema)
+        stringify(schema).empty?
+      end
+
       def union(*schemas)
         schemas = schemas.flatten.map { |schema| stringify(schema) }
-        return {} if schemas.empty? || schemas.any?(&:empty?)
+        return {} if schemas.empty? || schemas.any? { |schema| unknown?(schema) }
 
         branches = schemas.flat_map { |schema| union_branches(schema) }.uniq
         return branches.first if branches.one?
@@ -324,16 +328,42 @@ module DiscourseWorkflows
         infer_value(value)
       end
 
-      def visible?(display_options, configuration)
+      def expression_value?(value)
+        value.is_a?(String) && value.start_with?("=")
+      end
+
+      # :indeterminate means a rule is anchored to an expression-valued parameter,
+      # so the target must neither be dropped nor have its requirements enforced.
+      def display_state(display_options, configuration)
         display_options = normalize_options(display_options)
-        configuration = normalize_options(configuration)
         show_rules = display_options["show"]
         hide_rules = display_options["hide"]
+        return :visible if show_rules.blank? && hide_rules.blank?
 
-        return false if show_rules.present? && !matches_rules?(show_rules, configuration)
-        return false if hide_rules.present? && matches_rules?(hide_rules, configuration)
+        configuration = normalize_configuration(configuration)
+        indeterminate = false
 
-        true
+        if show_rules.present?
+          outcome = rules_outcome(show_rules, configuration)
+          return :hidden if outcome == false
+          indeterminate ||= outcome == :unknown
+        end
+
+        if hide_rules.present?
+          outcome = rules_outcome(hide_rules, configuration)
+          return :hidden if outcome == true
+          indeterminate ||= outcome == :unknown
+        end
+
+        indeterminate ? :indeterminate : :visible
+      end
+
+      def visible?(display_options, configuration)
+        display_state(display_options, configuration) != :hidden
+      end
+
+      def definitely_visible?(display_options, configuration)
+        display_state(display_options, configuration) == :visible
       end
 
       private
@@ -431,10 +461,28 @@ module DiscourseWorkflows
         options.to_h.deep_stringify_keys
       end
 
-      def matches_rules?(rules, configuration)
-        rules.all? do |field_name, expected|
-          matches_rule?(expected, configuration[field_name.to_s])
+      # Rules only anchor on top-level keys, so a shallow pass avoids deep-copying
+      # the whole configuration on every visibility check.
+      def normalize_configuration(configuration)
+        return {} if configuration.blank?
+
+        configuration.to_h.stringify_keys
+      end
+
+      def rules_outcome(rules, configuration)
+        unknown = false
+
+        rules.each do |field_name, expected|
+          value = configuration[field_name.to_s]
+          if expression_value?(value)
+            unknown = true
+            next
+          end
+
+          return false unless matches_rule?(expected, value)
         end
+
+        unknown ? :unknown : true
       end
 
       def matches_rule?(expected, value)

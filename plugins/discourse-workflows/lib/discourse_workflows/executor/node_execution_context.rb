@@ -524,7 +524,7 @@ module DiscourseWorkflows
 
         raw_value = get_node_parameter(field, item_index || 0, options: { raw_expressions: true })
         return :default if raw_value.nil?
-        return :expression if raw_value.is_a?(String) && raw_value.start_with?("=")
+        return :expression if Schema.expression_value?(raw_value)
 
         :static_config
       end

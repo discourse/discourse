@@ -123,8 +123,12 @@ module DiscourseWorkflows
     def self.output_schemas(configuration = {}, input_schemas: [])
       input_schema = Schema.union(*input_schemas.compact)
 
-      active_output_contracts(configuration).map do |contract|
-        Schema.resolve(contract.fetch(:schema), mode: contract.fetch(:mode), input_schema:)
+      active_output_contracts(configuration).map do |candidates|
+        Schema.union(
+          *candidates.map do |contract|
+            Schema.resolve(contract.fetch(:schema), mode: contract.fetch(:mode), input_schema:)
+          end,
+        )
       end
     end
 
@@ -146,18 +150,38 @@ module DiscourseWorkflows
     EMPTY_OUTPUT_CONTRACT = { schema: {}, mode: :replace, display_options: {} }.freeze
 
     def self.active_output_contracts(configuration = {})
-      output_contracts.map do |contract|
-        active =
-          contract
-            .fetch(:variants)
-            .find { |variant| Schema.visible?(variant.fetch(:display_options), configuration) }
-        active ||= contract.except(:variants) if Schema.visible?(
-          contract.fetch(:display_options),
-          configuration,
-        )
-        active || EMPTY_OUTPUT_CONTRACT
-      end
+      output_contracts.map { |contract| contract_candidates(contract, configuration) }
     end
+
+    def self.contract_candidates(contract, configuration)
+      candidates = []
+
+      contract
+        .fetch(:variants)
+        .each do |variant|
+          state = Schema.display_state(variant.fetch(:display_options), configuration)
+          next if state == :hidden
+
+          candidates << variant
+          # Nothing after a definite match can be picked at runtime.
+          return candidates if state == :visible
+        end
+
+      if Schema.visible?(contract.fetch(:display_options), configuration)
+        candidates << contract.except(:variants)
+      end
+      # An unknown schema absorbs the union of everything it contends with, so
+      # drop it rather than let it erase what the others declare.
+      candidates.reject! { |candidate| unknown_contract?(candidate) }
+
+      candidates.presence || [EMPTY_OUTPUT_CONTRACT]
+    end
+    private_class_method :contract_candidates
+
+    def self.unknown_contract?(contract)
+      contract.fetch(:mode) == :replace && Schema.unknown?(contract.fetch(:schema))
+    end
+    private_class_method :unknown_contract?
 
     def self.event_name
       Array(description[:events]).first
@@ -252,7 +276,7 @@ module DiscourseWorkflows
     end
 
     def self.expression_value?(value)
-      value.is_a?(String) && value.start_with?("=")
+      Schema.expression_value?(value)
     end
 
     def self.validate_timezone_configuration(configuration, errors)

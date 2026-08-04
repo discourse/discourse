@@ -3,7 +3,7 @@ import {
   normalizeTargetInputIndex,
 } from "./graph-constants";
 import { resolveNodeTypeVersion, typeVersionForNode } from "./node-types";
-import { fieldVisible } from "./property-engine";
+import { fieldDisplayState, fieldVisible } from "./property-engine";
 
 const DRAFT_URI = "https://json-schema.org/draft/2020-12/schema";
 
@@ -115,20 +115,38 @@ function contractDefinition(contract = {}) {
   };
 }
 
-function activeOutputContract(contract, configuration) {
-  const variant = (contract.variants || []).find((candidate) =>
-    fieldVisible({ display_options: candidate.display_options }, configuration)
-  );
-  if (variant) {
-    return variant;
+function activeOutputContracts(contract, configuration) {
+  const candidates = [];
+
+  for (const variant of contract.variants || []) {
+    const state = fieldDisplayState(
+      { display_options: variant.display_options },
+      configuration
+    );
+    if (state === "hidden") {
+      continue;
+    }
+
+    candidates.push(contractDefinition(variant));
+    // Nothing after a definite match can be picked at runtime.
+    if (state === "visible") {
+      return candidates;
+    }
   }
 
-  return fieldVisible(
-    { display_options: contract.display_options },
-    configuration
-  )
-    ? contract
-    : {};
+  if (
+    fieldVisible({ display_options: contract.display_options }, configuration)
+  ) {
+    candidates.push(contractDefinition(contract));
+  }
+
+  // An unknown schema absorbs the union of everything it contends with, so drop
+  // it rather than let it erase what the others declare.
+  const contenders = candidates.filter(
+    ({ mode, schema }) => !(mode === "replace" && isUnknown(schema))
+  );
+
+  return contenders.length ? contenders : [contractDefinition({})];
 }
 
 function nodeTypeDefinitionForNode(node, graph) {
@@ -146,7 +164,7 @@ function nodeTypeDefinitionForNode(node, graph) {
 function ownOutputContracts(node, graph, configuration) {
   const definition = nodeTypeDefinitionForNode(node, graph);
   if (!definition) {
-    return [{ mode: "replace", schema: {} }];
+    return [[{ mode: "replace", schema: {} }]];
   }
 
   const currentConfiguration = configuration ?? node.configuration ?? {};
@@ -159,9 +177,7 @@ function ownOutputContracts(node, graph, configuration) {
     (definition.outputs || definition.ports || [null]).length;
 
   return Array.from({ length: outputCount }, (_, index) =>
-    contractDefinition(
-      activeOutputContract(contracts[index] || {}, currentConfiguration)
-    )
+    activeOutputContracts(contracts[index] || {}, currentConfiguration)
   );
 }
 
@@ -254,15 +270,19 @@ export function resolveDeclaredOutputSchemas(
         const contracts = contractsByKey.get(key);
         let inputSchema = {};
 
-        if (contracts.some(({ mode }) => mode !== "replace")) {
+        if (
+          contracts.some((port) => port.some(({ mode }) => mode !== "replace"))
+        ) {
           inputSchema = inputSchemaFor(key);
           if (inputSchema === undefined) {
             continue;
           }
         }
 
-        const resolved = contracts.map((contract) =>
-          resolvedOutputSchema(contract, inputSchema)
+        const resolved = contracts.map((port) =>
+          unionSchemas(
+            port.map((contract) => resolvedOutputSchema(contract, inputSchema))
+          )
         );
         if (
           !outputSchemas.has(key) ||

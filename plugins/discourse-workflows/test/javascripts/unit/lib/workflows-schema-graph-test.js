@@ -225,9 +225,14 @@ module("Unit | lib | discourse-workflows | schema-graph", function () {
       configuration: { resume: "time" },
     });
     const chooser = node("chooser", "action:chooser");
+    const blender = node("blender", "flow:blender");
     const graph = {
-      nodes: [node("source", "trigger:source"), wait, chooser],
-      connections: [conn("source", "wait"), conn("source", "chooser")],
+      nodes: [node("source", "trigger:source"), wait, chooser, blender],
+      connections: [
+        conn("source", "wait"),
+        conn("source", "chooser"),
+        conn("source", "blender"),
+      ],
       nodeTypes: [
         triggerType("trigger:source", src),
         nodeType("flow:wait", [
@@ -255,6 +260,12 @@ module("Unit | lib | discourse-workflows | schema-graph", function () {
                 display_options: { show: { mode: ["variant"] } },
               },
             ],
+          },
+        ]),
+        nodeType("flow:blender", [
+          {
+            mode: "passthrough",
+            variants: [{ display_options: { show: { mode: ["combine"] } } }],
           },
         ]),
       ],
@@ -288,6 +299,27 @@ module("Unit | lib | discourse-workflows | schema-graph", function () {
       out(chooser, { configuration: { mode: "other" } }),
       {},
       "no matching contract resolves to unknown without passing the input through"
+    );
+
+    assert.deepEqual(
+      out(wait, { configuration: { resume: "={{ $json.kind }}" } }),
+      { $schema: DRAFT_URI, anyOf: [src, hook] },
+      "an expression-valued controlling parameter unions the variants in contention, leaving out an empty-replace fallback"
+    );
+    assert.deepEqual(
+      out(chooser, { configuration: { mode: "={{ $json.mode }}" } }),
+      { $schema: DRAFT_URI, anyOf: [variant, base] },
+      "the declared fallback contract stays in contention alongside indeterminate variants"
+    );
+    assert.deepEqual(
+      out(blender, { configuration: { mode: "={{ $json.mode }}" } }),
+      src,
+      "a schema-less variant leaves contention rather than collapsing the union"
+    );
+    assert.deepEqual(
+      out(blender, { configuration: { mode: "combine" } }),
+      {},
+      "a schema-less variant that definitely matches still resolves to unknown"
     );
   });
 
