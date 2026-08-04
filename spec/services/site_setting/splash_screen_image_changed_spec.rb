@@ -129,6 +129,67 @@ RSpec.describe SiteSetting::SplashScreenImageChanged do
         end
       end
 
+      context "when targeting the dark splash setting" do
+        let(:params) { { upload_id: upload.id, setting_name: "splash_screen_image_dark" } }
+
+        let(:upload) do
+          u = Fabricate(:upload, extension: "svg", original_filename: "dark-splash.svg")
+          write_upload_file(u, svg_with_animate)
+          u
+        end
+
+        it { is_expected.to run_successfully }
+
+        it "runs the same sanitizer pipeline" do
+          result
+          expect(upload.reload.content).not_to include("animate")
+        end
+
+        it "is wired into the setting-changed hook" do
+          SiteSetting.splash_screen_image_dark = upload.id
+          expect(upload.reload.content).not_to include("animate")
+        end
+
+        context "when another upload with the same cleaned sha1 exists" do
+          let(:cleaned_svg_content) do
+            doc = Nokogiri.XML(svg_with_animate)
+            svg = doc.at_css("svg")
+            svg.xpath(
+              ".//*[local-name()='animate' or local-name()='animateTransform' or local-name()='animateMotion' or local-name()='set']",
+            ).each(&:remove)
+            svg.remove_attribute("width") if svg["viewBox"].present?
+            svg.remove_attribute("height") if svg["viewBox"].present?
+            svg.to_xml
+          end
+
+          let!(:existing_upload) do
+            u = Fabricate(:upload, extension: "svg", original_filename: "existing-dark.svg")
+            write_upload_file(u, cleaned_svg_content)
+            u.update!(sha1: Upload.generate_digest(Discourse.store.path_for(u)))
+            u
+          end
+
+          it "assigns the dark setting, leaving the light setting untouched" do
+            SiteSetting.splash_screen_image = ""
+            result
+            expect(SiteSetting.splash_screen_image_dark).to eq(existing_upload)
+            expect(SiteSetting.splash_screen_image).to be_blank
+          end
+        end
+      end
+
+      context "when setting_name is not a splash setting" do
+        let(:params) { { upload_id: upload.id, setting_name: "site_logo" } }
+
+        let(:upload) do
+          u = Fabricate(:upload, extension: "svg", original_filename: "splash.svg")
+          write_upload_file(u, svg_with_animate)
+          u
+        end
+
+        it { is_expected.to fail_a_contract }
+      end
+
       context "when cleaned SVG equals upload content" do
         let(:idempotent_svg) do
           doc = Nokogiri.XML(<<~SVG)

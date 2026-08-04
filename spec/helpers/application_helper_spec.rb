@@ -299,6 +299,100 @@ RSpec.describe ApplicationHelper do
     end
   end
 
+  describe "splash screen image" do
+    fab!(:light_upload, :upload)
+    fab!(:dark_upload, :upload)
+
+    let(:light_svg) do
+      '<svg><rect id="light" fill="var(--primary)" stroke="var(--secondary)" color="var(--tertiary)"/></svg>'
+    end
+    let(:dark_svg) { '<svg><style>@keyframes pulse {}</style><circle id="dark"/></svg>' }
+
+    def decoded_data_uri(data_uri)
+      Base64.decode64(data_uri.split(",").last)
+    end
+
+    before do
+      light_upload.stubs(:content).returns(light_svg)
+      dark_upload.stubs(:content).returns(dark_svg)
+    end
+
+    describe "#custom_splash_screen_enabled?" do
+      it "is enabled when either the light or the dark image is set" do
+        SiteSetting.stubs(:splash_screen_image).returns("")
+        SiteSetting.stubs(:splash_screen_image_dark).returns(dark_upload)
+        expect(helper.custom_splash_screen_enabled?).to eq(true)
+      end
+
+      it "is disabled when neither image is set" do
+        SiteSetting.stubs(:splash_screen_image).returns("")
+        SiteSetting.stubs(:splash_screen_image_dark).returns("")
+        expect(helper.custom_splash_screen_enabled?).to eq(false)
+      end
+    end
+
+    describe "#splash_screen_image?" do
+      it "resolves each scheme independently; a dark-only config skips the light scheme" do
+        SiteSetting.stubs(:splash_screen_image).returns("")
+        SiteSetting.stubs(:splash_screen_image_dark).returns(dark_upload)
+
+        expect(helper.splash_screen_image?(dark: true)).to eq(true)
+        expect(helper.splash_screen_image?(dark: false)).to eq(false)
+      end
+
+      it "falls back to the light image for the dark scheme" do
+        SiteSetting.stubs(:splash_screen_image).returns(light_upload)
+        SiteSetting.stubs(:splash_screen_image_dark).returns("")
+
+        expect(helper.splash_screen_image?(dark: false)).to eq(true)
+        expect(helper.splash_screen_image?(dark: true)).to eq(true)
+      end
+    end
+
+    describe "#splash_screen_image_data_uri" do
+      before do
+        SiteSetting.stubs(:splash_screen_image).returns(light_upload)
+        %w[primary secondary tertiary].each_with_index do |name, i|
+          helper.stubs(:light_color_hex_for_name).with(name).returns("aaaa0#{i}")
+          helper.stubs(:dark_color_hex_for_name).with(name).returns("bbbb0#{i}")
+        end
+      end
+
+      it "bakes in dark colors when dark is true and light colors otherwise" do
+        light = decoded_data_uri(helper.splash_screen_image_data_uri(dark: false))
+        expect(light).to include("#aaaa00", "#aaaa01", "#aaaa02")
+        expect(light).not_to include("var(--primary)")
+
+        dark = decoded_data_uri(helper.splash_screen_image_data_uri(dark: true))
+        expect(dark).to include("#bbbb00", "#bbbb01", "#bbbb02")
+      end
+
+      it "returns nil when no splash image is configured" do
+        SiteSetting.stubs(:splash_screen_image).returns("")
+        expect(helper.splash_screen_image_data_uri).to be_nil
+      end
+    end
+
+    describe "#splash_screen_inline_svg" do
+      before { SiteSetting.stubs(:splash_screen_image).returns(light_upload) }
+
+      it "selects the image by scheme and detects animation per image" do
+        SiteSetting.stubs(:splash_screen_image_dark).returns(dark_upload)
+
+        expect(helper.splash_screen_inline_svg(dark: false).to_s).to include("light")
+        expect(helper.splash_screen_image_animated?(dark: false)).to eq(false)
+
+        expect(helper.splash_screen_inline_svg(dark: true).to_s).to include("dark")
+        expect(helper.splash_screen_image_animated?(dark: true)).to eq(true)
+      end
+
+      it "falls back to the light image when no dark image is set" do
+        SiteSetting.stubs(:splash_screen_image_dark).returns("")
+        expect(helper.splash_screen_inline_svg(dark: true).to_s).to include("light")
+      end
+    end
+  end
+
   describe "application_logo_url" do
     context "when a dark color scheme is active" do
       before do
