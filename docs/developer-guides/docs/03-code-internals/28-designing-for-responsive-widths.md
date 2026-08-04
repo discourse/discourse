@@ -9,13 +9,13 @@ This document outlines the APIs used to adapt Discourse's user interface to diff
 We design "mobile first" and then add customizations for larger sizes as needed. The breakpoints we use are:
 
 | Breakpoint | Size  | Pixels (at 16px body font size) |
-| ---------- | ----- | -------------------------------- |
-| xs         | 20rem | 320px                            |
-| sm         | 40rem | 640px                            |
-| md         | 48rem | 768px                            |
-| lg         | 64rem | 1024px                           |
-| xl         | 80rem | 1280px                           |
-| 2xl        | 96rem | 1536px                           |
+| ---------- | ----- | ------------------------------- |
+| xs         | 20rem | 320px                           |
+| sm         | 40rem | 640px                           |
+| md         | 48rem | 768px                           |
+| lg         | 64rem | 1024px                          |
+| xl         | 80rem | 1280px                          |
+| 2xl        | 96rem | 1536px                          |
 
 ### Viewport Size
 
