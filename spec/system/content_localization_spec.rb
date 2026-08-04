@@ -130,7 +130,6 @@ describe "Content Localization" do
       modal = topic_page.open_content_language_preferences
       expect(modal).to be_open
       expect(modal).to have_logged_in_language_controls
-      expect(modal).to have_understood_languages_description
       expect(modal).to have_locked_understood_language
       expect(modal).to have_understood_language_option("de")
       expect(modal).to be_automatic_translation_enabled

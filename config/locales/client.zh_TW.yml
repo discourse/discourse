@@ -1351,6 +1351,10 @@ zh_TW:
       enable_quoting: "允許引用劃記文字"
       enable_smart_lists: "在編輯器中編寫時啟用智慧型列表"
       enable_defer: " 將主題標記為未讀"
+      automatically_translate: "自動翻譯以其他語言撰寫的主題和貼文"
+      content_languages:
+        understood: "我能理解的語言"
+        understood_description: "以這些語言撰寫的主題和貼文將不會被翻譯。你的介面語言一律會包含在內。"
       experimental_sidebar:
         enable: "啟用側選單"
         options: "選項"
@@ -3701,6 +3705,14 @@ zh_TW:
       share:
         title: "分享貼文#%{post_number}"
         instructions: "分享此貼文的連結:"
+      original_language: "這篇貼文原本以%{language}撰寫"
+      original_language_and_outdated: "這篇貼文原本以%{language}撰寫。翻譯內容可能已過時"
+      originally_written_in: "原文為 %{language}"
+      click_to_show_original: "點擊以顯示原文"
+      tap_to_show_original: "輕觸此處以顯示原文"
+      click_to_show_translation: "點擊以顯示翻譯"
+      tap_to_show_translation: "輕觸此處以顯示翻譯"
+      ai_translation_disclaimer: "由 AI 產生的翻譯可能不準確。"
     category:
       none: "( 無分類 )"
       all: "所有分類"
