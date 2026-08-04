@@ -69,7 +69,7 @@
     "ember-source": "~6.10.0",
     "ember-tracked-storage-polyfill": "^1.0.1",
     "highlight.js": "11.11.1",
-    "immer": "^11.1.8",
+    "immer": "^11.1.11",
     "jspreadsheet-ce": "^5.0.4",
     "minimasonry": "^1.3.2",
     "moment": "2.30.1",
