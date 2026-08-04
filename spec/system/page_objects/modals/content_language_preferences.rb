@@ -30,16 +30,6 @@ module PageObjects
           )
       end
 
-      def has_understood_languages_description?
-        body.has_css?(
-          ".form-kit__field[data-name='understoodLanguages'] " \
-            ".form-kit__container-description",
-          text:
-            "Topics and posts in these languages won’t be translated. " \
-              "Your interface language is always included.",
-        )
-      end
-
       def has_understood_language_option?(locale)
         understood_languages_dropdown.expand
         result =
