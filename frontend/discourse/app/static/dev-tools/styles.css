@@ -31,10 +31,12 @@
 .dev-tools-toolbar {
   position: fixed;
   z-index: 999999;
+  inset-inline-start: 0;
   display: flex;
   flex-direction: column;
   background-color: var(--primary-200);
-  border-radius: 0 5px 5px 0;
+  border-start-end-radius: 5px;
+  border-end-end-radius: 5px;
   box-shadow: var(--dev-tools-shadow);
   opacity: 0.8;
   transition: opacity 0.2s ease-in-out;
@@ -43,7 +45,9 @@
     opacity: 0.5;
   }
 
-  button {
+  /* Strip buttons only: a docked panel renders inside this subtree and its
+     buttons carry their own styling. */
+  & > button {
     background: none;
     border: none;
     padding: 5px;
@@ -73,6 +77,26 @@
       }
     }
   }
+}
+
+/* The dock renders inside the toolbar's subtree to share its stacking context,
+   and opacity composites a whole subtree - no descendant rule can undo it, so
+   the resting fade is lifted while a panel is open. */
+.dev-tools-toolbar.--docked {
+  opacity: 1;
+}
+
+/* The toolbar rests on the inline-start edge, which is where a start-docked
+   panel lands, so it moves aside. The dock owns its side and reports it
+   nowhere, so the toolbar reads it off the rendered class; this
+   developer-only interface can afford :has() on a single fixed element. */
+.dev-tools-toolbar:has(.d-panel-dock.--dock-start) {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+  border-start-start-radius: 5px;
+  border-start-end-radius: 0;
+  border-end-start-radius: 5px;
+  border-end-end-radius: 0;
 }
 
 /* Shared Base Styles */

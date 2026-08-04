@@ -37,6 +37,11 @@ export function dockState(): { open: boolean; activeTool: string | undefined } {
   };
 }
 
+/** Shared so the toolbar hosting the dock reacts on the same condition. */
+export function isDockVisible(): boolean {
+  return dockState().open && panels.size > 0;
+}
+
 export function toggleDockTool(toolId: string): void {
   const state = dockState();
 

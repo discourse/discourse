@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { type ModifierLike } from "@glint/template";
+import { isDockVisible } from "discourse/static/dev-tools/dock";
 import DevToolsDockHost from "discourse/static/dev-tools/dock-host";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -42,6 +43,12 @@ export default class Toolbar extends Component {
   @tracked activeDragOffset: number | null = null;
   @tracked ownSize = 0;
   @tracked top = 250;
+
+  // The dock renders in this subtree, and opacity composites a whole subtree,
+  // so the resting fade has to lift while a panel is open.
+  get docked() {
+    return isDockVisible();
+  }
 
   get style() {
     const clampedTop = Math.max(this.top, 0);
@@ -92,6 +99,7 @@ export default class Toolbar extends Component {
       class={{dConcatClass
         "dev-tools-toolbar"
         (if this.activeDragOffset "--dragging")
+        (if this.docked "--docked")
       }}
       style={{this.style}}
       {{dOnResize this.onResize}}
