@@ -13,7 +13,7 @@ class SidebarSectionUpdater
   end
 
   def update!
-    @sidebar_section.with_lock do
+    ActiveRecord::Base.transaction do
       @sidebar_section.update!(@section_params.merge(sidebar_urls_attributes: @links_params))
       @sidebar_section.sidebar_section_links.update_all(user_id: @sidebar_section.user_id)
       update_link_order
