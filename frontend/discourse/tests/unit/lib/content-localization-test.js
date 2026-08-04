@@ -50,7 +50,7 @@ module("Unit | Lib | content-localization", function (hooks) {
     );
   });
 
-  test("keeps the interface language first in understood languages", function (assert) {
+  test("normalizes understood languages independently from the interface language", function (assert) {
     assert.deepEqual(
       normalizeUnderstoodLanguages(["en", "de", "de"], "en"),
       ["en", "de"],
@@ -58,8 +58,8 @@ module("Unit | Lib | content-localization", function (hooks) {
     );
     assert.deepEqual(
       normalizeUnderstoodLanguages(["en"], "ja"),
-      ["ja", "en"],
-      "it inserts a missing interface language"
+      ["en"],
+      "the interface language does not change explicit selections"
     );
   });
 });

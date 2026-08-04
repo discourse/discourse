@@ -94,7 +94,7 @@ describe "Content Localization" do
       preferences_interface_page.visit(japanese_user)
       expect(preferences_interface_page).to have_interface_language_section
       expect(preferences_interface_page).to have_content_languages_section
-      expect(preferences_interface_page).to have_locked_understood_language
+      expect(preferences_interface_page).to have_understood_language_option("ja")
       expect(preferences_interface_page).to have_understood_language_option("de")
       expect(preferences_interface_page).to be_automatic_translation_enabled
 
@@ -130,7 +130,7 @@ describe "Content Localization" do
       modal = topic_page.open_content_language_preferences
       expect(modal).to be_open
       expect(modal).to have_logged_in_language_controls
-      expect(modal).to have_locked_understood_language
+      expect(modal).to have_understood_language_option("ja")
       expect(modal).to have_understood_language_option("de")
       expect(modal).to be_automatic_translation_enabled
       modal.close
@@ -143,7 +143,37 @@ describe "Content Localization" do
 
       preferences_interface_page.visit(japanese_user)
       expect(preferences_interface_page).to have_no_interface_language_section
-      expect(preferences_interface_page).to have_locked_understood_language("English")
+      expect(preferences_interface_page).to have_understood_language_option("en")
+    end
+
+    it "keeps header and understood language selections independent" do
+      SiteSetting.set_locale_from_cookie = true
+      SiteSetting.content_localization_language_switcher = "all"
+      site_local_user.user_option.update!(understood_languages: ["en"])
+
+      sign_in(site_local_user)
+      visit("/")
+
+      language_switcher.select_language("ja")
+      expect(page.find(switcher_selector)).to have_content("JA")
+
+      preferences_interface_page.visit(site_local_user)
+      expect(preferences_interface_page).to have_removable_understood_language("en")
+      expect(preferences_interface_page).to have_understood_language_option("ja")
+    end
+
+    it "lets users remove their last understood language from the modal" do
+      site_local_user.user_option.update!(understood_languages: ["en"])
+
+      sign_in(site_local_user)
+      topic_page.visit_topic(topic)
+
+      modal = topic_page.open_content_language_preferences
+      expect(modal).to have_removable_understood_language("en")
+      modal.remove_understood_language("en").save
+
+      modal = topic_page.open_content_language_preferences
+      expect(modal).to have_understood_language_option("en")
     end
 
     it "allows users to set their post's locale when posting" do
