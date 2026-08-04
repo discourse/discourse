@@ -42,18 +42,6 @@ module PageObjects
         result
       end
 
-      def has_locked_understood_language?
-        understood_languages_dropdown.expand
-        result =
-          body.has_css?(
-            ".form-kit__field[data-name='understoodLanguages'] " \
-              ".selected-content .tag-choice.disabled",
-            count: 1,
-          )
-        understood_languages_dropdown.collapse
-        result
-      end
-
       def automatic_translation_enabled?
         body.has_css?("[data-test-automatically-translate]:checked", visible: :all)
       end

@@ -35,8 +35,7 @@ export default class ContentLanguagePreferencesModal extends Component {
     return {
       interfaceLanguage,
       understoodLanguages: normalizeUnderstoodLanguages(
-        this.currentUser?.user_option?.understood_languages,
-        interfaceLanguage
+        this.currentUser?.user_option?.understood_languages
       ),
       automaticallyTranslate: automaticallyTranslate(this.currentUser),
     };
@@ -76,23 +75,13 @@ export default class ContentLanguagePreferencesModal extends Component {
   }
 
   @action
-  async setInterfaceLanguage(value, { set }) {
-    await set("interfaceLanguage", value);
-    await set(
-      "understoodLanguages",
-      normalizeUnderstoodLanguages(
-        this.formApi.get("understoodLanguages"),
-        value
-      )
-    );
+  setInterfaceLanguage(value, { set }) {
+    return set("interfaceLanguage", value);
   }
 
   @action
   setUnderstoodLanguages(value, { set }) {
-    return set(
-      "understoodLanguages",
-      normalizeUnderstoodLanguages(value, this.formApi.get("interfaceLanguage"))
-    );
+    return set("understoodLanguages", normalizeUnderstoodLanguages(value));
   }
 
   @action
@@ -102,8 +91,7 @@ export default class ContentLanguagePreferencesModal extends Component {
     try {
       if (this.currentUser) {
         const understoodLanguages = normalizeUnderstoodLanguages(
-          data.understoodLanguages,
-          data.interfaceLanguage
+          data.understoodLanguages
         );
 
         const preferences = {
@@ -159,7 +147,7 @@ export default class ContentLanguagePreferencesModal extends Component {
           @data={{this.data}}
           @onSubmit={{this.save}}
           @onRegisterApi={{this.registerFormApi}}
-          as |form transientData|
+          as |form|
         >
           <form.Field
             @name="interfaceLanguage"
@@ -200,10 +188,6 @@ export default class ContentLanguagePreferencesModal extends Component {
                   @content={{this.interfaceLanguageOptions}}
                   @value={{field.value}}
                   @onChange={{field.set}}
-                  @mandatoryValues={{transientData.interfaceLanguage}}
-                  @mandatoryValueTitle={{i18n
-                    "content_localization.preferences.interface_language_mandatory"
-                  }}
                   @options={{hash filterable=true}}
                 />
               </field.Control>

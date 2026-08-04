@@ -1827,7 +1827,7 @@ en:
       content_languages:
         title: "Content languages"
         understood: "Languages I understand"
-        understood_description: "Topics and posts in these languages won’t be translated. Your interface language is always included."
+        understood_description: "Topics and posts in these languages won’t be translated. Your interface language is always considered understood."
       experimental_sidebar:
         enable: "Enable sidebar"
         options: "Options"
@@ -5218,7 +5218,6 @@ en:
       preferences:
         title: "Content language preferences"
         login_to_set_languages: "Log in to set more languages"
-        interface_language_mandatory: "Your interface language is always included."
 
     category:
       none: "(no category)"
