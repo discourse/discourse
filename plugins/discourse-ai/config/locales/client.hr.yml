@@ -36,6 +36,9 @@ hr:
             canned_reply:
               label: "Odgovor"
     discourse_ai:
+      discourse_workflows:
+        ai_agent:
+          mode: "Modus"
       ai_tool_approval:
         loading: "Očitavanje..."
         tool: "Akcija"
@@ -132,6 +135,8 @@ hr:
         mcp_tools_modal:
           clear_all: "Obriši sve"
         allowed_groups: "Dopuštene grupe"
+        duplicate: "Dupliciraj"
+        copy_name: "Kopija %{name}"
         delete: "Izbriši"
         thinking_effort_options:
           none: "Ništa"
@@ -207,7 +212,6 @@ hr:
         tests:
           success: "Uspjeh!"
         providers:
-          google: "Google"
           fake: "Posebna"
       ai_helper:
         context_menu:

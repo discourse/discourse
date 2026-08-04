@@ -5,18 +5,31 @@
 # https://translate.discourse.org/
 
 fr:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_topic_voting: "Discourse Topic Voting"
   js:
     category:
       sort_options:
         votes: "Votes"
     topic_voting:
+      notification_label:
+        vote_released: "Vote restitué"
+      hot_nav_help: "sujets récents les mieux classés, y compris ceux ayant reçu des votes récemment"
       voted: "Vous avez voté pour ce sujet"
       vote_title: "Voter"
       vote_title_plural: "Votes"
+      voting_closed_description: "Le vote est fermé pour ce sujet"
+      see_votes: "Votes restants : %{count}/%{max}"
+      locked_description: "Augmentez votre niveau de confiance pour voter"
       votes:
         one: "%{count} vote"
         other: "%{count} votes"
       remove_vote: "Supprimer le vote"
+      watch_topic: "M'informer des nouvelles publications"
+      no_votes_yet: "Personne n'a encore voté pour ce sujet"
       and_more_voters: "et %{count} de plus…"
       show_voters: "Afficher les votants"
       vote_count_thousands: "%{count} K"
@@ -25,6 +38,7 @@ fr:
     filters:
       votes:
         title: "Votes"
+        help: "Sujets ayant reçu le plus de votes au total"
       my_votes:
         title: "Mes votes"
         help: "sujets sur lesquels vous avez voté"
@@ -37,5 +51,13 @@ fr:
           topic_upvote: "Lorsqu'un utilisateur vote sur un sujet"
           topic_unvote: "Lorsqu'un utilisateur retire son vote sur un sujet"
     discourse_workflows:
+      node_unavailable:
+        requires_topic_voting: "Nécessite l'activation du vote sur les sujets"
+      nodes:
+        "trigger:topic_received_vote": "Un sujet a reçu un vote"
+      node_descriptions:
+        "trigger:topic_received_vote": "Se déclenche lorsqu'un utilisateur vote pour un sujet"
       topic_received_vote:
+        category_ids_description: "Déclencher uniquement pour les sujets de ces catégories. Laissez ce champ vide pour inclure toutes les catégories."
         tag_names: "Étiquettes"
+        tag_names_description: "Déclencher uniquement pour les sujets comportant au moins une de ces étiquettes."

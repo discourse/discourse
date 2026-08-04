@@ -13,13 +13,6 @@ de:
   js:
     discourse_reactions:
       reactions_title: "Reaktionen"
-      state_panel:
-        more_users: "und %{count} weitere …"
-        show_users: "Mehr Benutzer anzeigen"
-        hide_users: "Weniger Benutzer anzeigen"
-        reaction_group:
-          one: "%{reaction}: %{count} Benutzer"
-          other: "%{reaction}: %{count} Benutzer"
       reaction:
         forbidden: "Du darfst nicht auf diesen Beitrag reagieren oder deine Reaktion ändern."
       picker:

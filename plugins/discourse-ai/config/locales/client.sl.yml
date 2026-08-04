@@ -201,7 +201,6 @@ sl:
         tests:
           success: "Uspeh!"
         providers:
-          google: "Google"
           fake: "Po meri"
         provider_fields:
           region: "Regija"

@@ -51,6 +51,9 @@ ro:
               label: "Permite postările de sistem"
               description: "Permite etichetarea postărilor create de utilizatorul sistemului."
     discourse_ai:
+      discourse_workflows:
+        ai_agent:
+          mode: "Mod"
       ai_tool_approval:
         loading: "Se încarcă..."
         tool: "Acțiune"
@@ -166,6 +169,7 @@ ro:
         mcp_tools_modal:
           select_all: "Selectează tot"
           clear_all: "Șterge tot"
+        duplicate: "Fă duplicat"
         delete: "Șterge"
         thinking_effort_options:
           none: "Nimic"
@@ -246,7 +250,6 @@ ro:
           success: "Succes!"
           invalid_config: "Remediază mai întâi următoarele erori în configurație:"
         providers:
-          google: "Google"
           fake: "Personalizat"
         provider_fields:
           role_arn: "Rol ARN AWS Bedrock"

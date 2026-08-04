@@ -114,6 +114,7 @@ te:
         user: సభ్యుడు
         save: "సేవ్ చేయండి"
         enabled: "ప్రారంభించబడిందా?"
+        duplicate: "నకిలీ చేయండి"
         delete: "తొలగించండి"
         thinking_effort_options:
           none: "ఏదీ లేదు"
@@ -180,7 +181,6 @@ te:
         next:
           title: "తదుపరి"
         providers:
-          google: "గూగుల్"
           fake: "అనుకూల"
       ai_helper:
         context_menu:

@@ -2379,7 +2379,8 @@ de:
           invite_by_email: "E-Mail"
           restrict_domain: "Auf Domain beschränken"
           domain_placeholder: "example.com"
-          more_options: "Mehr Optionen"
+          create_and_send: "Senden"
+          create_and_copy: "Link kopieren"
           update: "Aktualisieren"
           summary:
             role_member: "Mitglied"
@@ -2392,7 +2393,7 @@ de:
             expires: "Gültig bis"
             topic: "Thema"
             groups: "Gruppen"
-            edit: "Einladung bearbeiten"
+            edit: "Bearbeiten"
         bulk_invite:
           none: "Keine Einladungen, die auf dieser Seite angezeigt werden können."
           text: "Massen-Einladung"
@@ -3238,7 +3239,6 @@ de:
       italic_label: "K"
       italic_title: "Betonung"
       italic_text: "betonter Text"
-      heading_title: "Überschriften"
       heading_level_n: "Überschrift %{levelNumber}"
       heading_level_n_title: "Überschrift %{levelNumber}"
       heading_level_paragraph: "Absatz"
@@ -5789,9 +5789,9 @@ de:
           always_public: "Die Inhalte in diesem Abschnitt sind immer öffentlich"
           more_menu: "Menü „Mehr“"
           localizations:
-            title: "Übersetzungen"
             locale: "Sprache"
             title_label: "Titel des Abschnitts"
+            remove_language: "Entfernen"
           links:
             add: "Einen weiteren Link hinzufügen"
             delete: "Link löschen"

@@ -1756,6 +1756,7 @@ sv:
           invite_by_email: "E-postadress"
           restrict_domain: "Begränsa till domän"
           domain_placeholder: "example.com"
+          create_and_send: "Skicka"
           update: "Uppdatera"
           summary:
             role_member: "Medlem"
@@ -1766,6 +1767,7 @@ sv:
             expires: "Utgår"
             topic: "Ämne"
             groups: "Grupper"
+            edit: "Redigera"
         bulk_invite:
           none: "Inga inbjudningar att visa på denna sida."
           text: "Massinbjudan"
@@ -4166,10 +4168,9 @@ sv:
           always_public: "Innehållet i det här avsnittet är alltid offentligt"
           more_menu: "Menyn Mer"
           localizations:
-            title: "Översättningar"
             locale: "Språk"
             title_label: "Avsnittstitel"
-            link_label: "Länknamn"
+            remove_language: "Ta bort"
           links:
             add: "Lägg till ytterligare en länk"
             delete: "Ta bort länk"

@@ -909,6 +909,7 @@ pl_PL:
         api_key:
           base:
             at_least_one_granular_scope: "co najmniej jeden musi być wybrany"
+            read_only_scope: "musi to być globalny zakres odczytu"
       <<: *errors
   uncategorized_category_name: "Bez kategorii"
   general_category_name: "Ogólne"
@@ -1573,6 +1574,7 @@ pl_PL:
         page_view_anon_browser: "Anonimowi"
         page_view_logged_in_browser: "Zalogowani"
         page_view_crawler: "Boty indeksujące"
+        page_view_likely_crawler: "Prawdopodobne roboty indeksujące"
         page_view_embed: "Osadzone wyświetlenia stron"
         page_view_other: "Inny ruch"
       yaxis: "Dzień"
@@ -2161,6 +2163,7 @@ pl_PL:
     top_page_default_timeframe: "Domyślny okres górnej strony dla anonimowych użytkowników (automatycznie dostosowuje się do zalogowanych użytkowników na podstawie ich ostatniej wizyty)."
     moderators_view_emails: "Zezwalaj moderatorom na przeglądanie adresów e-mail użytkowników."
     moderators_view_ips: "Zezwól moderatorom na przeglądanie adresów IP użytkowników."
+    moderators_view_sso_details: "Zezwól moderatorom na przeglądanie rekordów SSO"
     moderators_change_trust_levels: "Zezwól moderatorom na zmianę poziomu zaufania użytkowników."
     prioritize_username_in_ux: "Pokaż nazwę użytkownika jako pierwszą na stronie użytkownika, jego karcie i w postach (gdy opcja jest wyłączona, pełna nazwa jest wyświetlana jako pierwsza)"
     enable_rich_text_paste: "Włącz automatyczną konwersję HTML na Markdown podczas wklejania tekstu do kompozytora."
@@ -2867,6 +2870,7 @@ pl_PL:
     enable_horizon_high_context_topic_cards: "Wyświetla bogatsze karty tematyczne w motywie Horizon, obejmujące fragmenty tematów, tagi i rozszerzone informacje o wtyczce."
     granular_anonymous_and_logged_in_groups_permissions: "Wprowadza uprawnienia witryn oparte na grupach, które traktują „wszystkich” jako „wszystkich zalogowanych użytkowników” oraz włącza nowe pseudogrupy „anonimowi_użytkownicy” i „zalogowani_użytkownicy”, dzięki czemu administratorzy mogą wyraźnie określać mianem anonimowych odwiedzających i uwierzytelnionych użytkowników."
     dashboard_improvements: "Umożliwia dostęp do przeprojektowanego pulpitu administracyjnego, który umożliwia przypinanie niestandardowych raportów i obejmuje ulepszone dane dotyczące ruchu w witrynie, zaangażowania i inne analizy powiązane z sukcesem i wartością społeczności."
+    improved_crawler_detection: "Umożliwia ulepszone śledzenie robotów indeksujących, co pozwala na lepsze wykrywanie prawdopodobnych robotów i zapewnia dokładniejsze raportowanie ruchu sieciowego."
     enable_invite_modal_with_roles: "Umożliwia przeprojektowany proces zapraszania, który pozwala administratorom zapraszać kogoś bezpośrednio jako administratora. Zaproszona osoba staje się moderatorem po rejestracji, a administratorem po potwierdzeniu zaproszenia przez osobę zapraszającą e-mailem."
     update_pending_users_reminder_default: "Aktualizujemy domyślną wartość ustawienia {{setting:pending_users_reminder_delay_minutes}} na 30 minut, aby personel był szybko powiadamiany o oczekiwaniu na zatwierdzenie nowego członka. Jeśli to ustawienie zostało już wcześniej zmienione, ta zmiana nie będzie miała żadnego efektu."
     errors:

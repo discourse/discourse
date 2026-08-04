@@ -578,6 +578,12 @@ zh_CN:
         web_fetch:
           name: "网页提取（原生）"
           help: "当智能体被强制使用支持的 LLM 时，模型可以使用提供商的内置网络访问权限打开和读取网页。"
+        google_maps:
+          name: "Google 地图（原生）"
+          help: "当代理被迫使用受支持的 Gemini LLM 时，允许模型使用当前的 Google Maps 地点和位置数据。"
+        code_execution:
+          name: "代码执行（本机）"
+          help: "当代理被迫使用受支持的 Gemini LLM 时，允许模型在提供商的沙箱中编写和运行 Python 代码。"
       tool_summary:
         read_artifact: "阅读 Web 工件"
         search_uploaded_documents: "搜索已上传的文档"

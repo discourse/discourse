@@ -166,7 +166,6 @@ sw:
         tests:
           success: "Mafanikio!"
         providers:
-          google: "Google"
           fake: "Binafsi"
       ai_helper:
         context_menu:

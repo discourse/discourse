@@ -1487,7 +1487,6 @@ ja:
       automatically_translate: "ほかの言語で書かれたトピックや投稿を自動翻訳する"
       content_languages:
         understood: "理解できる言語"
-        understood_description: "これらの言語で書かれたトピックや投稿は翻訳されません。インターフェースの言語は常にこのリストに含まれます。"
       experimental_sidebar:
         enable: "サイドバーを有効にする"
         options: "オプション"
@@ -2110,7 +2109,8 @@ ja:
           invite_by_email: "メールアドレス"
           restrict_domain: "ドメインに制限"
           domain_placeholder: "example.com"
-          more_options: "その他のオプション"
+          create_and_send: "送信"
+          create_and_copy: "リンクをコピー"
           update: "更新"
           summary:
             role_member: "メンバー"
@@ -2122,7 +2122,7 @@ ja:
             expires: "有効期限"
             topic: "トピック"
             groups: "グループ"
-            edit: "招待の編集"
+            edit: "編集"
         bulk_invite:
           none: "このページに表示する招待はありません。"
           text: "一括招待"
@@ -2799,7 +2799,6 @@ ja:
       italic_label: "I"
       italic_title: "斜体"
       italic_text: "斜体テキスト"
-      heading_title: "見出し"
       heading_level_n: "見出し %{levelNumber}"
       heading_level_n_title: "見出し %{levelNumber}"
       heading_level_paragraph: "段落"
@@ -4047,8 +4046,8 @@ ja:
       share:
         title: "投稿 #%{post_number} の共有"
         instructions: "この投稿へのリンクを共有します:"
-      original_language: "この投稿は元々%{language}で書かれています"
-      original_language_and_outdated: "この投稿は元々%{language}で書かれています。翻訳が最新でない可能性があります"
+      original_language: "元の投稿は%{language}で書かれました"
+      original_language_and_outdated: "元の投稿は%{language}で書かれています。翻訳は古い可能性があります"
       originally_written_in: "元の言語: %{language}"
       click_to_show_original: "クリックして原文を表示"
       tap_to_show_original: "タップして原文を表示"
@@ -4867,9 +4866,9 @@ ja:
           always_public: "このセクションのコンテンツは常に公開される"
           more_menu: "その他のメニュー"
           localizations:
-            title: "翻訳"
             locale: "言語"
             title_label: "セクションのタイトル"
+            remove_language: "削除"
           links:
             add: "別のリンクを追加する"
             delete: "リンクを削除する"
