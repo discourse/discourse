@@ -36,6 +36,30 @@ describe "OAuth2 Overrides Email", type: :request do
     expect(user.reload.email).to eq(initial_email)
   end
 
+  it "doesn't link an unverified provider account to a matching email" do
+    SiteSetting.oauth2_email_verified = false
+    OmniAuth.config.mock_auth[:oauth2_basic] = OmniAuth::AuthHash.new(
+      provider: "oauth2_basic",
+      uid: "unverified-provider-uid",
+      info: OmniAuth::AuthHash::InfoHash.new(email: user.email, email_verified: "pending"),
+      extra: OmniAuth::AuthHash.new,
+      credentials: OmniAuth::AuthHash.new,
+    )
+
+    get "/auth/oauth2_basic/callback"
+
+    expect(response.status).to eq(302)
+    expect(response.body).to be_blank
+    expect(session[:current_user_id]).to be_nil
+    expect(
+      UserAssociatedAccount.exists?(
+        provider_name: "oauth2_basic",
+        provider_uid: "unverified-provider-uid",
+        user: user,
+      ),
+    ).to eq(false)
+  end
+
   it "updates user email if enabled" do
     SiteSetting.oauth2_overrides_email = true
 
