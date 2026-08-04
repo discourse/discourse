@@ -651,6 +651,44 @@ RSpec.describe SidebarSectionsController do
       )
     end
 
+    it "enforces the total link limit when adding links" do
+      SiteSetting.max_sidebar_section_links = 5
+      sign_in(user)
+
+      put "/sidebar_sections/#{sidebar_section.id}.json",
+          params: {
+            title: "custom section",
+            links: [
+              { icon: "link", name: "latest", value: "/latest" },
+              { icon: "link", name: "new", value: "/new" },
+              { icon: "link", name: "top", value: "/top" },
+              { icon: "link", name: "hot", value: "/hot" },
+            ],
+          }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq(
+        ["Maximum 5 records are allowed. Got 6 records instead."],
+      )
+      expect(sidebar_section.reload.sidebar_urls.count).to eq(2)
+    end
+
+    it "allows an existing over-limit section to remove links" do
+      SiteSetting.max_sidebar_section_links = 1
+      sign_in(user)
+
+      put "/sidebar_sections/#{sidebar_section.id}.json",
+          params: {
+            title: "custom section",
+            links: [
+              { id: sidebar_url_2.id, icon: "link", name: "tags", value: "/tags", _destroy: "1" },
+            ],
+          }
+
+      expect(response.status).to eq(200)
+      expect(sidebar_section.reload.sidebar_urls).to contain_exactly(sidebar_url_1)
+    end
+
     it "returns 404 when updating a non-existent section" do
       sign_in(user)
 

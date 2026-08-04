@@ -872,6 +872,10 @@ en:
           attributes:
             linkable_type:
               invalid: "is not valid"
+        sidebar_section:
+          attributes:
+            base:
+              too_many_sidebar_urls: "Maximum %{limit} records are allowed. Got %{count} records instead."
         api_key:
           base:
             at_least_one_granular_scope: "at least one must be selected"
