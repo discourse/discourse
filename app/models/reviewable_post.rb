@@ -19,7 +19,6 @@ class ReviewablePost < Reviewable
     return if edited_by.staff? || edited_by.bot?
     return if post.post_type != Post.types[:regular] || post.topic.private_message?
     return if edited_by.in_any_groups?(SiteSetting.skip_review_media_groups_map)
-    return if pending.where(target: post).exists?
 
     media = post.embedded_media_keys
     return if media.empty?
@@ -27,7 +26,15 @@ class ReviewablePost < Reviewable
     previous_media = Post.new(raw: previous_raw, topic_id: post.topic_id).embedded_media_keys
     return if (media - previous_media).empty?
 
-    queue_for_review(post, reason: :contains_media)
+    queue_for_review(post, reason: :contains_media) unless pending.where(target: post).exists?
+
+    post.hide!(
+      nil,
+      Post.hidden_reasons[:media_pending_review],
+      custom_message: :post_hidden_media_pending_review,
+      visibility_reason_id: Topic.visibility_reasons[:media_pending_review],
+    )
+    post.publish_change_to_clients!(:acted)
   end
 
   def self.queue_for_review(post, reason: nil)
@@ -116,7 +123,7 @@ class ReviewablePost < Reviewable
 
   def perform_approve_and_unhide(performed_by, _args)
     post.acting_user = performed_by
-    post.unhide!
+    post.unhide!(force: true)
 
     create_result(:success, :approved, [created_by_id], false)
   end

@@ -1905,6 +1905,51 @@ describe PostRevisor do
         revisor.revise!(post.user, { raw: raw_with_image }, recovering_post: true)
       }.not_to change(ReviewablePost, :count)
     end
+
+    it "does not queue the post when the revision skips validations" do
+      expect {
+        revisor.revise!(
+          post.user,
+          { raw: raw_with_image },
+          revised_at: post.updated_at + 10.seconds,
+          skip_validations: true,
+        )
+      }.not_to change(ReviewablePost, :count)
+    end
+
+    it "hides the post until staff review the added media" do
+      revisor.revise!(post.user, { raw: raw_with_image }, revised_at: post.updated_at + 10.seconds)
+
+      expect(post.reload.hidden).to eq(true)
+      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:media_pending_review])
+      expect(post.topic.reload.visible).to eq(false)
+    end
+
+    it "keeps the post hidden when a follow-up edit does not add new media" do
+      revisor.revise!(post.user, { raw: raw_with_image }, revised_at: post.updated_at + 10.seconds)
+      expect(post.reload.hidden).to eq(true)
+
+      PostRevisor.new(post).revise!(
+        post.user,
+        { raw: "#{raw_with_image}\n\nsome more text" },
+        revised_at: post.updated_at + 20.seconds,
+      )
+
+      expect(post.reload.hidden).to eq(true)
+    end
+
+    it "does not unhide a flag-hidden post while a media review is pending" do
+      revisor.revise!(post.user, { raw: raw_with_image }, revised_at: post.updated_at + 10.seconds)
+      post.reload.update!(hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached])
+
+      PostRevisor.new(post).revise!(
+        post.user,
+        { raw: "#{raw_with_image}\n\nedited to address feedback" },
+        revised_at: post.updated_at + 20.seconds,
+      )
+
+      expect(post.reload.hidden).to eq(true)
+    end
   end
 
   describe "topic bumping" do

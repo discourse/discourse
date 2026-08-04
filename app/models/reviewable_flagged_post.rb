@@ -263,7 +263,7 @@ class ReviewableFlaggedPost < Reviewable
     end
 
     # Undo hide/silence if applicable
-    if post&.hidden?
+    if post&.hidden? && !post.awaiting_media_review?
       notify_poster(performed_by)
       post.acting_user = performed_by
       post.unhide!

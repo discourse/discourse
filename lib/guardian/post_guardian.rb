@@ -207,6 +207,7 @@ module PostGuardian
 
   def can_edit_hidden_post?(post)
     return false if post.nil?
+    return true if post.hidden_reason_id == Post.hidden_reasons[:media_pending_review]
     post.hidden_at.nil? ||
       post.hidden_at < SiteSetting.cooldown_minutes_after_hiding_posts.minutes.ago
   end

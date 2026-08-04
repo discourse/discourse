@@ -28,11 +28,9 @@ class BasicPostSerializer < ApplicationSerializer
 
   def cooked
     if cooked_hidden
-      if scope.current_user && object.user_id == scope.current_user.id
-        I18n.t("flagging.you_must_edit", path: "/my/messages")
-      else
-        I18n.t("flagging.user_must_edit")
-      end
+      yours = scope.current_user && object.user_id == scope.current_user.id
+
+      I18n.t(object.hidden_notice_key(for_author: yours), path: "/my/messages")
     else
       cooked = object.filter_quotes(@parent_post)
 

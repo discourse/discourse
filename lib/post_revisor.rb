@@ -425,7 +425,7 @@ class PostRevisor
     publish_changes
     grant_badge
 
-    unless @opts[:recovering_post]
+    unless @opts[:recovering_post] || @opts[:skip_validations]
       ReviewablePost.queue_for_media_review_if_possible(@post, @editor, previous_raw: old_raw)
     end
     ReviewablePost.queue_for_review_if_possible(@post, @editor) if should_create_new_version?
@@ -673,6 +673,7 @@ class PostRevisor
   def remove_flags_and_unhide_post
     return if @opts[:deleting_post]
     return unless editing_a_flagged_and_hidden_post?
+    return if @post.awaiting_media_review?
 
     flaggers = []
     @post

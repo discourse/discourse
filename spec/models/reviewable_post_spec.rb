@@ -99,6 +99,57 @@ RSpec.describe ReviewablePost do
         described_class.queue_for_media_review_if_possible(pm_post, author, previous_raw:)
       }.not_to change(ReviewablePost, :count)
     end
+
+    it "hides the post and unlists the topic until staff review the media" do
+      expect { queue("#{post.raw}\n\n#{image_markdown}") }.to change { post.reload.hidden }.to(
+        true,
+      ).and change { post.topic.reload.visible }.to(false)
+
+      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:media_pending_review])
+      expect(post.topic.visibility_reason_id).to eq(Topic.visibility_reasons[:media_pending_review])
+    end
+
+    it "hides the post even when a media reviewable is already pending" do
+      described_class.queue_for_review(post)
+
+      expect { queue("#{post.raw}\n\n#{image_markdown}") }.to change { post.reload.hidden }.to(true)
+    end
+
+    it "notifies the author that their post is hidden" do
+      expect_enqueued_with(
+        job: :send_system_message,
+        args: {
+          user_id: author.id,
+          message_type: "post_hidden_media_pending_review",
+        },
+      ) { queue("#{post.raw}\n\n#{image_markdown}") }
+    end
+
+    it "does not unlist the topic when the hidden post is a reply" do
+      reply = Fabricate(:post, topic: post.topic, user: author)
+      reply.raw = "#{reply.raw}\n\n#{image_markdown}"
+
+      described_class.queue_for_media_review_if_possible(reply, author, previous_raw: "reply")
+
+      expect(reply.reload.hidden).to eq(true)
+      expect(reply.topic.reload.visible).to eq(true)
+    end
+
+    it "does not overwrite the visibility reason of a manually unlisted topic" do
+      post.topic.update_status(
+        "visible",
+        false,
+        admin,
+        { visibility_reason_id: Topic.visibility_reasons[:manually_unlisted] },
+      )
+
+      queue("#{post.raw}\n\n#{image_markdown}")
+
+      expect(post.reload.hidden).to eq(true)
+      expect(post.topic.reload.visibility_reason_id).to eq(
+        Topic.visibility_reasons[:manually_unlisted],
+      )
+    end
   end
 
   describe "#build_actions" do
@@ -231,11 +282,38 @@ RSpec.describe ReviewablePost do
         expect(result.transition_to).to eq :approved
         expect(post.reload.hidden).to eq(false)
       end
+
+      it "relists the topic when the post was hidden pending media review" do
+        post.hide!(
+          nil,
+          Post.hidden_reasons[:media_pending_review],
+          visibility_reason_id: Topic.visibility_reasons[:media_pending_review],
+        )
+
+        result = reviewable.reload.perform admin, :approve_and_unhide
+
+        expect(result.transition_to).to eq :approved
+        expect(post.reload.hidden).to eq(false)
+        expect(post.topic.reload.visible).to eq(true)
+      end
     end
 
     describe "#perform_reject_and_delete" do
       it "transitions to the rejected state and deletes the post" do
         result = reviewable.perform admin, :reject_and_delete
+
+        expect(result.transition_to).to eq :rejected
+        expect(Post.where(id: post.id).exists?).to eq(false)
+      end
+
+      it "deletes a post that was hidden pending media review" do
+        post.hide!(
+          nil,
+          Post.hidden_reasons[:media_pending_review],
+          visibility_reason_id: Topic.visibility_reasons[:media_pending_review],
+        )
+
+        result = reviewable.reload.perform admin, :reject_and_delete
 
         expect(result.transition_to).to eq :rejected
         expect(Post.where(id: post.id).exists?).to eq(false)

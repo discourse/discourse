@@ -1823,6 +1823,17 @@ RSpec.describe Post do
     end
   end
 
+  it "does not unhide a post awaiting media review unless forced" do
+    post = Fabricate(:post)
+    post.hide!(nil, Post.hidden_reasons[:media_pending_review])
+
+    post.unhide!
+    expect(post.reload.hidden).to eq(true)
+
+    post.unhide!(force: true)
+    expect(post.reload.hidden).to eq(false)
+  end
+
   it "will unhide the post but will keep the topic invisible/unlisted" do
     hidden_topic = Fabricate(:topic, visible: false)
     create_post(topic: hidden_topic)

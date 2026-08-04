@@ -63,6 +63,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
         system_messages.pending_users_reminder
         system_messages.post_hidden
         system_messages.post_hidden_again
+        system_messages.post_hidden_media_pending_review
         system_messages.queued_by_staff
         system_messages.queued_posts_reminder
         system_messages.restore_failed

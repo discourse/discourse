@@ -111,7 +111,7 @@
               </span>
             </div>
             <div class='post' <%= tag.attributes(itemprop: "text") if emit_md %>>
-              <%= post.hidden ? t('flagging.user_must_edit').html_safe : post.cooked.html_safe %>
+              <%= post.hidden ? t(post.hidden_notice_key).html_safe : post.cooked.html_safe %>
             </div>
 
             <% unless crawler_post_schema_overridden?(post, @topic_view.topic) %>
