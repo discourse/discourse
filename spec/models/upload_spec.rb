@@ -936,12 +936,6 @@ RSpec.describe Upload do
       upload.update!(url: Discourse.store.store_upload(file, upload))
       upload
     end
-    let(:multiband_image) do
-      upload = Fabricate(:upload)
-      file = file_from_fixtures("multiband.tif")
-      upload.update!(url: Discourse.store.store_upload(file, upload), extension: "tiff")
-      upload
-    end
     let(:not_an_image) do
       upload = Fabricate(:upload)
 
@@ -1037,12 +1031,6 @@ RSpec.describe Upload do
       expect(invalid_image.dominant_color).to eq(nil)
       expect(invalid_image.dominant_color(calculate_if_missing: true)).to eq("")
       expect(invalid_image.dominant_color).to eq("")
-    end
-
-    it "stores an empty string for a multiband TIFF image" do
-      expect(multiband_image.dominant_color).to eq(nil)
-      expect(multiband_image.dominant_color(calculate_if_missing: true)).to eq("")
-      expect(multiband_image.dominant_color).to eq("")
     end
 
     it "correctly handles unparsable ImageMagick output" do

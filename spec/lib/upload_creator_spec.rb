@@ -92,6 +92,19 @@ RSpec.describe UploadCreator do
       end
     end
 
+    context "when PNG image data is malformed" do
+      it "persists the upload with an empty dominant color" do
+        upload =
+          described_class.new(file_from_fixtures("malformed.png"), "malformed.png").create_for(
+            user.id,
+          )
+
+        expect(upload).to be_persisted
+        expect(upload.errors).to be_empty
+        expect(upload.dominant_color).to eq("")
+      end
+    end
+
     describe "when upload is not an image" do
       before { SiteSetting.authorized_extensions = "txt|long-FileExtension" }
 
