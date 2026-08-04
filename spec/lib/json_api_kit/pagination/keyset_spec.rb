@@ -3,8 +3,12 @@
 RSpec.describe JsonApiKit::Pagination::Keyset do
   subject(:keyset) { described_class.new(keys) }
 
+  let(:model) { Topic }
   let(:keys) do
-    [described_class::Key.new(:created_at, direction: :desc), described_class::Key.new(:id)]
+    [
+      described_class::Key.new(:created_at, model:, direction: :desc),
+      described_class::Key.new(:id, model:),
+    ]
   end
 
   describe ".new" do
@@ -27,8 +31,8 @@ RSpec.describe JsonApiKit::Pagination::Keyset do
     context "with a nullable key" do
       let(:keys) do
         [
-          described_class::Key.new(:bumped_at, direction: :desc, nulls_last: true),
-          described_class::Key.new(:id),
+          described_class::Key.new(:bumped_at, model:, direction: :desc, nulls_last: true),
+          described_class::Key.new(:id, model:),
         ]
       end
 
@@ -44,9 +48,9 @@ RSpec.describe JsonApiKit::Pagination::Keyset do
     context "with a key already in the order" do
       let(:keys) do
         [
-          described_class::Key.new(:id, direction: :desc),
-          described_class::Key.new(:created_at),
-          described_class::Key.new(:id),
+          described_class::Key.new(:id, model:, direction: :desc),
+          described_class::Key.new(:created_at, model:),
+          described_class::Key.new(:id, model:),
         ]
       end
 
@@ -65,8 +69,8 @@ RSpec.describe JsonApiKit::Pagination::Keyset do
 
     let(:keys) do
       [
-        described_class::Key.new(:username, sql: "users.username", joins: [:user]),
-        described_class::Key.new(:title, sql: "topics.title", joins: [:user]),
+        described_class::Key.new(:username, model:, sql: "users.username", joins: [:user]),
+        described_class::Key.new(:title, model:, sql: "topics.title", joins: [:user]),
       ]
     end
 
@@ -80,8 +84,8 @@ RSpec.describe JsonApiKit::Pagination::Keyset do
 
     let(:keys) do
       [
-        described_class::Key.new(:bumped_at, direction: :desc, nulls_last: true),
-        described_class::Key.new(:id),
+        described_class::Key.new(:bumped_at, model:, direction: :desc, nulls_last: true),
+        described_class::Key.new(:id, model:),
       ]
     end
 
@@ -95,8 +99,8 @@ RSpec.describe JsonApiKit::Pagination::Keyset do
 
     let(:keys) do
       [
-        described_class::Key.new(:bumped_at, direction: :desc, nulls_last: true),
-        described_class::Key.new(:id),
+        described_class::Key.new(:bumped_at, model:, direction: :desc, nulls_last: true),
+        described_class::Key.new(:id, model:),
       ]
     end
     let(:record) { Topic.new(id: 12, bumped_at: Time.utc(2026, 8, 3, 12)) }
@@ -128,8 +132,8 @@ RSpec.describe JsonApiKit::Pagination::Keyset do
     context "with a key backed by SQL" do
       let(:keys) do
         [
-          described_class::Key.new(:author, sql: "users.username", joins: [:user]),
-          described_class::Key.new(:id),
+          described_class::Key.new(:author, model:, sql: "users.username", joins: [:user]),
+          described_class::Key.new(:id, model:),
         ]
       end
 
@@ -141,8 +145,8 @@ RSpec.describe JsonApiKit::Pagination::Keyset do
     context "with a nullable key" do
       let(:keys) do
         [
-          described_class::Key.new(:bumped_at, direction: :desc, nulls_last: true),
-          described_class::Key.new(:id),
+          described_class::Key.new(:bumped_at, model:, direction: :desc, nulls_last: true),
+          described_class::Key.new(:id, model:),
         ]
       end
 

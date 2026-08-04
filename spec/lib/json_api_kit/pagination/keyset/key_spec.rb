@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Pagination::Keyset::Key do
-  subject(:key) { described_class.new(:created_at) }
+  subject(:key) { described_class.new(:created_at, model:) }
 
   let(:model) { Topic }
 
   describe ".new" do
     context "with a direction that is not a direction" do
       it "refuses to build the key" do
-        expect { described_class.new(:created_at, direction: :sideways) }.to raise_error(
+        expect { described_class.new(:created_at, model:, direction: :sideways) }.to raise_error(
           ArgumentError,
         )
       end
@@ -29,7 +29,7 @@ RSpec.describe JsonApiKit::Pagination::Keyset::Key do
     end
 
     context "when the key is backed by SQL" do
-      let(:key) { described_class.new(:username, sql: "users.username") }
+      let(:key) { described_class.new(:username, model:, sql: "users.username") }
 
       it "has to be projected onto the scope" do
         expect(key).to be_projected
@@ -41,7 +41,13 @@ RSpec.describe JsonApiKit::Pagination::Keyset::Key do
     subject(:reversed) { key.reverse }
 
     let(:key) do
-      described_class.new(:username, direction: :desc, sql: "users.username", joins: [:user])
+      described_class.new(
+        :username,
+        model:,
+        direction: :desc,
+        sql: "users.username",
+        joins: [:user],
+      )
     end
 
     it "flips the direction" do
@@ -57,7 +63,7 @@ RSpec.describe JsonApiKit::Pagination::Keyset::Key do
     end
 
     context "when the key is nullable" do
-      let(:key) { described_class.new(:bumped_at, nulls_last: true) }
+      let(:key) { described_class.new(:bumped_at, model:, nulls_last: true) }
 
       it "still wants its nulls last" do
         expect(reversed).to be_nulls_last
@@ -76,14 +82,14 @@ RSpec.describe JsonApiKit::Pagination::Keyset::Key do
   end
 
   describe "#value_sql" do
-    subject(:value_sql) { key.value_sql(model) }
+    subject(:value_sql) { key.value_sql }
 
     it "qualifies the column with its table" do
       expect(value_sql).to eq(%("topics"."created_at"))
     end
 
     context "when the key is backed by SQL" do
-      let(:key) { described_class.new(:username, sql: "users.username") }
+      let(:key) { described_class.new(:username, model:, sql: "users.username") }
 
       it "is that SQL" do
         expect(value_sql).to eq("users.username")
@@ -92,14 +98,14 @@ RSpec.describe JsonApiKit::Pagination::Keyset::Key do
   end
 
   describe "#select_expression" do
-    subject(:select_expression) { key.select_expression(model) }
+    subject(:select_expression) { key.select_expression }
 
     it "has nothing to project" do
       expect(select_expression).to be_nil
     end
 
     context "when the key is backed by SQL" do
-      let(:key) { described_class.new(:username, sql: "users.username") }
+      let(:key) { described_class.new(:username, model:, sql: "users.username") }
 
       it "projects the SQL under the key's name" do
         expect(select_expression).to eq(%(users.username AS "username"))
@@ -115,7 +121,7 @@ RSpec.describe JsonApiKit::Pagination::Keyset::Key do
     end
 
     context "when the key is nullable" do
-      let(:key) { described_class.new(:bumped_at, direction: :desc, nulls_last: true) }
+      let(:key) { described_class.new(:bumped_at, model:, direction: :desc, nulls_last: true) }
 
       it "puts a null flag in front of itself" do
         expect(expanded.map(&:name)).to eq(%i[bumped_at_is_null bumped_at])

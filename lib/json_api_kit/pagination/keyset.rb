@@ -26,10 +26,10 @@ module JsonApiKit
       # lets ordering, comparison and cursor minting treat SQL-backed keys and null
       # flags exactly like columns. One subquery selects all of them.
       def project(scope)
-        model = scope.klass
-        projections = keys.filter_map { it.select_expression(model) }
+        projections = keys.filter_map(&:select_expression)
         return scope if projections.empty?
 
+        model = scope.klass
         inner = scope.joins(joins).select(model.arel_table[Arel.star], *projections)
         model.select(Arel.star).from(inner, model.table_name)
       end

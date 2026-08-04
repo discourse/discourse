@@ -13,7 +13,7 @@ module JsonApiKit
       class NullFlag < Key
         def initialize(source, direction: :asc)
           @source = source
-          super(:"#{source.name}_is_null", direction:)
+          super(:"#{source.name}_is_null", model: source.model, direction:)
         end
 
         def projected? = true
@@ -22,7 +22,7 @@ module JsonApiKit
 
         def value_for(record) = source.value_for(record).nil? ? 1 : 0
 
-        def value_sql(model) = "CASE WHEN #{source.value_sql(model)} IS NULL THEN 1 ELSE 0 END"
+        def value_sql = "CASE WHEN #{source.value_sql} IS NULL THEN 1 ELSE 0 END"
 
         private
 

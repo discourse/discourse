@@ -3,7 +3,7 @@
 RSpec.describe JsonApiKit::Pagination::Keyset::NullFlag do
   subject(:flag) { described_class.new(source) }
 
-  let(:source) { JsonApiKit::Pagination::Keyset::Key.new(:bumped_at) }
+  let(:source) { JsonApiKit::Pagination::Keyset::Key.new(:bumped_at, model:) }
   let(:model) { Topic }
 
   describe "#name" do
@@ -59,14 +59,16 @@ RSpec.describe JsonApiKit::Pagination::Keyset::NullFlag do
   end
 
   describe "#value_sql" do
-    subject(:value_sql) { flag.value_sql(model) }
+    subject(:value_sql) { flag.value_sql }
 
     it "tests the flagged column for null" do
       expect(value_sql).to eq(%(CASE WHEN "topics"."bumped_at" IS NULL THEN 1 ELSE 0 END))
     end
 
     context "when the flagged key is backed by SQL" do
-      let(:source) { JsonApiKit::Pagination::Keyset::Key.new(:username, sql: "users.username") }
+      let(:source) do
+        JsonApiKit::Pagination::Keyset::Key.new(:username, model:, sql: "users.username")
+      end
 
       it "tests that SQL, which the key's alias could not stand in for" do
         expect(value_sql).to eq("CASE WHEN users.username IS NULL THEN 1 ELSE 0 END")
@@ -75,7 +77,7 @@ RSpec.describe JsonApiKit::Pagination::Keyset::NullFlag do
   end
 
   describe "#select_expression" do
-    subject(:select_expression) { flag.select_expression(model) }
+    subject(:select_expression) { flag.select_expression }
 
     it "projects the flag under its own name" do
       expect(select_expression).to eq(
