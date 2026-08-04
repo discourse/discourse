@@ -470,6 +470,9 @@ en:
         resume: "Resume capture"
         capturing: "Capturing"
         paused: "Paused"
+        chip_capturing_title: "Interactions and announcements are being recorded"
+        chip_paused_title: "Capture is paused; the page keeps announcing"
+        chip_regions_title: "Live regions currently watched for announcements"
         region_count:
           one: "%{count} live region"
           other: "%{count} live regions"
@@ -479,6 +482,7 @@ en:
         clear: "Clear timeline"
         filter_placeholder: "Filter entries"
         problems_toggle: "Problems"
+        view: "View"
         views:
           timeline: "Timeline"
           inspector: "Inspector"

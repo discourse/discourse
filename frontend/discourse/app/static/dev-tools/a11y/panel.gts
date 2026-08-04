@@ -274,35 +274,59 @@ export default class A11yPanel extends Component<A11yPanelSignature> {
       {{didInsert this.setup}}
       ...attributes
     >
-      <div class="dev-tools-a11y__topbar">
-        <span
-          class={{dConcatClass
-            "dev-tools-a11y__chip"
-            (if this.paused "--paused" "--capturing")
-          }}
-        >
-          <span class="dev-tools-a11y__live-dot"></span>
-          {{if
-            this.paused
-            (i18n "dev_tools.a11y.paused")
-            (i18n "dev_tools.a11y.capturing")
-          }}
-        </span>
-        <span
-          class={{dConcatClass
-            "dev-tools-a11y__chip"
-            "--regions"
-            (if (eq this.liveRegionCount 0) "--critical")
-          }}
-        >
-          {{i18n "dev_tools.a11y.region_count" count=this.liveRegionCount}}
-        </span>
-        <div class="dev-tools-a11y__actions">
+      <header class="dev-tools-panel__top-bar dev-tools-a11y__topbar">
+        <div class="dev-tools-panel__heading">
+          <span class="dev-tools-panel__title">
+            {{i18n "dev_tools.a11y.title"}}
+          </span>
+          <div class="dev-tools-panel__chips">
+            <span
+              class={{dConcatClass
+                "dev-tools-panel__chip dev-tools-a11y__chip"
+                (if this.paused "--paused" "--capturing --success")
+              }}
+              title={{if
+                this.paused
+                (i18n "dev_tools.a11y.chip_paused_title")
+                (i18n "dev_tools.a11y.chip_capturing_title")
+              }}
+            >
+              <span
+                class={{dConcatClass
+                  "dev-tools-panel__live-dot"
+                  (if this.paused "--paused")
+                }}
+              ></span>
+              {{if
+                this.paused
+                (i18n "dev_tools.a11y.paused")
+                (i18n "dev_tools.a11y.capturing")
+              }}
+            </span>
+            <span
+              class={{dConcatClass
+                "dev-tools-panel__chip dev-tools-a11y__chip"
+                "--regions"
+                (if (eq this.liveRegionCount 0) "--critical")
+              }}
+              title={{i18n "dev_tools.a11y.chip_regions_title"}}
+            >
+              {{i18n "dev_tools.a11y.region_count" count=this.liveRegionCount}}
+            </span>
+          </div>
+        </div>
+
+        <div class="dev-tools-panel__action-group">
           <button
             type="button"
-            class="dev-tools-a11y__pause"
+            class="dev-tools-panel__action dev-tools-a11y__pause"
             aria-pressed={{if this.paused "true" "false"}}
             title={{if
+              this.paused
+              (i18n "dev_tools.a11y.resume")
+              (i18n "dev_tools.a11y.pause")
+            }}
+            aria-label={{if
               this.paused
               (i18n "dev_tools.a11y.resume")
               (i18n "dev_tools.a11y.pause")
@@ -313,38 +337,41 @@ export default class A11yPanel extends Component<A11yPanelSignature> {
           </button>
           <button
             type="button"
-            class="dev-tools-a11y__test-channel"
+            class="dev-tools-panel__action dev-tools-a11y__test-channel"
             title={{i18n "dev_tools.a11y.test_channel"}}
+            aria-label={{i18n "dev_tools.a11y.test_channel"}}
             {{on "click" this.testChannel}}
           >
             {{dIcon "bullhorn"}}
           </button>
           <button
             type="button"
-            class="dev-tools-a11y__copy"
+            class="dev-tools-panel__action dev-tools-a11y__copy"
             title={{i18n "dev_tools.a11y.copy_trace"}}
+            aria-label={{i18n "dev_tools.a11y.copy_trace"}}
             {{on "click" this.copy}}
           >
             {{dIcon (if this.copied "check" "far-clipboard")}}
           </button>
           <button
             type="button"
-            class="dev-tools-a11y__clear"
+            class="dev-tools-panel__action dev-tools-a11y__clear"
             title={{i18n "dev_tools.a11y.clear"}}
+            aria-label={{i18n "dev_tools.a11y.clear"}}
             {{on "click" this.clear}}
           >
-            {{dIcon "trash-can"}}
+            {{dIcon "ban"}}
           </button>
         </div>
-      </div>
+      </header>
 
       {{#if (eq this.liveRegionCount 0)}}
-        <div class="dev-tools-a11y__warning">
+        <div class="dev-tools-panel__warning dev-tools-a11y__warning">
           {{i18n "dev_tools.a11y.zero_regions_warning"}}
         </div>
       {{/if}}
 
-      <div class="dev-tools-a11y__toolbar">
+      <div class="dev-tools-panel__toolbar dev-tools-a11y__toolbar">
         <DFilterInput
           @value={{this.filter}}
           @filterAction={{this.updateFilter}}
@@ -355,7 +382,7 @@ export default class A11yPanel extends Component<A11yPanelSignature> {
         <button
           type="button"
           class={{dConcatClass
-            "dev-tools-a11y__problems-toggle"
+            "dev-tools-panel__action dev-tools-a11y__problems-toggle"
             (if this.problemsOnly "--active")
           }}
           aria-pressed={{if this.problemsOnly "true" "false"}}
@@ -363,32 +390,39 @@ export default class A11yPanel extends Component<A11yPanelSignature> {
         >
           {{i18n "dev_tools.a11y.problems_toggle"}}
         </button>
-        <div class="dev-tools-a11y__views">
-          <button
-            type="button"
-            class={{dConcatClass
-              "dev-tools-a11y__view"
-              "--timeline"
-              (if (eq this.view "timeline") "--active")
-            }}
-            aria-pressed={{if (eq this.view "timeline") "true" "false"}}
-            {{on "click" this.showTimeline}}
-          >
-            {{i18n "dev_tools.a11y.views.timeline"}}
-          </button>
-          <button
-            type="button"
-            class={{dConcatClass
-              "dev-tools-a11y__view"
-              "--inspector"
-              (if (eq this.view "inspector") "--active")
-            }}
-            aria-pressed={{if (eq this.view "inspector") "true" "false"}}
-            {{on "click" this.showInspector}}
-          >
-            {{i18n "dev_tools.a11y.views.inspector"}}
-          </button>
-        </div>
+        <nav
+          class="dev-tools-panel__views dev-tools-a11y__views"
+          aria-label={{i18n "dev_tools.a11y.view"}}
+        >
+          <ul class="nav nav-pills">
+            <li>
+              <button
+                type="button"
+                class={{dConcatClass
+                  "dev-tools-a11y__view --timeline"
+                  (if (eq this.view "timeline") "active")
+                }}
+                aria-pressed={{if (eq this.view "timeline") "true" "false"}}
+                {{on "click" this.showTimeline}}
+              >
+                {{i18n "dev_tools.a11y.views.timeline"}}
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                class={{dConcatClass
+                  "dev-tools-a11y__view --inspector"
+                  (if (eq this.view "inspector") "active")
+                }}
+                aria-pressed={{if (eq this.view "inspector") "true" "false"}}
+                {{on "click" this.showInspector}}
+              >
+                {{i18n "dev_tools.a11y.views.inspector"}}
+              </button>
+            </li>
+          </ul>
+        </nav>
       </div>
 
       {{#if (eq this.view "timeline")}}
@@ -408,27 +442,30 @@ export default class A11yPanel extends Component<A11yPanelSignature> {
                 <span
                   class="dev-tools-a11y__entry-kind"
                 >{{row.entry.kind}}</span>
-                <span class="dev-tools-a11y__entry-detail">
+                <span class="dev-tools-a11y__entry-label">
                   {{row.entry.label}}
-                  —
+                </span>
+                <span class="dev-tools-a11y__entry-detail">
                   {{row.entry.detail}}
                 </span>
                 {{#if row.undelivered}}
                   <span
-                    class="dev-tools-a11y__not-delivered"
+                    class="dev-tools-panel__chip dev-tools-a11y__not-delivered"
                     title={{i18n "dev_tools.a11y.not_delivered_title"}}
                   >
                     {{i18n "dev_tools.a11y.not_delivered"}}
                   </span>
                 {{/if}}
                 {{#each row.problems as |problem|}}
-                  <span class="dev-tools-a11y__problem">{{problem}}</span>
+                  <span
+                    class="dev-tools-panel__chip --critical dev-tools-a11y__problem"
+                  >{{problem}}</span>
                 {{/each}}
               </li>
             {{/each}}
           </ol>
         {{else}}
-          <p class="dev-tools-a11y__empty">
+          <p class="dev-tools-panel__empty dev-tools-a11y__empty">
             {{if
               (or this.filter this.problemsOnly)
               (i18n "dev_tools.a11y.no_matching_entries")
@@ -441,23 +478,31 @@ export default class A11yPanel extends Component<A11yPanelSignature> {
           {{#if this.snapshot}}
             {{#if this.snapshotProblems.length}}
               <section class="dev-tools-a11y__group --problems">
-                <h3>{{i18n "dev_tools.a11y.groups.problems"}}</h3>
+                <h3 class="dev-tools-panel__section-heading">
+                  {{i18n "dev_tools.a11y.groups.problems"}}
+                </h3>
                 <div class="dev-tools-a11y__problem-strip">
                   {{#each this.snapshotProblems as |problem|}}
-                    <span class="dev-tools-a11y__problem">{{problem}}</span>
+                    <span
+                      class="dev-tools-panel__chip --critical dev-tools-a11y__problem"
+                    >{{problem}}</span>
                   {{/each}}
                 </div>
               </section>
             {{/if}}
             {{#if this.focusValue}}
               <section class="dev-tools-a11y__group">
-                <h3>{{i18n "dev_tools.a11y.groups.focus"}}</h3>
+                <h3 class="dev-tools-panel__section-heading">
+                  {{i18n "dev_tools.a11y.groups.focus"}}
+                </h3>
                 <dl><dt>element</dt><dd>{{this.focusValue}}</dd></dl>
               </section>
             {{/if}}
             {{#if this.cursorRows.length}}
               <section class="dev-tools-a11y__group">
-                <h3>{{i18n "dev_tools.a11y.groups.cursor"}}</h3>
+                <h3 class="dev-tools-panel__section-heading">
+                  {{i18n "dev_tools.a11y.groups.cursor"}}
+                </h3>
                 {{#each this.cursorRows as |row|}}
                   <dl><dt>{{row.label}}</dt><dd>{{row.value}}</dd></dl>
                 {{/each}}
@@ -465,14 +510,16 @@ export default class A11yPanel extends Component<A11yPanelSignature> {
             {{/if}}
             {{#if this.deliveryRows.length}}
               <section class="dev-tools-a11y__group">
-                <h3>{{i18n "dev_tools.a11y.groups.delivery"}}</h3>
+                <h3 class="dev-tools-panel__section-heading">
+                  {{i18n "dev_tools.a11y.groups.delivery"}}
+                </h3>
                 {{#each this.deliveryRows as |row|}}
                   <dl><dt>{{row.label}}</dt><dd>{{row.value}}</dd></dl>
                 {{/each}}
               </section>
             {{/if}}
           {{else}}
-            <p class="dev-tools-a11y__no-snapshot">
+            <p class="dev-tools-panel__empty dev-tools-a11y__no-snapshot">
               {{i18n "dev_tools.a11y.no_snapshot"}}
             </p>
           {{/if}}

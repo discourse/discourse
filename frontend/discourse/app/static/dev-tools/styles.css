@@ -672,8 +672,176 @@ pre.outlet-info__error-message {
   opacity: 0.7;
 }
 
-/* A11y inspector panel. Written flat: this file is served as native CSS,
-   where Sass-style `&__element` concatenation silently matches nothing. */
+/* Shared panel design language. Values match the MessageBus panel, the
+   reference implementation; a new panel composes these classes with its own
+   BEM hooks and only adds layout of its own, so every tool reads as one
+   product. Written flat: this file is served as native CSS, where Sass-style
+   `&__element` concatenation silently matches nothing. */
+
+.dev-tools-panel__top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-block-end: 1px solid var(--content-border-color);
+}
+
+.dev-tools-panel__heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.dev-tools-panel__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.dev-tools-panel__chip {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  gap: var(--space-1);
+  padding: var(--space-half) var(--space-2);
+  border-radius: 3px;
+  background: var(--primary-low);
+  color: var(--primary-high);
+  font-size: var(--font-down-1);
+  white-space: nowrap;
+
+  &.--success {
+    background: var(--success-low);
+    color: var(--success-hover);
+  }
+
+  &.--critical {
+    background: var(--danger-low);
+    color: var(--danger-hover);
+  }
+}
+
+.dev-tools-panel__action-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-half);
+  padding-inline-start: var(--space-1);
+  border-inline-start: 1px solid var(--content-border-color);
+}
+
+.dev-tools-panel__action {
+  border-radius: var(--d-button-border-radius);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  padding: var(--space-half);
+  border: 0;
+  background: none;
+  color: var(--primary-high);
+  cursor: pointer;
+
+  & .d-icon {
+    font-size: var(--font-down-1);
+  }
+
+  /* The same hover treatment core gives flat buttons, e.g. in the composer
+     toolbar. */
+  &:hover,
+  &:focus-visible {
+    background: var(--d-hover);
+    color: var(--primary);
+  }
+}
+
+.dev-tools-panel__live-dot {
+  width: 0.6em;
+  height: 0.6em;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--success);
+
+  &.--paused {
+    background: var(--primary-medium);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dev-tools-panel__live-dot:not(.--paused) {
+    animation: dev-tools-panel-pulse 2s ease-in-out infinite;
+  }
+}
+
+@keyframes dev-tools-panel-pulse {
+  50% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
+}
+
+.dev-tools-panel__warning {
+  padding: var(--space-2) var(--space-3);
+  border-block: 1px solid var(--danger);
+  background: var(--danger-low);
+  color: var(--danger);
+}
+
+.dev-tools-panel__toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-block-end: 1px solid var(--content-border-color);
+  background: var(--secondary);
+
+  & .filter-input-container {
+    min-width: 0;
+    flex: 1 1 10em;
+    margin: 0;
+  }
+}
+
+.dev-tools-panel__views {
+  flex: 0 0 auto;
+
+  & .nav-pills {
+    gap: var(--space-half);
+    margin: 0;
+
+    & > li > button {
+      min-height: 1.5rem;
+      padding: var(--space-half) var(--space-1);
+    }
+  }
+}
+
+.dev-tools-panel__section-heading {
+  margin: 0 0 var(--space-1);
+  color: var(--primary);
+  font-size: inherit;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.dev-tools-panel__empty {
+  margin: 0;
+  padding: var(--space-4) var(--space-3);
+  color: var(--primary-medium);
+  text-align: center;
+}
+
+/* A11y inspector panel. The top bar, toolbar, chips and buttons come from the
+   shared primitives above; the rules here only lay out the timeline and the
+   inspector view. */
+
 .dev-tools-a11y {
   display: flex;
   flex-direction: column;
@@ -684,116 +852,17 @@ pre.outlet-info__error-message {
   font-size: var(--font-down-1);
 }
 
-.dev-tools-a11y__topbar,
-.dev-tools-a11y__toolbar,
-.dev-tools-a11y__actions,
-.dev-tools-a11y__views,
-.dev-tools-a11y__problem-strip {
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
+.d-panel-dock.--context-dev-tools:has(.dev-tools-a11y) .d-panel-dock__body {
+  padding: 0;
 }
 
-.dev-tools-a11y__topbar,
-.dev-tools-a11y__toolbar {
-  padding: 0.5em 0.75em;
-  border-bottom: 1px solid var(--primary-low);
-}
-
-.dev-tools-a11y__topbar {
-  flex-wrap: wrap;
-}
-
-.dev-tools-a11y__actions {
-  margin-inline-start: auto;
-}
-
-.dev-tools-a11y__actions button,
-.dev-tools-a11y__pause,
-.dev-tools-a11y__test-channel,
-.dev-tools-a11y__copy,
-.dev-tools-a11y__clear {
-  border: 0;
-  border-radius: 0.25em;
-  padding: 0.35em 0.5em;
-  color: var(--primary-high);
-  background: transparent;
-  cursor: pointer;
-
-  &:hover,
-  &:focus-visible {
-    color: var(--primary);
-    background: var(--primary-very-low);
-  }
-}
-
-.dev-tools-a11y__chip,
-.dev-tools-a11y__problem,
-.dev-tools-a11y__not-delivered,
-.dev-tools-a11y__problems-toggle,
-.dev-tools-a11y__view {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35em;
-  border: 1px solid var(--primary-low-mid);
-  border-radius: 999em;
-  padding: 0.2em 0.6em;
-  color: var(--primary-high);
-  background: var(--primary-very-low);
-  font-size: var(--font-down-1);
-  line-height: var(--line-height-medium);
-  white-space: nowrap;
-}
-
-.dev-tools-a11y__chip.--critical {
-  border-color: var(--danger-medium);
-  color: var(--danger);
-  background: var(--danger-low);
-}
-
-.dev-tools-a11y__live-dot {
-  width: 0.55em;
-  height: 0.55em;
-  border-radius: 50%;
-  background: var(--success);
-}
-
-.dev-tools-a11y__chip.--paused .dev-tools-a11y__live-dot {
-  background: var(--primary-medium);
-}
-
-.dev-tools-a11y__warning {
-  padding: 0.5em 0.75em;
-  border-bottom: 1px solid var(--danger-medium);
-  color: var(--danger);
-  background: var(--danger-low);
-}
-
-.dev-tools-a11y__toolbar {
-  flex-wrap: wrap;
-
-  .filter-input-container {
-    flex: 1 1 14em;
-    min-width: 8em;
-    margin: 0;
-  }
-}
-
-.dev-tools-a11y__problems-toggle,
-.dev-tools-a11y__view {
-  border-color: var(--primary-low-mid);
-  font: inherit;
-  cursor: pointer;
+.dev-tools-a11y__problems-toggle {
+  padding: var(--space-half) var(--space-1);
 
   &.--active {
-    border-color: var(--tertiary);
+    background: var(--tertiary-low);
     color: var(--tertiary);
-    background: var(--tertiary-very-low);
   }
-}
-
-.dev-tools-a11y__views {
-  margin-inline-start: auto;
 }
 
 .dev-tools-a11y__timeline {
@@ -803,130 +872,125 @@ pre.outlet-info__error-message {
   list-style: none;
   margin: 0;
   padding: 0;
+
+  /* The data tier steps down once more, like the MessageBus tables. */
+  font-size: var(--font-down-1);
 }
 
 .dev-tools-a11y__entry {
-  display: grid;
-  grid-template-columns: auto auto minmax(8em, 1fr) auto;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.6em;
+  gap: var(--space-1) var(--space-2);
   min-width: 0;
-  padding: 0.45em 0.75em;
-  border-bottom: 1px solid var(--primary-low);
+  padding: var(--space-1) var(--space-3);
+  border-block-end: 1px solid var(--content-border-color);
+  border-inline-start: 3px solid transparent;
 
   &.--problem {
     background: var(--danger-low);
   }
 
   &.--intent {
-    border-inline-start: 0.25em solid var(--tertiary);
+    border-inline-start-color: var(--tertiary);
   }
 
   &.--spoken {
-    border-inline-start: 0.25em solid var(--success);
+    border-inline-start-color: var(--success);
   }
 
   &.--event {
-    border-inline-start: 0.25em solid var(--primary-medium);
+    border-inline-start-color: var(--primary-medium);
   }
 
   &.--meta {
-    border-inline-start: 0.25em solid var(--primary-low-mid);
+    border-inline-start-color: var(--primary-low-mid);
   }
 }
 
-.dev-tools-a11y__entry-seq,
-.dev-tools-a11y__entry-detail,
-.dev-tools-a11y__group dt,
-.dev-tools-a11y__group dd {
-  font-family: var(--dev-tools-mono-font);
-}
-
 .dev-tools-a11y__entry-seq {
+  flex: 0 0 auto;
   color: var(--primary-medium);
+  font-family: var(--dev-tools-mono-font);
+  font-variant-numeric: tabular-nums;
 }
 
 .dev-tools-a11y__entry-kind {
-  font-weight: bold;
+  flex: 0 0 auto;
+  color: var(--primary-high);
+  font-size: var(--font-down-1);
+  font-weight: 600;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
 }
 
-.dev-tools-a11y__entry-detail {
+.dev-tools-a11y__entry-label {
+  flex: 0 1 auto;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.dev-tools-a11y__not-delivered {
-  border-color: color-mix(in srgb, var(--tertiary) 70%, var(--highlight));
+.dev-tools-a11y__entry-detail {
+  flex: 1 1 8em;
+  min-width: 0;
+  overflow: hidden;
   color: var(--primary);
+  font-family: var(--dev-tools-mono-font);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dev-tools-a11y__not-delivered {
   background: color-mix(in srgb, var(--tertiary-low) 70%, var(--highlight-low));
+  color: var(--primary);
 }
 
 .dev-tools-a11y__problem {
-  border-color: var(--danger-medium);
-  color: var(--danger);
-  background: var(--danger-low);
   font-family: var(--dev-tools-mono-font);
-}
-
-.dev-tools-a11y__empty,
-.dev-tools-a11y__no-snapshot {
-  margin: 0;
-  padding: 1.25em;
-  color: var(--primary-medium);
-  font-style: italic;
 }
 
 .dev-tools-a11y__inspector {
   flex: 1;
   min-height: 0;
   overflow: auto;
-  padding: 0.75em;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-down-1);
 }
 
 .dev-tools-a11y__group {
-  padding-block: 0.5em;
-  border-bottom: 1px solid var(--primary-low);
+  padding-block: var(--space-2);
+  border-block-end: 1px solid var(--content-border-color);
 
-  h3 {
-    margin: 0 0 0.4em;
-    font-size: var(--font-0);
-  }
-
-  dl {
+  & dl {
     display: grid;
     grid-template-columns: minmax(7em, auto) minmax(0, 1fr);
-    gap: 0.75em;
-    margin: 0.2em 0;
+    gap: var(--space-1) var(--space-3);
+    margin: var(--space-half) 0;
   }
 
-  dt {
+  & dt {
     color: var(--primary-medium);
+    font-family: var(--dev-tools-mono-font);
   }
 
-  dd {
+  & dd {
     margin: 0;
     overflow-wrap: anywhere;
+    font-family: var(--dev-tools-mono-font);
   }
 
   &.--problems {
+    padding-inline: var(--space-2);
     color: var(--danger);
     background: var(--danger-low);
-    padding-inline: 0.5em;
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .dev-tools-a11y__chip.--capturing .dev-tools-a11y__live-dot {
-    animation: dev-tools-a11y-live-dot 1.5s ease-in-out infinite;
-  }
-}
-
-@keyframes dev-tools-a11y-live-dot {
-  50% {
-    opacity: 0.35;
-    transform: scale(0.75);
-  }
+.dev-tools-a11y__problem-strip {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-1);
 }
