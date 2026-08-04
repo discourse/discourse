@@ -104,7 +104,8 @@ export default class ContentLanguagePreferencesModal extends Component {
 
         await ajax(`/u/${this.currentUser.username}.json`, {
           type: "PUT",
-          data: preferences,
+          contentType: "application/json",
+          data: JSON.stringify(preferences),
         });
         if (this.canChangeInterfaceLanguage) {
           this.currentUser.set("locale", data.interfaceLanguage);

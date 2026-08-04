@@ -162,6 +162,20 @@ describe "Content Localization" do
       expect(preferences_interface_page).to have_understood_language_option("ja")
     end
 
+    it "lets users remove their last understood language from the modal" do
+      site_local_user.user_option.update!(understood_languages: ["en"])
+
+      sign_in(site_local_user)
+      topic_page.visit_topic(topic)
+
+      modal = topic_page.open_content_language_preferences
+      expect(modal).to have_removable_understood_language("en")
+      modal.remove_understood_language("en").save
+
+      modal = topic_page.open_content_language_preferences
+      expect(modal).to have_understood_language_option("en")
+    end
+
     it "allows users to set their post's locale when posting" do
       sign_in(japanese_user)
 
