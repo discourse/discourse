@@ -228,6 +228,47 @@ RSpec.describe PostsController do
     end
   end
 
+  describe "whisper visibility" do
+    it "blocks removed whisperers from their own whisper", :aggregate_failures do
+      whisper_group = Fabricate(:group)
+      whisper_author = Fabricate(:user, trust_level: TrustLevel[1])
+      topic = Fabricate(:topic)
+      Fabricate(:post, topic: topic)
+      original_raw = "staff-only whisper body"
+      edited_raw = "edited whisper body"
+      whisper =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: whisper_author,
+          post_type: Post.types[:whisper],
+          raw: original_raw,
+        )
+
+      SiteSetting.whispers_allowed_groups = whisper_group.id.to_s
+      whisper_group.add(whisper_author)
+      whisper_group.remove(whisper_author)
+      sign_in(User.find(whisper_author.id))
+
+      get "/posts/#{whisper.id}.json"
+      expect(response).to be_forbidden
+      expect(response.body).not_to include(whisper.raw)
+
+      get "/posts/by_number/#{topic.id}/#{whisper.post_number}.json"
+      expect(response).to be_forbidden
+      expect(response.body).not_to include(whisper.raw)
+
+      get "/raw/#{topic.id}/#{whisper.post_number}"
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(whisper.raw)
+
+      put "/posts/#{whisper.id}.json", params: { post: { raw: edited_raw } }
+      expect(response).to be_forbidden
+      expect(response.body).not_to include(edited_raw)
+      expect(whisper.reload.raw).to eq(original_raw)
+    end
+  end
+
   describe "#by_date" do
     include_examples "finding and showing post" do
       let(:url) { "/posts/by-date/#{post.topic_id}/#{post.created_at.strftime("%Y-%m-%d")}.json" }
