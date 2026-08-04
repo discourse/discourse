@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
@@ -21,7 +20,6 @@ export default class FormTemplateFieldComposer extends Component {
   fieldUid = `form-template-composer-${guidFor(this)}`;
 
   #claimAbortController = null;
-  #validatedInput = null;
   #editorTarget = null;
   #validationFailed = false;
 
@@ -60,11 +58,6 @@ export default class FormTemplateFieldComposer extends Component {
     schedule("afterRender", () => {
       this.args.onChange?.();
     });
-  }
-
-  @action
-  registerValidatedInput(element) {
-    this.#validatedInput = element;
   }
 
   @action
@@ -118,9 +111,9 @@ export default class FormTemplateFieldComposer extends Component {
       this.args.onChange?.(event);
       // the editor emits no form events of its own, so the input standing in
       // for it has to report the change
-      this.#validatedInput?.dispatchEvent(
-        new Event("input", { bubbles: true })
-      );
+      document
+        .getElementById(this.validationInputId)
+        ?.dispatchEvent(new Event("input", { bubbles: true }));
     });
   }
 
@@ -189,7 +182,6 @@ export default class FormTemplateFieldComposer extends Component {
         class="form-template-field__composer-hidden-input"
         tabindex="-1"
         aria-hidden="true"
-        {{didInsert this.registerValidatedInput}}
         {{on "invalid" this.handleInvalid}}
         {{on "input" this.handleValidationInput}}
       />
