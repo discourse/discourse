@@ -1,7 +1,9 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { optionalRequire } from "discourse/lib/utilities";
 import { eventHasLivestream } from "../../lib/livestream-utils";
 import LivestreamZoomEntry from "../livestream/zoom-entry";
@@ -65,6 +67,17 @@ export default class Livestream extends Component {
       : trustHTML(this.args.event?.livestreamOnebox ?? "");
   }
 
+  // Once playing, the post has to stay rendered: scrolling far enough away
+  // would otherwise cloak it and tear the player out of the DOM.
+  @action
+  preventCloak() {
+    const postId = this.args.post?.id;
+
+    if (postId) {
+      withPluginApi((api) => api.preventCloak(postId));
+    }
+  }
+
   <template>
     {{#if this.show}}
       <section class="event__section event-livestream">
@@ -72,7 +85,10 @@ export default class Livestream extends Component {
           <LivestreamZoomEntry @event={{@event}} />
         {{else if this.hasLivestreamOnebox}}
           {{#if this.videoAttributes}}
-            <this.lazyVideo @videoAttributes={{this.videoAttributes}} />
+            <this.lazyVideo
+              @videoAttributes={{this.videoAttributes}}
+              @onLoadedVideo={{this.preventCloak}}
+            />
           {{else}}
             {{this.oneboxHtml}}
           {{/if}}
