@@ -14,6 +14,10 @@ module DiscourseAi
           merge_tool_batches(super)
         end
 
+        def embed_user_ids?
+          true
+        end
+
         private
 
         def tool_call_msg(msg)
