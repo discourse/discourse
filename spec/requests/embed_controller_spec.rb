@@ -113,6 +113,19 @@ RSpec.describe EmbedController do
         expect(response.body).to match("data-referer=\"https://example.com/evil-trout\"")
       end
 
+      it "ignores invalid path allowlists from legacy hosts" do
+        embeddable_host = Fabricate(:embeddable_host, allowed_paths: "/articles/.*")
+        embeddable_host.update_column(:allowed_paths, "[invalid")
+
+        get "/embed/topics?discourse_embed_id=de-1234",
+            headers: {
+              "REFERER" => "https://#{embeddable_host.host}/articles/test",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.body).to match("data-embed-id=\"de-1234\"")
+      end
+
       it "returns a list of top topics" do
         good_topic = Fabricate(:topic, like_count: 1000, posts_count: 100)
         TopTopic.refresh!
