@@ -180,10 +180,6 @@ export default <template>
           @content={{@controller.availableLocales}}
           @value={{@controller.understoodLanguages}}
           @onChange={{@controller.setUnderstoodLanguages}}
-          @mandatoryValues={{@controller.interfaceLanguage}}
-          @mandatoryValueTitle={{i18n
-            "content_localization.preferences.interface_language_mandatory"
-          }}
           @options={{hash filterable=true}}
         />
         <div class="instructions">

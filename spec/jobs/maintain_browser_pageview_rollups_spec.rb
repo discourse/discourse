@@ -110,6 +110,70 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
       end
     end
 
+    context "when aggregating crawler rollups" do
+      let(:above_threshold) { CrawlerScorer::BOT_SCORE_THRESHOLD + 1 }
+
+      before { freeze_time(Time.utc(2026, 6, 20, 12, 0, 0)) }
+
+      it "does nothing when improved_crawler_detection is disabled" do
+        Fabricate(
+          :browser_pageview_event,
+          score: above_threshold,
+          created_at: Time.utc(2026, 6, 20, 9),
+        )
+
+        job.execute({})
+
+        expect(BrowserPageviewCrawlerDailyRollup.count).to eq(0)
+      end
+
+      context "when improved_crawler_detection is enabled" do
+        before { SiteSetting.improved_crawler_detection = true }
+
+        it "backfills the full event history on the first run" do
+          Fabricate(
+            :browser_pageview_event,
+            score: above_threshold,
+            created_at: Time.utc(2026, 5, 1, 9),
+          )
+          Fabricate(
+            :browser_pageview_event,
+            score: above_threshold,
+            created_at: Time.utc(2026, 6, 20, 9),
+          )
+
+          job.execute({})
+
+          expect(BrowserPageviewCrawlerDailyRollup.sum(:count)).to eq(2)
+        end
+
+        it "only refreshes yesterday and today once history has been rolled up" do
+          Fabricate(
+            :browser_pageview_event,
+            score: above_threshold,
+            created_at: Time.utc(2026, 6, 20, 9),
+          )
+          job.execute({})
+
+          Fabricate(
+            :browser_pageview_event,
+            score: above_threshold,
+            created_at: Time.utc(2026, 5, 1, 9),
+          )
+          Fabricate(
+            :browser_pageview_event,
+            score: above_threshold,
+            created_at: Time.utc(2026, 6, 19, 9),
+          )
+          job.execute({})
+
+          expect(
+            BrowserPageviewCrawlerDailyRollup.order(:date).pluck(:date, :count),
+          ).to contain_exactly([Date.new(2026, 6, 19), 1], [Date.new(2026, 6, 20), 1])
+        end
+      end
+    end
+
     context "when aggregating engagement rollups" do
       before { freeze_time(Time.utc(2026, 6, 20, 12, 0, 0)) }
 

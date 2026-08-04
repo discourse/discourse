@@ -23,6 +23,7 @@ module DiscourseWorkflows
       output_contracts: [],
       palette_visible: true,
       available: true,
+      previewable: false,
     }.freeze
 
     def self.inherited(subclass)
@@ -69,6 +70,10 @@ module DiscourseWorkflows
 
     def self.palette_visible?
       description_value(:palette_visible)
+    end
+
+    def self.previewable?
+      description_value(:previewable)
     end
 
     def self.available?
@@ -246,6 +251,17 @@ module DiscourseWorkflows
       end
     end
 
+    def self.expression_value?(value)
+      value.is_a?(String) && value.start_with?("=")
+    end
+
+    def self.validate_timezone_configuration(configuration, errors)
+      timezone = (configuration || {}).deep_stringify_keys["timezone"].presence
+      return if timezone.nil? || expression_value?(timezone) || WorkflowTimezone.valid?(timezone)
+
+      errors.add(:base, I18n.t("discourse_workflows.errors.invalid_timezone", timezone: timezone))
+    end
+
     def initialize(**)
     end
 
@@ -285,6 +301,20 @@ module DiscourseWorkflows
 
     def matches_category_ids?(topic_category_id, category_ids, include_subcategories: true)
       self.class.matches_category_ids?(topic_category_id, category_ids, include_subcategories:)
+    end
+
+    def resolve_timezone(exec_ctx, item_index)
+      timezone = exec_ctx.get_node_parameter("timezone", item_index, default: nil).to_s.presence
+      return exec_ctx.get_timezone if timezone.nil?
+
+      if !WorkflowTimezone.valid?(timezone)
+        raise_node_error!(
+          I18n.t("discourse_workflows.errors.invalid_timezone", timezone: timezone),
+          item_index: item_index,
+        )
+      end
+
+      timezone
     end
 
     def wrap(data, paired_item: nil)

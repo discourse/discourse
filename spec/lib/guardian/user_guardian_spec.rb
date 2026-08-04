@@ -537,6 +537,14 @@ RSpec.describe UserGuardian do
       end
     end
 
+    it "requires an admin to delete another moderator" do
+      another_moderator = Fabricate(:moderator)
+
+      expect(Guardian.new(moderator).can_delete_user?(another_moderator)).to eq(false)
+      expect(Guardian.new(admin).can_delete_user?(another_moderator)).to eq(true)
+      expect(Guardian.new(moderator).can_delete_user?(moderator)).to eq(true)
+    end
+
     context "when deleting myself" do
       let(:guardian) { Guardian.new(user) }
 

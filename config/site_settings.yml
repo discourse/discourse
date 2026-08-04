@@ -653,9 +653,6 @@ basic:
     max: 86400
     hidden: true
     client: true
-  experimental_detect_crawler_pageviews:
-    default: false
-    hidden: true
   crawler_automation_user_agents:
     default: "HeadlessChrome|Playwright|Puppeteer|Selenium|PhantomJS|jsdom"
     hidden: true
@@ -4690,7 +4687,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/389820"
   enable_composer_redesign:
@@ -4830,6 +4827,15 @@ experimental:
       status: "beta"
       impact: "feature,admins"
       learn_more_url: "https://meta.discourse.org/t/-/404528"
+  improved_crawler_detection:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "conceptual"
+      impact: "other,all_members"
+      allow_enabled_for:
+        - everyone
   admin_dashboard_reports_seeded:
     default: false
     hidden: true

@@ -292,6 +292,7 @@ en:
     discourse_workflows:
       ai_agent:
         errors:
+          invalid_mode: "'%{mode}' is not a supported AI agent execution mode."
           locked_default_llm_missing: "Agent '%{agent}' is locked to its default LLM, but no valid default LLM is configured"
           llm_not_found: "LLM model with id %{llm_model_id} not found"
           no_llm_configured: "No LLM is configured for agent '%{agent}'. Select an LLM model or configure an agent/site default LLM."
@@ -620,6 +621,12 @@ en:
         web_fetch:
           name: "Web Fetch (native)"
           help: "Lets the model open and read web pages using the provider's built-in web access, when the agent is forced to a supported LLM."
+        google_maps:
+          name: "Google Maps (native)"
+          help: "Lets the model use current Google Maps place and location data, when the agent is forced to a supported Gemini LLM."
+        code_execution:
+          name: "Code execution (native)"
+          help: "Lets the model write and run Python code in the provider's sandbox, when the agent is forced to a supported Gemini LLM."
       tool_summary:
         read_artifact: "Read a web artifact"
         search_uploaded_documents: "Search uploaded documents"

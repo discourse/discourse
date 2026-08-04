@@ -139,6 +139,19 @@ module DiscourseWorkflows
       @nodes_by_id[connection.source_node_id]
     end
 
+    def pinned_items_for(node)
+      pinned = pin_data.transform_keys(&:to_s)
+      return [] if pinned.blank?
+
+      items =
+        connections_to(node)
+          .filter_map { |connection| source_node(connection)&.name }
+          .filter_map { |name| pinned[name.to_s] }
+          .first
+
+      Array(items)
+    end
+
     def node_has_reachable_downstream_of_type?(node_id, type)
       visited = Set.new
       queue = [node_id.to_s]

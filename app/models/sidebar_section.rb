@@ -32,7 +32,6 @@ class SidebarSection < ActiveRecord::Base
             }
 
   validates :locale, presence: true, length: { maximum: 20 }
-  validate :sidebar_urls_count_within_limit
 
   scope :public_sections, -> { where("public") }
   scope :custom_sections, -> { where(section_type: nil) }
@@ -74,14 +73,6 @@ class SidebarSection < ActiveRecord::Base
   end
 
   private
-
-  def sidebar_urls_count_within_limit
-    count = sidebar_urls.reject(&:marked_for_destruction?).size
-    limit = SiteSetting.max_sidebar_section_links
-    return if count <= limit
-
-    errors.add(:base, "Maximum #{limit} records are allowed. Got #{count} records instead.")
-  end
 
   def set_system_user_for_public_section
     self.user_id = Discourse.system_user.id if public

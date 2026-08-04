@@ -218,6 +218,8 @@ export default class Field extends Component {
               @nodeDefinition={{this.nodeDefinition}}
               @nodeParameters={{@nodeParameters}}
               @nodes={{@nodes}}
+              @nodeTypes={{@nodeTypes}}
+              @connections={{@connections}}
               @formApi={{@formApi}}
               @session={{@session}}
               @supportsExpression={{this.supportsExpression}}
@@ -238,6 +240,8 @@ export default class Field extends Component {
             @nodeDefinition={{this.nodeDefinition}}
             @nodeParameters={{@nodeParameters}}
             @nodes={{@nodes}}
+            @nodeTypes={{@nodeTypes}}
+            @connections={{@connections}}
             @formApi={{@formApi}}
             @session={{@session}}
             @supportsExpression={{this.supportsExpression}}
