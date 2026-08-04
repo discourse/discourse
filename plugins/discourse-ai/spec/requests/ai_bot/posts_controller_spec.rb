@@ -24,35 +24,54 @@ RSpec.describe PostsController do
 
   describe "#create" do
     it "uses the topic creator permissions for stored agent ids" do
-      sign_in(user)
-
-      post "/posts.json",
-           params: {
-             archetype: Archetype.private_message,
-             raw: "Can you help me with this?",
-             target_recipients: "#{admin.username},#{bot_user.username}",
-             title: "AI agent escalation attempt",
-             topic_custom_fields: {
-               ai_agent_id: restricted_agent.id,
-             },
-           }
-
-      topic_id = response.parsed_body["topic_id"]
-
-      aggregate_failures do
-        expect(response.status).to eq(200)
-        expect(topic_id).to be_present
-      end
-
+      topic = Fabricate(:private_message_topic, user: user, recipient: bot_user)
+      topic.topic_allowed_users.create!(user: admin)
+      topic.custom_fields["ai_agent_id"] = restricted_agent.id
+      topic.save_custom_fields
       sign_in(admin)
 
       expect_not_enqueued_with(job: :create_ai_reply, args: { agent_id: restricted_agent.id }) do
-        post "/posts.json", params: { raw: "I'll look into this.", topic_id: topic_id }
+        post "/posts.json", params: { raw: "I'll look into this.", topic_id: topic.id }
       end
 
       aggregate_failures do
         expect(response.status).to eq(200)
-        expect(response.parsed_body["topic_id"]).to eq(topic_id)
+        expect(response.parsed_body["topic_id"]).to eq(topic.id)
+      end
+    end
+
+    it "uses the topic creator permissions for legacy stored agent names" do
+      topic = Fabricate(:private_message_topic, user: user, recipient: bot_user)
+      topic.topic_allowed_users.create!(user: admin)
+      topic.custom_fields["ai_agent"] = restricted_agent.name
+      topic.save_custom_fields
+      sign_in(admin)
+
+      expect_not_enqueued_with(job: :create_ai_reply, args: { agent_id: restricted_agent.id }) do
+        post "/posts.json", params: { raw: "I'll look into this.", topic_id: topic.id }
+      end
+
+      aggregate_failures do
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_id"]).to eq(topic.id)
+      end
+    end
+
+    it "fails closed when the topic creator no longer exists" do
+      topic = Fabricate(:private_message_topic, user: user, recipient: bot_user)
+      topic.topic_allowed_users.create!(user: admin)
+      topic.custom_fields["ai_agent_id"] = restricted_agent.id
+      topic.save_custom_fields
+      topic.update_columns(user_id: nil)
+      sign_in(admin)
+
+      expect_not_enqueued_with(job: :create_ai_reply, args: { agent_id: restricted_agent.id }) do
+        post "/posts.json", params: { raw: "I'll look into this.", topic_id: topic.id }
+      end
+
+      aggregate_failures do
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_id"]).to eq(topic.id)
       end
     end
   end

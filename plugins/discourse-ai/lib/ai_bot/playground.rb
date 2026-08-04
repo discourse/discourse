@@ -147,21 +147,29 @@ module DiscourseAi
           topic_agent_id = post.topic.custom_fields["ai_agent_id"]
           topic_agent_id = topic_agent_id.to_i if topic_agent_id.present?
 
-          agent_user = post.user
+          authorization_user = post.user
           if mentioned
             agent_id = mentioned[:id]
           else
             agent_id = topic_agent_id
-            agent_user = post.topic.user if topic_agent_id
+            authorization_user = post.topic.user if topic_agent_id
           end
 
           agent = nil
 
           agent =
-            DiscourseAi::Agents::Agent.find_by(user: agent_user, id: agent_id.to_i) if agent_id
+            DiscourseAi::Agents::Agent.find_by(
+              user: authorization_user,
+              id: agent_id.to_i,
+            ) if agent_id && authorization_user
 
           if !agent && (agent_name = post.topic.custom_fields["ai_agent"])
-            agent = DiscourseAi::Agents::Agent.find_by(user: post.user, name: agent_name)
+            authorization_user = post.topic.user
+            agent =
+              DiscourseAi::Agents::Agent.find_by(
+                user: authorization_user,
+                name: agent_name,
+              ) if authorization_user
           end
 
           # edge case, llm was mentioned in an ai agent conversation
@@ -182,7 +190,7 @@ module DiscourseAi
           bot_user = User.find(agent.user_id) if agent && agent.force_default_llm
 
           bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent.new)
-          new(bot).update_playground_with(post, agent_user: agent_user)
+          new(bot).update_playground_with(post, authorization_user: authorization_user)
         end
       end
 
@@ -229,8 +237,8 @@ module DiscourseAi
         @bot = bot
       end
 
-      def update_playground_with(post, agent_user: post.user)
-        schedule_bot_reply(post, agent_user: agent_user) if can_attach?(post)
+      def update_playground_with(post, authorization_user: post.user)
+        schedule_bot_reply(post, authorization_user: authorization_user) if can_attach?(post)
       end
 
       def title_playground(post, user)
@@ -867,14 +875,14 @@ module DiscourseAi
         true
       end
 
-      def schedule_bot_reply(post, agent_user: post.user)
+      def schedule_bot_reply(post, authorization_user: post.user)
         agent_id = DiscourseAi::Agents::Agent.system_agents[bot.agent.class] || bot.agent.class.id
         ::Jobs.enqueue(
           :create_ai_reply,
           post_id: post.id,
           bot_user_id: bot.bot_user.id,
           agent_id: agent_id,
-          agent_user_id: agent_user&.id,
+          authorization_user_id: authorization_user&.id,
         )
       end
 

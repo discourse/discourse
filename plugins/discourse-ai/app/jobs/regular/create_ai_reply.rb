@@ -11,28 +11,36 @@ module Jobs
       return if args[:reply_post_id].present? && reply_post.nil?
       return if reply_post && reply_post.topic_id != post.topic_id
       agent_id = args[:agent_id]
-      agent_user =
-        if args[:agent_user_id].present?
-          User.find_by(id: args[:agent_user_id])
+      authorization_user =
+        if args[:authorization_user_id].present?
+          User.find_by(id: args[:authorization_user_id])
         else
           post.user
         end
-      return if agent_user.nil?
+      return if authorization_user.nil?
 
       llm_model_id = args[:llm_model_id]
 
       begin
-        agent = DiscourseAi::Agents::Agent.find_by(user: agent_user, id: agent_id)
+        agent = DiscourseAi::Agents::Agent.find_by(user: authorization_user, id: agent_id)
         raise DiscourseAi::Agents::Bot::BOT_NOT_FOUND if agent.nil?
 
         llm_model = LlmModel.find_by(id: llm_model_id.to_i) if !llm_model_id.to_i.zero?
         bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent.new, model: llm_model)
 
-        DiscourseAi::AiBot::Playground.new(bot).reply_to(
-          post,
-          feature_name: "bot",
-          existing_reply_post: reply_post,
-        )
+        reply_post =
+          DiscourseAi::AiBot::Playground.new(bot).reply_to(
+            post,
+            feature_name: "bot",
+            existing_reply_post: reply_post,
+          )
+
+        if reply_post
+          reply_post.custom_fields[
+            DiscourseAi::AiBot::POST_AI_AGENT_AUTHORIZATION_USER_ID_FIELD
+          ] = authorization_user.id
+          reply_post.save_custom_fields
+        end
       rescue DiscourseAi::Agents::Bot::BOT_NOT_FOUND
         Rails.logger.warn(
           "Bot not found for post #{post.id} - perhaps agent was deleted or bot was disabled",

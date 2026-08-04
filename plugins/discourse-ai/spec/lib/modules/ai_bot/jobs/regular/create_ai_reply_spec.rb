@@ -23,13 +23,28 @@ RSpec.describe Jobs::CreateAiReply do
 
     it "adds a reply from the bot" do
       agent_id = AiAgent.find_by(name: "Forum Helper").id
-
       bot_user = DiscourseAi::AiBot::EntryPoint.find_user_from_model("gpt-3.5-turbo")
+      authorization_user = topic.first_post.user
+
       DiscourseAi::Completions::Llm.with_prepared_responses([expected_response]) do
-        job.execute(post_id: topic.first_post.id, bot_user_id: bot_user.id, agent_id: agent_id)
+        job.execute(
+          post_id: topic.first_post.id,
+          bot_user_id: bot_user.id,
+          agent_id: agent_id,
+          authorization_user_id: authorization_user.id,
+        )
       end
 
-      expect(topic.posts.last.raw).to eq(expected_response)
+      bot_reply = topic.posts.last
+
+      aggregate_failures do
+        expect(bot_reply.raw).to eq(expected_response)
+        expect(
+          bot_reply.custom_fields[
+            DiscourseAi::AiBot::POST_AI_AGENT_AUTHORIZATION_USER_ID_FIELD
+          ].to_i,
+        ).to eq(authorization_user.id)
+      end
     end
   end
 end
