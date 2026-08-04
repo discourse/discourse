@@ -249,7 +249,7 @@ en:
             selection_single_label: "Single-select: the resting trigger"
             selection_multi_label: "Multi-select: one chip each"
             divided_example: "Rules between timezone offsets"
-            divided_description: "`@groupBy` with no `@groupLabel` draws a non-interactive rule at each group boundary — here the group key is the UTC offset, so a rule lands wherever the offset changes. Adding `@groupLabel` turns the same boundaries into labelled headers. Keyboard navigation skips each rule and leaves it out of the ARIA positions, so the count a reader hears is still the number of options."
+            divided_description: "`@groupBy` with no `@groupLabel` draws a non-interactive rule at each group boundary — here the group key is the UTC offset, so a rule lands wherever the offset changes. Adding `@groupLabel` turns the same boundaries into labeled headers. Keyboard navigation skips each rule and leaves it out of the ARIA positions, so the count a reader hears is still the number of options."
             divided_try_this: "Arrow from one UTC offset into the next. The cursor steps straight over the rule, and the positions stay contiguous. Then type a query: the rules are recomputed from the surviving rows instead of vanishing."
             divided_placeholder: "Choose a time zone"
             divided_note: "Boundaries are derived after filtering on every render, so a query keeps exactly the rules that still separate two surviving groups — none is ever orphaned."
@@ -300,15 +300,15 @@ en:
               create: "Create “%{tag}”"
             notifications:
               title: "Choose a notification level"
-              description: "Each level needs a sentence to be chosen correctly, so the list is two lines per row; the icon is how the choice is recognised again in the trigger. One row is disabled and one is an action that runs without changing the selection."
+              description: "Each level needs a sentence to be chosen correctly, so the list is two lines per row; the icon is how the choice is recognized again in the trigger. One row is disabled and one is an action that runs without changing the selection."
               try_this: "Choose Manage notification settings — the counter below moves but the selection does not."
               event_idle: "The action row has not been used."
               action_count:
                 one: "The action row was used %{count} time without changing the selection."
                 other: "The action row was used %{count} times without changing the selection."
             colors:
-              title: "Pick a colour scheme"
-              description: "The clearest case for a block on the page: the value is a colour, and no argument can render one. The swatches are hidden from assistive technology because unnamed colours convey nothing, while the scheme's name already identifies it."
+              title: "Pick a color palette"
+              description: "The clearest case for a block on the page: the value is a color, and no argument can render one. The swatches are hidden from assistive technology because unnamed colors convey nothing, while the palette's name already identifies it."
               try_this: "Open it and compare the palettes rather than the names."
             emoji:
               title: "Pick an emoji"
@@ -325,8 +325,8 @@ en:
                 other: "%{count} members"
             badges:
               title: "Choose a badge"
-              description: "A badge already knows how to draw itself, so the row hands it straight to the icon-or-image helper and only supplies the rarity colour and the grant count around it."
-              try_this: "Open it and note the gold, silver and bronze tiers are colour plus position, never colour alone."
+              description: "A badge already knows how to draw itself, so the row hands it straight to the icon-or-image helper and only supplies the rarity color and the grant count around it."
+              try_this: "Open it and note the gold, silver and bronze tiers are color plus position, never color alone."
               granted:
                 one: "Granted %{count} time"
                 other: "Granted %{count} times"
