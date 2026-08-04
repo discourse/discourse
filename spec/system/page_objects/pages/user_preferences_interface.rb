@@ -70,6 +70,16 @@ module PageObjects
         result
       end
 
+      def has_no_understood_language?(locale)
+        understood_languages_dropdown.expand
+        result =
+          page.has_no_css?(
+            "#understood-languages-selector .selected-choice[data-value='#{locale}']",
+          )
+        understood_languages_dropdown.collapse
+        result
+      end
+
       def has_understood_language_option?(locale)
         understood_languages_dropdown.expand
         result =
