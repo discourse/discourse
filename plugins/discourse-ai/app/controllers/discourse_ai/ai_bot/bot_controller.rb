@@ -83,6 +83,7 @@ module DiscourseAi
           post.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_AUTHORIZATION_USER_ID_FIELD].presence
         authorization_user_id = authorization_user_id.to_i if authorization_user_id
         authorization_user_id ||= prompt_post.topic.user_id
+        raise Discourse::InvalidAccess if authorization_user_id.blank?
 
         args = {
           post_id: prompt_post.id,

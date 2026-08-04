@@ -12,9 +12,10 @@ module Jobs
       return if reply_post && reply_post.topic_id != post.topic_id
       agent_id = args[:agent_id]
       authorization_user =
-        if args[:authorization_user_id].present?
+        if args.key?(:authorization_user_id)
           User.find_by(id: args[:authorization_user_id])
         else
+          # jobs enqueued before authorization provenance was recorded
           post.user
         end
       return if authorization_user.nil?

@@ -185,7 +185,10 @@ module DiscourseAi
             end
           end
 
-          agent ||= DiscourseAi::Agents::General
+          if !agent
+            agent = DiscourseAi::Agents::General
+            authorization_user = post.user
+          end
 
           bot_user = User.find(agent.user_id) if agent && agent.force_default_llm
 

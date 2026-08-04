@@ -46,5 +46,32 @@ RSpec.describe Jobs::CreateAiReply do
         ).to eq(authorization_user.id)
       end
     end
+
+    it "does not reply when an explicit authorization user is missing" do
+      agent_id = AiAgent.find_by(name: "Forum Helper").id
+      bot_user = DiscourseAi::AiBot::EntryPoint.find_user_from_model("gpt-3.5-turbo")
+
+      expect {
+        DiscourseAi::Completions::Llm.with_prepared_responses([expected_response]) do
+          job.execute(
+            post_id: topic.first_post.id,
+            bot_user_id: bot_user.id,
+            agent_id: agent_id,
+            authorization_user_id: nil,
+          )
+        end
+      }.not_to change { topic.posts.count }
+    end
+
+    it "falls back to the post author for jobs enqueued without authorization provenance" do
+      agent_id = AiAgent.find_by(name: "Forum Helper").id
+      bot_user = DiscourseAi::AiBot::EntryPoint.find_user_from_model("gpt-3.5-turbo")
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([expected_response]) do
+        job.execute(post_id: topic.first_post.id, bot_user_id: bot_user.id, agent_id: agent_id)
+      end
+
+      expect(topic.posts.last.raw).to eq(expected_response)
+    end
   end
 end
