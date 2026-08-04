@@ -322,6 +322,8 @@ namespace :release do
 
   desc "Update advisory affected versions on GitHub for all supported Discourse versions"
   task "update_security_advisories" do
+    ReleaseUtils.ensure_security_advisory_scopes!
+
     advisories_base = "repos/discourse/discourse/security-advisories"
 
     puts "Fetching draft security advisories..."
