@@ -865,6 +865,12 @@ pre.outlet-info__error-message {
   padding: 0;
 }
 
+/* Above the toolbar's own stacking context, like the MessageBus settings
+   menu. */
+.fk-d-menu[data-identifier="dev-tools-a11y-test-channel"] {
+  z-index: 1000001;
+}
+
 .dev-tools-a11y__problems-toggle {
   padding: var(--space-half) var(--space-1);
 

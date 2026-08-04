@@ -200,10 +200,40 @@ module("Integration | Component | dev-tools | a11y-panel", function (hooks) {
     observeLiveRegions();
 
     await click(".dev-tools-a11y__test-channel");
+    await click(".dev-tools-a11y__test-polite");
     await settledAnnouncements();
 
     assert.dom(".dev-tools-a11y__entry.--intent").exists("intent recorded");
     assert.dom(".dev-tools-a11y__entry.--spoken").exists("delivery recorded");
+    assert
+      .dom(".dev-tools-a11y__entry.--event")
+      .doesNotExist("choosing from the menu never enters the trace");
+  });
+
+  test("the test channel can exercise the assertive path", async function (assert) {
+    await render(
+      <template>
+        <A11yLiveRegions />
+        <A11yPanel />
+      </template>
+    );
+    observeLiveRegions();
+
+    await click(".dev-tools-a11y__test-channel");
+    await click(".dev-tools-a11y__test-assertive");
+    await settledAnnouncements();
+
+    const rows = [...document.querySelectorAll(".dev-tools-a11y__entry")]
+      .map((row) => row.textContent)
+      .join(" ");
+    assert.true(
+      rows.includes("politeness=assertive"),
+      "the intent carries the assertive politeness"
+    );
+    assert.true(
+      rows.includes("a11y-announcements-assertive"),
+      "delivery came from the assertive region"
+    );
   });
 
   test("the regions chip warns loudly at zero", async function (assert) {

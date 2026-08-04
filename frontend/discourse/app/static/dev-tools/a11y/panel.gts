@@ -1,11 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
-import { concat, hash } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import DMenu from "discourse/float-kit/components/d-menu";
+import type DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import A11y from "discourse/services/a11y";
 import {
   attachCapture,
@@ -19,6 +21,8 @@ import {
 } from "discourse/static/dev-tools/a11y/instrumentation";
 import devToolsState from "discourse/static/dev-tools/state";
 import { eq, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -108,6 +112,7 @@ export default class A11yPanel extends Component<A11yPanelSignature> {
   @tracked paused = devToolsState.getFlag("a11y", "paused") === true;
   @tracked problemsOnly = false;
   @tracked view: View = "timeline";
+  #testMenu?: DMenuInstance;
 
   get liveRegionCount() {
     const regions = new Set<Element>();
@@ -241,8 +246,14 @@ export default class A11yPanel extends Component<A11yPanelSignature> {
   }
 
   @action
-  testChannel() {
-    this.a11y.announce("a11y inspector channel check", "polite");
+  onRegisterTestMenu(api: DMenuInstance) {
+    this.#testMenu = api;
+  }
+
+  @action
+  async runTestChannel(politeness: "polite" | "assertive") {
+    await this.#testMenu?.close();
+    this.a11y.announce("a11y inspector channel check", politeness);
   }
 
   @action
@@ -317,15 +328,36 @@ export default class A11yPanel extends Component<A11yPanelSignature> {
         </div>
 
         <div class="dev-tools-panel__action-group">
-          <button
-            type="button"
-            class="dev-tools-panel__action dev-tools-a11y__test-channel"
-            title={{i18n "dev_tools.a11y.test_channel"}}
-            aria-label={{i18n "dev_tools.a11y.test_channel"}}
-            {{on "click" this.testChannel}}
+          <DMenu
+            @identifier="dev-tools-a11y-test-channel"
+            @icon="bullhorn"
+            @modalForMobile={{false}}
+            @title={{i18n "dev_tools.a11y.test_channel"}}
+            @ariaLabel={{i18n "dev_tools.a11y.test_channel"}}
+            @triggerClass="dev-tools-panel__action dev-tools-a11y__test-channel"
+            @onRegisterApi={{this.onRegisterTestMenu}}
           >
-            {{dIcon "bullhorn"}}
-          </button>
+            <:content>
+              <div data-dev-tools-trace-exclude="">
+                <DDropdownMenu as |dropdown|>
+                  <dropdown.item>
+                    <DButton
+                      @label="dev_tools.a11y.test_channel_polite"
+                      class="btn-transparent dev-tools-a11y__test-polite"
+                      @action={{fn this.runTestChannel "polite"}}
+                    />
+                  </dropdown.item>
+                  <dropdown.item>
+                    <DButton
+                      @label="dev_tools.a11y.test_channel_assertive"
+                      class="btn-transparent dev-tools-a11y__test-assertive"
+                      @action={{fn this.runTestChannel "assertive"}}
+                    />
+                  </dropdown.item>
+                </DDropdownMenu>
+              </div>
+            </:content>
+          </DMenu>
           <span class="dev-tools-panel__action-divider"></span>
           <button
             type="button"

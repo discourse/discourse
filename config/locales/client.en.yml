@@ -478,6 +478,8 @@ en:
           other: "%{count} live regions"
         zero_regions_warning: "No live regions are being watched. Announcements cannot be verified."
         test_channel: "Test channel"
+        test_channel_polite: "Test polite channel"
+        test_channel_assertive: "Test assertive channel"
         copy_trace: "Copy trace"
         clear: "Clear timeline"
         filter_placeholder: "Filter entries"
