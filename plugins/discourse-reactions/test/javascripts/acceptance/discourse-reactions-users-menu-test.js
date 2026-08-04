@@ -18,7 +18,6 @@ const SETTINGS = {
   discourse_reactions_enabled_reactions: "laughing|open_mouth",
   discourse_reactions_reaction_for_like: "heart",
   discourse_reactions_like_icon: "heart",
-  enable_new_post_reactions_menu: true,
 };
 
 acceptance(
