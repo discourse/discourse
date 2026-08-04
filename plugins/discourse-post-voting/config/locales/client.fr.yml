@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 fr:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_post_voting: "Discourse Post Voting"
   post_voting:
     reviewables:
       comment_already_handled: "Merci, mais nous avons déjà examiné ce commentaire et déterminé qu'il n'a pas besoin d'être signalé à nouveau."
@@ -26,14 +31,23 @@ fr:
         label: "Créer un sujet de vote de message"
       composer_actions:
         create_as_post_voting:
+          label: "Activer ou désactiver le vote sur les publications"
           desc: "Le sujet sera créé avec des messages pouvant faire l'objet d'un vote"
         remove_as_post_voting:
+          label: "Désactiver le vote sur les publications"
           desc: "Le sujet sera créé dans le format normal"
     vote:
       already_voted: "Vous ne pouvez voter qu'une seule fois par question."
       user_over_limit: "Vous ne pouvez pas dépasser le nombre de votes correspondant à votre niveau de confiance."
       one_vote_per_post: "Vous ne pouvez voter qu'une seule fois pour chaque message."
+      button:
+        upvote: "Voter pour"
+        remove_upvote: "Retirer le vote positif"
+        downvote: "Voter contre"
+        remove_downvote: "Retirer le vote négatif"
       toggle_voters: "Afficher les votants"
+      upvotes: "Votes positifs"
+      downvotes: "Votes négatifs"
     last_answer_lowercase: dernière réponse
     answer_lowercase:
       one: réponse
@@ -56,7 +70,9 @@ fr:
           cancel: "annuler"
           add: "Ajouter un commentaire"
           actions:
+            edit: "Modifier le commentaire"
             delete: "Supprimer le commentaire"
+            flag: "Signaler le commentaire"
           show:
             one: Afficher %{count} commentaire supplémentaire
             other: Afficher %{count} commentaires supplémentaires

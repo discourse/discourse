@@ -4040,6 +4040,12 @@ ja:
         instructions: "この投稿へのリンクを共有します:"
       original_language: "元の投稿は%{language}で書かれました"
       original_language_and_outdated: "元の投稿は%{language}で書かれています。翻訳は古い可能性があります"
+      originally_written_in: "元の言語: %{language}"
+      click_to_show_original: "クリックして原文を表示"
+      tap_to_show_original: "タップして原文を表示"
+      click_to_show_translation: "クリックして翻訳を表示"
+      tap_to_show_translation: "タップして翻訳を表示"
+      ai_translation_disclaimer: "AIによる翻訳は正確でない場合があります。"
     category:
       none: "(カテゴリなし)"
       all: "すべてのカテゴリ"
