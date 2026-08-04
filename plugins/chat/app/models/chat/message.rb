@@ -168,7 +168,13 @@ module Chat
         regex = %r{^[^:]+://}
         clean_urls = urls.map { |url| url.sub(regex, "") }
         if message.gsub(regex, "").split.sort == clean_urls.sort
-          return PrettyText.excerpt(urls.join(" "), EXCERPT_LENGTH)
+          return(
+            if strip_links
+              PrettyText.excerpt(urls.join(" "), EXCERPT_LENGTH)
+            else
+              PrettyText.excerpt(urls_as_links(urls), EXCERPT_LENGTH, strip_links: false)
+            end
+          )
         end
       end
 
@@ -402,6 +408,17 @@ module Chat
     end
 
     private
+
+    def urls_as_links(urls)
+      html =
+        urls.map { |url| "<a href=\"#{CGI.escapeHTML(url)}\">#{CGI.escapeHTML(url)}</a>" }.join(" ")
+      doc = Nokogiri::HTML5.fragment(html)
+      PrettyText.add_rel_attributes_to_user_content(
+        doc,
+        SiteSetting.add_rel_nofollow_to_user_content,
+      )
+      doc.to_html
+    end
 
     def delete_mentions(mention_type, target_ids)
       chat_mentions.where(type: mention_type, target_id: target_ids).destroy_all

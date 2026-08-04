@@ -35,6 +35,18 @@ RSpec.describe Chat::Api::ChannelPinsController do
       expect(pin["message"]["excerpt"]).not_to include("<a")
     end
 
+    it "keeps a link for a pin whose message is only a URL" do
+      url_only =
+        Fabricate(:chat_message, chat_channel: channel, message: "https://example.com/docs")
+      Fabricate(:chat_pinned_message, chat_message: url_only, chat_channel: channel)
+
+      get "/chat/api/channels/#{channel.id}/pins"
+
+      pin = response.parsed_body["pinned_messages"][0]
+      expect(pin["excerpt"]).to include("<a href=\"https://example.com/docs\"")
+      expect(pin["excerpt"]).to include("rel=\"noopener nofollow ugc\"")
+    end
+
     it "returns an empty list when there are no pinned messages" do
       get "/chat/api/channels/#{channel.id}/pins"
 

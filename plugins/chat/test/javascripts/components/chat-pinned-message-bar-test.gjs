@@ -160,6 +160,29 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
       .hasAttribute("href", "/t/topic/1", "the link survives");
   });
 
+  test("renders a URL-only pin as a link", async function (assert) {
+    this.channel.pinnedMessagesCount = 1;
+    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
+      excerptPinResponse(
+        '<a href="https://example.com/docs" rel="noopener nofollow ugc">https://example.com/docs</a>'
+      )
+    );
+
+    await render(
+      <template>
+        <ChatPinnedMessageBar
+          @channel={{this.channel}}
+          @onJumpToMessage={{this.noop}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".chat-pinned-bar__excerpt a")
+      .hasAttribute("href", "https://example.com/docs")
+      .hasAttribute("rel", "noopener nofollow ugc");
+  });
+
   test("skips pins whose message the host hides from the list", async function (assert) {
     this.channel.pinnedMessagesCount = 2;
     this.hiddenMessageIds = new Set([201]);
