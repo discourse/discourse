@@ -595,6 +595,9 @@ fr:
       user_not_found: L'utilisateur spécifié n'existe pas. Vérifiez le paramètre du nom d'utilisateur.
       agent_disabled: "L'agent spécifié est désactivé. Vérifiez les paramètres agent_name ou agent_id (anciennement : persona_name ou persona_id)."
       user_not_allowed: L'utilisateur n'est pas autorisé à participer au sujet.
+      ambiguous_tool_results: "Spécifiez soit tool_results, soit tool_result, mais pas les deux."
+      invalid_tool_results: "Le paramètre tool_results n'est pas valide : %{details}"
+      too_many_tool_results: "Le paramètre tool_results peut inclure au maximum %{max} éléments."
       prompt_message_length: Le message %{idx} dépasse la limite de 1 000 caractères.
       custom_tool_exists:
         one: "L'outil personnalisé portant le nom %{names} existe déjà."

@@ -14,7 +14,28 @@ fr:
       reports:
         reading_time:
           title: Temps de lecture
+        best_topics:
+          title_others:
+            one: "Meilleur sujet de %{username}"
+            other: "%{count} meilleurs sujets de %{username}"
+        best_posts:
+          view_post: Voir la publication
+          title:
+            one: Votre meilleure publication
+            other: Vos %{count} meilleures publications
+          title_others:
+            one: "Meilleure publication de %{username}"
+            other: "%{count} meilleures publications de %{username}"
         ai_usage:
+          title: Utilisation de l'IA
+          total_requests: Nombre total de requêtes
+          total_tokens: Nombre total de jetons
+          success_rate: Taux de réussite
+          favorite_features: Fonctionnalités les plus utilisées
+          favorite_models: Modèles d'IA les plus utilisés
+          wake_up: "Réveillez-vous, %{username}..."
+          system_title: "UTILISATION DE L'IA DÉTECTÉE"
+          section_features: "PRINCIPALES FONCTIONNALITÉS"
           section_models: "LES MEILLEURS MODÈLES"
         assignments:
           title: Attributions
@@ -51,6 +72,9 @@ fr:
               other {<strong>#</strong> personnes ou groupes}
             }.
           reply_2: "cOo0oL :D"
+          message_3:
+            one: "Les gens ont adoré vos messages ! Vous avez reçu <strong>%{count}</strong> réaction ❤️"
+            other: "Les gens ont adoré vos messages ! Vous avez reçu <strong>%{count}</strong> réactions ❤️"
           message_4: "La longueur moyenne de vos messages était de <strong>%{length}</strong> caractères"
           message_5: "Vos canaux préférés :"
           dancing_baby_alt: "Bébé dansant"
