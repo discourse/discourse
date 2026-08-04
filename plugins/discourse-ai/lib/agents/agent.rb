@@ -268,6 +268,10 @@ module DiscourseAi
         []
       end
 
+      def stop_chain_on_pending_approval?
+        false
+      end
+
       def temperature
         nil
       end
