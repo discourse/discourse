@@ -49,6 +49,17 @@ module PageObjects
         page.has_no_css?(".form-kit__actions.is-floating")
       end
 
+      def has_form_field_value?(name, value)
+        page.has_field?(name, with: value)
+      end
+
+      def has_agent_enabled_state?(enabled)
+        page.has_css?(
+          ".form-kit__field[data-name='enabled'] button[role='switch'][aria-checked='#{enabled}']",
+          visible: :all,
+        )
+      end
+
       def has_agent_user?(username = nil)
         options = username ? { text: username } : {}
         page.has_css?(".ai-agent-editor__ai_bot_user a", **options)

@@ -15,6 +15,7 @@ export default class AdminPluginsShowDiscourseAiAgentsNew extends DiscourseRoute
       data.name = i18n("discourse_ai.ai_agent.copy_name", {
         name: sourceAgent.name,
       });
+      data.enabled = false;
       data.system = false;
       data.user = null;
       data.user_id = null;

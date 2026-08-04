@@ -24,11 +24,11 @@ import { and, eq, gt, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import { i18n } from "discourse-i18n";
 import AiAgentMcpToolSelectorModal from "../components/modal/ai-agent-mcp-tool-selector-modal";
 import AiAgentResponseFormatEditor from "../components/modal/ai-agent-response-format-editor";
 import { toPlainObject } from "../lib/utilities";
-import PositionAiAgentActions from "../modifiers/position-ai-agent-actions";
 import AiAgentCollapsableExample from "./ai-agent-example";
 import AiAgentToolOptions from "./ai-agent-tool-options";
 import AiLlmSelector from "./ai-llm-selector";
@@ -637,12 +637,32 @@ export default class AgentEditor extends Component {
     });
   }
 
+  @action
+  positionActions([entry]) {
+    const editorElement = entry.target.closest(".ai-agent-editor");
+    const formElement = editorElement?.querySelector(".form-kit");
+    const actionsElement = formElement?.querySelector(".form-kit__actions");
+
+    if (!formElement || !actionsElement) {
+      return;
+    }
+
+    const { width } = formElement.getBoundingClientRect();
+    const { height } = actionsElement.getBoundingClientRect();
+    actionsElement.style.width = `${width}px`;
+    formElement.style.setProperty("--ai-agent-actions-height", `${height}px`);
+  }
+
   <template>
     <BackButton
       @route="adminPlugins.show.discourse-ai-agents"
       @label="discourse_ai.ai_agent.back"
     />
-    <div class="ai-agent-editor" {{didInsert this.updateAllGroups @model.id}}>
+    <div
+      class="ai-agent-editor"
+      {{didInsert this.updateAllGroups @model.id}}
+      {{dOnResize this.positionActions}}
+    >
       <Form
         class={{if this.hasFloatingActions "has-floating-actions"}}
         @commitOnSubmit={{false}}
@@ -1337,7 +1357,7 @@ export default class AgentEditor extends Component {
 
         <form.Actions
           class={{if this.hasFloatingActions "is-floating"}}
-          {{PositionAiAgentActions}}
+          {{dOnResize this.positionActions}}
         >
           <form.Submit />
 

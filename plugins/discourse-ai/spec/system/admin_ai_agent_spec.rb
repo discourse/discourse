@@ -79,9 +79,10 @@ RSpec.describe "Admin AI agent configuration" do
     agent_editor_page.visit_edit(source_agent).duplicate
 
     expect(page).to have_current_path("/admin/plugins/discourse-ai/ai-agents/new?copyFrom=-28")
-    expect(form.field("name").value).to eq("Copy of #{source_agent.name}")
-    expect(form.field("description").value).to eq(source_agent.description)
-    expect(form.field("system_prompt").value).to eq(source_agent.system_prompt)
+    expect(agent_editor_page).to have_form_field_value("name", "Copy of #{source_agent.name}")
+    expect(agent_editor_page).to have_form_field_value("description", source_agent.description)
+    expect(agent_editor_page).to have_form_field_value("system_prompt", source_agent.system_prompt)
+    expect(agent_editor_page).to have_agent_enabled_state(false)
     expect(form.field("system_prompt")).not_to be_disabled
 
     find(".back-button").click
@@ -91,11 +92,11 @@ RSpec.describe "Admin AI agent configuration" do
     find(".ai-agent-list-editor__new-button").click
 
     expect(page).to have_current_path("/admin/plugins/discourse-ai/ai-agents/new")
-    expect(form.field("name").value).to be_blank
+    expect(agent_editor_page).to have_form_field_value("name", "")
   end
 
   it "starts a duplicate from the searchable agent list" do
-    source_agent = Fabricate(:ai_agent, name: "猫 Translator")
+    source_agent = Fabricate(:ai_agent, name: "猫 Translator", enabled: true)
     other_agent = Fabricate(:ai_agent, name: "Unrelated custom agent")
 
     agent_editor_page.visit_list.open_duplicate_menu.filter_duplicates("猫")
@@ -108,7 +109,8 @@ RSpec.describe "Admin AI agent configuration" do
     expect(page).to have_current_path(
       "/admin/plugins/discourse-ai/ai-agents/new?copyFrom=#{source_agent.id}",
     )
-    expect(form.field("name").value).to eq("Copy of #{source_agent.name}")
+    expect(agent_editor_page).to have_form_field_value("name", "Copy of #{source_agent.name}")
+    expect(agent_editor_page).to have_agent_enabled_state(false)
   end
 
   it "opens a saved duplicate containing RAG uploads on its edit route" do
