@@ -565,7 +565,7 @@ en:
       congrats_onboarding_complete: "Congratulations on completing the onboarding process!"
       select_theme:
         title: "Customize your site"
-        description: "Choose a starting theme"
+        description: "Choose a starting theme."
         action: "Select theme"
         show_light_screenshot: "Show light screenshot"
         show_dark_screenshot: "Show dark screenshot"

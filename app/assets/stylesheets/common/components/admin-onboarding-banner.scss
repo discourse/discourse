@@ -2,6 +2,8 @@
 @import "common/foundation/mixins";
 
 .admin-onboarding-banner {
+  padding-block: var(--d-main-content-gap);
+
   @include viewport.until(sm) {
     display: none;
   }
@@ -11,6 +13,7 @@
     position: relative;
     border-radius: var(--d-border-radius);
     border: 1px solid var(--content-border-color);
+    overflow: hidden;
   }
 
   &__title {
@@ -28,7 +31,7 @@
     justify-content: space-between;
     height: min-content;
     padding-inline-start: var(--space-4);
-    background: var(--primary-100);
+    background: var(--background-color, var(--primary-100));
   }
 
   &__header-text {
