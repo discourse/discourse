@@ -217,6 +217,8 @@ module DiscourseWorkflows
           "action:group" => "group membership member belongs friend friends",
           "trigger:user_added_to_group" => "joined added to group membership member",
           "trigger:user_removed_from_group" => "left removed from group membership member",
+          "trigger:user_created" => "signup sign up register registration new account joined site",
+          "trigger:user_updated" => "profile edited changed avatar name username email account",
           "trigger:badge_granted" => "badge award achievement medal granted earned",
           "action:user" =>
             "user profile bio title trust level lock groups fields lookup edit update",
