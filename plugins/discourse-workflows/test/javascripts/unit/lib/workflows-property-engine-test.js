@@ -4,6 +4,7 @@ import {
   collectionAddLabel,
   emptyCollectionItem,
   fieldControl,
+  fieldDisplayState,
   fieldFormat,
   fieldSupportsExpression,
   fieldValue,
@@ -394,6 +395,51 @@ module("Unit | Utility | workflows property engine", function () {
     );
     assert.false(
       fieldVisible(combined, { method: "POST", content_type: "raw" })
+    );
+  });
+
+  test("treats an expression anchor as indeterminate rather than a failed rule", function (assert) {
+    const expression = "={{ $json.op }}";
+    const state = fieldDisplayState;
+
+    const shown = {
+      display_options: { show: { operation: ["add", "remove"] } },
+    };
+    assert.strictEqual(state(shown, { operation: "add" }), "visible");
+    assert.strictEqual(state(shown, { operation: "get" }), "hidden");
+    assert.strictEqual(
+      state(shown, { operation: expression }),
+      "indeterminate"
+    );
+    assert.true(
+      fieldVisible(shown, { operation: expression }),
+      "an indeterminate field is still rendered"
+    );
+
+    const hidden = { display_options: { hide: { operation: ["get"] } } };
+    assert.strictEqual(
+      state(hidden, { operation: expression }),
+      "indeterminate",
+      "an expression anchor does not trigger a hide rule either"
+    );
+
+    const twoRules = {
+      display_options: { show: { operation: ["add"], source: ["csv"] } },
+    };
+    assert.strictEqual(
+      state(twoRules, { operation: expression, source: "json" }),
+      "hidden",
+      "a rule that definitely fails settles the field despite the expression"
+    );
+    assert.strictEqual(
+      state(twoRules, { operation: expression, source: "csv" }),
+      "indeterminate"
+    );
+
+    assert.strictEqual(
+      state({ ...shown, ui: { hidden: true } }, { operation: expression }),
+      "hidden",
+      "ui.hidden is not a rule and stays definite"
     );
   });
 
