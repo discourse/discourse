@@ -26,6 +26,58 @@ RSpec.describe Migrations::Tooling::Schema::DSL::IgnoredBuilder do
     end
   end
 
+  describe "all_other_tables DSL" do
+    it "records the catch-all reason" do
+      Migrations::Tooling::Schema.ignored { all_other_tables "only mirrors a few tables" }
+
+      ignored = Migrations::Tooling::Schema.ignored_tables
+      expect(ignored.all_other_tables?).to be true
+      expect(ignored.all_other_tables_reason).to eq("only mirrors a few tables")
+    end
+
+    it "coexists with explicit table and plugin entries" do
+      Migrations::Tooling::Schema.ignored do
+        all_other_tables "only mirrors a few tables"
+        table :schema_migrations, "Rails internal table"
+        plugin :chat, "Not migrating"
+      end
+
+      ignored = Migrations::Tooling::Schema.ignored_tables
+      expect(ignored.all_other_tables?).to be true
+      expect(ignored.table_names).to include("schema_migrations")
+      expect(ignored.ignored_plugin_names).to eq(["chat"])
+    end
+
+    it "defaults to disabled" do
+      Migrations::Tooling::Schema.ignored { table :schema_migrations, "Rails internal table" }
+
+      expect(Migrations::Tooling::Schema.ignored_tables.all_other_tables?).to be false
+    end
+
+    it "raises when the reason is missing" do
+      expect do Migrations::Tooling::Schema.ignored { all_other_tables } end.to raise_error(
+        Migrations::Tooling::Schema::ConfigError,
+        /reason/,
+      )
+    end
+
+    it "raises when the reason is blank" do
+      expect do Migrations::Tooling::Schema.ignored { all_other_tables "  " } end.to raise_error(
+        Migrations::Tooling::Schema::ConfigError,
+        /reason/,
+      )
+    end
+
+    it "raises when declared twice" do
+      expect do
+        Migrations::Tooling::Schema.ignored do
+          all_other_tables "first"
+          all_other_tables "second"
+        end
+      end.to raise_error(Migrations::Tooling::Schema::ConfigError, /already declared/)
+    end
+  end
+
   describe "plugin DSL" do
     it "raises when plugin reason is missing" do
       expect do Migrations::Tooling::Schema.ignored { plugin :chat, "" } end.to raise_error(

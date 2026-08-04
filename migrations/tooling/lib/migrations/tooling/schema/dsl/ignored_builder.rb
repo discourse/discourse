@@ -8,7 +8,7 @@ module Migrations
         IgnoredPluginEntry = Data.define(:name, :reason)
 
         IgnoredConfig =
-          Data.define(:entries, :plugin_entries) do
+          Data.define(:entries, :plugin_entries, :all_other_tables_reason) do
             def table_names
               entries.map(&:name).to_set
             end
@@ -25,6 +25,12 @@ module Migrations
               normalized = Helpers.normalize_plugin_name(name)
               plugin_entries.any? { |e| e.name == normalized }
             end
+
+            # True when the config declares `all_other_tables`: every live table
+            # that isn't configured or explicitly ignored is treated as ignored.
+            def all_other_tables?
+              !all_other_tables_reason.nil?
+            end
           end
 
         class IgnoredBuilder
@@ -33,6 +39,7 @@ module Migrations
             @plugin_entries = []
             @entry_names = {}
             @plugin_entry_names = {}
+            @all_other_tables_reason = nil
           end
 
           def table(name, reason = nil)
@@ -57,8 +64,23 @@ module Migrations
             @plugin_entries << IgnoredPluginEntry.new(name: normalized_name, reason:)
           end
 
+          def all_other_tables(reason = nil)
+            if reason.nil? || reason.strip.empty?
+              raise ConfigError, "`all_other_tables` must have a reason."
+            end
+            unless @all_other_tables_reason.nil?
+              raise ConfigError, "`all_other_tables` is already declared."
+            end
+
+            @all_other_tables_reason = reason
+          end
+
           def build
-            IgnoredConfig.new(entries: @entries.freeze, plugin_entries: @plugin_entries.freeze)
+            IgnoredConfig.new(
+              entries: @entries.freeze,
+              plugin_entries: @plugin_entries.freeze,
+              all_other_tables_reason: @all_other_tables_reason,
+            )
           end
 
           private
