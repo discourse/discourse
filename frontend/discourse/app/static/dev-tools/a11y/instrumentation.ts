@@ -32,7 +32,9 @@ export interface TimelineEntry {
 export const TIMELINE_LIMIT = 200;
 
 const TOOL_ID = "a11y";
-const TOOLBAR_SELECTOR = ".dev-tools-toolbar";
+// The dev-tools chrome and anything carrying the opt-out marker never enter
+// the trace they help produce.
+const TOOLBAR_SELECTOR = ".dev-tools-toolbar, [data-dev-tools-trace-exclude]";
 const CORE_LIVE_REGION_SELECTORS = [
   "#a11y-announcements-polite",
   "#a11y-announcements-assertive",
