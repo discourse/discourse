@@ -63,6 +63,7 @@
     "codemirror": "^6.0.2",
     "decorator-transforms": "^2.3.2",
     "diff": "^9.0.0",
+    "dom-accessibility-api": "^0.7.1",
     "ember-curry-component": "^0.5.0",
     "ember-resolver": "^13.2.0",
     "ember-route-template": "^1.0.3",
