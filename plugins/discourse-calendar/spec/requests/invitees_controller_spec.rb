@@ -9,7 +9,7 @@ module DiscoursePostEvent
       sign_in(user)
     end
 
-    let(:user) { Fabricate(:user, admin: true) }
+    let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     let(:topic_1) { Fabricate(:topic, user: user) }
     let(:post_1) { Fabricate(:post, user: user, topic: topic_1) }
 
@@ -411,7 +411,7 @@ module DiscoursePostEvent
       SiteSetting.discourse_post_event_enabled = true
     end
 
-    fab!(:admin_user) { Fabricate(:user, admin: true) }
+    fab!(:admin_user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     fab!(:topic) { Fabricate(:topic, user: admin_user) }
     fab!(:post_1) { Fabricate(:post, user: admin_user, topic: topic) }
     fab!(:event) { Fabricate(:event, post: post_1) }

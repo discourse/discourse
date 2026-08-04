@@ -325,7 +325,7 @@ describe PrettyText do
     end
 
     describe "An event is summarized in an excerpt (used by oneboxes)" do
-      fab!(:user_1, :user) { Fabricate(:user, admin: true) }
+      fab!(:user_1, :user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
 
       def excerpt_for(post)
         PrettyText.excerpt(post.cooked, SiteSetting.post_onebox_maxlength, post: post)

@@ -238,7 +238,7 @@ describe DiscoursePostEvent::Event do
   end
 
   describe "#raw_invitees_are_groups" do
-    fab!(:user) { Fabricate(:user, admin: true) }
+    fab!(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     fab!(:topic) { Fabricate(:topic, user: user) }
     fab!(:post) { Fabricate(:post, topic: topic) }
 
@@ -276,7 +276,7 @@ describe DiscoursePostEvent::Event do
   end
 
   describe "topic custom fields callback" do
-    let(:user) { Fabricate(:user, admin: true) }
+    let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     let!(:notified_user) { Fabricate(:user) }
     let(:topic) { Fabricate(:topic, user: user) }
     let!(:first_post) { Fabricate(:post, topic: topic) }
@@ -546,7 +546,7 @@ describe DiscoursePostEvent::Event do
   end
 
   describe "#ongoing?" do
-    let(:user) { Fabricate(:user, admin: true) }
+    let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     let(:topic) { Fabricate(:topic, user: user) }
     let!(:first_post) { Fabricate(:post, topic: topic) }
 
@@ -626,7 +626,7 @@ describe DiscoursePostEvent::Event do
   end
 
   describe "#currently_within_event_timeframe?" do
-    let(:user) { Fabricate(:user, admin: true) }
+    let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     let(:topic) { Fabricate(:topic, user: user) }
     let!(:first_post) { Fabricate(:post, topic: topic) }
 
@@ -704,7 +704,7 @@ describe DiscoursePostEvent::Event do
   end
 
   describe "#expired?" do
-    let(:user) { Fabricate(:user, admin: true) }
+    let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     let(:topic) { Fabricate(:topic, user: user) }
     let!(:first_post) { Fabricate(:post, topic: topic) }
 
@@ -1165,7 +1165,7 @@ describe DiscoursePostEvent::Event do
   end
 
   describe "syncing from raw" do
-    fab!(:user) { Fabricate(:user, admin: true) }
+    fab!(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     fab!(:topic) { Fabricate(:topic, user: user) }
     fab!(:post) { Fabricate(:post, topic: topic, user: user) }
     fab!(:upload)
@@ -1326,7 +1326,7 @@ describe DiscoursePostEvent::Event do
   end
 
   describe "post/topic image_upload_id sync on post_edited" do
-    fab!(:user) { Fabricate(:user, admin: true) }
+    fab!(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     fab!(:topic) { Fabricate(:topic, user: user) }
     fab!(:post) { Fabricate(:post, topic: topic, user: user, post_number: 1) }
     fab!(:upload)
