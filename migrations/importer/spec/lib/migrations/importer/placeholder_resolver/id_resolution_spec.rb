@@ -28,6 +28,46 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(resolved[1]).to eq('x [quote="robert"] y')
     end
 
+    it "fills quoted_post_id from (topic_id, post_number) and feeds the maps flow" do
+      Migrations::Database::IntermediateDB::Post.create(
+        original_id: 200,
+        topic_id: 5,
+        post_number: 12,
+        raw: "quoted body",
+      )
+      quote = placeholder.mint(:quote)
+      Migrations::Database::IntermediateDB::EmbedQuote.create(
+        owner_type: embed_owner::POST,
+        owner_id: 1,
+        placeholder: quote,
+        quoted_topic_id: 5,
+        quoted_post_number: 12,
+        quoted_username: "bob",
+      )
+      maps = FakePlaceholderMaps.new(post: { 200 => { topic_id: 42, post_number: 3 } })
+      resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{quote} y" }])
+
+      expect(resolved[1]).to eq('x [quote="bob, post:3, topic:42"] y')
+    end
+
+    it "falls back to the username when the coordinates match no post" do
+      quote = placeholder.mint(:quote)
+      Migrations::Database::IntermediateDB::EmbedQuote.create(
+        owner_type: embed_owner::POST,
+        owner_id: 1,
+        placeholder: quote,
+        quoted_topic_id: 5,
+        quoted_post_number: 99,
+        quoted_username: "bob",
+      )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{quote} y" }])
+
+      expect(resolved[1]).to eq('x [quote="bob"] y')
+    end
+
     it "maps a user mention name to the user's original_id, honoring an import-time rename" do
       Migrations::Database::IntermediateDB::User.create(
         original_id: 7,

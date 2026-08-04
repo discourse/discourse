@@ -18,3 +18,17 @@ source_db:
 
 categories:
   map_seeded_categories: true
+
+# The source site's own address, used to recognize absolute internal links
+# (`https://forum.example.com/t/slug/123`) so they can be rewritten at import.
+# Optional: without it, only relative links (`/t/slug/123`) are rewritten. List
+# `former_domains` when the site moved and old posts still link to the old host.
+# The scheme and port are ignored, but a path is not: for a subdirectory install
+# include the prefix (`https://www.example.com/forum`) so only links under it are
+# treated as the forum's. Each entry may carry its own prefix — a former domain
+# can sit at the root while the current one moved into a subfolder, or vice versa.
+#
+#   source_site:
+#     base_url: "https://forum.example.com/forum"
+#     former_domains:
+#       - "https://old.example.com"
