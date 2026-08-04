@@ -21,6 +21,7 @@ class UserOption < ActiveRecord::Base
     "enable_experimental_sidebar", # TODO: Remove when 20250804021210_drop_enable_experimental_sidebar_user_option has been promoted to pre-deploy
     "only_chat_push_notifications", # TODO(2027-01): replaced by push_notification_level; drop the column in a follow-up PR once this has shipped
     "chat_send_shortcut", # TODO(2027-01): replaced by send_shortcut; drop the column in a follow-up PR once this has shipped
+    "enable_defer", # TODO(2027-02): the preference was removed; drop the column in a follow-up PR once this has shipped
   ]
 
   self.primary_key = :user_id
@@ -88,7 +89,6 @@ class UserOption < ActiveRecord::Base
 
     self.enable_quoting = SiteSetting.default_other_enable_quoting
     self.enable_smart_lists = SiteSetting.default_other_enable_smart_lists
-    self.enable_defer = SiteSetting.default_other_enable_defer
     self.enable_markdown_monospace_font = SiteSetting.default_other_enable_markdown_monospace_font
     self.external_links_in_new_tab = SiteSetting.default_other_external_links_in_new_tab
     self.dynamic_favicon = SiteSetting.default_other_dynamic_favicon
@@ -307,7 +307,6 @@ end
 #  email_messages_level                           :integer          default(0), not null
 #  email_previous_replies                         :integer          default(2), not null
 #  enable_allowed_pm_users                        :boolean          default(FALSE), not null
-#  enable_defer                                   :boolean          default(FALSE), not null
 #  enable_markdown_monospace_font                 :boolean          default(TRUE), not null
 #  enable_quoting                                 :boolean          default(TRUE), not null
 #  enable_smart_lists                             :boolean          default(TRUE), not null

@@ -54,7 +54,6 @@ class SiteSetting < ActiveRecord::Base
     default_other_external_links_in_new_tab
     default_other_enable_quoting
     default_other_enable_smart_lists
-    default_other_enable_defer
     default_other_dynamic_favicon
     default_other_like_notification_frequency
     default_other_skip_new_user_tips
