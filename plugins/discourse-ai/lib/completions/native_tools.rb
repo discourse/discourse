@@ -15,6 +15,8 @@ module DiscourseAi
 
       WEB_SEARCH = "web_search"
       WEB_FETCH = "web_fetch"
+      GOOGLE_MAPS = "google_maps"
+      CODE_EXECUTION = "code_execution"
 
       # open_ai/azure only expose web search through the Responses API
       RESPONSES_API_PROVIDERS = %w[open_ai azure].freeze
@@ -50,8 +52,13 @@ module DiscourseAi
       end
 
       DEFINITIONS = [
-        Definition.new(id: WEB_SEARCH, providers: %w[google anthropic open_ai azure]),
-        Definition.new(id: WEB_FETCH, providers: %w[google anthropic]),
+        Definition.new(
+          id: WEB_SEARCH,
+          providers: %w[google gemini_interactions anthropic open_ai azure],
+        ),
+        Definition.new(id: WEB_FETCH, providers: %w[google gemini_interactions anthropic]),
+        Definition.new(id: GOOGLE_MAPS, providers: %w[gemini_interactions]),
+        Definition.new(id: CODE_EXECUTION, providers: %w[gemini_interactions]),
       ].freeze
 
       def self.all

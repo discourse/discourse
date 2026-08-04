@@ -620,6 +620,12 @@ en:
         web_fetch:
           name: "Web Fetch (native)"
           help: "Lets the model open and read web pages using the provider's built-in web access, when the agent is forced to a supported LLM."
+        google_maps:
+          name: "Google Maps (native)"
+          help: "Lets the model use current Google Maps place and location data, when the agent is forced to a supported Gemini LLM."
+        code_execution:
+          name: "Code execution (native)"
+          help: "Lets the model write and run Python code in the provider's sandbox, when the agent is forced to a supported Gemini LLM."
       tool_summary:
         read_artifact: "Read a web artifact"
         search_uploaded_documents: "Search uploaded documents"
