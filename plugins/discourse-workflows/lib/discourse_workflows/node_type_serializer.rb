@@ -66,6 +66,7 @@ module DiscourseWorkflows
         operations: klass.operations,
         output_contracts: serializable_output_contracts(klass),
         palette_visible: klass.palette_visible?,
+        previewable: klass.previewable?,
         available: klass.available?,
         unavailable_reason_key: (klass.unavailable_reason_key unless klass.available?),
         metadata: metadata.presence,

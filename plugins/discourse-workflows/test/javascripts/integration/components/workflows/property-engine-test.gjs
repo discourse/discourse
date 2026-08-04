@@ -12,7 +12,7 @@ import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 import PropertyEngineConfigurator from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/property-engine";
 import WorkflowEditorSession from "discourse/plugins/discourse-workflows/admin/lib/workflows/editor-session";
 
@@ -915,6 +915,165 @@ module("Integration | Component | workflows property engine", function (hooks) {
 
     assert.dom(".workflows-property-engine__collection-row").exists();
     assert.strictEqual(this.formApi.get("entries.values").length, 1);
+  });
+
+  test("labels fixed collection remove buttons for items without a name", async function (assert) {
+    this.setProperties({
+      configuration: { entries: { values: [{ aggregation: "count" }] } },
+      nodeType: "action:log",
+      schema: {
+        entries: {
+          type: "fixed_collection",
+          type_options: {
+            multiple_values: true,
+          },
+          options: [
+            {
+              name: "values",
+              values: {
+                aggregation: {
+                  type: "string",
+                  required: true,
+                  no_data_expression: true,
+                },
+              },
+            },
+          ],
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom(".workflows-property-engine__collection-delete")
+      .hasAria("label", i18n("discourse_workflows.property_engine.remove_item"))
+      .hasAttribute(
+        "title",
+        i18n("discourse_workflows.property_engine.remove_item")
+      );
+  });
+
+  test("labels fixed collection remove buttons with the item name", async function (assert) {
+    this.setProperties({
+      configuration: { entries: { values: [{ name: "Alpha" }] } },
+      nodeType: "action:log",
+      schema: {
+        entries: {
+          type: "fixed_collection",
+          type_options: {
+            multiple_values: true,
+          },
+          options: [
+            {
+              name: "values",
+              values: {
+                name: {
+                  type: "string",
+                  required: true,
+                  no_data_expression: true,
+                },
+              },
+            },
+          ],
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".workflows-property-engine__collection-delete").hasAria(
+      "label",
+      i18n("discourse_workflows.property_engine.remove_assignment", {
+        name: "Alpha",
+      })
+    );
+  });
+
+  test("only titles the fixed collection add button when a maximum exists", async function (assert) {
+    this.setProperties({
+      configuration: { entries: { values: [] }, capped: { values: [] } },
+      nodeType: "action:log",
+      schema: {
+        entries: {
+          type: "fixed_collection",
+          type_options: {
+            multiple_values: true,
+          },
+          options: [
+            {
+              name: "values",
+              values: {
+                key: { type: "string", required: true },
+              },
+            },
+          ],
+        },
+        capped: {
+          type: "fixed_collection",
+          max_items: 1,
+          type_options: {
+            multiple_values: true,
+          },
+          options: [
+            {
+              name: "values",
+              values: {
+                key: { type: "string", required: true },
+              },
+            },
+          ],
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const addButtons = findAll(".form-kit__section .btn-default");
+
+    assert.dom(addButtons[0]).doesNotHaveAttribute("title");
+    assert.dom(addButtons[1]).hasAttribute(
+      "title",
+      i18n("discourse_workflows.property_engine.max_items_reached", {
+        count: 1,
+      })
+    );
   });
 
   test("renders condition builder controls inside the property engine", async function (assert) {
