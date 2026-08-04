@@ -14,13 +14,11 @@ module JsonApiKit
 
         attr_reader :name, :model, :direction, :sql, :joins
 
-        delegate :connection, :table_name, to: :model, private: true
+        delegate :connection, :table_name, :type_for_attribute, to: :model, private: true
         delegate :quote_table_name, :quote_column_name, to: :connection, private: true
 
         def initialize(name, model:, direction: :asc, sql: nil, joins: [], nulls_last: false)
-          if !DIRECTIONS.include?(direction)
-            raise ArgumentError, "#{direction.inspect} is not a sort direction"
-          end
+          raise ArgumentError, "unknown direction: #{direction}" if !DIRECTIONS.include?(direction)
 
           @name = name.to_sym
           @model = model
@@ -50,7 +48,16 @@ module JsonApiKit
 
         def value_for(record) = record.public_send(name)
 
-        def value_sql = sql || "#{quoted_table}.#{quoted_name}"
+        # The column the key is read from once the keyset has been projected: its own
+        # name, never the SQL behind it, which the wrapping relation no longer exposes.
+        def identifier = "#{quoted_table}.#{quoted_name}"
+
+        def value_sql = sql || identifier
+
+        # A cursor carries JSON scalars; the column's own type turns one back into the
+        # value it was minted from. A projected key has no column type of its own, and
+        # its value passes straight through.
+        def cast(value) = type_for_attribute(name).cast(value)
 
         def select_expression
           return if !projected?

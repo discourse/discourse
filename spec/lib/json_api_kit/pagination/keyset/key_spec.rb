@@ -81,6 +81,22 @@ RSpec.describe JsonApiKit::Pagination::Keyset::Key do
     end
   end
 
+  describe "#identifier" do
+    subject(:identifier) { key.identifier }
+
+    it "qualifies the column with its table" do
+      expect(identifier).to eq(%("topics"."created_at"))
+    end
+
+    context "when the key is backed by SQL" do
+      let(:key) { described_class.new(:username, model:, sql: "users.username") }
+
+      it "names the key, not the SQL behind it — the SQL is gone once projected" do
+        expect(identifier).to eq(%("topics"."username"))
+      end
+    end
+  end
+
   describe "#value_sql" do
     subject(:value_sql) { key.value_sql }
 

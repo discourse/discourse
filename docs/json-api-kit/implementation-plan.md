@@ -33,6 +33,7 @@ This is the real thing, so the spike's licence to take shortcuts is withdrawn:
 | First endpoint | Its own slice, after the framework core — the framework is driven by specs first |
 | `from_resource` | Slice 4, with the writes |
 | Developer guide | Later, once the shape is real |
+| Comments in the code | Prose for now — they carry the reasoning while the design is still moving. A documentation format for the public surface (YARD or similar) is a later decision, once that surface settles |
 | Agent skill | With the developer guide, or after it — see *The agent skill* |
 
 ## Slices
@@ -86,6 +87,10 @@ construction, so "unknown parameter → 400" is not a separate concern:
   like any other, so nothing else in the keyset knows about nullability. Built (2026-08-03).
 - `Cursor` — value ⇄ opaque string, with shape validation. Owns the lesson that lossy encoding breaks
   keysets: timestamps at microsecond precision, normalised to UTC. Built (2026-08-03).
+- `Predicate` — the comparison selecting the rows after a cursor's position in an order, and only
+  that. Built (2026-08-04); the rules it encodes are below.
+- `Predicate::Term` — a key bound to the cursor's value for it, contributing its own fragments of the
+  comparison, with `Term::Null` as the case a null cursor value becomes. Built (2026-08-04).
 - `Window` — records plus whether more exist either side.
 - `Paginator` — scope + keyset + request → `Window`.
 - `Anchor::Resolver` and `Anchor::Window` — positional entry, including the centred form.
@@ -218,6 +223,49 @@ specs, which the copied predicate never had.
 Caveat to re-check on real data when `Paginator` lands: the plans above come from a 68-row table, so
 the *costs* are meaningless — it is the `Index Cond` versus `Filter` structure that generalises, and
 none of it bites unless the keyset's leading columns have a supporting index in the first place.
+
+#### What the predicate emits
+
+Built 2026-08-04. It means one thing — the rows after this cursor's position in this order — because
+reading backwards reverses the keyset rather than inverting the comparison, leaving one shape to get
+right instead of two. Cursor values arrive from a client and are always bound; the only literal text is
+what a resource authored, a key's name and its SQL.
+
+| case | shape |
+| --- | --- |
+| directions differ | a bound on the leading key, then the OR-of-ANDs |
+| every direction agrees, no null values | row-wise `(a, b) > (:a, :b)` |
+| a key's cursor value is null | `col IS NULL` where it must match, and no strict disjunct for it |
+| the *leading* cursor value is null | no bound on the leading key |
+
+The last two are traps, not optimisations:
+
+- **The leading-key bound has to go when its cursor value is null.** It is ANDed with the disjuncts, so
+  `col >= NULL` is NULL and the whole predicate then matches nothing — a silently empty page. Only
+  reachable for a nullable key declared without `nulls_last`, which is precisely the case nobody tests.
+- **A key whose cursor value is null gets no strict disjunct.** Inside a group of NULLs nothing sorts
+  after NULL, so that disjunct could never hold and only bloats the plan.
+
+Row-wise comparison is automatic rather than an option (Pagy's `tuple_comparison`), because the keyset
+can prove when it holds. That hands the declaration layer a decision: the fast form only applies when
+the tiebreak sorts the same way as the leading key, so `sort=-created_at` earns it with an `id: :desc`
+tiebreak and loses it with `id: :asc`. **Open, for `Sort`: should a tiebreak follow the leading key's
+direction?**
+
+Two smaller findings worth not rediscovering. The predicate compares against the *projected* columns,
+never the SQL behind them — the wrapping relation no longer exposes `users.username`, only
+`"topics"."author"` — which is why a key answers both `identifier` and `value_sql`. And
+`type_for_attribute` returns a passthrough `ActiveModel::Type::Value` for a name it does not know, so
+turning a cursor value back into its column type is one uniform call on the key, with no branch for
+projected ones.
+
+How it is put together: a `Predicate` holds one `Term` per key — the key bound to the cursor's value for
+it — and each term contributes its own fragments (the disjunct where it moved past the cursor, the bound
+it puts on the whole comparison, its binding). A cursor value that is null becomes a `Term::Null`
+instead, which matches by testing for null, contributes no disjunct, bounds nothing and binds nothing.
+So the four rules above are answered by the special case itself rather than by four questions asked
+about it, and the only place nil is read is the boundary where a term is built. The predicate's own
+methods are then pure composition: which form, which disjuncts, which bound.
 
 ## The agent skill
 

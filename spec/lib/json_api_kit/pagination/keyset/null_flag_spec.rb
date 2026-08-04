@@ -58,6 +58,14 @@ RSpec.describe JsonApiKit::Pagination::Keyset::NullFlag do
     end
   end
 
+  describe "#identifier" do
+    subject(:identifier) { flag.identifier }
+
+    it "is the column it is projected as, so it needs no rule of its own" do
+      expect(identifier).to eq(%("topics"."bumped_at_is_null"))
+    end
+  end
+
   describe "#value_sql" do
     subject(:value_sql) { flag.value_sql }
 
