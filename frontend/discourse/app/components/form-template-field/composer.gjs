@@ -20,10 +20,10 @@ export default class FormTemplateFieldComposer extends Component {
 
   fieldUid = `form-template-composer-${guidFor(this)}`;
 
-  _claimAbortController = null;
-  _validatedInput = null;
-  _editorTarget = null;
-  _invalid = false;
+  #claimAbortController = null;
+  #validatedInput = null;
+  #editorTarget = null;
+  #validationFailed = false;
 
   constructor() {
     super(...arguments);
@@ -33,7 +33,7 @@ export default class FormTemplateFieldComposer extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     this.appEvents.off("composer:replace-text", this, this.handleReplaceText);
-    this._claimAbortController?.abort();
+    this.#claimAbortController?.abort();
   }
 
   get labelId() {
@@ -64,12 +64,12 @@ export default class FormTemplateFieldComposer extends Component {
 
   @action
   registerValidatedInput(element) {
-    this._validatedInput = element;
+    this.#validatedInput = element;
   }
 
   @action
   handleInvalid() {
-    this._invalid = true;
+    this.#validationFailed = true;
     this.#syncEditorAccessibility();
 
     this.a11y.announce(
@@ -81,7 +81,7 @@ export default class FormTemplateFieldComposer extends Component {
   @action
   handleValidationInput(event) {
     if (event.currentTarget.validity.valid) {
-      this._invalid = false;
+      this.#validationFailed = false;
       this.#syncEditorAccessibility();
     }
   }
@@ -89,7 +89,7 @@ export default class FormTemplateFieldComposer extends Component {
   // reapplies the full state rather than toggling it, because switching
   // between markdown and rich modes replaces the editor element
   #syncEditorAccessibility() {
-    const editor = this._editorTarget;
+    const editor = this.#editorTarget;
 
     if (!editor) {
       return;
@@ -102,7 +102,7 @@ export default class FormTemplateFieldComposer extends Component {
       editor.removeAttribute("aria-labelledby");
     }
 
-    if (this._invalid) {
+    if (this.#validationFailed) {
       editor.setAttribute("aria-invalid", "true");
       editor.setAttribute("aria-describedby", this.errorId);
     } else {
@@ -118,7 +118,7 @@ export default class FormTemplateFieldComposer extends Component {
       this.args.onChange?.(event);
       // the editor emits no form events of its own, so the input standing in
       // for it has to report the change
-      this._validatedInput?.dispatchEvent(
+      this.#validatedInput?.dispatchEvent(
         new Event("input", { bubbles: true })
       );
     });
@@ -126,7 +126,7 @@ export default class FormTemplateFieldComposer extends Component {
 
   @action
   onEditorSetup(textManipulation) {
-    this._editorTarget =
+    this.#editorTarget =
       textManipulation.textarea || textManipulation.view?.dom;
 
     this.#syncEditorAccessibility();
@@ -137,20 +137,20 @@ export default class FormTemplateFieldComposer extends Component {
 
     this.args.uppyComposerUpload.textManipulation = textManipulation;
 
-    if (!this._editorTarget) {
+    if (!this.#editorTarget) {
       return;
     }
 
-    this._claimAbortController?.abort();
-    this._claimAbortController = new AbortController();
-    const { signal } = this._claimAbortController;
+    this.#claimAbortController?.abort();
+    this.#claimAbortController = new AbortController();
+    const { signal } = this.#claimAbortController;
 
     const claimUploadTarget = () => {
       this.args.uppyComposerUpload.textManipulation = textManipulation;
     };
 
     for (const event of ["focusin", "dragenter", "dragover"]) {
-      this._editorTarget.addEventListener(event, claimUploadTarget, { signal });
+      this.#editorTarget.addEventListener(event, claimUploadTarget, { signal });
     }
   }
 
