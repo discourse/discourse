@@ -56,7 +56,23 @@ RSpec.describe Patreon::Api do
 
     it "should not add admin warning message for valid api response" do
       stub_url(200, url)
+      described_class.campaign_data
+
       expect(ProblemCheckTracker[:access_token_invalid].blips).to eq(0)
+      expect(AdminNotice.find_by(identifier: :access_token_invalid)).to eq(nil)
+    end
+
+    it "should clear an existing admin warning message once the api responds again" do
+      stub_url(401, url)
+      described_class.campaign_data
+      expect(AdminNotice.find_by(identifier: :access_token_invalid)).to be_present
+
+      stub_url(200, url)
+      described_class.campaign_data
+
+      expect(ProblemCheckTracker[:access_token_invalid].blips).to eq(0)
+      expect(ProblemCheckTracker[:access_token_invalid]).to be_passing
+      expect(AdminNotice.find_by(identifier: :access_token_invalid)).to eq(nil)
     end
 
     it "should add warning log" do
