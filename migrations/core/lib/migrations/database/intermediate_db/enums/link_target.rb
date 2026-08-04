@@ -18,6 +18,7 @@ module Migrations
           TAG = 5
           GROUP = 6
           BADGE = 7
+          SITE = 8
         end
       end
     end
