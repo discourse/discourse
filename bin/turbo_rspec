@@ -4,7 +4,11 @@
 ENV["RAILS_ENV"] ||= "test"
 
 require "./lib/turbo_tests"
+require "./lib/turbo_rspec_exclusion"
 require "optparse"
+
+# spec/nginx has its own Rails-free runner; turbo_rspec loads rails_helper.
+DEFAULT_EXCLUDE_PATTERNS = ["spec/nginx/**/*_spec.rb"].freeze
 
 requires = []
 formatters = []
@@ -16,7 +20,7 @@ profile_print_slowest_examples_count = 10
 use_runtime_info = nil
 enable_system_tests = nil
 retry_and_log_flaky_tests = ENV["DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS"].to_s == "1"
-exclude_patterns = []
+exclude_patterns = DEFAULT_EXCLUDE_PATTERNS.dup
 
 OptionParser
   .new do |opts|
@@ -74,6 +78,9 @@ OptionParser
   end
   .parse!(ARGV)
 
+explicit_file_args = ARGV.any?
+requested_files = nil
+
 # OptionParser modifies ARGV, leaving the leftover arguments in ARGV
 if ARGV.empty?
   files = Dir.glob("spec/**/*_spec.rb")
@@ -92,11 +99,32 @@ else
       end
     end
 
+  requested_files = files.dup
   use_runtime_info = false if use_runtime_info.nil?
 end
 
 if exclude_patterns.any?
-  files.reject! { |file| exclude_patterns.any? { |pattern| File.fnmatch(pattern, file) } }
+  files.reject! { |file| TurboRspecExclusion.excluded_by_patterns?(file, exclude_patterns) }
+end
+
+# If a developer explicitly asked for a file that the DEFAULT nginx
+# exclusion drops, fail loudly rather than silently running a subset.
+# Only the built-in pattern triggers this -- user-supplied
+# --exclude-pattern filters are intentional and may legitimately drop
+# requested files. Checking per-dropped-file (not just files.empty?)
+# catches the mixed case, e.g.
+#   bin/turbo_rspec spec/nginx/foo_spec.rb spec/models/bar_spec.rb
+# which would otherwise run only the model spec and exit 0.
+if explicit_file_args && requested_files&.any?
+  dropped_nginx =
+    requested_files.select do |file|
+      TurboRspecExclusion.excluded_by_patterns?(file, DEFAULT_EXCLUDE_PATTERNS)
+    end
+
+  abort <<~MSG.chomp unless dropped_nginx.empty?
+      Requested spec file(s) are excluded from turbo_rspec by default: #{dropped_nginx.join(", ")}
+      spec/nginx has its own Rails-free runner; run those with: spec/nginx/run.sh
+    MSG
 end
 
 requires.each { |f| require(f) }

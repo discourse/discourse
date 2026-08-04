@@ -1,0 +1,66 @@
+name: Nginx Tests
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/nginx-tests.yml"
+      - "bin/turbo_rspec"
+      - "lib/turbo_rspec_exclusion.rb"
+      - "config/nginx.sample.conf"
+      - "spec/nginx/**"
+      - "spec/rails_helper.rb"
+  push:
+    branches:
+      - main
+      - stable
+    paths:
+      - ".github/workflows/nginx-tests.yml"
+      - "bin/turbo_rspec"
+      - "lib/turbo_rspec_exclusion.rb"
+      - "config/nginx.sample.conf"
+      - "spec/nginx/**"
+      - "spec/rails_helper.rb"
+
+concurrency:
+  group: nginx-tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
+    name: Tests
+    runs-on: ${{ (github.repository_owner == 'discourse' && 'cdck-linux-8-core') || 'ubuntu-latest' }}
+    container: discourse/discourse_test:release
+    timeout-minutes: 10
+
+    env:
+      RAILS_ENV: test
+      NGINX_TESTS_REQUIRED: "1"
+
+    steps:
+      - name: Set working directory owner
+        run: chown root:root .
+
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Symlink vendor/bundle from image
+        run: |
+          ln -s /var/www/discourse/vendor/bundle vendor/bundle
+
+      - name: Setup gems
+        run: |
+          bundle config --local path vendor/bundle
+          bundle config --local deployment true
+          bundle config --local without development
+          bundle install --jobs $(($(nproc) - 1))
+
+      - name: Show nginx version
+        run: nginx -v && nginx -V 2>&1 | tr ' ' '\n' | grep -iE 'module|brotli' || true
+
+      - name: Run nginx sample tests
+        run: spec/nginx/run.sh
