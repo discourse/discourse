@@ -567,6 +567,31 @@ RSpec.describe Jobs::PullHotlinkedImages do
           url = Upload.secure_uploads_url_from_upload_url(upload.url)
           expect(job.should_download_image?(url)).to eq(false)
         end
+
+        it "uses the logical upload identity for deduplicated secure-upload urls" do
+          setup_s3
+          SiteSetting.secure_uploads = true
+
+          other_post = Fabricate(:post)
+          post = Fabricate(:post)
+          primary = Fabricate(:upload_s3, secure: true, access_control_post: other_post)
+          dependent =
+            Fabricate(
+              :upload_s3,
+              secure: true,
+              access_control_post: post,
+              original_sha1: SecureRandom.hex(20),
+              primary_upload: primary,
+              url: primary.url,
+            )
+          url =
+            Upload.secure_uploads_url_from_upload_url(
+              primary.url,
+              base62_sha1: dependent.base62_sha1,
+            )
+
+          expect(job.should_download_image?(url, post)).to eq(false)
+        end
       end
 
       it "should return true for optimized" do
