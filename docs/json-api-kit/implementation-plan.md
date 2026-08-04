@@ -33,6 +33,7 @@ This is the real thing, so the spike's licence to take shortcuts is withdrawn:
 | First endpoint | Its own slice, after the framework core — the framework is driven by specs first |
 | `from_resource` | Slice 4, with the writes |
 | Developer guide | Later, once the shape is real |
+| Agent skill | With the developer guide, or after it — see *The agent skill* |
 
 ## Slices
 
@@ -77,10 +78,14 @@ construction, so "unknown parameter → 400" is not a separate concern:
 
 **Pagination** (`lib/json_api_kit/pagination/`)
 
-- `Keyset` — keys, directions, SQL-backed expressions, joins, nullable keys; knows how to project
-  itself onto a scope.
+- `Keyset` — an ordered set of `Keyset::Key`s: the order to compare against, and the projection that
+  makes every one of its values readable as a column of the scope. Built (2026-08-03).
+- `Keyset::Key` — one term of the order: name, direction, backing SQL, joins, nullability. It answers
+  for its own value on both sides — read off a record, and produced by the database — which is what
+  dissolves the spike's four parallel collections keyed by the same names. `Keyset::NullFlag` is a key
+  like any other, so nothing else in the keyset knows about nullability. Built (2026-08-03).
 - `Cursor` — value ⇄ opaque string, with shape validation. Owns the lesson that lossy encoding breaks
-  keysets (timestamps at full precision).
+  keysets: timestamps at microsecond precision, normalised to UTC. Built (2026-08-03).
 - `Window` — records plus whether more exist either side.
 - `Paginator` — scope + keyset + request → `Window`.
 - `Anchor::Resolver` and `Anchor::Window` — positional entry, including the centred form.
@@ -89,6 +94,8 @@ construction, so "unknown parameter → 400" is not a separate concern:
 **Documents** (`lib/json_api_kit/documents/`)
 
 - `Collection`, `Resource`, `Errors` — assembly, each aware only of its own shape.
+- `IncludeTree` — the requested paths as a tree, where a path implies its prefixes (that *is* full
+  linkage), and `Included` — the deduplicating collection of side-loaded resources.
 - `Links`, `ItemMeta`.
 - `Errors::*` — one object per typed error (unsupported sort, max size exceeded, invalid cursor,
   unknown parameter, range pagination), each knowing its status, title, type URI and source pointer.
@@ -122,30 +129,86 @@ nothing in the app.
   maps and gap ordering, the OpenAPI schema derivation.
 - **Rewritten**: everything that lived in the controller, the config object (the resource *is* the
   config), the endpoint registry, the plugin registration surface (it belongs in core's plugin API,
-  not monkeypatched from a plugin).
+  not monkeypatched from a plugin), and the whole rendering path — with the assembler ours, the
+  serializer patch, the include-prefix expansion and the empty-relationship pruning all disappear
+  rather than move.
 - **Dropped**: `stats[total]=count` (not in the profile, unbounded count), the run-stats stand-in
   plugin, the endpoint map.
 
-### Open decision: the renderer
+### Decided: we assemble the document ourselves
 
-The spike renders with **jsonapi-serializer 2.2.0** plus an owned one-line monkeypatch: the gem builds
-each nested resource's hash with the *parent's* parsed include list, so with `lazy_load_data` a nested
-leaf's linkage disappears — a full-linkage violation. The gem is feature-dead.
+The spike rendered with **jsonapi-serializer 2.2.0** (feature-dead). Getting a compliant document out
+of it took three owned workarounds, all of them for the same underlying reason — the gem decides
+linkage from a flat, direct-match include list:
 
-Three options:
+1. A **monkeypatch** of `get_included_records`: it builds each nested resource's hash with the
+   *parent's* parsed include list, so with `lazy_load_data` a nested leaf's linkage disappears.
+2. **Include-prefix expansion** before rendering (`user.groups` → `user`, `user.groups`), because a
+   nested path leaves the intermediate relationship's linkage off the primary data otherwise.
+3. A **post-render document walk** pruning empty relationship objects: with `lazy_load_data`, every
+   declared-but-not-included relationship is emitted as `{}`, and a relationship object must carry at
+   least one of `links`, `data`, `meta`. Without the walk, the flat case is invalid on every resource.
 
-1. **Keep it, keep the patch.** Cheapest, measured fastest of the three renderers we benchmarked, but
-   we own a patch on a dormant gem and we will hit its other gaps (relationship `links`, which
-   WarpDrive's relationship mode wants, are not emitted at all).
-2. **Vendor it** (~500 lines, MIT) and maintain it as ours.
-3. **Write the document assembler.** It is not large — resource objects, `included` deduplication,
-   sparse fieldsets, linkage, meta and links — and we already isolate it behind our own declarations,
-   so the blast radius is internal. It removes a dependency, a patch, and the ceiling on spec
-   coverage.
+On top of that the gem emits no relationship `links` at all, which is what a client's relationship
+mode reads, and which it will never gain.
 
-Recommendation: build option 3 behind the existing port during slice 1 and **benchmark it against the
-gem on the same data** (the harness exists). Keep the gem only if ours is materially slower. Three
-strikes — a patch, dormancy, and missing relationship links — argue for owning it.
+The perf axis, which was the one argument for staying, does not hold either. A **headroom probe**
+compared three assemblies of a byte-identical document (8 attributes, one to-one and one to-many
+relationship, in-process, GC off during timing, plain objects so no attribute-read tax dilutes the
+signal): the gem, a straight-line hardcoded assembler (the time floor), and a **declaration-driven
+sketch of what we would own** — dot-path include trees with prefix implication, cross-tree dedup,
+sparse fieldsets applied per type, nested recursion.
+
+| records | include | gem | ours (sketch) | floor |
+| --- | --- | --- | --- | --- |
+| 50 | — | 0.163 ms / 912 allocs | 0.058 ms / 309 | 0.021 ms / 304 |
+| 50 | `author,tags` | 0.521 ms / 2688 | 0.156 ms / 999 | 0.125 ms / 1214 |
+| 50 | `author.groups` | 0.456 ms / 2066 | 0.102 ms / 597 | 0.057 ms / 649 |
+| 1000 | — | 3.149 ms / 18012 | 1.148 ms / 6009 | 0.396 ms / 6004 |
+| 1000 | `author,tags` | 9.878 ms / 51940 | 2.891 ms / 18099 | 2.378 ms / 23064 |
+| 1000 | `author.groups` | 9.016 ms / 41212 | 1.928 ms / 11241 | 1.071 ms / 12622 |
+
+A generic assembler is **2.7–4.7× faster than the gem and allocates ~3× less**, and the flat case —
+where its per-attribute generality costs the most against the floor — is still 2.8× faster than the
+gem. In per-request terms the win is small (sub-millisecond against a ~28 ms compound response), so
+the point is not speed: **owning the assembler costs nothing in performance**, and the abstraction
+budget for declarations, versioning transforms and links is already paid for.
+
+So: **write it, and drop the dependency.** It also collapses two declaration systems into one — the
+gem's class macros were a second model derived from the resource, which is exactly the kind of
+stand-in this plan rules out.
+
+What the sketch does not yet cover, and what specs therefore have to drive: relationship `links` and
+meta, resource and top-level links and meta, polymorphic types, `fields` narrowing relationship keys,
+null to-one linkage, cycles, and the identity rules (`id` always a string, type naming). The floor
+figures are a *time* bound only — the sketch already allocates less than the floor, whose dedup keys
+were arrays where the sketch nests hashes.
+
+## The agent skill
+
+`.skills/discourse-json-api-kit-authoring/SKILL.md`, following the convention in `.skills/`
+(frontmatter `name` + `description`, one directory per skill). Written with the developer guide or
+just after it, since both derive from the same material.
+
+It **points at the developer guide as its source of truth rather than restating the rules** — for the
+same reason the API documentation is generated: two hand-written descriptions of one set of rules
+drift, and the one an agent reads is the one nobody notices has gone stale. What the skill adds on top
+is the part a guide written for humans can leave implicit, because a human infers it from the
+surrounding code and an agent does not:
+
+- Which declarations exist, and where an endpoint's files go — a resource in `app/resources`, a
+  controller through the app's own base, routes through the route helper. Never a hand-maintained map.
+- A change to a resource's shape that a client could notice is a `VersionChange`, never an edit in
+  place. The contract guard failing means a version change is missing, not that the baseline needs
+  updating.
+- Committed artifacts (the OpenAPI document, the contract descriptor) are regenerated, never edited.
+- A sort is paginatable only if its ordering value can be projected as a stable per-row column; a
+  block sort cannot be paged.
+- `internal!` is the opt-out from documentation and versioning, and what that costs the endpoint (no
+  API key scope, no support promise) — so it is a deliberate choice, not a shortcut around writing a
+  version change.
+- The vocabulary: "plugin" for Discourse plugins throughout, since "extension" is reserved by the
+  spec's own `ext` mechanism.
 
 ## Definition of done, per slice
 
