@@ -2,7 +2,7 @@
 
 # name: discourse-workflows
 # about: Workflow automation system for Discourse
-# meta_topic_id: 406990
+# meta_topic_id: 407100
 # version: 0.1
 # authors: Discourse
 # url: https://github.com/discourse/discourse-workflows
