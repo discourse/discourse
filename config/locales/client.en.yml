@@ -7217,7 +7217,6 @@ en:
         up_to_date_newer_commits:
           one: "You're on the most recent release, but %{count} new change is available."
           other: "You're on the most recent release, but %{count} new changes are available."
-        critical_available: "A critical update is available."
         updates_available: "Updates are available."
         please_update: "Please update!"
         no_check_performed: "A check for updates has not been performed. Ensure Sidekiq is running."
