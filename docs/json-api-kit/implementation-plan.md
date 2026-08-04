@@ -213,10 +213,13 @@ Owning it also produces better SQL, because the engine cannot know what we know:
 
 - **`IS NOT DISTINCT FROM` is not an indexable condition.** On PostgreSQL 15.18 with `enable_seqscan`
   off, `id = 5` plans as `Index Cond`, while `id IS NOT DISTINCT FROM 5` plans as a post-scan
-  `Filter`; `deleted_at IS NULL` is an index condition again. A composer that reaches for null-safe
-  equality everywhere degrades *every* equality term of a composite keyset, on every page — not just
-  in the NULL tail. Knowing per key whether the cursor value is null, we emit `col IS NULL` or
-  `col = :value`, both indexable, for the same correctness.
+  `Filter`; `deleted_at IS NULL` is an index condition again. Knowing per key whether the cursor value
+  is null, we emit `col IS NULL` or `col = :value`, both indexable, for the same correctness.
+  **Measured (2026-08-04, 500k rows, matching index, cursor at row 400k): the three shapes are
+  indistinguishable — 0.010 ms each.** The leading-key bound is what positions the index scan, so the
+  equality terms are only ever a post-filter within one tie group, whichever operator they use. Row-wise
+  remains the better shape (the whole predicate becomes the `Index Cond`, nothing is filtered) but an
+  earlier claim here that null-safe equality "degrades every equality term on every page" was wrong.
 - **Row-wise comparison is unsafe with nullable keys.** `(a, b, c) > (:a, :b, :c)` is the friendliest
   form for an index, and it evaluates to NULL — silently dropping rows — if any element is NULL. An
   engine with no concept of nulls cannot guard that; a keyset that knows which keys are nullable can
@@ -273,6 +276,77 @@ instead, which matches by testing for null, contributes no disjunct, bounds noth
 So the four rules above are answered by the special case itself rather than by four questions asked
 about it, and the only place nil is read is the boundary where a term is built. The predicate's own
 methods are then pure composition: which form, which disjuncts, which bound.
+
+### Open: a nulls-last order wastes its index bound, and segmenting is the fix
+
+Measured 2026-08-04 on 500k rows, page size 50, an index for every shape, each variant checked by
+comparing the rows it returns rather than how many. Cursor at depth 400k in the valued part of a
+`pinned_at desc nulls last, id` order:
+
+| shape | time | plan |
+| --- | --- | --- |
+| what we emit today (flag leads the order) | 8.2 ms | Index Scan, no index condition |
+| tail removed, OR-of-ANDs, no bound on the leading key | 5.4 ms | Index Scan, no index condition |
+| tail removed, OR-of-ANDs, **bound on the leading key** | **0.011 ms** | `Index Cond: pinned_at <= …` |
+| tail removed, uniform directions, row-wise | 0.009 ms | `Index Cond: ROW(…) < ROW(…)` |
+| a plain keyset at the same depth, either shape | 0.007–0.009 ms | `Index Cond` |
+
+**The leading-key bound is what makes a keyset predicate seekable.** Not row-wise, which is worth about
+1.5× on top of it, and not direction uniformity, which on its own changed nothing. We already emit the
+bound — the fault is *which key it lands on*: a nulls-last key puts its 0/1 flag at the head of the
+order, and `flag >= 0` is true of every row in the table, so the seek is spent on nothing.
+
+Nor can the bound simply be moved to the nullable column while the tail stays in the query: `NULL <= P`
+is NULL, so bounding `pinned_at` would drop the tail. Taking the tail out of the query is precisely what
+lets the bound land on a selective column — which is the fix, and all of it:
+
+1. **Segment the order** at a nullable key: valued rows, then the null tail. The cursor already says
+   which segment it names, since a null value for that key *is* the marker — no flag needed to tell them
+   apart.
+2. The bound then lands on the nullable column, and the page seeks: **8.2 ms → 0.011 ms**.
+3. The tail reads as `col IS NULL AND id > :id`, measured at 0.037 ms, needing none of this.
+4. `ORDER BY col DESC NULLS LAST` replaces the projected `CASE`, so nulls-last keys stop needing a
+   projection or an expression index — the index does have to match the declared order.
+5. *Optional polish:* inside the valued segment there are no NULLs, so row-wise becomes legal there, and
+   with a tiebreak that follows the leading key's direction it applies. Worth ~1.5×. This is the answer
+   to the tiebreak question left open above — worth having, not worth forcing.
+
+It generalises past nulls, which is the case that actually matters. A listing that puts a group first —
+pinned topics, then everything else by its ordinary order — has the same structure: a computed priority
+column leads the keyset, and the bound is spent on it. Measured on the same 500k rows, group = a business
+predicate over three columns matching 18,182 rows, order `created_at desc, id desc`, cursor deep in the
+second group:
+
+| shape | time | rows |
+| --- | --- | --- |
+| priority column leads the order | 10.0 ms | identical |
+| segmented, bound on `created_at` | **0.010 ms** | identical |
+| segmented, row-wise | 0.009 ms | identical |
+
+Every variant returns the same rows, at depth and on the first page: **segmenting reorganises the query,
+never the sequence** — the segments concatenated in order are what a single `ORDER BY` produces. Two
+further findings from that run: the group predicate needs **no index of its own** (with only
+`(created_at DESC, id DESC)` present the page still ran in 0.012 ms, the bound seeking and the predicate
+filtering two rows out), so per-user conditions such as dismissals or `pinned_until > now()` are free; and
+the first page gets marginally *slower* (0.011 → 0.092 ms, both negligible) because it reads the leading
+segment and then spills into the next.
+
+So the concept to build is not "nulls-last handling" but a **segmented order**: an ordered list of
+segment predicates, each paired with the keyset that orders it, where the cursor names its segment. A
+plain order is one segment; a nullable key is two; a listing with a pinned group is two with the group
+predicate supplied by the resource. That also retires the projected priority column such listings build
+by hand today.
+
+What it costs: `NullFlag` stops being a key, `Keyset#order` learns `NULLS LAST`, `Predicate` becomes
+segment-aware, and `Window` has to spill from a short valued page into the tail. Sequenced — today's
+machinery is correct, this is about depth. The benchmark lives outside the repo; its seed rebuilds in
+under a second.
+
+> Three revisions of this section in one session, each because a measurement contradicted the previous
+> reading: first that null-safe equality degraded every page (it does not, the bound rescues it), then
+> that the `OR … IS NULL` term was the cost (it is not, the wasted bound is), then that row-wise was the
+> fix (it is polish). Verify by comparing returned rows, not row counts — two of the three wrong readings
+> came from a variant that was quietly answering a different question.
 
 ## The agent skill
 
