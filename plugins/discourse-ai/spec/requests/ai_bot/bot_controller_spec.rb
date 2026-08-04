@@ -178,6 +178,40 @@ RSpec.describe DiscourseAi::AiBot::BotController do
       expect(response.parsed_body["id"]).to eq(log1.id)
     end
 
+    it "prefers the post's own log over a newer topic-scoped log like title generation" do
+      user = pm_topic.topic_allowed_users.first.user
+      sign_in(user)
+
+      reply_log =
+        AiApiAuditLog.create!(
+          post_id: pm_post.id,
+          provider_id: 1,
+          topic_id: pm_topic.id,
+          feature_name: "bot",
+          raw_request_payload: "reply request",
+          raw_response_payload: "reply response",
+          created_at: 2.minutes.ago,
+        )
+
+      title_log =
+        AiApiAuditLog.create!(
+          provider_id: 1,
+          topic_id: pm_topic.id,
+          feature_name: "bot_title",
+          raw_request_payload: "title request",
+          raw_response_payload: "title response",
+          created_at: 1.minute.ago,
+        )
+
+      Group.refresh_automatic_groups!
+      SiteSetting.ai_bot_debugging_allowed_groups = user.groups.first.id.to_s
+
+      get "/discourse-ai/ai-bot/post/#{pm_post.id}/show-debug-info"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["id"]).to eq(reply_log.id)
+      expect(response.parsed_body["next_log_id"]).to eq(title_log.id)
+    end
+
     context "with conversation totals and spending" do
       fab!(:llm_model) do
         Fabricate(

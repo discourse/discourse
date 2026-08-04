@@ -35,11 +35,13 @@ module DiscourseAi
 
         visible_post_ids = posts.select(:id)
 
+        # topic-scoped logs (eg. title generation) are created after the reply's
+        # own log, so prefer the clicked post's log over plain recency
         debug_info =
           AiApiAuditLog
             .where(topic_id: post.topic_id)
             .where("post_id IS NULL OR post_id IN (?)", visible_post_ids)
-            .order(created_at: :desc)
+            .order(Arel.sql("post_id = #{post.id.to_i} DESC NULLS LAST"), created_at: :desc)
             .first
 
         render json: AiApiAuditLogSerializer.new(debug_info, root: false), status: :ok
