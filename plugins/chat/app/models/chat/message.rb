@@ -161,7 +161,7 @@ module Chat
       end
     end
 
-    def build_excerpt
+    def build_excerpt(strip_links: true)
       # just show the URL if the whole message is a URL, because we cannot excerpt oneboxes
       urls = PrettyText.extract_links(cooked).map(&:url)
       if urls.present?
@@ -176,7 +176,7 @@ module Chat
       return uploads.first.original_filename if cooked.blank? && uploads.present?
 
       # this may return blank for some complex things like quotes, that is acceptable
-      PrettyText.excerpt(cooked, EXCERPT_LENGTH, strip_links: true, keep_mentions: true)
+      PrettyText.excerpt(cooked, EXCERPT_LENGTH, strip_links:, keep_mentions: true)
     end
 
     def cooked_for_excerpt

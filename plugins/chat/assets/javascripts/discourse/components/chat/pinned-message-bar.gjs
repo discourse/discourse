@@ -47,10 +47,10 @@ export default class ChatPinnedMessageBar extends Component {
       return false;
     }
     const dismissedAbove = pinsDismissedAboveId(this.args.channel);
-    if (dismissedAbove == null || this.pins.length === 0) {
+    if (dismissedAbove == null || this.visiblePins.length === 0) {
       return false;
     }
-    return newestPinId(this.pins) <= dismissedAbove;
+    return newestPinId(this.visiblePins) <= dismissedAbove;
   }
 
   get showBar() {
@@ -60,8 +60,16 @@ export default class ChatPinnedMessageBar extends Component {
     );
   }
 
+  get visiblePins() {
+    const hidden = this.args.hiddenMessageIds;
+    if (!hidden?.size) {
+      return this.pins;
+    }
+    return this.pins.filter((pin) => !hidden.has(pin.message.id));
+  }
+
   get orderedPins() {
-    return [...this.pins].sort((a, b) => a.message.id - b.message.id);
+    return [...this.visiblePins].sort((a, b) => a.message.id - b.message.id);
   }
 
   // the newest pin at or above the viewport bottom — the one governing the view
@@ -97,11 +105,11 @@ export default class ChatPinnedMessageBar extends Component {
   }
 
   get hasMultiplePins() {
-    return this.pins.length > 1;
+    return this.visiblePins.length > 1;
   }
 
   get indicatorTop() {
-    const total = this.pins.length;
+    const total = this.visiblePins.length;
     if (total <= INDICATOR_WINDOW) {
       return 0;
     }
@@ -110,7 +118,7 @@ export default class ChatPinnedMessageBar extends Component {
   }
 
   get visibleSegments() {
-    return Math.min(this.pins.length, INDICATOR_WINDOW);
+    return Math.min(this.visiblePins.length, INDICATOR_WINDOW);
   }
 
   get indicatorStyle() {
@@ -121,7 +129,8 @@ export default class ChatPinnedMessageBar extends Component {
     const height = segment * visible + SEGMENT_GAP_PX * (visible - 1);
     const top = this.indicatorTop;
     const fadeTop = top > 0 ? INDICATOR_FADE_PX : 0;
-    const fadeBottom = top < this.pins.length - visible ? INDICATOR_FADE_PX : 0;
+    const fadeBottom =
+      top < this.visiblePins.length - visible ? INDICATOR_FADE_PX : 0;
     return trustHTML(
       `--chat-pinned-bar-seg: ${segment}px; ` +
         `--chat-pinned-bar-gap: ${SEGMENT_GAP_PX}px; ` +
@@ -152,13 +161,15 @@ export default class ChatPinnedMessageBar extends Component {
   }
 
   get currentExcerpt() {
-    const message = this.currentPin?.message;
-    if (message?.excerpt) {
+    const pin = this.currentPin;
+    // the pin's own excerpt keeps links; the message's is the stripped fallback
+    const excerpt = pin?.excerpt || pin?.message?.excerpt;
+    if (excerpt) {
       // excerpt is server-escaped HTML — trust it so entities/emoji aren't re-escaped
-      return trustHTML(message.excerpt);
+      return trustHTML(excerpt);
     }
     // media-only fallback: leave untrusted so the template escapes it
-    return message?.message ?? "";
+    return pin?.message?.message ?? "";
   }
 
   @action
@@ -175,11 +186,10 @@ export default class ChatPinnedMessageBar extends Component {
   }
 
   #updatePinnedMessage(updated) {
-    const pin = updated && this.pins.find((p) => p.message?.id === updated.id);
-    if (pin) {
-      pin.message.message = updated.message;
-      pin.message.excerpt = updated.excerpt;
+    if (!updated || !this.pins.some((pin) => pin.message?.id === updated.id)) {
+      return;
     }
+    this.loadPins();
   }
 
   @action
@@ -203,7 +213,10 @@ export default class ChatPinnedMessageBar extends Component {
 
   #reconcileDismissal() {
     const dismissedAbove = pinsDismissedAboveId(this.args.channel);
-    if (dismissedAbove != null && newestPinId(this.pins) > dismissedAbove) {
+    if (
+      dismissedAbove != null &&
+      newestPinId(this.visiblePins) > dismissedAbove
+    ) {
       resetPinsDismissal(this.args.channel);
     }
   }
@@ -224,7 +237,7 @@ export default class ChatPinnedMessageBar extends Component {
 
   @action
   dismiss() {
-    dismissPinsUpTo(this.args.channel, newestPinId(this.pins));
+    dismissPinsUpTo(this.args.channel, newestPinId(this.visiblePins));
   }
 
   <template>
@@ -238,12 +251,14 @@ export default class ChatPinnedMessageBar extends Component {
         {{this.subscribe @channel.id}}
       >
         {{#if this.currentPin}}
-          <button
-            type="button"
-            class="chat-pinned-bar__main"
-            aria-label={{i18n "chat.pinned_bar.jump_to_pinned"}}
-            {{on "click" this.jumpToCurrentPin}}
-          >
+          <div class="chat-pinned-bar__main">
+            <button
+              type="button"
+              class="chat-pinned-bar__jump"
+              aria-label={{i18n "chat.pinned_bar.jump_to_pinned"}}
+              {{on "click" this.jumpToCurrentPin}}
+            ></button>
+
             {{#if this.hasMultiplePins}}
               <span
                 class="chat-pinned-bar__indicator"
@@ -271,7 +286,7 @@ export default class ChatPinnedMessageBar extends Component {
                 {{dReplaceEmoji this.currentExcerpt}}
               </span>
             </span>
-          </button>
+          </div>
         {{/if}}
 
         {{#if this.showInlineDismiss}}

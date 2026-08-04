@@ -24,6 +24,17 @@ RSpec.describe Chat::Api::ChannelPinsController do
       expect(response.parsed_body["pinned_messages"][0]["chat_message_id"]).to eq(message.id)
     end
 
+    it "keeps links in the pin excerpt, unlike the message's own excerpt" do
+      linked = Fabricate(:chat_message, chat_channel: channel, message: "see [the docs](/faq)")
+      Fabricate(:chat_pinned_message, chat_message: linked, chat_channel: channel)
+
+      get "/chat/api/channels/#{channel.id}/pins"
+
+      pin = response.parsed_body["pinned_messages"][0]
+      expect(pin["excerpt"]).to include("<a href=\"/faq\"")
+      expect(pin["message"]["excerpt"]).not_to include("<a")
+    end
+
     it "returns an empty list when there are no pinned messages" do
       get "/chat/api/channels/#{channel.id}/pins"
 
