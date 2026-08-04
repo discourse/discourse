@@ -5,7 +5,7 @@ RSpec.describe BookmarksController do
   let(:user_2) { Fabricate(:user) }
   let(:bookmark_post) { Fabricate(:post) }
   let(:bookmark_post_2) { Fabricate(:post) }
-  let(:bookmark_topic) { Fabricate(:topic) }
+  let(:bookmark_topic) { Fabricate(:topic_with_op) }
   let(:bookmark_user) { current_user }
 
   describe "#create" do
