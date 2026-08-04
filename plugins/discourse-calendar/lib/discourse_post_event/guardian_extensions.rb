@@ -9,9 +9,7 @@ module DiscoursePostEvent
 
     def can_create_discourse_post_event?
       return false if anonymous?
-      return @can_create_discourse_post_event if defined?(@can_create_discourse_post_event)
-
-      @can_create_discourse_post_event =
+      @can_create_discourse_post_event ||=
         user.in_any_groups?(SiteSetting.discourse_post_event_allowed_on_groups_map)
     end
 

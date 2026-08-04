@@ -21,6 +21,16 @@ Fabricator(:user, class_name: :user) do
   after_create do |user, transients|
     if transients[:refresh_auto_groups] || transients[:trust_level]
       Group.user_trust_level_change!(user.id, user.trust_level)
+
+      user.group_users << Fabricate(:group_user, user: user, group: Group[:admins]) if user.admin?
+
+      if user.moderator?
+        user.group_users << Fabricate(:group_user, user: user, group: Group[:moderators])
+      end
+
+      if user.admin? || user.moderator?
+        user.group_users << Fabricate(:group_user, user: user, group: Group[:staff])
+      end
     end
     SearchIndexer.disable if transients[:search_index]
 
