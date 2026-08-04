@@ -511,6 +511,18 @@ class Upload < ActiveRecord::Base
     sha1_from_base62_encoded(base62)
   end
 
+  def self.sha1_from_secure_uploads_url(url)
+    query = URI.parse(url).query
+    return if query.blank?
+
+    base62_sha1 = Rack::Utils.parse_query(query)["base62_sha1"]
+    return if !base62_sha1.is_a?(String) || !base62_sha1.match?(/\A[a-zA-Z0-9]+\z/)
+
+    sha1_from_base62_encoded(base62_sha1)
+  rescue URI::InvalidURIError, ArgumentError
+    nil
+  end
+
   def self.sha1_from_long_url(url)
     $2 if url =~ URL_REGEX || url =~ OptimizedImage::URL_REGEX
   end

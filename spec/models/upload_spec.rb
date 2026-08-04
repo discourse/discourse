@@ -848,6 +848,20 @@ RSpec.describe Upload do
     end
   end
 
+  describe ".sha1_from_secure_uploads_url" do
+    it "extracts the logical upload sha1 from the query string" do
+      url = "/secure-uploads/original/1X/storage.png?base62_sha1=#{upload.base62_sha1}"
+
+      expect(Upload.sha1_from_secure_uploads_url(url)).to eq(upload.sha1)
+    end
+
+    it "returns nil for an invalid logical upload identity" do
+      url = "/secure-uploads/original/1X/storage.png?base62_sha1=not%20base62"
+
+      expect(Upload.sha1_from_secure_uploads_url(url)).to be_nil
+    end
+  end
+
   def enable_secure_uploads
     setup_s3
     SiteSetting.secure_uploads = true
