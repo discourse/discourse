@@ -1906,7 +1906,7 @@ sq:
           email_placeholder: "emri@adresa.com"
           invite_by_email: "Email"
           restrict_domain: "Kufizoni në domein"
-          more_options: "Më shumë mundësi"
+          create_and_copy: "Kopjoni lidhjen"
           update: "Përditëso"
           summary:
             role_member: "Anëtar"
@@ -1917,7 +1917,7 @@ sq:
             expires: "Skadon"
             topic: "Topic"
             groups: "Grupet"
-            edit: "Redaktoni ftesën"
+            edit: "Redaktoni"
         bulk_invite:
           none: "Nuk ka ftesë për t'u shfaqur në këtë faqe."
           text: "Ftesë me shumicë"
@@ -3928,6 +3928,8 @@ sq:
         custom:
           save: "Ruaj"
           delete: "Fshij"
+          localizations:
+            remove_language: "Hiq"
           links:
             icon:
               label: "Ikonë"

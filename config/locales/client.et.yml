@@ -1212,6 +1212,7 @@ et:
           staff_role_moderator: "Moderaator"
           email_placeholder: "nimi@näide.ee"
           invite_by_email: "E-post"
+          create_and_send: "Saada"
           summary:
             role_member: "Liige"
             role_admin: "Adminn"
@@ -1219,6 +1220,7 @@ et:
             method_email: "E-post"
             topic: "Teema"
             groups: "Rühmad"
+            edit: "Muuda"
         bulk_invite:
           error: "Vabandust, fail peab olema CSV-vormingus."
       password:
@@ -2675,6 +2677,8 @@ et:
         custom:
           save: "Salvesta"
           delete: "Kustuta"
+          localizations:
+            remove_language: "Eemalda"
           links:
             icon:
               label: "Ikoon"

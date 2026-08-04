@@ -190,6 +190,9 @@ he:
               description: "לאפשר תיוג של פוסטים שנוצרו על ידי משתמש המערכת."
     discourse_ai:
       title: "בינה מלאכותית"
+      discourse_workflows:
+        ai_agent:
+          mode: "מצב"
       ai_tool_approval:
         loading: "בטעינה…"
         tool: "פעולה"
@@ -473,6 +476,8 @@ he:
           clear_all: "לפנות הכול"
         forced_tools: "כלים נאכפים"
         allowed_groups: "קבוצות מורשות"
+        duplicate: "שכפול"
+        copy_name: "עותק של %{name}"
         delete: "מחיקה"
         temperature: "טמפרטורה"
         temperature_help: "טמפרטורה לשימוש למודל השפה הגדול (LLM), הגדלה תגדיל את היצירתיות (אפשר להשאיר ריק לשימוש בברירת המחדל של הדגם, בדרך כלל זה ערך בין 0.0 לבין 2.0)"
@@ -662,7 +667,7 @@ he:
           anthropic-claude-opus-4-7: "המודל החכם ביותר של Anthropic"
           anthropic-claude-sonnet-4-6: "איזון מיטבי בין מהירות לעלות"
           anthropic-claude-haiku-4-5: "מהיר וחסכוני"
-          google-gemini-3-1-pro: "המודל החכם ביותר של Google"
+          google-gemini-3-1-pro-preview: "המודל החכם ביותר של Google"
         preseeded_model_description: "מודל קוד פתוח שהוגדר מראש ומשתמש ב־%{model}"
         configured:
           title: "LLMs (מודלי שפה גדולים) מוגדרים"
@@ -696,7 +701,6 @@ he:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"

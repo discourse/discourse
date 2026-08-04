@@ -231,6 +231,7 @@ tr_TR:
       discourse_workflows:
         ai_agent:
           agent_id: "Ajan"
+          mode: "Mod"
       ai_tool_approval:
         loading: "Yükleniyor..."
         agent: "Ajan"
@@ -623,6 +624,8 @@ tr_TR:
         allowed_groups: "İzin verilen gruplar"
         confirm_delete: "Bu ajanı silmek istediğinizden emin misiniz?"
         new: "Yeni ajan"
+        duplicate: "Eş Kopya"
+        copy_name: "%{name} kopyası"
         no_agents: "Henüz hiçbir ajan oluşturmadınız"
         title: "Ajanlar"
         short_title: "Ajanlar"
@@ -913,8 +916,7 @@ tr_TR:
           anthropic-claude-opus-4-7: "Antropic'in en akıllı modeli"
           anthropic-claude-sonnet-4-6: "Hız ve maliyetin optimum dengesi"
           anthropic-claude-haiku-4-5: "Hızlı ve uygun maliyetli"
-          google-gemini-3-1-pro: "Google'ın en akıllı modeli"
-          google-gemini-3-flash: "Hızlı ve uygun maliyetli, çok modlu akıl yürütme"
+          google-gemini-3-1-pro-preview: "Google'ın en akıllı modeli"
           open_router-moonshotai-kimi-k2-6: "Moonshot'ın vizyon yeteneklerine sahip multimodal modeli"
         preseeded_model_description: "%{model} kullanan önceden yapılandırılmış açık kaynaklı model"
         configured:
@@ -952,7 +954,6 @@ tr_TR:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"

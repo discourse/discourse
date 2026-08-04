@@ -2306,7 +2306,8 @@ el:
           email_placeholder: "name@example.com"
           invite_by_email: "Διεύθυνση Email"
           restrict_domain: "Περιορισμός σε τομέα"
-          more_options: "Περισσότερες επιλογές"
+          create_and_send: "Αποστολή"
+          create_and_copy: "Αντιγραφή συνδέσμου"
           update: "Ενημέρωση"
           summary:
             role_member: "Μέλος"
@@ -2319,7 +2320,7 @@ el:
             expires: "Λήγει"
             topic: "Νήμα"
             groups: "Ομάδες"
-            edit: "Επεξεργασία πρόσκλησης"
+            edit: "Επεξεργασία"
         bulk_invite:
           none: "Δεν υπάρχουν προσκλήσεις για εμφάνιση σε αυτή τη σελίδα."
           text: "Μαζική πρόσκληση"
@@ -3059,7 +3060,6 @@ el:
       italic_label: "I"
       italic_title: "Έμφαση"
       italic_text: "κείμενο σε έμφαση"
-      heading_title: "Επικεφαλίδες"
       heading_level_n: "Επικεφαλίδα %{levelNumber}"
       heading_level_n_title: "Επικεφαλίδα %{levelNumber}"
       heading_level_paragraph: "Παράγραφος"
@@ -5451,9 +5451,9 @@ el:
           always_public: "Το περιεχόμενο αυτής της ενότητας είναι πάντα δημόσιο"
           more_menu: "Περισσότερο μενού"
           localizations:
-            title: "Μεταφράσεις"
             locale: "Γλώσσα"
             title_label: "Τίτλος ενότητας"
+            remove_language: "Αφαίρεση"
           links:
             add: "Προσθήκη άλλου συνδέσμου"
             delete: "Διαγραφή συνδέσμου"

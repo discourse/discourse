@@ -2247,7 +2247,8 @@ ug:
           invite_by_email: "ئېلخەت"
           restrict_domain: "دائىرە بىلەنلا چەكلىنىدۇ"
           domain_placeholder: "example.com"
-          more_options: "تېخىمۇ كۆپ تاللانما"
+          create_and_send: "يوللا"
+          create_and_copy: "ئۇلانما كۆچۈر"
           update: "يېڭىلا"
           summary:
             role_member: "ئەزا"
@@ -2259,7 +2260,7 @@ ug:
             expires: "ۋاقتى توشىدۇ"
             topic: "تېما"
             groups: "گۇرۇپپا"
-            edit: "تەكلىپ تەھرىر"
+            edit: "تەھرىر"
         bulk_invite:
           none: "بۇ بەتتە كۆرسىتىلىدىغان تەكلىپنامە يوق."
           text: "توپ تەكلىپ"
@@ -2984,7 +2985,6 @@ ug:
       italic_label: "I"
       italic_title: "يانتۇ"
       italic_text: "يانتۇ تېكىست"
-      heading_title: "ماۋزۇ"
       heading_level_n: "ماۋزۇ %{levelNumber}"
       heading_level_n_title: "ماۋزۇ %{levelNumber}"
       heading_level_paragraph: "ئابزاس"
@@ -5131,9 +5131,9 @@ ug:
           always_public: "بۇ بۆلەكتىكى مەزمۇنلار ھەمىشە ئاشكارا"
           more_menu: "تېخىمۇ كۆپ تىزىملىك"
           localizations:
-            title: "تەرجىمە"
             locale: "تىل"
             title_label: "بۆلەك ماۋزۇسى"
+            remove_language: "چىقىرىۋەت"
           links:
             add: "باشقا ئۇلانما قوش"
             delete: "ئۇلانما ئۆچۈر"

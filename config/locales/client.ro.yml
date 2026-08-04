@@ -1837,7 +1837,8 @@ ro:
           admin_email_label: "Adresă email"
           email_placeholder: "nume@exemplu.comb"
           invite_by_email: "E-mail"
-          more_options: "Mai multe opțiuni"
+          create_and_send: "Trimite"
+          create_and_copy: "Copiază legătură"
           update: "Actualizează"
           summary:
             role_member: "Membru"
@@ -1847,7 +1848,7 @@ ro:
             method_email: "E-mail"
             topic: "Subiect"
             groups: "Grupuri"
-            edit: "Editează invitație"
+            edit: "Editează"
         bulk_invite:
           none: "Nu există invitații de afișat pe această pagină."
           text: "Invitație în masă"
@@ -2309,7 +2310,6 @@ ro:
       italic_label: "I"
       italic_title: "Italic"
       italic_text: "text italic"
-      heading_title: "Titluri"
       heading_level_n: "Titlu %{levelNumber}"
       heading_level_n_title: "Titlu %{levelNumber}"
       heading_level_paragraph: "Paragraf"
@@ -3747,7 +3747,7 @@ ro:
           delete: "Șterge"
           delete_public_confirm: "Această secțiune este vizibilă pentru toată lumea, sigur vrei să o ștergi?"
           localizations:
-            title: "Traduceri"
+            remove_language: "Elimină"
           links:
             add: "Adaugă altă legătură"
             reset: "Resetare la valorile implicite"

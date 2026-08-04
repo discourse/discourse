@@ -94,6 +94,9 @@ vi:
         description: "Chú thích"
         save: "Lưu chú thích"
         saved: "Đã lưu chú thích hình ảnh Trí tuệ nhân tạo (AI)"
+      discourse_workflows:
+        ai_agent:
+          mode: "Chế độ"
       ai_tool_approval:
         loading: "Đang tải..."
         load_error: "Không thể tải hành động đang chờ này."
@@ -240,6 +243,8 @@ vi:
         mcp_tools_modal:
           select_all: "Chọn hết"
           clear_all: "Xóa hết"
+        duplicate: "Nhân bản"
+        copy_name: "Bản sao của %{name}"
         delete: "Xóa"
         thinking_effort: "Cường độ suy luận (Thinking effort)"
         thinking_effort_help: "Mức độ suy luận mà mô hình nên thực hiện trước khi đưa ra câu trả lời. Giá trị cao hơn giúp xử lý tốt các tác vụ khó nhưng có thể làm tăng độ trễ và chi phí. Các nhà cung cấp không hỗ trợ sẽ bỏ qua cài đặt này."
@@ -328,7 +333,6 @@ vi:
         tests:
           success: "Thành công!"
         providers:
-          google: "G"
           google_vertex_ai: "Google Vertex AI"
           fake: "Tùy biến"
         provider_fields:

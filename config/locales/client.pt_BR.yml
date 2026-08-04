@@ -2330,7 +2330,8 @@ pt_BR:
           invite_by_email: "E-mail"
           restrict_domain: "Restringir a domínio"
           domain_placeholder: "example.com"
-          more_options: "Mais opções"
+          create_and_send: "Enviar"
+          create_and_copy: "Copiar link"
           update: "Atualizar"
           summary:
             role_member: "Membro"
@@ -2343,7 +2344,7 @@ pt_BR:
             expires: "Expira"
             topic: "Tópico"
             groups: "Grupos"
-            edit: "Editar convite"
+            edit: "Editar"
         bulk_invite:
           none: "Nenhum convite para exibir nesta página."
           text: "Convite em massa"
@@ -3101,7 +3102,6 @@ pt_BR:
       italic_label: "I"
       italic_title: "Realce"
       italic_text: "texto realçado"
-      heading_title: "Cabeçalhos"
       heading_level_n: "Cabeçalho %{levelNumber}"
       heading_level_n_title: "Cabeçalho %{levelNumber}"
       heading_level_paragraph: "Parágrafo"
@@ -5338,9 +5338,9 @@ pt_BR:
           always_public: "O conteúdo nesta seção é sempre público"
           more_menu: "Menu Mais"
           localizations:
-            title: "Traduções"
             locale: "Idioma"
             title_label: "Título da seção"
+            remove_language: "Remover"
           links:
             add: "Adicionar outro link"
             delete: "Excluir link"

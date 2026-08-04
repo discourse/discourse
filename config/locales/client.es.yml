@@ -2311,7 +2311,8 @@ es:
           email_placeholder: "nombre@ejemplo.com"
           invite_by_email: "Correo electrónico"
           restrict_domain: "Restringir a un dominio"
-          more_options: "Más opciones"
+          create_and_send: "Enviar"
+          create_and_copy: "Copiar enlace"
           update: "Actualizar"
           summary:
             role_member: "Miembro"
@@ -2324,7 +2325,7 @@ es:
             expires: "Caduca"
             topic: "Tema"
             groups: "Grupos"
-            edit: "Editar invitación"
+            edit: "Editar"
         bulk_invite:
           none: "No hay invitaciones para mostrar en esta página."
           text: "Invitaciones en masa"
@@ -3063,7 +3064,6 @@ es:
       italic_label: "I"
       italic_title: "Cursiva"
       italic_text: "Texto en cursiva"
-      heading_title: "Encabezados"
       heading_level_n: "Encabezado %{levelNumber}"
       heading_level_n_title: "Encabezado %{levelNumber}"
       heading_level_paragraph: "Párrafo"
@@ -5370,9 +5370,9 @@ es:
           always_public: "El contenido de esta sección es siempre público"
           more_menu: "Menú Más"
           localizations:
-            title: "Traducciones"
             locale: "Idioma"
             title_label: "Título de la sección"
+            remove_language: "Eliminar"
           links:
             add: "Añadir otro enlace"
             delete: "Eliminar enlace"
