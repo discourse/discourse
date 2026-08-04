@@ -156,7 +156,7 @@ en:
         error_workflow_none: "None"
         no_error_workflows_available: "No workflows with an Error trigger node are available"
         timezone: "Timezone"
-        timezone_description: "Schedule triggers and time conditions use this timezone. If unset, they use the site timezone."
+        timezone_description: "Schedule triggers, time conditions, and date values without a timezone offset use this timezone. If unset, they use the site timezone."
         danger_zone: "Danger zone"
         delete_description: "Permanently delete this workflow and all its executions. This action cannot be undone."
       versions:
@@ -265,6 +265,7 @@ en:
         "flow:wait": "Wait"
         "action:modal": "Modal"
         "action:topic_category": "Topic category"
+        "action:topic_pin": "Topic pinning"
       node_descriptions:
         "trigger:topic_closed": "Fires when a topic is closed by a user or auto-close timer"
         "trigger:post_created": "Fires when a new post or reply is created"
@@ -318,6 +319,7 @@ en:
         "flow:wait": "Pause workflow execution and resume after a delay or webhook callback"
         "action:modal": "Shows a modal to a user and waits for them to choose an option"
         "action:topic_category": "Set or clear the category of a topic"
+        "action:topic_pin": "Pin or unpin a topic in its category, globally, or as a banner"
       topic_admin_button:
         label: "Button label"
         label_placeholder: "Run workflow"
@@ -406,6 +408,27 @@ en:
         topic_id: "Topic ID"
         category_id: "Category"
         category_id_description: "Leave empty to set no category."
+        actor_username: "Performed by user"
+      topic_pin:
+        operation: "Operation"
+        operations:
+          add: "Pin"
+          remove: "Unpin"
+        pin_type: "Pin type"
+        pin_types:
+          pin: "Pinned topic"
+          banner: "Banner topic"
+        topic_id: "Topic ID"
+        pinned_globally: "Pin globally"
+        pinned_globally_description: "Show the topic at the top of all topic lists instead of only its category."
+        pinned_until: "Pinned until"
+        pinned_until_description: "Automatically unpin at this time. Leave empty to pin indefinitely."
+        pinned_until_dynamic_hint: "Must resolve to a date and time, for example 2026-08-01 12:00."
+        bannered_until: "Bannered until"
+        bannered_until_description: "Automatically remove the banner at this time. Leave empty to keep the banner indefinitely."
+        bannered_until_dynamic_hint: "Must resolve to a date and time, for example 2026-08-01 12:00."
+        timezone: "Timezone"
+        timezone_none: "Workflow default"
         actor_username: "Performed by user"
       limit:
         max_items: "Max items"
