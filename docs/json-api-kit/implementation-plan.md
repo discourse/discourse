@@ -184,6 +184,41 @@ null to-one linkage, cycles, and the identity rules (`id` always a string, type 
 figures are a *time* bound only — the sketch already allocates less than the floor, whose dedup keys
 were arrays where the sketch nests hashes.
 
+### Decided: no pagination engine dependency
+
+The spike ran its keyset windows through `Pagy::Keyset`, subclassed as `NullSafeEngine`. Pagy is not a
+core dependency — it existed only in the spike's Gemfile — so the question was never "drop it", it was
+"add it". The answer is no.
+
+What was left of it once `Keyset` and `Cursor` became ours: the `limit + 1`-and-pop fetch, which is
+`Window`'s job anyway, and one line of typecasting that is wrong for projected keys (an expression
+alias has no attribute type). Everything else we had already replaced — order extraction, cursor
+encoding, identifier quoting — or overridden: the predicate composer was a verbatim copy of a
+`protected` method with `=` changed to `IS NOT DISTINCT FROM`, held together by an `allocate`
+constructor bypass, and fed a `keyset:` option duplicating our own `Keyset`.
+
+Owning it also produces better SQL, because the engine cannot know what we know:
+
+- **`IS NOT DISTINCT FROM` is not an indexable condition.** On PostgreSQL 15.18 with `enable_seqscan`
+  off, `id = 5` plans as `Index Cond`, while `id IS NOT DISTINCT FROM 5` plans as a post-scan
+  `Filter`; `deleted_at IS NULL` is an index condition again. A composer that reaches for null-safe
+  equality everywhere degrades *every* equality term of a composite keyset, on every page — not just
+  in the NULL tail. Knowing per key whether the cursor value is null, we emit `col IS NULL` or
+  `col = :value`, both indexable, for the same correctness.
+- **Row-wise comparison is unsafe with nullable keys.** `(a, b, c) > (:a, :b, :c)` is the friendliest
+  form for an index, and it evaluates to NULL — silently dropping rows — if any element is NULL. An
+  engine with no concept of nulls cannot guard that; a keyset that knows which keys are nullable can
+  apply the optimisation exactly when it holds.
+
+So the `Paginator` owns predicate composition (OR-of-ANDs, the leading-key `>=` hint for optimizers
+that struggle with ORs, row-wise comparison when every direction agrees and no key is nullable), typed
+binding (cast by column type for column keys, pass through for projected ones) and the fetch. Under
+specs, which the copied predicate never had.
+
+Caveat to re-check on real data when `Paginator` lands: the plans above come from a 68-row table, so
+the *costs* are meaningless — it is the `Index Cond` versus `Filter` structure that generalises, and
+none of it bites unless the keyset's leading columns have a supporting index in the first place.
+
 ## The agent skill
 
 `.skills/discourse-json-api-kit-authoring/SKILL.md`, following the convention in `.skills/`
