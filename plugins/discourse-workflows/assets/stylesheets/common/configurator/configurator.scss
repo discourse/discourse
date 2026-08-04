@@ -418,21 +418,7 @@
 .workflows-node-preview {
   margin-block-end: var(--space-3);
 
-  &__header {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-2);
-    margin-block-end: var(--space-1);
-  }
-
-  &__title {
-    font-weight: 500;
-  }
-
-  &__counts,
-  &__truncated,
-  &__empty {
+  &__truncated {
     color: var(--primary-medium);
     font-size: var(--font-down-1);
   }

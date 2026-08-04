@@ -144,23 +144,23 @@ export default class LivePreview extends Component {
   <template>
     {{#if this.previewable}}
       <div
-        class="workflows-node-preview"
+        class="workflows-node-preview workflows-context-panel__section"
         {{didInsert this.schedulePreview}}
         {{didUpdate this.schedulePreview @configuration}}
       >
-        <div class="workflows-node-preview__header">
-          <span class="workflows-node-preview__title">
+        <div class="workflows-context-panel__header">
+          <h3 class="workflows-context-panel__title">
             {{i18n "discourse_workflows.node_preview.title"}}
-          </span>
-          {{#if this.result}}
-            <span
-              class="workflows-node-preview__counts"
-            >{{this.countLabel}}</span>
-          {{/if}}
+            {{#if this.result}}
+              <span class="workflows-context-panel__title-meta">
+                {{this.countLabel}}
+              </span>
+            {{/if}}
+          </h3>
         </div>
 
         {{#if this.emptyReason}}
-          <p class="workflows-node-preview__empty">{{this.emptyReason}}</p>
+          <p class="workflows-context-panel__empty">{{this.emptyReason}}</p>
         {{else if this.columns.length}}
           <div class="workflows-node-preview__table-wrapper">
             <table class="workflows-node-preview__table">
@@ -189,7 +189,7 @@ export default class LivePreview extends Component {
             </p>
           {{/if}}
         {{else}}
-          <p class="workflows-node-preview__empty">
+          <p class="workflows-context-panel__empty">
             {{i18n "discourse_workflows.node_preview.pending"}}
           </p>
         {{/if}}
