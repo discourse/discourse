@@ -88,11 +88,11 @@ export default class PostStream extends Component {
       .filter((num) => !isNaN(num));
   }
 
-  // Indexed rather than wrapped: a per-render wrapper would break `{{#each}}`
-  // identity, invalidating `@post` and rebuilding unchanged cooked HTML.
+  // Indexed rather than wrapped: a per-render wrapper is a new value each
+  // recompute, invalidating `@post` and rebuilding unchanged cooked HTML.
   @bind
   previousPost(index) {
-    return index > 0 ? this.posts[index - 1] : null;
+    return this.posts[index - 1] ?? null;
   }
 
   @bind

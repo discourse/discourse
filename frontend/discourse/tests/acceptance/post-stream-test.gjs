@@ -139,6 +139,7 @@ acceptance("Post-Stream | cooked HTML stability", function (needs) {
       before + 1,
       "a post was appended"
     );
+    assert.dom("#post_9001").exists("the appended post was rendered");
     assert.strictEqual(
       document.querySelector("#post_1 .cooked"),
       cookedBefore,
@@ -200,6 +201,7 @@ acceptance("Post-Stream | cooked HTML stability", function (needs) {
       before + 1,
       "a post was prepended"
     );
+    assert.dom("#post_0").exists("the prepended post was rendered");
     assert.strictEqual(
       document.querySelector(`${anchorSelector} .cooked`),
       cookedBefore,
@@ -215,5 +217,59 @@ acceptance("Post-Stream | cooked HTML stability", function (needs) {
       1,
       "the anchor post is not decorated again"
     );
+  });
+});
+
+acceptance("Post-Stream | neighbor reactivity", function (needs) {
+  needs.user();
+
+  test("a mid-stream insert refreshes the neighbor-derived output of the post below it", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    const postStream = this.owner.lookup("controller:topic").model.postStream;
+    // retains both its key and its index across the insert; only its
+    // `previousPost` changes, so it is only re-rendered if that stays live
+    const shiftedPost = postStream.posts[1];
+
+    assert
+      .dom(".time-gap")
+      .doesNotExist("the fixture posts are too close together to show a gap");
+
+    // far enough back that `shiftedPost` clears show_time_gap_days (7) once
+    // this post becomes the one above it
+    const inserted = postStream.storePost(
+      postStream.store.createRecord("post", {
+        id: 9003,
+        post_number: 9003,
+        topic_id: postStream.topic.id,
+        cooked: "<p>inserted</p>",
+        username: "eviltrout",
+        created_at: "2010-01-01T00:00:00.000Z",
+      })
+    );
+    postStream.posts.splice(1, 0, inserted);
+    await settled();
+
+    assert.dom("#post_9003").exists("the inserted post was rendered");
+
+    const shiftedElement = document.querySelector(
+      `#post_${shiftedPost.post_number}`
+    );
+    assert.dom(shiftedElement).exists("the shifted post is still rendered");
+    assert
+      .dom(".time-gap")
+      .exists(
+        { count: 1 },
+        "a time gap derived from the new previous post renders"
+      );
+
+    // the id is on the inner <article>, so step out to the post wrapper the
+    // gap is actually a sibling of
+    assert
+      .dom(shiftedElement.parentElement.previousElementSibling)
+      .hasClass(
+        "time-gap",
+        "the time gap renders directly above the shifted post"
+      );
   });
 });
