@@ -135,8 +135,8 @@
   &__sections {
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
     align-items: center;
+    gap: var(--space-4);
   }
 
   &__section {
@@ -230,7 +230,7 @@
     align-items: center;
     gap: var(--space-1);
     padding: var(--space-1) var(--space-2);
-    font-size: var(--font-down-2);
+    font-size: var(--font-down-1);
     font-weight: 700;
     color: var(--secondary);
     background: var(--tertiary);
@@ -693,6 +693,9 @@
 .design-wizard__font-list {
   max-height: 40vh;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-low-mid) transparent;
 }
 
 @keyframes design-wizard-slide-in {

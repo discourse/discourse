@@ -14,6 +14,7 @@ import { showCreateInviteModal } from "discourse/lib/invite-modal";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { defaultHomepage } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const STEPS = [
@@ -142,6 +143,7 @@ export default class AdminOnboardingBanner extends Component {
   @service toasts;
 
   @tracked dismissed = false;
+  @tracked minimized = false;
 
   get shouldDisplay() {
     if (this.dismissed) {
@@ -156,6 +158,12 @@ export default class AdminOnboardingBanner extends Component {
     return currentRouteName === `discovery.${defaultHomepage()}`;
   }
 
+  get completedSteps() {
+    return STEPS.filter(
+      (Step) => !!this.keyValueStore.get(`onboarding_step_${Step.name}`)
+    ).length;
+  }
+
   @action
   async checkIfOnboardingIsComplete() {
     const allStepsAreDone = STEPS.every(
@@ -165,6 +173,11 @@ export default class AdminOnboardingBanner extends Component {
     if (allStepsAreDone) {
       await this.endOnboarding({ skipped: false });
     }
+  }
+
+  @action
+  minimize() {
+    this.minimized = !this.minimized;
   }
 
   @action
@@ -190,25 +203,45 @@ export default class AdminOnboardingBanner extends Component {
       <div class="admin-onboarding-banner">
         <div class="admin-onboarding-banner__wrap">
           <div class="admin-onboarding-banner__header">
-            <h2>
-              {{i18n
-                "admin_onboarding_banner.launch_in_easy_steps"
-                (hash step_count=STEPS.length)
-              }}
-            </h2>
-            <DButton
-              @action={{this.endOnboarding}}
-              @icon="xmark"
-              class="btn no-text btn-transparent btn-close"
-            />
-          </div>
-          <div class="admin-onboarding-banner__content">
-            <div class="admin-onboarding-banner__steps">
-              {{#each STEPS as |Step|}}
-                <Step @onCompleted={{this.checkIfOnboardingIsComplete}} />
-              {{/each}}
+            <div class="admin-onboarding-banner__header-text">
+              <span class="admin-onboarding-banner__title">
+                {{dIcon "list" class="admin-onboarding-banner__title-icon"}}
+                {{i18n "admin_onboarding_banner.launch_in_easy_steps"}}
+              </span>
+              {{#if this.minimized}}
+                <span class="admin-onboarding-banner__subtitle">
+                  {{i18n
+                    "admin_onboarding_banner.launch_in_easy_steps_subtitle"
+                    (hash
+                      completed_steps=this.completedSteps
+                      step_count=STEPS.length
+                    )
+                  }}
+                </span>
+              {{/if}}
+            </div>
+            <div class="admin-onboarding-banner__header-actions">
+              <DButton
+                @action={{this.minimize}}
+                @icon={{if this.minimized "angle-down" "angle-up"}}
+                class="btn no-text btn-transparent btn-minimize"
+              />
+              <DButton
+                @action={{this.endOnboarding}}
+                @icon="xmark"
+                class="btn no-text btn-transparent btn-close"
+              />
             </div>
           </div>
+          {{#unless this.minimized}}
+            <div class="admin-onboarding-banner__content">
+              <div class="admin-onboarding-banner__steps">
+                {{#each STEPS as |Step|}}
+                  <Step @onCompleted={{this.checkIfOnboardingIsComplete}} />
+                {{/each}}
+              </div>
+            </div>
+          {{/unless}}
         </div>
       </div>
     {{/if}}

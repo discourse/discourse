@@ -4,7 +4,6 @@ import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { logOnboardingEvent } from "discourse/lib/admin-onboarding";
-import { currentThemeId, HORIZON_THEME_ID } from "discourse/lib/theme-selector";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -26,14 +25,8 @@ export default class OnboardingStep extends Component {
     return this.constructor.name;
   }
 
-  get icon() {
-    throw new Error("Icon is required for OnboardingStep");
-  }
-
   get btnClass() {
-    return currentThemeId() === HORIZON_THEME_ID
-      ? "btn-default"
-      : "btn-primary";
+    return "btn-transparent btn-small btn-link";
   }
 
   @action
@@ -67,20 +60,24 @@ export default class OnboardingStep extends Component {
       <div class="onboarding-step__checkbox">
         {{~dIcon
           (if this.completed "square-check" "far-square")
-          class=(if this.completed "checked")
+          class=(if
+            this.completed
+            "checked onboarding-step__checkbox-icon"
+            "onboarding-step__checkbox-icon"
+          )
         }}
-        <span>{{i18n (concat this.i18nKey this.name ".title")}}</span>
+        <span class="onboarding-step__title">{{i18n
+            (concat this.i18nKey this.name ".title")
+          }}</span>
+
       </div>
 
       <div class="onboarding-step__description">
-        <div class="onboarding-step__text">
-          {{i18n (concat this.i18nKey this.name ".description")}}
-        </div>
+        {{i18n (concat this.i18nKey this.name ".description")}}
       </div>
 
       <div class="onboarding-step__action">
         <DButton
-          @icon={{this.icon}}
           @label={{concat this.i18nKey this.name ".action"}}
           @action={{this.performAction}}
           class={{this.btnClass}}

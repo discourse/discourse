@@ -2,9 +2,6 @@
 @import "common/foundation/mixins";
 
 .admin-onboarding-banner {
-  margin-bottom: var(--space-4);
-  color: var(--secondary);
-
   @include viewport.until(sm) {
     display: none;
   }
@@ -12,95 +9,95 @@
   &__wrap {
     box-sizing: border-box;
     position: relative;
-    padding: var(--space-5) var(--space-8);
-    border-radius: var(--d-border-radius-large);
-    background: var(--accent-color, var(--tertiary-low));
-    color: var(--accent-text-color, var(--primary));
+    border-radius: var(--d-border-radius);
+    border: 1px solid var(--content-border-color);
+  }
 
-    @include viewport.until(md) {
-      padding: var(--space-4) var(--space-5);
-      margin-top: var(--space-2);
-    }
+  &__title {
+    font-weight: 600;
+  }
 
-    @include viewport.until(sm) {
-      display: block;
-      padding: var(--space-2);
-      margin-top: 0;
-    }
-
-    .btn-close {
-      position: absolute;
-      top: var(--space-1);
-      right: var(--space-1);
-
-      .d-icon {
-        color: var(--accent-text-color, var(--primary));
-      }
-    }
+  &__title-icon {
+    margin-right: var(--space-2);
+    font-size: var(--font-down-1);
   }
 
   &__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: var(--space);
+    height: min-content;
+    padding-inline-start: var(--space-4);
+    background: var(--primary-100);
+  }
 
-    @include viewport.until(md) {
-      font-size: var(--font-down-1);
-    }
+  &__header-text {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-4);
+    align-items: center;
+  }
+
+  &__subtitle {
+    font-size: var(--font-down-2);
+    color: var(--primary-700);
   }
 
   &__content {
     text-align: center;
-
-    @include viewport.until(md) {
-      margin-top: var(--space-3);
-    }
   }
 
   &__steps {
-    margin-bottom: var(--space-2);
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .onboarding-step {
+    display: flex;
     flex-direction: row;
+    padding: var(--space-2) var(--space-4);
+    border-bottom: 1px solid var(--content-border-color);
+    gap: var(--space-4);
     align-items: center;
-    gap: var(--space-2) var(--space-12);
-    text-wrap: pretty;
+  }
 
-    @include viewport.until(md) {
-      font-size: var(--font-down-1);
-    }
+  .onboarding-step:last-child {
+    border-bottom: none;
+  }
 
-    .onboarding-step {
-      display: grid;
-      grid-template-rows: subgrid;
-      grid-row: span 3;
-      justify-content: start;
-      flex-direction: column;
-      align-items: flex-start;
-      text-align: left;
-      gap: var(--space-2);
+  .onboarding-step:first-child {
+    border-top: 1px solid var(--content-border-color);
+  }
 
-      &__checkbox {
-        gap: var(--space-2);
-        display: flex;
-        align-items: baseline;
-        font-weight: bold;
+  .onboarding-step__checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+  }
 
-        .d-icon {
-          position: relative;
-          top: var(--space-half);
-        }
-      }
+  .onboarding-step__checkbox-icon {
+    font-size: var(--font-down-1);
+  }
 
-      &__text {
-        max-width: 16em;
-      }
+  .onboarding-step__title {
+    font-weight: 600;
+    font-size: var(--font-down-1);
+  }
 
-      button {
-        margin-top: var(--space-2);
-      }
-    }
+  .onboarding-step__description {
+    font-size: var(--font-down-1);
+    color: var(--primary-700);
+  }
+
+  .onboarding-step__action {
+    margin-left: auto;
+
+    --d-button-transparent-text-color: var(--tertiary);
+  }
+
+  .onboarding-step__action .btn-link {
+    font-weight: 600;
   }
 }
 

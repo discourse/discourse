@@ -560,11 +560,12 @@ en:
       pm_title: "Suggested Messages"
 
     admin_onboarding_banner:
-      launch_in_easy_steps: "Launch in %{step_count} easy steps"
+      launch_in_easy_steps: "Setup your community"
+      launch_in_easy_steps_subtitle: "%{completed_steps} of %{step_count} steps completed"
       congrats_onboarding_complete: "Congratulations on completing the onboarding process!"
       select_theme:
         title: "Customize your site"
-        description: "Choose a starting theme for your community"
+        description: "Choose a starting theme"
         action: "Select theme"
         show_light_screenshot: "Show light screenshot"
         show_dark_screenshot: "Show dark screenshot"
@@ -608,11 +609,11 @@ en:
             only: "Categories only"
       invite_collaborators:
         title: "Invite Collaborators"
-        description: "Early members help bring your community to life"
+        description: "Early members bring it to life."
         action: "Create invite"
       start_posting:
         title: "Start Posting"
-        description: "Give people something to talk about together"
+        description: "Give people something to discuss."
         action: "See ideas"
         choose_option: "How would you like to start?"
         predefined_topics: "Icebreaker templates"

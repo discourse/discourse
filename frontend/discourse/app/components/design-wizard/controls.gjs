@@ -115,7 +115,7 @@ export default class DesignWizardControls extends Component {
 
   <template>
     <div class="design-wizard__content">
-      <header>
+      <header class="design-wizard__header">
         <h2 id="design-wizard-title">
           {{i18n "admin_onboarding_banner.design_wizard.title"}}
         </h2>
