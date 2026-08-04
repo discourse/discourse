@@ -3,7 +3,7 @@
 RSpec.describe "Imported topic embeds" do
   fab!(:embeddable_host) { Fabricate(:embeddable_host, host: "eviltrout.com") }
 
-  let(:embed_url) { "http://eviltrout.com/'onmouseover='window.topicEmbedXssExecuted=true" }
+  let(:embed_url) { "http://eviltrout.com/'onmouseover='window.topic_embed_xss_executed=true" }
 
   before do
     SiteSetting.content_security_policy = false
@@ -22,10 +22,10 @@ RSpec.describe "Imported topic embeds" do
     visit(TopicEmbed.last.post.topic.url)
     link = find("#post_1 .cooked a", text: embed_url)
 
-    page.execute_script("window.topicEmbedXssExecuted = false")
+    page.execute_script("window.topic_embed_xss_executed = false")
     link.hover
 
-    expect(page.evaluate_script("window.topicEmbedXssExecuted")).to eq(false)
+    expect(page.evaluate_script("window.topic_embed_xss_executed")).to eq(false)
     expect(link["onmouseover"]).to be_nil
   end
 end
