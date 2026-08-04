@@ -293,6 +293,7 @@ class LlmModel < ActiveRecord::Base
           type: :enum,
           values: %w[default minimal low medium high],
           default: "default",
+          label: "discourse_ai.llms.provider_fields.gemini_interactions_thinking_level",
         },
         disable_temperature: {
           type: :checkbox,

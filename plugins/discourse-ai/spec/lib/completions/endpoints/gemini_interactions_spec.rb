@@ -58,6 +58,10 @@ RSpec.describe DiscourseAi::Completions::Endpoints::GeminiInteractions do
       :disable_top_p,
       :service_tier,
     )
+    expect(LlmModel.provider_params.dig(:gemini_interactions, :thinking_level, :label)).to eq(
+      "discourse_ai.llms.provider_fields.gemini_interactions_thinking_level",
+    )
+    expect(LlmModel.provider_params.dig(:google, :thinking_level)).not_to have_key(:label)
   end
 
   it "generates text using stateless interactions and records provider usage" do

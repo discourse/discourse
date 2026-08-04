@@ -1152,6 +1152,7 @@ en:
           adaptive_thinking: "Enable adaptive thinking (recommended for Claude 4.6 models)"
           enable_thinking: "Enable thinking (Gemini 2.5 models - uses token budget)"
           thinking_level: "Thinking level (Gemini 3 models - controls reasoning depth)"
+          gemini_interactions_thinking_level: "Thinking level"
           thinking_tokens: "Number of tokens used for thinking"
           reasoning_tokens: "Number of tokens used for reasoning"
           disable_temperature: "Disable temperature (some thinking models don't support temperature)"
