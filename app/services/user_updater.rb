@@ -191,14 +191,6 @@ class UserUpdater
         attributes[:text_size]
     end
 
-    if attributes.key?(:understood_languages)
-      interface_locale = user.effective_locale
-      attributes[:understood_languages] = Array(attributes[:understood_languages])
-        .compact
-        .uniq
-        .reject { |locale| LocaleNormalizer.is_same?(locale, interface_locale) }
-    end
-
     OPTION_ATTR.each do |attribute|
       if attributes.key?(attribute)
         save_options = true
