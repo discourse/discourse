@@ -371,9 +371,12 @@ the race the suite is otherwise blind to.
   The create row now stamps `groupOrdinal: undefined` and carries no group description.
 - **Group `aria-describedby` no longer dangles under windowing.** The header `<li>` used to own
   the group id, and the windowed list unmounts a header row while its options are still visible —
-  the reference then named a nonexistent element and the group context silently vanished. The
-  ids now live on hidden `<span>`s in a `.d-combobox__group-labels` store rendered outside the
-  listbox, which windowing never touches, so a mounted option's description always resolves.
+  the reference then named a nonexistent element and the group context silently vanished. Each
+  header now contains the id-bearing label span, and the window extension pins that header while
+  any row from its group is mounted. Every published window therefore keeps each mounted option's
+  description resolvable while keeping the description DOM bounded by the window. A custom group
+  header renders beside a hidden label-only span, so its arbitrary markup never enters option
+  descriptions.
   This is distinct from the **still-open** `aria-controls` dangling reference above (the empty
   result set destroying the element the combobox names): same defect class, different reference,
   and that one still needs its structural decision.

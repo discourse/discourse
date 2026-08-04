@@ -255,7 +255,7 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     after dismissing the overlay.
   - ◐ **Selection outside the render window.** **Client half closed** as predicted: DSelect
     adopted `DVirtualList`, the client cap is gone, and the listbox API's `scrollToIndex`
-    reaches any index (`d-select.gts` `#listboxApi.scrollToIndex`, fed by `@pinnedIndex`).
+    reaches any index (`d-select.gts` `#listboxApi.scrollToIndex`, fed by `@pinnedIndices`).
     **Server half still open** and still not solvable by rendering — a selection sitting in no
     fetched page needs a locate-by-value contract from the source.
 - ◐ **`DVirtualList` folded into this branch, and now wired** (Decision 5 reversed on the
@@ -269,11 +269,11 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     inner container while the outer viewport scrolls. A symmetric edge API
     (`@onReachStart`/`@onReachEnd`, threshold + hysteresis, mount and initial-fill handling)
     replaced the over-firing `onVisibleRangeChange` for consumers, and
-    `@initialIndex`/`@pinnedIndex` add flash-free deep-open and off-window pinning, the pinned
+    `@initialIndex`/`@pinnedIndices` add flash-free deep-open and off-window pinning, the pinned
     row merged in index order so DOM and `aria-posinset` stay monotonic. The positioning
     modifier is one stable instance applied with args, so a re-render updates it in place
     rather than letting an old instance's teardown strip a reused row's styles. The
-    spacer-vs-per-row spike concluded for per-row (only per-row composes with `@pinnedIndex`)
+    spacer-vs-per-row spike concluded for per-row (only per-row composes with `@pinnedIndices`)
     and the spike components were deleted.
   - ☑ **Wire DSelect to the primitive** (`ab295dfffbc`). The listbox renders in owned-row mode,
     yielding `SelectItem` rows (plus frontier skeletons during a server reveal) as direct
@@ -303,7 +303,7 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     offset and refreshes it only from the scroll element's events, so when `@items` shrinks and
     then grows — a select filtered to one match and widened again — the browser clamps
     `scrollTop` without firing an observed event and the window is computed from a stale,
-    out-of-range offset. With `@pinnedIndex` set that painted the pinned row at the top and the
+    out-of-range offset. With `@pinnedIndices` set that painted the pinned row at the top and the
     window far below it, with a visible gap between. The modifier now re-reads the element's
     real `scrollTop` on an item-set update whenever it disagrees with the cached offset, and
     no-ops when they match.
@@ -373,7 +373,8 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
 - ☑ **Group/section-aware model** (Decision 2, `1204ec45981`, unified later in this phase):
   `@groupBy` segments a client source into sections; a boundary renders as a non-selectable
   header where `@groupLabel` yields text and as an unlabeled splitter otherwise, with each
-  option associated to its group via `aria-describedby` into a persistent hidden label store.
+  option associated to its group's label span via `aria-describedby`; the window extension pins
+  the header while any row from that group is mounted.
   Still to be exercised by the category family; grouping a *server* source is untested.
 - ☑ **Capability parity pass** — three commits of select-kit feature catch-up that predate any
   tracker line of their own:
