@@ -91,8 +91,15 @@ construction, so "unknown parameter → 400" is not a separate concern:
   that. Built (2026-08-04); the rules it encodes are below.
 - `Predicate::Term` — a key bound to the cursor's value for it, contributing its own fragments of the
   comparison, with `Term::Null` as the case a null cursor value becomes. Built (2026-08-04).
-- `Window` — records plus whether more exist either side.
-- `Paginator` — scope + keyset + request → `Window`.
+- `Window` — one page of rows read along an order, and whether the order carries on past them.
+  It reads one way only, so reading backwards is a window over the reversed keyset, and a window of
+  no rows is the probe form that answers whether anything lies that way at all — which retires the
+  spike's separate probe. Built (2026-08-04).
+- `Paginator` — a page and the cursors either side of it, as `Paginator::Forwards` or
+  `Paginator::Backwards`: which end a page is read from decides the direction, whether rows come
+  back in presentation order, and which side the window answers for rather than probes. An empty
+  page still points at the cursor it was read from, or a client that pages one step too far is
+  stranded. Built (2026-08-04).
 - `Anchor::Resolver` and `Anchor::Window` — positional entry, including the centred form.
 - `Profile` — the cursor-pagination profile's names, error type URIs and content type in one place.
 

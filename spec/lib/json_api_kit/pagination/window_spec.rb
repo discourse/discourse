@@ -80,6 +80,38 @@ RSpec.describe JsonApiKit::Pagination::Window do
     end
   end
 
+  describe "#first_cursor" do
+    subject(:first_cursor) { window.first_cursor }
+
+    it "names the row the window starts on" do
+      expect(first_cursor).to eq(keyset.cursor_for(first_topic))
+    end
+
+    context "with a cursor on the last row of the order" do
+      let(:after) { keyset.cursor_for(third_topic) }
+
+      it "names nothing, the window having read nothing" do
+        expect(first_cursor).to be_nil
+      end
+    end
+  end
+
+  describe "#last_cursor" do
+    subject(:last_cursor) { window.last_cursor }
+
+    it "names the row the window ends on" do
+      expect(last_cursor).to eq(keyset.cursor_for(second_topic))
+    end
+
+    context "with a cursor on the last row of the order" do
+      let(:after) { keyset.cursor_for(third_topic) }
+
+      it "names nothing, the window having read nothing" do
+        expect(last_cursor).to be_nil
+      end
+    end
+  end
+
   describe "#truncated?" do
     it "knows a row follows the page" do
       expect(window).to be_truncated
