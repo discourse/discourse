@@ -118,11 +118,11 @@ describe "Content Localization" do
       preferences_interface_page.enable_automatic_translation.save_changes
       page.refresh
       expect(preferences_interface_page).to be_automatic_translation_enabled
-      expect(preferences_interface_page).to have_understood_language("en")
+      expect(preferences_interface_page).to have_no_understood_language("en")
 
       topic_page.visit_topic(topic)
-      expect(topic_page).to have_topic_title("Life strategies from The Art of War")
-      expect(post_1_obj).to have_cooked_content(post_1.raw)
+      expect(topic_page).to have_topic_title("孫子兵法からの人生戦略")
+      expect(post_1_obj).to have_cooked_content("傑作は単なる軍事戦略についてではありません")
       expect(post_3_obj).to have_cooked_content(post_3.raw)
       expect(topic_page).to have_topic_tag("戦略")
       expect(sidebar).to have_section_link("戦略")

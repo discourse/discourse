@@ -2720,7 +2720,7 @@ RSpec.describe UsersController do
             ).pluck(:tag_id),
           ).to contain_exactly(tags[0].id, tags[1].id)
           expect(user.user_option.automatically_translate).to eq(false)
-          expect(user.user_option.understood_languages).to contain_exactly("en", "ja")
+          expect(user.user_option.understood_languages).to contain_exactly("ja")
 
           theme = Fabricate(:theme, user_selectable: true)
 
