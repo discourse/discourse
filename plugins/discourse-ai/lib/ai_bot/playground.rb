@@ -147,11 +147,18 @@ module DiscourseAi
           topic_agent_id = post.topic.custom_fields["ai_agent_id"]
           topic_agent_id = topic_agent_id.to_i if topic_agent_id.present?
 
-          agent_id = mentioned&.dig(:id) || topic_agent_id
+          agent_user = post.user
+          if mentioned
+            agent_id = mentioned[:id]
+          else
+            agent_id = topic_agent_id
+            agent_user = post.topic.user if topic_agent_id
+          end
 
           agent = nil
 
-          agent = DiscourseAi::Agents::Agent.find_by(user: post.user, id: agent_id.to_i) if agent_id
+          agent =
+            DiscourseAi::Agents::Agent.find_by(user: agent_user, id: agent_id.to_i) if agent_id
 
           if !agent && (agent_name = post.topic.custom_fields["ai_agent"])
             agent = DiscourseAi::Agents::Agent.find_by(user: post.user, name: agent_name)
@@ -175,7 +182,7 @@ module DiscourseAi
           bot_user = User.find(agent.user_id) if agent && agent.force_default_llm
 
           bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent.new)
-          new(bot).update_playground_with(post)
+          new(bot).update_playground_with(post, agent_user: agent_user)
         end
       end
 
@@ -222,8 +229,8 @@ module DiscourseAi
         @bot = bot
       end
 
-      def update_playground_with(post)
-        schedule_bot_reply(post) if can_attach?(post)
+      def update_playground_with(post, agent_user: post.user)
+        schedule_bot_reply(post, agent_user: agent_user) if can_attach?(post)
       end
 
       def title_playground(post, user)
@@ -860,13 +867,14 @@ module DiscourseAi
         true
       end
 
-      def schedule_bot_reply(post)
+      def schedule_bot_reply(post, agent_user: post.user)
         agent_id = DiscourseAi::Agents::Agent.system_agents[bot.agent.class] || bot.agent.class.id
         ::Jobs.enqueue(
           :create_ai_reply,
           post_id: post.id,
           bot_user_id: bot.bot_user.id,
           agent_id: agent_id,
+          agent_user_id: agent_user&.id,
         )
       end
 

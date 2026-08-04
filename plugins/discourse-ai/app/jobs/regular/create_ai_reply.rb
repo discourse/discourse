@@ -11,10 +11,18 @@ module Jobs
       return if args[:reply_post_id].present? && reply_post.nil?
       return if reply_post && reply_post.topic_id != post.topic_id
       agent_id = args[:agent_id]
+      agent_user =
+        if args[:agent_user_id].present?
+          User.find_by(id: args[:agent_user_id])
+        else
+          post.user
+        end
+      return if agent_user.nil?
+
       llm_model_id = args[:llm_model_id]
 
       begin
-        agent = DiscourseAi::Agents::Agent.find_by(user: post.user, id: agent_id)
+        agent = DiscourseAi::Agents::Agent.find_by(user: agent_user, id: agent_id)
         raise DiscourseAi::Agents::Bot::BOT_NOT_FOUND if agent.nil?
 
         llm_model = LlmModel.find_by(id: llm_model_id.to_i) if !llm_model_id.to_i.zero?

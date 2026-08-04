@@ -84,6 +84,7 @@ module DiscourseAi
           post_id: prompt_post.id,
           bot_user_id: post.user_id,
           agent_id: agent_id,
+          agent_user_id: prompt_post.topic.user_id,
           reply_post_id: post.id,
         }
 
