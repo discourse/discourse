@@ -108,6 +108,39 @@ RSpec.describe TopicOgImageGenerator do
       expect([png.width, png.height]).to eq([1200, 630])
       expect(png[180, 520]).to eq(png[500, 520])
     end
+
+    it "renders SVG assets without applying filters" do
+      logo_upload = Struct.new(:url, :width, :height).new("/logo.svg", 200, 100)
+      unfiltered_svg = <<~SVG
+        <svg xmlns="http://www.w3.org/2000/svg" width="200" height="100">
+          <rect x="50" y="25" width="100" height="50" fill="#00ff00"/>
+        </svg>
+      SVG
+      filtered_svg = <<~SVG
+        <svg xmlns="http://www.w3.org/2000/svg" width="200" height="100">
+          <defs>
+            <filter id="blur">
+              <feGaussianBlur stdDeviation="20"/>
+            </filter>
+          </defs>
+          <rect x="50" y="25" width="100" height="50" fill="#00ff00" filter="url(#blur)"/>
+        </svg>
+      SVG
+      SiteSetting.stubs(:logo).returns(logo_upload)
+
+      render_logo =
+        lambda do |svg|
+          generator = described_class.new(topic)
+          generator.stubs(:fetch_as_data_uri).returns(nil)
+          generator
+            .stubs(:fetch_as_data_uri)
+            .with("/logo.svg")
+            .returns("data:image/svg+xml;base64,#{Base64.strict_encode64(svg)}")
+          ChunkyPNG::Image.from_blob(generator.generate_bytes)
+        end
+
+      expect(render_logo.call(filtered_svg)).to eq(render_logo.call(unfiltered_svg))
+    end
   end
 
   describe ".eligible?" do
