@@ -66,6 +66,10 @@ function serializeHtmlAttrs(htmlAttrs) {
 
 const ALL_ALLOWED_TAGS = [...Object.keys(HTML_INLINE_MARKS), ...ALLOWED_INLINE];
 
+// Publishing tools stamp `lang` on every span; an authored one arrives as a token.
+// A span kept as a node also loses the whitespace sitting at its edges.
+const DOM_PARSED_INLINE = ALLOWED_INLINE.filter((tag) => tag !== "span");
+
 const SMALL = "small";
 
 function isSmall(node, schema) {
@@ -237,18 +241,12 @@ const extension = {
       defining: true,
       content: "inline*",
       attrs: { tag: {}, htmlAttrs: { default: null } },
-      parseDOM: ALLOWED_INLINE.map((tag) => ({
+      parseDOM: DOM_PARSED_INLINE.map((tag) => ({
         tag,
-        getAttrs: (element) => {
-          if (tag === "span") {
-            const htmlAttrs = extractHtmlAttrs(element, tag);
-            if (!htmlAttrs) {
-              return false;
-            }
-            return { tag, htmlAttrs };
-          }
-          return { tag, htmlAttrs: extractHtmlAttrs(element, tag) };
-        },
+        getAttrs: (element) => ({
+          tag,
+          htmlAttrs: extractHtmlAttrs(element, tag),
+        }),
       })),
       toDOM: (node) => {
         const domAttrs = node.attrs.htmlAttrs

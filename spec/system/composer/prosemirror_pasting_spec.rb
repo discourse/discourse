@@ -266,6 +266,20 @@ describe "Composer - ProseMirror - Pasting content" do
     expect(composer).to have_value("<mark>mark</mark> my <ins>words</ins> <kbd>ctrl</kbd> ")
   end
 
+  it "pastes web page text without leaving literal span markup" do
+    cdp.allow_clipboard
+    open_composer
+    cdp.copy_paste(
+      # the space sits inside the first span, where a surviving span node eats it
+      %(<p><span class="sentence" lang="en">So I have heard. </span><span class="sentence" lang="en">At one time.</span></p>),
+      html: true,
+    )
+    expect(rich).to have_css("p", text: "So I have heard. At one time.")
+    expect(rich).to have_no_css("span[lang]")
+    composer.toggle_rich_editor
+    expect(composer).to have_value("So I have heard. At one time.")
+  end
+
   it "converts newlines to hard breaks when parsing `white-space: pre` HTML" do
     cdp.allow_clipboard
     open_composer
