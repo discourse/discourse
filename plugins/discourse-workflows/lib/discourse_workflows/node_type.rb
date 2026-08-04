@@ -245,6 +245,18 @@ module DiscourseWorkflows
       category_ids.include?(topic_category_id)
     end
 
+    def self.matches_user_groups?(user, group_ids)
+      raw_group_ids = Array.wrap(group_ids).reject(&:blank?)
+      return true if raw_group_ids.empty?
+
+      group_ids =
+        raw_group_ids.filter_map do |group_id|
+          value = group_id.to_s
+          value.to_i if value.match?(/\A\d+\z/)
+        end
+      group_ids.present? && !!user&.in_any_groups?(group_ids)
+    end
+
     def self.trust_level_options
       TrustLevel.levels.map do |name, level|
         { value: level.to_s, label_key: "trust_levels.names.#{name}" }
@@ -315,6 +327,10 @@ module DiscourseWorkflows
       end
 
       timezone
+    end
+
+    def matches_user_groups?(user, group_ids)
+      self.class.matches_user_groups?(user, group_ids)
     end
 
     def wrap(data, paired_item: nil)

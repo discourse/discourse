@@ -2,28 +2,25 @@
 
 module DiscourseWorkflows
   module Nodes
-    module UserRemovedFromGroup
+    module UserUpdated
       class V1 < NodeType
         description(
-          name: "trigger:user_removed_from_group",
+          name: "trigger:user_updated",
           version: "1.0",
           defaults: {
-            icon: "user-minus",
-            color: "grey",
+            icon: "user-pen",
+            color: "teal",
           },
           group: "discourse_triggers",
-          events: [:user_removed_from_group],
-          output_contracts: [{ schema: Schema::USER_REMOVED_FROM_GROUP_SCHEMA }],
+          events: [:user_updated],
+          output_contracts: [{ schema: Schema::USER_EVENT_SCHEMA }],
           properties: {
-            group_id: {
-              type: :integer,
-              required: true,
+            group_ids: {
+              type: :multi_options,
+              required: false,
+              default: [],
               type_options: {
                 load_options_method: "groups",
-              },
-              no_data_expression: true,
-              ui: {
-                control: :group_select,
               },
               control_options: {
                 value_property: "id",
@@ -31,6 +28,9 @@ module DiscourseWorkflows
                 filterable: true,
               },
             },
+          },
+          capabilities: {
+            provides_current_user: true,
           },
         )
 
@@ -45,41 +45,31 @@ module DiscourseWorkflows
           end
         end
 
-        def initialize(user, group)
+        def initialize(user, *)
           super(parameters: {})
           @user = user
-          @group = group
         end
 
         def valid?
-          @user.present? && @group.present?
+          @user.present? && @user.human?
+        end
+
+        def user_id
+          @user.id
         end
 
         def output
           {
-            user: serialize_user(@user),
-            group: group_data,
-            membership: {
-              action: "removed",
-              automatic: nil,
-            },
+            user:
+              serialize_user(@user).merge(
+                staged: @user.staged?,
+                created_at: @user.created_at&.iso8601,
+              ),
           }
         end
 
         def matches?(trigger_ctx)
-          group_id = trigger_ctx.get_node_parameter("group_id")
-          group_id.present? && @group.id == group_id.to_i
-        end
-
-        private
-
-        def group_data
-          {
-            id: @group.id,
-            name: @group.name,
-            full_name: @group.full_name,
-            automatic: @group.automatic?,
-          }
+          matches_user_groups?(@user, trigger_ctx.get_node_parameter("group_ids", []))
         end
       end
     end

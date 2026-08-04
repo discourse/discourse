@@ -222,6 +222,21 @@ module DiscourseWorkflows
     USER_ADDED_TO_GROUP_SCHEMA = group_membership_event("added")
     USER_REMOVED_FROM_GROUP_SCHEMA = group_membership_event("removed")
 
+    USER_EVENT_SCHEMA =
+      entity(
+        "user",
+        USER_PROPERTIES.merge(
+          "staged" => {
+            "type" => "boolean",
+          },
+          "created_at" => {
+            "type" => "string",
+            "format" => "date-time",
+          },
+        ),
+        "User account event payload",
+      )
+
     USER_SEEN_SCHEMA =
       document(
         BASIC_USER_SCHEMA.fetch("properties").merge(

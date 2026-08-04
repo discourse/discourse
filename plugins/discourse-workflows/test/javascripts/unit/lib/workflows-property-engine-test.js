@@ -88,6 +88,22 @@ module("Unit | Utility | workflows property engine", function () {
       propertyLabel("trigger:topic_tag_changed", "include_subcategories"),
       "Include subcategories"
     );
+    assert.strictEqual(
+      propertyLabel("trigger:user_updated", "group_ids"),
+      "Groups"
+    );
+    assert.strictEqual(
+      propertyDescription("trigger:user_seen", "group_ids"),
+      "Only trigger for users in at least one of these groups"
+    );
+    assert.strictEqual(
+      propertyPlaceholder("trigger:user_updated", "group_ids"),
+      "All groups"
+    );
+    assert.strictEqual(
+      propertySelectNoneKey("trigger:user_added_to_group", "group_id"),
+      "discourse_workflows.property_engine.fields.group_id_placeholder"
+    );
 
     // node-scoped keys win over the shared scope
     assert.strictEqual(
@@ -97,6 +113,10 @@ module("Unit | Utility | workflows property engine", function () {
     assert.strictEqual(
       propertyDescription("trigger:stale_topic", "category_ids"),
       "Only consider topics in these categories. Leave empty to match all categories."
+    );
+    assert.strictEqual(
+      propertyDescription("trigger:post_button", "group_ids"),
+      "Only members of at least one of these groups can see and use the button"
     );
   });
 

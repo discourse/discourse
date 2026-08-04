@@ -228,6 +228,7 @@ export function propertySelectNoneKey(nodeDefinitionOrType, fieldName) {
   return translationKeyWithFallback([
     `${base}.select_${selectField}`,
     `${base}.${key}_placeholder`,
+    `${SHARED_FIELDS_BASE}.${key}_placeholder`,
   ]);
 }
 
