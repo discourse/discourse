@@ -33,6 +33,8 @@ export default class DevToolsDockHost extends Component {
       <DPanelDock
         @context="dev-tools"
         @isOpen={{this.state.open}}
+        @dockable={{true}}
+        @defaultSide="bottom"
         @tabs={{this.tabs}}
         @activeTab={{this.state.activeTool}}
         @onActivateTab={{activateDockTool}}
