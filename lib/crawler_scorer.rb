@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CrawlerScorer
-  BOT_SCORE_THRESHOLD = 60
+  BOT_SCORE_THRESHOLD = 55
 
   AUTOMATION_UA_SCORE = 100
 

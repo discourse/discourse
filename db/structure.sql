@@ -1979,6 +1979,37 @@ ALTER SEQUENCE public.browser_pageview_country_daily_rollups_id_seq OWNED BY pub
 
 
 --
+-- Name: browser_pageview_crawler_daily_rollups; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_crawler_daily_rollups (
+    id bigint NOT NULL,
+    date date NOT NULL,
+    logged_in boolean NOT NULL,
+    count bigint NOT NULL
+);
+
+
+--
+-- Name: browser_pageview_crawler_daily_rollups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.browser_pageview_crawler_daily_rollups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: browser_pageview_crawler_daily_rollups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.browser_pageview_crawler_daily_rollups_id_seq OWNED BY public.browser_pageview_crawler_daily_rollups.id;
+
+
+--
 -- Name: browser_pageview_event_scores; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -12761,6 +12792,13 @@ ALTER TABLE ONLY public.browser_pageview_country_daily_rollups ALTER COLUMN id S
 
 
 --
+-- Name: browser_pageview_crawler_daily_rollups id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_crawler_daily_rollups ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_crawler_daily_rollups_id_seq'::regclass);
+
+
+--
 -- Name: browser_pageview_event_scores id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -15051,6 +15089,14 @@ ALTER TABLE ONLY public.bookmarks
 
 ALTER TABLE ONLY public.browser_pageview_country_daily_rollups
     ADD CONSTRAINT browser_pageview_country_daily_rollups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: browser_pageview_crawler_daily_rollups browser_pageview_crawler_daily_rollups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_crawler_daily_rollups
+    ADD CONSTRAINT browser_pageview_crawler_daily_rollups_pkey PRIMARY KEY (id);
 
 
 --
@@ -17527,6 +17573,13 @@ CREATE UNIQUE INDEX idx_bookmarks_user_polymorphic_unique ON public.bookmarks US
 --
 
 CREATE UNIQUE INDEX idx_bpcd_rollups_date_country_unique ON public.browser_pageview_country_daily_rollups USING btree (date, country_code) NULLS NOT DISTINCT;
+
+
+--
+-- Name: idx_bpcrawler_rollups_date_logged_in_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_bpcrawler_rollups_date_logged_in_unique ON public.browser_pageview_crawler_daily_rollups USING btree (date, logged_in);
 
 
 --
@@ -23082,7 +23135,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260728162516'),
 ('20260728134532'),
 ('20260728071552'),
+('20260728050038'),
 ('20260728045008'),
+('20260728033946'),
 ('20260727085824'),
 ('20260727035337'),
 ('20260723183001'),
