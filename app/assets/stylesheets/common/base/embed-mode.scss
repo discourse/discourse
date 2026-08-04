@@ -133,7 +133,8 @@ body.embed-mode {
   }
 
   // Hide admin menu in the progress bar for embed context
-  #topic-progress-wrapper .topic-admin-menu-trigger {
+  #topic-progress-wrapper .topic-admin-menu-trigger,
+  #topic-progress-wrapper .topic-content-language-preferences {
     display: none;
   }
 

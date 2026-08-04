@@ -604,5 +604,3 @@ after_initialize do
     DiscoursePluginRegistry.discourse_dev_populate_reviewable_types.add DiscourseDev::ReviewableMessage
   end
 end
-
-Dir[Rails.root.join("plugins/chat/spec/support/**/*.rb")].each { |f| require f } if Rails.env.test?

@@ -179,7 +179,6 @@ sr:
         next:
           title: "Dalje"
         providers:
-          google: "Google"
           fake: "Posebna"
       ai_helper:
         context_menu:

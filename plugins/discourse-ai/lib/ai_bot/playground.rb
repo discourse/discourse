@@ -614,6 +614,7 @@ module DiscourseAi
               reply << "<details class='ai-thinking'><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>\n\n"
               started_thinking = true
             elsif should_stop_thinking?(partial:, context:, type:, started_thinking:, placeholder:)
+              reply << "\n" if !reply.end_with?("\n")
               reply << "</details>\n\n"
               started_thinking = false
             end

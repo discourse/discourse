@@ -104,7 +104,7 @@ module DiscourseWorkflows
 
         def self.topic_data(topic)
           MultiJson.load(
-            TopicListItemSerializer.new(
+            DiscourseWorkflows::TopicListItemSerializer.new(
               topic,
               scope: Discourse.system_user.guardian,
               root: false,

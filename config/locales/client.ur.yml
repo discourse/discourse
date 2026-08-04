@@ -865,6 +865,7 @@ ur:
         email: "ای میل"
         name: "نام"
         fields: "خانے"
+        penalty_forever: "ہمیشہ کیلئے"
         reject_reason: "وجہ"
         scrubbed_by: "نے ریکارڈصاف کر دیا"
         scrubbed_reason: "وجہ"
@@ -2332,7 +2333,8 @@ ur:
           email_placeholder: "name@example.com"
           invite_by_email: "ای میل"
           restrict_domain: "ڈومین تک محدود"
-          more_options: "مزید اختیارات"
+          create_and_send: "بھیجیں"
+          create_and_copy: "رابطہ کاپی کریں"
           update: "اپ ڈیٹ"
           summary:
             role_member: "معتمد"
@@ -2344,7 +2346,7 @@ ur:
             expires: "میعاد ختم"
             topic: "ٹاپک"
             groups: "گروپس"
-            edit: "دعوت میں ترمیم"
+            edit: "ترمیم کریں"
         bulk_invite:
           none: "اس صفحہ پر دکھانے کے لیے کوئی دعوت نہیں ہے۔"
           text: "مجموئی دعوت نامہ"
@@ -3098,7 +3100,6 @@ ur:
       italic_label: "I"
       italic_title: "آئیٹیلک"
       italic_text: "زور دیا گیا ٹَیکسٹ"
-      heading_title: "سرخیاں"
       heading_level_n: "سرخی %{levelNumber}"
       heading_level_n_title: "سرخی %{levelNumber}"
       heading_level_paragraph: "پیراگراف"
@@ -5417,9 +5418,9 @@ ur:
           always_public: "اس شعبہ میں مواد ہمیشہ عوامی ہوتا ہے"
           more_menu: "مزید مینو"
           localizations:
-            title: "ترجمہ"
             locale: "زبان"
             title_label: "سیکشن کا عنوان"
+            remove_language: "خارج کریں"
           links:
             add: "ایک اور رابطہ شامل کریں"
             delete: "رابطہ حذف"

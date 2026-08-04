@@ -629,7 +629,8 @@ class TagsController < ::ApplicationController
 
     if !@filter_on_category
       permalink = Permalink.find_by_url("c/#{params[:category_slug_path_with_id]}")
-      if permalink.present? && permalink.category_id
+      if permalink.present? && permalink.category_id &&
+           guardian.can_see_permalink_target?(permalink)
         return(
           redirect_to "#{Discourse.base_path}/tags#{permalink.target_url}/#{params[:tag_name]}",
                       status: :moved_permanently

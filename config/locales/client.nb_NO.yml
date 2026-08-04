@@ -585,6 +585,7 @@ nb_NO:
         email: "E-post"
         name: "Navn"
         fields: "Felter"
+        penalty_forever: "For alltid"
         reject_reason: "Begrunnelse"
         scrubbed_reason: "Begrunnelse"
         scrub_record:
@@ -1848,7 +1849,7 @@ nb_NO:
           email_placeholder: "navn@example.com"
           invite_by_email: "E-post"
           restrict_domain: "Begrens til domene"
-          more_options: "Flere valg"
+          create_and_send: "Send"
           update: "Oppdater"
           summary:
             role_member: "Medlem"
@@ -1859,6 +1860,7 @@ nb_NO:
             expires: "Utløper"
             topic: "Emne"
             groups: "Grupper"
+            edit: "Rediger"
         bulk_invite:
           none: "Ingen invitasjoner til å vise på denne siden."
           text: "Bulk invitasjon"
@@ -4246,7 +4248,7 @@ nb_NO:
           save: "Lagre"
           delete: "Slett"
           localizations:
-            title: "Oversettelser"
+            remove_language: "Fjern"
           links:
             reset: "Tilbakestill til standard"
             icon:

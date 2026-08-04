@@ -4808,11 +4808,9 @@ ja:
         title: "いいえ"
         delete:
           title: "ユーザーの削除"
-          description: "ブロックせずにユーザーを削除します"
           complete: "ユーザーは削除されました。"
         block:
           title: "ユーザーの削除とブロック"
-          description: "ユーザーは削除され、その IP とメールアドレスはブロックされます。"
           complete: "ユーザーを削除してブロックしました。"
       confirm_spam:
         title: "はい"
@@ -4872,12 +4870,10 @@ ja:
         bundle_title: "ユーザーをどうしますか？"
       silence_user:
         title: "ユーザーを投稿禁止にする"
-        description: "ユーザーが投稿できないようにします"
         complete: "ユーザーを投稿禁止にしました"
         reason: "ユーザーはレビューキューを通じて投稿禁止にされました"
       suspend_user:
         title: "ユーザーを凍結する"
-        description: "ユーザーアカウントを凍結します"
         complete: "ユーザーを凍結しました"
         reason: "ユーザーはレビューキューを通じて凍結されました"
       delete_user:

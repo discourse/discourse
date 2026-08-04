@@ -23,6 +23,7 @@ module DiscourseWorkflows
       output_contracts: [],
       palette_visible: true,
       available: true,
+      previewable: false,
     }.freeze
 
     def self.inherited(subclass)
@@ -71,6 +72,10 @@ module DiscourseWorkflows
       description_value(:palette_visible)
     end
 
+    def self.previewable?
+      description_value(:previewable)
+    end
+
     def self.available?
       description_value(:available)
     end
@@ -78,15 +83,15 @@ module DiscourseWorkflows
     def self.unavailable_reason_key(configuration = nil)
       return nil unless description.key?(:unavailable_reason_key)
 
-      description_value(:unavailable_reason_key, configuration: configuration)
+      description_value(:unavailable_reason_key, configuration:)
     end
 
     def self.inputs(configuration = {})
-      description_value(:inputs, configuration: configuration)
+      description_value(:inputs, configuration:)
     end
 
     def self.outputs(configuration = {})
-      description_value(:outputs, configuration: configuration)
+      description_value(:outputs, configuration:)
     end
 
     def self.properties
@@ -98,7 +103,7 @@ module DiscourseWorkflows
     end
 
     def self.webhooks(configuration = {})
-      Array(description_value(:webhooks, configuration: configuration)).map do |webhook|
+      Array(description_value(:webhooks, configuration:)).map do |webhook|
         webhook.deep_symbolize_keys
       end
     end
@@ -119,11 +124,7 @@ module DiscourseWorkflows
       input_schema = Schema.union(*input_schemas.compact)
 
       active_output_contracts(configuration).map do |contract|
-        Schema.resolve(
-          contract.fetch(:schema),
-          mode: contract.fetch(:mode),
-          input_schema: input_schema,
-        )
+        Schema.resolve(contract.fetch(:schema), mode: contract.fetch(:mode), input_schema:)
       end
     end
 
@@ -208,7 +209,7 @@ module DiscourseWorkflows
 
       {
         schema: Schema.normalize(contract.fetch(:schema, {})),
-        mode: mode,
+        mode:,
         display_options: contract.fetch(:display_options, {}),
       }
     end
@@ -250,6 +251,17 @@ module DiscourseWorkflows
       end
     end
 
+    def self.expression_value?(value)
+      value.is_a?(String) && value.start_with?("=")
+    end
+
+    def self.validate_timezone_configuration(configuration, errors)
+      timezone = (configuration || {}).deep_stringify_keys["timezone"].presence
+      return if timezone.nil? || expression_value?(timezone) || WorkflowTimezone.valid?(timezone)
+
+      errors.add(:base, I18n.t("discourse_workflows.errors.invalid_timezone", timezone: timezone))
+    end
+
     def initialize(**)
     end
 
@@ -288,11 +300,21 @@ module DiscourseWorkflows
     end
 
     def matches_category_ids?(topic_category_id, category_ids, include_subcategories: true)
-      self.class.matches_category_ids?(
-        topic_category_id,
-        category_ids,
-        include_subcategories: include_subcategories,
-      )
+      self.class.matches_category_ids?(topic_category_id, category_ids, include_subcategories:)
+    end
+
+    def resolve_timezone(exec_ctx, item_index)
+      timezone = exec_ctx.get_node_parameter("timezone", item_index, default: nil).to_s.presence
+      return exec_ctx.get_timezone if timezone.nil?
+
+      if !WorkflowTimezone.valid?(timezone)
+        raise_node_error!(
+          I18n.t("discourse_workflows.errors.invalid_timezone", timezone: timezone),
+          item_index: item_index,
+        )
+      end
+
+      timezone
     end
 
     def wrap(data, paired_item: nil)
@@ -317,22 +339,26 @@ module DiscourseWorkflows
     )
       DiscourseWorkflows::Executor::NodeExecutionContext.serialize_post(
         post,
-        guardian: guardian,
-        include_raw: include_raw,
-        include_cooked: include_cooked,
+        guardian:,
+        include_raw:,
+        include_cooked:,
       )
     end
 
     def serialize_topic(topic, guardian: Discourse.system_user.guardian, custom_field_names: [])
       DiscourseWorkflows::Executor::NodeExecutionContext.serialize_topic(
         topic,
-        guardian: guardian,
-        custom_field_names: custom_field_names,
+        guardian:,
+        custom_field_names:,
       )
     end
 
+    def topic_data(topic, scope: Discourse.system_user.guardian)
+      serialize_record(topic, DiscourseWorkflows::TopicListItemSerializer, scope:)
+    end
+
     def serialize_user(user, guardian: Discourse.system_user.guardian)
-      DiscourseWorkflows::Executor::NodeExecutionContext.serialize_user(user, guardian: guardian)
+      DiscourseWorkflows::Executor::NodeExecutionContext.serialize_user(user, guardian:)
     end
 
     def with_paired_item(item, paired_item)

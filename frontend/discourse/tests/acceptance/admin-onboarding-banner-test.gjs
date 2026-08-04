@@ -306,7 +306,9 @@ acceptance("Admin - Onboarding Banner - admin invites", function (needs) {
       .dom(".create-invite-with-roles-modal")
       .exists("opens the role-based invite modal");
     assert
-      .dom(".create-invite-with-roles-modal__role-toggle input[value='admin']")
+      .dom(
+        ".create-invite-with-roles-modal input[name='invite-role'][value='admin']"
+      )
       .isChecked("defaults to the admins tab");
 
     await fillIn(

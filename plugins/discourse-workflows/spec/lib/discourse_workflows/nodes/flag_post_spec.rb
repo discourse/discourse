@@ -42,20 +42,29 @@ RSpec.describe DiscourseWorkflows::Nodes::FlagPost::V1 do
       )
     end
 
-    it "appends the configured reason to the moderator-facing score reason, escaping HTML" do
+    it "appends the configured Markdown and sanitizes it when rendered" do
       execute_node(
         configuration: {
           "post_id" => post.id.to_s,
           "flag_type" => "review",
-          "reason" => "Contains suspicious <script>alert(1)</script> links",
+          "reason" =>
+            "Contains **suspicious** links\n\n> quoted evidence\n\n<script>alert(1)</script>",
         },
         workflow: workflow,
       )
 
       score = ReviewablePost.pending.find_by(target: post).reviewable_scores.last
       expect(score.reason).to eq(
-        "#{attribution}<br>Contains suspicious &lt;script&gt;alert(1)&lt;/script&gt; links",
+        "#{attribution}<br>Contains **suspicious** links\n\n> quoted evidence\n\n<script>alert(1)</script>",
       )
+
+      serialized = ReviewableScoreSerializer.new(score, scope: moderator.guardian, root: nil)
+      expect(serialized.reason).to match_html(<<~HTML)
+        <p>#{attribution}<br>Contains <strong>suspicious</strong> links</p>
+        <blockquote>
+          <p>quoted evidence</p>
+        </blockquote>
+      HTML
     end
 
     it "reuses a pending flagged post reviewable instead of creating a second review item",

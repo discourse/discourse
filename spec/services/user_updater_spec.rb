@@ -46,6 +46,43 @@ RSpec.describe UserUpdater do
       expect(user.reload.name).to eq "Jim Tom"
     end
 
+    it "preserves explicitly submitted understood languages when the interface locale changes" do
+      user.update!(locale: "en")
+
+      UserUpdater.new(user, user).update(locale: "ja", understood_languages: %w[ja de])
+
+      expect(user.reload.locale).to eq("ja")
+      expect(user.user_option.understood_languages).to eq(%w[ja de])
+    end
+
+    it "preserves understood languages when only the interface locale changes" do
+      user.update!(locale: "en")
+      user.user_option.update!(understood_languages: ["de"])
+
+      UserUpdater.new(user, user).update(locale: "ja")
+
+      expect(user.reload.locale).to eq("ja")
+      expect(user.user_option.understood_languages).to eq(["de"])
+    end
+
+    it "preserves explicitly submitted understood languages when user locales are disabled" do
+      SiteSetting.default_locale = "en"
+      SiteSetting.allow_user_locale = false
+      user.update!(locale: "fr")
+
+      UserUpdater.new(user, user).update(understood_languages: %w[en ja])
+
+      expect(user.user_option.understood_languages).to eq(%w[en ja])
+    end
+
+    it "adapts legacy show-original updates to the positive preference" do
+      UserUpdater.new(user, user).update(show_original_content: true)
+      expect(user.reload.user_option.automatically_translate).to eq(false)
+
+      UserUpdater.new(user, user).update(show_original_content: true, automatically_translate: true)
+      expect(user.reload.user_option.automatically_translate).to eq(true)
+    end
+
     describe "the within_user_updater_transaction event" do
       it "allows plugins to perform additional updates" do
         update_attributes = { name: "Jimmmy Johnny" }

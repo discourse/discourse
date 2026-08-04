@@ -1814,12 +1814,13 @@ RSpec.describe Email::Receiver do
           SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
         end
 
-        def create_post_reply_key(value)
-          Fabricate(:post_reply_key, reply_key: value, user: user2, post: post)
-        end
-
         it "when bounce without verp" do
-          create_post_reply_key("4f97315cc828096c9cb34c6f1a0d6fe8")
+          Fabricate(
+            :post_reply_key,
+            reply_key: "4f97315cc828096c9cb34c6f1a0d6fe8",
+            user: user2,
+            post: post,
+          )
 
           expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
           post = Post.last
@@ -1836,10 +1837,10 @@ RSpec.describe Email::Receiver do
 
         context "when bounce with verp" do
           let(:bounce_key) { "14b08c855160d67f2e0c2f8ef36e251e" }
-
-          before do
-            SiteSetting.reply_by_email_address = "foo+%{reply_key}@discourse.org"
-            create_post_reply_key(bounce_key)
+          let!(:bounce_post_reply_key) do
+            Fabricate(:post_reply_key, reply_key: bounce_key, user: user2, post: post)
+          end
+          let!(:bounce_email_log) do
             Fabricate(
               :email_log,
               to_address: email_address,
@@ -1848,6 +1849,8 @@ RSpec.describe Email::Receiver do
               post: post,
             )
           end
+
+          before { SiteSetting.reply_by_email_address = "foo+%{reply_key}@discourse.org" }
 
           it "creates a post with the bounce error" do
             expect { process(:hard_bounce_via_verp) }.to raise_error(

@@ -8,6 +8,7 @@ fr:
   site_settings:
     policy_enabled: "Autoriser les politiques ?"
     policy_restrict_to_staff_posts: "Les politiques ne peuvent apparaître que dans les publications des responsables"
+    create_policy_allowed_groups: "Appartenance à un groupe requise pour ajouter des politiques aux publications"
     policy_easy_revoke: "Afficher les boutons d'acceptation et de révocation en même temps"
   discourse_policy:
     errors:
@@ -15,6 +16,8 @@ fr:
       group_not_found: "Groupe introuvable pour la politique"
       no_policy: "Aucune politique n'existe pour le message"
       staff_only: "Les politiques ne peuvent s'appliquer qu'aux publications des responsables"
+      policy_group_inaccessible: "Cette politique ne peut pas être acceptée pour le moment. Contactez un administrateur du site."
+      no_policy_permission: "Vous ne disposez pas de l'autorisation nécessaire pour modifier les politiques de cette publication."
     error:
       no_permission: "Non autorisé"
   reports:

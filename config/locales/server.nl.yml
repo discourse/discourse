@@ -5164,11 +5164,9 @@ nl:
         title: "Nee"
         delete:
           title: "Gebruiker verwijderen"
-          description: "Gebruiker verwijderen zonder te blokkeren"
           complete: "Gebruiker verwijderd."
         block:
           title: "Gebruiker verwijderen en blokkeren"
-          description: "De gebruiker wordt verwijderd, en het IP- en e-mailadres ervan geblokkeerd."
           complete: "Gebruiker verwijderd en geblokkeerd."
       confirm_spam:
         title: "Ja"
@@ -5228,12 +5226,10 @@ nl:
         bundle_title: "Wat wil je met de gebruiker doen?"
       silence_user:
         title: "Gebruiker dempen"
-        description: "Voorkom dat de gebruiker berichten plaatst"
         complete: "Gebruiker gedempt"
         reason: "Gebruiker gedempt via beoordelingswachtrij"
       suspend_user:
         title: "Gebruiker schorsen"
-        description: "Schors het gebruikersaccount"
         complete: "Gebruiker geschorst"
         reason: "Gebruiker geschorst via beoordelingswachtrij"
       delete_user:

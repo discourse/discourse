@@ -40,6 +40,7 @@ import CredentialControl from "../configurators/credential";
 import PropertyEngineConfigurator from "../configurators/property-engine";
 import InputContext from "../context/input";
 import OutputContext from "../context/output";
+import LivePreview from "./live-preview";
 
 function credentialSlotLabel(slot) {
   return i18n(slot.label_key || "discourse_workflows.credentials.type");
@@ -744,6 +745,12 @@ export default class NodeConfigurator extends Component {
 
             {{#if this.showsOutputContext}}
               <div class="workflows-configurator-modal__column --right">
+                <LivePreview
+                  @node={{@model.node}}
+                  @nodeTypes={{this.nodeTypes}}
+                  @session={{@model.session}}
+                  @configuration={{this.configuration}}
+                />
                 <OutputContext
                   @node={{@model.node}}
                   @nodes={{@model.nodes}}

@@ -184,7 +184,6 @@ hy:
         tests:
           success: "Հաջողություն!"
         providers:
-          google: "Google"
           fake: "Մասնավոր"
       ai_helper:
         context_menu:

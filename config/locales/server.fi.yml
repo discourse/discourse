@@ -4672,7 +4672,6 @@ fi:
           complete: "Käyttäjä poistettu."
         block:
           title: "Poista ja estä käyttäjä"
-          description: "Käyttäjä poistetaan ja hänen IP-osoitteensa sekä sähköpostiosoitteensa estetään."
           complete: "Käyttäjä poistettu ja estetty."
       confirm_spam:
         title: "Kyllä"

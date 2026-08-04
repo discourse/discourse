@@ -1403,6 +1403,46 @@ RSpec.describe Middleware::RequestTracker do
       end
     end
 
+    describe "health check rate limits" do
+      def health_check_env(ip, subfolder: nil)
+        request_env = env(:path => "#{subfolder}/srv/status", "REMOTE_ADDR" => ip)
+        request_env.merge!("SCRIPT_NAME" => subfolder, "PATH_INFO" => "/srv/status") if subfolder
+        request_env
+      end
+
+      before do
+        global_setting :max_reqs_per_ip_per_10_seconds, 1
+        global_setting :max_reqs_per_ip_mode, "block"
+      end
+
+      it "gives each backend its own budget in subfolder installs" do
+        Discourse.stubs(:os_hostname).returns("backend-1")
+        status, _ = middleware.call(health_check_env("1.2.3.4", subfolder: "/forum"))
+        expect(status).to eq(200)
+
+        Discourse.stubs(:os_hostname).returns("backend-2")
+        status, _ = middleware.call(health_check_env("1.2.3.4", subfolder: "/forum"))
+        expect(status).to eq(200)
+
+        Discourse.stubs(:os_hostname).returns("backend-1")
+        status, headers = middleware.call(health_check_env("1.2.3.4", subfolder: "/forum"))
+        expect(status).to eq(429)
+        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("health_check_10_secs_limit")
+      end
+
+      it "keeps other paths on a separate rate limit budget" do
+        status, _ = middleware.call(health_check_env("1.2.3.4"))
+        expect(status).to eq(200)
+
+        status, headers = middleware.call(health_check_env("1.2.3.4"))
+        expect(status).to eq(429)
+        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("health_check_10_secs_limit")
+
+        status, _ = middleware.call(env("REMOTE_ADDR" => "1.2.3.4"))
+        expect(status).to eq(200)
+      end
+    end
+
     describe "crawler rate limits" do
       context "when there are multiple matching crawlers" do
         before { SiteSetting.slow_down_crawler_user_agents = "badcrawler2|badcrawler22" }

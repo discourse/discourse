@@ -7,8 +7,6 @@
 gl:
   js:
     discourse_reactions:
-      state_panel:
-        more_users: "e %{count} máis..."
       users_popup:
         all: "Todas"
       main_reaction:

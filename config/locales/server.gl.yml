@@ -3517,7 +3517,6 @@ gl:
           complete: "Usuario eliminado."
         block:
           title: "Eliminar e bloquear usuario"
-          description: "O usuario será eliminado e bloquearase a súa IP e enderezo electrónico."
       confirm_spam:
         title: "Si"
       not_spam:

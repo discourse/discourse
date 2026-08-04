@@ -124,6 +124,29 @@ describe DiscourseAi::Translation::EntryPoint do
     end
   end
 
+  describe "upon enabling ai_translation_enabled" do
+    before do
+      SiteSetting.ai_translation_enabled = false
+      SiteSetting.ai_translation_backfill_start_date = ""
+    end
+
+    it "sets the backfill start date to 5 days ago when it is at the default value" do
+      freeze_time
+
+      SiteSetting.ai_translation_enabled = true
+
+      expect(SiteSetting.ai_translation_backfill_start_date).to eq(5.days.ago.utc.to_date.iso8601)
+    end
+
+    it "keeps an existing backfill start date" do
+      SiteSetting.ai_translation_backfill_start_date = "2026-07-01"
+
+      SiteSetting.ai_translation_enabled = true
+
+      expect(SiteSetting.ai_translation_backfill_start_date).to eq("2026-07-01")
+    end
+  end
+
   describe "upon post edited" do
     it "enqueues detect translate post job in grace period" do
       freeze_time

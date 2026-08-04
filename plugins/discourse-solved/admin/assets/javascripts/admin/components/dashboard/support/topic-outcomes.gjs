@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import { i18n } from "discourse-i18n";
 
@@ -19,14 +20,11 @@ export default class SupportTopicOutcomes extends Component {
         tooltip: i18n(
           `admin.dashboard.sections.support.outcomes.${key}.tooltip`
         ),
+        query: this.args.queries?.[key] ?? {},
         fillStyle: trustHTML(`width: ${(count / max) * 100}%`),
         fillClass: `--${key.replace("_", "-")}`,
       };
     });
-  }
-
-  get ariaLabel() {
-    return this.rows.map((row) => `${row.label} ${row.count}`).join(", ");
   }
 
   <template>
@@ -36,17 +34,18 @@ export default class SupportTopicOutcomes extends Component {
       </h3>
     </div>
 
-    <div
-      class="db-support-outcomes__bars"
-      role="img"
-      aria-label={{this.ariaLabel}}
-    >
+    <div class="db-support-outcomes__bars">
       {{#each this.rows as |row|}}
         <div class="db-support-outcomes__row">
-          <span class="db-support-outcomes__label" title={{row.tooltip}}>
+          <LinkTo
+            @route="discovery.filter"
+            @query={{row.query}}
+            class="db-support-outcomes__label"
+            title={{row.tooltip}}
+          >
             {{row.label}}
-          </span>
-          <span class="db-support-outcomes__track">
+          </LinkTo>
+          <span class="db-support-outcomes__track" aria-hidden="true">
             <span
               class={{concat "db-support-outcomes__fill " row.fillClass}}
               style={{row.fillStyle}}

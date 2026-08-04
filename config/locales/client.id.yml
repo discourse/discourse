@@ -490,6 +490,7 @@ id:
         email: "Email"
         name: "Nama"
         fields: "bidang"
+        penalty_forever: "Selamanya"
         reject_reason: "Alasan"
         scrubbed_reason: "Alasan"
         scrub_record:
@@ -1403,6 +1404,7 @@ id:
             method_email: "Email"
             topic: "Topik"
             groups: "Grup"
+            edit: "Ubah"
         bulk_invite:
           error: "Maaf, file harus dalam format CSV"
       password:
@@ -2306,6 +2308,8 @@ id:
           reset_confirm: "Yakin ingin menyetel ulang bagian ini ke bawaan?"
           always_public: "Konten di bagian ini selalu bersifat publik"
           more_menu: "Lebih banyak menu"
+          localizations:
+            remove_language: "Hapus"
           links:
             reset: "Setel ulang ke bawaan"
             name:

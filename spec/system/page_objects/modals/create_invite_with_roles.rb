@@ -22,43 +22,30 @@ module PageObjects
       end
 
       def has_role_toggle?
-        within(modal) { has_css?(".create-invite-with-roles-modal__role-toggle") }
+        within(modal) { has_css?(".d-segmented-control") }
       end
 
       def has_no_role_toggle?
-        within(modal) { has_no_css?(".create-invite-with-roles-modal__role-toggle") }
+        within(modal) { has_no_css?(".d-segmented-control") }
       end
 
       def selected_role
-        within(modal) do
-          find(".create-invite-with-roles-modal__role-toggle input:checked", visible: false)[:value]
-        end
+        within(modal) { find(".d-segmented-control input:checked", visible: false)[:value] }
       end
 
       def select_role(role)
         within(modal) do
-          find(
-            ".create-invite-with-roles-modal__role-toggle input[value='#{role}']",
-            visible: false,
-          ).ancestor("label").click
-        end
-      end
-
-      def role_option_disabled?(role)
-        within(modal) do
-          find(
-            ".create-invite-with-roles-modal__role-toggle input[value='#{role}']",
-            visible: false,
-          ).disabled?
+          find(".d-segmented-control input[value='#{role}']", visible: false).ancestor(
+            "label",
+          ).click
         end
       end
 
       def select_delivery(delivery)
         within(modal) do
-          find(
-            ".create-invite-with-roles-modal__delivery input[value='#{delivery}']",
-            visible: false,
-          ).ancestor("label").click
+          find(".form-kit__inline-radio input[value='#{delivery}']", visible: false).ancestor(
+            "label",
+          ).click
         end
       end
 
@@ -67,7 +54,7 @@ module PageObjects
       end
 
       def toggle_advanced_options
-        within(modal) { find(".toggle-advanced").click }
+        within(modal) { find(".advanced-mode-btn").click }
       end
 
       def edit_button

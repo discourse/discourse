@@ -199,6 +199,9 @@ ja:
               description: "システムユーザーが作成した投稿のタグ付けを許可します。"
     discourse_ai:
       title: "AI"
+      discourse_workflows:
+        ai_agent:
+          mode: "モード"
       ai_tool_approval:
         loading: "読み込み中..."
         tool: "操作"
@@ -508,6 +511,8 @@ ja:
           clear_all: "すべてクリア"
         forced_tools: "強制されたツール"
         allowed_groups: "許可されたグループ"
+        duplicate: "複製"
+        copy_name: "%{name} のコピー"
         delete: "削除"
         temperature: "Temperature"
         temperature_help: "LLM に使用する Temperature。値を増やすと創造性が増加します (モデルのデフォルトを使用する場合は空白にします。一般に 0.0～2.0 の値です)"
@@ -693,7 +698,7 @@ ja:
           anthropic-claude-opus-4-7: "Anthropic の最もインテリジェントなモデル"
           anthropic-claude-sonnet-4-6: "速度とコストの最適なバランス"
           anthropic-claude-haiku-4-5: "高速でコスト効率に優れています"
-          google-gemini-3-1-pro: "Google の最もインテリジェントなモデル"
+          google-gemini-3-1-pro-preview: "Google の最もインテリジェントなモデル"
         preseeded_model_description: "%{model} を利用する事前構成済みのオープンソースモデル"
         configured:
           title: "構成済みの LLM"
@@ -729,7 +734,6 @@ ja:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"

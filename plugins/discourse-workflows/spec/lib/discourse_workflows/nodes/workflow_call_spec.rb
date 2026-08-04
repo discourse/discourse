@@ -264,7 +264,7 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
               "assignments" => [
                 assignment("full_name", "={{ $json.name }}"),
                 assignment("profile.score", "12.5", type: "number"),
-                assignment("active", "true", type: "boolean"),
+                assignment("active", "={{ $json.enabled }}", type: "boolean"),
                 assignment("tags", '["workflow"]', type: "array"),
                 assignment("source", "={{ $json }}", type: "object"),
               ],
@@ -273,7 +273,13 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
         )
 
       execution =
-        execute_workflow(caller, trigger_data: [{ "name" => "Ada" }, { "name" => "Grace" }])
+        execute_workflow(
+          caller,
+          trigger_data: [
+            { "name" => "Ada", "enabled" => true },
+            { "name" => "Grace", "enabled" => false },
+          ],
+        )
       expect_parent_waiting_at_call(execution)
 
       expect(run_workflow_call_jobs).to eq(1)
@@ -293,6 +299,7 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
           "tags" => ["workflow"],
           "source" => {
             "name" => "Ada",
+            "enabled" => true,
           },
         },
         {
@@ -300,10 +307,11 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
           "profile" => {
             "score" => 12.5,
           },
-          "active" => true,
+          "active" => false,
           "tags" => ["workflow"],
           "source" => {
             "name" => "Grace",
+            "enabled" => false,
           },
         },
       ]
@@ -503,11 +511,43 @@ RSpec.describe DiscourseWorkflows::Nodes::WorkflowCall::V1 do
       execution.reload
       call_step = execution.execution_data.find_step(node_id: "call-1")
       run = DiscourseWorkflows::WorkflowCallRun.last
+      child_execution = run.child_execution
+      expect(child_execution).to be_error
       expect(execution).to be_error
       expect(execution.error).to include("finished with status 'error'")
       expect(call_step["status"]).to eq("error")
       expect(call_step["error"]).to include("finished with status 'error'")
       expect(run).to be_error
+    end
+
+    context "when rate limiting is enabled" do
+      before { RateLimiter.enable }
+      after { RateLimiter.disable }
+
+      it "fails the parent when a child execution is rate limited before it starts" do
+        SiteSetting.discourse_workflows_max_executions_per_minute_per_workflow = 1
+        target = callable_workflow_with_set_fields([assignment("called", "yes")])
+        caller = caller_workflow_for(target)
+
+        warmup_execution = execute_workflow(target, trigger_node_id: "call-trigger")
+        expect(warmup_execution).to be_success
+
+        execution = execute_workflow(caller)
+        expect_parent_waiting_at_call(execution)
+        run_workflow_call_jobs
+
+        execution.reload
+        call_step = execution.execution_data.find_step(node_id: "call-1")
+        run = DiscourseWorkflows::WorkflowCallRun.last
+        child_execution = run.child_execution
+
+        expect(child_execution).to be_rate_limited
+        expect(execution).to be_error
+        expect(execution.error).to include("finished with status 'rate_limited'")
+        expect(call_step["status"]).to eq("error")
+        expect(call_step["error"]).to include("finished with status 'rate_limited'")
+        expect(run).to be_error
+      end
     end
 
     it "continues through regular output when an async child failure uses continueOnFail" do

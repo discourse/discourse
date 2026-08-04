@@ -163,8 +163,6 @@ be:
           title: "Далей"
         tests:
           success: "Працуе!"
-        providers:
-          google: "Google"
       ai_helper:
         context_menu:
           cancel: "Адмяніць"

@@ -5,8 +5,16 @@
 # https://translate.discourse.org/
 
 fr:
+  category_types:
+    ideas:
+      name: "Idées"
+      title: "idées"
+      description: "Espace où les membres peuvent proposer des idées et voter pour leurs préférées."
   site_settings:
+    enable_ideas_category_type_setup: "Active l'option de type de catégorie « Idées » lors de la configuration de la création d'une catégorie."
+    enable_topic_voting_badges: "Active les badges de vote sur les sujets attribués aux membres lorsque d'autres personnes votent pour leurs idées."
     topic_voting_enabled: 'Autoriser les utilisateurs à voter pour les sujets ?'
+    topic_voting_enable_vote_limits: 'Limiter le nombre de votes par utilisateur selon le niveau de confiance'
     topic_voting_tl0_vote_limit: 'À combien de votes les utilisateurs de niveau de confiance 0 ont-ils droit ?'
     topic_voting_tl1_vote_limit: 'À combien de votes les utilisateurs de niveau de confiance 1 ont-ils droit ?'
     topic_voting_tl2_vote_limit: 'À combien de votes les utilisateurs de niveau de confiance 2 ont-ils droit ?'
@@ -19,9 +27,48 @@ fr:
     category_type:
       show_who_voted:
         label: "Afficher les votants"
+      show_votes_on_profile:
+        label: "Afficher les votes sur le profil"
+      enable_vote_limits:
+        label: "Limiter les votes des membres"
+      tl0_vote_limit:
+        label: "Limite de votes au niveau de confiance 0"
+      tl1_vote_limit:
+        label: "Limite de votes au niveau de confiance 1"
+      tl2_vote_limit:
+        label: "Limite de votes au niveau de confiance 2"
+      tl3_vote_limit:
+        label: "Limite de votes au niveau de confiance 3"
+      tl4_vote_limit:
+        label: "Limite de votes au niveau de confiance 4"
+      alert_votes_left:
+        label: "Alerter en fonction du nombre de votes restants"
     votes_moved:
       one: "Un vote a été déplacé."
       other: "%{count} votes ont été déplacés."
     duplicated_votes:
       one: "Un vote n'a pas pu être déplacé, car l'utilisateur a déjà voté dans l'autre sujet."
       other: "%{count} votes n'ont pas pu être déplacés, car leurs utilisateurs ont déjà voté dans l'autre sujet."
+    filter:
+      description:
+        topic_votes_min: "Nombre minimal de votes par sujet"
+        topic_votes_max: "Nombre maximal de votes par sujet"
+        order_topic_votes: "Trier les sujets par nombre de votes décroissant"
+        order_topic_votes_asc: "Trier les sujets par nombre de votes croissant"
+  badges:
+    daydreamer:
+      name: "Rêveur"
+      description: "Recevoir un vote pour votre sujet"
+      long_description: "Ce badge est attribué lorsque l'un de vos sujets reçoit un vote. :white_check_mark: Bonne idée. :+1:"
+    brainstormer:
+      name: "Créatif"
+      description: "Recevoir 5 votes pour votre sujet"
+      long_description: "Ce badge est attribué lorsque l'un de vos sujets reçoit 5 votes. :white_check_mark: Votre sujet gagne en popularité."
+    innovator:
+      name: "Innovateur"
+      description: "Recevoir 15 votes pour votre sujet"
+      long_description: "Ce badge est attribué lorsque l'un de vos sujets reçoit 15 votes. :white_check_mark: Une idée si bonne qu'elle ne peut pas être ignorée."
+    visionary:
+      name: "Visionnaire"
+      description: "Recevoir 25 votes pour votre sujet"
+      long_description: "Ce badge est attribué lorsque l'un de vos sujets reçoit 25 votes. :white_check_mark: Donnez aux gens ce qu'ils veulent ! :clap:"

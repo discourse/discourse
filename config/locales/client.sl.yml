@@ -534,6 +534,7 @@ sl:
         email: "E-naslov"
         name: "Polno ime"
         fields: "Polja"
+        penalty_forever: "Za vedno"
         reject_reason: "Razlog"
         scrubbed_reason: "Razlog"
         scrub_record:
@@ -1594,6 +1595,7 @@ sl:
           staff_role_moderator: "Moderator"
           email_placeholder: "name@example.com"
           invite_by_email: "E-naslov"
+          create_and_send: "Pošlji"
           summary:
             role_member: "Polnopraven član"
             role_admin: "Admin"
@@ -1602,6 +1604,7 @@ sl:
             expires: "Poteče"
             topic: "Tema"
             groups: "Skupine"
+            edit: "Uredi"
         bulk_invite:
           none: "Ni povabil za prikaz na tej strani."
           text: "Skupinsko povabilo"
@@ -3631,6 +3634,7 @@ sl:
           public: "Vidno vsem"
           localizations:
             locale: "Jezik"
+            remove_language: "Odstrani"
           links:
             reset: "Ponastavi na privzeto"
             icon:

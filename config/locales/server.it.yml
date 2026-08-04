@@ -4625,7 +4625,6 @@ it:
           complete: "Utente eliminato."
         block:
           title: "Elimina e blocca Utente"
-          description: "L'utente sarà eliminato, e ne bloccheremo l'IP e l'indirizzo email."
           complete: "Utente eliminato e bloccato."
       confirm_spam:
         title: "Sì"

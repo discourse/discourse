@@ -801,6 +801,7 @@ hr:
         email: "Email"
         name: "Ime"
         fields: "Polja"
+        penalty_forever: "Zauvijek"
         reject_reason: "Razlog"
         scrubbed_by: "Zapis je obrisao"
         scrubbed_reason: "Razlog"
@@ -2227,7 +2228,8 @@ hr:
           email_placeholder: "ime@primjer.com"
           invite_by_email: "Email"
           restrict_domain: "Ograniči na domenu"
-          more_options: "Više opcija"
+          create_and_send: "Pošalji"
+          create_and_copy: "Kopirajte poveznicu"
           update: "Ažuriraj"
           summary:
             role_member: "Član"
@@ -2238,7 +2240,7 @@ hr:
             expires: "Istječe"
             topic: "Tema"
             groups: "Grupe"
-            edit: "Uredi pozivnicu"
+            edit: "Uredi"
         bulk_invite:
           none: "Nema pozivnica za prikaz na ovoj stranici."
           text: "Skupna pozivnica"
@@ -2971,7 +2973,6 @@ hr:
       italic_label: "I"
       italic_title: "Naglasak"
       italic_text: "naglašen tekst"
-      heading_title: "Naslovi"
       heading_level_n: "Naslov %{levelNumber}"
       heading_level_n_title: "Naslov %{levelNumber}"
       heading_level_paragraph: "Odlomak"
@@ -5122,9 +5123,9 @@ hr:
           always_public: "Sadržaj u ovom odjeljku je uvijek javan"
           more_menu: "Više izbornika"
           localizations:
-            title: "Prijevodi"
             locale: "Jezik"
             title_label: "Naslov odjeljka"
+            remove_language: "Ukloni"
           links:
             add: "Dodajte još jednu poveznicu"
             delete: "Izbrišite poveznicu"

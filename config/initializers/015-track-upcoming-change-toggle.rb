@@ -33,3 +33,32 @@ DiscourseEvent.on(:upcoming_change_disabled) do |setting_name|
     SiteSetting::Action::RemoveAndReplaceUncategorizedToggled.call(enabled: false)
   end
 end
+
+# A plugin's settings are registered whether or not it is enabled, so its upcoming
+# changes have been accumulating in the audit trail all along, only
+# ConditionalDisplay was holding their notifications back. Enabling the plugin would
+# otherwise release that whole back-catalogue at once, which is noise. The admin just
+# opted into the plugin, they did not have anything change out from under them, so they
+# don't need to have a flood of notifications.
+#
+# Treat it the same way as a new site and mark those changes as already notified
+# about. Promotion itself still happens, so :upcoming_change_enabled fires as usual.
+DiscourseEvent.on(:site_setting_changed) do |name, _old_value, new_value|
+  next if !new_value
+
+  plugin_name = SiteSetting.plugins[name]
+  next if plugin_name.blank?
+
+  plugin = Discourse.plugins_by_name[plugin_name]
+  next if plugin&.enabled_site_setting&.to_sym != name.to_sym
+
+  all_plugin_upcoming_changes =
+    SiteSetting.upcoming_change_site_settings.select do |change_name|
+      SiteSetting.plugins[change_name] == plugin_name
+    end
+  next if all_plugin_upcoming_changes.blank?
+
+  UpcomingChanges::Action::BackfillNotifiedEvents.call(
+    upcoming_change_names: all_plugin_upcoming_changes,
+  )
+end

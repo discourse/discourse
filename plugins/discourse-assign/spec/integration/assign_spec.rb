@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../support/assign_allowed_group"
 require_relative "../fabricators/assign_hook_fabricator"
 
 describe "integration tests" do
@@ -25,8 +24,8 @@ describe "integration tests" do
     include_context "with group that is allowed to assign"
 
     before do
-      add_to_assign_allowed_group(user)
-      add_to_assign_allowed_group(user2)
+      assign_allowed_group.add(user)
+      assign_allowed_group.add(user2)
       group.add(user)
       group.add(user2)
       pm.topic_allowed_groups.create!(group: group)
@@ -34,8 +33,7 @@ describe "integration tests" do
 
     def assert_publish_topic_state(topic, user: nil, group: nil)
       messages = MessageBus.track_publish { yield }
-
-      message = messages.find { |m| m.channel == channel }
+      message = messages.find { |published_message| published_message.channel == channel }
 
       expect(message.data[:topic_id]).to eq(topic.id)
       expect(message.user_ids).to eq([user.id]) if user
@@ -105,8 +103,8 @@ describe "integration tests" do
     include_context "with group that is allowed to assign"
 
     before do
-      add_to_assign_allowed_group(user1)
-      add_to_assign_allowed_group(user2)
+      assign_allowed_group.add(user1)
+      assign_allowed_group.add(user2)
     end
 
     it "assigns topic" do
@@ -150,7 +148,7 @@ describe "integration tests" do
     include_context "with group that is allowed to assign"
 
     it "allows to assign topic if post is already assigned" do
-      add_to_assign_allowed_group(user)
+      assign_allowed_group.add(user)
 
       assigner = Assigner.new(post, user)
       response = assigner.assign(user)

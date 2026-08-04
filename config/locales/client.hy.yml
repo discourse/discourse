@@ -596,6 +596,7 @@ hy:
         email: "Էլ. հասցե"
         name: "Անուն"
         fields: "Դաշտեր"
+        penalty_forever: "Ընդմիշտ"
         reject_reason: "Պատճառ"
         scrubbed_reason: "Պատճառ"
         scrub_record:
@@ -1852,7 +1853,8 @@ hy:
           email_placeholder: "name@example.com"
           invite_by_email: "Էլ. հասցե"
           restrict_domain: "Սահմանափակել դոմենով"
-          more_options: "Ավելի շատ տարբերակներ"
+          create_and_send: "Ուղարկել"
+          create_and_copy: "Պատճենել հղումը"
           update: "Թարմացնել"
           summary:
             role_member: "Անդամ"
@@ -1863,7 +1865,7 @@ hy:
             expires: "Ժամկետը լրանում է"
             topic: "Թեմա"
             groups: "Խմբեր"
-            edit: "Խմբագրել հրավերը"
+            edit: "Խմբագրել"
         bulk_invite:
           none: "Այս էջում ցուցադրելու հրավերներ չկան:"
           text: "Զանգվածային Հրավեր"
@@ -3737,7 +3739,7 @@ hy:
           save: "Պահպանել"
           delete: "Ջնջել"
           localizations:
-            title: "Թարգմանություններ"
+            remove_language: "Հեռացնել"
           links:
             reset: "Վերականգնել լռելյայն"
             icon:

@@ -59,6 +59,7 @@ DiscourseWorkflows::Engine.routes.draw do
       get "/stats" => "stats#index"
       get "/stats/:workflow_id" => "stats#index"
       post "/expressions/evaluate" => "expressions#evaluate"
+      post "/node-previews" => "node_previews#create"
       get "/variables" => "variables#index"
       post "/variables" => "variables#create"
       put "/variables/:id" => "variables#update"

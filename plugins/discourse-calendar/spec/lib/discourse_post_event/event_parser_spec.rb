@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-def build_post(user, raw)
-  Post.new(user: user, raw: raw)
-end
-
 describe DiscoursePostEvent::EventParser do
   subject(:parser) { DiscoursePostEvent::EventParser }
 
   let(:user) { Fabricate(:user) }
+
+  def build_post(user, raw)
+    Post.new(user:, raw:)
+  end
 
   it "works with no event" do
     events = parser.extract_events(build_post(user, "this could be a nice event"))

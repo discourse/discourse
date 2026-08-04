@@ -557,6 +557,7 @@ ko:
         email: "이메일"
         name: "이름"
         fields: "필드"
+        penalty_forever: "영원히"
         reject_reason: "이유"
         scrubbed_reason: "이유"
         scrub_record:
@@ -1683,7 +1684,8 @@ ko:
           invite_by_email: "이메일"
           restrict_domain: "도메인으로 제한"
           domain_placeholder: "example.com"
-          more_options: "추가 옵션"
+          create_and_send: "보내기"
+          create_and_copy: "링크 복사"
           update: "업데이트"
           summary:
             role_member: "회원"
@@ -1694,6 +1696,7 @@ ko:
             expires: "만료"
             topic: "글"
             groups: "그룹"
+            edit: "편집"
         bulk_invite:
           none: "이 페이지에 표시할 초대장이 없습니다."
           text: "일괄 초대"
@@ -3707,8 +3710,8 @@ ko:
           save: "저장"
           delete: "삭제하기"
           localizations:
-            title: "번역"
             locale: "언어"
+            remove_language: "제거"
           links:
             reset: "기본값으로 재설정"
             icon:

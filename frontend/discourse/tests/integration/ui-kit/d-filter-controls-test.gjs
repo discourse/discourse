@@ -137,6 +137,67 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       .exists("renders dropdown filter");
   });
 
+  test("can collapse a single dropdown behind the filter toggle", async function (assert) {
+    this.set("data", SAMPLE_DATA);
+    this.set("dropdownOptions", SAMPLE_DROPDOWN_OPTIONS);
+
+    await render(
+      <template>
+        <DFilterControls
+          @array={{this.data}}
+          @dropdownOptions={{this.dropdownOptions}}
+          @filterDropdownsExpanded={{false}}
+          @forceShowDropdownFilterToggle={{true}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-filter-controls")
+      .hasClass(
+        "--dropdowns-in-filter-drawer",
+        "uses the filter drawer layout"
+      );
+    assert
+      .dom(".d-filter-controls__toggle-filters")
+      .exists("shows the filter toggle");
+    assert
+      .dom(".d-filter-controls__dropdown")
+      .doesNotExist("starts with the dropdown collapsed");
+
+    await click(".d-filter-controls__toggle-filters");
+
+    assert
+      .dom(".d-filter-controls__dropdown")
+      .exists("reveals the dropdown after toggling filters");
+  });
+
+  test("shows one reset button with a forced single-dropdown toggle", async function (assert) {
+    this.set("data", SAMPLE_DATA);
+    this.set("searchableProps", ["name"]);
+    this.set("dropdownOptions", SAMPLE_DROPDOWN_OPTIONS);
+
+    await render(
+      <template>
+        <DFilterControls
+          @array={{this.data}}
+          @searchableProps={{this.searchableProps}}
+          @dropdownOptions={{this.dropdownOptions}}
+          @forceShowDropdownFilterToggle={{true}}
+        />
+      </template>
+    );
+
+    await fillIn(".filter-input", "first");
+
+    assert
+      .dom(".d-filter-controls__reset")
+      .exists({ count: 1 }, "shows a single reset button");
+    assert
+      .dom(".d-filter-controls > .d-filter-controls__reset")
+      .doesNotExist("does not show a second reset button after the dropdowns");
+  });
+
   test("filters data by single dropdown (client-side)", async function (assert) {
     this.set("data", SAMPLE_DATA);
     this.set("dropdownOptions", SAMPLE_DROPDOWN_OPTIONS);
@@ -276,6 +337,51 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     assert
       .dom(".d-filter-controls__reset")
       .exists("shows reset button after filtering");
+  });
+
+  test("can hide the built-in no-results state", async function (assert) {
+    this.set("data", SAMPLE_DATA);
+    this.set("searchableProps", ["name"]);
+
+    await render(
+      <template>
+        <DFilterControls
+          @array={{this.data}}
+          @searchableProps={{this.searchableProps}}
+          @showNoResults={{false}}
+        />
+      </template>
+    );
+
+    await fillIn(".filter-input", "nonexistent");
+
+    assert
+      .dom(".d-filter-controls > .d-filter-controls__reset")
+      .exists({ count: 1 }, "shows one reset button beside the filters");
+    assert
+      .dom(".d-filter-controls__no-results")
+      .doesNotExist("does not render the built-in no-results state");
+  });
+
+  test("can hide the reset button", async function (assert) {
+    this.set("data", SAMPLE_DATA);
+    this.set("searchableProps", ["name"]);
+
+    await render(
+      <template>
+        <DFilterControls
+          @array={{this.data}}
+          @searchableProps={{this.searchableProps}}
+          @showResetButton={{false}}
+        />
+      </template>
+    );
+
+    await fillIn(".filter-input", "nonexistent");
+
+    assert
+      .dom(".d-filter-controls__reset")
+      .doesNotExist("does not render the reset button");
   });
 
   test("reset button clears filters", async function (assert) {
@@ -660,6 +766,12 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
       </template>
     );
 
+    assert
+      .dom(".d-filter-controls")
+      .hasClass(
+        "--dropdowns-in-filter-drawer",
+        "uses the filter drawer layout"
+      );
     assert
       .dom(".d-filter-controls__dropdown")
       .exists({ count: 2 }, "renders two dropdowns");

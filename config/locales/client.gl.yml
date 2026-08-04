@@ -443,6 +443,7 @@ gl:
         email: "Correo electrónico"
         name: "Nome"
         fields: "Campos"
+        penalty_forever: "Sempre"
         reject_reason: "Razón"
         scrubbed_reason: "Motivo"
         scrub_record:
@@ -1467,6 +1468,7 @@ gl:
           staff_role_moderator: "Moderador"
           email_placeholder: "nome@exemplo.com"
           invite_by_email: "Enderezo de correo"
+          create_and_send: "Enviar"
           update: "Actualizar"
           summary:
             role_member: "Membro"
@@ -1476,6 +1478,7 @@ gl:
             expires: "Caduca"
             topic: "Tema"
             groups: "Grupos"
+            edit: "Editar"
         bulk_invite:
           none: "Non hai convites que amosar nesta páxina."
           text: "Convite en grupo"
@@ -3336,8 +3339,8 @@ gl:
           save: "Gardar"
           delete: "Eliminar"
           localizations:
-            title: "Traducións"
             locale: "Idioma"
+            remove_language: "Retirar"
           links:
             reset: "Restabelecer cos valores predeterminados"
             icon:

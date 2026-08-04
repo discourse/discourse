@@ -193,7 +193,6 @@ gl:
         tests:
           success: "Feito!"
         providers:
-          google: "Google"
           fake: "Personalizado"
       ai_helper:
         context_menu:

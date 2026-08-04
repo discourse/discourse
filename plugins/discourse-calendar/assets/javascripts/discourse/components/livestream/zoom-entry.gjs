@@ -3,8 +3,10 @@ import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { bind } from "discourse/lib/decorators";
+import { iconHTML } from "discourse/lib/icon-library";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
@@ -55,6 +57,18 @@ export default class LivestreamZoomEntry extends Component {
 
   get showFallbackLink() {
     return !isEmpty(this.session.errorMessage);
+  }
+
+  get showAudioHint() {
+    return this.session.isJoined && !this.session.hasJoinedAudio;
+  }
+
+  get joinAudioHint() {
+    return trustHTML(
+      i18n("discourse_calendar.livestream.zoom.join_audio_hint", {
+        icon: iconHTML("zoom-join-audio"),
+      })
+    );
   }
 
   get joinDisabled() {
@@ -160,6 +174,12 @@ export default class LivestreamZoomEntry extends Component {
             }}
             {{zoomComponentViewLayout this.session this.isDesktop}}
           ></div>
+
+          {{#if this.showAudioHint}}
+            <p class="discourse-calendar-livestream-zoom-entry__audio-hint">
+              {{this.joinAudioHint}}
+            </p>
+          {{/if}}
         {{else}}
           <div class="discourse-calendar-livestream-zoom-entry__actions">
             <DButton

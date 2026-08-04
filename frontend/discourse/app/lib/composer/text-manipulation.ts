@@ -28,6 +28,8 @@ export interface ToolbarState {
   inHeadingLevel?: number;
   /** Whether the selection is inside a paragraph. */
   inParagraph?: boolean;
+  /** Whether the selection has small text formatting. */
+  inSmall?: boolean;
 }
 
 export interface SelectedText {
@@ -77,6 +79,8 @@ export interface SurroundOptions {
   applyEmptyLines?: boolean;
   /** Leave the leading marker outside the restored selection. */
   excludeHeadInSelection?: boolean;
+  /** Expand the selection to whole lines before applying. */
+  wholeLine?: boolean;
 }
 
 export interface AddTextOptions {

@@ -58,11 +58,12 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     await click(".bulk-select-topics-dropdown-trigger");
     assert
       .dom(".fk-d-menu__inner-content .dropdown-menu__item")
-      .exists({ count: 5 });
+      .exists({ count: 6 });
 
     [
       "update-notifications",
       "reset-bump-dates",
+      "defer",
       "close-topics",
       "manage-tags",
       "delete-topics",
@@ -107,23 +108,6 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     assert
       .dom(".fk-d-menu__inner-content .dropdown-menu__item .relist-topics")
       .doesNotExist();
-  });
-
-  test("allows deferring topics if the user has the preference enabled", async function (assert) {
-    this.currentUser.admin = true;
-    this.currentUser.user_option.enable_defer = true;
-    this.bulkSelectHelper = createBulkSelectHelper(this);
-
-    await render(
-      <template>
-        <BulkSelectTopicsDropdown @bulkSelectHelper={{this.bulkSelectHelper}} />
-      </template>
-    );
-
-    await click(".bulk-select-topics-dropdown-trigger");
-    assert
-      .dom(".fk-d-menu__inner-content .dropdown-menu__item .defer")
-      .exists();
   });
 
   test("does not allow tagging actions if tagging_enabled is false", async function (assert) {

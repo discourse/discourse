@@ -697,6 +697,7 @@ sr:
         email: "E-mail"
         name: "Ime foruma"
         fields: "Polja"
+        penalty_forever: "Zauvek"
         reject_reason: "Razlog"
         scrubbed_reason: "Razlog"
         scrub_record:
@@ -1558,7 +1559,6 @@ sr:
           staff_role_moderator: "Moderator"
           email_placeholder: "ime@primer.com"
           invite_by_email: "E-mail"
-          more_options: "Više opcija"
           summary:
             role_member: "Član"
             role_admin: "Admin"
@@ -1566,6 +1566,7 @@ sr:
             method_email: "E-mail"
             topic: "Tema"
             groups: "Grupe"
+            edit: "Izmeni"
       password:
         title: "Šifra"
         common: "Ta šifra je pre česta."
@@ -2730,6 +2731,8 @@ sr:
           edit: "Uredite prilagođeni odeljak"
           save: "Sačuvaj"
           delete: "Obriši"
+          localizations:
+            remove_language: "Ukloni"
           links:
             icon:
               label: "Ikona"

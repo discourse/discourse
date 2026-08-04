@@ -192,7 +192,6 @@ nb_NO:
         tests:
           success: "Suksess!"
         providers:
-          google: "Google"
           fake: "Egendefinert"
       ai_helper:
         context_menu:

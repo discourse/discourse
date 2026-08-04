@@ -5310,11 +5310,10 @@ zh_CN:
         title: "否"
         delete:
           title: "删除用户"
-          description: "删除用户，而不封禁"
           complete: "用户已被删除。"
         block:
           title: "删除并阻止用户"
-          description: "该用户将被删除，我们将屏蔽他们的 IP 和电子邮件地址。"
+          description: "删除用户并屏蔽其电子邮件地址和 IP 地址"
           complete: "用户已被删除并被屏蔽。"
       confirm_spam:
         title: "是"
@@ -5374,12 +5373,10 @@ zh_CN:
         bundle_title: "您想如何处理该用户？"
       silence_user:
         title: "将用户禁言"
-        description: "禁止该用户发帖"
         complete: "用户已被禁言"
         reason: "用户通过审核队列被禁言"
       suspend_user:
         title: "封禁用户"
-        description: "封禁用户帐户"
         complete: "用户已被封禁"
         reason: "用户通过审核队列被封禁"
       delete_user:

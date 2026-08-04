@@ -27,6 +27,8 @@ ro:
         yesterday: "Ieri"
       create: "Creează"
       cancel: "Anulează"
+      pinned_bar:
+        title: "Fixat"
       pinned: "Fixat"
       move_to_channel:
         instructions:

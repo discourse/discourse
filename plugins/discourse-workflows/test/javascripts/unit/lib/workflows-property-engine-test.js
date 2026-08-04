@@ -295,6 +295,10 @@ module("Unit | Utility | workflows property engine", function () {
     assert.true(
       fieldSupportsExpression({ type: "options", ui: { expression: true } })
     );
+    assert.false(fieldSupportsExpression({ type: "boolean" }));
+    assert.true(
+      fieldSupportsExpression({ type: "boolean", ui: { expression: true } })
+    );
   });
 
   test("multi_options defaults to an empty array", function (assert) {

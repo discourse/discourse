@@ -749,6 +749,8 @@ sk:
         email: "Email"
         name: "Meno"
         fields: "Polia"
+        silence_reason: "Dôvod ticha"
+        penalty_forever: "Vždy"
         reject_reason: "Dôvod"
         scrubbed_by: "Záznam vymazaný"
         scrubbed_reason: "Dôvod"
@@ -2226,7 +2228,8 @@ sk:
           email_placeholder: "meno@príklad.com"
           invite_by_email: "Email"
           restrict_domain: "Obmedziť na doménu"
-          more_options: "Ďalšie možnosti"
+          create_and_send: "Odoslať"
+          create_and_copy: "Kopírovať odkaz"
           update: "Aktualizovať"
           summary:
             role_member: "Člen"
@@ -2238,7 +2241,7 @@ sk:
             expires: "Platnosť vyprší"
             topic: "Téma"
             groups: "Skupiny"
-            edit: "Upraviť pozvánku"
+            edit: "Upraviť"
         bulk_invite:
           none: "Na tejto stránke nie sú žiadne pozvánky na zobrazenie."
           text: "Hromadné pozvanie"
@@ -3005,7 +3008,6 @@ sk:
       italic_label: "I"
       italic_title: "Zdôraznene"
       italic_text: "zdôraznený text"
-      heading_title: "Nadpisy"
       heading_level_n: "Nadpis %{levelNumber}"
       heading_level_n_title: "Nadpis %{levelNumber}"
       heading_level_paragraph: "Odsek"
@@ -5255,9 +5257,9 @@ sk:
           always_public: "Obsah v tejto časti je vždy verejný"
           more_menu: "Ďalšie menu"
           localizations:
-            title: "Preklady"
             locale: "Jazyk"
             title_label: "Názov sekcie"
+            remove_language: "Odstrániť"
           links:
             add: "Pridať ďalší odkaz"
             delete: "Odstrániť odkaz"

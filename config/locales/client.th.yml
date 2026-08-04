@@ -450,6 +450,7 @@ th:
         username: "ชื่อผู้ใช้"
         email: "อีเมล"
         name: "ชื่อ"
+        penalty_forever: "ตลอดไป"
         reject_reason: "เหตุผล"
         scrubbed_reason: "เหตุผล"
         scrub_record:
@@ -1193,6 +1194,7 @@ th:
           staff_role_moderator: "ผู้ดูแล"
           email_placeholder: "name@example.com"
           invite_by_email: "อีเมล"
+          create_and_send: "ส่ง"
           update: "อัปเดต"
           summary:
             role_member: "สมาชิก"
@@ -1202,6 +1204,7 @@ th:
             expires: "หมดอายุ"
             topic: "หัวข้อ"
             groups: "กลุ่ม"
+            edit: "แก้ไข"
       password:
         title: "รหัสผ่าน"
         common: "รหัสผ่านง่ายเกินไป"
@@ -2566,6 +2569,8 @@ th:
         custom:
           save: "บันทึก"
           delete: "ลบ"
+          localizations:
+            remove_language: "ลบ"
           links:
             icon:
               label: "ไอคอน"

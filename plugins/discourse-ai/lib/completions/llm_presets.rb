@@ -120,32 +120,30 @@ module DiscourseAi
             id: "google",
             models: [
               model(
-                name: "gemini-3.1-pro",
+                name: "gemini-3.1-pro-preview",
                 tokens: 1_000_000,
-                display_name: "Gemini 3.1 Pro",
+                display_name: "Gemini 3.1 Pro Preview",
                 max_output_tokens: 65_000,
                 input_cost: 2.0,
                 cached_input_cost: 0.20,
                 output_cost: 12.0,
                 vision_enabled: true,
-                endpoint:
-                  "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-pro-preview",
+                endpoint: "https://generativelanguage.googleapis.com/v1beta/interactions",
               ),
               model(
-                name: "gemini-3-flash",
-                tokens: 1_000_000,
-                display_name: "Gemini 3 Flash",
-                max_output_tokens: 65_000,
-                input_cost: 0.50,
-                cached_input_cost: 0.05,
-                output_cost: 3.0,
+                name: "gemini-3.6-flash",
+                tokens: 1_048_576,
+                display_name: "Gemini 3.6 Flash",
+                max_output_tokens: 65_536,
+                input_cost: 1.50,
+                cached_input_cost: 0.15,
+                output_cost: 7.50,
                 vision_enabled: true,
-                endpoint:
-                  "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview",
               ),
             ],
             tokenizer: DiscourseAi::Tokenizer::GeminiTokenizer,
-            provider: "google",
+            endpoint: "https://generativelanguage.googleapis.com/v1/interactions",
+            provider: "gemini_interactions",
           }
         end
 

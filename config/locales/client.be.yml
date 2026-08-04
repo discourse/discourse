@@ -1162,6 +1162,7 @@ be:
           staff_role_moderator: "запавольнік"
           email_placeholder: "name@example.com"
           invite_by_email: "Электронная пошта"
+          create_and_send: "Адправіць"
           summary:
             role_member: "Член"
             role_admin: "адміністратар"
@@ -1169,6 +1170,7 @@ be:
             method_email: "Электронная пошта"
             topic: "Тэма"
             groups: "Груп"
+            edit: "Рэдагаваць"
       password:
         title: "Пароль"
         common: "Гэты пароль занадта папулярны."
@@ -1954,6 +1956,8 @@ be:
         custom:
           save: "Захаваць"
           delete: "Выдаліць"
+          localizations:
+            remove_language: "Выдаліць"
           links:
             add: "Дадаць яшчэ адну спасылку"
             delete: "Выдаліць спасылку"

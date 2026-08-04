@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::SharedConversationAdjustUploadSecurity do
+  subject(:run_job) { described_class.new.execute(params) }
+
   let(:params) { {} }
 
   fab!(:claude_2) { Fabricate(:llm_model, name: "claude-2") }
@@ -19,10 +21,6 @@ RSpec.describe Jobs::SharedConversationAdjustUploadSecurity do
   fab!(:post_1) { Fabricate(:post, topic: topic, user: bot_user) }
   fab!(:post_2) { Fabricate(:post, topic: topic, user: user) }
   fab!(:conversation) { SharedAiConversation.share_conversation(user, topic) }
-
-  def run_job
-    described_class.new.execute(params)
-  end
 
   before { enable_current_plugin }
 

@@ -189,7 +189,6 @@ bg:
         next:
           title: "Напред"
         providers:
-          google: "Google"
           fake: "По избор"
       ai_helper:
         context_menu:

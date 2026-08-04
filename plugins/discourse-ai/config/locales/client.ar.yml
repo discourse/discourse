@@ -231,6 +231,7 @@ ar:
       discourse_workflows:
         ai_agent:
           agent_id: "الوكيل"
+          mode: "الوضع"
       ai_tool_approval:
         loading: "جارٍ التحميل..."
         agent: "الوكيل"
@@ -404,7 +405,7 @@ ar:
         description: "تفعيل الترجمة التلقائية لجميع محتويات المنتدى وفقًا للغة المفضلة لدى كل مستخدم"
         supported_locales: "اللغات المدعومة"
         category_scope: "الفئات"
-        cached_results_notice: "عرض النتائج المخزنة مؤقتًا منذ %{relative_time}"
+        cached_results_notice: "يتم عرض النتائج المخزَّنة مؤقتًا منذ %{relative_time}."
         model_progress:
           detail:
             columns:
@@ -686,6 +687,8 @@ ar:
         allowed_groups: "المجموعات المسموح بها"
         confirm_delete: "هل تريد بالتأكيد حذف هذا الوكيل؟"
         new: "وكيل جديد"
+        duplicate: "تكرار"
+        copy_name: "نسخة من %{name}"
         no_agents: "لم تُنشئ أي وكلاء بعد"
         title: "الوكلاء"
         short_title: "الوكلاء"
@@ -999,8 +1002,7 @@ ar:
           anthropic-claude-opus-4-7: "النموذج الأكثر ذكاءً لدى Anthropic"
           anthropic-claude-sonnet-4-6: "التوازن الأمثل بين السرعة والتكلفة"
           anthropic-claude-haiku-4-5: "سريع وفعَّال من حيث التكلفة"
-          google-gemini-3-1-pro: "النموذج الأكثر ذكاءً لدى Google"
-          google-gemini-3-flash: "سريع وفعَّال من حيث التكلفة مع الاستدلال متعدد النماذج"
+          google-gemini-3-1-pro-preview: "النموذج الأكثر ذكاءً لدى Google"
           open_router-moonshotai-kimi-k2-6: "نموذج Moonshot متعدد الوسائط القادر على الرؤية"
           open_router-deepseek-deepseek-v4-flash: "أحدث نموذج عالي الأداء من DeepSeek مع سياق يصل إلى 1 مليون رمز"
           open_router-minimax-minimax-m2-7: "نموذج MiniMax مع سياق كبير"
@@ -1045,7 +1047,6 @@ ar:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"

@@ -177,7 +177,6 @@ bs_BA:
         tests:
           success: "Uspjeh!"
         providers:
-          google: "Google"
           fake: "Custom"
       ai_helper:
         context_menu:

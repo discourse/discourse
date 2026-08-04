@@ -13,8 +13,6 @@ it:
   js:
     discourse_reactions:
       reactions_title: "Reazioni"
-      state_panel:
-        more_users: "e %{count} altro..."
       picker:
         react_with: "Reagisci a questo messaggio con: %{reaction}"
         cant_remove_reaction: "Non puoi più rimuovere la tua reazione"

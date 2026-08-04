@@ -373,11 +373,15 @@ export default class Toolbar extends ToolbarBase {
       id: "heading",
       group: "fontStyles",
       active: ({ state }) => {
-        if (!state || !state.inHeading) {
+        if (!state) {
           return false;
         }
 
-        if (state.inHeadingLevel > 4) {
+        if (state.inSmall) {
+          return true;
+        }
+
+        if (!state.inHeading || state.inHeadingLevel > 4) {
           return false;
         }
 
@@ -394,7 +398,7 @@ export default class Toolbar extends ToolbarBase {
 
         return `discourse-h${state.inHeadingLevel}`;
       },
-      title: "composer.heading_title",
+      title: "composer.text_size_title",
       popupMenu: {
         options: () => {
           const headingOptions = [];
@@ -434,8 +438,27 @@ export default class Toolbar extends ToolbarBase {
             condition: true,
             showActiveIcon: true,
             shortcut: "Alt+0",
-            active: ({ state }) => state?.inParagraph,
+            active: ({ state }) => state?.inParagraph && !state?.inSmall,
             action: (toolbarEvent) => toolbarEvent.applyHeading(0, "heading"),
+          });
+          headingOptions.push({
+            name: "heading-small",
+            icon: "discourse-text",
+            label: "composer.heading_level_small",
+            title: "composer.heading_level_small_title",
+            shortcut: "Alt+5",
+            condition: true,
+            showActiveIcon: true,
+            active: ({ state }) => state?.inSmall,
+            action: (toolbarEvent) =>
+              toolbarEvent.commands?.toggleSmall
+                ? toolbarEvent.commands.toggleSmall()
+                : toolbarEvent.applySurround(
+                    "<small>",
+                    "</small>",
+                    "heading_level_small_text",
+                    { multiline: true, wholeLine: true }
+                  ),
           });
           return headingOptions;
         },

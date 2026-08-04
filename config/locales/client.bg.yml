@@ -503,6 +503,7 @@ bg:
         email: "Имейл"
         name: "Име"
         fields: "Полета"
+        penalty_forever: "Завинаги"
         reject_reason: "Причина"
         scrubbed_reason: "Причина"
         scrub_record:
@@ -1660,6 +1661,7 @@ bg:
             expires: "Изтича"
             topic: "Тема"
             groups: "Групи"
+            edit: "Редактирай"
         bulk_invite:
           none: "Няма покани за показване на тази страница."
           text: "Групова покана"
@@ -3392,6 +3394,8 @@ bg:
           save: "Запази"
           delete: "Изтрий"
           delete_confirm: "Сигурни ли сте, че искате да изтриете този раздел?"
+          localizations:
+            remove_language: "Премахване"
           links:
             add: "Добавете друга връзка"
             delete: "Изтриване на връзката"

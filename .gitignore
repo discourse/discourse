@@ -140,6 +140,7 @@ frontend/discourse-i18n/src/index.d.ts.map
 /plugins/discourse-ai/config/eval-llms.local.yml
 
 # AI customization
+/AGENTS.override.md
 /.claude
 /.cursor
 .playwright-mcp

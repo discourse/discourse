@@ -1375,6 +1375,7 @@ lv:
           staff_role_moderator: "Moderātors"
           email_placeholder: "vards@piemers.com"
           invite_by_email: "E-pasts"
+          create_and_send: "Sūtīt"
           summary:
             role_member: "Biedrs"
             role_admin: "Administrators"
@@ -1384,6 +1385,7 @@ lv:
             expires: "Derīguma termiņš beidzas"
             topic: "Tēmas"
             groups: "Grupas"
+            edit: "Labot"
         bulk_invite:
           success: "Fails veiksmīgi lejuplādēts, jums paziņos, kad process beidzies."
           error: "Atvainojiet, failam jābūt CSV formātā."
@@ -2822,6 +2824,8 @@ lv:
         custom:
           save: "Saglabāt"
           delete: "Dzēst"
+          localizations:
+            remove_language: "Atcelt"
           links:
             reset: "Atiestatīt uz noklusējumu"
             icon:

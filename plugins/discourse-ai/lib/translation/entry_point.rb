@@ -31,6 +31,13 @@ module DiscourseAi
             Jobs.enqueue_in(grace, :detect_translate_post, post_id: post.id) if raw_changed
           end
         end
+
+        plugin.on(:site_setting_changed) do |name, _old_value, new_value|
+          if name == :ai_translation_enabled && new_value &&
+               SiteSetting.ai_translation_backfill_start_date.blank?
+            SiteSetting.ai_translation_backfill_start_date = 5.days.ago.utc.to_date.iso8601
+          end
+        end
       end
     end
   end

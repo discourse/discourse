@@ -6,7 +6,12 @@ RSpec.describe DiscourseWorkflows::ActiveWebhooks do
   before { described_class.reset_for_tests! }
   after { described_class.reset_for_tests! }
 
-  def make_workflow(path:, http_method:, webhook_id: nil)
+  let(:webhook_path) { "hooks/inbound" }
+  let(:http_method) { "POST" }
+  let(:webhook_id) { nil }
+  let(:workflow) { activate_workflow(path: webhook_path, http_method:, webhook_id:) }
+
+  def activate_workflow(path:, http_method:, webhook_id: nil)
     graph =
       build_workflow_graph do |g|
         g.node "webhook-1",
@@ -28,7 +33,7 @@ RSpec.describe DiscourseWorkflows::ActiveWebhooks do
 
   describe ".find" do
     it "matches static paths exactly with empty path_params" do
-      make_workflow(path: "hooks/inbound", http_method: "POST")
+      workflow
 
       result = described_class.find(method: "POST", path: "hooks/inbound", test_webhook: false)
 
@@ -37,21 +42,26 @@ RSpec.describe DiscourseWorkflows::ActiveWebhooks do
     end
 
     it "returns nil when the method does not match" do
-      make_workflow(path: "hooks/inbound", http_method: "POST")
+      workflow
 
       expect(
         described_class.find(method: "GET", path: "hooks/inbound", test_webhook: false),
       ).to be_nil
     end
 
-    it "matches dynamic paths by webhook_id prefix and captures path params" do
-      make_workflow(path: "users/:id/posts", http_method: "GET", webhook_id: "abcd-1234")
+    context "with a dynamic webhook path" do
+      let(:webhook_path) { "users/:id/posts" }
+      let(:http_method) { "GET" }
+      let(:webhook_id) { "abcd-1234" }
 
-      result =
-        described_class.find(method: "GET", path: "abcd-1234/users/42/posts", test_webhook: false)
+      it "matches by webhook_id prefix and captures path params" do
+        workflow
+        result =
+          described_class.find(method: "GET", path: "abcd-1234/users/42/posts", test_webhook: false)
 
-      expect(result[:webhook].webhook_id).to eq("abcd-1234")
-      expect(result[:path_params]).to eq("id" => "42")
+        expect(result[:webhook].webhook_id).to eq("abcd-1234")
+        expect(result[:path_params]).to eq("id" => "42")
+      end
     end
 
     it "prefers the longest template when several share the same webhook_id" do
@@ -88,7 +98,7 @@ RSpec.describe DiscourseWorkflows::ActiveWebhooks do
     end
 
     it "is invalidated when webhook rows change" do
-      make_workflow(path: "hooks/before", http_method: "POST")
+      activate_workflow(path: "hooks/before", http_method: "POST")
       expect(
         described_class.find(method: "POST", path: "hooks/before", test_webhook: false),
       ).to be_present

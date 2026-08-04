@@ -709,6 +709,8 @@ ja:
         email: "メール"
         name: "名前"
         fields: "フィールド"
+        silence_reason: "投稿禁止の理由"
+        penalty_forever: "永遠"
         reject_reason: "理由"
         scrubbed_by: "レコードを削除したユーザー:"
         scrubbed_reason: "理由"
@@ -1482,6 +1484,9 @@ ja:
       enable_smart_lists: "コンポーザーに書き込む際にスマートリストを有効にする"
       enable_defer: "トピックを未読としてマークする"
       enable_markdown_monospace_font: "作成ツールの Markdown モードで等幅フォントを使用する"
+      automatically_translate: "ほかの言語で書かれたトピックや投稿を自動翻訳する"
+      content_languages:
+        understood: "理解できる言語"
       experimental_sidebar:
         enable: "サイドバーを有効にする"
         options: "オプション"
@@ -2104,7 +2109,8 @@ ja:
           invite_by_email: "メールアドレス"
           restrict_domain: "ドメインに制限"
           domain_placeholder: "example.com"
-          more_options: "その他のオプション"
+          create_and_send: "送信"
+          create_and_copy: "リンクをコピー"
           update: "更新"
           summary:
             role_member: "メンバー"
@@ -2116,7 +2122,7 @@ ja:
             expires: "有効期限"
             topic: "トピック"
             groups: "グループ"
-            edit: "招待の編集"
+            edit: "編集"
         bulk_invite:
           none: "このページに表示する招待はありません。"
           text: "一括招待"
@@ -2793,7 +2799,6 @@ ja:
       italic_label: "I"
       italic_title: "斜体"
       italic_text: "斜体テキスト"
-      heading_title: "見出し"
       heading_level_n: "見出し %{levelNumber}"
       heading_level_n_title: "見出し %{levelNumber}"
       heading_level_paragraph: "段落"
@@ -4043,6 +4048,12 @@ ja:
         instructions: "この投稿へのリンクを共有します:"
       original_language: "元の投稿は%{language}で書かれました"
       original_language_and_outdated: "元の投稿は%{language}で書かれています。翻訳は古い可能性があります"
+      originally_written_in: "元の言語: %{language}"
+      click_to_show_original: "クリックして原文を表示"
+      tap_to_show_original: "タップして原文を表示"
+      click_to_show_translation: "クリックして翻訳を表示"
+      tap_to_show_translation: "タップして翻訳を表示"
+      ai_translation_disclaimer: "AIによる翻訳は正確でない場合があります。"
     category:
       none: "(カテゴリなし)"
       all: "すべてのカテゴリ"
@@ -4855,9 +4866,9 @@ ja:
           always_public: "このセクションのコンテンツは常に公開される"
           more_menu: "その他のメニュー"
           localizations:
-            title: "翻訳"
             locale: "言語"
             title_label: "セクションのタイトル"
+            remove_language: "削除"
           links:
             add: "別のリンクを追加する"
             delete: "リンクを削除する"
