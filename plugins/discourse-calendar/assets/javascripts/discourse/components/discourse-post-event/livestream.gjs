@@ -67,8 +67,8 @@ export default class Livestream extends Component {
       : trustHTML(this.args.event?.livestreamOnebox ?? "");
   }
 
-  // Once playing, the post has to stay rendered: scrolling far enough away
-  // would otherwise cloak it and tear the player out of the DOM.
+  // Once playback starts the post has to stay rendered: cloaking it tears down
+  // the component holding the stream, taking any joined Zoom session with it.
   @action
   preventCloak() {
     const postId = this.args.post?.id;
@@ -82,7 +82,10 @@ export default class Livestream extends Component {
     {{#if this.show}}
       <section class="event__section event-livestream">
         {{#if this.isZoomLivestream}}
-          <LivestreamZoomEntry @event={{@event}} />
+          <LivestreamZoomEntry
+            @event={{@event}}
+            @onJoined={{this.preventCloak}}
+          />
         {{else if this.hasLivestreamOnebox}}
           {{#if this.videoAttributes}}
             <this.lazyVideo
