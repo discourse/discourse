@@ -1,4 +1,11 @@
-import { click, focus, triggerEvent, visit } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  find,
+  focus,
+  triggerEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -55,5 +62,54 @@ acceptance("Composer - swipe to collapse", function (needs) {
     await swipeDown(".composer-footer", { to: 20 });
 
     assert.dom(".d-editor-input").isFocused();
+  });
+
+  test("a swipe is deferred while text is selected in the editor", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post[data-post-number='1'] button.reply");
+    await fillIn(".d-editor-input", "some text");
+    find(".d-editor-input").setSelectionRange(0, 4);
+
+    await swipeDown(".composer-footer");
+    assert.dom(".d-editor-input").isFocused();
+  });
+
+  test("a selection outside the composer does not defer the swipe", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post[data-post-number='1'] button.reply");
+    await focus(".d-editor-input");
+
+    window
+      .getSelection()
+      .selectAllChildren(find(".topic-post[data-post-number='1'] .cooked p"));
+
+    try {
+      await swipeDown(".composer-footer");
+      assert.dom(".d-editor-input").isNotFocused();
+    } finally {
+      window.getSelection().removeAllRanges();
+    }
+  });
+
+  test("a dismissing swipe reflows the composer without waiting for the viewport", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post[data-post-number='1'] button.reply");
+    await focus(".d-editor-input");
+
+    const docEl = document.documentElement;
+    docEl.classList.add("keyboard-visible");
+
+    try {
+      await swipeDown(".composer-footer", { to: 20 });
+      assert
+        .dom(docEl)
+        .hasClass("keyboard-visible", "snap-back keeps the keyboard state");
+
+      await swipeDown(".composer-footer");
+      assert.dom(docEl).doesNotHaveClass("keyboard-visible");
+    } finally {
+      docEl.classList.remove("keyboard-visible");
+      docEl.style.removeProperty("--composer-vh");
+    }
   });
 });
