@@ -92,6 +92,20 @@ RSpec.describe BookmarksController do
         )
       end
     end
+
+    it "returns a 403 when the first post of a topic is hidden" do
+      hidden_topic = Fabricate(:topic_with_op)
+      hidden_topic.first_post.update!(hidden: true)
+
+      post "/bookmarks.json",
+           params: {
+             bookmarkable_id: hidden_topic.id,
+             bookmarkable_type: "Topic",
+           }
+
+      expect(response.status).to eq(403)
+      expect(Bookmark.find_by(user: current_user, bookmarkable: hidden_topic)).to be_nil
+    end
   end
 
   describe "#destroy" do
