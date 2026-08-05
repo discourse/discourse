@@ -76,6 +76,9 @@ module Email
     class EmailNotAllowed < ProcessingError
     end
 
+    class EmailAliasNotAllowed < ProcessingError
+    end
+
     class OldDestinationError < ProcessingError
     end
 
@@ -792,6 +795,10 @@ module Email
 
         if user.nil? && SiteSetting.enable_staged_users
           raise EmailNotAllowed unless EmailValidator.allowed?(email)
+          # Staging would be rejected by the normalized uniqueness rule, which is a
+          # deliberate block rather than an unexpected failure. Callers that tolerate
+          # a failed create keep getting nil, so only the sender aborts the email.
+          raise EmailAliasNotAllowed if raise_on_failed_create && normalized_email_taken?(email)
 
           username = UserNameSuggester.sanitize_username(display_name) if display_name.present?
           begin
@@ -817,6 +824,10 @@ module Email
 
     def find_or_create_user!(email, display_name)
       find_or_create_user(email, display_name, raise_on_failed_create: true)
+    end
+
+    def normalized_email_taken?(email)
+      SiteSetting.normalize_emails? && UserEmail.find_by_normalized(email).present?
     end
 
     def all_destinations
