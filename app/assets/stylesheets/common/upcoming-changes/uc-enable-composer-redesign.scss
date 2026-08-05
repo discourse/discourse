@@ -161,6 +161,7 @@
     }
   }
 
+  // TODO move to plugin css when UC is removed
   .showing-ai-suggestions #reply-title {
     padding-right: calc(var(--space-7) + 27px);
   }
@@ -187,6 +188,7 @@
       }
     }
 
+    // TODO move to plugin css when UC is removed
     .suggest-titles-button {
       right: var(--space-4) !important;
       top: var(--space-4);
