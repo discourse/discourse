@@ -498,6 +498,41 @@ en:
           focus: "Focus"
           cursor: "Cursor"
           delivery: "Delivery"
+        findings:
+          focus:
+            not_in_tree: "Focused element must remain in the accessibility tree"
+            no_name: "Focused control needs an accessible name"
+          cursor:
+            dangling: "Active descendant must reference an element that exists"
+            target_hidden: "Active descendant must remain in the accessibility tree"
+            not_item: "Active descendant must belong to its composite"
+            claim_missing: "Composite must contain or own its active descendant"
+            visual_diverged: "Visual focus must match the active descendant"
+            visual_diverged_conventional: "Visual focus marker differs from the active descendant"
+          set:
+            impossible: "Set position must use a valid positive position and size"
+            disagrees: "Declared set position differs from the rendered order"
+          role:
+            missing_state: "Widget needs its required ARIA state"
+            missing_attribute: "Widget should expose the expected ARIA attribute"
+            missing_attribute_defaulted: "Widget relies on an implicit ARIA attribute value"
+          name:
+            describedby_echoes_name: "Accessible description should add information beyond the name"
+            from_title_only: "Provide an accessible name without relying only on the title attribute"
+            title_duplicates_name: "Remove the title attribute that duplicates the accessible name"
+            labelledby_partly_unresolved: "Every aria-labelledby reference should resolve to an element"
+          live:
+            born_with_content: "Insert the live region before adding its announcement text"
+            born_with_content_alert: "Insert the alert region before adding its announcement text"
+            replaced_mid_session: "Keep the live-region element stable while announcements are active"
+            not_in_tree: "Keep the live region in the accessibility tree"
+            politeness_contradicts_role: "Make the live-region role and politeness level agree"
+            redundant_politeness: "Remove the redundant aria-live value or live-region role"
+          announce:
+            no_region: "Provide a live region for the requested announcement channel"
+            undelivered: "Ensure the announcement reaches its live region"
+            text_mismatch: "Make the delivered text match the requested announcement"
+            runaway: "Stop repeatedly announcing the same message in a short interval"
       disable_dev_tools: "Disable dev tools"
       toggle_upcoming_changes_debug: "Toggle upcoming changes debug"
 

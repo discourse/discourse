@@ -100,6 +100,7 @@ import {
   clearExtraKeyboardShortcutHelp,
   PLATFORM_KEY_MODIFIER,
 } from "discourse/services/keyboard-shortcuts";
+import { resetA11yInstrumentation } from "discourse/static/dev-tools/a11y/instrumentation";
 import { clearDockPanels, closeDock } from "discourse/static/dev-tools/dock";
 import { resetEngine as resetProsemirrorEngine } from "discourse/static/prosemirror/lib/markdown-it";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
@@ -260,6 +261,7 @@ export function testCleanup(container, app) {
   clearExtraGlimmerHeaderButtons();
   clearDockPanels();
   closeDock();
+  resetA11yInstrumentation();
   resetOnKeyUpCallbacks();
   resetLogSearchLinkClickedCallbacks();
   resetItemSelectCallbacks();

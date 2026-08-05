@@ -1,10 +1,15 @@
+import { computeAccessibleName } from "dom-accessibility-api";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import {
+  accessibleDescription,
   classifyCursor,
+  compareCursors,
   composeUtterance,
   describeBarriers,
   describeContainment,
+  describeElement,
+  visualCursor,
 } from "discourse/static/dev-tools/a11y/inspect";
 
 /**
@@ -137,12 +142,29 @@ module("Unit | Lib | dev-tools | a11y-inspect", function (hooks) {
       </div>
     `;
 
-    assert.deepEqual(describeBarriers(this.fixture.querySelector("#leaf")), [
-      "inert",
-      "aria-hidden",
-      "aria-modal",
-      "role=dialog",
-    ]);
+    assert.deepEqual(
+      describeBarriers(this.fixture.querySelector("#leaf")),
+      ["inert", "aria-hidden"],
+      "the dialog and its modal flag are not barriers to what is inside them"
+    );
+  });
+
+  // Every control in every modal sits under these. Counting them as barriers
+  // flagged an entire composer session as broken.
+  test("a dialog is not a barrier to its own contents", function (assert) {
+    this.fixture.innerHTML = `
+      <div role="dialog" aria-modal="true">
+        <div popover="auto">
+          <button id="leaf">Save</button>
+        </div>
+      </div>
+    `;
+
+    assert.deepEqual(
+      describeBarriers(this.fixture.querySelector("#leaf")),
+      [],
+      "a reader inside the dialog reaches this perfectly well"
+    );
   });
 
   test("an unobstructed element has no barriers", function (assert) {
@@ -225,5 +247,160 @@ module("Unit | Lib | dev-tools | a11y-inspect", function (hooks) {
       composeUtterance(this.fixture.querySelector("#opt")),
       "alpha, 1 of 2, disabled"
     );
+  });
+
+  test("an utterance carries the description a reader would speak", function (assert) {
+    this.fixture.innerHTML = `
+      <span id="hint">Press down arrow to select</span>
+      <ul role="listbox">
+        <li role="option" id="opt" aria-describedby="hint"
+          aria-posinset="1" aria-setsize="2">alpha</li>
+      </ul>
+    `;
+
+    assert.strictEqual(
+      composeUtterance(this.fixture.querySelector("#opt")),
+      "alpha, Press down arrow to select, 1 of 2",
+      "the description lands between the name and the state"
+    );
+  });
+
+  test("a description that adds something is kept", function (assert) {
+    this.fixture.innerHTML = `
+      <button id="fine" title="Closes the panel">Close</button>
+      <button id="bare">Close</button>
+    `;
+
+    assert.strictEqual(
+      accessibleDescription(this.fixture.querySelector("#fine")),
+      "Closes the panel"
+    );
+    assert.strictEqual(
+      accessibleDescription(this.fixture.querySelector("#bare")),
+      "",
+      "no description at all"
+    );
+  });
+
+  // The real markup of the header's advanced-search link. Its children are all
+  // aria-hidden, so the title IS the name and a reader says it once — the
+  // library reports that title in both roles, and `textContent` is no help
+  // because it counts the aria-hidden span the tree ignores.
+  test("a title doing the naming is not also a description", function (assert) {
+    this.fixture.innerHTML = `
+      <a id="icon" href="/search?expanded=true" title="Open advanced search">
+        <svg aria-hidden="true"><use href="#magnifying-glass"></use></svg>
+        <span aria-hidden="true">…</span>
+      </a>
+    `;
+    const link = this.fixture.querySelector("#icon");
+
+    assert.strictEqual(
+      computeAccessibleName(link),
+      "Open advanced search",
+      "the title named it"
+    );
+    assert.strictEqual(
+      accessibleDescription(link),
+      "",
+      "so it describes nothing on top"
+    );
+    assert.strictEqual(
+      composeUtterance(link),
+      "Open advanced search",
+      "and the utterance says it once"
+    );
+  });
+
+  test("an element is described by tag and role, never by a generated id", function (assert) {
+    this.fixture.innerHTML = `
+      <input role="combobox" id="ember143" class="d-combobox__input"
+        aria-label="Category" />
+      <div id="real-id" class="thing"></div>
+      <span id="ember9"></span>
+    `;
+
+    assert.strictEqual(
+      describeElement(this.fixture.querySelector("#ember143")),
+      "input · role=combobox · Category",
+      "the accessible name beats an auto-generated id"
+    );
+    assert.strictEqual(
+      describeElement(this.fixture.querySelector("#real-id")),
+      "div · thing",
+      "a class identifies an element with no name"
+    );
+    assert.strictEqual(
+      describeElement(this.fixture.querySelector("#ember9")),
+      "span",
+      "a generated id is never the identity"
+    );
+    assert.strictEqual(describeElement(null), undefined);
+  });
+
+  test("a visual cursor is found by convention, within its own container", function (assert) {
+    this.fixture.innerHTML = `
+      <ul role="listbox" id="mine">
+        <li role="option" id="a">alpha</li>
+        <li role="option" id="b" class="--active">beta</li>
+      </ul>
+      <ul role="listbox" id="other">
+        <li role="option" id="c" class="--active">gamma</li>
+      </ul>
+      <ul role="listbox" id="unmarked"><li role="option">delta</li></ul>
+      <ul role="listbox" id="falsy">
+        <li role="option" id="e" aria-current="false">epsilon</li>
+      </ul>
+    `;
+
+    assert.strictEqual(
+      visualCursor(this.fixture.querySelector("#mine"))?.id,
+      "b",
+      "a sibling composite does not answer for this one"
+    );
+    assert.strictEqual(
+      visualCursor(this.fixture.querySelector("#unmarked")),
+      null,
+      "a composite marking nothing yields no cursor"
+    );
+    assert.strictEqual(
+      visualCursor(this.fixture.querySelector("#falsy")),
+      null,
+      "aria-current=false is not a cursor"
+    );
+    assert.strictEqual(visualCursor(null), null);
+  });
+
+  test("cursor agreement never guesses from an absent half", function (assert) {
+    this.fixture.innerHTML = `
+      <ul role="listbox"><li role="option" id="a">a</li>
+      <li role="option" id="b">b</li></ul>
+    `;
+    const a = this.fixture.querySelector("#a");
+    const b = this.fixture.querySelector("#b");
+
+    assert.strictEqual(compareCursors(a, a), "agree");
+    assert.strictEqual(compareCursors(a, b), "diverged");
+    assert.strictEqual(
+      compareCursors(a, null),
+      "unknown",
+      "a missing visual cursor is not agreement"
+    );
+    assert.strictEqual(compareCursors(null, b), "unknown");
+  });
+
+  test("an ok cursor reports the size of the set it sits in", function (assert) {
+    const focused = combobox(this.fixture, {
+      activeId: "o2",
+      html: `
+        <li role="option" id="o1">one</li>
+        <li role="option" id="o2">two</li>
+        <li role="option" id="o3">three</li>
+      `,
+    });
+
+    const cursor = classifyCursor(focused);
+    assert.strictEqual(cursor.index, 1);
+    assert.strictEqual(cursor.size, 3, "the set size comes from the container");
   });
 });

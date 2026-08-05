@@ -917,24 +917,39 @@ pre.outlet-info__error-message {
 }
 
 .dev-tools-a11y__entry {
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  /* The detail wraps to several lines on an interesting event, so the seq, kind
+     and label stay level with its first line rather than floating mid-row. */
+  align-items: flex-start;
   gap: var(--space-1) var(--space-2);
   min-width: 0;
   padding: var(--space-1) var(--space-3);
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  background: transparent;
+  cursor: pointer;
+  border: 0;
   border-block-end: 1px solid var(--content-border-color);
   border-inline-start: 3px solid transparent;
 
+  /* Warning rather than danger: a flagged row is a finding to read, not an
+     error, and the danger pair leaves red-on-red text unreadable in dark. */
   &.--problem {
-    background: var(--danger-low);
+    background: var(--highlight-low);
+  }
+
+  &.--selected {
+    box-shadow: inset 0 0 0 2px var(--tertiary);
   }
 
   &.--intent {
     border-inline-start-color: var(--tertiary);
   }
 
-  &.--spoken {
+  &.--delivered {
     border-inline-start-color: var(--success);
   }
 
@@ -963,22 +978,36 @@ pre.outlet-info__error-message {
   text-transform: uppercase;
 }
 
+/* Inherits the keycap the app already gives every `kbd`. Sized back up to the
+   row's own font: the glyphs are the smallest thing on the line and the whole
+   point of a keycap is that it can be read at a glance. */
+.dev-tools-a11y__key {
+  min-width: 1.5em;
+  margin: 0;
+  padding: 0 0.4em;
+  font-size: inherit;
+  line-height: 1.5;
+}
+
+/* Never shrinks. Labels are bounded now that the state moved to the detail, and
+   clipping one would eat the keycaps at its end. */
 .dev-tools-a11y__entry-label {
-  flex: 0 1 auto;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex: 0 0 auto;
   white-space: nowrap;
 }
 
+/* Never clipped. The summary already omits unset fields, so a plain focus move
+   is one short line and only an event with something to look at runs long —
+   truncating would hide exactly the rows worth reading. */
 .dev-tools-a11y__entry-detail {
   flex: 1 1 8em;
   min-width: 0;
-  overflow: hidden;
   color: var(--primary);
   font-family: var(--dev-tools-mono-font);
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 .dev-tools-a11y__not-delivered {
@@ -987,7 +1016,24 @@ pre.outlet-info__error-message {
 }
 
 .dev-tools-a11y__problem {
+  background: var(--highlight-medium);
+  color: var(--primary);
   font-family: var(--dev-tools-mono-font);
+}
+
+.dev-tools-a11y__finding {
+  font-family: var(--dev-tools-mono-font);
+
+  &.--fragile {
+    background: var(--primary-very-low);
+    color: var(--primary-high);
+  }
+}
+
+.dev-tools-a11y__timeline[hidden],
+.dev-tools-a11y__empty[hidden],
+.dev-tools-a11y__inspector[hidden] {
+  display: none;
 }
 
 .dev-tools-a11y__inspector {

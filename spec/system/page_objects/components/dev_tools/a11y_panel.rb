@@ -14,8 +14,12 @@ module PageObjects
           page.has_no_css?(PANEL)
         end
 
-        def test_channel
+        # The trigger opens a menu; the announcement comes from choosing a
+        # channel inside it. Clicking only the trigger announces nothing, so a
+        # spec that stops there waits for a delivery that was never requested.
+        def test_channel(politeness = :polite)
           find("#{PANEL} .dev-tools-a11y__test-channel").click
+          find(".dev-tools-a11y__test-#{politeness}").click
           self
         end
 
@@ -33,8 +37,18 @@ module PageObjects
           page.has_css?("#{PANEL} .dev-tools-a11y__entry.--intent")
         end
 
-        def has_spoken_entry?
-          page.has_css?("#{PANEL} .dev-tools-a11y__entry.--spoken")
+        # A DOM write into a live region is a delivery. It is not evidence any
+        # assistive technology said anything, and the panel does not claim it is.
+        def has_delivered_entry?
+          page.has_css?("#{PANEL} .dev-tools-a11y__entry.--delivered")
+        end
+
+        def has_problem?
+          page.has_css?("#{PANEL} .dev-tools-a11y__problem")
+        end
+
+        def has_no_problems?
+          page.has_no_css?("#{PANEL} .dev-tools-a11y__problem")
         end
 
         def has_empty_state?

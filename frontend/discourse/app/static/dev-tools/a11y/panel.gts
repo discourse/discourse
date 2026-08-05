@@ -10,16 +10,26 @@ import DMenu from "discourse/float-kit/components/d-menu";
 import type DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import A11y from "discourse/services/a11y";
 import {
+  type Finding,
+  findingKey,
+  isProblem,
+} from "discourse/static/dev-tools/a11y/findings";
+import type { CursorAgreement } from "discourse/static/dev-tools/a11y/inspect";
+import {
   attachCapture,
+  attachLiveRegions,
   clearTimeline,
   copyTrace,
   detachCapture,
-  observeLiveRegions,
+  isPaused,
+  pruneDetachedLiveRegions,
   setPaused,
   timelineEntries,
   type TimelineEntry,
+  timelineEntryTrace,
+  watchedLiveRegionCount,
+  watchedLiveRegions,
 } from "discourse/static/dev-tools/a11y/instrumentation";
-import devToolsState from "discourse/static/dev-tools/state";
 import { eq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
@@ -31,8 +41,10 @@ import { i18n } from "discourse-i18n";
 type View = "timeline" | "inspector";
 
 interface DisplayEntry {
+  broken: Finding[];
   entry: TimelineEntry;
-  problems: string[];
+  fragile: Finding[];
+  noted: Finding[];
   undelivered: boolean;
 }
 
@@ -40,68 +52,22 @@ interface A11yPanelSignature {
   Element: HTMLDivElement;
 }
 
-const CORE_LIVE_REGION_SELECTORS = [
-  "#a11y-announcements-polite",
-  "#a11y-announcements-assertive",
-] as const;
-
-export function undeliveredIntentSequences(
-  entries: readonly TimelineEntry[]
-): ReadonlySet<number> {
-  const undelivered = new Set<number>();
-
-  for (let index = 0; index < entries.length; index++) {
-    const entry = entries[index];
-    if (entry.kind !== "intent") {
-      continue;
-    }
-
-    let delivered = false;
-    for (let next = index + 1; next < entries.length; next++) {
-      if (entries[next].kind === "spoken") {
-        delivered = true;
-        break;
-      }
-      if (entries[next].kind === "intent") {
-        break;
-      }
-    }
-
-    if (!delivered) {
-      undelivered.add(entry.seq);
-    }
-  }
-
-  return undelivered;
+interface InspectorRow {
+  label: string;
+  value: string;
 }
 
-function eventProblems(entry: TimelineEntry): string[] {
-  if (entry.kind !== "event" || !entry.snapshot) {
-    return [];
-  }
+const AGREEMENT_LABELS: Record<CursorAgreement, string | undefined> = {
+  agree: "yes",
+  diverged: "NO — visual and ARIA cursors differ",
+  unknown: undefined,
+};
 
-  const { barriers, containment, cursor } = entry.snapshot;
-  const problems: string[] = [];
-
-  if (cursor.state === "dangling" || cursor.state === "not_item") {
-    problems.push(`cursor: ${cursor.state}`);
-  }
-  if (containment.kind === "unclaimed") {
-    problems.push("containment: unclaimed");
-  }
-  problems.push(...barriers.map((barrier) => `barrier: ${barrier}`));
-
-  return problems;
-}
-
-function elementDescription(element: Element | null): string | undefined {
-  if (!element) {
-    return undefined;
-  }
-
-  const id = element.id ? `#${element.id}` : "";
-  const role = element.getAttribute("role");
-  return `${element.tagName.toLowerCase()}${id}${role ? `[role=${role}]` : ""}`;
+/** Drops rows with nothing to show, so an unset field costs no screen space. */
+function presentRows(
+  rows: Array<{ label: string; value: string | undefined }>
+): InspectorRow[] {
+  return rows.filter((row): row is InspectorRow => Boolean(row.value));
 }
 
 export default class A11yPanel extends Component<A11yPanelSignature> {
@@ -109,46 +75,58 @@ export default class A11yPanel extends Component<A11yPanelSignature> {
 
   @tracked copied = false;
   @tracked filter = "";
-  @tracked paused = devToolsState.getFlag("a11y", "paused") === true;
   @tracked problemsOnly = false;
+  @tracked selectedSeq?: number;
   @tracked view: View = "timeline";
   #testMenu?: DMenuInstance;
 
+  get paused() {
+    return isPaused();
+  }
+
+  // What is watched, not what is in the DOM: a region the observer never
+  // attached to verifies nothing, and counting it would claim coverage.
   get liveRegionCount() {
-    const regions = new Set<Element>();
+    return watchedLiveRegionCount();
+  }
 
-    for (const selector of CORE_LIVE_REGION_SELECTORS) {
-      const region = document.querySelector(selector);
-      if (region) {
-        regions.add(region);
-      }
-    }
-    for (const region of document.querySelectorAll("[aria-live]")) {
-      regions.add(region);
-    }
+  // A bare count cannot separate a leak from bookkeeping.
+  get liveRegionTitle() {
+    const regions = watchedLiveRegions();
 
-    return [...regions].filter(
-      (region) => !region.closest(".dev-tools-toolbar")
-    ).length;
+    return regions.length
+      ? regions.join("\n")
+      : i18n("dev_tools.a11y.chip_regions_title");
   }
 
   get entries(): DisplayEntry[] {
     const entries = timelineEntries();
-    const undelivered = undeliveredIntentSequences(entries);
     const filter = this.filter.trim().toLowerCase();
 
     return entries
-      .map((entry) => ({
-        entry,
-        problems: eventProblems(entry),
-        undelivered: undelivered.has(entry.seq),
-      }))
-      .filter(({ entry, problems, undelivered: isUndelivered }) => {
+      .map((entry) => {
+        const undelivered = entry.findings.some(
+          ({ id }) => id === "announce.undelivered"
+        );
+
+        return {
+          broken: entry.findings.filter(
+            (finding) =>
+              finding.id !== "announce.undelivered" && isProblem(finding)
+          ),
+          entry,
+          fragile: entry.findings.filter(
+            (finding) => finding.tier === "fragile"
+          ),
+          noted: entry.findings.filter((finding) => finding.tier === "noted"),
+          undelivered,
+        };
+      })
+      .filter(({ broken, entry, undelivered: isUndelivered }) => {
         const matchesText =
-          !filter ||
-          `${entry.label} ${entry.detail}`.toLowerCase().includes(filter);
+          !filter || timelineEntryTrace(entry).toLowerCase().includes(filter);
         const matchesProblems =
-          !this.problemsOnly || isUndelivered || problems.length > 0;
+          !this.problemsOnly || isUndelivered || broken.length > 0;
         return matchesText && matchesProblems;
       });
   }
@@ -165,27 +143,55 @@ export default class A11yPanel extends Component<A11yPanelSignature> {
   }
 
   get snapshot() {
-    return this.latestEvent?.snapshot;
+    return this.selectedEntry?.snapshot;
   }
 
-  get focusValue() {
-    return elementDescription(this.snapshot?.focused ?? null);
+  get selectedEntry() {
+    if (this.selectedSeq === undefined) {
+      return this.latestEvent;
+    }
+
+    return timelineEntries().find(({ seq }) => seq === this.selectedSeq);
   }
 
-  get cursorRows() {
-    const cursor = this.snapshot?.cursor;
-    if (!cursor) {
+  get focusRows() {
+    const snapshot = this.snapshot;
+    if (!snapshot) {
       return [];
     }
 
-    return [
-      { label: "state", value: cursor.state },
-      { label: "target", value: elementDescription(cursor.target) },
-      { label: "container", value: elementDescription(cursor.container) },
-      { label: "index", value: cursor.index?.toString() },
-    ].filter((row): row is { label: string; value: string } =>
-      Boolean(row.value)
-    );
+    return presentRows([
+      { label: "element", value: snapshot.focused },
+      { label: "aria-label", value: snapshot.focusedLabel },
+      { label: "description", value: snapshot.focusedDescription },
+      { label: "aria-expanded", value: snapshot.expanded },
+      { label: "aria-owns", value: snapshot.owns },
+    ]);
+  }
+
+  get cursorRows() {
+    const snapshot = this.snapshot;
+    if (!snapshot) {
+      return [];
+    }
+
+    return presentRows([
+      { label: "state", value: snapshot.cursorState },
+      { label: "target", value: snapshot.cursorTarget },
+      { label: "container", value: snapshot.cursorContainer },
+      {
+        label: "position",
+        value:
+          snapshot.cursorIndex === undefined
+            ? snapshot.rowPosition
+            : `${snapshot.cursorIndex + 1} / ${snapshot.cursorSize}`,
+      },
+      { label: "aria-selected", value: snapshot.rowSelected },
+      { label: "visual cursor", value: snapshot.visual },
+      { label: "cursors agree", value: AGREEMENT_LABELS[snapshot.agreement] },
+      { label: "aria-multiselectable", value: snapshot.multiselectable },
+      { label: "selected in list", value: snapshot.selectedCount?.toString() },
+    ]);
   }
 
   get deliveryRows() {
@@ -194,34 +200,36 @@ export default class A11yPanel extends Component<A11yPanelSignature> {
       return [];
     }
 
-    const containment =
-      snapshot.containment.kind === "claimed"
-        ? `claimed via ${snapshot.containment.via.join(", ")}`
-        : snapshot.containment.kind;
-
-    return [
+    return presentRows([
       {
         label: "barriers",
-        value: snapshot.barriers.length
-          ? snapshot.barriers.join(", ")
-          : undefined,
+        value: snapshot.barriers,
       },
-      { label: "containment", value: containment },
+      {
+        label: "measured from",
+        value: snapshot.barrierSource,
+      },
+      {
+        label: "in the tree",
+        value: snapshot.inTree,
+      },
+      { label: "containment", value: snapshot.inspectorContainment },
       { label: "utterance", value: snapshot.utterance },
-    ].filter((row): row is { label: string; value: string } =>
-      Boolean(row.value)
-    );
+    ]);
   }
 
-  get snapshotProblems() {
-    return this.latestEvent ? eventProblems(this.latestEvent) : [];
+  get snapshotFindings() {
+    return this.selectedEntry?.findings ?? [];
   }
 
   @action
   setup(element: HTMLDivElement) {
-    observeLiveRegions(element.ownerDocument);
+    attachLiveRegions(element.ownerDocument);
     attachCapture(element.ownerDocument);
-    registerDestructor(this, detachCapture);
+    registerDestructor(this, () => {
+      detachCapture();
+      pruneDetachedLiveRegions();
+    });
   }
 
   @action
@@ -241,8 +249,7 @@ export default class A11yPanel extends Component<A11yPanelSignature> {
 
   @action
   togglePaused() {
-    this.paused = !this.paused;
-    setPaused(this.paused);
+    setPaused(!isPaused());
   }
 
   @action
@@ -266,6 +273,12 @@ export default class A11yPanel extends Component<A11yPanelSignature> {
   clear() {
     clearTimeline();
     this.copied = false;
+    this.selectedSeq = undefined;
+  }
+
+  @action
+  selectEntry(seq: number) {
+    this.selectedSeq = seq;
   }
 
   @action
@@ -320,7 +333,7 @@ export default class A11yPanel extends Component<A11yPanelSignature> {
                 "--regions"
                 (if (eq this.liveRegionCount 0) "--critical")
               }}
-              title={{i18n "dev_tools.a11y.chip_regions_title"}}
+              title={{this.liveRegionTitle}}
             >
               {{i18n "dev_tools.a11y.region_count" count=this.liveRegionCount}}
             </span>
@@ -459,16 +472,27 @@ export default class A11yPanel extends Component<A11yPanelSignature> {
         </nav>
       </div>
 
-      {{#if (eq this.view "timeline")}}
-        {{#if this.entries.length}}
-          <ol class="dev-tools-a11y__timeline">
-            {{#each this.entries key="entry.seq" as |row|}}
-              <li
+      {{#if this.entries.length}}
+        <ol
+          class="dev-tools-a11y__timeline"
+          hidden={{eq this.view "inspector"}}
+        >
+          {{#each this.entries key="entry.seq" as |row|}}
+            <li>
+              <button
+                type="button"
                 class={{dConcatClass
                   "dev-tools-a11y__entry"
                   (concat "--" row.entry.kind)
-                  (if (or row.undelivered row.problems.length) "--problem")
+                  (if (or row.undelivered row.broken.length) "--problem")
+                  (if (eq this.selectedSeq row.entry.seq) "--selected")
                 }}
+                aria-pressed={{if
+                  (eq this.selectedSeq row.entry.seq)
+                  "true"
+                  "false"
+                }}
+                {{on "click" (fn this.selectEntry row.entry.seq)}}
               >
                 <span
                   class="dev-tools-a11y__entry-seq"
@@ -478,6 +502,9 @@ export default class A11yPanel extends Component<A11yPanelSignature> {
                 >{{row.entry.kind}}</span>
                 <span class="dev-tools-a11y__entry-label">
                   {{row.entry.label}}
+                  {{~#each row.entry.keys as |key|~}}
+                    <kbd class="dev-tools-a11y__key">{{key}}</kbd>
+                  {{~/each~}}
                 </span>
                 <span class="dev-tools-a11y__entry-detail">
                   {{row.entry.detail}}
@@ -490,75 +517,99 @@ export default class A11yPanel extends Component<A11yPanelSignature> {
                     {{i18n "dev_tools.a11y.not_delivered"}}
                   </span>
                 {{/if}}
-                {{#each row.problems as |problem|}}
+                {{#each row.broken as |finding|}}
                   <span
                     class="dev-tools-panel__chip --critical dev-tools-a11y__problem"
-                  >{{problem}}</span>
+                  >{{i18n (findingKey finding.id) finding.params}}</span>
                 {{/each}}
-              </li>
-            {{/each}}
-          </ol>
-        {{else}}
-          <p class="dev-tools-panel__empty dev-tools-a11y__empty">
-            {{if
-              (or this.filter this.problemsOnly)
-              (i18n "dev_tools.a11y.no_matching_entries")
-              (i18n "dev_tools.a11y.empty_timeline")
-            }}
-          </p>
-        {{/if}}
+                {{#each row.fragile as |finding|}}
+                  <span
+                    class="dev-tools-panel__chip dev-tools-a11y__finding --fragile"
+                  >{{i18n (findingKey finding.id) finding.params}}</span>
+                {{/each}}
+                {{#each row.noted as |finding|}}
+                  <span class="dev-tools-a11y__finding --noted">
+                    {{i18n (findingKey finding.id) finding.params}}
+                  </span>
+                {{/each}}
+              </button>
+            </li>
+          {{/each}}
+        </ol>
       {{else}}
-        <div class="dev-tools-a11y__inspector">
-          {{#if this.snapshot}}
-            {{#if this.snapshotProblems.length}}
-              <section class="dev-tools-a11y__group --problems">
-                <h3 class="dev-tools-panel__section-heading">
-                  {{i18n "dev_tools.a11y.groups.problems"}}
-                </h3>
-                <div class="dev-tools-a11y__problem-strip">
-                  {{#each this.snapshotProblems as |problem|}}
+        <p
+          class="dev-tools-panel__empty dev-tools-a11y__empty"
+          hidden={{eq this.view "inspector"}}
+        >
+          {{if
+            (or this.filter this.problemsOnly)
+            (i18n "dev_tools.a11y.no_matching_entries")
+            (i18n "dev_tools.a11y.empty_timeline")
+          }}
+        </p>
+      {{/if}}
+      <div class="dev-tools-a11y__inspector" hidden={{eq this.view "timeline"}}>
+        {{#if this.snapshot}}
+          {{#if this.snapshotFindings.length}}
+            <section class="dev-tools-a11y__group --problems">
+              <h3 class="dev-tools-panel__section-heading">
+                {{i18n "dev_tools.a11y.groups.problems"}}
+              </h3>
+              <div class="dev-tools-a11y__problem-strip">
+                {{#each this.snapshotFindings as |finding|}}
+                  {{#if (eq finding.tier "broken")}}
                     <span
                       class="dev-tools-panel__chip --critical dev-tools-a11y__problem"
-                    >{{problem}}</span>
-                  {{/each}}
-                </div>
-              </section>
-            {{/if}}
-            {{#if this.focusValue}}
-              <section class="dev-tools-a11y__group">
-                <h3 class="dev-tools-panel__section-heading">
-                  {{i18n "dev_tools.a11y.groups.focus"}}
-                </h3>
-                <dl><dt>element</dt><dd>{{this.focusValue}}</dd></dl>
-              </section>
-            {{/if}}
-            {{#if this.cursorRows.length}}
-              <section class="dev-tools-a11y__group">
-                <h3 class="dev-tools-panel__section-heading">
-                  {{i18n "dev_tools.a11y.groups.cursor"}}
-                </h3>
-                {{#each this.cursorRows as |row|}}
-                  <dl><dt>{{row.label}}</dt><dd>{{row.value}}</dd></dl>
+                    >{{i18n (findingKey finding.id) finding.params}}</span>
+                  {{else if (eq finding.tier "fragile")}}
+                    <span
+                      class="dev-tools-panel__chip dev-tools-a11y__finding --fragile"
+                    >{{i18n (findingKey finding.id) finding.params}}</span>
+                  {{else}}
+                    <span class="dev-tools-a11y__finding --noted">
+                      {{i18n (findingKey finding.id) finding.params}}
+                    </span>
+                  {{/if}}
                 {{/each}}
-              </section>
-            {{/if}}
-            {{#if this.deliveryRows.length}}
-              <section class="dev-tools-a11y__group">
-                <h3 class="dev-tools-panel__section-heading">
-                  {{i18n "dev_tools.a11y.groups.delivery"}}
-                </h3>
-                {{#each this.deliveryRows as |row|}}
-                  <dl><dt>{{row.label}}</dt><dd>{{row.value}}</dd></dl>
-                {{/each}}
-              </section>
-            {{/if}}
-          {{else}}
-            <p class="dev-tools-panel__empty dev-tools-a11y__no-snapshot">
-              {{i18n "dev_tools.a11y.no_snapshot"}}
-            </p>
+              </div>
+            </section>
           {{/if}}
-        </div>
-      {{/if}}
+          {{#if this.focusRows.length}}
+            <section class="dev-tools-a11y__group">
+              <h3 class="dev-tools-panel__section-heading">
+                {{i18n "dev_tools.a11y.groups.focus"}}
+              </h3>
+              {{#each this.focusRows as |row|}}
+                <dl><dt>{{row.label}}</dt><dd>{{row.value}}</dd></dl>
+              {{/each}}
+            </section>
+          {{/if}}
+          {{#if this.cursorRows.length}}
+            <section class="dev-tools-a11y__group">
+              <h3 class="dev-tools-panel__section-heading">
+                {{i18n "dev_tools.a11y.groups.cursor"}}
+              </h3>
+              {{#each this.cursorRows as |row|}}
+                <dl><dt>{{row.label}}</dt><dd>{{row.value}}</dd></dl>
+              {{/each}}
+            </section>
+          {{/if}}
+          {{#if this.deliveryRows.length}}
+            <section class="dev-tools-a11y__group">
+              <h3 class="dev-tools-panel__section-heading">
+                {{i18n "dev_tools.a11y.groups.delivery"}}
+              </h3>
+              {{#each this.deliveryRows as |row|}}
+                <dl><dt>{{row.label}}</dt><dd>{{row.value}}</dd></dl>
+              {{/each}}
+            </section>
+          {{/if}}
+        {{else}}
+          <p class="dev-tools-panel__empty dev-tools-a11y__no-snapshot">
+            {{i18n "dev_tools.a11y.no_snapshot"}}
+          </p>
+        {{/if}}
+      </div>
     </div>
   </template>
 }

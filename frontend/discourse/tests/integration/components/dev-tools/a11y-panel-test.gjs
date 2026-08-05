@@ -1,4 +1,4 @@
-import { click, fillIn, render, settled } from "@ember/test-helpers";
+import { click, fillIn, focus, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import {
@@ -7,9 +7,13 @@ import {
 } from "discourse/services/a11y";
 import A11yButton from "discourse/static/dev-tools/a11y/button";
 import {
+  attachCapture,
+  attachLiveRegions,
+  detachCapture,
+  disconnectLiveRegions,
   installA11yTap,
-  observeLiveRegions,
   resetA11yInstrumentation,
+  timelineEntries,
 } from "discourse/static/dev-tools/a11y/instrumentation";
 import A11yPanel from "discourse/static/dev-tools/a11y/panel";
 import {
@@ -18,6 +22,7 @@ import {
   dockState,
 } from "discourse/static/dev-tools/dock";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { i18n } from "discourse-i18n";
 
 async function settledAnnouncements() {
   await settled();
@@ -52,7 +57,7 @@ module("Integration | Component | dev-tools | a11y-panel", function (hooks) {
         <A11yPanel />
       </template>
     );
-    observeLiveRegions();
+    attachLiveRegions();
 
     this.a11y.announce("first message", "polite");
     await settledAnnouncements();
@@ -73,14 +78,34 @@ module("Integration | Component | dev-tools | a11y-panel", function (hooks) {
       .exists("rows carry their sequence");
   });
 
-  test("an undelivered repeat is flagged, not hidden", async function (assert) {
+  // A region exists on the requested channel, but the announcement service
+  // never writes into it. A repeat into a working region is NOT this case — the
+  // region blanks in between, so the second write is really spoken.
+  test("an intent with no delivery is flagged", async function (assert) {
+    await render(
+      <template>
+        <div aria-live="polite"></div>
+        <A11yPanel />
+      </template>
+    );
+    attachLiveRegions();
+
+    this.a11y.announce("no results", "polite");
+    await settledAnnouncements();
+
+    assert
+      .dom(".dev-tools-a11y__entry.--event .dev-tools-a11y__not-delivered")
+      .exists("the later finding carries a not-delivered marker");
+  });
+
+  test("a repeat into a working region is not flagged", async function (assert) {
     await render(
       <template>
         <A11yLiveRegions />
         <A11yPanel />
       </template>
     );
-    observeLiveRegions();
+    attachLiveRegions();
 
     this.a11y.announce("no results", "polite");
     await settledAnnouncements();
@@ -88,8 +113,11 @@ module("Integration | Component | dev-tools | a11y-panel", function (hooks) {
     await settledAnnouncements();
 
     assert
-      .dom(".dev-tools-a11y__entry.--intent .dev-tools-a11y__not-delivered")
-      .exists("the second intent carries a not-delivered marker");
+      .dom(".dev-tools-a11y__not-delivered")
+      .doesNotExist("both deliveries were observed");
+    assert
+      .dom(".dev-tools-a11y__entry.--delivered")
+      .exists({ count: 2 }, "the repeat is a second spoken entry");
   });
 
   test("the text filter narrows the timeline", async function (assert) {
@@ -99,7 +127,7 @@ module("Integration | Component | dev-tools | a11y-panel", function (hooks) {
         <A11yPanel />
       </template>
     );
-    observeLiveRegions();
+    attachLiveRegions();
 
     this.a11y.announce("alpha wolf", "polite");
     await settledAnnouncements();
@@ -115,6 +143,72 @@ module("Integration | Component | dev-tools | a11y-panel", function (hooks) {
     assert.false(visible.includes("beta fish"));
   });
 
+  // "5 live regions" cannot tell a leak from bookkeeping, so the chip has to
+  // name what is behind the number.
+  test("the regions chip names the regions it is counting", async function (assert) {
+    await render(
+      <template>
+        <A11yLiveRegions />
+        <A11yPanel />
+      </template>
+    );
+    attachLiveRegions();
+    await settled();
+
+    assert
+      .dom(".dev-tools-a11y__chip.--regions")
+      .hasAttribute("title", /#a11y-announcements-polite \(polite\)/)
+      .hasAttribute("title", /#a11y-announcements-assertive \(assertive\)/);
+  });
+
+  test("a cursor pointing outside the accessibility tree is flagged", async function (assert) {
+    attachCapture();
+    await render(
+      <template>
+        <A11yPanel />
+        <input
+          role="combobox"
+          id="cb"
+          aria-label="Category"
+          aria-controls="lb"
+          aria-activedescendant="row"
+        />
+        <ul role="listbox" id="lb" style="display: none">
+          <li role="option" id="row">Bugs</li>
+        </ul>
+      </template>
+    );
+
+    await focus("#cb");
+
+    // The combobox is visible; only its cursor target is not. The two must not
+    // be conflated, or one defect is reported twice under two rules.
+    //
+    // Asserted by absence and presence rather than as the complete list: this
+    // fixture is ordinary markup and will keep attracting new observations as
+    // the catalogue grows, and none of those make the claim below less true.
+    const recorded = timelineEntries().flatMap((entry) =>
+      entry.findings.map(({ id }) => id)
+    );
+
+    assert.true(
+      recorded.includes("cursor.target-hidden"),
+      "the cursor target is out of the tree"
+    );
+    assert.false(
+      recorded.includes("focus.not-in-tree"),
+      "the visible focus does not inherit the cursor target's tree exclusion"
+    );
+    assert
+      .dom(".dev-tools-a11y__timeline .dev-tools-a11y__problem")
+      .exists({ count: 1 }, "one problem, and it is the one that matters");
+    assert
+      .dom(".dev-tools-a11y__timeline .dev-tools-a11y__problem")
+      .hasText(i18n("dev_tools.a11y.findings.cursor.target_hidden"));
+
+    detachCapture();
+  });
+
   test("the problems toggle keeps only problem rows", async function (assert) {
     await render(
       <template>
@@ -122,11 +216,15 @@ module("Integration | Component | dev-tools | a11y-panel", function (hooks) {
         <A11yPanel />
       </template>
     );
-    observeLiveRegions();
+    attachLiveRegions();
 
     this.a11y.announce("healthy delivery", "polite");
     await settledAnnouncements();
-    this.a11y.announce("healthy delivery", "polite");
+
+    // Announced into a document with no watched region left, so this one has no
+    // delivery to pair with and becomes the problem row the filter must keep.
+    disconnectLiveRegions();
+    this.a11y.announce("lost delivery", "polite");
     await settledAnnouncements();
 
     await click(".dev-tools-a11y__problems-toggle");
@@ -155,7 +253,7 @@ module("Integration | Component | dev-tools | a11y-panel", function (hooks) {
         <A11yPanel />
       </template>
     );
-    observeLiveRegions();
+    attachLiveRegions();
 
     await click(".dev-tools-a11y__pause");
     assert.dom(".dev-tools-a11y__pause").hasAria("pressed", "true");
@@ -177,7 +275,7 @@ module("Integration | Component | dev-tools | a11y-panel", function (hooks) {
         <A11yPanel />
       </template>
     );
-    observeLiveRegions();
+    attachLiveRegions();
 
     this.a11y.announce("something", "polite");
     await settledAnnouncements();
@@ -197,14 +295,16 @@ module("Integration | Component | dev-tools | a11y-panel", function (hooks) {
         <A11yPanel />
       </template>
     );
-    observeLiveRegions();
+    attachLiveRegions();
 
     await click(".dev-tools-a11y__test-channel");
     await click(".dev-tools-a11y__test-polite");
     await settledAnnouncements();
 
     assert.dom(".dev-tools-a11y__entry.--intent").exists("intent recorded");
-    assert.dom(".dev-tools-a11y__entry.--spoken").exists("delivery recorded");
+    assert
+      .dom(".dev-tools-a11y__entry.--delivered")
+      .exists("delivery recorded");
     assert
       .dom(".dev-tools-a11y__entry.--event")
       .doesNotExist("choosing from the menu never enters the trace");
@@ -217,7 +317,7 @@ module("Integration | Component | dev-tools | a11y-panel", function (hooks) {
         <A11yPanel />
       </template>
     );
-    observeLiveRegions();
+    attachLiveRegions();
 
     await click(".dev-tools-a11y__test-channel");
     await click(".dev-tools-a11y__test-assertive");
@@ -238,7 +338,7 @@ module("Integration | Component | dev-tools | a11y-panel", function (hooks) {
 
   test("the regions chip warns loudly at zero", async function (assert) {
     await render(<template><A11yPanel /></template>);
-    observeLiveRegions();
+    attachLiveRegions();
     await settled();
 
     assert
@@ -288,7 +388,7 @@ module("Integration | Component | dev-tools | a11y-panel", function (hooks) {
         </div>
       </template>
     );
-    observeLiveRegions();
+    attachLiveRegions();
 
     await click(".dev-tools-a11y__pause");
     await click(".dev-tools-a11y__pause");
