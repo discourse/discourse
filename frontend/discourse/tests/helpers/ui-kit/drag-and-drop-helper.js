@@ -55,21 +55,30 @@ export async function dragEvent(selector, type, options) {
  * traps at once: the rAF-batched `onDragStart` fires before the move, and the
  * rAF-batched `onDrag` fires before the `drop` (which would otherwise cancel a
  * still-pending `onDrag` and never let it be observed). The source and target
- * center coordinates are computed via {@link centerOf}.
+ * center coordinates are computed via {@link centerOf}, then independently
+ * overridden when a test needs a more precise pointer location. A bare center
+ * only exercises the `after` branch of strict midpoint comparisons, and a drag
+ * handle needs the event dispatched on its registered row while carrying the
+ * handle's coordinates.
  *
  * @param {string} sourceSelector - CSS selector for the source element.
  * @param {string} targetSelector - CSS selector for the target element.
- * @param {{ dataTransfer: DataTransfer }} options - Shared payload that must
- *   travel across every event so the drag library can correlate them.
+ * @param {Object} options
+ * @param {DataTransfer} options.dataTransfer - Shared payload that must travel
+ *   across every event so the drag library can correlate them.
+ * @param {{ clientX?: number, clientY?: number }} [options.sourceCoordinates]
+ *   Coordinates merged over the source element's center.
+ * @param {{ clientX?: number, clientY?: number }} [options.targetCoordinates]
+ *   Coordinates merged over the target element's center.
  * @returns {Promise<void>}
  */
 export async function simulateDrag(
   sourceSelector,
   targetSelector,
-  { dataTransfer }
+  { dataTransfer, sourceCoordinates, targetCoordinates }
 ) {
-  const source = centerOf(sourceSelector);
-  const target = centerOf(targetSelector);
+  const source = { ...centerOf(sourceSelector), ...sourceCoordinates };
+  const target = { ...centerOf(targetSelector), ...targetCoordinates };
   await dragEvent(sourceSelector, "dragstart", { dataTransfer, ...source });
   await dragEvent(targetSelector, "dragenter", { dataTransfer, ...target });
   await dragEvent(targetSelector, "dragover", { dataTransfer, ...target });

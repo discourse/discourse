@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { find, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -9,6 +10,7 @@ import {
   simulateDrag,
 } from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
 import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
+import { registerDragAndDropMonitor } from "discourse/ui-kit/modifiers/d-drag-and-drop-monitor";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 
@@ -188,6 +190,334 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     await simulateDrag("#src", "#tgt", { dataTransfer });
 
     assert.false(dropped, "onDrop is not called for foreign types");
+  });
+
+  test("simulateDrag merges independent partial coordinate overrides", async function (assert) {
+    const events = {};
+
+    await render(
+      <template>
+        <div id="src">source</div>
+        <div id="tgt">target</div>
+      </template>
+    );
+
+    for (const type of ["dragstart", "dragend"]) {
+      find("#src").addEventListener(type, (event) => {
+        events[type] = { clientX: event.clientX, clientY: event.clientY };
+      });
+    }
+    for (const type of ["dragenter", "dragover", "drop"]) {
+      find("#tgt").addEventListener(type, (event) => {
+        events[type] = { clientX: event.clientX, clientY: event.clientY };
+      });
+    }
+
+    const sourceCenter = centerOf("#src");
+    const targetCenter = centerOf("#tgt");
+    const sourceCoordinates = { clientY: sourceCenter.clientY - 1 };
+    const targetCoordinates = { clientX: targetCenter.clientX + 1 };
+
+    await simulateDrag("#src", "#tgt", {
+      dataTransfer: new DataTransfer(),
+      sourceCoordinates,
+      targetCoordinates,
+    });
+
+    assert.strictEqual(
+      events.dragstart.clientY,
+      sourceCoordinates.clientY,
+      "dragstart uses the source clientY override"
+    );
+    assert.strictEqual(
+      events.dragstart.clientX,
+      sourceCenter.clientX,
+      "dragstart keeps the computed source clientX"
+    );
+    assert.strictEqual(
+      events.dragend.clientY,
+      sourceCoordinates.clientY,
+      "dragend uses the source clientY override"
+    );
+    assert.strictEqual(
+      events.dragend.clientX,
+      sourceCenter.clientX,
+      "dragend keeps the computed source clientX"
+    );
+    for (const type of ["dragenter", "dragover", "drop"]) {
+      assert.strictEqual(
+        events[type].clientX,
+        targetCoordinates.clientX,
+        `${type} uses the target clientX override`
+      );
+      assert.strictEqual(
+        events[type].clientY,
+        targetCenter.clientY,
+        `${type} keeps the computed target clientY`
+      );
+    }
+  });
+
+  test("source without dragHandle starts from the whole element", async function (assert) {
+    let starts = 0;
+    const onDragStart = () => starts++;
+
+    await render(
+      <template>
+        <div id="src" {{dDragAndDropSource type="row" onDragStart=onDragStart}}>
+          <span id="body">body</span>
+        </div>
+        <div id="tgt" {{dDragAndDropTarget accepts="row"}}>target</div>
+      </template>
+    );
+
+    await simulateDrag("#src", "#tgt", {
+      dataTransfer: new DataTransfer(),
+      sourceCoordinates: centerOf("#body"),
+    });
+
+    assert.strictEqual(starts, 1, "pressing the row body starts the drag");
+  });
+
+  test("source re-registers when dragHandle arrives after initial registration", async function (assert) {
+    const state = new (class {
+      @tracked showHandle = false;
+      @tracked dragHandle;
+      starts = 0;
+      captureHandle = (element) => (this.dragHandle = element);
+      onDragStart = () => this.starts++;
+    })();
+
+    await render(
+      <template>
+        <div
+          id="src"
+          {{dDragAndDropSource
+            type="row"
+            dragHandle=state.dragHandle
+            onDragStart=state.onDragStart
+          }}
+        >
+          <span id="body">body</span>
+          {{#if state.showHandle}}
+            <button id="handle" type="button" {{didInsert state.captureHandle}}>
+              handle
+            </button>
+          {{/if}}
+        </div>
+        <div id="tgt" {{dDragAndDropTarget accepts="row"}}>target</div>
+      </template>
+    );
+
+    state.showHandle = true;
+    await settled();
+
+    await simulateDrag("#src", "#tgt", {
+      dataTransfer: new DataTransfer(),
+      sourceCoordinates: centerOf("#body"),
+    });
+    assert.strictEqual(
+      state.starts,
+      0,
+      "after the handle arrives, pressing the row body does not start a drag"
+    );
+
+    await simulateDrag("#src", "#tgt", {
+      dataTransfer: new DataTransfer(),
+      sourceCoordinates: centerOf("#handle"),
+    });
+    assert.strictEqual(
+      state.starts,
+      1,
+      "after the handle arrives, pressing the handle starts a drag"
+    );
+  });
+
+  test("source re-registers when dragHandle changes identity", async function (assert) {
+    const state = new (class {
+      @tracked showSecondHandle = false;
+      @tracked dragHandle;
+      starts = 0;
+      captureHandle = (element) => (this.dragHandle = element);
+      onDragStart = () => this.starts++;
+    })();
+
+    await render(
+      <template>
+        <div
+          id="src"
+          {{dDragAndDropSource
+            type="row"
+            dragHandle=state.dragHandle
+            onDragStart=state.onDragStart
+          }}
+        >
+          <button
+            id="first-handle"
+            type="button"
+            {{didInsert state.captureHandle}}
+          >
+            first
+          </button>
+          {{#if state.showSecondHandle}}
+            <button
+              id="second-handle"
+              type="button"
+              {{didInsert state.captureHandle}}
+            >
+              second
+            </button>
+          {{/if}}
+        </div>
+        <div id="tgt" {{dDragAndDropTarget accepts="row"}}>target</div>
+      </template>
+    );
+
+    state.showSecondHandle = true;
+    await settled();
+
+    await simulateDrag("#src", "#tgt", {
+      dataTransfer: new DataTransfer(),
+      sourceCoordinates: centerOf("#first-handle"),
+    });
+    assert.strictEqual(
+      state.starts,
+      0,
+      "pressing the previous handle does not start a drag"
+    );
+
+    await simulateDrag("#src", "#tgt", {
+      dataTransfer: new DataTransfer(),
+      sourceCoordinates: centerOf("#second-handle"),
+    });
+    assert.strictEqual(
+      state.starts,
+      1,
+      "pressing the replacement handle starts a drag"
+    );
+  });
+
+  test("source re-registers when dragHandle is removed", async function (assert) {
+    const state = new (class {
+      @tracked dragHandle;
+      @tracked useHandle = true;
+      starts = 0;
+      captureHandle = (element) => (this.dragHandle = element);
+      onDragStart = () => this.starts++;
+    })();
+
+    await render(
+      <template>
+        <div
+          id="src"
+          {{dDragAndDropSource
+            type="row"
+            dragHandle=(if state.useHandle state.dragHandle)
+            onDragStart=state.onDragStart
+          }}
+        >
+          <span id="body">body</span>
+          <button id="handle" type="button" {{didInsert state.captureHandle}}>
+            handle
+          </button>
+        </div>
+        <div id="tgt" {{dDragAndDropTarget accepts="row"}}>target</div>
+      </template>
+    );
+
+    await simulateDrag("#src", "#tgt", {
+      dataTransfer: new DataTransfer(),
+      sourceCoordinates: centerOf("#body"),
+    });
+    assert.strictEqual(
+      state.starts,
+      0,
+      "while the handle is configured, pressing the row body does not drag"
+    );
+
+    state.useHandle = false;
+    await settled();
+
+    await simulateDrag("#src", "#tgt", {
+      dataTransfer: new DataTransfer(),
+      sourceCoordinates: centerOf("#body"),
+    });
+    assert.strictEqual(
+      state.starts,
+      1,
+      "after removing the handle, pressing the row body starts a drag"
+    );
+  });
+
+  test("target accepts a self drop by default", async function (assert) {
+    let drops = 0;
+    const onDrop = () => drops++;
+
+    await render(
+      <template>
+        <div
+          id="row"
+          {{dDragAndDropSource type="row"}}
+          {{dDragAndDropTarget accepts="row" onDrop=onDrop}}
+        >row</div>
+      </template>
+    );
+
+    await simulateDrag("#row", "#row", {
+      dataTransfer: new DataTransfer(),
+    });
+
+    assert.strictEqual(drops, 1, "self drops remain enabled when omitted");
+  });
+
+  test("target with acceptsSelf=false rejects its own source element", async function (assert) {
+    let drops = 0;
+    const onDrop = () => drops++;
+
+    await render(
+      <template>
+        <div
+          id="row"
+          {{dDragAndDropSource type="row"}}
+          {{dDragAndDropTarget accepts="row" acceptsSelf=false onDrop=onDrop}}
+        >row</div>
+      </template>
+    );
+
+    await simulateDrag("#row", "#row", {
+      dataTransfer: new DataTransfer(),
+    });
+
+    assert.strictEqual(drops, 0, "the target refuses its own source element");
+  });
+
+  test("acceptsSelf checks the raw source element without target fallback", async function (assert) {
+    let drops = 0;
+    const onDrop = () => drops++;
+    const cleanupMonitor = registerDragAndDropMonitor(() => ({
+      onDragStart: ({ source }) => delete source.element,
+    }));
+
+    await render(
+      <template>
+        <div id="src" {{dDragAndDropSource type="row"}}>source</div>
+        <div
+          id="tgt"
+          {{dDragAndDropTarget accepts="row" acceptsSelf=false onDrop=onDrop}}
+        >target</div>
+      </template>
+    );
+
+    await simulateDrag("#src", "#tgt", {
+      dataTransfer: new DataTransfer(),
+    });
+    cleanupMonitor();
+
+    assert.strictEqual(
+      drops,
+      1,
+      "a missing raw source element is not treated as the target element"
+    );
   });
 
   test("source toggles --dragging during the drag", async function (assert) {

@@ -54,8 +54,8 @@ function sourceFromPDND(pdndSource, element) {
  * @param {() => Object} getArgsRef - Closure returning the latest args.
  *   PDND callbacks read this on every invocation, so arg changes take
  *   effect without re-registering. Args shape matches the modifier:
- *   `accepts` (string | string[] | undefined), `position`, `axis`,
- *   `canDrop`, `getData`, `getDropEffect`, `getIsSticky`,
+ *   `accepts` (string | string[] | undefined), `acceptsSelf`, `position`,
+ *   `axis`, `canDrop`, `getData`, `getDropEffect`, `getIsSticky`,
  *   `onDragEnter`, `onDrag`, `onDragLeave`, `onDrop`, `indicator`.
  * @returns {() => void} Cleanup function. Caller invokes it once on
  *   teardown (modifier destroy, component willDestroy, etc.).
@@ -119,6 +119,12 @@ export function registerDragAndDropTarget(element, getArgsRef) {
         return false;
       }
       const args = getArgsRef();
+      // Compared against the raw source element rather than the normalised
+      // payload, whose `element` falls back to this one and would therefore read
+      // as self whenever the source element is absent.
+      if (args.acceptsSelf === false && source.element === element) {
+        return false;
+      }
       if (!args.canDrop) {
         return true;
       }
@@ -241,6 +247,11 @@ export function registerDragAndDropTarget(element, getArgsRef) {
  *  - `accepts` — string or array of strings. The dragged source's
  *    `type` must be in this list for the target to engage. Omit to
  *    accept any source.
+ *  - `acceptsSelf` — `false` to refuse a drop whose dragged element is this
+ *    element. Where `accepts` filters by type, this filters by identity.
+ *    Defaults to `true`, because an element carrying both this modifier and
+ *    `dDragAndDropSource` is a supported arrangement with a meaningful drop,
+ *    so excluding it is opt-in rather than automatic.
  *  - `position` — fixed `"before"` / `"after"` / `"inside"`. When set,
  *    `axis` and the midpoint logic are ignored.
  *  - `axis` — `"y"` (default) or `"x"`. Drives the indicator class

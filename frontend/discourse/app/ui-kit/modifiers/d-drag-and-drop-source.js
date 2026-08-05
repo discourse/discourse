@@ -26,7 +26,9 @@ import Modifier from "ember-modifier";
  *   PDND callbacks read this on every invocation, so arg changes take
  *   effect without re-registering. Args shape matches the modifier:
  *   `type`, `data`, `getInitialData`, `dragPreview`, `dragPreviewOffset`,
- *   `canDrag`, `onDragStart`, `onDrop`.
+ *   `canDrag`, `onDragStart`, `onDrop`. `dragHandle` is the exception: it is
+ *   read once, when this registers, so a caller driving this imperatively must
+ *   re-register to change it.
  * @returns {() => void} Cleanup function. Caller invokes it once on
  *   teardown.
  */
@@ -40,6 +42,11 @@ export function registerDragAndDropSource(element, getArgsRef) {
 
   const cleanup = draggable({
     element,
+    // Read once, here: the underlying library keeps this in the config captured
+    // at registration, so it does not see a later change the way the callbacks
+    // below see one through `getArgsRef`. Replacing the registration when the
+    // handle changes is the modifier's job.
+    dragHandle: getArgsRef().dragHandle,
     canDrag: ({ input }) => {
       const args = getArgsRef();
       if (!args.canDrag) {
@@ -179,9 +186,18 @@ export function registerDragAndDropSource(element, getArgsRef) {
  *    full drop dispatch (target callbacks, monitor callbacks, native
  *    bubble listeners). Safe to clear shared dispatch state from this
  *    callback — see the deferral note on `registerDragAndDropSource`.
+ *  - `dragHandle` — an element inside this one that a drag must start from,
+ *    so the rest stays free for selecting text and operating controls. Pass
+ *    the element itself, not a selector; capture its ref with a modifier on
+ *    the handle rather than querying the DOM. Changing it re-registers, so a
+ *    ref that only arrives on a later render still takes effect. Omit it and
+ *    the whole element initiates a drag.
  *  - `disabled` — when `true`, the modifier detaches the underlying
  *    draggable registration. Used by consumers that conditionally
- *    suppress dragging (e.g. read-only modes).
+ *    suppress dragging (e.g. read-only modes). This, not `dragHandle`, is how
+ *    to stop an element being dragged: `draggable="true"` is stamped on the
+ *    host element either way, and `dragHandle` only narrows where a drag may
+ *    begin.
  *
  * Stamps `data-drag-source` on the element for the lifetime of the
  * registration and adds the `--dragging` class while a drag is active. Both are
@@ -198,6 +214,8 @@ export default class DDragAndDropSourceModifier extends Modifier {
   #cleanup = null;
   #element = null;
   #args = {};
+  /** The handle the live registration was created with, to detect a change. */
+  #dragHandle = undefined;
 
   constructor(owner, args) {
     super(owner, args);
@@ -219,6 +237,16 @@ export default class DDragAndDropSourceModifier extends Modifier {
     // observes element drags first-hand via its own `monitorForElements`, so
     // this modifier owns no shared drag state and stays service-free.
     this.#args = args;
+
+    // A handle is captured when the registration is created, so a new one has to
+    // replace it. This is the ordinary case rather than an edge case: a handle is
+    // often rendered conditionally and its ref only reaches these args on a later
+    // run, and without this the element would keep dragging from anywhere.
+    if (this.#cleanup && args.dragHandle !== this.#dragHandle) {
+      this.#detach();
+      this.#element = element;
+    }
+    this.#dragHandle = args.dragHandle;
 
     if (!this.#cleanup) {
       this.#cleanup = registerDragAndDropSource(element, () => this.#args);
