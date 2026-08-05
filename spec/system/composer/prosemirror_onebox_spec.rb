@@ -71,7 +71,7 @@ describe "Composer - ProseMirror - Oneboxing" do
 
     composer.toggle_rich_editor
 
-    expect(composer).to have_value("https://example.com\n\n")
+    expect(composer).to have_value("https://example.com")
   end
 
   it "creates an inline onebox for links that are part of a paragraph" do

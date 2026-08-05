@@ -90,8 +90,8 @@ module(
         .doesNotExist("is no longer an inline onebox");
       assert.strictEqual(
         editor.value,
-        `${URL}\n\nb`,
-        "serializes the full onebox on its own line, matching the cooked output"
+        `${URL} \n\nb`,
+        "leaves the markdown the user typed alone"
       );
     });
 
@@ -159,8 +159,8 @@ module(
       );
       assert.strictEqual(
         editor.value,
-        `${URL}\n\nasd`,
-        "the trailing line becomes its own paragraph"
+        `${URL}\nasd`,
+        "leaves the markdown the user typed alone"
       );
       assert.false(
         view.state.selection instanceof NodeSelection,
