@@ -5,7 +5,11 @@ class AddTargetCreatedByIndexToReviewables < ActiveRecord::Migration[7.0]
 
   def up
     execute <<~SQL
-      CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_reviewables_flagged_by_target_created_by
+      DROP INDEX IF EXISTS idx_reviewables_flagged_by_target_created_by
+    SQL
+
+    execute <<~SQL
+      CREATE INDEX CONCURRENTLY idx_reviewables_flagged_by_target_created_by
         ON reviewables(target_created_by_id)
         WHERE type = 'ReviewableFlaggedPost'
     SQL
