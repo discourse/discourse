@@ -11,6 +11,9 @@ const macros = buildMacros({
 
 const PRODUCTION = process.env.EMBER_ENV === "production";
 
+const KEEP_TEST_CODE = process.env.KEEP_TEST_CODE === "1";
+const STRIP_TEST_SELECTORS = PRODUCTION && !KEEP_TEST_CODE;
+
 module.exports = {
   plugins: [
     [
@@ -24,7 +27,7 @@ module.exports = {
         ],
         transforms: [
           ...macros.templateMacros,
-          ...(PRODUCTION ? [StripTestSelectors] : []),
+          ...(STRIP_TEST_SELECTORS ? [StripTestSelectors] : []),
         ],
       },
     ],
@@ -53,11 +56,12 @@ module.exports = {
             flags: {
               DEBUG: !PRODUCTION,
               CI: !!process.env.CI,
+              RAILS_TESTING: !PRODUCTION || KEEP_TEST_CODE,
             },
           },
         ],
         debugTools: {
-          isDebug: !PRODUCTION,
+          isDebug: !PRODUCTION || KEEP_TEST_CODE,
           source: "@ember/debug",
           assertPredicateIndex: 1,
         },
