@@ -18,7 +18,7 @@ marked merged means its files are **upstream** and no longer this branch's to ch
 
 | # | Layer | PR | State | Paths it owns |
 |---|---|---|---|---|
-| 1 | float-kit | — | ☐ not opened | `frontend/discourse/float-kit/**`, `tests/integration/components/float-kit/{d-menu,apply-floating-ui}-test.gjs` |
+| 1 | float-kit | [#42376](https://github.com/discourse/discourse/pull/42376) | ◐ open | `frontend/discourse/float-kit/**`, `tests/integration/components/float-kit/{d-menu,apply-floating-ui}-test.gjs` |
 | 2 | a11y announcement composition | — | ☐ not opened | `app/services/a11y.js`, `tests/integration/components/a11y/live-regions-test.gjs`, `app/ui-kit/d-icon-grid-picker/content.gjs`, `tests/integration/components/d-icon-grid-picker-test.gjs` |
 | 3 | ui-kit primitive fixes | — | ☐ not opened | `app/ui-kit/d-async-content.gts`, `app/ui-kit/modifiers/d-observe-intersection.js`, `app/ui-kit/d-load-more.gjs` |
 | 4 | DSkeleton | — | ☐ not opened | `app/ui-kit/d-skeleton.gts`, `common/components/d-skeleton.scss`, `tests/integration/ui-kit/d-skeleton-test.gjs` |
@@ -74,8 +74,24 @@ states.
 git worktree add ~/discourse/core/worktrees/<layer> -b <layer> origin/main
 cd ~/discourse/core/worktrees/<layer>
 pnpm install                                        # a fresh worktree has no node_modules
+mkdir -p tmp                                        # nor tmp/, which --standalone needs
 git checkout select-kit-rework -- <that layer's paths>
 ```
+
+Without `tmp/`, `bin/qunit --standalone` dies on
+`Process.spawn: No such file or directory - .../tmp/test_server_4566.log` before running anything.
+
+Before pushing, confirm the carve took nothing extra and clobbered nothing upstream:
+
+```bash
+git status --short                                       # exactly this layer's files
+git diff select-kit-rework -- <paths>                    # empty: carve matches the branch
+git log <merge-base>..origin/main -- <paths>             # empty: no upstream change overwritten
+```
+
+That third check matters because `main` moves under you. A wholesale
+`git checkout select-kit-rework -- <dir>` reverts any upstream edit to a file in that directory
+made since the branch's merge-base, and nothing else in the flow would catch it.
 
 One scratch worktree, reused per layer, is enough. Each export is carve → verify → push, and the
 worktree is only needed again if review feedback arrives.
@@ -116,6 +132,21 @@ Per export branch, before pushing:
 - **Load the `discourse-qunit` skill before any `bin/qunit` run**, including a re-run of something that
   just passed.
 - Exact `--module` runs for that layer's suites.
+- **One full-suite run per build, and wipe `dist` first.** Repeated `--standalone` runs in one
+  worktree re-digest chunks while a previously generated index is still live, so a later run fetches
+  a digest that no longer exists and dies partway through. The tell is a **short test count** plus
+  `Failed to fetch dynamically imported module: .../<chunk>-<digest>.digested.js`; a complete core
+  run is ~10.9k tests, so anything in the hundreds or low thousands is truncated, not green and not
+  a real failure list. Recover with
+  `rm -rf tmp/stylesheet-cache tmp/cache/assets frontend/discourse/dist`.
+- Expect the first `--standalone` run after any tree change (including `git checkout`/`reset`) to
+  trip the watchdog with `Browser made no test progress ... outside an active test` and
+  `# tests 1 / # fail 1`. That is a startup stall, not a result. Re-run once.
+- **Attribute every failure against a baseline before believing it.** `main` is not always green
+  here: `Acceptance: composer buttons API: buttons can support a shortcut` fails on a clean
+  checkout, independent of this work. Cheapest attribution is to run the named test in isolation on
+  the layer branch and on clean `main`; only escalate to a full-suite comparison if it passes in
+  isolation on both.
 - `bin/lint --fix <changed files>` and `pnpm lint:types`.
 - Layer 1 additionally needs the **full JS suite**: making `settled()` await float-kit positioning
   alters test timing everywhere.
