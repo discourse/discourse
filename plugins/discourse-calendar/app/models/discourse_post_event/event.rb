@@ -65,7 +65,7 @@ module DiscoursePostEvent
     end
 
     def livestream_location?
-      location.to_s.match?(%r{\Ahttps?://}i)
+      DiscourseCalendar::Livestream::AllowedHosts.allows_url?(location)
     end
 
     def create_livestream_chat_channel

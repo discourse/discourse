@@ -1,14 +1,41 @@
 import { buildBBCodeAttrs, parseBBCodeTag } from "discourse/lib/text";
 
-// `([\w-]+\.)*` allows any subdomain, since livestream hosts routinely use them
-// (us06web.zoom.us, www.youtube.com). It cannot match a host that merely ends in
-// one of these names, because each captured label must be followed by a dot:
-// "notzoom.us" and "zoom.us.evil.com" are both rejected.
-const LIVESTREAM_URL =
-  /^(https?:\/\/)?([\w-]+\.)*(youtube\.com|youtu\.be|twitch\.tv|zoom\.us|kick\.com|tiktok\.com|instagram\.com|facebook\.com)\//i;
+let lastSetting;
+let lastPattern;
 
-export function isLivestreamUrl(url) {
-  return LIVESTREAM_URL.test(url ?? "");
+// Mirrors DiscourseCalendar::Livestream::AllowedHosts on the server: an allowed
+// host or any of its subdomains. `([\w-]+\.)*` allows the subdomains livestream
+// hosts routinely use (us06web.zoom.us, www.youtube.com) but cannot match a host
+// that merely ends in an allowed name, because each captured label must be
+// followed by a dot: "notzoom.us" and "zoom.us.evil.com" are both rejected.
+// Compiled once per setting value because this runs on every location keystroke.
+function livestreamUrlPattern(setting) {
+  if (setting !== lastSetting) {
+    const hosts = (setting ?? "")
+      .split("|")
+      .map(
+        (host) =>
+          host
+            .trim()
+            .toLowerCase()
+            .replace(/^https?:\/\//, "")
+            .split("/")[0]
+      )
+      .filter(Boolean)
+      .map((host) => host.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+
+    lastSetting = setting;
+    lastPattern = hosts.length
+      ? new RegExp(`^(https?://)?([\\w-]+\\.)*(${hosts.join("|")})(/|$)`, "i")
+      : null;
+  }
+
+  return lastPattern;
+}
+
+export function isLivestreamUrl(url, siteSettings) {
+  const pattern = livestreamUrlPattern(siteSettings?.livestream_allowed_hosts);
+  return !!pattern?.test(url ?? "");
 }
 
 export function defaultReminderFor({ startsAt, endsAt, allDay } = {}) {

@@ -3,7 +3,7 @@
 module PageObjects
   module Pages
     class TopicLivestream < PageObjects::Pages::Base
-      LIVESTREAM_URL = "https://example.com/live"
+      LIVESTREAM_URL = "https://www.youtube.com/live/abc123"
 
       def cache_livestream_onebox
         Discourse.cache.write(

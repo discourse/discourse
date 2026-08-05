@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Jobs::WarmLivestreamOnebox do
-  let(:livestream_url) { "https://example.com/live" }
+  let(:livestream_url) { "https://www.youtube.com/live/abc123" }
 
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }

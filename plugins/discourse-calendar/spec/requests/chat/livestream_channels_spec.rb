@@ -22,7 +22,7 @@ RSpec.describe "Livestream channel list serialization" do
       id: post.id,
       original_starts_at: 1.hour.from_now,
       original_ends_at: 2.hours.from_now,
-      location: "https://example.com/live",
+      location: "https://www.youtube.com/live/abc123",
       status: DiscoursePostEvent::Event.statuses[:private],
       raw_invitees: [group.name],
       livestream: true,

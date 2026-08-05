@@ -212,6 +212,7 @@ module ::DiscoursePostEvent
 end
 
 require_relative "lib/discourse_calendar/engine"
+require_relative "lib/discourse_calendar/livestream/allowed_hosts"
 require_relative "lib/discourse_calendar/livestream/topic_extension"
 require_relative "lib/discourse_calendar/livestream/chat_channel_extension"
 require_relative "lib/discourse_calendar/livestream/zoom_url_parser"

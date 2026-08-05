@@ -15,6 +15,12 @@ import {
   stateToEventInput,
 } from "discourse/plugins/discourse-calendar/discourse/lib/raw-event-helper";
 
+// Mirrors the `livestream_allowed_hosts` site setting default.
+const SETTINGS = {
+  livestream_allowed_hosts:
+    "youtube.com|youtu.be|twitch.tv|zoom.us|kick.com|tiktok.com|instagram.com|facebook.com",
+};
+
 const SAME_DAY_CONFIG = {
   startsAt: "2024-06-15T10:00:00Z",
   endsAt: "2024-06-15T11:00:00Z",
@@ -513,77 +519,133 @@ module("Unit | Lib | raw-event-helper", function () {
 
   test("isLivestreamUrl only accepts http(s) URLs for major livestreaming platforms", function (assert) {
     assert.false(
-      isLivestreamUrl("https://example.com/live"),
+      isLivestreamUrl("https://example.com/live", SETTINGS),
       "does not accept arbitrary URLs"
     );
     assert.false(
-      isLivestreamUrl("http://example.com/live"),
+      isLivestreamUrl("http://example.com/live", SETTINGS),
       "does not accept arbitrary URLs"
     );
     assert.false(
-      isLivestreamUrl("HTTPS://EXAMPLE.COM"),
+      isLivestreamUrl("HTTPS://EXAMPLE.COM", SETTINGS),
       "does not accept arbitrary URLs"
     );
-    assert.false(isLivestreamUrl("www.example.com"), "rejects schemeless www");
-    assert.false(isLivestreamUrl("mailto:host@example.com"), "rejects mailto");
-    assert.false(isLivestreamUrl("Room 5"), "rejects plain text");
-    assert.false(isLivestreamUrl(null), "handles null");
-    assert.false(isLivestreamUrl(undefined), "handles undefined");
+    assert.false(
+      isLivestreamUrl("www.example.com", SETTINGS),
+      "rejects schemeless www"
+    );
+    assert.false(
+      isLivestreamUrl("mailto:host@example.com", SETTINGS),
+      "rejects mailto"
+    );
+    assert.false(isLivestreamUrl("Room 5", SETTINGS), "rejects plain text");
+    assert.false(isLivestreamUrl(null, SETTINGS), "handles null");
+    assert.false(isLivestreamUrl(undefined, SETTINGS), "handles undefined");
 
     assert.true(
-      isLivestreamUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ"),
+      isLivestreamUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ", SETTINGS),
       "accepts YouTube"
     );
     assert.true(
-      isLivestreamUrl("https://youtu.be/dQw4w9WgXcQ"),
+      isLivestreamUrl("https://youtu.be/dQw4w9WgXcQ", SETTINGS),
       "accepts YouTube short link"
     );
     assert.true(
-      isLivestreamUrl("https://www.twitch.tv/username"),
+      isLivestreamUrl("https://www.twitch.tv/username", SETTINGS),
       "accepts Twitch"
     );
     assert.true(
-      isLivestreamUrl("https://www.facebook.com/username/videos/123456789"),
+      isLivestreamUrl(
+        "https://www.facebook.com/username/videos/123456789",
+        SETTINGS
+      ),
       "accepts Facebook"
     );
     assert.true(
-      isLivestreamUrl("https://www.tiktok.com/@username/video/123456789"),
+      isLivestreamUrl(
+        "https://www.tiktok.com/@username/video/123456789",
+        SETTINGS
+      ),
       "accepts TikTok"
     );
     assert.true(
-      isLivestreamUrl("https://www.instagram.com/tv/123456789"),
+      isLivestreamUrl("https://www.instagram.com/tv/123456789", SETTINGS),
       "accepts Instagram"
     );
-    assert.true(isLivestreamUrl("https://zoom.us/j/123456789"), "accepts Zoom");
+    assert.true(
+      isLivestreamUrl("https://zoom.us/j/123456789", SETTINGS),
+      "accepts Zoom"
+    );
   });
 
   test("isLivestreamUrl accepts subdomains of livestreaming platforms", function (assert) {
     assert.true(
-      isLivestreamUrl("https://us06web.zoom.us/j/123456789?pwd=secret"),
+      isLivestreamUrl(
+        "https://us06web.zoom.us/j/123456789?pwd=secret",
+        SETTINGS
+      ),
       "accepts the vanity subdomain Zoom actually hands out"
     );
     assert.true(
-      isLivestreamUrl("https://gaming.youtube.com/watch?v=dQw4w9WgXcQ"),
+      isLivestreamUrl(
+        "https://gaming.youtube.com/watch?v=dQw4w9WgXcQ",
+        SETTINGS
+      ),
       "accepts a YouTube subdomain"
     );
     assert.true(
-      isLivestreamUrl("HTTPS://US06WEB.ZOOM.US/j/123456789"),
+      isLivestreamUrl("HTTPS://US06WEB.ZOOM.US/j/123456789", SETTINGS),
       "is case-insensitive"
     );
   });
 
   test("isLivestreamUrl rejects hosts that merely resemble a platform", function (assert) {
     assert.false(
-      isLivestreamUrl("https://notzoom.us/j/123456789"),
+      isLivestreamUrl("https://notzoom.us/j/123456789", SETTINGS),
       "rejects a host ending in the platform name"
     );
     assert.false(
-      isLivestreamUrl("https://zoom.us.evil.com/j/123456789"),
+      isLivestreamUrl("https://zoom.us.evil.com/j/123456789", SETTINGS),
       "rejects a host starting with the platform name"
     );
     assert.false(
-      isLivestreamUrl("https://myyoutube.com/watch?v=1"),
+      isLivestreamUrl("https://myyoutube.com/watch?v=1", SETTINGS),
       "rejects a host prefixed with the platform name"
+    );
+  });
+
+  test("isLivestreamUrl follows the livestream_allowed_hosts setting", function (assert) {
+    const custom = { livestream_allowed_hosts: "stream.example.com|vimeo.com" };
+
+    assert.true(
+      isLivestreamUrl("https://stream.example.com/live/1", custom),
+      "accepts an admin-added host"
+    );
+    assert.true(
+      isLivestreamUrl("https://player.vimeo.com/video/123", custom),
+      "accepts subdomains of an admin-added host"
+    );
+    assert.false(
+      isLivestreamUrl("https://www.youtube.com/watch?v=1", custom),
+      "rejects a default host the admin removed"
+    );
+
+    assert.true(
+      isLivestreamUrl("https://vimeo.com/123", {
+        livestream_allowed_hosts: "https://VIMEO.com/videos",
+      }),
+      "tolerates a pasted URL as a list entry"
+    );
+
+    assert.false(
+      isLivestreamUrl("https://www.youtube.com/watch?v=1", {
+        livestream_allowed_hosts: "",
+      }),
+      "an empty list allows nothing"
+    );
+    assert.false(
+      isLivestreamUrl("https://www.youtube.com/watch?v=1", {}),
+      "a missing setting allows nothing"
     );
   });
 });

@@ -207,7 +207,9 @@ export default class CompactEventEditor extends Component {
   }
 
   get isLivestreamUrl() {
-    return this.hasLocation && isLivestreamUrl(this.location);
+    return (
+      this.hasLocation && isLivestreamUrl(this.location, this.siteSettings)
+    );
   }
 
   get locationIcon() {

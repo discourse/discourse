@@ -142,6 +142,11 @@ discourse_calendar:
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/401309"
       requires_plugin_enabled: false
+  livestream_allowed_hosts:
+    type: host_list
+    list_type: compact
+    default: "youtube.com|youtu.be|twitch.tv|zoom.us|kick.com|tiktok.com|instagram.com|facebook.com"
+    client: true
   livestream_zoom_enabled:
     default: false
     client: true
