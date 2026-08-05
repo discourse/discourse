@@ -480,6 +480,102 @@ RSpec.describe DiscourseAi::AiBot::BotController do
       expect(response.status).to eq(403)
     end
 
+    it "uses the topic creator to authorize a legacy restricted agent retry" do
+      admin = Fabricate(:admin, refresh_auto_groups: true)
+      restricted_agent =
+        Fabricate(
+          :ai_agent,
+          user: bot_user,
+          default_llm_id: llm_model.id,
+          allowed_group_ids: [Group::AUTO_GROUPS[:admins]],
+        )
+      topic = Fabricate(:private_message_topic, user: user, recipient: bot_user)
+      topic.topic_allowed_users.create!(user: admin)
+      prompt_post =
+        Fabricate(:post, topic: topic, user: admin, raw: "Please use the restricted agent")
+      reply_post = Fabricate(:post, topic: topic, user: bot_user, raw: "original restricted reply")
+      reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD] = restricted_agent.id
+      reply_post.save_custom_fields
+      AiAgent.agent_cache.flush!
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["restricted retry response", "restricted retry title"],
+      ) do
+        post "/discourse-ai/ai-bot/post/#{reply_post.id}/retry"
+
+        job_args = Jobs::CreateAiReply.jobs.last["args"].first.symbolize_keys
+        Jobs::CreateAiReply.new.execute(job_args)
+      end
+
+      aggregate_failures do
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq("success" => "OK")
+        expect(Jobs::CreateAiReply.jobs.last["args"].first["authorization_user_id"]).to eq(user.id)
+        expect(reply_post.reload.raw).to eq("original restricted reply")
+      end
+    end
+
+    it "reuses the recorded authorization user when retrying" do
+      admin = Fabricate(:admin, refresh_auto_groups: true)
+      restricted_agent =
+        Fabricate(
+          :ai_agent,
+          user: bot_user,
+          default_llm_id: llm_model.id,
+          allowed_group_ids: [Group::AUTO_GROUPS[:admins]],
+        )
+      topic = Fabricate(:private_message_topic, user: user, recipient: bot_user)
+      topic.topic_allowed_users.create!(user: admin)
+      prompt_post = Fabricate(:post, topic: topic, user: admin, raw: "Use the restricted agent")
+      reply_post = Fabricate(:post, topic: topic, user: bot_user, raw: "original reply")
+      reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD] = restricted_agent.id
+      reply_post.custom_fields[
+        DiscourseAi::AiBot::POST_AI_AGENT_AUTHORIZATION_USER_ID_FIELD
+      ] = admin.id
+      reply_post.save_custom_fields
+      AiAgent.agent_cache.flush!
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["retried response", "retried title"],
+      ) do
+        post "/discourse-ai/ai-bot/post/#{reply_post.id}/retry"
+
+        job_args = Jobs::CreateAiReply.jobs.last["args"].first.symbolize_keys
+        Jobs::CreateAiReply.new.execute(job_args)
+      end
+
+      aggregate_failures do
+        expect(response.status).to eq(200)
+        expect(Jobs::CreateAiReply.jobs.last["args"].first["authorization_user_id"]).to eq(admin.id)
+        expect(reply_post.reload.raw).to eq("retried response")
+      end
+    end
+
+    it "fails closed when a legacy retry has no topic creator to authorize against" do
+      admin = Fabricate(:admin, refresh_auto_groups: true)
+      restricted_agent =
+        Fabricate(
+          :ai_agent,
+          user: bot_user,
+          default_llm_id: llm_model.id,
+          allowed_group_ids: [Group::AUTO_GROUPS[:admins]],
+        )
+      topic = Fabricate(:private_message_topic, user: user, recipient: bot_user)
+      topic.topic_allowed_users.create!(user: admin)
+      prompt_post = Fabricate(:post, topic: topic, user: admin, raw: "Use the restricted agent")
+      reply_post = Fabricate(:post, topic: topic, user: bot_user, raw: "original reply")
+      reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD] = restricted_agent.id
+      reply_post.save_custom_fields
+      topic.update_columns(user_id: nil)
+      AiAgent.agent_cache.flush!
+
+      expect_not_enqueued_with(job: :create_ai_reply) do
+        post "/discourse-ai/ai-bot/post/#{reply_post.id}/retry"
+      end
+
+      expect(response.status).to eq(403)
+    end
+
     it "streams a replacement into the existing bot reply" do
       retry_text = "second attempt"
       messages = nil
