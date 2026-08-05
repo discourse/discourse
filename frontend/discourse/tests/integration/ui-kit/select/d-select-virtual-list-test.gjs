@@ -47,11 +47,6 @@ const OPTION_SELECTOR = `${LISTBOX_SELECTOR} > [role='option']`;
 
 async function openSelect() {
   await click("[role='combobox']");
-  // The first window is published from a ResizeObserver measurement. The modifier's flush is
-  // runloop-scheduled, but the browser's delivery of the measurement that triggers it is not,
-  // so `settled()` can resolve against an empty listbox. Waiting here rather than in each test
-  // means no caller can read the DOM before a window exists.
-  await waitUntil(() => findAll(OPTION_SELECTOR).length > 0);
 }
 
 module(
@@ -504,11 +499,6 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       </template>
     );
     await openSelect();
-    // The windowed list publishes its first window off a ResizeObserver measurement, which
-    // `settled()` does not await — wait for the window before asserting its contents.
-    await waitUntil(
-      () => findAll(OPTION_SELECTOR).length === GROUPED_ITEMS.length
-    );
 
     assert
       .dom(GROUP_HEADER_SELECTOR)
