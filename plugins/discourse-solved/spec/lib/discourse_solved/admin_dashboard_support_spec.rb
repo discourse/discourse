@@ -80,12 +80,12 @@ RSpec.describe DiscourseSolved::AdminDashboardSupport do
       expect(dashboard[:topic_outcomes]).to eq(resolved: 1, in_progress: 1, unanswered: 1)
     end
 
-    it "treats a topic where only the author replied as unanswered, not in progress" do
+    it "treats a topic where only the author replied as in progress, not unanswered" do
       topic = Fabricate(:topic, category: support_category, user: author)
       Fabricate(:post, topic: topic, user: author)
       Fabricate(:post, topic: topic, user: author)
 
-      expect(dashboard[:topic_outcomes]).to eq(resolved: 0, in_progress: 0, unanswered: 1)
+      expect(dashboard[:topic_outcomes]).to eq(resolved: 0, in_progress: 1, unanswered: 0)
     end
 
     it "serves cached data for the same scope and window within the TTL" do
