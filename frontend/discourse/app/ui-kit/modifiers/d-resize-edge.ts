@@ -1,6 +1,7 @@
 import { registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
 import Modifier, { type ArgsFor } from "ember-modifier";
+import { registerPointerDrag } from "discourse/ui-kit/modifiers/d-pointer-drag";
 
 // How far a single arrow key press moves the edge, in pixels.
 const KEYBOARD_STEP = 16;
@@ -37,6 +38,19 @@ interface DResizeEdgeSignature {
       side?: "start" | "end";
 
       /**
+       * Called when a pointer gesture begins. Return the size the gesture should
+       * start from to override `value` for this gesture; return nothing to use
+       * `value` as usual. Anything non-finite is ignored.
+       *
+       * This exists for a caller whose current size is a live measurement of the
+       * DOM or the window. Such a caller cannot supply it through `value`,
+       * because an arg whose compute reads no tracked state is cached for the
+       * modifier's lifetime, so every gesture after the first would start from
+       * the first one's origin.
+       */
+      onResizeStart?: () => number | void;
+
+      /**
        * Called while dragging, at most once per animation frame. Suitable for
        * updating the rendered size.
        */
@@ -65,9 +79,11 @@ interface DResizeEdgeSignature {
  *
  * Both pointer and keyboard interaction are supported, which is what the
  * splitter pattern requires: a resize that can only be performed by dragging
- * is unusable without a pointing device. Pointer events cover mouse, touch,
- * and pen alike, and the modifier sets `touch-action: none` on the element so
- * that a touch drag is not claimed by the browser as a scroll gesture.
+ * is unusable without a pointing device. The pointer half is delegated to
+ * `registerPointerDrag`, the shared press-drag-transform engine, which covers
+ * mouse, touch and pen alike and marks the element so that a touch drag is not
+ * claimed by the browser as a scroll gesture. This modifier keeps the value
+ * semantics: clamping, the logical `side` handling, and the keyboard path.
  *
  * ```hbs
  * <div
@@ -92,36 +108,15 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
   /** The options from the most recent invocation, set by `modify`. */
   #named: DResizeEdgeSignature["Args"]["Named"];
 
-  #onPointerDown = (event: PointerEvent) => {
-    // Ignore anything that is not a primary button press, so that a right
-    // click or a secondary pointer cannot begin a resize.
-    if (event.button !== 0) {
-      return;
-    }
-
-    // A drag is already in progress. Taking this one over would overwrite the
-    // tracked pointer and strand the first one's capture, since its release
-    // would then no longer match.
-    if (this.#pointerId !== null) {
-      return;
-    }
-
-    event.preventDefault();
-
-    this.#pointerId = event.pointerId;
+  #onDragStart = (event: PointerEvent) => {
     this.#startCoordinate = this.#coordinate(event);
-    this.#startValue = this.#named.value;
 
-    this.#element.setPointerCapture(event.pointerId);
-    this.#element.addEventListener("pointermove", this.#onPointerMove);
-    this.#element.addEventListener("pointerup", this.#onPointerUp);
-    this.#element.addEventListener("pointercancel", this.#onPointerUp);
+    const supplied = this.#named.onResizeStart?.();
+    this.#startValue = Number.isFinite(supplied)
+      ? (supplied as number)
+      : this.#named.value;
   };
-  #onPointerMove = (event: PointerEvent) => {
-    if (event.pointerId !== this.#pointerId) {
-      return;
-    }
-
+  #onDrag = (event: PointerEvent) => {
     // A pointer can move several times between paints, so only the latest
     // position is kept and reported on the next frame. A size computed for the
     // positions in between would be replaced before anything rendered it.
@@ -131,16 +126,12 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
       this.#reportMove(this.#pendingCoordinate);
     });
   };
-  #onPointerUp = (event: PointerEvent) => {
-    if (event.pointerId !== this.#pointerId) {
-      return;
-    }
-
+  #onDragEnd = (event: PointerEvent) => {
     // The committed size is the one the pointer was released at, so any frame
-    // still pending is dropped in favour of reporting that position now.
+    // still pending is dropped first: letting it fire afterwards would report a
+    // stale intermediate size over the committed one.
     this.#cancelFrame();
     this.#reportMove(this.#coordinate(event), { final: true });
-    this.#releasePointer();
   };
   #onKeyDown = (event: KeyboardEvent) => {
     const { value, min, max } = this.#named;
@@ -176,9 +167,17 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
   #element: HTMLElement;
   #frame?: number;
   #pendingCoordinate = 0;
-  #pointerId: number | null = null;
+  #releaseGesture: (() => void) | null = null;
   #startCoordinate = 0;
   #startValue = 0;
+  /** The gesture args handed to `registerPointerDrag`. */
+  #gestureArgs: {
+    onDragStart: (event: PointerEvent) => void;
+    onDrag: (event: PointerEvent) => void;
+    onDragEnd: (event: PointerEvent) => void;
+    cancelCommits: boolean;
+    touchAction: string;
+  };
 
   constructor(owner: Owner, args: ArgsFor<DResizeEdgeSignature>) {
     super(owner, args);
@@ -193,22 +192,35 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     this.#element = element;
     this.#named = named;
 
-    // A touch drag would otherwise be claimed by the browser as a scroll and
-    // abort the resize through `pointercancel`. Applied here rather than left
-    // to each caller's stylesheet because the interaction does not work
-    // without it.
-    element.style.touchAction = "none";
+    this.#gestureArgs = {
+      onDragStart: this.#onDragStart,
+      onDrag: this.#onDrag,
+      onDragEnd: this.#onDragEnd,
+      // An OS-interrupted resize keeps the size the user dragged to rather than
+      // snapping back, so cancellation commits.
+      cancelCommits: true,
+      // A touch drag would otherwise be claimed by the browser as a scroll and
+      // abort the resize through `pointercancel`. An edge is small enough that
+      // suppressing every touch gesture on it costs the user nothing.
+      touchAction: "none",
+    };
 
-    element.addEventListener("pointerdown", this.#onPointerDown);
+    // The gesture engine owns pointer identity, capture, and the primary-button
+    // gate; this modifier keeps the value semantics and the keyboard path.
+    this.#releaseGesture ??= registerPointerDrag(
+      element,
+      () => this.#gestureArgs
+    );
+
     element.addEventListener("keydown", this.#onKeyDown);
   }
 
   cleanup() {
     this.#cancelFrame();
 
-    this.#element.removeEventListener("pointerdown", this.#onPointerDown);
+    this.#releaseGesture?.();
+    this.#releaseGesture = null;
     this.#element.removeEventListener("keydown", this.#onKeyDown);
-    this.#releasePointer();
   }
 
   /**
@@ -266,20 +278,5 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
 
     cancelAnimationFrame(this.#frame);
     this.#frame = undefined;
-  }
-
-  #releasePointer() {
-    if (this.#pointerId === null) {
-      return;
-    }
-
-    if (this.#element.hasPointerCapture(this.#pointerId)) {
-      this.#element.releasePointerCapture(this.#pointerId);
-    }
-
-    this.#element.removeEventListener("pointermove", this.#onPointerMove);
-    this.#element.removeEventListener("pointerup", this.#onPointerUp);
-    this.#element.removeEventListener("pointercancel", this.#onPointerUp);
-    this.#pointerId = null;
   }
 }

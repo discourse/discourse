@@ -592,4 +592,90 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
     await triggerKeyEvent(EDGE, "keydown", "ArrowUp");
     assert.strictEqual(state.value, 136, "ArrowUp grows it too");
   });
+
+  module("gesture-time start value", function () {
+    test("onResizeStart can supply the pointer gesture start value", async function (assert) {
+      const state = new Harness();
+      const onResizeStart = () => 500;
+
+      await render(
+        <template>
+          <div
+            class="resize-edge"
+            {{dResizeEdge
+              value=state.value
+              min=240
+              max=720
+              onResizeStart=onResizeStart
+              onResize=state.onResize
+              onResizeEnd=state.onResizeEnd
+            }}
+          ></div>
+        </template>
+      );
+
+      const edge = find(EDGE);
+      installPointerCaptureSpy(edge);
+      await triggerEvent(edge, "pointerdown", {
+        button: 0,
+        clientX: 100,
+        pointerId: 1,
+      });
+      await triggerEvent(edge, "pointerup", {
+        button: 0,
+        clientX: 150,
+        pointerId: 1,
+      });
+
+      assert.deepEqual(
+        state.resizeEnds,
+        [550],
+        "the returned number replaces the cached value for this gesture"
+      );
+    });
+
+    test("onResizeStart falls back to value when it returns nothing", async function (assert) {
+      const state = new Harness();
+      let starts = 0;
+      const onResizeStart = () => {
+        starts++;
+      };
+
+      await render(
+        <template>
+          <div
+            class="resize-edge"
+            {{dResizeEdge
+              value=state.value
+              min=240
+              max=720
+              onResizeStart=onResizeStart
+              onResize=state.onResize
+              onResizeEnd=state.onResizeEnd
+            }}
+          ></div>
+        </template>
+      );
+
+      const edge = find(EDGE);
+      installPointerCaptureSpy(edge);
+      await triggerEvent(edge, "pointerdown", {
+        button: 0,
+        clientX: 100,
+        pointerId: 1,
+      });
+      await triggerEvent(edge, "pointerup", {
+        button: 0,
+        clientX: 150,
+        pointerId: 1,
+      });
+
+      assert.strictEqual(starts, 1, "the callback runs at gesture time");
+      assert.deepEqual(
+        state.resizeEnds,
+        [350],
+        "a non-number return falls back to the value argument"
+      );
+    });
+  });
 });
