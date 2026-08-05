@@ -117,8 +117,13 @@ export interface TooltipOptions {
   /** Whether FloatKit attaches the trigger event listeners itself, rather than the caller driving it through the service API. */
   listeners: boolean;
 
-  /** The maximum width of the content, in pixels. */
-  maxWidth: number;
+  /**
+   * The maximum width of the content: a number in pixels, or any CSS `max-width` value. Pass
+   * `"none"` alongside `matchTriggerWidth` — the two are both applied inline, so a numeric cap
+   * silently wins over the matched width and a trigger wider than the cap gets a narrower
+   * overlay.
+   */
+  maxWidth: number | string;
 
   /** Passed as the `@data` argument to a `component` rendered as the content. */
   data: unknown;
@@ -156,6 +161,16 @@ export interface TooltipOptions {
   /** Called after the float shows. */
   onShow: FloatCallback | null;
 
+  /**
+   * Called after the float has been positioned, with its content element.
+   *
+   * Positioning is what gives a float its size, and it resolves asynchronously — so content
+   * that renders from a measurement of itself computes that measurement against a float that
+   * has no size yet. Such content re-measures here rather than waiting for a resize to be
+   * observed, which happens on the browser's schedule and is not guaranteed to be prompt.
+   */
+  onPositioned: FloatCallback | null;
+
   /** Called with the float instance when it is created, so callers can control it programmatically. */
   onRegisterApi: FloatCallback | null;
 
@@ -164,11 +179,18 @@ export interface TooltipOptions {
 }
 
 /**
- * The options for a menu: every tooltip option plus the menu-only extras (focus
- * management, the mobile modal, identifier grouping, and the class/width overrides
+ * The options for a menu: every tooltip option plus the menu-only extras (the content role,
+ * focus management, the mobile modal, identifier grouping, and the class/width overrides
  * the menu template forwards to its trigger and content).
  */
 export interface MenuOptions extends TooltipOptions {
+  /**
+   * The ARIA role for the content element. `dialog` suits a panel that holds its own widgets.
+   * A popup that is only a list should pass `none`, so the container does not sit between the
+   * control and the items its `aria-activedescendant` points at.
+   */
+  contentRole: string;
+
   /** Whether to focus the content when the menu opens. */
   autofocus: boolean;
 
@@ -313,6 +335,7 @@ export const TOOLTIP: { options: TooltipOptions; portalOutletId: string } = {
     trapTab: true,
     onClose: null,
     onShow: null,
+    onPositioned: null,
     onRegisterApi: null,
     portalOutletElement: null,
   },
@@ -344,8 +367,10 @@ export const MENU: { options: MenuOptions; portalOutletId: string } = {
     fallbackPlacements: FLOAT_UI_PLACEMENTS,
     autoUpdate: true,
     trapTab: true,
+    contentRole: "dialog",
     onClose: null,
     onShow: null,
+    onPositioned: null,
     onRegisterApi: null,
     modalForMobile: false,
     inline: null,
