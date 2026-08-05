@@ -122,6 +122,19 @@ describe "Admin Onboarding Banner" do
       expect(design_wizard_panel).to have_site_sidebar
     end
 
+    it "keeps the design wizard within a narrow viewport" do
+      admin.update!(uploaded_avatar: Fabricate(:image_upload, width: 100, height: 100))
+      visit("/")
+
+      banner.click_step_action("select_theme")
+      expect(design_wizard_panel).to be_visible
+
+      page.current_window.resize_to(320, 740)
+
+      dimensions = design_wizard_panel.layout_dimensions
+      expect(dimensions[:panel_width]).to be <= dimensions[:viewport_width]
+    end
+
     it "keeps a custom default theme rendered until another theme is chosen" do
       custom_theme = Fabricate(:theme)
       custom_theme.set_default!

@@ -13,7 +13,6 @@ import discourseLater from "discourse/lib/later";
 import { HORIZON_THEME_ID, setLocalTheme } from "discourse/lib/theme-selector";
 
 const STATE_KEY = "design_wizard_panel_state";
-const BASE_LIGHT_PALETTE_ID = -1;
 // mirrors the onboarding step's own completion key so a wizard finished
 // after a theme-preview reload (where the step's callback is gone) still
 // marks the step complete
@@ -47,8 +46,7 @@ export default class DesignWizardService extends Service {
 
   #onComplete;
   #originalCategoryPageStyle;
-  #originalColorMode;
-  #originalColorSchemeMedia;
+  #originalColorSchemeLinks;
 
   async start({ onComplete } = {}) {
     this.#onComplete = onComplete;
@@ -73,7 +71,7 @@ export default class DesignWizardService extends Service {
 
     this.animateEntrance = !stored;
     this.active = true;
-    this.#captureColorSchemeMedia();
+    this.#captureColorSchemeLinks();
 
     if (stored && this.homepage === "categories") {
       this.siteSettings.desktop_category_page_style = this.categoryPageStyle;
@@ -219,7 +217,7 @@ export default class DesignWizardService extends Service {
         this.#originalCategoryPageStyle;
       this.#refreshCategoriesPage();
     }
-    this.#restoreColorSchemeMedia();
+    this.#restoreColorSchemeLinks();
     document.documentElement.style.removeProperty(
       "--design-wizard-chrome-font-size"
     );
@@ -228,8 +226,6 @@ export default class DesignWizardService extends Service {
       window.location.assign(getURL("/"));
       return;
     }
-
-    this.#revertPalette();
   }
 
   async save() {
@@ -385,30 +381,46 @@ export default class DesignWizardService extends Service {
     );
   }
 
-  #captureColorSchemeMedia() {
+  #captureColorSchemeLinks() {
     const lightTag = document.querySelector("link.light-scheme");
     const darkTag = document.querySelector("link.dark-scheme");
 
-    this.#originalColorMode = this.#renderedColorMode;
-    this.#originalColorSchemeMedia = {
-      light: lightTag?.media,
-      dark: darkTag?.media,
+    this.#originalColorSchemeLinks = {
+      light: lightTag
+        ? {
+            href: lightTag.getAttribute("href"),
+            media: lightTag.getAttribute("media"),
+          }
+        : null,
+      dark: darkTag
+        ? {
+            href: darkTag.getAttribute("href"),
+            media: darkTag.getAttribute("media"),
+          }
+        : null,
     };
   }
 
-  #restoreColorSchemeMedia() {
-    if (!this.#originalColorSchemeMedia) {
+  #restoreColorSchemeLinks() {
+    if (!this.#originalColorSchemeLinks) {
       return;
     }
 
-    const lightTag = document.querySelector("link.light-scheme");
-    const darkTag = document.querySelector("link.dark-scheme");
+    for (const mode of ["light", "dark"]) {
+      const link = document.querySelector(`link.${mode}-scheme`);
+      const original = this.#originalColorSchemeLinks[mode];
+      if (!link || !original) {
+        continue;
+      }
 
-    if (lightTag) {
-      lightTag.media = this.#originalColorSchemeMedia.light ?? "";
-    }
-    if (darkTag) {
-      darkTag.media = this.#originalColorSchemeMedia.dark ?? "";
+      for (const attribute of ["href", "media"]) {
+        if (original[attribute] === null) {
+          link.removeAttribute(attribute);
+        } else {
+          link.setAttribute(attribute, original[attribute]);
+        }
+      }
+      link.removeAttribute("data-scheme-id");
     }
   }
 
@@ -477,32 +489,5 @@ export default class DesignWizardService extends Service {
     }
 
     this.#showColorMode(mode);
-  }
-
-  async #revertPalette() {
-    // closing from the theme step with nothing chosen applied no preview,
-    // and "reverting" would replace the current theme's palette
-    if (!document.querySelector("link[data-scheme-id]")) {
-      return;
-    }
-
-    const renderedTheme = this.data?.themes.find((theme) => theme.default);
-    const mode = this.#originalColorMode ?? "light";
-    const paletteId =
-      mode === "dark"
-        ? (renderedTheme?.dark_color_scheme_id ??
-          renderedTheme?.color_scheme_id ??
-          BASE_LIGHT_PALETTE_ID)
-        : (renderedTheme?.color_scheme_id ?? BASE_LIGHT_PALETTE_ID);
-
-    try {
-      await applyColorScheme({ id: paletteId }, { replace: true, mode });
-    } catch {
-      // a failed revert only leaves the previewed colors in place
-    }
-
-    document
-      .querySelectorAll("link[data-scheme-id]")
-      .forEach((link) => link.removeAttribute("data-scheme-id"));
   }
 }

@@ -96,7 +96,8 @@
   inset-inline-end: 0;
   display: flex;
   flex-direction: column;
-  width: 24em;
+  box-sizing: border-box;
+  width: min(24em, 100vw);
   background: var(--secondary);
   border: 1px solid var(--content-border-color);
   border-inline-end: none;

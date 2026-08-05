@@ -65,6 +65,13 @@ module PageObjects
         has_no_css?("link[data-scheme-id]", visible: :all)
       end
 
+      def layout_dimensions
+        {
+          panel_width: find(WIZARD_SELECTOR).evaluate_script("this.getBoundingClientRect().width"),
+          viewport_width: page.evaluate_script("window.innerWidth"),
+        }
+      end
+
       def next_step
         find("#{WIZARD_SELECTOR}__next").click
       end

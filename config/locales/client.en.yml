@@ -563,6 +563,9 @@ en:
       launch_in_easy_steps: "Setup your community"
       launch_in_easy_steps_subtitle: "%{completed_steps} of %{step_count} steps completed"
       congrats_onboarding_complete: "Congratulations on completing the onboarding process!"
+      expand: "Expand setup steps"
+      collapse: "Collapse setup steps"
+      dismiss: "Dismiss setup"
       select_theme:
         title: "Customize your site"
         description: "Choose colors, fonts, and a homepage."

@@ -192,6 +192,31 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     assert.dom(".admin-onboarding-banner").exists("shows onboarding banner");
   });
 
+  test("the header controls have accessible labels", async function (assert) {
+    await visit("/");
+
+    assert
+      .dom(".admin-onboarding-banner .btn-minimize")
+      .hasAttribute(
+        "aria-label",
+        "Collapse setup steps",
+        "labels the collapse action"
+      );
+    assert
+      .dom(".admin-onboarding-banner .btn-close")
+      .hasAttribute("aria-label", "Dismiss setup", "labels the dismiss action");
+
+    await click(".admin-onboarding-banner .btn-minimize");
+
+    assert
+      .dom(".admin-onboarding-banner .btn-minimize")
+      .hasAttribute(
+        "aria-label",
+        "Expand setup steps",
+        "updates the label for the expand action"
+      );
+  });
+
   test("it can end onboarding prematurely", async function (assert) {
     await visit("/");
     assert.dom(".admin-onboarding-banner").exists();
@@ -456,6 +481,22 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .hasAttribute("media", "all", "activates the dark stylesheet");
 
     await click(".design-wizard__close");
+    assert
+      .dom(lightLink)
+      .hasAttribute(
+        "href",
+        "data:text/css,design-wizard-light",
+        "restores the original light stylesheet"
+      )
+      .hasAttribute("media", "all", "reactivates the light stylesheet");
+    assert
+      .dom(darkLink)
+      .hasAttribute(
+        "href",
+        "data:text/css,design-wizard-dark",
+        "restores the original dark stylesheet"
+      )
+      .hasAttribute("media", "none", "deactivates the dark stylesheet");
     lightLink.remove();
     darkLink.remove();
   });

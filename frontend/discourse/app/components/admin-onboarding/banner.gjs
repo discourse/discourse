@@ -224,11 +224,17 @@ export default class AdminOnboardingBanner extends Component {
               <DButton
                 @action={{this.minimize}}
                 @icon={{if this.minimized "angle-down" "angle-up"}}
+                @ariaLabel={{if
+                  this.minimized
+                  "admin_onboarding_banner.expand"
+                  "admin_onboarding_banner.collapse"
+                }}
                 class="btn no-text btn-transparent btn-minimize"
               />
               <DButton
                 @action={{this.endOnboarding}}
                 @icon="xmark"
+                @ariaLabel="admin_onboarding_banner.dismiss"
                 class="btn no-text btn-transparent btn-close"
               />
             </div>
