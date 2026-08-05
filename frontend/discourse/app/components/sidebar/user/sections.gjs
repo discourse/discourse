@@ -14,6 +14,7 @@ export default class SidebarUserSections extends Component {
       <BlockOutlet @name="sidebar-blocks" />
       <CustomSections
         @collapsable={{@collapsableSections}}
+        @enableLinkDrop={{@enableLinkDrop}}
         @toggleNavigationMenu={{@toggleNavigationMenu}}
       />
 

@@ -1,6 +1,15 @@
 @use "lib/viewport";
 
 .sidebar-section-wrapper {
+  position: relative;
+
+  &.is-link-drop-active {
+    --d-sidebar-highlight-background: transparent;
+    --d-sidebar-active-background: transparent;
+    outline: 2px solid var(--token-color-border-accent);
+    outline-offset: -2px;
+  }
+
   @include viewport.from(sm) {
     padding-block: var(--space-1);
     border-bottom: 1px solid var(--d-sidebar-section-border-color);
@@ -153,6 +162,25 @@
     flex-direction: column;
     gap: var(--d-sidebar-vertical-gap);
   }
+}
+
+.sidebar-section-link-drop-indicator,
+.sidebar-section-link-wrapper.is-link-drop-before::before {
+  position: absolute;
+  z-index: 1;
+  inset-inline: var(--d-sidebar-row-horizontal-padding);
+  pointer-events: none;
+  border-block-start: 2px solid var(--token-color-border-accent);
+  opacity: 0.65;
+}
+
+.sidebar-section-link-drop-indicator {
+  inset-block-end: 0;
+}
+
+.sidebar-section-link-wrapper.is-link-drop-before::before {
+  content: "";
+  inset-block-start: 0;
 }
 
 .sidebar-section-header-global-indicator__content {
