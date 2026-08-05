@@ -277,6 +277,7 @@
 
     .d-editor-textarea-column {
       grid-area: editor;
+      min-height: 0;
     }
 
     .d-editor-preview-wrapper {
