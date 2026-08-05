@@ -2346,7 +2346,6 @@ es:
     default_other_external_links_in_new_tab: "Abrir enlaces externos en una nueva pestaña por defecto."
     default_other_enable_quoting: "Activar respuesta citando texto seleccionado por defecto."
     default_other_enable_smart_lists: "Activar por defecto las listas inteligentes al escribir en el compositor."
-    default_other_enable_defer: "Activar la funcionalidad de temas diferidos por defecto."
     default_other_enable_markdown_monospace_font: "Usar fuente monoespaciada en el modo Markdown del compositor por defecto."
     default_other_dynamic_favicon: "Mostrar la cantidad de temas nuevos/actualizados en el icono del navegador por defecto."
     default_other_skip_new_user_tips: "Omitir consejos y medallas de bienvenida."

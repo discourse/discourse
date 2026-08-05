@@ -1284,7 +1284,6 @@ sq:
       external_links_in_new_tab: "Hap të gjitha lidhjet e jashtme në një tab të ri"
       enable_quoting: "Aktivizo citimin në përgjigje për tekstin e përzgjedhur"
       enable_smart_lists: "Aktivizo listat e zgjuara kur shkruhet në redaktor"
-      enable_defer: "Aktivizo shënimin e temave si të palexuara"
       experimental_sidebar:
         enable: "Aktivizo shiritin anësor"
         options: "Opsione"

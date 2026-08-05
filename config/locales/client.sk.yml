@@ -1542,7 +1542,6 @@ sk:
       external_links_in_new_tab: "Otvárať všekty externé odkazy na novej karte"
       enable_quoting: "Umožniť odpoveď s citáciou z označeného textu"
       enable_smart_lists: "Povolenie inteligentných zoznamov pri písaní v aplikácii Composer"
-      enable_defer: "Povoliť označenie tém ako neprečítaných"
       experimental_sidebar:
         enable: "Povoliť bočný panel"
         options: "Možnosti"

@@ -1710,7 +1710,6 @@ de:
       external_links_in_new_tab: "Öffne alle externen Links in einer neuen Registerkarte"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
       enable_smart_lists: "Aktiviere intelligente Listen beim Schreiben im Composer"
-      enable_defer: "„Themen als ungelesen markieren“ aktivieren"
       enable_markdown_monospace_font: "Monospace-Schriftart im Markdown-Modus des Editors verwenden"
       experimental_sidebar:
         enable: "Seitenleiste aktivieren"

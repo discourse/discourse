@@ -2683,7 +2683,6 @@ uk:
     default_other_external_links_in_new_tab: "Відкривати зовнішні посилання у новій вкладці."
     default_other_enable_quoting: "Додавати у відповідь цитату з виділеного тексту."
     default_other_enable_smart_lists: "Увімкнути розумні смарт-списки під час введення тексту за замовчуванням."
-    default_other_enable_defer: "Увімкнути функцію відкладення теми."
     default_other_enable_markdown_monospace_font: "Використовувати моноширинний шрифт у режимі Markdown редактора за замовчуванням."
     default_other_dynamic_favicon: "Показувати кількість нових/оновлених тем на піктограмі оглядача."
     default_other_skip_new_user_tips: "Пропустити курс ознайомлення для нових користувачів."

@@ -1783,7 +1783,6 @@ he:
       external_links_in_new_tab: "פתיחת כל הקישורים החיצוניים בלשונית חדשה"
       enable_quoting: "הפעלת תגובת ציטוט לטקסט מסומן"
       enable_smart_lists: "הפעלת רשימות חכמות בעת כתיבה בחלון עריכת הודעות"
-      enable_defer: "הפעלת סימון נושאים כלא נקראו"
       enable_markdown_monospace_font: "להשתמש בגופן ברוחב אחיד במצב ה־Markdown בכתיבת הודעה"
       automatically_translate: "לתרגם אוטומטית נושאים ופוסטים בשפות אחרות"
       content_languages:

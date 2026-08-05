@@ -1396,7 +1396,6 @@ da:
       external_links_in_new_tab: "Åbn alle eksterne links i en ny fane"
       enable_quoting: "Tillad citering af markeret tekst"
       enable_smart_lists: "Aktivér smarte lister, når du skriver i editoren"
-      enable_defer: "Aktivér markering af emner som ulæste"
       enable_markdown_monospace_font: "Brug monospace-skrifttype i editors Markdown-tilstand"
       experimental_sidebar:
         enable: "Aktiver sidebjælke"
