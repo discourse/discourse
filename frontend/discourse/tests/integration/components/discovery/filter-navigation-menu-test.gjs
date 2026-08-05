@@ -204,6 +204,9 @@ module(
         "custom selection metadata submits its exact replacement value"
       );
       assert
+        .dom(".filter-navigation__tip-item")
+        .doesNotExist("a submitted custom suggestion dismisses the menu");
+      assert
         .dom(".topic-query-filter__clear-btn")
         .hasAttribute("title", "Clear filter", "the clear button has a title");
     });

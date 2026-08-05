@@ -7529,6 +7529,7 @@ en:
             view_more: "View more"
             unavailable: "Unavailable"
             active_filters: "Site traffic filters"
+            filter_placeholder: "Filter by top URL, entry URL, referrer, country, network, browser, or IP address"
             filter_row: "Filter by %{value}"
             filter_dimensions:
               top_url: "Top URL"

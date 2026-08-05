@@ -355,8 +355,10 @@
 
   &__row-filter {
     flex: 0 0 auto;
-    padding: var(--space-1);
+    border: 0;
     min-width: auto;
+    padding: 0;
+    line-height: inherit;
   }
 
   html.discourse-no-touch &__row-filter {

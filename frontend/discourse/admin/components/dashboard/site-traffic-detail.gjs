@@ -1,14 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array, concat, fn, get } from "@ember/helper";
-import { on } from "@ember/modifier";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import AdminReportStackedChart from "discourse/admin/components/admin-report-stacked-chart";
+import SiteTrafficBreakdownCard from "discourse/admin/components/dashboard/site-traffic-breakdown-card";
 import SiteTrafficMetric from "discourse/admin/components/dashboard/site-traffic-metric";
 import SiteTrafficBreakdownModal from "discourse/admin/components/modal/site-traffic-breakdown";
-import { countryFlag, countryName } from "discourse/admin/lib/format-country";
+import { countryName } from "discourse/admin/lib/format-country";
 import {
   SITE_TRAFFIC_BROWSER_FAMILIES,
   SITE_TRAFFIC_SAFE_FILTERS,
@@ -18,9 +18,8 @@ import FilterNavigationMenu from "discourse/components/discovery/filter-navigati
 import { formatMinutesSeconds } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import Session from "discourse/models/session";
-import { and, eq, gt } from "discourse/truth-helpers";
+import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
 const SENSITIVE_FILTERS = new Set(["top_url", "entry_url", "referrer", "ip"]);
@@ -93,8 +92,9 @@ export default class SiteTrafficDetail extends Component {
   @tracked error;
   @tracked filters = {};
   @tracked suggestionDimension;
+  @tracked sourceTab = "traffic_sources";
   @tracked pagesTab = "top_urls";
-  @tracked dimensionTab = "countries";
+  @tracked visitorTab = "browsers";
 
   abortController;
   requestId = 0;
@@ -216,34 +216,80 @@ export default class SiteTrafficDetail extends Component {
       .join(" ");
   }
 
-  get pageRows() {
-    return this.#displayRows(this.pagesTab);
-  }
-
-  get pageCardTitle() {
-    return i18n(
-      `admin.dashboard.site_traffic.details.dimensions.${this.pagesTab}`
-    );
-  }
-
-  get trafficSourcesCard() {
-    return {
-      key: "traffic_sources",
-      title: i18n(
-        "admin.dashboard.site_traffic.details.dimensions.traffic_sources"
-      ),
-      rows: this.#displayRows("traffic_sources"),
-    };
-  }
-
-  get dimensionRows() {
-    return this.#displayRows(this.dimensionTab);
-  }
-
-  get dimensionCardTitle() {
-    return i18n(
-      `admin.dashboard.site_traffic.details.dimensions.${this.dimensionTab}`
-    );
+  get breakdownCards() {
+    return [
+      {
+        key: "sources",
+        title: i18n("admin.dashboard.site_traffic.details.dimensions.sources"),
+        tabs: [
+          {
+            key: "traffic_sources",
+            label: i18n(
+              "admin.dashboard.site_traffic.details.dimensions.traffic_sources"
+            ),
+          },
+          {
+            key: "countries",
+            label: i18n(
+              "admin.dashboard.site_traffic.details.dimensions.countries"
+            ),
+          },
+          {
+            key: "networks",
+            label: i18n(
+              "admin.dashboard.site_traffic.details.dimensions.networks"
+            ),
+          },
+        ],
+        activeTab: this.sourceTab,
+        rows: this.#displayRows(this.sourceTab),
+        filterDimension: FILTER_DIMENSIONS[this.sourceTab],
+      },
+      {
+        key: "pages",
+        title: i18n("admin.dashboard.site_traffic.details.dimensions.pages"),
+        tabs: [
+          {
+            key: "top_urls",
+            label: i18n(
+              "admin.dashboard.site_traffic.details.dimensions.top_urls"
+            ),
+          },
+          {
+            key: "entry_urls",
+            label: i18n(
+              "admin.dashboard.site_traffic.details.dimensions.entry_urls"
+            ),
+          },
+        ],
+        activeTab: this.pagesTab,
+        rows: this.#displayRows(this.pagesTab),
+        filterDimension: FILTER_DIMENSIONS[this.pagesTab],
+      },
+      {
+        key: "visitors",
+        title: i18n(
+          "admin.dashboard.site_traffic.details.dimensions.visitor_dimensions"
+        ),
+        tabs: [
+          {
+            key: "browsers",
+            label: i18n(
+              "admin.dashboard.site_traffic.details.dimensions.browsers"
+            ),
+          },
+          {
+            key: "ip_addresses",
+            label: i18n(
+              "admin.dashboard.site_traffic.details.dimensions.ip_addresses"
+            ),
+          },
+        ],
+        activeTab: this.visitorTab,
+        rows: this.#displayRows(this.visitorTab),
+        filterDimension: FILTER_DIMENSIONS[this.visitorTab],
+      },
+    ];
   }
 
   get chartModel() {
@@ -291,14 +337,6 @@ export default class SiteTrafficDetail extends Component {
 
   get formattedEventCap() {
     return this.#formatNumber(this.analysis.event_cap);
-  }
-
-  cardRows(rows) {
-    return rows.slice(0, 8);
-  }
-
-  countryFlag(value) {
-    return countryFlag(value);
   }
 
   @action
@@ -462,63 +500,14 @@ export default class SiteTrafficDetail extends Component {
   }
 
   @action
-  selectPagesTab(tab) {
-    this.pagesTab = tab;
-  }
-
-  @action
-  selectDimensionTab(tab) {
-    this.dimensionTab = tab;
-  }
-
-  @action
-  navigatePagesTabs(event) {
-    const tabs = ["top_urls", "entry_urls"];
-    const currentIndex = tabs.indexOf(this.pagesTab);
-    let nextIndex;
-
-    if (event.key === "ArrowRight") {
-      nextIndex = (currentIndex + 1) % tabs.length;
-    } else if (event.key === "ArrowLeft") {
-      nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
-    } else if (event.key === "Home") {
-      nextIndex = 0;
-    } else if (event.key === "End") {
-      nextIndex = tabs.length - 1;
-    } else {
-      return;
+  selectBreakdownTab(cardKey, tabKey) {
+    if (cardKey === "sources") {
+      this.sourceTab = tabKey;
+    } else if (cardKey === "pages") {
+      this.pagesTab = tabKey;
+    } else if (cardKey === "visitors") {
+      this.visitorTab = tabKey;
     }
-
-    event.preventDefault();
-    this.pagesTab = tabs[nextIndex];
-    event.currentTarget.parentElement
-      .querySelector(`[data-site-traffic-tab="${this.pagesTab}"]`)
-      ?.focus();
-  }
-
-  @action
-  navigateDimensionTabs(event) {
-    const tabs = ["countries", "networks", "browsers", "ip_addresses"];
-    const currentIndex = tabs.indexOf(this.dimensionTab);
-    let nextIndex;
-
-    if (event.key === "ArrowRight") {
-      nextIndex = (currentIndex + 1) % tabs.length;
-    } else if (event.key === "ArrowLeft") {
-      nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
-    } else if (event.key === "Home") {
-      nextIndex = 0;
-    } else if (event.key === "End") {
-      nextIndex = tabs.length - 1;
-    } else {
-      return;
-    }
-
-    event.preventDefault();
-    this.dimensionTab = tabs[nextIndex];
-    event.currentTarget.parentElement
-      .querySelector(`[data-site-traffic-dimension-tab="${this.dimensionTab}"]`)
-      ?.focus();
   }
 
   @action
@@ -711,7 +700,7 @@ export default class SiteTrafficDetail extends Component {
               @onChange={{this.filterInputChanged}}
               @menuClass="site-traffic-filter-menu"
               @placeholder={{i18n
-                "admin.dashboard.site_traffic.details.active_filters"
+                "admin.dashboard.site_traffic.details.filter_placeholder"
               }}
             />
           </div>
@@ -925,361 +914,19 @@ export default class SiteTrafficDetail extends Component {
           </p>
         {{else}}
           <div class="site-traffic-detail__cards">
-            <section
-              class="site-traffic-detail__card"
-              data-test-breakdown={{this.trafficSourcesCard.key}}
-            >
-              <h2 class="sr-only">{{this.trafficSourcesCard.title}}</h2>
-              <div
-                class="site-traffic-detail__tabs"
-                role="tablist"
-                aria-label={{this.trafficSourcesCard.title}}
-              >
-                <button
-                  id="site-traffic-sources-tab"
-                  type="button"
-                  role="tab"
-                  class="is-active"
-                  data-site-traffic-sources-tab
-                  aria-controls="site-traffic-sources-panel"
-                  aria-selected="true"
-                >
-                  {{i18n
-                    "admin.dashboard.site_traffic.details.dimensions.sources"
-                  }}
-                </button>
-              </div>
-              <div
-                id="site-traffic-sources-panel"
-                role="tabpanel"
-                aria-labelledby="site-traffic-sources-tab"
-              >
-                <ul class="site-traffic-detail__breakdown-list">
-                  {{#each
-                    (this.cardRows this.trafficSourcesCard.rows)
-                    as |row|
-                  }}
-                    <li>
-                      {{#if row.filterable}}
-                        <button
-                          type="button"
-                          class="site-traffic-detail__row"
-                          data-test-breakdown-row
-                          {{on
-                            "click"
-                            (fn this.applyFilter "referrer" row.value)
-                          }}
-                        >
-                          <span>{{row.displayLabel}}</span>
-                          <span
-                            class="site-traffic-detail__row-count"
-                          >{{row.formattedPageviews}}</span>
-                        </button>
-                      {{else}}
-                        <span
-                          class="site-traffic-detail__row"
-                          data-test-breakdown-row
-                        >
-                          <span>{{row.displayLabel}}</span>
-                          <span
-                            class="site-traffic-detail__row-count"
-                          >{{row.formattedPageviews}}</span>
-                        </span>
-                      {{/if}}
-                    </li>
-                  {{/each}}
-                </ul>
-                {{#if (gt this.trafficSourcesCard.rows.length 8)}}
-                  <DButton
-                    @label="admin.dashboard.site_traffic.details.view_more"
-                    @action={{fn
-                      this.showMore
-                      this.trafficSourcesCard.key
-                      this.trafficSourcesCard.title
-                      this.trafficSourcesCard.rows
-                    }}
-                    class="site-traffic-detail__view-more btn-flat"
-                  />
-                {{/if}}
-              </div>
-            </section>
-
-            <section
-              class="site-traffic-detail__card"
-              data-test-breakdown="pages"
-            >
-              <h2 class="sr-only">
-                {{i18n "admin.dashboard.site_traffic.details.dimensions.pages"}}
-              </h2>
-              <div
-                class="site-traffic-detail__tabs"
-                role="tablist"
-                aria-label={{i18n
-                  "admin.dashboard.site_traffic.details.dimensions.pages"
-                }}
-              >
-                <button
-                  id="site-traffic-tab-top-urls"
-                  type="button"
-                  role="tab"
-                  data-site-traffic-tab="top_urls"
-                  aria-controls="site-traffic-pages-panel"
-                  aria-selected={{concat
-                    (if (eq this.pagesTab "top_urls") "true" "false")
-                  }}
-                  tabindex={{if (eq this.pagesTab "top_urls") "0" "-1"}}
-                  class={{if (eq this.pagesTab "top_urls") "is-active"}}
-                  {{on "click" (fn this.selectPagesTab "top_urls")}}
-                  {{on "keydown" this.navigatePagesTabs}}
-                >
-                  {{i18n
-                    "admin.dashboard.site_traffic.details.dimensions.top_urls"
-                  }}
-                </button>
-                <button
-                  id="site-traffic-tab-entry-urls"
-                  type="button"
-                  role="tab"
-                  data-site-traffic-tab="entry_urls"
-                  aria-controls="site-traffic-pages-panel"
-                  aria-selected={{concat
-                    (if (eq this.pagesTab "entry_urls") "true" "false")
-                  }}
-                  tabindex={{if (eq this.pagesTab "entry_urls") "0" "-1"}}
-                  class={{if (eq this.pagesTab "entry_urls") "is-active"}}
-                  {{on "click" (fn this.selectPagesTab "entry_urls")}}
-                  {{on "keydown" this.navigatePagesTabs}}
-                >
-                  {{i18n
-                    "admin.dashboard.site_traffic.details.dimensions.entry_urls"
-                  }}
-                </button>
-              </div>
-              <div
-                id="site-traffic-pages-panel"
-                role="tabpanel"
-                aria-labelledby={{if
-                  (eq this.pagesTab "top_urls")
-                  "site-traffic-tab-top-urls"
-                  "site-traffic-tab-entry-urls"
-                }}
-              >
-                <ul class="site-traffic-detail__breakdown-list">
-                  {{#each (this.cardRows this.pageRows) as |row|}}
-                    <li>
-                      {{#if
-                        (and row.filterable (eq this.pagesTab "entry_urls"))
-                      }}
-                        <span
-                          class="site-traffic-detail__row"
-                          data-test-breakdown-row
-                        >
-                          <a
-                            href={{getURL row.value}}
-                            class="site-traffic-detail__row-link"
-                            data-auto-route="true"
-                            data-test-entry-url-link
-                          >{{row.displayLabel}}</a>
-                          <span
-                            class="site-traffic-detail__row-count"
-                          >{{row.formattedPageviews}}</span>
-                          <DButton
-                            @icon="filter"
-                            @action={{fn
-                              this.applyFilter
-                              "entry_url"
-                              row.value
-                            }}
-                            @translatedTitle={{i18n
-                              "admin.dashboard.site_traffic.details.filter_row"
-                              value=row.displayLabel
-                            }}
-                            @translatedAriaLabel={{i18n
-                              "admin.dashboard.site_traffic.details.filter_row"
-                              value=row.displayLabel
-                            }}
-                            class="site-traffic-detail__row-filter btn-flat"
-                            data-test-entry-url-filter
-                          />
-                        </span>
-                      {{else if row.filterable}}
-                        <button
-                          type="button"
-                          class="site-traffic-detail__row"
-                          data-test-breakdown-row
-                          {{on
-                            "click"
-                            (fn
-                              this.applyFilter
-                              (get FILTER_DIMENSIONS this.pagesTab)
-                              row.value
-                            )
-                          }}
-                        >
-                          <span>{{row.displayLabel}}</span>
-                          <span
-                            class="site-traffic-detail__row-count"
-                          >{{row.formattedPageviews}}</span>
-                        </button>
-                      {{else if row.value}}
-                        <a
-                          href={{getURL row.value}}
-                          class="site-traffic-detail__row"
-                          data-auto-route="true"
-                          data-test-breakdown-row
-                        >
-                          <span>{{row.displayLabel}}</span>
-                          <span
-                            class="site-traffic-detail__row-count"
-                          >{{row.formattedPageviews}}</span>
-                        </a>
-                      {{else}}
-                        <span
-                          class="site-traffic-detail__row"
-                          data-test-breakdown-row
-                        >
-                          <span>{{row.displayLabel}}</span>
-                          <span
-                            class="site-traffic-detail__row-count"
-                          >{{row.formattedPageviews}}</span>
-                        </span>
-                      {{/if}}
-                    </li>
-                  {{/each}}
-                </ul>
-                {{#if (gt this.pageRows.length 8)}}
-                  <DButton
-                    @label="admin.dashboard.site_traffic.details.view_more"
-                    @action={{fn
-                      this.showMore
-                      this.pagesTab
-                      this.pageCardTitle
-                      this.pageRows
-                    }}
-                    class="site-traffic-detail__view-more btn-flat"
-                  />
-                {{/if}}
-              </div>
-            </section>
-
-            <section
-              class="site-traffic-detail__card"
-              data-test-breakdown="visitor-dimensions"
-            >
-              <h2 class="sr-only">
-                {{i18n
-                  "admin.dashboard.site_traffic.details.dimensions.visitor_dimensions"
-                }}
-              </h2>
-              <div
-                class="site-traffic-detail__tabs"
-                role="tablist"
-                aria-label={{i18n
-                  "admin.dashboard.site_traffic.details.dimensions.visitor_dimensions"
-                }}
-              >
-                {{#each
-                  (array "countries" "networks" "browsers" "ip_addresses")
-                  as |tab|
-                }}
-                  <button
-                    id="site-traffic-dimension-tab-{{tab}}"
-                    type="button"
-                    role="tab"
-                    data-site-traffic-dimension-tab={{tab}}
-                    aria-controls="site-traffic-dimension-panel"
-                    aria-selected={{concat
-                      (if (eq this.dimensionTab tab) "true" "false")
-                    }}
-                    tabindex={{if (eq this.dimensionTab tab) "0" "-1"}}
-                    class={{if (eq this.dimensionTab tab) "is-active"}}
-                    {{on "click" (fn this.selectDimensionTab tab)}}
-                    {{on "keydown" this.navigateDimensionTabs}}
-                  >
-                    {{i18n
-                      (concat
-                        "admin.dashboard.site_traffic.details.dimensions." tab
-                      )
-                    }}
-                  </button>
-                {{/each}}
-              </div>
-              <div
-                id="site-traffic-dimension-panel"
-                role="tabpanel"
-                aria-labelledby="site-traffic-dimension-tab-{{this.dimensionTab}}"
-              >
-                <ul class="site-traffic-detail__breakdown-list">
-                  {{#each (this.cardRows this.dimensionRows) as |row|}}
-                    <li>
-                      {{#if row.filterable}}
-                        <button
-                          type="button"
-                          class="site-traffic-detail__row"
-                          data-test-breakdown-row
-                          {{on
-                            "click"
-                            (fn
-                              this.applyFilter
-                              (get FILTER_DIMENSIONS this.dimensionTab)
-                              row.value
-                            )
-                          }}
-                        >
-                          <span>
-                            {{#if (eq this.dimensionTab "countries")}}
-                              <span aria-hidden="true">
-                                {{this.countryFlag row.value}}
-                              </span>
-                            {{/if}}
-                            {{#if row.icon}}
-                              {{dIcon
-                                row.icon
-                                class="site-traffic-detail__browser-icon"
-                              }}
-                            {{/if}}
-                            {{row.displayLabel}}
-                          </span>
-                          <span
-                            class="site-traffic-detail__row-count"
-                          >{{row.formattedPageviews}}</span>
-                        </button>
-                      {{else}}
-                        <span
-                          class="site-traffic-detail__row"
-                          data-test-breakdown-row
-                        >
-                          <span>
-                            {{#if row.icon}}
-                              {{dIcon
-                                row.icon
-                                class="site-traffic-detail__browser-icon"
-                              }}
-                            {{/if}}
-                            {{row.displayLabel}}
-                          </span>
-                          <span
-                            class="site-traffic-detail__row-count"
-                          >{{row.formattedPageviews}}</span>
-                        </span>
-                      {{/if}}
-                    </li>
-                  {{/each}}
-                </ul>
-                {{#if (gt this.dimensionRows.length 8)}}
-                  <DButton
-                    @label="admin.dashboard.site_traffic.details.view_more"
-                    @action={{fn
-                      this.showMore
-                      this.dimensionTab
-                      this.dimensionCardTitle
-                      this.dimensionRows
-                    }}
-                    class="site-traffic-detail__view-more btn-flat"
-                  />
-                {{/if}}
-              </div>
-            </section>
+            {{#each this.breakdownCards as |card|}}
+              <SiteTrafficBreakdownCard
+                @cardKey={{card.key}}
+                @title={{card.title}}
+                @tabs={{card.tabs}}
+                @activeTab={{card.activeTab}}
+                @rows={{card.rows}}
+                @filterDimension={{card.filterDimension}}
+                @onSelectTab={{fn this.selectBreakdownTab card.key}}
+                @onApplyFilter={{this.applyFilter}}
+                @onViewMore={{this.showMore}}
+              />
+            {{/each}}
           </div>
         {{/if}}
       {{/if}}

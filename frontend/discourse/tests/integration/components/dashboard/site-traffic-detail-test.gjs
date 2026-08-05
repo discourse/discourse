@@ -3,6 +3,7 @@ import {
   clearRender,
   click,
   fillIn,
+  find,
   findAll,
   render,
   settled,
@@ -152,6 +153,13 @@ module(
           "[data-test-filter-control] > .topic-query-filter__input > input.topic-query-filter__filter-term"
         )
         .exists("the full-width filter is visible while data loads");
+      assert
+        .dom("#topic-query-filter-input")
+        .hasAttribute(
+          "placeholder",
+          "Filter by top URL, entry URL, referrer, country, network, browser, or IP address",
+          "the filter input describes every supported dimension"
+        );
       assert.dom(".db-skeleton__kpi").exists({ count: 5 });
       assert.dom(".db-skeleton__chart").exists();
       assert.dom(".db-skeleton__report-card").exists({ count: 3 });
@@ -324,6 +332,9 @@ module(
         "the country control applies one exact value"
       );
       assert
+        .dom(".filter-navigation__tip-item")
+        .doesNotExist("a submitted value dismisses the suggestion menu");
+      assert
         .dom("#topic-query-filter-input")
         .hasValue("country:US", "the selected filter uses canonical syntax");
 
@@ -408,21 +419,16 @@ module(
       await settled();
 
       await click(
-        "[data-test-breakdown='visitor-dimensions'] [data-test-breakdown-row]"
+        "[data-test-breakdown='sources'] [data-site-traffic-breakdown-tab='countries']"
       );
+      await click("[data-test-breakdown='sources'] [data-test-breakdown-row]");
       assert.dom("[data-test-traffic-loading]").exists();
       assert.dom("[data-test-metric]").includesText("5");
 
-      await click("[data-site-traffic-dimension-tab='browsers']");
-
       assert
-        .dom(
-          "#site-traffic-dimension-panel [data-test-breakdown-row] .svg-icon"
-        )
+        .dom("#site-traffic-visitors-panel [data-test-breakdown-row] .svg-icon")
         .exists("browser rows have an icon");
-      await click(
-        "[data-test-breakdown='visitor-dimensions'] [data-test-breakdown-row]"
-      );
+      await click("[data-test-breakdown='visitors'] [data-test-breakdown-row]");
       assert.true(requests[1].aborted, "the superseded request was aborted");
 
       requests[2].resolve(response(payload({ pageviews: 1 })));
@@ -520,7 +526,7 @@ module(
       );
 
       await click(
-        "[data-test-breakdown='traffic_sources'] button[data-test-breakdown-row]"
+        "[data-test-breakdown='sources'] button[data-test-breakdown-row]"
       );
       assert
         .dom("#topic-query-filter-input")
@@ -529,15 +535,13 @@ module(
           "named Referrer rows synchronize the canonical input"
         );
       assert
-        .dom("[data-test-breakdown='traffic_sources'] li:nth-child(2) button")
+        .dom("[data-test-breakdown='sources'] li:nth-child(2) button")
         .includesText(
           "Direct / unknown",
           "the row displays the human-readable label"
         );
 
-      await click(
-        "[data-test-breakdown='traffic_sources'] li:nth-child(2) button"
-      );
+      await click("[data-test-breakdown='sources'] li:nth-child(2) button");
       assert
         .dom("#topic-query-filter-input")
         .hasValue(
@@ -559,8 +563,9 @@ module(
       );
 
       await click(
-        "[data-test-breakdown='visitor-dimensions'] [data-test-breakdown-row]"
+        "[data-test-breakdown='sources'] [data-site-traffic-breakdown-tab='countries']"
       );
+      await click("[data-test-breakdown='sources'] [data-test-breakdown-row]");
       assert.strictEqual(
         this.state.country,
         "US",
@@ -628,6 +633,14 @@ module(
                 filterable: true,
               },
             ],
+            browsers: [
+              {
+                value: "firefox",
+                label: "firefox",
+                pageviews: 2,
+                filterable: true,
+              },
+            ],
             topUrls: Array.from({ length: 9 }, (_value, index) => ({
               value: `/page-${index}`,
               label: `/page-${index}`,
@@ -666,11 +679,61 @@ module(
         .dom(".site-traffic-detail__card > h2.sr-only")
         .exists({ count: 3 });
       assert.dom(".site-traffic-detail__card-header").doesNotExist();
-      assert.dom("[data-site-traffic-dimension-tab]").exists({ count: 4 });
       assert
-        .dom("[data-site-traffic-sources-tab]")
-        .hasText("Referrers")
-        .hasAttribute("aria-selected", "true");
+        .dom(
+          "[data-test-breakdown='sources'] [data-site-traffic-breakdown-tab]"
+        )
+        .exists({ count: 3 }, "Sources has three tabs");
+      assert
+        .dom("[data-test-breakdown='sources']")
+        .includesText("Referrers", "Sources includes Referrers")
+        .includesText("Countries", "Sources includes Countries")
+        .includesText("Networks", "Sources includes Networks");
+      assert
+        .dom(
+          "[data-test-breakdown='sources'] [data-site-traffic-breakdown-tab='traffic_sources']"
+        )
+        .hasAttribute("aria-selected", "true", "Sources defaults to Referrers");
+      assert
+        .dom("[data-test-breakdown='pages'] [data-site-traffic-breakdown-tab]")
+        .exists({ count: 2 }, "Pages has two tabs");
+      assert
+        .dom("[data-test-breakdown='pages']")
+        .includesText("Top URLs", "Pages includes Top URLs")
+        .includesText("Entry URLs", "Pages includes Entry URLs");
+      assert
+        .dom(
+          "[data-test-breakdown='pages'] [data-site-traffic-breakdown-tab='top_urls']"
+        )
+        .hasAttribute("aria-selected", "true", "Pages defaults to Top URLs");
+      assert
+        .dom(
+          "[data-test-breakdown='visitors'] [data-site-traffic-breakdown-tab]"
+        )
+        .exists({ count: 2 }, "Visitors has two tabs");
+      assert
+        .dom("[data-test-breakdown='visitors']")
+        .includesText("Browsers", "Visitors includes Browsers")
+        .includesText("IP addresses", "Visitors includes IP addresses");
+      assert
+        .dom("[data-test-breakdown='visitors']")
+        .doesNotIncludeText("Countries", "Visitors excludes Countries")
+        .doesNotIncludeText("Networks", "Visitors excludes Networks");
+      assert
+        .dom(
+          "[data-test-breakdown='visitors'] [data-site-traffic-breakdown-tab='browsers']"
+        )
+        .hasAttribute("aria-selected", "true", "Visitors defaults to Browsers");
+      ["sources", "pages", "visitors"].forEach((cardKey) => {
+        assert
+          .dom(`[data-test-breakdown='${cardKey}'].site-traffic-detail__card`)
+          .exists(`${cardKey} uses the shared card root`);
+        assert
+          .dom(
+            `[data-test-breakdown='${cardKey}'] [data-test-breakdown-row].site-traffic-detail__row`
+          )
+          .exists(`${cardKey} uses the shared row shell`);
+      });
       assert.dom(".site-traffic-detail__metrics").exists({ count: 1 });
       assert
         .dom(".site-traffic-detail__metrics > .site-traffic-detail__metric")
@@ -696,24 +759,12 @@ module(
         .dom("[data-test-breakdown='pages'] .site-traffic-detail__view-more")
         .hasClass("btn-flat")
         .hasText("View more");
-      assert
-        .dom("[data-site-traffic-dimension-tab='countries']")
-        .hasText("Countries");
-      assert
-        .dom("[data-site-traffic-dimension-tab='networks']")
-        .hasText("Networks");
-      assert
-        .dom("[data-site-traffic-dimension-tab='browsers']")
-        .hasText("Browsers");
-      assert
-        .dom("[data-site-traffic-dimension-tab='ip_addresses']")
-        .hasText("IP addresses");
 
-      await click("[data-site-traffic-dimension-tab='networks']");
+      await click(
+        "[data-test-breakdown='sources'] [data-site-traffic-breakdown-tab='networks']"
+      );
 
-      assert
-        .dom("#site-traffic-dimension-panel")
-        .includesText("AS15169 Google");
+      assert.dom("#site-traffic-sources-panel").includesText("AS15169 Google");
     });
 
     test("provides keyboard-operable Pages tabs", async function (assert) {
@@ -768,22 +819,30 @@ module(
           "the Top URL row does not inherit standard button typography"
         );
 
-      const topTab = document.querySelector("#site-traffic-tab-top-urls");
+      const topTab = find("#site-traffic-pages-tab-top_urls");
       topTab.focus();
       await triggerKeyEvent(topTab, "keydown", "ArrowRight");
 
       assert
-        .dom("#site-traffic-tab-entry-urls")
+        .dom("#site-traffic-pages-tab-entry_urls")
         .hasAttribute("aria-selected", "true");
       assert.strictEqual(
         document.activeElement.id,
-        "site-traffic-tab-entry-urls"
+        "site-traffic-pages-tab-entry_urls"
       );
       assert
         .dom("#site-traffic-pages-panel")
-        .hasAttribute("aria-labelledby", "site-traffic-tab-entry-urls");
+        .hasAttribute(
+          "aria-labelledby",
+          "site-traffic-pages-tab-entry_urls",
+          "the shared panel points to the active Entry URLs tab"
+        );
       assert
         .dom("#site-traffic-pages-panel [data-test-breakdown-row]")
+        .hasClass(
+          "site-traffic-detail__row",
+          "the shared row shell remains after switching tabs"
+        )
         .includesText("/entry");
       assert
         .dom("#site-traffic-pages-panel [data-test-entry-url-link]")

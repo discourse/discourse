@@ -166,8 +166,13 @@ export default class FilterNavigationMenu extends Component {
   @action
   async selectItem(item) {
     if (item.inputValue !== undefined) {
-      await this.updateInput(item.inputValue, item.submitOnSelect);
-      this.inputElement?.focus();
+      if (item.submitOnSelect) {
+        await this.dMenuInstance?.close();
+        await this.updateInput(item.inputValue, true);
+      } else {
+        await this.updateInput(item.inputValue, false);
+        this.inputElement?.focus();
+      }
       return;
     }
 
