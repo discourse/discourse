@@ -13,7 +13,7 @@ export async function loadDashboardReports({ items, filters }) {
 
   const map = new Map();
   for (const entry of response.items) {
-    map.set(entry.key, entry.data);
+    map.set(entry.key, { payload: entry.data, error: Boolean(entry.error) });
   }
   return map;
 }

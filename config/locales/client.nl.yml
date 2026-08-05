@@ -1648,7 +1648,6 @@ nl:
       external_links_in_new_tab: "Alle externe links openen op een nieuw tabblad"
       enable_quoting: "Antwoorden met citaat inschakelen voor gemarkeerde tekst"
       enable_smart_lists: "Schakel slimme lijsten in bij schrijven in de editor"
-      enable_defer: "Als gelezen markeren van topics inschakelen"
       enable_markdown_monospace_font: "Gebruik een monospace lettertype in de Markdown-modus van de editor"
       experimental_sidebar:
         enable: "Zijbalk inschakelen"

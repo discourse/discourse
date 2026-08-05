@@ -1662,7 +1662,6 @@ el:
       external_links_in_new_tab: "Άνοιγε όλους τους εξωτερικούς συνδέσμους σε νέα καρτέλα"
       enable_quoting: "Το κείμενο που επισημαίνεται να παρατίθεται στην απάντηση "
       enable_smart_lists: "Ενεργοποίηση έξυπνων λιστών κατά το γράψιμο στον συνθέτη"
-      enable_defer: "Ενεργοποίηση σήμανσης θεμάτων ως αδιάβαστων"
       enable_markdown_monospace_font: "Χρήση γραμματοσειράς monospace στη λειτουργία Markdown του συνθέτη"
       experimental_sidebar:
         enable: "Ενεργοποίηση πλαϊνής γραμμής"

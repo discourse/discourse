@@ -82,7 +82,7 @@ module PageObjects
       end
 
       def has_title_below_category_row?
-        page.has_css?("#{@composer_id} .title-and-category + .title-input")
+        page.has_css?("#{@composer_id} .title-and-category ~ .title-input")
       end
 
       def has_pm_recipients_in_category_row?

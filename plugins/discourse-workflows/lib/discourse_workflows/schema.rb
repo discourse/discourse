@@ -263,6 +263,23 @@ module DiscourseWorkflows
         ),
       )
 
+    REVIEWABLE_PROPERTIES = JSON.parse(<<~JSON).freeze
+      {
+        "id": { "type": "integer" },
+        "type": { "type": "string" },
+        "status": { "type": "string" },
+        "target_type": { "type": ["string", "null"] },
+        "target_id": { "type": ["integer", "null"] },
+        "topic_id": { "type": ["integer", "null"] },
+        "category_id": { "type": ["integer", "null"] },
+        "score": { "type": "number" },
+        "created_at": { "type": ["string", "null"], "format": "date-time" }
+      }
+    JSON
+
+    REVIEWABLE_EVENT_SCHEMA =
+      entity("reviewable", REVIEWABLE_PROPERTIES, "Review queue item payload")
+
     BADGE_PROPERTIES = JSON.parse(<<~JSON).freeze
       {
         "id": { "type": "integer" },

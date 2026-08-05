@@ -90,7 +90,7 @@ class TagGroupsController < ApplicationController
   end
 
   def search
-    matches = TagGroup.includes(:tags).visible(guardian).all
+    matches = TagGroup.visible(guardian).includes(:base_tags)
 
     matches = matches.where("lower(name) ILIKE ?", "%#{params[:q].strip}%") if params[:q].present?
 
@@ -98,28 +98,26 @@ class TagGroupsController < ApplicationController
       matches = matches.where("lower(NAME) in (?)", params[:names].map(&:downcase))
     end
 
-    matches =
-      matches.order("name").limit(
-        fetch_limit_from_params(
-          default: SiteSetting.max_tag_search_results,
-          max: MAX_TAG_GROUPS_SEARCH_RESULTS,
-        ),
+    limit =
+      fetch_limit_from_params(
+        default: SiteSetting.max_tag_search_results,
+        max: MAX_TAG_GROUPS_SEARCH_RESULTS,
       )
 
-    render json: {
-             results:
-               matches.map do |x|
-                 {
-                   name: x.name,
-                   tags:
-                     x
-                       .tags
-                       .base_tags
-                       .pluck(:id, :name, :slug)
-                       .map { |id, name, slug| { id:, name:, slug: } },
-                 }
-               end,
-           }
+    matches = matches.order("name").limit(limit).to_a
+    visible_tag_ids = DiscourseTagging.visible_tag_ids(matches.flat_map(&:base_tags), guardian)
+
+    results =
+      matches.map do |tag_group|
+        tags = tag_group.base_tags.select { |tag| visible_tag_ids.include?(tag.id) }
+
+        {
+          name: tag_group.name,
+          tags: tags.map { |tag| { id: tag.id, name: tag.name, slug: tag.slug } },
+        }
+      end
+
+    render json: { results: }
   end
 
   private

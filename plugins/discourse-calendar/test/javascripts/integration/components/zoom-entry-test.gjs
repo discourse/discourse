@@ -273,6 +273,88 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
     assert.dom(`${AUDIO_HINT_SELECTOR} .d-icon-zoom-join-audio`).exists();
   });
 
+  test("notifies once the desktop session has joined", async function (assert) {
+    stubCapabilities(getOwner(this), { lg: true });
+    const performJoin = sinon.stub(ZoomMeetingSession.prototype, "performJoin");
+    const join = deferred();
+    performJoin.returns(join.promise);
+    this.onJoined = sinon.fake();
+
+    await render(
+      <template>
+        <LivestreamZoomEntry
+          @event={{this.event}}
+          @onJoined={{this.onJoined}}
+        />
+      </template>
+    );
+
+    await click(JOIN_BUTTON_SELECTOR);
+
+    assert.false(
+      this.onJoined.called,
+      "does not notify while the join is still in flight"
+    );
+
+    join.resolve();
+    await settled();
+
+    assert.strictEqual(
+      this.onJoined.callCount,
+      1,
+      "notifies once the session is joined"
+    );
+  });
+
+  test("does not notify when the join fails", async function (assert) {
+    stubCapabilities(getOwner(this), { lg: true });
+    sinon
+      .stub(ZoomMeetingSession.prototype, "performJoin")
+      .rejects(new Error("nope"));
+    this.onJoined = sinon.fake();
+
+    await render(
+      <template>
+        <LivestreamZoomEntry
+          @event={{this.event}}
+          @onJoined={{this.onJoined}}
+        />
+      </template>
+    );
+
+    await click(JOIN_BUTTON_SELECTOR);
+
+    assert.false(this.onJoined.called);
+  });
+
+  test("does not notify when the component is torn down mid-join", async function (assert) {
+    stubCapabilities(getOwner(this), { lg: true });
+    const performJoin = sinon.stub(ZoomMeetingSession.prototype, "performJoin");
+    const join = deferred();
+    performJoin.returns(join.promise);
+    this.onJoined = sinon.fake();
+
+    await render(
+      <template>
+        <LivestreamZoomEntry
+          @event={{this.event}}
+          @onJoined={{this.onJoined}}
+        />
+      </template>
+    );
+
+    await click(JOIN_BUTTON_SELECTOR);
+    await clearRender();
+
+    join.resolve();
+    await settled();
+
+    assert.false(
+      this.onJoined.called,
+      "the session was torn down before it could join"
+    );
+  });
+
   test("hides the audio hint once the user connects audio", async function (assert) {
     stubCapabilities(getOwner(this), { lg: true });
     const captured = captureSession();

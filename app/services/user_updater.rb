@@ -245,10 +245,7 @@ class UserUpdater
         SidebarSectionLinksUpdater.update_tag_section_links(
           user,
           tag_ids:
-            DiscourseTagging
-              .filter_visible(Tag, @user_guardian)
-              .where(name: attributes[:sidebar_tag_names])
-              .pluck(:id),
+            Tag.browsable(@user_guardian).where(name: attributes[:sidebar_tag_names]).pluck(:id),
         )
       end
 

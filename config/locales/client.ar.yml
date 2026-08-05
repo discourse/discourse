@@ -2058,7 +2058,6 @@ ar:
       external_links_in_new_tab: "فتح كل الروابط الخارجية في علامة تبويب جديدة"
       enable_quoting: "تفعيل الرد باقتباس للنص المميَّز"
       enable_smart_lists: "تفعيل القوائم الذكية عند الكتابة في أداة الإنشاء"
-      enable_defer: "تفعيل وضع علامة على الموضوعات كغير مقروءة"
       enable_markdown_monospace_font: "اعرض النص بخط ثابت العرض عند استخدام وضع Markdown في أداة الإنشاء"
       experimental_sidebar:
         enable: "تفعيل الشريط الجانبي"

@@ -96,8 +96,9 @@ RSpec.describe FormTemplate, type: :model do
     fab!(:tag5, :tag)
     fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2, tag3]) }
     fab!(:tag_group2) { Fabricate(:tag_group, tags: [tag4, tag5]) }
+    fab!(:synonym) { Fabricate(:tag, target_tag: tag1) }
 
-    it "automatically adds tags choices to the template" do
+    it "automatically adds tags choices, but no synonyms, to the template" do
       template = <<~YAML
         - type: tag-chooser
           id: tag-chooser

@@ -502,6 +502,37 @@ RSpec.describe DiscourseWorkflows::EventListener do
     expect(trigger_data).to include("user" => include("id" => user.id, "username" => user.username))
   end
 
+  it "only enqueues reviewable created workflows matching the selected types" do
+    create_published_workflow("reviewable-created-trigger", "trigger:reviewable_created")
+    create_published_workflow(
+      "matching-type-created-trigger",
+      "trigger:reviewable_created",
+      configuration: {
+        "reviewable_types" => ["ReviewableFlaggedPost"],
+      },
+    )
+    create_published_workflow(
+      "type-mismatch-created-trigger",
+      "trigger:reviewable_created",
+      configuration: {
+        "reviewable_types" => ["ReviewableUser"],
+      },
+    )
+
+    reviewable = Fabricate(:reviewable_flagged_post)
+
+    expect(enqueued_trigger_node_ids).to contain_exactly(
+      "reviewable-created-trigger",
+      "matching-type-created-trigger",
+    )
+
+    trigger_data = trigger_data_for("reviewable-created-trigger")
+    expect(trigger_data).to include(
+      "reviewable" =>
+        include("id" => reviewable.id, "type" => "ReviewableFlaggedPost", "status" => "pending"),
+    )
+  end
+
   it "does not query the dependencies table when no live workflow uses the fired trigger type" do
     create_published_workflow("closed-trigger", "trigger:topic_closed")
     DiscourseWorkflows::WorkflowDependency.active_node_types # warm the cache

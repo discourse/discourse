@@ -281,6 +281,19 @@ module DiscourseWorkflows
       group_ids.present? && !!user&.in_any_groups?(group_ids)
     end
 
+    def self.matches_reviewable_types?(reviewable, reviewable_types)
+      reviewable_types = Array.wrap(reviewable_types).compact_blank
+      reviewable_types.empty? || reviewable_types.include?(reviewable.class.sti_name)
+    end
+
+    def self.reviewable_type_options
+      Reviewable
+        .types
+        .uniq(&:sti_name)
+        .sort_by(&:name)
+        .map { |klass| { id: klass.sti_name, name: klass.name.demodulize.underscore.humanize } }
+    end
+
     def self.trust_level_options
       TrustLevel.levels.map do |name, level|
         { value: level.to_s, label_key: "trust_levels.names.#{name}" }
@@ -355,6 +368,24 @@ module DiscourseWorkflows
 
     def matches_user_groups?(user, group_ids)
       self.class.matches_user_groups?(user, group_ids)
+    end
+
+    def matches_reviewable_types?(reviewable, reviewable_types)
+      self.class.matches_reviewable_types?(reviewable, reviewable_types)
+    end
+
+    def reviewable_data(reviewable)
+      {
+        id: reviewable.id,
+        type: reviewable.type,
+        status: reviewable.status,
+        target_type: reviewable.target_type,
+        target_id: reviewable.target_id,
+        topic_id: reviewable.topic_id,
+        category_id: reviewable.category_id,
+        score: reviewable.score,
+        created_at: reviewable.created_at&.iso8601,
+      }
     end
 
     def wrap(data, paired_item: nil)
