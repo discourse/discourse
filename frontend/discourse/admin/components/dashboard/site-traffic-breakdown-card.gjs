@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { countryFlag } from "discourse/admin/lib/format-country";
 import getURL from "discourse/lib/get-url";
-import { and, eq, gt } from "discourse/truth-helpers";
+import { and, eq, gt, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -101,31 +101,46 @@ export default class SiteTrafficBreakdownCard extends Component {
         <ul class="site-traffic-detail__breakdown-list">
           {{#each this.rows as |row|}}
             <li>
-              {{#if (and row.filterable (eq @activeTab "entry_urls"))}}
+              {{#if
+                (and
+                  row.value
+                  (or (eq @activeTab "top_urls") (eq @activeTab "entry_urls"))
+                )
+              }}
                 <span class="site-traffic-detail__row" data-test-breakdown-row>
                   <a
                     href={{getURL row.value}}
                     class="site-traffic-detail__row-link"
                     data-auto-route="true"
-                    data-test-entry-url-link
+                    data-test-url-link
                   >{{row.displayLabel}}</a>
-                  <span class="site-traffic-detail__row-count">
-                    {{row.formattedPageviews}}
-                  </span>
-                  <DButton
-                    @icon="filter"
-                    @action={{fn @onApplyFilter @filterDimension row.value}}
-                    @translatedTitle={{i18n
-                      "admin.dashboard.site_traffic.details.filter_row"
-                      value=row.displayLabel
-                    }}
-                    @translatedAriaLabel={{i18n
-                      "admin.dashboard.site_traffic.details.filter_row"
-                      value=row.displayLabel
-                    }}
-                    class="site-traffic-detail__row-filter btn-flat"
-                    data-test-entry-url-filter
-                  />
+                  {{#if row.filterable}}
+                    <button
+                      type="button"
+                      class="site-traffic-detail__row-filter-area"
+                      aria-label={{i18n
+                        "admin.dashboard.site_traffic.details.filter_row"
+                        value=row.displayLabel
+                      }}
+                      title={{i18n
+                        "admin.dashboard.site_traffic.details.filter_row"
+                        value=row.displayLabel
+                      }}
+                      data-test-url-filter-area
+                      {{on
+                        "click"
+                        (fn @onApplyFilter @filterDimension row.value)
+                      }}
+                    >
+                      <span class="site-traffic-detail__row-count">
+                        {{row.formattedPageviews}}
+                      </span>
+                    </button>
+                  {{else}}
+                    <span class="site-traffic-detail__row-count">
+                      {{row.formattedPageviews}}
+                    </span>
+                  {{/if}}
                 </span>
               {{else if row.filterable}}
                 <button
@@ -150,18 +165,6 @@ export default class SiteTrafficBreakdownCard extends Component {
                     {{row.formattedPageviews}}
                   </span>
                 </button>
-              {{else if (and (eq @activeTab "entry_urls") row.value)}}
-                <a
-                  href={{getURL row.value}}
-                  class="site-traffic-detail__row"
-                  data-auto-route="true"
-                  data-test-breakdown-row
-                >
-                  <span>{{row.displayLabel}}</span>
-                  <span class="site-traffic-detail__row-count">
-                    {{row.formattedPageviews}}
-                  </span>
-                </a>
               {{else}}
                 <span class="site-traffic-detail__row" data-test-breakdown-row>
                   <span>

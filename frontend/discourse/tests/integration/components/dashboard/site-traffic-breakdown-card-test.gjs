@@ -6,19 +6,19 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 class CardState {
   @tracked activeTab = "traffic_sources";
+  @tracked filterDimension = "referrer";
+  @tracked rows = Array.from({ length: 9 }, (_value, index) => ({
+    value: `source-${index}.example`,
+    displayLabel: `source-${index}.example`,
+    formattedPageviews: `${9 - index}`,
+    filterable: true,
+  }));
 
   tabs = [
     { key: "traffic_sources", label: "Referrers" },
     { key: "countries", label: "Countries" },
     { key: "networks", label: "Networks" },
   ];
-
-  rows = Array.from({ length: 9 }, (_value, index) => ({
-    value: `source-${index}.example`,
-    displayLabel: `source-${index}.example`,
-    formattedPageviews: `${9 - index}`,
-    filterable: true,
-  }));
 }
 
 module(
@@ -135,30 +135,45 @@ module(
       );
     });
 
-    test("keeps Entry URL navigation separate from filtering", async function (assert) {
+    test("uses link and sibling filter actions for URL tabs", async function (assert) {
       this.state = new CardState();
-      this.state.activeTab = "entry_urls";
+      this.state.activeTab = "top_urls";
+      this.state.filterDimension = "top_url";
       this.state.tabs = [
         { key: "top_urls", label: "Top URLs" },
         { key: "entry_urls", label: "Entry URLs" },
       ];
-      this.state.rows = [
-        {
-          value: "/privacy",
-          displayLabel: "/privacy",
-          formattedPageviews: "3",
-          filterable: true,
-        },
-        {
-          value: "/about",
-          displayLabel: "/about",
-          formattedPageviews: "2",
-          filterable: false,
-        },
-      ];
+      this.urlRows = {
+        top_urls: [
+          {
+            value: "/latest",
+            displayLabel: "/latest",
+            formattedPageviews: "3",
+            filterable: true,
+          },
+          {
+            value: "/about",
+            displayLabel: "/about",
+            formattedPageviews: "2",
+            filterable: false,
+          },
+        ],
+        entry_urls: [
+          {
+            value: "/privacy",
+            displayLabel: "/privacy",
+            formattedPageviews: "4",
+            filterable: true,
+          },
+        ],
+      };
+      this.state.rows = this.urlRows.top_urls;
       this.appliedFilter = null;
       this.selectTab = (tabKey) => {
         this.state.activeTab = tabKey;
+        this.state.filterDimension =
+          tabKey === "top_urls" ? "top_url" : "entry_url";
+        this.state.rows = this.urlRows[tabKey];
       };
       this.applyFilter = (dimension, value) => {
         this.appliedFilter = { dimension, value };
@@ -173,7 +188,7 @@ module(
             @tabs={{this.state.tabs}}
             @activeTab={{this.state.activeTab}}
             @rows={{this.state.rows}}
-            @filterDimension="entry_url"
+            @filterDimension={{this.state.filterDimension}}
             @onSelectTab={{this.selectTab}}
             @onApplyFilter={{this.applyFilter}}
             @onViewMore={{this.showMore}}
@@ -182,31 +197,73 @@ module(
       );
 
       assert
-        .dom("[data-test-entry-url-link]")
-        .hasAttribute("href", "/privacy", "the Entry URL remains a real link");
+        .dom("[data-test-url-link][href='/latest']")
+        .hasAttribute("href", "/latest", "the Top URL text is a real link");
       assert
-        .dom("[data-test-entry-url-filter]")
+        .dom(
+          "[data-test-url-link][href='/latest'] + [data-test-url-filter-area]"
+        )
         .hasAttribute(
           "aria-label",
-          "Filter by /privacy",
-          "the Entry URL has a separate accessible filter action"
+          "Filter by /latest",
+          "the Top URL has a sibling filter action"
         );
       assert
-        .dom("[data-test-entry-url-link] [data-test-entry-url-filter]")
-        .doesNotExist("the Entry URL actions are not nested");
+        .dom("[data-test-url-filter-area] .site-traffic-detail__row-count")
+        .hasText("3", "the Top URL filter action contains its count");
       assert
-        .dom("a.site-traffic-detail__row[data-test-breakdown-row]")
+        .dom("a[data-test-url-link][href='/about']")
         .hasAttribute(
           "href",
           "/about",
-          "a safe nonfilterable Entry URL remains a link"
+          "a safe nonfilterable URL remains a link"
         );
+      assert
+        .dom(
+          "a[data-test-url-link][href='/about'] + [data-test-url-filter-area]"
+        )
+        .doesNotExist("a nonfilterable URL has no filter action");
+      assert
+        .dom("[data-test-breakdown='pages'] .d-icon-filter")
+        .doesNotExist("the Top URL row has no filter icon");
 
-      await click("[data-test-entry-url-filter]");
+      await click("[data-test-url-filter-area]");
+      assert.deepEqual(
+        this.appliedFilter,
+        { dimension: "top_url", value: "/latest" },
+        "the Top URL action applies the exact filter"
+      );
+
+      await click("[data-site-traffic-breakdown-tab='entry_urls']");
+
+      assert
+        .dom("[data-test-url-link][href='/privacy']")
+        .hasAttribute(
+          "href",
+          "/privacy",
+          "the Entry URL text uses the same link markup"
+        );
+      assert
+        .dom(
+          "[data-test-url-link][href='/privacy'] + [data-test-url-filter-area]"
+        )
+        .hasAttribute(
+          "title",
+          "Filter by /privacy",
+          "the Entry URL uses the same sibling filter action"
+        );
+      assert
+        .dom("[data-test-url-filter-area] .site-traffic-detail__row-count")
+        .hasText("4", "the Entry URL filter action contains its count");
+      assert
+        .dom("[data-test-breakdown='pages'] .d-icon-filter")
+        .doesNotExist("the Entry URL row has no filter icon");
+
+      await click("[data-test-url-filter-area]");
       assert.deepEqual(
         this.appliedFilter,
         { dimension: "entry_url", value: "/privacy" },
-        "the separate action applies the exact Entry URL filter"
+        "the Entry URL action applies the exact filter"
       );
     });
   }
