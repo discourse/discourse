@@ -1,6 +1,20 @@
 @import "colors";
 @import "typography";
 
+// One surface for the page's two card-shaped things, so the hero and an example cannot drift
+// apart the way they had — 1.25rem of padding against 1rem, which no one would defend if asked.
+// The comfortable reading measure, for prose that sits directly on the page with nothing
+// bounding it. Prose INSIDE a box does not get this: the box is already the measure, and
+// capping it there just left obvious dead space inside a drawn border.
+$styleguide-measure: 70ch;
+
+@mixin styleguide-surface {
+  border: 1px solid var(--content-border-color);
+  border-radius: var(--d-border-radius);
+  background-color: var(--secondary);
+  padding: 1rem;
+}
+
 .styleguide {
   position: relative;
 
@@ -9,8 +23,13 @@
   padding: 0 1rem 1rem;
 
   .styleguide-note {
-    padding: 1em;
-    background-color: var(--tertiary);
+    // Was --tertiary (saturated brand) with no `color`, so text inherited near-black --primary
+    // on top of it — a contrast failure in light mode and wrong in dark. A quiet surface with
+    // an explicit text colour reads as an aside instead of an alert.
+    padding: 0.75rem 1rem;
+    background-color: var(--primary-very-low);
+    color: var(--primary-high);
+    border-inline-start: 2px solid var(--tertiary);
     margin-bottom: 1em;
   }
 
@@ -31,6 +50,7 @@
 
   .styleguide-section {
     .section-description {
+      max-width: $styleguide-measure;
       margin-bottom: 2em;
     }
 
@@ -43,27 +63,197 @@
     }
 
     .styleguide-example {
-      border: 1px dotted var(--content-border-color);
-      background-color: var(--secondary);
-      padding: 1rem;
+      @include styleguide-surface;
 
-      .example-title {
-        color: var(--primary-medium);
-        font-size: var(--font-up-1);
-        border-bottom: 1px dotted var(--content-border-color);
-        margin-bottom: 1rem;
+      // Ungrouped styleguide pages stack their cards; the card grid overrides this.
+      margin-bottom: 2em;
+
+      // The row each slot occupies. Cards in a grid share these rows through subgrid, and a
+      // subgrid places its children in DOM order — so a card missing one slot would pull every
+      // later slot up a row and take the whole band's alignment with it. Placing each slot
+      // explicitly means a missing slot leaves its row empty instead.
+      &__header {
+        grid-row: 1;
         display: flex;
-        align-items: center;
+        align-items: baseline;
         justify-content: space-between;
+        gap: var(--space-2);
+
+        // Keeps the rhythm even between GROUPS. Within a band the shared row already does it,
+        // but a group whose cards all lack a code toggle would otherwise sit tighter.
+        min-height: 2rem;
+        margin-bottom: 0.5rem;
       }
 
-      .rendered {
+      &__title {
+        color: var(--primary);
+        font-size: var(--font-0);
+        font-weight: 600;
+        margin: 0;
+      }
+
+      // Light on purpose: these sentences are mostly identifiers, and a heavier mark would
+      // speckle every paragraph.
+      &__description code,
+      &__try-this code,
+      &__note code {
+        padding: 0 0.2em;
+        background: var(--primary-very-low);
+        border-radius: var(--d-border-radius);
+        color: var(--primary);
+        font-size: 0.9em;
+      }
+
+      &__description {
+        grid-row: 2;
+        color: var(--primary-high);
+        margin: 0 0 1rem;
+      }
+
+      // The card's one call to action, and the only thing wearing the accent mark.
+      &__try-this {
+        grid-row: 3;
+        display: flex;
+        gap: 0.4rem;
+        color: var(--primary-high);
+        background: var(--primary-very-low);
+        border-inline-start: 2px solid var(--tertiary);
+        padding: 0.5rem 0.75rem;
+        margin: 0 0 1rem;
+      }
+
+      &__try-this-label {
+        color: var(--primary);
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      // The instruction as ONE flex item, so a sentence containing inline code still wraps as a
+      // sentence. min-width:0 lets it shrink below the intrinsic width of a long code span
+      // instead of pushing the row wider.
+      &__try-this-text {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+
+      &__body {
+        grid-row: 4;
         width: 100%;
         position: relative;
-        flex-direction: column;
-        gap: 0.5rem;
+        min-width: 0;
       }
-      margin-bottom: 2em;
+
+      // Background prose, read passively. Unadorned on purpose: giving it the instruction's
+      // fill and stripe sandwiched the control between two identical bars.
+      &__note {
+        grid-row: 5;
+        color: var(--primary-medium);
+        font-size: var(--font-down-1);
+        margin: 0.75rem 0 0;
+      }
+
+      // Output the demo produced, not commentary about it. Bordered on all sides rather than
+      // marked on one, so it reads as a panel written into rather than as another aside.
+      &__result {
+        grid-row: 6;
+        display: block;
+        color: var(--primary);
+        background: var(--primary-very-low);
+        border: 1px solid var(--content-border-color);
+        border-radius: var(--d-border-radius);
+        padding: 0.5rem 0.75rem;
+        margin: 0.75rem 0 0;
+      }
+
+      &__note-list {
+        margin: 0;
+        padding-inline-start: 1.25rem;
+
+        li + li {
+          margin-block-start: 0.35rem;
+        }
+      }
+
+      &__code {
+        grid-row: 7;
+        min-width: 0;
+        max-width: 100%;
+        margin-block-start: 1rem;
+
+        pre {
+          margin: 0;
+        }
+      }
+    }
+
+    .styleguide-subnav {
+      position: sticky;
+
+      // Below the site header.
+      top: var(--header-offset);
+      z-index: 1;
+
+      // Required, not decorative: the overflow-nav's scroll fades and its scroll buttons both
+      // paint --secondary, so a transparent sticky bar would show content through them.
+      background: var(--secondary);
+      margin-bottom: 1.5rem;
+      padding-block: 0.5rem;
+    }
+
+    .styleguide-group {
+      /* Cards subgrid over one shared band of rows, so every slot lines up across a row
+         instead of drifting with the prose above it. Two rules make it hold: each slot is
+         placed explicitly (see `.styleguide-example`), because a subgrid auto-places in DOM
+         order and one missing slot would shift every later one; and row spacing is margin,
+         not `row-gap`, on BOTH sides, so an empty row — the code row, almost always — costs
+         nothing. */
+
+      &__examples {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+        column-gap: 1.5rem;
+        row-gap: 0;
+
+        > .styleguide-example {
+          display: grid;
+
+          // Rows only: the card is one parent column wide, so subgridding the column axis
+          // would hand it a single track it has no use for.
+          grid-template-columns: 1fr;
+          grid-template-rows: subgrid;
+
+          // header · description · try-this · body · note · result · code
+          grid-row: span 7;
+          gap: 0;
+
+          // Grid items default to min-width: auto, so a long code line or an unbreakable
+          // label would otherwise stretch its track.
+          min-width: 0;
+
+          // Carried by the card rather than the parent's row-gap, per the note above. Uniform
+          // across cards, so their bottom edges stay aligned.
+          margin-bottom: 1.5rem;
+
+          // Cards that own their width — a side-by-side comparison, a control strip, the
+          // synthesis picker — take the whole row rather than being squeezed into a track.
+          // They still span the band, so they subgrid against rows only they fill.
+          &.--wide {
+            grid-column: 1 / -1;
+          }
+        }
+      }
+
+      &__title {
+        font-size: var(--font-up-2);
+        font-weight: 600;
+        margin: 0 0 0.25rem;
+      }
+
+      &__description {
+        color: var(--primary-high);
+        max-width: $styleguide-measure;
+        margin: 0 0 1.5rem;
+      }
     }
 
     .component-properties {
@@ -143,7 +333,7 @@
   p.reason {
     display: inline;
     color: var(--primary-medium);
-    margin: 0 0 0 10px;
+    margin: 0 0 0 var(--space-2);
   }
 
   &--char-counter {
@@ -153,7 +343,7 @@
   }
 }
 
-.buttons-examples .rendered {
+.buttons-examples .styleguide-example__body {
   button {
     margin-right: 0.5em;
     margin-bottom: 0.5em;
@@ -178,14 +368,16 @@
 
 .styleguide-icons {
   display: grid;
-  grid-template-columns: 150px 150px 150px 150px 150px;
-  gap: 10px;
+
+  // Was a fixed 5 x 150px track list, which overflowed below ~750px.
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  gap: var(--space-2);
 
   .styleguide-icon {
     background-color: var(--primary-low);
-    margin: 3px;
+    margin: var(--space-1);
     text-align: center;
-    padding: 10px;
+    padding: var(--space-2);
     overflow: hidden;
 
     svg {
@@ -202,7 +394,7 @@
 }
 
 .styleguide__component {
-  border: 1px dotted var(--content-border-color);
+  border: 1px solid var(--content-border-color);
   margin-bottom: 2rem;
   position: relative;
 
@@ -210,7 +402,7 @@
     position: absolute;
     top: 0;
     right: 0;
-    padding: 3px 6px;
+    padding: var(--space-1) var(--space-2);
     background: var(--primary-low);
     max-width: 25%;
 

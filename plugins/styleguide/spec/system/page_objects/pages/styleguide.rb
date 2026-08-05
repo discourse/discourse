@@ -47,6 +47,31 @@ module PageObjects
       def has_no_color_selector?
         has_no_css?(".toggle-color-mode")
       end
+
+      # Addressed by its visible title, the one identifier every example has.
+      def example(title)
+        find("[data-test-example-title]", text: title, exact_text: true).ancestor(
+          ".styleguide-example",
+        )
+      end
+
+      def toggle_example_source(title)
+        example(title).find("button.styleguide-example__code-toggle").click
+      end
+
+      def has_example_source?(title, text:)
+        example(title).has_css?(".styleguide-example__code", text: text)
+      end
+
+      def has_no_example_source?(title)
+        example(title).has_no_css?(".styleguide-example__code")
+      end
+
+      def has_example_source_expanded?(title, expanded)
+        example(title).has_css?(
+          "button.styleguide-example__code-toggle[aria-expanded='#{expanded}']",
+        )
+      end
     end
   end
 end

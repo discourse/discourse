@@ -63,6 +63,23 @@ RSpec.describe "Styleguide Smoke Test" do
     sign_in(admin)
   end
 
+  it "reveals and hides an example's source" do
+    visit "/styleguide/molecules/char-counter"
+
+    expect(styleguide).to have_no_example_source("<DCharCounter>")
+    expect(styleguide).to have_example_source_expanded("<DCharCounter>", "false")
+
+    styleguide.toggle_example_source("<DCharCounter>")
+
+    expect(styleguide).to have_example_source("<DCharCounter>", text: "DCharCounter")
+    expect(styleguide).to have_example_source_expanded("<DCharCounter>", "true")
+
+    styleguide.toggle_example_source("<DCharCounter>")
+
+    expect(styleguide).to have_no_example_source("<DCharCounter>")
+    expect(styleguide).to have_example_source_expanded("<DCharCounter>", "false")
+  end
+
   # this test will check if the index page is rendering correctly and also ensures that all component pages are
   # declared in the sections hash above
   it "renders the index page correctly and collect information about the available page" do

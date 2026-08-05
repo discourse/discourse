@@ -23,4 +23,14 @@ export default class StyleguideShow extends Route {
       dummy: createData(this.store),
     });
   }
+
+  // Query-param stickiness is model-scoped, so `?group=` cannot leak from one section to
+  // another. What it does do is survive leaving and returning to the SAME section, which would
+  // silently reopen a group the reader had navigated away from. Clearing on exit keeps the bare
+  // nav link meaning "the first group".
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set("group", null);
+    }
+  }
 }
