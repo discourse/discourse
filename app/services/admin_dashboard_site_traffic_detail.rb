@@ -311,8 +311,9 @@ class AdminDashboardSiteTrafficDetail
   class Request
     FILTERS = %w[top_url entry_url referrer country asn browser ip].freeze
     KEYS = %w[start_date end_date filters].freeze
+    MAX_FUTURE_END_DATE_OFFSET_DAYS = 1
     MAX_STORED_ASN = 2_147_483_647
-    private_constant :MAX_STORED_ASN
+    private_constant :MAX_FUTURE_END_DATE_OFFSET_DAYS, :MAX_STORED_ASN
 
     attr_reader :start_date, :end_date, :filters
 
@@ -335,7 +336,7 @@ class AdminDashboardSiteTrafficDetail
     def initialize(start_date:, end_date:, filters:)
       @start_date = parse_date(start_date)
       @end_date = parse_date(end_date)
-      if @end_date < @start_date || @end_date > Date.current ||
+      if @end_date < @start_date || @end_date > Date.current + MAX_FUTURE_END_DATE_OFFSET_DAYS ||
            (@end_date - @start_date).to_i > MAX_DATE_RANGE_DAYS
         raise InvalidRequest
       end

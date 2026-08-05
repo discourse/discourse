@@ -406,6 +406,32 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
         expect(direct_request.filters).to eq("referrer" => "direct")
       end
 
+      it "accepts one future client calendar day and rejects the following day" do
+        freeze_time(Time.zone.local(2026, 8, 5, 23, 30))
+        tomorrow = Date.tomorrow
+        tomorrow_params =
+          ActionController::Parameters.new(
+            start_date: Date.current.iso8601,
+            end_date: tomorrow.iso8601,
+            filters: {
+            },
+          )
+        following_day_params =
+          ActionController::Parameters.new(
+            start_date: Date.current.iso8601,
+            end_date: tomorrow.tomorrow.iso8601,
+            filters: {
+            },
+          )
+
+        request = described_class.parse(tomorrow_params)
+
+        expect(request.end_date).to eq(tomorrow)
+        expect { described_class.parse(following_day_params) }.to raise_error(
+          AdminDashboardSiteTrafficDetail::InvalidRequest,
+        )
+      end
+
       it "rejects unknown, nested, and noncanonical values" do
         invalid_requests = [
           { start_date: "2026-05-01", end_date: "2026-05-12", filters: { country: "us" } },
