@@ -59,24 +59,54 @@ export function registerPointerDrag(element, getArgsRef) {
   // suppressing movement again mid-drag.
   let engaged = false;
   // The class actually added at the start of this gesture. `draggingClass` can
-  // change between gestures, and removing the current arg's value would leave
-  // the one really on the element behind.
+  // change between gestures, so the value really on the element is snapshotted
+  // rather than re-read when it is time to remove it.
   let appliedClass = null;
 
   const finish = () => {
-    if (pointerId !== null) {
+    const finishedPointer = pointerId;
+    const classToRemove = appliedClass;
+
+    // Reset before touching the DOM: either call below can throw, and leaving
+    // `pointerId` set would keep the gesture in flight forever.
+    pointerId = null;
+    engaged = false;
+    appliedClass = null;
+
+    if (finishedPointer !== null) {
       try {
-        element.releasePointerCapture(pointerId);
+        element.releasePointerCapture(finishedPointer);
       } catch {
         // Already released if the element was removed mid-gesture.
       }
     }
-    if (appliedClass) {
-      element.classList.remove(appliedClass);
-      appliedClass = null;
+    if (classToRemove) {
+      try {
+        element.classList.remove(classToRemove);
+      } catch {
+        // Teardown runs through here and must not be abandoned part-way.
+      }
     }
-    pointerId = null;
-    engaged = false;
+  };
+
+  /**
+   * Ends the gesture the way the caller asked cancellation to behave. Shared by
+   * `pointercancel` and by losing the capture, which are the same situation: the
+   * gesture is over without the pointer having been released on this element.
+   *
+   * @param {Object} args - The current args.
+   * @param {PointerEvent} event - The event ending the gesture.
+   */
+  const cancelGesture = (args, event) => {
+    try {
+      if (args.cancelCommits) {
+        args.onDragEnd?.(event);
+      } else {
+        args.onDragCancel?.(event);
+      }
+    } finally {
+      finish();
+    }
   };
 
   const onPointerDown = (event) => {
@@ -106,7 +136,16 @@ export function registerPointerDrag(element, getArgsRef) {
 
     const args = getArgsRef();
     // The caller captures its origin state here and may veto by returning false.
-    if (args.onDragStart?.(event) === false) {
+    let vetoed;
+    try {
+      vetoed = args.onDragStart?.(event) === false;
+    } catch (error) {
+      // Rethrown, because a throwing consumer is the consumer's bug. The capture
+      // still has to go back: nothing else would release it.
+      releaseCapture();
+      throw error;
+    }
+    if (vetoed) {
       releaseCapture();
       return;
     }
@@ -117,8 +156,15 @@ export function registerPointerDrag(element, getArgsRef) {
     engaged = !(args.threshold > 0);
 
     if (args.draggingClass) {
-      appliedClass = args.draggingClass;
-      element.classList.add(appliedClass);
+      try {
+        element.classList.add(args.draggingClass);
+        // Only once it is really on the element, so `finish` never tries to
+        // remove a token the DOM rejected.
+        appliedClass = args.draggingClass;
+      } catch {
+        // A whitespace token is a caller mistake: it costs the drag its styling
+        // but must not abort the gesture.
+      }
     }
 
     // Only an accepted press is suppressed. A secondary button, a press during
@@ -165,16 +211,18 @@ export function registerPointerDrag(element, getArgsRef) {
     if (pointerId === null || event.pointerId !== pointerId) {
       return;
     }
-    const args = getArgsRef();
-    try {
-      if (args.cancelCommits) {
-        args.onDragEnd?.(event);
-      } else {
-        args.onDragCancel?.(event);
-      }
-    } finally {
-      finish();
+    cancelGesture(getArgsRef(), event);
+  };
+
+  const onLostPointerCapture = (event) => {
+    if (pointerId === null || event.pointerId !== pointerId) {
+      return;
     }
+    // Once capture is gone, a pointer no longer over this element delivers its
+    // release somewhere else, so this is the last event to arrive and a gesture
+    // not ended here stays in flight forever. A normal release fires this too,
+    // but after `pointerup` cleared the state, so the guard above no-ops it.
+    cancelGesture(getArgsRef(), event);
   };
 
   // `touch-action` has to be in effect before the gesture starts, or the browser
@@ -188,6 +236,7 @@ export function registerPointerDrag(element, getArgsRef) {
   element.addEventListener("pointermove", onPointerMove);
   element.addEventListener("pointerup", onPointerUp);
   element.addEventListener("pointercancel", onPointerCancel);
+  element.addEventListener("lostpointercapture", onLostPointerCapture);
 
   return () => {
     finish();
@@ -195,6 +244,7 @@ export function registerPointerDrag(element, getArgsRef) {
     element.removeEventListener("pointermove", onPointerMove);
     element.removeEventListener("pointerup", onPointerUp);
     element.removeEventListener("pointercancel", onPointerCancel);
+    element.removeEventListener("lostpointercapture", onLostPointerCapture);
     element.removeAttribute("data-pointer-drag");
   };
 }
@@ -214,12 +264,16 @@ export function registerPointerDrag(element, getArgsRef) {
  *
  * Args (named, all optional):
  *  - `onDragStart(event)` — capture origin state; return `false` to ABORT the
- *    gesture (e.g. an anchor isn't resolvable). Any other return starts it.
+ *    gesture (e.g. an anchor isn't resolvable). Any other return starts it. An
+ *    exception thrown here is rethrown, having released the pointer capture and
+ *    started no gesture.
  *  - `onDrag(event)` — compute + preview. Only fires during an active gesture,
  *    and only once `threshold` has been exceeded.
  *  - `onDragEnd(event)` — compute + commit. Runs BEFORE capture is released.
  *  - `onDragCancel(event)` — release any preview without committing.
  *  - `draggingClass` — class toggled on the element for the gesture's duration.
+ *    A single token: a value with whitespace in it is rejected by the DOM, which
+ *    costs the drag its styling but leaves the gesture working.
  *  - `threshold` — pixels of travel, measured as a straight line from the press
  *    origin, that `onDrag` waits for before it starts firing. Reaching the
  *    distance is enough; it does not have to be exceeded. Suppresses the jitter
@@ -230,9 +284,11 @@ export function registerPointerDrag(element, getArgsRef) {
  *    Defaults to `false`: document-level listeners (click-outside dismissal,
  *    card and menu closers) depend on seeing `pointerdown`, so suppression is
  *    opt-in for the handles that genuinely need to isolate themselves.
- *  - `cancelCommits` — whether `pointercancel` commits via `onDragEnd` instead
- *    of discarding via `onDragCancel`. Defaults to `false`. A splitter wants
- *    `true`: an OS-interrupted resize should keep the size the user dragged to.
+ *  - `cancelCommits` — whether a gesture that ends without the pointer being
+ *    released on this element — `pointercancel`, or the capture being taken away
+ *    — commits via `onDragEnd` instead of discarding via `onDragCancel`. Defaults
+ *    to `false`. A splitter wants `true`: an OS-interrupted resize should keep the
+ *    size the user dragged to.
  *  - `touchAction` — which browser touch gestures the element gives up,
  *    reflected as `data-pointer-drag` and mapped by
  *    `app/assets/stylesheets/common/ui-kit/d-pointer-drag.scss`. Defaults to

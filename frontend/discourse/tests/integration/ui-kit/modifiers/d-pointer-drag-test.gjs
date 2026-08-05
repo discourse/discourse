@@ -17,6 +17,34 @@ function installPointerCaptureSpy(element) {
   return { captured, released };
 }
 
+function installEventListenerSpy(element) {
+  const added = [];
+  const listeners = new Map();
+  const removed = [];
+  const addEventListener = element.addEventListener.bind(element);
+  const removeEventListener = element.removeEventListener.bind(element);
+
+  element.addEventListener = (type, listener, options) => {
+    added.push(type);
+    listeners.set(type, listener);
+    addEventListener(type, listener, options);
+  };
+  element.removeEventListener = (type, listener, options) => {
+    removed.push(type);
+    removeEventListener(type, listener, options);
+  };
+
+  return { added, listeners, removed };
+}
+
+function caughtError(callback) {
+  try {
+    callback();
+  } catch (error) {
+    return error;
+  }
+}
+
 module("Integration | ui-kit | d-pointer-drag", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -148,20 +176,70 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
         </template>
       );
 
-      await triggerEvent(".dpd-target", "pointerdown", {
+      const target = find(".dpd-target");
+      target.setPointerCapture = (pointerId) => {
+        // Force the failure: a browser may treat a synthetic pointer ID as an
+        // active mouse, so relying on an ambient NotFoundError is unstable.
+        if (pointerId === 1) {
+          throw new DOMException("No active pointer", "NotFoundError");
+        }
+      };
+
+      await triggerEvent(target, "pointerdown", {
         button: 0,
         pointerId: 1,
       });
-      await triggerEvent(".dpd-target", "pointerdown", {
+      await triggerEvent(target, "pointerdown", {
         button: 0,
         pointerId: 2,
       });
 
       assert.deepEqual(
         starts,
-        [1, 2],
-        "a later press can start after pointer capture fails"
+        [2],
+        "only the later press starts after pointer capture fails"
       );
+    });
+
+    test("a throwing onDragStart releases capture, rethrows, and permits a later press", function (assert) {
+      const target = document.createElement("div");
+      const capture = installPointerCaptureSpy(target);
+      const events = installEventListenerSpy(target);
+      const starts = [];
+      const error = new Error("consumer start failed");
+      const cleanup = dPointerDragModule.registerPointerDrag(target, () => ({
+        onDragStart(event) {
+          starts.push(event.pointerId);
+          if (event.pointerId === 1) {
+            throw error;
+          }
+        },
+      }));
+
+      assert.throws(
+        () =>
+          events.listeners.get("pointerdown")(
+            new PointerEvent("pointerdown", { button: 0, pointerId: 1 })
+          ),
+        error,
+        "the consumer error is rethrown"
+      );
+      assert.false(
+        capture.captured.has(1),
+        "a throwing start does not strand its pointer capture"
+      );
+
+      events.listeners.get("pointerdown")(
+        new PointerEvent("pointerdown", { button: 0, pointerId: 2 })
+      );
+
+      assert.deepEqual(
+        starts,
+        [1, 2],
+        "a later press can start after the throwing callback"
+      );
+
+      cleanup();
     });
 
     test("threshold suppresses movement until exceeded and stays engaged", async function (assert) {
@@ -309,6 +387,207 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
         calls,
         ["cancel:cancel:1", "end:commit:2"],
         "cancellation only commits when requested"
+      );
+    });
+
+    test("lost pointer capture discards and permits a later press by default", async function (assert) {
+      const calls = [];
+      const onDragStart = (event) => calls.push(`start:${event.pointerId}`);
+      const onDragEnd = (event) => calls.push(`end:${event.pointerId}`);
+      const onDragCancel = (event) => calls.push(`cancel:${event.pointerId}`);
+
+      await render(
+        <template>
+          <div
+            class="dpd-target"
+            {{dPointerDrag
+              onDragStart=onDragStart
+              onDragEnd=onDragEnd
+              onDragCancel=onDragCancel
+            }}
+          ></div>
+        </template>
+      );
+
+      const target = find(".dpd-target");
+      installPointerCaptureSpy(target);
+      await triggerEvent(target, "pointerdown", { button: 0, pointerId: 1 });
+      await triggerEvent(target, "lostpointercapture", { pointerId: 1 });
+      await triggerEvent(target, "pointerdown", { button: 0, pointerId: 2 });
+      await triggerEvent(target, "pointerup", { pointerId: 2 });
+
+      assert.deepEqual(
+        calls,
+        ["start:1", "cancel:1", "start:2", "end:2"],
+        "capture loss discards the active drag and clears the gesture latch"
+      );
+    });
+
+    test("lost pointer capture commits and permits a later press when configured", async function (assert) {
+      const calls = [];
+      const onDragStart = (event) => calls.push(`start:${event.pointerId}`);
+      const onDragEnd = (event) => calls.push(`end:${event.pointerId}`);
+      const onDragCancel = (event) => calls.push(`cancel:${event.pointerId}`);
+
+      await render(
+        <template>
+          <div
+            class="dpd-target"
+            {{dPointerDrag
+              cancelCommits=true
+              onDragStart=onDragStart
+              onDragEnd=onDragEnd
+              onDragCancel=onDragCancel
+            }}
+          ></div>
+        </template>
+      );
+
+      const target = find(".dpd-target");
+      installPointerCaptureSpy(target);
+      await triggerEvent(target, "pointerdown", { button: 0, pointerId: 1 });
+      await triggerEvent(target, "lostpointercapture", { pointerId: 1 });
+      await triggerEvent(target, "pointerdown", { button: 0, pointerId: 2 });
+      await triggerEvent(target, "pointerup", { pointerId: 2 });
+
+      assert.deepEqual(
+        calls,
+        ["start:1", "end:1", "start:2", "end:2"],
+        "capture loss commits the active drag and clears the gesture latch"
+      );
+    });
+
+    test("lost pointer capture ignores other pointers and is harmless after release", async function (assert) {
+      const calls = [];
+      const onDragStart = (event) => calls.push(`start:${event.pointerId}`);
+      const onDragEnd = (event) => calls.push(`end:${event.pointerId}`);
+      const onDragCancel = (event) => calls.push(`cancel:${event.pointerId}`);
+
+      await render(
+        <template>
+          <div
+            class="dpd-target"
+            {{dPointerDrag
+              onDragStart=onDragStart
+              onDragEnd=onDragEnd
+              onDragCancel=onDragCancel
+            }}
+          ></div>
+        </template>
+      );
+
+      const target = find(".dpd-target");
+      installPointerCaptureSpy(target);
+      await triggerEvent(target, "pointerdown", { button: 0, pointerId: 7 });
+      await triggerEvent(target, "lostpointercapture", { pointerId: 99 });
+      await triggerEvent(target, "pointerup", { pointerId: 7 });
+      await triggerEvent(target, "lostpointercapture", { pointerId: 7 });
+      await triggerEvent(target, "pointerdown", { button: 0, pointerId: 8 });
+      await triggerEvent(target, "lostpointercapture", { pointerId: 8 });
+
+      assert.deepEqual(
+        calls,
+        ["start:7", "end:7", "start:8", "cancel:8"],
+        "only active capture loss terminates a gesture"
+      );
+    });
+
+    test("teardown removes the lostpointercapture listener", function (assert) {
+      const target = document.createElement("div");
+      const events = installEventListenerSpy(target);
+      const cleanup = dPointerDragModule.registerPointerDrag(
+        target,
+        () => ({})
+      );
+
+      assert.true(
+        events.added.includes("lostpointercapture"),
+        "capture loss is observed while the gesture is registered"
+      );
+
+      cleanup();
+
+      assert.true(
+        events.removed.includes("lostpointercapture"),
+        "teardown removes the capture-loss listener"
+      );
+    });
+
+    test("an invalid draggingClass degrades safely through gesture and teardown", function (assert) {
+      const target = document.createElement("div");
+      const capture = installPointerCaptureSpy(target);
+      const events = installEventListenerSpy(target);
+      const starts = [];
+      const ends = [];
+      const cleanup = dPointerDragModule.registerPointerDrag(target, () => ({
+        draggingClass: "is-dragging active",
+        onDragStart: (event) => starts.push(event.pointerId),
+        onDragEnd: (event) => ends.push(event.pointerId),
+      }));
+
+      const firstStartError = caughtError(() =>
+        events.listeners.get("pointerdown")(
+          new PointerEvent("pointerdown", { button: 0, pointerId: 1 })
+        )
+      );
+      assert.false(
+        Boolean(firstStartError),
+        "an invalid dragging class does not abort gesture start"
+      );
+
+      const firstEndError = caughtError(() =>
+        events.listeners.get("pointerup")(
+          new PointerEvent("pointerup", { pointerId: 1 })
+        )
+      );
+      assert.false(
+        Boolean(firstEndError),
+        "an invalid dragging class does not abort gesture finish"
+      );
+
+      events.listeners.get("pointerdown")(
+        new PointerEvent("pointerdown", { button: 0, pointerId: 2 })
+      );
+      events.listeners.get("pointerup")(
+        new PointerEvent("pointerup", { pointerId: 2 })
+      );
+
+      assert.deepEqual(
+        starts,
+        [1, 2],
+        "an invalid dragging class does not leave gesture state latched"
+      );
+      assert.deepEqual(
+        ends,
+        [1, 2],
+        "both gestures remain functional with an invalid dragging class"
+      );
+      assert.deepEqual(
+        [...capture.released],
+        [1, 2],
+        "both gestures release pointer capture"
+      );
+
+      const cleanupError = caughtError(cleanup);
+      assert.false(
+        Boolean(cleanupError),
+        "an invalid dragging class does not abort teardown"
+      );
+      assert.strictEqual(
+        target.getAttribute("data-pointer-drag"),
+        null,
+        "teardown still removes the pointer-drag attribute"
+      );
+      assert.deepEqual(
+        events.removed,
+        [
+          "pointerdown",
+          "pointermove",
+          "pointerup",
+          "pointercancel",
+          "lostpointercapture",
+        ],
+        "teardown still removes every pointer listener"
       );
     });
 
