@@ -522,7 +522,12 @@ RSpec.describe TopicTrackingState do
         expect(messages).to be_empty
       end
 
-      it "publish a read count update to every client" do
+      it "publishes the read count without identifying a reader in a group PM with hidden members" do
+        group.update!(
+          visibility_level: Group.visibility_levels[:members],
+          members_visibility_level: Group.visibility_levels[:staff],
+        )
+
         message =
           MessageBus
             .track_publish(read_post_key) do
@@ -534,7 +539,9 @@ RSpec.describe TopicTrackingState do
             end
             .first
 
-        expect(message.data[:type]).to eq :read
+        expect(message.data[:type]).to eq(:read)
+        expect(message.data[:readers_count]).to eq(post_2.readers_count)
+        expect(message.data).not_to have_key(:reader_id)
       end
     end
   end
