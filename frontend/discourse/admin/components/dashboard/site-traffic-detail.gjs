@@ -54,6 +54,9 @@ const SERIES = [
     color: "#D5CDF7",
   },
 ];
+const SKELETON_KPIS = Array.from({ length: 7 });
+const SKELETON_CARDS = Array.from({ length: 4 });
+const SKELETON_ROWS = Array.from({ length: 5 });
 
 export default class SiteTrafficDetail extends Component {
   @service currentUser;
@@ -147,6 +150,10 @@ export default class SiteTrafficDetail extends Component {
       this.error?.error_type === "timeout" ||
       this.error?.error_type === "unexpected"
     );
+  }
+
+  get showSkeleton() {
+    return this.loading && !this.data;
   }
 
   get activeFilterEntries() {
@@ -666,13 +673,43 @@ export default class SiteTrafficDetail extends Component {
         {{/if}}
       </div>
 
-      {{#if this.loading}}
-        <p
-          class="site-traffic-detail__loading"
+      {{#if this.showSkeleton}}
+        <div
+          class="db-skeleton site-traffic-detail__skeleton --animation"
           data-test-traffic-loading
           role="status"
-          aria-live="polite"
+          aria-label={{i18n "admin.dashboard.site_traffic.details.loading"}}
         >
+          <div class="db-skeleton__kpi-row">
+            {{#each SKELETON_KPIS}}
+              <div class="db-skeleton__kpi">
+                <div class="db-skeleton__kpi-value"></div>
+                <div class="db-skeleton__kpi-label"></div>
+              </div>
+            {{/each}}
+          </div>
+          <div class="db-skeleton__chart"></div>
+          <div class="db-skeleton__report-grid">
+            {{#each SKELETON_CARDS}}
+              <div class="db-skeleton__report-card">
+                <div class="db-skeleton__report-card-header">
+                  <div class="db-skeleton__report-card-title"></div>
+                  <div class="db-skeleton__report-card-label"></div>
+                </div>
+                <ul class="db-skeleton__list">
+                  {{#each SKELETON_ROWS}}
+                    <li class="db-skeleton__list-row">
+                      <span class="db-skeleton__list-name"></span>
+                      <span class="db-skeleton__list-value"></span>
+                    </li>
+                  {{/each}}
+                </ul>
+              </div>
+            {{/each}}
+          </div>
+        </div>
+      {{else if this.loading}}
+        <p class="sr-only" data-test-traffic-loading role="status">
           {{i18n "admin.dashboard.site_traffic.details.loading"}}
         </p>
       {{/if}}

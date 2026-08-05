@@ -120,6 +120,33 @@ module(
       window.location.hash = "";
     });
 
+    test("uses the dashboard skeleton for the initial load", async function (assert) {
+      let request;
+      this.fetchStub.callsFake((_url, options) => {
+        request = deferredRequest(options);
+        return request.promise;
+      });
+
+      await render(
+        <template>
+          <SiteTrafficDetail
+            @startDate={{this.state.startDate}}
+            @endDate={{this.state.endDate}}
+            @startDateValue={{this.state.startDate}}
+            @endDateValue={{this.state.endDate}}
+          />
+        </template>
+      );
+
+      assert.dom("[data-test-traffic-loading].db-skeleton").exists();
+      assert.dom(".db-skeleton__kpi").exists({ count: 7 });
+      assert.dom(".db-skeleton__chart").exists();
+      assert.dom(".db-skeleton__report-card").exists({ count: 4 });
+
+      request.resolve(response(payload()));
+      await settled();
+    });
+
     test("posts the closed request contract with CSRF credentials", async function (assert) {
       this.fetchStub.resolves(response(payload()));
 

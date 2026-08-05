@@ -102,6 +102,54 @@
     margin-top: var(--space-3);
   }
 
+  &__skeleton {
+    gap: var(--space-6);
+
+    .db-skeleton__kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      overflow: hidden;
+      background: var(--primary-low);
+    }
+
+    .db-skeleton__kpi {
+      min-width: 0;
+      border: 0;
+      background: var(--secondary);
+    }
+
+    .db-skeleton__chart {
+      box-sizing: border-box;
+      height: 22rem;
+      border: 1px solid var(--primary-low);
+      border-radius: var(--d-border-radius-large);
+    }
+
+    .db-skeleton__report-card {
+      height: auto;
+      min-height: 18rem;
+    }
+
+    @include viewport.until(md) {
+      .db-skeleton__kpi-row,
+      .db-skeleton__report-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @include viewport.until(sm) {
+      .db-skeleton__kpi-row,
+      .db-skeleton__report-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .db-skeleton__chart {
+        height: 18rem;
+      }
+    }
+  }
+
   &__metrics {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
