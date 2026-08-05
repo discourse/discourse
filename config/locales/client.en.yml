@@ -7575,7 +7575,6 @@ en:
               unknown: "Unknown"
             errors:
               timeout: "Site traffic took too long to load."
-              rate_limited: "You’ve made too many Site traffic requests. Try again shortly."
               invalid_request: "This Site traffic request is invalid."
               unexpected: "Site traffic couldn’t be loaded. Try again."
             dimensions:

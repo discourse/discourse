@@ -147,7 +147,9 @@ module(
 
       assert.dom("[data-test-traffic-loading].db-skeleton").exists();
       assert
-        .dom("[data-test-filter-control] .topic-query-filter__input")
+        .dom(
+          "[data-test-filter-control] > .topic-query-filter__input > input.topic-query-filter__filter-term"
+        )
         .exists("the full-width filter is visible while data loads");
       assert.dom(".db-skeleton__kpi").exists({ count: 5 });
       assert.dom(".db-skeleton__chart").exists();
@@ -157,7 +159,9 @@ module(
       await settled();
 
       assert
-        .dom("[data-test-filter-control] .topic-query-filter__input")
+        .dom(
+          "[data-test-filter-control] > .topic-query-filter__input > input.topic-query-filter__filter-term"
+        )
         .exists("the full-width filter is visible after an empty load");
     });
 
@@ -475,10 +479,10 @@ module(
                 filterable: true,
               },
               {
-                value: "Direct / unknown",
+                value: "direct",
                 label: "Direct / unknown",
                 pageviews: 1,
-                filterable: false,
+                filterable: true,
               },
             ],
           })
@@ -524,16 +528,33 @@ module(
           "named Referrer rows synchronize the canonical input"
         );
       assert
-        .dom(
-          "[data-test-breakdown='traffic_sources'] span[data-test-breakdown-row]"
-        )
+        .dom("[data-test-breakdown='traffic_sources'] li:nth-child(2) button")
         .includesText(
           "Direct / unknown",
-          "Direct traffic does not expose a filter action"
+          "the row displays the human-readable label"
         );
+
+      await click(
+        "[data-test-breakdown='traffic_sources'] li:nth-child(2) button"
+      );
+      assert
+        .dom("#topic-query-filter-input")
+        .hasValue(
+          "top_url:/top referrer:direct",
+          "Direct traffic uses its canonical expression"
+        );
+      assert.deepEqual(
+        JSON.parse(this.fetchStub.lastCall.args[1].body).filters,
+        { top_url: "/top", referrer: "direct" },
+        "the request separates the canonical value from the displayed label"
+      );
       assert.false(
-        window.location.href.includes("external.example"),
-        "the referrer is absent from the browser URL"
+        window.location.href.includes("direct"),
+        "the canonical referrer is absent from the browser URL"
+      );
+      assert.false(
+        window.location.href.includes("Direct%20%2F%20unknown"),
+        "the displayed referrer label is absent from the browser URL"
       );
 
       await click(
@@ -556,12 +577,12 @@ module(
       );
       assert.deepEqual(
         JSON.parse(this.fetchStub.lastCall.args[1].body).filters,
-        { top_url: "/top", referrer: "external.example" },
+        { top_url: "/top", referrer: "direct" },
         "query parameter removal preserves the sensitive filter"
       );
     });
 
-    test("renders timeout, invalid, rate-limited, and retry states distinctly", async function (assert) {
+    test("renders timeout, invalid, and retry states distinctly", async function (assert) {
       this.fetchStub
         .onCall(0)
         .resolves(response({ error_type: "timeout", retryable: true }, 503));
@@ -584,14 +605,8 @@ module(
       await click("[role='alert'] button");
       assert.dom("[role='status']").includesText("No matching pageviews");
 
-      this.fetchStub.resolves(response({ error_type: "rate_limited" }, 429));
-      this.state.startDate = "2026-05-02";
-      await settled();
-      assert.dom("[role='alert']").includesText("too many");
-      assert.dom("[role='alert'] button").doesNotExist();
-
       this.fetchStub.resolves(response({ error_type: "invalid_request" }, 400));
-      this.state.startDate = "2026-05-03";
+      this.state.startDate = "2026-05-02";
       await settled();
       assert.dom("[role='alert']").includesText("invalid");
     });
@@ -627,7 +642,10 @@ module(
         </template>
       );
 
-      assert.dom(".site-traffic-detail__card").exists({ count: 3 });
+      assert.dom(".site-traffic-detail__cards").exists({ count: 1 });
+      assert
+        .dom(".site-traffic-detail__cards > .site-traffic-detail__card")
+        .exists({ count: 3 });
       assert.dom("[data-test-filter-control]").exists({ count: 1 });
       assert
         .dom(".site-traffic-detail__card > h2.sr-only")
@@ -639,7 +657,9 @@ module(
         .hasText("Referrers")
         .hasAttribute("aria-selected", "true");
       assert.dom(".site-traffic-detail__metrics").exists({ count: 1 });
-      assert.dom(".site-traffic-detail__metric").exists({ count: 5 });
+      assert
+        .dom(".site-traffic-detail__metrics > .site-traffic-detail__metric")
+        .exists({ count: 5 });
       assert
         .dom(
           ".site-traffic-detail__metric:nth-of-type(5) .site-traffic-detail__metric-tooltip"
@@ -758,10 +778,12 @@ module(
     test("renders a semantic table capped at fifty rows", async function (assert) {
       let selected;
       this.model = {
-        title: "Top URLs",
+        dimension: "traffic_sources",
+        title: "Referrers",
         rows: Array.from({ length: 55 }, (_value, index) => ({
-          value: `/page-${index}`,
-          displayLabel: `/page-${index}`,
+          value: index === 0 ? "direct" : `source-${index}.example`,
+          displayLabel:
+            index === 0 ? "Direct / unknown" : `source-${index}.example`,
           formattedPageviews: `${55 - index}`,
           filterable: true,
         })),
@@ -780,11 +802,14 @@ module(
         </template>
       );
 
-      assert.dom("table[aria-label='Top URLs'] thead th").exists({ count: 2 });
-      assert.dom("table[aria-label='Top URLs'] tbody tr").exists({ count: 50 });
+      assert.dom("table[aria-label='Referrers'] thead th").exists({ count: 2 });
+      assert
+        .dom("table[aria-label='Referrers'] tbody tr")
+        .exists({ count: 50 });
+      assert.dom("tbody [data-test-breakdown-row]").hasText("Direct / unknown");
 
       await click("tbody [data-test-breakdown-row]");
-      assert.strictEqual(selected, "/page-0");
+      assert.strictEqual(selected, "direct");
     });
 
     test("keeps Entry URL navigation separate from filtering", async function (assert) {

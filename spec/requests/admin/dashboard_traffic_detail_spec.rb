@@ -259,6 +259,15 @@ RSpec.describe Admin::DashboardController do
       )
     end
 
+    it "accepts the canonical direct referrer value" do
+      body = request_body.merge(filters: { referrer: "direct" })
+      cache_result_for(body)
+
+      post "/admin/dashboard/traffic.json", params: body, as: :json
+
+      expect(response).to have_http_status(:ok)
+    end
+
     it "filters the complete sensitive filters object for this request" do
       post "/admin/dashboard/traffic.json",
            params: request_body.merge(filters: { ip: "192.0.2.1\nsecret" }),
@@ -309,54 +318,13 @@ RSpec.describe Admin::DashboardController do
       serialized_lograge_payload = lograge_event.payload.except(:headers).to_json
       serialized_request_tracker_data = request_tracker_data.to_json
       [serialized_lograge_payload, serialized_request_tracker_data].each do |serialized_output|
-        expect(serialized_output).not_to include(
-          *body[:filters].values,
-          body.to_json,
-          "rack.input",
-        )
+        expect(serialized_output).not_to include(*body[:filters].values, body.to_json, "rack.input")
       end
     ensure
       if request_tracker_logger
         Middleware::RequestTracker.unregister_detailed_request_logger(request_tracker_logger)
       end
       Rails.configuration.lograge = previous_lograge
-    end
-
-    it "limits each admin after six uncached computations while cache hits remain free" do
-      RateLimiter.enable
-      limiter =
-        RateLimiter.new(admin, "admin-site-traffic-detail", 6, 1.minute, apply_limit_to_staff: true)
-      limiter.clear!
-      service = stub
-      service.stubs(:call).returns(result)
-      AdminDashboardSiteTrafficDetail.stubs(:new).returns(service)
-
-      %w[US GB CA DE FR SG].each do |country|
-        post "/admin/dashboard/traffic.json",
-             params: request_body.merge(filters: { country: }),
-             as: :json
-        expect(response).to have_http_status(:ok)
-      end
-
-      post "/admin/dashboard/traffic.json",
-           params: request_body.merge(filters: { country: "JP" }),
-           as: :json
-      expect(response).to have_http_status(:too_many_requests)
-      expect(response.parsed_body.fetch("retry_after_seconds")).to be_positive
-
-      post "/admin/dashboard/traffic.json",
-           params: request_body.merge(filters: { country: "US" }),
-           as: :json
-      expect(response).to have_http_status(:ok)
-
-      sign_in(other_admin)
-      post "/admin/dashboard/traffic.json",
-           params: request_body.merge(filters: { country: "JP" }),
-           as: :json
-      expect(response).to have_http_status(:ok)
-    ensure
-      limiter&.clear!
-      RateLimiter.disable
     end
 
     it "rejects an authenticated POST without a CSRF token when forgery protection is enabled" do

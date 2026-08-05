@@ -392,6 +392,18 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
           "asn" => "AS64500",
           "ip" => "192.0.2.1",
         )
+
+        direct_request =
+          described_class.parse(
+            ActionController::Parameters.new(
+              start_date: "2026-05-01",
+              end_date: "2026-05-12",
+              filters: {
+                referrer: "direct",
+              },
+            ),
+          )
+        expect(direct_request.filters).to eq("referrer" => "direct")
       end
 
       it "rejects unknown, nested, and noncanonical values" do
@@ -1150,9 +1162,23 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
 
       expect(result.dig(:dimensions, :traffic_sources)).to contain_exactly(
         include(value: "external.example", filterable: true),
-        include(value: "Direct / unknown", filterable: false),
+        include(value: "direct", label: "Direct / unknown", filterable: true),
       )
       expect(filtered_result.dig(:summary, :pageviews)).to eq(1)
+
+      direct_filtered_request =
+        described_class::Request.parse(
+          ActionController::Parameters.new(
+            start_date: 1.day.ago.to_date.iso8601,
+            end_date: Date.current.iso8601,
+            filters: {
+              referrer: "direct",
+            },
+          ),
+        )
+      expect(
+        described_class.new(request: direct_filtered_request).call.dig(:summary, :pageviews),
+      ).to eq(1)
     end
 
     it "suppresses every exact canonical internal hostname alias without suppressing attacker domains" do
@@ -1189,12 +1215,12 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
       result = described_class.new(request: request).call
 
       expect(result.dig(:dimensions, :traffic_sources)).to contain_exactly(
-        include(value: "Direct / unknown", pageviews: 4),
+        include(value: "direct", label: "Direct / unknown", pageviews: 4, filterable: true),
         include(value: "site.example.attacker.test", pageviews: 1),
         include(value: "evilsite.example", pageviews: 1),
       )
       expect(result.dig(:analysis, :traffic_source_semantics)).to eq(
-        "entry_external_normalized_host_v2",
+        "entry_external_normalized_host_v3",
       )
     end
 
@@ -1470,6 +1496,18 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
           ),
         )
       entry_filtered_key = described_class.cache_key(request: entry_filtered_request, actor: actor)
+      direct_filtered_request =
+        described_class::Request.parse(
+          ActionController::Parameters.new(
+            start_date: request.start_date.iso8601,
+            end_date: request.end_date.iso8601,
+            filters: {
+              referrer: "direct",
+            },
+          ),
+        )
+      direct_filtered_key =
+        described_class.cache_key(request: direct_filtered_request, actor: actor)
       SiteSetting.clean_up_browser_pageview_events = false
       cleanup_disabled_key = described_class.cache_key(request: request, actor: actor)
       SiteSetting.clean_up_browser_pageview_events = true
@@ -1483,6 +1521,7 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
       expect(first_key).not_to eq(filtered_key)
       expect(first_key).not_to eq(entry_filtered_key)
       expect(filtered_key).not_to eq(entry_filtered_key)
+      expect(entry_filtered_key).not_to eq(direct_filtered_key)
       expect(cleanup_disabled_key).not_to eq(cleanup_enabled_key)
       expect(crawler_detection_disabled_key).not_to eq(crawler_detection_enabled_key)
     end
@@ -1588,10 +1627,6 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
         contended << true if mutex.locked?
         mutex.synchronize(&block)
       end
-      limiter = stub
-      limiter.stubs(:performed!).returns(true)
-      limiter_factory = stub
-      limiter_factory.stubs(:new).returns(limiter)
       entered = Queue.new
       release = Queue.new
       computations = 0
@@ -1603,7 +1638,6 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
             actor: actor,
             cache: cache,
             synchronizer: synchronizer,
-            limiter_factory: limiter_factory,
             cache_key: "single-flight",
             executor: yielding_executor,
             cutover_resolver: fixed_cutover_resolver,
@@ -1636,7 +1670,7 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
       expect([acquire_timeouts.pop, acquire_timeouts.pop]).to eq([12.seconds, 12.seconds])
     end
 
-    it "returns a cache hit without creating a limiter" do
+    it "returns a cache hit without running the computation" do
       request =
         AdminDashboardSiteTrafficDetail::Request.parse(
           ActionController::Parameters.new(
@@ -1649,8 +1683,6 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
       actor = Fabricate(:admin)
       cache = stub
       cache.stubs(:read).returns({ summary: { pageviews: 1 } })
-      limiter_factory = stub
-      limiter_factory.expects(:new).never
       queries = []
       resolver = Object.new
       resolver.define_singleton_method(:resolve) do |query:|
@@ -1663,7 +1695,6 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
           request: request,
           actor: actor,
           cache: cache,
-          limiter_factory: limiter_factory,
           cache_key: "cache-hit",
           executor: yielding_executor(queries),
           cutover_resolver: resolver,
@@ -1674,7 +1705,7 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
       expect(queries).to eq([["cutover metadata", {}]])
     end
 
-    it "maps lock acquisition timeout without consuming quota, computing, or caching" do
+    it "maps lock acquisition timeout without computing or caching" do
       request =
         AdminDashboardSiteTrafficDetail::Request.parse(
           ActionController::Parameters.new(
@@ -1688,8 +1719,6 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
       cache = stub
       cache.stubs(:read).returns(nil)
       cache.expects(:write).never
-      limiter_factory = stub
-      limiter_factory.expects(:new).never
       synchronizer = stub
       synchronizer
         .expects(:synchronize)
@@ -1704,7 +1733,6 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
           actor: actor,
           cache: cache,
           synchronizer: synchronizer,
-          limiter_factory: limiter_factory,
           cache_key: "lock-timeout",
           executor: executor,
           cutover_resolver: fixed_cutover_resolver,
@@ -1727,10 +1755,6 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
       cache = stub
       cache.stubs(:read).returns(nil)
       cache.expects(:write).never
-      limiter = stub
-      limiter.expects(:performed!).once
-      limiter_factory = stub
-      limiter_factory.stubs(:new).returns(limiter)
       synchronizer = Object.new
       synchronizer.define_singleton_method(:synchronize) { |*, **, &block| block.call }
       resolver = Object.new
@@ -1746,7 +1770,6 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
           actor: actor,
           cache: cache,
           synchronizer: synchronizer,
-          limiter_factory: limiter_factory,
           cache_key: "failed-computation",
           cutover_resolver: resolver,
           compute:
@@ -1775,10 +1798,6 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
       cache = stub
       cache.stubs(:read).returns(nil)
       cache.expects(:write).never
-      limiter = stub
-      limiter.expects(:performed!).once
-      limiter_factory = stub
-      limiter_factory.stubs(:new).returns(limiter)
       executor = Object.new
       executor.define_singleton_method(:execute) do |&operation|
         query = ->(sql:, binds: {}) { [] }
@@ -1791,7 +1810,6 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
           request: request,
           actor: actor,
           cache: cache,
-          limiter_factory: limiter_factory,
           cache_key: "failed-transaction-exit",
           executor: executor,
           cutover_resolver: fixed_cutover_resolver,

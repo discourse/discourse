@@ -34,14 +34,25 @@
     min-width: 0;
 
     .topic-query-filter__input {
+      box-sizing: border-box;
+      display: block;
       width: 100%;
       min-width: 0;
     }
 
     input.topic-query-filter__filter-term {
       box-sizing: border-box;
+      display: block;
+      width: 100%;
+      min-width: 0;
       max-width: 100%;
       padding-inline: 2.25em 2.5em;
+    }
+
+    .topic-query-filter__icon,
+    .topic-query-filter__clear-btn {
+      top: 50%;
+      transform: translateY(-50%);
     }
 
     .topic-query-filter__icon {
@@ -141,11 +152,7 @@
   &__metrics {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 1px;
-    overflow: hidden;
-    border: 1px solid var(--site-traffic-card-border);
-    border-radius: var(--d-border-radius-large);
-    background: var(--site-traffic-card-border);
+    gap: var(--space-8);
 
     @include viewport.until(md) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -162,8 +169,6 @@
     grid-template-rows: auto auto auto;
     gap: var(--space-1);
     min-width: 0;
-    padding: var(--space-4);
-    background: var(--secondary);
   }
 
   &__metric-copy {
@@ -175,8 +180,7 @@
     grid-row: 1;
     overflow-wrap: anywhere;
     color: var(--primary);
-    font-size: var(--font-up-3-rem);
-    font-weight: 600;
+    font-size: var(--font-up-3);
     font-variant-numeric: tabular-nums;
   }
 
@@ -189,7 +193,7 @@
     min-width: 0;
     overflow-wrap: anywhere;
     color: var(--primary-medium);
-    font-size: var(--font-down-1-rem);
+    font-size: var(--font-down-2-rem);
   }
 
   &__metric-tooltip {
@@ -246,8 +250,11 @@
 
   &__cards {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-4);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow: hidden;
+    border: 1px solid var(--site-traffic-card-border);
+    border-radius: var(--d-border-radius-large);
+    background: var(--secondary);
 
     @include viewport.until(md) {
       grid-template-columns: minmax(0, 1fr);
@@ -259,10 +266,19 @@
     flex-direction: column;
     gap: var(--space-3);
     min-width: 0;
-    border: 1px solid var(--site-traffic-card-border);
-    border-radius: var(--d-border-radius-large);
     padding: var(--space-4);
     background: var(--secondary);
+
+    & + & {
+      border-inline-start: 1px solid var(--site-traffic-card-border);
+    }
+
+    @include viewport.until(md) {
+      & + & {
+        border-block-start: 1px solid var(--site-traffic-card-border);
+        border-inline-start: 0;
+      }
+    }
   }
 
   &__tabs {
@@ -277,6 +293,7 @@
       padding: var(--space-2);
       background: transparent;
       color: var(--primary-high);
+      font-size: var(--font-down-1-rem);
       white-space: nowrap;
 
       &.is-active {
@@ -430,7 +447,9 @@
 }
 
 .fk-d-menu.site-traffic-filter-menu {
+  box-sizing: border-box;
   max-width: calc(100vw - var(--space-4));
+  overflow-x: hidden;
 
   .filter-navigation__tip-item {
     min-width: 0;

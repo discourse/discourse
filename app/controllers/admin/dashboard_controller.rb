@@ -192,12 +192,6 @@ class Admin::DashboardController < Admin::StaffController
         ).call
 
       render json: response
-    rescue RateLimiter::LimitExceeded => error
-      render json: {
-               error_type: "rate_limited",
-               retry_after_seconds: error.available_in,
-             },
-             status: :too_many_requests
     rescue AdminDashboardSiteTrafficDetail::Timeout
       render json: { error_type: "timeout", retryable: true }, status: :service_unavailable
     rescue StandardError => error

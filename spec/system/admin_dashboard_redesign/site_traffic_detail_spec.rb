@@ -118,18 +118,9 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
       },
     ].each { |attributes| Fabricate(:browser_pageview_event, **attributes) }
 
-    BrowserPageviewSessionEngagement.create!(
-      session_id: "logged-in-session",
-      engaged_seconds: 60,
-    )
-    BrowserPageviewSessionEngagement.create!(
-      session_id: "crawler-session",
-      engaged_seconds: 0,
-    )
-    BrowserPageviewSessionEngagement.create!(
-      session_id: "anonymous-session",
-      engaged_seconds: 0,
-    )
+    BrowserPageviewSessionEngagement.create!(session_id: "logged-in-session", engaged_seconds: 60)
+    BrowserPageviewSessionEngagement.create!(session_id: "crawler-session", engaged_seconds: 0)
+    BrowserPageviewSessionEngagement.create!(session_id: "anonymous-session", engaged_seconds: 0)
 
     traffic.visit_with_range(start_date: "2026-05-01", end_date: "2026-05-12")
 
@@ -263,26 +254,15 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
     initial_payload =
       traffic_payload(
         pageviews: 5,
-        filters: {},
-        countries: [
-          { value: "US", label: "United States", pageviews: 3, filterable: true },
-        ],
-        browsers: [
-          { value: "firefox", label: "Firefox", pageviews: 1, filterable: true },
-        ],
-      )
-    final_payload =
-      traffic_payload(
-        pageviews: 1,
         filters: {
-          country: "US",
-          browser: "firefox",
         },
+        countries: [{ value: "US", label: "United States", pageviews: 3, filterable: true }],
+        browsers: [{ value: "firefox", label: "Firefox", pageviews: 1, filterable: true }],
       )
+    final_payload = traffic_payload(pageviews: 1, filters: { country: "US", browser: "firefox" })
 
     page.driver.with_playwright_page do |playwright_page|
-      playwright_page.add_init_script(
-        script: <<~JS,
+      playwright_page.add_init_script(script: <<~JS)
           const originalFetch = window.fetch.bind(window);
           window.__trafficRequests = [];
           window.__trafficPending = [];
@@ -315,15 +295,11 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
             });
           };
         JS
-      )
 
       traffic.visit_with_range(start_date: "2026-05-01", end_date: "2026-05-12")
       expect(traffic).to have_loading_state
 
-      playwright_page.evaluate(
-        "body => window.__resolveTraffic(0, body)",
-        arg: initial_payload,
-      )
+      playwright_page.evaluate("body => window.__resolveTraffic(0, body)", arg: initial_payload)
       expect(traffic).to have_pageview_summary(
         total: "5",
         logged_in_human: "0",
@@ -338,10 +314,7 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
 
       expect(page.evaluate_script("window.__trafficRequests[1].aborted")).to eq(true)
 
-      playwright_page.evaluate(
-        "body => window.__resolveTraffic(2, body)",
-        arg: final_payload,
-      )
+      playwright_page.evaluate("body => window.__resolveTraffic(2, body)", arg: final_payload)
       expect(traffic).to have_pageview_summary(
         total: "1",
         logged_in_human: "0",
@@ -375,7 +348,8 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
             unscored_event_count: 1,
             session_scope: "capped_base_unfiltered",
           },
-          filters: {},
+          filters: {
+          },
           summary: {
             pageviews: 2,
             logged_in_human_pageviews: 1,
@@ -397,10 +371,7 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
           },
         },
       },
-      {
-        status: 503,
-        body: { error_type: "timeout", retryable: true },
-      },
+      { status: 503, body: { error_type: "timeout", retryable: true } },
       {
         status: 200,
         body: {
@@ -422,7 +393,8 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
             unscored_event_count: 0,
             session_scope: "capped_base_unfiltered",
           },
-          filters: {},
+          filters: {
+          },
           summary: {
             pageviews: 0,
             logged_in_human_pageviews: 0,
@@ -444,18 +416,8 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
           },
         },
       },
-      {
-        status: 429,
-        body: { error_type: "rate_limited", retry_after_seconds: 30 },
-      },
-      {
-        status: 400,
-        body: { error_type: "invalid_request" },
-      },
-      {
-        status: 500,
-        body: { error_type: "unexpected", retryable: true },
-      },
+      { status: 400, body: { error_type: "invalid_request" } },
+      { status: 500, body: { error_type: "unexpected", retryable: true } },
     ]
     pattern = %r{/admin/dashboard/traffic\.json}
 
@@ -502,14 +464,7 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
       )
 
       page.refresh
-      expect(traffic).to have_error_state(
-        message: "You’ve made too many Site traffic requests. Try again shortly.",
-      )
-
-      page.refresh
-      expect(traffic).to have_error_state(
-        message: "This Site traffic request is invalid.",
-      )
+      expect(traffic).to have_error_state(message: "This Site traffic request is invalid.")
 
       page.refresh
       expect(traffic).to have_error_state(
