@@ -370,6 +370,100 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
       await changePromise;
       assert.dom(".content").hasText("second");
     });
+
+    // The un-debounced path calls `@asyncData` inside the cached computation, so state it
+    // reads is autotracked; the debounced path calls it from a timer, where it cannot be.
+    // Consumers that debounce must therefore fold every reactive dependency into
+    // `@context` instead of relying on the function to track it. These two pin that
+    // asymmetry: without the un-debounced case the debounced assertion would also hold
+    // for a source that simply never re-runs.
+    test("an un-debounced source autotracks state read inside the function", async function (assert) {
+      await render(
+        class extends Component {
+          @tracked suffix = "a";
+
+          load = () => `value-${this.suffix}`;
+
+          @action
+          changeSuffix() {
+            this.suffix = "b";
+          }
+
+          <template>
+            <button {{on "click" this.changeSuffix}}>Suffix</button>
+            <DAsyncContent @asyncData={{this.load}}>
+              <:content as |data|>
+                <div class="content">{{data}}</div>
+              </:content>
+            </DAsyncContent>
+          </template>
+        }
+      );
+
+      assert.dom(".content").hasText("value-a");
+
+      await click("button");
+
+      assert
+        .dom(".content")
+        .hasText("value-b", "the reload picks up the new value");
+    });
+
+    test("a debounced source does not autotrack state read inside the function", async function (assert) {
+      await render(
+        class extends Component {
+          @tracked context = "first";
+          @tracked suffix = "a";
+
+          load = (context) => `${context}-${this.suffix}`;
+
+          @action
+          changeContext() {
+            this.context = "second";
+          }
+
+          @action
+          changeSuffix() {
+            this.suffix = "b";
+          }
+
+          <template>
+            <button
+              class="context"
+              {{on "click" this.changeContext}}
+            >Context</button>
+            <button
+              class="suffix"
+              {{on "click" this.changeSuffix}}
+            >Suffix</button>
+            <DAsyncContent
+              @asyncData={{this.load}}
+              @context={{this.context}}
+              @debounce={{true}}
+            >
+              <:content as |data|>
+                <div class="content">{{data}}</div>
+              </:content>
+            </DAsyncContent>
+          </template>
+        }
+      );
+
+      assert.dom(".content").hasText("first-a");
+
+      // Engages the debounced path, which applies from the second evaluation onward.
+      await click(".context");
+      assert.dom(".content").hasText("second-a");
+
+      await click(".suffix");
+
+      assert
+        .dom(".content")
+        .hasText(
+          "second-a",
+          "a dependency read only inside the debounced call does not restart the load"
+        );
+    });
   });
 
   module("<:loading>", function () {
