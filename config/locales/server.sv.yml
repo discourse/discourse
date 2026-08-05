@@ -1966,7 +1966,6 @@ sv:
     default_other_notification_level_when_replying: "Generell standardiserad bevakningssnivå när en användare svarar i ett ämne."
     default_other_external_links_in_new_tab: "Öppna externa länkar i en ny flik som standard."
     default_other_enable_quoting: "Aktivera svar med citat för markerad text som standard."
-    default_other_enable_defer: "Aktivera uppskjutande ämnesfunktioner som standard."
     default_other_dynamic_favicon: "Visa räknaren för nya/uppdaterade ämnen i webbläsaren som standard."
     default_other_skip_new_user_tips: "Hoppa över nybörjartips och utmärkelser för ny användare."
     default_topics_automatic_unpin: "Ta automatiskt ned ämnen när användaren når botten som standard."

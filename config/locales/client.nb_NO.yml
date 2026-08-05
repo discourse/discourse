@@ -1259,7 +1259,6 @@ nb_NO:
       allow_private_messages: "Tillat andre brukere å sende meg personlige meldinger"
       external_links_in_new_tab: "Åpne alle eksterne lenker i ny fane"
       enable_quoting: "Aktiver svar med sitat for uthevet tekst"
-      enable_defer: "Aktiver merking av emner som ulest"
       experimental_sidebar:
         enable: "Aktiver sidefelt"
         options: "Alternativer"

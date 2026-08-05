@@ -2329,7 +2329,6 @@ pt_BR:
     default_other_external_links_in_new_tab: "Abra links externos em uma nova aba por padrão."
     default_other_enable_quoting: "Ative a citação de resposta para texto realçado por padrão."
     default_other_enable_smart_lists: "Ativar listas inteligentes ao digitar no compositor por padrão."
-    default_other_enable_defer: "Ative a funcionalidade de adiar tópico por padrão."
     default_other_enable_markdown_monospace_font: "Usar fonte monoespacial no modo Markdown do compositor por padrão."
     default_other_dynamic_favicon: "Mostre contagem de tópicos novos/atualizados no ícone do navegador por padrão."
     default_other_skip_new_user_tips: "Pule emblemas e dicas de integração de novo(a) usuário(a)."

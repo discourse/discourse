@@ -2523,7 +2523,6 @@ ru:
     default_other_external_links_in_new_tab: "По умолчанию открывать внешние ссылки в новой вкладке."
     default_other_enable_quoting: "Включить по умолчанию ответ с цитированием для выделенного текста."
     default_other_enable_smart_lists: "Включать умные списки при вводе текста в редакторе по умолчанию."
-    default_other_enable_defer: "Включить функцию отложенных тем по умолчанию."
     default_other_enable_markdown_monospace_font: "Использовать моноширинный шрифт в режиме Markdown по умолчанию."
     default_other_dynamic_favicon: "Показывать количество новых/обновлённых тем на значке браузера по умолчанию."
     default_other_skip_new_user_tips: "Не выдавать награды и не показывать советы новым пользователям."

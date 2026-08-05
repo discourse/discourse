@@ -1631,7 +1631,6 @@ hu:
       external_links_in_new_tab: "Az összes külső hivatkozás megnyitása új lapon"
       enable_quoting: "A kijelölt szöveg idézése a válaszban"
       enable_smart_lists: "Intelligens listák engedélyezése a szerkesztőben való íráskor"
-      enable_defer: "A témák olvasatlanként való megjelölésének engedélyezése"
       enable_markdown_monospace_font: "Fix szélességű betűkészlet használata a szerkesztő Markdown módjában"
       experimental_sidebar:
         enable: "Oldalsáv engedélyezése"

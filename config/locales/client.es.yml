@@ -1646,7 +1646,6 @@ es:
       external_links_in_new_tab: "Abrir todos los enlaces externos en una nueva pestaña"
       enable_quoting: "Activar respuesta citando el texto seleccionado"
       enable_smart_lists: "Activar listas inteligentes al escribir en el compositor"
-      enable_defer: "Activar marcar temas como no leídos"
       enable_markdown_monospace_font: "Usar fuente monoespaciada en el modo Markdown del compositor"
       experimental_sidebar:
         enable: "Activar barra lateral"
