@@ -43,6 +43,9 @@
     font-size: var(--font-down-1-rem);
 
     > span {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -339,9 +342,17 @@
     }
   }
 
-  html.discourse-no-touch & button.site-traffic-detail__row:hover {
+  html.discourse-no-touch & .site-traffic-detail__row:hover {
     background: var(--primary-very-low);
+  }
+
+  html.discourse-no-touch & button.site-traffic-detail__row:hover {
     color: var(--tertiary);
+  }
+
+  &__browser-icon {
+    flex: 0 0 auto;
+    color: var(--primary-medium);
   }
 
   @include viewport.until(sm) {

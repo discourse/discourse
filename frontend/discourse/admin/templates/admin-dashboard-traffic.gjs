@@ -26,7 +26,7 @@ export default <template>
       <:actions>
         <div data-test-site-traffic-date-range>
           <DashboardDateRange
-            @period="custom"
+            @period={{@controller.period}}
             @startDate={{@controller.startDate}}
             @endDate={{@controller.endDate}}
             @setPeriod={{@controller.setPeriod}}

@@ -28,6 +28,8 @@ function payload({
   browsers = [],
   ipAddresses = [],
   topUrls = [],
+  entryUrls = [],
+  trafficSources = [],
   analysis = {},
 } = {}) {
   return {
@@ -66,8 +68,8 @@ function payload({
     ],
     dimensions: {
       top_urls: topUrls,
-      entry_urls: [],
-      traffic_sources: [],
+      entry_urls: entryUrls,
+      traffic_sources: trafficSources,
       countries,
       networks,
       browsers,
@@ -229,6 +231,12 @@ module(
       assert.dom("[data-test-metric]").includesText("5");
 
       await click("[data-site-traffic-dimension-tab='browsers']");
+
+      assert
+        .dom(
+          "#site-traffic-dimension-panel [data-test-breakdown-row] .svg-icon"
+        )
+        .exists("browser rows have an icon");
       await click(
         "[data-test-breakdown='visitor-dimensions'] [data-test-breakdown-row]"
       );
@@ -410,7 +418,20 @@ module(
     });
 
     test("provides keyboard-operable Pages tabs", async function (assert) {
-      this.fetchStub.resolves(response(payload()));
+      this.fetchStub.resolves(
+        response(
+          payload({
+            entryUrls: [
+              {
+                value: "/entry",
+                label: "/entry",
+                pageviews: 2,
+                filterable: false,
+              },
+            ],
+          })
+        )
+      );
 
       await render(
         <template>
@@ -437,6 +458,9 @@ module(
       assert
         .dom("#site-traffic-pages-panel")
         .hasAttribute("aria-labelledby", "site-traffic-tab-entry-urls");
+      assert
+        .dom("#site-traffic-pages-panel [data-test-breakdown-row]")
+        .includesText("/entry");
     });
   }
 );

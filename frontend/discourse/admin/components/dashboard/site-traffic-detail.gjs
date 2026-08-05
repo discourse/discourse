@@ -15,6 +15,7 @@ import DiscourseURL from "discourse/lib/url";
 import Session from "discourse/models/session";
 import { eq, gt, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
 const SAFE_FILTERS = new Set(["country", "asn", "browser"]);
@@ -29,6 +30,16 @@ const BROWSER_FAMILIES = new Set([
   "discoursehub",
   "unknown",
 ]);
+const BROWSER_ICONS = {
+  edge: "fab-edge",
+  opera: "fab-opera",
+  firefox: "fab-firefox-browser",
+  chrome: "fab-chrome",
+  safari: "fab-safari",
+  ie: "fab-internet-explorer",
+  discoursehub: "fab-discourse",
+  unknown: "globe",
+};
 const FILTER_DIMENSIONS = {
   top_urls: "url",
   countries: "country",
@@ -424,8 +435,13 @@ export default class SiteTrafficDetail extends Component {
     return (this.dimensions[dimension] || []).map((row) => ({
       ...row,
       displayLabel: this.#rowLabel(dimension, row),
+      icon: dimension === "browsers" ? this.#browserIcon(row.value) : null,
       formattedPageviews: this.#formatNumber(row.pageviews),
     }));
+  }
+
+  #browserIcon(value) {
+    return BROWSER_ICONS[BROWSER_FAMILIES.has(value) ? value : "unknown"];
   }
 
   #rowLabel(dimension, row) {
@@ -1078,6 +1094,12 @@ export default class SiteTrafficDetail extends Component {
                                 {{this.countryFlag row.value}}
                               </span>
                             {{/if}}
+                            {{#if row.icon}}
+                              {{dIcon
+                                row.icon
+                                class="site-traffic-detail__browser-icon"
+                              }}
+                            {{/if}}
                             {{row.displayLabel}}
                           </span>
                           <strong>{{row.formattedPageviews}}</strong>
@@ -1087,7 +1109,15 @@ export default class SiteTrafficDetail extends Component {
                           class="site-traffic-detail__row"
                           data-test-breakdown-row
                         >
-                          <span>{{row.displayLabel}}</span>
+                          <span>
+                            {{#if row.icon}}
+                              {{dIcon
+                                row.icon
+                                class="site-traffic-detail__browser-icon"
+                              }}
+                            {{/if}}
+                            {{row.displayLabel}}
+                          </span>
                           <strong>{{row.formattedPageviews}}</strong>
                         </span>
                       {{/if}}

@@ -1,7 +1,11 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import { calculatePresetStartDate } from "discourse/admin/lib/dashboard-date-range";
+import {
+  ALL_PRESETS,
+  calculatePresetStartDate,
+  PERIOD_CUSTOM,
+} from "discourse/admin/lib/dashboard-date-range";
 
 export default class AdminDashboardTrafficController extends Controller {
   @tracked start_date = null;
@@ -15,6 +19,20 @@ export default class AdminDashboardTrafficController extends Controller {
 
   get endDate() {
     return moment(this.end_date, "YYYY-MM-DD", true).toDate();
+  }
+
+  get period() {
+    const startDate = moment(this.start_date, "YYYY-MM-DD", true);
+    const endDate = moment(this.end_date, "YYYY-MM-DD", true);
+    if (!startDate.isValid() || !endDate.isSame(moment(), "day")) {
+      return PERIOD_CUSTOM;
+    }
+
+    return (
+      ALL_PRESETS.find((period) =>
+        startDate.isSame(calculatePresetStartDate(period), "day")
+      ) ?? PERIOD_CUSTOM
+    );
   }
 
   @action
