@@ -760,18 +760,6 @@ export default class SiteTrafficDetail extends Component {
           />
           <SiteTrafficMetric
             @label={{i18n
-              "admin.dashboard.site_traffic.kpi.logged_in_share.label"
-            }}
-            @value={{this.formattedLoggedInShare}}
-            @tooltip={{i18n
-              "admin.dashboard.site_traffic.kpi.logged_in_share.tooltip"
-            }}
-            @tooltipIdentifier="site-traffic-detail-logged-in-share-tooltip"
-            data-test-metric
-            data-test-logged-in-share
-          />
-          <SiteTrafficMetric
-            @label={{i18n
               "admin.dashboard.site_traffic.details.kpi.distinct_sessions.label"
             }}
             @value={{this.formattedDistinctSessions}}
@@ -781,6 +769,18 @@ export default class SiteTrafficDetail extends Component {
             @tooltipIdentifier="site-traffic-detail-sessions-tooltip"
             data-test-metric
             data-test-session-kpi
+          />
+          <SiteTrafficMetric
+            @label={{i18n
+              "admin.dashboard.site_traffic.kpi.logged_in_share.label"
+            }}
+            @value={{this.formattedLoggedInShare}}
+            @tooltip={{i18n
+              "admin.dashboard.site_traffic.kpi.logged_in_share.tooltip"
+            }}
+            @tooltipIdentifier="site-traffic-detail-logged-in-share-tooltip"
+            data-test-metric
+            data-test-logged-in-share
           />
           <SiteTrafficMetric
             @label={{i18n
