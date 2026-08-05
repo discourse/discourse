@@ -374,6 +374,9 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
               start_date: "2026-05-01",
               end_date: "2026-05-12",
               filters: {
+                top_url: "/about",
+                entry_url: "/privacy",
+                referrer: "example.com",
                 country: "US",
                 asn: "AS64500",
                 ip: "192.0.2.1",
@@ -381,31 +384,72 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
             ),
           )
 
-        expect(request.filters).to eq("country" => "US", "asn" => "AS64500", "ip" => "192.0.2.1")
+        expect(request.filters).to eq(
+          "top_url" => "/about",
+          "entry_url" => "/privacy",
+          "referrer" => "example.com",
+          "country" => "US",
+          "asn" => "AS64500",
+          "ip" => "192.0.2.1",
+        )
       end
 
       it "rejects unknown, nested, and noncanonical values" do
         invalid_requests = [
           { start_date: "2026-05-01", end_date: "2026-05-12", filters: { country: "us" } },
           { start_date: "2026-05-01", end_date: "2026-05-12", filters: { ip: "192.0.2.0/24" } },
-          { start_date: "2026-05-01", end_date: "2026-05-12", filters: { url: "/admin/users" } },
+          { start_date: "2026-05-01", end_date: "2026-05-12", filters: { url: "/about" } },
+          {
+            start_date: "2026-05-01",
+            end_date: "2026-05-12",
+            filters: {
+              top_url: "/admin/users",
+            },
+          },
           { start_date: "2026-5-1", end_date: "2026-05-12", filters: {} },
           { start_date: "2026-05-01", end_date: "2026-05-12", filters: { country: ["US"] } },
           {
             start_date: "2026-05-01",
             end_date: "2026-05-12",
             filters: {
-              url: "/<img src=x onerror=alert(1)>",
+              entry_url: "/<img src=x onerror=alert(1)>",
             },
           },
-          { start_date: "2026-05-01", end_date: "2026-05-12", filters: { url: "/../admin" } },
-          { start_date: "2026-05-01", end_date: "2026-05-12", filters: { url: "/safe%2fpath" } },
-          { start_date: "2026-05-01", end_date: "2026-05-12", filters: { url: "/new" } },
+          { start_date: "2026-05-01", end_date: "2026-05-12", filters: { top_url: "/../admin" } },
           {
             start_date: "2026-05-01",
             end_date: "2026-05-12",
             filters: {
-              url: "/plugin/private-helper",
+              top_url: "/safe%2fpath",
+            },
+          },
+          { start_date: "2026-05-01", end_date: "2026-05-12", filters: { top_url: "/new" } },
+          {
+            start_date: "2026-05-01",
+            end_date: "2026-05-12",
+            filters: {
+              top_url: "/plugin/private-helper",
+            },
+          },
+          {
+            start_date: "2026-05-01",
+            end_date: "2026-05-12",
+            filters: {
+              referrer: "Direct / unknown",
+            },
+          },
+          {
+            start_date: "2026-05-01",
+            end_date: "2026-05-12",
+            filters: {
+              referrer: "Example.com",
+            },
+          },
+          {
+            start_date: "2026-05-01",
+            end_date: "2026-05-12",
+            filters: {
+              referrer: "www.example.com",
             },
           },
           { start_date: "2026-05-01", end_date: "2026-05-12", filters: { browser: "other" } },
@@ -626,7 +670,7 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
             start_date: 1.day.ago.to_date.iso8601,
             end_date: Date.current.iso8601,
             filters: {
-              url: "/about",
+              top_url: "/about",
             },
           ),
         )
@@ -742,7 +786,7 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
             start_date: 1.day.ago.to_date.iso8601,
             end_date: Date.current.iso8601,
             filters: {
-              url: "/about",
+              top_url: "/about",
             },
           ),
         )
@@ -753,6 +797,67 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
       expect(result.dig(:dimensions, :top_urls).map { |row| row[:value] }).to contain_exactly(
         "/about",
         "/search",
+      )
+    end
+
+    it "applies entry filters to the same entry pageview without expanding its session" do
+      Fabricate(
+        :browser_pageview_event,
+        url: "/about",
+        session_id: "matching-entry",
+        normalized_referrer: "external.example/landing",
+        normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
+        created_at: 3.hours.ago,
+      )
+      Fabricate(
+        :browser_pageview_event,
+        url: "/privacy",
+        session_id: "matching-entry",
+        normalized_referrer: "other.example/later",
+        normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
+        created_at: 2.hours.ago,
+      )
+      Fabricate(
+        :browser_pageview_event,
+        url: "/about",
+        session_id: "other-source",
+        normalized_referrer: "other.example/landing",
+        normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
+        created_at: 3.hours.ago,
+      )
+      Fabricate(
+        :browser_pageview_event,
+        url: "/privacy",
+        session_id: "other-entry",
+        normalized_referrer: "external.example/landing",
+        normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
+        created_at: 3.hours.ago,
+      )
+      request =
+        described_class::Request.parse(
+          ActionController::Parameters.new(
+            start_date: 1.day.ago.to_date.iso8601,
+            end_date: Date.current.iso8601,
+            filters: {
+              entry_url: "/about",
+              referrer: "external.example",
+            },
+          ),
+        )
+
+      result = described_class.new(request: request).call
+
+      expect(result.dig(:summary, :pageviews)).to eq(1)
+      expect(result.dig(:dimensions, :entry_urls)).to contain_exactly(
+        include(value: "/about", pageviews: 1, filterable: true),
+        include(value: "/privacy", pageviews: 1, filterable: true),
+      )
+      expect(result.dig(:dimensions, :traffic_sources)).to contain_exactly(
+        include(value: "external.example", pageviews: 1, filterable: true),
+        include(value: "other.example", pageviews: 1, filterable: true),
+      )
+      expect(result.dig(:dimensions, :top_urls)).to include(
+        include(value: "/privacy", pageviews: 0),
       )
     end
 
@@ -781,7 +886,7 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
             start_date: 1.day.ago.to_date.iso8601,
             end_date: Date.current.iso8601,
             filters: {
-              url: "/top",
+              top_url: "/top",
               country: "US",
               asn: "AS64500",
               browser: "chrome",
@@ -979,7 +1084,7 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
             start_date: 1.day.ago.to_date.iso8601,
             end_date: Date.current.iso8601,
             filters: {
-              url: "/t/#{private_message.id}",
+              top_url: "/t/#{private_message.id}",
             },
           ),
         )
@@ -1014,6 +1119,12 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
         normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
         created_at: 1.minute.ago,
       )
+      Fabricate(
+        :browser_pageview_event,
+        url: "/about",
+        session_id: "direct-session",
+        created_at: 2.minutes.ago,
+      )
       request =
         described_class::Request.parse(
           ActionController::Parameters.new(
@@ -1025,10 +1136,23 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
         )
 
       result = described_class.new(request: request).call
+      filtered_request =
+        described_class::Request.parse(
+          ActionController::Parameters.new(
+            start_date: 1.day.ago.to_date.iso8601,
+            end_date: Date.current.iso8601,
+            filters: {
+              referrer: "external.example",
+            },
+          ),
+        )
+      filtered_result = described_class.new(request: filtered_request).call
 
-      expect(result.dig(:dimensions, :traffic_sources)).to include(
-        include(value: "external.example"),
+      expect(result.dig(:dimensions, :traffic_sources)).to contain_exactly(
+        include(value: "external.example", filterable: true),
+        include(value: "Direct / unknown", filterable: false),
       )
+      expect(filtered_result.dig(:summary, :pageviews)).to eq(1)
     end
 
     it "suppresses every exact canonical internal hostname alias without suppressing attacker domains" do
@@ -1291,10 +1415,10 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
       result = described_class.new(request: request).call
 
       expect(result.dig(:dimensions, :entry_urls)).to contain_exactly(
-        include(value: "/search", pageviews: 1, filterable: false),
+        include(value: "/search", pageviews: 1, filterable: true),
       )
       expect(result.dig(:dimensions, :traffic_sources)).to contain_exactly(
-        include(value: "later.example", pageviews: 1, filterable: false),
+        include(value: "later.example", pageviews: 1, filterable: true),
       )
       expect(result.fetch(:analysis)).to include(
         cap_truncated: true,
@@ -1333,6 +1457,19 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
           ),
         )
       filtered_key = described_class.cache_key(request: filtered_request, actor: actor)
+      entry_filtered_request =
+        described_class::Request.parse(
+          ActionController::Parameters.new(
+            start_date: request.start_date.iso8601,
+            end_date: request.end_date.iso8601,
+            filters: {
+              top_url: "/about",
+              entry_url: "/privacy",
+              referrer: "example.com",
+            },
+          ),
+        )
+      entry_filtered_key = described_class.cache_key(request: entry_filtered_request, actor: actor)
       SiteSetting.clean_up_browser_pageview_events = false
       cleanup_disabled_key = described_class.cache_key(request: request, actor: actor)
       SiteSetting.clean_up_browser_pageview_events = true
@@ -1344,6 +1481,8 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
 
       expect(first_key).not_to eq(second_key)
       expect(first_key).not_to eq(filtered_key)
+      expect(first_key).not_to eq(entry_filtered_key)
+      expect(filtered_key).not_to eq(entry_filtered_key)
       expect(cleanup_disabled_key).not_to eq(cleanup_enabled_key)
       expect(crawler_detection_disabled_key).not_to eq(crawler_detection_enabled_key)
     end

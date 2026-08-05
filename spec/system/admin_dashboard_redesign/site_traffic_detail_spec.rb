@@ -162,7 +162,7 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
     expect(traffic).to have_breakdown_row(title: "Top URLs", label: "/top", pageviews: "2")
     expect(traffic).to have_breakdown_row(title: "Entry URLs", label: "/latest", pageviews: "1")
     expect(traffic).to have_breakdown_row(
-      title: "Traffic Sources",
+      title: "Referrers",
       label: "search.example",
       pageviews: "1",
     )

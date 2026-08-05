@@ -3,6 +3,9 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import getURL from "discourse/lib/get-url";
+import { and, eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
@@ -49,7 +52,31 @@ export default class SiteTrafficBreakdownModal extends Component {
             {{#each this.rows as |row|}}
               <tr class="d-table__row">
                 <td class="d-table__cell">
-                  {{#if row.filterable}}
+                  {{#if
+                    (and row.filterable (eq @model.dimension "entry_urls"))
+                  }}
+                    <span class="site-traffic-breakdown-modal__entry-actions">
+                      <a
+                        href={{getURL row.value}}
+                        data-auto-route="true"
+                        data-test-entry-url-link
+                      >{{row.displayLabel}}</a>
+                      <DButton
+                        @icon="filter"
+                        @action={{fn this.select row}}
+                        @translatedTitle={{i18n
+                          "admin.dashboard.site_traffic.details.filter_row"
+                          value=row.displayLabel
+                        }}
+                        @translatedAriaLabel={{i18n
+                          "admin.dashboard.site_traffic.details.filter_row"
+                          value=row.displayLabel
+                        }}
+                        class="site-traffic-breakdown-modal__filter btn-flat"
+                        data-test-entry-url-filter
+                      />
+                    </span>
+                  {{else if row.filterable}}
                     <button
                       type="button"
                       class="btn-flat site-traffic-breakdown-modal__filter"

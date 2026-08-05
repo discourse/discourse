@@ -35,6 +35,23 @@
 
     .topic-query-filter__input {
       width: 100%;
+      min-width: 0;
+    }
+
+    input.topic-query-filter__filter-term {
+      box-sizing: border-box;
+      max-width: 100%;
+      padding-inline: 2.25em 2.5em;
+    }
+
+    .topic-query-filter__icon {
+      left: auto;
+      inset-inline-start: 0.75em;
+    }
+
+    .topic-query-filter__clear-btn {
+      right: auto;
+      inset-inline-end: 0.5em;
     }
   }
 
@@ -317,6 +334,19 @@
     }
   }
 
+  &__row-link {
+    min-width: 0;
+    overflow: hidden;
+    color: inherit;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__row-filter {
+    flex: 0 0 auto;
+    padding: var(--space-1);
+  }
+
   button.site-traffic-detail__row {
     cursor: pointer;
 
@@ -370,6 +400,20 @@
     font-variant-numeric: tabular-nums;
   }
 
+  &__entry-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+
+    a {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
   &__filter {
     max-width: 100%;
     padding: 0;
@@ -382,5 +426,24 @@
     &:focus-visible {
       text-decoration: underline;
     }
+  }
+}
+
+.fk-d-menu.site-traffic-filter-menu {
+  max-width: calc(100vw - var(--space-4));
+
+  .filter-navigation__tip-item {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .filter-navigation__tip-name {
+    display: block;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }

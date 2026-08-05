@@ -18,12 +18,12 @@ import FilterNavigationMenu from "discourse/components/discovery/filter-navigati
 import { formatMinutesSeconds } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import Session from "discourse/models/session";
-import { eq, gt } from "discourse/truth-helpers";
+import { and, eq, gt } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
-const SENSITIVE_FILTERS = new Set(["url", "ip"]);
+const SENSITIVE_FILTERS = new Set(["top_url", "entry_url", "referrer", "ip"]);
 const FILTER_OPTION_LIMIT = 20;
 const BROWSER_ICONS = {
   edge: "fab-edge",
@@ -36,18 +36,31 @@ const BROWSER_ICONS = {
   unknown: "globe",
 };
 const FILTER_DIMENSIONS = {
-  top_urls: "url",
+  top_urls: "top_url",
+  entry_urls: "entry_url",
+  traffic_sources: "referrer",
   countries: "country",
   networks: "asn",
   browsers: "browser",
   ip_addresses: "ip",
 };
 const FILTER_SOURCE_DIMENSIONS = {
-  url: "top_urls",
+  top_url: "top_urls",
+  entry_url: "entry_urls",
+  referrer: "traffic_sources",
   country: "countries",
   asn: "networks",
   browser: "browsers",
   ip: "ip_addresses",
+};
+const FILTER_PREFIXES = {
+  top_url: "top_url",
+  entry_url: "entry_url",
+  referrer: "referrer",
+  country: "country",
+  asn: "network",
+  browser: "browser",
+  ip: "ip",
 };
 const SERIES = [
   {
@@ -188,20 +201,19 @@ export default class SiteTrafficDetail extends Component {
             id: `${dimension}:${row.value}`,
             dimension,
             value: row.value,
-            name: this.#filterDisplayName(
-              dimension,
-              this.#rowLabel(sourceDimension, row)
-            ),
+            name: this.#rowLabel(sourceDimension, row),
+            expression: this.#filterExpression(dimension, row.value),
           }))
     );
   }
 
   get filterInputValue() {
-    return Object.entries(this.filters)
-      .map(([dimension, value]) =>
-        this.#filterDisplayName(dimension, this.#filterLabel(dimension, value))
+    return Object.keys(FILTER_SOURCE_DIMENSIONS)
+      .filter((dimension) => this.filters[dimension])
+      .map((dimension) =>
+        this.#filterExpression(dimension, this.filters[dimension])
       )
-      .join(i18n("admin.dashboard.site_traffic.details.filter_separator"));
+      .join(" ");
   }
 
   get pageRows() {
@@ -345,6 +357,7 @@ export default class SiteTrafficDetail extends Component {
 
   @action
   applyFilter(dimension, value) {
+    this.suggestionDimension = null;
     this.#updateFilters({ ...this.filters, [dimension]: value });
   }
 
@@ -354,7 +367,14 @@ export default class SiteTrafficDetail extends Component {
       const dimension = Object.keys(FILTER_SOURCE_DIMENSIONS).find(
         (candidate) => value === this.#filterPrefix(candidate)
       );
-      this.suggestionDimension = dimension;
+      if (dimension) {
+        this.suggestionDimension = dimension;
+      } else if (
+        !this.suggestionDimension ||
+        !value.startsWith(this.#filterPrefix(this.suggestionDimension))
+      ) {
+        this.suggestionDimension = null;
+      }
       return;
     }
 
@@ -367,7 +387,7 @@ export default class SiteTrafficDetail extends Component {
     const option = this.filterOptions.find(
       (candidate) =>
         candidate.dimension === this.suggestionDimension &&
-        candidate.name === value
+        candidate.expression === value
     );
     this.suggestionDimension = null;
 
@@ -407,7 +427,7 @@ export default class SiteTrafficDetail extends Component {
         .slice(0, FILTER_OPTION_LIMIT)
         .map((option) => ({
           ...option,
-          inputValue: option.name,
+          inputValue: option.expression,
           submitOnSelect: true,
         })),
     };
@@ -507,6 +527,7 @@ export default class SiteTrafficDetail extends Component {
       model: {
         title,
         rows,
+        dimension,
         onSelect: (row) => {
           const filterDimension = FILTER_DIMENSIONS[dimension];
           if (filterDimension && row.filterable) {
@@ -553,45 +574,12 @@ export default class SiteTrafficDetail extends Component {
     return row.label;
   }
 
-  #filterLabel(dimension, value) {
-    const sourceDimension = {
-      url: "top_urls",
-      country: "countries",
-      asn: "networks",
-      browser: "browsers",
-      ip: "ip_addresses",
-    }[dimension];
-    const row = (this.dimensions[sourceDimension] || []).find(
-      (candidate) => candidate.value === value
-    );
-
-    if (row) {
-      return this.#rowLabel(sourceDimension, row);
-    }
-    if (dimension === "country") {
-      return countryName(value) || value;
-    }
-    if (dimension === "browser") {
-      return i18n(
-        `admin.dashboard.site_traffic.details.browsers.${
-          SITE_TRAFFIC_BROWSER_FAMILIES.has(value) ? value : "unknown"
-        }`
-      );
-    }
-    return value;
-  }
-
-  #filterDisplayName(dimension, value) {
-    return i18n("admin.dashboard.site_traffic.details.filter_value", {
-      dimension: i18n(
-        `admin.dashboard.site_traffic.details.filter_dimensions.${dimension}`
-      ),
-      value,
-    });
+  #filterExpression(dimension, value) {
+    return `${FILTER_PREFIXES[dimension]}:${value}`;
   }
 
   #filterPrefix(dimension) {
-    return this.#filterDisplayName(dimension, "");
+    return `${FILTER_PREFIXES[dimension]}:`;
   }
 
   #formatNumber(value) {
@@ -721,6 +709,7 @@ export default class SiteTrafficDetail extends Component {
               @getSuggestions={{this.getFilterSuggestions}}
               @initialInputValue={{this.filterInputValue}}
               @onChange={{this.filterInputChanged}}
+              @menuClass="site-traffic-filter-menu"
               @placeholder={{i18n
                 "admin.dashboard.site_traffic.details.active_filters"
               }}
@@ -971,13 +960,28 @@ export default class SiteTrafficDetail extends Component {
                     as |row|
                   }}
                     <li>
-                      <span
-                        class="site-traffic-detail__row"
-                        data-test-breakdown-row
-                      >
-                        <span>{{row.displayLabel}}</span>
-                        <strong>{{row.formattedPageviews}}</strong>
-                      </span>
+                      {{#if row.filterable}}
+                        <button
+                          type="button"
+                          class="site-traffic-detail__row"
+                          data-test-breakdown-row
+                          {{on
+                            "click"
+                            (fn this.applyFilter "referrer" row.value)
+                          }}
+                        >
+                          <span>{{row.displayLabel}}</span>
+                          <strong>{{row.formattedPageviews}}</strong>
+                        </button>
+                      {{else}}
+                        <span
+                          class="site-traffic-detail__row"
+                          data-test-breakdown-row
+                        >
+                          <span>{{row.displayLabel}}</span>
+                          <strong>{{row.formattedPageviews}}</strong>
+                        </span>
+                      {{/if}}
                     </li>
                   {{/each}}
                 </ul>
@@ -1058,12 +1062,52 @@ export default class SiteTrafficDetail extends Component {
                 <ul class="site-traffic-detail__breakdown-list">
                   {{#each (this.cardRows this.pageRows) as |row|}}
                     <li>
-                      {{#if row.filterable}}
+                      {{#if
+                        (and row.filterable (eq this.pagesTab "entry_urls"))
+                      }}
+                        <span
+                          class="site-traffic-detail__row"
+                          data-test-breakdown-row
+                        >
+                          <a
+                            href={{getURL row.value}}
+                            class="site-traffic-detail__row-link"
+                            data-auto-route="true"
+                            data-test-entry-url-link
+                          >{{row.displayLabel}}</a>
+                          <strong>{{row.formattedPageviews}}</strong>
+                          <DButton
+                            @icon="filter"
+                            @action={{fn
+                              this.applyFilter
+                              "entry_url"
+                              row.value
+                            }}
+                            @translatedTitle={{i18n
+                              "admin.dashboard.site_traffic.details.filter_row"
+                              value=row.displayLabel
+                            }}
+                            @translatedAriaLabel={{i18n
+                              "admin.dashboard.site_traffic.details.filter_row"
+                              value=row.displayLabel
+                            }}
+                            class="site-traffic-detail__row-filter btn-flat"
+                            data-test-entry-url-filter
+                          />
+                        </span>
+                      {{else if row.filterable}}
                         <button
                           type="button"
                           class="site-traffic-detail__row"
                           data-test-breakdown-row
-                          {{on "click" (fn this.applyFilter "url" row.value)}}
+                          {{on
+                            "click"
+                            (fn
+                              this.applyFilter
+                              (get FILTER_DIMENSIONS this.pagesTab)
+                              row.value
+                            )
+                          }}
                         >
                           <span>{{row.displayLabel}}</span>
                           <strong>{{row.formattedPageviews}}</strong>

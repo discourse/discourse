@@ -280,24 +280,37 @@ module(
 
       await click("#topic-query-filter-input");
       assert
+        .dom(".fk-d-menu.site-traffic-filter-menu")
+        .exists("the autocomplete uses the viewport-constrained menu style");
+      assert
         .dom(".filter-navigation__tip-item")
-        .exists({ count: 5 }, "opening first shows only five dimensions");
+        .exists({ count: 7 }, "opening first shows only seven dimensions");
+      assert
+        .dom(".filter-navigation__tip-item")
+        .includesText("Top URL")
+        .includesText("Entry URL")
+        .includesText("Referrer")
+        .includesText("Network");
       assert
         .dom(".filter-navigation__tip-name")
         .doesNotIncludeText("United States", "values are not shown initially");
 
       await click(".filter-navigation__tip-item:nth-child(1)");
       assert
+        .dom("#topic-query-filter-input")
+        .hasValue("top_url:", "dimension selection uses the canonical prefix");
+      assert
         .dom(".filter-navigation__tip-item")
         .exists({ count: 20 }, "value suggestions are capped at twenty");
 
       await fillIn("#topic-query-filter-input", "");
-      await click(".filter-navigation__tip-item:nth-child(2)");
-      await fillIn("#topic-query-filter-input", "Country: United");
+      await click(".filter-navigation__tip-item:nth-child(4)");
+      assert.dom("#topic-query-filter-input").hasValue("country:");
+      await fillIn("#topic-query-filter-input", "country:United");
       assert
         .dom(".filter-navigation__tip-item")
         .exists({ count: 1 }, "the second stage narrows exact country values")
-        .includesText("Country: United States");
+        .hasText("United States", "the value stage omits the dimension label");
       await click(".filter-navigation__tip-item");
 
       assert.deepEqual(
@@ -307,11 +320,11 @@ module(
       );
       assert
         .dom("#topic-query-filter-input")
-        .hasValue("Country: United States", "the selected filter is visible");
+        .hasValue("country:US", "the selected filter uses canonical syntax");
 
       await fillIn("#topic-query-filter-input", "");
-      await click(".filter-navigation__tip-item:nth-child(4)");
-      await fillIn("#topic-query-filter-input", "Browser: Fire");
+      await click(".filter-navigation__tip-item:nth-child(6)");
+      await fillIn("#topic-query-filter-input", "browser:Fire");
       await click(".filter-navigation__tip-item");
 
       assert.deepEqual(
@@ -321,8 +334,8 @@ module(
       );
 
       await fillIn("#topic-query-filter-input", "");
-      await click(".filter-navigation__tip-item:nth-child(2)");
-      await fillIn("#topic-query-filter-input", "Country: Can");
+      await click(".filter-navigation__tip-item:nth-child(4)");
+      await fillIn("#topic-query-filter-input", "country:Can");
       await click(".filter-navigation__tip-item");
 
       assert.deepEqual(
@@ -333,7 +346,7 @@ module(
       assert
         .dom("#topic-query-filter-input")
         .hasValue(
-          "Country: Canada, Browser: Firefox",
+          "country:CA browser:firefox",
           "one value remains for each active dimension"
         );
 
@@ -454,6 +467,20 @@ module(
                 filterable: true,
               },
             ],
+            trafficSources: [
+              {
+                value: "external.example",
+                label: "external.example",
+                pageviews: 2,
+                filterable: true,
+              },
+              {
+                value: "Direct / unknown",
+                label: "Direct / unknown",
+                pageviews: 1,
+                filterable: false,
+              },
+            ],
           })
         )
       );
@@ -476,7 +503,7 @@ module(
       await click("[data-test-breakdown='pages'] [data-test-breakdown-row]");
       assert
         .dom("#topic-query-filter-input")
-        .hasValue("Top URL: /top", "row clicks update the filter input");
+        .hasValue("top_url:/top", "row clicks update the filter input");
       const sensitiveState = Array.from(
         { length: sessionStorage.length },
         (_value, index) => sessionStorage.getItem(sessionStorage.key(index))
@@ -485,6 +512,28 @@ module(
       assert.false(
         window.location.href.includes("/top"),
         "the sensitive path is absent from the browser URL"
+      );
+
+      await click(
+        "[data-test-breakdown='traffic_sources'] button[data-test-breakdown-row]"
+      );
+      assert
+        .dom("#topic-query-filter-input")
+        .hasValue(
+          "top_url:/top referrer:external.example",
+          "named Referrer rows synchronize the canonical input"
+        );
+      assert
+        .dom(
+          "[data-test-breakdown='traffic_sources'] span[data-test-breakdown-row]"
+        )
+        .includesText(
+          "Direct / unknown",
+          "Direct traffic does not expose a filter action"
+        );
+      assert.false(
+        window.location.href.includes("external.example"),
+        "the referrer is absent from the browser URL"
       );
 
       await click(
@@ -507,7 +556,7 @@ module(
       );
       assert.deepEqual(
         JSON.parse(this.fetchStub.lastCall.args[1].body).filters,
-        { url: "/top" },
+        { top_url: "/top", referrer: "external.example" },
         "query parameter removal preserves the sensitive filter"
       );
     });
@@ -587,7 +636,7 @@ module(
       assert.dom("[data-site-traffic-dimension-tab]").exists({ count: 4 });
       assert
         .dom("[data-site-traffic-sources-tab]")
-        .hasText("Sources")
+        .hasText("Referrers")
         .hasAttribute("aria-selected", "true");
       assert.dom(".site-traffic-detail__metrics").exists({ count: 1 });
       assert.dom(".site-traffic-detail__metric").exists({ count: 5 });
@@ -628,7 +677,7 @@ module(
                 value: "/entry",
                 label: "/entry",
                 pageviews: 2,
-                filterable: false,
+                filterable: true,
               },
               {
                 value: null,
@@ -681,11 +730,22 @@ module(
         .dom("#site-traffic-pages-panel [data-test-breakdown-row]")
         .includesText("/entry");
       assert
-        .dom("#site-traffic-pages-panel a[data-test-breakdown-row]")
+        .dom("#site-traffic-pages-panel [data-test-entry-url-link]")
         .hasAttribute("href", "/entry");
+      assert
+        .dom("#site-traffic-pages-panel [data-test-entry-url-filter]")
+        .hasAttribute("aria-label", "Filter by /entry");
       assert
         .dom("#site-traffic-pages-panel span[data-test-breakdown-row]")
         .includesText("Private or sensitive page");
+
+      await click("#site-traffic-pages-panel [data-test-entry-url-filter]");
+      assert
+        .dom("#topic-query-filter-input")
+        .hasValue(
+          "entry_url:/entry",
+          "the separate Entry URL action applies its canonical filter"
+        );
     });
   }
 );
@@ -725,6 +785,48 @@ module(
 
       await click("tbody [data-test-breakdown-row]");
       assert.strictEqual(selected, "/page-0");
+    });
+
+    test("keeps Entry URL navigation separate from filtering", async function (assert) {
+      let selected;
+      this.model = {
+        dimension: "entry_urls",
+        title: "Entry URLs",
+        rows: [
+          {
+            value: "/privacy",
+            displayLabel: "/privacy",
+            formattedPageviews: "3",
+            filterable: true,
+          },
+        ],
+        onSelect: (row) => {
+          selected = row.value;
+        },
+      };
+      this.closeModal = () => {};
+
+      await render(
+        <template>
+          <SiteTrafficBreakdownModal
+            @model={{this.model}}
+            @closeModal={{this.closeModal}}
+          />
+        </template>
+      );
+
+      assert
+        .dom("[data-test-entry-url-link]")
+        .hasAttribute("href", "/privacy", "the URL remains navigable");
+      assert
+        .dom("[data-test-entry-url-filter]")
+        .hasAttribute("aria-label", "Filter by /privacy");
+      assert
+        .dom("[data-test-entry-url-link] [data-test-entry-url-filter]")
+        .doesNotExist("the interactive controls are not nested");
+
+      await click("[data-test-entry-url-filter]");
+      assert.strictEqual(selected, "/privacy", "the filter action stays exact");
     });
   }
 );

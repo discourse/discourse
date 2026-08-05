@@ -13,7 +13,7 @@ class AdminDashboardSiteTrafficDetail
   BROWSER_FAMILIES = %w[edge opera firefox chrome safari ie discoursehub unknown].freeze
   BROWSER_CLASSIFIER_VERSION = 1
   CRAWLER_SEMANTICS_VERSION = 3
-  RESPONSE_VERSION = 8
+  RESPONSE_VERSION = 9
   SANITIZER_VERSION = 5
   SESSION_SEMANTICS_VERSION = 2
   TRAFFIC_SOURCE_VERSION = 2
@@ -319,7 +319,7 @@ class AdminDashboardSiteTrafficDetail
   end
 
   class Request
-    FILTERS = %w[url country asn browser ip].freeze
+    FILTERS = %w[top_url entry_url referrer country asn browser ip].freeze
     KEYS = %w[start_date end_date filters].freeze
     MAX_STORED_ASN = 2_147_483_647
     private_constant :MAX_STORED_ASN
@@ -386,8 +386,16 @@ class AdminDashboardSiteTrafficDetail
         raise InvalidRequest unless parsed.to_s == ip
       end
 
-      if (url = @filters["url"])
-        unless AdminDashboardSiteTrafficDetail.canonical_filter_path(url) == url
+      %w[top_url entry_url].each do |filter_name|
+        if (path = @filters[filter_name])
+          unless AdminDashboardSiteTrafficDetail.canonical_filter_path(path) == path
+            raise InvalidRequest
+          end
+        end
+      end
+
+      if (referrer = @filters["referrer"])
+        unless AdminDashboardSiteTrafficDetail.canonical_referrer_domain(referrer) == referrer
           raise InvalidRequest
         end
       end
@@ -408,6 +416,15 @@ class AdminDashboardSiteTrafficDetail
     return if sensitive_path?(path) || !public_path_shape?(path)
 
     path
+  end
+
+  def self.canonical_referrer_domain(value)
+    unless value.match?(/\A[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+\z/)
+      return
+    end
+    return unless BrowserPageviewReferrerInspector.normalize_host(value) == value
+
+    value
   end
 
   def self.public_path_shape?(path)
@@ -657,10 +674,15 @@ class AdminDashboardSiteTrafficDetail
         END AS traffic_source
         FROM normalized_events
         INNER JOIN safe_paths USING (normalized_path)
-      ), entries AS (
+      ), entries AS MATERIALIZED (
         SELECT DISTINCT ON (session_id) * FROM classified
         WHERE session_id IS NOT NULL AND session_id <> ''
         ORDER BY session_id, created_at ASC, id ASC
+      ), facet_events AS MATERIALIZED (
+        SELECT classified.*, entries.safe_path AS entry_path,
+          entries.traffic_source AS entry_source
+        FROM classified
+        LEFT JOIN entries ON entries.id = classified.id
       ), session_rollup AS (
         SELECT session_id, MIN(created_at) AS first_observed_at, COUNT(*) AS pageviews FROM classified
         WHERE session_id IS NOT NULL AND session_id <> '' GROUP BY session_id
@@ -675,8 +697,11 @@ class AdminDashboardSiteTrafficDetail
           COUNT(*) FILTER (WHERE (score IS NULL OR score <= #{BOT_SCORE_THRESHOLD}) AND user_id IS NOT NULL)::bigint AS logged_in_human_pageviews,
           COUNT(*) FILTER (WHERE (score IS NULL OR score <= #{BOT_SCORE_THRESHOLD}) AND user_id IS NULL)::bigint AS anonymous_human_pageviews,
           COUNT(*) FILTER (WHERE score > #{BOT_SCORE_THRESHOLD})::bigint AS likely_crawler_pageviews
-        FROM classified
-        WHERE (:url IS NULL OR safe_path = :url) AND (:country IS NULL OR country_code = :country)
+        FROM facet_events
+        WHERE (:top_url IS NULL OR safe_path = :top_url)
+          AND (:entry_url IS NULL OR entry_path = :entry_url)
+          AND (:referrer IS NULL OR entry_source = :referrer)
+          AND (:country IS NULL OR country_code = :country)
           AND (:asn IS NULL OR asn = :asn) AND (:browser IS NULL OR browser_family = :browser)
           AND (:ip IS NULL OR ip_address = CAST(:ip AS inet))
         GROUP BY created_at::date
@@ -687,13 +712,13 @@ class AdminDashboardSiteTrafficDetail
           COALESCE(SUM(likely_crawler_pageviews), 0)::bigint AS likely_crawler_pageviews
         FROM daily
       ), dimension_rows AS (
-        (SELECT 'top_urls' AS dimension, safe_path AS value, safe_path AS label, COUNT(*) FILTER (WHERE (:country IS NULL OR country_code = :country) AND (:asn IS NULL OR asn = :asn) AND (:browser IS NULL OR browser_family = :browser) AND (:ip IS NULL OR ip_address = CAST(:ip AS inet)))::bigint AS pageviews, safe_path <> '[redacted]' AS filterable, NULL::text AS lookup_ip FROM classified GROUP BY safe_path ORDER BY pageviews DESC, label ASC LIMIT 50)
-        UNION ALL (SELECT 'entry_urls', safe_path, safe_path, COUNT(*)::bigint AS pageviews, false, NULL::text FROM entries GROUP BY safe_path ORDER BY pageviews DESC, safe_path ASC LIMIT 50)
-        UNION ALL (SELECT 'traffic_sources', traffic_source, traffic_source, COUNT(*)::bigint AS pageviews, false, NULL::text FROM entries GROUP BY traffic_source ORDER BY pageviews DESC, traffic_source ASC LIMIT 50)
-        UNION ALL (SELECT 'countries', country_code, country_code, COUNT(*) FILTER (WHERE (:url IS NULL OR safe_path = :url) AND (:asn IS NULL OR asn = :asn) AND (:browser IS NULL OR browser_family = :browser) AND (:ip IS NULL OR ip_address = CAST(:ip AS inet)))::bigint AS pageviews, true, NULL::text FROM classified WHERE country_code IS NOT NULL AND country_code <> '' GROUP BY country_code ORDER BY pageviews DESC, country_code ASC LIMIT 50)
-        UNION ALL (SELECT 'networks', 'AS' || asn::text, 'AS' || asn::text, COUNT(*) FILTER (WHERE (:url IS NULL OR safe_path = :url) AND (:country IS NULL OR country_code = :country) AND (:browser IS NULL OR browser_family = :browser) AND (:ip IS NULL OR ip_address = CAST(:ip AS inet)))::bigint AS pageviews, true, host(MIN(ip_address)) FROM classified WHERE asn IS NOT NULL GROUP BY asn ORDER BY pageviews DESC, 'AS' || asn::text ASC LIMIT 50)
-        UNION ALL (SELECT 'browsers', browser_family, browser_family, COUNT(*) FILTER (WHERE (:url IS NULL OR safe_path = :url) AND (:country IS NULL OR country_code = :country) AND (:asn IS NULL OR asn = :asn) AND (:ip IS NULL OR ip_address = CAST(:ip AS inet)))::bigint AS pageviews, true, NULL::text FROM classified GROUP BY browser_family ORDER BY pageviews DESC, browser_family ASC LIMIT 50)
-        UNION ALL (SELECT 'ip_addresses', host(ip_address), host(ip_address), COUNT(*) FILTER (WHERE (:url IS NULL OR safe_path = :url) AND (:country IS NULL OR country_code = :country) AND (:asn IS NULL OR asn = :asn) AND (:browser IS NULL OR browser_family = :browser))::bigint AS pageviews, true, NULL::text FROM classified WHERE ip_address IS NOT NULL GROUP BY ip_address ORDER BY pageviews DESC, host(ip_address) ASC LIMIT 50)
+        (SELECT 'top_urls' AS dimension, safe_path AS value, safe_path AS label, COUNT(*) FILTER (WHERE (:entry_url IS NULL OR entry_path = :entry_url) AND (:referrer IS NULL OR entry_source = :referrer) AND (:country IS NULL OR country_code = :country) AND (:asn IS NULL OR asn = :asn) AND (:browser IS NULL OR browser_family = :browser) AND (:ip IS NULL OR ip_address = CAST(:ip AS inet)))::bigint AS pageviews, safe_path <> '[redacted]' AS filterable, NULL::text AS lookup_ip FROM facet_events GROUP BY safe_path ORDER BY pageviews DESC, label ASC LIMIT 50)
+        UNION ALL (SELECT 'entry_urls', entry_path, entry_path, COUNT(*) FILTER (WHERE (:top_url IS NULL OR safe_path = :top_url) AND (:referrer IS NULL OR entry_source = :referrer) AND (:country IS NULL OR country_code = :country) AND (:asn IS NULL OR asn = :asn) AND (:browser IS NULL OR browser_family = :browser) AND (:ip IS NULL OR ip_address = CAST(:ip AS inet)))::bigint AS pageviews, entry_path <> '[redacted]', NULL::text FROM facet_events WHERE entry_path IS NOT NULL GROUP BY entry_path ORDER BY pageviews DESC, entry_path ASC LIMIT 50)
+        UNION ALL (SELECT 'traffic_sources', entry_source, entry_source, COUNT(*) FILTER (WHERE (:top_url IS NULL OR safe_path = :top_url) AND (:entry_url IS NULL OR entry_path = :entry_url) AND (:country IS NULL OR country_code = :country) AND (:asn IS NULL OR asn = :asn) AND (:browser IS NULL OR browser_family = :browser) AND (:ip IS NULL OR ip_address = CAST(:ip AS inet)))::bigint AS pageviews, entry_source <> 'Direct / unknown', NULL::text FROM facet_events WHERE entry_source IS NOT NULL GROUP BY entry_source ORDER BY pageviews DESC, entry_source ASC LIMIT 50)
+        UNION ALL (SELECT 'countries', country_code, country_code, COUNT(*) FILTER (WHERE (:top_url IS NULL OR safe_path = :top_url) AND (:entry_url IS NULL OR entry_path = :entry_url) AND (:referrer IS NULL OR entry_source = :referrer) AND (:asn IS NULL OR asn = :asn) AND (:browser IS NULL OR browser_family = :browser) AND (:ip IS NULL OR ip_address = CAST(:ip AS inet)))::bigint AS pageviews, true, NULL::text FROM facet_events WHERE country_code IS NOT NULL AND country_code <> '' GROUP BY country_code ORDER BY pageviews DESC, country_code ASC LIMIT 50)
+        UNION ALL (SELECT 'networks', 'AS' || asn::text, 'AS' || asn::text, COUNT(*) FILTER (WHERE (:top_url IS NULL OR safe_path = :top_url) AND (:entry_url IS NULL OR entry_path = :entry_url) AND (:referrer IS NULL OR entry_source = :referrer) AND (:country IS NULL OR country_code = :country) AND (:browser IS NULL OR browser_family = :browser) AND (:ip IS NULL OR ip_address = CAST(:ip AS inet)))::bigint AS pageviews, true, host(MIN(ip_address)) FROM facet_events WHERE asn IS NOT NULL GROUP BY asn ORDER BY pageviews DESC, 'AS' || asn::text ASC LIMIT 50)
+        UNION ALL (SELECT 'browsers', browser_family, browser_family, COUNT(*) FILTER (WHERE (:top_url IS NULL OR safe_path = :top_url) AND (:entry_url IS NULL OR entry_path = :entry_url) AND (:referrer IS NULL OR entry_source = :referrer) AND (:country IS NULL OR country_code = :country) AND (:asn IS NULL OR asn = :asn) AND (:ip IS NULL OR ip_address = CAST(:ip AS inet)))::bigint AS pageviews, true, NULL::text FROM facet_events GROUP BY browser_family ORDER BY pageviews DESC, browser_family ASC LIMIT 50)
+        UNION ALL (SELECT 'ip_addresses', host(ip_address), host(ip_address), COUNT(*) FILTER (WHERE (:top_url IS NULL OR safe_path = :top_url) AND (:entry_url IS NULL OR entry_path = :entry_url) AND (:referrer IS NULL OR entry_source = :referrer) AND (:country IS NULL OR country_code = :country) AND (:asn IS NULL OR asn = :asn) AND (:browser IS NULL OR browser_family = :browser))::bigint AS pageviews, true, NULL::text FROM facet_events WHERE ip_address IS NOT NULL GROUP BY ip_address ORDER BY pageviews DESC, host(ip_address) ASC LIMIT 50)
       ), dimensions AS (
         SELECT dimension, jsonb_agg(jsonb_build_object('value', CASE WHEN value = '[redacted]' THEN NULL ELSE value END, 'label', CASE WHEN value = '[redacted]' THEN 'Private or sensitive page' ELSE label END, 'pageviews', pageviews, 'filterable', filterable, 'lookup_ip', lookup_ip) ORDER BY pageviews DESC, label ASC) AS rows
         FROM dimension_rows GROUP BY dimension
@@ -723,7 +748,9 @@ class AdminDashboardSiteTrafficDetail
       event_cap: self.class.event_cap,
       event_cap_plus_one: self.class.event_cap + 1,
       cutover_date: cutover_date,
-      url: filters["url"],
+      top_url: filters["top_url"],
+      entry_url: filters["entry_url"],
+      referrer: filters["referrer"],
       country: filters["country"],
       asn: filters["asn"]&.delete_prefix("AS")&.to_i,
       browser: filters["browser"],

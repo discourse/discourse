@@ -210,7 +210,15 @@ RSpec.describe Admin::DashboardController do
           true
         end
 
-      body = request_body.merge(filters: { ip: "192.0.2.123", url: "/top" })
+      body =
+        request_body.merge(
+          filters: {
+            ip: "192.0.2.123",
+            top_url: "/top",
+            entry_url: "/privacy",
+            referrer: "referrer.example",
+          },
+        )
       key =
         AdminDashboardSiteTrafficDetail.cache_key(
           request: AdminDashboardSiteTrafficDetail::Request.parse(body),
@@ -235,7 +243,7 @@ RSpec.describe Admin::DashboardController do
       sensitive_url = "/internal/account"
 
       post "/admin/dashboard/traffic.json",
-           params: request_body.merge(filters: { url: sensitive_url }),
+           params: request_body.merge(filters: { top_url: sensitive_url }),
            as: :json
 
       expect(response).to have_http_status(:bad_request)
@@ -261,7 +269,15 @@ RSpec.describe Admin::DashboardController do
     end
 
     it "redacts request filters from hijacked Lograge and request-tracker output" do
-      body = request_body.merge(filters: { ip: "192.0.2.123", url: "/top" })
+      body =
+        request_body.merge(
+          filters: {
+            ip: "192.0.2.123",
+            top_url: "/top",
+            entry_url: "/privacy",
+            referrer: "referrer.example",
+          },
+        )
       service = stub
       service.stubs(:call).returns(result)
       AdminDashboardSiteTrafficDetail.stubs(:new).returns(service)
@@ -294,8 +310,7 @@ RSpec.describe Admin::DashboardController do
       serialized_request_tracker_data = request_tracker_data.to_json
       [serialized_lograge_payload, serialized_request_tracker_data].each do |serialized_output|
         expect(serialized_output).not_to include(
-          body[:filters][:ip],
-          body[:filters][:url],
+          *body[:filters].values,
           body.to_json,
           "rack.input",
         )

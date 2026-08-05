@@ -661,7 +661,6 @@ RSpec.describe Admin::DashboardController do
       SiteSetting.dashboard_improvements = true
       SiteSetting.persist_browser_pageview_events = true
       SiteSetting.use_legacy_pageviews = false
-      SiteSetting.experimental_detect_crawler_pageviews = false
       Discourse.cache.clear
     end
 
@@ -779,8 +778,9 @@ RSpec.describe Admin::DashboardController do
         request_body.merge(filters: { ip: "192.0.2.0/24" }),
         request_body.merge(filters: { ip: nil }),
         request_body.merge(filters: { browser: "Firefox*" }),
-        request_body.merge(filters: { url: "/admin/secret" }),
-        request_body.merge(filters: { url: "/safe\ninjected" }),
+        request_body.merge(filters: { top_url: "/admin/secret" }),
+        request_body.merge(filters: { entry_url: "/safe\ninjected" }),
+        request_body.merge(filters: { referrer: "Direct / unknown" }),
         request_body.merge(filters: { unknown: "value" }),
         request_body.merge(start_date: "2026-5-1"),
         request_body.merge(end_date: "not-a-date"),
@@ -846,7 +846,7 @@ RSpec.describe Admin::DashboardController do
       end
       expect(response.body).not_to include(private_message.slug)
 
-      guessed_hidden_filter = request_body.merge(filters: { url: "/admin/users/list/active" })
+      guessed_hidden_filter = request_body.merge(filters: { top_url: "/admin/users/list/active" })
       post "/admin/dashboard/traffic.json", params: guessed_hidden_filter, as: :json
 
       expect(response.status).to eq(400)
