@@ -67,6 +67,24 @@
   }
 }
 
+.sidebar-link-drop-target {
+  position: absolute;
+  z-index: 1;
+  inset-inline: var(--space-2);
+  inset-block-end: calc(var(--d-sidebar-row-height) + var(--space-4));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  pointer-events: none;
+  color: var(--token-color-text-default);
+  background: var(--token-color-surface-selected);
+  border: 1px dashed var(--token-color-border-accent);
+  border-radius: var(--d-border-radius);
+  font-weight: var(--token-font-weight-semibold);
+}
+
 .sidebar-row {
   box-sizing: border-box;
   height: var(--d-sidebar-row-height);
@@ -96,6 +114,7 @@
   @include unselectable;
 
   .sidebar-container {
+    position: relative;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
@@ -103,6 +122,13 @@
     padding: 0;
     border-right: 1px solid var(--d-sidebar-border-color);
     overflow-x: hidden;
+
+    &.is-link-drag-active {
+      .sidebar-section.is-link-drop-enabled {
+        outline: 1px dashed var(--token-color-border-accent);
+        outline-offset: -1px;
+      }
+    }
 
     // allows sidebar to scroll to the bottom when the composer is open
     height: calc(100% - var(--composer-height, 0px));

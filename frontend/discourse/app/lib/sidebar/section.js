@@ -4,7 +4,9 @@ import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
 import SidebarSectionForm from "discourse/components/modal/sidebar-section-form";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import { extractDroppedWebLink } from "discourse/lib/sidebar/link-drop";
 import SectionLink from "discourse/lib/sidebar/section-link";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { unicodeSlugify } from "discourse/lib/utilities";
@@ -39,22 +41,59 @@ export default class Section {
     return this.section.public && this.currentUser?.staff;
   }
 
+  get canAcceptLinkDrop() {
+    return this.section.public === false && !this.section.section_type;
+  }
+
+  async openForm(link, linkDropIndex) {
+    const json = await ajax(`/sidebar_sections/${this.section.id}.json`).catch(
+      popupAjaxError
+    );
+
+    if (!json) {
+      return;
+    }
+
+    const section = json.sidebar_section;
+    let focusLinkIndex;
+
+    if (link) {
+      const insertionIndex = Math.min(
+        Math.max(linkDropIndex ?? section.links.length, 0),
+        section.links.length
+      );
+      focusLinkIndex = section.links
+        .slice(0, insertionIndex)
+        .filter((sectionLink) => sectionLink.segment === "primary").length;
+      section.links.splice(insertionIndex, 0, {
+        ...link,
+        locale: section.locale,
+      });
+    }
+
+    return this.modal.show(SidebarSectionForm, {
+      model: {
+        focusLinkIndex,
+        hideSectionHeader: this.hideSectionHeader,
+        section,
+      },
+    });
+  }
+
+  @bind
+  dropLink(dataTransfer, linkDropIndex) {
+    const link = extractDroppedWebLink(dataTransfer);
+
+    if (link) {
+      return this.openForm(link, linkDropIndex);
+    }
+  }
+
   get headerActions() {
     if (!this.section.public || this.currentUser?.admin) {
       return [
         {
-          action: async () => {
-            const json = await ajax(
-              `/sidebar_sections/${this.section.id}.json`
-            );
-
-            return this.modal.show(SidebarSectionForm, {
-              model: {
-                hideSectionHeader: this.hideSectionHeader,
-                section: json.sidebar_section,
-              },
-            });
-          },
+          action: () => this.openForm(),
           title: i18n("sidebar.sections.custom.edit"),
         },
       ];

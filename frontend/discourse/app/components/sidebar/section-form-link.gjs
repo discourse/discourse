@@ -11,6 +11,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DIconGridPicker from "discourse/ui-kit/d-icon-grid-picker";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
 export default class SectionFormLink extends Component {
@@ -123,6 +124,7 @@ export default class SectionFormLink extends Component {
         <div class="input-group" role="cell">
           {{! eslint-disable-next-line ember/template-no-nested-interactive }}
           <Input
+            {{(if @focusNameInput (modifier dAutoFocus selectText=true))}}
             {{on "input" (withEventValue (fn (mut @link.name)))}}
             @type="text"
             @value={{@link.name}}

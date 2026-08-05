@@ -21,7 +21,7 @@ import { afterRender, bind } from "discourse/lib/decorators";
 import { isSameLocale } from "discourse/lib/locale-normalizer";
 import { sanitize } from "discourse/lib/text";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import { not } from "discourse/truth-helpers";
+import { eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DSelect from "discourse/ui-kit/d-select";
@@ -390,16 +390,21 @@ export default class SidebarSectionForm extends Component {
         locale: sectionLocale,
       });
     } else {
+      const locale = this.siteSettings.default_locale;
+      const link = this.model?.link;
+
       return new Section({
         links: [
-          new SectionLink({
-            router: this.router,
-            objectId: this.nextObjectId,
-            segment: "primary",
-            locale: this.siteSettings.default_locale,
-          }),
+          link
+            ? this.initLink(link, locale)
+            : new SectionLink({
+                router: this.router,
+                objectId: this.nextObjectId,
+                segment: "primary",
+                locale,
+              }),
         ],
-        locale: this.siteSettings.default_locale,
+        locale,
       });
     }
   }
@@ -548,6 +553,15 @@ export default class SidebarSectionForm extends Component {
 
   get activeLinks() {
     return this.transformedModel.links.filter((link) => !link._destroy);
+  }
+
+  get initialFocusLinkObjectId() {
+    const index = this.model?.focusLinkIndex;
+    return index === undefined ? undefined : this.activeLinks[index]?.objectId;
+  }
+
+  get modalAutofocus() {
+    return this.model?.focusLinkIndex === undefined;
   }
 
   get activeSecondaryLinks() {
@@ -1139,6 +1153,7 @@ export default class SidebarSectionForm extends Component {
 
   <template>
     <DModal
+      @autofocus={{this.modalAutofocus}}
       @closeModal={{@closeModal}}
       @flash={{this.flash}}
       @flashType={{this.flashType}}
@@ -1331,6 +1346,10 @@ export default class SidebarSectionForm extends Component {
               {{#each this.activeLinks as |link|}}
                 <SectionFormLink
                   @link={{link}}
+                  @focusNameInput={{eq
+                    link.objectId
+                    this.initialFocusLinkObjectId
+                  }}
                   @deleteLink={{this.deleteLink}}
                   @reorderCallback={{this.reorder}}
                   @setDraggedLinkCallback={{this.setDraggedLink}}

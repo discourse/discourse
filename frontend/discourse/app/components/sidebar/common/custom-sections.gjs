@@ -22,6 +22,7 @@ export default class SidebarCustomSections extends Component {
         <CustomSection
           @sectionData={{section}}
           @collapsable={{@collapsable}}
+          @enableLinkDrop={{@enableLinkDrop}}
           @toggleNavigationMenu={{@toggleNavigationMenu}}
         />
       {{/each}}
