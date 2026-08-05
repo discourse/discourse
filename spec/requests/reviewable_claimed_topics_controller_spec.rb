@@ -17,12 +17,11 @@ RSpec.describe ReviewableClaimedTopicsController do
       expect(response.status).to eq(403)
     end
 
-    context "when logged in as a category group moderator who cannot see the topic" do
+    context "when logged in as a category group moderator" do
       fab!(:mod_group, :group)
       fab!(:cat_mod_user, :user)
       fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
       fab!(:private_topic) { Fabricate(:topic, category: private_category) }
-      fab!(:private_reviewable) { Fabricate(:reviewable_flagged_post, topic: private_topic) }
 
       before do
         SiteSetting.enable_category_group_moderation = true
@@ -86,26 +85,11 @@ RSpec.describe ReviewableClaimedTopicsController do
           ).exists?,
         ).to eq(false)
       end
-    end
-
-    context "when logged in as a category group moderator who can see the topic" do
-      fab!(:mod_group, :group)
-      fab!(:cat_mod_user, :user)
-      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
-      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
-      fab!(:private_reviewable) { Fabricate(:reviewable_flagged_post, topic: private_topic) }
-
-      before do
-        SiteSetting.enable_category_group_moderation = true
-        SiteSetting.reviewable_claiming = "optional"
-        private_category.set_permissions(mod_group => :full)
-        private_category.save!
-        Fabricate(:category_moderation_group, category: private_category, group: mod_group)
-        mod_group.add(cat_mod_user)
-        sign_in(cat_mod_user)
-      end
 
       it "allows claiming a topic the user can see" do
+        private_category.set_permissions(mod_group => :full)
+        private_category.save!
+
         post "/reviewable_claimed_topics.json",
              params: {
                reviewable_claimed_topic: {
@@ -123,13 +107,13 @@ RSpec.describe ReviewableClaimedTopicsController do
       end
     end
 
-    context "when logged in" do
+    context "when logged in as a moderator" do
       before do
         SiteSetting.reviewable_claiming = "optional"
         sign_in(moderator)
       end
 
-      it "works" do
+      it "claims the topic, logs it, and notifies staff" do
         messages =
           MessageBus.track_publish("/reviewable_claimed") do
             post "/reviewable_claimed_topics.json", params: params
@@ -139,14 +123,7 @@ RSpec.describe ReviewableClaimedTopicsController do
         expect(
           ReviewableClaimedTopic.where(user_id: moderator.id, topic_id: topic.id).exists?,
         ).to eq(true)
-        expect(
-          topic
-            .reviewables
-            .first
-            .history
-            .where(reviewable_history_type: ReviewableHistory.types[:claimed])
-            .size,
-        ).to eq(1)
+        expect(reviewable.history.claimed.size).to eq(1)
         expect(messages.size).to eq(1)
 
         message = messages[0]
@@ -159,7 +136,6 @@ RSpec.describe ReviewableClaimedTopicsController do
 
       it "publishes reviewable claimed changes to the category moderators of the topic's category" do
         SiteSetting.enable_category_group_moderation = true
-        SiteSetting.reviewable_claiming = "optional"
 
         group = Fabricate(:group)
         Fabricate(:category_moderation_group, category: topic.category, group:)
@@ -191,14 +167,14 @@ RSpec.describe ReviewableClaimedTopicsController do
         ).to eq(true)
       end
 
-      it "raises an error if user cannot claim the topic" do
+      it "returns 403 when claiming is disabled" do
         SiteSetting.reviewable_claiming = "disabled"
         post "/reviewable_claimed_topics.json", params: params
 
         expect(response.status).to eq(403)
       end
 
-      it "allows claiming when automatic param is present" do
+      it "allows claiming when automatic param is present, without logging history" do
         SiteSetting.reviewable_claiming = "disabled"
         params[:reviewable_claimed_topic][:topic_id] = automatic_topic.id
         params[:reviewable_claimed_topic][:automatic] = "true"
@@ -209,6 +185,7 @@ RSpec.describe ReviewableClaimedTopicsController do
         expect(
           ReviewableClaimedTopic.where(user_id: moderator.id, topic_id: automatic_topic.id).exists?,
         ).to eq(true)
+        expect(automatic_reviewable.history.claimed).to be_empty
       end
 
       it "raises an error if topic is already claimed" do
@@ -222,16 +199,10 @@ RSpec.describe ReviewableClaimedTopicsController do
       end
 
       it "queues a sidekiq job to refresh reviewable counts for users who can see the reviewable" do
-        SiteSetting.navigation_menu = "sidebar"
         SiteSetting.enable_category_group_moderation = true
-
-        not_notified = Fabricate(:user)
 
         group = Fabricate(:group)
         Fabricate(:category_moderation_group, category: topic.category, group:)
-
-        notified = Fabricate(:user)
-        group.add(notified)
 
         expect_enqueued_with(
           job: :refresh_users_reviewable_counts,
@@ -271,7 +242,7 @@ RSpec.describe ReviewableClaimedTopicsController do
       end
     end
 
-    context "when logged in as a category group moderator who cannot see the topic" do
+    context "when logged in as a category group moderator" do
       fab!(:mod_group, :group)
       fab!(:cat_mod_user, :user)
       fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
@@ -302,26 +273,11 @@ RSpec.describe ReviewableClaimedTopicsController do
         expect(response.status).to eq(404)
         expect(ReviewableClaimedTopic.where(topic_id: private_topic.id).exists?).to eq(true)
       end
-    end
-
-    context "when logged in as a category group moderator who can see the topic" do
-      fab!(:mod_group, :group)
-      fab!(:cat_mod_user, :user)
-      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
-      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
-      fab!(:private_claimed) { Fabricate(:reviewable_claimed_topic, topic: private_topic) }
-
-      before do
-        SiteSetting.enable_category_group_moderation = true
-        SiteSetting.reviewable_claiming = "optional"
-        private_category.set_permissions(mod_group => :full)
-        private_category.save!
-        Fabricate(:category_moderation_group, category: private_category, group: mod_group)
-        mod_group.add(cat_mod_user)
-        sign_in(cat_mod_user)
-      end
 
       it "allows unclaiming a topic the user can see" do
+        private_category.set_permissions(mod_group => :full)
+        private_category.save!
+
         delete "/reviewable_claimed_topics/#{private_topic.id}.json"
 
         expect(response.status).to eq(200)
@@ -329,109 +285,112 @@ RSpec.describe ReviewableClaimedTopicsController do
       end
     end
 
-    before { sign_in(moderator) }
+    context "when logged in as a moderator" do
+      before do
+        SiteSetting.reviewable_claiming = "optional"
+        sign_in(moderator)
+      end
 
-    it "works" do
-      SiteSetting.reviewable_claiming = "optional"
+      it "releases the claim, logs it, and notifies staff" do
+        messages =
+          MessageBus.track_publish("/reviewable_claimed") do
+            delete "/reviewable_claimed_topics/#{claimed.topic_id}.json"
+            expect(response.status).to eq(200)
+          end
 
-      messages =
-        MessageBus.track_publish("/reviewable_claimed") do
+        expect(ReviewableClaimedTopic.where(topic_id: claimed.topic_id).exists?).to eq(false)
+        expect(reviewable.history.unclaimed.size).to eq(1)
+        expect(messages.size).to eq(1)
+
+        message = messages[0]
+
+        expect(message.data[:topic_id]).to eq(topic.id)
+        expect(message.data[:user][:id]).to eq(moderator.id)
+        expect(message.data[:claimed]).to be false
+        expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff])
+      end
+
+      it "works with deleted topics" do
+        first_post = topic.first_post || Fabricate(:post, topic: topic)
+        PostDestroyer.new(Discourse.system_user, first_post, context: "Automated testing").destroy
+
+        delete "/reviewable_claimed_topics/#{claimed.topic_id}.json"
+
+        expect(response.status).to eq(200)
+        expect(
+          ReviewableClaimedTopic.where(user_id: moderator.id, topic_id: topic.id).exists?,
+        ).to eq(false)
+      end
+
+      it "raises an error if topic is missing" do
+        delete "/reviewable_claimed_topics/111111111.json"
+
+        expect(response.status).to eq(404)
+      end
+
+      it "returns 404 when claiming is disabled" do
+        SiteSetting.reviewable_claiming = "disabled"
+
+        delete "/reviewable_claimed_topics/#{claimed.topic_id}.json"
+
+        expect(response.status).to eq(404)
+      end
+
+      it "allows unclaiming when automatic param is present, without logging history" do
+        SiteSetting.reviewable_claiming = "disabled"
+
+        delete "/reviewable_claimed_topics/#{automatic_claimed.topic_id}.json?automatic=true"
+        expect(response.status).to eq(200)
+        expect(
+          ReviewableClaimedTopic.where(user_id: moderator.id, topic_id: automatic_topic.id).exists?,
+        ).to eq(false)
+        expect(automatic_reviewable.history.unclaimed).to be_empty
+      end
+
+      it "does not log history when the claim being removed was automatic" do
+        claimed.update!(automatic: true)
+
+        messages =
+          MessageBus.track_publish("/reviewable_claimed") do
+            delete "/reviewable_claimed_topics/#{claimed.topic_id}.json"
+            expect(response.status).to eq(200)
+          end
+
+        expect(ReviewableClaimedTopic.where(topic_id: topic.id).exists?).to eq(false)
+        expect(reviewable.history.unclaimed).to be_empty
+        expect(messages.size).to eq(1)
+        expect(messages.first.data[:automatic]).to eq(true)
+      end
+
+      it "queues a sidekiq job to refresh reviewable counts for users who can see the reviewable" do
+        SiteSetting.enable_category_group_moderation = true
+
+        group = Fabricate(:group)
+        Fabricate(:category_moderation_group, category: topic.category, group:)
+
+        expect_enqueued_with(
+          job: :refresh_users_reviewable_counts,
+          args: {
+            group_ids: [Group::AUTO_GROUPS[:staff], group.id],
+          },
+        ) do
           delete "/reviewable_claimed_topics/#{claimed.topic_id}.json"
           expect(response.status).to eq(200)
         end
-
-      expect(ReviewableClaimedTopic.where(topic_id: claimed.topic_id).exists?).to eq(false)
-      expect(
-        topic
-          .reviewables
-          .first
-          .history
-          .where(reviewable_history_type: ReviewableHistory.types[:unclaimed])
-          .size,
-      ).to eq(1)
-      expect(messages.size).to eq(1)
-
-      message = messages[0]
-
-      expect(message.data[:topic_id]).to eq(topic.id)
-      expect(message.data[:user][:id]).to eq(moderator.id)
-      expect(message.data[:claimed]).to be false
-      expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff])
-    end
-
-    it "works with deleted topics" do
-      SiteSetting.reviewable_claiming = "optional"
-      first_post = topic.first_post || Fabricate(:post, topic: topic)
-      PostDestroyer.new(Discourse.system_user, first_post, context: "Automated testing").destroy
-
-      delete "/reviewable_claimed_topics/#{claimed.topic_id}.json"
-
-      expect(response.status).to eq(200)
-      expect(ReviewableClaimedTopic.where(user_id: moderator.id, topic_id: topic.id).exists?).to eq(
-        false,
-      )
-    end
-
-    it "raises an error if topic is missing" do
-      delete "/reviewable_claimed_topics/111111111.json"
-
-      expect(response.status).to eq(404)
-    end
-
-    it "returns 404 if user cannot claim the topic" do
-      delete "/reviewable_claimed_topics/#{claimed.topic_id}.json"
-
-      expect(response.status).to eq(404)
-    end
-
-    it "allows unclaiming when automatic param is present" do
-      SiteSetting.reviewable_claiming = "disabled"
-
-      delete "/reviewable_claimed_topics/#{automatic_claimed.topic_id}.json?automatic=true"
-      expect(response.status).to eq(200)
-      expect(
-        ReviewableClaimedTopic.where(user_id: moderator.id, topic_id: automatic_topic.id).exists?,
-      ).to eq(false)
-    end
-
-    it "queues a sidekiq job to refresh reviewable counts for users who can see the reviewable" do
-      SiteSetting.reviewable_claiming = "optional"
-      SiteSetting.navigation_menu = "sidebar"
-      SiteSetting.enable_category_group_moderation = true
-
-      not_notified = Fabricate(:user)
-
-      group = Fabricate(:group)
-      Fabricate(:category_moderation_group, category: topic.category, group:)
-
-      notified = Fabricate(:user)
-      group.add(notified)
-
-      expect_enqueued_with(
-        job: :refresh_users_reviewable_counts,
-        args: {
-          group_ids: [Group::AUTO_GROUPS[:staff], group.id],
-        },
-      ) do
-        delete "/reviewable_claimed_topics/#{claimed.topic_id}.json"
-        expect(response.status).to eq(200)
       end
-    end
 
-    it "does not log unclaimed history when topic was not claimed" do
-      SiteSetting.reviewable_claiming = "optional"
-      claimed.destroy!
+      it "does not log history or publish when the topic was not claimed" do
+        claimed.destroy!
 
-      delete "/reviewable_claimed_topics/#{topic.id}.json"
-      expect(response.status).to eq(200)
-      expect(
-        topic
-          .reviewables
-          .first
-          .history
-          .where(reviewable_history_type: ReviewableHistory.types[:unclaimed])
-          .size,
-      ).to eq(0)
+        messages =
+          MessageBus.track_publish("/reviewable_claimed") do
+            delete "/reviewable_claimed_topics/#{topic.id}.json"
+            expect(response.status).to eq(200)
+          end
+
+        expect(reviewable.history.unclaimed).to be_empty
+        expect(messages).to be_empty
+      end
     end
   end
 end

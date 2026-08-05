@@ -1,6 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ReviewableTimeline from "discourse/components/reviewable/timeline";
+import { CLAIMED, UNCLAIMED } from "discourse/models/reviewable-history";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | Reviewable | Timeline", function (hooks) {
@@ -51,5 +52,34 @@ module("Integration | Component | Reviewable | Timeline", function (hooks) {
         "<p>First line<br>Second line</p><p>Fourth line</p>",
         "renders the cooked HTML directly"
       );
+  });
+
+  test("renders claimed and unclaimed history events", async function (assert) {
+    const reviewable = { reviewable_scores: [] };
+    const historyEvents = [
+      {
+        reviewable_history_type: CLAIMED,
+        created_at: "2024-01-01T00:00:00.000Z",
+        created_by: { id: 1, username: "moderator" },
+      },
+      {
+        reviewable_history_type: UNCLAIMED,
+        created_at: "2024-01-02T00:00:00.000Z",
+        created_by: { id: 1, username: "moderator" },
+      },
+    ];
+
+    await render(
+      <template>
+        <ReviewableTimeline
+          @reviewable={{reviewable}}
+          @historyEvents={{historyEvents}}
+        />
+      </template>
+    );
+
+    assert.dom(".timeline-event").exists({ count: 2 });
+    assert.dom(".timeline-event__icon .d-icon-user-plus").exists();
+    assert.dom(".timeline-event__icon .d-icon-user-xmark").exists();
   });
 });
