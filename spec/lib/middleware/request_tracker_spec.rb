@@ -872,6 +872,29 @@ RSpec.describe Middleware::RequestTracker do
 
           expect(events.length).to eq(0)
         end
+
+        it "does not emit or persist events for automation user agent page views" do
+          SiteSetting.crawler_automation_user_agents = "TestingAgent"
+          data =
+            Middleware::RequestTracker.get_data(
+              env(
+                "HTTP_USER_AGENT" => "testingagent/1.0",
+                "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+                "HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID" => "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx",
+                "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
+              ),
+              ["200", { "Content-Type" => "text/html" }],
+              0.2,
+            )
+
+          events = DiscourseEvent.track_events(:browser_pageview) { log_browser_pageview(data) }
+
+          expect(events).to be_empty
+
+          SiteSetting.persist_browser_pageview_events = true
+
+          expect { log_browser_pageview(data) }.not_to change { BrowserPageviewEvent.count }
+        end
       end
 
       context "when SiteSetting.trigger_browser_pageview_events is false" do

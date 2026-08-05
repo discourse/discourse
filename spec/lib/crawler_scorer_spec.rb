@@ -19,10 +19,13 @@ RSpec.describe CrawlerScorer do
     described_class.score!(window_start: 1.hour.ago, window_end: Time.now)
   end
 
-  it "scores automation user agents at +100" do
+  it "does not score automation user agents" do
     event = make_event(user_agent: "Mozilla/5.0 (X11; Linux x86_64) HeadlessChrome/120.0.0.0")
+
     score!
-    expect(event.reload.score).to eq(140)
+
+    expect(event.reload.score).to be_nil
+    expect(event.browser_pageview_event_score).to be_nil
   end
 
   it "writes the score breakdown per heuristic to the side table" do
@@ -35,9 +38,9 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(event.reload.score).to eq(170)
+    expect(event.reload.score).to eq(70)
     breakdown = event.browser_pageview_event_score
-    expect(breakdown.automation_ua_score).to eq(100)
+    expect(breakdown.automation_ua_score).to eq(0)
     expect(breakdown.known_asn_score).to eq(30)
     expect(breakdown.datacenter_asn_score).to eq(0)
     expect(breakdown.single_request_no_referrer_score).to eq(0)
@@ -273,12 +276,14 @@ RSpec.describe CrawlerScorer do
   end
 
   it "also scores logged-in events" do
+    SiteSetting.crawler_asns = "12345"
     user = Fabricate(:user)
-    event = make_event(user_id: user.id, user_agent: "Mozilla/5.0 HeadlessChrome/120.0.0.0")
+    event = make_event(user_id: user.id, asn: 12_345)
 
     score!
 
-    expect(event.reload.score).to eq(140)
+    expect(event.reload.score).to eq(70)
+    expect(event.browser_pageview_event_score.known_asn_score).to eq(30)
   end
 
   it "ignores events outside the window" do
@@ -290,7 +295,8 @@ RSpec.describe CrawlerScorer do
   end
 
   it "does not penalise events whose session shows human interaction" do
-    event = make_event(user_agent: "Mozilla/5.0 HeadlessChrome/120.0.0.0")
+    SiteSetting.crawler_asns = "12345"
+    event = make_event(asn: 12_345)
     Fabricate(
       :browser_pageview_session_engagement,
       session_id: event.session_id,
@@ -300,8 +306,10 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(event.reload.score).to eq(100)
-    expect(event.browser_pageview_event_score.engagement_score).to eq(0)
+    expect(event.reload.score).to eq(30)
+    breakdown = event.browser_pageview_event_score
+    expect(breakdown.known_asn_score).to eq(30)
+    expect(breakdown.engagement_score).to eq(0)
   end
 
   it "never scores an event below its bot signals" do
@@ -319,7 +327,8 @@ RSpec.describe CrawlerScorer do
   end
 
   it "treats any engagement row as engagement, since the client only beacons on activity" do
-    event = make_event(user_agent: "Mozilla/5.0 HeadlessChrome/120.0.0.0")
+    SiteSetting.crawler_asns = "12345"
+    event = make_event(asn: 12_345)
     Fabricate(
       :browser_pageview_session_engagement,
       session_id: event.session_id,
@@ -328,8 +337,10 @@ RSpec.describe CrawlerScorer do
 
     score!
 
-    expect(event.reload.score).to eq(100)
-    expect(event.browser_pageview_event_score.engagement_score).to eq(0)
+    expect(event.reload.score).to eq(30)
+    breakdown = event.browser_pageview_event_score
+    expect(breakdown.known_asn_score).to eq(30)
+    expect(breakdown.engagement_score).to eq(0)
   end
 
   it "lowers the score when an engagement beacon arrives after an earlier run" do

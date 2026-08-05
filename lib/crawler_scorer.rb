@@ -3,8 +3,6 @@
 class CrawlerScorer
   BOT_SCORE_THRESHOLD = 55
 
-  AUTOMATION_UA_SCORE = 100
-
   KNOWN_ASN_SCORE = 30
   DATACENTER_ASN_SCORE = 10
   SINGLE_REQUEST_NO_REFERRER_SCORE = 10
@@ -54,11 +52,9 @@ class CrawlerScorer
         SQL,
         window_start: window_start,
         window_end: window_end,
-        ua_regex: SiteSetting.crawler_automation_user_agents,
         crawler_asns: crawler_asns,
         crawler_detection_datacenter_asns: crawler_detection_datacenter_asns,
         hostname: Discourse.current_hostname,
-        automation_ua_score: AUTOMATION_UA_SCORE,
         known_asn_score: KNOWN_ASN_SCORE,
         datacenter_asn_score: DATACENTER_ASN_SCORE,
         single_request_no_referrer_score: SINGLE_REQUEST_NO_REFERRER_SCORE,
@@ -197,10 +193,7 @@ class CrawlerScorer
     breakdown AS (
       SELECT
         e.id,
-        CASE
-          WHEN :ua_regex <> '' AND e.user_agent ~* :ua_regex THEN :automation_ua_score
-          ELSE 0
-        END AS automation_ua_score,
+        0 AS automation_ua_score,
         CASE
           WHEN e.asn = ANY(ARRAY[:crawler_asns]::int[]) THEN :known_asn_score
           ELSE 0
@@ -295,11 +288,11 @@ class CrawlerScorer
         engagement_score,
         GREATEST(
           0,
-          automation_ua_score + known_asn_score + datacenter_asn_score + single_request_no_referrer_score + stale_browser_score + velocity_score + churn_score
+          known_asn_score + datacenter_asn_score + single_request_no_referrer_score + stale_browser_score + velocity_score + churn_score
             + rapid_nav_score + ip_rotation_score + referrer_score + engagement_score
         ) AS score
       FROM breakdown
-      WHERE automation_ua_score + known_asn_score + datacenter_asn_score + single_request_no_referrer_score + stale_browser_score + velocity_score + churn_score
+      WHERE known_asn_score + datacenter_asn_score + single_request_no_referrer_score + stale_browser_score + velocity_score + churn_score
         + rapid_nav_score + ip_rotation_score + referrer_score > 0
     ),
 

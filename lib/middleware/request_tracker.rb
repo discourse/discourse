@@ -226,7 +226,7 @@ class Middleware::RequestTracker
 
     request_data = {
       status: status,
-      is_crawler: helper.is_crawler?,
+      is_crawler: helper.is_crawler? || automation_user_agent?(helper.crawler_identifier),
       has_auth_cookie: has_auth_cookie,
       current_user_id: current_user_id,
       current_username: current_username,
@@ -266,6 +266,18 @@ class Middleware::RequestTracker
 
     request_data
   end
+
+  def self.automation_user_agent?(user_agent)
+    automation_user_agents = SiteSetting.crawler_automation_user_agents
+    return false if user_agent.blank? || automation_user_agents.blank?
+
+    @automation_user_agent_matchers ||= {}
+    matcher =
+      (@automation_user_agent_matchers[automation_user_agents] ||=
+        Regexp.new(automation_user_agents, Regexp::IGNORECASE))
+    user_agent.match?(matcher)
+  end
+  private_class_method :automation_user_agent?
 
   def log_request_info(env, result, info, request = nil)
     # We've got to skip this on error ... its just logging
