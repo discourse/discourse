@@ -104,7 +104,7 @@ export default class ZoomMeetingSession {
 
   stopWaitingForStart() {
     this.waitForStartSignal = false;
-    this.stopRetrying();
+    this.leaveZoom();
   }
 
   resumeWaitingForStart() {

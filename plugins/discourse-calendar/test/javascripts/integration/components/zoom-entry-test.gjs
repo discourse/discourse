@@ -988,6 +988,30 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
       assert.false(performJoin.called, "and still does not join early");
     });
 
+    test("stopping the countdown takes the Zoom frame down with it", async function (assert) {
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+
+      assert
+        .dom(`${FRAME_SELECTOR}.--visible`)
+        .exists("Zoom's not-started panel sits beside the countdown");
+
+      await click(STOP_WAITING_SELECTOR);
+
+      assert
+        .dom(`${FRAME_SELECTOR}.--visible`)
+        .doesNotExist("and goes away with it");
+      assert.dom(WAITING_SELECTOR).doesNotExist();
+      assert.dom(JOIN_BUTTON_SELECTOR).isNotDisabled();
+
+      await tick(RETRY_DELAY_SECONDS * 2);
+
+      assert.false(reloadPage.called, "the countdown really stopped");
+    });
+
     test("holds the reload until the tab is visible again", async function (assert) {
       const setVisibility = (state) =>
         Object.defineProperty(document, "visibilityState", {
