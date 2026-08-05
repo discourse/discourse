@@ -535,8 +535,20 @@ module("Unit | Lib | raw-event-helper", function () {
       "rejects schemeless www"
     );
     assert.false(
+      isLivestreamUrl("youtube.com/watch?v=dQw4w9WgXcQ", SETTINGS),
+      "rejects a schemeless allowed host, which the save path would not retain"
+    );
+    assert.false(
       isLivestreamUrl("mailto:host@example.com", SETTINGS),
       "rejects mailto"
+    );
+    assert.false(
+      isLivestreamUrl("ftp://youtube.com/watch", SETTINGS),
+      "rejects a non-http(s) scheme on an allowed host"
+    );
+    assert.false(
+      isLivestreamUrl("https://", SETTINGS),
+      "rejects a bare scheme"
     );
     assert.false(isLivestreamUrl("Room 5", SETTINGS), "rejects plain text");
     assert.false(isLivestreamUrl(null, SETTINGS), "handles null");
@@ -611,6 +623,10 @@ module("Unit | Lib | raw-event-helper", function () {
     assert.false(
       isLivestreamUrl("https://myyoutube.com/watch?v=1", SETTINGS),
       "rejects a host prefixed with the platform name"
+    );
+    assert.false(
+      isLivestreamUrl("https://youtube.com@evil.com/live", SETTINGS),
+      "rejects a platform name smuggled into the userinfo"
     );
   });
 

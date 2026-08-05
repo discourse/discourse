@@ -1,17 +1,13 @@
 import { buildBBCodeAttrs, parseBBCodeTag } from "discourse/lib/text";
 
 let lastSetting;
-let lastPattern;
+let lastHosts;
 
-// Mirrors DiscourseCalendar::Livestream::AllowedHosts on the server: an allowed
-// host or any of its subdomains. `([\w-]+\.)*` allows the subdomains livestream
-// hosts routinely use (us06web.zoom.us, www.youtube.com) but cannot match a host
-// that merely ends in an allowed name, because each captured label must be
-// followed by a dot: "notzoom.us" and "zoom.us.evil.com" are both rejected.
-// Compiled once per setting value because this runs on every location keystroke.
-function livestreamUrlPattern(setting) {
+// Parsed once per setting value because this runs on every location keystroke.
+function allowedHosts(setting) {
   if (setting !== lastSetting) {
-    const hosts = (setting ?? "")
+    lastSetting = setting;
+    lastHosts = (setting ?? "")
       .split("|")
       .map(
         (host) =>
@@ -21,21 +17,39 @@ function livestreamUrlPattern(setting) {
             .replace(/^https?:\/\//, "")
             .split("/")[0]
       )
-      .filter(Boolean)
-      .map((host) => host.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
-
-    lastSetting = setting;
-    lastPattern = hosts.length
-      ? new RegExp(`^(https?://)?([\\w-]+\\.)*(${hosts.join("|")})(/|$)`, "i")
-      : null;
+      .filter(Boolean);
   }
 
-  return lastPattern;
+  return lastHosts;
 }
 
+// Mirrors DiscourseCalendar::Livestream::AllowedHosts on the server, down to
+// parsing the URL rather than pattern-matching it: a location the editor
+// presents as a livestream must be one the save path still recognizes, or the
+// livestream flag is silently dropped. Subdomains are allowed because livestream
+// hosts routinely use them (us06web.zoom.us, www.youtube.com); a host that merely
+// ends in an allowed name is not, since the match is anchored to a label boundary.
 export function isLivestreamUrl(url, siteSettings) {
-  const pattern = livestreamUrlPattern(siteSettings?.livestream_allowed_hosts);
-  return !!pattern?.test(url ?? "");
+  const hosts = allowedHosts(siteSettings?.livestream_allowed_hosts);
+  if (!hosts.length) {
+    return false;
+  }
+
+  let parsed;
+  try {
+    parsed = new URL(url ?? "");
+  } catch {
+    return false;
+  }
+
+  if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+    return false;
+  }
+
+  return hosts.some(
+    (allowed) =>
+      parsed.hostname === allowed || parsed.hostname.endsWith(`.${allowed}`)
+  );
 }
 
 export function defaultReminderFor({ startsAt, endsAt, allDay } = {}) {
