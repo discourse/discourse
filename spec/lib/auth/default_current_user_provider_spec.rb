@@ -138,7 +138,10 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     it "finds a user for a correct system api key" do
       api_key = ApiKey.create!(created_by_id: -1)
       params = { "HTTP_API_KEY" => api_key.key, "HTTP_API_USERNAME" => user.username.downcase }
-      expect(provider("/", params).current_user.id).to eq(user.id)
+      current_user_provider = provider("/", params)
+
+      expect(current_user_provider.current_user.id).to eq(user.id)
+      expect(current_user_provider.current_api_key).to eq(api_key)
     end
 
     it "raises for a mismatched api_key header and param username" do

@@ -108,6 +108,11 @@ class ApiKey < ActiveRecord::Base
     api_key_scopes.blank? || api_key_scopes.any? { |s| s.permits?(env) }
   end
 
+  def unrestricted_global?
+    # Userless keys can impersonate users; scope rows are what restrict their access.
+    user_id.nil? && api_key_scopes.empty?
+  end
+
   def update_last_used!(now = Time.zone.now)
     return if last_used_at && (last_used_at > 1.minute.ago)
 

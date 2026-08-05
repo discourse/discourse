@@ -1595,6 +1595,91 @@ RSpec.describe PostsController do
         expect(response.parsed_body["errors"]).to be_present
       end
 
+      it "allows an unrestricted global key to skip validations" do
+        api_key = Fabricate(:global_api_key)
+
+        expect do
+          post "/posts.json",
+               params: {
+                 raw: "tiny",
+                 title: "tiny",
+                 skip_validations: true,
+               },
+               headers: {
+                 HTTP_API_USERNAME: user.username,
+                 HTTP_API_KEY: api_key.key,
+               }
+        end.to change { Topic.count }.by(1)
+
+        expect(response.status).to eq(200)
+      end
+
+      it "validates content for unrestricted user-bound keys" do
+        api_key = Fabricate(:global_api_key, user: user)
+
+        expect do
+          post "/posts.json",
+               params: {
+                 raw: "tiny",
+                 title: "tiny",
+                 skip_validations: true,
+               },
+               headers: {
+                 HTTP_API_KEY: api_key.key,
+               }
+        end.not_to change { Topic.count }
+
+        expect(response.status).to eq(422)
+      end
+
+      it "allows staff using a granular key to skip validations" do
+        user.update!(moderator: true)
+        api_key =
+          Fabricate(
+            :api_key,
+            user: user,
+            scope_mode: :granular,
+            api_key_scopes: [Fabricate.build(:api_key_scope, resource: "topics", action: "write")],
+          )
+
+        expect do
+          post "/posts.json",
+               params: {
+                 raw: "tiny",
+                 title: "tiny",
+                 skip_validations: true,
+               },
+               headers: {
+                 HTTP_API_KEY: api_key.key,
+               }
+        end.to change { Topic.count }.by(1)
+
+        expect(response.status).to eq(200)
+      end
+
+      it "validates content for user API keys" do
+        user_api_key =
+          Fabricate(
+            :user_api_key,
+            user: user,
+            scopes: [Fabricate.build(:user_api_key_scope, name: "write")],
+          )
+
+        expect do
+          post "/posts.json",
+               params: {
+                 raw: "tiny",
+                 title: "tiny",
+                 skip_validations: true,
+               },
+               headers: {
+                 HTTP_USER_API_KEY: user_api_key.key,
+               }
+        end.not_to change { Topic.count }
+
+        expect(response.status).to eq(422)
+      end
+
       it "allows a topic to be created with an external_id" do
         master_key = Fabricate(:api_key).key
         post "/posts.json",

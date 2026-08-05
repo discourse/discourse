@@ -57,6 +57,23 @@ RSpec.describe ApiKey do
     expect(ApiKey.with_key(key).length).to eq(1)
   end
 
+  describe "#unrestricted_global?" do
+    it "is true for a userless key without scopes" do
+      expect(ApiKey.new).to be_unrestricted_global
+    end
+
+    it "is false for a user-bound key" do
+      expect(ApiKey.new(user: user)).not_to be_unrestricted_global
+    end
+
+    it "is false for a scoped key" do
+      api_key = ApiKey.new
+      api_key.api_key_scopes = [ApiKeyScope.new(resource: "topics", action: "write")]
+
+      expect(api_key).not_to be_unrestricted_global
+    end
+  end
+
   it "can calculate the epoch correctly" do
     expect(ApiKey.last_used_epoch.to_datetime).to be_a(DateTime)
 
