@@ -7530,6 +7530,7 @@ en:
             unavailable: "Unavailable"
             active_filters: "Site traffic filters"
             filter_value: "%{dimension}: %{value}"
+            filter_separator: ", "
             filter_dimensions:
               url: "Top URL"
               country: "Country"

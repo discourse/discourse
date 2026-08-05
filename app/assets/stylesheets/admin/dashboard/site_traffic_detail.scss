@@ -33,8 +33,8 @@
     width: 100%;
     min-width: 0;
 
-    .d-multi-select-trigger__selection-label {
-      max-width: min(24rem, 70vw);
+    .topic-query-filter__input {
+      width: 100%;
     }
   }
 
@@ -141,7 +141,7 @@
 
   &__metric {
     display: grid;
-    grid-template-columns: max-content minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) max-content;
     grid-template-rows: auto auto auto;
     gap: var(--space-1);
     min-width: 0;
@@ -169,6 +169,8 @@
     display: flex;
     align-items: center;
     gap: var(--space-1);
+    min-width: 0;
+    overflow-wrap: anywhere;
     color: var(--primary-medium);
     font-size: var(--font-down-1-rem);
   }
@@ -177,6 +179,7 @@
     grid-column: 2;
     grid-row: 2;
     align-self: center;
+    margin-inline-start: var(--space-1);
   }
 
   &__metric-scope {

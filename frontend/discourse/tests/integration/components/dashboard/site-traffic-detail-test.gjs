@@ -11,13 +11,16 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import SiteTrafficDetail from "discourse/admin/components/dashboard/site-traffic-detail";
 import SiteTrafficBreakdownModal from "discourse/admin/components/modal/site-traffic-breakdown";
-import DiscourseURL from "discourse/lib/url";
+import DMenus from "discourse/float-kit/components/d-menus";
 import Session from "discourse/models/session";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 class DateState {
   @tracked startDate = "2026-05-01";
   @tracked endDate = "2026-05-12";
+  @tracked country = null;
+  @tracked asn = null;
+  @tracked browser = null;
 }
 
 function payload({
@@ -114,14 +117,14 @@ module(
       this.state = new DateState();
       this.setPeriod = () => {};
       this.setCustomDateRange = () => {};
+      this.setSafeFilters = (filters) => {
+        this.state.country = filters.country;
+        this.state.asn = filters.asn;
+        this.state.browser = filters.browser;
+      };
       Session.currentProp("csrfToken", "traffic-csrf");
       this.fetchStub = sinon.stub(window, "fetch");
       sessionStorage.clear();
-      window.location.hash = "";
-    });
-
-    hooks.afterEach(function () {
-      window.location.hash = "";
     });
 
     test("uses the dashboard skeleton for the initial load", async function (assert) {
@@ -144,7 +147,7 @@ module(
 
       assert.dom("[data-test-traffic-loading].db-skeleton").exists();
       assert
-        .dom("[data-test-filter-control].d-multi-select-trigger")
+        .dom("[data-test-filter-control] .topic-query-filter__input")
         .exists("the full-width filter is visible while data loads");
       assert.dom(".db-skeleton__kpi").exists({ count: 5 });
       assert.dom(".db-skeleton__chart").exists();
@@ -154,7 +157,7 @@ module(
       await settled();
 
       assert
-        .dom("[data-test-filter-control].d-multi-select-trigger")
+        .dom("[data-test-filter-control] .topic-query-filter__input")
         .exists("the full-width filter is visible after an empty load");
     });
 
@@ -189,7 +192,33 @@ module(
       assert.dom("[data-test-metric]").includesText("5");
     });
 
-    test("offers one searchable exact-match control with AND composition", async function (assert) {
+    test("validates safe query parameter values before requests", async function (assert) {
+      this.state.country = "US";
+      this.state.asn = "AS0";
+      this.state.browser = "not-a-browser";
+      this.fetchStub.resolves(response(payload()));
+
+      await render(
+        <template>
+          <SiteTrafficDetail
+            @startDate={{this.state.startDate}}
+            @endDate={{this.state.endDate}}
+            @country={{this.state.country}}
+            @asn={{this.state.asn}}
+            @browser={{this.state.browser}}
+            @setSafeFilters={{this.setSafeFilters}}
+          />
+        </template>
+      );
+
+      assert.deepEqual(
+        JSON.parse(this.fetchStub.firstCall.args[1].body).filters,
+        { country: "US" },
+        "only canonical safe query parameter values reach the request"
+      );
+    });
+
+    test("uses two-stage exact suggestions with replacement and clearing", async function (assert) {
       const requestBodies = [];
       this.fetchStub.callsFake((_url, options) => {
         requestBodies.push(JSON.parse(options.body));
@@ -218,6 +247,12 @@ module(
                   filterable: true,
                 },
               ],
+              topUrls: Array.from({ length: 25 }, (_value, index) => ({
+                value: `/page-${index}`,
+                label: `/page-${index}`,
+                pageviews: 25 - index,
+                filterable: true,
+              })),
             })
           )
         );
@@ -230,21 +265,40 @@ module(
             @endDate={{this.state.endDate}}
             @startDateValue={{this.state.startDate}}
             @endDateValue={{this.state.endDate}}
+            @country={{this.state.country}}
+            @asn={{this.state.asn}}
+            @browser={{this.state.browser}}
+            @setSafeFilters={{this.setSafeFilters}}
           />
+          <DMenus />
         </template>
       );
 
       assert
-        .dom("[data-test-filter-control].d-multi-select-trigger")
-        .exists({ count: 1 }, "all dimensions share one full-width control");
+        .dom("[data-test-filter-control] .topic-query-filter__input")
+        .exists({ count: 1 }, "all dimensions share one filter input");
 
-      await click("[data-test-filter-control]");
-      await fillIn(".d-multi-select__search-input", "Country: United States");
+      await click("#topic-query-filter-input");
       assert
-        .dom(".d-multi-select__result")
-        .exists({ count: 1 }, "search narrows the available exact values")
-        .hasText("Country: United States");
-      await click(".d-multi-select__result");
+        .dom(".filter-navigation__tip-item")
+        .exists({ count: 5 }, "opening first shows only five dimensions");
+      assert
+        .dom(".filter-navigation__tip-name")
+        .doesNotIncludeText("United States", "values are not shown initially");
+
+      await click(".filter-navigation__tip-item:nth-child(1)");
+      assert
+        .dom(".filter-navigation__tip-item")
+        .exists({ count: 20 }, "value suggestions are capped at twenty");
+
+      await fillIn("#topic-query-filter-input", "");
+      await click(".filter-navigation__tip-item:nth-child(2)");
+      await fillIn("#topic-query-filter-input", "Country: United");
+      assert
+        .dom(".filter-navigation__tip-item")
+        .exists({ count: 1 }, "the second stage narrows exact country values")
+        .includesText("Country: United States");
+      await click(".filter-navigation__tip-item");
 
       assert.deepEqual(
         requestBodies.at(-1).filters,
@@ -252,11 +306,13 @@ module(
         "the country control applies one exact value"
       );
       assert
-        .dom(".d-multi-select-trigger__selected-item")
-        .hasText("Country: United States");
+        .dom("#topic-query-filter-input")
+        .hasValue("Country: United States", "the selected filter is visible");
 
-      await fillIn(".d-multi-select__search-input", "Browser: Firefox");
-      await click(".d-multi-select__result");
+      await fillIn("#topic-query-filter-input", "");
+      await click(".filter-navigation__tip-item:nth-child(4)");
+      await fillIn("#topic-query-filter-input", "Browser: Fire");
+      await click(".filter-navigation__tip-item");
 
       assert.deepEqual(
         requestBodies.at(-1).filters,
@@ -264,8 +320,10 @@ module(
         "different dimensions compose with AND semantics"
       );
 
-      await fillIn(".d-multi-select__search-input", "Country: Canada");
-      await click(".d-multi-select__result");
+      await fillIn("#topic-query-filter-input", "");
+      await click(".filter-navigation__tip-item:nth-child(2)");
+      await fillIn("#topic-query-filter-input", "Country: Can");
+      await click(".filter-navigation__tip-item");
 
       assert.deepEqual(
         requestBodies.at(-1).filters,
@@ -273,15 +331,18 @@ module(
         "a new country replaces the existing country value"
       );
       assert
-        .dom(".d-multi-select-trigger__selected-item")
-        .exists({ count: 2 }, "one token remains for each active dimension");
+        .dom("#topic-query-filter-input")
+        .hasValue(
+          "Country: Canada, Browser: Firefox",
+          "one value remains for each active dimension"
+        );
 
-      await click(".d-multi-select-trigger__selected-item:nth-child(2)");
+      await click(".topic-query-filter__clear-btn");
 
       assert.deepEqual(
         requestBodies.at(-1).filters,
-        { country: "CA" },
-        "token removal removes only its dimension"
+        {},
+        "the inline clear button removes all dimensions"
       );
     });
 
@@ -373,8 +434,7 @@ module(
       assert.true(request.aborted);
     });
 
-    test("shares safe filters but keeps paths in session storage", async function (assert) {
-      sinon.stub(DiscourseURL, "replaceState");
+    test("synchronizes safe query filters but keeps paths in session storage", async function (assert) {
       this.fetchStub.resolves(
         response(
           payload({
@@ -405,29 +465,50 @@ module(
             @endDate={{this.state.endDate}}
             @startDateValue={{this.state.startDate}}
             @endDateValue={{this.state.endDate}}
+            @country={{this.state.country}}
+            @asn={{this.state.asn}}
+            @browser={{this.state.browser}}
+            @setSafeFilters={{this.setSafeFilters}}
           />
         </template>
       );
 
       await click("[data-test-breakdown='pages'] [data-test-breakdown-row]");
       assert
-        .dom(".d-multi-select-trigger__selected-item")
-        .hasText("Top URL: /top", "row clicks update the selected token");
+        .dom("#topic-query-filter-input")
+        .hasValue("Top URL: /top", "row clicks update the filter input");
       const sensitiveState = Array.from(
         { length: sessionStorage.length },
         (_value, index) => sessionStorage.getItem(sessionStorage.key(index))
       ).join(" ");
       assert.true(sensitiveState.includes("/top"));
       assert.false(
-        DiscourseURL.replaceState.lastCall.args[0].includes("/top"),
-        "the path is absent from browser history"
+        window.location.href.includes("/top"),
+        "the sensitive path is absent from the browser URL"
       );
 
       await click(
         "[data-test-breakdown='visitor-dimensions'] [data-test-breakdown-row]"
       );
-      assert.true(
-        DiscourseURL.replaceState.lastCall.args[0].includes("#country=US")
+      assert.strictEqual(
+        this.state.country,
+        "US",
+        "the safe country value updates its query parameter state"
+      );
+
+      const requestCount = this.fetchStub.callCount;
+      this.state.country = null;
+      await settled();
+
+      assert.strictEqual(
+        this.fetchStub.callCount,
+        requestCount + 1,
+        "back or forward query parameter changes issue one request"
+      );
+      assert.deepEqual(
+        JSON.parse(this.fetchStub.lastCall.args[1].body).filters,
+        { url: "/top" },
+        "query parameter removal preserves the sensitive filter"
       );
     });
 
@@ -510,6 +591,11 @@ module(
         .hasAttribute("aria-selected", "true");
       assert.dom(".site-traffic-detail__metrics").exists({ count: 1 });
       assert.dom(".site-traffic-detail__metric").exists({ count: 5 });
+      assert
+        .dom(
+          ".site-traffic-detail__metric:nth-of-type(5) .site-traffic-detail__metric-tooltip"
+        )
+        .exists("the final metric keeps its tooltip inside the metric grid");
       assert.dom("[data-test-logged-in-share]").includesText("40%");
       assert.dom("[data-test-session-kpi]").exists({ count: 3 });
       assert

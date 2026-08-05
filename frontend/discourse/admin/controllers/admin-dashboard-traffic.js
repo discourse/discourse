@@ -10,8 +10,11 @@ import {
 export default class AdminDashboardTrafficController extends Controller {
   @tracked start_date = null;
   @tracked end_date = null;
+  @tracked country = null;
+  @tracked asn = null;
+  @tracked browser = null;
 
-  queryParams = ["start_date", "end_date"];
+  queryParams = ["start_date", "end_date", "country", "asn", "browser"];
 
   get startDate() {
     return moment(this.start_date, "YYYY-MM-DD", true).toDate();
@@ -47,6 +50,13 @@ export default class AdminDashboardTrafficController extends Controller {
   setCustomDateRange(startDate, endDate) {
     this.start_date = moment(startDate).format("YYYY-MM-DD");
     this.end_date = moment(endDate).format("YYYY-MM-DD");
+  }
+
+  @action
+  setSafeFilters(filters) {
+    this.country = filters.country;
+    this.asn = filters.asn;
+    this.browser = filters.browser;
   }
 
   ensureDefaultRange() {

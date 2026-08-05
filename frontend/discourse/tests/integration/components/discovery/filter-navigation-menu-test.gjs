@@ -163,6 +163,51 @@ module(
       assert.strictEqual(this.query, "tag:ember", "tag result selected");
     });
 
+    test("uses a custom suggestion provider without changing default input behavior", async function (assert) {
+      this.getSuggestions = async (input) => ({
+        suggestions: [
+          {
+            name: `Result for ${input}`,
+            inputValue: "Selected value",
+            submitOnSelect: true,
+          },
+        ],
+      });
+      this.changes = [];
+      this.update = (value, submit) => {
+        this.changes.push({ value, submit });
+        this.set("query", value);
+      };
+
+      await render(
+        <template>
+          <FilterNavigationMenu
+            @getSuggestions={{this.getSuggestions}}
+            @initialInputValue={{this.query}}
+            @onChange={{this.update}}
+          />
+          <DMenus />
+        </template>
+      );
+
+      await triggerEvent("#topic-query-filter-input", "focus");
+
+      assert
+        .dom(".filter-navigation__tip-name")
+        .hasText("Result for ", "the custom provider supplies suggestions");
+
+      await triggerEvent(".filter-navigation__tip-item", "click");
+
+      assert.deepEqual(
+        this.changes.at(-1),
+        { value: "Selected value", submit: true },
+        "custom selection metadata submits its exact replacement value"
+      );
+      assert
+        .dom(".topic-query-filter__clear-btn")
+        .hasAttribute("title", "Clear filter", "the clear button has a title");
+    });
+
     test("escape hides suggestions", async function (assert) {
       await render(
         <template>

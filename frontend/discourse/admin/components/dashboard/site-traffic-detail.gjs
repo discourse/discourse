@@ -9,28 +9,22 @@ import AdminReportStackedChart from "discourse/admin/components/admin-report-sta
 import SiteTrafficMetric from "discourse/admin/components/dashboard/site-traffic-metric";
 import SiteTrafficBreakdownModal from "discourse/admin/components/modal/site-traffic-breakdown";
 import { countryFlag, countryName } from "discourse/admin/lib/format-country";
+import {
+  SITE_TRAFFIC_BROWSER_FAMILIES,
+  SITE_TRAFFIC_SAFE_FILTERS,
+  validSiteTrafficSafeFilter,
+} from "discourse/admin/lib/site-traffic-filters";
+import FilterNavigationMenu from "discourse/components/discovery/filter-navigation-menu";
 import { formatMinutesSeconds } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
-import DiscourseURL from "discourse/lib/url";
 import Session from "discourse/models/session";
 import { eq, gt } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
-import DMultiSelect from "discourse/ui-kit/d-multi-select";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
-const SAFE_FILTERS = new Set(["country", "asn", "browser"]);
 const SENSITIVE_FILTERS = new Set(["url", "ip"]);
-const BROWSER_FAMILIES = new Set([
-  "edge",
-  "opera",
-  "firefox",
-  "chrome",
-  "safari",
-  "ie",
-  "discoursehub",
-  "unknown",
-]);
+const FILTER_OPTION_LIMIT = 20;
 const BROWSER_ICONS = {
   edge: "fab-edge",
   opera: "fab-opera",
@@ -85,6 +79,7 @@ export default class SiteTrafficDetail extends Component {
   @tracked loading = false;
   @tracked error;
   @tracked filters = {};
+  @tracked suggestionDimension;
   @tracked pagesTab = "top_urls";
   @tracked dimensionTab = "countries";
 
@@ -95,7 +90,7 @@ export default class SiteTrafficDetail extends Component {
   constructor() {
     super(...arguments);
     this.filters = {
-      ...this.#fragmentFilters(),
+      ...this.#safeFiltersFromArgs(),
       ...this.#storedSensitiveFilters(),
     };
     this.load();
@@ -201,24 +196,12 @@ export default class SiteTrafficDetail extends Component {
     );
   }
 
-  get filterSelection() {
-    const options = this.filterOptions;
-
-    return Object.entries(this.filters).map(([dimension, value]) => {
-      return (
-        options.find(
-          (option) => option.dimension === dimension && option.value === value
-        ) || {
-          id: `${dimension}:${value}`,
-          dimension,
-          value,
-          name: this.#filterDisplayName(
-            dimension,
-            this.#filterLabel(dimension, value)
-          ),
-        }
-      );
-    });
+  get filterInputValue() {
+    return Object.entries(this.filters)
+      .map(([dimension, value]) =>
+        this.#filterDisplayName(dimension, this.#filterLabel(dimension, value))
+      )
+      .join(i18n("admin.dashboard.site_traffic.details.filter_separator"));
   }
 
   get pageRows() {
@@ -362,27 +345,100 @@ export default class SiteTrafficDetail extends Component {
 
   @action
   applyFilter(dimension, value) {
-    this.filters = { ...this.filters, [dimension]: value };
-    this.#persistFilters();
-    this.load();
+    this.#updateFilters({ ...this.filters, [dimension]: value });
   }
 
   @action
-  setFilters(selection) {
-    this.filters = Object.fromEntries(
-      selection.map((option) => [option.dimension, option.value])
+  filterInputChanged(value, submit) {
+    if (!submit) {
+      const dimension = Object.keys(FILTER_SOURCE_DIMENSIONS).find(
+        (candidate) => value === this.#filterPrefix(candidate)
+      );
+      this.suggestionDimension = dimension;
+      return;
+    }
+
+    if (!value) {
+      this.suggestionDimension = null;
+      this.#updateFilters({});
+      return;
+    }
+
+    const option = this.filterOptions.find(
+      (candidate) =>
+        candidate.dimension === this.suggestionDimension &&
+        candidate.name === value
     );
-    this.#persistFilters();
-    this.load();
+    this.suggestionDimension = null;
+
+    if (option) {
+      this.#updateFilters({
+        ...this.filters,
+        [option.dimension]: option.value,
+      });
+    }
   }
 
   @action
-  async loadFilterOptions(searchTerm) {
-    const query = searchTerm.trim().toLocaleLowerCase();
+  async getFilterSuggestions(input) {
+    if (!this.suggestionDimension) {
+      return {
+        suggestions: Object.keys(FILTER_SOURCE_DIMENSIONS).map((dimension) => ({
+          name: i18n(
+            `admin.dashboard.site_traffic.details.filter_dimensions.${dimension}`
+          ),
+          inputValue: this.#filterPrefix(dimension),
+        })),
+      };
+    }
 
-    return this.filterOptions.filter((option) =>
-      option.name.toLocaleLowerCase().includes(query)
+    const prefix = this.#filterPrefix(this.suggestionDimension);
+    const query = input.startsWith(prefix)
+      ? input.slice(prefix.length).trim().toLocaleLowerCase()
+      : "";
+
+    return {
+      suggestions: this.filterOptions
+        .filter(
+          (option) =>
+            option.dimension === this.suggestionDimension &&
+            option.name.toLocaleLowerCase().includes(query)
+        )
+        .slice(0, FILTER_OPTION_LIMIT)
+        .map((option) => ({
+          ...option,
+          inputValue: option.name,
+          submitOnSelect: true,
+        })),
+    };
+  }
+
+  @action
+  safeFiltersChanged() {
+    const safeFilters = this.#safeFiltersFromArgs();
+    const currentSafeFilters = Object.fromEntries(
+      Object.entries(this.filters).filter(([key]) =>
+        SITE_TRAFFIC_SAFE_FILTERS.includes(key)
+      )
     );
+
+    if (
+      SITE_TRAFFIC_SAFE_FILTERS.every(
+        (key) => safeFilters[key] === currentSafeFilters[key]
+      )
+    ) {
+      return;
+    }
+
+    this.filters = {
+      ...Object.fromEntries(
+        Object.entries(this.filters).filter(
+          ([key]) => !SITE_TRAFFIC_SAFE_FILTERS.includes(key)
+        )
+      ),
+      ...safeFilters,
+    };
+    this.load();
   }
 
   @action
@@ -476,7 +532,9 @@ export default class SiteTrafficDetail extends Component {
   }
 
   #browserIcon(value) {
-    return BROWSER_ICONS[BROWSER_FAMILIES.has(value) ? value : "unknown"];
+    return BROWSER_ICONS[
+      SITE_TRAFFIC_BROWSER_FAMILIES.has(value) ? value : "unknown"
+    ];
   }
 
   #rowLabel(dimension, row) {
@@ -487,7 +545,7 @@ export default class SiteTrafficDetail extends Component {
     if (dimension === "browsers") {
       return i18n(
         `admin.dashboard.site_traffic.details.browsers.${
-          BROWSER_FAMILIES.has(row.value) ? row.value : "unknown"
+          SITE_TRAFFIC_BROWSER_FAMILIES.has(row.value) ? row.value : "unknown"
         }`
       );
     }
@@ -516,7 +574,7 @@ export default class SiteTrafficDetail extends Component {
     if (dimension === "browser") {
       return i18n(
         `admin.dashboard.site_traffic.details.browsers.${
-          BROWSER_FAMILIES.has(value) ? value : "unknown"
+          SITE_TRAFFIC_BROWSER_FAMILIES.has(value) ? value : "unknown"
         }`
       );
     }
@@ -530,6 +588,10 @@ export default class SiteTrafficDetail extends Component {
       ),
       value,
     });
+  }
+
+  #filterPrefix(dimension) {
+    return this.#filterDisplayName(dimension, "");
   }
 
   #formatNumber(value) {
@@ -577,25 +639,11 @@ export default class SiteTrafficDetail extends Component {
     )} – ${end.format(`${dateFormat}, ${timeFormat}`)}`;
   }
 
-  #validSafeFilter(key, value) {
-    if (key === "country") {
-      return /^[A-Z]{2}$/.test(value);
-    }
-    if (key === "asn") {
-      if (!/^AS[1-9][0-9]{0,9}$/.test(value)) {
-        return false;
-      }
-      return Number(value.slice(2)) <= 2_147_483_647;
-    }
-    return key === "browser" && BROWSER_FAMILIES.has(value);
-  }
-
-  #fragmentFilters() {
-    const values = new URLSearchParams(window.location.hash.slice(1));
+  #safeFiltersFromArgs() {
     return Object.fromEntries(
-      [...SAFE_FILTERS].flatMap((key) => {
-        const value = values.get(key);
-        return value && this.#validSafeFilter(key, value) ? [[key, value]] : [];
+      SITE_TRAFFIC_SAFE_FILTERS.flatMap((key) => {
+        const value = this.args[key];
+        return validSiteTrafficSafeFilter(key, value) ? [[key, value]] : [];
       })
     );
   }
@@ -614,23 +662,15 @@ export default class SiteTrafficDetail extends Component {
     );
   }
 
-  #persistFilters() {
-    this.#writeFragment();
-    this.#persistSensitiveFilters();
-  }
-
-  #writeFragment() {
-    const values = new URLSearchParams();
-    for (const [key, value] of Object.entries(this.filters)) {
-      if (SAFE_FILTERS.has(key)) {
-        values.set(key, value);
-      }
-    }
-
-    const fragment = values.size ? `#${values.toString()}` : "";
-    DiscourseURL.replaceState(
-      `${window.location.pathname}${window.location.search}${fragment}`
+  #updateFilters(filters) {
+    this.filters = filters;
+    this.args.setSafeFilters?.(
+      Object.fromEntries(
+        SITE_TRAFFIC_SAFE_FILTERS.map((key) => [key, this.filters[key] || null])
+      )
     );
+    this.#persistSensitiveFilters();
+    this.load();
   }
 
   #persistSensitiveFilters() {
@@ -664,6 +704,7 @@ export default class SiteTrafficDetail extends Component {
       class="site-traffic-detail"
       data-test-site-traffic-detail
       {{didUpdate this.datesChanged @startDate @endDate}}
+      {{didUpdate this.safeFiltersChanged @country @asn @browser}}
     >
       <div class="site-traffic-detail__sticky-controls">
         <div
@@ -672,21 +713,19 @@ export default class SiteTrafficDetail extends Component {
             "admin.dashboard.site_traffic.details.active_filters"
           }}
         >
-          <DMultiSelect
-            @loadFn={{this.loadFilterOptions}}
-            @selection={{this.filterSelection}}
-            @onChange={{this.setFilters}}
-            @label={{i18n
-              "admin.dashboard.site_traffic.details.active_filters"
-            }}
-            @matchTriggerWidth={{true}}
-            @matchTriggerMinWidth={{true}}
+          <div
             class="site-traffic-detail__filter-control"
             data-test-filter-control
           >
-            <:selection as |option|>{{option.name}}</:selection>
-            <:result as |option|>{{option.name}}</:result>
-          </DMultiSelect>
+            <FilterNavigationMenu
+              @getSuggestions={{this.getFilterSuggestions}}
+              @initialInputValue={{this.filterInputValue}}
+              @onChange={{this.filterInputChanged}}
+              @placeholder={{i18n
+                "admin.dashboard.site_traffic.details.active_filters"
+              }}
+            />
+          </div>
         </div>
 
         {{#if this.analysisWarning}}

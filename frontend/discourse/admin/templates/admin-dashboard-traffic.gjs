@@ -39,6 +39,10 @@ export default <template>
     <SiteTrafficDetail
       @startDate={{@controller.start_date}}
       @endDate={{@controller.end_date}}
+      @country={{@controller.country}}
+      @asn={{@controller.asn}}
+      @browser={{@controller.browser}}
+      @setSafeFilters={{@controller.setSafeFilters}}
     />
   </div>
 </template>

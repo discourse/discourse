@@ -119,13 +119,11 @@ export default class FilterNavigationMenu extends Component {
     const requestId = ++this.suggestionRequestId;
 
     try {
-      const result = await FilterSuggestions.getSuggestions(
-        input,
-        this.args.tips,
-        {
-          site: this.site,
-        }
-      );
+      const result = this.args.getSuggestions
+        ? await this.args.getSuggestions(input)
+        : await FilterSuggestions.getSuggestions(input, this.args.tips, {
+            site: this.site,
+          });
 
       // Drop stale responses or results for outdated input
       if (
@@ -167,6 +165,12 @@ export default class FilterNavigationMenu extends Component {
 
   @action
   async selectItem(item) {
+    if (item.inputValue !== undefined) {
+      await this.updateInput(item.inputValue, item.submitOnSelect);
+      this.inputElement?.focus();
+      return;
+    }
+
     const words = this.currentInputValue.split(/\s+/);
     let newValue;
 
@@ -366,6 +370,7 @@ export default class FilterNavigationMenu extends Component {
         <DButton
           @icon="xmark"
           @action={{this.clearInput}}
+          @title="filter_input.clear"
           class="topic-query-filter__clear-btn btn-flat"
         />
       {{/if}}
