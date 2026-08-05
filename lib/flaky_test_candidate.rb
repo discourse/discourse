@@ -19,13 +19,16 @@ class FlakyTestCandidate
   end
 
   def call
-    candidate =
+    candidates =
       grouped_failures
         .values
         .filter { |failure| eligible?(failure) }
-        .max_by { |failure| [failure[:occurrences], failure[:workflow_runs].length, failure[:key]] }
+        .sort_by do |failure|
+          [-failure[:occurrences], -failure[:workflow_runs].length, failure[:key]]
+        end
+        .map { |failure| serialize(failure) }
 
-    { candidate: candidate && serialize(candidate) }
+    { candidates: }
   end
 
   private
@@ -49,18 +52,24 @@ class FlakyTestCandidate
             description:,
             occurrences: 0,
             workflow_runs: [],
+            contexts: [],
             examples: [],
           }
 
         failure[:occurrences] += 1
         failure[:workflow_runs] << workflow_run_id
+        failure[:contexts] << test_context(report_path)
         if failure[:examples].length < MAX_EXAMPLES
-          failure[:examples] << example(report, workflow_run_id)
+          failure[:examples] << example(report, report_path, workflow_run_id)
         end
       end
     end
 
-    failures.each_value { |failure| failure[:workflow_runs].uniq! }
+    failures.each_value do |failure|
+      failure[:workflow_runs].uniq!
+      failure[:contexts].compact!
+      failure[:contexts].uniq!
+    end
   end
 
   def report_paths
@@ -83,9 +92,10 @@ class FlakyTestCandidate
       failure[:workflow_runs].length >= @minimum_workflow_runs
   end
 
-  def example(report, workflow_run_id)
+  def example(report, report_path, workflow_run_id)
     {
       workflow_run_id:,
+      report_file: report_path.basename.to_s,
       exception_name: report["exception_name"],
       exception_message: truncate(report["exception_message"]),
       message_lines: truncate(report["message_lines"]),
@@ -94,11 +104,22 @@ class FlakyTestCandidate
     }
   end
 
+  def test_context(report_path)
+    match =
+      report_path.basename.to_s.match(
+        /\Aturbo_rspec_flaky_tests-(?<build_type>[^-]+)-(?<target>.+)-\d+\.json\z/,
+      )
+    match && { build_type: match[:build_type], target: match[:target] }
+  end
+
   def truncate(value)
     value.to_s.slice(0, MAX_TEXT_LENGTH)
   end
 
   def serialize(failure)
-    failure.merge(workflow_runs: failure[:workflow_runs].sort)
+    failure.merge(
+      workflow_runs: failure[:workflow_runs].sort,
+      contexts: failure[:contexts].sort_by { |context| [context[:build_type], context[:target]] },
+    )
   end
 end
