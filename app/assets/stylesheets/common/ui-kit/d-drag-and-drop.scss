@@ -1,0 +1,94 @@
+/* Default treatment for the drag-and-drop vocabulary. The source and target
+   registrars stamp `data-drag-source` / `data-drop-target` on their host for the
+   lifetime of the registration, and toggle the state modifiers below during a
+   drag. Selectors are gated on the attribute rather than the class alone so
+   they cannot reach an unrelated element that happens to use the same state
+   name. Override by raising specificity, by setting `content: none` on the
+   pseudo-element to drop just the line, or by passing `indicator=false` to opt
+   out entirely.
+
+   The accent token matches the sidebar's existing reorder indicator, but it
+   resolves to a tint blended 74% toward the surface, which does not reach the
+   3:1 WCAG 1.4.11 asks of a non-text UI component. Raising it is tracked
+   separately rather than diverging this primitive from the surfaces it
+   replaces. */
+
+@mixin drag-line-horizontal {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--token-color-border-accent);
+  pointer-events: none;
+}
+
+@mixin drag-line-vertical {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--token-color-border-accent);
+  pointer-events: none;
+}
+
+[data-drag-source] {
+  &.--dragging {
+    opacity: 0.5;
+  }
+}
+
+[data-drop-target] {
+  &.--drag-above {
+    position: relative;
+
+    &::before {
+      @include drag-line-horizontal;
+      top: -1px;
+    }
+  }
+
+  &.--drag-below {
+    position: relative;
+
+    &::after {
+      @include drag-line-horizontal;
+      bottom: -1px;
+    }
+  }
+
+  &.--drag-left {
+    position: relative;
+
+    &::before {
+      @include drag-line-vertical;
+      left: -1px;
+    }
+  }
+
+  &.--drag-right {
+    position: relative;
+
+    &::after {
+      @include drag-line-vertical;
+      right: -1px;
+    }
+  }
+
+  /* The cursor is over a container that accepts the dragged item as a child
+     rather than a sibling, so an outline distinguishes it from the four
+     sibling positions. */
+
+  &.--drag-inside {
+    outline: 2px solid var(--token-color-border-accent);
+    outline-offset: -2px;
+  }
+}
+
+[data-drop-target-external] {
+  &.--drag-over-external {
+    outline: 2px solid var(--token-color-border-accent);
+    outline-offset: -2px;
+  }
+}
