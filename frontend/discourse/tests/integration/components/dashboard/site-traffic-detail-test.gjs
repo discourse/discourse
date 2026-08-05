@@ -23,7 +23,9 @@ function payload({
   pageviews = 5,
   filters = {},
   countries = [],
+  networks = [],
   browsers = [],
+  ipAddresses = [],
   topUrls = [],
   analysis = {},
 } = {}) {
@@ -66,9 +68,9 @@ function payload({
       entry_urls: [],
       traffic_sources: [],
       countries,
-      networks: [],
+      networks,
       browsers,
-      ip_addresses: [],
+      ip_addresses: ipAddresses,
     },
   };
 }
@@ -193,7 +195,7 @@ module(
       await settled();
 
       await click(
-        "[data-test-breakdown='countries'] [data-test-breakdown-row]"
+        "[data-test-breakdown='geography'] [data-test-breakdown-row]"
       );
       assert.dom("[data-test-traffic-loading]").exists();
       assert.dom("[data-test-metric]").includesText("5");
@@ -276,7 +278,7 @@ module(
       );
 
       await click(
-        "[data-test-breakdown='countries'] [data-test-breakdown-row]"
+        "[data-test-breakdown='geography'] [data-test-breakdown-row]"
       );
       assert.true(
         DiscourseURL.replaceState.lastCall.args[0].includes("#country=US")
@@ -316,6 +318,53 @@ module(
       this.state.startDate = "2026-05-03";
       await settled();
       assert.dom("[role='alert']").includesText("invalid");
+    });
+
+    test("groups breakdowns and keeps all KPIs in one grid", async function (assert) {
+      this.fetchStub.resolves(
+        response(
+          payload({
+            countries: [
+              { value: "US", label: "US", pageviews: 3, filterable: true },
+            ],
+            networks: [
+              {
+                value: "AS15169",
+                label: "AS15169 Google",
+                pageviews: 2,
+                filterable: true,
+              },
+            ],
+          })
+        )
+      );
+
+      await render(
+        <template>
+          <SiteTrafficDetail
+            @startDate={{this.state.startDate}}
+            @endDate={{this.state.endDate}}
+            @startDateValue={{this.state.startDate}}
+            @endDateValue={{this.state.endDate}}
+          />
+        </template>
+      );
+
+      assert.dom(".site-traffic-detail__card").exists({ count: 4 });
+      assert.dom(".site-traffic-detail__metrics").exists({ count: 1 });
+      assert.dom(".site-traffic-detail__metric").exists({ count: 7 });
+      assert.dom("[data-test-session-kpi]").exists({ count: 3 });
+      assert
+        .dom("[data-test-session-kpi] .site-traffic-detail__metric-scope")
+        .exists({ count: 3 });
+      assert.dom("[data-test-session-scope]").hasClass("sr-only");
+      assert.dom("[data-test-crawler-scope]").hasClass("sr-only");
+
+      await click("[data-site-traffic-geography-tab='networks']");
+
+      assert
+        .dom("#site-traffic-geography-panel")
+        .includesText("AS15169 Google");
     });
 
     test("provides keyboard-operable Pages tabs", async function (assert) {

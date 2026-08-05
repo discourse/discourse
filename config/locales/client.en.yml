@@ -7575,6 +7575,7 @@ en:
               top_urls: "Top URLs"
               entry_urls: "Entry URLs"
               traffic_sources: "Traffic Sources"
+              geography: "Geography"
               countries: "Countries"
               networks: "Networks"
               browsers: "Browsers"

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat, fn, get } from "@ember/helper";
+import { array, concat, fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
@@ -65,6 +65,7 @@ export default class SiteTrafficDetail extends Component {
   @tracked error;
   @tracked filters = {};
   @tracked pagesTab = "top_urls";
+  @tracked geographyTab = "countries";
 
   abortController;
   requestId = 0;
@@ -174,19 +175,31 @@ export default class SiteTrafficDetail extends Component {
     return this.pagesTab === "entry_urls";
   }
 
-  get breakdownCards() {
-    return [
-      "traffic_sources",
-      "countries",
-      "networks",
-      "browsers",
-      "ip_addresses",
-    ].map((key) => ({
+  get standaloneCards() {
+    return ["traffic_sources", "browsers"].map((key) => ({
       key,
       title: i18n(`admin.dashboard.site_traffic.details.dimensions.${key}`),
       rows: this.#displayRows(key),
       informational: key === "traffic_sources",
     }));
+  }
+
+  get trafficSourcesCard() {
+    return this.standaloneCards[0];
+  }
+
+  get browsersCard() {
+    return this.standaloneCards[1];
+  }
+
+  get geographyRows() {
+    return this.#displayRows(this.geographyTab);
+  }
+
+  get geographyCardTitle() {
+    return i18n(
+      `admin.dashboard.site_traffic.details.dimensions.${this.geographyTab}`
+    );
   }
 
   get chartModel() {
@@ -327,6 +340,11 @@ export default class SiteTrafficDetail extends Component {
   }
 
   @action
+  selectGeographyTab(tab) {
+    this.geographyTab = tab;
+  }
+
+  @action
   navigatePagesTabs(event) {
     const tabs = ["top_urls", "entry_urls"];
     const currentIndex = tabs.indexOf(this.pagesTab);
@@ -348,6 +366,31 @@ export default class SiteTrafficDetail extends Component {
     this.pagesTab = tabs[nextIndex];
     event.currentTarget.parentElement
       .querySelector(`[data-site-traffic-tab="${this.pagesTab}"]`)
+      ?.focus();
+  }
+
+  @action
+  navigateGeographyTabs(event) {
+    const tabs = ["countries", "networks", "ip_addresses"];
+    const currentIndex = tabs.indexOf(this.geographyTab);
+    let nextIndex;
+
+    if (event.key === "ArrowRight") {
+      nextIndex = (currentIndex + 1) % tabs.length;
+    } else if (event.key === "ArrowLeft") {
+      nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+    } else if (event.key === "Home") {
+      nextIndex = 0;
+    } else if (event.key === "End") {
+      nextIndex = tabs.length - 1;
+    } else {
+      return;
+    }
+
+    event.preventDefault();
+    this.geographyTab = tabs[nextIndex];
+    event.currentTarget.parentElement
+      .querySelector(`[data-site-traffic-geography-tab="${this.geographyTab}"]`)
       ?.focus();
   }
 
@@ -657,6 +700,7 @@ export default class SiteTrafficDetail extends Component {
       {{#if this.data}}
         <section
           class="site-traffic-detail__metrics"
+          data-test-session-kpis
           aria-labelledby="site-traffic-pageview-metrics"
         >
           <h2 id="site-traffic-pageview-metrics" class="sr-only">
@@ -698,6 +742,62 @@ export default class SiteTrafficDetail extends Component {
             data-test-series-total
             data-test-traffic-series="likely-crawler"
           />
+          <SiteTrafficMetric
+            @label={{i18n
+              "admin.dashboard.site_traffic.details.kpi.distinct_sessions.label"
+            }}
+            @value={{this.formattedDistinctSessions}}
+            @scope={{i18n
+              "admin.dashboard.site_traffic.details.overall_analyzed_period"
+            }}
+            @tooltip={{i18n
+              "admin.dashboard.site_traffic.details.kpi.distinct_sessions.tooltip"
+            }}
+            @tooltipIdentifier="site-traffic-detail-sessions-tooltip"
+            data-test-metric
+            data-test-session-kpi
+          />
+          <SiteTrafficMetric
+            @label={{i18n
+              "admin.dashboard.site_traffic.details.kpi.bounce_rate.label"
+            }}
+            @value={{this.formattedBounceRate}}
+            @scope={{i18n
+              "admin.dashboard.site_traffic.details.overall_analyzed_period"
+            }}
+            @tooltip={{i18n
+              "admin.dashboard.site_traffic.kpi.bounce_rate.tooltip"
+            }}
+            @tooltipIdentifier="site-traffic-detail-bounce-tooltip"
+            data-test-metric
+            data-test-session-kpi
+          />
+          <SiteTrafficMetric
+            @label={{i18n
+              "admin.dashboard.site_traffic.details.kpi.average_session_duration.label"
+            }}
+            @value={{this.formattedAverageDuration}}
+            @scope={{i18n
+              "admin.dashboard.site_traffic.details.overall_analyzed_period"
+            }}
+            @tooltip={{i18n
+              "admin.dashboard.site_traffic.kpi.average_session_duration.tooltip"
+            }}
+            @tooltipIdentifier="site-traffic-detail-duration-tooltip"
+            data-test-metric
+            data-test-session-kpi
+          />
+          <span class="sr-only" data-test-session-scope>
+            {{i18n
+              "admin.dashboard.site_traffic.details.session_metrics.scope"
+            }}
+          </span>
+          <span class="sr-only" data-test-crawler-scope>
+            {{i18n
+              "admin.dashboard.site_traffic.details.crawler_scope"
+              state=this.analysis.crawler_scoring_state
+            }}
+          </span>
         </section>
 
         <div class="site-traffic-detail__chart">
@@ -715,71 +815,6 @@ export default class SiteTrafficDetail extends Component {
           {{/each}}
         </div>
 
-        <section
-          class="site-traffic-detail__session-section"
-          data-test-session-kpis
-          aria-labelledby="site-traffic-session-metrics"
-        >
-          <div class="site-traffic-detail__section-heading">
-            <h2 id="site-traffic-session-metrics">
-              {{i18n
-                "admin.dashboard.site_traffic.details.session_metrics.title"
-              }}
-            </h2>
-            <span>
-              {{i18n
-                "admin.dashboard.site_traffic.details.overall_analyzed_period"
-              }}
-            </span>
-          </div>
-          <div class="site-traffic-detail__metrics --sessions">
-            <SiteTrafficMetric
-              @label={{i18n
-                "admin.dashboard.site_traffic.details.kpi.distinct_sessions.label"
-              }}
-              @value={{this.formattedDistinctSessions}}
-              @tooltip={{i18n
-                "admin.dashboard.site_traffic.details.kpi.distinct_sessions.tooltip"
-              }}
-              @tooltipIdentifier="site-traffic-detail-sessions-tooltip"
-              data-test-metric
-            />
-            <SiteTrafficMetric
-              @label={{i18n
-                "admin.dashboard.site_traffic.details.kpi.bounce_rate.label"
-              }}
-              @value={{this.formattedBounceRate}}
-              @tooltip={{i18n
-                "admin.dashboard.site_traffic.kpi.bounce_rate.tooltip"
-              }}
-              @tooltipIdentifier="site-traffic-detail-bounce-tooltip"
-              data-test-metric
-            />
-            <SiteTrafficMetric
-              @label={{i18n
-                "admin.dashboard.site_traffic.details.kpi.average_session_duration.label"
-              }}
-              @value={{this.formattedAverageDuration}}
-              @tooltip={{i18n
-                "admin.dashboard.site_traffic.kpi.average_session_duration.tooltip"
-              }}
-              @tooltipIdentifier="site-traffic-detail-duration-tooltip"
-              data-test-metric
-            />
-          </div>
-          <p data-test-session-scope>
-            {{i18n
-              "admin.dashboard.site_traffic.details.session_metrics.scope"
-            }}
-          </p>
-          <p data-test-crawler-scope>
-            {{i18n
-              "admin.dashboard.site_traffic.details.crawler_scope"
-              state=this.analysis.crawler_scoring_state
-            }}
-          </p>
-        </section>
-
         {{#if (eq this.summary.pageviews 0)}}
           <p
             class="site-traffic-detail__empty"
@@ -790,6 +825,39 @@ export default class SiteTrafficDetail extends Component {
           </p>
         {{else}}
           <div class="site-traffic-detail__cards">
+            <section
+              class="site-traffic-detail__card"
+              data-test-breakdown={{this.trafficSourcesCard.key}}
+            >
+              <div class="site-traffic-detail__card-header">
+                <h2>{{this.trafficSourcesCard.title}}</h2>
+              </div>
+              <ul class="site-traffic-detail__breakdown-list">
+                {{#each (this.cardRows this.trafficSourcesCard.rows) as |row|}}
+                  <li>
+                    <span
+                      class="site-traffic-detail__row"
+                      data-test-breakdown-row
+                    >
+                      <span>{{row.displayLabel}}</span>
+                      <strong>{{row.formattedPageviews}}</strong>
+                    </span>
+                  </li>
+                {{/each}}
+              </ul>
+              {{#if (gt this.trafficSourcesCard.rows.length 8)}}
+                <DButton
+                  @label="admin.dashboard.site_traffic.details.view_more"
+                  @action={{fn
+                    this.showMore
+                    this.trafficSourcesCard.key
+                    this.trafficSourcesCard.title
+                    this.trafficSourcesCard.rows
+                  }}
+                />
+              {{/if}}
+            </section>
+
             <section
               class="site-traffic-detail__card"
               data-test-breakdown="pages"
@@ -900,23 +968,54 @@ export default class SiteTrafficDetail extends Component {
               </div>
             </section>
 
-            {{#each this.breakdownCards as |card|}}
-              <section
-                class="site-traffic-detail__card"
-                data-test-breakdown={{card.key}}
+            <section
+              class="site-traffic-detail__card"
+              data-test-breakdown="geography"
+            >
+              <div class="site-traffic-detail__card-header">
+                <h2>
+                  {{i18n
+                    "admin.dashboard.site_traffic.details.dimensions.geography"
+                  }}
+                </h2>
+              </div>
+              <div
+                class="site-traffic-detail__tabs"
+                role="tablist"
+                aria-label={{i18n
+                  "admin.dashboard.site_traffic.details.dimensions.geography"
+                }}
               >
-                <div class="site-traffic-detail__card-header">
-                  <h2>{{card.title}}</h2>
-                  {{#if card.informational}}
-                    <span>
-                      {{i18n
-                        "admin.dashboard.site_traffic.details.overall_analyzed_period"
-                      }}
-                    </span>
-                  {{/if}}
-                </div>
+                {{#each (array "countries" "networks" "ip_addresses") as |tab|}}
+                  <button
+                    id="site-traffic-geography-tab-{{tab}}"
+                    type="button"
+                    role="tab"
+                    data-site-traffic-geography-tab={{tab}}
+                    aria-controls="site-traffic-geography-panel"
+                    aria-selected={{concat
+                      (if (eq this.geographyTab tab) "true" "false")
+                    }}
+                    tabindex={{if (eq this.geographyTab tab) "0" "-1"}}
+                    class={{if (eq this.geographyTab tab) "is-active"}}
+                    {{on "click" (fn this.selectGeographyTab tab)}}
+                    {{on "keydown" this.navigateGeographyTabs}}
+                  >
+                    {{i18n
+                      (concat
+                        "admin.dashboard.site_traffic.details.dimensions." tab
+                      )
+                    }}
+                  </button>
+                {{/each}}
+              </div>
+              <div
+                id="site-traffic-geography-panel"
+                role="tabpanel"
+                aria-labelledby="site-traffic-geography-tab-{{this.geographyTab}}"
+              >
                 <ul class="site-traffic-detail__breakdown-list">
-                  {{#each (this.cardRows card.rows) as |row|}}
+                  {{#each (this.cardRows this.geographyRows) as |row|}}
                     <li>
                       {{#if row.filterable}}
                         <button
@@ -927,13 +1026,13 @@ export default class SiteTrafficDetail extends Component {
                             "click"
                             (fn
                               this.applyFilter
-                              (get FILTER_DIMENSIONS card.key)
+                              (get FILTER_DIMENSIONS this.geographyTab)
                               row.value
                             )
                           }}
                         >
                           <span>
-                            {{#if (eq card.key "countries")}}
+                            {{#if (eq this.geographyTab "countries")}}
                               <span aria-hidden="true">
                                 {{this.countryFlag row.value}}
                               </span>
@@ -954,14 +1053,64 @@ export default class SiteTrafficDetail extends Component {
                     </li>
                   {{/each}}
                 </ul>
-                {{#if (gt card.rows.length 8)}}
+                {{#if (gt this.geographyRows.length 8)}}
                   <DButton
                     @label="admin.dashboard.site_traffic.details.view_more"
-                    @action={{fn this.showMore card.key card.title card.rows}}
+                    @action={{fn
+                      this.showMore
+                      this.geographyTab
+                      this.geographyCardTitle
+                      this.geographyRows
+                    }}
                   />
                 {{/if}}
-              </section>
-            {{/each}}
+              </div>
+            </section>
+
+            <section
+              class="site-traffic-detail__card"
+              data-test-breakdown={{this.browsersCard.key}}
+            >
+              <div class="site-traffic-detail__card-header">
+                <h2>{{this.browsersCard.title}}</h2>
+              </div>
+              <ul class="site-traffic-detail__breakdown-list">
+                {{#each (this.cardRows this.browsersCard.rows) as |row|}}
+                  <li>
+                    {{#if row.filterable}}
+                      <button
+                        type="button"
+                        class="btn-flat site-traffic-detail__row"
+                        data-test-breakdown-row
+                        {{on "click" (fn this.applyFilter "browser" row.value)}}
+                      >
+                        <span>{{row.displayLabel}}</span>
+                        <strong>{{row.formattedPageviews}}</strong>
+                      </button>
+                    {{else}}
+                      <span
+                        class="site-traffic-detail__row"
+                        data-test-breakdown-row
+                      >
+                        <span>{{row.displayLabel}}</span>
+                        <strong>{{row.formattedPageviews}}</strong>
+                      </span>
+                    {{/if}}
+                  </li>
+                {{/each}}
+              </ul>
+              {{#if (gt this.browsersCard.rows.length 8)}}
+                <DButton
+                  @label="admin.dashboard.site_traffic.details.view_more"
+                  @action={{fn
+                    this.showMore
+                    this.browsersCard.key
+                    this.browsersCard.title
+                    this.browsersCard.rows
+                  }}
+                />
+              {{/if}}
+            </section>
           </div>
         {{/if}}
       {{/if}}

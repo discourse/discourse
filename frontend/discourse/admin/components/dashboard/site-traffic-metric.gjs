@@ -5,6 +5,9 @@ export default <template>
     <span class="site-traffic-detail__metric-copy" ...attributes>
       <span class="site-traffic-detail__metric-label">{{@label}}</span>
       <span class="site-traffic-detail__metric-value">{{@value}}</span>
+      {{#if @scope}}
+        <span class="site-traffic-detail__metric-scope">{{@scope}}</span>
+      {{/if}}
     </span>
     {{#if @tooltip}}
       <DTooltip
