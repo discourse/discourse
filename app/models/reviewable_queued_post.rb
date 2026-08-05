@@ -53,7 +53,9 @@ class ReviewableQueuedPost < Reviewable
         )
 
       build_action(actions, :reject_post, bundle: reject_bundle, icon: "xmark")
-      build_action(actions, :revise_and_reject_post, bundle: reject_bundle, icon: "envelope")
+      if target_created_by.present?
+        build_action(actions, :revise_and_reject_post, bundle: reject_bundle, icon: "envelope")
+      end
 
       build_penalty_actions(
         actions,

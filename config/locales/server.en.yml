@@ -6107,6 +6107,7 @@ en:
     post_restored_by_author: "Post was restored by the author"
     post_deleted_by_author_after_penalty: >-
       Post was deleted by the author after the user was penalized for it. Review the penalty without restoring the post.
+    target_user_deleted: "Automatically ignored because the user account was deleted."
     priorities:
       low: "Low"
       medium: "Medium"
