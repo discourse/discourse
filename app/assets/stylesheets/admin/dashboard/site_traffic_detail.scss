@@ -19,7 +19,6 @@
     flex-direction: column;
     gap: var(--space-3);
     padding: var(--space-3) 0;
-    border-bottom: 1px solid var(--content-border-color);
     background: var(--secondary);
   }
 
@@ -164,48 +163,38 @@
   }
 
   &__metric {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) max-content;
-    grid-template-rows: auto auto auto;
-    gap: var(--space-1);
     min-width: 0;
   }
 
   &__metric-copy {
-    display: contents;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
   }
 
   &__metric-value {
-    grid-column: 1 / -1;
-    grid-row: 1;
     overflow-wrap: anywhere;
     color: var(--primary);
     font-size: var(--font-up-3);
     font-variant-numeric: tabular-nums;
   }
 
-  &__metric-label {
-    grid-column: 1;
-    grid-row: 2;
+  &__metric-label-row {
     display: flex;
     align-items: center;
     gap: var(--space-1);
-    min-width: 0;
+    width: max-content;
+    max-width: 100%;
+  }
+
+  &__metric-label {
     overflow-wrap: anywhere;
     color: var(--primary-medium);
     font-size: var(--font-down-2-rem);
   }
 
-  &__metric-tooltip {
-    grid-column: 2;
-    grid-row: 2;
-    align-self: center;
-    margin-inline-start: var(--space-1);
-  }
-
   &__metric-scope {
-    grid-column: 1 / -1;
-    grid-row: 3;
     color: var(--primary-medium);
     font-size: var(--font-down-2-rem);
   }
@@ -283,14 +272,17 @@
 
   &__tabs {
     display: flex;
-    gap: var(--space-1);
-    overflow-x: auto;
+    flex-wrap: wrap;
+    gap: 0 var(--space-1);
+    min-width: 0;
+    overflow: visible;
     border-bottom: 1px solid var(--content-border-color);
 
     button {
       border: 0;
       border-bottom: 2px solid transparent;
-      padding: var(--space-2);
+      padding-block: var(--space-2);
+      padding-inline: var(--space-1);
       background: transparent;
       color: var(--primary-high);
       font-size: var(--font-down-1-rem);
@@ -315,11 +307,8 @@
     min-width: 0;
     margin: 0;
     padding: 0;
+    font-size: var(--font-down-1-rem);
     list-style: none;
-
-    li + li {
-      border-top: 1px solid var(--primary-low);
-    }
   }
 
   &__row {
@@ -327,28 +316,33 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
+    width: calc(100% + 2 * var(--space-2));
     min-width: 0;
     gap: var(--space-3);
+    margin-inline: calc(-1 * var(--space-2));
     border: 0;
     border-radius: var(--d-border-radius);
-    padding: var(--space-2) var(--space-3);
+    padding-block: var(--space-1);
+    padding-inline: var(--space-2);
     background: transparent;
     color: var(--primary);
     font: inherit;
     text-align: start;
     text-decoration: none;
 
-    > span {
+    > span:not(.site-traffic-detail__row-count) {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+  }
 
-    strong {
-      flex-shrink: 0;
-      font-variant-numeric: tabular-nums;
-    }
+  &__row-count {
+    flex-shrink: 0;
+    margin-inline-start: auto;
+    color: var(--primary);
+    font-weight: normal;
+    font-variant-numeric: tabular-nums;
   }
 
   &__row-link {
@@ -362,6 +356,16 @@
   &__row-filter {
     flex: 0 0 auto;
     padding: var(--space-1);
+    min-width: auto;
+  }
+
+  html.discourse-no-touch &__row-filter {
+    opacity: 0;
+  }
+
+  html.discourse-no-touch &__row:hover &__row-filter,
+  html.discourse-no-touch &__row:focus-within &__row-filter {
+    opacity: 1;
   }
 
   button.site-traffic-detail__row {
@@ -377,8 +381,11 @@
     background: var(--primary-very-low);
   }
 
-  html.discourse-no-touch & button.site-traffic-detail__row:hover {
-    color: var(--tertiary);
+  &__view-more {
+    width: max-content;
+    max-width: 100%;
+    padding-inline: var(--space-2);
+    font-size: var(--font-down-1-rem);
   }
 
   &__browser-icon {

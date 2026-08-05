@@ -971,7 +971,9 @@ export default class SiteTrafficDetail extends Component {
                           }}
                         >
                           <span>{{row.displayLabel}}</span>
-                          <strong>{{row.formattedPageviews}}</strong>
+                          <span
+                            class="site-traffic-detail__row-count"
+                          >{{row.formattedPageviews}}</span>
                         </button>
                       {{else}}
                         <span
@@ -979,7 +981,9 @@ export default class SiteTrafficDetail extends Component {
                           data-test-breakdown-row
                         >
                           <span>{{row.displayLabel}}</span>
-                          <strong>{{row.formattedPageviews}}</strong>
+                          <span
+                            class="site-traffic-detail__row-count"
+                          >{{row.formattedPageviews}}</span>
                         </span>
                       {{/if}}
                     </li>
@@ -994,6 +998,7 @@ export default class SiteTrafficDetail extends Component {
                       this.trafficSourcesCard.title
                       this.trafficSourcesCard.rows
                     }}
+                    class="site-traffic-detail__view-more btn-flat"
                   />
                 {{/if}}
               </div>
@@ -1075,7 +1080,9 @@ export default class SiteTrafficDetail extends Component {
                             data-auto-route="true"
                             data-test-entry-url-link
                           >{{row.displayLabel}}</a>
-                          <strong>{{row.formattedPageviews}}</strong>
+                          <span
+                            class="site-traffic-detail__row-count"
+                          >{{row.formattedPageviews}}</span>
                           <DButton
                             @icon="filter"
                             @action={{fn
@@ -1110,7 +1117,9 @@ export default class SiteTrafficDetail extends Component {
                           }}
                         >
                           <span>{{row.displayLabel}}</span>
-                          <strong>{{row.formattedPageviews}}</strong>
+                          <span
+                            class="site-traffic-detail__row-count"
+                          >{{row.formattedPageviews}}</span>
                         </button>
                       {{else if row.value}}
                         <a
@@ -1120,7 +1129,9 @@ export default class SiteTrafficDetail extends Component {
                           data-test-breakdown-row
                         >
                           <span>{{row.displayLabel}}</span>
-                          <strong>{{row.formattedPageviews}}</strong>
+                          <span
+                            class="site-traffic-detail__row-count"
+                          >{{row.formattedPageviews}}</span>
                         </a>
                       {{else}}
                         <span
@@ -1128,7 +1139,9 @@ export default class SiteTrafficDetail extends Component {
                           data-test-breakdown-row
                         >
                           <span>{{row.displayLabel}}</span>
-                          <strong>{{row.formattedPageviews}}</strong>
+                          <span
+                            class="site-traffic-detail__row-count"
+                          >{{row.formattedPageviews}}</span>
                         </span>
                       {{/if}}
                     </li>
@@ -1143,6 +1156,7 @@ export default class SiteTrafficDetail extends Component {
                       this.pageCardTitle
                       this.pageRows
                     }}
+                    class="site-traffic-detail__view-more btn-flat"
                   />
                 {{/if}}
               </div>
@@ -1226,7 +1240,9 @@ export default class SiteTrafficDetail extends Component {
                             {{/if}}
                             {{row.displayLabel}}
                           </span>
-                          <strong>{{row.formattedPageviews}}</strong>
+                          <span
+                            class="site-traffic-detail__row-count"
+                          >{{row.formattedPageviews}}</span>
                         </button>
                       {{else}}
                         <span
@@ -1242,7 +1258,9 @@ export default class SiteTrafficDetail extends Component {
                             {{/if}}
                             {{row.displayLabel}}
                           </span>
-                          <strong>{{row.formattedPageviews}}</strong>
+                          <span
+                            class="site-traffic-detail__row-count"
+                          >{{row.formattedPageviews}}</span>
                         </span>
                       {{/if}}
                     </li>
@@ -1257,6 +1275,7 @@ export default class SiteTrafficDetail extends Component {
                       this.dimensionCardTitle
                       this.dimensionRows
                     }}
+                    class="site-traffic-detail__view-more btn-flat"
                   />
                 {{/if}}
               </div>

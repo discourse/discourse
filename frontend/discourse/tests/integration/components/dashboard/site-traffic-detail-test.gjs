@@ -3,6 +3,7 @@ import {
   clearRender,
   click,
   fillIn,
+  findAll,
   render,
   settled,
   triggerKeyEvent,
@@ -627,6 +628,20 @@ module(
                 filterable: true,
               },
             ],
+            topUrls: Array.from({ length: 9 }, (_value, index) => ({
+              value: `/page-${index}`,
+              label: `/page-${index}`,
+              pageviews: 9 - index,
+              filterable: true,
+            })),
+            trafficSources: [
+              {
+                value: "referrer.example",
+                label: "referrer.example",
+                pageviews: 2,
+                filterable: true,
+              },
+            ],
           })
         )
       );
@@ -660,11 +675,13 @@ module(
       assert
         .dom(".site-traffic-detail__metrics > .site-traffic-detail__metric")
         .exists({ count: 5 });
-      assert
-        .dom(
-          ".site-traffic-detail__metric:nth-of-type(5) .site-traffic-detail__metric-tooltip"
-        )
-        .exists("the final metric keeps its tooltip inside the metric grid");
+      const metricLabelRows = findAll(".site-traffic-detail__metric-label-row");
+      assert.strictEqual(metricLabelRows.length, 5);
+      metricLabelRows.forEach((labelRow) => {
+        assert
+          .dom(labelRow.querySelector(".site-traffic-detail__metric-tooltip"))
+          .exists("each metric keeps its tooltip trigger beside its label");
+      });
       assert.dom("[data-test-logged-in-share]").includesText("40%");
       assert.dom("[data-test-session-kpi]").exists({ count: 3 });
       assert
@@ -672,6 +689,25 @@ module(
         .doesNotExist();
       assert.dom("[data-test-session-scope]").hasClass("sr-only");
       assert.dom("[data-test-crawler-scope]").hasClass("sr-only");
+      assert
+        .dom("button[data-test-breakdown-row] .d-icon-filter")
+        .doesNotExist("standard filterable rows have no filter icon");
+      assert
+        .dom("[data-test-breakdown='pages'] .site-traffic-detail__view-more")
+        .hasClass("btn-flat")
+        .hasText("View more");
+      assert
+        .dom("[data-site-traffic-dimension-tab='countries']")
+        .hasText("Countries");
+      assert
+        .dom("[data-site-traffic-dimension-tab='networks']")
+        .hasText("Networks");
+      assert
+        .dom("[data-site-traffic-dimension-tab='browsers']")
+        .hasText("Browsers");
+      assert
+        .dom("[data-site-traffic-dimension-tab='ip_addresses']")
+        .hasText("IP addresses");
 
       await click("[data-site-traffic-dimension-tab='networks']");
 
@@ -754,6 +790,7 @@ module(
         .hasAttribute("href", "/entry");
       assert
         .dom("#site-traffic-pages-panel [data-test-entry-url-filter]")
+        .hasClass("site-traffic-detail__row-filter")
         .hasAttribute("aria-label", "Filter by /entry");
       assert
         .dom("#site-traffic-pages-panel span[data-test-breakdown-row]")
