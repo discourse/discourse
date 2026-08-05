@@ -62,6 +62,7 @@ export default class DIconGridPickerContent extends Component {
     /* Fill the spanned grid area (inline style overrides the CSS cell width) */
     element.style.width = "100%";
   });
+
   /**
    * Modifier that registers a hover tooltip showing the icon ID on each grid cell.
    * Skips the selected-chip element since it already displays the name inline.
