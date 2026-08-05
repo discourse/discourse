@@ -4,7 +4,16 @@ import type { TemplateOnlyComponent } from "@ember/component/template-only";
 import type { ComponentLike } from "@glint/template";
 
 /** The tag names that have a dedicated, higher-performance shortcut wrapper. */
-type ShortcutTag = "div" | "span" | "form" | "a" | "button" | "td" | "aside";
+type ShortcutTag =
+  | "div"
+  | "span"
+  | "form"
+  | "a"
+  | "button"
+  | "td"
+  | "aside"
+  | "ul"
+  | "li";
 
 /**
  * A wrapper component for a single known tag, typed with the matching element so
@@ -45,6 +54,12 @@ const shortcuts: { [K in ShortcutTag]: ElementWrapper<K> } = {
   </template>,
   aside: <template>
     <aside ...attributes>{{yield}}</aside>
+  </template>,
+  ul: <template>
+    <ul ...attributes>{{yield}}</ul>
+  </template>,
+  li: <template>
+    <li ...attributes>{{yield}}</li>
   </template>,
 };
 
