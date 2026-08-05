@@ -258,5 +258,25 @@ RSpec.describe SecondFactor::Actions::DiscourseConnectProvider do
         GlobalPath.full_cdn_url(user.user_profile.card_background_upload.url),
       )
     end
+
+    it "includes only the configured optional claims" do
+      SiteSetting.discourse_connect_provider_claims = "email|groups|avatar_url"
+      user.update!(uploaded_avatar: Fabricate(:upload))
+      user.user_profile.update!(
+        profile_background_upload: Fabricate(:upload),
+        card_background_upload: Fabricate(:upload),
+      )
+
+      expect(response_payload.email).to eq(user.email)
+      expect(response_payload.groups).to eq(user.groups.pluck(:name).join(","))
+      expect(response_payload.avatar_url).to eq(GlobalPath.full_cdn_url(user.uploaded_avatar.url))
+      expect(response_payload.name).to be_nil
+      expect(response_payload.admin).to be_nil
+      expect(response_payload.moderator).to be_nil
+      expect(response_payload.profile_background_url).to be_nil
+      expect(response_payload.card_background_url).to be_nil
+      expect(response_payload.external_id).to eq(user.id.to_s)
+      expect(response_payload.username).to eq(user.username)
+    end
   end
 end
