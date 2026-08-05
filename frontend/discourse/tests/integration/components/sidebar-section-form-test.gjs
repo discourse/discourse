@@ -95,8 +95,12 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.closeModal = () => {};
-      this.model = { section: communitySection() };
+      const section = communitySection();
+
+      this.modalClosed = false;
+      this.closeModal = () => (this.modalClosed = true);
+      this.currentUser.set("sidebar_sections", [section]);
+      this.model = { section };
     });
 
     test("moves a primary link to the chosen position in the secondary list", async function (assert) {
@@ -156,6 +160,7 @@ module(
         ],
         "the request preserves the dropped position within the destination list"
       );
+      assert.true(this.modalClosed, "the successful save closes the modal");
     });
 
     test("does not duplicate a cross-list link when the drop is repeated", async function (assert) {
@@ -225,6 +230,29 @@ module(
           secondary: ["Secondary 1", "Secondary 2", "Primary 1"],
         },
         "the dragged link is removed from Primary and inserted below its Secondary target"
+      );
+    });
+
+    test("moves a secondary link to the chosen position in the primary list", async function (assert) {
+      await render(
+        <template>
+          <SidebarSectionForm
+            @closeModal={{this.closeModal}}
+            @inline={{true}}
+            @model={{this.model}}
+          />
+        </template>
+      );
+
+      await dragAbove("Secondary 2", "Primary 2");
+
+      assert.deepEqual(
+        renderedLinks(),
+        {
+          primary: ["Primary 1", "Secondary 2", "Primary 2"],
+          secondary: ["Secondary 1"],
+        },
+        "the dragged link is removed from Secondary and inserted above its Primary target"
       );
     });
   }
