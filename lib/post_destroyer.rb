@@ -302,7 +302,12 @@ class PostDestroyer
     # has internal transactions, if we nest then there are some very high risk deadlocks
     last_revision = @post.revisions.last
     if last_revision.present? && last_revision.modifications["raw"].present?
-      @post.revise(@user, { raw: last_revision.modifications["raw"][0] }, force_new_version: true)
+      @post.revise(
+        @user,
+        { raw: last_revision.modifications["raw"][0] },
+        force_new_version: true,
+        recovering_post: true,
+      )
     end
 
     restore_reviewables_for_author_recovery if @user.id == @post.user_id

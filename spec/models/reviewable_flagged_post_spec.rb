@@ -590,6 +590,19 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(flagged_post.reload.hidden).to eq(false)
       expect(flagged_post.topic.reload.visible).to eq(true)
     end
+
+    it "keeps the post hidden when it is awaiting media review" do
+      reviewable = Fabricate(:reviewable_flagged_post)
+      reviewable.post.update!(
+        hidden: true,
+        hidden_at: Time.zone.now,
+        hidden_reason_id: Post.hidden_reasons[:media_pending_review],
+      )
+
+      reviewable.perform(moderator, :disagree)
+
+      expect(reviewable.post.reload.hidden).to eq(true)
+    end
   end
 
   describe "#perform_disagree_and_restore" do

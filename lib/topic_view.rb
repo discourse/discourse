@@ -457,6 +457,8 @@ class TopicView
   end
 
   def image_url
+    return if desired_post&.hidden
+
     if @post_number == 1
       @topic.image_url || og_image_url
     else
@@ -465,6 +467,8 @@ class TopicView
   end
 
   def image_upload
+    return if desired_post&.hidden
+
     @image_upload ||=
       if @post_number == 1
         @topic.image_upload || og_image_upload

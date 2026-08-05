@@ -276,8 +276,13 @@ class PostRevisor
   # @option opts [Boolean] :bypass_rate_limiter Bypass the max limits per day rate limiter
   # @option opts [Boolean] :bypass_bump Do not bump the topic. Takes precedence over should_bump_topic plugin modifier, and any other should_bump? logic
   # @option opts [Boolean] :skip_validations Ask ActiveRecord to skip validations
+  # @option opts [Boolean] :validate_post Validate the post, unless :skip_validations says otherwise
+  # @option opts [Boolean] :validate_topic Validate the topic, unless :skip_validations says otherwise
   # @option opts [Boolean] :skip_revision Do not create a new PostRevision record
   # @option opts [Boolean] :skip_staff_log Skip creating an entry in the staff action log
+  # @option opts [Boolean] :keep_existing_draft Do not advance the draft sequence, keeping any open draft
+  # @option opts [Boolean] :deleting_post Blanking content the author deleted, not a new edit
+  # @option opts [Boolean] :recovering_post Restoring content the author had deleted, not a new edit
   # @option opts [Boolean] :silent Don't send notifications to user
   # @option opts [Boolean] :hidden Force the created revision to be hidden from non-staff users
   # @return [Boolean] Returns true if the revision was successful, false otherwise
@@ -420,6 +425,9 @@ class PostRevisor
     publish_changes
     grant_badge
 
+    unless @opts[:recovering_post] || @opts[:skip_validations]
+      ReviewablePost.queue_for_media_review_if_possible(@post, @editor, previous_raw: old_raw)
+    end
     ReviewablePost.queue_for_review_if_possible(@post, @editor) if should_create_new_version?
 
     successfully_saved_post_and_topic
@@ -665,6 +673,7 @@ class PostRevisor
   def remove_flags_and_unhide_post
     return if @opts[:deleting_post]
     return unless editing_a_flagged_and_hidden_post?
+    return if @post.awaiting_media_review?
 
     flaggers = []
     @post
