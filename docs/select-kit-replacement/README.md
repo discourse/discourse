@@ -21,6 +21,10 @@ Status legend: ☐ pending · ◐ in progress · ☑ done
 
 ## Side trackers
 
+- [`PR-SPLIT.md`](PR-SPLIT.md) — **read this before touching the branch.** `select-kit-rework` is an
+  integration branch with upstream layers being peeled off into separate PRs against `main`. Carries
+  the per-layer status table, the merge-`main`-in-never-rebase rule and why, the shared files that
+  must be hand-edited when carving, and what not to do while the PRs are in flight.
 - [`SANDBOX-A11Y-REMEDIATION.md`](SANDBOX-A11Y-REMEDIATION.md) — screen-reader and design
   feedback on the sandbox (dev topic #188731), tracked within Phase 1. Read it before touching
   `DSelect` announcements: it carries the "express states, announce events" rule, the
