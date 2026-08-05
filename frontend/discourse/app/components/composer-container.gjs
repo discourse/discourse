@@ -568,14 +568,6 @@ export default class ComposerContainer extends Component {
                         }}
                       />
                     </div>
-
-                    {{#if this.composerRedesign}}
-                      <ComposerTitle
-                        @composer={{this.composer.model}}
-                        @lastValidatedAt={{this.composer.lastValidatedAt}}
-                        @focusTarget={{this.composer.focusTarget}}
-                      />
-                    {{/if}}
                   {{/if}}
 
                   <span>
@@ -588,6 +580,16 @@ export default class ComposerContainer extends Component {
                       }}
                     />
                   </span>
+
+                  {{#if this.composerRedesign}}
+                    {{#if this.composer.model.canEditTitle}}
+                      <ComposerTitle
+                        @composer={{this.composer.model}}
+                        @lastValidatedAt={{this.composer.lastValidatedAt}}
+                        @focusTarget={{this.composer.focusTarget}}
+                      />
+                    {{/if}}
+                  {{/if}}
                 {{/unless}}
               </div>
             </ComposerEditor>

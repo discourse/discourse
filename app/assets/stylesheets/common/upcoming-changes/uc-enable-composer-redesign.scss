@@ -60,11 +60,12 @@
     }
   }
 
-  .title-and-category {
+  #reply-control .title-and-category {
     padding: 0 !important;
     width: 100% !important;
     gap: 0 !important;
     border-bottom: 1px solid var(--primary-low);
+    flex-wrap: nowrap !important;
 
     .user-selector {
       margin: 0 !important;
@@ -81,6 +82,10 @@
   }
 
   .tags-input {
+    &:not(:last-child) {
+      border-right: 1px solid var(--primary-low);
+    }
+
     @include viewport.until(sm) {
       flex-grow: 0 !important;
     }
