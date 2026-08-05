@@ -161,6 +161,9 @@ class SectionLink {
   @tracked name;
   @tracked value;
   @tracked locale;
+  // Reassigned when a link moves between segments; tracked so a future reader
+  // of it, or of `isPrimary`, observes the move during render.
+  @tracked segment;
   @autoTrackedArray localizations;
   @tracked _destroy;
 
@@ -805,16 +808,32 @@ export default class SidebarSectionForm extends Component {
       return;
     }
 
-    const links = this.draggedLink.isPrimary
+    const source = this.draggedLink.isPrimary
+      ? this.transformedModel.links
+      : this.transformedModel.secondaryLinks;
+    const destination = targetLink.isPrimary
       ? this.transformedModel.links
       : this.transformedModel.secondaryLinks;
 
-    removeValueFromArray(links, this.draggedLink);
+    // Nothing to insert next to, so leave both arrays untouched rather than
+    // removing the link and dropping it at an arbitrary offset.
+    if (!destination.includes(targetLink)) {
+      return;
+    }
 
-    const toPosition = links.indexOf(targetLink);
+    removeValueFromArray(source, this.draggedLink);
+
+    // Read after the removal: within one segment the two arrays are the same
+    // one, so a pre-removal index would be off by one when dragging downwards.
+    const toPosition = destination.indexOf(targetLink);
+
     this.draggedLink.segment = targetLink.isPrimary ? "primary" : "secondary";
 
-    links.splice(above ? toPosition : toPosition + 1, 0, this.draggedLink);
+    destination.splice(
+      above ? toPosition : toPosition + 1,
+      0,
+      this.draggedLink
+    );
   }
 
   get canDelete() {
@@ -1140,6 +1159,7 @@ export default class SidebarSectionForm extends Component {
   <template>
     <DModal
       @closeModal={{@closeModal}}
+      @inline={{@inline}}
       @flash={{this.flash}}
       @flashType={{this.flashType}}
       @title={{i18n this.header}}
