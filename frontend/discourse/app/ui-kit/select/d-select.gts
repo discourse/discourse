@@ -554,6 +554,9 @@ export default class DSelect extends Component<DSelectSignature> {
       @disabled={{this.presenter.isLocked}}
       @onClose={{this.interaction.handleClose}}
       @onShow={{this.interaction.handleShow}}
+      {{! The overlay is sized by its positioning, which lands after the windowed list has
+        already measured itself against an unsized overlay. }}
+      @onPositioned={{this.listbox.remeasureListbox}}
       @onRegisterApi={{this.interaction.registerMenu}}
       @triggerClass={{this.presenter.triggerClass}}
       {{! Control variants put ARIA and keyboard behavior on the root; input variants put

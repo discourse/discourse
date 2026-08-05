@@ -65,6 +65,15 @@ export interface DVirtualListApi {
   scrollToOffset(offset: number, opts?: object): void;
   scrollToEdge(edge: "start" | "end"): void;
   measure(): void;
+
+  /**
+   * Re-reads the viewport's size and republishes the window from it.
+   *
+   * For a consumer that changes the viewport's size itself and would otherwise wait on a
+   * resize being observed, which the browser schedules and may not deliver promptly. Distinct
+   * from `measure`, which clears the item-size cache and leaves the viewport untouched.
+   */
+  remeasureViewport(): void;
   measureElement(element: HTMLElement): void;
   visibleRange(): { startIndex: number; endIndex: number } | undefined;
   readonly isScrolling: boolean;

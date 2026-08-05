@@ -141,9 +141,48 @@ export function keyFor(item, field) {
  * unable to scroll (`scrollToFn is not a function`) the moment anything asks it
  * to move, which includes prepend anchoring and every `scrollTo*` API call.
  */
+/**
+ * The engine's viewport-rect callbacks, keyed by engine.
+ *
+ * The engine reads its viewport once as it mounts and then only from a ResizeObserver, whose
+ * delivery is the browser's to schedule. A consumer that changes the viewport's size itself —
+ * an overlay being positioned, say — knows the recorded rect is stale immediately, and holding
+ * the callback lets it say so. `measure()` is not that lever: it clears the item-size cache and
+ * never re-reads the viewport.
+ */
+const RECT_CALLBACKS = new WeakMap();
+
+function observeElementRectWithHandle(instance, callback) {
+  RECT_CALLBACKS.set(instance, callback);
+  return observeElementRect(instance, callback);
+}
+
+/**
+ * Re-reads the viewport and pushes the measurement into the engine, which republishes its
+ * window from it. A no-op before the engine has mounted or once it has torn down.
+ *
+ * Measured the way the engine measures it — `offsetWidth`/`offsetHeight`, rounded — so a
+ * pushed rect and an observed one are the same value and cannot disagree.
+ *
+ * @param {{ scrollElement?: HTMLElement | null }} virtualizer
+ */
+export function remeasureViewport(virtualizer) {
+  const callback = RECT_CALLBACKS.get(virtualizer);
+  const element = virtualizer?.scrollElement;
+
+  if (!callback || !element) {
+    return;
+  }
+
+  callback({
+    width: Math.round(element.offsetWidth),
+    height: Math.round(element.offsetHeight),
+  });
+}
+
 const ELEMENT_ADAPTER = {
   scrollToFn: elementScroll,
-  observeElementRect,
+  observeElementRect: observeElementRectWithHandle,
   observeElementOffset,
   measureElement,
 };

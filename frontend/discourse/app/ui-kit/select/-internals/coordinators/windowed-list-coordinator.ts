@@ -252,6 +252,19 @@ export default class WindowedListCoordinator {
     this.#listboxApi = api;
   }
 
+  /**
+   * Re-measures the list against the overlay's applied size.
+   *
+   * The engine measures its scroll element as it mounts, which happens while the overlay is
+   * still unpositioned and therefore has no height — so the first window computes empty. The
+   * correcting measurement would otherwise arrive only when a resize is observed, on the
+   * browser's schedule, leaving the list blank until then.
+   */
+  @action
+  remeasureListbox(): void {
+    this.#listboxApi?.remeasureViewport();
+  }
+
   @action
   registerListboxRoving(api: DRovingFocusApi | null): void {
     this.#listboxRoving = api;

@@ -12,6 +12,7 @@ import {
   isVirtualizationEnabled,
   keyFor,
   rangeExtractorWithPins,
+  remeasureViewport,
   updateElementVirtualizer,
 } from "discourse/ui-kit/lib/virtualizer";
 
@@ -85,6 +86,8 @@ interface VirtualizerOptions {
 interface VirtualizerApi {
   range: VisibleRange | null;
   isScrolling: boolean;
+  // The viewport the engine measures and scrolls. Null until it mounts.
+  scrollElement: HTMLElement | null;
   // The engine's cached scroll offset (px). Null until the first measure. The
   // element's real `scrollTop` is the source of truth; this can drift from it
   // when the browser clamps a scroll the engine never observed (see
@@ -328,6 +331,11 @@ export default class DVirtualizer<T> extends Modifier<
         this.#syncScrollOffset(before);
       },
       measure: () => this.#virtualizer?.measure(),
+      remeasureViewport: () => {
+        if (this.#virtualizer) {
+          remeasureViewport(this.#virtualizer);
+        }
+      },
       measureElement: (element) => this.#virtualizer?.measureElement(element),
       visibleRange: () => this.#virtualizer?.range ?? undefined,
       get isScrolling() {

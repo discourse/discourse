@@ -161,6 +161,16 @@ export interface TooltipOptions {
   /** Called after the float shows. */
   onShow: FloatCallback | null;
 
+  /**
+   * Called after the float has been positioned, with its content element.
+   *
+   * Positioning is what gives a float its size, and it resolves asynchronously — so content
+   * that renders from a measurement of itself computes that measurement against a float that
+   * has no size yet. Such content re-measures here rather than waiting for a resize to be
+   * observed, which happens on the browser's schedule and is not guaranteed to be prompt.
+   */
+  onPositioned: FloatCallback | null;
+
   /** Called with the float instance when it is created, so callers can control it programmatically. */
   onRegisterApi: FloatCallback | null;
 
@@ -325,6 +335,7 @@ export const TOOLTIP: { options: TooltipOptions; portalOutletId: string } = {
     trapTab: true,
     onClose: null,
     onShow: null,
+    onPositioned: null,
     onRegisterApi: null,
     portalOutletElement: null,
   },
@@ -359,6 +370,7 @@ export const MENU: { options: MenuOptions; portalOutletId: string } = {
     contentRole: "dialog",
     onClose: null,
     onShow: null,
+    onPositioned: null,
     onRegisterApi: null,
     modalForMobile: false,
     inline: null,

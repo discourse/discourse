@@ -606,6 +606,47 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     );
   });
 
+  // The scroll element is measured synchronously when the engine mounts, at which point the
+  // menu has not been positioned and so has no height — the first window computes empty. Every
+  // later measurement arrives through a ResizeObserver, on the browser's own schedule, which
+  // nothing awaits: under load the delivery lands after a test has already read the listbox,
+  // which is how these grouping tests fail on CI while passing on an idle machine.
+  //
+  // Neutralising the observer pins the contract that removes the race rather than reproducing
+  // it: the first window must not depend on a resize delivery at all, because whatever changes
+  // the menu's size re-measures the list directly.
+  test("the first window does not depend on a resize delivery", async function (assert) {
+    const observerStub = sinon.stub(window, "ResizeObserver").value(
+      class {
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      }
+    );
+
+    try {
+      await render(
+        <template>
+          <DSelect
+            @items={{GROUPED_ITEMS}}
+            @groupBy="group"
+            @groupLabel={{identityLabel}}
+          />
+        </template>
+      );
+      await openSelect();
+
+      assert
+        .dom(OPTION_SELECTOR)
+        .exists(
+          { count: GROUPED_ITEMS.length },
+          "the window is mounted by the time the open has settled"
+        );
+    } finally {
+      observerStub.restore();
+    }
+  });
+
   test("each option names its own group via aria-describedby on its header's label span", async function (assert) {
     await render(
       <template>
