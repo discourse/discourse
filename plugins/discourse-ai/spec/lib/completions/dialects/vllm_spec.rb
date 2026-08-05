@@ -13,6 +13,27 @@ RSpec.describe DiscourseAi::Completions::Dialects::Vllm do
     )
   end
 
+  it "embeds participant names in user message content" do
+    prompt =
+      DiscourseAi::Completions::Prompt.new(
+        "System instructions",
+        messages: [
+          { type: :user, id: "user1", content: "First question" },
+          { type: :model, content: "First answer" },
+          { type: :user, id: "admin", content: "Who am I?" },
+        ],
+      )
+
+    expect(described_class.new(prompt, model).translate).to eq(
+      [
+        { role: "system", content: "System instructions" },
+        { role: "user", content: "user1: First question" },
+        { role: "assistant", content: "First answer" },
+        { role: "user", content: "admin: Who am I?" },
+      ],
+    )
+  end
+
   it "replays tool-call reasoning without adding reasoning to normal assistant messages" do
     prompt =
       DiscourseAi::Completions::Prompt.new(
