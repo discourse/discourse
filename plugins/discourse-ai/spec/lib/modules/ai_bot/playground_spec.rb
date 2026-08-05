@@ -682,6 +682,10 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         first_target = Fabricate(:user)
         second_target = Fabricate(:user)
         agent.update!(tools: ["SuspendUser"], require_approval: true)
+        DiscourseAi::Agents::Agent
+          .any_instance
+          .stubs(:stop_chain_on_pending_approval?)
+          .returns(true)
 
         first_tool_call =
           DiscourseAi::Completions::ToolCall.new(
@@ -714,6 +718,13 @@ RSpec.describe DiscourseAi::AiBot::Playground do
           Chat::Message.where(chat_channel: dm_channel).where.not(blocks: nil).order(:id)
         reviewable_ids = ReviewableAiToolAction.order(:id).last(2).map(&:id)
 
+        expect(approval_messages.count).to eq(2)
+        expect(
+          Chat::Message.exists?(
+            chat_channel: dm_channel,
+            message: "Both actions are awaiting approval.",
+          ),
+        ).to eq(false)
         expect(
           approval_messages.map do |approval_message|
             approval_message.blocks.first["elements"].map { |element| element["action_id"] }
