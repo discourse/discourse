@@ -21,6 +21,7 @@ class DateState {
 
 function payload({
   pageviews = 5,
+  loggedInHumanPageviews = 0,
   filters = {},
   countries = [],
   networks = [],
@@ -47,8 +48,8 @@ function payload({
     filters,
     summary: {
       pageviews,
-      logged_in_human_pageviews: 0,
-      anonymous_human_pageviews: pageviews,
+      logged_in_human_pageviews: loggedInHumanPageviews,
+      anonymous_human_pageviews: pageviews - loggedInHumanPageviews,
       likely_crawler_pageviews: 0,
       distinct_sessions: 3,
       bounce_rate: 67,
@@ -58,8 +59,8 @@ function payload({
       {
         date: "2026-05-10",
         pageviews,
-        logged_in_human_pageviews: 0,
-        anonymous_human_pageviews: pageviews,
+        logged_in_human_pageviews: loggedInHumanPageviews,
+        anonymous_human_pageviews: pageviews - loggedInHumanPageviews,
         likely_crawler_pageviews: 0,
       },
     ],
@@ -139,7 +140,7 @@ module(
       );
 
       assert.dom("[data-test-traffic-loading].db-skeleton").exists();
-      assert.dom(".db-skeleton__kpi").exists({ count: 4 });
+      assert.dom(".db-skeleton__kpi").exists({ count: 5 });
       assert.dom(".db-skeleton__chart").exists();
       assert.dom(".db-skeleton__report-card").exists({ count: 3 });
 
@@ -354,6 +355,7 @@ module(
       this.fetchStub.resolves(
         response(
           payload({
+            loggedInHumanPageviews: 2,
             countries: [
               { value: "US", label: "US", pageviews: 3, filterable: true },
             ],
@@ -386,12 +388,17 @@ module(
         .exists({ count: 3 });
       assert.dom(".site-traffic-detail__card-header").doesNotExist();
       assert.dom("[data-site-traffic-dimension-tab]").exists({ count: 4 });
+      assert
+        .dom("[data-site-traffic-sources-tab]")
+        .hasText("Sources")
+        .hasAttribute("aria-selected", "true");
       assert.dom(".site-traffic-detail__metrics").exists({ count: 1 });
-      assert.dom(".site-traffic-detail__metric").exists({ count: 4 });
+      assert.dom(".site-traffic-detail__metric").exists({ count: 5 });
+      assert.dom("[data-test-logged-in-share]").includesText("40%");
       assert.dom("[data-test-session-kpi]").exists({ count: 3 });
       assert
         .dom("[data-test-session-kpi] .site-traffic-detail__metric-scope")
-        .exists({ count: 3 });
+        .doesNotExist();
       assert.dom("[data-test-session-scope]").hasClass("sr-only");
       assert.dom("[data-test-crawler-scope]").hasClass("sr-only");
 

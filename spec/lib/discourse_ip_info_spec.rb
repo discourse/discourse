@@ -41,6 +41,52 @@ RSpec.describe DiscourseIpInfo do
     end
   end
 
+  describe ".asn_organization" do
+    let(:ip) { "192.0.2.1" }
+    let(:database) { mock }
+    let(:result) { mock }
+
+    before do
+      instance = described_class.instance
+      @original_asn_database = instance.instance_variable_get(:@asn_mmdb)
+      @original_asn_cache = instance.instance_variable_get(:@asn_organization_cache)
+      instance.instance_variable_set(:@asn_mmdb, database)
+      instance.instance_variable_set(:@asn_organization_cache, LruRedux::ThreadSafeCache.new(2000))
+    end
+
+    after do
+      instance = described_class.instance
+      instance.instance_variable_set(:@asn_mmdb, @original_asn_database)
+      instance.instance_variable_set(:@asn_organization_cache, @original_asn_cache)
+    end
+
+    it "returns the organization when the current ASN matches the stored ASN" do
+      database.expects(:lookup).with(ip).returns(result)
+      result.stubs(:found?).returns(true)
+      result.stubs(:to_hash).returns(
+        "autonomous_system_number" => 64_500,
+        "autonomous_system_organization" => "Example Network",
+      )
+
+      organization = described_class.asn_organization(ip: ip, expected_asn: 64_500)
+
+      expect(organization).to eq("Example Network")
+    end
+
+    it "does not include the IP address in a lookup error" do
+      fake_logger = FakeLogger.new
+      Rails.logger.broadcast_to(fake_logger)
+      database.stubs(:lookup).with(ip).raises(StandardError, "lookup failed")
+
+      organization = described_class.asn_organization(ip: ip, expected_asn: 64_500)
+
+      expect(organization).to be_nil
+      expect(fake_logger.warnings.join).not_to include(ip)
+    ensure
+      Rails.logger.stop_broadcasting_to(fake_logger)
+    end
+  end
+
   describe ".mmdb_download" do
     before { Discourse::Utils.stubs(:execute_command) }
 

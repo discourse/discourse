@@ -790,6 +790,15 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
           ),
         )
 
+      DiscourseIpInfo
+        .stubs(:asn_organization)
+        .with(ip: "192.0.2.1", expected_asn: 64_500)
+        .returns("Example Network")
+      DiscourseIpInfo
+        .stubs(:asn_organization)
+        .with(ip: "198.51.100.2", expected_asn: 64_501)
+        .returns("Replacement Network")
+
       result = described_class.new(request: request).call
 
       expect(result.dig(:summary, :pageviews)).to eq(1)
@@ -807,8 +816,13 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
       )
       expect(result.dig(:dimensions, :networks)).to eq(
         [
-          { value: "AS64500", label: "AS64500", pageviews: 1, filterable: true },
-          { value: "AS64501", label: "AS64501", pageviews: 0, filterable: true },
+          { value: "AS64500", label: "AS64500 Example Network", pageviews: 1, filterable: true },
+          {
+            value: "AS64501",
+            label: "AS64501 Replacement Network",
+            pageviews: 0,
+            filterable: true,
+          },
         ],
       )
       expect(result.dig(:dimensions, :browsers)).to eq(

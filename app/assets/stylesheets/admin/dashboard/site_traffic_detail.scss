@@ -23,12 +23,6 @@
     background: var(--secondary);
   }
 
-  &__date-range {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-  }
-
   &__active-filters {
     display: flex;
     flex-wrap: wrap;
@@ -107,7 +101,7 @@
 
     .db-skeleton__kpi-row {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 1px;
       overflow: hidden;
       background: var(--primary-low);
@@ -152,7 +146,7 @@
 
   &__metrics {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 1px;
     overflow: hidden;
     border: 1px solid var(--site-traffic-card-border);
@@ -362,10 +356,6 @@
     &__card-header {
       align-items: flex-start;
       flex-direction: column;
-    }
-
-    &__date-range {
-      width: 100%;
     }
 
     &__clear {

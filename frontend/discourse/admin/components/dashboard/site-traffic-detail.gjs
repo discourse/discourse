@@ -6,7 +6,6 @@ import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import AdminReportStackedChart from "discourse/admin/components/admin-report-stacked-chart";
-import DashboardDateRange from "discourse/admin/components/dashboard/date-range";
 import SiteTrafficMetric from "discourse/admin/components/dashboard/site-traffic-metric";
 import SiteTrafficBreakdownModal from "discourse/admin/components/modal/site-traffic-breakdown";
 import { countryFlag, countryName } from "discourse/admin/lib/format-country";
@@ -14,7 +13,7 @@ import { formatMinutesSeconds } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import Session from "discourse/models/session";
-import { eq, gt } from "discourse/truth-helpers";
+import { eq, gt, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import I18n, { i18n } from "discourse-i18n";
 
@@ -54,7 +53,7 @@ const SERIES = [
     color: "#D5CDF7",
   },
 ];
-const SKELETON_KPIS = Array.from({ length: 4 });
+const SKELETON_KPIS = Array.from({ length: 5 });
 const SKELETON_CARDS = Array.from({ length: 3 });
 const SKELETON_ROWS = Array.from({ length: 5 });
 
@@ -123,6 +122,16 @@ export default class SiteTrafficDetail extends Component {
 
   get formattedDistinctSessions() {
     return this.#formatNumber(this.summary.distinct_sessions);
+  }
+
+  get formattedLoggedInShare() {
+    if (!this.summary.pageviews) {
+      return "—";
+    }
+
+    const share =
+      (this.summary.logged_in_human_pageviews * 100) / this.summary.pageviews;
+    return `${I18n.toNumber(share, { precision: 0 })}%`;
   }
 
   get formattedBounceRate() {
@@ -596,71 +605,60 @@ export default class SiteTrafficDetail extends Component {
       data-test-site-traffic-detail
       {{didUpdate this.datesChanged @startDate @endDate}}
     >
-      <div class="site-traffic-detail__sticky-controls">
-        <div
-          class="site-traffic-detail__date-range"
-          data-test-site-traffic-date-range
-        >
-          <DashboardDateRange
-            @period="custom"
-            @startDate={{@startDateValue}}
-            @endDate={{@endDateValue}}
-            @setPeriod={{@setPeriod}}
-            @setCustomDateRange={{@setCustomDateRange}}
-          />
-        </div>
-
-        {{#if this.hasFilters}}
-          <div
-            class="site-traffic-detail__active-filters"
-            aria-label={{i18n
-              "admin.dashboard.site_traffic.details.active_filters"
-            }}
-          >
-            {{#each this.activeFilterEntries as |filter|}}
-              <span
-                class="site-traffic-detail__filter-chip"
-                data-test-filter-chip={{filter.dimension}}
-              >
-                <span>{{filter.label}}</span>
-                <button
-                  type="button"
-                  class="btn-flat"
-                  aria-label={{i18n
-                    "admin.dashboard.site_traffic.details.remove_filter"
-                    filter=filter.label
-                  }}
-                  {{on "click" (fn this.removeFilter filter.dimension)}}
+      {{#if (or this.hasFilters this.analysisWarning)}}
+        <div class="site-traffic-detail__sticky-controls">
+          {{#if this.hasFilters}}
+            <div
+              class="site-traffic-detail__active-filters"
+              aria-label={{i18n
+                "admin.dashboard.site_traffic.details.active_filters"
+              }}
+            >
+              {{#each this.activeFilterEntries as |filter|}}
+                <span
+                  class="site-traffic-detail__filter-chip"
+                  data-test-filter-chip={{filter.dimension}}
                 >
-                  ×
-                </button>
-              </span>
-            {{/each}}
-            <DButton
-              class="site-traffic-detail__clear"
-              @label="admin.dashboard.site_traffic.details.clear"
-              @action={{this.clearFilters}}
-            />
-          </div>
-        {{/if}}
+                  <span>{{filter.label}}</span>
+                  <button
+                    type="button"
+                    class="btn-flat"
+                    aria-label={{i18n
+                      "admin.dashboard.site_traffic.details.remove_filter"
+                      filter=filter.label
+                    }}
+                    {{on "click" (fn this.removeFilter filter.dimension)}}
+                  >
+                    ×
+                  </button>
+                </span>
+              {{/each}}
+              <DButton
+                class="site-traffic-detail__clear"
+                @label="admin.dashboard.site_traffic.details.clear"
+                @action={{this.clearFilters}}
+              />
+            </div>
+          {{/if}}
 
-        {{#if this.analysisWarning}}
-          <p
-            class="site-traffic-detail__partial-warning"
-            data-test-analysis-warning
-            role="status"
-          >
-            {{i18n
-              "admin.dashboard.site_traffic.details.partial"
-              requested=this.requestedRange
-              available=this.availableRange
-              analyzed=this.analyzedRange
-              analyzed_count=this.formattedAnalyzedCount
-              cap=this.formattedEventCap
-            }}
-          </p>
-        {{/if}}
-      </div>
+          {{#if this.analysisWarning}}
+            <p
+              class="site-traffic-detail__partial-warning"
+              data-test-analysis-warning
+              role="status"
+            >
+              {{i18n
+                "admin.dashboard.site_traffic.details.partial"
+                requested=this.requestedRange
+                available=this.availableRange
+                analyzed=this.analyzedRange
+                analyzed_count=this.formattedAnalyzedCount
+                cap=this.formattedEventCap
+              }}
+            </p>
+          {{/if}}
+        </div>
+      {{/if}}
 
       {{#if this.showSkeleton}}
         <div
@@ -746,12 +744,21 @@ export default class SiteTrafficDetail extends Component {
           />
           <SiteTrafficMetric
             @label={{i18n
+              "admin.dashboard.site_traffic.kpi.logged_in_share.label"
+            }}
+            @value={{this.formattedLoggedInShare}}
+            @tooltip={{i18n
+              "admin.dashboard.site_traffic.kpi.logged_in_share.tooltip"
+            }}
+            @tooltipIdentifier="site-traffic-detail-logged-in-share-tooltip"
+            data-test-metric
+            data-test-logged-in-share
+          />
+          <SiteTrafficMetric
+            @label={{i18n
               "admin.dashboard.site_traffic.details.kpi.distinct_sessions.label"
             }}
             @value={{this.formattedDistinctSessions}}
-            @scope={{i18n
-              "admin.dashboard.site_traffic.details.overall_analyzed_period"
-            }}
             @tooltip={{i18n
               "admin.dashboard.site_traffic.details.kpi.distinct_sessions.tooltip"
             }}
@@ -764,9 +771,6 @@ export default class SiteTrafficDetail extends Component {
               "admin.dashboard.site_traffic.details.kpi.bounce_rate.label"
             }}
             @value={{this.formattedBounceRate}}
-            @scope={{i18n
-              "admin.dashboard.site_traffic.details.overall_analyzed_period"
-            }}
             @tooltip={{i18n
               "admin.dashboard.site_traffic.kpi.bounce_rate.tooltip"
             }}
@@ -779,9 +783,6 @@ export default class SiteTrafficDetail extends Component {
               "admin.dashboard.site_traffic.details.kpi.average_session_duration.label"
             }}
             @value={{this.formattedAverageDuration}}
-            @scope={{i18n
-              "admin.dashboard.site_traffic.details.overall_analyzed_period"
-            }}
             @tooltip={{i18n
               "admin.dashboard.site_traffic.kpi.average_session_duration.tooltip"
             }}
@@ -811,17 +812,24 @@ export default class SiteTrafficDetail extends Component {
             class="sr-only"
             data-test-series-total
             data-test-traffic-series="logged-in-human"
-          >{{this.formattedLoggedInHumanPageviews}}</span>
+          >{{i18n
+              "admin.dashboard.site_traffic.details.series.logged-in-human"
+            }}
+            {{this.formattedLoggedInHumanPageviews}}</span>
           <span
             class="sr-only"
             data-test-series-total
             data-test-traffic-series="anonymous-human"
-          >{{this.formattedAnonymousHumanPageviews}}</span>
+          >{{i18n
+              "admin.dashboard.site_traffic.details.series.anonymous-human"
+            }}
+            {{this.formattedAnonymousHumanPageviews}}</span>
           <span
             class="sr-only"
             data-test-series-total
             data-test-traffic-series="likely-crawler"
-          >{{this.formattedLikelyCrawlerPageviews}}</span>
+          >{{i18n "admin.dashboard.site_traffic.details.series.likely-crawler"}}
+            {{this.formattedLikelyCrawlerPageviews}}</span>
           {{#each this.data.series as |point|}}
             <span
               class="sr-only"
@@ -847,30 +855,58 @@ export default class SiteTrafficDetail extends Component {
               data-test-breakdown={{this.trafficSourcesCard.key}}
             >
               <h2 class="sr-only">{{this.trafficSourcesCard.title}}</h2>
-              <ul class="site-traffic-detail__breakdown-list">
-                {{#each (this.cardRows this.trafficSourcesCard.rows) as |row|}}
-                  <li>
-                    <span
-                      class="site-traffic-detail__row"
-                      data-test-breakdown-row
-                    >
-                      <span>{{row.displayLabel}}</span>
-                      <strong>{{row.formattedPageviews}}</strong>
-                    </span>
-                  </li>
-                {{/each}}
-              </ul>
-              {{#if (gt this.trafficSourcesCard.rows.length 8)}}
-                <DButton
-                  @label="admin.dashboard.site_traffic.details.view_more"
-                  @action={{fn
-                    this.showMore
-                    this.trafficSourcesCard.key
-                    this.trafficSourcesCard.title
-                    this.trafficSourcesCard.rows
+              <div
+                class="site-traffic-detail__tabs"
+                role="tablist"
+                aria-label={{this.trafficSourcesCard.title}}
+              >
+                <button
+                  id="site-traffic-sources-tab"
+                  type="button"
+                  role="tab"
+                  class="is-active"
+                  data-site-traffic-sources-tab
+                  aria-controls="site-traffic-sources-panel"
+                  aria-selected="true"
+                >
+                  {{i18n
+                    "admin.dashboard.site_traffic.details.dimensions.sources"
                   }}
-                />
-              {{/if}}
+                </button>
+              </div>
+              <div
+                id="site-traffic-sources-panel"
+                role="tabpanel"
+                aria-labelledby="site-traffic-sources-tab"
+              >
+                <ul class="site-traffic-detail__breakdown-list">
+                  {{#each
+                    (this.cardRows this.trafficSourcesCard.rows)
+                    as |row|
+                  }}
+                    <li>
+                      <span
+                        class="site-traffic-detail__row"
+                        data-test-breakdown-row
+                      >
+                        <span>{{row.displayLabel}}</span>
+                        <strong>{{row.formattedPageviews}}</strong>
+                      </span>
+                    </li>
+                  {{/each}}
+                </ul>
+                {{#if (gt this.trafficSourcesCard.rows.length 8)}}
+                  <DButton
+                    @label="admin.dashboard.site_traffic.details.view_more"
+                    @action={{fn
+                      this.showMore
+                      this.trafficSourcesCard.key
+                      this.trafficSourcesCard.title
+                      this.trafficSourcesCard.rows
+                    }}
+                  />
+                {{/if}}
+              </div>
             </section>
 
             <section

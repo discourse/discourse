@@ -16,6 +16,7 @@ class DiscourseIpInfo
     @loc_mmdb = mmdb_load(File.join(path, "GeoLite2-City.mmdb"))
     @asn_mmdb = mmdb_load(File.join(path, "GeoLite2-ASN.mmdb"))
     @cache = LruRedux::ThreadSafeCache.new(2000)
+    @asn_organization_cache = LruRedux::ThreadSafeCache.new(2000)
   end
 
   def self.path
@@ -168,11 +169,47 @@ class DiscourseIpInfo
     )
   end
 
+  def asn_organization(ip:, expected_asn:)
+    ip = ip.to_s
+    return if ip.blank?
+
+    @asn_organization_cache ||= LruRedux::ThreadSafeCache.new(2000)
+    info = @asn_organization_cache[ip] ||= lookup_asn(ip)
+    return if info[:asn].to_i != expected_asn.to_i
+
+    info[:organization]
+  end
+
+  private
+
+  def lookup_asn(ip)
+    return {} if !@asn_mmdb
+
+    result = @asn_mmdb.lookup(ip)
+    return {} if !result&.found?
+
+    value = result.to_hash
+    {
+      asn: value["autonomous_system_number"],
+      organization: value["autonomous_system_organization"],
+    }
+  rescue => error
+    Discourse.warn_exception(
+      error,
+      message: "ASN organization could not be looked up in MaxMind GeoLite2-ASN database.",
+    )
+    {}
+  end
+
   def self.open_db(path)
     instance.open_db(path)
   end
 
   def self.get(ip, locale: :en, resolve_hostname: false)
     instance.get(ip, locale: locale, resolve_hostname: resolve_hostname)
+  end
+
+  def self.asn_organization(ip:, expected_asn:)
+    instance.asn_organization(ip: ip, expected_asn: expected_asn)
   end
 end

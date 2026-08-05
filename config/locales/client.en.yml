@@ -7521,7 +7521,7 @@ en:
             crawlers: "Crawlers"
           see_details: "See details"
           details:
-            title: "Site traffic"
+            title: "Site Traffic Explorer"
             loading: "Loading Site traffic…"
             retry: "Retry"
             narrow_range: "Choose a narrower date range"
@@ -7532,7 +7532,6 @@ en:
             active_filters: "Active Site traffic filters"
             remove_filter: "Remove %{filter} filter"
             traffic_metrics: "Traffic metrics"
-            overall_analyzed_period: "Overall for analyzed period"
             partial: "Requested %{requested} Available %{available} Analyzed %{analyzed} %{analyzed_count} pageviews analyzed %{cap} event cap Earlier eligible pageviews excluded"
             crawler_scope: "Likely crawler uses persisted scores for retained events. Scoring is disabled or may lag, so human means not currently flagged, not verified human."
             session_metrics:
@@ -7572,6 +7571,7 @@ en:
               unexpected: "Site traffic couldn’t be loaded. Try again."
             dimensions:
               pages: "Pages"
+              sources: "Sources"
               top_urls: "Top URLs"
               entry_urls: "Entry URLs"
               traffic_sources: "Traffic Sources"

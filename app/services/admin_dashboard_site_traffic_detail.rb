@@ -13,7 +13,7 @@ class AdminDashboardSiteTrafficDetail
   BROWSER_FAMILIES = %w[edge opera firefox chrome safari ie discoursehub unknown].freeze
   BROWSER_CLASSIFIER_VERSION = 1
   CRAWLER_SEMANTICS_VERSION = 3
-  RESPONSE_VERSION = 7
+  RESPONSE_VERSION = 8
   SANITIZER_VERSION = 5
   SESSION_SEMANTICS_VERSION = 2
   TRAFFIC_SOURCE_VERSION = 2
@@ -687,15 +687,15 @@ class AdminDashboardSiteTrafficDetail
           COALESCE(SUM(likely_crawler_pageviews), 0)::bigint AS likely_crawler_pageviews
         FROM daily
       ), dimension_rows AS (
-        (SELECT 'top_urls' AS dimension, safe_path AS value, safe_path AS label, COUNT(*) FILTER (WHERE (:country IS NULL OR country_code = :country) AND (:asn IS NULL OR asn = :asn) AND (:browser IS NULL OR browser_family = :browser) AND (:ip IS NULL OR ip_address = CAST(:ip AS inet)))::bigint AS pageviews, safe_path <> '[redacted]' AS filterable FROM classified GROUP BY safe_path ORDER BY pageviews DESC, label ASC LIMIT 50)
-        UNION ALL (SELECT 'entry_urls', safe_path, safe_path, COUNT(*)::bigint AS pageviews, false FROM entries GROUP BY safe_path ORDER BY pageviews DESC, safe_path ASC LIMIT 50)
-        UNION ALL (SELECT 'traffic_sources', traffic_source, traffic_source, COUNT(*)::bigint AS pageviews, false FROM entries GROUP BY traffic_source ORDER BY pageviews DESC, traffic_source ASC LIMIT 50)
-        UNION ALL (SELECT 'countries', country_code, country_code, COUNT(*) FILTER (WHERE (:url IS NULL OR safe_path = :url) AND (:asn IS NULL OR asn = :asn) AND (:browser IS NULL OR browser_family = :browser) AND (:ip IS NULL OR ip_address = CAST(:ip AS inet)))::bigint AS pageviews, true FROM classified WHERE country_code IS NOT NULL AND country_code <> '' GROUP BY country_code ORDER BY pageviews DESC, country_code ASC LIMIT 50)
-        UNION ALL (SELECT 'networks', 'AS' || asn::text, 'AS' || asn::text, COUNT(*) FILTER (WHERE (:url IS NULL OR safe_path = :url) AND (:country IS NULL OR country_code = :country) AND (:browser IS NULL OR browser_family = :browser) AND (:ip IS NULL OR ip_address = CAST(:ip AS inet)))::bigint AS pageviews, true FROM classified WHERE asn IS NOT NULL GROUP BY asn ORDER BY pageviews DESC, 'AS' || asn::text ASC LIMIT 50)
-        UNION ALL (SELECT 'browsers', browser_family, browser_family, COUNT(*) FILTER (WHERE (:url IS NULL OR safe_path = :url) AND (:country IS NULL OR country_code = :country) AND (:asn IS NULL OR asn = :asn) AND (:ip IS NULL OR ip_address = CAST(:ip AS inet)))::bigint AS pageviews, true FROM classified GROUP BY browser_family ORDER BY pageviews DESC, browser_family ASC LIMIT 50)
-        UNION ALL (SELECT 'ip_addresses', host(ip_address), host(ip_address), COUNT(*) FILTER (WHERE (:url IS NULL OR safe_path = :url) AND (:country IS NULL OR country_code = :country) AND (:asn IS NULL OR asn = :asn) AND (:browser IS NULL OR browser_family = :browser))::bigint AS pageviews, true FROM classified WHERE ip_address IS NOT NULL GROUP BY ip_address ORDER BY pageviews DESC, host(ip_address) ASC LIMIT 50)
+        (SELECT 'top_urls' AS dimension, safe_path AS value, safe_path AS label, COUNT(*) FILTER (WHERE (:country IS NULL OR country_code = :country) AND (:asn IS NULL OR asn = :asn) AND (:browser IS NULL OR browser_family = :browser) AND (:ip IS NULL OR ip_address = CAST(:ip AS inet)))::bigint AS pageviews, safe_path <> '[redacted]' AS filterable, NULL::text AS lookup_ip FROM classified GROUP BY safe_path ORDER BY pageviews DESC, label ASC LIMIT 50)
+        UNION ALL (SELECT 'entry_urls', safe_path, safe_path, COUNT(*)::bigint AS pageviews, false, NULL::text FROM entries GROUP BY safe_path ORDER BY pageviews DESC, safe_path ASC LIMIT 50)
+        UNION ALL (SELECT 'traffic_sources', traffic_source, traffic_source, COUNT(*)::bigint AS pageviews, false, NULL::text FROM entries GROUP BY traffic_source ORDER BY pageviews DESC, traffic_source ASC LIMIT 50)
+        UNION ALL (SELECT 'countries', country_code, country_code, COUNT(*) FILTER (WHERE (:url IS NULL OR safe_path = :url) AND (:asn IS NULL OR asn = :asn) AND (:browser IS NULL OR browser_family = :browser) AND (:ip IS NULL OR ip_address = CAST(:ip AS inet)))::bigint AS pageviews, true, NULL::text FROM classified WHERE country_code IS NOT NULL AND country_code <> '' GROUP BY country_code ORDER BY pageviews DESC, country_code ASC LIMIT 50)
+        UNION ALL (SELECT 'networks', 'AS' || asn::text, 'AS' || asn::text, COUNT(*) FILTER (WHERE (:url IS NULL OR safe_path = :url) AND (:country IS NULL OR country_code = :country) AND (:browser IS NULL OR browser_family = :browser) AND (:ip IS NULL OR ip_address = CAST(:ip AS inet)))::bigint AS pageviews, true, host(MIN(ip_address)) FROM classified WHERE asn IS NOT NULL GROUP BY asn ORDER BY pageviews DESC, 'AS' || asn::text ASC LIMIT 50)
+        UNION ALL (SELECT 'browsers', browser_family, browser_family, COUNT(*) FILTER (WHERE (:url IS NULL OR safe_path = :url) AND (:country IS NULL OR country_code = :country) AND (:asn IS NULL OR asn = :asn) AND (:ip IS NULL OR ip_address = CAST(:ip AS inet)))::bigint AS pageviews, true, NULL::text FROM classified GROUP BY browser_family ORDER BY pageviews DESC, browser_family ASC LIMIT 50)
+        UNION ALL (SELECT 'ip_addresses', host(ip_address), host(ip_address), COUNT(*) FILTER (WHERE (:url IS NULL OR safe_path = :url) AND (:country IS NULL OR country_code = :country) AND (:asn IS NULL OR asn = :asn) AND (:browser IS NULL OR browser_family = :browser))::bigint AS pageviews, true, NULL::text FROM classified WHERE ip_address IS NOT NULL GROUP BY ip_address ORDER BY pageviews DESC, host(ip_address) ASC LIMIT 50)
       ), dimensions AS (
-        SELECT dimension, jsonb_agg(jsonb_build_object('value', CASE WHEN value = '[redacted]' THEN NULL ELSE value END, 'label', CASE WHEN value = '[redacted]' THEN 'Private or sensitive page' ELSE label END, 'pageviews', pageviews, 'filterable', filterable) ORDER BY pageviews DESC, label ASC) AS rows
+        SELECT dimension, jsonb_agg(jsonb_build_object('value', CASE WHEN value = '[redacted]' THEN NULL ELSE value END, 'label', CASE WHEN value = '[redacted]' THEN 'Private or sensitive page' ELSE label END, 'pageviews', pageviews, 'filterable', filterable, 'lookup_ip', lookup_ip) ORDER BY pageviews DESC, label ASC) AS rows
         FROM dimension_rows GROUP BY dimension
       )
       SELECT available.*, (SELECT COUNT(*) FROM candidates) > :event_cap AS cap_truncated,
@@ -857,8 +857,19 @@ class AdminDashboardSiteTrafficDetail
       ip_addresses
     ].to_h do |dimension|
       rows = row.fetch(dimension, [])
-      rows = rows.map(&:symbolize_keys) if rows.respond_to?(:map)
+      rows = rows.map { |dimension_row| present_dimension_row(dimension:, row: dimension_row) }
       [dimension, rows]
     end
+  end
+
+  def present_dimension_row(dimension:, row:)
+    row = row.symbolize_keys
+    lookup_ip = row.delete(:lookup_ip)
+    return row if dimension != :networks || lookup_ip.blank?
+
+    expected_asn = row[:value].delete_prefix("AS").to_i
+    organization = DiscourseIpInfo.asn_organization(ip: lookup_ip, expected_asn: expected_asn)
+    row[:label] = "#{row[:value]} #{organization}" if organization.present?
+    row
   end
 end
