@@ -214,6 +214,7 @@ export default class AdminReportStackedChart extends Component {
               sampleSize: 5,
               maxRotation: 25,
               minRotation: 0,
+              precision: 0,
             },
           },
           x: {
