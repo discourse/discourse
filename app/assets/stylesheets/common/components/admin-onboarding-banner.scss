@@ -5,7 +5,8 @@
   padding-block: var(--d-main-content-gap);
 
   @include viewport.until(sm) {
-    display: none;
+    padding-block: 0;
+    padding-block-end: var(--space-4);
   }
 
   &__wrap {
@@ -62,6 +63,14 @@
     border-bottom: 1px solid var(--content-border-color);
     gap: var(--space-4);
     align-items: center;
+
+    @include viewport.until(sm) {
+      display: grid;
+      gap: 0;
+      grid-template-columns: 1fr auto;
+      grid-template-areas: "text action" "description action";
+      padding: var(--space-2);
+    }
   }
 
   .onboarding-step:last-child {
@@ -77,30 +86,62 @@
     align-items: center;
     justify-content: center;
     gap: var(--space-2);
+
+    @include viewport.until(sm) {
+      display: block;
+      justify-self: baseline;
+    }
   }
 
   .onboarding-step__checkbox-icon {
     font-size: var(--font-down-1);
+
+    &.--completed {
+      color: var(--success);
+    }
   }
 
   .onboarding-step__title {
     font-weight: 600;
     font-size: var(--font-down-1);
+
+    @include viewport.until(sm) {
+      grid-area: text;
+    }
   }
 
   .onboarding-step__description {
     font-size: var(--font-down-1);
     color: var(--primary-700);
+
+    @include viewport.until(sm) {
+      grid-area: description;
+      justify-self: baseline;
+    }
   }
 
   .onboarding-step__action {
     margin-left: auto;
+
+    @include viewport.until(sm) {
+      grid-area: action;
+      margin-left: 0;
+    }
 
     --d-button-transparent-text-color: var(--tertiary);
   }
 
   .onboarding-step__action .btn-link {
     font-weight: 600;
+
+    &.--completed {
+      --d-button-transparent-text-color: var(--primary-medium);
+      font-weight: 400;
+    }
+
+    &.--completed:hover {
+      --d-button-transparent-text-color--hover: var(--primary-high);
+    }
   }
 }
 

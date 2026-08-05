@@ -565,12 +565,13 @@ en:
       congrats_onboarding_complete: "Congratulations on completing the onboarding process!"
       select_theme:
         title: "Customize your site"
-        description: "Choose a starting theme."
-        action: "Select theme"
+        description: "Choose colors, fonts, and a homepage."
+        action: "See options"
+        completed: "Change options"
         show_light_screenshot: "Show light screenshot"
         show_dark_screenshot: "Show dark screenshot"
       design_wizard:
-        title: "Set up your design"
+        title: "Customize your site"
         subtitle: "You can change all of this later in your admin settings"
         step_label: "Go to step %{index}"
         save: "Save and finish"
@@ -611,6 +612,7 @@ en:
         title: "Invite Collaborators"
         description: "Early members bring it to life."
         action: "Create invite"
+        completed: "Invite more"
       start_posting:
         title: "Start Posting"
         description: "Give people something to discuss."
