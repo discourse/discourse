@@ -94,6 +94,12 @@ export default class DashboardReports extends Component {
         };
       });
     } catch (e) {
+      this.cards = this.items.map((item) => ({
+        ...item,
+        payload: null,
+        error: true,
+        isLoading: false,
+      }));
       popupAjaxError(e);
     } finally {
       this.loading = false;

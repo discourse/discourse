@@ -5,6 +5,8 @@ module AdminDashboard
     class BulkFetch
       FETCH_FAILED = :fetch_failed
 
+      MAX_CONCURRENT_FETCHES = 4
+
       def self.call(items:, filters:, guardian:)
         payloads = fetch_in_parallel(items, guardian:, filters:)
 
@@ -28,7 +30,7 @@ module AdminDashboard
 
       def self.pool_size
         available = [ActiveRecord::Base.connection_pool.size - 1, 1].max
-        [AdminDashboardReport::VISIBLE_CAP, available].min
+        [MAX_CONCURRENT_FETCHES, available].min
       end
 
       def self.thread_pool

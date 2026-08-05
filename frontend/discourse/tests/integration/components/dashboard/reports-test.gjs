@@ -141,4 +141,24 @@ module("Integration | Component | DashboardReports", function (hooks) {
       .dom('[data-identifier="test_source:signups"] .fake-report-renderer')
       .hasText("signups", "a successful report renders its content");
   });
+
+  test("clears every card's loading state when the whole bulk request fails", async function (assert) {
+    pretender.post("/admin/dashboard/reports/bulk", () => response(500, {}));
+
+    await render(
+      <template><DashboardReports @data={{hash items=ITEMS}} /></template>
+    );
+
+    assert
+      .dom(".db-report__card .loading-container.visible")
+      .doesNotExist(
+        "no card is left spinning once the whole request has failed"
+      );
+    assert
+      .dom(".db-report__card .db-report__error")
+      .exists(
+        { count: ITEMS.length },
+        "every card shows its own error state instead"
+      );
+  });
 });
