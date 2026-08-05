@@ -7540,7 +7540,9 @@ en:
             kpi:
               pageviews:
                 label: "Pageviews"
-                tooltip: "Retained browser pageview events matching the selected filters."
+                tooltip: "Retained browser pageview events."
+              logged_in_share:
+                tooltip: "The share of retained browser pageview events from logged-in members."
               distinct_sessions:
                 label: "Distinct sessions"
                 tooltip: "Sessions observed in the analyzed period. Recent and cap-boundary sessions may be incomplete."

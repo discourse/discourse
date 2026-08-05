@@ -776,7 +776,7 @@ export default class SiteTrafficDetail extends Component {
             }}
             @value={{this.formattedLoggedInShare}}
             @tooltip={{i18n
-              "admin.dashboard.site_traffic.kpi.logged_in_share.tooltip"
+              "admin.dashboard.site_traffic.details.kpi.logged_in_share.tooltip"
             }}
             @tooltipIdentifier="site-traffic-detail-logged-in-share-tooltip"
             data-test-metric
