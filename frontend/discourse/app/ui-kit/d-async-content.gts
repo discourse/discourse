@@ -110,8 +110,12 @@ interface DAsyncContentSignature<T> {
 export default class DAsyncContent<T> extends Component<
   DAsyncContentSignature<T>
 > {
-  #debounce: boolean | number | undefined = false;
   #abortController: AbortController | null = null;
+
+  // Whether the function form of `@asyncData` has been evaluated at least once, so the
+  // first evaluation can skip debouncing: there is no rapid input to coalesce yet, and a
+  // delay there would only postpone the initial paint.
+  #hasEvaluated = false;
 
   // The value from the most recent resolution, kept so we can keep rendering it
   // while a *subsequent* load is pending (opt-in via `@retainWhileReloading`).
@@ -201,7 +205,9 @@ export default class DAsyncContent<T> extends Component<
     if (this.#isPromise(asyncData)) {
       value = asyncData;
     } else if (typeof asyncData === "function") {
-      value = this.#debounce
+      const debounceDelay = this.#debounceDelay;
+
+      value = debounceDelay
         ? new Promise<T>((resolve, reject) => {
             discourseDebounce(
               this,
@@ -211,10 +217,15 @@ export default class DAsyncContent<T> extends Component<
               signal,
               resolve,
               reject,
-              this.#debounce
+              debounceDelay
             );
           })
         : this.#resolveAsyncData(asyncData, context, signal);
+
+      // Untracked, like the retained-value fields above: it only gates the *next*
+      // evaluation, so it never needs to drive its own invalidation.
+      /* eslint-disable-next-line ember/no-side-effects */
+      this.#hasEvaluated = true;
     }
 
     // A function may return a synchronous value (a client-only data source) rather
@@ -247,6 +258,18 @@ export default class DAsyncContent<T> extends Component<
     return value instanceof Promise || value instanceof RsvpPromise;
   }
 
+  // Resolved at evaluation time rather than recorded as a side effect of the previous
+  // resolve, so a changed `@debounce` reaches the very next evaluation instead of the
+  // one after it.
+  get #debounceDelay(): number | undefined {
+    if (!this.#hasEvaluated) {
+      return undefined;
+    }
+
+    const { debounce } = this.args;
+    return debounce === true ? INPUT_DELAY : debounce || undefined;
+  }
+
   // Aborts the previous fetch's controller and mints a fresh one, returning its
   // signal. Kept out of the `data` getter body so the (benign, untracked) mutation
   // isn't a computed side-effect.
@@ -264,18 +287,18 @@ export default class DAsyncContent<T> extends Component<
     resolve?: (value: T | PromiseLike<T>) => void,
     reject?: (reason?: unknown) => void
   ): T | Promise<T> | Promise<void> {
-    this.#debounce =
-      this.args.debounce === true ? INPUT_DELAY : this.args.debounce;
-
     // The async function receives an AbortSignal as a second arg so it can cancel an
     // in-flight request when superseded; existing zero/one-arg functions ignore it.
     // When a resolve fn is provided (the debounced path) we settle the outer promise;
     // otherwise we return the function's result directly (a promise OR a sync value).
     //
-    // The debounced path only runs against async data sources, so the result is
-    // cast to `Promise<T>` to settle the outer promise via `.then`/`.catch`.
+    // The debounced path may run against a synchronous source, so the result can be a
+    // plain value rather than a promise. Calling the source *inside* the executor both
+    // assimilates either shape and converts a synchronous throw into a rejection —
+    // `Promise.resolve(fn())` evaluates `fn()` first, so a throw there escapes the
+    // debounce timer and leaves the outer promise unsettled forever.
     return resolve
-      ? (asyncData(context, { signal }) as Promise<T>)
+      ? new Promise<T>((settle) => settle(asyncData(context, { signal })))
           .then(resolve)
           .catch(reject)
       : asyncData(context, { signal });
