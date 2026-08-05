@@ -30,23 +30,14 @@ export function extensionFromUrl(url) {
 }
 
 export function buildImageMarkdown(imageData) {
-  const {
-    src,
-    alt,
-    width,
-    height,
-    title,
-    escapeTablePipe = false,
-    fallbackAlt,
-  } = imageData;
+  const { src, alt, width, height, title, fallbackAlt } = imageData;
 
   if (!src) {
     return "";
   }
 
   const altText = sanitizeAlt(alt, { fallback: fallbackAlt });
-  const pipe = escapeTablePipe ? "\\|" : "|";
-  const suffix = width && height ? `${pipe}${width}x${height}` : "";
+  const suffix = width && height ? `|${width}x${height}` : "";
   const titleSuffix = title ? ` "${title}"` : "";
 
   return `![${altText}${suffix}](${src}${titleSuffix})`;

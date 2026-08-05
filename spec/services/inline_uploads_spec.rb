@@ -231,7 +231,7 @@ RSpec.describe InlineUploads do
         expect(InlineUploads.process(md)).to eq(<<~MD)
         ![](#{upload.short_url})
         <img src="#{upload2.short_url}">
-        [Text|attachment](#{upload3.short_url})
+        [Text\\|attachment](#{upload3.short_url})
         MD
       end
 
@@ -539,7 +539,7 @@ RSpec.describe InlineUploads do
 
         > some quote
 
-        [test2|attachment](#{upload2.short_url})
+        [test2\\|attachment](#{upload2.short_url})
         MD
       end
 
@@ -561,7 +561,7 @@ RSpec.describe InlineUploads do
 
         <a href="https://some.external.com/link">test</a>
 
-        [test2|attachment](#{upload2.short_url})
+        [test2\\|attachment](#{upload2.short_url})
         MD
       end
 
@@ -579,7 +579,7 @@ RSpec.describe InlineUploads do
 
         [some complicated.doc %50](#{upload3.short_url})
 
-        [test2|attachment](#{upload2.short_url})
+        [test2\\|attachment](#{upload2.short_url})
         MD
       end
 
@@ -604,16 +604,16 @@ RSpec.describe InlineUploads do
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
-        [this is some attachment|attachment](#{upload.short_url})
+        [this is some attachment\\|attachment](#{upload.short_url})
 
-        - [test2|attachment](#{upload.short_url})
-          - [test2|attachment](#{upload2.short_url})
-            - [test2|attachment](#{upload3.short_url})
+        - [test2\\|attachment](#{upload.short_url})
+          - [test2\\|attachment](#{upload2.short_url})
+            - [test2\\|attachment](#{upload3.short_url})
 
-        [test3|attachment](#{upload.short_url})
-        [test3|attachment](#{upload2.short_url})[test3|attachment](#{upload3.short_url})
+        [test3\\|attachment](#{upload.short_url})
+        [test3\\|attachment](#{upload2.short_url})[test3\\|attachment](#{upload3.short_url})
 
-        [This is some _test_ here|attachment](#{upload3.short_url})
+        [This is some _test_ here\\|attachment](#{upload3.short_url})
         MD
       end
 
@@ -623,8 +623,35 @@ RSpec.describe InlineUploads do
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)
-        [abc_d|attachment](#{upload.short_url})
+        [abc_d\\|attachment](#{upload.short_url})
         MD
+      end
+
+      it "keeps a table row intact when the attachment sits in a cell" do
+        md = <<~MD
+        | file | desc |
+        | --- | --- |
+        | <a class="attachment" href="#{upload.url}">test2</a> | hello |
+
+        | file |
+        | --- |
+        <a class="attachment" href="#{upload2.url}">test3</a>
+        MD
+
+        processed = InlineUploads.process(md)
+
+        expect(processed).to eq(<<~MD)
+        | file | desc |
+        | --- | --- |
+        | [test2\\|attachment](#{upload.short_url}) | hello |
+
+        | file |
+        | --- |
+        [test3\\|attachment](#{upload2.short_url})
+        MD
+
+        cooked = Nokogiri::HTML5.fragment(PrettyText.cook(processed))
+        expect(cooked.css("tbody td").map(&:text)).to eq(%w[test2 hello test3])
       end
 
       it "should correct full upload url to the shorter version" do
@@ -655,7 +682,7 @@ RSpec.describe InlineUploads do
         ![test](#{upload.short_url})
         [test|attachment](#{upload.short_url})
 
-        [test|attachment](#{upload.short_url})
+        [test\\|attachment](#{upload.short_url})
 
         `<a class="attachment" href="#{upload2.url}">In Code Block</a>`
 

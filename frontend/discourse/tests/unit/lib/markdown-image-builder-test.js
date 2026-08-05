@@ -115,19 +115,6 @@ module("Unit | Lib | markdown-image-builder", function () {
       );
     });
 
-    test("escapes pipe in dimensions for table context", function (assert) {
-      assert.strictEqual(
-        buildImageMarkdown({
-          src: "/uploads/image.png",
-          alt: "test",
-          width: 640,
-          height: 480,
-          escapeTablePipe: true,
-        }),
-        "![test\\|640x480](/uploads/image.png)"
-      );
-    });
-
     test("sanitizes alt text", function (assert) {
       assert.strictEqual(
         buildImageMarkdown({

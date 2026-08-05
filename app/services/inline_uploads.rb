@@ -199,7 +199,9 @@ class InlineUploads
         has_attachment = node.attributes["class"]&.value
         index = $~.offset(0)[0]
         text = match[2].strip.gsub("\n", "").gsub(/ +/, " ").gsub(/[\[\]\|]/, "")
-        text = "#{text}|attachment" if has_attachment
+        # a bare `|` would end the cell if this lands in a table row, and the
+        # escape is inert anywhere else since the destination is an upload label
+        text = "#{text}\\|attachment" if has_attachment
 
         yield(match[0], href, +"[#{text}](#{PLACEHOLDER})", index) if block_given?
       end

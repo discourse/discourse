@@ -698,6 +698,14 @@ export function getCaretPosition(element, options) {
   return adjustedPosition;
 }
 
+// a bare `|` ends the cell early, and in a header it changes the column count,
+// which drops the whole table
+function escapeTableCell(value) {
+  return String(value ?? "")
+    .replace(/\r?\n|\r/g, " ")
+    .replaceAll("|", "\\|");
+}
+
 /**
  * Generate markdown table from an array of objects
  * Inspired by https://github.com/Ygilany/array-to-table
@@ -714,7 +722,7 @@ export function arrayToTable(array, cols, colPrefix = "col", alignments) {
 
   // Generate table headers
   table += "|";
-  table += cols.join(" | ");
+  table += cols.map(escapeTableCell).join(" | ");
   table += "|\n|";
 
   const alignMap = {
@@ -736,9 +744,7 @@ export function arrayToTable(array, cols, colPrefix = "col", alignments) {
     table +=
       cols
         .map(function (_key, index) {
-          return String(item[`${colPrefix}${index}`] || "")
-            .replace(/\r?\n|\r/g, " ")
-            .replaceAll("|", "\\|");
+          return escapeTableCell(item[`${colPrefix}${index}`] || "");
         })
         .join(" | ") + "|\n";
   });

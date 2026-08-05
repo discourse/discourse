@@ -624,6 +624,14 @@ module("Unit | Utilities | table-builder", function (hooks) {
     );
   });
 
+  test("arrayToTable should escape `|` in headings", function (assert) {
+    assert.strictEqual(
+      arrayToTable([{ col0: "x", col1: "y" }], ["a|b", "Model"]),
+      "|a\\|b | Model|\n|--- | ---|\n|x | y|\n",
+      "an unescaped heading pipe would change the column count and drop the table"
+    );
+  });
+
   test("replaceTableRaw", function (assert) {
     const raw = "Some text\n\nMaterial | Value\n--- | ---\nA | 1\n\nMore text";
     const result = replaceTableRaw(
