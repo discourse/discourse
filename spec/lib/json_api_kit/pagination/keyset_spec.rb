@@ -21,28 +21,35 @@ RSpec.describe JsonApiKit::Pagination::Keyset do
     end
   end
 
-  describe "#order" do
-    subject(:order) { keyset.order }
+  describe "#leading" do
+    subject(:leading) { keyset.leading }
 
-    it "orders by every key, each its own way" do
-      expect(order).to eq(created_at: :desc, id: :asc)
+    it "is the key the order is read by first" do
+      expect(leading.name).to eq(:created_at)
+    end
+  end
+
+  describe "#rest" do
+    subject(:rest) { keyset.rest }
+
+    it "is the order behind the leading key" do
+      expect(rest.keys.map(&:name)).to eq([:id])
     end
 
-    context "with a nullable key" do
-      let(:keys) do
-        [
-          described_class::Key.new(:bumped_at, model:, direction: :desc, nulls_last: true),
-          described_class::Key.new(:id, model:),
-        ]
-      end
+    context "with nothing behind the leading key" do
+      let(:keys) { [described_class::Key.new(:created_at, model:)] }
 
-      it "sorts on the key's null flag before the key itself" do
-        expect(order.keys).to eq(%i[bumped_at_is_null bumped_at id])
+      it "refuses to be an order of nothing" do
+        expect { rest }.to raise_error(ArgumentError)
       end
+    end
+  end
 
-      it "sends the nulls last, whichever way the key itself sorts" do
-        expect(order).to eq(bumped_at_is_null: :asc, bumped_at: :desc, id: :asc)
-      end
+  describe "#order" do
+    subject(:order) { keyset.order.map(&:to_s) }
+
+    it "orders by every key, each its own way" do
+      expect(order).to eq([%("topics"."created_at" DESC), %("topics"."id" ASC)])
     end
 
     context "with a key already in the order" do
@@ -55,12 +62,18 @@ RSpec.describe JsonApiKit::Pagination::Keyset do
       end
 
       it "keeps the first place the key takes" do
-        expect(order.keys).to eq(%i[id created_at])
+        expect(order).to eq([%("topics"."id" DESC), %("topics"."created_at" ASC)])
       end
+    end
+  end
 
-      it "keeps the direction it was first given" do
-        expect(order[:id]).to eq(:desc)
-      end
+  describe "#cursor_for" do
+    subject(:cursor) { keyset.cursor_for(record) }
+
+    let(:record) { Topic.new(id: 12, created_at: Time.utc(2026, 8, 3, 12)) }
+
+    it "carries one value per key, in the order's own sequence" do
+      expect(cursor.values).to eq(["2026-08-03T12:00:00.000000Z", 12])
     end
   end
 
@@ -84,37 +97,13 @@ RSpec.describe JsonApiKit::Pagination::Keyset do
 
     let(:keys) do
       [
-        described_class::Key.new(:bumped_at, model:, direction: :desc, nulls_last: true),
+        described_class::Key.new(:bumped_at, model:, direction: :desc, nulls: :last),
         described_class::Key.new(:id, model:),
       ]
     end
 
-    it "walks every key the other way, nulls included" do
-      expect(reversed.order).to eq(bumped_at_is_null: :desc, bumped_at: :asc, id: :desc)
-    end
-  end
-
-  describe "#cursor_for" do
-    subject(:cursor) { keyset.cursor_for(record) }
-
-    let(:keys) do
-      [
-        described_class::Key.new(:bumped_at, model:, direction: :desc, nulls_last: true),
-        described_class::Key.new(:id, model:),
-      ]
-    end
-    let(:record) { Topic.new(id: 12, bumped_at: Time.utc(2026, 8, 3, 12)) }
-
-    it "reads one value per key in the order" do
-      expect(cursor.values).to eq([0, "2026-08-03T12:00:00.000000Z", 12])
-    end
-
-    context "with a null value" do
-      let(:record) { Topic.new(id: 12, bumped_at: nil) }
-
-      it "flags the null and leaves the key's own value out of the comparison" do
-        expect(cursor.values).to eq([1, nil, 12])
-      end
+    it "walks every one of its keys the other way" do
+      expect(reversed.keys.map(&:direction)).to eq(%i[asc desc])
     end
   end
 
@@ -142,16 +131,16 @@ RSpec.describe JsonApiKit::Pagination::Keyset do
       end
     end
 
-    context "with a nullable key" do
+    context "with a nullable key, which is a plain column like any other" do
       let(:keys) do
         [
-          described_class::Key.new(:bumped_at, model:, direction: :desc, nulls_last: true),
+          described_class::Key.new(:bumped_at, model:, direction: :desc, nulls: :last),
           described_class::Key.new(:id, model:),
         ]
       end
 
-      it "makes the null flag readable, so a cursor can be minted for the null tail" do
-        expect(projected.first.bumped_at_is_null).to eq(0)
+      it "leaves the scope alone, nullability needing nothing projected" do
+        expect(projected).to be(scope)
       end
     end
   end

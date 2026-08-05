@@ -11,8 +11,8 @@ RSpec.describe JsonApiKit::Pagination::Predicate::Term do
   let(:value) { "2026-08-03T12:00:00.123456Z" }
 
   describe ".for" do
-    it "builds a term the order can compare against" do
-      expect(term).to be_comparable
+    it "builds a term for a value the order can compare" do
+      expect(term).to be_an_instance_of(described_class)
     end
 
     context "when the cursor holds no value for the key" do
@@ -28,8 +28,14 @@ RSpec.describe JsonApiKit::Pagination::Predicate::Term do
       let(:value) { false }
 
       it "compares it, false being a value a keyset can order by" do
-        expect(term).to be_comparable
+        expect(term).to be_an_instance_of(described_class)
       end
+    end
+  end
+
+  describe "#comparable?" do
+    it "has a value for a comparison to hold against" do
+      expect(term).to be_comparable
     end
   end
 

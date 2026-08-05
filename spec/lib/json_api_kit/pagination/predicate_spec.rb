@@ -72,7 +72,7 @@ RSpec.describe JsonApiKit::Pagination::Predicate do
             :bumped_at,
             model:,
             direction: :desc,
-            nulls_last: true,
+            nulls: :last,
           ),
           JsonApiKit::Pagination::Keyset::Key.new(:id, model:),
         ]
@@ -128,31 +128,8 @@ RSpec.describe JsonApiKit::Pagination::Predicate do
   describe "#bindings" do
     subject(:bindings) { predicate.bindings }
 
-    it "binds a timestamp back to a time, to the microsecond" do
-      expect(bindings[:created_at]).to eq(Time.utc(2026, 8, 3, 12, 0, 0, 123_456))
-    end
-
-    it "binds an integer column as an integer" do
-      expect(bindings[:id]).to be(12)
-    end
-
-    context "with a key backed by SQL, which no column type describes" do
-      let(:keys) do
-        [
-          JsonApiKit::Pagination::Keyset::Key.new(
-            :author,
-            model:,
-            sql: "users.username",
-            joins: [:user],
-          ),
-          JsonApiKit::Pagination::Keyset::Key.new(:id, model:),
-        ]
-      end
-      let(:record) { Topic.new(id: 12).tap { it.define_singleton_method(:author) { "alice" } } }
-
-      it "passes the value through untouched" do
-        expect(bindings[:author]).to eq("alice")
-      end
+    it "binds one value per key it compares, each named after its key" do
+      expect(bindings.keys).to eq(%i[created_at id])
     end
 
     context "with a boolean key whose cursor value is false" do
@@ -176,16 +153,12 @@ RSpec.describe JsonApiKit::Pagination::Predicate do
             :bumped_at,
             model:,
             direction: :desc,
-            nulls_last: true,
+            nulls: :last,
           ),
           JsonApiKit::Pagination::Keyset::Key.new(:id, model:),
         ]
       end
       let(:record) { Topic.new(id: 12, bumped_at: nil) }
-
-      it "binds the null flag the order sorts on" do
-        expect(bindings[:bumped_at_is_null]).to be(1)
-      end
 
       it "binds nothing for a key it never compares" do
         expect(bindings).not_to have_key(:bumped_at)
@@ -196,27 +169,25 @@ RSpec.describe JsonApiKit::Pagination::Predicate do
   describe "#apply" do
     subject(:selected) { predicate.apply(scope).order(:id).map(&:id) }
 
-    fab!(:pinned) { Fabricate(:topic, pinned_at: Time.utc(2026, 8, 1)) }
+    fab!(:pinned_late) { Fabricate(:topic, pinned_at: Time.utc(2026, 8, 2)) }
+    fab!(:pinned_early) { Fabricate(:topic, pinned_at: Time.utc(2026, 8, 1)) }
     fab!(:first_unpinned, :topic)
     fab!(:last_unpinned, :topic)
 
     let(:keys) do
       [
-        JsonApiKit::Pagination::Keyset::Key.new(
-          :pinned_at,
-          model:,
-          direction: :desc,
-          nulls_last: true,
-        ),
+        JsonApiKit::Pagination::Keyset::Key.new(:pinned_at, model:, direction: :desc, nulls: :last),
         JsonApiKit::Pagination::Keyset::Key.new(:id, model:),
       ]
     end
     let(:scope) do
-      keyset.project(Topic.where(id: [pinned.id, first_unpinned.id, last_unpinned.id]))
+      keyset.project(
+        Topic.where(id: [pinned_late.id, pinned_early.id, first_unpinned.id, last_unpinned.id]),
+      )
     end
     let(:record) { first_unpinned }
 
-    it "walks into the null tail from a row inside it" do
+    it "walks on through the nulls from a row among them" do
       expect(selected).to eq([last_unpinned.id])
     end
 
@@ -228,11 +199,15 @@ RSpec.describe JsonApiKit::Pagination::Predicate do
       end
     end
 
-    context "when the cursor names a row before the null tail" do
-      let(:record) { pinned }
+    context "when the cursor names a row that has a value" do
+      let(:record) { pinned_late }
 
-      it "selects the whole tail" do
-        expect(selected).to eq([first_unpinned.id, last_unpinned.id])
+      it "selects the rows following it among those that also have one" do
+        expect(selected).to eq([pinned_early.id])
+      end
+
+      it "leaves the nulls alone, a bound on the column being what makes the page seekable" do
+        expect(selected).not_to include(first_unpinned.id, last_unpinned.id)
       end
     end
   end

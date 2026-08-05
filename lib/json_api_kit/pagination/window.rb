@@ -2,51 +2,51 @@
 
 module JsonApiKit
   module Pagination
-    # One page of rows read along a keyset order, and whether the order carries on past
-    # them.
+    # One page of rows read along an order, and whether the order carries on past them.
     #
-    # It only ever reads forwards: a page read backwards is a window over the reversed
-    # keyset, which the caller turns back into presentation order. A window of no rows is
-    # the probe form — it reads nothing, and answers whether anything lies that way.
+    # An order is read one segment at a time, so a page that runs out of rows in the segment
+    # it started in spills into the segment after it — which is what keeps every read
+    # bounded, and therefore seekable. A page that ends exactly where a segment does still
+    # asks the next one whether anything is there.
+    #
+    # It reads forwards only: a page read backwards is a window over the reversed order,
+    # which the caller turns back into presentation order. A window of no rows is the probe
+    # form — it reads nothing, and answers whether anything lies that way at all.
+    #
+    # `after` is a position, not a cursor: cursors belong to the wire, and by the time a page
+    # is being read the segment it starts in has already been resolved.
     class Window
-      def initialize(scope, keyset:, size:, after: nil)
+      def initialize(scope, order:, size:, after: nil)
         @scope = scope
-        @keyset = keyset
+        @order = order
         @size = size
         @after = after
       end
 
-      def records = read.first(size)
+      def rows = scans.flat_map(&:rows)
 
-      # Whether the order carries on past the page. One row beyond it is read to answer
-      # this, so it costs nothing more than the page itself.
-      def truncated? = read.size > size
+      def records = rows.map(&:record)
 
-      # The rows the window starts and ends on, named by cursor. Nil when it read none —
-      # what a caller makes of that is its own business.
-      def first_cursor = cursor_for(records.first)
-
-      def last_cursor = cursor_for(records.last)
+      def truncated? = scans.last.truncated?
 
       private
 
-      def cursor_for(record)
-        return if record.nil?
-        keyset.cursor_for(record)
+      attr_reader :scope, :order, :size, :after
+
+      def scans = @scans ||= read_from(starting_segment, size:, after: after&.cursor)
+
+      # A page is one segment read, and — when that segment ran out before the page was full
+      # and another follows it — the same page carried on from the start of the next.
+      def read_from(segment, size:, after:)
+        scan = Scan.new(scope, segment:, size:, after:)
+        return [scan] if scan.truncated?
+
+        following = order.after(segment)
+        return [scan] if following.nil?
+        [scan, *read_from(following, size: size - scan.rows.size, after: nil)]
       end
 
-      attr_reader :scope, :keyset, :size, :after
-
-      def read = @read ||= page.to_a
-
-      def page
-        return ordered if after.nil?
-        Predicate.new(keyset, after).apply(ordered)
-      end
-
-      # The order itself, asked for one row beyond the page so the window knows whether it
-      # was truncated.
-      def ordered = keyset.project(scope).reorder(keyset.order).limit(size + 1)
+      def starting_segment = after&.segment || order.first
     end
   end
 end

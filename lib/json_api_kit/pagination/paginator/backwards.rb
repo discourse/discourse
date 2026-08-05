@@ -8,7 +8,7 @@ module JsonApiKit
       # turned round to be presented; the window then answers for the page behind, and the
       # page ahead is the one that takes a probe.
       class Backwards < Paginator
-        def records = super.reverse
+        def rows = super.reverse
 
         def next = behind
 
@@ -16,7 +16,7 @@ module JsonApiKit
 
         private
 
-        def reading = keyset.reverse
+        def reading = order.reverse
       end
     end
   end

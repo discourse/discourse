@@ -81,20 +81,29 @@ construction, so "unknown parameter → 400" is not a separate concern:
 
 - `Keyset` — an ordered set of `Keyset::Key`s: the order to compare against, and the projection that
   makes every one of its values readable as a column of the scope. Built (2026-08-03).
-- `Keyset::Key` — one term of the order: name, direction, backing SQL, joins, nullability. It answers
-  for its own value on both sides — read off a record, and produced by the database — which is what
-  dissolves the spike's four parallel collections keyed by the same names. `Keyset::NullFlag` is a key
-  like any other, so nothing else in the keyset knows about nullability. Built (2026-08-03).
+- `Keyset::Key` — one term of the order: name, direction, backing SQL, joins, and which end its nulls
+  sort at. It answers for its own value on both sides — read off a record, and produced by the database —
+  which is what dissolves the spike's four parallel collections keyed by the same names. Built
+  (2026-08-03), nulls became a *placement* rather than a flag (2026-08-05).
 - `Cursor` — value ⇄ opaque string, with shape validation. Owns the lesson that lossy encoding breaks
   keysets: timestamps at microsecond precision, normalised to UTC. Built (2026-08-03).
 - `Predicate` — the comparison selecting the rows after a cursor's position in an order, and only
   that. Built (2026-08-04); the rules it encodes are below.
 - `Predicate::Term` — a key bound to the cursor's value for it, contributing its own fragments of the
   comparison, with `Term::Null` as the case a null cursor value becomes. Built (2026-08-04).
-- `Window` — one page of rows read along an order, and whether the order carries on past them.
-  It reads one way only, so reading backwards is a window over the reversed keyset, and a window of
-  no rows is the probe form that answers whether anything lies that way at all — which retires the
-  spike's separate probe. Built (2026-08-04).
+- `Order` — the order a listing is read in, as a sequence of `Order::Segment`s, each a membership
+  predicate plus the `Keyset` that orders it. `Order.for(keyset)` derives them; `Order::Position` is
+  where a cursor points. Built (2026-08-05).
+- `Scan` — one page-read inside one segment, tagging its rows with the segment they came from so any row
+  can be placed in the order. Built (2026-08-05).
+- `Window` — one page of rows read along an order, and whether the order carries on past them. It reads
+  one way only, so reading backwards is a window over the reversed order, a window of no rows is the
+  probe form that answers whether anything lies that way at all — which retires the spike's separate
+  probe — and a page that runs out of rows in one segment spills into the next. Built (2026-08-04),
+  spilling added (2026-08-05).
+- `Row` — a record together with the segment it was read from, working out its position and cursor when
+  asked. Every row of a listing can be paged from, which is what `meta.page.cursor` promises, and rows
+  are what retired the five separate cursor-minting methods the earlier design had. Built (2026-08-05).
 - `Paginator` — a page and the cursors either side of it, as `Paginator::Forwards` or
   `Paginator::Backwards`: which end a page is read from decides the direction, whether rows come
   back in presentation order, and which side the window answers for rather than probes. An empty
@@ -277,7 +286,7 @@ So the four rules above are answered by the special case itself rather than by f
 about it, and the only place nil is read is the boundary where a term is built. The predicate's own
 methods are then pure composition: which form, which disjuncts, which bound.
 
-### Open: a nulls-last order wastes its index bound, and segmenting is the fix
+### Done: a nulls-last order wasted its index bound, and segmenting fixed it
 
 Measured 2026-08-04 on 500k rows, page size 50, an index for every shape, each variant checked by
 comparing the rows it returns rather than how many. Cursor at depth 400k in the valued part of a
@@ -331,22 +340,80 @@ filtering two rows out), so per-user conditions such as dismissals or `pinned_un
 the first page gets marginally *slower* (0.011 → 0.092 ms, both negligible) because it reads the leading
 segment and then spills into the next.
 
+Reading a page across segments can be two queries (read the segment the cursor names, spill into the next
+when it comes up short) or one (`UNION ALL` of bounded branches, sorted at the top over at most two pages
+of rows). Measured 2026-08-05, wall-clock per page with the query cache off:
+
+| cursor | spill | union all | as we emit it today |
+| --- | --- | --- | --- |
+| deep in the leading segment | **0.13 ms** | 0.21 ms | 9.6 ms |
+| near the segment boundary | **0.24 ms** | 0.46 ms | **43 ms** |
+| inside the tail | 0.24 ms | **0.18 ms** | 0.61 ms |
+| first page | 0.36 ms | **0.18 ms** | — |
+
+They trade places and every gap is under 0.3 ms, so **the spill wins on design rather than speed**: plain
+relations throughout, no `UNION ALL` assembled from strings inside `Window`, and no wasted second branch
+on the common deep page. Today's shape also has a worse case than we had found — 43 ms at the segment
+boundary, where the flag query walks the whole leading segment to reach its last rows.
+
 So the concept to build is not "nulls-last handling" but a **segmented order**: an ordered list of
 segment predicates, each paired with the keyset that orders it, where the cursor names its segment. A
 plain order is one segment; a nullable key is two; a listing with a pinned group is two with the group
 predicate supplied by the resource. That also retires the projected priority column such listings build
 by hand today.
 
-What it costs: `NullFlag` stops being a key, `Keyset#order` learns `NULLS LAST`, `Predicate` becomes
-segment-aware, and `Window` has to spill from a short valued page into the tail. Sequenced — today's
-machinery is correct, this is about depth. The benchmark lives outside the repo; its seed rebuilds in
-under a second.
+Built 2026-08-05. `NullFlag` is gone, `Keyset` orders nulls at a named end, `Order`/`Order::Segment` hold
+the sequence, `Scan` reads one segment, and `Window` spills between them. `Predicate`, `Term`, `Cursor`
+and `Paginator` needed no change beyond `Paginator` taking an order where it took a keyset. Measured
+through the framework itself, page of 50, query cache off, verified against the row-level baselines above:
+
+| cursor | before | after (records + both links) | after (records only) |
+| --- | --- | --- | --- |
+| deep in the leading segment | 9.6 ms | **0.79 ms** | 0.46 ms |
+| near the segment boundary | 43 ms | **1.16 ms** | 0.78 ms |
+| inside the null tail | 0.61 ms | 0.60 ms | 0.30 ms |
+| first page | — | 0.65 ms | 0.27 ms |
+
+Re-measured 2026-08-05 against the finished objects, every scenario verified row by row (page of 50,
+500k rows, query cache off), with Pagy on the one shape it can express:
+
+| scenario | records | records + both links |
+| --- | --- | --- |
+| plain keyset, cursor deep at 400k | **0.33 ms** (Pagy: 0.32 with its next) | 0.93 ms |
+| nulls-last, deep in the leading segment | 0.39 ms | 0.99 ms |
+| nulls-last, at the segment boundary (spills) | 0.51 ms | 1.14 ms |
+| nulls-last, inside the null tail | 0.37 ms | 0.75 ms |
+| **first page** | 0.30 ms | **0.36 ms** |
+| read backwards, deep | — | 0.91 ms |
+| a resource-declared group (the `/latest` shape) | — | 0.67 ms |
+
+Two costs the end-to-end run found, both now fixed:
+
+- **A row's place is worked out when it is asked for.** Building a position — and so a cursor, which
+  normalises every timestamp to `iso8601(6)` — for all fifty rows of a page cost about 40% of the read,
+  and only the page's two ends are usually named. Lazy again, we are level with Pagy.
+- **A page read from the start of the order needs no probe.** Nothing can lie behind it, so the "is
+  there a previous page" query is skipped: 0.98 ms → 0.36 ms on the most common request a listing gets.
+
+Also verified end to end: paging resumed from an arbitrary row's own cursor lands on the row after it
+(what the profile promises for `meta.page.cursor`), a backwards page returns the rows immediately before
+the cursor with none drawn from the null tail, and the declared-group path — the first production-shaped
+use of `Segment`'s general constructor — returns the same rows as the priority-column form it replaces.
+
+One lesson only the end-to-end run could surface: **reversing an order has to move its nulls to the other
+end.** A first cut kept them last in both directions, so the backwards probe asked for
+`ASC NULLS LAST` where the index offers `ASC NULLS FIRST` when scanned backwards — a `top-N heapsort`
+over the table, 20.9 ms for a single-row probe, which made the *complete* page slower than before the fix
+even though reading it had become 12× faster. `Key#reverse` now flips the placement with the direction,
+which is also what reversal means.
 
 > Three revisions of this section in one session, each because a measurement contradicted the previous
 > reading: first that null-safe equality degraded every page (it does not, the bound rescues it), then
 > that the `OR … IS NULL` term was the cost (it is not, the wasted bound is), then that row-wise was the
 > fix (it is polish). Verify by comparing returned rows, not row counts — two of the three wrong readings
-> came from a variant that was quietly answering a different question.
+> came from a variant that was quietly answering a different question. A fourth reading was wrong for a
+> different reason: Rails' query cache is **on** inside `bin/rails runner`, so a loop over one SQL string
+> measures cache hits. Wrap benchmark loops in `ActiveRecord::Base.uncached`.
 
 ## The agent skill
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Pagination::Paginator do
-  subject(:paginator) { described_class.for(scope, keyset:, size:, after:, before:) }
+  subject(:paginator) { described_class.for(scope, order:, size:, after:, before:) }
 
   fab!(:first_topic, :topic)
   fab!(:second_topic, :topic)
@@ -11,8 +11,10 @@ RSpec.describe JsonApiKit::Pagination::Paginator do
 
   let(:model) { Topic }
   let(:topics) { [first_topic, second_topic, third_topic, fourth_topic, fifth_topic] }
-  let(:keyset) do
-    JsonApiKit::Pagination::Keyset.new([JsonApiKit::Pagination::Keyset::Key.new(:id, model:)])
+  let(:order) do
+    JsonApiKit::Pagination::Order.for(
+      JsonApiKit::Pagination::Keyset.new([JsonApiKit::Pagination::Keyset::Key.new(:id, model:)]),
+    )
   end
   let(:scope) { Topic.where(id: topics.map(&:id)) }
   let(:size) { 2 }
@@ -25,7 +27,7 @@ RSpec.describe JsonApiKit::Pagination::Paginator do
     end
 
     context "with a cursor to read after" do
-      let(:after) { keyset.cursor_for(second_topic) }
+      let(:after) { order.first.position_of(second_topic).to_cursor }
 
       it "reads forwards from it" do
         expect(paginator).to be_an_instance_of(described_class::Forwards)
@@ -33,7 +35,7 @@ RSpec.describe JsonApiKit::Pagination::Paginator do
     end
 
     context "with a cursor to read before" do
-      let(:before) { keyset.cursor_for(fourth_topic) }
+      let(:before) { order.first.position_of(fourth_topic).to_cursor }
 
       it "reads backwards from it" do
         expect(paginator).to be_an_instance_of(described_class::Backwards)
@@ -41,8 +43,8 @@ RSpec.describe JsonApiKit::Pagination::Paginator do
     end
 
     context "with a cursor at both ends" do
-      let(:after) { keyset.cursor_for(first_topic) }
-      let(:before) { keyset.cursor_for(fourth_topic) }
+      let(:after) { order.first.position_of(first_topic).to_cursor }
+      let(:before) { order.first.position_of(fourth_topic).to_cursor }
 
       it "refuses to read a range" do
         expect { paginator }.to raise_error(ArgumentError)
@@ -50,35 +52,23 @@ RSpec.describe JsonApiKit::Pagination::Paginator do
     end
   end
 
+  describe "#rows" do
+    subject(:rows) { paginator.rows }
+
+    context "with a cursor to read before" do
+      let(:before) { order.first.position_of(fifth_topic).to_cursor }
+
+      it "reads the page preceding it, turned round into the order it is presented in" do
+        expect(rows.map(&:record)).to eq([third_topic, fourth_topic])
+      end
+    end
+  end
+
   describe "#records" do
     subject(:records) { paginator.records }
 
-    it "reads the first page of the order" do
+    it "hands back what the rows hold, for whoever renders the page" do
       expect(records).to eq([first_topic, second_topic])
-    end
-
-    context "with a cursor to read after" do
-      let(:after) { keyset.cursor_for(second_topic) }
-
-      it "reads the page following it" do
-        expect(records).to eq([third_topic, fourth_topic])
-      end
-    end
-
-    context "with a cursor to read before" do
-      let(:before) { keyset.cursor_for(fifth_topic) }
-
-      it "reads the page preceding it, in the order it is presented" do
-        expect(records).to eq([third_topic, fourth_topic])
-      end
-    end
-
-    context "with a cursor past the end of the order" do
-      let(:after) { keyset.cursor_for(fifth_topic) }
-
-      it "reads nothing" do
-        expect(records).to be_empty
-      end
     end
   end
 
@@ -86,11 +76,11 @@ RSpec.describe JsonApiKit::Pagination::Paginator do
     subject(:next_page) { paginator.next }
 
     it "points at the last row of the page, for the client to read on from" do
-      expect(next_page).to eq(keyset.cursor_for(second_topic))
+      expect(next_page).to eq(order.first.position_of(second_topic).to_cursor)
     end
 
     context "with a page that reaches the end of the order" do
-      let(:after) { keyset.cursor_for(third_topic) }
+      let(:after) { order.first.position_of(third_topic).to_cursor }
 
       it "has nowhere to point" do
         expect(next_page).to be_nil
@@ -98,7 +88,7 @@ RSpec.describe JsonApiKit::Pagination::Paginator do
     end
 
     context "with a cursor past the end of the order" do
-      let(:after) { keyset.cursor_for(fifth_topic) }
+      let(:after) { order.first.position_of(fifth_topic).to_cursor }
 
       it "has nowhere to point either" do
         expect(next_page).to be_nil
@@ -106,18 +96,18 @@ RSpec.describe JsonApiKit::Pagination::Paginator do
     end
 
     context "when reading backwards" do
-      let(:before) { keyset.cursor_for(fifth_topic) }
+      let(:before) { order.first.position_of(fifth_topic).to_cursor }
 
       it "points back at the row the page ends on" do
-        expect(next_page).to eq(keyset.cursor_for(fourth_topic))
+        expect(next_page).to eq(order.first.position_of(fourth_topic).to_cursor)
       end
     end
 
     context "when reading backwards past the start of the order" do
-      let(:before) { keyset.cursor_for(first_topic) }
+      let(:before) { order.first.position_of(first_topic).to_cursor }
 
       it "points at the cursor the empty page was read from, so a client can leave it" do
-        expect(next_page).to eq(keyset.cursor_for(first_topic))
+        expect(next_page).to eq(order.first.position_of(first_topic).to_cursor)
       end
     end
   end
@@ -130,31 +120,31 @@ RSpec.describe JsonApiKit::Pagination::Paginator do
     end
 
     context "with a cursor to read after" do
-      let(:after) { keyset.cursor_for(second_topic) }
+      let(:after) { order.first.position_of(second_topic).to_cursor }
 
       it "points at the first row of the page, for the client to read back from" do
-        expect(previous_page).to eq(keyset.cursor_for(third_topic))
+        expect(previous_page).to eq(order.first.position_of(third_topic).to_cursor)
       end
     end
 
     context "with a cursor past the end of the order" do
-      let(:after) { keyset.cursor_for(fifth_topic) }
+      let(:after) { order.first.position_of(fifth_topic).to_cursor }
 
       it "points at the cursor the empty page was read from, so a client can leave it" do
-        expect(previous_page).to eq(keyset.cursor_for(fifth_topic))
+        expect(previous_page).to eq(order.first.position_of(fifth_topic).to_cursor)
       end
     end
 
     context "when reading backwards" do
-      let(:before) { keyset.cursor_for(fifth_topic) }
+      let(:before) { order.first.position_of(fifth_topic).to_cursor }
 
       it "points at the row the page starts on" do
-        expect(previous_page).to eq(keyset.cursor_for(third_topic))
+        expect(previous_page).to eq(order.first.position_of(third_topic).to_cursor)
       end
     end
 
     context "when reading backwards to the start of the order" do
-      let(:before) { keyset.cursor_for(third_topic) }
+      let(:before) { order.first.position_of(third_topic).to_cursor }
 
       it "has nowhere to point" do
         expect(previous_page).to be_nil
