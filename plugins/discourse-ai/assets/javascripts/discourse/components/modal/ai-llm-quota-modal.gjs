@@ -16,9 +16,7 @@ export default class AiLlmQuotaModal extends Component {
   @action
   save(data) {
     const quota = { ...data };
-    quota.group_name = this.site.groups.find(
-      (item) => item.id === data.group_id
-    )?.name;
+    quota.group_name = this.site.groupName(data.group_id);
     quota.llm_model_id = this.args.model.id;
 
     this.args.model.addItemToCollection(quota);
