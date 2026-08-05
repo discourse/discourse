@@ -13,6 +13,7 @@ import {
   type MenuOptions,
 } from "discourse/float-kit/lib/constants";
 import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
+import FloatKitNotifyPositioned from "discourse/float-kit/modifiers/notify-positioned";
 import { isTesting } from "discourse/lib/environment";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
@@ -28,8 +29,16 @@ export interface DMenuComponentArgs<Data = unknown> {
 
   /** The `@data` passed to the menu. */
   data?: Data;
+
   /** Whether the menu is currently open — reflects the live instance state. */
   expanded: boolean;
+
+  /**
+   * Whether the menu is disabled — reflects the live instance state. A custom
+   * `@triggerComponent` does not receive `@disabled` itself, so this is how it renders a
+   * disabled affordance for the veto that `<DMenu>` is already applying.
+   */
+  disabled: boolean;
 }
 
 // The subset of arguments that mirror a menu's option bag. Built as a
@@ -80,7 +89,13 @@ interface DMenuSignature<Data = unknown> {
      * Disables the menu: the default trigger button renders disabled, and — for any trigger,
      * including a custom `@triggerComponent` — a trigger event (click/focus/hover/hold) no longer
      * opens the menu. It does not touch the trigger's focusability or ARIA; that stays the
-     * caller's concern.
+     * caller's concern. A custom trigger reads the state back through `componentArgs.disabled`.
+     *
+     * Becoming disabled while open also closes the menu, since a disabled control must not keep
+     * an interactive overlay live. Where focus lands afterwards follows from the trigger: the
+     * default button is natively `disabled`, which no element can hold focus while being, so
+     * focus falls to the document. A caller that needs focus preserved supplies a trigger that
+     * stays focusable — the close refocuses it.
      */
     disabled?: boolean;
 
@@ -188,10 +203,13 @@ export default class DMenu<Data = unknown> extends Component<
       close: instance.close,
       show: instance.show,
       data: this.options.data as Data,
-      // A getter (not a snapshot) so a consumer reading `expanded` subscribes to the
-      // live tracked state and re-renders on open/close, without churning this object.
+      // Getters (not snapshots) so a consumer reading these subscribes to the live tracked
+      // state and re-renders as it changes, without churning this object.
       get expanded() {
         return instance.expanded;
+      },
+      get disabled() {
+        return instance.disabled;
       },
     };
   }
@@ -278,6 +296,7 @@ export default class DMenu<Data = unknown> extends Component<
           @inline={{(isTesting)}}
           data-identifier={{this.options.identifier}}
           data-content
+          {{FloatKitNotifyPositioned this.menuInstance}}
         >
           <div class="fk-d-menu-modal__grip" aria-hidden="true"></div>
           {{#if (has-block)}}

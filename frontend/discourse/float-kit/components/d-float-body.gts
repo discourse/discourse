@@ -80,14 +80,6 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
     };
   });
 
-  get contentAriaExpanded(): "true" | "false" | undefined {
-    if (this.#hasPresentationalRole) {
-      return;
-    }
-
-    return this.args.instance.expanded ? "true" : "false";
-  }
-
   get contentAriaLabelledby(): string | null | undefined {
     if (this.#hasPresentationalRole) {
       return;
@@ -96,6 +88,10 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
     return this.args.instance.id;
   }
 
+  /**
+   * `presentation` prohibits an accessible name outright, and `none` is its synonym, so a
+   * container in either role must not be labelled by its trigger.
+   */
   get #hasPresentationalRole() {
     return this.args.role === "none" || this.args.role === "presentation";
   }
@@ -138,7 +134,6 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
       @inline={{@inline}}
       @portalOutletElement={{@instance.portalOutletElement}}
     >
-      {{! eslint-disable-next-line ember/template-no-unsupported-role-attributes }}
       <div
         class={{dConcatClass
           @mainClass
@@ -148,7 +143,6 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
         data-identifier={{this.options.identifier}}
         data-content
         aria-labelledby={{this.contentAriaLabelledby}}
-        aria-expanded={{this.contentAriaExpanded}}
         role={{@role}}
         {{FloatKitApplyFloatingUi this.trigger this.options @instance}}
         {{this.trapInteractionPropagation}}
