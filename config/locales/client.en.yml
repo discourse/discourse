@@ -572,7 +572,7 @@ en:
         show_dark_screenshot: "Show dark screenshot"
       design_wizard:
         title: "Customize your site"
-        subtitle: "You can change all of this later in your admin settings"
+        subtitle: "Choose colors, fonts, and a homepage."
         step_label: "Go to step %{index}"
         save: "Save and finish"
         back: "Back"

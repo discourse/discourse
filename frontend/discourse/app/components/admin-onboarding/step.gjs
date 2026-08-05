@@ -68,8 +68,7 @@ export default class OnboardingStep extends Component {
         {{~dIcon
           this.checkboxIcon
           class=(dConcatClass
-            "onboarding-step__checkbox-icon"
-            (if this.completed " --completed" "")
+            "onboarding-step__checkbox-icon" (if this.completed "--completed")
           )
         }}
         <span class="onboarding-step__title">{{i18n
@@ -87,7 +86,7 @@ export default class OnboardingStep extends Component {
           @action={{this.performAction}}
           class={{dConcatClass
             "btn-transparent btn-small btn-link"
-            (if this.completed " --completed" "")
+            (if this.completed "--completed")
           }}
         />
 

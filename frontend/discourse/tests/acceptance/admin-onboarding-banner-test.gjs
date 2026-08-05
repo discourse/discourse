@@ -16,11 +16,11 @@ const withStep = (id, assert) => {
       return click(`div#${id} .onboarding-step__action .btn`);
     },
     isChecked() {
-      return this.checkbox().hasClass("checked", `${id} step is completed`);
+      return this.checkbox().hasClass("--completed", `${id} step is completed`);
     },
     isNotChecked() {
       return this.checkbox().doesNotHaveClass(
-        "checked",
+        "--completed",
         `${id} step is not completed`
       );
     },
