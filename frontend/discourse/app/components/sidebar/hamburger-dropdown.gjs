@@ -9,6 +9,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { or } from "discourse/truth-helpers";
 import ApiPanels from "./api-panels";
 import Footer from "./footer";
+import HamburgerSignupLink from "./hamburger-signup-link";
 import Sections from "./sections";
 
 export default class SidebarHamburgerDropdown extends Component {
@@ -54,6 +55,10 @@ export default class SidebarHamburgerDropdown extends Component {
                 class="sidebar-hamburger-dropdown"
                 {{didInsert this.focusFirstLink}}
               >
+                <HamburgerSignupLink
+                  @showCreateAccount={{@showCreateAccount}}
+                  @toggleNavigationMenu={{@toggleNavigationMenu}}
+                />
                 <PluginOutlet
                   @name="before-sidebar-sections"
                   @outletArgs={{lazyHash
