@@ -54,8 +54,8 @@ const SERIES = [
     color: "#D5CDF7",
   },
 ];
-const SKELETON_KPIS = Array.from({ length: 7 });
-const SKELETON_CARDS = Array.from({ length: 4 });
+const SKELETON_KPIS = Array.from({ length: 4 });
+const SKELETON_CARDS = Array.from({ length: 3 });
 const SKELETON_ROWS = Array.from({ length: 5 });
 
 export default class SiteTrafficDetail extends Component {
@@ -68,7 +68,7 @@ export default class SiteTrafficDetail extends Component {
   @tracked error;
   @tracked filters = {};
   @tracked pagesTab = "top_urls";
-  @tracked geographyTab = "countries";
+  @tracked dimensionTab = "countries";
 
   abortController;
   requestId = 0;
@@ -178,34 +178,23 @@ export default class SiteTrafficDetail extends Component {
     );
   }
 
-  get pageCardInformational() {
-    return this.pagesTab === "entry_urls";
-  }
-
-  get standaloneCards() {
-    return ["traffic_sources", "browsers"].map((key) => ({
-      key,
-      title: i18n(`admin.dashboard.site_traffic.details.dimensions.${key}`),
-      rows: this.#displayRows(key),
-      informational: key === "traffic_sources",
-    }));
-  }
-
   get trafficSourcesCard() {
-    return this.standaloneCards[0];
+    return {
+      key: "traffic_sources",
+      title: i18n(
+        "admin.dashboard.site_traffic.details.dimensions.traffic_sources"
+      ),
+      rows: this.#displayRows("traffic_sources"),
+    };
   }
 
-  get browsersCard() {
-    return this.standaloneCards[1];
+  get dimensionRows() {
+    return this.#displayRows(this.dimensionTab);
   }
 
-  get geographyRows() {
-    return this.#displayRows(this.geographyTab);
-  }
-
-  get geographyCardTitle() {
+  get dimensionCardTitle() {
     return i18n(
-      `admin.dashboard.site_traffic.details.dimensions.${this.geographyTab}`
+      `admin.dashboard.site_traffic.details.dimensions.${this.dimensionTab}`
     );
   }
 
@@ -347,8 +336,8 @@ export default class SiteTrafficDetail extends Component {
   }
 
   @action
-  selectGeographyTab(tab) {
-    this.geographyTab = tab;
+  selectDimensionTab(tab) {
+    this.dimensionTab = tab;
   }
 
   @action
@@ -377,9 +366,9 @@ export default class SiteTrafficDetail extends Component {
   }
 
   @action
-  navigateGeographyTabs(event) {
-    const tabs = ["countries", "networks", "ip_addresses"];
-    const currentIndex = tabs.indexOf(this.geographyTab);
+  navigateDimensionTabs(event) {
+    const tabs = ["countries", "networks", "browsers", "ip_addresses"];
+    const currentIndex = tabs.indexOf(this.dimensionTab);
     let nextIndex;
 
     if (event.key === "ArrowRight") {
@@ -395,9 +384,9 @@ export default class SiteTrafficDetail extends Component {
     }
 
     event.preventDefault();
-    this.geographyTab = tabs[nextIndex];
+    this.dimensionTab = tabs[nextIndex];
     event.currentTarget.parentElement
-      .querySelector(`[data-site-traffic-geography-tab="${this.geographyTab}"]`)
+      .querySelector(`[data-site-traffic-dimension-tab="${this.dimensionTab}"]`)
       ?.focus();
   }
 
@@ -738,10 +727,10 @@ export default class SiteTrafficDetail extends Component {
         <section
           class="site-traffic-detail__metrics"
           data-test-session-kpis
-          aria-labelledby="site-traffic-pageview-metrics"
+          aria-labelledby="site-traffic-metrics"
         >
-          <h2 id="site-traffic-pageview-metrics" class="sr-only">
-            {{i18n "admin.dashboard.site_traffic.details.pageview_metrics"}}
+          <h2 id="site-traffic-metrics" class="sr-only">
+            {{i18n "admin.dashboard.site_traffic.details.traffic_metrics"}}
           </h2>
           <SiteTrafficMetric
             @primary={{true}}
@@ -754,30 +743,6 @@ export default class SiteTrafficDetail extends Component {
             }}
             @tooltipIdentifier="site-traffic-detail-pageviews-tooltip"
             data-test-metric
-          />
-          <SiteTrafficMetric
-            @label={{i18n
-              "admin.dashboard.site_traffic.details.series.logged-in-human"
-            }}
-            @value={{this.formattedLoggedInHumanPageviews}}
-            data-test-series-total
-            data-test-traffic-series="logged-in-human"
-          />
-          <SiteTrafficMetric
-            @label={{i18n
-              "admin.dashboard.site_traffic.details.series.anonymous-human"
-            }}
-            @value={{this.formattedAnonymousHumanPageviews}}
-            data-test-series-total
-            data-test-traffic-series="anonymous-human"
-          />
-          <SiteTrafficMetric
-            @label={{i18n
-              "admin.dashboard.site_traffic.details.series.likely-crawler"
-            }}
-            @value={{this.formattedLikelyCrawlerPageviews}}
-            data-test-series-total
-            data-test-traffic-series="likely-crawler"
           />
           <SiteTrafficMetric
             @label={{i18n
@@ -842,6 +807,21 @@ export default class SiteTrafficDetail extends Component {
             @model={{this.chartModel}}
             @options={{this.chartOptions}}
           />
+          <span
+            class="sr-only"
+            data-test-series-total
+            data-test-traffic-series="logged-in-human"
+          >{{this.formattedLoggedInHumanPageviews}}</span>
+          <span
+            class="sr-only"
+            data-test-series-total
+            data-test-traffic-series="anonymous-human"
+          >{{this.formattedAnonymousHumanPageviews}}</span>
+          <span
+            class="sr-only"
+            data-test-series-total
+            data-test-traffic-series="likely-crawler"
+          >{{this.formattedLikelyCrawlerPageviews}}</span>
           {{#each this.data.series as |point|}}
             <span
               class="sr-only"
@@ -866,9 +846,7 @@ export default class SiteTrafficDetail extends Component {
               class="site-traffic-detail__card"
               data-test-breakdown={{this.trafficSourcesCard.key}}
             >
-              <div class="site-traffic-detail__card-header">
-                <h2>{{this.trafficSourcesCard.title}}</h2>
-              </div>
+              <h2 class="sr-only">{{this.trafficSourcesCard.title}}</h2>
               <ul class="site-traffic-detail__breakdown-list">
                 {{#each (this.cardRows this.trafficSourcesCard.rows) as |row|}}
                   <li>
@@ -899,20 +877,9 @@ export default class SiteTrafficDetail extends Component {
               class="site-traffic-detail__card"
               data-test-breakdown="pages"
             >
-              <div class="site-traffic-detail__card-header">
-                <h2>
-                  {{i18n
-                    "admin.dashboard.site_traffic.details.dimensions.pages"
-                  }}
-                </h2>
-                {{#if this.pageCardInformational}}
-                  <span>
-                    {{i18n
-                      "admin.dashboard.site_traffic.details.overall_analyzed_period"
-                    }}
-                  </span>
-                {{/if}}
-              </div>
+              <h2 class="sr-only">
+                {{i18n "admin.dashboard.site_traffic.details.dimensions.pages"}}
+              </h2>
               <div
                 class="site-traffic-detail__tabs"
                 role="tablist"
@@ -1007,36 +974,37 @@ export default class SiteTrafficDetail extends Component {
 
             <section
               class="site-traffic-detail__card"
-              data-test-breakdown="geography"
+              data-test-breakdown="visitor-dimensions"
             >
-              <div class="site-traffic-detail__card-header">
-                <h2>
-                  {{i18n
-                    "admin.dashboard.site_traffic.details.dimensions.geography"
-                  }}
-                </h2>
-              </div>
+              <h2 class="sr-only">
+                {{i18n
+                  "admin.dashboard.site_traffic.details.dimensions.visitor_dimensions"
+                }}
+              </h2>
               <div
                 class="site-traffic-detail__tabs"
                 role="tablist"
                 aria-label={{i18n
-                  "admin.dashboard.site_traffic.details.dimensions.geography"
+                  "admin.dashboard.site_traffic.details.dimensions.visitor_dimensions"
                 }}
               >
-                {{#each (array "countries" "networks" "ip_addresses") as |tab|}}
+                {{#each
+                  (array "countries" "networks" "browsers" "ip_addresses")
+                  as |tab|
+                }}
                   <button
-                    id="site-traffic-geography-tab-{{tab}}"
+                    id="site-traffic-dimension-tab-{{tab}}"
                     type="button"
                     role="tab"
-                    data-site-traffic-geography-tab={{tab}}
-                    aria-controls="site-traffic-geography-panel"
+                    data-site-traffic-dimension-tab={{tab}}
+                    aria-controls="site-traffic-dimension-panel"
                     aria-selected={{concat
-                      (if (eq this.geographyTab tab) "true" "false")
+                      (if (eq this.dimensionTab tab) "true" "false")
                     }}
-                    tabindex={{if (eq this.geographyTab tab) "0" "-1"}}
-                    class={{if (eq this.geographyTab tab) "is-active"}}
-                    {{on "click" (fn this.selectGeographyTab tab)}}
-                    {{on "keydown" this.navigateGeographyTabs}}
+                    tabindex={{if (eq this.dimensionTab tab) "0" "-1"}}
+                    class={{if (eq this.dimensionTab tab) "is-active"}}
+                    {{on "click" (fn this.selectDimensionTab tab)}}
+                    {{on "keydown" this.navigateDimensionTabs}}
                   >
                     {{i18n
                       (concat
@@ -1047,12 +1015,12 @@ export default class SiteTrafficDetail extends Component {
                 {{/each}}
               </div>
               <div
-                id="site-traffic-geography-panel"
+                id="site-traffic-dimension-panel"
                 role="tabpanel"
-                aria-labelledby="site-traffic-geography-tab-{{this.geographyTab}}"
+                aria-labelledby="site-traffic-dimension-tab-{{this.dimensionTab}}"
               >
                 <ul class="site-traffic-detail__breakdown-list">
-                  {{#each (this.cardRows this.geographyRows) as |row|}}
+                  {{#each (this.cardRows this.dimensionRows) as |row|}}
                     <li>
                       {{#if row.filterable}}
                         <button
@@ -1063,13 +1031,13 @@ export default class SiteTrafficDetail extends Component {
                             "click"
                             (fn
                               this.applyFilter
-                              (get FILTER_DIMENSIONS this.geographyTab)
+                              (get FILTER_DIMENSIONS this.dimensionTab)
                               row.value
                             )
                           }}
                         >
                           <span>
-                            {{#if (eq this.geographyTab "countries")}}
+                            {{#if (eq this.dimensionTab "countries")}}
                               <span aria-hidden="true">
                                 {{this.countryFlag row.value}}
                               </span>
@@ -1090,63 +1058,18 @@ export default class SiteTrafficDetail extends Component {
                     </li>
                   {{/each}}
                 </ul>
-                {{#if (gt this.geographyRows.length 8)}}
+                {{#if (gt this.dimensionRows.length 8)}}
                   <DButton
                     @label="admin.dashboard.site_traffic.details.view_more"
                     @action={{fn
                       this.showMore
-                      this.geographyTab
-                      this.geographyCardTitle
-                      this.geographyRows
+                      this.dimensionTab
+                      this.dimensionCardTitle
+                      this.dimensionRows
                     }}
                   />
                 {{/if}}
               </div>
-            </section>
-
-            <section
-              class="site-traffic-detail__card"
-              data-test-breakdown={{this.browsersCard.key}}
-            >
-              <div class="site-traffic-detail__card-header">
-                <h2>{{this.browsersCard.title}}</h2>
-              </div>
-              <ul class="site-traffic-detail__breakdown-list">
-                {{#each (this.cardRows this.browsersCard.rows) as |row|}}
-                  <li>
-                    {{#if row.filterable}}
-                      <button
-                        type="button"
-                        class="btn-flat site-traffic-detail__row"
-                        data-test-breakdown-row
-                        {{on "click" (fn this.applyFilter "browser" row.value)}}
-                      >
-                        <span>{{row.displayLabel}}</span>
-                        <strong>{{row.formattedPageviews}}</strong>
-                      </button>
-                    {{else}}
-                      <span
-                        class="site-traffic-detail__row"
-                        data-test-breakdown-row
-                      >
-                        <span>{{row.displayLabel}}</span>
-                        <strong>{{row.formattedPageviews}}</strong>
-                      </span>
-                    {{/if}}
-                  </li>
-                {{/each}}
-              </ul>
-              {{#if (gt this.browsersCard.rows.length 8)}}
-                <DButton
-                  @label="admin.dashboard.site_traffic.details.view_more"
-                  @action={{fn
-                    this.showMore
-                    this.browsersCard.key
-                    this.browsersCard.title
-                    this.browsersCard.rows
-                  }}
-                />
-              {{/if}}
             </section>
           </div>
         {{/if}}

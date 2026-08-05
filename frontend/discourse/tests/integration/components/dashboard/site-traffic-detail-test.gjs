@@ -139,9 +139,9 @@ module(
       );
 
       assert.dom("[data-test-traffic-loading].db-skeleton").exists();
-      assert.dom(".db-skeleton__kpi").exists({ count: 7 });
+      assert.dom(".db-skeleton__kpi").exists({ count: 4 });
       assert.dom(".db-skeleton__chart").exists();
-      assert.dom(".db-skeleton__report-card").exists({ count: 4 });
+      assert.dom(".db-skeleton__report-card").exists({ count: 3 });
 
       request.resolve(response(payload()));
       await settled();
@@ -222,12 +222,15 @@ module(
       await settled();
 
       await click(
-        "[data-test-breakdown='geography'] [data-test-breakdown-row]"
+        "[data-test-breakdown='visitor-dimensions'] [data-test-breakdown-row]"
       );
       assert.dom("[data-test-traffic-loading]").exists();
       assert.dom("[data-test-metric]").includesText("5");
 
-      await click("[data-test-breakdown='browsers'] [data-test-breakdown-row]");
+      await click("[data-site-traffic-dimension-tab='browsers']");
+      await click(
+        "[data-test-breakdown='visitor-dimensions'] [data-test-breakdown-row]"
+      );
       assert.true(requests[1].aborted, "the superseded request was aborted");
 
       requests[2].resolve(response(payload({ pageviews: 1 })));
@@ -305,7 +308,7 @@ module(
       );
 
       await click(
-        "[data-test-breakdown='geography'] [data-test-breakdown-row]"
+        "[data-test-breakdown='visitor-dimensions'] [data-test-breakdown-row]"
       );
       assert.true(
         DiscourseURL.replaceState.lastCall.args[0].includes("#country=US")
@@ -377,9 +380,14 @@ module(
         </template>
       );
 
-      assert.dom(".site-traffic-detail__card").exists({ count: 4 });
+      assert.dom(".site-traffic-detail__card").exists({ count: 3 });
+      assert
+        .dom(".site-traffic-detail__card > h2.sr-only")
+        .exists({ count: 3 });
+      assert.dom(".site-traffic-detail__card-header").doesNotExist();
+      assert.dom("[data-site-traffic-dimension-tab]").exists({ count: 4 });
       assert.dom(".site-traffic-detail__metrics").exists({ count: 1 });
-      assert.dom(".site-traffic-detail__metric").exists({ count: 7 });
+      assert.dom(".site-traffic-detail__metric").exists({ count: 4 });
       assert.dom("[data-test-session-kpi]").exists({ count: 3 });
       assert
         .dom("[data-test-session-kpi] .site-traffic-detail__metric-scope")
@@ -387,10 +395,10 @@ module(
       assert.dom("[data-test-session-scope]").hasClass("sr-only");
       assert.dom("[data-test-crawler-scope]").hasClass("sr-only");
 
-      await click("[data-site-traffic-geography-tab='networks']");
+      await click("[data-site-traffic-dimension-tab='networks']");
 
       assert
-        .dom("#site-traffic-geography-panel")
+        .dom("#site-traffic-dimension-panel")
         .includesText("AS15169 Google");
     });
 
