@@ -124,10 +124,10 @@ RSpec.describe "Chat pinned messages" do
     # newest pin is shown first
     expect(page).to have_css(".chat-pinned-bar__excerpt", text: "Second message")
 
-    find(".chat-pinned-bar__main").click
+    find(".chat-pinned-bar__jump").click
     expect(page).to have_css(".chat-pinned-bar__excerpt", text: "Important message")
 
-    find(".chat-pinned-bar__main").click
+    find(".chat-pinned-bar__jump").click
     expect(page).to have_css(".chat-pinned-bar__excerpt", text: "Second message")
   end
 
