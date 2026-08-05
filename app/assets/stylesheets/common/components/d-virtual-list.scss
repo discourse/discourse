@@ -1,0 +1,25 @@
+.d-virtual-list {
+  // This element IS the scroll viewport the virtualizer measures and drives, so it
+  // must scroll. Height belongs to the consumer, set via CSS (`...attributes` go to
+  // the inner container, not here): the virtualizer computes an empty window from a
+  // zero-height element, and silently renders nothing.
+  overflow-y: auto;
+
+  // Rows are absolutely positioned to approximate offsets, so the browser must not
+  // pick the list as a scroll anchor — its correction would fight the virtualizer's
+  // own scroll compensation and produce a jump.
+  overflow-anchor: none;
+
+  // No padding or border on this element: `scrollEndThreshold` is compared in two
+  // different coordinate spaces (DOM scrollHeight vs the engine's measured total),
+  // and box spacing here offsets one from the other permanently. Put spacing on the
+  // row element instead.
+  &__sizer {
+    // The inner container is the sizer AND the containing block for the absolutely
+    // positioned rows; `position: relative` + `height` (the measured total) are set
+    // inline, so the scrollbar spans the whole list while only a window mounts.
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}
