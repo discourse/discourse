@@ -80,6 +80,26 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
     };
   });
 
+  get contentAriaExpanded(): "true" | "false" | undefined {
+    if (this.#hasPresentationalRole) {
+      return;
+    }
+
+    return this.args.instance.expanded ? "true" : "false";
+  }
+
+  get contentAriaLabelledby(): string | null | undefined {
+    if (this.#hasPresentationalRole) {
+      return;
+    }
+
+    return this.args.instance.id;
+  }
+
+  get #hasPresentationalRole() {
+    return this.args.role === "none" || this.args.role === "presentation";
+  }
+
   get supportsCloseOnClickOutside() {
     return this.options.closeOnClickOutside;
   }
@@ -127,8 +147,8 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
         }}
         data-identifier={{this.options.identifier}}
         data-content
-        aria-labelledby={{@instance.id}}
-        aria-expanded={{if @instance.expanded "true" "false"}}
+        aria-labelledby={{this.contentAriaLabelledby}}
+        aria-expanded={{this.contentAriaExpanded}}
         role={{@role}}
         {{FloatKitApplyFloatingUi this.trigger this.options @instance}}
         {{this.trapInteractionPropagation}}

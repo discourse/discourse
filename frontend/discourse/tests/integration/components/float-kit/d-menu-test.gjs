@@ -293,6 +293,51 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     assert.dom(".fk-d-menu").hasAttribute("role", "dialog");
   });
 
+  test("@contentRole none removes container semantics", async function (assert) {
+    await render(
+      <template>
+        <DMenu @contentRole="none" @inline={{true}} @label="label" />
+      </template>
+    );
+
+    await open();
+
+    assert
+      .dom(".fk-d-menu")
+      .hasAttribute("role", "none", "the requested role is rendered");
+    assert
+      .dom(".fk-d-menu")
+      .doesNotHaveAttribute(
+        "aria-labelledby",
+        "the presentational container has no accessible name"
+      );
+    assert
+      .dom(".fk-d-menu")
+      .doesNotHaveAttribute(
+        "aria-expanded",
+        "the presentational container has no ARIA state"
+      );
+  });
+
+  test("service-created menus use @contentRole", async function (assert) {
+    await render(
+      <template>
+        <div class="menu-trigger"></div>
+        <DMenus />
+      </template>
+    );
+
+    await getOwner(this).lookup("service:menu").show(find(".menu-trigger"), {
+      content: "content",
+      contentRole: "none",
+    });
+    await settled();
+
+    assert
+      .dom(".fk-d-menu")
+      .hasAttribute("role", "none", "the service option reaches the menu body");
+  });
+
   test("@component", async function (assert) {
     this.component = DDefaultToast;
 
@@ -725,8 +770,12 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
       .dom(".fk-d-menu")
       .exists("clearing disabled after mount restores trigger opening");
 
-    await click(".fk-d-menu__trigger");
     this.set("disabled", true);
+    await settled();
+    assert
+      .dom(".fk-d-menu")
+      .doesNotExist("setting disabled closes an open menu");
+
     await click(".fk-d-menu__trigger");
     assert
       .dom(".fk-d-menu")
