@@ -315,11 +315,32 @@ module(
       assert
         .dom(".filter-navigation__tip-item")
         .exists({ count: 20 }, "value suggestions are capped at twenty");
+      await click(".filter-navigation__tip-item:nth-child(1)");
+
+      assert.deepEqual(
+        requestBodies.at(-1).filters,
+        { top_url: "/page-0" },
+        "the Top URL control applies one exact value"
+      );
+      assert
+        .dom("#topic-query-filter-input")
+        .hasValue(
+          "top_url:/page-0",
+          "the selected Top URL uses canonical syntax"
+        );
 
       await fillIn("#topic-query-filter-input", "");
       await click(".filter-navigation__tip-item:nth-child(4)");
-      assert.dom("#topic-query-filter-input").hasValue("country:");
-      await fillIn("#topic-query-filter-input", "country:United");
+      assert
+        .dom("#topic-query-filter-input")
+        .hasValue(
+          "top_url:/page-0 country:",
+          "dimension selection preserves active canonical expressions"
+        );
+      await fillIn(
+        "#topic-query-filter-input",
+        "top_url:/page-0 country:United"
+      );
       assert
         .dom(".filter-navigation__tip-item")
         .exists({ count: 1 }, "the second stage narrows exact country values")
@@ -328,42 +349,89 @@ module(
 
       assert.deepEqual(
         requestBodies.at(-1).filters,
-        { country: "US" },
-        "the country control applies one exact value"
+        { top_url: "/page-0", country: "US" },
+        "the country value preserves the active Top URL"
       );
       assert
         .dom(".filter-navigation__tip-item")
         .doesNotExist("a submitted value dismisses the suggestion menu");
       assert
         .dom("#topic-query-filter-input")
-        .hasValue("country:US", "the selected filter uses canonical syntax");
+        .hasValue(
+          "top_url:/page-0 country:US",
+          "the selected filters use canonical AND syntax"
+        );
 
       await fillIn("#topic-query-filter-input", "");
       await click(".filter-navigation__tip-item:nth-child(6)");
-      await fillIn("#topic-query-filter-input", "browser:Fire");
+      assert
+        .dom("#topic-query-filter-input")
+        .hasValue(
+          "top_url:/page-0 country:US browser:",
+          "browser selection appends its prefix"
+        );
+      await fillIn(
+        "#topic-query-filter-input",
+        "top_url:/page-0 country:US browser:Fire"
+      );
       await click(".filter-navigation__tip-item");
 
       assert.deepEqual(
         requestBodies.at(-1).filters,
-        { country: "US", browser: "firefox" },
+        { top_url: "/page-0", country: "US", browser: "firefox" },
         "different dimensions compose with AND semantics"
       );
 
       await fillIn("#topic-query-filter-input", "");
       await click(".filter-navigation__tip-item:nth-child(4)");
-      await fillIn("#topic-query-filter-input", "country:Can");
+      assert
+        .dom("#topic-query-filter-input")
+        .hasValue(
+          "top_url:/page-0 browser:firefox country:",
+          "country replacement preserves the other dimensions"
+        );
+      await fillIn(
+        "#topic-query-filter-input",
+        "top_url:/page-0 browser:firefox country:Can"
+      );
       await click(".filter-navigation__tip-item");
 
       assert.deepEqual(
         requestBodies.at(-1).filters,
-        { country: "CA", browser: "firefox" },
+        { top_url: "/page-0", country: "CA", browser: "firefox" },
         "a new country replaces the existing country value"
       );
       assert
         .dom("#topic-query-filter-input")
         .hasValue(
-          "country:CA browser:firefox",
+          "top_url:/page-0 country:CA browser:firefox",
           "one value remains for each active dimension"
+        );
+
+      await fillIn("#topic-query-filter-input", "");
+      await click(".filter-navigation__tip-item:nth-child(1)");
+      assert
+        .dom("#topic-query-filter-input")
+        .hasValue(
+          "country:CA browser:firefox top_url:",
+          "Top URL replacement preserves the other dimensions"
+        );
+      await fillIn(
+        "#topic-query-filter-input",
+        "country:CA browser:firefox top_url:/page-1"
+      );
+      await click(".filter-navigation__tip-item:nth-child(1)");
+
+      assert.deepEqual(
+        requestBodies.at(-1).filters,
+        { top_url: "/page-1", country: "CA", browser: "firefox" },
+        "a new Top URL replaces only the existing Top URL"
+      );
+      assert
+        .dom("#topic-query-filter-input")
+        .hasValue(
+          "top_url:/page-1 country:CA browser:firefox",
+          "replacement keeps one canonical value for each dimension"
         );
 
       await click(".topic-query-filter__clear-btn");

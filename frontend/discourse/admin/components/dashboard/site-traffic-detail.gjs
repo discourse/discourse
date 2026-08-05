@@ -202,7 +202,10 @@ export default class SiteTrafficDetail extends Component {
             dimension,
             value: row.value,
             name: this.#rowLabel(sourceDimension, row),
-            expression: this.#filterExpression(dimension, row.value),
+            expression: this.#composedFilterInput({
+              dimension,
+              expression: this.#filterExpression(dimension, row.value),
+            }),
           }))
     );
   }
@@ -403,13 +406,15 @@ export default class SiteTrafficDetail extends Component {
   filterInputChanged(value, submit) {
     if (!submit) {
       const dimension = Object.keys(FILTER_SOURCE_DIMENSIONS).find(
-        (candidate) => value === this.#filterPrefix(candidate)
+        (candidate) => value === this.#filterInputForDimension(candidate)
       );
       if (dimension) {
         this.suggestionDimension = dimension;
       } else if (
         !this.suggestionDimension ||
-        !value.startsWith(this.#filterPrefix(this.suggestionDimension))
+        !value.startsWith(
+          this.#filterInputForDimension(this.suggestionDimension)
+        )
       ) {
         this.suggestionDimension = null;
       }
@@ -445,12 +450,12 @@ export default class SiteTrafficDetail extends Component {
           name: i18n(
             `admin.dashboard.site_traffic.details.filter_dimensions.${dimension}`
           ),
-          inputValue: this.#filterPrefix(dimension),
+          inputValue: this.#filterInputForDimension(dimension),
         })),
       };
     }
 
-    const prefix = this.#filterPrefix(this.suggestionDimension);
+    const prefix = this.#filterInputForDimension(this.suggestionDimension);
     const query = input.startsWith(prefix)
       ? input.slice(prefix.length).trim().toLocaleLowerCase()
       : "";
@@ -569,6 +574,26 @@ export default class SiteTrafficDetail extends Component {
 
   #filterPrefix(dimension) {
     return `${FILTER_PREFIXES[dimension]}:`;
+  }
+
+  #filterInputForDimension(dimension) {
+    return this.#composedFilterInput({
+      dimension,
+      expression: this.#filterPrefix(dimension),
+    });
+  }
+
+  #composedFilterInput({ dimension, expression }) {
+    return [
+      ...Object.keys(FILTER_SOURCE_DIMENSIONS)
+        .filter(
+          (candidate) => candidate !== dimension && this.filters[candidate]
+        )
+        .map((candidate) =>
+          this.#filterExpression(candidate, this.filters[candidate])
+        ),
+      expression,
+    ].join(" ");
   }
 
   #formatNumber(value) {
