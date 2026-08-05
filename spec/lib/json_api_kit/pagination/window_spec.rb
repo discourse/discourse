@@ -13,6 +13,8 @@ RSpec.describe JsonApiKit::Pagination::Window do
   let(:keyset) { JsonApiKit::Pagination::Keyset.new(keys) }
   let(:order) { JsonApiKit::Pagination::Order.for(keyset) }
   let(:scope) { Topic.where(id: [first_topic.id, second_topic.id, third_topic.id]) }
+  let(:first_position) { order.first.position_of(first_topic) }
+  let(:third_position) { order.first.position_of(third_topic) }
   let(:size) { 2 }
   let(:after) { nil }
 
@@ -24,7 +26,7 @@ RSpec.describe JsonApiKit::Pagination::Window do
 
   describe "#rows" do
     context "when every segment it read was empty" do
-      let(:after) { order.first.position_of(third_topic) }
+      let(:after) { third_position }
 
       it "reads none" do
         expect(window.rows).to be_empty
@@ -100,6 +102,8 @@ RSpec.describe JsonApiKit::Pagination::Window do
 
     describe "#truncated?" do
       context "when the page ends exactly where a segment does" do
+        let(:first_position) { order.first.position_of(first_topic) }
+        let(:third_position) { order.first.position_of(third_topic) }
         let(:size) { 2 }
 
         it "knows the listing carries on in the segment after it" do

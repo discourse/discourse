@@ -19,10 +19,8 @@ module JsonApiKit
         delegate :quote_table_name, :quote_column_name, to: :connection, private: true
 
         def initialize(name, model:, direction: :asc, sql: nil, joins: [], nulls: nil)
-          raise ArgumentError, "unknown direction: #{direction}" if !DIRECTIONS.include?(direction)
-          if nulls && !NULL_PLACEMENTS.include?(nulls)
-            raise ArgumentError, "unknown nulls: #{nulls}"
-          end
+          raise ArgumentError, "unknown direction: #{direction}" if DIRECTIONS.exclude?(direction)
+          raise ArgumentError, "unknown nulls: #{nulls}" if nulls && NULL_PLACEMENTS.exclude?(nulls)
 
           @name = name.to_sym
           @model = model
@@ -72,7 +70,7 @@ module JsonApiKit
         def cast(value) = type_for_attribute(name).cast(value)
 
         def select_expression
-          return if !projected?
+          return unless projected?
           "#{value_sql} AS #{quoted_name}"
         end
 

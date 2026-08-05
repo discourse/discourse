@@ -28,7 +28,7 @@ module JsonApiKit
         private
 
         def segments_for(keyset, id: 0)
-          return [Segment.new(id:, keyset:)] if !keyset.leading.nullable?
+          return [Segment.new(id:, keyset:)] unless keyset.leading.nullable?
 
           [
             Segment.new(id:, keyset:, rows: keyset.leading.valued_rows),
@@ -52,6 +52,16 @@ module JsonApiKit
       def reverse = self.class.new(segments.reverse.map(&:reverse))
 
       def position(cursor) = Position.from(cursor, order: self)
+
+      # The first row of the listing a narrowing keeps, and where it sits — the segments are
+      # walked in their own sequence, since that is the listing's order. Nothing, when no row
+      # is kept: what to say about that belongs to whoever asked.
+      def locate(scope, matching:)
+        segments
+          .lazy
+          .filter_map { Scan.new(matching.call(scope), segment: it, size: 1).rows.first }
+          .first
+      end
 
       private
 

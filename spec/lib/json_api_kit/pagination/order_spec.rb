@@ -136,6 +136,47 @@ RSpec.describe JsonApiKit::Pagination::Order do
     end
   end
 
+  describe "#locate" do
+    subject(:located) { order.locate(scope, matching:) }
+
+    let(:keys) do
+      [key.new(:pinned_at, model:, direction: :desc, nulls: :last), key.new(:id, model:)]
+    end
+    let(:matching) { ->(rows) { rows.where(id: unpinned.id) } }
+
+    it "finds the row a narrowing keeps" do
+      expect(located.record).to eq(unpinned)
+    end
+
+    it "places it in the segment that holds it" do
+      expect(located.position.segment).to eq(order.segments.last)
+    end
+
+    context "with a row in the leading segment" do
+      let(:matching) { ->(rows) { rows.where(id: pinned.id) } }
+
+      it "places it there instead" do
+        expect(located.position.segment).to eq(order.first)
+      end
+    end
+
+    context "with a narrowing that keeps rows in both segments" do
+      let(:matching) { ->(rows) { rows.where(id: [pinned.id, unpinned.id]) } }
+
+      it "finds the first of them the listing reads" do
+        expect(located.record).to eq(pinned)
+      end
+    end
+
+    context "with a narrowing that keeps nothing" do
+      let(:matching) { ->(rows) { rows.where(id: -1) } }
+
+      it "finds nothing, leaving what to say about it to the caller" do
+        expect(located).to be_nil
+      end
+    end
+  end
+
   describe "#position" do
     subject(:position) { order.position(cursor) }
 

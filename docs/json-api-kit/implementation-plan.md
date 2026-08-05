@@ -109,7 +109,11 @@ construction, so "unknown parameter → 400" is not a separate concern:
   back in presentation order, and which side the window answers for rather than probes. An empty
   page still points at the cursor it was read from, or a client that pages one step too far is
   stranded. Built (2026-08-04).
-- `Anchor::Resolver` and `Anchor::Window` — positional entry, including the centred form.
+- `Around` — a page centred on one row: the rows before it, the row itself, the rows after it. It is the
+  two ordinary readings, one each way from the row's position, so each side answers for its own link and
+  neither probes. `Order#locate(scope, matching:)` finds the row a narrowing keeps and places it in its
+  segment; the identity/value/symbolic taxonomy and `AnchorNotFound` belong to the declarations slice.
+  Built (2026-08-05).
 - `Profile` — the cursor-pagination profile's names, error type URIs and content type in one place.
 
 **Documents** (`lib/json_api_kit/documents/`)
@@ -394,6 +398,13 @@ Two costs the end-to-end run found, both now fixed:
   and only the page's two ends are usually named. Lazy again, we are level with Pagy.
 - **A page read from the start of the order needs no probe.** Nothing can lie behind it, so the "is
   there a previous page" query is skipped: 0.98 ms → 0.36 ms on the most common request a listing gets.
+
+Anchors, measured the same way (2026-08-05): locating a row costs 0.17 ms by identity, 0.27 ms by a bound
+on the leading key, and 0.32 ms when it walks into the null tail — one small indexed query per segment
+until it hits. A centred page of 25 either side, **with both links, costs 0.59 ms against 0.98 ms for a
+cursor page with both links**: an anchored read is cheaper because both sides read the direction they
+point in, so neither needs a probe. Entering a listing at a row (page of 50 after it) is 0.60 ms, and a
+centred page inside the null tail 0.59 ms.
 
 Also verified end to end: paging resumed from an arbitrary row's own cursor lands on the row after it
 (what the profile promises for `meta.page.cursor`), a backwards page returns the rows immediately before

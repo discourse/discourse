@@ -10,17 +10,19 @@ module JsonApiKit
     # order they are presented in, and which side the window answers for rather than probes.
     # Each end is its own reading (see Forwards and Backwards).
     class Paginator
+      # Cursors are what a client sends, so this is where they are resolved; a page is read
+      # from a position.
       def self.for(scope, order:, size:, after: nil, before: nil)
         raise ArgumentError, "a page is read from one end or the other" if after && before
-        return Backwards.new(scope, order:, size:, cursor: before) if before
-        Forwards.new(scope, order:, size:, cursor: after)
+        return Backwards.new(scope, order:, size:, from: order.position(before)) if before
+        Forwards.new(scope, order:, size:, from: after && order.position(after))
       end
 
-      def initialize(scope, order:, size:, cursor: nil)
+      def initialize(scope, order:, size:, from: nil)
         @scope = scope
         @order = order
         @size = size
-        @cursor = cursor
+        @from = from
       end
 
       def rows = window.rows
@@ -29,19 +31,20 @@ module JsonApiKit
 
       private
 
-      attr_reader :scope, :order, :size, :cursor
+      attr_reader :scope, :order, :size, :from
 
       # The order as this page walks it: the declared one, or its reverse (see Backwards).
       def reading = order
 
       def window = @window ||= Window.new(scope, order: reading, size:, after: position)
 
-      # The cursor a client sent, resolved against the order this page reads.
-      def position = @position ||= cursor && reading.position(cursor)
+      # Where this page starts, as the order it reads names it: a page read backwards walks the
+      # reversed order, where the same place belongs to a segment of its own.
+      def position = @position ||= from&.in(reading)
 
       # The page continuing the way this one was read, if the order carries on past it.
       def further
-        return if !window.truncated?
+        return unless window.truncated?
         exit_position.to_cursor
       end
 
@@ -49,7 +52,8 @@ module JsonApiKit
       # that way, so it takes a probe to find out — unless this page was read from the very
       # start of the order, where nothing can lie behind it and no query is needed.
       def behind
-        return if cursor.nil? || !probe.truncated?
+        return if from.nil?
+        return unless probe.truncated?
         entry_position.to_cursor
       end
 

@@ -28,7 +28,7 @@ module JsonApiKit
         def decode(raw)
           JSON
             .parse(Base64.urlsafe_decode64(raw.to_s))
-            .tap { raise Invalid, "a cursor holds a list of values" if !it.is_a?(Array) }
+            .tap { raise Invalid, "a cursor holds a list of values" unless it.is_a?(Array) }
         rescue ArgumentError, JSON::ParserError
           raise Invalid, "a cursor is a base64-encoded list of values"
         end
