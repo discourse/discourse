@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array, concat, fn, get } from "@ember/helper";
+import { array, concat, fn, get, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
@@ -15,6 +15,7 @@ import DiscourseURL from "discourse/lib/url";
 import Session from "discourse/models/session";
 import { eq, gt, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
@@ -177,11 +178,19 @@ export default class SiteTrafficDetail extends Component {
   }
 
   get activeFilterEntries() {
-    return Object.entries(this.filters).map(([dimension, value]) => ({
-      dimension,
-      value,
-      label: this.#filterLabel(dimension, value),
-    }));
+    return Object.entries(this.filters).map(([dimension, value]) => {
+      const valueLabel = this.#filterLabel(dimension, value);
+      return {
+        dimension,
+        value,
+        label: i18n("admin.dashboard.site_traffic.details.filter_chip", {
+          dimension: i18n(
+            `admin.dashboard.site_traffic.details.filter_dimensions.${dimension}`
+          ),
+          value: valueLabel,
+        }),
+      };
+    });
   }
 
   get hasFilters() {
@@ -631,23 +640,19 @@ export default class SiteTrafficDetail extends Component {
               }}
             >
               {{#each this.activeFilterEntries as |filter|}}
-                <span
-                  class="site-traffic-detail__filter-chip"
+                <DFilterInput
+                  @value={{filter.label}}
+                  @onClearInput={{fn this.removeFilter filter.dimension}}
+                  @clearLabel={{i18n
+                    "admin.dashboard.site_traffic.details.remove_filter"
+                    filter=filter.label
+                  }}
+                  @icons={{hash left="filter"}}
+                  @containerClass="site-traffic-detail__filter-control"
                   data-test-filter-chip={{filter.dimension}}
-                >
-                  <span>{{filter.label}}</span>
-                  <button
-                    type="button"
-                    class="btn-flat"
-                    aria-label={{i18n
-                      "admin.dashboard.site_traffic.details.remove_filter"
-                      filter=filter.label
-                    }}
-                    {{on "click" (fn this.removeFilter filter.dimension)}}
-                  >
-                    ×
-                  </button>
-                </span>
+                  aria-label={{filter.label}}
+                  readonly
+                />
               {{/each}}
               <DButton
                 class="site-traffic-detail__clear"

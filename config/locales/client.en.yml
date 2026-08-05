@@ -7530,6 +7530,13 @@ en:
             clear: "Clear"
             unavailable: "Unavailable"
             active_filters: "Active Site traffic filters"
+            filter_chip: "%{dimension}: %{value}"
+            filter_dimensions:
+              url: "Top URL"
+              country: "Country"
+              asn: "Network"
+              browser: "Browser"
+              ip: "IP address"
             remove_filter: "Remove %{filter} filter"
             traffic_metrics: "Traffic metrics"
             partial: "Requested %{requested} Available %{available} Analyzed %{analyzed} %{analyzed_count} pageviews analyzed %{cap} event cap Earlier eligible pageviews excluded"

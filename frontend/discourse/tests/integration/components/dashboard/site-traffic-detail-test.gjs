@@ -306,6 +306,13 @@ module(
       );
 
       await click("[data-test-breakdown='pages'] [data-test-breakdown-row]");
+      assert
+        .dom("[data-test-filter-chip='url']")
+        .hasValue("Top URL: /top")
+        .hasAttribute("readonly");
+      assert
+        .dom(".site-traffic-detail__filter-control .filter-input-clear-btn")
+        .hasAttribute("aria-label", "Remove Top URL: /top filter");
       const sensitiveState = Array.from(
         { length: sessionStorage.length },
         (_value, index) => sessionStorage.getItem(sessionStorage.key(index))
