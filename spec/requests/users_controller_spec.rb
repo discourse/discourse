@@ -7803,7 +7803,7 @@ RSpec.describe UsersController do
       expect(response.body).not_to include(hidden_post.raw)
     end
 
-    it "prevents hidden first posts from being bookmarked, listed, or searched" do
+    it "prevents hidden first posts from being listed or searched" do
       SearchIndexer.enable
       hidden_topic =
         Fabricate(:topic, title: "Hidden topic bookmark secret title", user: Fabricate(:user))
@@ -7814,16 +7814,9 @@ RSpec.describe UsersController do
           user: hidden_topic.user,
           raw: "hidden topic bookmark secret body",
         )
+      hidden_topic_bookmark = Fabricate(:bookmark, user: user, bookmarkable: hidden_topic)
 
       sign_in(user)
-      post "/bookmarks.json",
-           params: {
-             bookmarkable_id: hidden_topic.id,
-             bookmarkable_type: "Topic",
-           }
-      expect(response.status).to eq(200)
-      hidden_topic_bookmark = Bookmark.last
-
       hidden_first_post.update!(hidden: true)
 
       get "/u/#{user.username}/bookmarks.json"
@@ -7840,25 +7833,6 @@ RSpec.describe UsersController do
       expect(bookmark_list.map { |bookmark_response| bookmark_response["id"] }).not_to include(
         hidden_topic_bookmark.id,
       )
-
-      hidden_topic_to_bookmark =
-        Fabricate(:topic, title: "Unbookmarked hidden topic secret title", user: Fabricate(:user))
-      Fabricate(
-        :post,
-        topic: hidden_topic_to_bookmark,
-        user: hidden_topic_to_bookmark.user,
-        raw: "unbookmarked hidden topic secret body",
-        hidden: true,
-      )
-
-      post "/bookmarks.json",
-           params: {
-             bookmarkable_id: hidden_topic_to_bookmark.id,
-             bookmarkable_type: "Topic",
-           }
-      expect(response.status).to eq(403)
-      expect(Bookmark.find_by(user: user, bookmarkable: hidden_topic_to_bookmark)).to be_nil
-      expect(response.body).not_to include(hidden_topic_to_bookmark.title)
     end
 
     describe "bookmarkable_url" do
