@@ -167,17 +167,19 @@ after_initialize do
         .where.not(topics: { archetype: Archetype.private_message })
 
     raw_ids = report.filters[:category_ids]
-    if raw_ids.present?
-      parsed_ids = Array(raw_ids.is_a?(String) ? raw_ids.split(",") : raw_ids).map(&:to_i)
-      requested_ids =
+    filter_requested = raw_ids.present?
+    requested_ids =
+      if filter_requested
+        parsed_ids = Array(raw_ids.is_a?(String) ? raw_ids.split(",") : raw_ids).map(&:to_i)
         Category
-          .where(id: parsed_ids)
+          .in_order_of(:id, parsed_ids)
           .limit(DiscourseSolved::MAX_ACCEPTED_SOLUTIONS_CATEGORY_IDS)
           .pluck(:id)
-      report.add_filter("category_ids", type: "category_list", default: requested_ids)
+      end
+    report.add_filter("category_ids", type: "category_list", default: requested_ids)
 
-      accepted_solutions = accepted_solutions.where("topics.category_id" => requested_ids)
-    end
+    accepted_solutions =
+      accepted_solutions.where("topics.category_id" => requested_ids) if filter_requested
 
     accepted_solutions
       .where("discourse_solved_solved_topics.created_at >= ?", report.start_date)
