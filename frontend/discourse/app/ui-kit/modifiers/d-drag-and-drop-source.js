@@ -8,7 +8,7 @@ import Modifier from "ember-modifier";
 
 /**
  * Wraps PDND's `draggable()` with the source-payload normalisation, the
- * `--dragging` class on the source element, and the consumer-onDrop deferral
+ * `--dragging` class on the source element, and the end-of-drag deferral
  * that hides PDND's source-before-target dispatch ordering. Used by the
  * default-exported modifier below, and exported so a consumer can register a
  * drag source imperatively (when a template modifier doesn't fit — e.g. marking
@@ -18,16 +18,16 @@ import Modifier from "ember-modifier";
  * Library-agnostic by design: `@atlaskit/pragmatic-drag-and-drop` is
  * imported only by the ui-kit modifier files.
  *
- * The consumer's `onDrop` callback is deferred to the next task so it
- * fires after the drop event has finished propagating, and is skipped
- * altogether for a drag that ended on no drop target.
+ * The consumer's end-of-drag callbacks are deferred to the next task so they fire
+ * after the drop event has finished propagating: `onDragEnd` for every drag, then
+ * `onDrop` only for one that ended on a drop target.
  *
  * @param {HTMLElement} element - The element to mark draggable.
  * @param {() => Object} getArgsRef - Closure returning the latest args.
  *   PDND callbacks read this on every invocation, so arg changes take
  *   effect without re-registering. Args shape matches the modifier:
  *   `type`, `data`, `getInitialData`, `dragPreview`, `dragPreviewOffset`,
- *   `canDrag`, `onDragStart`, `onDrop`. `dragHandle` is the exception: it is
+ *   `canDrag`, `onDragStart`, `onDragEnd`, `onDrop`. `dragHandle` is the exception: it is
  *   read once, when this registers, so a caller driving this imperatively must
  *   re-register to change it.
  * @returns {() => void} Cleanup function. Caller invokes it once on
@@ -112,19 +112,12 @@ export function registerDragAndDropSource(element, getArgsRef) {
       // depends on them.
       element.classList.remove("--dragging");
 
-      // An abandoned drag — cancelled, or released outside every drop target —
-      // reports here too. Cleanup above still has to happen, but the consumer
-      // hears only about a drop that landed somewhere, so a reorder is not
-      // performed for a drag the user gave up on.
-      if (event.location.current.dropTargets.length === 0) {
-        return;
-      }
-
-      // Snapshot the consumer callback + payload BEFORE deferring.
+      // Snapshot the consumer callbacks + payload BEFORE deferring.
       // The modifier's argsRef can change across re-renders, and by
       // the time the microtask fires a new drag could already have
-      // started — we want the consumer for THIS drag, with the
+      // started — we want the consumers for THIS drag, with the
       // payload PDND captured at THIS drag's start.
+      const consumerOnDragEnd = args.onDragEnd;
       const consumerOnDrop = args.onDrop;
       const sourcePayload = {
         type: args.type,
@@ -132,13 +125,23 @@ export function registerDragAndDropSource(element, getArgsRef) {
         element,
       };
       const location = event.location;
+      // An abandoned drag — cancelled, or released outside every drop target —
+      // arrives here too, and is what separates the two callbacks below.
+      const landed = location.current.dropTargets.length > 0;
 
-      // `next` defers the consumer to the next task, so it fires
+      // `next` defers the consumers to the next task, so they fire
       // after the current drop event finishes propagating —
       // including bubble-phase listeners that may still need to
-      // read shared dispatch state.
+      // read shared dispatch state. One task for both, so their
+      // order is fixed and a drag schedules exactly one.
       next(() => {
-        consumerOnDrop?.({ source: sourcePayload, location });
+        // Lifecycle before dispatch: a consumer that only needs to undo its
+        // drag-time state hears about every drag, while one that performs an
+        // operation is not asked to perform it for a drag the user gave up on.
+        consumerOnDragEnd?.({ source: sourcePayload, location });
+        if (landed) {
+          consumerOnDrop?.({ source: sourcePayload, location });
+        }
       });
     },
   });
@@ -162,7 +165,8 @@ export function registerDragAndDropSource(element, getArgsRef) {
  *   dragPreview=this.previewEl
  *   canDrag=this.canDrag
  *   onDragStart=this.handleDragStart
- *   onDrop=this.handleDragEnd
+ *   onDragEnd=this.clearDragState
+ *   onDrop=this.applyDrop
  * }}>...</li>
  * ```
  *
@@ -191,14 +195,19 @@ export function registerDragAndDropSource(element, getArgsRef) {
  *    blocks the drag from starting.
  *  - `onDragStart` — `({source, input}) => void`. Fires once the
  *    drag is confirmed; receives `{type, data, element}` as `source`.
- *  - `onDrop` — `({source, location}) => void`. Fires AFTER PDND's
- *    full drop dispatch (target callbacks, monitor callbacks, native
- *    bubble listeners). Safe to clear shared dispatch state from this
- *    callback — see the deferral note on `registerDragAndDropSource`.
- *    Only fires for a drop that landed on at least one drop target, so an
- *    abandoned drag does not reach it; the `--dragging` class comes off either
- *    way. Cleanup that must happen for every drag therefore does not belong
- *    here.
+ *  - `onDragEnd` — `({source, location}) => void`. Fires once at the end of
+ *    EVERY drag, whether it landed on a target or the user abandoned it. This
+ *    is where drag-time state gets undone.
+ *  - `onDrop` — `({source, location}) => void`. Fires only when the drag ended
+ *    on at least one drop target, so it is where the operation gets performed:
+ *    an abandoned drag never reaches it. For a drag that lands, both fire —
+ *    `onDragEnd` first — with the same `source` and `location`.
+ *
+ *    Both fire AFTER PDND's full drop dispatch (target callbacks, monitor
+ *    callbacks, native bubble listeners), so it is safe to clear shared dispatch
+ *    state from either — see the deferral note on `registerDragAndDropSource`.
+ *    Inspect `location.current.dropTargets` from `onDragEnd` if a consumer needs
+ *    to branch on the outcome itself.
  *  - `dragHandle` — an element inside this one that a drag must start from,
  *    so the rest stays free for selecting text and operating controls. Pass
  *    the element itself, not a selector; capture its ref with a modifier on

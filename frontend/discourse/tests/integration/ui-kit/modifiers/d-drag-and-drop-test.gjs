@@ -580,6 +580,145 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     );
   });
 
+  module("source end callbacks", function () {
+    test("abandoned drag defers onDragEnd without onDrop", async function (assert) {
+      const calls = [];
+      let dragEndPayload;
+      const onDragEnd = (payload) => {
+        dragEndPayload = payload;
+        calls.push("onDragEnd");
+      };
+      const onDrop = () => calls.push("onDrop");
+
+      await render(
+        <template>
+          <div
+            id="src"
+            {{dDragAndDropSource
+              type="row"
+              data=(hash id=1)
+              onDragEnd=onDragEnd
+              onDrop=onDrop
+            }}
+          >src</div>
+        </template>
+      );
+
+      find("#src").addEventListener("dragend", () =>
+        calls.push("native dragend")
+      );
+
+      const dataTransfer = new DataTransfer();
+      await dragEvent("#src", "dragstart", {
+        dataTransfer,
+        ...centerOf("#src"),
+      });
+      await dragEvent("#src", "dragend", {
+        dataTransfer,
+        ...centerOf("#src"),
+      });
+
+      assert.deepEqual(
+        {
+          calls,
+          sourceData: dragEndPayload?.source.data ?? null,
+          hasSourceElement: dragEndPayload?.source.element === find("#src"),
+          dropTargetCount:
+            dragEndPayload?.location.current.dropTargets.length ?? null,
+        },
+        {
+          calls: ["native dragend", "onDragEnd"],
+          sourceData: { type: "row", id: 1 },
+          hasSourceElement: true,
+          dropTargetCount: 0,
+        },
+        "an abandoned drag defers onDragEnd with its snapshot and does not fire onDrop"
+      );
+    });
+
+    test("landed drag defers onDragEnd before onDrop with the same payload", async function (assert) {
+      const calls = [];
+      const onDragEnd = (payload) => calls.push({ name: "onDragEnd", payload });
+      const onDrop = (payload) => calls.push({ name: "onDrop", payload });
+
+      await render(
+        <template>
+          <div
+            id="src"
+            {{dDragAndDropSource
+              type="row"
+              data=(hash id=1)
+              onDragEnd=onDragEnd
+              onDrop=onDrop
+            }}
+          >src</div>
+          <div id="tgt" {{dDragAndDropTarget accepts="row"}}>target</div>
+        </template>
+      );
+
+      find("#tgt").addEventListener("drop", () =>
+        calls.push({ name: "native drop" })
+      );
+
+      await simulateDrag("#src", "#tgt", {
+        dataTransfer: new DataTransfer(),
+      });
+
+      const dragEndPayload = calls.find(
+        ({ name }) => name === "onDragEnd"
+      )?.payload;
+      const dropPayload = calls.find(({ name }) => name === "onDrop")?.payload;
+
+      assert.deepEqual(
+        {
+          calls: calls.map(({ name }) => name),
+          sharesSource: dragEndPayload?.source === dropPayload?.source,
+          sharesLocation: dragEndPayload?.location === dropPayload?.location,
+          sourceData: dragEndPayload?.source.data ?? null,
+        },
+        {
+          calls: ["native drop", "onDragEnd", "onDrop"],
+          sharesSource: true,
+          sharesLocation: true,
+          sourceData: { type: "row", id: 1 },
+        },
+        "a landed drag defers onDragEnd before onDrop with the same snapshot"
+      );
+    });
+
+    test("landed drag fires onDragEnd once across multiple drop targets", async function (assert) {
+      const dragEnds = [];
+      const onDragEnd = (payload) => dragEnds.push(payload);
+
+      await render(
+        <template>
+          <div
+            id="src"
+            {{dDragAndDropSource type="row" onDragEnd=onDragEnd}}
+          >src</div>
+          <div id="outer" {{dDragAndDropTarget accepts="row"}}>
+            outer
+            <div id="inner" {{dDragAndDropTarget accepts="row"}}>inner</div>
+          </div>
+        </template>
+      );
+
+      await simulateDrag("#src", "#inner", {
+        dataTransfer: new DataTransfer(),
+      });
+
+      assert.deepEqual(
+        {
+          callbackCount: dragEnds.length,
+          dropTargetCount:
+            dragEnds[0]?.location.current.dropTargets.length ?? 0,
+        },
+        { callbackCount: 1, dropTargetCount: 2 },
+        "onDragEnd fires once for a drag that lands on two nested targets"
+      );
+    });
+  });
+
   test("smart row mode resolves position from cursor midpoint", async function (assert) {
     const drops = [];
     const onDrop = (payload) => drops.push(payload);
