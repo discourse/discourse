@@ -920,6 +920,21 @@ class PostsController < ApplicationController
     posts.offset(opts[:offset]).limit(opts[:limit])
   end
 
+  def can_skip_validations?
+    return true if current_user&.staff?
+
+    api_key = request.env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY]
+    return false if api_key.blank?
+
+    ApiKey
+      .active
+      .with_key(api_key)
+      .where(user_id: nil)
+      .left_outer_joins(:api_key_scopes)
+      .where(api_key_scopes: { id: nil })
+      .exists?
+  end
+
   def create_params
     permitted = %i[
       raw
@@ -955,9 +970,11 @@ class PostsController < ApplicationController
     params[:visible] = (params[:unlist_topic].to_s == "false") if params[:unlist_topic]
 
     if is_api?
-      # php seems to be sending this incorrectly, don't fight with it
-      params[:skip_validations] = params[:skip_validations].to_s == "true"
-      permitted << :skip_validations
+      if can_skip_validations?
+        # php seems to be sending this incorrectly, don't fight with it
+        params[:skip_validations] = params[:skip_validations].to_s == "true"
+        permitted << :skip_validations
+      end
 
       params[:import_mode] = params[:import_mode].to_s == "true"
       permitted << :import_mode

@@ -1569,6 +1569,32 @@ RSpec.describe PostsController do
         expect(post_1.topic.user.notifications.count).to eq(1)
       end
 
+      it "validates content for granular user-scoped keys" do
+        api_key =
+          Fabricate(
+            :api_key,
+            user: user,
+            scope_mode: :granular,
+            api_key_scopes: [Fabricate.build(:api_key_scope, resource: "topics", action: "write")],
+          )
+
+        expect do
+          post "/posts.json",
+               params: {
+                 raw: "tiny",
+                 title: "tiny",
+                 skip_validations: true,
+               },
+               headers: {
+                 HTTP_API_USERNAME: user.username,
+                 HTTP_API_KEY: api_key.key,
+               }
+        end.not_to change { Topic.count }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to be_present
+      end
+
       it "allows a topic to be created with an external_id" do
         master_key = Fabricate(:api_key).key
         post "/posts.json",
