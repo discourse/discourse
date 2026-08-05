@@ -24,27 +24,18 @@
   }
 
   &__filters {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+    display: flex;
+    flex-direction: column;
     gap: var(--space-2);
   }
 
-  &__filter-field {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
+  &__filter-control {
+    width: 100%;
     min-width: 0;
-    font-size: var(--font-down-1-rem);
 
-    .d-select {
-      width: 100%;
+    .d-multi-select-trigger__selection-label {
+      max-width: min(24rem, 70vw);
     }
-  }
-
-  &__filter-actions {
-    display: flex;
-    grid-column: 1 / -1;
-    justify-content: flex-end;
   }
 
   &__partial-warning,
@@ -295,16 +286,21 @@
   }
 
   &__row {
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
     min-width: 0;
     gap: var(--space-3);
+    border: 0;
     border-radius: var(--d-border-radius);
     padding: var(--space-2) var(--space-3);
+    background: transparent;
     color: var(--primary);
+    font: inherit;
     text-align: start;
+    text-decoration: none;
 
     > span {
       overflow: hidden;
@@ -319,6 +315,8 @@
   }
 
   button.site-traffic-detail__row {
+    cursor: pointer;
+
     &:focus-visible {
       background: var(--primary-very-low);
       color: var(--tertiary);
@@ -350,10 +348,6 @@
     &__card-header {
       align-items: flex-start;
       flex-direction: column;
-    }
-
-    &__clear {
-      margin-inline-start: 0;
     }
 
     &__chart {

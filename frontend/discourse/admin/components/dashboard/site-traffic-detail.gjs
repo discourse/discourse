@@ -15,7 +15,7 @@ import DiscourseURL from "discourse/lib/url";
 import Session from "discourse/models/session";
 import { eq, gt } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
-import DSelect from "discourse/ui-kit/d-select";
+import DMultiSelect from "discourse/ui-kit/d-multi-select";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
@@ -184,38 +184,41 @@ export default class SiteTrafficDetail extends Component {
     return this.loading && !this.data;
   }
 
-  get filterControls() {
-    return Object.entries(FILTER_SOURCE_DIMENSIONS).map(
-      ([dimension, sourceDimension]) => {
-        const value = this.filters[dimension];
-        const options = (this.dimensions[sourceDimension] || [])
+  get filterOptions() {
+    return Object.entries(FILTER_SOURCE_DIMENSIONS).flatMap(
+      ([dimension, sourceDimension]) =>
+        (this.dimensions[sourceDimension] || [])
           .filter((row) => row.filterable)
           .map((row) => ({
+            id: `${dimension}:${row.value}`,
+            dimension,
             value: row.value,
-            label: this.#rowLabel(sourceDimension, row),
-          }));
-
-        if (value && !options.some((option) => option.value === value)) {
-          options.unshift({
-            value,
-            label: this.#filterLabel(dimension, value),
-          });
-        }
-
-        return {
-          dimension,
-          label: i18n(
-            `admin.dashboard.site_traffic.details.filter_dimensions.${dimension}`
-          ),
-          options,
-          value,
-        };
-      }
+            name: this.#filterDisplayName(
+              dimension,
+              this.#rowLabel(sourceDimension, row)
+            ),
+          }))
     );
   }
 
-  get hasFilters() {
-    return Object.keys(this.filters).length > 0;
+  get filterSelection() {
+    const options = this.filterOptions;
+
+    return Object.entries(this.filters).map(([dimension, value]) => {
+      return (
+        options.find(
+          (option) => option.dimension === dimension && option.value === value
+        ) || {
+          id: `${dimension}:${value}`,
+          dimension,
+          value,
+          name: this.#filterDisplayName(
+            dimension,
+            this.#filterLabel(dimension, value)
+          ),
+        }
+      );
+    });
   }
 
   get pageRows() {
@@ -365,28 +368,21 @@ export default class SiteTrafficDetail extends Component {
   }
 
   @action
-  setFilter(dimension, value) {
-    if (value) {
-      this.applyFilter(dimension, value);
-    } else {
-      this.removeFilter(dimension);
-    }
-  }
-
-  @action
-  removeFilter(dimension) {
-    const filters = { ...this.filters };
-    delete filters[dimension];
-    this.filters = filters;
+  setFilters(selection) {
+    this.filters = Object.fromEntries(
+      selection.map((option) => [option.dimension, option.value])
+    );
     this.#persistFilters();
     this.load();
   }
 
   @action
-  clearFilters() {
-    this.filters = {};
-    this.#persistFilters();
-    this.load();
+  async loadFilterOptions(searchTerm) {
+    const query = searchTerm.trim().toLocaleLowerCase();
+
+    return this.filterOptions.filter((option) =>
+      option.name.toLocaleLowerCase().includes(query)
+    );
   }
 
   @action
@@ -525,6 +521,15 @@ export default class SiteTrafficDetail extends Component {
       );
     }
     return value;
+  }
+
+  #filterDisplayName(dimension, value) {
+    return i18n("admin.dashboard.site_traffic.details.filter_value", {
+      dimension: i18n(
+        `admin.dashboard.site_traffic.details.filter_dimensions.${dimension}`
+      ),
+      value,
+    });
   }
 
   #formatNumber(value) {
@@ -667,36 +672,21 @@ export default class SiteTrafficDetail extends Component {
             "admin.dashboard.site_traffic.details.active_filters"
           }}
         >
-          {{#each this.filterControls as |filter|}}
-            <label class="site-traffic-detail__filter-field">
-              <span>{{filter.label}}</span>
-              <DSelect
-                @value={{filter.value}}
-                @onChange={{fn this.setFilter filter.dimension}}
-                @nonePlaceholder={{i18n
-                  "admin.dashboard.site_traffic.details.all_filter_values"
-                }}
-                data-test-filter-control={{filter.dimension}}
-                disabled={{this.showSkeleton}}
-                as |select|
-              >
-                {{#each filter.options as |option|}}
-                  <select.Option @value={{option.value}}>
-                    {{option.label}}
-                  </select.Option>
-                {{/each}}
-              </DSelect>
-            </label>
-          {{/each}}
-          {{#if this.hasFilters}}
-            <div class="site-traffic-detail__filter-actions">
-              <DButton
-                class="site-traffic-detail__clear"
-                @label="admin.dashboard.site_traffic.details.clear"
-                @action={{this.clearFilters}}
-              />
-            </div>
-          {{/if}}
+          <DMultiSelect
+            @loadFn={{this.loadFilterOptions}}
+            @selection={{this.filterSelection}}
+            @onChange={{this.setFilters}}
+            @label={{i18n
+              "admin.dashboard.site_traffic.details.active_filters"
+            }}
+            @matchTriggerWidth={{true}}
+            @matchTriggerMinWidth={{true}}
+            class="site-traffic-detail__filter-control"
+            data-test-filter-control
+          >
+            <:selection as |option|>{{option.name}}</:selection>
+            <:result as |option|>{{option.name}}</:result>
+          </DMultiSelect>
         </div>
 
         {{#if this.analysisWarning}}
@@ -1032,7 +1022,7 @@ export default class SiteTrafficDetail extends Component {
                       {{#if row.filterable}}
                         <button
                           type="button"
-                          class="btn-flat site-traffic-detail__row"
+                          class="site-traffic-detail__row"
                           data-test-breakdown-row
                           {{on "click" (fn this.applyFilter "url" row.value)}}
                         >
@@ -1128,7 +1118,7 @@ export default class SiteTrafficDetail extends Component {
                       {{#if row.filterable}}
                         <button
                           type="button"
-                          class="btn-flat site-traffic-detail__row"
+                          class="site-traffic-detail__row"
                           data-test-breakdown-row
                           {{on
                             "click"

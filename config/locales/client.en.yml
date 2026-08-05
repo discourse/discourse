@@ -7527,10 +7527,9 @@ en:
             narrow_range: "Choose a narrower date range"
             empty: "No matching pageviews"
             view_more: "View more"
-            clear: "Clear"
             unavailable: "Unavailable"
             active_filters: "Site traffic filters"
-            all_filter_values: "All"
+            filter_value: "%{dimension}: %{value}"
             filter_dimensions:
               url: "Top URL"
               country: "Country"

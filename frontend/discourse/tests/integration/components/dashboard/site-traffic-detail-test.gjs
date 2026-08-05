@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import {
   clearRender,
   click,
+  fillIn,
   render,
   settled,
   triggerKeyEvent,
@@ -142,13 +143,19 @@ module(
       );
 
       assert.dom("[data-test-traffic-loading].db-skeleton").exists();
-      assert.dom("[data-test-filter-control]").exists({ count: 5 });
+      assert
+        .dom("[data-test-filter-control].d-multi-select-trigger")
+        .exists("the full-width filter is visible while data loads");
       assert.dom(".db-skeleton__kpi").exists({ count: 5 });
       assert.dom(".db-skeleton__chart").exists();
       assert.dom(".db-skeleton__report-card").exists({ count: 3 });
 
       request.resolve(response(payload()));
       await settled();
+
+      assert
+        .dom("[data-test-filter-control].d-multi-select-trigger")
+        .exists("the full-width filter is visible after an empty load");
     });
 
     test("posts the closed request contract with CSRF credentials", async function (assert) {
@@ -180,6 +187,102 @@ module(
       });
       assert.dom("[data-test-metric]").includesText("Pageviews");
       assert.dom("[data-test-metric]").includesText("5");
+    });
+
+    test("offers one searchable exact-match control with AND composition", async function (assert) {
+      const requestBodies = [];
+      this.fetchStub.callsFake((_url, options) => {
+        requestBodies.push(JSON.parse(options.body));
+        return Promise.resolve(
+          response(
+            payload({
+              countries: [
+                {
+                  value: "US",
+                  label: "US",
+                  pageviews: 3,
+                  filterable: true,
+                },
+                {
+                  value: "CA",
+                  label: "CA",
+                  pageviews: 2,
+                  filterable: true,
+                },
+              ],
+              browsers: [
+                {
+                  value: "firefox",
+                  label: "firefox",
+                  pageviews: 2,
+                  filterable: true,
+                },
+              ],
+            })
+          )
+        );
+      });
+
+      await render(
+        <template>
+          <SiteTrafficDetail
+            @startDate={{this.state.startDate}}
+            @endDate={{this.state.endDate}}
+            @startDateValue={{this.state.startDate}}
+            @endDateValue={{this.state.endDate}}
+          />
+        </template>
+      );
+
+      assert
+        .dom("[data-test-filter-control].d-multi-select-trigger")
+        .exists({ count: 1 }, "all dimensions share one full-width control");
+
+      await click("[data-test-filter-control]");
+      await fillIn(".d-multi-select__search-input", "Country: United States");
+      assert
+        .dom(".d-multi-select__result")
+        .exists({ count: 1 }, "search narrows the available exact values")
+        .hasText("Country: United States");
+      await click(".d-multi-select__result");
+
+      assert.deepEqual(
+        requestBodies.at(-1).filters,
+        { country: "US" },
+        "the country control applies one exact value"
+      );
+      assert
+        .dom(".d-multi-select-trigger__selected-item")
+        .hasText("Country: United States");
+
+      await fillIn(".d-multi-select__search-input", "Browser: Firefox");
+      await click(".d-multi-select__result");
+
+      assert.deepEqual(
+        requestBodies.at(-1).filters,
+        { country: "US", browser: "firefox" },
+        "different dimensions compose with AND semantics"
+      );
+
+      await fillIn(".d-multi-select__search-input", "Country: Canada");
+      await click(".d-multi-select__result");
+
+      assert.deepEqual(
+        requestBodies.at(-1).filters,
+        { country: "CA", browser: "firefox" },
+        "a new country replaces the existing country value"
+      );
+      assert
+        .dom(".d-multi-select-trigger__selected-item")
+        .exists({ count: 2 }, "one token remains for each active dimension");
+
+      await click(".d-multi-select-trigger__selected-item:nth-child(2)");
+
+      assert.deepEqual(
+        requestBodies.at(-1).filters,
+        { country: "CA" },
+        "token removal removes only its dimension"
+      );
     });
 
     test("keeps the last success and only accepts the newest request", async function (assert) {
@@ -307,7 +410,9 @@ module(
       );
 
       await click("[data-test-breakdown='pages'] [data-test-breakdown-row]");
-      assert.dom("[data-test-filter-control='url']").hasValue("/top");
+      assert
+        .dom(".d-multi-select-trigger__selected-item")
+        .hasText("Top URL: /top", "row clicks update the selected token");
       const sensitiveState = Array.from(
         { length: sessionStorage.length },
         (_value, index) => sessionStorage.getItem(sessionStorage.key(index))
@@ -393,7 +498,7 @@ module(
       );
 
       assert.dom(".site-traffic-detail__card").exists({ count: 3 });
-      assert.dom("[data-test-filter-control]").exists({ count: 5 });
+      assert.dom("[data-test-filter-control]").exists({ count: 1 });
       assert
         .dom(".site-traffic-detail__card > h2.sr-only")
         .exists({ count: 3 });
@@ -424,6 +529,14 @@ module(
       this.fetchStub.resolves(
         response(
           payload({
+            topUrls: [
+              {
+                value: "/top",
+                label: "/top",
+                pageviews: 3,
+                filterable: true,
+              },
+            ],
             entryUrls: [
               {
                 value: "/entry",
@@ -452,6 +565,17 @@ module(
           />
         </template>
       );
+
+      assert
+        .dom("#site-traffic-pages-panel button[data-test-breakdown-row]")
+        .hasClass(
+          "site-traffic-detail__row",
+          "a filterable Top URL uses the shared row box"
+        )
+        .doesNotHaveClass(
+          "btn-flat",
+          "the Top URL row does not inherit standard button typography"
+        );
 
       const topTab = document.querySelector("#site-traffic-tab-top-urls");
       topTab.focus();
