@@ -26,6 +26,7 @@ end
 DiscourseCalendar::Engine.routes.draw do
   get "/discourse-calendar/livestream/zoom/signature" => "livestream#prepare_zoom_signature",
       :format => :json
+  post "/discourse-calendar/livestream/zoom/webhook" => "livestream#zoom_webhook", :format => :json
 end
 
 Discourse::Application.routes.draw do

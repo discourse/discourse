@@ -150,6 +150,9 @@ discourse_calendar:
   livestream_zoom_sdk_secret:
     default: ""
     secret: true
+  livestream_zoom_webhook_secret_token:
+    default: ""
+    secret: true
   livestream_embeddable_chat_allowed_paths:
     type: list
     default: "/t"

@@ -215,6 +215,7 @@ require_relative "lib/discourse_calendar/engine"
 require_relative "lib/discourse_calendar/livestream/topic_extension"
 require_relative "lib/discourse_calendar/livestream/chat_channel_extension"
 require_relative "lib/discourse_calendar/livestream/zoom_url_parser"
+require_relative "lib/discourse_calendar/livestream/zoom_live_meetings"
 
 Dir
   .glob(File.expand_path("../lib/discourse_calendar/site_settings/*.rb", __FILE__))

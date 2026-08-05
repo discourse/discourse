@@ -76,6 +76,7 @@ en:
     livestream_zoom_enabled: "Enable Zoom video embedding for livestream topics."
     livestream_zoom_sdk_key: "Zoom Meeting SDK client ID."
     livestream_zoom_sdk_secret: "Zoom Meeting SDK client secret."
+    livestream_zoom_webhook_secret_token: "Secret token from your Zoom app's event subscription, subscribed to the meeting and webinar started events. Attendees waiting for the host then join automatically, but only for webinars on that Zoom account."
     livestream_embeddable_chat_allowed_paths: "Allowed paths for the embeddable livestream chat."
     livestream_enable_modal_chat_on_mobile: "Show livestream chat in a modal on mobile."
 

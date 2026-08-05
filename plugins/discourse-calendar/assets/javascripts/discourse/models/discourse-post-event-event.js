@@ -66,6 +66,8 @@ export default class DiscoursePostEventEvent {
   @tracked livestreamUrl;
   @tracked livestreamChatChannelId;
   @tracked isZoomLivestream;
+  @tracked livestreamStarted;
+  @tracked livestreamStartIsPushed;
   @tracked canUpdateAttendance;
   @tracked canActOnDiscoursePostEvent;
   @tracked shouldDisplayInvitees;
@@ -117,6 +119,8 @@ export default class DiscoursePostEventEvent {
     this.livestreamUrl = args.livestream_url;
     this.livestreamChatChannelId = args.livestream_chat_channel_id;
     this.isZoomLivestream = args.is_zoom_livestream;
+    this.livestreamStarted = args.livestream_started;
+    this.livestreamStartIsPushed = args.livestream_start_is_pushed;
     this.maxAttendees = args.max_attendees;
     this.atCapacity = args.at_capacity;
     this.recurrence = args.recurrence;
@@ -231,6 +235,8 @@ export default class DiscoursePostEventEvent {
     this.livestreamUrl = this.location || this.url;
     this.livestreamChatChannelId = event.livestreamChatChannelId;
     this.isZoomLivestream = event.isZoomLivestream;
+    this.livestreamStarted = event.livestreamStarted;
+    this.livestreamStartIsPushed = event.livestreamStartIsPushed;
     this.rrule = event.rrule;
     this.maxAttendees = event.maxAttendees;
     this.atCapacity = event.atCapacity;

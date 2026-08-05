@@ -10,13 +10,11 @@ const MIN_VIDEO_HEIGHT = 135;
 const MAX_VIDEO_HEIGHT = 810;
 
 export function computeZoomViewSize(root) {
-  const width = Math.max(
-    MIN_VIDEO_WIDTH,
-    Math.min(
-      MAX_VIDEO_WIDTH,
-      Math.floor(root?.getBoundingClientRect().width || 0)
-    )
-  );
+  const measured =
+    Math.floor(root?.getBoundingClientRect().width || 0) ||
+    Math.floor(root?.parentElement?.getBoundingClientRect().width || 0);
+
+  const width = Math.max(MIN_VIDEO_WIDTH, Math.min(MAX_VIDEO_WIDTH, measured));
 
   const height = Math.max(
     MIN_VIDEO_HEIGHT,

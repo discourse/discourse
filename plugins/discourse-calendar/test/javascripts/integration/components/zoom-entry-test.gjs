@@ -3,9 +3,11 @@ import { clearRender, click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
 import LivestreamZoomEntry from "../../discourse/components/livestream/zoom-entry";
 import ZoomMeetingSession, {
   MAX_RETRY_ATTEMPTS,
+  resumeStorageKey,
   RETRY_DELAY_SECONDS,
 } from "../../discourse/lib/zoom-meeting-session";
 
@@ -20,6 +22,8 @@ const FRAME_SELECTOR = ".discourse-calendar-livestream-zoom-entry__frame";
 const JOIN_BUTTON_SELECTOR =
   ".discourse-calendar-livestream-zoom-entry .btn-primary";
 const LEAVE_BUTTON_SELECTOR = ".zoom-MuiButton-root";
+const STOP_WAITING_SELECTOR =
+  ".discourse-calendar-livestream-zoom-entry__stop-waiting";
 const AUDIO_HINT_SELECTOR =
   ".discourse-calendar-livestream-zoom-entry__audio-hint";
 
@@ -50,6 +54,20 @@ function deferred() {
     reject = rej;
   });
   return { promise, resolve, reject };
+}
+
+// Stands in for the client the real `performJoin` creates, which the stubbed
+// one never does.
+function stubMountedZoomClient(session) {
+  const client = {
+    leaveMeeting: sinon.fake.resolves(),
+    updateVideoOptions: sinon.fake(),
+  };
+
+  session.zoomClient = client;
+  session.sdkInitialized = true;
+
+  return { client };
 }
 
 // Zoom renders its own leave button inside the app root, both on the
@@ -102,6 +120,10 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
   hooks.beforeEach(function () {
     const siteSettings = getOwner(this).lookup("service:site-settings");
     siteSettings.livestream_zoom_enabled = true;
+
+    // Retrying reloads the page, which would take the test run with it.
+    this.reloadPage = sinon.stub(ZoomMeetingSession.prototype, "reloadPage");
+    window.sessionStorage.removeItem(resumeStorageKey(1));
 
     this.eventApi = stubEventApi(getOwner(this));
 
@@ -401,7 +423,26 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
       assert.dom(ERROR_SELECTOR).doesNotExist("does not surface an error");
     });
 
-    test("only RSVPs once when the join is retried", async function (assert) {
+    test("does not RSVP again when the retry resumes", async function (assert) {
+      window.sessionStorage.setItem(
+        resumeStorageKey(1),
+        JSON.stringify({ topicId: 1, attempts: 1, at: Date.now() })
+      );
+      this.event.watchingInvitee = { id: 5, status: "going" };
+
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      assert.true(performJoin.called, "resumes the join after the reload");
+      assert.false(
+        this.eventApi.joinEvent.called,
+        "the RSVP made before the reload still stands"
+      );
+      assert.false(this.eventApi.updateEventAttendance.called);
+    });
+
+    test("only RSVPs once before the retry reloads", async function (assert) {
       const clock = sinon.useFakeTimers({
         toFake: ["setInterval", "clearInterval"],
       });
@@ -415,15 +456,14 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
 
         await click(JOIN_BUTTON_SELECTOR);
 
-        performJoin.resolves();
         clock.tick(RETRY_DELAY_SECONDS * 1000);
         await settled();
 
-        assert.dom(`${FRAME_SELECTOR}.--joined`).exists();
+        assert.true(this.reloadPage.calledOnce, "reloads to retry");
         assert.strictEqual(
           this.eventApi.joinEvent.callCount,
           1,
-          "the retry sees the RSVP it already made"
+          "RSVPs for the attempt that ran here, and no more"
         );
       } finally {
         clock.restore();
@@ -575,10 +615,177 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
       );
       assert.dom(JOIN_BUTTON_SELECTOR).isNotDisabled("can join again");
     });
+
+    test("waits for the host rather than joining early when Zoom will tell us", async function (assert) {
+      performJoin.resolves();
+      this.event.livestreamStartIsPushed = true;
+      this.event.livestreamStarted = false;
+
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+
+      assert.false(
+        performJoin.called,
+        "a join before the host starts would leave the SDK unable to retry"
+      );
+      assert
+        .dom(WAITING_SELECTOR)
+        .hasText(
+          "Waiting for the host to start the webinar. You'll join automatically."
+        );
+      assert.strictEqual(
+        this.eventApi.joinEvent.callCount,
+        1,
+        "still RSVPs while waiting"
+      );
+
+      await publishToMessageBus(
+        `/discourse-calendar/livestream/zoom/${this.event.post.topic.id}`,
+        { live: true }
+      );
+
+      assert.true(performJoin.called, "joins as soon as the host starts");
+      assert.dom(WAITING_SELECTOR).doesNotExist();
+      assert.dom(`${FRAME_SELECTOR}.--joined`).exists();
+    });
+
+    test("retries rather than waiting once the start has been announced", async function (assert) {
+      performJoin.rejects(MEETING_NOT_STARTED);
+      this.event.livestreamStartIsPushed = true;
+      this.event.livestreamStarted = true;
+
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+
+      // Zoom announces a start once, so waiting for a second announcement
+      // would be waiting forever — a webinar started into a practice session
+      // keeps failing 3008 with no further webhook.
+      assert
+        .dom(WAITING_SELECTOR)
+        .hasText(COUNTDOWN_TEXT, "hands the failure to the retry instead");
+      assert
+        .dom(STOP_WAITING_SELECTOR)
+        .exists("and the retry is still cancellable");
+    });
+
+    test("offers a way out of waiting when the start signal never comes", async function (assert) {
+      performJoin.resolves();
+      this.event.livestreamStartIsPushed = true;
+      this.event.livestreamStarted = false;
+
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+
+      assert
+        .dom(JOIN_BUTTON_SELECTOR)
+        .doesNotExist("the join button gives way while waiting");
+
+      // Zoom never reports a start for a webinar on another account, so the
+      // wait cannot be the only way forward.
+      await click(STOP_WAITING_SELECTOR);
+
+      assert.false(performJoin.called, "stopping is not another join attempt");
+      assert.dom(WAITING_SELECTOR).doesNotExist();
+      assert
+        .dom(JOIN_BUTTON_SELECTOR)
+        .isNotDisabled("the user is back in charge");
+
+      // Zoom never reports a start for a webinar on another account, so this
+      // link is the only real way in.
+      assert
+        .dom(".discourse-calendar-livestream-zoom-entry a")
+        .hasText("Open in Zoom");
+    });
+
+    test("joins straight away when the webinar is already live", async function (assert) {
+      performJoin.resolves();
+      this.event.livestreamStartIsPushed = true;
+      this.event.livestreamStarted = true;
+
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+
+      assert.true(performJoin.calledOnce, "does not wait to be told twice");
+      assert.dom(`${FRAME_SELECTOR}.--joined`).exists();
+    });
+
+    test("reloads rather than initializing the SDK twice", async function (assert) {
+      const captured = captureSession();
+      performJoin.resolves();
+
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+
+      // Stands in for the init the stubbed `performJoin` never ran.
+      stubMountedZoomClient(captured.session);
+
+      captured.session.leaveZoom();
+      await settled();
+      await click(JOIN_BUTTON_SELECTOR);
+
+      assert.true(
+        this.reloadPage.calledOnce,
+        "the SDK cannot be initialized twice in one document"
+      );
+      assert.strictEqual(
+        performJoin.callCount,
+        1,
+        "does not try to join again in this document"
+      );
+    });
+
+    test("does not resize the video before the meeting is joined", async function (assert) {
+      const captured = captureSession();
+      const join = deferred();
+      performJoin.returns(join.promise);
+
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+
+      const { client } = stubMountedZoomClient(captured.session);
+
+      // The frame resizes while Zoom is still connecting, and the SDK throws
+      // from inside its own bundle if it is asked to resize that early.
+      captured.session.syncVideoSize();
+
+      assert.false(
+        client.updateVideoOptions.called,
+        "leaves the video alone until the media session is up"
+      );
+
+      join.resolve();
+      await settled();
+      client.updateVideoOptions.resetHistory();
+
+      captured.session.syncVideoSize();
+
+      assert.true(
+        client.updateVideoOptions.calledOnce,
+        "resizes once the meeting is joined"
+      );
+    });
   });
 
   module("when the meeting has not started", function (innerHooks) {
-    let clock, performJoin;
+    let clock, performJoin, reloadPage;
 
     innerHooks.beforeEach(function () {
       stubCapabilities(getOwner(this), { lg: true });
@@ -589,12 +796,19 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
       performJoin = sinon.stub(ZoomMeetingSession.prototype, "performJoin");
       performJoin.rejects(MEETING_NOT_STARTED);
 
+      reloadPage = this.reloadPage;
       sinon.stub(console, "error");
     });
 
     innerHooks.afterEach(function () {
       clock.restore();
+      window.sessionStorage.removeItem(resumeStorageKey(1));
     });
+
+    function resumeState() {
+      const raw = window.sessionStorage.getItem(resumeStorageKey(1));
+      return raw ? JSON.parse(raw) : null;
+    }
 
     async function tick(seconds) {
       clock.tick(seconds * 1000);
@@ -608,7 +822,10 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
 
       await click(JOIN_BUTTON_SELECTOR);
 
-      assert.dom(JOIN_BUTTON_SELECTOR).isDisabled();
+      // A countdown reloads the page on its own, so it always offers a way
+      // out rather than a disabled button.
+      assert.dom(JOIN_BUTTON_SELECTOR).doesNotExist();
+      assert.dom(STOP_WAITING_SELECTOR).exists();
       assert
         .dom(WAITING_SELECTOR)
         .hasText(COUNTDOWN_TEXT, "shows the initial countdown");
@@ -633,68 +850,172 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
       performJoin.resetHistory();
       await tick(RETRY_DELAY_SECONDS - 1);
 
-      assert.true(performJoin.calledOnce, "retries the join at zero");
-      assert
-        .dom(WAITING_SELECTOR)
-        .hasText(
-          COUNTDOWN_TEXT,
-          "restarts the countdown after another failure"
-        );
+      // Zoom's SDK cannot be initialized twice in one document, so the retry
+      // is a fresh page rather than another join here.
+      assert.true(reloadPage.calledOnce, "reloads at zero");
+      assert.false(performJoin.called, "does not join again in this document");
+      assert.deepEqual(
+        { topicId: resumeState().topicId, attempts: resumeState().attempts },
+        { topicId: 1, attempts: 1 },
+        "hands the attempt budget to the next page"
+      );
     });
 
-    test("reports that a retry is in flight", async function (assert) {
+    test("does not put the user back to waiting once they stop waiting", async function (assert) {
+      this.event.livestreamStartIsPushed = true;
+      this.event.livestreamStarted = false;
+
       await render(
         <template><LivestreamZoomEntry @event={{this.event}} /></template>
       );
 
       await click(JOIN_BUTTON_SELECTOR);
+      await click(STOP_WAITING_SELECTOR);
 
-      const retry = deferred();
-      performJoin.returns(retry.promise);
-      await tick(RETRY_DELAY_SECONDS);
-
-      assert
-        .dom(WAITING_SELECTOR)
-        .hasText(
-          "Trying to join the webinar again now...",
-          "swaps the countdown for the in-flight message"
-        );
-
-      retry.resolve();
-      await settled();
-
+      // Stopping has to actually stop: neither the waiting message nor a
+      // countdown, which would just be a different wait.
       assert.dom(WAITING_SELECTOR).doesNotExist();
-      assert.dom(`${FRAME_SELECTOR}.--joined`).exists();
-    });
-
-    test("joins when the meeting starts", async function (assert) {
-      await render(
-        <template><LivestreamZoomEntry @event={{this.event}} /></template>
-      );
-
-      await click(JOIN_BUTTON_SELECTOR);
-
-      performJoin.resolves();
-      await tick(RETRY_DELAY_SECONDS);
-
-      assert.dom(WAITING_SELECTOR).doesNotExist("clears the waiting message");
-      assert.dom(JOIN_BUTTON_SELECTOR).doesNotExist("hides the join button");
+      assert.strictEqual(resumeState(), null, "nothing scheduled");
+      assert.false(reloadPage.called);
       assert
-        .dom(`${FRAME_SELECTOR}.--joined`)
-        .exists("shows the joined Zoom frame");
+        .dom(JOIN_BUTTON_SELECTOR)
+        .isNotDisabled("hands the decision back to the user");
+      assert
+        .dom(".discourse-calendar-livestream-zoom-entry a")
+        .hasText("Open in Zoom", "and offers a way in");
     });
 
-    test("stops retrying on a non-retryable error", async function (assert) {
+    test("joining again after stopping goes back to waiting", async function (assert) {
+      this.event.livestreamStartIsPushed = true;
+      this.event.livestreamStarted = false;
+
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+      await click(STOP_WAITING_SELECTOR);
+      await click(JOIN_BUTTON_SELECTOR);
+
+      assert
+        .dom(WAITING_SELECTOR)
+        .hasText(
+          "Waiting for the host to start the webinar. You'll join automatically.",
+          "clicking join is a fresh decision, not one an earlier stop can refuse"
+        );
+      assert.false(performJoin.called, "and still does not join early");
+    });
+
+    test("holds the reload until the tab is visible again", async function (assert) {
+      const setVisibility = (state) =>
+        Object.defineProperty(document, "visibilityState", {
+          configurable: true,
+          get: () => state,
+        });
+
+      setVisibility("hidden");
+
+      try {
+        await render(
+          <template><LivestreamZoomEntry @event={{this.event}} /></template>
+        );
+
+        await click(JOIN_BUTTON_SELECTOR);
+        await tick(RETRY_DELAY_SECONDS);
+
+        assert.false(
+          reloadPage.called,
+          "reloading a tab nobody is looking at is pure churn"
+        );
+        assert.strictEqual(
+          resumeState(),
+          null,
+          "the marker would be stale by the time anyone came back"
+        );
+
+        setVisibility("visible");
+        document.dispatchEvent(new Event("visibilitychange"));
+        await settled();
+
+        assert.true(reloadPage.calledOnce, "reloads once the user returns");
+        assert.strictEqual(
+          resumeState().attempts,
+          1,
+          "and still spends the attempt it was holding"
+        );
+      } finally {
+        delete document.visibilityState;
+      }
+    });
+
+    test("resumes the join after the reload", async function (assert) {
+      window.sessionStorage.setItem(
+        resumeStorageKey(1),
+        JSON.stringify({ topicId: 1, attempts: 3, at: Date.now() })
+      );
+
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      assert.true(
+        performJoin.called,
+        "joins without waiting for another click"
+      );
+      assert
+        .dom(WAITING_SELECTOR)
+        .hasText(COUNTDOWN_TEXT, "picks the countdown back up");
+      assert.strictEqual(
+        resumeState(),
+        null,
+        "consumes the marker so a later load does not join on its own"
+      );
+    });
+
+    test("does not resume a marker left by another topic", async function (assert) {
+      window.sessionStorage.setItem(
+        resumeStorageKey(1),
+        JSON.stringify({ topicId: 999, attempts: 1, at: Date.now() })
+      );
+
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      assert.false(performJoin.called);
+      assert.dom(JOIN_BUTTON_SELECTOR).isNotDisabled();
+    });
+
+    test("stops the countdown when the event window closes", async function (assert) {
       await render(
         <template><LivestreamZoomEntry @event={{this.event}} /></template>
       );
 
       await click(JOIN_BUTTON_SELECTOR);
 
-      performJoin.rejects(new Error("nope"));
+      this.event.currentlyWithinEventTimeframe = false;
       await tick(RETRY_DELAY_SECONDS);
 
-      assert.dom(WAITING_SELECTOR).doesNotExist("stops the countdown");
+      assert.false(reloadPage.called, "does not reload to retry");
+      assert.strictEqual(resumeState(), null, "leaves nothing to resume");
+      assert
+        .dom(`${FRAME_SELECTOR}.--visible`)
+        .doesNotExist("tears the Zoom frame down");
+      assert.dom(JOIN_BUTTON_SELECTOR).isDisabled();
+    });
+
+    test("does not retry a non-retryable error", async function (assert) {
+      performJoin.rejects(new Error("nope"));
+
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+      await tick(RETRY_DELAY_SECONDS);
+
+      assert.false(reloadPage.called, "only 3008 is worth another page");
+      assert.dom(WAITING_SELECTOR).doesNotExist("never starts a countdown");
       assert.dom(JOIN_BUTTON_SELECTOR).isNotDisabled();
       assert.dom(ERROR_SELECTOR).hasText(ERROR_TEXT);
       assert
@@ -706,21 +1027,38 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
     });
 
     test("gives up once the retry budget is exhausted", async function (assert) {
+      window.sessionStorage.setItem(
+        resumeStorageKey(1),
+        JSON.stringify({
+          topicId: 1,
+          attempts: MAX_RETRY_ATTEMPTS,
+          at: Date.now(),
+        })
+      );
+
       await render(
         <template><LivestreamZoomEntry @event={{this.event}} /></template>
       );
 
-      await click(JOIN_BUTTON_SELECTOR);
+      assert.false(
+        performJoin.called,
+        "a webinar that never starts stops reloading the page"
+      );
+      assert.dom(WAITING_SELECTOR).doesNotExist();
+      assert.dom(JOIN_BUTTON_SELECTOR).isNotDisabled("the user can try again");
+    });
 
-      // The initial click is attempt 1, so MAX_RETRY_ATTEMPTS further attempts
-      // exhaust the budget.
-      for (let i = 0; i < MAX_RETRY_ATTEMPTS; i++) {
-        await tick(RETRY_DELAY_SECONDS);
-      }
+    test("does not resume a stale marker", async function (assert) {
+      window.sessionStorage.setItem(
+        resumeStorageKey(1),
+        JSON.stringify({ topicId: 1, attempts: 1, at: Date.now() - 300_000 })
+      );
 
-      assert.dom(WAITING_SELECTOR).doesNotExist("stops the countdown");
-      assert.dom(JOIN_BUTTON_SELECTOR).isNotDisabled();
-      assert.dom(ERROR_SELECTOR).hasText(ERROR_TEXT);
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      assert.false(performJoin.called);
     });
 
     test("stops retrying when the user leaves Zoom's not-started panel", async function (assert) {

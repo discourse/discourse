@@ -30,8 +30,8 @@ export default modifier((element, [session, observeResize]) => {
   let resizeObserver;
   if (observeResize && window.ResizeObserver) {
     resizeObserver = new ResizeObserver(() => {
-      session.syncVideoSize();
       syncZoomLayout(element);
+      session.syncVideoSize();
     });
     resizeObserver.observe(element);
   }

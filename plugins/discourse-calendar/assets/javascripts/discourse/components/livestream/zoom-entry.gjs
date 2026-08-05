@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -18,17 +19,71 @@ export default class LivestreamZoomEntry extends Component {
   @service capabilities;
   @service currentUser;
   @service discoursePostEventApi;
+  @service messageBus;
   @service siteSettings;
+
+  @tracked waitingForHost = false;
+  @tracked hasStoppedWaiting = false;
+  @tracked startAnnounced = null;
 
   session = new ZoomMeetingSession(getOwner(this), {
     topicId: this.topic.id,
     canJoin: () => this.canJoinNow,
     onBeforeJoinAttempt: this.markAsGoing,
+    onMeetingNotStarted: () => {
+      if (!this.startIsPushed || this.hasStarted) {
+        return false;
+      }
+
+      this.waitingForHost = true;
+      return true;
+    },
   });
+
+  constructor() {
+    super(...arguments);
+    this.messageBus.subscribe(this.liveChannel, this.onLiveStateChange);
+  }
 
   willDestroy() {
     super.willDestroy(...arguments);
+    this.messageBus.unsubscribe(this.liveChannel, this.onLiveStateChange);
     this.session.teardown();
+  }
+
+  get isWaiting() {
+    return (
+      this.waitingForHost ||
+      this.session.isWaitingForStart ||
+      this.session.isRetryingNow
+    );
+  }
+
+  get liveChannel() {
+    return `/discourse-calendar/livestream/zoom/${this.topic.id}`;
+  }
+
+  // Zoom only reports that a webinar started when the site has been configured
+  // to receive it. Without that we cannot tell "not started" from "nobody told
+  // us", so the join is attempted and retried instead.
+  get startIsPushed() {
+    return this.args.event.livestreamStartIsPushed;
+  }
+
+  get hasStarted() {
+    return this.startAnnounced ?? this.args.event.livestreamStarted;
+  }
+
+  @bind
+  onLiveStateChange(data) {
+    this.startAnnounced = data.live;
+
+    if (!data.live || !this.waitingForHost) {
+      return;
+    }
+
+    this.waitingForHost = false;
+    this.session.join();
   }
 
   get topic() {
@@ -56,7 +111,7 @@ export default class LivestreamZoomEntry extends Component {
   }
 
   get showFallbackLink() {
-    return !isEmpty(this.session.errorMessage);
+    return !isEmpty(this.session.errorMessage) || this.hasStoppedWaiting;
   }
 
   get showAudioHint() {
@@ -111,7 +166,28 @@ export default class LivestreamZoomEntry extends Component {
         .send("showCreateAccount");
     }
 
+    // Joining before the host starts leaves Zoom's SDK unable to try again in
+    // this page, so we've got to wait
+    this.hasStoppedWaiting = false;
+    this.session.resumeWaitingForStart();
+
+    if (this.startIsPushed && !this.hasStarted) {
+      this.waitingForHost = true;
+      this.markAsGoing().catch((err) => {
+        // eslint-disable-next-line no-console
+        console.error("Error marking the user as going", err);
+      });
+      return;
+    }
+
     this.session.join();
+  }
+
+  @action
+  stopWaiting() {
+    this.waitingForHost = false;
+    this.hasStoppedWaiting = true;
+    this.session.stopWaitingForStart();
   }
 
   <template>
@@ -119,15 +195,22 @@ export default class LivestreamZoomEntry extends Component {
       <div class="discourse-calendar-livestream-zoom-entry">
         {{#if this.isDesktop}}
           <div class="discourse-calendar-livestream-zoom-entry__actions">
-            {{#unless this.session.isJoined}}
+            {{#if this.isWaiting}}
               <DButton
-                @action={{this.joinZoom}}
-                @label="discourse_calendar.livestream.zoom.join"
-                @icon="video"
-                class="btn-primary"
-                @disabled={{this.joinDisabled}}
+                @action={{this.stopWaiting}}
+                @label="discourse_calendar.livestream.zoom.stop_waiting"
+                @icon="xmark"
+                class="btn-default discourse-calendar-livestream-zoom-entry__stop-waiting"
               />
-            {{/unless}}
+            {{else}}{{#unless this.session.isJoined}}
+                <DButton
+                  @action={{this.joinZoom}}
+                  @label="discourse_calendar.livestream.zoom.join"
+                  @icon="video"
+                  class="btn-primary"
+                  @disabled={{this.joinDisabled}}
+                />
+              {{/unless}}{{/if}}
 
             {{#unless this.canJoinNow}}
               <p class="discourse-calendar-livestream-zoom-entry__waiting">
@@ -135,7 +218,11 @@ export default class LivestreamZoomEntry extends Component {
               </p>
             {{/unless}}
 
-            {{#if this.session.isWaitingForStart}}
+            {{#if this.waitingForHost}}
+              <p class="discourse-calendar-livestream-zoom-entry__waiting">
+                {{i18n "discourse_calendar.livestream.zoom.waiting_for_host"}}
+              </p>
+            {{else if this.session.isWaitingForStart}}
               <p class="discourse-calendar-livestream-zoom-entry__waiting">
                 {{i18n
                   "discourse_calendar.livestream.zoom.not_started_retrying"

@@ -179,5 +179,129 @@ module DiscourseCalendar
         expect(response.status).to eq(404)
       end
     end
+
+    describe "#zoom_webhook" do
+      let(:secret) { "webhook-secret" }
+      let(:meeting_number) { "123456789" }
+
+      before { SiteSetting.livestream_zoom_webhook_secret_token = secret }
+
+      def post_webhook(payload, signature: nil, timestamp: Time.now.to_i, token: secret)
+        body = payload.to_json
+        signature ||= "v0=#{OpenSSL::HMAC.hexdigest("SHA256", token, "v0:#{timestamp}:#{body}")}"
+
+        # `post` is shadowed by the fabricated post.
+        process :post,
+                "/discourse-calendar/livestream/zoom/webhook",
+                params: body,
+                headers: {
+                  "CONTENT_TYPE" => "application/json",
+                  "HTTP_X_ZM_REQUEST_TIMESTAMP" => timestamp.to_s,
+                  "HTTP_X_ZM_SIGNATURE" => signature,
+                }
+      end
+
+      def started_payload
+        { event: "webinar.started", payload: { object: { id: meeting_number } } }
+      end
+
+      it "accepts a correctly signed webinar.started and marks the meeting live" do
+        messages =
+          MessageBus.track_publish("/discourse-calendar/livestream/zoom/#{topic.id}") do
+            post_webhook(started_payload)
+          end
+
+        expect(response.status).to eq(200)
+        expect(Livestream::ZoomLiveMeetings.live?(meeting_number)).to eq(true)
+        expect(messages.map { |m| m.data["live"] || m.data[:live] }).to eq([true])
+      end
+
+      it "restricts the push to participants when the event is in a personal message" do
+        pm = Fabricate(:private_message_topic, user: current_user)
+        pm_post = Fabricate(:post, user: current_user, topic: pm, post_number: 1)
+        Fabricate(
+          :event,
+          post: pm_post,
+          location: "https://us06web.zoom.us/j/#{meeting_number}?pwd=secret",
+          livestream: true,
+        )
+
+        messages =
+          MessageBus.track_publish("/discourse-calendar/livestream/zoom/#{pm.id}") do
+            post_webhook(started_payload)
+          end
+
+        expect(messages.size).to eq(1)
+        # Core's audience helper adds staff on top of the participants.
+        expect(messages.first.user_ids).to include(*pm.allowed_users.pluck(:id))
+        expect(messages.first.group_ids).to be_blank
+      end
+
+      it "clears the live state when the webinar ends" do
+        Livestream::ZoomLiveMeetings.started(meeting_number)
+
+        post_webhook({ event: "webinar.ended", payload: { object: { id: meeting_number } } })
+
+        expect(response.status).to eq(200)
+        expect(Livestream::ZoomLiveMeetings.live?(meeting_number)).to eq(false)
+      end
+
+      it "rejects a payload signed with the wrong token" do
+        post_webhook(started_payload, token: "not-the-secret")
+
+        expect(response.status).to eq(403)
+        expect(Livestream::ZoomLiveMeetings.live?(meeting_number)).to eq(false)
+      end
+
+      it "rejects an unsigned payload" do
+        process :post,
+                "/discourse-calendar/livestream/zoom/webhook",
+                params: started_payload.to_json,
+                headers: {
+                  "CONTENT_TYPE" => "application/json",
+                }
+
+        expect(response.status).to eq(403)
+        expect(Livestream::ZoomLiveMeetings.live?(meeting_number)).to eq(false)
+      end
+
+      it "rejects a replayed payload signed outside the timestamp window" do
+        post_webhook(started_payload, timestamp: 1.hour.ago.to_i)
+
+        expect(response.status).to eq(403)
+        expect(Livestream::ZoomLiveMeetings.live?(meeting_number)).to eq(false)
+      end
+
+      it "answers Zoom's URL validation challenge" do
+        post_webhook({ event: "endpoint.url_validation", payload: { plainToken: "abc123" } })
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["plainToken"]).to eq("abc123")
+        expect(response.parsed_body["encryptedToken"]).to eq(
+          OpenSSL::HMAC.hexdigest("SHA256", secret, "abc123"),
+        )
+      end
+
+      it "is closed off entirely when no secret token is configured" do
+        SiteSetting.livestream_zoom_webhook_secret_token = ""
+
+        post_webhook(started_payload)
+
+        expect(response.status).to eq(404)
+        expect(Livestream::ZoomLiveMeetings.live?(meeting_number)).to eq(false)
+      end
+
+      it "ignores a meeting number no event points at" do
+        messages =
+          MessageBus.track_publish do
+            post_webhook({ event: "webinar.started", payload: { object: { id: "999999" } } })
+          end
+
+        expect(response.status).to eq(200)
+        expect(
+          messages.select { |m| m.channel.start_with?("/discourse-calendar/livestream") },
+        ).to be_empty
+      end
+    end
   end
 end

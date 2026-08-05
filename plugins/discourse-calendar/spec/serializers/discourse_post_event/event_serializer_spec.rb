@@ -182,6 +182,16 @@ describe DiscoursePostEvent::EventSerializer do
 
         expect(json[:event][:is_zoom_livestream]).to eq(false)
       end
+
+      it "omits the Zoom start attributes" do
+        SiteSetting.livestream_zoom_webhook_secret_token = "webhook-secret"
+
+        json =
+          DiscoursePostEvent::EventSerializer.new(livestream_event, scope: Guardian.new).as_json
+
+        expect(json[:event].key?(:livestream_start_is_pushed)).to eq(false)
+        expect(json[:event].key?(:livestream_started)).to eq(false)
+      end
     end
 
     context "when the event is not a livestream" do
@@ -233,6 +243,36 @@ describe DiscoursePostEvent::EventSerializer do
 
         expect(json[:event][:is_zoom_livestream]).to eq(false)
         expect(json[:event].key?(:livestream_onebox)).to eq(true)
+      end
+
+      it "tells the client the start is pushed when a webhook secret is configured" do
+        SiteSetting.livestream_zoom_webhook_secret_token = "webhook-secret"
+
+        json = DiscoursePostEvent::EventSerializer.new(zoom_event, scope: Guardian.new).as_json
+
+        expect(json[:event][:livestream_start_is_pushed]).to eq(true)
+      end
+
+      it "tells the client the start is not pushed, and skips the live state, without a secret" do
+        SiteSetting.livestream_zoom_webhook_secret_token = ""
+
+        json = DiscoursePostEvent::EventSerializer.new(zoom_event, scope: Guardian.new).as_json
+
+        expect(json[:event][:livestream_start_is_pushed]).to eq(false)
+        expect(json[:event].key?(:livestream_started)).to eq(false)
+      end
+
+      it "reflects the live state Zoom reported for the meeting" do
+        SiteSetting.livestream_zoom_webhook_secret_token = "webhook-secret"
+
+        json = DiscoursePostEvent::EventSerializer.new(zoom_event, scope: Guardian.new).as_json
+
+        expect(json[:event][:livestream_started]).to eq(false)
+
+        DiscourseCalendar::Livestream::ZoomLiveMeetings.started("123456789")
+        json = DiscoursePostEvent::EventSerializer.new(zoom_event, scope: Guardian.new).as_json
+
+        expect(json[:event][:livestream_started]).to eq(true)
       end
     end
 

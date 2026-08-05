@@ -36,6 +36,8 @@ module DiscoursePostEvent
     # comes from chat_enabled on the event, we dont need 2 channels per event
     attributes :livestream_chat_channel_id
     attributes :is_zoom_livestream
+    attributes :livestream_started
+    attributes :livestream_start_is_pushed
     attributes :channel
     attributes :rrule
     attributes :max_attendees
@@ -63,11 +65,33 @@ module DiscoursePostEvent
       object.is_zoom_livestream?
     end
 
+    def livestream_started
+      DiscourseCalendar::Livestream::ZoomLiveMeetings.live?(zoom_meeting_number)
+    end
+
+    def include_livestream_started?
+      object.is_zoom_livestream? && livestream_start_is_pushed
+    end
+
+    def livestream_start_is_pushed
+      SiteSetting.livestream_zoom_webhook_secret_token.present?
+    end
+
+    def include_livestream_start_is_pushed?
+      object.is_zoom_livestream?
+    end
+
     # Only ever reads the cache. Fetching here would put a blocking outbound
     # request in the middle of serialization, once per event in a list. The
     # `warm_livestream_onebox` job fills the cache and republishes the post.
     def livestream_onebox
       Oneboxer.cached_onebox(object.livestream_url).presence
+    end
+
+    def zoom_meeting_number
+      DiscourseCalendar::Livestream::ZoomUrlParser.parse(object.livestream_url)&.dig(
+        :meeting_number,
+      )
     end
 
     def livestream_chat_channel_id
