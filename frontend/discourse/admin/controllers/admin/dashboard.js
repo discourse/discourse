@@ -37,10 +37,10 @@ export default class AdminDashboardController extends Controller {
 
   isLoading = false;
   dashboardFetchedAt = null;
+  #metadataLoadingCount = 0;
   _sectionsLoadId = 0;
-  _sectionsLoadingCount = 0;
   _configSaveId = 0;
-  _sectionDataCache = new Map();
+  _sectionRequestIds = new Map();
 
   get safePeriod() {
     if (!VALID_PERIODS.includes(this.range)) {
@@ -78,7 +78,7 @@ export default class AdminDashboardController extends Controller {
     this.range = period;
     this.start_date = null;
     this.end_date = null;
-    this.fetchSections();
+    this.#refreshSectionsForDateRange();
   }
 
   @action
@@ -86,22 +86,54 @@ export default class AdminDashboardController extends Controller {
     this.range = PERIOD_CUSTOM;
     this.start_date = moment(startDate).format("YYYY-MM-DD");
     this.end_date = moment(endDate).format("YYYY-MM-DD");
-    this.fetchSections();
+    this.#refreshSectionsForDateRange();
+  }
+
+  #refreshSectionsForDateRange() {
+    if (!this.loadedSections) {
+      this.fetchSections();
+      return;
+    }
+
+    this._sectionsLoadId += 1;
+    this.loadingSections = false;
+    this.sectionsFetchError = false;
+    this.#markSectionsStaleForDateRange();
+  }
+
+  #markSectionsStaleForDateRange() {
+    if (!this.loadedSections) {
+      return;
+    }
+
+    this.loadedSections = {
+      ...this.loadedSections,
+      period: this.safePeriod,
+      startDate: this.startDate,
+      endDate: this.endDate,
+      sections: this.loadedSections.sections.map((section) => ({
+        ...section,
+        loading: false,
+        error: false,
+        stale: section.loaded,
+      })),
+    };
   }
 
   @action
   toggleSection(id) {
     const previous = this.loadedSections;
     const current = previous?.configuration?.sections ?? [];
-    const wasVisible = current.find((s) => s.id === id)?.visible;
+    const wasVisible = current.find((section) => section.id === id)?.visible;
     const nextConfig = current.map((s) =>
       s.id === id ? { ...s, visible: !s.visible } : s
     );
 
     this.#applyConfigOptimistically(nextConfig);
-
-    const needsRefetch = !wasVisible && !this._sectionDataCache.has(id);
-    this.#persistConfiguration(nextConfig, previous, { needsRefetch });
+    if (wasVisible === false) {
+      this.#updateSection(id, { configurationPending: true });
+    }
+    this.#persistConfiguration(nextConfig, previous);
   }
 
   @action
@@ -112,24 +144,24 @@ export default class AdminDashboardController extends Controller {
     nextConfig.splice(toIndex, 0, moved);
 
     this.#applyConfigOptimistically(nextConfig);
-    this.#persistConfiguration(nextConfig, previous, { needsRefetch: false });
+    this.#persistConfiguration(nextConfig, previous);
   }
 
   #applyConfigOptimistically(nextConfig) {
-    for (const section of this.loadedSections?.sections ?? []) {
-      this._sectionDataCache.set(section.id, section.data);
-    }
+    const sectionsById = new Map(
+      this.loadedSections.sections.map((section) => [section.id, section])
+    );
 
     this.loadedSections = {
       ...this.loadedSections,
-      sections: nextConfig
-        .filter((s) => s.visible && this._sectionDataCache.has(s.id))
-        .map((s) => ({ id: s.id, data: this._sectionDataCache.get(s.id) })),
+      sections: nextConfig.map(
+        ({ id }) => sectionsById.get(id) ?? this.#newSection(id)
+      ),
       configuration: { sections: nextConfig },
     };
   }
 
-  async #persistConfiguration(sections, revertTo, { needsRefetch } = {}) {
+  async #persistConfiguration(sections, revertTo) {
     const saveId = ++this._configSaveId;
 
     try {
@@ -139,8 +171,15 @@ export default class AdminDashboardController extends Controller {
         data: JSON.stringify({ sections }),
       });
 
-      if (needsRefetch && saveId === this._configSaveId) {
-        await this.fetchSections();
+      if (saveId === this._configSaveId) {
+        this.loadedSections = {
+          ...this.loadedSections,
+          sections: this.loadedSections.sections.map((section) =>
+            section.configurationPending
+              ? { ...section, configurationPending: false }
+              : section
+          ),
+        };
       }
     } catch (e) {
       if (saveId === this._configSaveId) {
@@ -159,11 +198,9 @@ export default class AdminDashboardController extends Controller {
 
     this.loadingSections = true;
     this.sectionsFetchError = false;
+    this.#markSectionsStaleForDateRange();
 
-    this._sectionsLoadingCount += 1;
-    if (this._sectionsLoadingCount === 1) {
-      this.loadingSlider.transitionStarted();
-    }
+    this.#startMetadataLoading();
 
     try {
       const model = await AdminDashboard.fetch({
@@ -176,11 +213,23 @@ export default class AdminDashboardController extends Controller {
         return;
       }
 
+      const sectionsById = new Map(
+        this.loadedSections?.sections.map((section) => [section.id, section])
+      );
+      const configurationSectionIds = model.configuration?.sections.map(
+        (section) => section.id
+      );
+      const sectionIds =
+        configurationSectionIds ?? model.sections.map((section) => section.id);
+
       this.loadedSections = {
         period,
         startDate,
         endDate,
-        sections: model.sections,
+        sections: sectionIds.map(
+          (sectionId) =>
+            sectionsById.get(sectionId) ?? this.#newSection(sectionId)
+        ),
         configuration: model.configuration,
       };
       this.problems = model.problems;
@@ -190,15 +239,128 @@ export default class AdminDashboardController extends Controller {
       }
       this.sectionsFetchError = true;
     } finally {
-      this._sectionsLoadingCount = Math.max(this._sectionsLoadingCount - 1, 0);
-      if (this._sectionsLoadingCount === 0) {
-        this.loadingSlider.transitionEnded();
-      }
+      this.#finishMetadataLoading();
 
       if (id === this._sectionsLoadId) {
         this.loadingSections = false;
       }
     }
+  }
+
+  @action
+  async loadSection(sectionId, intersection) {
+    if (intersection && !intersection.isIntersecting) {
+      return;
+    }
+
+    const section = this.loadedSections?.sections.find(
+      (candidate) => candidate.id === sectionId
+    );
+    if (
+      !section ||
+      section.configurationPending ||
+      section.loading ||
+      (section.loaded && !section.stale)
+    ) {
+      return;
+    }
+
+    const loadId = this._sectionsLoadId;
+    const requestId = (this._sectionRequestIds.get(sectionId) ?? 0) + 1;
+    this._sectionRequestIds.set(sectionId, requestId);
+    this.#updateSection(sectionId, { loading: true, error: false });
+
+    try {
+      const result = await AdminDashboard.fetchSection(sectionId, {
+        startDate: this.loadedSections.startDate,
+        endDate: this.loadedSections.endDate,
+        version: this.version,
+      });
+
+      if (
+        loadId !== this._sectionsLoadId ||
+        requestId !== this._sectionRequestIds.get(sectionId)
+      ) {
+        return;
+      }
+
+      const loadedSection = {
+        ...section,
+        data: result.data,
+        loaded: true,
+        loading: false,
+        error: false,
+        stale: false,
+        period: this.loadedSections.period,
+        startDate: this.loadedSections.startDate,
+        endDate: this.loadedSections.endDate,
+      };
+      this.#updateSection(sectionId, loadedSection);
+    } catch {
+      if (
+        loadId === this._sectionsLoadId &&
+        requestId === this._sectionRequestIds.get(sectionId)
+      ) {
+        const failedSection = {
+          ...section,
+          loaded: section.loaded,
+          loading: false,
+          error: true,
+          stale: section.loaded,
+        };
+        this.#updateSection(sectionId, failedSection);
+      }
+    }
+  }
+
+  #startMetadataLoading() {
+    this.#metadataLoadingCount += 1;
+    if (this.#metadataLoadingCount === 1) {
+      this.loadingSlider.transitionStarted();
+    }
+  }
+
+  #finishMetadataLoading() {
+    this.#metadataLoadingCount = Math.max(this.#metadataLoadingCount - 1, 0);
+    if (this.#metadataLoadingCount === 0) {
+      this.loadingSlider.transitionEnded();
+    }
+  }
+
+  @action
+  async refreshSection(sectionId) {
+    this.#updateSection(sectionId, {
+      loading: false,
+      error: false,
+      stale: true,
+    });
+    await this.loadSection(sectionId);
+  }
+
+  @action
+  retrySection(sectionId) {
+    this.#updateSection(sectionId, { error: false });
+    this.loadSection(sectionId);
+  }
+
+  #updateSection(sectionId, attributes) {
+    this.loadedSections = {
+      ...this.loadedSections,
+      sections: this.loadedSections.sections.map((section) =>
+        section.id === sectionId ? { ...section, ...attributes } : section
+      ),
+    };
+  }
+
+  #newSection(id) {
+    return {
+      id,
+      data: null,
+      loaded: false,
+      loading: false,
+      error: false,
+      stale: false,
+    };
   }
 
   get showRedesign() {

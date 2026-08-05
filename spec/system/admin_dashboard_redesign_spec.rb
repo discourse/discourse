@@ -12,6 +12,156 @@ describe "Admin Dashboard Redesign" do
     sign_in(current_user)
   end
 
+  context "with progressive section loading" do
+    it "loads sections only when they enter the viewport" do
+      AdminDashboardSectionConfiguration.update(
+        [
+          { id: "highlights", visible: true },
+          { id: "reports", visible: true },
+          { id: "traffic", visible: true },
+          { id: "engagement", visible: true },
+          { id: "search", visible: true },
+        ],
+        actor: current_user,
+      )
+
+      dashboard
+        .resize_viewport(height: 400)
+        .track_section_requests
+        .track_general_dashboard_requests
+        .visit
+
+      dashboard.wait_for_section_request("highlights")
+
+      expect(dashboard).to have_highlights_content
+      expect(dashboard.general_dashboard_request_count).to eq(0)
+      expect(dashboard.pageview_request_count).to eq(1)
+      expect(dashboard).to have_section_loading("reports")
+      expect(dashboard).to have_section_loading("search")
+      expect(dashboard.requested_section_ids).not_to include("reports", "search")
+
+      dashboard.scroll_to_section("reports").wait_for_section_request("reports")
+      expect(dashboard).to have_no_section_loading("reports")
+
+      dashboard.scroll_to_section("search").wait_for_section_request("search")
+
+      expect(dashboard).to have_no_section_loading("search")
+      expect(dashboard.section_request_count("reports")).to eq(1)
+      expect(dashboard.section_request_count("search")).to eq(1)
+      expect(dashboard.reports_bulk_request_count).to eq(0)
+      expect(dashboard.pageview_request_count).to eq(1)
+    end
+
+    it "keeps loaded content stable through date changes and ignores an older response that finishes last",
+       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      AdminDashboardSectionConfiguration.update(
+        [
+          { id: "traffic", visible: true },
+          { id: "highlights", visible: false },
+          { id: "reports", visible: false },
+          { id: "engagement", visible: false },
+          { id: "search", visible: false },
+        ],
+        actor: current_user,
+      )
+      Fabricate(:logged_in_browser_application_request, date: "2026-04-20", count: 10)
+      Fabricate(:logged_in_browser_application_request, date: "2026-05-12", count: 20)
+
+      dashboard.visit
+      expect(dashboard.site_traffic).to have_headline("30 pageviews in the last 30 days")
+
+      dashboard.hold_next_section_request("traffic").select_preset_while_request_pending(
+        "last_7_days",
+      )
+
+      expect(dashboard).to have_no_section_loading("traffic")
+      expect(dashboard.site_traffic).to have_headline("30 pageviews in the last 30 days")
+
+      dashboard.select_preset_while_request_pending("last_3_months")
+
+      expect(dashboard.site_traffic).to have_headline("30 pageviews in the last 3 months")
+
+      dashboard.release_section_requests("traffic")
+
+      expect(dashboard).to have_active_period("last_3_months")
+      expect(dashboard.site_traffic).to have_headline("30 pageviews in the last 3 months")
+      expect(dashboard.site_traffic).to have_no_headline("20 pageviews in the last 7 days")
+    end
+
+    it "keeps other sections usable when one fails and retries it only when staff ask" do
+      AdminDashboardSectionConfiguration.update(
+        [
+          { id: "highlights", visible: true },
+          { id: "reports", visible: true },
+          { id: "traffic", visible: false },
+          { id: "engagement", visible: false },
+          { id: "search", visible: false },
+        ],
+        actor: current_user,
+      )
+
+      dashboard.fail_next_section_request("highlights").track_section_requests.visit
+
+      expect(dashboard).to have_section_error("highlights")
+      expect(dashboard).to have_no_section_loading("reports")
+      expect(dashboard.section_request_count("highlights")).to eq(1)
+
+      dashboard.scroll_to_section("reports").scroll_to_section("highlights")
+
+      expect(dashboard).to have_section_error("highlights")
+      expect(dashboard.section_request_count("highlights")).to eq(1)
+
+      dashboard.retry_section("highlights").wait_for_section_request_count("highlights", 2)
+
+      expect(dashboard).to have_no_section_error("highlights")
+      expect(dashboard).to have_highlights_content
+
+      dashboard.fail_next_section_request("highlights").select_preset("last_7_days")
+
+      expect(dashboard).to have_section_error("highlights")
+      expect(dashboard).to have_highlights_content
+      expect(dashboard).to have_no_section_loading("highlights")
+      expect(dashboard.section_request_count("highlights")).to eq(3)
+
+      dashboard.retry_section("highlights").wait_for_section_request_count("highlights", 4)
+
+      expect(dashboard).to have_no_section_error("highlights")
+      expect(dashboard).to have_highlights_content
+    end
+
+    it "waits for a newly enabled section to save before loading it after a date change" do
+      AdminDashboardSectionConfiguration.update(
+        [
+          { id: "highlights", visible: true },
+          { id: "reports", visible: false },
+          { id: "traffic", visible: false },
+          { id: "engagement", visible: false },
+          { id: "search", visible: false },
+        ],
+        actor: current_user,
+      )
+
+      dashboard.track_section_requests.visit
+
+      expect(dashboard).to have_no_section("search")
+
+      dashboard
+        .open_configure_menu
+        .hold_configuration_save
+        .toggle_section_while_request_pending("search")
+        .close_configure_menu_while_request_pending
+        .select_preset_while_request_pending("last_7_days")
+        .scroll_to_section_while_request_pending("search")
+
+      expect(dashboard.requested_section_ids).not_to include("search")
+
+      dashboard.release_configuration_saves.wait_for_section_request("search")
+
+      expect(dashboard).to have_no_section_error("search")
+      expect(dashboard).to have_no_section_loading("search")
+    end
+  end
+
   it "allows a user to use a preset range or select a custom range",
      time: Time.utc(2026, 5, 26, 12, 0, 0) do
     dashboard.visit

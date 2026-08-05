@@ -1269,7 +1269,8 @@ class Plugin::Instance
   # dashboard_improvements upcoming change). The matching client-side section
   # component must be registered via the JS `api.registerAdminDashboardSection`.
   #
-  # @param id [String] unique section id. Matched against the persisted
+  # @param id [String] unique section id containing only lowercase ASCII
+  #   letters, digits, and underscores. Matched against the persisted
   #   configuration and the client-side component registry.
   # @param enabled [Proc] optional gate evaluated when assembling the dashboard.
   #   Return false to omit the section (and hide it from the configure menu)
@@ -1283,8 +1284,14 @@ class Plugin::Instance
   #   core sections use. A setting inherits the section's own `enabled` gate
   #   rather than declaring its own.
   # @yield [start_date:, end_date:, current_user:] block returning the section's
-  #   data hash, run inside the dashboard's parallel section loader.
+  #   data hash for the section's dedicated dashboard request.
   def register_admin_dashboard_section(id:, enabled: nil, settings: nil, &loader)
+    section_id = id.to_s
+    if !section_id.match?(/\A[a-z0-9_]+\z/)
+      raise ArgumentError,
+            "Dashboard section id must contain only lowercase ASCII letters, digits, and underscores"
+    end
+
     settings&.each_value do |setting|
       if !setting.respond_to?(:permit) || !setting.respond_to?(:validate)
         raise ArgumentError, "#{setting} must respond to .permit and .validate"
@@ -1292,7 +1299,12 @@ class Plugin::Instance
     end
 
     DiscoursePluginRegistry.register_admin_dashboard_section(
-      { id: id.to_s, enabled: enabled, settings: settings&.transform_keys(&:to_s), loader: loader },
+      {
+        id: section_id,
+        enabled: enabled,
+        settings: settings&.transform_keys(&:to_s),
+        loader: loader,
+      },
       self,
     )
   end
