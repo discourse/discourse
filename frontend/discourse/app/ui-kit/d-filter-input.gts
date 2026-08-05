@@ -21,8 +21,6 @@ interface DFilterInputSignature {
     /** Handler fired when the clear button is clicked. */
     onClearInput?: (event: Event) => void;
 
-    clearLabel?: string;
-
     /** Icons displayed inside the input. */
     icons?: {
       /** ID of the icon displayed at the start of the input. */
@@ -104,8 +102,8 @@ export default class DFilterInput extends Component<DFilterInputSignature> {
         <DButton
           @icon="xmark"
           @action={{this.onClearInput}}
-          @title={{if @clearLabel @clearLabel (i18n "filter_input.clear")}}
-          aria-label={{if @clearLabel @clearLabel (i18n "filter_input.clear")}}
+          @title={{i18n "filter_input.clear"}}
+          aria-label={{i18n "filter_input.clear"}}
           class="btn-small btn-transparent filter-input-clear-btn"
         />
       {{/if}}

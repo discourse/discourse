@@ -98,23 +98,6 @@ module("Integration | ui-kit | DFilterInput", function (hooks) {
     assert.true(this.called);
   });
 
-  test("custom clear label", async function (assert) {
-    await render(
-      <template>
-        <DFilterInput
-          @clearLabel="Remove country filter"
-          @onClearInput={{this.clearAction}}
-          @value="Country: United States"
-        />
-      </template>
-    );
-
-    assert
-      .dom(".filter-input-clear-btn")
-      .hasAttribute("aria-label", "Remove country filter")
-      .hasAttribute("title", "Remove country filter");
-  });
-
   test("Input focus after clear", async function (assert) {
     this.set("clearAction", () => {});
     await render(

@@ -142,6 +142,7 @@ module(
       );
 
       assert.dom("[data-test-traffic-loading].db-skeleton").exists();
+      assert.dom("[data-test-filter-control]").exists({ count: 5 });
       assert.dom(".db-skeleton__kpi").exists({ count: 5 });
       assert.dom(".db-skeleton__chart").exists();
       assert.dom(".db-skeleton__report-card").exists({ count: 3 });
@@ -306,13 +307,7 @@ module(
       );
 
       await click("[data-test-breakdown='pages'] [data-test-breakdown-row]");
-      assert
-        .dom("[data-test-filter-chip='url']")
-        .hasValue("Top URL: /top")
-        .hasAttribute("readonly");
-      assert
-        .dom(".site-traffic-detail__filter-control .filter-input-clear-btn")
-        .hasAttribute("aria-label", "Remove Top URL: /top filter");
+      assert.dom("[data-test-filter-control='url']").hasValue("/top");
       const sensitiveState = Array.from(
         { length: sessionStorage.length },
         (_value, index) => sessionStorage.getItem(sessionStorage.key(index))
@@ -398,6 +393,7 @@ module(
       );
 
       assert.dom(".site-traffic-detail__card").exists({ count: 3 });
+      assert.dom("[data-test-filter-control]").exists({ count: 5 });
       assert
         .dom(".site-traffic-detail__card > h2.sr-only")
         .exists({ count: 3 });
@@ -435,6 +431,12 @@ module(
                 pageviews: 2,
                 filterable: false,
               },
+              {
+                value: null,
+                label: "Private or sensitive page",
+                pageviews: 1,
+                filterable: false,
+              },
             ],
           })
         )
@@ -468,6 +470,12 @@ module(
       assert
         .dom("#site-traffic-pages-panel [data-test-breakdown-row]")
         .includesText("/entry");
+      assert
+        .dom("#site-traffic-pages-panel a[data-test-breakdown-row]")
+        .hasAttribute("href", "/entry");
+      assert
+        .dom("#site-traffic-pages-panel span[data-test-breakdown-row]")
+        .includesText("Private or sensitive page");
     });
   }
 );

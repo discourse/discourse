@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array, concat, fn, get, hash } from "@ember/helper";
+import { array, concat, fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
@@ -13,9 +13,9 @@ import { formatMinutesSeconds } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import Session from "discourse/models/session";
-import { eq, gt, or } from "discourse/truth-helpers";
+import { eq, gt } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
-import DFilterInput from "discourse/ui-kit/d-filter-input";
+import DSelect from "discourse/ui-kit/d-select";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
@@ -47,6 +47,13 @@ const FILTER_DIMENSIONS = {
   networks: "asn",
   browsers: "browser",
   ip_addresses: "ip",
+};
+const FILTER_SOURCE_DIMENSIONS = {
+  url: "top_urls",
+  country: "countries",
+  asn: "networks",
+  browser: "browsers",
+  ip: "ip_addresses",
 };
 const SERIES = [
   {
@@ -177,24 +184,38 @@ export default class SiteTrafficDetail extends Component {
     return this.loading && !this.data;
   }
 
-  get activeFilterEntries() {
-    return Object.entries(this.filters).map(([dimension, value]) => {
-      const valueLabel = this.#filterLabel(dimension, value);
-      return {
-        dimension,
-        value,
-        label: i18n("admin.dashboard.site_traffic.details.filter_chip", {
-          dimension: i18n(
+  get filterControls() {
+    return Object.entries(FILTER_SOURCE_DIMENSIONS).map(
+      ([dimension, sourceDimension]) => {
+        const value = this.filters[dimension];
+        const options = (this.dimensions[sourceDimension] || [])
+          .filter((row) => row.filterable)
+          .map((row) => ({
+            value: row.value,
+            label: this.#rowLabel(sourceDimension, row),
+          }));
+
+        if (value && !options.some((option) => option.value === value)) {
+          options.unshift({
+            value,
+            label: this.#filterLabel(dimension, value),
+          });
+        }
+
+        return {
+          dimension,
+          label: i18n(
             `admin.dashboard.site_traffic.details.filter_dimensions.${dimension}`
           ),
-          value: valueLabel,
-        }),
-      };
-    });
+          options,
+          value,
+        };
+      }
+    );
   }
 
   get hasFilters() {
-    return this.activeFilterEntries.length > 0;
+    return Object.keys(this.filters).length > 0;
   }
 
   get pageRows() {
@@ -341,6 +362,15 @@ export default class SiteTrafficDetail extends Component {
     this.filters = { ...this.filters, [dimension]: value };
     this.#persistFilters();
     this.load();
+  }
+
+  @action
+  setFilter(dimension, value) {
+    if (value) {
+      this.applyFilter(dimension, value);
+    } else {
+      this.removeFilter(dimension);
+    }
   }
 
   @action
@@ -630,30 +660,36 @@ export default class SiteTrafficDetail extends Component {
       data-test-site-traffic-detail
       {{didUpdate this.datesChanged @startDate @endDate}}
     >
-      {{#if (or this.hasFilters this.analysisWarning)}}
-        <div class="site-traffic-detail__sticky-controls">
+      <div class="site-traffic-detail__sticky-controls">
+        <div
+          class="site-traffic-detail__filters"
+          aria-label={{i18n
+            "admin.dashboard.site_traffic.details.active_filters"
+          }}
+        >
+          {{#each this.filterControls as |filter|}}
+            <label class="site-traffic-detail__filter-field">
+              <span>{{filter.label}}</span>
+              <DSelect
+                @value={{filter.value}}
+                @onChange={{fn this.setFilter filter.dimension}}
+                @nonePlaceholder={{i18n
+                  "admin.dashboard.site_traffic.details.all_filter_values"
+                }}
+                data-test-filter-control={{filter.dimension}}
+                disabled={{this.showSkeleton}}
+                as |select|
+              >
+                {{#each filter.options as |option|}}
+                  <select.Option @value={{option.value}}>
+                    {{option.label}}
+                  </select.Option>
+                {{/each}}
+              </DSelect>
+            </label>
+          {{/each}}
           {{#if this.hasFilters}}
-            <div
-              class="site-traffic-detail__active-filters"
-              aria-label={{i18n
-                "admin.dashboard.site_traffic.details.active_filters"
-              }}
-            >
-              {{#each this.activeFilterEntries as |filter|}}
-                <DFilterInput
-                  @value={{filter.label}}
-                  @onClearInput={{fn this.removeFilter filter.dimension}}
-                  @clearLabel={{i18n
-                    "admin.dashboard.site_traffic.details.remove_filter"
-                    filter=filter.label
-                  }}
-                  @icons={{hash left="filter"}}
-                  @containerClass="site-traffic-detail__filter-control"
-                  data-test-filter-chip={{filter.dimension}}
-                  aria-label={{filter.label}}
-                  readonly
-                />
-              {{/each}}
+            <div class="site-traffic-detail__filter-actions">
               <DButton
                 class="site-traffic-detail__clear"
                 @label="admin.dashboard.site_traffic.details.clear"
@@ -661,25 +697,25 @@ export default class SiteTrafficDetail extends Component {
               />
             </div>
           {{/if}}
-
-          {{#if this.analysisWarning}}
-            <p
-              class="site-traffic-detail__partial-warning"
-              data-test-analysis-warning
-              role="status"
-            >
-              {{i18n
-                "admin.dashboard.site_traffic.details.partial"
-                requested=this.requestedRange
-                available=this.availableRange
-                analyzed=this.analyzedRange
-                analyzed_count=this.formattedAnalyzedCount
-                cap=this.formattedEventCap
-              }}
-            </p>
-          {{/if}}
         </div>
-      {{/if}}
+
+        {{#if this.analysisWarning}}
+          <p
+            class="site-traffic-detail__partial-warning"
+            data-test-analysis-warning
+            role="status"
+          >
+            {{i18n
+              "admin.dashboard.site_traffic.details.partial"
+              requested=this.requestedRange
+              available=this.availableRange
+              analyzed=this.analyzedRange
+              analyzed_count=this.formattedAnalyzedCount
+              cap=this.formattedEventCap
+            }}
+          </p>
+        {{/if}}
+      </div>
 
       {{#if this.showSkeleton}}
         <div
@@ -1003,6 +1039,16 @@ export default class SiteTrafficDetail extends Component {
                           <span>{{row.displayLabel}}</span>
                           <strong>{{row.formattedPageviews}}</strong>
                         </button>
+                      {{else if row.value}}
+                        <a
+                          href={{getURL row.value}}
+                          class="site-traffic-detail__row"
+                          data-auto-route="true"
+                          data-test-breakdown-row
+                        >
+                          <span>{{row.displayLabel}}</span>
+                          <strong>{{row.formattedPageviews}}</strong>
+                        </a>
                       {{else}}
                         <span
                           class="site-traffic-detail__row"

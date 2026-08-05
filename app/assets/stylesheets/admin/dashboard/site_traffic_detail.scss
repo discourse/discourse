@@ -23,30 +23,28 @@
     background: var(--secondary);
   }
 
-  &__active-filters {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+  &__filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
     gap: var(--space-2);
   }
 
-  &__filter-control {
-    flex: 1 1 15rem;
-    width: 100%;
-    max-width: 100%;
+  &__filter-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+    font-size: var(--font-down-1-rem);
 
-    @include viewport.from(sm) {
-      max-width: 22rem;
-    }
-
-    .filter-input {
-      cursor: default;
-      text-overflow: ellipsis;
+    .d-select {
+      width: 100%;
     }
   }
 
-  &__clear {
-    margin-inline-start: auto;
+  &__filter-actions {
+    display: flex;
+    grid-column: 1 / -1;
+    justify-content: flex-end;
   }
 
   &__partial-warning,
