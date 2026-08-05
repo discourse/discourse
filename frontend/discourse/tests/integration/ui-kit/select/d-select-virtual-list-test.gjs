@@ -700,9 +700,6 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       </template>
     );
     await openSelect();
-    await waitUntil(
-      () => findAll(OPTION_SELECTOR).length === GROUPED_ITEMS.length
-    );
 
     assert
       .dom(".d-combobox__group-labels")
@@ -802,7 +799,6 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       </template>
     );
     await openSelect();
-    await waitUntil(() => findAll(OPTION_SELECTOR).length > 0);
 
     // The reveal centers the held last-of-First option, so the window covers the
     // boundary: First options via the pinned/revealed rows, Second options below.
@@ -837,9 +833,6 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       </template>
     );
     await openSelect();
-    await waitUntil(
-      () => findAll(OPTION_SELECTOR).length === GROUPED_ITEMS.length
-    );
 
     assert
       .dom(`${GROUP_HEADER_SELECTOR} .fancy-header`)
@@ -889,7 +882,6 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       </template>
     );
     await openSelect();
-    await waitUntil(() => findAll(OPTION_SELECTOR).length > 0);
 
     assert
       .dom(".d-combobox__group-labels")
@@ -908,9 +900,6 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       <template><DSelect @items={{GROUPED_ITEMS}} @groupBy="group" /></template>
     );
     await openSelect();
-    await waitUntil(
-      () => findAll(OPTION_SELECTOR).length === GROUPED_ITEMS.length
-    );
 
     assert
       .dom(`${LISTBOX_SELECTOR} > .d-combobox__divider`)
@@ -951,9 +940,6 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       </template>
     );
     await openSelect();
-    await waitUntil(
-      () => findAll(OPTION_SELECTOR).length === GROUPED_ITEMS.length
-    );
 
     assert
       .dom(GROUP_HEADER_SELECTOR)
