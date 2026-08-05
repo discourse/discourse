@@ -399,7 +399,7 @@ export default class DiscoursePostEvent extends Component {
               {{/if}}
 
               {{#unless @hideLivestreamVideo}}
-                <Livestream @event={{event}} />
+                <Livestream @event={{event}} @post={{@post}} />
               {{/unless}}
             </PluginOutlet>
           {{/if}}
