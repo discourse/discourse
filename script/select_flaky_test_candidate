@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "json"
+require "optparse"
+require_relative "../lib/flaky_test_candidate"
+
+options = { minimum_occurrences: 5, minimum_workflow_runs: 3 }
+
+OptionParser
+  .new do |parser|
+    parser.on("--reports-dir DIRECTORY") { |value| options[:reports_dir] = value }
+    parser.on("--minimum-occurrences COUNT", Integer) do |value|
+      options[:minimum_occurrences] = value
+    end
+    parser.on("--minimum-workflow-runs COUNT", Integer) do |value|
+      options[:minimum_workflow_runs] = value
+    end
+  end
+  .parse!
+
+abort "--reports-dir is required" if options[:reports_dir].nil?
+
+puts JSON.pretty_generate(FlakyTestCandidate.call(**options))
