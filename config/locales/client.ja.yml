@@ -1482,7 +1482,6 @@ ja:
       external_links_in_new_tab: "すべての外部リンクを新しいタブで開く"
       enable_quoting: "選択したテキストを引用して返信する"
       enable_smart_lists: "コンポーザーに書き込む際にスマートリストを有効にする"
-      enable_defer: "トピックを未読としてマークする"
       enable_markdown_monospace_font: "作成ツールの Markdown モードで等幅フォントを使用する"
       automatically_translate: "ほかの言語で書かれたトピックや投稿を自動翻訳する"
       content_languages:

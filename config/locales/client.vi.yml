@@ -1480,7 +1480,6 @@ vi:
       external_links_in_new_tab: "Mở liên kết ngoài trong thẻ mới"
       enable_quoting: "Bật trả lời trích dẫn khi tô đen văn bản"
       enable_smart_lists: "Bật danh sách thông minh khi soạn thảo"
-      enable_defer: "Bật đánh dấu chủ đề là chưa đọc"
       enable_markdown_monospace_font: "Dùng phông chữ monospace trong chế độ Markdown"
       experimental_sidebar:
         enable: "Bật thanh bên"

@@ -906,6 +906,10 @@ pl_PL:
           attributes:
             linkable_type:
               invalid: "nie jest prawidłowy"
+        sidebar_section:
+          attributes:
+            base:
+              too_many_sidebar_urls: "Dozwolona jest maksymalna liczba rekordów: %{limit} . Zamiast tego otrzymano %{count} rekordów."
         api_key:
           base:
             at_least_one_granular_scope: "co najmniej jeden musi być wybrany"
@@ -2705,7 +2709,6 @@ pl_PL:
     default_other_external_links_in_new_tab: "Otwórz linki zewnętrzne w nowej karcie domyślnie."
     default_other_enable_quoting: "Domyślnie zezwól na podświetlone cytowane odpowiedzi."
     default_other_enable_smart_lists: "Domyślnie włącz inteligentne listy podczas pisania w kompozytorze."
-    default_other_enable_defer: "Domyślnie włącz funkcję odroczenia tematu."
     default_other_enable_markdown_monospace_font: "Domyślnie używaj czcionki monospace w trybie Markdown kompozytora."
     default_other_dynamic_favicon: "Domyślnie pokazuj liczbę nowych/zaktualizowanych tematów w ikonie przeglądarki."
     default_other_skip_new_user_tips: "Pomiń wskazówki i odznaki dotyczące wprowadzania nowych użytkowników."

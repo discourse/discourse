@@ -2502,7 +2502,6 @@ de:
     default_other_external_links_in_new_tab: "Öffne externe Links standardmäßig in einer neuen Registerkarte."
     default_other_enable_quoting: "Aktiviere standardmäßig die Zitat-Antwort-Funktion für hervorgehobenen Text."
     default_other_enable_smart_lists: "Bei der Eingabe im Composer standardmäßig intelligente Listen aktivieren."
-    default_other_enable_defer: "Aktiviere standardmäßig die Funktion zum Aufschieben von Themen."
     default_other_enable_markdown_monospace_font: "Verwende standardmäßig eine Monospace-Schriftart im Markdown-Modus des Editors."
     default_other_dynamic_favicon: "Zeige standardmäßig die Anzahl der neuen/aktualisierten Themen im Browser-Symbol an."
     default_other_skip_new_user_tips: "Überspringe Tipps und Abzeichen für das Onboarding neuer Benutzer."

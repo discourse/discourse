@@ -1350,7 +1350,6 @@ zh_TW:
       external_links_in_new_tab: "在新分頁中開啟所有外部連結"
       enable_quoting: "允許引用劃記文字"
       enable_smart_lists: "在編輯器中編寫時啟用智慧型列表"
-      enable_defer: " 將主題標記為未讀"
       automatically_translate: "自動翻譯以其他語言撰寫的主題和貼文"
       content_languages:
         understood: "我能理解的語言"

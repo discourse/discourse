@@ -2420,7 +2420,6 @@ sk:
     default_other_external_links_in_new_tab: "Štandardne otvárať externé odkazy v novej záložke."
     default_other_enable_quoting: "Štandardne na vybraný text zapnúť citované odpovede."
     default_other_enable_smart_lists: "Predvolene povoľte inteligentné zoznamy pri zadávaní v kompozitore."
-    default_other_enable_defer: "Povolenie funkcie odloženia témy v predvolenom nastavení."
     default_other_dynamic_favicon: "Štandardne zobraziť počet nových/aktualizovaných tém v ikone prehliadača."
     default_other_skip_new_user_tips: "Preskočiť tipy a odznaky na registráciu nového používateľa."
     default_other_like_notification_frequency: "Nastavuje frekvenciu, s akou používatelia dostávajú oznámenia o lajkoch v predvolenom nastavení. Používatelia, ktorí si neupravili nastavenia upozornení, sa budú riadiť týmto predvoleným správaním."

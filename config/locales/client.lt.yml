@@ -1416,7 +1416,6 @@ lt:
       external_links_in_new_tab: "Atidaryti visas pridėtas nuorodas naujame lange"
       enable_quoting: "Įjungti citatų atsakymus pabrėžtam tekstui"
       enable_smart_lists: "Įgalinti išmaniuosius sąrašus rašant kompozitoriuje"
-      enable_defer: "Įgalinti temų žymėjimą kaip neskaitytų"
       experimental_sidebar:
         enable: "Įjungti šoninę juostą"
         options: "Nustatymai"

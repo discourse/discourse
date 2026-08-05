@@ -2235,7 +2235,6 @@ ja:
     default_other_external_links_in_new_tab: "デフォルトで、外部リンクを新しいタブで開く。"
     default_other_enable_quoting: "デフォルトで、選択したテキストを引用して返信する。"
     default_other_enable_smart_lists: "コンポーザーに入力する際にスマートリストをデフォルトで有効にする。"
-    default_other_enable_defer: "デフォルトで、トピックの延期機能を有効にする。"
     default_other_enable_markdown_monospace_font: "作成ツールの Markdown モードでは、デフォルトで等幅フォントを使用する。"
     default_other_dynamic_favicon: "デフォルトで、ブラウザアイコンに新規/更新されたトピック数を表示する。"
     default_other_skip_new_user_tips: "新規ユーザーオンボーディングのヒントとバッジをスキップします。"
