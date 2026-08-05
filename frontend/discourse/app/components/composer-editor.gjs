@@ -126,6 +126,10 @@ export default class ComposerEditor extends Component {
     });
   }
 
+  get composerRedesign() {
+    return this.siteSettings.enable_composer_redesign;
+  }
+
   willDestroyElement() {
     super.willDestroyElement(...arguments);
     this.uppyComposerUpload.teardown();
@@ -1005,6 +1009,7 @@ export default class ComposerEditor extends Component {
         @onSetup={{this.setupEditor}}
         @disableSubmit={{this.composer.disableSubmit}}
         @toolbarPortalTarget={{this.toolbarPortalTarget}}
+        @renderYieldAboveContainer={{this.composerRedesign}}
         {{didInsert this._composerEditorInitEditor}}
         {{willDestroy this._composerEditorDestroyEditor}}
         {{didInsert this._composerEditorInitPreview}}

@@ -20,6 +20,14 @@
       height: auto;
       min-height: 0;
     }
+
+    // structure properly when :where is gone
+    &.hide-preview .d-editor-container {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "fields"
+        "editor";
+    }
   }
 
   .grippie {
@@ -129,7 +137,7 @@
     }
 
     .category-chooser.is-expanded,
-    .mini-tag-chooser.is-expanded.,
+    .mini-tag-chooser.is-expanded,
     .user-chooser.is-expanded {
       .select-kit-header {
         outline: 0 !important;
@@ -153,6 +161,10 @@
     }
   }
 
+  .showing-ai-suggestions #reply-title {
+    padding-right: calc(var(--space-7) + 27px);
+  }
+
   .title-input {
     #reply-title {
       border: 0;
@@ -160,7 +172,7 @@
       font-size: var(--font-up-4);
       font-weight: bold;
       margin-bottom: 0 !important;
-      padding-bottom: var(--space-2) !important;
+      padding-bottom: var(--space-3) !important;
 
       &::placeholder {
         color: var(--primary-medium);
@@ -183,7 +195,7 @@
     }
   }
 
-  .d-editor-textarea-wrapper {
+  #reply-control .d-editor-textarea-wrapper {
     --composer-slide-easing: cubic-bezier(0.2, 0, 0, 1);
     border: 0;
 
@@ -237,10 +249,38 @@
     display: none;
   }
 
+  #reply-control .d-editor-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: min-content 1fr;
+    grid-template-areas:
+      "fields fields"
+      "editor preview";
+
+    &.--rich-editor-enabled {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "fields"
+        "editor";
+    }
+
+    .composer-fields {
+      grid-area: fields;
+    }
+
+    .d-editor-textarea-column {
+      grid-area: editor;
+    }
+
+    .d-editor-preview-wrapper {
+      grid-area: preview;
+    }
+  }
+
   // clean up selector once the uc- body class is no longer in the way
   .show-preview .d-editor-container.--markdown-editor-enabled {
     .d-editor-textarea-column {
-      border-right: 1px solid var(--primary-low);
+      border-right: none;
     }
 
     .d-editor-preview-wrapper {
