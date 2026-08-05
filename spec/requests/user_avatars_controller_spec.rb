@@ -290,6 +290,25 @@ RSpec.describe UserAvatarsController do
       upload.destroy
     end
 
+    it "serves vips avatar URLs after the setting is disabled" do
+      user = Fabricate(:user)
+      SiteSetting.avatar_sizes = "45"
+
+      image = file_from_fixtures("cropped.png")
+      upload = UploadCreator.new(image, "image.png").create_for(user.id)
+      user.update_columns(uploaded_avatar_id: upload.id)
+
+      SiteSetting.use_vips_for_image_processing = true
+      avatar_version = UserAvatar.version(upload.id)
+      SiteSetting.use_vips_for_image_processing = false
+
+      get "/user_avatar/default/#{user.username}/45/#{avatar_version}.png"
+
+      expect(response.status).to eq(200)
+
+      upload.destroy
+    end
+
     it "serves a correct last modified for render blank" do
       freeze_time
 
