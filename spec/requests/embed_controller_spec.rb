@@ -214,6 +214,39 @@ RSpec.describe EmbedController do
         expect(response.status).to eq(200)
       end
 
+      it "does not share an anonymous cached response between referers" do
+        global_setting :anon_cache_store_threshold, 1
+        Middleware::AnonymousCache.enable_anon_cache
+        Middleware::AnonymousCache.clear_all_cache!
+
+        attacker_referer = "https://origin-a.example/page"
+        victim_referer = "https://origin-b.example/page"
+
+        get "/embed/comments",
+            params: {
+              topic_id: topic.id,
+            },
+            headers: {
+              "REFERER" => attacker_referer,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.headers["X-Discourse-Cached"]).to eq("store")
+        expect(response.body).to include("data-referer=\"#{attacker_referer}\"")
+
+        get "/embed/comments",
+            params: {
+              topic_id: topic.id,
+            },
+            headers: {
+              "REFERER" => victim_referer,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.headers["X-Discourse-Cached"]).to eq("store")
+        expect(response.body).to include("data-referer=\"#{victim_referer}\"")
+      end
+
       fab!(:attacker, :trust_level_1)
       fab!(:existing_post) { Fabricate(:post, topic: topic) }
 

@@ -2,6 +2,7 @@
 
 require "mobile_detection"
 require "crawler_detection"
+require "digest"
 require "guardian"
 require "http_language_parser"
 require "http_user_agent_encoder"
@@ -165,8 +166,13 @@ module Middleware
         @cache_key =
           +"ANON_CACHE_#{is_xhr}_#{@env["HTTP_ACCEPT"]}_#{@env[Rack::RACK_URL_SCHEME]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}"
 
+        @cache_key << key_embed_referer if @request.path.start_with?("/embed/")
         @cache_key << AnonymousCache.build_cache_key(self)
         @cache_key
+      end
+
+      def key_embed_referer
+        "|er=#{Digest::SHA256.hexdigest(@env["HTTP_REFERER"].to_s)}"
       end
 
       def key_cache_theme_ids
