@@ -3,6 +3,7 @@ import { assert } from "@ember/debug";
 import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { schedule } from "@ember/runloop";
 import { countryFlag } from "discourse/admin/lib/format-country";
 import getURL from "discourse/lib/get-url";
 import { and, eq, gt, or } from "discourse/truth-helpers";
@@ -64,8 +65,13 @@ export default class SiteTrafficBreakdownCard extends Component {
     }
 
     event.preventDefault();
-    this.args.onSelectTab(this.args.tabs[nextIndex].key);
-    event.currentTarget.parentElement.children[nextIndex]?.focus();
+    const nextTabKey = this.args.tabs[nextIndex].key;
+    this.args.onSelectTab(nextTabKey);
+    schedule("afterRender", () => {
+      document
+        .getElementById(`site-traffic-${this.args.cardKey}-tab-${nextTabKey}`)
+        ?.focus();
+    });
   }
 
   <template>

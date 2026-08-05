@@ -1435,6 +1435,33 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
       )
     end
 
+    it "keeps blank session events out of entry and session metrics" do
+      freeze_time(Time.zone.local(2026, 7, 31, 12))
+      Fabricate(
+        :browser_pageview_event,
+        url: "/about",
+        session_id: "",
+        normalized_referrer: "external.example/path",
+        normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
+        created_at: 1.hour.ago,
+      )
+      request =
+        described_class::Request.parse(
+          ActionController::Parameters.new(
+            start_date: 1.day.ago.to_date.iso8601,
+            end_date: Date.current.iso8601,
+            filters: {
+            },
+          ),
+        )
+
+      result = described_class.new(request: request).call
+
+      expect(result.fetch(:summary)).to include(pageviews: 1, distinct_sessions: 0)
+      expect(result.dig(:dimensions, :entry_urls)).to eq([])
+      expect(result.dig(:dimensions, :traffic_sources)).to eq([])
+    end
+
     it "uses first observed capped events for entry data and discloses a mid-session cap boundary" do
       freeze_time(Time.zone.local(2026, 7, 31, 12))
       SiteSetting.admin_site_traffic_event_cap = 1
@@ -1588,17 +1615,17 @@ RSpec.describe AdminDashboardSiteTrafficDetail do
 
   describe ".event_cap" do
     it "uses the benchmark-derived finite hard maximum as the default" do
-      expect(SiteSetting.admin_site_traffic_event_cap).to eq(1_000_000)
-      expect(described_class.event_cap).to eq(1_000_000)
+      expect(SiteSetting.admin_site_traffic_event_cap).to eq(750_000)
+      expect(described_class.event_cap).to eq(750_000)
       expect(
         SiteSetting.type_supervisor.type_hash(:admin_site_traffic_event_cap).fetch(:max),
-      ).to eq(1_000_000)
+      ).to eq(750_000)
 
-      SiteSetting.admin_site_traffic_event_cap = 1_000_000
-      expect(described_class.event_cap).to eq(1_000_000)
+      SiteSetting.admin_site_traffic_event_cap = 750_000
+      expect(described_class.event_cap).to eq(750_000)
 
-      SiteSetting.stubs(:admin_site_traffic_event_cap).returns(1_000_001)
-      expect(described_class.event_cap).to eq(1_000_000)
+      SiteSetting.stubs(:admin_site_traffic_event_cap).returns(750_001)
+      expect(described_class.event_cap).to eq(750_000)
     end
   end
 

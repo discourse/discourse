@@ -603,7 +603,7 @@ module(
         </template>
       );
 
-      await click("[data-test-breakdown='pages'] [data-test-breakdown-row]");
+      await click("[data-test-breakdown='pages'] [data-test-url-filter-area]");
       assert
         .dom("#topic-query-filter-input")
         .hasValue("top_url:/top", "row clicks update the filter input");
@@ -901,15 +901,20 @@ module(
       );
 
       assert
-        .dom("#site-traffic-pages-panel button[data-test-breakdown-row]")
+        .dom("#site-traffic-pages-panel span[data-test-breakdown-row]")
         .hasClass(
           "site-traffic-detail__row",
           "a filterable Top URL uses the shared row box"
         )
-        .doesNotHaveClass(
-          "btn-flat",
-          "the Top URL row does not inherit standard button typography"
-        );
+        .includesText("/top");
+      assert
+        .dom("#site-traffic-pages-panel [data-test-url-link]")
+        .hasAttribute("href", "/top");
+      assert
+        .dom(
+          "#site-traffic-pages-panel [data-test-url-link] + [data-test-url-filter-area]"
+        )
+        .hasAttribute("aria-label", "Filter by /top");
 
       const topTab = find("#site-traffic-pages-tab-top_urls");
       topTab.focus();
@@ -930,24 +935,28 @@ module(
           "the shared panel points to the active Entry URLs tab"
         );
       assert
-        .dom("#site-traffic-pages-panel [data-test-breakdown-row]")
+        .dom("#site-traffic-pages-panel span[data-test-breakdown-row]")
         .hasClass(
           "site-traffic-detail__row",
           "the shared row shell remains after switching tabs"
         )
         .includesText("/entry");
       assert
-        .dom("#site-traffic-pages-panel [data-test-entry-url-link]")
+        .dom("#site-traffic-pages-panel [data-test-url-link]")
         .hasAttribute("href", "/entry");
       assert
-        .dom("#site-traffic-pages-panel [data-test-entry-url-filter]")
-        .hasClass("site-traffic-detail__row-filter")
+        .dom(
+          "#site-traffic-pages-panel [data-test-url-link] + [data-test-url-filter-area]"
+        )
+        .hasClass("site-traffic-detail__row-filter-area")
         .hasAttribute("aria-label", "Filter by /entry");
       assert
-        .dom("#site-traffic-pages-panel span[data-test-breakdown-row]")
+        .dom(
+          "#site-traffic-pages-panel li:last-child span[data-test-breakdown-row]"
+        )
         .includesText("Private or sensitive page");
 
-      await click("#site-traffic-pages-panel [data-test-entry-url-filter]");
+      await click("#site-traffic-pages-panel [data-test-url-filter-area]");
       assert
         .dom("#topic-query-filter-input")
         .hasValue(

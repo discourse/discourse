@@ -167,7 +167,9 @@ export default class FilterNavigationMenu extends Component {
   async selectItem(item) {
     if (item.inputValue !== undefined) {
       if (item.submitOnSelect) {
-        await this.dMenuInstance?.close();
+        this.suggestions = [];
+        this.trackedMenuListData.suggestions = [];
+        await this.dMenuInstance?.close({ focusTrigger: false });
         await this.updateInput(item.inputValue, true);
       } else {
         await this.updateInput(item.inputValue, false);
@@ -233,7 +235,7 @@ export default class FilterNavigationMenu extends Component {
   @action
   async openFilterMenu() {
     if (this.dMenuInstance) {
-      this.dMenuInstance.show();
+      await this.fetchSuggestions();
       return;
     }
 

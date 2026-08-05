@@ -53,6 +53,7 @@ export default class DInlineFloat extends Component<DInlineFloatSignature> {
           class={{dConcatClass
             "fk-d-menu-modal"
             (concat @instance.options.identifier "-content")
+            @instance.options.contentClass
           }}
         >
           {{#if @instance.options.component}}

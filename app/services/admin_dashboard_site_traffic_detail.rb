@@ -2,7 +2,7 @@
 
 class AdminDashboardSiteTrafficDetail
   EVENT_CAP_SETTING = :admin_site_traffic_event_cap
-  MAX_EVENT_CAP = 1_000_000
+  MAX_EVENT_CAP = 750_000
   MAX_DATE_RANGE_DAYS = 365
   MAX_FILTER_LENGTH = 255
   CACHE_TTL = 1.minute
@@ -666,24 +666,28 @@ class AdminDashboardSiteTrafficDetail
         END AS traffic_source
         FROM normalized_events
         INNER JOIN safe_paths USING (normalized_path)
-      ), entries AS MATERIALIZED (
-        SELECT DISTINCT ON (session_id) * FROM classified
-        WHERE session_id IS NOT NULL AND session_id <> ''
-        ORDER BY session_id, created_at ASC, id ASC
       ), facet_events AS MATERIALIZED (
-        SELECT classified.*, entries.safe_path AS entry_path,
-          entries.traffic_source AS entry_source
-        FROM classified
-        LEFT JOIN entries ON entries.id = classified.id
-      ), session_rollup AS (
-        SELECT session_id, MIN(created_at) AS first_observed_at, COUNT(*) AS pageviews FROM classified
-        WHERE session_id IS NOT NULL AND session_id <> '' GROUP BY session_id
+        SELECT session_events.*,
+          CASE WHEN session_id IS NOT NULL AND session_id <> '' AND session_event_number = 1 THEN safe_path END AS entry_path,
+          CASE WHEN session_id IS NOT NULL AND session_id <> '' AND session_event_number = 1 THEN traffic_source END AS entry_source
+        FROM (
+          SELECT classified.*,
+            ROW_NUMBER() OVER session_window AS session_event_number,
+            MIN(created_at) OVER session_window AS session_first_observed_at,
+            COUNT(*) OVER session_window AS session_pageviews
+          FROM classified
+          WINDOW session_window AS (
+            PARTITION BY session_id ORDER BY created_at ASC, id ASC
+            ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+          )
+        ) session_events
       ), session_stats AS (
-        SELECT COUNT(*) FILTER (WHERE session_rollup.first_observed_at < :session_started_before)::bigint AS distinct_sessions,
-          COUNT(*) FILTER (WHERE session_rollup.first_observed_at < :session_started_before AND session_rollup.pageviews = 1 AND COALESCE(engagement.engaged_seconds, 0) < 10)::bigint AS bounced_sessions,
-          COALESCE(SUM(engagement.engaged_seconds) FILTER (WHERE session_rollup.first_observed_at < :session_started_before), 0)::bigint AS engaged_seconds_total,
-          COUNT(*) FILTER (WHERE session_rollup.first_observed_at >= :session_started_before)::bigint AS excluded_unsettled_session_count
-        FROM session_rollup LEFT JOIN browser_pageview_session_engagements engagement USING (session_id)
+        SELECT COUNT(*) FILTER (WHERE session_first_observed_at < :session_started_before)::bigint AS distinct_sessions,
+          COUNT(*) FILTER (WHERE session_first_observed_at < :session_started_before AND session_pageviews = 1 AND COALESCE(engagement.engaged_seconds, 0) < 10)::bigint AS bounced_sessions,
+          COALESCE(SUM(engagement.engaged_seconds) FILTER (WHERE session_first_observed_at < :session_started_before), 0)::bigint AS engaged_seconds_total,
+          COUNT(*) FILTER (WHERE session_first_observed_at >= :session_started_before)::bigint AS excluded_unsettled_session_count
+        FROM facet_events LEFT JOIN browser_pageview_session_engagements engagement USING (session_id)
+        WHERE session_id IS NOT NULL AND session_id <> '' AND session_event_number = 1
       ), daily AS MATERIALIZED (
         SELECT created_at::date AS date, COUNT(*)::bigint AS pageviews,
           COUNT(*) FILTER (WHERE (score IS NULL OR score <= #{BOT_SCORE_THRESHOLD}) AND user_id IS NOT NULL)::bigint AS logged_in_human_pageviews,

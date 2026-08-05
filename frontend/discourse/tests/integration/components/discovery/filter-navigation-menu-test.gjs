@@ -184,6 +184,7 @@ module(
           <FilterNavigationMenu
             @getSuggestions={{this.getSuggestions}}
             @initialInputValue={{this.query}}
+            @menuClass="filter-navigation-menu-test"
             @onChange={{this.update}}
           />
           <DMenus />
@@ -195,6 +196,12 @@ module(
       assert
         .dom(".filter-navigation__tip-name")
         .hasText("Result for ", "the custom provider supplies suggestions");
+      assert
+        .dom(".fk-d-menu")
+        .hasClass(
+          "filter-navigation-menu-test",
+          "the service menu applies its custom content class"
+        );
 
       await triggerEvent(".filter-navigation__tip-item", "click");
 
@@ -209,6 +216,16 @@ module(
       assert
         .dom(".topic-query-filter__clear-btn")
         .hasAttribute("title", "Clear filter", "the clear button has a title");
+
+      await triggerEvent("#topic-query-filter-input", "blur");
+      await triggerEvent("#topic-query-filter-input", "focus");
+
+      assert
+        .dom(".filter-navigation__tip-name")
+        .hasText(
+          "Result for Selected value",
+          "refocusing fetches and displays fresh suggestions"
+        );
     });
 
     test("escape hides suggestions", async function (assert) {

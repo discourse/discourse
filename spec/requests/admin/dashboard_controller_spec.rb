@@ -650,11 +650,7 @@ RSpec.describe Admin::DashboardController do
 
   describe "#traffic" do
     let(:request_body) do
-      {
-        start_date: 2.days.ago.to_date.iso8601,
-        end_date: Date.current.iso8601,
-        filters: {},
-      }
+      { start_date: 2.days.ago.to_date.iso8601, end_date: Date.current.iso8601, filters: {} }
     end
 
     before do
@@ -693,21 +689,23 @@ RSpec.describe Admin::DashboardController do
         "analyzed_end_at",
       )
       expect(response.parsed_body).to include(
-        "analysis" => include(
-          "requested_start_date" => request_body[:start_date],
-          "requested_end_date" => request_body[:end_date],
-          "analyzed_event_count" => 1,
-          "event_cap" => 1_000_000,
-          "retention_truncated" => false,
-          "cap_truncated" => false,
-          "capture_scope" => "retained_browser_pageviews",
-          "crawler_classification" => "likely_crawler_score",
-          "crawler_scoring_state" => "disabled",
-          "crawler_score_threshold" => CrawlerScorer::BOT_SCORE_THRESHOLD,
-          "unscored_event_count" => 1,
-          "session_scope" => "capped_base_unfiltered",
-        ),
-        "filters" => {},
+        "analysis" =>
+          include(
+            "requested_start_date" => request_body[:start_date],
+            "requested_end_date" => request_body[:end_date],
+            "analyzed_event_count" => 1,
+            "event_cap" => 750_000,
+            "retention_truncated" => false,
+            "cap_truncated" => false,
+            "capture_scope" => "retained_browser_pageviews",
+            "crawler_classification" => "likely_crawler_score",
+            "crawler_scoring_state" => "disabled",
+            "crawler_score_threshold" => CrawlerScorer::BOT_SCORE_THRESHOLD,
+            "unscored_event_count" => 1,
+            "session_scope" => "capped_base_unfiltered",
+          ),
+        "filters" => {
+        },
         "summary" => {
           "pageviews" => 1,
           "logged_in_human_pageviews" => 0,
@@ -804,25 +802,18 @@ RSpec.describe Admin::DashboardController do
           topic_id: private_message.id,
           created_at: 1.day.ago,
         ),
-        Fabricate(
-          :browser_pageview_event,
-          url: "/admin/users/list/active",
-          created_at: 1.day.ago,
-        ),
+        Fabricate(:browser_pageview_event, url: "/admin/users/list/active", created_at: 1.day.ago),
         Fabricate(
           :browser_pageview_event,
           url: "/session/email-login/reset-secret",
           created_at: 1.day.ago,
         ),
-        Fabricate(
-          :browser_pageview_event,
-          url: "/invites/private-token",
-          created_at: 1.day.ago,
-        ),
+        Fabricate(:browser_pageview_event, url: "/invites/private-token", created_at: 1.day.ago),
         Fabricate(
           :browser_pageview_event,
           url: "/<img src=x onerror=alert(1)>?token=private\r\ninjected=true",
-          referrer: "https://user:password@evil.example:8443/high-entropy-0123456789abcdef?q=secret",
+          referrer:
+            "https://user:password@evil.example:8443/high-entropy-0123456789abcdef?q=secret",
           normalized_referrer: "evil.example/high-entropy-0123456789abcdef?q=secret",
           normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
           created_at: 1.day.ago,

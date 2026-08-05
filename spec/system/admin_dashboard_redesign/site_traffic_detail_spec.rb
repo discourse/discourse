@@ -23,7 +23,7 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
         analyzed_start_at: "2026-05-01T10:00:00Z",
         analyzed_end_at: "2026-05-12T10:00:00Z",
         analyzed_event_count: 5,
-        event_cap: 1_000_000,
+        event_cap: 750_000,
         retention_truncated: false,
         cap_truncated: false,
         capture_scope: "retained_browser_pageviews",
@@ -104,7 +104,7 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
         ip_address: "198.51.100.2",
         user_agent: chrome,
         session_id: "crawler-session",
-        score: CrawlerScorer::BOT_SCORE_THRESHOLD,
+        score: CrawlerScorer::BOT_SCORE_THRESHOLD + 1,
         created_at: "2026-05-11 10:00:00",
       },
       {
@@ -150,19 +150,26 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
     )
     expect(traffic).to have_crawler_scope_disclosure
     expect(traffic).to have_session_scope_disclosure
-    expect(traffic).to have_breakdown_row(title: "Top URLs", label: "/top", pageviews: "2")
-    expect(traffic).to have_breakdown_row(title: "Entry URLs", label: "/latest", pageviews: "1")
+    expect(traffic).to have_breakdown_row(title: "Pages", label: "/top", pageviews: "2")
     expect(traffic).to have_breakdown_row(
       title: "Referrers",
       label: "search.example",
       pageviews: "1",
     )
+
+    traffic.select_breakdown_tab(title: "Pages", tab: "Entry URLs")
+
+    expect(traffic).to have_breakdown_row(title: "Entry URLs", label: "/latest", pageviews: "1")
+
+    traffic.select_breakdown_tab(title: "Pages", tab: "Top URLs")
+
     expect(traffic).to have_no_partial_data_warning
     expect(traffic).to have_no_generic_analysis_copy
 
+    traffic.select_breakdown_tab(title: "Referrers", tab: "Countries")
     traffic.click_breakdown_row(title: "Countries", label: "United States")
 
-    expect(traffic).to have_filter_chip(dimension: "country", value: "United States")
+    expect(traffic).to have_filter_input(value: "country:US")
     expect(traffic).to have_pageview_summary(
       total: "3",
       logged_in_human: "3",
@@ -175,9 +182,9 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
       average_duration: "20s",
     )
 
-    traffic.click_breakdown_row(title: "Top URLs", label: "/top")
+    traffic.click_breakdown_row(title: "Pages", label: "/top")
 
-    expect(traffic).to have_filter_chip(dimension: "url", value: "/top")
+    expect(traffic).to have_filter_input(value: "top_url:/top country:US")
     expect(traffic).to have_pageview_summary(
       total: "2",
       logged_in_human: "2",
@@ -190,31 +197,32 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
       average_duration: "20s",
     )
 
+    traffic.select_breakdown_tab(title: "Visitor dimensions", tab: "IP addresses")
     history_length = traffic.browser_history_length
     traffic.click_breakdown_row(title: "IP addresses", label: "192.0.2.1")
 
-    expect(traffic).to have_filter_chip(dimension: "ip", value: "192.0.2.1")
+    expect(traffic).to have_filter_input(value: "top_url:/top country:US ip:192.0.2.1")
     expect(traffic.browser_history_length).to eq(history_length)
 
     page.refresh
 
-    expect(traffic).to have_filter_chip(dimension: "ip", value: "192.0.2.1")
+    expect(traffic).to have_filter_input(value: "top_url:/top country:US ip:192.0.2.1")
     expect(traffic).to have_no_sensitive_url_state("192.0.2.1", "/top")
 
-    traffic.remove_filter("ip")
-    traffic.click_breakdown_row(title: "Countries", label: "Canada")
+    traffic.clear_filters
 
-    expect(traffic).to have_filter_chip(dimension: "country", value: "Canada")
-    expect(traffic).to have_no_filter_chip("ip")
+    expect(traffic).to have_filter_input(value: "")
     expect(traffic).to have_pageview_summary(
-      total: "0",
-      logged_in_human: "0",
-      anonymous_human: "0",
-      likely_crawler: "0",
+      total: "5",
+      logged_in_human: "3",
+      anonymous_human: "1",
+      likely_crawler: "1",
     )
 
-    traffic.remove_filter("url")
+    traffic.select_breakdown_tab(title: "Referrers", tab: "Countries")
+    traffic.click_breakdown_row(title: "Countries", label: "Canada")
 
+    expect(traffic).to have_filter_input(value: "country:CA")
     expect(traffic).to have_pageview_summary(
       total: "1",
       logged_in_human: "0",
@@ -224,7 +232,7 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
 
     page.refresh
 
-    expect(traffic).to have_filter_chip(dimension: "country", value: "Canada")
+    expect(traffic).to have_filter_input(value: "country:CA")
     expect(traffic).to have_safe_shareable_state(country: "CA", browser: nil)
     expect(traffic).to have_no_sensitive_url_state("192.0.2.1", "/top")
   end
@@ -307,6 +315,7 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
         likely_crawler: "0",
       )
 
+      traffic.select_breakdown_tab(title: "Referrers", tab: "Countries")
       traffic.click_breakdown_row(title: "Countries", label: "United States")
       expect(traffic).to have_loading_state_with_previous_total(total: "5")
 
@@ -383,7 +392,7 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
             analyzed_start_at: nil,
             analyzed_end_at: nil,
             analyzed_event_count: 0,
-            event_cap: 1_000_000,
+            event_cap: 750_000,
             retention_truncated: false,
             cap_truncated: false,
             capture_scope: "retained_browser_pageviews",
