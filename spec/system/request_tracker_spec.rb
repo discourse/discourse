@@ -80,9 +80,8 @@ describe "Request tracking" do
       expect(event_2[:session_id]).to eq(event[:session_id])
     end
 
-    it "tracks a crawler visit correctly" do
-      # Can't change playwright user agent for now... so change site settings to make Discourse detect chrome as a crawler
-      SiteSetting.crawler_user_agents += "|chrome"
+    it "counts an automated browser visit as crawler traffic" do
+      SiteSetting.crawler_automation_user_agents += "|Chrome"
 
       events =
         DiscourseEvent.track_events(:browser_pageview) do
