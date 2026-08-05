@@ -447,8 +447,9 @@ export default class SiteTrafficDetail extends Component {
     if (!this.suggestionDimension) {
       return {
         suggestions: Object.keys(FILTER_SOURCE_DIMENSIONS).map((dimension) => ({
-          name: i18n(
-            `admin.dashboard.site_traffic.details.filter_dimensions.${dimension}`
+          name: this.#filterPrefix(dimension),
+          description: i18n(
+            `admin.dashboard.site_traffic.details.filter_dimension_descriptions.${dimension}`
           ),
           inputValue: this.#filterInputForDimension(dimension),
         })),

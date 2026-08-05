@@ -298,12 +298,36 @@ module(
       assert
         .dom(".filter-navigation__tip-item")
         .exists({ count: 7 }, "opening first shows only seven dimensions");
-      assert
-        .dom(".filter-navigation__tip-item")
-        .includesText("Top URL")
-        .includesText("Entry URL")
-        .includesText("Referrer")
-        .includesText("Network");
+      assert.deepEqual(
+        findAll(".filter-navigation__tip-name").map((element) =>
+          element.textContent.trim()
+        ),
+        [
+          "top_url:",
+          "entry_url:",
+          "referrer:",
+          "country:",
+          "network:",
+          "browser:",
+          "ip:",
+        ],
+        "filter names use canonical prefixes in the established order"
+      );
+      assert.deepEqual(
+        findAll(".filter-navigation__tip-description").map((element) =>
+          element.textContent.trim().replace(/\s+/g, " ")
+        ),
+        [
+          "— Filter pageviews by URL",
+          "— Filter pageviews by the first URL visited",
+          "— Filter pageviews by where visitors came from",
+          "— Filter pageviews by country",
+          "— Filter pageviews by network",
+          "— Filter pageviews by browser",
+          "— Filter pageviews by IP address",
+        ],
+        "filter descriptions use the approved copy in the established order"
+      );
       assert
         .dom(".filter-navigation__tip-name")
         .doesNotIncludeText("United States", "values are not shown initially");
