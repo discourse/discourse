@@ -28,7 +28,7 @@ class Admin::Config::DesignWizardController < Admin::AdminController
              base_font: SiteSetting.base_font,
              heading_font: SiteSetting.heading_font,
              homepage: SiteSetting.homepage,
-             palettes_user_selectable: palettes_user_selectable?(default_theme),
+             palettes_user_selectable: palettes_user_selectable?(preselected_theme(default_theme)),
            }
   end
 
@@ -57,8 +57,15 @@ class Admin::Config::DesignWizardController < Admin::AdminController
     { id: default_theme.id, name: default_theme.name }
   end
 
-  def palettes_user_selectable?(default_theme)
-    offered = ColorScheme.where(theme_id: default_theme&.id)
+  # the wizard preselects horizon when the current default isn't a core theme,
+  # so selectability must be derived from the theme it will actually offer
+  def preselected_theme(default_theme)
+    return default_theme if Theme::CORE_THEMES.value?(default_theme&.id)
+    Theme.horizon_theme
+  end
+
+  def palettes_user_selectable?(theme)
+    offered = ColorScheme.where(theme_id: theme&.id)
     offered = ColorScheme.where(via_wizard: true) if offered.none?
     offered.exists? && offered.where(user_selectable: false).none?
   end

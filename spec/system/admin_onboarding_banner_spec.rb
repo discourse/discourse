@@ -122,12 +122,19 @@ describe "Admin Onboarding Banner" do
       expect(design_wizard_panel).to have_site_sidebar
     end
 
-    it "previews a core theme before opening when the current default is custom" do
+    it "keeps a custom default theme rendered until another theme is chosen" do
       custom_theme = Fabricate(:theme)
       custom_theme.set_default!
 
       visit("/")
       banner.click_step_action("select_theme")
+
+      expect(design_wizard_panel).to be_visible
+      expect(page).to have_current_path("/")
+      expect(design_wizard_panel).to have_no_selected_theme
+      expect(design_wizard_panel).to have_disabled_next
+
+      design_wizard_panel.select_theme(Theme.horizon_theme.id)
 
       expect(page).to have_current_path("/?preview_theme_id=#{Theme.horizon_theme.id}")
       expect(design_wizard_panel).to be_visible

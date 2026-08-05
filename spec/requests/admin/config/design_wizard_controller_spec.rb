@@ -84,6 +84,27 @@ RSpec.describe Admin::Config::DesignWizardController do
           "name" => theme.name,
         )
       end
+
+      it "reports palettes as not user selectable when only a custom default theme's palettes are selectable" do
+        theme = Fabricate(:theme)
+        Fabricate(:color_scheme, theme_id: theme.id, user_selectable: true)
+        theme.set_default!
+
+        get "/admin/config/design-wizard.json"
+
+        expect(response.parsed_body["palettes_user_selectable"]).to eq(false)
+      end
+
+      it "reports palettes as user selectable when horizon's palettes are selectable and the default theme is custom" do
+        ColorScheme.where(theme_id: Theme::CORE_THEMES["horizon"]).update_all(user_selectable: true)
+        theme = Fabricate(:theme)
+        Fabricate(:color_scheme, theme_id: theme.id, user_selectable: false)
+        theme.set_default!
+
+        get "/admin/config/design-wizard.json"
+
+        expect(response.parsed_body["palettes_user_selectable"]).to eq(true)
+      end
     end
 
     it "is not accessible to moderators" do

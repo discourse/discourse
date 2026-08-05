@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { service } from "@ember/service";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import { eq } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -66,6 +65,14 @@ class ThemeCard extends Component {
 }
 
 const DesignWizardThemeSection = <template>
+  {{#if @currentTheme}}
+    <p class="design-wizard__custom-theme-notice">
+      {{i18n
+        "admin_onboarding_banner.design_wizard.theme.custom_theme_notice"
+        name=@currentTheme.name
+      }}
+    </p>
+  {{/if}}
   <fieldset class="design-wizard__theme-cards">
     <legend class="sr-only">
       {{i18n "admin_onboarding_banner.design_wizard.sections.theme"}}
@@ -78,15 +85,6 @@ const DesignWizardThemeSection = <template>
       />
     {{/each}}
   </fieldset>
-  {{#if @currentTheme}}
-    <p class="design-wizard__custom-theme-notice">
-      {{i18n
-        "admin_onboarding_banner.design_wizard.theme.custom_theme_notice"
-        name=@currentTheme.name
-      }}
-    </p>
-  {{/if}}
-  <PluginOutlet @name="theme-picker-modal-below-themes" />
 </template>;
 
 export default DesignWizardThemeSection;

@@ -154,6 +154,13 @@
     gap: var(--space-2);
   }
 
+  &__custom-theme-notice {
+    margin: 0;
+    padding: var(--space-1) var(--space-2);
+    background: var(--primary-100);
+    border-radius: var(--d-border-radius);
+  }
+
   &__theme-cards {
     display: flex;
     flex-direction: column;

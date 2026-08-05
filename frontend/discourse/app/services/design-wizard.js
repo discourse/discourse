@@ -71,16 +71,6 @@ export default class DesignWizardService extends Service {
       this.#initFromData();
     }
 
-    if (
-      !stored &&
-      this.data.current_theme &&
-      this.#currentPreviewThemeId === null
-    ) {
-      this.#persistState();
-      this.#navigateToThemePreview(this.themeId);
-      return;
-    }
-
     this.animateEntrance = !stored;
     this.active = true;
     this.#captureColorSchemeMedia();
@@ -331,10 +321,14 @@ export default class DesignWizardService extends Service {
   }
 
   #initFromData() {
-    const defaultTheme =
+    // a custom default theme isn't offered by the wizard, so nothing is
+    // preselected and the page keeps rendering it until a theme is chosen
+    const preselectedTheme =
       this.data.themes.find((theme) => theme.default) ??
-      this.data.themes.find((theme) => theme.id === HORIZON_THEME_ID);
-    this.themeId = defaultTheme.id;
+      (this.data.current_theme
+        ? null
+        : this.data.themes.find((theme) => theme.id === HORIZON_THEME_ID));
+    this.themeId = preselectedTheme?.id ?? null;
     this.selectedPairKeys = new Map(
       this.data.themes.map((theme) => [theme.id, this.#currentPairKey(theme)])
     );
@@ -486,6 +480,12 @@ export default class DesignWizardService extends Service {
   }
 
   async #revertPalette() {
+    // closing from the theme step with nothing chosen applied no preview,
+    // and "reverting" would replace the current theme's palette
+    if (!document.querySelector("link[data-scheme-id]")) {
+      return;
+    }
+
     const renderedTheme = this.data?.themes.find((theme) => theme.default);
     const mode = this.#originalColorMode ?? "light";
     const paletteId =

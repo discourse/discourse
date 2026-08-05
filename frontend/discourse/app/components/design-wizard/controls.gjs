@@ -38,9 +38,19 @@ export default class DesignWizardControls extends Component {
     return this.designWizard.stepIndex >= STEPS.length - 1;
   }
 
+  // a site whose default theme is custom starts with no theme selected, and
+  // the later steps are meaningless until one is chosen
+  get needsThemeChoice() {
+    return this.currentStep === "theme" && !this.designWizard.themeId;
+  }
+
   @action
   async goToStep(index) {
     if (index === this.designWizard.stepIndex) {
+      return;
+    }
+
+    if (index > this.designWizard.stepIndex && this.needsThemeChoice) {
       return;
     }
 
@@ -217,6 +227,7 @@ export default class DesignWizardControls extends Component {
             @action={{this.next}}
             @label="admin_onboarding_banner.design_wizard.next"
             @isLoading={{this.designWizard.saving}}
+            @disabled={{this.needsThemeChoice}}
             class="btn-primary design-wizard__next"
           />
         {{/if}}

@@ -584,7 +584,7 @@ en:
           homepage: "Homepage"
         theme:
           selected: "Selected"
-          custom_theme_notice: "Your site currently uses %{name} as its default theme. Saving will replace it with the selected theme."
+          custom_theme_notice: "Your site currently uses %{name} as its default theme. Choose a theme below to preview it — saving will replace your current theme."
         colors:
           light: "Light"
           dark: "Dark"

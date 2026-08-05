@@ -5,7 +5,109 @@ import { test } from "qunit";
 import StartPostingOption from "discourse/components/admin-onboarding/start-posting-option";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+
+const designWizardData = () => ({
+  themes: [
+    {
+      id: -1,
+      name: "Foundation",
+      default: true,
+      color_scheme_id: null,
+      dark_color_scheme_id: null,
+      screenshot_light_url: null,
+      screenshot_dark_url: null,
+      palette_pairs: [
+        {
+          key: "default",
+          name: "Default",
+          dark_only: false,
+          light: {
+            id: -1,
+            name: "Light",
+            colors: {
+              primary: "222222",
+              secondary: "ffffff",
+              tertiary: "0088cc",
+            },
+          },
+          dark: {
+            id: -2,
+            name: "Dark",
+            colors: {
+              primary: "dddddd",
+              secondary: "222222",
+              tertiary: "099dd7",
+            },
+          },
+        },
+      ],
+    },
+    {
+      id: -2,
+      name: "Horizon",
+      default: false,
+      color_scheme_id: 23,
+      dark_color_scheme_id: 24,
+      screenshot_light_url: null,
+      screenshot_dark_url: null,
+      palette_pairs: [
+        {
+          key: "horizon",
+          name: "Horizon",
+          dark_only: false,
+          light: {
+            id: 23,
+            name: "Horizon",
+            colors: {
+              primary: "222222",
+              secondary: "ffffff",
+              tertiary: "563fe3",
+            },
+          },
+          dark: {
+            id: 24,
+            name: "Horizon Dark",
+            colors: {
+              primary: "e7e5f2",
+              secondary: "1b1533",
+              tertiary: "7965f0",
+            },
+          },
+        },
+        {
+          key: "marigold",
+          name: "Marigold",
+          dark_only: false,
+          light: {
+            id: 25,
+            name: "Marigold",
+            colors: {
+              primary: "222222",
+              secondary: "ffffff",
+              tertiary: "b78d12",
+            },
+          },
+          dark: {
+            id: 26,
+            name: "Marigold Dark",
+            colors: {
+              primary: "efe7d4",
+              secondary: "201808",
+              tertiary: "d9a616",
+            },
+          },
+        },
+      ],
+    },
+  ],
+  current_theme: null,
+  base_font: "inter",
+  heading_font: "inter",
+  homepage: "latest",
+  palettes_user_selectable: false,
+});
 
 const withStep = (id, assert) => {
   return {
@@ -80,108 +182,9 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       })
     );
 
-    server.get("/admin/config/design-wizard.json", () => {
-      return helper.response(200, {
-        themes: [
-          {
-            id: -1,
-            name: "Foundation",
-            default: true,
-            color_scheme_id: null,
-            dark_color_scheme_id: null,
-            screenshot_light_url: null,
-            screenshot_dark_url: null,
-            palette_pairs: [
-              {
-                key: "default",
-                name: "Default",
-                dark_only: false,
-                light: {
-                  id: -1,
-                  name: "Light",
-                  colors: {
-                    primary: "222222",
-                    secondary: "ffffff",
-                    tertiary: "0088cc",
-                  },
-                },
-                dark: {
-                  id: -2,
-                  name: "Dark",
-                  colors: {
-                    primary: "dddddd",
-                    secondary: "222222",
-                    tertiary: "099dd7",
-                  },
-                },
-              },
-            ],
-          },
-          {
-            id: -2,
-            name: "Horizon",
-            default: false,
-            color_scheme_id: 23,
-            dark_color_scheme_id: 24,
-            screenshot_light_url: null,
-            screenshot_dark_url: null,
-            palette_pairs: [
-              {
-                key: "horizon",
-                name: "Horizon",
-                dark_only: false,
-                light: {
-                  id: 23,
-                  name: "Horizon",
-                  colors: {
-                    primary: "222222",
-                    secondary: "ffffff",
-                    tertiary: "563fe3",
-                  },
-                },
-                dark: {
-                  id: 24,
-                  name: "Horizon Dark",
-                  colors: {
-                    primary: "e7e5f2",
-                    secondary: "1b1533",
-                    tertiary: "7965f0",
-                  },
-                },
-              },
-              {
-                key: "marigold",
-                name: "Marigold",
-                dark_only: false,
-                light: {
-                  id: 25,
-                  name: "Marigold",
-                  colors: {
-                    primary: "222222",
-                    secondary: "ffffff",
-                    tertiary: "b78d12",
-                  },
-                },
-                dark: {
-                  id: 26,
-                  name: "Marigold Dark",
-                  colors: {
-                    primary: "efe7d4",
-                    secondary: "201808",
-                    tertiary: "d9a616",
-                  },
-                },
-              },
-            ],
-          },
-        ],
-        current_theme: null,
-        base_font: "inter",
-        heading_font: "inter",
-        homepage: "latest",
-        palettes_user_selectable: false,
-      });
-    });
+    server.get("/admin/config/design-wizard.json", () =>
+      helper.response(200, designWizardData())
+    );
   });
 
   test("it shows onboarding banner", async function (assert) {
@@ -455,6 +458,35 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     await click(".design-wizard__close");
     lightLink.remove();
     darkLink.remove();
+  });
+
+  test("the design wizard keeps a custom default theme until another theme is chosen", async function (assert) {
+    const data = designWizardData();
+    data.themes.forEach((theme) => (theme.default = false));
+    data.current_theme = { id: 42, name: "Air" };
+    pretender.get("/admin/config/design-wizard.json", () => response(data));
+
+    await visit("/");
+    await withStep("select_theme", assert).clickAction();
+    await settled();
+
+    assert
+      .dom(".design-wizard")
+      .exists("the wizard opens without reloading into a theme preview");
+    assert
+      .dom(".design-wizard__theme-card.--selected")
+      .doesNotExist("no theme is preselected");
+    assert
+      .dom(".design-wizard__custom-theme-notice")
+      .includesText("Air", "the notice names the current custom theme");
+    assert
+      .dom(".design-wizard__next")
+      .isDisabled("cannot continue until a theme is chosen");
+
+    await click(".design-wizard__close");
+    assert
+      .dom("link[data-scheme-id]", document.documentElement)
+      .doesNotExist("closing leaves the current theme's palette untouched");
   });
 });
 

@@ -27,6 +27,14 @@ module PageObjects
         )
       end
 
+      def has_no_selected_theme?
+        has_no_css?("#{WIZARD_SELECTOR}__theme-card input[type='radio']:checked")
+      end
+
+      def has_disabled_next?
+        has_css?("#{WIZARD_SELECTOR}__next[disabled]")
+      end
+
       def select_palette(pair_key)
         find("#{WIZARD_SELECTOR}__swatch[data-pair-key='#{pair_key}']").click
       end
