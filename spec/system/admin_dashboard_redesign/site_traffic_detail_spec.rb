@@ -208,7 +208,7 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
     page.refresh
 
     expect(traffic).to have_filter_chip(dimension: "ip", value: "192.0.2.1")
-    expect(traffic).to have_no_sensitive_url_state?("192.0.2.1", "/top")
+    expect(traffic).to have_no_sensitive_url_state("192.0.2.1", "/top")
 
     traffic.remove_filter("ip")
     traffic.click_breakdown_row(title: "Countries", label: "Canada")
@@ -235,7 +235,7 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
 
     expect(traffic).to have_filter_chip(dimension: "country", value: "Canada")
     expect(traffic).to have_safe_shareable_state(country: "CA", browser: nil)
-    expect(traffic).to have_no_sensitive_url_state?("192.0.2.1", "/top")
+    expect(traffic).to have_no_sensitive_url_state("192.0.2.1", "/top")
   end
 
   it "keeps cards bounded and makes the expanded table accessible",
@@ -322,7 +322,7 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
 
       playwright_page.evaluate(
         "body => window.__resolveTraffic(0, body)",
-        initial_payload,
+        arg: initial_payload,
       )
       expect(traffic).to have_pageview_summary(
         total: "5",
@@ -340,7 +340,7 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
 
       playwright_page.evaluate(
         "body => window.__resolveTraffic(2, body)",
-        final_payload,
+        arg: final_payload,
       )
       expect(traffic).to have_pageview_summary(
         total: "1",
@@ -466,7 +466,7 @@ RSpec.describe "Admin Dashboard Redesign | Site traffic details" do
           next_response = responses.shift
           route.fulfill(
             status: next_response[:status],
-            content_type: "application/json",
+            contentType: "application/json",
             body: JSON.generate(next_response[:body]),
           )
         end,

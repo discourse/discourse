@@ -1891,6 +1891,7 @@ en:
 
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
+    admin_site_traffic_event_cap: "Maximum number of the newest retained browser pageview events analyzed by one Site traffic detail request. The benchmark-derived default and maximum are 1,000,000; earlier eligible events are excluded when this cap is reached."
     disabled: "disabled"
     display_local_time_in_user_card: "Display the local time based on a user's timezone when their user card is opened."
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"

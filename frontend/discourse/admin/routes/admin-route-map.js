@@ -17,6 +17,11 @@ export default function () {
       });
     });
 
+    this.route("adminDashboardTraffic", {
+      path: "/dashboard/traffic",
+      resetNamespace: true,
+    });
+
     this.route(
       "adminSiteSettings",
       { path: "/site_settings", resetNamespace: true },

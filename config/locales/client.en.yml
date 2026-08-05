@@ -7520,6 +7520,65 @@ en:
             embedded: "Embedded pageviews"
             crawlers: "Crawlers"
           see_details: "See details"
+          details:
+            title: "Site traffic"
+            loading: "Loading Site traffic…"
+            retry: "Retry"
+            narrow_range: "Choose a narrower date range"
+            empty: "No matching pageviews"
+            view_more: "View more"
+            clear: "Clear"
+            unavailable: "Unavailable"
+            active_filters: "Active Site traffic filters"
+            remove_filter: "Remove %{filter} filter"
+            pageview_metrics: "Pageview metrics"
+            overall_analyzed_period: "Overall for analyzed period"
+            partial: "Requested %{requested} Available %{available} Analyzed %{analyzed} %{analyzed_count} pageviews analyzed %{cap} event cap Earlier eligible pageviews excluded"
+            crawler_scope: "Likely crawler uses persisted scores for retained events. Scoring is disabled or may lag, so human means not currently flagged, not verified human."
+            session_metrics:
+              title: "Session metrics"
+              scope: "Overall for the unfiltered capped population. Recent and cap-boundary sessions may be incomplete."
+            kpi:
+              pageviews:
+                label: "Pageviews"
+                tooltip: "Retained browser pageview events matching the selected filters."
+              distinct_sessions:
+                label: "Distinct sessions"
+                tooltip: "Sessions observed in the analyzed period. Recent and cap-boundary sessions may be incomplete."
+              bounce_rate:
+                label: "Bounce rate"
+              average_session_duration:
+                label: "Average session duration"
+            series:
+              logged-in-human: "Logged-in human"
+              anonymous-human: "Anonymous human"
+              likely-crawler: "Likely crawler"
+            table:
+              dimension: "Value"
+              pageviews: "Pageviews"
+            browsers:
+              edge: "Microsoft Edge"
+              opera: "Opera"
+              firefox: "Firefox"
+              chrome: "Chrome"
+              safari: "Safari"
+              ie: "Internet Explorer"
+              discoursehub: "DiscourseHub"
+              unknown: "Unknown"
+            errors:
+              timeout: "Site traffic took too long to load."
+              rate_limited: "You’ve made too many Site traffic requests. Try again shortly."
+              invalid_request: "This Site traffic request is invalid."
+              unexpected: "Site traffic couldn’t be loaded. Try again."
+            dimensions:
+              pages: "Pages"
+              top_urls: "Top URLs"
+              entry_urls: "Entry URLs"
+              traffic_sources: "Traffic Sources"
+              countries: "Countries"
+              networks: "Networks"
+              browsers: "Browsers"
+              ip_addresses: "IP addresses"
         period:
           last_7_days: "Last 7 days"
           last_30_days: "Last 30 days"

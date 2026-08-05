@@ -637,6 +637,12 @@ basic:
   persist_browser_pageview_events:
     default: true
     hidden: true
+  admin_site_traffic_event_cap:
+    default: 1000000
+    type: integer
+    min: 1
+    max: 1000000
+    hidden: true
   clean_up_browser_pageview_events:
     default: false
     hidden: true

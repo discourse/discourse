@@ -327,6 +327,8 @@ Discourse::Application.routes.draw do
       get "version_check" => "versions#show"
 
       get "dashboard" => "dashboard#index"
+      get "dashboard/traffic" => "dashboard#traffic_page"
+      post "dashboard/traffic" => "dashboard#traffic"
       put "dashboard/configuration" => "dashboard#update_configuration",
           :constraints => AdminConstraint.new
       put "dashboard/sections/:section_id/settings/:setting_key" =>

@@ -65,7 +65,7 @@ module Hijack
 
           view_start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
           begin
-            I18n.with_locale(resolved_locale) { instance.instance_eval(&blk) }
+            I18n.with_locale(resolved_locale) { instance.instance_exec(io, &blk) }
           rescue => e
             # TODO we need to reuse our exception handling in ApplicationController
             Discourse.warn_exception(
@@ -120,7 +120,7 @@ module Hijack
                 ActiveSupport::HashWithIndifferentAccess.new(
                   controller: self.class.name,
                   action: action_name,
-                  params: request.filtered_parameters,
+                  params: request_copy.filtered_parameters,
                   headers: request.headers,
                   format: request.format.ref,
                   method: request.request_method,
@@ -169,7 +169,7 @@ module Hijack
       # not leaked out, we use 418 ... I am a teapot to denote that we are hijacked
       render plain: "", status: 418
     else
-      blk.call
+      instance_exec(nil, &blk)
     end
   end
 end

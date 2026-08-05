@@ -6,6 +6,9 @@ class DistributedMutex
   DEFAULT_VALIDITY = 60
   CHECK_READONLY_ATTEMPTS = 5
 
+  class LockTimeout < StandardError
+  end
+
   LOCK_SCRIPT = DiscourseRedis::EvalHelper.new <<~LUA
     local now = redis.call("time")[1]
     local expire_time = now + ARGV[1]
@@ -30,16 +33,18 @@ class DistributedMutex
     end
   LUA
 
-  def self.synchronize(key, redis: nil, validity: DEFAULT_VALIDITY, &blk)
-    new(key, redis: redis, validity: validity).synchronize(&blk)
+  def self.synchronize(key, redis: nil, validity: DEFAULT_VALIDITY, acquire_timeout: nil, &blk)
+    new(key, redis: redis, validity: validity, acquire_timeout: acquire_timeout).synchronize(&blk)
   end
 
-  def initialize(key, redis: nil, validity: DEFAULT_VALIDITY)
+  def initialize(key, redis: nil, validity: DEFAULT_VALIDITY, acquire_timeout: nil, clock: Process)
     @key = key
     @using_global_redis = true if !redis
     @redis = redis || Discourse.redis
     @mutex = Mutex.new
     @validity = validity.to_i
+    @acquire_timeout = acquire_timeout
+    @clock = clock
   end
 
   # NOTE wrapped in mutex to maintain its semantics
@@ -77,6 +82,7 @@ class DistributedMutex
 
   def get_lock
     attempts = 0
+    deadline = monotonic_time + @acquire_timeout if @acquire_timeout
 
     while true
       expire_time = LOCK_SCRIPT.eval(redis, [prefixed_key], [validity])
@@ -85,8 +91,12 @@ class DistributedMutex
 
       # Exponential backoff, max duration 1s
       interval = attempts < 10 ? (0.001 * 2**attempts) : 1
+      interval = [interval, deadline - monotonic_time].min if deadline
+      raise LockTimeout if interval <= 0
       sleep interval
       attempts += 1
+
+      raise LockTimeout if deadline && monotonic_time >= deadline
 
       # in readonly we will never be able to get a lock
       if @using_global_redis && Discourse.recently_readonly? && attempts > CHECK_READONLY_ATTEMPTS
@@ -97,6 +107,10 @@ class DistributedMutex
 
   def prefixed_key
     @prefixed_key ||= redis.respond_to?(:namespace_key) ? redis.namespace_key(key) : key
+  end
+
+  def monotonic_time
+    @clock.clock_gettime(Process::CLOCK_MONOTONIC)
   end
 
   def warn(msg)

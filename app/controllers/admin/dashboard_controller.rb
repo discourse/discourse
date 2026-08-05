@@ -3,6 +3,8 @@
 class Admin::DashboardController < Admin::StaffController
   BULK_REPORTS_FILTER_KEYS = %i[start_date end_date].freeze
 
+  rescue_from ActionDispatch::Http::Parameters::ParseError, with: :handle_parameter_parse_error
+
   before_action :ensure_admin,
                 only: %i[
                   available_reports
@@ -10,6 +12,9 @@ class Admin::DashboardController < Admin::StaffController
                   update_configuration
                   update_section_settings
                 ]
+  before_action :ensure_traffic_admin, only: %i[traffic_page traffic]
+  before_action :ensure_dashboard_improvements_enabled, only: %i[traffic_page traffic]
+  prepend_before_action :filter_traffic_parameters, only: :traffic
 
   def index
     if dashboard_improvements?
@@ -148,7 +153,84 @@ class Admin::DashboardController < Admin::StaffController
     end
   end
 
+  def traffic_page
+    raise Discourse::NotFound if request.format.json?
+  end
+
+  def traffic
+    request_parameters = request.request_parameters
+    wrapped_parameters = request_parameters["dashboard"]
+    unwrapped_parameters = request_parameters.except("dashboard")
+    unless wrapped_parameters == unwrapped_parameters
+      raise AdminDashboardSiteTrafficDetail::InvalidRequest
+    end
+
+    analysis_request = AdminDashboardSiteTrafficDetail::Request.parse(unwrapped_parameters)
+    actor_id = current_user.id
+
+    hijack do |client_io|
+      actor = User.find_by(id: actor_id)
+      guardian = actor&.guardian
+      unless actor&.admin? && actor.active? && !actor.suspended? && guardian&.is_admin? &&
+               UpcomingChanges.enabled_for_user?(:dashboard_improvements, actor)
+        render json: { errors: [I18n.t("not_found")] }, status: :not_found
+        next
+      end
+
+      executor = AdminDashboardSiteTrafficDetail::DeadlineExecutor.new(client_io: client_io)
+      response =
+        AdminDashboardSiteTrafficDetail::CachedQuery.new(
+          request: analysis_request,
+          actor: actor,
+          executor: executor,
+          compute: ->(cutover_date:, query:) do
+            AdminDashboardSiteTrafficDetail.new(request: analysis_request).call(
+              cutover_date: cutover_date,
+              query: query,
+            )
+          end,
+        ).call
+
+      render json: response
+    rescue RateLimiter::LimitExceeded => error
+      render json: {
+               error_type: "rate_limited",
+               retry_after_seconds: error.available_in,
+             },
+             status: :too_many_requests
+    rescue AdminDashboardSiteTrafficDetail::Timeout
+      render json: { error_type: "timeout", retryable: true }, status: :service_unavailable
+    rescue StandardError => error
+      warn_traffic_failure(error)
+      render json: { error_type: "unexpected", retryable: true }, status: :internal_server_error
+    end
+  rescue AdminDashboardSiteTrafficDetail::InvalidRequest,
+         ActionDispatch::Http::Parameters::ParseError,
+         JSON::ParserError,
+         Encoding::InvalidByteSequenceError,
+         ArgumentError
+    render json: { error_type: "invalid_request" }, status: :bad_request
+  end
+
   private
+
+  def filter_traffic_parameters
+    existing =
+      request.env["action_dispatch.parameter_filter"] || Rails.application.config.filter_parameters
+    request.env["action_dispatch.parameter_filter"] = Array(existing) + ["filters"]
+  end
+
+  def handle_parameter_parse_error(error)
+    raise error unless action_name == "traffic"
+
+    render json: { error_type: "invalid_request" }, status: :bad_request
+  end
+
+  def warn_traffic_failure(error)
+    sanitized_error = StandardError.new("Site traffic detail request failed")
+    sanitized_error.set_backtrace(error.backtrace)
+    Discourse.warn_exception(sanitized_error, message: "Failed to build Site traffic detail")
+  end
 
   def serialized_problems
     serialize_data(AdminNotice.problem.order(:id), AdminNoticeSerializer)
@@ -181,11 +263,15 @@ class Admin::DashboardController < Admin::StaffController
     raise Discourse::NotFound if !dashboard_improvements?
   end
 
+  def ensure_traffic_admin
+    raise Discourse::NotFound unless current_user&.admin?
+  end
+
   def dashboard_improvements?
     dashboard_improvements_enabled =
       UpcomingChanges.enabled_for_user?(:dashboard_improvements, current_user)
 
-    if params[:version] == "alt"
+    if request.query_parameters["version"] == "alt"
       !dashboard_improvements_enabled
     else
       dashboard_improvements_enabled

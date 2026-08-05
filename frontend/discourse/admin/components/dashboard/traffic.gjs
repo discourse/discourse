@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { concat, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import { service } from "@ember/service";
 import AdminReportStackedChart from "discourse/admin/components/admin-report-stacked-chart";
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import { countryFlag, countryName } from "discourse/admin/lib/format-country";
@@ -29,6 +30,8 @@ const PERIOD_COPY_KEYS = {
 };
 
 export default class DashboardTraffic extends Component {
+  @service currentUser;
+
   hiddenLabels = ["page_view_crawler"];
 
   get browserPageviews() {
@@ -385,18 +388,19 @@ export default class DashboardTraffic extends Component {
               class="db-section__traffic-chart-canvas"
             />
           </div>
-          <LinkTo
-            class="db-traffic__see-details"
-            @route="adminReports.show"
-            @model="site_traffic"
-            @query={{hash
-              start_date=this.reportQuery.start_date
-              end_date=this.reportQuery.end_date
-            }}
-          >
-            {{i18n "admin.dashboard.site_traffic.see_details"}}
-            {{dIcon "arrow-right"}}
-          </LinkTo>
+          {{#if this.currentUser.admin}}
+            <LinkTo
+              class="db-traffic__see-details"
+              @route="adminDashboardTraffic"
+              @query={{hash
+                start_date=this.reportQuery.start_date
+                end_date=this.reportQuery.end_date
+              }}
+            >
+              {{i18n "admin.dashboard.site_traffic.see_details"}}
+              {{dIcon "arrow-right"}}
+            </LinkTo>
+          {{/if}}
         {{else}}
           <div class="db-section__traffic-chart">
             <div class="db-section__traffic-chart-shell"></div>

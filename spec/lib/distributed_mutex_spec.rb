@@ -62,6 +62,24 @@ RSpec.describe DistributedMutex do
     expect { m.synchronize { m.synchronize {} } }.to raise_error(ThreadError)
   end
 
+  it "acquires immediately when an acquisition timeout is configured" do
+    result = DistributedMutex.new(key, acquire_timeout: 0.1).synchronize { :locked }
+
+    expect(result).to eq(:locked)
+  end
+
+  it "times out under a held lock without running the critical section" do
+    clock = stub
+    clock.stubs(:clock_gettime).returns(0, 0, 0.1)
+    mutex = DistributedMutex.new(key, acquire_timeout: 0.1, clock: clock)
+    mutex.stubs(:sleep)
+    DistributedMutex::LOCK_SCRIPT.stubs(:eval).returns(nil)
+    ran = false
+
+    expect { mutex.synchronize { ran = true } }.to raise_error(DistributedMutex::LockTimeout)
+    expect(ran).to eq(false)
+  end
+
   describe "readonly redis" do
     before { Discourse.redis.slaveof "127.0.0.1", "65534" }
 

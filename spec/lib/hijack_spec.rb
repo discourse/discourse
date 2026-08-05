@@ -70,6 +70,22 @@ RSpec.describe Hijack do
     expect(copy_req.object_id).not_to eq(orig_req.object_id)
   end
 
+  it "yields the hijacked IO and yields nil without hijack support" do
+    hijacked_io = nil
+    tester.hijack_test do |client_io|
+      hijacked_io = client_io
+      render body: "hello world", status: :ok
+    end
+
+    fallback_tester = Hijack::Tester.new
+    fallback_tester.request.env.delete("rack.hijack")
+    fallback_io = :unset
+    fallback_tester.hijack_test { |client_io| fallback_io = client_io }
+
+    expect(hijacked_io).to eq(tester.io)
+    expect(fallback_io).to be_nil
+  end
+
   it "handles cors" do
     SiteSetting.cors_origins = "www.rainbows.com"
     global_setting :enable_cors, true
