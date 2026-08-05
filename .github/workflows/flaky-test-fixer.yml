@@ -1,0 +1,367 @@
+name: Flaky test fixer
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * *"
+
+concurrency:
+  group: flaky-test-fixer
+  cancel-in-progress: false
+
+jobs:
+  select-candidate:
+    if: github.event_name != 'schedule' || vars.ENABLE_FLAKY_TEST_AGENT == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: read
+    outputs:
+      build-type: ${{ steps.candidate.outputs.build-type }}
+      found: ${{ steps.candidate.outputs.found }}
+      target: ${{ steps.candidate.outputs.target }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Select a flaky test candidate
+        id: candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MINIMUM_OCCURRENCES: "5"
+          MINIMUM_WORKFLOW_RUNS: "3"
+        run: |
+          reports_dir="$RUNNER_TEMP/flaky-test-reports"
+          mkdir -p "$reports_dir"
+
+          artifact_count=0
+          cutoff=$(date -d "14 days ago" +%s)
+          while IFS=$'\t' read -r workflow_run_id created_at; do
+            artifact_count=$((artifact_count + 1))
+            if [[ $artifact_count -le 50 && $(date -d "$created_at" +%s) -ge $cutoff ]]; then
+              gh run download "$workflow_run_id" --name flaky-test-reports --dir "$reports_dir/$workflow_run_id" || true
+            fi
+          done < <(
+            gh api --paginate "repos/$GITHUB_REPOSITORY/actions/artifacts?name=flaky-test-reports&per_page=100" \
+              --jq '.artifacts[] | select(.expired == false) | [.workflow_run.id, .created_at] | @tsv'
+          )
+
+          ranked_candidates_path="$RUNNER_TEMP/flaky-test-candidates.json"
+          ruby script/select_flaky_test_candidate \
+            --reports-dir "$reports_dir" \
+            --minimum-occurrences "$MINIMUM_OCCURRENCES" \
+            --minimum-workflow-runs "$MINIMUM_WORKFLOW_RUNS" > "$ranked_candidates_path"
+
+          if ! jq -e '.candidates | length > 0' "$ranked_candidates_path" > /dev/null; then
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          open_pr_bodies_path="$RUNNER_TEMP/open-pr-bodies.txt"
+          gh pr list --state open --limit 100 --json body --jq '.[].body' > "$open_pr_bodies_path"
+
+          candidate_path="$RUNNER_TEMP/candidate.json"
+          candidate_count=$(jq '.candidates | length' "$ranked_candidates_path")
+          for ((candidate_index = 0; candidate_index < candidate_count; candidate_index++)); do
+            key=$(jq -r --argjson index "$candidate_index" '.candidates[$index].key' "$ranked_candidates_path")
+            if ! grep -Fq "flaky-test-key:$key" "$open_pr_bodies_path"; then
+              jq --argjson index "$candidate_index" '{candidate: .candidates[$index]}' \
+                "$ranked_candidates_path" > "$candidate_path"
+              break
+            fi
+          done
+
+          if [[ ! -f "$candidate_path" ]]; then
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "found=true" >> "$GITHUB_OUTPUT"
+          echo "target=$(jq -r '.candidate.contexts[0].target // "core"' "$candidate_path")" >> "$GITHUB_OUTPUT"
+          echo "build-type=$(jq -r '.candidate.contexts[0].build_type // "backend"' "$candidate_path")" >> "$GITHUB_OUTPUT"
+
+      - name: Upload selected candidate
+        if: steps.candidate.outputs.found == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: flaky-test-candidate
+          path: ${{ runner.temp }}/candidate.json
+          retention-days: 1
+
+  repair:
+    needs: [select-candidate]
+    if: needs.select-candidate.outputs.found == 'true'
+    runs-on: >-
+      ${{
+        github.repository_owner == 'discourse' &&
+        needs.select-candidate.outputs.build-type == 'system' &&
+        (needs.select-candidate.outputs.target == 'core' ||
+         needs.select-candidate.outputs.target == 'core-plugins' ||
+         needs.select-candidate.outputs.target == 'official-plugins') &&
+        'cdck-linux-16-core' ||
+        github.repository_owner == 'discourse' && 'cdck-linux-8-core' ||
+        'ubuntu-latest'
+      }}
+    container: discourse/discourse_test:release
+    timeout-minutes: 60
+    permissions:
+      actions: read
+      contents: read
+      copilot-requests: write
+    outputs:
+      has-fix: ${{ steps.patch.outputs.has-fix }}
+    defaults:
+      run:
+        shell: bash
+    env:
+      CAPYBARA_DEFAULT_MAX_WAIT_TIME: 20
+      CHEAP_SOURCE_MAPS: "1"
+      DBUS_SESSION_BUS_ADDRESS: unix:path=/dev/null
+      EMBER_ENV: development
+      MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
+      MINIO_RUNNER_LOG_LEVEL: WARN
+      PGPASSWORD: discourse
+      PGUSER: discourse
+      PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
+      QUNIT_REUSE_BUILD: 1
+      RAILS_ENV: test
+    steps:
+      - name: Enable jemalloc
+        run: echo /usr/lib/libjemalloc.so.1 > /etc/ld.so.preload
+
+      - name: Verify jemalloc is loaded into Ruby
+        run: ruby -e 'abort "jemalloc not loaded" unless File.read("/proc/self/maps").include?("libjemalloc")'
+
+      - name: Set working directory owner
+        run: chown root:root .
+
+      - name: Prepare selected test context
+        env:
+          BUILD_TYPE: ${{ needs.select-candidate.outputs.build-type }}
+          TARGET: ${{ needs.select-candidate.outputs.target }}
+        run: |
+          if [[ "$TARGET" == "plugins" || "$TARGET" == "core-plugins" || "$TARGET" == "official-plugins" || "$TARGET" == "chat" ]]; then
+            echo "LOAD_PLUGINS=1" >> "$GITHUB_ENV"
+          else
+            echo "LOAD_PLUGINS=0" >> "$GITHUB_ENV"
+          fi
+          if [[ "$BUILD_TYPE" == "backend" || "$BUILD_TYPE" == "system" ]]; then
+            echo "USES_PARALLEL_DATABASES=true" >> "$GITHUB_ENV"
+            echo "DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS=1" >> "$GITHUB_ENV"
+          else
+            echo "USES_PARALLEL_DATABASES=false" >> "$GITHUB_ENV"
+          fi
+          if [[ "$BUILD_TYPE" == "system" ]]; then
+            echo "CHECKOUT_TIMEOUT=10" >> "$GITHUB_ENV"
+            echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2 + 2))" >> "$GITHUB_ENV"
+          elif [[ "$BUILD_TYPE" == "frontend" ]]; then
+            if [[ "$TARGET" == "themes" ]]; then
+              echo "QUNIT_PARALLEL=2" >> "$GITHUB_ENV"
+            else
+              echo "QUNIT_PARALLEL=$(($(nproc) / 2))" >> "$GITHUB_ENV"
+            fi
+          fi
+
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup Git
+        run: |
+          git config --global user.email "ci@ci.invalid"
+          git config --global user.name "Discourse CI"
+
+      - name: Start redis
+        run: redis-server /etc/redis/redis.conf &
+
+      - name: Start Postgres
+        run: |
+          chown -R postgres /var/run/postgresql
+          sudo -E -u postgres script/start_test_db.rb
+          sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
+
+      - name: Symlink vendor/bundle from image
+        run: ln -s /var/www/discourse/vendor/bundle vendor/bundle
+
+      - name: Setup gems
+        run: |
+          bundle config --local path vendor/bundle
+          bundle config --local deployment true
+          bundle config --local without development
+          bundle install --jobs $(($(nproc) - 1))
+          bundle clean
+
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
+
+      - name: Checkout official plugins
+        if: needs.select-candidate.outputs.target == 'official-plugins' || needs.select-candidate.outputs.target == 'plugins'
+        run: bin/rake plugin:install_all_official
+
+      - name: Symlinking plugin gems from image
+        if: >-
+          needs.select-candidate.outputs.target == 'plugins' ||
+          needs.select-candidate.outputs.target == 'core-plugins' ||
+          needs.select-candidate.outputs.target == 'official-plugins'
+        run: |
+          for dir in /var/www/discourse/plugins/*/gems; do
+            plugin_name=$(basename "$(dirname "$dir")")
+            plugin_dir="plugins/$plugin_name"
+            gem_dir="$plugin_dir/gems"
+
+            if [[ ! -d "$plugin_dir" ]]; then
+              echo "Skipping $plugin_name: Plugin directory does not exist"
+            elif [[ -d "$gem_dir" ]]; then
+              echo "Skipping $plugin_name: Source gems directory exists"
+            else
+              echo "Symlinking $dir to $gem_dir"
+              ln -s "$dir" "$gem_dir"
+            fi
+          done
+
+      - name: Checkout official themes
+        if: needs.select-candidate.outputs.target == 'themes'
+        run: bin/rake themes:clone_all_official themes:pull_compatible_all
+
+      - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
+        if: needs.select-candidate.outputs.build-type == 'system' && needs.select-candidate.outputs.target == 'core'
+        run: |
+          echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
+          echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
+
+      - name: Create databases
+        run: bin/rake db:create
+
+      - name: Migrate database
+        run: bin/rake db:migrate
+
+      - name: Create and migrate parallel databases
+        if: needs.select-candidate.outputs.build-type == 'backend' || needs.select-candidate.outputs.build-type == 'system'
+        run: bin/rake parallel:create parallel:migrate
+
+      - name: Ember Build
+        if: needs.select-candidate.outputs.build-type == 'system' || needs.select-candidate.outputs.build-type == 'frontend'
+        run: script/assemble_ember_build.rb
+
+      - name: Prepare Chrome environment for QUnit
+        if: needs.select-candidate.outputs.build-type == 'frontend'
+        run: |
+          mkdir -p "$HOME/.pki/nssdb" "$HOME/.local/share/pki/nssdb"
+          dbus-daemon --system --fork 2>/dev/null || true
+          bus_addr=$(dbus-daemon --session --fork --print-address 2>/dev/null)
+          echo "DBUS_SESSION_BUS_ADDRESS=$bus_addr" >> "$GITHUB_ENV"
+
+      - name: Install Copilot CLI
+        run: npm install --global @github/copilot
+
+      - name: Download selected candidate
+        uses: actions/download-artifact@v8
+        with:
+          name: flaky-test-candidate
+          path: tmp/flaky-test-fixer
+
+      - name: Reproduce and fix the flaky test
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          copilot \
+            --model gpt-5.3-codex \
+            --max-ai-credits 300 \
+            --prompt "$(cat .github/prompts/flaky-test-fixer.md)" \
+            --allow-all-tools \
+            --allow-all-paths \
+            --deny-tool='shell(git push)' \
+            --deny-tool='shell(gh)' \
+            --deny-tool='shell(curl)' \
+            --deny-tool='shell(wget)' \
+            --excluded-tools='web_fetch,web_search' \
+            --no-ask-user
+
+      - name: Prepare patch
+        id: patch
+        run: |
+          git add --intent-to-add --all
+          git reset tmp/flaky-test-fixer
+          git diff --binary > tmp/flaky-test-fixer/fix.patch
+          if [[ -s tmp/flaky-test-fixer/fix.patch ]]; then
+            echo "has-fix=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has-fix=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload proposed fix
+        if: steps.patch.outputs.has-fix == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: flaky-test-fix
+          path: |
+            tmp/flaky-test-fixer/candidate.json
+            tmp/flaky-test-fixer/fix.patch
+          retention-days: 1
+
+  publish:
+    needs: [repair]
+    if: needs.repair.outputs.has-fix == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: flaky-test-fix
+          path: tmp/flaky-test-fixer
+
+      - name: Validate proposed fix
+        run: |
+          git apply --check tmp/flaky-test-fixer/fix.patch
+          git apply tmp/flaky-test-fixer/fix.patch
+          git diff --check
+
+          changed_file_count=$(git diff --name-only | wc -l)
+          if [[ $changed_file_count -gt 8 ]]; then
+            echo "The proposed fix changes more than 8 files."
+            exit 1
+          fi
+
+          if git diff --name-only | grep -Eq '^\.github/'; then
+            echo "The proposed fix changes protected GitHub configuration."
+            exit 1
+          fi
+
+      - name: Create draft pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          key=$(jq -r '.candidate.key' tmp/flaky-test-fixer/candidate.json)
+          description=$(jq -r '.candidate.description' tmp/flaky-test-fixer/candidate.json)
+          spec_path=$(jq -r '.candidate.spec_path' tmp/flaky-test-fixer/candidate.json)
+          branch="automated/flaky-test-fix-$GITHUB_RUN_ID"
+
+          git config user.email "ci@ci.invalid"
+          git config user.name "Discourse CI"
+          git switch -c "$branch"
+          git add --all
+          git commit -m "DEV: Fix flaky test"
+          git push origin "$branch"
+
+          body_path="$RUNNER_TEMP/pull-request-body.md"
+          printf '%s\n' \
+            "This draft was prepared by the scheduled flaky test fixer." \
+            "" \
+            "Test: \`$description\`" \
+            "Spec: \`$spec_path\`" \
+            "" \
+            "<!-- flaky-test-key:$key -->" > "$body_path"
+
+          gh pr create \
+            --base main \
+            --head "$branch" \
+            --title "DEV: Fix flaky test" \
+            --body-file "$body_path" \
+            --draft
