@@ -7523,14 +7523,14 @@ RSpec.describe UsersController do
   describe "#bookmarks excerpts" do
     fab!(:user)
     let!(:topic) { Fabricate(:topic, user: user) }
-    let!(:post) { Fabricate(:post, topic: topic) }
+    let!(:topic_post) { Fabricate(:post, topic: topic) }
     let!(:bookmark) { Fabricate(:bookmark, name: "Test", user: user, bookmarkable: topic) }
 
     it "uses the first post of the topic for the bookmarks excerpt" do
       TopicUser.change(
         user.id,
         bookmark.bookmarkable.id,
-        { last_read_post_number: post.post_number },
+        { last_read_post_number: topic_post.post_number },
       )
 
       sign_in(user)
@@ -7542,13 +7542,67 @@ RSpec.describe UsersController do
       expect(bookmark_list.first["excerpt"]).to eq(expected_excerpt)
     end
 
+    it "does not expose excerpts for hidden post bookmarks the user cannot see" do
+      hidden_post_raw = "hidden post bookmark secret " * 20
+      hidden_post = Fabricate(:post, raw: hidden_post_raw)
+      hidden_post_bookmark = Fabricate(:bookmark, user: user, bookmarkable: hidden_post)
+
+      TopicUser.change(user.id, hidden_post.topic_id, total_msecs_viewed: 1)
+      hidden_post.update!(hidden: true)
+
+      sign_in(user)
+
+      get "/u/#{user.username}/bookmarks.json"
+      expect(response.status).to eq(200)
+      bookmark_list = response.parsed_body["user_bookmark_list"]["bookmarks"]
+      hidden_post_response = bookmark_list.find { |item| item["id"] == hidden_post_bookmark.id }
+
+      expect(hidden_post_response).to be_present
+      expect(hidden_post_response).not_to have_key("excerpt")
+      expect(hidden_post_response).not_to have_key("truncated")
+      expect(hidden_post_response).not_to have_key("cooked")
+      expect(response.body).not_to include(hidden_post.raw)
+    end
+
+    it "prevents hidden first posts from being listed or searched" do
+      SearchIndexer.enable
+      hidden_topic =
+        Fabricate(:topic, title: "Hidden topic bookmark secret title", user: Fabricate(:user))
+      hidden_first_post =
+        Fabricate(
+          :post,
+          topic: hidden_topic,
+          user: hidden_topic.user,
+          raw: "hidden topic bookmark secret body",
+        )
+      hidden_topic_bookmark = Fabricate(:bookmark, user: user, bookmarkable: hidden_topic)
+
+      sign_in(user)
+      hidden_first_post.update!(hidden: true)
+
+      get "/u/#{user.username}/bookmarks.json"
+      expect(response.status).to eq(200)
+      bookmark_list = response.parsed_body.dig("user_bookmark_list", "bookmarks") || []
+      expect(bookmark_list.map { |bookmark_response| bookmark_response["id"] }).not_to include(
+        hidden_topic_bookmark.id,
+      )
+      expect(response.body).not_to include(hidden_topic.title)
+
+      get "/u/#{user.username}/bookmarks.json", params: { q: "hidden topic bookmark secret body" }
+      expect(response.status).to eq(200)
+      bookmark_list = response.parsed_body.dig("user_bookmark_list", "bookmarks") || []
+      expect(bookmark_list.map { |bookmark_response| bookmark_response["id"] }).not_to include(
+        hidden_topic_bookmark.id,
+      )
+    end
+
     describe "bookmarkable_url" do
       context "with the link_to_first_unread_post option" do
         it "is a full topic URL to the first unread post in the topic when the option is set" do
           TopicUser.change(
             user.id,
             bookmark.bookmarkable.id,
-            { last_read_post_number: post.post_number },
+            { last_read_post_number: topic_post.post_number },
           )
 
           sign_in(user)
@@ -7558,7 +7612,7 @@ RSpec.describe UsersController do
           bookmark_list = response.parsed_body["bookmarks"]
 
           expect(bookmark_list.first["bookmarkable_url"]).to end_with(
-            "/t/#{topic.slug}/#{topic.id}/#{post.post_number + 1}",
+            "/t/#{topic.slug}/#{topic.id}/#{topic_post.post_number + 1}",
           )
         end
 
@@ -7566,7 +7620,7 @@ RSpec.describe UsersController do
           TopicUser.change(
             user.id,
             bookmark.bookmarkable.id,
-            { last_read_post_number: post.post_number },
+            { last_read_post_number: topic_post.post_number },
           )
 
           sign_in(user)
@@ -7852,7 +7906,7 @@ RSpec.describe UsersController do
         expect(notifications.first["data"]["bookmark_id"]).to eq(bookmark_with_reminder.id)
       end
 
-      it "doesn’t show unread notifications when the bookmark has been deleted" do
+      it "doesn't show unread notifications when the bookmark has been deleted" do
         bookmark_with_reminder.destroy!
 
         get "/u/#{user.username}/user-menu-bookmarks"
