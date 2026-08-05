@@ -117,11 +117,21 @@ export default class DragAndDropService extends Service {
         this.clearCurrentDrag();
       },
     });
+    // Guarded the same way as the element monitor above: a drag still in flight
+    // when the service is torn down would otherwise write tracked state on a
+    // destroyed object.
     const cleanupExternal = monitorForExternal({
+      canMonitor: () => !this.isDestroying && !this.isDestroyed,
       onDragStart: ({ source }) => {
+        if (this.isDestroying || this.isDestroyed) {
+          return;
+        }
         this.currentExternalDrag = this.#decorateExternalSource(source);
       },
       onDrop: () => {
+        if (this.isDestroying || this.isDestroyed) {
+          return;
+        }
         this.currentExternalDrag = null;
       },
     });

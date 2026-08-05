@@ -19,7 +19,8 @@ import Modifier from "ember-modifier";
  * imported only by the ui-kit modifier files.
  *
  * The consumer's `onDrop` callback is deferred to the next task so it
- * fires after the drop event has finished propagating.
+ * fires after the drop event has finished propagating, and is skipped
+ * altogether for a drag that ended on no drop target.
  *
  * @param {HTMLElement} element - The element to mark draggable.
  * @param {() => Object} getArgsRef - Closure returning the latest args.
@@ -111,6 +112,14 @@ export function registerDragAndDropSource(element, getArgsRef) {
       // depends on them.
       element.classList.remove("--dragging");
 
+      // An abandoned drag — cancelled, or released outside every drop target —
+      // reports here too. Cleanup above still has to happen, but the consumer
+      // hears only about a drop that landed somewhere, so a reorder is not
+      // performed for a drag the user gave up on.
+      if (event.location.current.dropTargets.length === 0) {
+        return;
+      }
+
       // Snapshot the consumer callback + payload BEFORE deferring.
       // The modifier's argsRef can change across re-renders, and by
       // the time the microtask fires a new drag could already have
@@ -186,6 +195,10 @@ export function registerDragAndDropSource(element, getArgsRef) {
  *    full drop dispatch (target callbacks, monitor callbacks, native
  *    bubble listeners). Safe to clear shared dispatch state from this
  *    callback — see the deferral note on `registerDragAndDropSource`.
+ *    Only fires for a drop that landed on at least one drop target, so an
+ *    abandoned drag does not reach it; the `--dragging` class comes off either
+ *    way. Cleanup that must happen for every drag therefore does not belong
+ *    here.
  *  - `dragHandle` — an element inside this one that a drag must start from,
  *    so the rest stays free for selecting text and operating controls. Pass
  *    the element itself, not a selector; capture its ref with a modifier on

@@ -545,6 +545,41 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     assert.dom("#src").doesNotHaveClass("--dragging");
   });
 
+  test("cancelled source drag cleans up without firing consumer onDrop", async function (assert) {
+    let drops = 0;
+    const onDrop = () => drops++;
+
+    await render(
+      <template>
+        <div id="src" {{dDragAndDropSource type="row" onDrop=onDrop}}>
+          src
+        </div>
+      </template>
+    );
+
+    const dataTransfer = new DataTransfer();
+    await dragEvent("#src", "dragstart", {
+      dataTransfer,
+      ...centerOf("#src"),
+    });
+    await dragEvent("#src", "dragend", {
+      dataTransfer,
+      ...centerOf("#src"),
+    });
+
+    assert
+      .dom("#src")
+      .doesNotHaveClass(
+        "--dragging",
+        "a cancelled drag still removes the source-private dragging class"
+      );
+    assert.strictEqual(
+      drops,
+      0,
+      "a cancelled drag does not fire the consumer's onDrop"
+    );
+  });
+
   test("smart row mode resolves position from cursor midpoint", async function (assert) {
     const drops = [];
     const onDrop = (payload) => drops.push(payload);
