@@ -1803,7 +1803,6 @@ RSpec.describe Admin::DashboardController do
           },
         )
       end
-
     end
 
     it "does not allow moderators to read traffic details" do
@@ -1811,6 +1810,7 @@ RSpec.describe Admin::DashboardController do
 
       get "/admin/dashboard/traffic.json", params: request_params
 
+      expect(response.status).to eq(404)
       expect(response.parsed_body).to eq(
         "errors" => ["The requested URL or resource could not be found."],
         "error_type" => "not_found",
@@ -1822,6 +1822,7 @@ RSpec.describe Admin::DashboardController do
 
       get "/admin/dashboard/traffic.json", params: request_params
 
+      expect(response.status).to eq(404)
       expect(response.parsed_body).to eq(
         "errors" => ["The requested URL or resource could not be found."],
         "error_type" => "not_found",
@@ -1831,6 +1832,7 @@ RSpec.describe Admin::DashboardController do
     it "does not allow anonymous users to read traffic details" do
       get "/admin/dashboard/traffic.json", params: request_params
 
+      expect(response.status).to eq(404)
       expect(response.parsed_body).to eq(
         "errors" => ["The requested URL or resource could not be found."],
         "error_type" => "not_found",
@@ -1843,6 +1845,7 @@ RSpec.describe Admin::DashboardController do
 
       get "/admin/dashboard/traffic.json", params: request_params
 
+      expect(response.status).to eq(404)
       expect(response.parsed_body).to eq(
         "errors" => ["The requested URL or resource could not be found."],
         "error_type" => "not_found",
