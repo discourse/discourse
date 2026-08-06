@@ -51,11 +51,28 @@ function typeKeyFor({ type, subtype, list_type }) {
   return "default";
 }
 
+const TEXT_INPUT = { ...ROW, type: "input", adminReady: true };
+
 registerSettingFieldType("default", { ...ROW, type: "input" });
-registerSettingFieldType("textarea", { ...ROW, type: "textarea" });
-registerSettingFieldType("email", { ...ROW, type: "input-email" });
+registerSettingFieldType("string", TEXT_INPUT);
+registerSettingFieldType("float", TEXT_INPUT);
+registerSettingFieldType("username", TEXT_INPUT);
+registerSettingFieldType("textarea", {
+  ...ROW,
+  type: "textarea",
+  adminReady: true,
+});
+registerSettingFieldType("email", {
+  ...ROW,
+  type: "input-email",
+  adminReady: true,
+});
 registerSettingFieldType("date", { ...ROW, type: "input-date" });
-registerSettingFieldType("password", { ...ROW, type: "password" });
+registerSettingFieldType("password", {
+  ...ROW,
+  type: "password",
+  adminReady: true,
+});
 registerSettingFieldType("radio-group", {
   ...ROW,
   type: "radio-group",

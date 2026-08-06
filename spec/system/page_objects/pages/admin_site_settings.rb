@@ -82,6 +82,16 @@ module PageObjects
         find_setting(setting_name).find(".setting-value input[type=checkbox]", visible: :all)
       end
 
+      def secret_setting_input(setting_name)
+        find_setting(setting_name).find(".form-kit__control-password")
+      end
+
+      def reveal_secret_setting(setting_name)
+        setting = find_setting(setting_name)
+        PageObjects::Components::FormKitField.new(setting.find(".form-kit__field")).toggle
+        self
+      end
+
       def submit_setting_with_keyboard(setting_name, value)
         input = find_setting(setting_name).find(".form-kit__field input")
         input.fill_in(with: value)
