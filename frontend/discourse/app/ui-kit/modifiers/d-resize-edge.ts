@@ -11,14 +11,23 @@ interface DResizeEdgeSignature {
   Element: HTMLElement;
   Args: {
     Named: {
-      /** The current size, in pixels. */
-      value: number;
+      /**
+       * The current size, in pixels, or a function returning it. `value` is read
+       * once when a gesture starts, and on every arrow key press.
+       */
+      value: number | (() => number);
 
-      /** The smallest size the edge may be dragged to. */
-      min: number;
+      /**
+       * The smallest size the edge may be dragged to, or a function returning it.
+       * Read every time a size is clamped.
+       */
+      min: number | (() => number);
 
-      /** The largest size the edge may be dragged to. */
-      max: number;
+      /**
+       * The largest size the edge may be dragged to, or a function returning it.
+       * Read every time a size is clamped.
+       */
+      max: number | (() => number);
 
       /**
        * The axis the edge moves along. Defaults to `"horizontal"`.
@@ -38,17 +47,14 @@ interface DResizeEdgeSignature {
       side?: "start" | "end";
 
       /**
-       * Called when a pointer gesture begins. Return the size the gesture should
-       * start from to override `value` for this gesture; return nothing to use
-       * `value` as usual. Anything non-finite is ignored.
+       * Called once when a pointer gesture begins, before anything moves. Purely
+       * a notification — the return value is ignored, and a caller whose size is
+       * a live measurement supplies it by passing a function as `value`.
        *
-       * This exists for a caller whose current size is a live measurement of the
-       * DOM or the window. Such a caller cannot supply it through `value`,
-       * because an arg whose compute reads no tracked state is cached for the
-       * modifier's lifetime, so every gesture after the first would start from
-       * the first one's origin.
+       * Useful because it fires for a press even if the pointer never moves, so a
+       * caller can announce the start of a resize exactly once.
        */
-      onResizeStart?: () => number | void;
+      onResizeStart?: () => void;
 
       /**
        * Called while dragging, at most once per animation frame. Suitable for
@@ -76,6 +82,10 @@ interface DResizeEdgeSignature {
  * reported number carries no unit of its own: it is whatever `value`, `min`,
  * and `max` are expressed in, which is a width for a side panel but an offset
  * from a resting height for a composer.
+ *
+ * `value`, `min` and `max` may each be a function instead of a number, which is
+ * what a caller whose size or bounds are a live measurement of the DOM or the
+ * window must use — see `#read`.
  *
  * Both pointer and keyboard interaction are supported, which is what the
  * splitter pattern requires: a resize that can only be performed by dragging
@@ -110,11 +120,8 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
 
   #onDragStart = (event: PointerEvent) => {
     this.#startCoordinate = this.#coordinate(event);
-
-    const supplied = this.#named.onResizeStart?.();
-    this.#startValue = Number.isFinite(supplied)
-      ? (supplied as number)
-      : this.#named.value;
+    this.#startValue = this.#read(this.#named.value);
+    this.#named.onResizeStart?.();
   };
   #onDrag = (event: PointerEvent) => {
     // A pointer can move several times between paints, so only the latest
@@ -134,25 +141,28 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     this.#reportMove(this.#coordinate(event), { final: true });
   };
   #onKeyDown = (event: KeyboardEvent) => {
-    const { value, min, max } = this.#named;
     const [shrinkKey, growKey] =
       this.#named.axis === "vertical"
         ? ["ArrowUp", "ArrowDown"]
         : ["ArrowLeft", "ArrowRight"];
     let next;
 
+    // Each branch reads only what it needs, so a caller passing functions is not
+    // asked for a bound the pressed key does not use.
     switch (event.key) {
       case shrinkKey:
-        next = value - KEYBOARD_STEP * this.#growthDirection;
+        next =
+          this.#read(this.#named.value) - KEYBOARD_STEP * this.#growthDirection;
         break;
       case growKey:
-        next = value + KEYBOARD_STEP * this.#growthDirection;
+        next =
+          this.#read(this.#named.value) + KEYBOARD_STEP * this.#growthDirection;
         break;
       case "Home":
-        next = min;
+        next = this.#read(this.#named.min);
         break;
       case "End":
-        next = max;
+        next = this.#read(this.#named.max);
         break;
       default:
         return;
@@ -267,8 +277,26 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     }
   }
 
+  /**
+   * Resolves a size arg that may be given as a function.
+   *
+   * A caller whose size or bounds are a live measurement of the DOM or the window
+   * has to pass a function: an arg whose compute reads no tracked state is cached
+   * for the modifier's lifetime, so a plain number would be frozen at its first
+   * value and every later gesture would work from a stale one.
+   *
+   * @param arg - A size, or a function returning one.
+   * @returns The size in pixels.
+   */
+  #read(arg: number | (() => number)) {
+    return typeof arg === "function" ? arg() : arg;
+  }
+
   #clamp(size: number) {
-    return Math.min(Math.max(size, this.#named.min), this.#named.max);
+    return Math.min(
+      Math.max(size, this.#read(this.#named.min)),
+      this.#read(this.#named.max)
+    );
   }
 
   #cancelFrame() {

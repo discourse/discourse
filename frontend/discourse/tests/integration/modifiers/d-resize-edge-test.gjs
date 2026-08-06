@@ -593,20 +593,24 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
     assert.strictEqual(state.value, 136, "ArrowUp grows it too");
   });
 
-  module("gesture-time start value", function () {
-    test("onResizeStart can supply the pointer gesture start value", async function (assert) {
+  module("live argument reads", function () {
+    test("a function value is read at the start of every pointer gesture", async function (assert) {
       const state = new Harness();
-      const onResizeStart = () => 500;
+      let value = 500;
+      let reads = 0;
+      const readValue = () => {
+        reads++;
+        return value;
+      };
 
       await render(
         <template>
           <div
             class="resize-edge"
             {{dResizeEdge
-              value=state.value
+              value=readValue
               min=240
               max=720
-              onResizeStart=onResizeStart
               onResize=state.onResize
               onResizeEnd=state.onResizeEnd
             }}
@@ -627,18 +631,32 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
         pointerId: 1,
       });
 
+      value = 400;
+      await triggerEvent(edge, "pointerdown", {
+        button: 0,
+        clientX: 200,
+        pointerId: 2,
+      });
+      await triggerEvent(edge, "pointerup", {
+        button: 0,
+        clientX: 180,
+        pointerId: 2,
+      });
+
+      assert.strictEqual(reads, 2, "value is read once for each gesture");
       assert.deepEqual(
         state.resizeEnds,
-        [550],
-        "the returned number replaces the cached value for this gesture"
+        [550, 380],
+        "each gesture starts from the value read when it begins"
       );
     });
 
-    test("onResizeStart falls back to value when it returns nothing", async function (assert) {
+    test("onResizeStart fires once and its return value is ignored", async function (assert) {
       const state = new Harness();
       let starts = 0;
       const onResizeStart = () => {
         starts++;
+        return 500;
       };
 
       await render(
@@ -674,7 +692,123 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
       assert.deepEqual(
         state.resizeEnds,
         [350],
-        "a non-number return falls back to the value argument"
+        "the gesture starts from value regardless of the callback return"
+      );
+    });
+
+    test("mixed numeric and function bounds are read for every pointer clamp", async function (assert) {
+      const state = new Harness();
+      let max = 360;
+      let maxReads = 0;
+      const readMax = () => {
+        maxReads++;
+        return max;
+      };
+
+      await render(
+        <template>
+          <div
+            class="resize-edge"
+            {{dResizeEdge
+              value=state.value
+              min=240
+              max=readMax
+              onResize=state.onResize
+              onResizeEnd=state.onResizeEnd
+            }}
+          ></div>
+        </template>
+      );
+
+      const edge = find(EDGE);
+      installPointerCaptureSpy(edge);
+      await triggerEvent(edge, "pointerdown", {
+        button: 0,
+        clientX: 300,
+        pointerId: 1,
+      });
+      await triggerEvent(edge, "pointermove", {
+        button: 0,
+        clientX: 400,
+        pointerId: 1,
+      });
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+
+      max = 340;
+      await triggerEvent(edge, "pointerup", {
+        button: 0,
+        clientX: 420,
+        pointerId: 1,
+      });
+
+      assert.strictEqual(maxReads, 2, "max is read for each pointer clamp");
+      assert.deepEqual(
+        state.resizes,
+        [360, 340],
+        "each pointer clamp uses the current maximum"
+      );
+      assert.deepEqual(
+        state.resizeEnds,
+        [340],
+        "the gesture commits once at the current maximum"
+      );
+    });
+
+    test("function value and bounds are read for every arrow key press", async function (assert) {
+      const state = new Harness();
+      let value = 300;
+      let min = 240;
+      let max = 720;
+      const reads = { value: 0, min: 0, max: 0 };
+      const readValue = () => {
+        reads.value++;
+        return value;
+      };
+      const readMin = () => {
+        reads.min++;
+        return min;
+      };
+      const readMax = () => {
+        reads.max++;
+        return max;
+      };
+      state.onResize = (size) => {
+        state.resizes.push(size);
+        value = size;
+      };
+
+      await render(
+        <template>
+          <div
+            class="resize-edge"
+            {{dResizeEdge
+              value=readValue
+              min=readMin
+              max=readMax
+              onResize=state.onResize
+              onResizeEnd=state.onResizeEnd
+            }}
+          ></div>
+        </template>
+      );
+
+      await triggerKeyEvent(EDGE, "keydown", "ArrowRight");
+
+      max = 320;
+      await triggerKeyEvent(EDGE, "keydown", "ArrowRight");
+
+      min = 310;
+      await triggerKeyEvent(EDGE, "keydown", "ArrowLeft");
+
+      assert.deepEqual(
+        reads,
+        { value: 3, min: 3, max: 3 },
+        "value and both bounds are read for each arrow key press"
+      );
+      assert.deepEqual(
+        state.resizeEnds,
+        [316, 320, 310],
+        "arrow keys clamp against bounds that changed since render"
       );
     });
   });
