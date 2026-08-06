@@ -33,6 +33,7 @@ class GroupManager
 
     recalculate_trust_level(removed_user_ids)
     bulk_publish_category_updates(removed_user_ids)
+    enqueue_pm_notification_cleanup
 
     User.where(id: removed_user_ids).find_each { |user| @group.trigger_user_removed_event(user) }
     enqueue_user_removed_webhook_events(webhook_payloads)
@@ -147,6 +148,13 @@ class GroupManager
     else
       Discourse.request_refresh!(user_ids:)
     end
+  end
+
+  def enqueue_pm_notification_cleanup
+    TopicAllowedGroup
+      .where(group_id: @group.id)
+      .pluck(:topic_id)
+      .each { |topic_id| Jobs.enqueue(:delete_inaccessible_notifications, topic_id:) }
   end
 
   def build_user_removed_webhook_payloads(group_users_relation)
