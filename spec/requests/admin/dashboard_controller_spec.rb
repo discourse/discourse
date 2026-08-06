@@ -1466,12 +1466,12 @@ RSpec.describe Admin::DashboardController do
             { "value" => "/top", "pageviews" => 1 },
           ],
           "referrers" => [
-            { "value" => "search.example", "pageviews" => 1 },
             {
-              "value" => nil,
+              "value" => "",
               "label_key" => "admin.dashboard.site_traffic.explorer.direct_or_unknown",
               "pageviews" => 1,
             },
+            { "value" => "search.example", "pageviews" => 1 },
           ],
           "countries" => [
             { "value" => "US", "pageviews" => 2 },
@@ -1520,7 +1520,7 @@ RSpec.describe Admin::DashboardController do
           "entry_urls" => [{ "value" => "/top", "pageviews" => 1 }],
           "referrers" => [
             {
-              "value" => nil,
+              "value" => "",
               "label_key" => "admin.dashboard.site_traffic.explorer.direct_or_unknown",
               "pageviews" => 1,
             },
@@ -1610,7 +1610,7 @@ RSpec.describe Admin::DashboardController do
           ],
           "referrers" => [
             {
-              "value" => nil,
+              "value" => "",
               "label_key" => "admin.dashboard.site_traffic.explorer.direct_or_unknown",
               "pageviews" => 2,
             },
@@ -1705,7 +1705,7 @@ RSpec.describe Admin::DashboardController do
           ],
           "referrers" => [
             {
-              "value" => nil,
+              "value" => "",
               "label_key" => "admin.dashboard.site_traffic.explorer.direct_or_unknown",
               "pageviews" => 2,
             },
@@ -1778,7 +1778,7 @@ RSpec.describe Admin::DashboardController do
           ],
           "referrers" => [
             {
-              "value" => nil,
+              "value" => "",
               "label_key" => "admin.dashboard.site_traffic.explorer.direct_or_unknown",
               "pageviews" => 2,
             },
@@ -1967,7 +1967,7 @@ RSpec.describe Admin::DashboardController do
           ],
           "referrers" => [
             {
-              "value" => nil,
+              "value" => "",
               "label_key" => "admin.dashboard.site_traffic.explorer.direct_or_unknown",
               "pageviews" => 2,
             },
