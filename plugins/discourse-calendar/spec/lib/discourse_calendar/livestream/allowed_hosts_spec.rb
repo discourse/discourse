@@ -67,12 +67,6 @@ RSpec.describe DiscourseCalendar::Livestream::AllowedHosts do
 
       expect(described_class.allows_url?("https://www.youtube.com/watch?v=abc")).to eq(false)
     end
-
-    it "tolerates a pasted URL as a list entry" do
-      SiteSetting.livestream_allowed_hosts = "https://VIMEO.com/videos"
-
-      expect(described_class.allows_url?("https://vimeo.com/123")).to eq(true)
-    end
   end
 
   describe ".list" do
@@ -80,6 +74,28 @@ RSpec.describe DiscourseCalendar::Livestream::AllowedHosts do
       SiteSetting.livestream_allowed_hosts = "youtube.com|zoom.us"
 
       expect(described_class.list).to eq(%w[youtube.com zoom.us])
+    end
+  end
+
+  describe ".normalize" do
+    it "canonicalizes an entry to the host a browser resolves" do
+      expect(described_class.normalize("YOUTUBE.com")).to eq("youtube.com")
+      expect(described_class.normalize(" zoom.us ")).to eq("zoom.us")
+    end
+
+    it "takes an international host in the punycode it is compared as" do
+      expect(described_class.normalize("xn--80ak6aa92e.com")).to eq("xn--80ak6aa92e.com")
+      expect(described_class.normalize("ｙoutube.com")).to be_nil
+    end
+
+    it "rejects an entry that is not a bare host" do
+      expect(described_class.normalize("https://vimeo.com/videos")).to be_nil
+      expect(described_class.normalize("vimeo.com/videos")).to be_nil
+      expect(described_class.normalize("vimeo.com:443")).to be_nil
+      expect(described_class.normalize("youtube.com@evil.com")).to be_nil
+      expect(described_class.normalize("youtube.com。evil.com")).to be_nil
+      expect(described_class.normalize("")).to be_nil
+      expect(described_class.normalize(nil)).to be_nil
     end
   end
 end

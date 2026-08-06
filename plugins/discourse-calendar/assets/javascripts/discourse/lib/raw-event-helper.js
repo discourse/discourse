@@ -3,11 +3,16 @@ import { buildBBCodeAttrs, parseBBCodeTag } from "discourse/lib/text";
 let lastSetting;
 let lastHosts;
 
+// A bare host, mirroring `AllowedHosts::HOST_FORMAT` on the server, which is
+// what the setting validator holds list entries to.
+const HOST_FORMAT =
+  /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+
 // Resolves the host the browser would actually connect to, so that percent
 // escapes, Unicode and separators are compared after the browser has had its
 // say rather than as written. `AllowedHosts.canonical_host` does the same on
 // the server.
-function canonicalHost(url, { requireHttps = true } = {}) {
+function canonicalHost(url) {
   let parsed;
   try {
     parsed = new URL(url ?? "");
@@ -15,7 +20,7 @@ function canonicalHost(url, { requireHttps = true } = {}) {
     return null;
   }
 
-  if (requireHttps && parsed.protocol !== "https:") {
+  if (parsed.protocol !== "https:") {
     return null;
   }
 
@@ -26,19 +31,11 @@ function canonicalHost(url, { requireHttps = true } = {}) {
 function allowedHosts(setting) {
   if (setting !== lastSetting) {
     lastSetting = setting;
-    // Admins routinely paste a full URL into a host list, so keep only the host.
     lastHosts = (setting ?? "")
       .split("|")
       .map((entry) => entry.trim())
-      .filter(Boolean)
-      .map((entry) =>
-        canonicalHost(
-          /^https?:\/\//i.test(entry) ? entry : `https://${entry}`,
-          {
-            requireHttps: false,
-          }
-        )
-      )
+      .filter((entry) => HOST_FORMAT.test(entry))
+      .map((entry) => canonicalHost(`https://${entry}`))
       .filter(Boolean);
   }
 

@@ -1,3 +1,5 @@
+import { getOwner } from "@ember/owner";
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import {
   attendanceTransition,
@@ -14,12 +16,6 @@ import {
   replaceRaw,
   stateToEventInput,
 } from "discourse/plugins/discourse-calendar/discourse/lib/raw-event-helper";
-
-// Mirrors the `livestream_allowed_hosts` site setting default.
-const SETTINGS = {
-  livestream_allowed_hosts:
-    "youtube.com|youtu.be|twitch.tv|zoom.us|kick.com|tiktok.com|instagram.com|facebook.com",
-};
 
 const SAME_DAY_CONFIG = {
   startsAt: "2024-06-15T10:00:00Z",
@@ -44,7 +40,9 @@ const LONG_DEFAULT = {
   period: "before",
 };
 
-module("Unit | Lib | raw-event-helper", function () {
+module("Unit | Lib | raw-event-helper", function (hooks) {
+  setupTest(hooks);
+
   test("removeEvent", function (assert) {
     assert.strictEqual(
       removeEvent('[event start="2024-01-01"]\nDescription\n[/event]'),
@@ -518,126 +516,135 @@ module("Unit | Lib | raw-event-helper", function () {
   });
 
   test("isLivestreamUrl only accepts https URLs for major livestreaming platforms", function (assert) {
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+
     assert.false(
-      isLivestreamUrl("https://example.com/live", SETTINGS),
+      isLivestreamUrl("https://example.com/live", siteSettings),
       "does not accept arbitrary URLs"
     );
     assert.false(
-      isLivestreamUrl("http://example.com/live", SETTINGS),
+      isLivestreamUrl("http://example.com/live", siteSettings),
       "does not accept arbitrary URLs"
     );
     assert.false(
-      isLivestreamUrl("http://www.youtube.com/watch?v=1", SETTINGS),
+      isLivestreamUrl("http://www.youtube.com/watch?v=1", siteSettings),
       "rejects http on an allowed host"
     );
     assert.false(
-      isLivestreamUrl("HTTPS://EXAMPLE.COM", SETTINGS),
+      isLivestreamUrl("HTTPS://EXAMPLE.COM", siteSettings),
       "does not accept arbitrary URLs"
     );
     assert.false(
-      isLivestreamUrl("www.example.com", SETTINGS),
+      isLivestreamUrl("www.example.com", siteSettings),
       "rejects schemeless www"
     );
     assert.false(
-      isLivestreamUrl("youtube.com/watch?v=dQw4w9WgXcQ", SETTINGS),
+      isLivestreamUrl("youtube.com/watch?v=dQw4w9WgXcQ", siteSettings),
       "rejects a schemeless allowed host, which the save path would not retain"
     );
     assert.false(
-      isLivestreamUrl("mailto:host@example.com", SETTINGS),
+      isLivestreamUrl("mailto:host@example.com", siteSettings),
       "rejects mailto"
     );
     assert.false(
-      isLivestreamUrl("ftp://youtube.com/watch", SETTINGS),
+      isLivestreamUrl("ftp://youtube.com/watch", siteSettings),
       "rejects a non-https scheme on an allowed host"
     );
     assert.false(
-      isLivestreamUrl("https://", SETTINGS),
+      isLivestreamUrl("https://", siteSettings),
       "rejects a bare scheme"
     );
-    assert.false(isLivestreamUrl("Room 5", SETTINGS), "rejects plain text");
-    assert.false(isLivestreamUrl(null, SETTINGS), "handles null");
-    assert.false(isLivestreamUrl(undefined, SETTINGS), "handles undefined");
+    assert.false(isLivestreamUrl("Room 5", siteSettings), "rejects plain text");
+    assert.false(isLivestreamUrl(null, siteSettings), "handles null");
+    assert.false(isLivestreamUrl(undefined, siteSettings), "handles undefined");
 
     assert.true(
-      isLivestreamUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ", SETTINGS),
+      isLivestreamUrl(
+        "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        siteSettings
+      ),
       "accepts YouTube"
     );
     assert.true(
-      isLivestreamUrl("https://youtu.be/dQw4w9WgXcQ", SETTINGS),
+      isLivestreamUrl("https://youtu.be/dQw4w9WgXcQ", siteSettings),
       "accepts YouTube short link"
     );
     assert.true(
-      isLivestreamUrl("https://www.twitch.tv/username", SETTINGS),
+      isLivestreamUrl("https://www.twitch.tv/username", siteSettings),
       "accepts Twitch"
     );
     assert.true(
       isLivestreamUrl(
         "https://www.facebook.com/username/videos/123456789",
-        SETTINGS
+        siteSettings
       ),
       "accepts Facebook"
     );
     assert.true(
       isLivestreamUrl(
         "https://www.tiktok.com/@username/video/123456789",
-        SETTINGS
+        siteSettings
       ),
       "accepts TikTok"
     );
     assert.true(
-      isLivestreamUrl("https://www.instagram.com/tv/123456789", SETTINGS),
+      isLivestreamUrl("https://www.instagram.com/tv/123456789", siteSettings),
       "accepts Instagram"
     );
     assert.true(
-      isLivestreamUrl("https://zoom.us/j/123456789", SETTINGS),
+      isLivestreamUrl("https://zoom.us/j/123456789", siteSettings),
       "accepts Zoom"
     );
   });
 
   test("isLivestreamUrl accepts subdomains of livestreaming platforms", function (assert) {
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+
     assert.true(
       isLivestreamUrl(
         "https://us06web.zoom.us/j/123456789?pwd=secret",
-        SETTINGS
+        siteSettings
       ),
       "accepts the vanity subdomain Zoom actually hands out"
     );
     assert.true(
       isLivestreamUrl(
         "https://gaming.youtube.com/watch?v=dQw4w9WgXcQ",
-        SETTINGS
+        siteSettings
       ),
       "accepts a YouTube subdomain"
     );
     assert.true(
-      isLivestreamUrl("HTTPS://US06WEB.ZOOM.US/j/123456789", SETTINGS),
+      isLivestreamUrl("HTTPS://US06WEB.ZOOM.US/j/123456789", siteSettings),
       "is case-insensitive"
     );
   });
 
   test("isLivestreamUrl rejects hosts that merely resemble a platform", function (assert) {
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+
     assert.false(
-      isLivestreamUrl("https://notzoom.us/j/123456789", SETTINGS),
+      isLivestreamUrl("https://notzoom.us/j/123456789", siteSettings),
       "rejects a host ending in the platform name"
     );
     assert.false(
-      isLivestreamUrl("https://zoom.us.evil.com/j/123456789", SETTINGS),
+      isLivestreamUrl("https://zoom.us.evil.com/j/123456789", siteSettings),
       "rejects a host starting with the platform name"
     );
     assert.false(
-      isLivestreamUrl("https://myyoutube.com/watch?v=1", SETTINGS),
+      isLivestreamUrl("https://myyoutube.com/watch?v=1", siteSettings),
       "rejects a host prefixed with the platform name"
     );
     assert.false(
-      isLivestreamUrl("https://youtube.com@evil.com/live", SETTINGS),
+      isLivestreamUrl("https://youtube.com@evil.com/live", siteSettings),
       "rejects a platform name smuggled into the userinfo"
     );
     assert.false(
-      isLivestreamUrl("https://youtube.com\t@evil.com/live", SETTINGS),
+      isLivestreamUrl("https://youtube.com\t@evil.com/live", siteSettings),
       "rejects userinfo hidden behind a stripped control character"
     );
     assert.false(
-      isLivestreamUrl("https://youtube.com。evil.com/live", SETTINGS),
+      isLivestreamUrl("https://youtube.com。evil.com/live", siteSettings),
       "rejects a separator that only looks like a label boundary"
     );
   });
@@ -645,20 +652,22 @@ module("Unit | Lib | raw-event-helper", function () {
   // The browser resolves these to a host the admin did allow, so the save path
   // keeps the livestream flag and the editor has to agree.
   test("isLivestreamUrl matches the host the browser would connect to", function (assert) {
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+
     assert.true(
-      isLivestreamUrl("https://youtube.com\\@evil.com/live", SETTINGS),
+      isLivestreamUrl("https://youtube.com\\@evil.com/live", siteSettings),
       "resolves a backslash as a path separator"
     );
     assert.true(
-      isLivestreamUrl("https://%79outube.com/live", SETTINGS),
+      isLivestreamUrl("https://%79outube.com/live", siteSettings),
       "decodes percent escapes in the host"
     );
     assert.true(
-      isLivestreamUrl("https://ｙoutube.com/live", SETTINGS),
+      isLivestreamUrl("https://ｙoutube.com/live", siteSettings),
       "maps Unicode to the host it resolves to"
     );
     assert.true(
-      isLivestreamUrl("https://youtube.com./live", SETTINGS),
+      isLivestreamUrl("https://youtube.com./live", siteSettings),
       "ignores a fully qualified trailing dot"
     );
   });
@@ -681,9 +690,21 @@ module("Unit | Lib | raw-event-helper", function () {
 
     assert.true(
       isLivestreamUrl("https://vimeo.com/123", {
-        livestream_allowed_hosts: "https://VIMEO.com/videos",
+        livestream_allowed_hosts: "VIMEO.com",
       }),
-      "tolerates a pasted URL as a list entry"
+      "canonicalizes a list entry before comparing"
+    );
+    assert.false(
+      isLivestreamUrl("https://vimeo.com/123", {
+        livestream_allowed_hosts: "https://vimeo.com/videos",
+      }),
+      "ignores a list entry that is not a bare host, as the validator rejects it on save"
+    );
+    assert.false(
+      isLivestreamUrl("https://youtube.com/live", {
+        livestream_allowed_hosts: "ｙoutube.com",
+      }),
+      "ignores a non-ASCII list entry, which the validator requires in punycode"
     );
 
     assert.false(

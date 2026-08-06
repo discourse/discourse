@@ -10,6 +10,14 @@ module DiscourseCalendar
       # keeps them resolves a different host than the one that gets loaded.
       IGNORED_CHARACTERS = /[\t\n\r]/
 
+      # A list entry is a bare host, never a URL: a scheme, port or path would
+      # suggest a single address can be allowed when everything on the host and
+      # its subdomains is. `AllowedHostsValidator` rejects the rest on save.
+      # ASCII only, so that the editor's copy of this cannot disagree with it
+      # over which characters make up a host. An international host is listed in
+      # punycode, which is the form it gets compared as either way.
+      HOST_FORMAT = /\A[a-z0-9]([a-z0-9\-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9\-]*[a-z0-9])?)*\z/i
+
       def self.list
         SiteSetting.livestream_allowed_hosts.to_s.split("|").filter_map { |entry| normalize(entry) }
       end
@@ -21,13 +29,13 @@ module DiscourseCalendar
         list.any? { |allowed| host == allowed || host.end_with?(".#{allowed}") }
       end
 
-      # Admins routinely paste a full URL into a host list, so keep only the host.
+      # Canonicalized like the URLs it is compared against, so an entry written
+      # in another case or script still matches the host the browser resolves.
       def self.normalize(entry)
         entry = entry.to_s.strip
-        return if entry.blank?
+        return if !entry.match?(HOST_FORMAT)
 
-        entry = "https://#{entry}" if !entry.match?(%r{\Ahttps?://}i)
-        canonical_host(entry, require_https: false)
+        canonical_host("https://#{entry}")
       end
 
       # Resolves the host the browser would actually connect to. Matching the
@@ -36,11 +44,11 @@ module DiscourseCalendar
       # characters, decode percent-escapes and map Unicode to punycode, so
       # `https://allowed.example\@evil.example/` loads `allowed.example` while
       # `https://%65vil.example/` loads `evil.example`.
-      def self.canonical_host(url, require_https: true)
+      def self.canonical_host(url)
         cleaned = url.to_s.gsub(IGNORED_CHARACTERS, "").strip.tr("\\", "/")
         uri = Addressable::URI.parse(cleaned)&.normalize
         return if uri.nil? || uri.host.blank?
-        return if require_https && uri.scheme != "https"
+        return if uri.scheme != "https"
 
         uri.host
       rescue Addressable::URI::InvalidURIError
