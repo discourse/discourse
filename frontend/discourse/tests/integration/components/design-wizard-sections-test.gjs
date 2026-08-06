@@ -1,4 +1,5 @@
-import { render } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ColorsSection from "discourse/components/design-wizard/colors-section";
 import HomepageSection from "discourse/components/design-wizard/homepage-section";
@@ -7,37 +8,50 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 const SCREENSHOT = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
 
+const noop = () => {};
+
+const PAIRS = [
+  {
+    key: "default",
+    name: "Default",
+    dark_only: false,
+    light: { colors: { secondary: "ffffff", tertiary: "0088cc" } },
+  },
+  {
+    key: "alternate",
+    name: "Alternate",
+    dark_only: false,
+    light: { colors: { secondary: "eeeeee", tertiary: "ff0000" } },
+  },
+];
+
 module(
   "Integration | Component | DesignWizard | ThemeSection",
   function (hooks) {
     setupRenderingTest(hooks);
 
     test("theme choices are native radios", async function (assert) {
-      this.setProperties({
-        themes: [
-          {
-            id: -1,
-            name: "Foundation",
-            screenshot_light_url: SCREENSHOT,
-            screenshot_dark_url: SCREENSHOT,
-          },
-          {
-            id: -2,
-            name: "Horizon",
-            screenshot_light_url: null,
-            screenshot_dark_url: null,
-          },
-        ],
-        selectedThemeId: -1,
-        selectTheme() {},
-      });
+      const themes = [
+        {
+          id: -1,
+          name: "Foundation",
+          screenshot_light_url: SCREENSHOT,
+          screenshot_dark_url: SCREENSHOT,
+        },
+        {
+          id: -2,
+          name: "Horizon",
+          screenshot_light_url: null,
+          screenshot_dark_url: null,
+        },
+      ];
 
       await render(
         <template>
           <ThemeSection
-            @themes={{this.themes}}
-            @selectedThemeId={{this.selectedThemeId}}
-            @onSelect={{this.selectTheme}}
+            @themes={{themes}}
+            @selectedThemeId={{-1}}
+            @onSelect={{noop}}
           />
         </template>
       );
@@ -67,48 +81,18 @@ module(
     setupRenderingTest(hooks);
 
     test("color controls expose their selected state and switch labels", async function (assert) {
-      this.setProperties({
-        pairs: [
-          {
-            key: "default",
-            name: "Default",
-            dark_only: false,
-            light: {
-              colors: {
-                secondary: "ffffff",
-                tertiary: "0088cc",
-              },
-            },
-          },
-          {
-            key: "alternate",
-            name: "Alternate",
-            dark_only: false,
-            light: {
-              colors: {
-                secondary: "eeeeee",
-                tertiary: "ff0000",
-              },
-            },
-          },
-        ],
-        selectMode() {},
-        selectPair() {},
-        toggleUserSelectable() {},
-      });
-
       await render(
         <template>
           <ColorsSection
-            @pairs={{this.pairs}}
+            @pairs={{PAIRS}}
             @selectedPairKey="default"
             @selectedPairName="Default"
             @colorMode="light"
             @darkOnly={{false}}
             @userSelectable={{false}}
-            @onSelectMode={{this.selectMode}}
-            @onSelectPair={{this.selectPair}}
-            @onToggleUserSelectable={{this.toggleUserSelectable}}
+            @onSelectMode={{noop}}
+            @onSelectPair={{noop}}
+            @onToggleUserSelectable={{noop}}
           />
         </template>
       );
@@ -136,6 +120,45 @@ module(
           "associates the switch description"
         );
     });
+
+    test("the user selectable switch reflects and toggles its state", async function (assert) {
+      const state = new (class {
+        @tracked userSelectable = false;
+      })();
+      const toggle = () => (state.userSelectable = !state.userSelectable);
+
+      await render(
+        <template>
+          <ColorsSection
+            @pairs={{PAIRS}}
+            @selectedPairKey="default"
+            @selectedPairName="Default"
+            @colorMode="light"
+            @darkOnly={{false}}
+            @userSelectable={{state.userSelectable}}
+            @onSelectMode={{noop}}
+            @onSelectPair={{noop}}
+            @onToggleUserSelectable={{toggle}}
+          />
+        </template>
+      );
+
+      const SWITCH = ".design-wizard__user-selectable [role='switch']";
+      assert.dom(SWITCH).hasAria("checked", "false", "starts off");
+
+      await click(SWITCH);
+      assert.true(
+        state.userSelectable,
+        "clicking the switch notifies the caller"
+      );
+      assert.dom(SWITCH).hasAria("checked", "true", "renders the new state");
+
+      await click(SWITCH);
+      assert.false(state.userSelectable, "clicking again toggles back off");
+      assert
+        .dom(SWITCH)
+        .hasAria("checked", "false", "renders the reverted state");
+    });
   }
 );
 
@@ -145,22 +168,18 @@ module(
     setupRenderingTest(hooks);
 
     test("homepage controls expose their selected state", async function (assert) {
-      this.setProperties({
-        themeId: -1,
-        homepage: "latest",
-        categoryPageStyle: "categories_boxes",
-        selectHomepage() {},
-        selectCategoryPageStyle() {},
-      });
+      const state = new (class {
+        @tracked homepage = "latest";
+      })();
 
       await render(
         <template>
           <HomepageSection
-            @themeId={{this.themeId}}
-            @homepage={{this.homepage}}
-            @categoryPageStyle={{this.categoryPageStyle}}
-            @onSelectHomepage={{this.selectHomepage}}
-            @onSelectCategoryPageStyle={{this.selectCategoryPageStyle}}
+            @themeId={{-1}}
+            @homepage={{state.homepage}}
+            @categoryPageStyle="categories_boxes"
+            @onSelectHomepage={{noop}}
+            @onSelectCategoryPageStyle={{noop}}
           />
         </template>
       );
@@ -175,7 +194,8 @@ module(
         .dom(".design-wizard__topic-page-option[data-topic-page='new']")
         .hasAria("pressed", "false", "exposes an unselected topic page");
 
-      this.set("homepage", "categories");
+      state.homepage = "categories";
+      await settled();
 
       assert
         .dom(".design-wizard__homepage-card[data-homepage='categories']")
@@ -183,6 +203,9 @@ module(
       assert
         .dom(".design-wizard__style-block[data-style='categories_boxes']")
         .hasAria("pressed", "true", "exposes the selected category style");
+      assert
+        .dom(".design-wizard__topic-page-option")
+        .doesNotExist("hides the topic page types for a categories homepage");
     });
   }
 );

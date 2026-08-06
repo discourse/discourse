@@ -43,7 +43,7 @@ class ThemeCard extends Component {
         {{#if (eq @theme.id @selectedThemeId)}}
           <span class="design-wizard__theme-enabled-badge">
             {{dIcon "check"}}
-            {{i18n "admin_onboarding_banner.design_wizard.theme.selected"}}
+            {{i18n "design_wizard.theme.selected"}}
           </span>
         {{/if}}
         <span class="design-wizard__theme-screenshot">
@@ -67,15 +67,12 @@ class ThemeCard extends Component {
 const DesignWizardThemeSection = <template>
   {{#if @currentTheme}}
     <p class="design-wizard__custom-theme-notice">
-      {{i18n
-        "admin_onboarding_banner.design_wizard.theme.custom_theme_notice"
-        name=@currentTheme.name
-      }}
+      {{i18n "design_wizard.theme.custom_theme_notice" name=@currentTheme.name}}
     </p>
   {{/if}}
   <fieldset class="design-wizard__theme-cards">
     <legend class="sr-only">
-      {{i18n "admin_onboarding_banner.design_wizard.sections.theme"}}
+      {{i18n "design_wizard.sections.theme"}}
     </legend>
     {{#each @themes as |theme|}}
       <ThemeCard

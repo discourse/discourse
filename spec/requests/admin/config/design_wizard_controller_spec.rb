@@ -95,6 +95,15 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(response.parsed_body["palettes_user_selectable"]).to eq(false)
       end
 
+      it "reports palettes as not user selectable when there are none to offer" do
+        ColorScheme.where(theme_id: Theme::CORE_THEMES.values).destroy_all
+        ColorScheme.where(via_wizard: true).destroy_all
+
+        get "/admin/config/design-wizard.json"
+
+        expect(response.parsed_body["palettes_user_selectable"]).to eq(false)
+      end
+
       it "reports palettes as user selectable when horizon's palettes are selectable and the default theme is custom" do
         ColorScheme.where(theme_id: Theme::CORE_THEMES["horizon"]).update_all(user_selectable: true)
         theme = Fabricate(:theme)

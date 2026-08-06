@@ -1,67 +1,82 @@
+@use "lib/viewport";
 @import "common/foundation/mixins";
 
-// Keep the wizard chrome neutral while the page behind it previews palettes
-// and fonts. Explicit font sample classes inside the panel still apply.
+// Common stylesheets compile with the active scheme injected into
+// $primary/$secondary/$tertiary, so referencing those (or their derived shades)
+// would let the previewed palette restyle the tool. Pin base-light instead.
+$dw-primary: #222;
+$dw-secondary: #fff;
+$dw-tertiary: #08c;
+$dw-tertiary-hover: #069;
+$dw-tertiary-high: #0aadff;
+$dw-selected: #d1f0ff;
+$dw-hover: #f2f2f2;
+$dw-primary-very-low: #f8f8f8;
+$dw-primary-low: #e9e9e9;
+$dw-primary-low-mid: #bdbdbd;
+$dw-primary-medium: #919191;
+$dw-primary-high: #646464;
+$dw-primary-very-high: #434343;
+$dw-button-default-border: #d3d3d3;
+
 .design-wizard,
 .design-wizard__font-select-content {
-  // These are literal base-light values because common stylesheets compile
-  // with the active scheme injected, which would otherwise restyle the tool.
-  --primary: #222;
-  --secondary: #fff;
-  --d-content-background: #fff;
-  --tertiary: #08c;
-  --tertiary-hover: #069;
-  --tertiary-low: #d1f0ff;
-  --primary-very-low: #f8f8f8;
-  --primary-low: #e9e9e9;
-  --primary-low-mid: #bdbdbd;
-  --primary-medium: #919191;
-  --primary-high: #646464;
-  --primary-very-high: #434343;
-  --d-hover: #f2f2f2;
-  --d-link-color: #08c;
-  --primary-100: #f2f2f2;
-  --primary-200: #e9e9e9;
-  --tertiary-300: #d1f0ff;
-  --tertiary-high: #0aadff;
+  --primary: #{$dw-primary};
+  --secondary: #{$dw-secondary};
+  --d-content-background: #{$dw-secondary};
+  --tertiary: #{$dw-tertiary};
+  --tertiary-hover: #{$dw-tertiary-hover};
+  --tertiary-low: #{$dw-selected};
+  --primary-very-low: #{$dw-primary-very-low};
+  --primary-low: #{$dw-primary-low};
+  --primary-low-mid: #{$dw-primary-low-mid};
+  --primary-medium: #{$dw-primary-medium};
+  --primary-high: #{$dw-primary-high};
+  --primary-very-high: #{$dw-primary-very-high};
+  --d-hover: #{$dw-hover};
+  --d-link-color: #{$dw-tertiary};
+  --primary-100: #{$dw-hover};
+  --primary-200: #{$dw-primary-low};
+  --tertiary-300: #{$dw-selected};
+  --tertiary-high: #{$dw-tertiary-high};
 
   // Theme-defined button accents, including Horizon's button overrides.
-  --accent-color: #08c;
-  --accent-text-color: #fff;
-  --button-box-shadow: #d1f0ff;
-  --content-border-color: #e9e9e9;
+  --accent-color: #{$dw-tertiary};
+  --accent-text-color: #{$dw-secondary};
+  --button-box-shadow: #{$dw-selected};
+  --content-border-color: #{$dw-primary-low};
 
   // Default buttons keep the modernized Foundation treatment.
-  --d-button-default-text-color: #434343;
-  --d-button-default-text-color--hover: #222;
-  --d-button-default-bg-color: #fff;
-  --d-button-default-bg-color--hover: #e9e9e9;
-  --d-button-default-icon-color: #434343;
-  --d-button-default-icon-color--hover: #222;
-  --d-button-default-border: 1px solid #d3d3d3;
-  --d-button-default-border--hover: 1px solid #bdbdbd;
-  --d-button-primary-text-color: #fff;
-  --d-button-primary-text-color--hover: #fff;
-  --d-button-primary-bg-color: #08c;
-  --d-button-primary-bg-color--hover: #069;
-  --d-button-primary-icon-color: #fff;
-  --d-button-primary-icon-color--hover: #fff;
-  --d-button-flat-text-color: #08c;
-  --d-button-flat-text-color--hover: #222;
-  --d-button-flat-icon-color: #bdbdbd;
-  --d-button-flat-icon-color--hover: #222;
+  --d-button-default-text-color: #{$dw-primary-very-high};
+  --d-button-default-text-color--hover: #{$dw-primary};
+  --d-button-default-bg-color: #{$dw-secondary};
+  --d-button-default-bg-color--hover: #{$dw-primary-low};
+  --d-button-default-icon-color: #{$dw-primary-very-high};
+  --d-button-default-icon-color--hover: #{$dw-primary};
+  --d-button-default-border: 1px solid #{$dw-button-default-border};
+  --d-button-default-border--hover: 1px solid #{$dw-primary-low-mid};
+  --d-button-primary-text-color: #{$dw-secondary};
+  --d-button-primary-text-color--hover: #{$dw-secondary};
+  --d-button-primary-bg-color: #{$dw-tertiary};
+  --d-button-primary-bg-color--hover: #{$dw-tertiary-hover};
+  --d-button-primary-icon-color: #{$dw-secondary};
+  --d-button-primary-icon-color--hover: #{$dw-secondary};
+  --d-button-flat-text-color: #{$dw-tertiary};
+  --d-button-flat-text-color--hover: #{$dw-primary};
+  --d-button-flat-icon-color: #{$dw-primary-low-mid};
+  --d-button-flat-icon-color--hover: #{$dw-primary};
   --d-button-flat-bg-color: transparent;
-  --d-button-flat-bg-color--hover: #f2f2f2;
-  --d-button-flat-bg-color--focus: #f2f2f2;
-  --d-button-flat-text-color--disabled: #222;
-  --d-button-flat-close-text-color: #646464;
+  --d-button-flat-bg-color--hover: #{$dw-hover};
+  --d-button-flat-bg-color--focus: #{$dw-hover};
+  --d-button-flat-text-color--disabled: #{$dw-primary};
+  --d-button-flat-close-text-color: #{$dw-primary-high};
   --d-button-flat-close-bg-color: transparent;
-  --d-button-flat-close-icon-color: #646464;
-  --d-button-flat-close-icon-color--hover: #222;
-  --d-button-transparent-text-color: #222;
-  --d-button-transparent-text-color--hover: #069;
-  --d-button-transparent-icon-color: #646464;
-  --d-button-transparent-icon-color--hover: #069;
+  --d-button-flat-close-icon-color: #{$dw-primary-high};
+  --d-button-flat-close-icon-color--hover: #{$dw-primary};
+  --d-button-transparent-text-color: #{$dw-primary};
+  --d-button-transparent-text-color--hover: #{$dw-tertiary-hover};
+  --d-button-transparent-icon-color: #{$dw-primary-high};
+  --d-button-transparent-icon-color--hover: #{$dw-tertiary-hover};
   color: var(--primary);
   color-scheme: light;
   font-family:
@@ -72,7 +87,9 @@
     Helvetica,
     Arial,
     sans-serif;
-  font-size: var(--design-wizard-chrome-font-size, 16px);
+
+  // pinned so the previewed theme's root font size cannot resize the tool
+  font-size: 16px;
 
   h1,
   h2,
@@ -85,13 +102,14 @@
 }
 
 .design-wizard {
-  --design-wizard-slide-offset: 100%;
+  // also read by the panel component, for its closing animation
+  --design-wizard-slide-out: translateX(100%);
   --design-wizard-category-1: #25aae2;
   --design-wizard-category-2: #9eb83b;
   --design-wizard-category-3: #e45735;
   --design-wizard-category-4: #7159c1;
   position: fixed;
-  z-index: z("max");
+  z-index: z("design-wizard");
   inset-block: calc(var(--header-offset) - var(--space-2)) 0;
   inset-inline-end: 0;
   display: flex;
@@ -107,7 +125,22 @@
   @include d-animation(design-wizard-slide-in, 0.25s, ease-out);
 
   html[dir="rtl"] & {
-    --design-wizard-slide-offset: -100%;
+    --design-wizard-slide-out: translateX(-100%);
+  }
+
+  // a full-height rail would cover the page it previews
+  @include viewport.until(sm) {
+    --design-wizard-slide-out: translateY(100%);
+    inset-block: auto 0;
+    inset-inline: 0;
+    width: 100%;
+    max-height: 65vh;
+    border-inline-end: 1px solid var(--content-border-color);
+    border-start-end-radius: var(--d-border-radius-large);
+
+    html[dir="rtl"] & {
+      --design-wizard-slide-out: translateY(100%);
+    }
   }
 
   &.--no-entrance {
@@ -125,6 +158,9 @@
     flex-direction: column;
     gap: var(--space-4);
     height: 100%;
+
+    // so the sections scroll rather than pushing the footer actions out
+    min-height: 0;
     padding: var(--space-4);
   }
 
@@ -138,6 +174,9 @@
     flex-direction: column;
     align-items: center;
     gap: var(--space-4);
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   &__section {
@@ -158,6 +197,8 @@
   &__custom-theme-notice {
     margin: 0;
     padding: var(--space-1) var(--space-2);
+    font-size: var(--font-down-2);
+    color: var(--primary-medium);
     background: var(--primary-100);
     border-radius: var(--d-border-radius);
   }
@@ -247,11 +288,6 @@
     .d-icon {
       color: currentcolor;
     }
-  }
-
-  &__custom-theme-notice {
-    font-size: var(--font-down-2);
-    color: var(--primary-medium);
   }
 
   &__color {
@@ -690,12 +726,38 @@
   }
 
   &__step-dots {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
     margin-inline-end: auto;
+  }
+
+  &__step-dot {
+    box-sizing: border-box;
+    width: 0.5em;
+    height: 0.5em;
+    padding: 0;
+    background: var(--primary-low-mid);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+
+    &.--active {
+      background: var(--tertiary);
+    }
+
+    html.discourse-no-touch &:hover {
+      background: var(--primary-medium);
+    }
+
+    html.discourse-no-touch &.--active:hover {
+      background: var(--tertiary-hover);
+    }
   }
 }
 
 .design-wizard__font-select-content {
-  z-index: z("max");
+  z-index: z("modal", "popover");
 }
 
 .design-wizard__font-list {
@@ -708,10 +770,10 @@
 
 @keyframes design-wizard-slide-in {
   from {
-    transform: translateX(var(--design-wizard-slide-offset));
+    transform: var(--design-wizard-slide-out);
   }
 
   to {
-    transform: translateX(0);
+    transform: translate(0, 0);
   }
 }

@@ -11,9 +11,7 @@ function topicPageLabel(page) {
 }
 
 function topicPageDescription(page) {
-  return i18n(
-    `admin_onboarding_banner.design_wizard.homepage.topic_pages.${page}`
-  );
+  return i18n(`design_wizard.homepage.topic_pages.${page}`);
 }
 
 function isHorizon(themeId) {
@@ -48,12 +46,7 @@ const CATEGORY_STYLE_OPTIONS = [
 ];
 
 function categoryStyleLabel(kind) {
-  return i18n(
-    `admin_onboarding_banner.design_wizard.homepage.styles.${kind.replaceAll(
-      "-",
-      "_"
-    )}`
-  );
+  return i18n(`design_wizard.homepage.styles.${kind.replaceAll("-", "_")}`);
 }
 
 function categoryStyleKind(style) {
@@ -68,10 +61,20 @@ function categoryStyleKind(style) {
   return "with-topics";
 }
 
+const CategoriesMock = <template>
+  {{#each (array "c1" "c2" "c3" "c4") as |box|}}
+    <span class="design-wizard__mock-box --{{box}}">
+      <span class="design-wizard__mock-line --title"></span>
+      <span class="design-wizard__mock-line --text"></span>
+      <span class="design-wizard__mock-line --text"></span>
+    </span>
+  {{/each}}
+</template>;
+
 const CategoryStyleMock = <template>
-  {{#if (eq (categoryStyleKind @style) "boxes")}}
+  {{#if (eq @kind "boxes")}}
     <CategoriesMock />
-  {{else if (eq (categoryStyleKind @style) "only")}}
+  {{else if (eq @kind "only")}}
     {{#each (array "c1" "c2" "c3" "c4") as |row|}}
       <span class="design-wizard__mock-row">
         <span class="design-wizard__mock-cat-badge --{{row}}"></span>
@@ -101,16 +104,6 @@ const CategoryStyleMock = <template>
   {{/if}}
 </template>;
 
-const CategoriesMock = <template>
-  {{#each (array "c1" "c2" "c3" "c4") as |box|}}
-    <span class="design-wizard__mock-box --{{box}}">
-      <span class="design-wizard__mock-line --title"></span>
-      <span class="design-wizard__mock-line --text"></span>
-      <span class="design-wizard__mock-line --text"></span>
-    </span>
-  {{/each}}
-</template>;
-
 const DesignWizardHomepageSection = <template>
   <div class="design-wizard__homepage-cards">
     <button
@@ -127,7 +120,7 @@ const DesignWizardHomepageSection = <template>
       >
         <TopicsMock @themeId={{@themeId}} />
       </span>
-      {{i18n "admin_onboarding_banner.design_wizard.homepage.topics"}}
+      {{i18n "design_wizard.homepage.topics"}}
     </button>
     <button
       type="button"
@@ -140,51 +133,42 @@ const DesignWizardHomepageSection = <template>
       <span class="design-wizard__homepage-thumbnail --categories">
         <CategoriesMock />
       </span>
-      {{i18n "admin_onboarding_banner.design_wizard.homepage.categories"}}
+      {{i18n "design_wizard.homepage.categories"}}
     </button>
   </div>
 
   {{#if (eq @homepage "categories")}}
     <div class="design-wizard__homepage-detail">
       <span class="design-wizard__label">
-        {{i18n
-          "admin_onboarding_banner.design_wizard.homepage.category_page_style"
-        }}
+        {{i18n "design_wizard.homepage.category_page_style"}}
       </span>
       <div class="design-wizard__style-blocks">
-        {{#each CATEGORY_STYLE_OPTIONS as |option|}}
-          <button
-            type="button"
-            class="design-wizard__style-block
-              {{if
-                (eq (categoryStyleKind @categoryPageStyle) option.kind)
-                '--selected'
-              }}"
-            aria-pressed={{if
-              (eq (categoryStyleKind @categoryPageStyle) option.kind)
-              "true"
-              "false"
-            }}
-            data-style={{option.value}}
-            {{on "click" (fn @onSelectCategoryPageStyle option.value)}}
-          >
-            <span
-              class="design-wizard__homepage-style-preview
-                {{if (eq option.kind 'boxes') '--boxes'}}"
+        {{#let (categoryStyleKind @categoryPageStyle) as |selectedKind|}}
+          {{#each CATEGORY_STYLE_OPTIONS as |option|}}
+            <button
+              type="button"
+              class="design-wizard__style-block
+                {{if (eq selectedKind option.kind) '--selected'}}"
+              aria-pressed={{if (eq selectedKind option.kind) "true" "false"}}
+              data-style={{option.value}}
+              {{on "click" (fn @onSelectCategoryPageStyle option.value)}}
             >
-              <CategoryStyleMock @style={{option.value}} />
-            </span>
-            {{categoryStyleLabel option.kind}}
-          </button>
-        {{/each}}
+              <span
+                class="design-wizard__homepage-style-preview
+                  {{if (eq option.kind 'boxes') '--boxes'}}"
+              >
+                <CategoryStyleMock @kind={{option.kind}} />
+              </span>
+              {{categoryStyleLabel option.kind}}
+            </button>
+          {{/each}}
+        {{/let}}
       </div>
     </div>
   {{else}}
     <div class="design-wizard__homepage-detail">
       <span class="design-wizard__label">
-        {{i18n
-          "admin_onboarding_banner.design_wizard.homepage.topic_page_type"
-        }}
+        {{i18n "design_wizard.homepage.topic_page_type"}}
       </span>
       <div class="design-wizard__topic-page-options">
         {{#each TOPIC_PAGES as |page|}}

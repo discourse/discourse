@@ -144,7 +144,26 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     default_composer_category: 1,
   });
 
-  needs.hooks.beforeEach(() => (loggedEvents = []));
+  needs.hooks.beforeEach(function () {
+    loggedEvents = [];
+    this.schemeLinks = [];
+
+    // registered so afterEach tears them down even when an assertion throws
+    this.addSchemeLink = (className, href, media) => {
+      const element = document.createElement("link");
+      element.rel = "stylesheet";
+      element.className = className;
+      element.href = href;
+      element.media = media;
+      document.head.prepend(element);
+      this.schemeLinks.push(element);
+      return element;
+    };
+  });
+
+  needs.hooks.afterEach(function () {
+    this.schemeLinks.forEach((link) => link.remove());
+  });
 
   needs.pretender((server, helper) => {
     server.put("/admin/site_settings/enable_site_owner_onboarding", () => {
@@ -453,20 +472,16 @@ acceptance("Admin - Onboarding Banner", function (needs) {
   });
 
   test("the design wizard activates the stylesheet for the selected color mode", async function (assert) {
-    const lightLink = document.createElement("link");
-    lightLink.rel = "stylesheet";
-    lightLink.className = "light-scheme";
-    lightLink.href = "data:text/css,design-wizard-light";
-    lightLink.media = "all";
-
-    const darkLink = document.createElement("link");
-    darkLink.rel = "stylesheet";
-    darkLink.className = "dark-scheme";
-    darkLink.href = "data:text/css,design-wizard-dark";
-    darkLink.media = "none";
-
-    document.head.prepend(darkLink);
-    document.head.prepend(lightLink);
+    const darkLink = this.addSchemeLink(
+      "dark-scheme",
+      "data:text/css,design-wizard-dark",
+      "none"
+    );
+    const lightLink = this.addSchemeLink(
+      "light-scheme",
+      "data:text/css,design-wizard-light",
+      "all"
+    );
 
     await visit("/");
     await withStep("select_theme", assert).clickAction();
@@ -497,8 +512,6 @@ acceptance("Admin - Onboarding Banner", function (needs) {
         "restores the original dark stylesheet"
       )
       .hasAttribute("media", "none", "deactivates the dark stylesheet");
-    lightLink.remove();
-    darkLink.remove();
   });
 
   test("the design wizard keeps a custom default theme until another theme is chosen", async function (assert) {
@@ -528,6 +541,35 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     assert
       .dom("link[data-scheme-id]", document.documentElement)
       .doesNotExist("closing leaves the current theme's palette untouched");
+  });
+
+  test("the design wizard stays on the step when saving progress fails", async function (assert) {
+    pretender.put("/admin/config/design-wizard.json", () =>
+      response(422, { errors: ["Something went wrong"] })
+    );
+
+    await visit("/");
+    await withStep("select_theme", assert).clickAction();
+
+    assert
+      .dom(".design-wizard__theme-card")
+      .exists({ count: 2 }, "starts on the theme step");
+
+    await click(".design-wizard__next");
+
+    assert
+      .dom(".design-wizard__theme-card")
+      .exists({ count: 2 }, "a failed progress save does not advance the step");
+    assert
+      .dom(".design-wizard__swatch")
+      .doesNotExist("the colors step is not reached");
+    assert
+      .dom(".design-wizard__next")
+      .isNotDisabled("the next button is usable again after the failure");
+
+    await click(".dialog-footer .btn-primary");
+    // close the sheet so the palette preview does not leak into other tests
+    await click(".design-wizard__close");
   });
 });
 

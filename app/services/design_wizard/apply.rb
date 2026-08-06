@@ -74,19 +74,7 @@ class DesignWizard::Apply
     end
     step :update_palette_selectability
     step :restore_site_settings_on_rollback
-    step :set_default_theme
-    only_if :base_font_provided do
-      step :update_base_font
-    end
-    only_if :heading_font_provided do
-      step :update_heading_font
-    end
-    only_if :homepage_provided do
-      step :update_homepage
-    end
-    only_if :category_page_style_provided do
-      step :update_category_page_style
-    end
+    step :update_site_settings
   end
 
   step :expire_user_color_schemes_cache
@@ -135,6 +123,13 @@ class DesignWizard::Apply
     end
   end
 
+  # Every save re-states the whole offering, so palettes an admin made
+  # selectable outside the wizard are reset too.
+  #
+  # update_all skips callbacks deliberately: user_selectable does not affect
+  # compiled CSS, and expire_user_color_schemes_cache covers the one cache that
+  # matters. ColorScheme's default scope excludes remote copies, which is what
+  # keeps this from bypassing no_edits_for_remote_copies.
   def update_palette_selectability(params:, theme:)
     offered = ColorScheme.where(theme_id: theme.id)
     offered = ColorScheme.where(via_wizard: true) if offered.none?
@@ -179,40 +174,10 @@ class DesignWizard::Apply
     end
   end
 
-  def set_default_theme(theme:, guardian:)
-    SiteSetting.set_and_log(:default_theme_id, theme.id, guardian.user)
-  end
-
-  def base_font_provided(params:)
-    params.base_font.present?
-  end
-
-  def update_base_font(params:, guardian:)
-    SiteSetting.set_and_log(:base_font, params.base_font, guardian.user)
-  end
-
-  def heading_font_provided(params:)
-    params.heading_font.present?
-  end
-
-  def update_heading_font(params:, guardian:)
-    SiteSetting.set_and_log(:heading_font, params.heading_font, guardian.user)
-  end
-
-  def homepage_provided(params:)
-    params.homepage.present?
-  end
-
-  def update_homepage(params:, guardian:)
-    SiteSetting.set_and_log(:default_homepage, params.homepage, guardian.user)
-  end
-
-  def category_page_style_provided(params:)
-    params.category_page_style.present?
-  end
-
-  def update_category_page_style(params:, guardian:)
-    SiteSetting.set_and_log(:desktop_category_page_style, params.category_page_style, guardian.user)
+  def update_site_settings(params:, theme:, guardian:)
+    params
+      .site_settings(theme_id: theme.id)
+      .each { |name, value| SiteSetting.set_and_log(name, value, guardian.user) }
   end
 
   def expire_user_color_schemes_cache

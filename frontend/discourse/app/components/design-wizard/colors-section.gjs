@@ -21,7 +21,7 @@ const DesignWizardColorsSection = <template>
         disabled={{@darkOnly}}
         {{on "click" (fn @onSelectMode "light")}}
       >
-        {{i18n "admin_onboarding_banner.design_wizard.colors.light"}}
+        {{i18n "design_wizard.colors.light"}}
       </button>
       <button
         type="button"
@@ -30,7 +30,7 @@ const DesignWizardColorsSection = <template>
         aria-pressed={{if (eq @colorMode "dark") "true" "false"}}
         {{on "click" (fn @onSelectMode "dark")}}
       >
-        {{i18n "admin_onboarding_banner.design_wizard.colors.dark"}}
+        {{i18n "design_wizard.colors.dark"}}
       </button>
     </div>
     <div class="design-wizard__swatches">
@@ -56,12 +56,9 @@ const DesignWizardColorsSection = <template>
     </div>
     <p class="design-wizard__color-note">
       {{#if @darkOnly}}
-        {{i18n
-          "admin_onboarding_banner.design_wizard.colors.dark_only"
-          name=@selectedPairName
-        }}
+        {{i18n "design_wizard.colors.dark_only" name=@selectedPairName}}
       {{else}}
-        {{i18n "admin_onboarding_banner.design_wizard.colors.both_modes"}}
+        {{i18n "design_wizard.colors.both_modes"}}
       {{/if}}
     </p>
   </div>
@@ -72,15 +69,13 @@ const DesignWizardColorsSection = <template>
         id="design-wizard-user-selectable-title"
         class="design-wizard__user-selectable-title"
       >
-        {{i18n "admin_onboarding_banner.design_wizard.colors.user_selectable"}}
+        {{i18n "design_wizard.colors.user_selectable"}}
       </span>
       <span
         id="design-wizard-user-selectable-description"
         class="design-wizard__user-selectable-description"
       >
-        {{i18n
-          "admin_onboarding_banner.design_wizard.colors.user_selectable_description"
-        }}
+        {{i18n "design_wizard.colors.user_selectable_description"}}
       </span>
     </div>
     <DToggleSwitch

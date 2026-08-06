@@ -1,6 +1,13 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
-import { applyColorScheme } from "discourse/admin/lib/color-scheme-manager";
+import {
+  applyColorScheme,
+  captureColorSchemeLinks,
+  renderedColorMode,
+  restoreColorSchemeLinks,
+  showColorMode,
+} from "discourse/admin/lib/color-scheme-manager";
+import { logOnboardingEvent } from "discourse/lib/admin-onboarding";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
@@ -13,10 +20,10 @@ import discourseLater from "discourse/lib/later";
 import { HORIZON_THEME_ID, setLocalTheme } from "discourse/lib/theme-selector";
 
 const STATE_KEY = "design_wizard_panel_state";
+const SELECT_THEME_STEP = "select_theme";
 // mirrors the onboarding step's own completion key so a wizard finished
-// after a theme-preview reload (where the step's callback is gone) still
-// marks the step complete
-const STEP_COMPLETED_KEY = "onboarding_step_select_theme";
+// after its caller was torn down still marks the step complete
+const STEP_COMPLETED_KEY = `onboarding_step_${SELECT_THEME_STEP}`;
 
 /**
  * Drives the design wizard panel while the current page acts as the live
@@ -71,13 +78,21 @@ export default class DesignWizardService extends Service {
 
     this.animateEntrance = !stored;
     this.active = true;
-    this.#captureColorSchemeLinks();
+    this.#originalColorSchemeLinks = captureColorSchemeLinks();
 
     if (stored && this.homepage === "categories") {
       this.siteSettings.desktop_category_page_style = this.categoryPageStyle;
     }
 
     await this.#previewSelections();
+  }
+
+  // lets `save` fall back to the store instead of reaching into a caller that
+  // was torn down while the sheet stayed open
+  clearCompletionCallback(callback) {
+    if (callback === undefined || this.#onComplete === callback) {
+      this.#onComplete = undefined;
+    }
   }
 
   resumeAfterThemePreview({ onComplete } = {}) {
@@ -209,6 +224,7 @@ export default class DesignWizardService extends Service {
 
   stop() {
     this.active = false;
+    this.#onComplete = undefined;
     this.keyValueStore.remove(STATE_KEY);
     clearPreview(document);
 
@@ -217,14 +233,10 @@ export default class DesignWizardService extends Service {
         this.#originalCategoryPageStyle;
       this.#refreshCategoriesPage();
     }
-    this.#restoreColorSchemeLinks();
-    document.documentElement.style.removeProperty(
-      "--design-wizard-chrome-font-size"
-    );
+    restoreColorSchemeLinks(this.#originalColorSchemeLinks);
 
     if (this.#currentPreviewThemeId !== null) {
       window.location.assign(getURL("/"));
-      return;
     }
   }
 
@@ -243,7 +255,7 @@ export default class DesignWizardService extends Service {
       if (this.#onComplete) {
         await this.#onComplete();
       } else {
-        this.keyValueStore.set({ key: STEP_COMPLETED_KEY, value: true });
+        await this.#completeStepWithoutCaller();
       }
 
       window.location.assign(getURL("/"));
@@ -282,6 +294,17 @@ export default class DesignWizardService extends Service {
       return false;
     } finally {
       this.saving = false;
+    }
+  }
+
+  // the durable half of the step's own markAsCompleted, for when the caller is
+  // gone; awaited so the reload can't cancel the audit write in flight
+  async #completeStepWithoutCaller() {
+    const alreadyCompleted = !!this.keyValueStore.get(STEP_COMPLETED_KEY);
+    this.keyValueStore.set({ key: STEP_COMPLETED_KEY, value: true });
+
+    if (!alreadyCompleted) {
+      await logOnboardingEvent("step_completed", SELECT_THEME_STEP);
     }
   }
 
@@ -331,7 +354,7 @@ export default class DesignWizardService extends Service {
     this.palettesUserSelectable = this.data.palettes_user_selectable;
     this.bodyFont = this.data.base_font;
     this.headingFont = this.data.heading_font;
-    this.colorMode = this.#renderedColorMode;
+    this.colorMode = renderedColorMode();
     this.homepage = this.#supportedHomepage(this.data.homepage);
     this.categoryPageStyle = this.siteSettings.desktop_category_page_style;
     this.stepIndex = 0;
@@ -340,7 +363,7 @@ export default class DesignWizardService extends Service {
   #restore(stored) {
     this.themeId = stored.themeId;
     this.selectedPairKeys = new Map(stored.selectedPairKeys);
-    this.colorMode = stored.colorMode ?? this.#renderedColorMode;
+    this.colorMode = stored.colorMode ?? renderedColorMode();
     this.palettesUserSelectable = stored.palettesUserSelectable;
     this.bodyFont = stored.bodyFont;
     this.headingFont = stored.headingFont;
@@ -381,76 +404,6 @@ export default class DesignWizardService extends Service {
     );
   }
 
-  #captureColorSchemeLinks() {
-    const lightTag = document.querySelector("link.light-scheme");
-    const darkTag = document.querySelector("link.dark-scheme");
-
-    this.#originalColorSchemeLinks = {
-      light: lightTag
-        ? {
-            href: lightTag.getAttribute("href"),
-            media: lightTag.getAttribute("media"),
-          }
-        : null,
-      dark: darkTag
-        ? {
-            href: darkTag.getAttribute("href"),
-            media: darkTag.getAttribute("media"),
-          }
-        : null,
-    };
-  }
-
-  #restoreColorSchemeLinks() {
-    if (!this.#originalColorSchemeLinks) {
-      return;
-    }
-
-    for (const mode of ["light", "dark"]) {
-      const link = document.querySelector(`link.${mode}-scheme`);
-      const original = this.#originalColorSchemeLinks[mode];
-      if (!link || !original) {
-        continue;
-      }
-
-      for (const attribute of ["href", "media"]) {
-        if (original[attribute] === null) {
-          link.removeAttribute(attribute);
-        } else {
-          link.setAttribute(attribute, original[attribute]);
-        }
-      }
-      link.removeAttribute("data-scheme-id");
-    }
-  }
-
-  get #renderedColorMode() {
-    const lightTag = document.querySelector("link.light-scheme");
-    const darkTag = document.querySelector("link.dark-scheme");
-    const lightIsActive =
-      lightTag &&
-      lightTag.media !== "none" &&
-      window.matchMedia(lightTag.media || "all").matches;
-    const darkIsActive =
-      darkTag &&
-      darkTag.media !== "none" &&
-      window.matchMedia(darkTag.media || "all").matches;
-
-    return darkIsActive && !lightIsActive ? "dark" : "light";
-  }
-
-  #showColorMode(mode) {
-    const lightTag = document.querySelector("link.light-scheme");
-    const darkTag = document.querySelector("link.dark-scheme");
-
-    if (lightTag && darkTag) {
-      lightTag.media = mode === "light" ? "all" : "none";
-      darkTag.media = mode === "dark" ? "all" : "none";
-    } else {
-      (lightTag ?? darkTag)?.setAttribute("media", "all");
-    }
-  }
-
   #supportedHomepage(homepage) {
     return ["latest", "new", "hot", "categories"].includes(homepage)
       ? homepage
@@ -488,6 +441,6 @@ export default class DesignWizardService extends Service {
       }
     }
 
-    this.#showColorMode(mode);
+    showColorMode(mode);
   }
 }

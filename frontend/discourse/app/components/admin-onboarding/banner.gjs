@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { trackedArray } from "@ember/reactive/collections";
+import { trackedArray, trackedSet } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import SiteSetting from "discourse/admin/models/site-setting";
 import PredefinedTopicsOptionsModal from "discourse/components/admin-onboarding/modal/predefined-topics-options";
@@ -25,18 +25,24 @@ const STEPS = [
 
     icon = "paintbrush";
 
+    #onComplete = () => this.markAsCompleted();
+
     constructor() {
       super(...arguments);
       this.designWizard.resumeAfterThemePreview({
-        onComplete: () => this.markAsCompleted(),
+        onComplete: this.#onComplete,
       });
+    }
+
+    // a homepage preview routes away from this component while the sheet lives on
+    willDestroy() {
+      super.willDestroy(...arguments);
+      this.designWizard.clearCompletionCallback(this.#onComplete);
     }
 
     @action
     performAction() {
-      this.designWizard.start({
-        onComplete: () => this.markAsCompleted(),
-      });
+      this.designWizard.start({ onComplete: this.#onComplete });
     }
   },
   class InviteCollaborators extends OnboardingStep {
@@ -137,6 +143,7 @@ const STEPS = [
 ];
 
 export default class AdminOnboardingBanner extends Component {
+  @service appEvents;
   @service currentUser;
   @service keyValueStore;
   @service router;
@@ -144,6 +151,35 @@ export default class AdminOnboardingBanner extends Component {
 
   @tracked dismissed = false;
   @tracked minimized = false;
+  // the key value store isn't reactive, but the progress count must be
+  completedStepNames = trackedSet(
+    STEPS.filter(
+      (Step) => !!this.keyValueStore.get(`onboarding_step_${Step.name}`)
+    ).map((Step) => Step.name)
+  );
+
+  constructor() {
+    super(...arguments);
+    this.appEvents.on(
+      "onboarding-step:completed",
+      this,
+      this.markStepCompleted
+    );
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.appEvents.off(
+      "onboarding-step:completed",
+      this,
+      this.markStepCompleted
+    );
+  }
+
+  @action
+  markStepCompleted(name) {
+    this.completedStepNames.add(name);
+  }
 
   get shouldDisplay() {
     if (this.dismissed) {
@@ -159,9 +195,7 @@ export default class AdminOnboardingBanner extends Component {
   }
 
   get completedSteps() {
-    return STEPS.filter(
-      (Step) => !!this.keyValueStore.get(`onboarding_step_${Step.name}`)
-    ).length;
+    return this.completedStepNames.size;
   }
 
   @action
@@ -188,6 +222,7 @@ export default class AdminOnboardingBanner extends Component {
     STEPS.forEach((Step) => {
       this.keyValueStore.remove(`onboarding_step_${Step.name}`);
     });
+    this.completedStepNames.clear();
 
     if (!skipped) {
       this.toasts.success({

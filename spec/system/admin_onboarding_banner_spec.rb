@@ -122,7 +122,7 @@ describe "Admin Onboarding Banner" do
       expect(design_wizard_panel).to have_site_sidebar
     end
 
-    it "keeps the design wizard within a narrow viewport" do
+    it "docks to the bottom edge on a narrow viewport, leaving the preview visible" do
       admin.update!(uploaded_avatar: Fabricate(:image_upload, width: 100, height: 100))
       visit("/")
 
@@ -132,7 +132,13 @@ describe "Admin Onboarding Banner" do
       page.current_window.resize_to(320, 740)
 
       dimensions = design_wizard_panel.layout_dimensions
+
       expect(dimensions[:panel_width]).to be <= dimensions[:viewport_width]
+      expect(dimensions[:document_scroll_width]).to be <= dimensions[:viewport_width]
+
+      # a full-height rail would hide the page it previews
+      expect(dimensions[:panel_bottom]).to be_within(1).of(dimensions[:viewport_height])
+      expect(dimensions[:panel_top]).to be > dimensions[:viewport_height] * 0.25
     end
 
     it "keeps a custom default theme rendered until another theme is chosen" do
@@ -169,6 +175,28 @@ describe "Admin Onboarding Banner" do
       expect(design_wizard_panel).to be_hidden
       expect(design_wizard_panel).to have_no_palette_preview
       expect(banner.step_not_completed?("select_theme")).to eq(true)
+    end
+
+    it "reflects and turns off palettes members can switch between" do
+      horizon = Theme.horizon_theme
+      horizon.set_default!
+      ColorScheme.where(theme_id: horizon.id).update_all(user_selectable: true)
+
+      visit("/")
+      banner.click_step_action("select_theme")
+      design_wizard_panel.next_step
+
+      expect(design_wizard_panel).to have_user_selectable_palettes
+
+      design_wizard_panel.toggle_user_selectable_palettes
+
+      expect(design_wizard_panel).to have_no_user_selectable_palettes
+
+      design_wizard_panel.next_step
+      design_wizard_panel.save
+
+      expect(banner).to be_visible
+      expect(ColorScheme.where(theme_id: horizon.id).pluck(:user_selectable)).to all(eq(false))
     end
 
     it "previews and applies the design choices and marks step complete" do
@@ -214,12 +242,6 @@ describe "Admin Onboarding Banner" do
           acting_user_id: admin.id,
         ).pluck(:subject),
       ).to eq(["select_theme"])
-
-      expect(SiteSetting.default_theme_id).to eq(Theme.horizon_theme.id)
-      horizon = Theme.horizon_theme
-      expect(horizon.color_scheme.name).to eq("Royal")
-      expect(horizon.color_scheme.user_selectable).to eq(true)
-      expect(SiteSetting.base_font).to eq("lato")
     end
   end
 

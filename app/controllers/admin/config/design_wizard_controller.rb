@@ -15,7 +15,7 @@ class Admin::Config::DesignWizardController < Admin::AdminController
                  {
                    id: theme.id,
                    name: theme.name,
-                   description: theme.description,
+                   description: theme.description(preloaded_locale_fields: theme.locale_fields),
                    default: theme.id == default_theme&.id,
                    color_scheme_id: theme.color_scheme_id,
                    dark_color_scheme_id: theme.dark_color_scheme_id,
@@ -39,6 +39,7 @@ class Admin::Config::DesignWizardController < Admin::AdminController
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end
       on_model_not_found(:theme) { raise Discourse::NotFound }
+      # unreachable via AdminController, but don't let it 422 if that changes
       on_failed_policy(:current_user_is_admin) { raise Discourse::InvalidAccess }
       on_failed_policy(:palettes_available_to_theme) do
         render json:

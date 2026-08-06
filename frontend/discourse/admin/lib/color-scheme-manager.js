@@ -1,6 +1,105 @@
 import ColorScheme from "discourse/admin/models/color-scheme";
 import { ajax } from "discourse/lib/ajax";
 
+const MODES = ["light", "dark"];
+
+function schemeLink(mode) {
+  return document.querySelector(`link.${mode}-scheme`);
+}
+
+/**
+ * @typedef {Object} ColorSchemeLinkState
+ * @property {?{href: ?string, media: ?string}} light
+ * @property {?{href: ?string, media: ?string}} dark
+ */
+
+/**
+ * Snapshots the light/dark stylesheet links so a preview can be undone.
+ *
+ * @returns {ColorSchemeLinkState}
+ */
+export function captureColorSchemeLinks() {
+  return Object.fromEntries(
+    MODES.map((mode) => {
+      const link = schemeLink(mode);
+
+      return [
+        mode,
+        link
+          ? {
+              href: link.getAttribute("href"),
+              media: link.getAttribute("media"),
+            }
+          : null,
+      ];
+    })
+  );
+}
+
+/**
+ * Restores links snapshotted by {@link captureColorSchemeLinks}.
+ *
+ * @param {?ColorSchemeLinkState} original
+ */
+export function restoreColorSchemeLinks(original) {
+  if (!original) {
+    return;
+  }
+
+  for (const mode of MODES) {
+    const link = schemeLink(mode);
+    const originalLink = original[mode];
+
+    if (!link || !originalLink) {
+      continue;
+    }
+
+    for (const attribute of ["href", "media"]) {
+      if (originalLink[attribute] === null) {
+        link.removeAttribute(attribute);
+      } else {
+        link.setAttribute(attribute, originalLink[attribute]);
+      }
+    }
+
+    link.removeAttribute("data-scheme-id");
+  }
+}
+
+/**
+ * Which color mode the page is currently rendering.
+ *
+ * @returns {"light" | "dark"}
+ */
+export function renderedColorMode() {
+  const isActive = (link) =>
+    link &&
+    link.media !== "none" &&
+    window.matchMedia(link.media || "all").matches;
+
+  const lightIsActive = isActive(schemeLink("light"));
+  const darkIsActive = isActive(schemeLink("dark"));
+
+  return darkIsActive && !lightIsActive ? "dark" : "light";
+}
+
+/**
+ * Forces the page to render one color mode.
+ *
+ * @param {"light" | "dark"} mode
+ */
+export function showColorMode(mode) {
+  const lightTag = schemeLink("light");
+  const darkTag = schemeLink("dark");
+
+  if (lightTag && darkTag) {
+    lightTag.media = mode === "light" ? "all" : "none";
+    darkTag.media = mode === "dark" ? "all" : "none";
+  } else {
+    (lightTag ?? darkTag)?.setAttribute("media", "all");
+  }
+}
+
 /**
  * Apply color scheme by updating stylesheet links
  *

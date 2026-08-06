@@ -40,9 +40,15 @@ module PageObjects
       end
 
       def toggle_user_selectable_palettes
-        PageObjects::Components::DToggleSwitch.new(
-          "#{WIZARD_SELECTOR}__user-selectable [role='switch']",
-        ).toggle
+        user_selectable_switch.toggle
+      end
+
+      def has_user_selectable_palettes?
+        user_selectable_switch.checked?
+      end
+
+      def has_no_user_selectable_palettes?
+        user_selectable_switch.unchecked?
       end
 
       def select_homepage(key)
@@ -66,9 +72,20 @@ module PageObjects
       end
 
       def layout_dimensions
+        rect = find(WIZARD_SELECTOR).evaluate_script(<<~JS)
+          (() => {
+            const { width, top, bottom } = this.getBoundingClientRect();
+            return { width, top, bottom };
+          })()
+        JS
+
         {
-          panel_width: find(WIZARD_SELECTOR).evaluate_script("this.getBoundingClientRect().width"),
+          panel_width: rect["width"],
+          panel_top: rect["top"],
+          panel_bottom: rect["bottom"],
           viewport_width: page.evaluate_script("window.innerWidth"),
+          viewport_height: page.evaluate_script("window.innerHeight"),
+          document_scroll_width: page.evaluate_script("document.documentElement.scrollWidth"),
         }
       end
 
@@ -82,6 +99,14 @@ module PageObjects
 
       def close
         find("#{WIZARD_SELECTOR}__close").click
+      end
+
+      private
+
+      def user_selectable_switch
+        PageObjects::Components::DToggleSwitch.new(
+          "#{WIZARD_SELECTOR}__user-selectable [role='switch']",
+        )
       end
     end
   end

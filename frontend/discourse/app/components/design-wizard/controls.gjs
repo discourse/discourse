@@ -17,13 +17,8 @@ const STEPS = ["theme", "colors", "homepage"];
 export default class DesignWizardControls extends Component {
   @service designWizard;
 
-  goToStepLabel = (index) =>
-    i18n("admin_onboarding_banner.design_wizard.step_label", {
-      index: index + 1,
-    });
-
-  get steps() {
-    return STEPS;
+  goToStepLabel(index) {
+    return i18n("design_wizard.step_label", { index: index + 1 });
   }
 
   get currentStep() {
@@ -127,20 +122,16 @@ export default class DesignWizardControls extends Component {
     <div class="design-wizard__content">
       <header class="design-wizard__header">
         <h2 id="design-wizard-title">
-          {{i18n "admin_onboarding_banner.design_wizard.title"}}
+          {{i18n "design_wizard.title"}}
         </h2>
         <span class="design-wizard__subtitle">
-          {{i18n "admin_onboarding_banner.design_wizard.subtitle"}}
+          {{i18n "design_wizard.subtitle"}}
         </span>
       </header>
 
       <div class="design-wizard__sections">
         {{#if (eq this.currentStep "theme")}}
-          <Section
-            @title={{i18n
-              "admin_onboarding_banner.design_wizard.sections.theme"
-            }}
-          >
+          <Section @title={{i18n "design_wizard.sections.theme"}}>
             <ThemeSection
               @themes={{this.designWizard.data.themes}}
               @currentTheme={{this.designWizard.data.current_theme}}
@@ -149,11 +140,7 @@ export default class DesignWizardControls extends Component {
             />
           </Section>
         {{else if (eq this.currentStep "colors")}}
-          <Section
-            @title={{i18n
-              "admin_onboarding_banner.design_wizard.sections.colors"
-            }}
-          >
+          <Section @title={{i18n "design_wizard.sections.colors"}}>
             <ColorsSection
               @pairs={{this.designWizard.pairs}}
               @selectedPairKey={{this.designWizard.selectedPair.key}}
@@ -167,11 +154,7 @@ export default class DesignWizardControls extends Component {
             />
           </Section>
 
-          <Section
-            @title={{i18n
-              "admin_onboarding_banner.design_wizard.sections.fonts"
-            }}
-          >
+          <Section @title={{i18n "design_wizard.sections.fonts"}}>
             <FontsSection
               @bodyFont={{this.designWizard.bodyFont}}
               @headingFont={{this.designWizard.headingFont}}
@@ -180,11 +163,7 @@ export default class DesignWizardControls extends Component {
             />
           </Section>
         {{else}}
-          <Section
-            @title={{i18n
-              "admin_onboarding_banner.design_wizard.sections.homepage"
-            }}
-          >
+          <Section @title={{i18n "design_wizard.sections.homepage"}}>
             <HomepageSection
               @themeId={{this.designWizard.themeId}}
               @homepage={{this.designWizard.homepage}}
@@ -197,12 +176,12 @@ export default class DesignWizardControls extends Component {
       </div>
 
       <footer class="design-wizard__actions">
-        <div class="d-image-carousel__dots design-wizard__step-dots">
-          {{#each this.steps as |step index|}}
+        <div class="design-wizard__step-dots">
+          {{#each STEPS as |step index|}}
             <button
               type="button"
-              class="d-image-carousel__dot
-                {{if (eq step this.currentStep) 'active'}}"
+              class="design-wizard__step-dot
+                {{if (eq step this.currentStep) '--active'}}"
               aria-label={{this.goToStepLabel index}}
               aria-current={{if (eq step this.currentStep) "true"}}
               {{on "click" (fn this.goToStep index)}}
@@ -211,21 +190,21 @@ export default class DesignWizardControls extends Component {
         </div>
         <DButton
           @action={{this.back}}
-          @label="admin_onboarding_banner.design_wizard.back"
+          @label="design_wizard.back"
           @disabled={{this.isFirstStep}}
           class="btn-flat design-wizard__back"
         />
         {{#if this.isLastStep}}
           <DButton
             @action={{this.save}}
-            @label="admin_onboarding_banner.design_wizard.save"
+            @label="design_wizard.save"
             @isLoading={{this.designWizard.saving}}
             class="btn-primary design-wizard__save"
           />
         {{else}}
           <DButton
             @action={{this.next}}
-            @label="admin_onboarding_banner.design_wizard.next"
+            @label="design_wizard.next"
             @isLoading={{this.designWizard.saving}}
             @disabled={{this.needsThemeChoice}}
             class="btn-primary design-wizard__next"

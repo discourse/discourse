@@ -20,19 +20,17 @@ export default class DesignWizardPanel extends Component {
   @action
   async close() {
     if (this.element && !isTesting() && !prefersReducedMotion()) {
-      const slideOffset =
+      const slideOut =
         getComputedStyle(this.element)
-          .getPropertyValue("--design-wizard-slide-offset")
-          .trim() || "100%";
+          .getPropertyValue("--design-wizard-slide-out")
+          .trim() || "translateX(100%)";
 
       await this.element
-        .animate(
-          [
-            { transform: "translateX(0)" },
-            { transform: `translateX(${slideOffset})` },
-          ],
-          { duration: 250, easing: "ease-in", fill: "forwards" }
-        )
+        .animate([{ transform: "translate(0, 0)" }, { transform: slideOut }], {
+          duration: 250,
+          easing: "ease-in",
+          fill: "forwards",
+        })
         .finished.catch(() => {});
     }
 
