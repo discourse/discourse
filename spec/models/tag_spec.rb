@@ -174,6 +174,7 @@ RSpec.describe Tag do
     end
 
     context "with hidden tags" do
+      fab!(:moderator)
       let(:hidden_tag) { Fabricate(:tag, name: "hidden") }
       let!(:staff_tag_group) do
         Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
@@ -197,6 +198,27 @@ RSpec.describe Tag do
           { id: hidden_tag.id, name: hidden_tag.name, slug: hidden_tag.slug },
         )
       end
+
+      it "doesn't return tags hidden from moderators to a moderator" do
+        admin_only_tag = Fabricate(:tag, name: "admin-only")
+        Fabricate(:tag_group, permissions: { "admins" => 1 }, tag_names: [admin_only_tag.name])
+        Fabricate(:topic, tags: [admin_only_tag])
+
+        expect(Tag.top_tags(guardian: Guardian.new(moderator))).to_not include(
+          { id: admin_only_tag.id, name: admin_only_tag.name, slug: admin_only_tag.slug },
+        )
+      end
+    end
+
+    it "doesn't return synonyms" do
+      target_tag = Fabricate(:tag)
+      Fabricate(:topic, tags: [target_tag, Fabricate(:tag, target_tag: target_tag)])
+      serialized_target_tag = { id: target_tag.id, name: target_tag.name, slug: target_tag.slug }
+
+      expect(Tag.top_tags).to contain_exactly(serialized_target_tag)
+      expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:admin)))).to contain_exactly(
+        serialized_target_tag,
+      )
     end
 
     context "with numeric-only tag names" do
@@ -381,6 +403,41 @@ RSpec.describe Tag do
       expect(tag2.public_topic_count).to eq(0)
       expect(tag3.staff_topic_count).to eq(0)
       expect(tag3.public_topic_count).to eq(0)
+    end
+  end
+
+  describe ".browsable" do
+    fab!(:admin)
+    fab!(:browsable_tag, :tag)
+    fab!(:hidden_tag, :tag)
+    fab!(:synonym) { Fabricate(:tag, target_tag: browsable_tag) }
+    fab!(:admin_tag_group) do
+      Fabricate(:tag_group, permissions: { "admins" => 1 }, tag_names: [hidden_tag.name])
+    end
+
+    it "excludes synonyms, and tags the guardian is not allowed to see" do
+      expect(Tag.browsable(Guardian.new)).to contain_exactly(browsable_tag)
+      expect(Tag.browsable(Guardian.new(admin))).to contain_exactly(browsable_tag, hidden_tag)
+    end
+  end
+
+  describe ".without_pm_only_tags" do
+    fab!(:admin)
+    fab!(:used_tag) { Fabricate(:tag, public_topic_count: 1, staff_topic_count: 1) }
+    fab!(:pm_only_tag) { Fabricate(:tag, pm_topic_count: 1) }
+
+    it "excludes tags only used in personal messages" do
+      expect(Tag.without_pm_only_tags(Guardian.new)).to contain_exactly(used_tag)
+      expect(Tag.without_pm_only_tags(Guardian.new(user))).to contain_exactly(used_tag)
+    end
+
+    it "keeps them for a guardian allowed to tag personal messages" do
+      SiteSetting.pm_tags_allowed_for_groups = Group::AUTO_GROUPS[:admins]
+
+      expect(Tag.without_pm_only_tags(Guardian.new(admin))).to contain_exactly(
+        used_tag,
+        pm_only_tag,
+      )
     end
   end
 
