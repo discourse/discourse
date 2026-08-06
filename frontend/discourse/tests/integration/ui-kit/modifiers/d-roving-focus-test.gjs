@@ -2152,6 +2152,85 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     );
   });
 
+  test("grid: a rectangular grid takes no ragged fallback when the cell below is the last one", async function (assert) {
+    const edges = [];
+    const onEdgeReach = (direction) => edges.push(direction);
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus
+            itemSelector="[role=option]"
+            columns=3
+            onEdgeReach=onEdgeReach
+          }}
+        >
+          <button class="i0" role="option">0</button>
+          <button class="i1" role="option">1</button>
+          <button class="i2" role="option">2</button>
+          <button class="i3" role="option">3</button>
+          <button class="i4" role="option">4</button>
+          <button class="i5" role="option" aria-disabled="true">5</button>
+        </div>
+      </template>
+    );
+
+    // Rows are [i0 i1 i2] [i3 i4 i5], so the grid is rectangular and i2's column DOES exist in
+    // the last row, merely blocked. This sits exactly on the boundary where the ragged guard's
+    // strict comparison is the only thing holding the fallback shut: relax it and the cursor
+    // slides diagonally to i4.
+    await focus(".i2");
+    await triggerKeyEvent(".i2", "keydown", "ArrowDown");
+
+    assert.dom(".i2").isFocused("the cursor stays in its own column");
+    assert.deepEqual(
+      edges,
+      ["forward"],
+      "and a blocked cell at the end of a full grid is an edge, not a ragged row"
+    );
+  });
+
+  test("grid: a ragged last row takes no fallback when the cursor's own column is merely blocked", async function (assert) {
+    const edges = [];
+    const onEdgeReach = (direction) => edges.push(direction);
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus
+            itemSelector="[role=option]"
+            columns=3
+            onEdgeReach=onEdgeReach
+          }}
+        >
+          <button class="i0" role="option">0</button>
+          <button class="i1" role="option">1</button>
+          <button class="i2" role="option">2</button>
+          <button class="i3" role="option">3</button>
+          <button class="i4" role="option">4</button>
+          <button class="i5" role="option">5</button>
+          <button class="i6" role="option">6</button>
+          <button class="i7" role="option" aria-disabled="true">7</button>
+        </div>
+      </template>
+    );
+
+    // Rows are [i0 i1 i2] [i3 i4 i5] [i6 i7]. The last row IS ragged, but i4's column still
+    // reaches it, since i7 exists and is only disabled, so the fallback must stay shut. Again on
+    // the boundary: relaxing the guard walks back to i6 and changes column.
+    await focus(".i4");
+    await triggerKeyEvent(".i4", "keydown", "ArrowDown");
+
+    assert.dom(".i4").isFocused("the cursor stays in its own column");
+    assert.deepEqual(
+      edges,
+      ["forward"],
+      "and a ragged row only rescues a column that is absent, not one that is blocked"
+    );
+  });
+
   test("Enter does not activate a row that has become disabled under the cursor", async function (assert) {
     const activated = [];
     const onActivate = (item) => activated.push(item.className);
