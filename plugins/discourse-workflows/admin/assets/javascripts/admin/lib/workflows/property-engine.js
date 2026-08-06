@@ -493,6 +493,9 @@ function matchesRule(expected, value) {
 function matchesCondition(condition, value) {
   const operator = condition?.condition;
   if (!operator) {
+    if (Array.isArray(value) && !Array.isArray(condition)) {
+      return value.includes(condition);
+    }
     return condition === value;
   }
 

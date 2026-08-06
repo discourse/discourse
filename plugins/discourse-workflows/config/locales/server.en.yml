@@ -96,6 +96,7 @@ en:
         flag_failed: "Failed to flag post: %{errors}"
       user:
         unknown_operation: "Unknown operation: %{operation}."
+        unknown_extensions: "Unknown user extensions: %{extensions}."
         invalid_updates: "User updates must be an object."
         invalid_trust_level: "Invalid trust level: %{level}."
         update_failed: "Failed to update user: %{errors}"
@@ -179,6 +180,8 @@ en:
         payload_too_large: "Workflow call payload exceeds the maximum size of %{max} bytes."
     flag_post:
       flagged_by_workflow: "Flagged by the '%{workflow_name}' workflow."
+    user:
+      check_email_context: "Workflow user node"
     pin_data:
       errors:
         unsupported_node: "Only nodes with a single output can have pinned data."

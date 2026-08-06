@@ -330,6 +330,10 @@ RSpec.describe DiscourseWorkflows::Nodes::Summarize::V1 do
   end
 
   describe ".output_schemas" do
+    it "names the editor-side resolver so both sides derive the same keys" do
+      expect(described_class.output_schema_resolver).to eq("summarize")
+    end
+
     it "derives properties from the configured aggregations and group keys" do
       schema =
         described_class.output_schemas(
