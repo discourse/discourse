@@ -1257,6 +1257,7 @@ class Topic < ActiveRecord::Base
         group_user.destroy
         allowed_groups.reload
         add_small_action(removed_by, "removed_group", group.name, skip_guardian: true)
+        Jobs.enqueue(:delete_inaccessible_notifications, topic_id: id)
         return true
       end
     end
@@ -1277,6 +1278,11 @@ class Topic < ActiveRecord::Base
           add_small_action(removed_by, "user_left", user.username, skip_guardian: true)
         else
           add_small_action(removed_by, "removed_user", user.username, skip_guardian: true)
+        end
+
+        unless Guardian.new(user).can_see?(self)
+          removed_count = Notification.remove_for(user.id, id)
+          user.publish_notifications_state if removed_count.positive?
         end
 
         MessageBus.publish("/topic/#{id}", { type: "remove_allowed_user" }, user_ids: [user.id])
