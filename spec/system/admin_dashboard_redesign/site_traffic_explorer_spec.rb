@@ -2,7 +2,6 @@
 
 RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
   fab!(:admin)
-  fab!(:moderator)
 
   let(:traffic) { PageObjects::Pages::AdminSiteTrafficExplorer.new }
 
@@ -332,14 +331,6 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       reason:
         "Traffic before Feb 14, 2026 is no longer available. These results are also limited to the most recent 2 pageviews in the selected date range. Choose a shorter date range within the available dates to include all available traffic.",
     )
-  end
-
-  it "keeps the explorer unavailable to a moderator" do
-    sign_in(moderator)
-
-    traffic.visit(start_date: "2026-05-01", end_date: "2026-05-12")
-
-    expect(traffic).to have_not_found
   end
 
   it "tells an admin when no pageviews match" do

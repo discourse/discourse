@@ -145,10 +145,6 @@ module PageObjects
         has_css?("[data-test-site-traffic-filter-pill='#{dimension}'] button:focus")
       end
 
-      def has_not_found?
-        has_css?(".page-not-found")
-      end
-
       def has_empty_state?
         has_css?("[data-test-site-traffic-empty]", exact_text: "No matching pageviews")
       end
