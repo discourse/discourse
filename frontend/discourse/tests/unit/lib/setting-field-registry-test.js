@@ -75,6 +75,28 @@ module("Unit | Lib | setting-field-registry", function () {
         CategoryListControl
       );
     });
+
+    test("the text field family is admin-ready, the fallback never is", function (assert) {
+      for (const type of [
+        "string",
+        "float",
+        "username",
+        "email",
+        "textarea",
+        "password",
+      ]) {
+        assert.true(
+          resolveSettingFieldType({ type }).adminReady,
+          `${type} renders with FormKit on the admin page`
+        );
+      }
+
+      assert.strictEqual(
+        resolveSettingFieldType({ type: "not_a_real_type" }).adminReady,
+        undefined,
+        "types without an explicit entry keep their legacy control instead of degrading to a bare text input"
+      );
+    });
   });
 
   module("settingFieldValidation", function () {
