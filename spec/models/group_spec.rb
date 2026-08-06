@@ -1301,16 +1301,18 @@ RSpec.describe Group do
       expect(events).to include(:user_removed_from_group)
     end
 
-    it "enqueues an inaccessible-notifications cleanup for each PM the group is on" do
-      pm_topic = Fabricate(:private_message_topic)
-      Fabricate(:topic_allowed_group, topic: pm_topic, group: group)
+    it "enqueues an inaccessible-notifications cleanup for each PM the removed user has notifications on" do
+      pm_topic1 = Fabricate(:private_message_topic)
+      pm_topic2 = Fabricate(:private_message_topic)
+      Fabricate(:topic_allowed_group, topic: pm_topic1, group: group)
+      Fabricate(:topic_allowed_group, topic: pm_topic2, group: group)
+      Fabricate(:notification, user: user, topic: pm_topic1)
+      Fabricate(:notification, user: user, topic: pm_topic2)
 
-      expect_enqueued_with(
-        job: :delete_inaccessible_notifications,
-        args: {
-          topic_id: pm_topic.id,
-        },
-      ) { group.remove(user) }
+      group.remove(user)
+
+      expect_job_enqueued(job: :delete_inaccessible_notifications, args: { topic_id: pm_topic1.id })
+      expect_job_enqueued(job: :delete_inaccessible_notifications, args: { topic_id: pm_topic2.id })
     end
 
     describe "with webhook" do
@@ -1666,16 +1668,18 @@ RSpec.describe Group do
       expect(result).to contain_exactly(user.id, admin.id)
     end
 
-    it "enqueues an inaccessible-notifications cleanup for each PM the group is on" do
-      pm_topic = Fabricate(:private_message_topic)
-      Fabricate(:topic_allowed_group, topic: pm_topic, group: group)
+    it "enqueues an inaccessible-notifications cleanup for each PM a removed user has notifications on" do
+      pm_topic1 = Fabricate(:private_message_topic)
+      pm_topic2 = Fabricate(:private_message_topic)
+      Fabricate(:topic_allowed_group, topic: pm_topic1, group: group)
+      Fabricate(:topic_allowed_group, topic: pm_topic2, group: group)
+      Fabricate(:notification, user: user, topic: pm_topic1)
+      Fabricate(:notification, user: admin, topic: pm_topic2)
 
-      expect_enqueued_with(
-        job: :delete_inaccessible_notifications,
-        args: {
-          topic_id: pm_topic.id,
-        },
-      ) { group.bulk_remove([user.id, admin.id]) }
+      group.bulk_remove([user.id, admin.id])
+
+      expect_job_enqueued(job: :delete_inaccessible_notifications, args: { topic_id: pm_topic1.id })
+      expect_job_enqueued(job: :delete_inaccessible_notifications, args: { topic_id: pm_topic2.id })
     end
 
     it "clears primary_group_id" do

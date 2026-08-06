@@ -3689,8 +3689,6 @@ RSpec.describe Topic do
     end
 
     it "enqueues an inaccessible-notifications cleanup for the topic" do
-      pm_group.add(moderator)
-
       private_topic =
         Fabricate(
           :private_message_topic,
