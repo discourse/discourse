@@ -21,9 +21,17 @@ import { escapeExpression } from "discourse/lib/utilities";
  * @returns {SafeString} the escaped text with backticked spans wrapped in `code`.
  */
 export default function inlineCode(text) {
+  const parts = String(text ?? "").split("`");
+
+  // An even part count means an odd number of backticks, so the marks are unbalanced. Pairing
+  // anyway would code-format the whole tail after the stray one; rendering the string as plain
+  // prose keeps a typo in a translation to one visible backtick rather than a mangled sentence.
+  if (parts.length % 2 === 0) {
+    return trustHTML(escapeExpression(parts.join("`")));
+  }
+
   return trustHTML(
-    String(text ?? "")
-      .split("`")
+    parts
       .map((part, index) =>
         // Odd indices sat between a pair of backticks.
         index % 2

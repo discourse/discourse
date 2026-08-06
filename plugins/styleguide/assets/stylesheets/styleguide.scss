@@ -1,13 +1,13 @@
 @import "colors";
 @import "typography";
 
-// One surface for the page's two card-shaped things, so the hero and an example cannot drift
-// apart the way they had — 1.25rem of padding against 1rem, which no one would defend if asked.
 // The comfortable reading measure, for prose that sits directly on the page with nothing
 // bounding it. Prose INSIDE a box does not get this: the box is already the measure, and
 // capping it there just left obvious dead space inside a drawn border.
 $styleguide-measure: 70ch;
 
+// The card surface, so anything card-shaped is bounded the same way rather than each drawing
+// its own border and padding.
 @mixin styleguide-surface {
   border: 1px solid var(--content-border-color);
   border-radius: var(--d-border-radius);
@@ -23,13 +23,8 @@ $styleguide-measure: 70ch;
   padding: 0 1rem 1rem;
 
   .styleguide-note {
-    // Was --tertiary (saturated brand) with no `color`, so text inherited near-black --primary
-    // on top of it — a contrast failure in light mode and wrong in dark. A quiet surface with
-    // an explicit text colour reads as an aside instead of an alert.
-    padding: 0.75rem 1rem;
-    background-color: var(--primary-very-low);
-    color: var(--primary-high);
-    border-inline-start: 2px solid var(--tertiary);
+    padding: 1em;
+    background-color: var(--tertiary);
     margin-bottom: 1em;
   }
 
@@ -58,10 +53,6 @@ $styleguide-measure: 70ch;
       margin: 1em 0;
     }
 
-    .half-size {
-      width: 50%;
-    }
-
     .styleguide-example {
       @include styleguide-surface;
 
@@ -75,14 +66,19 @@ $styleguide-measure: 70ch;
       &__header {
         grid-row: 1;
         display: flex;
-        align-items: baseline;
+
+        // Not `baseline`: the second item is an icon-only button, and `.btn` is inline-flex
+        // around an svg, so its synthesised baseline is the bottom margin edge and the toggle
+        // hangs below the title rather than centring on it.
+        align-items: center;
         justify-content: space-between;
         gap: var(--space-2);
 
         // Keeps the rhythm even between GROUPS. Within a band the shared row already does it,
-        // but a group whose cards all lack a code toggle would otherwise sit tighter.
-        min-height: 2rem;
-        margin-bottom: 0.5rem;
+        // but a group whose cards all lack a code toggle would otherwise sit tighter. Sized to
+        // a flat icon button (icon + .btn padding); if that changes, this drifts with it.
+        min-height: var(--space-8);
+        margin-bottom: var(--space-2);
       }
 
       &__title {
@@ -107,7 +103,7 @@ $styleguide-measure: 70ch;
       &__description {
         grid-row: 2;
         color: var(--primary-high);
-        margin: 0 0 1rem;
+        margin: 0 0 var(--space-4);
       }
 
       // The card's one call to action, and the only thing wearing the accent mark.
@@ -118,8 +114,8 @@ $styleguide-measure: 70ch;
         color: var(--primary-high);
         background: var(--primary-very-low);
         border-inline-start: 2px solid var(--tertiary);
-        padding: 0.5rem 0.75rem;
-        margin: 0 0 1rem;
+        padding: var(--space-2) var(--space-3);
+        margin: 0 0 var(--space-4);
       }
 
       &__try-this-label {
@@ -136,6 +132,12 @@ $styleguide-measure: 70ch;
         min-width: 0;
       }
 
+      // Deliberately left `overflow: visible`. Examples render floating content in place rather
+      // than through a portal, some of it absolutely positioned against this element: date
+      // pickers always, tooltips when asked to render inline, and select-kit bodies on mobile.
+      // Any non-visible overflow here would clip them — on either axis, since a non-visible
+      // value on one forces the other. A demo wide enough to overhang its track is the lesser
+      // problem.
       &__body {
         grid-row: 4;
         width: 100%;
@@ -149,25 +151,29 @@ $styleguide-measure: 70ch;
         grid-row: 5;
         color: var(--primary-medium);
         font-size: var(--font-down-1);
-        margin: 0.75rem 0 0;
+        margin: var(--space-3) 0 0;
       }
 
       // Output the demo produced, not commentary about it. Bordered on all sides rather than
       // marked on one, so it reads as a panel written into rather than as another aside.
+      //
+      // An opt-in authoring class, like `__note-list`: an example applies it to its own output
+      // element inside the default block. Styled as a descendant rather than placed as a slot,
+      // because that element lands within `__body` and is not a grid item of the card, so a
+      // `grid-row` here would be inert. Documented in the README and the component JSDoc.
       &__result {
-        grid-row: 6;
         display: block;
         color: var(--primary);
         background: var(--primary-very-low);
         border: 1px solid var(--content-border-color);
         border-radius: var(--d-border-radius);
-        padding: 0.5rem 0.75rem;
-        margin: 0.75rem 0 0;
+        padding: var(--space-2) var(--space-3);
+        margin: var(--space-3) 0 0;
       }
 
       &__note-list {
         margin: 0;
-        padding-inline-start: 1.25rem;
+        padding-inline-start: var(--space-5);
 
         li + li {
           margin-block-start: 0.35rem;
@@ -175,10 +181,10 @@ $styleguide-measure: 70ch;
       }
 
       &__code {
-        grid-row: 7;
+        grid-row: 6;
         min-width: 0;
         max-width: 100%;
-        margin-block-start: 1rem;
+        margin-block-start: var(--space-4);
 
         pre {
           margin: 0;
@@ -189,15 +195,22 @@ $styleguide-measure: 70ch;
     .styleguide-subnav {
       position: sticky;
 
-      // Below the site header.
-      top: var(--header-offset);
+      // Below the site header. The fallback matters: --header-offset is written at runtime after
+      // the header's first measurement, and until then an unresolved var() makes `top` compute
+      // to `auto`, which silently stops the bar sticking at all.
+      top: var(--header-offset, 0);
+
+      // Above static card content, and deliberately BELOW the float layer: open select-kit
+      // bodies and float-kit menus paint at z("dropdown"). On a page whose subject is those
+      // controls, a bar that covered the menu the reader just opened is worse than a menu that
+      // overlaps the bar while scrolling past it.
       z-index: 1;
 
       // Required, not decorative: the overflow-nav's scroll fades and its scroll buttons both
       // paint --secondary, so a transparent sticky bar would show content through them.
       background: var(--secondary);
-      margin-bottom: 1.5rem;
-      padding-block: 0.5rem;
+      margin-bottom: var(--space-6);
+      padding-block: var(--space-2);
     }
 
     .styleguide-group {
@@ -211,9 +224,14 @@ $styleguide-measure: 70ch;
       &__examples {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
-        column-gap: 1.5rem;
+        column-gap: var(--space-6);
         row-gap: 0;
 
+        // Sparse placement on purpose: `dense` would backfill a gap left by a `--wide` card
+        // with a later card, so visual order would diverge from the DOM order a keyboard or
+        // screen reader follows. The cost is that a full-width card only lands flush when the
+        // cards before it fill their row — guaranteed only when it comes first, since the
+        // column count here is responsive.
         > .styleguide-example {
           display: grid;
 
@@ -222,8 +240,8 @@ $styleguide-measure: 70ch;
           grid-template-columns: 1fr;
           grid-template-rows: subgrid;
 
-          // header · description · try-this · body · note · result · code
-          grid-row: span 7;
+          // header · description · try-this · body · note · code
+          grid-row: span 6;
           gap: 0;
 
           // Grid items default to min-width: auto, so a long code line or an unbreakable
@@ -232,7 +250,7 @@ $styleguide-measure: 70ch;
 
           // Carried by the card rather than the parent's row-gap, per the note above. Uniform
           // across cards, so their bottom edges stay aligned.
-          margin-bottom: 1.5rem;
+          margin-bottom: var(--space-6);
 
           // Cards that own their width — a side-by-side comparison, a control strip, the
           // synthesis picker — take the whole row rather than being squeezed into a track.
@@ -246,13 +264,13 @@ $styleguide-measure: 70ch;
       &__title {
         font-size: var(--font-up-2);
         font-weight: 600;
-        margin: 0 0 0.25rem;
+        margin: 0 0 var(--space-1);
       }
 
       &__description {
         color: var(--primary-high);
         max-width: $styleguide-measure;
-        margin: 0 0 1.5rem;
+        margin: 0 0 var(--space-6);
       }
     }
 
@@ -369,7 +387,7 @@ $styleguide-measure: 70ch;
 .styleguide-icons {
   display: grid;
 
-  // Was a fixed 5 x 150px track list, which overflowed below ~750px.
+  // Track count follows the width so the grid does not overflow on a narrow viewport.
   grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
   gap: var(--space-2);
 

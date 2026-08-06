@@ -1,4 +1,11 @@
 import Component from "@glimmer/component";
+import StyleguideExample from "./styleguide-example";
+
+// Group ids are only unique within one manifest, so two sets of groups on a page could both
+// hold a "start". A per-instance number keeps the heading ids distinct, which `aria-labelledby`
+// depends on. A plain counter rather than `guidFor`: `@ember/object/internals` is not
+// resolvable from a plugin bundle.
+let groupId = 0;
 
 /**
  * One group of a sectioned styleguide page. Renders its body only while it is the active group.
@@ -7,22 +14,24 @@ import Component from "@glimmer/component";
  * are supplied for you and a call site passes only `@id`. The heading and description are read
  * from the manifest rather than repeated here, keeping one source of truth for group titles.
  *
+ * Yields a `StyleguideExample` curried to `@headingLevel={{3}}`, so a grouped page keeps a
+ * correct `h1` → `h2` → `h3` order without every call site restating the level. Ignoring the
+ * block param and writing `<StyleguideExample>` directly still works, and renders `h2`.
+ *
  * The `{{#if}}` is load-bearing and must NOT become a CSS-hidden variant: unmounting is what
- * tears down the group's live components, so per-example counters and in-flight sources reset
- * when the reader switches away. Glimmer blocks are lazy, so an inactive group's body is never
- * instantiated in the first place.
+ * tears down the group's live components, so each demo's own state is discarded when the reader
+ * switches away rather than left running out of sight. Glimmer blocks are lazy, so an inactive
+ * group's body is never instantiated in the first place.
  */
 export default class StyleguideGroup extends Component {
+  headingId = `styleguide-group-heading-${(groupId += 1)}`;
+
   get isActive() {
     return this.args.id === this.args.activeId;
   }
 
   get record() {
     return (this.args.groups ?? []).find((group) => group.id === this.args.id);
-  }
-
-  get headingId() {
-    return `styleguide-group-heading-${this.args.id}`;
   }
 
   <template>
@@ -45,7 +54,7 @@ export default class StyleguideGroup extends Component {
         {{/if}}
 
         <div class="styleguide-group__examples">
-          {{yield}}
+          {{yield (component StyleguideExample headingLevel=3)}}
         </div>
       </div>
     {{/if}}

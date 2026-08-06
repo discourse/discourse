@@ -19,6 +19,13 @@ Discourse::Application.routes.append { mount Styleguide::Engine, at: "/styleguid
 
 after_initialize do
   register_asset_filter do |type, request, opts|
-    (opts[:path] || "").start_with?("#{Discourse.base_path}/styleguide")
+    path = opts[:path]
+
+    # Keep this plugin's assets off unrelated pages. The QUnit page is the one caller that
+    # resolves plugin JS without a request, leaving no path to judge; treating that as "not my
+    # page" dropped the plugin before its test bundle was collected, which made this plugin's
+    # own JS tests unrunnable. Narrowed to JS on purpose — stylesheet precompilation also
+    # resolves CSS without a request, and that should stay excluded.
+    (type == :js && path.blank?) || path.to_s.start_with?("#{Discourse.base_path}/styleguide")
   end
 end

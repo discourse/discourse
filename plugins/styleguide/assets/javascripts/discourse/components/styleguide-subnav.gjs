@@ -17,14 +17,14 @@ import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
  *
  * Active state is computed from `@activeId` rather than left to `<LinkTo>`: the default group
  * carries no `?group=` in the URL, so Ember would never mark it active. The class goes on the
- * `<a>` (which `.nav-pills` styling and the overflow auto-scroll both key off) as well as the
- * `<li>`, and `aria-current` carries the state non-visually — `<LinkTo>` emits none of its own.
+ * `<a>`, which is what both `.nav-pills` styling and the overflow nav's auto-scroll key off,
+ * and `aria-current` carries the state non-visually — `<LinkTo>` emits none of its own.
  */
 const StyleguideSubnav = <template>
   <div class="styleguide-subnav">
     <DHorizontalOverflowNav @ariaLabel={{@ariaLabel}}>
       {{#each @groups key="id" as |group|}}
-        <li class={{if (eq group.id @activeId) "active"}}>
+        <li>
           <LinkTo
             @route="styleguide.show"
             @models={{array @section.category @section.id}}
