@@ -18108,6 +18108,13 @@ CREATE INDEX idx_posts_user_id_deleted_at ON public.posts USING btree (user_id) 
 
 
 --
+-- Name: idx_reviewables_flagged_by_target_created_by; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_reviewables_flagged_by_target_created_by ON public.reviewables USING btree (target_created_by_id) WHERE ((type)::text = 'ReviewableFlaggedPost'::text);
+
+
+--
 -- Name: idx_reviewables_score_desc_created_at_desc; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -23128,6 +23135,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260805183535'),
 ('20260803015314'),
 ('20260731055703'),
 ('20260730183114'),
