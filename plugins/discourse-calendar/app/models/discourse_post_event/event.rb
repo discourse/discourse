@@ -61,11 +61,11 @@ module DiscoursePostEvent
     def reset_invalid_livestream
       return unless livestream?
 
-      self.livestream = false unless livestream_location? && post&.is_first_post?
+      self.livestream = false unless allowed_livestream_url? && post&.is_first_post?
     end
 
-    def livestream_location?
-      location.to_s.match?(%r{\Ahttps?://}i)
+    def allowed_livestream_url?
+      DiscourseCalendar::Livestream::AllowedHosts.allows_url?(livestream_url)
     end
 
     def create_livestream_chat_channel
