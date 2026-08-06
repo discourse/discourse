@@ -426,6 +426,60 @@ which is also what reversal means.
 > different reason: Rails' query cache is **on** inside `bin/rails runner`, so a loop over one SQL string
 > measures cache hits. Wrap benchmark loops in `ActiveRecord::Base.uncached`.
 
+### Fixed 2026-08-06: nulls outside the segmented path were compared wrongly
+
+Segmenting made *leading* nullable keys correct and fast, and hid four defects in every other place a
+null can appear. Found while designing the sort declarations, since `sort :ran_at, nulls: :last` is
+exactly the declaration that produces these keysets. All four were reproduced by specs first:
+
+1. **Row-wise comparison dropped null rows.** `row_wise?` checked that no *cursor value* was null, never
+   whether a *column* could be. `(created_at, pinned_at, id) > (…)` is NULL for every row whose
+   `pinned_at` is NULL, so a page skipped them outright.
+2. **The OR-of-ANDs form had the same hole.** A key whose nulls sort last places its null rows *after*
+   every value, so the disjunct must be `(col > :v OR col IS NULL)`.
+3. **`Term::Null` assumed nulls sort last.** "Nothing follows a NULL" holds only in that reading, and
+   `Key#reverse` flips placement — so *every backwards page* over a non-leading nullable key found
+   nothing at all.
+4. **The valued band was always placed first.** With `nulls: :first` the null band is read first, so the
+   sequence was inverted.
+
+Fixed by giving the key two answers instead of one: **`nulls_last?`** is where its nulls sort in this
+reading (a declared placement, or the database's own default — verified: ascending puts them last,
+descending first), and **`nulls_after_values?`** is whether the comparison has to take rows in rather
+than compare them. `Predicate` now refuses a keyset whose leading key is nullable, since a bound cannot
+be correct there; the only way to read one is within a segment, which is what `Order` builds.
+
+**A placement in `ORDER BY` constrains which index can serve it**, and the valued band has no nulls to
+place, so it now emits none — `Keyset#valued`, via `Key#without_nulls`. Measured on 500k rows, page of
+50, deep cursor:
+
+| the band's `ORDER BY` | plan | records |
+| --- | --- | --- |
+| `pinned_at DESC NULLS LAST, id ASC` | Index Only Scan, purpose-built `(pinned_at DESC NULLS LAST, id)` | — |
+| `pinned_at DESC, id ASC` | **Incremental Sort** — no index carries that mix | 1.94 ms |
+| `pinned_at DESC, id ASC`, with `(pinned_at DESC, id)` built | Index Only Scan | 0.58 ms |
+| `pinned_at DESC, id DESC` | **Index Only Scan Backward, plain `(pinned_at, id)`** | **0.35 ms** |
+
+The last row is the one that matters, and it is the measured case for **`unique_by` following the leading
+key's direction**: a uniform order needs no bespoke index at all, because one ordinary composite index
+serves it in both directions, nulls included. A mixed order needs its own index either way — with no
+placement to carry, that index is simply `(col DESC, id)`.
+
+The fix first landed as flags on `Key` — `nulls_last?`, `nulls_after_values?`, `opposite_nulls`,
+`placement` — and four conditionals keyed on the same value, two of them compounds that callers
+assembled themselves. That is a missing type, so **`Nulls`** now holds it, in one case per reading:
+`Last`, `First`, and `Undeclared` for a key expecting none — either nothing was declared, or the band
+being read has a value in every row. Each answers `expected?`, `placement`, `to_sql`, `reversed`,
+`trailing?` (there is a band of nulls a comparison has to take in) and `read_first?` (they are read
+before the values). `Key` holds one and delegates; `Term` and `Order` ask instead of deciding; and the
+question `Predicate` and `Order.for` share — is this order read in bands? — is `Keyset#splits?`.
+
+Coverage that was missing, and is what caught this: `spec/lib/json_api_kit/pagination_spec.rb` states
+properties of a whole listing — paging forwards through it, and reading back from *every* row — against
+`scope.order(keyset.order)` as the oracle, for a nullable key that leads, one that does not, and one
+whose nulls sort first. Two examples in `predicate_spec` were rebuilt rather than kept: they compared a
+nulls-last key *leading* an unsegmented keyset, which is now refused input.
+
 ## The agent skill
 
 `.skills/discourse-json-api-kit-authoring/SKILL.md`, following the convention in `.skills/`

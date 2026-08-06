@@ -45,6 +45,48 @@ RSpec.describe JsonApiKit::Pagination::Keyset::Key do
     end
   end
 
+  describe "#nulls_trailing?" do
+    it "reads a column that has no nulls to trail with" do
+      expect(key).not_to be_nulls_trailing
+    end
+
+    context "when the key's nulls sort last" do
+      let(:key) { described_class.new(:bumped_at, model:, nulls: :last) }
+
+      it "trails the values with them" do
+        expect(key).to be_nulls_trailing
+      end
+    end
+  end
+
+  describe "#nulls_read_first?" do
+    it "reads its rows the way the database orders them ascending, nulls last" do
+      expect(key).not_to be_nulls_read_first
+    end
+
+    context "when the key's nulls sort first" do
+      let(:key) { described_class.new(:bumped_at, model:, nulls: :first) }
+
+      it "reads them before the values" do
+        expect(key).to be_nulls_read_first
+      end
+    end
+  end
+
+  describe "#without_nulls" do
+    subject(:without_nulls) { key.without_nulls }
+
+    let(:key) { described_class.new(:bumped_at, model:, direction: :desc, nulls: :last) }
+
+    it "names no placement, which would constrain the index it reads for nothing" do
+      expect(without_nulls.ordering.to_s).to eq(%("topics"."bumped_at" DESC))
+    end
+
+    it "keeps everything else about the key" do
+      expect(without_nulls.direction).to eq(:desc)
+    end
+  end
+
   describe "#projected?" do
     it "reads a plain column straight off the table" do
       expect(key).not_to be_projected

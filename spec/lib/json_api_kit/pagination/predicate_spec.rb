@@ -68,6 +68,7 @@ RSpec.describe JsonApiKit::Pagination::Predicate do
     context "with a nullable key whose cursor value is null" do
       let(:keys) do
         [
+          JsonApiKit::Pagination::Keyset::Key.new(:created_at, model:),
           JsonApiKit::Pagination::Keyset::Key.new(
             :bumped_at,
             model:,
@@ -77,7 +78,7 @@ RSpec.describe JsonApiKit::Pagination::Predicate do
           JsonApiKit::Pagination::Keyset::Key.new(:id, model:),
         ]
       end
-      let(:record) { Topic.new(id: 12, bumped_at: nil) }
+      let(:record) { Topic.new(id: 12, created_at: Time.utc(2026, 8, 3), bumped_at: nil) }
 
       it "tests the null with IS NULL, which an index can use" do
         expect(sql).to include(%("topics"."bumped_at" IS NULL))
@@ -89,6 +90,42 @@ RSpec.describe JsonApiKit::Pagination::Predicate do
 
       it "never reaches for null-safe equality" do
         expect(sql).not_to include("DISTINCT FROM")
+      end
+    end
+
+    context "with a nullable key that does not lead" do
+      let(:keys) do
+        [
+          JsonApiKit::Pagination::Keyset::Key.new(:created_at, model:),
+          JsonApiKit::Pagination::Keyset::Key.new(:pinned_at, model:, nulls: :last),
+          JsonApiKit::Pagination::Keyset::Key.new(:id, model:),
+        ]
+      end
+      let(:record) do
+        Topic.new(id: 12, created_at: Time.utc(2026, 8, 3), pinned_at: Time.utc(2026, 7, 1))
+      end
+
+      it "counts a row whose value is null as following one that has a value" do
+        expect(sql).to include(%("topics"."pinned_at" IS NULL))
+      end
+
+      it "compares key by key, row-wise comparison dropping every null row" do
+        expect(sql).not_to include(") > (")
+      end
+    end
+
+    context "when a null cursor value's nulls sort first" do
+      let(:keys) do
+        [
+          JsonApiKit::Pagination::Keyset::Key.new(:created_at, model:),
+          JsonApiKit::Pagination::Keyset::Key.new(:pinned_at, model:, nulls: :first),
+          JsonApiKit::Pagination::Keyset::Key.new(:id, model:),
+        ]
+      end
+      let(:record) { Topic.new(id: 12, created_at: Time.utc(2026, 8, 3), pinned_at: nil) }
+
+      it "counts a row that has a value as following the null" do
+        expect(sql).to include(%("topics"."pinned_at" IS NOT NULL))
       end
     end
 
@@ -149,16 +186,12 @@ RSpec.describe JsonApiKit::Pagination::Predicate do
     context "with a nullable key whose cursor value is null" do
       let(:keys) do
         [
-          JsonApiKit::Pagination::Keyset::Key.new(
-            :bumped_at,
-            model:,
-            direction: :desc,
-            nulls: :last,
-          ),
+          JsonApiKit::Pagination::Keyset::Key.new(:created_at, model:),
+          JsonApiKit::Pagination::Keyset::Key.new(:bumped_at, model:, nulls: :last),
           JsonApiKit::Pagination::Keyset::Key.new(:id, model:),
         ]
       end
-      let(:record) { Topic.new(id: 12, bumped_at: nil) }
+      let(:record) { Topic.new(id: 12, created_at: Time.utc(2026, 8, 3), bumped_at: nil) }
 
       it "binds nothing for a key it never compares" do
         expect(bindings).not_to have_key(:bumped_at)
@@ -169,13 +202,19 @@ RSpec.describe JsonApiKit::Pagination::Predicate do
   describe "#apply" do
     subject(:selected) { predicate.apply(scope).order(:id).map(&:id) }
 
-    fab!(:pinned_late) { Fabricate(:topic, pinned_at: Time.utc(2026, 8, 2)) }
-    fab!(:pinned_early) { Fabricate(:topic, pinned_at: Time.utc(2026, 8, 1)) }
-    fab!(:first_unpinned, :topic)
-    fab!(:last_unpinned, :topic)
+    # One created_at, so the nullable key behind it is what orders these rows.
+    fab!(:pinned_late) do
+      Fabricate(:topic, created_at: Time.utc(2026, 8, 1), pinned_at: Time.utc(2026, 8, 2))
+    end
+    fab!(:pinned_early) do
+      Fabricate(:topic, created_at: Time.utc(2026, 8, 1), pinned_at: Time.utc(2026, 8, 1))
+    end
+    fab!(:first_unpinned) { Fabricate(:topic, created_at: Time.utc(2026, 8, 1), pinned_at: nil) }
+    fab!(:last_unpinned) { Fabricate(:topic, created_at: Time.utc(2026, 8, 1), pinned_at: nil) }
 
     let(:keys) do
       [
+        JsonApiKit::Pagination::Keyset::Key.new(:created_at, model:),
         JsonApiKit::Pagination::Keyset::Key.new(:pinned_at, model:, direction: :desc, nulls: :last),
         JsonApiKit::Pagination::Keyset::Key.new(:id, model:),
       ]
@@ -202,12 +241,8 @@ RSpec.describe JsonApiKit::Pagination::Predicate do
     context "when the cursor names a row that has a value" do
       let(:record) { pinned_late }
 
-      it "selects the rows following it among those that also have one" do
-        expect(selected).to eq([pinned_early.id])
-      end
-
-      it "leaves the nulls alone, a bound on the column being what makes the page seekable" do
-        expect(selected).not_to include(first_unpinned.id, last_unpinned.id)
+      it "selects the rows following it, those with no value among them" do
+        expect(selected).to eq([pinned_early.id, first_unpinned.id, last_unpinned.id])
       end
     end
   end

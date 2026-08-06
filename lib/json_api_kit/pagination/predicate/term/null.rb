@@ -14,15 +14,23 @@ module JsonApiKit
 
           def matches = "#{identifier} IS NULL"
 
-          # Within a group of NULLs nothing sorts after NULL, so no row could ever satisfy
-          # this disjunct.
-          def disjuncts(_matched) = []
+          # Where nulls sort last nothing follows one, so there is no disjunct to contribute;
+          # where they sort first, every row that has a value does.
+          def disjuncts(matched)
+            return super if nulls_read_first?
+            []
+          end
 
           # A bound against NULL is NULL, and would leave the whole comparison matching
           # nothing at all.
           def bound_on(comparison) = comparison
 
           def bindings = {}
+
+          private
+
+          # Where nulls sort first, the rows following a null are the rows that have a value.
+          def after = "#{identifier} IS NOT NULL"
         end
       end
     end

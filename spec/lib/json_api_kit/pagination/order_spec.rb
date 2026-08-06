@@ -45,6 +45,18 @@ RSpec.describe JsonApiKit::Pagination::Order do
       it "drops the key from the tail, where every row shares its one null value" do
         expect(order.segments.last.keyset.keys.map(&:name)).to eq([:id])
       end
+
+      it "asks for no nulls placement in the valued band, which constrains the index it reads" do
+        expect(order.first.keyset.order.join(" ")).not_to include("NULLS")
+      end
+    end
+
+    context "with a leading key whose nulls sort first" do
+      let(:keys) { [key.new(:pinned_at, model:, nulls: :first), key.new(:id, model:)] }
+
+      it "reads the null band before the valued one" do
+        expect(order.first.scope(scope).map(&:id)).to contain_exactly(unpinned.id)
+      end
     end
 
     context "with a nullable key and nothing to break its ties" do

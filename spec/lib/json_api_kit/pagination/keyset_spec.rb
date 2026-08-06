@@ -45,6 +45,44 @@ RSpec.describe JsonApiKit::Pagination::Keyset do
     end
   end
 
+  describe "#splits?" do
+    it "reads a listing whose leading key always has a value as one band" do
+      expect(keyset).not_to be_splits
+    end
+
+    context "when the leading key can be null" do
+      let(:keys) do
+        [
+          described_class::Key.new(:bumped_at, model:, nulls: :last),
+          described_class::Key.new(:id, model:),
+        ]
+      end
+
+      it "splits it, the rows it is null in belonging to a band of their own" do
+        expect(keyset).to be_splits
+      end
+    end
+  end
+
+  describe "#valued" do
+    subject(:valued) { keyset.valued }
+
+    let(:keys) do
+      [
+        described_class::Key.new(:bumped_at, model:, direction: :desc, nulls: :last),
+        described_class::Key.new(:id, model:),
+      ]
+    end
+
+    it "reads the leading key as one that cannot be null" do
+      expect(valued.leading).not_to be_nullable
+    end
+
+    it "leaves the keys behind it as they are, nulls and all" do
+      expect(valued.keys.drop(1)).to eq(keys.drop(1))
+    end
+  end
+
   describe "#order" do
     subject(:order) { keyset.order.map(&:to_s) }
 

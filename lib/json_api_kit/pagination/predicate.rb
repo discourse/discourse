@@ -12,6 +12,8 @@ module JsonApiKit
     # text here is what a resource authored: a key's name and its SQL.
     class Predicate
       def initialize(keyset, cursor)
+        raise ArgumentError, "a split order is read one band at a time" if keyset.splits?
+
         @terms = keyset.keys.zip(cursor.values).map { Term.for(*it) }
         raise Cursor::Invalid, "this order needs #{terms.size} values" if terms.size != cursor.size
       end
@@ -32,8 +34,9 @@ module JsonApiKit
       attr_reader :terms
 
       # Row-wise comparison is the form an index seeks on directly, but it evaluates to
-      # NULL — dropping every row — as soon as one element is NULL, and it can only carry
-      # a single direction.
+      # NULL — dropping every row — as soon as one element is NULL, so it is only available
+      # where no key holds a null the comparison has to take in, and it can only carry a
+      # single direction.
       def row_wise?
         terms.many? && terms.all?(&:comparable?) && terms.map(&:operator).uniq.one?
       end

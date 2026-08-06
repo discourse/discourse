@@ -6,9 +6,10 @@ module JsonApiKit
     # which directions, which joins, which of them nullable. Keyset pagination compares
     # rows against this order, and a cursor carries one value per key of it.
     #
-    # A nullable key is ordered with its nulls last and is otherwise a key like any other —
-    # a listing whose *leading* key is nullable is split into segments instead (see Order),
-    # because a query that reaches the null tail cannot bound the column the tail is null in.
+    # A nullable key is a key like any other until it is compared, where the rows it is null
+    # in have to be taken in rather than compared (see Predicate). A listing whose *leading*
+    # key is nullable is split into segments instead (see Order), because a query that reaches
+    # the null tail cannot bound the column the tail is null in.
     class Keyset
       attr_reader :keys
 
@@ -24,6 +25,15 @@ module JsonApiKit
       # The order behind the leading key. A nullable leading key must have one: the rows its
       # value is null in are ordered by nothing else, and a page needs a total order.
       def rest = self.class.new(keys.drop(1))
+
+      # Whether the listing this order reads is split into bands: it is when the leading key can
+      # be null, the rows it is null in belonging to a band of their own (see Order). Only an
+      # order that does not split can be compared, a bound on a nullable key being no bound.
+      def splits? = leading.nullable?
+
+      # This order as the band where its leading key has values reads it: nulls cannot appear
+      # there, so that key names no placement.
+      def valued = self.class.new([leading.without_nulls, *keys.drop(1)])
 
       def order = keys.map(&:ordering)
 

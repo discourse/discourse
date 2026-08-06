@@ -20,20 +20,22 @@ module JsonApiKit
 
       class << self
         # Derives the segments a keyset implies. Only a *leading* nullable key splits the
-        # listing: anywhere else, the keys in front of it are bounded and the null is just a
-        # value the comparison handles. The tail is read again the same way, so an order that
-        # leads with two nullable keys has three segments.
+        # listing: anywhere else the comparison takes the nulls in itself (see Predicate). The
+        # band read behind the split is read again the same way, so an order that leads with two
+        # nullable keys has three segments.
         def for(keyset) = new(segments_for(keyset))
 
         private
 
+        # Which band comes first is the key's own nulls placement: an id names a band, it does
+        # not number the sequence.
         def segments_for(keyset, id: 0)
-          return [Segment.new(id:, keyset:)] unless keyset.leading.nullable?
+          return [Segment.new(id:, keyset:)] unless keyset.splits?
 
-          [
-            Segment.new(id:, keyset:, rows: keyset.leading.valued_rows),
-            *segments_for(keyset.rest, id: id + 1).map { it.narrowed_by(keyset.leading.null_rows) },
-          ]
+          leading = keyset.leading
+          valued = Segment.new(id:, keyset: keyset.valued, rows: leading.valued_rows)
+          nulls = segments_for(keyset.rest, id: id + 1).map { it.narrowed_by(leading.null_rows) }
+          leading.nulls_read_first? ? [*nulls, valued] : [valued, *nulls]
         end
       end
 

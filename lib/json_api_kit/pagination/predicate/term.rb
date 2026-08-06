@@ -14,7 +14,7 @@ module JsonApiKit
         OPERATORS = { asc: ">", desc: "<" }.freeze
 
         delegate :identifier, to: :key
-        delegate :direction, :name, to: :key, private: true
+        delegate :direction, :name, :nulls_trailing?, :nulls_read_first?, to: :key, private: true
 
         def self.for(key, value) = value.nil? ? Null.new(key) : new(key, value)
 
@@ -23,8 +23,10 @@ module JsonApiKit
           @value = value
         end
 
-        # Whether the term can take part in a comparison at all.
-        def comparable? = true
+        # Whether the term can take part in a row-wise comparison, which drops every row holding
+        # a NULL: a null value cannot (see Null), and neither can a key whose nulls follow its
+        # values, those rows belonging in the comparison rather than out of it.
+        def comparable? = !nulls_trailing?
 
         def operator = OPERATORS[direction]
 
@@ -47,7 +49,14 @@ module JsonApiKit
 
         attr_reader :key, :value
 
-        def after = "#{identifier} #{operator} #{placeholder}"
+        # The rows following the cursor's value at this key. Where the key's nulls follow its
+        # values, the rows it is null in follow this one too, and no comparison reaches them.
+        def after
+          return moved_past unless nulls_trailing?
+          "(#{moved_past} OR #{identifier} IS NULL)"
+        end
+
+        def moved_past = "#{identifier} #{operator} #{placeholder}"
 
         def at_or_after = "#{identifier} #{operator}= #{placeholder}"
       end
