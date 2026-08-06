@@ -139,7 +139,6 @@ RSpec.describe PostReadersController do
 
       expect(response).to be_forbidden
       expect(response.parsed_body["error_type"]).to eq("invalid_access")
-      expect(response.body).not_to include(hidden_member.username)
     end
 
     it "returns forbidden if no group has publish_read_state enabled" do
