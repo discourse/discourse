@@ -11,8 +11,7 @@ let groupId = 0;
  * One group of a sectioned styleguide page. Renders its body only while it is the active group.
  *
  * Invoked through the curried component `StyleguideGroups` yields, so `@activeId` and `@groups`
- * are supplied for you and a call site passes only `@id`. The heading and description are read
- * from the manifest rather than repeated here, keeping one source of truth for group titles.
+ * are supplied for you and a call site passes only `@id`.
  *
  * Yields a `StyleguideExample` curried to `@headingLevel={{3}}`, so a grouped page keeps a
  * correct `h1` → `h2` → `h3` order without every call site restating the level. Ignoring the

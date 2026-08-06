@@ -124,7 +124,7 @@ export default class StyleguideExample extends Component {
         </p>
       {{/if}}
 
-      <section class="styleguide-example__body">{{yield}}</section>
+      <div class="styleguide-example__body">{{yield}}</div>
 
       {{! The far side of the demo from the instruction: what to notice once it has been used. A
       div rather than a paragraph because a note is as often a short list as a sentence. }}

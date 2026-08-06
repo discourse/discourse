@@ -4,11 +4,6 @@ import { escapeExpression } from "discourse/lib/utilities";
 /**
  * Renders backticked spans in a translated string as inline code.
  *
- * The prose on this page is dense with argument and block names, and an identifier set as
- * running text is both harder to scan and occasionally ambiguous — "never mutates @value" reads
- * oddly mid-sentence. Marking them up in the translation keeps the sentence whole, which
- * splitting it across keys would not.
- *
  * Backticks rather than markup in the YAML: a translator can move them without understanding
  * HTML, and escaping stays here rather than being trusted to every string.
  *
