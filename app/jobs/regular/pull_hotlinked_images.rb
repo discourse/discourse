@@ -28,47 +28,41 @@ module Jobs
 
       changed_hotlink_records = false
 
-      extract_images_from(post.cooked).each do |node|
-        download_src =
-          original_src = node["src"] || node[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR] || node["href"]
-        download_src = replace_encoded_src(download_src)
-        download_src =
-          "#{SiteSetting.force_https ? "https" : "http"}:#{original_src}" if original_src.start_with?(
-          "//",
-        )
-        normalized_src = normalize_src(download_src)
+      HotlinkedMedia
+        .extract_candidates(post.cooked)
+        .each do |node|
+          download_src = HotlinkedMedia.download_src_for(node)
+          normalized_src = normalize_src(download_src)
 
-        next if !should_download_image?(download_src, post)
+          next if !should_download_image?(download_src, post)
 
-        hotlink_record = hotlinked_map[normalized_src]
+          hotlink_record = hotlinked_map[normalized_src]
 
-        if hotlink_record.nil?
-          hotlinked_map[normalized_src] = hotlink_record =
-            PostHotlinkedMedia.new(post: post, url: normalized_src)
-          begin
-            hotlink_record.upload = attempt_download(download_src, post.user_id)
-            hotlink_record.status = :downloaded
-          rescue ImageTooLargeError
-            hotlink_record.status = :too_large
-          rescue ImageBrokenError
-            hotlink_record.status = :download_failed
-          rescue UploadCreateError
-            hotlink_record.status = :upload_create_failed
+          if hotlink_record.nil?
+            hotlinked_map[normalized_src] = hotlink_record =
+              PostHotlinkedMedia.new(post: post, url: normalized_src)
+            status, upload =
+              HotlinkedMedia.download(
+                download_src,
+                post.user_id,
+                tmp_file_name: "discourse-hotlinked",
+              )
+            hotlink_record.upload = upload
+            hotlink_record.status = status
           end
-        end
 
-        if hotlink_record.changed?
-          changed_hotlink_records = true
-          hotlink_record.save!
+          if hotlink_record.changed?
+            changed_hotlink_records = true
+            hotlink_record.save!
+          end
+        rescue => e
+          raise e if Rails.env.test?
+          log(
+            :error,
+            "Failed to pull hotlinked image (#{download_src}) post: #{@post_id}\n" + e.message +
+              "\n" + e.backtrace.join("\n"),
+          )
         end
-      rescue => e
-        raise e if Rails.env.test?
-        log(
-          :error,
-          "Failed to pull hotlinked image (#{download_src}) post: #{@post_id}\n" + e.message +
-            "\n" + e.backtrace.join("\n"),
-        )
-      end
 
       if changed_hotlink_records
         post.trigger_post_process(
@@ -155,10 +149,7 @@ module Jobs
     end
 
     def extract_images_from(html)
-      doc = Nokogiri::HTML5.fragment(html)
-
-      doc.css("img[src], [#{PrettyText::BLOCKED_HOTLINKED_SRC_ATTR}], a.lightbox[href]") -
-        doc.css("img.avatar") - doc.css(".lightbox img[src]")
+      HotlinkedMedia.extract_candidates(html)
     end
 
     def should_download_image?(src, post = nil)
@@ -226,10 +217,6 @@ module Jobs
       return false if access_control_post.blank?
 
       guardian.can_see_post?(access_control_post)
-    end
-
-    def replace_encoded_src(src)
-      PostHotlinkedMedia.normalize_src(src, reset_scheme: false)
     end
 
     def normalize_src(src)
