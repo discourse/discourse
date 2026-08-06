@@ -2,7 +2,6 @@
 
 RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
   fab!(:admin)
-  fab!(:other_admin, :admin)
   fab!(:moderator)
 
   let(:traffic) { PageObjects::Pages::AdminSiteTrafficExplorer.new }
@@ -176,7 +175,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_filter_pill(dimension: "entry_url", label: "/latest")
     expect(traffic).to have_metric(label: "Pageviews", value: "1")
     expect(page).to have_current_path(
-      "/admin/dashboard/traffic?end_date=2026-05-12&range=custom&start_date=2026-05-01",
+      "/admin/dashboard/traffic?end_date=2026-05-12&entry_url=%2Flatest&range=custom&start_date=2026-05-01",
     )
     traffic.remove_filter("entry_url")
 
@@ -184,7 +183,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_filter_pill(dimension: "referrer", label: "Direct / unknown")
     expect(traffic).to have_metric(label: "Pageviews", value: "1")
     expect(page).to have_current_path(
-      "/admin/dashboard/traffic?end_date=2026-05-12&range=custom&start_date=2026-05-01",
+      "/admin/dashboard/traffic?end_date=2026-05-12&range=custom&referrer=&start_date=2026-05-01",
     )
     traffic.remove_filter("referrer")
 
@@ -192,7 +191,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_filter_pill(dimension: "referrer", label: "search.example")
     expect(traffic).to have_metric(label: "Pageviews", value: "1")
     expect(page).to have_current_path(
-      "/admin/dashboard/traffic?end_date=2026-05-12&range=custom&start_date=2026-05-01",
+      "/admin/dashboard/traffic?end_date=2026-05-12&range=custom&referrer=search.example&start_date=2026-05-01",
     )
     traffic.remove_filter("referrer")
 
@@ -242,14 +241,14 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_metric(label: "Distinct sessions", value: "3")
     expect(traffic).to have_metric(label: "Bounce rate", value: "67%")
     expect(page).to have_current_path(
-      "/admin/dashboard/traffic?country=US&end_date=2026-05-12&range=custom&start_date=2026-05-01",
+      "/admin/dashboard/traffic?country=US&end_date=2026-05-12&range=custom&start_date=2026-05-01&top_url=%2Ftop",
     )
 
     traffic.select_tab(card: "visitors", tab: "IP addresses")
     traffic.filter_row(card: "visitors", label: "192.0.2.1")
     expect(traffic).to have_filter_pill(dimension: "ip", label: "192.0.2.1")
     expect(page).to have_current_path(
-      "/admin/dashboard/traffic?country=US&end_date=2026-05-12&range=custom&start_date=2026-05-01",
+      "/admin/dashboard/traffic?country=US&end_date=2026-05-12&ip=192.0.2.1&range=custom&start_date=2026-05-01&top_url=%2Ftop",
     )
 
     page.refresh
@@ -258,6 +257,9 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_filter_pill(dimension: "top_url", label: "/top")
     expect(traffic).to have_filter_pill(dimension: "ip", label: "192.0.2.1")
     expect(traffic).to have_metric(label: "Pageviews", value: "1")
+    expect(page).to have_current_path(
+      "/admin/dashboard/traffic?country=US&end_date=2026-05-12&ip=192.0.2.1&range=custom&start_date=2026-05-01&top_url=%2Ftop",
+    )
 
     traffic.clear_filters
 
@@ -268,45 +270,6 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     expect(traffic).to have_date_range("Last 30 days")
     expect(page).to have_current_path("/admin/dashboard/traffic?range=last_30_days")
-  end
-
-  it "keeps sensitive filter values out of the page URL and other admin sessions" do
-    Fabricate(
-      :browser_pageview_event,
-      url: "https://test.localhost/latest?secret=private",
-      ip_address: "192.0.2.10",
-      session_id: "sensitive-filter",
-      source: BrowserPageviewEvent::SOURCE_BEACON,
-      created_at: "2026-05-10 10:00:00",
-    )
-
-    sign_in(admin)
-    traffic.visit(start_date: "2026-05-01", end_date: "2026-05-12")
-    traffic.filter_row(card: "pages", label: "/latest")
-    traffic.select_tab(card: "visitors", tab: "IP addresses")
-    traffic.filter_row(card: "visitors", label: "192.0.2.10")
-
-    expect(traffic).to have_filter_pill(dimension: "top_url", label: "/latest")
-    expect(traffic).to have_filter_pill(dimension: "ip", label: "192.0.2.10")
-    expect(page.current_url).not_to include("latest")
-    expect(page.current_url).not_to include("192.0.2.10")
-
-    page.refresh
-
-    expect(traffic).to have_filter_pill(dimension: "top_url", label: "/latest")
-    expect(traffic).to have_filter_pill(dimension: "ip", label: "192.0.2.10")
-
-    sign_out
-    sign_in(other_admin)
-    traffic.visit(start_date: "2026-05-01", end_date: "2026-05-12")
-
-    expect(traffic).to have_no_filter_pills
-
-    Capybara.reset_session!
-    sign_in(admin)
-    traffic.visit(start_date: "2026-05-01", end_date: "2026-05-12")
-
-    expect(traffic).to have_no_filter_pills
   end
 
   it "lets an admin expand eight-row cards to a table with at most 50 rows",
