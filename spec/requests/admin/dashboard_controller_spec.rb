@@ -1439,50 +1439,71 @@ RSpec.describe Admin::DashboardController do
         source: BrowserPageviewEvent::SOURCE_BEACON,
         created_at: "2026-05-11 10:00:00",
       )
+      Fabricate(
+        :browser_pageview_session_engagement,
+        session_id: "admin-session",
+        engaged_seconds: 60,
+      )
+      Fabricate(
+        :browser_pageview_session_engagement,
+        session_id: "anonymous-session",
+        engaged_seconds: 0,
+      )
 
       get "/admin/dashboard/traffic.json", params: request_params
 
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["partial_data"]).to be_nil
-      expect(response.parsed_body["summary"]).to include(
-        "pageviews" => 3,
-        "logged_in_share" => 67,
-      )
-      dimensions = response.parsed_body["dimensions"]
-      expect(dimensions["top_urls"]).to contain_exactly(
-        include("value" => "/landing", "label" => "/landing", "pageviews" => 1),
-        include("value" => "/latest", "label" => "/latest", "pageviews" => 1),
-        include("value" => "/top", "label" => "/top", "pageviews" => 1),
-      )
-      expect(dimensions["entry_urls"]).to contain_exactly(
-        include("value" => "/landing", "label" => "/landing", "pageviews" => 1),
-        include("value" => "/top", "label" => "/top", "pageviews" => 1),
-      )
-      expect(dimensions["referrers"]).to contain_exactly(
-        include("value" => "search.example", "label" => "search.example", "pageviews" => 1),
-        include("value" => nil, "label" => "Direct / unknown", "pageviews" => 1),
-      )
-      expect(dimensions["countries"]).to contain_exactly(
-        include("value" => "US", "label" => "United States", "pageviews" => 2),
-        include("value" => "GB", "label" => "United Kingdom", "pageviews" => 1),
-      )
-      expect(dimensions["networks"]).to contain_exactly(
-        include("value" => "AS64496", "label" => "AS64496 Example Network", "pageviews" => 3),
-      )
-      expect(dimensions["browsers"]).to contain_exactly(
-        include("value" => "chrome", "label" => "Chrome", "pageviews" => 2),
-        include("value" => "firefox", "label" => "Firefox", "pageviews" => 1),
-      )
-      expect(dimensions["ip_addresses"]).to contain_exactly(
-        include("value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2),
-        include("value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1),
+      expect(response.parsed_body).to include(
+        "partial_data" => nil,
+        "summary" => {
+          "pageviews" => 3,
+          "distinct_sessions" => 2,
+          "logged_in_share" => 67,
+          "bounce_rate" => 50,
+          "average_session_duration_seconds" => 30,
+        },
+        "dimensions" => {
+          "top_urls" => contain_exactly(
+            include("value" => "/landing", "label" => "/landing", "pageviews" => 1),
+            include("value" => "/latest", "label" => "/latest", "pageviews" => 1),
+            include("value" => "/top", "label" => "/top", "pageviews" => 1),
+          ),
+          "entry_urls" => contain_exactly(
+            include("value" => "/landing", "label" => "/landing", "pageviews" => 1),
+            include("value" => "/top", "label" => "/top", "pageviews" => 1),
+          ),
+          "referrers" => contain_exactly(
+            include(
+              "value" => "search.example",
+              "label" => "search.example",
+              "pageviews" => 1,
+            ),
+            include("value" => nil, "label" => "Direct / unknown", "pageviews" => 1),
+          ),
+          "countries" => contain_exactly(
+            include("value" => "US", "label" => "United States", "pageviews" => 2),
+            include("value" => "GB", "label" => "United Kingdom", "pageviews" => 1),
+          ),
+          "networks" => contain_exactly(
+            include(
+              "value" => "AS64496",
+              "label" => "AS64496 Example Network",
+              "pageviews" => 3,
+            ),
+          ),
+          "browsers" => contain_exactly(
+            include("value" => "chrome", "label" => "Chrome", "pageviews" => 2),
+            include("value" => "firefox", "label" => "Firefox", "pageviews" => 1),
+          ),
+          "ip_addresses" => contain_exactly(
+            include("value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2),
+            include("value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1),
+          ),
+        },
       )
 
       get "/admin/dashboard/traffic.json", params: request_params.merge(referrer: "")
 
-      expect(response.status).to eq(200)
-      expect(response.parsed_body).not_to have_key("filters")
-      expect(response.parsed_body.dig("summary", "pageviews")).to eq(1)
+      expect(response.parsed_body).to include("summary" => include("pageviews" => 1))
     end
 
     it "reports when older traffic is no longer available",
