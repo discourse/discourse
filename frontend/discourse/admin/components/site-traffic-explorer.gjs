@@ -218,6 +218,8 @@ export default class SiteTrafficExplorer extends Component {
         {{#if this.partialWarning}}
           <div
             class="alert alert-warning site-traffic-explorer__partial-warning"
+            role="status"
+            aria-live="polite"
             data-test-site-traffic-partial-warning
           >
             <strong>{{i18n
@@ -236,77 +238,94 @@ export default class SiteTrafficExplorer extends Component {
               class="btn-primary"
             />
           </div>
-        {{else if @traffic}}
-          {{#if @hasPageviews}}
-            <section
-              class="site-traffic-explorer__metrics"
-              aria-label={{i18n "admin.site_traffic_explorer.summary"}}
-            >
-              {{#each this.metrics as |metric|}}
-                <SiteTrafficMetric
-                  @name={{metric.name}}
-                  @label={{metric.label}}
-                  @tooltip={{metric.tooltip}}
-                  @value={{metric.value}}
-                />
-              {{/each}}
-            </section>
-
-            <section
-              class="site-traffic-explorer__chart"
-              aria-label={{i18n
-                "admin.site_traffic_explorer.traffic_over_time"
-              }}
-            >
-              <h2>{{i18n "admin.site_traffic_explorer.traffic_over_time"}}</h2>
-              <AdminReportStackedChart
-                @model={{this.chartModel}}
-                @options={{this.chartOptions}}
-              />
-              <div class="sr-only">
-                {{#each this.series as |series|}}
-                  <span
-                    data-test-traffic-series={{series.key}}
-                  >{{series.total}}</span>
-                {{/each}}
-              </div>
-            </section>
-
-            <div class="site-traffic-explorer__cards">
-              <SiteTrafficBreakdownCard
-                @name="acquisition"
-                @title={{i18n "admin.site_traffic_explorer.cards.acquisition"}}
-                @tabs={{this.acquisitionTabs}}
-                @dimensions={{@traffic.dimensions}}
-                @setFilter={{@setFilter}}
-              />
-              <SiteTrafficBreakdownCard
-                @name="pages"
-                @title={{i18n "admin.site_traffic_explorer.cards.pages"}}
-                @tabs={{this.pagesTabs}}
-                @dimensions={{@traffic.dimensions}}
-                @setFilter={{@setFilter}}
-              />
-              <SiteTrafficBreakdownCard
-                @name="visitors"
-                @title={{i18n "admin.site_traffic_explorer.cards.visitors"}}
-                @tabs={{this.visitorsTabs}}
-                @dimensions={{@traffic.dimensions}}
-                @setFilter={{@setFilter}}
-              />
-            </div>
-          {{else}}
+        {{else}}
+          {{#if @loading}}
             <div
-              class="site-traffic-explorer__empty"
-              data-test-site-traffic-empty
+              class="site-traffic-explorer__loading"
+              role="status"
+              aria-live="polite"
+              aria-busy="true"
             >
-              {{i18n "admin.site_traffic_explorer.empty"}}
+              {{i18n "admin.site_traffic_explorer.loading"}}
             </div>
           {{/if}}
-        {{else}}
-          <div class="site-traffic-explorer__loading" aria-busy="true">
-            {{i18n "admin.site_traffic_explorer.loading"}}
-          </div>
+
+          {{#if @traffic}}
+            <div hidden={{@loading}}>
+              {{#if @hasPageviews}}
+                <section
+                  class="site-traffic-explorer__metrics"
+                  aria-label={{i18n "admin.site_traffic_explorer.summary"}}
+                >
+                  {{#each this.metrics as |metric|}}
+                    <SiteTrafficMetric
+                      @name={{metric.name}}
+                      @label={{metric.label}}
+                      @tooltip={{metric.tooltip}}
+                      @value={{metric.value}}
+                    />
+                  {{/each}}
+                </section>
+
+                <section
+                  class="site-traffic-explorer__chart"
+                  aria-label={{i18n
+                    "admin.site_traffic_explorer.traffic_over_time"
+                  }}
+                >
+                  <h2>{{i18n
+                      "admin.site_traffic_explorer.traffic_over_time"
+                    }}</h2>
+                  <AdminReportStackedChart
+                    @model={{this.chartModel}}
+                    @options={{this.chartOptions}}
+                  />
+                  <div class="sr-only">
+                    {{#each this.series as |series|}}
+                      <span
+                        data-test-traffic-series={{series.key}}
+                      >{{series.total}}</span>
+                    {{/each}}
+                  </div>
+                </section>
+
+                <div class="site-traffic-explorer__cards">
+                  <SiteTrafficBreakdownCard
+                    @name="acquisition"
+                    @title={{i18n
+                      "admin.site_traffic_explorer.cards.acquisition"
+                    }}
+                    @tabs={{this.acquisitionTabs}}
+                    @dimensions={{@traffic.dimensions}}
+                    @setFilter={{@setFilter}}
+                  />
+                  <SiteTrafficBreakdownCard
+                    @name="pages"
+                    @title={{i18n "admin.site_traffic_explorer.cards.pages"}}
+                    @tabs={{this.pagesTabs}}
+                    @dimensions={{@traffic.dimensions}}
+                    @setFilter={{@setFilter}}
+                  />
+                  <SiteTrafficBreakdownCard
+                    @name="visitors"
+                    @title={{i18n "admin.site_traffic_explorer.cards.visitors"}}
+                    @tabs={{this.visitorsTabs}}
+                    @dimensions={{@traffic.dimensions}}
+                    @setFilter={{@setFilter}}
+                  />
+                </div>
+              {{else}}
+                <div
+                  class="site-traffic-explorer__empty"
+                  role="status"
+                  aria-live="polite"
+                  data-test-site-traffic-empty
+                >
+                  {{i18n "admin.site_traffic_explorer.empty"}}
+                </div>
+              {{/if}}
+            </div>
+          {{/if}}
         {{/if}}
       </div>
     </div>

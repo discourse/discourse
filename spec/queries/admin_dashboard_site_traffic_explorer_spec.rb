@@ -75,6 +75,15 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
       )
     end
 
+    it "uses the canonical country code when local IP data has no localized country name" do
+      DiscourseIpInfo.stubs(:get).returns(country_code: "US", asn: 64_496)
+
+      countries =
+        I18n.with_locale(:de) { described_class.call(params).dig(:dimensions, "countries") }
+
+      expect(countries).to eq([{ value: "US", label: "US", pageviews: 8 }])
+    end
+
     it "runs one read-only analytics statement with a ten-second deadline" do
       query_row = {
         "pageview_limited" => false,
