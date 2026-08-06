@@ -20,9 +20,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       .returns({})
     DiscourseIpInfo
       .stubs(:get)
-      .with do |ip, **options|
-        ip.to_s == "192.0.2.1" && options[:resolve_hostname] == false
-      end
+      .with { |ip, **options| ip.to_s == "192.0.2.1" && options[:resolve_hostname] == false }
       .returns(
         country_code: "US",
         country: "United States",
@@ -31,9 +29,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       )
     DiscourseIpInfo
       .stubs(:get)
-      .with do |ip, **options|
-        ip.to_s == "198.51.100.2" && options[:resolve_hostname] == false
-      end
+      .with { |ip, **options| ip.to_s == "198.51.100.2" && options[:resolve_hostname] == false }
       .returns(
         country_code: "GB",
         country: "United Kingdom",
@@ -42,9 +38,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       )
     DiscourseIpInfo
       .stubs(:get)
-      .with do |ip, **options|
-        ip.to_s == "203.0.113.3" && options[:resolve_hostname] == false
-      end
+      .with { |ip, **options| ip.to_s == "203.0.113.3" && options[:resolve_hostname] == false }
       .returns(
         country_code: "US",
         country: "United States",
@@ -111,7 +105,8 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_metric(label: "Average session duration", value: "10s")
   end
 
-  it "lets an admin investigate traffic with dates and filters", time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+  it "lets an admin investigate traffic with dates and filters",
+     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
     sign_in(admin)
 
     chrome = "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36"
