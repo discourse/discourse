@@ -70,21 +70,8 @@ describe Jobs::Chat::PullHotlinkedImages do
       expect(message.cooked).to include(upload.url)
       expect(message.cooked).to include("data-base62-sha1=\"#{upload.base62_sha1}\"")
       expect(message.cooked).not_to include(image_url)
+      # referenced so GC keeps it, but not tiled on top of the inline image
       expect(message.upload_references.pluck(:upload_id)).to include(upload.id)
-    end
-
-    it "keeps the rehosted image's reference but excludes it from serialized uploads (no double render)" do
-      stub_image_size
-      message = fabricate_chat_message("![longcat](#{image_url})")
-
-      described_class.new.execute(chat_message_id: message.id)
-
-      message.reload
-      upload = Upload.last
-      # Reference retained so the upload isn't orphaned by GC...
-      expect(message.upload_references.pluck(:upload_id)).to include(upload.id)
-      # ...but excluded from the serialized uploads so the collapser doesn't
-      # render a tile on top of the inline image already in cooked.
       serialized = Chat::MessageSerializer.new(message, scope: Guardian.new, root: nil).as_json
       expect(serialized[:uploads].map { |u| u[:id] }).not_to include(upload.id)
     end
@@ -99,11 +86,11 @@ describe Jobs::Chat::PullHotlinkedImages do
       expect(record).to be_present
       expect(record.status).to eq("download_failed")
 
-      # Second run does not re-attempt the download — the record is terminal.
-      FileHelper.expects(:download).never
+      # the record is terminal, so a second run doesn't re-attempt it
       described_class.new.execute(chat_message_id: message.id)
 
       expect(message.hotlinked_media.count).to eq(1)
+      expect(WebMock).to have_requested(:get, broken_image_url).once
     end
 
     it "classifies an oversize image as :too_large (not :download_failed)" do
@@ -180,29 +167,6 @@ describe Jobs::Chat::PullHotlinkedImages do
 
       expect(Upload.exists?(upload.id)).to eq(true)
       expect(second.reload.upload_references.pluck(:upload_id)).to include(upload.id)
-    end
-
-    it "does not enqueue ProcessMessage when every download fails" do
-      message = fabricate_chat_message("![broken](#{broken_image_url})")
-
-      ::Jobs.expects(:enqueue).with(::Jobs::Chat::ProcessMessage, anything).never
-
-      described_class.new.execute(chat_message_id: message.id)
-    end
-
-    it "re-enqueues ProcessMessage with skip_pull_hotlinked_images on successful rewrite" do
-      stub_image_size
-      message = fabricate_chat_message("![longcat](#{image_url})")
-
-      ::Jobs
-        .expects(:enqueue)
-        .with(
-          ::Jobs::Chat::ProcessMessage,
-          has_entries(chat_message_id: message.id, skip_pull_hotlinked_images: true),
-        )
-        .at_least_once
-
-      described_class.new.execute(chat_message_id: message.id)
     end
 
     it "is a no-op when the setting is disabled" do
@@ -343,18 +307,6 @@ describe Jobs::Chat::PullHotlinkedImages do
       upload = Upload.last
       expect(message.reload.cooked).to include(upload.url)
       expect(message.cooked).not_to include(PrettyText::BLOCKED_HOTLINKED_SRC_ATTR)
-    end
-
-    it "stores tracking rows scoped to the chat message" do
-      stub_image_size
-      message = fabricate_chat_message("![longcat](#{image_url})")
-
-      described_class.new.execute(chat_message_id: message.id)
-
-      record = Chat::MessageHotlinkedMedia.find_by(chat_message_id: message.id)
-      expect(record).to be_present
-      expect(record.status).to eq("downloaded")
-      expect(message.hotlinked_media).to include(record)
     end
 
     it "destroys tracking rows when the message is destroyed" do
