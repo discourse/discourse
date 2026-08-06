@@ -1280,7 +1280,7 @@ class Topic < ActiveRecord::Base
           add_small_action(removed_by, "removed_user", user.username, skip_guardian: true)
         end
 
-        unless Guardian.new(user).can_see?(self)
+        unless user.guardian.can_see?(self)
           removed_count = Notification.remove_for(user.id, id)
           user.publish_notifications_state if removed_count.positive?
         end
