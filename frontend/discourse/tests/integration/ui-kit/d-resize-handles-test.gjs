@@ -1,4 +1,4 @@
-import { render, triggerEvent } from "@ember/test-helpers";
+import { find, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DResizeHandles from "discourse/ui-kit/d-resize-handles";
@@ -95,6 +95,117 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       events,
       ["start:e", "resize:e:30,10", "end:e"],
       "reports the handle payload and the origin→current delta"
+    );
+  });
+
+  test("@stopPropagation keeps the press from reaching an ancestor", async function (assert) {
+    const handles = [{ payload: "e", class: "handle-e" }];
+    const ancestorPresses = [];
+
+    await render(
+      <template>
+        <div class="ancestor">
+          <DResizeHandles @handles={{handles}} @stopPropagation={{true}} />
+        </div>
+      </template>
+    );
+
+    find(".ancestor").addEventListener("pointerdown", () =>
+      ancestorPresses.push("ancestor")
+    );
+    await triggerEvent(".handle-e", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 0,
+      clientY: 0,
+    });
+
+    assert.deepEqual(
+      ancestorPresses,
+      [],
+      "an isolated handle does not let an enclosing gesture claim the pointer"
+    );
+  });
+
+  test("a press reaches an ancestor by default", async function (assert) {
+    const handles = [{ payload: "e", class: "handle-e" }];
+    const ancestorPresses = [];
+
+    await render(
+      <template>
+        <div class="ancestor">
+          <DResizeHandles @handles={{handles}} />
+        </div>
+      </template>
+    );
+
+    find(".ancestor").addEventListener("pointerdown", () =>
+      ancestorPresses.push("ancestor")
+    );
+    await triggerEvent(".handle-e", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 0,
+      clientY: 0,
+    });
+
+    assert.deepEqual(
+      ancestorPresses,
+      ["ancestor"],
+      "suppression stays opt-in, so document-level listeners still see the press"
+    );
+  });
+
+  test("@threshold suppresses jitter before the first resize", async function (assert) {
+    const handles = [{ payload: "e", class: "handle-e" }];
+    const events = [];
+    const onResize = (payload, info) => events.push(`resize:${info.delta.x}`);
+    const onResizeEnd = () => events.push("end");
+
+    await render(
+      <template>
+        <DResizeHandles
+          @handles={{handles}}
+          @threshold={{10}}
+          @onResize={{onResize}}
+          @onResizeEnd={{onResizeEnd}}
+        />
+      </template>
+    );
+
+    await triggerEvent(".handle-e", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 0,
+      clientY: 0,
+    });
+    await triggerEvent(".handle-e", "pointermove", {
+      pointerId: 1,
+      clientX: 4,
+      clientY: 0,
+    });
+
+    assert.deepEqual(
+      events,
+      [],
+      "movement inside the threshold reports nothing"
+    );
+
+    await triggerEvent(".handle-e", "pointermove", {
+      pointerId: 1,
+      clientX: 12,
+      clientY: 0,
+    });
+    await triggerEvent(".handle-e", "pointerup", {
+      pointerId: 1,
+      clientX: 12,
+      clientY: 0,
+    });
+
+    assert.deepEqual(
+      events,
+      ["resize:12", "end"],
+      "past the threshold the full delta from the press origin is reported"
     );
   });
 });

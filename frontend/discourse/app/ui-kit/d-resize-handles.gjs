@@ -54,6 +54,13 @@ const BOX_DIRECTIONS = ["n", "ne", "e", "se", "s", "sw", "w", "nw"];
  *  - `@onResizeEnd(payload, dragInfo)` — fired once on release (commit here).
  *  - `@onResizeCancel(payload, dragInfo)` — fired if the gesture is cancelled.
  *  - `@draggingClass` — optional class toggled on the active handle while dragging.
+ *  - `@threshold` — pixels of travel before `@onResize` starts firing, to absorb
+ *    the jitter of a click that was never meant to be a drag.
+ *  - `@stopPropagation` — whether an accepted press stops propagating. Defaults to
+ *    `false`, since document-level listeners depend on seeing `pointerdown`.
+ *    Required when the handles sit inside another gesture: the press bubbles, the
+ *    enclosing element claims the pointer last and so wins it, and the handle
+ *    would be released the instant it was pressed.
  *
  * `dragInfo` = `{ payload, event, origin:{x,y}, current:{x,y}, delta:{x,y}, handleRect }`.
  */
@@ -155,6 +162,8 @@ export default class DResizeHandles extends Component {
           onDragEnd=(fn this.onHandleUp handle.payload)
           onDragCancel=(fn this.onHandleCancel handle.payload)
           draggingClass=@draggingClass
+          threshold=@threshold
+          stopPropagation=@stopPropagation
         }}
       ></span>
     {{/each}}
