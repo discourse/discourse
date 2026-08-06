@@ -8,7 +8,8 @@ RSpec.describe AdminUserListSerializer do
   let(:serializer) { AdminUserListSerializer.new(user, scope: guardian, root: false) }
 
   context "when totp enabled" do
-    before { Fabricate(:user_second_factor_totp, user: user) }
+    fab!(:user_totp) { Fabricate(:user_second_factor_totp, user: user) }
+
     it "returns the right values" do
       json = serializer.as_json
 
@@ -17,7 +18,8 @@ RSpec.describe AdminUserListSerializer do
   end
 
   context "when security keys enabled" do
-    before { Fabricate(:user_security_key, user: user) }
+    fab!(:user_security_key) { Fabricate(:user_security_key, user: user) }
+
     it "returns the right values" do
       json = serializer.as_json
 
@@ -26,84 +28,107 @@ RSpec.describe AdminUserListSerializer do
   end
 
   describe "emails" do
+    subject(:json) do
+      described_class.new(
+        serialized_user,
+        scope: Guardian.new(viewed_by),
+        root: false,
+        emails_desired: emails_desired,
+      ).as_json
+    end
+
     fab!(:admin) { Fabricate(:user, admin: true, email: "admin@email.com") }
     fab!(:moderator) { Fabricate(:user, moderator: true, email: "moderator@email.com") }
     fab!(:user) { Fabricate(:user, email: "user@email.com") }
 
-    def serialize(user, viewed_by, opts = nil)
-      AdminUserListSerializer.new(
-        user,
-        scope: Guardian.new(viewed_by),
-        root: false,
-        emails_desired: opts && opts[:emails_desired],
-      ).as_json
+    let(:serialized_user) { user }
+    let(:viewed_by) { user }
+    let(:emails_desired) { nil }
+    let!(:secondary_emails) do
+      %w[first second].map do |name|
+        Fabricate(:secondary_email, user: serialized_user, email: "#{name}@email.com")
+      end
     end
 
-    def fabricate_secondary_emails_for(u)
-      Fabricate(:secondary_email, user: u, email: "first@email.com")
-      Fabricate(:secondary_email, user: u, email: "second@email.com")
+    context "when an admin views their own account" do
+      let(:serialized_user) { admin }
+      let(:viewed_by) { admin }
+
+      it "contains the admin's emails" do
+        expect(json[:email]).to eq("admin@email.com")
+        expect(json[:secondary_emails]).to contain_exactly("first@email.com", "second@email.com")
+      end
     end
 
-    it "contains an admin's own emails" do
-      fabricate_secondary_emails_for(admin)
-      json = serialize(admin, admin)
-      expect(json[:email]).to eq("admin@email.com")
-      expect(json[:secondary_emails]).to contain_exactly("first@email.com", "second@email.com")
+    context "when a regular user views their own account" do
+      it "doesn't include the user's emails" do
+        expect(json[:email]).to eq(nil)
+        expect(json[:secondary_emails]).to eq(nil)
+      end
     end
 
-    it "doesn't include a regular user's emails" do
-      fabricate_secondary_emails_for(user)
-      json = serialize(user, user)
-      expect(json[:email]).to eq(nil)
-      expect(json[:secondary_emails]).to eq(nil)
+    context "when a moderator requests a user's emails" do
+      let(:viewed_by) { moderator }
+      let(:emails_desired) { true }
+
+      it "doesn't return emails when moderators_view_emails is disabled" do
+        SiteSetting.moderators_view_emails = false
+
+        expect(json[:email]).to eq(nil)
+        expect(json[:secondary_emails]).to eq(nil)
+      end
+
+      it "returns emails when moderators_view_emails is enabled" do
+        SiteSetting.moderators_view_emails = true
+
+        expect(json[:email]).to eq("user@email.com")
+        expect(json[:secondary_emails]).to contain_exactly("first@email.com", "second@email.com")
+      end
     end
 
-    it "doesn't return emails for a moderator request when moderators_view_emails is disabled" do
-      SiteSetting.moderators_view_emails = false
-      fabricate_secondary_emails_for(user)
-      json = serialize(user, moderator, emails_desired: true)
-      expect(json[:email]).to eq(nil)
-      expect(json[:secondary_emails]).to eq(nil)
+    context "when an admin requests a user's emails" do
+      let(:viewed_by) { admin }
+      let(:emails_desired) { true }
+
+      it "returns the emails" do
+        expect(json[:email]).to eq("user@email.com")
+        expect(json[:secondary_emails]).to contain_exactly("first@email.com", "second@email.com")
+      end
     end
 
-    it "returns emails for a moderator request when moderators_view_emails is enabled" do
-      SiteSetting.moderators_view_emails = true
-      fabricate_secondary_emails_for(user)
-      json = serialize(user, moderator, emails_desired: true)
-      expect(json[:email]).to eq("user@email.com")
-      expect(json[:secondary_emails]).to contain_exactly("first@email.com", "second@email.com")
+    context "when an admin views a staged user" do
+      let(:viewed_by) { admin }
+
+      it "returns the user's emails" do
+        user.update!(staged: true)
+
+        expect(json[:email]).to eq("user@email.com")
+        expect(json[:secondary_emails]).to contain_exactly("first@email.com", "second@email.com")
+      end
     end
 
-    it "returns emails for admins when emails_desired is true" do
-      fabricate_secondary_emails_for(user)
-      json = serialize(user, admin, emails_desired: true)
-      expect(json[:email]).to eq("user@email.com")
-      expect(json[:secondary_emails]).to contain_exactly("first@email.com", "second@email.com")
+    context "when a moderator views a staged user" do
+      let(:viewed_by) { moderator }
+
+      it "doesn't return the user's emails when moderator email access is disabled" do
+        SiteSetting.moderators_view_emails = false
+        user.update!(staged: true)
+
+        expect(json[:email]).to eq(nil)
+        expect(json[:secondary_emails]).to eq(nil)
+      end
     end
 
-    it "returns a staged user's emails to admins" do
-      user.update!(staged: true)
-      fabricate_secondary_emails_for(user)
-      json = serialize(user, admin)
-      expect(json[:email]).to eq("user@email.com")
-      expect(json[:secondary_emails]).to contain_exactly("first@email.com", "second@email.com")
-    end
+    context "when an admin requests a staged user's emails" do
+      let(:viewed_by) { admin }
+      let(:emails_desired) { true }
 
-    it "doesn't return a staged user's emails to moderators when disabled" do
-      SiteSetting.moderators_view_emails = false
-      user.update!(staged: true)
-      fabricate_secondary_emails_for(user)
-      json = serialize(user, moderator)
-      expect(json[:email]).to eq(nil)
-      expect(json[:secondary_emails]).to eq(nil)
-    end
+      it "returns the user's emails" do
+        user.update!(staged: true)
 
-    it "returns a staged user's emails for admins when emails_desired is true" do
-      user.update!(staged: true)
-      fabricate_secondary_emails_for(user)
-      json = serialize(user, admin, emails_desired: true)
-      expect(json[:email]).to eq("user@email.com")
-      expect(json[:secondary_emails]).to contain_exactly("first@email.com", "second@email.com")
+        expect(json[:email]).to eq("user@email.com")
+        expect(json[:secondary_emails]).to contain_exactly("first@email.com", "second@email.com")
+      end
     end
   end
 

@@ -6,6 +6,7 @@ describe "Affiliate links on localized posts" do
 
   let(:amazon_url) { "https://www.amazon.de/gp/product/B0C3WGSSWC" }
   let(:affiliate_tag) { "tag=discourse-21" }
+  let(:post_with_link) { create_post(raw: "Great deal at #{amazon_url}", user: admin).reload }
 
   before do
     enable_current_plugin
@@ -17,12 +18,8 @@ describe "Affiliate links on localized posts" do
     SiteSetting.content_localization_allowed_groups = localizer_group.id.to_s
   end
 
-  def create_post_with_link
-    create_post(raw: "Great deal at #{amazon_url}", user: admin).reload
-  end
-
   it "applies affiliate codes to a newly created localization" do
-    post = create_post_with_link
+    post = post_with_link
 
     localization =
       PostLocalizationCreator.create(
@@ -37,7 +34,7 @@ describe "Affiliate links on localized posts" do
   end
 
   it "applies affiliate codes to an updated localization" do
-    post = create_post_with_link
+    post = post_with_link
     PostLocalizationCreator.create(post: post, locale: "ja", raw: "お得な情報", user: admin)
 
     localization =
@@ -52,7 +49,7 @@ describe "Affiliate links on localized posts" do
   end
 
   it "applies affiliate codes to an existing localization when it is recooked" do
-    post = create_post_with_link
+    post = post_with_link
     localization =
       PostLocalizationCreator.create(
         post: post,

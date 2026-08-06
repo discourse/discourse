@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-require_relative "../support/assign_allowed_group"
-
 describe UserBookmarkBaseSerializer do
   include_context "with group that is allowed to assign"
 
   before do
     SiteSetting.assign_enabled = true
-    add_to_assign_allowed_group(user)
+    assign_allowed_group.add(user)
   end
 
   fab!(:user)

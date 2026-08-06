@@ -75,6 +75,7 @@ class SiteSettings::TypeSupervisor
         topic: 30,
         datetime: 31,
         icon: 32,
+        date: 33,
       )
   end
 
@@ -198,7 +199,8 @@ class SiteSettings::TypeSupervisor
       nil
     when self.class.types[:enum]
       @defaults_provider[name].is_a?(Integer) ? value.to_i : value.to_s
-    when self.class.types[:string], self.class.types[:datetime], self.class.types[:icon]
+    when self.class.types[:string], self.class.types[:datetime], self.class.types[:icon],
+         self.class.types[:date]
       value.to_s
     else
       return value if self.class.types[type]
@@ -412,6 +414,8 @@ class SiteSettings::TypeSupervisor
       TopicSettingValidator
     when self.class.types[:datetime]
       DatetimeSettingValidator
+    when self.class.types[:date]
+      DateSettingValidator
     else
       nil
     end

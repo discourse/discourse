@@ -13,7 +13,6 @@ fi:
   js:
     styleguide:
       title: "Tyyliopas"
-      welcome: "Aloita valitsemalla osio vasemmalla olevasta valikosta."
       categories:
         syntax: Syntaksi
         atoms: Atomit

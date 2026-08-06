@@ -32,6 +32,11 @@
 # argument to their block. `on_model_errors` receives the actual model so it’s
 # easier to inspect it, and `on_exceptions` receives the actual exception.
 #
+# Blocks can also declare keyword arguments, which are filled from the
+# service result (e.g. +on_success do |model:|+). A required keyword argument
+# raises if the service didn’t set that key, while a keyword argument with a
+# default uses its default as a fallback when the key is absent.
+#
 # @example In a controller
 #   def create
 #     MyService.call do
@@ -165,7 +170,7 @@ class Service::Runner
           result[
             [*action[:key], action[:name] || args.first || action[:default_name]].join(".")
           ].public_send(action[:property] || :itself),
-          **result.slice(*block.parameters.filter_map { it.last if it.first == :keyreq }),
+          **result.slice(*block.parameters.filter_map { it.last if it.first.in?(%i[keyreq key]) }),
           &block
         )
       end,

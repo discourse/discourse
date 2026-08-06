@@ -758,8 +758,14 @@ export default class DEditor extends Component {
     <div
       class={{dConcatClass "d-editor-container" this.editorContainerModeClass}}
     >
-      <div class="d-editor-textarea-column">
+      {{#if @renderYieldAboveContainer}}
         {{yield}}
+      {{/if}}
+
+      <div class="d-editor-textarea-column">
+        {{#unless @renderYieldAboveContainer}}
+          {{yield}}
+        {{/unless}}
 
         <div
           class="d-editor-textarea-wrapper

@@ -461,6 +461,7 @@ bs_BA:
         email: "Email"
         name: "Ime"
         fields: "Polja"
+        penalty_forever: "Zauvijek"
         reject_reason: "Reason"
         scrubbed_reason: "Reason"
         scrub_record:
@@ -1276,6 +1277,8 @@ bs_BA:
         title: "Naslov pozadinske stranice prikazuje broj:"
         notifications: "Nove obavijesti"
         contextual: "Novi sadržaj stranice"
+      send_shortcut:
+        enter: "Naprijed"
       like_notification_frequency:
         title: "Obavijesti ukoliko se nekome sviđa"
         always: "Uvijek"
@@ -1374,6 +1377,7 @@ bs_BA:
           staff_role_moderator: "Moderator"
           email_placeholder: "name@example.com"
           invite_by_email: "Email"
+          create_and_send: "Pošalji"
           summary:
             role_member: "Član"
             role_admin: "Admin"
@@ -1382,6 +1386,7 @@ bs_BA:
             expires: "Ističe"
             topic: "Topic"
             groups: "Grupa"
+            edit: "Izmijeni"
         bulk_invite:
           text: "Skupna pozivnica"
           error: "Oprostite, vaš fajl bi trebao biti u CSV formatu."
@@ -1703,6 +1708,8 @@ bs_BA:
       medium_dark_tone: Srednje tamni ton
       dark_tone: Tamni ton
       default: Sopstveni emotikoni
+    filter_controls:
+      reset: "Resetovati"
     shared_drafts:
       title: "Dijeljene skice"
       destination_category: "Kategorija destinacije"
@@ -3080,7 +3087,7 @@ bs_BA:
           save: "Save"
           delete: "Delete"
           localizations:
-            title: "Prevodi"
+            remove_language: "Ukloni"
           links:
             icon:
               label: "Icon"
@@ -3721,6 +3728,8 @@ bs_BA:
           enabled: "Omogućen"
           disabled: "Neomogućen"
           reset: "Resetovati"
+      duplicate_topic_titles:
+        allowed: "Dopušteno"
       backups:
         title: "Backups"
         menu:
@@ -3874,7 +3883,6 @@ bs_BA:
           import_web_tip: "Tema sa spremištem"
           is_private: "Tema je u privatnom git repozitoriju"
           remote_branch: "Naziv podružnice (opcionalno)"
-          public_key: "Dajte sljedeći pristup javnom ključu repo:"
           install: "Instaliraj"
           installed: "Installed"
           install_popular: "Popularno"
@@ -4598,6 +4606,7 @@ bs_BA:
         delete: "Delete"
         name: "Ime"
         group: "Grupa"
+        all_groups: "Sve grupe"
         image: "Slika"
         delete_confirm: "Jeste li sigurni da želite izbrisati: %{name}: emoji?"
         settings: "Postavke"

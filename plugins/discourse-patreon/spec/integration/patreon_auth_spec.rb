@@ -22,7 +22,27 @@ describe "Patreon Oauth2" do
       expect(response.status).to eq(302)
       expect(response.location).to start_with("https://www.patreon.com/oauth2/authorize")
 
-      setup_patreon_stubs(email: user1.email, verified: false)
+      stub_request(:get, identity_url).with(
+        headers: {
+          "Authorization" => "Bearer #{access_token}",
+        },
+      ).to_return(
+        status: 200,
+        body:
+          JSON.dump(
+            data: {
+              id: "493290423324",
+              attributes: {
+                email: user1.email,
+                full_name: "Patron",
+                is_email_verified: false,
+              },
+            },
+          ),
+        headers: {
+          "Content-Type" => "application/json",
+        },
+      )
 
       post "/auth/patreon/callback", params: { state: session["omniauth.state"], code: temp_code }
       expect(response.status).to eq(302)
@@ -35,7 +55,27 @@ describe "Patreon Oauth2" do
       expect(response.status).to eq(302)
       expect(response.location).to start_with("https://www.patreon.com/oauth2/authorize")
 
-      setup_patreon_stubs(email: user1.email, verified: true)
+      stub_request(:get, identity_url).with(
+        headers: {
+          "Authorization" => "Bearer #{access_token}",
+        },
+      ).to_return(
+        status: 200,
+        body:
+          JSON.dump(
+            data: {
+              id: "493290423324",
+              attributes: {
+                email: user1.email,
+                full_name: "Patron",
+                is_email_verified: true,
+              },
+            },
+          ),
+        headers: {
+          "Content-Type" => "application/json",
+        },
+      )
 
       post "/auth/patreon/callback", params: { state: session["omniauth.state"], code: temp_code }
       expect(response.status).to eq(302)
@@ -45,6 +85,8 @@ describe "Patreon Oauth2" do
   end
 
   context "with API v1" do
+    let(:identity_url) { "https://api.patreon.com/oauth2/api/current_user" }
+
     before do
       SiteSetting.patreon_api_version = "1"
 
@@ -66,34 +108,14 @@ describe "Patreon Oauth2" do
       )
     end
 
-    def setup_patreon_stubs(email:, verified:)
-      stub_request(:get, "https://api.patreon.com/oauth2/api/current_user").with(
-        headers: {
-          "Authorization" => "Bearer #{access_token}",
-        },
-      ).to_return(
-        status: 200,
-        body:
-          JSON.dump(
-            data: {
-              id: "493290423324",
-              attributes: {
-                email: email,
-                full_name: "Patron",
-                is_email_verified: verified,
-              },
-            },
-          ),
-        headers: {
-          "Content-Type" => "application/json",
-        },
-      )
-    end
-
     include_examples "patreon oauth"
   end
 
   context "with API v2" do
+    let(:identity_url) do
+      "https://www.patreon.com/api/oauth2/v2/identity?fields%5Buser%5D=email,full_name,is_email_verified"
+    end
+
     before do
       SiteSetting.patreon_api_version = "2"
 
@@ -111,29 +133,6 @@ describe "Patreon Oauth2" do
         body: Rack::Utils.build_query(access_token: access_token),
         headers: {
           "Content-Type" => "application/x-www-form-urlencoded",
-        },
-      )
-    end
-
-    def setup_patreon_stubs(email:, verified:)
-      stub_request(
-        :get,
-        "https://www.patreon.com/api/oauth2/v2/identity?fields%5Buser%5D=email,full_name,is_email_verified",
-      ).with(headers: { "Authorization" => "Bearer #{access_token}" }).to_return(
-        status: 200,
-        body:
-          JSON.dump(
-            data: {
-              id: "493290423324",
-              attributes: {
-                email: email,
-                full_name: "Patron",
-                is_email_verified: verified,
-              },
-            },
-          ),
-        headers: {
-          "Content-Type" => "application/json",
         },
       )
     end

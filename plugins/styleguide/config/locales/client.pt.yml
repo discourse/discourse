@@ -8,7 +8,6 @@ pt:
   js:
     styleguide:
       title: "Styleguide"
-      welcome: "Para começar, escolha uma seção no menu à esquerda."
       categories:
         atoms: Átomos
         molecules: Moléculas

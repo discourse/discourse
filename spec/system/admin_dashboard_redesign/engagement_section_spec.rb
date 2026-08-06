@@ -25,6 +25,7 @@ describe "Admin Dashboard Redesign | Engagement section" do
     )
     Fabricate(:topic, category: category_alpha, created_at: "2026-06-12")
     Fabricate(:topic, category: category_bravo, created_at: "2026-06-12")
+    Jobs::MaintainCategoryActivityDailyRollups.new.execute
     sign_in(current_user)
   end
 

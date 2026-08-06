@@ -2,7 +2,7 @@
 
 class BrowserPageviewSessionEngagement < ActiveRecord::Base
   MAX_SESSION_ID_LENGTH = 32
-  BEACON_SETTLE_PERIOD = 10.minutes
+  BEACON_SETTLE_PERIOD = 30.minutes
 
   INTERACTION_COLUMNS = %i[
     mouse_move_events

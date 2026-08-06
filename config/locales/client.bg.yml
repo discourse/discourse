@@ -503,6 +503,7 @@ bg:
         email: "Имейл"
         name: "Име"
         fields: "Полета"
+        penalty_forever: "Завинаги"
         reject_reason: "Причина"
         scrubbed_reason: "Причина"
         scrub_record:
@@ -1519,6 +1520,9 @@ bg:
         contextual: "Ново съдържание на страницата"
       bookmark_after_notification:
         title: "След изпращане на известие за напомняне за отметка:"
+      send_shortcut:
+        enter: "Въведете"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Информирай ме когато е харесан"
         always: "Винаги"
@@ -1657,6 +1661,7 @@ bg:
             expires: "Изтича"
             topic: "Тема"
             groups: "Групи"
+            edit: "Редактирай"
         bulk_invite:
           none: "Няма покани за показване на тази страница."
           text: "Групова покана"
@@ -2073,6 +2078,8 @@ bg:
       medium_dark_tone: Средно тъмен тон на кожата
       dark_tone: Тъмен тон на кожата
       default: Персонализирани емоджи
+    filter_controls:
+      reset: "Нулиране"
     shared_drafts:
       title: "Споделени чернови"
       notice: "Тази тема е видима само за тези, които могат да публикуват споделени чернови."
@@ -3387,6 +3394,8 @@ bg:
           save: "Запази"
           delete: "Изтрий"
           delete_confirm: "Сигурни ли сте, че искате да изтриете този раздел?"
+          localizations:
+            remove_language: "Премахване"
           links:
             add: "Добавете друга връзка"
             delete: "Изтриване на връзката"
@@ -3884,6 +3893,8 @@ bg:
           reset: "Нулиране"
       navigation_menu:
         sidebar: "Странична лента"
+      duplicate_topic_titles:
+        allowed: "Позволено"
       backups:
         title: "Бекъп"
         menu:
@@ -4598,6 +4609,7 @@ bg:
         uploading: "Качване…"
         name: "Име "
         group: "Група"
+        all_groups: "Всички групи"
         image: "Изображение "
         delete_confirm: "Сигурни ли сте че искате да изтриете тази :%{name}% емотикона? "
         settings: "Настройки"

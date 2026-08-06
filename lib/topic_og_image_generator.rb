@@ -29,8 +29,7 @@ class TopicOgImageGenerator
 
   # Generates the OG image, persists as an Upload, and returns it (or nil on failure).
   def generate
-    svg = build_svg
-    png = render_png(svg)
+    png = render_png
     return nil if png.nil?
     create_upload(png)
   end
@@ -38,13 +37,12 @@ class TopicOgImageGenerator
   # Renders the OG image to PNG bytes without persisting an Upload. Used by the
   # admin preview endpoint to avoid producing orphaned uploads on every click.
   def generate_bytes
-    svg = build_svg
-    render_png(svg)
+    render_png
   end
 
   private
 
-  def build_svg
+  def build_svg(asset_directory: nil)
     title = truncated_title
     category_name = @topic.category&.name || ""
     category_color = @topic.category&.color || "888888"
@@ -54,6 +52,7 @@ class TopicOgImageGenerator
     colors = fetch_colors
     logo_upload = SiteSetting.logo.presence || SiteSetting.logo_small
     logo_data_uri = fetch_as_data_uri(logo_upload&.url)
+    logo_path = materialize_asset(logo_data_uri, directory: asset_directory, basename: "logo")
 
     title_lines = word_wrap(title, TITLE_LINE_CHARS)
     truncated = title_lines.length > MAX_TITLE_LINES
@@ -76,6 +75,7 @@ class TopicOgImageGenerator
     author = @topic.user
     avatar_data_uri =
       author ? fetch_as_data_uri(author.avatar_template_url.gsub("{size}", "120")) : nil
+    avatar_path = materialize_asset(avatar_data_uri, directory: asset_directory, basename: "avatar")
     username = author&.username
     created_at = @topic.created_at&.strftime("%b %-d, %Y")
 
@@ -103,10 +103,10 @@ class TopicOgImageGenerator
         #{title_svg(display_lines, colors[:primary], SIDE_MARGIN, title_start_y)}
 
         <!-- Author -->
-        #{author_svg(avatar_data_uri, username, created_at, colors, SIDE_MARGIN, author_y)}
+        #{author_svg(avatar_path, username, created_at, colors, SIDE_MARGIN, author_y)}
 
         <!-- Site logo -->
-        #{logo_svg(logo_data_uri, logo_upload, SIDE_MARGIN, logo_y)}
+        #{logo_svg(logo_path, logo_upload, SIDE_MARGIN, logo_y)}
 
         <!-- Stats -->
         #{stats_svg(like_count, posts_count, read_time, colors, OG_WIDTH - SIDE_MARGIN, stats_y)}
@@ -311,6 +311,50 @@ class TopicOgImageGenerator
     "#{Discourse.base_url_no_prefix}#{url}"
   end
 
+  def materialize_asset(data_uri, directory:, basename:)
+    return data_uri if directory.nil? || data_uri.blank?
+
+    match = data_uri.match(%r{\Adata:(image/[a-z0-9.+-]+);base64,(.+)\z}m)
+    return nil if match.nil?
+
+    content_type = match[1]
+    bytes = Base64.strict_decode64(match[2])
+
+    if content_type == "image/svg+xml"
+      svg_path = File.join(directory, "#{basename}.svg")
+      png_path = File.join(directory, "#{basename}.png")
+      File.binwrite(svg_path, bytes)
+      ImageMagick.magick(
+        "MSVG:#{svg_path}",
+        png_path,
+        read: [svg_path],
+        write: [directory],
+        timeout: 10,
+      )
+      return png_path if File.exist?(png_path)
+
+      return nil
+    end
+
+    extension =
+      { "image/gif" => "gif", "image/jpeg" => "jpg", "image/png" => "png", "image/webp" => "webp" }[
+        content_type
+      ]
+    return nil if extension.nil?
+
+    path = File.join(directory, "#{basename}.#{extension}")
+    File.binwrite(path, bytes)
+    path
+  rescue ArgumentError, Discourse::Utils::CommandError => error
+    Discourse.warn(
+      "Failed to materialize topic OG image asset",
+      topic_id: @topic.id,
+      asset: basename,
+      error: error.message,
+    )
+    nil
+  end
+
   def escape_xml(text)
     text
       .to_s
@@ -321,29 +365,28 @@ class TopicOgImageGenerator
       .gsub('"', "&quot;")
   end
 
-  def render_png(svg)
+  def render_png
     Dir.mktmpdir("topic_og") do |dir|
       svg_path = File.join(dir, "og.svg")
       png_path = File.join(dir, "og.png")
 
-      File.write(svg_path, svg)
+      File.write(svg_path, build_svg(asset_directory: dir))
 
-      Discourse::Utils.execute_command(
-        "nice",
-        "-n",
-        "10",
-        "convert",
+      ImageMagick.magick(
         "-background",
         "none",
         "-size",
         "#{OG_WIDTH}x#{OG_HEIGHT}",
-        svg_path,
+        "MSVG:#{svg_path}",
         "-depth",
         "8",
         "-define",
         "png:compression-level=9",
         png_path,
-        timeout: 20_000,
+        read: [dir],
+        write: [dir],
+        nice: 10,
+        timeout: 20,
       )
 
       return nil unless File.exist?(png_path)

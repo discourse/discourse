@@ -52,3 +52,14 @@ pl_PL:
           group_name: "Wydarzenie głosowania na temat"
           topic_upvote: "Gdy użytkownik głosuje na dany temat"
           topic_unvote: "Kiedy użytkownik cofa głos na temat"
+    discourse_workflows:
+      node_unavailable:
+        requires_topic_voting: "Wymaga włączenia głosowania na tematy"
+      nodes:
+        "trigger:topic_received_vote": "Temat otrzymał głos"
+      node_descriptions:
+        "trigger:topic_received_vote": "Wypala, gdy użytkownik zagłosuje na dany temat"
+      topic_received_vote:
+        category_ids_description: "Aktywuj tylko dla tematów z tych kategorii. Pozostaw puste, aby dopasować do wszystkich kategorii."
+        tag_names: "Tagi"
+        tag_names_description: "Wyzwalaj tylko dla tematów, które mają co najmniej jeden z tych tagów"

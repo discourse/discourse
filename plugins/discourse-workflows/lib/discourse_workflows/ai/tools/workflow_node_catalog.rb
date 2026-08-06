@@ -151,6 +151,16 @@ module DiscourseWorkflows
               },
             },
           ],
+          "action:send_chat_integration_message" => [
+            {
+              name: "Send a message to an external chat integration channel",
+              parameters: {
+                channel_id: 123,
+                channel_name: "Slack: #general",
+                message: "={{ $json.post.excerpt }}",
+              },
+            },
+          ],
           "action:ai_agent" => [
             {
               name: "Classify the trigger post with an existing agent",
@@ -200,11 +210,17 @@ module DiscourseWorkflows
 
         SEARCH_ALIASES = {
           "action:send_personal_message" => "dm direct message pm personal private message",
+          "action:send_chat_integration_message" =>
+            "external chat integration notification slack discord telegram mattermost matrix zulip rocket chat gitter groupme teams power automate webex google chat guilded",
           "action:ai_agent" =>
             "ai agent bot llm classify summarize generate sentiment triage runner run as permissions uploads attachments",
           "action:group" => "group membership member belongs friend friends",
           "trigger:user_added_to_group" => "joined added to group membership member",
           "trigger:user_removed_from_group" => "left removed from group membership member",
+          "trigger:user_created" => "signup sign up register registration new account joined site",
+          "trigger:user_updated" => "profile edited changed avatar name username email account",
+          "trigger:reviewable_created" =>
+            "review queue flag flagged spam moderation pending needs approval queued post akismet",
           "trigger:badge_granted" => "badge award achievement medal granted earned",
           "action:user" =>
             "user profile bio title trust level lock groups fields lookup edit update",

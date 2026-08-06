@@ -5,3 +5,15 @@
 # https://translate.discourse.org/
 
 fr:
+  site_settings:
+    rss_polling_enabled: "Active l'importation de publications intégrées depuis plusieurs flux RSS."
+    rss_polling_frequency: "Fréquence d'interrogation des flux, en minutes"
+    rss_polling_feed_request_timeout: "Durée maximale, en secondes, d'attente de la réponse d'un flux lors de sa récupération."
+    rss_polling_verbose_logging: "Consigne des informations détaillées pour chaque tentative d'interrogation, notamment les éléments importés ou ignorés et les raisons correspondantes."
+    rss_polling_use_pubdate: "Définit la date de création du sujet sur la valeur pubDate trouvée dans le flux RSS."
+    rss_polling_update_tags: "Met à jour les étiquettes d'un sujet lorsque celui-ci est mis à jour. La désactivation de ce paramètre récupère les étiquettes initiales, mais empêche toute modification ultérieure des étiquettes."
+  rss_polling:
+    errors:
+      feed_url_must_be_http: "L'URL du flux doit commencer par http:// ou https://."
+      unknown_author_username: "Aucun utilisateur ne possède le nom d'utilisateur « %{username} »."
+      required_tag_group: "Les sujets de la catégorie « %{category} » doivent comporter au moins %{count} étiquette(s) du groupe « %{tag_group} » (%{tags}). Ajoutez l'une de ces étiquettes afin que les éléments importés ne soient pas rejetés."

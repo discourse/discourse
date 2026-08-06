@@ -3,7 +3,7 @@
 class Tag < ActiveRecord::Base
   include Searchable
   include HasDestroyedWebHook
-  include HasSanitizableFields
+  include HasCookedTagDescription
   include Localizable
 
   RESERVED_TAGS = [
@@ -27,12 +27,13 @@ class Tag < ActiveRecord::Base
           where("lower(tags.name) IN (?)", name)
         end
 
-  # tags that have never been used and don't belong to a tag group
+  # base tags that have never been used and don't belong to a tag group
   scope :unused,
         -> do
-          where(staff_topic_count: 0, pm_topic_count: 0, target_tag_id: nil).joins(
-            "LEFT JOIN tag_group_memberships tgm ON tags.id = tgm.tag_id",
-          ).where("tgm.tag_id IS NULL")
+          base_tags
+            .where(staff_topic_count: 0, pm_topic_count: 0)
+            .joins("LEFT JOIN tag_group_memberships tgm ON tags.id = tgm.tag_id")
+            .where("tgm.tag_id IS NULL")
         end
 
   scope :used_tags_in_regular_topics,
@@ -40,6 +41,14 @@ class Tag < ActiveRecord::Base
 
   scope :base_tags, -> { where(target_tag_id: nil) }
   scope :visible, ->(guardian = nil) { merge(DiscourseTagging.visible_tags(guardian)) }
+
+  scope :without_pm_only_tags,
+        ->(guardian) do
+          next all if guardian.can_tag_pms?
+          where("NOT (tags.pm_topic_count > 0 AND tags.#{Tag.topic_count_column(guardian)} = 0)")
+        end
+
+  scope :browsable, ->(guardian) { base_tags.visible(guardian) }
 
   has_many :tag_users, dependent: :destroy # notification settings
 
@@ -60,7 +69,7 @@ class Tag < ActiveRecord::Base
   has_many :embeddable_host_tags
   has_many :embeddable_hosts, through: :embeddable_host_tags
 
-  before_save :sanitize_description
+  before_save :cook_description
 
   after_save :index_search
   after_save :update_synonym_associations
@@ -144,14 +153,10 @@ class Tag < ActiveRecord::Base
 
     return [] if scope_category_ids.empty?
 
-    filter_sql =
-      (
-        if guardian.is_staff?
-          ""
-        else
-          " AND tags.id IN (#{DiscourseTagging.visible_tags(guardian).select(:id).to_sql})"
-        end
-      )
+    filter_sql = +" AND tags.target_tag_id IS NULL"
+    if !guardian.is_admin?
+      filter_sql << " AND tags.id IN (#{DiscourseTagging.visible_tags(guardian).select(:id).to_sql})"
+    end
 
     tag_data = DB.query <<~SQL
       SELECT tags.id as tag_id, tags.name as tag_name, tags.slug as tag_slug, SUM(stats.topic_count) AS sum_topic_count
@@ -176,13 +181,11 @@ class Tag < ActiveRecord::Base
     end
 
     tags_by_id = Tag.where(id: tag_data.map(&:tag_id)).includes(:localizations).index_by(&:id)
-    show_localized = !ContentLocalization.show_original?(guardian)
-
     tag_data.filter_map do |row|
       tag = tags_by_id[row.tag_id]
       next unless tag
 
-      name = show_localized ? (tag.get_localization&.name || tag.name) : tag.name
+      name = tag.get_localization&.name || tag.name
       slug = row.tag_slug.presence || "#{row.tag_id}-tag"
       { id: tag.id, name:, slug: }
     end
@@ -337,10 +340,6 @@ class Tag < ActiveRecord::Base
     scope.exists?
   end
 
-  def sanitize_description
-    self.description = sanitize_field(description) if description_changed?
-  end
-
   def name_validator
     errors.add(:name, :invalid) if name.present? && RESERVED_TAGS.include?(name.strip.downcase)
   end
@@ -350,22 +349,25 @@ end
 #
 # Table name: tags
 #
-#  id                 :integer          not null, primary key
-#  description        :string(1000)
-#  locale             :string(20)
-#  name               :string           not null
-#  pm_topic_count     :integer          default(0), not null
-#  public_topic_count :integer          default(0), not null
-#  slug               :string           default(""), not null
-#  staff_topic_count  :integer          default(0), not null
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  target_tag_id      :integer
+#  id                         :integer          not null, primary key
+#  description                :string(1000)
+#  description_cooked         :string(2000)
+#  description_cooked_version :integer
+#  locale                     :string(20)
+#  name                       :string           not null
+#  pm_topic_count             :integer          default(0), not null
+#  public_topic_count         :integer          default(0), not null
+#  slug                       :string           default(""), not null
+#  staff_topic_count          :integer          default(0), not null
+#  created_at                 :datetime         not null
+#  updated_at                 :datetime         not null
+#  target_tag_id              :integer
 #
 # Indexes
 #
-#  index_tags_on_lower_name     (lower((name)::text)) UNIQUE
-#  index_tags_on_name           (name) UNIQUE
-#  index_tags_on_slug           (slug) WHERE ((slug)::text <> ''::text)
-#  index_tags_on_target_tag_id  (target_tag_id) WHERE (target_tag_id IS NOT NULL)
+#  index_tags_on_description_cooked_version  (description_cooked_version)
+#  index_tags_on_lower_name                  (lower((name)::text)) UNIQUE
+#  index_tags_on_name                        (name) UNIQUE
+#  index_tags_on_slug                        (slug) WHERE ((slug)::text <> ''::text)
+#  index_tags_on_target_tag_id               (target_tag_id) WHERE (target_tag_id IS NOT NULL)
 #

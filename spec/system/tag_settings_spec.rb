@@ -17,6 +17,9 @@ describe "Tag Settings" do
   before do
     SiteSetting.tagging_enabled = true
     SiteSetting.edit_tags_allowed_groups = "1|2|14"
+    [admin, trust_level_4, user].each do |u|
+      u.user_option.update!(composition_mode: UserOption.composition_mode_types[:markdown])
+    end
   end
 
   context "when using the tag settings page" do

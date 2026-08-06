@@ -21,7 +21,9 @@ uk:
     github_gold_badge_min_commits: "Мінімальна кількість коммітів для отримання золотого бейджа"
     errors:
       invalid_badge_repo: "Ви повинні вказати URL GitHub або назву репозиторію у форматі github_user/repository_name"
+      invalid_badge_repo_value: "«%{repo}» не є дійсною URL-адресою GitHub або назвою репозиторію. Використовуйте формат github_user/repository_name."
       invalid_github_linkback_access_token: "Ви повинні надати дійсний токен зворотного зв'язку GitHub, який має доступ до вказаних вами сховищ бейджів."
+      invalid_github_linkback_access_token_for_repo: "Токен доступу для зворотного посилання GitHub не зміг отримати доступ до репозиторію '%{repo}'. Переконайтеся, що токен дійсний, а назва репозиторію правильна та доступна."
   github_linkback:
     commit_template: |
       Цей коміт згадувався на **%{title}**. Там можуть бути відповідні деталі:

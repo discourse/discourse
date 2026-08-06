@@ -24,3 +24,6 @@ sk:
     filters:
       votes:
         title: "Hlasy"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Značky"

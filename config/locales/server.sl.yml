@@ -70,7 +70,6 @@ sl:
     messages:
       taken: "je že uporabljeno"
       exclusion: je rezervirano
-      has_already_been_used: "je že v uporabi"
       inclusion: ni vključeno na seznam
       invalid: je neveljavno
       is_invalid_meaningful: "zdi se nejasno, večina besed vsebuje iste črke znova in znova?"
@@ -2056,7 +2055,6 @@ sl:
           complete: "Uporabnik izbrisan."
         block:
           title: "Izbriši in blokiraj uporabnika"
-          description: "Ta uporabnik bo izbrisan in njegov IP naslov in e-naslov bo blokiran."
       confirm_spam:
         title: "Da"
       not_spam:

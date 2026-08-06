@@ -1,14 +1,4 @@
 body.chat-enabled.livestream-topic.confirmed-event-assistance {
-  #post_1 {
-    .topic-avatar {
-      display: none;
-    }
-
-    .topic-meta-data {
-      margin: 0;
-    }
-  }
-
   .topic-navigation {
     display: none;
   }
@@ -17,7 +7,7 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
     width: 100%;
 
     .topic-body {
-      width: 100%;
+      flex: 1;
       margin-right: 1em;
     }
   }
@@ -62,6 +52,21 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
     color: var(--primary-medium);
     text-align: center;
     width: 100%;
+  }
+
+  &__audio-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+    margin: 0;
+    padding: var(--space-2);
+
+    // intentionally hardcoded zoom values
+    border-radius: 9px;
+    background: rgb(36, 36, 36);
+    color: rgb(255, 255, 255);
+    border: 1px solid rgb(0, 255, 145);
   }
 
   &__frame {

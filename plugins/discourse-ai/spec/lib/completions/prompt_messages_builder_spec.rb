@@ -698,6 +698,30 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
       }.not_to raise_error
     end
 
+    it "attaches referenced bot post uploads to custom prompt model messages" do
+      second_post.update_columns(raw: "Here is the result ![image](#{image_upload1.short_url})")
+      UploadReference.create!(target: second_post, upload: image_upload1)
+      PostCustomPrompt.create!(
+        post_id: second_post.id,
+        custom_prompt: [
+          [second_post.raw, bot_user.username, nil, nil, { message: "Generated an image" }],
+        ],
+      )
+
+      context =
+        described_class.messages_from_post(
+          third_post,
+          max_posts: 10,
+          bot_usernames: [bot_user.username],
+          include_image_uploads: true,
+          include_document_uploads: false,
+        )
+
+      expect(context.find { |message| message[:type] == :model }).to include(
+        content: [second_post.raw, { upload_id: image_upload1.id }],
+      )
+    end
+
     it "handles uploads correctly in topic style messages (and times)" do
       freeze_time 32.days.ago
 

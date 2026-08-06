@@ -36,3 +36,6 @@ fi:
           group_name: "Ketjunäänestystapahtuma"
           topic_upvote: "Kun käyttäjä äänestää ketjua"
           topic_unvote: "Kun käyttäjä poistaa äänen ketjulta"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Tunnisteet"

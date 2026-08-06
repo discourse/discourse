@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import moment from "moment";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
@@ -148,11 +149,25 @@ export default class AiTranslations extends Component {
     );
   }
 
+  get hasSavedLocales() {
+    return this.originalLocales.length > 0;
+  }
+
   get isToggleDisabled() {
     return (
       this.isTogglingTranslation ||
-      (this.args.model?.no_locales_configured &&
-        this.originalLocales.length === 0)
+      !this.hasSavedLocales ||
+      this.selectedLocales.length === 0
+    );
+  }
+
+  get toggleDisabledReason() {
+    if (this.hasSavedLocales && this.selectedLocales.length > 0) {
+      return null;
+    }
+
+    return i18n(
+      "discourse_ai.translations.admin_actions.enable_translations_disabled"
     );
   }
 
@@ -207,10 +222,6 @@ export default class AiTranslations extends Component {
         }
       );
       this.originalLocales = [...this.selectedLocales];
-
-      if (this.selectedLocales.length > 0) {
-        this.args.model.no_locales_configured = false;
-      }
 
       if (this.translationEnabled) {
         window.location.reload();
@@ -291,13 +302,13 @@ export default class AiTranslations extends Component {
       return;
     }
 
-    if (!this.translationEnabled && this.originalLocales.length === 0) {
+    if (!this.translationEnabled && !this.hasSavedLocales) {
       return;
     }
 
     this.isTogglingTranslation = true;
     try {
-      if (!this.translationEnabled && this.originalLocales.length > 0) {
+      if (!this.translationEnabled && this.hasSavedLocales) {
         await ajax("/admin/site_settings/content_localization_enabled", {
           type: "PUT",
           data: { content_localization_enabled: true },
@@ -310,7 +321,7 @@ export default class AiTranslations extends Component {
       });
       this.translationEnabled = !this.translationEnabled;
 
-      if (this.translationEnabled && !this.args.model.no_locales_configured) {
+      if (this.translationEnabled && this.hasSavedLocales) {
         this.enabled = true;
       } else {
         this.enabled = false;
@@ -328,7 +339,7 @@ export default class AiTranslations extends Component {
   backfillStatusMessage(targets) {
     if (
       this.args.model?.backfill_enabled &&
-      this.args.model?.backfill_max_age_days &&
+      this.args.model?.backfill_start_date &&
       this.hourlyRate > 0
     ) {
       const posts = targets?.find(({ target_type }) => target_type === "post");
@@ -337,15 +348,13 @@ export default class AiTranslations extends Component {
         : 0;
 
       if (totalRemaining && totalRemaining > 0) {
-        const cutoffDate = new Date();
-        cutoffDate.setDate(
-          cutoffDate.getDate() - this.args.model.backfill_max_age_days
-        );
-
-        const formattedDate = cutoffDate.toLocaleDateString(undefined, {
+        const formattedDate = new Date(
+          this.args.model.backfill_start_date
+        ).toLocaleDateString(undefined, {
           year: "numeric",
           month: "long",
           day: "numeric",
+          timeZone: "UTC",
         });
 
         return trustHTML(
@@ -514,14 +523,6 @@ export default class AiTranslations extends Component {
       {{/if}}
 
       <div class="ai-translations__settings-panel settings">
-        <div class="setting ai-translations__toggle-container">
-          <DToggleSwitch
-            @state={{this.translationEnabled}}
-            @label="discourse_ai.translations.admin_actions.enable_translations"
-            disabled={{this.isToggleDisabled}}
-            {{on "click" this.toggleTranslationEnabled}}
-          />
-        </div>
         <div class="ai-translations__settings-fields">
           <div class="setting">
             <div class="setting-label">
@@ -648,6 +649,30 @@ export default class AiTranslations extends Component {
                 }}</div>
             </div>
           </div>
+        </div>
+        <div class="setting ai-translations__toggle-container">
+          {{#if this.toggleDisabledReason}}
+            <DTooltip
+              @content={{this.toggleDisabledReason}}
+              class="ai-translations__toggle-disabled-tooltip"
+            >
+              <:trigger>
+                <DToggleSwitch
+                  @state={{this.translationEnabled}}
+                  @label="discourse_ai.translations.admin_actions.enable_translations"
+                  disabled={{this.isToggleDisabled}}
+                  {{on "click" this.toggleTranslationEnabled}}
+                />
+              </:trigger>
+            </DTooltip>
+          {{else}}
+            <DToggleSwitch
+              @state={{this.translationEnabled}}
+              @label="discourse_ai.translations.admin_actions.enable_translations"
+              disabled={{this.isToggleDisabled}}
+              {{on "click" this.toggleTranslationEnabled}}
+            />
+          {{/if}}
         </div>
       </div>
 

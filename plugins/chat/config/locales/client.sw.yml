@@ -22,6 +22,8 @@ sw:
         yesterday: "Jana"
       create: "Tengeneza"
       cancel: "Ghairi"
+      pinned_bar:
+        title: "Imebandikwa"
       pinned: "Imebandikwa"
       channel_settings:
         edit: "Hariri"

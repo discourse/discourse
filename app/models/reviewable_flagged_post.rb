@@ -94,25 +94,12 @@ class ReviewableFlaggedPost < Reviewable
       end
     end
 
-    if guardian.can_suspend?(target_created_by)
-      if !target_created_by.silenced?
-        build_action(
-          actions,
-          :agree_and_silence,
-          icon: "microphone-slash",
-          bundle: agree_bundle,
-          client_action: "silence",
-        )
-      end
-
-      build_action(
-        actions,
-        :agree_and_suspend,
-        icon: "ban",
-        bundle: agree_bundle,
-        client_action: "suspend",
-      )
-    end
+    build_penalty_actions(
+      actions,
+      bundle: agree_bundle,
+      silence: :agree_and_silence,
+      suspend: :agree_and_suspend,
+    )
 
     if (potential_spam? || potentially_illegal?) && guardian.can_delete_user?(target_created_by)
       delete_user_actions(actions, agree_bundle)
@@ -349,10 +336,11 @@ class ReviewableFlaggedPost < Reviewable
   def unassign_topic(performed_by, post)
     topic = post.topic
     return unless topic && performed_by && SiteSetting.reviewable_claiming != "disabled"
-    deleted_count = ReviewableClaimedTopic.where(topic_id: topic.id, automatic: false).delete_all
-    if deleted_count > 0
-      topic.reviewables.find_each { |reviewable| reviewable.log_history(:unclaimed, performed_by) }
-    end
+    claim = ReviewableClaimedTopic.find_by(topic_id: topic.id, automatic: false)
+    return if claim.nil?
+
+    claim.delete
+    claim.log_topic_history(:unclaimed, performed_by)
 
     user_ids = User.staff.pluck(:id)
 

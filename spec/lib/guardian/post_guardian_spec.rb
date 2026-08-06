@@ -1123,7 +1123,7 @@ RSpec.describe PostGuardian do
       expect(Guardian.new(user2).can_see?(post)).to eq(false)
     end
 
-    it "respects whispers" do
+    it "requires current whisper group membership" do
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}|#{group.id}"
 
       regular_post = post
@@ -1138,9 +1138,8 @@ RSpec.describe PostGuardian do
       expect(regular_guardian.can_see?(regular_post)).to eq(true)
       expect(regular_guardian.can_see?(whisper_post)).to eq(false)
 
-      # can see your own whispers
       regular_whisper = Fabricate(:post, post_type: Post.types[:whisper], user: regular_user)
-      expect(regular_guardian.can_see?(regular_whisper)).to eq(true)
+      expect(regular_guardian.can_see?(regular_whisper)).to eq(false)
 
       mod_guardian = Guardian.new(Fabricate(:moderator))
       expect(mod_guardian.can_see?(regular_post)).to eq(true)

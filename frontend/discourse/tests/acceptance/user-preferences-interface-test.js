@@ -1,5 +1,7 @@
-import { click, find, visit } from "@ember/test-helpers";
+import { getOwner } from "@ember/owner";
+import { click, find, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import ContentLanguagePreferencesModal from "discourse/components/modal/content-language-preferences";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
@@ -81,6 +83,57 @@ acceptance("User Preferences - Interface", function (needs) {
       seen_popups: "",
       skip_new_user_tips: "false",
     });
+  });
+});
+
+acceptance("Content language preferences", function (needs) {
+  needs.user();
+  needs.settings({
+    allow_user_locale: true,
+    available_locales: [
+      { name: "English", value: "en" },
+      { name: "Japanese (日本語)", value: "ja" },
+    ],
+  });
+
+  test("keeps interface and understood languages independent", async function (assert) {
+    await visit("/");
+
+    const owner = getOwner(this);
+    const currentUser = owner.lookup("service:current-user");
+    currentUser.setProperties({
+      effective_locale: "ja",
+      locale: "ja",
+      user_option: {
+        automatically_translate: true,
+        understood_languages: ["en"],
+      },
+    });
+
+    const modalService = owner.lookup("service:modal");
+    modalService.show(ContentLanguagePreferencesModal);
+    await settled();
+
+    await selectKit(
+      ".form-kit__field[data-name='understoodLanguages'] .multi-select"
+    ).expand();
+
+    assert
+      .dom(".form-kit__field[data-name='understoodLanguages']")
+      .exists("the understood languages field is shown");
+    assert
+      .dom(
+        ".form-kit__field[data-name='understoodLanguages'] .selected-choice[data-value='en']"
+      )
+      .exists("the explicitly understood language is selected")
+      .isEnabled("the explicitly understood language can be removed");
+    assert
+      .dom(
+        ".form-kit__field[data-name='understoodLanguages'] .select-kit-row[data-value='ja']"
+      )
+      .exists(
+        "the interface language remains available as an understood language"
+      );
   });
 });
 

@@ -114,7 +114,7 @@ module Discourse
         next if File.symlink?(destination) && File.readlink(destination) == source
 
         temp_destination = Rails.root.join("tmp", SecureRandom.hex).to_s
-        execute_command("ln", "-s", source, temp_destination)
+        File.symlink(source, temp_destination)
 
         begin
           File.rename(temp_destination, destination)

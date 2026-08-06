@@ -126,7 +126,6 @@ let userOptionFields = [
   "email_messages_level",
   "email_previous_replies",
   "enable_allowed_pm_users",
-  "enable_defer",
   "enable_markdown_monospace_font",
   "enable_quoting",
   "enable_smart_lists",
@@ -145,6 +144,8 @@ let userOptionFields = [
   "notify_on_linked_posts",
   "push_notification_level",
   "seen_popups",
+  "send_shortcut",
+  "automatically_translate",
   "show_original_content",
   "sidebar_link_to_filtered_list",
   "sidebar_show_count_of_new_items",
@@ -154,6 +155,7 @@ let userOptionFields = [
   "timezone",
   "title_count_mode",
   "topics_unread_when_closed",
+  "understood_languages",
   "watched_precedence_over_muted",
 ];
 
@@ -246,7 +248,6 @@ export default class User extends RestModel.extend(Evented) {
   @userOption("hide_profile") hide_profile;
   @userOption("hide_presence") hide_presence;
   @userOption("title_count_mode") title_count_mode;
-  @userOption("enable_defer") enable_defer;
   @userOption("timezone") timezone;
   @userOption("skip_new_user_tips") skip_new_user_tips;
   @userOption("default_calendar") default_calendar;

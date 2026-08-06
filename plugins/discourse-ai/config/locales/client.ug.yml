@@ -46,6 +46,9 @@ ug:
             canned_reply:
               label: "جاۋاب"
     discourse_ai:
+      discourse_workflows:
+        ai_agent:
+          mode: "ھالەت"
       ai_tool_approval:
         tool: "مەشغۇلات"
         user: "ئىشلەتكۈچى"
@@ -85,6 +88,22 @@ ug:
       translations:
         title: "تەرجىمە"
         category_scope: "سەھىپە"
+        model_progress:
+          detail:
+            retry: "قايتا سىنا"
+            columns:
+              locale: "يەرلىك"
+              pending: "كۈتۈۋاتىدۇ"
+              total: "جەمئىي"
+          targets:
+            post:
+              title: "يازما"
+            topic:
+              title: "تېما"
+            category:
+              title: "سەھىپە"
+            tag:
+              title: "بەلگە"
         stats:
           eta_minutes:
             one: "%{count} مىنۇت"
@@ -127,6 +146,8 @@ ug:
         mcp_tools_modal:
           select_all: "ھەممىنى تاللا"
           clear_all: "ھەممىنى تازىلا"
+        duplicate: "كۆپەيت"
+        copy_name: "%{name} نىڭ كۆچۈرۈلمىسى"
         delete: "ئۆچۈر"
         thinking_effort_options:
           none: "يوق"
@@ -208,7 +229,6 @@ ug:
           title: "سىناقنى ئىجرا قىل"
           success: "مۇۋەپپەقىيەتلىك!"
         providers:
-          google: "Google"
           fake: "ئىختىيارى"
       ai_helper:
         context_menu:

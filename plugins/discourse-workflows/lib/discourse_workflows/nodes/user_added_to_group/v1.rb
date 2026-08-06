@@ -29,7 +29,6 @@ module DiscourseWorkflows
                 value_property: "id",
                 name_property: "name",
                 filterable: true,
-                none: "discourse_workflows.user_added_to_group.group_id_placeholder",
               },
             },
           },

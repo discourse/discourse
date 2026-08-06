@@ -2,10 +2,7 @@
 
 RSpec.describe DiscourseTopicVoting::EnableTopicVotingBadgesToggled do
   let(:badge_names) { DiscourseTopicVoting::BADGE_NAMES }
-
-  def topic_voting_badges
-    Badge.where(name: badge_names)
-  end
+  let(:topic_voting_badges) { Badge.where(name: badge_names) }
 
   describe "enabling" do
     before { topic_voting_badges.update_all(enabled: false) }

@@ -531,6 +531,7 @@ te:
         email: "ఈమెయిల్"
         name: "పేరు"
         fields: "ఫీల్డ్స్"
+        penalty_forever: "ఎప్పటికీ"
         reject_reason: "కారణం"
         scrubbed_reason: "కారణం"
         scrub_record:
@@ -1583,6 +1584,9 @@ te:
         contextual: "కొత్త పేజీ కంటెంట్"
       bookmark_after_notification:
         title: "బుక్‌మార్క్ రిమైండర్ నోటిఫికేషన్ పంపిన తర్వాత:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "ఇష్టపడినప్పుడు తెలియజేయండి"
         always: "ఎల్లప్పుడూ"
@@ -1714,6 +1718,7 @@ te:
           invite_by_email: "ఈమెయిల్"
           restrict_domain: "డొమైన్‌కు పరిమితం చేయండి"
           domain_placeholder: "example.com"
+          create_and_send: "పంపండి"
           update: "నవీకరించండి"
           summary:
             role_member: "సభ్యుడు"
@@ -1724,6 +1729,7 @@ te:
             expires: "గడువు ముగుస్తుంది"
             topic: "విషయం"
             groups: "సమూహాలు"
+            edit: "సవరించండి"
         bulk_invite:
           none: "ఈ పేజీలో ప్రదర్శించడానికి ఆహ్వానాలు లేవు."
           text: "చాలా మొత్తం ఆహ్వానాలు"
@@ -2189,6 +2195,8 @@ te:
       default: అనుకూల ఎమోజీలు
     filter_input:
       clear: "ఫిల్టర్‌ని క్లియర్ చేయండి"
+    filter_controls:
+      reset: "రీసెట్ చేయండి"
     shared_drafts:
       title: "షేర్ చేసిన చిత్తుప్రతులు"
       notice: "షేర్ చేయబడిన చిత్తుప్రతులను ప్రచురించగల వారికి మాత్రమే ఈ విషయం కనిపిస్తుంది."
@@ -4118,9 +4126,9 @@ te:
           always_public: "ఈ విభాగంలోని కంటెంట్ ఎల్లప్పుడూ బహిరంగంగా ఉంటుంది"
           more_menu: "మరిన్ని మెను"
           localizations:
-            title: "అనువాదాలు"
             locale: "భాష"
             title_label: "విభాగం శీర్షిక"
+            remove_language: "తొలగించు"
           links:
             add: "మరొక లింక్‌ని జోడించండి"
             delete: "లింక్‌ని తొలగించండి"
@@ -5092,6 +5100,8 @@ te:
         sidebar: "సైడ్‌బార్"
         header_dropdown: "హెడర్ లో డ్రాప్‌డౌన్"
         legacy: "పాతది"
+      duplicate_topic_titles:
+        allowed: "అనుమతించబడింది"
       backups:
         title: "బ్యాకప్పులు"
         menu:
@@ -5284,7 +5294,6 @@ te:
           finish_install: "థీమ్ సంస్థాపనను ముగించండి"
           last_attempt: "ఇన్‌స్టాలేషన్ ప్రక్రియ పూర్తి కాలేదు, చివరి ప్రయత్నం:"
           remote_branch: "శాఖ పేరు (ఐచ్ఛికం)"
-          public_key: "రెపోకి కింది పబ్లిక్ కీ యాక్సెస్‌ని మంజూరు చేయండి:"
           install: "ఇన్‌స్టాల్ చేయండి"
           installed: "ప్రతిష్టించబడింది"
           install_popular: "ప్రముఖ"
@@ -6292,6 +6301,7 @@ te:
         uploading: "అప్‌లోడ్ చేయబడుతోంది…"
         name: "పేరు"
         group: "సమూహం"
+        all_groups: "అన్ని సమూహాలు"
         image: "చిత్రం"
         alt: "అనుకూల ఎమోజి ప్రివ్యూ"
         delete_confirm: "మీరు నిజంగా %{name}: ఎమోజీ ని తొలగించాలనుకుంటున్నారా ?"

@@ -30,7 +30,7 @@ describe DiscourseAi::TopicSummarization do
   let(:summary) { "This is the final summary" }
 
   describe ".for" do
-    it "selects the displayed locale and respects the show-original preference" do
+    it "selects the displayed locale and respects the automatic-translation preference" do
       SiteSetting.content_localization_enabled = true
       SiteSetting.content_localization_supported_locales = "he"
       topic.update!(locale: "en")
@@ -43,7 +43,7 @@ describe DiscourseAi::TopicSummarization do
         I18n.with_locale(:he) { described_class.for(topic, user, scope: user.guardian) }
       expect(localized_service.cached_summary).to eq(hebrew_summary)
 
-      user.user_option.update!(show_original_content: true)
+      user.user_option.update!(automatically_translate: false)
       original_service =
         I18n.with_locale(:he) { described_class.for(topic, user, scope: user.guardian) }
       expect(original_service.cached_summary).to eq(english_summary)

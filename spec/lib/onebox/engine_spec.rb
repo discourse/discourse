@@ -47,38 +47,55 @@ RSpec.describe Onebox::Engine do
   end
 
   describe "origins_to_regexes" do
-    it "matches URLs from configured origins" do
+    it "converts host-only URLs to regexes with URL boundaries" do
+      result = Onebox::Engine.origins_to_regexes(%w[https://example.com https://example2.com])
+      expect(result).to eq(
+        [
+          %r{\Ahttps://example\.com(?::\d+(?:[/\\?#]|\z)|[/\\?#]|\z)}i,
+          %r{\Ahttps://example2\.com(?::\d+(?:[/\\?#]|\z)|[/\\?#]|\z)}i,
+        ],
+      )
+    end
+
+    it "matches host-only URLs only at URL boundaries" do
       regex = Onebox::Engine.origins_to_regexes(["https://example.com"]).first
-      urls = %w[
+
+      %w[
         https://example.com
         https://example.com/embed
-        https://example.com?key=value
+        https://example.com?foo=bar
         https://example.com#fragment
-      ]
+        https://example.com:3000/embed
+      ].each { |url| expect(url).to match(regex) }
 
-      expect(urls.to_h { |url| [url, regex.match?(url)] }).to eq(urls.to_h { |url| [url, true] })
+      %w[
+        https://example.com.attacker.example/embed
+        https://example.com:3000.attacker.example/embed
+        https://example.com@attacker.example/embed
+      ].each { |url| expect(url).not_to match(regex) }
+
+      expect(regex).to match("https://example.com\\embed")
     end
 
-    it "rejects URLs whose authorities only share a configured origin prefix" do
-      regex = Onebox::Engine.origins_to_regexes(["https://example.com"]).first
-      urls = %w[https://example.com.attacker.test/embed https://example.com@attacker.test/embed]
-
-      expect(urls.to_h { |url| [url, regex.match?(url)] }).to eq(urls.to_h { |url| [url, false] })
-    end
-
-    it "matches wildcard subdomains without crossing URL authority boundaries" do
+    it "limits wildcard origins to a single URL authority" do
       regex = Onebox::Engine.origins_to_regexes(["https://*.example.com"]).first
-      urls = {
-        "https://embed.example.com/video" => true,
-        "https://embed.example.com.attacker.test/video" => false,
-        "https://attacker.test/path/.example.com/video" => false,
-        "https://attacker.test\\path.example.com/video" => false,
-      }
 
-      expect(urls.keys.to_h { |url| [url, regex.match?(url)] }).to eq(urls)
+      %w[https://embed.example.com/player https://deep.embed.example.com/player].each do |url|
+        expect(url).to match(regex)
+      end
+
+      %w[
+        https://attacker.example/path.example.com/player
+        https://attacker.example?.example.com/
+        https://attacker.example#.example.com/
+        https://embed.example.com.attacker.example/player
+        https://attacker.example\path.example.com/player
+      ].each { |url| expect(url).not_to match(regex) }
+
+      expect(regex).to match("https://embed.example.com\\player")
     end
 
-    it "preserves configured URL prefix matching after the authority" do
+    it "preserves configured paths after the URL authority" do
       regex = Onebox::Engine.origins_to_regexes(["https://example.com/embed?"]).first
 
       expect(regex).to match("https://example.com/embed?key=value")

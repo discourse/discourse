@@ -8,7 +8,6 @@ da:
   js:
     styleguide:
       title: "Styleguide"
-      welcome: "For at komme i gang, vælg en sektion fra menuen til venstre."
       categories:
         syntax: Syntaks
         atoms: Atomer

@@ -14,19 +14,96 @@ fr:
     rss_polling:
       title: Sondage RSS
     admin:
+      logs:
+        staff_actions:
+          actions:
+            create_rss_polling_feed: créer un flux RSS
+            update_rss_polling_feed: mettre à jour le flux RSS
+            destroy_rss_polling_feed: supprimer le flux RSS
+            enable_rss_polling_feed: activer le flux RSS
+            disable_rss_polling_feed: désactiver le flux RSS
+            poll_rss_polling_feed: interroger le flux RSS maintenant
       rss_polling:
+        feed_settings: Paramètres du flux
+        discourse_settings: Paramètres Discourse
         author: Auteur
         feed_url: URL
+        feed_url_must_be_http: Saisissez une URL de flux valide commençant par http:// ou https://.
         discourse_category: Catégorie
         discourse_tags: Étiquettes
+        required_tags_hint: "Cette catégorie requiert l'une de ces étiquettes. Ajoutez-en une, sinon les sujets importés seront rejetés :"
+        required_tag_error: 'Ajoutez au moins %{count} étiquette(s) du groupe « %{tag_group} », faute de quoi les sujets importés seront rejetés.'
+        feed_category_filter: Filtre de catégorie
+        feed_category_filter_description: Importer uniquement les éléments dont la catégorie du flux contient ce texte (sans distinction entre majuscules et minuscules). Laissez ce champ vide pour tout importer.
+        showing: "Affichage des %{count} premiers éléments sur %{total}."
         feeds:
+          title: Flux
+          nav_description: Gérer les flux RSS/Atom importés dans Discourse.
+          description: Configurer les flux RSS/Atom interrogés et importés sous forme de sujets.
+          add: Ajouter un flux
+          add_header: Ajouter un flux
+          edit_header: Modifier le flux
+          empty: Vous n'avez encore configuré aucun flux.
           edit: Modifier
           delete: Supprimer
+          enable: Activer le flux
+          disable: Désactiver le flux
+          back: Retour aux flux
           save: Enregistrer
           confirm_delete: "Voulez-vous vraiment supprimer ce flux ?"
+          delete_success: Flux supprimé
+          save_success: Flux enregistré
+          enable_success: Flux activé
+          disable_success: Flux désactivé
         test:
+          button: Tester le flux
           title: Aperçu
+          empty: Ce flux n'a renvoyé aucun élément.
           dismiss: Rejeter
+          would_import: Serait importé
+          summary:
+            would_import: "À importer : %{count}"
+            already_imported: "Déjà importés : %{count}"
+            skipped: "À ignorer : %{count}"
+          already_imported: "Déjà importé. L'interrogation mettrait à jour le <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>sujet existant</a>."
+          already_imported_plain: "Déjà importé : l'interrogation mettrait à jour le sujet existant."
+          skip_reasons:
+            missing_content: 'Ignoré : l''élément ne comporte aucun contenu.'
+            missing_title: 'Ignoré : l''élément ne comporte aucun titre.'
+            invalid_url: 'Ignoré : l''élément ne comporte aucun lien valide à importer.'
+            category_filter_mismatch: "Ignoré : catégories de l'élément : %{categories}"
+            category_filter_mismatch_none: 'Ignoré : l''élément ne comporte aucune catégorie.'
+          errors:
+            fetch_failed: Impossible de récupérer le flux. Vérifiez que l'URL est correcte et accessible.
+            parse_failed: La réponse ne semble pas correspondre à un flux RSS ou Atom valide.
+            invalid_feed: Impossible de lire le flux, car il est mal formé.
+            blank_feed_url: Saisissez l'URL d'un flux à tester.
+            category_deleted: La catégorie dans laquelle ce flux importait les éléments n'existe plus. Modifiez le flux et choisissez une nouvelle catégorie.
+            unknown: Impossible de lire ce flux. Il est peut-être temporairement indisponible ou renvoie un contenu inattendu. Testez-le pour établir un diagnostic ou consultez les journaux pour en savoir plus.
         status:
           enabled: Activé
-          disabled: Désactivée
+          disabled: Désactivé
+          disabled_note: Ne sera pas interrogé selon la planification
+        history:
+          recent: Interrogations récentes
+          show_older: "Afficher %{count} interrogations précédentes"
+          poll_now: Interroger maintenant
+          poll_now_dirty: Enregistrez vos modifications avant de lancer l'interrogation.
+          poll_now_disabled: Activez le flux avant de lancer l'interrogation.
+          poll_confirm: Lancer l'interrogation maintenant récupérera ce flux et importera ou mettra à jour des sujets. Continuer ?
+          poll_started: Interrogation lancée. La dernière tentative apparaîtra ici sous peu.
+          empty: Ce flux n'a encore jamais été interrogé.
+          no_items: Aucun élément n'a été traité lors de cette interrogation.
+          no_changes: Aucune modification
+          imported_count: "%{count} importé(s)"
+          updated_count: "%{count} mis à jour"
+          skipped_count: "%{count} ignoré(s)"
+          failed_count: "%{count} échec(s)"
+          imported: "Importé comme nouveau <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>sujet</a>."
+          imported_plain: "Importé comme nouveau sujet."
+          updated: "Le <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>sujet existant</a> a été mis à jour."
+          updated_plain: "Le sujet existant a été mis à jour."
+          failed: Échec de l'importation.
+          failed_reasons:
+            import_rejected: "Impossible d'importer l'élément. Il ne comporte aucun lien valide permettant son importation."
+            import_error: "Impossible d'importer l'élément : %{error}"

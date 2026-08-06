@@ -41,6 +41,8 @@ RSpec.describe Admin::DashboardController do
 
   describe "#index" do
     shared_examples "version info present" do
+      before { SiteSetting.dashboard_improvements = false }
+
       it "returns discourse version info" do
         get "/admin/dashboard.json"
 
@@ -50,7 +52,10 @@ RSpec.describe Admin::DashboardController do
     end
 
     shared_examples "version info absent" do
-      before { SiteSetting.version_checks = false }
+      before do
+        SiteSetting.dashboard_improvements = false
+        SiteSetting.version_checks = false
+      end
 
       it "does not return discourse version info" do
         get "/admin/dashboard.json"
@@ -256,6 +261,7 @@ RSpec.describe Admin::DashboardController do
         end
 
         it "does not expose admin-only browser pageview cards to moderators" do
+          SiteSetting.use_legacy_pageviews = false
           SiteSetting.persist_browser_pageview_events = true
           configure_dashboard_sections(%w[traffic])
 
@@ -1213,11 +1219,23 @@ RSpec.describe Admin::DashboardController do
       end
     end
 
+    let(:raising_provider) do
+      Class.new(AdminDashboard::Reports::SourceProvider) do
+        def self.source_name = "raising_source"
+        def self.fetch_many(identifiers, guardian:, filters: {})
+          identifiers.each_with_object({}) do |id, h|
+            raise "boom" if id == "broken"
+            h[id.to_s] = { id: id.to_s }
+          end
+        end
+      end
+    end
+
     let(:plugin) { Plugin::Instance.new }
 
     after do
       DiscoursePluginRegistry._raw_admin_dashboard_report_sources.reject! do |entry|
-        entry[:value] == fake_provider
+        entry[:value] == fake_provider || entry[:value] == raising_provider
       end
     end
 
@@ -1274,7 +1292,7 @@ RSpec.describe Admin::DashboardController do
         expect(items.map { |i| [i["identifier"], i["data"]["id"]] }).to eq([%w[a a], %w[b b]])
       end
 
-      it "returns data: nil for items whose source has no registered provider" do
+      it "returns data: nil, error: false for items whose source has no registered provider" do
         post "/admin/dashboard/reports/bulk.json",
              params: {
                items: [{ source: "totally_unregistered", identifier: "x" }],
@@ -1284,7 +1302,25 @@ RSpec.describe Admin::DashboardController do
         items = response.parsed_body["items"]
         expect(items.size).to eq(1)
         expect(items.first["data"]).to be_nil
+        expect(items.first["error"]).to eq(false)
         expect(items.first["source"]).to eq("totally_unregistered")
+      end
+
+      it "returns error: true for an item whose provider raises, without affecting other items" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(raising_provider, plugin)
+
+        post "/admin/dashboard/reports/bulk.json",
+             params: {
+               items: [
+                 { source: "raising_source", identifier: "broken" },
+                 { source: "raising_source", identifier: "ok" },
+               ],
+             }
+
+        expect(response.status).to eq(200)
+        items = response.parsed_body["items"].index_by { |item| item["identifier"] }
+        expect(items["broken"]).to include("data" => nil, "error" => true)
+        expect(items["ok"]).to include("data" => { "id" => "ok" }, "error" => false)
       end
 
       it "returns data shaped by the dashboard filters" do

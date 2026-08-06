@@ -883,6 +883,50 @@ describe DiscourseDataExplorer::QueryController do
         expect(response.body).not_to include(private_topic.title)
       end
 
+      it "prevents nested params from injecting SQL" do
+        victim = Fabricate(:user, email: "victim@example.com")
+        query = make_query(<<~SQL, { name: "Parameterized Query" }, [group.id.to_s])
+            -- [params]
+            -- string :first_value
+            -- string :second
+            SELECT :first_value AS value
+          SQL
+
+        post "/g/#{group.name}/reports/#{query.id}/run.json",
+             params: {
+               params: {
+                 first_value: ":second",
+                 second: "UNION SELECT email FROM user_emails --",
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(true)
+        expect(response.parsed_body["rows"]).to eq([[":second"]])
+        expect(response.body).not_to include(victim.email)
+      end
+
+      it "prevents params from injecting SQL through parameter declaration comments" do
+        victim = Fabricate(:user, email: "victim@example.com")
+        query = make_query(<<~SQL, { name: "Parameterized Query" }, [group.id.to_s])
+            -- [params]
+            -- string :injection
+            SELECT 'safe' AS value
+          SQL
+
+        post "/g/#{group.name}/reports/#{query.id}/run.json",
+             params: {
+               params: {
+                 injection: "ignored\nSELECT email FROM user_emails UNION ALL --",
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(true)
+        expect(response.parsed_body["rows"]).to eq([["safe"]])
+        expect(response.body).not_to include(victim.email)
+      end
+
       it "can accept parameters as a hash" do
         query_string = <<~SQL
         -- [params]

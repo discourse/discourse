@@ -199,6 +199,34 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       )
     end
 
+    it "closes a fenced thinking block before rendering visible content" do
+      ai_agent.update!(show_thinking: true)
+      agent_klass = AiAgent.all_agents.find { |agent_class| agent_class.name == ai_agent.name }
+      bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent_klass.new)
+      playground = described_class.new(bot)
+      responses = [
+        [
+          DiscourseAi::Completions::Thinking.new(
+            message: "Code execution:\n\n```python\nprint(42)\n```",
+          ),
+          "![image](https://example.com/image.png)",
+        ],
+      ]
+
+      reply_post = nil
+      DiscourseAi::Completions::Llm.with_prepared_responses(responses) do
+        new_post = Fabricate(:post, raw: "Render a chart")
+        reply_post = playground.reply_to(new_post)
+      end
+
+      expect(reply_post.raw).to include(
+        "```python\nprint(42)\n```\n</details>\n\n![image](https://example.com/image.png)",
+      )
+      expect(reply_post.cooked).to include(
+        "</code></pre>\n</details>\n<p><img src=\"https://example.com/image.png\"",
+      )
+    end
+
     it "keeps trailing thinking outside the response text" do
       ai_agent.update!(show_thinking: true)
       agent_klass = AiAgent.all_agents.find { |agent_class| agent_class.name == ai_agent.name }
@@ -682,6 +710,10 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         first_target = Fabricate(:user)
         second_target = Fabricate(:user)
         agent.update!(tools: ["SuspendUser"], require_approval: true)
+        DiscourseAi::Agents::Agent
+          .any_instance
+          .stubs(:stop_chain_on_pending_approval?)
+          .returns(true)
 
         first_tool_call =
           DiscourseAi::Completions::ToolCall.new(
@@ -714,6 +746,13 @@ RSpec.describe DiscourseAi::AiBot::Playground do
           Chat::Message.where(chat_channel: dm_channel).where.not(blocks: nil).order(:id)
         reviewable_ids = ReviewableAiToolAction.order(:id).last(2).map(&:id)
 
+        expect(approval_messages.count).to eq(2)
+        expect(
+          Chat::Message.exists?(
+            chat_channel: dm_channel,
+            message: "Both actions are awaiting approval.",
+          ),
+        ).to eq(false)
         expect(
           approval_messages.map do |approval_message|
             approval_message.blocks.first["elements"].map { |element| element["action_id"] }
@@ -1175,6 +1214,53 @@ RSpec.describe DiscourseAi::AiBot::Playground do
           expect(expected_bot_response.start_with?(m.data[:raw])).to eq(true)
         end
       end
+    end
+
+    it "only streams the reply to the PM's participants" do
+      messages =
+        DiscourseAi::Completions::Llm.with_prepared_responses(["the secret bot reply"]) do
+          MessageBus.track_publish("discourse-ai/ai-bot/topic/#{pm.id}") do
+            playground.reply_to(third_post)
+          end
+        end
+
+      message = messages.first
+      expect(message.user_ids).to contain_exactly(user.id, bot_user.id)
+      expect(message.group_ids).to be_nil
+    end
+
+    it "streams the reply to a participant authorized through an allowed group" do
+      group = Fabricate(:group)
+      group_pm =
+        Fabricate(
+          :private_message_topic,
+          user: user,
+          topic_allowed_users: [
+            Fabricate.build(:topic_allowed_user, user: user),
+            Fabricate.build(:topic_allowed_user, user: bot_user),
+          ],
+          topic_allowed_groups: [Fabricate.build(:topic_allowed_group, group: group)],
+        )
+      Fabricate(:post, topic: group_pm, user: user, post_number: 1, raw: "group opening message")
+      group_post =
+        Fabricate(
+          :post,
+          topic: group_pm,
+          user: user,
+          post_number: 2,
+          raw: "a private group question",
+        )
+
+      messages =
+        DiscourseAi::Completions::Llm.with_prepared_responses(["a reply to the group"]) do
+          MessageBus.track_publish("discourse-ai/ai-bot/topic/#{group_pm.id}") do
+            playground.reply_to(group_post)
+          end
+        end
+
+      message = messages.first
+      expect(message.user_ids).to contain_exactly(user.id, bot_user.id)
+      expect(message.group_ids).to contain_exactly(group.id)
     end
 
     it "supports multiple function calls" do

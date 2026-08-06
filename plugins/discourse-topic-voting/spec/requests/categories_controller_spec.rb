@@ -38,12 +38,7 @@ describe CategoriesController do
   end
 
   describe "#update" do
-    before do
-      Category.reset_voting_cache
-      SiteSetting.enable_ideas_category_type_setup = true
-    end
-
-    after { SiteSetting.enable_ideas_category_type_setup = false }
+    before { Category.reset_voting_cache }
 
     it "can add the ideas type to the category" do
       expect(Category.can_vote?(category.id)).to eq(false)

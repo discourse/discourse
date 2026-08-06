@@ -84,6 +84,10 @@ export default class FixedCollection extends Component {
   }
 
   get label() {
+    if (this.args.showLabel === false) {
+      return null;
+    }
+
     return (
       this.args.label || propertyLabel(this.nodeDefinition, this.args.fieldName)
     );
@@ -113,6 +117,10 @@ export default class FixedCollection extends Component {
   }
 
   get maxItemsReachedTitle() {
+    if (this.maxItems === null) {
+      return null;
+    }
+
     return i18n("discourse_workflows.property_engine.max_items_reached", {
       count: this.maxItems,
     });
@@ -230,6 +238,17 @@ export default class FixedCollection extends Component {
   }
 
   @action
+  removeItemLabel(item) {
+    if (!item?.name) {
+      return i18n("discourse_workflows.property_engine.remove_item");
+    }
+
+    return i18n("discourse_workflows.property_engine.remove_assignment", {
+      name: item.name,
+    });
+  }
+
+  @action
   removeItem(group, removeFn, index) {
     this.args.onRemove?.(index);
     const path = this.groupPath(group);
@@ -336,14 +355,8 @@ export default class FixedCollection extends Component {
                 @action={{fn this.removeItem group collection.remove index}}
                 @icon="xmark"
                 class="workflows-property-engine__collection-delete"
-                @translatedAriaLabel={{i18n
-                  "discourse_workflows.property_engine.remove_assignment"
-                  name=item.name
-                }}
-                @translatedTitle={{i18n
-                  "discourse_workflows.property_engine.remove_assignment"
-                  name=item.name
-                }}
+                @translatedAriaLabel={{this.removeItemLabel item}}
+                @translatedTitle={{this.removeItemLabel item}}
               />
 
               <collection.Object
@@ -405,7 +418,7 @@ export default class FixedCollection extends Component {
                           >
                             <subCollection.Object
                               class="workflows-property-engine__nested-collection-item"
-                              as |subObject|
+                              as |subObject subItem|
                             >
 
                               {{#each
@@ -415,6 +428,7 @@ export default class FixedCollection extends Component {
                                 <Field
                                   @form={{subObject}}
                                   @formApi={{@formApi}}
+                                  @configuration={{subItem}}
                                   @connections={{@connections}}
                                   @credentials={{@credentials}}
                                   @fieldName={{subField.name}}
@@ -459,6 +473,7 @@ export default class FixedCollection extends Component {
                         <Field
                           @form={{object}}
                           @formApi={{@formApi}}
+                          @configuration={{item}}
                           @connections={{@connections}}
                           @credentials={{@credentials}}
                           @fieldName={{extraField.name}}

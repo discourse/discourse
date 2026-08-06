@@ -65,6 +65,8 @@ ug:
       cancel_reply: "جاۋابتىن ۋازكەچ"
       chat_channels: "قانال"
       starred: "يۇلتۇزلانغان"
+      pinned_bar:
+        title: "چوققىلاندى"
       pinned: "چوققىلاندى"
       browse_all_channels: "بارلىق قانالغا كۆز يۈگۈرتىدۇ"
       see_in: "قاراڭ"
@@ -146,11 +148,6 @@ ug:
         never: "ھەرگىز"
       separate_sidebar_mode:
         title: "مۇنبەر ۋە سۆھبەتكە ئايرىم يان بالداق ھالىتىنى كۆرسىتىدۇ"
-      send_shortcut:
-        enter:
-          label: "Enter بېسىلسا يوللايدۇ"
-        meta_enter:
-          label: "%{meta_key} + Enter بېسىلسا يوللايدۇ"
       enable: "سۆھبەتنى قوزغات"
       flag: "پاش قىل"
       emoji: "چىراي ئىپادە قىستۇر"

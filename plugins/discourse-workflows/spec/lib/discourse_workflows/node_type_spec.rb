@@ -136,6 +136,7 @@ RSpec.describe DiscourseWorkflows::NodeType do
           },
         },
         variants: [],
+        extensions: [],
       )
     end
 
@@ -226,6 +227,7 @@ RSpec.describe DiscourseWorkflows::NodeType do
         display_options: {
         },
         variants: [],
+        extensions: [],
       )
     end
 

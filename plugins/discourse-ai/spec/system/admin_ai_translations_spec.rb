@@ -60,7 +60,6 @@ describe "Admin AI translations" do
       SiteSetting.ai_translation_enabled = true
       SiteSetting.content_localization_supported_locales = "en|fr|es"
       SiteSetting.ai_translation_backfill_hourly_rate = 10
-      SiteSetting.ai_translation_backfill_max_age_days = 30
 
       translations_page.visit
     end
@@ -82,9 +81,7 @@ describe "Admin AI translations" do
       )
       expect(page).to have_css(".ai-translations__locale-input-row .multi-select")
       expect(page).to have_css(".ai-translations__category-input-row .combo-box")
-      expect(page).to have_css(
-        ".ai-translations__settings-panel > .setting:first-child .d-toggle-switch",
-      )
+      expect(translations_page).to have_toggle
       expect(page).to have_no_css(".ai-translations__settings-panel.alert-info")
 
       expect(translations_page).to have_overview_cards
@@ -170,7 +167,6 @@ describe "Admin AI translations" do
       SiteSetting.content_localization_supported_locales = "en|fr|es"
       SiteSetting.ai_translation_category_scope = "include"
       SiteSetting.ai_translation_categories = category.id.to_s
-      SiteSetting.ai_translation_backfill_max_age_days = 30
 
       translations_page.visit
     end
@@ -196,7 +192,6 @@ describe "Admin AI translations" do
       SiteSetting.discourse_ai_enabled = true
       SiteSetting.ai_translation_enabled = false
       SiteSetting.content_localization_supported_locales = ""
-      SiteSetting.ai_translation_backfill_max_age_days = 30
 
       translations_page.visit
     end
@@ -234,7 +229,6 @@ describe "Admin AI translations" do
       SiteSetting.content_localization_supported_locales = "en|fr"
       SiteSetting.ai_translation_category_scope = "include"
       SiteSetting.ai_translation_categories = ""
-      SiteSetting.ai_translation_backfill_max_age_days = 30
 
       visit "/admin/plugins/discourse-ai/ai-translations"
     end
@@ -261,7 +255,6 @@ describe "Admin AI translations" do
     before do
       SiteSetting.discourse_ai_enabled = true
       SiteSetting.content_localization_supported_locales = "en|fr"
-      SiteSetting.ai_translation_backfill_max_age_days = 30
     end
 
     it "displays the translation toggle" do

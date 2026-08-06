@@ -75,6 +75,8 @@ nl:
         close: "Vastgemaakte berichten sluiten"
         pinned_by_you: "Vastgemaakt door jou"
         pinned_by_user: "Vastgemaakt door %{username}"
+      pinned_bar:
+        title: "Vastgemaakt"
       no_pinned_messages: "Geen vastgemaakte berichten in dit kanaal."
       pin_message: "Bericht vastmaken"
       unpin_message: "Bericht losmaken"
@@ -166,12 +168,6 @@ nl:
         never: "Nooit"
       separate_sidebar_mode:
         title: "Afzonderlijke zijbalkmodussen weergeven voor forum en chat"
-      send_shortcut:
-        title: "Snelkoppeling verzenden"
-        enter:
-          label: "Verzenden met Enter"
-        meta_enter:
-          label: "Verzenden met %{meta_key} + Enter"
       enable: "Chat inschakelen"
       flag: "Markeren"
       emoji: "Emoji invoegen"

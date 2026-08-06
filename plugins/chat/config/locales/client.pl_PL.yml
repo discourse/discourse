@@ -75,8 +75,15 @@ pl_PL:
       pinned_messages:
         title: "Przypięte wiadomości"
         close: "Zamknij przypięte wiadomości"
+        dismiss: "Odrzuć przypięte wiadomości"
+        show: "Pokaż przypięte wiadomości"
         pinned_by_you: "Przypięte przez Ciebie"
         pinned_by_user: "Przypięte przez %{username}"
+      pinned_bar:
+        title: "Przypięta"
+        see_all: "Zobacz wszystkie przypięte wiadomości"
+        jump_to_pinned: "Przejdź do przypiętej wiadomości"
+        dismiss: "Odrzuć przypiętą wiadomość"
       no_pinned_messages: "Żadnych przypiętych wiadomości na tym kanale."
       pin_message: "Przypnij wiadomość"
       unpin_message: "Odepnij wiadomość"
@@ -174,12 +181,6 @@ pl_PL:
         never: "Nigdy"
       separate_sidebar_mode:
         title: "Pokaż oddzielne tryby paska bocznego dla forum i czatu"
-      send_shortcut:
-        title: "Wyślij skrót"
-        enter:
-          label: "Wyślij przez Enter"
-        meta_enter:
-          label: "Wyślij przez %{meta_key} + Enter"
       enable: "Włącz czat"
       flag: "Oflaguj"
       emoji: "Wstaw emoji"

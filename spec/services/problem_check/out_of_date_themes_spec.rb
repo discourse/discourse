@@ -11,7 +11,7 @@ RSpec.describe ProblemCheck::OutOfDateThemes do
       )
     end
 
-    before { Fabricate(:theme, id: 44, remote_theme: remote, name: "Test< Theme") }
+    let!(:theme) { Fabricate(:theme, id: 44, remote_theme: remote, name: "Test< Theme") }
 
     context "when theme is out of date" do
       let(:commits_behind) { 2 }

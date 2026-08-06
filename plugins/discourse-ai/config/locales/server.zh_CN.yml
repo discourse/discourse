@@ -44,10 +44,9 @@ zh_CN:
         flagged_post: |
           %{score_reason}
           %{response}
-        flagged_post_response: |
-          <p>模型响应： %{llm_response}</p>
+        flagged_post_response: "模型回答：%{llm_response}"
         flagged_post_score_reason: |
-          <b>由 <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> 规则触发。</b>
+          <b>由 <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> 规则触发</b>。
         notify_author_pm:
           subject: "您的帖子已暂时移除供审核"
           body: |
@@ -64,7 +63,7 @@ zh_CN:
         description: "使用 AI 自动为话题添加标签"
   site_settings:
     discourse_ai_enabled: "启用 Discourse AI 插件。"
-    enable_ai_bot_starred_conversations: "允许用户为 AI 机器人对话添加星标，并在“星标”侧边栏部分显示。"
+    enable_ai_bot_starred_conversations: "允许用户为 AI 机器人对话添加星标，并在“星标”边栏部分显示。"
     ai_default_llm_model: "用于所有 AI 功能的默认 LLM 模型"
     ai_artifact_security: "AI 工件系统会生成包含可运行代码的 iframe。严格模式将强制额外点击才能运行代码。宽松模式则立即运行代码。混合模式允许用户提供 data-ai-artifact-autorun 来立即显示。禁用模式则会禁用工件系统。"
     ai_toxicity_enabled: "启用毒性模块。"
@@ -86,9 +85,9 @@ zh_CN:
     ai_sentiment_model_configs: "用于推理的分类模型端点。情感分析将帖子分类为正面、中性或负面。情绪分析根据支持的情绪标签对帖子进行分类。"
     ai_sentiment_models: "用于推理的分类模型端点。情感分析将帖子分类为正面、中性或负面。情绪分析根据支持的情绪标签对帖子进行分类。"
     ai_sentiment_sentiment_classification_strategy: "情感分类后端。"
-    ai_sentiment_sentiment_agent: "当情感后端为代理时，用于情感分类的代理。"
+    ai_sentiment_sentiment_agent: "当情感后端为智能体时，用于情感分类的智能体。"
     ai_sentiment_emotion_classification_strategy: "情绪分类后端。"
-    ai_sentiment_emotion_agent: "当情感后端是代理时，用于情感分类的代理。"
+    ai_sentiment_emotion_agent: "当情绪后端为智能体时，用于情绪分类的智能体。"
     ai_nsfw_detection_enabled: "启用 NSFW 模块。"
     ai_nsfw_inference_service_api_endpoint: "为 NSFW 模块运行 API 的 URL"
     ai_nsfw_inference_service_api_key: "NSFW API 的 API 密钥"
@@ -146,7 +145,7 @@ zh_CN:
     ai_bot_add_to_header: "在标题中显示按钮以使用 AI 机器人开始 PM"
     ai_bot_add_to_community_section: "在边栏社区版块中显示一个链接，以使用 AI 机器人开始 PM"
     ai_bot_github_access_token: "搭配使用 GitHub AI 工具所需的 GitHub 访问令牌（搜索支持需要）"
-    ai_bot_enable_docked_composer: "为 AI 机器人对话启用停靠式聊天风格编辑器，而不是标准的浮动编辑器。"
+    ai_bot_enable_docked_composer: "为 AI 机器人对话启用停靠式聊天风格编辑器，而不是标准的浮动式编辑器。"
     ai_discover_enabled: "启用发现搜索功能"
     ai_discover_agent: "用于发现搜索功能的智能体"
     ai_google_custom_search_api_key: "Google 自定义搜索 API 的 API 密钥，请参阅：https://developers.google.com/custom-search"
@@ -160,8 +159,6 @@ zh_CN:
     ai_translation_enabled: "启用 AI 翻译功能"
     ai_translation_personal_messages: "控制哪些个人消息需要翻译。'none' 表示禁用个人消息翻译。'group' 仅翻译群组个人消息。'all' 翻译所有个人消息。"
     ai_translation_include_bot_content: "启用后，机器人（用户 ID 小于 0）编写的内容也将发送进行翻译。"
-    ai_translation_max_post_length: "要翻译的帖子的最大字符数。超过此长度的帖子将不会被翻译。"
-    ai_translation_backfill_max_age_days: "待翻译帖子和话题的最长期限。超过此期限的帖子和话题将不进行翻译。0 表示禁用回填，但不会禁用新帖子的翻译。"
     ai_translation_backfill_hourly_rate: "回填操作期间每小时翻译的帖子和话题数量。设置为 0 可禁用现有内容的自动翻译回填。"
     ai_translation_backfill_parallel_jobs: "每个回填周期中并行运行的后置本地化任务数量。数值越高吞吐量越大，但会占用更多资源。"
     ai_usage_rollup_after_days: "每次请求的 AI 使用数据在被汇总到每日统计之前要保留的天数。设为 0 表示不进行汇总。"
@@ -278,7 +275,7 @@ zh_CN:
       ai_agent:
         errors:
           locked_default_llm_missing: "智能体 '%{agent}' 被锁定为其默认 LLM，但未配置有效的默认 LLM"
-          llm_not_found: "未找到 ID 为 %{llm_model_id} 的 LLM 模型"
+          llm_not_found: "找不到 ID 为 %{llm_model_id} 的 LLM 模型"
           no_llm_configured: "没有为智能体 '%{agent}' 配置 LLM。请选择一个 LLM 模型，或配置智能体/站点默认 LLM。"
     tools:
       custom_name: "%{name}（自定义）"
@@ -403,11 +400,11 @@ zh_CN:
         cannot_delete_system_agent: "系统智能体无法删除，请改为将其禁用。"
         cannot_edit_system_agent: "系统智能体只能重命名，无法编辑工具或系统提示，只能禁用并复制。"
         cannot_have_duplicate_tools: "不能有重复的工具"
-        native_tool_requires_forced_llm: "要使用提供程序原生工具，需要具有启用了“强制默认 LLM”的默认 LLM"
-        native_tool_unsupported_by_llm: "所选的默认 LLM 不支持其中某个启用的提供程序原生工具"
+        native_tool_requires_forced_llm: "提供商原生工具需要启用“强制默认 LLM”的默认 LLM。"
+        native_tool_unsupported_by_llm: "所选的默认 LLM 不支持已启用的提供商原生工具之一"
         admin_dashboard_highlights:
-          name: "管理员信息中心高亮显示内容"
-          description: "写下显示在管理员信息中心顶部的简要总结，解释此期间的变化和值得关注的事情"
+          name: "管理员信息中心亮点"
+          description: "撰写在管理信息中心顶部显示的简要报告，解释此期间的变化和需要关注的事项"
         github_helper:
           name: "GitHub 助手"
           description: "专门协助处理 GitHub 相关任务和问题的 AI 机器人"
@@ -514,10 +511,10 @@ zh_CN:
           description: "支持自动生成聊天消息串标题的默认智能体"
         sentiment_classifier:
           name: "情感分类器"
-          description: "默认代理支持情感分类"
+          description: "支持情感分类的默认智能体"
         emotion_classifier:
           name: "情绪分类器"
-          description: "默认代理支持情绪分类"
+          description: "支持情绪分类的默认智能体"
       topic_not_found: "总结不可用，找不到话题！"
       summarizing: "正在总结话题"
       searching: "搜索：'%{query}'"
@@ -527,11 +524,11 @@ zh_CN:
             name: "LLM"
             description: "用于研究的语言模型（默认为当前智能体的语言模型）"
           max_tokens_per_batch:
-            name: "每个批次最大词元数"
-            description: "研究中每个批次可以使用的最大词元数"
+            name: "每个批次最大 token 数"
+            description: "研究中每个批次可以使用的最大 token 数"
           max_tokens_per_post:
-            name: "每个帖子的最大词元数"
-            description: "研究中每个帖子可以使用的最大词元数"
+            name: "每个帖子的最大 token 数"
+            description: "研究中每个帖子可以使用的最大 token 数"
           max_results:
             name: "最大结果数"
             description: "筛选器中可以包括的最大结果数"
@@ -576,11 +573,17 @@ zh_CN:
             description: "控制帖子是被审核、隐藏、删除还是视为垃圾信息。"
       native_tools:
         web_search:
-          name: "网络搜索（原生）"
-          help: "当智能体被强制使用受支持的 LLM 时，模型可以使用提供程序的内置搜索功能进行网络搜索。"
+          name: "网页搜索（原生）"
+          help: "当智能体被强制使用支持的 LLM 时，模型可以使用提供商的内置搜索功能搜索网页。"
         web_fetch:
-          name: "网络获取（原生）"
-          help: "当智能体被强制使用受支持的 LLM 时，模型可以使用提供程序的内置网络访问权限打开和读取网页。"
+          name: "网页提取（原生）"
+          help: "当智能体被强制使用支持的 LLM 时，模型可以使用提供商的内置网络访问权限打开和读取网页。"
+        google_maps:
+          name: "Google 地图（原生）"
+          help: "当代理被迫使用受支持的 Gemini LLM 时，允许模型使用当前的 Google Maps 地点和位置数据。"
+        code_execution:
+          name: "代码执行（本机）"
+          help: "当代理被迫使用受支持的 Gemini LLM 时，允许模型在提供商的沙箱中编写和运行 Python 代码。"
       tool_summary:
         read_artifact: "阅读 Web 工件"
         search_uploaded_documents: "搜索已上传的文档"
@@ -885,8 +888,8 @@ zh_CN:
         errors:
           not_allowed: "您无权访问审核队列"
           not_found: "找不到审核队列条目"
-          no_note: "向审核队列条目添加备注时，必须填写备注内容"
-          failed: "添加备注失败"
+          no_note: "向审核队列条目添加备注时，必须填写备注"
+          failed: "无法添加备注"
         success: "已成功向审核队列条目 %{reviewable_id} 添加备注"
       change_site_setting:
         errors:
@@ -953,7 +956,7 @@ zh_CN:
         disable_modules_first: "您必须先禁用这些模块：%{settings}"
         set_llm_first: "首先设置%{setting}"
         model_unreachable: "我们无法从此模型获得回答。请先检查您的设置。"
-        empty_response: "模型返回了空响应。"
+        empty_response: "模型返回了空回答。"
         invalid_seeded_model: "您无法在此模型中使用此功能"
         invalid_agent_response_format: "所选智能体必须具有包含名为“spam”的布尔字段的响应格式。"
         must_select_model: "必须先选择一个 LLM"
@@ -999,7 +1002,7 @@ zh_CN:
       limit_exceeded_admin: "您已达到 AI 点数上限。请在 %{reset_time} 后重试。"
     errors:
       quota_exceeded: "您已超出此模型的配额。请在 %{relative_time}后再试。"
-      quota_required: "必须为此模型指定最大词元数、使用次数或成本"
+      quota_required: "必须为此模型指定最大 token 数、使用次数或成本"
       no_query_specified: 查询参数为必选项，请指定。
       no_user_for_agent: 指定的智能体没有关联的用户。
       agent_not_found: "指定的智能体不存在。请检查 agent_name 或 agent_id 参数（旧版：agent_name 或 agent_id）。"

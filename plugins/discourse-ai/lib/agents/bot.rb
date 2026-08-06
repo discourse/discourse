@@ -207,19 +207,26 @@ module DiscourseAi
                   needs_newlines = false
                 end
 
-                process_tool(
-                  tool: tool,
-                  raw_context: raw_context,
-                  current_llm: current_llm,
-                  update_blk: update_blk,
-                  prompt: prompt,
-                  context: context,
-                  current_thinking: current_thinking,
-                )
+                tool_result =
+                  process_tool(
+                    tool: tool,
+                    raw_context: raw_context,
+                    current_llm: current_llm,
+                    update_blk: update_blk,
+                    prompt: prompt,
+                    context: context,
+                    current_thinking: current_thinking,
+                  )
 
-                ongoing_chain &&= tool.chain_next_response?
+                chain_next_response =
+                  tool.chain_next_response? &&
+                    !(
+                      agent.stop_chain_on_pending_approval? && tool_result.is_a?(Hash) &&
+                        tool_result[:status] == "pending_approval"
+                    )
+                ongoing_chain &&= chain_next_response
 
-                tool_halted = true if !tool.chain_next_response?
+                tool_halted = true if !chain_next_response
               else
                 next if tool_halted
                 needs_newlines = true
@@ -282,7 +289,7 @@ module DiscourseAi
       private
 
       def enable_gemini_thought_summaries!(llm_kwargs, current_llm, context)
-        return if current_llm.llm_model.provider != "google"
+        return if !%w[google gemini_interactions].include?(current_llm.llm_model.provider)
         return if context.skip_show_thinking != false
 
         extra_model_params = (llm_kwargs[:extra_model_params] || {}).dup
@@ -406,7 +413,8 @@ module DiscourseAi
         current_thinking:
       )
         tool_call_id = tool.tool_call_id
-        invocation_result_json = invoke_tool(tool, context, &update_blk).to_json
+        invocation_result = invoke_tool(tool, context, &update_blk)
+        invocation_result_json = invocation_result.to_json
 
         tool_call_message = {
           type: :tool_call,
@@ -454,6 +462,7 @@ module DiscourseAi
           tool.provider_data.presence,
         ]
         raw_context << [invocation_result_json, tool_call_id, "tool", tool.name]
+        invocation_result
       end
 
       def invoke_tool(tool, context, &update_blk)

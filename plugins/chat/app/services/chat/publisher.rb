@@ -470,6 +470,9 @@ module Chat
           chat_message_id: chat_message.id,
           pinned_at: pin.created_at.iso8601(3),
           pinned_by_id: pin.pinned_by_id,
+          # authoritative count so clients assign instead of incrementing,
+          # keeping them correct even if events are replayed or double-handled
+          pinned_message_count: chat_channel.pinned_messages.count,
         },
       )
     end
@@ -477,7 +480,12 @@ module Chat
     def self.publish_unpin!(chat_channel, chat_message, unpinned_by)
       publish_to_channel!(
         chat_channel,
-        { type: :unpin, chat_message_id: chat_message.id, unpinned_by_id: unpinned_by.id },
+        {
+          type: :unpin,
+          chat_message_id: chat_message.id,
+          unpinned_by_id: unpinned_by.id,
+          pinned_message_count: chat_channel.pinned_messages.count,
+        },
       )
     end
 

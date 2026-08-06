@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
+require "strscan"
+
 module DiscourseDataExplorer
   module DataExplorer
+    # the lookbehind skips `::type` casts
+    PARAM_REGEX = /(?<!:):([a-zA-Z_][a-zA-Z0-9_]*)/
+
     # Used for ftype calls, see https://www.rubydoc.info/gems/pg/0.17.1/PG%2FResult:ftype
     # and /usr/include/postgresql/server/catalog/pg_type_d.h
     PG_TYPE_OID_JSON = 114
@@ -42,6 +47,9 @@ module DiscourseDataExplorer
         return { error: e, duration_nanos: 0 }
       end
 
+      # a parameter value could otherwise break out of a comment
+      executable_sql = interpolate_params(strip_comments(query.sql), query_args)
+
       time_start, time_end, explain, err, result = nil
       begin
         ActiveRecord::Base.connection.transaction do
@@ -51,7 +59,7 @@ module DiscourseDataExplorer
           # Set a statement timeout so we can't tie up the server
           DB.exec "SET LOCAL statement_timeout = 10000"
 
-          # SQL comments are for the benefits of the slow queries log
+          # Add trusted instrumentation after removing comments from the stored query.
           started_by = opts[:current_user]&.username
           sql = <<~SQL
             /*
@@ -60,20 +68,12 @@ module DiscourseDataExplorer
             #{"* Started by: #{started_by}" if started_by}
             */
             WITH query AS (
-            #{query.sql}
+            #{executable_sql}
             ) SELECT * FROM query
             LIMIT #{opts[:limit] || SiteSetting.data_explorer_query_result_limit}
           SQL
 
           time_start = Time.now
-
-          # Using MiniSql::InlineParamEncoder directly instead of DB.param_encoder because current implementation of
-          # DB.param_encoder is meant for SQL fragments and not an entire SQL string.
-          sql =
-            MiniSql::InlineParamEncoder.new(ActiveRecord::Base.connection.raw_connection).encode(
-              sql,
-              query_args,
-            )
 
           result = ActiveRecord::Base.connection.raw_connection.async_exec(sql)
           result.check # make sure it's done
@@ -81,9 +81,7 @@ module DiscourseDataExplorer
 
           if opts[:explain]
             explain =
-              DB
-                .query_hash("EXPLAIN #{query.sql}", query_args)
-                .map { |row| row["QUERY PLAN"] }.join "\n"
+              DB.query_hash("EXPLAIN #{executable_sql}").map { |row| row["QUERY PLAN"] }.join "\n"
           end
 
           # All done. Issue a rollback anyways, just in case
@@ -103,6 +101,53 @@ module DiscourseDataExplorer
         params_full: query_args,
       }
     end
+
+    # Single pass, so that a substituted value is never rescanned.
+    def self.interpolate_params(sql, params)
+      return sql if params.blank?
+
+      # not DB.param_encoder, which quotes some types differently
+      encoder = MiniSql::InlineParamEncoder.new(ActiveRecord::Base.connection.raw_connection)
+      values = params.transform_keys(&:to_s)
+      sql.gsub(PARAM_REGEX) { values.key?($1) ? encoder.quote_val(values[$1]) : $& }
+    end
+
+    # Literals, quoted identifiers, and dollar-quoted strings are left untouched,
+    # as are unterminated constructs, so that PostgreSQL reports the syntax error.
+    def self.strip_comments(sql)
+      scanner = StringScanner.new(sql)
+      result = +""
+
+      until scanner.eos?
+        if scanner.scan(/--[^\n]*/)
+          # dropped, the newline is kept
+        elsif scanner.scan(%r{/\*})
+          depth = 1
+          while depth > 0 && scanner.skip_until(%r{\*/|/\*})
+            depth += scanner.matched == "/*" ? 1 : -1
+          end
+          scanner.terminate if depth > 0
+          result << " "
+        elsif scanner.match?(/'/)
+          # backslash escapes only apply to E'' strings
+          pattern = result.match?(/(?<![\w"])[eE]\z/) ? /'(?:''|[^'\\]|\\.)*'/m : /'(?:''|[^'])*'/
+          result << (scanner.scan(pattern) || scan_rest(scanner))
+        elsif scanner.match?(/"/)
+          result << (scanner.scan(/"(?:""|[^"])*"/) || scan_rest(scanner))
+        elsif scanner.match?(/\$\w*\$/)
+          result << (scanner.scan(/\$(\w*)\$.*?\$\1\$/m) || scan_rest(scanner))
+        else
+          result << (scanner.scan(%r{[^-/'"$]+}) || scanner.getch)
+        end
+      end
+
+      result
+    end
+
+    def self.scan_rest(scanner)
+      scanner.rest.tap { scanner.terminate }
+    end
+    private_class_method :scan_rest
 
     def self.extra_data_pluck_fields
       @extra_data_pluck_fields ||= {

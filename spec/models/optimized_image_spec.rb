@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "chunky_png"
+
 RSpec.describe OptimizedImage do
   let(:upload) { build(:upload) }
   before { upload.id = 42 }
@@ -30,25 +32,24 @@ RSpec.describe OptimizedImage do
       end
     end
 
-    it "should correctly crop images vertically" do
-      tmp_path = "/tmp/cropped.png"
-      desired_width = 100
-      desired_height = 66
+    it "crops vertical content from the top edge" do
+      FileHelper.stubs(:optimize_image!).returns(true)
 
-      begin
-        OptimizedImage.crop(
-          "#{Rails.root.join("spec/fixtures/images/logo.png")}", # 244x66px
-          tmp_path,
-          desired_width,
-          desired_height,
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "cropped.png")
+
+        described_class.crop(
+          Rails.root.join("spec/fixtures/images/crop_position.png").to_s,
+          output_path,
+          3,
+          2,
         )
+        output_image = ChunkyPNG::Image.from_file(output_path)
 
-        w, h = FastImage.size(tmp_path)
-
-        expect(w).to eq(desired_width)
-        expect(h).to eq(desired_height)
-      ensure
-        File.delete(tmp_path) if File.exist?(tmp_path)
+        expect([output_image.width, output_image.height]).to eq([3, 2])
+        expect(output_image.pixels).to all(
+          satisfy { |pixel| ChunkyPNG::Color.r(pixel) > ChunkyPNG::Color.b(pixel) },
+        )
       end
     end
 
@@ -180,6 +181,23 @@ RSpec.describe OptimizedImage do
           File.delete(tmp_path) if File.exist?(tmp_path)
         end
       end
+
+      it "keeps a tiny image at its original dimensions when it is within the requested bounds" do
+        FileHelper.stubs(:optimize_image!).returns(true)
+
+        Dir.mktmpdir do |dir|
+          output_path = File.join(dir, "downsized.png")
+
+          OptimizedImage.downsize(
+            "#{Rails.root.join("spec/fixtures/images/resized.png")}",
+            output_path,
+            "10x10\>",
+          )
+
+          expect(FastImage.type(output_path)).to eq(:png)
+          expect(FastImage.size(output_path)).to eq([5, 5])
+        end
+      end
     end
   end
 
@@ -257,8 +275,9 @@ RSpec.describe OptimizedImage do
         optimized_new = OptimizedImage.create_for(upload, 10, 10, format: "gif")
         expect(optimized_new.id).to eq(old_id)
 
-        path = Shellwords.escape(Discourse.store.path_for(optimized_new))
-        expect(`identify -format %m #{path}`.strip).to eq("GIF")
+        path = Discourse.store.path_for(optimized_new)
+        expect(FastImage.type(path)).to eq(:gif)
+        expect(FastImage.size(path)).to eq([10, 10])
 
         # cleanup (which transaction rollback may miss)
         optimized_new.destroy

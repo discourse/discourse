@@ -75,6 +75,8 @@ de:
         close: "Angeheftete Nachrichten schließen"
         pinned_by_you: "Angeheftet von dir"
         pinned_by_user: "Angeheftet von %{username}"
+      pinned_bar:
+        title: "Angeheftet"
       no_pinned_messages: "Keine angehefteten Nachrichten in diesem Kanal."
       pin_message: "Nachricht anheften"
       unpin_message: "Nachricht loslösen"
@@ -166,12 +168,6 @@ de:
         never: "niemals"
       separate_sidebar_mode:
         title: "Separate Seitenleisten-Modi für Forum und Chat anzeigen"
-      send_shortcut:
-        title: "Tastenkombinationen zum Absenden"
-        enter:
-          label: "Senden mit Enter"
-        meta_enter:
-          label: "Senden mit %{meta_key} + Enter"
       enable: "Chat aktivieren"
       flag: "Melden"
       emoji: "Emoji einfügen"
@@ -322,6 +318,11 @@ de:
         title: "Desktop-Chat-Benachrichtigungston"
       sounds:
         none: "Keiner"
+        classic: "Klassisch und schlicht"
+        soft: "Weiche Marimba"
+        retro: "8-Bit-Retro"
+        bubble: "Verspielter Blubber-Klang"
+        ethereal: "Luftiges Glas"
       title: "Chat"
       title_capitalized: "Chat"
       upload: "Datei anhängen"
@@ -404,6 +405,8 @@ de:
         input_placeholder: Einen Namen hinzufügen
         slug_description: In der URL wird anstelle des Kanalnamens ein Kanal-Kürzel verwendet
         name: Kanalname
+        slug: Sprechender Name für den Kanal
+        emoji: Kanal-Emoji
         reset_emoji: Emoji zurücksetzen
       channel_edit_description_modal:
         title: Beschreibung bearbeiten
@@ -466,12 +469,14 @@ de:
         create: "Kanal erstellen"
         description: "Beschreibung"
         name: "Kanalname"
+        slug: "Sprechender Name für den Kanal"
         title: "Neuer Kanal"
         type: "Typ"
         types:
           category: "Kategorie"
           topic: "Thema"
         emoji:
+          label: "Kanal-Emoji"
           reset: "Emoji zurücksetzen"
       reviewable:
         type: "Chat-Nachricht"
@@ -800,14 +805,33 @@ de:
         chat:
           label: "Chat"
     discourse_workflows:
+      node_unavailable:
+        requires_chat: "Erfordert die Aktivierung des Chat-Plug-ins."
       nodes:
         "action:send_chat_message": "Chat-Nachricht senden"
+        "action:chat_approval": "Chat-Genehmigung"
         "trigger:chat_message_created": "Chat-Nachricht erstellt"
+      node_descriptions:
+        "action:send_chat_message": "Eine Nachricht an einen Chat-Kanal senden"
+        "action:chat_approval": "Eine Genehmigungsanfrage an einen Chat-Kanal senden und auf eine Antwort warten"
+        "trigger:chat_message_created": "Wird ausgelöst, wenn eine neue Chat-Nachricht erstellt wird"
       chat_message_created:
         channel_id: "Kanal"
+        channel_id_description: "Leer lassen, damit die Funktion für alle Chat-Kanäle ausgelöst wird."
       send_chat_message:
         channel_id: "Kanal"
         message: "Nachricht"
       chat_approval:
         message: "Nachricht"
+        approve_label: "Bezeichnung der Schaltfläche „Genehmigen“"
+        approve_label_description: "Wird standardmäßig auf „Genehmigen“ gesetzt, wenn das Feld leer bleibt."
+        deny_label: "Bezeichnung der Schaltfläche „Ablehnen“"
+        deny_label_description: "Wird standardmäßig auf „Ablehnen“ gesetzt, wenn das Feld leer bleibt."
         channel_id: "Kanal"
+        channel_id_description: "Der Chat-Kanal, an den die Bestätigungsnachricht gesendet werden soll."
+        timeout_minutes: "Zeitüberschreitung (Minuten)"
+        timeout_minutes_description: "Leer lassen, wenn keine Zeitüberschreitung gewünscht ist."
+        timeout_action: "Bei Zeitüberschreitung"
+        timeout_action_description: "Was passiert, wenn die Zeit für die Genehmigung überschritten wird."
+        timeout_action_deny: "Fortsetzen als abgelehnt"
+        timeout_action_fail: "Fehlschlagen des Workflows"

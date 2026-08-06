@@ -37,6 +37,15 @@ module DiscourseWorkflows
              class_name: "DiscourseWorkflows::WorkflowCallRun",
              foreign_key: "target_workflow_id",
              dependent: :delete_all
+    has_many :workflow_tag_mappings,
+             class_name: "DiscourseWorkflows::WorkflowTagMapping",
+             foreign_key: "workflow_id",
+             dependent: :delete_all
+    has_many :tags,
+             -> { order(:name) },
+             class_name: "DiscourseWorkflows::WorkflowTag",
+             through: :workflow_tag_mappings,
+             source: :workflow_tag
 
     belongs_to :created_by, class_name: "User", foreign_key: "created_by_id"
     belongs_to :updated_by, class_name: "User", foreign_key: "updated_by_id", optional: true
@@ -82,11 +91,24 @@ module DiscourseWorkflows
               [{ "type" => "trigger:#{type}" }].to_json,
             )
           end
+    scope :filter_by_tags,
+          ->(tag_names) do
+            Array.wrap(tag_names).reduce(all) { |scope, tag_name| scope.where(<<~SQL, tag_name) }
+                EXISTS (
+                  SELECT 1
+                  FROM discourse_workflows_workflow_tags wtm
+                  JOIN discourse_workflows_tags wt ON wt.id = wtm.workflow_tag_id
+                  WHERE wtm.workflow_id = discourse_workflows_workflows.id
+                    AND wt.name = ?
+                )
+              SQL
+          end
 
-    def self.filtered(name: nil, trigger_type: nil, exclude_id: nil)
+    def self.filtered(name: nil, trigger_type: nil, exclude_id: nil, tags: nil)
       scope = all
       scope = scope.filter_by_name(name) if name.present?
       scope = scope.filter_by_trigger_type(trigger_type) if trigger_type.present?
+      scope = scope.filter_by_tags(tags) if tags.present?
       scope = scope.where.not(id: exclude_id) if exclude_id
       scope
     end

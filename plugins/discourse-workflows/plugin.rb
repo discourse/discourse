@@ -2,7 +2,7 @@
 
 # name: discourse-workflows
 # about: Workflow automation system for Discourse
-# meta_topic_id: 406990
+# meta_topic_id: 407100
 # version: 0.1
 # authors: Discourse
 # url: https://github.com/discourse/discourse-workflows
@@ -51,6 +51,7 @@ register_svg_icon "user-minus"
 register_svg_icon "grip-vertical"
 register_svg_icon "paragraph"
 register_svg_icon "arrow-down-a-z"
+register_svg_icon "layer-group"
 register_svg_icon "copy"
 register_svg_icon "paste"
 register_svg_icon "scissors"
@@ -105,6 +106,7 @@ after_initialize do
     require_relative "lib/discourse_workflows/ai/tools/workflow_ask_questions"
     require_relative "lib/discourse_workflows/ai/tools/workflow_resolve_entity"
     require_relative "lib/discourse_workflows/ai/tools/search_chat_channels"
+    require_relative "lib/discourse_workflows/ai/tools/search_chat_integration_channels"
     require_relative "lib/discourse_workflows/ai/tools/workflow_script_context"
     require_relative "lib/discourse_workflows/ai/tools/workflow_validate_script"
     require_relative "lib/discourse_workflows/ai_workflow_author"

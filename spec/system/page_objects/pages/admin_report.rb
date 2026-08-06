@@ -40,7 +40,7 @@ module PageObjects
         PageObjects::Components::DFilterControls.new(".d-filter-controls")
       end
 
-      CATEGORY_FILTER = ".admin-report .chart__additional-filters .category-selector"
+      CATEGORY_FILTER = ".admin-report .chart__additional-filters .multiple-categories-selector"
 
       def visit_report(type)
         page.visit("/admin/reports/#{type}")

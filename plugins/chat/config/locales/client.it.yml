@@ -64,6 +64,8 @@ it:
       cancel: "Annulla"
       cancel_reply: "Annulla risposta"
       chat_channels: "Canali"
+      pinned_bar:
+        title: "Appuntato"
       pinned: "Appuntato"
       browse_all_channels: "Sfoglia tutti i canali"
       see_in: "Da' un'occhiata"
@@ -145,11 +147,6 @@ it:
         never: "Mai"
       separate_sidebar_mode:
         title: "Mostra modalità separate della barra laterale per forum e chat"
-      send_shortcut:
-        enter:
-          label: "Invia tramite Invio"
-        meta_enter:
-          label: "Invia tramite %{meta_key} + Invio"
       enable: "Abilita chat"
       flag: "Segnala"
       emoji: "Inserisci emoji"

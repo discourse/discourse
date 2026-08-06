@@ -110,17 +110,27 @@ RSpec.describe Onebox::Preview do
       expect(result).to include ' src="https://thirdparty.example.com"'
     end
 
-    it "sanitizes origins that only share an allowed prefix" do
-      iframe_html = "<iframe src='https://thirdparty.example.com.attacker.test/embed'>"
-      preview =
-        described_class.new(preview_url, allowed_iframe_origins: ["https://thirdparty.example.com"])
-      preview.stubs(:engine_html).returns(iframe_html)
+    it "sanitizes sources that cross an allowed URL authority boundary" do
+      scenarios = [
+        {
+          allowed_origins: ["https://thirdparty.example.com"],
+          iframe_src: "https://thirdparty.example.com.attacker.test/embed",
+        },
+        {
+          allowed_origins: ["https://*.example.com"],
+          iframe_src: "https://attacker.test\\path.example.com/embed",
+        },
+      ]
 
-      result = preview.to_s
-      expect(result).to include(
-        ' data-unsanitized-src="https://thirdparty.example.com.attacker.test/embed"',
-      )
-      expect(result).not_to include(' src="https://thirdparty.example.com.attacker.test/embed"')
+      scenarios.each do |scenario|
+        preview =
+          described_class.new(preview_url, allowed_iframe_origins: scenario[:allowed_origins])
+        preview.stubs(:engine_html).returns("<iframe src='#{scenario[:iframe_src]}'>")
+
+        result = preview.to_s
+        expect(result).to include(%( data-unsanitized-src="#{scenario[:iframe_src]}"))
+        expect(result).not_to include(%( src="#{scenario[:iframe_src]}"))
+      end
     end
 
     it "allows wildcard allowed origins" do

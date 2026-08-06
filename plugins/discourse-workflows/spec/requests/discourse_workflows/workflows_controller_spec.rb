@@ -48,6 +48,18 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
       expect(json["workflows"][0]["last_execution_status"]).to eq("success")
     end
 
+    it "filters by tags and serializes each workflow's tags" do
+      ops_workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, tags: %w[ops])
+      Fabricate(:discourse_workflows_workflow, created_by: admin, tags: %w[billing])
+
+      get "/admin/plugins/discourse-workflows/workflows.json", params: { tags: "ops" }
+
+      expect(response).to have_http_status(:ok)
+      json = response.parsed_body
+      expect(json["workflows"].map { |workflow| workflow["id"] }).to eq([ops_workflow.id.to_s])
+      expect(json["workflows"][0]["tags"]).to eq(%w[ops])
+    end
+
     it "returns meta with total rows" do
       Fabricate(:discourse_workflows_workflow, created_by: admin)
 
@@ -128,6 +140,23 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
       expect(json["workflow"]["static_data"]).to eq("node:Topic Closed" => { "cursor" => "abc" })
     end
 
+    it "creates a workflow with normalized tags" do
+      post "/admin/plugins/discourse-workflows/workflows.json",
+           params: {
+             workflow: {
+               name: "Tagged Workflow",
+               tags: ["Ops", " billing ", "Ops"],
+             },
+           },
+           as: :json
+
+      expect(response).to have_http_status(:created)
+      expect(response.parsed_body["workflow"]["tags"]).to eq(%w[billing ops])
+      expect(
+        DiscourseWorkflows::Workflow.find(response.parsed_body["workflow"]["id"]).tags.map(&:name),
+      ).to eq(%w[billing ops])
+    end
+
     it "returns 400 when name is missing" do
       post "/admin/plugins/discourse-workflows/workflows.json", params: { workflow: { nodes: [] } }
       expect(response).to have_http_status(:bad_request)
@@ -176,6 +205,37 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body["workflow"]).to include("name" => "Updated Name")
       expect(response.parsed_body["workflow"]["active_version_id"]).to be_nil
+    end
+
+    it "updates the workflow tags" do
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
+
+      put "/admin/plugins/discourse-workflows/workflows/#{workflow.id}.json",
+          params: {
+            workflow: {
+              tags: %w[Ops billing],
+            },
+          }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["workflow"]["tags"]).to eq(%w[billing ops])
+    end
+
+    it "rejects updates with too many tags" do
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, tags: %w[keep])
+
+      put "/admin/plugins/discourse-workflows/workflows/#{workflow.id}.json",
+          params: {
+            workflow: {
+              tags: (1..11).map { |index| "tag-#{index}" },
+            },
+          }
+
+      expect(response).to have_http_status(:bad_request)
+      expect(response.parsed_body["errors"].join).to include(
+        I18n.t("discourse_workflows.errors.too_many_tags", max: 10),
+      )
+      expect(workflow.reload.tags.map(&:name)).to eq(%w[keep])
     end
 
     it "publishes a workflow draft" do

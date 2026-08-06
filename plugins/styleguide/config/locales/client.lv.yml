@@ -8,7 +8,6 @@ lv:
   js:
     styleguide:
       title: "Stila ceļvedis"
-      welcome: "Lai sāktu, izvēlieties sadaļu no izvēlnes kreisajā pusē."
       categories:
         atoms: Atomi
         molecules: Molekulas

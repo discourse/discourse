@@ -102,6 +102,9 @@ RSpec.describe SiteSettings::TypeSupervisor do
       it "'datetime' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:datetime]).to eq(31)
       end
+      it "'date' should be at the right position" do
+        expect(SiteSettings::TypeSupervisor.types[:date]).to eq(33)
+      end
     end
   end
 
@@ -178,6 +181,7 @@ RSpec.describe SiteSettings::TypeSupervisor do
       settings.setting(:type_false, false)
       settings.setting(:type_float, 2.3232)
       settings.setting(:type_string, "string")
+      settings.setting(:type_date, "2024-01-01", type: "date")
       settings.setting(:type_enum_default_string, "2", type: "enum", choices: ["2"])
       settings.setting(:type_enum_class, "en", enum: "TestEnumClass")
       settings.setting(:type_validator, 5, validator: "TestSmallThanTenValidator")
@@ -258,6 +262,13 @@ RSpec.describe SiteSettings::TypeSupervisor do
         expect(settings.type_supervisor.to_db_value(:type_string, "a")).to eq [
              "a",
              SiteSetting.types[:string],
+           ]
+      end
+
+      it "returns date values" do
+        expect(settings.type_supervisor.to_db_value(:type_date, "2024-12-29")).to eq [
+             "2024-12-29",
+             SiteSetting.types[:date],
            ]
       end
 
@@ -471,6 +482,7 @@ RSpec.describe SiteSettings::TypeSupervisor do
       settings.setting(:type_true, true)
       settings.setting(:type_float, 2.3232)
       settings.setting(:type_string, "string")
+      settings.setting(:type_date, "2024-01-01", type: "date")
       settings.setting(:type_url_list, "string", type: "url_list")
       settings.setting(:type_textarea, "string", textarea: true)
       settings.setting(:type_enum_choices, "2", type: "enum", choices: %w[1 2])
@@ -510,6 +522,10 @@ RSpec.describe SiteSettings::TypeSupervisor do
 
     it "returns string type" do
       expect(settings.type_supervisor.type_hash(:type_string)[:type]).to eq "string"
+    end
+
+    it "returns date type" do
+      expect(settings.type_supervisor.type_hash(:type_date)[:type]).to eq "date"
     end
 
     it "returns url_list type" do

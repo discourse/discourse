@@ -131,7 +131,6 @@ zh_TW:
       exclusion: 被保留
       greater_than: 必須大於 %{count}
       greater_than_or_equal_to: 必須大於或等於 %{count}
-      has_already_been_used: "已經被使用"
       inclusion: 不包括在這列表中
       invalid: 無效的
       is_invalid: "似乎不清楚，這是完整的句子嗎？"
@@ -1120,7 +1119,6 @@ zh_TW:
     editing_grace_period_max_diff: "編輯寬限期允許的字元更改的最大數量，如果有更多的更改，將另儲存為另一個版本的修訂（信任等級0和1）"
     editing_grace_period_max_diff_high_trust: "編輯寬限期允許的最大字元更改數，如果更改將另存為另一個修訂版（信任級別2和更高）"
     staff_edit_locks_post: "如果版主編輯過貼文，貼文將被鎖定編輯"
-    edit_history_visible_to_public: "允許任何人查看編輯過的貼文的舊版本。當禁用時，只有工作成員才能查看。"
     delete_removed_posts_after: "貼文被作者刪除，將在 (n) 小時後被自動刪除。如果設置為 0，貼文將被立即刪除。"
     responsive_post_image_sizes: "調整燈箱預覽圖片的大小，此操作將允許像素高的 DPI 螢幕顯示。刪除所有值以禁用響應式圖片"
     fixed_category_positions: "若勾選，你將能調整並固定分類的順序。若不勾選，分類將會依照活躍程度來排序。"
@@ -2901,7 +2899,6 @@ zh_TW:
           title: "刪除使用者"
         block:
           title: "刪除並阻擋使用者"
-          description: "這個使用者將被刪除，我們將阻擋他們的IP及郵件地址。"
       confirm_spam:
         title: "是"
       not_spam:

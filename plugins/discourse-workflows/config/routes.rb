@@ -27,6 +27,7 @@ DiscourseWorkflows::Engine.routes.draw do
     scope format: :json do
       get "/workflows" => "workflows#index"
       post "/workflows" => "workflows#create"
+      get "/workflow-tags" => "workflow_tags#index"
       post "/workflows/ai/author" => "ai_authoring#create"
       post "/workflows/:workflow_id/ai/author" => "ai_authoring#create"
       post "/workflows/:workflow_id/ai/apply" => "ai_authoring#apply"
@@ -58,6 +59,7 @@ DiscourseWorkflows::Engine.routes.draw do
       get "/stats" => "stats#index"
       get "/stats/:workflow_id" => "stats#index"
       post "/expressions/evaluate" => "expressions#evaluate"
+      post "/node-previews" => "node_previews#create"
       get "/variables" => "variables#index"
       post "/variables" => "variables#create"
       put "/variables/:id" => "variables#update"

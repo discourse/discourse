@@ -127,7 +127,9 @@ module DiscourseWorkflows
 
         node_class
           .active_output_contracts(NodeData.parameters(@nodes_by_id.fetch(node_id)))
-          .all? { |contract| contract.fetch(:mode).to_sym == :replace }
+          .all? do |candidates|
+            candidates.all? { |contract| contract.fetch(:mode).to_sym == :replace }
+          end
       end
 
       def output_count(node_id)

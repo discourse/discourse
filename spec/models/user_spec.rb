@@ -1770,39 +1770,55 @@ RSpec.describe User do
   end
 
   describe "#new_user_posting_on_first_day?" do
-    def create_test_user(opts = {})
-      Fabricate(:user, { created_at: Time.zone.now }.merge(opts))
-    end
-
     it "is true for a user who has never posted" do
-      expect(create_test_user.new_user_posting_on_first_day?).to eq(true)
+      expect(Fabricate(:user, created_at: Time.zone.now).new_user_posting_on_first_day?).to eq(true)
     end
 
     it "is false if the user is moderator or admin" do
-      expect(create_test_user(moderator: true).new_user_posting_on_first_day?).to eq(false)
-      expect(create_test_user(admin: true).new_user_posting_on_first_day?).to eq(false)
+      expect(
+        Fabricate(:user, created_at: Time.zone.now, moderator: true).new_user_posting_on_first_day?,
+      ).to eq(false)
+      expect(
+        Fabricate(:user, created_at: Time.zone.now, admin: true).new_user_posting_on_first_day?,
+      ).to eq(false)
     end
 
     it "is false for a user that is TL2 or above" do
-      expect(create_test_user(trust_level: TrustLevel[2]).new_user_posting_on_first_day?).to eq(
-        false,
-      )
-      expect(create_test_user(trust_level: TrustLevel[3]).new_user_posting_on_first_day?).to eq(
-        false,
-      )
-      expect(create_test_user(trust_level: TrustLevel[0]).new_user_posting_on_first_day?).to eq(
-        true,
-      )
+      expect(
+        Fabricate(
+          :user,
+          created_at: Time.zone.now,
+          trust_level: TrustLevel[2],
+        ).new_user_posting_on_first_day?,
+      ).to eq(false)
+      expect(
+        Fabricate(
+          :user,
+          created_at: Time.zone.now,
+          trust_level: TrustLevel[3],
+        ).new_user_posting_on_first_day?,
+      ).to eq(false)
+      expect(
+        Fabricate(
+          :user,
+          created_at: Time.zone.now,
+          trust_level: TrustLevel[0],
+        ).new_user_posting_on_first_day?,
+      ).to eq(true)
     end
 
     it "is true for a TL1 user created less than 24 hours ago" do
-      expect(create_test_user(trust_level: TrustLevel[1]).new_user_posting_on_first_day?).to eq(
-        true,
-      )
+      expect(
+        Fabricate(
+          :user,
+          created_at: Time.zone.now,
+          trust_level: TrustLevel[1],
+        ).new_user_posting_on_first_day?,
+      ).to eq(true)
     end
 
     it "is false if account was created more than 24 hours ago" do
-      u = create_test_user(created_at: 25.hours.ago)
+      u = Fabricate(:user, created_at: 25.hours.ago)
       expect(u.new_user_posting_on_first_day?).to eq(false)
     end
   end
@@ -3875,8 +3891,12 @@ RSpec.describe User do
     fab!(:tag_sidebar_section_link_2) do
       Fabricate(:tag_sidebar_section_link, user: user, linkable: hidden_tag)
     end
+    fab!(:synonym) { Fabricate(:tag, target_tag: tag) }
+    fab!(:tag_sidebar_section_link_3) do
+      Fabricate(:tag_sidebar_section_link, user: user, linkable: synonym)
+    end
 
-    it "should only return tag sidebar section link records of tags that the user is allowed to see" do
+    it "should only return tag sidebar section link records of tags that the user is allowed to browse" do
       expect(user.visible_sidebar_tags).to contain_exactly(tag)
 
       user.update!(admin: true)

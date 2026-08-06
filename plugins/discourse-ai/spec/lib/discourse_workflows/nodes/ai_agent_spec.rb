@@ -124,6 +124,81 @@ RSpec.describe DiscourseWorkflows::Nodes::AiAgent::V1 do
     expect(bot).to have_received(:reply).twice
   end
 
+  describe "run once for all items" do
+    it "makes a single request no matter how many items arrive" do
+      items =
+        execute_node_output(
+          configuration: {
+            "agent_id" => agent.id,
+            "mode" => "runOnceForAllItems",
+            "prompt" => "={{ 'Report about ' + $json.name }}",
+          },
+          input_items: [
+            { "json" => { "name" => "Ada" } },
+            { "json" => { "name" => "Grace" } },
+            { "json" => { "name" => "Alan" } },
+          ],
+        ).first
+
+      expect(prompts).to eq(["Report about Ada"])
+      expect(items.length).to eq(1)
+      expect(items.first["json"]["result"]).to eq("Reply to Report about Ada")
+      expect(bot).to have_received(:reply).once
+    end
+
+    it "pairs its single output with every input item" do
+      items =
+        execute_node_output(
+          configuration: {
+            "agent_id" => agent.id,
+            "mode" => "runOnceForAllItems",
+            "prompt" => "Hello",
+          },
+          input_items: [{ "json" => { "name" => "Ada" } }, { "json" => { "name" => "Grace" } }],
+        ).first
+
+      expect(items.first["pairedItem"]).to eq([{ "item" => 0 }, { "item" => 1 }])
+    end
+
+    it "defaults to per-item so existing workflows keep their behaviour" do
+      expect(described_class.property_schema[:mode][:default]).to eq("runOnceForEachItem")
+
+      execute_node_output(
+        configuration: {
+          "agent_id" => agent.id,
+          "prompt" => "Hello",
+        },
+        input_items: [{ "json" => {} }, { "json" => {} }],
+      )
+
+      expect(bot).to have_received(:reply).twice
+    end
+
+    it "reports the run scope through the mode parameter" do
+      expect(described_class.description[:capabilities][:run_scope]).to eq(
+        {
+          parameter: "mode",
+          values: {
+            runOnceForEachItem: "per_item",
+            runOnceForAllItems: "all_items",
+          },
+        },
+      )
+    end
+
+    it "raises a node error for an unknown mode" do
+      expect {
+        execute_node_output(
+          configuration: {
+            "agent_id" => agent.id,
+            "mode" => "whenever",
+            "prompt" => "Hello",
+          },
+        )
+      }.to raise_error(DiscourseWorkflows::NodeError, /not a supported AI agent execution mode/)
+    end
+  end
+
   it "uses the system user as the default runner" do
     execute_node_output(configuration: { "agent_id" => agent.id, "prompt" => "Hello" })
 

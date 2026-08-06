@@ -1,6 +1,27 @@
 # frozen_string_literal: true
 
 class ReviewableScoreSerializer < ApplicationSerializer
+  REASON_COOK_OPTIONS = {
+    features_override: [].freeze,
+    markdown_it_rules: %w[
+      autolink
+      list
+      backticks
+      newline
+      code
+      fence
+      linkify
+      link
+      strikethrough
+      blockquote
+      emphasis
+      escape
+      entity
+      html_block
+      html_inline
+    ].freeze,
+  }.freeze
+
   REASONS_AND_SETTINGS = {
     post_count: "approve_post_count",
     trust_level: "approve_unless_trust_level",
@@ -34,7 +55,8 @@ class ReviewableScoreSerializer < ApplicationSerializer
   has_one :reviewed_by, serializer: BasicUserSerializer, root: "users"
 
   def include_reviewable_conversation?
-    object.meta_topic.present? && scope&.can_see?(object.meta_topic)
+    return false if object.meta_topic.blank?
+    scope&.can_see?(object.meta_topic) || object.notify_moderators_flag_message?
   end
 
   def agree_stats
@@ -46,6 +68,7 @@ class ReviewableScoreSerializer < ApplicationSerializer
   end
 
   def reason
+    return @reason if defined?(@reason)
     return unless object.reason
 
     link_text = setting_name_for_reason(object.reason)
@@ -55,15 +78,15 @@ class ReviewableScoreSerializer < ApplicationSerializer
       link = build_link_for(object.reason, link_text)
 
       if object.reason == "watched_word"
-        text = watched_word_reason(link)
-      else
-        text = I18n.t("reviewables.reasons.#{object.reason}", link: link, default: object.reason)
+        return @reason = PrettyText.sanitize("<p>#{watched_word_reason(link)}</p>")
       end
+
+      text = I18n.t("reviewables.reasons.#{object.reason}", link:, default: object.reason)
     else
       text = I18n.t("reviewables.reasons.#{object.reason}", default: object.reason)
     end
 
-    text
+    @reason = PrettyText.cook(text, REASON_COOK_OPTIONS)
   end
 
   def reason_type
@@ -95,16 +118,17 @@ class ReviewableScoreSerializer < ApplicationSerializer
 
   def watched_word_reason(link)
     words = watched_words_found
+    default = "watched_word"
 
     if words.nil? || words.empty?
-      I18n.t("reviewables.reasons.no_context.watched_word", link: link, default: "watched_word")
+      I18n.t("reviewables.reasons.no_context.watched_word", link:, default:)
     else
       I18n.t(
         "reviewables.reasons.watched_word",
-        link: link,
-        words: words.map { |w| CGI.escapeHTML(w) }.join(", "),
-        count: words.length,
-        default: "watched_word",
+        link:,
+        words: words.map { |word| CGI.escapeHTML(word) }.join(", "),
+        count: words.size,
+        default:,
       )
     end
   end

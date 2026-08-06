@@ -75,6 +75,8 @@ tr_TR:
         close: "Sabitlenmiş mesajları kapat"
         pinned_by_you: "Sizin tarafınızdan sabitlendi"
         pinned_by_user: "%{username} tarafından sabitlendi"
+      pinned_bar:
+        title: "Sabitlendi"
       no_pinned_messages: "Bu kanalda sabitlenmiş mesaj yok."
       pin_message: "Mesajı sabitle"
       unpin_message: "Mesajı sabitlemeyi kaldır"
@@ -166,12 +168,6 @@ tr_TR:
         never: "Asla"
       separate_sidebar_mode:
         title: "Forum ve sohbet için ayrı kenar çubuğu modları göster"
-      send_shortcut:
-        title: "Kısayol gönder"
-        enter:
-          label: "Enter ile gönder"
-        meta_enter:
-          label: "%{meta_key} + Enter ile gönder"
       enable: "Sohbeti etkinleştir"
       flag: "Bayrak ekle"
       emoji: "Emoji ekle"

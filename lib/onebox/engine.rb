@@ -25,26 +25,23 @@ module Onebox
       return [/.*/] if origins.include?("*")
 
       origins.map do |origin|
-        url_match = origin.match(%r{\A(?<scheme>https?://)(?<authority>[^/\\?#]+)(?<suffix>.*)\z}i)
-
-        if url_match
-          escaped_authority = Regexp.escape(url_match[:authority])
-          if url_match[:authority].start_with?("*.")
-            escaped_authority = escaped_authority.sub("\\*") { "[^/\\\\?#]*" }
-          end
-
-          escaped_origin = [
-            Regexp.escape(url_match[:scheme]),
-            escaped_authority,
-            "(?=[/\\\\?#]|\\z)",
-            Regexp.escape(url_match[:suffix]),
-          ].join
-        else
-          escaped_origin = Regexp.escape(origin)
-          escaped_origin = escaped_origin.sub("\\*") { "[^/\\\\?#]*" } if origin.start_with?("*.")
+        escaped_origin = Regexp.escape(origin)
+        if origin.start_with?("*.", "https://*.", "http://*.")
+          escaped_origin = escaped_origin.sub("\\*") { "[^/\\\\?#]*" }
         end
 
-        Regexp.new("\\A#{escaped_origin}", "i")
+        origin_boundary =
+          if origin.match?(%r{\Ahttps?://[^/\\?#]+\z}i)
+            if origin.match?(/:\d+\z/)
+              "(?:[/\\\\?#]|\\z)"
+            else
+              "(?::\\d+(?:[/\\\\?#]|\\z)|[/\\\\?#]|\\z)"
+            end
+          else
+            ""
+          end
+
+        Regexp.new("\\A#{escaped_origin}#{origin_boundary}", "i")
       end
     end
 

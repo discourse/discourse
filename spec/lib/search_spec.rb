@@ -1806,9 +1806,7 @@ RSpec.describe Search do
   end
 
   describe "tags" do
-    def search
-      Search.execute(tag.name)
-    end
+    let(:search) { Search.execute(tag.name) }
 
     let!(:tag) { Fabricate(:tag) }
     let!(:uppercase_tag) { Fabricate(:tag, name: "HeLlO") }
@@ -1874,6 +1872,12 @@ RSpec.describe Search do
           [tag.name, "#{tag.name}9"],
         )
         expect(search.tags.map(&:name)).to eq([tag.name, "#{tag.name}9"])
+      end
+
+      it "does not return synonyms" do
+        Fabricate(:tag, name: "#{tag.name}9", target_tag: tag)
+
+        expect(search.tags).to eq([tag])
       end
 
       it "filters category-restricted tags based on category access" do

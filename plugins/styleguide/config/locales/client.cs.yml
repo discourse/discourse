@@ -13,7 +13,6 @@ cs:
   js:
     styleguide:
       title: "Průvodce styly"
-      welcome: "Pro začátek, vyberte položku z menu po levé straně."
       categories:
         syntax: Syntaxe
         atoms: Atomy

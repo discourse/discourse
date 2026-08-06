@@ -166,7 +166,7 @@ html:not(.keyboard-visible).mobile-device {
       display: none;
     }
 
-    input {
+    input:where(:not(.form-kit__control-input)) {
       width: auto;
 
       &[type="text"],
