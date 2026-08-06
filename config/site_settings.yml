@@ -1419,7 +1419,7 @@ posting:
     client: true
     hidden: true
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "other,all_members"
       allow_enabled_for:
         - everyone
