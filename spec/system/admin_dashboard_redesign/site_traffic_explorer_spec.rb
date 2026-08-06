@@ -265,10 +265,17 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_no_filter_pills
     expect(traffic).to have_metric(label: "Pageviews", value: "3")
 
-    traffic.select_date_preset("Last 30 days")
+    traffic.select_date_preset("Last 7 days")
 
-    expect(traffic).to have_date_range("Last 30 days")
-    expect(page).to have_current_path("/admin/dashboard/traffic?range=last_30_days")
+    expect(traffic).to have_date_range("Last 7 days")
+    expect(page).to have_current_path("/admin/dashboard/traffic?range=last_7_days")
+
+    traffic.select_custom_date_range(start_date: "2026-05-01", end_date: "2026-05-12")
+
+    expect(traffic).to have_date_range("May 1, 2026 – May 12, 2026")
+    expect(page).to have_current_path(
+      "/admin/dashboard/traffic?end_date=2026-05-12&range=custom&start_date=2026-05-01",
+    )
   end
 
   it "lets an admin filter additional results from an expanded table",
