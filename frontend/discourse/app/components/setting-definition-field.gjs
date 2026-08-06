@@ -27,7 +27,7 @@ export default class SettingDefinitionField extends Component {
   }
 
   get format() {
-    return this.args.definition.format ?? this.entry.format;
+    return this.args.format ?? this.args.definition.format ?? this.entry.format;
   }
 
   get validation() {

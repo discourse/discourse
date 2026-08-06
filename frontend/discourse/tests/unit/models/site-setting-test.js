@@ -44,4 +44,24 @@ module("Unit | Model | site-setting", function (hooks) {
     assert.strictEqual(definition.valid_values[1].name, "Public categories");
     assert.strictEqual(definition.valid_values[1].value, "b");
   });
+
+  test("definition refines a text setting into a textarea or password subtype", function (assert) {
+    const subtypeOf = (props) =>
+      SiteSetting.create({ setting: "test_setting", type: "string", ...props })
+        .definition.subtype;
+
+    assert.strictEqual(subtypeOf({}), undefined);
+    assert.strictEqual(subtypeOf({ textarea: true }), "textarea");
+    assert.strictEqual(subtypeOf({ secret: true }), "password");
+    assert.strictEqual(
+      subtypeOf({ textarea: true, secret: true }),
+      "textarea",
+      "a multi-line credential stays readable instead of collapsing into a masked single-line input"
+    );
+    assert.strictEqual(
+      subtypeOf({ type: "list", list_type: "secret", secret: true }),
+      undefined,
+      "a delimited value keeps its own control, otherwise its key|secret pairs are rewritten as one masked string"
+    );
+  });
 });

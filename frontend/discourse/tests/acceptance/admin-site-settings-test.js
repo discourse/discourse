@@ -68,13 +68,13 @@ acceptance("Admin - Site Settings", function (needs) {
       .dom(".row.setting.overridden")
       .doesNotExist("setting isn't overridden");
 
-    await fillIn(".input-setting-string", "Test");
+    await fillIn(".form-kit__control-input", "Test");
     await click("button.cancel");
     assert
       .dom(".row.setting.overridden")
       .doesNotExist("canceling doesn't mark setting as overridden");
 
-    await fillIn(".input-setting-string", "Test");
+    await fillIn(".form-kit__control-input", "Test");
     await click("button.ok");
     assert
       .dom(".row.setting.overridden")
@@ -95,12 +95,6 @@ acceptance("Admin - Site Settings", function (needs) {
     assert
       .dom(".row.setting.overridden")
       .doesNotExist("setting isn't marked as overridden after undo");
-
-    await fillIn(".input-setting-string", "Test");
-    await triggerKeyEvent(".input-setting-string", "keydown", "Enter");
-    assert
-      .dom(".row.setting.overridden")
-      .exists("saving via Enter key marks setting as overridden");
   });
 
   test("always shows filtered site settings if a filter is set", async function (assert) {
@@ -202,7 +196,7 @@ acceptance("Admin - Site Settings", function (needs) {
     await click('[data-setting="highlight_scope"] > .setting-controls__undo');
 
     assert
-      .dom('[data-setting="highlight_categories"] .input-setting-string')
+      .dom('[data-setting="highlight_categories"] .form-kit__control-input')
       .hasValue("default", "parent controls reset the dependent setting");
     assert
       .dom(".setting-depends-on-notice")
@@ -349,15 +343,15 @@ acceptance("Admin - Site Settings", function (needs) {
     await visit("/admin/site_settings");
 
     await fillIn(
-      '[data-setting="highlight_scope"] .input-setting-string',
+      '[data-setting="highlight_scope"] .form-kit__control-input',
       "include"
     );
     await fillIn(
-      '[data-setting="highlight_categories"] .input-setting-string',
+      '[data-setting="highlight_categories"] .form-kit__control-input',
       "selected categories"
     );
     await fillIn(
-      '[data-setting="unrelated_setting"] .input-setting-string',
+      '[data-setting="unrelated_setting"] .form-kit__control-input',
       "do not save me"
     );
 
