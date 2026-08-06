@@ -5,6 +5,7 @@ module Jobs
     CHUNK_SIZE = 1024
     CHUNK_OVERLAP = 64
     MAX_FRAGMENTS = 100_000
+    UTF8_TEXT_EXTENSIONS = %w[md txt].freeze
 
     # TODO(roman): Add a way to automatically recover from errors, resulting in unindexed uploads.
     def execute(args)
@@ -34,6 +35,7 @@ module Jobs
         ActiveRecord::Base.transaction do
           chunk_document(
             file: document,
+            extension: upload.extension,
             tokenizer:,
             chunk_tokens:,
             overlap_tokens:,
@@ -65,7 +67,7 @@ module Jobs
 
     private
 
-    def chunk_document(file:, tokenizer:, chunk_tokens:, overlap_tokens:)
+    def chunk_document(file:, extension:, tokenizer:, chunk_tokens:, overlap_tokens:)
       buffer = +""
       current_metadata = nil
       done = false
@@ -73,18 +75,17 @@ module Jobs
 
       # generally this will be plenty
       read_size = chunk_tokens * 10
+      document_chunks = each_document_chunk(file:, extension:, read_size:)
 
       while buffer.present? || !done
-        if buffer.length < read_size
-          read = file.read(read_size)
-          done = true if read.nil?
-
-          read = Encodings.to_utf8(read) if read
-
-          buffer << (read || "")
+        while buffer.length < read_size && !done
+          begin
+            buffer << document_chunks.next
+          rescue StopIteration
+            done = true
+          end
         end
 
-        # at this point we unconditionally have 2x CHUNK_SIZE worth of data in the buffer
         metadata_regex = /\[\[metadata (.*?)\]\]/m
 
         before_metadata, new_metadata, after_metadata = buffer.split(metadata_regex)
@@ -133,6 +134,33 @@ module Jobs
 
         # remove first word it is probably truncated
         overlap = overlap.split(/\s/, 2).last.to_s.lstrip
+      end
+    end
+
+    def each_document_chunk(file:, extension:, read_size:)
+      return enum_for(__method__, file:, extension:, read_size:) if !block_given?
+
+      if UTF8_TEXT_EXTENSIONS.include?(extension&.downcase)
+        each_utf8_text_chunk(file:, chunk_size: read_size) { |chunk| yield chunk }
+      else
+        while (chunk = file.read(read_size))
+          yield Encodings.to_utf8(chunk)
+        end
+      end
+    end
+
+    def each_utf8_text_chunk(file:, chunk_size:)
+      file.binmode if file.respond_to?(:binmode)
+      file.set_encoding(Encoding::UTF_8)
+
+      first_chunk = true
+
+      file.each_line(chunk_size) do |chunk|
+        chunk.scrub!("")
+        Encodings.delete_bom!(chunk) if first_chunk
+        first_chunk = false
+
+        yield chunk if !chunk.empty?
       end
     end
 
