@@ -16,15 +16,19 @@ Do not re-derive either decision without new information.
 Tick a row when its PR merges, and merge `main` into `select-kit-rework` in the same pass. A layer
 marked merged means its files are **upstream** and no longer this branch's to change directly.
 
+State is ☑ merged · ◐ ready for review · ○ draft, plus the review decision where there is one. Read
+it from GitHub rather than from memory (`gh pr view <n> --json state,isDraft,reviewDecision`); these
+flip outside this branch and the table goes stale silently.
+
 | # | Layer | PR | State | Paths it owns |
 |---|---|---|---|---|
-| 1 | float-kit | [#42376](https://github.com/discourse/discourse/pull/42376) | ☑ merged | `frontend/discourse/float-kit/**`, `tests/integration/components/float-kit/{d-menu,d-tooltip,apply-floating-ui}-test.gjs` |
-| 2 | a11y announcement composition | [#42377](https://github.com/discourse/discourse/pull/42377) | ◐ open | `app/services/a11y.js`, `tests/integration/components/a11y/live-regions-test.gjs`, `app/ui-kit/d-icon-grid-picker/content.gjs`, `tests/integration/components/d-icon-grid-picker-test.gjs` |
-| 3 | ui-kit primitive fixes | [#42378](https://github.com/discourse/discourse/pull/42378) | ◐ draft | `app/ui-kit/d-async-content.gts`, `app/ui-kit/modifiers/d-observe-intersection.js`, `app/ui-kit/d-load-more.gjs` |
-| 4 | DSkeleton | [#42380](https://github.com/discourse/discourse/pull/42380) | ◐ draft | `app/ui-kit/d-skeleton.gts`, `common/components/d-skeleton.scss`, `tests/integration/ui-kit/d-skeleton-test.gjs` |
-| 5 | dRovingFocus | [#42381](https://github.com/discourse/discourse/pull/42381) | ◐ draft | `app/ui-kit/modifiers/d-roving-focus.ts`, `tests/integration/ui-kit/modifiers/d-roving-focus{,-windowed}-test.gjs` |
-| 6 | DVirtualList | [#42382](https://github.com/discourse/discourse/pull/42382) | ◐ draft | `app/ui-kit/{d-virtual-list.gts,modifiers/d-virtualizer.ts,lib/virtualizer.js,helpers/d-element.gts}`, `common/components/d-virtual-list.scss`, `tests/integration/ui-kit/d-virtual-list-*.gjs`, `tests/unit/ui-kit/virtualizer-test.js`, `tests/setup-tests.js`, `package.json` + `pnpm-lock.yaml`, styleguide `sections/molecules/virtual-list.gjs` |
-| 7 | styleguide infrastructure | [#42385](https://github.com/discourse/discourse/pull/42385) | ◐ draft | styleguide `components/styleguide-{group,groups,subnav}.gjs`, `styleguide-example.gjs`, `helpers/inline-code.js`, `controllers/styleguide/show.js`, `routes/styleguide/show.js`, `templates/styleguide/show.gjs`, `README.md`, `spec/system/{smoke_test_spec.rb,page_objects/pages/styleguide.rb}` |
+| 1 | float-kit | [#42376](https://github.com/discourse/discourse/pull/42376) | ☑ merged · approved | `frontend/discourse/float-kit/**`, `tests/integration/components/float-kit/{d-menu,d-tooltip,apply-floating-ui}-test.gjs` |
+| 2 | a11y announcement composition | [#42377](https://github.com/discourse/discourse/pull/42377) | ○ draft · approved | `app/services/a11y.js`, `tests/integration/components/a11y/live-regions-test.gjs`, `app/ui-kit/d-icon-grid-picker/content.gjs`, `tests/integration/components/d-icon-grid-picker-test.gjs` |
+| 3 | ui-kit primitive fixes | [#42378](https://github.com/discourse/discourse/pull/42378) | ◐ ready · review required | `app/ui-kit/d-async-content.gts`, `app/ui-kit/modifiers/d-observe-intersection.js`, `app/ui-kit/d-load-more.gjs` |
+| 4 | DSkeleton | [#42380](https://github.com/discourse/discourse/pull/42380) | ◐ ready · review required | `app/ui-kit/d-skeleton.gts`, `common/components/d-skeleton.scss`, `tests/integration/ui-kit/d-skeleton-test.gjs` |
+| 5 | dRovingFocus | [#42381](https://github.com/discourse/discourse/pull/42381) | ○ draft | `app/ui-kit/modifiers/d-roving-focus.ts`, `tests/integration/ui-kit/modifiers/d-roving-focus{,-windowed}-test.gjs` |
+| 6 | DVirtualList | [#42382](https://github.com/discourse/discourse/pull/42382) | ○ draft | `app/ui-kit/{d-virtual-list.gts,modifiers/d-virtualizer.ts,lib/virtualizer.js,helpers/d-element.gts}`, `common/components/d-virtual-list.scss`, `tests/integration/ui-kit/d-virtual-list-*.gjs`, `tests/unit/ui-kit/virtualizer-test.js`, `tests/setup-tests.js`, `package.json` + `pnpm-lock.yaml`, styleguide `sections/molecules/virtual-list.gjs` |
+| 7 | styleguide infrastructure | [#42385](https://github.com/discourse/discourse/pull/42385) | ○ draft | styleguide `components/styleguide-{group,groups,subnav}.gjs`, `styleguide-example.gjs`, `lib/inline-code.js`, `controllers/styleguide/show.js`, `routes/styleguide/show.js`, `templates/styleguide/show.gjs`, `README.md`, **`config/locales/client.en.yml`** (the three `example.*` keys, per the shared-file table below), `plugin.rb` (its asset filter dropped the plugin whenever assets were resolved without a request, which made its own JS tests unloadable), `spec/system/{smoke_test_spec.rb,styleguide_example_spec.rb,page_objects/pages/styleguide.rb}`, `test/javascripts/**`, plus the `class="half-size"` removal from `sections/{molecules/navigation-stacked,organisms/basic-topic-list}.gjs` |
 
 Everything not listed above stays on this branch: the select family, the `modifySelectKit` bridge, the
 styleguide select sandbox and its system specs, and these trackers.
