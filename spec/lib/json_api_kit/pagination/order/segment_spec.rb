@@ -72,7 +72,7 @@ RSpec.describe JsonApiKit::Pagination::Order::Segment do
     end
 
     it "walks its own order backwards" do
-      expect(reversed.keyset.keys.map(&:direction)).to eq([:desc])
+      expect(reversed.keyset.keys.map { it.direction.to_sym }).to eq([:desc])
     end
   end
 end

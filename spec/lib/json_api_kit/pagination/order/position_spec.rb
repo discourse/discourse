@@ -41,7 +41,7 @@ RSpec.describe JsonApiKit::Pagination::Order::Position do
     end
 
     it "takes the directions of the given order" do
-      expect(in_reverse.segment.keyset.keys.map(&:direction)).to eq([:desc])
+      expect(in_reverse.segment.keyset.keys.map { it.direction.to_sym }).to eq([:desc])
     end
   end
 end

@@ -11,10 +11,8 @@ module JsonApiKit
       # instead of being asked about everywhere (see Term::Null). The nil is read once, on
       # the way in.
       class Term
-        OPERATORS = { asc: ">", desc: "<" }.freeze
-
-        delegate :identifier, to: :key
-        delegate :direction, :name, :nulls_trailing?, :nulls_read_first?, to: :key, private: true
+        delegate :identifier, :operator, to: :key
+        delegate :name, :nulls_trailing?, :nulls_read_first?, to: :key, private: true
 
         def self.for(key, value) = value.nil? ? Null.new(key) : new(key, value)
 
@@ -27,8 +25,6 @@ module JsonApiKit
         # a NULL: a null value cannot (see Null), and neither can a key whose nulls follow its
         # values, those rows belonging in the comparison rather than out of it.
         def comparable? = !nulls_trailing?
-
-        def operator = OPERATORS[direction]
 
         def placeholder = ":#{name}"
 

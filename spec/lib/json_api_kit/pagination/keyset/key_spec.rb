@@ -41,7 +41,15 @@ RSpec.describe JsonApiKit::Pagination::Keyset::Key do
     subject(:direction) { key.direction }
 
     it "sorts ascending unless told otherwise" do
-      expect(direction).to eq(:asc)
+      expect(direction.to_sym).to eq(:asc)
+    end
+  end
+
+  describe "#operator" do
+    subject(:operator) { key.operator }
+
+    it "counts a greater value as following the cursor, reading upwards" do
+      expect(operator).to eq(">")
     end
   end
 
@@ -83,7 +91,7 @@ RSpec.describe JsonApiKit::Pagination::Keyset::Key do
     end
 
     it "keeps everything else about the key" do
-      expect(without_nulls.direction).to eq(:desc)
+      expect(without_nulls.direction.to_sym).to eq(:desc)
     end
   end
 
@@ -115,7 +123,7 @@ RSpec.describe JsonApiKit::Pagination::Keyset::Key do
     end
 
     it "flips the direction" do
-      expect(reversed.direction).to eq(:asc)
+      expect(reversed.direction.to_sym).to eq(:asc)
     end
 
     it "keeps the SQL backing the key" do

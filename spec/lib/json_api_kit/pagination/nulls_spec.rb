@@ -4,7 +4,7 @@ RSpec.describe JsonApiKit::Pagination::Nulls do
   subject(:nulls) { described_class.for(placement, direction:) }
 
   let(:placement) { :last }
-  let(:direction) { :asc }
+  let(:direction) { JsonApiKit::Pagination::Direction.for(:asc) }
 
   describe ".for" do
     context "with a placement nulls cannot sort at" do
@@ -137,7 +137,7 @@ RSpec.describe JsonApiKit::Pagination::Nulls do
       end
 
       context "when the key sorts descending" do
-        let(:direction) { :desc }
+        let(:direction) { JsonApiKit::Pagination::Direction.for(:desc) }
 
         it "is read where the database puts them descending, which is first" do
           expect(nulls).to be_read_first

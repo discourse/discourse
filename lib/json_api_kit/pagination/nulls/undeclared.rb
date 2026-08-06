@@ -22,7 +22,7 @@ module JsonApiKit
 
         def trailing? = false
 
-        def read_first? = direction == :desc
+        def read_first? = direction.nulls_first?
 
         private
 

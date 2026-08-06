@@ -141,7 +141,7 @@ RSpec.describe JsonApiKit::Pagination::Keyset do
     end
 
     it "walks every one of its keys the other way" do
-      expect(reversed.keys.map(&:direction)).to eq(%i[asc desc])
+      expect(reversed.keys.map { it.direction.to_sym }).to eq(%i[asc desc])
     end
   end
 

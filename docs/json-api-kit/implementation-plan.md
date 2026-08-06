@@ -474,6 +474,16 @@ being read has a value in every row. Each answers `expected?`, `placement`, `to_
 before the values). `Key` holds one and delegates; `Term` and `Order` ask instead of deciding; and the
 question `Predicate` and `Order.for` share — is this order read in bands? — is `Keyset#splits?`.
 
+**`Direction`** followed, for the same reason: which way a key reads was a symbol that four places
+interpreted — `Key`'s validation and its `opposite`, the `to_s.upcase` in its ordering, `Term`'s
+operator table, and the database's own null placement inside `Nulls::Undeclared`. `Ascending` and
+`Descending` each answer `to_sym`, `to_sql`, `operator`, `reversed` and `nulls_first?`, and they are
+values, so two readings of one direction are equal — which is what "a uniform order needs one index"
+will be asserted against when `unique_by` follows the leading key. `Request::Sort` gets the `-` prefix
+to interpret in slice 1 and docs generation lists directions in slice 5; both now have one place to
+ask. `Key` holds a `Direction` and a `Nulls` and rebuilds both from what was declared, never from the
+reading they produced — a key handed another direction reads its nulls another way.
+
 Coverage that was missing, and is what caught this: `spec/lib/json_api_kit/pagination_spec.rb` states
 properties of a whole listing — paging forwards through it, and reading back from *every* row — against
 `scope.order(keyset.order)` as the oracle, for a nullable key that leads, one that does not, and one
