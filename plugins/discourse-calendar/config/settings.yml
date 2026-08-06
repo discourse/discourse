@@ -147,6 +147,7 @@ discourse_calendar:
     list_type: compact
     default: "youtube.com|youtu.be|twitch.tv|zoom.us|kick.com|tiktok.com|instagram.com|facebook.com"
     client: true
+    hidden: true
   livestream_zoom_enabled:
     default: false
     client: true
