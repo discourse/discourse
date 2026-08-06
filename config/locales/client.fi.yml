@@ -1482,7 +1482,6 @@ fi:
       external_links_in_new_tab: "Avaa sivuston ulkopuoliset linkit uudessa välilehdessä"
       enable_quoting: "Ota käyttöön viestin lainaaminen tekstiä valitsemalla"
       enable_smart_lists: "Ota älykkäät luettelot käyttöön kirjoittaessasi kirjoitustilassa"
-      enable_defer: "Ota ketjujen merkitseminen lukemattomiksi käyttöön"
       enable_markdown_monospace_font: "Käytä tasalevyistä fonttia kirjoitustilan markdown-tilassa"
       experimental_sidebar:
         enable: "Ota sivupalkki käyttöön"

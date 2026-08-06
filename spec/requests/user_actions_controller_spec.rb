@@ -13,6 +13,36 @@ RSpec.describe UserActionsController do
       end
     end
 
+    context "when requesting more actions than the maximum page size" do
+      fab!(:user)
+
+      let(:params) { { username: user.username, filter: UserAction::REPLY, limit: 200 } }
+
+      before do
+        topic = Fabricate(:topic, user: user)
+
+        101.times do
+          post = Fabricate(:post, topic: topic, user: user)
+          UserAction.create!(
+            action_type: UserAction::REPLY,
+            user: user,
+            acting_user: user,
+            target_topic: topic,
+            target_post: post,
+          )
+        end
+
+        user.user_stat.update!(post_count: 101)
+      end
+
+      it "returns no more than 100 actions" do
+        user_actions
+
+        expect(response).to have_http_status :ok
+        expect(response.parsed_body["user_actions"].length).to eq(100)
+      end
+    end
+
     context "when 'username' is specified" do
       let(:username) { post.user.username }
       let(:params) { { username: username } }

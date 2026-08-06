@@ -363,10 +363,10 @@ RSpec.describe TopicsFilter do
     end
 
     describe "when filtering with the `in` filter" do
-      fab!(:topic)
+      fab!(:topic, :topic_with_op)
 
       fab!(:pinned_topic) do
-        Fabricate(:topic, pinned_at: Time.zone.now, pinned_until: 1.hour.from_now)
+        Fabricate(:topic_with_op, pinned_at: Time.zone.now, pinned_until: 1.hour.from_now)
       end
 
       fab!(:expired_pinned_topic) do

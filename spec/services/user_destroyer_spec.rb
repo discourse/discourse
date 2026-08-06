@@ -149,6 +149,36 @@ RSpec.describe UserDestroyer do
       end
     end
 
+    context "with a pending reviewable targeting the user" do
+      fab!(:queued_post) { Fabricate(:reviewable_queued_post, target_created_by: user) }
+      fab!(:flagged_post) do
+        Fabricate(
+          :reviewable_flagged_post,
+          target_created_by: user,
+          target: Fabricate(:post, user: user),
+        )
+      end
+
+      it "ignores them and notes why" do
+        UserDestroyer.new(admin).destroy(user, delete_posts: true)
+
+        expect(queued_post.reload).to be_ignored
+        expect(flagged_post.reload).to be_ignored
+        expect(queued_post.reviewable_notes.last.content).to eq(
+          I18n.t("reviewables.target_user_deleted"),
+        )
+      end
+
+      it "leaves reviewables that were already handled alone" do
+        queued_post.update!(status: :approved)
+
+        UserDestroyer.new(admin).destroy(user, delete_posts: true)
+
+        expect(queued_post.reload).to be_approved
+        expect(queued_post.reviewable_notes).to be_empty
+      end
+    end
+
     context "with a reviewable user" do
       let(:reviewable) { Fabricate(:reviewable, created_by: admin) }
 

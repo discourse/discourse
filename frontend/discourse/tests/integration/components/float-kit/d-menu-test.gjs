@@ -6,6 +6,7 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import {
   click,
   find,
+  focus,
   render,
   rerender,
   settled,
@@ -132,6 +133,83 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     assert
       .dom(".fk-d-tooltip__content[data-identifier='mobile-tooltip']")
       .hasText("tooltip content", "the tooltip renders as an inline float");
+  });
+
+  test("menu.shouldRenderInModal decides without an instance", async function (assert) {
+    forceMobile();
+
+    await render(<template><DMenus /></template>);
+    const menu = getOwner(this).lookup("service:menu");
+
+    assert.true(
+      menu.shouldRenderInModal(true),
+      "mobile plus modalForMobile renders in a modal"
+    );
+    assert.false(
+      menu.shouldRenderInModal(false),
+      "mobile alone does not render in a modal"
+    );
+    assert.false(
+      menu.shouldRenderInModal(),
+      "an omitted option does not render in a modal"
+    );
+  });
+
+  test("@onPositioned fires with the content once the float is positioned", async function (assert) {
+    const positioned = [];
+    this.onPositioned = (element) => positioned.push(element);
+
+    await render(
+      <template>
+        <DMenu
+          @inline={{true}}
+          @label="label"
+          @content="content"
+          @onPositioned={{this.onPositioned}}
+        />
+      </template>
+    );
+
+    assert.strictEqual(
+      positioned.length,
+      0,
+      "nothing is positioned while the menu is closed"
+    );
+
+    await open();
+
+    assert.true(positioned.length > 0, "opening positions the float");
+    assert.dom(positioned[0]).hasClass("fk-d-menu", "the content is passed");
+  });
+
+  test("@onPositioned fires when the menu renders as a mobile modal", async function (assert) {
+    forceMobile();
+
+    const positioned = [];
+    this.onPositioned = (element) => positioned.push(element);
+
+    await render(
+      <template>
+        <DMenu
+          @inline={{true}}
+          @modalForMobile={{true}}
+          @label="label"
+          @content="content"
+          @onPositioned={{this.onPositioned}}
+        />
+      </template>
+    );
+    await open();
+
+    assert.dom(".fk-d-menu-modal").exists("the menu renders as a modal");
+    assert.strictEqual(
+      positioned.length,
+      1,
+      "the modal path reports once, since a modal does not reposition"
+    );
+    assert
+      .dom(positioned[0])
+      .hasClass("d-modal", "the modal element is passed");
   });
 
   test("@modalForMobile - swipe down to close", async function (assert) {
@@ -291,6 +369,12 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await open();
 
     assert.dom(".fk-d-menu").hasAttribute("role", "dialog");
+    assert
+      .dom(".fk-d-menu")
+      .doesNotHaveAttribute(
+        "aria-expanded",
+        "the content carries no expanded state — no role it takes supports one, it could only ever be true while rendered, and the trigger already carries it"
+      );
   });
 
   test("@contentRole none removes container semantics", async function (assert) {
@@ -486,6 +570,32 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     assert
       .dom(".expanded-flag")
       .hasText("open", "expanded flips to true on open");
+  });
+
+  test("trigger disabled argument reflects the disabled state", async function (assert) {
+    this.disabled = false;
+
+    await render(
+      <template>
+        <DMenu @disabled={{this.disabled}} @inline={{true}}>
+          <:trigger as |args|>
+            <span class="disabled-flag">{{if args.disabled "off" "on"}}</span>
+          </:trigger>
+          <:content>content</:content>
+        </DMenu>
+      </template>
+    );
+
+    assert.dom(".disabled-flag").hasText("on", "disabled is false by default");
+
+    this.set("disabled", true);
+    await rerender();
+    assert
+      .dom(".disabled-flag")
+      .hasText(
+        "off",
+        "a custom trigger sees the veto it cannot read from @disabled"
+      );
   });
 
   test("@autofocus", async function (assert) {
@@ -864,6 +974,37 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
       .dom(".fk-d-menu")
       .doesNotExist(
         "a pending trigger cannot open after the menu becomes disabled"
+      );
+  });
+
+  test("disabling an open menu returns focus to a trigger that stays focusable", async function (assert) {
+    this.disabled = false;
+
+    await render(
+      <template>
+        <DMenu
+          @disabled={{this.disabled}}
+          @inline={{true}}
+          @triggerComponent={{dElement "div"}}
+          tabindex="0"
+        >
+          <:content><input class="menu-input" /></:content>
+        </DMenu>
+      </template>
+    );
+
+    await click(".fk-d-menu__trigger");
+    await focus(".menu-input");
+    assert.dom(".menu-input").isFocused("focus moved into the open menu");
+
+    this.set("disabled", true);
+    await settled();
+
+    assert.dom(".fk-d-menu").doesNotExist("becoming disabled closed the menu");
+    assert
+      .dom(".fk-d-menu__trigger")
+      .isFocused(
+        "the close hands focus back, so a caller that keeps its trigger focusable does not lose it"
       );
   });
 

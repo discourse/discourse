@@ -1720,7 +1720,6 @@ fr:
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Proposer de citer le texte sélectionné"
       enable_smart_lists: "Activer les listes intelligentes lors de la rédaction dans l'éditeur"
-      enable_defer: "Activer le marquage des sujets comme non lus"
       enable_markdown_monospace_font: "Utiliser une police à chasse fixe dans le mode Markdown de l'éditeur"
       experimental_sidebar:
         enable: "Activer la barre latérale"

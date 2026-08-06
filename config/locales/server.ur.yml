@@ -1864,7 +1864,6 @@ ur:
     default_other_notification_level_when_replying: "عالمی ڈیفالٹ اطلاع کی سطح جب رکن کسی موضوع کا جواب دیتا ہے۔"
     default_other_external_links_in_new_tab: "ڈِیفالٹ کے طور پر تمام بیرونی ویب سائٹ کے لنکس ایک نئے ٹیب میں کھولیں۔"
     default_other_enable_quoting: "ڈِیفالٹ کے طور پر روشنی ڈالے گئے ٹَیکسٹ کے لئے اقتباسی جواب فعال کریں۔"
-    default_other_enable_defer: "ڈیفالٹ سے ٹاپک ملتوی خصوصیت فعال کریں۔"
     default_other_dynamic_favicon: "ڈِیفالٹ کے طور پر براؤزر آئکن پر نئے / اَپ ڈیٹ کردہ ٹاپکس کی گنتی دکھائیں۔"
     default_other_skip_new_user_tips: "نئے صارف آن بورڈنگ تجاویز اور بیجز کو چھوڑ دیں."
     default_topics_automatic_unpin: "ڈِیفالٹ کے طور پر صارفین جب ٹاپک کے آخر تک پہنچ جائیں تو خود بخود ٹاپکس پر سے پِن ہٹا دیں۔"

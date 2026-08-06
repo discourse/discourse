@@ -2,6 +2,7 @@ import type { TemplateOnlyComponent } from "@ember/component/template-only";
 import { concat } from "@ember/helper";
 import DFloatBody from "discourse/float-kit/components/d-float-body";
 import type FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
+import FloatKitNotifyPositioned from "discourse/float-kit/modifiers/notify-positioned";
 import DModal from "discourse/ui-kit/d-modal";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
@@ -48,6 +49,7 @@ const DInlineFloat: TemplateOnlyComponent<DInlineFloatSignature> = <template>
           "fk-d-menu-modal"
           (concat @instance.options.identifier "-content")
         }}
+        {{FloatKitNotifyPositioned @instance}}
       >
         {{#if @instance.options.component}}
           <@instance.options.component

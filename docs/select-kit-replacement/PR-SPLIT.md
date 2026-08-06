@@ -18,7 +18,7 @@ marked merged means its files are **upstream** and no longer this branch's to ch
 
 | # | Layer | PR | State | Paths it owns |
 |---|---|---|---|---|
-| 1 | float-kit | [#42376](https://github.com/discourse/discourse/pull/42376) | ◐ open | `frontend/discourse/float-kit/**`, `tests/integration/components/float-kit/{d-menu,apply-floating-ui}-test.gjs` |
+| 1 | float-kit | [#42376](https://github.com/discourse/discourse/pull/42376) | ◐ open | `frontend/discourse/float-kit/**`, `tests/integration/components/float-kit/{d-menu,d-tooltip,apply-floating-ui}-test.gjs` |
 | 2 | a11y announcement composition | [#42377](https://github.com/discourse/discourse/pull/42377) | ◐ open | `app/services/a11y.js`, `tests/integration/components/a11y/live-regions-test.gjs`, `app/ui-kit/d-icon-grid-picker/content.gjs`, `tests/integration/components/d-icon-grid-picker-test.gjs` |
 | 3 | ui-kit primitive fixes | [#42378](https://github.com/discourse/discourse/pull/42378) | ◐ draft | `app/ui-kit/d-async-content.gts`, `app/ui-kit/modifiers/d-observe-intersection.js`, `app/ui-kit/d-load-more.gjs` |
 | 4 | DSkeleton | [#42380](https://github.com/discourse/discourse/pull/42380) | ◐ draft | `app/ui-kit/d-skeleton.gts`, `common/components/d-skeleton.scss`, `tests/integration/ui-kit/d-skeleton-test.gjs` |

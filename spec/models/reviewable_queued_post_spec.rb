@@ -455,6 +455,20 @@ RSpec.describe ReviewableQueuedPost, type: :model do
     end
   end
 
+  describe "actions when the author no longer exists" do
+    fab!(:reviewable, :reviewable_queued_post)
+
+    it "only offers rejecting the post" do
+      reviewable.update_column(:target_created_by_id, nil)
+
+      actions = reviewable.actions_for(Guardian.new(moderator))
+      bundle = actions.bundles.find { |bundle| bundle.id == "#{reviewable.id}-reject-post" }
+
+      expect(actions.has?(:approve_post)).to eq(false)
+      expect(bundle.actions.map(&:server_action)).to eq(%w[reject_post])
+    end
+  end
+
   describe "penalty actions" do
     fab!(:reviewable, :reviewable_queued_post)
 

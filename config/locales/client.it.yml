@@ -1482,7 +1482,6 @@ it:
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
       enable_quoting: "Abilita \"rispondi citando\" il testo evidenziato"
       enable_smart_lists: "Abilita gli elenchi smart quando scrivi nel compositore"
-      enable_defer: "Abilita opzione di contrassegnare gli argomenti come non letti"
       enable_markdown_monospace_font: "Utilizza il font monospace nella modalità Markdown del compositore"
       experimental_sidebar:
         enable: "Abilita barra laterale"

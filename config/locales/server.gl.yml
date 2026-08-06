@@ -1683,7 +1683,6 @@ gl:
     default_other_notification_level_when_replying: "Nivel de notificación predefinida global cando o usuario responde a un tema."
     default_other_external_links_in_new_tab: "Abrir as ligazóns externas nunha nova lapela por defecto."
     default_other_enable_quoting: "Activar resposta citando o texto seleccionado por defecto."
-    default_other_enable_defer: "Activar, de xeito predeterminado, a función de aprazar o tema."
     default_other_dynamic_favicon: "Mostrar o número de temas novos/actualizados na icona do navegador por defecto."
     default_other_skip_new_user_tips: "Saltar os consellos iniciais e as insignias dos novos usuarios."
     default_topics_automatic_unpin: "Soltar automaticamente temas cando o usuario acada o fondo, de modo predeterminado."

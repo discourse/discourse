@@ -224,6 +224,7 @@ en:
         "trigger:user_removed_from_group": "User removed from group"
         "trigger:user_created": "User created"
         "trigger:user_updated": "User updated"
+        "trigger:reviewable_created": "New reviewable"
         "trigger:reviewable_approved": "Approved reviewable"
         "trigger:badge_granted": "Badge granted"
         "trigger:user_search": "User search"
@@ -280,6 +281,7 @@ en:
         "trigger:user_removed_from_group": "Fires when a user is removed from a selected group"
         "trigger:user_created": "Fires when a new user account is created"
         "trigger:user_updated": "Fires when a user account or profile is updated"
+        "trigger:reviewable_created": "Fires when a new item is added to the review queue"
         "trigger:reviewable_approved": "Fires when a reviewable is approved"
         "trigger:badge_granted": "Fires when a user is granted a badge"
         "trigger:user_search": "Fires when a user searches the site"
@@ -705,6 +707,9 @@ en:
           group_ids_description: "Only trigger for users in at least one of these groups"
           group_ids_placeholder: "All groups"
           include_subcategories: "Include subcategories"
+          reviewable_types: "Reviewable types"
+          reviewable_types_description: "Only trigger for these reviewable types"
+          reviewable_types_placeholder: "All types"
         dynamic_values:
           badge_id: "a badge ID"
           boolean: "true or false"
@@ -811,10 +816,6 @@ en:
         group_id_description: "Only trigger when a user is added to this group"
       user_removed_from_group:
         group_id_description: "Only trigger when a user is removed from this group"
-      reviewable_approved:
-        reviewable_types: "Reviewable types"
-        reviewable_types_description: "Only trigger for these reviewable types"
-        reviewable_types_placeholder: "All types"
       badge_granted:
         badge_id: "Badge"
         badge_id_description: "Only trigger when this badge is granted. Leave blank for any badge."

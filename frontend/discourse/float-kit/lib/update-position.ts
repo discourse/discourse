@@ -61,7 +61,10 @@ export interface PositioningOptions {
     result: ComputePositionReturn & { arrowElement?: HTMLElement }
   ) => void;
 
-  /** Called once the position has been applied. See `TooltipOptions.onPositioned`. */
+  /**
+   * Called each time a position has been applied — so once per call, and once per `autoUpdate`
+   * reposition. See `TooltipOptions.onPositioned`.
+   */
   onPositioned?: ((content: HTMLElement) => void) | null;
 }
 

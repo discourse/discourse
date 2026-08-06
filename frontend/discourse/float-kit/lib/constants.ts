@@ -48,6 +48,15 @@ export type VisibilityOptimizer =
   (typeof VISIBILITY_OPTIMIZERS)[keyof typeof VISIBILITY_OPTIMIZERS];
 
 /**
+ * The ARIA roles a float's content element may carry: `dialog` for a panel that owns widgets of
+ * its own, and the two presentational values for a container that must not sit between a control
+ * and the elements it references. Deliberately closed — a role outside this set has not been
+ * reconciled with the ARIA the content emits (see `DFloatBody`), so widening it is a decision to
+ * make here rather than at a call site.
+ */
+export type FloatContentRole = "dialog" | "none" | "presentation";
+
+/**
  * A relayed lifecycle or trigger callback (`onShow`, `onClose`, `beforeTrigger`, …).
  * These are handed straight to consumers that pass functions of varying arity and
  * return type, so the signature is deliberately broad-but-real: it accepts any
@@ -162,12 +171,20 @@ export interface TooltipOptions {
   onShow: FloatCallback | null;
 
   /**
-   * Called after the float has been positioned, with its content element.
+   * Called with the float's content element once it has been placed.
    *
    * Positioning is what gives a float its size, and it resolves asynchronously — so content
    * that renders from a measurement of itself computes that measurement against a float that
    * has no size yet. Such content re-measures here rather than waiting for a resize to be
    * observed, which happens on the browser's schedule and is not guaranteed to be prompt.
+   *
+   * This fires on every placement, not once per open: with `autoUpdate` on (the default) an
+   * ancestor scroll, an element resize or a layout shift each reposition the float and call
+   * back. A callback that re-renders from its own measurement therefore has to reach a fixed
+   * point, since a size change it causes is itself a reposition trigger.
+   *
+   * A menu that renders as a mobile modal has no placement to compute and never repositions.
+   * It calls back once, after the modal is inserted, with the modal element.
    */
   onPositioned: FloatCallback | null;
 
@@ -189,7 +206,7 @@ export interface MenuOptions extends TooltipOptions {
    * A popup that is only a list should pass `none`, so the container does not sit between the
    * control and the items its `aria-activedescendant` points at.
    */
-  contentRole: string;
+  contentRole: FloatContentRole;
 
   /** Whether to focus the content when the menu opens. */
   autofocus: boolean;

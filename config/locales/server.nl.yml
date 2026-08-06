@@ -2356,7 +2356,6 @@ nl:
     default_other_external_links_in_new_tab: "Externe links standaard in een nieuw tabblad openen."
     default_other_enable_quoting: "Antwoord-met-citaat voor gemarkeerde tekst standaard inschakelen."
     default_other_enable_smart_lists: "Schakel slimme lijsten bij typen in de editor standaard in."
-    default_other_enable_defer: "Topicnegeerfunctionaliteit standaard inschakelen."
     default_other_enable_markdown_monospace_font: "Gebruik standaard een monospace lettertype in de Markdown-modus van de editor."
     default_other_dynamic_favicon: "Aantal nieuwe / bijgewerkte topics standaard weergeven op browserpictogram."
     default_other_skip_new_user_tips: "Onboarding-tips en -badges voor nieuwe gebruikers overslaan."

@@ -289,6 +289,7 @@ en:
         screened_email_error: "Happens when the sender's email address was already screened."
         unsubscribe_not_allowed: "Happens when unsubscribing via email is not allowed for this user."
         email_not_allowed: "Happens when the email address is not on the allowlist or is on the blocklist."
+        email_alias_not_allowed: "Happens when the sender's address is an alias of an address already registered to an account, and normalized emails are required to be unique."
       unrecognized_error: "Unrecognized Error"
     secure_uploads_placeholder: "Redacted: This site has secure uploads enabled, visit the topic or click View Media to see the attached uploads."
     view_redacted_media: "View Media"
@@ -1127,6 +1128,7 @@ en:
     error: "There was an error changing your email address. Perhaps the address is already in use?"
     doesnt_exist: "That email address is not associated with your account."
     error_staged: "There was an error changing your email address. The address is already in use by a staged user."
+    error_alias: "That email address is an alias of an address already in use."
     already_done: "Sorry, this confirmation link is no longer valid. Perhaps your email was already changed?"
     confirm: "Confirm"
     max_secondary_emails_error: "You have reached the maximum allowed secondary emails limit."
@@ -4084,6 +4086,15 @@ en:
 
         Your reply was sent from a blocked email address. Try sending from another email address, or [contact a staff member](%{base_url}/about).
 
+    email_reject_email_alias:
+      title: "Email Reject Email Alias"
+      subject_template: "[%{email_prefix}] Email issue -- unrecognized email address"
+      subject_template_improved: "%{email_prefix}: Email issue -- unrecognized email address"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        We couldn't match the address you sent from to an account on this site. Try sending from the email address you signed up with, or [contact a staff member](%{base_url}/about).
+
     email_reject_inactive_user:
       title: "Email Reject Inactive User"
       subject_template: "[%{email_prefix}] Email issue -- Inactive User"
@@ -6107,6 +6118,7 @@ en:
     post_restored_by_author: "Post was restored by the author"
     post_deleted_by_author_after_penalty: >-
       Post was deleted by the author after the user was penalized for it. Review the penalty without restoring the post.
+    target_user_deleted: "Automatically ignored because the user account was deleted."
     priorities:
       low: "Low"
       medium: "Medium"

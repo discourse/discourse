@@ -1,4 +1,5 @@
 import { assert } from "@ember/debug";
+import type { FloatContentRole } from "discourse/float-kit/lib/constants";
 import SelectEngine, {
   type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -130,7 +131,7 @@ export default class VariantPresenter {
    * {@link triggerRootHasPopup} promises there — dropping the role would make that promise false.
    * Mobile is unaffected either way, since there the panel is a `DModal`.
    */
-  get panelContentRole(): string {
+  get panelContentRole(): FloatContentRole {
     return this.isPanelSearchable ? "dialog" : "none";
   }
 

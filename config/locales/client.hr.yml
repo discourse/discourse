@@ -1567,7 +1567,6 @@ hr:
       external_links_in_new_tab: "Otvori sve vanjske poveznice u novoj kartici"
       enable_quoting: "Omogući citirani odgovor označenog teksta"
       enable_smart_lists: "Omogući pametne popise prilikom pisanja u editoru"
-      enable_defer: "Omogući označavanje tema kao nepročitanih"
       enable_markdown_monospace_font: "Koristi monospace font u Markdown načinu rada editora"
       experimental_sidebar:
         enable: "Omogući bočnu traku"
