@@ -14,6 +14,7 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import LinkLookup from "discourse/lib/link-lookup";
 import { cloneJSON } from "discourse/lib/object";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { translateModKey } from "discourse/lib/utilities";
 import Composer, { CREATE_TOPIC } from "discourse/models/composer";
@@ -27,6 +28,63 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
+
+function installPointerCaptureStub(element) {
+  const captured = new Set();
+
+  element.setPointerCapture = (pointerId) => captured.add(pointerId);
+  element.hasPointerCapture = (pointerId) => captured.has(pointerId);
+  element.releasePointerCapture = (pointerId) => captured.delete(pointerId);
+}
+
+async function dragComposer({ from, to, waitForMove = false }) {
+  const grippie = find(".grippie");
+  installPointerCaptureStub(grippie);
+
+  await triggerEvent(grippie, "pointerdown", {
+    button: 0,
+    clientY: from,
+    pointerId: 1,
+  });
+  await triggerEvent(grippie, "pointermove", {
+    button: 0,
+    clientY: to,
+    pointerId: 1,
+  });
+
+  if (waitForMove) {
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
+
+  await triggerEvent(grippie, "pointerup", {
+    button: 0,
+    clientY: to,
+    pointerId: 1,
+  });
+}
+
+function composerResizeMeasurements() {
+  const replyControl = find("#reply-control");
+  const currentHeight = replyControl.offsetHeight;
+  const minimumHeight = parseInt(getComputedStyle(replyControl).minHeight, 10);
+  const maximumHeight = window.innerHeight - headerOffset();
+  const targetHeight = Math.floor(
+    minimumHeight + (maximumHeight - minimumHeight) / 2
+  );
+
+  return {
+    currentHeight,
+    minimumHeight,
+    maximumHeight,
+    targetHeight,
+  };
+}
+
+function dragCoordinatesForHeight(currentHeight, targetHeight) {
+  const from = 500;
+
+  return { from, to: from + currentHeight - targetHeight };
+}
 
 acceptance(`Composer`, function (needs) {
   needs.user({
@@ -128,41 +186,71 @@ acceptance(`Composer`, function (needs) {
     );
   });
 
-  test("Composer height adjustment", async function (assert) {
+  test("composer resize oracle persists and restores a specific height", async function (assert) {
     await visit("/");
     await click("#create-topic");
-    await triggerEvent(".grippie", "mousedown");
-    await triggerEvent(".grippie", "mousemove");
-    await triggerEvent(".grippie", "mouseup");
+    const { currentHeight, minimumHeight, maximumHeight, targetHeight } =
+      composerResizeMeasurements();
+    const expectedHeight = `${targetHeight}px`;
+
+    assert.true(
+      targetHeight > minimumHeight,
+      "selects a target above the measured minimum clamp"
+    );
+    assert.true(
+      targetHeight < maximumHeight,
+      "selects a target below the measured maximum clamp"
+    );
+
+    await dragComposer(dragCoordinatesForHeight(currentHeight, targetHeight));
+
+    assert.strictEqual(
+      localStorage.getItem("__test_discourse_composerHeight"),
+      expectedHeight,
+      "persists the specific measured mid-range height"
+    );
+
     await visit("/"); // reload page
     await click("#create-topic");
 
-    const expectedHeight = localStorage.getItem(
-      "__test_discourse_composerHeight"
-    );
-    const actualHeight =
-      document.documentElement.style.getPropertyValue("--composer-height");
-
     assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
       expectedHeight,
-      actualHeight,
-      "Updated height is persistent"
+      "restores that specific height on a later visit"
     );
   });
 
-  test("restores the resized height when resuming a minimized draft", async function (assert) {
+  test("composer resize oracle restores a mid-range height when resuming a minimized draft", async function (assert) {
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "this draft has been resized");
 
-    // drag past the minimum so the height clamps to a known value
-    await triggerEvent(".grippie", "mousedown", { clientY: 500 });
-    await triggerEvent(".grippie", "mousemove", { clientY: 3000 });
-    await triggerEvent(".grippie", "mouseup");
+    const { currentHeight, minimumHeight, maximumHeight, targetHeight } =
+      composerResizeMeasurements();
+    const resizedHeight = `${targetHeight}px`;
 
-    const resizedHeight =
-      document.documentElement.style.getPropertyValue("--composer-height");
-    assert.strictEqual(resizedHeight, "255px", "applies the dragged height");
+    assert.true(
+      targetHeight > minimumHeight,
+      "selects a target above the measured minimum clamp"
+    );
+    assert.true(
+      targetHeight < maximumHeight,
+      "selects a target below the measured maximum clamp"
+    );
+
+    await dragComposer(dragCoordinatesForHeight(currentHeight, targetHeight));
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      resizedHeight,
+      "first applies a height that is neither the default nor the minimum"
+    );
+
+    await dragComposer({ from: 500, to: 500 });
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      resizedHeight,
+      "starts a later resize from the current live composer height"
+    );
 
     await click(".toggle-minimize");
     assert.strictEqual(
@@ -177,6 +265,179 @@ acceptance(`Composer`, function (needs) {
       resizedHeight,
       "restores the resized height instead of the default when resumed"
     );
+  });
+
+  test("composer resize oracle exposes separator accessibility and keyboard resizing", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    const { currentHeight, minimumHeight, maximumHeight } =
+      composerResizeMeasurements();
+
+    assert
+      .dom(".grippie")
+      .hasAttribute("role", "separator", "identifies the resize separator")
+      .hasAttribute(
+        "aria-orientation",
+        "horizontal",
+        "describes the separator's visual orientation"
+      )
+      .hasAttribute("aria-label", i18n("composer.resize"), "labels the grippie")
+      .hasAttribute("tabindex", "0", "makes the grippie keyboard focusable")
+      .hasAttribute(
+        "aria-valuenow",
+        `${currentHeight}`,
+        "exposes the current composer height"
+      )
+      .hasAttribute(
+        "aria-valuemin",
+        `${minimumHeight}`,
+        "exposes the computed minimum height"
+      )
+      .hasAttribute(
+        "aria-valuemax",
+        `${maximumHeight}`,
+        "exposes the current viewport maximum"
+      );
+
+    await triggerKeyEvent(".grippie", "keydown", "Home");
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      `${minimumHeight}px`,
+      "Home resizes to the computed minimum"
+    );
+
+    await triggerKeyEvent(".grippie", "keydown", "ArrowUp");
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      `${minimumHeight + 16}px`,
+      "ArrowUp grows the composer away from the minimum clamp"
+    );
+
+    await triggerKeyEvent(".grippie", "keydown", "End");
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      `${maximumHeight}px`,
+      "End resizes to the current viewport maximum"
+    );
+  });
+
+  test("composer resize oracle lifecycle events fire once per pointer resize", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    const appEvents = this.container.lookup("service:app-events");
+    appEvents.on("composer:resize-started", () => assert.step("started"));
+    appEvents.on("composer:resize-ended", () => assert.step("ended"));
+
+    const { currentHeight, targetHeight } = composerResizeMeasurements();
+    await dragComposer(dragCoordinatesForHeight(currentHeight, targetHeight));
+
+    assert.verifySteps(
+      ["started", "ended"],
+      "fires each resize lifecycle event exactly once"
+    );
+  });
+
+  test("composer resize oracle persists only when the pointer resize ends", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    const keyValueStore = this.container.lookup("service:key-value-store");
+    const setSpy = sinon.spy(keyValueStore, "set");
+    const { currentHeight, minimumHeight, maximumHeight, targetHeight } =
+      composerResizeMeasurements();
+    const expectedHeight = `${targetHeight}px`;
+    const { from, to } = dragCoordinatesForHeight(currentHeight, targetHeight);
+    const grippie = find(".grippie");
+    installPointerCaptureStub(grippie);
+
+    assert.true(
+      targetHeight > minimumHeight,
+      "selects a target above the measured minimum clamp"
+    );
+    assert.true(
+      targetHeight < maximumHeight,
+      "selects a target below the measured maximum clamp"
+    );
+
+    await triggerEvent(grippie, "pointerdown", {
+      button: 0,
+      clientY: from,
+      pointerId: 1,
+    });
+    await triggerEvent(grippie, "pointermove", {
+      button: 0,
+      clientY: to,
+      pointerId: 1,
+    });
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      expectedHeight,
+      "applies the resized height on the animation-frame move"
+    );
+    assert.strictEqual(
+      setSpy.callCount,
+      0,
+      "does not persist during the animation-frame move"
+    );
+
+    await triggerEvent(grippie, "pointerup", {
+      button: 0,
+      clientY: to,
+      pointerId: 1,
+    });
+
+    assert.strictEqual(setSpy.callCount, 1, "persists once when resizing ends");
+    assert.deepEqual(
+      setSpy.firstCall?.args,
+      [{ key: "composerHeight", value: expectedHeight }],
+      "persists the final height"
+    );
+  });
+
+  test("composer resize oracle clears transitions from the first move through resize end", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    const replyControl = find("#reply-control");
+    const { currentHeight, targetHeight } = composerResizeMeasurements();
+    const { from, to } = dragCoordinatesForHeight(currentHeight, targetHeight);
+    const grippie = find(".grippie");
+    installPointerCaptureStub(grippie);
+
+    await triggerEvent(grippie, "pointerdown", {
+      button: 0,
+      clientY: from,
+      pointerId: 1,
+    });
+    assert
+      .dom(replyControl)
+      .doesNotHaveClass("clear-transitions", "keeps transitions on at press");
+
+    await triggerEvent(grippie, "pointermove", {
+      button: 0,
+      clientY: to,
+      pointerId: 1,
+    });
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    assert
+      .dom(replyControl)
+      .hasClass("clear-transitions", "clears transitions on the first move");
+
+    await triggerEvent(grippie, "pointerup", {
+      button: 0,
+      clientY: to,
+      pointerId: 1,
+    });
+    assert
+      .dom(replyControl)
+      .doesNotHaveClass(
+        "clear-transitions",
+        "restores transitions at resize end"
+      );
   });
 
   test("fires resize event after width transition", async function (assert) {
