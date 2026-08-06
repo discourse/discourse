@@ -83,7 +83,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     events = [
       {
-        url: "/latest?campaign=secret",
+        url: "https://test.localhost/latest/?campaign=secret#section",
         country_code: "US",
         asn: 64_496,
         ip_address: "192.0.2.1",
@@ -95,7 +95,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         created_at: "2026-05-10 10:00:00",
       },
       {
-        url: "/top?token=secret",
+        url: "https://test.localhost/top?token=secret",
         country_code: "US",
         asn: 64_496,
         ip_address: "192.0.2.1",
@@ -273,7 +273,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
   it "keeps sensitive filter values out of the page URL and other admin sessions" do
     Fabricate(
       :browser_pageview_event,
-      url: "/latest?secret=private",
+      url: "https://test.localhost/latest?secret=private",
       ip_address: "192.0.2.10",
       session_id: "sensitive-filter",
       source: BrowserPageviewEvent::SOURCE_BEACON,
