@@ -1,0 +1,164 @@
+# frozen_string_literal: true
+
+module PageObjects
+  module Pages
+    class AdminSiteTrafficExplorer < PageObjects::Pages::Base
+      PATH = "/admin/dashboard/traffic"
+      METRIC_KEYS = {
+        "Pageviews" => "pageviews",
+        "Distinct sessions" => "distinct_sessions",
+        "Logged-in share" => "logged_in_share",
+        "Bounce rate" => "bounce_rate",
+        "Average session duration" => "average_session_duration",
+      }.freeze
+      FILTER_LABELS = {
+        "top_url" => "Top URL",
+        "entry_url" => "Entry URL",
+        "referrer" => "Referrer",
+        "country" => "Country",
+        "network" => "Network",
+        "browser" => "Browser",
+        "ip" => "IP address",
+      }.freeze
+
+      def visit(start_date:, end_date:)
+        page.visit("#{PATH}?end_date=#{end_date}&range=custom&start_date=#{start_date}")
+        self
+      end
+
+      def has_page_title?
+        has_css?("h1", exact_text: "Site Traffic Explorer")
+      end
+
+      def has_date_range?(text)
+        has_button?(text)
+      end
+
+      def select_date_preset(label)
+        find(".db-date-range__trigger").click
+        PageObjects::Components::AdminDashboardDateRangePicker.new.select_preset(label)
+        self
+      end
+
+      def has_metric?(label:, value:)
+        selector = "[data-test-site-traffic-metric='#{METRIC_KEYS.fetch(label)}']"
+        has_css?(selector, text: label) && has_css?(selector, text: value)
+      end
+
+      def has_series_total?(label:, value:)
+        has_css?("[data-test-traffic-series='#{label}']", text: value, visible: :all)
+      end
+
+      def has_no_series?(label:)
+        has_no_css?("[data-test-traffic-series='#{label}']", visible: :all)
+      end
+
+      def has_partial_data_warning?(reason:)
+        selector = "[data-test-site-traffic-partial-warning]"
+
+        has_css?(selector, text: "Partial traffic data") &&
+          has_css?("#{selector} [data-test-partial-reason]", exact_text: reason) &&
+          has_no_css?("#{selector} button")
+      end
+
+      def has_no_partial_data_warning?
+        has_no_css?("[data-test-site-traffic-partial-warning]")
+      end
+
+      def has_card_tabs?(card:, tabs:)
+        tabs.all? do |tab|
+          has_css?("[data-test-site-traffic-card='#{card}'] [role='tab']", exact_text: tab)
+        end
+      end
+
+      def select_tab(card:, tab:)
+        within("[data-test-site-traffic-card='#{card}']") do
+          find("[role='tab']", exact_text: tab).click
+        end
+        self
+      end
+
+      def has_row?(card:, label:, count:)
+        within("[data-test-site-traffic-card='#{card}']") do
+          has_css?(
+            "[data-test-site-traffic-row]",
+            text: /#{Regexp.escape(label)}.*#{Regexp.escape(count)}/m,
+          )
+        end
+      end
+
+      def has_url_link?(card:, label:, href:)
+        within("[data-test-site-traffic-card='#{card}']") do
+          has_css?("a[href='#{href}']", exact_text: label)
+        end
+      end
+
+      def filter_row(card:, label:)
+        within("[data-test-site-traffic-card='#{card}']") do
+          find_button("Filter by #{label}").click
+        end
+        self
+      end
+
+      def has_filter_pill?(dimension:, label:)
+        selector = "[data-test-site-traffic-filter-pill='#{dimension}']"
+
+        has_css?(selector, text: "#{FILTER_LABELS.fetch(dimension)} is #{label}", count: 1) &&
+          has_button?("Remove #{FILTER_LABELS.fetch(dimension)} filter")
+      end
+
+      def has_no_filter_pills?
+        has_no_css?("[data-test-site-traffic-filter-pill]")
+      end
+
+      def remove_filter(name)
+        find_button("Remove #{FILTER_LABELS.fetch(name)} filter").click
+        self
+      end
+
+      def clear_filters
+        find_button("Clear all filters").click
+        self
+      end
+
+      def has_top_row_count?(card:, count:)
+        within("[data-test-site-traffic-card='#{card}']") do
+          has_css?("[data-test-site-traffic-row]", count: count)
+        end
+      end
+
+      def expand(card:)
+        within("[data-test-site-traffic-card='#{card}']") { find_button("View more").click }
+        self
+      end
+
+      def has_expanded_table?(title:, row_count:)
+        has_css?("[role='dialog']", text: title) &&
+          has_css?("[role='dialog'] tbody tr", count: row_count)
+      end
+
+      def filter_expanded_row(label:)
+        within("[role='dialog']") do
+          within("tr", text: label) { find_button("Filter by #{label}").click }
+        end
+        self
+      end
+
+      def has_no_expanded_table?
+        has_no_css?("[role='dialog']")
+      end
+
+      def has_focused_filter_pill?(dimension:)
+        has_css?("[data-test-site-traffic-filter-pill='#{dimension}'] button:focus")
+      end
+
+      def has_not_found?
+        has_css?(".page-not-found")
+      end
+
+      def has_empty_state?
+        has_css?("[data-test-site-traffic-empty]", exact_text: "No matching pageviews")
+      end
+    end
+  end
+end
