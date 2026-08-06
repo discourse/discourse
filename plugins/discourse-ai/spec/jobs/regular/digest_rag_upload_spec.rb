@@ -48,6 +48,27 @@ describe Jobs::DigestRagUpload do
         }.to raise_error(Discourse::InvalidAccess)
       end
     end
+
+    context "when processing a PDF upload" do
+      let(:pdf) { plugin_file_from_fixtures("2-page.pdf", "rag") }
+
+      it "indexes multilingual text extracted from the PDF" do
+        SiteSetting.authorized_extensions = "txt|pdf"
+        pdf_upload = UploadCreator.new(pdf, "2-page.pdf").create_for(Discourse.system_user.id)
+
+        job.execute(upload_id: pdf_upload.id, target_id: agent.id, target_type: agent.class.to_s)
+
+        indexed_content =
+          RagDocumentFragment
+            .where(upload: pdf_upload, target: agent)
+            .order(:fragment_number)
+            .pluck(:fragment)
+            .join("\n")
+
+        expect(indexed_content).to include("| 猫 | cat | 貓 |", "| 犬 | dog | 狗 |")
+      end
+    end
+
     context "when processing an upload containing metadata" do
       it "correctly splits on metadata boundary" do
         # be explicit here about chunking strategy
