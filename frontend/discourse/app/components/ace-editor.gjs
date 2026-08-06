@@ -270,6 +270,7 @@ export default class AceEditor extends Component {
   @bind
   resize() {
     this.editor?.resize();
+    this.refreshResizeBounds();
   }
 
   @bind

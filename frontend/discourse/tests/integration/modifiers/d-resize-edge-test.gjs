@@ -107,6 +107,72 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
     );
   });
 
+  test("grippie regression clamp conflict pointer honors minimum", async function (assert) {
+    const state = new Harness(220);
+
+    await render(
+      <template>
+        <div
+          class="resize-edge"
+          {{dResizeEdge
+            value=state.value
+            min=255
+            max=190
+            onResize=state.onResize
+            onResizeEnd=state.onResizeEnd
+          }}
+        ></div>
+      </template>
+    );
+
+    const edge = find(EDGE);
+    installPointerCaptureSpy(edge);
+
+    await triggerEvent(edge, "pointerdown", {
+      button: 0,
+      clientX: 220,
+      pointerId: 1,
+    });
+    await triggerEvent(edge, "pointerup", {
+      button: 0,
+      clientX: 230,
+      pointerId: 1,
+    });
+
+    assert.deepEqual(
+      state.resizeEnds,
+      [255],
+      "a pointer clamp never reports a value below the minimum"
+    );
+  });
+
+  test("grippie regression clamp conflict keyboard honors minimum", async function (assert) {
+    const state = new Harness(220);
+
+    await render(
+      <template>
+        <div
+          class="resize-edge"
+          {{dResizeEdge
+            value=state.value
+            min=255
+            max=190
+            onResize=state.onResize
+            onResizeEnd=state.onResizeEnd
+          }}
+        ></div>
+      </template>
+    );
+
+    await triggerKeyEvent(EDGE, "keydown", "ArrowRight");
+
+    assert.deepEqual(
+      state.resizeEnds,
+      [255],
+      "a keyboard clamp never reports a value below the minimum"
+    );
+  });
+
   test("the element is opted out of browser touch gestures", async function (assert) {
     const state = new Harness();
 

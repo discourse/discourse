@@ -143,8 +143,16 @@ export default class ComposerContainer extends Component {
   #swipeEditor = null;
   #swipeSlide = 0;
 
+  constructor() {
+    super(...arguments);
+    // The maximum is derived from the window, and a fixed-height composer does not
+    // resize with it, so its own observer never fires for this.
+    window.addEventListener("resize", this.refreshResizeBounds);
+  }
+
   willDestroy() {
     super.willDestroy(...arguments);
+    window.removeEventListener("resize", this.refreshResizeBounds);
     cancel(this.composerResizeDebounceHandler);
   }
 
@@ -285,6 +293,11 @@ export default class ComposerContainer extends Component {
    * @param {number|null} height - The height in pixels, or null when the composer
    *   is closed and has none.
    */
+  @bind
+  refreshResizeBounds() {
+    this.setResizeHeight(this.composerHeight() || null);
+  }
+
   @action
   setResizeHeight(height) {
     this.resizeHeight = height;
@@ -395,11 +408,14 @@ export default class ComposerContainer extends Component {
   @bind
   onResizeEnd(size) {
     this.#replyControl?.classList.remove("clear-transitions");
+    // Announced before persisting, because the write can throw — storage quota —
+    // and a subscriber that undoes its own drag-time state has to hear the end of
+    // every resize regardless.
+    this.appEvents.trigger("composer:resize-ended");
     // Persisted once per resize rather than on every report: the size is now
     // reported once per animation frame instead of on a fixed throttle, and this
     // write is the only thing that cared about the cadence.
     this.keyValueStore.set({ key: "composerHeight", value: `${size}px` });
-    this.appEvents.trigger("composer:resize-ended");
   }
 
   get #replyControl() {

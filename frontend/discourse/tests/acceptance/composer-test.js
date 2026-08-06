@@ -4,7 +4,9 @@ import {
   fillIn,
   find,
   focus,
+  resetOnerror,
   settled,
+  setupOnerror,
   triggerEvent,
   triggerKeyEvent,
   visit,
@@ -337,6 +339,74 @@ acceptance(`Composer`, function (needs) {
       ["started", "ended"],
       "fires each resize lifecycle event exactly once"
     );
+  });
+
+  test("grippie regression persistence failure still ends composer resize", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    const appEvents = this.container.lookup("service:app-events");
+    appEvents.on("composer:resize-ended", () => assert.step("ended"));
+
+    const keyValueStore = this.container.lookup("service:key-value-store");
+    const setStub = sinon
+      .stub(keyValueStore, "set")
+      .throws(new Error("simulated localStorage quota failure"));
+
+    const { currentHeight, targetHeight } = composerResizeMeasurements();
+    setupOnerror((error) => {
+      if (error.message !== "simulated localStorage quota failure") {
+        throw error;
+      }
+    });
+    try {
+      await dragComposer(dragCoordinatesForHeight(currentHeight, targetHeight));
+    } finally {
+      resetOnerror();
+    }
+
+    assert.true(
+      setStub.calledOnce,
+      "the resize attempts the persistence write"
+    );
+    assert.verifySteps(
+      ["ended"],
+      "composer:resize-ended fires after a failed persistence write"
+    );
+  });
+
+  test("grippie regression composer window resize refreshes published maximum", async function (assert) {
+    const initialWindowHeight = 900;
+    const expandedWindowHeight = 1200;
+    const innerHeightStub = sinon
+      .stub(window, "innerHeight")
+      .value(initialWindowHeight);
+
+    await visit("/");
+    const replyControl = find("#reply-control");
+    const headerHeight = headerOffset();
+    replyControl.style.maxHeight = `${initialWindowHeight - headerHeight}px`;
+    await click("#create-topic");
+
+    const initialComposerHeight = replyControl.offsetHeight;
+
+    innerHeightStub.value(expandedWindowHeight);
+    replyControl.style.maxHeight = `${expandedWindowHeight - headerHeight}px`;
+    window.dispatchEvent(new Event("resize"));
+    await settled();
+
+    assert.strictEqual(
+      replyControl.offsetHeight,
+      initialComposerHeight,
+      "the window resize leaves the fixed-height composer unchanged"
+    );
+    assert
+      .dom(".grippie")
+      .hasAttribute(
+        "aria-valuemax",
+        `${expandedWindowHeight - headerHeight}`,
+        "a window resize publishes the composer's new maximum height"
+      );
   });
 
   test("composer resize oracle persists only when the pointer resize ends", async function (assert) {

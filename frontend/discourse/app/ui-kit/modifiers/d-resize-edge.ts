@@ -293,9 +293,13 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
   }
 
   #clamp(size: number) {
-    return Math.min(
-      Math.max(size, this.#read(this.#named.min)),
-      this.#read(this.#named.max)
+    // The minimum is applied last, so it wins when the two bounds conflict — a
+    // short viewport can put `max` below `min`, and the stylesheet's own min-height
+    // would still hold the box open. Letting `max` win would report a size the
+    // element never takes.
+    return Math.max(
+      Math.min(size, this.#read(this.#named.max)),
+      this.#read(this.#named.min)
     );
   }
 

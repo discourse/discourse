@@ -3,11 +3,14 @@ import {
   findAll,
   focus,
   render,
+  settled,
   triggerEvent,
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import AceEditor from "discourse/components/ace-editor";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 
@@ -169,6 +172,37 @@ module("Integration | Component | AceEditor", function (hooks) {
         "aria-valuemax",
         "240",
         "the separator honors the editor's declared maximum height"
+      );
+  });
+
+  test("grippie regression ACE window resize refreshes published maximum", async function (assert) {
+    const initialWindowHeight = 600;
+    const expandedWindowHeight = 900;
+    const innerHeightStub = sinon
+      .stub(window, "innerHeight")
+      .value(initialWindowHeight);
+
+    await render(
+      <template>
+        <AceEditor
+          @mode="sql"
+          @content="SELECT * FROM users"
+          style="width: 300px; height: 220px; min-height: 200px"
+          @resizable={{true}}
+        />
+      </template>
+    );
+
+    innerHeightStub.value(expandedWindowHeight);
+    window.dispatchEvent(new Event("resize"));
+    await settled();
+
+    assert
+      .dom(".ace-wrapper .grippie")
+      .hasAttribute(
+        "aria-valuemax",
+        `${expandedWindowHeight - headerOffset()}`,
+        "a window resize publishes the resizable area's new maximum height"
       );
   });
 
