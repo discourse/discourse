@@ -2,6 +2,7 @@ import { module, test } from "qunit";
 import {
   createElementVirtualizer,
   keyFor,
+  pushScrollOffset,
   rangeExtractorWithPins,
   stableKeyFor,
 } from "discourse/ui-kit/lib/virtualizer";
@@ -38,6 +39,65 @@ function buildVirtualizer(overrides = {}) {
 }
 
 module("Unit | ui-kit | virtualizer", function () {
+  test("a pushed offset survives the engine's settle", async function (assert) {
+    // The engine learns the offset from a closure only its own scroll handler
+    // writes, and its debounced settle re-reports that captured value once
+    // scrolling stops. `pushScrollOffset` calls the retained callback directly and
+    // cannot reach that closure, so the settle looks able to hand the engine back
+    // a pre-push offset. It cannot: a push only ever carries the element's own
+    // `scrollTop`, and every change to `scrollTop` emits a scroll event that
+    // refreshes the closure long before the settle delay elapses. Pinned here
+    // because that safety is the ENGINE's behaviour, not ours, so a version bump
+    // could remove it. Uses the real adapter, since the shared harness stubs
+    // `observeElementOffset` and would bypass the debounce under test.
+    const scrollElement = document.createElement("div");
+    scrollElement.style.cssText = "height: 500px; overflow-y: auto";
+    const inner = document.createElement("div");
+    inner.style.height = "50000px";
+    scrollElement.appendChild(inner);
+    document.body.appendChild(scrollElement);
+
+    try {
+      const virtualizer = createElementVirtualizer({
+        count: 1000,
+        getScrollElement: () => scrollElement,
+        estimateSize: () => 50,
+        overscan: 2,
+      });
+      const cleanup = virtualizer._didMount();
+      virtualizer._willUpdate();
+
+      // A real scroll, so the engine captures this offset and arms its settle.
+      scrollElement.scrollTop = 2000;
+      scrollElement.dispatchEvent(new Event("scroll"));
+      assert.strictEqual(
+        virtualizer.scrollOffset,
+        2000,
+        "precondition: the engine adopted the scrolled offset"
+      );
+
+      // Correct the engine the way the modifier does for an out-of-range offset.
+      scrollElement.scrollTop = 1000;
+      pushScrollOffset(virtualizer);
+      assert.strictEqual(
+        virtualizer.scrollOffset,
+        1000,
+        "precondition: the push was adopted"
+      );
+
+      await new Promise((resolve) => setTimeout(resolve, 250));
+
+      assert.strictEqual(
+        virtualizer.scrollOffset,
+        1000,
+        "the settle did not re-adopt the pre-push offset"
+      );
+      cleanup();
+    } finally {
+      scrollElement.remove();
+    }
+  });
+
   test("getTotalSize reflects the full count, not the window", function (assert) {
     const { virtualizer, cleanup } = buildVirtualizer();
     assert.strictEqual(
@@ -111,26 +171,27 @@ module("Unit | ui-kit | virtualizer", function () {
   });
 
   test("stableKeyFor is stable across an in-place id mutation", function (assert) {
-    // Reproduces the chat send-confirm case: a row object created with a temporary
-    // string id, then reconciled to a numeric server id on the SAME object. Keying
-    // on `id` would orphan the measured height; object identity must not.
-    const message = { id: "staged-guid-abc" };
-    const before = stableKeyFor(message);
+    // Reproduces optimistic insertion: a row created with a temporary client id,
+    // then reconciled to the server's id on the SAME object. Keying on `id` would
+    // orphan the measured height; object identity must not.
+    const row = { id: "staged-guid-abc" };
+    const before = stableKeyFor(row);
 
-    message.id = 4213; // server confirmation mutates in place
+    row.id = 4213; // server confirmation mutates in place
 
     assert.strictEqual(
-      stableKeyFor(message),
+      stableKeyFor(row),
       before,
       "same object keeps its key across id mutation"
     );
   });
 
   test("stableKeyFor does not collide across objects and primitive items", function (assert) {
-    // Object keys come from a bare counter while primitives are returned as-is, so
-    // they share one key space: the object handed key N collides with the primitive
-    // item N. Keys drive BOTH the engine's measurement cache (keyed by getItemKey)
-    // and {{#each key=}}, so a collision aliases row heights and row identity at once.
+    // Generated object keys live in a reserved namespace, and a string item that
+    // looks like one is escaped, so a primitive item can never resolve to a live
+    // object's key. Keys drive BOTH the engine's measurement cache (keyed by
+    // getItemKey) and {{#each key=}}, so a collision would alias row heights and
+    // row identity at once.
     const object = {};
     const objectKey = stableKeyFor(object);
 
@@ -142,8 +203,8 @@ module("Unit | ui-kit | virtualizer", function () {
   });
 
   test("stableKeyFor returns an engine-valid key type", function (assert) {
-    // virtual-core's Key contract is number | string | bigint. A boolean item is
-    // currently passed straight through, which also breaks the .gts key typing.
+    // The engine's Key contract is number | string | bigint, so every other item
+    // shape has to be normalized into one of them.
     const key = stableKeyFor(true);
 
     assert.true(
@@ -287,6 +348,31 @@ module("Unit | ui-kit | virtualizer", function () {
         "undefined row"
       );
       assert.strictEqual(keyFor(7, "id"), 7, "primitive row keys as itself");
+    });
+
+    test("rows whose field value is absent key by identity, not onto one shared key", function (assert) {
+      // Normalizing a nullish field value would send every such row to the SAME
+      // constant, aliasing their measurements and duplicating their iteration key.
+      // Only a DUPLICATE value is the consumer's contract to keep; a MISSING one
+      // has to degrade to the identity keying that works for any item shape.
+      const a = { name: "first" };
+      const b = { name: "second" };
+
+      assert.notStrictEqual(
+        keyFor(a, "id"),
+        keyFor(b, "id"),
+        "two rows both missing the field stay distinct"
+      );
+      assert.strictEqual(
+        keyFor(a, "id"),
+        stableKeyFor(a),
+        "a missing field falls back to the row's own identity"
+      );
+      assert.notStrictEqual(
+        keyFor({ id: null }, "id"),
+        keyFor({ id: null }, "id"),
+        "an explicitly null field value is treated the same way"
+      );
     });
 
     test("routes the field value through stableKeyFor so a domain value can't collide with a generated key", function (assert) {

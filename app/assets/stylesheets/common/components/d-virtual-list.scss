@@ -1,25 +1,31 @@
 .d-virtual-list {
-  // This element IS the scroll viewport the virtualizer measures and drives, so it
-  // must scroll. Height belongs to the consumer, set via CSS (`...attributes` go to
-  // the inner container, not here): the virtualizer computes an empty window from a
-  // zero-height element, and silently renders nothing.
-  overflow-y: auto;
+  /* This element is the scroll viewport the virtualizer measures and drives. Its
+     height belongs to the consumer: a zero-height element yields an empty window
+     and silently renders nothing. Box spacing here would offset the engine's
+     measured total from the DOM scroll height permanently, so put padding and
+     borders on a wrapper or on the rows.
 
-  // Rows are absolutely positioned to approximate offsets, so the browser must not
-  // pick the list as a scroll anchor — its correction would fight the virtualizer's
-  // own scroll compensation and produce a jump.
+     Vertical only: rows are absolutely positioned and stretched across the inline
+     axis, so they offer no intrinsic width for an inline scrollbar to act on.
+     Content wider than the viewport has to scroll inside its own row. */
+  overflow: hidden auto;
+  overscroll-behavior: contain;
+
+  /* Rows are absolutely positioned to approximate offsets, so the browser must not
+     pick the list as a scroll anchor — its correction would fight the virtualizer's
+     own scroll compensation and produce a jump. */
   overflow-anchor: none;
 
-  // No padding or border on this element: `scrollEndThreshold` is compared in two
-  // different coordinate spaces (DOM scrollHeight vs the engine's measured total),
-  // and box spacing here offsets one from the other permanently. Put spacing on the
-  // row element instead.
   &__sizer {
-    // The inner container is the sizer AND the containing block for the absolutely
-    // positioned rows; `position: relative` + `height` (the measured total) are set
-    // inline, so the scrollbar spans the whole list while only a window mounts.
     margin: 0;
     padding: 0;
-    list-style: none;
+
+    /* Removing the marker also removes the implicit list semantics in some
+       screen readers, so only do it once the element is carrying an explicit
+       role of its own. */
+
+    &[role] {
+      list-style: none;
+    }
   }
 }

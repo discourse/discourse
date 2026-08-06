@@ -9,7 +9,42 @@ import {
 } from "discourse/ui-kit/lib/virtualizer";
 
 const ROW_PX = 40;
+const VIEWPORT_PX = 320;
+
+// Derived from the geometry, never from the rendered array's own length: an oracle
+// built out of that length accepts a single row as "contiguous from the pinned
+// index", which is the exact gap these tests exist to catch.
+const MIN_MOUNTED_ROWS = Math.ceil(VIEWPORT_PX / ROW_PX);
+
 const estimate = () => ROW_PX;
+
+/**
+ * Asserts that the mounted rows are the pinned index followed by an unbroken run
+ * tall enough to fill the viewport.
+ *
+ * Three assertions rather than one `deepEqual`, so a failure names which property
+ * broke: too few rows, the wrong starting index, or a hole.
+ *
+ * @param assert The QUnit assert object for the running test.
+ * @param indices The mounted row indices, ascending.
+ * @param label Prefix identifying which stage of the test is being checked.
+ */
+function assertCoversViewportFromZero(assert, indices, label) {
+  assert.true(
+    indices.length >= MIN_MOUNTED_ROWS,
+    `${label}: at least ${MIN_MOUNTED_ROWS} rows mounted to fill the viewport (got ${indices.length}: [${indices}])`
+  );
+  assert.strictEqual(
+    indices[0],
+    0,
+    `${label}: the run starts at the pinned row`
+  );
+  assert.deepEqual(
+    indices,
+    Array.from({ length: indices.length }, (_, i) => i),
+    `${label}: the run has no holes (got [${indices}])`
+  );
+}
 
 class Harness {
   @tracked items;
@@ -133,11 +168,10 @@ module(
       h.items = buildRows(15);
       await settled();
 
-      const indices = renderedIndices();
-      assert.deepEqual(
-        indices,
-        Array.from({ length: indices.length }, (_, i) => i),
-        `rendered rows are contiguous from the pinned index (got [${indices}])`
+      assertCoversViewportFromZero(
+        assert,
+        renderedIndices(),
+        "after the shrink and regrow"
       );
     });
 
@@ -173,7 +207,7 @@ module(
 
       await scrollTo(ROW_PX * 40);
 
-      let indices = renderedIndices();
+      const indices = renderedIndices();
       assert.true(
         indices.includes(0),
         `the first pinned row stays mounted outside the window (got [${indices}])`
@@ -196,11 +230,10 @@ module(
       h.items = buildRows(15);
       await settled();
 
-      indices = renderedIndices();
-      assert.deepEqual(
-        indices,
-        Array.from({ length: indices.length }, (_, i) => i),
-        `rendered rows are contiguous across both pins (got [${indices}])`
+      assertCoversViewportFromZero(
+        assert,
+        renderedIndices(),
+        "across both pins after the shrink and regrow"
       );
     });
   }

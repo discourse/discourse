@@ -306,6 +306,10 @@ export default async function setupTests(config) {
     // Rendering tests mount in a zero-height container, so a virtualizer would compute an
     // empty window and render nothing. Disable it globally (opt back in per-test with
     // enableVirtualization) so tests mount every row; mirrors disableLoadMoreObserver.
+    //
+    // The fallback is a different code path, in which a row's index and its item can
+    // never disagree. A consumer whose behaviour depends on windowing therefore needs
+    // its own module that opts back in, or its suite says nothing about what ships.
     disableVirtualization();
   });
 
