@@ -26,7 +26,8 @@ type StepOutcome =
  * Controls for moving the cursor to a live item in the roving-focus group.
  *
  * The `focus*` members return whether they landed on an item — `false` when the group is
- * currently empty (e.g. a re-render dropped every item), when the index is not a number, or, for
+ * currently empty (e.g. a re-render dropped every item), when the index fails the member's own
+ * numeric predicate, or, for
  * {@link DRovingFocusApi.focusLogicalIndex}, when the target row is not mounted — so the caller
  * can fall back. {@link DRovingFocusApi.reannounceActive} moves nothing and carries its own
  * return contract.
@@ -352,7 +353,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
 
   #mode: SelectionMode = "focus";
 
-  /** Stable controls registered with the consumer for moving focus into the group. */
+  /** Stable controls registered with the consumer for moving the cursor within the group. */
   #api: DRovingFocusApi = {
     focusFirst: () => {
       const items = this.#items();
@@ -433,7 +434,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
 
       listenElement.removeAttribute("aria-activedescendant");
       // A second call before the first flushes would otherwise strand the earlier timer, leaving
-      // `cleanup()` able to cancel only the last one.
+      // `#cleanup()` able to cancel only the last one.
       if (this.#reannounceTimer) {
         cancel(this.#reannounceTimer);
       }
@@ -560,7 +561,6 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
           return;
         }
         const direction = event.key === "ArrowDown" ? 1 : -1;
-        // From no cursor, Down seeds the first item and Up the last.
         outcome =
           current < 0
             ? this.#step(-1, direction, cells, columns)
@@ -622,15 +622,11 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       }
       case "Enter":
       case " ":
-        // In focus mode, only when the item ITSELF holds the key: `#currentIndex` resolves by
-        // containment, so an item's own nested control would otherwise have its Enter stolen and
-        // its native activation suppressed. Active mode is exempt by construction — DOM focus
-        // stays on the controller there, so the target is never the item.
-        //
-        // The navigability check is not redundant: the cursor addresses the layout coordinate
-        // space, which deliberately RETAINS disabled and hidden cells so the grid arithmetic
-        // stays true. A row that becomes `aria-disabled` while holding the cursor keeps DOM
-        // focus, so without this Enter would still activate it.
+        // Two guards that look redundant and are not. The target check: `#currentIndex` resolves
+        // by containment, so an item's own nested control would otherwise have its Enter stolen.
+        // Active mode is exempt because focus stays on the controller, never the item. The
+        // navigability check: the coordinate space deliberately RETAINS disabled cells to keep
+        // the grid arithmetic true, and such a cell keeps DOM focus while holding the cursor.
         if (
           current >= 0 &&
           this.#onActivate &&
@@ -794,7 +790,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     }
 
     // Registered last, so a consumer that drives the cursor from inside the callback acts on a
-    // bound listener and a seeded group rather than having its work undone by the seed below.
+    // bound listener and an already-seeded group.
     if (this.#registeredApiCallback !== named.onRegisterApi) {
       // Tell the superseded holder its registration has ended. The handle it already has stays
       // functional while the modifier lives — there is one shared API object, and only teardown
@@ -826,8 +822,6 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
 
   /**
    * Whether the group is laid out right-to-left, which inverts the horizontal arrows.
-   *
-   * @returns `true` when the container resolves to a right-to-left writing direction.
    */
   #isRtl(): boolean {
     return this.#element
@@ -1037,12 +1031,14 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    * focus resting on a focusable descendant of an item (e.g. an inline control
    * inside a row, or the trigger a closed menu just handed focus back to) still
    * resolves to that item.
+   *
+   * @param cells - The coordinate space to locate the cursor within.
+   * @returns The cursor's index, or -1 for "no cursor yet". Callers must treat a negative index
+   * as no highlight: Arrow seeds the first or last item, and Enter falls through so the consumer
+   * can submit or create.
    */
   #currentIndex(cells: HTMLElement[]): number {
     if (this.#mode === "active") {
-      // May be -1 — "no active option yet". Callers treat a negative index as no
-      // highlight: Arrow seeds the first/last item, Enter falls through so the
-      // consumer can submit or create.
       return cells.findIndex((el) => el.id === this.#activeId);
     }
     const active = document.activeElement;
@@ -1226,8 +1222,6 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
           : column + Math.floor((last - column) / columns) * columns;
       const wrapped = this.#scan(cells, from, direction * columns, 0, last);
       if (wrapped != null) {
-        // As in `#step`: a wrap onto the cursor itself is not a move, but it is still a wrap, so
-        // it must not be reported as an edge that `wrap` promised to suppress.
         return wrapped === index
           ? { kind: "row-edge" }
           : { kind: "move", index: wrapped };
@@ -1272,8 +1266,6 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    */
   #setActive(target: HTMLElement, pointer = false): void {
     if (this.#mode === "active") {
-      // Sweep all items, not just the navigable ones: the previously-active row may have just
-      // been disabled, which drops it from that set while it still carries the class.
       this.#clearActiveClass();
       const id = this.#ensureId(target);
       this.#activeId = id;
@@ -1283,9 +1275,6 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       this.#listenElement?.setAttribute("aria-activedescendant", id);
       this.#scrollActiveIntoView(target);
     } else {
-      // Every matching item, not just the navigable ones: a row that became `aria-disabled`
-      // while holding the tab stop has left the navigable set, and skipping it would leave its
-      // `tabindex="0"` in place as a second, unreachable tab stop.
       for (const el of this.#allItems()) {
         el.tabIndex = this.#tabStop && el === target ? 0 : -1;
       }
@@ -1369,9 +1358,6 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       items.find((el) => el.getAttribute("aria-selected") === "true") ??
       items.find((el) => el.hasAttribute("aria-current")) ??
       items[0];
-    // Then demote every matching item, navigable or not: a row disabled while it held the tab
-    // stop has left the navigable set, and seeding only across that set would leave its
-    // `tabindex="0"` in place as a second, unreachable tab stop.
     for (const el of this.#allItems()) {
       el.tabIndex = -1;
     }
@@ -1409,26 +1395,13 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
         this.#setActive(seed);
         return;
       }
-      // A seed that found no items at all has not been answered yet — a windowed list installs
-      // this modifier on a container the virtualizer has not filled, so the rows land a frame
-      // later and no key changes when they do. Wait for them once, rather than presenting a list
-      // whose cursor the reader has to create with a wasted arrow press.
-      //
-      // Deliberately not a re-seed on every item change: a windowed list republishes its rows on
-      // every scroll, and re-seeding there would throw a reader who has arrowed away back to the
-      // top. An item set that exists and yielded no seed is a decision, not an absence.
-      // Keyed on the NAVIGABLE items, matching what the observer's own callback checks. A window
-      // of placeholder rows has none, and replacing those rows with real ones is a childList
-      // mutation, so the watch fires and the seed lands. The callback stays armed until it finds
-      // something navigable, so arming on the rendered count instead would simply never seed
-      // such a window at all.
+      // Keyed on the NAVIGABLE count, not the rendered one: a window of placeholder rows has no
+      // navigable items, and arming on the rendered count would never seed it.
       if (!items.length) {
         this.#armPendingSeed();
       }
       this.#activeId = null;
       this.#listenElement?.removeAttribute("aria-activedescendant");
-      // Sweep all items: the row that lost the highlight may have left the navigable set
-      // (disabled) in the same change that cleared the cursor.
       this.#clearActiveClass();
       // Notify the consumer too, so a template-driven highlight (a tracked active key rendered as
       // a class) clears alongside the modifier's own `activeClass` and `aria-activedescendant`.
@@ -1447,6 +1420,10 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    * Watches the container for the arrival of its first items, then seeds the cursor once and
    * stops. One-shot by construction: the observer disconnects before reconciling, so a container
    * that keeps churning rows is never re-seeded.
+   *
+   * Armed only when a seed found nothing at all, because a set that exists and yielded no seed is
+   * a decision rather than an absence. Re-arming on every item change would throw a reader who
+   * has arrowed away back to the top each time a windowed list republishes its rows on scroll.
    */
   #armPendingSeed(): void {
     if (this.#pendingSeed || !this.#element) {
@@ -1552,7 +1529,6 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       this.#mintedIds.clear();
       return;
     }
-    // Focus mode owns only the tabindex values it stamped.
     for (const el of this.#allItems()) {
       el.removeAttribute("tabindex");
     }
@@ -1560,7 +1536,9 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
 
   /**
    * Releases every listener, observer and timer, and gives back everything either mode wrote to
-   * the DOM. Registered as the destructor, so it also revokes the consumer's API handle.
+   * the DOM. Registered as the destructor, so it also tells the consumer its registration has
+   * ended. That notification is final, unlike the one a supersede sends: every API method
+   * reports failure once the modifier is torn down.
    */
   #cleanup(): void {
     this.#disarmPendingSeed();
