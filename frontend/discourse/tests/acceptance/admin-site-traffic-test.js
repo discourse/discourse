@@ -1,4 +1,10 @@
-import { click, currentURL, triggerKeyEvent, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  focus,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -60,11 +66,10 @@ acceptance("Admin | Site Traffic Explorer", function (needs) {
       .dom("[data-test-site-traffic-card='visitors'] .d-icon-fab-chrome")
       .exists("shows a browser icon");
 
-    await triggerKeyEvent(
-      "[data-test-site-traffic-card='acquisition'] [role='tab']:first-child",
-      "keydown",
-      "ArrowRight"
-    );
+    const firstAcquisitionTab =
+      "[data-test-site-traffic-card='acquisition'] [role='tab']:first-child";
+    await focus(firstAcquisitionTab);
+    await triggerKeyEvent(firstAcquisitionTab, "keydown", "ArrowRight");
     assert
       .dom(
         "[data-test-site-traffic-card='acquisition'] [role='tab']:nth-child(2)"
@@ -105,7 +110,7 @@ acceptance("Admin | Site Traffic Explorer | Errors", function (needs) {
     await visit("/admin/dashboard/traffic?range=last_30_days");
 
     assert
-      .dom("[role='alert']")
+      .dom("[role='alert'] p")
       .hasText(
         "This traffic query took too long. Choose a shorter date range and try again."
       );
@@ -114,7 +119,7 @@ acceptance("Admin | Site Traffic Explorer | Errors", function (needs) {
     await click("[role='alert'] button");
 
     assert
-      .dom("[role='alert']")
+      .dom("[role='alert'] p")
       .hasText("Couldn't load site traffic. Try again.");
   });
 });
