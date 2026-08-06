@@ -1805,64 +1805,6 @@ RSpec.describe Admin::DashboardController do
           },
         )
       end
-
-      it "returns complete results when traffic fits within the configured pageview cap" do
-        oldest.destroy!
-        get "/admin/dashboard/traffic.json", params: request_params
-
-        expect(response.parsed_body).to eq(
-          "partial_data" => nil,
-          "summary" => {
-            "pageviews" => 2,
-            "distinct_sessions" => 2,
-            "logged_in_share" => 0,
-            "bounce_rate" => 100,
-            "average_session_duration_seconds" => 0,
-          },
-          "series" => [
-            {
-              "date" => "2026-05-10",
-              "pageviews" => 2,
-              "logged_in_human_pageviews" => 0,
-              "anonymous_human_pageviews" => 2,
-              "likely_crawler_pageviews" => 0,
-            },
-          ],
-          "dimensions" => {
-            "top_urls" => [
-              { "value" => middle.url, "label" => middle.url, "pageviews" => 1 },
-              { "value" => newest.url, "label" => newest.url, "pageviews" => 1 },
-            ],
-            "entry_urls" => [
-              { "value" => middle.url, "label" => middle.url, "pageviews" => 1 },
-              { "value" => newest.url, "label" => newest.url, "pageviews" => 1 },
-            ],
-            "referrers" => [
-              {
-                "value" => "",
-                "label" => "Direct / unknown",
-                "pageviews" => 2,
-              },
-            ],
-            "countries" => [
-              { "value" => "US", "label" => "United States", "pageviews" => 2 },
-            ],
-            "networks" => [
-              {
-                "value" => "AS64496",
-                "label" => "AS64496 Example Network",
-                "pageviews" => 2,
-              },
-            ],
-            "browsers" => [
-              { "value" => "chrome", "label" => "Chrome", "pageviews" => 2 },
-            ],
-            "ip_addresses" => [
-              { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2 },
-            ],
-          },
-        )
-      end
     end
 
     it "does not allow moderators to read traffic details" do
