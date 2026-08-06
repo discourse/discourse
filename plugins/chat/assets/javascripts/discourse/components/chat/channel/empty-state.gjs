@@ -45,6 +45,11 @@ export default class ChatChannelEmptyState extends Component {
 
   get channelIcon() {
     const { emoji, chatable } = this.args.channel;
+
+    if (this.isOneToOneDirectMessage && chatable?.users?.[0]) {
+      return dAvatar(chatable.users[0], { imageSize: "extra_large" });
+    }
+
     const icon = emoji ? dReplaceEmoji(`:${emoji}:`) : dIcon("d-chat");
 
     if (!chatable?.color) {
@@ -54,7 +59,18 @@ export default class ChatChannelEmptyState extends Component {
     return trustHTML(`<span style="color: #${chatable.color}">${icon}</span>`);
   }
 
+  get isOneToOneDirectMessage() {
+    const { isDirectMessageChannel, chatable } = this.args.channel;
+    return isDirectMessageChannel && !chatable?.group;
+  }
+
   get title() {
+    if (this.isOneToOneDirectMessage) {
+      return i18n("chat.channel.empty_state.direct_message_title", {
+        name: this.args.channel.title,
+      });
+    }
+
     const channelName = `#${this.args.channel.title}`;
 
     if (this.args.channel.isFollowing) {
@@ -65,6 +81,10 @@ export default class ChatChannelEmptyState extends Component {
   }
 
   get tip() {
+    if (this.isOneToOneDirectMessage) {
+      return null;
+    }
+
     if (this.args.channel.isFollowing) {
       return i18n("chat.channel.empty_state.joined_tip");
     }
@@ -85,33 +105,35 @@ export default class ChatChannelEmptyState extends Component {
             <p class="empty-state__tip-text">{{this.tip}}</p>
           {{/if}}
 
-          <div
-            class={{dConcatClass
-              "empty-state__members-facepile"
-              (if this.otherMemberships.length "--with-avatars")
-            }}
-            {{didInsert this.loadMemberships}}
-          >
-            {{#if this.otherMemberships.length}}
-              <div class="empty-state__members-avatars">
-                {{#each this.otherMemberships as |membership|}}
-                  {{dAvatar membership.user imageSize="small"}}
-                {{/each}}
-              </div>
-            {{/if}}
-            <span class="empty-state__members-count">
-              {{#if this.memberCount}}
-                {{trustHTML
-                  (i18n
-                    "chat.channel.empty_state.members_here"
-                    count=this.memberCount
-                  )
-                }}
-              {{else}}
-                {{i18n "chat.channel.empty_state.no_other_members"}}
+          {{#unless this.isOneToOneDirectMessage}}
+            <div
+              class={{dConcatClass
+                "empty-state__members-facepile"
+                (if this.otherMemberships.length "--with-avatars")
+              }}
+              {{didInsert this.loadMemberships}}
+            >
+              {{#if this.otherMemberships.length}}
+                <div class="empty-state__members-avatars">
+                  {{#each this.otherMemberships as |membership|}}
+                    {{dAvatar membership.user imageSize="small"}}
+                  {{/each}}
+                </div>
               {{/if}}
-            </span>
-          </div>
+              <span class="empty-state__members-count">
+                {{#if this.memberCount}}
+                  {{trustHTML
+                    (i18n
+                      "chat.channel.empty_state.members_here"
+                      count=this.memberCount
+                    )
+                  }}
+                {{else}}
+                  {{i18n "chat.channel.empty_state.no_other_members"}}
+                {{/if}}
+              </span>
+            </div>
+          {{/unless}}
         </:tip>
       </DEmptyState>
     {{/if}}
