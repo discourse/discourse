@@ -1568,7 +1568,6 @@ RSpec.describe Admin::DashboardController do
     it "returns partial retained results and the available start date when the range exceeds retention",
        time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
       sign_in(admin)
-      SiteSetting.clean_up_browser_pageview_events = true
       chrome = "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36"
       firefox = "Mozilla/5.0 Firefox/126.0"
 
