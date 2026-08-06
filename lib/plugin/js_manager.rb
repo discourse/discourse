@@ -59,6 +59,34 @@ module Plugin
       read_manifest(plugin_directory_name)[entrypoint_name]["externalPluginImports"]
     end
 
+    # The lazy route chunk to preload for `path`, if any. The first match wins, so a specific glob
+    # must be declared before a wildcard covering it.
+    def self.route_bundle_for_path(plugin_directory_name, entrypoint_name, path)
+      bundles = read_manifest(plugin_directory_name).dig(entrypoint_name, "routeBundles")
+
+      bundle = bundles.to_a.find { |candidate| url_glob_matches?(candidate["url"], path) }
+
+      "js/plugins/#{bundle["fileName"].delete_suffix(".js")}" if bundle
+    end
+
+    # A `*` matches exactly one path segment, except as the final segment, where it matches the
+    # rest of the path — or nothing, so `chat/*` also covers `/chat` itself. Dynamic segments make
+    # the first form necessary: chat's preferences route lives at `u/*/preferences/chat`.
+    def self.url_glob_matches?(glob, path)
+      glob_segments = glob.split("/")
+      path_segments = path.split("/")
+
+      glob_segments.each_with_index do |segment, i|
+        return true if segment == "*" && i == glob_segments.size - 1
+        return false if path_segments[i].nil?
+        next if segment == "*"
+        return false if segment != path_segments[i]
+      end
+
+      glob_segments.size == path_segments.size
+    end
+    private_class_method :url_glob_matches?
+
     def compile!
       log "Compiling #{Discourse.plugins.count} plugins..."
       start = Time.now
@@ -117,6 +145,8 @@ module Plugin
         end
       end
 
+      frontend_config = plugin.about_json_metadata&.dig("frontend")
+
       hex_digest =
         Digest::SHA1.hexdigest(
           [
@@ -126,6 +156,7 @@ module Plugin
             AssetProcessor.ember_version,
             minify?.to_s,
             plugin.name,
+            frontend_config.to_json,
           ].join,
         )
       base36_digest = hex_digest.to_i(16).to_s(36).first(8)
@@ -152,6 +183,7 @@ module Plugin
             entrypoints: entrypoints_config,
             filename_prefix:,
             filename_suffix:,
+            frontend: frontend_config,
           )
         result = compiler.compile!
 
@@ -171,6 +203,7 @@ module Plugin
               fileName: file_name,
               imports: info["imports"],
               externalPluginImports: info["externalPluginImports"],
+              routeBundles: route_bundles_for(info, frontend_config),
             }
           end
         end
@@ -223,6 +256,30 @@ module Plugin
     end
 
     private
+
+    # Maps each split route back to the user-facing URL glob it was declared under, so a direct
+    # navigation to that URL can preload the chunk instead of waiting for the router to discover
+    # it. Ordered by `about.json`, because URL globs are matched first-one-wins.
+    def route_bundles_for(entry, frontend_config)
+      chunk_by_route = entry["routeBundles"] || {}
+
+      urls_by_route(frontend_config).filter_map do |route_name, url|
+        file_name = chunk_by_route[route_name]
+        { url: url, fileName: file_name } if file_name
+      end
+    end
+
+    # `splitAtRoutes` maps a URL glob to a route-name pattern. A trailing star means "and
+    # everything beneath", which is already implied by splitting a route, so the base route name
+    # is the pattern with any trailing star removed.
+    def urls_by_route(frontend_config)
+      split_at_routes = frontend_config&.dig("splitAtRoutes") || {}
+
+      split_at_routes.each_with_object({}) do |(url, pattern), result|
+        base = pattern.sub(/\.?\*\z/, "")
+        result[base] ||= url
+      end
+    end
 
     def minify?
       Rails.env.production?

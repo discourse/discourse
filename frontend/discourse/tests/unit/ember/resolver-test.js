@@ -2,7 +2,7 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import DiscourseTemplateMap from "discourse/lib/discourse-template-map";
-import { buildResolver } from "discourse/resolver";
+import { buildResolver, expireModuleTrieCache } from "discourse/resolver";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 
 let resolver;
@@ -631,5 +631,42 @@ module("Unit | Ember | resolver", function (hooks) {
       resolve("component:my-second-component"),
       "my-second-component"
     );
+  });
+
+  test("addModules exposes modules which arrive after boot", function (assert) {
+    const templateModule =
+      "discourse/plugins/my-fake-plugin/discourse/templates/lazy-route";
+    const serviceModule =
+      "discourse/plugins/my-fake-plugin/discourse/services/lazy-thing";
+
+    // Build both caches first, so this exercises the case a lazily-loaded route bundle hits:
+    // the template map and the suffix trie already exist by the time the modules show up.
+    expireModuleTrieCache();
+    DiscourseTemplateMap.setModuleNames(Object.keys(requirejs.entries));
+    resolve("service:some-service-to-populate-the-trie");
+
+    try {
+      resolver.addModules({
+        [templateModule]: { default: "lazy-template" },
+        [serviceModule]: { default: "lazy-service" },
+      });
+
+      lookupTemplate(
+        assert,
+        "template:lazy-route",
+        "lazy-template",
+        "finds a template added after the template map was built"
+      );
+      assert.strictEqual(
+        resolve("service:lazy-thing"),
+        "lazy-service",
+        "finds a service added after the suffix trie was built"
+      );
+    } finally {
+      delete requirejs.entries[templateModule];
+      delete requirejs.entries[serviceModule];
+      expireModuleTrieCache();
+      DiscourseTemplateMap.setModuleNames(Object.keys(requirejs.entries));
+    }
   });
 });

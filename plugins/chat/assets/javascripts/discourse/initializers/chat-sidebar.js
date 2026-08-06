@@ -11,13 +11,13 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import ChatChannelSidebarContextMenu from "discourse/plugins/chat/discourse/components/chat-channel-sidebar-context-menu";
 import ChatSidebarIndicators from "discourse/plugins/chat/discourse/components/chat-sidebar-indicators";
 import {
   CHAT_PANEL,
   initSidebarState,
 } from "discourse/plugins/chat/discourse/lib/init-sidebar-state";
+import showNewMessageModal from "discourse/plugins/chat/discourse/lib/show-new-message-modal";
 
 const CHAT_STARRED_CHANNELS_SECTION = "chat-starred-channels";
 
@@ -990,7 +990,7 @@ export default {
                     id: "startDm",
                     title: i18n("chat.direct_messages.new"),
                     action: () => {
-                      this.modal.show(ChatModalNewMessage);
+                      showNewMessageModal(this.modal);
                     },
                   },
                 ];
