@@ -3288,6 +3288,7 @@ en:
 
     d_icon_grid_picker:
       select_icon: "Select icon"
+      search_label: "Search icons"
       search_placeholder: "Search icons..."
       no_results: "No icons found"
       results_count:
@@ -5768,6 +5769,7 @@ en:
     invalid_video_url: This video cannot be played because the URL is invalid or unavailable.
 
     keyboard_shortcuts_help:
+      search_label: "Search shortcuts"
       search_placeholder: "Search for a shortcut by description or key combination"
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"

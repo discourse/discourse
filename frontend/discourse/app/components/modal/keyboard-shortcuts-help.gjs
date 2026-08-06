@@ -518,7 +518,7 @@ export default class KeyboardShortcutsHelp extends Component {
             @filterAction={{this.filterShortcuts}}
             @value={{this.searchTerm}}
             placeholder={{i18n "keyboard_shortcuts_help.search_placeholder"}}
-            aria-label={{i18n "keyboard_shortcuts_help.search_placeholder"}}
+            aria-label={{i18n "keyboard_shortcuts_help.search_label"}}
           />
 
           <div class="keyboard-shortcuts-help__container">
