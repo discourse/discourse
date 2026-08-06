@@ -13,6 +13,7 @@ module Jobs
       aggregate_engagement
       aggregate_crawlers
       backfill_referrers
+      backfill_urls
     end
 
     private
@@ -181,6 +182,51 @@ module Jobs
         SET normalized_referrer_version = :version
         WHERE id IN (:ids)
       SQL
+    end
+
+    def backfill_urls
+      rows = url_batch
+      return if rows.empty?
+
+      ids = rows.map(&:id)
+      normalized = rows.map { |row| BrowserPageviewUrlInspector.normalize(row.url) }
+
+      DB.exec(
+        <<~SQL,
+          UPDATE browser_pageview_events AS e
+          SET
+            normalized_url = data.normalized_url,
+            normalized_url_version = :version
+          FROM unnest(
+            ARRAY[:ids]::bigint[],
+            ARRAY[:normalized]::text[]
+          ) AS data(id, normalized_url)
+          WHERE e.id = data.id
+        SQL
+        ids: ids,
+        normalized: normalized,
+        version: BrowserPageviewUrlInspector::VERSION,
+      )
+    end
+
+    def url_batch
+      DB.query(
+        <<~SQL,
+          SELECT id, url
+          FROM browser_pageview_events
+          WHERE created_at >= :retention_cutoff
+            AND #{BrowserPageviewEvent.rollup_source_condition}
+            AND (
+              normalized_url_version IS NULL
+              OR normalized_url_version < :version
+            )
+          ORDER BY id
+          LIMIT :limit
+        SQL
+        retention_cutoff: BrowserPageviewEvent.retention_cutoff,
+        version: BrowserPageviewUrlInspector::VERSION,
+        limit: batch_size,
+      )
     end
 
     def batch_size

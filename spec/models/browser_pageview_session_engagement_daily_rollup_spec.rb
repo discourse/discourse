@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe BrowserPageviewSessionEngagementDailyRollup do
+  describe ".bounce_engaged_seconds_threshold" do
+    it "exposes the dashboard bounce threshold" do
+      expect(described_class.bounce_engaged_seconds_threshold).to eq(10)
+    end
+  end
+
   describe ".aggregate" do
     let(:start_date) { Date.new(2026, 6, 1) }
     let(:end_date) { Date.new(2026, 6, 30) }

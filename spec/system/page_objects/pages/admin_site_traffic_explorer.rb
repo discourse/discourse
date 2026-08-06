@@ -102,7 +102,7 @@ module PageObjects
 
       def filter_row(card:, label:)
         within("[data-test-site-traffic-card='#{card}']") do
-          find_button("Filter by #{label}").click
+          find("button[aria-label='Filter by #{label}']").click
         end
         self
       end
@@ -111,7 +111,9 @@ module PageObjects
         selector = "[data-test-site-traffic-filter-pill='#{dimension}']"
 
         has_css?(selector, text: "#{FILTER_LABELS.fetch(dimension)} is #{label}", count: 1) &&
-          has_button?("Remove #{FILTER_LABELS.fetch(dimension)} filter")
+          has_css?(
+            "#{selector} button[aria-label='Remove #{FILTER_LABELS.fetch(dimension)} filter']",
+          )
       end
 
       def has_no_filter_pills?
@@ -119,7 +121,7 @@ module PageObjects
       end
 
       def remove_filter(name)
-        find_button("Remove #{FILTER_LABELS.fetch(name)} filter").click
+        find("button[aria-label='Remove #{FILTER_LABELS.fetch(name)} filter']").click
         self
       end
 
@@ -128,24 +130,25 @@ module PageObjects
         self
       end
 
-      def expand(card:)
+      def expand(card)
         within("[data-test-site-traffic-card='#{card}']") { find_button("View more").click }
         self
       end
 
       def has_expanded_table?(title:)
-        has_css?("[role='dialog']", text: title) && has_css?("[role='dialog'] tbody tr")
+        selector = ".site-traffic-explorer__modal[role='dialog']"
+        has_css?(selector, text: title) && has_css?("#{selector} tbody tr")
       end
 
       def filter_expanded_row(label:)
-        within("[role='dialog']") do
-          within("tr", text: label) { find_button("Filter by #{label}").click }
+        within(".site-traffic-explorer__modal[role='dialog']") do
+          within("tr", text: label) { find("button[aria-label='Filter by #{label}']").click }
         end
         self
       end
 
       def has_no_expanded_table?
-        has_no_css?("[role='dialog']")
+        has_no_css?(".site-traffic-explorer__modal[role='dialog']")
       end
 
       def has_focused_filter_pill?(dimension:)

@@ -10,6 +10,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     SiteSetting.improved_crawler_detection = true
     SiteSetting.persist_browser_pageview_events = true
     SiteSetting.use_legacy_pageviews = false
+    BrowserPageviewEvent.stubs(:beacon_cutover_date).returns(Date.new(2026, 1, 1))
     Discourse.stubs(:current_hostname).returns("test.localhost")
     DiscourseIpInfo.stubs(:get).returns(asn: 64_496, organization: "Example Network")
   end
