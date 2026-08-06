@@ -1549,7 +1549,7 @@ RSpec.describe Admin::DashboardController do
       )
     end
 
-    it "reports when older traffic is no longer available",
+    it "returns partial retained results and the available start date when the range exceeds retention",
        time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
       sign_in(admin)
       SiteSetting.clean_up_browser_pageview_events = true
@@ -1664,7 +1664,7 @@ RSpec.describe Admin::DashboardController do
       )
     end
 
-    it "limits filtered results to the newest pageviews" do
+    it "returns no more than the configured pageview cap" do
       sign_in(admin)
       SiteSetting.stubs(:admin_site_traffic_event_cap).returns(2)
       created_at = Time.zone.parse("2026-05-10 10:00:00")
