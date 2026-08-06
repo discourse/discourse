@@ -126,14 +126,16 @@ class TopicsBulkAction
   end
 
   def dismiss_posts
-    highest_number_source_column =
-      @user.whisperer? ? "highest_staff_post_number" : "highest_post_number"
-
     sql = <<~SQL
       UPDATE topic_users tu
-      SET last_read_post_number = t.#{highest_number_source_column}
-      FROM topics t
-      WHERE t.id = tu.topic_id AND tu.user_id = :user_id AND t.id IN (:topic_ids)
+      SET last_read_post_number = (
+        SELECT COALESCE(MAX(post_number), 0)
+        FROM posts
+        WHERE topic_id = tu.topic_id
+          AND deleted_at IS NULL
+          AND #{Topic.stream_post_types_sql(whisperer: @user.whisperer?)}
+      )
+      WHERE tu.user_id = :user_id AND tu.topic_id IN (:topic_ids)
     SQL
 
     DB.exec(sql, user_id: @user.id, topic_ids: @topic_ids)

@@ -575,7 +575,7 @@ class TopicTrackingState
     user_id,
     write_event
   )
-    return unless last_read_post_number == topic.highest_post_number
+    return if last_read_post_number < topic.highest_post_number
     message = { topic_id: topic.id, show_indicator: write_event }.as_json
     groups_to_update = []
 

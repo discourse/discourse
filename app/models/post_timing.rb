@@ -154,12 +154,8 @@ class PostTiming < ActiveRecord::Base
   MAX_READ_TIME_PER_BATCH = 60 * 1000.0
 
   def self.process_timings(current_user, topic_id, topic_time, timings, opts = {})
-    lookup_column = current_user.whisperer? ? "highest_staff_post_number" : "highest_post_number"
-    highest_post_number = DB.query_single(<<~SQL, topic_id: topic_id).first
-          SELECT #{lookup_column}
-          FROM topics
-          WHERE id = :topic_id
-        SQL
+    highest_post_number =
+      Topic.highest_post_number_in_stream(topic_id, whisperer: current_user.whisperer?)
 
     # does not exist log nothing
     return if highest_post_number.nil?
@@ -237,7 +233,7 @@ SQL
       highest_seen,
       new_posts_read,
       topic_time,
-      opts,
+      opts.merge(max_post_number: highest_post_number),
     )
     TopicGroup.update_last_read(current_user, topic_id, highest_seen)
 

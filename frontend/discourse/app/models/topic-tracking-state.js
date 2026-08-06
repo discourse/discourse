@@ -306,7 +306,7 @@ export default class TopicTrackingState extends EmberObject {
       // the highest post number is equal to last read post number here
       // because the state has already been modified based on the /unread
       // messageBus message
-      if (!old || old.highest_post_number === old.last_read_post_number) {
+      if (!old || old.last_read_post_number >= old.highest_post_number) {
         this._addIncoming(data.topic_id);
       }
     }

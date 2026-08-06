@@ -119,6 +119,19 @@ RSpec.describe TopicsBulkAction do
       expect(tu.last_read_post_number).to eq(3)
     end
 
+    it "dismisses up to a trailing small action" do
+      post1 = create_post
+      create_post(topic_id: post1.topic_id)
+      small_action =
+        Fabricate(:post, topic: post1.topic, post_type: Post.types[:small_action], post_number: 3)
+
+      TopicsBulkAction.new(post1.user, [post1.topic_id], type: "dismiss_posts").perform!
+
+      tu = TopicUser.find_by(user_id: post1.user_id, topic_id: post1.topic_id)
+
+      expect(tu.last_read_post_number).to eq(small_action.post_number)
+    end
+
     context "when the user is staff" do
       fab!(:user, :admin)
 
