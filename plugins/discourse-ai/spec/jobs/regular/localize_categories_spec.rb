@@ -133,6 +133,38 @@ describe Jobs::LocalizeCategories do
     job.execute({ limit: 10 })
   end
 
+  it "retranslates existing localizations for a requested category" do
+    localize_all_categories("pt_BR", "zh_CN")
+    category = Fabricate(:category, locale: "en", description: "Source description")
+    localizations =
+      %w[pt_BR zh_CN].map do |locale|
+        Fabricate(
+          :category_localization,
+          category:,
+          locale:,
+          name: "Old name",
+          description: "Old description",
+        )
+      end
+
+    short_text_translator = instance_double(DiscourseAi::Translation::ShortTextTranslator)
+    allow(DiscourseAi::Translation::ShortTextTranslator).to receive(:new).and_return(
+      short_text_translator,
+    )
+    allow(short_text_translator).to receive(:translate).and_return("New name")
+    post_raw_translator = instance_double(DiscourseAi::Translation::PostRawTranslator)
+    allow(DiscourseAi::Translation::PostRawTranslator).to receive(:new).and_return(
+      post_raw_translator,
+    )
+    allow(post_raw_translator).to receive(:translate).and_return("New description")
+
+    job.execute({ limit: 1, category_id: category.id, fields: ["description"], force: true })
+
+    expect(
+      CategoryLocalization.where(id: localizations.map(&:id)).pluck(:name, :description),
+    ).to contain_exactly(["Old name", "New description"], ["Old name", "New description"])
+  end
+
   it "handles translation errors gracefully" do
     localize_all_categories("pt", "zh_CN")
 
