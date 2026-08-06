@@ -8,11 +8,14 @@ RSpec.describe "AI Bot sidebar navigation" do
   let(:ai_pm_homepage) { PageObjects::Components::AiPmHomepage.new }
   let(:chat_page) { PageObjects::Pages::Chat.new }
 
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
+  end
+
   before do
     enable_current_plugin
     SiteSetting.ai_bot_enabled = true
     toggle_enabled_bots(bots: [gpt_4])
-    SiteSetting.navigation_menu = "sidebar"
     SiteSetting.chat_separate_sidebar_mode = "always"
     chat_system_bootstrap
     channel.add(admin)
@@ -43,7 +46,9 @@ RSpec.describe "AI Bot sidebar navigation" do
   end
 
   context "with header dropdown navigation menu" do
-    before { SiteSetting.navigation_menu = "header dropdown" }
+    fab!(:header_dropdown_navigation_menu) do
+      Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "header dropdown")
+    end
 
     it "clears forced sidebar when navigating from AI bot to chat and then away" do
       chat_page.prefers_full_page

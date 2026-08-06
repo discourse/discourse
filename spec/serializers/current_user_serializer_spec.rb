@@ -329,9 +329,7 @@ RSpec.describe CurrentUserSerializer do
       )
     end
 
-    it "is included when sidebar is enabled" do
-      SiteSetting.navigation_menu = "sidebar"
-
+    it "is included" do
       expect(serializer.as_json[:new_personal_messages_notifications_count]).to eq(1)
     end
   end

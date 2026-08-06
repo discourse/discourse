@@ -5,8 +5,11 @@ RSpec.describe "List channels | no sidebar" do
 
   let(:chat) { PageObjects::Pages::Chat.new }
 
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "header dropdown")
+  end
+
   before do
-    SiteSetting.navigation_menu = "header dropdown"
     chat_system_bootstrap
     sign_in(current_user)
   end

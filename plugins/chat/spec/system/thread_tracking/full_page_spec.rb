@@ -104,10 +104,11 @@ describe "Thread tracking state | full page" do
     describe "sidebar unread indicators" do
       fab!(:other_channel, :chat_channel)
 
-      before do
-        other_channel.add(current_user)
-        SiteSetting.navigation_menu = "sidebar"
+      fab!(:navigation_menu) do
+        Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
       end
+
+      before { other_channel.add(current_user) }
 
       it "shows an unread indicator for the channel with unread threads in the sidebar" do
         chat_page.visit_channel(other_channel)
