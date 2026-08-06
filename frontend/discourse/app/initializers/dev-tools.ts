@@ -1,5 +1,13 @@
 import { DEBUG } from "@glimmer/env";
+import type Application from "@ember/application";
 import { isDevelopment } from "discourse/lib/environment";
+
+declare global {
+  interface Window {
+    enableDevTools(): void;
+    disableDevTools(): void;
+  }
+}
 
 const KEY = "discourse__dev_tools";
 
@@ -17,18 +25,18 @@ function parseStoredValue() {
 export default {
   after: ["discourse-bootstrap"],
 
-  initialize(app) {
+  initialize(app: Application) {
     let defaultEnabled = false;
 
     if (DEBUG && isDevelopment()) {
       defaultEnabled = true;
     }
 
-    function storeValue(value) {
+    function storeValue(value: boolean) {
       if (value === defaultEnabled) {
         window.localStorage?.removeItem(KEY);
       } else {
-        window.localStorage?.setItem(KEY, value);
+        window.localStorage?.setItem(KEY, String(value));
       }
     }
 
