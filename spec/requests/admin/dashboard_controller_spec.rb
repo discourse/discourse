@@ -1384,6 +1384,307 @@ RSpec.describe Admin::DashboardController do
     end
   end
 
+  describe "#traffic" do
+    let(:request_params) { { start_date: "2026-05-01", end_date: "2026-05-12" } }
+
+    before do
+      SiteSetting.dashboard_improvements = true
+      SiteSetting.persist_browser_pageview_events = true
+      SiteSetting.use_legacy_pageviews = false
+      Discourse.stubs(:current_hostname).returns("test.localhost")
+      DiscourseIpInfo.stubs(:get).returns(asn: 64_496, organization: "Example Network")
+    end
+
+    it "summarizes every traffic dimension for the selected dates and filters" do
+      sign_in(admin)
+      chrome = "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36"
+      firefox = "Mozilla/5.0 Firefox/126.0"
+
+      Fabricate(
+        :browser_pageview_event,
+        url: "/landing?campaign=private",
+        country_code: "US",
+        asn: 64_496,
+        ip_address: "192.0.2.1",
+        user_agent: chrome,
+        user_id: admin.id,
+        session_id: "admin-session",
+        normalized_referrer: "search.example/results?token=private",
+        normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
+        source: BrowserPageviewEvent::SOURCE_BEACON,
+        created_at: "2026-05-10 10:00:00",
+      )
+      Fabricate(
+        :browser_pageview_event,
+        url: "/latest?token=private",
+        country_code: "US",
+        asn: 64_496,
+        ip_address: "192.0.2.1",
+        user_agent: chrome,
+        user_id: admin.id,
+        session_id: "admin-session",
+        normalized_referrer: "ignored.example/return?token=private",
+        normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
+        source: BrowserPageviewEvent::SOURCE_BEACON,
+        created_at: "2026-05-10 10:01:00",
+      )
+      Fabricate(
+        :browser_pageview_event,
+        url: "/top",
+        country_code: "GB",
+        asn: 64_496,
+        ip_address: "198.51.100.2",
+        user_agent: firefox,
+        session_id: "anonymous-session",
+        source: BrowserPageviewEvent::SOURCE_BEACON,
+        created_at: "2026-05-11 10:00:00",
+      )
+
+      get "/admin/dashboard/traffic.json", params: request_params
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["partial_data"]).to be_nil
+      expect(response.parsed_body["summary"]).to include(
+        "pageviews" => 3,
+        "logged_in_share" => 67,
+      )
+      dimensions = response.parsed_body["dimensions"]
+      expect(dimensions["top_urls"]).to contain_exactly(
+        include("value" => "/landing", "label" => "/landing", "pageviews" => 1),
+        include("value" => "/latest", "label" => "/latest", "pageviews" => 1),
+        include("value" => "/top", "label" => "/top", "pageviews" => 1),
+      )
+      expect(dimensions["entry_urls"]).to contain_exactly(
+        include("value" => "/landing", "label" => "/landing", "pageviews" => 1),
+        include("value" => "/top", "label" => "/top", "pageviews" => 1),
+      )
+      expect(dimensions["referrers"]).to contain_exactly(
+        include("value" => "search.example", "label" => "search.example", "pageviews" => 1),
+        include("value" => nil, "label" => "Direct / unknown", "pageviews" => 1),
+      )
+      expect(dimensions["countries"]).to contain_exactly(
+        include("value" => "US", "label" => "United States", "pageviews" => 2),
+        include("value" => "GB", "label" => "United Kingdom", "pageviews" => 1),
+      )
+      expect(dimensions["networks"]).to contain_exactly(
+        include("value" => "AS64496", "label" => "AS64496 Example Network", "pageviews" => 3),
+      )
+      expect(dimensions["browsers"]).to contain_exactly(
+        include("value" => "chrome", "label" => "Chrome", "pageviews" => 2),
+        include("value" => "firefox", "label" => "Firefox", "pageviews" => 1),
+      )
+      expect(dimensions["ip_addresses"]).to contain_exactly(
+        include("value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2),
+        include("value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1),
+      )
+
+      get "/admin/dashboard/traffic.json", params: request_params.merge(referrer: "")
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).not_to have_key("filters")
+      expect(response.parsed_body.dig("summary", "pageviews")).to eq(1)
+    end
+
+    it "reports when older traffic is no longer available",
+       time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      sign_in(admin)
+      SiteSetting.clean_up_browser_pageview_events = true
+
+      Fabricate(
+        :browser_pageview_event,
+        url: "/first-retained",
+        session_id: "first-retained",
+        source: BrowserPageviewEvent::SOURCE_BEACON,
+        created_at: "2026-02-15 09:00:00",
+      )
+      Fabricate(
+        :browser_pageview_event,
+        url: "/latest-retained",
+        session_id: "latest-retained",
+        source: BrowserPageviewEvent::SOURCE_BEACON,
+        created_at: "2026-05-10 10:00:00",
+      )
+
+      get "/admin/dashboard/traffic.json", params: request_params.merge(start_date: "2026-01-01")
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["partial_data"]).to eq(
+        "reason" => "retention",
+        "available_start_date" => "2026-02-14",
+      )
+    end
+
+    it "limits filtered results to the newest pageviews" do
+      sign_in(admin)
+      SiteSetting.stubs(:admin_site_traffic_event_cap).returns(2)
+      created_at = Time.zone.parse("2026-05-10 10:00:00")
+
+      oldest =
+        Fabricate(
+          :browser_pageview_event,
+          url: "/oldest-id",
+          session_id: "oldest-id",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: created_at,
+        )
+      middle =
+        Fabricate(
+          :browser_pageview_event,
+          url: "/middle-id",
+          session_id: "middle-id",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: created_at,
+        )
+      newest =
+        Fabricate(
+          :browser_pageview_event,
+          url: "/newest-id",
+          session_id: "newest-id",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+          created_at: created_at,
+        )
+
+      get "/admin/dashboard/traffic.json", params: request_params
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["partial_data"]).to eq(
+        "reason" => "pageview_limit",
+        "pageview_limit" => 2,
+      )
+      top_urls = response.parsed_body.dig("dimensions", "top_urls").map { |row| row["value"] }
+      expect(top_urls).to contain_exactly(middle.url, newest.url)
+
+      get "/admin/dashboard/traffic.json", params: request_params.merge(top_url: oldest.url)
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("summary", "pageviews")).to eq(0)
+
+      oldest.destroy!
+      get "/admin/dashboard/traffic.json", params: request_params
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["partial_data"]).to be_nil
+    end
+
+    it "allows only admins to read traffic details while dashboard improvements are enabled" do
+      [moderator, user, nil].each do |actor|
+        sign_in(actor) if actor
+
+        get "/admin/dashboard/traffic.json", params: request_params
+
+        expect(response.status).to eq(404)
+        sign_out
+      end
+
+      sign_in(admin)
+      post "/admin/dashboard/traffic.json", params: request_params, as: :json
+
+      expect(response.status).to eq(404)
+
+      SiteSetting.dashboard_improvements = false
+      get "/admin/dashboard/traffic.json", params: request_params
+
+      expect(response.status).to eq(404)
+    end
+
+    it "rejects invalid dates and filters" do
+      sign_in(admin)
+      invalid_params = [
+        request_params.merge(extra: true),
+        request_params.merge(country: ["US"]),
+        request_params.merge(country: { value: "US" }),
+        request_params.merge(country: nil),
+        request_params.merge(country: "us"),
+        request_params.merge(network: "AS0"),
+        request_params.merge(browser: "Firefox"),
+        request_params.merge(browser: "firefox\nforged"),
+        request_params.merge(ip: "192.0.2.0/24"),
+        request_params.merge(top_url: "/#{"a" * BrowserPageviewEvent::MAX_URL_LENGTH}"),
+        request_params.merge(top_url: "https://example.com/latest"),
+        request_params.merge(top_url: nil),
+        request_params.merge(entry_url: "/latest?token=secret"),
+        request_params.merge(referrer: "search.example/path"),
+        request_params.merge(referrer: nil),
+        request_params.merge(start_date: "2026-5-1"),
+        request_params.merge(start_date: "2026-05-13"),
+        request_params.except(:start_date),
+        request_params.except(:end_date),
+        request_params.merge(end_date: "2026-5-12"),
+        request_params.merge(end_date: 20_260_512),
+        request_params.merge(end_date: ["2026-05-12"]),
+        request_params.merge(end_date: { value: "2026-05-12" }),
+        request_params.merge(start_date: 20_260_501),
+        request_params.merge(start_date: ["2026-05-01"]),
+        request_params.merge(start_date: { value: "2026-05-01" }),
+      ]
+
+      invalid_params.each do |invalid_params_for_request|
+        get "/admin/dashboard/traffic.json", params: invalid_params_for_request
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body).to eq("error_type" => "invalid_request")
+      end
+    end
+
+    it "redacts sensitive URL and referrer values" do
+      sign_in(admin)
+      private_message = Fabricate(:private_message_topic, user: admin)
+      secret_token = "secret-token-1234567890"
+      log_injection = "forged\nlog-entry"
+      secret_user_agent = "PrivateBrowser/#{secret_token}"
+
+      Fabricate(
+        :browser_pageview_event,
+        url: "/latest?api_key=#{secret_token}",
+        referrer: "https://search.example/path/#{secret_token}?query=private",
+        normalized_referrer: "search.example/path/#{secret_token}?query=private",
+        normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
+        ip_address: "192.0.2.10",
+        session_id: "public-session",
+        user_agent: secret_user_agent,
+        source: BrowserPageviewEvent::SOURCE_BEACON,
+        created_at: "2026-05-10 10:00:00",
+      )
+      Fabricate(
+        :browser_pageview_event,
+        url: "/t/#{private_message.slug}/#{private_message.id}",
+        topic_id: private_message.id,
+        referrer: log_injection,
+        ip_address: "198.51.100.20",
+        session_id: "private-session",
+        source: BrowserPageviewEvent::SOURCE_BEACON,
+        created_at: "2026-05-11 10:00:00",
+      )
+      Fabricate(
+        :browser_pageview_event,
+        url: "/admin/users/list/active?token=#{secret_token}",
+        ip_address: "203.0.113.30",
+        session_id: "admin-path-session",
+        source: BrowserPageviewEvent::SOURCE_BEACON,
+        created_at: "2026-05-12 10:00:00",
+      )
+
+      get "/admin/dashboard/traffic.json", params: request_params
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include("/latest", "search.example", "Private or sensitive page")
+      expect(response.body).not_to include(
+        secret_token,
+        private_message.slug,
+        "/admin/users/list/active",
+        log_injection,
+        "search.example/path",
+        "public-session",
+        "private-session",
+        "admin-path-session",
+        secret_user_agent,
+      )
+      expect(response.body).not_to match(
+        /"(?:id|url|referrer|normalized_referrer|normalized_referrer_version|user_agent|session_id|user_id|topic_id|score|source|created_at|ip_address|country_code|asn)"\s*:/,
+      )
+    end
+  end
+
   describe "#available_reports" do
     before { AdminDashboardReport.delete_all }
 
