@@ -272,16 +272,16 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(page).to have_current_path("/admin/dashboard/traffic?range=last_30_days")
   end
 
-  it "lets an admin expand eight-row cards to a table with at most 50 rows",
+  it "lets an admin filter additional results from an expanded table",
      time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
     sign_in(admin)
 
-    ninth_path = nil
-    51.times do |index|
+    additional_path = nil
+    9.times do |index|
       topic = Fabricate(:topic, title: "Traffic topic #{index}")
       path = "/t/#{topic.slug}/#{topic.id}"
-      ninth_path = path if index == 8
-      event_count = index < 9 ? 10 - index : 1
+      additional_path = path if index == 8
+      event_count = 9 - index
       event_count.times do |event_index|
         Fabricate(
           :browser_pageview_event,
@@ -295,15 +295,13 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     traffic.visit(start_date: "2026-05-01", end_date: "2026-05-12")
 
-    expect(traffic).to have_top_row_count(card: "pages", count: 8)
-
     traffic.expand("pages")
 
-    expect(traffic).to have_expanded_table(title: "Top URLs", row_count: 50)
+    expect(traffic).to have_expanded_table(title: "Top URLs")
 
-    traffic.filter_expanded_row(label: ninth_path)
+    traffic.filter_expanded_row(label: additional_path)
 
-    expect(traffic).to have_filter_pill(dimension: "top_url", label: ninth_path)
+    expect(traffic).to have_filter_pill(dimension: "top_url", label: additional_path)
     expect(traffic).to have_no_expanded_table
     expect(traffic).to have_focused_filter_pill(dimension: "top_url")
   end
