@@ -59,8 +59,9 @@ export default class SiteTrafficBreakdownCard extends Component {
     }
 
     event.preventDefault();
+    const tabList = event.currentTarget.parentElement;
     this.selectTab(nextIndex);
-    next(() => event.currentTarget.parentElement.children[nextIndex]?.focus());
+    next(() => tabList.children[nextIndex]?.focus());
   }
 
   @action

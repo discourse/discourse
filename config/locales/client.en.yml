@@ -7272,7 +7272,7 @@ en:
           likely_crawler: "Likely crawler"
         partial:
           title: "Partial traffic data"
-          retention: "Traffic before %{date} is no longer available."
+          retention: "Traffic before %{date} is no longer available, so these results do not cover the full selected date range."
           pageview_limit: "These results are limited to the most recent %{limit} pageviews in the selected date range. Choose a shorter date range to include all available traffic."
           combined: "Traffic before %{date} is no longer available. These results are also limited to the most recent %{limit} pageviews in the selected date range. Choose a shorter date range within the available dates to include all available traffic."
       dashboard:

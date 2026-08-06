@@ -469,9 +469,6 @@ class AdminDashboardSiteTrafficExplorer
     info = DiscourseIpInfo.get(representative_ip, locale: I18n.locale, resolve_hostname: false)
     return info[:country] if info[:country_code].to_s.casecmp?(value) && info[:country].present?
 
-    fallback = TZInfo::Country.get(value).name
-    I18n.t("admin_site_traffic_explorer.country_fallbacks.#{value}", default: fallback)
-  rescue TZInfo::InvalidCountryCode
     value
   end
 

@@ -1136,8 +1136,6 @@ en:
       opera: "Opera"
       safari: "Safari"
       unknown: "Unknown browser"
-    country_fallbacks:
-      GB: "United Kingdom"
 
   change_email:
     error: "There was an error changing your email address. Perhaps the address is already in use?"

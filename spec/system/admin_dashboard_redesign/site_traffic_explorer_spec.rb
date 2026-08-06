@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
+  include ThemeScreenshotMarker
+
   fab!(:admin)
 
   let(:traffic) { PageObjects::Pages::AdminSiteTrafficExplorer.new }
@@ -12,7 +14,43 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     SiteSetting.use_legacy_pageviews = false
     BrowserPageviewEvent.stubs(:beacon_cutover_date).returns(Date.new(2026, 1, 1))
     Discourse.stubs(:current_hostname).returns("test.localhost")
-    DiscourseIpInfo.stubs(:get).returns(asn: 64_496, organization: "Example Network")
+    DiscourseIpInfo
+      .stubs(:get)
+      .with { |_ip, **options| options[:resolve_hostname] != false }
+      .returns({})
+    DiscourseIpInfo
+      .stubs(:get)
+      .with do |ip, **options|
+        ip.to_s == "192.0.2.1" && options[:resolve_hostname] == false
+      end
+      .returns(
+        country_code: "US",
+        country: "United States",
+        asn: 64_496,
+        organization: "Example Network",
+      )
+    DiscourseIpInfo
+      .stubs(:get)
+      .with do |ip, **options|
+        ip.to_s == "198.51.100.2" && options[:resolve_hostname] == false
+      end
+      .returns(
+        country_code: "GB",
+        country: "United Kingdom",
+        asn: 64_497,
+        organization: "Example Network",
+      )
+    DiscourseIpInfo
+      .stubs(:get)
+      .with do |ip, **options|
+        ip.to_s == "203.0.113.3" && options[:resolve_hostname] == false
+      end
+      .returns(
+        country_code: "US",
+        country: "United States",
+        asn: 64_498,
+        organization: "Example Network",
+      )
   end
 
   it "lets an admin see anonymous traffic without a crawler series when detection is disabled",
@@ -73,8 +111,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_metric(label: "Average session duration", value: "10s")
   end
 
-  it "lets an admin investigate pageviews with dashboard controls and row filters",
-     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+  it "lets an admin investigate traffic with dates and filters", time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
     sign_in(admin)
 
     chrome = "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36"
@@ -168,6 +205,9 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_row(card: "pages", label: "/top", count: "2")
     expect(traffic).to have_url_link(card: "pages", label: "/top", href: "/top")
 
+    screenshot_marker(label: "site-traffic-explorer-overview")
+    next if ENV["TAKE_SCREENSHOTS"] == "1"
+
     traffic.select_tab(card: "pages", tab: "Entry URLs")
     expect(traffic).to have_row(card: "pages", label: "/latest", count: "1")
     expect(traffic).to have_url_link(card: "pages", label: "/latest", href: "/latest")
@@ -225,11 +265,15 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     )
 
     traffic.remove_filter("country")
+    expect(traffic).to have_metric(label: "Pageviews", value: "3")
+    traffic.select_tab(card: "acquisition", tab: "Countries")
     traffic.filter_row(card: "acquisition", label: "United Kingdom")
     expect(traffic).to have_filter_pill(dimension: "country", label: "United Kingdom")
     expect(traffic).to have_metric(label: "Pageviews", value: "1")
 
     traffic.remove_filter("country")
+    expect(traffic).to have_metric(label: "Pageviews", value: "3")
+    traffic.select_tab(card: "acquisition", tab: "Countries")
     traffic.filter_row(card: "acquisition", label: "United States")
     expect(traffic).to have_filter_pill(dimension: "country", label: "United States")
 

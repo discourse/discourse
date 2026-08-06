@@ -1373,6 +1373,24 @@ RSpec.describe Admin::DashboardController do
       BrowserPageviewEvent.stubs(:beacon_cutover_date).returns(Date.new(2026, 1, 1))
       Discourse.stubs(:current_hostname).returns("test.localhost")
       DiscourseIpInfo.stubs(:get).returns(asn: 64_496, organization: "Example Network")
+      DiscourseIpInfo
+        .stubs(:get)
+        .with("192.0.2.1", locale: anything, resolve_hostname: false)
+        .returns(
+          country_code: "US",
+          country: "United States",
+          asn: 64_496,
+          organization: "Example Network",
+        )
+      DiscourseIpInfo
+        .stubs(:get)
+        .with("198.51.100.2", locale: anything, resolve_hostname: false)
+        .returns(
+          country_code: "GB",
+          country: "United Kingdom",
+          asn: 64_496,
+          organization: "Example Network",
+        )
     end
 
     context "with traffic in the selected date range" do
