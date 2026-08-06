@@ -1,5 +1,6 @@
 import { focus, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import {
   disableClearA11yAnnouncementsInTests,
@@ -8,7 +9,13 @@ import {
 import {
   attachCapture,
   attachLiveRegions,
+  clearTimeline,
+  elementHandles,
+  hasElementHandle,
+  installA11yTap,
+  logElementHandle,
   resetA11yInstrumentation,
+  TIMELINE_LIMIT,
   timelineEntries,
   watchedLiveRegions,
 } from "discourse/static/dev-tools/a11y/instrumentation";
@@ -65,7 +72,19 @@ module("Integration | Component | dev-tools | a11y-leak", function (hooks) {
     return host;
   }
 
-  /** Every path from `value` that lands on a DOM node, for the failure message. */
+  /**
+   * Every path from `value` that lands on a DOM node, for the failure message.
+   *
+   * `Map` and `Set` have to be walked explicitly. `Object.entries` yields nothing
+   * for either, so a walk built on it alone reports a clean bill of health for
+   * `new Set([element])` — and the page sweep aggregates through exactly that
+   * shape, `Map<string, { finding, elements: Set<Element> }>`. A strong reference
+   * hidden in a collection is the same leak as a strong reference on a field.
+   *
+   * A `WeakRef` is a deliberate terminal: it cannot pin its target, which is the
+   * whole reason it is the sanctioned way to hold onto an element here, and its
+   * referent is not enumerable so the walk could not reach through it anyway.
+   */
   function domNodesIn(value, path = "entry", seen = new Set()) {
     if (value === null || typeof value !== "object") {
       return [];
@@ -73,10 +92,25 @@ module("Integration | Component | dev-tools | a11y-leak", function (hooks) {
     if (value instanceof Node) {
       return [path];
     }
+    if (value instanceof WeakRef || value instanceof WeakMap) {
+      return [];
+    }
     if (seen.has(value)) {
       return [];
     }
     seen.add(value);
+
+    if (value instanceof Map) {
+      return [...value.entries()].flatMap(([key, nested]) => [
+        ...domNodesIn(key, `${path}.<key>`, seen),
+        ...domNodesIn(nested, `${path}.get(${String(key)})`, seen),
+      ]);
+    }
+    if (value instanceof Set) {
+      return [...value.values()].flatMap((nested, index) =>
+        domNodesIn(nested, `${path}.<set:${index}>`, seen)
+      );
+    }
 
     return Object.entries(value).flatMap(([key, nested]) =>
       domNodesIn(nested, `${path}.${key}`, seen)
@@ -107,6 +141,38 @@ module("Integration | Component | dev-tools | a11y-leak", function (hooks) {
   function eventEntry() {
     return timelineEntries().find((entry) => entry.kind === "event");
   }
+
+  /*
+   * The walker is the instrument every assertion below depends on, so it gets
+   * checked against a known leak before it is trusted with a real one. It used
+   * to traverse with `Object.entries` alone, which yields nothing for a `Map` or
+   * a `Set` — so an element hidden in a collection passed clean, and the page
+   * sweep aggregates through exactly that shape.
+   */
+  test("the walker finds a node hidden in a Map or a Set", function (assert) {
+    const element = document.createElement("div");
+
+    assert.deepEqual(
+      domNodesIn({ bag: new Set([element]) }),
+      ["entry.bag.<set:0>"],
+      "a set member is as strong a reference as a field"
+    );
+    assert.deepEqual(
+      domNodesIn({ byRule: new Map([["cursor.dangling", element]]) }),
+      ["entry.byRule.get(cursor.dangling)"],
+      "and so is a map value"
+    );
+    assert.deepEqual(
+      domNodesIn({ keyed: new Map([[element, "note"]]) }),
+      ["entry.keyed.<key>"],
+      "a map KEY pins its element just as hard as a value"
+    );
+    assert.deepEqual(
+      domNodesIn({ handle: new WeakRef(element) }),
+      [],
+      "a weak reference cannot pin anything, which is why it is the way in"
+    );
+  });
 
   test("no timeline entry holds a DOM node", async function (assert) {
     await captureDanglingCursor();
@@ -271,5 +337,182 @@ module("Integration | Component | dev-tools | a11y-leak", function (hooks) {
       watchedLiveRegions().some((name) => name.includes("leak-region")),
       "still watching a region that is still there"
     );
+  });
+
+  /*
+   * Oracle for the weak handle back to the element (unit 1d).
+   *
+   * The panel describes an element in strings, and when that element is still on
+   * the page the developer wants the node: to log it, expand it, reveal it in the
+   * browser's own Elements panel. That is the ordinary devtools loop, and reading
+   * "div · role=listbox · Categories" and then going hunting is the panel breaking
+   * it.
+   *
+   * This must not undo what the rest of this file pins. A `WeakRef` cannot pin its
+   * target, so the convenience comes back without the leak — but only while two
+   * things hold: the handles live outside the entries, and no handle ever feeds
+   * displayed data. Everything a row SAYS stays frozen at record time.
+   *
+   * These tests live here rather than in their own file because the walker above
+   * is the instrument that tells a weak handle from a strong one, and because the
+   * running devserver expands its test-discovery glob only at a full build, so a
+   * new file reports "No tests matched" instead of running.
+   */
+  module("weak element handles (unit 1d)", function () {
+    test("a described element is reachable as a handle to the node itself", async function (assert) {
+      await captureDanglingCursor();
+
+      const { seq } = eventEntry();
+      assert.true(
+        hasElementHandle(seq, "focused"),
+        "the focused element was described, so it has a handle"
+      );
+
+      const logged = sinon.stub(console, "log");
+      try {
+        assert.true(
+          logElementHandle(seq, "focused"),
+          "activating the control resolves the node"
+        );
+        assert.strictEqual(
+          logged.firstCall.args.at(-1),
+          document.querySelector("#leak-fixture"),
+          "and logs that exact node, which is what gives an expandable handle"
+        );
+      } finally {
+        logged.restore();
+      }
+    });
+
+    // The fallback is the thing that was always there: no handle, no control, and
+    // nothing said about why. A field the snapshot never filled has no node behind
+    // it, and that is not a failure to report.
+    test("a field that described nothing has no handle", async function (assert) {
+      await captureDanglingCursor();
+
+      const { seq, snapshot } = eventEntry();
+      assert.strictEqual(
+        snapshot.cursorTarget,
+        undefined,
+        "the cursor dangles, so no target was described"
+      );
+      assert.false(
+        hasElementHandle(seq, "cursorTarget"),
+        "so there is nothing to offer a control for"
+      );
+    });
+
+    /*
+     * A handle hangs off the identity line, so a node with no identity line has
+     * nowhere to put one. `body` is deliberately left undescribed, and it is the
+     * common case: it holds focus whenever nothing else does.
+     */
+    test("a present node the panel does not describe gets no handle", async function (assert) {
+      attachCapture();
+      document.body.click();
+      await settled();
+
+      const entry = timelineEntries().find((one) => one.label === "click");
+      assert.strictEqual(
+        entry.snapshot.focused,
+        undefined,
+        "body is present and deliberately not described"
+      );
+      assert.false(
+        hasElementHandle(entry.seq, "focused"),
+        "so there is no control to offer"
+      );
+    });
+
+    /*
+     * The test a strong implementation fails. A `Map<seq, Element>` would satisfy
+     * every other assertion here — handles resolve, pruning works — while pinning
+     * exactly what this file exists to keep unpinned, because the registry sits
+     * outside the entries the other walks cover.
+     */
+    test("the registry holds weak handles and never a node", async function (assert) {
+      await captureDanglingCursor();
+
+      assert.deepEqual(
+        domNodesIn(elementHandles(), "handles"),
+        [],
+        "a node found here is a strong reference wearing a handle's name"
+      );
+      assert.true(
+        elementHandles().every((handle) => handle instanceof WeakRef),
+        "and the only sanctioned way to hold an element is the one that cannot pin it"
+      );
+    });
+
+    // A node the page has finished with still derefs, and the console showing it
+    // detached is where that belongs. Garbage-collection timing carries no
+    // information about the page, so the panel says nothing about it either.
+    test("a detached element still resolves while it is alive", async function (assert) {
+      await captureDanglingCursor();
+
+      const { seq } = eventEntry();
+      const element = document.querySelector("#leak-fixture");
+      element.remove();
+
+      const logged = sinon.stub(console, "log");
+      try {
+        assert.true(logElementHandle(seq, "focused"), "detached is not gone");
+        assert.strictEqual(logged.firstCall.args.at(-1), element);
+      } finally {
+        logged.restore();
+      }
+    });
+
+    // A handle whose entry the ring has dropped is unreachable, so keeping its
+    // record would grow the registry for the life of the session — the same
+    // unbounded growth this file exists to prevent, one indirection further out.
+    test("handles are released with the entry they belong to", async function (assert) {
+      await captureDanglingCursor();
+
+      const { seq } = eventEntry();
+      assert.true(
+        hasElementHandle(seq, "focused"),
+        "held while the entry lives"
+      );
+
+      clearTimeline();
+
+      assert.false(
+        hasElementHandle(seq, "focused"),
+        "clearing the timeline releases what nothing can reach"
+      );
+      assert.deepEqual(elementHandles(), [], "and leaves no record behind");
+    });
+
+    /*
+     * The path that actually matters, because a long session never clears: the
+     * ring drops its oldest entry on every new one, so a registry that only
+     * pruned on Clear would grow for as long as the panel is recording.
+     */
+    test("handles are released when the ring evicts their entry", async function (assert) {
+      installA11yTap();
+      await captureDanglingCursor();
+
+      const { seq } = eventEntry();
+      assert.true(
+        hasElementHandle(seq, "focused"),
+        "held while the entry lives"
+      );
+
+      for (let i = 0; i < TIMELINE_LIMIT; i++) {
+        this.a11y.announce(`m${i}`, "polite");
+      }
+      await settled();
+
+      assert.strictEqual(
+        eventEntry(),
+        undefined,
+        "the event has been pushed out of the ring"
+      );
+      assert.false(
+        hasElementHandle(seq, "focused"),
+        "and its handle went with it"
+      );
+    });
   });
 });

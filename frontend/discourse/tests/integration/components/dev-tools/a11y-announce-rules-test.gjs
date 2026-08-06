@@ -185,6 +185,87 @@ module(
       );
     });
 
+    /*
+     * The near-miss, and the qualifier the rule turns on. A region swapped out
+     * before it ever delivered costs nothing: the reader was tracking an element
+     * that never spoke, so rebinding to its replacement loses no announcement.
+     * Frameworks replace not-yet-used regions routinely, and without this case a
+     * detector that flags EVERY same-key replacement passes the test above.
+     */
+    test("a region replaced before it has delivered is not a defect", async function (assert) {
+      const host = addFixture(
+        `<div id="replaceable-region" aria-live="polite"></div>`
+      );
+      instrumentation.attachLiveRegions();
+      await settledAnnouncements();
+
+      const original = host.querySelector("#replaceable-region");
+      original.replaceWith(original.cloneNode(true));
+
+      instrumentation.attachLiveRegions();
+      await settledAnnouncements();
+
+      assert.false(
+        findingIds().includes("live.replaced-mid-session"),
+        "nothing was in flight, so nothing was lost"
+      );
+    });
+
+    /*
+     * Text mismatch (unit 1a), NOTED rather than a defect.
+     *
+     * A region that composes markup around the message legitimately delivers
+     * something other than the string that was requested, so this is worth
+     * seeing and is not worth ranking. It is only checkable at all because the
+     * intent now carries its normalised message; before that there was nothing
+     * to compare the delivered text against.
+     */
+    async function deliverInto(a11y, requested, delivered) {
+      const host = addFixture(
+        `<div id="mismatch-region" aria-live="polite"></div>`
+      );
+      instrumentation.attachLiveRegions();
+
+      a11y.announce(requested, "polite");
+      // Written WITHOUT settling first. The undelivered deadline is a runloop
+      // timer, so settling here retires the pending intent before the delivery
+      // arrives — leaving nothing to compare the text against, and making both
+      // halves of this pair pass or fail for a reason unrelated to the rule.
+      host.querySelector("#mismatch-region").textContent = delivered;
+      await settledAnnouncements();
+
+      return findingIds();
+    }
+
+    test("delivered text that differs from the intent is noted", async function (assert) {
+      const found = await deliverInto(
+        this.a11y,
+        "Draft saved",
+        "Alert: Draft saved"
+      );
+
+      assert.true(
+        found.includes("announce.text-mismatch"),
+        "the region wrote something other than what was asked for"
+      );
+    });
+
+    // The same delivery path with the same message, differing only by the
+    // whitespace the service itself trims. A detector comparing raw strings
+    // would report a mismatch here, which is the false positive to avoid.
+    test("delivered text matching the intent after trimming is not noted", async function (assert) {
+      const found = await deliverInto(
+        this.a11y,
+        "  Draft saved  ",
+        "Draft saved"
+      );
+
+      assert.false(
+        found.includes("announce.text-mismatch"),
+        "normalised the same way on both sides, these are the same string"
+      );
+    });
+
     // A caller repeating one identical string many times per second is looping,
     // not informing. The counterweight is that repeats are legitimate and must
     // stay legitimate: a changing message is a working feature, however fast.

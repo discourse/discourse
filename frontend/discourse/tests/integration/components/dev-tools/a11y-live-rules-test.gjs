@@ -239,5 +239,123 @@ module(
       assert.true(kinds.includes("delivered"), "the DOM write is a delivery");
       assert.false(kinds.includes("spoken"), "nothing claims it was spoken");
     });
+
+    /*
+     * Region facts and lifecycle (unit 0e).
+     *
+     * The Regions view has to answer the two questions anyone staring at a
+     * silent region actually asks — how many times has this delivered, and what
+     * did it last say — and neither is answerable today. Deliveries are a
+     * boolean, kept only so the replacement rule can check whether anything was
+     * in flight, and no arrival time or last text is retained at all.
+     *
+     * Worse, every field is frozen at discovery: `watchLiveRegions` skips a
+     * region it is already watching, so a region whose `aria-live` or `role`
+     * changes later keeps the channel and the verdicts it had when first seen.
+     * That makes the view state something untrue rather than merely omit it.
+     */
+    function regionRecord(key) {
+      return (instrumentation.watchedLiveRegionDetails?.() ?? []).find(
+        (region) => region.key === key
+      );
+    }
+
+    test("a region counts its deliveries and remembers its last text", async function (assert) {
+      const host = addRegion(`aria-live="polite"`);
+      instrumentation.attachLiveRegions();
+
+      const region = host.querySelector("#live-fixture");
+      for (const text of ["one result", "two results", "three results"]) {
+        region.textContent = text;
+        await settled();
+        await Promise.resolve();
+      }
+
+      const record = regionRecord("id:live-fixture");
+      assert.strictEqual(
+        record?.deliveries,
+        3,
+        "a count makes 'this has never delivered' a statable fact rather than an inference"
+      );
+      assert.strictEqual(
+        record?.lastText,
+        "three results",
+        "and what it last said is the other question worth asking of a silent region"
+      );
+    });
+
+    test("a region records when it arrived", async function (assert) {
+      addRegion(`aria-live="polite"`);
+      instrumentation.attachLiveRegions();
+
+      assert.strictEqual(
+        typeof regionRecord("id:live-fixture")?.arrivedAt,
+        "number",
+        "how long a region has been sitting there unused is diagnostic on its own"
+      );
+    });
+
+    /*
+     * The staleness that makes the view wrong rather than incomplete. Note the
+     * region is NOT replaced and does not leave — the same element simply
+     * changes what channel it is on, which is a thing live regions do.
+     */
+    test("a region's channel and verdicts are re-derived, not frozen at discovery", async function (assert) {
+      const host = addRegion(
+        `id="mutable-region" role="alert" aria-live="assertive"`
+      );
+      instrumentation.attachLiveRegions();
+
+      assert.strictEqual(
+        regionRecord("id:live-fixture")?.channel,
+        "assertive",
+        "as first seen"
+      );
+
+      host.querySelector("#live-fixture").setAttribute("aria-live", "polite");
+      instrumentation.attachLiveRegions();
+      await settled();
+
+      assert.strictEqual(
+        regionRecord("id:live-fixture")?.channel,
+        "polite",
+        "the attribute changed, so the reported channel has to change with it"
+      );
+      assert.true(
+        instrumentation
+          .liveRegionFindings()
+          .some(({ id }) => id === "live.politeness-contradicts-role"),
+        "and the contradiction it now carries has to be noticed"
+      );
+    });
+
+    /*
+     * Losing live-region semantics is a departure, and has to go through the
+     * lifecycle that already exists rather than inventing a second one: the
+     * existing count-decrement and the named `left` row are one invariant, and a
+     * region that stops being a region while staying in the DOM must not be
+     * reported forever.
+     */
+    test("a region that stops being one leaves, rather than lingering", async function (assert) {
+      const host = addRegion(`aria-live="polite"`);
+      instrumentation.attachLiveRegions();
+      assert.strictEqual(instrumentation.watchedLiveRegionCount(), 1);
+
+      host.querySelector("#live-fixture").removeAttribute("aria-live");
+      instrumentation.attachLiveRegions();
+      await settled();
+
+      assert.strictEqual(
+        instrumentation.watchedLiveRegionCount(),
+        0,
+        "it can no longer announce, so it is no longer a region being watched"
+      );
+      assert.true(
+        instrumentation
+          .timelineEntries()
+          .some((entry) => entry.label === "live region left"),
+        "reported the same way a detached region is, not through a second mechanism"
+      );
+    });
   }
 );

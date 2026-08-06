@@ -28,6 +28,8 @@ import {
   describeContainment,
   describeElement,
   visualCursor,
+  type VisualCursorKind,
+  visualCursorKind,
 } from "discourse/static/dev-tools/a11y/inspect";
 import devToolsState from "discourse/static/dev-tools/state";
 
@@ -57,6 +59,7 @@ export interface A11ySnapshot {
   rowSelected?: string;
   rowPosition?: string;
   visual?: string;
+  visualCursorKind: VisualCursorKind;
   agreement: CursorAgreement;
   multiselectable?: string;
   selectedCount?: number;
@@ -64,14 +67,34 @@ export interface A11ySnapshot {
 
 export interface TimelineEntry {
   seq: number;
+  at: number;
+  elapsedMs: number | undefined;
   kind: EntryKind;
   label: string;
   /** The chord, one key per entry, for a panel that renders them as keycaps. */
   keys?: readonly string[];
+  code?: string;
+  repeat?: boolean;
+  target?: string;
+  trusted?: boolean;
   detail: string;
   findings: readonly Finding[];
+  message?: string;
+  latencyMs?: number;
+  intentSeq?: number;
+  regionKey?: string;
   snapshot?: A11ySnapshot;
 }
+
+/** Which of a snapshot's described elements a handle can be asked for. */
+export type ElementHandleField =
+  | "focused"
+  | "cursorTarget"
+  | "cursorContainer"
+  | "barrierSource"
+  | "visual";
+
+type ElementHandleSources = Partial<Record<ElementHandleField, Element>>;
 
 export const TIMELINE_LIMIT = 200;
 
@@ -93,8 +116,27 @@ const LIVE_REGION_ROLES = {
   log: "polite",
   status: "polite",
 } as const;
-const CAPTURE_EVENT_TYPES = ["focusin", "keyup", "click"] as const;
-const MODIFIER_KEYS = new Set(["Alt", "Control", "Meta", "Shift"]);
+const CAPTURE_EVENT_TYPES = ["focusin", "keydown", "click"] as const;
+/**
+ * Modifiers that compose a chord, in the order they are reported.
+ *
+ * `getModifierState` also answers for the locks — `CapsLock`, `NumLock` and
+ * friends — and those are deliberately absent. A lock is a state that stays true
+ * for as long as it is on, not a key being held, and num lock is on by default on
+ * most external keyboards, so including them would prefix a large share of all
+ * keystrokes with a modifier nobody pressed. A shortcut is `Cmd+K`.
+ */
+const MODIFIER_KEYS = [
+  "Meta",
+  "Control",
+  "Alt",
+  "Shift",
+  "AltGraph",
+  "Fn",
+  "Hyper",
+  "Super",
+  "Symbol",
+] as const;
 /**
  * What Apple keyboards print on the modifier keys. Elsewhere the DOM's own
  * names are kept: the product's shortcut helper folds meta into ctrl off Apple,
@@ -120,11 +162,18 @@ type Announce = typeof A11y.prototype.announce;
 class WatchState {
   @tracked findings: readonly Finding[] = [];
   @tracked liveRegions: readonly string[] = [];
+  @tracked mutedRegionKeys = new Set<string>();
   @tracked paused = devToolsState.getFlag(TOOL_ID, "paused") === true;
 }
 
 export interface SweepFinding extends Finding {
   readonly count: number;
+  readonly elements: readonly SweepElement[];
+}
+
+export interface SweepElement {
+  readonly description: string;
+  readonly handleId: number;
 }
 
 export interface A11ySweepResult {
@@ -139,16 +188,48 @@ interface WatchedRegion {
   key: string;
   region: Element;
   observer: MutationObserver;
+  /** Monotonic, so "sitting there unused for a while" is answerable. */
+  arrivedAt: number;
+}
+
+/**
+ * What the panel can say about a watched region without holding onto it.
+ *
+ * Primitives only, for the same reason timeline entries are: a description that
+ * outlives its element must not keep that element alive. The two fields that
+ * matter to anyone staring at a region that is not announcing are the delivery
+ * count and the last text, and neither was retained before.
+ */
+export interface WatchedRegionDetail {
+  readonly key: string;
+  readonly channel: string;
+  readonly description: string;
+  readonly deliveries: number;
+  readonly lastText: string;
+  readonly outOfTree: boolean;
+  readonly arrivedAt: number;
+  readonly findings: readonly Finding[];
+  readonly muted: boolean;
 }
 
 interface PendingIntent {
+  at: number;
   channel: string;
+  matchingRegionKeys: readonly string[];
+  message?: string;
   seq: number;
   timer: ReturnType<typeof later>;
 }
 
 interface RegionHistory {
-  delivered: boolean;
+  /**
+   * A count rather than a flag. The replacement rule only ever asks "has this
+   * ever delivered", which a count answers just as well, and a count also makes
+   * "this region has never delivered" a fact the Regions view can state instead
+   * of leaving the reader to infer it from silence.
+   */
+  deliveries: number;
+  lastText: string;
   element: Element;
 }
 
@@ -161,6 +242,7 @@ interface RecentAnnouncement {
 const timeline = trackedArray<TimelineEntry>();
 const watchState = new WatchState();
 let sequence = 0;
+let previousEntryAt: number | undefined;
 let consoleMirror = devToolsState.getFlag(TOOL_ID, "consoleMirror") === true;
 let originalAnnounce: Announce | undefined;
 const watchedRegions = new Map<string, WatchedRegion>();
@@ -171,9 +253,12 @@ let captureGeneration = 0;
 const pendingIntents = new Map<number, PendingIntent>();
 const recentAnnouncements: RecentAnnouncement[] = [];
 const regionHistory = new Map<string, RegionHistory>();
-/** Modifiers a recorded chord was holding, awaiting their own release. */
-const heldByLastChord = new Set<string>();
-
+const elementHandleRegistry = new Map<
+  number,
+  Map<ElementHandleField, WeakRef<Element>>
+>();
+const sweepHandleRegistry = new Map<number, WeakRef<Element>>();
+let sweepHandleSequence = 0;
 /** One entry as plain text, which is what a pasted trace and the filter see. */
 export function timelineEntryTrace(entry: TimelineEntry): string {
   const keys = entry.keys?.length ? ` ${entry.keys.join("+")}` : "";
@@ -188,28 +273,67 @@ function record(
   label: string,
   detail: string,
   extra: {
+    code?: string;
     findings?: readonly Finding[];
     keys?: string[];
+    message?: string;
+    regionKey?: string;
+    repeat?: boolean;
+    intent?: PendingIntent;
+    elementHandleSources?: ElementHandleSources;
     snapshot?: A11ySnapshot;
+    target?: string;
+    trusted?: boolean;
   } = {}
 ): TimelineEntry | undefined {
   if (watchState.paused) {
     return undefined;
   }
 
+  const at = performance.now();
   const entry: TimelineEntry = {
     seq: ++sequence,
+    at,
+    elapsedMs: previousEntryAt === undefined ? undefined : at - previousEntryAt,
     kind,
     label,
     detail,
     findings: Object.freeze([...(extra.findings ?? [])]),
+    ...(extra.code !== undefined ? { code: extra.code } : {}),
     ...(extra.keys ? { keys: extra.keys } : {}),
+    ...(extra.message !== undefined ? { message: extra.message } : {}),
+    ...(extra.regionKey !== undefined ? { regionKey: extra.regionKey } : {}),
+    ...(extra.repeat !== undefined ? { repeat: extra.repeat } : {}),
+    ...(extra.target !== undefined ? { target: extra.target } : {}),
+    ...(extra.trusted !== undefined ? { trusted: extra.trusted } : {}),
+    ...(extra.intent
+      ? {
+          latencyMs: at - extra.intent.at,
+          intentSeq: extra.intent.seq,
+        }
+      : {}),
     ...(extra.snapshot ? { snapshot: extra.snapshot } : {}),
   };
+  previousEntryAt = at;
+
+  if (extra.elementHandleSources) {
+    const handles = new Map<ElementHandleField, WeakRef<Element>>();
+    for (const [field, element] of Object.entries(
+      extra.elementHandleSources
+    ) as [ElementHandleField, Element][]) {
+      handles.set(field, new WeakRef(element));
+    }
+    if (handles.size > 0) {
+      elementHandleRegistry.set(entry.seq, handles);
+    }
+  }
 
   timeline.push(entry);
   if (timeline.length > TIMELINE_LIMIT) {
-    timeline.splice(0, timeline.length - TIMELINE_LIMIT);
+    const evicted = timeline.splice(0, timeline.length - TIMELINE_LIMIT);
+    for (const evictedEntry of evicted) {
+      elementHandleRegistry.delete(evictedEntry.seq);
+    }
   }
 
   if (consoleMirror) {
@@ -277,7 +401,7 @@ function runawayFinding(
     return undefined;
   }
 
-  const timestamp = Date.now();
+  const timestamp = performance.now();
   while (
     recentAnnouncements[0] &&
     timestamp - recentAnnouncements[0].timestamp > RUNAWAY_WINDOW_MS
@@ -301,7 +425,13 @@ function runawayFinding(
     : undefined;
 }
 
-function scheduleUndelivered(seq: number, channel: string): void {
+function scheduleUndelivered(
+  seq: number,
+  channel: string,
+  matchingRegionKeys: readonly string[],
+  message: string | undefined,
+  at: number
+): void {
   const timer = later(() => {
     if (!pendingIntents.delete(seq)) {
       return;
@@ -317,7 +447,14 @@ function scheduleUndelivered(seq: number, channel: string): void {
     );
   }, ANNOUNCEMENT_DELIVERY_DEADLINE_MS);
 
-  pendingIntents.set(seq, { channel, seq, timer });
+  pendingIntents.set(seq, {
+    at,
+    channel,
+    matchingRegionKeys,
+    message,
+    seq,
+    timer,
+  });
 }
 
 function recordIntent(args: Parameters<Announce>): void {
@@ -326,6 +463,8 @@ function recordIntent(args: Parameters<Announce>): void {
   }
 
   const [message, politeness = "polite"] = args;
+  const normalizedMessage =
+    typeof message === "string" ? message.trim() : undefined;
   const joinedRegions = watchedDocument
     ? discoverLiveRegions(watchedDocument)
     : [];
@@ -371,11 +510,17 @@ function recordIntent(args: Parameters<Announce>): void {
     "intent",
     "announce intent",
     `politeness=${describeArgument(politeness)} "${describeArgument(message)}"`,
-    { findings }
+    { findings, message: normalizedMessage }
   );
 
   if (entry && typeof politeness === "string" && matchingRegions.length > 0) {
-    scheduleUndelivered(entry.seq, politeness);
+    scheduleUndelivered(
+      entry.seq,
+      politeness,
+      matchingRegions.map(({ key }) => key),
+      normalizedMessage,
+      entry.at
+    );
   }
 }
 
@@ -384,28 +529,31 @@ function recordDelivered(region: Element, text: string): void {
     return;
   }
 
-  const politeness = region.getAttribute("aria-live") ?? "?";
   const source = region.id || describeElement(region) || "anonymous";
 
   // The blank between two identical messages is what makes the second audible,
   // so it is recorded — but as `meta`, since counting a clear as a delivery
   // would let an intent that never arrived look answered.
   if (!text) {
-    recordMeta("live region cleared", `region=${source}`);
+    recordMeta("live region cleared", `region=${source}`, regionKey(region));
     return;
   }
 
   const watched = [...watchedRegions.values()].find(
     (candidate) => candidate.region === region
   );
+
+  let pending: PendingIntent | undefined;
   if (watched) {
     const history = regionHistory.get(watched.key);
     if (history) {
-      history.delivered = true;
+      history.deliveries += 1;
+      history.lastText = text;
+      updateWatchState();
     }
 
-    const pending = [...pendingIntents.values()].find(
-      (intent) => intent.channel === watched.channel
+    pending = [...pendingIntents.values()].find((intent) =>
+      intent.matchingRegionKeys.includes(watched.key)
     );
     if (pending) {
       cancel(pending.timer);
@@ -413,15 +561,22 @@ function recordDelivered(region: Element, text: string): void {
     }
   }
 
-  record("delivered", `delivered ${politeness}`, `region=${source} "${text}"`);
+  const politeness = pending?.channel ?? watched?.channel ?? channelFor(region);
+  record("delivered", `delivered ${politeness}`, `region=${source} "${text}"`, {
+    findings:
+      pending?.message !== undefined && pending.message !== text
+        ? [finding("announce.text-mismatch")]
+        : [],
+    intent: pending,
+  });
 }
 
-function recordMeta(label: string, detail: string): void {
+function recordMeta(label: string, detail: string, region?: string): void {
   if (watchState.paused) {
     return;
   }
 
-  record("meta", label, detail);
+  record("meta", label, detail, { regionKey: region });
 }
 
 function isToolbarElement(element: Element): boolean {
@@ -619,38 +774,30 @@ function requiredAttributeFindings(
 }
 
 /**
- * The chord as pressed, one key per entry, or nothing for the trailing release
- * of a chord already recorded.
+ * The chord as pressed, one key per entry.
  *
- * `keyup` fires once per physical key, so a chord ends in as many events as it
- * had keys held: Meta+C reports `c` and then `Meta`. That trailing `Meta` says
- * nothing the chord did not. A modifier pressed on its own still earns a row,
- * though: screen readers are driven by held modifiers, and a keypress that
- * leaves no trace cannot be told apart from capture being broken.
+ * `AltGraph` is not independent of the two it is built from: on Windows AltGr IS
+ * Control+Alt and reports all three, and on macOS Firefox reports Option as both
+ * Alt and AltGraph. Reporting every true state would turn one key into a chord of
+ * three that nobody pressed, so AltGraph subsumes them.
  */
-function describeChord(event: KeyboardEvent): string[] | undefined {
-  if (MODIFIER_KEYS.has(event.key)) {
-    const trailingRelease =
-      !event.getModifierState(event.key) && heldByLastChord.delete(event.key);
-
-    return trailingRelease ? undefined : [labelKey(event.key)];
+function describeChord(event: KeyboardEvent): string[] {
+  if (MODIFIER_KEYS.includes(event.key as (typeof MODIFIER_KEYS)[number])) {
+    return [labelKey(event.key)];
   }
 
-  const modifiers = [
-    event.metaKey ? "Meta" : "",
-    event.ctrlKey ? "Control" : "",
-    event.altKey ? "Alt" : "",
-    event.shiftKey ? "Shift" : "",
-  ].filter(Boolean);
-
-  for (const modifier of modifiers) {
-    heldByLastChord.add(modifier);
-  }
+  const held = MODIFIER_KEYS.filter((modifier) =>
+    event.getModifierState(modifier)
+  );
+  const modifiers = held.includes("AltGraph")
+    ? held.filter((modifier) => modifier !== "Alt" && modifier !== "Control")
+    : held;
 
   return [...modifiers.map(labelKey), event.key];
 }
 
 function snapshotFor(doc: Document): {
+  elementHandleSources: ElementHandleSources;
   findings: readonly Finding[];
   snapshot: A11ySnapshot;
 } {
@@ -697,6 +844,7 @@ function snapshotFor(doc: Document): {
       ? { rowPosition: `${position ?? "?"} / ${size ?? "?"}` }
       : {}),
     visual: describeElement(visual),
+    visualCursorKind: visualCursorKind(visual),
     agreement,
     multiselectable: attribute(container, "aria-multiselectable"),
     ...(container
@@ -767,7 +915,13 @@ function snapshotFor(doc: Document): {
     findings.push(finding("cursor.not-item"));
   }
   if (snapshot.agreement === "diverged") {
-    findings.push(finding("cursor.visual-diverged"));
+    findings.push(
+      finding(
+        snapshot.visualCursorKind === "contract"
+          ? "cursor.visual-diverged"
+          : "cursor.visual-diverged-conventional"
+      )
+    );
   }
   if (snapshot.containmentKind === "unclaimed") {
     findings.push(finding("cursor.claim-missing"));
@@ -778,6 +932,19 @@ function snapshotFor(doc: Document): {
   findings.push(...setPositionFindings(cursor, position, size));
 
   return {
+    elementHandleSources: {
+      ...(snapshot.focused !== undefined && focused ? { focused } : {}),
+      ...(snapshot.cursorTarget !== undefined && target
+        ? { cursorTarget: target }
+        : {}),
+      ...(snapshot.cursorContainer !== undefined && container
+        ? { cursorContainer: container }
+        : {}),
+      ...(snapshot.barrierSource !== undefined && barrierSource
+        ? { barrierSource }
+        : {}),
+      ...(snapshot.visual !== undefined && visual ? { visual } : {}),
+    },
     findings: Object.freeze(findings),
     snapshot,
   };
@@ -875,14 +1042,18 @@ function captureEvent(event: Event): void {
   // Read synchronously: the event object is not guaranteed to still carry its
   // properties by the time the queued read runs.
   let keys: string[] | undefined;
+  let code: string | undefined;
+  let repeat: boolean | undefined;
   if (event instanceof KeyboardEvent) {
     keys = describeChord(event);
-    if (!keys) {
-      return;
-    }
+    code = event.code;
+    repeat = event.repeat;
   }
 
   const label = event.type;
+  const target =
+    event.target instanceof Element ? describeElement(event.target) : undefined;
+  const trusted = event.isTrusted;
   const generation = captureGeneration;
 
   next(() => {
@@ -892,8 +1063,17 @@ function captureEvent(event: Event): void {
 
     attachLiveRegions(doc);
 
-    const { findings, snapshot } = snapshotFor(doc);
-    record("event", label, summarize(snapshot), { findings, keys, snapshot });
+    const { elementHandleSources, findings, snapshot } = snapshotFor(doc);
+    record("event", label, summarize(snapshot), {
+      code,
+      elementHandleSources,
+      findings,
+      keys,
+      repeat,
+      snapshot,
+      target,
+      trusted,
+    });
   });
 }
 
@@ -1002,7 +1182,10 @@ function compositeFindings(composite: Element): Map<Element, Finding[]> {
     const visual = visualCursor(cursor.container);
     const containment = describeContainment(composite, target);
 
-    if (compareCursors(target, visual) === "diverged") {
+    if (
+      visualCursorKind(visual) === "contract" &&
+      compareCursors(target, visual) === "diverged"
+    ) {
       targetFindings.push(finding("cursor.visual-diverged"));
     }
     if (containment.kind === "unclaimed") {
@@ -1057,6 +1240,8 @@ function compositeFindings(composite: Element): Map<Element, Finding[]> {
 
 /** Checks the current document on demand without changing capture state. */
 export function sweepA11y(doc: Document = document): A11ySweepResult {
+  sweepHandleRegistry.clear();
+
   const pass = beginPass();
   const regions = liveRegions(doc);
   const composites = [...doc.querySelectorAll("*")].filter((element) => {
@@ -1096,9 +1281,23 @@ export function sweepA11y(doc: Document = document): A11ySweepResult {
     regions: regions.length,
     composites: composites.length,
     findings: Object.freeze(
-      [...aggregated.values()].map(({ finding: candidate, elements }) =>
-        Object.freeze({ ...candidate, count: elements.size })
-      )
+      [...aggregated.values()].map(({ finding: candidate, elements }) => {
+        const sweepElements = [...elements].map((element) => {
+          const handleId = ++sweepHandleSequence;
+          sweepHandleRegistry.set(handleId, new WeakRef(element));
+
+          return Object.freeze({
+            description: describeElement(element),
+            handleId,
+          });
+        });
+
+        return Object.freeze({
+          ...candidate,
+          count: elements.size,
+          elements: Object.freeze(sweepElements),
+        });
+      })
     ),
   });
 }
@@ -1112,16 +1311,33 @@ function updateWatchState(): void {
   );
 }
 
-/** Stops watching regions that have left the document, naming each one. */
-function releaseDetachedRegions(): void {
+/**
+ * Stops watching regions that have gone, naming each one.
+ *
+ * "Gone" covers two things, and they are deliberately the same departure. A
+ * region can leave the document, or it can stay put and stop being a live region
+ * at all — its `aria-live` removed, its role changed to something inert. Either
+ * way it can no longer announce, so continuing to count it would overstate what
+ * the page can say. Routing both through one path keeps the count decrement and
+ * the named row as the single invariant the existing tests treat them as.
+ */
+function releaseDetachedRegions(present?: ReadonlySet<Element>): void {
+  // The caller passes the enumeration it already did. Scanning the document
+  // again here would double the cost of every discovery pass, and a pass runs on
+  // every captured event.
+  const live =
+    present ?? (watchedDocument ? new Set(liveRegions(watchedDocument)) : null);
+
   for (const [key, { region, observer }] of watchedRegions) {
-    if (region.isConnected) {
+    const stillWatchable =
+      region.isConnected && (live === null || live.has(region));
+    if (stillWatchable) {
       continue;
     }
 
     observer.disconnect();
     watchedRegions.delete(key);
-    recordMeta("live region left", describeRegion(region));
+    recordMeta("live region left", describeRegion(region), key);
   }
 }
 
@@ -1149,12 +1365,50 @@ function discoverLiveRegions(doc: Document, baseline = false): WatchedRegion[] {
   const joinedRegions: WatchedRegion[] = [];
 
   watchedDocument = doc;
-  releaseDetachedRegions();
+  const present = new Set(liveRegions(doc));
+  releaseDetachedRegions(present);
 
-  for (const region of liveRegions(doc)) {
+  /*
+   * A region's key is derived from its id, so renaming a watched element changes
+   * its key — and without this it would then be discovered as a SECOND region,
+   * leaving the same element with two records and two observers counting every
+   * delivery twice. Renaming is metadata changing, not a departure and an
+   * arrival, so the record moves across intact: same observer, same history, no
+   * rows, and no replacement verdict.
+   */
+  const watchedKeyFor = new Map<Element, string>();
+  for (const [key, watched] of watchedRegions) {
+    watchedKeyFor.set(watched.region, key);
+  }
+
+  for (const region of present) {
     const key = regionKey(region);
+    const previousKey = watchedKeyFor.get(region);
+    if (previousKey !== undefined && previousKey !== key) {
+      const watched = watchedRegions.get(previousKey);
+      if (watched) {
+        watchedRegions.delete(previousKey);
+        watched.key = key;
+        watchedRegions.set(key, watched);
+      }
+
+      const history = regionHistory.get(previousKey);
+      if (history) {
+        regionHistory.delete(previousKey);
+        regionHistory.set(key, history);
+      }
+    }
+
     const existing = watchedRegions.get(key);
     if (existing) {
+      // Re-derived rather than skipped. Both of these are read from attributes
+      // that a region is free to change while it sits there, and keeping the
+      // first-seen values makes the panel state something untrue rather than
+      // merely omit it. The text observer is deliberately left attached: tearing
+      // it down and re-observing would count the region's current contents as a
+      // fresh delivery every pass.
+      existing.channel = channelFor(region);
+      existing.findings = liveRegionMarkupFindings(region);
       continue;
     }
 
@@ -1162,17 +1416,23 @@ function discoverLiveRegions(doc: Document, baseline = false): WatchedRegion[] {
     // deduplicated: a message repeated after the region idles is a second real
     // delivery, and hiding it hides the bug this panel is for.
     let lastText = regionText(region);
-    const observer = new MutationObserverConstructor(() => {
-      const text = regionText(region);
-      if (text === lastText) {
-        return;
+    const observer = new MutationObserverConstructor((mutations) => {
+      if (mutations.some(({ type }) => type !== "attributes")) {
+        const text = regionText(region);
+        if (text !== lastText) {
+          lastText = text;
+          recordDelivered(region, text);
+        }
       }
 
-      lastText = text;
-      recordDelivered(region, text);
+      if (mutations.some(({ type }) => type === "attributes")) {
+        discoverLiveRegions(doc);
+      }
     });
 
     observer.observe(region, {
+      attributes: true,
+      attributeFilter: ["aria-live", "role"],
       childList: true,
       characterData: true,
       subtree: true,
@@ -1186,24 +1446,27 @@ function discoverLiveRegions(doc: Document, baseline = false): WatchedRegion[] {
       key,
       observer,
       region,
+      arrivedAt: performance.now(),
     };
     watchedRegions.set(key, watched);
     joinedRegions.push(watched);
 
-    if (previous && previous.element !== region && previous.delivered) {
+    if (previous && previous.element !== region && previous.deliveries > 0) {
       record("event", "live region replaced", describeRegion(region), {
         findings: [
           finding("live.replaced-mid-session", { channel, region: key }),
         ],
+        regionKey: key,
       });
     }
     regionHistory.set(key, {
-      delivered: previous?.delivered ?? false,
+      deliveries: previous?.deliveries ?? 0,
+      lastText: previous?.lastText ?? "",
       element: region,
     });
 
     if (!baseline) {
-      recordMeta("live region joined", describeRegion(region));
+      recordMeta("live region joined", describeRegion(region), key);
     }
   }
 
@@ -1240,6 +1503,54 @@ export function liveRegionFindings(): readonly Finding[] {
   return watchState.findings;
 }
 
+/**
+ * What is known about each watched region, as primitives.
+ *
+ * Separate from `watchedLiveRegions`, which returns description strings for the
+ * chip and is pinned by existing tests. This is the shape a Regions view needs:
+ * enough to say what a region is on, how often it has spoken, and what it last
+ * said, without keeping a reference to the element that would outlive it.
+ */
+export function watchedLiveRegionDetails(): readonly WatchedRegionDetail[] {
+  const pass = beginPass();
+
+  return Object.freeze(
+    [...watchedRegions.values()].map(
+      ({ key, channel, region, findings, arrivedAt }) => {
+        const history = regionHistory.get(key);
+
+        return Object.freeze({
+          key,
+          channel,
+          description: describeRegion(region),
+          deliveries: history?.deliveries ?? 0,
+          lastText: history?.lastText ?? "",
+          outOfTree: pass.hidden(region),
+          arrivedAt,
+          findings,
+          muted: watchState.mutedRegionKeys.has(key),
+        });
+      }
+    )
+  );
+}
+
+/** Region keys whose churn is hidden from the panel trace. Reactive. */
+export function mutedLiveRegionKeys(): ReadonlySet<string> {
+  return watchState.mutedRegionKeys;
+}
+
+/** Toggles trace suppression without changing observation or recorded facts. */
+export function toggleLiveRegionMuted(key: string): void {
+  const mutedRegionKeys = new Set(watchState.mutedRegionKeys);
+  if (mutedRegionKeys.has(key)) {
+    mutedRegionKeys.delete(key);
+  } else {
+    mutedRegionKeys.add(key);
+  }
+  watchState.mutedRegionKeys = mutedRegionKeys;
+}
+
 /** Disconnects every live-region observer. */
 export function disconnectLiveRegions(): void {
   for (const { observer } of watchedRegions.values()) {
@@ -1260,12 +1571,6 @@ export function attachCapture(doc: Document = document): void {
   for (const eventType of CAPTURE_EVENT_TYPES) {
     doc.addEventListener(eventType, captureEvent, true);
   }
-  doc.addEventListener("visibilitychange", clearHeldChord);
-  doc.defaultView?.addEventListener("blur", clearHeldChord);
-}
-
-function clearHeldChord(): void {
-  heldByLastChord.clear();
 }
 
 /** Removes the capture listeners and invalidates their pending reads. */
@@ -1274,13 +1579,10 @@ export function detachCapture(): void {
     for (const eventType of CAPTURE_EVENT_TYPES) {
       captureDocument.removeEventListener(eventType, captureEvent, true);
     }
-    captureDocument.removeEventListener("visibilitychange", clearHeldChord);
-    captureDocument.defaultView?.removeEventListener("blur", clearHeldChord);
   }
 
   captureDocument = undefined;
   captureGeneration++;
-  heldByLastChord.clear();
 }
 
 /** Returns the reactive module timeline. */
@@ -1291,6 +1593,50 @@ export function timelineEntries(): readonly TimelineEntry[] {
 /** Removes all surviving entries without changing sequence allocation. */
 export function clearTimeline(): void {
   timeline.splice(0, timeline.length);
+  elementHandleRegistry.clear();
+  previousEntryAt = undefined;
+}
+
+export function elementHandles(): readonly WeakRef<Element>[] {
+  return [...elementHandleRegistry.values()].flatMap((handles) => [
+    ...handles.values(),
+  ]);
+}
+
+export function hasElementHandle(
+  seq: number,
+  field: ElementHandleField
+): boolean {
+  return elementHandleRegistry.get(seq)?.get(field)?.deref() !== undefined;
+}
+
+export function logElementHandle(
+  seq: number,
+  field: ElementHandleField
+): boolean {
+  const element = elementHandleRegistry.get(seq)?.get(field)?.deref();
+  if (!element) {
+    return false;
+  }
+
+  // eslint-disable-next-line no-console
+  console.log(element);
+  return true;
+}
+
+export function hasSweepHandle(id: number): boolean {
+  return sweepHandleRegistry.get(id)?.deref() !== undefined;
+}
+
+export function logSweepHandle(id: number): boolean {
+  const element = sweepHandleRegistry.get(id)?.deref();
+  if (!element) {
+    return false;
+  }
+
+  // eslint-disable-next-line no-console
+  console.log(element);
+  return true;
 }
 
 /** Enables or disables recording while leaving instrumentation attached. */
@@ -1321,12 +1667,14 @@ export function resetA11yInstrumentation(): void {
   disconnectLiveRegions();
   detachCapture();
   clearTimeline();
+  sweepHandleRegistry.clear();
   for (const { timer } of pendingIntents.values()) {
     cancel(timer);
   }
   pendingIntents.clear();
   recentAnnouncements.splice(0, recentAnnouncements.length);
   regionHistory.clear();
+  watchState.mutedRegionKeys = new Set();
   sequence = 0;
   setPaused(false);
   setConsoleMirror(false);

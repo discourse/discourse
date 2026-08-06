@@ -16,6 +16,11 @@ export interface Finding {
   readonly params: Readonly<Record<string, string | number>>;
 }
 
+interface RuleOptions {
+  /** Parameters that identify one subject; every other parameter is incidental. */
+  readonly subjectParams: readonly string[];
+}
+
 const RULES = Object.freeze([
   ["focus.not-in-tree", "broken"],
   ["focus.no-name", "broken"],
@@ -36,7 +41,7 @@ const RULES = Object.freeze([
   ["name.labelledby-partly-unresolved", "noted"],
   ["live.born-with-content", "broken"],
   ["live.born-with-content-alert", "fragile"],
-  ["live.replaced-mid-session", "broken"],
+  ["live.replaced-mid-session", "broken", { subjectParams: ["region"] }],
   ["live.not-in-tree", "broken"],
   ["live.politeness-contradicts-role", "broken"],
   ["live.redundant-politeness", "noted"],
@@ -44,9 +49,16 @@ const RULES = Object.freeze([
   ["announce.undelivered", "broken"],
   ["announce.text-mismatch", "noted"],
   ["announce.runaway", "fragile"],
-] as const satisfies ReadonlyArray<readonly [string, Tier]>);
+] as const satisfies ReadonlyArray<readonly [string, Tier, RuleOptions?]>);
 
-const TIERS: ReadonlyMap<string, Tier> = new Map(RULES);
+const TIERS: ReadonlyMap<string, Tier> = new Map(
+  RULES.map(([id, tier]) => [id, tier])
+);
+const SUBJECT_PARAMS: ReadonlyMap<string, readonly string[]> = new Map(
+  RULES.flatMap(([id, , options]) =>
+    options ? [[id, options.subjectParams] as const] : []
+  )
+);
 const RULE_IDS: readonly string[] = Object.freeze(RULES.map(([id]) => id));
 
 /** Returns the reviewed registry in stable order. */
@@ -80,6 +92,21 @@ export function finding(
 /** Selects findings that feed the Problems filter. */
 export function isProblem(recorded: Finding): boolean {
   return recorded.tier === "broken";
+}
+
+/** Identifies repeat observations of one rule on one declared subject. */
+export function findingSubjectEquivalenceKey(
+  recorded: Finding
+): string | undefined {
+  const subjectParams = SUBJECT_PARAMS.get(recorded.id);
+  if (!subjectParams) {
+    return;
+  }
+
+  return JSON.stringify([
+    recorded.id,
+    subjectParams.map((param) => [param, recorded.params[param] ?? null]),
+  ]);
 }
 
 /** Serializes a locale-independent line suitable for a pasted bug report. */

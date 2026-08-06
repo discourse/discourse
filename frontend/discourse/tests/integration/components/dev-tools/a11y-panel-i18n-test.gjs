@@ -1,4 +1,4 @@
-import { click, focus, render } from "@ember/test-helpers";
+import { click, focus, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import {
   findingKey,
@@ -120,9 +120,15 @@ module(
 
       assert.dom(".dev-tools-a11y__inspector").includesText("Second");
 
-      // The event rows specifically: watching the regions records a meta row of
-      // its own, and it is first, and it has no snapshot to inspect.
-      await click(".dev-tools-a11y__entry.--event");
+      // Two consecutive focus events are one collapsed run, so the older row is
+      // reached by opening the run and picking it — which is the only route to it
+      // and therefore the one worth testing.
+      await click(".dev-tools-a11y__noise");
+      await click(
+        document.querySelector(
+          ".dev-tools-a11y__run-members .dev-tools-a11y__entry"
+        )
+      );
 
       assert
         .dom(".dev-tools-a11y__inspector")
@@ -150,15 +156,35 @@ module(
       <a id="noted" href="#" title="Admin">Admin</a>
     `);
       instrumentation.attachCapture();
-      await focus(host.querySelector("#broken"));
+
+      /*
+       * The two focus events must NOT collapse into one run here. A run carries
+       * the union of its members' findings, so a row holding both the broken
+       * cursor and the noted title would be kept by the filter no matter how
+       * `noted` ranked — the test would pass while proving nothing.
+       *
+       * The keypress between them is what separates the two focus rows, and it
+       * lands while the noted element holds focus so it contributes only a NOTED
+       * observation of its own.
+       */
       await focus(host.querySelector("#noted"));
+      await triggerKeyEvent(
+        host.querySelector("#noted"),
+        "keydown",
+        "ArrowDown"
+      );
+      await focus(host.querySelector("#broken"));
       await render(<template><A11yPanel /></template>);
+
+      assert
+        .dom(".dev-tools-a11y__noise")
+        .doesNotExist("three rows, none of them collapsed");
 
       await click(".dev-tools-a11y__problems-toggle");
 
       assert
         .dom(".dev-tools-a11y__entry")
-        .exists({ count: 1 }, "the noted row is not a problem");
+        .exists({ count: 1 }, "the noted rows are not problems");
     });
 
     test("a noted observation is shown, just never as a problem", async function (assert) {

@@ -207,5 +207,235 @@ module(
         "three correct widgets, nothing to report"
       );
     });
+
+    /*
+     * Unit 0a — the contract/convention split.
+     *
+     * A composite's visual "active" row is only evidence of a defect when
+     * something owns both it and `aria-activedescendant`. Where the marker is a
+     * styling convention nobody enforces, divergence is routine: the marker may
+     * sit on a wrapper, `aria-current` means the current PAGE, and `.--active`
+     * is generic. Reporting those as broken is the false positive this whole
+     * catalogue exists to remove.
+     *
+     * So an owner declares the contract by stamping `data-active-descendant` on
+     * the row it considers active. The attribute — not a class name — is the
+     * signal, because a roving-focus owner's active class is caller-supplied and
+     * therefore has no stable name core could ever match on.
+     */
+    const CONTRACT = "data-active-descendant";
+
+    function composite({ cursor, marker, markerAttrs }) {
+      return `
+        <div id="subject" role="listbox" tabindex="0"
+             aria-label="Categories" aria-activedescendant="${cursor}">
+          <div id="opt-1" role="option" ${marker === "opt-1" ? markerAttrs : ""}>Bugs</div>
+          <div id="opt-2" role="option" ${marker === "opt-2" ? markerAttrs : ""}>Features</div>
+        </div>
+      `;
+    }
+
+    test("divergence under the contract is broken", async function (assert) {
+      const found = await findingsAfterFocusing(
+        composite({ cursor: "opt-1", marker: "opt-2", markerAttrs: CONTRACT })
+      );
+
+      assert.true(
+        found.includes("cursor.visual-diverged"),
+        "an owner of both the marker and the cursor disagreeing with itself is a defect"
+      );
+      assert.false(
+        found.includes("cursor.visual-diverged-conventional"),
+        "the contract case must not also report the conventional rule"
+      );
+    });
+
+    test("divergence under a convention is noted, not broken", async function (assert) {
+      const found = await findingsAfterFocusing(
+        composite({
+          cursor: "opt-1",
+          marker: "opt-2",
+          markerAttrs: `class="--active"`,
+        })
+      );
+
+      assert.true(
+        found.includes("cursor.visual-diverged-conventional"),
+        "worth seeing, since nothing enforces a styling marker"
+      );
+      assert.false(
+        found.includes("cursor.visual-diverged"),
+        "this is the false positive the split exists to remove"
+      );
+    });
+
+    test("agreement reports nothing, under either signal", async function (assert) {
+      const contract = await findingsAfterFocusing(
+        composite({ cursor: "opt-2", marker: "opt-2", markerAttrs: CONTRACT })
+      );
+      const convention = await findingsAfterFocusing(
+        composite({
+          cursor: "opt-2",
+          marker: "opt-2",
+          markerAttrs: `class="--active"`,
+        })
+      );
+
+      assert.deepEqual(
+        [contract, convention].map((found) =>
+          found.filter((id) => id.startsWith("cursor.visual-diverged"))
+        ),
+        [[], []],
+        "the marker and the cursor are the same row in both"
+      );
+    });
+
+    /*
+     * The precedence case, and the reason it is not merely tidiness: a composite
+     * under contract routinely carries conventional markers too, because the
+     * same row is usually styled with an `--active` class. Reading the
+     * convention first would classify a genuine contract breach as NOTED and
+     * bury it.
+     */
+    test("the contract marker wins when both signals are present", async function (assert) {
+      const found = await findingsAfterFocusing(`
+        <div id="subject" role="listbox" tabindex="0"
+             aria-label="Categories" aria-activedescendant="opt-1">
+          <div id="opt-1" role="option" ${CONTRACT}>Bugs</div>
+          <div id="opt-2" role="option" class="--active">Features</div>
+        </div>
+      `);
+
+      assert.deepEqual(
+        found.filter((id) => id.startsWith("cursor.visual-diverged")),
+        [],
+        "the contract agrees with the cursor, so a stray styling class decides nothing"
+      );
+    });
+
+    /*
+     * The inverse of the case above, and the more dangerous direction. Reading
+     * the conventional marker first would find agreement here and report
+     * nothing at all, silently swallowing a genuine contract breach — a
+     * failure the previous test cannot detect, because there the wrong answer
+     * is noisy rather than silent.
+     */
+    test("a contract breach is reported even when a conventional marker agrees", async function (assert) {
+      const found = await findingsAfterFocusing(`
+        <div id="subject" role="listbox" tabindex="0"
+             aria-label="Categories" aria-activedescendant="opt-1">
+          <div id="opt-1" role="option" class="--active">Bugs</div>
+          <div id="opt-2" role="option" ${CONTRACT}>Features</div>
+        </div>
+      `);
+
+      assert.true(
+        found.includes("cursor.visual-diverged"),
+        "the owner's own marker is on a different row from its own cursor"
+      );
+    });
+
+    /*
+     * The conventional selector carries three alternatives and only one of them
+     * was exercised, so dropping either of the others would not have shown up.
+     * `aria-current` is the one worth spelling out: it is routinely present and
+     * `false` on every row but one, which is why the selector filters it.
+     */
+    test("every conventional marker is recognised", async function (assert) {
+      const markers = [
+        `class="--active"`,
+        `data-active`,
+        `aria-current="true"`,
+      ];
+      const results = [];
+
+      for (const marker of markers) {
+        // The timeline is module-scoped and only cleared between tests, so
+        // without this each pass reports its predecessors' findings too.
+        instrumentation.resetA11yInstrumentation();
+
+        results.push(
+          await findingsAfterFocusing(`
+            <div id="subject" role="listbox" tabindex="0"
+                 aria-label="Categories" aria-activedescendant="opt-1">
+              <div id="opt-1" role="option" aria-current="false">Bugs</div>
+              <div id="opt-2" role="option" ${marker}>Features</div>
+            </div>
+          `)
+        );
+      }
+
+      assert.deepEqual(
+        results.map((found) =>
+          found.filter((id) => id.startsWith("cursor.visual-diverged"))
+        ),
+        markers.map(() => ["cursor.visual-diverged-conventional"]),
+        "all three styling markers diverge, and none of them is a defect"
+      );
+    });
+
+    test("a composite with no marker at all reports neither", async function (assert) {
+      const found = await findingsAfterFocusing(`
+        <div id="subject" role="listbox" tabindex="0"
+             aria-label="Categories" aria-activedescendant="opt-1">
+          <div id="opt-1" role="option">Bugs</div>
+          <div id="opt-2" role="option">Features</div>
+        </div>
+      `);
+
+      assert.deepEqual(
+        found.filter((id) => id.startsWith("cursor.visual-diverged")),
+        [],
+        "no visual cursor means no comparison, not a failed one"
+      );
+    });
+
+    /*
+     * The sweep is a second, independent emit site. It classified divergence on
+     * its own before this split and will keep doing so unless it is changed
+     * with the per-event path.
+     */
+    function sweptFindings(html) {
+      const host = document.createElement("div");
+      host.innerHTML = html;
+      document.body.appendChild(host);
+      fixtures.push(host);
+
+      return instrumentation.sweepA11y().findings.map(({ id }) => id);
+    }
+
+    test("the sweep reports a contract breach", async function (assert) {
+      const found = sweptFindings(`
+        <div role="listbox" aria-label="Contract" aria-activedescendant="c-1">
+          <div id="c-1" role="option">Bugs</div>
+          <div id="c-2" role="option" ${CONTRACT}>Features</div>
+        </div>
+      `);
+
+      assert.true(
+        found.includes("cursor.visual-diverged"),
+        "an owner disagreeing with itself is exactly what a page scan is for"
+      );
+    });
+
+    /*
+     * The half that has to be asserted alone. Swept together with a contract
+     * breach, both composites produce the same rule id, so a run that reports
+     * conventional divergence as broken is indistinguishable from a correct one.
+     */
+    test("the sweep is silent on a conventional divergence", async function (assert) {
+      const found = sweptFindings(`
+        <div role="listbox" aria-label="Convention" aria-activedescendant="v-1">
+          <div id="v-1" role="option">Bugs</div>
+          <div id="v-2" role="option" class="--active">Features</div>
+        </div>
+      `);
+
+      assert.deepEqual(
+        found.filter((id) => id.startsWith("cursor.visual-diverged")),
+        [],
+        "NOTED never enters a sweep, and this is not broken"
+      );
+    });
   }
 );

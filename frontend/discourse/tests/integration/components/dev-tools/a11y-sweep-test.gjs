@@ -146,17 +146,18 @@ module("Integration | Component | dev-tools | a11y-sweep", function (hooks) {
   });
 
   /*
-   * `keyup` fires once per physical key, so a chord ends in as many events as it
-   * had keys held, and the trailing modifier release is suppressed as redundant.
-   * Tracking that in a set means a chord interrupted by a blur — alt-tabbing
-   * away mid-chord, which is exactly what happens when someone switches to
-   * their screen reader — leaves the set holding a key that is no longer down,
-   * and the NEXT press of that key is swallowed as a phantom trailing release.
-   *
    * A keypress that leaves no trace cannot be told apart from capture being
-   * broken, which makes this panel unable to report on its own liveness.
+   * broken, which makes the panel unable to report on its own liveness. This
+   * used to be reachable: suppressing a chord's redundant trailing release meant
+   * tracking held modifiers in a set, and a chord interrupted by a blur — alt
+   * tabbing away to a screen reader, which is exactly when it happens — left the
+   * set holding a key that was no longer down, swallowing its next press.
+   *
+   * Recording on press removes the mechanism rather than repairing it: there is
+   * no trailing release to suppress and so nothing to hold. The invariant is
+   * still worth pinning, because what it protects is the panel's own liveness.
    */
-  test("a modifier released while the page is away does not swallow the next one", async function (assert) {
+  test("a modifier held across a blur does not swallow the next press", async function (assert) {
     const host = addFixture(
       `<button id="subject" aria-label="Save">a</button>`
     );
@@ -164,20 +165,17 @@ module("Integration | Component | dev-tools | a11y-sweep", function (hooks) {
     const subject = host.querySelector("#subject");
     await focus(subject);
 
-    // A real chord, which is what records the modifier as still held: its own
-    // release is expected next and will be suppressed as redundant.
-    await triggerKeyEvent(subject, "keyup", "C", { metaKey: true });
+    await triggerKeyEvent(subject, "keydown", "C", { metaKey: true });
 
-    // The release never comes, because the page went away mid-chord.
     const before = instrumentation.timelineEntries().length;
     subject.blur();
     document.dispatchEvent(new Event("visibilitychange"));
 
-    await triggerKeyEvent(subject, "keyup", "Meta");
+    await triggerKeyEvent(subject, "keydown", "Meta");
 
     assert.true(
       instrumentation.timelineEntries().length > before,
-      "the second press is a real press, not a stale release"
+      "the second press is a real press"
     );
   });
 
@@ -194,5 +192,92 @@ module("Integration | Component | dev-tools | a11y-sweep", function (hooks) {
     instrumentation.setPaused(false);
 
     assert.false(instrumentation.isPaused?.(), "and reports the change");
+  });
+
+  /*
+   * Unit 3d exposes the elements behind each aggregated rule, and the sweep already
+   * collects them internally as `Map<string, { finding, elements: Set<Element> }>` —
+   * which is precisely the shape the leak oracle's walker was once blind to, because
+   * `Object.entries` yields nothing for a Map or a Set.
+   *
+   * So the elements must cross the boundary as descriptions plus weak handles, never
+   * as nodes. A sweep runs on demand over the whole document and its result is held
+   * for as long as the view shows it.
+   */
+  test("a sweep result carries no DOM nodes at any depth", function (assert) {
+    addFixture(`<div id="swept" role="alert" aria-live="polite"></div>`);
+
+    function domNodePaths(value, path = "result", seen = new Set()) {
+      if (value === null || typeof value !== "object") {
+        return [];
+      }
+      if (value instanceof Node) {
+        return [path];
+      }
+      if (value instanceof WeakRef || value instanceof WeakMap) {
+        return [];
+      }
+      if (seen.has(value)) {
+        return [];
+      }
+      seen.add(value);
+
+      if (value instanceof Map) {
+        return [...value.entries()].flatMap(([key, nested]) => [
+          ...domNodePaths(key, `${path}.<key>`, seen),
+          ...domNodePaths(nested, `${path}.get(${String(key)})`, seen),
+        ]);
+      }
+      if (value instanceof Set) {
+        return [...value].flatMap((nested, index) =>
+          domNodePaths(nested, `${path}.<set:${index}>`, seen)
+        );
+      }
+
+      return Object.entries(value).flatMap(([key, nested]) =>
+        domNodePaths(nested, `${path}.${key}`, seen)
+      );
+    }
+
+    const result = instrumentation.sweepA11y();
+
+    assert.true(
+      result.findings.length > 0,
+      "the fixture gave the sweep something to find"
+    );
+    assert.deepEqual(
+      domNodePaths(result),
+      [],
+      "a node here would be held for as long as the view shows the result"
+    );
+  });
+
+  /*
+   * A sweep covers the WHOLE document, so its handles are the largest set the panel
+   * ever holds. Each sweep replaces the previous one, which is what bounds the
+   * registry — the same argument as the timeline ring releasing an evicted entry's
+   * handles. Without it, scanning repeatedly while chasing a defect grows the
+   * registry for the life of the session.
+   */
+  test("a new sweep releases the previous sweep's handles", function (assert) {
+    addFixture(`<div id="first-swept" role="alert" aria-live="polite"></div>`);
+
+    const stale = instrumentation
+      .sweepA11y()
+      .findings.flatMap(({ elements }) => elements ?? [])
+      .map(({ handleId }) => handleId);
+
+    assert.true(stale.length > 0, "the first sweep produced handles");
+    assert.true(
+      stale.every((id) => instrumentation.hasSweepHandle(id)),
+      "which resolve while that sweep is the current one"
+    );
+
+    instrumentation.sweepA11y();
+
+    assert.false(
+      stale.some((id) => instrumentation.hasSweepHandle(id)),
+      "and are all released once a later sweep replaces them"
+    );
   });
 });

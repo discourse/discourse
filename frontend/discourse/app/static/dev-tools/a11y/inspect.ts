@@ -2,6 +2,7 @@ import {
   computeAccessibleDescription,
   computeAccessibleName,
   getRole,
+  isDisabled,
   isInaccessible,
 } from "dom-accessibility-api";
 import {
@@ -23,6 +24,8 @@ export interface CursorInfo {
 /** `unknown` covers a missing half, which is never reported as agreement. */
 export type CursorAgreement = "unknown" | "agree" | "diverged";
 
+export type VisualCursorKind = "contract" | "conventional" | "none";
+
 /**
  * Markers a composite conventionally puts on the row the eye follows. Nothing
  * enforces them, so a composite marking its cursor another way yields no visual
@@ -31,6 +34,7 @@ export type CursorAgreement = "unknown" | "agree" | "diverged";
  */
 export const VISUAL_CURSOR_SELECTOR =
   "[data-active], .--active, [aria-current]:not([aria-current='false'])";
+const CONTRACT_VISUAL_CURSOR_SELECTOR = "[data-active-descendant]";
 
 /** Ember names most elements, and the name says nothing about the element. */
 const GENERATED_ID = /^ember\d+$/;
@@ -112,7 +116,22 @@ export function hiddenFromReader(element: Element | null): boolean {
 }
 
 export function visualCursor(container: Element | null): Element | null {
+  const contract = container?.querySelector(CONTRACT_VISUAL_CURSOR_SELECTOR);
+  if (contract) {
+    return contract;
+  }
+
   return container?.querySelector(VISUAL_CURSOR_SELECTOR) ?? null;
+}
+
+export function visualCursorKind(visual: Element | null): VisualCursorKind {
+  if (!visual) {
+    return "none";
+  }
+
+  return visual.matches(CONTRACT_VISUAL_CURSOR_SELECTOR)
+    ? "contract"
+    : "conventional";
 }
 
 /**
@@ -260,6 +279,26 @@ export function describeContainment(
   return via.length ? { kind: "claimed", via } : { kind: "unclaimed" };
 }
 
+function inheritsDisabledFieldset(element: Element): boolean {
+  let ancestor = element.parentElement;
+
+  while (ancestor) {
+    if (ancestor.matches("fieldset[disabled]")) {
+      const firstLegend = Array.from(ancestor.children).find(
+        (child) => child.localName === "legend"
+      );
+
+      if (!firstLegend?.contains(element)) {
+        return true;
+      }
+    }
+
+    ancestor = ancestor.parentElement;
+  }
+
+  return false;
+}
+
 /**
  * Composes the relevant screen-reader utterance for an element. Name, then
  * description, then state — the order readers announce them in.
@@ -279,7 +318,7 @@ export function composeUtterance(element: Element): string {
   if (element.getAttribute("aria-selected") === "true") {
     utterance.push("selected");
   }
-  if (element.getAttribute("aria-disabled") === "true") {
+  if (isDisabled(element) || inheritsDisabledFieldset(element)) {
     utterance.push("disabled");
   }
 

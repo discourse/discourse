@@ -403,4 +403,120 @@ module("Unit | Lib | dev-tools | a11y-inspect", function (hooks) {
     assert.strictEqual(cursor.index, 1);
     assert.strictEqual(cursor.size, 3, "the set size comes from the container");
   });
+
+  /*
+   * Disabled state (unit 1c).
+   *
+   * A reader announces "dimmed" or "unavailable" for all three ways a control
+   * can be disabled, and the panel currently reads only one of them, so an
+   * utterance can claim a control is available when it is not.
+   *
+   * `dom-accessibility-api` covers the element's own `disabled` attribute and
+   * `aria-disabled`, and nothing else — there is no ancestor walk in it, so the
+   * inherited case is ours. The HTML rule is not a blanket `legend` carve-out:
+   * a control is exempt only inside the FIRST `legend` child of a given
+   * disabled fieldset, and the test has to be applied to every disabled
+   * fieldset ancestor rather than just the nearest one.
+   */
+  function saysDisabled(fixture, html) {
+    fixture.innerHTML = html;
+
+    return composeUtterance(fixture.querySelector("#subject"))
+      .split(", ")
+      .includes("disabled");
+  }
+
+  test("an utterance reports a natively disabled control", function (assert) {
+    assert.true(
+      saysDisabled(this.fixture, `<button id="subject" disabled>Save</button>`),
+      "the attribute the host language defines is the commonest of the three"
+    );
+  });
+
+  test("an utterance reports an aria-disabled control", function (assert) {
+    assert.true(
+      saysDisabled(
+        this.fixture,
+        `<div id="subject" role="button" aria-disabled="true">Save</div>`
+      )
+    );
+  });
+
+  test("an utterance leaves an enabled control alone", function (assert) {
+    assert.false(
+      saysDisabled(this.fixture, `<button id="subject">Save</button>`),
+      "nothing to say, and saying it would be worse than silence"
+    );
+  });
+
+  test("an utterance reports disablement inherited from a fieldset", function (assert) {
+    assert.true(
+      saysDisabled(
+        this.fixture,
+        `<fieldset disabled><button id="subject">Save</button></fieldset>`
+      ),
+      "the control carries no attribute of its own and is still unavailable"
+    );
+  });
+
+  test("a control in a disabled fieldset's first legend stays enabled", function (assert) {
+    assert.false(
+      saysDisabled(
+        this.fixture,
+        `<fieldset disabled>
+           <legend><button id="subject">Save</button></legend>
+         </fieldset>`
+      ),
+      "the first legend is the exemption the spec carves out, so it stays usable"
+    );
+  });
+
+  // The exemption is the FIRST legend child, not any legend. A second one is
+  // an ordinary descendant and inherits like everything else.
+  test("a control in a later legend is still disabled", function (assert) {
+    assert.true(
+      saysDisabled(
+        this.fixture,
+        `<fieldset disabled>
+           <legend>Options</legend>
+           <legend><button id="subject">Save</button></legend>
+         </fieldset>`
+      )
+    );
+  });
+
+  /*
+   * The case a single `closest("fieldset[disabled]")` gets wrong. The nearest
+   * disabled fieldset exempts this control through its own first legend, and
+   * the outer one does not — so a check that stops at the first ancestor
+   * reports an unavailable control as available.
+   */
+  test("a legend exemption does not escape an outer disabled fieldset", function (assert) {
+    assert.true(
+      saysDisabled(
+        this.fixture,
+        `<fieldset disabled>
+           <fieldset disabled>
+             <legend><button id="subject">Save</button></legend>
+           </fieldset>
+         </fieldset>`
+      ),
+      "exempt from the inner fieldset, still inside the outer one"
+    );
+  });
+
+  // And the same shape with the outer fieldset enabled must stay enabled, or
+  // the rule above is satisfied by simply ignoring legends entirely.
+  test("a legend exemption holds when no outer fieldset is disabled", function (assert) {
+    assert.false(
+      saysDisabled(
+        this.fixture,
+        `<fieldset>
+           <fieldset disabled>
+             <legend><button id="subject">Save</button></legend>
+           </fieldset>
+         </fieldset>`
+      )
+    );
+  });
 });
