@@ -791,6 +791,7 @@ export default class SiteSettingComponent extends Component {
                 @disabled={{this.isDisabled}}
               />
             </Form>
+            {{this.preview}}
           {{else}}
             <this.resolvedComponent
               {{on "keydown" this._handleKeydown}}
