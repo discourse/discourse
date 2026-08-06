@@ -30,6 +30,19 @@ export default class SettingFieldEnum extends Component {
       );
   }
 
+  get fallbackChoice() {
+    const selected = this.selectedValue;
+
+    if (
+      selected === "" ||
+      this.choices.some(({ value }) => value === selected)
+    ) {
+      return null;
+    }
+
+    return { value: selected, name: selected };
+  }
+
   get selectedValue() {
     return String(this.args.field.value ?? "");
   }
@@ -41,10 +54,15 @@ export default class SettingFieldEnum extends Component {
       as |select|
     >
       {{#each this.choices as |choice|}}
-        <select.Option @value={{choice.value}} @selected={{this.selectedValue}}>
+        <select.Option @value={{choice.value}}>
           {{choice.name}}
         </select.Option>
       {{/each}}
+      {{#if this.fallbackChoice}}
+        <select.Option @value={{this.fallbackChoice.value}}>
+          {{this.fallbackChoice.name}}
+        </select.Option>
+      {{/if}}
     </@field.Control>
   </template>
 }

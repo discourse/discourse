@@ -42,13 +42,14 @@ module PageObjects
       end
 
       def select_enum_value(setting_name, value)
-        setting =
-          PageObjects::Components::SelectKit.new(
-            ".row.setting[data-setting='#{setting_name}'] .single-select",
-          )
-        setting.expand
-        setting.select_row_by_value(value)
+        enum_setting(setting_name).select(value)
         self
+      end
+
+      def enum_setting(setting_name)
+        PageObjects::Components::FormKitField.new(
+          find_setting(setting_name).find("[data-name='#{setting_name}']"),
+        )
       end
 
       def has_setting?(setting_name)
