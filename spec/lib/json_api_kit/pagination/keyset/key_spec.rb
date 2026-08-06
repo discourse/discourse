@@ -5,6 +5,8 @@ RSpec.describe JsonApiKit::Pagination::Keyset::Key do
 
   let(:model) { Topic }
 
+  it { is_expected.to delegate_method(:operator).to(:direction) }
+
   describe ".new" do
     context "with a direction that is not a direction" do
       it "refuses to build the key" do
@@ -42,14 +44,6 @@ RSpec.describe JsonApiKit::Pagination::Keyset::Key do
 
     it "sorts ascending unless told otherwise" do
       expect(direction.to_sym).to eq(:asc)
-    end
-  end
-
-  describe "#operator" do
-    subject(:operator) { key.operator }
-
-    it "counts a greater value as following the cursor, reading upwards" do
-      expect(operator).to eq(">")
     end
   end
 

@@ -13,6 +13,10 @@ module JsonApiKit
     class Keyset
       attr_reader :keys
 
+      # An order that splits reads its bands off its leading key: which rows have a value for it,
+      # which have none, and which of the two is read first.
+      delegate :valued_rows, :null_rows, :nulls_read_first?, to: :leading
+
       def initialize(keys)
         @keys = keys.uniq(&:name)
         raise ArgumentError, "an order needs at least one key" if @keys.empty?

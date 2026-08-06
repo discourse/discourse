@@ -18,26 +18,9 @@ module JsonApiKit
     class Order
       attr_reader :segments
 
-      class << self
-        # Derives the segments a keyset implies. Only a *leading* nullable key splits the
-        # listing: anywhere else the comparison takes the nulls in itself (see Predicate). The
-        # band read behind the split is read again the same way, so an order that leads with two
-        # nullable keys has three segments.
-        def for(keyset) = new(segments_for(keyset))
-
-        private
-
-        # Which band comes first is the key's own nulls placement: an id names a band, it does
-        # not number the sequence.
-        def segments_for(keyset, id: 0)
-          return [Segment.new(id:, keyset:)] unless keyset.splits?
-
-          leading = keyset.leading
-          valued = Segment.new(id:, keyset: keyset.valued, rows: leading.valued_rows)
-          nulls = segments_for(keyset.rest, id: id + 1).map { it.narrowed_by(leading.null_rows) }
-          leading.nulls_read_first? ? [*nulls, valued] : [valued, *nulls]
-        end
-      end
+      # Only a *leading* nullable key splits a listing: anywhere else the comparison takes the
+      # nulls in itself (see Predicate and Segment.split).
+      def self.for(keyset) = new(Segment.split(keyset))
 
       def initialize(segments)
         @segments = segments

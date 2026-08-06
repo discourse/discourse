@@ -11,6 +11,10 @@ RSpec.describe JsonApiKit::Pagination::Keyset do
     ]
   end
 
+  it { is_expected.to delegate_method(:valued_rows).to(:leading) }
+  it { is_expected.to delegate_method(:null_rows).to(:leading) }
+  it { is_expected.to delegate_method(:nulls_read_first?).to(:leading) }
+
   describe ".new" do
     context "without a single key" do
       let(:keys) { [] }

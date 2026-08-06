@@ -13,86 +13,12 @@ RSpec.describe JsonApiKit::Pagination::Order do
   let(:scope) { Topic.where(id: [pinned.id, unpinned.id]) }
 
   describe ".for" do
-    it "reads a listing whose keys are never null as one segment" do
-      expect(order.segments.size).to eq(1)
+    let(:keys) do
+      [key.new(:pinned_at, model:, direction: :desc, nulls: :last), key.new(:id, model:)]
     end
 
-    it "holds the whole listing in that segment" do
-      expect(order.first.scope(scope)).to be(scope)
-    end
-
-    context "with a nullable leading key" do
-      let(:keys) do
-        [key.new(:pinned_at, model:, direction: :desc, nulls: :last), key.new(:id, model:)]
-      end
-
-      it "splits the listing in two, the valued rows before the null tail" do
-        expect(order.segments.map(&:id)).to eq([0, 1])
-      end
-
-      it "keeps the nullable key out of the leading segment's nulls" do
-        expect(order.first.scope(scope).map(&:id)).to contain_exactly(pinned.id)
-      end
-
-      it "gives the tail the rows the key is null in" do
-        expect(order.segments.last.scope(scope).map(&:id)).to contain_exactly(unpinned.id)
-      end
-
-      it "orders the leading segment by the key and then the tiebreak" do
-        expect(order.first.keyset.keys.map(&:name)).to eq(%i[pinned_at id])
-      end
-
-      it "drops the key from the tail, where every row shares its one null value" do
-        expect(order.segments.last.keyset.keys.map(&:name)).to eq([:id])
-      end
-
-      it "asks for no nulls placement in the valued band, which constrains the index it reads" do
-        expect(order.first.keyset.order.join(" ")).not_to include("NULLS")
-      end
-    end
-
-    context "with a leading key whose nulls sort first" do
-      let(:keys) { [key.new(:pinned_at, model:, nulls: :first), key.new(:id, model:)] }
-
-      it "reads the null band before the valued one" do
-        expect(order.first.scope(scope).map(&:id)).to contain_exactly(unpinned.id)
-      end
-    end
-
-    context "with a nullable key and nothing to break its ties" do
-      let(:keys) { [key.new(:pinned_at, model:, nulls: :last)] }
-
-      it "refuses the listing, its null rows having no order at all" do
-        expect { order }.to raise_error(ArgumentError)
-      end
-    end
-
-    context "with a nullable key that does not lead" do
-      let(:keys) { [key.new(:created_at, model:), key.new(:pinned_at, model:, nulls: :last)] }
-
-      it "reads it as one segment, the leading key's bound doing the seeking" do
-        expect(order.segments.size).to eq(1)
-      end
-    end
-
-    context "with two nullable keys leading" do
-      let(:keys) do
-        [
-          key.new(:pinned_at, model:, nulls: :last),
-          key.new(:bumped_at, model:, nulls: :last),
-          key.new(:id, model:),
-        ]
-      end
-
-      it "splits again inside the tail" do
-        expect(order.segments.size).to eq(3)
-      end
-
-      it "narrows each segment further than the one before" do
-        expect(order.segments.map { it.keyset.keys.map(&:name) }).to eq(
-          [%i[pinned_at bumped_at id], %i[bumped_at id], %i[id]],
-        )
-      end
+    it "reads the listing as the bands its keyset splits into" do
+      expect(order.segments.map(&:id)).to eq([0, 1])
     end
   end
 

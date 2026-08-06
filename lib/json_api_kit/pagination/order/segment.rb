@@ -10,6 +10,20 @@ module JsonApiKit
         # A segment holds every row it is offered unless it is given a narrowing.
         ALL_ROWS = ->(scope) { scope }
 
+        # The bands a keyset reads a listing in: one segment where nothing splits it, and
+        # otherwise the rows its leading key has values in, plus the band the rows it is null in
+        # form — read again the same way, so an order leading with two nullable keys has three.
+        #
+        # Which band comes first is where that key's nulls sort. An id names a band; it does not
+        # number the sequence.
+        def self.split(keyset, id: 0)
+          return [new(id:, keyset:)] unless keyset.splits?
+
+          valued = new(id:, keyset: keyset.valued, rows: keyset.valued_rows)
+          nulls = split(keyset.rest, id: id + 1).map { it.narrowed_by(keyset.null_rows) }
+          keyset.nulls_read_first? ? [*nulls, valued] : [valued, *nulls]
+        end
+
         attr_reader :id, :keyset
 
         # `rows` narrows a scope to this segment's members.
