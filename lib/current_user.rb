@@ -36,10 +36,6 @@ module CurrentUser
     current_user_provider.is_api?
   end
 
-  def current_api_key
-    current_user_provider.current_api_key
-  end
-
   def is_user_api?
     current_user_provider.is_user_api?
   end

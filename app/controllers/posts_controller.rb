@@ -921,7 +921,12 @@ class PostsController < ApplicationController
   end
 
   def can_skip_validations?
-    current_user&.staff? || current_api_key&.unrestricted_global?
+    return true if current_user&.staff?
+
+    api_key = request.env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY]
+    return false if api_key.blank?
+
+    ApiKey.active.with_key(api_key).first&.unrestricted_global?
   end
 
   def create_params

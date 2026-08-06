@@ -35,7 +35,6 @@ class Auth::DefaultCurrentUserProvider
   USER_API_KEY = "HTTP_USER_API_KEY"
   USER_API_CLIENT_ID = "HTTP_USER_API_CLIENT_ID"
   API_KEY_ENV = "_DISCOURSE_API"
-  AUTHENTICATED_API_KEY_ENV = "_DISCOURSE_AUTHENTICATED_API_KEY"
   USER_API_KEY_ENV = "_DISCOURSE_USER_API"
   TOKEN_COOKIE = ENV["DISCOURSE_TOKEN_COOKIE"] || "_t"
   PATH_INFO = "PATH_INFO"
@@ -385,11 +384,6 @@ class Auth::DefaultCurrentUserProvider
     !!@env[API_KEY_ENV]
   end
 
-  def current_api_key
-    current_user
-    @env[AUTHENTICATED_API_KEY_ENV]
-  end
-
   def is_user_api?
     current_user
     !!@env[USER_API_KEY_ENV]
@@ -436,8 +430,6 @@ class Auth::DefaultCurrentUserProvider
           api_key.update_last_used!
         end
       end
-
-      @env[AUTHENTICATED_API_KEY_ENV] = api_key if user
 
       user
     end
