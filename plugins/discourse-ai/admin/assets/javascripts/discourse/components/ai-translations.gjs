@@ -14,7 +14,7 @@ import Category from "discourse/models/category";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import MultiSelect from "discourse/select-kit/components/multi-select";
-import { eq } from "discourse/truth-helpers";
+import { eq, not } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
@@ -41,6 +41,12 @@ export default class AiTranslations extends Component {
     this.args.model?.translation_enabled &&
     !this.args.model?.no_locales_configured;
   @tracked enabled = this.args.model?.enabled;
+  // Pre-checked during first-time setup so enabling translations also surfaces the switcher;
+  // reflects the real setting once translations are already on.
+  @tracked
+  languageSwitcherRequested =
+    this.siteSettings.content_localization_language_switcher !== "none" ||
+    !this.translationEnabled;
   @tracked
   selectedLocales = this.siteSettings.content_localization_supported_locales
     ? this.siteSettings.content_localization_supported_locales.split("|")
@@ -171,6 +177,10 @@ export default class AiTranslations extends Component {
     );
   }
 
+  get languageSwitcherValue() {
+    return this.languageSwitcherRequested ? "all" : "none";
+  }
+
   get availableLocales() {
     const locales = this.siteSettings.available_locales;
     if (!locales) {
@@ -297,6 +307,32 @@ export default class AiTranslations extends Component {
   }
 
   @action
+  async toggleLanguageSwitcher(event) {
+    const previous = this.languageSwitcherRequested;
+    this.languageSwitcherRequested = event.target.checked;
+
+    // Not yet enabled: the value is applied together with the enable toggle.
+    if (!this.translationEnabled) {
+      return;
+    }
+
+    try {
+      await ajax(
+        "/admin/site_settings/content_localization_language_switcher",
+        {
+          type: "PUT",
+          data: {
+            content_localization_language_switcher: this.languageSwitcherValue,
+          },
+        }
+      );
+    } catch (e) {
+      this.languageSwitcherRequested = previous;
+      popupAjaxError(e);
+    }
+  }
+
+  @action
   async toggleTranslationEnabled() {
     if (this.isTogglingTranslation) {
       return;
@@ -309,16 +345,24 @@ export default class AiTranslations extends Component {
     this.isTogglingTranslation = true;
     try {
       if (!this.translationEnabled && this.hasSavedLocales) {
-        await ajax("/admin/site_settings/content_localization_enabled", {
+        await ajax("/admin/site_settings/bulk_update", {
           type: "PUT",
-          data: { content_localization_enabled: true },
+          data: {
+            settings: {
+              content_localization_enabled: { value: true },
+              content_localization_language_switcher: {
+                value: this.languageSwitcherValue,
+              },
+              ai_translation_enabled: { value: true },
+            },
+          },
+        });
+      } else {
+        await ajax("/admin/site_settings/ai_translation_enabled", {
+          type: "PUT",
+          data: { ai_translation_enabled: false },
         });
       }
-
-      await ajax("/admin/site_settings/ai_translation_enabled", {
-        type: "PUT",
-        data: { ai_translation_enabled: !this.translationEnabled },
-      });
       this.translationEnabled = !this.translationEnabled;
 
       if (this.translationEnabled && this.hasSavedLocales) {
@@ -650,6 +694,22 @@ export default class AiTranslations extends Component {
                 }}</div>
             </div>
           </div>
+        </div>
+        <div class="setting ai-translations__language-switcher">
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              checked={{this.languageSwitcherRequested}}
+              disabled={{not this.hasSavedLocales}}
+              {{on "input" this.toggleLanguageSwitcher}}
+            />
+            <span>{{i18n
+                "discourse_ai.translations.admin_actions.show_language_switcher"
+              }}</span>
+          </label>
+          <div class="desc">{{i18n
+              "discourse_ai.translations.admin_actions.show_language_switcher_description"
+            }}</div>
         </div>
         <div class="setting ai-translations__toggle-container">
           {{#if this.toggleDisabledReason}}

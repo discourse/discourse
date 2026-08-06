@@ -783,4 +783,75 @@ RSpec.describe Discourse do
       expect(css).to include("url(#{new_upload_url})")
     end
   end
+
+  describe ".anonymous_locale" do
+    def locale_for(cookie: nil, path: "/")
+      env = cookie ? { "HTTP_COOKIE" => "locale=#{cookie}" } : {}
+      Discourse.anonymous_locale(ActionDispatch::Request.new(Rack::MockRequest.env_for(path, env)))
+    end
+
+    before do
+      SiteSetting.default_locale = "en"
+      SiteSetting.allow_user_locale = true
+    end
+
+    it "ignores the locale cookie by default" do
+      expect(locale_for(cookie: "es")).to eq("en")
+    end
+
+    context "when set_locale_from_cookie is enabled" do
+      before { SiteSetting.set_locale_from_cookie = true }
+
+      it "honours any available locale, even one that is not a supported content locale" do
+        SiteSetting.content_localization_supported_locales = "fr"
+
+        expect(locale_for(cookie: "es")).to eq("es")
+      end
+    end
+
+    context "when the language switcher is enabled" do
+      before do
+        SiteSetting.set_locale_from_cookie = false
+        SiteSetting.content_localization_supported_locales = "es|fr"
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_language_switcher = "all"
+      end
+
+      it "honours the locale cookie without set_locale_from_cookie" do
+        expect(locale_for(cookie: "es")).to eq("es")
+      end
+
+      it "honours the default locale, which the switcher also offers" do
+        expect(locale_for(cookie: "en")).to eq("en")
+      end
+
+      it "ignores an available locale that is not configured for this site" do
+        expect(locale_for(cookie: "ja")).to eq("en")
+      end
+
+      it "ignores the cookie once the switcher is turned off" do
+        SiteSetting.content_localization_language_switcher = "none"
+
+        expect(locale_for(cookie: "es")).to eq("en")
+      end
+
+      it "ignores the cookie when content localization is disabled" do
+        SiteSetting.content_localization_enabled = false
+
+        expect(locale_for(cookie: "es")).to eq("en")
+      end
+
+      it "ignores the cookie when user locales are not allowed" do
+        SiteSetting.allow_user_locale = false
+
+        expect(locale_for(cookie: "es")).to eq("en")
+      end
+
+      it "still prefers the locale param over the cookie" do
+        SiteSetting.set_locale_from_param = true
+
+        expect(locale_for(cookie: "es", path: "/?tl=fr")).to eq("fr")
+      end
+    end
+  end
 end

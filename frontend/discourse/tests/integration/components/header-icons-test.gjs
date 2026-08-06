@@ -103,6 +103,32 @@ module("Integration | Component | Header | Icons", function (hooks) {
       );
   });
 
+  test("the language switcher needs user locales to be allowed", async function (assert) {
+    const noop = () => {};
+    this.siteSettings.content_localization_enabled = true;
+    this.siteSettings.content_localization_supported_locales = "en|fr";
+    this.siteSettings.content_localization_language_switcher = "all";
+    this.siteSettings.allow_user_locale = false;
+
+    await render(
+      <template>
+        <Icons
+          @sidebarEnabled={{true}}
+          @toggleSearchMenu={{noop}}
+          @toggleNavigationMenu={{noop}}
+          @toggleUserMenu={{noop}}
+          @searchButtonId={{SEARCH_BUTTON_ID}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".language-switcher-trigger")
+      .doesNotExist(
+        "switching language would have no effect, so the switcher is hidden"
+      );
+  });
+
   test("every header icon is a list item", async function (assert) {
     const noop = () => {};
     this.siteSettings.content_localization_enabled = true;
