@@ -17620,6 +17620,13 @@ CREATE INDEX idx_bpe_session_created_at ON public.browser_pageview_events USING 
 
 
 --
+-- Name: idx_bpe_stale_normalized_url; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_stale_normalized_url ON public.browser_pageview_events USING btree (id) WHERE ((normalized_url_version IS NULL) OR (normalized_url_version < 1));
+
+
+--
 -- Name: idx_bprd_rollups_date_referrer_unique; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -18856,13 +18863,6 @@ CREATE INDEX index_bookmarks_on_reminder_set_at ON public.bookmarks USING btree 
 --
 
 CREATE INDEX index_bookmarks_on_user_id ON public.bookmarks USING btree (user_id);
-
-
---
--- Name: idx_bpe_stale_normalized_url; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_bpe_stale_normalized_url ON public.browser_pageview_events USING btree (id) WHERE ((normalized_url_version IS NULL) OR (normalized_url_version < 1));
 
 
 --
@@ -25557,3 +25557,4 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20120311164326'),
 ('20120311163914'),
 ('20000225050318');
+
