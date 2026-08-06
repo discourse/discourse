@@ -31,10 +31,12 @@
 .dev-tools-toolbar {
   position: fixed;
   z-index: 999999;
+  inset-inline-start: 0;
   display: flex;
   flex-direction: column;
   background-color: var(--primary-200);
-  border-radius: 0 5px 5px 0;
+  border-start-end-radius: 5px;
+  border-end-end-radius: 5px;
   box-shadow: var(--dev-tools-shadow);
   opacity: 0.8;
   transition: opacity 0.2s ease-in-out;
@@ -43,7 +45,9 @@
     opacity: 0.5;
   }
 
-  button {
+  /* Strip buttons only: a docked panel renders inside this subtree and its
+     buttons carry their own styling. */
+  & > button {
     background: none;
     border: none;
     padding: 5px;
@@ -73,6 +77,26 @@
       }
     }
   }
+}
+
+/* The dock renders inside the toolbar's subtree to share its stacking context,
+   and opacity composites a whole subtree - no descendant rule can undo it, so
+   the resting fade is lifted while a panel is open. */
+.dev-tools-toolbar.--docked {
+  opacity: 1;
+}
+
+/* The toolbar rests on the inline-start edge, which is where a start-docked
+   panel lands, so it moves aside. The dock owns its side and reports it
+   nowhere, so the toolbar reads it off the rendered class; this
+   developer-only interface can afford :has() on a single fixed element. */
+.dev-tools-toolbar:has(.d-panel-dock.--dock-start) {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+  border-start-start-radius: 5px;
+  border-start-end-radius: 0;
+  border-end-start-radius: 5px;
+  border-end-end-radius: 0;
 }
 
 /* Shared Base Styles */
@@ -670,4 +694,824 @@ pre.outlet-info__error-message {
 
 .outlet-args-table__deprecation-version {
   opacity: 0.7;
+}
+
+/* Shared panel design language. Values match the MessageBus panel, the
+   reference implementation; a new panel composes these classes with its own
+   BEM hooks and only adds layout of its own, so every tool reads as one
+   product. Written flat: this file is served as native CSS, where Sass-style
+   `&__element` concatenation silently matches nothing. */
+
+.dev-tools-panel__top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-block-end: 1px solid var(--content-border-color);
+}
+
+.dev-tools-panel__heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.dev-tools-panel__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.dev-tools-panel__chip {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  gap: var(--space-1);
+  padding: var(--space-half) var(--space-2);
+  border-radius: 3px;
+  background: var(--primary-low);
+  color: var(--primary-high);
+  font-size: var(--font-down-1);
+  white-space: nowrap;
+
+  &.--success {
+    background: var(--success-low);
+    color: var(--success-hover);
+  }
+
+  &.--critical {
+    background: var(--danger-low);
+    color: var(--danger-hover);
+  }
+}
+
+.dev-tools-panel__action-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-half);
+  padding-inline-start: var(--space-1);
+  border-inline-start: 1px solid var(--content-border-color);
+}
+
+/* Splits an action group into clusters, matching the group's own leading
+   separator. */
+.dev-tools-panel__action-divider {
+  align-self: stretch;
+  width: 1px;
+  margin-inline: var(--space-half);
+  background: var(--content-border-color);
+}
+
+.dev-tools-panel__action {
+  border-radius: var(--d-button-border-radius);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  padding: var(--space-half);
+  border: 0;
+  background: none;
+  color: var(--primary-high);
+  cursor: pointer;
+
+  & .d-icon {
+    font-size: var(--font-down-1);
+  }
+
+  /* The same hover treatment core gives flat buttons, e.g. in the composer
+     toolbar. */
+  &:hover,
+  &:focus-visible {
+    background: var(--d-hover);
+    color: var(--primary);
+  }
+}
+
+.dev-tools-panel__live-dot {
+  width: 0.6em;
+  height: 0.6em;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--success);
+
+  &.--paused {
+    background: var(--primary-medium);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dev-tools-panel__live-dot:not(.--paused) {
+    animation: dev-tools-panel-pulse 2s ease-in-out infinite;
+  }
+}
+
+@keyframes dev-tools-panel-pulse {
+  50% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
+}
+
+.dev-tools-panel__warning {
+  padding: var(--space-2) var(--space-3);
+  border-block: 1px solid var(--danger);
+  background: var(--danger-low);
+  color: var(--danger);
+}
+
+.dev-tools-panel__toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-block-end: 1px solid var(--content-border-color);
+  background: var(--secondary);
+
+  & .filter-input-container {
+    min-width: 0;
+    flex: 1 1 10em;
+    margin: 0;
+  }
+}
+
+.dev-tools-panel__views {
+  flex: 0 0 auto;
+
+  & .nav-pills {
+    gap: var(--space-half);
+    margin: 0;
+
+    & > li > button {
+      min-height: 1.5rem;
+      padding: var(--space-half) var(--space-1);
+    }
+  }
+}
+
+.dev-tools-panel__section-heading {
+  margin: 0 0 var(--space-1);
+  color: var(--primary);
+  font-size: inherit;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.dev-tools-panel__empty {
+  margin: 0;
+  padding: var(--space-4) var(--space-3);
+  color: var(--primary-medium);
+  text-align: center;
+}
+
+/* A11y inspector panel. The top bar, toolbar, chips and buttons come from the
+   shared primitives above; the rules here only lay out the timeline and the
+   selection detail. */
+
+.dev-tools-a11y {
+  container-name: dev-tools-a11y;
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  color: var(--primary);
+  font-size: var(--font-down-1);
+}
+
+.d-panel-dock.--context-dev-tools:has(.dev-tools-a11y) .d-panel-dock__body {
+  padding: 0;
+}
+
+/* Above the toolbar's own stacking context, like the MessageBus settings
+   menu. */
+.fk-d-menu[data-identifier="dev-tools-a11y-test-channel"] {
+  z-index: 1000001;
+}
+
+.dev-tools-a11y__problems-toggle {
+  padding: var(--space-half) var(--space-1);
+
+  &.--active {
+    background: var(--tertiary-low);
+    color: var(--tertiary);
+  }
+}
+
+.dev-tools-a11y__scroll-shell {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.dev-tools-a11y__scroller {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+}
+
+.dev-tools-a11y__jump-wrap {
+  position: sticky;
+  inset-block-start: 100%;
+  height: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.dev-tools-a11y__jump {
+  position: relative;
+  transform: translateY(calc(-100% - var(--space-2)));
+  pointer-events: auto;
+}
+
+.dev-tools-a11y__map {
+  flex: 0 0 14px;
+  position: relative;
+  border-inline-start: 1px solid var(--border);
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--primary-low) 0 1px,
+    transparent 1px 7px
+  );
+}
+
+.dev-tools-a11y__map-mark {
+  position: absolute;
+  inset-inline: 0;
+  height: 3px;
+}
+
+.dev-tools-a11y__map-mark.--broken {
+  background: var(--danger);
+}
+
+.dev-tools-a11y__map-mark.--fragile {
+  background: var(--highlight-high);
+}
+
+.dev-tools-a11y__map-viewport {
+  position: absolute;
+  inset-inline: 0;
+  border-block: 1px solid var(--primary-medium);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+}
+
+.dev-tools-a11y__timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dev-tools-a11y__entry {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 3px 8.5em minmax(0, 1fr) auto;
+  column-gap: var(--space-2);
+  align-items: baseline;
+  padding: 3px var(--space-3) 3px 0;
+  border: 0;
+  border-bottom: 1px solid var(--primary-very-low);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--d-hover);
+  }
+
+  &.--selected {
+    background: var(--d-selected);
+    box-shadow: inset 0 0 0 2px var(--tertiary);
+  }
+}
+
+.dev-tools-a11y__entry-rail {
+  grid-row: 1 / -1;
+  align-self: stretch;
+  background: transparent;
+}
+
+.dev-tools-a11y__entry.--broken .dev-tools-a11y__entry-rail {
+  background: var(--danger);
+}
+
+.dev-tools-a11y__entry.--fragile .dev-tools-a11y__entry-rail {
+  background: var(--highlight-high);
+}
+
+.dev-tools-a11y__entry-cause {
+  grid-column: 2;
+  justify-self: end;
+  text-align: end;
+  white-space: nowrap;
+  font-family: var(--dev-tools-mono-font);
+  color: var(--primary-medium);
+}
+
+.dev-tools-a11y__entry-say {
+  grid-column: 3;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.dev-tools-a11y__entry-utterance {
+  color: var(--primary);
+}
+
+/* Silence is most of a real capture, so this mark has to be scannable — that is
+   its entire job. At --primary-low it was invisible in both colour modes, which
+   left a silent row reading as a rendering fault rather than as a fact. Matched to
+   the trigger gutter's tone instead: as present as the word beside it, no louder. */
+.dev-tools-a11y__entry-silent {
+  display: inline-block;
+  width: 1.8em;
+  border-bottom: 1px solid var(--primary-medium);
+  transform: translateY(-0.32em);
+}
+
+.dev-tools-a11y__entry-dim {
+  font-family: var(--dev-tools-mono-font);
+  font-size: var(--font-down-1);
+  color: var(--primary-medium);
+}
+
+.dev-tools-a11y__entry-latency {
+  font-family: var(--dev-tools-mono-font);
+  font-size: var(--font-down-1);
+  color: var(--success-hover);
+  white-space: nowrap;
+}
+
+/* Inherits the keycap the app already gives every `kbd`. Sized back up to the
+   row's own font: the glyphs are the smallest thing on the line and the whole
+   point of a keycap is that it can be read at a glance. */
+.dev-tools-a11y__key {
+  min-width: 1.5em;
+  margin: 0;
+  padding: 0 0.4em;
+  font-size: inherit;
+  line-height: 1.5;
+}
+
+.dev-tools-a11y__entry-message {
+  grid-column: 3 / -1;
+  display: block;
+  margin-top: 1px;
+  padding: 2px var(--space-2);
+  border-radius: 3px;
+  font-size: var(--font-down-1);
+  line-height: 1.4;
+  color: var(--primary);
+}
+
+.dev-tools-a11y__entry-message.--broken {
+  background: var(--danger-low);
+}
+
+.dev-tools-a11y__entry-message.--fragile {
+  background: var(--highlight-low);
+}
+
+.dev-tools-a11y__entry-meta {
+  grid-column: 4;
+  white-space: nowrap;
+  font-family: var(--dev-tools-mono-font);
+  font-size: var(--font-down-1);
+  font-variant-numeric: tabular-nums;
+  color: var(--primary-low-mid);
+}
+
+.dev-tools-a11y__noise {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 1px var(--space-3) 1px calc(3px + var(--space-2));
+  border: 0;
+  border-bottom: 1px solid var(--primary-very-low);
+  background: transparent;
+  color: var(--primary-low-mid);
+  font-family: var(--dev-tools-mono-font);
+  font-size: var(--font-down-1);
+  text-align: start;
+  cursor: pointer;
+}
+
+.dev-tools-a11y__noise-range {
+  margin-inline-start: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+.dev-tools-a11y__run-members {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  padding-inline-start: var(--space-4);
+}
+
+.dev-tools-a11y__noise:hover {
+  background: var(--d-hover);
+  color: var(--primary-medium);
+}
+
+.dev-tools-a11y__noise.--selected {
+  background: var(--d-selected);
+  color: var(--primary);
+  box-shadow: inset 0 0 0 2px var(--tertiary);
+}
+
+.dev-tools-a11y__scroll-shell[hidden],
+.dev-tools-a11y__scroller[hidden],
+.dev-tools-a11y__regions[hidden],
+.dev-tools-a11y__sweep[hidden] {
+  display: none;
+}
+
+.dev-tools-a11y__regions {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* No `width: 100%`: the row is a block element that already fills the list, and
+   asking for the full width put its trailing padding outside the scrollport,
+   leaving the delivery count flush against the clip edge. */
+.dev-tools-a11y__region {
+  display: grid;
+  grid-template-columns: 3px minmax(0, 1fr) auto;
+  column-gap: var(--space-2);
+  align-items: baseline;
+  padding: var(--space-2) var(--space-3) var(--space-2) 0;
+  border: 0;
+  border-bottom: 1px solid var(--primary-very-low);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+}
+
+/* The findings recede with the rest of the row. Dimming only the description left
+   a muted row whose brightest element was its own finding message. */
+.dev-tools-a11y__region.--muted {
+  & .dev-tools-a11y__region-id,
+  & .dev-tools-a11y__region-last {
+    color: var(--primary-low-mid);
+  }
+
+  & .dev-tools-a11y__region-message {
+    color: var(--primary-low-mid);
+    background: transparent;
+  }
+}
+
+.dev-tools-a11y__region-rail {
+  grid-row: 1 / -1;
+  align-self: stretch;
+  background: transparent;
+}
+
+.dev-tools-a11y__region.--broken .dev-tools-a11y__region-rail {
+  background: var(--danger);
+}
+
+.dev-tools-a11y__region.--fragile .dev-tools-a11y__region-rail {
+  background: var(--highlight-high);
+}
+
+.dev-tools-a11y__region-id {
+  grid-column: 2;
+  overflow-wrap: anywhere;
+  font-family: var(--dev-tools-mono-font);
+}
+
+.dev-tools-a11y__region-tags {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-top: 3px;
+}
+
+.dev-tools-a11y__region-tag {
+  font-family: var(--dev-tools-mono-font);
+  font-size: var(--font-down-1);
+  padding: 0 5px;
+  border-radius: 3px;
+  background: var(--primary-very-low);
+  color: var(--primary-medium);
+}
+
+.dev-tools-a11y__region-tag.--out {
+  background: var(--danger-low);
+  color: var(--primary);
+}
+
+.dev-tools-a11y__region-tag.--muted {
+  background: var(--primary-high);
+  color: var(--primary-low);
+}
+
+.dev-tools-a11y__region-last {
+  grid-column: 2;
+  margin-top: 3px;
+  color: var(--primary-high);
+  overflow-wrap: anywhere;
+}
+
+.dev-tools-a11y__region-message {
+  grid-column: 2 / -1;
+  margin-top: var(--space-1);
+  padding: 2px var(--space-2);
+  border-radius: 3px;
+  font-size: var(--font-down-1);
+  line-height: 1.4;
+}
+
+.dev-tools-a11y__region-message.--broken {
+  background: var(--danger-low);
+}
+
+.dev-tools-a11y__region-message.--fragile {
+  background: var(--highlight-low);
+}
+
+.dev-tools-a11y__region-count {
+  grid-column: 3;
+  grid-row: 1;
+  font-family: var(--dev-tools-mono-font);
+  font-size: var(--font-down-1);
+  font-variant-numeric: tabular-nums;
+  color: var(--primary-low-mid);
+  white-space: nowrap;
+}
+
+/* Carries the panel so it outranks `.btn-transparent`, which otherwise wins on
+   specificity and leaves the toggle looking like a static label. */
+.dev-tools-a11y .dev-tools-a11y__mute {
+  justify-self: end;
+  padding: 0 var(--space-1);
+  border: 1px solid var(--primary-low);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--primary-high);
+  font-family: var(--dev-tools-mono-font);
+  font-size: var(--font-down-1);
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--primary-medium);
+    background: var(--d-hover);
+    color: var(--primary);
+  }
+}
+
+.dev-tools-a11y__region > .dev-tools-a11y__mute {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.dev-tools-a11y__sweep {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding-block-start: var(--space-3);
+}
+
+/* One line, because pinning the header costs the findings list the height it
+   occupies, and the bottom dock has little to spare. */
+.dev-tools-a11y__sweep-header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding-block-end: var(--space-2);
+}
+
+.dev-tools-a11y__sweep-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.dev-tools-a11y__sweep-scan,
+.dev-tools-a11y__sweep-scope {
+  margin-inline: var(--space-3);
+}
+
+.dev-tools-a11y__sweep-scope {
+  color: var(--primary-high);
+}
+
+.dev-tools-a11y__sweep-findings,
+.dev-tools-a11y__sweep-elements {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dev-tools-a11y__sweep-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 3px 1.2em 2.6em minmax(0, 1fr);
+  column-gap: var(--space-2);
+  align-items: baseline;
+  padding: var(--space-2) var(--space-3) var(--space-2) 0;
+  border: 0;
+  border-bottom: 1px solid var(--primary-very-low);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.dev-tools-a11y__sweep-row:hover {
+  background: var(--d-hover);
+}
+
+.dev-tools-a11y__sweep-rail {
+  grid-row: 1 / -1;
+  align-self: stretch;
+  background: transparent;
+}
+
+.dev-tools-a11y__sweep-row.--broken .dev-tools-a11y__sweep-rail {
+  background: var(--danger);
+}
+
+.dev-tools-a11y__sweep-row.--fragile .dev-tools-a11y__sweep-rail {
+  background: var(--highlight-high);
+}
+
+.dev-tools-a11y__sweep-count {
+  grid-column: 3;
+  justify-self: end;
+  font-family: var(--dev-tools-mono-font);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.dev-tools-a11y__sweep-rule {
+  display: block;
+  margin-top: 1px;
+  font-family: var(--dev-tools-mono-font);
+  font-size: var(--font-down-1);
+  color: var(--primary-low-mid);
+}
+
+.dev-tools-a11y__sweep-elements {
+  border-bottom: 1px solid var(--primary-very-low);
+  background: var(--primary-very-low);
+}
+
+.dev-tools-a11y__sweep-element {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 3px var(--space-3) 3px calc(3px + 1.2em + 2.6em + var(--space-2) * 3);
+  font-family: var(--dev-tools-mono-font);
+  font-size: var(--font-down-1);
+  color: var(--primary-high);
+}
+
+.dev-tools-a11y__sweep-log {
+  flex: 0 0 auto;
+  margin-inline-start: auto;
+  font-family: inherit;
+}
+
+.dev-tools-a11y__inspector {
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  font-size: 1em;
+}
+
+.dev-tools-a11y__inspector-utterance {
+  margin: 0;
+  font-size: var(--font-up-2);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+
+  &.--broken {
+    text-decoration: underline;
+    text-decoration-color: var(--danger);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
+}
+
+.dev-tools-a11y__inspector-message {
+  margin: 0;
+  padding: var(--space-2);
+  border-radius: 3px;
+  line-height: 1.4;
+
+  &.--broken {
+    background: var(--danger-low);
+  }
+
+  &.--fragile {
+    background: var(--highlight-low);
+  }
+}
+
+.dev-tools-a11y__inspector-identity {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+  font-family: var(--dev-tools-mono-font);
+  font-size: var(--font-down-1);
+  color: var(--primary-high);
+}
+
+.dev-tools-a11y__inspector-log {
+  font-family: inherit;
+}
+
+.dev-tools-a11y__inspector-facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 3px var(--space-3);
+  margin: 0;
+  font-family: var(--dev-tools-mono-font);
+  font-size: var(--font-down-1);
+  font-variant-numeric: tabular-nums;
+
+  & dt {
+    text-align: end;
+    color: var(--primary-low-mid);
+  }
+
+  & dd {
+    margin: 0;
+    color: var(--primary);
+    overflow-wrap: anywhere;
+  }
+}
+
+.dev-tools-a11y__inspector.--aside {
+  display: none;
+}
+
+.dev-tools-a11y__inspector.--inline {
+  display: flex;
+}
+
+/* Wide enough for a region to read across rather than down. The stacked form is
+   the side dock's; at the bottom dock it left most of the row empty and fitted
+   about one region per screen. */
+@container dev-tools-a11y (min-width: 760px) {
+  .dev-tools-a11y__region {
+    grid-template-columns: 3px minmax(8rem, 18rem) auto minmax(0, 1fr) auto auto;
+  }
+
+  .dev-tools-a11y__region-tags {
+    grid-column: 3;
+    margin-top: 0;
+  }
+
+  .dev-tools-a11y__region-last {
+    grid-column: 4;
+    margin-top: 0;
+  }
+
+  .dev-tools-a11y__region-count {
+    grid-column: 5;
+  }
+
+  .dev-tools-a11y__region > .dev-tools-a11y__mute {
+    grid-column: 6;
+    grid-row: 1;
+  }
+
+  .dev-tools-a11y__inspector.--aside {
+    display: flex;
+    flex: 0 0 20rem;
+    min-height: 0;
+    overflow: auto;
+    border-inline-start: 1px solid var(--content-border-color);
+  }
+
+  .dev-tools-a11y__inspector.--inline {
+    display: none;
+  }
 }

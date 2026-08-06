@@ -83,6 +83,19 @@ module PageObjects
           self
         end
 
+        def open_a11y
+          find(".dev-tools-toolbar .toggle-a11y").click
+          self
+        end
+
+        def has_active_a11y?
+          page.has_css?(".dev-tools-toolbar .toggle-a11y.--active")
+        end
+
+        def has_no_active_a11y?
+          page.has_no_css?(".dev-tools-toolbar .toggle-a11y.--active")
+        end
+
         def has_toolbar?
           page.has_css?(".dev-tools-toolbar")
         end

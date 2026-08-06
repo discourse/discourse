@@ -4,6 +4,7 @@ import {
   closeDock,
   dockPanels,
   dockState,
+  isDockVisible,
 } from "discourse/static/dev-tools/dock";
 import DPanelDock from "discourse/ui-kit/panel-dock";
 
@@ -25,7 +26,7 @@ export default class DevToolsDockHost extends Component {
   }
 
   get shouldRender() {
-    return this.state.open && this.panels.length > 0;
+    return isDockVisible();
   }
 
   <template>

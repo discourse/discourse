@@ -39,6 +39,7 @@ module SvgSprite
         book
         book-open-reader
         bookmark
+        bullhorn
         bookmark-delete
         box-archive
         briefcase
@@ -277,6 +278,7 @@ module SvgSprite
         truck-medical
         unlock
         unlock-keyhole
+        universal-access
         up-down
         up-right-from-square
         upload
