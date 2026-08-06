@@ -1281,8 +1281,7 @@ class Topic < ActiveRecord::Base
         end
 
         unless user.guardian.can_see?(self)
-          removed_count = Notification.remove_for(user.id, id)
-          user.publish_notifications_state if removed_count.positive?
+          user.publish_notifications_state if Notification.remove_for(user.id, id).positive?
         end
 
         MessageBus.publish("/topic/#{id}", { type: "remove_allowed_user" }, user_ids: [user.id])
