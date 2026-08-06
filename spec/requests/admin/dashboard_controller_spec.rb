@@ -1389,6 +1389,7 @@ RSpec.describe Admin::DashboardController do
 
     before do
       SiteSetting.dashboard_improvements = true
+      SiteSetting.improved_crawler_detection = true
       SiteSetting.persist_browser_pageview_events = true
       SiteSetting.use_legacy_pageviews = false
       Discourse.stubs(:current_hostname).returns("test.localhost")
@@ -1452,58 +1453,85 @@ RSpec.describe Admin::DashboardController do
 
       get "/admin/dashboard/traffic.json", params: request_params
 
-      expect(response.parsed_body).to include(
-        "partial_data" => nil,
-        "summary" => {
-          "pageviews" => 3,
-          "distinct_sessions" => 2,
-          "logged_in_share" => 67,
-          "bounce_rate" => 50,
-          "average_session_duration_seconds" => 30,
-        },
-        "dimensions" => {
-          "top_urls" => contain_exactly(
-            include("value" => "/landing", "label" => "/landing", "pageviews" => 1),
-            include("value" => "/latest", "label" => "/latest", "pageviews" => 1),
-            include("value" => "/top", "label" => "/top", "pageviews" => 1),
-          ),
-          "entry_urls" => contain_exactly(
-            include("value" => "/landing", "label" => "/landing", "pageviews" => 1),
-            include("value" => "/top", "label" => "/top", "pageviews" => 1),
-          ),
-          "referrers" => contain_exactly(
-            include(
-              "value" => "search.example",
-              "label" => "search.example",
-              "pageviews" => 1,
-            ),
-            include("value" => nil, "label" => "Direct / unknown", "pageviews" => 1),
-          ),
-          "countries" => contain_exactly(
-            include("value" => "US", "label" => "United States", "pageviews" => 2),
-            include("value" => "GB", "label" => "United Kingdom", "pageviews" => 1),
-          ),
-          "networks" => contain_exactly(
-            include(
-              "value" => "AS64496",
-              "label" => "AS64496 Example Network",
+      expect(response).to have_attributes(
+        status: 200,
+        parsed_body:
+          match(
+            "partial_data" => nil,
+            "summary" => {
               "pageviews" => 3,
+              "distinct_sessions" => 2,
+              "logged_in_share" => 67,
+              "bounce_rate" => 50,
+              "average_session_duration_seconds" => 30,
+            },
+            "series" => contain_exactly(
+              include(
+                "date" => "2026-05-10",
+                "pageviews" => 2,
+                "logged_in_human_pageviews" => 2,
+                "anonymous_human_pageviews" => 0,
+                "likely_crawler_pageviews" => 0,
+              ),
+              include(
+                "date" => "2026-05-11",
+                "pageviews" => 1,
+                "logged_in_human_pageviews" => 0,
+                "anonymous_human_pageviews" => 1,
+                "likely_crawler_pageviews" => 0,
+              ),
             ),
+            "dimensions" => {
+              "top_urls" => contain_exactly(
+                include("value" => "/landing", "label" => "/landing", "pageviews" => 1),
+                include("value" => "/latest", "label" => "/latest", "pageviews" => 1),
+                include("value" => "/top", "label" => "/top", "pageviews" => 1),
+              ),
+              "entry_urls" => contain_exactly(
+                include("value" => "/landing", "label" => "/landing", "pageviews" => 1),
+                include("value" => "/top", "label" => "/top", "pageviews" => 1),
+              ),
+              "referrers" => contain_exactly(
+                include(
+                  "value" => "search.example",
+                  "label" => "search.example",
+                  "pageviews" => 1,
+                ),
+                include("value" => nil, "label" => "Direct / unknown", "pageviews" => 1),
+              ),
+              "countries" => contain_exactly(
+                include("value" => "US", "label" => "United States", "pageviews" => 2),
+                include("value" => "GB", "label" => "United Kingdom", "pageviews" => 1),
+              ),
+              "networks" => contain_exactly(
+                include(
+                  "value" => "AS64496",
+                  "label" => "AS64496 Example Network",
+                  "pageviews" => 3,
+                ),
+              ),
+              "browsers" => contain_exactly(
+                include("value" => "chrome", "label" => "Chrome", "pageviews" => 2),
+                include("value" => "firefox", "label" => "Firefox", "pageviews" => 1),
+              ),
+              "ip_addresses" => contain_exactly(
+                include("value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2),
+                include(
+                  "value" => "198.51.100.2",
+                  "label" => "198.51.100.2",
+                  "pageviews" => 1,
+                ),
+              ),
+            },
           ),
-          "browsers" => contain_exactly(
-            include("value" => "chrome", "label" => "Chrome", "pageviews" => 2),
-            include("value" => "firefox", "label" => "Firefox", "pageviews" => 1),
-          ),
-          "ip_addresses" => contain_exactly(
-            include("value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2),
-            include("value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1),
-          ),
-        },
       )
 
       get "/admin/dashboard/traffic.json", params: request_params.merge(referrer: "")
 
-      expect(response.parsed_body).to include("summary" => include("pageviews" => 1))
+      expect(response).to have_attributes(
+        status: 200,
+        parsed_body: include("summary" => include("pageviews" => 1)),
+      )
     end
 
     it "reports when older traffic is no longer available",
