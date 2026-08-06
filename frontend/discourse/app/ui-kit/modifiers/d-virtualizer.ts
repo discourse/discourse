@@ -6,11 +6,13 @@ import {
 import type Owner from "@ember/owner";
 import { cancel, schedule } from "@ember/runloop";
 import Modifier, { type ArgsFor } from "ember-modifier";
+import { prefersReducedMotion } from "discourse/lib/utilities";
 import type { DVirtualListApi } from "discourse/ui-kit/d-virtual-list";
 import {
   createElementVirtualizer,
   isVirtualizationEnabled,
   keyFor,
+  pushScrollOffset,
   rangeExtractorWithPins,
   remeasureViewport,
   updateElementVirtualizer,
@@ -18,15 +20,28 @@ import {
 
 type VirtualKey = number | string | bigint;
 
-// How close (in rows) the visible range must come to an edge before its reach
-// callback arms. Eight rows ahead gives a fetch time to land before the reader
-// hits the true edge.
+/**
+ * How close (in rows) the visible range must come to an edge before its reach
+ * callback arms. A few rows of lead time lets a fetch land before the reader
+ * reaches the true edge.
+ */
 const DEFAULT_EDGE_THRESHOLD = 8;
 
-// Once an edge has fired, the range must retreat this many rows PAST the band
-// before the edge re-arms. Without the gap, a range hovering on the band
-// boundary would re-fire on every jitter.
+/**
+ * Once an edge has fired, the range must retreat this many rows PAST the band
+ * before the edge re-arms. Without the gap, a range hovering on the band
+ * boundary would re-fire on every jitter.
+ */
 const EDGE_HYSTERESIS = 4;
+
+/**
+ * The engine's own tolerance for treating a computed offset and the element's
+ * snapped `scrollTop` as the same position. Its offsets come from arithmetic over
+ * estimates and alignment halving, while `scrollTop` is snapped to the browser's
+ * layout grid, so exact equality is the wrong comparison and would leave the two
+ * permanently "disagreeing" for a fractional row size.
+ */
+const SCROLL_EPSILON = 1.5;
 
 interface VisibleRange {
   startIndex: number;
@@ -58,7 +73,14 @@ interface VirtualItem {
 }
 
 interface PublishedState {
-  virtualItems: VirtualItem[];
+  /**
+   * The rendered window. Frozen, and a copy of the engine's own array rather than
+   * the array itself, so a consumer cannot write into the memoized result the
+   * engine hands back on every later read. Only the array is frozen: the items in
+   * it are reconstructed per computation, so a write to one cannot outlive the
+   * next window change.
+   */
+  virtualItems: readonly VirtualItem[];
   totalSize: number;
   range: VisibleRange | null;
 }
@@ -80,18 +102,22 @@ interface VirtualizerOptions {
   getItemKey: (index: number) => VirtualKey;
   overscan: number;
   onChange: () => void;
+  followOnAppend: boolean;
+  scrollEndThreshold?: number;
   rangeExtractor?: (range: VirtualRange) => number[];
 }
 
 interface VirtualizerApi {
   range: VisibleRange | null;
   isScrolling: boolean;
-  // The viewport the engine measures and scrolls. Null until it mounts.
+  /** The viewport the engine measures and scrolls. Null until it mounts. */
   scrollElement: HTMLElement | null;
-  // The engine's cached scroll offset (px). Null until the first measure. The
-  // element's real `scrollTop` is the source of truth; this can drift from it
-  // when the browser clamps a scroll the engine never observed (see
-  // `#resyncScrollOffset`).
+
+  /**
+   * The engine's cached scroll offset (px). Null until the first measure. The
+   * element's real `scrollTop` is the source of truth; this can drift from it
+   * when the browser clamps a scroll the engine never observed.
+   */
   scrollOffset: number | null;
   _didMount(): () => void;
   _willUpdate(): void;
@@ -132,8 +158,19 @@ interface DVirtualizerSignature<T> {
       /** The number of extra items rendered outside the visible range. */
       overscan?: number;
 
-      /** The edge where the list initially rests. */
+      /**
+       * The edge the list rests at. `"bottom"` additionally makes the engine
+       * follow appends while the reader is within `scrollEndThreshold` of the
+       * end; the initial rest position is applied by the component, not here.
+       */
       anchor?: "top" | "bottom";
+
+      /**
+       * Distance from the end, in px, that still counts as "at the end". Governs
+       * both the follow-on-append gate and the engine's at-end row-resize branch.
+       * Defaults to the engine's own value, which is 1px.
+       */
+      scrollEndThreshold?: number;
 
       /**
        * Extends the default window with extra absolute indices to keep mounted.
@@ -145,7 +182,16 @@ interface DVirtualizerSignature<T> {
       /** Receives newly published virtualizer state. */
       onState?: (state: PublishedState) => void;
 
-      /** Receives the imperative virtual-list API after initialization. */
+      /**
+       * Receives the imperative virtual-list API after initialization.
+       *
+       * Delivered synchronously during the first `modify()`, unlike the other
+       * callbacks here, which are delivered from the after-render flush. The
+       * phase is load-bearing: a consumer that positions the list and then calls
+       * back into the API needs the handle before that positioning runs. The
+       * cost is that writing tracked state already consumed in this render pass
+       * will trip a backtracking assertion — do that work in a later phase.
+       */
       onRegisterApi?: (api: DVirtualListApi) => void;
 
       /** Runs when the visible item range changes. */
@@ -202,20 +248,42 @@ export default class DVirtualizer<T> extends Modifier<
   #named: DVirtualizerSignature<T>["Args"]["Named"] | null = null;
   #virtualizer: VirtualizerApi | null = null;
 
-  // The start latch begins satisfied (mount at the top is not a "reached start"
-  // event); the end latch begins unsatisfied so a list whose first page already
-  // fills to the end fires its end callback on mount. `count === 0` resets both.
+  /**
+   * The start latch begins satisfied (mount at the top is not a "reached start"
+   * event); the end latch begins unsatisfied so a list whose first page already
+   * fills to the end fires its end callback on mount. `count === 0` resets both.
+   */
   #startLatched = true;
   #endLatched = false;
 
-  // Reentrancy guard for the synchronous scroll dispatch (see #syncScrollOffset).
+  /**
+   * The edge keys the latches were last evaluated against. A latch can only be
+   * re-armed by a range retreat, which an `@items` change never produces: rows
+   * arriving beyond the viewport move the BAND, not the range. Watching the keys
+   * instead re-arms the edge the change actually touched. Null until the first
+   * non-empty evaluation seeds them, which is what keeps mount suppression
+   * intact across the initial 0 -> N transition.
+   */
+  #lastFirstKey: VirtualKey | null = null;
+  #lastLastKey: VirtualKey | null = null;
+
+  /**
+   * The item count the edges were last evaluated against. A latch may only be
+   * re-armed by a list that actually changed length, so that an in-place refresh
+   * cannot be mistaken for rows arriving at an edge.
+   */
+  #lastCount = 0;
+
+  /** Reentrancy guard for the synchronous offset push (see {@link #syncScrollOffset}). */
   #syncingScroll = false;
 
-  // Snapshotted from the named arg in `modify()` (not read live at flush time)
-  // so that CHANGING it re-invokes `modify()` — which schedules a flush that
-  // re-arms the latches against the new band. Reading it only inside `#flush`
-  // would leave a threshold change without a flush, so the latches would never
-  // re-arm until the next unrelated scroll.
+  /**
+   * Snapshotted from the named arg in `modify()` (not read live at flush time)
+   * so that CHANGING it re-invokes `modify()` — which schedules a flush that
+   * re-arms the latches against the new band. Reading it only inside `#flush`
+   * would leave a threshold change without a flush, so the latches would never
+   * re-arm until the next unrelated scroll.
+   */
   #edgeThreshold = DEFAULT_EDGE_THRESHOLD;
 
   constructor(owner: Owner, args: ArgsFor<DVirtualizerSignature<T>>) {
@@ -245,28 +313,40 @@ export default class DVirtualizer<T> extends Modifier<
       return;
     }
 
-    // Consume the threshold here (not just at flush time) so a change to it
-    // re-runs modify() and schedules the flush that re-arms the latches.
     this.#edgeThreshold = named.edgeThreshold ?? DEFAULT_EDGE_THRESHOLD;
 
-    const options = this.#buildOptions(
-      named.items,
-      named.estimateSize,
-      named.overscan,
-      named.key,
-      named.pinnedIndices
-    );
+    const options = this.#buildOptions(named);
 
     if (!this.#virtualizer) {
+      // Build into locals and only adopt once mounting has fully succeeded.
+      //
+      // `_willUpdate()` is not inert on a first run: it attaches the observers,
+      // and the rect observer reports eagerly, which measures every index through
+      // the consumer's `estimateSize`. If that throws mid-way while `#virtualizer`
+      // is already assigned, every later `modify()` takes the update branch and
+      // the API is never registered — so `measureRow` stays a no-op and NO row is
+      // ever measured, silently, for the life of the list.
+      //
       // The JavaScript adapter's public type loses its element and option types.
-      this.#virtualizer = createElementVirtualizer(
+      const virtualizer = createElementVirtualizer(
         options
       ) as unknown as VirtualizerApi;
-      this.#cleanup = this.#virtualizer._didMount();
-      this.#virtualizer._willUpdate();
+
+      let cleanup: (() => void) | null = null;
+      try {
+        cleanup = virtualizer._didMount();
+        virtualizer._willUpdate();
+      } catch (e) {
+        cleanup?.();
+        throw e;
+      }
+
+      this.#virtualizer = virtualizer;
+      this.#cleanup = cleanup;
       named.onRegisterApi?.(this.#buildApi());
     } else {
       updateElementVirtualizer(this.#virtualizer, options);
+      this.#growSizerToTotal();
       this.#virtualizer._willUpdate();
       this.#resyncScrollOffset();
     }
@@ -274,15 +354,82 @@ export default class DVirtualizer<T> extends Modifier<
     this.#scheduleFlush();
   }
 
-  // After an `@items` change the engine can hold a scroll offset the element no
-  // longer has: shrinking the list makes the browser clamp `scrollTop`, but that
-  // clamp does not reach the engine's offset observer, so it keeps computing the
-  // window from a stale, now out-of-range offset. On its own that only mis-scrolls
-  // the window; combined with pinned indices it surfaces as a visible gap — the
-  // pinned row renders at its true offset while the window sits far below it, and
-  // the rows between are absent. Re-read the element's real `scrollTop` whenever
-  // the two disagree so the window tracks the actual position. A no-op when they
-  // already match (the common case: a tail reveal leaves the offset valid).
+  /** The element whose height stands in for the whole list. */
+  #sizer() {
+    return (
+      this.#element?.querySelector<HTMLElement>(
+        ":scope > .d-virtual-list__sizer"
+      ) ?? null
+    );
+  }
+
+  /**
+   * Sets the sizer to the engine's current total, so the scrollbar spans the whole
+   * list while only a window is mounted.
+   *
+   * This modifier is the ONLY writer of that height. Sharing it with the component
+   * would not merely be untidy: Glimmer installs a parent's modifier update before
+   * its children's, so a height the component derived from tracked state would land
+   * after this one and carry the PREVIOUS flush's total — reverting the raise below
+   * within the same commit, and leaving the engine to reconcile a scroll target it
+   * captured against a height that no longer exists.
+   *
+   * An empty list gets no height at all: the `empty` block renders inside this
+   * element, and a self-centering empty state would collapse into a zero-height box.
+   *
+   * @param options `grow` raises the height but never lowers it.
+   */
+  #applySizerHeight({ grow = false } = {}) {
+    const sizer = this.#sizer();
+    if (!sizer || !this.#virtualizer) {
+      return;
+    }
+
+    if (!(this.#named?.items.length ?? 0)) {
+      sizer.style.removeProperty("height");
+      return;
+    }
+
+    const total = this.#virtualizer.getTotalSize();
+    if (grow && total <= sizer.offsetHeight) {
+      return;
+    }
+
+    sizer.style.height = `${total}px`;
+  }
+
+  /**
+   * Raise the sizer to the engine's new total BEFORE the engine acts on the options
+   * it was just given.
+   *
+   * `setOptions` resolves the keyed scroll anchor and stashes it; `_willUpdate` then
+   * writes that offset to the element. At this instant the element is still as tall
+   * as the OLD list, and the browser clamps a scroll past the end of it — so a
+   * prepend larger than the reader's remaining distance to the bottom lands short,
+   * losing the very anchor that exists to hold their position.
+   *
+   * Raise only. Lowering here would clamp in the other direction while the engine
+   * is still deciding where to go; the flush sets the exact height afterwards.
+   */
+  #growSizerToTotal() {
+    this.#applySizerHeight({ grow: true });
+  }
+
+  /**
+   * After an `@items` change the engine can hold a scroll offset the element no
+   * longer has: shrinking the list makes the browser clamp `scrollTop`, but that
+   * clamp does not reach the engine's offset observer, so it keeps computing the
+   * window from a stale, now out-of-range offset. On its own that only mis-scrolls
+   * the window; combined with pinned indices it surfaces as a visible gap — the
+   * pinned row renders at its true offset while the window sits far below it, and
+   * the rows between are absent. Adopt the element's real `scrollTop` whenever the
+   * two disagree so the window tracks the actual position.
+   *
+   * Compared with a tolerance rather than exactly, because the engine's offset is
+   * arithmetic over estimates while `scrollTop` is snapped to the layout grid. A
+   * no-op when they already agree, which is the common case now that
+   * {@link #growSizerToTotal} keeps a grown list's anchored scroll reachable.
+   */
   #resyncScrollOffset() {
     const element = this.#element;
     if (
@@ -294,15 +441,54 @@ export default class DVirtualizer<T> extends Modifier<
       return;
     }
     const engineOffset = this.#virtualizer?.scrollOffset ?? null;
-    if (engineOffset === null || engineOffset === element.scrollTop) {
+    if (
+      engineOffset === null ||
+      Math.abs(engineOffset - element.scrollTop) < SCROLL_EPSILON
+    ) {
       return;
     }
+
+    // Only correct an offset that is genuinely out of range. A mere disagreement
+    // is normal mid-update — the engine may have just issued a programmatic scroll
+    // whose target it has not observed yet — and adopting the element's position
+    // there would overwrite that intent and settle the window somewhere stale.
+    //
+    // Measured against the ENGINE's new total rather than the element's current
+    // height. On a shrink the element is still as tall as the outgoing list,
+    // because the component applies the smaller height on a later render and this
+    // method does not run again; asking the DOM would answer for the list being
+    // left rather than the one being entered, and the stale offset would survive
+    // exactly the case this exists for.
+    const maxOffset = Math.max(
+      this.#virtualizer.getTotalSize() - element.clientHeight,
+      0
+    );
+    if (engineOffset <= maxOffset + SCROLL_EPSILON) {
+      return;
+    }
+
     this.#syncingScroll = true;
     try {
-      element.dispatchEvent(new Event("scroll"));
+      pushScrollOffset(this.#virtualizer);
     } finally {
       this.#syncingScroll = false;
     }
+  }
+
+  /**
+   * Strip an animated scroll when the reader has asked for reduced motion, so a
+   * consumer does not have to check for it at every call site.
+   *
+   * @param options The caller's scroll options.
+   * @returns The options, with any animation removed if motion is unwelcome.
+   */
+  #respectMotionPreference<O extends { behavior?: ScrollBehavior }>(
+    options: O | undefined
+  ): O | undefined {
+    if (options?.behavior === "smooth" && prefersReducedMotion()) {
+      return { ...options, behavior: "auto" };
+    }
+    return options;
   }
 
   #buildApi(): DVirtualListApi {
@@ -311,12 +497,18 @@ export default class DVirtualizer<T> extends Modifier<
     return {
       scrollToIndex: (index, options) => {
         const before = this.#element?.scrollTop;
-        this.#virtualizer?.scrollToIndex(index, options);
+        this.#virtualizer?.scrollToIndex(
+          index,
+          this.#respectMotionPreference(options)
+        );
         this.#syncScrollOffset(before);
       },
       scrollToOffset: (offset, options) => {
         const before = this.#element?.scrollTop;
-        this.#virtualizer?.scrollToOffset(offset, options);
+        this.#virtualizer?.scrollToOffset(
+          offset,
+          this.#respectMotionPreference(options)
+        );
         this.#syncScrollOffset(before);
       },
       scrollToEdge: (edge) => {
@@ -344,19 +536,25 @@ export default class DVirtualizer<T> extends Modifier<
     };
   }
 
-  // The engine reads the scroll offset only from the element's `scroll` event,
-  // which `element.scrollTo` (used by every programmatic scroll) fires
-  // ASYNCHRONOUSLY. Left to that, the window would not reflect an imperative
-  // scroll until a later tick — imperceptible in a browser, but a race that
-  // leaves a rendering test unsettled at the old window. Dispatching the event
-  // synchronously makes a programmatic scroll immediately consistent; the real
-  // async event that follows is a no-op (the engine short-circuits when the
-  // offset already matches).
-  //
-  // Guarded so it only fires when the scroll actually moved (a no-op scroll must
-  // not fake an `isScrolling` transition), never on a detached/destroyed element,
-  // and never re-enters — a consumer `scroll` listener that calls a scroll API
-  // would otherwise recurse through the synthetic dispatch.
+  /**
+   * The engine reads the scroll offset only from the element's `scroll` event,
+   * which `element.scrollTo` (used by every programmatic scroll) fires
+   * ASYNCHRONOUSLY. Left to that, the window would not reflect an imperative
+   * scroll until a later tick — imperceptible in a browser, but a race that
+   * leaves a rendering test unsettled at the old window. Pushing the offset
+   * straight into the engine makes a programmatic scroll immediately consistent;
+   * the real async event that follows is a no-op (the engine short-circuits when
+   * the offset already matches).
+   *
+   * Guarded so it only pushes when the scroll actually moved, never on a
+   * detached/destroyed element, and never re-enters.
+   *
+   * A `behavior: "smooth"` scroll does not move `scrollTop` synchronously, so it
+   * takes the no-op branch and settles through the engine's own reconcile loop
+   * instead.
+   *
+   * @param previousScrollTop The offset before the scroll was requested.
+   */
   #syncScrollOffset(previousScrollTop: number | undefined) {
     const element = this.#element;
     if (
@@ -370,27 +568,24 @@ export default class DVirtualizer<T> extends Modifier<
     }
     this.#syncingScroll = true;
     try {
-      element.dispatchEvent(new Event("scroll"));
+      pushScrollOffset(this.#virtualizer);
     } finally {
       this.#syncingScroll = false;
     }
   }
 
   #buildOptions(
-    items: readonly T[],
-    estimateSize: (item: T, index: number) => number,
-    overscan?: number,
-    key?: string,
-    pinnedIndices?: PinnedIndices
+    named: DVirtualizerSignature<T>["Args"]["Named"]
   ): VirtualizerOptions {
+    const { items, estimateSize, overscan, key, pinnedIndices } = named;
+
     const options: VirtualizerOptions = {
-      // Despite the name, this does NOT set where the list rests — resting
-      // position comes from `initialOffset`. The engine consults `anchorTo` in
-      // exactly two places: the gate on key-based prepend anchoring, and the
-      // "was at the end" branch of a row resize. We always want the former,
-      // because inserting older rows above the viewport otherwise shifts
-      // everything the reader is looking at by the height of what arrived.
-      // The latter only engages within `scrollEndThreshold` of the true bottom.
+      // Despite the name, this does NOT set where the list rests — the component
+      // applies the initial position. Unconditional because it gates key-based
+      // prepend anchoring, which we always want: inserting older rows above the
+      // viewport otherwise shifts everything the reader is looking at by the
+      // height of what arrived. The engine's other uses of it are additionally
+      // bounded by `scrollEndThreshold`.
       anchorTo: "end",
       count: items.length,
       getScrollElement: () => this.#element,
@@ -398,11 +593,23 @@ export default class DVirtualizer<T> extends Modifier<
       getItemKey: (index) => keyFor(items[index], key),
       overscan: overscan ?? 5,
       onChange: () => this.#scheduleFlush(),
+      // Only a bottom-anchored list tracks the live edge. The engine gates this
+      // on the reader having been within `scrollEndThreshold` of the end BEFORE
+      // the append, so a reader who has scrolled up to read history is never
+      // yanked down by arriving rows.
+      followOnAppend: named.anchor === "bottom",
     };
 
-    // Only override the range when there is something to pin: passing an explicit
-    // `rangeExtractor: undefined` through `setOptions` would replace the engine's
-    // own default with undefined and crash the next measure.
+    // Left unset the engine keeps its own 1px default. `setOptions` skips
+    // undefined values, so passing it through unconditionally would be harmless
+    // but would misrepresent "unset" as an explicit choice.
+    if (named.scrollEndThreshold != null) {
+      options.scrollEndThreshold = named.scrollEndThreshold;
+    }
+
+    // Set the extractor only when there is something to pin, so the engine keeps
+    // its own default path when there isn't — and so dropping `@pinnedIndices`
+    // reverts cleanly rather than installing a pass-through.
     if (pinnedIndices != null) {
       options.rangeExtractor = rangeExtractorWithPins(pinnedIndices);
     }
@@ -416,7 +623,7 @@ export default class DVirtualizer<T> extends Modifier<
       return;
     }
 
-    // Sweep disconnected rows out of the engine's ResizeObserver. ResizeObserver
+    // Sweep disconnected rows out of the engine's ResizeObserver. A ResizeObserver
     // does not fire on removal, and the engine only self-heals opportunistically,
     // so without this the element cache grows with every row ever scrolled past.
     // The sweep contract is pinned in the virtualizer unit suite.
@@ -425,31 +632,172 @@ export default class DVirtualizer<T> extends Modifier<
     const virtualItems = this.#virtualizer.getVirtualItems();
     const totalSize = this.#virtualizer.getTotalSize();
     const range = this.#virtualizer.range;
+    const count = this.#named?.items.length ?? 0;
 
-    // Edge evaluation runs on EVERY flush, ahead of the rendering-signature
-    // de-dup: its inputs (range, count, threshold) are not all captured by that
-    // signature, so a threshold-only change — which leaves the rendered window
-    // identical — must still re-arm the latches.
-    this.#evaluateEdges(range, this.#named?.items.length ?? 0);
+    // The settled height, including any shrink the pre-scroll raise skipped.
+    this.#applySizerHeight();
 
     const signature = this.#stateSignature(virtualItems, totalSize, range);
 
-    if (this.#signaturesMatch(signature, this.#lastSignature)) {
+    // Hand out frozen copies, never the engine's own objects. `range` stays
+    // attached to the engine between computations and its committed value is what
+    // the engine's change memo compares against, and `getVirtualItems()` returns a
+    // memoized array the engine keeps handing back — so a consumer that wrote
+    // through either could silently stop the window from updating.
+    const publishedRange = range
+      ? Object.freeze({
+          startIndex: range.startIndex,
+          endIndex: range.endIndex,
+        })
+      : null;
+    const publishedItems = Object.freeze([...virtualItems]);
+
+    // Publish BEFORE any edge callback runs. The window is what the component
+    // needs to render at all, so it must not sit behind a consumer callback that
+    // could throw — the engine's own change memo has already committed by the
+    // time this runs, so a flush lost to an exception is never re-driven and the
+    // list would stay blank for good.
+    if (!this.#signaturesMatch(signature, this.#lastSignature)) {
+      this.#lastSignature = signature;
+
+      const published = this.#safely("onState", () =>
+        this.#named?.onState?.({
+          virtualItems: publishedItems,
+          totalSize,
+          range: publishedRange,
+        })
+      );
+
+      // Drop the memo when the publish did not happen. Unlike the edge callbacks,
+      // this one carries the window the component renders from, so remembering a
+      // publish that threw would match forever and strand the list on whatever it
+      // last drew — for a mounted list nobody scrolls, that is permanent.
+      if (!published) {
+        this.#lastSignature = null;
+      }
+
+      // A row remeasurement changes the signature (sizes/offsets shift) without
+      // moving the visible indices. Gate the range callback on a real start/end
+      // change so a size-only remeasure does not publish a spurious range event.
+      if (range && this.#rangeIndicesChanged(range)) {
+        this.#lastEmittedRange = {
+          startIndex: range.startIndex,
+          endIndex: range.endIndex,
+        };
+        this.#safely("onVisibleRangeChange", () =>
+          this.#named?.onVisibleRangeChange?.(publishedRange!)
+        );
+      }
+    }
+
+    // Deliberately outside the signature gate: the edge inputs (range, count,
+    // threshold) are not all captured by the rendering signature, so a
+    // threshold-only change — which leaves the rendered window identical — must
+    // still re-arm the latches.
+    this.#evaluateEdges(range, count);
+  }
+
+  /**
+   * Runs a callback so that throwing cannot abort the flush around it.
+   *
+   * A latch or cache the caller owns is committed BEFORE the call, so a callback
+   * that throws every time is not retried on every subsequent flush. That trade
+   * only makes sense for a callback whose loss costs the consumer an event; where
+   * the loss would instead desync the rendered window, the caller must undo its
+   * commit on a false return rather than memoize a publish that never happened.
+   *
+   * @param label Callback name, used to attribute the error.
+   * @param run The callback to invoke.
+   * @returns Whether it completed without throwing.
+   */
+  #safely(label: string, run: () => void): boolean {
+    try {
+      run();
+      return true;
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(`[d-virtual-list] ${label} threw: `, e);
+      return false;
+    }
+  }
+
+  /**
+   * Re-arms the edge whose boundary row changed identity, so a consumer that
+   * answers an edge callback by growing the list can reach that edge again.
+   *
+   * Direction matters: an append moves the end band away from a range that has
+   * not moved, so the retreat rule alone would re-arm only for a page bigger than
+   * the band plus hysteresis, and a smaller page would stall the edge forever.
+   * Keying off the boundary rows instead re-arms exactly the edge that gained
+   * rows, which is why a tail change must not disturb the start latch.
+   *
+   * @param count The total number of items, known to be non-zero.
+   */
+  #rearmEdgesForItemChange(count: number) {
+    const named = this.#named;
+    if (!named) {
       return;
     }
-    this.#lastSignature = signature;
 
-    this.#named?.onState?.({ virtualItems, totalSize, range });
+    const firstKey = keyFor(named.items[0], named.key);
+    const lastKey = keyFor(named.items[count - 1], named.key);
+    const previousCount = this.#lastCount;
 
-    // A row remeasurement changes the signature (sizes/offsets shift) without
-    // moving the visible indices. Gate the range callback on a real start/end
-    // change so a size-only remeasure does not publish a spurious range event.
-    if (range && this.#rangeIndicesChanged(range)) {
-      this.#lastEmittedRange = {
-        startIndex: range.startIndex,
-        endIndex: range.endIndex,
-      };
-      this.#named?.onVisibleRangeChange?.(range);
+    this.#lastCount = count;
+
+    // Seed only: the first non-empty evaluation must not unlatch, or a list that
+    // mounts non-empty would lose the deliberate start-edge suppression.
+    if (this.#lastFirstKey === null && this.#lastLastKey === null) {
+      this.#lastFirstKey = firstKey;
+      this.#lastLastKey = lastKey;
+      return;
+    }
+
+    const previousFirstKey = this.#lastFirstKey;
+    const previousLastKey = this.#lastLastKey;
+    this.#lastFirstKey = firstKey;
+    this.#lastLastKey = lastKey;
+
+    // Whether a changed boundary key means anything depends on how rows are keyed.
+    //
+    // With an explicit `@key` the key IS the row's logical identity, so a changed
+    // boundary is a genuinely different row and re-arming is right even at a
+    // constant length — which is exactly a capped stream, appending at the tail
+    // while dropping from the head.
+    //
+    // Without one, rows key by object identity, and a consumer that rebuilds its
+    // items in place hands over brand new boundary keys for the very same rows.
+    // Re-arming there would answer an edge callback with an edge callback: the
+    // consumer refreshes, the boundary key changes, the range is still in the
+    // band, and it fires again. So an unkeyed list additionally has to have
+    // changed length before a boundary is believed.
+    if (!named.key && count === previousCount) {
+      return;
+    }
+
+    const headChanged = firstKey !== previousFirstKey;
+    const tailChanged = lastKey !== previousLastKey;
+
+    if (!headChanged && !tailChanged && count === previousCount) {
+      return;
+    }
+
+    // Neither boundary moved yet the list changed length, so rows were inserted
+    // between them — which is what a list carrying a stable trailing sentinel
+    // looks like, a loading skeleton or placeholder that outlives the page it
+    // announces. The side cannot be told apart, so arm both rather than let an
+    // edge stall forever behind a row whose key never changes.
+    if (!headChanged && !tailChanged) {
+      this.#startLatched = false;
+      this.#endLatched = false;
+      return;
+    }
+
+    if (headChanged) {
+      this.#startLatched = false;
+    }
+    if (tailChanged) {
+      this.#endLatched = false;
     }
   }
 
@@ -462,16 +810,32 @@ export default class DVirtualizer<T> extends Modifier<
     );
   }
 
-  // Fires `onReachStart`/`onReachEnd` once per entry into an edge band, re-arming
-  // only after the range retreats past the band plus hysteresis. An empty list
-  // resets both latches so a refill re-fires; a null range holds the current
-  // state (nothing measured yet).
+  /**
+   * Fires `onReachStart`/`onReachEnd` once per entry into an edge band, re-arming
+   * after the range retreats past the band plus hysteresis OR when the list gains
+   * a new edge (see {@link #rearmEdgesForItemChange}). An empty list resets both
+   * latches so a refill re-fires; a null range holds the current state (nothing
+   * measured yet) but still tracks the edges.
+   *
+   * @param range The visible range, or null before anything has been measured.
+   * @param count The total number of items.
+   */
   #evaluateEdges(range: VisibleRange | null, count: number) {
     if (count === 0) {
       this.#startLatched = true;
       this.#endLatched = false;
+      // Dropping the emitted range alongside the latches keeps an empty->refill
+      // cycle from swallowing the new list's first range event when it happens to
+      // land on the same indices.
+      this.#lastEmittedRange = null;
+      this.#lastFirstKey = null;
+      this.#lastLastKey = null;
+      this.#lastCount = 0;
       return;
     }
+
+    this.#rearmEdgesForItemChange(count);
+
     if (!range) {
       return;
     }
@@ -483,7 +847,9 @@ export default class DVirtualizer<T> extends Modifier<
     if (range.startIndex <= startBand) {
       if (!this.#startLatched) {
         this.#startLatched = true;
-        this.#named?.onReachStart?.({ ...range, count });
+        this.#safely("onReachStart", () =>
+          this.#named?.onReachStart?.({ ...range, count })
+        );
       }
     } else if (range.startIndex > startBand + EDGE_HYSTERESIS) {
       this.#startLatched = false;
@@ -492,7 +858,9 @@ export default class DVirtualizer<T> extends Modifier<
     if (range.endIndex >= endBand) {
       if (!this.#endLatched) {
         this.#endLatched = true;
-        this.#named?.onReachEnd?.({ ...range, count });
+        this.#safely("onReachEnd", () =>
+          this.#named?.onReachEnd?.({ ...range, count })
+        );
       }
     } else if (range.endIndex < endBand - EDGE_HYSTERESIS) {
       this.#endLatched = false;
@@ -558,6 +926,17 @@ export default class DVirtualizer<T> extends Modifier<
     this.#cleanup?.();
     this.#cleanup = null;
     this.#virtualizer = null;
+    // Drop the publish and edge bookkeeping with the engine that produced it.
+    // This path is not only destruction: the disabled-virtualization branch tears
+    // down a live modifier, and a later re-enable builds a FRESH engine that must
+    // not inherit the previous one's de-dup memo or latch state.
+    this.#lastSignature = null;
+    this.#lastEmittedRange = null;
+    this.#lastFirstKey = null;
+    this.#lastLastKey = null;
+    this.#lastCount = 0;
+    this.#startLatched = true;
+    this.#endLatched = false;
     // Drop the element too: a retained API handle or a pending `next()` scroll
     // must not dispatch a synthetic event onto a detached node after teardown.
     this.#element = null;

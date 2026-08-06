@@ -69,18 +69,26 @@ module("Integration | ui-kit | DVirtualList | edges", function (hooks) {
     const measuredRow = find(
       `.d-virtual-list__item[data-index='${rangeBeforeResize.startIndex + 2}']`
     );
+    // Resolve on ANY delivery rather than on an exact height, then assert the
+    // height separately. Waiting for a specific number here turns a mismatch —
+    // adding padding to the row wrapper would be enough — into a test-timeout with
+    // no diagnostic, instead of a failed assertion that says what it measured.
     const resizeDelivered = new Promise((resolve) => {
       const observer = new ResizeObserver(() => {
-        if (measuredRow.offsetHeight === 41) {
-          observer.disconnect();
-          resolve();
-        }
+        observer.disconnect();
+        resolve();
       });
       observer.observe(measuredRow, { box: "border-box" });
     });
     measuredRow.querySelector(".row").style.height = "41px";
     await resizeDelivered;
     await settled();
+
+    assert.strictEqual(
+      measuredRow.offsetHeight,
+      41,
+      "the row wrapper reports the height set on its content"
+    );
 
     assert.deepEqual(
       api.visibleRange(),
