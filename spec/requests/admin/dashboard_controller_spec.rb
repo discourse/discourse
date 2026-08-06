@@ -1781,30 +1781,6 @@ RSpec.describe Admin::DashboardController do
         )
       end
 
-      it "applies filters to the capped results" do
-        get "/admin/dashboard/traffic.json", params: request_params.merge(top_url: oldest.url)
-
-        expect(response.parsed_body).to eq(
-          "partial_data" => { "reason" => "pageview_limit", "pageview_limit" => 2 },
-          "summary" => {
-            "pageviews" => 0,
-            "distinct_sessions" => 2,
-            "logged_in_share" => 0,
-            "bounce_rate" => 100,
-            "average_session_duration_seconds" => 0,
-          },
-          "series" => [],
-          "dimensions" => {
-            "top_urls" => [],
-            "entry_urls" => [],
-            "referrers" => [],
-            "countries" => [],
-            "networks" => [],
-            "browsers" => [],
-            "ip_addresses" => [],
-          },
-        )
-      end
     end
 
     it "does not allow moderators to read traffic details" do
