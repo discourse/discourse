@@ -35,8 +35,15 @@ module PageObjects
       end
 
       def select_date_preset(label)
-        find(".db-date-range__trigger").click
-        PageObjects::Components::AdminDashboardDateRangePicker.new.select_preset(label)
+        open_date_range.select_preset(label)
+        self
+      end
+
+      def select_custom_date_range(start_date:, end_date:)
+        picker = open_date_range
+        picker.pick_day(start_date)
+        picker.pick_day(end_date)
+        picker.apply
         self
       end
 
@@ -147,6 +154,13 @@ module PageObjects
 
       def has_empty_state?
         has_css?("[data-test-site-traffic-empty]", exact_text: "No matching pageviews")
+      end
+
+      private
+
+      def open_date_range
+        find(".db-date-range__trigger").click
+        PageObjects::Components::AdminDashboardDateRangePicker.new.tap(&:open?)
       end
     end
   end
