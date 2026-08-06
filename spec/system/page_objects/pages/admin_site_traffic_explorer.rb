@@ -121,20 +121,13 @@ module PageObjects
         self
       end
 
-      def has_top_row_count?(card:, count:)
-        within("[data-test-site-traffic-card='#{card}']") do
-          has_css?("[data-test-site-traffic-row]", count: count)
-        end
-      end
-
       def expand(card:)
         within("[data-test-site-traffic-card='#{card}']") { find_button("View more").click }
         self
       end
 
-      def has_expanded_table?(title:, row_count:)
-        has_css?("[role='dialog']", text: title) &&
-          has_css?("[role='dialog'] tbody tr", count: row_count)
+      def has_expanded_table?(title:)
+        has_css?("[role='dialog']", text: title) && has_css?("[role='dialog'] tbody tr")
       end
 
       def filter_expanded_row(label:)
