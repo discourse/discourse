@@ -128,7 +128,7 @@ export default class AdminUserBadgesController extends Controller {
         // Update the selected badge ID after the combobox has re-rendered.
         const newSelectedBadge = this.availableBadges[0];
         if (newSelectedBadge) {
-          this.set("selectedBadgeId", newSelectedBadge.get("id"));
+          this.set("selectedBadgeId", newSelectedBadge.id);
         }
       });
     } catch (error) {

@@ -1,13 +1,22 @@
-import { computed } from "@ember/object";
 import { capitalize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
-import { ajax } from "discourse/lib/ajax";
+import {
+  bulkBookmarkOperation,
+  deleteBookmark,
+  togglePinBookmark,
+} from "discourse/data/builders/bookmarks";
+import RestCompatModel from "discourse/data/rest-compat";
+import { BookmarkSchema } from "discourse/data/schemas/bookmark";
+import {
+  defineFieldForwarders,
+  warpStore,
+} from "discourse/data/warp-rest-model";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { longDate } from "discourse/lib/formatter";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
 import { applyModelTransformations } from "discourse/lib/model-transformers";
-import RestModel from "discourse/models/rest";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
@@ -24,12 +33,22 @@ export const NO_REMINDER_ICON = "bookmark";
 export const NOT_BOOKMARKED = "far-bookmark";
 export const WITH_REMINDER_ICON = "discourse-bookmark-clock";
 
-export default class Bookmark extends RestModel {
-  static create(args) {
-    args = args || {};
-    args.currentUser = args.currentUser || User.current();
-    args.user = User.create(args.user);
-    return super.create(args);
+export default class Bookmark extends RestCompatModel {
+  static type = "bookmark";
+  static builders = { delete: deleteBookmark };
+
+  // `user` is wrapped as a User instance (legacy parity); `currentUser` is
+  // stashed on the wrapper as an own property (survives `_adoptResource` and
+  // isn't part of the schema).
+  static create(args = {}) {
+    if (args instanceof Bookmark) {
+      return args;
+    }
+
+    const { user, currentUser, ...rest } = args;
+    const wrapper = super.create({ ...rest, user: User.create(user) });
+    wrapper.currentUser = currentUser || User.current();
+    return wrapper;
   }
 
   static createFor(user, bookmarkableType, bookmarkableId) {
@@ -42,39 +61,24 @@ export default class Bookmark extends RestModel {
   }
 
   static bulkOperation(bookmarks, operation) {
-    const data = {
-      bookmark_ids: bookmarks.map((item) => item.id),
-      operation,
-    };
-
-    return ajax("/bookmarks/bulk", {
-      type: "PUT",
-      data,
-    });
+    return warpStore().request(
+      bulkBookmarkOperation(
+        bookmarks.map((b) => b.id),
+        operation
+      )
+    );
   }
 
   static async applyTransformations(bookmarks) {
     await applyModelTransformations("bookmark", bookmarks);
   }
 
-  @computed("id")
   get newBookmark() {
     return this.id == null;
   }
 
-  @computed
   get url() {
     return getURL(`/bookmarks/${this.id}`);
-  }
-
-  destroy() {
-    if (this.newBookmark) {
-      return Promise.resolve();
-    }
-
-    return ajax(this.url, {
-      type: "DELETE",
-    });
   }
 
   attachedTo() {
@@ -88,17 +92,13 @@ export default class Bookmark extends RestModel {
     if (this.newBookmark) {
       return Promise.resolve();
     }
-
-    return ajax(this.url + "/toggle_pin", {
-      type: "PUT",
-    });
+    return warpStore().request(togglePinBookmark(this.id));
   }
 
   pinAction() {
     return this.pinned ? "unpin" : "pin";
   }
 
-  @computed("topic_id", "highest_post_number", "bookmarkable_url")
   get lastPostUrl() {
     return this.topic_id
       ? this.urlForPostNumber(this.highest_post_number)
@@ -113,12 +113,10 @@ export default class Bookmark extends RestModel {
     return url;
   }
 
-  @computed("bumped_at", "createdAt")
   get bumpedAt() {
     return this.bumped_at ? new Date(this.bumped_at) : this.createdAt;
   }
 
-  @computed("bumpedAt", "createdAt")
   get bumpedAtTitle() {
     const BUMPED_FORMAT = "YYYY-MM-DDTHH:mm:ss";
     if (moment(this.bumpedAt).isValid() && moment(this.createdAt).isValid()) {
@@ -133,14 +131,14 @@ export default class Bookmark extends RestModel {
     }
   }
 
-  @computed("name", "reminder_at")
+  get timezone() {
+    return this.currentUser?.user_option?.timezone || moment.tz.guess();
+  }
+
   get reminderTitle() {
     if (!isEmpty(this.reminder_at)) {
       return i18n("bookmarks.created_with_reminder_generic", {
-        date: formattedReminderTime(
-          this.reminder_at,
-          this.currentUser?.user_option?.timezone || moment.tz.guess()
-        ),
+        date: formattedReminderTime(this.reminder_at, this.timezone),
         name: this.name || "",
       });
     }
@@ -150,54 +148,35 @@ export default class Bookmark extends RestModel {
     });
   }
 
-  @computed("created_at")
   get createdAt() {
     return new Date(this.created_at);
   }
 
-  @computed("tags")
   get visibleListTags() {
-    if (!this.tags || !this.siteSettings.suppress_overlapping_tags_in_list) {
+    const siteSettings = getOwnerWithFallback().lookup("service:site-settings");
+    if (!this.tags || !siteSettings.suppress_overlapping_tags_in_list) {
       return this.tags;
     }
 
     const title = this.title;
-    const newTags = [];
-
-    this.tags.forEach(function (tag) {
-      if (!title.toLowerCase().includes(tag)) {
-        newTags.push(tag);
-      }
-    });
-
-    return newTags;
+    return this.tags.filter((tag) => !title.toLowerCase().includes(tag));
   }
 
-  @computed("category_id")
   get category() {
     return Category.findById(this.category_id);
   }
 
-  @computed("reminder_at", "currentUser")
   get formattedReminder() {
-    return capitalize(
-      formattedReminderTime(
-        this.reminder_at,
-        this.currentUser?.user_option?.timezone || moment.tz.guess()
-      )
-    );
+    return capitalize(formattedReminderTime(this.reminder_at, this.timezone));
   }
 
-  @computed("reminder_at")
   get reminderAtExpired() {
     return moment(this.reminder_at) < moment();
   }
 
-  @computed()
+  // For topic-level bookmarks, no linked post number — let the topic-link
+  // helper jump to the last unread post by default.
   get topicForList() {
-    // for topic level bookmarks we want to jump to the last unread post URL,
-    // which the topic-link helper does by default if no linked post number is
-    // provided
     const linkedPostNumber =
       this.bookmarkable_type === "Topic" ? null : this.linked_post_number;
 
@@ -210,13 +189,13 @@ export default class Bookmark extends RestModel {
     });
   }
 
-  @computed("bookmarkable_type")
   get bookmarkableTopicAlike() {
     return ["Topic", "Post"].includes(this.bookmarkable_type);
   }
 
-  @computed("reminder_at", "name")
   get hasMetadata() {
     return this.reminder_at || this.name;
   }
 }
+
+defineFieldForwarders(Bookmark, BookmarkSchema);

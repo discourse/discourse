@@ -12,7 +12,7 @@ export default class AdminBadgesAwardRoute extends Route {
     }
 
     return this.adminBadges.badges.find(
-      (value) => value.id === parseInt(params.badge_id, 10)
+      (value) => String(value.id) === params.badge_id
     );
   }
 }
