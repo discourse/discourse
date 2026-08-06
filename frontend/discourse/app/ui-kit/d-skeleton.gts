@@ -1,11 +1,56 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { type TrustedHTML, trustHTML } from "@ember/template";
+import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const DEFAULT_COUNT = 1;
 
-type SkeletonVariant = "text" | "rect" | "circle";
+/** A placeholder longer than this reserves space no real content will occupy. */
+const MAX_COUNT = 50;
+
+const VARIANTS = ["text", "rect", "circle"] as const;
+
+type SkeletonVariant = (typeof VARIANTS)[number];
+
+/**
+ * The dimension custom properties, each paired with the property the stylesheet
+ * feeds it to. A value is emitted only if it is valid for that property, which
+ * is what stops one from carrying further declarations into the style attribute.
+ */
+const DIMENSIONS = {
+  "--d-skeleton-item-width": "width",
+  "--d-skeleton-item-height": "height",
+  "--d-skeleton-radius": "border-radius",
+} as const;
+
+type DimensionValues = Partial<Record<keyof typeof DIMENSIONS, string>>;
+
+/**
+ * Valid for any property, so `CSS.supports` waves them through, but a custom
+ * property holding one is guaranteed-invalid rather than the keyword's usual
+ * meaning. Rejecting them here keeps the variant's own sizing instead.
+ */
+const CSS_WIDE_KEYWORDS = new Set([
+  "initial",
+  "inherit",
+  "unset",
+  "revert",
+  "revert-layer",
+]);
+
+function buildDimensionStyle(values: DimensionValues): TrustedHTML | undefined {
+  const declarations = Object.entries(values).flatMap(([property, value]) => {
+    const target = DIMENSIONS[property as keyof typeof DIMENSIONS];
+    return value != null &&
+      !CSS_WIDE_KEYWORDS.has(value.trim().toLowerCase()) &&
+      CSS.supports(target, value)
+      ? [`${property}:${value}`]
+      : [];
+  });
+
+  return declarations.length ? trustHTML(declarations.join(";")) : undefined;
+}
 
 interface DSkeletonSignature {
   Args: {
@@ -39,15 +84,38 @@ interface DSkeletonSignature {
  * keep a static fill underneath (from the scss) so the placeholder still reads
  * when the animation is suppressed (reduced motion, or `@animated={{false}}`).
  *
- * The consumer's `...attributes` are forwarded to the wrapper element.
+ * The placeholder is decorative and the wrapper is `aria-hidden`, so assistive
+ * technology sees nothing here. Announcing the load is the caller's half of the
+ * contract: mark the region whose content is being replaced `aria-busy` while it
+ * resolves. Passing `role="status"` to this component announces nothing on its
+ * own, because the wrapper stays hidden; override `aria-hidden` through
+ * `...attributes` if the placeholder itself has to be exposed.
+ *
+ * Adjust it through the custom properties. The theming ones —
+ * `--d-skeleton-fill`, `--d-skeleton-shimmer`, `--d-skeleton-duration` and
+ * `--d-skeleton-radius` — can be set by a class on the placeholder or scoped from
+ * any ancestor, so a container can retint everything inside it. The `circle`
+ * variant is the one exception: its radius is what makes it a circle, so it is
+ * not themeable from outside. The layout ones,
+ * `--d-skeleton-display` and `--d-skeleton-gap`, only take effect on the
+ * placeholder itself, so a container cannot relay out a nested one by accident.
+ * Keep `--d-skeleton-display` a flex value, since the line rhythm comes from
+ * `gap`.
+ *
+ * The consumer's `...attributes` are forwarded to the wrapper, but `style` is the
+ * component's own: it carries the dimensions, so anything passed there is
+ * discarded. Use a class.
  */
 export default class DSkeleton extends Component<DSkeletonSignature> {
   /**
    * The variant, defaulting to a text line. Stamped on both the wrapper and
-   * each item so the scss can key variant-specific defaults off it.
+   * each item so the scss can key variant-specific defaults off it. An
+   * unrecognised value falls back rather than stamping a modifier no rule
+   * matches, which would leave an item with none of its variant's sizing.
    */
   get variant(): SkeletonVariant {
-    return this.args.variant ?? "text";
+    const requested = this.args.variant as SkeletonVariant;
+    return VARIANTS.includes(requested) ? requested : "text";
   }
 
   /**
@@ -56,21 +124,28 @@ export default class DSkeleton extends Component<DSkeletonSignature> {
    * box to ink height so they read as separate lines).
    */
   get multiline(): boolean {
-    return this.items.length > 1;
+    return this.#itemCount > 1;
   }
 
   /**
-   * The placeholder items to render, one per `@count` (at least one), each with
-   * its own inline dimensions. Every item shares `@width`/`@height`, except the
-   * last takes `@lastLineWidth` instead when it is set and there is more than
-   * one item — a tapered final paragraph line.
+   * How many items to render. Coerced and clamped because the count reaches the
+   * component from callers that only assert its type: a non-finite value would
+   * otherwise render nothing, and an unbounded one would allocate until the tab
+   * gave up.
    */
-  get items(): Array<{ style: TrustedHTML | undefined }> {
-    const requested = this.args.count ?? DEFAULT_COUNT;
-    const count = Math.max(1, Math.floor(requested));
-    return Array.from({ length: count }, (_, index) => ({
-      style: this.#styleFor(index, count),
-    }));
+  get #itemCount(): number {
+    const requested = Number(this.args.count ?? DEFAULT_COUNT);
+
+    if (!Number.isFinite(requested)) {
+      return DEFAULT_COUNT;
+    }
+
+    return Math.min(Math.max(1, Math.floor(requested)), MAX_COUNT);
+  }
+
+  /** The indices of the placeholder items to render, one per `@count`. */
+  get items(): number[] {
+    return Array.from({ length: this.#itemCount }, (_, index) => index);
   }
 
   /**
@@ -88,38 +163,39 @@ export default class DSkeleton extends Component<DSkeletonSignature> {
   }
 
   /**
-   * Builds the per-item dimension tokens, emitted as inline custom properties
-   * (not the `width`/`height`/`border-radius` properties themselves) so the
-   * stylesheet owns the property mapping and can derive from them. Inline custom
-   * properties override the variant defaults for this item. `@size` is a
-   * shorthand that makes a square (used for circles); explicit `@width`/`@height`
-   * win over it. In a multi-line block the last item takes `@lastLineWidth`
-   * instead of `@width`, so it renders shorter than the lines above it. Returns
-   * `undefined` when no dimension is set (the variant's scss tokens apply).
-   *
-   * @param index - The item's position.
-   * @param total - The total number of items.
+   * The dimensions shared by every item, emitted as inline custom properties
+   * (not `width`/`height`/`border-radius` themselves) so the stylesheet owns the
+   * property mapping. They sit on the wrapper because they are uniform, and the
+   * items inherit them. `@size` is a shorthand that makes a square; explicit
+   * `@width`/`@height` win over it. `undefined` when nothing is set, so the
+   * variant's scss tokens apply.
    */
-  #styleFor(index: number, total: number): TrustedHTML | undefined {
-    const { width, height, radius, size, lastLineWidth } = this.args;
-    const declarations: string[] = [];
+  get dimensionStyle(): TrustedHTML | undefined {
+    const { width, height, radius, size } = this.args;
 
-    const isLastOfMany = total > 1 && index === total - 1;
-    const resolvedWidth =
-      isLastOfMany && lastLineWidth != null ? lastLineWidth : (width ?? size);
-    const resolvedHeight = height ?? size;
+    return buildDimensionStyle({
+      "--d-skeleton-item-width": width ?? size,
+      "--d-skeleton-item-height": height ?? size,
+      "--d-skeleton-radius": radius,
+    });
+  }
 
-    if (resolvedWidth != null) {
-      declarations.push(`--d-skeleton-item-width:${resolvedWidth}`);
-    }
-    if (resolvedHeight != null) {
-      declarations.push(`--d-skeleton-item-height:${resolvedHeight}`);
-    }
-    if (radius != null) {
-      declarations.push(`--d-skeleton-radius:${radius}`);
-    }
+  /** Overrides the width of the final line so it tapers like a real paragraph's. */
+  get lastLineStyle(): TrustedHTML | undefined {
+    return buildDimensionStyle({
+      "--d-skeleton-item-width": this.args.lastLineWidth,
+    });
+  }
 
-    return declarations.length ? trustHTML(declarations.join(";")) : undefined;
+  /**
+   * The item `@lastLineWidth` applies to, or `-1` when it applies to none. A
+   * lone bar is left at full width: it stands in for a whole element, not for
+   * the last line of a paragraph.
+   */
+  get lastLineIndex(): number {
+    return this.multiline && this.args.lastLineWidth != null
+      ? this.#itemCount - 1
+      : -1;
   }
 
   <template>
@@ -131,9 +207,13 @@ export default class DSkeleton extends Component<DSkeletonSignature> {
       }}
       aria-hidden="true"
       ...attributes
+      style={{this.dimensionStyle}}
     >
-      {{#each this.items key="@index" as |item|}}
-        <div class={{this.itemClass}} style={{item.style}}></div>
+      {{#each this.items key="@index" as |index|}}
+        <div
+          class={{this.itemClass}}
+          style={{if (eq index this.lastLineIndex) this.lastLineStyle}}
+        ></div>
       {{/each}}
     </div>
   </template>
