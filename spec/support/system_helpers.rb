@@ -458,6 +458,42 @@ module SystemHelpers
     end
   end
 
+  # Drives a press-drag-release with the real mouse, for the surfaces built on
+  # pointer events rather than native drag-and-drop.
+  #
+  # `drag_and_drop` above is NOT interchangeable with this: it goes through
+  # Playwright's CDP drag interception, which is what makes a native HTML5 drag
+  # work and which suppresses the ordinary mouse moves a pointer gesture needs. A
+  # pointer-driven surface therefore sees the press and then nothing, and looks
+  # exactly like a dead drag. Pick the helper that matches the mechanism.
+  #
+  # `from:` is a CSS selector for the element to press. `to:` is an absolute
+  # viewport point; `by:` is an offset from the press point, for when the distance
+  # matters more than the destination. Movement is broken into `steps:` so a
+  # gesture with a movement threshold actually crosses it, and so anything driven
+  # by intermediate moves sees more than one.
+  #
+  # Like `drag_and_drop`, this bypasses Capybara's client-settle wait, so assert
+  # through a retrying matcher rather than a value read once.
+  def drag_with_pointer(from:, to: nil, by: nil, steps: 10)
+    raise ArgumentError, "pass exactly one of to: or by:" if to.nil? == by.nil?
+
+    page.driver.with_playwright_page do |pw_page|
+      box = pw_page.query_selector(from).bounding_box
+      start_x = box["x"] + box["width"] / 2
+      start_y = box["y"] + box["height"] / 2
+      end_x = to ? to[:x] : start_x + by.fetch(:x, 0)
+      end_y = to ? to[:y] : start_y + by.fetch(:y, 0)
+
+      pw_page.mouse.move(start_x, start_y)
+      pw_page.mouse.down
+      # Stepped rather than a single jump: a gesture with a threshold needs to be
+      # seen crossing it, not teleported past it.
+      pw_page.mouse.move(end_x, end_y, steps: steps)
+      pw_page.mouse.up
+    end
+  end
+
   def html_translation_to_text(html_translation)
     Nokogiri.HTML5(html_translation).at("body").inner_text
   end
