@@ -344,6 +344,69 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
       end
     end
 
+    context "with operation 'bump'" do
+      fab!(:topic) { Fabricate(:topic, category: category, user: user) }
+      fab!(:post) { Fabricate(:post, topic: topic, user: user) }
+
+      before do
+        freeze_time
+        topic.update_columns(bumped_at: 1.month.ago)
+      end
+
+      it "bumps the topic and adds a small action explaining the move" do
+        result =
+          execute_node(
+            configuration: {
+              "operation" => "bump",
+              "topic_id" => topic.id.to_s,
+              "actor_username" => admin.username,
+            },
+            item: item,
+          )
+
+        expect(topic.reload.bumped_at).to eq_time(Time.zone.now)
+        expect(topic.posts.last).to have_attributes(
+          post_type: Post.types[:small_action],
+          action_code: "autobumped",
+        )
+        expect(result["topic"]).to include(
+          "id" => topic.id,
+          "bumped_at" => Time.zone.now.utc.iso8601,
+        )
+      end
+
+      it "bumps the topic without adding a post when silent is true" do
+        expect do
+          execute_node(
+            configuration: {
+              "operation" => "bump",
+              "topic_id" => topic.id.to_s,
+              "silent" => true,
+              "actor_username" => admin.username,
+            },
+            item: item,
+          )
+        end.not_to change { topic.posts.count }
+
+        expect(topic.reload.bumped_at).to eq_time(Time.zone.now)
+      end
+
+      it "raises when the actor cannot update the bump date" do
+        expect do
+          execute_node(
+            configuration: {
+              "operation" => "bump",
+              "topic_id" => topic.id.to_s,
+              "actor_username" => user.username,
+            },
+            item: item,
+          )
+        end.to raise_error(Discourse::InvalidAccess)
+
+        expect(topic.reload.bumped_at).to eq_time(1.month.ago)
+      end
+    end
+
     context "with operation 'list'" do
       fab!(:topic_1, :topic) do
         Fabricate(:topic, category: category, user: user, title: "First topic about workflows")
