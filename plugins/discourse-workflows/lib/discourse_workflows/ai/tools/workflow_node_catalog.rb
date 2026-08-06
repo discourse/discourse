@@ -215,6 +215,8 @@ module DiscourseWorkflows
           "action:ai_agent" =>
             "ai agent bot llm classify summarize generate sentiment triage runner run as permissions uploads attachments",
           "action:group" => "group membership member belongs friend friends",
+          "action:flag_user" =>
+            "flag user report spammer spam suspect review queue moderation approve reject account signup",
           "trigger:user_added_to_group" => "joined added to group membership member",
           "trigger:user_removed_from_group" => "left removed from group membership member",
           "trigger:user_created" => "signup sign up register registration new account joined site",
