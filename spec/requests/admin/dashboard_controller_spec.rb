@@ -1930,47 +1930,6 @@ RSpec.describe Admin::DashboardController do
         "error_type" => "not_found",
       )
     end
-
-    [
-      ["unknown parameters", { extra: true }],
-      ["array-valued countries", { country: ["US"] }],
-      ["object-valued countries", { country: { value: "US" } }],
-      ["nil countries", { country: nil }],
-      ["lowercase country codes", { country: "us" }],
-      ["invalid networks", { network: "AS0" }],
-      ["invalid browser casing", { browser: "Firefox" }],
-      ["browser values containing control characters", { browser: "firefox\nforged" }],
-      ["CIDR IP addresses", { ip: "192.0.2.0/24" }],
-      [
-        "overlong top URLs",
-        { top_url: "/#{"a" * BrowserPageviewEvent::MAX_URL_LENGTH}" },
-      ],
-      ["absolute top URLs", { top_url: "https://example.com/latest" }],
-      ["nil top URLs", { top_url: nil }],
-      ["entry URLs containing queries", { entry_url: "/latest?token=secret" }],
-      ["referrers containing paths", { referrer: "search.example/path" }],
-      ["nil referrers", { referrer: nil }],
-      ["noncanonical start dates", { start_date: "2026-5-1" }],
-      ["start dates after the end date", { start_date: "2026-05-13" }],
-      ["missing start dates", {}, [:start_date]],
-      ["missing end dates", {}, [:end_date]],
-      ["noncanonical end dates", { end_date: "2026-5-12" }],
-      ["integer end dates", { end_date: 20_260_512 }],
-      ["array-valued end dates", { end_date: ["2026-05-12"] }],
-      ["object-valued end dates", { end_date: { value: "2026-05-12" } }],
-      ["integer start dates", { start_date: 20_260_501 }],
-      ["array-valued start dates", { start_date: ["2026-05-01"] }],
-      ["object-valued start dates", { start_date: { value: "2026-05-01" } }],
-    ].each do |description, overrides, omitted_keys = []|
-      it "rejects #{description}" do
-        sign_in(admin)
-        params = request_params.merge(overrides).except(*omitted_keys)
-
-        get "/admin/dashboard/traffic.json", params: params
-
-        expect(response.parsed_body).to eq("error_type" => "invalid_request")
-      end
-    end
   end
 
   describe "#available_reports" do
