@@ -23,7 +23,6 @@ export default class ChatNavbarPinnedMessagesButton extends Component {
       this.siteSettings.chat_pinned_messages &&
       !this.chatStateManager.isDrawerCollapsed &&
       this.args.channel?.hasPinnedMessages &&
-      !this.args.channel.canManagePins &&
       hasPinsDismissal(this.args.channel) &&
       this.router.currentRoute?.name !== "chat.channel.pins"
     );

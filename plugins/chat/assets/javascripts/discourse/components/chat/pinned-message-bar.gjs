@@ -43,9 +43,6 @@ export default class ChatPinnedMessageBar extends Component {
   #loadSequence = 0;
 
   get dismissed() {
-    if (this.args.channel.canManagePins) {
-      return false;
-    }
     const dismissedAbove = pinsDismissedAboveId(this.args.channel);
     if (dismissedAbove == null || this.pins.length === 0) {
       return false;
@@ -133,10 +130,6 @@ export default class ChatPinnedMessageBar extends Component {
     );
   }
 
-  get showInlineDismiss() {
-    return !this.hasMultiplePins && !this.args.channel.canManagePins;
-  }
-
   get pinsPanelOpen() {
     return this.router.currentRoute?.name === "chat.channel.pins";
   }
@@ -148,7 +141,7 @@ export default class ChatPinnedMessageBar extends Component {
   get seeAllLabel() {
     return this.pinsPanelOpen
       ? i18n("chat.pinned_messages.close")
-      : i18n("chat.pinned_bar.see_all");
+      : i18n("chat.pinned_messages.title");
   }
 
   get currentExcerpt() {
@@ -225,6 +218,19 @@ export default class ChatPinnedMessageBar extends Component {
   @action
   dismiss() {
     dismissPinsUpTo(this.args.channel, newestPinId(this.pins));
+    this.#markPinsAsRead();
+  }
+
+  // without this the navbar button that replaces the bar would carry an unread
+  // dot for the very pin just dismissed
+  #markPinsAsRead() {
+    const membership = this.args.channel.currentUserMembership;
+    if (!membership) {
+      return;
+    }
+    membership.lastViewedPinsAt = new Date();
+    membership.hasUnseenPins = false;
+    this.chatApi.markPinsAsRead(this.args.channel.id).catch(() => {});
   }
 
   <template>
@@ -274,15 +280,8 @@ export default class ChatPinnedMessageBar extends Component {
           </button>
         {{/if}}
 
-        {{#if this.showInlineDismiss}}
-          <DButton
-            @action={{this.dismiss}}
-            @icon="xmark"
-            @title="chat.pinned_bar.dismiss"
-            @ariaLabel="chat.pinned_bar.dismiss"
-            class="chat-pinned-bar__dismiss btn-transparent no-text"
-          />
-        {{else}}
+        {{! a lone pin has no list to open, and the excerpt wants the width }}
+        {{#if this.hasMultiplePins}}
           <LinkTo
             @route={{this.seeAllRoute}}
             @models={{@channel.routeModels}}
@@ -300,6 +299,14 @@ export default class ChatPinnedMessageBar extends Component {
             {{/if}}
           </LinkTo>
         {{/if}}
+
+        <DButton
+          @action={{this.dismiss}}
+          @icon="xmark"
+          @title="chat.pinned_messages.dismiss"
+          @ariaLabel="chat.pinned_messages.dismiss"
+          class="chat-pinned-bar__dismiss btn-transparent no-text"
+        />
       </div>
     {{/if}}
   </template>
