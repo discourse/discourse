@@ -1380,7 +1380,7 @@ RSpec.describe Admin::DashboardController do
 
       Fabricate(
         :browser_pageview_event,
-        url: "/landing?campaign=private",
+        url: "https://test.localhost/landing/?campaign=private#section",
         country_code: "US",
         asn: 64_496,
         ip_address: "192.0.2.1",
@@ -1394,7 +1394,7 @@ RSpec.describe Admin::DashboardController do
       )
       Fabricate(
         :browser_pageview_event,
-        url: "/latest?token=private",
+        url: "https://test.localhost/latest?token=private",
         country_code: "US",
         asn: 64_496,
         ip_address: "192.0.2.1",
@@ -1457,25 +1457,25 @@ RSpec.describe Admin::DashboardController do
         ],
         "dimensions" => {
           "top_urls" => [
-            { "value" => "/landing", "pageviews" => 1 },
-            { "value" => "/latest", "pageviews" => 1 },
-            { "value" => "/top", "pageviews" => 1 },
+            { "value" => "/landing", "label" => "/landing", "pageviews" => 1 },
+            { "value" => "/latest", "label" => "/latest", "pageviews" => 1 },
+            { "value" => "/top", "label" => "/top", "pageviews" => 1 },
           ],
           "entry_urls" => [
-            { "value" => "/landing", "pageviews" => 1 },
-            { "value" => "/top", "pageviews" => 1 },
+            { "value" => "/landing", "label" => "/landing", "pageviews" => 1 },
+            { "value" => "/top", "label" => "/top", "pageviews" => 1 },
           ],
           "referrers" => [
             {
               "value" => "",
-              "label_key" => "admin.dashboard.site_traffic.explorer.direct_or_unknown",
+              "label" => "Direct / unknown",
               "pageviews" => 1,
             },
-            { "value" => "search.example", "pageviews" => 1 },
+            { "value" => "search.example", "label" => "search.example", "pageviews" => 1 },
           ],
           "countries" => [
-            { "value" => "US", "pageviews" => 2 },
-            { "value" => "GB", "pageviews" => 1 },
+            { "value" => "US", "label" => "United States", "pageviews" => 2 },
+            { "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 },
           ],
           "networks" => [
             {
@@ -1485,12 +1485,12 @@ RSpec.describe Admin::DashboardController do
             },
           ],
           "browsers" => [
-            { "value" => "chrome", "pageviews" => 2 },
-            { "value" => "firefox", "pageviews" => 1 },
+            { "value" => "chrome", "label" => "Chrome", "pageviews" => 2 },
+            { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
           ],
           "ip_addresses" => [
-            { "value" => "192.0.2.1", "pageviews" => 2 },
-            { "value" => "198.51.100.2", "pageviews" => 1 },
+            { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2 },
+            { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
           ],
         },
       )
@@ -1516,16 +1516,18 @@ RSpec.describe Admin::DashboardController do
           },
         ],
         "dimensions" => {
-          "top_urls" => [{ "value" => "/top", "pageviews" => 1 }],
-          "entry_urls" => [{ "value" => "/top", "pageviews" => 1 }],
+          "top_urls" => [{ "value" => "/top", "label" => "/top", "pageviews" => 1 }],
+          "entry_urls" => [{ "value" => "/top", "label" => "/top", "pageviews" => 1 }],
           "referrers" => [
             {
               "value" => "",
-              "label_key" => "admin.dashboard.site_traffic.explorer.direct_or_unknown",
+              "label" => "Direct / unknown",
               "pageviews" => 1,
             },
           ],
-          "countries" => [{ "value" => "GB", "pageviews" => 1 }],
+          "countries" => [
+            { "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 },
+          ],
           "networks" => [
             {
               "value" => "AS64496",
@@ -1533,8 +1535,16 @@ RSpec.describe Admin::DashboardController do
               "pageviews" => 1,
             },
           ],
-          "browsers" => [{ "value" => "firefox", "pageviews" => 1 }],
-          "ip_addresses" => [{ "value" => "198.51.100.2", "pageviews" => 1 }],
+          "browsers" => [
+            { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
+          ],
+          "ip_addresses" => [
+            {
+              "value" => "198.51.100.2",
+              "label" => "198.51.100.2",
+              "pageviews" => 1,
+            },
+          ],
         },
       )
     end
@@ -1601,23 +1611,39 @@ RSpec.describe Admin::DashboardController do
         ],
         "dimensions" => {
           "top_urls" => [
-            { "value" => "/first-retained", "pageviews" => 1 },
-            { "value" => "/latest-retained", "pageviews" => 1 },
+            {
+              "value" => "/first-retained",
+              "label" => "/first-retained",
+              "pageviews" => 1,
+            },
+            {
+              "value" => "/latest-retained",
+              "label" => "/latest-retained",
+              "pageviews" => 1,
+            },
           ],
           "entry_urls" => [
-            { "value" => "/first-retained", "pageviews" => 1 },
-            { "value" => "/latest-retained", "pageviews" => 1 },
+            {
+              "value" => "/first-retained",
+              "label" => "/first-retained",
+              "pageviews" => 1,
+            },
+            {
+              "value" => "/latest-retained",
+              "label" => "/latest-retained",
+              "pageviews" => 1,
+            },
           ],
           "referrers" => [
             {
               "value" => "",
-              "label_key" => "admin.dashboard.site_traffic.explorer.direct_or_unknown",
+              "label" => "Direct / unknown",
               "pageviews" => 2,
             },
           ],
           "countries" => [
-            { "value" => "GB", "pageviews" => 1 },
-            { "value" => "US", "pageviews" => 1 },
+            { "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 },
+            { "value" => "US", "label" => "United States", "pageviews" => 1 },
           ],
           "networks" => [
             {
@@ -1627,12 +1653,12 @@ RSpec.describe Admin::DashboardController do
             },
           ],
           "browsers" => [
-            { "value" => "chrome", "pageviews" => 1 },
-            { "value" => "firefox", "pageviews" => 1 },
+            { "value" => "chrome", "label" => "Chrome", "pageviews" => 1 },
+            { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
           ],
           "ip_addresses" => [
-            { "value" => "192.0.2.1", "pageviews" => 1 },
-            { "value" => "198.51.100.2", "pageviews" => 1 },
+            { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 1 },
+            { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
           ],
         },
       )
@@ -1696,21 +1722,23 @@ RSpec.describe Admin::DashboardController do
         ],
         "dimensions" => {
           "top_urls" => [
-            { "value" => middle.url, "pageviews" => 1 },
-            { "value" => newest.url, "pageviews" => 1 },
+            { "value" => middle.url, "label" => middle.url, "pageviews" => 1 },
+            { "value" => newest.url, "label" => newest.url, "pageviews" => 1 },
           ],
           "entry_urls" => [
-            { "value" => middle.url, "pageviews" => 1 },
-            { "value" => newest.url, "pageviews" => 1 },
+            { "value" => middle.url, "label" => middle.url, "pageviews" => 1 },
+            { "value" => newest.url, "label" => newest.url, "pageviews" => 1 },
           ],
           "referrers" => [
             {
               "value" => "",
-              "label_key" => "admin.dashboard.site_traffic.explorer.direct_or_unknown",
+              "label" => "Direct / unknown",
               "pageviews" => 2,
             },
           ],
-          "countries" => [{ "value" => "US", "pageviews" => 2 }],
+          "countries" => [
+            { "value" => "US", "label" => "United States", "pageviews" => 2 },
+          ],
           "networks" => [
             {
               "value" => "AS64496",
@@ -1718,8 +1746,12 @@ RSpec.describe Admin::DashboardController do
               "pageviews" => 2,
             },
           ],
-          "browsers" => [{ "value" => "chrome", "pageviews" => 2 }],
-          "ip_addresses" => [{ "value" => "192.0.2.1", "pageviews" => 2 }],
+          "browsers" => [
+            { "value" => "chrome", "label" => "Chrome", "pageviews" => 2 },
+          ],
+          "ip_addresses" => [
+            { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2 },
+          ],
         },
       )
 
@@ -1769,21 +1801,23 @@ RSpec.describe Admin::DashboardController do
         ],
         "dimensions" => {
           "top_urls" => [
-            { "value" => middle.url, "pageviews" => 1 },
-            { "value" => newest.url, "pageviews" => 1 },
+            { "value" => middle.url, "label" => middle.url, "pageviews" => 1 },
+            { "value" => newest.url, "label" => newest.url, "pageviews" => 1 },
           ],
           "entry_urls" => [
-            { "value" => middle.url, "pageviews" => 1 },
-            { "value" => newest.url, "pageviews" => 1 },
+            { "value" => middle.url, "label" => middle.url, "pageviews" => 1 },
+            { "value" => newest.url, "label" => newest.url, "pageviews" => 1 },
           ],
           "referrers" => [
             {
               "value" => "",
-              "label_key" => "admin.dashboard.site_traffic.explorer.direct_or_unknown",
+              "label" => "Direct / unknown",
               "pageviews" => 2,
             },
           ],
-          "countries" => [{ "value" => "US", "pageviews" => 2 }],
+          "countries" => [
+            { "value" => "US", "label" => "United States", "pageviews" => 2 },
+          ],
           "networks" => [
             {
               "value" => "AS64496",
@@ -1791,8 +1825,12 @@ RSpec.describe Admin::DashboardController do
               "pageviews" => 2,
             },
           ],
-          "browsers" => [{ "value" => "chrome", "pageviews" => 2 }],
-          "ip_addresses" => [{ "value" => "192.0.2.1", "pageviews" => 2 }],
+          "browsers" => [
+            { "value" => "chrome", "label" => "Chrome", "pageviews" => 2 },
+          ],
+          "ip_addresses" => [
+            { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2 },
+          ],
         },
       )
     end
@@ -1865,7 +1903,7 @@ RSpec.describe Admin::DashboardController do
       end
     end
 
-    it "redacts sensitive URL and referrer values" do
+    it "returns canonical URLs and omits irrelevant raw event fields" do
       sign_in(admin)
       private_message = Fabricate(:private_message_topic, user: admin)
       secret_token = "secret-token-1234567890"
@@ -1949,31 +1987,41 @@ RSpec.describe Admin::DashboardController do
         "dimensions" => {
           "top_urls" => [
             {
-              "value" => nil,
-              "label_key" =>
-                "admin.dashboard.site_traffic.explorer.private_or_sensitive_page",
-              "pageviews" => 2,
+              "value" => "/admin/users/list/active",
+              "label" => "/admin/users/list/active",
+              "pageviews" => 1,
             },
-            { "value" => "/latest", "pageviews" => 1 },
+            { "value" => "/latest", "label" => "/latest", "pageviews" => 1 },
+            {
+              "value" => "/t/#{private_message.slug}/#{private_message.id}",
+              "label" => "/t/#{private_message.slug}/#{private_message.id}",
+              "pageviews" => 1,
+            },
           ],
           "entry_urls" => [
             {
-              "value" => nil,
-              "label_key" =>
-                "admin.dashboard.site_traffic.explorer.private_or_sensitive_page",
-              "pageviews" => 2,
+              "value" => "/admin/users/list/active",
+              "label" => "/admin/users/list/active",
+              "pageviews" => 1,
             },
-            { "value" => "/latest", "pageviews" => 1 },
+            { "value" => "/latest", "label" => "/latest", "pageviews" => 1 },
+            {
+              "value" => "/t/#{private_message.slug}/#{private_message.id}",
+              "label" => "/t/#{private_message.slug}/#{private_message.id}",
+              "pageviews" => 1,
+            },
           ],
           "referrers" => [
             {
               "value" => "",
-              "label_key" => "admin.dashboard.site_traffic.explorer.direct_or_unknown",
+              "label" => "Direct / unknown",
               "pageviews" => 2,
             },
-            { "value" => "search.example", "pageviews" => 1 },
+            { "value" => "search.example", "label" => "search.example", "pageviews" => 1 },
           ],
-          "countries" => [{ "value" => "US", "pageviews" => 3 }],
+          "countries" => [
+            { "value" => "US", "label" => "United States", "pageviews" => 3 },
+          ],
           "networks" => [
             {
               "value" => "AS64496",
@@ -1981,11 +2029,21 @@ RSpec.describe Admin::DashboardController do
               "pageviews" => 3,
             },
           ],
-          "browsers" => [{ "value" => "chrome", "pageviews" => 3 }],
+          "browsers" => [
+            { "value" => "chrome", "label" => "Chrome", "pageviews" => 3 },
+          ],
           "ip_addresses" => [
-            { "value" => "192.0.2.10", "pageviews" => 1 },
-            { "value" => "198.51.100.20", "pageviews" => 1 },
-            { "value" => "203.0.113.30", "pageviews" => 1 },
+            { "value" => "192.0.2.10", "label" => "192.0.2.10", "pageviews" => 1 },
+            {
+              "value" => "198.51.100.20",
+              "label" => "198.51.100.20",
+              "pageviews" => 1,
+            },
+            {
+              "value" => "203.0.113.30",
+              "label" => "203.0.113.30",
+              "pageviews" => 1,
+            },
           ],
         },
       )
