@@ -37,41 +37,41 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_no_series(label: "likely-crawler")
   end
 
-  it "lets an admin see session KPIs from completed sessions only",
+  it "lets an admin see session KPIs formed from available raw pageviews",
      time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
     sign_in(admin)
 
     Fabricate(
       :browser_pageview_event,
-      url: "/mature-session",
-      session_id: "mature-session",
+      url: "/engaged-session",
+      session_id: "engaged-session",
       source: BrowserPageviewEvent::SOURCE_BEACON,
       created_at: "2026-05-14 10:00:00",
     )
     Fabricate(
       :browser_pageview_session_engagement,
-      session_id: "mature-session",
+      session_id: "engaged-session",
       engaged_seconds: 20,
     )
     Fabricate(
       :browser_pageview_event,
-      url: "/unsettled-session",
-      session_id: "unsettled-session",
+      url: "/active-session",
+      session_id: "active-session",
       source: BrowserPageviewEvent::SOURCE_BEACON,
       created_at: "2026-05-14 11:50:00",
     )
     Fabricate(
       :browser_pageview_session_engagement,
-      session_id: "unsettled-session",
+      session_id: "active-session",
       engaged_seconds: 0,
     )
 
     traffic.visit(start_date: "2026-05-14", end_date: "2026-05-14")
 
     expect(traffic).to have_metric(label: "Pageviews", value: "2")
-    expect(traffic).to have_metric(label: "Distinct sessions", value: "1")
-    expect(traffic).to have_metric(label: "Bounce rate", value: "0%")
-    expect(traffic).to have_metric(label: "Average session duration", value: "20s")
+    expect(traffic).to have_metric(label: "Distinct sessions", value: "2")
+    expect(traffic).to have_metric(label: "Bounce rate", value: "50%")
+    expect(traffic).to have_metric(label: "Average session duration", value: "10s")
   end
 
   it "lets an admin investigate pageviews with dashboard controls and row filters",
