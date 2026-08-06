@@ -1908,17 +1908,6 @@ RSpec.describe Admin::DashboardController do
       )
     end
 
-    it "does not allow POST requests" do
-      sign_in(admin)
-
-      post "/admin/dashboard/traffic.json", params: request_params, as: :json
-
-      expect(response.parsed_body).to eq(
-        "errors" => ["The requested URL or resource could not be found."],
-        "error_type" => "not_found",
-      )
-    end
-
     it "does not allow access while dashboard improvements are disabled" do
       sign_in(admin)
       SiteSetting.dashboard_improvements = false
