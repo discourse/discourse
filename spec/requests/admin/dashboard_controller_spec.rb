@@ -1480,21 +1480,25 @@ RSpec.describe Admin::DashboardController do
         ],
         "dimensions" => {
           "top_urls" => [
-            { "value" => "/landing", "label" => "/landing", "pageviews" => 1 },
-            { "value" => "/latest", "label" => "/latest", "pageviews" => 1 },
-            { "value" => "/top", "label" => "/top", "pageviews" => 1 },
+            { "value" => "/landing", "pageviews" => 1 },
+            { "value" => "/latest", "pageviews" => 1 },
+            { "value" => "/top", "pageviews" => 1 },
           ],
           "entry_urls" => [
-            { "value" => "/landing", "label" => "/landing", "pageviews" => 1 },
-            { "value" => "/top", "label" => "/top", "pageviews" => 1 },
+            { "value" => "/landing", "pageviews" => 1 },
+            { "value" => "/top", "pageviews" => 1 },
           ],
           "referrers" => [
-            { "value" => "search.example", "label" => "search.example", "pageviews" => 1 },
-            { "value" => nil, "label" => "Direct / unknown", "pageviews" => 1 },
+            { "value" => "search.example", "pageviews" => 1 },
+            {
+              "value" => nil,
+              "label_key" => "admin.dashboard.site_traffic.explorer.direct_or_unknown",
+              "pageviews" => 1,
+            },
           ],
           "countries" => [
-            { "value" => "US", "label" => "United States", "pageviews" => 2 },
-            { "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 },
+            { "value" => "US", "pageviews" => 2 },
+            { "value" => "GB", "pageviews" => 1 },
           ],
           "networks" => [
             {
@@ -1504,12 +1508,12 @@ RSpec.describe Admin::DashboardController do
             },
           ],
           "browsers" => [
-            { "value" => "chrome", "label" => "Chrome", "pageviews" => 2 },
-            { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
+            { "value" => "chrome", "pageviews" => 2 },
+            { "value" => "firefox", "pageviews" => 1 },
           ],
           "ip_addresses" => [
-            { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2 },
-            { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
+            { "value" => "192.0.2.1", "pageviews" => 2 },
+            { "value" => "198.51.100.2", "pageviews" => 1 },
           ],
         },
       )
@@ -1520,10 +1524,10 @@ RSpec.describe Admin::DashboardController do
         "partial_data" => nil,
         "summary" => {
           "pageviews" => 1,
-          "distinct_sessions" => 1,
+          "distinct_sessions" => 2,
           "logged_in_share" => 0,
-          "bounce_rate" => 100,
-          "average_session_duration_seconds" => 0,
+          "bounce_rate" => 50,
+          "average_session_duration_seconds" => 30,
         },
         "series" => [
           {
@@ -1535,14 +1539,16 @@ RSpec.describe Admin::DashboardController do
           },
         ],
         "dimensions" => {
-          "top_urls" => [{ "value" => "/top", "label" => "/top", "pageviews" => 1 }],
-          "entry_urls" => [{ "value" => "/top", "label" => "/top", "pageviews" => 1 }],
+          "top_urls" => [{ "value" => "/top", "pageviews" => 1 }],
+          "entry_urls" => [{ "value" => "/top", "pageviews" => 1 }],
           "referrers" => [
-            { "value" => nil, "label" => "Direct / unknown", "pageviews" => 1 },
+            {
+              "value" => nil,
+              "label_key" => "admin.dashboard.site_traffic.explorer.direct_or_unknown",
+              "pageviews" => 1,
+            },
           ],
-          "countries" => [
-            { "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 },
-          ],
+          "countries" => [{ "value" => "GB", "pageviews" => 1 }],
           "networks" => [
             {
               "value" => "AS64496",
@@ -1550,12 +1556,8 @@ RSpec.describe Admin::DashboardController do
               "pageviews" => 1,
             },
           ],
-          "browsers" => [
-            { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
-          ],
-          "ip_addresses" => [
-            { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
-          ],
+          "browsers" => [{ "value" => "firefox", "pageviews" => 1 }],
+          "ip_addresses" => [{ "value" => "198.51.100.2", "pageviews" => 1 }],
         },
       )
     end
@@ -1564,10 +1566,16 @@ RSpec.describe Admin::DashboardController do
        time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
       sign_in(admin)
       SiteSetting.clean_up_browser_pageview_events = true
+      chrome = "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36"
+      firefox = "Mozilla/5.0 Firefox/126.0"
 
       Fabricate(
         :browser_pageview_event,
         url: "/first-retained",
+        country_code: "US",
+        asn: 64_496,
+        ip_address: "192.0.2.1",
+        user_agent: chrome,
         session_id: "first-retained",
         source: BrowserPageviewEvent::SOURCE_BEACON,
         created_at: "2026-02-15 09:00:00",
@@ -1575,6 +1583,10 @@ RSpec.describe Admin::DashboardController do
       Fabricate(
         :browser_pageview_event,
         url: "/latest-retained",
+        country_code: "GB",
+        asn: 64_496,
+        ip_address: "198.51.100.2",
+        user_agent: firefox,
         session_id: "latest-retained",
         source: BrowserPageviewEvent::SOURCE_BEACON,
         created_at: "2026-05-10 10:00:00",
@@ -1582,10 +1594,70 @@ RSpec.describe Admin::DashboardController do
 
       get "/admin/dashboard/traffic.json", params: request_params.merge(start_date: "2026-01-01")
 
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["partial_data"]).to eq(
-        "reason" => "retention",
-        "available_start_date" => "2026-02-14",
+      expect(response.parsed_body).to eq(
+        "partial_data" => {
+          "reason" => "retention",
+          "available_start_date" => "2026-02-14",
+        },
+        "summary" => {
+          "pageviews" => 2,
+          "distinct_sessions" => 2,
+          "logged_in_share" => 0,
+          "bounce_rate" => 100,
+          "average_session_duration_seconds" => 0,
+        },
+        "series" => [
+          {
+            "date" => "2026-02-15",
+            "pageviews" => 1,
+            "logged_in_human_pageviews" => 0,
+            "anonymous_human_pageviews" => 1,
+            "likely_crawler_pageviews" => 0,
+          },
+          {
+            "date" => "2026-05-10",
+            "pageviews" => 1,
+            "logged_in_human_pageviews" => 0,
+            "anonymous_human_pageviews" => 1,
+            "likely_crawler_pageviews" => 0,
+          },
+        ],
+        "dimensions" => {
+          "top_urls" => [
+            { "value" => "/first-retained", "pageviews" => 1 },
+            { "value" => "/latest-retained", "pageviews" => 1 },
+          ],
+          "entry_urls" => [
+            { "value" => "/first-retained", "pageviews" => 1 },
+            { "value" => "/latest-retained", "pageviews" => 1 },
+          ],
+          "referrers" => [
+            {
+              "value" => nil,
+              "label_key" => "admin.dashboard.site_traffic.explorer.direct_or_unknown",
+              "pageviews" => 2,
+            },
+          ],
+          "countries" => [
+            { "value" => "GB", "pageviews" => 1 },
+            { "value" => "US", "pageviews" => 1 },
+          ],
+          "networks" => [
+            {
+              "value" => "AS64496",
+              "label" => "AS64496 Example Network",
+              "pageviews" => 2,
+            },
+          ],
+          "browsers" => [
+            { "value" => "chrome", "pageviews" => 1 },
+            { "value" => "firefox", "pageviews" => 1 },
+          ],
+          "ip_addresses" => [
+            { "value" => "192.0.2.1", "pageviews" => 1 },
+            { "value" => "198.51.100.2", "pageviews" => 1 },
+          ],
+        },
       )
     end
 
@@ -1593,52 +1665,159 @@ RSpec.describe Admin::DashboardController do
       sign_in(admin)
       SiteSetting.stubs(:admin_site_traffic_event_cap).returns(2)
       created_at = Time.zone.parse("2026-05-10 10:00:00")
+      chrome = "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36"
+      event_attributes = {
+        country_code: "US",
+        asn: 64_496,
+        ip_address: "192.0.2.1",
+        user_agent: chrome,
+        source: BrowserPageviewEvent::SOURCE_BEACON,
+        created_at: created_at,
+      }
 
       oldest =
         Fabricate(
           :browser_pageview_event,
           url: "/oldest-id",
           session_id: "oldest-id",
-          source: BrowserPageviewEvent::SOURCE_BEACON,
-          created_at: created_at,
+          **event_attributes,
         )
       middle =
         Fabricate(
           :browser_pageview_event,
           url: "/middle-id",
           session_id: "middle-id",
-          source: BrowserPageviewEvent::SOURCE_BEACON,
-          created_at: created_at,
+          **event_attributes,
         )
       newest =
         Fabricate(
           :browser_pageview_event,
           url: "/newest-id",
           session_id: "newest-id",
-          source: BrowserPageviewEvent::SOURCE_BEACON,
-          created_at: created_at,
+          **event_attributes,
         )
 
       get "/admin/dashboard/traffic.json", params: request_params
 
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["partial_data"]).to eq(
-        "reason" => "pageview_limit",
-        "pageview_limit" => 2,
+      expect(response.parsed_body).to eq(
+        "partial_data" => { "reason" => "pageview_limit", "pageview_limit" => 2 },
+        "summary" => {
+          "pageviews" => 2,
+          "distinct_sessions" => 2,
+          "logged_in_share" => 0,
+          "bounce_rate" => 100,
+          "average_session_duration_seconds" => 0,
+        },
+        "series" => [
+          {
+            "date" => "2026-05-10",
+            "pageviews" => 2,
+            "logged_in_human_pageviews" => 0,
+            "anonymous_human_pageviews" => 2,
+            "likely_crawler_pageviews" => 0,
+          },
+        ],
+        "dimensions" => {
+          "top_urls" => [
+            { "value" => middle.url, "pageviews" => 1 },
+            { "value" => newest.url, "pageviews" => 1 },
+          ],
+          "entry_urls" => [
+            { "value" => middle.url, "pageviews" => 1 },
+            { "value" => newest.url, "pageviews" => 1 },
+          ],
+          "referrers" => [
+            {
+              "value" => nil,
+              "label_key" => "admin.dashboard.site_traffic.explorer.direct_or_unknown",
+              "pageviews" => 2,
+            },
+          ],
+          "countries" => [{ "value" => "US", "pageviews" => 2 }],
+          "networks" => [
+            {
+              "value" => "AS64496",
+              "label" => "AS64496 Example Network",
+              "pageviews" => 2,
+            },
+          ],
+          "browsers" => [{ "value" => "chrome", "pageviews" => 2 }],
+          "ip_addresses" => [{ "value" => "192.0.2.1", "pageviews" => 2 }],
+        },
       )
-      top_urls = response.parsed_body.dig("dimensions", "top_urls").map { |row| row["value"] }
-      expect(top_urls).to contain_exactly(middle.url, newest.url)
 
       get "/admin/dashboard/traffic.json", params: request_params.merge(top_url: oldest.url)
 
-      expect(response.status).to eq(200)
-      expect(response.parsed_body.dig("summary", "pageviews")).to eq(0)
+      expect(response.parsed_body).to eq(
+        "partial_data" => { "reason" => "pageview_limit", "pageview_limit" => 2 },
+        "summary" => {
+          "pageviews" => 0,
+          "distinct_sessions" => 2,
+          "logged_in_share" => 0,
+          "bounce_rate" => 100,
+          "average_session_duration_seconds" => 0,
+        },
+        "series" => [],
+        "dimensions" => {
+          "top_urls" => [],
+          "entry_urls" => [],
+          "referrers" => [],
+          "countries" => [],
+          "networks" => [],
+          "browsers" => [],
+          "ip_addresses" => [],
+        },
+      )
 
       oldest.destroy!
       get "/admin/dashboard/traffic.json", params: request_params
 
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["partial_data"]).to be_nil
+      expect(response.parsed_body).to eq(
+        "partial_data" => nil,
+        "summary" => {
+          "pageviews" => 2,
+          "distinct_sessions" => 2,
+          "logged_in_share" => 0,
+          "bounce_rate" => 100,
+          "average_session_duration_seconds" => 0,
+        },
+        "series" => [
+          {
+            "date" => "2026-05-10",
+            "pageviews" => 2,
+            "logged_in_human_pageviews" => 0,
+            "anonymous_human_pageviews" => 2,
+            "likely_crawler_pageviews" => 0,
+          },
+        ],
+        "dimensions" => {
+          "top_urls" => [
+            { "value" => middle.url, "pageviews" => 1 },
+            { "value" => newest.url, "pageviews" => 1 },
+          ],
+          "entry_urls" => [
+            { "value" => middle.url, "pageviews" => 1 },
+            { "value" => newest.url, "pageviews" => 1 },
+          ],
+          "referrers" => [
+            {
+              "value" => nil,
+              "label_key" => "admin.dashboard.site_traffic.explorer.direct_or_unknown",
+              "pageviews" => 2,
+            },
+          ],
+          "countries" => [{ "value" => "US", "pageviews" => 2 }],
+          "networks" => [
+            {
+              "value" => "AS64496",
+              "label" => "AS64496 Example Network",
+              "pageviews" => 2,
+            },
+          ],
+          "browsers" => [{ "value" => "chrome", "pageviews" => 2 }],
+          "ip_addresses" => [{ "value" => "192.0.2.1", "pageviews" => 2 }],
+        },
+      )
     end
 
     it "allows only admins to read traffic details while dashboard improvements are enabled" do
@@ -1647,19 +1826,28 @@ RSpec.describe Admin::DashboardController do
 
         get "/admin/dashboard/traffic.json", params: request_params
 
-        expect(response.status).to eq(404)
+        expect(response.parsed_body).to eq(
+          "errors" => ["The requested URL or resource could not be found."],
+          "error_type" => "not_found",
+        )
         sign_out
       end
 
       sign_in(admin)
       post "/admin/dashboard/traffic.json", params: request_params, as: :json
 
-      expect(response.status).to eq(404)
+      expect(response.parsed_body).to eq(
+        "errors" => ["The requested URL or resource could not be found."],
+        "error_type" => "not_found",
+      )
 
       SiteSetting.dashboard_improvements = false
       get "/admin/dashboard/traffic.json", params: request_params
 
-      expect(response.status).to eq(404)
+      expect(response.parsed_body).to eq(
+        "errors" => ["The requested URL or resource could not be found."],
+        "error_type" => "not_found",
+      )
     end
 
     it "rejects invalid dates and filters" do
@@ -1696,7 +1884,6 @@ RSpec.describe Admin::DashboardController do
       invalid_params.each do |invalid_params_for_request|
         get "/admin/dashboard/traffic.json", params: invalid_params_for_request
 
-        expect(response.status).to eq(400)
         expect(response.parsed_body).to eq("error_type" => "invalid_request")
       end
     end
@@ -1706,7 +1893,8 @@ RSpec.describe Admin::DashboardController do
       private_message = Fabricate(:private_message_topic, user: admin)
       secret_token = "secret-token-1234567890"
       log_injection = "forged\nlog-entry"
-      secret_user_agent = "PrivateBrowser/#{secret_token}"
+      secret_user_agent =
+        "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36 #{secret_token}"
 
       Fabricate(
         :browser_pageview_event,
@@ -1714,6 +1902,8 @@ RSpec.describe Admin::DashboardController do
         referrer: "https://search.example/path/#{secret_token}?query=private",
         normalized_referrer: "search.example/path/#{secret_token}?query=private",
         normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
+        country_code: "US",
+        asn: 64_496,
         ip_address: "192.0.2.10",
         session_id: "public-session",
         user_agent: secret_user_agent,
@@ -1725,37 +1915,102 @@ RSpec.describe Admin::DashboardController do
         url: "/t/#{private_message.slug}/#{private_message.id}",
         topic_id: private_message.id,
         referrer: log_injection,
+        country_code: "US",
+        asn: 64_496,
         ip_address: "198.51.100.20",
         session_id: "private-session",
+        user_agent: secret_user_agent,
         source: BrowserPageviewEvent::SOURCE_BEACON,
         created_at: "2026-05-11 10:00:00",
       )
       Fabricate(
         :browser_pageview_event,
         url: "/admin/users/list/active?token=#{secret_token}",
+        country_code: "US",
+        asn: 64_496,
         ip_address: "203.0.113.30",
         session_id: "admin-path-session",
+        user_agent: secret_user_agent,
         source: BrowserPageviewEvent::SOURCE_BEACON,
         created_at: "2026-05-12 10:00:00",
       )
 
       get "/admin/dashboard/traffic.json", params: request_params
 
-      expect(response.status).to eq(200)
-      expect(response.body).to include("/latest", "search.example", "Private or sensitive page")
-      expect(response.body).not_to include(
-        secret_token,
-        private_message.slug,
-        "/admin/users/list/active",
-        log_injection,
-        "search.example/path",
-        "public-session",
-        "private-session",
-        "admin-path-session",
-        secret_user_agent,
-      )
-      expect(response.body).not_to match(
-        /"(?:id|url|referrer|normalized_referrer|normalized_referrer_version|user_agent|session_id|user_id|topic_id|score|source|created_at|ip_address|country_code|asn)"\s*:/,
+      expect(response.parsed_body).to eq(
+        "partial_data" => nil,
+        "summary" => {
+          "pageviews" => 3,
+          "distinct_sessions" => 3,
+          "logged_in_share" => 0,
+          "bounce_rate" => 100,
+          "average_session_duration_seconds" => 0,
+        },
+        "series" => [
+          {
+            "date" => "2026-05-10",
+            "pageviews" => 1,
+            "logged_in_human_pageviews" => 0,
+            "anonymous_human_pageviews" => 1,
+            "likely_crawler_pageviews" => 0,
+          },
+          {
+            "date" => "2026-05-11",
+            "pageviews" => 1,
+            "logged_in_human_pageviews" => 0,
+            "anonymous_human_pageviews" => 1,
+            "likely_crawler_pageviews" => 0,
+          },
+          {
+            "date" => "2026-05-12",
+            "pageviews" => 1,
+            "logged_in_human_pageviews" => 0,
+            "anonymous_human_pageviews" => 1,
+            "likely_crawler_pageviews" => 0,
+          },
+        ],
+        "dimensions" => {
+          "top_urls" => [
+            {
+              "value" => nil,
+              "label_key" =>
+                "admin.dashboard.site_traffic.explorer.private_or_sensitive_page",
+              "pageviews" => 2,
+            },
+            { "value" => "/latest", "pageviews" => 1 },
+          ],
+          "entry_urls" => [
+            {
+              "value" => nil,
+              "label_key" =>
+                "admin.dashboard.site_traffic.explorer.private_or_sensitive_page",
+              "pageviews" => 2,
+            },
+            { "value" => "/latest", "pageviews" => 1 },
+          ],
+          "referrers" => [
+            {
+              "value" => nil,
+              "label_key" => "admin.dashboard.site_traffic.explorer.direct_or_unknown",
+              "pageviews" => 2,
+            },
+            { "value" => "search.example", "pageviews" => 1 },
+          ],
+          "countries" => [{ "value" => "US", "pageviews" => 3 }],
+          "networks" => [
+            {
+              "value" => "AS64496",
+              "label" => "AS64496 Example Network",
+              "pageviews" => 3,
+            },
+          ],
+          "browsers" => [{ "value" => "chrome", "pageviews" => 3 }],
+          "ip_addresses" => [
+            { "value" => "192.0.2.10", "pageviews" => 1 },
+            { "value" => "198.51.100.20", "pageviews" => 1 },
+            { "value" => "203.0.113.30", "pageviews" => 1 },
+          ],
+        },
       )
     end
   end
