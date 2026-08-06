@@ -5,6 +5,7 @@ import DurationControl from "discourse/components/setting-field/duration";
 import EnumControl from "discourse/components/setting-field/enum";
 import GroupListControl from "discourse/components/setting-field/group-list";
 import IntegerControl from "discourse/components/setting-field/integer";
+import LocaleEnumControl from "discourse/components/setting-field/locale-enum";
 import RadioGroupControl from "discourse/components/setting-field/radio-group";
 
 const REGISTRY = {};
@@ -81,7 +82,14 @@ registerSettingFieldType("radio-group", {
 registerSettingFieldType("enum", {
   ...ROW,
   type: "select",
+  adminReady: true,
   renderer: EnumControl,
+});
+registerSettingFieldType("locale_enum", {
+  ...ROW,
+  type: "select",
+  adminReady: true,
+  renderer: LocaleEnumControl,
 });
 registerSettingFieldType("group_list", {
   ...ROW,
