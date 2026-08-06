@@ -1365,10 +1365,12 @@ RSpec.describe Admin::DashboardController do
     let(:request_params) { { start_date: "2026-05-01", end_date: "2026-05-12" } }
 
     before do
+      freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
       SiteSetting.dashboard_improvements = true
       SiteSetting.improved_crawler_detection = true
       SiteSetting.persist_browser_pageview_events = true
       SiteSetting.use_legacy_pageviews = false
+      BrowserPageviewEvent.stubs(:beacon_cutover_date).returns(Date.new(2026, 1, 1))
       Discourse.stubs(:current_hostname).returns("test.localhost")
       DiscourseIpInfo.stubs(:get).returns(asn: 64_496, organization: "Example Network")
     end
@@ -1479,11 +1481,7 @@ RSpec.describe Admin::DashboardController do
               { "value" => "/top", "label" => "/top", "pageviews" => 1 },
             ],
             "referrers" => [
-              {
-                "value" => "",
-                "label" => "Direct / unknown",
-                "pageviews" => 1,
-              },
+              { "value" => "", "label" => "Direct / unknown", "pageviews" => 1 },
               { "value" => "search.example", "label" => "search.example", "pageviews" => 1 },
             ],
             "countries" => [
@@ -1491,11 +1489,7 @@ RSpec.describe Admin::DashboardController do
               { "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 },
             ],
             "networks" => [
-              {
-                "value" => "AS64496",
-                "label" => "AS64496 Example Network",
-                "pageviews" => 3,
-              },
+              { "value" => "AS64496", "label" => "AS64496 Example Network", "pageviews" => 3 },
             ],
             "browsers" => [
               { "value" => "chrome", "label" => "Chrome", "pageviews" => 2 },
@@ -1533,32 +1527,14 @@ RSpec.describe Admin::DashboardController do
           "dimensions" => {
             "top_urls" => [{ "value" => "/top", "label" => "/top", "pageviews" => 1 }],
             "entry_urls" => [{ "value" => "/top", "label" => "/top", "pageviews" => 1 }],
-            "referrers" => [
-              {
-                "value" => "",
-                "label" => "Direct / unknown",
-                "pageviews" => 1,
-              },
-            ],
-            "countries" => [
-              { "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 },
-            ],
+            "referrers" => [{ "value" => "", "label" => "Direct / unknown", "pageviews" => 1 }],
+            "countries" => [{ "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 }],
             "networks" => [
-              {
-                "value" => "AS64496",
-                "label" => "AS64496 Example Network",
-                "pageviews" => 1,
-              },
+              { "value" => "AS64496", "label" => "AS64496 Example Network", "pageviews" => 1 },
             ],
-            "browsers" => [
-              { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
-            ],
+            "browsers" => [{ "value" => "firefox", "label" => "Firefox", "pageviews" => 1 }],
             "ip_addresses" => [
-              {
-                "value" => "198.51.100.2",
-                "label" => "198.51.100.2",
-                "pageviews" => 1,
-              },
+              { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
             ],
           },
         )
@@ -1627,46 +1603,20 @@ RSpec.describe Admin::DashboardController do
           ],
           "dimensions" => {
             "top_urls" => [
-              {
-                "value" => "/first-retained",
-                "label" => "/first-retained",
-                "pageviews" => 1,
-              },
-              {
-                "value" => "/latest-retained",
-                "label" => "/latest-retained",
-                "pageviews" => 1,
-              },
+              { "value" => "/first-retained", "label" => "/first-retained", "pageviews" => 1 },
+              { "value" => "/latest-retained", "label" => "/latest-retained", "pageviews" => 1 },
             ],
             "entry_urls" => [
-              {
-                "value" => "/first-retained",
-                "label" => "/first-retained",
-                "pageviews" => 1,
-              },
-              {
-                "value" => "/latest-retained",
-                "label" => "/latest-retained",
-                "pageviews" => 1,
-              },
+              { "value" => "/first-retained", "label" => "/first-retained", "pageviews" => 1 },
+              { "value" => "/latest-retained", "label" => "/latest-retained", "pageviews" => 1 },
             ],
-            "referrers" => [
-              {
-                "value" => "",
-                "label" => "Direct / unknown",
-                "pageviews" => 2,
-              },
-            ],
+            "referrers" => [{ "value" => "", "label" => "Direct / unknown", "pageviews" => 2 }],
             "countries" => [
               { "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 },
               { "value" => "US", "label" => "United States", "pageviews" => 1 },
             ],
             "networks" => [
-              {
-                "value" => "AS64496",
-                "label" => "AS64496 Example Network",
-                "pageviews" => 2,
-              },
+              { "value" => "AS64496", "label" => "AS64496 Example Network", "pageviews" => 2 },
             ],
             "browsers" => [
               { "value" => "chrome", "label" => "Chrome", "pageviews" => 1 },
@@ -1728,7 +1678,10 @@ RSpec.describe Admin::DashboardController do
         get "/admin/dashboard/traffic.json", params: request_params
 
         expect(response.parsed_body).to eq(
-          "partial_data" => { "reason" => "pageview_limit", "pageview_limit" => 2 },
+          "partial_data" => {
+            "reason" => "pageview_limit",
+            "pageview_limit" => 2,
+          },
           "summary" => {
             "pageviews" => 2,
             "distinct_sessions" => 2,
@@ -1754,26 +1707,12 @@ RSpec.describe Admin::DashboardController do
               { "value" => middle.url, "label" => middle.url, "pageviews" => 1 },
               { "value" => newest.url, "label" => newest.url, "pageviews" => 1 },
             ],
-            "referrers" => [
-              {
-                "value" => "",
-                "label" => "Direct / unknown",
-                "pageviews" => 2,
-              },
-            ],
-            "countries" => [
-              { "value" => "US", "label" => "United States", "pageviews" => 2 },
-            ],
+            "referrers" => [{ "value" => "", "label" => "Direct / unknown", "pageviews" => 2 }],
+            "countries" => [{ "value" => "US", "label" => "United States", "pageviews" => 2 }],
             "networks" => [
-              {
-                "value" => "AS64496",
-                "label" => "AS64496 Example Network",
-                "pageviews" => 2,
-              },
+              { "value" => "AS64496", "label" => "AS64496 Example Network", "pageviews" => 2 },
             ],
-            "browsers" => [
-              { "value" => "chrome", "label" => "Chrome", "pageviews" => 2 },
-            ],
+            "browsers" => [{ "value" => "chrome", "label" => "Chrome", "pageviews" => 2 }],
             "ip_addresses" => [
               { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 2 },
             ],
@@ -1783,12 +1722,7 @@ RSpec.describe Admin::DashboardController do
     end
 
     context "when the selected date range exceeds retention and traffic reaches the cap" do
-      let(:event_attributes) do
-        {
-          asn: 64_496,
-          source: BrowserPageviewEvent::SOURCE_BEACON,
-        }
-      end
+      let(:event_attributes) { { asn: 64_496, source: BrowserPageviewEvent::SOURCE_BEACON } }
       let!(:first_retained) do
         Fabricate(
           :browser_pageview_event,
@@ -1830,8 +1764,7 @@ RSpec.describe Admin::DashboardController do
         sign_in(admin)
         SiteSetting.stubs(:admin_site_traffic_event_cap).returns(2)
 
-        get "/admin/dashboard/traffic.json",
-            params: request_params.merge(start_date: "2026-01-01")
+        get "/admin/dashboard/traffic.json", params: request_params.merge(start_date: "2026-01-01")
 
         expect(response.parsed_body).to eq(
           "partial_data" => {
@@ -1864,46 +1797,20 @@ RSpec.describe Admin::DashboardController do
           ],
           "dimensions" => {
             "top_urls" => [
-              {
-                "value" => latest_retained.url,
-                "label" => latest_retained.url,
-                "pageviews" => 1,
-              },
-              {
-                "value" => middle_retained.url,
-                "label" => middle_retained.url,
-                "pageviews" => 1,
-              },
+              { "value" => latest_retained.url, "label" => latest_retained.url, "pageviews" => 1 },
+              { "value" => middle_retained.url, "label" => middle_retained.url, "pageviews" => 1 },
             ],
             "entry_urls" => [
-              {
-                "value" => latest_retained.url,
-                "label" => latest_retained.url,
-                "pageviews" => 1,
-              },
-              {
-                "value" => middle_retained.url,
-                "label" => middle_retained.url,
-                "pageviews" => 1,
-              },
+              { "value" => latest_retained.url, "label" => latest_retained.url, "pageviews" => 1 },
+              { "value" => middle_retained.url, "label" => middle_retained.url, "pageviews" => 1 },
             ],
-            "referrers" => [
-              {
-                "value" => "",
-                "label" => "Direct / unknown",
-                "pageviews" => 2,
-              },
-            ],
+            "referrers" => [{ "value" => "", "label" => "Direct / unknown", "pageviews" => 2 }],
             "countries" => [
               { "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 },
               { "value" => "US", "label" => "United States", "pageviews" => 1 },
             ],
             "networks" => [
-              {
-                "value" => "AS64496",
-                "label" => "AS64496 Example Network",
-                "pageviews" => 2,
-              },
+              { "value" => "AS64496", "label" => "AS64496 Example Network", "pageviews" => 2 },
             ],
             "browsers" => [
               { "value" => "chrome", "label" => "Chrome", "pageviews" => 1 },

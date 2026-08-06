@@ -2068,7 +2068,9 @@ CREATE TABLE public.browser_pageview_events (
     score integer,
     normalized_referrer character varying(2000),
     normalized_referrer_version smallint,
-    source smallint DEFAULT 1 NOT NULL
+    source smallint DEFAULT 1 NOT NULL,
+    normalized_url character varying(2000),
+    normalized_url_version integer
 );
 
 
@@ -18857,6 +18859,13 @@ CREATE INDEX index_bookmarks_on_user_id ON public.bookmarks USING btree (user_id
 
 
 --
+-- Name: idx_bpe_stale_normalized_url; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_stale_normalized_url ON public.browser_pageview_events USING btree (id) WHERE ((normalized_url_version IS NULL) OR (normalized_url_version < 1));
+
+
+--
 -- Name: index_browser_pageview_event_scores_on_event_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25546,4 +25555,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20120311164326'),
 ('20120311163914'),
 ('20000225050318');
-
