@@ -1,8 +1,22 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, find, triggerEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
+
+/**
+ * Pointer capture rejects a pointer ID that was never real, so the gesture would
+ * refuse to start on a synthetic press. Stubbing it leaves the rest of the
+ * lifecycle genuine.
+ *
+ * @param {HTMLElement} element - The element that will receive the press.
+ */
+function makePressable(element) {
+  const captured = new Set();
+  element.setPointerCapture = (pointerId) => captured.add(pointerId);
+  element.hasPointerCapture = (pointerId) => captured.has(pointerId);
+  element.releasePointerCapture = (pointerId) => captured.delete(pointerId);
+}
 
 acceptance("Run Query", function (needs) {
   needs.user();
@@ -427,5 +441,75 @@ acceptance("Run Query", function (needs) {
     await visit("/g/testgroup/reports/2?run=1");
 
     assert.dom("div.query-results").exists("query results should be displayed");
+  });
+
+  test("dragging the grippie resizes the editor panes", async function (assert) {
+    // A default query is not editable, and the grippie only exists in edit mode.
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const grippie = find(".query-editor .grippie");
+    const panes = find(".query-editor .panels-flex");
+    makePressable(grippie);
+    const startingHeight = panes.clientHeight;
+
+    await triggerEvent(grippie, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 40,
+      clientY: 200,
+    });
+    // The handler bails unless the pointer also moved horizontally, so the move
+    // carries a nominal movementX alongside the vertical travel it acts on.
+    await triggerEvent(grippie, "pointermove", {
+      pointerId: 1,
+      clientX: 41,
+      clientY: 240,
+      movementX: 1,
+      movementY: 40,
+    });
+
+    assert.strictEqual(
+      panes.style.height,
+      `${startingHeight + 40}px`,
+      "the panes grow by the pointer's vertical travel"
+    );
+
+    await triggerEvent(grippie, "pointerup", { pointerId: 1 });
+    assert
+      .dom(document.body)
+      .doesNotHaveClass("dragging", "the page mark is given back on release");
+  });
+
+  test("a purely vertical drag of the grippie does not resize", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const grippie = find(".query-editor .grippie");
+    const panes = find(".query-editor .panels-flex");
+    makePressable(grippie);
+
+    await triggerEvent(grippie, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 40,
+      clientY: 200,
+    });
+    await triggerEvent(grippie, "pointermove", {
+      pointerId: 1,
+      clientX: 40,
+      clientY: 240,
+      movementX: 0,
+      movementY: 40,
+    });
+
+    // Pinning a quirk rather than endorsing it: the handler gates on horizontal
+    // movement while resizing on vertical, so a straight downward drag is
+    // ignored. Changing that should be a deliberate decision, not a surprise.
+    assert.strictEqual(
+      panes.style.height,
+      "",
+      "no height is written when the pointer has not moved horizontally"
+    );
+
+    await triggerEvent(grippie, "pointerup", { pointerId: 1 });
   });
 });
