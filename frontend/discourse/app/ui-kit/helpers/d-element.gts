@@ -64,6 +64,14 @@ const shortcuts: { [K in ShortcutTag]: ElementWrapper<K> } = {
 };
 
 /**
+ * Wrappers built for tags outside the shortcut table, kept so a given tag always
+ * resolves to the same component. A caller that picks its tag at runtime would
+ * otherwise get a new component identity on every call, and rendering it would
+ * tear down and rebuild the whole subtree instead of updating it.
+ */
+const fallbacks = new Map<string, unknown>();
+
+/**
  * Returns a wrapper component that renders the given tag name, or an empty
  * pass-through wrapper for an empty string. Modeled on the reference
  * implementation of RFC389, with higher-performance shortcuts for common
@@ -134,13 +142,20 @@ export default function dElement(
   } else if (shortcuts[tagName as ShortcutTag]) {
     wrapper = shortcuts[tagName as ShortcutTag];
   } else {
-    wrapper = <template>
-      {{! @glint-nocheck: @ember/component (ClassicComponent) is not glint-typed }}
-      <ClassicComponent
-        @tagName={{tagName}}
-        ...attributes
-      >{{yield}}</ClassicComponent>
-    </template>;
+    const cached = fallbacks.get(tagName);
+    if (cached) {
+      wrapper = cached;
+    } else {
+      const fallback = <template>
+        {{! @glint-nocheck: @ember/component (ClassicComponent) is not glint-typed }}
+        <ClassicComponent
+          @tagName={{tagName}}
+          ...attributes
+        >{{yield}}</ClassicComponent>
+      </template>;
+      fallbacks.set(tagName, fallback);
+      wrapper = fallback;
+    }
   }
 
   return wrapper as ComponentLike<{

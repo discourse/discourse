@@ -405,11 +405,9 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
   });
 
   test("replacing an interior item republishes its key", async function (assert) {
-    // The flush signature hashes totalSize + range + the FIRST and LAST keys only.
-    // Swapping an item strictly inside the window leaves all four identical, so the
-    // freshly computed window is discarded and the component keeps pairing stale
-    // virtual keys with current items[index] — keyed row state then belongs to the
-    // wrong object.
+    // The published window pairs each virtual key with items[index]. Replacing an
+    // object strictly inside the window must change that row's key, or keyed row
+    // state stays attached to the previous object.
     const state = new State(buildRows(1000));
 
     await render(
