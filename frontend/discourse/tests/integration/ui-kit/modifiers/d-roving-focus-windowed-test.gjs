@@ -3,12 +3,16 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 
-// A mounted window of ten rows deep in a 5000-row logical list: data-index 100..109.
+/** A mounted window of ten rows deep in a 5000-row logical list: data-index 100..109. */
 const WINDOW_ROWS = Array.from({ length: 10 }, (_, i) => 100 + i);
-// A fully-mounted small list: data-index 0..9, logicalCount 10 (nothing off-window).
+
+/** A fully-mounted small list: data-index 0..9, logicalCount 10 (nothing off-window). */
 const SMALL_ROWS = Array.from({ length: 10 }, (_, i) => i);
-// The same ten-row window with one row disabled, so the rendered cell count and the navigable
-// count differ.
+
+/**
+ * The same ten-row window with one row disabled, so the rendered cell count and the navigable
+ * count differ.
+ */
 const WINDOW_ROWS_ONE_DISABLED = WINDOW_ROWS.map((index) => ({
   index,
   disabled: index === 109 ? "true" : "false",
@@ -343,8 +347,6 @@ module(
   }
 );
 
-// Oracle for U-D change A: logical (windowed) keyboard navigation (4b).
-//
 // Home/End/PageUp/PageDown must target the LOGICAL row (0 / `logicalCount-1` / ±one
 // page) over the ABSOLUTE `data-index` set, not the mounted slice. An in-window target
 // lands locally; an off-window target fires `onJump(target, direction)` so the consumer
