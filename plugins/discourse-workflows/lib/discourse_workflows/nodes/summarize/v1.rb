@@ -58,6 +58,7 @@ module DiscourseWorkflows
           },
           group: "data",
           previewable: true,
+          output_schema_resolver: "summarize",
           capabilities: {
             run_scope: "all_items",
           },

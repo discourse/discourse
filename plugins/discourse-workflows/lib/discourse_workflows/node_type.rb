@@ -21,6 +21,7 @@ module DiscourseWorkflows
       capabilities: {
       },
       output_contracts: [],
+      output_schema_resolver: nil,
       palette_visible: true,
       available: true,
       previewable: false,
@@ -123,13 +124,20 @@ module DiscourseWorkflows
     def self.output_schemas(configuration = {}, input_schemas: [])
       input_schema = Schema.union(*input_schemas.compact)
 
-      active_output_contracts(configuration).map do |candidates|
-        Schema.union(
-          *candidates.map do |contract|
-            Schema.resolve(contract.fetch(:schema), mode: contract.fetch(:mode), input_schema:)
-          end,
-        )
+      active_output_contracts(configuration).map.with_index do |candidates, index|
+        resolved =
+          Schema.union(
+            *candidates.map do |contract|
+              Schema.resolve(contract.fetch(:schema), mode: contract.fetch(:mode), input_schema:)
+            end,
+          )
+
+        Schema.augment(resolved, active_output_extensions(index, configuration))
       end
+    end
+
+    def self.output_schema_resolver
+      description_value(:output_schema_resolver)
     end
 
     def self.output_contracts
@@ -151,6 +159,16 @@ module DiscourseWorkflows
 
     def self.active_output_contracts(configuration = {})
       output_contracts.map { |contract| contract_candidates(contract, configuration) }
+    end
+
+    def self.active_output_extensions(output_index, configuration = {})
+      contract = output_contracts[output_index]
+      return [] if contract.nil?
+
+      contract
+        .fetch(:extensions)
+        .select { |extension| Schema.visible?(extension.fetch(:display_options), configuration) }
+        .map { |extension| extension.fetch(:schema) }
     end
 
     def self.contract_candidates(contract, configuration)
@@ -220,6 +238,10 @@ module DiscourseWorkflows
         variants:
           Array(contract[:variants]).map do |variant|
             normalize_contract_fields(variant.deep_symbolize_keys)
+          end,
+        extensions:
+          Array(contract[:extensions]).map do |extension|
+            normalize_contract_fields(extension.deep_symbolize_keys)
           end,
       )
     end
