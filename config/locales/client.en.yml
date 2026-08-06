@@ -1,5 +1,7 @@
 en:
   js:
+    ace_editor:
+      resize: "Resize code editor"
     user_api_key:
       title: 'Authorize "%{application_name}"'
       authorize: "Authorize"

@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
@@ -9,9 +8,10 @@ import { modifier } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import loadAce from "discourse/lib/load-ace-editor";
-import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dResizeEdge from "discourse/ui-kit/modifiers/d-resize-edge";
 import { i18n } from "discourse-i18n";
 
 const WAITER = buildWaiter("ace-editor");
@@ -59,8 +59,19 @@ function overridePlaceholder(ace) {
 // @save
 // @submit
 // @setWarning
+// Used only if the editor's min-height computes to `auto`, which would leave the
+// resize with no lower bound at all.
+const FALLBACK_MIN_HEIGHT = 200;
+
 export default class AceEditor extends Component {
   @service appEvents;
+
+  /** The size reported to assistive technology; null until measured. */
+  @tracked resizeHeight = null;
+  /** The minimum reported to assistive technology. */
+  @tracked resizeMin = null;
+  /** The maximum reported to assistive technology. */
+  @tracked resizeMax = null;
 
   @tracked isLoading = true;
   editor = null;
@@ -153,6 +164,7 @@ export default class AceEditor extends Component {
 
     this.editor.on("blur", () => this.warnSCSSDeprecations());
 
+    this.refreshResizeBounds();
     this.editor.$blockScrolling = Infinity;
     this.editor.renderer.setScrollMargin(10, 10);
 
@@ -268,9 +280,71 @@ export default class AceEditor extends Component {
     }
   }
 
+  /**
+   * The height the next drag grows or shrinks from.
+   *
+   * A function rather than a number because it is a live measurement: an arg whose
+   * compute reads no tracked state is cached for the modifier's lifetime.
+   *
+   * @returns {number} The editor's current height, in pixels.
+   */
+  @bind
+  editorHeight() {
+    return this.editor?.container.offsetHeight ?? 0;
+  }
+
+  /**
+   * The smallest height the editor may be dragged to, read from the stylesheet so
+   * the two cannot drift apart.
+   *
+   * @returns {number} The minimum height, in pixels.
+   */
+  @bind
+  minEditorHeight() {
+    const container = this.editor?.container;
+    if (!container) {
+      return FALLBACK_MIN_HEIGHT;
+    }
+    const declared = getComputedStyle(container).minHeight;
+    return parseInt(declared === "auto" ? FALLBACK_MIN_HEIGHT : declared, 10);
+  }
+
+  /**
+   * The largest height the editor may be dragged to.
+   *
+   * @returns {number} The maximum height, in pixels.
+   */
+  @bind
+  maxEditorHeight() {
+    const belowHeader = window.innerHeight - headerOffset();
+    const container = this.editor?.container;
+    if (!container) {
+      return belowHeader;
+    }
+    // A declared cap also binds the box, and dragging past it would report a
+    // height the editor never takes.
+    const declared = parseInt(getComputedStyle(container).maxHeight, 10);
+    return Number.isFinite(declared)
+      ? Math.min(declared, belowHeader)
+      : belowHeader;
+  }
+
+  /**
+   * Refreshes what the separator publishes to assistive technology. Needed because
+   * the attributes render before the editor exists, and a getter reading the DOM
+   * has no tracked dependency to re-render on.
+   */
+  @bind
+  refreshResizeBounds() {
+    this.resizeHeight = this.editorHeight() || null;
+    this.resizeMin = this.minEditorHeight();
+    this.resizeMax = this.maxEditorHeight();
+  }
+
   @bind
   onResizeDrag(size) {
     this.editor.container.style.height = `${size}px`;
+    this.refreshResizeBounds();
   }
 
   <template>
@@ -290,10 +364,20 @@ export default class AceEditor extends Component {
         {{#if @resizable}}
           <div
             class="grippie"
-            {{grippieDragResize
-              ".ace_editor--resizable"
-              "bottom"
-              (hash onThrottledDrag=this.onResizeDrag)
+            role="separator"
+            aria-orientation="horizontal"
+            aria-label={{i18n "ace_editor.resize"}}
+            aria-valuenow={{this.resizeHeight}}
+            aria-valuemin={{this.resizeMin}}
+            aria-valuemax={{this.resizeMax}}
+            tabindex="0"
+            {{dResizeEdge
+              value=this.editorHeight
+              min=this.minEditorHeight
+              max=this.maxEditorHeight
+              axis="vertical"
+              side="start"
+              onResize=this.onResizeDrag
             }}
           ></div>
         {{/if}}

@@ -66,6 +66,31 @@ module PageObjects
         self
       end
 
+      def height
+        find(@composer_id).native.bounding_box["height"].round
+      end
+
+      def drag_resize_by(pixels)
+        grippie = find("#{@composer_id} .grippie")
+
+        page.driver.with_playwright_page do |pw_page|
+          box = grippie.native.bounding_box
+          x = box["x"] + box["width"] / 2
+          y = box["y"] + box["height"] / 2
+
+          pw_page.mouse.move(x, y)
+          pw_page.mouse.down
+          pw_page.mouse.move(x, y - pixels, steps: 5)
+          pw_page.mouse.up
+        end
+
+        self
+      end
+
+      def has_height?(height)
+        has_css?("html[style*='--composer-height: #{height}px']", visible: :all)
+      end
+
       def fill_title(title)
         find("#{@composer_id} #reply-title").fill_in(with: title)
         self

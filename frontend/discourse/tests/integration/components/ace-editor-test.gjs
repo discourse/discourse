@@ -1,7 +1,43 @@
-import { render, triggerEvent } from "@ember/test-helpers";
+import {
+  find,
+  findAll,
+  focus,
+  render,
+  triggerEvent,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import AceEditor from "discourse/components/ace-editor";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { i18n } from "discourse-i18n";
+
+function installPointerCaptureStub(element) {
+  const captured = new Set();
+
+  element.setPointerCapture = (pointerId) => captured.add(pointerId);
+  element.hasPointerCapture = (pointerId) => captured.has(pointerId);
+  element.releasePointerCapture = (pointerId) => captured.delete(pointerId);
+}
+
+async function dragResizeEdge(element, { from, to, pointerId = 1 }) {
+  installPointerCaptureStub(element);
+
+  await triggerEvent(element, "pointerdown", {
+    button: 0,
+    clientY: from,
+    pointerId,
+  });
+  await triggerEvent(element, "pointermove", {
+    button: 0,
+    clientY: to,
+    pointerId,
+  });
+  await triggerEvent(element, "pointerup", {
+    button: 0,
+    clientY: to,
+    pointerId,
+  });
+}
 
 module("Integration | Component | AceEditor", function (hooks) {
   setupRenderingTest(hooks);
@@ -85,13 +121,13 @@ module("Integration | Component | AceEditor", function (hooks) {
       .hasAttribute("data-disabled", "true", "it has a data-disabled attr");
   });
 
-  test("resizable editor", async function (assert) {
+  test("ACE resize oracle renders an accessible separator", async function (assert) {
     await render(
       <template>
         <AceEditor
           @mode="sql"
           @content="SELECT * FROM users"
-          style="width: 300px; height: 200px"
+          style="width: 300px; height: 220px; min-height: 200px; max-height: 240px"
           @resizable={{true}}
         />
       </template>
@@ -105,41 +141,154 @@ module("Integration | Component | AceEditor", function (hooks) {
     assert
       .dom(".ace-wrapper .grippie")
       .exists("it renders the grippie element for dragging vertically");
+    assert
+      .dom(".ace-wrapper .grippie")
+      .hasAttribute("role", "separator", "the resize edge is a separator")
+      .hasAttribute(
+        "aria-orientation",
+        "horizontal",
+        "the separator reports its visual orientation"
+      )
+      .hasAttribute(
+        "aria-label",
+        i18n("ace_editor.resize"),
+        "the separator has an accessible name"
+      )
+      .hasAttribute("tabindex", "0", "the separator is keyboard focusable")
+      .hasAttribute(
+        "aria-valuenow",
+        "220",
+        "the separator reports the measured editor height"
+      )
+      .hasAttribute(
+        "aria-valuemin",
+        "200",
+        "the separator reports the computed minimum height"
+      )
+      .hasAttribute(
+        "aria-valuemax",
+        "240",
+        "the separator honors the editor's declared maximum height"
+      );
   });
 
-  test("resizable editor height adjustment", async function (assert) {
+  test("ACE resize oracle adjusts and clamps pointer-dragged height", async function (assert) {
     await render(
       <template>
+        <button class="focus-sentinel" type="button">Keep focus</button>
         <AceEditor
           @mode="sql"
           @content="SELECT * FROM users"
-          style="width: 300px; min-height: 200px"
+          style="width: 300px; height: 260px; min-height: 200px"
           @resizable={{true}}
         />
       </template>
     );
 
-    const initialHeight = document.querySelector(
-      ".ace_editor--resizable"
-    ).offsetHeight;
-    const expectedHeight = initialHeight + 300;
-    await triggerEvent(".grippie", "mousedown", { clientY: initialHeight });
-    await triggerEvent(".grippie", "mousemove", { clientY: expectedHeight });
-    await triggerEvent(".grippie", "mouseup", { clientY: expectedHeight });
+    const editor = find(".ace_editor--resizable");
+    const grippie = find(".grippie");
+    const initialHeight = editor.offsetHeight;
+    const startCoordinate = 47;
+    const growBy = 120;
+    const expectedHeight = initialHeight + growBy;
 
-    const actualHeight = document.querySelector(
-      ".ace_editor--resizable"
-    ).offsetHeight;
-    assert.strictEqual(expectedHeight, actualHeight, "height is adjusted");
-
-    await triggerEvent(".grippie", "mousedown", { clientY: expectedHeight });
-    await triggerEvent(".grippie", "mousemove", { clientY: 150 });
-    await triggerEvent(".grippie", "mouseup", { clientY: 150 });
+    await focus(".focus-sentinel");
+    await dragResizeEdge(grippie, {
+      from: startCoordinate,
+      to: startCoordinate + growBy,
+    });
 
     assert.strictEqual(
-      document.querySelector(".ace_editor--resizable").offsetHeight,
+      editor.offsetHeight,
+      expectedHeight,
+      "height is adjusted"
+    );
+    assert.dom(".focus-sentinel").isFocused("resizing does not steal focus");
+
+    await dragResizeEdge(grippie, {
+      from: 611,
+      to: 11,
+      pointerId: 2,
+    });
+
+    assert.strictEqual(
+      editor.offsetHeight,
       200,
       "height will not go past the minimum height of 200px"
     );
+  });
+
+  test("ACE resize oracle scopes pointer dragging to its own editor", async function (assert) {
+    await render(
+      <template>
+        <AceEditor
+          @mode="sql"
+          @content="SELECT 1"
+          style="width: 300px; height: 240px; min-height: 200px; max-height: 500px"
+          @resizable={{true}}
+        />
+        <AceEditor
+          @mode="sql"
+          @content="SELECT 2"
+          style="width: 300px; height: 320px; min-height: 200px; max-height: 500px"
+          @resizable={{true}}
+        />
+      </template>
+    );
+
+    const editors = findAll(".ace_editor--resizable");
+    const grippies = findAll(".grippie");
+
+    await dragResizeEdge(grippies[1], { from: 41, to: 101 });
+
+    assert.strictEqual(
+      editors[0].offsetHeight,
+      240,
+      "the first editor keeps its height"
+    );
+    assert.strictEqual(
+      editors[1].offsetHeight,
+      380,
+      "the second grippie resizes the second editor"
+    );
+  });
+
+  test("ACE resize oracle supports arrow, Home, and End keys", async function (assert) {
+    await render(
+      <template>
+        <AceEditor
+          @mode="sql"
+          @content="SELECT * FROM users"
+          style="width: 300px; height: 300px; min-height: 200px; max-height: 360px"
+          @resizable={{true}}
+        />
+      </template>
+    );
+
+    const editor = find(".ace_editor--resizable");
+    const grippie = find(".grippie");
+
+    await triggerKeyEvent(grippie, "keydown", "ArrowDown");
+    assert.strictEqual(editor.offsetHeight, 316, "ArrowDown grows the editor");
+
+    await triggerKeyEvent(grippie, "keydown", "ArrowUp");
+    assert.strictEqual(editor.offsetHeight, 300, "ArrowUp shrinks the editor");
+
+    await triggerKeyEvent(grippie, "keydown", "Home");
+    assert.strictEqual(
+      editor.offsetHeight,
+      200,
+      "Home uses the minimum height"
+    );
+
+    await triggerKeyEvent(grippie, "keydown", "End");
+    assert.strictEqual(editor.offsetHeight, 360, "End uses the maximum height");
+    assert
+      .dom(grippie)
+      .hasAttribute(
+        "aria-valuenow",
+        "360",
+        "keyboard resizing refreshes the reported height"
+      );
   });
 });
