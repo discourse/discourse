@@ -24,6 +24,7 @@ export default class LivestreamZoomEntry extends Component {
     topicId: this.topic.id,
     canJoin: () => this.canJoinNow,
     onBeforeJoinAttempt: this.markAsGoing,
+    onJoined: () => this.args.onJoined?.(),
   });
 
   willDestroy() {

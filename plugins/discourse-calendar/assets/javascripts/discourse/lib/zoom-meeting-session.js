@@ -35,11 +35,12 @@ export default class ZoomMeetingSession {
 
   #tornDown = false;
 
-  constructor(owner, { topicId, canJoin, onBeforeJoinAttempt }) {
+  constructor(owner, { topicId, canJoin, onBeforeJoinAttempt, onJoined }) {
     setOwner(this, owner);
     this.topicId = topicId;
     this.canJoin = canJoin;
     this.onBeforeJoinAttempt = onBeforeJoinAttempt;
+    this.onJoined = onJoined;
   }
 
   teardown() {
@@ -95,6 +96,7 @@ export default class ZoomMeetingSession {
       }
 
       this.isJoined = true;
+      this.onJoined?.();
       this.stopRetrying();
     } catch (err) {
       const serializedError = serializeZoomError(err);

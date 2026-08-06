@@ -115,7 +115,7 @@ export default class UpsertCategorySecurity extends Component {
     const newPermissions = [
       ...(this.permissions || []),
       {
-        group_name: this.site.groupsById[groupId]?.name,
+        group_name: this.site.groupName(groupId),
         group_id: groupId,
         permission_type: this.minimumPermission,
       },

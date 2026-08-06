@@ -66,10 +66,6 @@ module("Unit | Utility | workflows property engine", function () {
       propertyPlaceholder("trigger:webhook", "path"),
       "my-webhook"
     );
-    assert.strictEqual(
-      propertyPlaceholder("trigger:reviewable_approved", "reviewable_types"),
-      "All types"
-    );
   });
 
   test("falls back to the shared property_engine.fields scope", function (assert) {
@@ -104,6 +100,18 @@ module("Unit | Utility | workflows property engine", function () {
     assert.strictEqual(
       propertySelectNoneKey("trigger:user_added_to_group", "group_id"),
       "discourse_workflows.property_engine.fields.group_id_placeholder"
+    );
+    assert.strictEqual(
+      propertyLabel("trigger:reviewable_created", "reviewable_types"),
+      "Reviewable types"
+    );
+    assert.strictEqual(
+      propertyDescription("trigger:reviewable_created", "reviewable_types"),
+      "Only trigger for these reviewable types"
+    );
+    assert.strictEqual(
+      propertyPlaceholder("trigger:reviewable_approved", "reviewable_types"),
+      "All types"
     );
 
     // node-scoped keys win over the shared scope
@@ -395,6 +403,20 @@ module("Unit | Utility | workflows property engine", function () {
     );
     assert.false(
       fieldVisible(combined, { method: "POST", content_type: "raw" })
+    );
+  });
+
+  test("tests membership when the anchor is a multi-select", function (assert) {
+    const shown = { display_options: { show: { extensions: ["stats"] } } };
+
+    assert.true(fieldVisible(shown, { extensions: ["stats", "ips"] }));
+    assert.true(fieldVisible(shown, { extensions: ["stats"] }));
+    assert.false(fieldVisible(shown, { extensions: ["ips"] }));
+    assert.false(fieldVisible(shown, { extensions: [] }));
+    assert.strictEqual(
+      fieldDisplayState(shown, { extensions: "={{ $json.extensions }}" }),
+      "indeterminate",
+      "an expression anchor stays indeterminate for multi-selects too"
     );
   });
 

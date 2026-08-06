@@ -194,6 +194,37 @@ RSpec.describe DiscourseWorkflows::Schema do
     end
   end
 
+  describe ".augment" do
+    it "merges extension properties into the same shape", :aggregate_failures do
+      base = described_class.entity("user", { "id" => { "type" => "integer" } }, "User")
+      extension = described_class.entity_extension("user", "email" => { "type" => "string" })
+
+      augmented = described_class.augment(base, extension)
+
+      expect(augmented.dig("properties", "user", "properties").keys).to eq(%w[id email])
+      expect(augmented.dig("properties", "user", "description")).to eq("User")
+    end
+
+    it "returns the schema untouched without usable extensions" do
+      base = described_class.entity("user", { "id" => { "type" => "integer" } }, "User")
+
+      expect(described_class.augment(base)).to eq(base)
+      expect(described_class.augment(base, {})).to eq(base)
+    end
+
+    it "augments every branch of an anyOf" do
+      left = described_class.document("a" => { "type" => "string" })
+      right = described_class.document("b" => { "type" => "string" })
+      extension = described_class.document("c" => { "type" => "string" })
+
+      augmented = described_class.augment(described_class.union(left, right), extension)
+
+      expect(augmented["anyOf"].map { |branch| branch["properties"].keys }).to eq(
+        [%w[a c], %w[b c]],
+      )
+    end
+  end
+
   describe ".resolve" do
     it "replaces the input schema by default" do
       expect(
@@ -334,6 +365,15 @@ RSpec.describe DiscourseWorkflows::Schema do
       display_options = { show: { operation: %w[add remove] } }
 
       expect(described_class.visible?(display_options, operation: "={{ $json.op }}")).to eq(true)
+    end
+
+    it "tests membership against a multi-select value", :aggregate_failures do
+      display_options = { show: { extensions: ["stats"] } }
+
+      expect(described_class.visible?(display_options, extensions: %w[stats ips])).to eq(true)
+      expect(described_class.visible?(display_options, extensions: ["stats"])).to eq(true)
+      expect(described_class.visible?(display_options, extensions: ["ips"])).to eq(false)
+      expect(described_class.visible?(display_options, extensions: [])).to eq(false)
     end
   end
 

@@ -404,8 +404,8 @@ pl_PL:
         confirm_payment: Potwierdź płatność
         success: Cofnij
       admin:
-        unconfigured: 'Stripe nie jest poprawnie skonfigurowany. Więcej informacji można znaleźć w Discourse Meta.'
-        on_meta: Subskrypcje Discourse na Meta
+        unconfigured: "Stripe nie jest poprawnie skonfigurowany. Szczegóły znajdziesz w dokumentacji Discourse Meta <a href='%{url}' target='_blank'>w</a>."
+        configure_stripe: Przejdź do ustawień
         dashboard:
           title: Panel
           table:

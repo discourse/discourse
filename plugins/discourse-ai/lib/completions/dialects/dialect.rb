@@ -202,6 +202,30 @@ module DiscourseAi
 
         attr_reader :opts, :llm_model
 
+        def user_id_for(msg)
+          msg[:id] if msg[:type].to_sym == :user && msg[:id].present?
+        end
+
+        def user_id_prefix(msg)
+          user_id = user_id_for(msg)
+          "#{user_id}: " if user_id
+        end
+
+        def prepend_user_id(content, msg)
+          prefix = user_id_prefix(msg)
+          return content unless prefix
+          return "#{prefix}#{content}" unless content.is_a?(Array)
+
+          content = content.dup
+          first_text_index = content.index { |item| item.is_a?(String) }
+          if first_text_index
+            content[first_text_index] = "#{prefix}#{content[first_text_index]}"
+          else
+            content.unshift(prefix)
+          end
+          content
+        end
+
         def strip_upload_markers(markdown, upload_shas)
           return markdown if markdown.blank? || upload_shas.blank?
           base62_set = upload_shas.compact.map { |sha| Upload.base62_sha1(sha) }.to_set

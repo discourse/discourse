@@ -1175,7 +1175,6 @@ ko:
       external_links_in_new_tab: "새 탭에서 모든 외부 링크 열기"
       enable_quoting: "하이라이트된 텍스트에 대한 인용 댓글 활성화"
       enable_smart_lists: "글 작성 모드에서 스마트 목록 활성화"
-      enable_defer: "글을 읽지 않은 상태로 표시 활성화"
       enable_markdown_monospace_font: "마크다운 모드에서 글 작성시 고정폭 글꼴 사용"
       experimental_sidebar:
         enable: "사이드바 활성화"

@@ -114,11 +114,11 @@ module DiscourseAi
 
           user_message = { role: }
 
-          if msg[:id]
+          if (user_id = user_id_for(msg))
             if embed_user_ids?
-              content_array << "#{msg[:id]}: "
+              content_array << "#{user_id}: "
             else
-              user_message[:name] = msg[:id]
+              user_message[:name] = user_id
             end
           end
 

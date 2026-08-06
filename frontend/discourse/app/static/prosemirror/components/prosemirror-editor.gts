@@ -271,6 +271,8 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
       dispatchTransaction: (tr) => {
         this.view.updateState(this.view.state.apply(tr));
 
+        // serializing rewrites the whole document, so only the user's own
+        // edits, the ones they can undo, may replace the value
         if (tr.docChanged && tr.getMeta("addToHistory") !== false) {
           // If this gets expensive, we can debounce it
           const value = this.convertToMarkdown(this.view.state.doc);

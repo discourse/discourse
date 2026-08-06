@@ -2433,7 +2433,6 @@ zh_CN:
     default_other_external_links_in_new_tab: "默认在新标签页中打开外部链接。"
     default_other_enable_quoting: "默认启用高亮显示文本的引用回复。"
     default_other_enable_smart_lists: "默认情况下，在编辑器中输入时启用智能列表。"
-    default_other_enable_defer: "默认启用延迟话题功能。"
     default_other_enable_markdown_monospace_font: "默认在输入框的 Markdown 模式下使用等宽字体。"
     default_other_dynamic_favicon: "在浏览器图标上默认显示新的/更新的话题计数。"
     default_other_skip_new_user_tips: "跳过新用户入门提示和徽章。"
@@ -5168,6 +5167,7 @@ zh_CN:
     post_restored_by_author: "帖子被作者恢复。"
     post_deleted_by_author_after_penalty: >-
       该帖子在用户受到处罚后被作者删除。在不恢复帖子的情况下审核处罚。
+    target_user_deleted: "由于用户帐户已被删除，因此自动忽略。"
     priorities:
       low: "低"
       medium: "中"

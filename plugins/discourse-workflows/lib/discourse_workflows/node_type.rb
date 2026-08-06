@@ -21,6 +21,7 @@ module DiscourseWorkflows
       capabilities: {
       },
       output_contracts: [],
+      output_schema_resolver: nil,
       palette_visible: true,
       available: true,
       previewable: false,
@@ -123,13 +124,20 @@ module DiscourseWorkflows
     def self.output_schemas(configuration = {}, input_schemas: [])
       input_schema = Schema.union(*input_schemas.compact)
 
-      active_output_contracts(configuration).map do |candidates|
-        Schema.union(
-          *candidates.map do |contract|
-            Schema.resolve(contract.fetch(:schema), mode: contract.fetch(:mode), input_schema:)
-          end,
-        )
+      active_output_contracts(configuration).map.with_index do |candidates, index|
+        resolved =
+          Schema.union(
+            *candidates.map do |contract|
+              Schema.resolve(contract.fetch(:schema), mode: contract.fetch(:mode), input_schema:)
+            end,
+          )
+
+        Schema.augment(resolved, active_output_extensions(index, configuration))
       end
+    end
+
+    def self.output_schema_resolver
+      description_value(:output_schema_resolver)
     end
 
     def self.output_contracts
@@ -151,6 +159,16 @@ module DiscourseWorkflows
 
     def self.active_output_contracts(configuration = {})
       output_contracts.map { |contract| contract_candidates(contract, configuration) }
+    end
+
+    def self.active_output_extensions(output_index, configuration = {})
+      contract = output_contracts[output_index]
+      return [] if contract.nil?
+
+      contract
+        .fetch(:extensions)
+        .select { |extension| Schema.visible?(extension.fetch(:display_options), configuration) }
+        .map { |extension| extension.fetch(:schema) }
     end
 
     def self.contract_candidates(contract, configuration)
@@ -221,6 +239,10 @@ module DiscourseWorkflows
           Array(contract[:variants]).map do |variant|
             normalize_contract_fields(variant.deep_symbolize_keys)
           end,
+        extensions:
+          Array(contract[:extensions]).map do |extension|
+            normalize_contract_fields(extension.deep_symbolize_keys)
+          end,
       )
     end
     private_class_method :normalize_output_contract
@@ -279,6 +301,19 @@ module DiscourseWorkflows
           value.to_i if value.match?(/\A\d+\z/)
         end
       group_ids.present? && !!user&.in_any_groups?(group_ids)
+    end
+
+    def self.matches_reviewable_types?(reviewable, reviewable_types)
+      reviewable_types = Array.wrap(reviewable_types).compact_blank
+      reviewable_types.empty? || reviewable_types.include?(reviewable.class.sti_name)
+    end
+
+    def self.reviewable_type_options
+      Reviewable
+        .types
+        .uniq(&:sti_name)
+        .sort_by(&:name)
+        .map { |klass| { id: klass.sti_name, name: klass.name.demodulize.underscore.humanize } }
     end
 
     def self.trust_level_options
@@ -355,6 +390,24 @@ module DiscourseWorkflows
 
     def matches_user_groups?(user, group_ids)
       self.class.matches_user_groups?(user, group_ids)
+    end
+
+    def matches_reviewable_types?(reviewable, reviewable_types)
+      self.class.matches_reviewable_types?(reviewable, reviewable_types)
+    end
+
+    def reviewable_data(reviewable)
+      {
+        id: reviewable.id,
+        type: reviewable.type,
+        status: reviewable.status,
+        target_type: reviewable.target_type,
+        target_id: reviewable.target_id,
+        topic_id: reviewable.topic_id,
+        category_id: reviewable.category_id,
+        score: reviewable.score,
+        created_at: reviewable.created_at&.iso8601,
+      }
     end
 
     def wrap(data, paired_item: nil)

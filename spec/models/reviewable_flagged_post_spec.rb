@@ -232,37 +232,27 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       fab!(:claimed) { Fabricate(:reviewable_claimed_topic, topic: post.topic, user: moderator) }
 
       before { SiteSetting.reviewable_claiming = "required" }
+
       it "clears the claimed topic on resolve" do
         reviewable.perform(moderator, :agree_and_keep)
+
         expect(reviewable).to be_approved
         expect(score.reload).to be_agreed
         expect(post).not_to be_hidden
         expect(ReviewableClaimedTopic.where(topic_id: post.topic.id).exists?).to eq(false)
-        expect(
-          post
-            .topic
-            .reviewables
-            .first
-            .history
-            .where(reviewable_history_type: ReviewableHistory.types[:unclaimed])
-            .size,
-        ).to eq(1)
+        expect(reviewable.history.unclaimed.size).to eq(1)
       end
 
-      it "does not log unclaimed history when topic was not claimed" do
+      it "does not log history or publish when the topic was not claimed" do
         claimed.destroy!
-        reviewable.perform(moderator, :agree_and_keep)
-        expect(reviewable).to be_approved
-        expect(score.reload).to be_agreed
-        expect(
-          post
-            .topic
-            .reviewables
-            .first
-            .history
-            .where(reviewable_history_type: ReviewableHistory.types[:unclaimed])
-            .size,
-        ).to eq(0)
+
+        messages =
+          MessageBus.track_publish("/reviewable_claimed") do
+            reviewable.perform(moderator, :agree_and_keep)
+          end
+
+        expect(reviewable.history.unclaimed).to be_empty
+        expect(messages).to be_empty
       end
 
       it "publishes reviewable_claimed message with user data when claim is removed" do

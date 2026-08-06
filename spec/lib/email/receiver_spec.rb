@@ -1041,6 +1041,24 @@ RSpec.describe Email::Receiver do
       Fabricate(:user, email: "tl3@bar.com", trust_level: TrustLevel[3])
       expect { process(:tl3_user) }.to raise_error(Email::Receiver::InsufficientTrustLevelError)
     end
+
+    context "when the sender's address is an alias of a registered address" do
+      before { Fabricate(:user, email: "dis.course@bar.com") }
+
+      it "raises an EmailAliasNotAllowed if normalize_emails is enabled" do
+        SiteSetting.normalize_emails = true
+
+        expect { process(:new_user) }.to raise_error(Email::Receiver::EmailAliasNotAllowed)
+        expect(IncomingEmail.last.error).to eq("Email::Receiver::EmailAliasNotAllowed")
+      end
+
+      it "stages a new user if normalize_emails is disabled" do
+        SiteSetting.normalize_emails = false
+
+        expect { process(:new_user) }.to change(Topic, :count)
+        expect(Topic.last.user.email).to eq("discourse@bar.com")
+      end
+    end
   end
 
   describe "#reply_by_email_address_regex" do
