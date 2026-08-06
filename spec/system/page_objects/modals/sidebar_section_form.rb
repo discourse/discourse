@@ -202,8 +202,8 @@ module PageObjects
         find(".draggable[data-link-name='Topics']")
       end
 
-      def review_link
-        find(".draggable[data-link-name='Review']")
+      def my_messages_link
+        find(".draggable[data-link-name='My messages']")
       end
 
       def has_source_language?(locale)

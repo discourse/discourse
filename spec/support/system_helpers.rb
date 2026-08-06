@@ -422,6 +422,42 @@ module SystemHelpers
     page.driver.with_playwright_page { |pw_page| pw_page.touchscreen.tap_point(x, y) }
   end
 
+  # Drives a real native drag through Playwright's CDP drag interception.
+  #
+  # Capybara's own `drag_to` synthesises mouse events (mousedown/move/up), which
+  # works for simple drags but is unreliable here: some drags fire `dragstart` and
+  # then stall with no `dragover`/`drop`/`dragend`, so the drop silently no-ops.
+  # That is what a drag into a multi-layer region tends to do.
+  #
+  # `source:` and `target:` are CSS selectors, and BOTH ends may need a position.
+  # `source_position:` matters whenever the press point decides whether a drag is
+  # an element drag at all: pressing the centre of a row that contains a text
+  # input starts a text-selection drag, which fires `dragstart` and then stalls
+  # with no further events. Point it at the row's grip instead. It is also how a
+  # drag handle is satisfied, since the press must land inside the handle while
+  # the drag itself originates from the registered element.
+  #
+  # `target_position:` (`{ x:, y: }`,
+  # relative to the target's top-left) picks where inside the target the drop
+  # lands, which is what a before/after drop zone needs: the target's centre is
+  # the ambiguous midpoint and resolves the same way every time. `steps:` smooths
+  # the pointer movement when a drag needs more intermediate moves to register.
+  #
+  # Note this does NOT wait for the client to settle. Capybara's patched node
+  # methods, `drag_to` among them, get that wait for free; driving Playwright
+  # directly bypasses it, and the wait is only reachable from the driver's own
+  # patch. So assert through a retrying matcher after calling this, not a bare
+  # equality on a value read once.
+  def drag_and_drop(source:, target:, source_position: nil, target_position: nil, steps: nil)
+    page.driver.with_playwright_page do |pw_page|
+      options = {}
+      options[:sourcePosition] = source_position if source_position
+      options[:targetPosition] = target_position if target_position
+      options[:steps] = steps if steps
+      pw_page.drag_and_drop(source, target, **options)
+    end
+  end
+
   def html_translation_to_text(html_translation)
     Nokogiri.HTML5(html_translation).at("body").inner_text
   end

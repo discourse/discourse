@@ -797,18 +797,24 @@ export default class SidebarSectionForm extends Component {
       .focus();
   }
 
+  /**
+   * Moves a link next to the row it was dropped on, across segments if needed.
+   *
+   * Both links arrive as arguments rather than one of them being remembered from
+   * when the drag started: holding the dragged link on the component is how a
+   * corrupted `segment` used to survive from one drag into the next.
+   *
+   * @param {Object} draggedLink - The link being moved.
+   * @param {Object} targetLink - The link it was dropped onto.
+   * @param {string} position - `"before"` to insert above the target, otherwise below.
+   */
   @bind
-  setDraggedLink(link) {
-    this.draggedLink = link;
-  }
-
-  @bind
-  reorder(targetLink, above) {
-    if (this.draggedLink === targetLink) {
+  reorder(draggedLink, targetLink, position) {
+    if (draggedLink === targetLink) {
       return;
     }
 
-    const source = this.draggedLink.isPrimary
+    const source = draggedLink.isPrimary
       ? this.transformedModel.links
       : this.transformedModel.secondaryLinks;
     const destination = targetLink.isPrimary
@@ -821,18 +827,18 @@ export default class SidebarSectionForm extends Component {
       return;
     }
 
-    removeValueFromArray(source, this.draggedLink);
+    removeValueFromArray(source, draggedLink);
 
     // Read after the removal: within one segment the two arrays are the same
     // one, so a pre-removal index would be off by one when dragging downwards.
     const toPosition = destination.indexOf(targetLink);
 
-    this.draggedLink.segment = targetLink.isPrimary ? "primary" : "secondary";
+    draggedLink.segment = targetLink.isPrimary ? "primary" : "secondary";
 
     destination.splice(
-      above ? toPosition : toPosition + 1,
+      position === "before" ? toPosition : toPosition + 1,
       0,
-      this.draggedLink
+      draggedLink
     );
   }
 
@@ -1353,7 +1359,6 @@ export default class SidebarSectionForm extends Component {
                   @link={{link}}
                   @deleteLink={{this.deleteLink}}
                   @reorderCallback={{this.reorder}}
-                  @setDraggedLinkCallback={{this.setDraggedLink}}
                 />
               {{/each}}
 
@@ -1375,7 +1380,6 @@ export default class SidebarSectionForm extends Component {
                   @link={{link}}
                   @deleteLink={{this.deleteLink}}
                   @reorderCallback={{this.reorder}}
-                  @setDraggedLinkCallback={{this.setDraggedLink}}
                 />
               {{/each}}
               <DButton

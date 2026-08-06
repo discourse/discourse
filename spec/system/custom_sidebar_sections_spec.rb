@@ -243,7 +243,7 @@ describe "Custom sidebar sections" do
     expect(sidebar).to have_no_section_link("Sidebar Categories")
   end
 
-  it "allows the user to reorder links in custom section" do
+  it "Sidebar link DnD oracle lets the user reorder links in a custom section" do
     sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
 
     sidebar_url_1 =
@@ -271,15 +271,35 @@ describe "Custom sidebar sections" do
 
     sidebar.edit_custom_section("My section")
 
-    tags_link = find(".draggable[data-link-name='Sidebar Tags']")
-    latest_link = find(".draggable[data-link-name='Sidebar Latest']")
-    tags_link.drag_to(latest_link, delay: 0.4)
+    drag_and_drop(
+      source: ".sidebar-section-form-link:has(.draggable[data-link-name='Sidebar Tags'])",
+      # Press the grip, not the row centre: the centre is a text input, and a
+      # text-selection drag stalls after dragstart.
+      source_position: {
+        x: 16,
+        y: 20,
+      },
+      target: ".sidebar-section-form-link:has(.draggable[data-link-name='Sidebar Categories'])",
+      target_position: {
+        x: 100,
+        y: 55,
+      },
+    )
+    try_until_success do
+      expect(
+        all(".sidebar-section-form__links-wrapper .draggable").map do |link|
+          link["data-link-name"]
+        end,
+      ).to eq(["Sidebar Categories", "Sidebar Tags", "Sidebar Latest"])
+    end
     section_modal.save
     expect(section_modal).to be_closed
 
-    expect(sidebar.primary_section_links("my-section")).to eq(
-      ["Sidebar Categories", "Sidebar Tags", "Sidebar Latest"],
-    )
+    try_until_success do
+      expect(sidebar.primary_section_links("my-section")).to eq(
+        ["Sidebar Categories", "Sidebar Tags", "Sidebar Latest"],
+      )
+    end
   end
 
   it "does not allow to drag on mobile", mobile: true do
