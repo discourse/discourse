@@ -1782,6 +1782,142 @@ RSpec.describe Admin::DashboardController do
       end
     end
 
+    context "when the selected date range exceeds retention and traffic reaches the cap" do
+      let(:event_attributes) do
+        {
+          asn: 64_496,
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+        }
+      end
+      let!(:first_retained) do
+        Fabricate(
+          :browser_pageview_event,
+          url: "/first-retained",
+          country_code: "US",
+          ip_address: "192.0.2.1",
+          user_agent: "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36",
+          session_id: "first-retained",
+          created_at: "2026-02-15 09:00:00",
+          **event_attributes,
+        )
+      end
+      let!(:middle_retained) do
+        Fabricate(
+          :browser_pageview_event,
+          url: "/middle-retained",
+          country_code: "GB",
+          ip_address: "198.51.100.2",
+          user_agent: "Mozilla/5.0 Firefox/126.0",
+          session_id: "middle-retained",
+          created_at: "2026-05-10 10:00:00",
+          **event_attributes,
+        )
+      end
+      let!(:latest_retained) do
+        Fabricate(
+          :browser_pageview_event,
+          url: "/latest-retained",
+          country_code: "US",
+          ip_address: "192.0.2.1",
+          user_agent: "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36",
+          session_id: "latest-retained",
+          created_at: "2026-05-11 10:00:00",
+          **event_attributes,
+        )
+      end
+
+      it "returns both partial-data reasons", time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+        sign_in(admin)
+        SiteSetting.stubs(:admin_site_traffic_event_cap).returns(2)
+
+        get "/admin/dashboard/traffic.json",
+            params: request_params.merge(start_date: "2026-01-01")
+
+        expect(response.parsed_body).to eq(
+          "partial_data" => {
+            "reason" => "retention_and_pageview_limit",
+            "available_start_date" => "2026-02-14",
+            "pageview_limit" => 2,
+          },
+          "summary" => {
+            "pageviews" => 2,
+            "distinct_sessions" => 2,
+            "logged_in_share" => 0,
+            "bounce_rate" => 100,
+            "average_session_duration_seconds" => 0,
+          },
+          "series" => [
+            {
+              "date" => "2026-05-10",
+              "pageviews" => 1,
+              "logged_in_human_pageviews" => 0,
+              "anonymous_human_pageviews" => 1,
+              "likely_crawler_pageviews" => 0,
+            },
+            {
+              "date" => "2026-05-11",
+              "pageviews" => 1,
+              "logged_in_human_pageviews" => 0,
+              "anonymous_human_pageviews" => 1,
+              "likely_crawler_pageviews" => 0,
+            },
+          ],
+          "dimensions" => {
+            "top_urls" => [
+              {
+                "value" => latest_retained.url,
+                "label" => latest_retained.url,
+                "pageviews" => 1,
+              },
+              {
+                "value" => middle_retained.url,
+                "label" => middle_retained.url,
+                "pageviews" => 1,
+              },
+            ],
+            "entry_urls" => [
+              {
+                "value" => latest_retained.url,
+                "label" => latest_retained.url,
+                "pageviews" => 1,
+              },
+              {
+                "value" => middle_retained.url,
+                "label" => middle_retained.url,
+                "pageviews" => 1,
+              },
+            ],
+            "referrers" => [
+              {
+                "value" => "",
+                "label" => "Direct / unknown",
+                "pageviews" => 2,
+              },
+            ],
+            "countries" => [
+              { "value" => "GB", "label" => "United Kingdom", "pageviews" => 1 },
+              { "value" => "US", "label" => "United States", "pageviews" => 1 },
+            ],
+            "networks" => [
+              {
+                "value" => "AS64496",
+                "label" => "AS64496 Example Network",
+                "pageviews" => 2,
+              },
+            ],
+            "browsers" => [
+              { "value" => "chrome", "label" => "Chrome", "pageviews" => 1 },
+              { "value" => "firefox", "label" => "Firefox", "pageviews" => 1 },
+            ],
+            "ip_addresses" => [
+              { "value" => "192.0.2.1", "label" => "192.0.2.1", "pageviews" => 1 },
+              { "value" => "198.51.100.2", "label" => "198.51.100.2", "pageviews" => 1 },
+            ],
+          },
+        )
+      end
+    end
+
     it "does not allow moderators to read traffic details" do
       sign_in(moderator)
 
