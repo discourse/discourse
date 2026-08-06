@@ -727,4 +727,376 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       );
     });
   });
+
+  module("nested registrations claiming one pointer", function () {
+    function recorder(calls) {
+      return {
+        onDragStart: () => calls.push("start"),
+        onDragEnd: () => calls.push("end"),
+        onDragCancel: () => calls.push("cancel"),
+      };
+    }
+
+    test("an ancestor claiming the same press releases the descendant's gesture", async function (assert) {
+      const inner = [];
+      const outer = [];
+      const innerHandlers = recorder(inner);
+      const outerHandlers = recorder(outer);
+
+      await render(
+        <template>
+          <div
+            class="dpd-outer"
+            {{dPointerDrag
+              onDragStart=outerHandlers.onDragStart
+              onDragEnd=outerHandlers.onDragEnd
+              onDragCancel=outerHandlers.onDragCancel
+            }}
+          >
+            <div
+              class="dpd-inner"
+              {{dPointerDrag
+                onDragStart=innerHandlers.onDragStart
+                onDragEnd=innerHandlers.onDragEnd
+                onDragCancel=innerHandlers.onDragCancel
+              }}
+            ></div>
+          </div>
+        </template>
+      );
+
+      const outerTarget = find(".dpd-outer");
+      const innerTarget = find(".dpd-inner");
+      installPointerCaptureSpy(outerTarget);
+      installPointerCaptureSpy(innerTarget);
+
+      await triggerEvent(innerTarget, "pointerdown", {
+        button: 0,
+        pointerId: 1,
+      });
+
+      assert.deepEqual(
+        inner,
+        ["start", "cancel"],
+        "the descendant is told its gesture ended when the ancestor takes the pointer"
+      );
+      assert.deepEqual(
+        outer,
+        ["start"],
+        "the ancestor's gesture is the live one"
+      );
+
+      // The release goes to whichever element holds the capture, which is the
+      // ancestor — so the descendant sees nothing, exactly as in a real browser
+      // once the pointer has left it.
+      await triggerEvent(outerTarget, "pointerup", { pointerId: 1 });
+
+      await triggerEvent(innerTarget, "pointerdown", {
+        button: 0,
+        pointerId: 1,
+      });
+
+      assert.deepEqual(
+        inner,
+        ["start", "cancel", "start", "cancel"],
+        "a later press still starts a gesture on the descendant"
+      );
+      assert.deepEqual(
+        outer,
+        ["start", "end", "start"],
+        "every started gesture reaches exactly one terminal callback"
+      );
+    });
+
+    test("a superseded gesture honours cancelCommits", async function (assert) {
+      const inner = [];
+      const innerHandlers = recorder(inner);
+
+      await render(
+        <template>
+          <div class="dpd-outer" {{dPointerDrag}}>
+            <div
+              class="dpd-inner"
+              {{dPointerDrag
+                onDragStart=innerHandlers.onDragStart
+                onDragEnd=innerHandlers.onDragEnd
+                onDragCancel=innerHandlers.onDragCancel
+                cancelCommits=true
+              }}
+            ></div>
+          </div>
+        </template>
+      );
+
+      installPointerCaptureSpy(find(".dpd-outer"));
+      const innerTarget = find(".dpd-inner");
+      installPointerCaptureSpy(innerTarget);
+
+      await triggerEvent(innerTarget, "pointerdown", {
+        button: 0,
+        pointerId: 3,
+      });
+
+      assert.deepEqual(
+        inner,
+        ["start", "end"],
+        "a consumer that commits on cancellation commits here too"
+      );
+    });
+
+    test("a descendant that stops propagation keeps the pointer", async function (assert) {
+      const inner = [];
+      const outer = [];
+      const innerHandlers = recorder(inner);
+      const outerHandlers = recorder(outer);
+
+      await render(
+        <template>
+          <div
+            class="dpd-outer"
+            {{dPointerDrag
+              onDragStart=outerHandlers.onDragStart
+              onDragEnd=outerHandlers.onDragEnd
+              onDragCancel=outerHandlers.onDragCancel
+            }}
+          >
+            <div
+              class="dpd-inner"
+              {{dPointerDrag
+                onDragStart=innerHandlers.onDragStart
+                onDragEnd=innerHandlers.onDragEnd
+                onDragCancel=innerHandlers.onDragCancel
+                stopPropagation=true
+              }}
+            ></div>
+          </div>
+        </template>
+      );
+
+      installPointerCaptureSpy(find(".dpd-outer"));
+      const innerTarget = find(".dpd-inner");
+      installPointerCaptureSpy(innerTarget);
+
+      await triggerEvent(innerTarget, "pointerdown", {
+        button: 0,
+        pointerId: 4,
+      });
+      await triggerEvent(innerTarget, "pointerup", { pointerId: 4 });
+
+      assert.deepEqual(
+        inner,
+        ["start", "end"],
+        "the isolated gesture runs to completion uninterrupted"
+      );
+      assert.deepEqual(outer, [], "the ancestor never sees the press");
+    });
+
+    test("gestures on distinct pointers do not supersede each other", async function (assert) {
+      const first = [];
+      const second = [];
+      const firstHandlers = recorder(first);
+      const secondHandlers = recorder(second);
+
+      await render(
+        <template>
+          <div
+            class="dpd-first"
+            {{dPointerDrag
+              onDragStart=firstHandlers.onDragStart
+              onDragEnd=firstHandlers.onDragEnd
+              onDragCancel=firstHandlers.onDragCancel
+            }}
+          ></div>
+          <div
+            class="dpd-second"
+            {{dPointerDrag
+              onDragStart=secondHandlers.onDragStart
+              onDragEnd=secondHandlers.onDragEnd
+              onDragCancel=secondHandlers.onDragCancel
+            }}
+          ></div>
+        </template>
+      );
+
+      const firstTarget = find(".dpd-first");
+      const secondTarget = find(".dpd-second");
+      installPointerCaptureSpy(firstTarget);
+      installPointerCaptureSpy(secondTarget);
+
+      await triggerEvent(firstTarget, "pointerdown", {
+        button: 0,
+        pointerId: 5,
+      });
+      await triggerEvent(secondTarget, "pointerdown", {
+        button: 0,
+        pointerId: 6,
+      });
+      await triggerEvent(firstTarget, "pointerup", { pointerId: 5 });
+      await triggerEvent(secondTarget, "pointerup", { pointerId: 6 });
+
+      assert.deepEqual(
+        first,
+        ["start", "end"],
+        "a second pointer elsewhere leaves the first gesture alone"
+      );
+      assert.deepEqual(
+        second,
+        ["start", "end"],
+        "ownership is tracked per pointer, not globally"
+      );
+    });
+
+    test("three levels each release the level below them", async function (assert) {
+      const inner = [];
+      const middle = [];
+      const outer = [];
+      const innerHandlers = recorder(inner);
+      const middleHandlers = recorder(middle);
+      const outerHandlers = recorder(outer);
+
+      await render(
+        <template>
+          <div
+            class="dpd-outer"
+            {{dPointerDrag
+              onDragStart=outerHandlers.onDragStart
+              onDragEnd=outerHandlers.onDragEnd
+              onDragCancel=outerHandlers.onDragCancel
+            }}
+          >
+            <div
+              class="dpd-middle"
+              {{dPointerDrag
+                onDragStart=middleHandlers.onDragStart
+                onDragEnd=middleHandlers.onDragEnd
+                onDragCancel=middleHandlers.onDragCancel
+              }}
+            >
+              <div
+                class="dpd-inner"
+                {{dPointerDrag
+                  onDragStart=innerHandlers.onDragStart
+                  onDragEnd=innerHandlers.onDragEnd
+                  onDragCancel=innerHandlers.onDragCancel
+                }}
+              ></div>
+            </div>
+          </div>
+        </template>
+      );
+
+      for (const selector of [".dpd-outer", ".dpd-middle", ".dpd-inner"]) {
+        installPointerCaptureSpy(find(selector));
+      }
+
+      await triggerEvent(find(".dpd-inner"), "pointerdown", {
+        button: 0,
+        pointerId: 11,
+      });
+
+      // The middle releasing the inner must not drop the middle's own fresh
+      // claim, or the outer would find no owner to release and the middle would
+      // stay latched with nothing left to end it.
+      assert.deepEqual(inner, ["start", "cancel"], "the innermost is released");
+      assert.deepEqual(
+        middle,
+        ["start", "cancel"],
+        "the middle is released too"
+      );
+      assert.deepEqual(
+        outer,
+        ["start"],
+        "only the outermost keeps the pointer"
+      );
+
+      await triggerEvent(find(".dpd-outer"), "pointerup", { pointerId: 11 });
+      await triggerEvent(find(".dpd-middle"), "pointerdown", {
+        button: 0,
+        pointerId: 11,
+      });
+
+      assert.deepEqual(
+        middle,
+        ["start", "cancel", "start", "cancel"],
+        "a level released mid-dispatch can start a later gesture"
+      );
+    });
+
+    test("a registration torn down during onDragStart claims no pointer", function (assert) {
+      const target = document.createElement("div");
+      installPointerCaptureSpy(target);
+      const events = installEventListenerSpy(target);
+      const calls = [];
+      let cleanup;
+
+      cleanup = dPointerDragModule.registerPointerDrag(target, () => ({
+        onDragStart: () => {
+          calls.push("start");
+          // A consumer destroying its own registration from inside the callback
+          // that started it: every listener is gone by the time this returns.
+          cleanup();
+        },
+        onDragCancel: () => calls.push("cancel"),
+      }));
+
+      events.listeners.get("pointerdown")(
+        new PointerEvent("pointerdown", { button: 0, pointerId: 21 })
+      );
+
+      const later = document.createElement("div");
+      installPointerCaptureSpy(later);
+      const laterEvents = installEventListenerSpy(later);
+      const laterCleanup = dPointerDragModule.registerPointerDrag(
+        later,
+        () => ({})
+      );
+      laterEvents.listeners.get("pointerdown")(
+        new PointerEvent("pointerdown", { button: 0, pointerId: 21 })
+      );
+
+      assert.deepEqual(
+        calls,
+        ["start"],
+        "reusing the pointer never reaches into the destroyed registration"
+      );
+
+      laterCleanup();
+    });
+
+    test("teardown mid-gesture gives up the pointer", function (assert) {
+      const target = document.createElement("div");
+      installPointerCaptureSpy(target);
+      const events = installEventListenerSpy(target);
+      const calls = [];
+
+      const cleanup = dPointerDragModule.registerPointerDrag(target, () => ({
+        onDragStart: () => calls.push("start"),
+        onDragCancel: () => calls.push("cancel"),
+      }));
+
+      events.listeners.get("pointerdown")(
+        new PointerEvent("pointerdown", { button: 0, pointerId: 22 })
+      );
+      cleanup();
+
+      const later = document.createElement("div");
+      installPointerCaptureSpy(later);
+      const laterEvents = installEventListenerSpy(later);
+      const laterCleanup = dPointerDragModule.registerPointerDrag(
+        later,
+        () => ({})
+      );
+      laterEvents.listeners.get("pointerdown")(
+        new PointerEvent("pointerdown", { button: 0, pointerId: 22 })
+      );
+
+      assert.deepEqual(
+        calls,
+        ["start"],
+        "a torn-down registration is not asked to release a pointer it no longer holds"
+      );
+
+      laterCleanup();
+    });
+  });
 });

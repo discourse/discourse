@@ -6,6 +6,30 @@ import Modifier from "ember-modifier";
 const DEFAULT_TOUCH_ACTION = "none";
 
 /**
+ * The gesture holding each active pointer, keyed by `pointerId`, so a
+ * registration that loses a contested pointer can be told to stand down.
+ *
+ * Keyed per pointer rather than kept as a single current owner, because two
+ * gestures driven by two different pointers are both legitimately live.
+ *
+ * A pointer ID is a number, so this cannot be a `WeakMap`, and each value closes
+ * over its element: an entry left behind holds a detached element alive, and a
+ * later press reusing that ID would call into a registration that no longer
+ * exists. Removing an entry the moment its gesture ends is therefore load-bearing
+ * rather than housekeeping.
+ */
+const pointerOwners = new Map();
+
+/**
+ * Drops all pointer-ownership bookkeeping. For tests only: a consumer of
+ * {@link registerPointerDrag} that never invokes its cleanup would otherwise
+ * leave an entry behind that releases the next gesture to reuse that pointer ID.
+ */
+export function resetPointerDragForTesting() {
+  pointerOwners.clear();
+}
+
+/**
  * Reflects the wanted `touch-action` onto the element for the stylesheet to
  * pick up. Separate from the gesture registration because the declaration has to
  * be in place before a touch begins, so it is refreshed whenever the args
@@ -62,6 +86,9 @@ export function registerPointerDrag(element, getArgsRef) {
   // change between gestures, so the value really on the element is snapshotted
   // rather than re-read when it is time to remove it.
   let appliedClass = null;
+  // Set by the cleanup below. A consumer can destroy its own registration from
+  // inside `onDragStart`, and the rest of that dispatch still runs.
+  let tornDown = false;
 
   const finish = () => {
     const finishedPointer = pointerId;
@@ -74,6 +101,11 @@ export function registerPointerDrag(element, getArgsRef) {
     appliedClass = null;
 
     if (finishedPointer !== null) {
+      // Only while the claim is still ours: a later claimant owns the entry from
+      // the moment it supersedes us, and must not have it deleted underneath it.
+      if (pointerOwners.get(finishedPointer) === onSuperseded) {
+        pointerOwners.delete(finishedPointer);
+      }
       try {
         element.releasePointerCapture(finishedPointer);
       } catch {
@@ -107,6 +139,20 @@ export function registerPointerDrag(element, getArgsRef) {
     } finally {
       finish();
     }
+  };
+
+  /**
+   * Ends this gesture because another registration has claimed the pointer it
+   * was holding. Routed through `cancelGesture` so `cancelCommits` decides how
+   * it reports, like any other end that is not a release on this element.
+   *
+   * Doubles as this registration's identity in `pointerOwners`: one stable
+   * function per registration, so an entry can only be removed by its owner.
+   *
+   * @param {PointerEvent} event - The press that claimed the pointer away.
+   */
+  const onSuperseded = (event) => {
+    cancelGesture(getArgsRef(), event);
   };
 
   const onPointerDown = (event) => {
@@ -145,7 +191,10 @@ export function registerPointerDrag(element, getArgsRef) {
       releaseCapture();
       throw error;
     }
-    if (vetoed) {
+    // A registration torn down by its own `onDragStart` has already had its
+    // listeners removed, so nothing is left to end a gesture installed now — and
+    // claiming the pointer would leave an entry no one can remove.
+    if (vetoed || tornDown) {
       releaseCapture();
       return;
     }
@@ -154,6 +203,16 @@ export function registerPointerDrag(element, getArgsRef) {
     originX = event.clientX;
     originY = event.clientY;
     engaged = !(args.threshold > 0);
+
+    // A press bubbles, so an ancestor registration starts its own gesture from
+    // the same event. Capture requested during `pointerdown` is only pending
+    // until the dispatch ends and the last request wins, so the earlier claimant
+    // keeps none of it and receives no terminal event at all — its in-flight
+    // guard would then reject every later press. Tracked here rather than read
+    // back through `hasPointerCapture`, which cannot tell a lost claim apart from
+    // a pointer that was never real.
+    const superseded = pointerOwners.get(event.pointerId);
+    pointerOwners.set(event.pointerId, onSuperseded);
 
     if (args.draggingClass) {
       try {
@@ -173,6 +232,10 @@ export function registerPointerDrag(element, getArgsRef) {
     if (args.stopPropagation) {
       event.stopPropagation();
     }
+
+    // Last, so this gesture is fully established before control passes to another
+    // consumer's callback, which is free to throw.
+    superseded?.(event);
   };
 
   const onPointerMove = (event) => {
@@ -239,6 +302,7 @@ export function registerPointerDrag(element, getArgsRef) {
   element.addEventListener("lostpointercapture", onLostPointerCapture);
 
   return () => {
+    tornDown = true;
     finish();
     element.removeEventListener("pointerdown", onPointerDown);
     element.removeEventListener("pointermove", onPointerMove);
@@ -301,6 +365,14 @@ export function registerPointerDrag(element, getArgsRef) {
  * A single element supports one registration. Two would each claim the same
  * pointer capture and the same attribute, and tearing either down would strand
  * the other's gesture.
+ *
+ * Nesting one registration inside another is supported, but only one of them can
+ * hold a given press: the ancestor sees it too, and whichever claims the pointer
+ * last keeps it. The other is ended immediately through `onDragCancel` (or
+ * `onDragEnd` under `cancelCommits`) with the same press as its event, so a
+ * consumer always gets one terminal callback per `onDragStart`. Pass
+ * `stopPropagation` on the inner registration when the press should not reach the
+ * ancestor at all.
  */
 export default class DPointerDragModifier extends Modifier {
   #args = null;
