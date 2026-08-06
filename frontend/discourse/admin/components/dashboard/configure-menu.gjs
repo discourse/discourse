@@ -1,77 +1,32 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import discourseLater from "discourse/lib/later";
-import { eq } from "discourse/truth-helpers";
+import { eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
-import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
+import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 
 class ConfigureRow extends Component {
   @service site;
 
-  @tracked dragCssClass;
-  dragCount = 0;
-
-  isAboveElement(event) {
-    event.preventDefault();
-    const target = event.currentTarget;
-    const domRect = target.getBoundingClientRect();
-    return event.offsetY < domRect.height / 2;
-  }
-
+  /**
+   * Resolves a drop onto this row into a reorder.
+   *
+   * Both indices arrive with the drop — the dragged one as the payload, this row's
+   * from its own args — so nothing has to be remembered from when the drag started.
+   *
+   * @param {Object} params - The drop payload.
+   * @param {Object} params.source - The dragged source, carrying `data.index`.
+   * @param {string} params.position - Whether the drop landed before or after.
+   */
   @action
-  dragStart(event) {
-    event.dataTransfer.effectAllowed = "move";
-    this.args.onDragStart(this.args.index);
-    this.dragCssClass = "dragging";
-  }
-
-  @action
-  dragOver(event) {
-    event.preventDefault();
-    if (this.dragCssClass === "dragging") {
-      return;
-    }
-    this.dragCssClass = this.isAboveElement(event)
-      ? "drag-above"
-      : "drag-below";
-  }
-
-  @action
-  dragEnter() {
-    this.dragCount++;
-  }
-
-  @action
-  dragLeave() {
-    this.dragCount--;
-    if (
-      this.dragCount === 0 &&
-      (this.dragCssClass === "drag-above" || this.dragCssClass === "drag-below")
-    ) {
-      discourseLater(() => (this.dragCssClass = null), 10);
-    }
-  }
-
-  @action
-  drop(event) {
-    event.stopPropagation();
-    this.dragCount = 0;
-    const dropAbove = this.isAboveElement(event);
-    this.dragCssClass = null;
-    this.args.onDrop(this.args.index, dropAbove);
-  }
-
-  @action
-  dragEnd() {
-    this.dragCount = 0;
-    this.dragCssClass = null;
+  onRowDrop({ source, position }) {
+    this.args.onDrop(source.data.index, this.args.index, position === "before");
   }
 
   get sectionLabel() {
@@ -104,15 +59,18 @@ class ConfigureRow extends Component {
 
   <template>
     <li
-      {{on "dragstart" this.dragStart}}
-      {{on "dragover" this.dragOver}}
-      {{on "dragenter" this.dragEnter}}
-      {{on "dragleave" this.dragLeave}}
-      {{on "drop" this.drop}}
-      {{on "dragend" this.dragEnd}}
-      class={{dConcatClass "db-configure__row" this.dragCssClass}}
+      {{dDragAndDropSource
+        type="dashboard-section"
+        data=(hash index=@index)
+        disabled=(not this.site.desktopView)
+      }}
+      {{dDragAndDropTarget
+        accepts="dashboard-section"
+        acceptsSelf=false
+        onDrop=this.onRowDrop
+      }}
+      class="db-configure__row"
       data-section-id={{@section.id}}
-      draggable="true"
     >
       {{#if this.site.desktopView}}
         <span
@@ -154,21 +112,12 @@ class ConfigureRow extends Component {
 }
 
 export default class ConfigureMenu extends Component {
-  draggedIndex = null;
-
   get lastIndex() {
     return (this.args.sections?.length ?? 0) - 1;
   }
 
   @action
-  onDragStart(index) {
-    this.draggedIndex = index;
-  }
-
-  @action
-  onDrop(targetIndex, dropAbove) {
-    const fromIndex = this.draggedIndex;
-    this.draggedIndex = null;
+  onDrop(fromIndex, targetIndex, dropAbove) {
     if (fromIndex == null || fromIndex === targetIndex) {
       return;
     }
@@ -210,7 +159,6 @@ export default class ConfigureMenu extends Component {
             @index={{index}}
             @isFirst={{eq index 0}}
             @isLast={{eq index this.lastIndex}}
-            @onDragStart={{this.onDragStart}}
             @onDrop={{this.onDrop}}
             @onMoveUp={{this.onMoveUp}}
             @onMoveDown={{this.onMoveDown}}

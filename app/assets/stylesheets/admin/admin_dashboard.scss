@@ -159,16 +159,28 @@ $db-bar-height: var(--space-2);
     border-bottom: 2px solid transparent;
     cursor: grab;
 
-    &.dragging {
+    &.--dragging {
       opacity: 0.5;
     }
 
-    &.drag-above {
+    /* Drawn on the row's own reserved border, so adjacent rows keep sharing one
+       gutter. The shared primitive's inserted line is dropped rather than
+       overridden, or both would show at once. */
+
+    &.--drag-above {
       border-top-color: var(--tertiary);
+
+      &::before {
+        content: none;
+      }
     }
 
-    &.drag-below {
+    &.--drag-below {
       border-bottom-color: var(--tertiary);
+
+      &::after {
+        content: none;
+      }
     }
   }
 

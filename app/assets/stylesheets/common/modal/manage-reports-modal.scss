@@ -34,10 +34,6 @@
       inset 0 2px 0 0 transparent,
       inset 0 -2px 0 0 transparent;
 
-    .manage-reports__list.--dragging & {
-      transition: box-shadow 0.1s ease;
-    }
-
     &:not(:last-child) {
       border-bottom: 1px solid var(--primary-low);
     }
@@ -46,19 +42,28 @@
       cursor: grab;
     }
 
-    &.dragging {
+    &.--dragging {
       opacity: 0.5;
     }
 
-    &.drag-below,
-    &:not(.dragging):has(+ .manage-reports__row.drag-above) {
+    /* Rows carry their own separator, so "above row N" is drawn on row N-1's bottom
+       edge instead, and nothing doubles up. The shared primitive's inserted lines are
+       dropped in favour of these insets. */
+
+    &.--drag-above::before,
+    &.--drag-below::after {
+      content: none;
+    }
+
+    &.--drag-below,
+    &:not(.--dragging):has(+ .manage-reports__row.--drag-above) {
       box-shadow:
         inset 0 2px 0 0 transparent,
         inset 0 -2px 0 0 var(--tertiary);
     }
 
-    &:first-child.drag-above,
-    .manage-reports__row.dragging + &.drag-above {
+    &:first-child.--drag-above,
+    .manage-reports__row.--dragging + &.--drag-above {
       box-shadow:
         inset 0 2px 0 0 var(--tertiary),
         inset 0 -2px 0 0 transparent;

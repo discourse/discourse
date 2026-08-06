@@ -202,6 +202,22 @@ module PageObjects
         self
       end
 
+      def drag_section(source_id, target_id)
+        drag_and_drop(
+          source: configure_row_selector(source_id),
+          source_position: {
+            x: 16,
+            y: 20,
+          },
+          target: configure_row_selector(target_id),
+          target_position: {
+            x: 100,
+            y: 1,
+          },
+        )
+        self
+      end
+
       private
 
       def custom_range_params(from:, to:)
@@ -212,6 +228,10 @@ module PageObjects
         page.refresh unless has_css?(".db-main", wait: 0)
         has_css?(".db-main [data-section-id], .db-main__empty")
         self
+      end
+
+      def configure_row_selector(id)
+        ".db-configure__row[data-section-id='#{id}']"
       end
 
       def preset_label(period)

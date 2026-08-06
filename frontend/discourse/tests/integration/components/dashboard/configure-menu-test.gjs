@@ -1,8 +1,15 @@
-import { click, render, triggerEvent } from "@ember/test-helpers";
+import { click, find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ConfigureMenu from "discourse/admin/components/dashboard/configure-menu";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import {
+  centerOf,
+  dragEvent,
+  simulateDrag,
+} from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
+
+const ORACLE = "Configure menu DnD oracle";
 
 const FOUR_SECTIONS = [
   { id: "highlights", visible: true },
@@ -11,8 +18,29 @@ const FOUR_SECTIONS = [
   { id: "engagement", visible: true },
 ];
 
-function dataTransferStub() {
-  return { effectAllowed: null, setData() {}, getData: () => "" };
+function rowSelector(id) {
+  return `[data-section-id="${id}"]`;
+}
+
+async function dragSection(sourceId, targetId, position) {
+  const source = rowSelector(sourceId);
+  const target = rowSelector(targetId);
+
+  if (
+    !find(source).hasAttribute("data-drag-source") ||
+    !find(target).hasAttribute("data-drop-target")
+  ) {
+    return;
+  }
+
+  const targetRect = find(target).getBoundingClientRect();
+  await simulateDrag(source, target, {
+    dataTransfer: new DataTransfer(),
+    targetCoordinates: {
+      clientY:
+        position === "above" ? targetRect.top + 1 : targetRect.bottom - 1,
+    },
+  });
 }
 
 module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
@@ -59,7 +87,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     assert.deepEqual(calls, ["highlights"]);
   });
 
-  test("drag-and-drop fires @onReorder with computed indices", async function (assert) {
+  test(`${ORACLE} reorders in both directions`, async function (assert) {
     const sections = FOUR_SECTIONS;
     const calls = [];
     const onReorder = (from, to) => calls.push([from, to]);
@@ -75,19 +103,159 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
       </template>
     );
 
-    const source = '[data-section-id="reports"]';
-    const target = '[data-section-id="highlights"]';
-    const dataTransfer = dataTransferStub();
-
-    await triggerEvent(source, "dragstart", { dataTransfer });
-    await triggerEvent(target, "dragover", { dataTransfer, offsetY: 1 });
-    await triggerEvent(target, "drop", { dataTransfer, offsetY: 1 });
+    await dragSection("reports", "highlights", "above");
+    await dragSection("highlights", "engagement", "below");
 
     assert.deepEqual(
-      calls.at(-1),
-      [1, 0],
-      "drop above index 0 moves source from 1 to 0"
+      calls,
+      [
+        [1, 0],
+        [0, 3],
+      ],
+      "drops above and below resolve from source and target rows without dragstart state"
     );
+  });
+
+  test(`${ORACLE} wires every row as a shared source and target`, async function (assert) {
+    const noop = () => {};
+
+    await render(
+      <template>
+        <ConfigureMenu
+          @sections={{FOUR_SECTIONS}}
+          @onReorder={{noop}}
+          @onToggleVisibility={{noop}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".db-configure__row[data-drag-source][data-drop-target]")
+      .exists(
+        { count: FOUR_SECTIONS.length },
+        "every configure row is both a shared drag source and drop target"
+      );
+  });
+
+  test(`${ORACLE} uses the shared drag state classes`, async function (assert) {
+    const noop = () => {};
+
+    await render(
+      <template>
+        <ConfigureMenu
+          @sections={{FOUR_SECTIONS}}
+          @onReorder={{noop}}
+          @onToggleVisibility={{noop}}
+        />
+      </template>
+    );
+
+    const source = rowSelector("reports");
+    const target = rowSelector("traffic");
+    const dataTransfer = new DataTransfer();
+    const sourceCoordinates = centerOf(source);
+    const targetRect = find(target).getBoundingClientRect();
+    const targetCoordinates = {
+      clientX: targetRect.left + targetRect.width / 2,
+      clientY: targetRect.top + 1,
+    };
+
+    await dragEvent(source, "dragstart", {
+      dataTransfer,
+      ...sourceCoordinates,
+    });
+    await dragEvent(target, "dragenter", {
+      dataTransfer,
+      ...targetCoordinates,
+    });
+    await dragEvent(target, "dragover", {
+      dataTransfer,
+      offsetY: 1,
+      ...targetCoordinates,
+    });
+
+    assert
+      .dom(source)
+      .hasClass("--dragging", "the source uses the shared dragging class");
+    assert
+      .dom(target)
+      .hasClass("--drag-above", "the target uses the shared above indicator");
+
+    await dragEvent(source, "dragend", {
+      dataTransfer,
+      ...sourceCoordinates,
+    });
+  });
+
+  test(`${ORACLE} leaves no indicator after an abandoned drag`, async function (assert) {
+    const noop = () => {};
+
+    await render(
+      <template>
+        <ConfigureMenu
+          @sections={{FOUR_SECTIONS}}
+          @onReorder={{noop}}
+          @onToggleVisibility={{noop}}
+        />
+      </template>
+    );
+
+    const source = rowSelector("reports");
+    const target = rowSelector("traffic");
+    const dataTransfer = new DataTransfer();
+    const sourceCoordinates = centerOf(source);
+    const targetRect = find(target).getBoundingClientRect();
+    const targetCoordinates = {
+      clientX: targetRect.left + targetRect.width / 2,
+      clientY: targetRect.top + 1,
+    };
+
+    await dragEvent(source, "dragstart", {
+      dataTransfer,
+      ...sourceCoordinates,
+    });
+    await dragEvent(target, "dragenter", {
+      dataTransfer,
+      ...targetCoordinates,
+    });
+    await dragEvent(target, "dragover", {
+      dataTransfer,
+      offsetY: 1,
+      ...targetCoordinates,
+    });
+    await dragEvent(source, "dragend", {
+      dataTransfer,
+      ...sourceCoordinates,
+    });
+
+    assert
+      .dom(source)
+      .doesNotHaveClass(
+        "--dragging",
+        "an abandoned drag clears the source indicator"
+      )
+      .doesNotHaveClass(
+        "dragging",
+        "an abandoned drag leaves no legacy source indicator"
+      );
+    assert
+      .dom(target)
+      .doesNotHaveClass(
+        "drag-above",
+        "an abandoned drag leaves no legacy above indicator"
+      )
+      .doesNotHaveClass(
+        "drag-below",
+        "an abandoned drag leaves no legacy below indicator"
+      )
+      .doesNotHaveClass(
+        "--drag-above",
+        "an abandoned drag clears the target's above indicator"
+      )
+      .doesNotHaveClass(
+        "--drag-below",
+        "an abandoned drag clears the target's below indicator"
+      );
   });
 
   test("desktop renders the drag handle and not the arrows", async function (assert) {
@@ -134,6 +302,31 @@ module(
 
       assert.dom(".db-configure__drag-handle").doesNotExist();
       assert.dom(".db-configure__arrow").exists({ count: 8 });
+    });
+
+    test(`${ORACLE} disables shared row drag on mobile`, async function (assert) {
+      const noop = () => {};
+
+      await render(
+        <template>
+          <ConfigureMenu
+            @sections={{FOUR_SECTIONS}}
+            @onReorder={{noop}}
+            @onToggleVisibility={{noop}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".db-configure__row")
+        .doesNotHaveAttribute(
+          "data-drag-source",
+          "mobile rows have no active drag-source registration"
+        )
+        .doesNotHaveAttribute(
+          "draggable",
+          "mobile rows have no hardcoded draggable attribute"
+        );
     });
 
     test("arrow buttons fire @onReorder", async function (assert) {

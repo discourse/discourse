@@ -9,7 +9,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
-import { and, eq } from "discourse/truth-helpers";
+import { and, eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DLoadMore from "discourse/ui-kit/d-load-more";
@@ -17,6 +17,8 @@ import DModal from "discourse/ui-kit/d-modal";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
+import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 
 const VISIBLE_CAP = 10;
@@ -25,86 +27,49 @@ const SEARCH_DEBOUNCE_MS = 200;
 class ManageReportsRow extends Component {
   @service site;
 
-  @tracked dragCssClass;
-  dragCount = 0;
-
-  isAboveElement(event) {
-    const domRect = event.currentTarget.getBoundingClientRect();
-    return event.offsetY < domRect.height / 2;
+  /**
+   * Resolves a drop onto this row into a reorder.
+   *
+   * Rows travel by their stable `key`, never as objects: `visibleRows` can be
+   * search-filtered and spreads a fresh copy of each row per render, so an object
+   * would not match by identity a moment later.
+   *
+   * @param {Object} params - The drop payload.
+   * @param {Object} params.source - The dragged source, carrying `data.key`.
+   * @param {string} params.position - Whether the drop landed before or after.
+   */
+  /**
+   * A disabled row is not part of the order, so it cannot receive a drop.
+   *
+   * @returns {boolean} Whether this row accepts the drop.
+   */
+  @action
+  canAcceptDrop() {
+    return Boolean(this.args.row.enabled && this.args.reorderable);
   }
 
   @action
-  dragStart(event) {
-    event.dataTransfer.effectAllowed = "move";
-    this.args.onDragStart(this.args.row.key);
-    this.dragCssClass = "dragging";
-  }
-
-  @action
-  dragOver(event) {
-    if (!this.args.row.enabled) {
-      return;
-    }
-    event.preventDefault();
-    if (this.dragCssClass === "dragging") {
-      return;
-    }
-    this.dragCssClass = this.isAboveElement(event)
-      ? "drag-above"
-      : "drag-below";
-  }
-
-  @action
-  dragEnter() {
-    this.dragCount++;
-  }
-
-  @action
-  dragLeave() {
-    this.dragCount--;
-    if (
-      this.dragCount === 0 &&
-      (this.dragCssClass === "drag-above" || this.dragCssClass === "drag-below")
-    ) {
-      this.dragCssClass = null;
-    }
-  }
-
-  @action
-  drop(event) {
-    if (!this.args.row.enabled) {
-      return;
-    }
-    event.preventDefault();
-    event.stopPropagation();
-    this.dragCount = 0;
-    const dropAbove = this.isAboveElement(event);
-    this.dragCssClass = null;
-    this.args.onDrop(this.args.row.key, dropAbove);
-  }
-
-  @action
-  dragEnd() {
-    this.dragCount = 0;
-    this.dragCssClass = null;
-    this.args.onDragEnd();
+  onRowDrop({ source, position }) {
+    this.args.onDrop(source.data.key, this.args.row.key, position === "before");
   }
 
   <template>
     <li
-      class={{dConcatClass
-        "manage-reports__row"
-        (if @row.enabled "--enabled")
-        this.dragCssClass
-      }}
+      class={{dConcatClass "manage-reports__row" (if @row.enabled "--enabled")}}
       data-identifier={{@row.key}}
-      draggable={{and @row.enabled @reorderable}}
-      {{on "dragstart" this.dragStart}}
-      {{on "dragover" this.dragOver}}
-      {{on "dragenter" this.dragEnter}}
-      {{on "dragleave" this.dragLeave}}
-      {{on "drop" this.drop}}
-      {{on "dragend" this.dragEnd}}
+      {{! `disabled` carries what the draggable attribute used to: the library marks
+          the host draggable unconditionally, and a disabled row must not look grabbable }}
+      {{dDragAndDropSource
+        type="dashboard-report"
+        data=(hash key=@row.key)
+        disabled=(not (and @row.enabled @reorderable))
+      }}
+      {{dDragAndDropTarget
+        accepts="dashboard-report"
+        acceptsSelf=false
+        canDrop=this.canAcceptDrop
+        onDrop=this.onRowDrop
+      }}
     >
 
       {{#unless this.site.mobileView}}
@@ -179,7 +144,6 @@ export default class ManageReports extends Component {
   @tracked loading = true;
   @tracked loadingMore = false;
   @tracked applying = false;
-  @tracked draggedId = null;
   itemsByKey = new Map();
 
   isEnabled = (row) => this.enabledKeys.has(row.key);
@@ -353,14 +317,8 @@ export default class ManageReports extends Component {
   }
 
   @action
-  onDragStart(key) {
-    this.draggedId = key;
-  }
-
-  @action
-  onDrop(targetKey, dropAbove) {
-    const fromIndex = this.enabledOrder.indexOf(this.draggedId);
-    this.draggedId = null;
+  onDrop(draggedKey, targetKey, dropAbove) {
+    const fromIndex = this.enabledOrder.indexOf(draggedKey);
     if (fromIndex < 0) {
       return;
     }
@@ -382,11 +340,6 @@ export default class ManageReports extends Component {
     const [moved] = next.splice(fromIndex, 1);
     next.splice(toIndex, 0, moved);
     this.enabledOrder = next;
-  }
-
-  @action
-  onDragEnd() {
-    this.draggedId = null;
   }
 
   @action
@@ -448,7 +401,6 @@ export default class ManageReports extends Component {
           <ul
             class={{dConcatClass
               "manage-reports__list"
-              (if this.draggedId "--dragging")
               (if this.reorderable "--reorderable")
             }}
           >

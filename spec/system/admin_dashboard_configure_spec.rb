@@ -68,6 +68,17 @@ describe "Admin Dashboard Configure menu" do
       expect(dashboard).to have_first_section("reports")
       expect(dashboard.section_ids_in_order.first(2)).to eq(%w[reports highlights])
     end
+
+    it "Configure menu DnD oracle lets an admin reorder sections with a real browser drag" do
+      dashboard.visit
+      dashboard.open_configure_menu
+
+      dashboard.drag_section("reports", "highlights")
+
+      try_until_success do
+        expect(dashboard.section_ids_in_order.first(2)).to eq(%w[reports highlights])
+      end
+    end
   end
 
   context "as a moderator" do
