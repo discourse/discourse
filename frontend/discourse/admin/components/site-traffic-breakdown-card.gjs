@@ -43,7 +43,7 @@ export default class SiteTrafficBreakdownCard extends Component {
   }
 
   @action
-  navigateTabs(event, index) {
+  navigateTabs(index, event) {
     let nextIndex;
 
     if (event.key === "ArrowLeft") {
@@ -59,9 +59,9 @@ export default class SiteTrafficBreakdownCard extends Component {
     }
 
     event.preventDefault();
-    const tabList = event.currentTarget.parentElement;
+    const nextTab = event.currentTarget.parentElement.children[nextIndex];
+    nextTab?.focus();
     this.selectTab(nextIndex);
-    next(() => tabList.children[nextIndex]?.focus());
   }
 
   @action
