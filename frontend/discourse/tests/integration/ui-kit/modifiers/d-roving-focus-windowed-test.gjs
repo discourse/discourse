@@ -7,6 +7,12 @@ import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 const WINDOW_ROWS = Array.from({ length: 10 }, (_, i) => 100 + i);
 // A fully-mounted small list: data-index 0..9, logicalCount 10 (nothing off-window).
 const SMALL_ROWS = Array.from({ length: 10 }, (_, i) => i);
+// The same ten-row window with one row disabled, so the rendered cell count and the navigable
+// count differ.
+const WINDOW_ROWS_ONE_DISABLED = WINDOW_ROWS.map((index) => ({
+  index,
+  disabled: index === 109 ? "true" : "false",
+}));
 
 module(
   "Integration | ui-kit | Modifier | dRovingFocus | windowed",
@@ -306,18 +312,27 @@ module(
         </template>
       );
 
+      // `onEdgeReach` is unreachable from Home/End/ArrowRight/ArrowLeft by construction, so an
+      // empty `edges` proves nothing on its own. Each step asserts where the cursor actually
+      // landed, which is what would catch a key being mis-routed to the wrong axis.
       await focus(".b");
       await triggerKeyEvent(".b", "keydown", "Home");
+      assert.dom(".a").isFocused("Home moves to the first item");
+
       await triggerKeyEvent(".a", "keydown", "End");
-      assert.deepEqual(edges, [], "Home and End do not reach a vertical edge");
+      assert.dom(".c").isFocused("End moves to the last item");
 
       await triggerKeyEvent(".c", "keydown", "ArrowRight");
+      assert.dom(".c").isFocused("ArrowRight at the last item does not move");
+
       await focus(".a");
       await triggerKeyEvent(".a", "keydown", "ArrowLeft");
+      assert.dom(".a").isFocused("ArrowLeft at the first item does not move");
+
       assert.deepEqual(
         edges,
         [],
-        "horizontal edge keys do not reach a vertical edge"
+        "none of these keys reaches the vertical edge callback"
       );
       assert.deepEqual(
         exits,
@@ -333,8 +348,9 @@ module(
 // Home/End/PageUp/PageDown must target the LOGICAL row (0 / `logicalCount-1` / ±one
 // page) over the ABSOLUTE `data-index` set, not the mounted slice. An in-window target
 // lands locally; an off-window target fires `onJump(target, direction)` so the consumer
-// scrolls it in and refocuses. `logicalCount` absent ⇒ today's positional behavior, no
-// `onJump`. Direction: Home/PageUp → "backward", End/PageDown → "forward". Page size =
+// scrolls it in and refocuses. `logicalCount` absent ⇒ Home/End keep their positional behavior
+// and the PAGE keys are not claimed at all, so a scrollable container pages natively; no
+// `onJump` either way. Direction: Home/PageUp → "backward", End/PageDown → "forward". Page size =
 // the mounted navigable count. In ACTIVE mode PageUp/PageDown always navigate the
 // listbox; Home/End navigate it only when the controller is NON-editable (select-only
 // combobox) and are left for the caret when it is editable (editable combobox).
@@ -463,6 +479,42 @@ module(
         jumps,
         [[115, "forward"]],
         "PageDown targets current (105) + page size (10 mounted rows)"
+      );
+    });
+
+    test("focus mode: PageDown clamps to the last logical row", async function (assert) {
+      const jumps = [];
+      const onJump = (target, direction) => jumps.push([target, direction]);
+
+      // 105 + a 10-row page overshoots a 112-row list, so this is the fixture that actually
+      // reaches `Math.min`. The 5000-row case above is an ordinary increment and would still
+      // pass with the clamp deleted.
+      await render(
+        <template>
+          <div
+            class="list"
+            role="listbox"
+            {{dRovingFocus
+              orientation="vertical"
+              itemSelector="[role=option]"
+              logicalCount=112
+              onJump=onJump
+            }}
+          >
+            {{#each WINDOW_ROWS as |n|}}
+              <button role="option" data-index={{n}}>{{n}}</button>
+            {{/each}}
+          </div>
+        </template>
+      );
+
+      await focus('[data-index="105"]');
+      await triggerKeyEvent('[data-index="105"]', "keydown", "PageDown");
+
+      assert.deepEqual(
+        jumps,
+        [[111, "forward"]],
+        "PageDown clamps to the last logical row (112-1) instead of overshooting to 115"
       );
     });
 
@@ -667,6 +719,269 @@ module(
         "PageDown pages the listbox even on an editable combobox (100 + 10)"
       );
       assert.true(prevented.PageDown, "PageDown is prevented");
+    });
+
+    test("without logicalCount the page keys are left to the scroll container", async function (assert) {
+      const prevented = {};
+
+      await render(
+        <template>
+          <div
+            class="list"
+            role="listbox"
+            {{dRovingFocus orientation="vertical" itemSelector="[role=option]"}}
+          >
+            {{#each SMALL_ROWS as |n|}}
+              <button role="option" data-index={{n}}>{{n}}</button>
+            {{/each}}
+          </div>
+        </template>
+      );
+      document
+        .querySelector(".list")
+        .addEventListener(
+          "keydown",
+          (e) => (prevented[e.key] = e.defaultPrevented)
+        );
+
+      await focus('[data-index="5"]');
+      await triggerKeyEvent('[data-index="5"]', "keydown", "PageDown");
+      assert
+        .dom('[data-index="5"]')
+        .isFocused(
+          "PageDown does not move the cursor without a logical row count"
+        );
+      assert.false(
+        prevented.PageDown,
+        "and it falls through so the container can page natively"
+      );
+
+      await triggerKeyEvent('[data-index="5"]', "keydown", "PageUp");
+      assert
+        .dom('[data-index="5"]')
+        .isFocused("PageUp does not move the cursor either");
+      assert.false(prevented.PageUp, "and it falls through too");
+    });
+
+    test("a page is the mounted navigable count, not the rendered cell count", async function (assert) {
+      const jumps = [];
+      const onJump = (target, direction) => jumps.push([target, direction]);
+
+      await render(
+        <template>
+          <div
+            class="list"
+            role="listbox"
+            {{dRovingFocus
+              orientation="vertical"
+              itemSelector="[role=option]"
+              logicalCount=5000
+              onJump=onJump
+            }}
+          >
+            {{#each WINDOW_ROWS_ONE_DISABLED key="index" as |row|}}
+              <button
+                role="option"
+                data-index={{row.index}}
+                aria-disabled={{row.disabled}}
+              >{{row.index}}</button>
+            {{/each}}
+          </div>
+        </template>
+      );
+
+      await focus('[data-index="105"]');
+      await triggerKeyEvent('[data-index="105"]', "keydown", "PageDown");
+
+      // Ten rows are rendered but one is disabled, so a page is nine.
+      assert.deepEqual(
+        jumps,
+        [[114, "forward"]],
+        "a disabled placeholder does not lengthen the page"
+      );
+    });
+
+    test("a page key with no cursor pages from the mounted window", async function (assert) {
+      const jumps = [];
+      const onJump = (target, direction) => jumps.push([target, direction]);
+
+      await render(
+        <template>
+          <div
+            class="list"
+            role="listbox"
+            {{dRovingFocus
+              orientation="vertical"
+              itemSelector="[role=option]"
+              logicalCount=5000
+              onJump=onJump
+              tabStop=false
+            }}
+          >
+            {{#each WINDOW_ROWS as |n|}}
+              <button role="option" data-index={{n}}>{{n}}</button>
+            {{/each}}
+          </div>
+        </template>
+      );
+
+      // No cursor, so there is no current logical row to page from. Anchoring on -1 would
+      // page to row 9 — backwards past the window on a PageDown.
+      await triggerKeyEvent('[data-index="100"]', "keydown", "PageDown");
+
+      assert.deepEqual(
+        jumps,
+        [[110, "forward"]],
+        "PageDown pages forward from the window's first row, not from -1"
+      );
+    });
+
+    test("a jump key is left alone when there is no onJump to service it", async function (assert) {
+      const prevented = {};
+
+      await render(
+        <template>
+          <div
+            class="list"
+            role="listbox"
+            {{dRovingFocus
+              orientation="vertical"
+              itemSelector="[role=option]"
+              logicalCount=5000
+            }}
+          >
+            {{#each WINDOW_ROWS as |n|}}
+              <button role="option" data-index={{n}}>{{n}}</button>
+            {{/each}}
+          </div>
+        </template>
+      );
+      document
+        .querySelector(".list")
+        .addEventListener(
+          "keydown",
+          (e) => (prevented[e.key] = e.defaultPrevented)
+        );
+
+      await focus('[data-index="105"]');
+      await triggerKeyEvent('[data-index="105"]', "keydown", "End");
+
+      // The target is off-window and no consumer can scroll it in, so swallowing the key
+      // would make End do nothing at all.
+      assert.false(
+        prevented.End,
+        "an unserviceable jump falls through instead of becoming a dead key"
+      );
+    });
+
+    test("focusLogicalIndex refuses an out-of-range index on an unstamped group", async function (assert) {
+      let api = null;
+      const register = (value) => (api = value);
+
+      await render(
+        <template>
+          <div
+            role="listbox"
+            {{dRovingFocus
+              orientation="vertical"
+              itemSelector="[role=option]"
+              logicalCount=5000
+              onRegisterApi=register
+            }}
+          >
+            <button class="a" role="option">A</button>
+            <button class="b" role="option">B</button>
+            <button class="c" role="option">C</button>
+          </div>
+        </template>
+      );
+
+      // Nothing is stamped, so the index is positional — but positional addressing must be
+      // bounds-checked, not clamped: reporting success here would tell a windowed consumer the
+      // jump had been serviced when the row was never reached.
+      assert.false(
+        api.focusLogicalIndex(4999),
+        "an index past the mounted rows reports no landing"
+      );
+      assert
+        .dom(".c")
+        .isNotFocused("and the cursor is not clamped onto the last row");
+
+      assert.true(api.focusLogicalIndex(2), "an in-range index still lands");
+      assert.dom(".c").isFocused("on the row at that position");
+    });
+
+    test("a logical index prefers data-logical-index over data-index", async function (assert) {
+      let api = null;
+      const register = (value) => (api = value);
+
+      await render(
+        <template>
+          <div
+            role="listbox"
+            {{dRovingFocus
+              orientation="vertical"
+              itemSelector="[role=option]"
+              logicalCount=5000
+              onRegisterApi=register
+            }}
+          >
+            <button
+              class="a"
+              role="option"
+              data-index="0"
+              data-logical-index="40"
+            >A</button>
+            <button
+              class="b"
+              role="option"
+              data-index="1"
+              data-logical-index="41"
+            >B</button>
+          </div>
+        </template>
+      );
+
+      // A windowed list with non-option rows stamps its own option ordinal, which must win over
+      // the raw virtualizer index.
+      assert.true(
+        api.focusLogicalIndex(41),
+        "the logical ordinal identifies the row"
+      );
+      assert.dom(".b").isFocused("and the cursor lands on it");
+
+      assert.false(
+        api.focusLogicalIndex(1),
+        "the raw virtualizer index is not what is addressed"
+      );
+    });
+
+    test("a logical index matches its row however the attribute is written", async function (assert) {
+      let api = null;
+      const register = (value) => (api = value);
+
+      await render(
+        <template>
+          <div
+            role="listbox"
+            {{dRovingFocus
+              orientation="vertical"
+              itemSelector="[role=option]"
+              logicalCount=5000
+              onRegisterApi=register
+            }}
+          >
+            <button class="r1" role="option" data-index="0105">105</button>
+            <button class="r2" role="option" data-index="106">106</button>
+          </div>
+        </template>
+      );
+
+      assert.true(
+        api.focusLogicalIndex(105),
+        "a zero-padded index still identifies its row"
+      );
+      assert.dom(".r1").isFocused("and the cursor lands on it");
     });
   }
 );
