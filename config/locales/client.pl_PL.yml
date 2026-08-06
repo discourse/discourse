@@ -7659,6 +7659,7 @@ pl_PL:
           add: "Dodaj raport"
           remove: "Usuń raport"
           no_data: "Brak danych do wyświetlenia"
+          report_error: "Nie można załadować tego raportu"
           modal:
             title: "Zarządzaj raportami"
             search_placeholder: "Wyszukaj raporty"

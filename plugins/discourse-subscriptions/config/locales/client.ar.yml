@@ -404,8 +404,6 @@ ar:
         confirm_payment: تأكيد الدفع
         success: العودة
       admin:
-        unconfigured: 'لم يتم إعداد Stripe بشكلٍ صحيح. يُرجى الاطلاع على Discourse Meta للحصول على المعلومات.'
-        on_meta: اشتراكات Discourse على Meta
         dashboard:
           title: لوحة المعلومات
           table:
