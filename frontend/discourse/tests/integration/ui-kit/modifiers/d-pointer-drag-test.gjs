@@ -1099,4 +1099,98 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       laterCleanup();
     });
   });
+
+  module("bodyClass", function () {
+    test("marks the document body for the gesture's duration", async function (assert) {
+      await render(
+        <template>
+          <div class="dpd-target" {{dPointerDrag bodyClass="dragging"}}></div>
+        </template>
+      );
+
+      const target = find(".dpd-target");
+      installPointerCaptureSpy(target);
+
+      await triggerEvent(target, "pointerdown", { button: 0, pointerId: 1 });
+      assert
+        .dom(document.body)
+        .hasClass("dragging", "the body is marked while the gesture runs");
+
+      await triggerEvent(target, "pointerup", { pointerId: 1 });
+      assert
+        .dom(document.body)
+        .doesNotHaveClass("dragging", "and unmarked on release");
+    });
+
+    test("unmarks the body when the gesture is cancelled", async function (assert) {
+      await render(
+        <template>
+          <div class="dpd-target" {{dPointerDrag bodyClass="dragging"}}></div>
+        </template>
+      );
+
+      const target = find(".dpd-target");
+      installPointerCaptureSpy(target);
+
+      await triggerEvent(target, "pointerdown", { button: 0, pointerId: 1 });
+      assert.dom(document.body).hasClass("dragging", "the gesture marked it");
+
+      await triggerEvent(target, "pointercancel", { pointerId: 1 });
+      assert
+        .dom(document.body)
+        .doesNotHaveClass(
+          "dragging",
+          "a cancelled gesture cleans up after itself"
+        );
+    });
+
+    test("unmarks the body when torn down mid-gesture", async function (assert) {
+      await render(
+        <template>
+          <div class="dpd-target" {{dPointerDrag bodyClass="dragging"}}></div>
+        </template>
+      );
+
+      const target = find(".dpd-target");
+      installPointerCaptureSpy(target);
+      await triggerEvent(target, "pointerdown", { button: 0, pointerId: 1 });
+      assert.dom(document.body).hasClass("dragging", "the gesture marked it");
+
+      await clearRender();
+      assert
+        .dom(document.body)
+        .doesNotHaveClass("dragging", "teardown does not strand the mark");
+    });
+
+    test("a second gesture keeps the mark until it ends too", async function (assert) {
+      await render(
+        <template>
+          <div class="dpd-first" {{dPointerDrag bodyClass="dragging"}}></div>
+          <div class="dpd-second" {{dPointerDrag bodyClass="dragging"}}></div>
+        </template>
+      );
+
+      const first = find(".dpd-first");
+      const second = find(".dpd-second");
+      installPointerCaptureSpy(first);
+      installPointerCaptureSpy(second);
+
+      await triggerEvent(first, "pointerdown", { button: 0, pointerId: 1 });
+      await triggerEvent(second, "pointerdown", { button: 0, pointerId: 2 });
+      await triggerEvent(first, "pointerup", { pointerId: 1 });
+
+      assert
+        .dom(document.body)
+        .hasClass(
+          "dragging",
+          "one gesture ending does not unmark the body while another is live"
+        );
+
+      await triggerEvent(second, "pointerup", { pointerId: 2 });
+
+      assert
+        .dom(document.body)
+        .doesNotHaveClass("dragging", "the last one out clears the mark");
+    });
+  });
 });

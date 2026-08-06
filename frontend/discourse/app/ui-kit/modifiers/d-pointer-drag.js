@@ -21,12 +21,60 @@ const DEFAULT_TOUCH_ACTION = "none";
 const pointerOwners = new Map();
 
 /**
+ * How many live gestures asked for each body class. Counted rather than toggled,
+ * because two gestures driven by two pointers can want the same mark at once and
+ * the first to end must not take it away from the second.
+ */
+const bodyClassHolders = new Map();
+
+/**
+ * Marks `document.body` for the duration of a gesture, for the rules that cannot
+ * be expressed against the dragged element: a cursor that has to hold while the
+ * pointer travels anywhere on the page, or a rule targeting something that is not
+ * a descendant of the element being dragged.
+ *
+ * @param {string} className - The class to hold.
+ */
+function holdBodyClass(className) {
+  const held = bodyClassHolders.get(className) ?? 0;
+  if (held === 0) {
+    // Before the count, so a token the DOM rejects leaves nothing to give back.
+    document.body.classList.add(className);
+  }
+  bodyClassHolders.set(className, held + 1);
+}
+
+/**
+ * Gives up one hold on a body class, removing it once nothing holds it.
+ *
+ * @param {string} className - The class to release.
+ */
+function releaseBodyClass(className) {
+  const held = bodyClassHolders.get(className) ?? 0;
+  if (held > 1) {
+    bodyClassHolders.set(className, held - 1);
+    return;
+  }
+
+  bodyClassHolders.delete(className);
+  try {
+    document.body.classList.remove(className);
+  } catch {
+    // Teardown runs through here and must not be abandoned part-way.
+  }
+}
+
+/**
  * Drops all pointer-ownership bookkeeping. For tests only: a consumer of
  * {@link registerPointerDrag} that never invokes its cleanup would otherwise
  * leave an entry behind that releases the next gesture to reuse that pointer ID.
  */
 export function resetPointerDragForTesting() {
   pointerOwners.clear();
+  for (const className of bodyClassHolders.keys()) {
+    document.body.classList.remove(className);
+  }
+  bodyClassHolders.clear();
 }
 
 /**
@@ -86,6 +134,9 @@ export function registerPointerDrag(element, getArgsRef) {
   // change between gestures, so the value really on the element is snapshotted
   // rather than re-read when it is time to remove it.
   let appliedClass = null;
+  // Snapshotted for the same reason, and separately, because this one is a hold
+  // on shared state that has to be given back exactly once.
+  let heldBodyClass = null;
   // Set by the cleanup below. A consumer can destroy its own registration from
   // inside `onDragStart`, and the rest of that dispatch still runs.
   let tornDown = false;
@@ -93,12 +144,14 @@ export function registerPointerDrag(element, getArgsRef) {
   const finish = () => {
     const finishedPointer = pointerId;
     const classToRemove = appliedClass;
+    const bodyClassToRelease = heldBodyClass;
 
     // Reset before touching the DOM: either call below can throw, and leaving
     // `pointerId` set would keep the gesture in flight forever.
     pointerId = null;
     engaged = false;
     appliedClass = null;
+    heldBodyClass = null;
 
     if (finishedPointer !== null) {
       // Only while the claim is still ours: a later claimant owns the entry from
@@ -118,6 +171,9 @@ export function registerPointerDrag(element, getArgsRef) {
       } catch {
         // Teardown runs through here and must not be abandoned part-way.
       }
+    }
+    if (bodyClassToRelease) {
+      releaseBodyClass(bodyClassToRelease);
     }
   };
 
@@ -223,6 +279,14 @@ export function registerPointerDrag(element, getArgsRef) {
       } catch {
         // A whitespace token is a caller mistake: it costs the drag its styling
         // but must not abort the gesture.
+      }
+    }
+    if (args.bodyClass) {
+      try {
+        holdBodyClass(args.bodyClass);
+        heldBodyClass = args.bodyClass;
+      } catch {
+        // Same as above: a rejected token costs the page-level styling only.
       }
     }
 
@@ -338,6 +402,11 @@ export function registerPointerDrag(element, getArgsRef) {
  *  - `draggingClass` — class toggled on the element for the gesture's duration.
  *    A single token: a value with whitespace in it is rejected by the DOM, which
  *    costs the drag its styling but leaves the gesture working.
+ *  - `bodyClass` — class held on `document.body` for the gesture's duration, for
+ *    the rules an element-level class cannot reach: a cursor that must hold while
+ *    the pointer travels anywhere on the page, or a rule targeting something that
+ *    is not a descendant of the element being dragged. Held by count, so two
+ *    gestures asking for the same class both keep it until the last one ends.
  *  - `threshold` — pixels of travel, measured as a straight line from the press
  *    origin, that `onDrag` waits for before it starts firing. Reaching the
  *    distance is enough; it does not have to be exceeded. Suppresses the jitter
