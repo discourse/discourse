@@ -1965,11 +1965,11 @@ RSpec.describe Report do
       Report.cache(exception_report)
     end
 
-    it "caches valid reports for 35 minutes" do
+    it "caches valid reports for 60 minutes" do
       Discourse
         .cache
         .expects(:write)
-        .with(Report.cache_key(valid_report), valid_report.as_json, expires_in: 35.minutes)
+        .with(Report.cache_key(valid_report), valid_report.as_json, expires_in: 60.minutes)
       Report.cache(valid_report)
     end
   end
