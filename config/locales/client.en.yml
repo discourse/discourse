@@ -3209,6 +3209,7 @@ en:
       subcategory_count:
         one: "+%{count} subcategory"
         other: "+%{count} subcategories"
+      subcategories: "+ Subcategories"
       topic_count:
         one: "%{count} topic in this category"
         other: "%{count} topics in this category"

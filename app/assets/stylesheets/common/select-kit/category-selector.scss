@@ -1,6 +1,7 @@
 .select-kit,
 .select-kit-box {
-  &.category-selector {
+  &.category-selector,
+  &.multiple-categories-selector {
     .category-row {
       max-width: 100%;
 
