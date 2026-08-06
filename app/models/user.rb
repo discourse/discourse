@@ -252,6 +252,9 @@ class User < ActiveRecord::Base
   # Skip validating email, for example from a particular auth provider plugin
   attr_accessor :skip_email_validation
 
+  # DiscourseConnect is authoritative for usernames, so watched words must not block SSO users.
+  attr_accessor :skip_username_watched_words_validation
+
   # Whether we need to be sending a system message after creation
   attr_accessor :send_welcome_message
 
@@ -1492,7 +1495,11 @@ class User < ActiveRecord::Base
   end
 
   def username_format_validator
-    UsernameValidator.perform_validation(self, "username")
+    UsernameValidator.perform_validation(
+      self,
+      "username",
+      skip_watched_words: skip_username_watched_words_validation,
+    )
   end
 
   def email_confirmed?
