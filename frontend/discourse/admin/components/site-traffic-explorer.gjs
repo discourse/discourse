@@ -215,20 +215,6 @@ export default class SiteTrafficExplorer extends Component {
           @clearFilters={{@clearFilters}}
         />
 
-        {{#if this.partialWarning}}
-          <div
-            class="alert alert-warning site-traffic-explorer__partial-warning"
-            role="status"
-            aria-live="polite"
-            data-test-site-traffic-partial-warning
-          >
-            <strong>{{i18n
-                "admin.site_traffic_explorer.partial.title"
-              }}</strong>
-            <span data-test-partial-reason>{{this.partialWarning}}</span>
-          </div>
-        {{/if}}
-
         {{#if @fetchError}}
           <div class="site-traffic-explorer__error" role="alert">
             <p>{{this.fetchErrorMessage}}</p>
@@ -247,6 +233,18 @@ export default class SiteTrafficExplorer extends Component {
               aria-busy="true"
             >
               {{i18n "admin.site_traffic_explorer.loading"}}
+            </div>
+          {{else if this.partialWarning}}
+            <div
+              class="alert alert-warning site-traffic-explorer__partial-warning"
+              role="status"
+              aria-live="polite"
+              data-test-site-traffic-partial-warning
+            >
+              <strong>{{i18n
+                  "admin.site_traffic_explorer.partial.title"
+                }}</strong>
+              <span data-test-partial-reason>{{this.partialWarning}}</span>
             </div>
           {{/if}}
 

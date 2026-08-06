@@ -210,7 +210,10 @@ export default class AdminReportStackedChart extends Component {
               display: !chartOptions.hideYAxisGridLines,
             },
             ticks: {
-              callback: (label) => number(label),
+              callback: (_label, index, ticks) => {
+                const value = ticks[index]?.value;
+                return Number.isInteger(Number(value)) ? number(value) : null;
+              },
               sampleSize: 5,
               maxRotation: 25,
               minRotation: 0,
