@@ -1397,18 +1397,14 @@ RSpec.describe Admin::DashboardController do
     end
 
     context "with traffic in the selected date range" do
-      before do
-        sign_in(admin)
-        chrome = "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36"
-        firefox = "Mozilla/5.0 Firefox/126.0"
-
+      fab!(:landing_pageview) do
         Fabricate(
           :browser_pageview_event,
           url: "https://test.localhost/landing/?campaign=private#section",
           country_code: "US",
           asn: 64_496,
           ip_address: "192.0.2.1",
-          user_agent: chrome,
+          user_agent: "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36",
           user_id: admin.id,
           session_id: "admin-session",
           normalized_referrer: "search.example/results?token=private",
@@ -1416,13 +1412,16 @@ RSpec.describe Admin::DashboardController do
           source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: "2026-05-10 10:00:00",
         )
+      end
+
+      fab!(:latest_pageview) do
         Fabricate(
           :browser_pageview_event,
           url: "https://test.localhost/latest?token=private",
           country_code: "US",
           asn: 64_496,
           ip_address: "192.0.2.1",
-          user_agent: chrome,
+          user_agent: "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36",
           user_id: admin.id,
           session_id: "admin-session",
           normalized_referrer: "ignored.example/return?token=private",
@@ -1430,28 +1429,39 @@ RSpec.describe Admin::DashboardController do
           source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: "2026-05-10 10:01:00",
         )
+      end
+
+      fab!(:top_pageview) do
         Fabricate(
           :browser_pageview_event,
           url: "/top",
           country_code: "GB",
           asn: 64_496,
           ip_address: "198.51.100.2",
-          user_agent: firefox,
+          user_agent: "Mozilla/5.0 Firefox/126.0",
           session_id: "anonymous-session",
           source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: "2026-05-11 10:00:00",
         )
+      end
+
+      fab!(:admin_session_engagement) do
         Fabricate(
           :browser_pageview_session_engagement,
           session_id: "admin-session",
           engaged_seconds: 60,
         )
+      end
+
+      fab!(:anonymous_session_engagement) do
         Fabricate(
           :browser_pageview_session_engagement,
           session_id: "anonymous-session",
           engaged_seconds: 0,
         )
       end
+
+      before { sign_in(admin) }
 
       it "summarizes every traffic dimension for the selected dates" do
         get "/admin/dashboard/traffic.json", params: request_params
