@@ -517,7 +517,7 @@ module("Unit | Lib | raw-event-helper", function () {
     );
   });
 
-  test("isLivestreamUrl only accepts http(s) URLs for major livestreaming platforms", function (assert) {
+  test("isLivestreamUrl only accepts https URLs for major livestreaming platforms", function (assert) {
     assert.false(
       isLivestreamUrl("https://example.com/live", SETTINGS),
       "does not accept arbitrary URLs"
@@ -525,6 +525,10 @@ module("Unit | Lib | raw-event-helper", function () {
     assert.false(
       isLivestreamUrl("http://example.com/live", SETTINGS),
       "does not accept arbitrary URLs"
+    );
+    assert.false(
+      isLivestreamUrl("http://www.youtube.com/watch?v=1", SETTINGS),
+      "rejects http on an allowed host"
     );
     assert.false(
       isLivestreamUrl("HTTPS://EXAMPLE.COM", SETTINGS),
@@ -544,7 +548,7 @@ module("Unit | Lib | raw-event-helper", function () {
     );
     assert.false(
       isLivestreamUrl("ftp://youtube.com/watch", SETTINGS),
-      "rejects a non-http(s) scheme on an allowed host"
+      "rejects a non-https scheme on an allowed host"
     );
     assert.false(
       isLivestreamUrl("https://", SETTINGS),
@@ -627,6 +631,35 @@ module("Unit | Lib | raw-event-helper", function () {
     assert.false(
       isLivestreamUrl("https://youtube.com@evil.com/live", SETTINGS),
       "rejects a platform name smuggled into the userinfo"
+    );
+    assert.false(
+      isLivestreamUrl("https://youtube.com\t@evil.com/live", SETTINGS),
+      "rejects userinfo hidden behind a stripped control character"
+    );
+    assert.false(
+      isLivestreamUrl("https://youtube.com。evil.com/live", SETTINGS),
+      "rejects a separator that only looks like a label boundary"
+    );
+  });
+
+  // The browser resolves these to a host the admin did allow, so the save path
+  // keeps the livestream flag and the editor has to agree.
+  test("isLivestreamUrl matches the host the browser would connect to", function (assert) {
+    assert.true(
+      isLivestreamUrl("https://youtube.com\\@evil.com/live", SETTINGS),
+      "resolves a backslash as a path separator"
+    );
+    assert.true(
+      isLivestreamUrl("https://%79outube.com/live", SETTINGS),
+      "decodes percent escapes in the host"
+    );
+    assert.true(
+      isLivestreamUrl("https://ｙoutube.com/live", SETTINGS),
+      "maps Unicode to the host it resolves to"
+    );
+    assert.true(
+      isLivestreamUrl("https://youtube.com./live", SETTINGS),
+      "ignores a fully qualified trailing dot"
     );
   });
 

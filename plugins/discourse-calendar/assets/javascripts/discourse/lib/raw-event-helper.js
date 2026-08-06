@@ -3,19 +3,41 @@ import { buildBBCodeAttrs, parseBBCodeTag } from "discourse/lib/text";
 let lastSetting;
 let lastHosts;
 
+// Resolves the host the browser would actually connect to, so that percent
+// escapes, Unicode and separators are compared after the browser has had its
+// say rather than as written. `AllowedHosts.canonical_host` does the same on
+// the server.
+function canonicalHost(url, { requireHttps = true } = {}) {
+  let parsed;
+  try {
+    parsed = new URL(url ?? "");
+  } catch {
+    return null;
+  }
+
+  if (requireHttps && parsed.protocol !== "https:") {
+    return null;
+  }
+
+  return parsed.hostname.replace(/\.$/, "") || null;
+}
+
 // Parsed once per setting value because this runs on every location keystroke.
 function allowedHosts(setting) {
   if (setting !== lastSetting) {
     lastSetting = setting;
+    // Admins routinely paste a full URL into a host list, so keep only the host.
     lastHosts = (setting ?? "")
       .split("|")
-      .map(
-        (host) =>
-          host
-            .trim()
-            .toLowerCase()
-            .replace(/^https?:\/\//, "")
-            .split("/")[0]
+      .map((entry) => entry.trim())
+      .filter(Boolean)
+      .map((entry) =>
+        canonicalHost(
+          /^https?:\/\//i.test(entry) ? entry : `https://${entry}`,
+          {
+            requireHttps: false,
+          }
+        )
       )
       .filter(Boolean);
   }
@@ -24,7 +46,7 @@ function allowedHosts(setting) {
 }
 
 // Mirrors DiscourseCalendar::Livestream::AllowedHosts on the server, down to
-// parsing the URL rather than pattern-matching it: a location the editor
+// canonicalizing the URL rather than pattern-matching it: a location the editor
 // presents as a livestream must be one the save path still recognizes, or the
 // livestream flag is silently dropped. Subdomains are allowed because livestream
 // hosts routinely use them (us06web.zoom.us, www.youtube.com); a host that merely
@@ -35,20 +57,13 @@ export function isLivestreamUrl(url, siteSettings) {
     return false;
   }
 
-  let parsed;
-  try {
-    parsed = new URL(url ?? "");
-  } catch {
-    return false;
-  }
-
-  if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+  const host = canonicalHost(url);
+  if (!host) {
     return false;
   }
 
   return hosts.some(
-    (allowed) =>
-      parsed.hostname === allowed || parsed.hostname.endsWith(`.${allowed}`)
+    (allowed) => host === allowed || host.endsWith(`.${allowed}`)
   );
 }
 

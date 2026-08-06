@@ -238,8 +238,29 @@ describe DiscoursePostEvent::Event do
       expect(event.reload.livestream).to eq(true)
     end
 
-    it "resets livestream when the location is not an http(s) URL" do
+    it "resets livestream when the location is not an https URL" do
       event = Fabricate(:event, post: post, livestream: true, location: "Room 5")
+
+      expect(event.reload.livestream).to eq(false)
+
+      event.update!(location: "http://www.youtube.com/live/abc123")
+
+      expect(event.reload.livestream).to eq(false)
+    end
+
+    it "falls back to the url, which is what the onebox and serializers use" do
+      event =
+        Fabricate(
+          :event,
+          post: post,
+          livestream: true,
+          location: nil,
+          url: "https://www.youtube.com/live/abc123",
+        )
+
+      expect(event.reload.livestream).to eq(true)
+
+      event.update!(url: "https://example.com/live")
 
       expect(event.reload.livestream).to eq(false)
     end
