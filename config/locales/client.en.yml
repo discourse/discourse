@@ -3799,7 +3799,6 @@ en:
         other: "%{count} open membership requests for '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - completed"
       new_features: "New features available!"
       admin_problems: "New advice on your site dashboard"
       upcoming_changes:
