@@ -12,16 +12,18 @@ import { find, settled } from "@ember/test-helpers";
  * `captured` and `released` are exposed for the tests that assert the capture itself
  * was taken and given back; most callers only need the side effect.
  *
- * @param {string|HTMLElement} target - The element that will receive the press, or a
- *   selector for it.
- * @returns {{element: HTMLElement, captured: Set<number>, released: number[]}} The
- *   element, the pointer IDs it currently holds, and those it has given back in
- *   order.
+ * @param target - The element that will receive the press, or a selector for it.
+ * @returns The element, the pointer IDs it currently holds, and those it has given
+ *   back in order.
  */
-export function stubPointerCapture(target) {
-  const element = typeof target === "string" ? find(target) : target;
-  const captured = new Set();
-  const released = [];
+export function stubPointerCapture(target: string | HTMLElement) {
+  // `find` is typed as possibly missing the element; a test naming one that is
+  // not rendered is a test bug, and failing on the next line says so directly.
+  const element = (
+    typeof target === "string" ? find(target) : target
+  ) as HTMLElement;
+  const captured = new Set<number>();
+  const released: number[] = [];
 
   element.setPointerCapture = (pointerId) => captured.add(pointerId);
   element.hasPointerCapture = (pointerId) => captured.has(pointerId);
@@ -41,11 +43,6 @@ export function stubPointerCapture(target) {
  * caused it. `settled` does not await frames, so a test that presses, moves, and
  * asserts reads the value from *before* the move and quietly passes or fails on the
  * wrong basis. Await this between a move and any assertion about what the move did.
- *
- * Not needed after a release: ending a gesture cancels the pending frame and reports
- * synchronously, precisely so the committed value cannot be overtaken by a stale one.
- *
- * @returns {Promise<void>} Resolves once the frame has run and the app has settled.
  */
 export async function settleGestureFrame() {
   await new Promise((resolve) => requestAnimationFrame(resolve));

@@ -1,6 +1,7 @@
 import { registerDestructor } from "@ember/destroyable";
 import Modifier from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
 
 /**
  * Binds a press-drag lifecycle using legacy mouse and touch event pairs, plus
@@ -28,6 +29,10 @@ export default class DDraggableModifier extends Modifier {
 
   constructor(owner, args) {
     super(owner, args);
+    deprecated(
+      "`dDraggable` is deprecated. Use `dPointerDrag` (`discourse/ui-kit/modifiers/d-pointer-drag`) instead.",
+      { id: "discourse.ui-kit.d-draggable", since: "2026.8.0" }
+    );
     registerDestructor(this, (instance) => instance.cleanup());
   }
 

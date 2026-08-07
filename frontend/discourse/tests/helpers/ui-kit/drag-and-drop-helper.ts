@@ -1,5 +1,11 @@
 import { triggerEvent } from "@ember/test-helpers";
 
+/** A point on the viewport, in the shape every drag event has to carry. */
+interface ClientPoint {
+  clientX: number;
+  clientY: number;
+}
+
 /**
  * Returns the center-point client coordinates of an element, for realistic
  * synthetic drag events.
@@ -9,11 +15,15 @@ import { triggerEvent } from "@ember/test-helpers";
  * which throws on non-finite values. A real drag always has coordinates, so the
  * test must supply them too.
  *
- * @param {string} selector - CSS selector for the element to measure.
- * @returns {{ clientX: number, clientY: number }} The element's center point.
+ * @param selector - CSS selector for the element to measure.
+ * @returns The element's center point.
  */
-export function centerOf(selector) {
-  const rect = document.querySelector(selector).getBoundingClientRect();
+export function centerOf(selector: string): ClientPoint {
+  // A selector matching nothing is a test bug; failing on the next line names it
+  // directly, where a guard here would report a missing coordinate instead.
+  const rect = (
+    document.querySelector(selector) as Element
+  ).getBoundingClientRect();
   return {
     clientX: rect.left + rect.width / 2,
     clientY: rect.top + rect.height / 2,
@@ -34,13 +44,16 @@ export function centerOf(selector) {
  * guaranteed to have fired. Bundling the wait here keeps it out of the test
  * bodies.
  *
- * @param {string} selector - CSS selector for the event target.
- * @param {string} type - The drag event type (e.g. `"dragstart"`, `"drop"`).
- * @param {Object} [options] - Forwarded to `triggerEvent`; must include the
- *   shared `dataTransfer` and finite client coordinates (see {@link centerOf}).
- * @returns {Promise<void>}
+ * @param selector - CSS selector for the event target.
+ * @param type - The drag event type (e.g. `"dragstart"`, `"drop"`).
+ * @param options - Forwarded to `triggerEvent`; must include the shared
+ *   `dataTransfer` and finite client coordinates (see {@link centerOf}).
  */
-export async function dragEvent(selector, type, options) {
+export async function dragEvent(
+  selector: string,
+  type: string,
+  options?: Record<string, unknown>
+) {
   await triggerEvent(selector, type, options);
   await new Promise((resolve) => requestAnimationFrame(resolve));
 }
@@ -61,21 +74,29 @@ export async function dragEvent(selector, type, options) {
  * handle needs the event dispatched on its registered row while carrying the
  * handle's coordinates.
  *
- * @param {string} sourceSelector - CSS selector for the source element.
- * @param {string} targetSelector - CSS selector for the target element.
- * @param {Object} options
- * @param {DataTransfer} options.dataTransfer - Shared payload that must travel
- *   across every event so the drag library can correlate them.
- * @param {{ clientX?: number, clientY?: number }} [options.sourceCoordinates]
- *   Coordinates merged over the source element's center.
- * @param {{ clientX?: number, clientY?: number }} [options.targetCoordinates]
- *   Coordinates merged over the target element's center.
- * @returns {Promise<void>}
+ * @param sourceSelector - CSS selector for the source element.
+ * @param targetSelector - CSS selector for the target element.
  */
 export async function simulateDrag(
-  sourceSelector,
-  targetSelector,
-  { dataTransfer, sourceCoordinates, targetCoordinates }
+  sourceSelector: string,
+  targetSelector: string,
+  {
+    dataTransfer,
+    sourceCoordinates,
+    targetCoordinates,
+  }: {
+    /**
+     * Shared payload that must travel across every event so the drag library can
+     * correlate them.
+     */
+    dataTransfer: DataTransfer;
+
+    /** Coordinates merged over the source element's center. */
+    sourceCoordinates?: Partial<ClientPoint>;
+
+    /** Coordinates merged over the target element's center. */
+    targetCoordinates?: Partial<ClientPoint>;
+  }
 ) {
   const source = { ...centerOf(sourceSelector), ...sourceCoordinates };
   const target = { ...centerOf(targetSelector), ...targetCoordinates };

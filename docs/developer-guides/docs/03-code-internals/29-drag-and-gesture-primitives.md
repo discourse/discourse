@@ -35,6 +35,13 @@ input. `dOnResize` appears below only as a disambiguation note.
 | Detect a directional touch swipe                                                    | `dSwipe` — a discrete gesture, not a continuous transform |
 | Anything, using `dDraggable`                                                        | Don't — deprecated; its notice names the replacement      |
 
+That last row is enforced rather than advisory. `dDraggable` raises the
+`discourse.ui-kit.d-draggable` deprecation the moment it is instantiated, and
+nothing silences it, so a usage in core or a preinstalled plugin fails the test
+suite. A theme or plugin gets a console warning attributed to it instead. The
+migration notes — including the three behaviour differences that matter — live in
+its own JSDoc.
+
 # The three boundaries
 
 Each of these is a live trap: both options appear to work, and only one is correct.

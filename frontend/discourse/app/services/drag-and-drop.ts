@@ -1,9 +1,12 @@
-// @ts-check
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
 import Service from "@ember/service";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { monitorForExternal } from "@atlaskit/pragmatic-drag-and-drop/external/adapter";
+import {
+  type ExternalDragPayload as NativeExternalDragPayload,
+  monitorForExternal,
+  type NativeMediaType,
+} from "@atlaskit/pragmatic-drag-and-drop/external/adapter";
 import {
   containsFiles,
   getFiles,
@@ -21,33 +24,55 @@ import {
   getURLs,
 } from "@atlaskit/pragmatic-drag-and-drop/external/url";
 
-/**
- * @typedef {Object} DragPayload
- * @property {string} type - Discriminator string set by the source.
- * @property {*} data - Arbitrary payload the source attached to the drag.
- * @property {Element} element - The element that originated the drag.
- */
+/** The in-flight element drag, as the source described it. */
+export interface DragPayload {
+  /** Discriminator string set by the source. */
+  type: string;
+
+  /** Arbitrary payload the source attached to the drag. */
+  data: Record<string, unknown>;
+
+  /**
+   * The element that originated the drag. The service's own monitor always
+   * supplies one; `setCurrentDrag` is public and validates nothing, so a caller
+   * driving the service by hand may not.
+   */
+  element: HTMLElement | null;
+}
 
 /**
- * @typedef {Object} ExternalDragPayload
- * @property {string[]} types - Native MIME types declared by the
- *   incoming drag (e.g. `"Files"`, `"text/plain"`, `"text/uri-list"`).
- * @property {DataTransferItem[]} items - The `DataTransferItem` list
- *   PDND snapshotted at drag start. Browsers expose `kind` and `type`
- *   here even when `dataTransfer.getData(…)` is blocked during
- *   `dragover` for security.
- * @property {(mediaType: string) => string | null} getStringData -
- *   Reads the string payload for a given MIME type. Returns `null`
- *   when the type is absent.
- * @property {() => boolean} containsFiles
- * @property {() => File[]} getFiles
- * @property {() => boolean} containsHTML
- * @property {() => string | null} getHTML
- * @property {() => boolean} containsText
- * @property {() => string | null} getText
- * @property {() => boolean} containsURLs
- * @property {() => string[]} getURLs
+ * The in-flight external drag, with the read helpers bound to it so consumers
+ * never reach for the underlying library themselves.
  */
+export interface ExternalDragPayload {
+  /**
+   * Native MIME types declared by the incoming drag (e.g. `"Files"`,
+   * `"text/plain"`, `"text/uri-list"`).
+   */
+  types: NativeMediaType[];
+
+  /**
+   * The `DataTransferItem` list snapshotted at drag start. Browsers expose `kind`
+   * and `type` here even when `dataTransfer.getData(…)` is blocked during
+   * `dragover` for security.
+   */
+  items: DataTransferItem[];
+
+  /**
+   * Reads the string payload for a given MIME type. Returns `null` when the type
+   * is absent.
+   */
+  getStringData: (mediaType: string) => string | null;
+
+  containsFiles: () => boolean;
+  getFiles: () => File[];
+  containsHTML: () => boolean;
+  getHTML: () => string | null;
+  containsText: () => boolean;
+  getText: () => string | null;
+  containsURLs: () => boolean;
+  getURLs: () => string[];
+}
 
 /**
  * Vocabulary `acceptsExternal()` understands. Each key delegates to
@@ -60,6 +85,9 @@ const EXTERNAL_KIND_PREDICATES = Object.freeze({
   text: containsText,
   urls: containsURLs,
 });
+
+/** A kind of external payload, as named by `accepts` / `acceptsExternal()`. */
+export type ExternalDragKind = keyof typeof EXTERNAL_KIND_PREDICATES;
 
 /**
  * Tracks the in-flight drag — both for the `dDragAndDropSource` /
@@ -84,14 +112,12 @@ const EXTERNAL_KIND_PREDICATES = Object.freeze({
  * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
  */
 export default class DragAndDropService extends Service {
-  /** @type {DragPayload|null} */
-  @tracked currentDrag = null;
+  @tracked currentDrag: DragPayload | null = null;
 
-  /** @type {ExternalDragPayload|null} */
-  @tracked currentExternalDrag = null;
+  @tracked currentExternalDrag: ExternalDragPayload | null = null;
 
-  constructor() {
-    super(...arguments);
+  constructor(...args: ConstructorParameters<typeof Service>) {
+    super(...args);
     // Registering a monitor subscribes to PDND's drag streams; the element
     // adapter mounts its window-level listeners through usage registration
     // rather than at module import, so this is what brings it up.
@@ -112,7 +138,7 @@ export default class DragAndDropService extends Service {
           // `source.data` is PDND's `Record<string, unknown>`; our own
           // `dDragAndDropSource` always stamps `type` as a string, and
           // `canMonitor` above only admits sources whose `type` is set.
-          type: /** @type {string} */ (source.data.type),
+          type: source.data.type as string,
           data: source.data,
           element: source.element,
         });
@@ -152,8 +178,6 @@ export default class DragAndDropService extends Service {
    * `true` if any drag is in flight — element OR external. Lets
    * consumers paint cross-cutting affordances (drop hints, sidebar
    * highlights) without caring which kind of drag started.
-   *
-   * @returns {boolean}
    */
   get isDragging() {
     return !!(this.currentDrag || this.currentExternalDrag);
@@ -162,10 +186,8 @@ export default class DragAndDropService extends Service {
   /**
    * Stores the in-flight drag's payload. Called by the service's own
    * `monitorForElements` on drag start.
-   *
-   * @param {DragPayload} payload
    */
-  setCurrentDrag(payload) {
+  setCurrentDrag(payload: DragPayload) {
     this.currentDrag = payload;
   }
 
@@ -183,10 +205,10 @@ export default class DragAndDropService extends Service {
    * filter? Drop targets call this from their event handlers before
    * reacting.
    *
-   * @param {string|string[]} accepts - Single type string or array.
-   * @returns {boolean}
+   * @param accepts - Single type string or array. A nullish filter matches
+   *   nothing, so a target can pass its unset arg straight through.
    */
-  accepts(accepts) {
+  accepts(accepts?: string | string[] | null) {
     if (!this.currentDrag || !accepts) {
       return false;
     }
@@ -200,12 +222,9 @@ export default class DragAndDropService extends Service {
    * Does the in-flight EXTERNAL drag carry one of the supplied kinds?
    * Vocabulary mirrors the `accepts` arg on
    * `dDragAndDropExternalTarget`: `"files"`, `"html"`, `"text"`,
-   * `"urls"`, or an array of those.
-   *
-   * @param {string|string[]} kinds
-   * @returns {boolean}
+   * `"urls"`, or an array of those. A nullish filter matches nothing.
    */
-  acceptsExternal(kinds) {
+  acceptsExternal(kinds?: ExternalDragKind | ExternalDragKind[] | null) {
     if (!this.currentExternalDrag || !kinds) {
       return false;
     }
@@ -223,7 +242,9 @@ export default class DragAndDropService extends Service {
    * directly instead of importing PDND helpers. Library wall stays
    * intact — PDND imports live here, not in consumer code.
    */
-  #decorateExternalSource(source) {
+  #decorateExternalSource(
+    source: NativeExternalDragPayload
+  ): ExternalDragPayload {
     return {
       types: source.types,
       items: source.items,
@@ -245,7 +266,9 @@ export default class DragAndDropService extends Service {
    * because the predicate input is the original PDND source — we keep
    * a reconstructed `{source}` shape for it.
    */
-  #callExternalPredicate(predicate) {
+  #callExternalPredicate(
+    predicate: (typeof EXTERNAL_KIND_PREDICATES)[ExternalDragKind]
+  ) {
     return predicate({
       source: {
         types: this.currentExternalDrag.types,
@@ -282,7 +305,7 @@ export function resetDragAndDropForTesting() {
   // the source and to monitors, so a source wrapper deferring the consumer
   // callback can still schedule it during teardown. Guarding that is the
   // source modifier's job, not this function's.
-  const make = (type) =>
+  const make = (type: string) =>
     typeof DragEvent === "function"
       ? new DragEvent(type, { bubbles: true })
       : new Event(type, { bubbles: true });

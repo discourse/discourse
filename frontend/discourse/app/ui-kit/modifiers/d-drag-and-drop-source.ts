@@ -1,10 +1,168 @@
-// @ts-check
 import { registerDestructor } from "@ember/destroyable";
+import type Owner from "@ember/owner";
 import { next } from "@ember/runloop";
-import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import {
+  draggable,
+  type ElementDropTargetEventBasePayload,
+  type ElementGetFeedbackArgs,
+} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { pointerOutsideOfPreview } from "@atlaskit/pragmatic-drag-and-drop/element/pointer-outside-of-preview";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
-import Modifier from "ember-modifier";
+import Modifier, { type ArgsFor } from "ember-modifier";
+
+/** The pointer position as the underlying library reports it. */
+type DragInput = ElementGetFeedbackArgs["input"];
+
+/** The drag's initial, previous and current locations. */
+type DragLocation = ElementDropTargetEventBasePayload["location"];
+
+/**
+ * Renders a drag preview into an isolated, offscreen container the browser
+ * photographs. Return a cleanup function that tears the preview down.
+ */
+export type DragPreviewRenderer = (args: {
+  /** The offscreen container to render into. */
+  container: HTMLElement;
+
+  /** The source element the drag began on. */
+  element: HTMLElement;
+}) => (() => void) | void;
+
+/** The dragged source, as the lifecycle callbacks receive it. */
+export interface DragSource {
+  /** The discriminator this source stamps, so targets can filter on it. */
+  type?: string;
+
+  /** The payload the drag carries, with `type` merged in. */
+  data: Record<string, unknown>;
+
+  /** The element the drag began on. */
+  element: HTMLElement;
+}
+
+interface DDragAndDropSourceSignature {
+  /** The element to mark draggable. */
+  Element: HTMLElement;
+  Args: {
+    Named: {
+      /**
+       * Discriminator string. Targets filter on this via their `accepts` arg.
+       * Stamped onto `source.data.type` so callbacks receive it with the rest of
+       * the payload.
+       */
+      type?: string;
+
+      /**
+       * Static payload the source attaches to the drag. Merged with `{type}` and
+       * exposed as `source.data` in target callbacks.
+       */
+      data?: object;
+
+      /**
+       * Alternative to `data` for dynamic payloads. Called once just before
+       * `dragstart`; merged with `{type}`.
+       */
+      getInitialData?: () => object;
+
+      /**
+       * A custom native drag preview, in one of two forms. An `Element` is
+       * photographed in place and the browser controls the hotspot. A render
+       * function mounts a fresh preview into an isolated, offscreen container,
+       * so nothing around the source element bleeds into the drag image.
+       * Defaults to the source element when omitted.
+       */
+      dragPreview?: Element | DragPreviewRenderer;
+
+      /**
+       * CSS length values (e.g. `{x: "1rem", y: "0.5rem"}`) that push the preview
+       * clear of the pointer for better drop accuracy. Applies only to the
+       * render-function `dragPreview` form; ignored for an `Element` preview,
+       * whose hotspot the browser clamps to within the image.
+       */
+      dragPreviewOffset?: { x: string; y: string };
+
+      /** Returning `false` blocks the drag from starting. */
+      canDrag?: (feedback: {
+        /**
+         * The source as it stands before the drag begins. `data` is the arg
+         * exactly as passed, before it is merged into the drag payload.
+         */
+        source: { type?: string; data?: object; element: HTMLElement };
+
+        /** Where the pointer is. */
+        input: DragInput;
+      }) => boolean | void;
+
+      /** Fires once the drag is confirmed. */
+      onDragStart?: (event: {
+        /** The dragged source. */
+        source: DragSource;
+
+        /** Where the pointer is. */
+        input: DragInput;
+      }) => void;
+
+      /**
+       * Fires once at the end of EVERY drag, whether it landed on a target or the
+       * user abandoned it. This is where drag-time state gets undone.
+       *
+       * Fires AFTER the full drop dispatch (target callbacks, monitor callbacks,
+       * native bubble listeners), so it is safe to clear shared dispatch state
+       * from here. Inspect `location.current.dropTargets` to branch on the
+       * outcome.
+       */
+      onDragEnd?: (event: {
+        /** The dragged source. */
+        source: DragSource;
+
+        /** The drag's location history. */
+        location: DragLocation;
+      }) => void;
+
+      /**
+       * Fires only when the drag ended on at least one drop target, so it is
+       * where the operation gets performed: an abandoned drag never reaches it.
+       * For a drag that lands, both this and `onDragEnd` fire — `onDragEnd`
+       * first — with the same `source` and `location`.
+       */
+      onDrop?: (event: {
+        /** The dragged source. */
+        source: DragSource;
+
+        /** The drag's location history. */
+        location: DragLocation;
+      }) => void;
+
+      /**
+       * An element inside this one that a drag must start from, so the rest stays
+       * free for selecting text and operating controls. Pass the element itself,
+       * not a selector; capture its ref with a modifier on the handle rather than
+       * querying the DOM. Changing it re-registers, so a ref that only arrives on
+       * a later render still takes effect. Omit it and the whole element
+       * initiates a drag.
+       */
+      dragHandle?: Element;
+
+      /**
+       * When `true`, the underlying draggable registration is detached. Used by
+       * consumers that conditionally suppress dragging (e.g. read-only modes).
+       * This, not `dragHandle`, is how to stop an element being dragged:
+       * `draggable="true"` is stamped on the host element either way, and
+       * `dragHandle` only narrows where a drag may begin.
+       */
+      disabled?: boolean;
+    };
+    Positional: [];
+  };
+}
+
+/**
+ * The drag source's named args, for a consumer driving
+ * {@link registerDragAndDropSource} imperatively rather than through the
+ * modifier.
+ */
+export type DragAndDropSourceArgs =
+  DDragAndDropSourceSignature["Args"]["Named"];
 
 /**
  * Wraps PDND's `draggable()` with the source-payload normalisation, the
@@ -22,18 +180,17 @@ import Modifier from "ember-modifier";
  * after the drop event has finished propagating: `onDragEnd` for every drag, then
  * `onDrop` only for one that ended on a drop target.
  *
- * @param {HTMLElement} element - The element to mark draggable.
- * @param {() => Object} getArgsRef - Closure returning the latest args.
- *   PDND callbacks read this on every invocation, so arg changes take
- *   effect without re-registering. Args shape matches the modifier:
- *   `type`, `data`, `getInitialData`, `dragPreview`, `dragPreviewOffset`,
- *   `canDrag`, `onDragStart`, `onDragEnd`, `onDrop`. `dragHandle` is the exception: it is
- *   read once, when this registers, so a caller driving this imperatively must
- *   re-register to change it.
- * @returns {() => void} Cleanup function. Caller invokes it once on
- *   teardown.
+ * @param element - The element to mark draggable.
+ * @param getArgsRef - Closure returning the latest args. PDND callbacks read this
+ *   on every invocation, so arg changes take effect without re-registering.
+ *   `dragHandle` is the exception: it is read once, when this registers, so a
+ *   caller driving this imperatively must re-register to change it.
+ * @returns Cleanup function. Caller invokes it once on teardown.
  */
-export function registerDragAndDropSource(element, getArgsRef) {
+export function registerDragAndDropSource(
+  element: HTMLElement,
+  getArgsRef: () => DragAndDropSourceArgs
+) {
   // Marks the element as owned by this primitive for the lifetime of the
   // registration. The stylesheet gates the state modifiers below on it, so a
   // generic state name cannot reach an element this never touched. An attribute
@@ -75,7 +232,11 @@ export function registerDragAndDropSource(element, getArgsRef) {
           getOffset: args.dragPreviewOffset
             ? pointerOutsideOfPreview(args.dragPreviewOffset)
             : undefined,
-          render: ({ container }) => args.dragPreview({ container, element }),
+          // The narrowing above does not survive into this nested callback,
+          // where TypeScript sees the whole `Element | DragPreviewRenderer`
+          // union again.
+          render: ({ container }) =>
+            (args.dragPreview as DragPreviewRenderer)({ container, element }),
         });
         return;
       }
@@ -156,7 +317,8 @@ export function registerDragAndDropSource(element, getArgsRef) {
 /**
  * Marks an element as a drag source for the Discourse drag-and-drop
  * vocabulary, paired with `dDragAndDropTarget` on the receiving side.
- * Thin Ember-modifier wrapper around {@link registerDragAndDropSource}.
+ * Thin Ember-modifier wrapper around {@link registerDragAndDropSource}. Every
+ * arg is documented on {@link DragAndDropSourceArgs}.
  *
  * ```hbs
  * <li {{dDragAndDropSource
@@ -169,57 +331,6 @@ export function registerDragAndDropSource(element, getArgsRef) {
  *   onDrop=this.applyDrop
  * }}>...</li>
  * ```
- *
- * Args (named):
- *  - `type` — discriminator string. Targets filter on this via their
- *    `accepts` arg. Stamped onto `source.data.type` so callbacks
- *    receive it with the rest of the payload.
- *  - `data` — static payload object the source attaches to the drag.
- *    Merged with `{type}` and exposed as `source.data` in target
- *    callbacks.
- *  - `getInitialData` — alternative to `data` for dynamic payloads.
- *    Called once just before `dragstart`; merged with `{type}`.
- *  - `dragPreview` — optional custom native drag preview, in one of two
- *    forms. An `Element` is photographed in place (the browser controls
- *    the hotspot). A render function `({container, element}) =>
- *    cleanupFn` mounts a fresh preview into an isolated, offscreen
- *    container the browser photographs, so nothing around the source
- *    element bleeds into the drag image; return a cleanup function that
- *    tears the preview down. Defaults to the source element if omitted.
- *  - `dragPreviewOffset` — optional `{x, y}` of CSS length values (e.g.
- *    `{x: "1rem", y: "0.5rem"}`) that pushes the preview clear of the
- *    pointer for better drop accuracy. Applies only to the render-
- *    function `dragPreview` form; ignored for an `Element` preview, whose
- *    hotspot the browser clamps to within the image.
- *  - `canDrag` — `({source, input}) => boolean`. Returning `false`
- *    blocks the drag from starting.
- *  - `onDragStart` — `({source, input}) => void`. Fires once the
- *    drag is confirmed; receives `{type, data, element}` as `source`.
- *  - `onDragEnd` — `({source, location}) => void`. Fires once at the end of
- *    EVERY drag, whether it landed on a target or the user abandoned it. This
- *    is where drag-time state gets undone.
- *  - `onDrop` — `({source, location}) => void`. Fires only when the drag ended
- *    on at least one drop target, so it is where the operation gets performed:
- *    an abandoned drag never reaches it. For a drag that lands, both fire —
- *    `onDragEnd` first — with the same `source` and `location`.
- *
- *    Both fire AFTER PDND's full drop dispatch (target callbacks, monitor
- *    callbacks, native bubble listeners), so it is safe to clear shared dispatch
- *    state from either — see the deferral note on `registerDragAndDropSource`.
- *    Inspect `location.current.dropTargets` from `onDragEnd` if a consumer needs
- *    to branch on the outcome itself.
- *  - `dragHandle` — an element inside this one that a drag must start from,
- *    so the rest stays free for selecting text and operating controls. Pass
- *    the element itself, not a selector; capture its ref with a modifier on
- *    the handle rather than querying the DOM. Changing it re-registers, so a
- *    ref that only arrives on a later render still takes effect. Omit it and
- *    the whole element initiates a drag.
- *  - `disabled` — when `true`, the modifier detaches the underlying
- *    draggable registration. Used by consumers that conditionally
- *    suppress dragging (e.g. read-only modes). This, not `dragHandle`, is how
- *    to stop an element being dragged: `draggable="true"` is stamped on the
- *    host element either way, and `dragHandle` only narrows where a drag may
- *    begin.
  *
  * Stamps `data-drag-source` on the element for the lifetime of the
  * registration and adds the `--dragging` class while a drag is active. Both are
@@ -238,19 +349,24 @@ export function registerDragAndDropSource(element, getArgsRef) {
  * @see The `dPointerDrag` modifier when there is no drop target and no payload — a
  *   press that changes a value continuously is a different gesture.
  */
-export default class DDragAndDropSourceModifier extends Modifier {
-  #cleanup = null;
-  #element = null;
-  #args = {};
-  /** The handle the live registration was created with, to detect a change. */
-  #dragHandle = undefined;
+export default class DDragAndDropSourceModifier extends Modifier<DDragAndDropSourceSignature> {
+  #cleanup: (() => void) | null = null;
+  #element: HTMLElement | null = null;
+  #args: DragAndDropSourceArgs = {};
 
-  constructor(owner, args) {
+  /** The handle the live registration was created with, to detect a change. */
+  #dragHandle: Element | undefined = undefined;
+
+  constructor(owner: Owner, args: ArgsFor<DDragAndDropSourceSignature>) {
     super(owner, args);
     registerDestructor(this, (instance) => instance.#detach());
   }
 
-  modify(element, _positional, args = {}) {
+  modify(
+    element: HTMLElement,
+    _positional: [],
+    args: DragAndDropSourceArgs = {}
+  ) {
     if (this.#element && this.#element !== element) {
       this.#detach();
     }

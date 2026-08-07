@@ -1,5 +1,9 @@
-// @ts-check
-import { dropTargetForExternal } from "@atlaskit/pragmatic-drag-and-drop/external/adapter";
+import {
+  dropTargetForExternal,
+  type ExternalDragPayload as NativeExternalDragPayload,
+  type ExternalDropTargetEventBasePayload,
+  type ExternalDropTargetGetFeedbackArgs,
+} from "@atlaskit/pragmatic-drag-and-drop/external/adapter";
 import {
   containsFiles,
   getFiles,
@@ -17,6 +21,41 @@ import {
   getURLs,
 } from "@atlaskit/pragmatic-drag-and-drop/external/url";
 import { modifier } from "ember-modifier";
+import type {
+  ExternalDragKind,
+  ExternalDragPayload,
+} from "discourse/services/drag-and-drop";
+import type { DropEffect } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
+
+/** The pointer position as the underlying library reports it. */
+type DragInput = ExternalDropTargetGetFeedbackArgs["input"];
+
+/** The drag's initial, previous and current locations. */
+type DragLocation = ExternalDropTargetEventBasePayload["location"];
+
+/** What a synchronous gate (`canDrop`, `getDropEffect`) is asked about. */
+export interface ExternalDropTargetFeedback {
+  /** The incoming payload, with the read helpers bound to it. */
+  source: ExternalDragPayload;
+
+  /** Where the pointer is. */
+  input: DragInput;
+
+  /** This target's element. */
+  element: Element;
+}
+
+/** What a lifecycle callback is told. */
+export interface ExternalDropTargetEvent {
+  /** The incoming payload, with the read helpers bound to it. */
+  source: ExternalDragPayload;
+
+  /** The drag's location history. */
+  location: DragLocation;
+
+  /** This target's element. */
+  element: Element;
+}
 
 /**
  * State modifier class toggled on the target while a compatible
@@ -40,7 +79,7 @@ const KIND_HANDLERS = Object.freeze({
   urls: { contains: containsURLs, get: getURLs },
 });
 
-function normaliseAccepts(accepts) {
+function normaliseAccepts(accepts?: ExternalDragKind | ExternalDragKind[]) {
   if (!accepts) {
     return [];
   }
@@ -57,10 +96,10 @@ function normaliseAccepts(accepts) {
  * consumer's call site reads `source.getFiles()` instead of
  * `getFiles({source})`. Keeps the library wall intact: PDND helpers
  * are imported here, not in plugin code.
- *
- * @param {{types: string[], items: DataTransferItem[], getStringData: (mediaType: string) => string}} payload
  */
-function decorateSource(payload) {
+function decorateSource(
+  payload: NativeExternalDragPayload
+): ExternalDragPayload {
   return {
     types: payload.types,
     items: payload.items,
@@ -75,6 +114,56 @@ function decorateSource(payload) {
     getURLs: () => getURLs({ source: payload }),
   };
 }
+
+interface DDragAndDropExternalTargetSignature {
+  /** The element to register as a drop target. */
+  Element: HTMLElement;
+  Args: {
+    Named: {
+      /**
+       * Filters which external drag kinds engage the target. Omit to accept any
+       * external drag.
+       */
+      accepts?: ExternalDragKind | ExternalDragKind[];
+
+      /** Synchronous gate. Returning `false` refuses the drop. */
+      canDrop?: (feedback: ExternalDropTargetFeedback) => boolean | void;
+
+      /** Determines the cursor feedback browsers show during the drag. */
+      getDropEffect?: (feedback: ExternalDropTargetFeedback) => DropEffect;
+
+      /**
+       * `false` to suppress the `--drag-over-external` indicator class. Defaults
+       * to `true`.
+       */
+      indicator?: boolean;
+
+      /** The cursor entered this target with a compatible external drag in flight. */
+      onDragEnter?: (event: ExternalDropTargetEvent) => void;
+
+      /**
+       * The drag progressed. Throttled; fires when the input or the drop-target
+       * hierarchy updates while this target is active.
+       */
+      onDrag?: (event: ExternalDropTargetEvent) => void;
+
+      /** The cursor left this target. */
+      onDragLeave?: (event: ExternalDropTargetEvent) => void;
+
+      /** The drag was released on this target. */
+      onDrop?: (event: ExternalDropTargetEvent) => void;
+    };
+    Positional: [];
+  };
+}
+
+/**
+ * The external drop target's named args, for a consumer driving
+ * {@link registerDragAndDropExternalTarget} imperatively rather than through the
+ * modifier.
+ */
+export type DragAndDropExternalTargetArgs =
+  DDragAndDropExternalTargetSignature["Args"]["Named"];
 
 /**
  * Imperative drop-target registration backed by Pragmatic Drag and
@@ -92,17 +181,16 @@ function decorateSource(payload) {
  * imported only by the ui-kit modifier files. Consumers (plugins,
  * core features) talk to this helper, not to PDND directly.
  *
- * @param {Element} element - The element to register as a drop target.
- * @param {() => Object} getArgsRef - Closure returning the latest args.
- *   PDND callbacks read this on every invocation, so arg changes take
- *   effect without re-registering. Args shape matches the modifier:
- *   `accepts` (string | string[] | undefined), `canDrop`,
- *   `getDropEffect`, `onDragEnter`, `onDrag`, `onDragLeave`, `onDrop`,
- *   `indicator`.
- * @returns {() => void} Cleanup function. Caller invokes it once on
- *   teardown (modifier destroy, component willDestroy, etc.).
+ * @param element - The element to register as a drop target.
+ * @param getArgsRef - Closure returning the latest args. PDND callbacks read
+ *   this on every invocation, so arg changes take effect without re-registering.
+ * @returns Cleanup function. Caller invokes it once on teardown (modifier
+ *   destroy, component willDestroy, etc.).
  */
-export function registerDragAndDropExternalTarget(element, getArgsRef) {
+export function registerDragAndDropExternalTarget(
+  element: Element,
+  getArgsRef: () => DragAndDropExternalTargetArgs
+) {
   let isIndicating = false;
 
   const showIndicator = () => {
@@ -126,7 +214,7 @@ export function registerDragAndDropExternalTarget(element, getArgsRef) {
    * Empty / missing `accepts` accepts every external drag, mirroring
    * the element variant's "no filter = accept all" behaviour.
    */
-  const acceptsSource = (sourcePayload) => {
+  const acceptsSource = (sourcePayload: NativeExternalDragPayload) => {
     const kinds = normaliseAccepts(getArgsRef().accepts);
     if (kinds.length === 0) {
       return true;
@@ -142,7 +230,7 @@ export function registerDragAndDropExternalTarget(element, getArgsRef) {
   // hierarchy. The contract here is "deepest accepted target wins":
   // short-circuit every callback unless this element is at the top of
   // the `dropTargets` bubble stack.
-  const isDeepest = (location) =>
+  const isDeepest = (location: DragLocation) =>
     location.current.dropTargets[0]?.element === element;
 
   // See the note in `registerDragAndDropSource`.
@@ -230,7 +318,9 @@ export function registerDragAndDropExternalTarget(element, getArgsRef) {
  * Marks an element as a drop target for **external** drags — files,
  * URLs, HTML, text dragged into the window from outside (OS file
  * manager, another browser tab, etc.). Thin Ember-modifier wrapper
- * around {@link registerDragAndDropExternalTarget}.
+ * around {@link registerDragAndDropExternalTarget}. Every arg is documented on
+ * {@link DragAndDropExternalTargetArgs}, and the payload every callback
+ * receives on {@link ExternalDragPayload}.
  *
  * Pair with the existing `dDragAndDropTarget` modifier for
  * element-to-element drags; the two adapters are independent and can
@@ -259,36 +349,6 @@ export function registerDragAndDropExternalTarget(element, getArgsRef) {
  * }}>...</div>
  * ```
  *
- * Args (named):
- *  - `accepts` — `"files"` | `"html"` | `"text"` | `"urls"` or an
- *    array of those keys. Filters which external drag kinds engage
- *    the target. Omit to accept any external drag.
- *  - `canDrop` — `({source, input, element}) => boolean`. Synchronous
- *    gate. `source` is the decorated payload (see below).
- *  - `getDropEffect` — `({source, input, element}) => "copy" | "move"
- *    | "link"`. Determines the cursor feedback browsers show during
- *    the drag.
- *  - `indicator` — `false` to suppress the `--drag-over-external`
- *    indicator class toggling (defaults to `true`).
- *  - `onDragEnter` / `onDrag` / `onDragLeave` / `onDrop` —
- *    `({source, location, element}) => void`. `onDrag` is PDND's
- *    throttled drag-progress event; it fires when the input or the
- *    drop-target hierarchy updates while this target is active.
- *
- * Decorated source shape (passed into every callback):
- *
- * ```
- * {
- *   types,           // string[] of native MIME types incl. "Files"
- *   items,           // DataTransferItem[]
- *   getStringData,   // (mediaType) => string | null
- *   containsFiles(), getFiles(),     // File[]
- *   containsHTML(),  getHTML(),      // string | null
- *   containsText(),  getText(),      // string | null
- *   containsURLs(),  getURLs(),      // string[]
- * }
- * ```
- *
  * Nested targets: only the deepest accepted target receives the
  * lifecycle callbacks, so an ancestor decorated with this modifier
  * doesn't double-handle a drop the child already claimed.
@@ -300,10 +360,11 @@ export function registerDragAndDropExternalTarget(element, getArgsRef) {
  *   `DropTarget` plugin, not through here. This modifier hands you the raw payload
  *   and stops; it will not upload anything.
  */
-export default modifier((element, _positional, args) =>
-  // Pass `args` through to the closure WITHOUT reading any property of
-  // it here. Reading args.X inside the body would mark its tag consumed
-  // and force the modifier to re-run (re-registering PDND) on every
-  // change. The closure reads fresh values inside PDND's callbacks.
-  registerDragAndDropExternalTarget(element, () => args)
+export default modifier<DDragAndDropExternalTargetSignature>(
+  (element, _positional, args) =>
+    // Pass `args` through to the closure WITHOUT reading any property of
+    // it here. Reading args.X inside the body would mark its tag consumed
+    // and force the modifier to re-run (re-registering PDND) on every
+    // change. The closure reads fresh values inside PDND's callbacks.
+    registerDragAndDropExternalTarget(element, () => args)
 );

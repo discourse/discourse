@@ -1,6 +1,47 @@
-// @ts-check
-import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import {
+  type ElementDragPayload,
+  type ElementEventBasePayload,
+  monitorForElements,
+} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { modifier } from "ember-modifier";
+
+/** What a monitor callback is told: the dragged source and where it has been. */
+export type DragMonitorEvent = ElementEventBasePayload;
+
+interface DDragAndDropMonitorSignature {
+  /**
+   * Irrelevant — a monitor is global. Attach to any always-present sentinel for
+   * the lifecycle.
+   */
+  Element: HTMLElement;
+  Args: {
+    Named: {
+      /**
+       * Only drags whose source `type` matches are observed. Omit to observe any
+       * drag.
+       */
+      types?: string | string[];
+
+      /** The drag was confirmed. */
+      onDragStart?: (event: DragMonitorEvent) => void;
+
+      /** The drag progressed. */
+      onDrag?: (event: DragMonitorEvent) => void;
+
+      /** The drag ended, whether or not it landed on a target. */
+      onDrop?: (event: DragMonitorEvent) => void;
+    };
+    Positional: [];
+  };
+}
+
+/**
+ * The monitor's named args, for a consumer driving
+ * {@link registerDragAndDropMonitor} imperatively rather than through the
+ * modifier.
+ */
+export type DragAndDropMonitorArgs =
+  DDragAndDropMonitorSignature["Args"]["Named"];
 
 /**
  * Wraps PDND's `monitorForElements` behind one shape. Used by the
@@ -10,21 +51,20 @@ import { modifier } from "ember-modifier";
  *
  * Library-agnostic by design: PDND is imported only here.
  *
- * @param {() => Object} getArgsRef - Closure returning the latest args.
- *   PDND callbacks read this on every invocation. Args shape:
- *   `types` (string | string[] | undefined — only drags whose source `type`
- *   matches are observed; omit to observe any drag), and the optional
- *   `onDragStart` / `onDrag` / `onDrop` callbacks.
- * @returns {() => void} Cleanup function. Caller invokes it once on teardown.
+ * @param getArgsRef - Closure returning the latest args. PDND callbacks read
+ *   this on every invocation.
+ * @returns Cleanup function. Caller invokes it once on teardown.
  */
-export function registerDragAndDropMonitor(getArgsRef) {
-  const matchesType = ({ source }) => {
+export function registerDragAndDropMonitor(
+  getArgsRef: () => DragAndDropMonitorArgs
+) {
+  const matchesType = ({ source }: { source: ElementDragPayload }) => {
     const types = getArgsRef().types;
     const list = Array.isArray(types) ? types : types ? [types] : [];
     if (list.length === 0) {
       return true;
     }
-    return list.includes(source.data?.type);
+    return list.includes(source.data?.type as string);
   };
 
   return monitorForElements({
@@ -36,18 +76,11 @@ export function registerDragAndDropMonitor(getArgsRef) {
 }
 
 /**
- * @typedef {Object} MonitorNamedArgs
- * @property {string | string[]} [types]
- * @property {(event: Object) => void} [onDragStart]
- * @property {(event: Object) => void} [onDrag]
- * @property {(event: Object) => void} [onDrop]
- */
-
-/**
  * Observes the in-flight element drag, regardless of drop targets — PDND's
  * `monitorForElements`. Use it to react to a drag's progress without making
  * an element droppable (e.g. paging a scroll container when the cursor hovers
- * a navigation control mid-drag).
+ * a navigation control mid-drag). Every arg is documented on
+ * {@link DragAndDropMonitorArgs}.
  *
  * A monitor is global, so the host element is irrelevant — attach to any
  * always-present sentinel for the lifecycle, the same way `dDragAndDropAutoScroll`
@@ -57,24 +90,13 @@ export function registerDragAndDropMonitor(getArgsRef) {
  * <div {{dDragAndDropMonitor types=this.dragTypes onDrag=this.onDrag}}></div>
  * ```
  *
- * Args (named):
- *  - `types` — string or array of strings. Only drags whose source `type`
- *    matches are observed. Omit to observe any drag.
- *  - `onDragStart` / `onDrag` / `onDrop` — PDND monitor callbacks, each
- *    receiving `{ source, location }`.
- *
  * Guide to choosing between the gesture primitives:
  * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
  *
  * @see The `dragAndDrop` service to *read* drag state reactively. This modifier is
  *   for *responding* imperatively; rendering from it duplicates what the service keeps.
  */
-export default modifier(
-  /**
-   * @param {HTMLElement} _element
-   * @param {unknown[]} _positional
-   * @param {MonitorNamedArgs} args
-   */
+export default modifier<DDragAndDropMonitorSignature>(
   (_element, _positional, args) =>
     // Read args INSIDE the closure, not via destructure in the body — a
     // destructure here would mark the args' tags consumed and force the

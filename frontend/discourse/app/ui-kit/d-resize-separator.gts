@@ -5,6 +5,17 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { modifier } from "ember-modifier";
 import dResizeEdge from "discourse/ui-kit/modifiers/d-resize-edge";
 
+/** A size, or a function returning one for a value the template cannot observe. */
+type Measurement = number | (() => number);
+
+/**
+ * The box being resized: the element itself, or a function receiving the
+ * separator's own element and returning it.
+ */
+type ObserveTarget =
+  | Element
+  | ((separator: HTMLElement) => Element | null | undefined);
+
 /**
  * Which cursor is held while a gesture on each axis runs, mapped by
  * `app/assets/stylesheets/common/ui-kit/d-resize-separator.scss`.
@@ -14,22 +25,38 @@ const CURSOR_CLASS = {
   horizontal: "d-resizing-ew",
 };
 
+interface ObserveResizedSignature {
+  Element: HTMLElement;
+  Args: {
+    Positional: [separator: DResizeSeparator, target?: ObserveTarget];
+  };
+}
+
 /**
  * Watches the box being resized so the announced size keeps up with changes no
  * gesture caused. Re-runs when `target` changes, which is what lets a consumer
  * whose element does not exist at first render hand it over once it does.
  */
-const observeResized = modifier((separator, [separatorComponent, target]) => {
-  const element = typeof target === "function" ? target(separator) : target;
-  if (!element) {
-    return;
+const observeResized = modifier<ObserveResizedSignature>(
+  (separator, [separatorComponent, target]) => {
+    const element = typeof target === "function" ? target(separator) : target;
+    if (!element) {
+      return;
+    }
+
+    const observer = new ResizeObserver(() => separatorComponent.refresh());
+    observer.observe(element);
+
+    return () => observer.disconnect();
   }
+);
 
-  const observer = new ResizeObserver(() => separatorComponent.refresh());
-  observer.observe(element);
-
-  return () => observer.disconnect();
-});
+interface RefreshOnViewportChangeSignature {
+  Element: HTMLElement;
+  Args: {
+    Positional: [separator: DResizeSeparator];
+  };
+}
 
 /**
  * Re-reads the size when the viewport changes. Separate from watching the box
@@ -37,12 +64,76 @@ const observeResized = modifier((separator, [separatorComponent, target]) => {
  * grow is usually what is left of the window — and a window change need not alter
  * the box's own size, so nothing else would notice it.
  */
-const refreshOnViewportChange = modifier((_element, [separatorComponent]) => {
-  const onViewportChange = () => separatorComponent.refresh();
-  window.addEventListener("resize", onViewportChange);
+const refreshOnViewportChange = modifier<RefreshOnViewportChangeSignature>(
+  (_element, [separatorComponent]) => {
+    const onViewportChange = () => separatorComponent.refresh();
+    window.addEventListener("resize", onViewportChange);
 
-  return () => window.removeEventListener("resize", onViewportChange);
-});
+    return () => window.removeEventListener("resize", onViewportChange);
+  }
+);
+
+interface DResizeSeparatorSignature {
+  /** The separator itself. Attributes and modifiers pass through to it. */
+  Element: HTMLDivElement;
+  Args: {
+    /**
+     * `"vertical"` to resize height, `"horizontal"` to resize width. Defaults to
+     * `"vertical"`.
+     */
+    axis?: "vertical" | "horizontal";
+
+    /**
+     * The edge of the resized box the handle sits on, naming the edge OPPOSITE
+     * the one that moves: a handle at the top of a bottom-docked box is `"end"`.
+     * Defaults to `"start"`.
+     */
+    side?: "start" | "end";
+
+    /**
+     * The current size. Pass a function whenever the number is a live
+     * measurement rather than tracked state.
+     */
+    value: Measurement;
+
+    /** The smallest size the box may be dragged to. */
+    min: Measurement;
+
+    /** The largest size the box may be dragged to. */
+    max: Measurement;
+
+    /** What the separator is called, already translated. */
+    label?: string;
+
+    /** The gesture began. A notification; the return is ignored. */
+    onResizeStart?: () => void;
+
+    /** Fired throughout the gesture. Preview here. */
+    onResize?: (size: number) => void;
+
+    /** Fired once at the end. Commit here. */
+    onResizeEnd?: (size: number) => void;
+
+    /**
+     * The box being resized, so the announced size keeps up with changes no
+     * gesture caused, such as a panel opening or a preview toggling. Viewport
+     * changes are picked up regardless and need no arg.
+     *
+     * Either the element, or a function receiving the separator's own element and
+     * returning it. Pass the element when it may not exist at first render, since
+     * a change to it re-attaches the observer; a function is resolved once, which
+     * suits a box already around the separator when it renders.
+     */
+    observe?: ObserveTarget;
+  };
+  Blocks: {
+    /**
+     * Rendered inside the handle, for the ones that draw themselves with a real
+     * element rather than a pseudo-element.
+     */
+    default: [];
+  };
+}
 
 /**
  * A one-axis resize handle that is operable and announced: the separator semantics
@@ -84,32 +175,8 @@ const refreshOnViewportChange = modifier((_element, [separatorComponent]) => {
  *   class="my-block__handle"
  * />
  *
- * Args:
- *  - `@axis` — `"vertical"` to resize height, `"horizontal"` to resize width.
- *    Defaults to `"vertical"`.
- *  - `@side` — the edge of the resized box the handle sits on, naming the edge
- *    OPPOSITE the one that moves: a handle at the top of a bottom-docked box is
- *    `"end"`. Defaults to `"start"`.
- *  - `@value`, `@min`, `@max` — the current size and its bounds, each a number or a
- *    function returning one. Pass a function whenever the number is a live
- *    measurement rather than tracked state.
- *  - `@label` — what the separator is called, already translated.
- *  - `@onResizeStart` — the gesture began. A notification; the return is ignored.
- *  - `@onResize(size)` — fired throughout the gesture; preview here.
- *  - `@onResizeEnd(size)` — fired once at the end; commit here.
- *  - `@observe` — the box being resized, so the announced size keeps up with changes
- *    no gesture caused, such as a panel opening or a preview toggling. Viewport
- *    changes are picked up regardless and need no arg.
- *    Either the element, or a function receiving the separator's own element and
- *    returning it. Pass the element when it may not exist at first render, since a
- *    change to it re-attaches the observer; a function is resolved once, which suits
- *    a box already around the separator when it renders.
- *
  * Attributes pass through, so a consumer keeps its own class alongside this one —
  * Glimmer merges the two rather than replacing — and may add its own modifiers.
- *
- * Anything passed as content renders inside the handle, for the ones that draw
- * themselves with a real element rather than a pseudo-element.
  *
  * Guide to choosing between the gesture primitives:
  * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
@@ -120,9 +187,14 @@ const refreshOnViewportChange = modifier((_element, [separatorComponent]) => {
  *   does not apply.
  * @see The `dOnResize` modifier to merely OBSERVE a size change. It is not a gesture.
  */
-export default class DResizeSeparator extends Component {
+export default class DResizeSeparator extends Component<DResizeSeparatorSignature> {
   /** The size and bounds as last read, for assistive technology to announce. */
-  @tracked _announced = null;
+  @tracked
+  _announced: {
+    now: number | undefined;
+    min: number | undefined;
+    max: number | undefined;
+  } | null = null;
 
   get axis() {
     return this.args.axis ?? "vertical";
@@ -140,8 +212,6 @@ export default class DResizeSeparator extends Component {
   /**
    * The size to announce, or `undefined` while it is unknown so that the attribute
    * is left off rather than reporting a number nothing measured.
-   *
-   * @returns {number|undefined} The current size.
    */
   get valueNow() {
     return this.#announce("value", "now");
@@ -163,11 +233,13 @@ export default class DResizeSeparator extends Component {
    * trigger a re-read. Only a function needs the mirror, because a measurement has
    * no tracked state for the template to notice changing.
    *
-   * @param {string} argName - Which arg to resolve.
-   * @param {string} mirrorKey - Its key in the mirror.
-   * @returns {number|undefined} The number to announce.
+   * @param argName - Which arg to resolve.
+   * @param mirrorKey - Its key in the mirror.
    */
-  #announce(argName, mirrorKey) {
+  #announce(
+    argName: "value" | "min" | "max",
+    mirrorKey: "now" | "min" | "max"
+  ): number | undefined {
     const arg = this.args[argName];
     if (typeof arg === "function") {
       return this._announced?.[mirrorKey] ?? undefined;
@@ -192,15 +264,15 @@ export default class DResizeSeparator extends Component {
    * an unhandled error instead. Mid-gesture there is nothing worth announcing
    * anyway: the size is still moving, and the commit re-reads it.
    *
-   * @param {number} size - The size the gesture is passing through.
+   * @param size - The size the gesture is passing through.
    */
   @action
-  onResize(size) {
+  onResize(size: number) {
     this.args.onResize?.(size);
   }
 
   @action
-  onResizeEnd(size) {
+  onResizeEnd(size: number) {
     this.args.onResizeEnd?.(size);
     this.#snapshot();
   }
@@ -217,7 +289,7 @@ export default class DResizeSeparator extends Component {
     };
   }
 
-  #read(arg) {
+  #read(arg: Measurement) {
     return typeof arg === "function" ? arg() : arg;
   }
 

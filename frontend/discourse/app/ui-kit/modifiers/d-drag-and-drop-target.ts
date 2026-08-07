@@ -1,6 +1,64 @@
-// @ts-check
-import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import {
+  dropTargetForElements,
+  type ElementDragPayload,
+  type ElementDropTargetEventBasePayload,
+  type ElementDropTargetGetFeedbackArgs,
+} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { modifier } from "ember-modifier";
+
+/** The pointer position as the underlying library reports it. */
+type DragInput = ElementDropTargetGetFeedbackArgs["input"];
+
+/** The drag's initial, previous and current locations. */
+type DragLocation = ElementDropTargetEventBasePayload["location"];
+
+/** Where a drop would land relative to this target. */
+export type DropPosition = "before" | "after" | "inside";
+
+/** The axis the target's position math and indicator classes work along. */
+export type DropAxis = "x" | "y";
+
+/** The cursor feedback the browser shows for a drop. */
+export type DropEffect = "copy" | "link" | "move";
+
+/** The dragged source, normalised to the shape `dDragAndDropSource` publishes. */
+export interface DropTargetSource {
+  /** The source's discriminator, or `null` when the drag carries none. */
+  type: string | null;
+
+  /** The payload the source attached to the drag. */
+  data: Record<string, unknown>;
+
+  /** The dragged element, falling back to this target when the drag has none. */
+  element: Element | null;
+}
+
+/** What a synchronous gate (`canDrop`, `getDropEffect`) is asked about. */
+export interface DropTargetFeedback {
+  /** The dragged source. */
+  source: DropTargetSource;
+
+  /** Where the pointer is. */
+  input: DragInput;
+
+  /** This target's element. */
+  element: Element;
+}
+
+/** What a lifecycle callback is told. */
+export interface DropTargetEvent {
+  /** The dragged source. */
+  source: DropTargetSource;
+
+  /** Where the drop would land, or `null` when the drag has left. */
+  position: DropPosition | null;
+
+  /** The drag's location history. */
+  location: DragLocation;
+
+  /** This target's element. */
+  element: Element;
+}
 
 /**
  * Per-axis state modifier classes toggled while the cursor is hovering with a
@@ -16,7 +74,7 @@ const POSITION_CLASSES = Object.freeze({
   inside: { y: "--drag-inside", x: "--drag-inside" },
 });
 
-function normaliseAccepts(accepts) {
+function normaliseAccepts(accepts?: string | string[]) {
   if (!accepts) {
     return [];
   }
@@ -26,13 +84,104 @@ function normaliseAccepts(accepts) {
   return [accepts];
 }
 
-function sourceFromPDND(pdndSource, element) {
+function sourceFromPDND(
+  pdndSource: ElementDragPayload,
+  element: Element
+): DropTargetSource {
   return {
-    type: pdndSource.data?.type ?? null,
+    // The underlying library types its payload values as `unknown`, because
+    // anything registering a draggable with it can put anything there. Only
+    // `dDragAndDropSource` does, since the library is imported nowhere outside
+    // these files, and it always stamps a string.
+    type: (pdndSource.data?.type ?? null) as string | null,
     data: pdndSource.data ?? {},
     element: pdndSource.element ?? element ?? null,
   };
 }
+
+interface DDragAndDropTargetSignature {
+  /** The element to register as a drop target. */
+  Element: HTMLElement;
+  Args: {
+    Named: {
+      /**
+       * The dragged source's `type` must be in this list for the target to
+       * engage. Omit to accept any source.
+       */
+      accepts?: string | string[];
+
+      /**
+       * `false` to refuse a drop whose dragged element is this element. Where
+       * `accepts` filters by type, this filters by identity. Defaults to `true`,
+       * because an element carrying both this modifier and `dDragAndDropSource`
+       * is a supported arrangement with a meaningful drop, so excluding it is
+       * opt-in rather than automatic.
+       */
+      acceptsSelf?: boolean;
+
+      /**
+       * A fixed drop position. When set, `axis` and the midpoint logic are
+       * ignored.
+       */
+      position?: DropPosition;
+
+      /**
+       * Drives the indicator class selection and the smart-row position math.
+       * Defaults to `"y"`.
+       */
+      axis?: DropAxis;
+
+      /**
+       * Synchronous gate. Returning `false` refuses the drop. `source` is
+       * `{type, data, element}` — the shape the matching `dDragAndDropSource`
+       * published.
+       */
+      canDrop?: (feedback: DropTargetFeedback) => boolean | void;
+
+      /**
+       * Optional target-side metadata attached to the drag's record of this
+       * target; consumers reading `source.dropTargets` see it under `.data`.
+       */
+      getData?: () => object;
+
+      /** Determines the cursor feedback browsers show. */
+      getDropEffect?: (feedback: DropTargetFeedback) => DropEffect;
+
+      /**
+       * Enables sticky-target semantics: the target stays "current" briefly
+       * after the cursor leaves, which suits hover-to-expand patterns.
+       */
+      getIsSticky?: () => boolean;
+
+      /** `false` to suppress the `--drag-*` indicator classes. Defaults to `true`. */
+      indicator?: boolean;
+
+      /** The cursor entered this target with a compatible drag in flight. */
+      onDragEnter?: (event: DropTargetEvent) => void;
+
+      /**
+       * The drag progressed. Throttled; fires when the input or the drop-target
+       * hierarchy updates while this target is active.
+       */
+      onDrag?: (event: DropTargetEvent) => void;
+
+      /** The cursor left this target. `position` is `null`. */
+      onDragLeave?: (event: DropTargetEvent) => void;
+
+      /** The drag was released on this target. */
+      onDrop?: (event: DropTargetEvent) => void;
+    };
+    Positional: [];
+  };
+}
+
+/**
+ * The drop target's named args, for a consumer driving
+ * {@link registerDragAndDropTarget} imperatively rather than through the
+ * modifier.
+ */
+export type DragAndDropTargetArgs =
+  DDragAndDropTargetSignature["Args"]["Named"];
 
 /**
  * Imperative drop-target registration backed by Pragmatic Drag and
@@ -50,20 +199,19 @@ function sourceFromPDND(pdndSource, element) {
  * imported only by the ui-kit modifier files. Consumers (plugins,
  * core features) talk to this helper, not to PDND directly.
  *
- * @param {Element} element - The element to register as a drop target.
- * @param {() => Object} getArgsRef - Closure returning the latest args.
- *   PDND callbacks read this on every invocation, so arg changes take
- *   effect without re-registering. Args shape matches the modifier:
- *   `accepts` (string | string[] | undefined), `acceptsSelf`, `position`,
- *   `axis`, `canDrop`, `getData`, `getDropEffect`, `getIsSticky`,
- *   `onDragEnter`, `onDrag`, `onDragLeave`, `onDrop`, `indicator`.
- * @returns {() => void} Cleanup function. Caller invokes it once on
- *   teardown (modifier destroy, component willDestroy, etc.).
+ * @param element - The element to register as a drop target.
+ * @param getArgsRef - Closure returning the latest args. PDND callbacks read
+ *   this on every invocation, so arg changes take effect without re-registering.
+ * @returns Cleanup function. Caller invokes it once on teardown (modifier
+ *   destroy, component willDestroy, etc.).
  */
-export function registerDragAndDropTarget(element, getArgsRef) {
-  let activeClass = null;
+export function registerDragAndDropTarget(
+  element: Element,
+  getArgsRef: () => DragAndDropTargetArgs
+) {
+  let activeClass: string | null = null;
 
-  const applyIndicator = (position, axis) => {
+  const applyIndicator = (position: DropPosition, axis: DropAxis) => {
     const className = POSITION_CLASSES[position]?.[axis];
     if (!className || activeClass === className) {
       return;
@@ -82,12 +230,12 @@ export function registerDragAndDropTarget(element, getArgsRef) {
     }
   };
 
-  const acceptsType = (type) => {
+  const acceptsType = (type: unknown) => {
     const list = normaliseAccepts(getArgsRef().accepts);
-    return list.length === 0 || list.includes(type);
+    return list.length === 0 || list.includes(type as string);
   };
 
-  const resolvePosition = (input) => {
+  const resolvePosition = (input: DragInput): DropPosition => {
     const args = getArgsRef();
     if (args.position) {
       return args.position;
@@ -104,7 +252,7 @@ export function registerDragAndDropTarget(element, getArgsRef) {
   // hierarchy. The contract here is "deepest accepted target wins":
   // short-circuit on every callback unless this element is at the top
   // of the `dropTargets` bubble stack.
-  const isDeepest = (location) =>
+  const isDeepest = (location: DragLocation) =>
     location.current.dropTargets[0]?.element === element;
 
   // See the note in `registerDragAndDropSource`: the stylesheet gates the state
@@ -136,7 +284,10 @@ export function registerDragAndDropTarget(element, getArgsRef) {
         }) !== false
       );
     },
-    getData: () => getArgsRef().getData?.() ?? {},
+    // The consumer's metadata is deliberately typed as a plain object, which the
+    // underlying library's index-signature shape does not accept as-is.
+    getData: () =>
+      (getArgsRef().getData?.() ?? {}) as Record<string | symbol, unknown>,
     getDropEffect: ({ source, input }) => {
       const args = getArgsRef();
       return args.getDropEffect?.({
@@ -220,7 +371,8 @@ export function registerDragAndDropTarget(element, getArgsRef) {
 /**
  * Marks an element as a drop target compatible with the
  * `dDragAndDropSource` vocabulary. Thin Ember-modifier wrapper around
- * {@link registerDragAndDropTarget}.
+ * {@link registerDragAndDropTarget}. Every arg is documented on
+ * {@link DragAndDropTargetArgs}.
  *
  * Smart row mode — position is computed from the cursor against the
  * element's midpoint:
@@ -243,38 +395,6 @@ export function registerDragAndDropTarget(element, getArgsRef) {
  * }}></div>
  * ```
  *
- * Args (named):
- *  - `accepts` — string or array of strings. The dragged source's
- *    `type` must be in this list for the target to engage. Omit to
- *    accept any source.
- *  - `acceptsSelf` — `false` to refuse a drop whose dragged element is this
- *    element. Where `accepts` filters by type, this filters by identity.
- *    Defaults to `true`, because an element carrying both this modifier and
- *    `dDragAndDropSource` is a supported arrangement with a meaningful drop,
- *    so excluding it is opt-in rather than automatic.
- *  - `position` — fixed `"before"` / `"after"` / `"inside"`. When set,
- *    `axis` and the midpoint logic are ignored.
- *  - `axis` — `"y"` (default) or `"x"`. Drives the indicator class
- *    selection and the smart-row position math.
- *  - `canDrop` — `({source, input, element}) => boolean`. Synchronous
- *    gate. Source is `{type, data, element}` — the shape the matching
- *    `dDragAndDropSource` published.
- *  - `getData` — `() => object`. Optional target-side metadata that
- *    PDND attaches to its `DropTargetRecord`; consumers reading
- *    `source.dropTargets` see it under `.data`.
- *  - `getDropEffect` — `({source, input, element}) => "copy" | "move"
- *    | "link"`. Determines the cursor feedback browsers show.
- *  - `getIsSticky` — `() => boolean`. Enables PDND's sticky-target
- *    semantics (the target stays "current" briefly after the cursor
- *    leaves, useful for hover-to-expand patterns).
- *  - `indicator` — `false` to suppress the `--drag-*` indicator
- *    class toggling (defaults to `true`).
- *  - `onDragEnter` / `onDrag` / `onDragLeave` / `onDrop` —
- *    `({source, position, location, element}) => void`. `onDrag` is
- *    PDND's throttled drag-progress event; it fires when the input
- *    or the drop-target hierarchy updates while this target is
- *    active.
- *
  * Nested targets: only the deepest accepted target receives the
  * lifecycle callbacks, so an ancestor decorated with this modifier
  * doesn't double-handle a drop the child already claimed.
@@ -291,10 +411,11 @@ export function registerDragAndDropTarget(element, getArgsRef) {
  * @see The `dDragAndDropExternalTarget` modifier for payloads dragged in from outside
  *   the browser. Neither one is the file-upload path; that is Uppy's `DropTarget`.
  */
-export default modifier((element, _positional, args) =>
-  // Pass `args` through to the closure WITHOUT reading any property of
-  // it here. Reading args.X inside the body would mark its tag consumed
-  // and force the modifier to re-run (re-registering PDND) on every
-  // change. The closure reads fresh values inside PDND's callbacks.
-  registerDragAndDropTarget(element, () => args)
+export default modifier<DDragAndDropTargetSignature>(
+  (element, _positional, args) =>
+    // Pass `args` through to the closure WITHOUT reading any property of
+    // it here. Reading args.X inside the body would mark its tag consumed
+    // and force the modifier to re-run (re-registering PDND) on every
+    // change. The closure reads fresh values inside PDND's callbacks.
+    registerDragAndDropTarget(element, () => args)
 );
