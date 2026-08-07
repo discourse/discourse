@@ -46,6 +46,13 @@ export default class PluginsExplorerController extends Controller {
   order = null;
   form = null;
   shouldAutoRun = false;
+  /**
+   * The panes the live separator resolved, so the reader and the writer cannot
+   * disagree with the observer about which editor they belong to. A global
+   * first-match query would pick whichever editor happens to be first in the
+   * document.
+   */
+  #resolvedPanes = null;
   _pristine = null;
   _teardownAiGeneration = null;
   _aiGenerationToken = 0;
@@ -347,7 +354,13 @@ export default class PluginsExplorerController extends Controller {
    */
   @bind
   panesFor(separator) {
-    return separator.closest(".query-editor")?.querySelector(".panels-flex");
+    this.#resolvedPanes =
+      separator.closest(".query-editor")?.querySelector(".panels-flex") ?? null;
+    // A different editor means a fresh minimum. This controller is a singleton,
+    // so without the reset the first query's resting height would bound every
+    // query opened afterwards for the rest of the session.
+    this.originalPaneHeight = null;
+    return this.#resolvedPanes;
   }
 
   /**
@@ -373,8 +386,14 @@ export default class PluginsExplorerController extends Controller {
    */
   @bind
   minPaneHeight() {
-    this.originalPaneHeight ??= this.paneHeight();
-    return this.originalPaneHeight;
+    const measured = this.paneHeight();
+    // Zero means the panes have not been laid out yet — the narrow layout makes
+    // their height content-driven and the editor loads asynchronously. Capturing
+    // that would pin the minimum at zero and let the editor be dragged shut.
+    if (measured > 0) {
+      this.originalPaneHeight ??= measured;
+    }
+    return this.originalPaneHeight ?? measured;
   }
 
   /**
@@ -405,7 +424,7 @@ export default class PluginsExplorerController extends Controller {
   }
 
   get #panes() {
-    return document.querySelector(".query-editor .panels-flex");
+    return this.#resolvedPanes;
   }
 
   @action

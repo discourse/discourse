@@ -69,6 +69,8 @@ export default class StickyNote extends Component {
   #appliedDy = 0;
   /** The note's box when the resize gesture began. */
   #resizeOrigin = { x: 0, y: 0, width: 0, height: 0 };
+  /** The canvas zoom in force when the live gesture began. */
+  #gestureZoom = null;
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -118,7 +120,10 @@ export default class StickyNote extends Component {
    * @returns {{dx: number, dy: number}} The same delta in canvas units.
    */
   #inCanvasUnits(delta) {
-    const zoom = this.args.zoom ?? 1;
+    // Snapshotted at the start of the gesture: zooming mid-drag would otherwise
+    // re-divide the whole accumulated delta by the new factor and make the note
+    // jump, because the delta is measured from the original press.
+    const zoom = this.#gestureZoom ?? this.args.zoom ?? 1;
     return { dx: delta.x / zoom, dy: delta.y / zoom };
   }
 
@@ -132,6 +137,7 @@ export default class StickyNote extends Component {
 
     this.args.onSelect?.();
     this.args.onBeforeMutation?.();
+    this.#gestureZoom = this.args.zoom ?? 1;
     this.#pressX = event.clientX;
     this.#pressY = event.clientY;
     this.#dragOrigin = { ...this.args.note.position };
@@ -164,12 +170,14 @@ export default class StickyNote extends Component {
 
   @action
   onNoteDragEnd() {
+    this.#gestureZoom = null;
     this.args.onAfterMutation?.();
   }
 
   @action
   onEdgeResizeStart() {
     this.args.onBeforeMutation?.();
+    this.#gestureZoom = this.args.zoom ?? 1;
     this.#resizeOrigin = {
       ...this.args.note.position,
       ...this.args.note.size,
@@ -209,6 +217,7 @@ export default class StickyNote extends Component {
 
   @action
   onEdgeResizeEnd() {
+    this.#gestureZoom = null;
     this.args.onAfterMutation?.();
   }
 
@@ -270,6 +279,7 @@ export default class StickyNote extends Component {
         onDragStart=this.onNoteDragStart
         onDrag=this.onNoteDrag
         onDragEnd=this.onNoteDragEnd
+        onDragCancel=this.onNoteDragEnd
         threshold=this.dragLeniencePx
         stopPropagation=true
         touchAction="pinch-zoom"

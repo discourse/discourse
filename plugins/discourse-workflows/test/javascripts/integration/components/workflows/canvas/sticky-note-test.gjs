@@ -1,23 +1,17 @@
-import { find, render, triggerEvent } from "@ember/test-helpers";
+import { render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import StickyNote from "discourse/plugins/discourse-workflows/admin/components/workflows/canvas/sticky-note";
 
 /**
- * Pointer capture rejects a pointer ID that was never real, so the gesture engine
- * would refuse to start on a synthetic press. Stubbing it lets the drag run while
- * leaving every other part of the lifecycle genuine.
+ * The element a synthetic press can actually reach, ready to receive one.
  *
  * @param {string} selector - The element that will receive the press.
  * @returns {HTMLElement} That element.
  */
 function pressable(selector) {
-  const element = find(selector);
-  const captured = new Set();
-  element.setPointerCapture = (pointerId) => captured.add(pointerId);
-  element.hasPointerCapture = (pointerId) => captured.has(pointerId);
-  element.releasePointerCapture = (pointerId) => captured.delete(pointerId);
-  return element;
+  return stubPointerCapture(selector).element;
 }
 
 function noteFixture(overrides = {}) {

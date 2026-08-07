@@ -7,6 +7,7 @@ import DResizeHandles from "discourse/ui-kit/d-resize-handles";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
+import { i18n } from "discourse-i18n";
 
 /**
  * The five drop positions the shared stylesheet draws, each paired with the
@@ -93,11 +94,10 @@ export default class DragAndDropExample extends Component {
   <template>
     <div class="styleguide--drag-and-drop">
       <section class="styleguide--drag-and-drop__positions">
-        <h3>Drop positions</h3>
-        <p>
-          Four sibling positions plus one container position. A target toggles
-          exactly one of these while a drag is over it.
-        </p>
+        <h3>{{i18n "styleguide.sections.drag_and_drop.positions_title"}}</h3>
+        <p>{{i18n
+            "styleguide.sections.drag_and_drop.positions_description"
+          }}</p>
 
         <div class="styleguide--drag-and-drop__swatches">
           {{#each this.positions key="state" as |position|}}
@@ -118,11 +118,8 @@ export default class DragAndDropExample extends Component {
       </section>
 
       <section class="styleguide--drag-and-drop__live">
-        <h3>A live reorder</h3>
-        <p>
-          Drag a row onto another to see the same indicators driven by the
-          registrars rather than pinned open.
-        </p>
+        <h3>{{i18n "styleguide.sections.drag_and_drop.live_title"}}</h3>
+        <p>{{i18n "styleguide.sections.drag_and_drop.live_description"}}</p>
 
         <ul class="styleguide--drag-and-drop__list">
           {{#each this.items key="@identity" as |item|}}
@@ -142,12 +139,8 @@ export default class DragAndDropExample extends Component {
       </section>
 
       <section class="styleguide--drag-and-drop__resize">
-        <h3>Box resize</h3>
-        <p>
-          <code>DResizeHandles</code>
-          renders the eight compass handles and reports pointer geometry; the
-          consumer turns that into a size.
-        </p>
+        <h3>{{i18n "styleguide.sections.drag_and_drop.resize_title"}}</h3>
+        <p>{{i18n "styleguide.sections.drag_and_drop.resize_description"}}</p>
 
         <div
           class="styleguide--drag-and-drop__resizable"
