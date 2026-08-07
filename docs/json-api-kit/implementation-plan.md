@@ -1,0 +1,607 @@
+# JSON:API Kit — implementation plan
+
+**Status:** working document for the production implementation (branch `loic/json-api-kit-core`,
+started 2026-08-03). The spike lives on `loic/json-api-experiments` — proven behaviour, spike-shaped
+code, and the reference docs that explain *why* each decision was made. This plan says how we get
+from one to the other.
+
+## The bar
+
+This is the real thing, so the spike's licence to take shortcuts is withdrawn:
+
+- **Generic, not "enough for our first endpoint".** Every case the JSON:API spec describes will exist
+  eventually; the design must not foreclose one. Where we don't implement something yet, it is
+  because of sequencing, and the shape has to leave room for it.
+- **Concepts identified and encapsulated.** Small objects, each with one job, named after what it *is*
+  in the domain. The spike's 623-line `BaseController` is the anti-pattern: it resolved versions,
+  parsed six parameter families, filtered, sorted, paginated, deserialized, rendered and built errors.
+  All of those are separate concepts.
+- **Specs first, always.** Behaviour is pinned before it is written; the spike's acceptance specs are
+  the checklist we port.
+- **No stand-ins.** No `serializer_for` placeholder registry, no monkeypatch from a plugin, no
+  hand-maintained endpoint maps.
+
+## Settled
+
+| Question | Decision |
+| --- | --- |
+| URL | `/api/...` (easy to change later) |
+| Namespace | `JsonApiKit` — that's the name now |
+| Home | `lib/json_api_kit/` — a self-contained layer, extractable to a gem if it ever needs to be |
+| Resources | `app/resources/`, with an `ApplicationResource` in the app, mirroring the `ApplicationRecord`/`ApplicationController` convention |
+| Controllers | `JsonApiKit::BaseController` in the lib; the app subclasses through its own base |
+| First endpoint | Its own slice, after the framework core — the framework is driven by specs first |
+| `from_resource` | Slice 4, with the writes |
+| Developer guide | Later, once the shape is real |
+| Comments in the code | Prose for now — they carry the reasoning while the design is still moving. A documentation format for the public surface (YARD or similar) is a later decision, once that surface settles |
+| Agent skill | With the developer guide, or after it — see *The agent skill* |
+
+## Slices
+
+Each is independently reviewable and additive — nothing existing changes behaviour, and nothing is
+routed until we route it.
+
+1. **Framework core.** Declarations, request parsing, query building, pagination, document assembly,
+   errors. Driven entirely by specs (see *Testing without an endpoint*). This is the "core of the
+   framework with missing stuff" that merges first.
+2. **First endpoint.** A real resource on `/api/...`, which turns the framework's unit-proven parts
+   into an end-to-end path.
+3. **Versioning.** Registry, `VersionChange`, gap resolution, up/down pipeline, header handling.
+4. **Writes.** `POST`/`PATCH`, the service bridge, `422` with JSON Pointers, `from_resource`.
+5. **Documentation generation.** OpenAPI document, committed artifacts, drift loop.
+6. **Contract guard.** Committed descriptor, CI failure on incompatible change.
+7. **API key scopes.** Derived per endpoint, plugged into the existing system.
+8. **Publication.** `internal`, the route helper's prefix derivation.
+9. **Plugin extension API.** Namespaced relationships, filters, own timelines.
+10. **Endpoint lifecycle.** Deprecation, dated removal, usage metering.
+
+## Object map for slice 1
+
+Names are the point of this section: each of these is a concept the spike had, mostly tangled inside
+the controller. Every one of them should be testable without a request.
+
+**Declarations** (`app/resources`, `lib/json_api_kit/declarations/`)
+
+- `Resource` — the base class; declarations only, no behaviour beyond recording them.
+- `Attribute`, `Relationship`, `Filter`, `Sort`, `Anchor`, `PageLimits`, `IncludePaths` — one object
+  per declared concept, each owning what it knows: an `Attribute` reads a value off a record, a
+  `Filter` applies itself to a scope, a `Sort` says whether it is column-derived, SQL-backed or opaque
+  and yields its keyset key, an `Anchor` selects a row.
+- `Declarations::Sort` — one way a listing may be ordered: the name a client sorts by, and the column
+  or SQL behind it. It takes the model when asked for a key rather than holding one, so declaring a
+  sort loads nothing. Built (2026-08-06).
+- `Declarations::Sorts` — which sorts a resource offers, what it reads when a request names none, and
+  the key that makes an order unique; it answers with the keyset a page is read along, so nothing else
+  turns a request into an order. `Unsupported` is what an undeclared sort raises. Built (2026-08-06).
+
+**A filter's value type comes back with a consumer, not before** (decided 2026-08-07). `Filter` cast
+its value on the way in until measurement showed `where` already does it — for scalars, lists,
+dates and booleans alike — and that `ActiveModel::Type#cast` never raises, so the "a garbage value
+becomes a typed 400" argument for declaring one was simply false (`where(id: "abc")` compiles to
+`= NULL` either way). The type has two real consumers, and neither is `Filter#apply`: documentation
+generation, which is the only thing that can describe a virtual filter's value, and the request
+mapping, where casting once for every family is cheaper than each declaration doing its own — and
+where a block would then receive a `Time` rather than a string. It returns as metadata read by
+those, with whatever else they need, rather than as an argument nothing consumes.
+
+**Open, to settle when filters land:** whether a family's collection keeps the plural name
+(`Sort`/`Sorts`, mirroring `resource.sorts` and Rails' own `Error`/`Errors`) or nests as
+`Sort::Collection`, the way parts of a concept already do (`Keyset::Key`, `Order::Segment`). The
+plural is kept for now; the case against it is one line inside the collection itself —
+`unique_by.map { Sort.new(it).key(...) }` reads as a double-take. Decide it with `Filter`/`Filters`
+in front of us, since whichever wins becomes the pattern for attributes and relationships too.
+
+**A sort's nulls placement is inferred, because leaving it out is a correctness bug.** A key with no
+placement is read as having no nulls (see the fix below), so `Sort` declares one for anything that can
+be null: what the declaration says, else `:last` when the column is nullable *or* when there is no
+column at all — an expression over a join usually can be null, and being wrong that way costs an empty
+tail band rather than a skipped row. A resource that knows an expression is never null has no way to
+say so yet; the room for it is a third placement value, additive when a use case turns up.
+- `ResourceRegistry` — type ⇄ resource, replacing the spike's stand-in.
+
+**Query** (`lib/json_api_kit/query.rb`) — a listing being read: the sequence from the rows a resource
+exposes to the records of one page, in the one place that knows it. Lazy, so a query can be handed on
+— a sideload and a nested route are the same object `scoped_to:` another listing's rows. Built
+2026-08-07 with scope and order; paging, filters and documents join it as their slices land.
+
+**What a resource is asked for is ours, not the wire's** (decided 2026-08-07). A controller validates
+`sort=-created_at` against the spec and hands the resource `sort: { created_at: :desc }`; anchors are
+`anchor: { id: 5 }` rather than `page: { around: … }`. The parameters stay JSON:API *concepts* while
+their shape suits our objects, so nothing below the controller parses strings and the mapping is free
+to change. Two smaller decisions in the same area: a resource that declares no `scope` exposes
+`model.all`, and a `default_sort` may only name a sort the resource declares — one vocabulary, and a
+typo fails at the first read rather than in SQL.
+
+**`Request`** (`lib/json_api_kit/request.rb`) — what a caller brought: what they asked for, and who
+they are. Built 2026-08-07. It names every parameter the kit reads (`ordering`, `filtering`,
+`page_size`, `after`, `before`, `guardian`) and **refuses anything else**, one level down as well, so
+`sorts:` or `page: { sise: 2 }` raises rather than being silently dropped — a request the kit ignores
+is one a caller believes was honoured. It holds no parsing and no casting: whether `page[size]` is a
+number at all is the spec's business, settled before a resource is asked anything.
+
+**Wire parsing** (`lib/json_api_kit/request/`) — one object per reserved parameter family, each strict
+by construction, so "unknown parameter → 400" is not a separate concern. These turn JSON:API spelling
+into what `Request` takes, and belong with the controller in slice 2:
+
+- `Request::Fields`, `Request::Include`, `Request::Filters`, `Request::Sort`, `Request::Page`,
+  `Request::Version`, `Request::Document` (writes).
+- Each returns a value object: `Fieldsets`, `IncludePaths`, `AppliedFilters`, `Keyset`, `PageRequest`,
+  `VersionPin`, `WriteDocument`.
+
+**Pagination** (`lib/json_api_kit/pagination/`)
+
+- `Keyset` — an ordered set of `Keyset::Key`s: the order to compare against, and the projection that
+  makes every one of its values readable as a column of the scope. Built (2026-08-03).
+- `Keyset::Key` — one term of the order: name, direction, backing SQL, joins, and which end its nulls
+  sort at. It answers for its own value on both sides — read off a record, and produced by the database —
+  which is what dissolves the spike's four parallel collections keyed by the same names. Built
+  (2026-08-03), nulls became a *placement* rather than a flag (2026-08-05).
+- `Cursor` — value ⇄ opaque string, with shape validation. Owns the lesson that lossy encoding breaks
+  keysets: timestamps at microsecond precision, normalised to UTC. Built (2026-08-03).
+- `Predicate` — the comparison selecting the rows after a cursor's position in an order, and only
+  that. Built (2026-08-04); the rules it encodes are below.
+- `Predicate::Term` — a key bound to the cursor's value for it, contributing its own fragments of the
+  comparison, with `Term::Null` as the case a null cursor value becomes. Built (2026-08-04).
+- `Order` — the order a listing is read in, as a sequence of `Order::Segment`s, each a membership
+  predicate plus the `Keyset` that orders it. `Order.for(keyset)` derives them; `Order::Position` is
+  where a cursor points. Built (2026-08-05).
+- `Scan` — one page-read inside one segment, tagging its rows with the segment they came from so any row
+  can be placed in the order. Built (2026-08-05).
+- `Window` — one page of rows read along an order, and whether the order carries on past them. It reads
+  one way only, so reading backwards is a window over the reversed order, a window of no rows is the
+  probe form that answers whether anything lies that way at all — which retires the spike's separate
+  probe — and a page that runs out of rows in one segment spills into the next. Built (2026-08-04),
+  spilling added (2026-08-05).
+- `Row` — a record together with the segment it was read from, working out its position and cursor when
+  asked. Every row of a listing can be paged from, which is what `meta.page.cursor` promises, and rows
+  are what retired the five separate cursor-minting methods the earlier design had. Built (2026-08-05).
+- `Paginator` — a page and the cursors either side of it, as `Paginator::Forwards` or
+  `Paginator::Backwards`: which end a page is read from decides the direction, whether rows come
+  back in presentation order, and which side the window answers for rather than probes. An empty
+  page still points at the cursor it was read from, or a client that pages one step too far is
+  stranded. Built (2026-08-04).
+- `Around` — a page centred on one row: the rows before it, the row itself, the rows after it. It is the
+  two ordinary readings, one each way from the row's position, so each side answers for its own link and
+  neither probes. `Order#locate(scope, matching:)` finds the row a narrowing keeps and places it in its
+  segment; the identity/value/symbolic taxonomy and `AnchorNotFound` belong to the declarations slice.
+  Built (2026-08-05).
+- `Profile` — the cursor-pagination profile's names, error type URIs and content type in one place.
+
+**Documents** (`lib/json_api_kit/documents/`)
+
+- `Collection`, `Resource`, `Errors` — assembly, each aware only of its own shape.
+- `IncludeTree` — the requested paths as a tree, where a path implies its prefixes (that *is* full
+  linkage), and `Included` — the deduplicating collection of side-loaded resources.
+- `Links`, `ItemMeta`.
+- `Errors::*` — one object per typed error (unsupported sort, max size exceeded, invalid cursor,
+  unknown parameter, range pagination), each knowing its status, title, type URI and source pointer.
+
+**Endpoint** (`lib/json_api_kit/`)
+
+- `Endpoint` — the controller's declarations (resource, services, publication, scope overrides),
+  extracted so the controller carries no state of its own.
+- `Endpoint::Index`, `Endpoint::Show` — orchestrate scope → filters → keyset → window → document.
+- `BaseController` — thin: builds a request context, delegates, renders. If it grows past a screen,
+  something above is missing.
+
+## Testing without an endpoint
+
+Slice 1 has no real endpoint by design, and that is a feature: it forces the framework to depend on
+nothing in the app.
+
+- **Start with the end-to-end spec, before any object exists** — `spec/integration/json_api_kit/`,
+  written against the public API a client uses (`Resource.all(params, guardian:)`), never against an
+  internal. It is red for as long as the feature takes to build, and the moment it turns green the
+  feature is done, which is what stops a slice growing code nothing asks for. It also *decides* the
+  API: what a request says and what an answer holds is easier to settle from the outside than to
+  derive from internals that do not exist yet. Every aspect of the feature is written up front —
+  sorting, paging, filtering, documents, sideloading, nesting — with the ones not under way marked
+  `pending: "reason"` (metadata works on a whole group), so only the aspect being built is red. RSpec
+  reports a pending example that starts passing as FIXED and fails the build: that is when the marker
+  comes off. Two conditions make it worth having:
+  - **Assert against an independent oracle, never against our own machinery.** `pagination_spec` works
+    because it compares pages to `scope.order(keyset.order)`; a spec whose expectation is built from
+    the code under test proves only that the code agrees with itself.
+  - **State an outcome, not a collaboration** — rows, links, a document. Written that way it survives
+    redesigns of everything underneath: the listing properties went through the `Nulls` extraction, the
+    `Direction` extraction and moving the split onto `Segment` without a single edit, while unit specs
+    needed changes in all three.
+
+  Evidence for the rule rather than taste: 175 green unit specs coexisted with four defects that made
+  pages skip rows, and it was the listing-level spec that caught every one of them. Since it cannot be
+  committed red, it stays in the working tree and lands with the code that makes it pass.
+- **Unit specs per object,** asserting only what each object adds on top of the end-to-end claim. Most
+  are pure; the ones touching the database take a scope.
+- **Framework request specs against a fixture endpoint** defined in spec support (a `Resource` over an
+  existing model plus a controller), with routes drawn per example. `with_routing` is the intended
+  mechanism — to be confirmed, as nothing in the repo uses it yet; the fallback is a test-only route
+  file loaded in the test environment.
+- **Ported acceptance specs as the checklist**: profile conformance, traces A–G (slice 3), plugin
+  rules (slice 9), documentation drift (slice 5), scopes (slice 7), anchors and centred windows,
+  publication (slice 8).
+
+## Ported, rewritten, decided
+
+- **Ported nearly as-is** (proven, and the knowledge is in the details): the keyset predicate work
+  including the null-safe equality, cursor encoding, nulls-last projection, the version pipeline's key
+  maps and gap ordering, the OpenAPI schema derivation.
+- **Rewritten**: everything that lived in the controller, the config object (the resource *is* the
+  config), the endpoint registry, the plugin registration surface (it belongs in core's plugin API,
+  not monkeypatched from a plugin), and the whole rendering path — with the assembler ours, the
+  serializer patch, the include-prefix expansion and the empty-relationship pruning all disappear
+  rather than move.
+- **Dropped**: `stats[total]=count` (not in the profile, unbounded count), the run-stats stand-in
+  plugin, the endpoint map.
+
+### Decided: we assemble the document ourselves
+
+The spike rendered with **jsonapi-serializer 2.2.0** (feature-dead). Getting a compliant document out
+of it took three owned workarounds, all of them for the same underlying reason — the gem decides
+linkage from a flat, direct-match include list:
+
+1. A **monkeypatch** of `get_included_records`: it builds each nested resource's hash with the
+   *parent's* parsed include list, so with `lazy_load_data` a nested leaf's linkage disappears.
+2. **Include-prefix expansion** before rendering (`user.groups` → `user`, `user.groups`), because a
+   nested path leaves the intermediate relationship's linkage off the primary data otherwise.
+3. A **post-render document walk** pruning empty relationship objects: with `lazy_load_data`, every
+   declared-but-not-included relationship is emitted as `{}`, and a relationship object must carry at
+   least one of `links`, `data`, `meta`. Without the walk, the flat case is invalid on every resource.
+
+On top of that the gem emits no relationship `links` at all, which is what a client's relationship
+mode reads, and which it will never gain.
+
+The perf axis, which was the one argument for staying, does not hold either. A **headroom probe**
+compared three assemblies of a byte-identical document (8 attributes, one to-one and one to-many
+relationship, in-process, GC off during timing, plain objects so no attribute-read tax dilutes the
+signal): the gem, a straight-line hardcoded assembler (the time floor), and a **declaration-driven
+sketch of what we would own** — dot-path include trees with prefix implication, cross-tree dedup,
+sparse fieldsets applied per type, nested recursion.
+
+| records | include | gem | ours (sketch) | floor |
+| --- | --- | --- | --- | --- |
+| 50 | — | 0.163 ms / 912 allocs | 0.058 ms / 309 | 0.021 ms / 304 |
+| 50 | `author,tags` | 0.521 ms / 2688 | 0.156 ms / 999 | 0.125 ms / 1214 |
+| 50 | `author.groups` | 0.456 ms / 2066 | 0.102 ms / 597 | 0.057 ms / 649 |
+| 1000 | — | 3.149 ms / 18012 | 1.148 ms / 6009 | 0.396 ms / 6004 |
+| 1000 | `author,tags` | 9.878 ms / 51940 | 2.891 ms / 18099 | 2.378 ms / 23064 |
+| 1000 | `author.groups` | 9.016 ms / 41212 | 1.928 ms / 11241 | 1.071 ms / 12622 |
+
+A generic assembler is **2.7–4.7× faster than the gem and allocates ~3× less**, and the flat case —
+where its per-attribute generality costs the most against the floor — is still 2.8× faster than the
+gem. In per-request terms the win is small (sub-millisecond against a ~28 ms compound response), so
+the point is not speed: **owning the assembler costs nothing in performance**, and the abstraction
+budget for declarations, versioning transforms and links is already paid for.
+
+So: **write it, and drop the dependency.** It also collapses two declaration systems into one — the
+gem's class macros were a second model derived from the resource, which is exactly the kind of
+stand-in this plan rules out.
+
+What the sketch does not yet cover, and what specs therefore have to drive: relationship `links` and
+meta, resource and top-level links and meta, polymorphic types, `fields` narrowing relationship keys,
+null to-one linkage, cycles, and the identity rules (`id` always a string, type naming). The floor
+figures are a *time* bound only — the sketch already allocates less than the floor, whose dedup keys
+were arrays where the sketch nests hashes.
+
+### Decided: no pagination engine dependency
+
+The spike ran its keyset windows through `Pagy::Keyset`, subclassed as `NullSafeEngine`. Pagy is not a
+core dependency — it existed only in the spike's Gemfile — so the question was never "drop it", it was
+"add it". The answer is no.
+
+What was left of it once `Keyset` and `Cursor` became ours: the `limit + 1`-and-pop fetch, which is
+`Window`'s job anyway, and one line of typecasting that is wrong for projected keys (an expression
+alias has no attribute type). Everything else we had already replaced — order extraction, cursor
+encoding, identifier quoting — or overridden: the predicate composer was a verbatim copy of a
+`protected` method with `=` changed to `IS NOT DISTINCT FROM`, held together by an `allocate`
+constructor bypass, and fed a `keyset:` option duplicating our own `Keyset`.
+
+Owning it also produces better SQL, because the engine cannot know what we know:
+
+- **`IS NOT DISTINCT FROM` is not an indexable condition.** On PostgreSQL 15.18 with `enable_seqscan`
+  off, `id = 5` plans as `Index Cond`, while `id IS NOT DISTINCT FROM 5` plans as a post-scan
+  `Filter`; `deleted_at IS NULL` is an index condition again. Knowing per key whether the cursor value
+  is null, we emit `col IS NULL` or `col = :value`, both indexable, for the same correctness.
+  **Measured (2026-08-04, 500k rows, matching index, cursor at row 400k): the three shapes are
+  indistinguishable — 0.010 ms each.** The leading-key bound is what positions the index scan, so the
+  equality terms are only ever a post-filter within one tie group, whichever operator they use. Row-wise
+  remains the better shape (the whole predicate becomes the `Index Cond`, nothing is filtered) but an
+  earlier claim here that null-safe equality "degrades every equality term on every page" was wrong.
+- **Row-wise comparison is unsafe with nullable keys.** `(a, b, c) > (:a, :b, :c)` is the friendliest
+  form for an index, and it evaluates to NULL — silently dropping rows — if any element is NULL. An
+  engine with no concept of nulls cannot guard that; a keyset that knows which keys are nullable can
+  apply the optimisation exactly when it holds.
+
+So the `Paginator` owns predicate composition (OR-of-ANDs, the leading-key `>=` hint for optimizers
+that struggle with ORs, row-wise comparison when every direction agrees and no key is nullable), typed
+binding (cast by column type for column keys, pass through for projected ones) and the fetch. Under
+specs, which the copied predicate never had.
+
+Caveat to re-check on real data when `Paginator` lands: the plans above come from a 68-row table, so
+the *costs* are meaningless — it is the `Index Cond` versus `Filter` structure that generalises, and
+none of it bites unless the keyset's leading columns have a supporting index in the first place.
+
+#### What the predicate emits
+
+Built 2026-08-04. It means one thing — the rows after this cursor's position in this order — because
+reading backwards reverses the keyset rather than inverting the comparison, leaving one shape to get
+right instead of two. Cursor values arrive from a client and are always bound; the only literal text is
+what a resource authored, a key's name and its SQL.
+
+| case | shape |
+| --- | --- |
+| directions differ | a bound on the leading key, then the OR-of-ANDs |
+| every direction agrees, no null values | row-wise `(a, b) > (:a, :b)` |
+| a key's cursor value is null | `col IS NULL` where it must match, and no strict disjunct for it |
+| the *leading* cursor value is null | no bound on the leading key |
+
+The last two are traps, not optimisations:
+
+- **The leading-key bound has to go when its cursor value is null.** It is ANDed with the disjuncts, so
+  `col >= NULL` is NULL and the whole predicate then matches nothing — a silently empty page. Only
+  reachable for a nullable key declared without `nulls_last`, which is precisely the case nobody tests.
+- **A key whose cursor value is null gets no strict disjunct.** Inside a group of NULLs nothing sorts
+  after NULL, so that disjunct could never hold and only bloats the plan.
+
+Row-wise comparison is automatic rather than an option (Pagy's `tuple_comparison`), because the keyset
+can prove when it holds. That hands the declaration layer a decision: the fast form only applies when
+the tiebreak sorts the same way as the leading key, so `sort=-created_at` earns it with an `id: :desc`
+tiebreak and loses it with `id: :asc`. **Open, for `Sort`: should a tiebreak follow the leading key's
+direction?**
+
+Two smaller findings worth not rediscovering. The predicate compares against the *projected* columns,
+never the SQL behind them — the wrapping relation no longer exposes `users.username`, only
+`"topics"."author"` — which is why a key answers both `identifier` and `value_sql`. And
+`type_for_attribute` returns a passthrough `ActiveModel::Type::Value` for a name it does not know, so
+turning a cursor value back into its column type is one uniform call on the key, with no branch for
+projected ones.
+
+How it is put together: a `Predicate` holds one `Term` per key — the key bound to the cursor's value for
+it — and each term contributes its own fragments (the disjunct where it moved past the cursor, the bound
+it puts on the whole comparison, its binding). A cursor value that is null becomes a `Term::Null`
+instead, which matches by testing for null, contributes no disjunct, bounds nothing and binds nothing.
+So the four rules above are answered by the special case itself rather than by four questions asked
+about it, and the only place nil is read is the boundary where a term is built. The predicate's own
+methods are then pure composition: which form, which disjuncts, which bound.
+
+### Done: a nulls-last order wasted its index bound, and segmenting fixed it
+
+Measured 2026-08-04 on 500k rows, page size 50, an index for every shape, each variant checked by
+comparing the rows it returns rather than how many. Cursor at depth 400k in the valued part of a
+`pinned_at desc nulls last, id` order:
+
+| shape | time | plan |
+| --- | --- | --- |
+| what we emit today (flag leads the order) | 8.2 ms | Index Scan, no index condition |
+| tail removed, OR-of-ANDs, no bound on the leading key | 5.4 ms | Index Scan, no index condition |
+| tail removed, OR-of-ANDs, **bound on the leading key** | **0.011 ms** | `Index Cond: pinned_at <= …` |
+| tail removed, uniform directions, row-wise | 0.009 ms | `Index Cond: ROW(…) < ROW(…)` |
+| a plain keyset at the same depth, either shape | 0.007–0.009 ms | `Index Cond` |
+
+**The leading-key bound is what makes a keyset predicate seekable.** Not row-wise, which is worth about
+1.5× on top of it, and not direction uniformity, which on its own changed nothing. We already emit the
+bound — the fault is *which key it lands on*: a nulls-last key puts its 0/1 flag at the head of the
+order, and `flag >= 0` is true of every row in the table, so the seek is spent on nothing.
+
+Nor can the bound simply be moved to the nullable column while the tail stays in the query: `NULL <= P`
+is NULL, so bounding `pinned_at` would drop the tail. Taking the tail out of the query is precisely what
+lets the bound land on a selective column — which is the fix, and all of it:
+
+1. **Segment the order** at a nullable key: valued rows, then the null tail. The cursor already says
+   which segment it names, since a null value for that key *is* the marker — no flag needed to tell them
+   apart.
+2. The bound then lands on the nullable column, and the page seeks: **8.2 ms → 0.011 ms**.
+3. The tail reads as `col IS NULL AND id > :id`, measured at 0.037 ms, needing none of this.
+4. `ORDER BY col DESC NULLS LAST` replaces the projected `CASE`, so nulls-last keys stop needing a
+   projection or an expression index — the index does have to match the declared order.
+5. *Optional polish:* inside the valued segment there are no NULLs, so row-wise becomes legal there, and
+   with a tiebreak that follows the leading key's direction it applies. Worth ~1.5×. This is the answer
+   to the tiebreak question left open above — worth having, not worth forcing.
+
+It generalises past nulls, which is the case that actually matters. A listing that puts a group first —
+pinned topics, then everything else by its ordinary order — has the same structure: a computed priority
+column leads the keyset, and the bound is spent on it. Measured on the same 500k rows, group = a business
+predicate over three columns matching 18,182 rows, order `created_at desc, id desc`, cursor deep in the
+second group:
+
+| shape | time | rows |
+| --- | --- | --- |
+| priority column leads the order | 10.0 ms | identical |
+| segmented, bound on `created_at` | **0.010 ms** | identical |
+| segmented, row-wise | 0.009 ms | identical |
+
+Every variant returns the same rows, at depth and on the first page: **segmenting reorganises the query,
+never the sequence** — the segments concatenated in order are what a single `ORDER BY` produces. Two
+further findings from that run: the group predicate needs **no index of its own** (with only
+`(created_at DESC, id DESC)` present the page still ran in 0.012 ms, the bound seeking and the predicate
+filtering two rows out), so per-user conditions such as dismissals or `pinned_until > now()` are free; and
+the first page gets marginally *slower* (0.011 → 0.092 ms, both negligible) because it reads the leading
+segment and then spills into the next.
+
+Reading a page across segments can be two queries (read the segment the cursor names, spill into the next
+when it comes up short) or one (`UNION ALL` of bounded branches, sorted at the top over at most two pages
+of rows). Measured 2026-08-05, wall-clock per page with the query cache off:
+
+| cursor | spill | union all | as we emit it today |
+| --- | --- | --- | --- |
+| deep in the leading segment | **0.13 ms** | 0.21 ms | 9.6 ms |
+| near the segment boundary | **0.24 ms** | 0.46 ms | **43 ms** |
+| inside the tail | 0.24 ms | **0.18 ms** | 0.61 ms |
+| first page | 0.36 ms | **0.18 ms** | — |
+
+They trade places and every gap is under 0.3 ms, so **the spill wins on design rather than speed**: plain
+relations throughout, no `UNION ALL` assembled from strings inside `Window`, and no wasted second branch
+on the common deep page. Today's shape also has a worse case than we had found — 43 ms at the segment
+boundary, where the flag query walks the whole leading segment to reach its last rows.
+
+So the concept to build is not "nulls-last handling" but a **segmented order**: an ordered list of
+segment predicates, each paired with the keyset that orders it, where the cursor names its segment. A
+plain order is one segment; a nullable key is two; a listing with a pinned group is two with the group
+predicate supplied by the resource. That also retires the projected priority column such listings build
+by hand today.
+
+Built 2026-08-05. `NullFlag` is gone, `Keyset` orders nulls at a named end, `Order`/`Order::Segment` hold
+the sequence, `Scan` reads one segment, and `Window` spills between them. `Predicate`, `Term`, `Cursor`
+and `Paginator` needed no change beyond `Paginator` taking an order where it took a keyset. Measured
+through the framework itself, page of 50, query cache off, verified against the row-level baselines above:
+
+| cursor | before | after (records + both links) | after (records only) |
+| --- | --- | --- | --- |
+| deep in the leading segment | 9.6 ms | **0.79 ms** | 0.46 ms |
+| near the segment boundary | 43 ms | **1.16 ms** | 0.78 ms |
+| inside the null tail | 0.61 ms | 0.60 ms | 0.30 ms |
+| first page | — | 0.65 ms | 0.27 ms |
+
+Re-measured 2026-08-05 against the finished objects, every scenario verified row by row (page of 50,
+500k rows, query cache off), with Pagy on the one shape it can express:
+
+| scenario | records | records + both links |
+| --- | --- | --- |
+| plain keyset, cursor deep at 400k | **0.33 ms** (Pagy: 0.32 with its next) | 0.93 ms |
+| nulls-last, deep in the leading segment | 0.39 ms | 0.99 ms |
+| nulls-last, at the segment boundary (spills) | 0.51 ms | 1.14 ms |
+| nulls-last, inside the null tail | 0.37 ms | 0.75 ms |
+| **first page** | 0.30 ms | **0.36 ms** |
+| read backwards, deep | — | 0.91 ms |
+| a resource-declared group (the `/latest` shape) | — | 0.67 ms |
+
+Two costs the end-to-end run found, both now fixed:
+
+- **A row's place is worked out when it is asked for.** Building a position — and so a cursor, which
+  normalises every timestamp to `iso8601(6)` — for all fifty rows of a page cost about 40% of the read,
+  and only the page's two ends are usually named. Lazy again, we are level with Pagy.
+- **A page read from the start of the order needs no probe.** Nothing can lie behind it, so the "is
+  there a previous page" query is skipped: 0.98 ms → 0.36 ms on the most common request a listing gets.
+
+Anchors, measured the same way (2026-08-05): locating a row costs 0.17 ms by identity, 0.27 ms by a bound
+on the leading key, and 0.32 ms when it walks into the null tail — one small indexed query per segment
+until it hits. A centred page of 25 either side, **with both links, costs 0.59 ms against 0.98 ms for a
+cursor page with both links**: an anchored read is cheaper because both sides read the direction they
+point in, so neither needs a probe. Entering a listing at a row (page of 50 after it) is 0.60 ms, and a
+centred page inside the null tail 0.59 ms.
+
+Also verified end to end: paging resumed from an arbitrary row's own cursor lands on the row after it
+(what the profile promises for `meta.page.cursor`), a backwards page returns the rows immediately before
+the cursor with none drawn from the null tail, and the declared-group path — the first production-shaped
+use of `Segment`'s general constructor — returns the same rows as the priority-column form it replaces.
+
+One lesson only the end-to-end run could surface: **reversing an order has to move its nulls to the other
+end.** A first cut kept them last in both directions, so the backwards probe asked for
+`ASC NULLS LAST` where the index offers `ASC NULLS FIRST` when scanned backwards — a `top-N heapsort`
+over the table, 20.9 ms for a single-row probe, which made the *complete* page slower than before the fix
+even though reading it had become 12× faster. `Key#reverse` now flips the placement with the direction,
+which is also what reversal means.
+
+> Three revisions of this section in one session, each because a measurement contradicted the previous
+> reading: first that null-safe equality degraded every page (it does not, the bound rescues it), then
+> that the `OR … IS NULL` term was the cost (it is not, the wasted bound is), then that row-wise was the
+> fix (it is polish). Verify by comparing returned rows, not row counts — two of the three wrong readings
+> came from a variant that was quietly answering a different question. A fourth reading was wrong for a
+> different reason: Rails' query cache is **on** inside `bin/rails runner`, so a loop over one SQL string
+> measures cache hits. Wrap benchmark loops in `ActiveRecord::Base.uncached`. A fifth, found 2026-08-06:
+> **two measured blocks over the same SQL in one process are order-dependent** — whichever runs second
+> is consistently ~40% slower (0.38 → 0.55 ms), which read as "the declared order is slower than a
+> hand-built keyset" until the blocks were swapped and the gap swapped with them. Compare like-for-like
+> positions, not like-for-like objects — and note that swapping *blocks* is not enough either, since
+> the first block in a process absorbs the warm-up for the whole stack: on 2026-08-07 that read as the
+> full `Resource.all` path costing 2× a hand-built keyset. **Interleave the variants per iteration and
+> report medians.** Done that way, 300 runs each: hand-built 0.323 ms median, `Resource.all` → `Query`
+> 0.341 ms — the 0.018 ms between them being exactly the sum of the parts measured on their own
+> (`Request.new` 0.001, building the order 0.006, `filters.apply` 0.007, `Cursor.parse` 0.002).
+
+### Fixed 2026-08-06: nulls outside the segmented path were compared wrongly
+
+Segmenting made *leading* nullable keys correct and fast, and hid four defects in every other place a
+null can appear. Found while designing the sort declarations, since `sort :ran_at, nulls: :last` is
+exactly the declaration that produces these keysets. All four were reproduced by specs first:
+
+1. **Row-wise comparison dropped null rows.** `row_wise?` checked that no *cursor value* was null, never
+   whether a *column* could be. `(created_at, pinned_at, id) > (…)` is NULL for every row whose
+   `pinned_at` is NULL, so a page skipped them outright.
+2. **The OR-of-ANDs form had the same hole.** A key whose nulls sort last places its null rows *after*
+   every value, so the disjunct must be `(col > :v OR col IS NULL)`.
+3. **`Term::Null` assumed nulls sort last.** "Nothing follows a NULL" holds only in that reading, and
+   `Key#reverse` flips placement — so *every backwards page* over a non-leading nullable key found
+   nothing at all.
+4. **The valued band was always placed first.** With `nulls: :first` the null band is read first, so the
+   sequence was inverted.
+
+Fixed by giving the key two answers instead of one: **`nulls_last?`** is where its nulls sort in this
+reading (a declared placement, or the database's own default — verified: ascending puts them last,
+descending first), and **`nulls_after_values?`** is whether the comparison has to take rows in rather
+than compare them. `Predicate` now refuses a keyset whose leading key is nullable, since a bound cannot
+be correct there; the only way to read one is within a segment, which is what `Order` builds.
+
+**A placement in `ORDER BY` constrains which index can serve it**, and the valued band has no nulls to
+place, so it now emits none — `Keyset#valued`, via `Key#without_nulls`. Measured on 500k rows, page of
+50, deep cursor:
+
+| the band's `ORDER BY` | plan | records |
+| --- | --- | --- |
+| `pinned_at DESC NULLS LAST, id ASC` | Index Only Scan, purpose-built `(pinned_at DESC NULLS LAST, id)` | — |
+| `pinned_at DESC, id ASC` | **Incremental Sort** — no index carries that mix | 1.94 ms |
+| `pinned_at DESC, id ASC`, with `(pinned_at DESC, id)` built | Index Only Scan | 0.58 ms |
+| `pinned_at DESC, id DESC` | **Index Only Scan Backward, plain `(pinned_at, id)`** | **0.35 ms** |
+
+The last row is the one that matters, and it is the measured case for **`unique_by` following the leading
+key's direction**: a uniform order needs no bespoke index at all, because one ordinary composite index
+serves it in both directions, nulls included. A mixed order needs its own index either way — with no
+placement to carry, that index is simply `(col DESC, id)`.
+
+The fix first landed as flags on `Key` — `nulls_last?`, `nulls_after_values?`, `opposite_nulls`,
+`placement` — and four conditionals keyed on the same value, two of them compounds that callers
+assembled themselves. That is a missing type, so **`Nulls`** now holds it, in one case per reading:
+`Last`, `First`, and `Undeclared` for a key expecting none — either nothing was declared, or the band
+being read has a value in every row. Each answers `expected?`, `placement`, `to_sql`, `reversed`,
+`trailing?` (there is a band of nulls a comparison has to take in) and `read_first?` (they are read
+before the values). `Key` holds one and delegates; `Term` and `Order` ask instead of deciding; and the
+question `Predicate` and `Order.for` share — is this order read in bands? — is `Keyset#splits?`.
+
+**`Direction`** followed, for the same reason: which way a key reads was a symbol that four places
+interpreted — `Key`'s validation and its `opposite`, the `to_s.upcase` in its ordering, `Term`'s
+operator table, and the database's own null placement inside `Nulls::Undeclared`. `Ascending` and
+`Descending` each answer `to_sym`, `to_sql`, `operator`, `reversed` and `nulls_first?`, and they are
+values, so two readings of one direction are equal — which is what "a uniform order needs one index"
+will be asserted against when `unique_by` follows the leading key. `Request::Sort` gets the `-` prefix
+to interpret in slice 1 and docs generation lists directions in slice 5; both now have one place to
+ask. `Key` holds a `Direction` and a `Nulls` and rebuilds both from what was declared, never from the
+reading they produced — a key handed another direction reads its nulls another way.
+
+Coverage that was missing, and is what caught this: `spec/lib/json_api_kit/pagination_spec.rb` states
+properties of a whole listing — paging forwards through it, and reading back from *every* row — against
+`scope.order(keyset.order)` as the oracle, for a nullable key that leads, one that does not, and one
+whose nulls sort first. Two examples in `predicate_spec` were rebuilt rather than kept: they compared a
+nulls-last key *leading* an unsegmented keyset, which is now refused input.
+
+## The agent skill
+
+`.skills/discourse-json-api-kit-authoring/SKILL.md`, following the convention in `.skills/`
+(frontmatter `name` + `description`, one directory per skill). Written with the developer guide or
+just after it, since both derive from the same material.
+
+It **points at the developer guide as its source of truth rather than restating the rules** — for the
+same reason the API documentation is generated: two hand-written descriptions of one set of rules
+drift, and the one an agent reads is the one nobody notices has gone stale. What the skill adds on top
+is the part a guide written for humans can leave implicit, because a human infers it from the
+surrounding code and an agent does not:
+
+- Which declarations exist, and where an endpoint's files go — a resource in `app/resources`, a
+  controller through the app's own base, routes through the route helper. Never a hand-maintained map.
+- A change to a resource's shape that a client could notice is a `VersionChange`, never an edit in
+  place. The contract guard failing means a version change is missing, not that the baseline needs
+  updating.
+- Committed artifacts (the OpenAPI document, the contract descriptor) are regenerated, never edited.
+- A sort is paginatable only if its ordering value can be projected as a stable per-row column; a
+  block sort cannot be paged.
+- `internal!` is the opt-out from documentation and versioning, and what that costs the endpoint (no
+  API key scope, no support promise) — so it is a deliberate choice, not a shortcut around writing a
+  version change.
+- The vocabulary: "plugin" for Discourse plugins throughout, since "extension" is reserved by the
+  spec's own `ext` mechanism.
+
+## Definition of done, per slice
+
+- Specs green, lint clean, no TODOs left in the code.
+- Every JSON:API area the slice touches is either covered or explicitly listed as sequenced-not-built,
+  in this document.
+- Reference material updated when a decision changes — the durable artifact is the design, not the
+  code.
