@@ -930,6 +930,21 @@ login:
       key: "sso_provider.key_placeholder"
       value: "sso_provider.value_placeholder"
     area: "discourseconnect"
+  discourse_connect_provider_claims:
+    default: "name|email|admin|moderator|groups|avatar_url|profile_background_url|card_background_url"
+    type: list
+    list_type: compact
+    allow_any: false
+    choices:
+      - name
+      - email
+      - admin
+      - moderator
+      - groups
+      - avatar_url
+      - profile_background_url
+      - card_background_url
+    area: "discourseconnect"
   blocked_email_domains:
     default: "mailinator.com"
     type: host_list
