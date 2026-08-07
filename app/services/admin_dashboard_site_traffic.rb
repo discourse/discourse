@@ -76,7 +76,7 @@ class AdminDashboardSiteTraffic
     return { rows: [], error: "exception" } if report.nil?
 
     # Timeouts skip the cache so the next request retries instead of being
-    # pinned to the error for the full 35-minute TTL.
+    # pinned to the error for the full TTL.
     Report.cache(report) if report.error != :timeout
 
     return { rows: [], error: report.error.to_s } if report.error.present?
