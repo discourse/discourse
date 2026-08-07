@@ -110,7 +110,13 @@ plugins:
         - assignable_level
       user_options:
         - notification_level_when_assigned
-  discourse-calendar:
+  discourse-data-explorer:
+    tables:
+      - data_explorer_queries
+      - data_explorer_query_groups
+      - data_explorer_query_stats
+    columns: {}
+  discourse-events:
     tables:
       - calendar_events
       - discourse_calendar_disabled_holidays
@@ -118,12 +124,6 @@ plugins:
       - discourse_post_event_events
       - discourse_post_event_invitees
       - livestream_topic_chat_channels
-    columns: {}
-  discourse-data-explorer:
-    tables:
-      - data_explorer_queries
-      - data_explorer_query_groups
-      - data_explorer_query_stats
     columns: {}
   discourse-gamification:
     tables:
@@ -228,10 +228,10 @@ plugin_checksums:
   discourse-ai: 4ff4f60e8c1744603f7f8590f8f99447
   discourse-assign: 7a7a36e8ac0214e8a6aca1a1ed9899aa
   discourse-cakeday: a5bb91366c8dc8d267088eb0c2679187
-  discourse-calendar: 6a305b06fa9121f17245cefbc726ce20
   discourse-captcha: fd538c1338062354276ccfda4cbafd55
   discourse-chat-integration: ffa3bf5dba9089491d2fc02971eb96f8
   discourse-data-explorer: fb71ab79dbe07af481ba147ea526406f
+  discourse-events: 6a305b06fa9121f17245cefbc726ce20
   discourse-gamification: 633256e241b030fddcc059076f7474f8
   discourse-github: 3bd17b2c09828e232e7565edbf2c746f
   discourse-graphviz: 8a1835520fbf8f7f5d1ef8a25d737e20
