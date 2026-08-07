@@ -1,11 +1,15 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { array, concat } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 import {
   localeKeyPart,
@@ -109,12 +113,24 @@ function itemCount(data) {
     : null;
 }
 
-function formatDuration(startedAt, finishedAt) {
-  if (!startedAt || !finishedAt) {
+function formatDuration(startedAt, finishedAt, currentTime) {
+  if (!startedAt || (!finishedAt && !currentTime)) {
     return "—";
   }
-  const ms = new Date(finishedAt) - new Date(startedAt);
+  const end = finishedAt ? new Date(finishedAt) : currentTime;
+  const ms = Math.max(0, end - new Date(startedAt));
+  if (!finishedAt && currentTime) {
+    return `${Math.floor(ms / 1000).toFixed(1)}s`;
+  }
   return ms < 1000 ? `${ms}ms` : `${(ms / 1000).toFixed(1)}s`;
+}
+
+function stepDuration(step, currentTime) {
+  return formatDuration(
+    step.started_at,
+    step.finished_at,
+    step.status === "running" ? currentTime : null
+  );
 }
 
 function formatValue(value) {
@@ -186,7 +202,11 @@ function conditionPassed(step) {
 }
 
 export default class ExecutionDetail extends Component {
+  @service messageBus;
   @service workflowsNodeTypes;
+
+  @tracked liveExecution;
+  @tracked currentTime = Date.now();
 
   operationLabel = (step) => {
     const value = step?.metadata?.operation;
@@ -207,14 +227,173 @@ export default class ExecutionDetail extends Component {
     return propertyOptionLabel(definition, "operation", { value });
   };
 
+  #channel;
+
+  #messageHandler;
+
+  #timer;
+
+  #refreshing = false;
+
+  #refreshRequested = false;
+
+  #refreshToken = 0;
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.#refreshToken++;
+    this.#unsubscribe();
+    this.#stopTimer();
+  }
+
+  get execution() {
+    return this.liveExecution?.id === this.args.execution.id
+      ? this.liveExecution
+      : this.args.execution;
+  }
+
+  set execution(value) {
+    this.liveExecution = value;
+  }
+
+  get isRunning() {
+    return ["pending", "running"].includes(this.execution.status);
+  }
+
+  get isLive() {
+    return this.isRunning || this.execution.status === "waiting";
+  }
+
   @action
-  async ensureNodeTypes() {
+  async initialize() {
+    this.#syncLiveUpdates();
     await this.workflowsNodeTypes.load();
   }
 
   @action
+  executionChanged() {
+    this.#refreshToken++;
+    this.#refreshing = false;
+    this.#refreshRequested = false;
+    this.liveExecution = null;
+    this.#unsubscribe();
+    this.#syncLiveUpdates();
+  }
+
+  #syncLiveUpdates() {
+    if (this.isLive && !this.#channel) {
+      this.#channel = `/discourse-workflows/execution/${this.execution.id}`;
+      this.#messageHandler = (message) => this.#handleProgress(message);
+      this.messageBus.subscribe(this.#channel, this.#messageHandler, 0);
+    } else if (!this.isLive) {
+      this.#unsubscribe();
+    }
+
+    if (this.isRunning) {
+      this.#startTimer();
+    } else {
+      this.#stopTimer();
+    }
+  }
+
+  #handleProgress(message) {
+    if (
+      message.type !== "execution_progress" ||
+      message.execution?.id !== this.execution.id
+    ) {
+      return;
+    }
+
+    if (this.#refreshing) {
+      this.#refreshRequested = true;
+    }
+
+    const steps = [...(this.execution.steps || [])];
+    if (message.step) {
+      const index = steps.findIndex(
+        (step) => step.position === message.step.position
+      );
+      if (index === -1) {
+        steps.push(message.step);
+      } else {
+        steps[index] = { ...steps[index], ...message.step };
+      }
+    }
+
+    this.execution = {
+      ...this.execution,
+      ...message.execution,
+      steps,
+    };
+    this.#syncLiveUpdates();
+
+    if (message.refresh) {
+      this.#refreshExecution();
+    }
+  }
+
+  async #refreshExecution() {
+    if (this.#refreshing) {
+      this.#refreshRequested = true;
+      return;
+    }
+
+    const executionId = this.execution.id;
+    const refreshToken = ++this.#refreshToken;
+    this.#refreshing = true;
+    try {
+      const result = await ajax(
+        `/admin/plugins/discourse-workflows/executions/${executionId}`
+      );
+      if (
+        this.isDestroying ||
+        this.isDestroyed ||
+        refreshToken !== this.#refreshToken ||
+        executionId !== this.execution.id
+      ) {
+        return;
+      }
+
+      this.execution = result.execution;
+      this.#syncLiveUpdates();
+    } catch {
+      // Keep the latest MessageBus state when an authoritative refresh fails.
+    } finally {
+      if (refreshToken === this.#refreshToken) {
+        this.#refreshing = false;
+        if (this.#refreshRequested && !this.isDestroying && !this.isDestroyed) {
+          this.#refreshRequested = false;
+          this.#refreshExecution();
+        }
+      }
+    }
+  }
+
+  #startTimer() {
+    this.currentTime = Date.now();
+    this.#timer ||= window.setInterval(() => {
+      this.currentTime = Date.now();
+    }, 1000);
+  }
+
+  #stopTimer() {
+    if (this.#timer) {
+      window.clearInterval(this.#timer);
+      this.#timer = null;
+    }
+  }
+
+  #unsubscribe() {
+    if (this.#channel) {
+      this.messageBus.unsubscribe(this.#channel, this.#messageHandler);
+      this.#channel = null;
+      this.#messageHandler = null;
+    }
+  }
+
+  @action
   exportAsText() {
-    const execution = this.args.execution;
+    const execution = this.execution;
     const lines = [];
 
     lines.push(`Workflow: ${execution.workflow_name ?? "Unknown"}`);
@@ -223,7 +402,11 @@ export default class ExecutionDetail extends Component {
     lines.push(`Started: ${execution.started_at ?? "—"}`);
     lines.push(`Finished: ${execution.finished_at ?? "—"}`);
     lines.push(
-      `Total time: ${formatDuration(execution.started_at, execution.finished_at)}`
+      `Total time: ${formatDuration(
+        execution.started_at,
+        execution.finished_at,
+        this.isRunning ? this.currentTime : null
+      )}`
     );
 
     if (execution.error) {
@@ -295,31 +478,55 @@ export default class ExecutionDetail extends Component {
   }
 
   <template>
-    <div class="workflows-execution-detail" {{didInsert this.ensureNodeTypes}}>
-      {{#if @execution.workflow_call_caller}}
+    <div
+      class="workflows-execution-detail"
+      {{didInsert this.initialize}}
+      {{didUpdate this.executionChanged @execution}}
+    >
+      {{#if this.isRunning}}
+        <div class="workflows-execution-detail__progress">
+          {{dLoadingSpinner size="small"}}
+          <span class="workflows-execution-detail__progress-label">
+            {{i18n
+              (concat
+                "discourse_workflows.executions.statuses." this.execution.status
+              )
+            }}
+          </span>
+          <span class="workflows-execution-detail__progress-time">
+            {{formatDuration
+              this.execution.started_at
+              this.execution.finished_at
+              this.currentTime
+            }}
+          </span>
+        </div>
+      {{/if}}
+
+      {{#if this.execution.workflow_call_caller}}
         <div class="workflows-execution-detail__workflow-call --caller">
           <div class="workflows-execution-detail__workflow-call-main">
             <span class="workflows-execution-detail__workflow-call-label">
               {{i18n "discourse_workflows.executions.workflow_call_called_by"}}
             </span>
             <span class="workflows-execution-detail__workflow-call-name">
-              {{#if @execution.workflow_call_caller.workflow_name}}
-                {{@execution.workflow_call_caller.workflow_name}}
+              {{#if this.execution.workflow_call_caller.workflow_name}}
+                {{this.execution.workflow_call_caller.workflow_name}}
               {{else}}
                 {{i18n
                   "discourse_workflows.executions.workflow_call_workflow"
-                  id=@execution.workflow_call_caller.workflow_id
+                  id=this.execution.workflow_call_caller.workflow_id
                 }}
               {{/if}}
             </span>
           </div>
 
-          {{#if @execution.workflow_call_caller.execution_url}}
+          {{#if this.execution.workflow_call_caller.execution_url}}
             <DButton
               @route="adminPlugins.show.discourse-workflows.show.executions.show"
               @routeModels={{array
-                @execution.workflow_call_caller.workflow_id
-                @execution.workflow_call_caller.execution_id
+                this.execution.workflow_call_caller.workflow_id
+                this.execution.workflow_call_caller.execution_id
               }}
               @icon="up-right-from-square"
               @label="discourse_workflows.executions.workflow_call_open_parent"
@@ -330,7 +537,7 @@ export default class ExecutionDetail extends Component {
       {{/if}}
 
       <div class="workflows-execution-detail__steps">
-        {{#each @execution.steps as |step|}}
+        {{#each this.execution.steps as |step|}}
           <div
             class="workflows-execution-detail__step --{{step.status}}
               --kind-{{nodeKind step.node_type}}"
@@ -385,7 +592,7 @@ export default class ExecutionDetail extends Component {
                 {{/if}}
               </span>
               <span class="workflows-execution-detail__step-time">
-                {{formatDuration step.started_at step.finished_at}}
+                {{stepDuration step this.currentTime}}
                 {{#if step.metadata.js_elapsed_ms}}
                   <span
                     class="workflows-execution-detail__step-js-time"
@@ -546,7 +753,11 @@ export default class ExecutionDetail extends Component {
         <div class="workflows-execution-detail__footer">
           <div class="workflows-execution-detail__total">
             {{i18n "discourse_workflows.executions.total_time"}}
-            {{formatDuration @execution.started_at @execution.finished_at}}
+            {{formatDuration
+              this.execution.started_at
+              this.execution.finished_at
+              (if this.isRunning this.currentTime)
+            }}
           </div>
           <DButton
             @action={{this.exportAsText}}
