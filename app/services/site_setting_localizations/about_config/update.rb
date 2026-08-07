@@ -50,13 +50,31 @@ class SiteSettingLocalizations::AboutConfig::Update
       ).destroy_all
     else
       localization =
-        SiteSettingLocalization.find_or_initialize_by(
+        SiteSettingLocalization.find_by(
           setting_name: submitted_setting[:setting_name],
           locale: params.locale,
         )
-      localization.value = submitted_setting[:value]
-      localization.localizer_user_id = guardian.user.id
-      localization.save!
+
+      if localization
+        localization.update!(value: submitted_setting[:value], localizer_user_id: guardian.user.id)
+      else
+        localization =
+          SiteSettingLocalization.create_or_find_by!(
+            setting_name: submitted_setting[:setting_name],
+            locale: params.locale,
+          ) do |record|
+            record.value = submitted_setting[:value]
+            record.localizer_user_id = guardian.user.id
+          end
+
+        if localization.value != submitted_setting[:value] ||
+             localization.localizer_user_id != guardian.user.id
+          localization.update!(
+            value: submitted_setting[:value],
+            localizer_user_id: guardian.user.id,
+          )
+        end
+      end
     end
   end
 
