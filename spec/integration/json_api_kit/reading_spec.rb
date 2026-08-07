@@ -17,6 +17,8 @@ class ReadingSpecTopicResource < JsonApiKit::Resource
   sort :created_at
   sort :title
   default_sort created_at: :desc
+
+  filter :title
 end
 
 RSpec.describe "reading through a resource" do
@@ -133,7 +135,7 @@ RSpec.describe "reading through a resource" do
     end
   end
 
-  describe "filtering", pending: "slice 1: filters" do
+  describe "filtering" do
     let(:params) { { filter: { title: "Cursors that survive a redesign" } } }
 
     it "keeps the rows a declared filter allows" do

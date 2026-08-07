@@ -10,6 +10,7 @@ module JsonApiKit
   class Resource
     include Naming
     include Sorting
+    include Filtering
     include QueryInterface
   end
 end

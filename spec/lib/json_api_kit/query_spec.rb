@@ -55,6 +55,15 @@ RSpec.describe JsonApiKit::Query do
       end
     end
 
+    context "with a filter asked for" do
+      let(:resource) { Class.new(super()) { filter :title } }
+      let(:params) { { filter: { title: second_topic.title } } }
+
+      it "reads only the rows that filter keeps" do
+        expect(records).to eq([second_topic])
+      end
+    end
+
     context "with a scope the resource declares" do
       let(:resource) do
         Class.new(super()) { scope { |guardian| Topic.where(user_id: guardian.user&.id) } }

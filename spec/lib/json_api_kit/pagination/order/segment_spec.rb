@@ -122,16 +122,16 @@ RSpec.describe JsonApiKit::Pagination::Order::Segment do
   end
 
   describe "#narrowed_by" do
-    subject(:narrowed) { segment.narrowed_by(narrowing).scope(scope).map(&:id) }
+    subject(:narrowed) { segment.narrowed_by(condition).scope(scope).map(&:id) }
 
-    let(:narrowing) { ->(rows) { rows.where(id: [pinned.id, unpinned.id]) } }
+    let(:condition) { ->(rows) { rows.where(id: [pinned.id, unpinned.id]) } }
 
-    it "keeps only what the narrowing allows" do
+    it "keeps only what the condition allows" do
       expect(narrowed).to contain_exactly(unpinned.id)
     end
 
-    context "when the narrowing would allow rows the segment does not hold" do
-      let(:narrowing) { ->(rows) { rows.where(id: pinned.id) } }
+    context "when the condition would allow rows the segment does not hold" do
+      let(:condition) { ->(rows) { rows.where(id: pinned.id) } }
 
       it "keeps holding only its own" do
         expect(narrowed).to be_empty

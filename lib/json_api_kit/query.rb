@@ -26,12 +26,14 @@ module JsonApiKit
 
     def page = @page ||= Pagination::Paginator.for(scope, order:, size: PAGE_SIZE)
 
-    # The rows this query reads: the ones the resource offers, kept to those of the listing it is
-    # being read as part of.
+    # The rows this query reads: the ones the resource offers, narrowed by the filtering asked
+    # for, and kept to those of the listing it is being read as part of.
     def scope
-      return available_rows unless scoped_to
-      available_rows.merge(scoped_to)
+      return filtered unless scoped_to
+      filtered.merge(scoped_to)
     end
+
+    def filtered = resource.filters.apply(available_rows, params[:filter])
 
     def available_rows = resource.scope_for(guardian)
 

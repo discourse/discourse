@@ -74,6 +74,23 @@ the controller. Every one of them should be testable without a request.
   the key that makes an order unique; it answers with the keyset a page is read along, so nothing else
   turns a request into an order. `Unsupported` is what an undeclared sort raises. Built (2026-08-06).
 
+**A filter's value type comes back with a consumer, not before** (decided 2026-08-07). `Filter` cast
+its value on the way in until measurement showed `where` already does it — for scalars, lists,
+dates and booleans alike — and that `ActiveModel::Type#cast` never raises, so the "a garbage value
+becomes a typed 400" argument for declaring one was simply false (`where(id: "abc")` compiles to
+`= NULL` either way). The type has two real consumers, and neither is `Filter#apply`: documentation
+generation, which is the only thing that can describe a virtual filter's value, and the request
+mapping, where casting once for every family is cheaper than each declaration doing its own — and
+where a block would then receive a `Time` rather than a string. It returns as metadata read by
+those, with whatever else they need, rather than as an argument nothing consumes.
+
+**Open, to settle when filters land:** whether a family's collection keeps the plural name
+(`Sort`/`Sorts`, mirroring `resource.sorts` and Rails' own `Error`/`Errors`) or nests as
+`Sort::Collection`, the way parts of a concept already do (`Keyset::Key`, `Order::Segment`). The
+plural is kept for now; the case against it is one line inside the collection itself —
+`unique_by.map { Sort.new(it).key(...) }` reads as a double-take. Decide it with `Filter`/`Filters`
+in front of us, since whichever wins becomes the pattern for attributes and relationships too.
+
 **A sort's nulls placement is inferred, because leaving it out is a correctness bug.** A key with no
 placement is read as having no nulls (see the fix below), so `Sort` declares one for anything that can
 be null: what the declaration says, else `:last` when the column is nullable *or* when there is no

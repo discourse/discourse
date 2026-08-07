@@ -38,13 +38,13 @@ module JsonApiKit
 
       def position(cursor) = Position.from(cursor, order: self)
 
-      # The first row of the listing a narrowing keeps, and where it sits — the segments are
+      # The first row of the listing a condition keeps, and where it sits — the segments are
       # walked in their own sequence, since that is the listing's order. Nothing, when no row
       # is kept: what to say about that belongs to whoever asked.
-      def locate(scope, matching:)
+      def locate(scope, condition:)
         segments
           .lazy
-          .filter_map { Scan.new(matching.call(scope), segment: it, size: 1).rows.first }
+          .filter_map { Scan.new(condition.call(scope), segment: it, size: 1).rows.first }
           .first
       end
 

@@ -18,7 +18,7 @@ RSpec.describe JsonApiKit::Pagination::Around do
   end
   let(:scope) { Topic.where(id: topics.map(&:id)) }
   let(:anchored) { third_topic }
-  let(:row) { order.locate(scope, matching: ->(rows) { rows.where(id: anchored.id) }) }
+  let(:row) { order.locate(scope, condition: ->(rows) { rows.where(id: anchored.id) }) }
   let(:second_cursor) { order.first.position_of(second_topic).to_cursor }
   let(:third_cursor) { order.first.position_of(third_topic).to_cursor }
   let(:fourth_cursor) { order.first.position_of(fourth_topic).to_cursor }

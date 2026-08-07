@@ -25,6 +25,7 @@ RSpec.describe JsonApiKit::Resource do
       sort :ran_at, column: :last_posted_at
       default_sort ran_at: :desc
       unique_by :title, :id
+      filter :title
     end
   end
 
@@ -213,6 +214,28 @@ RSpec.describe JsonApiKit::Resource do
 
     it "declares the columns that leave no two rows sharing a place" do
       expect(keyset.keys.map(&:name)).to eq(%i[created_at title id])
+    end
+  end
+
+  describe ".filter" do
+    subject(:filtered) { topic_resource.filters.apply(Topic.all, title: kept.title) }
+
+    fab!(:kept) { Fabricate(:topic, title: "The rows a filter keeps") }
+    fab!(:dropped) { Fabricate(:topic, title: "The rows it leaves behind") }
+
+    it "declares a condition a request may ask for" do
+      expect(filtered.map(&:id)).to contain_exactly(kept.id)
+    end
+
+    context "when it is declared after the resource has been read" do
+      before do
+        topic_resource.filters
+        topic_resource.filter(:closed)
+      end
+
+      it "offers it all the same, a plugin declaring long after the class body ran" do
+        expect(topic_resource.filters.fetch("closed").name).to eq("closed")
+      end
     end
   end
 

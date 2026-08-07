@@ -7,7 +7,7 @@ module JsonApiKit
       # within it. A segment is identified rather than positioned, because a cursor names the
       # segment it was minted in and has to keep naming it when the listing is read backwards.
       class Segment
-        # A segment holds every row it is offered unless it is given a narrowing.
+        # A segment holds every row it is offered unless it is given a condition.
         ALL_ROWS = ->(scope) { scope }
 
         # The bands a keyset reads a listing in: one segment where nothing splits it, and
@@ -41,16 +41,16 @@ module JsonApiKit
         def reverse = self.class.new(id:, keyset: keyset.reverse, rows:)
 
         # The same segment of the listing, narrowed further: it holds the rows the given
-        # narrowing keeps of the ones it held already. Its identity does not change, since a
+        # condition keeps of the ones it held already. Its identity does not change, since a
         # cursor names it.
-        def narrowed_by(narrowing) = self.class.new(id:, keyset:, rows: rows_within(narrowing))
+        def narrowed_by(condition) = self.class.new(id:, keyset:, rows: rows_within(condition))
 
         private
 
         attr_reader :rows
 
-        # This segment's rows, taken from those the given narrowing keeps.
-        def rows_within(narrowing) = ->(scope) { rows.call(narrowing.call(scope)) }
+        # This segment's rows, taken from those the given condition keeps.
+        def rows_within(condition) = ->(scope) { rows.call(condition.call(scope)) }
       end
     end
   end
