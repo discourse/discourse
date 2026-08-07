@@ -1301,6 +1301,20 @@ RSpec.describe Group do
       expect(events).to include(:user_removed_from_group)
     end
 
+    it "enqueues an inaccessible-notifications cleanup for each PM the removed user has notifications on" do
+      pm_topic1 = Fabricate(:private_message_topic)
+      pm_topic2 = Fabricate(:private_message_topic)
+      Fabricate(:topic_allowed_group, topic: pm_topic1, group: group)
+      Fabricate(:topic_allowed_group, topic: pm_topic2, group: group)
+      Fabricate(:notification, user: user, topic: pm_topic1)
+      Fabricate(:notification, user: user, topic: pm_topic2)
+
+      group.remove(user)
+
+      expect_job_enqueued(job: :delete_inaccessible_notifications, args: { topic_id: pm_topic1.id })
+      expect_job_enqueued(job: :delete_inaccessible_notifications, args: { topic_id: pm_topic2.id })
+    end
+
     describe "with webhook" do
       fab!(:group_user_web_hook)
 
@@ -1652,6 +1666,20 @@ RSpec.describe Group do
       result = group.bulk_remove([user.id, admin.id, admin.id + 1000])
 
       expect(result).to contain_exactly(user.id, admin.id)
+    end
+
+    it "enqueues an inaccessible-notifications cleanup for each PM a removed user has notifications on" do
+      pm_topic1 = Fabricate(:private_message_topic)
+      pm_topic2 = Fabricate(:private_message_topic)
+      Fabricate(:topic_allowed_group, topic: pm_topic1, group: group)
+      Fabricate(:topic_allowed_group, topic: pm_topic2, group: group)
+      Fabricate(:notification, user: user, topic: pm_topic1)
+      Fabricate(:notification, user: admin, topic: pm_topic2)
+
+      group.bulk_remove([user.id, admin.id])
+
+      expect_job_enqueued(job: :delete_inaccessible_notifications, args: { topic_id: pm_topic1.id })
+      expect_job_enqueued(job: :delete_inaccessible_notifications, args: { topic_id: pm_topic2.id })
     end
 
     it "clears primary_group_id" do

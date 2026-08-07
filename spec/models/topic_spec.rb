@@ -3614,6 +3614,47 @@ RSpec.describe Topic do
         }.by(1)
       end
     end
+
+    it "removes notifications when the removed user loses access" do
+      notification =
+        Fabricate(
+          :notification,
+          user: user1,
+          topic: private_topic,
+          notification_type: Notification.types[:private_message],
+          read: false,
+        )
+
+      user1.expects(:publish_notifications_state).once
+
+      expect { private_topic.remove_allowed_user(admin, user1) }.to change {
+        Notification.exists?(notification.id)
+      }.from(true).to(false)
+
+      expect(Guardian.new(user1).can_see?(private_topic)).to eq(false)
+    end
+
+    it "preserves notifications when the removed user still has group access" do
+      group.add(user1)
+      Fabricate(:topic_allowed_group, topic: private_topic, group: group)
+
+      notification =
+        Fabricate(
+          :notification,
+          user: user1,
+          topic: private_topic,
+          notification_type: Notification.types[:private_message],
+          read: false,
+        )
+
+      user1.expects(:publish_notifications_state).never
+
+      expect { private_topic.remove_allowed_user(admin, user1) }.not_to change {
+        Notification.exists?(notification.id)
+      }
+
+      expect(Guardian.new(user1).can_see?(private_topic)).to eq(true)
+    end
   end
 
   describe "#remove_allowed_group" do
@@ -3645,6 +3686,23 @@ RSpec.describe Topic do
       small_action = private_topic.posts.where(action_code: "removed_group").last
       expect(small_action).to be_present
       expect(small_action.user).to eq(moderator)
+    end
+
+    it "enqueues an inaccessible-notifications cleanup for the topic" do
+      private_topic =
+        Fabricate(
+          :private_message_topic,
+          user: admin,
+          topic_allowed_users: [Fabricate.build(:topic_allowed_user, user: admin)],
+          topic_allowed_groups: [Fabricate.build(:topic_allowed_group, group: pm_group)],
+        )
+
+      expect_enqueued_with(
+        job: :delete_inaccessible_notifications,
+        args: {
+          topic_id: private_topic.id,
+        },
+      ) { private_topic.remove_allowed_group(admin, pm_group.name) }
     end
   end
 

@@ -5,13 +5,18 @@ module Jobs
     def execute(args)
       raise Discourse::InvalidParameters.new(:topic_id) if args[:topic_id].blank?
 
-      Notification
-        .where(topic_id: args[:topic_id])
-        .find_each do |notification|
-          next unless notification.user && notification.topic
+      topic = Topic.find_by(id: args[:topic_id])
+      return if topic.blank?
 
-          notification.destroy if !Guardian.new(notification.user).can_see?(notification.topic)
-        end
+      user_ids = args[:user_ids].presence
+      user_ids ||= Notification.where(topic_id: topic.id).distinct.pluck(:user_id)
+      return if user_ids.blank?
+
+      inaccessible_users = User.where(id: user_ids).reject { |user| user.guardian.can_see?(topic) }
+      return if inaccessible_users.empty?
+
+      Notification.where(user_id: inaccessible_users.map(&:id), topic_id: topic.id).delete_all
+      inaccessible_users.each(&:publish_notifications_state)
     end
   end
 end
