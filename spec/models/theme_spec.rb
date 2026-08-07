@@ -663,6 +663,24 @@ RSpec.describe Theme do
       expect(translations.map(&:value)).to contain_exactly("Description of my theme")
     end
 
+    it "exposes the theme_metadata.description translation as the description" do
+      expect(theme.description).to be_nil
+
+      ThemeField.create!(
+        theme_id: theme.id,
+        name: "en",
+        type_id: ThemeField.types[:yaml],
+        target_id: Theme.targets[:translations],
+        value: <<~YAML,
+        en:
+          theme_metadata:
+            description: "Description of my theme"
+      YAML
+      )
+
+      expect(Theme.find(theme.id).description).to eq("Description of my theme")
+    end
+
     it "can create a hash of overridden values" do
       en_translation =
         ThemeField.create!(
