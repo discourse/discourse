@@ -644,8 +644,7 @@ RSpec.describe AdminDashboardSiteTraffic do
         SiteSetting.use_legacy_pageviews = true
 
         result = build_traffic(start_date: nil, end_date: nil)
-        expect(result).not_to have_key(:top_countries)
-        expect(result).not_to have_key(:top_referrers)
+        expect(result.keys).to contain_exactly(:kpis, :pageview_series)
       end
 
       it "returns top_countries and top_referrers with rows and no error when matching events exist" do
