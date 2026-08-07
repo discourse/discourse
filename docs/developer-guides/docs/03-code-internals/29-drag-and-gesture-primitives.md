@@ -124,9 +124,22 @@ tracks the pointer continuously, you want `dPointerDrag`.
 # Accessibility
 
 A drag is not reachable by keyboard, so any surface whose only path to an outcome
-is a drag has no keyboard path at all. Every consumer in core pairs its drag with
-something else — arrow buttons at the reorder surfaces, the keyboard path built
-into `dResizeEdge` — and a new one should too.
+is a drag has no keyboard path at all. A new consumer must pair its drag with
+something else — arrow buttons at a reorder surface, the keyboard path built into
+`dResizeEdge` at a resize.
+
+Every reorder surface in core does: the dashboard configure menu, the
+manage-reports modal, and the sidebar section-link form all render
+`DReorderButtons` beside the handle. The arrows render on every viewport, because
+the drag beside them is an alternative to them rather than a replacement — a
+touch screen has no drag path at all here.
+
+Arrows and a drag do not have to reach the same destinations. The sidebar's
+arrows move a link within its own list, while its drag also moves links between
+the primary and "More menu" lists: the two lists render under separate headings,
+so arrowing across that boundary would take the link out of the list being
+arrowed through. Match the arrows to the list the user is stepping through, and
+leave the wider rearrangement to the pointer.
 
 No gesture moves focus. A handle usually sits against the thing it acts on, and
 taking focus on press would pull the caret out of whatever the user was working
