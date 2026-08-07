@@ -28,10 +28,13 @@ const pointerOwners = new Map();
 const bodyClassHolders = new Map();
 
 /**
- * Marks `document.body` for the duration of a gesture, for the rules that cannot
- * be expressed against the dragged element: a cursor that has to hold while the
- * pointer travels anywhere on the page, or a rule targeting something that is not
- * a descendant of the element being dragged.
+ * Marks `document.body` for the duration of a gesture.
+ *
+ * The case this exists for is the cursor. Not every engine keeps the cursor of the
+ * element a drag began on: some suppress cursor updates while a button is held,
+ * others re-resolve it against whatever the pointer is over, so the cursor changes
+ * mid-gesture as it leaves the handle. A page-level rule is the only way to state
+ * an intent that outlives the element's own bounds.
  *
  * @param {string} className - The class to hold.
  */
@@ -402,11 +405,16 @@ export function registerPointerDrag(element, getArgsRef) {
  *  - `draggingClass` — class toggled on the element for the gesture's duration.
  *    A single token: a value with whitespace in it is rejected by the DOM, which
  *    costs the drag its styling but leaves the gesture working.
- *  - `bodyClass` — class held on `document.body` for the gesture's duration, for
- *    the rules an element-level class cannot reach: a cursor that must hold while
- *    the pointer travels anywhere on the page, or a rule targeting something that
- *    is not a descendant of the element being dragged. Held by count, so two
- *    gestures asking for the same class both keep it until the last one ends.
+ *  - `bodyClass` — class held on `document.body` for the gesture's duration, for a
+ *    cursor that has to survive the pointer leaving the handle. Whether that
+ *    happens by itself is engine-dependent, so the rule cannot be left to the
+ *    element. It reaches only what inherits `cursor`, so anything declaring its own
+ *    still wins over it, and a gesture that must hold the cursor everywhere wants
+ *    an overlay instead. Held by count, so two gestures asking for the same class
+ *    both keep it until the last one ends.
+ *    Reach for a class on a shared ancestor, not this, when the target is simply
+ *    outside the dragged element's subtree — a sibling is still reachable from the
+ *    parent the two have in common.
  *  - `threshold` — pixels of travel, measured as a straight line from the press
  *    origin, that `onDrag` waits for before it starts firing. Reaching the
  *    distance is enough; it does not have to be exceeded. Suppresses the jitter
