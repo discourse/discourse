@@ -24,22 +24,20 @@
     }
 
     &__toggle-drawer-button {
-      &::after {
-        @container (inline-size) {
-          content: "";
-          position: absolute;
-          height: 100%;
-          left: -1rem;
-          width: calc(100cqw - 2.3em + 1rem);
-        }
+      // only shown for keyboard nav
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      overflow: hidden;
+      clip-path: inset(50%);
 
-        &:hover {
-          color: var(--tertiary-hover);
-
-          .d-icon {
-            color: inherit;
-          }
-        }
+      &:focus-visible {
+        position: static;
+        width: auto;
+        height: auto;
+        overflow: visible;
+        clip-path: none;
       }
     }
   }

@@ -472,6 +472,7 @@ en:
         empty_state:
           title: "This is the start of %{channelName}"
           joined_title: "You're the first in %{channelName}"
+          direct_message_title: "Start the conversation with %{name}"
           guest_tip: "You're reading along as a guest. The conversation starts the moment members post — join in to be one of them."
           joined_tip: "Be the first to post and start the conversation."
           members_here:

@@ -676,6 +676,8 @@ zh_TW:
         email: "電子信箱"
         name: "名稱"
         fields: "欄位"
+        silence_reason: "禁言原因"
+        penalty_forever: "永久"
         reject_reason: "原因"
         scrubbed_reason: "原因"
         scrub_record:
@@ -1348,7 +1350,9 @@ zh_TW:
       external_links_in_new_tab: "在新分頁中開啟所有外部連結"
       enable_quoting: "允許引用劃記文字"
       enable_smart_lists: "在編輯器中編寫時啟用智慧型列表"
-      enable_defer: " 將主題標記為未讀"
+      automatically_translate: "自動翻譯以其他語言撰寫的主題和貼文"
+      content_languages:
+        understood: "我能理解的語言"
       experimental_sidebar:
         enable: "啟用側選單"
         options: "選項"
@@ -1949,7 +1953,8 @@ zh_TW:
           email_placeholder: "name@example.com"
           invite_by_email: "電子信箱"
           restrict_domain: "僅限網域"
-          more_options: "更多選項"
+          create_and_send: "傳送"
+          create_and_copy: "複製連結"
           update: "更新"
           summary:
             role_member: "成員"
@@ -1960,7 +1965,7 @@ zh_TW:
             expires: "過期時間"
             topic: "話題"
             groups: "群組"
-            edit: "編輯邀請"
+            edit: "編輯"
         bulk_invite:
           none: "此頁面上沒有邀請函顯示。"
           text: "批量邀請"
@@ -3699,6 +3704,11 @@ zh_TW:
       share:
         title: "分享貼文#%{post_number}"
         instructions: "分享此貼文的連結:"
+      click_to_show_original: "點擊以顯示原文"
+      tap_to_show_original: "輕觸此處以顯示原文"
+      click_to_show_translation: "點擊以顯示翻譯"
+      tap_to_show_translation: "輕觸此處以顯示翻譯"
+      ai_translation_disclaimer: "由 AI 產生的翻譯可能不準確。"
     category:
       none: "( 無分類 )"
       all: "所有分類"
@@ -4426,9 +4436,9 @@ zh_TW:
           always_public: "本節中的內容始終是公開"
           more_menu: "更多選單"
           localizations:
-            title: "翻譯"
             locale: "語言"
             title_label: "章節標題"
+            remove_language: "移除"
           links:
             add: "新增另一個連結"
             delete: "刪除連結"

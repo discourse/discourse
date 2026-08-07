@@ -65,7 +65,9 @@ module DiscourseWorkflows
         ports: klass.ports,
         operations: klass.operations,
         output_contracts: serializable_output_contracts(klass),
+        output_schema_resolver: klass.output_schema_resolver,
         palette_visible: klass.palette_visible?,
+        previewable: klass.previewable?,
         available: klass.available?,
         unavailable_reason_key: (klass.unavailable_reason_key unless klass.available?),
         metadata: metadata.presence,
@@ -79,7 +81,8 @@ module DiscourseWorkflows
     def serializable_output_contracts(klass)
       contracts = klass.output_contracts
       if contracts.all? { |contract|
-           contract[:schema].empty? && contract[:mode] == :replace && contract[:variants].empty?
+           contract[:schema].empty? && contract[:mode] == :replace && contract[:variants].empty? &&
+             contract[:extensions].empty?
          }
         return
       end
@@ -93,6 +96,10 @@ module DiscourseWorkflows
           contract
             .fetch(:variants)
             .map { |variant| variant.slice(:schema, :mode, :display_options) },
+        extensions:
+          contract
+            .fetch(:extensions)
+            .map { |extension| extension.slice(:schema, :display_options) },
       )
     end
 

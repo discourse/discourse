@@ -704,6 +704,7 @@ lt:
         email: "Epaštas"
         name: "Vardas"
         fields: "Laukai"
+        penalty_forever: "Am-inai"
         reject_reason: "Priežastis"
         scrubbed_by: "Įrašas išvalytas pagal"
         scrubbed_reason: "Priežastis"
@@ -1415,7 +1416,6 @@ lt:
       external_links_in_new_tab: "Atidaryti visas pridėtas nuorodas naujame lange"
       enable_quoting: "Įjungti citatų atsakymus pabrėžtam tekstui"
       enable_smart_lists: "Įgalinti išmaniuosius sąrašus rašant kompozitoriuje"
-      enable_defer: "Įgalinti temų žymėjimą kaip neskaitytų"
       experimental_sidebar:
         enable: "Įjungti šoninę juostą"
         options: "Nustatymai"
@@ -1927,7 +1927,8 @@ lt:
           email_placeholder: "vardas@example.com"
           invite_by_email: "Epaštas"
           domain_placeholder: "example.com"
-          more_options: "Daugiau parinkčių"
+          create_and_send: "Siųsti"
+          create_and_copy: "Nukopijuoti nuorodą"
           update: "Atnaujinti"
           summary:
             role_member: "Narys"
@@ -1938,7 +1939,7 @@ lt:
             expires: "Galiojimo laikas baigiasi"
             topic: "Tema"
             groups: "Grupės"
-            edit: "Redaguoti kvietimą"
+            edit: "Redaguoti"
         bulk_invite:
           text: "Masinis kvietimas"
           error: "Atsiprašome, failas privalo buti CSV formato."
@@ -4091,8 +4092,8 @@ lt:
           save: "Išsaugoti"
           delete: "Pašalinti"
           localizations:
-            title: "Vertimai"
             locale: "Kalba"
+            remove_language: "Pašalinti"
           links:
             reset: "Atstatyti numatytuosius nustatymus"
             icon:

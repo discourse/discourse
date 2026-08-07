@@ -735,6 +735,8 @@ fi:
         email: "Sähköposti"
         name: "Nimi"
         fields: "Kentät"
+        silence_reason: "Hiljennyksen syy"
+        penalty_forever: "Ikuisesti"
         reject_reason: "Syy"
         scrubbed_by: "Tietueen puhdisti"
         scrubbed_reason: "Syy"
@@ -1480,7 +1482,6 @@ fi:
       external_links_in_new_tab: "Avaa sivuston ulkopuoliset linkit uudessa välilehdessä"
       enable_quoting: "Ota käyttöön viestin lainaaminen tekstiä valitsemalla"
       enable_smart_lists: "Ota älykkäät luettelot käyttöön kirjoittaessasi kirjoitustilassa"
-      enable_defer: "Ota ketjujen merkitseminen lukemattomiksi käyttöön"
       enable_markdown_monospace_font: "Käytä tasalevyistä fonttia kirjoitustilan markdown-tilassa"
       experimental_sidebar:
         enable: "Ota sivupalkki käyttöön"
@@ -2122,7 +2123,8 @@ fi:
           invite_by_email: "Sähköpostiosoite"
           restrict_domain: "Rajoita verkkotunnukseen"
           domain_placeholder: "example.com"
-          more_options: "Lisää vaihtoehtoja"
+          create_and_send: "Lähetä"
+          create_and_copy: "Kopioi linkki"
           update: "Päivitä"
           summary:
             role_member: "Konkari"
@@ -2134,7 +2136,7 @@ fi:
             expires: "Vanhenee"
             topic: "Ketju"
             groups: "Ryhmät"
-            edit: "Muokkaa kutsua"
+            edit: "Muokkaa"
         bulk_invite:
           none: "Ei näytettäviä kutsuja tällä sivulla."
           text: "Joukkokutsu"
@@ -2831,7 +2833,6 @@ fi:
       italic_label: "I"
       italic_title: "Kursiivi"
       italic_text: "kursivoitu teksti"
-      heading_title: "Otsikot"
       heading_level_n: "Otsikko %{levelNumber}"
       heading_level_n_title: "Otsikko %{levelNumber}"
       heading_level_paragraph: "Kappale"
@@ -4871,9 +4872,9 @@ fi:
           always_public: "Tämän osion sisältö on aina julkista"
           more_menu: "Lisää-valikko"
           localizations:
-            title: "Käännökset"
             locale: "Kieli"
             title_label: "Osion otsikko"
+            remove_language: "Poista"
           links:
             add: "Lisää toinen linkki"
             delete: "Poista linkki"

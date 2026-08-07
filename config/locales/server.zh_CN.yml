@@ -2433,7 +2433,6 @@ zh_CN:
     default_other_external_links_in_new_tab: "默认在新标签页中打开外部链接。"
     default_other_enable_quoting: "默认启用高亮显示文本的引用回复。"
     default_other_enable_smart_lists: "默认情况下，在编辑器中输入时启用智能列表。"
-    default_other_enable_defer: "默认启用延迟话题功能。"
     default_other_enable_markdown_monospace_font: "默认在输入框的 Markdown 模式下使用等宽字体。"
     default_other_dynamic_favicon: "在浏览器图标上默认显示新的/更新的话题计数。"
     default_other_skip_new_user_tips: "跳过新用户入门提示和徽章。"
@@ -5168,6 +5167,7 @@ zh_CN:
     post_restored_by_author: "帖子被作者恢复。"
     post_deleted_by_author_after_penalty: >-
       该帖子在用户受到处罚后被作者删除。在不恢复帖子的情况下审核处罚。
+    target_user_deleted: "由于用户帐户已被删除，因此自动忽略。"
     priorities:
       low: "低"
       medium: "中"
@@ -5310,11 +5310,10 @@ zh_CN:
         title: "否"
         delete:
           title: "删除用户"
-          description: "删除用户，而不封禁"
           complete: "用户已被删除。"
         block:
           title: "删除并阻止用户"
-          description: "该用户将被删除，我们将屏蔽他们的 IP 和电子邮件地址。"
+          description: "删除用户并屏蔽其电子邮件地址和 IP 地址"
           complete: "用户已被删除并被屏蔽。"
       confirm_spam:
         title: "是"
@@ -5374,12 +5373,10 @@ zh_CN:
         bundle_title: "您想如何处理该用户？"
       silence_user:
         title: "将用户禁言"
-        description: "禁止该用户发帖"
         complete: "用户已被禁言"
         reason: "用户通过审核队列被禁言"
       suspend_user:
         title: "封禁用户"
-        description: "封禁用户帐户"
         complete: "用户已被封禁"
         reason: "用户通过审核队列被封禁"
       delete_user:

@@ -964,6 +964,8 @@ ru:
         email: "Эл. почта"
         name: "Имя"
         fields: "Поля"
+        silence_reason: "Причина заморозки"
+        penalty_forever: "Навсегда"
         reject_reason: "Причина"
         scrubbed_by: "Запись удалена пользователем"
         scrubbed_reason: "Причина"
@@ -1802,7 +1804,6 @@ ru:
       external_links_in_new_tab: "Открывать все внешние ссылки в новой вкладке"
       enable_quoting: "Разрешить отвечать с цитированием выделенного текста"
       enable_smart_lists: "Включать умные списки при написании в редакторе"
-      enable_defer: "Включить функцию отметки тем как непрочитанных"
       enable_markdown_monospace_font: "Использовать моноширинный шрифт в режиме Markdown редактора"
       experimental_sidebar:
         enable: "Включить боковую панель"
@@ -2513,7 +2514,8 @@ ru:
           invite_by_email: "Эл. почта"
           restrict_domain: "Ограничить по домену"
           domain_placeholder: "example.com"
-          more_options: "Другие варианты"
+          create_and_send: "Отправить"
+          create_and_copy: "Копировать ссылку"
           update: "Обновить"
           summary:
             role_member: "Участник"
@@ -2526,7 +2528,7 @@ ru:
             expires: "Срок действия"
             topic: "Тема"
             groups: "Группы"
-            edit: "Изменение приглашение"
+            edit: "Изменить"
         bulk_invite:
           none: "Нет приглашений для отображения на этой странице."
           text: "Массовое приглашение"
@@ -3344,7 +3346,6 @@ ru:
       italic_label: "К"
       italic_title: "Курсив"
       italic_text: "текст, выделенный курсивом"
-      heading_title: "Заголовки"
       heading_level_n: "Заголовок %{levelNumber}"
       heading_level_n_title: "Заголовок %{levelNumber}"
       heading_level_paragraph: "Абзац"
@@ -5811,9 +5812,9 @@ ru:
           always_public: "Контент в этом разделе всегда публичный"
           more_menu: "Меню «Еще»"
           localizations:
-            title: "Переводы"
             locale: "Язык"
             title_label: "Заголовок раздела"
+            remove_language: "Отозвать"
           links:
             add: "Добавить еще ссылку"
             delete: "Удалить ссылку"

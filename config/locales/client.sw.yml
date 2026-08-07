@@ -320,6 +320,7 @@ sw:
         username: "Jina la mtumiaji"
         email: "Barua Pepe"
         name: "Jina"
+        penalty_forever: "Milele"
         reject_reason: "Sababu"
         scrubbed_reason: "Sababu"
         scrub_record:
@@ -994,6 +995,7 @@ sw:
           staff_role_moderator: "Msimamizi"
           email_placeholder: "jina@mfano.com"
           invite_by_email: "Barua Pepe"
+          create_and_send: "Tuma"
           summary:
             role_member: "Mwanachama"
             role_admin: "Kiongozi"
@@ -1001,6 +1003,7 @@ sw:
             method_email: "Barua Pepe"
             topic: "Mada"
             groups: "Makundi"
+            edit: "Hariri"
         bulk_invite:
           error: "Samahani, faili hili inabidi liwe na umbizo faili la CSV"
       password:
@@ -2350,6 +2353,8 @@ sw:
         custom:
           save: "Hifadhi"
           delete: "Futa"
+          localizations:
+            remove_language: "Ondoa"
           links:
             icon:
               label: "ikoni"

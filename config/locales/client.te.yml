@@ -531,6 +531,7 @@ te:
         email: "ఈమెయిల్"
         name: "పేరు"
         fields: "ఫీల్డ్స్"
+        penalty_forever: "ఎప్పటికీ"
         reject_reason: "కారణం"
         scrubbed_reason: "కారణం"
         scrub_record:
@@ -1717,6 +1718,7 @@ te:
           invite_by_email: "ఈమెయిల్"
           restrict_domain: "డొమైన్‌కు పరిమితం చేయండి"
           domain_placeholder: "example.com"
+          create_and_send: "పంపండి"
           update: "నవీకరించండి"
           summary:
             role_member: "సభ్యుడు"
@@ -1727,6 +1729,7 @@ te:
             expires: "గడువు ముగుస్తుంది"
             topic: "విషయం"
             groups: "సమూహాలు"
+            edit: "సవరించండి"
         bulk_invite:
           none: "ఈ పేజీలో ప్రదర్శించడానికి ఆహ్వానాలు లేవు."
           text: "చాలా మొత్తం ఆహ్వానాలు"
@@ -4123,9 +4126,9 @@ te:
           always_public: "ఈ విభాగంలోని కంటెంట్ ఎల్లప్పుడూ బహిరంగంగా ఉంటుంది"
           more_menu: "మరిన్ని మెను"
           localizations:
-            title: "అనువాదాలు"
             locale: "భాష"
             title_label: "విభాగం శీర్షిక"
+            remove_language: "తొలగించు"
           links:
             add: "మరొక లింక్‌ని జోడించండి"
             delete: "లింక్‌ని తొలగించండి"

@@ -7,4 +7,12 @@
 fr:
   js:
     discourse_captcha:
+      missing_token: "Veuillez résoudre le défi captcha."
+      verification_failed: "La vérification du captcha a échoué. Veuillez réessayer."
       placeholder: espace réservé
+      contact_system_administrator: "Un problème est survenu avec votre fournisseur de captcha. Si le problème persiste, veuillez contacter un administrateur système."
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_captcha: "Captcha Discourse"

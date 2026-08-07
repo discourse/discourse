@@ -460,10 +460,12 @@ TEXT
       DiscoursePluginRegistry.serialized_current_user_fields << "has_car"
       user = Fabricate(:user)
       user.custom_fields["has_car"] = "true"
+      user.custom_fields["has_bike"] = "true"
       user.save!
 
       payload = JSON.parse(CurrentUserSerializer.new(user, scope: Guardian.new(user)).to_json)
       expect(payload["current_user"]["custom_fields"]["has_car"]).to eq("true")
+      expect(payload["current_user"]["custom_fields"]).not_to have_key("has_bike")
 
       payload = JSON.parse(UserSerializer.new(user, scope: Guardian.new(user)).to_json)
       expect(payload["user"]["custom_fields"]["has_car"]).to eq("true")

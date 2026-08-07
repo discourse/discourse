@@ -735,6 +735,8 @@ it:
         email: "Email"
         name: "Nome"
         fields: "Campi"
+        silence_reason: "Motivo del silenzio"
+        penalty_forever: "Per sempre"
         reject_reason: "Motivo"
         scrubbed_by: "Record cancellato da"
         scrubbed_reason: "Motivo"
@@ -1480,7 +1482,6 @@ it:
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
       enable_quoting: "Abilita \"rispondi citando\" il testo evidenziato"
       enable_smart_lists: "Abilita gli elenchi smart quando scrivi nel compositore"
-      enable_defer: "Abilita opzione di contrassegnare gli argomenti come non letti"
       enable_markdown_monospace_font: "Utilizza il font monospace nella modalità Markdown del compositore"
       experimental_sidebar:
         enable: "Abilita barra laterale"
@@ -2122,7 +2123,8 @@ it:
           invite_by_email: "E-mail"
           restrict_domain: "Limita al dominio"
           domain_placeholder: "example.com"
-          more_options: "Altre opzioni"
+          create_and_send: "Invia"
+          create_and_copy: "Copia link"
           update: "Aggiorna"
           summary:
             role_member: "Membro"
@@ -2134,7 +2136,7 @@ it:
             expires: "Scadenza"
             topic: "Argomento"
             groups: "Gruppi"
-            edit: "Modifica invito"
+            edit: "Modifica"
         bulk_invite:
           none: "Nessun invito da visualizzare in questa pagina."
           text: "Inviti di gruppo"
@@ -2828,7 +2830,6 @@ it:
       italic_label: "I"
       italic_title: "Corsivo"
       italic_text: "testo in corsivo"
-      heading_title: "Titoli"
       heading_level_n: "Titolo %{levelNumber}"
       heading_level_n_title: "Titolo %{levelNumber}"
       heading_level_paragraph: "Paragrafo"
@@ -4868,9 +4869,9 @@ it:
           always_public: "Il contenuto di questa sezione è sempre pubblico"
           more_menu: "Menu Altro"
           localizations:
-            title: "Traduzioni"
             locale: "Lingua"
             title_label: "Titolo della sezione"
+            remove_language: "Rimuovi"
           links:
             add: "Aggiungi un altro link"
             delete: "Elimina link"

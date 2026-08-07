@@ -168,6 +168,7 @@ Migrations::Tooling::Schema.ignored do
          :backup_metadata,
          :badge_types,
          :bookmarks,
+         :browser_pageview_crawler_daily_rollups,
          :browser_pageview_event_scores,
          :browser_pageview_events,
          :browser_pageview_session_engagement_daily_rollups,

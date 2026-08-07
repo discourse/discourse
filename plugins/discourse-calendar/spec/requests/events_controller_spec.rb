@@ -469,7 +469,7 @@ module DiscoursePostEvent
     end
 
     context "with an existing post" do
-      let(:user) { Fabricate(:user, admin: true) }
+      let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
       let(:topic) { Fabricate(:topic, user: user, category: Fabricate(:category)) }
       let(:post1) { Fabricate(:post, user: user, topic: topic) }
       let(:invitee1) { Fabricate(:user) }
@@ -621,11 +621,14 @@ module DiscoursePostEvent
           it "destroys a event" do
             expect(event_1.persisted?).to be(true)
 
+            channel = "/discourse-post-event/#{event_1.post.topic_id}"
             messages =
-              MessageBus.track_publish { delete "/discourse-post-event/events/#{event_1.id}.json" }
+              MessageBus
+                .track_publish { delete "/discourse-post-event/events/#{event_1.id}.json" }
+                .select { |message| message.channel == channel }
             expect(messages.count).to eq(1)
             message = messages.first
-            expect(message.channel).to eq("/discourse-post-event/#{event_1.post.topic_id}")
+            expect(message.channel).to eq(channel)
             expect(message.data[:id]).to eq(event_1.id)
             expect(response.status).to eq(200)
             expect(Event).to_not exist(id: event_1.id)
@@ -680,7 +683,7 @@ module DiscoursePostEvent
           fab!(:private_event_post) do
             Fabricate(
               :post,
-              user: Fabricate(:user, admin: true),
+              user: Fabricate(:user, admin: true, refresh_auto_groups: true),
               topic: Fabricate(:topic, category: Fabricate(:category)),
             )
           end
@@ -899,7 +902,7 @@ module DiscoursePostEvent
       SiteSetting.discourse_post_event_enabled = true
     end
 
-    let(:user) { Fabricate(:user, admin: true) }
+    let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     let(:topic) { Fabricate(:topic, user: user) }
     let(:post1) { Fabricate(:post, user: user, topic: topic) }
     let!(:event) { Fabricate(:event, post: post1, max_attendees: 1) }
@@ -941,7 +944,7 @@ module DiscoursePostEvent
       SiteSetting.discourse_post_event_enabled = true
     end
 
-    fab!(:admin_user) { Fabricate(:user, admin: true) }
+    fab!(:admin_user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     fab!(:category)
     fab!(:topic) { Fabricate(:topic, user: admin_user, category: category) }
     fab!(:post_1) { Fabricate(:post, user: admin_user, topic: topic) }
@@ -1014,7 +1017,7 @@ module DiscoursePostEvent
       SiteSetting.discourse_post_event_enabled = true
     end
 
-    fab!(:admin_user) { Fabricate(:user, admin: true) }
+    fab!(:admin_user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     fab!(:topic) { Fabricate(:topic, user: admin_user) }
     fab!(:post_1) { Fabricate(:post, user: admin_user, topic: topic) }
     fab!(:event) { Fabricate(:event, post: post_1) }

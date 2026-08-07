@@ -27,7 +27,6 @@ class UserUpdater
     external_links_in_new_tab
     enable_quoting
     enable_smart_lists
-    enable_defer
     enable_markdown_monospace_font
     color_scheme_id
     dark_scheme_id
@@ -191,13 +190,6 @@ class UserUpdater
         attributes[:text_size]
     end
 
-    if attributes.key?(:locale) || attributes.key?(:understood_languages)
-      understood_languages =
-        attributes.fetch(:understood_languages) { user.user_option.understood_languages }
-      interface_locale = user.effective_locale
-      attributes[:understood_languages] = [interface_locale, *understood_languages].compact.uniq
-    end
-
     OPTION_ATTR.each do |attribute|
       if attributes.key?(attribute)
         save_options = true
@@ -253,10 +245,7 @@ class UserUpdater
         SidebarSectionLinksUpdater.update_tag_section_links(
           user,
           tag_ids:
-            DiscourseTagging
-              .filter_visible(Tag, @user_guardian)
-              .where(name: attributes[:sidebar_tag_names])
-              .pluck(:id),
+            Tag.browsable(@user_guardian).where(name: attributes[:sidebar_tag_names]).pluck(:id),
         )
       end
 

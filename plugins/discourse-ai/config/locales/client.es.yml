@@ -231,6 +231,7 @@ es:
       discourse_workflows:
         ai_agent:
           agent_id: "Agente"
+          mode: "Modo"
       ai_tool_approval:
         loading: "Cargando..."
         agent: "Agente"
@@ -620,6 +621,8 @@ es:
         allowed_groups: "Grupos permitidos"
         confirm_delete: "¿Seguro que quieres eliminar este agente?"
         new: "Nuevo agente"
+        duplicate: "Duplicar"
+        copy_name: "Copiar de %{name}"
         no_agents: "Aún no has creado ningún agente"
         title: "Agentes"
         short_title: "Agentes"
@@ -910,8 +913,7 @@ es:
           anthropic-claude-opus-4-7: "El modelo antrópico más inteligente"
           anthropic-claude-sonnet-4-6: "Equilibrio óptimo entre velocidad y coste"
           anthropic-claude-haiku-4-5: "Rápido y rentable"
-          google-gemini-3-1-pro: "El modelo de Google más inteligente"
-          google-gemini-3-flash: "Rápido y rentable con razonamiento multimodal"
+          google-gemini-3-1-pro-preview: "El modelo de Google más inteligente"
           open_router-moonshotai-kimi-k2-6: "Modelo multimodal de Moonshot con capacidades de visión"
         preseeded_model_description: "Modelo de código abierto preconfigurado que utiliza %{model}"
         configured:
@@ -949,7 +951,6 @@ es:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"

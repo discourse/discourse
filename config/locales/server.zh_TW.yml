@@ -2899,7 +2899,6 @@ zh_TW:
           title: "刪除使用者"
         block:
           title: "刪除並阻擋使用者"
-          description: "這個使用者將被刪除，我們將阻擋他們的IP及郵件地址。"
       confirm_spam:
         title: "是"
       not_spam:

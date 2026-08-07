@@ -18,6 +18,17 @@ fr:
           amazon_plugin: "Amazon"
           carbonads_plugin: "Carbon Ads"
           adbutler_plugin: "AdButler"
+      dashboard:
+        reports:
+          filters:
+            ad_type:
+              label: "Type de publicité"
+            house_ad_name:
+              label: "Nom de la publicité interne"
+            ad_placement:
+              label: "Emplacement de la publicité"
+            user_type:
+              label: "Type d'utilisateur"
       adplugin:
         house_ads:
           title: "Annonces personnalisées"
@@ -26,20 +37,27 @@ fr:
           new_name: "Nouvelle annonce maison"
           save: "Enregistrer"
           delete: "Supprimer"
+          confirm_delete: "Voulez-vous vraiment supprimer cette publicité ?"
           html: "HTML"
           categories: "Catégories"
+          routes: "Routes"
           groups: "Groupes"
+          description: "Créez et gérez vos propres publicités afin de les afficher à différents emplacements sur votre site."
+          get_started: "Aucune publicité interne n'a encore été créée."
           filter_placeholder: "Sélectionnez les annonces…"
           more_settings: "Plus de paramètres"
           show_to_anons: "Afficher aux utilisateurs anonymes"
           show_to_logged_in_users: "Afficher aux utilisateurs connectés"
           category_chooser_description: "Choisissez les catégories dans lesquelles cette annonce doit être affichée ou laissez ce champ vide pour diffuser l'annonce partout. Le paramètre de site « no_ads_for_categories » a la priorité sur ce paramètre."
+          category_chooser_description_with_routes: "Choisissez les catégories dans lesquelles cette publicité doit être affichée. Laissez cette sélection et celle des routes vides pour afficher la publicité partout. Le paramètre de site `no_ads_for_categories` est prioritaire sur ce paramètre."
+          route_chooser_description: "Choisissez les pages ou routes sur lesquelles cette publicité doit être affichée. Laissez cette sélection et celle des catégories vides pour afficher la publicité partout."
           group_chooser_description: "Choisissez les groupes qui peuvent voir cette annonce ou laissez ce champ vide pour diffuser l'annonce à tous les utilisateurs connectés."
           preview: "Aperçu"
           back: "Publicités internes"
           name: "Nom"
           edit: "Modifier"
           tabs:
+            ads: "Publicités"
             settings: "Paramètres"
           topic_list_top:
             title: "Annonces de la liste des sujets"
@@ -56,3 +74,6 @@ fr:
           topic_list_between:
             title: "Entre les sujets"
             description: "Annonces à afficher entre les sujets, tous les N sujets."
+          nested_roots_between:
+            title: "Entre les racines imbriquées"
+            description: "Publicités à afficher entre les réponses racines dans l'affichage des réponses imbriquées, après chaque groupe de N réponses racines."

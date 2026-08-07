@@ -1517,7 +1517,6 @@ ca:
     default_other_notification_level_when_replying: "Nivell de notificació global per defecte quan l'usuari respon a un tema."
     default_other_external_links_in_new_tab: "Obre enllaços externs en una nova pestanya per defecte."
     default_other_enable_quoting: "Per defecte, habilita la resposta amb citació per a text destacat"
-    default_other_enable_defer: "Habilita la funció d'ajornar temes per defecte."
     default_other_dynamic_favicon: "Mostra per defecte el recompte de tema nou/actualitzat en una icona del navegador."
     default_topics_automatic_unpin: "Per defecte desafixa automàticament temes quan l'usuari arriba al capdavall."
     default_categories_watching: "Llista de categories que són vigilades per defecte."
@@ -2860,7 +2859,6 @@ ca:
           complete: "Usuari suprimit."
         block:
           title: "Suprimeix i bloca l'usuari"
-          description: "Se suprimirà l'usuari i es blocarà la seva adreça IP i adreça de correu electrònic."
       confirm_spam:
         title: "Sí"
       not_spam:

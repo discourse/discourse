@@ -29,7 +29,7 @@ import {
 } from "discourse/lib/utilities";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
-import I18n, { i18n } from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 // same as UserOption::HOMEPAGES
 const USER_HOMES = {
@@ -75,7 +75,6 @@ export default class InterfaceController extends Controller {
       "dynamic_favicon",
       "enable_quoting",
       "enable_smart_lists",
-      "enable_defer",
       "automatically_unpin_topics",
       "allow_private_messages",
       "enable_allowed_pm_users",
@@ -108,20 +107,10 @@ export default class InterfaceController extends Controller {
     });
   }
 
-  @computed("model.locale")
-  get interfaceLanguage() {
-    if (!this.siteSettings.allow_user_locale) {
-      return this.siteSettings.default_locale ?? I18n.locale;
-    }
-
-    return this.model.locale ?? this.siteSettings.default_locale ?? I18n.locale;
-  }
-
-  @computed("model.locale", "model.user_option.understood_languages.[]")
+  @computed("model.user_option.understood_languages.[]")
   get understoodLanguages() {
     return normalizeUnderstoodLanguages(
-      this.model.user_option.understood_languages,
-      this.interfaceLanguage
+      this.model.user_option.understood_languages
     );
   }
 
@@ -136,14 +125,13 @@ export default class InterfaceController extends Controller {
   @action
   setInterfaceLanguage(locale) {
     this.model.set("locale", locale);
-    this.setUnderstoodLanguages(this.model.user_option.understood_languages);
   }
 
   @action
   setUnderstoodLanguages(locales) {
     this.model.set(
       "user_option.understood_languages",
-      normalizeUnderstoodLanguages(locales, this.interfaceLanguage)
+      normalizeUnderstoodLanguages(locales)
     );
   }
 

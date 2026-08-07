@@ -29,12 +29,12 @@ RSpec.describe Acl::Target do
       expect(target_acl.group_has_permission?(22, "edit")).to eq(false)
     end
 
-    it "returns nil for a group not present in the list" do
-      expect(target_acl.group_has_permission?(123_456, "view")).to be_nil
+    it "returns false for a group not present in the list" do
+      expect(target_acl.group_has_permission?(123_456, "view")).to eq(false)
     end
 
     it "does not grant group permissions from non-group entries" do
-      expect(target_acl.group_has_permission?(99, "manage")).to be_nil
+      expect(target_acl.group_has_permission?(99, "manage")).to eq(false)
     end
   end
 
@@ -99,12 +99,12 @@ RSpec.describe Acl::Target do
       expect(target_acl.user_has_permission?(99, "manage")).to eq(false)
     end
 
-    it "returns nil for a user not present in the list" do
-      expect(target_acl.user_has_permission?(123_456, "view")).to be_nil
+    it "returns false for a user not present in the list" do
+      expect(target_acl.user_has_permission?(123_456, "view")).to eq(false)
     end
 
     it "does not grant user permissions from non-user entries" do
-      expect(target_acl.user_has_permission?(group.id, "edit")).to be_nil
+      expect(target_acl.user_has_permission?(group.id, "edit")).to eq(false)
     end
   end
 

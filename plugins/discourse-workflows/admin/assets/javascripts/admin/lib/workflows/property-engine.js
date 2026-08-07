@@ -228,6 +228,7 @@ export function propertySelectNoneKey(nodeDefinitionOrType, fieldName) {
   return translationKeyWithFallback([
     `${base}.select_${selectField}`,
     `${base}.${key}_placeholder`,
+    `${SHARED_FIELDS_BASE}.${key}_placeholder`,
   ]);
 }
 
@@ -425,32 +426,60 @@ export function credentialSlotAnchorField(slot = {}) {
   return fields.size === 1 ? [...fields][0] : null;
 }
 
-export function fieldVisible(schema = {}, configuration = {}) {
+/**
+ * "visible" | "hidden" | "indeterminate". A rule anchored to an
+ * expression-valued parameter cannot be settled in the editor, so the target
+ * stays visible rather than vanishing along with its validations.
+ */
+export function fieldDisplayState(schema = {}, configuration = {}) {
   if (fieldUi(schema).hidden) {
-    return false;
+    return "hidden";
   }
 
   const display_options = schema.display_options;
-  if (
-    display_options?.show &&
-    !matchesRules(display_options.show, configuration)
-  ) {
-    return false;
+  let indeterminate = false;
+
+  if (display_options?.show) {
+    const outcome = rulesOutcome(display_options.show, configuration);
+    if (outcome === false) {
+      return "hidden";
+    }
+    indeterminate ||= outcome === "unknown";
   }
-  if (
-    display_options?.hide &&
-    matchesRules(display_options.hide, configuration)
-  ) {
-    return false;
+  if (display_options?.hide) {
+    const outcome = rulesOutcome(display_options.hide, configuration);
+    if (outcome === true) {
+      return "hidden";
+    }
+    indeterminate ||= outcome === "unknown";
   }
 
-  return true;
+  return indeterminate ? "indeterminate" : "visible";
 }
 
-function matchesRules(rules, configuration) {
-  return Object.entries(rules).every(([fieldName, expected]) =>
-    matchesRule(expected, configuration[fieldName])
-  );
+export function fieldVisible(schema = {}, configuration = {}) {
+  return fieldDisplayState(schema, configuration) !== "hidden";
+}
+
+export function fieldDefinitelyVisible(schema = {}, configuration = {}) {
+  return fieldDisplayState(schema, configuration) === "visible";
+}
+
+function rulesOutcome(rules, configuration) {
+  let unknown = false;
+
+  for (const [fieldName, expected] of Object.entries(rules)) {
+    const value = configuration?.[fieldName];
+    if (isExpression(value)) {
+      unknown = true;
+      continue;
+    }
+    if (!matchesRule(expected, value)) {
+      return false;
+    }
+  }
+
+  return unknown ? "unknown" : true;
 }
 
 function matchesRule(expected, value) {
@@ -464,6 +493,9 @@ function matchesRule(expected, value) {
 function matchesCondition(condition, value) {
   const operator = condition?.condition;
   if (!operator) {
+    if (Array.isArray(value) && !Array.isArray(condition)) {
+      return value.includes(condition);
+    }
     return condition === value;
   }
 

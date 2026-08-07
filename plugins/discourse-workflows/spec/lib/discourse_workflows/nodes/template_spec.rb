@@ -15,6 +15,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Template::V1 do
   let(:mode) { nil }
   let(:template_parameters) { { "template" => template, "mode" => mode }.compact }
   let(:execution_items) { [{ "json" => {} }] }
+  let(:input_groups) { nil }
   let(:template_vars) { {} }
   let(:workflow_context) { nil }
   let(:execution_id) { nil }
@@ -24,6 +25,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Template::V1 do
   let(:execution_context) do
     DiscourseWorkflows::Executor::NodeExecutionContext.new(
       input_items: execution_items,
+      input_groups: input_groups,
       parameters: template_parameters,
       property_schema: described_class.property_schema,
       resolver: resolver,
@@ -194,6 +196,83 @@ RSpec.describe DiscourseWorkflows::Nodes::Template::V1 do
           DiscourseWorkflows::NodeError,
           /Invalid Template mode/,
         )
+      end
+    end
+  end
+
+  describe "multiple inputs" do
+    it "accepts several connections on its main input" do
+      expect(described_class.input_ports).to contain_exactly(
+        include(key: "main", required: false, multiple: true),
+      )
+    end
+
+    context "with several connected branches" do
+      let(:template) do
+        "{% for u in inputs[1] %}@{{ u.username }} {% endfor %}| {{ inputs[0][0].title }}"
+      end
+      let(:execution_items) { [{ "json" => { "title" => "Topics" } }] }
+      let(:input_groups) do
+        {
+          "input_1" => [{ "json" => { "title" => "Topics" } }],
+          "input_2" => [
+            { "json" => { "username" => "ann" } },
+            { "json" => { "username" => "bob" } },
+          ],
+        }
+      end
+
+      it "exposes each connected branch under inputs" do
+        expect(template_result.first["json"]).to eq("template" => "@ann @bob | Topics")
+      end
+    end
+
+    context "with a template reading items" do
+      let(:template) { "{{ items[0].title }}/{{ items_count }}" }
+      let(:execution_items) { [{ "json" => { "title" => "Topics" } }] }
+      let(:input_groups) do
+        {
+          "input_1" => [{ "json" => { "title" => "Topics" } }],
+          "input_2" => [{ "json" => { "username" => "ann" } }],
+        }
+      end
+
+      it "keeps items pointing at the first input" do
+        expect(template_result.first["json"]).to eq("template" => "Topics/1")
+      end
+    end
+
+    context "with a single connected input" do
+      let(:template) { "{{ inputs[0][0].name }}" }
+      let(:execution_items) { [{ "json" => { "name" => "Alice" } }] }
+
+      it "exposes it as inputs[0]" do
+        expect(template_result.first["json"]).to eq("template" => "Alice")
+      end
+    end
+  end
+
+  describe "resource limits" do
+    context "with a runaway loop without a ceiling" do
+      let(:template) { "{% for i in (1..1000000) %}x{% endfor %}" }
+
+      it "raises a node error instead of rendering it" do
+        expect { template_result }.to raise_error(DiscourseWorkflows::NodeError, /Invalid template/)
+      end
+    end
+
+    context "with a report-sized template" do
+      let(:template) do
+        "{% for t in items %}{{ t.title }}{% for p in t.posts %} {{ p.n }}{% endfor %}\n{% endfor %}"
+      end
+      let(:execution_items) do
+        (1..20).map do |index|
+          { "json" => { "title" => "Topic #{index}", "posts" => (1..20).map { |n| { "n" => n } } } }
+        end
+      end
+
+      it "renders well within the limits" do
+        expect(template_result.first["json"]["template"].lines.length).to eq(20)
       end
     end
   end

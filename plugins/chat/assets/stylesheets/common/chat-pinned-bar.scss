@@ -22,24 +22,33 @@
   }
 
   &__main {
+    position: relative;
     flex: 1 1 auto;
     display: flex;
     align-items: center;
     gap: var(--space-2);
     min-width: 0;
     padding: var(--space-1) var(--space-2);
-    background: transparent;
-    border: 0;
-    border-radius: 4px;
     text-align: start;
-    cursor: pointer;
 
-    .no-touch &:hover {
+    .no-touch &:hover .chat-pinned-bar__jump {
       background: var(--d-hover);
     }
   }
 
+  &__jump {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
   &__indicator {
+    position: relative;
+    pointer-events: none;
     align-self: center;
     flex-shrink: 0;
     width: 3px;
@@ -105,6 +114,9 @@
   }
 
   &__content {
+    // clicks still fall through to the overlay, except on links
+    position: relative;
+    pointer-events: none;
     display: flex;
     flex-direction: column;
     min-width: 0;
@@ -129,6 +141,11 @@
     @include ellipsis;
     color: var(--primary);
     font-size: var(--font-down-1);
+
+    // only links opt back into clicks; the rest of the bar jumps to the pin
+    a {
+      pointer-events: auto;
+    }
   }
 
   &__see-all,

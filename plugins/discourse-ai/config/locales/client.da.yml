@@ -42,6 +42,9 @@ da:
             canned_reply:
               label: "Svar"
     discourse_ai:
+      discourse_workflows:
+        ai_agent:
+          mode: "Tilstand"
       ai_tool_approval:
         loading: "Indlæser…"
         tool: "Handling"
@@ -138,6 +141,7 @@ da:
         mcp_tools_modal:
           clear_all: "Ryd alle"
         allowed_groups: "Tilladte grupper"
+        duplicate: "Dupliker"
         delete: "Slet"
         thinking_effort_options:
           none: "Ingen"
@@ -216,7 +220,6 @@ da:
           title: "Kør test"
           success: "Succes!"
         providers:
-          google: "Google"
           fake: "Tilpasset"
         provider_fields:
           region: "Område"

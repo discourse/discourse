@@ -21,6 +21,14 @@ describe "accepted_solutions report" do # rubocop:disable RSpec/DescribeClass
     expect(build.total).to eq(2)
   end
 
+  it "registers the category_ids filter even when no filter is given" do
+    report = build
+
+    filter = report.available_filters["category_ids"]
+    expect(filter).to be_present
+    expect(filter[:type]).to eq("category_list")
+  end
+
   it "filters by category when the category_ids filter is provided" do
     target_category = Fabricate(:category)
     other_category = Fabricate(:category)
@@ -56,6 +64,17 @@ describe "accepted_solutions report" do # rubocop:disable RSpec/DescribeClass
     report = build(filters: { category_ids: "#{first_category.id},#{second_category.id}" })
 
     expect(report.total).to eq(2)
+  end
+
+  it "preserves the requested category order in the filter default" do
+    first_category = Fabricate(:category)
+    second_category = Fabricate(:category)
+
+    report = build(filters: { category_ids: [second_category.id, first_category.id] })
+
+    expect(report.available_filters["category_ids"][:default]).to eq(
+      [second_category.id, first_category.id],
+    )
   end
 
   it "strips category ids that don't correspond to an existing category" do

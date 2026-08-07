@@ -2273,7 +2273,6 @@ fi:
     default_other_external_links_in_new_tab: "Avaa oletuksena ulkopuoliset linkit uudessa välilehdessä."
     default_other_enable_quoting: "Ota oletuksena käyttöön lainaaminen valitsemalla tekstiä."
     default_other_enable_smart_lists: "Ota älykkäät luettelot käyttöön kirjoittaessasi kirjoitustilassa oletuksena."
-    default_other_enable_defer: "Ota ketjun lykkäystoiminto käyttöön oletuksena."
     default_other_enable_markdown_monospace_font: "Käytä tasalevyistä fonttia kirjoitustilan Markdown-tilassa oletuksena."
     default_other_dynamic_favicon: "Näytä oletuksena uusien/päivittyneiden ketjujen määrä selaimen kuvakkeessa."
     default_other_skip_new_user_tips: "Ohita uuden käyttäjän aloittamisvinkit ja -kunniamerkit."
@@ -4672,7 +4671,6 @@ fi:
           complete: "Käyttäjä poistettu."
         block:
           title: "Poista ja estä käyttäjä"
-          description: "Käyttäjä poistetaan ja hänen IP-osoitteensa sekä sähköpostiosoitteensa estetään."
           complete: "Käyttäjä poistettu ja estetty."
       confirm_spam:
         title: "Kyllä"

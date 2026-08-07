@@ -4,6 +4,7 @@ import {
   collectionAddLabel,
   emptyCollectionItem,
   fieldControl,
+  fieldDisplayState,
   fieldFormat,
   fieldSupportsExpression,
   fieldValue,
@@ -65,10 +66,6 @@ module("Unit | Utility | workflows property engine", function () {
       propertyPlaceholder("trigger:webhook", "path"),
       "my-webhook"
     );
-    assert.strictEqual(
-      propertyPlaceholder("trigger:reviewable_approved", "reviewable_types"),
-      "All types"
-    );
   });
 
   test("falls back to the shared property_engine.fields scope", function (assert) {
@@ -88,6 +85,34 @@ module("Unit | Utility | workflows property engine", function () {
       propertyLabel("trigger:topic_tag_changed", "include_subcategories"),
       "Include subcategories"
     );
+    assert.strictEqual(
+      propertyLabel("trigger:user_updated", "group_ids"),
+      "Groups"
+    );
+    assert.strictEqual(
+      propertyDescription("trigger:user_seen", "group_ids"),
+      "Only trigger for users in at least one of these groups"
+    );
+    assert.strictEqual(
+      propertyPlaceholder("trigger:user_updated", "group_ids"),
+      "All groups"
+    );
+    assert.strictEqual(
+      propertySelectNoneKey("trigger:user_added_to_group", "group_id"),
+      "discourse_workflows.property_engine.fields.group_id_placeholder"
+    );
+    assert.strictEqual(
+      propertyLabel("trigger:reviewable_created", "reviewable_types"),
+      "Reviewable types"
+    );
+    assert.strictEqual(
+      propertyDescription("trigger:reviewable_created", "reviewable_types"),
+      "Only trigger for these reviewable types"
+    );
+    assert.strictEqual(
+      propertyPlaceholder("trigger:reviewable_approved", "reviewable_types"),
+      "All types"
+    );
 
     // node-scoped keys win over the shared scope
     assert.strictEqual(
@@ -97,6 +122,10 @@ module("Unit | Utility | workflows property engine", function () {
     assert.strictEqual(
       propertyDescription("trigger:stale_topic", "category_ids"),
       "Only consider topics in these categories. Leave empty to match all categories."
+    );
+    assert.strictEqual(
+      propertyDescription("trigger:post_button", "group_ids"),
+      "Only members of at least one of these groups can see and use the button"
     );
   });
 
@@ -374,6 +403,65 @@ module("Unit | Utility | workflows property engine", function () {
     );
     assert.false(
       fieldVisible(combined, { method: "POST", content_type: "raw" })
+    );
+  });
+
+  test("tests membership when the anchor is a multi-select", function (assert) {
+    const shown = { display_options: { show: { extensions: ["stats"] } } };
+
+    assert.true(fieldVisible(shown, { extensions: ["stats", "ips"] }));
+    assert.true(fieldVisible(shown, { extensions: ["stats"] }));
+    assert.false(fieldVisible(shown, { extensions: ["ips"] }));
+    assert.false(fieldVisible(shown, { extensions: [] }));
+    assert.strictEqual(
+      fieldDisplayState(shown, { extensions: "={{ $json.extensions }}" }),
+      "indeterminate",
+      "an expression anchor stays indeterminate for multi-selects too"
+    );
+  });
+
+  test("treats an expression anchor as indeterminate rather than a failed rule", function (assert) {
+    const expression = "={{ $json.op }}";
+    const state = fieldDisplayState;
+
+    const shown = {
+      display_options: { show: { operation: ["add", "remove"] } },
+    };
+    assert.strictEqual(state(shown, { operation: "add" }), "visible");
+    assert.strictEqual(state(shown, { operation: "get" }), "hidden");
+    assert.strictEqual(
+      state(shown, { operation: expression }),
+      "indeterminate"
+    );
+    assert.true(
+      fieldVisible(shown, { operation: expression }),
+      "an indeterminate field is still rendered"
+    );
+
+    const hidden = { display_options: { hide: { operation: ["get"] } } };
+    assert.strictEqual(
+      state(hidden, { operation: expression }),
+      "indeterminate",
+      "an expression anchor does not trigger a hide rule either"
+    );
+
+    const twoRules = {
+      display_options: { show: { operation: ["add"], source: ["csv"] } },
+    };
+    assert.strictEqual(
+      state(twoRules, { operation: expression, source: "json" }),
+      "hidden",
+      "a rule that definitely fails settles the field despite the expression"
+    );
+    assert.strictEqual(
+      state(twoRules, { operation: expression, source: "csv" }),
+      "indeterminate"
+    );
+
+    assert.strictEqual(
+      state({ ...shown, ui: { hidden: true } }, { operation: expression }),
+      "hidden",
+      "ui.hidden is not a rule and stays definite"
     );
   });
 

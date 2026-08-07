@@ -26,8 +26,8 @@ class ReviewableSerializer < ApplicationSerializer
 
   attribute :status_for_database, key: :status
 
-  has_one :created_by, serializer: UserWithCustomFieldsSerializer, root: "users"
   has_one :target_created_by, root: "users"
+  has_one :created_by, serializer: UserWithCustomFieldsSerializer, root: "users"
   has_one :target_deleted_by, serializer: BasicUserSerializer, root: "users"
   has_one :topic, serializer: ListableTopicSerializer
   has_many :editable_fields, serializer: ReviewableEditableFieldSerializer, embed: :objects

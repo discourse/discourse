@@ -180,10 +180,6 @@ export default <template>
           @content={{@controller.availableLocales}}
           @value={{@controller.understoodLanguages}}
           @onChange={{@controller.setUnderstoodLanguages}}
-          @mandatoryValues={{@controller.interfaceLanguage}}
-          @mandatoryValueTitle={{i18n
-            "content_localization.preferences.interface_language_mandatory"
-          }}
           @options={{hash filterable=true}}
         />
         <div class="instructions">
@@ -234,12 +230,6 @@ export default <template>
       @checked={{@controller.model.user_option.enable_smart_lists}}
       data-setting-name="user-enable-smart-lists"
       class="pref-enable-smart-lists"
-    />
-    <PreferenceCheckbox
-      @labelKey="user.enable_defer"
-      @checked={{@controller.model.user_option.enable_defer}}
-      data-setting-name="user-enable-defer"
-      class="pref-defer-unread"
     />
     {{#if @controller.siteSettings.automatically_unpin_topics}}
       <PreferenceCheckbox

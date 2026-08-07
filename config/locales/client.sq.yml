@@ -597,6 +597,7 @@ sq:
         email: "Email"
         name: "Emri"
         fields: "Fushat"
+        penalty_forever: "Përgjithmonë"
         reject_reason: "Arsye"
         scrubbed_reason: "Arsye"
         scrub_record:
@@ -1283,7 +1284,6 @@ sq:
       external_links_in_new_tab: "Hap të gjitha lidhjet e jashtme në një tab të ri"
       enable_quoting: "Aktivizo citimin në përgjigje për tekstin e përzgjedhur"
       enable_smart_lists: "Aktivizo listat e zgjuara kur shkruhet në redaktor"
-      enable_defer: "Aktivizo shënimin e temave si të palexuara"
       experimental_sidebar:
         enable: "Aktivizo shiritin anësor"
         options: "Opsione"
@@ -1905,7 +1905,7 @@ sq:
           email_placeholder: "emri@adresa.com"
           invite_by_email: "Email"
           restrict_domain: "Kufizoni në domein"
-          more_options: "Më shumë mundësi"
+          create_and_copy: "Kopjoni lidhjen"
           update: "Përditëso"
           summary:
             role_member: "Anëtar"
@@ -1916,7 +1916,7 @@ sq:
             expires: "Skadon"
             topic: "Topic"
             groups: "Grupet"
-            edit: "Redaktoni ftesën"
+            edit: "Redaktoni"
         bulk_invite:
           none: "Nuk ka ftesë për t'u shfaqur në këtë faqe."
           text: "Ftesë me shumicë"
@@ -3927,6 +3927,8 @@ sq:
         custom:
           save: "Ruaj"
           delete: "Fshij"
+          localizations:
+            remove_language: "Hiq"
           links:
             icon:
               label: "Ikonë"

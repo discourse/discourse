@@ -2356,7 +2356,6 @@ tr_TR:
     default_other_external_links_in_new_tab: "Harici bağlantıları varsayılan olarak yeni bir sekmede açın."
     default_other_enable_quoting: "Varsayılan olarak vurgulanan metin için alıntı yanıtını etkinleştirin."
     default_other_enable_smart_lists: "Varsayılan olarak bestecide yazarken akıllı listeleri etkinleştirin."
-    default_other_enable_defer: "Varsayılan olarak konu erteleme işlevini etkinleştirin."
     default_other_enable_markdown_monospace_font: "Varsayılan olarak bestecinin Markdown modunda monospace yazı tipini kullanın."
     default_other_dynamic_favicon: "Varsayılan olarak tarayıcı simgesinde yeni/güncellenmiş konu sayısını gösterin."
     default_other_skip_new_user_tips: "Yeni kullanıcı katılım ipuçlarını ve rozetlerini atlayın."
@@ -5124,11 +5123,9 @@ tr_TR:
         title: "Hayır"
         delete:
           title: "Kullanıcıyı Sil"
-          description: "Engellemeden kullanıcıyı sil"
           complete: "Kullanıcı silindi."
         block:
           title: "Kullanıcıyı Sil ve Engelle"
-          description: "Kullanıcı silinecek ve IP ve e-posta adresini engelleyeceğiz."
           complete: "Kullanıcı silindi ve engellendi."
       confirm_spam:
         title: "Evet"
@@ -5188,12 +5185,10 @@ tr_TR:
         bundle_title: "Kullanıcıyla ne yapmak istiyorsunuz?"
       silence_user:
         title: "Kullanıcıyı sustur"
-        description: "Kullanıcının gönderi yapmasını engelle"
         complete: "Kullanıcı susturuldu"
         reason: "Kullanıcı inceleme kuyruğu aracılığıyla susturuldu"
       suspend_user:
         title: "Kullanıcıyı askıya al"
-        description: "Kullanıcı hesabını askıya al"
         complete: "Kullanıcı askıya alındı"
         reason: "İnceleme kuyruğu aracılığıyla askıya alınan kullanıcı"
       delete_user:

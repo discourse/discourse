@@ -1,14 +1,67 @@
 import { buildBBCodeAttrs, parseBBCodeTag } from "discourse/lib/text";
 
-// `([\w-]+\.)*` allows any subdomain, since livestream hosts routinely use them
-// (us06web.zoom.us, www.youtube.com). It cannot match a host that merely ends in
-// one of these names, because each captured label must be followed by a dot:
-// "notzoom.us" and "zoom.us.evil.com" are both rejected.
-const LIVESTREAM_URL =
-  /^(https?:\/\/)?([\w-]+\.)*(youtube\.com|youtu\.be|twitch\.tv|zoom\.us|kick\.com|tiktok\.com|instagram\.com|facebook\.com)\//i;
+let lastSetting;
+let lastHosts;
 
-export function isLivestreamUrl(url) {
-  return LIVESTREAM_URL.test(url ?? "");
+// A bare host, mirroring `AllowedHosts::HOST_FORMAT` on the server, which is
+// what the setting validator holds list entries to.
+const HOST_FORMAT =
+  /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+
+// Resolves the host the browser would actually connect to, so that percent
+// escapes, Unicode and separators are compared after the browser has had its
+// say rather than as written. `AllowedHosts.canonical_host` does the same on
+// the server.
+function canonicalHost(url) {
+  let parsed;
+  try {
+    parsed = new URL(url ?? "");
+  } catch {
+    return null;
+  }
+
+  if (parsed.protocol !== "https:") {
+    return null;
+  }
+
+  return parsed.hostname.replace(/\.$/, "") || null;
+}
+
+// Parsed once per setting value because this runs on every location keystroke.
+function allowedHosts(setting) {
+  if (setting !== lastSetting) {
+    lastSetting = setting;
+    lastHosts = (setting ?? "")
+      .split("|")
+      .map((entry) => entry.trim())
+      .filter((entry) => HOST_FORMAT.test(entry))
+      .map((entry) => canonicalHost(`https://${entry}`))
+      .filter(Boolean);
+  }
+
+  return lastHosts;
+}
+
+// Mirrors DiscourseCalendar::Livestream::AllowedHosts on the server, down to
+// canonicalizing the URL rather than pattern-matching it: a location the editor
+// presents as a livestream must be one the save path still recognizes, or the
+// livestream flag is silently dropped. Subdomains are allowed because livestream
+// hosts routinely use them (us06web.zoom.us, www.youtube.com); a host that merely
+// ends in an allowed name is not, since the match is anchored to a label boundary.
+export function isLivestreamUrl(url, siteSettings) {
+  const hosts = allowedHosts(siteSettings?.livestream_allowed_hosts);
+  if (!hosts.length) {
+    return false;
+  }
+
+  const host = canonicalHost(url);
+  if (!host) {
+    return false;
+  }
+
+  return hosts.some(
+    (allowed) => host === allowed || host.endsWith(`.${allowed}`)
+  );
 }
 
 export function defaultReminderFor({ startsAt, endsAt, allDay } = {}) {

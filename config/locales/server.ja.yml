@@ -2235,7 +2235,6 @@ ja:
     default_other_external_links_in_new_tab: "デフォルトで、外部リンクを新しいタブで開く。"
     default_other_enable_quoting: "デフォルトで、選択したテキストを引用して返信する。"
     default_other_enable_smart_lists: "コンポーザーに入力する際にスマートリストをデフォルトで有効にする。"
-    default_other_enable_defer: "デフォルトで、トピックの延期機能を有効にする。"
     default_other_enable_markdown_monospace_font: "作成ツールの Markdown モードでは、デフォルトで等幅フォントを使用する。"
     default_other_dynamic_favicon: "デフォルトで、ブラウザアイコンに新規/更新されたトピック数を表示する。"
     default_other_skip_new_user_tips: "新規ユーザーオンボーディングのヒントとバッジをスキップします。"
@@ -4808,11 +4807,9 @@ ja:
         title: "いいえ"
         delete:
           title: "ユーザーの削除"
-          description: "ブロックせずにユーザーを削除します"
           complete: "ユーザーは削除されました。"
         block:
           title: "ユーザーの削除とブロック"
-          description: "ユーザーは削除され、その IP とメールアドレスはブロックされます。"
           complete: "ユーザーを削除してブロックしました。"
       confirm_spam:
         title: "はい"
@@ -4872,12 +4869,10 @@ ja:
         bundle_title: "ユーザーをどうしますか？"
       silence_user:
         title: "ユーザーを投稿禁止にする"
-        description: "ユーザーが投稿できないようにします"
         complete: "ユーザーを投稿禁止にしました"
         reason: "ユーザーはレビューキューを通じて投稿禁止にされました"
       suspend_user:
         title: "ユーザーを凍結する"
-        description: "ユーザーアカウントを凍結します"
         complete: "ユーザーを凍結しました"
         reason: "ユーザーはレビューキューを通じて凍結されました"
       delete_user:

@@ -2331,7 +2331,6 @@ hu:
     default_other_external_links_in_new_tab: "Alapértelmezés szerint nyissa meg a külső hivatkozásokat egy új lapon."
     default_other_enable_quoting: "Alapértelmezés szerint a kijelölt szöveg idézése a válaszban."
     default_other_enable_smart_lists: "Az intelligens listák alapértelmezés szerinti engedélyezése a szerkesztőbe íráskor."
-    default_other_enable_defer: "Alapértelmezés szerint engedélyezze a téma elhalasztása funkciót."
     default_other_enable_markdown_monospace_font: "Alapértelmezés szerint monospace betűtípust használ a szerkesztő Markdown módjában."
     default_other_dynamic_favicon: "Alapértelmezés szerint az új/frissített témák számának megjelenítése a böngésző ikonján."
     default_other_skip_new_user_tips: "A tippek és jelvények kihagyása az új felhasználók regisztrációjakor"
@@ -4918,11 +4917,9 @@ hu:
         title: "Nem"
         delete:
           title: "Felhasználó törlése"
-          description: "Felhasználó törlése blokkolás nélkül"
           complete: "Felhasználó törölve."
         block:
           title: "Felhasználó törlése és blokkolása"
-          description: "A felhasználót töröljük, IP-címét és e-mail címét pedig blokkoljuk."
           complete: "Felhasználó törölve és letiltva."
       confirm_spam:
         title: "Igen"
@@ -4982,12 +4979,10 @@ hu:
         bundle_title: "Mit szeretnél csinálni a felhasználóval?"
       silence_user:
         title: "Felhasználó némítása"
-        description: "Felhasználó letiltása a posztolásról"
         complete: "Felhasználó elnémítva"
         reason: "Felhasználó elnémítva a felülvizsgálati soron keresztül"
       suspend_user:
         title: "Felhasználó felfüggesztése"
-        description: "Felhasználói fiók felfüggesztése"
         complete: "Felhasználó felfüggesztve"
         reason: "Felhasználó felfüggesztve a felülvizsgálati sor miatt"
       delete_user:

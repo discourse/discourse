@@ -2346,7 +2346,6 @@ es:
     default_other_external_links_in_new_tab: "Abrir enlaces externos en una nueva pestaña por defecto."
     default_other_enable_quoting: "Activar respuesta citando texto seleccionado por defecto."
     default_other_enable_smart_lists: "Activar por defecto las listas inteligentes al escribir en el compositor."
-    default_other_enable_defer: "Activar la funcionalidad de temas diferidos por defecto."
     default_other_enable_markdown_monospace_font: "Usar fuente monoespaciada en el modo Markdown del compositor por defecto."
     default_other_dynamic_favicon: "Mostrar la cantidad de temas nuevos/actualizados en el icono del navegador por defecto."
     default_other_skip_new_user_tips: "Omitir consejos y medallas de bienvenida."
@@ -5069,11 +5068,9 @@ es:
         title: "No"
         delete:
           title: "Eliminar usuario"
-          description: "Eliminar usuario sin bloquearlo"
           complete: "Usuario eliminado."
         block:
           title: "Eliminar y bloquear usuario"
-          description: "El usuario será eliminado y bloquearemos su IP y su dirección de correo electrónico."
           complete: "Usuario eliminado y bloqueado."
       confirm_spam:
         title: "Sí"
@@ -5133,12 +5130,10 @@ es:
         bundle_title: "¿Qué quieres hacer con el usuario?"
       silence_user:
         title: "Silenciar al usuario"
-        description: "Evitar que el usuario siga publicando"
         complete: "Usuario silenciado"
         reason: "Usuario silenciado a través de la cola de revisión"
       suspend_user:
         title: "Suspender al usuario"
-        description: "Suspender la cuenta del usuario"
         complete: "Usuario suspendido"
         reason: "Usuario suspendido a través de la cola de revisión"
       delete_user:

@@ -3891,8 +3891,12 @@ RSpec.describe User do
     fab!(:tag_sidebar_section_link_2) do
       Fabricate(:tag_sidebar_section_link, user: user, linkable: hidden_tag)
     end
+    fab!(:synonym) { Fabricate(:tag, target_tag: tag) }
+    fab!(:tag_sidebar_section_link_3) do
+      Fabricate(:tag_sidebar_section_link, user: user, linkable: synonym)
+    end
 
-    it "should only return tag sidebar section link records of tags that the user is allowed to see" do
+    it "should only return tag sidebar section link records of tags that the user is allowed to browse" do
       expect(user.visible_sidebar_tags).to contain_exactly(tag)
 
       user.update!(admin: true)

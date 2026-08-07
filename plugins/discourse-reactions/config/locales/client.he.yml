@@ -13,8 +13,6 @@ he:
   js:
     discourse_reactions:
       reactions_title: "תחושות"
-      state_panel:
-        more_users: "ו־%{count} נוספות..."
       picker:
         react_with: "להוסיף תחושה לפוסט הזה: %{reaction}"
         cant_remove_reaction: "כבר אין לך אפשרות להסיר את התחושה שלך"

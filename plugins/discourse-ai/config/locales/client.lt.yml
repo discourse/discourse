@@ -392,7 +392,6 @@ lt:
         tests:
           success: "Sėkmingai!"
         providers:
-          google: "Google"
           fake: "Išskirtinės"
       ai_helper:
         context_menu:

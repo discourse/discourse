@@ -20,6 +20,14 @@
       height: auto;
       min-height: 0;
     }
+
+    // structure properly when :where is gone
+    &.hide-preview .d-editor-container {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "fields"
+        "editor";
+    }
   }
 
   .grippie {
@@ -52,15 +60,20 @@
     }
   }
 
-  .title-and-category {
+  #reply-control .title-and-category {
     padding: 0 !important;
     width: 100% !important;
     gap: 0 !important;
     border-bottom: 1px solid var(--primary-low);
+    flex-wrap: nowrap !important;
+
+    .user-selector {
+      margin: 0 !important;
+    }
   }
 
   .category-input,
-  .users-input {
+  .user-selector {
     border-right: 1px solid var(--primary-low);
 
     @include viewport.until(sm) {
@@ -69,6 +82,10 @@
   }
 
   .tags-input {
+    &:not(:last-child) {
+      border-right: 1px solid var(--primary-low);
+    }
+
     @include viewport.until(sm) {
       flex-grow: 0 !important;
     }
@@ -114,7 +131,7 @@
 
   .category-input,
   .tags-input,
-  .users-input {
+  .user-selector {
     margin: 0 !important;
     max-width: unset !important;
     width: 50% !important;
@@ -125,7 +142,8 @@
     }
 
     .category-chooser.is-expanded,
-    .mini-tag-chooser.is-expanded {
+    .mini-tag-chooser.is-expanded,
+    .user-chooser.is-expanded {
       .select-kit-header {
         outline: 0 !important;
       }
@@ -141,20 +159,26 @@
         outline: 0;
       }
 
-      .d-icon {
+      .d-icon:not(.badge-category *) {
         font-size: var(--font-down-1-rem);
         color: var(--primary-medium);
       }
     }
   }
 
+  // TODO move to plugin css when UC is removed
+  .showing-ai-suggestions #reply-title {
+    padding-right: calc(var(--space-7) + 27px);
+  }
+
   .title-input {
     #reply-title {
       border: 0;
       padding: var(--space-4);
-      font-size: var(--font-up-3);
+      font-size: var(--font-up-4);
+      font-weight: bold;
       margin-bottom: 0 !important;
-      padding-bottom: var(--space-2) !important;
+      padding-bottom: var(--space-3) !important;
 
       &::placeholder {
         color: var(--primary-medium);
@@ -168,9 +192,17 @@
         outline: 0;
       }
     }
+
+    // TODO move to plugin css when UC is removed
+    .suggest-titles-button {
+      right: var(--space-4) !important;
+      top: var(--space-4);
+      bottom: unset !important;
+      transform: none !important;
+    }
   }
 
-  .d-editor-textarea-wrapper {
+  #reply-control .d-editor-textarea-wrapper {
     --composer-slide-easing: cubic-bezier(0.2, 0, 0, 1);
     border: 0;
 
@@ -224,10 +256,39 @@
     display: none;
   }
 
+  #reply-control .d-editor-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: min-content 1fr;
+    grid-template-areas:
+      "fields fields"
+      "editor preview";
+
+    &.--rich-editor-enabled {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "fields"
+        "editor";
+    }
+
+    .composer-fields {
+      grid-area: fields;
+    }
+
+    .d-editor-textarea-column {
+      grid-area: editor;
+      min-height: 0;
+    }
+
+    .d-editor-preview-wrapper {
+      grid-area: preview;
+    }
+  }
+
   // clean up selector once the uc- body class is no longer in the way
   .show-preview .d-editor-container.--markdown-editor-enabled {
     .d-editor-textarea-column {
-      border-right: 1px solid var(--primary-low);
+      border-right: none;
     }
 
     .d-editor-preview-wrapper {
@@ -331,5 +392,10 @@
     .reply-to {
       padding: var(--space-1) var(--space-3);
     }
+  }
+
+  // PM specific removals/overrules
+  #reply-control.private-message .with-tags .title-input {
+    max-width: unset;
   }
 }

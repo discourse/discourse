@@ -687,6 +687,7 @@ da:
         email: "Email"
         name: "Navn"
         fields: "Felter"
+        penalty_forever: "Forevigt"
         reject_reason: "Årsag"
         scrubbed_reason: "Begrundelse"
         scrubbed_reject_reason: "Årsag til brugerafvisning"
@@ -1395,7 +1396,6 @@ da:
       external_links_in_new_tab: "Åbn alle eksterne links i en ny fane"
       enable_quoting: "Tillad citering af markeret tekst"
       enable_smart_lists: "Aktivér smarte lister, når du skriver i editoren"
-      enable_defer: "Aktivér markering af emner som ulæste"
       enable_markdown_monospace_font: "Brug monospace-skrifttype i editors Markdown-tilstand"
       experimental_sidebar:
         enable: "Aktiver sidebjælke"
@@ -1898,7 +1898,8 @@ da:
           email_placeholder: "navn@eksempel.dk"
           invite_by_email: "E-mail"
           restrict_domain: "Begræns til domæne"
-          more_options: "Flere muligheder"
+          create_and_send: "Send"
+          create_and_copy: "Kopiér link"
           update: "Opdater"
           summary:
             role_member: "Bruger"
@@ -1910,7 +1911,7 @@ da:
             expires: "Udløber"
             topic: "Emne"
             groups: "Grupper"
-            edit: "Rediger invitation"
+            edit: "Rediger"
         bulk_invite:
           none: "Ingen invitationer at vise på denne side."
           text: "Masseinvitation"
@@ -2470,7 +2471,6 @@ da:
       italic_label: "K"
       italic_title: "Kursiv"
       italic_text: "kursiv skrift"
-      heading_title: "Overskrifter"
       heading_level_n: "Overskrift %{levelNumber}"
       heading_level_n_title: "Overskrift %{levelNumber}"
       heading_level_paragraph: "Afsnit"
@@ -4184,9 +4184,9 @@ da:
           public: "Synlig for alle"
           more_menu: "Mere menu"
           localizations:
-            title: "Oversættelser"
             locale: "Sprog"
             title_label: "Sektionens titel"
+            remove_language: "Fjern"
           links:
             add: "Tilføj endnu et link"
             delete: "Slet link"

@@ -11,3 +11,8 @@ uk:
       verification_failed: "Не вдалося перевірити капчу. Спробуйте ще раз."
       placeholder: заповнювач
       contact_system_administrator: "Виникла проблема з вашим постачальником капчі. Якщо проблема не зникає, зверніться до системного адміністратора."
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_captcha: "Discourse Капча"

@@ -225,9 +225,14 @@ module("Unit | lib | discourse-workflows | schema-graph", function () {
       configuration: { resume: "time" },
     });
     const chooser = node("chooser", "action:chooser");
+    const blender = node("blender", "flow:blender");
     const graph = {
-      nodes: [node("source", "trigger:source"), wait, chooser],
-      connections: [conn("source", "wait"), conn("source", "chooser")],
+      nodes: [node("source", "trigger:source"), wait, chooser, blender],
+      connections: [
+        conn("source", "wait"),
+        conn("source", "chooser"),
+        conn("source", "blender"),
+      ],
       nodeTypes: [
         triggerType("trigger:source", src),
         nodeType("flow:wait", [
@@ -255,6 +260,12 @@ module("Unit | lib | discourse-workflows | schema-graph", function () {
                 display_options: { show: { mode: ["variant"] } },
               },
             ],
+          },
+        ]),
+        nodeType("flow:blender", [
+          {
+            mode: "passthrough",
+            variants: [{ display_options: { show: { mode: ["combine"] } } }],
           },
         ]),
       ],
@@ -288,6 +299,121 @@ module("Unit | lib | discourse-workflows | schema-graph", function () {
       out(chooser, { configuration: { mode: "other" } }),
       {},
       "no matching contract resolves to unknown without passing the input through"
+    );
+
+    assert.deepEqual(
+      out(wait, { configuration: { resume: "={{ $json.kind }}" } }),
+      { $schema: DRAFT_URI, anyOf: [src, hook] },
+      "an expression-valued controlling parameter unions the variants in contention, leaving out an empty-replace fallback"
+    );
+    assert.deepEqual(
+      out(chooser, { configuration: { mode: "={{ $json.mode }}" } }),
+      { $schema: DRAFT_URI, anyOf: [variant, base] },
+      "the declared fallback contract stays in contention alongside indeterminate variants"
+    );
+    assert.deepEqual(
+      out(blender, { configuration: { mode: "={{ $json.mode }}" } }),
+      src,
+      "a schema-less variant leaves contention rather than collapsing the union"
+    );
+    assert.deepEqual(
+      out(blender, { configuration: { mode: "combine" } }),
+      {},
+      "a schema-less variant that definitely matches still resolves to unknown"
+    );
+  });
+
+  test("extensions compose onto the contract per selected value", function (assert) {
+    const base = objectSchema({
+      user: objectSchema({ id: { type: "integer" } }),
+    });
+    const extension = (name) => ({
+      type: "object",
+      properties: {
+        user: objectSchema({ [name]: { type: "string" } }),
+      },
+    });
+    const picker = node("picker", "action:picker");
+    const graph = {
+      nodes: [picker],
+      nodeTypes: [
+        nodeType("action:picker", [
+          {
+            schema: base,
+            extensions: [
+              {
+                schema: extension("email"),
+                display_options: { show: { include: ["emails"] } },
+              },
+              {
+                schema: extension("ip"),
+                display_options: { show: { include: ["ips"] } },
+              },
+            ],
+          },
+        ]),
+      ],
+      connections: [],
+    };
+    const keys = (configuration) =>
+      Object.keys(
+        outputSchemaForNode(picker, graph, { configuration }).properties.user
+          .properties
+      );
+
+    assert.deepEqual(keys({}), ["id"], "nothing is added without a selection");
+    assert.deepEqual(
+      keys({ include: ["emails"] }),
+      ["id", "email"],
+      "a selected extension merges into the base contract"
+    );
+    assert.deepEqual(
+      keys({ include: ["ips", "emails"] }),
+      ["id", "email", "ip"],
+      "every selected extension composes, unlike variants which are exclusive"
+    );
+    assert.deepEqual(
+      keys({ include: "={{ $json.include }}" }),
+      ["id", "email", "ip"],
+      "an expression leaves every extension in contention"
+    );
+  });
+
+  test("nodes with author-defined output keys resolve from their configuration", function (assert) {
+    const summarize = node("summarize", "action:summarize");
+    const graph = {
+      nodes: [node("source", "trigger:source"), summarize],
+      connections: [conn("source", "summarize")],
+      nodeTypes: [
+        triggerType("trigger:source", prop("source", "string")),
+        {
+          name: "action:summarize",
+          versions: { "1.0": { output_schema_resolver: "summarize" } },
+        },
+      ],
+    };
+    const keys = (configuration) =>
+      Object.keys(
+        outputSchemaForNode(summarize, graph, { configuration }).properties
+      );
+
+    assert.deepEqual(
+      keys({
+        fields_to_split_by: "topic_id",
+        fields_to_summarize: {
+          values: [
+            { aggregation: "sum", field: "likes" },
+            { aggregation: "count", output_field_name: "posts" },
+          ],
+        },
+      }),
+      ["topic_id", "sum_likes", "posts"],
+      "the node's declared resolver derives keys from the configuration"
+    );
+    assert.deepEqual(
+      keys({}),
+      [],
+      "an unconfigured node resolves to an empty shape rather than the input"
     );
   });
 

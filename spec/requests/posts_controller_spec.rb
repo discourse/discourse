@@ -125,6 +125,39 @@ RSpec.describe PostsController do
         expect(response.parsed_body["cooked"]).to eq("<p>BEFORE</p>")
       end
 
+      it "rejects a version restored from a hidden revision" do
+        hidden_raw = "hidden moderator-redacted secret"
+        hidden_cooked = "<p>#{hidden_raw}</p>"
+        post_with_hidden_revision =
+          Fabricate(:post, user: user, version: 3, raw: "public current version")
+        Fabricate(
+          :post_revision,
+          post: post_with_hidden_revision,
+          number: 2,
+          hidden: true,
+          modifications: {
+            "cooked" => ["<p>public first version</p>", hidden_cooked],
+            "raw" => ["public first version", hidden_raw],
+          },
+        )
+        Fabricate(
+          :post_revision,
+          post: post_with_hidden_revision,
+          number: 3,
+          modifications: {
+            "cooked" => [hidden_cooked, "<p>public current version</p>"],
+            "raw" => [hidden_raw, "public current version"],
+          },
+        )
+
+        get "/posts/#{post_with_hidden_revision.id}.json", params: { version: 2 }
+
+        aggregate_failures do
+          expect(response).to be_forbidden
+          expect(response.body).not_to include(hidden_raw)
+        end
+      end
+
       context "when the revision is hidden" do
         before { post_revision.update!(hidden: true) }
 
@@ -192,6 +225,47 @@ RSpec.describe PostsController do
   describe "#by_number" do
     include_examples "finding and showing post" do
       let(:url) { "/posts/by_number/#{post.topic_id}/#{post.post_number}.json" }
+    end
+  end
+
+  describe "whisper visibility" do
+    it "blocks removed whisperers from their own whisper", :aggregate_failures do
+      whisper_group = Fabricate(:group)
+      whisper_author = Fabricate(:user, trust_level: TrustLevel[1])
+      topic = Fabricate(:topic)
+      Fabricate(:post, topic: topic)
+      original_raw = "staff-only whisper body"
+      edited_raw = "edited whisper body"
+      whisper =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: whisper_author,
+          post_type: Post.types[:whisper],
+          raw: original_raw,
+        )
+
+      SiteSetting.whispers_allowed_groups = whisper_group.id.to_s
+      whisper_group.add(whisper_author)
+      whisper_group.remove(whisper_author)
+      sign_in(User.find(whisper_author.id))
+
+      get "/posts/#{whisper.id}.json"
+      expect(response).to be_forbidden
+      expect(response.body).not_to include(whisper.raw)
+
+      get "/posts/by_number/#{topic.id}/#{whisper.post_number}.json"
+      expect(response).to be_forbidden
+      expect(response.body).not_to include(whisper.raw)
+
+      get "/raw/#{topic.id}/#{whisper.post_number}"
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(whisper.raw)
+
+      put "/posts/#{whisper.id}.json", params: { post: { raw: edited_raw } }
+      expect(response).to be_forbidden
+      expect(response.body).not_to include(edited_raw)
+      expect(whisper.reload.raw).to eq(original_raw)
     end
   end
 
@@ -739,6 +813,39 @@ RSpec.describe PostsController do
 
     describe "when logged in as staff" do
       before { sign_in(moderator) }
+
+      it "limits edit reasons while allowing staff to edit small action content" do
+        small_action = Fabricate(:small_action, user: user)
+        oversized_edit_reason = "a" * 1001
+
+        put "/posts/#{small_action.id}.json",
+            params: {
+              post: {
+                raw: "x",
+                edit_reason: oversized_edit_reason,
+              },
+            }
+
+        aggregate_failures do
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(
+            "Edit reason is too long (maximum is 1000 characters)",
+          )
+          expect(small_action.reload.edit_reason).not_to eq(oversized_edit_reason)
+        end
+
+        put "/posts/#{small_action.id}.json",
+            params: {
+              post: {
+                raw: "x",
+                edit_reason: "a" * 1000,
+              },
+            }
+
+        expect(response.status).to eq(200), response.body
+        expect(response.parsed_body["post"]["raw"]).to eq("x")
+        expect(small_action.reload.edit_reason).to eq("a" * 1000)
+      end
 
       it "supports updating posts in deleted topics" do
         first_post = post.topic.ordered_posts.first
@@ -4022,6 +4129,18 @@ RSpec.describe PostsController do
 
       expect(body).to_not include(private_post.topic.slug)
       expect(body).to include(public_post.topic.slug)
+    end
+
+    it "does not disclose a user's posts when public profiles are hidden" do
+      public_post
+      SiteSetting.hide_user_profiles_from_public = true
+
+      %w[rss json].each do |format|
+        get "/u/#{user.username}/activity.#{format}"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).not_to include(public_post.raw)
+      end
     end
 
     it "excludes ignored users' likes from JSON like counts" do

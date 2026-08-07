@@ -32,6 +32,8 @@ pt:
       cancel: "Cancelar"
       cancel_reply: "Cancelar resposta"
       chat_channels: "Canais"
+      pinned_bar:
+        title: "Fixado"
       pinned: "Fixado"
       browse_all_channels: "Navegar todos os canais"
       move_to_channel:

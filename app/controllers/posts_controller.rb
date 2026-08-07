@@ -1103,6 +1103,7 @@ class PostsController < ApplicationController
       post_revision = PostRevision.find_by(post_id: post.id, number: version + 1)
       if post_revision
         guardian.ensure_can_see!(post_revision)
+        guardian.ensure_can_view_post_version!(post, version)
         post.revert_to(version)
       end
     end

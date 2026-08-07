@@ -742,6 +742,7 @@ pt:
         email: "E-mail"
         name: "Nome"
         fields: "campos"
+        penalty_forever: "Para Sempre"
         reject_reason: "Motivo"
         scrubbed_by: "Registo apagado por"
         scrubbed_reason: "Motivo"
@@ -1484,7 +1485,6 @@ pt:
       external_links_in_new_tab: "Abrir todas as hiperligações externas num novo separador"
       enable_quoting: "Ativar resposta usando citação de texto destacado"
       enable_smart_lists: "Ativar as listas inteligentes quando escreve no compositor"
-      enable_defer: "Ativar a marcação de tópicos como não lidos"
       experimental_sidebar:
         enable: "Ativar a barra lateral"
         options: "Opções"
@@ -2123,7 +2123,8 @@ pt:
           email_placeholder: "name@example.com"
           invite_by_email: "E-mail"
           restrict_domain: "Restringir ao domínio"
-          more_options: "Mais opções"
+          create_and_send: "Enviar"
+          create_and_copy: "Copiar hiperligação"
           update: "Atualização"
           summary:
             role_member: "Membro"
@@ -2134,7 +2135,7 @@ pt:
             expires: "Expira"
             topic: "Tópico"
             groups: "Grupos"
-            edit: "Editar convite"
+            edit: "Editar"
         bulk_invite:
           none: "Sem convites para exibir nesta página."
           text: "Convite em massa"
@@ -2817,7 +2818,6 @@ pt:
       italic_label: "I"
       italic_title: "Itálico"
       italic_text: "texto em itálico"
-      heading_title: "Cabeçalhos"
       heading_level_n: "Cabeçalho  %{levelNumber}"
       heading_level_n_title: "Cabeçalho %{levelNumber}"
       heading_level_paragraph: "Parágrafo"
@@ -4487,7 +4487,7 @@ pt:
           save: "Guardar"
           delete: "Eliminar"
           localizations:
-            title: "Traduções"
+            remove_language: "Remover"
           links:
             reset: "Restaurar ao padrão"
             icon:

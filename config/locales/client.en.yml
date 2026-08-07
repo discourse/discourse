@@ -935,10 +935,6 @@ en:
       stale_help: "This item has been resolved by <b>%{username}</b>."
       claim_help:
         optional: "You can claim this item to prevent others from reviewing it."
-        required: "You must claim items before you can review them."
-        claimed_by_you: "You've claimed this item and can review it."
-        claimed_by_other: "This item can only be reviewed by <b>%{username}</b>."
-        automatically_claimed_by: "This item is currently being reviewed by <b>%{username}</b>."
       claim:
         title: "Claim this topic"
       unclaim:
@@ -1824,13 +1820,12 @@ en:
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
       enable_smart_lists: "Enable smart lists when writing in the composer"
-      enable_defer: "Enable mark topics as unread"
       enable_markdown_monospace_font: "Use monospace font in composer's Markdown mode"
       automatically_translate: "Automatically translate topics and posts in other languages"
       content_languages:
         title: "Content languages"
         understood: "Languages I understand"
-        understood_description: "Topics and posts in these languages won’t be translated. Your interface language is always included."
+        understood_description: "Topics and posts in these languages won’t be translated. Your interface language is always considered understood."
       experimental_sidebar:
         enable: "Enable sidebar"
         options: "Options"
@@ -2551,9 +2546,8 @@ en:
           sent_title: "Invitation sent"
           member_tab: "Members"
           admin_tab: "Staff"
-          member_description: "Invite people to join this site. Share a link or send an email invitation."
-          admin_description: "Invite people to join your staff team. Admins have full access to this site."
-          moderator_description: "Invite people to join your staff team. Moderators can help manage content and members."
+          admin_description: "Admins have full access to this site, its settings, and data."
+          moderator_description: "Moderators can help manage content and members."
           staff_role_label: "Invite as"
           staff_role_admin: "Admin"
           staff_role_moderator: "Moderator"
@@ -2566,16 +2560,13 @@ en:
           invite_by_email: "Email"
           role_label: "Invite as"
           restrict_domain: "Restrict to domain"
-          restrict_domain_help: "Only people with an email at this domain can accept the link. To invite a specific person, use Email above."
+          restrict_domain_help: "Only people with an email at this domain can accept the link."
           domain_placeholder: "example.com"
           domain_invalid: "Enter a valid domain, e.g. example.com"
           arrive_at_topic_help: "Send people to a specific topic after they accept."
-          create_and_send: "Create & send"
-          create_and_copy: "Create & copy link"
-          more_options: "More options"
-          fewer_options: "Fewer options"
+          create_and_send: "Send"
+          create_and_copy: "Copy link"
           update: "Update"
-          role_locked: "The invite type can't be changed after the invite is created."
           summary:
             sent_to: "An invitation was emailed to %{email}. You can also share this link directly:"
             role: "Role"
@@ -2590,7 +2581,7 @@ en:
             expires: "Expires"
             topic: "Topic"
             groups: "Groups"
-            edit: "Edit invite"
+            edit: "Edit"
             view_invites: "View invites"
           email_sent:
             body: "An invitation was emailed to %{email}."
@@ -3217,6 +3208,7 @@ en:
       subcategory_count:
         one: "+%{count} subcategory"
         other: "+%{count} subcategories"
+      subcategories: "+ Subcategories"
       topic_count:
         one: "%{count} topic in this category"
         other: "%{count} topics in this category"
@@ -3300,6 +3292,7 @@ en:
 
     d_icon_grid_picker:
       select_icon: "Select icon"
+      search_label: "Search icons"
       search_placeholder: "Search icons..."
       no_results: "No icons found"
       results_count:
@@ -3535,11 +3528,14 @@ en:
       italic_label: "I"
       italic_title: "Emphasis"
       italic_text: "emphasized text"
-      heading_title: "Headings"
+      text_size_title: "Text sizes"
       heading_level_n: "Heading %{levelNumber}"
       heading_level_n_title: "Heading %{levelNumber}"
       heading_level_paragraph: "Paragraph"
       heading_level_paragraph_title: "Paragraph"
+      heading_level_small: "Small"
+      heading_level_small_title: "Small text"
+      heading_level_small_text: "Small text"
       link_title: "Link"
       link_description: "enter link description here"
       link_dialog_title: "Insert link"
@@ -5222,7 +5218,6 @@ en:
       preferences:
         title: "Content language preferences"
         login_to_set_languages: "Log in to set more languages"
-        interface_language_mandatory: "Your interface language is always included."
 
     category:
       none: "(no category)"
@@ -5778,6 +5773,7 @@ en:
     invalid_video_url: This video cannot be played because the URL is invalid or unavailable.
 
     keyboard_shortcuts_help:
+      search_label: "Search shortcuts"
       search_placeholder: "Search for a shortcut by description or key combination"
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -6252,13 +6248,26 @@ en:
           always_public: "Content in this section is always public"
           more_menu: "More menu"
           localizations:
-            title: "Translations"
             locale: "Language"
+            language: "Section language"
+            language_description: "The primary language of this section's title and link names."
             title_label: "Section title"
-            link_label: "Link name"
-            add_section: "Add section title translation"
-            add_link: "Add link name translation"
-            remove: "Remove translation"
+            link_label: "Link names"
+            back: "Section content"
+            add_first: "Add translations"
+            manage:
+              one: "Manage translations (%{count} language)"
+              other: "Manage translations (%{count} languages)"
+            incomplete:
+              one: "%{count} string missing"
+              other: "%{count} strings missing"
+            add_language: "Add language"
+            remove_language: "Remove"
+            remove_language_confirm: "Remove every %{language} translation for this section?"
+            remove_cleared_confirm:
+              one: "You cleared %{count} saved translation. It will be removed. Continue?"
+              other: "You cleared %{count} saved translations. They will be removed. Continue?"
+            untranslated: "Not translated yet"
           links:
             title: "Section links"
             add: "Add another link"
@@ -7413,6 +7422,7 @@ en:
           add: "Add report"
           remove: "Remove report"
           no_data: "No data to display"
+          report_error: "Couldn't load this report"
           modal:
             title: "Manage reports"
             search_placeholder: "Search reports"

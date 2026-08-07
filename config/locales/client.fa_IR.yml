@@ -664,6 +664,8 @@ fa_IR:
         email: "ایمیل"
         name: "نام"
         fields: "فیلدها"
+        silence_reason: "دلیل سکوت"
+        penalty_forever: "همیشه"
         reject_reason: "دلیل"
         scrubbed_reason: "دلیل"
         scrub_record:
@@ -1357,7 +1359,6 @@ fa_IR:
       external_links_in_new_tab: "همهٔ پیوندهای خروجی را در یک تب جدید باز کن"
       enable_quoting: "فعال کردن نقل قول گرفتن از متن انتخاب شده"
       enable_smart_lists: "هنگام نوشتن در ابزار نوشتن، لیست های هوشمند را فعال کن"
-      enable_defer: "علامت گذاری موضوعات به عنوان خوانده نشده را فعال کن"
       experimental_sidebar:
         enable: "فعال کردن نوار کناری"
         options: "تنظیمات"
@@ -1985,7 +1986,8 @@ fa_IR:
           email_placeholder: "name@example.com"
           invite_by_email: "ایمیل"
           restrict_domain: "محدود کردن دامنه"
-          more_options: "گزینه‌های بیشتر"
+          create_and_send: "ارسال"
+          create_and_copy: "رونوشت پیوند"
           update: "به‌روزرسانی"
           summary:
             role_member: "عضو"
@@ -1996,7 +1998,7 @@ fa_IR:
             expires: "انقضاء"
             topic: "موضوع"
             groups: "گروه‌ها"
-            edit: "ویرایش دعوت‌نامه"
+            edit: "ویرایش"
         bulk_invite:
           none: "دعوتنامه ای برای نمایش در این صفحه موجود نیست."
           text: "دعوت به تعداد بالا"
@@ -4612,10 +4614,9 @@ fa_IR:
           always_public: "محتوای این بخش همیشه عمومی است"
           more_menu: "فهرست انتخاب بیشتر"
           localizations:
-            title: "ترجمه‌ها"
             locale: "زبان"
             title_label: "عنوان بخش"
-            link_label: "نام پیوند"
+            remove_language: "پاک کردن"
           links:
             add: "پیوند دیگری اضافه کنید"
             delete: "حذف پیوند"

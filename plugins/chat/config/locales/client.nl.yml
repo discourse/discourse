@@ -75,6 +75,8 @@ nl:
         close: "Vastgemaakte berichten sluiten"
         pinned_by_you: "Vastgemaakt door jou"
         pinned_by_user: "Vastgemaakt door %{username}"
+      pinned_bar:
+        title: "Vastgemaakt"
       no_pinned_messages: "Geen vastgemaakte berichten in dit kanaal."
       pin_message: "Bericht vastmaken"
       unpin_message: "Bericht losmaken"

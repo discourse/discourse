@@ -38,6 +38,9 @@ hu:
             canned_reply:
               label: "Válasz"
     discourse_ai:
+      discourse_workflows:
+        ai_agent:
+          mode: "Mód"
       ai_tool_approval:
         loading: "Betöltés…"
         tool: "Művelet"
@@ -140,6 +143,8 @@ hu:
         mcp_tools_modal:
           select_all: "Összes kiválasztása"
           clear_all: "Összes törlése"
+        duplicate: "Megkettőz"
+        copy_name: "%{name} másolata"
         delete: "Törlés"
         thinking_effort_options:
           none: "Egyik sem"
@@ -223,7 +228,6 @@ hu:
           title: "Teszt futtatása"
           success: "Sikeres!"
         providers:
-          google: "Google"
           fake: "Egyéni"
         provider_fields:
           region: "Régió"

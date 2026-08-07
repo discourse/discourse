@@ -196,7 +196,10 @@ export default class SupportSection extends Component {
 
   #categoryTerm(categories) {
     const slugs = categories.map((category) => Category.slugFor(category, ":"));
-    return `category:${slugs.join(",")}`;
+    // `=` restricts to these exact categories, excluding subcategories, to
+    // match the dashboard's own count (accepted answers are opt-in per
+    // category and never inherited by subcategories).
+    return `=category:${slugs.join(",")}`;
   }
 
   get dateRangeTerms() {
@@ -207,8 +210,13 @@ export default class SupportSection extends Component {
       );
     }
     if (this.args.endDate) {
+      // `created-before:D` matches created_at <= midnight on D, so pass the
+      // following day to cover all of the selected end date (the dashboard's
+      // own count instead runs through that day's end_of_day).
       terms.push(
-        `created-before:${moment(this.args.endDate).format("YYYY-MM-DD")}`
+        `created-before:${moment(this.args.endDate)
+          .add(1, "day")
+          .format("YYYY-MM-DD")}`
       );
     }
     return terms;

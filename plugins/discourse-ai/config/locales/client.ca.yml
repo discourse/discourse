@@ -186,7 +186,6 @@ ca:
         tests:
           success: "Èxit!"
         providers:
-          google: "Google"
           fake: "Personalitzat"
       ai_helper:
         context_menu:

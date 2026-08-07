@@ -10,13 +10,32 @@ fr:
     support:
       name: "Assistance"
       title: "assistance"
+      description: "Espace où les membres peuvent poser des questions et marquer des réponses comme solutions."
   discourse_solved:
     category_type:
       allow_accepted_answers:
         label: "Autoriser l'auteur du sujet et les responsables à marquer une réponse comme solution"
+      solved_topics_auto_close_hours:
+        label: "Fermeture automatique des sujets résolus (heures)"
+        description: "Ferme automatiquement le sujet après le nombre d'heures indiqué une fois qu'il est marqué comme résolu. Définissez cette valeur sur 0 pour désactiver cette option."
+      notify_on_staff_accept_solved:
+        label: "Informer l'auteur du sujet lorsqu'un responsable marque une solution"
+      empty_box_on_unsolved:
+        label: "Afficher le statut non résolu des sujets dans la liste pour les thèmes compatibles"
+      solved_topics_auto_close_duration:
+        label: "Fermer automatiquement les sujets résolus"
+        description: "Ferme automatiquement les sujets résolus une fois cette durée écoulée depuis la dernière réponse. Définissez cette valeur sur 0 pour désactiver cette option."
+      enable_shared_issues:
+        label: "Activer les problèmes partagés"
+        description: "Ajoute aux sujets non résolus de cette catégorie un bouton permettant aux membres d'indiquer qu'ils rencontrent le même problème et de recevoir des notifications concernant sa résolution."
+      shared_issue_label:
+        label: "Libellé du problème partagé"
+        description: "Libellé affiché sur le bouton de problème partagé."
   site_settings:
     solved_enabled: "Activer l'extension permettant aux utilisateurs de sélectionner des solutions aux sujets"
+    solved_allow_multiple_solutions: "Autoriser l'acceptation de plusieurs solutions dans chaque sujet"
     allow_solved_on_all_topics: "Autoriser les utilisateurs à sélectionner des solutions sur tous les sujets (lorsque cette option n'est pas activée, les solutions peuvent être activées par catégorie ou étiquette)"
+    allow_solved_in_groups: "Autoriser ces groupes à marquer des solutions dans les messages de groupe."
     accept_all_solutions_trust_level: "Niveau de confiance minimal requis pour accepter des solutions sur n'importe quel sujet (même sans en être l'auteur)"
     accept_all_solutions_allowed_groups: "Groupes autorisés à accepter des solutions sur n'importe quel sujet (même s'il n'est pas OP). Les administrateurs et modérateurs sont toujours autorisés."
     empty_box_on_unsolved: "Afficher une case vide à côté des sujets non résolus"
@@ -29,12 +48,16 @@ fr:
     solved_add_schema_markup: "Ajouter le marquage du schéma QAPage au code HTML."
     enable_solved_tags: "Étiquettes qui permettront aux utilisateurs de sélectionner des solutions."
     prioritize_solved_topics_in_search: "Prioriser les sujets résolus dans les résultats de recherche."
+    enable_support_category_type_setup: "Active l'option de type de catégorie « Assistance » lors de la configuration de la création d'une catégorie."
+    enable_solved_shared_issues: "Ajoute un bouton « Moi aussi » aux sujets non résolus des catégories d'assistance, afin que les membres puissent indiquer qu'ils rencontrent le même problème et recevoir des notifications concernant sa résolution."
+    enable_solved_badges: "Active les badges de résolution attribués aux membres lorsqu'ils apportent des solutions aux questions d'autres personnes."
     show_who_marked_solved: "Affichez qui a marqué le sujet comme résolu. Cette information apparaît dans la première publication du sujet et dans une infobulle sur la réponse."
     keywords:
       accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
   reports:
     accepted_solutions:
       title: "Solutions acceptées"
+      description: "Nombre de sujets ayant reçu une solution acceptée par jour sur une période donnée, avec un filtre de catégorie facultatif et un total comparatif sur 30 jours."
       xaxis: "Jour"
       yaxis: "Total"
   solved:

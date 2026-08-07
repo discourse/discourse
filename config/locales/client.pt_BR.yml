@@ -860,6 +860,8 @@ pt_BR:
         email: "E-mail"
         name: "Nome"
         fields: "Campos"
+        silence_reason: "Motivo do silêncio"
+        penalty_forever: "Para sempre"
         reject_reason: "Motivo"
         scrubbed_by: "Registro removido por"
         scrubbed_reason: "Motivo"
@@ -1665,7 +1667,6 @@ pt_BR:
       external_links_in_new_tab: "Abrir todos os links externos em uma nova aba"
       enable_quoting: "Ativar resposta citando o texto destacado"
       enable_smart_lists: "Ativar listas inteligentes ao escrever no compositor"
-      enable_defer: "Ativar tópicos marcados como não lidos"
       enable_markdown_monospace_font: "Usar fonte monoespacial no modo Markdown do compositor"
       experimental_sidebar:
         enable: "Ativar barra lateral"
@@ -2328,7 +2329,8 @@ pt_BR:
           invite_by_email: "E-mail"
           restrict_domain: "Restringir a domínio"
           domain_placeholder: "example.com"
-          more_options: "Mais opções"
+          create_and_send: "Enviar"
+          create_and_copy: "Copiar link"
           update: "Atualizar"
           summary:
             role_member: "Membro"
@@ -2341,7 +2343,7 @@ pt_BR:
             expires: "Expira"
             topic: "Tópico"
             groups: "Grupos"
-            edit: "Editar convite"
+            edit: "Editar"
         bulk_invite:
           none: "Nenhum convite para exibir nesta página."
           text: "Convite em massa"
@@ -3099,7 +3101,6 @@ pt_BR:
       italic_label: "I"
       italic_title: "Realce"
       italic_text: "texto realçado"
-      heading_title: "Cabeçalhos"
       heading_level_n: "Cabeçalho %{levelNumber}"
       heading_level_n_title: "Cabeçalho %{levelNumber}"
       heading_level_paragraph: "Parágrafo"
@@ -5336,9 +5337,9 @@ pt_BR:
           always_public: "O conteúdo nesta seção é sempre público"
           more_menu: "Menu Mais"
           localizations:
-            title: "Traduções"
             locale: "Idioma"
             title_label: "Título da seção"
+            remove_language: "Remover"
           links:
             add: "Adicionar outro link"
             delete: "Excluir link"

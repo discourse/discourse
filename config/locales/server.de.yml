@@ -2502,7 +2502,6 @@ de:
     default_other_external_links_in_new_tab: "Öffne externe Links standardmäßig in einer neuen Registerkarte."
     default_other_enable_quoting: "Aktiviere standardmäßig die Zitat-Antwort-Funktion für hervorgehobenen Text."
     default_other_enable_smart_lists: "Bei der Eingabe im Composer standardmäßig intelligente Listen aktivieren."
-    default_other_enable_defer: "Aktiviere standardmäßig die Funktion zum Aufschieben von Themen."
     default_other_enable_markdown_monospace_font: "Verwende standardmäßig eine Monospace-Schriftart im Markdown-Modus des Editors."
     default_other_dynamic_favicon: "Zeige standardmäßig die Anzahl der neuen/aktualisierten Themen im Browser-Symbol an."
     default_other_skip_new_user_tips: "Überspringe Tipps und Abzeichen für das Onboarding neuer Benutzer."
@@ -5418,11 +5417,10 @@ de:
         title: "Nein"
         delete:
           title: "Benutzer löschen"
-          description: "Benutzer löschen, ohne ihn zu blockieren"
           complete: "Benutzer gelöscht."
         block:
           title: "Benutzer löschen und blockieren"
-          description: "Der Benutzer wird gelöscht und wir blockieren seine IP- und E-Mail-Adresse."
+          description: "Benutzer löschen und seine E-Mail- und IP-Adresse blockieren"
           complete: "Benutzer gelöscht und gesperrt."
       confirm_spam:
         title: "Ja"
@@ -5482,12 +5480,10 @@ de:
         bundle_title: "Was willst du mit dem Benutzer machen?"
       silence_user:
         title: "Benutzer stummschalten"
-        description: "Benutzer daran hindern Beiträge zu veröffentlichen"
         complete: "Benutzer stummgeschaltet"
         reason: "Benutzer von der Warteschlange zur Überprüfung aus stummgeschaltet"
       suspend_user:
         title: "Benutzer sperren"
-        description: "Das Benutzerkonto sperren"
         complete: "Benutzer gesperrt"
         reason: "Benutzer von der Warteschlange zur Überprüfung aus gesperrt"
       delete_user:

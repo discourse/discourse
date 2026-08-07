@@ -128,6 +128,7 @@ sv:
         save: "Spara"
         enabled: "Aktiverad?"
         allowed_groups: "Tillåtna grupper"
+        duplicate: "Duplicera"
         delete: "Ta bort"
         thinking_effort_options:
           none: "Ingen"
@@ -206,7 +207,6 @@ sv:
         tests:
           success: "Klart!"
         providers:
-          google: "Google"
           fake: "Anpassad"
         provider_fields:
           region: "Region"

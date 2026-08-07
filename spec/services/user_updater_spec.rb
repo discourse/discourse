@@ -46,24 +46,33 @@ RSpec.describe UserUpdater do
       expect(user.reload.name).to eq "Jim Tom"
     end
 
-    it "keeps the interface locale among the user's understood languages" do
+    it "preserves explicitly submitted understood languages when the interface locale changes" do
       user.update!(locale: "en")
-      user.user_option.update!(understood_languages: ["en"])
 
-      UserUpdater.new(user, user).update(locale: "ja", understood_languages: [])
+      UserUpdater.new(user, user).update(locale: "ja", understood_languages: %w[ja de])
 
       expect(user.reload.locale).to eq("ja")
-      expect(user.user_option.understood_languages).to eq(["ja"])
+      expect(user.user_option.understood_languages).to eq(%w[ja de])
     end
 
-    it "uses the effective interface locale when user locales are disabled" do
+    it "preserves understood languages when only the interface locale changes" do
+      user.update!(locale: "en")
+      user.user_option.update!(understood_languages: ["de"])
+
+      UserUpdater.new(user, user).update(locale: "ja")
+
+      expect(user.reload.locale).to eq("ja")
+      expect(user.user_option.understood_languages).to eq(["de"])
+    end
+
+    it "preserves explicitly submitted understood languages when user locales are disabled" do
       SiteSetting.default_locale = "en"
       SiteSetting.allow_user_locale = false
       user.update!(locale: "fr")
 
-      UserUpdater.new(user, user).update(understood_languages: [])
+      UserUpdater.new(user, user).update(understood_languages: %w[en ja])
 
-      expect(user.user_option.understood_languages).to eq(["en"])
+      expect(user.user_option.understood_languages).to eq(%w[en ja])
     end
 
     it "adapts legacy show-original updates to the positive preference" do

@@ -186,7 +186,6 @@ sq:
         next:
           title: "Vazhdo përpara"
         providers:
-          google: "Google"
           fake: "Grupet e krijuara"
       ai_helper:
         context_menu:

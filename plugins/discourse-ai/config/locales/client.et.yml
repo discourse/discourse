@@ -180,7 +180,6 @@ et:
         tests:
           success: "Korras!"
         providers:
-          google: "Google"
           fake: "Individuaalne"
       ai_helper:
         context_menu:

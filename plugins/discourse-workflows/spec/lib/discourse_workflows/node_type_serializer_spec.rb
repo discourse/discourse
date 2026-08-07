@@ -66,6 +66,7 @@ RSpec.describe DiscourseWorkflows::NodeTypeSerializer do
         display_options: {
         },
         variants: [],
+        extensions: [],
       )
     end
 

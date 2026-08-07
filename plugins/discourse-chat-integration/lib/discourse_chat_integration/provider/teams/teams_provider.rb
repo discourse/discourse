@@ -57,7 +57,7 @@ module DiscourseChatIntegration::Provider::TeamsProvider
           end
         )
     end
-    tags = topic.tags.map(&:name).join(", ") if topic.tags.present?
+    tags = DiscourseChatIntegration::Provider.display_tag_names(topic).presence
     category_and_tags_line = [category, tags].compact.join(" | ").presence
 
     body = [

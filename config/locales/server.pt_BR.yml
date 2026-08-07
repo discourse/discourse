@@ -2329,7 +2329,6 @@ pt_BR:
     default_other_external_links_in_new_tab: "Abra links externos em uma nova aba por padrão."
     default_other_enable_quoting: "Ative a citação de resposta para texto realçado por padrão."
     default_other_enable_smart_lists: "Ativar listas inteligentes ao digitar no compositor por padrão."
-    default_other_enable_defer: "Ative a funcionalidade de adiar tópico por padrão."
     default_other_enable_markdown_monospace_font: "Usar fonte monoespacial no modo Markdown do compositor por padrão."
     default_other_dynamic_favicon: "Mostre contagem de tópicos novos/atualizados no ícone do navegador por padrão."
     default_other_skip_new_user_tips: "Pule emblemas e dicas de integração de novo(a) usuário(a)."
@@ -4985,11 +4984,9 @@ pt_BR:
         title: "Não"
         delete:
           title: "Excluir usuário(a)"
-          description: "Excluir usuário sem bloquear"
           complete: "Usuário(a) excluído(a)."
         block:
           title: "Excluir e bloquear usuário(a)"
-          description: "O(a) usuário(a) será excluído(a) e bloquearemos seu endereço IP e de e-mail."
           complete: "Usuário(a) excluído(a) e bloqueado(a)."
       confirm_spam:
         title: "Sim"
@@ -5049,12 +5046,10 @@ pt_BR:
         bundle_title: "O que você deseja fazer com o(a) usuário(a)?"
       silence_user:
         title: "Silenciar usuário(a)"
-        description: "Impedir que o(a) usuário(a) faça postagens"
         complete: "Usuário(a) silenciado(a)"
         reason: "Usuário(a) silenciado(a) via fila de revisão"
       suspend_user:
         title: "Suspender usuário(a)"
-        description: "Suspender a conta do usuário"
         complete: "Usuário(a) suspenso(a)."
         reason: "Usuário(a) suspenso(a) via fila de revisão"
       delete_user:

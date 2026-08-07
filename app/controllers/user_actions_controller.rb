@@ -11,7 +11,7 @@ class UserActionsController < ApplicationController
       )
     offset = [0, user_actions_params[:offset].to_i].max
     action_types = (user_actions_params[:filter] || "").split(",").map(&:to_i)
-    limit = user_actions_params.fetch(:limit, 30).to_i
+    limit = [user_actions_params.fetch(:limit, 30).to_i, 100].min
 
     ensure_user_actions_visible!(user, action_types)
 

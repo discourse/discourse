@@ -303,6 +303,7 @@ pl_PL:
         screened_email_error: "Dzieje się tak, gdy adres e-mail nadawcy został już sprawdzony."
         unsubscribe_not_allowed: "Zdarza się, kiedy anulowanie subskrypcji przez e‐mail nie jest dozwolone dla tego użytkownika."
         email_not_allowed: "Zdarza się, gdy adres e-mail nie znajduje się na liście dozwolonych adresów lub jest na liście zablokowanych."
+        email_alias_not_allowed: "Dzieje się tak, gdy adres nadawcy jest aliasem adresu już zarejestrowanego na koncie, a znormalizowane adresy e-mail muszą być unikalne."
       unrecognized_error: "Niezidentyfikowany błąd"
     secure_uploads_placeholder: "Redacted: Ta strona ma włączone bezpieczne przesyłanie plików, odwiedź temat lub kliknij wyświetl media, aby zobaczyć załączone pliki."
     view_redacted_media: "Wyświetl załączniki"
@@ -906,9 +907,14 @@ pl_PL:
           attributes:
             linkable_type:
               invalid: "nie jest prawidłowy"
+        sidebar_section:
+          attributes:
+            base:
+              too_many_sidebar_urls: "Dozwolona jest maksymalna liczba rekordów: %{limit} . Zamiast tego otrzymano %{count} rekordów."
         api_key:
           base:
             at_least_one_granular_scope: "co najmniej jeden musi być wybrany"
+            read_only_scope: "musi to być globalny zakres odczytu"
       <<: *errors
   uncategorized_category_name: "Bez kategorii"
   general_category_name: "Ogólne"
@@ -1193,6 +1199,7 @@ pl_PL:
     error: "Podczas próby zmiany Twojego adresu email wystąpił błąd. Być może ten adres jest już używany?"
     doesnt_exist: "Ten adres e-mail nie jest powiązany z Twoim kontem."
     error_staged: "Podczas próby zmiany Twojego adresu email wystąpił błąd. Być może ten adres jest już używany?"
+    error_alias: "Ten adres e-mail jest aliasem adresu, który jest już w użyciu."
     already_done: "Przepraszamy, ten link aktywujący konto jest już nieważny. Być może Twój e-mail został zmieniony?"
     confirm: "Potwierdź"
     max_secondary_emails_error: "Osiągnąłeś maksymalny dozwolony limit dodatkowych e-maili."
@@ -1573,6 +1580,7 @@ pl_PL:
         page_view_anon_browser: "Anonimowi"
         page_view_logged_in_browser: "Zalogowani"
         page_view_crawler: "Boty indeksujące"
+        page_view_likely_crawler: "Prawdopodobne roboty indeksujące"
         page_view_embed: "Osadzone wyświetlenia stron"
         page_view_other: "Inny ruch"
       yaxis: "Dzień"
@@ -2122,6 +2130,9 @@ pl_PL:
     allowed_iframes: "Lista prefiksów adresów URL iframe, które Discourse może bezpiecznie dopuszczać w postach. Znak * można użyć w celu dopasowania dowolnej liczby znaków innych niż /."
     allowed_crawler_user_agents: "Agenci użytkowników dla robotów indeksujących, które powinny mieć dostęp do strony. OSTRZEŻENIE! USTAWIENIE TEGO SPOWODUJE BLOKADE ROBOTÓW, KTÓRE NIE SĄ NA LIŚCIE!"
     blocked_crawler_user_agents: "Unikalne słowo bez rozróżniania wielkości liter w ciągu znaków, które identyfikują crawlery internetowe, które nie powinny mieć dostępu do witryny. Nie ma zastosowania, jeśli dozwolona lista jest zdefiniowana."
+    crawler_asns: "Sieci ASN obsługiwane przez zweryfikowane roboty indeksujące. Ruch z tych sieci jest wykluczany z raportów dotyczących wyświetleń stron w przeglądarce i otrzymuje wysoką ocenę robota indeksującego."
+    crawler_detection_datacenter_asns: "Sieci ASN świadczące usługi w chmurze, hostingu lub centrów danych. Sieci te niekoniecznie są robotami indeksującymi: ich ruch otrzymuje ocenę niskiego poziomu zaufania robota indeksującego i nadal jest liczony jako ruch przeglądarki."
+    crawler_stale_chromium_major_version_cutoff: "Główne wersje Chromium o wartości równej lub niższej w sesjach bez zaangażowania otrzymują wynik robota indeksującego. Aktualizuj go dopiero po przeanalizowaniu ruchu; nieaktualny próg staje się mniej wrażliwy, a nie bardziej agresywny."
     slow_down_crawler_user_agents: "Agenty użytkownika robotów indeksujących sieć, które powinny mieć ograniczenie przepustowości zgodnie z konfiguracją w ustawieniu {{setting:slow_down_crawler_rate}} . Każda wartość musi mieć co najmniej 3 znaki."
     slow_down_crawler_rate: "Jeżeli określono {{setting:slow_down_crawler_user_agents}} , ta szybkość będzie dotyczyć wszystkich robotów indeksujących (liczba sekund opóźnienia między żądaniami)"
     llms_txt: "Prześlij plik tekstowy, który będzie udostępniany w katalogu /llms.txt robotom LLM. Więcej informacji znajdziesz na stronie <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> ."
@@ -2158,6 +2169,7 @@ pl_PL:
     top_page_default_timeframe: "Domyślny okres górnej strony dla anonimowych użytkowników (automatycznie dostosowuje się do zalogowanych użytkowników na podstawie ich ostatniej wizyty)."
     moderators_view_emails: "Zezwalaj moderatorom na przeglądanie adresów e-mail użytkowników."
     moderators_view_ips: "Zezwól moderatorom na przeglądanie adresów IP użytkowników."
+    moderators_view_sso_details: "Zezwól moderatorom na przeglądanie rekordów SSO"
     moderators_change_trust_levels: "Zezwól moderatorom na zmianę poziomu zaufania użytkowników."
     prioritize_username_in_ux: "Pokaż nazwę użytkownika jako pierwszą na stronie użytkownika, jego karcie i w postach (gdy opcja jest wyłączona, pełna nazwa jest wyświetlana jako pierwsza)"
     enable_rich_text_paste: "Włącz automatyczną konwersję HTML na Markdown podczas wklejania tekstu do kompozytora."
@@ -2699,7 +2711,6 @@ pl_PL:
     default_other_external_links_in_new_tab: "Otwórz linki zewnętrzne w nowej karcie domyślnie."
     default_other_enable_quoting: "Domyślnie zezwól na podświetlone cytowane odpowiedzi."
     default_other_enable_smart_lists: "Domyślnie włącz inteligentne listy podczas pisania w kompozytorze."
-    default_other_enable_defer: "Domyślnie włącz funkcję odroczenia tematu."
     default_other_enable_markdown_monospace_font: "Domyślnie używaj czcionki monospace w trybie Markdown kompozytora."
     default_other_dynamic_favicon: "Domyślnie pokazuj liczbę nowych/zaktualizowanych tematów w ikonie przeglądarki."
     default_other_skip_new_user_tips: "Pomiń wskazówki i odznaki dotyczące wprowadzania nowych użytkowników."
@@ -2864,6 +2875,7 @@ pl_PL:
     enable_horizon_high_context_topic_cards: "Wyświetla bogatsze karty tematyczne w motywie Horizon, obejmujące fragmenty tematów, tagi i rozszerzone informacje o wtyczce."
     granular_anonymous_and_logged_in_groups_permissions: "Wprowadza uprawnienia witryn oparte na grupach, które traktują „wszystkich” jako „wszystkich zalogowanych użytkowników” oraz włącza nowe pseudogrupy „anonimowi_użytkownicy” i „zalogowani_użytkownicy”, dzięki czemu administratorzy mogą wyraźnie określać mianem anonimowych odwiedzających i uwierzytelnionych użytkowników."
     dashboard_improvements: "Umożliwia dostęp do przeprojektowanego pulpitu administracyjnego, który umożliwia przypinanie niestandardowych raportów i obejmuje ulepszone dane dotyczące ruchu w witrynie, zaangażowania i inne analizy powiązane z sukcesem i wartością społeczności."
+    improved_crawler_detection: "Umożliwia ulepszone śledzenie robotów indeksujących, co pozwala na lepsze wykrywanie prawdopodobnych robotów i zapewnia dokładniejsze raportowanie ruchu sieciowego."
     enable_invite_modal_with_roles: "Umożliwia przeprojektowany proces zapraszania, który pozwala administratorom zapraszać kogoś bezpośrednio jako administratora. Zaproszona osoba staje się moderatorem po rejestracji, a administratorem po potwierdzeniu zaproszenia przez osobę zapraszającą e-mailem."
     update_pending_users_reminder_default: "Aktualizujemy domyślną wartość ustawienia {{setting:pending_users_reminder_delay_minutes}} na 30 minut, aby personel był szybko powiadamiany o oczekiwaniu na zatwierdzenie nowego członka. Jeśli to ustawienie zostało już wcześniej zmienione, ta zmiana nie będzie miała żadnego efektu."
     errors:
@@ -3960,6 +3972,14 @@ pl_PL:
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
         Twoja odpowiedź została wysłana z zablokowanego adresu email. Spróbuj ją wysłać z innego adresu email, lub [skontaktuj się z obsługą] %{base_url}/o nas).
+    email_reject_email_alias:
+      title: "Odrzuć e-mail Alias ​​e-mail"
+      subject_template: "[%{email_prefix}] Problem z pocztą e-mail – nierozpoznany adres e-mail"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – nierozpoznany adres e-mail"
+      text_body_template: |
+        Przepraszamy, ale Twoja wiadomość e-mail wysłana na adres %{destination} (zatytułowana %{former_title}) nie dotarła.
+
+        Nie udało nam się dopasować adresu, z którego wysłałeś wiadomość na konto w tej witrynie. Spróbuj wysłać wiadomość z adresu e-mail użytego do rejestracji lub [skontaktuj się z pracownikiem](%{base_url}/about).
     email_reject_inactive_user:
       title: "Email odrzucony Użytkownik nieaktywny"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - nieaktywny użytkownik"
@@ -5871,6 +5891,7 @@ pl_PL:
     post_restored_by_author: "Wpis został przywrócony przez autora"
     post_deleted_by_author_after_penalty: >-
       Wpis został usunięty przez autora po tym, jak użytkownik został za to ukarany. Zapoznaj się z karą bez przywracania wpisu.
+    target_user_deleted: "Automatycznie zignorowano, ponieważ konto użytkownika zostało usunięte."
     priorities:
       low: "Niski"
       medium: "Średni"
@@ -6016,11 +6037,11 @@ pl_PL:
         title: "Nie"
         delete:
           title: "Usuń użytkownika"
-          description: "Usuń użytkownika bez blokowania"
+          description: "Usuń użytkownika bez blokowania jego adresu e-mail lub adresu IP"
           complete: "Użytkownik usunięty."
         block:
           title: "Usuń i zablokuj użytkownika"
-          description: "Użytkownik zostanie usunięty, a my zablokujemy jego adres IP i e-mail."
+          description: "Usuń użytkownika i zablokuj jego adres e-mail i adres IP"
           complete: "Użytkownik usunięty i zablokowany."
       confirm_spam:
         title: "Tak"
@@ -6032,9 +6053,11 @@ pl_PL:
         bundle_title: "Odrzuć…"
       reject_and_suspend:
         title: "Odrzuć i zawieś użytkownika"
+        description: "Odrzuć wpis i zablokuj użytkownikowi możliwość logowania się do czasu zakończenia zawieszenia"
         complete: "Post odrzucony, a użytkownik zawieszony."
       reject_and_silence:
         title: "Odrzuć i wycisz użytkownika"
+        description: "Odrzuć wpis i zablokuj użytkownikowi możliwość publikowania wpisów lub wysyłania wiadomości"
         complete: "Post odrzucony, a użytkownik wyciszony."
       reject_and_delete:
         title: "Odrzuć i usuń post"
@@ -6080,12 +6103,12 @@ pl_PL:
         bundle_title: "Co chcesz zrobić z użytkownikiem?"
       silence_user:
         title: "Wycisz użytkownika"
-        description: "Zablokuj użytkownikowi możliwość tworzenia wpisów"
+        description: "Zablokuj użytkownikowi możliwość publikowania lub wysyłania wiadomości"
         complete: "Użytkownik wyciszony"
         reason: "Użytkownik uciszony przez kolejkę recenzji"
       suspend_user:
         title: "Zawieś użytkownika"
-        description: "Zawieś konto użytkownika"
+        description: "Zablokuj użytkownikowi możliwość logowania się do momentu zakończenia zawieszenia"
         complete: "Użytkownik zawieszony"
         reason: "Użytkownik zawieszony przez kolejkę recenzji"
       delete_user:

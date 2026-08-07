@@ -32,9 +32,8 @@ module Acl
     end
 
     def group_has_permission?(group_or_id, permission)
-      @group_lookup[group_or_id.is_a?(Numeric) ? group_or_id : group_or_id&.id]&.include?(
-        permission,
-      )
+      group_permissions = @group_lookup[group_or_id.is_a?(Numeric) ? group_or_id : group_or_id&.id]
+      (group_permissions || []).include?(permission)
     end
 
     def group_has_any_permission?(group_or_id, permissions)
@@ -51,7 +50,8 @@ module Acl
     end
 
     def user_has_permission?(user_or_id, permission)
-      @user_lookup[user_or_id.is_a?(Numeric) ? user_or_id : user_or_id&.id]&.include?(permission)
+      user_permissions = @user_lookup[user_or_id.is_a?(Numeric) ? user_or_id : user_or_id&.id]
+      (user_permissions || []).include?(permission)
     end
 
     def user_has_any_permission?(user_or_id, permissions)

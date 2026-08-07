@@ -13,14 +13,21 @@ fr:
   js:
     discourse_reactions:
       reactions_title: "Réactions"
-      state_panel:
-        more_users: "et %{count} de plus..."
+      reaction:
+        forbidden: "Vous n'êtes pas autorisé(e) à réagir à cette publication ni à modifier votre réaction."
       picker:
         react_with: "Réagir à ce message avec : %{reaction}"
         cant_remove_reaction: "Vous ne pouvez plus supprimer votre réaction"
         remove_reaction: "Supprimer cette réaction %{reaction}"
       users_popup:
         all: "Tout"
+        title:
+          one: "%{count} réaction"
+          other: "%{count} réactions"
+      counter:
+        aria_label:
+          one: "%{count} réaction"
+          other: "%{count} réactions"
       main_reaction:
         add: "J'aime cette publication"
         remove: "Supprimer ce « J'aime »"
