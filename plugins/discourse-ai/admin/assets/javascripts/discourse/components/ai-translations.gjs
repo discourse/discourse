@@ -509,7 +509,8 @@ export default class AiTranslations extends Component {
           />
           <actions.Default
             @label="discourse_ai.translations.admin_actions.localization_settings"
-            @route="adminConfig.localization.settings"
+            @route="adminSiteSettingsCategory"
+            @routeModels="content_localization"
             class="ai-localization-settings-button"
           />
         </:actions>
