@@ -3,6 +3,7 @@
 module DiscourseDataExplorer
   class AdminDashboardReportProvider < ::AdminDashboard::Reports::SourceProvider
     SOURCE_NAME = "data_explorer_query"
+    CACHE_MAX_AGE = 1.hour
 
     def self.source_name
       SOURCE_NAME
@@ -45,7 +46,9 @@ module DiscourseDataExplorer
 
       load_queries(identifiers).each_with_object({}) do |query, hash|
         next if !guardian.user_can_access_query?(query)
-        result = QueryRunner.run(query, params, current_user: guardian.user)
+        result =
+          QueryRunner.cached_result(query, params, max_age: CACHE_MAX_AGE) ||
+            QueryRunner.run(query, params, current_user: guardian.user)
         result = result.merge(empty: Array(result[:rows]).empty?) if result.is_a?(Hash)
         hash[query.id.to_s] = result
       end
