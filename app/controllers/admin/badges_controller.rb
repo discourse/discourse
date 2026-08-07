@@ -170,6 +170,8 @@ class Admin::BadgesController < Admin::AdminController
   def destroy
     Badge.transaction do
       badge = find_badge
+      raise Discourse::InvalidAccess if badge.system?
+
       StaffActionLogger.new(current_user).log_badge_deletion(badge)
       badge.clear_user_titles!
       badge.destroy!
