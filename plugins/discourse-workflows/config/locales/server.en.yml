@@ -83,6 +83,7 @@ en:
         inconsistent_format: "Every returned item must use the same format."
       topic:
         create_failed: "Failed to create topic."
+        bump_failed: "Failed to bump topic."
         unknown_operation: "Unknown operation: %{operation}."
       post:
         topic_closed_or_archived: "Cannot create a post in a closed or archived topic."
