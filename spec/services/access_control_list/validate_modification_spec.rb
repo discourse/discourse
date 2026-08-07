@@ -2,8 +2,6 @@
 
 RSpec.describe AccessControlList::ValidateModification do
   describe described_class::Contract, type: :model do
-    it { is_expected.to validate_presence_of(:new_acl) }
-    it { is_expected.to validate_presence_of(:target_id) }
     it { is_expected.to validate_presence_of(:target_type) }
   end
 
@@ -12,14 +10,13 @@ RSpec.describe AccessControlList::ValidateModification do
 
     fab!(:current_user, :user)
 
-    let(:params) { { new_acl:, target_id:, target_type: } }
+    let(:params) { { new_acl:, target_type: } }
     let(:dependencies) { { guardian: } }
     let(:guardian) { current_user.guardian }
     let(:new_acl) do
       [{ type: "group", id: Group::AUTO_GROUPS[:logged_in_users], permission: "view" }]
     end
     let(:target) { Fabricate(:post) }
-    let(:target_id) { target.id }
     let(:target_type) { "ValidateModificationTestClass" }
 
     class ValidateModificationTestClass < ActiveRecord::Base
@@ -30,12 +27,6 @@ RSpec.describe AccessControlList::ValidateModification do
       def self.mandatory_acl
         [{ type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" }]
       end
-    end
-
-    context "when the contract is invalid" do
-      let(:new_acl) { [] }
-
-      it { is_expected.to fail_a_contract }
     end
 
     context "when the target type does not exist" do

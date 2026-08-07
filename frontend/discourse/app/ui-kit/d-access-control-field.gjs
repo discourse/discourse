@@ -82,6 +82,8 @@ export default class DAccessControlField extends Component {
     });
 
     if (confirmed) {
+      // TODO (martin) Not even sure we need this? If you confirm then we save, and whatever
+      // form generally goes away ...
       this.confirmedAclFingerprint = fingerprint;
       // TODO (martin) Do we need to reload the page or something here? E.g. what happens
       // if the  permission for even being able to view this thing disappears?
