@@ -112,11 +112,13 @@ export default class DAccessControl extends Component {
    */
   @cached
   get mandatoryAcl() {
-    if (!this.args.aclTarget) {
+    if (!this.args.aclTargetType) {
       return [];
     }
 
-    return this.site.access_control?.mandatory_acl?.[this.args.aclTarget] || [];
+    return (
+      this.site.access_control?.mandatory_acl?.[this.args.aclTargetType] || []
+    );
   }
 
   /**
@@ -127,11 +129,13 @@ export default class DAccessControl extends Component {
    */
   @cached
   get bannedAcl() {
-    if (!this.args.aclTarget) {
+    if (!this.args.aclTargetType) {
       return [];
     }
 
-    return this.site.access_control?.banned_acl?.[this.args.aclTarget] || [];
+    return (
+      this.site.access_control?.banned_acl?.[this.args.aclTargetType] || []
+    );
   }
 
   /**
@@ -386,7 +390,7 @@ export default class DAccessControl extends Component {
         @labelProperty="name"
         @filterPlaceholder="access_control.manage.add_group"
         @options={{hash
-          aclTarget=@aclTarget
+          aclTargetType=@aclTarget.type
           customSearchOptions=(hash
             defaultSearchResults=this.defaultAvailableGrantees
           )

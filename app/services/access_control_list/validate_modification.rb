@@ -20,8 +20,8 @@ class AccessControlList::ValidateModification
     Site.access_control_target_classes.map(&:name).include?(params.target_type)
   end
 
-  def fetch_new_acl_with_mandatory(params:, target_type:)
-    AccessControlList.inject_mandatory_acl(params.new_acl, target_type)
+  def fetch_new_acl_with_mandatory(params:)
+    AccessControlList.inject_mandatory_acl(params.new_acl, params.target_type)
   end
 
   def user_will_have_permission(guardian:, new_acl_with_mandatory:)
