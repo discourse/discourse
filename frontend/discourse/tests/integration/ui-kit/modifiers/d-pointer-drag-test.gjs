@@ -142,11 +142,12 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
   });
 
   module("focus", function () {
-    test("an accepted press focuses the handle", async function (assert) {
+    test("an accepted press and the drag it starts leave focus alone", async function (assert) {
       const onDragStart = () => {};
 
       await render(
         <template>
+          <button type="button" class="dpd-other"></button>
           <button
             type="button"
             class="dpd-target"
@@ -155,17 +156,27 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
         </template>
       );
       stubPointerCapture(".dpd-target");
+      find(".dpd-other").focus();
 
       await triggerEvent(".dpd-target", "pointerdown", {
         button: 0,
         pointerId: 1,
       });
-
       assert
-        .dom(".dpd-target")
+        .dom(".dpd-other")
         .isFocused(
-          "the press restores the focus its own preventDefault suppressed, so a mouse user can carry on by keyboard"
+          "the press takes no focus, so a drag cannot pull the caret out of whatever the user was working in"
         );
+
+      await triggerEvent(".dpd-target", "pointermove", {
+        pointerId: 1,
+        clientX: 40,
+        clientY: 40,
+      });
+      await triggerEvent(".dpd-target", "pointerup", { pointerId: 1 });
+      assert
+        .dom(".dpd-other")
+        .isFocused("nor does any later phase of the gesture take it");
     });
 
     test("a press that starts no gesture leaves focus alone", async function (assert) {

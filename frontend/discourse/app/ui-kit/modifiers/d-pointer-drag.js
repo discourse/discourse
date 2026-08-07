@@ -300,15 +300,6 @@ export function registerPointerDrag(element, getArgsRef) {
       event.stopPropagation();
     }
 
-    // Restores what the line above just took away. Cancelling `pointerdown`
-    // suppresses the compatibility `mousedown`, and focus rides on that, so a
-    // handle that is a real control stops taking focus when clicked — leaving a
-    // mouse user unable to drag and then fine-tune the same control by keyboard.
-    // Paired with `preventDefault` rather than run earlier, so a press that
-    // starts no gesture keeps its hands off the focused element. Unfocusable
-    // elements ignore this, which is why it is unconditional.
-    element.focus({ preventScroll: true });
-
     // Last, so this gesture is fully established before control passes to another
     // consumer's callback, which is free to throw.
     superseded?.(event);
@@ -448,10 +439,12 @@ export function registerPointerDrag(element, getArgsRef) {
  *    an unrecognised value leaves `touch-action` at its inherited value, so add
  *    a rule to that stylesheet rather than inventing a token here.
  *
- * An accepted press focuses the element, because cancelling `pointerdown` is what
- * otherwise stops a handle that is a real control from taking focus on click. Give
- * the handle a tab stop when it has a keyboard path worth reaching; leave it
- * unfocusable and nothing happens.
+ * A press never moves focus. Cancelling `pointerdown` suppresses the compatibility
+ * `mousedown` that focus rides on, and that suppression is kept: a handle usually
+ * sits beside the thing it resizes or reorders, so taking focus on press would pull
+ * the caret out of whatever the user was working in. Give the handle its own tab
+ * stop when it has a keyboard path worth reaching — that is how it stays operable,
+ * not by claiming focus from a gesture assistive technology cannot perform.
  *
  * A single element supports one registration. Two would each claim the same
  * pointer capture and the same attribute, and tearing either down would strand

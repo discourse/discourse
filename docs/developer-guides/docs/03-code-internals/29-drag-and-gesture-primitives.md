@@ -20,20 +20,20 @@ input. `dOnResize` appears below only as a disambiguation note.
 
 # Pick by intent
 
-| I want to… | Use |
-| --- | --- |
-| Move something onto a target and transfer a payload | `dDragAndDropSource` + `dDragAndDropTarget` |
-| React to a drag without being a drop target | `dDragAndDropMonitor` |
-| Scroll a container while a drag is in flight | `dDragAndDropAutoScroll` |
-| Receive files/HTML/text dragged in from outside the browser, and handle them myself | `dDragAndDropExternalTarget` |
-| Receive dropped files **for upload** | the Uppy `DropTarget` path, **not** the modifier above |
-| Read whether, and what, is currently being dragged — reactively | `@service dragAndDrop` |
-| Press, drag, and change a value continuously | `dPointerDrag` |
-| Put a resize handle between two regions | `DResizeSeparator` |
-| Resize along one axis, supplying my own element and semantics | `dResizeEdge` |
-| Resize a box in two dimensions from its edges and corners | `DResizeHandles` |
-| Detect a directional touch swipe | `dSwipe` — a discrete gesture, not a continuous transform |
-| Anything, using `dDraggable` | Don't — deprecated; its notice names the replacement |
+| I want to…                                                                          | Use                                                       |
+| ----------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| Move something onto a target and transfer a payload                                 | `dDragAndDropSource` + `dDragAndDropTarget`               |
+| React to a drag without being a drop target                                         | `dDragAndDropMonitor`                                     |
+| Scroll a container while a drag is in flight                                        | `dDragAndDropAutoScroll`                                  |
+| Receive files/HTML/text dragged in from outside the browser, and handle them myself | `dDragAndDropExternalTarget`                              |
+| Receive dropped files **for upload**                                                | the Uppy `DropTarget` path, **not** the modifier above    |
+| Read whether, and what, is currently being dragged — reactively                     | `@service dragAndDrop`                                    |
+| Press, drag, and change a value continuously                                        | `dPointerDrag`                                            |
+| Put a resize handle between two regions                                             | `DResizeSeparator`                                        |
+| Resize along one axis, supplying my own element and semantics                       | `dResizeEdge`                                             |
+| Resize a box in two dimensions from its edges and corners                           | `DResizeHandles`                                          |
+| Detect a directional touch swipe                                                    | `dSwipe` — a discrete gesture, not a continuous transform |
+| Anything, using `dDraggable`                                                        | Don't — deprecated; its notice names the replacement      |
 
 # The three boundaries
 
@@ -45,9 +45,9 @@ Three similarly named files sit in `ui-kit/modifiers/`, and only two of them are
 gestures.
 
 - **`dOnResize`** wraps a `ResizeObserver`. It tells you an element's size
-  *changed* — by layout, by a font load, by a sibling growing. Nobody dragged
+  _changed_ — by layout, by a font load, by a sibling growing. Nobody dragged
   anything.
-- **`dResizeEdge`** and **`DResizeHandles`** are how a user *performs* a resize.
+- **`dResizeEdge`** and **`DResizeHandles`** are how a user _performs_ a resize.
 
 If you want to know a size, observe. If you want to let someone change one, perform.
 
@@ -84,7 +84,7 @@ monitor's callbacks means hand-maintaining state the service already keeps.
 - **`DResizeSeparator`** is the one to reach for by default. It wraps
   `dResizeEdge` and supplies everything a consumer would otherwise hand-write
   beside it: the `role="separator"` contract, one tab stop, the `aria-orientation`
-  that is the *opposite* of the axis, and a tracked mirror of the size for
+  that is the _opposite_ of the axis, and a tracked mirror of the size for
   `aria-valuenow` / `min` / `max` that keeps up with size changes no gesture
   caused.
 - **`dResizeEdge`** is the modifier underneath. Use it directly only when the
@@ -109,7 +109,7 @@ So nobody tries to force them in:
 - **`dOnResize`**, **`dObserveIntersection`**, **`dScrollIntoView`** — observers,
   not gestures. See the first boundary above.
 
-`dSwipe` is the one boundary case that stays *in* this guide while sitting outside
+`dSwipe` is the one boundary case that stays _in_ this guide while sitting outside
 the drag suite, because it is still an input-driven gesture. It reports a
 directional flick with a velocity — a discrete outcome. If you want a value that
 tracks the pointer continuously, you want `dPointerDrag`.
@@ -121,11 +121,16 @@ is a drag has no keyboard path at all. Every consumer in core pairs its drag wit
 something else — arrow buttons at the reorder surfaces, the keyboard path built
 into `dResizeEdge` — and a new one should too.
 
+No gesture moves focus. A handle usually sits against the thing it acts on, and
+taking focus on press would pull the caret out of whatever the user was working
+in. So a handle that is operable needs its own tab stop to be reachable; it will
+never be handed focus by being dragged.
+
 `aria-dropeffect` and `aria-grabbed` are **deliberately not used** anywhere in this
 suite. Both were deprecated in ARIA 1.1 and have no assistive-technology support;
 adding them signals support that does not exist.
 
-Announce the *outcome*, not the gesture. A drop that reorders something should
+Announce the _outcome_, not the gesture. A drop that reorders something should
 report where the item landed, once, through `a11y.announce()`. Do not announce the
 drop indicator moving: the gesture is unreachable by assistive technology, so
 narrating hover position is noise for the only people who would hear it.
