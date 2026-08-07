@@ -94,6 +94,13 @@ RSpec.describe FinishInstallationController do
       expect(response.body).to include(I18n.t("finish_installation.register.no_emails"))
     end
 
+    it "does not render a password field" do
+      get "/finish-installation/register"
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include('name="password"')
+      expect(response.body).not_to include('type="password"')
+    end
+
     it "returns 400 when email is not in the allowed list" do
       post "/finish-installation/register.json",
            params: {
@@ -102,6 +109,43 @@ RSpec.describe FinishInstallationController do
              password: "disismypasswordokay",
            }
       expect(response.status).to eq(400)
+    end
+
+    it "creates a passwordless user and sends the admin activation email with a password reset link" do
+      attacker_password = "AttackerKnownPass123!"
+
+      post "/finish-installation/register",
+           params: {
+             email: "robin@example.com",
+             username: "eviltrout",
+             password: attacker_password,
+           }
+
+      expect(response).to redirect_to(finish_installation_confirm_email_path)
+
+      user = User.find_by_email("robin@example.com")
+      expect(user).to be_present
+      expect(user.user_password).to be_blank
+      expect(user.confirm_password?(attacker_password)).to eq(false)
+
+      expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
+      job_args = Jobs::CriticalUserEmail.jobs.first["args"].first
+      activation_token = job_args["email_token"]
+      password_reset_token = job_args["password_reset_token"]
+
+      expect(
+        EmailToken.confirmable(activation_token, scope: EmailToken.scopes[:signup]).user,
+      ).to eq(user)
+      expect(
+        EmailToken.confirmable(
+          password_reset_token,
+          scope: EmailToken.scopes[:password_reset],
+        ).user,
+      ).to eq(user)
+
+      email = UserNotifications.signup(user, email_token: activation_token, password_reset_token:)
+      expect(email.body.to_s).to include("/u/activate-account/#{activation_token}")
+      expect(email.body.to_s).to include("/u/password-reset/#{password_reset_token}")
     end
   end
 
