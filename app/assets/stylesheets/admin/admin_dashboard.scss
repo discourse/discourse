@@ -163,10 +163,6 @@ $db-bar-height: var(--space-2);
       padding: calc(var(--space-5) / 2 + var(--space-half)) 0;
     }
 
-    &.--dragging {
-      opacity: 0.5;
-    }
-
     /* One boundary, one line. Rows tile edge to edge, so a row's own top border
        and its predecessor's bottom border are adjacent bands rather than the
        same pixels: drawing each state on its own row would shift the indicator

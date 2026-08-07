@@ -73,6 +73,10 @@ describe "Admin Dashboard Configure menu" do
       dashboard.visit
       dashboard.open_configure_menu
 
+      # Asserted before the drag: without it, a run where the two are already in
+      # the expected order passes whether or not the drag did anything.
+      expect(dashboard.section_ids_in_order.first(2)).to eq(%w[highlights reports])
+
       dashboard.drag_section("reports", "highlights")
 
       try_until_success do

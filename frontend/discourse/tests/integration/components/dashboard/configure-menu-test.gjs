@@ -9,6 +9,7 @@ import {
 } from "discourse/services/a11y";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
+  assertDragRegistered,
   centerOf,
   dragEvent,
   simulateDrag,
@@ -31,12 +32,7 @@ async function dragSection(sourceId, targetId, position) {
   const source = rowSelector(sourceId);
   const target = rowSelector(targetId);
 
-  if (
-    !find(source).hasAttribute("data-drag-source") ||
-    !find(target).hasAttribute("data-drop-target")
-  ) {
-    return;
-  }
+  assertDragRegistered(source, target);
 
   const targetRect = find(target).getBoundingClientRect();
   await simulateDrag(source, target, {

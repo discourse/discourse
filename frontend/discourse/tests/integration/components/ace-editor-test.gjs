@@ -12,18 +12,11 @@ import sinon from "sinon";
 import AceEditor from "discourse/components/ace-editor";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import { i18n } from "discourse-i18n";
 
-function installPointerCaptureStub(element) {
-  const captured = new Set();
-
-  element.setPointerCapture = (pointerId) => captured.add(pointerId);
-  element.hasPointerCapture = (pointerId) => captured.has(pointerId);
-  element.releasePointerCapture = (pointerId) => captured.delete(pointerId);
-}
-
 async function dragResizeEdge(element, { from, to, pointerId = 1 }) {
-  installPointerCaptureStub(element);
+  stubPointerCapture(element);
 
   await triggerEvent(element, "pointerdown", {
     button: 0,

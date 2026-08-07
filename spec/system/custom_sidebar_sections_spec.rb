@@ -302,6 +302,39 @@ describe "Custom sidebar sections" do
     end
   end
 
+  it "Sidebar link DnD oracle lets the user reorder links with the keyboard" do
+    sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
+
+    ["Sidebar Tags", "Sidebar Categories", "Sidebar Latest"].each do |name|
+      Fabricate(:sidebar_url, name: name, value: "/#{name.parameterize}").tap do |sidebar_url|
+        Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+      end
+    end
+
+    sign_in user
+
+    visit("/latest")
+
+    sidebar.edit_custom_section("My section")
+
+    section_modal.move_link_down("Sidebar Tags")
+
+    try_until_success do
+      expect(section_modal.link_names).to eq(
+        ["Sidebar Categories", "Sidebar Tags", "Sidebar Latest"],
+      )
+    end
+
+    section_modal.save
+    expect(section_modal).to be_closed
+
+    try_until_success do
+      expect(sidebar.primary_section_links("my-section")).to eq(
+        ["Sidebar Categories", "Sidebar Tags", "Sidebar Latest"],
+      )
+    end
+  end
+
   it "does not allow to drag on mobile", mobile: true do
     sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
 
@@ -321,6 +354,14 @@ describe "Custom sidebar sections" do
     sidebar.edit_custom_section("My section")
 
     expect(page).not_to have_css(".sidebar-section-form-link .draggable")
+
+    # The arrows are the only reorder path left once the handle is gone, so a
+    # touch screen having none at all is the regression to catch here.
+    section_modal.move_link_down("Sidebar Tags")
+
+    try_until_success do
+      expect(section_modal.link_names).to eq(["Sidebar Categories", "Sidebar Tags"])
+    end
   end
 
   it "does not allow the user to edit public section" do

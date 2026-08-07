@@ -10,6 +10,7 @@ import {
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
+  assertDragRegistered,
   centerOf,
   dragEvent,
   simulateDrag,
@@ -56,6 +57,25 @@ function communitySection() {
   };
 }
 
+/**
+ * A section whose primary list is long enough that deleting one link still
+ * leaves two visible, so an arrow move has a neighbour to swap with and a
+ * deleted link can sit between them.
+ */
+function sectionWithThreePrimaryLinks() {
+  const section = communitySection();
+
+  section.links.splice(2, 0, {
+    id: 5,
+    icon: "link",
+    name: "Primary 3",
+    value: "/primary-3",
+    segment: "primary",
+  });
+
+  return section;
+}
+
 function linkNames(selector) {
   return findAll(`${selector} input[name="link-name"]`).map(
     (input) => input.value
@@ -80,16 +100,19 @@ function rowSelector(name) {
   return `[data-row-id="${row.dataset.rowId}"]`;
 }
 
+function arrowSelector(name, direction) {
+  return `${rowSelector(name)} button[aria-label="Move ${name} ${direction}"]`;
+}
+
+async function moveLink(name, direction) {
+  await click(arrowSelector(name, direction));
+}
+
 async function dragLink(sourceName, targetName, position) {
   const source = rowSelector(sourceName);
   const target = rowSelector(targetName);
 
-  if (
-    !find(source).hasAttribute("data-drag-source") ||
-    !find(target).hasAttribute("data-drop-target")
-  ) {
-    return;
-  }
+  assertDragRegistered(source, target);
 
   const targetRect = find(target).getBoundingClientRect();
   const targetCoordinates = {
@@ -475,6 +498,86 @@ module(
         .dom(row)
         .doesNotHaveClass("--dragging", "a mobile row cannot initiate a drag");
       await dragEvent(row, "dragend", { dataTransfer, ...coordinates });
+    });
+
+    test(`${ORACLE} moves a link down its own list with the arrow`, async function (assert) {
+      await renderForm(this);
+
+      await moveLink("Primary 1", "down");
+
+      assert.deepEqual(
+        renderedLinks(),
+        {
+          primary: ["Primary 2", "Primary 1"],
+          secondary: ["Secondary 1", "Secondary 2"],
+        },
+        "the link swaps with the row below it and the other list is untouched"
+      );
+    });
+
+    test(`${ORACLE} moves a link up its own list with the arrow`, async function (assert) {
+      await renderForm(this);
+
+      await moveLink("Secondary 2", "up");
+
+      assert.deepEqual(
+        renderedLinks(),
+        {
+          primary: ["Primary 1", "Primary 2"],
+          secondary: ["Secondary 2", "Secondary 1"],
+        },
+        "a secondary link swaps within Secondary rather than crossing into Primary"
+      );
+    });
+
+    test(`${ORACLE} disables the arrows at each list's boundaries`, async function (assert) {
+      await renderForm(this);
+
+      assert
+        .dom(arrowSelector("Primary 1", "up"))
+        .isDisabled("the first link has nothing above it");
+      assert
+        .dom(arrowSelector("Primary 2", "down"))
+        .isDisabled("the last primary link has nothing below it");
+      assert
+        .dom(arrowSelector("Secondary 1", "up"))
+        .isDisabled("each list boundary is counted within that list");
+      assert
+        .dom(arrowSelector("Primary 1", "down"))
+        .isEnabled("a link with a row below it can still move down");
+    });
+
+    test(`${ORACLE} steps over a link awaiting deletion`, async function (assert) {
+      const a11y = getOwner(this).lookup("service:a11y");
+      this.model = { section: sectionWithThreePrimaryLinks() };
+      await renderForm(this);
+
+      await click(`${rowSelector("Primary 2")} .delete-link`);
+      await moveLink("Primary 1", "down");
+
+      assert.deepEqual(
+        renderedLinks().primary,
+        ["Primary 3", "Primary 1"],
+        "the arrow swaps with the next visible link, not with the deleted one between them"
+      );
+      assert.strictEqual(
+        a11y.politeMessage,
+        "Moved Primary 1 to position 2 of 2",
+        "the position is counted within the visible list"
+      );
+    });
+
+    test(`${ORACLE} announces where an arrow move landed`, async function (assert) {
+      const a11y = getOwner(this).lookup("service:a11y");
+      await renderForm(this);
+
+      await moveLink("Secondary 2", "up");
+
+      assert.strictEqual(
+        a11y.politeMessage,
+        "Moved Secondary 2 to position 1 of 2",
+        "the announcement counts against the list the link moved within"
+      );
     });
   }
 );

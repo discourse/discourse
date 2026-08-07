@@ -29,6 +29,16 @@ class ManageReportsRow extends Component {
   @service site;
 
   /**
+   * A disabled row is not part of the order, so it cannot receive a drop.
+   *
+   * @returns {boolean} Whether this row accepts the drop.
+   */
+  @action
+  canAcceptDrop() {
+    return Boolean(this.args.row.enabled && this.args.reorderable);
+  }
+
+  /**
    * Resolves a drop onto this row into a reorder.
    *
    * Rows travel by their stable `key`, never as objects: `visibleRows` can be
@@ -39,16 +49,6 @@ class ManageReportsRow extends Component {
    * @param {Object} params.source - The dragged source, carrying `data.key`.
    * @param {string} params.position - Whether the drop landed before or after.
    */
-  /**
-   * A disabled row is not part of the order, so it cannot receive a drop.
-   *
-   * @returns {boolean} Whether this row accepts the drop.
-   */
-  @action
-  canAcceptDrop() {
-    return Boolean(this.args.row.enabled && this.args.reorderable);
-  }
-
   @action
   onRowDrop({ source, position }) {
     this.args.onDrop(source.data.key, this.args.row.key, position === "before");
@@ -297,24 +297,44 @@ export default class ManageReports extends Component {
 
   @action
   moveUp(row) {
-    const index = this.enabledOrder.indexOf(row.key);
-    if (index <= 0) {
-      return;
-    }
-    const next = [...this.enabledOrder];
-    [next[index - 1], next[index]] = [next[index], next[index - 1]];
-    this.#reorder(next, row, index - 1);
+    this.#move(row, -1);
   }
 
   @action
   moveDown(row) {
-    const index = this.enabledOrder.indexOf(row.key);
-    if (index < 0 || index === this.enabledOrder.length - 1) {
+    this.#move(row, 1);
+  }
+
+  /**
+   * Swaps a row with its neighbour in the list as displayed.
+   *
+   * Resolved against `filteredEnabledRows` rather than against `enabledOrder`,
+   * because a search filter hides rows without removing them from the order.
+   * Stepping by index in the full order would swap with a hidden neighbour: the
+   * stored order would change, an announcement would claim a move, and nothing
+   * the user can see would move. The neighbour is then located in the full order
+   * by key, so the swap lands on the right pair either way.
+   *
+   * @param {Object} row - The row to move.
+   * @param {number} delta - `-1` to move it up, `1` to move it down.
+   */
+  #move(row, delta) {
+    const visible = this.filteredEnabledRows;
+    const visibleIndex = visible.findIndex((item) => item.key === row.key);
+    const neighbour = visible[visibleIndex + delta];
+    if (visibleIndex < 0 || !neighbour) {
       return;
     }
+
+    const from = this.enabledOrder.indexOf(row.key);
+    const to = this.enabledOrder.indexOf(neighbour.key);
+    if (from < 0 || to < 0) {
+      return;
+    }
+
     const next = [...this.enabledOrder];
-    [next[index], next[index + 1]] = [next[index + 1], next[index]];
-    this.#reorder(next, row, index + 1);
+    [next[from], next[to]] = [next[to], next[from]];
+    this.#reorder(next, row, visibleIndex + delta, visible.length);
   }
 
   @action
@@ -353,14 +373,26 @@ export default class ManageReports extends Component {
    * @param {Object} row - The row that moved, read for its title.
    * @param {number} toIndex - Its index within `nextOrder`.
    */
-  #reorder(nextOrder, row, toIndex) {
+  /**
+   * Applies a new order and announces where the row landed.
+   *
+   * `toIndex` and `total` are counted in the list the user is looking at, which
+   * is not the stored order whenever a search filter is hiding rows. Announcing
+   * a position from the full order would name a place that is not on screen.
+   *
+   * @param {string[]} nextOrder - The new stored order.
+   * @param {Object} row - The row that moved.
+   * @param {number} toIndex - Its index in the displayed list.
+   * @param {number} total - How many rows that list holds.
+   */
+  #reorder(nextOrder, row, toIndex, total = nextOrder.length) {
     this.enabledOrder = nextOrder;
 
     this.a11y.announce(
       i18n("reorder_announcement", {
         label: row.title,
         position: toIndex + 1,
-        total: nextOrder.length,
+        total,
       })
     );
   }
@@ -437,9 +469,7 @@ export default class ManageReports extends Component {
                 @onToggle={{this.toggle}}
                 @onMoveUp={{this.moveUp}}
                 @onMoveDown={{this.moveDown}}
-                @onDragStart={{this.onDragStart}}
                 @onDrop={{this.onDrop}}
-                @onDragEnd={{this.onDragEnd}}
               />
             {{/each}}
           </ul>

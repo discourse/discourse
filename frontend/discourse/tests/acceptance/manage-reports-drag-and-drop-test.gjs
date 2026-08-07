@@ -15,6 +15,7 @@ import {
 } from "discourse/services/a11y";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import {
+  assertDragRegistered,
   centerOf,
   dragEvent,
   simulateDrag,
@@ -66,12 +67,7 @@ async function dragReport(sourceKey, targetKey, position) {
   const source = rowSelector(sourceKey);
   const target = rowSelector(targetKey);
 
-  if (
-    !find(source).hasAttribute("data-drag-source") ||
-    !find(target).hasAttribute("data-drop-target")
-  ) {
-    return;
-  }
+  assertDragRegistered(source, target);
 
   const targetRect = find(target).getBoundingClientRect();
   await simulateDrag(source, target, {
@@ -224,10 +220,18 @@ acceptance("Manage reports drag and drop", function (needs) {
         "draggable",
         "a disabled row is not stamped as draggable"
       );
+    // Paired with the enabled row below, because `auto` is what an unstyled
+    // element reports anyway: on its own this passes even if the rule never
+    // matches anything.
     assert.strictEqual(
       getComputedStyle(find(disabledRow)).cursor,
       "auto",
       "a disabled row does not receive the grab cursor"
+    );
+    assert.strictEqual(
+      getComputedStyle(find(rowSelector("core_report:signups"))).cursor,
+      "grab",
+      "an enabled row does receive it, so the rule is reached"
     );
 
     assert
@@ -339,3 +343,54 @@ acceptance("Manage reports drag and drop", function (needs) {
       );
   });
 });
+
+acceptance(
+  "Manage reports arrow reorder with a hidden row between matches",
+  function (needs) {
+    needs.user({ admin: true });
+    needs.pretender((server, helper) =>
+      server.get("/admin/dashboard/reports/available.json", () =>
+        helper.response({
+          // Order matters: the row the filter hides sits BETWEEN the two it
+          // shows, which is the arrangement that separates moving by displayed
+          // position from moving by stored position.
+          enabled: [REPORTS[0], REPORTS[2], REPORTS[1]],
+          available: REPORTS,
+          providers: [],
+          cursor: null,
+          has_more: false,
+        })
+      )
+    );
+
+    needs.hooks.beforeEach(disableClearA11yAnnouncementsInTests);
+    needs.hooks.afterEach(enableClearA11yAnnouncementsInTests);
+
+    test("an arrow moves a row past the row shown next to it, not the one hidden between", async function (assert) {
+      const a11y = getOwner(this).lookup("service:a11y");
+      await openModal(this);
+      await fillIn(".manage-reports__search-wrapper .filter-input", "Matching");
+
+      assert.deepEqual(
+        enabledKeys(),
+        ["core_report:signups", "core_report:topics"],
+        "the filter shows the two matching rows, with one hidden between them"
+      );
+
+      await click(
+        `${rowSelector("core_report:signups")} .d-reorder-buttons__button:last-child`
+      );
+
+      assert.deepEqual(
+        enabledKeys(),
+        ["core_report:topics", "core_report:signups"],
+        "the row moves past its visible neighbour, so the list the user sees actually changes"
+      );
+      assert.strictEqual(
+        a11y.politeMessage,
+        "Moved Matching signups to position 2 of 2",
+        "and the announced position counts the rows on screen, not the stored order"
+      );
+    });
+  }
+);

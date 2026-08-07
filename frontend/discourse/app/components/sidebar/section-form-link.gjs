@@ -7,10 +7,11 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import withEventValue from "discourse/helpers/with-event-value";
-import { not } from "discourse/truth-helpers";
+import { eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDragHandle from "discourse/ui-kit/d-drag-handle";
 import DIconGridPicker from "discourse/ui-kit/d-icon-grid-picker";
+import DReorderButtons from "discourse/ui-kit/d-reorder-buttons";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
@@ -31,6 +32,24 @@ export default class SectionFormLink extends Component {
     return () => (this.gripElement = undefined);
   });
 
+  get dragHandleLabel() {
+    return i18n("sidebar.sections.custom.links.drag_handle", {
+      label: this.args.link.name,
+    });
+  }
+
+  get moveDownLabel() {
+    return i18n("sidebar.sections.custom.links.move_down", {
+      label: this.args.link.name,
+    });
+  }
+
+  get moveUpLabel() {
+    return i18n("sidebar.sections.custom.links.move_up", {
+      label: this.args.link.name,
+    });
+  }
+
   /**
    * Resolves a drop onto this row into a reorder.
    *
@@ -43,12 +62,6 @@ export default class SectionFormLink extends Component {
    * @param {Object} params.source - The dragged source, carrying `data.link`.
    * @param {string} params.position - Whether the drop landed before or after.
    */
-  get dragHandleLabel() {
-    return i18n("sidebar.sections.custom.links.drag_handle", {
-      label: this.args.link.name,
-    });
-  }
-
   @action
   onRowDrop({ source, position }) {
     this.args.reorderCallback(source.data.link, this.args.link, position);
@@ -80,6 +93,20 @@ export default class SectionFormLink extends Component {
             data-link-name={{@link.name}}
           />
         {{/if}}
+
+        {{! The arrows are the only keyboard path to reorder, so they render on
+            every viewport — the pointer drag beside them on desktop is an
+            alternative to them, not a replacement. }}
+        <DReorderButtons
+          @onMoveUp={{fn @moveUp @link}}
+          @onMoveDown={{fn @moveDown @link}}
+          @disableUp={{eq @index 0}}
+          @disableDown={{eq @index @lastIndex}}
+          @upLabel={{this.moveUpLabel}}
+          @downLabel={{this.moveDownLabel}}
+          role="cell"
+          class="sidebar-section-form-link__arrows"
+        />
 
         <div class="input-group" role="cell">
           <DIconGridPicker

@@ -61,10 +61,11 @@ function overridePlaceholder(ace) {
 // @setWarning
 // Used only if the editor's min-height computes to `auto`, which would leave the
 // resize with no lower bound at all.
-const FALLBACK_MIN_HEIGHT = 200;
+const FALLBACK_MIN_HEIGHT = 250;
 
 export default class AceEditor extends Component {
   @service appEvents;
+  @service capabilities;
 
   @tracked isLoading = true;
   /** The resized box, handed to the separator once the editor has built it. */
@@ -312,7 +313,12 @@ export default class AceEditor extends Component {
    */
   @bind
   maxEditorHeight() {
-    const belowHeader = window.innerHeight - headerOffset();
+    // A tablet has no sticky header eating the top of the viewport, so the
+    // editor may use its full height. Carried over from the shared modifier this
+    // replaced, where the same branch existed.
+    const belowHeader = this.capabilities.isTablet
+      ? window.innerHeight
+      : window.innerHeight - headerOffset();
     const container = this.editor?.container;
     if (!container) {
       return belowHeader;
@@ -327,7 +333,15 @@ export default class AceEditor extends Component {
 
   @bind
   onResizeDrag(size) {
+    // Added on the first report rather than on the press, so a click that
+    // resizes nothing does not touch the class at all.
+    this.editor.container.classList.add("clear-transitions");
     this.editor.container.style.height = `${size}px`;
+  }
+
+  @bind
+  onResizeEnd() {
+    this.editor?.container?.classList.remove("clear-transitions");
   }
 
   <template>
@@ -354,6 +368,7 @@ export default class AceEditor extends Component {
             @max={{this.maxEditorHeight}}
             @label={{i18n "ace_editor.resize"}}
             @onResize={{this.onResizeDrag}}
+            @onResizeEnd={{this.onResizeEnd}}
             @observe={{this.editorContainer}}
           />
         {{/if}}
