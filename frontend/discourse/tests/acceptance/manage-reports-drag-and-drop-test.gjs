@@ -102,6 +102,25 @@ acceptance("Manage reports drag and drop", function (needs) {
   needs.hooks.beforeEach(disableClearA11yAnnouncementsInTests);
   needs.hooks.afterEach(enableClearA11yAnnouncementsInTests);
 
+  test(`${ORACLE} adjacent rows leave no dead space between drop zones`, async function (assert) {
+    await openModal(this);
+
+    // Container spacing (a flex `gap`) belongs to the list, not to either row,
+    // so a pointer inside it reaches no drop target and the above/below zones
+    // stop meeting.
+    const rows = findAll(".manage-reports__row");
+    for (let i = 1; i < rows.length; i++) {
+      const previous = rows[i - 1].getBoundingClientRect();
+      const current = rows[i].getBoundingClientRect();
+
+      assert.strictEqual(
+        Math.round(current.top),
+        Math.round(previous.bottom),
+        `row ${i} starts exactly where row ${i - 1} ends, so no pointer position between them falls outside both`
+      );
+    }
+  });
+
   test("desktop renders the grip alongside the arrows", async function (assert) {
     await openModal(this);
 

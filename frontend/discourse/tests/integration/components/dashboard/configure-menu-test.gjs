@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { click, find, render } from "@ember/test-helpers";
+import { click, find, findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ConfigureMenu from "discourse/admin/components/dashboard/configure-menu";
 import { forceMobile } from "discourse/lib/mobile";
@@ -46,6 +46,58 @@ async function dragSection(sourceId, targetId, position) {
         position === "above" ? targetRect.top + 1 : targetRect.bottom - 1,
     },
   });
+}
+
+function isTransparent(color) {
+  return color === "transparent" || /rgba\(0, 0, 0, 0\)/.test(color);
+}
+
+/**
+ * The y-range of whichever row edge is currently painted as the drop indicator.
+ *
+ * Read from the computed border rather than from a class, because the point is
+ * where the line physically lands, not which row was asked to draw it.
+ *
+ * @returns {{top: number, bottom: number}|null} The band, or `null` if none.
+ */
+function indicatorBand() {
+  for (const row of findAll(".db-configure__row")) {
+    const style = getComputedStyle(row);
+    const rect = row.getBoundingClientRect();
+
+    if (!isTransparent(style.borderTopColor)) {
+      return {
+        top: rect.top,
+        bottom: rect.top + parseFloat(style.borderTopWidth),
+      };
+    }
+    if (!isTransparent(style.borderBottomColor)) {
+      return {
+        top: rect.bottom - parseFloat(style.borderBottomWidth),
+        bottom: rect.bottom,
+      };
+    }
+  }
+  return null;
+}
+
+/** Opens a drag and holds it over a target, without dropping. */
+async function hoverOver(sourceId, targetId, position) {
+  const source = rowSelector(sourceId);
+  const target = rowSelector(targetId);
+  const dataTransfer = new DataTransfer();
+  const targetRect = find(target).getBoundingClientRect();
+  const coordinates = {
+    clientX: targetRect.left + targetRect.width / 2,
+    clientY: position === "above" ? targetRect.top + 1 : targetRect.bottom - 1,
+  };
+
+  await dragEvent(source, "dragstart", { dataTransfer, ...centerOf(source) });
+  await dragEvent(target, "dragenter", { dataTransfer, ...coordinates });
+  await dragEvent(target, "dragover", { dataTransfer, ...coordinates });
+
+  return () =>
+    dragEvent(source, "dragend", { dataTransfer, ...centerOf(source) });
 }
 
 module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
@@ -321,6 +373,79 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
       calls.at(-1),
       [0, 1],
       "the down arrow moves the row later"
+    );
+  });
+
+  test(`${ORACLE} adjacent rows leave no dead space between drop zones`, async function (assert) {
+    const noop = () => {};
+
+    await render(
+      <template>
+        <ConfigureMenu
+          @sections={{FOUR_SECTIONS}}
+          @onReorder={{noop}}
+          @onToggleVisibility={{noop}}
+        />
+      </template>
+    );
+
+    // Each row splits into its own above/below halves at its midpoint, so the
+    // zones only meet end to end if the row boxes themselves touch. Container
+    // spacing (a flex `gap`) is owned by the list, not by either row, so a
+    // pointer inside it reaches no drop target at all.
+    const rows = findAll(".db-configure__row");
+    for (let i = 1; i < rows.length; i++) {
+      const previous = rows[i - 1].getBoundingClientRect();
+      const current = rows[i].getBoundingClientRect();
+
+      // Compared exactly, not rounded: a sub-pixel seam is still a band of
+      // pixels that belongs to no row, and rounding both sides would hide it.
+      assert.strictEqual(
+        current.top,
+        previous.bottom,
+        `row ${i} starts exactly where row ${i - 1} ends, so no pointer position between them falls outside both`
+      );
+    }
+  });
+
+  test(`${ORACLE} both sides of a boundary draw one shared indicator line`, async function (assert) {
+    const noop = () => {};
+
+    await render(
+      <template>
+        <ConfigureMenu
+          @sections={{FOUR_SECTIONS}}
+          @onReorder={{noop}}
+          @onToggleVisibility={{noop}}
+        />
+      </template>
+    );
+
+    // The same boundary reached from either side. Both resolve to the same
+    // insertion point, so the line has to stay put rather than shifting by its
+    // own width as the pointer crosses the midpoint.
+    const endBelow = await hoverOver("traffic", "highlights", "below");
+    const below = indicatorBand();
+    await endBelow();
+
+    const endAbove = await hoverOver("traffic", "reports", "above");
+    const above = indicatorBand();
+    await endAbove();
+
+    assert.notStrictEqual(
+      below,
+      null,
+      "hovering below the first row paints an indicator"
+    );
+    assert.notStrictEqual(
+      above,
+      null,
+      "hovering above the second row paints an indicator"
+    );
+    assert.deepEqual(
+      above,
+      below,
+      "below row 1 and above row 2 are the same insertion point, so they paint the same pixels"
     );
   });
 
