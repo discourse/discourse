@@ -525,9 +525,6 @@ ko:
         optional: "선택 사항"
       claim_help:
         optional: "다른 사용자가 검토하지 못하도록 이 항목을 독점할 수 있습니다."
-        required: "항목을 검토하려면 먼저 항목을 독점해야 합니다."
-        claimed_by_you: "이 항목을 독점했으며 이제 검토할 수 있습니다."
-        claimed_by_other: "이 항목은 <b>%{username}</b> 님만 검토할 수 있습니다."
       awaiting_approval: "승인 대기중"
       delete: "삭제"
       settings:
@@ -2023,6 +2020,7 @@ ko:
     category_row:
       subcategory_count:
         other: "+%{count}개의 하위 카테고리"
+      subcategories: "+ 하위 카테고리"
       topic_count:
         other: "이 카테고리에는 %{count}개의 글이 있습니다"
       read_only: "읽기 전용"

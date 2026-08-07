@@ -820,10 +820,6 @@ pt_BR:
       stale_help: "Este item foi resolvido por <b>%{username}</b>."
       claim_help:
         optional: "Você pode reivindicar este item para impedir que outras pessoas o revisem."
-        required: "Você precisa reivindicar itens antes de poder revisá-los."
-        claimed_by_you: "Você reivindicou este item e pode revisá-lo."
-        claimed_by_other: "Este item só pode ser revisado por <b>%{username}</b>."
-        automatically_claimed_by: "Este item está sendo revisado por <b>%{username}</b>."
       claim:
         title: "Reivindicar este tópico"
       unclaim:
@@ -2894,6 +2890,7 @@ pt_BR:
       subcategory_count:
         one: "+%{count} subcategoria"
         other: "+%{count} subcategorias"
+      subcategories: "+ Subcategorias"
       topic_count:
         one: "%{count} tópico nesta categoria"
         other: "%{count} tópicos nesta categoria"
@@ -2965,6 +2962,7 @@ pt_BR:
       toggle: "Alternar filtros suspensos"
     d_icon_grid_picker:
       select_icon: "Selecionar ícone"
+      search_label: "Buscar ícones"
       search_placeholder: "Buscar ícones..."
       no_results: "Nenhum ícone encontrado"
       results_count:

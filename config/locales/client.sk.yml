@@ -712,10 +712,6 @@ sk:
         optional: "nepovinné"
       claim_help:
         optional: "Túto položku môžete uplatniť, aby ste zabránili ostatným v jej preskúmaní."
-        required: "Predtým, ako ich budete môcť skontrolovať, musíte si uplatniť položky."
-        claimed_by_you: "Túto položku ste si uplatnili a môžete ju skontrolovať."
-        claimed_by_other: "Túto položku môže skontrolovať iba <b>%{username}</b>."
-        automatically_claimed_by: "Túto položku v súčasnosti skúma <b>%{username}</b>."
       awaiting_approval: "Čaká sa na schválenie"
       delete: "Odstrániť"
       settings:
@@ -2807,6 +2803,7 @@ sk:
         few: "+%{count} podkategórií"
         many: "+%{count} podkategórie"
         other: "+%{count} podkategórie"
+      subcategories: "+ Podkategórie"
       topic_count:
         one: "%{count} téma v tejto kategórii"
         few: "%{count} tém v tejto kategórii"

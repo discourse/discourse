@@ -1094,10 +1094,6 @@ ar:
       stale_help: "تم حل هذا العنصر بواسطة <b>%{username}</b>."
       claim_help:
         optional: "يمكنك المطالبة بهذا العنصر لمنع الآخرين من مراجعته."
-        required: "يجب عليك المطالبة بالعناصر قبل أن تتمكن من مراجعتها."
-        claimed_by_you: "لقد طالبت بهذا العنصر ويمكنك مراجعته."
-        claimed_by_other: "لا يمكن مراجعة هذا العنصر إلا بواسطة <b>%{username}</b>."
-        automatically_claimed_by: "هذا العنصر قيد المراجعة حاليًا من طرف <b>%{username}</b>."
       claim:
         title: "المطالبة بهذا الموضوع"
       unclaim:
@@ -3473,6 +3469,7 @@ ar:
         few: "+%{count} فئات فرعية"
         many: "+%{count} فئة فرعية"
         other: "+%{count} فئة فرعية"
+      subcategories: "+ الفئات الفرعية"
       topic_count:
         zero: "%{count} موضوع في هذه الفئة"
         one: "موضوع واحد (%{count}) في هذه الفئة"
@@ -3561,6 +3558,7 @@ ar:
       toggle: "تفعيل/إيقاف عوامل تصفية القائمة المنسدلة"
     d_icon_grid_picker:
       select_icon: "تحديد أيقونة"
+      search_label: "بحث عن أيقونات"
       search_placeholder: "بحث عن أيقونات..."
       no_results: "لم يتم العثور على أي أيقونات"
       results_count:

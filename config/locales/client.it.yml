@@ -700,10 +700,6 @@ it:
         optional: "facoltativo"
       claim_help:
         optional: "Puoi rivendicare questo elemento per evitare che altri lo revisionino."
-        required: "Per poter revisionare gli elementi devi prima rivendicarli."
-        claimed_by_you: "Hai rivendicato questo elemento e puoi revisionarlo."
-        claimed_by_other: "Questo elemento può essere rivisto esclusivamente da <b>%{username}</b>."
-        automatically_claimed_by: "Questo articolo è attualmente in fase di revisione da parte di <b>%{username}</b>."
       awaiting_approval: "In attesa di approvazione"
       delete: "Elimina"
       settings:
@@ -2655,6 +2651,7 @@ it:
       subcategory_count:
         one: "+%{count} sottocategoria"
         other: "+%{count} sottocategorie"
+      subcategories: "+ Sottocategorie"
       topic_count:
         one: "%{count} argomento in questa categoria"
         other: "%{count} argomenti in questa categoria"

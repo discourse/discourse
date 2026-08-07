@@ -1254,6 +1254,8 @@ sw:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
+    category_row:
+      subcategories: "+ Kategoria mtoto"
     select_kit:
       delete_item: "Futa %{name}"
       no_content: Hakuna uwiano uliopatikana

@@ -807,10 +807,6 @@ nl:
       stale_help: "Dit item is afgehandeld door <b>%{username}</b>."
       claim_help:
         optional: "Je kunt dit item claimen om te voorkomen dat anderen het beoordelen."
-        required: "Je moet items claimen voordat je ze kunt beoordelen."
-        claimed_by_you: "Je hebt dit item geclaimd en kunt het beoordelen."
-        claimed_by_other: "Dit item kan alleen worden beoordeeld door <b>%{username}</b>."
-        automatically_claimed_by: "Dit item wordt momenteel beoordeeld door <b>%{username}</b>."
       claim:
         title: "Dit topic claimen"
       unclaim:
@@ -2858,6 +2854,7 @@ nl:
       subcategory_count:
         one: "+%{count} subcategorie"
         other: "+%{count} subcategorieën"
+      subcategories: "+ Subcategorieën"
       topic_count:
         one: "%{count} topic in deze categorie"
         other: "%{count} topics in deze categorie"
@@ -2930,6 +2927,7 @@ nl:
       toggle: "Vervolgkeuzemenufilters in-/uitschakelen"
     d_icon_grid_picker:
       select_icon: "Selecteer pictogram"
+      search_label: "Pictogrammen zoeken"
       search_placeholder: "Pictogrammen zoeken..."
       no_results: "Geen pictogrammen gevonden"
       results_count:

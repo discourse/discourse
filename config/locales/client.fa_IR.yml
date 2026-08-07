@@ -630,10 +630,6 @@ fa_IR:
         optional: "اختیاری"
       claim_help:
         optional: "می‌توانید این مورد را درخواست کنید تا دیگران را از بازنگری آن بازنگه دارید."
-        required: "قبل از بازنگری موارد باید آن‌ها را درخواست دهید."
-        claimed_by_you: "می‌توانید این مورد را درخواست کنید و آن را بازنگری کنید."
-        claimed_by_other: "این مورد فقط توسط کاربر<b>%{username} </b>قابل بازنگری است."
-        automatically_claimed_by: "این مورد توسط <b>%{username}</b> در حال بازنگری است."
       awaiting_approval: "منتظر تایید"
       delete: "حذف"
       settings:
@@ -2489,6 +2485,7 @@ fa_IR:
       subcategory_count:
         one: "+%{count} زیر دسته"
         other: "+%{count} زیر دسته"
+      subcategories: "+ دسته‌‌بندی‌های فرزند"
       topic_count:
         one: "%{count} موضوع در این دسته"
         other: "%{count} موضوع در این دسته"

@@ -805,10 +805,6 @@ es:
       stale_help: "Este elemento ha sido resuelto por <b>%{username}</b>."
       claim_help:
         optional: "Puedes reclamar este elemento para evitar que otros lo revisen."
-        required: "Debes reclamar los elementos antes de poder revisarlos."
-        claimed_by_you: "Has reclamado este elemento y puedes revisarlo."
-        claimed_by_other: "Este elemento solo puede ser revisado por <b>%{username}</b>."
-        automatically_claimed_by: "<b>%{username}</b> ya está revisando este elemento."
       claim:
         title: "Asignarme este tema"
       unclaim:
@@ -2856,6 +2852,7 @@ es:
       subcategory_count:
         one: "+%{count} subcategoría"
         other: "+%{count} subcategorías"
+      subcategories: "+ Subcategorías"
       topic_count:
         one: "%{count} tema en esta categoría"
         other: "%{count} temas en esta categoría"
@@ -2928,6 +2925,7 @@ es:
       toggle: "Activar/desactivar filtros desplegables"
     d_icon_grid_picker:
       select_icon: "Seleccionar icono"
+      search_label: "Buscar iconos"
       search_placeholder: "Buscar iconos..."
       no_results: "No se han encontrado iconos"
       results_count:

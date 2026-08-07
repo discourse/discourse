@@ -707,10 +707,6 @@ pt:
         optional: "opcional"
       claim_help:
         optional: "Pode reivindicar este item para prevenir que outras pessoas o revejam."
-        required: "Deve reivindicar items antes de as poder rever."
-        claimed_by_you: "Você reivindicou este item e pode efectuar a sua revisão."
-        claimed_by_other: "Este item só pode ser revisto por <b>%{username}</b>."
-        automatically_claimed_by: "Este item está atualmente a ser revisto por <b>%{username}</b>."
       awaiting_approval: "Aguarda Aprovação"
       delete: "Eliminar"
       settings:
@@ -2665,6 +2661,7 @@ pt:
       subcategory_count:
         one: "+%{count} subcategoria"
         other: "+%{count} subcategorias"
+      subcategories: "+ Subcategorias"
       topic_count:
         one: "%{count} tópico nesta categoria"
         other: "%{count} tópicos nesta categoria"

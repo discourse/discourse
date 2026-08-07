@@ -458,9 +458,6 @@ id:
         optional: "opsional"
       claim_help:
         optional: "Anda dapat mengklaim item ini untuk mencegah orang lain meninjaunya."
-        required: "Anda harus mengklaim hal ini sebelum dapat meninjaunya."
-        claimed_by_you: "Anda telah mengklaim item ini dan dapat meninjaunya."
-        claimed_by_other: "Item ini hanya dapat ditinjau oleh <b>%{username}</b> ."
       awaiting_approval: "Menunggu Persetujuan"
       delete: "Hapus"
       settings:
@@ -1632,6 +1629,7 @@ id:
     category_row:
       subcategory_count:
         other: "+%{count} subkategori"
+      subcategories: "+ Subkategori"
       topic_count:
         other: "%{count} topik dalam kategori ini"
     select_kit:

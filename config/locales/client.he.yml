@@ -904,10 +904,6 @@ he:
         optional: "רשות"
       claim_help:
         optional: "אפשר לדרוש את הפריט כדי למנוע מאחרים לסקור אותו."
-        required: "עליך לדרוש פריטים לפני שיתאפשר לך לסקור אותם."
-        claimed_by_you: "דרשת את הפריט הזה ועכשיו יתאפשר לך לסקור אותו."
-        claimed_by_other: "הפריט הזה זמין לסריקה רק על ידי <b>%{username}</b>."
-        automatically_claimed_by: "הפריט הזה נבדק כרגע על ידי <b>%{username}</b>."
       claim:
         title: "דרישת נושא זה"
       unclaim:
@@ -3069,6 +3065,7 @@ he:
         two: "+%{count} תת־קטגוריות"
         many: "+%{count} תת־קטגוריות"
         other: "+%{count} תת־קטגוריות"
+      subcategories: "+ תת־קטגוריות"
       topic_count:
         one: "נושא %{count} בקטגוריה הזו"
         two: "%{count} נושאים בקטגוריה הזו"

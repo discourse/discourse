@@ -643,10 +643,6 @@ zh_TW:
         optional: "選擇性"
       claim_help:
         optional: "您可以聲明此項目以防止其他人審核。"
-        required: "您必須先審核項目才能查看它們。"
-        claimed_by_you: "您已聲明此項目，並可以查看。"
-        claimed_by_other: "此項目只能給<b>%{username}</b>來審核。"
-        automatically_claimed_by: "這個項目目前由 <b>%{username}</b> 審核。"
       awaiting_approval: "等待審核"
       delete: "刪除"
       settings:
@@ -2427,6 +2423,7 @@ zh_TW:
     category_row:
       subcategory_count:
         other: "+%{count} 個子類別"
+      subcategories: "+ 次分類"
       topic_count:
         other: "%{count}個話題在此分類"
       read_only: "唯讀"

@@ -700,10 +700,6 @@ fi:
         optional: "valinnainen"
       claim_help:
         optional: "Voit osoittaa tämän kohteen itsellesi, jolloin muut eivät voi käsitellä sitä."
-        required: "Sinun täytyy osoittaa kohde itsellesi, ennen kuin voit käsitellä sen."
-        claimed_by_you: "Osoitit tämän itsellesi ja voit nyt käsitellä sen."
-        claimed_by_other: "Tämän voi käsitellä vain <b>%{username}</b>."
-        automatically_claimed_by: "Tätä asiaa käsittelee parhaillaan <b>%{username}</b>."
       awaiting_approval: "Odottaa hyväksyntää"
       delete: "Poista"
       settings:
@@ -2655,6 +2651,7 @@ fi:
       subcategory_count:
         one: "+%{count} ala-alue"
         other: "+%{count} ala-aluetta"
+      subcategories: "+ Ala-alueet"
       topic_count:
         one: "%{count} ketju tällä alueella"
         other: "%{count} ketjua tällä alueella"

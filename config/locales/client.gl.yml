@@ -411,9 +411,6 @@ gl:
         optional: "opcional"
       claim_help:
         optional: "Podes reclamar este elemento para evitar que outros o revisen."
-        required: "Debes reclamar os elementos antes de revisalos."
-        claimed_by_you: "Reclamaches este elemento e podes revisalo."
-        claimed_by_other: "Este elemento só pode revisalo <b>%{username}</b>."
       awaiting_approval: "Agardando a aprobación"
       delete: "Eliminar"
       settings:
@@ -1780,6 +1777,7 @@ gl:
       subcategory_count:
         one: "+%{count} subcategoría"
         other: "+%{count} subcategorías"
+      subcategories: "+ Subcategorías"
       topic_count:
         one: "%{count} tema nesta categoría"
         other: "%{count} temas nesta categoría"

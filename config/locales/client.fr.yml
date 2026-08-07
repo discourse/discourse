@@ -864,10 +864,6 @@ fr:
       stale_help: "Cet élément a été résolu par <b>%{username}</b>."
       claim_help:
         optional: "Vous pouvez vous réserver cet élément pour empêcher d'autres responsables de l'examiner."
-        required: "Vous devez réserver un élément avant de l'examiner."
-        claimed_by_you: "Vous avez réservé cet élément et pouvez donc l'examiner."
-        claimed_by_other: "Cet élément ne peut être examiné que par <b>%{username}</b>."
-        automatically_claimed_by: "Cet élément est actuellement en cours d'examen par <b>%{username}</b>."
       claim:
         title: "Réserver ce sujet"
       unclaim:
@@ -2980,6 +2976,7 @@ fr:
       subcategory_count:
         one: "+%{count} sous-catégorie"
         other: "+%{count} sous-catégories"
+      subcategories: "+ Sous-catégories"
       topic_count:
         one: "%{count} sujet dans cette catégorie"
         other: "%{count} sujets dans cette catégorie"
@@ -3052,6 +3049,7 @@ fr:
       toggle: "Afficher/masquer les filtres déroulants"
     d_icon_grid_picker:
       select_icon: "Sélectionner l'icône"
+      search_label: "Rechercher des icônes"
       search_placeholder: "Rechercher des icônes..."
       no_results: "Aucune icône n'a été trouvée"
       results_count:

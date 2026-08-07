@@ -1460,6 +1460,8 @@ et:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
+    category_row:
+      subcategories: "+ Alamkategooriad"
     select_kit:
       delete_item: "Kustuta üksus %{name}"
       default_header_text: Vali...

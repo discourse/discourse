@@ -791,10 +791,6 @@ hu:
       stale_help: "Ezt a tételt <b>%{username}</b> megoldotta."
       claim_help:
         optional: "Zárolhatja ezt az elemet, hogy mások ne hagyhassák jóvá."
-        required: "Zárolnia kell az elemeket, hogy jóvá tudja őket hagyni."
-        claimed_by_you: "Zárolta ezt az elemet, és most már jóváhagyhatja."
-        claimed_by_other: "Ezt az elemet csak <b>%{username}</b> hagyhatja jóvá."
-        automatically_claimed_by: "Ezt az elemet <b>%{username}</b> vizsgálja felül."
       claim:
         title: "Igényelje ezt a témát"
       unclaim:
@@ -2830,6 +2826,7 @@ hu:
       subcategory_count:
         one: "+%{count} alkategória"
         other: "+%{count} alkategória"
+      subcategories: "+ Alkategóriák"
       topic_count:
         one: "%{count} téma van ebben a kategóriában"
         other: "%{count} téma van ebben a kategóriában"

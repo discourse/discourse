@@ -470,9 +470,6 @@ bg:
         optional: "по избор"
       claim_help:
         optional: "Можете да заявите този артикул, за да попречите на други да го преглеждат."
-        required: "Трябва да заявите артикули, преди да можете да ги прегледате."
-        claimed_by_you: "Заявихте този артикул и можете да го прегледате."
-        claimed_by_other: "Този артикул може да бъде прегледан само от <b>%{username}</b>."
       awaiting_approval: "Очаква одобрение"
       delete: "Изтрий"
       settings:
@@ -2031,6 +2028,7 @@ bg:
       subcategory_count:
         one: "+%{count} подкатегория"
         other: "+%{count} подкатегории"
+      subcategories: "+ Подкатегории"
       topic_count:
         one: "%{count} тема в тази категория"
         other: "%{count} теми в тази категория"

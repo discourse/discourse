@@ -666,10 +666,6 @@ vi:
         optional: "tùy chọn"
       claim_help:
         optional: "Bạn có thể phàn nàn mục này để tránh những người khác đánh giá nó."
-        required: "Bạn phải yêu cầu các mục trước khi bạn có thể xem xét chúng."
-        claimed_by_you: "Bạn đã yêu cầu mặt hàng này và có thể xem xét nó."
-        claimed_by_other: "Mục này chỉ có thể được xem xét bởi <b>%{username}</b> ."
-        automatically_claimed_by: "Mục này chỉ có thể được xem xét bởi <b>%{username}</b>."
       claim:
         title: "Xác nhận chủ đề này"
       unclaim:
@@ -2646,6 +2642,7 @@ vi:
     category_row:
       subcategory_count:
         other: "+%{count} chuyên mục phụ"
+      subcategories: "+ Chuyên mục phụ"
       topic_count:
         other: "%{count} chủ đề trong chuyên mục này"
       read_only: "chỉ đọc"

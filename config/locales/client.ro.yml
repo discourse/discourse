@@ -683,10 +683,6 @@ ro:
         optional: "opțional"
       claim_help:
         optional: "Poți revendica acest element pentru a împiedica alte persoane să-l revizuiască."
-        required: "Trebuie să revendici elementele înainte de a le putea revizui."
-        claimed_by_you: "Ai revendicat acest element și îl poți revizui."
-        claimed_by_other: "Acest element poate fi revizuit numai de <b>%{username}</b>."
-        automatically_claimed_by: "Acest element este revizuit momentan de <b>%{username}</b>."
       claim:
         title: "Revendică acest subiect"
       unclaim:
@@ -2204,6 +2200,7 @@ ro:
         one: "+%{count} subcategorie"
         few: "+%{count} subcategorii"
         other: "+%{count} de subcategorii"
+      subcategories: "+ Subcategorii"
     timezone_input:
       ambiguous_ist: "IST este ambiguu, te rugăm să selectezi un fus orar specific (de exemplu: Asia/Kolkata)"
     select_kit:

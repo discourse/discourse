@@ -428,9 +428,6 @@ bs_BA:
         optional: "opciono"
       claim_help:
         optional: "Možete tražiti ova da sprijećite ostale da ga pregledaju"
-        required: "VI morate tvrditi stavari prije ih morate cijeniti"
-        claimed_by_you: "Vi ste tvrdili ovu stvar i sad ju možete pregledati "
-        claimed_by_other: "Ovu stavku može revidirati samo korisnik<b>%{username}</b>"
       awaiting_approval: "čekanje odobrenje"
       delete: "Delete"
       settings:
@@ -1669,6 +1666,8 @@ bs_BA:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Naprijed"
+    category_row:
+      subcategories: "+ Podkategorije"
     select_kit:
       delete_item: "Izbriši %{name}"
       no_content: Nije pronađen traženi pojam

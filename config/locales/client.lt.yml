@@ -668,10 +668,6 @@ lt:
         optional: "pasirinktinai"
       claim_help:
         optional: "Galite pareikšti teises į šį elementą, kad kiti negalėtų jo peržiūrėti."
-        required: "Turite pareikšti teises į elementus, kad galėtumėte juos peržiūrėti."
-        claimed_by_you: "Pareiškėte teises į šį elementą ir galite jį peržiūrėti."
-        claimed_by_other: "Šį elementą gali peržiūrėti tik <b>%{username}</b>."
-        automatically_claimed_by: "Šį elementą šiuo metu peržiūri <b>%{username}</b>."
       awaiting_approval: "Laukiama patvirtinimo"
       delete: "Pašalinti"
       settings:
@@ -2376,6 +2372,7 @@ lt:
         few: "+%{count} subkategorijos"
         many: "+%{count} subkategorijos"
         other: "+%{count} subkategorijos"
+      subcategories: "+ Subkategorijos"
       topic_count:
         one: "%{count} tema šioje kategorijoje"
         few: "%{count} temos šioje kategorijoje"

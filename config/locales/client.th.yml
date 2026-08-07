@@ -1441,6 +1441,7 @@ th:
       alt: "Alt"
       enter: "เอ็นเทอร์"
     category_row:
+      subcategories: "+ หมวดหมู่ย่อย"
       topic_count:
         other: "%{count}กระทู้ในหมวดหมู่นี้"
     select_kit:
