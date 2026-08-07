@@ -203,17 +203,6 @@ $db-bar-height: var(--space-2);
     }
   }
 
-  &__arrows {
-    display: flex;
-    flex-direction: column;
-    font-size: 0.7em;
-  }
-
-  &__arrow.btn {
-    padding: 0 var(--space-1);
-    min-height: 0;
-  }
-
   .d-toggle-switch {
     margin-left: auto;
 

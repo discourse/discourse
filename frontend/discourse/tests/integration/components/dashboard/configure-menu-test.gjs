@@ -336,7 +336,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
 
     assert.dom(".db-configure__drag-handle").exists({ count: 4 });
     assert
-      .dom(".db-configure__arrow")
+      .dom(".d-reorder-buttons__button")
       .exists(
         { count: 8 },
         "desktop keeps a keyboard path to reorder, not only the pointer drag"
@@ -359,7 +359,9 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
       </template>
     );
 
-    await click('[data-section-id="reports"] .db-configure__arrow:first-child');
+    await click(
+      '[data-section-id="reports"] .d-reorder-buttons__button:first-child'
+    );
     assert.deepEqual(
       calls.at(-1),
       [1, 0],
@@ -367,7 +369,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     );
 
     await click(
-      '[data-section-id="highlights"] .db-configure__arrow:last-child'
+      '[data-section-id="highlights"] .d-reorder-buttons__button:last-child'
     );
     assert.deepEqual(
       calls.at(-1),
@@ -464,7 +466,9 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
       </template>
     );
 
-    await click('[data-section-id="reports"] .db-configure__arrow:first-child');
+    await click(
+      '[data-section-id="reports"] .d-reorder-buttons__button:first-child'
+    );
     assert.strictEqual(
       a11y.politeMessage,
       "Moved Reports to position 1 of 4",
@@ -472,7 +476,7 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     );
 
     await click(
-      '[data-section-id="highlights"] .db-configure__arrow:last-child'
+      '[data-section-id="highlights"] .d-reorder-buttons__button:last-child'
     );
     assert.strictEqual(
       a11y.politeMessage,
@@ -560,16 +564,20 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
         "the handle stays out of the tab order — the arrows carry the keyboard path"
       );
     assert
-      .dom('[data-section-id="reports"] .db-configure__arrow:first-child')
+      .dom('[data-section-id="reports"] .d-reorder-buttons__button:first-child')
       .doesNotHaveAttribute(
         "tabindex",
         "the arrows keep their native button tab stop"
       );
     assert
-      .dom('[data-section-id="highlights"] .db-configure__arrow:first-child')
+      .dom(
+        '[data-section-id="highlights"] .d-reorder-buttons__button:first-child'
+      )
       .isDisabled("first row's up arrow is disabled");
     assert
-      .dom('[data-section-id="engagement"] .db-configure__arrow:last-child')
+      .dom(
+        '[data-section-id="engagement"] .d-reorder-buttons__button:last-child'
+      )
       .isDisabled("last row's down arrow is disabled");
   });
 });
@@ -598,7 +606,7 @@ module(
       );
 
       assert.dom(".db-configure__drag-handle").doesNotExist();
-      assert.dom(".db-configure__arrow").exists({ count: 8 });
+      assert.dom(".d-reorder-buttons__button").exists({ count: 8 });
     });
 
     test(`${ORACLE} disables shared row drag on mobile`, async function (assert) {
@@ -643,12 +651,12 @@ module(
       );
 
       await click(
-        '[data-section-id="reports"] .db-configure__arrow:first-child'
+        '[data-section-id="reports"] .d-reorder-buttons__button:first-child'
       );
       assert.deepEqual(calls.at(-1), [1, 0]);
 
       await click(
-        '[data-section-id="highlights"] .db-configure__arrow:last-child'
+        '[data-section-id="highlights"] .d-reorder-buttons__button:last-child'
       );
       assert.deepEqual(calls.at(-1), [0, 1]);
     });
@@ -668,13 +676,19 @@ module(
       );
 
       assert
-        .dom('[data-section-id="highlights"] .db-configure__arrow:first-child')
+        .dom(
+          '[data-section-id="highlights"] .d-reorder-buttons__button:first-child'
+        )
         .isDisabled("first row's up arrow is disabled");
       assert
-        .dom('[data-section-id="engagement"] .db-configure__arrow:last-child')
+        .dom(
+          '[data-section-id="engagement"] .d-reorder-buttons__button:last-child'
+        )
         .isDisabled("last row's down arrow is disabled");
       assert
-        .dom('[data-section-id="reports"] .db-configure__arrow:first-child')
+        .dom(
+          '[data-section-id="reports"] .d-reorder-buttons__button:first-child'
+        )
         .isNotDisabled("middle row's up arrow is enabled");
     });
   }

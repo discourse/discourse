@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { eq, not } from "discourse/truth-helpers";
-import DButton from "discourse/ui-kit/d-button";
+import DReorderButtons from "discourse/ui-kit/d-reorder-buttons";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
@@ -84,24 +84,15 @@ class ConfigureRow extends Component {
       {{! The arrows are the only keyboard path to reorder, so they render on
           every viewport — the pointer drag beside them on desktop is an
           alternative to them, not a replacement. }}
-      <span class="db-configure__arrows">
-        <DButton
-          @icon="chevron-up"
-          @action={{fn @onMoveUp @index}}
-          @disabled={{@isFirst}}
-          @translatedAriaLabel={{this.reorderUpLabel}}
-          @translatedTitle={{this.reorderUpLabel}}
-          class="btn-flat db-configure__arrow"
-        />
-        <DButton
-          @icon="chevron-down"
-          @action={{fn @onMoveDown @index}}
-          @disabled={{@isLast}}
-          @translatedAriaLabel={{this.reorderDownLabel}}
-          @translatedTitle={{this.reorderDownLabel}}
-          class="btn-flat db-configure__arrow"
-        />
-      </span>
+      <DReorderButtons
+        @onMoveUp={{fn @onMoveUp @index}}
+        @onMoveDown={{fn @onMoveDown @index}}
+        @disableUp={{@isFirst}}
+        @disableDown={{@isLast}}
+        @upLabel={{this.reorderUpLabel}}
+        @downLabel={{this.reorderDownLabel}}
+        class="db-configure__arrows"
+      />
 
       <span class="db-configure__section-name">{{this.sectionLabel}}</span>
 

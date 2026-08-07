@@ -126,7 +126,7 @@ acceptance("Manage reports drag and drop", function (needs) {
 
     assert.dom(".manage-reports__grip").exists({ count: 3 });
     assert
-      .dom(".manage-reports__arrow")
+      .dom(".d-reorder-buttons__button")
       .exists(
         { count: 6 },
         "desktop keeps a keyboard path to reorder, not only the pointer drag"
@@ -137,7 +137,7 @@ acceptance("Manage reports drag and drop", function (needs) {
     await openModal(this);
 
     await click(
-      `${rowSelector("core_report:topics")} .manage-reports__arrow:first-child`
+      `${rowSelector("core_report:topics")} .d-reorder-buttons__button:first-child`
     );
 
     assert.deepEqual(
@@ -152,7 +152,7 @@ acceptance("Manage reports drag and drop", function (needs) {
     await openModal(this);
 
     await click(
-      `${rowSelector("core_report:topics")} .manage-reports__arrow:first-child`
+      `${rowSelector("core_report:topics")} .d-reorder-buttons__button:first-child`
     );
 
     assert.strictEqual(

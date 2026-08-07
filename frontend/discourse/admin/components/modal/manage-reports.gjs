@@ -14,6 +14,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import DModal from "discourse/ui-kit/d-modal";
+import DReorderButtons from "discourse/ui-kit/d-reorder-buttons";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -81,28 +82,21 @@ class ManageReportsRow extends Component {
       {{! The arrows are the only keyboard path to reorder, so they render on
           every viewport — the pointer drag beside them on desktop is an
           alternative to them, not a replacement. }}
-      <div class="manage-reports__arrows">
-        <DButton
-          @icon="arrow-up"
-          @action={{fn @onMoveUp @row}}
-          @disabled={{eq @index 0}}
-          @translatedAriaLabel={{i18n
-            "admin.dashboard.reports_section.modal.move_up"
-            title=@row.title
-          }}
-          class="manage-reports__arrow btn-transparent"
-        />
-        <DButton
-          @icon="arrow-down"
-          @action={{fn @onMoveDown @row}}
-          @disabled={{eq @index @lastEnabledIndex}}
-          @translatedAriaLabel={{i18n
-            "admin.dashboard.reports_section.modal.move_down"
-            title=@row.title
-          }}
-          class="manage-reports__arrow btn-transparent"
-        />
-      </div>
+      <DReorderButtons
+        @onMoveUp={{fn @onMoveUp @row}}
+        @onMoveDown={{fn @onMoveDown @row}}
+        @disableUp={{eq @index 0}}
+        @disableDown={{eq @index @lastEnabledIndex}}
+        @upLabel={{i18n
+          "admin.dashboard.reports_section.modal.move_up"
+          title=@row.title
+        }}
+        @downLabel={{i18n
+          "admin.dashboard.reports_section.modal.move_down"
+          title=@row.title
+        }}
+        class="manage-reports__arrows"
+      />
 
       <div class="manage-reports__row-text">
         <div class="manage-reports__row-heading">
