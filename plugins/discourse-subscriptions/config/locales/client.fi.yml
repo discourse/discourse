@@ -404,8 +404,6 @@ fi:
         confirm_payment: Vahvista maksu
         success: Palaa takaisin
       admin:
-        unconfigured: 'Stripea ei ole määritetty oikein. Katso lisätietoja Discourse Metasta.'
-        on_meta: Discoursen tilaukset Metassa
         dashboard:
           title: Hallintapaneeli
           table:

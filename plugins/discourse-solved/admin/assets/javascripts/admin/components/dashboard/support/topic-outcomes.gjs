@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { i18n } from "discourse-i18n";
 
 const ROWS = ["resolved", "in_progress", "unanswered"];
@@ -37,14 +38,17 @@ export default class SupportTopicOutcomes extends Component {
     <div class="db-support-outcomes__bars">
       {{#each this.rows as |row|}}
         <div class="db-support-outcomes__row">
-          <LinkTo
-            @route="discovery.filter"
-            @query={{row.query}}
-            class="db-support-outcomes__label"
-            title={{row.tooltip}}
-          >
-            {{row.label}}
-          </LinkTo>
+          <DTooltip @content={{row.tooltip}}>
+            <:trigger>
+              <LinkTo
+                @route="discovery.filter"
+                @query={{row.query}}
+                class="db-support-outcomes__label"
+              >
+                {{row.label}}
+              </LinkTo>
+            </:trigger>
+          </DTooltip>
           <span class="db-support-outcomes__track" aria-hidden="true">
             <span
               class={{concat "db-support-outcomes__fill " row.fillClass}}

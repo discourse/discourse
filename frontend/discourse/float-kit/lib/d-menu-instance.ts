@@ -13,7 +13,6 @@ import {
 import FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
 import type MenuService from "discourse/float-kit/services/menu";
 import { animateClosing } from "discourse/lib/animation-utils";
-import type Site from "discourse/models/site";
 import type ModalService from "discourse/services/modal";
 
 /**
@@ -25,11 +24,18 @@ import type ModalService from "discourse/services/modal";
  */
 export default class DMenuInstance extends FloatKitInstance {
   @service declare menu: MenuService;
-  @service declare site: Site;
   @service declare modal: ModalService;
 
   /** Whether the menu is currently open. */
   @tracked expanded = false;
+
+  /**
+   * Whether the trigger is disabled. While true, a trigger event (click/focus/hover/hold) does
+   * not open the menu — the single reactive veto for every listener the base wires once at
+   * registration. `<DMenu>` keeps this in sync with its `@disabled` argument; it does not touch
+   * focusability or the trigger's own ARIA, which stay the caller's concern.
+   */
+  @tracked disabled = false;
 
   /**
    * Whether the menu's trigger is managed outside the `<DMenu />` component. It
@@ -88,7 +94,7 @@ export default class DMenuInstance extends FloatKitInstance {
 
     await animateClosing(this.content);
 
-    if (this.site.mobileView && this.options.modalForMobile && this.expanded) {
+    if (this.renderInModal && this.expanded) {
       await this.modal.close();
     }
 
@@ -141,9 +147,22 @@ export default class DMenuInstance extends FloatKitInstance {
 
   @action
   async onTrigger(event: Event) {
+    // Consume the trigger event even when disabled, so a disabled trigger inside a clickable
+    // ancestor doesn't fall through and activate it — an enabled trigger would have consumed it.
     event.stopPropagation();
 
+    if (this.disabled) {
+      this.openedByDelayedHover = false;
+      return;
+    }
+
     await this.options.beforeTrigger?.(this);
+
+    if (this.disabled) {
+      this.openedByDelayedHover = false;
+      return;
+    }
+
     await this.show();
   }
 

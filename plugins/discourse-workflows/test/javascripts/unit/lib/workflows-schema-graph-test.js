@@ -323,6 +323,100 @@ module("Unit | lib | discourse-workflows | schema-graph", function () {
     );
   });
 
+  test("extensions compose onto the contract per selected value", function (assert) {
+    const base = objectSchema({
+      user: objectSchema({ id: { type: "integer" } }),
+    });
+    const extension = (name) => ({
+      type: "object",
+      properties: {
+        user: objectSchema({ [name]: { type: "string" } }),
+      },
+    });
+    const picker = node("picker", "action:picker");
+    const graph = {
+      nodes: [picker],
+      nodeTypes: [
+        nodeType("action:picker", [
+          {
+            schema: base,
+            extensions: [
+              {
+                schema: extension("email"),
+                display_options: { show: { include: ["emails"] } },
+              },
+              {
+                schema: extension("ip"),
+                display_options: { show: { include: ["ips"] } },
+              },
+            ],
+          },
+        ]),
+      ],
+      connections: [],
+    };
+    const keys = (configuration) =>
+      Object.keys(
+        outputSchemaForNode(picker, graph, { configuration }).properties.user
+          .properties
+      );
+
+    assert.deepEqual(keys({}), ["id"], "nothing is added without a selection");
+    assert.deepEqual(
+      keys({ include: ["emails"] }),
+      ["id", "email"],
+      "a selected extension merges into the base contract"
+    );
+    assert.deepEqual(
+      keys({ include: ["ips", "emails"] }),
+      ["id", "email", "ip"],
+      "every selected extension composes, unlike variants which are exclusive"
+    );
+    assert.deepEqual(
+      keys({ include: "={{ $json.include }}" }),
+      ["id", "email", "ip"],
+      "an expression leaves every extension in contention"
+    );
+  });
+
+  test("nodes with author-defined output keys resolve from their configuration", function (assert) {
+    const summarize = node("summarize", "action:summarize");
+    const graph = {
+      nodes: [node("source", "trigger:source"), summarize],
+      connections: [conn("source", "summarize")],
+      nodeTypes: [
+        triggerType("trigger:source", prop("source", "string")),
+        {
+          name: "action:summarize",
+          versions: { "1.0": { output_schema_resolver: "summarize" } },
+        },
+      ],
+    };
+    const keys = (configuration) =>
+      Object.keys(
+        outputSchemaForNode(summarize, graph, { configuration }).properties
+      );
+
+    assert.deepEqual(
+      keys({
+        fields_to_split_by: "topic_id",
+        fields_to_summarize: {
+          values: [
+            { aggregation: "sum", field: "likes" },
+            { aggregation: "count", output_field_name: "posts" },
+          ],
+        },
+      }),
+      ["topic_id", "sum_likes", "posts"],
+      "the node's declared resolver derives keys from the configuration"
+    );
+    assert.deepEqual(
+      keys({}),
+      [],
+      "an unconfigured node resolves to an empty shape rather than the input"
+    );
+  });
+
   test("joins, union contracts and cycles resolve across the graph", function (assert) {
     const str = prop("v", "string");
     const num = prop("v", "integer");

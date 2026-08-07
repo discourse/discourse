@@ -25,7 +25,7 @@ const DHeadlessMenu: TemplateOnlyComponent<DHeadlessMenuSignature> = <template>
     @trapTab={{@menu.options.trapTab}}
     @mainClass="fk-d-menu"
     @innerClass="fk-d-menu__inner-content"
-    @role="dialog"
+    @role={{@menu.options.contentRole}}
     @inline={{@inline}}
   />
 </template>;

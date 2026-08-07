@@ -303,6 +303,7 @@ pl_PL:
         screened_email_error: "Dzieje się tak, gdy adres e-mail nadawcy został już sprawdzony."
         unsubscribe_not_allowed: "Zdarza się, kiedy anulowanie subskrypcji przez e‐mail nie jest dozwolone dla tego użytkownika."
         email_not_allowed: "Zdarza się, gdy adres e-mail nie znajduje się na liście dozwolonych adresów lub jest na liście zablokowanych."
+        email_alias_not_allowed: "Dzieje się tak, gdy adres nadawcy jest aliasem adresu już zarejestrowanego na koncie, a znormalizowane adresy e-mail muszą być unikalne."
       unrecognized_error: "Niezidentyfikowany błąd"
     secure_uploads_placeholder: "Redacted: Ta strona ma włączone bezpieczne przesyłanie plików, odwiedź temat lub kliknij wyświetl media, aby zobaczyć załączone pliki."
     view_redacted_media: "Wyświetl załączniki"
@@ -1198,6 +1199,7 @@ pl_PL:
     error: "Podczas próby zmiany Twojego adresu email wystąpił błąd. Być może ten adres jest już używany?"
     doesnt_exist: "Ten adres e-mail nie jest powiązany z Twoim kontem."
     error_staged: "Podczas próby zmiany Twojego adresu email wystąpił błąd. Być może ten adres jest już używany?"
+    error_alias: "Ten adres e-mail jest aliasem adresu, który jest już w użyciu."
     already_done: "Przepraszamy, ten link aktywujący konto jest już nieważny. Być może Twój e-mail został zmieniony?"
     confirm: "Potwierdź"
     max_secondary_emails_error: "Osiągnąłeś maksymalny dozwolony limit dodatkowych e-maili."
@@ -3970,6 +3972,14 @@ pl_PL:
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
         Twoja odpowiedź została wysłana z zablokowanego adresu email. Spróbuj ją wysłać z innego adresu email, lub [skontaktuj się z obsługą] %{base_url}/o nas).
+    email_reject_email_alias:
+      title: "Odrzuć e-mail Alias ​​e-mail"
+      subject_template: "[%{email_prefix}] Problem z pocztą e-mail – nierozpoznany adres e-mail"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – nierozpoznany adres e-mail"
+      text_body_template: |
+        Przepraszamy, ale Twoja wiadomość e-mail wysłana na adres %{destination} (zatytułowana %{former_title}) nie dotarła.
+
+        Nie udało nam się dopasować adresu, z którego wysłałeś wiadomość na konto w tej witrynie. Spróbuj wysłać wiadomość z adresu e-mail użytego do rejestracji lub [skontaktuj się z pracownikiem](%{base_url}/about).
     email_reject_inactive_user:
       title: "Email odrzucony Użytkownik nieaktywny"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - nieaktywny użytkownik"
@@ -5881,6 +5891,7 @@ pl_PL:
     post_restored_by_author: "Wpis został przywrócony przez autora"
     post_deleted_by_author_after_penalty: >-
       Wpis został usunięty przez autora po tym, jak użytkownik został za to ukarany. Zapoznaj się z karą bez przywracania wpisu.
+    target_user_deleted: "Automatycznie zignorowano, ponieważ konto użytkownika zostało usunięte."
     priorities:
       low: "Niski"
       medium: "Średni"

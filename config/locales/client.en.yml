@@ -936,10 +936,6 @@ en:
       stale_help: "This item has been resolved by <b>%{username}</b>."
       claim_help:
         optional: "You can claim this item to prevent others from reviewing it."
-        required: "You must claim items before you can review them."
-        claimed_by_you: "You've claimed this item and can review it."
-        claimed_by_other: "This item can only be reviewed by <b>%{username}</b>."
-        automatically_claimed_by: "This item is currently being reviewed by <b>%{username}</b>."
       claim:
         title: "Claim this topic"
       unclaim:
@@ -3213,6 +3209,7 @@ en:
       subcategory_count:
         one: "+%{count} subcategory"
         other: "+%{count} subcategories"
+      subcategories: "+ Subcategories"
       topic_count:
         one: "%{count} topic in this category"
         other: "%{count} topics in this category"
@@ -3296,6 +3293,7 @@ en:
 
     d_icon_grid_picker:
       select_icon: "Select icon"
+      search_label: "Search icons"
       search_placeholder: "Search icons..."
       no_results: "No icons found"
       results_count:
@@ -5776,6 +5774,7 @@ en:
     invalid_video_url: This video cannot be played because the URL is invalid or unavailable.
 
     keyboard_shortcuts_help:
+      search_label: "Search shortcuts"
       search_placeholder: "Search for a shortcut by description or key combination"
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"

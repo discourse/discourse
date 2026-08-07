@@ -120,6 +120,8 @@ class PostMover
       end
     end
 
+    @moving_post_ids = posts.map(&:id)
+
     create_temp_table
     move_each_post
     handle_moved_references
@@ -748,10 +750,12 @@ class PostMover
   end
 
   def update_reviewables
-    Reviewable.where(target_type: "Post", target_id: @post_ids).update_all(
-      topic_id: @destination_topic.id,
-      category_id: @destination_topic.category_id,
-    )
+    Reviewable.where(
+      target_type: "Post",
+      target_id: @moving_post_ids,
+      topic_id: @original_topic.id,
+      category_id: @original_topic.category_id,
+    ).update_all(topic_id: @destination_topic.id, category_id: @destination_topic.category_id)
   end
 
   def watch_new_topic
