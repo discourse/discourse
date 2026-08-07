@@ -87,6 +87,19 @@ RSpec.describe Admin::WatchedWordsController do
         expect(UserHistory.where(action: UserHistory.actions[:watched_word_destroy]).count).to eq(1)
       end
 
+      it "enqueues a targeted rebake when deleting a display rule" do
+        watched_word.update!(action: WatchedWord.actions[:censor])
+
+        expect_enqueued_with(
+          job: :rebake_posts_for_watched_words,
+          args: {
+            words: [watched_word.word],
+          },
+        ) { delete "/admin/customize/watched_words/#{watched_word.id}.json" }
+
+        expect(response.status).to eq(200)
+      end
+
       it "should delete watched word group if it's the last word" do
         watched_word_group = Fabricate(:watched_word_group)
         watched_word = watched_word_group.watched_words.first
@@ -145,6 +158,43 @@ RSpec.describe Admin::WatchedWordsController do
         expect(response.status).to eq(200)
         expect(WatchedWord.take.case_sensitive?).to eq(true)
         expect(WatchedWord.take.word).to eq("PNG")
+      end
+
+      it "enqueues one targeted rebake for display rules" do
+        expect_enqueued_with(
+          job: :rebake_posts_for_watched_words,
+          args: {
+            words: %w[Deals Offer],
+          },
+        ) do
+          post "/admin/customize/watched_words.json",
+               params: {
+                 action_key: "censor",
+                 words: %w[Deals Offer],
+               }
+        end
+
+        expect(response.status).to eq(200)
+      end
+
+      it "enqueues a targeted rebake when changing an existing display rule action" do
+        watched_word = Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: "Deals")
+
+        expect_enqueued_with(
+          job: :rebake_posts_for_watched_words,
+          args: {
+            words: [watched_word.word],
+          },
+        ) do
+          post "/admin/customize/watched_words.json",
+               params: {
+                 action_key: "block",
+                 words: [watched_word.word],
+               }
+        end
+
+        expect(response.status).to eq(200)
+        expect(watched_word.reload.action).to eq(WatchedWord.actions[:block])
       end
 
       it "creates a tag watched word with existing tags by id" do
