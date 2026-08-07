@@ -88,7 +88,6 @@ module DiscourseAi
           TEST_PROMPT,
           user: @opts[:user] || Discourse.system_user,
           feature_name: "llm_validator",
-          temperature: 0.7,
           top_p: 0.9,
           &blk
         )
