@@ -16,6 +16,12 @@ class Category < ActiveRecord::Base
   SLUG_REF_SEPARATOR = ":"
   DEFAULT_TEXT_COLORS = %w[FFFFFF 000000]
 
+  # Set on a category that intentionally has no definition topic, so
+  # `ensure_consistency!` does not backfill one for it.
+  SKIP_DEFINITION_CUSTOM_FIELD = "skip_category_definition"
+
+  register_custom_field_type(SKIP_DEFINITION_CUSTOM_FIELD, :boolean)
+
   belongs_to :topic
   belongs_to :topic_only_relative_url,
              -> { select "id, title, slug" },
@@ -605,7 +611,7 @@ class Category < ActiveRecord::Base
   end
 
   def create_category_definition
-    return if skip_category_definition
+    return if skip_category_definition || custom_fields[SKIP_DEFINITION_CUSTOM_FIELD]
 
     Topic.transaction do
       t =

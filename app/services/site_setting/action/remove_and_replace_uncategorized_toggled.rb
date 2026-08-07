@@ -12,7 +12,8 @@
 # Uncategorized category), the now-normal category is pinned as the
 # `default_composer_category` so the composer keeps pre-selecting it. An
 # explicit default already pointing at that category needs no change — the id
-# simply becomes a normal category.
+# simply becomes a normal category. The exemption from definition topics moves
+# from the setting onto the category itself.
 #
 # The site's prior state is snapshotted onto the change's UpcomingChangeEvent
 # so that opt-out can either restore the special category or do nothing.
@@ -53,6 +54,13 @@ class SiteSetting::Action::RemoveAndReplaceUncategorizedToggled < Service::Actio
 
       SiteSetting.set_and_log(:uncategorized_category_id, -1)
       SiteSetting.set_and_log(:allow_uncategorized_topics, false)
+
+      # Definition topics were skipped for the special category only by virtue
+      # of `uncategorized_category_id` pointing at it, so move the exemption
+      # onto the category before it stops matching.
+      Category.find_by(id: former_uncategorized_id)&.upsert_custom_fields(
+        Category::SKIP_DEFINITION_CUSTOM_FIELD => true,
+      )
     end
 
     Site.clear_cache
@@ -73,6 +81,10 @@ class SiteSetting::Action::RemoveAndReplaceUncategorizedToggled < Service::Actio
       if SiteSetting.default_composer_category != snapshot["default_composer_category"]
         SiteSetting.set_and_log(:default_composer_category, snapshot["default_composer_category"])
       end
+
+      Category.find_by(id: snapshot["uncategorized_category_id"])&.upsert_custom_fields(
+        Category::SKIP_DEFINITION_CUSTOM_FIELD => false,
+      )
     end
 
     Site.clear_cache
