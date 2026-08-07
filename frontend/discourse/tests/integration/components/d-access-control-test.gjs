@@ -31,6 +31,12 @@ const GROUPS = [
   },
 ];
 
+const aclTarget = {
+  type: "TestTarget",
+  id: 123,
+  name: "Test Target",
+};
+
 // Builds a controlled-component wrapper: `onChange` writes the next acl back into
 // tracked state so the component re-renders the way it would in a real parent.
 function controlledState(initialAcl = []) {
@@ -191,7 +197,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
         <DAccessControl
           @groups={{GROUPS}}
           @acl={{state.acl}}
-          @aclTarget="TestTarget"
+          @aclTarget={{aclTarget}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -289,7 +295,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
           <DAccessControl
             @groups={{GROUPS}}
             @acl={{state.acl}}
-            @aclTarget="TestTarget"
+            @aclTarget={{aclTarget}}
             @onChange={{state.onChange}}
           />
         </template>
@@ -571,7 +577,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
         <DAccessControl
           @groups={{GROUPS}}
           @acl={{state.acl}}
-          @aclTarget="TestTarget"
+          @aclTarget={{aclTarget}}
           @onChange={{state.onChange}}
           @transformPermissionOptions={{transformPermissionOptions}}
         />
@@ -699,7 +705,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
         <DAccessControl
           @groups={{GROUPS}}
           @acl={{state.acl}}
-          @aclTarget="TestTarget"
+          @aclTarget={{aclTarget}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -748,7 +754,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
         <DAccessControl
           @groups={{GROUPS}}
           @acl={{state.acl}}
-          @aclTarget="TestTarget"
+          @aclTarget={{aclTarget}}
           @onChange={{state.onChange}}
         />
       </template>

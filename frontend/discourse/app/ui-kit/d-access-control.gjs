@@ -112,12 +112,12 @@ export default class DAccessControl extends Component {
    */
   @cached
   get mandatoryAcl() {
-    if (!this.args.aclTargetType) {
+    if (!this.args.aclTarget) {
       return [];
     }
 
     return (
-      this.site.access_control?.mandatory_acl?.[this.args.aclTargetType] || []
+      this.site.access_control?.mandatory_acl?.[this.args.aclTarget.type] || []
     );
   }
 
@@ -129,12 +129,12 @@ export default class DAccessControl extends Component {
    */
   @cached
   get bannedAcl() {
-    if (!this.args.aclTargetType) {
+    if (!this.args.aclTarget) {
       return [];
     }
 
     return (
-      this.site.access_control?.banned_acl?.[this.args.aclTargetType] || []
+      this.site.access_control?.banned_acl?.[this.args.aclTarget.type] || []
     );
   }
 
