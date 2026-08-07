@@ -18,6 +18,16 @@ end
 RSpec.describe JsonApiKit::Resource do
   subject(:resource) { SpecBlog::PostResource }
 
+  let(:topic_resource) do
+    Class.new(described_class) do
+      model Topic
+      sort :created_at
+      sort :ran_at, column: :last_posted_at
+      default_sort ran_at: :desc
+      unique_by :title, :id
+    end
+  end
+
   describe ".model" do
     subject(:model) { resource.model }
 
@@ -46,6 +56,19 @@ RSpec.describe JsonApiKit::Resource do
 
       it "returns the declared model" do
         expect(model).to eq(Category)
+      end
+    end
+
+    context "when the model is declared after the resource has been read" do
+      subject(:resource) { Class.new(described_class) { model Category } }
+
+      before do
+        resource.model
+        resource.model(Topic)
+      end
+
+      it "answers with the one declared last" do
+        expect(model).to eq(Topic)
       end
     end
 
@@ -139,6 +162,98 @@ RSpec.describe JsonApiKit::Resource do
           expect(parent.type).to eq("threads")
         end
       end
+    end
+  end
+
+  describe ".sort" do
+    subject(:keyset) { topic_resource.sorts.keyset(created_at: :desc) }
+
+    it "declares an order a request may ask for" do
+      expect(keyset.leading.name).to eq(:created_at)
+    end
+  end
+
+  describe ".sorts" do
+    subject(:child) { Class.new(topic_resource) }
+
+    context "when a sort is declared after the resource has been read" do
+      before do
+        topic_resource.sorts
+        topic_resource.sort(:closed)
+      end
+
+      it "offers it all the same, a plugin declaring long after the class body ran" do
+        expect(topic_resource.sorts.fetch("closed").name).to eq("closed")
+      end
+    end
+
+    before { child.sort(:title) }
+
+    it "inherits the sorts declared above it" do
+      expect(child.sorts.fetch("created_at").name).to eq("created_at")
+    end
+
+    it "leaves the resource it inherits from alone when it declares its own" do
+      expect { topic_resource.sorts.fetch("title") }.to raise_error(
+        JsonApiKit::Declarations::Sorts::Unsupported,
+      )
+    end
+  end
+
+  describe ".default_sort" do
+    subject(:keyset) { topic_resource.sorts.keyset({}) }
+
+    it "declares what a listing is ordered by when the request names nothing" do
+      expect(keyset.keys.map(&:name)).to eq(%i[last_posted_at title id])
+    end
+  end
+
+  describe ".unique_by" do
+    subject(:keyset) { topic_resource.sorts.keyset(created_at: :desc) }
+
+    it "declares the columns that leave no two rows sharing a place" do
+      expect(keyset.keys.map(&:name)).to eq(%i[created_at title id])
+    end
+  end
+
+  describe ".scope_for" do
+    subject(:exposed) { topic_resource.scope_for(Guardian.new) }
+
+    it "is every row of the model, a resource declaring no scope holding nothing back" do
+      expect(exposed.to_sql).to eq(Topic.all.to_sql)
+    end
+
+    context "with a scope declared" do
+      subject(:exposed) { closed_topics.scope_for(Guardian.new) }
+
+      let(:closed_topics) do
+        Class.new(described_class) do
+          model Topic
+          scope { |guardian| Topic.where(closed: true) }
+        end
+      end
+
+      it "is the rows that scope allows" do
+        expect(exposed.to_sql).to eq(Topic.where(closed: true).to_sql)
+      end
+    end
+  end
+
+  describe ".all" do
+    subject(:listing) { topic_resource.all({ sort: { created_at: :asc } }, guardian: Guardian.new) }
+
+    fab!(:topic) { Fabricate(:topic, title: "A listing read from a resource") }
+
+    it "is a listing of the resource, read for whoever is asking" do
+      expect(listing.records).to eq([topic])
+    end
+  end
+
+  describe ".order" do
+    subject(:order) { topic_resource.order(ran_at: :desc) }
+
+    it "reads the listing in the bands its keyset splits into" do
+      expect(order.segments.size).to eq(2)
     end
   end
 end

@@ -42,7 +42,7 @@ module JsonApiKit
         return [scan] if scan.truncated?
 
         following = order.after(segment)
-        return [scan] if following.nil?
+        return [scan] unless following
         [scan, *read_from(following, size: size - scan.rows.size, after: nil)]
       end
 

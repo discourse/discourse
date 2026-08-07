@@ -67,7 +67,33 @@ the controller. Every one of them should be testable without a request.
   per declared concept, each owning what it knows: an `Attribute` reads a value off a record, a
   `Filter` applies itself to a scope, a `Sort` says whether it is column-derived, SQL-backed or opaque
   and yields its keyset key, an `Anchor` selects a row.
+- `Declarations::Sort` — one way a listing may be ordered: the name a client sorts by, and the column
+  or SQL behind it. It takes the model when asked for a key rather than holding one, so declaring a
+  sort loads nothing. Built (2026-08-06).
+- `Declarations::Sorts` — which sorts a resource offers, what it reads when a request names none, and
+  the key that makes an order unique; it answers with the keyset a page is read along, so nothing else
+  turns a request into an order. `Unsupported` is what an undeclared sort raises. Built (2026-08-06).
+
+**A sort's nulls placement is inferred, because leaving it out is a correctness bug.** A key with no
+placement is read as having no nulls (see the fix below), so `Sort` declares one for anything that can
+be null: what the declaration says, else `:last` when the column is nullable *or* when there is no
+column at all — an expression over a join usually can be null, and being wrong that way costs an empty
+tail band rather than a skipped row. A resource that knows an expression is never null has no way to
+say so yet; the room for it is a third placement value, additive when a use case turns up.
 - `ResourceRegistry` — type ⇄ resource, replacing the spike's stand-in.
+
+**Query** (`lib/json_api_kit/query.rb`) — a listing being read: the sequence from the rows a resource
+exposes to the records of one page, in the one place that knows it. Lazy, so a query can be handed on
+— a sideload and a nested route are the same object `scoped_to:` another listing's rows. Built
+2026-08-07 with scope and order; paging, filters and documents join it as their slices land.
+
+**What a resource is asked for is ours, not the wire's** (decided 2026-08-07). A controller validates
+`sort=-created_at` against the spec and hands the resource `sort: { created_at: :desc }`; anchors are
+`anchor: { id: 5 }` rather than `page: { around: … }`. The parameters stay JSON:API *concepts* while
+their shape suits our objects, so nothing below the controller parses strings and the mapping is free
+to change. Two smaller decisions in the same area: a resource that declares no `scope` exposes
+`model.all`, and a `default_sort` may only name a sort the resource declares — one vocabulary, and a
+typo fails at the first read rather than in SQL.
 
 **Request** (`lib/json_api_kit/request/`) — one object per reserved parameter family, each strict by
 construction, so "unknown parameter → 400" is not a separate concern:
@@ -138,7 +164,29 @@ construction, so "unknown parameter → 400" is not a separate concern:
 Slice 1 has no real endpoint by design, and that is a feature: it forces the framework to depend on
 nothing in the app.
 
-- **Unit specs per object.** Most are pure; the ones touching the database take a scope.
+- **Start with the end-to-end spec, before any object exists** — `spec/integration/json_api_kit/`,
+  written against the public API a client uses (`Resource.all(params, guardian:)`), never against an
+  internal. It is red for as long as the feature takes to build, and the moment it turns green the
+  feature is done, which is what stops a slice growing code nothing asks for. It also *decides* the
+  API: what a request says and what an answer holds is easier to settle from the outside than to
+  derive from internals that do not exist yet. Every aspect of the feature is written up front —
+  sorting, paging, filtering, documents, sideloading, nesting — with the ones not under way marked
+  `pending: "reason"` (metadata works on a whole group), so only the aspect being built is red. RSpec
+  reports a pending example that starts passing as FIXED and fails the build: that is when the marker
+  comes off. Two conditions make it worth having:
+  - **Assert against an independent oracle, never against our own machinery.** `pagination_spec` works
+    because it compares pages to `scope.order(keyset.order)`; a spec whose expectation is built from
+    the code under test proves only that the code agrees with itself.
+  - **State an outcome, not a collaboration** — rows, links, a document. Written that way it survives
+    redesigns of everything underneath: the listing properties went through the `Nulls` extraction, the
+    `Direction` extraction and moving the split onto `Segment` without a single edit, while unit specs
+    needed changes in all three.
+
+  Evidence for the rule rather than taste: 175 green unit specs coexisted with four defects that made
+  pages skip rows, and it was the listing-level spec that caught every one of them. Since it cannot be
+  committed red, it stays in the working tree and lands with the code that makes it pass.
+- **Unit specs per object,** asserting only what each object adds on top of the end-to-end claim. Most
+  are pure; the ones touching the database take a scope.
 - **Framework request specs against a fixture endpoint** defined in spec support (a `Resource` over an
   existing model plus a controller), with routes drawn per example. `with_routing` is the intended
   mechanism — to be confirmed, as nothing in the repo uses it yet; the fallback is a test-only route
@@ -424,7 +472,11 @@ which is also what reversal means.
 > fix (it is polish). Verify by comparing returned rows, not row counts — two of the three wrong readings
 > came from a variant that was quietly answering a different question. A fourth reading was wrong for a
 > different reason: Rails' query cache is **on** inside `bin/rails runner`, so a loop over one SQL string
-> measures cache hits. Wrap benchmark loops in `ActiveRecord::Base.uncached`.
+> measures cache hits. Wrap benchmark loops in `ActiveRecord::Base.uncached`. A fifth, found 2026-08-06:
+> **two measured blocks over the same SQL in one process are order-dependent** — whichever runs second
+> is consistently ~40% slower (0.38 → 0.55 ms), which read as "the declared order is slower than a
+> hand-built keyset" until the blocks were swapped and the gap swapped with them. Compare like-for-like
+> positions, not like-for-like objects.
 
 ### Fixed 2026-08-06: nulls outside the segmented path were compared wrongly
 

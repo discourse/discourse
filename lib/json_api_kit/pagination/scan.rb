@@ -29,7 +29,7 @@ module JsonApiKit
       def read = @read ||= page.to_a
 
       def page
-        return ordered if after.nil?
+        return ordered unless after
         Predicate.new(keyset, after).apply(ordered)
       end
 

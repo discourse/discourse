@@ -52,7 +52,7 @@ module JsonApiKit
       # that way, so it takes a probe to find out — unless this page was read from the very
       # start of the order, where nothing can lie behind it and no query is needed.
       def behind
-        return if from.nil?
+        return unless from
         return unless probe.truncated?
         entry_position.to_cursor
       end

@@ -32,7 +32,7 @@ module JsonApiKit
 
         # A key the table cannot hand over as a column has to be selected under its name
         # before anything can order, compare or read it.
-        def projected? = !sql.nil?
+        def projected? = sql.present?
 
         # Reversing an order sends its nulls to the other end — which is also the only
         # placement a backward scan of an index built for the forward order can serve.
