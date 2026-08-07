@@ -628,6 +628,12 @@ class UsersController < ApplicationController
     render json: checker.check_username(username, email)
   end
 
+  def generate_random_username
+    RateLimiter.new(nil, "random-username-#{request.remote_ip}", 20, 1.minute).performed!
+
+    render json: { username: RandomUsernameGenerator.generate }
+  end
+
   def check_email
     begin
       RateLimiter.new(nil, "check-email-#{request.remote_ip}", 10, 1.minute).performed!
