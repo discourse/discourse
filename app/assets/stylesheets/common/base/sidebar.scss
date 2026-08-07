@@ -9,8 +9,8 @@
   }
 
   --d-sidebar-vertical-gap: var(--space-half);
-  --sidebar-section-wrapper-padding: var(--space-6) var(--space-2)
-    var(--space-4);
+  --sidebar-section-wrapper-padding: var(--main-outlet-padding-top)
+    var(--space-2) var(--space-4);
 
   // ems so height is variable along with font size
   --d-sidebar-row-height: 2.2em;
