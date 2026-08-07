@@ -8,19 +8,15 @@ module Jobs
       topic = Topic.find_by(id: args[:topic_id])
       return if topic.blank?
 
-      scope = Notification.where(topic_id: topic.id)
-      scope = scope.where(user_id: args[:user_ids]) if args[:user_ids].present?
-      user_ids = scope.distinct.pluck(:user_id)
-      return if user_ids.empty?
+      user_ids = args[:user_ids].presence
+      user_ids ||= Notification.where(topic_id: topic.id).distinct.pluck(:user_id)
+      return if user_ids.blank?
 
-      User
-        .where(id: user_ids)
-        .find_each do |user|
-          next if user.guardian.can_see?(topic)
+      inaccessible_users = User.where(id: user_ids).reject { |user| user.guardian.can_see?(topic) }
+      return if inaccessible_users.empty?
 
-          removed_count = Notification.where(user_id: user.id, topic_id: topic.id).delete_all
-          user.publish_notifications_state if removed_count.positive?
-        end
+      Notification.where(user_id: inaccessible_users.map(&:id), topic_id: topic.id).delete_all
+      inaccessible_users.each(&:publish_notifications_state)
     end
   end
 end
