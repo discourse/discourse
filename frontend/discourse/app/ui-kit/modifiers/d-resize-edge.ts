@@ -47,6 +47,14 @@ interface DResizeEdgeSignature {
       side?: "start" | "end";
 
       /**
+       * A class held on `document.body` for the length of a gesture, for a cursor
+       * that has to survive the pointer leaving the edge. Whether the cursor of the
+       * element a drag began on does that by itself is engine-dependent, so it
+       * cannot be left to the edge's own rule.
+       */
+      bodyClass?: string;
+
+      /**
        * Called once when a pointer gesture begins, before anything moves. Purely
        * a notification — the return value is ignored, and a caller whose size is
        * a live measurement supplies it by passing a function as `value`.
@@ -187,6 +195,7 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     onDragEnd: (event: PointerEvent) => void;
     cancelCommits: boolean;
     touchAction: string;
+    bodyClass?: string;
   };
 
   constructor(owner: Owner, args: ArgsFor<DResizeEdgeSignature>) {
@@ -213,6 +222,7 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
       // abort the resize through `pointercancel`. An edge is small enough that
       // suppressing every touch gesture on it costs the user nothing.
       touchAction: "none",
+      bodyClass: named.bodyClass,
     };
 
     // The gesture engine owns pointer identity, capture, and the primary-button

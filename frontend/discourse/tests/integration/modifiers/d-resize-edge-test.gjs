@@ -878,4 +878,32 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
       );
     });
   });
+
+  test("bodyClass marks the page for the length of the gesture", async function (assert) {
+    await render(
+      <template>
+        <div
+          class="dre-edge"
+          {{dResizeEdge value=300 min=100 max=500 bodyClass="d-resizing-ns"}}
+        ></div>
+      </template>
+    );
+
+    const edge = find(".dre-edge");
+    installPointerCaptureSpy(edge);
+
+    assert.dom(document.body).doesNotHaveClass("d-resizing-ns");
+
+    await triggerEvent(edge, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientY: 400,
+    });
+    // A splitter's cursor has to outlive the pointer leaving the handle, and
+    // whether that happens on its own is engine-dependent.
+    assert.dom(document.body).hasClass("d-resizing-ns");
+
+    await triggerEvent(edge, "pointerup", { pointerId: 1, clientY: 400 });
+    assert.dom(document.body).doesNotHaveClass("d-resizing-ns");
+  });
 });
