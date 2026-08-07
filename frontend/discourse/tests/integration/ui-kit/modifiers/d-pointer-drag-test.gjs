@@ -1,21 +1,8 @@
 import { clearRender, find, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import dPointerDrag, * as dPointerDragModule from "discourse/ui-kit/modifiers/d-pointer-drag";
-
-function installPointerCaptureSpy(element) {
-  const captured = new Set();
-  const released = [];
-
-  element.setPointerCapture = (pointerId) => captured.add(pointerId);
-  element.hasPointerCapture = (pointerId) => captured.has(pointerId);
-  element.releasePointerCapture = (pointerId) => {
-    captured.delete(pointerId);
-    released.push(pointerId);
-  };
-
-  return { captured, released };
-}
 
 function installEventListenerSpy(element) {
   const added = [];
@@ -203,7 +190,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
 
     test("a throwing onDragStart releases capture, rethrows, and permits a later press", function (assert) {
       const target = document.createElement("div");
-      const capture = installPointerCaptureSpy(target);
+      const capture = stubPointerCapture(target);
       const events = installEventListenerSpy(target);
       const starts = [];
       const error = new Error("consumer start failed");
@@ -256,7 +243,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       );
 
       const target = find(".dpd-target");
-      installPointerCaptureSpy(target);
+      stubPointerCapture(target);
 
       await triggerEvent(target, "pointerdown", {
         button: 0,
@@ -306,8 +293,8 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       const ancestor = find(".dpd-ancestor");
       const defaultTarget = find(".dpd-default");
       const stoppedTarget = find(".dpd-stopped");
-      installPointerCaptureSpy(defaultTarget);
-      installPointerCaptureSpy(stoppedTarget);
+      stubPointerCapture(defaultTarget);
+      stubPointerCapture(stoppedTarget);
       ancestor.addEventListener("pointerdown", (event) => {
         ancestorEvents.push(event.target.className);
       });
@@ -369,8 +356,8 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
 
       const cancelTarget = find(".dpd-cancel");
       const commitTarget = find(".dpd-commit");
-      installPointerCaptureSpy(cancelTarget);
-      installPointerCaptureSpy(commitTarget);
+      stubPointerCapture(cancelTarget);
+      stubPointerCapture(commitTarget);
 
       await triggerEvent(cancelTarget, "pointerdown", {
         button: 0,
@@ -410,7 +397,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       );
 
       const target = find(".dpd-target");
-      installPointerCaptureSpy(target);
+      stubPointerCapture(target);
       await triggerEvent(target, "pointerdown", { button: 0, pointerId: 1 });
       await triggerEvent(target, "lostpointercapture", { pointerId: 1 });
       await triggerEvent(target, "pointerdown", { button: 0, pointerId: 2 });
@@ -444,7 +431,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       );
 
       const target = find(".dpd-target");
-      installPointerCaptureSpy(target);
+      stubPointerCapture(target);
       await triggerEvent(target, "pointerdown", { button: 0, pointerId: 1 });
       await triggerEvent(target, "lostpointercapture", { pointerId: 1 });
       await triggerEvent(target, "pointerdown", { button: 0, pointerId: 2 });
@@ -477,7 +464,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       );
 
       const target = find(".dpd-target");
-      installPointerCaptureSpy(target);
+      stubPointerCapture(target);
       await triggerEvent(target, "pointerdown", { button: 0, pointerId: 7 });
       await triggerEvent(target, "lostpointercapture", { pointerId: 99 });
       await triggerEvent(target, "pointerup", { pointerId: 7 });
@@ -515,7 +502,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
 
     test("an invalid draggingClass degrades safely through gesture and teardown", function (assert) {
       const target = document.createElement("div");
-      const capture = installPointerCaptureSpy(target);
+      const capture = stubPointerCapture(target);
       const events = installEventListenerSpy(target);
       const starts = [];
       const ends = [];
@@ -602,7 +589,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       );
 
       const target = find(".dpd-target");
-      installPointerCaptureSpy(target);
+      stubPointerCapture(target);
       await triggerEvent(target, "pointerdown", {
         button: 0,
         pointerId: 7,
@@ -624,7 +611,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       );
 
       const target = find(".dpd-target");
-      installPointerCaptureSpy(target);
+      stubPointerCapture(target);
       await triggerEvent(target, "pointerdown", {
         button: 0,
         pointerId: 7,
@@ -649,7 +636,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       );
 
       const target = find(".dpd-target");
-      installPointerCaptureSpy(target);
+      stubPointerCapture(target);
       await triggerEvent(target, "pointerdown", {
         button: 0,
         pointerId: 7,
@@ -672,7 +659,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       );
 
       const target = find(".dpd-target");
-      const capture = installPointerCaptureSpy(target);
+      const capture = stubPointerCapture(target);
       await triggerEvent(target, "pointerdown", {
         button: 0,
         pointerId: 17,
@@ -767,8 +754,8 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
 
       const outerTarget = find(".dpd-outer");
       const innerTarget = find(".dpd-inner");
-      installPointerCaptureSpy(outerTarget);
-      installPointerCaptureSpy(innerTarget);
+      stubPointerCapture(outerTarget);
+      stubPointerCapture(innerTarget);
 
       await triggerEvent(innerTarget, "pointerdown", {
         button: 0,
@@ -828,9 +815,9 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
         </template>
       );
 
-      installPointerCaptureSpy(find(".dpd-outer"));
+      stubPointerCapture(find(".dpd-outer"));
       const innerTarget = find(".dpd-inner");
-      installPointerCaptureSpy(innerTarget);
+      stubPointerCapture(innerTarget);
 
       await triggerEvent(innerTarget, "pointerdown", {
         button: 0,
@@ -873,9 +860,9 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
         </template>
       );
 
-      installPointerCaptureSpy(find(".dpd-outer"));
+      stubPointerCapture(find(".dpd-outer"));
       const innerTarget = find(".dpd-inner");
-      installPointerCaptureSpy(innerTarget);
+      stubPointerCapture(innerTarget);
 
       await triggerEvent(innerTarget, "pointerdown", {
         button: 0,
@@ -920,8 +907,8 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
 
       const firstTarget = find(".dpd-first");
       const secondTarget = find(".dpd-second");
-      installPointerCaptureSpy(firstTarget);
-      installPointerCaptureSpy(secondTarget);
+      stubPointerCapture(firstTarget);
+      stubPointerCapture(secondTarget);
 
       await triggerEvent(firstTarget, "pointerdown", {
         button: 0,
@@ -986,7 +973,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       );
 
       for (const selector of [".dpd-outer", ".dpd-middle", ".dpd-inner"]) {
-        installPointerCaptureSpy(find(selector));
+        stubPointerCapture(find(selector));
       }
 
       await triggerEvent(find(".dpd-inner"), "pointerdown", {
@@ -1024,7 +1011,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
 
     test("a registration torn down during onDragStart claims no pointer", function (assert) {
       const target = document.createElement("div");
-      installPointerCaptureSpy(target);
+      stubPointerCapture(target);
       const events = installEventListenerSpy(target);
       const calls = [];
       let cleanup;
@@ -1044,7 +1031,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       );
 
       const later = document.createElement("div");
-      installPointerCaptureSpy(later);
+      stubPointerCapture(later);
       const laterEvents = installEventListenerSpy(later);
       const laterCleanup = dPointerDragModule.registerPointerDrag(
         later,
@@ -1065,7 +1052,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
 
     test("teardown mid-gesture gives up the pointer", function (assert) {
       const target = document.createElement("div");
-      installPointerCaptureSpy(target);
+      stubPointerCapture(target);
       const events = installEventListenerSpy(target);
       const calls = [];
 
@@ -1080,7 +1067,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       cleanup();
 
       const later = document.createElement("div");
-      installPointerCaptureSpy(later);
+      stubPointerCapture(later);
       const laterEvents = installEventListenerSpy(later);
       const laterCleanup = dPointerDragModule.registerPointerDrag(
         later,
@@ -1109,7 +1096,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       );
 
       const target = find(".dpd-target");
-      installPointerCaptureSpy(target);
+      stubPointerCapture(target);
 
       await triggerEvent(target, "pointerdown", { button: 0, pointerId: 1 });
       assert
@@ -1130,7 +1117,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       );
 
       const target = find(".dpd-target");
-      installPointerCaptureSpy(target);
+      stubPointerCapture(target);
 
       await triggerEvent(target, "pointerdown", { button: 0, pointerId: 1 });
       assert.dom(document.body).hasClass("dragging", "the gesture marked it");
@@ -1152,7 +1139,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       );
 
       const target = find(".dpd-target");
-      installPointerCaptureSpy(target);
+      stubPointerCapture(target);
       await triggerEvent(target, "pointerdown", { button: 0, pointerId: 1 });
       assert.dom(document.body).hasClass("dragging", "the gesture marked it");
 
@@ -1172,8 +1159,8 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
 
       const first = find(".dpd-first");
       const second = find(".dpd-second");
-      installPointerCaptureSpy(first);
-      installPointerCaptureSpy(second);
+      stubPointerCapture(first);
+      stubPointerCapture(second);
 
       await triggerEvent(first, "pointerdown", { button: 0, pointerId: 1 });
       await triggerEvent(second, "pointerdown", { button: 0, pointerId: 2 });

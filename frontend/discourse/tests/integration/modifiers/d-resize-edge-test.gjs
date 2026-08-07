@@ -8,6 +8,7 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import dResizeEdge from "discourse/ui-kit/modifiers/d-resize-edge";
 
 const EDGE = ".resize-edge";
@@ -18,20 +19,6 @@ const EDGE = ".resize-edge";
  * The real methods reject synthetic pointer IDs, which is all a test can
  * dispatch, so capture has to be recorded rather than performed.
  */
-function installPointerCaptureSpy(element) {
-  const captured = new Set();
-  const released = [];
-
-  element.setPointerCapture = (pointerId) => captured.add(pointerId);
-  element.hasPointerCapture = (pointerId) => captured.has(pointerId);
-  element.releasePointerCapture = (pointerId) => {
-    captured.delete(pointerId);
-    released.push(pointerId);
-  };
-
-  return { captured, released };
-}
-
 class Harness {
   @tracked value;
 
@@ -70,7 +57,7 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
     );
 
     const edge = find(EDGE);
-    installPointerCaptureSpy(edge);
+    stubPointerCapture(edge);
 
     await triggerEvent(edge, "pointerdown", {
       button: 0,
@@ -126,7 +113,7 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
     );
 
     const edge = find(EDGE);
-    installPointerCaptureSpy(edge);
+    stubPointerCapture(edge);
 
     await triggerEvent(edge, "pointerdown", {
       button: 0,
@@ -211,7 +198,7 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
     );
 
     const edge = find(EDGE);
-    const capture = installPointerCaptureSpy(edge);
+    const capture = stubPointerCapture(edge);
 
     await triggerEvent(edge, "pointerdown", {
       button: 2,
@@ -248,7 +235,7 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
     );
 
     const edge = find(EDGE);
-    const capture = installPointerCaptureSpy(edge);
+    const capture = stubPointerCapture(edge);
 
     await triggerEvent(edge, "pointerdown", {
       button: 0,
@@ -296,7 +283,7 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
     );
 
     const edge = find(EDGE);
-    const capture = installPointerCaptureSpy(edge);
+    const capture = stubPointerCapture(edge);
 
     await triggerEvent(edge, "pointerdown", {
       button: 0,
@@ -344,7 +331,7 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
     );
 
     const edge = find(EDGE);
-    const capture = installPointerCaptureSpy(edge);
+    const capture = stubPointerCapture(edge);
 
     await triggerEvent(edge, "pointerdown", {
       button: 0,
@@ -466,7 +453,7 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
     );
 
     const edge = find(EDGE);
-    installPointerCaptureSpy(edge);
+    stubPointerCapture(edge);
 
     await triggerEvent(edge, "pointerdown", {
       button: 0,
@@ -520,7 +507,7 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
     );
 
     const edge = find(EDGE);
-    installPointerCaptureSpy(edge);
+    stubPointerCapture(edge);
 
     await triggerEvent(edge, "pointerdown", {
       button: 0,
@@ -540,7 +527,7 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
     );
 
     const verticalEdge = find(".vertical-edge");
-    installPointerCaptureSpy(verticalEdge);
+    stubPointerCapture(verticalEdge);
 
     await triggerEvent(verticalEdge, "pointerdown", {
       button: 0,
@@ -580,7 +567,7 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
     );
 
     const edge = find(EDGE);
-    installPointerCaptureSpy(edge);
+    stubPointerCapture(edge);
 
     await triggerEvent(edge, "pointerdown", {
       button: 0,
@@ -636,7 +623,7 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
     );
 
     const edge = find(EDGE);
-    installPointerCaptureSpy(edge);
+    stubPointerCapture(edge);
 
     await triggerEvent(edge, "pointerdown", {
       button: 0,
@@ -685,7 +672,7 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
       );
 
       const edge = find(EDGE);
-      installPointerCaptureSpy(edge);
+      stubPointerCapture(edge);
       await triggerEvent(edge, "pointerdown", {
         button: 0,
         clientX: 100,
@@ -742,7 +729,7 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
       );
 
       const edge = find(EDGE);
-      installPointerCaptureSpy(edge);
+      stubPointerCapture(edge);
       await triggerEvent(edge, "pointerdown", {
         button: 0,
         clientX: 100,
@@ -787,7 +774,7 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
       );
 
       const edge = find(EDGE);
-      installPointerCaptureSpy(edge);
+      stubPointerCapture(edge);
       await triggerEvent(edge, "pointerdown", {
         button: 0,
         clientX: 300,
@@ -890,7 +877,7 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
     );
 
     const edge = find(".dre-edge");
-    installPointerCaptureSpy(edge);
+    stubPointerCapture(edge);
 
     assert.dom(document.body).doesNotHaveClass("d-resizing-ns");
 

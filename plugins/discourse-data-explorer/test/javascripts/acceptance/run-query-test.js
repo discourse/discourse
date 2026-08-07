@@ -1,7 +1,6 @@
 import {
   click,
   find,
-  settled,
   triggerEvent,
   triggerKeyEvent,
   visit,
@@ -9,21 +8,11 @@ import {
 import { test } from "qunit";
 import sinon from "sinon";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import {
+  settleGestureFrame,
+  stubPointerCapture,
+} from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import { i18n } from "discourse-i18n";
-
-/**
- * Pointer capture rejects a pointer ID that was never real, so the gesture would
- * refuse to start on a synthetic press. Stubbing it leaves the rest of the
- * lifecycle genuine.
- *
- * @param {HTMLElement} element - The element that will receive the press.
- */
-function makePressable(element) {
-  const captured = new Set();
-  element.setPointerCapture = (pointerId) => captured.add(pointerId);
-  element.hasPointerCapture = (pointerId) => captured.has(pointerId);
-  element.releasePointerCapture = (pointerId) => captured.delete(pointerId);
-}
 
 acceptance("Run Query", function (needs) {
   needs.user();
@@ -455,7 +444,7 @@ acceptance("Run Query", function (needs) {
 
     const grippie = find(".query-editor .grippie");
     const panes = find(".query-editor .panels-flex");
-    makePressable(grippie);
+    stubPointerCapture(grippie);
     const startingHeight = panes.clientHeight;
 
     await triggerEvent(grippie, "pointerdown", {
@@ -466,9 +455,7 @@ acceptance("Run Query", function (needs) {
     // Straight down, with no sideways movement at all. The handle used to gate on
     // horizontal travel while resizing on vertical, so this did nothing.
     await triggerEvent(grippie, "pointermove", { pointerId: 1, clientY: 240 });
-    // Moves are coalesced into an animation frame, which settling does not await.
-    await new Promise((resolve) => requestAnimationFrame(resolve));
-    await settled();
+    await settleGestureFrame();
 
     assert.strictEqual(
       panes.style.height,

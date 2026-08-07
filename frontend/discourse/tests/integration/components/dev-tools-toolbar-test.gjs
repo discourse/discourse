@@ -2,20 +2,7 @@ import { find, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Toolbar from "discourse/static/dev-tools/toolbar";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-
-/**
- * Pointer capture rejects a pointer ID that was never real, so the gesture would
- * refuse to start on a synthetic press. Stubbing it leaves the rest of the
- * lifecycle genuine.
- *
- * @param {HTMLElement} element - The element that will receive the press.
- */
-function makePressable(element) {
-  const captured = new Set();
-  element.setPointerCapture = (pointerId) => captured.add(pointerId);
-  element.hasPointerCapture = (pointerId) => captured.has(pointerId);
-  element.releasePointerCapture = (pointerId) => captured.delete(pointerId);
-}
+import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 
 /**
  * The toolbar positions itself with `top: min(100dvh - <own height>px, <top>px)`,
@@ -35,7 +22,7 @@ module("Integration | Component | dev-tools toolbar", function (hooks) {
     await render(<template><Toolbar /></template>);
 
     const gripper = find(".dev-tools-toolbar .gripper");
-    makePressable(gripper);
+    stubPointerCapture(gripper);
 
     await triggerEvent(gripper, "pointerdown", {
       button: 0,
@@ -90,7 +77,7 @@ module("Integration | Component | dev-tools toolbar", function (hooks) {
     await render(<template><Toolbar /></template>);
 
     const gripper = find(".dev-tools-toolbar .gripper");
-    makePressable(gripper);
+    stubPointerCapture(gripper);
 
     assert
       .dom(".dev-tools-toolbar")
@@ -129,7 +116,7 @@ module("Integration | Component | dev-tools toolbar", function (hooks) {
     await render(<template><Toolbar /></template>);
 
     const gripper = find(".dev-tools-toolbar .gripper");
-    makePressable(gripper);
+    stubPointerCapture(gripper);
 
     await triggerEvent(gripper, "pointerdown", {
       button: 0,

@@ -29,19 +29,15 @@ import {
   metaModifier,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import {
+  settleGestureFrame,
+  stubPointerCapture,
+} from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import { i18n } from "discourse-i18n";
-
-function installPointerCaptureStub(element) {
-  const captured = new Set();
-
-  element.setPointerCapture = (pointerId) => captured.add(pointerId);
-  element.hasPointerCapture = (pointerId) => captured.has(pointerId);
-  element.releasePointerCapture = (pointerId) => captured.delete(pointerId);
-}
 
 async function dragComposer({ from, to, waitForMove = false }) {
   const grippie = find(".grippie");
-  installPointerCaptureStub(grippie);
+  stubPointerCapture(grippie);
 
   await triggerEvent(grippie, "pointerdown", {
     button: 0,
@@ -55,7 +51,7 @@ async function dragComposer({ from, to, waitForMove = false }) {
   });
 
   if (waitForMove) {
-    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await settleGestureFrame();
   }
 
   await triggerEvent(grippie, "pointerup", {
@@ -420,7 +416,7 @@ acceptance(`Composer`, function (needs) {
     const expectedHeight = `${targetHeight}px`;
     const { from, to } = dragCoordinatesForHeight(currentHeight, targetHeight);
     const grippie = find(".grippie");
-    installPointerCaptureStub(grippie);
+    stubPointerCapture(grippie);
 
     assert.true(
       targetHeight > minimumHeight,
@@ -476,7 +472,7 @@ acceptance(`Composer`, function (needs) {
     const { currentHeight, targetHeight } = composerResizeMeasurements();
     const { from, to } = dragCoordinatesForHeight(currentHeight, targetHeight);
     const grippie = find(".grippie");
-    installPointerCaptureStub(grippie);
+    stubPointerCapture(grippie);
 
     await triggerEvent(grippie, "pointerdown", {
       button: 0,

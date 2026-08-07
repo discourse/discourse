@@ -9,23 +9,8 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
-
-/**
- * Pointer capture rejects a pointer ID that was never real, so the gesture would
- * refuse to start on a synthetic press. Stubbing it leaves the rest genuine.
- *
- * @param {string} selector - The separator that will receive the press.
- * @returns {HTMLElement} That element.
- */
-function pressable(selector) {
-  const element = find(selector);
-  const captured = new Set();
-  element.setPointerCapture = (pointerId) => captured.add(pointerId);
-  element.hasPointerCapture = (pointerId) => captured.has(pointerId);
-  element.releasePointerCapture = (pointerId) => captured.delete(pointerId);
-  return element;
-}
 
 module("Integration | ui-kit | DResizeSeparator", function (hooks) {
   setupRenderingTest(hooks);
@@ -190,7 +175,7 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
       </template>
     );
 
-    const handle = pressable(".my-handle");
+    const { element: handle } = stubPointerCapture(".my-handle");
     await triggerEvent(handle, "pointerdown", {
       button: 0,
       pointerId: 1,
@@ -272,7 +257,7 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
       </template>
     );
 
-    const handle = pressable(".my-handle");
+    const { element: handle } = stubPointerCapture(".my-handle");
     await triggerEvent(handle, "pointerdown", {
       button: 0,
       pointerId: 1,
@@ -316,7 +301,7 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
       </template>
     );
 
-    const handle = pressable(".my-handle");
+    const { element: handle } = stubPointerCapture(".my-handle");
 
     assert.dom(document.body).doesNotHaveClass("d-resizing-ns");
 
@@ -356,7 +341,7 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
       </template>
     );
 
-    const handle = pressable(".my-handle");
+    const { element: handle } = stubPointerCapture(".my-handle");
     await triggerEvent(handle, "pointerdown", {
       button: 0,
       pointerId: 1,
