@@ -49,6 +49,7 @@ en:
       choose_group: "(Choose a group)"
       all_categories: "(All categories)"
       all_tags: "(All tags)"
+      excluding_categories: "Excluding:"
       create_rule: "Create rule"
       add_channel: "Add channel"
       delete_channel: "Delete"
@@ -95,12 +96,14 @@ en:
         channel: Channel
         filter: Filter
         category: Category
+        exclude_categories: Excluded categories
         group: Group
         tags: Tags
         instructions:
           type: "Change the type to trigger notifications for group messages or mentions"
           filter: "Notification level. Mute overrides other matching rules"
           category: "This rule will only apply to topics in the specified category"
+          exclude_categories: "If specified, this rule will not apply to topics in these categories"
           group: "This rule will apply to posts referencing this group"
           tags: "If specified, this rule will only apply to topics which have at least one of these tags"
 

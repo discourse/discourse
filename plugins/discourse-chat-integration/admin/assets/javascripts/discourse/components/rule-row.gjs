@@ -3,6 +3,7 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import Category from "discourse/models/category";
 import DButton from "discourse/ui-kit/d-button";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
@@ -22,6 +23,12 @@ export default class RuleRow extends Component {
 
   get isMention() {
     return this.args.rule.type === "group_mention";
+  }
+
+  get excludedCategories() {
+    return (this.args.rule.exclude_category_ids || [])
+      .map((id) => Category.findById(id))
+      .filter(Boolean);
   }
 
   get displayTags() {
@@ -64,6 +71,18 @@ export default class RuleRow extends Component {
             }}
           {{else}}
             {{i18n "chat_integration.all_categories"}}
+            {{#if this.excludedCategories.length}}
+              <div class="rule-excluded-categories">
+                {{i18n "chat_integration.excluding_categories"}}
+                {{#each this.excludedCategories as |category|}}
+                  {{dCategoryLink
+                    category
+                    allowUncategorized="true"
+                    link="false"
+                  }}
+                {{/each}}
+              </div>
+            {{/if}}
           {{/if}}
         {{else if this.isMention}}
           {{i18n
