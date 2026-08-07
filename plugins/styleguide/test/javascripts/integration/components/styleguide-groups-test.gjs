@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { find, findAll, focus, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import StyleguideGroups from "discourse/plugins/styleguide/discourse/components/styleguide-groups";
 
@@ -438,5 +439,62 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
       .dom("[data-test-styleguide-subnav-link='data']")
       .hasTagName("a")
       .hasAttribute("href", /group=data/);
+  });
+
+  // A block whose id is in no manifest entry can never match `activeId`, which only ever holds
+  // a manifest id, so it renders nothing at all and the page is a subnav above an empty body.
+  // Silent because there is no error state to hit: the group is simply never the active one.
+  test("warns about a group id that is in no manifest entry", async function (assert) {
+    const stub = sinon.stub(console, "warn");
+
+    await render(
+      <template>
+        <StyleguideGroups
+          @groups={{GROUPS}}
+          @section={{SECTION}}
+          @active="data"
+          as |Group|
+        >
+          <Group @id="dat">typo body</Group>
+          <Group @id="data">data body</Group>
+        </StyleguideGroups>
+      </template>
+    );
+
+    assert.true(
+      stub.calledOnceWithMatch('@id="dat"'),
+      "warns once, naming the id that matched nothing"
+    );
+
+    stub.restore();
+  });
+
+  // Guards the check against the two ways it could be trivially satisfied: warning for every
+  // group, or warning for every group that is not the active one. Both would fire here, where
+  // `start` and `states` are inactive but perfectly valid.
+  test("stays quiet when every group id matches the manifest", async function (assert) {
+    const stub = sinon.stub(console, "warn");
+
+    await render(
+      <template>
+        <StyleguideGroups
+          @groups={{GROUPS}}
+          @section={{SECTION}}
+          @active="data"
+          as |Group|
+        >
+          <Group @id="start">start body</Group>
+          <Group @id="data">data body</Group>
+          <Group @id="states">states body</Group>
+        </StyleguideGroups>
+      </template>
+    );
+
+    assert.false(
+      stub.calledWithMatch("StyleguideGroup"),
+      "an inactive but declared group is not a mismatch"
+    );
+
+    stub.restore();
   });
 });

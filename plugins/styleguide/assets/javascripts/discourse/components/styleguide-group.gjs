@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { warn } from "@ember/debug";
 import StyleguideExample from "./styleguide-example";
 
 // Group ids are only unique within one manifest, so two sets of groups on a page could both
@@ -24,6 +25,20 @@ let groupId = 0;
  */
 export default class StyleguideGroup extends Component {
   headingId = `styleguide-group-heading-${(groupId += 1)}`;
+
+  constructor() {
+    super(...arguments);
+
+    // Guarded on the manifest rather than on `isActive`, and placed here rather than in a
+    // getter: a mismatched id is exactly the case that can never be active, since `activeId`
+    // only ever holds a manifest id, so an `isActive` guard would never fire and a getter
+    // would repeat the warning on every render.
+    warn(
+      `<StyleguideGroup> was given @id="${this.args.id}", which no entry in the groups manifest declares. It can never become the active group, so its body will never render.`,
+      this.record !== undefined,
+      { id: "styleguide.group-id-not-in-manifest" }
+    );
+  }
 
   get isActive() {
     return this.args.id === this.args.activeId;
