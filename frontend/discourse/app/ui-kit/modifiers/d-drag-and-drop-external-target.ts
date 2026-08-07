@@ -25,7 +25,11 @@ import type {
   ExternalDragKind,
   ExternalDragPayload,
 } from "discourse/services/drag-and-drop";
-import type { DropEffect } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
+import {
+  type DropEffect,
+  isDeepestTarget,
+  toAcceptList,
+} from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 
 /** The pointer position as the underlying library reports it. */
 type DragInput = ExternalDropTargetGetFeedbackArgs["input"];
@@ -78,16 +82,6 @@ const KIND_HANDLERS = Object.freeze({
   text: { contains: containsText, get: getText },
   urls: { contains: containsURLs, get: getURLs },
 });
-
-function normaliseAccepts(accepts?: ExternalDragKind | ExternalDragKind[]) {
-  if (!accepts) {
-    return [];
-  }
-  if (Array.isArray(accepts)) {
-    return accepts;
-  }
-  return [accepts];
-}
 
 /**
  * Builds the decorated source object exposed to consumer callbacks.
@@ -215,7 +209,7 @@ export function registerDragAndDropExternalTarget(
    * the element variant's "no filter = accept all" behaviour.
    */
   const acceptsSource = (sourcePayload: NativeExternalDragPayload) => {
-    const kinds = normaliseAccepts(getArgsRef().accepts);
+    const kinds = toAcceptList(getArgsRef().accepts);
     if (kinds.length === 0) {
       return true;
     }
@@ -226,12 +220,8 @@ export function registerDragAndDropExternalTarget(
     });
   };
 
-  // PDND fires lifecycle events on every active drop target in the
-  // hierarchy. The contract here is "deepest accepted target wins":
-  // short-circuit every callback unless this element is at the top of
-  // the `dropTargets` bubble stack.
   const isDeepest = (location: DragLocation) =>
-    location.current.dropTargets[0]?.element === element;
+    isDeepestTarget(location, element);
 
   // See the note in `registerDragAndDropSource`.
   element.setAttribute("data-drop-target-external", "");
@@ -263,7 +253,11 @@ export function registerDragAndDropExternalTarget(
       });
     },
     onDragEnter: ({ source, location }) => {
+      // Ceasing to be the deepest target makes any indicator this element is
+      // showing stale, and an ancestor is kept in the hierarchy rather than
+      // sent a leave, so clearing here is the only chance to drop it.
       if (!isDeepest(location)) {
+        clearIndicator();
         return;
       }
       const args = getArgsRef();
@@ -278,9 +272,14 @@ export function registerDragAndDropExternalTarget(
     },
     onDrag: ({ source, location }) => {
       if (!isDeepest(location)) {
+        clearIndicator();
         return;
       }
-      getArgsRef().onDrag?.({
+      const args = getArgsRef();
+      if (args.indicator !== false) {
+        showIndicator();
+      }
+      args.onDrag?.({
         source: decorateSource(source),
         location,
         element,

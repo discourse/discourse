@@ -5,6 +5,26 @@ import {
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { modifier } from "ember-modifier";
 
+/**
+ * Whether a drag's source `type` is one the consumer asked for.
+ *
+ * Shared because the monitor and the auto-scroll ask the same question in the
+ * same way, and a copy of it in each drifted once already elsewhere in this set.
+ *
+ * @param types - One type, several, or nothing at all to match every drag.
+ * @param source - The dragged source, whose `data.type` is compared.
+ */
+export function matchesDragType(
+  types: string | string[] | undefined,
+  source: ElementDragPayload
+) {
+  const list = Array.isArray(types) ? types : types ? [types] : [];
+  if (list.length === 0) {
+    return true;
+  }
+  return list.includes(source.data?.type as string);
+}
+
 /** What a monitor callback is told: the dragged source and where it has been. */
 export type DragMonitorEvent = ElementEventBasePayload;
 
@@ -58,17 +78,8 @@ export type DragAndDropMonitorArgs =
 export function registerDragAndDropMonitor(
   getArgsRef: () => DragAndDropMonitorArgs
 ) {
-  const matchesType = ({ source }: { source: ElementDragPayload }) => {
-    const types = getArgsRef().types;
-    const list = Array.isArray(types) ? types : types ? [types] : [];
-    if (list.length === 0) {
-      return true;
-    }
-    return list.includes(source.data?.type as string);
-  };
-
   return monitorForElements({
-    canMonitor: matchesType,
+    canMonitor: ({ source }) => matchesDragType(getArgsRef().types, source),
     onDragStart: (event) => getArgsRef().onDragStart?.(event),
     onDrag: (event) => getArgsRef().onDrag?.(event),
     onDrop: (event) => getArgsRef().onDrop?.(event),

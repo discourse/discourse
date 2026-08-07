@@ -36,14 +36,20 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     assert
       .dom(".my-handle")
       .hasAttribute("role", "separator", "it is a separator")
-      // A separator between vertically stacked regions is itself a horizontal
-      // bar, so the orientation is the opposite of the axis being resized.
-      .hasAttribute("aria-orientation", "horizontal")
+      .hasAttribute(
+        "aria-orientation",
+        "horizontal",
+        "a separator between vertically stacked regions is itself a horizontal bar, so the orientation is the opposite of the axis"
+      )
       .hasAttribute("tabindex", "0", "it is a single tab stop")
-      .hasAttribute("aria-label", "Resize the thing")
-      .hasAttribute("aria-valuenow", "300")
-      .hasAttribute("aria-valuemin", "100")
-      .hasAttribute("aria-valuemax", "500");
+      .hasAttribute(
+        "aria-label",
+        "Resize the thing",
+        "the label names what is being resized"
+      )
+      .hasAttribute("aria-valuenow", "300", "the current size is announced")
+      .hasAttribute("aria-valuemin", "100", "the lower bound is announced")
+      .hasAttribute("aria-valuemax", "500", "the upper bound is announced");
   });
 
   test("carries a styling hook that does not depend on the ARIA", async function (assert) {
@@ -356,6 +362,41 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     assert.dom(document.body).doesNotHaveClass("d-resizing-ew");
   });
 
+  test("a held arrow key keeps the announced size in step", async function (assert) {
+    let current = 300;
+    const size = () => current;
+    const onResize = (next) => (current = next);
+
+    await render(
+      <template>
+        <DResizeSeparator
+          @axis="vertical"
+          @side="end"
+          @value={{size}}
+          @min={{100}}
+          @max={{500}}
+          @label="Resize the thing"
+          @onResize={{onResize}}
+          class="my-handle"
+        />
+      </template>
+    );
+
+    // A held key is one gesture spanning every repeat, so the commit that would
+    // otherwise refresh the announcement does not arrive until release. Assistive
+    // technology reading the value in between must not be told a stale one.
+    await triggerKeyEvent(".my-handle", "keydown", "ArrowUp");
+    await triggerKeyEvent(".my-handle", "keydown", "ArrowUp");
+
+    assert
+      .dom(".my-handle")
+      .hasAttribute(
+        "aria-valuenow",
+        "332",
+        "two repeats of a 16px step are announced before the key is released"
+      );
+  });
+
   test("arrow keys resize without a pointer", async function (assert) {
     const reports = [];
     let current = 300;
@@ -385,12 +426,16 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     // settles when a pointer is.
     await triggerKeyEvent(".my-handle", "keyup", "ArrowUp");
 
-    assert.strictEqual(reports.length, 1, "a key press resizes once");
+    assert.deepEqual(
+      reports,
+      [316],
+      "one press reports once, a single 16px step above the starting size"
+    );
     assert
       .dom(".my-handle")
       .hasAttribute(
         "aria-valuenow",
-        String(reports[0]),
+        "316",
         "the keyboard path keeps the announced size in step too"
       );
   });

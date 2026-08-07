@@ -6,6 +6,17 @@ import { registerPointerDrag } from "discourse/ui-kit/modifiers/d-pointer-drag";
 // How far a single arrow key press moves the edge, in pixels.
 const KEYBOARD_STEP = 16;
 
+/**
+ * What produced a size report. A consumer that mirrors the size for assistive
+ * technology needs this: a held arrow key is one gesture spanning every repeat,
+ * so waiting for the commit would leave the announced value stale for as long as
+ * the key is down, where a pointer gesture reports through a frame and settles
+ * on release.
+ */
+export interface ResizeReportMeta {
+  source: "pointer" | "keyboard";
+}
+
 interface DResizeEdgeSignature {
   /** The element acting as the edge. */
   Element: HTMLElement;
@@ -70,15 +81,19 @@ interface DResizeEdgeSignature {
        * dragging, and once per key press or repeat. Suitable for updating the
        * rendered size.
        */
-      onResize?: (size: number) => void;
+      onResize?: (size: number, meta: ResizeReportMeta) => void;
 
       /**
-       * Called once when the gesture finishes, and always paired with one
-       * `onResizeStart`. Suitable for work that should happen once per resize
-       * rather than once per report — persisting the size, or undoing something
-       * held for the length of the gesture.
+       * Called once when the gesture finishes. Suitable for work that should
+       * happen once per resize rather than once per report — persisting the
+       * size, or undoing something held for the length of the gesture.
+       *
+       * Paired with one `onResizeStart` for every gesture that reported a size.
+       * Two exits do not report: a press released without moving, which is a
+       * click rather than a resize, and teardown while a gesture is in flight,
+       * which fires no consumer callback at all.
        */
-      onResizeEnd?: (size: number) => void;
+      onResizeEnd?: (size: number, meta: ResizeReportMeta) => void;
     };
     Positional: [];
   };
@@ -152,6 +167,7 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     // A pointer taking over closes any key still being held, so the two inputs
     // cannot leave two gestures open against a single end.
     this.#endKeyboardGesture();
+    this.#rtl = undefined;
     this.#startCoordinate = this.#coordinate(event);
     this.#startValue = this.#read(this.#named.value);
     this.#named.onResizeStart?.();
@@ -171,9 +187,26 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     // still pending is dropped first: letting it fire afterwards would report a
     // stale intermediate size over the committed one.
     this.#cancelFrame();
-    this.#reportMove(this.#coordinate(event), { final: true });
+
+    const coordinate = this.#coordinate(event);
+    // A press released exactly where it landed is a click, not a resize.
+    // Reporting it would hand the consumer the size it already had, which is
+    // enough to make it persist one and fire whatever it fires per resize.
+    // Compared by coordinate rather than by whether a move was seen, because a
+    // browser may coalesce a short drag into no intermediate pointer move.
+    if (coordinate === this.#startCoordinate) {
+      return;
+    }
+    this.#reportMove(coordinate, { final: true });
   };
   #onKeyDown = (event: KeyboardEvent) => {
+    // A modified arrow belongs to whatever binding claims it — back, word-wise
+    // motion, selection — and the separator merely happens to hold focus. The
+    // window-splitter pattern defines no modified bindings of its own.
+    if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) {
+      return;
+    }
+
     const [shrinkKey, growKey] =
       this.#named.axis === "vertical"
         ? ["ArrowUp", "ArrowDown"]
@@ -186,6 +219,7 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     event.preventDefault();
 
     if (this.#keyboardValue === null) {
+      this.#rtl = undefined;
       this.#keyboardValue = this.#read(this.#named.value);
       this.#keyboardKey = event.key;
       this.#named.onResizeStart?.();
@@ -209,7 +243,7 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     }
 
     this.#keyboardValue = this.#clamp(next);
-    this.#named.onResize?.(this.#keyboardValue);
+    this.#named.onResize?.(this.#keyboardValue, { source: "keyboard" });
   };
   #onKeyUp = (event: KeyboardEvent) => {
     if (event.key !== this.#keyboardKey) {
@@ -236,6 +270,14 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
 
   #pendingCoordinate = 0;
   #releaseGesture: (() => void) | null = null;
+
+  /**
+   * Whether the element reads right-to-left, sampled when the current gesture
+   * opened. Cleared at the start of each one so a document that changed
+   * direction in between is measured again.
+   */
+  #rtl?: boolean;
+
   #startCoordinate = 0;
   #startValue = 0;
   /** The gesture args handed to `registerPointerDrag`. */
@@ -320,9 +362,14 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
       return logical;
     }
 
-    const rtl = getComputedStyle(this.#element).direction === "rtl";
+    // Sampled once per gesture rather than on every read: this runs for each
+    // reported frame, and the consumer is changing sizes in that same frame, so
+    // every read forces a style recalculation. `side` and `axis` above stay live
+    // reads — only the writing direction is held, and it is not something that
+    // changes while a pointer is down.
+    this.#rtl ??= getComputedStyle(this.#element).direction === "rtl";
 
-    return logical * (rtl ? -1 : 1);
+    return logical * (this.#rtl ? -1 : 1);
   }
 
   /**
@@ -338,10 +385,10 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     const delta = (coordinate - this.#startCoordinate) * this.#growthDirection;
     const size = this.#clamp(this.#startValue + delta);
 
-    this.#named.onResize?.(size);
+    this.#named.onResize?.(size, { source: "pointer" });
 
     if (final) {
-      this.#named.onResizeEnd?.(size);
+      this.#named.onResizeEnd?.(size, { source: "pointer" });
     }
   }
 
@@ -360,7 +407,7 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
 
     this.#keyboardKey = null;
     this.#keyboardValue = null;
-    this.#named.onResizeEnd?.(size);
+    this.#named.onResizeEnd?.(size, { source: "keyboard" });
   }
 
   /**

@@ -1,6 +1,7 @@
 import { find, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import DResizeHandles from "discourse/ui-kit/d-resize-handles";
 
 module("Integration | ui-kit | DResizeHandles", function (hooks) {
@@ -74,6 +75,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       </template>
     );
 
+    stubPointerCapture(".handle-e");
     await triggerEvent(".handle-e", "pointerdown", {
       button: 0,
       pointerId: 1,
@@ -113,6 +115,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
     find(".ancestor").addEventListener("pointerdown", () =>
       ancestorPresses.push("ancestor")
     );
+    stubPointerCapture(".handle-e");
     await triggerEvent(".handle-e", "pointerdown", {
       button: 0,
       pointerId: 1,
@@ -139,9 +142,10 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       </template>
     );
 
-    find(".ancestor").addEventListener("pointerdown", () =>
-      ancestorPresses.push("ancestor")
+    find(".ancestor").addEventListener("pointerdown", (event) =>
+      ancestorPresses.push(event.defaultPrevented ? "accepted" : "ancestor")
     );
+    stubPointerCapture(".handle-e");
     await triggerEvent(".handle-e", "pointerdown", {
       button: 0,
       pointerId: 1,
@@ -149,10 +153,13 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       clientY: 0,
     });
 
+    // Read through `defaultPrevented`, which only an accepted press sets. A press
+    // that started no gesture bubbles too, so the ancestor seeing it proves
+    // nothing on its own.
     assert.deepEqual(
       ancestorPresses,
-      ["ancestor"],
-      "suppression stays opt-in, so document-level listeners still see the press"
+      ["accepted"],
+      "suppression stays opt-in, so document-level listeners still see a press that did start a gesture"
     );
   });
 
@@ -173,6 +180,7 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       </template>
     );
 
+    stubPointerCapture(".handle-e");
     await triggerEvent(".handle-e", "pointerdown", {
       button: 0,
       pointerId: 1,

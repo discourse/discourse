@@ -3,6 +3,7 @@ import {
   clearRender,
   find,
   render,
+  settled,
   triggerEvent,
   triggerKeyEvent,
 } from "@ember/test-helpers";
@@ -14,10 +15,10 @@ import dResizeEdge from "discourse/ui-kit/modifiers/d-resize-edge";
 const EDGE = ".resize-edge";
 
 /**
- * Replaces the pointer capture API with an observable stand-in.
+ * Records what the modifier reported, and holds the size it reports against.
  *
- * The real methods reject synthetic pointer IDs, which is all a test can
- * dispatch, so capture has to be recorded rather than performed.
+ * The size is tracked because the modifier reads it back at the start of every
+ * gesture, so a test that drags twice has to see the first drag's result.
  */
 class Harness {
   @tracked value;
@@ -441,6 +442,82 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
     );
   });
 
+  test("a modified arrow key is left to the browser", async function (assert) {
+    const state = new Harness();
+
+    await render(
+      <template>
+        <div
+          class="resize-edge"
+          {{dResizeEdge
+            value=state.value
+            min=240
+            max=720
+            onResize=state.onResize
+            onResizeEnd=state.onResizeEnd
+          }}
+        ></div>
+      </template>
+    );
+
+    // Each of these is a browser or OS binding a user expects to work while the
+    // separator happens to hold focus: back, word-wise motion, and selection.
+    for (const modifier of ["metaKey", "ctrlKey", "altKey", "shiftKey"]) {
+      await triggerKeyEvent(EDGE, "keydown", "ArrowLeft", {
+        [modifier]: true,
+      });
+    }
+
+    assert.deepEqual(
+      state.resizes,
+      [],
+      "a modified arrow does not resize, so the binding it belongs to still runs"
+    );
+  });
+
+  test("a press that never moves reports nothing", async function (assert) {
+    const state = new Harness();
+
+    await render(
+      <template>
+        <div
+          class="resize-edge"
+          {{dResizeEdge
+            value=state.value
+            min=240
+            max=720
+            onResize=state.onResize
+            onResizeEnd=state.onResizeEnd
+          }}
+        ></div>
+      </template>
+    );
+    stubPointerCapture(EDGE);
+
+    await triggerEvent(EDGE, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 300,
+      clientY: 0,
+    });
+    await triggerEvent(EDGE, "pointerup", {
+      pointerId: 1,
+      clientX: 300,
+      clientY: 0,
+    });
+
+    assert.deepEqual(
+      state.resizes,
+      [],
+      "a click is not a resize, so nothing is previewed"
+    );
+    assert.deepEqual(
+      state.resizeEnds,
+      [],
+      "and nothing is committed, so a consumer does not persist a size the user never chose"
+    );
+  });
+
   test("an end-docked edge inverts the growth direction", async function (assert) {
     const state = new Harness();
 
@@ -552,6 +629,72 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
       vertical.resizeEnds,
       [380],
       "the vertical axis is unaffected by the writing direction"
+    );
+  });
+
+  test("a writing direction change between gestures is picked up", async function (assert) {
+    const state = new Harness();
+    const container = new (class {
+      @tracked dir = "ltr";
+    })();
+
+    await render(
+      <template>
+        <div dir={{container.dir}}>
+          <div
+            class="resize-edge"
+            {{dResizeEdge
+              value=state.value
+              min=240
+              max=720
+              onResizeEnd=state.onResizeEnd
+            }}
+          ></div>
+        </div>
+      </template>
+    );
+
+    const edge = find(EDGE);
+    stubPointerCapture(edge);
+
+    await triggerEvent(edge, "pointerdown", {
+      button: 0,
+      clientX: 300,
+      pointerId: 1,
+    });
+    await triggerEvent(edge, "pointerup", {
+      button: 0,
+      clientX: 340,
+      pointerId: 1,
+    });
+
+    assert.deepEqual(
+      state.resizeEnds,
+      [340],
+      "moving right grows a start-docked element under LTR"
+    );
+
+    container.dir = "rtl";
+    await settled();
+
+    // The direction is held for the length of a gesture, not for the length of
+    // the modifier: a document that switches direction between two drags has to
+    // be measured again rather than resized the old way.
+    await triggerEvent(edge, "pointerdown", {
+      button: 0,
+      clientX: 300,
+      pointerId: 2,
+    });
+    await triggerEvent(edge, "pointerup", {
+      button: 0,
+      clientX: 340,
+      pointerId: 2,
+    });
+
+    assert.deepEqual(
+      state.resizeEnds,
+      [340, 260],
+      "the same movement shrinks it once the document reads right-to-left"
     );
   });
 
@@ -812,6 +955,125 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
         state.resizeEnds,
         [340],
         "the gesture commits once at the current maximum"
+      );
+    });
+
+    test("an interrupted resize keeps the size it was dragged to", async function (assert) {
+      const state = new Harness();
+
+      await render(
+        <template>
+          <div
+            class="resize-edge"
+            {{dResizeEdge
+              value=state.value
+              min=240
+              max=720
+              onResizeStart=state.onResizeStart
+              onResize=state.onResize
+              onResizeEnd=state.onResizeEnd
+            }}
+          ></div>
+        </template>
+      );
+
+      const edge = find(EDGE);
+      stubPointerCapture(edge);
+      await triggerEvent(edge, "pointerdown", {
+        button: 0,
+        clientX: 300,
+        pointerId: 1,
+      });
+      await triggerEvent(edge, "pointermove", {
+        button: 0,
+        clientX: 400,
+        pointerId: 1,
+      });
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+
+      // The OS taking the pointer away mid-gesture. The modifier asks the gesture
+      // engine to commit on cancel rather than revert, because snapping a pane
+      // back to where it started would discard a resize the user watched happen.
+      await triggerEvent(edge, "pointercancel", {
+        button: 0,
+        clientX: 400,
+        pointerId: 1,
+      });
+
+      assert.strictEqual(state.resizeStarts, 1, "the gesture opened once");
+      assert.deepEqual(
+        state.resizes,
+        [400, 400],
+        "the drag reported the size it reached, and the commit reports it again as a release would"
+      );
+      assert.deepEqual(
+        state.resizeEnds,
+        [400],
+        "and cancellation commits that size instead of reverting"
+      );
+    });
+
+    test("coalesces the pointer moves sharing a frame into one report", async function (assert) {
+      const state = new Harness();
+
+      await render(
+        <template>
+          <div
+            class="resize-edge"
+            {{dResizeEdge
+              value=state.value
+              min=240
+              max=720
+              onResize=state.onResize
+              onResizeEnd=state.onResizeEnd
+            }}
+          ></div>
+        </template>
+      );
+
+      const edge = find(EDGE);
+      stubPointerCapture(edge);
+      await triggerEvent(edge, "pointerdown", {
+        button: 0,
+        clientX: 300,
+        pointerId: 1,
+      });
+
+      // Dispatched without awaiting in between: an await gives the browser room
+      // to paint, which would put each move in its own frame and test the
+      // opposite of the coalescing.
+      for (const clientX of [320, 340, 360]) {
+        edge.dispatchEvent(
+          new PointerEvent("pointermove", {
+            bubbles: true,
+            button: 0,
+            clientX,
+            pointerId: 1,
+          })
+        );
+      }
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+
+      assert.deepEqual(
+        state.resizes,
+        [360],
+        "the positions in between are dropped and only the latest is reported"
+      );
+
+      edge.dispatchEvent(
+        new PointerEvent("pointermove", {
+          bubbles: true,
+          button: 0,
+          clientX: 380,
+          pointerId: 1,
+        })
+      );
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+
+      assert.deepEqual(
+        state.resizes,
+        [360, 380],
+        "the next frame reports again, so a frame is coalesced rather than the gesture reporting once"
       );
     });
 

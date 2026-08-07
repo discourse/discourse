@@ -18,7 +18,7 @@
   --d-drag-indicator-color: var(--tertiary);
 }
 
-@mixin drag-line-horizontal {
+@mixin d-drag-line-horizontal {
   content: "";
   position: absolute;
   left: 0;
@@ -28,7 +28,7 @@
   pointer-events: none;
 }
 
-@mixin drag-line-vertical {
+@mixin d-drag-line-vertical {
   content: "";
   position: absolute;
   top: 0;
@@ -49,7 +49,7 @@
     position: relative;
 
     &::before {
-      @include drag-line-horizontal;
+      @include d-drag-line-horizontal;
       top: -1px;
     }
   }
@@ -58,7 +58,7 @@
     position: relative;
 
     &::after {
-      @include drag-line-horizontal;
+      @include d-drag-line-horizontal;
       bottom: -1px;
     }
   }
@@ -67,7 +67,7 @@
     position: relative;
 
     &::before {
-      @include drag-line-vertical;
+      @include d-drag-line-vertical;
       left: -1px;
     }
   }
@@ -76,7 +76,7 @@
     position: relative;
 
     &::after {
-      @include drag-line-vertical;
+      @include d-drag-line-vertical;
       right: -1px;
     }
   }

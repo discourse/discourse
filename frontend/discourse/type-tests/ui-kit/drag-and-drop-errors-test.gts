@@ -15,6 +15,7 @@ import dPointerDrag from "discourse/ui-kit/modifiers/d-pointer-drag";
 
 declare const noop: () => void;
 declare const px: number;
+declare const payload: object;
 
 declare const columnHandles: { payload: number }[];
 declare function onDirectionResize(direction: string): void;
@@ -27,6 +28,9 @@ const Negatives = <template>
 
   {{! @glint-expect-error - a selector is not an element; the handle ref must be }}
   <li {{dDragAndDropSource type="link" dragHandle="#handle"}}></li>
+
+  {{! @glint-expect-error - the discriminator is required, since targets filter on it and the service identifies its own drags by it }}
+  <li {{dDragAndDropSource data=payload}}></li>
 
   {{! @glint-expect-error - the axis vocabulary is x and y }}
   <li {{dDragAndDropTarget accepts="link" axis="z"}}></li>
@@ -43,8 +47,17 @@ const Negatives = <template>
   {{! @glint-expect-error - the element and external targets report different payloads }}
   <li {{dDragAndDropTarget accepts="link" onDrop=onExternalDrop}}></li>
 
-  {{! @glint-expect-error - a separator resizes along one of two axes }}
-  <DResizeSeparator @axis="diagonal" @value={{px}} @min={{px}} @max={{px}} />
+  {{! @glint-expect-error - a focusable separator with no accessible name is announced as a bare splitter, so the label is required }}
+  <DResizeSeparator @value={{px}} @min={{px}} @max={{px}} />
+
+  <DResizeSeparator
+    {{! @glint-expect-error - a separator resizes along one of two axes }}
+    @axis="diagonal"
+    @value={{px}}
+    @min={{px}}
+    @max={{px}}
+    @label="Resize"
+  />
 
   {{! @glint-expect-error - the descriptors pin the payload type, so a handler taking something else is rejected }}
   <DResizeHandles @handles={{columnHandles}} @onResize={{onDirectionResize}} />

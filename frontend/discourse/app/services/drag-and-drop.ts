@@ -302,9 +302,10 @@ export function resetDragAndDropForTesting() {
   // PDND, whose listeners are unbound by then.
   //
   // This does not silence everything: PDND still dispatches its own `onDrop` to
-  // the source and to monitors, so a source wrapper deferring the consumer
-  // callback can still schedule it during teardown. Guarding that is the
-  // source modifier's job, not this function's.
+  // the source and to monitors. A source wrapper deferring its consumer
+  // callbacks is what would then schedule them during teardown, and guarding
+  // that is its job rather than this function's — `registerDragAndDropSource`
+  // cancels the pending task from its own cleanup.
   const make = (type: string) =>
     typeof DragEvent === "function"
       ? new DragEvent(type, { bubbles: true })

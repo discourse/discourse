@@ -1,6 +1,6 @@
 import { registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
-import { next } from "@ember/runloop";
+import { cancel, next } from "@ember/runloop";
 import {
   draggable,
   type ElementDropTargetEventBasePayload,
@@ -49,18 +49,22 @@ interface DDragAndDropSourceSignature {
        * Discriminator string. Targets filter on this via their `accepts` arg.
        * Stamped onto `source.data.type` so callbacks receive it with the rest of
        * the payload.
+       *
+       * Required, and reserved: it is stamped over any `type` the payload
+       * carries. The `dragAndDrop` service also identifies its own drags by it,
+       * so a source without one would be invisible there.
        */
-      type?: string;
+      type: string;
 
       /**
-       * Static payload the source attaches to the drag. Merged with `{type}` and
-       * exposed as `source.data` in target callbacks.
+       * Static payload the source attaches to the drag, exposed as `source.data`
+       * in target callbacks. A `type` key on it is overwritten — see `type`.
        */
       data?: object;
 
       /**
        * Alternative to `data` for dynamic payloads. Called once just before
-       * `dragstart`; merged with `{type}`.
+       * `dragstart`. Its `type` key is overwritten the same way.
        */
       getInitialData?: () => object;
 
@@ -198,6 +202,11 @@ export function registerDragAndDropSource(
   // and a dynamic binding would drop anything written here.
   element.setAttribute("data-drag-source", "");
 
+  // The end-of-drag consumer callbacks are deferred, so teardown has to be able
+  // to take them back: without this a route transition, or a re-render dropping
+  // the row, runs them against a destroyed component one task later.
+  let pendingConsumers: Parameters<typeof cancel>[0] | null = null;
+
   const cleanup = draggable({
     element,
     // Read once, here: the underlying library keeps this in the config captured
@@ -250,7 +259,10 @@ export function registerDragAndDropSource(
     getInitialData: () => {
       const args = getArgsRef();
       const resolved = args.getInitialData?.() ?? args.data ?? {};
-      return { type: args.type, ...resolved };
+      // Stamped last: the discriminator is the primitive's, and a payload
+      // carrying its own `type` — which domain objects routinely do — would
+      // otherwise decide which targets accept the drag.
+      return { ...resolved, type: args.type };
     },
     onDragStart: (event) => {
       const args = getArgsRef();
@@ -295,7 +307,8 @@ export function registerDragAndDropSource(
       // including bubble-phase listeners that may still need to
       // read shared dispatch state. One task for both, so their
       // order is fixed and a drag schedules exactly one.
-      next(() => {
+      pendingConsumers = next(() => {
+        pendingConsumers = null;
         // Lifecycle before dispatch: a consumer that only needs to undo its
         // drag-time state hears about every drag, while one that performs an
         // operation is not asked to perform it for a drag the user gave up on.
@@ -308,6 +321,10 @@ export function registerDragAndDropSource(
   });
 
   return () => {
+    if (pendingConsumers) {
+      cancel(pendingConsumers);
+      pendingConsumers = null;
+    }
     cleanup();
     element.classList.remove("--dragging");
     element.removeAttribute("data-drag-source");
@@ -352,7 +369,9 @@ export function registerDragAndDropSource(
 export default class DDragAndDropSourceModifier extends Modifier<DDragAndDropSourceSignature> {
   #cleanup: (() => void) | null = null;
   #element: HTMLElement | null = null;
-  #args: DragAndDropSourceArgs = {};
+  // Replaced by `modify` before any callback can read it; the empty bag only
+  // covers the window before the first run.
+  #args = {} as DragAndDropSourceArgs;
 
   /** The handle the live registration was created with, to detect a change. */
   #dragHandle: Element | undefined = undefined;
@@ -365,7 +384,7 @@ export default class DDragAndDropSourceModifier extends Modifier<DDragAndDropSou
   modify(
     element: HTMLElement,
     _positional: [],
-    args: DragAndDropSourceArgs = {}
+    args: DragAndDropSourceArgs = {} as DragAndDropSourceArgs
   ) {
     if (this.#element && this.#element !== element) {
       this.#detach();

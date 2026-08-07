@@ -4,6 +4,7 @@ import {
   autoScrollWindowForElements,
 } from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/element";
 import { modifier } from "ember-modifier";
+import { matchesDragType } from "discourse/ui-kit/modifiers/d-drag-and-drop-monitor";
 
 /** Which direction the container is allowed to scroll while a drag is in flight. */
 export type AutoScrollAxis = "vertical" | "horizontal" | "all";
@@ -28,6 +29,9 @@ interface DDragAndDropAutoScrollSignature {
       /**
        * `"element"` (default) scrolls the host element; `"window"` scrolls the
        * window and ignores the element.
+       *
+       * Read once, when the modifier first runs, because it decides which
+       * registration to make. Changing it later has no effect.
        */
       target?: AutoScrollTarget;
     };
@@ -54,21 +58,19 @@ export type DragAndDropAutoScrollArgs =
  *
  * Library-agnostic by design: PDND auto-scroll is imported only here.
  *
- * @param getArgsRef - Closure returning the latest args. PDND callbacks read
- *   this on every invocation.
+ * @param getArgsRef - Closure returning the latest args. The `types` and `axis`
+ *   args are read on every callback, so changes to them take effect without
+ *   re-registering. `target` and `element` are the exception: they are read once,
+ *   here, to decide which registration to make, so changing either needs a fresh
+ *   registration. The modifier reads no arg in its body and so never re-runs,
+ *   which means changing `target` through it is a no-op.
  * @returns Cleanup function. Caller invokes it once on teardown.
  */
 export function registerDragAndDropAutoScroll(
   getArgsRef: () => DragAndDropAutoScrollArgs
 ) {
-  const matchesType = ({ source }: { source: ElementDragPayload }) => {
-    const types = getArgsRef().types;
-    const list = Array.isArray(types) ? types : types ? [types] : [];
-    if (list.length === 0) {
-      return true;
-    }
-    return list.includes(source.data?.type as string);
-  };
+  const matchesType = ({ source }: { source: ElementDragPayload }) =>
+    matchesDragType(getArgsRef().types, source);
 
   const getAllowedAxis = () => getArgsRef().axis ?? "vertical";
 

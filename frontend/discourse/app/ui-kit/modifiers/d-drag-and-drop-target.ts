@@ -74,14 +74,33 @@ const POSITION_CLASSES = Object.freeze({
   inside: { y: "--drag-inside", x: "--drag-inside" },
 });
 
-function normaliseAccepts(accepts?: string | string[]) {
-  if (!accepts) {
+/**
+ * One value, several, or nothing, as a list. Shared with the external target,
+ * which normalises its own vocabulary the same way.
+ *
+ * @param value - The `accepts` filter as the consumer supplied it.
+ */
+export function toAcceptList<T>(value?: T | T[]): T[] {
+  if (!value) {
     return [];
   }
-  if (Array.isArray(accepts)) {
-    return accepts;
+  if (Array.isArray(value)) {
+    return value;
   }
-  return [accepts];
+  return [value];
+}
+
+/**
+ * Whether this element is the innermost accepted target under the pointer.
+ *
+ * The underlying library fires every lifecycle event on every target in the
+ * hierarchy; the contract here is that only the deepest one acts on it.
+ *
+ * @param location - The drag's location history.
+ * @param element - The element being asked about.
+ */
+export function isDeepestTarget(location: DragLocation, element: Element) {
+  return location.current.dropTargets[0]?.element === element;
 }
 
 function sourceFromPDND(
@@ -210,6 +229,11 @@ export function registerDragAndDropTarget(
   getArgsRef: () => DragAndDropTargetArgs
 ) {
   let activeClass: string | null = null;
+  // Whether this wrapper has forwarded an enter the consumer is still owed a
+  // leave for. The underlying library sends both to every target in the
+  // hierarchy, but only the deepest one is forwarded, so an ancestor would
+  // otherwise be handed a leave it never had an enter for.
+  let owesLeave = false;
 
   const applyIndicator = (position: DropPosition, axis: DropAxis) => {
     const className = POSITION_CLASSES[position]?.[axis];
@@ -231,7 +255,7 @@ export function registerDragAndDropTarget(
   };
 
   const acceptsType = (type: unknown) => {
-    const list = normaliseAccepts(getArgsRef().accepts);
+    const list = toAcceptList(getArgsRef().accepts);
     return list.length === 0 || list.includes(type as string);
   };
 
@@ -248,12 +272,8 @@ export function registerDragAndDropTarget(
     return input.clientY < rect.top + rect.height / 2 ? "before" : "after";
   };
 
-  // PDND fires lifecycle events on every active drop target in the
-  // hierarchy. The contract here is "deepest accepted target wins":
-  // short-circuit on every callback unless this element is at the top
-  // of the `dropTargets` bubble stack.
   const isDeepest = (location: DragLocation) =>
-    location.current.dropTargets[0]?.element === element;
+    isDeepestTarget(location, element);
 
   // See the note in `registerDragAndDropSource`: the stylesheet gates the state
   // modifiers on this attribute, and an attribute survives a consumer rebinding
@@ -310,6 +330,7 @@ export function registerDragAndDropTarget(
       if (args.indicator !== false) {
         applyIndicator(pos, args.axis ?? "y");
       }
+      owesLeave = true;
       args.onDragEnter?.({
         source: sourceFromPDND(source, element),
         position: pos,
@@ -336,6 +357,10 @@ export function registerDragAndDropTarget(
     },
     onDragLeave: ({ source, location }) => {
       clearIndicators();
+      if (!owesLeave) {
+        return;
+      }
+      owesLeave = false;
       getArgsRef().onDragLeave?.({
         source: sourceFromPDND(source, element),
         position: null,
@@ -348,6 +373,7 @@ export function registerDragAndDropTarget(
       // being deepest still needs its indicator dropped, matching
       // `registerDragAndDropExternalTarget`.
       clearIndicators();
+      owesLeave = false;
       if (!isDeepest(location)) {
         return;
       }

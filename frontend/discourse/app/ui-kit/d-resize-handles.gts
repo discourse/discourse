@@ -179,7 +179,6 @@ interface DResizeHandlesSignature<Payload extends string | number> {
 export default class DResizeHandles<
   Payload extends string | number = BoxDirection,
 > extends Component<DResizeHandlesSignature<Payload>> {
-  #activePayload: Payload | null = null;
   #originX = 0;
   #originY = 0;
   #handleRect: DOMRect | null = null;
@@ -203,38 +202,53 @@ export default class DResizeHandles<
 
   @action
   onHandleDown(payload: Payload, event: PointerEvent) {
-    this.#activePayload = payload;
     this.#originX = event.clientX;
     this.#originY = event.clientY;
     this.#handleRect =
       (event.currentTarget as HTMLElement | null)?.getBoundingClientRect() ??
       null;
     // Propagate the consumer's veto: returning false aborts the drag.
-    return this.args.onResizeStart?.(payload, this.#dragInfo(event));
+    const started = this.args.onResizeStart?.(
+      payload,
+      this.#dragInfo(payload, event)
+    );
+
+    // A vetoed press starts no gesture, so no terminal callback arrives to
+    // close it and the session fields would otherwise describe a drag that
+    // never happened.
+    if (started === false) {
+      this.#reset();
+    }
+
+    return started;
   }
 
   @action
   onHandleMove(payload: Payload, event: PointerEvent) {
-    this.args.onResize?.(payload, this.#dragInfo(event));
+    this.args.onResize?.(payload, this.#dragInfo(payload, event));
   }
 
   @action
   onHandleUp(payload: Payload, event: PointerEvent) {
-    this.args.onResizeEnd?.(payload, this.#dragInfo(event));
+    this.args.onResizeEnd?.(payload, this.#dragInfo(payload, event));
     this.#reset();
   }
 
   @action
   onHandleCancel(payload: Payload, event: PointerEvent) {
-    this.args.onResizeCancel?.(payload, this.#dragInfo(event));
+    this.args.onResizeCancel?.(payload, this.#dragInfo(payload, event));
     this.#reset();
   }
 
-  #dragInfo(event: PointerEvent): DResizeHandleDragInfo<Payload> {
+  #dragInfo(
+    payload: Payload,
+    event: PointerEvent
+  ): DResizeHandleDragInfo<Payload> {
     return {
-      // Set by `onHandleDown`, which the gesture engine guarantees runs before
-      // any other callback that reaches here.
-      payload: this.#activePayload as Payload,
+      // The callback's own payload rather than the session snapshot: with
+      // positional keys, a descriptor list that changes mid-drag rebinds the
+      // handler while the snapshot still holds what was pressed.
+      payload,
       event,
       origin: { x: this.#originX, y: this.#originY },
       current: { x: event.clientX, y: event.clientY },
@@ -247,7 +261,6 @@ export default class DResizeHandles<
   }
 
   #reset() {
-    this.#activePayload = null;
     this.#handleRect = null;
   }
 

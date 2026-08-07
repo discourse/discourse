@@ -124,6 +124,7 @@ const Positives = <template>
     @value={{measure}}
     @min={{measure}}
     @max={{measure}}
+    @label="Resize"
   >grip</DResizeSeparator>
 
   {{! The built-in box hands a compass direction to the handler }}

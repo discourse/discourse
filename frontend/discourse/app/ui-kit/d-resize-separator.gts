@@ -3,7 +3,9 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { modifier } from "ember-modifier";
-import dResizeEdge from "discourse/ui-kit/modifiers/d-resize-edge";
+import dResizeEdge, {
+  type ResizeReportMeta,
+} from "discourse/ui-kit/modifiers/d-resize-edge";
 
 /** A size, or a function returning one for a value the template cannot observe. */
 type Measurement = number | (() => number);
@@ -34,8 +36,12 @@ interface ObserveResizedSignature {
 
 /**
  * Watches the box being resized so the announced size keeps up with changes no
- * gesture caused. Re-runs when `target` changes, which is what lets a consumer
- * whose element does not exist at first render hand it over once it does.
+ * gesture caused.
+ *
+ * Re-runs when `target` changes, which is what lets a consumer pass the element
+ * itself once it exists. A function `target` is resolved on each run, so a stable
+ * function reference is never retried — that form suits a box already around the
+ * separator when it renders.
  */
 const observeResized = modifier<ObserveResizedSignature>(
   (separator, [separatorComponent, target]) => {
@@ -102,8 +108,12 @@ interface DResizeSeparatorSignature {
     /** The largest size the box may be dragged to. */
     max: Measurement;
 
-    /** What the separator is called, already translated. */
-    label?: string;
+    /**
+     * What the separator is called, already translated. Required: a focusable
+     * `role="separator"` with no accessible name is announced as a bare
+     * "splitter", which says nothing about what it resizes.
+     */
+    label: string;
 
     /** The gesture began. A notification; the return is ignored. */
     onResizeStart?: () => void;
@@ -267,8 +277,18 @@ export default class DResizeSeparator extends Component<DResizeSeparatorSignatur
    * @param size - The size the gesture is passing through.
    */
   @action
-  onResize(size: number) {
+  onResize(size: number, meta: ResizeReportMeta) {
     this.args.onResize?.(size);
+
+    // A held arrow key is one gesture spanning every repeat, so the commit that
+    // normally refreshes this does not arrive until release. Without the
+    // snapshot here the announced value would be stale for the whole hold,
+    // which is exactly the path this component exists to provide. The runloop
+    // concern above does not apply: a key report is not inside a frame/commit
+    // stack with a consumer callback after it.
+    if (meta?.source === "keyboard") {
+      this.#snapshot();
+    }
   }
 
   @action

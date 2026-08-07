@@ -1,4 +1,11 @@
-import { clearRender, find, render, triggerEvent } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import {
+  clearRender,
+  find,
+  render,
+  settled,
+  triggerEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
@@ -817,6 +824,43 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
         null,
         "the custom attribute is removed"
       );
+    });
+
+    test("touchAction is re-reflected when the consumer changes it", async function (assert) {
+      const state = new (class {
+        @tracked touchAction = "pan-y";
+      })();
+
+      await render(
+        <template>
+          <div
+            class="dpd-target"
+            {{dPointerDrag touchAction=state.touchAction}}
+          ></div>
+        </template>
+      );
+
+      assert
+        .dom(".dpd-target")
+        .hasAttribute(
+          "data-pointer-drag",
+          "pan-y",
+          "the initial value is reflected"
+        );
+
+      state.touchAction = "pan-x";
+      await settled();
+
+      // The declaration has to be in place before a touch begins, so a value
+      // changed between gestures has to reach the attribute without the modifier
+      // being torn down and rebuilt.
+      assert
+        .dom(".dpd-target")
+        .hasAttribute(
+          "data-pointer-drag",
+          "pan-x",
+          "a later value replaces it without a re-render of the element"
+        );
     });
   });
 
