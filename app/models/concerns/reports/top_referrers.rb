@@ -33,6 +33,7 @@ module Reports::TopReferrers
         end_date: report.end_date,
         start_date: report.start_date,
         limit: report.limit || 8,
+        current_user: report.current_user,
       }
 
       result = IncomingLinksReport.find(:top_referrers, options)

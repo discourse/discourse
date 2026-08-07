@@ -452,6 +452,46 @@ RSpec.describe Admin::ReportsController do
         expect(response.parsed_body["report"]["total"]).to eq(1)
       end
 
+      it "does not expose referred topics from categories the moderator cannot see" do
+        freeze_time do
+          restricted_category = Fabricate(:private_category, group: Group[:admins], user: admin)
+          restricted_post = create_post(user: admin, category: restricted_category)
+          public_post = create_post
+
+          2.times do |n|
+            IncomingLink.add(
+              referer: "http://test.com",
+              host: "http://discourse.example.com",
+              topic_id: restricted_post.topic_id,
+              ip_address: "10.0.0.#{n}",
+              username: restricted_post.user.username,
+            )
+          end
+
+          IncomingLink.add(
+            referer: "http://test.com",
+            host: "http://discourse.example.com",
+            topic_id: public_post.topic_id,
+            ip_address: "10.0.0.2",
+            username: public_post.user.username,
+          )
+
+          get "/admin/reports/top_referred_topics.json", params: { limit: 1 }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["report"]["data"]).to eq(
+            [
+              {
+                "topic_id" => public_post.topic_id,
+                "topic_title" => public_post.topic.title,
+                "topic_url" => public_post.topic.relative_url,
+                "num_clicks" => 1,
+              },
+            ],
+          )
+        end
+      end
+
       context "when moderators cannot view IPs" do
         before do
           SiteSetting.moderators_view_ips = false
