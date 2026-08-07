@@ -231,6 +231,12 @@ export function registerDragAndDropSource(element, getArgsRef) {
  * tests use `SystemHelpers#drag_and_drop` (a real native drag via
  * Playwright) rather than Capybara's `drag_to`, whose synthetic mouse
  * events can silently stall mid-drag.
+ *
+ * Guide to choosing between the gesture primitives:
+ * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
+ *
+ * @see The `dPointerDrag` modifier when there is no drop target and no payload — a
+ *   press that changes a value continuously is a different gesture.
  */
 export default class DDragAndDropSourceModifier extends Modifier {
   #cleanup = null;

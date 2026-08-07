@@ -62,6 +62,12 @@ export function registerDragAndDropMonitor(getArgsRef) {
  *    matches are observed. Omit to observe any drag.
  *  - `onDragStart` / `onDrag` / `onDrop` — PDND monitor callbacks, each
  *    receiving `{ source, location }`.
+ *
+ * Guide to choosing between the gesture primitives:
+ * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
+ *
+ * @see The `dragAndDrop` service to *read* drag state reactively. This modifier is
+ *   for *responding* imperatively; rendering from it duplicates what the service keeps.
  */
 export default modifier(
   /**

@@ -1,7 +1,12 @@
+import { getOwner } from "@ember/owner";
 import { click, find, findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import SidebarSectionForm from "discourse/components/modal/sidebar-section-form";
+import {
+  disableClearA11yAnnouncementsInTests,
+  enableClearA11yAnnouncementsInTests,
+} from "discourse/services/a11y";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
@@ -124,8 +129,54 @@ module(
       this.model = { section };
     });
 
+    // `settled()` waits out pending timers, and an announcement schedules its own
+    // clear, so a message read after an awaited drag would always be gone.
+    hooks.beforeEach(disableClearA11yAnnouncementsInTests);
+
     hooks.afterEach(function () {
+      enableClearA11yAnnouncementsInTests();
       sinon.restore();
+    });
+
+    test(`${ORACLE} announces a cross-list move at its destination position`, async function (assert) {
+      const a11y = getOwner(this).lookup("service:a11y");
+      await renderForm(this);
+
+      await dragLink("Primary 1", "Secondary 2", "above");
+
+      assert.strictEqual(
+        a11y.politeMessage,
+        "Moved Primary 1 to position 2 of 3",
+        "the position is counted within the list the link moved into"
+      );
+    });
+
+    test(`${ORACLE} announces a within-list reorder`, async function (assert) {
+      const a11y = getOwner(this).lookup("service:a11y");
+      await renderForm(this);
+
+      await dragLink("Primary 2", "Primary 1", "above");
+
+      assert.strictEqual(
+        a11y.politeMessage,
+        "Moved Primary 2 to position 1 of 2",
+        "a same-list move announces against that list's own length"
+      );
+    });
+
+    test(`${ORACLE} announces nothing when a drop moves no link`, async function (assert) {
+      const a11y = getOwner(this).lookup("service:a11y");
+      await renderForm(this);
+
+      const before = a11y.politeMessage;
+
+      await dragLink("Primary 1", "Primary 1", "above");
+
+      assert.strictEqual(
+        a11y.politeMessage,
+        before,
+        "dropping a link onto itself is not a reorder, so nothing is announced"
+      );
     });
 
     test(`${ORACLE} moves a primary link to the chosen position in the secondary list`, async function (assert) {

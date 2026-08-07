@@ -284,6 +284,12 @@ export function registerDragAndDropTarget(element, getArgsRef) {
  * tests use `SystemHelpers#drag_and_drop` (a real native drag via
  * Playwright) rather than Capybara's `drag_to`, whose synthetic mouse
  * events can silently stall mid-drag.
+ *
+ * Guide to choosing between the gesture primitives:
+ * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
+ *
+ * @see The `dDragAndDropExternalTarget` modifier for payloads dragged in from outside
+ *   the browser. Neither one is the file-upload path; that is Uppy's `DropTarget`.
  */
 export default modifier((element, _positional, args) =>
   // Pass `args` through to the closure WITHOUT reading any property of

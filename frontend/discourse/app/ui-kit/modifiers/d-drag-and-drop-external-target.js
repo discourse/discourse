@@ -292,6 +292,13 @@ export function registerDragAndDropExternalTarget(element, getArgsRef) {
  * Nested targets: only the deepest accepted target receives the
  * lifecycle callbacks, so an ancestor decorated with this modifier
  * doesn't double-handle a drop the child already claimed.
+ *
+ * Guide to choosing between the gesture primitives:
+ * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
+ *
+ * @see Uppy's `DropTarget`, registered in `lib/uppy/uppy-upload.js` — dropping a FILE for UPLOAD goes through Uppy's
+ *   `DropTarget` plugin, not through here. This modifier hands you the raw payload
+ *   and stops; it will not upload anything.
  */
 export default modifier((element, _positional, args) =>
   // Pass `args` through to the closure WITHOUT reading any property of

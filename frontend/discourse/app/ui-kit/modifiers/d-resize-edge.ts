@@ -121,6 +121,16 @@ interface DResizeEdgeSignature {
  *   }}
  * ></div>
  * ```
+ *
+ * Guide to choosing between the gesture primitives:
+ * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
+ *
+ * @see The `DResizeSeparator` component, which wraps this and supplies the whole block of
+ *   separator markup above. Prefer it; reach for this modifier directly only when
+ *   the element and its semantics are already yours to own.
+ * @see The `DResizeHandles` component for a TWO-dimensional box resize. The separator role does
+ *   not apply there — a 2D resize has no single `aria-valuenow` to report.
+ * @see The `dOnResize` modifier to merely OBSERVE a size change. It is not a gesture.
  */
 export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> {
   /** The options from the most recent invocation, set by `modify`. */

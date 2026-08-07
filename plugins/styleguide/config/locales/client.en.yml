@@ -36,6 +36,8 @@ en:
           title: "Colors"
         dialog:
           title: "Dialog"
+        drag_and_drop:
+          title: "Drag and drop"
         icons:
           title: "Icons"
           full_list: "See the full list of Font Awesome Icons"

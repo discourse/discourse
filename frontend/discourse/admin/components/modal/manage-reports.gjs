@@ -78,30 +78,31 @@ class ManageReportsRow extends Component {
         </span>
       {{/unless}}
 
-      {{#if this.site.mobileView}}
-        <div class="manage-reports__order-mobile">
-          <DButton
-            @icon="arrow-up"
-            @action={{fn @onMoveUp @row}}
-            @disabled={{eq @index 0}}
-            @translatedAriaLabel={{i18n
-              "admin.dashboard.reports_section.modal.move_up"
-              title=@row.title
-            }}
-            class="manage-reports__arrow btn-transparent"
-          />
-          <DButton
-            @icon="arrow-down"
-            @action={{fn @onMoveDown @row}}
-            @disabled={{eq @index @lastEnabledIndex}}
-            @translatedAriaLabel={{i18n
-              "admin.dashboard.reports_section.modal.move_down"
-              title=@row.title
-            }}
-            class="manage-reports__arrow btn-transparent"
-          />
-        </div>
-      {{/if}}
+      {{! The arrows are the only keyboard path to reorder, so they render on
+          every viewport — the pointer drag beside them on desktop is an
+          alternative to them, not a replacement. }}
+      <div class="manage-reports__arrows">
+        <DButton
+          @icon="arrow-up"
+          @action={{fn @onMoveUp @row}}
+          @disabled={{eq @index 0}}
+          @translatedAriaLabel={{i18n
+            "admin.dashboard.reports_section.modal.move_up"
+            title=@row.title
+          }}
+          class="manage-reports__arrow btn-transparent"
+        />
+        <DButton
+          @icon="arrow-down"
+          @action={{fn @onMoveDown @row}}
+          @disabled={{eq @index @lastEnabledIndex}}
+          @translatedAriaLabel={{i18n
+            "admin.dashboard.reports_section.modal.move_down"
+            title=@row.title
+          }}
+          class="manage-reports__arrow btn-transparent"
+        />
+      </div>
 
       <div class="manage-reports__row-text">
         <div class="manage-reports__row-heading">
@@ -135,6 +136,8 @@ class ManageReportsRow extends Component {
 }
 
 export default class ManageReports extends Component {
+  @service a11y;
+
   @tracked allKeys = [];
   @tracked enabledOrder = [];
   @tracked providers = [];
@@ -302,7 +305,7 @@ export default class ManageReports extends Component {
     }
     const next = [...this.enabledOrder];
     [next[index - 1], next[index]] = [next[index], next[index - 1]];
-    this.enabledOrder = next;
+    this.#reorder(next, row, index - 1);
   }
 
   @action
@@ -313,7 +316,7 @@ export default class ManageReports extends Component {
     }
     const next = [...this.enabledOrder];
     [next[index], next[index + 1]] = [next[index + 1], next[index]];
-    this.enabledOrder = next;
+    this.#reorder(next, row, index + 1);
   }
 
   @action
@@ -339,7 +342,29 @@ export default class ManageReports extends Component {
     const next = [...this.enabledOrder];
     const [moved] = next.splice(fromIndex, 1);
     next.splice(toIndex, 0, moved);
-    this.enabledOrder = next;
+    this.#reorder(next, this.itemsByKey.get(draggedKey), toIndex);
+  }
+
+  /**
+   * Commits a new enabled order and announces where the row landed.
+   *
+   * Both arrows and the drag funnel through here, past their own no-op guards, so
+   * a move is announced exactly once and a non-move never is.
+   *
+   * @param {string[]} nextOrder - The reordered keys, ready to commit.
+   * @param {Object} row - The row that moved, read for its title.
+   * @param {number} toIndex - Its index within `nextOrder`.
+   */
+  #reorder(nextOrder, row, toIndex) {
+    this.enabledOrder = nextOrder;
+
+    this.a11y.announce(
+      i18n("reorder_announcement", {
+        label: row.title,
+        position: toIndex + 1,
+        total: nextOrder.length,
+      })
+    );
   }
 
   @action

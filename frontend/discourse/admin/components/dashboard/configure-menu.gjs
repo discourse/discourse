@@ -79,26 +79,29 @@ class ConfigureRow extends Component {
           tabindex="-1"
           title={{this.dragHandleLabel}}
         >{{dIcon "grip-vertical"}}</span>
-      {{else}}
-        <span class="db-configure__arrows">
-          <DButton
-            @icon="chevron-up"
-            @action={{fn @onMoveUp @index}}
-            @disabled={{@isFirst}}
-            @translatedAriaLabel={{this.reorderUpLabel}}
-            @translatedTitle={{this.reorderUpLabel}}
-            class="btn-flat db-configure__arrow"
-          />
-          <DButton
-            @icon="chevron-down"
-            @action={{fn @onMoveDown @index}}
-            @disabled={{@isLast}}
-            @translatedAriaLabel={{this.reorderDownLabel}}
-            @translatedTitle={{this.reorderDownLabel}}
-            class="btn-flat db-configure__arrow"
-          />
-        </span>
       {{/if}}
+
+      {{! The arrows are the only keyboard path to reorder, so they render on
+          every viewport — the pointer drag beside them on desktop is an
+          alternative to them, not a replacement. }}
+      <span class="db-configure__arrows">
+        <DButton
+          @icon="chevron-up"
+          @action={{fn @onMoveUp @index}}
+          @disabled={{@isFirst}}
+          @translatedAriaLabel={{this.reorderUpLabel}}
+          @translatedTitle={{this.reorderUpLabel}}
+          class="btn-flat db-configure__arrow"
+        />
+        <DButton
+          @icon="chevron-down"
+          @action={{fn @onMoveDown @index}}
+          @disabled={{@isLast}}
+          @translatedAriaLabel={{this.reorderDownLabel}}
+          @translatedTitle={{this.reorderDownLabel}}
+          class="btn-flat db-configure__arrow"
+        />
+      </span>
 
       <span class="db-configure__section-name">{{this.sectionLabel}}</span>
 
@@ -112,6 +115,8 @@ class ConfigureRow extends Component {
 }
 
 export default class ConfigureMenu extends Component {
+  @service a11y;
+
   get lastIndex() {
     return (this.args.sections?.length ?? 0) - 1;
   }
@@ -130,21 +135,47 @@ export default class ConfigureMenu extends Component {
       return;
     }
 
-    this.args.onReorder(fromIndex, toIndex);
+    this.#reorder(fromIndex, toIndex);
   }
 
   @action
   onMoveUp(index) {
     if (index > 0) {
-      this.args.onReorder(index, index - 1);
+      this.#reorder(index, index - 1);
     }
   }
 
   @action
   onMoveDown(index) {
     if (index < this.args.sections.length - 1) {
-      this.args.onReorder(index, index + 1);
+      this.#reorder(index, index + 1);
     }
+  }
+
+  /**
+   * Commits a reorder and announces where the row landed.
+   *
+   * Every path in — both arrows and the drag — funnels through here, past its own
+   * no-op guard, so a move is announced exactly once and a non-move never is. The
+   * destination is taken from `toIndex` rather than re-read from `sections`: this
+   * component is controlled, so the list it renders still holds the old order at
+   * this point.
+   *
+   * @param {number} fromIndex - The row's current index.
+   * @param {number} toIndex - The index it is moving to.
+   */
+  #reorder(fromIndex, toIndex) {
+    const section = this.args.sections[fromIndex];
+
+    this.args.onReorder(fromIndex, toIndex);
+
+    this.a11y.announce(
+      i18n("reorder_announcement", {
+        label: i18n(`admin.dashboard.sections.${section.id}.title`),
+        position: toIndex + 1,
+        total: this.args.sections.length,
+      })
+    );
   }
 
   <template>

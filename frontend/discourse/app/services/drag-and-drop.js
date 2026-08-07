@@ -75,6 +75,13 @@ const EXTERNAL_KIND_PREDICATES = Object.freeze({
  * Lives as a service rather than a module slot so test setup
  * (`setupTest` / `setupRenderingTest`) gets a fresh instance per test,
  * and so modifier classes can inject it via `@service`.
+ *
+ * Use this to READ drag state for rendering. Use `dDragAndDropMonitor` to RESPOND
+ * to a drag imperatively — rendering from its callbacks means hand-maintaining
+ * state this service already keeps.
+ *
+ * Guide to choosing between the gesture primitives:
+ * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
  */
 export default class DragAndDropService extends Service {
   /** @type {DragPayload|null} */

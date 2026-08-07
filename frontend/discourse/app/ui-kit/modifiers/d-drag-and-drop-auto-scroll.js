@@ -83,6 +83,12 @@ export function registerDragAndDropAutoScroll(getArgsRef) {
  *  - `axis` — `"vertical"` (default) / `"horizontal"` / `"all"`.
  *  - `target` — `"element"` (default — scroll the host element)
  *    or `"window"` (scroll the window; element is ignored).
+ *
+ * Guide to choosing between the gesture primitives:
+ * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
+ *
+ * @see The `dDragAndDropTarget` modifier, which this complements — auto-scroll moves the
+ *   container, it never accepts a drop of its own.
  */
 export default modifier(
   /**

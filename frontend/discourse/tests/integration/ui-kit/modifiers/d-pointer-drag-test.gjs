@@ -141,6 +141,100 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
     );
   });
 
+  module("focus", function () {
+    test("an accepted press focuses the handle", async function (assert) {
+      const onDragStart = () => {};
+
+      await render(
+        <template>
+          <button
+            type="button"
+            class="dpd-target"
+            {{dPointerDrag onDragStart=onDragStart}}
+          ></button>
+        </template>
+      );
+      stubPointerCapture(".dpd-target");
+
+      await triggerEvent(".dpd-target", "pointerdown", {
+        button: 0,
+        pointerId: 1,
+      });
+
+      assert
+        .dom(".dpd-target")
+        .isFocused(
+          "the press restores the focus its own preventDefault suppressed, so a mouse user can carry on by keyboard"
+        );
+    });
+
+    test("a press that starts no gesture leaves focus alone", async function (assert) {
+      const vetoed = () => false;
+
+      await render(
+        <template>
+          <button type="button" class="dpd-other"></button>
+          <button
+            type="button"
+            class="dpd-secondary"
+            {{dPointerDrag onDragStart=vetoed}}
+          ></button>
+          <button
+            type="button"
+            class="dpd-vetoed"
+            {{dPointerDrag onDragStart=vetoed}}
+          ></button>
+        </template>
+      );
+      stubPointerCapture(".dpd-secondary");
+      stubPointerCapture(".dpd-vetoed");
+      find(".dpd-other").focus();
+
+      await triggerEvent(".dpd-secondary", "pointerdown", {
+        button: 2,
+        pointerId: 1,
+      });
+      assert
+        .dom(".dpd-other")
+        .isFocused(
+          "a secondary-button press starts nothing, so it takes no focus"
+        );
+
+      await triggerEvent(".dpd-vetoed", "pointerdown", {
+        button: 0,
+        pointerId: 2,
+      });
+      assert
+        .dom(".dpd-other")
+        .isFocused("a vetoed press starts nothing, so it takes no focus");
+    });
+
+    test("a press on an unfocusable handle is harmless", async function (assert) {
+      const calls = [];
+      const onDragStart = () => calls.push("start");
+
+      await render(
+        <template>
+          <div
+            class="dpd-target"
+            {{dPointerDrag onDragStart=onDragStart}}
+          ></div>
+        </template>
+      );
+      stubPointerCapture(".dpd-target");
+
+      await triggerEvent(".dpd-target", "pointerdown", {
+        button: 0,
+        pointerId: 1,
+      });
+
+      assert.deepEqual(calls, ["start"], "the gesture starts as usual");
+      assert
+        .dom(".dpd-target")
+        .isNotFocused("a handle that cannot take focus does not get it");
+    });
+  });
+
   module("configurable pointer lifecycle", function () {
     test("exports registerPointerDrag for lifecycle reuse", function (assert) {
       assert.strictEqual(

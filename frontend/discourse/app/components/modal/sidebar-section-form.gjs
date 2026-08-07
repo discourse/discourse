@@ -346,6 +346,7 @@ const TranslationRow = <template>
 
 @tagName("")
 export default class SidebarSectionForm extends Component {
+  @service a11y;
   @service dialog;
   @service languageNameLookup;
   @service router;
@@ -832,13 +833,20 @@ export default class SidebarSectionForm extends Component {
     // Read after the removal: within one segment the two arrays are the same
     // one, so a pre-removal index would be off by one when dragging downwards.
     const toPosition = destination.indexOf(targetLink);
+    const toIndex = position === "before" ? toPosition : toPosition + 1;
 
     draggedLink.segment = targetLink.isPrimary ? "primary" : "secondary";
 
-    destination.splice(
-      position === "before" ? toPosition : toPosition + 1,
-      0,
-      draggedLink
+    destination.splice(toIndex, 0, draggedLink);
+
+    // Counted within the destination list, which is the one the link now belongs
+    // to — a cross-segment move lands at a position in the segment it arrived in.
+    this.a11y.announce(
+      i18n("reorder_announcement", {
+        label: draggedLink.name,
+        position: toIndex + 1,
+        total: destination.length,
+      })
     );
   }
 

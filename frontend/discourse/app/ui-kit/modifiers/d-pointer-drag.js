@@ -300,6 +300,15 @@ export function registerPointerDrag(element, getArgsRef) {
       event.stopPropagation();
     }
 
+    // Restores what the line above just took away. Cancelling `pointerdown`
+    // suppresses the compatibility `mousedown`, and focus rides on that, so a
+    // handle that is a real control stops taking focus when clicked — leaving a
+    // mouse user unable to drag and then fine-tune the same control by keyboard.
+    // Paired with `preventDefault` rather than run earlier, so a press that
+    // starts no gesture keeps its hands off the focused element. Unfocusable
+    // elements ignore this, which is why it is unconditional.
+    element.focus({ preventScroll: true });
+
     // Last, so this gesture is fully established before control passes to another
     // consumer's callback, which is free to throw.
     superseded?.(event);
@@ -439,9 +448,23 @@ export function registerPointerDrag(element, getArgsRef) {
  *    an unrecognised value leaves `touch-action` at its inherited value, so add
  *    a rule to that stylesheet rather than inventing a token here.
  *
+ * An accepted press focuses the element, because cancelling `pointerdown` is what
+ * otherwise stops a handle that is a real control from taking focus on click. Give
+ * the handle a tab stop when it has a keyboard path worth reaching; leave it
+ * unfocusable and nothing happens.
+ *
  * A single element supports one registration. Two would each claim the same
  * pointer capture and the same attribute, and tearing either down would strand
  * the other's gesture.
+ *
+ * Guide to choosing between the gesture primitives:
+ * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
+ *
+ * @see The `DResizeSeparator` component and `dResizeEdge` modifier before reaching for this to build a
+ *   resize by hand — they layer the value math, bounds, keyboard path and
+ *   separator semantics on top of this same engine.
+ * @see The `dDragAndDropSource` modifier when there IS a drop target and a payload to transfer.
+ *   This gesture has neither.
  *
  * Nesting one registration inside another is supported, but only one of them can
  * hold a given press: the ancestor sees it too, and whichever claims the pointer

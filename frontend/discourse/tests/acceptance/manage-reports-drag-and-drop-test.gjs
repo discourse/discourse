@@ -1,7 +1,18 @@
 import { getOwner } from "@ember/owner";
-import { fillIn, find, findAll, settled, visit } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  find,
+  findAll,
+  settled,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import ManageReports from "discourse/admin/components/modal/manage-reports";
+import {
+  disableClearA11yAnnouncementsInTests,
+  enableClearA11yAnnouncementsInTests,
+} from "discourse/services/a11y";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import {
   centerOf,
@@ -83,6 +94,87 @@ acceptance("Manage reports drag and drop", function (needs) {
         cursor: null,
         has_more: false,
       })
+    );
+  });
+
+  // `settled()` waits out pending timers, and an announcement schedules its own
+  // clear, so a message read after an awaited interaction would always be gone.
+  needs.hooks.beforeEach(disableClearA11yAnnouncementsInTests);
+  needs.hooks.afterEach(enableClearA11yAnnouncementsInTests);
+
+  test("desktop renders the grip alongside the arrows", async function (assert) {
+    await openModal(this);
+
+    assert.dom(".manage-reports__grip").exists({ count: 3 });
+    assert
+      .dom(".manage-reports__arrow")
+      .exists(
+        { count: 6 },
+        "desktop keeps a keyboard path to reorder, not only the pointer drag"
+      );
+  });
+
+  test("desktop arrow buttons reorder the enabled list", async function (assert) {
+    await openModal(this);
+
+    await click(
+      `${rowSelector("core_report:topics")} .manage-reports__arrow:first-child`
+    );
+
+    assert.deepEqual(
+      enabledKeys(),
+      ["core_report:topics", "core_report:signups"],
+      "the up arrow moves the report earlier on desktop, with no pointer involved"
+    );
+  });
+
+  test(`${ORACLE} the arrow path announces through the same call as the drag`, async function (assert) {
+    const a11y = getOwner(this).lookup("service:a11y");
+    await openModal(this);
+
+    await click(
+      `${rowSelector("core_report:topics")} .manage-reports__arrow:first-child`
+    );
+
+    assert.strictEqual(
+      a11y.politeMessage,
+      "Moved Matching topics to position 1 of 2",
+      "an arrow press announces exactly like the equivalent drag"
+    );
+  });
+
+  test(`${ORACLE} announces where a dragged report landed`, async function (assert) {
+    const a11y = getOwner(this).lookup("service:a11y");
+    await openModal(this);
+
+    await dragReport("core_report:topics", "core_report:signups", "above");
+
+    assert.strictEqual(
+      a11y.politeMessage,
+      "Moved Matching topics to position 1 of 2",
+      "a completed drag announces the report and its resulting position"
+    );
+  });
+
+  test(`${ORACLE} announces nothing when a drop changes no order`, async function (assert) {
+    const a11y = getOwner(this).lookup("service:a11y");
+    await openModal(this);
+
+    const before = a11y.politeMessage;
+
+    await dragReport("core_report:signups", "core_report:signups", "above");
+    assert.strictEqual(
+      a11y.politeMessage,
+      before,
+      "dropping a report onto itself is not a reorder, so nothing is announced"
+    );
+
+    // Below the report directly above it resolves to the index it already holds.
+    await dragReport("core_report:topics", "core_report:signups", "below");
+    assert.strictEqual(
+      a11y.politeMessage,
+      before,
+      "a drop that resolves to the report's current index announces nothing"
     );
   });
 

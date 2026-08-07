@@ -110,6 +110,15 @@ const refreshOnViewportChange = modifier((_element, [separatorComponent]) => {
  *
  * Anything passed as content renders inside the handle, for the ones that draw
  * themselves with a real element rather than a pseudo-element.
+ *
+ * Guide to choosing between the gesture primitives:
+ * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
+ *
+ * @see {@link dResizeEdge}, the modifier underneath. Use it directly only when the
+ *   element and its separator semantics are already yours to own.
+ * @see The `DResizeHandles` component for a TWO-dimensional box resize, where the separator role
+ *   does not apply.
+ * @see The `dOnResize` modifier to merely OBSERVE a size change. It is not a gesture.
  */
 export default class DResizeSeparator extends Component {
   /** The size and bounds as last read, for assistive technology to announce. */

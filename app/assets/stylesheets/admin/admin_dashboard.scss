@@ -154,7 +154,7 @@ $db-bar-height: var(--space-2);
     display: flex;
     align-items: center;
     gap: var(--space-3);
-    padding: var(--space-1) 0;
+    padding: var(--space-half) 0;
     border-top: 2px solid transparent;
     border-bottom: 2px solid transparent;
     cursor: grab;
@@ -200,6 +200,7 @@ $db-bar-height: var(--space-2);
   &__arrows {
     display: flex;
     flex-direction: column;
+    font-size: 0.7em;
   }
 
   &__arrow.btn {

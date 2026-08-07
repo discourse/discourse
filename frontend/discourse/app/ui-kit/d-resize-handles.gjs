@@ -63,6 +63,16 @@ const BOX_DIRECTIONS = ["n", "ne", "e", "se", "s", "sw", "w", "nw"];
  *    would be released the instant it was pressed.
  *
  * `dragInfo` = `{ payload, event, origin:{x,y}, current:{x,y}, delta:{x,y}, handleRect }`.
+ *
+ * This is the TWO-dimensional shape. `role="separator"` is wrong here and must not
+ * be used: a box resized from its corners has no single value to report.
+ *
+ * Guide to choosing between the gesture primitives:
+ * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
+ *
+ * @see The `DResizeSeparator` component for a ONE-axis resize between two regions, which is
+ *   operable by keyboard and announced.
+ * @see The `dOnResize` modifier to merely OBSERVE a size change. It is not a gesture.
  */
 export default class DResizeHandles extends Component {
   #activePayload = null;
