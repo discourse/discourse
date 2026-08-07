@@ -157,8 +157,15 @@ class GroupManager
         topic_id: TopicAllowedGroup.where(group_id: @group.id).select(:topic_id),
       )
       .distinct
-      .pluck(:topic_id)
-      .each { |topic_id| Jobs.enqueue(:delete_inaccessible_notifications, topic_id:) }
+      .pluck(:topic_id, :user_id)
+      .group_by(&:first)
+      .each do |topic_id, pairs|
+        Jobs.enqueue(
+          :delete_inaccessible_notifications,
+          topic_id: topic_id,
+          user_ids: pairs.map(&:last),
+        )
+      end
   end
 
   def build_user_removed_webhook_payloads(group_users_relation)
