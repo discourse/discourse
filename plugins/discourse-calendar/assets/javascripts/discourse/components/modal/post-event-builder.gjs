@@ -151,7 +151,7 @@ export default class PostEventBuilder extends Component {
     set("location", value);
     this.event.location = value;
 
-    if (!isLivestreamUrl(value)) {
+    if (!isLivestreamUrl(value, this.siteSettings)) {
       set("livestream", false);
       this.event.livestream = false;
     }
@@ -325,7 +325,8 @@ export default class PostEventBuilder extends Component {
 
   get showLivestream() {
     return (
-      isLivestreamUrl(this.event.location) && this.siteSettings.chat_enabled
+      isLivestreamUrl(this.event.location, this.siteSettings) &&
+      this.siteSettings.chat_enabled
     );
   }
 

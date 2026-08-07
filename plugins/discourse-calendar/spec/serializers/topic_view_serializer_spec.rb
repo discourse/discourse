@@ -149,7 +149,7 @@ RSpec.describe TopicViewSerializer do
         id: first_post.id,
         original_starts_at: 1.hour.from_now,
         original_ends_at: 2.hours.from_now,
-        location: "https://example.com/live",
+        location: "https://www.youtube.com/live/abc123",
         status: DiscoursePostEvent::Event.statuses[status],
         raw_invitees:,
         livestream:,
