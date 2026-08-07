@@ -7,29 +7,8 @@ class Admin::Config::DesignWizardController < Admin::AdminController
         .where(id: Theme::CORE_THEMES.values)
         .includes(:locale_fields, theme_fields: :upload)
         .order(:id)
-    default_theme = Theme.find_default
 
-    render json: {
-             themes:
-               core_themes.map do |theme|
-                 {
-                   id: theme.id,
-                   name: theme.name,
-                   description: theme.description(preloaded_locale_fields: theme.locale_fields),
-                   default: theme.id == default_theme&.id,
-                   color_scheme_id: theme.color_scheme_id,
-                   dark_color_scheme_id: theme.dark_color_scheme_id,
-                   screenshot_light_url: theme.screenshot_light_url,
-                   screenshot_dark_url: theme.screenshot_dark_url,
-                   palette_pairs: DesignWizard::PalettePairs.for_theme(theme),
-                 }
-               end,
-             current_theme: current_theme_payload(default_theme),
-             base_font: SiteSetting.base_font,
-             heading_font: SiteSetting.heading_font,
-             homepage: SiteSetting.homepage,
-             palettes_user_selectable: palettes_user_selectable?(preselected_theme(default_theme)),
-           }
+    render_serialized(Theme.find_default, DesignWizardSerializer, root: false, themes: core_themes)
   end
 
   def update
@@ -48,26 +27,5 @@ class Admin::Config::DesignWizardController < Admin::AdminController
       end
       on_failure { render json: failed_json, status: :unprocessable_entity }
     end
-  end
-
-  private
-
-  def current_theme_payload(default_theme)
-    return if default_theme.nil? || Theme::CORE_THEMES.value?(default_theme.id)
-
-    { id: default_theme.id, name: default_theme.name }
-  end
-
-  # the wizard preselects horizon when the current default isn't a core theme,
-  # so selectability must be derived from the theme it will actually offer
-  def preselected_theme(default_theme)
-    return default_theme if Theme::CORE_THEMES.value?(default_theme&.id)
-    Theme.horizon_theme
-  end
-
-  def palettes_user_selectable?(theme)
-    offered = ColorScheme.where(theme_id: theme&.id)
-    offered = ColorScheme.where(via_wizard: true) if offered.none?
-    offered.exists? && offered.where(user_selectable: false).none?
   end
 end

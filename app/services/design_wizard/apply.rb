@@ -8,8 +8,6 @@ class DesignWizard::Apply
 
   BASE_LIGHT_PALETTE_ID = ColorScheme::NAMES_TO_ID_MAP[ColorScheme::LIGHT_PALETTE_NAME]
 
-  policy :current_user_is_admin
-
   params do
     attribute :theme_id, :integer
     attribute :light_palette_id, :integer
@@ -62,6 +60,7 @@ class DesignWizard::Apply
     end
   end
 
+  policy :current_user_is_admin
   model :theme
   policy :palettes_available_to_theme
 
