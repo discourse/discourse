@@ -25,6 +25,13 @@ class Admin::Config::DesignWizardController < Admin::AdminController
                  failed_json.merge(errors: [I18n.t("design_wizard.errors.palette_unavailable")]),
                status: :unprocessable_entity
       end
+      on_failed_step(:update_site_settings) do
+        render json:
+                 failed_json.merge(
+                   errors: [I18n.t("design_wizard.errors.site_settings_update_failed")],
+                 ),
+               status: :unprocessable_entity
+      end
       on_failure { render json: failed_json, status: :unprocessable_entity }
     end
   end

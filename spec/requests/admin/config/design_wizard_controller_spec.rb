@@ -194,6 +194,17 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]).to be_present
       end
+
+      it "returns a 422 when the site settings cannot be updated" do
+        SiteSetting.stubs(:shadowed_settings).returns(Set.new(%i[default_theme_id]))
+
+        put "/admin/config/design-wizard.json", params: { theme_id: Theme::CORE_THEMES["horizon"] }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to eq(
+          [I18n.t("design_wizard.errors.site_settings_update_failed")],
+        )
+      end
     end
 
     it "is not accessible to moderators" do

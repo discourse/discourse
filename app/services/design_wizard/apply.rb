@@ -46,7 +46,7 @@ class DesignWizard::Apply
         heading_font: heading_font.presence,
         default_homepage: homepage.presence,
         desktop_category_page_style: category_page_style.presence,
-      }.compact
+      }.compact.map { |setting_name, value| { setting_name:, value: } }
     end
 
     private
@@ -64,18 +64,17 @@ class DesignWizard::Apply
   model :theme
   policy :palettes_available_to_theme
 
-  transaction(requires_new: true) do
+  transaction do
     model :light_palette, :resolve_light_palette, optional: true
     model :dark_palette, :resolve_dark_palette, optional: true
     step :assign_theme_palettes
     only_if :enabling_built_in_palettes do
-      step :materialize_built_in_palettes
+      step :offer_built_in_palettes
     end
     step :update_palette_selectability
-    step :restore_site_settings_on_rollback
-    step :update_site_settings
   end
 
+  step :update_site_settings
   step :expire_user_color_schemes_cache
 
   private
@@ -111,7 +110,7 @@ class DesignWizard::Apply
     params.palettes_user_selectable && ColorScheme.where(theme_id: theme.id).none?
   end
 
-  def materialize_built_in_palettes
+  def offer_built_in_palettes
     DesignWizard::PalettePairs::BUILT_IN_PAIRS.each do |pair|
       pair
         .values_at(:light, :dark)
@@ -122,61 +121,24 @@ class DesignWizard::Apply
     end
   end
 
-  # Every save re-states the whole offering, so palettes an admin made
-  # selectable outside the wizard are reset too.
-  #
-  # update_all skips callbacks deliberately: user_selectable does not affect
-  # compiled CSS, and expire_user_color_schemes_cache covers the one cache that
-  # matters. ColorScheme's default scope excludes remote copies, which is what
-  # keeps this from bypassing no_edits_for_remote_copies.
   def update_palette_selectability(params:, theme:)
-    offered = ColorScheme.where(theme_id: theme.id)
-    offered = ColorScheme.where(via_wizard: true) if offered.none?
-
-    ColorScheme
-      .where(theme_id: Theme::CORE_THEMES.values)
-      .or(ColorScheme.where(via_wizard: true))
-      .where.not(id: offered.select(:id))
-      .update_all(user_selectable: false)
-    offered.update_all(user_selectable: params.palettes_user_selectable)
+    DesignWizard::Action::UpdatePaletteSelectability.call(
+      theme:,
+      selectable: params.palettes_user_selectable,
+    )
   end
 
-  def restore_site_settings_on_rollback(params:, theme:)
-    changes = params.site_settings(theme_id: theme.id)
-    previous_values = changes.keys.index_with { |name| SiteSetting.public_send(name) }
-    previous_overrides =
-      changes.keys.index_with do |name|
-        setting = SiteSetting.provider.find(name)
-        setting && { value: setting.value, data_type: setting.data_type }
-      end
-
-    ActiveRecord::Base.current_transaction.after_rollback do
-      failed_values = changes.keys.index_with { |name| SiteSetting.public_send(name) }
-
-      previous_overrides.each do |name, override|
-        if override
-          SiteSetting.provider.save(name, override[:value], override[:data_type])
-        else
-          SiteSetting.provider.destroy(name)
-        end
-      end
-
-      SiteSetting.refresh!
-
-      failed_values.each do |name, failed_value|
-        restored_value = previous_values[name]
-        next if failed_value == restored_value
-
-        SiteSetting.notify_clients!(name) if SiteSetting.client_settings.include?(name)
-        DiscourseEvent.trigger(:site_setting_changed, name, failed_value, restored_value)
-      end
-    end
-  end
-
+  # default_theme_id is hidden, so it has to be explicitly allowed.
   def update_site_settings(params:, theme:, guardian:)
-    params
-      .site_settings(theme_id: theme.id)
-      .each { |name, value| SiteSetting.set_and_log(name, value, guardian.user) }
+    SiteSetting::Update.call(
+      params: {
+        settings: params.site_settings(theme_id: theme.id),
+      },
+      options: {
+        allow_changing_hidden: %i[default_theme_id],
+      },
+      guardian:,
+    ) { on_failure { fail!("failed to update site settings") } }
   end
 
   def expire_user_color_schemes_cache

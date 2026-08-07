@@ -28,8 +28,8 @@ module Service
         steps << Step.new(name)
       end
 
-      def transaction(**options, &block)
-        steps << TransactionStep.new(**options, &block)
+      def transaction(&block)
+        steps << TransactionStep.new(&block)
       end
 
       def lock(*keys, &block)

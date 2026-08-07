@@ -5977,6 +5977,7 @@ en:
   design_wizard:
     errors:
       palette_unavailable: "One of the selected color palettes is not available for the selected theme."
+      site_settings_update_failed: "The site settings could not be updated."
     palette_pairs:
       default: "Default"
       wcag: "WCAG"
