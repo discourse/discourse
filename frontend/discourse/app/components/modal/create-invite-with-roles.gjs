@@ -80,6 +80,10 @@ export default class CreateInviteWithRoles extends Component {
     this.initialStaffRole = this.staffRole;
   }
 
+  get allowEmailInvites() {
+    return this.siteSettings.allow_email_invites;
+  }
+
   get canInviteAdmins() {
     return !!this.currentUser?.can_create_admin_invite;
   }
@@ -677,9 +681,11 @@ export default class CreateInviteWithRoles extends Component {
                       <Condition @name="link">{{i18n
                           "user.invited.invite_roles.invite_by_link"
                         }}</Condition>
-                      <Condition @name="email">{{i18n
-                          "user.invited.invite_roles.invite_by_email"
-                        }}</Condition>
+                      {{#if this.allowEmailInvites}}
+                        <Condition @name="email">{{i18n
+                            "user.invited.invite_roles.invite_by_email"
+                          }}</Condition>
+                      {{/if}}
                     </conditional.Conditions>
                   </fieldset>
                 {{/unless}}
