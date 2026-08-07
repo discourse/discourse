@@ -60,6 +60,27 @@ describe Jobs::Chat::ProcessMessage do
     end
   end
 
+  describe "pull hotlinked images" do
+    it "enqueues the pull job when download_remote_images_to_local is enabled" do
+      SiteSetting.download_remote_images_to_local = true
+
+      expect_enqueued_with(
+        job: Jobs::Chat::PullHotlinkedImages,
+        args: {
+          chat_message_id: chat_message.id,
+        },
+      ) { described_class.new.execute(chat_message_id: chat_message.id) }
+    end
+
+    it "does not enqueue the pull job when download_remote_images_to_local is disabled" do
+      SiteSetting.download_remote_images_to_local = false
+
+      expect_not_enqueued_with(job: Jobs::Chat::PullHotlinkedImages) do
+        described_class.new.execute(chat_message_id: chat_message.id)
+      end
+    end
+  end
+
   describe "skip_notifications" do
     fab!(:user)
     fab!(:mentioned_user, :user)

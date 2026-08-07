@@ -39,6 +39,10 @@ module Chat
     has_one :in_reply_to, serializer: Chat::InReplyToSerializer, embed: :objects
     has_many :uploads, serializer: ::UploadSerializer, embed: :objects
 
+    def uploads
+      object.attachment_uploads
+    end
+
     def mentioned_users
       object
         .user_mentions

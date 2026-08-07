@@ -838,6 +838,131 @@ RSpec.describe Chat::UpdateMessage do
           )
         }.to change { UploadReference.where(target: chat_message).count }.by(1)
       end
+
+      it "keeps an upload referenced inline in the body when the edit omits it" do
+        chat_message =
+          create_chat_message(
+            user1,
+            "look ![](#{upload1.short_url})",
+            public_chat_channel,
+            upload_ids: [upload1.id],
+          )
+        expect(chat_message.reload.upload_ids).to contain_exactly(upload1.id)
+
+        described_class.call(
+          guardian: guardian,
+          params: {
+            message_id: chat_message.id,
+            channel_id: chat_message.chat_channel_id,
+            message: "look now ![](#{upload1.short_url})",
+            upload_ids: [],
+          },
+        )
+
+        expect(chat_message.reload.upload_ids).to contain_exactly(upload1.id)
+      end
+
+      it "restores an inline upload's reference through the async job when not processing inline" do
+        SiteSetting.authorized_extensions += "|mp4"
+        video = Fabricate(:upload, user: user1, original_filename: "clip.mp4", extension: "mp4")
+        chat_message =
+          create_chat_message(
+            user1,
+            "![clip|video](#{video.short_url})",
+            public_chat_channel,
+            upload_ids: [video.id],
+          )
+
+        Jobs.run_later!
+        described_class.call(
+          guardian: guardian,
+          params: {
+            message_id: chat_message.id,
+            channel_id: chat_message.chat_channel_id,
+            message: "edited ![clip|video](#{video.short_url})",
+            upload_ids: [],
+          },
+          options: {
+            process_inline: false,
+          },
+        )
+
+        # The edit prunes the reference; production restores it when the
+        # enqueued processing job runs.
+        expect(chat_message.reload.upload_ids).to be_empty
+
+        Jobs::Chat::ProcessMessage.new.execute(chat_message_id: chat_message.id)
+
+        expect(chat_message.reload.upload_ids).to contain_exactly(video.id)
+      end
+
+      it "keeps an inline upload when a different user edits the message" do
+        chat_message =
+          create_chat_message(
+            user1,
+            "look ![](#{upload1.short_url})",
+            public_chat_channel,
+            upload_ids: [upload1.id],
+          )
+
+        described_class.call(
+          guardian: Guardian.new(admin1),
+          params: {
+            message_id: chat_message.id,
+            channel_id: chat_message.chat_channel_id,
+            message: "look edited ![](#{upload1.short_url})",
+            upload_ids: [],
+          },
+        )
+
+        expect(chat_message.reload.upload_ids).to contain_exactly(upload1.id)
+      end
+
+      it "keeps both an attachment and an inline upload when the edit sends only the attachment" do
+        chat_message =
+          create_chat_message(
+            user1,
+            "text ![](#{upload2.short_url})",
+            public_chat_channel,
+            upload_ids: [upload1.id, upload2.id],
+          )
+        expect(chat_message.reload.upload_ids).to contain_exactly(upload1.id, upload2.id)
+
+        described_class.call(
+          guardian: guardian,
+          params: {
+            message_id: chat_message.id,
+            channel_id: chat_message.chat_channel_id,
+            message: "text edited ![](#{upload2.short_url})",
+            upload_ids: [upload1.id],
+          },
+        )
+
+        expect(chat_message.reload.upload_ids).to contain_exactly(upload1.id, upload2.id)
+      end
+
+      it "drops an inline upload once the edit removes it from the body" do
+        chat_message =
+          create_chat_message(
+            user1,
+            "look ![](#{upload1.short_url})",
+            public_chat_channel,
+            upload_ids: [upload1.id],
+          )
+
+        expect {
+          described_class.call(
+            guardian: guardian,
+            params: {
+              message_id: chat_message.id,
+              channel_id: chat_message.chat_channel_id,
+              message: "no image anymore",
+              upload_ids: [],
+            },
+          )
+        }.to change { UploadReference.where(upload_id: upload1.id).count }.by(-1)
+        expect(chat_message.reload.upload_ids).to be_empty
+      end
     end
 
     context "when the message is in a thread" do

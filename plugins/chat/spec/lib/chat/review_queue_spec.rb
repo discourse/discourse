@@ -158,9 +158,9 @@ describe Chat::ReviewQueue do
         payload = Chat::ReviewableMessage.find_by(target: message).payload
         expect(payload["message_cooked"]).to eq(message.cooked)
         expect(payload["message_cooked"]).to include(upload.url)
-        expect(payload["message_uploads"].map { |upload_json| upload_json["id"] }).to eq(
-          [upload.id],
-        )
+        # The image is inline in the body (rendered via cooked), so it isn't
+        # also tiled in message_uploads.
+        expect(payload).not_to have_key("message_uploads")
       end
 
       it "ignores the cooldown window when using the notify_moderators flag type" do

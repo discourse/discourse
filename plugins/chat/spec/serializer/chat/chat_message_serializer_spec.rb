@@ -304,4 +304,18 @@ describe Chat::MessageSerializer do
       end
     end
   end
+
+  describe "#uploads" do
+    it "serializes attachments but excludes uploads rendered inline in cooked" do
+      attachment = Fabricate(:upload)
+      inline = Fabricate(:upload)
+      message_1.message = "see ![](#{inline.short_url})"
+      message_1.cook
+      message_1.save!
+      UploadReference.create!(target: message_1, upload: attachment)
+      UploadReference.create!(target: message_1, upload: inline)
+      serialized = described_class.new(message_1, scope: guardian, root: nil).as_json
+      expect(serialized[:uploads].map { |u| u[:id] }).to contain_exactly(attachment.id)
+    end
+  end
 end

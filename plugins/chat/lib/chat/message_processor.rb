@@ -23,10 +23,73 @@ module Chat
 
     def run!
       post_process_oneboxes
+      process_hotlinked_images
       process_thumbnails
       post_process_videos
       add_lightbox_to_images
+      reconcile_upload_references
       DiscourseEvent.trigger(:chat_message_processed, @doc, @model)
+    end
+
+    # Replaces the mixin implementation, which requires @post. Unlike posts, a
+    # failed or oversized download keeps the hotlinked src, not a placeholder.
+    def process_hotlinked_image(img)
+      normalized_src =
+        Chat::MessageHotlinkedMedia.normalize_src(
+          img["src"] || img[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR],
+        )
+      info = hotlinked_map[normalized_src]
+
+      if info&.downloaded? && (upload = info.upload)
+        img["src"] = UrlHelper.cook_url(upload.url, secure: upload.secure?)
+        img["data-base62-sha1"] = upload.base62_sha1
+        img["data-dominant-color"] = upload.dominant_color(calculate_if_missing: true).presence
+        img.delete(PrettyText::BLOCKED_HOTLINKED_SRC_ATTR)
+      end
+
+      true
+    end
+
+    def process_hotlinked_images
+      extract_images.each { |img| process_hotlinked_image(img) }
+    end
+
+    # Keeps upload references matching what actually renders; a pruned hotlinked
+    # upload stays retained via its tracking row for cached reintroduction, for
+    # the message's lifetime. Runs after post_process_videos, whose ensure_exist!
+    # calls prune other references.
+    def reconcile_upload_references
+      inline_base62s =
+        @model.message.to_s.scan(%r{upload://([a-zA-Z0-9]+)}).flatten +
+          @doc.css("img[data-base62-sha1]").map { |img| img["data-base62-sha1"] }
+      in_doc_sha1s =
+        inline_base62s.uniq.filter_map { |base62| Upload.sha1_from_base62_encoded(base62) }
+      in_doc_ids = in_doc_sha1s.empty? ? [] : Upload.where(sha1: in_doc_sha1s).pluck(:id)
+
+      existing_ids = UploadReference.where(target: @model).pluck(:upload_id)
+      to_add = in_doc_ids - existing_ids
+      to_remove = existing_ids.empty? ? [] : (existing_ids & hotlinked_upload_ids) - in_doc_ids
+      return if to_add.empty? && to_remove.empty?
+
+      if to_add.any?
+        now = Time.zone.now
+        UploadReference.insert_all(
+          to_add.map do |upload_id|
+            {
+              upload_id: upload_id,
+              target_type: Chat::Message.polymorphic_name,
+              target_id: @model.id,
+              created_at: now,
+              updated_at: now,
+            }
+          end,
+        )
+      end
+
+      UploadReference.where(target: @model, upload_id: to_remove).delete_all if to_remove.any?
+
+      @model.association(:upload_references).reset
+      @model.association(:uploads).reset
     end
 
     def process_thumbnails
@@ -67,7 +130,7 @@ module Chat
         .css("img")
         .each do |img|
           if img["class"]&.include?("emoji") || img["class"]&.include?("avatar") ||
-               img["data-base62-sha1"].blank?
+               img["data-base62-sha1"].blank? || img.ancestors(".onebox, .onebox-body").any?
             next
           end
 
@@ -80,6 +143,14 @@ module Chat
             img["class"] = "#{img["class"]} lightbox".strip
           end
         end
+    end
+
+    def hotlinked_map
+      @hotlinked_map ||= @model.hotlinked_media.preload(:upload).index_by(&:url)
+    end
+
+    def hotlinked_upload_ids
+      hotlinked_map.values.select(&:downloaded?).filter_map(&:upload_id)
     end
 
     def large_images
