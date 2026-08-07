@@ -19,10 +19,6 @@ module DiscourseDataExplorer
       100_000
     end
 
-    def temperature
-      0.2
-    end
-
     def system_prompt
       <<~PROMPT
         You are a PostgreSQL expert that generates queries for Discourse Data Explorer.
