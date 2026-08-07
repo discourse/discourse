@@ -1,6 +1,12 @@
 en:
   admin_js:
     admin:
+      api:
+        scopes:
+          descriptions:
+            queries:
+              read: "Read saved Data Explorer queries, one or many."
+              create: "Create a saved Data Explorer query."
       site_settings:
         categories:
           discourse_data_explorer: "Discourse Data Explorer"

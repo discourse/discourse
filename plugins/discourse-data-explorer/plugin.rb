@@ -32,7 +32,38 @@ end
 
 require_relative "lib/discourse_data_explorer/engine"
 
+# JSON:API Kit: jsonapi-serializer is the rendering layer and pagy the keyset
+# pagination engine; include/fields/pagination/deserialization are handled by
+# JsonApiKit::BaseController. See docs/api-modernization-exploration.md.
+require "jsonapi/serializer"
+# The Kit namespace (incl. the version registry accessor). Required explicitly:
+# the patch require below defines the JsonApiKit constant ahead of Zeitwerk, so
+# the namespace file would otherwise never autoload.
+require_relative "lib/discourse_data_explorer/json_api_kit"
+# Patch jsonapi-serializer's nested-include linkage bug (lazy_load_data + nested leaf drops
+# the leaf's linkage). Small, owned, on a frozen gem. See the patch file + Part 9.
+require_relative "lib/discourse_data_explorer/json_api_kit/routes"
+ActionDispatch::Routing::Mapper.include(DiscourseDataExplorer::JsonApiKit::Routes)
+require_relative "lib/discourse_data_explorer/json_api_kit/lazy_nested_linkage_patch"
+FastJsonapi::SerializationCore::ClassMethods.prepend(
+  DiscourseDataExplorer::JsonApiKit::LazyNestedLinkagePatch,
+)
+
+# The plugin-facing declaration surface (docs/plugins-design.md B): one `jsonapi`
+# block per plugin, atomic. Its real home is core, next to the other plugin.rb
+# keywords; the spike defines it from the Kit's side.
+class ::Plugin::Instance
+  def jsonapi(namespace:, &block)
+    DiscourseDataExplorer::JsonApiKit.register_plugin(namespace:, &block)
+  end
+end
+
 after_initialize do
+  # A stand-in "official plugin" exercising the Kit's plugin surface for
+  # real — its contributions show up in the generated API docs. See
+  # lib/discourse_data_explorer/run_stats.rb.
+  DiscourseDataExplorer::RunStats.register!(self)
+
   GlobalSetting.add_default(:max_data_explorer_api_reqs_per_10_seconds, 2)
 
   # Available options:

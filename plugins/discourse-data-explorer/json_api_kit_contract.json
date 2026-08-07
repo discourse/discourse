@@ -1,0 +1,38 @@
+{
+  "queries": {
+    "type": "queries",
+    "attributes": [
+      "created_at",
+      "description",
+      "hidden",
+      "name",
+      "query",
+      "ran_at",
+      "updated_at"
+    ],
+    "relationships": {
+      "user": "to_one",
+      "groups": "to_many"
+    },
+    "filters": [
+      "q"
+    ],
+    "sorts": [
+      "name",
+      "ran_at",
+      "user.username"
+    ],
+    "default_sort": {
+      "ran_at": "desc"
+    },
+    "stats": {
+      "total": "count"
+    },
+    "includes": [
+      "groups",
+      "user",
+      "user.groups"
+    ],
+    "max_page_size": 100
+  }
+}
