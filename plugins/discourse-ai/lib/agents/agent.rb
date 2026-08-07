@@ -89,6 +89,7 @@ module DiscourseAi
         def all_available_tools
           tools = [
             Tools::ListCategories,
+            Tools::ListUsers,
             Tools::Time,
             Tools::Search,
             Tools::Read,
