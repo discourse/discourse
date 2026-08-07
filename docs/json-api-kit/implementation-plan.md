@@ -112,8 +112,16 @@ to change. Two smaller decisions in the same area: a resource that declares no `
 `model.all`, and a `default_sort` may only name a sort the resource declares — one vocabulary, and a
 typo fails at the first read rather than in SQL.
 
-**Request** (`lib/json_api_kit/request/`) — one object per reserved parameter family, each strict by
-construction, so "unknown parameter → 400" is not a separate concern:
+**`Request`** (`lib/json_api_kit/request.rb`) — what a caller brought: what they asked for, and who
+they are. Built 2026-08-07. It names every parameter the kit reads (`ordering`, `filtering`,
+`page_size`, `after`, `before`, `guardian`) and **refuses anything else**, one level down as well, so
+`sorts:` or `page: { sise: 2 }` raises rather than being silently dropped — a request the kit ignores
+is one a caller believes was honoured. It holds no parsing and no casting: whether `page[size]` is a
+number at all is the spec's business, settled before a resource is asked anything.
+
+**Wire parsing** (`lib/json_api_kit/request/`) — one object per reserved parameter family, each strict
+by construction, so "unknown parameter → 400" is not a separate concern. These turn JSON:API spelling
+into what `Request` takes, and belong with the controller in slice 2:
 
 - `Request::Fields`, `Request::Include`, `Request::Filters`, `Request::Sort`, `Request::Page`,
   `Request::Version`, `Request::Document` (writes).
@@ -493,7 +501,12 @@ which is also what reversal means.
 > **two measured blocks over the same SQL in one process are order-dependent** — whichever runs second
 > is consistently ~40% slower (0.38 → 0.55 ms), which read as "the declared order is slower than a
 > hand-built keyset" until the blocks were swapped and the gap swapped with them. Compare like-for-like
-> positions, not like-for-like objects.
+> positions, not like-for-like objects — and note that swapping *blocks* is not enough either, since
+> the first block in a process absorbs the warm-up for the whole stack: on 2026-08-07 that read as the
+> full `Resource.all` path costing 2× a hand-built keyset. **Interleave the variants per iteration and
+> report medians.** Done that way, 300 runs each: hand-built 0.323 ms median, `Resource.all` → `Query`
+> 0.341 ms — the 0.018 ms between them being exactly the sum of the parts measured on their own
+> (`Request.new` 0.001, building the order 0.006, `filters.apply` 0.007, `Cursor.parse` 0.002).
 
 ### Fixed 2026-08-06: nulls outside the segmented path were compared wrongly
 

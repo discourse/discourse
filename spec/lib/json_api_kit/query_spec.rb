@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Query do
-  subject(:query) { described_class.new(resource, params, guardian:, scoped_to:) }
+  subject(:query) { described_class.new(resource, request, scoped_to:) }
 
   fab!(:first_topic) do
     Fabricate(:topic, title: "Segments of a listing", created_at: Time.utc(2026, 8, 1))
@@ -20,9 +20,12 @@ RSpec.describe JsonApiKit::Query do
       default_sort created_at: :asc
     end
   end
+  let(:request) { JsonApiKit::Request.new(params, guardian:) }
   let(:params) { {} }
   let(:guardian) { Guardian.new }
   let(:scoped_to) { nil }
+
+  def request_for(asked) = JsonApiKit::Request.new(asked, guardian: Guardian.new)
 
   describe ".new" do
     let(:params) { { sort: { secrets: :asc } } }
@@ -46,9 +49,9 @@ RSpec.describe JsonApiKit::Query do
     let(:params) { { page: { size: 2 } } }
 
     it "names the page the listing carries on with" do
-      expect(
-        described_class.new(resource, { page: { after: following } }, guardian:).records,
-      ).to eq([third_topic])
+      expect(described_class.new(resource, request_for(page: { after: following })).records).to eq(
+        [third_topic],
+      )
     end
 
     context "when the page holds the last row of the listing" do
@@ -70,14 +73,8 @@ RSpec.describe JsonApiKit::Query do
     end
 
     context "with a page read from further in" do
-      let(:params) do
-        {
-          page: {
-            size: 2,
-            after: described_class.new(resource, {}, guardian:).rows.first.cursor.to_s,
-          },
-        }
-      end
+      let(:first_cursor) { described_class.new(resource, request_for({})).rows.first.cursor.to_s }
+      let(:params) { { page: { size: 2, after: first_cursor } } }
 
       it "names the page it was read on from" do
         expect(preceding).to be_present

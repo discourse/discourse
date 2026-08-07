@@ -29,7 +29,7 @@ module JsonApiKit
         # A listing of this resource, read lazily for whoever is asking, and kept to another
         # listing's rows when it is read as part of one.
         def all(params = {}, guardian:, scoped_to: nil)
-          Query.new(self, params, guardian:, scoped_to:)
+          Query.new(self, Request.new(params, guardian:), scoped_to:)
         end
       end
     end

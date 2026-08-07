@@ -2,16 +2,15 @@
 
 module JsonApiKit
   # A listing being read: the sequence from the rows a resource exposes to the records of one page,
-  # in the one place that knows it. What a caller asks for is JSON:API in concept and ours in shape,
-  # a controller having already checked it against the spec, so nothing here parses a request.
+  # in the one place that knows it. A resource says what may be asked of it, a request says what was
+  # asked, and this is where the two meet.
   #
   # Nothing runs until records are asked for, which is what lets a query be handed on: a sideload
   # and a nested route are this same object scoped to another listing's rows.
   class Query
-    def initialize(resource, params = {}, guardian:, scoped_to: nil)
+    def initialize(resource, request, scoped_to: nil)
       @resource = resource
-      @params = params
-      @guardian = guardian
+      @request = request
       @scoped_to = scoped_to
     end
 
@@ -26,7 +25,9 @@ module JsonApiKit
 
     private
 
-    attr_reader :resource, :params, :guardian, :scoped_to
+    attr_reader :resource, :request, :scoped_to
+
+    delegate :guardian, :after, :before, to: :request, private: true
 
     def page = @page ||= Pagination::Paginator.for(scope, order:, size:, after:, before:)
 
@@ -37,20 +38,12 @@ module JsonApiKit
       filtered.merge(scoped_to)
     end
 
-    def filtered = resource.filters.apply(available_rows, params[:filter])
+    def filtered = resource.filters.apply(available_rows, request.filtering)
 
     def available_rows = resource.scope_for(guardian)
 
-    def order = resource.order(params[:sort])
+    def order = resource.order(request.ordering)
 
-    def size = resource.page_limits.size(params.dig(:page, :size))
-
-    # A cursor is opaque on the way out and on the way in, so a caller hands back what it was
-    # given rather than anything it had to understand.
-    def after = cursor(params.dig(:page, :after))
-
-    def before = cursor(params.dig(:page, :before))
-
-    def cursor(raw) = raw && Pagination::Cursor.parse(raw)
+    def size = resource.page_limits.size(request.page_size)
   end
 end
