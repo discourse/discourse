@@ -1,5 +1,5 @@
 import { module, test } from "qunit";
-import { computeZoomViewSize } from "discourse/plugins/discourse-calendar/discourse/lib/zoom-component-view-dom";
+import { computeZoomViewSize } from "discourse/plugins/discourse-events/discourse/lib/zoom-component-view-dom";
 
 function elementOfWidth(width) {
   return { getBoundingClientRect: () => ({ width }) };
