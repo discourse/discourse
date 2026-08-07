@@ -11,6 +11,7 @@ module JsonApiKit
     include Naming
     include Sorting
     include Filtering
+    include Paging
     include QueryInterface
   end
 end

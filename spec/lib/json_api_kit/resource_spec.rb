@@ -26,6 +26,7 @@ RSpec.describe JsonApiKit::Resource do
       default_sort ran_at: :desc
       unique_by :title, :id
       filter :title
+      page default: 2, max: 10
     end
   end
 
@@ -235,6 +236,22 @@ RSpec.describe JsonApiKit::Resource do
 
       it "offers it all the same, a plugin declaring long after the class body ran" do
         expect(topic_resource.filters.fetch("closed").name).to eq("closed")
+      end
+    end
+  end
+
+  describe ".page" do
+    subject(:size) { topic_resource.page_limits.size(nil) }
+
+    it "declares the size a listing is read at when a request asks for none" do
+      expect(size).to eq(2)
+    end
+
+    context "when the resource declares no limits of its own" do
+      subject(:size) { Class.new(described_class) { model Topic }.page_limits.size(nil) }
+
+      it "reads a page of the size the kit reads by default" do
+        expect(size).to eq(JsonApiKit::Declarations::PageLimits::DEFAULT)
       end
     end
   end

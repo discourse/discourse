@@ -79,7 +79,7 @@ RSpec.describe "reading through a resource" do
     end
   end
 
-  describe "paging", pending: "slice 1: page limits and cursor parameters" do
+  describe "paging" do
     let(:params) { { sort: { created_at: :asc }, page: { size: 2 } } }
 
     it "reads a page of the size the request asks for" do
