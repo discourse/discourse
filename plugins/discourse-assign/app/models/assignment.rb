@@ -70,7 +70,9 @@ class Assignment < ActiveRecord::Base
 
   def create_missing_notifications!
     assigned_users.each do |user|
+      next if !user_can_see_target?(user)
       next if user.notifications.for_assignment(self).exists?
+
       DiscourseAssign::CreateNotification.call(
         assignment: self,
         user: user,
@@ -122,6 +124,20 @@ class Assignment < ActiveRecord::Base
   end
 
   private
+
+  def user_can_see_target?(user)
+    return false if !target
+
+    guardian = Guardian.new(user)
+
+    if target.is_a?(Topic)
+      guardian.can_see_topic?(target)
+    elsif target.is_a?(Post)
+      guardian.can_see_post?(target)
+    else
+      false
+    end
+  end
 
   def default_status
     self.status ||= Assignment.default_status if SiteSetting.enable_assign_status
