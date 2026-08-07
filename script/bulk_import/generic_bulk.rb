@@ -585,6 +585,7 @@ class BulkImport::Generic < BulkImport::Base
         row["username"] = "anon_#{anon_username_suffix}"
         row["email"] = "#{row["username"]}#{UserAnonymizer::EMAIL_SUFFIX}"
         row["name"] = nil
+        row["ip_address"] = nil
         row["registration_ip_address"] = nil
         row["date_of_birth"] = nil
         row["title"] = nil
@@ -613,6 +614,7 @@ class BulkImport::Generic < BulkImport::Base
         suspended_at: suspended_at,
         suspended_till: suspended_till,
         trust_level: row["trust_level"],
+        ip_address: row["ip_address"],
         registration_ip_address: row["registration_ip_address"],
         date_of_birth: to_date(row["date_of_birth"]),
         primary_group_id: group_id_from_imported_id(row["primary_group_id"]),

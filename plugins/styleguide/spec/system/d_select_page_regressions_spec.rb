@@ -186,8 +186,8 @@ describe "UiKit | DSelect page regressions" do
 
     examples.each do |group, (identifier, component_name)|
       visit "/styleguide/molecules/select?group=#{group}"
-      styleguide.show_example_source(identifier)
-      expect(styleguide).to have_example_source(
+      styleguide.show_example_source_by_trigger(identifier)
+      expect(styleguide).to have_example_source_by_trigger(
         identifier,
         text: "export default class #{component_name}",
       )

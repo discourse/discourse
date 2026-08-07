@@ -306,6 +306,7 @@ class Topic < ActiveRecord::Base
   belongs_to :og_image_upload, class_name: "Upload"
   has_many :topic_thumbnails, through: :image_upload
 
+  after_update :clear_page_not_found_topics_cache, if: :moved_to_read_restricted_category?
   after_save :regenerate_og_image
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
@@ -441,6 +442,15 @@ class Topic < ActiveRecord::Base
     elsif saved_changes[:category_id] && category&.read_restricted?
       UserProfile.remove_featured_topic_from_all_profiles(self)
     end
+  end
+
+  def self.clear_page_not_found_topics_cache!
+    Discourse.cache.keys("page_not_found_topics:*").each { |key| Discourse.cache.redis.del(key) }
+  end
+
+  def clear_page_not_found_topics_cache
+    self.class.clear_page_not_found_topics_cache!
+    DB.after_commit { self.class.clear_page_not_found_topics_cache! }
   end
 
   def regenerate_og_image
@@ -2252,6 +2262,10 @@ class Topic < ActiveRecord::Base
   end
 
   private
+
+  def moved_to_read_restricted_category?
+    saved_change_to_category_id? && category&.read_restricted?
+  end
 
   def invite_to_private_message(invited_by, target_user, guardian)
     if !guardian.can_send_private_message?(target_user)

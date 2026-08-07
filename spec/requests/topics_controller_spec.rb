@@ -342,6 +342,39 @@ RSpec.describe TopicsController do
         expect(response).to be_forbidden
       end
 
+      it "ignores unrelated post IDs without exposing their reviewables" do
+        restricted_category = Fabricate(:private_category, group: Fabricate(:group))
+        restricted_topic = Fabricate(:topic, category: restricted_category)
+        restricted_post = Fabricate(:post, topic: restricted_topic)
+        restricted_reviewable =
+          Fabricate(
+            :reviewable_flagged_post,
+            target: restricted_post,
+            target_created_by: restricted_post.user,
+            topic: restricted_topic,
+            category: restricted_category,
+          )
+
+        expect(Reviewable.list_for(user, preload: false)).not_to include(restricted_reviewable)
+
+        post "/t/#{topic.id}/move-posts.json",
+             params: {
+               title: "Logan is a good movie",
+               post_ids: [p2.id, restricted_post.id],
+               category_id: category.id,
+             }
+
+        aggregate_failures do
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["success"]).to eq(true)
+          expect(restricted_reviewable.reload).to have_attributes(
+            topic_id: restricted_topic.id,
+            category_id: restricted_category.id,
+          )
+          expect(Reviewable.list_for(user, preload: false)).not_to include(restricted_reviewable)
+        end
+      end
+
       it "does not allow posts outside of the category to be moved" do
         topic.update!(category: nil)
 

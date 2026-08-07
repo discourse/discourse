@@ -604,6 +604,59 @@ RSpec.describe ApplicationController do
         end
       end
 
+      it "does not retain topics moved to a restricted category" do
+        Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
+        topic = Fabricate(:topic_with_op, title: "restricted 404 cache topic")
+        private_category = Fabricate(:private_category, group: Group[:staff])
+
+        get "/missing-route"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to include(topic.title)
+
+        admin = sign_in(Fabricate(:admin))
+        put "/t/#{topic.id}.json", params: { category_id: private_category.id }
+
+        expect(response).to have_http_status(:ok)
+
+        delete "/session/#{admin.username}.json"
+        get "/missing-route"
+
+        aggregate_failures do
+          expect(response).to have_http_status(:not_found)
+          expect(response.body).not_to include(topic.title)
+        end
+      end
+
+      it "does not retain topics after a category becomes restricted" do
+        Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
+        category = Fabricate(:category)
+        topic = Fabricate(:topic_with_op, title: "restricted category 404 cache topic", category:)
+
+        get "/missing-route"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to include(topic.title)
+
+        admin = sign_in(Fabricate(:admin))
+        put "/categories/#{category.id}.json",
+            params: {
+              permissions: {
+                Group[:staff].name => CategoryGroup.permission_types[:full],
+              },
+            }
+
+        expect(response).to have_http_status(:ok)
+
+        delete "/session/#{admin.username}.json"
+        get "/missing-route"
+
+        aggregate_failures do
+          expect(response).to have_http_status(:not_found)
+          expect(response.body).not_to include(topic.title)
+        end
+      end
+
       it "should cache results" do
         Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
         Discourse.cache.delete("page_not_found_topics:fr")

@@ -5167,6 +5167,7 @@ zh_CN:
     post_restored_by_author: "帖子被作者恢复。"
     post_deleted_by_author_after_penalty: >-
       该帖子在用户受到处罚后被作者删除。在不恢复帖子的情况下审核处罚。
+    target_user_deleted: "由于用户帐户已被删除，因此自动忽略。"
     priorities:
       low: "低"
       medium: "中"

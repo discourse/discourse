@@ -25,10 +25,9 @@ export default modifier(
     // already mounted. An element can be handed over directly, which is the only race-free
     // option when the root and the observed node mount in the same render.
     let rootElement = document;
-    if (typeof root === "string") {
-      rootElement = document.querySelector(root);
-    } else if (root) {
-      rootElement = root;
+    if (root) {
+      rootElement =
+        typeof root === "string" ? document.querySelector(root) : root;
     }
 
     const observer = new IntersectionObserver(

@@ -122,7 +122,7 @@ describe DiscoursePostEvent::EventSerializer do
     end
 
     context "when event is a livestream" do
-      let(:livestream_url) { "https://example.com/live" }
+      let(:livestream_url) { "https://www.youtube.com/live/abc123" }
       # The event must live on the topic's first post: `Event#before_save` clears
       # the `livestream` flag on any other post.
       let(:livestream_topic) { Fabricate(:topic, category: category) }

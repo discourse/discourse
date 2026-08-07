@@ -495,21 +495,21 @@ RSpec.describe CategoriesController do
   describe "extensibility event" do
     before { sign_in(admin) }
 
-    it "triggers a extensibility event" do
-      event =
-        DiscourseEvent
-          .track_events do
-            put "/categories/#{category.id}.json",
-                params: {
-                  name: "hello",
-                  color: "ff0",
-                  text_color: "fff",
-                }
-          end
-          .last
+    it "triggers the category updated event once" do
+      events =
+        DiscourseEvent.track_events do
+          put "/categories/#{category.id}.json",
+              params: {
+                name: "hello",
+                color: "ff0",
+                text_color: "fff",
+              }
+        end
 
-      expect(event[:event_name]).to eq(:category_updated)
-      expect(event[:params].first).to eq(category)
+      category_updated_events = events.select { |event| event[:event_name] == :category_updated }
+
+      expect(category_updated_events.size).to eq(1)
+      expect(category_updated_events.pluck(:params).map(&:first)).to all(eq(category))
     end
   end
 

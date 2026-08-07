@@ -159,7 +159,7 @@
         outline: 0;
       }
 
-      .d-icon {
+      .d-icon:not(.badge-category *) {
         font-size: var(--font-down-1-rem);
         color: var(--primary-medium);
       }

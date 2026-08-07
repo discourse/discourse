@@ -17,11 +17,14 @@ import StyleguideSubnav from "./styleguide-subnav";
  * @param {Array<{id: string, title: string, description?: string}>} groups - ordered manifest;
  *   the single source of truth for both the subnav and the group order.
  * @param {object} section - the styleguide section, needed to build the `<LinkTo>` route models.
- * @param {string} [active] - the requested group id, from the query param.
+ * @param {string} [active] - the requested group id. This is the `group` query param, which the
+ *   section component receives as `@group` and passes in here; the name differs because from
+ *   this component's side it is the active selection rather than a URL parameter.
  * @param {string} [ariaLabel] - accessible name for the sub-navigation landmark.
  *
  * Yields a curried `Group` component, so a call site writes `<Group @id="data">…</Group>` and
- * the active-id comparison is supplied for it.
+ * the active-id comparison is supplied for it. `Group` in turn yields a `StyleguideExample`
+ * curried to the right heading level.
  */
 export default class StyleguideGroups extends Component {
   @service a11y;
@@ -33,22 +36,25 @@ export default class StyleguideGroups extends Component {
     return (requested ?? groups[0])?.id;
   }
 
-  get activeGroup() {
+  get #activeGroup() {
     return (this.args.groups ?? []).find((group) => group.id === this.activeId);
   }
 
+  // `didUpdate` hands over the element it is installed on, which is what keeps the lookup below
+  // scoped to THIS instance's body. A document-wide query would focus the first group on the
+  // page, which is the wrong one the moment a section renders two of these.
   @action
-  handleGroupChange() {
+  handleGroupChange(element) {
     // The pill that was clicked survives the swap, so focus is usually fine. It is not fine when
     // the group changed via Back/Forward while focus sat inside the outgoing group's body: that
     // node unmounts and focus falls to `<body>`. Only then is it ours to restore.
     if (document.activeElement === document.body) {
-      document.querySelector(".styleguide-group")?.focus();
+      element.querySelector(".styleguide-group")?.focus();
     }
 
     // Nothing else signals to a screen reader that the page's content was replaced.
-    if (this.activeGroup?.title) {
-      this.a11y.announce(this.activeGroup.title, "polite");
+    if (this.#activeGroup?.title) {
+      this.a11y.announce(this.#activeGroup.title, "polite");
     }
 
     scrollTop();

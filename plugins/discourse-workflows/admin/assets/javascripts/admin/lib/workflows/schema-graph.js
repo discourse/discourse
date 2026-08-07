@@ -2,6 +2,7 @@ import {
   normalizeSourceOutputIndex,
   normalizeTargetInputIndex,
 } from "./graph-constants";
+import { outputSchemasFromResolver } from "./node-output-schemas";
 import { resolveNodeTypeVersion, typeVersionForNode } from "./node-types";
 import { fieldDisplayState, fieldVisible } from "./property-engine";
 
@@ -90,6 +91,60 @@ function overlaySchemas(inputSchema, declaredSchema) {
   return merged;
 }
 
+function mergeSchemaPair(left, right) {
+  const merged = { ...left, ...right };
+  if (!isObjectSchema(left) || !isObjectSchema(right)) {
+    return merged;
+  }
+
+  const properties = { ...(left.properties || {}) };
+  for (const [name, value] of Object.entries(right.properties || {})) {
+    const existing = properties[name];
+    properties[name] =
+      existing && isObjectSchema(existing) && isObjectSchema(value)
+        ? mergeSchemaPair(existing, value)
+        : value;
+  }
+  merged.properties = properties;
+
+  const required = [
+    ...new Set([...(left.required || []), ...(right.required || [])]),
+  ];
+  if (required.length) {
+    merged.required = required;
+  } else {
+    delete merged.required;
+  }
+
+  return merged;
+}
+
+function augmentSchema(schema, extensions) {
+  const usable = extensions.filter((extension) => !isUnknown(extension));
+  if (!usable.length) {
+    return schema;
+  }
+
+  if (isAnyOfWrapper(schema)) {
+    return unionSchemas(
+      schema.anyOf.map((branch) => augmentSchema(branch, usable))
+    );
+  }
+
+  return usable.reduce(mergeSchemaPair, schema);
+}
+
+function activeOutputExtensions(contract, configuration) {
+  return (contract.extensions || [])
+    .filter((extension) =>
+      fieldVisible(
+        { display_options: extension.display_options },
+        configuration
+      )
+    )
+    .map((extension) => extension.schema || {});
+}
+
 function resolvedOutputSchema(contract, inputSchema = {}) {
   switch (contract.mode) {
     case "passthrough":
@@ -161,24 +216,41 @@ function nodeTypeDefinitionForNode(node, graph) {
   return resolveNodeTypeVersion(definition, typeVersionForNode(node));
 }
 
-function ownOutputContracts(node, graph, configuration) {
+function ownOutputResolution(node, graph, configuration) {
   const definition = nodeTypeDefinitionForNode(node, graph);
   if (!definition) {
-    return [[{ mode: "replace", schema: {} }]];
+    return { contracts: [[{ mode: "replace", schema: {} }]], extensions: [[]] };
   }
 
   const currentConfiguration = configuration ?? node.configuration ?? {};
+  const resolved = outputSchemasFromResolver(
+    definition.output_schema_resolver,
+    currentConfiguration
+  );
+  if (resolved) {
+    return {
+      contracts: resolved.map((schema) => [{ mode: "replace", schema }]),
+      extensions: resolved.map(() => []),
+    };
+  }
+
   const serializedContracts = definition.output_contracts;
-  const contracts = Array.isArray(serializedContracts)
+  const declarations = Array.isArray(serializedContracts)
     ? serializedContracts
     : [];
   const outputCount =
-    contracts.length ||
+    declarations.length ||
     (definition.outputs || definition.ports || [null]).length;
 
-  return Array.from({ length: outputCount }, (_, index) =>
-    activeOutputContracts(contracts[index] || {}, currentConfiguration)
-  );
+  const contracts = [];
+  const extensions = [];
+  for (let index = 0; index < outputCount; index++) {
+    const declaration = declarations[index] || {};
+    contracts.push(activeOutputContracts(declaration, currentConfiguration));
+    extensions.push(activeOutputExtensions(declaration, currentConfiguration));
+  }
+
+  return { contracts, extensions };
 }
 
 function nodeKey(node) {
@@ -223,10 +295,10 @@ export function resolveDeclaredOutputSchemas(
     incoming.sort(connectionOrder);
   }
 
-  const contractsByKey = new Map(
+  const resolutionByKey = new Map(
     nodes.map((candidate) => [
       nodeKey(candidate),
-      ownOutputContracts(
+      ownOutputResolution(
         candidate,
         graph,
         configurationOverrides.get(nodeKey(candidate))
@@ -267,7 +339,7 @@ export function resolveDeclaredOutputSchemas(
       changed = false;
       for (const candidate of nodes) {
         const key = nodeKey(candidate);
-        const contracts = contractsByKey.get(key);
+        const { contracts, extensions } = resolutionByKey.get(key);
         let inputSchema = {};
 
         if (
@@ -279,9 +351,14 @@ export function resolveDeclaredOutputSchemas(
           }
         }
 
-        const resolved = contracts.map((port) =>
-          unionSchemas(
-            port.map((contract) => resolvedOutputSchema(contract, inputSchema))
+        const resolved = contracts.map((port, index) =>
+          augmentSchema(
+            unionSchemas(
+              port.map((contract) =>
+                resolvedOutputSchema(contract, inputSchema)
+              )
+            ),
+            extensions[index] || []
           )
         );
         if (
@@ -304,7 +381,7 @@ export function resolveDeclaredOutputSchemas(
       promoted = true;
       outputSchemas.set(
         key,
-        contractsByKey.get(key).map(() => ({}))
+        resolutionByKey.get(key).contracts.map(() => ({}))
       );
     }
   }

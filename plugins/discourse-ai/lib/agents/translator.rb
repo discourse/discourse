@@ -33,10 +33,6 @@ module DiscourseAi
       def response_format
         [{ "key" => "output", "type" => "string" }]
       end
-
-      def temperature
-        0.2
-      end
     end
   end
 end

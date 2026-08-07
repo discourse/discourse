@@ -2848,7 +2848,7 @@ en:
     verbose_user_api_key_device_auth_logging: "Log detailed diagnostics for the user API key device authorization flow"
 
     tagging_enabled: "Enable tags on topics? See the <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Admin guide to tags on Meta</a> for more information."
-    create_tag_allowed_groups: "Groups that are allowed to create tags. Admins and moderators can always create tags."
+    create_tag_allowed_groups: "Groups that are allowed to create tags. Admins can always create tags."
     edit_tags_allowed_groups: "Groups that are allowed to edit tags, tag descriptions, and tag synonyms."
     max_tags_per_topic: "The maximum tags that can be applied to a topic."
     enable_max_tags_per_email_subject: "Use {{setting:max_tags_per_email_subject}} when generating the subject of an email"
@@ -2950,7 +2950,7 @@ en:
     content_localization_language_switcher: "Show a language switcher in the header, allowing visitors to switch between translated versions of Discourse and user-contributed content. Uses languages defined in {{setting:content_localization_supported_locales}}"
     content_localization_crawler_param: "Serve localized content to web crawlers when {{setting:content_localization_enabled}} and {{setting:set_locale_from_param}} is enabled. The list of supported locales is defined in {{setting:content_localization_supported_locales}}."
     content_localization_use_default_locale_when_unsupported: "Serve localized content in the site's default locale to users whose preferred language is not listed in 'content localization supported locales'."
-    content_localization_allow_author_localization: "Allow authors update localizations of their own topics and posts via the post menu."
+    content_localization_allow_author_localization: "Allow authors to update localizations of their own topics and posts via the post menu."
     nested_replies_enabled: "Enable the nested replies view for topics."
     nested_replies_default: "Use nested replies as the default view for all topics."
     nested_replies_hot_sort_enabled: "Allow people to sort nested replies by a demand-driven hot score. Hot scores are calculated in the background only for topics where hot sorting is requested."
@@ -5985,6 +5985,15 @@ en:
     title: "Developer Mode"
     enable_rack_mini_profiler: "Enable Rack Mini Profiler to persist across session changes for 1 hour"
     enter: "Enter Developer Mode"
+  design_wizard:
+    errors:
+      palette_unavailable: "One of the selected color palettes is not available for the selected theme."
+      site_settings_update_failed: "The site settings could not be updated."
+    palette_pairs:
+      default: "Default"
+      wcag: "WCAG"
+      solarized: "Solarized"
+      dracula: "Dracula"
   wizard:
     title: "Discourse Setup"
     step:

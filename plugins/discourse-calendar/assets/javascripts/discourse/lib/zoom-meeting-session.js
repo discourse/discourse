@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { setOwner } from "@ember/owner";
 import { isEmpty } from "@ember/utils";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import fetchZoomJoinPayload from "./fetch-zoom-join-payload";
 import { loadZoomMeetingSdkEmbedded } from "./load-zoom-meeting-sdk";
@@ -41,6 +42,8 @@ export default class ZoomMeetingSession {
     this.canJoin = canJoin;
     this.onBeforeJoinAttempt = onBeforeJoinAttempt;
     this.onJoined = onJoined;
+
+    document.addEventListener("visibilitychange", this.onVisibilityChange);
   }
 
   teardown() {
@@ -48,6 +51,7 @@ export default class ZoomMeetingSession {
     clearInterval(this.retryTimer);
     cancelAnimationFrame(this.layoutFrame);
     cancelAnimationFrame(this.videoSyncFrame);
+    document.removeEventListener("visibilitychange", this.onVisibilityChange);
     this.zoomClient?.leaveMeeting?.();
   }
 
@@ -126,13 +130,37 @@ export default class ZoomMeetingSession {
     } finally {
       this.isJoining = false;
 
-      this.layoutFrame = window.requestAnimationFrame(() =>
-        syncZoomLayout(this.element)
-      );
-      this.videoSyncFrame = window.requestAnimationFrame(() =>
-        this.syncVideoSize()
-      );
+      this.scheduleViewSync();
     }
+  }
+
+  // Both the frame callbacks below and the resize observer the modifier
+  // attaches are suspended while the document is hidden, so a join that lands
+  // in a background tab leaves Zoom rendering at whatever size it was last
+  // told about. `onVisibilityChange` picks the work back up on return.
+  scheduleViewSync() {
+    if (document.hidden) {
+      return;
+    }
+
+    cancelAnimationFrame(this.layoutFrame);
+    cancelAnimationFrame(this.videoSyncFrame);
+
+    this.layoutFrame = window.requestAnimationFrame(() =>
+      syncZoomLayout(this.element)
+    );
+    this.videoSyncFrame = window.requestAnimationFrame(() =>
+      this.syncVideoSize()
+    );
+  }
+
+  @bind
+  onVisibilityChange() {
+    if (document.hidden || this.#tornDown || !this.zoomClient) {
+      return;
+    }
+
+    this.scheduleViewSync();
   }
 
   async performJoin() {

@@ -9,12 +9,13 @@ class ReviewableClaimedTopicsController < ApplicationController
     guardian.ensure_can_claim_reviewable_topic!(topic, automatic)
 
     begin
-      ReviewableClaimedTopic.create!(user_id: current_user.id, topic_id: topic.id, automatic:)
+      claim =
+        ReviewableClaimedTopic.create!(user_id: current_user.id, topic_id: topic.id, automatic:)
     rescue ActiveRecord::RecordInvalid
       return render_json_error(I18n.t("reviewables.conflict"), status: 409)
     end
 
-    topic.reviewables.find_each { |reviewable| reviewable.log_history(:claimed, current_user) }
+    claim.log_topic_history(:claimed, current_user)
 
     notify_users(topic, current_user, automatic)
     render json: success_json
@@ -26,12 +27,13 @@ class ReviewableClaimedTopicsController < ApplicationController
     if topic.blank? || !guardian.can_claim_reviewable_topic?(topic, automatic)
       raise Discourse::NotFound
     end
-    deleted_count = ReviewableClaimedTopic.where(topic_id: topic.id).delete_all
-    if deleted_count > 0
-      topic.reviewables.find_each { |reviewable| reviewable.log_history(:unclaimed, current_user) }
+
+    if claim = ReviewableClaimedTopic.find_by(topic_id: topic.id)
+      claim.delete
+      claim.log_topic_history(:unclaimed, current_user)
+      notify_users(topic, current_user, claim.automatic, claimed: false)
     end
 
-    notify_users(topic, current_user, automatic, claimed: false)
     render json: success_json
   end
 

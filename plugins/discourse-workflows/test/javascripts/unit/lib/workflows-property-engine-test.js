@@ -406,6 +406,20 @@ module("Unit | Utility | workflows property engine", function () {
     );
   });
 
+  test("tests membership when the anchor is a multi-select", function (assert) {
+    const shown = { display_options: { show: { extensions: ["stats"] } } };
+
+    assert.true(fieldVisible(shown, { extensions: ["stats", "ips"] }));
+    assert.true(fieldVisible(shown, { extensions: ["stats"] }));
+    assert.false(fieldVisible(shown, { extensions: ["ips"] }));
+    assert.false(fieldVisible(shown, { extensions: [] }));
+    assert.strictEqual(
+      fieldDisplayState(shown, { extensions: "={{ $json.extensions }}" }),
+      "indeterminate",
+      "an expression anchor stays indeterminate for multi-selects too"
+    );
+  });
+
   test("treats an expression anchor as indeterminate rather than a failed rule", function (assert) {
     const expression = "={{ $json.op }}";
     const state = fieldDisplayState;

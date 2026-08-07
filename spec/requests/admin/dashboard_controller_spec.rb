@@ -129,6 +129,12 @@ RSpec.describe Admin::DashboardController do
         response.parsed_body["sections"].index_by { |section| section["id"] }
       end
 
+      def signups_kpi_value
+        highlights =
+          response.parsed_body["sections"].find { |section| section["id"] == "highlights" }
+        highlights["data"]["kpis"].find { |kpi| kpi["type"] == "new_signups" }["value"]
+      end
+
       context "with highlights_data" do
         let(:highlights_data) { section_payloads["highlights"]&.dig("data") }
 
@@ -497,6 +503,23 @@ RSpec.describe Admin::DashboardController do
           expect(items.first).to include("source" => "core_report", "identifier" => "signups")
           expect(items.first["title"]).to be_present
         end
+      end
+
+      it "serves the default window from the warmed report cache" do
+        configure_dashboard_sections(%w[highlights])
+        admin.update!(last_seen_at: 1.hour.ago)
+        params = { start_date: 29.days.ago.to_date.to_s, end_date: Time.zone.now.to_date.to_s }
+
+        Jobs::WarmDashboardReports.new.execute({})
+        Fabricate(:user, created_at: 2.days.ago)
+
+        get "/admin/dashboard.json", params: params
+        warmed_signups = signups_kpi_value
+
+        Discourse.cache.clear
+        get "/admin/dashboard.json", params: params
+
+        expect(signups_kpi_value).to eq(warmed_signups + 1)
       end
 
       it "denies non-staff users" do

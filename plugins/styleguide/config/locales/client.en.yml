@@ -12,7 +12,7 @@ en:
       example:
         toggle_code: "Toggle code sample"
         try_this: "Try this:"
-        code_region: "Source snippet"
+        code_region: "Source snippet: %{title}"
 
       categories:
         syntax: Syntax

@@ -112,10 +112,10 @@ describe "Admin AI translations" do
       )
     end
 
-    it "navigates to app language settings when clicking the app language button" do
+    it "takes the user to content localization settings when clicking the localization settings button" do
       find(".ai-localization-settings-button").click
 
-      expect(page).to have_current_path("/admin/config/localization")
+      expect(page).to have_current_path("/admin/site_settings/category/content_localization")
     end
 
     it "toggles the selected target for the upcoming details panel" do

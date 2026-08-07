@@ -74,8 +74,18 @@ module PageObjects
 
       def toggle_bool_setting(setting_name)
         setting = find_setting(setting_name)
-        setting.find(".setting-value input[type='checkbox']").click
+        PageObjects::Components::FormKitField.new(setting.find(".form-kit__field")).toggle
         save_setting(setting)
+      end
+
+      def bool_setting_checkbox(setting_name)
+        find_setting(setting_name).find(".setting-value input[type=checkbox]", visible: :all)
+      end
+
+      def submit_setting_with_keyboard(setting_name, value)
+        input = find_setting(setting_name).find(".form-kit__field input")
+        input.fill_in(with: value)
+        input.send_keys(:enter)
       end
 
       def change_number_setting(setting_name, value, save_changes = true)
@@ -171,7 +181,7 @@ module PageObjects
       end
 
       def has_disabled_input?(setting_name)
-        find_setting(setting_name).has_css?("input[disabled]")
+        find_setting(setting_name).has_css?("input[disabled]", visible: :all)
       end
 
       def has_visible_reorder_buttons?(setting_name)

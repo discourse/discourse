@@ -21,15 +21,7 @@ module DiscourseAi
 
           The title suggestions should be returned in a JSON array, under the `output` key, like this:
 
-          {
-            "output": [
-              "suggeested title #1",
-              "suggeested title #2",
-              "suggeested title #3",
-              "suggeested title #4",
-              "suggeested title #5"
-            ]
-          }
+          {"output": ["suggested title #1", "suggested title #2", "suggested title #3", "suggested title #4", "suggested title #5"]}
 
           Return only the JSON
         PROMPT
@@ -43,17 +35,15 @@ module DiscourseAi
         [
           [
             "<input>In the labyrinth of time, a solitary horse, etched in gold by the setting sun, embarked on an infinite journey.</input>",
-            <<~OUTPUT,
             {
-              "output": [
+              output: [
                 "The solitary horse",
                 "The horse etched in gold",
                 "A horse's infinite journey",
                 "A horse lost in time",
-                "A horse's last rid"
-              ]
-            }
-            OUTPUT
+                "A horse's last ride",
+              ],
+            }.to_json,
           ],
         ]
       end
