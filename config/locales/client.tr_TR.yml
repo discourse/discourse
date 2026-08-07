@@ -820,10 +820,6 @@ tr_TR:
       stale_help: "Bu sorun <b>%{username}</b> tarafından çözülmüştür."
       claim_help:
         optional: "Başkalarının incelemesini engellemek için bu ögeyi talep edebilirsiniz."
-        required: "Ögeleri inceleyebilmek için önce talepte bulunmalısınız."
-        claimed_by_you: "Bu ögeyi talep ettiniz ve inceleyebilirsiniz."
-        claimed_by_other: "Bu öge yalnızca <b>%{username}</b> adlı kullanıcı tarafından incelenebilir."
-        automatically_claimed_by: "Bu ürün şu anda <b>%{username}</b> tarafından inceleniyor."
       claim:
         title: "Bu konuyu talep et"
       unclaim:
@@ -2872,6 +2868,7 @@ tr_TR:
       subcategory_count:
         one: "+%{count} alt kategori"
         other: "+%{count} alt kategori"
+      subcategories: "+ Alt kategoriler"
       topic_count:
         one: "bu kategorideki %{count} konu"
         other: "bu kategorideki %{count} konu"
@@ -2944,6 +2941,7 @@ tr_TR:
       toggle: "Açılır filtreleri değiştir"
     d_icon_grid_picker:
       select_icon: "Simgeyi seç"
+      search_label: "Arama simgeleri"
       search_placeholder: "Arama simgeleri..."
       no_results: "Simge bulunamadı"
       results_count:

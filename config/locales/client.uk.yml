@@ -984,10 +984,6 @@ uk:
       stale_help: "Цей пункт вирішено користувачем <b>%{username}</b>."
       claim_help:
         optional: "Ви можете заявити права на цей елемент, щоб інші не могли його розглядати."
-        required: "Ви повинні заявити права на елементи, перш ніж ви зможете розглядати їх."
-        claimed_by_you: "Ви заявили права на цей елемент і можете розглядати його."
-        claimed_by_other: "Цей елемент може розглядати лише <b>%{username}</b>."
-        automatically_claimed_by: "Зараз цей елемент переглядає <b>%{username}</b>."
       claim:
         title: "Заявити права на цю тему"
       unclaim:
@@ -3273,6 +3269,7 @@ uk:
         few: "+%{count} підрозділи"
         many: "+%{count} підрозділів"
         other: "+%{count} підрозділів"
+      subcategories: "+ Підрозділи"
       topic_count:
         one: "в цьому розділі %{count} тема"
         few: "в цьому розділі %{count} теми"
@@ -3359,6 +3356,7 @@ uk:
       toggle: "Перемкнути випадаючі фільтри"
     d_icon_grid_picker:
       select_icon: "Виберіть іконку"
+      search_label: "Пошук значків"
       search_placeholder: "Пошук значків..."
       no_results: "Не знайдено піктограм"
       results_count:

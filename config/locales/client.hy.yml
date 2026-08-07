@@ -563,9 +563,6 @@ hy:
         optional: "ընտրովի"
       claim_help:
         optional: "Դուք կարող եք պահանջել այդ էլեմենտը, որպեսզի ուրիշները չկարողանան այն դիտել:  "
-        required: "Դուք պետք է նախ՝ հայտ ներկայացնեք, որպեսզի կարողանաք այն դիտեք: "
-        claimed_by_you: "Դուք վերցրել եք այդ էլեմենտը և կարող եք այն դիտել: "
-        claimed_by_other: "Այս կետը կարելի է դիտել միայն <b>%{username}</b>."
       awaiting_approval: "Հաստատմումը սպասման մեջ է"
       delete: "Ջնջել"
       settings:
@@ -2208,6 +2205,7 @@ hy:
       alt: "Alt"
       enter: "Մուտք"
     category_row:
+      subcategories: "+ Ենթակատեգորիաներ"
       topic_count:
         one: "%{count} թեմա այս կատեգորիայում"
         other: "%{count} թեմա այս կատեգորիայում"

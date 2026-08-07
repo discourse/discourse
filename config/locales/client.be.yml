@@ -1336,6 +1336,8 @@ be:
       required_at_signup: "Абавязкова"
     welcome_banner_page_visibility:
       homepage: "Галоўная старонка"
+    category_row:
+      subcategories: "+ Падкатэгорыі"
     select_kit:
       delete_item: "Выдаліць %{name}"
       components:

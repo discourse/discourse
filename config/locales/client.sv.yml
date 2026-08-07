@@ -518,9 +518,6 @@ sv:
         optional: "valfritt"
       claim_help:
         optional: "Du kan göra anspråk på detta för att förhindra andra från att granska det."
-        required: "Du måste göra anspråk innan du kan granska dem."
-        claimed_by_you: "Du har gjort anspråk på detta och kan nu granska det."
-        claimed_by_other: "Detta föremål kan enbart granskas av <b>%{username}</b>."
       awaiting_approval: "Inväntar godkännande"
       delete: "Radera"
       settings:
@@ -2175,6 +2172,7 @@ sv:
       subcategory_count:
         one: "+%{count} underkategori"
         other: "+%{count} underkategorier"
+      subcategories: "+ Underkategorier"
       topic_count:
         one: "%{count} ämne i den här kategorin"
         other: "%{count} ämnen i den här kategorin"

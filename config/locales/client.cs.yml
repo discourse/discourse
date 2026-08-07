@@ -843,10 +843,6 @@ cs:
         optional: "volitelné"
       claim_help:
         optional: "Tuto položku si můžete nárokovat, abyste zabránili ostatním v její kontrole."
-        required: "Než budete moci položky revidovat, musíte si je nárokovat."
-        claimed_by_you: "Tuto položku jste si nárokovali a můžete ji zkontrolovat."
-        claimed_by_other: "Tuto položku může revidovat pouze <b>%{username}</b>."
-        automatically_claimed_by: "Tuto položku aktuálně reviduje <b>%{username}</b>."
       claim:
         title: "Nárokovat toto téma"
       unclaim:
@@ -3022,6 +3018,7 @@ cs:
         few: "+%{count} podkategorie"
         many: "+%{count} podkategorií"
         other: "+%{count} podkategorií"
+      subcategories: "+ Podkategorie"
       topic_count:
         one: "%{count} téma v této kategorii"
         few: "%{count} témata v této kategorii"

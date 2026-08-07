@@ -858,10 +858,6 @@ de:
       stale_help: "Dieses Element wurde durch <b>%{username}</b> gelöst."
       claim_help:
         optional: "Du kannst dieses Element reservieren, damit andere es nicht überprüfen."
-        required: "Du musst Elemente reservieren, bevor du sie überprüfen kannst."
-        claimed_by_you: "Du hast dieses Element reserviert und kannst es überprüfen."
-        claimed_by_other: "Dieses Element kann nur von <b>%{username}</b> überprüft werden."
-        automatically_claimed_by: "Dieses Element wird derzeit von <b>%{username}</b> überprüft."
       claim:
         title: "Dieses Thema übernehmen"
       unclaim:
@@ -2945,6 +2941,7 @@ de:
       subcategory_count:
         one: "+%{count} Unterkategorie"
         other: "+%{count} Unterkategorien"
+      subcategories: "+ Unterkategorien"
       topic_count:
         one: "%{count} Thema in dieser Kategorie"
         other: "%{count} Themen in dieser Kategorie"
@@ -3017,6 +3014,7 @@ de:
       toggle: "Dropdowns zum Filtern anzeigen/ausblenden"
     d_icon_grid_picker:
       select_icon: "Symbol auswählen"
+      search_label: "Symbole durchsuchen"
       search_placeholder: "Symbole durchsuchen..."
       no_results: "Keine Symbole gefunden"
       results_count:

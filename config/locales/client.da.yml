@@ -653,10 +653,6 @@ da:
         optional: "valgfri"
       claim_help:
         optional: "Du kan gøre krav på dette punkt, for at forhindre andre i at gennemgå det."
-        required: "Du skal kræve punkter, før du kan gennemgå dem."
-        claimed_by_you: "Du har gjort krav på dette punkt og kan gennemgå det."
-        claimed_by_other: "Dette punkt kan kun gennemgås af <b>%{username}</b> ."
-        automatically_claimed_by: "Dette element er i øjeblikket ved at blive gennemgået af <b>%{username}</b>."
       awaiting_approval: "Afventer godkendelse"
       delete: "Slet"
       settings:

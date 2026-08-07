@@ -552,9 +552,6 @@ nb_NO:
         optional: "valgfritt"
       claim_help:
         optional: "Du kan gjøre krav på dette elementet for å hindre andre i å gjennomgå det."
-        required: "Du må gjøre krav på varer før du kan se gjennom dem."
-        claimed_by_you: "Du har gjort krav på dette elementet og kan se gjennom det."
-        claimed_by_other: "Dette elementet kan bare bli vurdert av <b>%{username}</b>."
       awaiting_approval: "Venter på godkjenning"
       delete: "Slett"
       settings:
@@ -2326,6 +2323,7 @@ nb_NO:
       subcategory_count:
         one: "+%{count} underkategori"
         other: "+%{count} underkategorier"
+      subcategories: "+ Underkategorier"
       topic_count:
         one: "%{count} emne i denne kategorien"
         other: "%{count} emner i denne kategorien"

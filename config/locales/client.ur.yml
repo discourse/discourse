@@ -825,10 +825,6 @@ ur:
         optional: "اختیاری"
       claim_help:
         optional: "آپ اس چیز کو کََلیم کرسکتے ہیں کہ دوسروں کو اِسکا جائزہ لینے سے روکا جا سکے۔"
-        required: "اشیاء کا جائزہ لینے سے پہلے ان کا آپکی ملکیت ہونا ضروری ہے۔"
-        claimed_by_you: "یہ آپکی ملکیت ہے اور اس کا جائزہ لے سکتے ہیں۔"
-        claimed_by_other: "اس چیز کا صرف <b>%{username}</b> جائزہ لے سکتے ہیں۔"
-        automatically_claimed_by: "اس شے کا فی الحال <b>%{username}</b> جائزہ لے رہے ہیں۔"
       claim:
         title: "اس موضوع کو کلیم کریں"
       unclaim:
@@ -2882,6 +2878,7 @@ ur:
       subcategory_count:
         one: "+%{count} ذیلی زمرہ"
         other: "+%{count} ذیلی زمرہ جات"
+      subcategories: "+ ذیلی زمرے"
       topic_count:
         one: "اس زمرے میں %{count} موضوعات"
         other: "اس زمرے میں %{count} موضوعات"
@@ -2953,6 +2950,7 @@ ur:
       reset: "ری سیٹ"
     d_icon_grid_picker:
       select_icon: "آئیکن منتخب کریں"
+      search_label: "آئیکنز ڈھونڈھیں"
       search_placeholder: "آئیکنز ڈھونڈھیں..."
       no_results: "آئیکنز نہیں ملے"
       results_count:

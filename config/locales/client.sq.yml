@@ -564,9 +564,6 @@ sq:
         optional: "opsionale"
       claim_help:
         optional: "Ju mund ta përvetësoni këtë artikull për të parandaluar të tjerët ta shqyrtojnë atë."
-        required: "Ju duhet të përvetësoni artikuj para se t'i rishikoni ato."
-        claimed_by_you: "Ju e keni përvetësuar këtë artikull dhe mund ta rishikoni atë."
-        claimed_by_other: "Ky artikull mund të shqyrtohet vetëm nga <b>%{username}</b>."
       awaiting_approval: "Në pritje të miratimit"
       delete: "Fshij"
       settings:
@@ -2395,6 +2392,7 @@ sq:
       subcategory_count:
         one: "+%{count} nënkategori"
         other: "+%{count} nënkategori"
+      subcategories: "+ Nënkategori"
       topic_count:
         one: "%{count} temë në këtë kategori"
         other: "%{count} tema në këtë kategori"

@@ -980,10 +980,6 @@ pl_PL:
       stale_help: "Ten element został rozwiązany przez <b>%{username}</b>."
       claim_help:
         optional: "Możesz przejąć tę pozycję, aby uniemożliwić innym jego sprawdzenie."
-        required: "Musisz przejąć tę pozycję, zanim będziesz mógł/mogła je przejrzeć."
-        claimed_by_you: "Przejęto tę pozycję i możesz ją teraz przejrzeć."
-        claimed_by_other: "Tę pozycję może zrecenzować tylko <b>%{username}</b>."
-        automatically_claimed_by: "Ta pozycja jest obecnie sprawdzana przez <b>%{username}</b>."
       claim:
         title: "Przejmij ten temat"
       unclaim:
@@ -3268,6 +3264,7 @@ pl_PL:
         few: "+%{count} podkategorie"
         many: "+%{count} podkategorii"
         other: "+%{count} podkategorii"
+      subcategories: "+ Podkategorie"
       topic_count:
         one: "%{count} temat w tej kategorii"
         few: "%{count} tematy w tej kategorii"
@@ -3354,6 +3351,7 @@ pl_PL:
       toggle: "Przełącz filtry rozwijane"
     d_icon_grid_picker:
       select_icon: "Wybierz ikonę"
+      search_label: "Szukaj ikon"
       search_placeholder: "Szukaj ikon..."
       no_results: "Nie znaleziono ikon"
       results_count:
@@ -5963,6 +5961,7 @@ pl_PL:
     cannot_render_video: Nie można wyrenderować tego wideo, ponieważ Twoja przeglądarka nie obsługuje tego kodeka.
     invalid_video_url: Nie można odtworzyć tego filmu, ponieważ adres URL jest nieprawidłowy lub niedostępny.
     keyboard_shortcuts_help:
+      search_label: "Skróty wyszukiwania"
       search_placeholder: "Wyszukaj skrót według opisu lub kombinacji klawiszy"
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"

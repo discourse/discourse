@@ -804,10 +804,6 @@ zh_CN:
       stale_help: "此条目已被 <b>%{username}</b> 解决。"
       claim_help:
         optional: "您可以认领此条目以避免被他人审核。"
-        required: "您必须先认领条目才能进行审核。"
-        claimed_by_you: "您已认领此条目，可以进行审核。"
-        claimed_by_other: "此条目仅可以由 <b>%{username}</b> 审核。"
-        automatically_claimed_by: "此条目目前正在由 <b>%{username}</b>审核。"
       claim:
         title: "认领此话题"
       unclaim:
@@ -2836,6 +2832,7 @@ zh_CN:
     category_row:
       subcategory_count:
         other: "+%{count} 个子类别"
+      subcategories: "+ 子类别"
       topic_count:
         other: "此类别下有 %{count} 个话题"
       read_only: "只读"

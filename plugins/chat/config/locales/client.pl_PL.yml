@@ -495,6 +495,7 @@ pl_PL:
         empty_state:
           title: "To jest początek %{channelName}"
           joined_title: "Jesteś pierwszy w %{channelName}"
+          direct_message_title: "Rozpocznij rozmowę z %{name}"
           guest_tip: "Czytasz jako gość. Rozmowa zaczyna się w momencie, gdy użytkownicy coś napiszą — dołącz do nich i bądź jednym z nich."
           joined_tip: "Bądź pierwszy, który opublikuje wpis i rozpocznie dyskusję."
           members_here:

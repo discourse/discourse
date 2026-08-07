@@ -768,10 +768,6 @@ ug:
         optional: "تاللاشچان"
       claim_help:
         optional: "سىز باشقىلارنىڭ تەكشۈرۈشىنىڭ ئالدىنى ئېلىش ئۈچۈن بۇ تۈرنى تەلەپ قىلسىڭىز بولىدۇ."
-        required: "ئاۋال تۈرنى تەلەپ قىلىپ ئاندىن ئۇلارنى تەكشۈرۈپ تەستىقلىيالايسىز."
-        claimed_by_you: "بۇ تۈرنى تەلەپ قىلدىڭىز، تەكشۈرۈپ تەستىقلىيالايسىز."
-        claimed_by_other: "بۇ تۈرنى پەقەت <b>%{username}</b>لا تەكشۈرۈپ تەستىقلىيالايدۇ."
-        automatically_claimed_by: "ھازىر بۇ تۈرنى <b>%{username}</b> تەكشۈرۈۋاتىدۇ."
       claim:
         title: "تېما تەلەپ قىلىدۇ"
       unclaim:
@@ -2793,6 +2789,7 @@ ug:
       subcategory_count:
         one: "+%{count} تارماق سەھىپە"
         other: "+%{count} تارماق سەھىپە"
+      subcategories: "+ تارماق سەھىپە"
       topic_count:
         one: "بۇ سەھىپىدە %{count} تېما بار"
         other: "بۇ سەھىپىدە %{count} تېما بار"

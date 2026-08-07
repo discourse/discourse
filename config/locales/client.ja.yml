@@ -670,10 +670,6 @@ ja:
         optional: "オプション"
       claim_help:
         optional: "この項目を自分に割り当ててほかのユーザーがレビューしないようにできます。"
-        required: "レビューする前に項目を自分に割り当てる必要があります。"
-        claimed_by_you: "この項目を自分に割り当てたため、レビューできます。"
-        claimed_by_other: "この項目は <b>%{username}</b> のみがレビューできます。"
-        automatically_claimed_by: "この項目は現在、<b>%{username}</b> がレビューしています。"
       claim:
         title: "このトピックを自分に割り当てる"
       unclaim:
@@ -2620,6 +2616,7 @@ ja:
     category_row:
       subcategory_count:
         other: "+%{count} 個のサブカテゴリ"
+      subcategories: "+ サブカテゴリ"
       topic_count:
         other: "このカテゴリの %{count} 件のトピック"
       read_only: "読み取り専用"
