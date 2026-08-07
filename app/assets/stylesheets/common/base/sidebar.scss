@@ -352,7 +352,7 @@
        overridden, or both would show at once. */
 
     &.--drag-above {
-      border-top: 2px solid var(--token-color-border-accent);
+      border-top: 2px solid var(--d-drag-indicator-color);
 
       &::before {
         content: none;
@@ -360,7 +360,7 @@
     }
 
     &.--drag-below {
-      border-bottom: 2px solid var(--token-color-border-accent);
+      border-bottom: 2px solid var(--d-drag-indicator-color);
 
       &::after {
         content: none;

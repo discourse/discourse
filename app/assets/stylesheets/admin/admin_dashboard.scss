@@ -176,12 +176,12 @@ $db-bar-height: var(--space-2);
 
     &.--drag-below,
     &:not(.--dragging):has(+ .db-configure__row.--drag-above) {
-      border-bottom-color: var(--tertiary);
+      border-bottom-color: var(--d-drag-indicator-color);
     }
 
     /* No predecessor to borrow an edge from. */
     &.--drag-above:first-child {
-      border-top-color: var(--tertiary);
+      border-top-color: var(--d-drag-indicator-color);
     }
 
     &.--drag-above::before,

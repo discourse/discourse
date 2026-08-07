@@ -451,6 +451,34 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
     );
   });
 
+  test(`${ORACLE} the indicator colour follows its own custom property`, async function (assert) {
+    const noop = () => {};
+
+    await render(
+      <template>
+        <div style="--d-drag-indicator-color: rgb(1, 2, 3)">
+          <ConfigureMenu
+            @sections={{FOUR_SECTIONS}}
+            @onReorder={{noop}}
+            @onToggleVisibility={{noop}}
+          />
+        </div>
+      </template>
+    );
+
+    const end = await hoverOver("traffic", "highlights", "below");
+    const painted = getComputedStyle(
+      find(rowSelector("highlights"))
+    ).borderBottomColor;
+    await end();
+
+    assert.strictEqual(
+      painted,
+      "rgb(1, 2, 3)",
+      "an ancestor can retune drag feedback without touching any other accent border"
+    );
+  });
+
   test("the arrow path announces where the row landed", async function (assert) {
     const a11y = getOwner(this).lookup("service:a11y");
     const sections = FOUR_SECTIONS;

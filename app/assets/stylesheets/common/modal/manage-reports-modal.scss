@@ -8,6 +8,11 @@
 
   &__search-wrapper {
     padding: var(--space-2) 1.5rem;
+
+    /* Not decoration: rows draw their separator on their own bottom edge, so this
+       is what supplies the first row's top one. Removing it is why the first row
+       needs its own `--drag-above` rule below rather than borrowing a
+       predecessor's edge like every other row. */
     border-bottom: 1px solid var(--primary-low);
     background: var(--secondary);
   }
@@ -59,13 +64,13 @@
     &:not(.--dragging):has(+ .manage-reports__row.--drag-above) {
       box-shadow:
         inset 0 2px 0 0 transparent,
-        inset 0 -2px 0 0 var(--tertiary);
+        inset 0 -2px 0 0 var(--d-drag-indicator-color);
     }
 
     &:first-child.--drag-above,
     .manage-reports__row.--dragging + &.--drag-above {
       box-shadow:
-        inset 0 2px 0 0 var(--tertiary),
+        inset 0 2px 0 0 var(--d-drag-indicator-color),
         inset 0 -2px 0 0 transparent;
     }
 
