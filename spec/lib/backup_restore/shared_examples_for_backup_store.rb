@@ -170,11 +170,22 @@ RSpec.shared_examples "backup store" do
         expect(store.files).to eq([backup1])
       end
 
+      let(:empty_list_body) { <<~XML }
+        <?xml version="1.0" encoding="UTF-8"?>
+        <ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+          <Name>s3-backup-bucket</Name>
+          <Prefix>default/</Prefix>
+          <KeyCount>0</KeyCount>
+          <MaxKeys>1000</MaxKeys>
+          <IsTruncated>false</IsTruncated>
+        </ListBucketResult>
+      XML
+
       it "runs if SiteSetting.backup_frequency is configured" do
         base_backup_s3_url = "https://s3-backup-bucket.s3.dualstack.us-west-1.amazonaws.com"
         stub_request(:get, "#{base_backup_s3_url}/?list-type=2&prefix=default/").to_return(
           status: 200,
-          body: "",
+          body: empty_list_body,
           headers: {
           },
         )
@@ -190,7 +201,7 @@ RSpec.shared_examples "backup store" do
         base_backup_s3_url = "https://s3-backup-bucket.s3.dualstack.us-west-1.amazonaws.com"
         stub_request(:get, "#{base_backup_s3_url}/?list-type=2&prefix=default/").to_return(
           status: 200,
-          body: "",
+          body: empty_list_body,
           headers: {
           },
         )

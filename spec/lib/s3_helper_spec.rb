@@ -77,6 +77,29 @@ RSpec.describe "S3Helper" do
     end
   end
 
+  describe "#download_file" do
+    let(:s3_helper) { S3Helper.new("bucket", "", client: client) }
+
+    before do
+      Aws::S3::Object
+        .any_instance
+        .expects(:download_file)
+        .raises(Aws::S3::Errors::NoSuchKey.new(nil, "The specified key does not exist."))
+    end
+
+    it "includes the underlying error when a failure message is given" do
+      expect {
+        s3_helper.download_file("key", "destination", "Failed to download archive.")
+      }.to raise_error("Failed to download archive. (The specified key does not exist.)")
+    end
+
+    it "includes the underlying error when no failure message is given" do
+      expect { s3_helper.download_file("key", "destination") }.to raise_error(
+        "Failed to download key (The specified key does not exist.)",
+      )
+    end
+  end
+
   it "should prefix bucket folder path only if not exists" do
     s3_helper = S3Helper.new("bucket/folder_path", "", client: client)
 

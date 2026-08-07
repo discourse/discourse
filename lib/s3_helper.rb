@@ -336,8 +336,8 @@ class S3Helper
     obj = object(filename)
     transfer_manager.download_file(destination_path, bucket: obj.bucket_name, key: obj.key)
   rescue => err
-    raise failure_message&.to_s ||
-            "Failed to download #{filename} because #{err.message.length > 0 ? err.message : err.class.to_s}"
+    detail = err.message.presence || err.class.to_s
+    raise "#{failure_message.presence || "Failed to download #{filename}"} (#{detail})"
   end
 
   def s3_client
