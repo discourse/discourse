@@ -19,22 +19,16 @@
   );
 }
 
-body:not(.archetype-private_message) {
-  .topic-map {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    column-gap: 0.75em;
-  }
-}
-
 .topic-map {
-  // both topic maps
   --chart-line-color: var(--tertiary);
   --chart-point-color: var(--tertiary-medium);
   --chart-prediction-color: var(--primary-low-mid);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  column-gap: 0.75em;
   border-bottom: 1px solid var(--content-border-color);
   box-sizing: border-box;
   max-width: calc(

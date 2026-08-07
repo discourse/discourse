@@ -175,5 +175,3 @@ cs:
           add: Přidat možnost
         automatic_close:
           label: Automaticky uzavřít hlasování
-        show_advanced: "Zobrazit pokročilé možnosti"
-        hide_advanced: "Skrýt pokročilé možnosti"

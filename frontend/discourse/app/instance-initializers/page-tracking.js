@@ -31,9 +31,10 @@ export default {
     // eslint-disable-next-line ember/no-private-routing-service
     const router = owner.lookup("router:main");
     router.on("routeWillChange", this.handleRouteWillChange);
-
-    const siteSettings = owner.lookup("service:site-settings");
-    if (siteSettings.use_beacon_for_browser_page_views) {
+    const dashboardImprovementsEnabled =
+      document.querySelector("meta[name=discourse-beacon-pageview-enabled]")
+        ?.content === "true";
+    if (dashboardImprovementsEnabled) {
       router.on("routeDidChange", this.handleRouteDidChange);
     }
 

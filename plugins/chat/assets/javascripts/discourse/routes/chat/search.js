@@ -3,6 +3,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 
 export default class ChatSearchRoute extends DiscourseRoute {
   @service chat;
+  @service currentUser;
   @service router;
   @service siteSettings;
 
@@ -13,6 +14,11 @@ export default class ChatSearchRoute extends DiscourseRoute {
   }
 
   redirect() {
+    if (!this.currentUser) {
+      this.router.transitionTo("chat.channels");
+      return;
+    }
+
     if (!this.siteSettings.chat_search_enabled) {
       this.router.transitionTo("chat");
     }

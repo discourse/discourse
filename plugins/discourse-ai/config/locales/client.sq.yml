@@ -34,6 +34,14 @@ sq:
             canned_reply:
               label: "Përgjigju"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Duke ngarkuar..."
+        tool: "Veprimi"
+        user: "User"
+        approve: "Aprovo"
+        reject: "Refuzo"
+        approved: "Aprovuar"
+        rejected: "Rejected"
       llm_selector:
         none: "Asnjë"
       features:
@@ -53,11 +61,29 @@ sq:
           reset: "Rivendosni"
         search:
           name: "Kërko"
+        image_caption:
+          setting_groups:
+            settings: "Rregullimet"
         spam:
           name: "Spam"
       modals:
         select_option: "Zgjidhni një opsion..."
       translations:
+        category_scope: "Categories"
+        model_progress:
+          detail:
+            columns:
+              pending: "Në pritje"
+              total: "Total"
+          targets:
+            post:
+              title: "Postime"
+            topic:
+              title: "Topics"
+            category:
+              title: "Categories"
+            tag:
+              title: "Etiketat"
         stats:
           eta_minutes:
             one: "%{count} minutë"
@@ -94,6 +120,12 @@ sq:
         save: "Ruani"
         enabled: "Aktivizuar?"
         delete: "Fshij"
+        thinking_effort_options:
+          none: "Asnjë"
+          low: "I ulët"
+          medium: "Mesatar"
+          high: "I lartë"
+          max: "Maksimumi"
         response_format:
           open_modal: "Redaktoni"
         filters:
@@ -154,7 +186,6 @@ sq:
         next:
           title: "Vazhdo përpara"
         providers:
-          google: "Google"
           fake: "Grupet e krijuara"
       ai_helper:
         context_menu:
@@ -169,8 +200,6 @@ sq:
         thumbnail_suggestions:
           select: "Zgjidhni"
           try_again: "Provoni përsëri"
-        image_caption:
-          save_caption: "Ruani"
       embeddings:
         save: "Ruani"
         delete: "Fshij"

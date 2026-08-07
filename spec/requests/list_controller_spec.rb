@@ -8,10 +8,25 @@ RSpec.describe ListController do
 
   before do
     admin # to skip welcome wizard at home page `/`
-    SiteSetting.top_menu = "latest|new|unread|categories"
+    SiteSetting.top_menu = "latest|new|categories"
   end
 
   describe "#index" do
+    it "does not expose the Klipy API key in anonymous preloaded site settings" do
+      SiteSetting.klipy_api_key = "super-secret-klipy-key"
+
+      get "/latest"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include(SiteSetting.klipy_api_key)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        data_preloaded = JSON.parse(element.current_scope.text)
+        site_settings = JSON.parse(data_preloaded["siteSettings"])
+
+        expect(site_settings).not_to have_key("klipy_api_key")
+      end
+    end
+
     context "when params are invalid" do
       it "should return a 400 response when `page` param is a string that represent a negative integer" do
         get "/latest?page=-1"
@@ -338,7 +353,7 @@ RSpec.describe ListController do
       before { topic.update!(category: subcategory) }
 
       it "returns categories and parent categories if true" do
-        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:anonymous_users]}"
 
         get "/latest.json"
 
@@ -421,6 +436,57 @@ RSpec.describe ListController do
     end
   end
 
+  describe "rss feed discovery" do
+    it "advertises the feed for anonymous filters with a feed route" do
+      topic
+      get "/latest", params: { _escaped_fragment_: "true" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include("latest.rss")
+    end
+
+    it "omits the feed for anonymous filters without a feed route" do
+      topic
+      sign_in(user)
+
+      SiteSetting.anonymous_menu_items
+      anonymous_filters = Discourse.anonymous_filters
+      Discourse.stubs(:anonymous_filters).returns(anonymous_filters + [:new])
+
+      get "/new", params: { _escaped_fragment_: "true" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("application/rss+xml")
+    end
+  end
+
+  describe "crawler homepage rendering" do
+    fab!(:homepage_topic) { Fabricate(:post).topic }
+
+    before do
+      SiteSetting.has_login_hint = false
+      SiteSetting.top_menu = "latest|new|bookmarks|categories"
+    end
+
+    it "renders the crawler homepage without error for each reachable filter" do
+      %w[latest categories top hot new bookmarks].each do |filter|
+        SiteSetting.default_homepage = filter
+        get "/", params: { _escaped_fragment_: "true" }
+
+        expect(response.status).to eq(200), "expected 200 for default_homepage=#{filter}"
+        expect(response.body).not_to include("finish-installation")
+      end
+    end
+
+    it "falls back to an anon-visible list when the homepage is a user-scoped filter" do
+      SiteSetting.default_homepage = "bookmarks"
+      get "/", params: { _escaped_fragment_: "true" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(homepage_topic.title)
+    end
+  end
+
   describe "filter private messages by tag" do
     fab!(:user)
     fab!(:moderator)
@@ -476,6 +542,28 @@ RSpec.describe ListController do
       get "/u/#{user.username}/messages/tags/#{tag.name}"
 
       expect(response.status).to eq(200)
+    end
+
+    it "returns only visible tagged private messages" do
+      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
+      SiteSetting.pm_tags_allowed_for_groups = group.name
+      group.add(user)
+      group.update!(has_messages: true)
+      direct_message = Fabricate(:private_message_topic, user: admin, recipient: user)
+      group_message = Fabricate(:group_private_message_topic, user: admin, recipient_group: group)
+      Fabricate(:topic_tag, tag: tag, topic: direct_message)
+      Fabricate(:topic_tag, tag: tag, topic: group_message)
+
+      sign_in(user)
+      get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
+
+      expect(response.status).to eq(404)
+
+      get "/topics/private-messages-tags/#{user.username}/#{tag.name}.json"
+
+      expect(response.status).to eq(200)
+      topic_ids = response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] }
+      expect(topic_ids).to contain_exactly(direct_message.id)
     end
   end
 
@@ -1070,6 +1158,18 @@ RSpec.describe ListController do
           expect(json["topic_list"]["for_period"]).to eq("monthly")
         end
 
+        it "falls back to the site default period when default_top_period is an unsupported value" do
+          SiteSetting.top_page_default_timeframe = "monthly"
+          category.update!(default_view: "top")
+          category.update_column(:default_top_period, "user~'^d'AND all")
+
+          get "/c/#{category.slug}/#{category.id}.json"
+
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json["topic_list"]["for_period"]).to eq("monthly")
+        end
+
         it "has a default view of nil" do
           category.update!(default_view: nil)
           get "/c/#{category.slug}/#{category.id}.json"
@@ -1136,6 +1236,27 @@ RSpec.describe ListController do
             with: {
               name: "twitter:description",
               content: "This is bold and italic text",
+            },
+          )
+        end
+
+        it "escapes the description exactly once instead of double-escaping entities" do
+          amazing_category.update!(description: "<p>Tom &amp; Jerry&rsquo;s adventures</p>")
+
+          get "/c/#{amazing_category.slug}/#{amazing_category.id}"
+
+          expect(response.body).to have_tag(
+            :meta,
+            with: {
+              name: "description",
+              content: "Tom & Jerry’s adventures",
+            },
+          )
+          expect(response.body).to have_tag(
+            :meta,
+            with: {
+              property: "og:description",
+              content: "Tom & Jerry’s adventures",
             },
           )
         end
@@ -1213,6 +1334,23 @@ RSpec.describe ListController do
         json = response.parsed_body
         expect(json["topic_list"]["topics"].size).to eq(2)
       end
+    end
+  end
+
+  describe "topics_by with public profiles hidden" do
+    fab!(:profile_user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:profile_topic) { Fabricate(:topic, user: profile_user) }
+
+    before do
+      profile_user.user_stat.update!(post_count: 1)
+      SiteSetting.hide_user_profiles_from_public = true
+    end
+
+    it "does not disclose a user's topics to anonymous users" do
+      get "/topics/created-by/#{profile_user.username}.json"
+
+      expect(response).to have_http_status(:not_found)
+      expect(response.body).not_to include(profile_topic.title)
     end
   end
 
@@ -1447,6 +1585,19 @@ RSpec.describe ListController do
 
       get "/c/hello/#{category.id}"
       expect(response.status).to eq(200)
+    end
+
+    it "does not disclose restricted topic titles through category route permalink fallbacks" do
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      private_topic =
+        Fabricate(:topic, category: private_category, title: "Restricted list fallback topic title")
+      Permalink.create!(url: "c/old-category/999", topic: private_topic)
+
+      get "/c/old-category/999"
+
+      expect(response).to have_http_status(:not_found)
+      expect(response.headers["Location"]).to be_nil
+      expect(response.body).not_to include(private_topic.title)
     end
 
     context "with encoded slugs" do
@@ -1936,7 +2087,7 @@ RSpec.describe ListController do
       response.parsed_body["topic_list"]["topics"].map { |topics| topics["id"] }
     end
 
-    context "when the user is part of the `experimental_new_new_view_groups` site setting group" do
+    context "when unified new is enabled for the user" do
       fab!(:category)
       fab!(:tag)
 
@@ -1961,8 +2112,7 @@ RSpec.describe ListController do
       before do
         TopicUser.update_last_read(user, topic.id, 1, 1, 1)
 
-        SiteSetting.experimental_new_new_view_groups = group.name
-        group.add(user)
+        SiteSetting.enable_unified_new = true
 
         sign_in(user)
       end

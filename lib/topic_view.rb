@@ -191,6 +191,42 @@ class TopicView
     @personal_message = @topic.private_message?
   end
 
+  def has_localized_content?
+    return @has_localized_content if defined?(@has_localized_content)
+
+    @has_localized_content =
+      if !SiteSetting.content_localization_enabled
+        false
+      elsif !topic.in_user_locale? && topic.has_localization?
+        true
+      elsif skip_post_loading
+        false
+      else
+        source_language = I18n.locale.to_s.tr("-", "_").split("_").first.downcase
+        localization_languages = [source_language]
+        if SiteSetting.content_localization_use_default_locale_when_unsupported
+          localization_languages << SiteSetting.default_locale.to_s
+        end
+        localization_locale = PostLocalization.arel_table[:locale]
+        localization_condition =
+          localization_languages
+            .map { |locale| locale.tr("-", "_").split("_").first.downcase }
+            .uniq
+            .map { |language| localization_locale.matches("#{language}%") }
+            .reduce(&:or)
+
+        filtered_posts
+          .joins(:localizations)
+          .where(localization_condition)
+          .where(
+            "posts.raw <> '' AND posts.locale IS NOT NULL AND posts.locale <> '' AND " \
+              "SPLIT_PART(REPLACE(LOWER(posts.locale), '-', '_'), '_', 1) <> ?",
+            source_language,
+          )
+          .exists?
+      end
+  end
+
   def user_badges(badge_names)
     return if !badge_names.present?
 
@@ -261,7 +297,10 @@ class TopicView
   def show_read_indicator?
     return false if !@user || !topic.private_message?
 
-    topic.allowed_groups.any? { |group| group.publish_read_state? && group.users.include?(@user) }
+    allowed_groups = topic.allowed_groups
+
+    allowed_groups.all? { |group| @guardian.can_see_group_members?(group) } &&
+      allowed_groups.any? { |group| group.publish_read_state? && group.users.include?(@user) }
   end
 
   def canonical_path
@@ -355,7 +394,7 @@ class TopicView
       if @topic.category_id != SiteSetting.uncategorized_category_id && @topic.category_id &&
            @topic.category
         title += " - #{@topic.category.name}"
-      elsif SiteSetting.tagging_enabled && visible_tags.exists?
+      elsif visible_tags.exists?
         title +=
           " - #{visible_tags.order("tags.#{Tag.topic_count_column(@guardian)} DESC").first.name}"
       end
@@ -421,12 +460,20 @@ class TopicView
   end
 
   def image_url
-    return @topic.image_url if @post_number == 1
-    desired_post&.image_url
+    if @post_number == 1
+      @topic.image_url || og_image_url
+    else
+      desired_post&.image_url
+    end
   end
 
   def image_upload
-    @image_upload ||= @post_number == 1 ? @topic.image_upload : desired_post&.image_upload
+    @image_upload ||=
+      if @post_number == 1
+        @topic.image_upload || og_image_upload
+      else
+        desired_post&.image_upload
+      end
   end
 
   def image_width
@@ -440,6 +487,18 @@ class TopicView
   def image_type
     ext = image_upload&.extension
     MiniMime.lookup_by_extension(ext)&.content_type if ext.present?
+  end
+
+  def og_image_upload
+    return unless SiteSetting.generate_topic_og_image
+    return if !TopicOgImageGenerator.eligible?(@topic)
+    @topic.og_image_upload
+  end
+
+  def og_image_url
+    upload = og_image_upload
+    return unless upload
+    UrlHelper.cook_url(upload.url, secure: upload.secure?)
   end
 
   def filter_posts(opts = {})
@@ -758,6 +817,25 @@ class TopicView
     link_counts[post.id]&.select { |l| l[:reflection] && l[:title].present? }
   end
 
+  # Per-post localized title/preview for internal topic oneboxes the reader sees
+  # in their own language. See ContentLocalization::OneboxLocalizer for the full
+  # contract (including the request-aware preference gate in the serializer).
+  def localized_oneboxes
+    return @localized_oneboxes if defined?(@localized_oneboxes)
+
+    @localized_oneboxes =
+      if SiteSetting.content_localization_enabled
+        ContentLocalization::OneboxLocalizer.build(
+          posts:,
+          guardian: @guardian,
+          category:,
+          locale: I18n.locale,
+        )
+      else
+        {}
+      end
+  end
+
   def pm_params
     @pm_params ||= TopicQuery.new(@user).get_pm_params(topic)
   end
@@ -888,6 +966,10 @@ class TopicView
       .compact
   end
 
+  def visible_tags
+    @visible_tags ||= guardian.can_see_tags?(topic) ? topic.tags.visible(guardian) : Tag.none
+  end
+
   protected
 
   def read_posts_set
@@ -978,7 +1060,18 @@ class TopicView
   end
 
   def find_topic(topic_or_topic_id)
-    return topic_or_topic_id if topic_or_topic_id.is_a?(Topic)
+    if topic_or_topic_id.is_a?(Topic)
+      if SiteSetting.content_localization_enabled &&
+           !topic_or_topic_id.association(:localizations).loaded?
+        ActiveRecord::Associations::Preloader.new(
+          records: [topic_or_topic_id],
+          associations: :localizations,
+        ).call
+      end
+
+      return topic_or_topic_id
+    end
+
     # with_deleted covered in #check_and_raise_exceptions
     tags_include =
       if SiteSetting.tagging_enabled && SiteSetting.content_localization_enabled
@@ -987,9 +1080,10 @@ class TopicView
         :tags
       end
     nested_topic_include = :nested_topic if SiteSetting.nested_replies_enabled
+    localizations_include = :localizations if SiteSetting.content_localization_enabled
     Topic
       .with_deleted
-      .includes(:category, nested_topic_include, tags_include)
+      .includes(:category, nested_topic_include, tags_include, localizations_include)
       .find_by(id: topic_or_topic_id)
   end
 
@@ -1166,9 +1260,5 @@ class TopicView
         StaffActionLogger.new(@user).log_check_personal_message(@topic)
       end
     end
-  end
-
-  def visible_tags
-    @visible_tags ||= topic.tags.visible(guardian)
   end
 end

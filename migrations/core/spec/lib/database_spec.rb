@@ -26,15 +26,27 @@ RSpec.describe Migrations::Database do
         expect(migrator_instance).to have_received(:migrate).with(migrations_path)
       end
     end
+  end
 
-    describe ".reset!" do
-      it "resets the database" do
-        allow(migrator_instance).to receive(:reset!)
+  describe ".database_files" do
+    it "lists the database file and its WAL/SHM sidecars" do
+      expect(described_class.database_files("path/to/db")).to eq(
+        %w[path/to/db path/to/db-wal path/to/db-shm],
+      )
+    end
+  end
 
-        described_class.reset!(db_path)
+  describe ".delete_database" do
+    it "removes the database and its sidecars, leaves other files, ignores missing ones" do
+      Dir.mktmpdir do |storage_path|
+        db_path = File.join(storage_path, "test.db")
+        FileUtils.touch(db_path)
+        FileUtils.touch("#{db_path}-wal")
+        # no -shm file: deletion must not raise on the missing one
+        FileUtils.touch(File.join(storage_path, "keep.txt"))
 
-        expect(Migrations::Database::Migrator).to have_received(:new).with(db_path)
-        expect(migrator_instance).to have_received(:reset!)
+        expect { described_class.delete_database(db_path) }.not_to raise_error
+        expect(Dir.children(storage_path)).to contain_exactly("keep.txt")
       end
     end
   end
@@ -129,6 +141,16 @@ RSpec.describe Migrations::Database do
     it "returns nil for nil input" do
       expect(described_class.format_ip_address(nil)).to be_nil
     end
+
+    it "formats an IPv4 `IPAddr`" do
+      expect(described_class.format_ip_address(IPAddr.new("192.168.1.1"))).to eq("192.168.1.1")
+    end
+
+    it "formats an IPv6 `IPAddr`" do
+      expect(
+        described_class.format_ip_address(IPAddr.new("2001:0db8:85a3:0000:0000:8a2e:0370:7334")),
+      ).to eq("2001:db8:85a3::8a2e:370:7334")
+    end
   end
 
   describe ".to_blob" do
@@ -151,7 +173,7 @@ RSpec.describe Migrations::Database do
           number: 123,
           date: DateTime.new(2023, 10, 5, 17, 30, 0),
         ),
-      ).to eq(%q|{"text":"foo","number":123,"date":"2023-10-05T17:30:00.000+00:00"}|)
+      ).to eq(%q|{"text":"foo","number":123,"date":"2023-10-05T17:30:00+00:00"}|)
     end
 
     it "returns nil for nil input" do

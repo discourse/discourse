@@ -21,7 +21,7 @@ RSpec.describe "Admin AI features configuration" do
   end
 
   it "lists all persona backed AI features separated by enabled/not enabled" do
-    all_modules = DiscourseAi::Configuration::Module.all
+    all_modules = DiscourseAi::Configuration::Module.all.select(&:visible?)
     configured_count = all_modules.count(&:enabled?)
     ai_features_page.visit
     ai_features_page.toggle_enabled

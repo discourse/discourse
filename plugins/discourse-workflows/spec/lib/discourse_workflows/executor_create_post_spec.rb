@@ -12,9 +12,10 @@ RSpec.describe DiscourseWorkflows::Executor do
         build_workflow_graph do |g|
           g.node "trigger-1", "trigger:manual"
           g.node "action-1",
-                 "action:create_post",
+                 "action:post",
                  name: "Create Post",
                  configuration: {
+                   "operation" => "create",
                    "topic_id" => "={{ $trigger.topic_id }}",
                    "raw" => "={{ $trigger.raw }}",
                    "reply_to_post_number" => "={{ $trigger.reply_to_post_number }}",

@@ -43,7 +43,7 @@ const hoverVisibility = modifier(function (element, _, named) {
   };
 });
 
-<template>
+export default <template>
   <div
     class={{dConcatClass "workflow-canvas-toolbar" (if @inline "--inline")}}
     {{hoverVisibility

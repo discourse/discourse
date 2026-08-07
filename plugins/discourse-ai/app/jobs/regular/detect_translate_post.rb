@@ -37,7 +37,7 @@ module Jobs
           return
         end
       else
-        return if DiscourseAi::Translation.category_excluded?(topic.category_id)
+        return if !DiscourseAi::Translation.category_allowed?(topic.category)
       end
 
       # the user may fill locale in manually

@@ -14,6 +14,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
         custom_invite_forum_mailer
         custom_invite_mailer
         download_backup_mailer
+        email_login_code_mailer
         invite_forum_mailer
         invite_mailer
         invite_password_instructions
@@ -30,6 +31,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
         system_messages.email_reject_attachment
         system_messages.email_reject_auto_generated
         system_messages.email_reject_bad_destination_address
+        system_messages.email_reject_email_alias
         system_messages.email_reject_empty
         system_messages.email_reject_inactive_user
         system_messages.email_reject_insufficient_trust_level

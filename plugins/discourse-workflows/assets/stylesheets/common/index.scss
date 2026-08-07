@@ -1,7 +1,9 @@
 @import "colors";
 @import "workflows-index";
+@import "tags";
 @import "editor/editor";
 @import "canvas/canvas";
+@import "canvas/ai-build-tool";
 @import "canvas/hover-toolbar";
 @import "canvas/node-panel";
 @import "canvas/sticky-note";
@@ -13,6 +15,7 @@
 @import "context/schema-field";
 @import "variable/variable-input";
 @import "variable/variables-manager";
+@import "version/versions-manager";
 @import "executions/executions";
 @import "executions/executions-manager";
 @import "executions/execution-detail";

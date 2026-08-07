@@ -92,16 +92,23 @@ module DiscourseWebauthn
     server_session.delete(session_challenge_key(user))
   end
 
+  # Returns separate allow-lists per WebAuthn ceremony: `allowed_credential_ids`
+  # for second-factor security keys (user verification discouraged) and
+  # `passkey_allowed_credential_ids` for passkeys used as 2FA (user
+  # verification required). Both ceremonies share the same staged challenge;
+  # the server validates the asserted credential against the intended ceremony.
   def self.allowed_credentials(user, server_session, include_passkeys: false)
     has_security_keys = user.security_keys_enabled?
-    has_passkeys = include_passkeys && user.passkeys_for_2fa_enabled?
+    has_passkeys = include_passkeys && user.passkeys_available_as_second_factor?
     return {} if !has_security_keys && !has_passkeys
 
-    credential_ids = []
-    credential_ids.concat(user.second_factor_security_key_credential_ids) if has_security_keys
-    credential_ids.concat(user.passkey_credential_ids) if has_passkeys
-
-    { allowed_credential_ids: credential_ids, challenge: challenge(user, server_session) }
+    response = {}
+    if has_security_keys
+      response[:allowed_credential_ids] = user.second_factor_security_key_credential_ids
+    end
+    response[:passkey_allowed_credential_ids] = user.passkey_credential_ids if has_passkeys
+    response[:challenge] = challenge(user, server_session)
+    response
   end
 
   def self.challenge(user, server_session)

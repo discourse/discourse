@@ -32,7 +32,9 @@ import {
   scrollListToMessage,
 } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import ChatChannelEmptyState from "./chat/channel/empty-state";
 import ChatComposerChannel from "./chat/composer/channel";
+import ChatPinnedMessageBar from "./chat/pinned-message-bar";
 import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow";
 import ChatSelectionManager from "./chat/selection-manager";
 import ChatChannelFilter from "./chat-channel-filter";
@@ -49,6 +51,7 @@ export default class ChatChannel extends Component {
   @service capabilities;
   @service chatApi;
   @service chatChannelsManager;
+  @service chatNewMessageAnnouncer;
   @service chatDraftsManager;
   @service chatStateManager;
   @service chatChannelScrollPositions;
@@ -61,14 +64,26 @@ export default class ChatChannel extends Component {
   @tracked atBottom = true;
   @tracked uploadDropZone;
   @tracked isScrolling = false;
+  // bottom-most visible message, so the pinned bar can anchor to the view
+  @tracked lastVisibleMessageId = null;
 
   scroller = null;
 
   paneState = new ChatPaneState(getOwner(this), {
     contextKey: this.pendingContextKey,
-    onUserPresent: this.debouncedUpdateLastReadMessage,
+    onUserPresent: this.maybeDebouncedUpdateLastReadMessage,
   });
 
+  jumpToPinnedMessage = (messageId) => {
+    this.highlightOrFetchMessage(messageId, { position: "center" });
+  };
+  // real user input flips this, so onScroll drops the pinned-bar tap override
+  // only on a scroll the user drove — not the programmatic jump that set it
+  #userScrolled = false;
+  #markUserScroll = () => {
+    this.#userScrolled = true;
+  };
+  #userScrollEvents = ["wheel", "touchmove", "pointerdown"];
   _mentionWarningsSeen = {};
   _unreachableGroupMentions = [];
   _overMembersLimitGroupMentions = [];
@@ -76,6 +91,9 @@ export default class ChatChannel extends Component {
   @action
   registerScroller(element) {
     this.scroller = element;
+    this.#userScrollEvents.forEach((event) =>
+      element.addEventListener(event, this.#markUserScroll, { passive: true })
+    );
   }
 
   @cached
@@ -85,6 +103,13 @@ export default class ChatChannel extends Component {
 
   get messagesManager() {
     return this.args.channel.messagesManager;
+  }
+
+  get isEmpty() {
+    return (
+      this.messagesLoader.fetchedOnce &&
+      this.messagesManager.messages.length === 0
+    );
   }
 
   get currentUserMembership() {
@@ -99,9 +124,19 @@ export default class ChatChannel extends Component {
     return this.args.channel?.id ? `channel:${this.args.channel.id}` : null;
   }
 
+  @cached
+  get hiddenMessageIds() {
+    return new Set((this.args.hiddenMessageIds ?? []).map(Number));
+  }
+
   @action
   teardown() {
-    document.removeEventListener("keydown", this._autoFocus);
+    document.removeEventListener("keydown", this._captureKeystroke);
+    this.#userScrollEvents.forEach((event) =>
+      this.scroller?.removeEventListener(event, this.#markUserScroll)
+    );
+    // cleared on teardown (not setup) so a pins-panel click can set it pre-mount
+    this.args.channel.activePinnedMessageId = null;
     this.#cancelHandlers();
     this.paneState.teardown();
     this.subscriptionManager.teardown();
@@ -116,7 +151,7 @@ export default class ChatChannel extends Component {
   @action
   didResizePane() {
     this.debounceFillPaneAttempt();
-    this.debouncedUpdateLastReadMessage();
+    this.maybeDebouncedUpdateLastReadMessage();
     DatesSeparatorsPositioner.apply(this.scroller);
 
     this.paneState.updatePendingContentFromScrollerPosition({
@@ -129,7 +164,10 @@ export default class ChatChannel extends Component {
   @action
   setup(element) {
     this.uploadDropZone = element;
-    document.addEventListener("keydown", this._autoFocus);
+
+    if (!this.args.disableKeystrokeCapture) {
+      document.addEventListener("keydown", this._captureKeystroke);
+    }
 
     this.messagesManager.clear();
 
@@ -146,7 +184,10 @@ export default class ChatChannel extends Component {
         user: this.currentUser,
       });
 
-    this.composer.focus();
+    if (!this.args.disableAutoFocus) {
+      this.composer.focus();
+    }
+
     this.loadMessages();
 
     // We update this value server-side when we load the Channel
@@ -186,11 +227,24 @@ export default class ChatChannel extends Component {
 
   @bind
   onNewMessage(message) {
+    const isOwnMessage = message.user.id === this.currentUser.id;
+
+    if (!isOwnMessage) {
+      this.chatNewMessageAnnouncer.notify(message, {
+        visible: this.paneState.isDocumentVisible,
+        active: this.paneState.isActiveReader,
+      });
+    }
+
     this.paneState.handleIncomingMessage({
       scroller: this.scroller,
-      shouldAutoScroll: this.paneState.userIsPresent && this.atBottom,
+      shouldAutoScroll: this.paneState.shouldAutoScrollIncomingMessage({
+        isAtLiveEdge: this.paneState.isAtLiveEdge,
+        isOwnMessage,
+      }),
       addMessage: () => this.messagesManager.addMessages([message]),
-      onAutoAdd: () => this.debouncedUpdateLastReadMessage(),
+      onAutoAdd: () => this.maybeDebouncedUpdateLastReadMessage(),
+      isOwnMessage,
     });
   }
 
@@ -226,7 +280,7 @@ export default class ChatChannel extends Component {
     }
 
     this.debounceFillPaneAttempt();
-    this.debouncedUpdateLastReadMessage();
+    this.maybeDebouncedUpdateLastReadMessage();
   }
 
   async fetchMoreMessages({ direction }, opts = {}) {
@@ -261,7 +315,7 @@ export default class ChatChannel extends Component {
   async scrollToBottom() {
     this._ignoreNextScroll = true;
     await scrollListToBottom(this.scroller);
-    if (this.paneState.userIsPresent) {
+    if (this.paneState.shouldMarkRead()) {
       this.debouncedUpdateLastReadMessage();
     }
     this.paneState.clearPendingMessages();
@@ -328,6 +382,10 @@ export default class ChatChannel extends Component {
     const messages = [];
     let foundFirstNew = false;
 
+    const messagesData = (result?.messages ?? []).filter(
+      (messageData) => !this.hiddenMessageIds.has(messageData.id)
+    );
+
     // Only compute the newest message marker on a full load.
     // In an already loaded list we need to preserve the "last visit" line.
     const hasNewest = this.messagesManager.messages.some(
@@ -337,10 +395,10 @@ export default class ChatChannel extends Component {
       channel.newestMessage = null;
     }
 
-    result?.messages?.forEach((messageData, index) => {
+    messagesData.forEach((messageData, index) => {
       messageData.firstOfResults = index === 0;
 
-      if (this.currentUser.ignored_users) {
+      if (this.currentUser?.ignored_users) {
         // If a message has been hidden it is because the current user is ignoring
         // the user who sent it, so we want to unconditionally hide it, even if
         // we are going directly to the target
@@ -397,6 +455,9 @@ export default class ChatChannel extends Component {
   }
 
   highlightOrFetchMessage(messageId, options = {}) {
+    // this jump's own scrolling must not drop a pinned-bar override set for it,
+    // so clear any stale user-scroll flag before it starts
+    this.#userScrolled = false;
     const message = this.messagesManager.findMessage(messageId);
     if (message) {
       this.scrollToMessageId(
@@ -417,6 +478,13 @@ export default class ChatChannel extends Component {
   }
 
   @bind
+  maybeDebouncedUpdateLastReadMessage() {
+    if (this.paneState.shouldMarkRead()) {
+      this.debouncedUpdateLastReadMessage();
+    }
+  }
+
+  @bind
   debouncedUpdateLastReadMessage() {
     this._debouncedUpdateLastReadMessageHandler = discourseDebounce(
       this,
@@ -426,7 +494,7 @@ export default class ChatChannel extends Component {
   }
 
   updateLastReadMessage() {
-    if (!this.paneState.userIsPresent) {
+    if (!this.paneState.shouldMarkRead()) {
       return;
     }
 
@@ -446,6 +514,15 @@ export default class ChatChannel extends Component {
       return;
     }
 
+    // Clear unread counts optimistically when the latest message is in view.
+    if (
+      !this.messagesLoader.canLoadMoreFuture &&
+      firstMessage.id === this.messagesManager.findLastMessage()?.id
+    ) {
+      this.args.channel.tracking.unreadCount = 0;
+      this.args.channel.tracking.mentionCount = 0;
+    }
+
     const lastReadId =
       this.args.channel.currentUserMembership?.lastReadMessageId;
     if (lastReadId >= firstMessage.id) {
@@ -463,11 +540,11 @@ export default class ChatChannel extends Component {
   }
 
   @action
-  scrollToLatestMessage() {
+  async scrollToLatestMessage() {
     if (this.messagesLoader.canLoadMoreFuture) {
-      this.fetchMessages();
+      await this.fetchMessages();
     } else if (this.messagesManager.messages.length > 0) {
-      this.scrollToBottom();
+      await this.scrollToBottom();
     }
   }
 
@@ -478,6 +555,15 @@ export default class ChatChannel extends Component {
         return;
       }
 
+      // re-anchor to the view; drop the tap override only on a user-driven
+      // scroll, not the programmatic jump that set it (which fires scroll events
+      // too — repeatedly on iOS smooth-scroll and via the fetch reflow)
+      this.lastVisibleMessageId = firstVisibleMessageId(this.scroller);
+      if (this.#userScrolled) {
+        this.#userScrolled = false;
+        this.args.channel.activePinnedMessageId = null;
+      }
+
       DatesSeparatorsPositioner.apply(this.scroller);
       this.paneState.updatePendingContentFromScrollState({
         scroller: this.scroller,
@@ -486,7 +572,7 @@ export default class ChatChannel extends Component {
         state,
       });
       this.isScrolling = true;
-      this.debouncedUpdateLastReadMessage();
+      this.maybeDebouncedUpdateLastReadMessage();
 
       if (
         state.atTop ||
@@ -505,8 +591,13 @@ export default class ChatChannel extends Component {
   onScrollEnd(state) {
     this.isScrolling = false;
     this.atBottom = state.atBottom;
+    this.lastVisibleMessageId =
+      state.firstVisibleId ?? this.lastVisibleMessageId;
+    this.paneState.updateLiveEdgeFromScrollState(state);
 
     if (state.atBottom) {
+      // Visible but unfocused panes can passively live-follow. Clear their
+      // pending affordance at the bottom while keeping hidden/away panes pending.
       if (this.paneState.userIsPresent) {
         this.paneState.clearPendingMessages();
       }
@@ -652,11 +743,7 @@ export default class ChatChannel extends Component {
   }
 
   @bind
-  _autoFocus(event) {
-    if (this.chatStateManager.isDrawerActive) {
-      return;
-    }
-
+  _captureKeystroke(event) {
     const { key, metaKey, ctrlKey, code, target } = event;
 
     if (
@@ -718,6 +805,7 @@ export default class ChatChannel extends Component {
         (if this.pane.sending "chat-channel--sending")
         (if this.hasSavedScrollPosition "chat-channel--saved-scroll-position")
         (if this.messagesLoader.fetchedOnce "--loaded")
+        (if this.isEmpty "is-empty")
       }}
       {{willDestroy this.teardown}}
       {{didInsert this.setup}}
@@ -732,6 +820,13 @@ export default class ChatChannel extends Component {
         @onToggleFilter={{@onToggleFilter}}
         @channel={{@channel}}
         @onLoadTargetMessageId={{this.onLoadTargetMessageId}}
+      />
+
+      <ChatPinnedMessageBar
+        @channel={{@channel}}
+        @onJumpToMessage={{this.jumpToPinnedMessage}}
+        @viewportBottomMessageId={{this.lastVisibleMessageId}}
+        @hiddenMessageIds={{this.hiddenMessageIds}}
       />
 
       <ChatMessagesScroller
@@ -749,14 +844,20 @@ export default class ChatChannel extends Component {
               @context="channel"
             />
           {{else}}
-            {{#unless this.messagesLoader.fetchedOnce}}
+            {{#if this.messagesLoader.fetchedOnce}}
+              <ChatChannelEmptyState @channel={{@channel}} />
+            {{else}}
               <ChatSkeleton />
-            {{/unless}}
+            {{/if}}
           {{/each}}
         </ChatMessagesContainer>
 
         {{! at bottom even if shown at top due to column-reverse  }}
-        {{#if this.messagesLoader.loadedPast}}
+        {{#if
+          (and
+            this.messagesLoader.loadedPast this.messagesManager.messages.length
+          )
+        }}
           <div class="all-loaded-message">
             {{i18n "chat.all_loaded"}}
           </div>
@@ -775,12 +876,13 @@ export default class ChatChannel extends Component {
             (not @channel.isDirectMessageChannel)
             @channel.canModerate
           }}
+          @channel={{@channel}}
           @pane={{this.pane}}
           @messagesManager={{this.messagesManager}}
         />
       {{else}}
         {{#if (and (not @channel.isFollowing) @channel.isCategoryChannel)}}
-          <ChatChannelPreviewCard @channel={{@channel}} />
+          <ChatChannelPreviewCard @channel={{@channel}} @context={{@context}} />
         {{else}}
           <ChatComposerChannel
             @channel={{@channel}}

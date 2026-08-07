@@ -7,12 +7,10 @@ import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import getURL from "discourse/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
-import { i18n } from "discourse-i18n";
 
 export default class UserController extends Controller {
   @service currentUser;
   @service router;
-  @service dialog;
   @optionalService adminTools;
 
   @computed("siteSettings.moderators_view_emails")
@@ -322,59 +320,14 @@ export default class UserController extends Controller {
   }
 
   get adminDeleteOptions() {
-    return [
-      {
-        id: "delete_dont_block",
-        label: i18n("admin.user.delete_dont_block"),
-        description: i18n("admin.user.delete_dont_block_description"),
-        icon: "trash-can",
-      },
-      {
-        id: "delete_and_block",
-        label: i18n("admin.user.delete_and_block"),
-        description: i18n("admin.user.delete_and_block_description"),
-        icon: "ban",
-      },
-    ];
+    return this.adminTools?.deleteUserOptions ?? [];
   }
 
   @action
   adminDelete(optionId) {
-    const block = optionId === "delete_and_block";
-    const userId = this.get("model.id");
-    const location = document.location.pathname;
-
-    const performDestroy = () => {
-      this.dialog.notice(i18n("admin.user.deleting_user"));
-      let formData = { context: location };
-      if (block) {
-        formData["block_email"] = true;
-        formData["block_urls"] = true;
-        formData["block_ip"] = true;
-      }
-      formData["delete_posts"] = true;
-
-      return this.adminTools
-        .deleteUser(userId, formData)
-        .then((data) => {
-          if (data.deleted) {
-            document.location = getURL("/admin/users/list/active");
-          } else {
-            this.dialog.alert(i18n("admin.user.delete_failed"));
-          }
-        })
-        .catch(() => this.dialog.alert(i18n("admin.user.delete_failed")));
-    };
-
-    this.dialog.deleteConfirm({
-      title: i18n("admin.user.delete_confirm_title"),
-      message: i18n("admin.user.delete_confirm"),
-      class: `delete-user-modal ${
-        block ? "delete-and-block" : "delete-dont-block"
-      }`,
-      confirmButtonLabel: `admin.user.${optionId}`,
-      confirmButtonIcon: block ? "triangle-exclamation" : "trash-can",
-      didConfirm: performDestroy,
+    this.adminTools.showDeleteUserModal(this.model.id, optionId, {
+      deletePosts: true,
+      onDeleted: () => (document.location = getURL("/admin/users/list/active")),
     });
   }
 

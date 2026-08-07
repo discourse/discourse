@@ -14,6 +14,7 @@ import categoryColorVariable from "discourse/helpers/category-color-variable";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { calculateFilterMode } from "discourse/lib/filter-mode";
 import { TRACKED_QUERY_PARAM_VALUE } from "discourse/lib/topic-list-tracked-filter";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
@@ -39,18 +40,21 @@ export default class DiscoveryNavigation extends Component {
   }
 
   get canCreateTopic() {
-    if (!this.currentUser?.can_create_topic) {
-      return false;
-    }
+    let value = this.currentUser?.can_create_topic ?? false;
 
     if (
+      value &&
       this.siteSettings.hide_disabled_create_topic_button &&
       this.args.createTopicDisabled
     ) {
-      return false;
+      value = false;
     }
 
-    return true;
+    return applyValueTransformer("can-create-topic-button", value, {
+      category: this.args.category,
+      tag: this.args.tag,
+      createTopicDisabled: this.args.createTopicDisabled,
+    });
   }
 
   get bodyClass() {

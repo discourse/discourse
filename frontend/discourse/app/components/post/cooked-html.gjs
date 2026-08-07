@@ -9,6 +9,7 @@ import { bind } from "discourse/lib/decorators";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
 import decorateLinkCounts from "discourse/lib/post-cooked-html-decorators/link-counts";
+import decorateLocalizedOneboxes from "discourse/lib/post-cooked-html-decorators/localized-oneboxes";
 import decorateMentions from "discourse/lib/post-cooked-html-decorators/mentions";
 import decorateQuoteControls from "discourse/lib/post-cooked-html-decorators/quote-controls";
 import decorateSearchHighlight from "discourse/lib/post-cooked-html-decorators/search-highlight";
@@ -24,6 +25,7 @@ const detachedDocument = document.implementation.createHTMLDocument("detached");
 
 const POST_COOKED_DECORATORS = [
   decorateStatefulHtmlElements,
+  decorateLocalizedOneboxes,
   decorateQuoteControls,
   decorateLinkCounts,
   decorateSearchHighlight,

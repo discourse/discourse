@@ -187,6 +187,8 @@ pt_BR:
       topic: "Tópico"
       post: "Postar"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "Atribuiu"
       assign_topic:
         operations:
           assign: "Atribuir"

@@ -33,7 +33,7 @@ export default class ChatMessageCreatorSearch extends Component {
         type: "list-action",
         label: i18n("chat.new_message_modal.new_group_chat"),
         enabled: true,
-        icon: "users",
+        icon: "user-group",
         id: "new-group-chat",
       });
     }

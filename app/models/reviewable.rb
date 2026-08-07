@@ -163,7 +163,8 @@ class Reviewable < ActiveRecord::Base
       update_args = {
         status: statuses[:pending],
         id: target.id,
-        type: target.class.polymorphic_name,
+        target_type: target.class.polymorphic_name,
+        reviewable_type: reviewable.type,
         potential_spam: potential_spam == true ? true : nil,
         potentially_illegal: potentially_illegal == true ? true : nil,
       }
@@ -175,7 +176,9 @@ class Reviewable < ActiveRecord::Base
           potentially_illegal = COALESCE(:potentially_illegal, reviewables.potentially_illegal)
         FROM reviewables AS old_reviewables
         WHERE reviewables.target_id = :id
-          AND reviewables.target_type = :type
+          AND reviewables.target_type = :target_type
+          AND reviewables.type = :reviewable_type
+          AND old_reviewables.id = reviewables.id
         RETURNING old_reviewables.status
       SQL
       old_status = row[0]
@@ -359,6 +362,9 @@ class Reviewable < ActiveRecord::Base
 
     validate_action!(guardian, action_id, perform_method, args)
 
+    affected_candidate_ids =
+      delete_user_action?(action_id) ? pending_reviewable_ids_for_target_user : []
+
     result = nil
     update_count = false
     Reviewable.transaction do
@@ -373,6 +379,10 @@ class Reviewable < ActiveRecord::Base
     end
 
     result.after_commit.call if result && result.after_commit
+
+    if result&.success? && affected_candidate_ids.present?
+      result.affected_reviewable_ids |= resolved_reviewable_ids(affected_candidate_ids)
+    end
 
     unless status == :pending
       if update_count || result.remove_reviewable_ids.present?
@@ -436,13 +446,20 @@ class Reviewable < ActiveRecord::Base
       ]
       target_associations << :localizations if SiteSetting.content_localization_enabled
 
+      target_created_by_associations = [:user_custom_fields]
+
+      if SiteSetting.allow_anonymous_mode
+        target_associations << { anonymous_user_master: :master_user }
+        target_created_by_associations << { anonymous_user_master: :master_user }
+      end
+
       result =
         result
           .includes(
             { created_by: :user_stat },
             :topic,
             { target: target_associations },
-            { target_created_by: [:user_custom_fields] },
+            { target_created_by: target_created_by_associations },
             :reviewable_histories,
           )
           .includes(reviewable_scores: { user: :user_stat, meta_topic: :posts })
@@ -453,18 +470,37 @@ class Reviewable < ActiveRecord::Base
     group_ids =
       SiteSetting.enable_category_group_moderation? ? user.group_users.pluck(:group_id) : []
 
-    result
-      .left_joins(category: :category_moderation_groups)
-      .where(
-        "(reviewables.reviewable_by_moderator AND :moderator) OR (category_moderation_groups.group_id IN (:group_ids))",
-        moderator: user.moderator?,
-        group_ids: group_ids,
-      )
-      .where(
-        "reviewables.category_id IS NULL OR reviewables.category_id IN (?)",
-        Guardian.new(user).allowed_category_ids,
-      )
+    result =
+      result
+        .left_joins(category: :category_moderation_groups)
+        .where(
+          "(reviewables.reviewable_by_moderator AND :moderator) OR (category_moderation_groups.group_id IN (:group_ids))",
+          moderator: user.moderator?,
+          group_ids: group_ids,
+        )
+        .where(
+          "reviewables.category_id IS NULL OR reviewables.category_id IN (?)",
+          Guardian.new(user).allowed_category_ids,
+        )
+
+    exclude_private_messages_hidden_from(result, user)
   end
+
+  def self.exclude_private_messages_hidden_from(result, user)
+    visible_private_message_ids =
+      Guardian.new(user).private_message_topic_scope(Topic.unscoped).select(:id)
+
+    result.where(<<~SQL, private_message: Archetype.private_message)
+        NOT EXISTS (
+          SELECT 1
+          FROM topics private_message
+          WHERE private_message.id = reviewables.topic_id
+            AND private_message.archetype = :private_message
+            AND private_message.id NOT IN (#{visible_private_message_ids.to_sql})
+        )
+      SQL
+  end
+  private_class_method :exclude_private_messages_hidden_from
 
   def self.pending_count(user)
     list_for(user).count
@@ -845,6 +881,27 @@ class Reviewable < ActiveRecord::Base
   end
 
   private
+
+  def delete_user_action?(action_id)
+    resolved_action = (aliases[action_id] || action_id).to_sym
+    %i[delete_user delete_and_block_user delete_user_block].include?(resolved_action)
+  end
+
+  def pending_reviewable_ids_for_target_user
+    user = target_created_by || (target if target_type == "User")
+    return [] if user.blank?
+
+    Reviewable
+      .pending
+      .where(target_created_by: user)
+      .or(Reviewable.pending.where(target: user))
+      .where.not(id: id)
+      .pluck(:id)
+  end
+
+  def resolved_reviewable_ids(candidate_ids)
+    candidate_ids - Reviewable.pending.where(id: candidate_ids).pluck(:id)
+  end
 
   def aliases
     self.class.action_aliases

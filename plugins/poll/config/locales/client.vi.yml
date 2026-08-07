@@ -12,6 +12,7 @@ vi:
           poll: "Discourse Poll"
   js:
     poll:
+      closed_by: "Đóng bởi %{username}"
       dynamic:
         enabled_hint: "Có thể thêm hoặc xóa các tùy chọn."
       voters:
@@ -151,5 +152,3 @@ vi:
           add: Thêm lựa chọn
         automatic_close:
           label: Tự động đóng bình chọn
-        show_advanced: "Hiển thị các tùy chọn nâng cao"
-        hide_advanced: "Ẩn các tùy chọn nâng cao"

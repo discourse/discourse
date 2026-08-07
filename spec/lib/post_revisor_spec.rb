@@ -414,13 +414,13 @@ describe PostRevisor do
       expect(post.locale).to eq("ja")
     end
 
-    it "also updates the topic's locale if first post" do
-      post = Fabricate(:post)
+    it "keeps the topic locale unchanged when editing the first post locale" do
+      post = Fabricate(:post, locale: "en")
+      post.topic.update!(locale: "fr")
 
       PostRevisor.new(post).revise!(post.user, locale: "ja")
 
-      post.reload
-      expect(post.topic.locale).to eq("ja")
+      expect(post.topic.reload.locale).to eq("fr")
     end
   end
 
@@ -442,6 +442,23 @@ describe PostRevisor do
 
     let(:post) { Fabricate(:post, post_args) }
     let(:first_version_at) { post.last_version_at }
+
+    describe "post type changes" do
+      let!(:opening_post) { Fabricate(:post, topic: topic) }
+      let!(:reply) { Fabricate(:post, topic: topic) }
+
+      it "rejects changing a post to a small action" do
+        expect(reply.revise(admin, post_type: Post.types[:small_action])).to eq(false)
+
+        expect(reply.reload.post_type).to eq(Post.types[:regular])
+      end
+
+      it "allows changing a post to a whisper" do
+        expect(opening_post.revise(admin, post_type: Post.types[:whisper])).to eq(true)
+
+        expect(opening_post.reload).to be_whisper
+      end
+    end
 
     it "destroys last revision if edit is undone" do
       old_raw = post.raw
@@ -1554,17 +1571,15 @@ describe PostRevisor do
           end
 
           context "with hidden tags" do
+            fab!(:super_tag) { Fabricate(:tag, name: "super") }
+            fab!(:stuff_tag) { Fabricate(:tag, name: "stuff") }
             let(:bumped_at) { 1.day.ago }
 
             before do
               topic.update!(bumped_at: bumped_at)
               create_hidden_tags(%w[important secret])
               topic = post.topic
-              topic.tags = [
-                Fabricate(:tag, name: "super"),
-                Tag.where(name: "important").first,
-                Fabricate(:tag, name: "stuff"),
-              ]
+              topic.tags = [super_tag, Tag.where(name: "important").first, stuff_tag]
             end
 
             it "creates a hidden revision" do
@@ -1596,6 +1611,27 @@ describe PostRevisor do
               expect(post.version).to eq(1)
               expect(post.public_version).to eq(1)
               expect(post.revisions.count).to eq(0)
+            end
+
+            it "creates a separate revision when a different user changes hidden tags instead of folding into the first author's revision" do
+              admin_a = Fabricate(:admin)
+              admin_b = Fabricate(:admin)
+              original_tags = topic.tags.map(&:name)
+
+              PostRevisor.new(post.reload).revise!(
+                admin_a,
+                raw: post.raw,
+                tags: original_tags + ["secret"],
+              )
+              post.reload
+              expect(post.version).to eq(2)
+              expect(post.revisions.last.user_id).to eq(admin_a.id)
+
+              PostRevisor.new(post.reload).revise!(admin_b, raw: post.raw, tags: original_tags)
+              post.reload
+              expect(post.version).to eq(3)
+              expect(post.revisions.count).to eq(2)
+              expect(post.revisions.last.user_id).to eq(admin_b.id)
             end
 
             it "increments public_version when hidden tag added with other visible changes" do
@@ -1935,7 +1971,73 @@ describe PostRevisor do
               { raw: "updated body" },
               revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
             )
-          }.to change { post.topic.bumped_at }
+          }.to change { post.topic.reload.bumped_at }
+        end
+
+        it "bumps the persisted topic when editing raw and title" do
+          post.topic.update!(bumped_at: 1.day.ago)
+
+          expect {
+            post_revisor.revise!(
+              post.user,
+              { raw: "updated body", title: "This is an updated topic title" },
+              revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
+            )
+          }.to change { post.topic.reload.bumped_at }
+        end
+
+        it "keeps post changes available to the modifier before advancing the draft" do
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin_instance,
+            :should_bump_topic,
+            &modifier_block
+          )
+
+          inspecting_modifier =
+            Proc.new do |value, modifier_post, modifier_post_changes, modifier_topic_changes, editor|
+              modifier_post.is_first_post? && modifier_post_changes.any?
+            end
+
+          plugin_instance.register_modifier(:should_bump_topic, &inspecting_modifier)
+
+          expect {
+            post_revisor.revise!(
+              post.user,
+              { raw: "updated body", title: "Updated topic title" },
+              revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
+            )
+          }.to change { post.topic.reload.bumped_at }
+        ensure
+          if defined?(inspecting_modifier)
+            DiscoursePluginRegistry.unregister_modifier(
+              plugin_instance,
+              :should_bump_topic,
+              &inspecting_modifier
+            )
+          end
+          plugin_instance.register_modifier(:should_bump_topic, &modifier_block)
+        end
+
+        it "doesn't bump the topic when the title edit is invalid" do
+          original_raw = post.raw
+          post.topic.update!(bumped_at: 1.day.ago)
+
+          messages =
+            MessageBus.track_publish(TopicTrackingState::LATEST_MESSAGE_BUS_CHANNEL) do
+              expect {
+                result =
+                  post_revisor.revise!(
+                    post.user,
+                    { raw: "updated body", title: "New Title" },
+                    revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
+                  )
+                expect(result).to eq(false)
+              }.not_to change { post.topic.reload.bumped_at }
+            end
+
+          expect(messages).to be_empty
+          expect(post.reload.raw).to eq(original_raw)
+          expect(post.version).to eq(1)
         end
       end
     end

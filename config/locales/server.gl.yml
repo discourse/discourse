@@ -134,7 +134,6 @@ gl:
       exclusion: está reservado
       greater_than: debe ser maior que %{count}
       greater_than_or_equal_to: debe ser igual ou maior que %{count}
-      has_already_been_used: "xa se está usando"
       inclusion: non está incluído na listaxe
       invalid: non é válido
       is_invalid: "parece pouco claro, é unha oración completa?"
@@ -398,6 +397,13 @@ gl:
       trust_level_2: "nivel_de_confianza_2"
       trust_level_3: "nivel_de_confianza_3"
       trust_level_4: "nivel_de_confianza_4"
+    default_full_names:
+      everyone: "Todos"
+      admins: "Administradores"
+      moderators: "Moderadores"
+      staff: "Equipo"
+      anonymous_users: "Usuarios anónimos"
+      logged_in_users: "Usuarios con sesión iniciada"
     request_membership_pm:
       title: "Solicitude de ser membro para @%{group_name}"
     request_accepted_pm:
@@ -824,6 +830,9 @@ gl:
       write: "Escribilo todo"
       one_time_password: "Crear un token de inicio de sesión dun só uso"
       bookmarks_calendar: "Ler recordatorios de marcadores"
+    device:
+      code: "Código"
+      continue: "Continuar"
     invalid_public_key: "Sentímolo, a chave pública non é válida."
     invalid_auth_redirect: "Sentímolo, este servidor auth_redirect non está permitido."
     invalid_token: "Token non válido, caducado ou ausente."
@@ -1278,7 +1287,6 @@ gl:
     staff_edit_locks_post: "Bloquearase a posibilidade de editar publicacións se estas son editadas por un membro do equipo"
     post_edit_time_limit: "Un autor con nivel de confianza 0 ou 1 pode editar as súas publicacións despois de (n) minutos. Se se estabelece en 0 pódese editar sempre."
     tl2_post_edit_time_limit: "Un autor con nivel de confianza 2 ou superior pode editar as súas publicacións despois de (n) minutos. Se se estabelece en 0 pódese editar sempre."
-    edit_history_visible_to_public: "Permitir que todos poidan ver as versións previas dunha publicación editada. Se se desactiva, unicamente os membros do equipo poderán velas."
     delete_removed_posts_after: "As publicacións retiradas polo seu autor borraranse automaticamente despois de (n) horas. Se se estabelece en 0, as publicacións eliminaranse ao momento."
     responsive_post_image_sizes: "Cambiar o tamaño das imaxes da caixa para permitir a súa visualización en pantallas de alto DPI das seguintes proporcións de píxeles. Retire todos os valores para desactivar imaxes adaptativas."
     fixed_category_positions: "De estar marcado, poderá organizar as categorías nunha orde determinada. De non o estar, as categorías aparecerán listadas segundo a súa actividade recente."
@@ -1313,8 +1321,6 @@ gl:
     silence_new_user_sensitivity: "A probabilidade de que un usuario novo sexa silenciado por denuncias de mensaxes lixo"
     auto_close_topic_sensitivity: "A probabilidade de que un tema denunciado sexa pechado automaticamente"
     cooldown_minutes_after_hiding_posts: "Número de minutos que un usuario debe esperar para poder editar unha publicación oculta por mor das denuncias da comunidade"
-    max_topics_in_first_day: "Número máximo de temas que un usuario ten permiso para crear nas 24 horas seguintes á creación da súa primeira publicación"
-    max_replies_in_first_day: "Número máximo de respostas que un usuario ten permiso para crear nas 24 horas seguintes á creación da súa primeira publicación"
     tl2_additional_likes_per_day_multiplier: "Incrementar o número de gústame por día para usuarios con nivel de confianza 2 (membros) multiplicándoo por este número"
     tl3_additional_likes_per_day_multiplier: "Incrementar o límite de gústame por día para usuarios con nivel de confianza 3 (habituais) multiplicándoo por este número"
     tl4_additional_likes_per_day_multiplier: "Incrementar o número de gústame por día para usuarios con nivel de confianza 4 (líderes) multiplicándoo por este número"
@@ -1677,7 +1683,6 @@ gl:
     default_other_notification_level_when_replying: "Nivel de notificación predefinida global cando o usuario responde a un tema."
     default_other_external_links_in_new_tab: "Abrir as ligazóns externas nunha nova lapela por defecto."
     default_other_enable_quoting: "Activar resposta citando o texto seleccionado por defecto."
-    default_other_enable_defer: "Activar, de xeito predeterminado, a función de aprazar o tema."
     default_other_dynamic_favicon: "Mostrar o número de temas novos/actualizados na icona do navegador por defecto."
     default_other_skip_new_user_tips: "Saltar os consellos iniciais e as insignias dos novos usuarios."
     default_topics_automatic_unpin: "Soltar automaticamente temas cando o usuario acada o fondo, de modo predeterminado."
@@ -1713,7 +1718,6 @@ gl:
     dashboard_general_tab_activity_metrics: "Escolla os informes que se amosarán como métricas de actividade na lapela xeral."
     share_quote_buttons: "Determinar que elementos aparecen no trebello de compartir cota e a súa orde."
     share_quote_visibility: "Determine cando amosar os botóns de compartir cota: nunca, só para usuarios anónimos ou para todos os usuarios. "
-    create_revision_on_bulk_topic_moves: "Crear revisión para as primeiras publicacións cando os temas se moven a unha nova categoría en masa."
     errors:
       invalid_email: "Enderezo electrónico non válido."
       invalid_username: "Non hai un usuario con este nome."
@@ -1764,6 +1768,10 @@ gl:
     results_page: "Buscar resultados para '%{term}'"
     audio: "[audio]"
     video: "[vídeo]"
+  posts_filter:
+    description:
+      order_latest: "Últimas publicacións"
+      order_latest_topic: "Últimos temas"
   discourse_connect:
     login_error: "Erro ao iniciar sesión"
     not_found: "Non se puido atopar a súa conta. Contacte co administrador do sitio."
@@ -3412,6 +3420,8 @@ gl:
   search_logs:
     graph_title: "Análise das buscas"
   onebox:
+    google_meet:
+      meeting_code: "Código:"
     github:
       closed: "pechado"
       status_date:
@@ -3506,7 +3516,6 @@ gl:
           complete: "Usuario eliminado."
         block:
           title: "Eliminar e bloquear usuario"
-          description: "O usuario será eliminado e bloquearase a súa IP e enderezo electrónico."
       confirm_spam:
         title: "Si"
       not_spam:

@@ -1,6 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
+import topicFixtures from "discourse/tests/fixtures/topic";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import pretender, {
   parsePostData,
@@ -12,6 +13,14 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
+function topicWithAssignablePosts() {
+  const topic = cloneJSON(topicFixtures["/t/280/1.json"]);
+  topic.can_assign = true;
+  topic.post_stream.posts.forEach((post) => (post.can_assign = true));
+
+  return topic;
+}
+
 acceptance("Assign mobile", function (needs) {
   needs.user();
   needs.mobileView();
@@ -20,6 +29,13 @@ acceptance("Assign mobile", function (needs) {
   });
 
   needs.pretender((server, helper) => {
+    server.get("/t/280.json", () =>
+      helper.response(topicWithAssignablePosts())
+    );
+    server.get("/t/280/:post_number.json", () =>
+      helper.response(topicWithAssignablePosts())
+    );
+
     server.get("/assign/suggestions", () => {
       return helper.response({
         success: true,
@@ -54,6 +70,13 @@ acceptance("Assign desktop", function (needs) {
   });
 
   needs.pretender((server, helper) => {
+    server.get("/t/280.json", () =>
+      helper.response(topicWithAssignablePosts())
+    );
+    server.get("/t/280/:post_number.json", () =>
+      helper.response(topicWithAssignablePosts())
+    );
+
     server.get("/assign/suggestions", () => {
       return helper.response({
         success: true,

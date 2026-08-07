@@ -41,9 +41,15 @@ module DiscourseAi
           examples: agent_data["examples"],
           temperature: agent_data["temperature"],
           top_p: agent_data["top_p"],
+          thinking_effort: agent_data["thinking_effort"],
           response_format: agent_data["response_format"],
           tools: transform_tools_for_import(agent_data["tools"], tool_name_to_id),
         }
+        if agent_data.key?("allowed_group_ids")
+          attrs[:allowed_group_ids] = Array(agent_data["allowed_group_ids"]).filter_map do |id|
+            Integer(id, exception: false)
+          end
+        end
         mcp_server_assignments = resolve_mcp_server_assignments(agent_data["mcp_servers"])
 
         if existing_agent && overwrite

@@ -50,6 +50,10 @@ ja:
       run: "実行"
       undo: "変更を破棄"
       delete: "削除"
+      chart:
+        form:
+          label: "グラフの種類"
+          bar: "棒"
       others_dirty: "クエリには保存されていない変更があり、移動すると失われます。"
       run_time: "クエリは %{value} ミリ秒で完了しました。"
       result_count:

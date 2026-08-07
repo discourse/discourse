@@ -6,12 +6,12 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
+import AdvancedModeToggle from "discourse/components/advanced-mode-toggle";
 import withEventValue from "discourse/helpers/with-event-value";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import { optionalRequire } from "discourse/lib/utilities";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { and, not } from "discourse/truth-helpers";
@@ -25,6 +25,9 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
+import generateCurrentDateMarkup from "discourse/plugins/discourse-local-dates/lib/generate-current-date-markup" with {
+  discourseImport: "optional",
+};
 
 export const BAR_CHART_TYPE = "bar";
 export const PIE_CHART_TYPE = "pie";
@@ -376,10 +379,6 @@ export default class PollUiBuilderModal extends Component {
       (event.metaKey || event.ctrlKey) &&
       this.siteSettings.discourse_local_dates_enabled
     ) {
-      const generateCurrentDateMarkup = optionalRequire(
-        "discourse/plugins/discourse-local-dates/lib/generate-current-date-markup"
-      );
-
       if (!generateCurrentDateMarkup) {
         return;
       }
@@ -704,15 +703,9 @@ export default class PollUiBuilderModal extends Component {
 
         <DButton @label="cancel" @action={{@closeModal}} class="btn-flat" />
 
-        <DButton
-          @action={{this.toggleAdvanced}}
-          @icon="gear"
-          @title={{if
-            this.showAdvanced
-            "poll.ui_builder.hide_advanced"
-            "poll.ui_builder.show_advanced"
-          }}
-          class="btn-default show-advanced"
+        <AdvancedModeToggle
+          @active={{this.showAdvanced}}
+          @onToggle={{this.toggleAdvanced}}
         />
 
       </:footer>

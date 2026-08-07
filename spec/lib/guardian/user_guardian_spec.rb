@@ -232,6 +232,18 @@ RSpec.describe UserGuardian do
 
     before { tl2_user.user_stat.update!(post_count: 1) }
 
+    context "when public profiles are hidden" do
+      before { SiteSetting.hide_user_profiles_from_public = true }
+
+      it "does not allow anonymous users to view profiles" do
+        expect(Guardian.new.can_see_profile?(tl2_user)).to eq(false)
+      end
+
+      it "allows logged-in users to view profiles" do
+        expect(Guardian.new(tl1_user).can_see_profile?(tl2_user)).to eq(true)
+      end
+    end
+
     context "when viewing the profile of a user with 0 posts" do
       before { user.user_stat.update!(post_count: 0) }
 
@@ -525,6 +537,14 @@ RSpec.describe UserGuardian do
       end
     end
 
+    it "requires an admin to delete another moderator" do
+      another_moderator = Fabricate(:moderator)
+
+      expect(Guardian.new(moderator).can_delete_user?(another_moderator)).to eq(false)
+      expect(Guardian.new(admin).can_delete_user?(another_moderator)).to eq(true)
+      expect(Guardian.new(moderator).can_delete_user?(moderator)).to eq(true)
+    end
+
     context "when deleting myself" do
       let(:guardian) { Guardian.new(user) }
 
@@ -532,6 +552,7 @@ RSpec.describe UserGuardian do
 
       it "isn't allowed when SSO is enabled" do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
         expect(guardian.can_delete_user?(user)).to eq(false)
       end
@@ -822,6 +843,53 @@ RSpec.describe UserGuardian do
     it "is false if the user has been banned from external uploads for a time period" do
       ExternalUploadManager.ban_user_from_external_uploads!(user: user)
       expect(Guardian.new(user).can_upload_external?).to eq(false)
+    end
+  end
+
+  describe "#can_check_sso_details?" do
+    it "is always true for admins" do
+      expect(Guardian.new(admin).can_check_sso_details?(user)).to eq(true)
+    end
+
+    it "is false for moderators by default" do
+      expect(Guardian.new(moderator).can_check_sso_details?(user)).to eq(false)
+    end
+
+    it "is true for moderators when moderators_view_sso_details is enabled" do
+      SiteSetting.moderators_view_sso_details = true
+      expect(Guardian.new(moderator).can_check_sso_details?(user)).to eq(true)
+    end
+
+    it "is false for regular users" do
+      expect(Guardian.new(user).can_check_sso_details?(user)).to eq(false)
+    end
+
+    it "is false for anonymous users" do
+      expect(Guardian.new.can_check_sso_details?(user)).to eq(false)
+    end
+  end
+
+  describe "#can_check_sso_email?" do
+    it "is true for admins" do
+      expect(Guardian.new(admin).can_check_sso_email?(user)).to eq(true)
+    end
+
+    it "is false for moderators when moderators_view_sso_details is enabled" do
+      SiteSetting.moderators_view_sso_details = true
+
+      expect(Guardian.new(moderator).can_check_sso_email?(user)).to eq(false)
+    end
+  end
+
+  describe "#can_check_sso_payload?" do
+    it "is true for admins" do
+      expect(Guardian.new(admin).can_check_sso_payload?(user)).to eq(true)
+    end
+
+    it "is false for moderators when moderators_view_sso_details is enabled" do
+      SiteSetting.moderators_view_sso_details = true
+
+      expect(Guardian.new(moderator).can_check_sso_payload?(user)).to eq(false)
     end
   end
 end

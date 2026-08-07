@@ -210,6 +210,136 @@ RSpec.describe DiscourseWorkflows::Executor do
       expect(after_output.first["json"]).to include("approved" => true, "done" => "true")
     end
 
+    it "preserves pending merge inputs across a wait resume" do
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:manual"
+          g.node "list-users",
+                 "action:set_fields",
+                 configuration: {
+                   "mode" => "raw",
+                   "include_other_fields" => false,
+                   "json_output" => '{"source": "users"}',
+                 }
+          g.node "wait-1", "flow:wait", configuration: { "resume" => "webhook" }
+          g.node "list-groups",
+                 "action:set_fields",
+                 configuration: {
+                   "mode" => "raw",
+                   "include_other_fields" => false,
+                   "json_output" => '{"source": "groups"}',
+                 }
+          g.node "merge-1", "flow:merge", name: "Merge branches"
+          g.connect "trigger-1", "list-users"
+          g.connect "trigger-1", "wait-1"
+          g.connect "wait-1", "list-groups"
+          g.connect "list-users", "merge-1", input: "input_1"
+          g.connect "list-groups", "merge-1", input: "input_2"
+        end
+      workflow =
+        Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+
+      execution = described_class.new(workflow, "trigger-1", {}).run
+      expect(execution.status).to eq("waiting")
+
+      claimed = DiscourseWorkflows::Execution.claim_for_resume(execution.reload)
+      resumed = DiscourseWorkflows::Executor.resume(claimed, [{ "json" => { "resumed" => true } }])
+
+      expect(resumed.status).to eq("success")
+      merge_run = resumed.execution_data.run_data["Merge branches"].first
+      expect(merge_run["inputs"].map { |input| input["item_count"] }).to eq([1, 1])
+
+      merge_output = resumed.execution_data.context_data["Merge branches"]
+      expect(merge_output.map { |item| item["json"]["source"] }).to contain_exactly(
+        "users",
+        "groups",
+      )
+    end
+
+    it "preserves queued sibling branches across a wait resume" do
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:manual"
+          g.node "wait-1", "flow:wait", configuration: { "resume" => "webhook" }
+          g.node "list-users",
+                 "action:set_fields",
+                 configuration: {
+                   "mode" => "raw",
+                   "include_other_fields" => false,
+                   "json_output" => '{"source": "users"}',
+                 }
+          g.node "list-groups",
+                 "action:set_fields",
+                 configuration: {
+                   "mode" => "raw",
+                   "include_other_fields" => false,
+                   "json_output" => '{"source": "groups"}',
+                 }
+          g.node "merge-1", "flow:merge", name: "Merge branches"
+          g.connect "trigger-1", "wait-1"
+          g.connect "trigger-1", "list-users"
+          g.connect "wait-1", "list-groups"
+          g.connect "list-users", "merge-1", input: "input_1"
+          g.connect "list-groups", "merge-1", input: "input_2"
+        end
+      workflow =
+        Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+
+      execution = described_class.new(workflow, "trigger-1", {}).run
+      expect(execution.status).to eq("waiting")
+
+      claimed = DiscourseWorkflows::Execution.claim_for_resume(execution.reload)
+      resumed = DiscourseWorkflows::Executor.resume(claimed, [{ "json" => { "resumed" => true } }])
+
+      merge_output = resumed.execution_data.context_data["Merge branches"]
+      expect(merge_output.map { |item| item["json"]["source"] }).to contain_exactly(
+        "users",
+        "groups",
+      )
+    end
+
+    it "preserves queued merge nodes across a wait resume" do
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:manual"
+          g.node "list-users",
+                 "action:set_fields",
+                 configuration: {
+                   "mode" => "raw",
+                   "include_other_fields" => false,
+                   "json_output" => '{"source": "users"}',
+                 }
+          g.node "list-groups",
+                 "action:set_fields",
+                 configuration: {
+                   "mode" => "raw",
+                   "include_other_fields" => false,
+                   "json_output" => '{"source": "groups"}',
+                 }
+          g.node "wait-1", "flow:wait", configuration: { "resume" => "webhook" }
+          g.node "merge-1", "flow:merge", name: "Merge branches"
+          g.connect "trigger-1", "list-users"
+          g.connect "trigger-1", "list-groups"
+          g.connect "trigger-1", "wait-1"
+          g.connect "list-users", "merge-1", input: "input_1"
+          g.connect "list-groups", "merge-1", input: "input_2"
+        end
+      workflow =
+        Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+
+      execution = described_class.new(workflow, "trigger-1", {}).run
+      expect(execution.status).to eq("waiting")
+
+      claimed = DiscourseWorkflows::Execution.claim_for_resume(execution.reload)
+      resumed = DiscourseWorkflows::Executor.resume(claimed, [{ "json" => { "resumed" => true } }])
+
+      merge_output = resumed.execution_data.context_data["Merge branches"]
+      expect(merge_output.map { |item| item["json"]["source"] }).to contain_exactly(
+        "users",
+        "groups",
+      )
+    end
+
     it "raises when the execution has not been claimed for resume" do
       response_items = [{ "json" => { "approved" => true } }]
 

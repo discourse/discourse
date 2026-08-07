@@ -66,7 +66,7 @@ module DiscourseAi
         end
 
         def max_prompt_tokens
-          llm_model.max_prompt_tokens
+          max_prompt_tokens_with_reserved_output
         end
 
         def native_tool_support?
@@ -140,6 +140,8 @@ module DiscourseAi
         end
 
         def user_msg(msg)
+          content = prepend_user_id(DiscourseAi::Completions::Prompt.text_only(msg), msg)
+
           images = nil
           if vision_support?
             encoded_uploads = prompt.encoded_uploads(msg)
@@ -156,7 +158,7 @@ module DiscourseAi
             end
           end
 
-          { role: "user", content: DiscourseAi::Completions::Prompt.text_only(msg), images: images }
+          { role: "user", content: content, images: images }
         end
 
         def model_msg(msg)

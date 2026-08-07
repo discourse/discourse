@@ -11,8 +11,8 @@ module DiscourseWorkflows
       (limit || DEFAULT_LIMIT).clamp(1, MAX_LIMIT)
     end
 
-    def self.cursor_page(scope:, cursor:, limit:, path:, query: {})
-      paginated_scope = cursor ? scope.where("id < ?", cursor) : scope
+    def self.cursor_page(scope:, cursor:, limit:, path:, query: {}, column: :id)
+      paginated_scope = cursor ? scope.where("#{column} < ?", cursor) : scope
       records = paginated_scope.limit(limit + 1).to_a
       has_more = records.size > limit
       records = records.first(limit) if has_more
@@ -20,14 +20,15 @@ module DiscourseWorkflows
       Page.new(
         records: records,
         total_rows: scope.count,
-        load_more_url: build_load_more_url(path, records, limit, query, has_more),
+        load_more_url: build_load_more_url(path, records, limit, query, has_more, column),
       )
     end
 
-    def self.build_load_more_url(path, records, limit, query, has_more)
+    def self.build_load_more_url(path, records, limit, query, has_more, column = :id)
       return if !has_more || records.empty?
 
-      "#{path}?#{query.merge(cursor: records.last.id, limit: limit).compact_blank.to_query}"
+      cursor = records.last.public_send(column)
+      "#{path}?#{query.merge(cursor: cursor, limit: limit).compact_blank.to_query}"
     end
   end
 end

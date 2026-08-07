@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ThemeSettingsManager
-  attr_reader :name, :theme, :default
+  attr_reader :name, :theme, :default, :opts
 
   def self.types
     ThemeSetting.types
@@ -53,6 +53,10 @@ class ThemeSettingsManager
 
   def requests_refresh?
     @opts[:refresh]
+  end
+
+  def disallowed_groups
+    @opts[:disallowed_groups]
   end
 
   def value=(new_value)

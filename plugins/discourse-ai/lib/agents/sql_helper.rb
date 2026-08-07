@@ -3,6 +3,10 @@
 module DiscourseAi
   module Agents
     class SqlHelper < Agent
+      def thinking_effort
+        "medium"
+      end
+
       def self.schema
         return @schema if defined?(@schema)
 

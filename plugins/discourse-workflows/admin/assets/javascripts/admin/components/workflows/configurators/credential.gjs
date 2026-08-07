@@ -102,6 +102,7 @@ export default class Credential extends Component {
   <template>
     <ExpressionWrapper
       @field={{if @field @field (hash value=this.value)}}
+      @schema={{@schema}}
       @supportsExpression={{@supportsExpression}}
       @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}

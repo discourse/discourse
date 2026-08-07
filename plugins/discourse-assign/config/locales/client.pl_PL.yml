@@ -31,6 +31,8 @@ pl_PL:
       status_change: "Zmieniono status przypisania dla %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Dodaj filtr \"nieprzypisane\" do tej kategorii"
+      additional_assign_allowed_groups: "Dodatkowe grupy z uprawnieniami do przydzielania zadań"
+      additional_assign_allowed_groups_description: "Członkowie tych grup mogą przypisywać tematy w tej kategorii. Grupy, które są już dopuszczone globalnie, są tutaj wyświetlane i nie można ich usunąć. Ustawienia kategorii nadrzędnej nie mają zastosowania do podkategorii."
       cant_act: "Nie możesz działać na flagach, które nie zostały przydzielone innymi użytkownikom"
       cant_act_unclaimed: "Musisz przejąć ten temat, zanim zaczniesz działać na flagach."
       topic_search_placeholder: "Szukaj tematów według tytułu lub treści"
@@ -213,8 +215,10 @@ pl_PL:
         requires_assign: "Wymaga włączenia wtyczki Przypisz"
       nodes:
         "action:assign_topic": "Przypisz temat"
+        "trigger:assigned": "Przypisany"
       node_descriptions:
         "action:assign_topic": "Przypisz lub anuluj przypisanie tematu"
+        "trigger:assigned": "Wyzwala się, gdy przypisany zostanie temat lub wpis"
       assign_topic:
         operation: "Działanie"
         operations:
@@ -223,3 +227,6 @@ pl_PL:
         topic_id: "ID tematu"
         assignee: "Przypisany"
         replace_existing: "Zastąp istniejące zadanie"
+      assigned:
+        topic_assignments_only: "Wyzwalaj tylko wtedy, gdy celem zadania jest temat, a nie pojedynczy wpis"
+        topic_assignments_only_description: "Tylko przypisania tematów"

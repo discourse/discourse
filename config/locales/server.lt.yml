@@ -136,7 +136,6 @@ lt:
       exclusion: yra rezervuotas
       greater_than: turi būti didesnis nei %{count}
       greater_than_or_equal_to: turi būti didesnis arba lygus %{count}
-      has_already_been_used: "jau yra naudojamas"
       inclusion: yra neitrauktas i sąrasą
       invalid: netinkamas
       is_invalid: "atrodo neaišku, ar tai visas sakinys?"
@@ -359,6 +358,13 @@ lt:
       trust_level_2: "pasitikėjimo_lygis_2"
       trust_level_3: "pasitikėjimo_lygis_3"
       trust_level_4: "pasitikėjimo_lygis_4"
+    default_full_names:
+      everyone: "Visi"
+      admins: "Administratoriai"
+      moderators: "Moderatoriai"
+      staff: "Personalas"
+      anonymous_users: "Anoniminiai vartotojai"
+      logged_in_users: "Prisijungę vartotojai"
     request_membership_pm:
       title: "Narystės prašymas @%{group_name}"
     request_accepted_pm:
@@ -842,6 +848,9 @@ lt:
       write: "Rašyti visus"
       one_time_password: "Sukurkite vienkartinį prisijungimo raktą"
       bookmarks_calendar: "Skaityti žymių priminimus"
+    device:
+      code: "Kodas"
+      continue: "Tęsti"
     invalid_public_key: "Atsiprašome, viešasis raktas yra neteisingas."
     invalid_token: "Trūksta, netinkamas arba pasibaigęs prieigos raktas."
   flags:
@@ -921,6 +930,7 @@ lt:
         level: "Patikimumo lygis"
         count: "Nariai"
         share: "Dalintis"
+        signups: "Registracijos"
       levels:
         "0": "Naujas"
         "1": "Pagrindinis"
@@ -1242,7 +1252,6 @@ lt:
     editing_grace_period_max_diff_high_trust: "Didžiausias leidžiamas simbolių pakeitimų skaičius per redagavimo atidėjimo laikotarpį, jei pakeitimų daugiau, išsaugokite kitą įrašo versiją (2 pasitikėjimo lygis ir aukštesnis)"
     staff_edit_locks_post: "Pranešimai bus užrakinti nuo redagavimo, jei juos redaguos darbuotojai"
     post_edit_time_limit: "tl0 arba tl1 autorius gali redaguoti savo įrašą (n) minučių po paskelbimo. Nustatykite 0 visam laikui."
-    edit_history_visible_to_public: "Leisti visiems matyti ankstesnes redaguoto įrašo versijas. Kai išjungta, peržiūrėti gali tik darbuotojai."
     delete_removed_posts_after: "Autoriaus pašalintos žinutės bus automatiškai ištrintos po (n) valandų. Jei nustatytas 0, įrašai bus nedelsiant ištrinti."
     fixed_category_positions: "Jei pažymėsite, galėsite suskirstyti kategorijas į nustatytą tvarką. Jei nepažymėta, kategorijos pateikiamos pagal veiklos eilę."
     show_pinned_excerpt_mobile: "Rodyti ištrauką apie prisegtas temas mobiliojo įrenginio rodinyje."
@@ -1256,8 +1265,6 @@ lt:
     hide_post_sensitivity: "Tikimybė, kad pažymėtas įrašas bus paslėptas"
     silence_new_user_sensitivity: "Tikimybė, kad naujas vartotojas bus nutildytas remiantis šlamšto vėliavomis"
     cooldown_minutes_after_hiding_posts: "Minučių skaičius, kiek vartotojas turi laukti, kol galės redaguoti įrašą, paslėptą per bendruomenės žymėjimą"
-    max_topics_in_first_day: "Maksimalus temų skaičius, kurį vartotojas gali sukurti per 24 valandų laikotarpį po pirmojo įrašo sukūrimo"
-    max_replies_in_first_day: "Maksimalus atsakymų, kuriuos vartotojas gali sukurti per 24 valandų laikotarpį po pirmojo įrašo sukūrimo"
     tl2_additional_likes_per_day_multiplier: "Padidinkite tl2 (nario) paspaudimų \"patinka\" limitą per dieną, padaugindami iš šio skaičiaus"
     tl3_additional_likes_per_day_multiplier: "Padidinkite patinkančių paspaudimų limitą per dieną tl3 (įprastai) padaugindami iš šio skaičiaus"
     tl4_additional_likes_per_day_multiplier: "Padidinkite tl4 (lyderio) paspaudimų „patinka“ limitą per dieną, padaugindami iš šio skaičiaus"
@@ -1445,6 +1452,10 @@ lt:
     results_page: "Paieškos rezultatai ir '%{term}'"
     audio: "[audio]"
     video: "[video]"
+  posts_filter:
+    description:
+      order_latest: "Naujausi įrašai"
+      order_latest_topic: "Naujausios temos"
   discourse_connect:
     login_error: "Prisijungimo klaida"
     not_found: "Nepavyko rasti jūsų paskyros. Prašome susisiekti su svetainės administratoriumi."
@@ -1820,6 +1831,7 @@ lt:
     Norėdami atsisakyti šių el. laiškų prenumeratos, [spustelėkite čia](%{unsubscribe_url}).
   subject_re: "Dar kartą:"
   subject_pm: "[AŽ]"
+  email_from: "%{user_name}"
   user_notifications:
     previous_discussion: "Ankstesni atsakymai"
     in_reply_to: "Atsakant į"
@@ -2558,6 +2570,8 @@ lt:
   search_logs:
     graph_title: "Ieškoti kontakto"
   onebox:
+    google_meet:
+      meeting_code: "Kodas:"
     github:
       closed: "uždaryta"
       status_date:
@@ -2607,6 +2621,8 @@ lt:
     actions:
       agree:
         title: "Taip"
+      agree_and_keep_deleted:
+        title: "Palikti įrašą ištrintą"
       agree_and_silence:
         description: "Sutikti su pranešimu ir nutildyti narį."
       agree_and_restore:

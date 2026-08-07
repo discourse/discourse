@@ -5,5 +5,3 @@
 # https://translate.discourse.org/
 
 ko:
-  site_settings:
-    rss_polling_frequency: "[RSS Polling] 피드 폴링 빈도(분당)"

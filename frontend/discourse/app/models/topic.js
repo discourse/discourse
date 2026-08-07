@@ -12,16 +12,22 @@ import { TOPIC_VISIBILITY_REASONS } from "discourse/lib/constants";
 import deprecated from "discourse/lib/deprecated";
 import { longDate } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
+import {
+  clearModelFields,
+  registerModelField,
+  stampModelClass,
+} from "discourse/lib/model-extensions";
 import { applyModelTransformations } from "discourse/lib/model-transformers";
 import { deepEqual, deepMerge } from "discourse/lib/object";
 import PreloadStore from "discourse/lib/preload-store";
 import { serializeTags } from "discourse/lib/serialize-tags";
 import { emojiUnescape } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import {
-  autoTrackedArray,
-  defineTrackedProperty,
-} from "discourse/lib/tracked-tools";
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import ActionSummary from "discourse/models/action-summary";
 import Bookmark from "discourse/models/bookmark";
@@ -32,14 +38,13 @@ import { flushMap } from "discourse/services/store";
 import { i18n } from "discourse-i18n";
 import Category from "./category";
 
-const pluginTrackedProperties = new Set();
-
 export function _addTrackedTopicProperty(propertyKey) {
-  pluginTrackedProperties.add(propertyKey);
+  stampModelClass(Topic, "topic");
+  registerModelField("topic", propertyKey);
 }
 
 export function clearAddedTrackedTopicProperties() {
-  pluginTrackedProperties.clear();
+  clearModelFields("topic");
 }
 
 export function loadTopicView(topic, args) {
@@ -354,14 +359,6 @@ export default class Topic extends RestModel {
     topic: this,
   });
 
-  constructor() {
-    super(...arguments);
-
-    pluginTrackedProperties.forEach((propertyKey) => {
-      defineTrackedProperty(this, propertyKey);
-    });
-  }
-
   @computed("lastPoster.user")
   get lastPosterUser() {
     return this.lastPoster?.user;
@@ -586,7 +583,9 @@ export default class Topic extends RestModel {
 
   @computed("posts_count")
   get replyCount() {
-    return this.posts_count - 1;
+    return applyValueTransformer("topic-reply-count", this.posts_count - 1, {
+      topic: this,
+    });
   }
 
   get details() {
@@ -651,14 +650,11 @@ export default class Topic extends RestModel {
     return `${getURL("/t/")}${slug}/${this.id}`;
   }
 
-  @computed("id", "slug", "is_nested_view", "_forcedFlat")
+  @computed("id", "slug")
   get url() {
     let slug = this.slug || "";
     if (slug.trim().length === 0) {
       slug = "topic";
-    }
-    if (this.is_nested_view && !this._forcedFlat) {
-      return `${getURL("/n/")}${slug}/${this.id}`;
     }
     return `${getURL("/t/")}${slug}/${this.id}`;
   }
@@ -688,9 +684,9 @@ export default class Topic extends RestModel {
     return this.unread_posts || this.new_posts;
   }
 
-  @computed("last_read_post_number", "url", "is_nested_view", "_forcedFlat")
+  @computed("last_read_post_number", "url", "is_nested_view")
   get lastReadUrl() {
-    if (this.is_nested_view && !this._forcedFlat) {
+    if (this.is_nested_view) {
       return this.url;
     }
     return this.urlForPostNumber(this.last_read_post_number);
@@ -700,11 +696,10 @@ export default class Topic extends RestModel {
     "last_read_post_number",
     "highest_post_number",
     "url",
-    "is_nested_view",
-    "_forcedFlat"
+    "is_nested_view"
   )
   get lastUnreadUrl() {
-    if (this.is_nested_view && !this._forcedFlat) {
+    if (this.is_nested_view) {
       return this.url;
     }
 
@@ -736,9 +731,9 @@ export default class Topic extends RestModel {
     return this.urlForPostNumber(postNumber);
   }
 
-  @computed("highest_post_number", "url", "is_nested_view", "_forcedFlat")
+  @computed("highest_post_number", "url", "is_nested_view")
   get lastPostUrl() {
-    if (this.is_nested_view && !this._forcedFlat) {
+    if (this.is_nested_view) {
       return this.url;
     }
     return this.urlForPostNumber(this.highest_post_number);
@@ -950,29 +945,35 @@ export default class Topic extends RestModel {
 
   // Update our attributes from a JSON result
   updateFromJson(json) {
-    const keys = Object.keys(json);
-    if (!json.view_hidden) {
-      this.details.updateFromJson(json.details);
+    return applyBehaviorTransformer(
+      "topic-update-from-json",
+      () => {
+        const keys = Object.keys(json);
+        if (!json.view_hidden) {
+          this.details.updateFromJson(json.details);
 
-      removeValuesFromArray(keys, ["details", "post_stream"]);
+          removeValuesFromArray(keys, ["details", "post_stream"]);
 
-      if (json.published_page) {
-        this.set(
-          "publishedPage",
-          this.store.createRecord("published-page", json.published_page)
-        );
-      }
-    }
-    keys.forEach((key) => this.set(key, json[key]));
+          if (json.published_page) {
+            this.set(
+              "publishedPage",
+              this.store.createRecord("published-page", json.published_page)
+            );
+          }
+        }
+        keys.forEach((key) => this.set(key, json[key]));
 
-    if (this.bookmarks.length) {
-      this.set(
-        "bookmarks",
-        this.bookmarks.map((bm) => Bookmark.create(bm))
-      );
-    }
+        if (this.bookmarks.length) {
+          this.set(
+            "bookmarks",
+            this.bookmarks.map((bm) => Bookmark.create(bm))
+          );
+        }
 
-    return this;
+        return this;
+      },
+      { topic: this, json }
+    );
   }
 
   reload(opts = {}) {
@@ -1019,7 +1020,11 @@ export default class Topic extends RestModel {
 
   @computed("excerpt")
   get escapedExcerpt() {
-    return emojiUnescape(this.excerpt);
+    return applyValueTransformer(
+      "topic-escaped-excerpt",
+      emojiUnescape(this.excerpt),
+      { topic: this }
+    );
   }
 
   @computed("excerpt")

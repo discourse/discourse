@@ -7,6 +7,7 @@ describe "Data explorer new query" do
 
   before do
     SiteSetting.data_explorer_enabled = true
+    SiteSetting.data_explorer_ai_queries_enabled = false
     sign_in admin
   end
 

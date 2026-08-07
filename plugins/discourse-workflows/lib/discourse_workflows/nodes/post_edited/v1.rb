@@ -5,13 +5,6 @@ module DiscourseWorkflows
     module PostEdited
       class V1 < NodeType
         POST_SCOPE_OPTIONS = %w[first_post replies all_posts].freeze
-        TRUST_LEVEL_OPTIONS = [
-          { value: "0", label_key: "trust_levels.names.newuser" },
-          { value: "1", label_key: "trust_levels.names.basic" },
-          { value: "2", label_key: "trust_levels.names.member" },
-          { value: "3", label_key: "trust_levels.names.regular" },
-          { value: "4", label_key: "trust_levels.names.leader" },
-        ].freeze
 
         description(
           name: "trigger:post_edited",
@@ -21,6 +14,17 @@ module DiscourseWorkflows
             color: "violet",
           },
           group: "discourse_triggers",
+          events: [:post_edited],
+          output_contracts: [
+            {
+              schema:
+                Schema.merge(
+                  Schema::POST_SCHEMA,
+                  Schema::TOPIC_LIST_ITEM_SCHEMA,
+                  Schema::USER_SCHEMA,
+                ),
+            },
+          ],
           properties: {
             post_scope: {
               type: :options,
@@ -28,11 +32,25 @@ module DiscourseWorkflows
               default: "first_post",
               options: POST_SCOPE_OPTIONS,
             },
-            category_id: {
-              type: :integer,
+            category_ids: {
+              type: :array,
               required: false,
               ui: {
                 control: :category,
+                multiple: true,
+              },
+            },
+            include_subcategories: {
+              type: :boolean,
+              required: false,
+              default: true,
+              ui: {
+                control: :checkbox,
+              },
+              display_options: {
+                show: {
+                  category_ids: [{ condition: { exists: true } }],
+                },
               },
             },
             tag_names: {
@@ -45,39 +63,45 @@ module DiscourseWorkflows
             trust_levels: {
               type: :multi_options,
               required: false,
-              options: TRUST_LEVEL_OPTIONS,
+              options: trust_level_options,
             },
           },
         )
 
-        def initialize(post, cooked, *)
+        def initialize(post, topic_changed_or_cooked = nil, revisor = nil, *)
           super(parameters: {})
           @post = post
-          @cooked = cooked
+          @cooked = topic_changed_or_cooked.is_a?(String) ? topic_changed_or_cooked : post&.cooked
+          @revisor = revisor
         end
 
         def valid?
-          @post.present? && @post.topic.present? && @post.post_type == ::Post.types[:regular]
+          @post.present? && @post.topic.present? && @post.post_type == ::Post.types[:regular] &&
+            !@revisor&.opts&.dig(:skip_workflows)
         end
 
         def output
           {
             post: serialize_post(@post, include_cooked: true).merge(cooked: @cooked),
             topic: topic_data(@post.topic),
+            user: user_data(@post.user),
           }
         end
 
         def matches?(trigger_ctx)
           matches_post_scope?(trigger_ctx.get_node_parameter("post_scope", "first_post")) &&
-            matches_category?(trigger_ctx.get_node_parameter("category_id")) &&
-            matches_tags?(normalize_tag_names(trigger_ctx.get_node_parameter("tag_names"))) &&
+            matches_category_ids?(
+              @post.topic.category_id,
+              category_ids_parameter(trigger_ctx),
+              include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
+            ) && matches_tags?(normalize_tag_names(trigger_ctx.get_node_parameter("tag_names"))) &&
             matches_trust_level?(trigger_ctx.get_node_parameter("trust_levels"))
         end
 
         private
 
-        def topic_data(topic)
-          serialize_record(topic, TopicListItemSerializer)
+        def user_data(user)
+          serialize_user(user)
         end
 
         def matches_post_scope?(post_scope)
@@ -89,14 +113,6 @@ module DiscourseWorkflows
           else
             @post.post_number == 1
           end
-        end
-
-        def matches_category?(category_id)
-          category_id.blank? || topic_category_ids.include?(category_id.to_i)
-        end
-
-        def topic_category_ids
-          [@post.topic.category_id, @post.topic.category&.parent_category_id].compact
         end
 
         def matches_tags?(tag_names)

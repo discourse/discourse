@@ -443,67 +443,24 @@ export default class AdminUserIndexController extends Controller {
   }
 
   get deleteUserOptions() {
-    return [
-      {
-        id: "delete_dont_block",
-        label: i18n("admin.user.delete_dont_block"),
-        description: i18n("admin.user.delete_dont_block_description"),
-        icon: "trash-can",
-      },
-      {
-        id: "delete_and_block",
-        label: i18n("admin.user.delete_and_block"),
-        description: i18n("admin.user.delete_and_block_description"),
-        icon: "ban",
-      },
-    ];
+    return this.adminTools.deleteUserOptions;
   }
 
   @action
   destroyUser(optionId) {
-    const block = optionId === "delete_and_block";
-    const postCount = this.get("model.post_count");
+    const postCount = this.model.post_count;
     const maxPostCount = this.siteSettings.delete_all_posts_max;
     const location = document.location.pathname;
 
-    const performDestroy = () => {
-      this.dialog.notice(i18n("admin.user.deleting_user"));
-      let formData = { context: location };
-      if (block) {
-        formData["block_email"] = true;
-        formData["block_urls"] = true;
-        formData["block_ip"] = true;
-      }
-      if (postCount <= maxPostCount) {
-        formData["delete_posts"] = true;
-      }
-      this.model
-        .destroy(formData)
-        .then((data) => {
-          if (data.deleted) {
-            if (/^\/admin\/users\/list\//.test(location)) {
-              document.location = location;
-            } else {
-              document.location = getURL("/admin/users/list/active");
-            }
-          } else {
-            this.dialog.alert(i18n("admin.user.delete_failed"));
-          }
-        })
-        .catch(() => {
-          this.dialog.alert(i18n("admin.user.delete_failed"));
-        });
-    };
-
-    this.dialog.deleteConfirm({
-      title: i18n("admin.user.delete_confirm_title"),
-      message: i18n("admin.user.delete_confirm"),
-      class: `delete-user-modal ${
-        block ? "delete-and-block" : "delete-dont-block"
-      }`,
-      confirmButtonLabel: `admin.user.${optionId}`,
-      confirmButtonIcon: block ? "triangle-exclamation" : "trash-can",
-      didConfirm: performDestroy,
+    this.adminTools.showDeleteUserModal(this.model.id, optionId, {
+      deletePosts: postCount <= maxPostCount,
+      onDeleted: () => {
+        if (/^\/admin\/users\/list\//.test(location)) {
+          document.location = location;
+        } else {
+          document.location = getURL("/admin/users/list/active");
+        }
+      },
     });
   }
 

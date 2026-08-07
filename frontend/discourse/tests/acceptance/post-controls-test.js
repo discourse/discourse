@@ -3,9 +3,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
-acceptance(`Post controls`, function (needs) {
-  needs.settings({ enable_new_post_reactions_menu: true });
-
+acceptance(`Post controls`, function () {
   test("popup with likes is shown when clicking on like count", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
@@ -13,9 +11,9 @@ acceptance(`Post controls`, function (needs) {
 
     await click("#post_2 .button-count");
 
-    assert.dom(".post-users-popup").exists("post likes popup appears");
+    assert.dom(".users-popup").exists("post likes popup appears");
     assert
-      .dom(".post-users-popup__item")
+      .dom(".users-popup__item")
       .exists("liked users are listed in the popup");
   });
 
@@ -38,7 +36,6 @@ acceptance(`Post controls`, function (needs) {
       .dom("#post_1 button.show-replies")
       .hasAria("pressed", "true", "show replies button is now pressed");
 
-    // const replies = Array.from(queryAll("#post_1 .embedded-posts .reply"));
     assert
       .dom("#post_1 .embedded-posts .reply")
       .exists({ count: 1 }, "replies are rendered");

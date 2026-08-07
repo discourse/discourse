@@ -110,15 +110,51 @@ RSpec.describe DiscourseWorkflows::Executor do
                    "include_other_fields" => false,
                    "json_output" => '{"topic_id": 1, "right": "yes"}',
                  }
+          g.node "merge-1", "flow:merge", name: "Merge branches"
+          g.connect "trigger-1", "left-1"
+          g.connect "trigger-1", "right-1"
+          g.connect "left-1", "merge-1", input: "input_1"
+          g.connect "right-1", "merge-1", input: "input_2"
+        end
+      workflow =
+        Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+
+      execution = described_class.new(workflow, "trigger-1", {}).run
+
+      expect(execution.status).to eq("success")
+      merge_steps =
+        execution.execution_data.steps_array.select { |step| step["node_id"] == "merge-1" }
+      expect(merge_steps.length).to eq(1)
+      expect(merge_steps.first["output"].map { |item| item["json"] }).to contain_exactly(
+        include("id" => 1, "left" => "yes"),
+        include("topic_id" => 1, "right" => "yes"),
+      )
+    end
+
+    it "combines two branches into a single item by position" do
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:manual"
+          g.node "left-1",
+                 "action:set_fields",
+                 configuration: {
+                   "mode" => "raw",
+                   "include_other_fields" => false,
+                   "json_output" => '{"id": 1, "left": "yes"}',
+                 }
+          g.node "right-1",
+                 "action:set_fields",
+                 configuration: {
+                   "mode" => "raw",
+                   "include_other_fields" => false,
+                   "json_output" => '{"topic_id": 1, "right": "yes"}',
+                 }
           g.node "merge-1",
                  "flow:merge",
                  name: "Merge branches",
                  configuration: {
                    "mode" => "combine",
-                   "combine_by" => "matching_fields",
-                   "fields_to_match" => {
-                     "values" => [{ "field_1" => "id", "field_2" => "topic_id" }],
-                   },
+                   "resolve_clash" => "prefer_last",
                  }
           g.connect "trigger-1", "left-1"
           g.connect "trigger-1", "right-1"
@@ -134,11 +170,8 @@ RSpec.describe DiscourseWorkflows::Executor do
       merge_steps =
         execution.execution_data.steps_array.select { |step| step["node_id"] == "merge-1" }
       expect(merge_steps.length).to eq(1)
-      expect(merge_steps.first["output"].first["json"]).to include(
-        "id" => 1,
-        "left" => "yes",
-        "topic_id" => 1,
-        "right" => "yes",
+      expect(merge_steps.first["output"].map { |item| item["json"] }).to eq(
+        [{ "id" => 1, "left" => "yes", "topic_id" => 1, "right" => "yes" }],
       )
     end
 
@@ -167,12 +200,7 @@ RSpec.describe DiscourseWorkflows::Executor do
                    "include_other_fields" => false,
                    "json_output" => '{"source": "third"}',
                  }
-          g.node "merge-1",
-                 "flow:merge",
-                 name: "Append branches",
-                 configuration: {
-                   "mode" => "append",
-                 }
+          g.node "merge-1", "flow:merge", name: "Append branches"
           g.connect "trigger-1", "first-1"
           g.connect "trigger-1", "second-1"
           g.connect "trigger-1", "third-1"
@@ -214,13 +242,7 @@ RSpec.describe DiscourseWorkflows::Executor do
                    "include_other_fields" => false,
                    "json_output" => '{"source": "second"}',
                  }
-          g.node "merge-1",
-                 "flow:merge",
-                 name: "Append branches",
-                 configuration: {
-                   "mode" => "append",
-                   "number_inputs" => 3,
-                 }
+          g.node "merge-1", "flow:merge", name: "Append branches"
           g.connect "trigger-1", "first-1"
           g.connect "trigger-1", "second-1"
           g.connect "first-1", "merge-1", input: "input_1"
@@ -282,12 +304,7 @@ RSpec.describe DiscourseWorkflows::Executor do
                    "include_other_fields" => true,
                    "json_output" => '{"source": "right"}',
                  }
-          g.node "merge-1",
-                 "flow:merge",
-                 name: "Append branches",
-                 configuration: {
-                   "mode" => "append",
-                 }
+          g.node "merge-1", "flow:merge", name: "Append branches"
           g.chain "trigger-1", "source-1", "branch-1"
           g.connect "branch-1", "left-1", output: "true"
           g.connect "branch-1", "right-1", output: "false"
@@ -331,18 +348,8 @@ RSpec.describe DiscourseWorkflows::Executor do
                    "include_other_fields" => false,
                    "json_output" => '{"source": "never"}',
                  }
-          g.node "merge-a",
-                 "flow:merge",
-                 name: "Parent merge",
-                 configuration: {
-                   "mode" => "append",
-                 }
-          g.node "merge-b",
-                 "flow:merge",
-                 name: "Downstream merge",
-                 configuration: {
-                   "mode" => "append",
-                 }
+          g.node "merge-a", "flow:merge", name: "Parent merge"
+          g.node "merge-b", "flow:merge", name: "Downstream merge"
           g.connect "trigger-1", "upstream-1"
           g.connect "trigger-1", "direct-1"
           g.connect "direct-1", "merge-b", input: "input_1"
@@ -362,71 +369,6 @@ RSpec.describe DiscourseWorkflows::Executor do
       expect(merge_steps.first["output"].map { |item| item["json"]["source"] }).to eq(
         %w[direct upstream],
       )
-    end
-
-    it "does not run choose branch merge with a missing connected branch" do
-      graph =
-        build_workflow_graph do |g|
-          g.node "trigger-1", "trigger:manual"
-          g.node "source-1",
-                 "action:set_fields",
-                 configuration: {
-                   "mode" => "raw",
-                   "include_other_fields" => false,
-                   "json_output" => '{"route": "left"}',
-                 }
-          g.node "branch-1",
-                 "condition:if",
-                 configuration: {
-                   "conditions" => [
-                     {
-                       "id" => "1",
-                       "leftValue" => "={{ $json.route }}",
-                       "rightValue" => "left",
-                       "operator" => {
-                         "type" => "string",
-                         "operation" => "equals",
-                       },
-                     },
-                   ],
-                   "combinator" => "and",
-                 }
-          g.node "left-1",
-                 "action:set_fields",
-                 configuration: {
-                   "mode" => "raw",
-                   "include_other_fields" => true,
-                   "json_output" => '{"source": "left"}',
-                 }
-          g.node "right-1",
-                 "action:set_fields",
-                 configuration: {
-                   "mode" => "raw",
-                   "include_other_fields" => true,
-                   "json_output" => '{"source": "right"}',
-                 }
-          g.node "merge-1",
-                 "flow:merge",
-                 name: "Choose branch",
-                 configuration: {
-                   "mode" => "choose_branch",
-                   "use_data_of_input" => "input_1",
-                 }
-          g.chain "trigger-1", "source-1", "branch-1"
-          g.connect "branch-1", "left-1", output: "true"
-          g.connect "branch-1", "right-1", output: "false"
-          g.connect "left-1", "merge-1", input: "input_1"
-          g.connect "right-1", "merge-1", input: "input_2"
-        end
-      workflow =
-        Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
-
-      execution = described_class.new(workflow, "trigger-1", {}).run
-
-      expect(execution.status).to eq("success")
-      merge_steps =
-        execution.execution_data.steps_array.select { |step| step["node_id"] == "merge-1" }
-      expect(merge_steps).to be_empty
     end
   end
 end

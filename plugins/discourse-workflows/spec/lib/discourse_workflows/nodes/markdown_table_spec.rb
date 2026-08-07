@@ -129,20 +129,25 @@ RSpec.describe DiscourseWorkflows::Nodes::MarkdownTable::V1 do
     end
 
     context "when mapping_mode is auto" do
-      it "derives headers from the keys of input items" do
+      it "derives headers from the keys of input items", :aggregate_failures do
         items = [
           { "json" => { "name" => "Alice", "age" => 30 } },
           { "json" => { "name" => "Bob", "age" => 25 } },
         ]
 
-        markdown = execute(items, { "mapping_mode" => "auto" })
+        output =
+          execute_node_output(configuration: { "mapping_mode" => "auto" }, input_items: items)
+            .first
+            .first
+            .fetch("json")
 
-        expect(markdown).to eq(<<~MD.strip)
+        expect(output.fetch("markdown")).to eq(<<~MD.strip)
           | name | age |
           | --- | --- |
           | Alice | 30 |
           | Bob | 25 |
         MD
+        expect(output).to match_node_output_schema(described_class)
       end
 
       it "unions keys across items preserving first-appearance order" do

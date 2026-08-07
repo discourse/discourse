@@ -31,12 +31,23 @@ module Categories
         types
       end
 
-      def list(only_visible: false)
-        types.values.select { |type| only_visible ? type.visible? : true }.map(&:metadata)
+      def list(only_visible: false, guardian: nil)
+        types
+          .values
+          .select { |type| only_visible ? type.visible? : true }
+          .map { |type| type.metadata(guardian:) }
       end
 
       def valid?(id)
         types.key?(id.to_sym)
+      end
+
+      def owner(id)
+        owners[id.to_sym]
+      end
+
+      def plugin_display_name(id)
+        Discourse.plugins_by_name[owner(id)]&.humanized_name
       end
 
       def reset!
@@ -74,6 +85,14 @@ module Categories
         type_list.each_with_object({}) do |type, counts|
           counts[type.type_id] = (result[type.type_id.to_s] || 0).to_i
         end
+      end
+
+      def non_discussion_category_ids
+        types
+          .values
+          .reject { |type| type.type_id == :discussion }
+          .flat_map { |type| type.find_matches.pluck(:id) }
+          .uniq
       end
 
       private

@@ -5,6 +5,7 @@ const local = (p) => fileURLToPath(import.meta.resolve(p));
 
 const bundle = await rolldown({
   input: local("./transpiler.js"),
+  tsconfig: false,
   platform: "browser",
   moduleTypes: { ".wasm": "binary" },
   transform: {
@@ -15,6 +16,7 @@ const bundle = await rolldown({
   resolve: {
     extensions: [".mjs", ".js", ".cjs", ".json"],
     alias: {
+      "content-tag": local("./content-tag.js"),
       path: "path-browserify",
       url: local("./url-polyfill.js"),
       // Absolute path so postcss's `browser` field (`source-map-js: false`) can't stub it out and disable CSS sourcemaps.

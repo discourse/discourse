@@ -59,6 +59,8 @@ et:
       topic: "Teema"
       post: "Postitus"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "Määratud"
       assign_topic:
         operations:
           assign: "Määra"

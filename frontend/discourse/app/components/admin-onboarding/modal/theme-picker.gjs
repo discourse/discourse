@@ -103,7 +103,7 @@ export default class ThemePickerModal extends Component {
 
   <template>
     <DModal
-      class="theme-picker-modal --large"
+      class="theme-picker-modal --max"
       @title={{i18n "admin_onboarding_banner.select_theme.modal_title"}}
       @closeModal={{@closeModal}}
     >

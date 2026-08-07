@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "../mixins/github_body"
-require_relative "../mixins/github_auth_header"
+require_relative "../mixins/github_api"
 
 module Onebox
   module Engine
@@ -11,7 +11,7 @@ module Onebox
       include LayoutSupport
       include JSON
       include Onebox::Mixins::GithubBody
-      include Onebox::Mixins::GithubAuthHeader
+      include Onebox::Mixins::GithubApi
 
       matches_regexp(
         %r{^https?://(?:www\.)?(?:(?:\w)+\.)?github\.com/(?<org>.+)/(?<repo>.+)/issues/([[:digit:]]+)},
@@ -24,9 +24,9 @@ module Onebox
       end
 
       def inline_data
-        return if github_auth_header(match["org"]).blank?
+        return unless github_token?
 
-        result = raw(github_auth_header(match["org"]))
+        result = raw
         {
           title:
             "#{result["title"]} - Issue ##{match["item_id"]} - #{match["org"]}/#{match["repo"]} - GitHub",
@@ -50,7 +50,7 @@ module Onebox
       end
 
       def data
-        result = raw(github_auth_header(match[:org])).clone
+        result = raw.clone
         repo = load_repo
         created_at = Time.parse(result["created_at"])
         closed_at = Time.parse(result["closed_at"]) if result["closed_at"]
@@ -85,12 +85,6 @@ module Onebox
 
       def load_repo
         load_json("https://api.github.com/repos/#{match[:org]}/#{match[:repo]}")
-      end
-
-      def load_json(url)
-        ::MultiJson.load(
-          URI.parse(url).open({ read_timeout: timeout }.merge(github_auth_header(match[:org]))),
-        )
       end
     end
   end

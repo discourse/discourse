@@ -58,6 +58,7 @@ module Chat
     model :thread
     policy :can_view_thread
     policy :threading_enabled_for_channel
+    policy :original_message_not_deleted
     model :membership, optional: true
     model :target_message_id, optional: true
     policy :target_message_exists, class_name: Chat::Thread::Policy::MessageExistence
@@ -69,7 +70,7 @@ module Chat
     def fetch_thread(params:)
       ::Chat::Thread
         .strict_loading
-        .includes(channel: :chatable)
+        .includes(:original_message, channel: :chatable)
         .find_by(id: params.thread_id, channel_id: params.channel_id)
     end
 
@@ -79,6 +80,11 @@ module Chat
 
     def threading_enabled_for_channel(thread:)
       thread.channel.threading_enabled || thread.force
+    end
+
+    def original_message_not_deleted(thread:, guardian:)
+      thread.original_message.deleted_at.blank? ||
+        guardian.can_moderate_chat?(thread.channel.chatable)
     end
 
     def fetch_membership(thread:, guardian:)
@@ -108,13 +114,23 @@ module Chat
       )
     end
 
-    def fetch_messages(metadata:)
-      [
+    def fetch_messages(metadata:, guardian:)
+      messages = [
         metadata[:messages],
         metadata[:past_messages]&.reverse,
         metadata[:target_message],
         metadata[:future_messages],
       ].flatten.compact
+
+      if guardian.user.blank?
+        messages.each do |message|
+          association = message.association(:bookmarks)
+          association.target = []
+          association.loaded!
+        end
+      end
+
+      messages
     end
   end
 end

@@ -259,7 +259,7 @@ class TopicQuery
           builder.add_results(unread_messages(pm_params.merge(count: builder.results_left)))
         end
       else
-        if @user.new_new_view_enabled?
+        if @user.unified_new_enabled?
           builder.add_results(
             new_and_unread_results(
               topic:,
@@ -334,7 +334,7 @@ class TopicQuery
   end
 
   def list_new
-    if @user&.new_new_view_enabled?
+    if @user&.unified_new_enabled?
       list =
         case @options[:subset]
         when "topics"

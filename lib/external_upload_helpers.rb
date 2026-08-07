@@ -366,7 +366,7 @@ module ExternalUploadHelpers
   end
 
   def multipart_store(upload_type)
-    ExternalUploadManager.store_for_upload_type(upload_type)
+    ExternalUploadManager.store_for_upload_type(upload_type, guardian: guardian)
   end
 
   def external_store_check

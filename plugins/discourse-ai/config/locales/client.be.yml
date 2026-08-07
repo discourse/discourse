@@ -34,6 +34,14 @@ be:
             canned_reply:
               label: "Адказаць"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Загрузка ..."
+        tool: "Дзеянне"
+        user: "Карыстальнік"
+        approve: "Ухваліць"
+        reject: "адхіляць"
+        approved: "Ухвалены"
+        rejected: "Адхіленыя"
       llm_selector:
         none: "Няма"
       features:
@@ -45,9 +53,27 @@ be:
           reset: "скінуць"
         search:
           name: "Пошук"
+        image_caption:
+          setting_groups:
+            settings: "Налады"
         spam:
           name: "Спам"
       translations:
+        category_scope: "катэгорыі"
+        model_progress:
+          detail:
+            columns:
+              pending: "У чаканні"
+              total: "Усяго"
+          targets:
+            post:
+              title: "Допісы"
+            topic:
+              title: "Тэмы"
+            category:
+              title: "Катэгорыі"
+            tag:
+              title: "Тэгі"
         stats:
           eta_minutes:
             one: "%{count} хвіліну"
@@ -88,6 +114,8 @@ be:
         user: Карыстальнік
         save: "Захаваць"
         delete: "Выдаліць"
+        thinking_effort_options:
+          none: "Няма"
         response_format:
           open_modal: "Рэдагаваць"
         filters:
@@ -134,9 +162,7 @@ be:
         next:
           title: "Далей"
         tests:
-          success: "поспех!"
-        providers:
-          google: "Google"
+          success: "Працуе!"
       ai_helper:
         context_menu:
           cancel: "Адмяніць"
@@ -146,14 +172,12 @@ be:
           cancel: "Адмяніць"
         thumbnail_suggestions:
           try_again: "Паспрабаваць яшчэ раз"
-        image_caption:
-          save_caption: "Захаваць"
       embeddings:
         save: "Захаваць"
         delete: "Выдаліць"
         edit: "Рэдагаваць"
         tests:
-          success: "поспех!"
+          success: "Працуе!"
         display_name: "Імя"
         providers:
           google: "Google"

@@ -18,6 +18,7 @@ module Migrations
 
           def call
             return print_usage if @options[:help]
+            require_positional!(table_name, "table_name")
 
             database = selected_database
             path = schema.add_table(table_name, database:)
@@ -25,7 +26,7 @@ module Migrations
             puts
             puts "Next steps:"
             puts "  1. Edit the file to configure columns"
-            puts "  2. Run 'disco schema validate'"
+            puts "  2. Run '#{Migrations::CLI::BIN} check schema'"
           end
         end
       end

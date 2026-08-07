@@ -68,6 +68,27 @@
       }
     }
 
+    .inline-dependent-settings {
+      margin-top: var(--space-3);
+
+      .setting.inline-dependent-setting {
+        padding-bottom: var(--space-2);
+
+        .setting-label,
+        .setting-value,
+        .setting-controls {
+          float: none;
+          width: 100%;
+          padding-right: 0;
+        }
+
+        .setting-label h3 {
+          margin-top: 0;
+          margin-bottom: var(--space-1);
+        }
+      }
+    }
+
     .setting-override-warning {
       font-size: var(--font-down-1);
       color: var(--primary-medium);

@@ -35,6 +35,7 @@ module Chat
       validates :message_id, presence: true
       validates :channel_id, presence: true
       validates :message, presence: true, if: -> { upload_ids.blank? }
+      validates :message, length: { maximum: -> { SiteSetting.chat_maximum_message_length } }
 
       after_validation do
         next if message.blank?
@@ -51,8 +52,9 @@ module Chat
     model :uploads, optional: true
     step :enforce_membership
     model :membership
-    policy :can_modify_channel_message
-    policy :can_modify_message
+    policy :can_edit_message
+    policy :channel_allows_message_modification,
+           class_name: Chat::Channel::Policy::MessageModification
 
     transaction do
       step :modify_message
@@ -102,11 +104,7 @@ module Chat
         .where(user_uploads: { user: guardian.user })
     end
 
-    def can_modify_channel_message(guardian:, message:)
-      guardian.can_modify_channel_message?(message.chat_channel)
-    end
-
-    def can_modify_message(guardian:, message:)
+    def can_edit_message(guardian:, message:)
       guardian.can_edit_chat?(message)
     end
 

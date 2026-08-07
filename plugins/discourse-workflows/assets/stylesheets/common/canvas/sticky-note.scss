@@ -15,6 +15,19 @@
     cursor: grabbing;
   }
 
+  &:has(.workflow-sticky-note__color-picker) {
+    z-index: calc(var(--z-canvas-chrome) + 1);
+
+    .workflow-canvas-toolbar {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  &.is-editing {
+    z-index: calc(var(--z-canvas-elements) + 1);
+  }
+
   &.is-selected {
     outline: 2px solid var(--tertiary);
     outline-offset: -1px;
@@ -22,7 +35,7 @@
 
   &__color-picker {
     position: absolute;
-    top: -58px;
+    top: -32px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -33,7 +46,7 @@
     border: 1px solid var(--primary-low-mid);
     border-radius: var(--d-border-radius);
     box-shadow: var(--shadow-dropdown);
-    z-index: 10;
+    z-index: calc(var(--z-canvas-chrome) + 1);
   }
 
   &__color-swatch {

@@ -21,6 +21,8 @@ lv:
         yesterday: "Vakar"
       create: "Izveidot"
       cancel: "Atcelt"
+      pinned_bar:
+        title: "Piesprausts"
       pinned: "Piesprausts"
       channel_settings:
         edit: "Rediģēt"
@@ -57,6 +59,8 @@ lv:
         filter_all: Viss
         filter_open: Atvērt
         filter_closed: Slēgts
+        filter_joined_all: "Visi"
+        filter_joined_joined: "Pievienojās"
       chat_message_separator:
         today: Šodien
         yesterday: Vakar
@@ -78,7 +82,11 @@ lv:
       direct_message_creator:
         title: Jauns ziņa
         prefix: "Kam:"
+      channel:
+        preview_card:
+          log_in: "Pieslēgties"
       create_channel:
+        description: "Apraksts"
         type: "Tips"
         types:
           category: "Sadaļa"

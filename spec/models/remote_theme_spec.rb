@@ -52,6 +52,16 @@ RSpec.describe RemoteTheme do
       JSON
     end
 
+    # Adds the version-specific d-compat branch, one commit ahead of the default branch.
+    def add_compat_branch(repo)
+      branch = "d-compat/#{Discourse::VERSION::MAJOR}.#{Discourse::VERSION::MINOR}"
+      system("git -C #{repo} checkout -q -b #{branch}", exception: true)
+      add_to_git_repo(repo, "compatible.txt" => "compatible version")
+      sha = `cd #{repo} && git rev-parse HEAD`.strip
+      system("git -C #{repo} checkout -q -", exception: true)
+      [branch, sha]
+    end
+
     let :scss_data do
       "@font-face { font-family: magic; src: url($font)}; body {color: $color; content: $name;}"
     end
@@ -184,6 +194,45 @@ RSpec.describe RemoteTheme do
       expect(
         theme.theme_fields.find_by(type_id: ThemeField.types[:scss], name: "file").value,
       ).to eq(".class1{color:red}")
+    end
+
+    it "leaves the compatibility refs nil when no compatibility pinning applies" do
+      theme = RemoteTheme.import_theme(initial_repo_url)
+      remote = theme.remote_theme
+
+      expect(remote.local_compat_ref).to be_nil
+      expect(remote.remote_compat_ref).to be_nil
+    end
+
+    it "records local_compat_ref and remote_compat_ref when pinned to a d-compat branch" do
+      compat_branch, compat_sha = add_compat_branch(initial_repo)
+
+      theme = RemoteTheme.import_theme(initial_repo_url)
+      remote = theme.remote_theme
+
+      expect(remote.local_compat_ref).to eq(compat_branch)
+      expect(remote.remote_compat_ref).to eq(compat_branch)
+      expect(remote.local_version).to eq(compat_sha)
+
+      serialized = RemoteThemeSerializer.new(remote, root: false).as_json
+      expect(serialized[:local_compat_ref]).to eq(compat_branch)
+      expect(serialized[:remote_compat_ref]).to eq(compat_branch)
+    end
+
+    it "updates remote_compat_ref without touching local_compat_ref when checking for updates" do
+      theme = RemoteTheme.import_theme(initial_repo_url)
+      remote = theme.remote_theme
+      expect(remote.local_compat_ref).to be_nil
+      expect(remote.remote_compat_ref).to be_nil
+
+      compat_branch, compat_sha = add_compat_branch(initial_repo)
+
+      remote.update_remote_version
+      remote.reload
+
+      expect(remote.local_compat_ref).to be_nil
+      expect(remote.remote_compat_ref).to eq(compat_branch)
+      expect(remote.remote_version).to eq(compat_sha)
     end
 
     it "can correctly import a remote theme" do

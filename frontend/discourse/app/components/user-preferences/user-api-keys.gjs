@@ -4,6 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import routeAction from "discourse/helpers/route-action";
+import { longDate } from "discourse/lib/formatter";
 import DButton from "discourse/ui-kit/d-button";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -11,6 +12,17 @@ import { i18n } from "discourse-i18n";
 
 class UserApiKeyRow extends Component {
   @tracked showScopes = false;
+
+  get isExpired() {
+    return (
+      this.args.apiKey.expires_at &&
+      new Date(this.args.apiKey.expires_at) <= new Date()
+    );
+  }
+
+  get expiresAtDate() {
+    return longDate(this.args.apiKey.expires_at);
+  }
 
   @action
   toggleScopes(event) {
@@ -30,6 +42,19 @@ class UserApiKeyRow extends Component {
           <div class="user-api-key__date-last-used">
             <span>{{i18n "user.api_last_used_at"}}</span>
             {{dAgeWithTooltip @apiKey.last_used_at format="medium"}}
+          </div>
+          <div class="user-api-key__date-expires">
+            {{#if @apiKey.expires_at}}
+              {{#if this.isExpired}}
+                <span>{{i18n "user.api_expired_at"}}</span>
+              {{else}}
+                <span>{{i18n "user.api_expires_at"}}</span>
+              {{/if}}
+              {{this.expiresAtDate}}
+            {{else}}
+              <span>{{i18n "user.api_expires_at"}}</span>
+              {{i18n "user.api_expires_never"}}
+            {{/if}}
           </div>
         </div>
       </div>

@@ -26,6 +26,9 @@ export const CATEGORY_STYLE_TYPES = { square: 0, icon: 1, emoji: 2 };
 
 export const CATEGORY_TEXT_COLORS = ["FFFFFF", "000000"];
 
+export const CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS =
+  "additional_assign_allowed_on_groups";
+
 // NOTE: Group names are changed based on the site's locale, see
 // Group.refresh_automatic_group! for more details
 export const AUTO_GROUPS = {
@@ -51,8 +54,6 @@ export const GROUP_VISIBILITY_LEVELS = {
   staff: 3,
   owners: 4,
 };
-
-export const MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP = 10;
 
 export const MAX_NOTIFICATIONS_LIMIT_PARAMS = 60;
 
@@ -89,6 +90,9 @@ export const POSTING_REVIEW_GROUP_BASED_MODES = [
 ];
 
 export const USER_OPTION_COMPOSITION_MODES = { markdown: 0, rich: 1 };
+
+export const SEND_SHORTCUT_ENTER = "enter";
+export const SEND_SHORTCUT_META_ENTER = "meta_enter";
 
 export const UPCOMING_CHANGES_USER_ENABLED_REASONS = {
   enabled_for_everyone: "enabled_for_everyone",

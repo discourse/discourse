@@ -4,7 +4,7 @@ class Themes::Action::HorizonHighContextTopicCardsToggled < Service::ActionBase
   option :enabled
 
   def call
-    theme = Theme.find_by(id: Theme::CORE_THEMES["horizon"])
+    theme = Theme.horizon_theme
     return if theme.blank?
     return if theme.settings.blank?
 
@@ -21,11 +21,11 @@ class Themes::Action::HorizonHighContextTopicCardsToggled < Service::ActionBase
       # site that got the legacy migration. If no setting exists,
       # it's a new site which has the theme setting for high-context topic cards
       # enabled by default.
-      ThemeSetting.exists?(theme_id: Theme::CORE_THEMES["horizon"], name: :topic_card_high_context)
+      ThemeSetting.exists?(theme_id: Theme.horizon_theme.id, name: :topic_card_high_context)
   end
 
   def self.horizon_theme_available?
-    horizon_theme = Theme.find_by(id: Theme::CORE_THEMES["horizon"])
+    horizon_theme = Theme.horizon_theme
     return false if horizon_theme.blank? || !horizon_theme.enabled?
     return false if !horizon_theme.user_selectable? && !horizon_theme.default?
     horizon_theme.default? || horizon_theme.user_selectable?

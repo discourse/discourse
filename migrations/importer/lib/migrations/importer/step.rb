@@ -3,7 +3,13 @@
 module Migrations
   module Importer
     class Step
+      extend StepDependencies
+
       Enums = Database::IntermediateDB::Enums
+
+      # Set by the executor before `execute` runs. Steps report progress and
+      # notices through it; see `Migrations::Reporting::Reporter`.
+      attr_accessor :reporter
 
       class << self
         # stree-ignore
@@ -19,37 +25,6 @@ module Migrations
           end
 
           @title = value
-        end
-
-        def depends_on(*step_names)
-          steps_module = Steps
-          classes =
-            step_names.map do |name|
-              name = name.to_s.camelize
-              klass = steps_module.const_get(name) if steps_module.const_defined?(name)
-
-              unless klass.is_a?(Class) && klass < Step
-                raise NameError, "Class #{class_name} not found"
-              end
-
-              klass
-            end
-
-          @dependencies ||= []
-          @dependencies.concat(classes)
-        end
-
-        def dependencies
-          @dependencies || []
-        end
-
-        # stree-ignore
-        def priority(value = (getter = true; nil))
-          if getter
-            @priority
-          else
-            @priority = value
-          end
         end
 
         def requires_shared_data(*names)
@@ -107,28 +82,23 @@ module Migrations
         required_sets = self.class.required_sets
         return if required_shared_data.empty? && required_mappings.blank? && required_sets.blank?
 
-        print "    #{I18n.t("importer.loading_required_data")} "
+        required_shared_data.each { |name| instance_variable_set("@#{name}", @shared_data[name]) }
 
-        runtime =
-          DateHelper.track_time do
-            required_shared_data.each do |name|
-              instance_variable_set("@#{name}", @shared_data[name])
-            end
+        required_mappings.each do |name, sql|
+          instance_variable_set("@#{name}", @shared_data.load_mapping(sql))
+        end
 
-            required_mappings.each do |name, sql|
-              instance_variable_set("@#{name}", @shared_data.load_mapping(sql))
-            end
+        required_sets.each do |name, sql|
+          instance_variable_set("@#{name}", @shared_data.load_set(sql))
+        end
+      end
 
-            required_sets.each do |name, sql|
-              instance_variable_set("@#{name}", @shared_data.load_set(sql))
-            end
-          end
-
-        puts DateHelper.human_readable_time(runtime) if runtime >= 1
+      def notice(message)
+        @reporter.notice(message)
       end
 
       def update_progressbar(increment_by: 1)
-        @progressbar.update(
+        @progress.update(
           increment_by:,
           skip_count: @stats.skip_count,
           warning_count: @stats.warning_count,
@@ -137,13 +107,11 @@ module Migrations
       end
 
       def with_progressbar(max_progress)
-        ExtendedProgressBar
-          .new(max_progress:)
-          .run do |progressbar|
-            @progressbar = progressbar
-            yield
-            @progressbar = nil
-          end
+        @reporter.with_progress(max_progress:) do |progress|
+          @progress = progress
+          yield
+          @progress = nil
+        end
       end
     end
   end

@@ -103,6 +103,61 @@ RSpec.describe Reviewable, type: :model do
       r1 = ReviewableFlaggedPost.needs_review!(created_by: admin, target: r0.target)
       expect(r1.pending?).to eq(true)
     end
+
+    it "will not resurrect an approved queued reviewable when reusing a flagged reviewable for the same target" do
+      r0 = Fabricate(:reviewable_queued_post)
+      r0.perform(admin, :approve_post)
+      expect(r0.reload.status).to eq("approved")
+
+      r1 = ReviewableFlaggedPost.needs_review!(created_by: admin, target: r0.target)
+      expect(r1.pending?).to eq(true)
+
+      ReviewableFlaggedPost.needs_review!(created_by: admin, target: r0.target)
+
+      expect(r1.reload.pending?).to eq(true)
+      expect(r0.reload.status).to eq("approved")
+    end
+  end
+
+  describe ".viewable_by" do
+    fab!(:admin)
+    fab!(:pm_author, :user)
+    fab!(:pm_recipient, :user)
+    fab!(:outsider_moderator, :moderator)
+    fab!(:pm_topic) { Fabricate(:private_message_topic, user: pm_author, recipient: pm_recipient) }
+    fab!(:pm_post) { Fabricate(:post, topic: pm_topic, user: pm_author) }
+    fab!(:reviewable) do
+      ReviewablePost.needs_review!(
+        target: pm_post,
+        created_by: Discourse.system_user,
+        reviewable_by_moderator: true,
+      )
+    end
+
+    it "excludes private-message reviewables from moderators outside the conversation" do
+      expect(described_class.viewable_by(outsider_moderator)).not_to exist(id: reviewable.id)
+    end
+
+    it "includes private-message reviewables for admins" do
+      expect(described_class.viewable_by(admin)).to exist(id: reviewable.id)
+    end
+
+    it "includes private-message reviewables for participating moderators" do
+      participant_moderator = Fabricate(:moderator)
+      participant_topic =
+        Fabricate(:private_message_topic, user: pm_author, recipient: participant_moderator)
+      participant_post = Fabricate(:post, topic: participant_topic, user: pm_author)
+      participant_reviewable =
+        ReviewablePost.needs_review!(
+          target: participant_post,
+          created_by: Discourse.system_user,
+          reviewable_by_moderator: true,
+        )
+
+      expect(described_class.viewable_by(participant_moderator)).to exist(
+        id: participant_reviewable.id,
+      )
+    end
   end
 
   describe ".list_for" do

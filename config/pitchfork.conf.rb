@@ -137,7 +137,7 @@ before_service_worker_ready do |server, service_worker|
   end
 
   if Rails.env.development?
-    EmberCli.watch!
+    EmberAssets.watch!
 
     workers = server.worker_processes
     parts = ["#{workers} worker#{"s" if workers != 1}"]

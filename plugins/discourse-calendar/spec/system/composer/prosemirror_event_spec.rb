@@ -6,7 +6,6 @@ describe "Composer - ProseMirror - Event Editor" do
   before do
     SiteSetting.calendar_enabled = true
     SiteSetting.discourse_post_event_enabled = true
-    SiteSetting.rich_editor = true
   end
 
   describe "event rendering" do
@@ -277,6 +276,25 @@ describe "Composer - ProseMirror - Event Editor" do
 
       composer.toggle_rich_editor
       expect(find(".d-editor-input").value).to include("fancyField=\"hello world\"")
+    end
+  end
+
+  describe "focus" do
+    it "keeps the topic title focused on the first click after editing the event node" do
+      open_composer
+      composer.toggle_rich_editor
+      composer.fill_content(
+        "[event start=\"2025-03-21 15:41\" status=\"public\" timezone=\"Europe/Paris\"]\n[/event]",
+      )
+      composer.toggle_rich_editor
+
+      rich.find(".composer-event__name-input").fill_in(with: "My offsite")
+
+      find("#reply-title").click
+
+      title_focused =
+        page.evaluate_script("document.activeElement === document.querySelector('#reply-title')")
+      expect(title_focused).to eq(true)
     end
   end
 end

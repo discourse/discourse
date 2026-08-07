@@ -7,4 +7,3 @@
 ru:
   site_settings:
     discourse_graphviz_enabled: "Включить плагин Graphviz"
-    graphviz_default_svg: "По умолчанию используется SVG-рендеринг вместо рендеринга изображений. Для каждого графа можно настроить отдельно с помощью элемента `svg=true|false`."

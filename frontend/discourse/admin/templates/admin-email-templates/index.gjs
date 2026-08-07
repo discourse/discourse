@@ -1,17 +1,18 @@
 import { array } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
-import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DButton from "discourse/ui-kit/d-button";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   <PluginOutlet @name="admin-email-templates-index" @connectorTagName="div">
-    <AdminFilterControls
+    <DFilterControls
       @array={{@controller.shownTemplates}}
       @searchableProps={{array "title" "id"}}
+      @textFilterQueryParam="filter"
       @showDropdownFilter={{false}}
       @inputPlaceholder={{i18n
         "admin.customize.email_templates.search_templates"
@@ -75,6 +76,6 @@ export default <template>
           </tbody>
         </table>
       </:content>
-    </AdminFilterControls>
+    </DFilterControls>
   </PluginOutlet>
 </template>

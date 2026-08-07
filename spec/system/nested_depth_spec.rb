@@ -13,11 +13,12 @@ RSpec.describe "Nested view depth and nesting" do
 
   before do
     SiteSetting.nested_replies_enabled = true
+    Fabricate(:nested_topic, topic: topic)
     sign_in(user)
   end
 
   describe "max depth setting" do
-    it "respects a low max depth" do
+    it "uses capped nesting by default at low max depth" do
       SiteSetting.nested_replies_max_depth = 2
       chain = create_reply_chain(depth: 4)
 
@@ -26,7 +27,13 @@ RSpec.describe "Nested view depth and nesting" do
       expect(nested_view).to have_post_at_depth(chain[0], depth: 0)
       expect(nested_view).to have_post_at_depth(chain[1], depth: 1)
       expect(nested_view).to have_post_at_depth(chain[2], depth: 2)
-      expect(nested_view).to have_continue_thread_for(chain[2])
+      expect(nested_view).to have_no_post(chain[3])
+      expect(nested_view).to have_no_continue_thread_for(chain[2])
+      expect(nested_view).to have_load_more_children_for(chain[1])
+
+      nested_view.click_load_more_children(chain[1])
+
+      expect(nested_view).to have_post_at_depth(chain[3], depth: 2)
     end
 
     it "allows deeper nesting with higher max depth" do

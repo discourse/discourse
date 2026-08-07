@@ -435,8 +435,8 @@ describe "Composer - Drafts" do
         expect(Draft.where(user: current_user).count).to eq(1)
       end
 
-      composer.open_composer_actions
-      composer.select_action(I18n.t("js.composer.composer_actions.reply_as_new_topic.label"))
+      composer.open_composer_actions_new
+      composer.select_action_by_id("reply_as_new_topic")
 
       expect(composer).to be_opened
       composer.fill_title("This is a linked topic title for testing")

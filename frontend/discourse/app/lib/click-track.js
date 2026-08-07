@@ -79,7 +79,13 @@ export default {
       return true;
     }
 
-    const link = e.currentTarget;
+    // Resolve the clicked link from the event target. This lets callers bind a
+    // single listener on a container element instead of delegating per-link.
+    const link = e.target?.closest("a");
+    if (!link) {
+      return true;
+    }
+
     const tracking = isValidLink(link);
 
     // Return early for mentions and group mentions. This is not in
@@ -106,7 +112,7 @@ export default {
       ) {
         const dialog = getOwnerWithFallback(this).lookup("service:dialog");
         dialog.alert(i18n("post.errors.attachment_download_requires_login"));
-      } else if (wantsNewWindow(e)) {
+      } else if (wantsNewWindow(e, link)) {
         const newWindow = window.open(href, "_blank");
         newWindow.opener = null;
         newWindow.focus();
@@ -161,7 +167,7 @@ export default {
       }
     }
 
-    if (!wantsNewWindow(e)) {
+    if (!wantsNewWindow(e, link)) {
       if (shouldOpenInNewTab(href)) {
         openLinkInNewTab(e, link);
       } else {

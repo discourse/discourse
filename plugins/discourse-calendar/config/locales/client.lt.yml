@@ -14,6 +14,9 @@ lt:
             topic_id:
               label: Temos ID
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Pokalbis"
       disable_holiday: "Išjungti"
       enable_holiday: "Įgalinti"
       date: "Data"
@@ -95,11 +98,6 @@ lt:
           every_day: "Kiekvieną dieną"
         attendance:
           none: "Nieko"
-        url:
-          label: "Nuoroda"
-          placeholder: "Pasirinktinai"
-        location:
-          label: "Vieta"
         description:
           label: "Aprašymas"
         event_type:

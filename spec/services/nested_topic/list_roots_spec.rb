@@ -60,6 +60,47 @@ RSpec.describe NestedTopic::ListRoots do
       end
     end
 
+    context "when staff views root posts with official notices" do
+      fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+      fab!(:root_post) { Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1) }
+
+      let(:topic_view) do
+        TopicView.new(topic.id, admin, skip_custom_fields: true, skip_post_loading: true)
+      end
+      let(:dependencies) { { guardian: admin.guardian, topic_view: topic_view } }
+
+      before do
+        root_post.custom_fields[Post::NOTICE] = {
+          type: Post.notices[:custom],
+          raw: "Official reply notice",
+          cooked: "<p>Official reply notice</p>",
+          created_by_user_id: admin.id,
+        }
+        root_post.save_custom_fields
+      end
+
+      it "serializes the official notice creator for nested posts" do
+        root_json = result[:response][:roots].first
+
+        expect(root_json[:notice]).to eq(
+          {
+            cooked: "<p>Official reply notice</p>",
+            created_by_user_id: admin.id,
+            raw: "Official reply notice",
+            type: Post.notices[:custom],
+          }.with_indifferent_access,
+        )
+        expect(root_json[:notice_created_by_user]).to eq(
+          {
+            id: admin.id,
+            username: admin.username,
+            name: admin.name,
+            avatar_template: admin.avatar_template,
+          },
+        )
+      end
+    end
+
     context "when page is greater than 0" do
       let(:params) { { sort: "top", page: 1 } }
 

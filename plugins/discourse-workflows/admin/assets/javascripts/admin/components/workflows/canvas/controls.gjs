@@ -12,7 +12,7 @@ function redoTitle() {
   return `${i18n("discourse_workflows.canvas.redo")} [${translateModKey("Meta+Y")}]`;
 }
 
-<template>
+export default <template>
   <div class="workflows-canvas__controls">
     <DTooltip @identifier="workflow-canvas-undo" @content={{(undoTitle)}}>
       <:trigger>

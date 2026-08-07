@@ -6,8 +6,10 @@ import RestModel from "discourse/models/rest";
 import { i18n } from "discourse-i18n";
 
 function format(label, value, escape = true) {
+  const labelBr = value && value.toString().includes("\n") ? "<br/>" : " ";
+  value = value ? value.toString() : "";
   return value
-    ? `<b>${i18n(label)}</b>: ${escape ? escapeExpression(value) : value}`
+    ? `<b>${i18n(label)}:</b>${labelBr} ${escape ? escapeExpression(value.replaceAll("\n", "<br/>")) : value.replaceAll("\n", "<br/>")}`
     : "";
 }
 

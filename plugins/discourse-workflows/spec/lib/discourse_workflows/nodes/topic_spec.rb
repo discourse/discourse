@@ -14,15 +14,15 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
     fab!(:topic_with_custom_fields) { Fabricate(:topic, category: category) }
     fab!(:other_topic_with_custom_fields) { Fabricate(:topic, category: category) }
 
-    def load_options(filter: nil)
-      context =
-        DiscourseWorkflows::LoadOptionsContext.new(
-          method_name: "topic_custom_fields",
-          filter: filter,
-          node_class: described_class,
-        )
+    subject(:options) { described_class.load_options_context(load_options_context) }
 
-      described_class.load_options_context(context)
+    let(:filter) { nil }
+    let(:load_options_context) do
+      DiscourseWorkflows::LoadOptionsContext.new(
+        method_name: "topic_custom_fields",
+        filter: filter,
+        node_class: described_class,
+      )
     end
 
     before do
@@ -34,16 +34,18 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
     end
 
     it "returns distinct topic custom field names for the chooser" do
-      expect(load_options).to contain_exactly(
+      expect(options).to contain_exactly(
         { id: "other_key", name: "other_key" },
         { id: "workflow_key", name: "workflow_key" },
       )
     end
 
-    it "filters topic custom field names by the filter term" do
-      expect(load_options(filter: "workflow")).to contain_exactly(
-        { id: "workflow_key", name: "workflow_key" },
-      )
+    context "with a filter" do
+      let(:filter) { "workflow" }
+
+      it "filters topic custom field names by the filter term" do
+        expect(options).to contain_exactly({ id: "workflow_key", name: "workflow_key" })
+      end
     end
 
     it "limits topic custom field names returned to the chooser" do
@@ -55,7 +57,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         )
       end
 
-      expect(load_options.length).to eq(described_class::CUSTOM_FIELD_OPTIONS_LIMIT)
+      expect(options.length).to eq(described_class::CUSTOM_FIELD_OPTIONS_LIMIT)
     end
   end
 
@@ -100,6 +102,8 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         expect(result["topic"]["last_poster_username"]).to eq(admin.username)
         expect(result["topic"]["posters"].map { |poster| poster["user_id"] }).to include(admin.id)
         expect(result).to include("post_id" => topic.first_post.id, "post_number" => 1)
+        expect(result.dig("post", "id")).to eq(topic.first_post.id)
+        expect(result.dig("post", "trust_level")).to eq(admin.trust_level)
       end
 
       it "creates a topic as the system user when actor_username is 'system'" do
@@ -114,6 +118,20 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         )
 
         expect(Topic.last.user_id).to eq(Discourse.system_user.id)
+      end
+
+      it "does not create a topic as the anonymous actor" do
+        expect do
+          execute_node(
+            configuration: {
+              "operation" => "create",
+              "title" => "Anonymous topic",
+              "raw" => "Created by workflows",
+              "actor_username" => DiscourseWorkflows::AnonymousActor::USERNAME,
+            },
+            item: item,
+          )
+        end.to raise_error(DiscourseWorkflows::NodeError).and not_change(Topic, :count)
       end
 
       it "accepts tags from an array" do
@@ -164,7 +182,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
       fab!(:topic) { Fabricate(:topic, category: category, user: user) }
       fab!(:post) { Fabricate(:post, topic: topic, user: user, raw: "This is the topic body") }
 
-      it "returns all expected topic fields" do
+      it "returns all expected topic and first post fields" do
         result =
           execute_node(
             configuration: {
@@ -182,6 +200,14 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         expect(result["topic"]["title"]).to eq(topic.title)
         expect(result["topic"]["category_id"]).to eq(category.id)
         expect(result["topic"]["tags"]).to eq([])
+        expect(result["post"]).to include(
+          "id" => topic.first_post.id,
+          "topic_id" => topic.id,
+          "user_id" => user.id,
+          "username" => user.username,
+          "trust_level" => user.trust_level,
+          "post_url" => topic.first_post.url,
+        )
       end
 
       it "returns tag names when topic has tags" do
@@ -282,6 +308,42 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
       end
     end
 
+    context "with operation 'archive'" do
+      fab!(:topic) { Fabricate(:topic, category: category, user: user) }
+      fab!(:post) { Fabricate(:post, topic: topic, user: user) }
+
+      it "archives the topic for the configured actor" do
+        result =
+          execute_node(
+            configuration: {
+              "operation" => "archive",
+              "topic_id" => topic.id.to_s,
+              "actor_username" => admin.username,
+            },
+            item: item,
+          )
+
+        expect(topic.reload).to be_archived
+        expect(result["topic"]).to include("id" => topic.id, "archived" => true)
+        expect(result.dig("post", "id")).to eq(topic.first_post.id)
+      end
+
+      it "raises when the actor cannot archive the topic" do
+        expect do
+          execute_node(
+            configuration: {
+              "operation" => "archive",
+              "topic_id" => topic.id.to_s,
+              "actor_username" => user.username,
+            },
+            item: item,
+          )
+        end.to raise_error(Discourse::InvalidAccess)
+
+        expect(topic.reload).not_to be_archived
+      end
+    end
+
     context "with operation 'list'" do
       fab!(:topic_1, :topic) do
         Fabricate(:topic, category: category, user: user, title: "First topic about workflows")
@@ -320,6 +382,26 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
           topic_1.id,
           topic_2.id,
         )
+      end
+
+      it "lists only publicly visible topics as the anonymous actor" do
+        group = Fabricate(:group)
+        private_category = Fabricate(:private_category, group: group)
+        private_topic = Fabricate(:topic, category: private_category, user: admin)
+        Fabricate(:post, topic: private_topic, user: admin)
+
+        result =
+          execute_list(
+            configuration: {
+              "operation" => "list",
+              "limit" => "50",
+              "actor_username" => DiscourseWorkflows::AnonymousActor::USERNAME,
+            },
+          )
+
+        ids = result.map { |output_item| output_item["json"]["topic"]["id"] }
+        expect(ids).to include(topic_1.id, topic_2.id)
+        expect(ids).not_to include(private_topic.id)
       end
 
       it "respects the limit parameter" do
@@ -383,7 +465,9 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
             },
           )
 
-        topic_data = result.find { |r| r["json"]["topic"]["id"] == topic_1.id }.dig("json", "topic")
+        topic_entry = result.find { |r| r["json"]["topic"]["id"] == topic_1.id }.dig("json")
+        topic_data = topic_entry["topic"]
+        post_data = topic_entry["post"]
         expect(topic_data).to include(
           "title" => topic_1.title,
           "category_id" => category.id,
@@ -398,6 +482,11 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         expect(topic_data["like_count"]).to be_present
         expect(topic_data["created_at"]).to be_present
         expect(topic_data["bumped_at"]).to be_present
+        expect(post_data).to include(
+          "id" => topic_1.first_post.id,
+          "topic_id" => topic_1.id,
+          "trust_level" => user.trust_level,
+        )
       end
 
       it "preloads selected custom fields when requested" do
@@ -528,6 +617,21 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
               "operation" => "close",
               "topic_id" => topic.id.to_s,
               "actor_username" => user.username,
+            },
+            item: item,
+          )
+        end.to raise_error(Discourse::InvalidAccess)
+
+        expect(topic.reload).not_to be_closed
+      end
+
+      it "raises when closing as the anonymous actor" do
+        expect do
+          execute_node(
+            configuration: {
+              "operation" => "close",
+              "topic_id" => topic.id.to_s,
+              "actor_username" => DiscourseWorkflows::AnonymousActor::USERNAME,
             },
             item: item,
           )

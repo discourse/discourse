@@ -5,11 +5,13 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { LinkTo } from "@ember/routing";
+import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier as modifierFn } from "ember-modifier";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import discourseLater from "discourse/lib/later";
 import { and, eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -18,13 +20,17 @@ import { i18n } from "discourse-i18n";
 import ChannelIcon from "discourse/plugins/chat/discourse/components/channel-icon";
 import ChannelName from "discourse/plugins/chat/discourse/components/channel-name";
 import ChatChannelMetadata from "discourse/plugins/chat/discourse/components/chat-channel-metadata";
+import ChatChannelSidebarContextMenu from "discourse/plugins/chat/discourse/components/chat-channel-sidebar-context-menu";
 import ToggleChannelMembershipButton from "discourse/plugins/chat/discourse/components/toggle-channel-membership-button";
+import ChatOnLongPress from "discourse/plugins/chat/discourse/modifiers/chat/on-long-press";
 
 const FADEOUT_CLASS = "-fade-out";
 
 export default class ChatChannelRow extends Component {
   @service capabilities;
   @service chat;
+  @service chatApi;
+  @service menu;
   @service site;
 
   @tracked isAtThreshold = false;
@@ -34,6 +40,7 @@ export default class ChatChannelRow extends Component {
   @tracked shouldReset = false;
   @tracked diff = 0;
   @tracked rowStyle = null;
+  @tracked isLongPressing = false;
 
   registerSwipableRow = modifierFn((element) => {
     this.swipableRow = element;
@@ -84,6 +91,12 @@ export default class ChatChannelRow extends Component {
     };
   });
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    cancel(this._longPressActivationHandler);
+    cancel(this._removeClickSuppressorHandler);
+  }
+
   @bind
   onSwipeStart(event) {
     this._initialX = event.changedTouches[0].screenX;
@@ -116,15 +129,95 @@ export default class ChatChannelRow extends Component {
   @bind
   onSwipeEnd() {
     if (this.isAtThreshold) {
-      this.rowStyle = trustHTML("margin-right: 0px;");
-      this.shouldRemoveChannel = true;
+      if (this.isSwipeToClearNotifications) {
+        this.#clearNotifications();
+        this.shouldReset = true;
+      } else {
+        this.rowStyle = trustHTML("margin-right: 0px;");
+        this.shouldRemoveChannel = true;
+      }
     } else {
       this.shouldReset = true;
     }
   }
 
+  #clearNotifications() {
+    const channel = this.args.channel;
+    if (!channel.currentUserMembership) {
+      return;
+    }
+
+    const lastMessageId = channel.lastMessage?.id;
+    channel.tracking.reset();
+    channel.updateLastViewedAt();
+
+    if (lastMessageId) {
+      this.chatApi
+        .markChannelAsRead(channel.id, lastMessageId)
+        .catch(popupAjaxError);
+    }
+  }
+
+  @bind
+  suppressEvent(event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  @action
+  onLongPressStart(element) {
+    // suppress the native context menu during the press
+    element.addEventListener("contextmenu", this.suppressEvent);
+
+    this._longPressActivationHandler = discourseLater(() => {
+      this.isLongPressing = true;
+    }, 125);
+  }
+
+  @action
+  onLongPressCancel(element) {
+    cancel(this._longPressActivationHandler);
+    this.isLongPressing = false;
+
+    element.removeEventListener("contextmenu", this.suppressEvent);
+
+    this._removeClickSuppressorHandler = discourseLater(() => {
+      element.removeEventListener("click", this.suppressEvent, {
+        capture: true,
+      });
+    }, 200);
+  }
+
+  @action
+  onLongPressEnd(element) {
+    cancel(this._longPressActivationHandler);
+    this.isLongPressing = false;
+
+    // stop the release from clicking through to the channel link
+    element.addEventListener("click", this.suppressEvent, { capture: true });
+
+    document.activeElement?.blur();
+
+    this.menu.show(element, {
+      identifier: this.args.channel.isDirectMessageChannel
+        ? "chat-direct-message-channel-menu"
+        : "chat-channel-menu",
+      component: ChatChannelSidebarContextMenu,
+      modalForMobile: true,
+      data: { channel: this.args.channel },
+    });
+  }
+
   get shouldHandleSwipe() {
-    return this.capabilities.touch && this.args.channel.isDirectMessageChannel;
+    if (!this.capabilities.touch) {
+      return false;
+    }
+
+    return this.args.channel.isDirectMessageChannel || this.channelHasUnread;
+  }
+
+  get isSwipeToClearNotifications() {
+    return !this.args.channel.isDirectMessageChannel;
   }
 
   get leaveDirectMessageLabel() {
@@ -175,12 +268,18 @@ export default class ChatChannelRow extends Component {
         (if @options.leaveButton "can-leave")
         (if (eq this.chat.activeChannel.id @channel.id) "active")
         (if this.channelHasUnread "has-unread")
+        (if this.isLongPressing "is-long-pressed")
       }}
       tabindex="0"
       data-chat-channel-id={{@channel.id}}
       {{didInsert this.startTrackingStatus}}
       {{willDestroy this.stopTrackingStatus}}
       {{(if this.shouldRemoveChannel (modifier this.onRemoveChannel))}}
+      {{ChatOnLongPress
+        this.onLongPressStart
+        this.onLongPressEnd
+        this.onLongPressCancel
+      }}
     >
       <div
         class={{dConcatClass
@@ -229,10 +328,13 @@ export default class ChatChannelRow extends Component {
         <div
           class={{dConcatClass
             "chat-channel-row__action-btn"
+            (if this.isSwipeToClearNotifications "--clear" "--remove")
             (if this.isAtThreshold "-at-threshold" "-not-at-threshold")
           }}
         >
-          {{dIcon "circle-xmark"}}
+          {{dIcon
+            (if this.isSwipeToClearNotifications "circle-check" "circle-xmark")
+          }}
         </div>
       {{/if}}
     </LinkTo>

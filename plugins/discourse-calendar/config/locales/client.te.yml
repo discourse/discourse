@@ -78,11 +78,6 @@ te:
             after: "తర్వాత"
         attendance:
           none: "ఏదీ లేదు"
-        url:
-          label: "URL"
-          placeholder: "ఐచ్ఛికం"
-        location:
-          label: "ప్రాంతం"
         description:
           label: "వివరణ"
         event_type:

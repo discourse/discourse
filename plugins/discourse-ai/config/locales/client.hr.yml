@@ -36,6 +36,17 @@ hr:
             canned_reply:
               label: "Odgovor"
     discourse_ai:
+      discourse_workflows:
+        ai_agent:
+          mode: "Modus"
+      ai_tool_approval:
+        loading: "Očitavanje..."
+        tool: "Akcija"
+        user: "Korisnik"
+        approve: "Odobrite"
+        reject: "Odbij"
+        approved: "Odobrio/la"
+        rejected: "Odbio/la"
       llm_selector:
         none: "Ništa"
       features:
@@ -56,12 +67,31 @@ hr:
           reset: "Resetirati"
         search:
           name: "Pretraživanje"
+        image_caption:
+          setting_groups:
+            settings: "Postavke"
         spam:
           name: "Nepoželjno"
       modals:
         select_option: "Odaberite opciju..."
       translations:
         title: "Prijevodi"
+        category_scope: "Kategorije"
+        model_progress:
+          detail:
+            columns:
+              locale: "Lokalizacija"
+              pending: "Na čekanju"
+              total: "Ukupno"
+          targets:
+            post:
+              title: "Postovi"
+            topic:
+              title: "Tema"
+            category:
+              title: "Kategorije"
+            tag:
+              title: "Oznake"
         stats:
           eta_minutes:
             one: "%{count} minuta"
@@ -105,7 +135,15 @@ hr:
         mcp_tools_modal:
           clear_all: "Obriši sve"
         allowed_groups: "Dopuštene grupe"
+        duplicate: "Dupliciraj"
+        copy_name: "Kopija %{name}"
         delete: "Izbriši"
+        thinking_effort_options:
+          none: "Ništa"
+          low: "Nizak"
+          medium: "Srednji"
+          high: "Visok"
+          max: "Maks"
         response_format:
           open_modal: "Uredi"
           modal:
@@ -174,7 +212,6 @@ hr:
         tests:
           success: "Uspjeh!"
         providers:
-          google: "Google"
           fake: "Posebna"
       ai_helper:
         context_menu:
@@ -190,8 +227,6 @@ hr:
           select: "Odaberite"
           selected: "Odabrano"
           try_again: "Pokušaj ponovno"
-        image_caption:
-          save_caption: "Spremi"
       embeddings:
         save: "Spremi"
         delete: "Izbriši"

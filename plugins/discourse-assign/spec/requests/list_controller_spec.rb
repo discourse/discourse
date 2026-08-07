@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../support/assign_allowed_group"
-
 describe ListController do
   before do
     SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
@@ -20,15 +18,31 @@ describe ListController do
       sign_in(user)
       SiteSetting.assign_allowed_on_groups = ""
 
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json"
+      get "/topics/group-topics-assigned/#{assign_allowed_group.name}.json"
       expect(response.status).to eq(403)
 
       get "/topics/messages-assigned/#{user.username_lower}.json"
       expect(response.status).to eq(403)
     end
 
+    it "filters requests from users who can only assign in scoped categories" do
+      SiteSetting.assign_allowed_on_groups = ""
+      category = Fabricate(:category)
+      scoped_group = Fabricate(:group, assignable_level: Group::ALIAS_LEVELS[:everyone])
+      scoped_user = Fabricate(:user, groups: [scoped_group])
+      allow_group_to_assign_in_category(category, scoped_group)
+
+      sign_in(scoped_user)
+
+      get "/topics/group-topics-assigned/#{scoped_group.name}.json"
+      expect(response.status).to eq(403)
+
+      get "/topics/messages-assigned/#{scoped_user.username_lower}.json"
+      expect(response.status).to eq(403)
+    end
+
     it "as an anon user" do
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json"
+      get "/topics/group-topics-assigned/#{assign_allowed_group.name}.json"
       expect(response.status).to eq(403)
 
       get "/topics/messages-assigned/#{user.username_lower}.json"
@@ -37,7 +51,7 @@ describe ListController do
 
     it "as an admin user" do
       sign_in(admin)
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json"
+      get "/topics/group-topics-assigned/#{assign_allowed_group.name}.json"
       expect(response.status).to eq(200)
 
       get "/topics/messages-assigned/#{user.username_lower}.json"
@@ -56,7 +70,7 @@ describe ListController do
     fab!(:topic2) { post2.topic }
 
     before do
-      add_to_assign_allowed_group(user)
+      assign_allowed_group.add(user)
 
       Assigner.new(topic1, user).assign(user)
       Assigner.new(topic2, user).assign(user2)
@@ -64,8 +78,23 @@ describe ListController do
       sign_in(user)
     end
 
+    it "returns 403 for a group hidden from the acting user" do
+      hidden_group =
+        Fabricate(
+          :group,
+          visibility_level: Group.visibility_levels[:staff],
+          assignable_level: Group::ALIAS_LEVELS[:everyone],
+        )
+
+      get "/g/#{hidden_group.name}.json"
+      expect(response.status).to eq(404)
+
+      get "/topics/group-topics-assigned/#{hidden_group.name}.json"
+      expect(response.status).to eq(403)
+    end
+
     it "returns user-assigned-topics-list of users in the assigned_allowed_group and doesn't include deleted topic" do
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json"
+      get "/topics/group-topics-assigned/#{assign_allowed_group.name}.json"
       expect(
         JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["assigned_to_user"]["id"] },
       ).to match_array([user.id])
@@ -74,13 +103,13 @@ describe ListController do
     it "returns user-assigned-topics-list of users in the assigned_allowed_group and doesn't include inactive topics" do
       Assignment.where(assigned_to: user, target: topic1).update_all(active: false)
 
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json"
+      get "/topics/group-topics-assigned/#{assign_allowed_group.name}.json"
       expect(response.parsed_body["topic_list"]["topics"]).to be_empty
     end
 
     it "returns empty user-assigned-topics-list for users not in the assigned_allowed_group" do
       ids = []
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json"
+      get "/topics/group-topics-assigned/#{assign_allowed_group.name}.json"
       JSON.parse(response.body)["topic_list"]["topics"].each do |t|
         ids.push(t["assigned_to_user"]["id"]) if t["assigned_to_user"]["id"] == user2.id
       end
@@ -115,7 +144,7 @@ describe ListController do
       topic.reload
 
       id = 0
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json"
+      get "/topics/group-topics-assigned/#{assign_allowed_group.name}.json"
 
       JSON.parse(response.body)["topic_list"]["topics"].each do |t|
         id = t.id if t["id"] == topic.id
@@ -136,8 +165,8 @@ describe ListController do
     fab!(:topic3) { post3.topic }
 
     before do
-      add_to_assign_allowed_group(user)
-      add_to_assign_allowed_group(user2)
+      assign_allowed_group.add(user)
+      assign_allowed_group.add(user2)
 
       Assigner.new(post1.topic, user).assign(user)
       Assigner.new(post2.topic, user).assign(user2)
@@ -163,32 +192,32 @@ describe ListController do
       topic2.save!
       topic3.save!
 
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json?order=posts"
+      get "/topics/group-topics-assigned/#{assign_allowed_group.name}.json?order=posts"
       expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to match_array(
         [topic2.id, topic1.id, topic3.id],
       )
 
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json?order=views"
+      get "/topics/group-topics-assigned/#{assign_allowed_group.name}.json?order=views"
       expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to match_array(
         [topic3.id, topic1.id, topic2.id],
       )
 
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json?order=activity"
+      get "/topics/group-topics-assigned/#{assign_allowed_group.name}.json?order=activity"
       expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to match_array(
         [topic3.id, topic2.id, topic1.id],
       )
 
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json?order=posts&ascending=true"
+      get "/topics/group-topics-assigned/#{assign_allowed_group.name}.json?order=posts&ascending=true"
       expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to match_array(
         [topic3.id, topic1.id, topic2.id],
       )
 
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json?order=views&ascending=true"
+      get "/topics/group-topics-assigned/#{assign_allowed_group.name}.json?order=views&ascending=true"
       expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to match_array(
         [topic2.id, topic1.id, topic3.id],
       )
 
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json?order=activity&ascending=true"
+      get "/topics/group-topics-assigned/#{assign_allowed_group.name}.json?order=activity&ascending=true"
       expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to match_array(
         [topic1.id, topic2.id, topic3.id],
       )
@@ -252,8 +281,8 @@ describe ListController do
     before do
       SearchIndexer.enable
 
-      add_to_assign_allowed_group(user)
-      add_to_assign_allowed_group(user2)
+      assign_allowed_group.add(user)
+      assign_allowed_group.add(user2)
 
       Assigner.new(post1.topic, user).assign(user)
       Assigner.new(post2.topic, user).assign(user2)
@@ -273,7 +302,7 @@ describe ListController do
       topic2.save!
       topic3.save!
 
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json",
+      get "/topics/group-topics-assigned/#{assign_allowed_group.name}.json",
           params: {
             search: "Testing",
           }
@@ -281,7 +310,7 @@ describe ListController do
         [topic1.id, topic2.id, topic3.id],
       )
 
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json",
+      get "/topics/group-topics-assigned/#{assign_allowed_group.name}.json",
           params: {
             search: "RSpec",
           }
@@ -289,7 +318,7 @@ describe ListController do
         [topic2.id],
       )
 
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json",
+      get "/topics/group-topics-assigned/#{assign_allowed_group.name}.json",
           params: {
             search: "love",
           }
@@ -312,7 +341,7 @@ describe ListController do
         [topic1.id, topic3.id],
       )
 
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json",
+      get "/topics/group-topics-assigned/#{assign_allowed_group.name}.json",
           params: {
             search: "love",
           }
@@ -329,7 +358,7 @@ describe ListController do
     fab!(:post2, :post)
 
     before do
-      add_to_assign_allowed_group(user)
+      assign_allowed_group.add(user)
 
       Assigner.new(post1.topic, user).assign(user)
       Assigner.new(post2.topic, user).assign(user2)
@@ -356,10 +385,10 @@ describe ListController do
     fab!(:topic) { Fabricate(:topic, user: user) }
     fab!(:pm_post) { Fabricate(:post, topic: pm) }
     fab!(:post) { Fabricate(:post, topic: topic) }
+    fab!(:private_message_allowed_user) { Fabricate(:topic_allowed_user, user: user, topic: pm) }
 
     before do
       SiteSetting.assign_allowed_on_groups = "#{group.id}"
-      Fabricate(:topic_allowed_user, user: user, topic: pm)
       Assigner.new(pm, user).assign(user)
       Assigner.new(topic, user).assign(user)
     end
@@ -388,7 +417,7 @@ describe ListController do
 
     describe "when user cannot assign" do
       it "ignores the assign filter" do
-        add_to_assign_allowed_group(user)
+        assign_allowed_group.add(user)
 
         Assigner.new(topic_1, user).assign(user)
 
@@ -405,7 +434,7 @@ describe ListController do
       before { sign_in(admin) }
 
       it "filters topics by assigned user" do
-        add_to_assign_allowed_group(user)
+        assign_allowed_group.add(user)
 
         Assigner.new(topic_1, admin).assign(user)
 
@@ -429,9 +458,9 @@ describe ListController do
       end
 
       it "filters topics by multiple assigned users and groups" do
-        add_to_assign_allowed_group(user)
+        assign_allowed_group.add(user)
         user2 = Fabricate(:user)
-        add_to_assign_allowed_group(user2)
+        assign_allowed_group.add(user2)
 
         # Assign topics to different users and groups
         Assigner.new(topic_1, admin).assign(user)
@@ -452,9 +481,9 @@ describe ListController do
       end
 
       it "filters topics by subset of multiple assigned users and groups" do
-        add_to_assign_allowed_group(user)
+        assign_allowed_group.add(user)
         user2 = Fabricate(:user)
-        add_to_assign_allowed_group(user2)
+        assign_allowed_group.add(user2)
 
         # Assign topics to different users and groups
         Assigner.new(topic_1, admin).assign(user)
@@ -475,7 +504,7 @@ describe ListController do
       end
 
       it "filters topics by assigned:*" do
-        add_to_assign_allowed_group(user)
+        assign_allowed_group.add(user)
 
         Assigner.new(topic_1, admin).assign(user)
         Assigner.new(topic_2, admin).assign(group)
@@ -490,7 +519,7 @@ describe ListController do
       end
 
       it "filters topics by assigned:nobody" do
-        add_to_assign_allowed_group(user)
+        assign_allowed_group.add(user)
 
         Assigner.new(topic_1, admin).assign(user)
         Assigner.new(topic_2, admin).assign(group)
@@ -505,7 +534,7 @@ describe ListController do
       end
 
       it "handles empty multi-value assigned filter gracefully" do
-        add_to_assign_allowed_group(user)
+        assign_allowed_group.add(user)
 
         Assigner.new(topic_1, admin).assign(user)
 
@@ -519,7 +548,7 @@ describe ListController do
       end
 
       it "handles non-existent users and groups in multi-value filter" do
-        add_to_assign_allowed_group(user)
+        assign_allowed_group.add(user)
 
         Assigner.new(topic_1, admin).assign(user)
 
@@ -539,7 +568,7 @@ describe ListController do
 
     describe "when user cannot assign" do
       it "ignores the assigned:* filter" do
-        add_to_assign_allowed_group(admin)
+        assign_allowed_group.add(admin)
 
         Assigner.new(topic_1, admin).assign(admin)
 
@@ -552,7 +581,7 @@ describe ListController do
       end
 
       it "ignores the assigned:nobody filter" do
-        add_to_assign_allowed_group(admin)
+        assign_allowed_group.add(admin)
 
         Assigner.new(topic_1, admin).assign(admin)
 

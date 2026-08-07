@@ -1,6 +1,6 @@
 import "./shims";
 import "./postcss";
-import "./theme-rollup";
+import "./asset-processor-rollup";
 import { transform as babelTransform } from "@babel/standalone";
 import DecoratorTransforms from "decorator-transforms";
 import EMBER_PACKAGE from "ember-source/package.json";

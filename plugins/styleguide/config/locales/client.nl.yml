@@ -13,7 +13,6 @@ nl:
   js:
     styleguide:
       title: "Stijlgids"
-      welcome: "Kies een sectie in het menu links om te beginnen."
       categories:
         syntax: Syntax
         atoms: Atomen

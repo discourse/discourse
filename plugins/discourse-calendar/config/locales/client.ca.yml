@@ -74,11 +74,6 @@ ca:
             last: "darrer"
         attendance:
           none: "Cap"
-        url:
-          label: "URL"
-          placeholder: "Opcional"
-        location:
-          label: "Ubicació"
         description:
           label: "Descripció"
         event_type:

@@ -203,6 +203,7 @@ tr_TR:
     discourse_workflows:
       nodes:
         "action:assign_topic": "Konu Ata"
+        "trigger:assigned": "Atandı"
       assign_topic:
         operations:
           assign: "Ata"

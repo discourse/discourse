@@ -29,6 +29,7 @@ export default <template>
     <div class="admin-config-area">
       <DashboardNewFeatures
         @onCheckForFeatures={{@controller.bindCheckFeatures}}
+        @scrollTo={{@controller.scrollTo}}
       />
     </div>
   </div>

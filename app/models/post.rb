@@ -71,7 +71,10 @@ class Post < ActiveRecord::Base
   has_many :reviewables, as: :target, dependent: :destroy
 
   validates_with PostValidator, unless: :skip_validation
-  validates :edit_reason, length: { maximum: 1000 }
+  MAX_EDIT_REASON_LENGTH = 1000
+  validates :edit_reason, length: { maximum: MAX_EDIT_REASON_LENGTH }
+
+  before_save :ensure_edit_reason_length
 
   after_commit :index_search
 
@@ -200,18 +203,17 @@ class Post < ActiveRecord::Base
     post_type == Post.types[:whisper]
   end
 
+  def small_action?
+    post_type == Post.types[:small_action]
+  end
+
   def add_detail(key, value, extra = nil)
     post_details.build(key: key, value: value, extra: extra)
   end
 
   def limit_posts_per_day
     if user && user.new_user_posting_on_first_day? && post_number && post_number > 1
-      RateLimiter.new(
-        user,
-        "first-day-replies-per-day",
-        SiteSetting.max_replies_in_first_day,
-        1.day.to_i,
-      )
+      RateLimiter.new(user, "first-day-replies-per-day", user.first_day_replies_limit, 1.day.to_i)
     end
   end
 
@@ -576,10 +578,7 @@ class Post < ActiveRecord::Base
     category ||= Category.find_by(topic_id:)
     return unless category
 
-    doc = Nokogiri::HTML5.fragment(cooked)
-    doc.css("img").remove
-
-    if (html = doc.css("p").first&.inner_html&.strip)
+    if (html = Category.first_paragraph_description(cooked))
       new_description = html unless html.starts_with?(Category.post_template[..50])
       return category if category.description == new_description
       category.update_column(:description, new_description)
@@ -878,6 +877,8 @@ class Post < ActiveRecord::Base
     TopicLink.extract_from(self)
     QuotedPost.extract_from(self)
 
+    rebake_localizations!
+
     trigger_post_process(bypass_bump: true, priority:)
 
     # Skip publishing if invalidating oneboxes - the ProcessPost job will
@@ -887,6 +888,14 @@ class Post < ActiveRecord::Base
     publish_change_to_clients!(:rebaked) if should_publish
 
     new_cooked != old_cooked
+  end
+
+  def rebake_localizations!
+    return if !SiteSetting.content_localization_enabled
+
+    localizations.find_each do |localization|
+      Jobs.enqueue(:process_localized_cooked, post_localization_id: localization.id, recook: true)
+    end
   end
 
   def set_owner(new_user, actor, skip_revision = false)
@@ -1216,6 +1225,13 @@ class Post < ActiveRecord::Base
   end
 
   private
+
+  def ensure_edit_reason_length
+    return if edit_reason.blank? || edit_reason.length <= MAX_EDIT_REASON_LENGTH
+
+    errors.add(:edit_reason, :too_long, count: MAX_EDIT_REASON_LENGTH)
+    throw :abort
+  end
 
   def access_control_post_id_for_upload
     id

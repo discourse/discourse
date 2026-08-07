@@ -553,7 +553,7 @@ RSpec.describe Discourse do
     end
   end
 
-  describe "Utils.execute_command" do
+  describe ".execute_command" do
     it "works for individual commands" do
       expect(Discourse::Utils.execute_command("pwd").strip).to eq(Rails.root.to_s)
       expect(Discourse::Utils.execute_command("pwd", chdir: "plugins").strip).to eq(
@@ -631,6 +631,52 @@ RSpec.describe Discourse do
     end
   end
 
+  describe ".atomic_ln_s" do
+    it "creates the destination symlink pointing at the source" do
+      Dir.mktmpdir do |dir|
+        source = File.join(dir, "source")
+        Dir.mkdir(source)
+        destination = File.join(dir, "link")
+
+        Discourse::Utils.atomic_ln_s(source, destination)
+
+        expect(File.symlink?(destination)).to eq(true)
+        expect(File.readlink(destination)).to eq(source)
+      end
+    end
+
+    it "replaces an existing symlink at the destination" do
+      Dir.mktmpdir do |dir|
+        source = File.join(dir, "source")
+        Dir.mkdir(source)
+        old_target = File.join(dir, "old")
+        Dir.mkdir(old_target)
+        destination = File.join(dir, "link")
+        File.symlink(old_target, destination)
+
+        Discourse::Utils.atomic_ln_s(source, destination)
+
+        expect(File.readlink(destination)).to eq(source)
+      end
+    end
+
+    it "falls back to a copy when tmp and destination are on different filesystems" do
+      # rename(2) raises EXDEV across filesystem boundaries (e.g. containers
+      # where Rails.root/tmp is a separate mount). The link must still land.
+      Dir.mktmpdir do |dir|
+        source = File.join(dir, "source")
+        Dir.mkdir(source)
+        destination = File.join(dir, "link")
+        allow(File).to receive(:rename).and_raise(Errno::EXDEV)
+
+        Discourse::Utils.atomic_ln_s(source, destination)
+
+        expect(File.symlink?(destination)).to eq(true)
+        expect(File.readlink(destination)).to eq(source)
+      end
+    end
+  end
+
   describe ".clear_all_theme_cache!" do
     before do
       setup_s3
@@ -690,18 +736,12 @@ RSpec.describe Discourse do
       )
     end
 
-    it "invalidates all JS and CSS caches" do
+    it "invalidates all theme settings and CSS caches" do
       Stylesheet::Manager.clear_theme_cache!
 
       old_upload_url = Discourse.store.cdn_url(upload.url)
 
-      js_file_script =
-        Nokogiri::HTML5
-          .fragment(Theme.lookup_field(theme.id, :extra_js, nil))
-          .css("link[rel=modulepreload]")
-          .first
-      file_js = JavascriptCache.find_by(digest: js_file_script[:href][/\h{40}/]).content
-      expect(file_js).to include(old_upload_url)
+      expect(theme.cached_settings["theme_uploads"]["imajee"]).to eq(old_upload_url)
 
       css_link_tag =
         Nokogiri::HTML5
@@ -716,13 +756,7 @@ RSpec.describe Discourse do
       SiteSetting.s3_cdn_url = "https://new.s3.cdn.com/gg"
       new_upload_url = Discourse.store.cdn_url(upload.url)
 
-      js_file_script =
-        Nokogiri::HTML5
-          .fragment(Theme.lookup_field(theme.id, :extra_js, nil))
-          .css("link[rel=modulepreload]")
-          .first
-      file_js = JavascriptCache.find_by(digest: js_file_script[:href][/\h{40}/]).content
-      expect(file_js).to include(old_upload_url)
+      expect(theme.cached_settings["theme_uploads"]["imajee"]).to eq(old_upload_url)
 
       css_link_tag =
         Nokogiri::HTML5
@@ -736,13 +770,7 @@ RSpec.describe Discourse do
 
       Discourse.clear_all_theme_cache!
 
-      js_file_script =
-        Nokogiri::HTML5
-          .fragment(Theme.lookup_field(theme.id, :extra_js, nil))
-          .css("link[rel=modulepreload]")
-          .first
-      file_js = JavascriptCache.find_by(digest: js_file_script[:href][/\h{40}/]).content
-      expect(file_js).to include(new_upload_url)
+      expect(theme.cached_settings["theme_uploads"]["imajee"]).to eq(new_upload_url)
 
       css_link_tag =
         Nokogiri::HTML5

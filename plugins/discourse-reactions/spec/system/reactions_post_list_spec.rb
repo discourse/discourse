@@ -13,7 +13,6 @@ describe "Reactions | Post reaction user list" do
 
   before do
     SiteSetting.discourse_reactions_enabled = true
-    SiteSetting.enable_new_post_reactions_menu = true
 
     DiscourseReactions::ReactionManager.new(
       reaction_value: "heart",
@@ -35,7 +34,7 @@ describe "Reactions | Post reaction user list" do
     reactions_list.click_counter
 
     expect(popup).to be_open
-    find(".post-users-popup .post-users-popup__name[data-user-card=#{user_2.username}]").click
+    find(".users-popup .users-popup__name[data-user-card=#{user_2.username}]").click
 
     expect(page).to have_css(".user-card.user-card-#{user_2.username}")
   end
@@ -50,10 +49,10 @@ describe "Reactions | Post reaction user list" do
     reactions_list.click_counter
 
     expect(page).to have_css(
-      ".post-users-popup__name[data-user-card=#{user_2.username}]",
+      ".users-popup__name[data-user-card=#{user_2.username}]",
       text: user_2.name,
     )
-    expect(page).to have_css(".post-users-popup__username", text: "@#{user_2.username}")
+    expect(page).to have_css(".users-popup__username", text: "@#{user_2.username}")
   end
 
   it "shows the user's username as primary when prioritize_username_in_ux is true" do
@@ -66,10 +65,10 @@ describe "Reactions | Post reaction user list" do
     reactions_list.click_counter
 
     expect(page).to have_css(
-      ".post-users-popup__name[data-user-card=#{user_2.username}]",
+      ".users-popup__name[data-user-card=#{user_2.username}]",
       text: user_2.username,
     )
-    expect(page).to have_no_css(".post-users-popup__username")
+    expect(page).to have_no_css(".users-popup__username")
   end
 
   it "filters the users popup by reaction" do

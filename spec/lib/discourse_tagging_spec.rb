@@ -425,6 +425,81 @@ RSpec.describe DiscourseTagging do
   end
 
   describe "filter_allowed_tags" do
+    context "when ordering by recent tag ids" do
+      fab!(:popular_tag) { Fabricate(:tag, name: "popular", public_topic_count: 100) }
+      fab!(:recent_tag) { Fabricate(:tag, name: "recent", public_topic_count: 1) }
+
+      it "lists the given tag ids first, then falls back to popularity" do
+        names =
+          DiscourseTagging.filter_allowed_tags(
+            guardian,
+            for_input: true,
+            order_recent_tag_ids: [recent_tag.id],
+          ).map(&:name)
+
+        expect(names.first).to eq("recent")
+        expect(names).to include("popular")
+        expect(names.index("recent")).to be < names.index("popular")
+      end
+
+      it "orders multiple recent tag ids by their position in the list" do
+        names =
+          DiscourseTagging.filter_allowed_tags(
+            guardian,
+            for_input: true,
+            order_popularity: true,
+            order_recent_tag_ids: [tag2.id, tag1.id],
+          ).map(&:name)
+
+        expect(names.first(2)).to eq([tag2.name, tag1.name])
+      end
+
+      it "produces the same result as popularity ordering when no recent tag ids are given" do
+        with_empty =
+          DiscourseTagging.filter_allowed_tags(
+            guardian,
+            for_input: true,
+            order_popularity: true,
+            order_recent_tag_ids: [],
+          ).map(&:name)
+        without =
+          DiscourseTagging.filter_allowed_tags(
+            guardian,
+            for_input: true,
+            order_popularity: true,
+          ).map(&:name)
+
+        expect(with_empty).to eq(without)
+      end
+
+      it "orders by staff_topic_count for staff without raising" do
+        names =
+          DiscourseTagging.filter_allowed_tags(
+            admin_guardian,
+            for_input: true,
+            order_popularity: true,
+            order_recent_tag_ids: [recent_tag.id],
+          ).map(&:name)
+
+        expect(names.first).to eq("recent")
+      end
+
+      it "does not surface a recent tag id the user is not allowed to see" do
+        secret_tag = Fabricate(:tag, name: "secret")
+        Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [secret_tag.name])
+
+        names =
+          DiscourseTagging.filter_allowed_tags(
+            guardian,
+            for_input: true,
+            order_popularity: true,
+            order_recent_tag_ids: [secret_tag.id],
+          ).map(&:name)
+
+        expect(names).not_to include("secret")
+      end
+    end
+
     context "for input fields" do
       it "doesn't return selected tags if there's a search term" do
         tags =
@@ -1065,7 +1140,62 @@ RSpec.describe DiscourseTagging do
     end
   end
 
+  describe "without_pm_only_tags" do
+    fab!(:pm_only_tag) { Fabricate(:tag, pm_topic_count: 1) }
+    fab!(:used_tag) { Fabricate(:tag, public_topic_count: 1, staff_topic_count: 1) }
+    fab!(:unused_tag, :tag)
+    fab!(:staff_seen_tag) { Fabricate(:tag, staff_topic_count: 1, pm_topic_count: 1) }
+
+    let(:all_tags) { Tag.where(id: [pm_only_tag, used_tag, unused_tag, staff_seen_tag]) }
+
+    it "rejects tags only used in personal messages for users who cannot tag PMs" do
+      tags = DiscourseTagging.without_pm_only_tags(all_tags, Guardian.new(user))
+      expect(tags).to contain_exactly(used_tag, unused_tag)
+    end
+
+    it "uses the staff topic count for staff users" do
+      tags = DiscourseTagging.without_pm_only_tags(all_tags, Guardian.new(admin))
+      expect(tags).to contain_exactly(used_tag, unused_tag, staff_seen_tag)
+    end
+
+    it "keeps all tags for users who can tag PMs" do
+      SiteSetting.pm_tags_allowed_for_groups = Group::AUTO_GROUPS[:trust_level_0]
+      tags = DiscourseTagging.without_pm_only_tags(all_tags, Guardian.new(user))
+      expect(tags).to contain_exactly(pm_only_tag, used_tag, unused_tag, staff_seen_tag)
+    end
+  end
+
   describe "tag_topic_by_names" do
+    context "with a tag restricted to other categories" do
+      fab!(:allowed_category, :category)
+      fab!(:other_category, :category)
+      fab!(:restricted_tag_group) { Fabricate(:tag_group, tag_names: ["events"]) }
+      fab!(:topic_in_other_category) { Fabricate(:topic, category: other_category) }
+
+      before do
+        CategoryTagGroup.create!(category: allowed_category, tag_group: restricted_tag_group)
+      end
+
+      it "names the offending category instead of a generic error, even for admins" do
+        valid =
+          DiscourseTagging.tag_topic_by_names(
+            topic_in_other_category,
+            Guardian.new(admin),
+            ["events"],
+          )
+
+        expect(valid).to eq(false)
+        expect(topic_in_other_category.errors[:base]&.first).to eq(
+          I18n.t(
+            "tags.forbidden.tag_not_allowed_in_category",
+            count: 1,
+            tags: "events",
+            category: other_category.name,
+          ),
+        )
+      end
+    end
+
     context "with visible but restricted tags" do
       fab!(:topic)
 

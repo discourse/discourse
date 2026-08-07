@@ -100,7 +100,6 @@ sq:
       exclusion: është i rezervuar
       greater_than: must be greater than %{count}
       greater_than_or_equal_to: must be greater than or equal to %{count}
-      has_already_been_used: "është përdorur më parë"
       inclusion: is not included in the list
       invalid: është i pavlefshëm
       less_than: must be less than %{count}
@@ -195,6 +194,11 @@ sq:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Të gjithë"
+      admins: "Administratorët"
+      moderators: "Moderatorë"
+      staff: "Stafi"
   education:
     until_posts:
       one: "%{count} postim"
@@ -429,6 +433,9 @@ sq:
       notifications: "Leximin dhe pastrimin e njoftimeve"
       push: "Njoftime \"push\" drejt shërbimeve të jashtme"
       session_info: "Leximin e informacionit të sesionit të llogarisë"
+    device:
+      code: "Kodi"
+      continue: "Vazhdoni"
   reports:
     default:
       labels:
@@ -472,6 +479,7 @@ sq:
       labels:
         count: "Anëtarë"
         share: "Shpërndaje"
+        signups: "Regjistrimet"
       levels:
         "0": "I Ri"
         "1": "Anëtar i Thjeshtë"
@@ -703,7 +711,6 @@ sq:
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
     editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
-    edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
     add_rel_nofollow_to_user_content: 'Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: "rake posts:rebake"'
@@ -717,7 +724,6 @@ sq:
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "How often should the clients poll in milliseconds (when the window is in the background)"
     cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit a post hidden via community flagging"
-    max_replies_in_first_day: "Numri maksimal i përgjigjeve që një përdorues ka të drejtë të krijojë në periudhën 24-orëshe pas postimit të tij të parë"
     tl2_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl2 (member) by multiplying with this number"
     tl3_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl3 (regular) by multiplying with this number"
     tl4_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl4 (leader) by multiplying with this number"
@@ -864,6 +870,10 @@ sq:
       category: "Categories"
       topic: "Results"
       user: "Users"
+  posts_filter:
+    description:
+      order_latest: "Postimet e fundit"
+      order_latest_topic: "Temat e fundit"
   original_poster: "Postuesi fillestar"
   most_recent_poster: "Postuesi i përgjigjes së fundit"
   frequent_poster: "Postues i shpeshtë"
@@ -1424,6 +1434,8 @@ sq:
               private:
                 label: "Private"
   onebox:
+    google_meet:
+      meeting_code: "Kodi:"
     github:
       status_date:
         approved: "aprovuar"

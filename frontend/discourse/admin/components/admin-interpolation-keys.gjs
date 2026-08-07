@@ -23,7 +23,7 @@ function pillTitle(item) {
   return i18n("admin.site_text.interpolation_key_insert");
 }
 
-<template>
+export default <template>
   {{#if @keys.length}}
     <div class="interpolation-keys">
       {{#each @keys as |item|}}

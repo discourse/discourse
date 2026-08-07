@@ -8,7 +8,7 @@ module Jobs
       category = topic_timer.category
 
       return if category.blank?
-      return unless guardian.can_see?(topic)
+      return unless guardian.can_set_topic_timer?(topic)
       return unless guardian.can_create_topic_on_category?(category)
       return if topic.private_message? && !guardian.can_convert_topic?(topic)
 

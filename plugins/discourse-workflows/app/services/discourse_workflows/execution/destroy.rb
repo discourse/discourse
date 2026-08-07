@@ -15,6 +15,7 @@ module DiscourseWorkflows
 
     transaction do
       step :delete_execution_data
+      step :remove_workflow_call_run_references
       model :deleted_count, :delete_executions
     end
 
@@ -22,6 +23,10 @@ module DiscourseWorkflows
 
     def delete_execution_data(params:)
       DiscourseWorkflows::ExecutionData.where(execution_id: params.execution_ids).delete_all
+    end
+
+    def remove_workflow_call_run_references(params:)
+      DiscourseWorkflows::WorkflowCallRun.remove_execution_references(params.execution_ids)
     end
 
     def delete_executions(params:)

@@ -9,7 +9,7 @@ import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { actionDescriptionHtml } from "discourse/components/post-action-description";
 import TopicAdminMenu from "discourse/components/topic-admin-menu";
-import TopicLocalizedContentToggle from "discourse/components/topic-localized-content-toggle";
+import TopicContentLanguagePreferences from "discourse/components/topic-content-language-preferences";
 import UserTip from "discourse/components/user-tip";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
@@ -572,7 +572,7 @@ export default class TopicTimelineScrollArea extends Component {
         />
 
         {{#if @model.has_localized_content}}
-          <TopicLocalizedContentToggle @topic={{@model}} />
+          <TopicContentLanguagePreferences />
         {{/if}}
       </div>
     {{/if}}

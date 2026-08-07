@@ -3,21 +3,24 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
-import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import WorkflowEditorSession from "../../../lib/workflows/editor-session";
 import {
   connectionMatchesEndpoint,
+  nextAvailableTargetInputIndex,
   normalizeSourceOutputIndex,
   portIndexFromKey,
 } from "../../../lib/workflows/graph-constants";
 import {
+  nodeTypeInputUsesConnectionIndexes,
   nodeTypeLabel,
+  nodeTypeOutputKeys,
   nodeTypePrimaryOutputKey,
   nodeTypeVersion,
   resolveNodeTypeVersion,
+  typeVersionForNode,
 } from "../../../lib/workflows/node-types";
 import { mergeImportedStaticData } from "../../../lib/workflows/static-data";
 import StickyNote, { STICKY_NOTE_TYPE } from "../../../models/sticky-note";
@@ -52,7 +55,8 @@ export function isNodeUnavailable(workflowsNodeTypes, node) {
   }
 
   return (
-    resolveNodeTypeVersion(nodeType, node.typeVersion)?.available === false
+    resolveNodeTypeVersion(nodeType, typeVersionForNode(node))?.available ===
+    false
   );
 }
 
@@ -68,9 +72,60 @@ function shouldHideTriggerNodeTypes(context, nodes) {
   return isTriggerType(sourceNode?.type);
 }
 
+export function buildPastedGraph({
+  existingNodes,
+  existingConnections,
+  copiedNodes = [],
+  copiedConnections = [],
+  nodeTypeFor = (node) => node?.type,
+}) {
+  const newNodes = [];
+  const remappedClientIds = new Map();
+
+  for (const copiedNode of copiedNodes) {
+    const newNode = WorkflowNode.create({
+      type: copiedNode.type,
+      typeVersion: copiedNode.typeVersion,
+      name: generateNodeName(copiedNode.type, [...existingNodes, ...newNodes]),
+      configuration: structuredClone(copiedNode.configuration || {}),
+      position: copiedNode.position
+        ? { x: copiedNode.position.x, y: copiedNode.position.y }
+        : null,
+    });
+    remappedClientIds.set(copiedNode.clientId, newNode.clientId);
+    newNodes.push(newNode);
+  }
+
+  const updatedNodes = [...existingNodes, ...newNodes];
+  const remappedConnections = copiedConnections.flatMap((connection) => {
+    const sourceClientId = remappedClientIds.get(connection.sourceClientId);
+    const targetClientId = remappedClientIds.get(connection.targetClientId);
+
+    if (!sourceClientId || !targetClientId) {
+      return [];
+    }
+
+    return [
+      {
+        ...structuredClone(connection),
+        sourceClientId,
+        targetClientId,
+      },
+    ];
+  });
+
+  return {
+    updatedNodes,
+    updatedConnections: normalizeConnectionsForNodes(
+      [...existingConnections, ...remappedConnections],
+      updatedNodes,
+      nodeTypeFor
+    ),
+  };
+}
+
 export default class WorkflowsEditor extends Component {
   @service router;
-  @service dialog;
   @service modal;
   @service toasts;
   @service workflowsNodeTypes;
@@ -85,7 +140,6 @@ export default class WorkflowsEditor extends Component {
   formApi = null;
   ignoreDirty = () => false;
   undoManager = new UndoManager();
-  allowUnpublishedDraftTransition = false;
   currentSavePromise = null;
   pendingGraphSnapshot = null;
   pendingSaveOptions = null;
@@ -108,7 +162,6 @@ export default class WorkflowsEditor extends Component {
   constructor() {
     super(...arguments);
     this.#subscribeToExecutions();
-    this.router.on("routeWillChange", this.confirmUnpublishedDraftTransition);
     window.addEventListener("beforeunload", this.handleBeforeUnload);
   }
 
@@ -116,7 +169,6 @@ export default class WorkflowsEditor extends Component {
     super.willDestroy(...arguments);
     this.undoManager.destroy();
     this.#unsubscribeFromExecutions();
-    this.router.off("routeWillChange", this.confirmUnpublishedDraftTransition);
     window.removeEventListener("beforeunload", this.handleBeforeUnload);
   }
 
@@ -141,70 +193,6 @@ export default class WorkflowsEditor extends Component {
     event.preventDefault();
     event.returnValue = message;
     return message;
-  }
-
-  @bind
-  confirmUnpublishedDraftTransition(transition) {
-    const routeChanging = transition.to?.name !== transition.from?.name;
-    const shouldCheck =
-      this.hasUnpublishedDraft &&
-      !this.allowUnpublishedDraftTransition &&
-      !transition.isAborted &&
-      (!transition.queryParamsOnly || routeChanging);
-
-    if (!shouldCheck) {
-      return;
-    }
-
-    transition.abort();
-
-    this.dialog.dialog({
-      class: "workflows-unpublished-draft-dialog",
-      message: i18n("discourse_workflows.unpublished_changes_confirmation"),
-      type: "confirm",
-      buttons: [
-        {
-          label: i18n("discourse_workflows.leave_without_publishing"),
-          class: "btn-primary",
-          action: () => this.leaveWithoutPublishing(transition),
-        },
-        {
-          label: i18n("discourse_workflows.keep_editing"),
-          class: "btn-default",
-        },
-        {
-          label: i18n("discourse_workflows.discard_changes"),
-          class: "btn-default workflows-unpublished-draft-dialog__discard-btn",
-          action: () => this.discardDraftAndRetryTransition(transition),
-        },
-      ],
-    });
-  }
-
-  @action
-  leaveWithoutPublishing(transition) {
-    this.allowUnpublishedDraftTransition = true;
-    transition.retry();
-  }
-
-  @action
-  async discardDraftAndRetryTransition(transition) {
-    const confirmed = await this.confirmDiscardChanges();
-
-    if (!confirmed) {
-      return;
-    }
-
-    await this.discardWorkflowDraft();
-    this.leaveWithoutPublishing(transition);
-  }
-
-  confirmDiscardChanges() {
-    return this.dialog.confirm({
-      message: i18n("discourse_workflows.discard_changes_confirmation"),
-      confirmButtonLabel: "discourse_workflows.discard_changes",
-      cancelButtonLabel: "discourse_workflows.keep_editing",
-    });
   }
 
   #subscribeToExecutions() {
@@ -274,7 +262,8 @@ export default class WorkflowsEditor extends Component {
     const nodes = this.#initNodes();
     return normalizeConnectionsForNodes(
       deserializeConnections(this.args.workflow.connections || {}, nodes),
-      nodes
+      nodes,
+      (node) => this.#nodeTypeFor(node)
     );
   }
 
@@ -388,13 +377,6 @@ export default class WorkflowsEditor extends Component {
 
   @action
   browseTemplates() {
-    const nodes = this.formApi.get("nodes") || [];
-    const stickyNotes = this.formApi.get("stickyNotes") || [];
-
-    if (nodes.length === 0 && stickyNotes.length === 0) {
-      this.allowUnpublishedDraftTransition = true;
-    }
-
     this.router.transitionTo(
       "adminPlugins.show.discourse-workflows-templates",
       {
@@ -453,16 +435,66 @@ export default class WorkflowsEditor extends Component {
     );
   }
 
+  #sourceOutputIndexFor(
+    sourceClientId,
+    sourceOutput,
+    nodes = this.formApi.get("nodes")
+  ) {
+    const sourceNode = nodes?.find((node) => node.clientId === sourceClientId);
+
+    return portIndexFromKey(
+      sourceOutput,
+      nodeTypeOutputKeys(this.#nodeTypeFor(sourceNode), sourceNode)
+    );
+  }
+
+  #nodeTypeFor(node) {
+    return this.workflowsNodeTypes.findNodeType(node?.type) || node?.type;
+  }
+
+  #targetInputIndexFor(
+    targetClientId,
+    targetInput,
+    nodes = this.formApi.get("nodes"),
+    connections = this.formApi.get("connections")
+  ) {
+    const targetNode = nodes?.find((node) => node.clientId === targetClientId);
+
+    if (
+      !nodeTypeInputUsesConnectionIndexes(
+        this.#nodeTypeFor(targetNode),
+        targetInput,
+        targetNode
+      )
+    ) {
+      return portIndexFromKey(targetInput);
+    }
+
+    return nextAvailableTargetInputIndex(connections, targetClientId);
+  }
+
+  #showMaxNodesReached() {
+    this.toasts.error({
+      data: {
+        message: i18n("discourse_workflows.canvas.max_nodes_reached", {
+          max: MAX_NODES,
+        }),
+      },
+    });
+  }
+
+  #canAddNodes(count, existingNodes = this.formApi.get("nodes")) {
+    if (existingNodes.length + count <= MAX_NODES) {
+      return true;
+    }
+
+    this.#showMaxNodesReached();
+    return false;
+  }
+
   #addNewNode(nodeType, position, configOverrides, wireConnections) {
     const existingNodes = this.formApi.get("nodes");
-    if (existingNodes.length >= MAX_NODES) {
-      this.toasts.error({
-        data: {
-          message: i18n("discourse_workflows.canvas.max_nodes_reached", {
-            max: MAX_NODES,
-          }),
-        },
-      });
+    if (!this.#canAddNodes(1, existingNodes)) {
       return;
     }
     this.#captureUndo();
@@ -503,11 +535,14 @@ export default class WorkflowsEditor extends Component {
       configOverrides,
       (connections, newNode) => {
         if (sourceClientId) {
+          const sourceOutputIndex = this.#sourceOutputIndexFor(
+            sourceClientId,
+            sourceOutput
+          );
           const existingIdx = connections.findIndex(
             (connection) =>
               connection.sourceClientId === sourceClientId &&
-              normalizeSourceOutputIndex(connection) ===
-                portIndexFromKey(sourceOutput)
+              normalizeSourceOutputIndex(connection) === sourceOutputIndex
           );
 
           if (existingIdx >= 0) {
@@ -517,17 +552,21 @@ export default class WorkflowsEditor extends Component {
               sourceClientId,
               targetClientId: newNode.clientId,
               sourceOutput,
+              sourceOutputIndex,
             });
             connections.push({
               sourceClientId: newNode.clientId,
               targetClientId: existing.targetClientId,
               sourceOutput: nodeTypePrimaryOutputKey(nodeType),
+              targetInput: existing.targetInput,
+              targetInputIndex: existing.targetInputIndex,
             });
           } else {
             connections.push({
               sourceClientId,
               targetClientId: newNode.clientId,
               sourceOutput,
+              sourceOutputIndex,
             });
           }
         }
@@ -554,6 +593,10 @@ export default class WorkflowsEditor extends Component {
             sourceClientId,
             targetClientId: newNode.clientId,
             sourceOutput,
+            sourceOutputIndex: this.#sourceOutputIndexFor(
+              sourceClientId,
+              sourceOutput
+            ),
           });
         }
         return false;
@@ -568,7 +611,9 @@ export default class WorkflowsEditor extends Component {
     targetClientId,
     nodeType,
     configOverrides = null,
-    targetInput = "main"
+    targetInput = "main",
+    sourceOutputIndex = null,
+    targetInputIndex = null
   ) {
     const existingNodes = this.formApi.get("nodes");
     const sourceNode = existingNodes.find((n) => n.clientId === sourceClientId);
@@ -590,8 +635,10 @@ export default class WorkflowsEditor extends Component {
           connectionMatchesEndpoint(connection, {
             sourceClientId,
             sourceOutput,
+            sourceOutputIndex,
             targetClientId,
             targetInput,
+            targetInputIndex,
           })
         );
         if (existingIdx >= 0) {
@@ -602,6 +649,13 @@ export default class WorkflowsEditor extends Component {
           sourceClientId,
           targetClientId: newNode.clientId,
           sourceOutput,
+          sourceOutputIndex:
+            sourceOutputIndex ??
+            this.#sourceOutputIndexFor(
+              sourceClientId,
+              sourceOutput,
+              existingNodes
+            ),
           targetInput: "main",
         });
         connections.push({
@@ -609,6 +663,7 @@ export default class WorkflowsEditor extends Component {
           targetClientId,
           sourceOutput: nodeTypePrimaryOutputKey(nodeType),
           targetInput,
+          targetInputIndex,
         });
         return true;
       }
@@ -646,13 +701,13 @@ export default class WorkflowsEditor extends Component {
   }
 
   @action
-  updateNodePosition(clientId, position) {
+  updateNodePositions(positions) {
+    if (!positions?.size) {
+      return;
+    }
+
     this.#captureUndo();
-    const nodes = this.formApi.get("nodes");
-    this.formApi.set(
-      "nodes",
-      nodes.map((n) => (n.clientId === clientId ? { ...n, position } : n))
-    );
+    this.#applyNodePositions(positions);
   }
 
   @action
@@ -691,19 +746,34 @@ export default class WorkflowsEditor extends Component {
     sourceClientId,
     sourceOutput,
     targetClientId,
-    targetInput = "main"
+    targetInput = "main",
+    sourceOutputIndex = null,
+    targetInputIndex = null
   ) {
     this.#captureUndo();
     const nodes = this.formApi.get("nodes");
     const connections = [...this.formApi.get("connections")];
+    sourceOutputIndex ??= this.#sourceOutputIndexFor(
+      sourceClientId,
+      sourceOutput,
+      nodes
+    );
+    targetInputIndex ??= this.#targetInputIndexFor(
+      targetClientId,
+      targetInput,
+      nodes,
+      connections
+    );
 
     // Don't create duplicate connections
     const exists = connections.some((connection) =>
       connectionMatchesEndpoint(connection, {
         sourceClientId,
         sourceOutput,
+        sourceOutputIndex,
         targetClientId,
         targetInput,
+        targetInputIndex,
       })
     );
     if (exists) {
@@ -714,7 +784,9 @@ export default class WorkflowsEditor extends Component {
       sourceClientId,
       targetClientId,
       sourceOutput,
+      sourceOutputIndex,
       targetInput,
+      targetInputIndex,
     });
     this.#ensureLoopSelfConnection(
       connections,
@@ -735,17 +807,26 @@ export default class WorkflowsEditor extends Component {
     sourceClientId,
     sourceOutput,
     targetClientId,
-    targetInput = "main"
+    targetInput = "main",
+    sourceOutputIndex = null,
+    targetInputIndex = null
   ) {
     this.#captureUndo();
     const nodes = this.formApi.get("nodes");
     const connections = [...this.formApi.get("connections")];
+    sourceOutputIndex ??= this.#sourceOutputIndexFor(
+      sourceClientId,
+      sourceOutput,
+      nodes
+    );
     const index = connections.findIndex((connection) =>
       connectionMatchesEndpoint(connection, {
         sourceClientId,
         sourceOutput,
+        sourceOutputIndex,
         targetClientId,
         targetInput,
+        targetInputIndex,
       })
     );
 
@@ -789,13 +870,23 @@ export default class WorkflowsEditor extends Component {
 
   @action
   removeSelected({ nodeIds, stickyNoteIds }) {
+    this.#removeSelected({ nodeIds, stickyNoteIds });
+  }
+
+  @action
+  cutSelected({ nodeIds, stickyNoteIds }) {
+    this.#removeSelected({ nodeIds, stickyNoteIds }, { reconnect: false });
+  }
+
+  #removeSelected({ nodeIds, stickyNoteIds }, { reconnect = true } = {}) {
     this.#captureUndo();
 
     if (nodeIds.length > 0) {
       const updatedGraph = removeNodesFromGraph(
         this.formApi.get("nodes"),
         this.formApi.get("connections"),
-        nodeIds
+        nodeIds,
+        { reconnect }
       );
       this.formApi.set("nodes", updatedGraph.nodes);
       this.formApi.set("connections", updatedGraph.connections);
@@ -816,14 +907,7 @@ export default class WorkflowsEditor extends Component {
   @action
   addNodeToLoop(loopNodeClientId, nodeType, configOverrides = null) {
     const existingNodes = this.formApi.get("nodes");
-    if (existingNodes.length >= MAX_NODES) {
-      this.toasts.error({
-        data: {
-          message: i18n("discourse_workflows.canvas.max_nodes_reached", {
-            max: MAX_NODES,
-          }),
-        },
-      });
+    if (!this.#canAddNodes(1, existingNodes)) {
       return;
     }
     this.#captureUndo();
@@ -916,11 +1000,14 @@ export default class WorkflowsEditor extends Component {
     const nodes = this.formApi.get("nodes");
     const updatedNodes = nodes.map((n) =>
       n.clientId === clientId
-        ? normalizeNodeConfiguration({
-            ...n,
-            configuration,
-            name: name || n.name,
-          })
+        ? normalizeNodeConfiguration(
+            {
+              ...n,
+              configuration,
+              name: name || n.name,
+            },
+            this.#nodeTypeFor(n)
+          )
         : n
     );
     this.formApi.set("nodes", updatedNodes);
@@ -928,7 +1015,8 @@ export default class WorkflowsEditor extends Component {
       "connections",
       normalizeConnectionsForNodes(
         this.formApi.get("connections"),
-        updatedNodes
+        updatedNodes,
+        (node) => this.#nodeTypeFor(node)
       )
     );
     return this.handleSubmit(options);
@@ -966,14 +1054,7 @@ export default class WorkflowsEditor extends Component {
   @action
   importNodes(newNodes, newConnections, newStickyNotes, staticData) {
     const existingNodes = this.formApi.get("nodes");
-    if (existingNodes.length + newNodes.length > MAX_NODES) {
-      this.toasts.error({
-        data: {
-          message: i18n("discourse_workflows.canvas.max_nodes_reached", {
-            max: MAX_NODES,
-          }),
-        },
-      });
+    if (!this.#canAddNodes(newNodes.length, existingNodes)) {
       return;
     }
     this.#captureUndo();
@@ -1081,23 +1162,29 @@ export default class WorkflowsEditor extends Component {
   }
 
   @action
-  pasteEntities({ nodes, stickyNotes }) {
+  pasteEntities({ nodes = [], connections = [], stickyNotes = [] }) {
+    if (nodes.length === 0 && stickyNotes.length === 0) {
+      return;
+    }
+
+    const existingNodes = this.formApi.get("nodes");
+    if (!this.#canAddNodes(nodes.length, existingNodes)) {
+      return;
+    }
+
     this.#captureUndo();
 
     if (nodes.length > 0) {
-      const existingNodes = this.formApi.get("nodes");
-      const newNodes = nodes.map((copiedNode) =>
-        WorkflowNode.create({
-          type: copiedNode.type,
-          typeVersion: copiedNode.typeVersion,
-          name: generateNodeName(copiedNode.type, existingNodes),
-          configuration: structuredClone(copiedNode.configuration || {}),
-          position: copiedNode.position
-            ? { x: copiedNode.position.x, y: copiedNode.position.y }
-            : null,
-        })
-      );
-      this.formApi.set("nodes", [...existingNodes, ...newNodes]);
+      const { updatedNodes, updatedConnections } = buildPastedGraph({
+        existingNodes,
+        existingConnections: this.formApi.get("connections"),
+        copiedNodes: nodes,
+        copiedConnections: connections,
+        nodeTypeFor: (node) => this.#nodeTypeFor(node),
+      });
+
+      this.formApi.set("nodes", updatedNodes);
+      this.formApi.set("connections", updatedConnections);
     }
 
     if (stickyNotes.length > 0) {
@@ -1212,7 +1299,9 @@ export default class WorkflowsEditor extends Component {
         ctx.connectionTarget,
         nodeType,
         configOverrides,
-        ctx.connectionTargetInput
+        ctx.connectionTargetInput,
+        ctx.connectionSourceOutputIndex,
+        ctx.connectionTargetInputIndex
       );
     } else if (ctx.canvasX != null) {
       this.addNodeAtPosition(
@@ -1261,7 +1350,7 @@ export default class WorkflowsEditor extends Component {
   }
 
   @action
-  handleWorkflowDiscarded(workflow) {
+  replaceWorkflow(workflow) {
     this.pendingSave = false;
     this.pendingGraphSnapshot = null;
     this.pendingSaveOptions = null;
@@ -1287,42 +1376,33 @@ export default class WorkflowsEditor extends Component {
     this.#refreshUndoState();
   }
 
-  async discardWorkflowDraft() {
-    try {
-      const response = await ajax(
-        `/admin/plugins/discourse-workflows/workflows/${this.args.workflow.id}/discard-draft.json`,
-        {
-          type: "POST",
-        }
-      );
-
-      this.handleWorkflowDiscarded(response.workflow);
-    } catch (e) {
-      popupAjaxError(e);
-      throw e;
-    }
-  }
-
   async #saveWorkflow(options = {}) {
     this.saving = true;
     try {
-      const name = this.formApi.get("name");
       const nodes = this.formApi.get("nodes");
       const connections = normalizeConnectionsForNodes(
         this.formApi.get("connections"),
-        nodes
+        nodes,
+        (node) => this.#nodeTypeFor(node)
       );
       const stickyNotes = this.formApi.get("stickyNotes");
       this.formApi.set("connections", connections);
 
-      this.args.workflow.setProperties({
-        name,
+      const workflowProperties = {
         nodes,
         connections,
         stickyNotes: stickyNotes || [],
-      });
+      };
 
-      const saveProperties = this.args.workflow.updateProperties();
+      if (this.args.isNew) {
+        workflowProperties.name = this.formApi.get("name");
+      }
+
+      this.args.workflow.setProperties(workflowProperties);
+
+      const saveProperties = this.args.isNew
+        ? this.args.workflow.createProperties()
+        : this.args.workflow.graphProperties();
       if (options.staticData !== undefined) {
         saveProperties.static_data = options.staticData;
       }
@@ -1337,7 +1417,6 @@ export default class WorkflowsEditor extends Component {
       this.#refreshUndoState();
 
       if (this.args.isNew) {
-        this.allowUnpublishedDraftTransition = true;
         this.router.transitionTo(
           "adminPlugins.show.discourse-workflows.show",
           this.args.workflow.id
@@ -1405,9 +1484,8 @@ export default class WorkflowsEditor extends Component {
           @connections={{transientData.connections}}
           @stickyNotes={{transientData.stickyNotes}}
           @workflowId={{@workflow.id}}
-          @workflowName={{@workflow.name}}
           @autoArrangeRequest={{this.autoArrangeRequest}}
-          @onUpdateNodePosition={{this.updateNodePosition}}
+          @onUpdateNodePositions={{this.updateNodePositions}}
           @onEditNode={{this.editNode}}
           @onRemoveNodes={{this.removeNodes}}
           @onCreateConnection={{this.createConnection}}
@@ -1427,7 +1505,8 @@ export default class WorkflowsEditor extends Component {
           @onOpenNodePanel={{this.openNodePanel}}
           @onCloseNodePanel={{this.closeNodePanel}}
           @onBrowseTemplates={{this.browseTemplates}}
-          @onDiscardWorkflow={{this.handleWorkflowDiscarded}}
+          @onDiscardWorkflow={{this.replaceWorkflow}}
+          @onWorkflowUpdated={{this.replaceWorkflow}}
           @onImportNodes={{this.importNodes}}
           @onAddStickyNote={{this.addStickyNote}}
           @onStickyNoteBeforeMutation={{this.stickyNoteBeforeMutation}}
@@ -1436,6 +1515,7 @@ export default class WorkflowsEditor extends Component {
           @onStickyNoteUpdateText={{this.stickyNoteUpdateText}}
           @onStickyNoteChangeColor={{this.stickyNoteChangeColor}}
           @onRemoveSelected={{this.removeSelected}}
+          @onCutSelected={{this.cutSelected}}
           @onPasteEntities={{this.pasteEntities}}
           @workflow={{@workflow}}
           @session={{this.workflowSession}}

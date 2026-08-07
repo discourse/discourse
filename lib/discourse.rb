@@ -114,8 +114,18 @@ module Discourse
         next if File.symlink?(destination) && File.readlink(destination) == source
 
         temp_destination = Rails.root.join("tmp", SecureRandom.hex).to_s
-        execute_command("ln", "-s", source, temp_destination)
-        File.rename(temp_destination, destination)
+        File.symlink(source, temp_destination)
+
+        begin
+          File.rename(temp_destination, destination)
+        rescue Errno::EXDEV
+          # Rails.root/tmp and the destination can live on different filesystems
+          # (e.g. containerized setups where tmp is a separate mount). rename(2)
+          # cannot cross filesystem boundaries, so fall back to a non-atomic
+          # replace. The flock above already serializes writers.
+          File.delete(destination) if File.symlink?(destination)
+          FileUtils.mv(temp_destination, destination)
+        end
       end
 
       nil
@@ -154,6 +164,7 @@ module Discourse
         failure_message: "",
         success_status_codes: [0],
         chdir: ".",
+        unsetenv_others: false,
         unsafe_shell: false
       )
         env = nil
@@ -173,7 +184,10 @@ module Discourse
 
         args = command
         args = [env] + command if env
-        stdout, stderr, status = Open3.capture3(*args, chdir: chdir)
+
+        spawn_options = { chdir: chdir }
+        spawn_options[:unsetenv_others] = true if unsetenv_others
+        stdout, stderr, status = Open3.capture3(*args, **spawn_options)
 
         if !status.exited? || !success_status_codes.include?(status.exitstatus)
           message = [command.join(" "), failure_message, stderr].filter(&:present?).join("\n")
@@ -249,6 +263,18 @@ module Discourse
 
   # When the input is somehow bad
   class InvalidParameters < StandardError
+  end
+
+  # Same as InvalidParameters, but carries an HTML-rendered variant of the
+  # message for surfaces that can render it (e.g. the admin settings UI).
+  # The plain #message stays free of markup so generic rescuers can display it.
+  class InvalidHTMLParameters < InvalidParameters
+    attr_reader :html_message
+
+    def initialize(message = nil, html_message: nil)
+      super(message)
+      @html_message = html_message || message
+    end
   end
 
   # When they don't have permission to do something
@@ -474,6 +500,8 @@ module Discourse
             plugin: plugin,
             type_module: true,
             importmap_name: "discourse/plugins/#{plugin.name}",
+            external_plugin_imports:
+              Plugin::JsManager.external_plugin_imports(plugin.directory_name, "main"),
           }
         end
       end
@@ -494,6 +522,8 @@ module Discourse
             imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "admin"),
             plugin: plugin,
             type_module: true,
+            external_plugin_imports:
+              Plugin::JsManager.external_plugin_imports(plugin.directory_name, "admin"),
           }
         end
       end
@@ -506,6 +536,8 @@ module Discourse
             imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "test"),
             plugin: plugin,
             type_module: true,
+            external_plugin_imports:
+              Plugin::JsManager.external_plugin_imports(plugin.directory_name, "test"),
           }
         end
       end
@@ -679,6 +711,10 @@ module Discourse
 
   def self.beacon_pv_tracking_path
     "#{Discourse.base_path}/srv/pv"
+  end
+
+  def self.engagement_tracking_path
+    "#{Discourse.base_path}/srv/se"
   end
 
   class << self
@@ -1271,7 +1307,7 @@ module Discourse
       end,
       Thread.new { LetterAvatar.image_magick_version },
       Thread.new { SvgSprite.core_svgs },
-      Thread.new { EmberCli.script_chunks(exception: false) },
+      Thread.new { EmberAssets.script_chunks(exception: false) },
       Thread.new do
         if GlobalSetting.mini_racer_single_threaded
           PrettyText.cook("warm up **pretty text**")

@@ -97,7 +97,7 @@ export default class ThemeSettingsEditor extends Component {
       return;
     }
 
-    let newSettings = "";
+    let newSettings;
 
     try {
       newSettings = JSON.parse(this.editedContent);

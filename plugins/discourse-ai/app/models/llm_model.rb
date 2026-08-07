@@ -8,6 +8,13 @@ class LlmModel < ActiveRecord::Base
   FIRST_BOT_USER_ID = -1200
   BEDROCK_PROVIDER_NAME = "aws_bedrock"
   BEDROCK_CONVERSE_PROVIDER_NAME = "aws_bedrock_converse"
+  GOOGLE_VERTEX_AI_PROVIDER_NAME = "google_vertex_ai"
+  OPEN_AI_PROVIDER_NAME = "open_ai"
+  OPEN_AI_REASONING_MODES = %w[standard pro].freeze
+  # Interpolated into the Vertex AI hostname/path — must stay strict to avoid
+  # sending environment credentials to an attacker-controlled host.
+  GOOGLE_VERTEX_AI_REGION_FORMAT = /\A[a-z](?:[a-z0-9-]*[a-z0-9])?\z/
+  GOOGLE_VERTEX_AI_PROJECT_ID_FORMAT = /\A[a-z][a-z0-9-]{4,28}[a-z0-9]\z/
   DEFAULT_ALLOWED_ATTACHMENT_TYPES = [].freeze
   ATTACHMENT_TYPE_ALIASES = {
     "markdown" => "md",
@@ -45,12 +52,49 @@ class LlmModel < ActiveRecord::Base
     COST_COMPONENTS.keys.map { |k| spending_component_sql(k, table) }.join(" + ")
   end
 
+  def self.spending_dollars_sql(table)
+    "(#{spending_sql(table)}) / 1000000.0"
+  end
+
+  def self.estimated_or_calculated_spending_sql(table)
+    qt = connection.quote_table_name(table.to_s)
+    "COALESCE(#{qt}.estimated_cost, CASE WHEN llm_models.id IS NULL THEN NULL ELSE #{spending_dollars_sql(table)} END)"
+  end
+
+  def estimated_cost_for_tokens(
+    request_tokens:,
+    response_tokens:,
+    cache_read_tokens: 0,
+    cache_write_tokens: 0
+  )
+    return nil if !costs_configured?
+
+    [
+      [request_tokens, input_cost],
+      [response_tokens, output_cost],
+      [cache_read_tokens, cached_input_cost],
+      [cache_write_tokens, cache_write_cost],
+    ].sum(BigDecimal("0")) do |tokens, cost|
+      BigDecimal(tokens.to_i.to_s) * BigDecimal((cost || 0).to_s) / 1_000_000
+    end
+  end
+
   def spending_for(record)
-    total =
-      COST_COMPONENTS.values.sum do |info|
-        record.public_send(info[:tokens]).to_i * public_send(info[:cost]).to_f
-      end
-    (total / 1_000_000.0).round(6)
+    if record.respond_to?(:estimated_cost) && record.estimated_cost.present?
+      record.estimated_cost.to_d.round(6).to_f
+    else
+      estimated_cost_for_tokens(
+        request_tokens: record.request_tokens,
+        response_tokens: record.response_tokens,
+        cache_read_tokens: record.cache_read_tokens,
+        cache_write_tokens: record.cache_write_tokens,
+      )&.round(6)&.to_f
+    end
+  end
+
+  def costs_configured?
+    [input_cost, output_cost, cached_input_cost].any? { |cost| !cost.nil? } ||
+      cache_write_cost.to_f != 0
   end
 
   has_many :llm_quotas, dependent: :destroy
@@ -62,9 +106,7 @@ class LlmModel < ActiveRecord::Base
   validates :display_name, presence: true, length: { maximum: 100 }
   validates :tokenizer, presence: true, inclusion: DiscourseAi::Completions::Llm.tokenizer_names
   validates :provider, presence: true, inclusion: DiscourseAi::Completions::Llm.provider_names
-  validates :url,
-            presence: true,
-            unless: -> { provider.in?([BEDROCK_PROVIDER_NAME, BEDROCK_CONVERSE_PROVIDER_NAME]) }
+  validates :url, presence: true, if: -> { llm_endpoint&.requires_configured_url? != false }
   validates :name, presence: true
   validate :api_key_or_secret_present
   validates :max_prompt_tokens, numericality: { greater_than: 0 }
@@ -201,16 +243,22 @@ class LlmModel < ActiveRecord::Base
         disable_native_tools: :checkbox,
         reasoning_effort: {
           type: :enum,
-          values: %w[default none minimal low medium high xhigh],
+          values: %w[default none minimal low medium high xhigh max],
           default: "default",
+        },
+        reasoning_mode: {
+          type: :enum,
+          values: ["default", *OPEN_AI_REASONING_MODES],
+          default: "default",
+          tooltip: "discourse_ai.llms.provider_field_hints.reasoning_mode",
         },
         disable_temperature: {
           type: :checkbox,
-          hidden_if: :reasoning_effort,
+          hidden_if: %i[reasoning_effort reasoning_mode],
         },
         disable_top_p: {
           type: :checkbox,
-          hidden_if: :reasoning_effort,
+          hidden_if: %i[reasoning_effort reasoning_mode],
         },
         disable_streaming: :checkbox,
         service_tier: {
@@ -239,7 +287,53 @@ class LlmModel < ActiveRecord::Base
       mistral: {
         disable_native_tools: :checkbox,
       },
+      gemini_interactions: {
+        disable_native_tools: :checkbox,
+        thinking_level: {
+          type: :enum,
+          values: %w[default minimal low medium high],
+          default: "default",
+          label: "discourse_ai.llms.provider_fields.gemini_interactions_thinking_level",
+        },
+        disable_temperature: {
+          type: :checkbox,
+          hidden_if: :thinking_level,
+        },
+        disable_top_p: :checkbox,
+        service_tier: {
+          type: :enum,
+          values: %w[default standard flex priority],
+          default: "default",
+        },
+      },
       google: {
+        disable_native_tools: :checkbox,
+        enable_thinking: :checkbox,
+        thinking_level: {
+          type: :enum,
+          values: %w[default minimal low medium high],
+          default: "default",
+          depends_on: :enable_thinking,
+        },
+        thinking_tokens: {
+          type: :number,
+          depends_on: :enable_thinking,
+          hidden_if: :thinking_level,
+        },
+        disable_temperature: {
+          type: :checkbox,
+          hidden_if: :enable_thinking,
+        },
+        disable_top_p: :checkbox,
+        service_tier: {
+          type: :enum,
+          values: %w[default standard flex priority],
+          default: "default",
+        },
+      },
+      google_vertex_ai: {
+        project_id: :text,
+        region: :text,
         disable_native_tools: :checkbox,
         enable_thinking: :checkbox,
         thinking_level: {
@@ -263,8 +357,9 @@ class LlmModel < ActiveRecord::Base
         disable_native_tools: :checkbox,
         reasoning_effort: {
           type: :enum,
-          values: %w[default none minimal low medium high xhigh],
+          values: %w[default none minimal low medium high xhigh max],
           default: "default",
+          tooltip: "discourse_ai.llms.provider_field_hints.azure_reasoning_effort",
         },
         disable_temperature: {
           type: :checkbox,
@@ -288,11 +383,54 @@ class LlmModel < ActiveRecord::Base
       vllm: {
         disable_system_prompt: :checkbox,
         disable_native_tools: :checkbox,
-        enable_thinking: :checkbox,
+        reasoning_parser: {
+          type: :enum,
+          values: [
+            { id: "default", name: "Server default" },
+            { id: "deepseek_r1", name: "deepseek_r1" },
+            { id: "qwen3", name: "qwen3" },
+            { id: "deepseek_v3", name: "deepseek_v3" },
+            { id: "deepseek_v4", name: "deepseek_v4" },
+            { id: "gemma4", name: "gemma4" },
+            { id: "granite", name: "granite" },
+            { id: "glm45", name: "glm45" },
+            { id: "hunyuan_a13b", name: "hunyuan_a13b" },
+            { id: "cohere_command3", name: "cohere_command3" },
+            { id: "ernie45", name: "ernie45" },
+            { id: "holo2", name: "holo2" },
+            { id: "minimax_m2_append_think", name: "minimax_m2_append_think" },
+          ],
+          default: "default",
+          tooltip: "discourse_ai.llms.provider_field_hints.reasoning_parser",
+        },
+        thinking_override: {
+          type: :enum,
+          values: [
+            { id: "default", name: "Server default" },
+            { id: "on", name: "Force on" },
+            { id: "off", name: "Force off" },
+          ],
+          default: "default",
+          depends_on: :reasoning_parser,
+          tooltip: "discourse_ai.llms.provider_field_hints.thinking_override",
+        },
         reasoning_effort: {
           type: :enum,
-          values: %w[default none minimal low medium high xhigh],
+          values: [
+            { id: "default", name: "Server default" },
+            { id: "none", name: "None" },
+            { id: "low", name: "Low" },
+            { id: "medium", name: "Medium" },
+            { id: "high", name: "High" },
+          ],
           default: "default",
+          depends_on: :reasoning_parser,
+          tooltip: "discourse_ai.llms.provider_field_hints.reasoning_effort",
+        },
+        thinking_token_budget: {
+          type: :number,
+          depends_on: :reasoning_parser,
+          tooltip: "discourse_ai.llms.provider_field_hints.thinking_token_budget",
         },
         disable_temperature: {
           type: :checkbox,
@@ -485,8 +623,9 @@ class LlmModel < ActiveRecord::Base
 
   def api_key_or_secret_present
     return if seeded?
-    # Converse provider supports auto-resolved credentials (env vars, instance profile)
-    return if provider == BEDROCK_CONVERSE_PROVIDER_NAME
+
+    return if llm_endpoint&.supports_environment_credentials?
+
     if ai_secret_id.present?
       unless AiSecret.exists?(ai_secret_id)
         errors.add(:ai_secret_id, I18n.t("discourse_ai.llm_models.secret_not_found"))
@@ -497,8 +636,19 @@ class LlmModel < ActiveRecord::Base
     errors.add(:base, I18n.t("discourse_ai.llm_models.secret_required"))
   end
 
+  def llm_endpoint
+    DiscourseAi::Completions::Endpoints::Base.endpoint_for(self)
+  rescue DiscourseAi::Completions::Llm::UNKNOWN_MODEL
+    nil
+  end
+
   def required_provider_params
-    if provider == BEDROCK_PROVIDER_NAME
+    reasoning_mode = lookup_custom_param("reasoning_mode")
+    if provider == OPEN_AI_PROVIDER_NAME && reasoning_mode == "pro"
+      if !url.to_s.include?("/v1/responses")
+        errors.add(:base, I18n.t("discourse_ai.llm_models.reasoning_mode_requirements"))
+      end
+    elsif provider == BEDROCK_PROVIDER_NAME
       if lookup_custom_param("region").blank?
         errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: "region"))
       end
@@ -511,6 +661,27 @@ class LlmModel < ActiveRecord::Base
         errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: "region"))
       end
       # access_key_id and role_arn are optional — SDK can auto-resolve credentials
+    elsif provider == GOOGLE_VERTEX_AI_PROVIDER_NAME
+      region = lookup_custom_param("region")
+      project_id = lookup_custom_param("project_id")
+
+      if region.blank?
+        errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: "region"))
+      elsif !region.to_s.match?(GOOGLE_VERTEX_AI_REGION_FORMAT)
+        errors.add(:base, I18n.t("discourse_ai.llm_models.invalid_provider_param", param: "region"))
+      end
+
+      if project_id.blank?
+        errors.add(
+          :base,
+          I18n.t("discourse_ai.llm_models.missing_provider_param", param: "project_id"),
+        )
+      elsif !project_id.to_s.match?(GOOGLE_VERTEX_AI_PROJECT_ID_FORMAT)
+        errors.add(
+          :base,
+          I18n.t("discourse_ai.llm_models.invalid_provider_param", param: "project_id"),
+        )
+      end
     end
   end
 end

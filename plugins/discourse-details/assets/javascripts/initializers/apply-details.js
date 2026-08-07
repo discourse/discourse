@@ -1,14 +1,8 @@
-/* eslint-disable ember/no-jquery */
-import $ from "jquery";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
 import richEditorExtension from "../lib/rich-editor-extension";
 
 function initializeDetails(api) {
-  api.decorateCooked(($elem) => $("details", $elem), {
-    id: "discourse-details",
-  });
-
   api.addComposerToolbarPopupMenuOption({
     action: function (toolbarEvent) {
       toolbarEvent.applySurround(

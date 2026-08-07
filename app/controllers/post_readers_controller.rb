@@ -39,17 +39,15 @@ class PostReadersController < ApplicationController
   private
 
   def ensure_can_see_readers!(post)
+    allowed_groups = post.topic.allowed_groups.to_a
+
     show_readers =
-      GroupUser
-        .where(user: current_user)
-        .joins(:group)
-        .where(
-          groups: {
-            id: post.topic.topic_allowed_groups.map(&:group_id),
-            publish_read_state: true,
-          },
-        )
-        .exists?
+      allowed_groups.all? { |group| guardian.can_see_group_members?(group) } &&
+        GroupUser
+          .where(user: current_user)
+          .joins(:group)
+          .where(groups: { id: allowed_groups.map(&:id), publish_read_state: true })
+          .exists?
 
     raise Discourse::InvalidAccess unless show_readers
   end

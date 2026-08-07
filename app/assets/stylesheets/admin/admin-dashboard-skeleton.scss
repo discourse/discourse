@@ -213,9 +213,7 @@
   }
 
   &__list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+    @include unstyled-list;
     display: flex;
     flex-direction: column;
     gap: var(--space-2);

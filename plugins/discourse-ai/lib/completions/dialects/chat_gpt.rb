@@ -30,7 +30,7 @@ module DiscourseAi
         def max_prompt_tokens
           # provide a buffer of 120 tokens - our function counting is not
           # 100% accurate and getting numbers to align exactly is very hard
-          buffer = (opts[:max_tokens] || 2500) + 50
+          buffer = (opts[:reserved_output_tokens] || opts[:max_tokens] || 2500) + 50
 
           if tools.present?
             # note this is about 100 tokens over, OpenAI have a more optimal representation
@@ -114,11 +114,11 @@ module DiscourseAi
 
           user_message = { role: }
 
-          if msg[:id]
+          if (user_id = user_id_for(msg))
             if embed_user_ids?
-              content_array << "#{msg[:id]}: "
+              content_array << "#{user_id}: "
             else
-              user_message[:name] = msg[:id]
+              user_message[:name] = user_id
             end
           end
 

@@ -13,7 +13,6 @@ ar:
   js:
     styleguide:
       title: "دليل الأنماط"
-      welcome: "اختر قسمًا من القائمة على اليمين لتبدأ."
       categories:
         syntax: بناء الجملة
         atoms: الذرّات (Atoms)
@@ -98,9 +97,10 @@ ar:
         docked_composer:
           title: "أداة إنشاء مثبتة"
         modal:
-          title: "النافذة المشروطة"
-          header: "العنوان المشروط"
-          footer: "التذييل المشروط"
+          title: "النافذة المنبثقة"
+          header: "عنوان النافذة المنبثقة"
+          footer: "تذييل النافذة المنبثقة"
+          open: "فتح النافذة المشروطة"
         user_about:
           title: "مربع \"نبذة عن المستخدم\""
         header_icons:
@@ -120,4 +120,4 @@ ar:
           title: "عداد الأحرف"
           placeholder: "أدخل نصك هنا..."
         segmented_control:
-          title: "عنصر تحكم مُقسَّم (مجموعة أزرار تبديل)"
+          title: "عنصر تحكم مقسَّم (مجموعة أزرار تبديل)"

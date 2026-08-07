@@ -14,6 +14,8 @@ module DiscourseUpdates
       unless updated_at.nil?
         attrs.merge!(
           latest_version: latest_version,
+          latest_pretty_version: latest_pretty_version,
+          latest_sha: latest_sha,
           critical_updates: critical_updates_available?,
           missing_versions_count: missing_versions_count,
         )
@@ -73,6 +75,22 @@ module DiscourseUpdates
 
     def latest_version=(arg)
       Discourse.redis.set(latest_version_key, arg)
+    end
+
+    def latest_pretty_version
+      Discourse.redis.get latest_pretty_version_key
+    end
+
+    def latest_pretty_version=(arg)
+      Discourse.redis.set(latest_pretty_version_key, arg)
+    end
+
+    def latest_sha
+      Discourse.redis.get latest_sha_key
+    end
+
+    def latest_sha=(arg)
+      Discourse.redis.set(latest_sha_key, arg)
     end
 
     def missing_versions_count
@@ -312,6 +330,8 @@ module DiscourseUpdates
       Discourse.redis.del(
         last_installed_version_key,
         latest_version_key,
+        latest_pretty_version_key,
+        latest_sha_key,
         critical_updates_available_key,
         missing_versions_count_key,
         updated_at_key,
@@ -347,6 +367,14 @@ module DiscourseUpdates
 
     def latest_version_key
       "discourse_latest_version"
+    end
+
+    def latest_pretty_version_key
+      "discourse_latest_pretty_version"
+    end
+
+    def latest_sha_key
+      "discourse_latest_sha"
     end
 
     def critical_updates_available_key

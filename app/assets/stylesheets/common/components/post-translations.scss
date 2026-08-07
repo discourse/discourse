@@ -1,6 +1,43 @@
+@use "lib/viewport";
+
 .post-translations-modal {
   table {
     width: 100%;
+  }
+
+  &__language-settings {
+    display: grid;
+    gap: var(--space-3);
+    margin-block-end: var(--space-4);
+  }
+
+  &__language-control {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-2);
+    align-items: end;
+
+    @include viewport.until(sm) {
+      display: contents;
+    }
+  }
+
+  &__language-actions {
+    display: flex;
+    gap: var(--space-1);
+
+    @include viewport.until(sm) {
+      order: 1;
+    }
+
+    &.is-hidden {
+      visibility: hidden;
+      pointer-events: none;
+
+      @include viewport.until(sm) {
+        display: none;
+      }
+    }
   }
 }
 
@@ -17,6 +54,16 @@
   .fk-d-tooltip__inner-content {
   flex-direction: column;
   align-items: flex-start;
+
+  .post-language__original-language {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    padding: 0;
+    text-align: start;
+  }
 
   .post-language__disclaimer {
     color: var(--primary-medium);

@@ -88,9 +88,12 @@ export function pretenderHelpers() {
 }
 
 export function applyDefaultHandlers() {
-  const pretenderModules = import.meta.glob("./**/*-pretender.{js,gjs}", {
-    eager: true,
-  });
+  const pretenderModules = import.meta.glob(
+    "./**/*-pretender.{js,gjs,ts,gts}",
+    {
+      eager: true,
+    }
+  );
 
   Object.keys(requirejs.entries).forEach((entry) => {
     if (/^discourse\/plugins\/.*helpers\/[a-z-]+\-pretender$/.test(entry)) {

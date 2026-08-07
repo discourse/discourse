@@ -28,7 +28,7 @@ module Migrations
           @namespace_parts.each { |part| emit "module #{part}" }
           emit "  module #{module_name}"
           emit "    SQL = <<~SQL"
-          emit "      INSERT INTO #{escape_identifier(table.name)} ("
+          emit "      #{insert_statement(table)} INTO #{escape_identifier(table.name)} ("
           emit column_names(columns)
           emit "      )"
           emit "      VALUES ("
@@ -37,6 +37,8 @@ module Migrations
           emit "    SQL"
           emit "    private_constant :SQL"
           emit
+
+          emit_conflict_strategy(table)
 
           if table.model_mode == :extended
             emit "    # -- custom code --"
@@ -69,6 +71,22 @@ module Migrations
               @out.puts(line.empty? ? "" : "#{@base_indent}#{line}")
             end
           end
+        end
+
+        def insert_statement(table)
+          table.conflict_strategy == :ignore ? "INSERT OR IGNORE" : "INSERT"
+        end
+
+        # Only `:ignore` needs a declaration; the absent method reads back as
+        # `:raise` via `IntermediateDB.conflict_strategy_for`, so a plain model's
+        # output is unchanged.
+        def emit_conflict_strategy(table)
+          return unless table.conflict_strategy == :ignore
+
+          emit "    def self.conflict_strategy"
+          emit "      :ignore"
+          emit "    end"
+          emit
         end
 
         def column_names(columns)

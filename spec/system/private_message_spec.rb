@@ -29,8 +29,8 @@ describe "Private Message" do
       visit "/new-topic"
       expect(composer).to be_opened
 
-      composer.open_composer_actions
-      composer.select_action(I18n.t("js.composer.composer_actions.create_personal_message.label"))
+      composer.open_composer_actions_new
+      composer.select_action_by_id("create_private_message")
 
       expect(composer.button_label).to have_text(I18n.t("js.composer.create_pm"))
     end
@@ -41,10 +41,8 @@ describe "Private Message" do
       pm_post_obj.reply
       expect(composer).to be_opened
 
-      composer.open_composer_actions
-      expect(composer).to have_no_action(
-        I18n.t("js.composer.composer_actions.create_personal_message.label"),
-      )
+      composer.open_composer_actions_new
+      expect(composer).to have_no_action_id("create_private_message")
     end
 
     it "can switch between topic and personal message modes" do
@@ -52,13 +50,13 @@ describe "Private Message" do
       expect(composer).to be_opened
 
       # Switch to personal message
-      composer.open_composer_actions
-      composer.select_action(I18n.t("js.composer.composer_actions.create_personal_message.label"))
+      composer.open_composer_actions_new
+      composer.select_action_by_id("create_private_message")
       expect(composer.button_label).to have_text(I18n.t("js.composer.create_pm"))
 
       # Switch back to topic
-      composer.open_composer_actions
-      composer.select_action(I18n.t("js.composer.composer_actions.create_topic.label"))
+      composer.open_composer_actions_new
+      composer.select_action_by_id("create_topic")
       expect(composer.button_label).to have_text(I18n.t("js.composer.create_topic"))
     end
   end

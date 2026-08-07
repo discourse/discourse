@@ -10,6 +10,20 @@ vi:
       site_settings:
         categories:
           discourse_solved: "Discourse Solved"
+      dashboard:
+        sections:
+          support:
+            save_error: "Không thể lưu lựa chọn cho lần sau."
+            answerers:
+              staff: "Nhân viên"
+              member: "Thành viên kênh"
+              basic: "Cơ Bản"
+            response_time:
+              buckets:
+                lt_1h: "< 1 tiếng"
+                "1_4h": "1–4 giờ"
+                "4_24h": "4–24 giờ"
+                gt_24h: "> 24 giờ"
   js:
     notifications:
       alt:
@@ -41,6 +55,8 @@ vi:
       move_post_cancel: "Hủy"
       confirm_solved_removal_confirm: "Xác nhận"
       confirm_solved_removal_cancel: "Hủy"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Câu hỏi của bạn đã được giải đáp chưa?
         description: "Hãy đánh dấu câu trả lời và giúp đỡ người khác bằng cách sử dụng nút \"Giải pháp\" bên dưới câu trả lời đúng."

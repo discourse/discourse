@@ -7,7 +7,7 @@ RSpec.describe "Wait for Approval end-to-end" do
 
   before do
     SiteSetting.chat_enabled = true
-    SiteSetting.discourse_workflows_enabled = true
+    SiteSetting.enable_discourse_workflows = true
   end
 
   def run_pending_approval_job

@@ -1,10 +1,9 @@
-import { render, settled } from "@ember/test-helpers";
+import { findAll, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import BookmarksList from "discourse/components/user-menu/bookmarks-list";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 module("Integration | Component | UserMenu | BookmarksList", function (hooks) {
@@ -12,7 +11,7 @@ module("Integration | Component | UserMenu | BookmarksList", function (hooks) {
 
   test("renders notifications on top and bookmarks on bottom", async function (assert) {
     await render(<template><BookmarksList /></template>);
-    const items = queryAll("ul li");
+    const items = findAll("ul li");
 
     assert.strictEqual(items.length, 2);
 

@@ -26,7 +26,7 @@ export default class RecentSearches extends Component {
   async clearRecent() {
     const result = await User.resetRecentSearches();
     if (result.success) {
-      this.currentUser.recent_searches.clear();
+      this.currentUser.set("recent_searches", []);
     }
   }
 

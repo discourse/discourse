@@ -14,8 +14,9 @@ RSpec.describe "Workflow: post created -> create post" do
       build_workflow_graph do |g|
         g.node "trigger-1", "trigger:post_created"
         g.node "action-1",
-               "action:create_post",
+               "action:post",
                configuration: {
+                 "operation" => "create",
                  "topic_id" => "={{ $trigger.topic.id }}",
                  "raw" => "Automated reply",
                }

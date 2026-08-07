@@ -42,6 +42,8 @@ class LocaleFileValidator
       "The file is not a valid YAML format or does not contain a valid locale structure.",
     invalid_one_keys:
       "The following keys contain the number 1 instead of the interpolation key %{count}:",
+    invalid_setting_link_format:
+      "The following keys contain malformed setting link markers.\nUse {{setting:setting_name}} or {{settings:name_one,name_two|Link label}} (lowercase snake_case names, no spaces around commas):",
   }.merge(
     BANNED_PHRASES
       .map do |banned, recommendation|
@@ -53,12 +55,22 @@ class LocaleFileValidator
       .to_h,
   )
 
+  # Must stay in sync with SETTING_LINK_PATTERN and SETTINGS_LINK_PATTERN in
+  # lib/site_settings/label_formatter.rb — markers that don't match there are
+  # rendered verbatim, so lint anything that only looks like one.
+  VALID_SETTING_LINK_REGEX =
+    /\{\{setting:[a-z][a-z0-9_]*\}\}|\{\{settings:[a-z][a-z0-9_]*(?:,[a-z][a-z0-9_]*)*(?:\|[^{}|]+)?\}\}/
+
+  SETTING_LINK_START_REGEX = /{{settings?:/
+  VALID_SETTING_LINK_AT_START_REGEX = /\A(?:#{VALID_SETTING_LINK_REGEX})/
+
   PLURALIZATION_KEYS = %w[zero one two few many other]
   ENGLISH_KEYS = %w[one other]
 
   EXEMPTED_DOUBLE_CURLY_BRACKET_KEYS = %w[
     js.discourse_automation.scriptables.auto_responder.fields.word_answer_list.description
     discourse_automation.scriptables.email_on_flagged_post.default_template
+    js.discourse_ai.discourse_workflows.ai_agent.upload_ids_placeholder
   ]
 
   def initialize(filename)
@@ -111,9 +123,16 @@ class LocaleFileValidator
 
       @errors[:invalid_relative_image_sources] << key if value.match?(%r{src\s*=\s*["']/[^/]}i)
 
-      if value.match?(/{{(?!setting:).+?}}/)
+      if value.match?(/{{(?!settings?:).+?}}/)
         exempt = key.end_with?("_MF") || EXEMPTED_DOUBLE_CURLY_BRACKET_KEYS.include?(key)
         @errors[:invalid_interpolation_key_format] << key unless exempt
+      end
+
+      if value
+           .enum_for(:scan, SETTING_LINK_START_REGEX)
+           .map { Regexp.last_match.begin(0) }
+           .any? { |start| !value[start..].match?(VALID_SETTING_LINK_AT_START_REGEX) }
+        @errors[:invalid_setting_link_format] << key
       end
 
       BANNED_PHRASES.keys.each do |banned|
@@ -152,4 +171,4 @@ class LocaleFileValidator
   end
 end
 
-I18nLinter.new(ARGV).run
+I18nLinter.new(ARGV).run if $PROGRAM_NAME == __FILE__

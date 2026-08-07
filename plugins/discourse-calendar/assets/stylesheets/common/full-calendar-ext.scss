@@ -107,6 +107,12 @@
   height: 100%;
 }
 
+[data-identifier="post-event-tooltip"] img.only-emoji {
+  width: 1em;
+  height: 1em;
+  margin: 0;
+}
+
 @include viewport.until(md) {
   .fc-header-toolbar {
     display: flex;

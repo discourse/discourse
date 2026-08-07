@@ -51,6 +51,7 @@ module DiscourseAi
           :llm_model_id,
           :max_tokens,
           :max_usages,
+          :max_cost,
           :duration_seconds,
         )
       end

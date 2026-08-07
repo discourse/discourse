@@ -64,6 +64,8 @@ fi:
       cancel: "Peruuta"
       cancel_reply: "Peruuta vastaus"
       chat_channels: "Kanavat"
+      pinned_bar:
+        title: "Kiinnitetty"
       pinned: "Kiinnitetty"
       browse_all_channels: "Selaa kaikkia kanavia"
       see_in: "Katso:"
@@ -145,11 +147,6 @@ fi:
         never: "Ei koskaan"
       separate_sidebar_mode:
         title: "Näytä erilliset sivupalkkitilat foorumille ja chatille"
-      send_shortcut:
-        enter:
-          label: "Lähetä painamalla Enter-näppäintä"
-        meta_enter:
-          label: "Lähetä painamalla %{meta_key} + Enter"
       enable: "Ota chat käyttöön"
       flag: "Liputa"
       emoji: "Lisää emoji"
@@ -192,8 +189,6 @@ fi:
       no_public_channels_cta: "Selaa kanavia"
       kicked_from_channel: "Et voi enää käyttää tätä kanavaa."
       chat_notifications_title: "Chat-ilmoitukset"
-      only_chat_push_notifications:
-        title: "Lähetä vain chatin push-ilmoituksia"
       ignore_channel_wide_mention:
         title: "Ohita kanavanlaajuiset maininnat"
       show_thread_title_prompts:
@@ -241,8 +236,6 @@ fi:
         title: "Työpöytälaitteen chat-ilmoitusääni"
       sounds:
         none: "Ei mitään"
-        bell: "Kello"
-        ding: "Ding"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Liitä tiedosto"
@@ -273,6 +266,8 @@ fi:
         filter_closed: Suljettu
         filter_archived: Arkistoitu
         filter_input_placeholder: Hae kanavaa nimellä
+        filter_joined_all: "Kaikki"
+        filter_joined_joined: "Liittyi"
       chat_message_separator:
         today: Tänään
         yesterday: Eilen
@@ -319,7 +314,6 @@ fi:
         input_placeholder: Lisää nimi
         slug_description: URL-osoitteessa käytetään kanavan polkutunnusta kanavan nimen sijaan
         name: Kanavan nimi
-        slug: Kanavan polkutunnus (valinnainen)
       channel_edit_description_modal:
         title: Muokkaa kuvausta
         input_placeholder: Lisää kuvaus
@@ -340,6 +334,9 @@ fi:
         memberships_count:
           one: "%{count} jäsen"
           other: "%{count} jäsentä"
+        preview_card:
+          log_in: "Kirjaudu"
+          sign_up: "Rekisteröityminen"
       create_channel:
         threading:
           label: "Käytä ketjutusta"
@@ -376,9 +373,8 @@ fi:
             one: 'Ryhmän %{group} ja %{count} muun ryhmän käyttäjillä on pääsy tälle kanavalle <a href="%{settingLink}" target="_blank">turvallisuusasetusten</a> mukaan'
             other: 'Ryhmän %{group} ja %{count} muun ryhmän käyttäjillä on pääsy tälle kanavalle <a href="%{settingLink}" target="_blank">turvallisuusasetusten</a> mukaan'
         create: "Luo kanava"
-        description: "Kuvaus (valinnainen)"
+        description: "Kuvaus"
         name: "Kanavan nimi"
-        slug: "Kanavan polkutunnus (valinnainen)"
         title: "Uusi kanava"
         type: "Tyyppi"
         types:
@@ -699,6 +695,8 @@ fi:
     discourse_workflows:
       nodes:
         "action:send_chat_message": "Lähetä chat-viesti"
+      chat_message_created:
+        channel_id: "Kanava"
       send_chat_message:
         channel_id: "Kanava"
         message: "Viesti"

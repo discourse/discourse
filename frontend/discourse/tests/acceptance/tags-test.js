@@ -1,10 +1,9 @@
-import { click, currentURL, visit } from "@ember/test-helpers";
+import { click, currentURL, findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import {
   acceptance,
-  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
@@ -207,12 +206,12 @@ acceptance("Tags listed by group", function (needs) {
         "shows separate lists for the 3 groups and the ungrouped tags"
       );
     assert.deepEqual(
-      [...queryAll(".tag-list h3")].map((el) => el.innerText),
+      findAll(".tag-list h3").map((el) => el.innerText),
       ["Ford Cars", "Honda Cars", "Makes", "Other Tags"],
       "shown in given order and with tags that are not in a group"
     );
     assert.deepEqual(
-      [...queryAll(".tag-list:nth-of-type(1) .discourse-tag")].map(
+      findAll(".tag-list:nth-of-type(1) .discourse-tag").map(
         (el) => el.innerText
       ),
       ["focus", "Escort"],
@@ -247,7 +246,7 @@ acceptance("Tags listed by group", function (needs) {
       .dom(".tag-sort-name")
       .doesNotHaveClass("active", "sort by name is not active");
     assert.deepEqual(
-      [...queryAll(".tag-list:nth-of-type(1) .discourse-tag")].map(
+      findAll(".tag-list:nth-of-type(1) .discourse-tag").map(
         (el) => el.innerText
       ),
       ["focus", "Escort"],
@@ -261,7 +260,7 @@ acceptance("Tags listed by group", function (needs) {
       .doesNotHaveClass("active", "sort by count is no longer active");
     assert.dom(".tag-sort-name").hasClass("active", "sort by name is active");
     assert.deepEqual(
-      [...queryAll(".tag-list:nth-of-type(1) .discourse-tag")].map(
+      findAll(".tag-list:nth-of-type(1) .discourse-tag").map(
         (el) => el.innerText
       ),
       ["Escort", "focus"],
@@ -275,7 +274,7 @@ acceptance("Tags listed by group", function (needs) {
       .dom(".tag-sort-name")
       .doesNotHaveClass("active", "sort by name is not active");
     assert.deepEqual(
-      [...queryAll(".tag-list:nth-of-type(1) .discourse-tag")].map(
+      findAll(".tag-list:nth-of-type(1) .discourse-tag").map(
         (el) => el.innerText
       ),
       ["focus", "Escort"],
@@ -319,7 +318,7 @@ acceptance("Tags sorted alphabetically by default", function (needs) {
       .dom(".tag-sort-count")
       .doesNotHaveClass("active", "sort by count is not active");
     assert.deepEqual(
-      [...queryAll(".tag-list:nth-of-type(1) .discourse-tag")].map(
+      findAll(".tag-list:nth-of-type(1) .discourse-tag").map(
         (el) => el.innerText
       ),
       ["Escort", "focus"],

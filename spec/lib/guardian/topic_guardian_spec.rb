@@ -338,6 +338,25 @@ RSpec.describe TopicGuardian do
     end
   end
 
+  describe "#can_set_topic_timer?" do
+    it "uses topic_timers_allowed_groups and requires topic visibility" do
+      expect(Guardian.new(admin).can_set_topic_timer?(topic)).to eq(true)
+      expect(Guardian.new(moderator).can_set_topic_timer?(topic)).to eq(true)
+      expect(Guardian.new(tl4_user).can_set_topic_timer?(topic)).to eq(true)
+      expect(Guardian.new(tl3_user).can_set_topic_timer?(topic)).to eq(false)
+
+      group.add(user)
+      SiteSetting.topic_timers_allowed_groups = group.id.to_s
+
+      inaccessible_private_topic =
+        Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+
+      expect(Guardian.new(user.reload).can_set_topic_timer?(topic)).to eq(true)
+      expect(Guardian.new(tl4_user).can_set_topic_timer?(topic)).to eq(false)
+      expect(Guardian.new(user).can_set_topic_timer?(inaccessible_private_topic)).to eq(false)
+    end
+  end
+
   describe "#can_see_unlisted_topics?" do
     it "is allowed for staff users" do
       expect(Guardian.new(moderator).can_see_unlisted_topics?).to eq(true)

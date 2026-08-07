@@ -72,6 +72,8 @@ he:
         close: "סגירת הודעות נעוצות"
         pinned_by_you: "ננעץ על ידיך"
         pinned_by_user: "ננעץ על ידי %{username}"
+      pinned_bar:
+        title: "נעוץ"
       no_pinned_messages: "אין הודעות נעוצות בערוץ הזה."
       pin_message: "נעיצת הודעה"
       unpin_message: "שליפת הודעה"
@@ -165,11 +167,6 @@ he:
         never: "לעולם לא"
       separate_sidebar_mode:
         title: "הצגת מצבי סרגל צד נפרדים עבור פורום וצ׳אט"
-      send_shortcut:
-        enter:
-          label: "שליחה עם Enter"
-        meta_enter:
-          label: "שליחה עם %{meta_key} + Enter"
       enable: "הפעלת צ׳אט"
       flag: "סימון"
       emoji: "הוספת אמוג׳י"
@@ -272,8 +269,6 @@ he:
       no_public_channels: "לא הצטרפת לערוצים כלשהם עדיין!"
       no_public_channels_cta: "עיון בערוצים"
       kicked_from_channel: "אין לך יותר גישה לערוץ הזה."
-      only_chat_push_notifications:
-        title: "לשלוח התראות בדחיפה על הצ׳אט בלבד"
       personalization_title: "התאמה אישית"
       ignore_channel_wide_mention:
         title: "התעלמות מאזכורים לכל הערוץ"
@@ -324,8 +319,6 @@ he:
         title: "צליל התראת צ׳אט שולחן עבודה"
       sounds:
         none: "ללא"
-        bell: "פעמון"
-        ding: "דינג"
       title: "צ׳אט"
       title_capitalized: "צ׳אט"
       upload: "צירוף קובץ"
@@ -358,6 +351,8 @@ he:
         filter_closed: סגור
         filter_archived: בארכיון
         filter_input_placeholder: חיפוש ערוץ לפי שם
+        filter_joined_all: "הכול"
+        filter_joined_joined: "הצטרפו"
       chat_message_separator:
         today: היום
         yesterday: אתמול
@@ -406,8 +401,6 @@ he:
         input_placeholder: הוספת שם
         slug_description: במזהה הייצוגי נעשה שימוש בכתובת במקום בשם הערוץ
         name: שם הערוץ
-        slug: מזהה ייצוגי של הערוץ (רשות)
-        emoji: אמוג׳י של הערוץ (רשות)
         reset_emoji: איפוס אמוג׳י
       channel_edit_description_modal:
         title: עריכת תיאור
@@ -433,6 +426,9 @@ he:
           two: "%{count} חברים"
           many: "%{count} חברים"
           other: "%{count} חברים"
+        preview_card:
+          log_in: "כניסה"
+          sign_up: "הרשמה"
       create_channel:
         threading:
           label: "הפעלת שרשור"
@@ -475,16 +471,14 @@ he:
             many: 'למשתמשים ב־%{group} וב־%{count} קבוצות נוספות תהיה גישה לערוץ הזה בהתאם ל<a href="%{settingLink}" target="_blank">הגדרות האבטחה</a>'
             other: 'למשתמשים ב־%{group} וב־%{count} קבוצות נוספות תהיה גישה לערוץ הזה בהתאם ל<a href="%{settingLink}" target="_blank">הגדרות האבטחה</a>'
         create: "יצירת ערוץ"
-        description: "תיאור (רשות)"
+        description: "תיאור"
         name: "שם הערוץ"
-        slug: "מזהה ייצוגי של הערוץ (רשות)"
         title: "ערוץ חדש"
         type: "סוג"
         types:
           category: "קטגוריה"
           topic: "נושא"
         emoji:
-          label: "אמוג׳י של הערוץ (רשות)"
           reset: "איפוס אמוג׳י"
       reviewable:
         type: "הודעת צ׳אט"
@@ -824,6 +818,8 @@ he:
         chat:
           label: "צ׳אט"
     discourse_workflows:
+      chat_message_created:
+        channel_id: "ערוץ"
       send_chat_message:
         channel_id: "ערוץ"
         message: "הודעה"

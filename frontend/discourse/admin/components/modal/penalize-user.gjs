@@ -21,13 +21,16 @@ export default class PenalizeUser extends Component {
   @service siteSettings;
 
   @tracked penalizeUntil = this.args.model.user.next_penalty;
+  @tracked penalizing = false;
   @tracked confirmClose = false;
+
   @tracked otherUserIds = [];
   @tracked postAction = "delete";
   @tracked flash;
   @tracked reason;
   @tracked message;
   @tracked readyToDeleteAll = false;
+  #beforeCompleted = false;
 
   constructor() {
     super(...arguments);
@@ -90,12 +93,13 @@ export default class PenalizeUser extends Component {
     this.penalizing = true;
     this.confirmClose = true;
 
-    if (this.args.model.before) {
-      this.args.model.before();
-    }
-
     let result;
     try {
+      if (this.args.model.before && !this.#beforeCompleted) {
+        await this.args.model.before();
+        this.#beforeCompleted = true;
+      }
+
       const opts = {
         reason: this.reason,
         message: this.message,
@@ -156,7 +160,7 @@ export default class PenalizeUser extends Component {
 
   <template>
     <DModal
-      class="{{@model.penaltyType}}-user-modal"
+      class="{{@model.penaltyType}}-user-modal --large"
       @title={{i18n this.modalTitle}}
       @closeModal={{this.warnBeforeClosing}}
       @flash={{this.flash}}
@@ -220,9 +224,9 @@ export default class PenalizeUser extends Component {
             <div class="cant-silence">{{i18n "admin.user.cant_silence"}}</div>
           {{/if}}
         {{/if}}
+        <div class="penalty-history">{{trustHTML this.penaltyHistory}}</div>
       </:body>
       <:footer>
-        <div class="penalty-history">{{trustHTML this.penaltyHistory}}</div>
         <DButton
           class="btn-danger perform-penalize"
           @action={{this.penalizeUser}}

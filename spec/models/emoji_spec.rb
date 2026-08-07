@@ -15,6 +15,56 @@ RSpec.describe Emoji do
       expect(emoji.name).to eq("test")
       expect(emoji.url).to be_nil
     end
+
+    it "caches the raw upload url, not the CDN-transformed one" do
+      upload = Fabricate(:upload, url: "//my-bucket.s3.amazonaws.com/images/my-emoji.png")
+      CustomEmoji.create!(name: "my_s3_emoji", upload: upload)
+
+      Emoji.clear_cache
+      emoji = Emoji.load_custom.find { |e| e.name == "my_s3_emoji" }
+
+      # The cached object must hold the raw url so that later CDN setting
+      # changes are reflected (CDN is applied lazily via #cdn_url).
+      expect(emoji.url).to eq(upload.url)
+    end
+  end
+
+  describe "#cdn_url" do
+    it "returns nil when there is no url" do
+      expect(Emoji.new.cdn_url).to be_nil
+    end
+
+    context "with a configured S3 store and CDN" do
+      before do
+        setup_s3
+        SiteSetting.s3_cdn_url = "https://cdn.example.com"
+      end
+
+      def custom_emoji_for(raw_url)
+        upload = Fabricate(:upload, url: raw_url)
+        CustomEmoji.create!(name: "my_s3_emoji", upload: upload)
+        Emoji.clear_cache
+        Emoji.load_custom.find { |e| e.name == "my_s3_emoji" }
+      end
+
+      it "rewrites a schemaless S3 bucket url to the configured s3_cdn_url" do
+        raw_url = "#{SiteSetting.Upload.absolute_base_url}/original/1X/my-emoji.png"
+        emoji = custom_emoji_for(raw_url)
+
+        # the cache still holds the raw bucket url...
+        expect(emoji.url).to eq(raw_url)
+        # ...and the CDN conversion happens lazily on read.
+        expect(emoji.cdn_url).to eq("https://cdn.example.com/original/1X/my-emoji.png")
+      end
+
+      it "does not leak the bucket subfolder into the rewritten url" do
+        SiteSetting.s3_upload_bucket = "s3-upload-bucket/emojis"
+        raw_url = "#{SiteSetting.Upload.absolute_base_url}/emojis/original/1X/my-emoji.png"
+        emoji = custom_emoji_for(raw_url)
+
+        expect(emoji.cdn_url).to eq("https://cdn.example.com/original/1X/my-emoji.png")
+      end
+    end
   end
 
   describe ".unicode_replacements" do
@@ -171,6 +221,14 @@ RSpec.describe Emoji do
       )
     end
 
+    it "doesn't double-escape text that already contains HTML entities" do
+      replaced_str = described_class.codes_to_img("Sam&rsquo;s :tada: A &amp; B")
+
+      expect(replaced_str).to eq(
+        %(Sam&rsquo;s <img src="/images/emoji/twitter/tada.png?v=#{Emoji::EMOJI_VERSION}" title="tada" class="emoji" alt="tada" loading="lazy" width="20" height="20"> A &amp; B),
+      )
+    end
+
     it "escapes generated image attribute values" do
       Plugin::CustomEmoji.register("xssxx", %q|" onerror="alert('xss')|)
 
@@ -193,6 +251,56 @@ RSpec.describe Emoji do
   describe ".groups" do
     it "returns emoji name to group name mapping" do
       expect(Emoji.groups["scotland"]).to eq("flags")
+    end
+  end
+
+  describe ".grouped" do
+    before { Emoji.clear_cache }
+
+    it "returns all groups with standard groups present" do
+      groups = Emoji.grouped
+      expect(groups.keys).to include("flags", "smileys_&_emotion")
+    end
+
+    it "preserves standard group order when no groups are pinned" do
+      SiteSetting.emoji_picker_pinned_groups = ""
+      keys = Emoji.grouped.keys
+      expect(keys.index("smileys_&_emotion")).to be < keys.index("flags")
+    end
+
+    it "pins a standard group to the top" do
+      SiteSetting.emoji_picker_pinned_groups = "flags"
+      expect(Emoji.grouped.keys.first).to eq("flags")
+    end
+
+    it "pins multiple groups in the configured order" do
+      SiteSetting.emoji_picker_pinned_groups = "flags|activities"
+      keys = Emoji.grouped.keys
+      expect(keys[0]).to eq("flags")
+      expect(keys[1]).to eq("activities")
+    end
+
+    it "pins a custom group to the top" do
+      CustomEmoji.create!(name: "partyblob", upload_id: 9999, group: "reactions")
+      Emoji.clear_cache
+      SiteSetting.emoji_picker_pinned_groups = "reactions"
+      expect(Emoji.grouped.keys.first).to eq("reactions")
+    end
+
+    it "silently ignores pinned groups that no longer exist" do
+      # Simulate a group that was valid when saved but has since been deleted
+      SiteSetting.stubs(:emoji_picker_pinned_groups).returns("nonexistent_group")
+      expect { Emoji.grouped }.not_to raise_error
+      expect(Emoji.grouped.keys).not_to include("nonexistent_group")
+    end
+
+    it "keeps unpinned groups after pinned ones" do
+      SiteSetting.emoji_picker_pinned_groups = "flags"
+      keys = Emoji.grouped.keys
+      flags_index = keys.index("flags")
+      smileys_index = keys.index("smileys_&_emotion")
+      expect(flags_index).to eq(0)
+      expect(smileys_index).to be > flags_index
     end
   end
 

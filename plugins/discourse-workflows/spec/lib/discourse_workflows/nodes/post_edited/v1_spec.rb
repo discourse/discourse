@@ -33,6 +33,13 @@ RSpec.describe DiscourseWorkflows::Nodes::PostEdited::V1 do
 
       expect(trigger).not_to be_valid
     end
+
+    it "returns false when workflow execution requested the edit to be skipped" do
+      revisor = instance_double(PostRevisor, opts: { skip_workflows: true })
+      trigger = described_class.new(first_post, false, revisor)
+
+      expect(trigger).not_to be_valid
+    end
   end
 
   describe "#output" do
@@ -43,7 +50,14 @@ RSpec.describe DiscourseWorkflows::Nodes::PostEdited::V1 do
       expect(output[:post][:id]).to eq(first_post.id)
       expect(output[:post][:raw]).to eq(first_post.raw)
       expect(output[:post][:cooked]).to eq("<p>Cooked</p>")
+      expect(output[:user]).to include(
+        id: user.id,
+        username: user.username,
+        trust_level: user.trust_level,
+        trust_level_name: TrustLevel.name(user.trust_level),
+      )
       expect(output[:topic][:id]).to eq(topic.id)
+      expect(output[:topic][:user_id]).to eq(topic.user_id)
       expect(output[:topic][:tags].map { |topic_tag| topic_tag[:name] }).to eq(["test-tag"])
       expect(output).not_to have_key(:cooked)
     end
@@ -76,12 +90,46 @@ RSpec.describe DiscourseWorkflows::Nodes::PostEdited::V1 do
       expect(reply_trigger.matches?(trigger_context("post_scope" => "replies"))).to eq(true)
     end
 
-    it "matches the configured category including parent categories" do
+    it "matches the configured category including subcategories by default" do
       trigger = described_class.new(first_post, "<p>Cooked</p>")
 
-      expect(trigger.matches?(trigger_context("category_id" => parent_category.id.to_s))).to eq(
+      expect(trigger.matches?(trigger_context("category_ids" => [parent_category.id.to_s]))).to eq(
         true,
       )
+      expect(trigger.matches?(trigger_context("category_ids" => [category.id.to_s]))).to eq(true)
+    end
+
+    it "does not match parent-category selections when subcategories are excluded" do
+      trigger = described_class.new(first_post, "<p>Cooked</p>")
+
+      expect(
+        trigger.matches?(
+          trigger_context(
+            "category_ids" => [parent_category.id.to_s],
+            "include_subcategories" => false,
+          ),
+        ),
+      ).to eq(false)
+      expect(
+        trigger.matches?(
+          trigger_context("category_ids" => [category.id.to_s], "include_subcategories" => false),
+        ),
+      ).to eq(true)
+    end
+
+    it "matches any of the configured categories" do
+      trigger = described_class.new(first_post, "<p>Cooked</p>")
+
+      expect(
+        trigger.matches?(
+          trigger_context("category_ids" => [Fabricate(:category).id.to_s, category.id.to_s]),
+        ),
+      ).to eq(true)
+    end
+
+    it "supports the legacy scalar category_id parameter" do
+      trigger = described_class.new(first_post, "<p>Cooked</p>")
+
       expect(trigger.matches?(trigger_context("category_id" => category.id.to_s))).to eq(true)
     end
 
@@ -97,7 +145,7 @@ RSpec.describe DiscourseWorkflows::Nodes::PostEdited::V1 do
       other_category = Fabricate(:category)
       trigger = described_class.new(first_post, "<p>Cooked</p>")
 
-      expect(trigger.matches?(trigger_context("category_id" => other_category.id.to_s))).to eq(
+      expect(trigger.matches?(trigger_context("category_ids" => [other_category.id.to_s]))).to eq(
         false,
       )
       expect(trigger.matches?(trigger_context("tag_names" => ["missing"]))).to eq(false)

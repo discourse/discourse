@@ -43,7 +43,6 @@ nl:
         description_hint: "Beschrijf in eenvoudige taal wat je wilt. Wij genereren de SQL-query, de naam en de beschrijving voor jou."
         description_placeholder: "bijvoorbeeld Toon me aanmeldingen in de loop van de tijd"
         generate: "Genereren"
-        regenerate: "Opnieuw genereren"
         generating: "Query genereren met AI..."
         generation_timeout: "Time-out AI-querygeneratie. Je kunt de SQL handmatig schrijven."
         generation_error: "Er is iets misgegaan bij het genereren van de query."
@@ -79,6 +78,10 @@ nl:
       delete: "Verwijderen"
       recover: "Query verwijderen ongedaan maken"
       sql_label: "SQL"
+      chart:
+        form:
+          label: "Diagramtype"
+          bar: "Staaf"
       others_dirty: "Een query heeft niet-opgeslagen wijzigingen die verloren gaan als je de pagina verlaat."
       run_time: "Query voltooid in %{value} ms."
       cached_result_notice: "Gecachete resultaten van %{relative_time} worden weergegeven."

@@ -559,11 +559,16 @@ class BulkImport::Base
     username
     username_lower
     name
+    locale
     title
     active
+    staged
     trust_level
     admin
     moderator
+    approved
+    approved_at
+    approved_by_id
     date_of_birth
     ip_address
     registration_ip_address
@@ -1344,6 +1349,8 @@ class BulkImport::Base
   end
 
   def process_user(user)
+    persist_imported_username = user.delete(:persist_imported_username) != false
+
     if user[:email].present?
       user[:email] = user[:email].downcase
 
@@ -1371,7 +1378,7 @@ class BulkImport::Base
     user[:username] = fix_name(user[:username]).presence || random_username
 
     if user[:username] != imported_username
-      @imported_usernames[imported_username] = user[:id]
+      @imported_usernames[imported_username] = user[:id] if persist_imported_username
       @mapped_usernames[imported_username] = user[:username]
     end
 
@@ -1385,11 +1392,18 @@ class BulkImport::Base
     user[:username_lower] = user[:username].downcase
     user[:trust_level] ||= TrustLevel[1]
     user[:active] = true unless user.has_key?(:active)
+    user[:staged] = false if user[:staged].nil?
     user[:admin] ||= false
     user[:moderator] ||= false
     user[:last_emailed_at] ||= NOW
     user[:created_at] ||= NOW
     user[:updated_at] ||= user[:created_at]
+
+    user[:approved] = true if user[:approved].nil?
+    if user[:approved]
+      user[:approved_at] ||= user[:created_at]
+      user[:approved_by_id] ||= Discourse::SYSTEM_USER_ID
+    end
     user[:suspended_at] ||= user[:suspended_at]
     user[:suspended_till] ||= user[:suspended_till] ||
       (200.years.from_now if user[:suspended_at].present?)
@@ -1491,7 +1505,7 @@ class BulkImport::Base
   }
 
   def process_user_option(user_option)
-    if user_option.key?(:hide_profile_and_presence)
+    if !user_option[:hide_profile_and_presence].nil?
       hide_profile_and_presence = user_option[:hide_profile_and_presence]
       user_option[:hide_profile] = user_option[:hide_presence] = hide_profile_and_presence
     end

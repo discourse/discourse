@@ -21,6 +21,8 @@ bs_BA:
         yesterday: "Yesterday"
       create: "napravi"
       cancel: "Odustani"
+      pinned_bar:
+        title: "Zakačena"
       pinned: "Zakačena"
       channel_settings:
         edit: "Edit"
@@ -56,6 +58,8 @@ bs_BA:
         filter_all: All
         filter_open: Otvori
         filter_closed: Zatvoreno
+        filter_joined_all: "Sve"
+        filter_joined_joined: "Pridružio se"
       chat_message_separator:
         today: Today
         yesterday: Yesterday
@@ -79,6 +83,7 @@ bs_BA:
         title: Nova poruka
         prefix: "Za:"
       create_channel:
+        description: "Opis"
         type: "Tip"
         types:
           category: "Kategorija"

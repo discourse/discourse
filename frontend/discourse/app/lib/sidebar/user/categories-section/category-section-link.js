@@ -117,7 +117,7 @@ export default class CategorySectionLink {
   #countables() {
     const countables = [];
 
-    if (this.#newNewViewEnabled) {
+    if (this.#unifiedNewEnabled) {
       countables.push(UNREAD_AND_NEW_COUNTABLE);
     } else {
       countables.push(...DEFAULT_COUNTABLES);
@@ -177,8 +177,10 @@ export default class CategorySectionLink {
     return "discovery.unreadCategory discovery.hotCategory discovery.topCategory discovery.newCategory discovery.latestCategory discovery.category discovery.categoryNone discovery.categoryAll";
   }
 
+  // The link text already names the category. A title here would only repeat
+  // the description as a mouse-only tooltip that screen readers announce.
   get title() {
-    return this.category.descriptionText;
+    return null;
   }
 
   get text() {
@@ -284,7 +286,7 @@ export default class CategorySectionLink {
     }
   }
 
-  get #newNewViewEnabled() {
-    return !!this.currentUser?.new_new_view_enabled;
+  get #unifiedNewEnabled() {
+    return !!this.currentUser?.unified_new_enabled;
   }
 }

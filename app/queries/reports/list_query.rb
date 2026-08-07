@@ -12,11 +12,8 @@ module Reports
 
       def visible?(guardian:)
         return false if Report.hidden?(type, guardian:)
-
-        if SiteSetting.reporting_improvements
-          return false if plugin_report? && plugin_disabled?
-          return false if Report::LEGACY_REPORTS.include?(type)
-        end
+        return false if plugin_report? && plugin_disabled?
+        return false if Report::LEGACY_REPORTS.include?(type)
 
         true
       end
@@ -29,7 +26,7 @@ module Reports
           description_link: I18n.t("reports.#{type}.description_link", default: "").presence,
         }
 
-        if SiteSetting.reporting_improvements && plugin_report?
+        if plugin_report?
           result[:plugin] = plugin_name
           result[:plugin_display_name] = plugin_display_name
         end

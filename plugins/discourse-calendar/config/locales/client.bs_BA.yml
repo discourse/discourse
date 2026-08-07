@@ -72,11 +72,6 @@ bs_BA:
             last: "posljednji"
         attendance:
           none: "Ništa"
-        url:
-          label: "URL"
-          placeholder: "Opcionalno"
-        location:
-          label: "Lokacija"
         description:
           label: "Opis"
         event_type:

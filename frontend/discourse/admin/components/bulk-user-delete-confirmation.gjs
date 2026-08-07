@@ -134,7 +134,7 @@ export default class BulkUserDeleteConfirmation extends Component {
   closeModal() {
     this.args.closeModal();
     if (this.callAfterBulkDelete) {
-      this.args.model?.afterBulkDelete();
+      this.args.model?.afterBulkAction();
     }
   }
 

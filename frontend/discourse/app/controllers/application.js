@@ -16,6 +16,7 @@ export default class ApplicationController extends Controller {
   @service router;
   @service scrollState;
   @service sidebarState;
+  @service site;
   @service siteSettings;
 
   queryParams = [{ navigationMenuQueryParamOverride: "navigation_menu" }];
@@ -38,7 +39,10 @@ export default class ApplicationController extends Controller {
     const classes = [];
 
     Object.keys(this.siteSettings.currentUserUpcomingChanges).forEach((key) => {
-      if (this.siteSettings[key]) {
+      if (
+        this.siteSettings[key] &&
+        this.site.upcoming_changes_with_css.includes(key)
+      ) {
         classes.push(`uc-${dasherize(key)}`);
       }
     });
@@ -91,9 +95,9 @@ export default class ApplicationController extends Controller {
     return this.showFooter && this.siteSettings.enable_powered_by_discourse;
   }
 
-  @computed
   get canSignUp() {
     return (
+      !this.site.isReadOnly &&
       !this.siteSettings.invite_only &&
       this.siteSettings.allow_new_registrations &&
       !this.siteSettings.enable_discourse_connect

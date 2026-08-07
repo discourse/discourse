@@ -45,8 +45,8 @@ Fabricator(:event_date, from: "DiscoursePostEvent::EventDate") do
   ends_at { |attrs| attrs[:ends_at] }
 end
 
-def create_post_with_event(user, extra_raw = "")
-  start = (Time.now - 10.seconds).utc.iso8601(3)
+def create_post_with_event(user, extra_raw = "", start = nil)
+  start = start ? start.utc.iso8601(3) : (Time.now - 10.seconds).utc.iso8601(3)
 
   PostCreator.create!(
     user,

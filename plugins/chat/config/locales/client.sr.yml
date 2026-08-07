@@ -24,6 +24,8 @@ sr:
         yesterday: "Juče"
       all_loaded: "Prikaz svih poruka"
       cancel: "Odustani"
+      pinned_bar:
+        title: "Zakvačeno"
       pinned: "Zakvačeno"
       channel_settings:
         edit: "Izmeni"
@@ -56,6 +58,8 @@ sr:
         back: "Nazad"
         filter_all: sve
         filter_open: Otvori
+        filter_joined_all: "Sve"
+        filter_joined_joined: "Pridružen"
       chat_message_separator:
         today: Danas
         yesterday: Juče
@@ -75,6 +79,7 @@ sr:
       direct_message_creator:
         title: Nova privatna poruka
       create_channel:
+        description: "Opis"
         type: "Tip"
         types:
           category: "Kategorija"

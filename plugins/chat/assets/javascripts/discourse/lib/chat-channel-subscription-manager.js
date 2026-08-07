@@ -92,7 +92,7 @@ export default class ChatChannelSubscriptionManager {
   }
 
   handleSentMessage(data) {
-    if (data.chat_message.user.id === this.currentUser.id && data.staged_id) {
+    if (data.chat_message.user.id === this.currentUser?.id && data.staged_id) {
       const stagedMessage = this.handleStagedMessage(
         this.channel,
         this.messagesManager,
@@ -144,7 +144,7 @@ export default class ChatChannelSubscriptionManager {
   handleReactionMessage(data) {
     const message = this.messagesManager.findMessage(data.chat_message_id);
     if (message) {
-      message.react(data.emoji, data.action, data.user, this.currentUser.id);
+      message.react(data.emoji, data.action, data.user, this.currentUser?.id);
     }
   }
 
@@ -157,6 +157,7 @@ export default class ChatChannelSubscriptionManager {
       message.uploads = cloneJSON(data.chat_message.uploads || []);
       message.edited = data.chat_message.edited;
       message.streaming = data.chat_message.streaming;
+      message.blocks = data.chat_message.blocks;
     }
   }
 
@@ -185,9 +186,9 @@ export default class ChatChannelSubscriptionManager {
     }
 
     if (
-      this.currentUser.staff ||
+      this.currentUser?.staff ||
       this.channel.canModerate ||
-      this.currentUser.id === targetMsg.user.id
+      this.currentUser?.id === targetMsg.user.id
     ) {
       targetMsg.deletedAt = data.deleted_at;
       targetMsg.deletedById = data.deleted_by_id;
@@ -196,7 +197,9 @@ export default class ChatChannelSubscriptionManager {
       this.messagesManager.removeMessage(targetMsg);
     }
 
-    if (this.channel.currentUserMembership.lastReadMessageId === targetMsg.id) {
+    if (
+      this.channel.currentUserMembership?.lastReadMessageId === targetMsg.id
+    ) {
       this.channel.currentUserMembership.lastReadMessageId =
         data.latest_not_deleted_message_id;
     }
@@ -271,9 +274,7 @@ export default class ChatChannelSubscriptionManager {
       message.pinned = true;
     }
 
-    if (!alreadyApplied) {
-      this.channel.pinnedMessagesCount++;
-    }
+    this.#syncPinnedMessagesCount(data, alreadyApplied, 1);
 
     if (
       this.channel.currentUserMembership &&
@@ -293,10 +294,18 @@ export default class ChatChannelSubscriptionManager {
       message.pinned = false;
     }
 
-    if (!alreadyApplied) {
+    this.#syncPinnedMessagesCount(data, alreadyApplied, -1);
+  }
+
+  // assign the authoritative count (idempotent under replayed/duplicate
+  // events); delta path is only a fallback for older events without a count
+  #syncPinnedMessagesCount(data, alreadyApplied, delta) {
+    if (data.pinned_message_count !== undefined) {
+      this.channel.pinnedMessagesCount = data.pinned_message_count;
+    } else if (!alreadyApplied) {
       this.channel.pinnedMessagesCount = Math.max(
         0,
-        this.channel.pinnedMessagesCount - 1
+        this.channel.pinnedMessagesCount + delta
       );
     }
   }

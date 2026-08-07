@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
+import { array, concat } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
@@ -296,6 +296,39 @@ export default class ExecutionDetail extends Component {
 
   <template>
     <div class="workflows-execution-detail" {{didInsert this.ensureNodeTypes}}>
+      {{#if @execution.workflow_call_caller}}
+        <div class="workflows-execution-detail__workflow-call --caller">
+          <div class="workflows-execution-detail__workflow-call-main">
+            <span class="workflows-execution-detail__workflow-call-label">
+              {{i18n "discourse_workflows.executions.workflow_call_called_by"}}
+            </span>
+            <span class="workflows-execution-detail__workflow-call-name">
+              {{#if @execution.workflow_call_caller.workflow_name}}
+                {{@execution.workflow_call_caller.workflow_name}}
+              {{else}}
+                {{i18n
+                  "discourse_workflows.executions.workflow_call_workflow"
+                  id=@execution.workflow_call_caller.workflow_id
+                }}
+              {{/if}}
+            </span>
+          </div>
+
+          {{#if @execution.workflow_call_caller.execution_url}}
+            <DButton
+              @route="adminPlugins.show.discourse-workflows.show.executions.show"
+              @routeModels={{array
+                @execution.workflow_call_caller.workflow_id
+                @execution.workflow_call_caller.execution_id
+              }}
+              @icon="up-right-from-square"
+              @label="discourse_workflows.executions.workflow_call_open_parent"
+              class="btn-default btn-small workflows-execution-detail__workflow-call-link workflows-execution-detail__workflow-call-parent-link"
+            />
+          {{/if}}
+        </div>
+      {{/if}}
+
       <div class="workflows-execution-detail__steps">
         {{#each @execution.steps as |step|}}
           <div
@@ -415,6 +448,71 @@ export default class ExecutionDetail extends Component {
                     }}</summary>
                   <pre>{{formatLogs step.metadata.logs}}</pre>
                 </details>
+              {{/if}}
+
+              {{#if step.workflow_call_run}}
+                <div class="workflows-execution-detail__workflow-call">
+                  <div class="workflows-execution-detail__workflow-call-main">
+                    <span
+                      class="workflows-execution-detail__workflow-call-icon"
+                    >
+                      {{dIcon "arrows-turn-to-dots"}}
+                    </span>
+                    <span
+                      class="workflows-execution-detail__workflow-call-content"
+                    >
+                      <span
+                        class="workflows-execution-detail__workflow-call-label"
+                      >
+                        {{i18n "discourse_workflows.executions.workflow_call"}}
+                      </span>
+                      <span
+                        class="workflows-execution-detail__workflow-call-name"
+                      >
+                        {{#if step.workflow_call_run.workflow_name}}
+                          {{step.workflow_call_run.workflow_name}}
+                        {{else}}
+                          {{i18n
+                            "discourse_workflows.executions.workflow_call_workflow"
+                            id=step.workflow_call_run.workflow_id
+                          }}
+                        {{/if}}
+                      </span>
+                    </span>
+                  </div>
+
+                  <span
+                    class="workflows-execution-detail__step-badge --{{step.workflow_call_run.status}}"
+                  >
+                    {{i18n
+                      (concat
+                        "discourse_workflows.executions.statuses."
+                        step.workflow_call_run.status
+                      )
+                    }}
+                  </span>
+
+                  {{#if step.workflow_call_run.execution_url}}
+                    <DButton
+                      @route="adminPlugins.show.discourse-workflows.show.executions.show"
+                      @routeModels={{array
+                        step.workflow_call_run.workflow_id
+                        step.workflow_call_run.execution_id
+                      }}
+                      @icon="up-right-from-square"
+                      @label="discourse_workflows.executions.workflow_call_open"
+                      class="btn-default btn-small workflows-execution-detail__workflow-call-link"
+                    />
+                  {{/if}}
+
+                  {{#if step.workflow_call_run.error}}
+                    <div
+                      class="workflows-execution-detail__workflow-call-error"
+                    >
+                      {{step.workflow_call_run.error}}
+                    </div>
+                  {{/if}}
+                </div>
               {{/if}}
 
               <details class="workflows-execution-detail__step-section">

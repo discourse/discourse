@@ -7,9 +7,7 @@ import withEventValue from "discourse/helpers/with-event-value";
 import { POSTING_REVIEW_GROUP_BASED_MODES } from "discourse/lib/constants";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
-import { eq } from "discourse/truth-helpers";
 import DRelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
-import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertCategoryModeration extends Component {
@@ -149,156 +147,151 @@ export default class UpsertCategoryModeration extends Component {
   }
 
   <template>
-    <@form.Section
-      class={{dConcatClass
-        "edit-category-tab"
-        "edit-category-tab-moderation"
-        "--full"
-        (if (eq @selectedTab "moderation") "active")
-      }}
+    {{#if this.siteSettings.enable_category_group_moderation}}
+      <@form.Container @title={{i18n "category.reviewable_by_group"}}>
+        <GroupChooser
+          @content={{this.site.groups}}
+          @value={{this.moderatingGroupIds}}
+          @onChange={{this.onCategoryModeratingGroupsChange}}
+        />
+      </@form.Container>
+    {{/if}}
+
+    <@form.Container @title={{i18n "category.default_slow_mode"}}>
+      <DRelativeTimePicker
+        @id="category-default-slow-mode"
+        @durationMinutes={{this.defaultSlowModeMinutes}}
+        @onChange={{this.onDefaultSlowModeDurationChange}}
+      />
+    </@form.Container>
+
+    <@form.Container @title={{i18n "topic.auto_close.label"}}>
+      <DRelativeTimePicker
+        @id="topic-auto-close"
+        @durationHours={{this.autoCloseHours}}
+        @hiddenIntervals={{this.hiddenRelativeIntervals}}
+        @onChange={{this.onAutoCloseDurationChange}}
+      />
+    </@form.Container>
+
+    <@form.Field
+      @name="auto_close_based_on_last_post"
+      @title={{i18n "topic.auto_close.based_on_last_post"}}
+      @type="checkbox"
+      @format="full"
+      as |field|
     >
-      {{#if this.siteSettings.enable_category_group_moderation}}
-        <@form.Container @title={{i18n "category.reviewable_by_group"}}>
-          <GroupChooser
-            @content={{this.site.groups}}
-            @value={{this.moderatingGroupIds}}
-            @onChange={{this.onCategoryModeratingGroupsChange}}
-          />
-        </@form.Container>
-      {{/if}}
+      <field.Control />
+    </@form.Field>
 
-      <@form.Container @title={{i18n "category.default_slow_mode"}}>
-        <DRelativeTimePicker
-          @id="category-default-slow-mode"
-          @durationMinutes={{this.defaultSlowModeMinutes}}
-          @onChange={{this.onDefaultSlowModeDurationChange}}
-        />
-      </@form.Container>
+    <@form.Container @title={{i18n "category.num_auto_bump_daily"}}>
+      <input
+        {{on "input" (withEventValue this.onNumAutoBumpDailyChange)}}
+        value={{this.numAutoBumpDaily}}
+        type="number"
+        min="0"
+        id="category-number-daily-bump"
+      />
+    </@form.Container>
 
-      <@form.Container @title={{i18n "topic.auto_close.label"}}>
-        <DRelativeTimePicker
-          @id="topic-auto-close"
-          @durationHours={{this.autoCloseHours}}
-          @hiddenIntervals={{this.hiddenRelativeIntervals}}
-          @onChange={{this.onAutoCloseDurationChange}}
-        />
-      </@form.Container>
+    <@form.Container @title={{i18n "category.auto_bump_cooldown_days"}}>
+      <input
+        {{on "input" (withEventValue this.onAutoBumpCooldownDaysChange)}}
+        value={{this.autoBumpCooldownDays}}
+        type="number"
+        min="0"
+        id="category-auto-bump-cooldown-days"
+      />
+    </@form.Container>
 
-      <@form.Field
-        @name="auto_close_based_on_last_post"
-        @title={{i18n "topic.auto_close.based_on_last_post"}}
-        @type="checkbox"
-        @format="full"
-        as |field|
-      >
-        <field.Control />
-      </@form.Field>
+    <@form.Section @title={{i18n "category.new_topic_approval"}}>
+      <@form.Object @name="category_setting" as |object|>
+        <object.Field
+          @name="topic_posting_review_mode"
+          @title={{i18n "category.require_topic_approval_for"}}
+          @type="custom"
+          @format="full"
+          as |field|
+        >
+          <field.Control>
+            <ComboBox
+              @valueProperty="value"
+              @content={{this.postingReviewModeOptions}}
+              @value={{field.value}}
+              @onChange={{this.onTopicPostingReviewModeChange}}
+              @options={{hash placementStrategy="absolute"}}
+            />
+          </field.Control>
+        </object.Field>
 
-      <@form.Container @title={{i18n "category.num_auto_bump_daily"}}>
-        <input
-          {{on "input" (withEventValue this.onNumAutoBumpDailyChange)}}
-          value={{this.numAutoBumpDaily}}
-          type="number"
-          min="0"
-          id="category-number-daily-bump"
-        />
-      </@form.Container>
-
-      <@form.Container @title={{i18n "category.auto_bump_cooldown_days"}}>
-        <input
-          {{on "input" (withEventValue this.onAutoBumpCooldownDaysChange)}}
-          value={{this.autoBumpCooldownDays}}
-          type="number"
-          min="0"
-          id="category-auto-bump-cooldown-days"
-        />
-      </@form.Container>
-
-      <@form.Section @title={{i18n "category.new_topic_approval"}}>
-        <@form.Object @name="category_setting" as |object|>
-          <object.Field
-            @name="topic_posting_review_mode"
-            @title={{i18n "category.require_topic_approval_for"}}
+        {{#if this.topicModeRequiresGroups}}
+          <@form.Field
+            @name="topic_posting_review_group_ids"
+            @title={{this.topicGroupChooserTitle}}
             @type="custom"
+            @format="full"
+            @validate={{this.validatePostingReviewGroups}}
             as |field|
           >
             <field.Control>
-              <ComboBox
-                @valueProperty="value"
-                @content={{this.postingReviewModeOptions}}
+              <GroupChooser
+                class="posting-review-group-chooser"
+                @content={{this.site.groups}}
                 @value={{field.value}}
-                @onChange={{this.onTopicPostingReviewModeChange}}
-                @options={{hash placementStrategy="absolute"}}
+                @onChange={{field.set}}
+                @options={{hash
+                  none="category.posting_review_groups_placeholder"
+                }}
               />
             </field.Control>
-          </object.Field>
+          </@form.Field>
+        {{/if}}
+      </@form.Object>
+    </@form.Section>
 
-          {{#if this.topicModeRequiresGroups}}
-            <@form.Field
-              @name="topic_posting_review_group_ids"
-              @title={{this.topicGroupChooserTitle}}
-              @type="custom"
-              @validate={{this.validatePostingReviewGroups}}
-              as |field|
-            >
-              <field.Control>
-                <GroupChooser
-                  class="posting-review-group-chooser"
-                  @content={{this.site.groups}}
-                  @value={{field.value}}
-                  @onChange={{field.set}}
-                  @options={{hash
-                    none="category.posting_review_groups_placeholder"
-                  }}
-                />
-              </field.Control>
-            </@form.Field>
-          {{/if}}
-        </@form.Object>
-      </@form.Section>
+    <@form.Section @title={{i18n "category.new_reply_approval"}}>
+      <@form.Object @name="category_setting" as |object|>
+        <object.Field
+          @name="reply_posting_review_mode"
+          @title={{i18n "category.require_reply_approval_for"}}
+          @type="custom"
+          @format="full"
+          as |field|
+        >
+          <field.Control>
+            <ComboBox
+              @valueProperty="value"
+              @content={{this.postingReviewModeOptions}}
+              @value={{field.value}}
+              @onChange={{this.onReplyPostingReviewModeChange}}
+              @options={{hash placementStrategy="absolute"}}
+            />
+          </field.Control>
+        </object.Field>
 
-      <@form.Section @title={{i18n "category.new_reply_approval"}}>
-        <@form.Object @name="category_setting" as |object|>
-          <object.Field
-            @name="reply_posting_review_mode"
-            @title={{i18n "category.require_reply_approval_for"}}
+        {{#if this.replyModeRequiresGroups}}
+          <@form.Field
+            @name="reply_posting_review_group_ids"
+            @title={{this.replyGroupChooserTitle}}
             @type="custom"
+            @format="full"
+            @validate={{this.validatePostingReviewGroups}}
             as |field|
           >
             <field.Control>
-              <ComboBox
-                @valueProperty="value"
-                @content={{this.postingReviewModeOptions}}
+              <GroupChooser
+                class="posting-review-group-chooser"
+                @content={{this.site.groups}}
                 @value={{field.value}}
-                @onChange={{this.onReplyPostingReviewModeChange}}
-                @options={{hash placementStrategy="absolute"}}
+                @onChange={{field.set}}
+                @options={{hash
+                  none="category.posting_review_groups_placeholder"
+                }}
               />
             </field.Control>
-          </object.Field>
-
-          {{#if this.replyModeRequiresGroups}}
-            <@form.Field
-              @name="reply_posting_review_group_ids"
-              @title={{this.replyGroupChooserTitle}}
-              @type="custom"
-              @validate={{this.validatePostingReviewGroups}}
-              as |field|
-            >
-              <field.Control>
-                <GroupChooser
-                  class="posting-review-group-chooser"
-                  @content={{this.site.groups}}
-                  @value={{field.value}}
-                  @onChange={{field.set}}
-                  @options={{hash
-                    none="category.posting_review_groups_placeholder"
-                  }}
-                />
-              </field.Control>
-            </@form.Field>
-          {{/if}}
-        </@form.Object>
-      </@form.Section>
+          </@form.Field>
+        {{/if}}
+      </@form.Object>
     </@form.Section>
   </template>
 }

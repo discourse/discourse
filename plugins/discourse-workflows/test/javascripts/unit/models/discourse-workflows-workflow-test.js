@@ -43,20 +43,16 @@ module("Unit | model | discourse-workflows-workflow", function () {
     });
   });
 
-  test("updateProperties maps model fields to API snake_case fields", function (assert) {
+  test("createProperties maps model fields to API snake_case fields", function (assert) {
     const workflow = DiscourseWorkflowsWorkflow.create({
       name: "Workflow",
-      errorWorkflowId: 2,
-      staticData: { global: { cursor: "abc" } },
       nodes: [],
       stickyNotes: [],
       connections: [],
     });
 
-    assert.deepEqual(workflow.updateProperties(), {
+    assert.deepEqual(workflow.createProperties(), {
       name: "Workflow",
-      error_workflow_id: 2,
-      static_data: { global: { cursor: "abc" } },
       nodes: [],
       connections: {},
     });

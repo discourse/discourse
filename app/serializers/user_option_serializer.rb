@@ -13,7 +13,6 @@ class UserOptionSerializer < ApplicationSerializer
              :dynamic_favicon,
              :enable_quoting,
              :enable_smart_lists,
-             :enable_defer,
              :enable_markdown_monospace_font,
              :digest_after_minutes,
              :automatically_unpin_topics,
@@ -24,6 +23,7 @@ class UserOptionSerializer < ApplicationSerializer
              :email_in_reply_to,
              :like_notification_frequency,
              :notify_on_linked_posts,
+             :push_notification_level,
              :enable_upcoming_change_available_notifications,
              :include_tl0_in_digests,
              :theme_ids,
@@ -49,7 +49,10 @@ class UserOptionSerializer < ApplicationSerializer
              :topics_unread_when_closed,
              :composition_mode,
              :interface_color_mode,
-             :show_original_content
+             :show_original_content,
+             :send_shortcut,
+             :automatically_translate,
+             :understood_languages
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs
@@ -66,5 +69,9 @@ class UserOptionSerializer < ApplicationSerializer
 
   def theme_ids
     object.theme_ids.presence || [SiteSetting.default_theme_id]
+  end
+
+  def show_original_content
+    !object.automatically_translate
   end
 end

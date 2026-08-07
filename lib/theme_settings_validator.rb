@@ -27,6 +27,8 @@ class ThemeSettingsValidator
     def validate_value(value, type, opts)
       errors = []
 
+      errors.concat(validate_resolve_group_membership(opts, type))
+
       case type
       when types[:enum]
         if opts[:choices].exclude?(value) && opts[:choices].map(&:to_s).exclude?(value)
@@ -60,10 +62,49 @@ class ThemeSettingsValidator
       errors
     end
 
+    def validate_resolve_group_membership(opts, type)
+      errors = []
+      if opts[:resolve_group_membership]
+        if type != types[:list]
+          errors << I18n.t("themes.settings_errors.resolve_group_membership_requires_list")
+        elsif opts[:list_type] != "group"
+          errors << I18n.t("themes.settings_errors.resolve_group_membership_requires_group_list")
+        end
+      end
+
+      if type == types[:objects]
+        errors.concat(validate_object_schema_resolve_group_membership(opts[:schema]))
+      end
+
+      errors
+    end
+
     private
 
     def types
       ThemeSetting.types
+    end
+
+    def validate_object_schema_resolve_group_membership(schema)
+      errors = []
+      return errors if schema.blank?
+
+      schema[:properties].each do |property_name, property_attributes|
+        if property_attributes[:resolve_group_membership] && property_attributes[:type] != "groups"
+          errors << I18n.t(
+            "themes.settings_errors.resolve_group_membership_requires_groups_property",
+            property: property_name,
+          )
+        end
+
+        if property_attributes[:type] == "objects"
+          errors.concat(
+            validate_object_schema_resolve_group_membership(property_attributes[:schema]),
+          )
+        end
+      end
+
+      errors
     end
 
     def validate_value_in_range!(value, min:, max:, errors:, translation_prefix:)

@@ -37,19 +37,22 @@ class SharedAiConversation < ActiveRecord::Base
   end
 
   def self.destroy_conversation(conversation)
+    target_id = conversation.target_id
+    target_type = conversation.target_type
+    target_topic = conversation.target_topic(with_deleted: true)
+
     conversation.destroy
 
-    maybe_topic = conversation.target
-    if maybe_topic.is_a?(Topic)
-      AiArtifact.where(post: maybe_topic.posts).update_all(
+    if target_topic
+      AiArtifact.where(post: target_topic.posts.with_deleted).update_all(
         "metadata = jsonb_set(COALESCE(metadata, '{}'), '{public}', 'false')",
       )
     end
 
     ::Jobs.enqueue(
       :shared_conversation_adjust_upload_security,
-      target_id: conversation.target_id,
-      target_type: conversation.target_type,
+      target_id: target_id,
+      target_type: target_type,
     )
   end
 
@@ -89,6 +92,30 @@ class SharedAiConversation < ActiveRecord::Base
 
   def url
     "#{Discourse.base_uri}/discourse-ai/ai-bot/shared-ai-conversations/#{share_key}"
+  end
+
+  def publicly_visible?
+    topic = target_topic
+    return false if topic.blank?
+
+    source_guardian = user.guardian
+    return false if DiscourseAi::AiBot::EntryPoint.ai_share_error(topic, source_guardian)
+
+    context_post_ids = context.filter_map { |context_post| context_post["id"] }
+    return false if context_post_ids.blank?
+
+    posts_by_id = Post.where(id: context_post_ids, topic_id: topic.id).index_by(&:id)
+    context_post_ids.all? do |post_id|
+      post = posts_by_id[post_id]
+      post.present? && source_guardian.can_see?(post)
+    end
+  end
+
+  def target_topic(with_deleted: false)
+    return if target_type != "Topic"
+
+    scope = with_deleted ? Topic.with_deleted : Topic
+    scope.find_by(id: target_id)
   end
 
   def html_excerpt

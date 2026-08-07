@@ -51,6 +51,7 @@ class PostMover
         new_topic =
           Topic.create!(
             user: post.user,
+            acting_user: user,
             title: title,
             category_id: category_id,
             created_at: post.created_at,
@@ -90,23 +91,7 @@ class PostMover
 
     ensure_acting_user_is_allowed_in_destination
 
-    # when a topic contains some posts after moving posts to another topic we shouldn't close it
-    # two types of posts should prevent a topic from closing:
-    #   1. regular posts
-    #   2. almost all whispers
-    # we should only exclude whispers with action_code: 'split_topic'
-    # because we use such whispers as a small-action posts when moving posts to the secret message
-    # (in this case we don't want everyone to see that posts were moved, that's why we use whispers)
-    original_topic_posts_count =
-      @original_topic
-        .posts
-        .where(
-          "post_type = ? or (post_type = ? and action_code != 'split_topic')",
-          Post.types[:regular],
-          Post.types[:whisper],
-        )
-        .count
-    @full_move = original_topic_posts_count == posts.length
+    @full_move = (posts_preventing_close.pluck(:id) - posts.map(&:id)).empty?
 
     @first_post_number_moved =
       posts.first.is_first_post? ? posts[1]&.post_number : posts.first.post_number
@@ -135,6 +120,8 @@ class PostMover
       end
     end
 
+    @moving_post_ids = posts.map(&:id)
+
     create_temp_table
     move_each_post
     handle_moved_references
@@ -145,6 +132,7 @@ class PostMover
     update_last_post_stats
     update_upload_security_status
     update_bookmarks
+    update_reviewables
 
     close_topic_and_schedule_deletion if @full_move
 
@@ -730,6 +718,14 @@ class PostMover
         .tap { |posts| raise Discourse::InvalidParameters.new(:post_ids) if posts.empty? }
   end
 
+  def posts_preventing_close
+    @original_topic
+      .posts
+      .where(post_type: [Post.types[:regular], Post.types[:whisper]])
+      .where.not(raw: "")
+      .where("action_code IS DISTINCT FROM 'split_topic'")
+  end
+
   def update_last_post_stats
     post = destination_topic.ordered_posts.where.not(post_type: Post.types[:whisper]).last
     if post && @post_ids_after_move.include?(post.id)
@@ -751,6 +747,15 @@ class PostMover
       Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: @original_topic.id)
       Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: @destination_topic.id)
     end
+  end
+
+  def update_reviewables
+    Reviewable.where(
+      target_type: "Post",
+      target_id: @moving_post_ids,
+      topic_id: @original_topic.id,
+      category_id: @original_topic.category_id,
+    ).update_all(topic_id: @destination_topic.id, category_id: @destination_topic.category_id)
   end
 
   def watch_new_topic

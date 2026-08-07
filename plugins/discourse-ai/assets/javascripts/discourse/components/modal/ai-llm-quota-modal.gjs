@@ -16,9 +16,7 @@ export default class AiLlmQuotaModal extends Component {
   @action
   save(data) {
     const quota = { ...data };
-    quota.group_name = this.site.groups.find(
-      (item) => item.id === data.group_id
-    )?.name;
+    quota.group_name = this.site.groupName(data.group_id);
     quota.llm_model_id = this.args.model.id;
 
     this.args.model.addItemToCollection(quota);
@@ -47,6 +45,7 @@ export default class AiLlmQuotaModal extends Component {
       llm_model_id: null,
       max_tokens: null,
       max_usages: null,
+      max_cost: null,
       duration_seconds: moment.duration(1, "day").asSeconds(),
     };
   }
@@ -58,7 +57,7 @@ export default class AiLlmQuotaModal extends Component {
 
   @action
   validateForm(data, { addError, removeError }) {
-    if (!data.max_tokens && !data.max_usages) {
+    if (!data.max_tokens && !data.max_usages && !data.max_cost) {
       addError("max_tokens", {
         title: i18n("discourse_ai.llms.quotas.max_tokens"),
         message: i18n("discourse_ai.llms.quotas.max_tokens_required"),
@@ -67,9 +66,14 @@ export default class AiLlmQuotaModal extends Component {
         title: i18n("discourse_ai.llms.quotas.max_usages"),
         message: i18n("discourse_ai.llms.quotas.max_usages_required"),
       });
+      addError("max_cost", {
+        title: i18n("discourse_ai.llms.quotas.max_cost"),
+        message: i18n("discourse_ai.llms.quotas.max_cost_required"),
+      });
     } else {
       removeError("max_tokens");
       removeError("max_usages");
+      removeError("max_cost");
     }
   }
 
@@ -124,6 +128,17 @@ export default class AiLlmQuotaModal extends Component {
             as |field|
           >
             <field.Control min="1" />
+          </form.Field>
+
+          <form.Field
+            @name="max_cost"
+            @title={{i18n "discourse_ai.llms.quotas.max_cost"}}
+            @tooltip={{i18n "discourse_ai.llms.quotas.max_cost_help"}}
+            @format="large"
+            @type="input-number"
+            as |field|
+          >
+            <field.Control min="0.01" step="0.01" />
           </form.Field>
 
           <form.Field

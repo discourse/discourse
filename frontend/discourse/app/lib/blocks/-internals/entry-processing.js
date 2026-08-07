@@ -111,7 +111,7 @@ function getOrCreateLeafBlockComponent(
  * @property {string} [__failureReason] - Custom failure reason message (debug mode only).
  *
  * @typedef {Object} ChildBlockResult
- * @property {import("ember-curry-component").CurriedComponent} Component - Curried component ready to render.
+ * @property {import("@glint/template").ComponentLike} Component - Curried component ready to render.
  * @property {Object} [containerArgs] - Values for parent container's childArgs schema.
  * @property {string} key - Stable unique key for list rendering.
  * @property {boolean} [isGhost] - True if this is a ghost block (debug mode only).

@@ -53,6 +53,28 @@ RSpec.describe DiscourseWorkflows::Execution do
     end
   end
 
+  describe ".claim_pending" do
+    fab!(:workflow, :discourse_workflows_workflow)
+    fab!(:execution) do
+      Fabricate(:discourse_workflows_execution, workflow: workflow, status: :pending)
+    end
+
+    it "transitions a pending execution to running and returns it" do
+      claimed = described_class.claim_pending(execution)
+
+      expect(claimed).to be_present
+      expect(claimed.status).to eq("running")
+      expect(claimed.started_at).to be_present
+      expect(execution.reload.status).to eq("running")
+    end
+
+    it "returns nil when the execution is no longer pending" do
+      execution.update!(status: :running)
+
+      expect(described_class.claim_pending(execution)).to be_nil
+    end
+  end
+
   describe "#fail_with_timeout!" do
     fab!(:workflow, :discourse_workflows_workflow)
     fab!(:execution) do

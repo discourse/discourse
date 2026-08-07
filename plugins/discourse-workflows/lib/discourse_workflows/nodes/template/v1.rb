@@ -1,20 +1,34 @@
 # frozen_string_literal: true
 
-require "mustache"
+require "liquid"
 
 module DiscourseWorkflows
   module Nodes
     module Template
       class V1 < NodeType
-        DEFAULT_TEMPLATE = <<~MUSTACHE
+        DEFAULT_TEMPLATE = <<~LIQUID
           Items:
-          {{#items}}
-          - {{item_index}}: {{name}}
-          {{/items}}
-        MUSTACHE
+          {% for item in items -%}
+          - {{ item.item_index }}: {{ item.name }}
+          {% endfor -%}
+        LIQUID
 
         RUN_ONCE_FOR_ALL_ITEMS = "runOnceForAllItems"
         RUN_ONCE_FOR_EACH_ITEM = "runOnceForEachItem"
+
+        RENDER_LENGTH_LIMIT = 1.megabyte
+        RENDER_SCORE_LIMIT = 200_000
+        ASSIGN_SCORE_LIMIT = 1.megabyte
+
+        OUTPUT_SCHEMA = {
+          "$schema" => Schema::DRAFT_URI,
+          "type" => "object",
+          "properties" => {
+            "template" => {
+              "type" => "string",
+            },
+          },
+        }.freeze
 
         description(
           name: "action:template",
@@ -33,6 +47,11 @@ module DiscourseWorkflows
               },
             },
           },
+          output_contracts: [{ schema: OUTPUT_SCHEMA }],
+          inputs: [
+            { key: "main", type: "main", display_name: "Input", required: false, multiple: true },
+          ],
+          required_inputs: 1,
           properties: {
             mode: {
               type: :options,
@@ -120,8 +139,12 @@ module DiscourseWorkflows
         end
 
         def render_template(template, context)
-          Mustache.render(template, context)
-        rescue Mustache::Parser::SyntaxError => e
+          parsed = Liquid::Template.parse(template)
+          parsed.resource_limits.render_length_limit = RENDER_LENGTH_LIMIT
+          parsed.resource_limits.render_score_limit = RENDER_SCORE_LIMIT
+          parsed.resource_limits.assign_score_limit = ASSIGN_SCORE_LIMIT
+          parsed.render!(context)
+        rescue Liquid::Error => e
           raise_node_error!(
             I18n.t("discourse_workflows.errors.template.invalid_template"),
             description: e.message,
@@ -129,22 +152,23 @@ module DiscourseWorkflows
         end
 
         def base_template_context(exec_ctx)
+          workflow = workflow_context(exec_ctx)
+
           {
             "items" => input_items(exec_ctx),
+            "inputs" => exec_ctx.inputs.map { |group| template_items(group) },
             "items_count" => exec_ctx.input_items.length,
             "vars" => (exec_ctx.vars || {}).deep_stringify_keys,
-            "workflow" => workflow_context(exec_ctx),
-            "execution" => execution_context(exec_ctx),
+            "workflow" => workflow,
+            "execution" => execution_context(exec_ctx, workflow),
             "site_settings" => site_settings_context,
           }
         end
 
         def item_template_context(base_context, input_item, item_index)
-          input_item
-            .fetch("json") { {} }
-            .deep_stringify_keys
-            .merge(base_context)
-            .merge("item" => input_item.deep_stringify_keys, "item_index" => item_index + 1)
+          item = template_item(input_item, item_index)
+
+          item.merge(base_context).merge("item" => item, "item_index" => item_index + 1)
         end
 
         def site_settings_context
@@ -163,12 +187,18 @@ module DiscourseWorkflows
         end
 
         def input_items(exec_ctx)
-          exec_ctx.input_items.map.with_index do |input_item, item_index|
-            input_item
-              .fetch("json") { {} }
-              .deep_stringify_keys
-              .merge("item" => input_item.deep_stringify_keys, "item_index" => item_index + 1)
-          end
+          template_items(exec_ctx.input_items)
+        end
+
+        def template_items(items)
+          items.map.with_index { |input_item, item_index| template_item(input_item, item_index) }
+        end
+
+        def template_item(input_item, item_index)
+          input_item
+            .fetch("json") { {} }
+            .deep_stringify_keys
+            .merge("item" => input_item.deep_stringify_keys, "item_index" => item_index + 1)
         end
 
         def paired_items(exec_ctx)
@@ -179,8 +209,7 @@ module DiscourseWorkflows
           exec_ctx.get_workflow.to_h
         end
 
-        def execution_context(exec_ctx)
-          workflow = workflow_context(exec_ctx)
+        def execution_context(exec_ctx, workflow)
           {
             "id" => exec_ctx.execution_id,
             "workflow_id" => workflow["id"],

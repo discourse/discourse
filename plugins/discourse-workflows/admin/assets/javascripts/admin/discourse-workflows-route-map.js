@@ -9,6 +9,7 @@ export default {
           this.route("show", { path: "/:execution_id" });
         });
         this.route("settings");
+        this.route("versions");
       });
     });
     this.route("discourse-workflows-templates", { path: "templates" });

@@ -15,13 +15,18 @@ ru:
       title: RSS-опрос
     admin:
       rss_polling:
-        feed: Настройки ленты
-        discourse: Настройки Discourse
         author: Автор
         feed_url: URL-адрес
         discourse_category: Категория
         discourse_tags: Теги
-        feed_category_filter: Фильтр категорий
-        documentation: Документация по настройке RSS-опроса
-        destroy_feed:
-          confirm: "Действительно удалить эту ленту?"
+        feeds:
+          edit: Изменить
+          delete: Удалить
+          save: Сохранить
+          confirm_delete: "Действительно удалить эту ленту?"
+        test:
+          title: Предпросмотр
+          dismiss: Закрыть
+        status:
+          enabled: Включено
+          disabled: Отключен

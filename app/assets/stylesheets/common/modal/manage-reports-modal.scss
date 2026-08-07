@@ -20,9 +20,8 @@
   &__list {
     display: flex;
     flex-direction: column;
-    list-style: none;
-    margin: 0;
-    padding: 0;
+
+    @include unstyled-list;
   }
 
   &__row {
@@ -66,7 +65,7 @@
     }
 
     @include viewport.until(sm) {
-      padding-inline: var(--space-3) var(--space-6);
+      padding: var(--space-2) var(--space-3) var(--space-2) var(--space-6);
     }
   }
 
@@ -118,6 +117,7 @@
     margin: 0;
     color: var(--primary-medium);
     font-size: var(--font-down-1);
+    text-transform: capitalize;
   }
 
   &__arrow {
@@ -126,5 +126,24 @@
 
   .d-modal__footer {
     justify-content: flex-end;
+
+    @include viewport.until(sm) {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: var(--space-2);
+    }
+  }
+
+  &__footer-note {
+    margin: 0;
+    margin-right: auto;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  .de-cta__description {
+    @include viewport.until(sm) {
+      display: none;
+    }
   }
 }

@@ -39,7 +39,7 @@ module Migrations
           user_id = row[:discourse_user_id]
 
           if name.start_with?(User::USER_FIELD_PREFIX)
-            puts "    '#{name}': Name cannot start with #{User::USER_FIELD_PREFIX}"
+            notice("'#{name}': Name cannot start with #{User::USER_FIELD_PREFIX}")
             return nil
           end
 

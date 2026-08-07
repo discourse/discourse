@@ -68,11 +68,11 @@ export function getPropertySchema(nodeTypes, nodeType, typeVersion = null) {
   }
 
   const versionedDefinition = resolveNodeTypeVersion(definition, typeVersion);
-  if (versionedDefinition?.properties) {
-    return versionedDefinition.properties;
+  if (!versionedDefinition) {
+    return {};
   }
 
-  return definition.properties || {};
+  return versionedDefinition.properties || definition.properties || {};
 }
 
 export function normalizeSchema(schema = {}) {
@@ -94,6 +94,8 @@ function i18nBase(nodeDefinitionOrType) {
   return `${i18nPrefix(nodeDefinitionOrType)}.${i18nScope(nodeDefinitionOrType)}`;
 }
 
+const SHARED_FIELDS_BASE = "discourse_workflows.property_engine.fields";
+
 export function propertyLabel(nodeDefinitionOrType, fieldName) {
   const base = i18nBase(nodeDefinitionOrType);
   const labelKey = localeKeyPart(fieldName);
@@ -101,19 +103,37 @@ export function propertyLabel(nodeDefinitionOrType, fieldName) {
   return (
     translatedOrNull(`${base}.${labelKey}`) ||
     translatedOrNull(`${base}.${labelKey}.title`) ||
+    translatedOrNull(`${SHARED_FIELDS_BASE}.${labelKey}`) ||
     humanize(fieldName)
   );
 }
 
 export function propertyDescription(nodeDefinitionOrType, fieldName) {
-  return translatedOrNull(
-    `${i18nBase(nodeDefinitionOrType)}.${localeKeyPart(fieldName)}_description`
+  const labelKey = localeKeyPart(fieldName);
+
+  return (
+    translatedOrNull(
+      `${i18nBase(nodeDefinitionOrType)}.${labelKey}_description`
+    ) || translatedOrNull(`${SHARED_FIELDS_BASE}.${labelKey}_description`)
+  );
+}
+
+export function propertyTooltip(nodeDefinitionOrType, fieldName) {
+  const labelKey = localeKeyPart(fieldName);
+
+  return (
+    translatedOrNull(`${i18nBase(nodeDefinitionOrType)}.${labelKey}_tooltip`) ||
+    translatedOrNull(`${SHARED_FIELDS_BASE}.${labelKey}_tooltip`)
   );
 }
 
 export function propertyPlaceholder(nodeDefinitionOrType, fieldName) {
-  return translatedOrNull(
-    `${i18nBase(nodeDefinitionOrType)}.${localeKeyPart(fieldName)}_placeholder`
+  const labelKey = localeKeyPart(fieldName);
+
+  return (
+    translatedOrNull(
+      `${i18nBase(nodeDefinitionOrType)}.${labelKey}_placeholder`
+    ) || translatedOrNull(`${SHARED_FIELDS_BASE}.${labelKey}_placeholder`)
   );
 }
 
@@ -125,6 +145,8 @@ function dynamicValueKey(schema = {}, fieldName) {
   }
 
   switch (fieldControl(schema)) {
+    case "actor":
+      return "username";
     case "category":
       return "category_id";
     case "data_table_column_select":
@@ -132,11 +154,13 @@ function dynamicValueKey(schema = {}, fieldName) {
     case "data_table_select":
       return "data_table_id";
     case "group_select":
-      return "group_id";
+      return schema.control_options?.value_property === "name"
+        ? "group_names"
+        : "group_id";
     case "tags":
       return "tag_names";
     case "user":
-      return "username";
+      return ui.multiple ? "usernames" : "username";
     case "user_or_group":
       return "user_or_group_name";
     case "select":
@@ -204,6 +228,7 @@ export function propertySelectNoneKey(nodeDefinitionOrType, fieldName) {
   return translationKeyWithFallback([
     `${base}.select_${selectField}`,
     `${base}.${key}_placeholder`,
+    `${SHARED_FIELDS_BASE}.${key}_placeholder`,
   ]);
 }
 
@@ -292,6 +317,8 @@ export function propertyOptionLabel(nodeDefinitionOrType, fieldName, option) {
     translatedOrNull(`${base}.${key}_${valueKey}`) ||
     translatedOrNull(`${base}.${key}s.${valueKey}`) ||
     (option.label_key ? translatedOrNull(option.label_key) : null) ||
+    translatedOrNull(`${SHARED_FIELDS_BASE}.${key}_${valueKey}`) ||
+    translatedOrNull(`${SHARED_FIELDS_BASE}.${key}s.${valueKey}`) ||
     option.label ||
     option.name ||
     option.value
@@ -399,32 +426,60 @@ export function credentialSlotAnchorField(slot = {}) {
   return fields.size === 1 ? [...fields][0] : null;
 }
 
-export function fieldVisible(schema = {}, configuration = {}) {
+/**
+ * "visible" | "hidden" | "indeterminate". A rule anchored to an
+ * expression-valued parameter cannot be settled in the editor, so the target
+ * stays visible rather than vanishing along with its validations.
+ */
+export function fieldDisplayState(schema = {}, configuration = {}) {
   if (fieldUi(schema).hidden) {
-    return false;
+    return "hidden";
   }
 
   const display_options = schema.display_options;
-  if (
-    display_options?.show &&
-    !matchesRules(display_options.show, configuration)
-  ) {
-    return false;
+  let indeterminate = false;
+
+  if (display_options?.show) {
+    const outcome = rulesOutcome(display_options.show, configuration);
+    if (outcome === false) {
+      return "hidden";
+    }
+    indeterminate ||= outcome === "unknown";
   }
-  if (
-    display_options?.hide &&
-    matchesRules(display_options.hide, configuration)
-  ) {
-    return false;
+  if (display_options?.hide) {
+    const outcome = rulesOutcome(display_options.hide, configuration);
+    if (outcome === true) {
+      return "hidden";
+    }
+    indeterminate ||= outcome === "unknown";
   }
 
-  return true;
+  return indeterminate ? "indeterminate" : "visible";
 }
 
-function matchesRules(rules, configuration) {
-  return Object.entries(rules).every(([fieldName, expected]) =>
-    matchesRule(expected, configuration[fieldName])
-  );
+export function fieldVisible(schema = {}, configuration = {}) {
+  return fieldDisplayState(schema, configuration) !== "hidden";
+}
+
+export function fieldDefinitelyVisible(schema = {}, configuration = {}) {
+  return fieldDisplayState(schema, configuration) === "visible";
+}
+
+function rulesOutcome(rules, configuration) {
+  let unknown = false;
+
+  for (const [fieldName, expected] of Object.entries(rules)) {
+    const value = configuration?.[fieldName];
+    if (isExpression(value)) {
+      unknown = true;
+      continue;
+    }
+    if (!matchesRule(expected, value)) {
+      return false;
+    }
+  }
+
+  return unknown ? "unknown" : true;
 }
 
 function matchesRule(expected, value) {
@@ -436,8 +491,11 @@ function matchesRule(expected, value) {
 }
 
 function matchesCondition(condition, value) {
-  const operator = condition?._cnd;
+  const operator = condition?.condition;
   if (!operator) {
+    if (Array.isArray(value) && !Array.isArray(condition)) {
+      return value.includes(condition);
+    }
     return condition === value;
   }
 

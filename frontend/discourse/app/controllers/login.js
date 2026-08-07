@@ -6,7 +6,7 @@ import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import NotActivatedModal from "discourse/components/modal/not-activated";
 import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import { isReadOnlyError, popupAjaxError } from "discourse/lib/ajax-error";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import escape from "discourse/lib/escape";
 import getURL from "discourse/lib/get-url";
@@ -49,10 +49,19 @@ export default class LoginPageController extends Controller {
   @tracked secondFactorToken;
   @tracked flash;
   @tracked flashType;
+  @tracked showCodeLoginForm = false;
 
   @computed("siteSettings.enable_local_logins")
   get canLoginLocal() {
     return this.siteSettings.enable_local_logins;
+  }
+
+  get canUseCodeLogin() {
+    return (
+      this.siteSettings.enable_local_logins_via_code &&
+      this.siteSettings.enable_local_logins_via_email &&
+      this.siteSettings.enable_local_logins
+    );
   }
 
   @computed("siteSettings.enable_local_logins_via_email")
@@ -80,7 +89,8 @@ export default class LoginPageController extends Controller {
     if (
       this.hasAtLeastOneLoginButton &&
       !this.showSecondFactor &&
-      !this.showSecurityKey
+      !this.showSecurityKey &&
+      !this.showCodeLoginForm
     ) {
       classes.push("has-alt-auth");
     }
@@ -89,6 +99,9 @@ export default class LoginPageController extends Controller {
     }
     if (this.showSecondFactor || this.showSecurityKey) {
       classes.push("second-factor");
+    }
+    if (this.showCodeLoginForm) {
+      classes.push("code-login");
     }
     return classes.join(" ");
   }
@@ -157,6 +170,16 @@ export default class LoginPageController extends Controller {
     } catch (e) {
       popupAjaxError(e);
     }
+  }
+
+  @action
+  showCodeLogin() {
+    this.showCodeLoginForm = true;
+  }
+
+  @action
+  usePassword() {
+    this.showCodeLoginForm = false;
   }
 
   @action
@@ -295,11 +318,8 @@ export default class LoginPageController extends Controller {
       this.flashType = "error";
       if (e.jqXHR?.status === 429) {
         this.flash = i18n("login.rate_limit");
-      } else if (
-        e.jqXHR?.status === 503 &&
-        e.jqXHR?.responseJSON?.error_type === "read_only"
-      ) {
-        this.flash = i18n("read_only_mode.login_disabled");
+      } else if (isReadOnlyError(e)) {
+        this.flash = this.login.readOnlyLoginMessage;
       } else if (!areCookiesEnabled()) {
         this.flash = i18n("login.cookies_error");
       } else {

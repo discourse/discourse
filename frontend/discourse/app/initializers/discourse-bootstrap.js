@@ -80,7 +80,6 @@ export default {
 
     session.highlightJsPath = setupData.highlightJsPath;
     session.svgSpritePath = setupData.svgSpritePath;
-    session.mediaOptimizationBundle = setupData.mediaOptimizationBundle;
     session.userColorSchemeId = parseInt(setupData.userColorSchemeId, 10);
     session.userDarkSchemeId = parseInt(setupData.userDarkSchemeId, 10);
 

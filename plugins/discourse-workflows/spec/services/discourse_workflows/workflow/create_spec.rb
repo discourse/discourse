@@ -11,12 +11,13 @@ RSpec.describe DiscourseWorkflows::Workflow::Create do
 
     fab!(:user, :admin)
 
-    let(:params) { { name:, nodes:, connections:, static_data: } }
+    let(:params) { { name:, nodes:, connections:, static_data:, tags: } }
     let(:dependencies) { { guardian: user.guardian } }
     let(:name) { "My Workflow" }
     let(:nodes) { [] }
     let(:connections) { {} }
     let(:static_data) { {} }
+    let(:tags) { [] }
 
     context "when contract is invalid" do
       let(:name) { nil }
@@ -52,6 +53,35 @@ RSpec.describe DiscourseWorkflows::Workflow::Create do
       let(:static_data) { { "global" => "bad" } }
 
       it { is_expected.to fail_a_contract }
+    end
+
+    context "when there are too many tags" do
+      let(:tags) { (1..11).map { |index| "tag-#{index}" } }
+
+      it { is_expected.to fail_a_contract }
+    end
+
+    context "when a tag is too long" do
+      let(:tags) { ["a" * 101] }
+
+      it { is_expected.to fail_a_contract }
+    end
+
+    context "when a tag contains a comma" do
+      let(:tags) { ["ops,billing"] }
+
+      it { is_expected.to fail_a_contract }
+    end
+
+    context "when tags are provided" do
+      let(:tags) { ["Ops", " ops ", "Billing"] }
+
+      it { is_expected.to run_successfully }
+
+      it "assigns the normalized tags to the workflow" do
+        expect(result[:workflow].tags.map(&:name)).to eq(%w[billing ops])
+        expect(DiscourseWorkflows::WorkflowTag.count).to eq(2)
+      end
     end
 
     context "when two nodes share the same name" do

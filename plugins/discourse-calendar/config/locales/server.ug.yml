@@ -21,6 +21,8 @@ ug:
         month: "ئاي"
         year: "يىل"
   discourse_post_event:
+    event_excerpt:
+      date_format: "%Y-يىلى %-d-%B"
     errors:
       bulk_invite:
         error: "ھۆججەتنى يۈكلەۋاتقاندا خاتالىق كۆرۈلدى. سەل تۇرۇپ قايتا سىناڭ."

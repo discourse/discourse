@@ -42,17 +42,9 @@ module Migrations
           end
 
           def validate_tables
-            configured_table_names =
-              @schema.tables.each_value.filter_map(&:source_table_name).to_set
-            ignored_table_names = @scope.ignored_table_name_set
-
-            # Check for unconfigured tables in database
-            unconfigured = @db_table_names - configured_table_names - ignored_table_names
-            if unconfigured.any?
-              @errors << "Tables exist in database but are not configured or ignored: #{sort_and_join(unconfigured)}"
-            end
-
-            # Validate each configured table
+            # Unconfigured tables (present in the database but neither configured
+            # nor ignored) are reported as drift by the Differ — with
+            # `schema add`/`ignore` suggestions — not as a validity error here.
             @schema.tables.each_value { |table_def| validate_table(table_def) }
           end
 
@@ -81,7 +73,6 @@ module Migrations
             validate_column_options
             validate_added_columns
             validate_ignored_columns
-            validate_unconfigured_columns
             validate_primary_key_columns
             validate_index_columns
             validate_enum_references
@@ -167,20 +158,6 @@ module Migrations
               else
                 seen_names[name] = true
               end
-            end
-          end
-
-          def validate_unconfigured_columns
-            return if @table_def.source_table_name.nil?
-
-            configured_columns = @scope.effective_column_names(@table_def, @db_column_names)
-            ignored_columns = @table_def.ignored_column_names.to_set
-            unconfigured =
-              @db_column_names - configured_columns - ignored_columns -
-                @scope.globally_ignored_columns - auto_ignored_column_names
-
-            if unconfigured.any?
-              @errors << "Table '#{@table_def.name}': database columns are not configured or ignored: #{sort_and_join(unconfigured)}"
             end
           end
 

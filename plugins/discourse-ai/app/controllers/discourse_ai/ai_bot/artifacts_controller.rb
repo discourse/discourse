@@ -13,6 +13,8 @@ module DiscourseAi
         artifact = AiArtifact.find(params[:id])
 
         post = Post.find_by(id: artifact.post_id)
+        raise Discourse::NotFound if post.blank? || post.topic.blank?
+
         if artifact.public?
           # no guardian needed
         else

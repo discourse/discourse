@@ -138,7 +138,7 @@ RSpec.describe DiscourseWorkflows::Executor do
     expect(context_output(execution, "Set").first.dig("json", "linked_label")).to eq("second")
   end
 
-  it "does not resolve ambiguous previous-node .item after a merge" do
+  it "resolves previous-node .item through append merge lineage" do
     execution =
       run_workflow do |g|
         g.node "trigger-1", "trigger:manual"
@@ -184,13 +184,7 @@ RSpec.describe DiscourseWorkflows::Executor do
                  ],
                  "combinator" => "and",
                }
-        g.node "merge",
-               "flow:merge",
-               name: "Merge",
-               configuration: {
-                 "mode" => "combine",
-                 "combine_by" => "all",
-               }
+        g.node "merge", "flow:merge", name: "Merge"
         g.node "set",
                "action:set_fields",
                configuration: {
@@ -214,10 +208,12 @@ RSpec.describe DiscourseWorkflows::Executor do
         g.chain "merge", "set"
       end
 
-    expect(execution.status).to eq("error")
-    expect(execution.error).to include("Multiple matching items for expression")
-    expect(context_output(execution, "Merge").first["pairedItem"]).to eq(
-      [{ "input" => 0, "item" => 0 }, { "input" => 1, "item" => 0 }],
+    expect(execution.status).to eq("success")
+    expect(context_output(execution, "Set").map { |item| item.dig("json", "linked_label") }).to eq(
+      %w[first second],
+    )
+    expect(context_output(execution, "Merge").map { |item| item["pairedItem"] }).to eq(
+      [{ "item" => 0 }, { "input" => 1, "item" => 0 }],
     )
   end
 end

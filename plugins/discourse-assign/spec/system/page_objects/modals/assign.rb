@@ -13,8 +13,7 @@ module PageObjects
         assignee = assignee.is_a?(Group) ? assignee.name : assignee.username
         input = find(".control-group input")
         input.fill_in(with: assignee)
-        find("li[data-value='#{assignee}']")
-        input.send_keys(:down)
+        find("li[data-value='#{assignee}'].is-highlighted")
         input.send_keys(:enter)
       end
 

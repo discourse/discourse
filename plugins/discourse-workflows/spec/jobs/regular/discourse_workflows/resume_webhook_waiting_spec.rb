@@ -7,7 +7,7 @@ RSpec.describe Jobs::DiscourseWorkflows::ResumeWebhookWaiting do
   end
 
   it "leaves the execution waiting when the plugin is disabled" do
-    SiteSetting.discourse_workflows_enabled = false
+    SiteSetting.enable_discourse_workflows = false
     before_updated_at = execution.updated_at
 
     described_class.new.execute(execution_id: execution.id)

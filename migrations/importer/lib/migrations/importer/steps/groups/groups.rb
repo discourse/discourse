@@ -107,7 +107,7 @@ module Migrations
           has_owner = row[:has_owner] == 1
 
           if allow_membership_requests && !has_owner
-            puts "    #{row[:name]}: An owner is required to enable allow_membership_requests"
+            notice("#{row[:name]}: An owner is required to enable allow_membership_requests")
           end
 
           row[:allow_membership_requests] = allow_membership_requests && has_owner
@@ -149,7 +149,7 @@ module Migrations
               allowed_set: TRUST_LEVELS,
               default_value: nil,
             ) do |value, _default_value|
-              puts "    #{row[:name]}: Invalid grant_trust_level '#{value}'"
+              notice("#{row[:name]}: Invalid grant_trust_level '#{value}'")
             end
           end
 
@@ -163,13 +163,15 @@ module Migrations
                 domain.sub!(DOMAIN_PATH_REGEX, "")
 
                 unless domain =~ Group::VALID_DOMAIN_REGEX
-                  puts "    #{row[:name]}: Invalid automatic_membership_email_domain '#{domain}'"
+                  notice("#{row[:name]}: Invalid automatic_membership_email_domain '#{domain}'")
                   next
                 end
 
                 if domain.length > Group::MAX_EMAIL_DOMAIN_LENGTH
-                  puts "    #{row[:name]}: Invalid automatic_membership_email_domain. Domain '#{domain}' is too long " \
-                         "(Max: #{Group::MAX_EMAIL_DOMAIN_LENGTH})"
+                  notice(
+                    "#{row[:name]}: Invalid automatic_membership_email_domain. Domain '#{domain}' is too long " \
+                      "(Max: #{Group::MAX_EMAIL_DOMAIN_LENGTH})",
+                  )
                   next
                 end
 
@@ -177,7 +179,9 @@ module Migrations
               end
 
             if valid_domains.size > @max_domains
-              puts "    #{row[:name]}: Invalid automatic_membership_email_domain. Too many domains (Max: #{@max_domains})"
+              notice(
+                "#{row[:name]}: Invalid automatic_membership_email_domain. Too many domains (Max: #{@max_domains})",
+              )
 
               valid_domains = valid_domains.take(@max_domains)
             end

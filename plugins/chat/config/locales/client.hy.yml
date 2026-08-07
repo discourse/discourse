@@ -22,6 +22,8 @@ hy:
         yesterday: "Երեկվա"
       create: "Ստեղծել"
       cancel: "Չեղարկել"
+      pinned_bar:
+        title: "Ամրակցված"
       pinned: "Ամրակցված"
       channel_settings:
         edit: "Խմբագրել"
@@ -58,6 +60,8 @@ hy:
         filter_all: Բոլորը
         filter_open: Բացել
         filter_closed: Փակված
+        filter_joined_all: "Բոլոր"
+        filter_joined_joined: "Միացել է"
       chat_message_separator:
         today: Այսօրվա
         yesterday: Երեկվա
@@ -85,6 +89,7 @@ hy:
           one: "%{count} անդամ"
           other: "%{count} անդամ"
       create_channel:
+        description: "Նկարագրություն"
         type: "Տիպը"
         types:
           category: "Կատեգորիա"
@@ -171,6 +176,8 @@ hy:
             message:
               label: Նոր Հաղորդագրություն
     discourse_workflows:
+      chat_message_created:
+        channel_id: "Ալիք"
       send_chat_message:
         channel_id: "Ալիք"
         message: "Ուղարկել"

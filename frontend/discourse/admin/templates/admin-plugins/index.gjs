@@ -1,11 +1,10 @@
 import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
-import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import AdminPluginsList from "discourse/admin/components/admin-plugins-list";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
-import DNavItem from "discourse/ui-kit/d-nav-item";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
@@ -13,6 +12,7 @@ export default <template>
   <div class="admin-plugins-list-container">
 
     <DPageHeader
+      @hideTabs={{true}}
       @titleLabel={{i18n "admin.config.plugins.title"}}
       @descriptionLabel={{trustHTML
         (concat
@@ -30,31 +30,10 @@ export default <template>
           @label={{i18n "admin.plugins.title"}}
         />
       </:breadcrumbs>
-      <:tabs>
-        <DNavItem @route="adminPlugins.index" @label="admin.plugins.title" />
-        {{#each @controller.adminRoutes as |route|}}
-          {{#if route.use_new_show_route}}
-            <DNavItem
-              @route={{route.full_location}}
-              @label={{route.label}}
-              @routeParam={{route.location}}
-              @class="admin-plugin-tab-nav-item"
-              data-plugin-nav-tab-id={{route.plugin_id}}
-            />
-          {{else}}
-            <DNavItem
-              @route={{route.full_location}}
-              @label={{route.label}}
-              @class="admin-plugin-tab-nav-item"
-              data-plugin-nav-tab-id={{route.plugin_id}}
-            />
-          {{/if}}
-        {{/each}}
-      </:tabs>
     </DPageHeader>
 
     {{#if @controller.model.length}}
-      <AdminFilterControls
+      <DFilterControls
         @array={{@controller.model}}
         @searchableProps={{@controller.searchableProps}}
         @dropdownOptions={{@controller.dropdownOptions}}
@@ -64,7 +43,7 @@ export default <template>
         <:content as |filteredPlugins|>
           <AdminPluginsList @plugins={{filteredPlugins}} />
         </:content>
-      </AdminFilterControls>
+      </DFilterControls>
     {{else}}
       <p>{{i18n "admin.plugins.none_installed"}}</p>
     {{/if}}

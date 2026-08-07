@@ -27,6 +27,8 @@ ro:
         yesterday: "Ieri"
       create: "Creează"
       cancel: "Anulează"
+      pinned_bar:
+        title: "Fixat"
       pinned: "Fixat"
       move_to_channel:
         instructions:
@@ -60,11 +62,6 @@ ro:
         title: "Afișați indicatorul de activitate în antet"
         all_new: "Toate mesajele noi"
         never: "Niciodată"
-      send_shortcut:
-        enter:
-          label: "Trimite prin Enter"
-        meta_enter:
-          label: "Trimite prin %{meta_key} + Enter"
       flag: "Marchează cu marcaj de avertizare"
       join: "Alătură-te"
       last_visit: "ultima vizită"
@@ -97,6 +94,8 @@ ro:
         filter_all: Toate
         filter_open: Deschide
         filter_closed: Închis
+        filter_joined_all: "Toate"
+        filter_joined_joined: "Înscris"
       chat_message_separator:
         today: Astăzi
         yesterday: Ieri
@@ -134,7 +133,11 @@ ro:
           one: "%{count}/%{max} membru"
           few: "%{count}/%{max} membri"
           other: "%{count}/%{max} de membri"
+      channel:
+        preview_card:
+          log_in: "Autentificare"
       create_channel:
+        description: "Descriere"
         type: "Tip"
         types:
           category: "Categorie"
@@ -270,6 +273,8 @@ ro:
         text: Începe un mesaj direct nou
         title: Creează o discuție personală
     discourse_workflows:
+      chat_message_created:
+        channel_id: "Canal"
       send_chat_message:
         channel_id: "Canal"
         message: "Mesaj"

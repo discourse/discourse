@@ -51,8 +51,8 @@ module Categories
       Categories::TypeRegistry.get(params.category_type)
     end
 
-    def type_is_available(type_class:)
-      type_class.available?
+    def type_is_available(type_class:, guardian:)
+      type_class.available_for?(guardian)
     end
 
     def enable_plugin(type_class:)

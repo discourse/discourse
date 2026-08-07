@@ -71,7 +71,7 @@ async function initLightbox(elem, additionalData = {}) {
   const caps = helperContext().capabilities;
 
   const { default: PhotoSwipeLightbox } = await waitForPromise(
-    import("photoswipe/lightbox")
+    import(/* dynamicChunkName: "photoswipe-lightbox" */ "photoswipe/lightbox")
   );
   const isTestEnv = isTesting() || isRailsTesting();
   const canDownload =
@@ -106,7 +106,10 @@ async function initLightbox(elem, additionalData = {}) {
     escKey: false,
     tapAction,
     paddingFn,
-    pswpModule: async () => await waitForPromise(import("photoswipe")),
+    pswpModule: async () =>
+      await waitForPromise(
+        import(/* dynamicChunkName: "photoswipe" */ "photoswipe")
+      ),
     appendToEl: isTesting() && document.getElementById("ember-testing"),
   });
 
@@ -149,23 +152,33 @@ async function initLightbox(elem, additionalData = {}) {
       html: "",
       onInit: (caption, pswp) => {
         pswp.on("change", () => {
-          const { element, title, inlineSVG } = pswp.currSlide.data;
+          const { aiDescription, element, title, inlineSVG } =
+            pswp.currSlide.data;
 
-          if (!element || !title || inlineSVG) {
+          if (!element || inlineSVG) {
+            caption.innerHTML = "";
             return;
           }
 
-          const captionTitle = escapeExpression(title);
+          const captionTitle = title ? escapeExpression(title) : null;
+          const captionAiDescription = aiDescription
+            ? escapeExpression(aiDescription)
+            : null;
           const captionDetails =
             element.querySelector(".informations")?.textContent;
           const titleEl = captionTitle
             ? `<div class='pswp__caption-title'>${captionTitle}</div>`
             : null;
+          const aiDescriptionEl = captionAiDescription
+            ? `<div class='pswp__caption-ai-description'>${captionAiDescription}</div>`
+            : null;
           const detailsEl = captionDetails
             ? `<div class='pswp__caption-details'>${captionDetails}</div>`
             : null;
 
-          caption.innerHTML = [titleEl, detailsEl].filter(Boolean).join("");
+          caption.innerHTML = [titleEl, aiDescriptionEl, detailsEl]
+            .filter(Boolean)
+            .join("");
         });
       },
     });
@@ -327,12 +340,14 @@ async function initLightbox(elem, additionalData = {}) {
     // this ensures that cropped images (eg: grid) do not cause jittering when closing
     data.thumbCropped = true;
 
-    data.src = data.src || el.getAttribute("data-large-src");
+    data.src ||= el.getAttribute("data-large-src");
+    data.msrc ||= imgEl?.currentSrc || imgEl?.src;
     data.origSrc =
       imgEl?.getAttribute("data-orig-src") ||
       el.getAttribute("data-orig-src") ||
       null;
     data.title = el.title || imgEl?.alt || imgEl?.title || null;
+    data.aiDescription = imgEl?.getAttribute("aria-description") || null;
     data.base62SHA1 =
       imgEl?.getAttribute("data-base62-sha1") ||
       el.getAttribute("data-base62-sha1") ||

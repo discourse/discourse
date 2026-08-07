@@ -12,7 +12,7 @@ const track = ClickTrack.trackClick;
 
 function generateClickEventOn(selector) {
   const event = new MouseEvent("click");
-  sinon.stub(event, "currentTarget").get(() => fixture(selector));
+  sinon.stub(event, "target").get(() => fixture(selector));
   return event;
 }
 
@@ -97,6 +97,26 @@ module("Unit | Utility | click-track", function (hooks) {
 
   test("does not track elements with no href", async function (assert) {
     assert.true(track(generateClickEventOn(".a-without-href")));
+  });
+
+  test("resolves the link when the click lands on a nested element", async function (assert) {
+    sinon.stub(DiscourseURL, "origin").get(() => "http://discuss.domain.com");
+
+    const done = assert.async();
+    pretender.post("/clicks/track", (request) => {
+      assert.strictEqual(
+        request.requestBody,
+        "url=http%3A%2F%2Fwww.google.de&post_id=42&topic_id=1337"
+      );
+      done();
+      return [200, {}, ""];
+    });
+
+    // Target the badge <span> inside the "#with-badge" anchor: trackClick must
+    // still walk up to the enclosing <a> via closest().
+    const event = new MouseEvent("click");
+    sinon.stub(event, "target").get(() => fixture("#with-badge span.badge"));
+    assert.false(track(event));
   });
 
   test("does not track attachments", async function (assert) {

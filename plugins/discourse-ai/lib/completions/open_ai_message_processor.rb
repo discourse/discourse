@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module DiscourseAi::Completions
   class OpenAiMessageProcessor
-    attr_reader :prompt_tokens, :completion_tokens, :cache_read_tokens
+    attr_reader :prompt_tokens, :completion_tokens, :cache_read_tokens, :cache_write_tokens
 
     def initialize(partial_tool_calls: false)
       @tool = nil
@@ -9,6 +9,7 @@ module DiscourseAi::Completions
       @prompt_tokens = nil
       @completion_tokens = nil
       @cache_read_tokens = nil
+      @cache_write_tokens = nil
       @partial_tool_calls = partial_tool_calls
     end
 
@@ -24,7 +25,7 @@ module DiscourseAi::Completions
           id = tool_call.dig(:id)
           name = tool_call.dig(:function, :name)
           arguments = tool_call.dig(:function, :arguments)
-          parameters = arguments.present? ? JSON.parse(arguments, symbolize_names: true) : {}
+          parameters = ToolArgumentsParser.parse(arguments)
           result << ToolCall.new(id: id, name: name, parameters: parameters)
         end
       end
@@ -67,7 +68,7 @@ module DiscourseAi::Completions
         @streaming_parser << arguments.to_s if @streaming_parser && !arguments.to_s.empty?
         rval = current_tool_progress if !rval
       elsif finished_tools && @tool
-        parsed_args = JSON.parse(@tool_arguments, symbolize_names: true)
+        parsed_args = ToolArgumentsParser.parse(@tool_arguments)
         @tool.parameters = parsed_args
         @tool.partial = false
         rval = @tool
@@ -115,7 +116,7 @@ module DiscourseAi::Completions
 
     def process_arguments
       if @tool_arguments.present?
-        parsed_args = JSON.parse(@tool_arguments, symbolize_names: true)
+        parsed_args = ToolArgumentsParser.parse(@tool_arguments)
         @tool.parameters = parsed_args
         @tool_arguments = nil
       end
@@ -125,14 +126,17 @@ module DiscourseAi::Completions
       usage = json.dig(:usage)
       return if !usage
 
-      cached_tokens = usage.dig(:prompt_tokens_details, :cached_tokens).to_i
+      token_details = usage[:prompt_tokens_details] || {}
+      cached_tokens = (token_details[:cached_tokens] || usage[:prompt_cache_hit_tokens]).to_i
+      cache_write_tokens = token_details[:cache_write_tokens].to_i
 
       prompt_tokens = usage[:prompt_tokens].to_i
       completion_tokens = usage[:completion_tokens].to_i
 
-      @prompt_tokens = prompt_tokens - cached_tokens
+      @prompt_tokens = prompt_tokens - cached_tokens - cache_write_tokens
       @completion_tokens = completion_tokens if completion_tokens.positive?
       @cache_read_tokens = cached_tokens
+      @cache_write_tokens = cache_write_tokens
     end
   end
 end

@@ -203,6 +203,7 @@ es:
     discourse_workflows:
       nodes:
         "action:assign_topic": "Asignar tema"
+        "trigger:assigned": "Asignada"
       assign_topic:
         operations:
           assign: "Asignar"

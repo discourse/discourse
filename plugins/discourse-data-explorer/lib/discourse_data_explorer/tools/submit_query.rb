@@ -26,7 +26,8 @@ module DiscourseDataExplorer
             },
             {
               name: "sql",
-              description: "the verified SQL query, without a trailing semicolon",
+              description:
+                "the exact SQL from the final successful run_sql call, including -- [params] comments, without a trailing semicolon",
               type: "string",
               required: true,
             },

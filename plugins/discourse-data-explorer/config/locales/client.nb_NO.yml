@@ -36,6 +36,9 @@ nb_NO:
           no: "Nei"
           null_: "Null"
       delete: "Slett"
+      chart:
+        form:
+          bar: "Bar"
       others_dirty: "En spørring har ulagrede endringer, og vil gå tapt hvis du navigerer vekk."
       result_count:
         one: "%{count} resultat."

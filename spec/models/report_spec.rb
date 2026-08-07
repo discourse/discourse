@@ -156,26 +156,6 @@ RSpec.describe Report do
     include_examples "no data"
 
     context "with visits" do
-      let(:user) { Fabricate(:user) }
-
-      it "returns a report with data" do
-        freeze_time_safe
-        user.user_visits.create(visited_at: 1.hour.from_now)
-        user.user_visits.create(visited_at: 1.day.ago)
-        user.user_visits.create(visited_at: 2.days.ago, mobile: true)
-        user.user_visits.create(visited_at: 45.days.ago)
-        user.user_visits.create(visited_at: 46.days.ago, mobile: true)
-
-        expect(report.data).to be_present
-        expect(report.data.count).to eq(3)
-        expect(report.data.select { |v| v[:x].today? }).to be_present
-        expect(report.prev30Days).to eq(2)
-      end
-    end
-
-    context "when reporting_improvements is enabled" do
-      before { SiteSetting.reporting_improvements = true }
-
       fab!(:user)
       fab!(:user_2, :user)
 
@@ -590,6 +570,25 @@ RSpec.describe Report do
     end
   end
 
+  describe "signups report" do
+    it "returns the current data and previous period count" do
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 1, 12))
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 2, 12))
+      Fabricate(:user, created_at: Time.zone.local(2026, 3, 31, 12))
+
+      report =
+        Report.find(
+          "signups",
+          start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
+          end_date: Time.zone.local(2026, 4, 2).end_of_day,
+          facets: [:prev_period],
+        )
+
+      expect(report.data.sum { |point| point[:y] }).to eq(2)
+      expect(report.prev_period).to eq(1)
+    end
+  end
+
   describe "new contributors report" do
     let(:report) { Report.find("new_contributors") }
 
@@ -613,6 +612,35 @@ RSpec.describe Report do
         expect(report.data[0][:y]).to eq 2
         expect(report.data[1][:y]).to eq 1
       end
+    end
+
+    it "returns the current data and previous period count" do
+      current_contributor = Fabricate(:user)
+      current_contributor.user_stat.update!(
+        new_since: Time.zone.local(2026, 4, 1, 12),
+        first_post_created_at: Time.zone.local(2026, 4, 1, 12),
+      )
+      another_current_contributor = Fabricate(:user)
+      another_current_contributor.user_stat.update!(
+        new_since: Time.zone.local(2026, 4, 2, 12),
+        first_post_created_at: Time.zone.local(2026, 4, 2, 12),
+      )
+      previous_contributor = Fabricate(:user)
+      previous_contributor.user_stat.update!(
+        new_since: Time.zone.local(2026, 3, 31, 12),
+        first_post_created_at: Time.zone.local(2026, 3, 31, 12),
+      )
+
+      report =
+        Report.find(
+          "new_contributors",
+          start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
+          end_date: Time.zone.local(2026, 4, 2).end_of_day,
+          facets: [:prev_period],
+        )
+
+      expect(report.data.sum { |point| point[:y] }).to eq(2)
+      expect(report.prev_period).to eq(1)
     end
   end
 
@@ -675,39 +703,6 @@ RSpec.describe Report do
     end
   end
 
-  describe "DAU/MAU report" do
-    let(:report) { Report.find("dau_by_mau") }
-
-    include_examples "no data"
-
-    context "with different users/visits" do
-      before do
-        freeze_time_safe
-
-        arpit = Fabricate(:user)
-        arpit.user_visits.create(visited_at: 1.day.ago)
-
-        sam = Fabricate(:user)
-        sam.user_visits.create(visited_at: 2.days.ago)
-
-        robin = Fabricate(:user)
-        robin.user_visits.create(visited_at: 2.days.ago)
-
-        michael = Fabricate(:user)
-        michael.user_visits.create(visited_at: 35.days.ago)
-
-        gerhard = Fabricate(:user)
-        gerhard.user_visits.create(visited_at: 45.days.ago)
-      end
-
-      it "returns a report with data" do
-        expect(report.data.first[:y]).to eq(100)
-        expect(report.data.last[:y]).to eq(33.34)
-        expect(report.prev30Days).to eq(75)
-      end
-    end
-  end
-
   describe "Daily engaged users" do
     let(:report) { Report.find("daily_engaged_users") }
 
@@ -734,25 +729,24 @@ RSpec.describe Report do
       end
     end
 
-    it "averages the previous period over the days that had engagement" do
-      freeze_time(Time.zone.local(2026, 4, 28, 12, 0, 0))
+    it "returns the current data and previous period average" do
+      current_user = Fabricate(:user)
+      previous_users = [Fabricate(:user), Fabricate(:user)]
 
-      two_on_first_day = [Fabricate(:user), Fabricate(:user)]
-      one_on_second_day = Fabricate(:user)
-      two_on_first_day.each do |engaged_user|
+      Fabricate(
+        :user_action,
+        user: current_user,
+        action_type: UserAction::LIKE,
+        created_at: Time.zone.local(2026, 4, 23, 12),
+      )
+      previous_users.each do |previous_user|
         Fabricate(
           :user_action,
-          user: engaged_user,
+          user: previous_user,
           action_type: UserAction::LIKE,
           created_at: Time.zone.local(2026, 4, 16, 12),
         )
       end
-      Fabricate(
-        :user_action,
-        user: one_on_second_day,
-        action_type: UserAction::LIKE,
-        created_at: Time.zone.local(2026, 4, 17, 12),
-      )
 
       report =
         Report.find(
@@ -762,7 +756,36 @@ RSpec.describe Report do
           facets: [:prev_period],
         )
 
-      expect(report.prev_period).to eq(1.5)
+      expect(report.data).to eq([{ x: Date.new(2026, 4, 23), y: 1 }])
+      expect(report.prev_period).to eq(2.0)
+    end
+  end
+
+  describe "signups" do
+    it "uses previous daily counts for the previous period" do
+      freeze_time(Time.zone.local(2026, 4, 28, 12, 0, 0))
+      Report.clear_cache
+
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 17, 12, 0, 0))
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 23, 12, 0, 0))
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 23, 13, 0, 0))
+
+      report =
+        Report.find(
+          "signups",
+          start_date: Time.zone.local(2026, 4, 22).beginning_of_day,
+          end_date: Time.zone.local(2026, 4, 28).end_of_day,
+          facets: %i[prev_period total prev30Days],
+        )
+
+      data = report.data.map { |data_point| [data_point[:x].to_date, data_point[:y]] }
+
+      aggregate_failures do
+        expect(data).to contain_exactly([Date.new(2026, 4, 23), 2])
+        expect(report.prev_period).to eq(1)
+        expect(report.total).to eq(3)
+        expect(report.prev30Days).to eq(1)
+      end
     end
   end
 
@@ -1703,6 +1726,63 @@ RSpec.describe Report do
 
         expect(reports.data.map { |r| r[:req] }).not_to include("page_view_embed")
       end
+
+      context "for likely crawlers" do
+        before { SiteSetting.improved_crawler_detection = true }
+
+        it "reclassifies likely crawlers out of the logged in and anonymous series" do
+          10.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+          20.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+          CachedCounting.flush
+
+          Fabricate(
+            :browser_pageview_crawler_daily_rollup,
+            date: Time.zone.today,
+            logged_in: true,
+            count: 4,
+          )
+          Fabricate(
+            :browser_pageview_crawler_daily_rollup,
+            date: Time.zone.today,
+            logged_in: false,
+            count: 6,
+          )
+
+          series = reports.data.index_by { |r| r[:req] }
+
+          expect(series.keys).to eq(
+            %w[
+              page_view_logged_in_browser
+              page_view_anon_browser
+              page_view_likely_crawler
+              page_view_crawler
+              page_view_other
+            ],
+          )
+          expect(series["page_view_logged_in_browser"][:data][0][:y]).to eq(6)
+          expect(series["page_view_anon_browser"][:data][0][:y]).to eq(14)
+          expect(series["page_view_likely_crawler"][:data][0][:y]).to eq(10)
+        end
+
+        it "leaves the series out and keeps counts intact when the change is disabled" do
+          SiteSetting.improved_crawler_detection = false
+
+          10.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+          CachedCounting.flush
+
+          Fabricate(
+            :browser_pageview_crawler_daily_rollup,
+            date: Time.zone.today,
+            logged_in: false,
+            count: 6,
+          )
+
+          series = reports.data.index_by { |r| r[:req] }
+
+          expect(series.keys).not_to include("page_view_likely_crawler")
+          expect(series["page_view_anon_browser"][:data][0][:y]).to eq(10)
+        end
+      end
     end
   end
 
@@ -1885,11 +1965,11 @@ RSpec.describe Report do
       Report.cache(exception_report)
     end
 
-    it "caches valid reports for 35 minutes" do
+    it "caches valid reports for 60 minutes" do
       Discourse
         .cache
         .expects(:write)
-        .with(Report.cache_key(valid_report), valid_report.as_json, expires_in: 35.minutes)
+        .with(Report.cache_key(valid_report), valid_report.as_json, expires_in: 60.minutes)
       Report.cache(valid_report)
     end
   end

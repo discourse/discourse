@@ -13,7 +13,7 @@ export default class DCountI18n extends Component {
       key += this.args.suffix;
     }
 
-    if (this.currentUser?.new_new_view_enabled && key === "topic_count_new") {
+    if (this.currentUser?.unified_new_enabled && key === "topic_count_new") {
       key = "topic_count_latest";
     }
 

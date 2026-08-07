@@ -22,8 +22,6 @@ fi:
       create:
         form:
           insert: Lisää
-          advanced_mode: Lisäasetukset
-          simple_mode: Piilota lisäasetukset
           format_description: "Muotoilu, jota käytetään päivämäärän näyttämiseen käyttäjälle. Aseta Z näyttääksesi siirtymän ja zz aikavyöhykkeen nimen."
           timezones_title: Näytettävät aikavyöhykkeet
           timezones_description: Aikavyöhykkeitä käytetään näytettäessä päivämääriä esikatselussa sekä varana virhetilanteissa.

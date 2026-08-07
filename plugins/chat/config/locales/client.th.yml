@@ -21,6 +21,8 @@ th:
         yesterday: "เมื่อวาน"
       create: "สร้าง"
       cancel: "ยกเลิก"
+      pinned_bar:
+        title: "ปักหมุดแล้ว"
       pinned: "ปักหมุดแล้ว"
       channel_settings:
         edit: "แก้ไข"
@@ -56,6 +58,8 @@ th:
         filter_all: ทั้งหมด
         filter_open: เปิด
         filter_closed: ปิด
+        filter_joined_all: "ทั้งหมด"
+        filter_joined_joined: "สมัครสมาชิกเมื่อ"
       chat_message_separator:
         today: วันนี้
         yesterday: เมื่อวาน
@@ -76,6 +80,7 @@ th:
         title: สร้างข้อความใหม่
         prefix: "ถึง:"
       create_channel:
+        description: "รายละเอียด"
         type: "ชนิด"
         types:
           category: "หมวดหมู่"
@@ -166,6 +171,8 @@ th:
       node_descriptions:
         "action:send_chat_message": "ส่งข้อความไปยังช่องแชท"
         "action:chat_approval": "ส่งคำขอการอนุมัติไปยังช่องแชทและรอการตอบกลับ"
+      chat_message_created:
+        channel_id: "ช่องทาง"
       send_chat_message:
         channel_id: "ช่องทาง"
         message: "ข้อความ"

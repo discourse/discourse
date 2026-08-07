@@ -404,8 +404,6 @@ zh_CN:
         confirm_payment: 确认付款
         success: 返回
       admin:
-        unconfigured: 'Stripe 配置不正确。有关信息，请参阅 Discourse Meta。'
-        on_meta: Meta 上的 Discourse Subscriptions
         dashboard:
           title: 信息中心
           table:

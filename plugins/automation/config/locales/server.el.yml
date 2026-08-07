@@ -68,6 +68,8 @@ el:
       user_global_notice:
         title: Καθολική σημείωση χρήστη
         description: Επιτρέπει την εμφάνιση μιας καθολικής σημείωσης για έναν χρήστη
+      user_global_notice_with_first_accepted_solution:
+        doc: Όταν ενεργοποιηθεί μέσω της πρώτης αποδεκτής λύσης, ο συντάκτης της λύσης θα λάβει την καθολική ειδοποίηση.
       close_topic:
         title: Κλείσιμο Θέματος
       append_last_checked_by:

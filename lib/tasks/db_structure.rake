@@ -21,7 +21,7 @@ module DbStructure
   def self.with_temp_db
     require "temporary_db"
 
-    db = TemporaryDb.new(versions: PG_DUMP_VERSIONS)
+    db = TemporaryDb.new(versions: PG_DUMP_VERSIONS, port: ENV["TEMPORARY_DB_PORT"]&.to_i)
     db.start
     begin
       db.with_env { yield }

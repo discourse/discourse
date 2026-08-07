@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
+require_relative "../mixins/github_api"
+
 module Onebox
   module Engine
     class GithubGistOnebox
       include Engine
       include LayoutSupport
       include JSON
+      include Onebox::Mixins::GithubApi
 
       MAX_FILES = 3
 

@@ -60,7 +60,7 @@ export async function startTests() {
 
   let availableModules;
   if (testingCore) {
-    const rawModules = import.meta.glob("./**/*-test.{gjs,js}", {
+    const rawModules = import.meta.glob("./**/*-test.{gjs,js,ts,gts}", {
       eager: true,
     });
     availableModules = {};

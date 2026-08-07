@@ -3,12 +3,14 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { themePrefix } from "virtual:theme";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import BulkSelectCheckbox from "discourse/components/topic-list/bulk-select-checkbox";
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
 import TopicLink from "discourse/components/topic-list/topic-link";
 import UnreadIndicator from "discourse/components/topic-list/unread-indicator";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
+import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { shortDateNoYear } from "discourse/lib/formatter";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
@@ -204,6 +206,10 @@ export default class HighContextTopicCard extends Component {
           {{~#if @topic.featured_link~}}
             &nbsp;{{topicFeaturedLink @topic}}
           {{~/if~}}
+          <PluginOutlet
+            @name="topic-list-after-title"
+            @outletArgs={{lazyHash topic=@topic}}
+          />
           <UnreadIndicator @topic={{@topic}} />
           <TopicPostBadges
             @unreadPosts={{@topic.unread_posts}}

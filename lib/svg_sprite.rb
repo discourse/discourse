@@ -22,6 +22,7 @@ module SvgSprite
         arrow-rotate-left
         arrow-rotate-right
         arrow-up
+        arrow-up-from-bracket
         arrows-rotate
         asterisk
         at
@@ -145,6 +146,7 @@ module SvgSprite
         far-chart-bar
         far-circle
         far-circle-dot
+        far-circle-question
         far-clipboard
         far-clock
         far-comment
@@ -172,6 +174,7 @@ module SvgSprite
         file
         file-lines
         filter
+        filter-circle-xmark
         flag
         flask
         folder
@@ -182,6 +185,7 @@ module SvgSprite
         forward-step
         gavel
         gear
+        gif
         gift
         globe
         grip-lines
@@ -286,6 +290,7 @@ module SvgSprite
         user-shield
         user-xmark
         users
+        video
         wand-magic
         wrench
         xmark

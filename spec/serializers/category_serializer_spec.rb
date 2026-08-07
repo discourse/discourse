@@ -153,7 +153,7 @@ RSpec.describe CategorySerializer do
       expect(json[:description]).to eq("Original Description")
     end
 
-    it "returns translated attributes for SiteCategorySerializer when enabled" do
+    it "returns only the first paragraph of the translated description for SiteCategorySerializer when enabled" do
       SiteSetting.content_localization_enabled = true
       user.update!(locale: "ja")
       I18n.with_locale("ja") do
@@ -164,9 +164,50 @@ RSpec.describe CategorySerializer do
             root: false,
           ).as_json
         expect(json[:name]).to eq("日本語名")
-        expect(json[:description]).to eq("<p>最初の段落</p><p>二番目の段落</p>")
-        expect(json[:description_text]).to eq("&lt;p&gt;最初の段落&lt;/p&gt;&lt;p&gt;二番目の段落&lt;/p&gt;")
-        expect(json[:description_excerpt]).to eq("最初の段落 二番目の段落")
+        expect(json[:description]).to eq("最初の段落")
+        expect(json[:description_text]).to eq("最初の段落")
+        expect(json[:description_excerpt]).to eq("最初の段落")
+      end
+    end
+
+    it "keeps only the first paragraph of a plain text translated description" do
+      SiteSetting.content_localization_enabled = true
+      category_with_localization
+        .category_localizations
+        .find_by(locale: "ja")
+        .update!(description: "最初の段落\n\n二番目の段落")
+      user.update!(locale: "ja")
+      I18n.with_locale("ja") do
+        json =
+          SiteCategorySerializer.new(
+            category_with_localization,
+            scope: Guardian.new(user),
+            root: false,
+          ).as_json
+        expect(json[:description]).to eq("最初の段落")
+        expect(json[:description_text]).to eq("最初の段落")
+        expect(json[:description_excerpt]).to eq("最初の段落")
+      end
+    end
+
+    it "falls back to the untranslated description when the translated description has no paragraph" do
+      SiteSetting.content_localization_enabled = true
+      category_with_localization
+        .category_localizations
+        .find_by(locale: "ja")
+        .update!(description: "- 一つ\n- 二つ")
+      user.update!(locale: "ja")
+      I18n.with_locale("ja") do
+        json =
+          SiteCategorySerializer.new(
+            category_with_localization,
+            scope: Guardian.new(user),
+            root: false,
+          ).as_json
+        expect(json[:name]).to eq("日本語名")
+        expect(json[:description]).to eq("Original Description")
+        expect(json[:description_text]).to eq(category_with_localization.description_text)
+        expect(json[:description_excerpt]).to eq(category_with_localization.description_excerpt)
       end
     end
 
@@ -314,6 +355,116 @@ RSpec.describe CategorySerializer do
       expect(json[:available_category_types]).to eq(
         [Categories::TypeRegistry.all[:discussion].metadata],
       )
+    end
+  end
+
+  describe "#allowed_tags" do
+    subject(:json) { described_class.new(category, scope: scope, root: false).as_json }
+
+    fab!(:attached_tag) { Fabricate(:tag, name: "category-allowed-tag") }
+
+    before { category.tags << attached_tag }
+
+    context "for a non-editor" do
+      let(:scope) { user.guardian }
+
+      it "is not included" do
+        expect(json).not_to have_key(:allowed_tags)
+      end
+    end
+
+    context "for an editor" do
+      let(:scope) { admin.guardian }
+
+      it "is included with all tag entries" do
+        expect(json[:allowed_tags]).to contain_exactly(
+          { id: attached_tag.id, name: attached_tag.name, slug: attached_tag.slug },
+        )
+      end
+    end
+
+    context "when tagging is disabled" do
+      let(:scope) { admin.guardian }
+
+      before { SiteSetting.tagging_enabled = false }
+
+      it "is not included" do
+        expect(json).not_to have_key(:allowed_tags)
+      end
+    end
+  end
+
+  describe "#allowed_tag_groups" do
+    subject(:json) { described_class.new(category, scope: scope, root: false).as_json }
+
+    fab!(:attached_tag_group) { Fabricate(:tag_group, name: "category-allowed-group") }
+
+    before { category.tag_groups << attached_tag_group }
+
+    context "for a non-editor" do
+      let(:scope) { user.guardian }
+
+      it "is not included" do
+        expect(json).not_to have_key(:allowed_tag_groups)
+      end
+    end
+
+    context "for an editor" do
+      let(:scope) { admin.guardian }
+
+      it "is included with all tag-group names" do
+        expect(json[:allowed_tag_groups]).to contain_exactly(attached_tag_group.name)
+      end
+    end
+
+    context "when tagging is disabled" do
+      let(:scope) { admin.guardian }
+
+      before { SiteSetting.tagging_enabled = false }
+
+      it "is not included" do
+        expect(json).not_to have_key(:allowed_tag_groups)
+      end
+    end
+  end
+
+  describe "#required_tag_groups" do
+    subject(:json) { described_class.new(category, scope: scope, root: false).as_json }
+
+    fab!(:required_tag_group) { Fabricate(:tag_group, name: "category-required-group") }
+
+    fab!(:category_required_tag_group) do
+      CategoryRequiredTagGroup.create!(
+        category: category,
+        tag_group: required_tag_group,
+        min_count: 2,
+      )
+    end
+
+    context "for a non-editor" do
+      let(:scope) { user.guardian }
+
+      it "omits the tag-group name from each entry" do
+        expect(json[:required_tag_groups]).to eq([{ min_count: 2 }])
+      end
+    end
+
+    context "for an editor" do
+      let(:scope) { admin.guardian }
+
+      it "includes the tag-group name in each entry" do
+        expect(json[:required_tag_groups]).to eq([{ name: required_tag_group.name, min_count: 2 }])
+      end
+    end
+
+    context "when tagging is disabled" do
+      let(:scope) { admin.guardian }
+
+      before { SiteSetting.tagging_enabled = false }
+
+      it "is not included" do
+        expect(json).not_to have_key(:required_tag_groups)
+      end
     end
   end
 

@@ -183,6 +183,7 @@ module PostGuardian
     return false if !trusted_with_post_edits?
 
     if is_my_own?(post)
+      return false if !is_staff? && !Topic.visible_post_types(@user).include?(post.post_type)
       return false if @user.silenced?
 
       return can_edit_hidden_post?(post) if post.hidden?
@@ -310,7 +311,7 @@ module PostGuardian
     return false if post.blank?
     return true if is_admin?
     return false unless can_see_post_topic?(post)
-    return false unless is_my_own?(post) || Topic.visible_post_types(@user).include?(post.post_type)
+    return false if Topic.visible_post_types(@user).exclude?(post.post_type)
     return true if is_moderator? || is_category_group_moderator?(post.topic.category)
     if (!post.trashed? || can_see_deleted_post?(post)) &&
          (!post.hidden? || can_see_hidden_post?(post))
@@ -342,20 +343,19 @@ module PostGuardian
   end
 
   def can_see_all_hidden_posts?(category = nil)
-    hidden_post_visible_groups = SiteSetting.hidden_post_visible_groups_map
+    # TODO (martin) Remove this when granular_anonymous_and_logged_in_groups_permissions is
+    # permanent, as the check is covered inside guardian.in_any_groups? for anon
+    return false if anonymous? && !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
 
-    return true if hidden_post_visible_groups.include?(Group::AUTO_GROUPS[:everyone])
-    return false if anonymous?
-    return true if is_staff?
-    return true if is_category_group_moderator?(category)
-
-    @user.in_any_groups?(hidden_post_visible_groups)
+    in_any_groups?(SiteSetting.hidden_post_visible_groups_map) ||
+      is_category_group_moderator?(category)
   end
 
   def can_see_hidden_post?(post)
     return true if can_see_all_hidden_posts?
-    return false if anonymous?
-
+    # TODO (martin) Remove this when granular_anonymous_and_logged_in_groups_permissions is
+    # permanent, as the check is covered inside guardian.in_any_groups? for anon
+    return false if anonymous? && !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
     is_my_own?(post)
   end
 
@@ -369,7 +369,7 @@ module PostGuardian
     return false if !authenticated?
     return false if !can_see_post?(post)
 
-    is_staff? || is_my_own?(post)
+    is_staff? || is_my_own?(post) || is_category_group_moderator?(post.topic.category)
   end
 
   def can_change_post_owner?

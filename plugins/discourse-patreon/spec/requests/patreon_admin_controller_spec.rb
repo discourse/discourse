@@ -25,6 +25,15 @@ describe Patreon::PatreonAdminController do
       expect(result["rewards"].count).to eq(2)
     end
 
+    it "reports that it is unconfigured when the creator tokens are missing" do
+      SiteSetting.patreon_creator_access_token = ""
+
+      get "/patreon/list.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq("unconfigured" => true)
+    end
+
     it "should display list of rewards" do
       get "/patreon/rewards.json"
 

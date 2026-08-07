@@ -26,16 +26,28 @@ module DiscourseAi
 
         bot = DiscourseAi::Agents::Bot.as(translation_user, agent:, model:)
 
-        ContentSplitter
-          .split(content: @text, chunk_size: model.max_output_tokens)
-          .map { |text| get_translation(text:, bot:, translation_user:, model:) }
-          .join("")
+        translated =
+          ContentSplitter
+            .split(content: @text, chunk_size: model.max_output_tokens)
+            .map { |text| get_translation(text:, bot:, translation_user:, model:) }
+            .join("")
+
+        strip_control_characters(translated)
       end
 
       private
 
       def formatted_content(content)
-        { content:, target_locale: @target_locale }.to_json
+        # JSON.generate over to_json: ActiveSupport HTML-escapes <, >, and & into
+        # \uXXXX sequences, which models can mis-copy into control characters
+        JSON.generate({ content:, target_locale: @target_locale })
+      end
+
+      # control characters are never valid in a translation, but models
+      # occasionally emit them by mangling unicode escapes (e.g. \u003c
+      # coming back as \u001c)
+      def strip_control_characters(text)
+        text.gsub(/[\u0000-\u0008\u000B-\u001F\u007F\u0080-\u009F]/, "")
       end
 
       def get_translation(text:, bot:, translation_user:, model:)

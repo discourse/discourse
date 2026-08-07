@@ -260,6 +260,17 @@ module("Unit | Utility | formatter", function (hooks) {
 
     elem = domFromString(autoUpdatingRelativeAge(d, { prefix: "test" }))[0];
     assert.dom(elem).hasHtml("test 1d");
+
+    assert.strictEqual(
+      autoUpdatingRelativeAge(null),
+      "",
+      "it returns an empty string for a missing date"
+    );
+    assert.strictEqual(
+      autoUpdatingRelativeAge(new Date(undefined), { format: "medium" }),
+      "",
+      "it returns an empty string for an invalid date"
+    );
   });
 
   test("updateRelativeAge", function (assert) {

@@ -1,0 +1,13 @@
+.content-language-preferences-modal {
+  &__understood {
+    display: grid;
+    gap: var(--space-1);
+    width: 100%;
+
+    > span {
+      color: var(--primary);
+      font-size: var(--font-down-1-rem);
+      font-weight: 600;
+    }
+  }
+}

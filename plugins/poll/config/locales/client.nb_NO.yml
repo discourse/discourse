@@ -103,5 +103,3 @@ nb_NO:
           add: Legg til alternativ
         automatic_close:
           label: Steng avstemningen automatisk
-        show_advanced: "Vis avanserte innstillinger"
-        hide_advanced: "Skjul avanserte alternativer"

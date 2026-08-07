@@ -116,5 +116,3 @@ da:
           add: Tilføj mulighed
         automatic_close:
           label: Luk afstemning automatisk
-        show_advanced: "Vis Avancerede Indstillinger"
-        hide_advanced: "Skjul Avancerede Indstillinger"

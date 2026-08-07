@@ -96,11 +96,6 @@ pt:
             last: "último"
         attendance:
           none: "Nenhuma"
-        url:
-          label: "URL"
-          placeholder: "Opcional"
-        location:
-          label: "Localização"
         description:
           label: "Descrição"
         event_type:

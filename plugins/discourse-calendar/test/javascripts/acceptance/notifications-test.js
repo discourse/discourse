@@ -1,6 +1,6 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 acceptance("Notifications", function (needs) {
@@ -111,7 +111,7 @@ acceptance("Notifications", function (needs) {
     await visit("/");
     await click(".d-header-icons .current-user button");
 
-    const notifications = queryAll(
+    const notifications = findAll(
       "#quick-access-all-notifications ul li.notification a"
     );
     assert.strictEqual(notifications.length, 5);

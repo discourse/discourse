@@ -24,6 +24,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_upload_avatar,
              :can_edit,
              :can_invite_to_forum,
+             :can_create_admin_invite,
              :no_password,
              :can_delete_account,
              :can_post_anonymously,
@@ -53,6 +54,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :primary_group_id,
              :flair_group_id,
              :can_create_topic,
+             :can_set_topic_timer,
              :can_create_category,
              :can_create_group,
              :link_posting_access,
@@ -73,7 +75,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :sidebar_tags,
              :sidebar_category_ids,
              :sidebar_sections,
-             :new_new_view_enabled?,
+             :unified_new_enabled?,
              :can_view_raw_email,
              :login_method,
              :has_unseen_features,
@@ -145,6 +147,10 @@ class CurrentUserSerializer < BasicUserSerializer
     scope.can_create_topic?(nil)
   end
 
+  def can_set_topic_timer
+    scope.can_set_topic_timer?
+  end
+
   def can_create_category
     true
   end
@@ -195,7 +201,7 @@ class CurrentUserSerializer < BasicUserSerializer
     last_visited = object.custom_fields["last_visited_upcoming_changes_at"]
     return false if last_visited.blank? && object.created_at < Discourse.site_creation_date + 1.hour
     cutoff = last_visited.present? ? Time.zone.parse(last_visited) : object.created_at
-    UpcomingChangeEvent.added.where("created_at > ?", cutoff).exists?
+    UpcomingChangeEvent.added.not_backfilled.where("created_at > ?", cutoff).exists?
   end
 
   def can_post_anonymously
@@ -229,6 +235,14 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_can_invite_to_forum?
     scope.can_invite_to_forum?
+  end
+
+  def can_create_admin_invite
+    true
+  end
+
+  def include_can_create_admin_invite?
+    scope.can_create_admin_invite?
   end
 
   def no_password
@@ -352,6 +366,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def second_factor_enabled
     object.totp_enabled? || object.security_keys_enabled?
+  end
+
+  def include_featured_topic?
+    scope.can_see_topic?(object.user_profile.featured_topic)
   end
 
   def featured_topic

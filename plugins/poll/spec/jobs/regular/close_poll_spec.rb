@@ -22,6 +22,16 @@ RSpec.describe Jobs::ClosePoll do
 
     Jobs::ClosePoll.new.execute(post_id: post.id, poll_name: "poll")
 
-    expect(post.polls.first.closed?).to eq(true)
+    poll = post.polls.first
+    expect(poll.closed?).to eq(true)
+    expect(poll.closed_by_id).to eq(Discourse.system_user.id)
+  end
+
+  it "logs the automatic close as the system user" do
+    Jobs::ClosePoll.new.execute(post_id: post.id, poll_name: "poll")
+
+    log = UserHistory.last
+    expect(log.custom_type).to eq("poll_closed")
+    expect(log.acting_user_id).to eq(Discourse.system_user.id)
   end
 end

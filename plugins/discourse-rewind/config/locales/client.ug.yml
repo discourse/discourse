@@ -130,6 +130,9 @@ ug:
           subtitle:
             one: سىز بۇ يىل %{count} يېڭى ئىشلەتكۈچىگە ياردەم قىلدىڭىز
             other: سىز بۇ يىل %{count} يېڭى ئىشلەتكۈچىگە ياردەم قىلدىڭىز
+          subtitle_others:
+            one: "%{username} بۇ يىل %{count} يېڭى ئىشلەتكۈچىگە ياردەم قىلدى"
+            other: "%{username} بۇ يىل %{count} يېڭى ئىشلەتكۈچىگە ياردەم قىلدى"
           new_member:
             one: "%{count} يېڭى ئەزا"
             other: "%{count} يېڭى ئەزا"
@@ -140,9 +143,11 @@ ug:
           mentions: ئاتاش
           topics_with_new_users: يېڭى ئىشلەتكۈچىنىڭ تېمىسى
           contributions_helped: تۆھپىڭىز ياردەم قىلدى
+          contributions_helped_others: "%{username} نىڭ تۆھپىسى ياردەم بەردى"
         time_of_day_activity:
           title: كۈندىلىك پائالىيەت رېتىمى
           play_button: پائالىيىتىڭىزنى ئاۋازلىق ياڭرىتىدۇ
+          play_button_others: "%{username} نىڭ پائالىيىتىنى ئاۋاز سۈپىتىدە ياڭرات"
           stop_button: ئاۋاز ياڭرىتىشنى توختات
         writing_analysis:
           title: يازما تەھلىلى

@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 be:
+  admin_js:
+    admin:
+      dashboard:
+        sections:
+          support:
+            answerers:
+              staff: "Персанал"
+              member: "Члены"
+              basic: "асноўнай"
+            response_time:
+              buckets:
+                gt_24h: "> 24 гадзіны"
   js:
     solved:
       topic_status_filter:

@@ -6,6 +6,10 @@
 # query params, converts the host to lowercase punycode, and truncates the
 # result to 200 bytes.
 class BrowserPageviewReferrerInspector
+  # Bump when the normalization logic changes significantly to trigger a
+  # re-backfill of rows stamped with an older version.
+  VERSION = 1
+
   # TODO: consider vendoring DuckDuckGo's Tracker Radar tracking-parameter list
   # (https://github.com/duckduckgo/tracker-radar) for broader, maintained
   # coverage instead of this hand-curated subset.

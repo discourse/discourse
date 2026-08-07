@@ -404,8 +404,6 @@ tr_TR:
         confirm_payment: Ödemeyi onaylayın
         success: Geri dön
       admin:
-        unconfigured: 'Stripe doğru yapılandırılmamış. Bilgi için lütfen Discourse Meta''ya bakın.'
-        on_meta: Meta'da Discourse Abonelikleri
         dashboard:
           title: Pano
           table:

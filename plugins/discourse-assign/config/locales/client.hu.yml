@@ -119,6 +119,8 @@ hu:
       topic: "Téma"
       post: "Bejegyzés"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "Kiosztott"
       assign_topic:
         operations:
           assign: "Kiosztás"

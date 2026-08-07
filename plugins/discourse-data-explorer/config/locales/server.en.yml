@@ -9,12 +9,15 @@ en:
           name: "Data Explorer Query Generator"
           description: "Generates SQL queries for Data Explorer from natural language"
       tool_help:
+        find_queries: "Finds existing Data Explorer queries that may be useful examples"
         run_sql: "Runs a SQL query and returns results"
         submit_query: "Submits the final generated query"
       tool_summary:
+        find_queries: "Finding example queries"
         run_sql: "Running SQL query"
         submit_query: "Submitting generated query"
       tool_description:
+        find_queries: "Found example queries for %{search}"
         run_sql: "Ran SQL query"
         submit_query: "Submitted generated query %{name}"
   discourse_data_explorer:

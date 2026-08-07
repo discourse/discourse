@@ -54,14 +54,29 @@ RSpec.describe "Archive channel" do
 
       context "when archiving" do
         it "works" do
+          SiteSetting.tagging_enabled = true
+          tag = Fabricate(:tag, name: "archived")
           Jobs.run_immediately!
 
           chat.visit_channel_settings(channel_1)
           click_button(I18n.t("js.chat.channel_settings.archive_channel"))
           find("#split-topic-name").fill_in(with: "An interesting topic for cats")
+
+          tag_chooser =
+            PageObjects::Components::SelectKit.new(".chat-to-topic-selector .tag-chooser")
+          tag_chooser.expand
+          tag_chooser.search(tag.name)
+          tag_chooser.select_row_by_name(tag.name)
+          tag_chooser.collapse
+
           click_button(I18n.t("js.chat.channel_archive.title"))
 
           expect(page).to have_css(".chat-channel-archive-status", wait: 15)
+
+          try_until_success do
+            archive = Chat::ChannelArchive.find_by(chat_channel: channel_1)
+            expect(archive&.destination_tags).to eq([tag.name])
+          end
         end
 
         context "when archived channels had unreads" do

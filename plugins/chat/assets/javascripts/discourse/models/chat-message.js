@@ -54,6 +54,7 @@ export default class ChatMessage {
   @tracked deletedById;
   @tracked streaming;
   @tracked pinned;
+  @tracked blocks;
   @autoTrackedArray reactions;
 
   @tracked _deletedAt;

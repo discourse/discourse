@@ -23,7 +23,7 @@ module Chat
         private
 
         def workflows_enabled
-          SiteSetting.discourse_workflows_enabled
+          SiteSetting.enable_discourse_workflows
         end
 
         def fetch_resume_request(params:)

@@ -1,7 +1,7 @@
 import DButton from "discourse/ui-kit/d-button";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 
-<template>
+export default <template>
   <div class="workflows-empty-state">
     {{#if @emoji}}
       <span class="workflows-empty-state__icon">{{dEmoji @emoji}}</span>

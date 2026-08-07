@@ -61,11 +61,12 @@ RSpec.describe DiscourseWorkflows::Nodes::ReviewableApproved::V1 do
   end
 
   describe "#output" do
-    it "returns reviewable data only" do
+    it "returns reviewable data", :aggregate_failures do
       reviewable.update!(status: :approved)
       trigger = described_class.new(:approved, reviewable)
+      output = trigger.output
 
-      expect(trigger.output).to eq(
+      expect(output).to eq(
         reviewable: {
           id: reviewable.id,
           type: "ReviewableFlaggedPost",
@@ -78,6 +79,7 @@ RSpec.describe DiscourseWorkflows::Nodes::ReviewableApproved::V1 do
           created_at: reviewable.created_at.iso8601,
         },
       )
+      expect(output).to match_node_output_schema(described_class)
     end
   end
 

@@ -205,9 +205,9 @@ RSpec.describe PostCreator do
         Jobs.run_immediately!
         UserActionManager.enable
 
-        admin = Fabricate(:user)
+        admin = Fabricate(:user, refresh_auto_groups: true)
         admin.grant_admin!
-        other_admin = Fabricate(:user)
+        other_admin = Fabricate(:user, refresh_auto_groups: true)
         other_admin.grant_admin!
 
         cat = Fabricate(:category)
@@ -1174,6 +1174,17 @@ RSpec.describe PostCreator do
       PostCreator.create!(admin2, raw: "I am also an admin, and a mod", topic_id: post.topic_id)
 
       expect(post.topic.topic_allowed_users.where(user_id: admin2.id).count).to eq(0)
+
+      tl0_user = Fabricate(:user, trust_level: 0, refresh_auto_groups: true)
+      PostCreator.create!(
+        tl0_user,
+        raw: "Automated support reply",
+        topic_id: post.topic_id,
+        guardian: Discourse.system_user.guardian,
+        skip_staff_author_pm_membership_sync: true,
+      )
+
+      expect(post.topic.topic_allowed_users.where(user_id: tl0_user.id).count).to eq(0)
     end
 
     it "does not add whisperers to allowed users of the topic" do
@@ -1224,7 +1235,7 @@ RSpec.describe PostCreator do
         expect(topic.posts.where(post_type: Post.types[:small_action]).count).to eq(i)
       end
 
-      expect(topic.word_count).to eq(0)
+      expect(topic.word_count).to be_nil
 
       p2 = Fabricate(:post, topic: topic)
       Topic.reset_highest(topic.id)
@@ -1239,7 +1250,7 @@ RSpec.describe PostCreator do
       expect(topic.word_count).to eq([p1, p2, p3].sum(&:word_count))
     end
 
-    it "does not bump highest_post_number for small_action posts in PMs" do
+    it "does not bump any post number counter for small_action posts" do
       topic = Fabricate(:private_message_topic, user: Fabricate(:user, refresh_auto_groups: true))
       Fabricate(:post, topic: topic)
       topic.reload
@@ -1258,7 +1269,7 @@ RSpec.describe PostCreator do
       topic.reload
 
       expect(topic.highest_post_number).to eq(1)
-      expect(topic.highest_staff_post_number).to eq(2)
+      expect(topic.highest_staff_post_number).to eq(1)
     end
   end
 

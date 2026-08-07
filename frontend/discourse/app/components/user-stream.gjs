@@ -175,7 +175,7 @@ export default class UserStreamComponent extends Component {
       return;
     }
 
-    if (event.target.matches(".excerpt a")) {
+    if (event.target.closest(".excerpt a")) {
       return ClickTrack.trackClick(event, getOwner(this));
     }
   }

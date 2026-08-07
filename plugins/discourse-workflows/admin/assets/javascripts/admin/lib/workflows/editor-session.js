@@ -1,11 +1,15 @@
 import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
 import {
+  normalizeSourceOutputIndex,
+  normalizeTargetInputIndex,
+} from "./graph-constants";
+import {
   inputForRun,
   latestRunWithInput,
   latestRunWithOutput,
   outputForRun,
-} from "./data-schema";
+} from "./run-data";
 
 function compactObject(object) {
   return Object.fromEntries(
@@ -20,36 +24,6 @@ function normalizeNodeForLoadOptions(node, identifier, typeVersion) {
     type: node?.type || identifier,
     typeVersion: node?.typeVersion || typeVersion,
   });
-}
-
-function portIndexFromKey(value) {
-  value = value?.toString();
-  if (!value || value === "main" || value === "true" || value === "done") {
-    return 0;
-  }
-
-  const inputMatch = value.match(/^input_(\d+)$/);
-  if (inputMatch) {
-    return parseInt(inputMatch[1], 10) - 1;
-  }
-
-  if (value === "false" || value === "loop") {
-    return 1;
-  }
-
-  return parseInt(value, 10) || 0;
-}
-
-function sourceOutputIndexForConnection(connection) {
-  return (
-    connection.sourceOutputIndex ?? portIndexFromKey(connection.sourceOutput)
-  );
-}
-
-function targetInputIndexForConnection(connection) {
-  return (
-    connection.targetInputIndex ?? portIndexFromKey(connection.targetInput)
-  );
 }
 
 export default class WorkflowEditorSession {
@@ -119,8 +93,8 @@ export default class WorkflowEditorSession {
     );
     const resolvedInputs = incomingConnections
       .map((connection) => {
-        const inputIndex = targetInputIndexForConnection(connection);
-        const outputIndex = sourceOutputIndexForConnection(connection);
+        const inputIndex = normalizeTargetInputIndex(connection);
+        const outputIndex = normalizeSourceOutputIndex(connection);
         const sourceNode = this.nodeForClientId(connection.sourceClientId);
         const currentInput = this.inputItemsForNode(node, inputIndex, {
           sourceNode,

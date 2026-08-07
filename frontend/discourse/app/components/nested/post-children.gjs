@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -25,6 +26,8 @@ export default class NestedPostChildren extends Component {
 
   // Tracks whether we've fetched from the server yet (vs only having preloaded data)
   _fetchedFromServer = false;
+  _identityKey = null;
+  _activeCacheKey = null;
 
   constructor() {
     super(...arguments);
@@ -34,9 +37,55 @@ export default class NestedPostChildren extends Component {
       this._onChildCreated
     );
 
-    const cached = this.args.fetchedChildrenCache?.get(
-      this.args.parentPostNumber
+    this._hydrateFromArgs();
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.appEvents.off(
+      "nested-replies:child-created",
+      this,
+      this._onChildCreated
     );
+    this._reportToCache();
+  }
+
+  get identityKey() {
+    return [
+      this.args.topic?.id,
+      this.args.parentPostNumber,
+      this.args.sort,
+    ].join(":");
+  }
+
+  @action
+  hydrateFromArgs() {
+    this._hydrateFromArgs();
+  }
+
+  _cacheKeyFor(
+    parentPostNumber = this.args.parentPostNumber,
+    topicId = this.args.topic?.id
+  ) {
+    return `${topicId}:${parentPostNumber}`;
+  }
+
+  _hydrateFromArgs() {
+    if (this._identityKey === this.identityKey) {
+      return;
+    }
+
+    this._identityKey = this.identityKey;
+    this._activeCacheKey = this._cacheKeyFor();
+    this.childNodes = [];
+    this.loading = false;
+    this.page = 0;
+    this.hasMore = false;
+    this.loadingMore = false;
+    this.loaded = false;
+    this._fetchedFromServer = false;
+
+    const cached = this.args.fetchedChildrenCache?.get(this._activeCacheKey);
     if (cached) {
       this.childNodes = cached.childNodes;
       this.page = cached.page;
@@ -63,21 +112,11 @@ export default class NestedPostChildren extends Component {
     }
   }
 
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.appEvents.off(
-      "nested-replies:child-created",
-      this,
-      this._onChildCreated
-    );
-    this._reportToCache();
-  }
-
-  _reportToCache(parentPostNumber = this.args.parentPostNumber) {
-    if (!this.loaded || !parentPostNumber || !this.args.fetchedChildrenCache) {
+  _reportToCache(cacheKey = this._activeCacheKey) {
+    if (!this.loaded || !cacheKey || !this.args.fetchedChildrenCache) {
       return;
     }
-    this.args.fetchedChildrenCache.set(parentPostNumber, {
+    this.args.fetchedChildrenCache.set(cacheKey, {
       childNodes: this.childNodes,
       page: this.page,
       hasMore: this.hasMore,
@@ -85,8 +124,11 @@ export default class NestedPostChildren extends Component {
     });
   }
 
-  _onChildCreated({ post, parentPostNumber }) {
-    if (parentPostNumber !== this.args.parentPostNumber) {
+  _onChildCreated({ topicId, post, parentPostNumber }) {
+    if (
+      String(topicId) !== String(this.args.topic?.id) ||
+      parentPostNumber !== this.args.parentPostNumber
+    ) {
       return;
     }
 
@@ -125,16 +167,27 @@ export default class NestedPostChildren extends Component {
   }
 
   async loadChildren() {
+    const identityKey = this.identityKey;
+    const topicId = this.args.topic?.id;
+
     this.loading = true;
     try {
+      const query = new URLSearchParams({
+        sort: this.args.sort || "top",
+        depth: this.childDepth,
+      });
       const data = await ajax(
-        `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.parentPostNumber}.json?sort=${this.args.sort || "top"}&depth=${this.childDepth}`
+        `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.parentPostNumber}.json?${query}`
       );
-      if (this.isDestroying || this.isDestroyed) {
+      if (
+        this.isDestroying ||
+        this.isDestroyed ||
+        this.identityKey !== identityKey
+      ) {
         return;
       }
-      this.childNodes = (data.children || []).map((child) =>
-        this._processNode(child)
+      this.childNodes = this._childrenForTopic(data.children, topicId).map(
+        (child) => this._processNode(child)
       );
       this.page = data.page;
       this.hasMore = data.has_more || false;
@@ -158,20 +211,32 @@ export default class NestedPostChildren extends Component {
       return;
     }
 
+    const identityKey = this.identityKey;
+    const topicId = this.args.topic?.id;
+
     this.loadingMore = true;
     try {
       // First server fetch after preloaded data: get page 0 and merge
       // to preserve expanded state on already-loaded nodes.
       // Subsequent fetches: normal pagination.
       const nextPage = this._fetchedFromServer ? this.page + 1 : 0;
+      const query = new URLSearchParams({
+        page: nextPage,
+        sort: this.args.sort || "top",
+        depth: this.childDepth,
+      });
       const data = await ajax(
-        `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.parentPostNumber}.json?page=${nextPage}&sort=${this.args.sort || "top"}&depth=${this.childDepth}`
+        `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.parentPostNumber}.json?${query}`
       );
-      if (this.isDestroying || this.isDestroyed) {
+      if (
+        this.isDestroying ||
+        this.isDestroyed ||
+        this.identityKey !== identityKey
+      ) {
         return;
       }
-      const newNodes = (data.children || []).map((child) =>
-        this._processNode(child)
+      const newNodes = this._childrenForTopic(data.children, topicId).map(
+        (child) => this._processNode(child)
       );
 
       if (!this._fetchedFromServer) {
@@ -203,12 +268,22 @@ export default class NestedPostChildren extends Component {
     }
   }
 
+  _childrenForTopic(children, topicId) {
+    return (children || []).filter(
+      (child) =>
+        child.topic_id != null && String(child.topic_id) === String(topicId)
+    );
+  }
+
   _processNode(nodeData) {
     return processNode(this.store, this.args.topic, nodeData);
   }
 
   <template>
-    <div class="nested-post-children">
+    <div
+      class="nested-post-children"
+      {{didUpdate this.hydrateFromArgs @topic.id @parentPostNumber @sort}}
+    >
       <DConditionalLoadingSpinner @condition={{this.loading}}>
         {{#each this.childNodes key="post.id" as |node|}}
           <NestedPost
@@ -245,6 +320,12 @@ export default class NestedPostChildren extends Component {
             @registerPost={{@registerPost}}
             @collapseFromDepth={{@collapseFromDepth}}
             @focusPost={{@focusPost}}
+            @captureScrollAnchor={{@captureScrollAnchor}}
+            @multiSelect={{@multiSelect}}
+            @togglePostSelection={{@togglePostSelection}}
+            @selectReplies={{@selectReplies}}
+            @selectBelow={{@selectBelow}}
+            @postSelected={{@postSelected}}
           />
         {{/each}}
 

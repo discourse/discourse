@@ -149,6 +149,36 @@ RSpec.describe UserDestroyer do
       end
     end
 
+    context "with a pending reviewable targeting the user" do
+      fab!(:queued_post) { Fabricate(:reviewable_queued_post, target_created_by: user) }
+      fab!(:flagged_post) do
+        Fabricate(
+          :reviewable_flagged_post,
+          target_created_by: user,
+          target: Fabricate(:post, user: user),
+        )
+      end
+
+      it "ignores them and notes why" do
+        UserDestroyer.new(admin).destroy(user, delete_posts: true)
+
+        expect(queued_post.reload).to be_ignored
+        expect(flagged_post.reload).to be_ignored
+        expect(queued_post.reviewable_notes.last.content).to eq(
+          I18n.t("reviewables.target_user_deleted"),
+        )
+      end
+
+      it "leaves reviewables that were already handled alone" do
+        queued_post.update!(status: :approved)
+
+        UserDestroyer.new(admin).destroy(user, delete_posts: true)
+
+        expect(queued_post.reload).to be_approved
+        expect(queued_post.reviewable_notes).to be_empty
+      end
+    end
+
     context "with a reviewable user" do
       let(:reviewable) { Fabricate(:reviewable, created_by: admin) }
 
@@ -277,6 +307,55 @@ RSpec.describe UserDestroyer do
 
               reviewable.reload
               expect(reviewable).to be_rejected
+            end
+
+            it "approves reviewable flags on hidden posts" do
+              spammer_post = Fabricate(:post, user: user)
+              reviewable = PostActionCreator.inappropriate(admin, spammer_post).reviewable
+              spammer_post.update!(
+                hidden: true,
+                hidden_at: Time.zone.now,
+                hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+              )
+              expect(reviewable).to be_pending
+
+              destroy
+
+              expect(reviewable.reload).to be_approved
+            end
+
+            it "rejects queued posts" do
+              reviewable =
+                Fabricate(
+                  :reviewable_queued_post,
+                  created_by: Discourse.system_user,
+                  target_created_by: user,
+                )
+              expect(reviewable).to be_pending
+
+              destroy
+
+              expect(reviewable.reload).to be_rejected
+            end
+
+            it "rejects the user's account reviewable when reviewable_id is a different reviewable" do
+              flag_reviewable =
+                PostActionCreator.inappropriate(admin, Fabricate(:post, user: user)).reviewable
+              account_reviewable = ReviewableUser.create_for(user)
+              destroy_opts[:reviewable_id] = flag_reviewable.id
+
+              destroy
+
+              expect(account_reviewable.reload).to be_rejected
+            end
+
+            it "leaves the user's account reviewable pending when reviewable_id is its id" do
+              account_reviewable = ReviewableUser.create_for(user)
+              destroy_opts[:reviewable_id] = account_reviewable.id
+
+              destroy
+
+              expect(account_reviewable.reload).to be_pending
             end
           end
         end

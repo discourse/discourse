@@ -6,12 +6,25 @@
 
 pt:
   js:
+    user_api_key:
+      authorize: "Autorizar"
+      deny: "Cancelar"
+      copied: "Copiado!"
+      no_trust_level: "Desculpe, não tem o nível de confiança requerido para aceder à API de utilizador"
+      generic_error: "Desculpe, nós não conseguimos gerar as chaves de API do utilizador, esta funcionalidade poderá estar desativada pela administração do site"
+      device:
+        code: "Código"
+        continue: "Continuar"
     blocks:
       ghost:
         status: "Estado"
         in_location: "em"
         hidden: "escondido"
         failed: "falhado"
+    access_control:
+      manage:
+        access_permission_editor: "Editor"
+        access_permission_remove: "Remover"
     number:
       format:
         separator: "."
@@ -374,6 +387,9 @@ pt:
     age: "Idade"
     joined: "Juntou-se"
     admin_title: "Administração"
+    advanced_mode_toggle:
+      advanced_mode: "Modo Avançado"
+      simple_mode: "Modo Simples"
     show_more: "mostrar mais"
     show_help: "Opções"
     links: "Hiperligações"
@@ -726,6 +742,7 @@ pt:
         email: "E-mail"
         name: "Nome"
         fields: "campos"
+        penalty_forever: "Para Sempre"
         reject_reason: "Motivo"
         scrubbed_by: "Registo apagado por"
         scrubbed_reason: "Motivo"
@@ -1084,7 +1101,6 @@ pt:
             from_alias_hint: "Alias para usar como endereço de origem ao enviar e-mails SMTP de grupo. Nota que isto pode não ser suportado por todos os fornecedores de e-mails, por isso consulta a documentação do seu fornecedor de correio."
         membership:
           title: Filiação
-          access: Acesso
         categories:
           title: Categorias
           long_title: "Notificações padrão da categoria"
@@ -1117,7 +1133,6 @@ pt:
         title: "Permissões"
         none: "Não existem categorias associadas a este grupo."
         description: "Os membros deste grupo podem ter acesso a estas categorias"
-      public_admission: "Permitir entrada livre no grupo (Requer grupo publicamente visível)"
       public_exit: "Permitir que os utilizadores deixem o grupo livremente"
       empty:
         posts: "Não existem publicações por membros deste grupo"
@@ -1133,7 +1148,6 @@ pt:
       request: "Pedir"
       message: "Mensagem"
       confirm_leave: "Tem a certeza que pretende sair deste grupo?"
-      allow_membership_requests: "Permitir que os usuários enviem solicitações de adesão aos proprietários do grupo (requer grupo publicamente visível)"
       membership_request_template: "Template personalizado para mostrar aos utilizadores quando for enviado um pedido de adesão"
       membership_request:
         submit: "Submeter Pedido"
@@ -1413,6 +1427,9 @@ pt:
       notifications: "Notificações"
       statistics: "Estatísticas"
       desktop_notifications:
+        push_level:
+          none: "Desativado"
+          all: "Ativado"
         not_supported: "Não são suportadas notificações neste navegador. Desculpe."
         perm_denied_expl: "Negou a permissão para as notificações. Autorize as notificações através das configurações do seu navegador."
         each_browser_note: "Nota: precisa de alterar esta configuração em todos os navegadores que utilizar. Todas as notificações serão desativadas se pausar as notificações no menu do utilizador, independentemente desta definição."
@@ -1468,7 +1485,6 @@ pt:
       external_links_in_new_tab: "Abrir todas as hiperligações externas num novo separador"
       enable_quoting: "Ativar resposta usando citação de texto destacado"
       enable_smart_lists: "Ativar as listas inteligentes quando escreve no compositor"
-      enable_defer: "Ativar a marcação de tópicos como não lidos"
       experimental_sidebar:
         enable: "Ativar a barra lateral"
         options: "Opções"
@@ -1547,6 +1563,9 @@ pt:
       undo_revoke_access: "Cancelar Rescissão de Acesso"
       api_approved: "Aprovado:"
       api_last_used_at: "Usado pela última vez em:"
+      api_expires_at: "Expira:"
+      api_expired_at: "Expirado:"
+      api_expires_never: "nunca"
       theme: "Tema"
       save_to_change_theme: 'O tema será atualizado após clicar em "%{save_text}"'
       home: "Página de Início Predefinida"
@@ -1893,7 +1912,7 @@ pt:
         default: "(predefinição)"
         any: "qualquer"
       homepage:
-        default: "(predefinição)"
+        default: "Predefinição"
       password_confirmation:
         title: "Palavra-passe Novamente"
       invite_code:
@@ -1937,6 +1956,9 @@ pt:
         contextual: "Conteúdo da nova página"
       bookmark_after_notification:
         title: "Após o envio de uma notificação de lembrete de marcador:"
+      send_shortcut:
+        enter: "Entrar"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Notificar quando alguém gostar"
         always: "Sempre"
@@ -2092,6 +2114,28 @@ pt:
           create_link_and_send_email: "Criar ligação e enviar e-mail"
           invite_saved_without_sending_email: "Convite guardado. Copie o link abaixo e partilhe para conceder acesso instantâneo a este sítio."
           invite_saved_with_sending_email: "O e-mail de convite foi enviado. Também pode copiar a ligação abaixo e partilhá-lo para conceder acesso instantâneo a este sítio."
+        invite_roles:
+          member_title: "Convidar membros"
+          member_tab: "Membros"
+          admin_tab: "Pessoal"
+          staff_role_admin: "Administração"
+          staff_role_moderator: "Moderador"
+          email_placeholder: "name@example.com"
+          invite_by_email: "E-mail"
+          restrict_domain: "Restringir ao domínio"
+          create_and_send: "Enviar"
+          create_and_copy: "Copiar hiperligação"
+          update: "Atualização"
+          summary:
+            role_member: "Membro"
+            role_admin: "Administração"
+            role_moderator: "Moderador"
+            method_email: "E-mail"
+            uses: "Máximo de utilizações"
+            expires: "Expira"
+            topic: "Tópico"
+            groups: "Grupos"
+            edit: "Editar"
         bulk_invite:
           none: "Sem convites para exibir nesta página."
           text: "Convite em massa"
@@ -2412,7 +2456,6 @@ pt:
     created: "Criado"
     created_lowercase: "criado"
     trust_level: "Nível de Confiança"
-    search_hint: "nome de utilizador, e-mail ou endereço de IP"
     create_account:
       header_title: "Bem-vindo!"
       disclaimer: "Ao registar-se, concorda com a <a href='%{privacy_link}' target='blank'>política de privacidade</a> e os <a href='%{tos_link}' target='blank'>termos do serviço</a>."
@@ -2456,6 +2499,13 @@ pt:
       confirm_title: Continuar para %{site_name}
       logging_in_as: Fazendo login como %{email}
       confirm_button: Concluir o Login
+    code_login:
+      email_label: "E-mail"
+      continue_button: "Continuar"
+      verify_button: "Continuar"
+      signup_title: "Crie sua conta"
+      account_ready_continue: "Continuar"
+      username_label: "Nome de Utilizador"
     login:
       header_title: "Bem-vindo de volta"
       title: "Iniciar Sessão"
@@ -2674,6 +2724,8 @@ pt:
       medium_dark_tone: Tom de pele meio escuro
       dark_tone: Tom de pele escuro
       default: Emojis Personalizados
+    filter_controls:
+      reset: "Repor"
     shared_drafts:
       title: "Rascunhos Partilhados"
       notice: "Este tópico é visível apenas para quem pode publicar rascunhos partilhados."
@@ -2740,6 +2792,7 @@ pt:
       draft_saved: "Rascunho guardado!"
       users_placeholder: "Adicionar utilizadores ou grupos"
       title_placeholder: "Numa breve frase, de que se trata esta discussão?"
+      title_placeholder_redesign: "Título"
       title_or_link_placeholder: "Digite o título, ou cole aqui uma hiperligação"
       edit_reason_placeholder: "Porque está a editar?"
       topic_featured_link_placeholder: "Inserir hiperligação mostrada com o título."
@@ -2765,7 +2818,6 @@ pt:
       italic_label: "I"
       italic_title: "Itálico"
       italic_text: "texto em itálico"
-      heading_title: "Cabeçalhos"
       heading_level_n: "Cabeçalho  %{levelNumber}"
       heading_level_n_title: "Cabeçalho %{levelNumber}"
       heading_level_paragraph: "Parágrafo"
@@ -2833,6 +2885,8 @@ pt:
           label: Responder ao tópico
           trigger: Tópico
           desc: Responder ao tópico, não a uma publicação especifica
+        reply_to_message:
+          trigger: Mensagem
         toggle_whisper:
           label: Alternar sussurro
         create_topic:
@@ -3220,6 +3274,9 @@ pt:
       deleted_post_placeholder: "[eliminado]"
       ignored_post_placeholder: "[ignorados]"
       pinned_reply: "Fixado"
+    share_target:
+      new_topic: "Novo tópico"
+      new_message: "Nova mensagem"
     topic:
       filter_to:
         one: "%{count} publicação no tópico"
@@ -3269,6 +3326,7 @@ pt:
       collapse_details: "ocultar detalhes do tópico"
       expand_details: "expandir detalhes do tópico"
       unread_indicator: "Nenhum membro leu o último post deste tópico ainda."
+      sr_read: "ler"
       participant_groups: "Grupos participantes"
       created_at: "Criado: %{date}"
       bumped_at: "Mais recente: %{date}"
@@ -3686,7 +3744,7 @@ pt:
           one: "Ver %{count} idioma traduzido"
           other: "Ver %{count} idiomas traduzidos"
         modal:
-          title: "Traduções para publicação"
+          title: "Traduções"
           confirm_delete: "Tem a certeza que pretende eliminar as traduções para '%{languageCode}'?"
         success: "As traduções foram atualizadas com sucesso"
         post_language_selector:
@@ -3854,7 +3912,7 @@ pt:
     category:
       none: "(sem categoria)"
       all: "Todas as categorias"
-      choose: "categoria&hellip;"
+      choose: "Categoria&hellip;"
       edit: "Editar"
       edit_title: "Editar esta categoria"
       edit_dialog_title: "Editar: %{categoryName}"
@@ -3885,7 +3943,6 @@ pt:
         tag_group: "Grupo de tags"
       topic_featured_link_allowed: "Permitir hiperligações em destaque nesta categoria"
       create_long: "Criar uma nova categoria"
-      slug_placeholder: "(Opcional) palavras com travessão no URL"
       creation_error: Ocorreu um erro durante a criação da categoria.
       save_error: Ocorreu um erro ao guardar a categoria.
       validations:
@@ -4286,7 +4343,6 @@ pt:
       selector_no_tags: "sem etiquetas"
       selector_remove_filter: "remover filtro"
       tags: "Etiquetas"
-      choose_for_topic: "tags opcionais"
       category_restricted: "Esta tag é restrita a categorias que você não tem permissão para acessar."
       synonyms: "Sinônimos"
       add_synonyms_label: "Adicionar sinônimos:"
@@ -4430,6 +4486,8 @@ pt:
         custom:
           save: "Guardar"
           delete: "Eliminar"
+          localizations:
+            remove_language: "Remover"
           links:
             reset: "Restaurar ao padrão"
             icon:
@@ -4527,6 +4585,7 @@ pt:
         title: "Lista de relatórios disponíveis"
         sidebar_title: "Relatórios"
         back: "Voltar para todos os relatórios"
+        all_groups: "Todos os grupos"
         group_traffic: "Tráfego"
         group_members: "Membros"
         group_other: "Outro"
@@ -4626,6 +4685,9 @@ pt:
               title: "Logótipo móvel"
             manifest_screenshots:
               description: "Capturas de ecrã que mostram as caraterísticas e a funcionalidade da instância na página de aviso da instalação. Todas as imagens deverão ser envios locais e das mesmas dimensões."
+            og_image_preview:
+              generate: "Gerar"
+              topic_id_label: "Id. do Tópico"
         fonts:
           backfill_modal:
             modal_yes: "Sim"
@@ -4685,6 +4747,20 @@ pt:
               title: "Configurações"
         badges:
           title: "Crachás"
+        category_management:
+          tabs:
+            settings: "Configurações"
+          types:
+            all:
+              title: "Todas as categorias"
+          table:
+            category: "Categoria"
+            visibility: "Visibilidade"
+            topics: "Tópicos"
+          visibility:
+            public: "Público"
+          visibility_filter:
+            all: "Todas as categorias"
         permalinks:
           title: "Hiperligações Permanentes"
         emoji:
@@ -4745,7 +4821,7 @@ pt:
         no_check_performed: "Não foi feita nenhuma verificação por atualizações. Certifique-se que o sidekiq está em execução."
         stale_data: "Não foi feita verificação por atualizações ultimamente. Certifique-se de que o sidekiq está em execução."
         installed_version: "Instalado"
-        latest_version: "Recentes"
+        github: "GitHub"
         problems_found: "Alguns conselhos com base nas configurações atuais do seu site"
         dismiss_notice: "Ignorar"
         new_features:
@@ -4799,7 +4875,6 @@ pt:
               posts: "Mensagens"
               share: "Partilhar"
             whos_posting:
-              all_categories: "Todas as categorias"
               staff: "Pessoal"
             trust_level_pipeline:
               trust_levels:
@@ -4808,7 +4883,13 @@ pt:
                 "2": "Membro"
                 "3": "Habitual"
                 "4": "Líder"
+          search:
+            title: "Procurar"
+            table:
+              searches: "Pesquisas"
+              status: "Estado"
         reports_section:
+          header_action: "Gerir"
           no_data: "Sem dados para exibir"
           modal:
             enabled_heading: "Ativado"
@@ -4875,7 +4956,6 @@ pt:
             email: E-mail
             incoming_email: "Endereço de email de entrada personalizado"
             incoming_email_placeholder: "introduza o endereço de email"
-            visibility: Visibilidade
             visibility_levels:
               title: "Quem pode ver este grupo?"
               public: "Todos"
@@ -5070,6 +5150,8 @@ pt:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nome"
+          company_url: "site"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Grupos"
           optional: "(opcional)"
@@ -5145,6 +5227,8 @@ pt:
           reset: "Repor"
       navigation_menu:
         sidebar: "Barra Lateral"
+      duplicate_topic_titles:
+        allowed: "Permitido"
       backups:
         title: "Fazer Cópias de Segurança"
         menu:
@@ -5621,6 +5705,12 @@ pt:
         id_not_found: "Pedimos desculpa, esse id de utilizador não existe no nosso sistema."
         status: "Estado"
         bulk_actions:
+          select_all: "Selecionar tudo"
+          clear_all: "Limpar tudo"
+          suspend:
+            confirmation_modal:
+              close: "Fechar"
+              confirm: "Suspender"
           delete:
             confirmation_modal:
               close: "Fechar"
@@ -5974,9 +6064,14 @@ pt:
         uploading: "A enviar…"
         name: "Nome"
         group: "Grupo"
+        all_groups: "Todos os grupos"
         image: "Imagem"
         delete_confirm: "Tem a certeza que deseja eliminar o emoji :%{name}:?"
         settings: "Configurações"
+        export: "Exportar"
+        import: "Importar"
+        import_category:
+          new: "Novo"
       embedding:
         get_started: "Se deseja incorporar o Discourse noutro sítio, comece por adicionar o seu servidor."
         delete: "Eliminar"

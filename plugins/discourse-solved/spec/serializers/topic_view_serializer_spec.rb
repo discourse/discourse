@@ -51,4 +51,25 @@ describe TopicViewSerializer do
       end
     end
   end
+
+  describe "#has_accepted_answer" do
+    it "is true when the topic has an accepted answer" do
+      Fabricate(:solved_topic, topic: topic, answer_post: post2)
+      serializer = TopicViewSerializer.new(TopicView.new(topic), scope: Guardian.new(user))
+      expect(serializer.as_json[:topic_view][:has_accepted_answer]).to eq(true)
+    end
+
+    it "is false when the topic has no accepted answer" do
+      unsolved_topic = Fabricate(:topic)
+      serializer = TopicViewSerializer.new(TopicView.new(unsolved_topic), scope: Guardian.new(user))
+      expect(serializer.as_json[:topic_view][:has_accepted_answer]).to eq(false)
+    end
+
+    it "is not included when solved is disabled" do
+      SiteSetting.solved_enabled = false
+      Fabricate(:solved_topic, topic: topic, answer_post: post2)
+      serializer = TopicViewSerializer.new(TopicView.new(topic), scope: Guardian.new(user))
+      expect(serializer.as_json[:topic_view]).not_to have_key(:has_accepted_answer)
+    end
+  end
 end

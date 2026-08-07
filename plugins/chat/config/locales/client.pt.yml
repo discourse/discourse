@@ -32,6 +32,8 @@ pt:
       cancel: "Cancelar"
       cancel_reply: "Cancelar resposta"
       chat_channels: "Canais"
+      pinned_bar:
+        title: "Fixado"
       pinned: "Fixado"
       browse_all_channels: "Navegar todos os canais"
       move_to_channel:
@@ -88,8 +90,6 @@ pt:
       join: "Entrar"
       last_visit: "última visita"
       no_public_channels_cta: "Navegar canais"
-      only_chat_push_notifications:
-        title: "Enviar notificações push apenas para chat"
       reply: "Responder"
       edit: "Editar"
       copy_link: "Copiar link"
@@ -109,7 +109,6 @@ pt:
         title: "Som de notificação de Chat na área de trabalho"
       sounds:
         none: "Nenhuma"
-        bell: "Sino"
       channel_status:
         archive_failed_no_topic: "O canal de arquivo falhou. %{completed}/%{total} mensagens foram arquivadas, o tópico de destino não foi criado. Clica Tentar de novo para tentar completar o arquivo."
         closed: "Fechado"
@@ -120,6 +119,8 @@ pt:
         filter_all: Tudo
         filter_open: Abrir
         filter_closed: Fechado
+        filter_joined_all: "Todos"
+        filter_joined_joined: "Juntou-se"
       chat_message_separator:
         today: Hoje
         yesterday: Ontem
@@ -141,12 +142,14 @@ pt:
         filter: "Filtrar"
       channel_edit_name_slug_modal:
         input_placeholder: Adicionar um nome
-        slug: Slug do canal (opcional)
       direct_message_creator:
         title: Nova Mensagem
         prefix: "Para:"
+      channel:
+        preview_card:
+          log_in: "Efetuar login"
       create_channel:
-        slug: "Slug do canal (opcional)"
+        description: "Descrição"
         title: "Novo canal"
         type: "Tipo"
         types:
@@ -251,6 +254,8 @@ pt:
         text: Iniciar novo DM
         title: Criar uma conversação pessoal
     discourse_workflows:
+      chat_message_created:
+        channel_id: "Canal"
       send_chat_message:
         channel_id: "Canal"
         message: "Mensagem"

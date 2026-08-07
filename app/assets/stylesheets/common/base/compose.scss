@@ -39,7 +39,7 @@ html.composer-open:not(.has-full-page-chat) {
 
 .composer-toggles-menu-content,
 .composer-actions-dropdown {
-  z-index: z("composer", "dropdown") + 1;
+  z-index: z("mobile-composer");
 }
 
 #reply-control {
@@ -228,8 +228,6 @@ html.composer-open:not(.has-full-page-chat) {
     }
 
     .composer-actions-trigger .d-button-label {
-      max-width: 10ch;
-
       @include ellipsis;
     }
 
@@ -266,11 +264,7 @@ html.composer-open:not(.has-full-page-chat) {
     .composer-actions-reply-target-link {
       --d-button-default-text-color: var(--primary-high);
       --d-button-flat-icon-color: var(--primary-high);
-      max-width: 30ch;
-
-      @include viewport.until(sm) {
-        max-width: 18ch;
-      }
+      overflow: hidden;
 
       &__label {
         @include ellipsis;
@@ -296,6 +290,11 @@ html.composer-open:not(.has-full-page-chat) {
       align-items: center;
       width: 100%;
       max-width: 100%;
+      overflow: hidden;
+
+      .topic-link {
+        @include ellipsis;
+      }
     }
 
     .composer-controls {
@@ -419,7 +418,7 @@ html.composer-open:not(.has-full-page-chat) {
       width: auto;
 
       &.has-selection {
-        .name {
+        .selected-name .name {
           font-size: var(--font-up-1);
         }
       }
@@ -819,8 +818,9 @@ html.composer-open:not(.has-full-page-chat) {
 
       .submit-panel,
       .composer-fields {
-        // this prevents touch events (i.e. accidental scrolls) from bubbling up
-        touch-action: none;
+        // prevents accidental scroll-panning from bubbling up while still
+        // allowing the browser's pinch-zoom gesture
+        touch-action: pinch-zoom;
       }
     }
 

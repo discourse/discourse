@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AssetProcessor
-  BASE_COMPILER_VERSION = 108
+  BASE_COMPILER_VERSION = 113
 
   PROCESSOR_DIR = "tmp/asset-processor"
   LOCK_FILE = "#{PROCESSOR_DIR}/build.lock"
@@ -10,6 +10,7 @@ class AssetProcessor
     node_modules/.pnpm/lock.yaml
     frontend/asset-processor/**/*.{js,mjs}
     frontend/discourse/lib/babel-transform-module-renames.js
+    frontend/discourse/lib/discourse-source-imports.mjs
     frontend/discourse/config/targets.js
   ]
 

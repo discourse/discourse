@@ -19,11 +19,16 @@ uk:
     openid_connect_allow_association_change: "Дозволити користувачам відключати та повторно підключати свої облікові записи Discourse від постачальника OpenID Connect"
     openid_connect_verbose_logging: "Записувати детальну інформацію про автентифікацію openid-connect до `/logs`. Під час звичайного використання тримайте цю функцію вимкненою."
     openid_connect_authorize_parameters: "Параметри URL, які будуть включені в перенаправлення з /auth/oidc на кінцеву точку авторизації IDP"
+    openid_connect_overrides_email: "Під час кожного входу замінювати електронну адресу користувача значенням openid-connect. Працює так само, як і налаштування {{setting:auth_overrides_email}} , але стосується лише входу в систему через OpenID Connect."
     openid_connect_claims: "Явно визначте вимоги для використання з провайдерами, які не передають дані назад на основі діапазонів. (JSON)"
     openid_connect_groups_claim: "Назва вимоги в токені OIDC, що містить групи користувача у вигляді масиву рядків. Залиште пустим, щоб вимкнути синхронізацію груп."
     openid_connect_user_field_mappings: "Зіставте вимоги OIDC з полями користувачів Discourse. Кожен запис поєднує назву заяви OIDC з числовим полем ID користувача Discourse."
     openid_connect_match_by_email: "Використовувати адресу електронної пошти для зіставлення автентифікацій OpenID Connect з існуючими обліковими записами користувачів Discourse."
     openid_connect_use_pkce: "Увімкнути ключ підтвердження для обміну кодом (PKCE) для автентифікації OpenID Connect."
+    openid_connect_mtls_client_cert: "Сертифікат клієнта X.509 для автентифікації клієнта mTLS у постачальника OIDC. Щоб увімкнути mTLS, також потрібно встановити {{setting:openid_connect_mtls_client_key}}."
+    openid_connect_mtls_client_key: "Закритий ключ X.509 для сертифіката клієнта mTLS. Щоб увімкнути mTLS, також потрібно встановити {{setting:openid_connect_mtls_client_cert}}."
+    openid_connect_mtls_client_key_passcode: "Парольна фраза для закритого ключа mTLS (необов'язково)"
   login:
     omniauth_error:
       openid_connect_discovery_error: Не вдалося отримати конфігурацію від постачальника ідентифікаційних даних. Спробуйте ще раз.
+      openid_connect_mtls_error: Виникла проблема з конфігурацією сертифіката клієнта mTLS. Зверніться до адміністратора.

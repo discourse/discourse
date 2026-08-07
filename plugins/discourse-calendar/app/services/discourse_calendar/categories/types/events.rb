@@ -7,13 +7,13 @@ module DiscourseCalendar
         type_id :events
 
         class << self
-          def visible?
-            SiteSetting.enable_events_category_type_setup
-          end
-
           def enable_plugin
             SiteSetting.calendar_enabled = true
             SiteSetting.discourse_post_event_enabled = true
+          end
+
+          def plugin_enabled?
+            SiteSetting.calendar_enabled && SiteSetting.discourse_post_event_enabled
           end
 
           def category_matches?(category)

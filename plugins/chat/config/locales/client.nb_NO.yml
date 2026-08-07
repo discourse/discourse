@@ -22,6 +22,8 @@ nb_NO:
         yesterday: "I går"
       create: "Opprett"
       cancel: "Avbryt"
+      pinned_bar:
+        title: "Fastsatt"
       pinned: "Fastsatt"
       channel_settings:
         edit: "Endre"
@@ -59,6 +61,8 @@ nb_NO:
         filter_all: Alle
         filter_open: Åpne
         filter_closed: Lukket
+        filter_joined_all: "Alle"
+        filter_joined_joined: "Medlem fra"
       chat_message_separator:
         today: I dag
         yesterday: I går
@@ -84,7 +88,10 @@ nb_NO:
         memberships_count:
           one: "%{count} medlem"
           other: "%{count} medlemmer"
+        preview_card:
+          log_in: "Logg inn"
       create_channel:
+        description: "Beskrivelse"
         type: "Type"
         types:
           category: "Kategori"
@@ -178,6 +185,8 @@ nb_NO:
             message:
               label: Send
     discourse_workflows:
+      chat_message_created:
+        channel_id: "Kanal"
       send_chat_message:
         channel_id: "Kanal"
         message: "Send"

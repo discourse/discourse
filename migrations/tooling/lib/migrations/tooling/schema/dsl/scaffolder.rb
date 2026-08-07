@@ -63,7 +63,7 @@ module Migrations
 
             lines << "  include_all"
             lines << ""
-            lines << "  # TODO: Configure columns. Run `schema validate` to check."
+            lines << "  # TODO: Configure columns. Run `#{Migrations::CLI::BIN} check schema` to check."
             lines << '  # ignore :col1, :col2, reason: "..."'
             lines << "end"
             lines.join("\n") + "\n"

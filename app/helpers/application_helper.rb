@@ -68,7 +68,7 @@ module ApplicationHelper
   end
 
   def csp_nonce_placeholder
-    ContentSecurityPolicy.nonce_placeholder(response.headers)
+    ContentSecurityPolicy.nonce_placeholder(response.headers, request_env: request.env)
   end
 
   def track_view_session_id_placeholder
@@ -82,8 +82,11 @@ module ApplicationHelper
       sk = "shared_session_key"
       return request.env[sk] if request.env[sk]
 
+      token = request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY]
+      return if !token || token.user != current_user
+
       request.env[sk] = key = (session[sk] ||= SecureRandom.hex)
-      Discourse.redis.setex "#{sk}_#{key}", 7.days, current_user.id.to_s
+      Auth::DefaultCurrentUserProvider.store_shared_session_key(key, token.id.to_s)
       key
     end
   end
@@ -102,6 +105,24 @@ module ApplicationHelper
         .filter { it[:importmap_name] }
         .map { [it[:importmap_name], script_asset_path(it[:name])] }
         .to_h
+
+    available_plugins = plugin_assets.map { |a| a[:plugin].directory_name }
+    external_plugin_imports =
+      (
+        plugin_assets.flat_map { |a| a[:external_plugin_imports] || [] } +
+          theme_js_assets.flat_map { |a| a[:external_plugin_imports] }
+      ).uniq
+
+    external_plugin_imports.each do |plugin_name|
+      if available_plugins.include?(plugin_name)
+        imports["discourse/plugins/#{plugin_name}?"] = imports["discourse/plugins/#{plugin_name}"]
+      else
+        imports["discourse/plugins/#{plugin_name}?"] = Plugin::JsManager.optional_plugin_stub
+        imports["discourse/plugins/#{plugin_name}"] = Plugin::JsManager.required_plugin_stub(
+          plugin_name,
+        )
+      end
+    end
 
     JSON.pretty_generate({ imports: }).html_safe
   end
@@ -140,14 +161,14 @@ module ApplicationHelper
   end
 
   def preload_script(script, type_module: false, attrs: {})
-    resolved_script = EmberCli.script_chunks[script]&.first || script
+    resolved_script = EmberAssets.script_chunks[script]&.first || script
     path = script_asset_path(resolved_script)
     preload_script_url(path, entrypoint: script, type_module:, attrs:).html_safe
   end
 
   def module_preloads_for(*scripts)
     resolved_preload_scripts =
-      scripts.compact.flat_map { |script| EmberCli.script_chunks[script] }.compact.uniq
+      scripts.compact.flat_map { |script| EmberAssets.script_chunks[script] }.compact.uniq
 
     modulepreload_tags = resolved_preload_scripts.map { |script| <<~HTML }
       <link rel="modulepreload" href="#{script_asset_path script}" nonce="#{csp_nonce_placeholder}">
@@ -422,9 +443,7 @@ module ApplicationHelper
   end
 
   def discourse_pageview_tracking_meta_tags
-    if !SiteSetting.trigger_browser_pageview_events &&
-         !SiteSetting.use_beacon_for_browser_page_views &&
-         !SiteSetting.persist_browser_pageview_events
+    if !SiteSetting.trigger_browser_pageview_events && !SiteSetting.persist_browser_pageview_events
       return ""
     end
 
@@ -433,8 +452,12 @@ module ApplicationHelper
       name: "discourse-track-view-session-id",
       content: track_view_session_id_placeholder,
     )
-    if SiteSetting.use_beacon_for_browser_page_views
+    if UpcomingChanges.enabled?(:dashboard_improvements)
       tags << tag.meta(name: "discourse-beacon-pageview-enabled", content: "true")
+    end
+
+    if SiteSetting.persist_browser_pageview_events
+      tags << tag.meta(name: "discourse-engagement-tracking-enabled", content: "true")
     end
     tags.html_safe
   end
@@ -667,7 +690,11 @@ module ApplicationHelper
   def user_scheme_id
     return @user_scheme_id if defined?(@user_scheme_id)
     scheme_id = cookies[:color_scheme_id] || current_user&.user_option&.color_scheme_id
-    @user_scheme_id = scheme_id if scheme_id && ColorScheme.find_by_id(scheme_id)
+
+    @user_scheme_id = ColorScheme.valid_id(scheme_id) if ColorScheme.exists?(
+      id: scheme_id,
+      user_selectable: true,
+    ) || theme&.color_scheme_id == scheme_id.to_i
   end
 
   def scheme_id
@@ -683,10 +710,18 @@ module ApplicationHelper
     @scheme_id = Theme.where(id: theme_id).pick(:color_scheme_id)
   end
 
+  def theme
+    @theme = theme_id ? Theme.find_by_id(theme_id) : Theme.find_default
+  end
+
   def user_dark_scheme_id
     return @user_dark_scheme_id if defined?(@user_dark_scheme_id)
     scheme_id = cookies[:dark_scheme_id] || current_user&.user_option&.dark_scheme_id
-    @user_dark_scheme_id = scheme_id if scheme_id && ColorScheme.find_by_id(scheme_id)
+
+    @user_dark_scheme_id = ColorScheme.valid_id(scheme_id) if ColorScheme.exists?(
+      id: scheme_id,
+      user_selectable: true,
+    ) || theme&.dark_color_scheme_id == scheme_id.to_i
   end
 
   def dark_scheme_id
@@ -794,13 +829,10 @@ module ApplicationHelper
     )
   end
 
-  def theme_js_lookup
-    Theme.lookup_field(
+  def theme_js_assets
+    Theme.js_asset_info(
       theme_id,
-      :extra_js,
-      nil,
       skip_transformation: request.env[:skip_theme_ids_transformation].present?,
-      csp_nonce: csp_nonce_placeholder,
     )
   end
 
@@ -984,11 +1016,6 @@ module ApplicationHelper
       disable_custom_css: loading_admin?,
       highlight_js_path: HighlightJs.path,
       svg_sprite_path: SvgSprite.path(theme_id),
-      media_optimization_bundle:
-        script_asset_path(
-          EmberCli.script_chunks["media-optimization-bundle"]&.first ||
-            "/media-optimization-bundle.js",
-        ),
       enable_js_error_reporting: GlobalSetting.enable_js_error_reporting,
       color_scheme_is_dark: dark_color_scheme?,
       user_color_scheme_id: user_scheme_id || -1,
@@ -1054,7 +1081,7 @@ module ApplicationHelper
   end
 
   def can_sign_up?
-    SiteSetting.allow_new_registrations && !SiteSetting.invite_only &&
+    !@readonly_mode && SiteSetting.allow_new_registrations && !SiteSetting.invite_only &&
       !SiteSetting.enable_discourse_connect
   end
 
@@ -1078,6 +1105,7 @@ module ApplicationHelper
   end
 
   def color_scheme_stylesheet_link_tag(href, media, css_class, scheme_id)
+    scheme_id = Integer(scheme_id, exception: false)
     %[<link href="#{href}" media="#{media}" rel="stylesheet" class="#{css_class}"#{scheme_id && scheme_id != -1 ? %[ data-scheme-id="#{scheme_id}"] : ""}/>]
   end
 end

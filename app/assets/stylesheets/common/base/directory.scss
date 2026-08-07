@@ -203,6 +203,8 @@
   }
 
   &__cell {
+    min-width: 0;
+
     &,
     &--user-field {
       padding: var(--space-3) var(--space-2);

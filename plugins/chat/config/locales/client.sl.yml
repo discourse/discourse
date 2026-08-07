@@ -41,6 +41,8 @@ sl:
         yesterday: "Včeraj"
       create: "Ustvari"
       cancel: "Prekliči"
+      pinned_bar:
+        title: "Pripeto"
       pinned: "Pripeto"
       channel_settings:
         edit: "Uredi"
@@ -83,6 +85,8 @@ sl:
         filter_all: Vse
         filter_open: Odpri
         filter_closed: Zaprto
+        filter_joined_all: "Vsi"
+        filter_joined_joined: "Pridružen"
       chat_message_separator:
         today: Danes
         yesterday: Včeraj
@@ -118,7 +122,11 @@ sl:
           two: "%{count}/%{max} člana"
           few: "%{count}/%{max} člani"
           other: "%{count}/%{max} članov"
+      channel:
+        preview_card:
+          log_in: "Prijava"
       create_channel:
+        description: "Opis"
         type: "Tip"
         types:
           category: "Kategorija"

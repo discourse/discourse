@@ -4,7 +4,8 @@
     "spdx": [
       "CC-BY-3.0",
       "CC-BY-4.0",
-      "Apache-2.0 WITH LLVM-exception"
+      "Apache-2.0 WITH LLVM-exception",
+      "MPL-2.0"
     ]
   },
   "packages": {

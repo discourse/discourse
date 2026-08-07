@@ -25,6 +25,7 @@ class Tags::Search
     attribute :filterForInput, :boolean
     attribute :excludeSynonyms, :boolean
     attribute :excludeHasSynonyms, :boolean
+    attribute :prioritizeRecentTags, :boolean
 
     validate :limit_is_valid
 
@@ -112,6 +113,10 @@ class Tags::Search
   def search_tags(params:, category:, guardian:)
     filter_options = params.filter_options.merge(category: category)
 
+    if (recent_tag_ids = recent_priority_tag_ids(params:, guardian:))
+      filter_options[:order_recent_tag_ids] = recent_tag_ids
+    end
+
     tags_with_counts, filter_result_context =
       DiscourseTagging.filter_allowed_tags(guardian, **filter_options, with_context: true)
 
@@ -121,6 +126,14 @@ class Tags::Search
     context[:required_tag_group] = filter_result_context[:required_tag_group]
     context[:forbidden] = nil
     context[:forbidden_message] = nil
+  end
+
+  def recent_priority_tag_ids(params:, guardian:)
+    return unless params.prioritizeRecentTags && params.term.blank?
+    return if guardian.anonymous?
+    return unless UpcomingChanges.enabled_for_user?(:prioritize_recently_used_tags, guardian.user)
+
+    Tag.recently_used_by(guardian.user).presence
   end
 
   def append_disabled_tags(params:, category:, tags:, guardian:)
@@ -199,20 +212,24 @@ class Tags::Search
 
       if group
         conflicting_tag_names =
-          Tag
+          visible_tags(guardian)
             .where(id: selected_ids)
             .joins(:tag_group_memberships)
             .where(tag_group_memberships: { tag_group_id: group.id })
             .order(:name)
             .pluck(:name)
 
-        return(
-          I18n.t(
-            "tags.forbidden.one_tag_per_topic_group",
-            tag_group_name: group.name,
-            tag_names: conflicting_tag_names.join(", "),
+        if conflicting_tag_names.present?
+          return(
+            I18n.t(
+              "tags.forbidden.one_tag_per_topic_group",
+              tag_group_name: group.name,
+              tag_names: conflicting_tag_names.join(", "),
+            )
           )
-        )
+        end
+
+        return I18n.t("tags.forbidden.one_tag_per_topic_group_without_names")
       end
     end
 

@@ -72,50 +72,6 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Validator, :rails do
       expect(errors).to be_empty
     end
 
-    it "detects unconfigured tables in database" do
-      schema = build_schema(tables: { users: proc { include_all } })
-
-      stub_database(
-        connection,
-        db_tables: %i[users posts comments],
-        table_columns: {
-          users: {
-            id: {
-              type: :integer,
-            },
-          },
-        },
-      )
-
-      errors = described_class.new(schema).validate
-      expect(errors).to include(match(/not configured or ignored.*comments.*posts/m))
-    end
-
-    it "does not report ignored tables as unconfigured" do
-      schema =
-        build_schema(
-          tables: {
-            users: proc { include_all },
-          },
-          ignored: proc { table :posts, "not needed" },
-        )
-
-      stub_database(
-        connection,
-        db_tables: %i[users posts],
-        table_columns: {
-          users: {
-            id: {
-              type: :integer,
-            },
-          },
-        },
-      )
-
-      errors = described_class.new(schema).validate
-      expect(errors).to be_empty
-    end
-
     it "detects source table not existing in database" do
       schema = build_schema(tables: { users: proc { include_all } })
 
@@ -142,31 +98,6 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Validator, :rails do
 
       errors = described_class.new(schema).validate
       expect(errors).to include(match(/included columns do not exist.*nonexistent/))
-    end
-
-    it "detects database columns that are not configured or ignored" do
-      schema = build_schema(tables: { users: proc { include :id, :username } })
-
-      stub_database(
-        connection,
-        db_tables: %i[users],
-        table_columns: {
-          users: {
-            id: {
-              type: :integer,
-            },
-            username: {
-              type: :text,
-            },
-            email: {
-              type: :text,
-            },
-          },
-        },
-      )
-
-      errors = described_class.new(schema).validate
-      expect(errors).to include(match(/database columns are not configured or ignored.*email/))
     end
 
     it "detects column options referencing missing columns" do
@@ -390,37 +321,6 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Validator, :rails do
       expect(errors).to contain_exactly(match(/source table 'users' does not exist in database/))
     end
 
-    it "does not report copy_structure_from source tables as unconfigured" do
-      schema =
-        build_schema(
-          tables: {
-            user_archive:
-              proc do
-                copy_structure_from :users
-                include :id
-              end,
-          },
-        )
-
-      stub_database(
-        connection,
-        db_tables: %i[users],
-        table_columns: {
-          users: {
-            id: {
-              type: :integer,
-            },
-          },
-        },
-        primary_keys: {
-          users: ["id"],
-        },
-      )
-
-      errors = described_class.new(schema).validate
-      expect(errors).to be_empty
-    end
-
     it "passes when index references added columns" do
       schema =
         build_schema(
@@ -475,40 +375,6 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Validator, :rails do
 
       errors = described_class.new(schema).validate
       expect(errors).to include(match(/primary key columns are not configured.*id/))
-    end
-
-    it "does not report plugin-ignored tables as unconfigured" do
-      manifest = instance_double(Migrations::Tooling::Schema::DSL::PluginManifest)
-      allow(manifest).to receive(:available?).and_return(true)
-      allow(manifest).to receive(:tables_for_plugin).with("chat").and_return(
-        %w[chat_channels chat_messages],
-      )
-      allow(manifest).to receive(:columns_for_plugin).with("chat", table: "users").and_return([])
-      allow(manifest).to receive(:plugin_for_table).with("users").and_return(nil)
-      allow(Migrations::Tooling::Schema).to receive(:plugin_manifest).and_return(manifest)
-
-      schema =
-        build_schema(
-          tables: {
-            users: proc { include_all },
-          },
-          ignored: proc { plugin :chat, "Not migrating" },
-        )
-
-      stub_database(
-        connection,
-        db_tables: %i[users chat_channels chat_messages],
-        table_columns: {
-          users: {
-            id: {
-              type: :integer,
-            },
-          },
-        },
-      )
-
-      errors = described_class.new(schema).validate
-      expect(errors).to be_empty
     end
 
     it "detects tables that are both configured and ignored" do

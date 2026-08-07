@@ -101,6 +101,32 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Differ, :rails do
       expect(names).to contain_exactly("comments")
     end
 
+    it "excludes plugin-ignored tables from unconfigured" do
+      manifest = instance_double(Migrations::Tooling::Schema::DSL::PluginManifest)
+      allow(manifest).to receive(:available?).and_return(true)
+      allow(manifest).to receive(:tables_for_plugin).with("chat").and_return(
+        %w[chat_channels chat_messages],
+      )
+      allow(manifest).to receive(:columns_for_plugin).with("chat", table: "users").and_return([])
+      allow(manifest).to receive(:plugin_for_table).and_return(nil)
+      allow(Migrations::Tooling::Schema).to receive(:plugin_manifest).and_return(manifest)
+
+      Migrations::Tooling::Schema.table(:users) { include :id }
+      Migrations::Tooling::Schema.ignored { plugin :chat, "Not migrating" }
+
+      stub_database(
+        connection,
+        db_tables: %i[users chat_channels chat_messages],
+        table_columns: {
+          users: %i[id],
+        },
+      )
+
+      result = described_class.new(Migrations::Tooling::Schema).diff
+
+      expect(result.unconfigured_tables).to be_empty
+    end
+
     it "detects missing tables" do
       stub_plugin_manifest_unavailable
 

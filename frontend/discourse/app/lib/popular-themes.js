@@ -60,13 +60,6 @@ export const POPULAR_THEMES = [
     component: true,
   },
   {
-    name: "Discourse GIFS",
-    value: "https://github.com/discourse/discourse-gifs",
-    description: "Adds a button to easily search and insert GIFs in posts.",
-    meta_url: "https://meta.discourse.org/t/discourse-gifs/158738",
-    component: true,
-  },
-  {
     name: "Category Banners",
     value: "https://github.com/discourse/discourse-category-banners",
     preview:

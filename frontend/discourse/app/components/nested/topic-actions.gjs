@@ -29,7 +29,6 @@ export default class NestedTopicActions extends Component {
       @deferTopic={{this.topicController.deferTopic}}
       @replyToPost={{this.topicController.replyToPost}}
       @showCreate={{false}}
-      @showPluginOutlets={{false}}
       class="nested-view__topic-actions"
     />
   </template>

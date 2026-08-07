@@ -2,6 +2,8 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import WhosPosting from "discourse/admin/components/dashboard/engagement/whos-posting";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { i18n } from "discourse-i18n";
 
 module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
   setupRenderingTest(hooks);
@@ -18,7 +20,7 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
     ],
   };
 
-  test("renders the stacked bar segments and legend rows", async function (assert) {
+  test("renders a bar row with label, fill and share for each bucket", async function (assert) {
     await render(
       <template>
         <WhosPosting
@@ -29,18 +31,14 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
       </template>
     );
 
-    assert.dom(".db-whos-posting__bar").exists();
-    assert.dom(".db-whos-posting__segment").exists({ count: 3 });
-    assert.dom(".db-whos-posting__legend-item").exists({ count: 3 });
+    assert.dom(".db-whos-posting__bars").exists();
+    assert.dom(".db-whos-posting__bar-row").exists({ count: 3 });
+    assert.dom(".db-whos-posting__bar-fill").exists({ count: 3 });
     assert
-      .dom(
-        ".db-whos-posting__legend-item:nth-child(1) .db-whos-posting__legend-label"
-      )
+      .dom(".db-whos-posting__bar-row:nth-child(1) .db-whos-posting__bar-label")
       .hasText("New members");
     assert
-      .dom(
-        ".db-whos-posting__legend-item:nth-child(2) .db-whos-posting__legend-share"
-      )
+      .dom(".db-whos-posting__bar-row:nth-child(2) .db-whos-posting__bar-share")
       .hasText("51%");
   });
 
@@ -59,7 +57,43 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
       .dom("a.db-section__row-block-title.--label")
       .hasText("Who's posting?")
       .hasAttribute("href", /\/admin\/reports\/posters_by_member_type/);
-    assert.dom(".category-chooser").exists();
+    assert.dom(".multiple-categories-selector").exists();
+  });
+
+  test("shows an 'All categories' placeholder when nothing is selected", async function (assert) {
+    await render(
+      <template>
+        <WhosPosting
+          @posters={{posters}}
+          @startDate={{start}}
+          @endDate={{end}}
+        />
+      </template>
+    );
+
+    assert.strictEqual(
+      selectKit(".multiple-categories-selector").header().label(),
+      i18n("category.all")
+    );
+  });
+
+  test("prefills the selector with the persisted category selection", async function (assert) {
+    const withSelection = { ...posters, category_ids: [1, 2] };
+
+    await render(
+      <template>
+        <WhosPosting
+          @posters={{withSelection}}
+          @startDate={{start}}
+          @endDate={{end}}
+        />
+      </template>
+    );
+
+    assert.strictEqual(
+      selectKit(".multiple-categories-selector").header().value(),
+      "1,2"
+    );
   });
 
   test("falls back to an empty-state message when there are no posts", async function (assert) {
@@ -71,12 +105,11 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
       </template>
     );
 
-    assert.dom(".db-whos-posting__bar").doesNotExist();
-    assert.dom(".db-whos-posting__legend").doesNotExist();
+    assert.dom(".db-whos-posting__bars").doesNotExist();
     assert.dom(".db-whos-posting__empty").exists();
   });
 
-  test("omits the bar segment for a bucket with zero share", async function (assert) {
+  test("renders a zero-share bucket with a 0% share", async function (assert) {
     const noStaff = {
       total: 85,
       rows: [
@@ -96,7 +129,9 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
       </template>
     );
 
-    assert.dom(".db-whos-posting__segment").exists({ count: 2 });
-    assert.dom(".db-whos-posting__legend-item").exists({ count: 3 });
+    assert.dom(".db-whos-posting__bar-row").exists({ count: 3 });
+    assert
+      .dom(".db-whos-posting__bar-row:nth-child(3) .db-whos-posting__bar-share")
+      .hasText("0%");
   });
 });

@@ -123,7 +123,7 @@ export default class AiTitleSuggester extends Component {
         @icon={{this.triggerIcon}}
         @identifier="ai-title-suggester"
         @onClose={{this.onClose}}
-        @triggerClass="btn-transparent suggestion-button suggest-titles-button {{if
+        @triggerClass="suggestion-button suggest-titles-button {{if
           this.loading
           'is-loading'
         }}"

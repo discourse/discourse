@@ -14,8 +14,8 @@ export default class ChatNavbarThreadSettingsButton extends Component {
     }
 
     return (
-      this.currentUser.staff ||
-      this.currentUser.id === this.args.thread.originalMessage.user.id
+      this.currentUser?.staff ||
+      this.currentUser?.id === this.args.thread.originalMessage.user.id
     );
   }
 

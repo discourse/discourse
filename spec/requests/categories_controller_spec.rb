@@ -19,8 +19,8 @@ RSpec.describe CategoriesController do
       SiteSetting.categories_topics.times { Fabricate(:topic) }
       get "/categories"
 
-      expect(response.body).to have_tag("div#data-preloaded") do |element|
-        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.text)
         expect(json["topic_list"]).to include(%{"more_topics_url":"/latest"})
       end
     end
@@ -51,6 +51,21 @@ RSpec.describe CategoriesController do
       expect(response).to redirect_to(%r{/c/#{category.slug}})
     end
 
+    it "does not disclose restricted topic titles through legacy category permalinks" do
+      group = Fabricate(:group)
+      private_category = Fabricate(:private_category, group: group)
+      private_topic =
+        Fabricate(:topic, category: private_category, title: "Restricted fallback topic title")
+      Permalink.create!(url: "category/old-category", topic: private_topic)
+
+      get "/category/old-category"
+
+      expect(response).to have_http_status(:found)
+      expect(response).to redirect_to("/c/old-category")
+      expect(response.headers["Location"]).not_to include(private_topic.title)
+      expect(response.body).not_to include(private_topic.title)
+    end
+
     it "returns the right response for a normal user" do
       sign_in(user)
 
@@ -64,6 +79,21 @@ RSpec.describe CategoriesController do
         SiteSetting.get(:uncategorized_category_id),
         category.id,
       )
+    end
+
+    it "omits invisible topics with stale featured rows", :aggregate_failures do
+      topic = Fabricate(:topic, category: category)
+      CategoryFeaturedTopic.create!(category: category, topic: topic)
+      topic.update_column(:visible, false)
+
+      get "/categories.json?include_topics=true"
+
+      expect(response).to have_http_status(:ok)
+      category_response =
+        response.parsed_body["category_list"]["categories"].find do |category_json|
+          category_json["id"] == category.id
+        end
+      expect(category_response).not_to have_key("topics")
     end
 
     it "does not returns subcategories without permission" do
@@ -81,6 +111,39 @@ RSpec.describe CategoriesController do
 
       subcategories_for_category = category_list["categories"][1]["subcategory_list"]
       expect(subcategories_for_category).to eq(nil)
+    end
+
+    it "excludes private subcategory counts for anonymous users", :aggregate_failures do
+      private_subcategory = Fabricate(:category, user: admin, parent_category: category)
+      private_subcategory.set_permissions(admins: :full)
+      private_subcategory.save!
+      Fabricate.times(7, :topic, category: private_subcategory)
+      Category.update_stats
+
+      get "/categories.json"
+
+      expect(response).to have_http_status(:ok)
+
+      category_list = response.parsed_body["category_list"]
+      category_response =
+        category_list["categories"].find { |category_json| category_json["id"] == category.id }
+
+      expect(category_response["subcategory_ids"]).not_to include(private_subcategory.id)
+      expect(
+        category_response.slice(
+          "topics_all_time",
+          "topics_year",
+          "topics_month",
+          "topics_week",
+          "topics_day",
+        ),
+      ).to eq(
+        "topics_all_time" => 0,
+        "topics_year" => 0,
+        "topics_month" => 0,
+        "topics_week" => 0,
+        "topics_day" => 0,
+      )
     end
 
     it "returns the right subcategory response with permission" do
@@ -432,21 +495,21 @@ RSpec.describe CategoriesController do
   describe "extensibility event" do
     before { sign_in(admin) }
 
-    it "triggers a extensibility event" do
-      event =
-        DiscourseEvent
-          .track_events do
-            put "/categories/#{category.id}.json",
-                params: {
-                  name: "hello",
-                  color: "ff0",
-                  text_color: "fff",
-                }
-          end
-          .last
+    it "triggers the category updated event once" do
+      events =
+        DiscourseEvent.track_events do
+          put "/categories/#{category.id}.json",
+              params: {
+                name: "hello",
+                color: "ff0",
+                text_color: "fff",
+              }
+        end
 
-      expect(event[:event_name]).to eq(:category_updated)
-      expect(event[:params].first).to eq(category)
+      category_updated_events = events.select { |event| event[:event_name] == :category_updated }
+
+      expect(category_updated_events.size).to eq(1)
+      expect(category_updated_events.pluck(:params).map(&:first)).to all(eq(category))
     end
   end
 
@@ -1263,6 +1326,26 @@ RSpec.describe CategoriesController do
           expect(category.reply_posting_review_group_ids).to contain_exactly(mod_group_3.id)
         end
 
+        it "returns 422 for invalid posting review modes" do
+          %w[topic_posting_review_mode reply_posting_review_mode].each do |review_mode|
+            expect do
+              put "/categories/#{category.id}.json",
+                  params: {
+                    category_setting_attributes: {
+                      review_mode => "invalid",
+                    },
+                  }
+            end.not_to raise_error
+
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response.parsed_body["errors"].join(" ").downcase).to include(
+              review_mode.humanize.downcase,
+              "is not included in the list",
+            )
+            expect(category.reload.category_setting.public_send(review_mode)).to eq("no_one")
+          end
+        end
+
         it "can correctly convert blank strings to appropriate null values" do
           put "/categories/#{category.id}.json", params: { email_in: "", minimum_required_tags: "" }
           expect(response.status).to eq(200)
@@ -1322,6 +1405,73 @@ RSpec.describe CategoriesController do
           put "/categories/#{category.id}.json", params: { locale: "ja" }
           expect(response.status).to eq(200)
           expect(category.reload.locale).to be_nil
+        end
+
+        context "when adding category_types that enable plugins" do
+          let(:test_type_class) do
+            Class.new(Categories::Types::Base) do
+              type_id :test_plugin_type
+
+              def self.enable_plugin
+              end
+
+              def self.plugin_enabled?
+                false
+              end
+
+              def self.category_matches?(category)
+                false
+              end
+
+              def self.find_matches
+                Category.none
+              end
+
+              def self.configure_category(category, guardian:, configuration_values: {})
+              end
+
+              def self.unconfigure_category(category, guardian:)
+              end
+            end
+          end
+
+          before do
+            SiteSetting.enable_simplified_category_creation = true
+            plugin = Plugin::Instance.new
+            plugin.stubs(:humanized_name).returns("Test")
+            Discourse.plugins_by_name["discourse-test-plugin"] = plugin
+            Categories::TypeRegistry.register(
+              test_type_class,
+              plugin_identifier: "discourse-test-plugin",
+            )
+          end
+
+          after do
+            Discourse.plugins_by_name.delete("discourse-test-plugin")
+            Categories::TypeRegistry.reset!
+          end
+
+          it "returns 422 when a moderator tries to add a plugin-enabling type" do
+            sign_in(Fabricate(:moderator))
+            SiteSetting.moderators_manage_categories = true
+
+            put "/categories/#{category.id}.json", params: { category_types: %w[test_plugin_type] }
+
+            expect(response.status).to eq(422)
+            expect(response.parsed_body["errors"]).to include(
+              I18n.t(
+                "category_types.requires_plugin",
+                type_name: "Test plugin type",
+                plugin_name: "Test",
+              ),
+            )
+          end
+
+          it "allows an admin to add a plugin-enabling type" do
+            put "/categories/#{category.id}.json", params: { category_types: %w[test_plugin_type] }
+
+            expect(response.status).to eq(200)
+          end
         end
       end
     end
@@ -1591,6 +1741,51 @@ RSpec.describe CategoriesController do
     end
   end
 
+  describe "#convert_nested_replies" do
+    let!(:topic) { Fabricate(:topic, category: category) }
+
+    let(:url) { "/categories/#{category.id}/convert_nested_replies.json" }
+
+    before do
+      SiteSetting.nested_replies_enabled = true
+      category.category_setting.update!(nested_replies_default: true)
+    end
+
+    it "requires the user to be logged in" do
+      post url
+
+      expect(response.status).to eq(403)
+    end
+
+    it "converts topics in the category to nested replies" do
+      sign_in(admin)
+
+      expect { post url }.to change { NestedTopic.where(topic: topic).count }.from(0).to(1)
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["converted_topic_count"]).to eq(1)
+      expect(response.parsed_body["nested_replies_conversion_completed"]).to eq(true)
+      expect(category.reload.nested_replies_conversion_completed?).to eq(true)
+    end
+
+    it "does not allow users who cannot edit the category" do
+      sign_in(user)
+
+      post url
+
+      expect(response.status).to eq(403)
+      expect(NestedTopic.where(topic: topic).exists?).to eq(false)
+    end
+
+    it "returns not found for a missing category" do
+      sign_in(admin)
+
+      post "/categories/0/convert_nested_replies.json"
+
+      expect(response.status).to eq(404)
+    end
+  end
+
   describe "#visible_groups" do
     fab!(:public_group) do
       Fabricate(:group, visibility_level: Group.visibility_levels[:public], name: "aaa")
@@ -1794,7 +1989,7 @@ RSpec.describe CategoriesController do
 
       queries = track_sql_queries { post "/categories/search.json", params: { term: "Notfoo" } }
 
-      expect(queries.length).to eq(8)
+      expect(queries.length).to eq(6)
 
       expect(response.parsed_body["categories"].length).to eq(1)
       expect(response.parsed_body["categories"][0]["custom_fields"]).to eq("bob" => "marley")
@@ -1852,6 +2047,30 @@ RSpec.describe CategoriesController do
         post "/categories/search.json", params: { term: "Éditions" }
 
         expect(response.parsed_body["categories"].map { |c| c["name"] }).to include("Editions")
+      end
+
+      it "limits the number of term words used in SQL filters" do
+        long_term = 50.times.map { |index| "word#{index}" }.join(" ")
+
+        queries = track_sql_queries { post "/categories/search.json", params: { term: long_term } }
+
+        expect(response.status).to eq(200)
+
+        category_search_queries =
+          queries.select { |query| query.match?(/FROM "?categories"?/i) && query.match?(/ILIKE/i) }
+        ilike_counts = category_search_queries.map { |query| query.scan(/\bILIKE\b/i).size }
+
+        expect(ilike_counts).to be_present
+        expect(ilike_counts.max).to be <= 25
+      end
+
+      it "limits the term length used in SQL filters" do
+        long_term = "a" * 300
+
+        queries = track_sql_queries { post "/categories/search.json", params: { term: long_term } }
+
+        expect(response.status).to eq(200)
+        expect(queries.join("\n")).not_to include(long_term)
       end
     end
 

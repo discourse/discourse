@@ -15,33 +15,45 @@ module Reports::TrustLevelPipeline
         },
         { property: :share_formatted, title: I18n.t("reports.trust_level_pipeline.labels.share") },
         {
-          property: :moves_in,
+          property: :promoted_in,
           type: :number,
-          title: I18n.t("reports.trust_level_pipeline.labels.moves_in"),
+          title: I18n.t("reports.trust_level_pipeline.labels.promoted_in"),
         },
         {
-          property: :moves_out,
+          property: :demoted_in,
           type: :number,
-          title: I18n.t("reports.trust_level_pipeline.labels.moves_out"),
+          title: I18n.t("reports.trust_level_pipeline.labels.demoted_in"),
+        },
+        {
+          property: :signups,
+          type: :number,
+          title: I18n.t("reports.trust_level_pipeline.labels.signups"),
         },
       ]
 
       snapshot = User.real.group(:trust_level).count
       total_members = snapshot.values.sum
 
-      moves_in_by_tl = Hash.new(0)
-      moves_out_by_tl = Hash.new(0)
+      new_signups = User.real.where(created_at: report.start_date..report.end_date).count
+      entry_level = SiteSetting.default_trust_level
+
+      promoted_in_by_tl = Hash.new(0)
+      demoted_in_by_tl = Hash.new(0)
       total_up = 0
       total_down = 0
 
       moves_sql = <<~SQL
+        WITH trust_changes AS MATERIALIZED (
+          SELECT target_user_id, new_value, previous_value, created_at
+          FROM user_histories
+          WHERE action IN (:change_action, :auto_action)
+        )
         SELECT
           new_value::integer AS new_tl,
           previous_value::integer AS prev_tl,
           COUNT(*) AS move_count
-        FROM user_histories
-        WHERE action IN (:change_action, :auto_action)
-          AND created_at >= :start_date
+        FROM trust_changes
+        WHERE created_at >= :start_date
           AND created_at <= :end_date
           AND previous_value ~ '^\\d+$'
           AND new_value ~ '^\\d+$'
@@ -59,11 +71,11 @@ module Reports::TrustLevelPipeline
         )
         .each do |row|
           next if row.new_tl == row.prev_tl
-          moves_in_by_tl[row.new_tl] += row.move_count
-          moves_out_by_tl[row.prev_tl] += row.move_count
           if row.new_tl > row.prev_tl
+            promoted_in_by_tl[row.new_tl] += row.move_count
             total_up += row.move_count
           else
+            demoted_in_by_tl[row.new_tl] += row.move_count
             total_down += row.move_count
           end
         end
@@ -78,8 +90,9 @@ module Reports::TrustLevelPipeline
             count: count,
             share: share,
             share_formatted: "#{share}%",
-            moves_in: moves_in_by_tl[tl],
-            moves_out: moves_out_by_tl[tl],
+            promoted_in: promoted_in_by_tl[tl],
+            demoted_in: demoted_in_by_tl[tl],
+            signups: tl == entry_level ? new_signups : 0,
           }
         end
 

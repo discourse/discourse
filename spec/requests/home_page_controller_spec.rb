@@ -62,6 +62,18 @@ RSpec.describe HomePageController do
         )
       end
 
+      it "uses the configured crawler route when a custom homepage is enabled" do
+        ThemeModifierHelper.any_instance.stubs(:custom_homepage).returns(true)
+        SiteSetting.custom_homepage_crawler_route = "categories"
+        category = Fabricate(:category, name: "Crawler Category")
+
+        get "/", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include(category.name)
+        expect(response.body).not_to include("crawler-view-anon-menu")
+      end
+
       it "should not display the site description on another route" do
         get "/top", headers: { "HTTP_USER_AGENT" => "Googlebot" }
 

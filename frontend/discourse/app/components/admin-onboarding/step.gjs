@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { logOnboardingEvent } from "discourse/lib/admin-onboarding";
 import { currentThemeId, HORIZON_THEME_ID } from "discourse/lib/theme-selector";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -40,13 +41,23 @@ export default class OnboardingStep extends Component {
     throw new Error("performAction is required for OnboardingStep");
   }
 
-  markAsCompleted() {
+  // Awaits the audit write so callers that reload the page on completion can't
+  // cancel it in flight.
+  async markAsCompleted() {
+    // app events backing some steps can fire more than once, so only audit the
+    // first transition into the completed state
+    const alreadyCompleted = this.completed;
+
     this.keyValueStore.set({
       key: `onboarding_step_${this.name}`,
       value: true,
     });
     this.completed = true;
     this.appEvents.trigger(`onboarding-step:completed`, this.name);
+
+    if (!alreadyCompleted) {
+      await logOnboardingEvent("step_completed", this.name);
+    }
 
     return this.args.onCompleted?.(this.name);
   }

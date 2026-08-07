@@ -7,15 +7,19 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
-import KeyValueStore from "discourse/lib/key-value-store";
 import { i18n } from "discourse-i18n";
 import QueryHelp from "discourse/plugins/discourse-data-explorer/discourse/components/modal/query-help";
 import { ParamValidationError } from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
 import { subscribeToAiGeneration } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-generation";
-import { chartability } from "discourse/plugins/discourse-data-explorer/discourse/lib/chart-helpers";
+import { dataExplorerAiQueriesEnabled } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-query-availability";
+import { defaultView } from "discourse/plugins/discourse-data-explorer/discourse/lib/chart-helpers";
+import {
+  dataExplorerStore,
+  rememberMode,
+} from "discourse/plugins/discourse-data-explorer/discourse/lib/data-explorer-store";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 
-const viewStore = new KeyValueStore("discourse_data_explorer_");
+const HIDE_SCHEMA_KEY = "hide_schema";
 
 export default class PluginsExplorerController extends Controller {
   @service modal;
@@ -31,6 +35,7 @@ export default class PluginsExplorerController extends Controller {
   @tracked results = this.model.results;
   @tracked dirty = false;
   @tracked isCachedResult = false;
+  @tracked hideSchema = dataExplorerStore.get(HIDE_SCHEMA_KEY) === "true";
   @tracked view = "table";
   @tracked mode = "manual";
   @tracked aiPrompt = "";
@@ -86,12 +91,19 @@ export default class PluginsExplorerController extends Controller {
       current.group_ids !== this._pristine.group_ids;
   }
 
+  // While a query is running (or AI is generating) the actions in the action
+  // bar shouldn't be usable — the interstitial "Save changes and run" state
+  // is confusing otherwise.
+  get actionsBusy() {
+    return this.loading || this.aiGenerating;
+  }
+
   get saveDisabled() {
-    return !this.dirty;
+    return !this.dirty || this.actionsBusy;
   }
 
   get runDisabled() {
-    return this.model.destroyed;
+    return this.model.destroyed || this.actionsBusy;
   }
 
   get parsedParams() {
@@ -134,7 +146,7 @@ export default class PluginsExplorerController extends Controller {
   }
 
   get aiQueriesEnabled() {
-    return this.siteSettings.data_explorer_ai_queries_enabled;
+    return dataExplorerAiQueriesEnabled(this.siteSettings);
   }
 
   get regenerateDisabled() {
@@ -157,7 +169,7 @@ export default class PluginsExplorerController extends Controller {
 
   initView() {
     const queryId = this.model?.id;
-    const stored = queryId ? viewStore.get(`view_${queryId}`) : null;
+    const stored = queryId ? dataExplorerStore.get(`view_${queryId}`) : null;
     const validViews =
       this.mode === "ai" ? ["chart", "table", "sql"] : ["chart", "table"];
     if (validViews.includes(stored)) {
@@ -165,7 +177,7 @@ export default class PluginsExplorerController extends Controller {
     } else if (this.mode === "ai" && !this.hasResults) {
       this.view = "sql";
     } else {
-      this.view = chartability(this.results).chartable ? "chart" : "table";
+      this.view = defaultView(this.results);
     }
   }
 
@@ -174,13 +186,20 @@ export default class PluginsExplorerController extends Controller {
     this.view = value;
     const queryId = this.model?.id;
     if (queryId) {
-      viewStore.set({ key: `view_${queryId}`, value });
+      dataExplorerStore.set({ key: `view_${queryId}`, value });
     }
+  }
+
+  @action
+  updateHideSchema(value) {
+    this.hideSchema = value;
+    dataExplorerStore.set({ key: HIDE_SCHEMA_KEY, value: value.toString() });
   }
 
   @action
   setMode(value) {
     this.mode = value;
+    rememberMode(value);
     if (value !== "ai") {
       this._teardownAi();
       this.aiPrompt = "";
@@ -496,9 +515,7 @@ export default class PluginsExplorerController extends Controller {
         // After a successful run, jump out of the SQL view so the user sees
         // the results they just asked for.
         if (this.view === "sql") {
-          this.setView(
-            chartability(this.results).chartable ? "chart" : "table"
-          );
+          this.setView(defaultView(this.results));
         } else {
           this.initView();
         }

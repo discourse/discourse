@@ -22,8 +22,6 @@ ja:
       create:
         form:
           insert: 挿入
-          advanced_mode: 詳細モード
-          simple_mode: シンプルモード
           format_description: "ユーザーに日付を表示するために使用されるフォーマット。オフセットを表示するには Z、タイムゾーン名を表示するには zz を使用します。"
           timezones_title: 表示するタイムゾーン
           timezones_description: タイムゾーンは、プレビューとフォールバックで日付を表示するために使用されます。

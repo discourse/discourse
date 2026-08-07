@@ -203,6 +203,7 @@ nl:
     discourse_workflows:
       nodes:
         "action:assign_topic": "Topic toewijzen"
+        "trigger:assigned": "Toegewezen"
       assign_topic:
         operations:
           assign: "Toewijzen"

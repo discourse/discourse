@@ -9,6 +9,8 @@ RSpec.describe DiscourseRssPolling::FeedItem do
     it { expect(feed_item.content).to eq(expected[:content]) }
     it { expect(feed_item.url).to eq(expected[:url]) }
     it { expect(feed_item.title).to eq(expected[:title]) }
+
+    it { expect(feed_item.categories).to eq(expected[:categories]) } if expected.key?(:categories)
   end
 
   context "with empty item" do

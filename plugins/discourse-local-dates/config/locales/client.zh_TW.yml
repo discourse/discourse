@@ -17,8 +17,6 @@ zh_TW:
       create:
         form:
           insert: 插入
-          advanced_mode: 進階模式
-          simple_mode: 簡單模式
           format_description: "日期的顯示格式。可用 Z 來顯示時區偏移量或 zz 來顯示時區名稱。"
           timezones_title: 時區顯示
           timezones_description: 時區決定顯示的日期及時間。

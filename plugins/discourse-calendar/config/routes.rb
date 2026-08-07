@@ -10,7 +10,6 @@ DiscoursePostEvent::Engine.routes.draw do
       }
   get "/discourse-post-event/events/:id" => "events#show"
   delete "/discourse-post-event/events/:id" => "events#destroy"
-  post "/discourse-post-event/events" => "events#create"
   post "/discourse-post-event/events/:id/csv-bulk-invite" => "events#csv_bulk_invite"
   post "/discourse-post-event/events/:id/bulk-invite" => "events#bulk_invite", :format => :json
   post "/discourse-post-event/events/:id/invite" => "events#invite"
@@ -24,9 +23,16 @@ DiscoursePostEvent::Engine.routes.draw do
   get "/upcoming-events/mine" => "upcoming_events#index"
 end
 
+DiscourseCalendar::Engine.routes.draw do
+  get "/discourse-calendar/livestream/zoom/signature" => "livestream#prepare_zoom_signature",
+      :format => :json
+end
+
 Discourse::Application.routes.draw do
   mount DiscourseCalendar::Engine, at: "/"
   mount DiscoursePostEvent::Engine, at: "/"
+
+  get "t/:slug/:topic_id/zoom" => "topics#show", :constraints => { topic_id: /\d+/ }
 
   scope constraints: StaffConstraint.new do
     get "/admin/plugins/calendar" => "admin/plugins#index"

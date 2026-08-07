@@ -9,7 +9,7 @@ import { i18n } from "discourse-i18n";
 export default class AssignedList extends Component {
   <template>
     <li class="user-activity-bottom-outlet assigned-list" ...attributes>
-      {{#if this.currentUser.can_assign}}
+      {{#if this.currentUser.can_assign_globally}}
         <LinkTo @route="userActivity.assigned">
           {{dIcon "user-plus"}}
           {{i18n "discourse_assign.assigned"}}

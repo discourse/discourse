@@ -119,4 +119,40 @@ module("Component | PollInfo", function (hooks) {
         "displays the public label"
       );
   });
+
+  test("displays who closed the poll", async function (assert) {
+    this.setProperties({
+      options: OPTIONS,
+      close: null,
+      closed: true,
+      closedBy: { username: "jane" },
+      results: [],
+      showResults: false,
+      postUserId: 59,
+      isPublic: false,
+      hasVoted: false,
+      voters: [],
+    });
+
+    await render(
+      <template>
+        <PollInfo
+          @options={{this.options}}
+          @close={{this.close}}
+          @closed={{this.closed}}
+          @closedBy={{this.closedBy}}
+          @results={{this.results}}
+          @showResults={{this.showResults}}
+          @postUserId={{this.postUserId}}
+          @isPublic={{this.isPublic}}
+          @hasVoted={{this.hasVoted}}
+          @voters={{this.voters}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".poll-info_instructions li.poll-info_closed-by span")
+      .hasText(i18n("poll.closed_by", { username: "jane" }));
+  });
 });

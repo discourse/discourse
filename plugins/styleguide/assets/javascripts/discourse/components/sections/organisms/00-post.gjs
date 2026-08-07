@@ -1,22 +1,9 @@
-import Component from "@glimmer/component";
-import Post from "discourse/components/post";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
+import PostExample from "../../examples/organisms/post";
+import postSource from "../../examples/organisms/post?source=file";
 
-export default class PostOrganism extends Component {
-  get postCode() {
-    return `import Post from "discourse/components/post";
-
-<template>
-  <Post @post={{@dummy.postModel}} />
-</template>`;
-  }
-
-  <template>
-    <StyleguideExample @title="<Post>" @code={{this.postCode}}>
-      <Post
-        @post={{@dummy.postModel.transformedPost}}
-        @canCreatePost={{true}}
-      />
-    </StyleguideExample>
-  </template>
-}
+export default <template>
+  <StyleguideExample @title="<Post>" @code={{postSource}}>
+    <PostExample @post={{@dummy.postModel.transformedPost}} />
+  </StyleguideExample>
+</template>

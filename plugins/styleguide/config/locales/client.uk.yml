@@ -13,7 +13,7 @@ uk:
   js:
     styleguide:
       title: "Styleguide"
-      welcome: "Для початку оберіть розділ у меню ліворуч."
+      welcome: "Щоб розпочати, виберіть розділ у меню навігації."
       categories:
         syntax: Синтаксис
         atoms: Атоми
@@ -101,6 +101,7 @@ uk:
           title: "Модальний"
           header: "Модальний заголовок"
           footer: "Модальний нижній колонтитул"
+          open: "Відкрити модальне вікно"
         user_about:
           title: "Вікно «Про користувача»"
         header_icons:

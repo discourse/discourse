@@ -7,6 +7,8 @@ describe Reports::ActivityByCategory do
   let(:end_date) { Time.zone.local(2026, 4, 28).end_of_day }
 
   def build(filters: {}, current_user: nil)
+    CategoryActivityDailyRollup.aggregate(start_date: start_date - 60.days, end_date: end_date)
+
     Report.find(
       "activity_by_category",
       { start_date: start_date, end_date: end_date, filters: filters, current_user: current_user },
@@ -94,6 +96,22 @@ describe Reports::ActivityByCategory do
     formatted = row(report, cat.id)[:share_change_formatted]
     expect(formatted).to start_with("+")
     expect(formatted).to end_with("%")
+  end
+
+  it "computes share_change against the prior period" do
+    grew = Fabricate(:category)
+    shrank = Fabricate(:category)
+    # current period activity
+    3.times { Fabricate(:topic, category: grew, created_at: start_date + 1.day) }
+    Fabricate(:topic, category: shrank, created_at: start_date + 1.day)
+    # prior period activity (start_date - 1.day falls in [prior_start, start_date])
+    3.times { Fabricate(:topic, category: shrank, created_at: start_date - 1.day) }
+
+    report = build(filters: { category_ids: [grew.id, shrank.id] })
+
+    expect(row(report, grew.id)[:share_change]).to be > 0
+    expect(row(report, shrank.id)[:share_change]).to be < 0
+    expect(row(report, shrank.id)[:share_change_formatted]).not_to start_with("+")
   end
 
   it "returns empty rows when an explicit filter resolves to no valid ids" do

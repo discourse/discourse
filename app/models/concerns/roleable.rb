@@ -5,6 +5,7 @@ module Roleable
 
   included do
     scope :admins, -> { where(admin: true) }
+    scope :active_admins, -> { real.admins.where(active: true) }
     scope :moderators, -> { where(moderator: true) }
     scope :staff, -> { where("moderator or admin ") }
   end
@@ -23,7 +24,6 @@ module Roleable
       begin
         return false if SiteSetting.whispers_allowed_groups_map.empty?
         return true if admin
-        return true if SiteSetting.whispers_allowed_groups_map.include?(primary_group_id)
         group_users&.exists?(group_id: SiteSetting.whispers_allowed_groups_map)
       end
   end

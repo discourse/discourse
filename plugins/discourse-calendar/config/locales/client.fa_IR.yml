@@ -25,6 +25,9 @@ fa_IR:
             topic_id:
               label: شناسه موضوع
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "گفتگو"
       invite_user_notification: "%{username} شما را دعوت کرده به: %{description}"
       on_holiday: "در تعطیلات"
       disable_holiday: "غیرفعال کردن"
@@ -411,6 +414,8 @@ fa_IR:
       composer_actions:
         create_event:
           label: "ایجاد رویداد"
+        create_topic:
+          label: "ایجاد موضوع"
       builder_modal:
         custom_fields:
           label: "فیلدهای سفارشی"
@@ -447,11 +452,6 @@ fa_IR:
             last: "آخرین"
         attendance:
           none: "هیچ‌کدام"
-        url:
-          label: "نشانی اینترنتی"
-          placeholder: "اختیاری"
-        location:
-          label: "موقعیت"
         description:
           label: "توضیح"
         name:

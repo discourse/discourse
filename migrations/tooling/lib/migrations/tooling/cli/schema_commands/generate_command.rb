@@ -18,7 +18,8 @@ module Migrations
             return print_usage if @options[:help]
 
             database = selected_database
-            resolved = schema.generate(database:)
+            result = schema.generate(database:)
+            resolved = result.resolved
 
             puts
             table_count = resolved.tables.size
@@ -26,6 +27,10 @@ module Migrations
             tables_str = "#{table_count} #{"table".pluralize(table_count)}"
             enums_str = "#{enum_count} #{"enum".pluralize(enum_count)}"
             puts "✓ Generated #{tables_str}, #{enums_str}".green
+
+            result.deleted_files.each do |path|
+              puts "✓ Deleted #{path} (no longer generated)".yellow
+            end
           end
         end
       end

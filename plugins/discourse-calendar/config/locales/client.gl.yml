@@ -84,11 +84,6 @@ gl:
             last: "último"
         attendance:
           none: "Ningunha"
-        url:
-          label: "URL"
-          placeholder: "Opcional"
-        location:
-          label: "Localización"
         description:
           label: "Descrición"
         event_type:

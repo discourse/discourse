@@ -34,6 +34,10 @@ import PreloadStore from "discourse/lib/preload-store";
 import singleton from "discourse/lib/singleton";
 import { emojiUnescape } from "discourse/lib/text";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import Badge from "discourse/models/badge";
@@ -54,6 +58,7 @@ export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
   BACKUP_CODE: 2,
   SECURITY_KEY: 3,
+  PASSKEY: 4,
 };
 
 export const MAX_SECOND_FACTOR_NAME_LENGTH = 300;
@@ -121,7 +126,6 @@ let userOptionFields = [
   "email_messages_level",
   "email_previous_replies",
   "enable_allowed_pm_users",
-  "enable_defer",
   "enable_markdown_monospace_font",
   "enable_quoting",
   "enable_smart_lists",
@@ -138,7 +142,10 @@ let userOptionFields = [
   "new_topic_duration_minutes",
   "notification_level_when_replying",
   "notify_on_linked_posts",
+  "push_notification_level",
   "seen_popups",
+  "send_shortcut",
+  "automatically_translate",
   "show_original_content",
   "sidebar_link_to_filtered_list",
   "sidebar_show_count_of_new_items",
@@ -148,6 +155,7 @@ let userOptionFields = [
   "timezone",
   "title_count_mode",
   "topics_unread_when_closed",
+  "understood_languages",
   "watched_precedence_over_muted",
 ];
 
@@ -240,7 +248,6 @@ export default class User extends RestModel.extend(Evented) {
   @userOption("hide_profile") hide_profile;
   @userOption("hide_presence") hide_presence;
   @userOption("title_count_mode") title_count_mode;
-  @userOption("enable_defer") enable_defer;
   @userOption("timezone") timezone;
   @userOption("skip_new_user_tips") skip_new_user_tips;
   @userOption("default_calendar") default_calendar;
@@ -255,6 +262,8 @@ export default class User extends RestModel.extend(Evented) {
   numGroupsToDisplay = 2;
 
   statusManager = new UserStatusManager(this);
+
+  @tracked _location;
 
   @computed("private_messages_stats.all")
   get hasPMs() {
@@ -296,6 +305,11 @@ export default class User extends RestModel.extend(Evented) {
     return this.staff || this.isLeader;
   }
 
+  @computed("can_set_topic_timer", "canManageTopic")
+  get canSetTopicTimer() {
+    return this.can_set_topic_timer ?? this.canManageTopic;
+  }
+
   @computed("sidebar_category_ids")
   get sidebarCategoryIds() {
     return this.sidebar_category_ids;
@@ -312,6 +326,17 @@ export default class User extends RestModel.extend(Evented) {
 
   set sidebarSections(value) {
     this.sidebar_sections = value;
+  }
+
+  @dependentKeyCompat
+  get location() {
+    return applyValueTransformer("user-location", this._location, {
+      user: this,
+    });
+  }
+
+  set location(value) {
+    this._location = value;
   }
 
   @computed("sidebarTags.@each.name")
@@ -446,7 +471,9 @@ export default class User extends RestModel.extend(Evented) {
   @computed()
   get path() {
     // no need to observe, requires a hard refresh to update
-    return userPath(this.username_lower);
+    return applyValueTransformer("user-path", userPath(this.username_lower), {
+      user: this,
+    });
   }
 
   @computed()
@@ -1508,7 +1535,7 @@ User.reopenClass({
     return result;
   },
 
-  createAccount(attrs) {
+  async createAccount(attrs) {
     let data = {
       name: attrs.accountName,
       email: attrs.accountEmail,
@@ -1524,10 +1551,15 @@ User.reopenClass({
       data.invite_code = attrs.inviteCode;
     }
 
-    return ajax(userPath(), {
-      data,
-      type: "POST",
-    });
+    return applyBehaviorTransformer(
+      "create-account",
+      () =>
+        ajax(userPath(), {
+          data,
+          type: "POST",
+        }),
+      { data }
+    );
   },
 
   _saveTimezone(user) {

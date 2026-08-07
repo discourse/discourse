@@ -6,3 +6,9 @@ Fabricator(:browser_pageview_event) do
   user_agent "test"
   session_id { SecureRandom.hex(16) }
 end
+
+Fabricator(:browser_pageview_event_with_unnormalized_referrer, from: :browser_pageview_event) do
+  referrer "https://www.example.com/"
+  normalized_referrer nil
+  normalized_referrer_version nil
+end

@@ -7,6 +7,8 @@
 sq:
   js:
     discourse_reactions:
+      users_popup:
+        all: "Të gjitha"
       main_reaction:
         add: "Më pëlqen ky postim"
     notifications:

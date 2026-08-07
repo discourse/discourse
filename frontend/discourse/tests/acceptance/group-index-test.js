@@ -1,8 +1,14 @@
-import { click, currentURL, settled, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  find,
+  findAll,
+  settled,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -70,8 +76,8 @@ acceptance("Group Members", function (needs) {
 
     await click("button.bulk-select");
 
-    await click(queryAll("input.bulk-select")[0]);
-    await click(queryAll("input.bulk-select")[1]);
+    await click(find("input.bulk-select"));
+    await click(findAll("input.bulk-select")[1]);
 
     const memberDropdown = selectKit(".bulk-group-member-dropdown");
     await memberDropdown.expand();
@@ -96,8 +102,8 @@ acceptance("Group Members", function (needs) {
 
     await click("button.bulk-select");
 
-    await click(queryAll("input.bulk-select")[0]);
-    await click(queryAll("input.bulk-select")[1]);
+    await click(find("input.bulk-select"));
+    await click(findAll("input.bulk-select")[1]);
 
     const memberDropdown = selectKit(".bulk-group-member-dropdown");
     await memberDropdown.expand();

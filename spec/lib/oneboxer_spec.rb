@@ -16,6 +16,31 @@ RSpec.describe Oneboxer do
     expect(Oneboxer.onebox("http://boom.com")).to eq("")
   end
 
+  it "shows the bot challenge error message when the response is a verification challenge" do
+    url = "https://challenged.example.com/page"
+    %i[head get].each do |method|
+      stub_request(method, url).to_return(
+        status: 202,
+        headers: {
+          "x-amzn-waf-action" => "challenge",
+        },
+      )
+    end
+
+    expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include(
+      I18n.t("errors.onebox.bot_challenge").sub(" :cry:", ""),
+    )
+  end
+
+  it "shows the status code error message for a plain error response" do
+    url = "https://error.example.com/page"
+    %i[head get].each { |method| stub_request(method, url).to_return(status: 403) }
+
+    expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include(
+      I18n.t("errors.onebox.error_response", status_code: 403).sub(" :cry:", ""),
+    )
+  end
+
   describe "#invalidate" do
     let(:url) { "http://test.com" }
     it "clears the cached preview for the onebox URL and the failed URL cache" do
@@ -140,6 +165,7 @@ RSpec.describe Oneboxer do
 
     it "links to an user profile" do
       user = Fabricate(:user)
+      user.user_stat.update!(post_count: 1)
 
       expect(preview("/u/does-not-exist")).to match_html(link("/u/does-not-exist"))
       expect(preview("/u/#{user.username}")).to include(user.name)
@@ -147,6 +173,7 @@ RSpec.describe Oneboxer do
 
     it "should respect enable_names site setting" do
       user = Fabricate(:user)
+      user.user_stat.update!(post_count: 1)
 
       SiteSetting.enable_names = true
       expect(preview("/u/#{user.username}")).to include(user.name)
@@ -164,6 +191,7 @@ RSpec.describe Oneboxer do
 
     it "strips HTML from user profile location" do
       user = Fabricate(:user)
+      user.user_stat.update!(post_count: 1)
       profile = user.reload.user_profile
 
       expect(preview("/u/#{user.username}")).not_to include("<span class=\"location\">")
@@ -234,6 +262,125 @@ RSpec.describe Oneboxer do
 
       expect(preview).to include(public_subcategory.name)
       expect(preview).to include(public_subcategory.url)
+    end
+  end
+
+  describe "localized internal topic oneboxes" do
+    fab!(:viewer, :user)
+    fab!(:category)
+    fab!(:linked_topic) do
+      Fabricate(:topic, title: "Sun Tzu's strategies", category: category, locale: "en")
+    end
+    fab!(:first_post) do
+      Fabricate(
+        :post,
+        topic: linked_topic,
+        post_number: 1,
+        locale: "en",
+        raw: "The supreme art of war is to subdue the enemy without fighting.",
+      )
+    end
+    fab!(:second_post) do
+      Fabricate(
+        :post,
+        topic: linked_topic,
+        post_number: 2,
+        locale: "en",
+        raw: "Every battle is won before it is ever fought.",
+      )
+    end
+
+    before { SiteSetting.content_localization_enabled = true }
+
+    def card(url, locale: nil)
+      Oneboxer.onebox(
+        "#{Discourse.base_url}#{url}",
+        user_id: viewer.id,
+        category_id: category.id,
+        locale: locale,
+      ).to_s
+    end
+
+    it "shows the topic title and first-post preview in the target locale" do
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+      Fabricate(:post_localization, post: first_post, locale: "ja", cooked: "<p>戦わずして勝つ</p>")
+
+      html = card(linked_topic.relative_url, locale: "ja")
+
+      expect(html).to include("孫子の兵法")
+      expect(html).to include("戦わずして勝つ")
+      expect(html).not_to include("Sun Tzu")
+      expect(html).not_to include("subdue the enemy")
+    end
+
+    it "shows the linked post's own translation, not another post's" do
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+      Fabricate(:post_localization, post: first_post, locale: "ja", cooked: "<p>戦わずして勝つ</p>")
+      Fabricate(:post_localization, post: second_post, locale: "ja", cooked: "<p>戦う前に勝つ</p>")
+
+      html = card(second_post.url, locale: "ja")
+
+      expect(html).to include(%{data-post="2"})
+      expect(html).to include("戦う前に勝つ")
+      expect(html).not_to include("戦わずして勝つ")
+    end
+
+    it "keeps the preview original when only the title is translated" do
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+
+      html = card(linked_topic.relative_url, locale: "ja")
+
+      expect(html).to include("孫子の兵法")
+      expect(html).to include("subdue the enemy")
+    end
+
+    it "falls back to the original when no translation exists" do
+      html = card(linked_topic.relative_url, locale: "ja")
+
+      expect(html).to include("Sun Tzu")
+      expect(html).to include("subdue the enemy")
+    end
+
+    it "keeps the original when the linked topic is already in the target locale" do
+      # topic is authored in ja and only carries an en translation; a ja reader
+      # must see the original ja, never the en default-locale fallback.
+      SiteSetting.content_localization_use_default_locale_when_unsupported = true
+      ja_topic = Fabricate(:topic, title: "孫子の兵法に関する詳細な考察と議論", category: category, locale: "ja")
+      ja_post = Fabricate(:post, topic: ja_topic, post_number: 1, locale: "ja", raw: "戦わずして勝つのが最善")
+      Fabricate(:topic_localization, topic: ja_topic, locale: "en", title: "The Art of War")
+      Fabricate(
+        :post_localization,
+        post: ja_post,
+        locale: "en",
+        cooked: "<p>Win without fighting</p>",
+      )
+
+      html = card(ja_topic.relative_url, locale: "ja")
+
+      expect(html).to include("孫子の兵法に関する詳細な考察と議論")
+      expect(html).not_to include("The Art of War")
+      expect(html).not_to include("Win without fighting")
+    end
+
+    it "leaves the card original when no locale is requested" do
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+      Fabricate(:post_localization, post: first_post, locale: "ja", cooked: "<p>戦わずして勝つ</p>")
+
+      html = card(linked_topic.relative_url, locale: nil)
+
+      expect(html).to include("Sun Tzu")
+      expect(html).not_to include("孫子の兵法")
+    end
+
+    it "leaves the card original when content localization is disabled" do
+      SiteSetting.content_localization_enabled = false
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+      Fabricate(:post_localization, post: first_post, locale: "ja", cooked: "<p>戦わずして勝つ</p>")
+
+      html = card(linked_topic.relative_url, locale: "ja")
+
+      expect(html).to include("Sun Tzu")
+      expect(html).not_to include("孫子の兵法")
     end
   end
 
@@ -960,6 +1107,77 @@ RSpec.describe Oneboxer do
     expect(Oneboxer.onebox("https://allowlist.ed/iframes", invalidate_oneboxes: true)).to match(
       "iframe src",
     )
+  end
+
+  it "blocks oEmbed iframes whose source only prefix-matches an allowed onebox origin" do
+    page_url = "https://attacker.example/page"
+    oembed_url = "https://attacker.example/oembed.json"
+    malicious_iframe_src = "https://www.youtube.com.attacker.example/payload"
+
+    page_body = <<~HTML
+      <html>
+        <head>
+          <meta property="og:type" content="website">
+          <link rel="alternate" type="application/json+oembed" href="#{oembed_url}">
+        </head>
+      </html>
+    HTML
+
+    oembed_body = {
+      type: "video",
+      version: "1.0",
+      title: "Interesting content",
+      provider_name: "ContentHost",
+      provider_url: "https://attacker.example",
+      width: 560,
+      height: 315,
+      html: "<iframe src='#{malicious_iframe_src}' width='560' height='315'></iframe>",
+    }
+
+    stub_request(:any, page_url).to_return(status: 200, body: page_body)
+    stub_request(:any, oembed_url).to_return(status: 200, body: oembed_body.to_json)
+
+    onebox = Oneboxer.onebox(page_url, invalidate_oneboxes: true)
+
+    expect(onebox).not_to include("<iframe")
+    expect(onebox).not_to include(malicious_iframe_src)
+  end
+
+  it "blocks oEmbed iframes whose wildcard allowlist suffix is only in a query or fragment" do
+    page_url = "https://attacker.example/wildcard-page"
+    oembed_url = "https://attacker.example/wildcard-oembed.json"
+    malicious_iframe_sources = %w[
+      https://attacker.example?.kaltura.com/
+      https://attacker.example#.kaltura.com/
+    ]
+
+    page_body = <<~HTML
+      <html>
+        <head>
+          <meta property="og:type" content="website">
+          <link rel="alternate" type="application/json+oembed" href="#{oembed_url}">
+        </head>
+      </html>
+    HTML
+
+    oembed_body = {
+      type: "video",
+      version: "1.0",
+      title: "Interesting content",
+      provider_name: "ContentHost",
+      provider_url: "https://attacker.example",
+      width: 560,
+      height: 315,
+      html: malicious_iframe_sources.map { |source| "<iframe src='#{source}'></iframe>" }.join,
+    }
+
+    stub_request(:any, page_url).to_return(status: 200, body: page_body)
+    stub_request(:any, oembed_url).to_return(status: 200, body: oembed_body.to_json)
+
+    onebox = Oneboxer.onebox(page_url, invalidate_oneboxes: true)
+
+    expect(onebox).not_to include("<iframe")
+    malicious_iframe_sources.each { |source| expect(onebox).not_to include(source) }
   end
 
   describe "missing attributes" do

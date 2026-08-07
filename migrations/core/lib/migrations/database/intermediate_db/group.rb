@@ -24,6 +24,7 @@ module Migrations
             flair_upload_id,
             full_name,
             grant_trust_level,
+            incoming_email,
             members_visibility_level,
             membership_request_template,
             mentionable_level,
@@ -37,7 +38,7 @@ module Migrations
             visibility_level
           )
           VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
@@ -58,6 +59,7 @@ module Migrations
         # @param flair_upload_id                      [String, nil]
         # @param full_name                            [String, nil]
         # @param grant_trust_level                    [Integer, nil]
+        # @param incoming_email                       [String, nil]
         # @param members_visibility_level             [Integer, nil]
         # @param membership_request_template          [String, nil]
         # @param mentionable_level                    [Integer, nil]
@@ -86,6 +88,7 @@ module Migrations
           flair_upload_id: nil,
           full_name: nil,
           grant_trust_level: nil,
+          incoming_email: nil,
           members_visibility_level: nil,
           membership_request_template: nil,
           mentionable_level: nil,
@@ -114,6 +117,7 @@ module Migrations
             flair_upload_id,
             full_name,
             grant_trust_level,
+            incoming_email,
             members_visibility_level,
             membership_request_template,
             mentionable_level,

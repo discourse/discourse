@@ -19,7 +19,7 @@ describe "glimmer topic list" do
 
   describe "/new" do
     it "shows the list and the toggle buttons" do
-      SiteSetting.experimental_new_new_view_groups = Group::AUTO_GROUPS[:everyone]
+      SiteSetting.enable_unified_new = true
       Fabricate(:topic)
       Fabricate(:new_reply_topic, current_user: user)
 

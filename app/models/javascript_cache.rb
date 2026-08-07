@@ -37,15 +37,16 @@ end
 #
 # Table name: javascript_caches
 #
-#  id             :bigint           not null, primary key
-#  content        :text             not null
-#  digest         :string
-#  name           :string
-#  source_map     :text
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  theme_field_id :bigint
-#  theme_id       :bigint
+#  id                      :bigint           not null, primary key
+#  content                 :text             not null
+#  digest                  :string
+#  external_plugin_imports :string           default([]), not null, is an Array
+#  name                    :string
+#  source_map              :text
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  theme_field_id          :bigint
+#  theme_id                :bigint
 #
 # Indexes
 #

@@ -191,8 +191,23 @@ class DiscoursePoll::Poll
         return
       end
 
-      poll.status = status
-      poll.save!
+      if poll.status != status
+        poll.status = status
+
+        if poll.closed?
+          poll.closed_by = user
+          poll.closed_at = Time.zone.now
+          log_action = "poll_closed"
+        else
+          poll.closed_by = nil
+          poll.closed_at = nil
+          log_action = "poll_opened"
+        end
+
+        poll.save!
+
+        StaffActionLogger.new(user).log_custom(log_action, { post_id:, subject: poll_name })
+      end
 
       serialized_poll = PollSerializer.new(poll, root: false, scope: guardian).as_json
 
@@ -250,16 +265,14 @@ class DiscoursePoll::Poll
                , po.digest
                , pv.rank AS int_rank
                , pv.user_id
-               , u.username
-               , ROW_NUMBER() OVER (PARTITION BY pv.poll_option_id ORDER BY pv.created_at) AS row
+               , ROW_NUMBER() OVER (PARTITION BY pv.poll_option_id ORDER BY pv.created_at, pv.user_id) AS row
           FROM poll_votes pv
           JOIN poll_options po ON pv.poll_id = po.poll_id AND pv.poll_option_id = po.id
-          JOIN users u ON pv.user_id = u.id
           WHERE pv.poll_id IN (:poll_ids)
                 /* where */
         ) v
         WHERE row BETWEEN :offset AND :offset_plus_limit
-        ORDER BY digest, int_rank, username
+        ORDER BY digest, int_rank, row
       SQL
 
     votes = DB.query(query, params.merge(poll_ids: uncached_poll_ids))

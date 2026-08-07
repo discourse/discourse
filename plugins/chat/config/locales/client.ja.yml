@@ -66,6 +66,8 @@ ja:
       starred: "スター付き"
       starred_channels: "スター付きのチャンネル"
       starred_channels_empty: "まだどのチャンネルにもスターを設定していません。チャンネルにスターを設定すると、ここで素早くアクセスできます。"
+      pinned_bar:
+        title: "固定"
       pinned: "固定"
       browse_all_channels: "すべてのチャンネルを閲覧する"
       see_in: "表示:"
@@ -149,12 +151,6 @@ ja:
         never: "なし"
       separate_sidebar_mode:
         title: "フォーラムとチャットに個別のサイドバーモードを表示する"
-      send_shortcut:
-        title: "送信ショートカット"
-        enter:
-          label: "Enter で送信"
-        meta_enter:
-          label: "%{meta_key} + Enter で送信"
       enable: "チャットを有効にする"
       flag: "通報する"
       emoji: "絵文字を挿入する"
@@ -240,8 +236,6 @@ ja:
       no_public_channels_cta: "チャンネルを閲覧する"
       kicked_from_channel: "このチャンネルにアクセスできなくなりました。"
       chat_notifications_title: "チャット通知"
-      only_chat_push_notifications:
-        title: "チャットのプッシュ通知のみ送信する"
       personalization_title: "パーソナライズ"
       ignore_channel_wide_mention:
         title: "チャンネル全体のメンションを無視する"
@@ -289,8 +283,6 @@ ja:
         title: "デスクトップチャットの通知音"
       sounds:
         none: "なし"
-        bell: "ベル"
-        ding: "ゴーン"
       title: "チャット"
       title_capitalized: "チャット"
       upload: "ファイルを添付する"
@@ -320,6 +312,8 @@ ja:
         filter_closed: 閉鎖
         filter_archived: アーカイブ済み
         filter_input_placeholder: チャンネル名で検索
+        filter_joined_all: "すべて"
+        filter_joined_joined: "参加中"
       chat_message_separator:
         today: 今日
         yesterday: 昨日
@@ -370,8 +364,6 @@ ja:
         input_placeholder: 名前を追加してください
         slug_description: チャンネルスラグはチャンネル名の代わりに URL で使用されます
         name: チャンネル名
-        slug: チャンネルスラグ (オプション)
-        emoji: チャンネル絵文字 (オプション)
         reset_emoji: 絵文字をリセット
       channel_edit_description_modal:
         title: 説明を編集する
@@ -391,6 +383,9 @@ ja:
         no_memberships_found: メンバーが見つかりません
         memberships_count:
           other: "%{count} 人のメンバー"
+        preview_card:
+          log_in: "ログイン"
+          sign_up: "登録"
       create_channel:
         threading:
           label: "スレッドを有効にする"
@@ -417,16 +412,14 @@ ja:
           hint_multiple_groups:
             other: '%{group} と他 %{count} 個のグループのユーザーは、<a href="%{settingLink}" target="_blank">セキュリティ設定</a>に従って、このチャンネルにアクセスできます'
         create: "チャンネルを作成"
-        description: "説明 (オプション)"
+        description: "説明"
         name: "チャンネル名"
-        slug: "チャンネルスラグ (オプション)"
         title: "新しいチャンネル"
         type: "タイプ"
         types:
           category: "カテゴリ"
           topic: "トピック"
         emoji:
-          label: "チャンネル絵文字 (オプション)"
           reset: "絵文字をリセット"
       reviewable:
         type: "チャットメッセージ"
@@ -737,6 +730,8 @@ ja:
     discourse_workflows:
       nodes:
         "action:send_chat_message": "チャットメッセージを送信する"
+      chat_message_created:
+        channel_id: "チャンネル"
       send_chat_message:
         channel_id: "チャンネル"
         message: "メッセージ"

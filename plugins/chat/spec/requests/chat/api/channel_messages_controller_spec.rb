@@ -24,6 +24,47 @@ RSpec.describe Chat::Api::ChannelMessagesController do
           message_1.id,
         )
       end
+
+      context "as anonymous user" do
+        before do
+          delete "/session/#{current_user.username}.json"
+          SiteSetting.chat_allowed_groups =
+            "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+        end
+
+        it "returns messages for a public category channel" do
+          thread = Fabricate(:chat_thread, channel:, original_message: message_1)
+          thread_reply = Fabricate(:chat_message, chat_channel: channel, thread:)
+
+          get "/chat/api/channels/#{channel.id}/messages"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["messages"].map { |message| message["id"] }).to eq(
+            [message_1.id, thread_reply.id],
+          )
+        end
+
+        it "returns an error for a direct message channel" do
+          direct_message_channel =
+            Fabricate(:direct_message_channel, group: true, users: Fabricate.times(3, :user))
+
+          get "/chat/api/channels/#{direct_message_channel.id}/messages"
+
+          expect(response.status).to eq(403)
+        end
+
+        it "skips bookmark queries" do
+          queries =
+            track_sql_queries do
+              get "/chat/api/channels/#{channel.id}/messages"
+              expect(response.status).to eq(200)
+            end
+
+          bookmark_queries = queries.select { |query| query.include?('FROM "bookmarks"') }
+
+          expect(bookmark_queries).to be_empty
+        end
+      end
     end
 
     context "when params are invalid" do
@@ -148,6 +189,43 @@ RSpec.describe Chat::Api::ChannelMessagesController do
 
     before { sign_in(current_user) }
 
+    context "when a recipient limits direct messages to specific users" do
+      fab!(:recipient, :user)
+      fab!(:allowed_user, :user)
+      fab!(:channel) { Fabricate(:direct_message_channel, users: [current_user, recipient]) }
+
+      before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
+
+      it "does not let an excluded existing participant send another message" do
+        expect { post "/chat/#{channel.id}.json", params: params }.to change {
+          channel.chat_messages.count
+        }.by(1)
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body["message_id"]).to eq(channel.chat_messages.last.id)
+
+        sign_in(recipient)
+        put "/u/#{recipient.username}.json",
+            params: {
+              enable_allowed_pm_users: true,
+              allowed_pm_usernames: allowed_user.username,
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body.dig("user", "id")).to eq(recipient.id)
+        expect(AllowedPmUser.exists?(user: recipient, allowed_pm_user: allowed_user)).to eq(true)
+
+        sign_in(current_user)
+        expect {
+          post "/chat/#{channel.id}.json", params: params.merge(message: "excluded message")
+        }.not_to change { channel.chat_messages.count }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("chat.errors.not_accepting_dms", username: recipient.username),
+        )
+      end
+    end
+
     context "when force_thread param is given" do
       let!(:message) { Fabricate(:chat_message, chat_channel: channel) }
 
@@ -179,6 +257,55 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         end
       end
     end
+
+    context "when message is too long" do
+      let(:message) { "a" * 25_000 }
+
+      it "does not create the message" do
+        expect { post "/chat/#{channel.id}.json", params: params }.not_to change {
+          Chat::Message.count
+        }
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"]).to eq(
+          [
+            "Message is too long (maximum is #{SiteSetting.chat_maximum_message_length} characters)",
+          ],
+        )
+      end
+    end
+  end
+
+  describe "#bulk_destroy" do
+    fab!(:other_user, :user)
+    fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel, user: other_user) }
+    fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel, user: other_user) }
+
+    context "when user is staff" do
+      fab!(:current_user, :admin)
+
+      it "deletes the messages" do
+        delete "/chat/api/channels/#{channel.id}/messages",
+               params: {
+                 message_ids: [message_1.id, message_2.id],
+               }
+
+        expect(response.status).to eq(200)
+        expect(Chat::Message.where(id: [message_1.id, message_2.id])).to be_empty
+      end
+    end
+
+    context "when user can't delete the messages" do
+      it "returns a generic permission error" do
+        delete "/chat/api/channels/#{channel.id}/messages",
+               params: {
+                 message_ids: [message_1.id, message_2.id],
+               }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+        expect(Chat::Message.where(id: [message_1.id, message_2.id]).count).to eq(2)
+      end
+    end
   end
 
   describe "#update" do
@@ -202,39 +329,124 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         end
       end
 
+      context "when message is too long" do
+        it "does not change the message" do
+          original_message = message_1.message
+
+          put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}",
+              params: {
+                message: "a" * 25_000,
+              }
+
+          expect(response.status).to eq(400)
+          expect(response.parsed_body["errors"]).to eq(
+            [
+              "Message is too long (maximum is #{SiteSetting.chat_maximum_message_length} characters)",
+            ],
+          )
+          expect(message_1.reload.message).to eq(original_message)
+        end
+      end
+
       context "when user is not part of the channel" do
         before { channel.membership_for(current_user).destroy! }
 
         it "returns a 404" do
-          put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}"
+          put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}",
+              params: {
+                message: "abcdefg",
+              }
 
-          expect(response.status).to eq(400)
+          expect(response.status).to eq(404)
         end
       end
 
       context "when user is not the author" do
         fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
 
-        it "returns a 422" do
+        it "returns a 403" do
           put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}",
               params: {
                 message: "abcdefg",
               }
 
-          expect(response.status).to eq(422)
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
         end
       end
 
       context "when current user is silenced" do
         before { UserSilencer.new(current_user).silence }
 
-        it "returns a 422" do
+        it "returns a 403" do
+          put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}",
+              params: {
+                message: "abcdefg",
+              }
+
+          expect(response.status).to eq(403)
+        end
+      end
+
+      context "when the channel is closed" do
+        before { channel.closed!(Discourse.system_user) }
+
+        it "returns an actionable error message" do
           put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}",
               params: {
                 message: "abcdefg",
               }
 
           expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to contain_exactly(
+            I18n.t("chat.errors.channel_modify_message_disallowed.closed"),
+          )
+          expect(message_1.reload.message).not_to eq("abcdefg")
+        end
+
+        context "when the user is not the author" do
+          fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
+
+          it "returns a 403" do
+            put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}",
+                params: {
+                  message: "abcdefg",
+                }
+
+            expect(response.status).to eq(403)
+            expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+          end
+        end
+      end
+
+      context "when the user no longer has access to a private category channel" do
+        fab!(:group)
+        fab!(:private_category) { Fabricate(:private_category, group:) }
+        fab!(:private_channel) { Fabricate(:chat_channel, chatable: private_category) }
+        fab!(:message) do
+          Fabricate(
+            :chat_message,
+            chat_channel: private_channel,
+            user: current_user,
+            message: "original message",
+          )
+        end
+
+        before do
+          group.add(current_user)
+          private_channel.add(current_user)
+          GroupUser.where(group:, user: current_user).destroy_all
+        end
+
+        it "does not update their own message" do
+          put "/chat/api/channels/#{private_channel.id}/messages/#{message.id}",
+              params: {
+                message: "edited message",
+              }
+
+          expect(response).to have_http_status(:forbidden)
+          expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+          expect(message.reload.message).to eq("original message")
         end
       end
 

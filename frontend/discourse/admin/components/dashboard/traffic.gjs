@@ -5,6 +5,7 @@ import AdminReportStackedChart from "discourse/admin/components/admin-report-sta
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import { countryFlag, countryName } from "discourse/admin/lib/format-country";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
+import { formatMinutesSeconds } from "discourse/lib/formatter";
 import { or } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
@@ -31,7 +32,7 @@ export default class DashboardTraffic extends Component {
   hiddenLabels = ["page_view_crawler"];
 
   get browserPageviews() {
-    return this.args.traffic?.kpis?.browser_pageviews?.value ?? 0;
+    return this.#kpiValue("browser_pageviews") ?? 0;
   }
 
   get headlineCount() {
@@ -87,12 +88,49 @@ export default class DashboardTraffic extends Component {
   }
 
   get showLoggedInShare() {
-    const loggedInShare = this.args.traffic?.kpis?.logged_in_share?.value;
-    return loggedInShare !== null && loggedInShare !== undefined;
+    return this.#kpiValue("logged_in_share") != null;
   }
 
   get loggedInShare() {
-    return `${this.args.traffic?.kpis?.logged_in_share?.value ?? 0}%`;
+    return `${this.#kpiValue("logged_in_share") ?? 0}%`;
+  }
+
+  get showDirectTraffic() {
+    return this.#kpiValue("direct_traffic") != null;
+  }
+
+  get directTraffic() {
+    return `${this.#kpiValue("direct_traffic") ?? 0}%`;
+  }
+
+  #kpiValue(key) {
+    return this.args.traffic?.kpis?.[key]?.value;
+  }
+
+  get showSessionMetrics() {
+    return this.#kpiValue("bounce_rate") !== undefined;
+  }
+
+  get showMetrics() {
+    return (
+      this.showLoggedInShare ||
+      this.showDirectTraffic ||
+      this.showSessionMetrics
+    );
+  }
+
+  get sessionMetricsEmpty() {
+    return this.#kpiValue("bounce_rate") == null;
+  }
+
+  get bounceRate() {
+    const value = this.#kpiValue("bounce_rate");
+    return value == null ? "—" : `${value}%`;
+  }
+
+  get averageSessionDuration() {
+    const value = this.#kpiValue("average_session_duration_seconds");
+    return value == null ? "—" : formatMinutesSeconds(value);
   }
 
   get chartModel() {
@@ -217,44 +255,121 @@ export default class DashboardTraffic extends Component {
                 </DTooltip>
               {{/if}}
             </h3>
-            {{! <p>
-              Placeholder: Logged-in traffic is growing steadily. Two spikes on
-              Mar 8-9 drove a burst of anonymous visitors who didn't log in,
-              pulling the logged-in share down slightly to 38%.
-            </p> }}
           </div>
 
-          {{#if this.showLoggedInShare}}
+          {{#if this.showMetrics}}
             <div class="db-section__metrics">
-              <div class="db-section__metric">
-                <div
-                  class="db-section__metric-number"
-                >{{this.loggedInShare}}</div>
-                <div class="db-section__metric-label">
-                  {{i18n
-                    "admin.dashboard.site_traffic.kpi.logged_in_share.label"
-                  }}
-                  <DTooltip
-                    class="db-section__info"
-                    @identifier="site-traffic-logged-in-share-tooltip"
-                    @icon="far-circle-question"
-                  >
-                    <:content>
-                      {{i18n
-                        "admin.dashboard.site_traffic.kpi.logged_in_share.tooltip"
-                      }}
-                    </:content>
-                  </DTooltip>
+              {{#if this.showLoggedInShare}}
+                <div class="db-section__metric">
+                  <div
+                    class="db-section__metric-number"
+                  >{{this.loggedInShare}}</div>
+                  <div class="db-section__metric-label">
+                    {{i18n
+                      "admin.dashboard.site_traffic.kpi.logged_in_share.label"
+                    }}
+                    <DTooltip
+                      class="db-section__info"
+                      @identifier="site-traffic-logged-in-share-tooltip"
+                      @icon="far-circle-question"
+                    >
+                      <:content>
+                        {{i18n
+                          "admin.dashboard.site_traffic.kpi.logged_in_share.tooltip"
+                        }}
+                      </:content>
+                    </DTooltip>
+                  </div>
                 </div>
-              </div>
+              {{/if}}
+
+              {{#if this.showDirectTraffic}}
+                <div class="db-section__metric">
+                  <div
+                    class="db-section__metric-number"
+                  >{{this.directTraffic}}</div>
+                  <div class="db-section__metric-label">
+                    {{i18n
+                      "admin.dashboard.site_traffic.kpi.direct_traffic.label"
+                    }}
+                    <DTooltip
+                      class="db-section__info"
+                      @identifier="site-traffic-direct-traffic-tooltip"
+                      @icon="far-circle-question"
+                    >
+                      <:content>
+                        {{i18n
+                          "admin.dashboard.site_traffic.kpi.direct_traffic.tooltip"
+                        }}
+                      </:content>
+                    </DTooltip>
+                  </div>
+                </div>
+              {{/if}}
+
+              {{#if this.showSessionMetrics}}
+                <div class="db-section__metric" data-test-kpi="bounce_rate">
+                  <div
+                    class="db-section__metric-number"
+                  >{{this.bounceRate}}</div>
+                  <div class="db-section__metric-label">
+                    {{i18n
+                      "admin.dashboard.site_traffic.kpi.bounce_rate.label"
+                    }}
+                    <DTooltip
+                      class="db-section__info"
+                      @identifier="site-traffic-bounce-rate-tooltip"
+                      @icon="far-circle-question"
+                    >
+                      <:content>
+                        {{#if this.sessionMetricsEmpty}}
+                          {{i18n
+                            "admin.dashboard.site_traffic.kpi.session_metrics.empty_tooltip"
+                          }}
+                        {{else}}
+                          {{i18n
+                            "admin.dashboard.site_traffic.kpi.bounce_rate.tooltip"
+                          }}
+                        {{/if}}
+                      </:content>
+                    </DTooltip>
+                  </div>
+                </div>
+
+                <div
+                  class="db-section__metric"
+                  data-test-kpi="average_session_duration"
+                >
+                  <div
+                    class="db-section__metric-number"
+                  >{{this.averageSessionDuration}}</div>
+                  <div class="db-section__metric-label">
+                    {{i18n
+                      "admin.dashboard.site_traffic.kpi.average_session_duration.label"
+                    }}
+                    <DTooltip
+                      class="db-section__info"
+                      @identifier="site-traffic-average-session-duration-tooltip"
+                      @icon="far-circle-question"
+                    >
+                      <:content>
+                        {{#if this.sessionMetricsEmpty}}
+                          {{i18n
+                            "admin.dashboard.site_traffic.kpi.session_metrics.empty_tooltip"
+                          }}
+                        {{else}}
+                          {{i18n
+                            "admin.dashboard.site_traffic.kpi.average_session_duration.tooltip"
+                          }}
+                        {{/if}}
+                      </:content>
+                    </DTooltip>
+                  </div>
+                </div>
+              {{/if}}
             </div>
           {{/if}}
         </div>
-
-        {{! <div class="db-section__callout">
-          Placeholder: Spikes on Mar 8 and Mar 9 - a Hacker News post linking to
-          the plugin release docs drove a surge in anonymous pageviews.
-        </div> }}
 
         {{#if @fetchError}}
           <div class="db-section__traffic-chart">

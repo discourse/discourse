@@ -15,7 +15,6 @@
     td,
     th {
       color: var(--d-topic-list-header-text-color);
-      font-size: var(--d-topic-list-data-font-size);
 
       &:first-of-type {
         padding-inline-start: var(--d-topic-list-data-padding-inline-start);
@@ -34,6 +33,7 @@
 
     th {
       vertical-align: middle;
+      font-size: var(--d-topic-list-data-font-size);
     }
 
     .topics .badge-notification,
@@ -499,9 +499,8 @@
 
     ul {
       color: var(--primary-medium);
-      list-style: none;
-      padding: 0;
-      margin: 0;
+
+      @include unstyled-list;
     }
 
     li {

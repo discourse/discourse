@@ -15,7 +15,7 @@ module DiscourseDataExplorer
       params = params_to_hash(query_params)
 
       result = DataExplorer.run_query(query, params)
-      query.update!(last_run_at: Time.now)
+      query.record_run!
 
       return [] if opts[:skip_empty] && result[:pg_result].values.empty?
       table =
@@ -31,7 +31,7 @@ module DiscourseDataExplorer
       params = params_to_hash(query_params)
 
       result = DataExplorer.run_query(query, params)
-      query.update!(last_run_at: Time.now)
+      query.record_run!
 
       return {} if opts[:skip_empty] && result[:pg_result].values.empty?
       table =

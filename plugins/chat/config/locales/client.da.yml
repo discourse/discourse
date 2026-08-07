@@ -46,6 +46,8 @@ da:
       cancel: "Annuller"
       cancel_reply: "Annuller svar"
       chat_channels: "Kanaler"
+      pinned_bar:
+        title: "Fastgjort"
       pinned: "Fastgjort"
       browse_all_channels: "Gennemse alle kanaler"
       move_to_channel:
@@ -127,8 +129,6 @@ da:
       select: "Vælg"
       sounds:
         none: "Ingen"
-        bell: "Klokke"
-        ding: "Ding"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Vedhæft en fil"
@@ -150,6 +150,8 @@ da:
         filter_open: Åbn
         filter_closed: Lukket
         filter_archived: Arkiveret
+        filter_joined_all: "Alle"
+        filter_joined_joined: "Tilmeldt"
       chat_message_separator:
         today: I dag
         yesterday: I går
@@ -180,12 +182,15 @@ da:
         title: Ny Besked
         prefix: "Til:"
         no_results: Ingen resultater
+      channel:
+        preview_card:
+          log_in: "Log ind"
       create_channel:
         choose_category:
           label: "Vælg en kategori"
           none: "vælg en..."
         create: "Opret kanal"
-        description: "Beskrivelse (valgfrit)"
+        description: "Beskrivelse"
         name: "Kanal navn"
         title: "Ny kanal"
         type: "Type"
@@ -333,6 +338,8 @@ da:
         chat:
           label: "Chat"
     discourse_workflows:
+      chat_message_created:
+        channel_id: "Kanal"
       send_chat_message:
         channel_id: "Kanal"
         message: "Meddelelse"

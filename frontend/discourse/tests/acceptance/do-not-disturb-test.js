@@ -1,9 +1,8 @@
-import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { click, findAll, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import DoNotDisturb from "discourse/lib/do-not-disturb";
 import {
   acceptance,
-  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 
@@ -30,8 +29,10 @@ acceptance("Do not disturb", function (needs) {
 
     assert.dom(".do-not-disturb-modal").exists("modal to choose time appears");
 
-    let tiles = queryAll(".do-not-disturb-tile");
-    assert.strictEqual(tiles.length, 4, "There are 4 duration choices");
+    let tiles = findAll(".do-not-disturb-tile");
+    assert
+      .dom(".do-not-disturb-tile")
+      .exists({ count: 4 }, "There are 4 duration choices");
 
     await click(tiles[0]);
 

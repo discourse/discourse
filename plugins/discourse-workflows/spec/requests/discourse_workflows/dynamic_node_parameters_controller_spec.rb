@@ -182,10 +182,7 @@ RSpec.describe DiscourseWorkflows::DynamicNodeParametersController do
         "user_id" => admin.id,
       )
     ensure
-      DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
-        entry[:value] == node_class
-      end
-      DiscourseWorkflows::Registry.reset_indexes!
+      unregister_workflow_nodes(node_class)
     end
 
     it "uses the requested node version when loading options" do
@@ -238,10 +235,7 @@ RSpec.describe DiscourseWorkflows::DynamicNodeParametersController do
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to contain_exactly("id" => "v2", "name" => "Version 2")
     ensure
-      DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
-        [v1, v2].include?(entry[:value])
-      end
-      DiscourseWorkflows::Registry.reset_indexes!
+      unregister_workflow_nodes(v1, v2)
     end
 
     it "requires exact node versions when loading options" do
@@ -270,10 +264,7 @@ RSpec.describe DiscourseWorkflows::DynamicNodeParametersController do
 
       expect(response).to have_http_status(:not_found)
     ensure
-      DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
-        entry[:value] == node_class
-      end
-      DiscourseWorkflows::Registry.reset_indexes!
+      unregister_workflow_nodes(node_class)
     end
 
     it "requires the context-aware option loader" do
@@ -302,10 +293,7 @@ RSpec.describe DiscourseWorkflows::DynamicNodeParametersController do
 
       expect(response).to have_http_status(:not_found)
     ensure
-      DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
-        entry[:value] == node_class
-      end
-      DiscourseWorkflows::Registry.reset_indexes!
+      unregister_workflow_nodes(node_class)
     end
   end
 end

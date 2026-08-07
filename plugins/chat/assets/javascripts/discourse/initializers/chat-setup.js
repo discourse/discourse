@@ -1,6 +1,7 @@
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
+import GifsModal from "discourse/components/modal/gifs";
 import { bind } from "discourse/lib/decorators";
 import EmbedMode from "discourse/lib/embed-mode";
 import { number } from "discourse/lib/formatter";
@@ -8,6 +9,7 @@ import { replaceIcon } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
 import { clearChatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
+import { buildGifPickHandler } from "discourse/plugins/chat/discourse/lib/gif-pick-handler";
 import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-types/channel";
 import richEditorExtension from "../../lib/rich-editor-extension";
 import ChatHeaderIcon from "../components/chat/header/icon";
@@ -46,6 +48,15 @@ class ChatSetupInit {
       });
 
       if (!this.chatService.userCanChat) {
+        // include chat elements for anons (except header icon)
+        if (
+          this.chatService.anonymousUserCanViewPublicChat &&
+          !EmbedMode.enabled
+        ) {
+          document.body.classList.add("chat-enabled");
+          api.addCardClickListenerSelector(".chat-drawer-outlet");
+        }
+
         return;
       }
 
@@ -101,6 +112,30 @@ class ChatSetupInit {
           return this.canAttachUploads;
         },
       });
+
+      if (this.siteSettings.enable_gifs) {
+        api.registerChatComposerButton({
+          id: "gifs",
+          label: "gifs.composer_title",
+          icon: "gif",
+          position: "dropdown",
+          action(context) {
+            const modal = owner.lookup("service:modal");
+            const currentUser = owner.lookup("service:current-user");
+
+            modal.show(GifsModal, {
+              model: {
+                customPickHandler: buildGifPickHandler({
+                  api,
+                  draft: this.draft,
+                  isThread: context === "thread",
+                  currentUser,
+                }),
+              },
+            });
+          },
+        });
+      }
 
       if (this.siteSettings.discourse_local_dates_enabled) {
         api.registerChatComposerButton({

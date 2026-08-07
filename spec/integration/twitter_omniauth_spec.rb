@@ -108,6 +108,7 @@ describe "Twitter OAuth 1.0a" do
 
   it "doesn't sign in the user discourse connect is enabled" do
     SiteSetting.discourse_connect_url = "https://example.com/sso"
+    SiteSetting.discourse_connect_secret = "x" * 10
     SiteSetting.enable_discourse_connect = true
     post "/auth/twitter"
     expect(response.status).to eq(302)

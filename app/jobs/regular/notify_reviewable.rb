@@ -16,7 +16,10 @@ class Jobs::NotifyReviewable < ::Jobs::Base
       Reviewable
         .where(id: args[:updated_reviewable_ids])
         .each do |r|
-          payload = { last_performing_username: args[:performing_username], status: r.status }
+          payload = {
+            last_performing_username: args[:performing_username],
+            status: r.status_for_database,
+          }
 
           all_updates[:admins][r.id] = payload
           all_updates[:moderators][r.id] = payload if r.reviewable_by_moderator?

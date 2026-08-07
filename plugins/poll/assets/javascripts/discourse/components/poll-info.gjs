@@ -149,12 +149,17 @@ export default class PollInfoComponent extends Component {
     return (
       this.showMultipleHelpText ||
       this.args.close ||
+      this.args.closedBy ||
       this.resultsOnVote ||
       this.resultsOnClose ||
       this.resultsStaffOnly ||
       this.publicTitle ||
       this.args.isDynamic
     );
+  }
+
+  get closedByLabel() {
+    return i18n("poll.closed_by", { username: this.args.closedBy.username });
   }
 
   <template>
@@ -197,6 +202,12 @@ export default class PollInfoComponent extends Component {
                 <span>{{this.automaticCloseClosesInLabel}}</span>
               </li>
             {{/if}}
+          {{/if}}
+          {{#if @closedBy}}
+            <li class="poll-info_closed-by">
+              {{dIcon "lock"}}
+              <span>{{this.closedByLabel}}</span>
+            </li>
           {{/if}}
           {{#if this.resultsOnVote}}
             <li class="results-on-vote">

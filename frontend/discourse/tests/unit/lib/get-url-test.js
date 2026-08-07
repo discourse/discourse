@@ -183,4 +183,28 @@ module("Unit | Utility | get-url", function (hooks) {
 
     assert.strictEqual(getURLWithCDN(url), url, "at correct path");
   });
+
+  test("getURLWithCDN ignores protocol mismatch between S3BaseUrl and URL", function (assert) {
+    // Case 1: S3 base is protocol-relative, URL is HTTPS
+    setupS3CDN(
+      "//test.s3-us-west-1.amazonaws.com/site",
+      "https://awesome.cdn/site"
+    );
+    assert.strictEqual(
+      getURLWithCDN("https://test.s3-us-west-1.amazonaws.com/site/awesome.png"),
+      "https://awesome.cdn/site/awesome.png",
+      "applies CDN when URL has https but base is protocol-relative"
+    );
+
+    // Case 2: S3 base is HTTPS, URL is protocol-relative
+    setupS3CDN(
+      "https://test.s3-us-west-1.amazonaws.com/site",
+      "https://awesome.cdn/site"
+    );
+    assert.strictEqual(
+      getURLWithCDN("//test.s3-us-west-1.amazonaws.com/site/awesome.png"),
+      "https://awesome.cdn/site/awesome.png",
+      "applies CDN when URL is protocol-relative but base has https"
+    );
+  });
 });

@@ -69,6 +69,15 @@ module PageObjects
         has_finished_loading?(with_preloaded_channels: with_preloaded_channels) if check
       end
 
+      def visit_channels
+        visit("/chat/channels")
+      end
+
+      def open_public_channel(channel)
+        find(public_channel_selector(channel)).click
+        has_finished_loading?
+      end
+
       def visit_user_threads
         visit("/chat/threads")
         has_css?(".c-user-threads.--loaded")
@@ -149,6 +158,18 @@ module PageObjects
         has_css?(".direct-message-channels-section")
       end
 
+      def has_public_channel?(channel)
+        has_css?(public_channel_selector(channel))
+      end
+
+      def has_no_public_channel?(channel)
+        has_no_css?(public_channel_selector(channel))
+      end
+
+      def has_no_browse_page_button?
+        has_no_css?(".open-browse-page-btn")
+      end
+
       def has_add_member_button?
         has_css?(".c-channel-members__list-item.-add-member")
       end
@@ -158,6 +179,10 @@ module PageObjects
       end
 
       private
+
+      def public_channel_selector(channel)
+        ".public-channels .chat-channel-row[data-chat-channel-id='#{channel.id}']"
+      end
 
       def drawer?(expectation:, channel_id: nil, expanded: true)
         selector = ".chat-drawer"

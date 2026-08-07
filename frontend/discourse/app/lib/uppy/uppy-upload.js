@@ -176,7 +176,7 @@ export default class UppyUpload {
       },
 
       onBeforeUpload: (files) => {
-        let tooMany = false;
+        let tooMany;
         const fileCount = Object.keys(files).length;
         const maxFiles =
           this.config.maxFiles || this.siteSettings.simultaneous_uploads;

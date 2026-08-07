@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -8,7 +8,7 @@ import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { outputSchemaForNode } from "../../../lib/workflows/data-schema";
+import { outputPreviewForNode } from "../../../lib/workflows/data-preview";
 import processFields from "../../../lib/workflows/field-processors";
 import { nodeTypePorts } from "../../../lib/workflows/node-types";
 import DragDropHint from "./drag-drop-hint";
@@ -94,24 +94,30 @@ export default class OutputContext extends Component {
     };
   }
 
-  get outputSchema() {
+  @cached
+  get outputPreview() {
     const currentNode = this.args.node;
-    const schema = outputSchemaForNode(
+    const preview = outputPreviewForNode(
       this.args.session?.lastExecutionRunData || {},
       currentNode.name,
-      { pinnedItems: this.pinnedItems, node: currentNode }
+      {
+        pinnedItems: this.pinnedItems,
+        node: currentNode,
+        graph: this.graph,
+        configuration: this.args.configuration,
+      }
     );
 
     return {
-      ...schema,
-      itemCountLabel: this.itemCountLabel(schema.summary),
-      emptyMessage: this.emptyMessage(schema.summary),
-      fields: processFields(schema.fields, currentNode, this.graph),
+      ...preview,
+      itemCountLabel: this.itemCountLabel(preview.summary),
+      emptyMessage: this.emptyMessage(preview.summary),
+      fields: processFields(preview.fields, currentNode, this.graph),
     };
   }
 
   get fields() {
-    return this.outputSchema.fields || [];
+    return this.outputPreview.fields || [];
   }
 
   itemCountLabel(summary) {
@@ -125,7 +131,7 @@ export default class OutputContext extends Component {
   }
 
   get singleItemCountLabel() {
-    return this.outputSchema.itemCountLabel;
+    return this.outputPreview.itemCountLabel;
   }
 
   emptyMessage(summary) {
@@ -143,7 +149,7 @@ export default class OutputContext extends Component {
   }
 
   get emptyOutputMessage() {
-    return this.outputSchema.emptyMessage;
+    return this.outputPreview.emptyMessage;
   }
 
   @action
@@ -256,14 +262,20 @@ export default class OutputContext extends Component {
           {{/if}}
         </div>
 
-        {{#if this.hasNoData}}
+        {{#if this.isJsonView}}
           <PinDataEditor
             @nodeName={{this.nodeName}}
             @initialItems={{this.effectiveItems}}
             @canEdit={{this.canEditPinData}}
             @session={{@session}}
           />
-        {{else if this.isJsonView}}
+        {{else if this.fields.length}}
+          <ul class="workflows-schema-field-list">
+            {{#each this.fields as |field|}}
+              <SchemaField @field={{field}} />
+            {{/each}}
+          </ul>
+        {{else if this.hasNoData}}
           <PinDataEditor
             @nodeName={{this.nodeName}}
             @initialItems={{this.effectiveItems}}
@@ -271,17 +283,9 @@ export default class OutputContext extends Component {
             @session={{@session}}
           />
         {{else}}
-          {{#if this.fields.length}}
-            <ul class="workflows-schema-field-list">
-              {{#each this.fields as |field|}}
-                <SchemaField @field={{field}} />
-              {{/each}}
-            </ul>
-          {{else}}
-            <p class="workflows-context-panel__empty">
-              {{this.emptyOutputMessage}}
-            </p>
-          {{/if}}
+          <p class="workflows-context-panel__empty">
+            {{this.emptyOutputMessage}}
+          </p>
         {{/if}}
       </div>
     </div>

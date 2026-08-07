@@ -9,7 +9,12 @@ import {
   loadColorSchemeStylesheet,
   updateColorSchemeCookie,
 } from "discourse/lib/color-scheme-picker";
-import { INTERFACE_COLOR_MODES } from "discourse/lib/constants";
+import {
+  INTERFACE_COLOR_MODES,
+  SEND_SHORTCUT_ENTER,
+  SEND_SHORTCUT_META_ENTER,
+} from "discourse/lib/constants";
+import { normalizeUnderstoodLanguages } from "discourse/lib/content-localization";
 import { deepEqual } from "discourse/lib/object";
 import {
   currentThemeId,
@@ -17,8 +22,13 @@ import {
   setLocalTheme,
 } from "discourse/lib/theme-selector";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import { setDefaultHomepage } from "discourse/lib/utilities";
+import {
+  setDefaultHomepage,
+  siteDefaultHomepage,
+  translateModKey,
+} from "discourse/lib/utilities";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
+import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import { i18n } from "discourse-i18n";
 
 // same as UserOption::HOMEPAGES
@@ -61,12 +71,10 @@ export default class InterfaceController extends Controller {
   @computed("makeThemeDefault")
   get saveAttrNames() {
     let attrs = [
-      "locale",
       "external_links_in_new_tab",
       "dynamic_favicon",
       "enable_quoting",
       "enable_smart_lists",
-      "enable_defer",
       "automatically_unpin_topics",
       "allow_private_messages",
       "enable_allowed_pm_users",
@@ -81,8 +89,14 @@ export default class InterfaceController extends Controller {
       "bookmark_auto_delete_preference",
       "interface_color_mode",
       "enable_markdown_monospace_font",
-      "show_original_content",
+      "send_shortcut",
+      "automatically_translate",
+      "understood_languages",
     ];
+
+    if (this.siteSettings.allow_user_locale) {
+      attrs.push("locale");
+    }
 
     if (this.makeThemeDefault) {
       attrs.push("theme_ids");
@@ -93,9 +107,32 @@ export default class InterfaceController extends Controller {
     });
   }
 
+  @computed("model.user_option.understood_languages.[]")
+  get understoodLanguages() {
+    return normalizeUnderstoodLanguages(
+      this.model.user_option.understood_languages
+    );
+  }
+
   @computed()
   get availableLocales() {
-    return this.siteSettings.available_locales;
+    return (this.siteSettings.available_locales ?? []).map((locale) => ({
+      ...locale,
+      id: locale.value,
+    }));
+  }
+
+  @action
+  setInterfaceLanguage(locale) {
+    this.model.set("locale", locale);
+  }
+
+  @action
+  setUnderstoodLanguages(locales) {
+    this.model.set(
+      "user_option.understood_languages",
+      normalizeUnderstoodLanguages(locales)
+    );
   }
 
   @computed("currentThemeId")
@@ -126,6 +163,22 @@ export default class InterfaceController extends Controller {
     return TITLE_COUNT_MODES.map((value) => {
       return { name: i18n(`user.title_count_mode.${value}`), value };
     });
+  }
+
+  @computed
+  get sendShortcutOptions() {
+    return [
+      {
+        name: i18n("user.send_shortcut.enter"),
+        value: SEND_SHORTCUT_ENTER,
+      },
+      {
+        name: i18n("user.send_shortcut.meta_enter", {
+          meta_key: translateModKey(PLATFORM_KEY_MODIFIER),
+        }),
+        value: SEND_SHORTCUT_META_ENTER,
+      },
+    ];
   }
 
   @computed
@@ -261,7 +314,7 @@ export default class InterfaceController extends Controller {
   }
 
   homeChanged() {
-    const siteHome = this.siteSettings.top_menu.split("|")[0].split(",")[0];
+    const siteHome = siteDefaultHomepage(this.siteSettings);
 
     if (this.model.canPickThemeWithCustomHomepage) {
       USER_HOMES[-1] = "custom";
@@ -280,16 +333,14 @@ export default class InterfaceController extends Controller {
       homeValues[newKey] = newValue;
     });
 
-    let result = [];
+    let result = [{ name: i18n("user.homepage.default"), value: -1 }];
 
-    if (this.model.canPickThemeWithCustomHomepage) {
-      result.push({
-        name: i18n("user.homepage.default"),
-        value: -1,
-      });
-    }
+    const siteHome = siteDefaultHomepage(this.siteSettings);
+    const availableIds = this.siteSettings.top_menu
+      .split("|")
+      .filter((m) => m !== siteHome);
+    availableIds.unshift(siteHome);
 
-    const availableIds = this.siteSettings.top_menu.split("|");
     const userHome = USER_HOMES[this.get("model.user_option.homepage_id")];
 
     if (userHome && !availableIds.includes(userHome)) {

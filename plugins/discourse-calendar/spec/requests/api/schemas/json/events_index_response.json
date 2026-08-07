@@ -12,24 +12,42 @@
             "type": "integer"
           },
           "category_id": {
-            "type": ["integer", "null"]
+            "type": [
+              "integer",
+              "null"
+            ]
           },
           "name": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "recurrence": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "recurrence_until": {
-            "type": ["string", "null"],
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "date-time"
           },
           "starts_at": {
-            "type": ["string", "null"],
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "date-time"
           },
           "ends_at": {
-            "type": ["string", "null"],
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "date-time"
           },
           "rrule": {
@@ -39,7 +57,10 @@
             "type": "boolean"
           },
           "timezone": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "duration": {
             "type": "string",
@@ -47,6 +68,9 @@
           },
           "all_day": {
             "type": "boolean"
+          },
+          "custom_fields": {
+            "type": ["object", "null"]
           },
           "post": {
             "type": "object",
@@ -82,12 +106,27 @@
                   },
                   "tags_descriptions": {
                     "type": "object"
+                  },
+                  "slug": {
+                    "type": "string"
                   }
                 },
-                "required": ["id", "title", "tags", "tags_descriptions"]
+                "required": [
+                  "id",
+                  "title",
+                  "tags",
+                  "tags_descriptions",
+                  "slug"
+                ]
               }
             },
-            "required": ["id", "post_number", "url", "category_slug", "topic"]
+            "required": [
+              "id",
+              "post_number",
+              "url",
+              "category_slug",
+              "topic"
+            ]
           },
           "occurrences": {
             "type": "array",
@@ -96,13 +135,22 @@
               "additionalProperties": false,
               "properties": {
                 "starts_at": {
-                  "type": ["string", "null"]
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 },
                 "ends_at": {
-                  "type": ["string", "null"]
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 }
               },
-              "required": ["starts_at", "ends_at"]
+              "required": [
+                "starts_at",
+                "ends_at"
+              ]
             }
           }
         },
@@ -119,5 +167,7 @@
       }
     }
   },
-  "required": ["events"]
+  "required": [
+    "events"
+  ]
 }

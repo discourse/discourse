@@ -1,6 +1,8 @@
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
+import { dataExplorerAiQueriesEnabled } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-query-availability";
+import { rememberedMode } from "discourse/plugins/discourse-data-explorer/discourse/lib/data-explorer-store";
 
 export default class AdminPluginsExplorerQueriesDetails extends DiscourseRoute {
   @service siteSettings;
@@ -62,11 +64,10 @@ export default class AdminPluginsExplorerQueriesDetails extends DiscourseRoute {
     const cachedResult = model.model.cached_result;
     const shouldAutoRun = !!transition.to.queryParams.run;
     const showCachedResult = !!cachedResult && !shouldAutoRun;
-    const defaultMode =
-      this.siteSettings.data_explorer_ai_queries_enabled &&
-      !model.model.is_default
-        ? "ai"
-        : "manual";
+    const aiAvailable =
+      dataExplorerAiQueriesEnabled(this.siteSettings) &&
+      !model.model.is_default;
+    const defaultMode = aiAvailable ? (rememberedMode() ?? "ai") : "manual";
 
     controller.setProperties({
       ...model,

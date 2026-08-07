@@ -213,9 +213,9 @@
       }
 
       img {
-        width: 100%;
-        max-width: var(--badge-icon-size);
-        max-height: var(--badge-icon-size);
+        width: var(--badge-icon-size);
+        height: var(--badge-icon-size);
+        object-fit: contain;
       }
 
       &.badge-type-gold .fa {

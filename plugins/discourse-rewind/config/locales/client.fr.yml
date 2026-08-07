@@ -14,21 +14,164 @@ fr:
       reports:
         reading_time:
           title: Temps de lecture
+        best_topics:
+          title_others:
+            one: "Meilleur sujet de %{username}"
+            other: "%{count} meilleurs sujets de %{username}"
+        best_posts:
+          view_post: Voir la publication
+          title:
+            one: Votre meilleure publication
+            other: Vos %{count} meilleures publications
+          title_others:
+            one: "Meilleure publication de %{username}"
+            other: "%{count} meilleures publications de %{username}"
+        ai_usage:
+          title: Utilisation de l'IA
+          total_requests: Nombre total de requêtes
+          total_tokens: Nombre total de jetons
+          success_rate: Taux de réussite
+          favorite_features: Fonctionnalités les plus utilisées
+          favorite_models: Modèles d'IA les plus utilisés
+          wake_up: "Réveillez-vous, %{username}..."
+          system_title: "UTILISATION DE L'IA DÉTECTÉE"
+          section_features: "PRINCIPALES FONCTIONNALITÉS"
+          section_models: "LES MEILLEURS MODÈLES"
         assignments:
           title: Attributions
+          total_assigned: Attribué à moi
           total_assigned_others: "Attribué à %{username}"
+          completed: Tâches terminées
+          pending: Tâches en attente
+          assigned_by_user: Tâches attribuées
+          completion_rate: Taux d'achèvement
         chat_usage:
-          messages: messages directs
+          title: Activité de discussion
+          total_messages: Nombre total de messages
+          dm_messages: Messages directs
+          unique_dm_channels: Conversations par messages directs
+          reactions_received: Réactions reçues
+          avg_message_length: Longueur moyenne des messages
+          favorite_channels: Canaux préférés
+          messages: messages
+          bot_name: XxRewindBotxX
           author: Vous
           author_others: "%{username}"
+          channel_title: "#chat-activity"
           status_online: "● en ligne"
+          message_1:
+            one: "Vous avez envoyé <strong>%{count}</strong> message cette année !"
+            other: "Vous avez envoyé <strong>%{count}</strong> messages cette année !"
+          reply_1: "lol, génial B-)"
+          message_2_MF: |
+            Vous avez eu { dm_count, plural,
+                one {<strong>#</strong> conversation DM}
+              other {<strong>#</strong> conversations DM}
+            } avec { channel_count, plural,
+                one {<strong>#</strong> personne ou groupe}
+              other {<strong>#</strong> personnes ou groupes}
+            }.
+          reply_2: "cOo0oL :D"
+          message_3:
+            one: "Les gens ont adoré vos messages ! Vous avez reçu <strong>%{count}</strong> réaction ❤️"
+            other: "Les gens ont adoré vos messages ! Vous avez reçu <strong>%{count}</strong> réactions ❤️"
+          message_4: "La longueur moyenne de vos messages était de <strong>%{length}</strong> caractères"
+          message_5: "Vos canaux préférés :"
+          dancing_baby_alt: "Bébé dansant"
+        favorite_gifs:
+          title:
+            one: Votre GIF préféré
+            other: Vos %{count} GIF préférés
+          title_others:
+            one: "Le GIF préféré de %{username}"
+            other: "Les %{count} GIF préférés de %{username}"
+          total_usage:
+            one: Utilisé %{count} fois
+            other: Utilisé %{count} fois au total
         invites:
           title: Invitations
-          invitee_posts: Messages créés
+          total_invites: Nombre total d'invitations envoyées
+          redeemed: Invitations acceptées
+          redemption_rate: Taux d'acceptation
+          avg_trust_level: Niveau de confiance moyen
+          invitee_impact: Impact de vos invités
+          invitee_impact_others: "Impact des invités de %{username}"
+          invitee_posts: Publications créées
+          invitee_topics: Sujets lancés
           invitee_likes: '« J''aime » donnés'
-          label_invitations_sent: "Invitations envoyées:"
+          most_active_invitee: Invité le plus actif
+          guest_book_title: Livre d'or
+          guest_book_subtitle: Invitations de votre communauté
+          guest_book_subtitle_others: "Invitations de la communauté de %{username}"
+          label_invitations_sent: "Invitations envoyées :"
+          label_guests_joined: "Invitations acceptées :"
+          label_acceptance_rate: "Taux d'acceptation :"
+          section_contributions: Contributions des invités
+          label_posts_written: "Publications écrites :"
+          label_topics_started: "Sujets lancés :"
+          label_likes_given: "Mentions « J'aime » attribuées :"
+          section_most_active: Invité le plus actif
         new_user_interactions:
+          title: Mentorat des nouveaux utilisateurs
+          subtitle:
+            one: Vous avez aidé %{count} nouvel utilisateur cette année
+            other: Vous avez aidé %{count} nouveaux utilisateurs cette année
+          subtitle_others:
+            one: "%{username} a aidé %{count} un nouvel utilisateur cette année"
+            other: "%{username} a aidé %{count} nouveaux utilisateurs cette année"
+          new_member:
+            one: "%{count} nouveau membre"
+            other: "%{count} nouveaux membres"
+          total_interactions: Nombre total d'interactions
+          unique_new_users: Nouveaux utilisateurs uniques
           likes_given: '« J''aime » donnés'
+          replies: Réponses aux publications
           mentions: Mentions
+          topics_with_new_users: Sujets avec de nouveaux utilisateurs
+          contributions_helped: Vos contributions ont été utiles
+          contributions_helped_others: "Les contributions de %{username} ont été utiles"
+        time_of_day_activity:
+          title: Rythme d'activité quotidienne
+          play_button: Diffusez votre activité sous forme de son
+          play_button_others: "Écouter l'activité de « %{username} » sous forme de son"
+          stop_button: Arrêter la lecture audio
         writing_analysis:
+          title: Analyse d'un texte
+          menu_file: Fichier
           menu_other: Autre
+          menu_additional: Supplémentaire
+          menu_opening: OUVERTURE
+          help_text: Appuyez sur F1 pour obtenir de l'aide
+          app_name: DiscoStar Professionnel
+          release_info: Sortie de %{rewindYear} depuis CDCK
+          total_words: Nombre total de mots
+          total_posts: Nombre total de publications
+          avg_post_length: Longueur moyenne des publications
+          readability_score_label: Score de lisibilité
+          readability_level: Niveau de lisibilité
+          readability_score:
+            over_80:
+              1: "Ernest Hemingway"
+              2: "Raymond Carver"
+              3: "Michael Crichton"
+              4: "Roald Dahl"
+            over_60:
+              1: "C.S. Lewis"
+              2: "Stephen King"
+              3: "Agatha Christie"
+              4: "George RR Martin"
+            over_40:
+              1: "George Orwell"
+              2: "F. Scott Fitzgerald"
+              3: "Aldous Huxley"
+              4: "Jeanne Didion"
+            over_20:
+              1: "Cormac McCarthy"
+              2: "William Faulkner"
+              3: "Virginia Woolf"
+              4: "Gabriel Garcia Marquez"
+            over_0:
+              1: "James Joyce"
+              2: "Thomas Pynchon"
+              3: "David Foster Wallace"
+              4: "Fiodor Dostoïevski"

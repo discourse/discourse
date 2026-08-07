@@ -144,7 +144,6 @@ ro:
       exclusion: este rezervat
       greater_than: trebuie să fie mai mare decât %{count}
       greater_than_or_equal_to: trebuie să fie mai mare sau egal cu %{count}
-      has_already_been_used: "a fost deja folosit"
       inclusion: nu este inclus in listă
       invalid: nu este valid
       is_invalid: "pare neclar, e completă propoziția?"
@@ -332,6 +331,11 @@ ro:
       trust_level_2: "nivel_de_încredere_2"
       trust_level_3: "nivel_de_încredere_3"
       trust_level_4: "nivel_de_încredere_4"
+    default_full_names:
+      everyone: "Toată lumea"
+      admins: "Admini"
+      moderators: "Moderatori"
+      staff: "Echipa"
     default_descriptions:
       everyone: "Grup automat care include toți membrii"
       staff: "Grup automat, inclusiv administratori și moderatori"
@@ -669,6 +673,9 @@ ro:
       session_info: "Citește informațiile despre sesiunea utilizatorului"
       read: "Citește tot"
       write: "Scrie tot"
+    device:
+      code: "Cod"
+      continue: "Continuă"
   reports:
     default:
       labels:
@@ -718,6 +725,7 @@ ro:
       labels:
         count: "Membri"
         share: "Partajează"
+        signups: "Înregistrări"
       levels:
         "0": "Nou"
         "1": "De bază"
@@ -1012,7 +1020,6 @@ ro:
     crawl_images: "Recuperează imaginile din URL-uri la distanță pentru a insera dimensiunile corecte de înălțime și lățime."
     download_remote_images_threshold: "Spațiul minim necesar pentru descărcarea imaginilor la distanță pe local (în procente)"
     editing_grace_period: "Pentru (n) secunde după postare, editarea nu va crea o versiune nouă în istoricul postării."
-    edit_history_visible_to_public: "Permite tuturor să vadă versiunile precedente ale unei postări editate. Când e dezactivat, ele pot fi văzute doar de membrii echipei."
     delete_removed_posts_after: "Postările șterse de către autor vor fi automat șterse după (n) de ore. Dacă este setat la 0, postările vor fi șterse imediat."
     fixed_category_positions: "Dacă e bifat, veți putea aranja categoriile într-o ordine fixă. Dacă e nebifat, categoriile sunt listate în ordinea activității."
     add_rel_nofollow_to_user_content: 'Adaugă atributul rel nofollow la toate conținuturile transmise de către utilizator, cu excepția link-urilor interne (includiv domeniile părinte). Dacă schimbi această setare, postările trebuie refăcute cu: "rake posts:rebake"'
@@ -1030,8 +1037,6 @@ ro:
     anon_polling_interval: "Cât de frecvent să interogheze clienții anonimi, în milisecunde"
     background_polling_interval: "Cât de des să interogheze clienții, în milisecunde (când fereastra este fundal)"
     cooldown_minutes_after_hiding_posts: "Numărul de minute pe care un utilizator trebuie să le aștepte până când va putea edita o postare ascunsă prin marcaje de avertizare ale comunității."
-    max_topics_in_first_day: "Numărul maxim de subiecte pe care un utilizator are voie să le creeze într-o perioadă de 24 de ore după ce și-a creat prima postare"
-    max_replies_in_first_day: "Numărul maxim de răspunsuri pe care un utilizator are voie să le creeze într-o perioadă de 24 de ore după ce și-a creat prima postare"
     tl2_additional_likes_per_day_multiplier: "Crește numărul maxim de aprecieri pe zi pentru (membrii cu) nivelul de încredere 2, multiplicând cu această valoare"
     tl3_additional_likes_per_day_multiplier: "Crește numărul maxim de aprecieri pe zi pentru (membrii cu) nivelul de încredere 3, multiplicând cu această valoare"
     tl4_additional_likes_per_day_multiplier: "Crește numărul maxim de aprecieri pe zi pentru (membrii cu) nivelul de încredere 4, multiplicând cu această valoare"
@@ -1305,7 +1310,6 @@ ro:
     enable_welcome_banner: "Afișează un banner pe paginile principale ale subiectelor pentru a ura bun venit membri și a le permite să caute conținut în site"
     welcome_banner_location: "Stabilește unde va apărea bannerul de bun venit pe pagină."
     welcome_banner_page_visibility: "Stabilește pe ce pagini va apărea bannerul de bun venit."
-    experimental_new_new_view_groups: 'Activează o nouă listă de subiecte care combină subiectele necitite și cele noi și fă ca legătura „Toate” din bara laterală să ducă spre aceasta.'
     show_preview_for_form_templates: "Activează funcționalitatea de previzualizare pentru șabloanele de formulare"
     experimental_impersonation_time_limit_minutes: "Cât durează până când o sesiune de preluare a identității se încheie automat."
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
@@ -1314,11 +1318,9 @@ ro:
     about_page_extra_groups_show_description: "Dacă se includ descrierile grupurilor pe pagina „Despre”."
     about_page_extra_groups_order: "Ordonarea grupurilor suplimentare pe pagina „Despre”."
     adobe_analytics_tags_url: "Adresa URL a etichetelor Adobe Analytics (`https://assets.adobedtm.com/...`)"
-    rich_editor: "Activează editorul îmbogățit pentru compoziție astfel încât toți utilizatorii să poată comuta între modul Markdown curent și noul editor de text îmbogățit pentru o compoziție mai intuitivă și mai ușor de utilizat."
     default_composition_mode: "Setează modul implicit pentru compozitorul comunității tale. Modul de text îmbogățit oferă o experienţă de scriere mai modernă, familiară pentru majoritatea utilizatorilor, în timp ce Markdown este potrivit pentru publicul mai tehnic. Membrii pot folosi o comutare în bara de instrumente a compozitorului pentru a comuta între moduri."
     reviewable_ui_refresh: "Grupuri care pot folosi noua interfață de utilizator experimentală în coada de revizuire."
     content_localization_allow_author_localization: "Permite autorilor să actualizeze localizările propriilor subiecte și postări prin intermediul meniului postări."
-    fake_upcoming_change: "Aceasta este o modificare viitoare falsă, în scopuri de testare. Nu este nevoie să traduci acest șir."
     errors:
       invalid_email: "Adresă de email invalidă."
       invalid_username: "Nu există nici un utilizator cu acest nume de utilizator."
@@ -1341,7 +1343,6 @@ ro:
       user_locale_not_enabled: "Trebuie să activezi întâi „permite locale utilizator” înainte de activa această setare."
       invalid_regex: "Regex invalid sau nepermis."
       content_localization_locale_limit: "Numărul de locale acceptate nu poate depăși %{max}."
-      content_localization_language_switcher_requirements: "Comutatorul de limbă necesită ca „setarea localei din cookie” și „permite locala utilizatorului” din setările site-ului să fie activate, și „locale acceptate din localizarea de conținut” să aibă cel puțin o limbă."
       mediaconvert_role_arn_required: "Rolul AWS IAM ARN este necesar atunci când utilizezi AWS MediaConvert pentru conversia video."
       s3_credentials_required_for_video_conversion: "Sunt necesare datele de conectare S3 pentru conversia video. Te rog să configurezi cheile de acces S3 sau să activezi profilul IAM."
     keywords:
@@ -1357,6 +1358,10 @@ ro:
       user: "Utilizatori"
     results_page: "Caută rezultate pentru '%{term}'"
     audio: "[audio]"
+  posts_filter:
+    description:
+      order_latest: "Ultimele postări"
+      order_latest_topic: "Ultimele subiecte"
   filter:
     description:
       status: "Filtrează subiectele după starea lor"
@@ -2262,6 +2267,8 @@ ro:
               private:
                 label: "Privat"
   onebox:
+    google_meet:
+      meeting_code: "Cod:"
     github:
       closed: "închis"
       status_date:
@@ -2395,12 +2402,10 @@ ro:
         bundle_title: "Ce vrei să faci cu utilizatorul?"
       silence_user:
         title: "Redu la tăcere utilizatorul"
-        description: "Împiedică utilizatorul să posteze"
         complete: "Utilizatorul a fost redus la tăcere"
         reason: "Utilizator redus la tăcere prin coada de examinare"
       suspend_user:
         title: "Suspendă utilizatorul"
-        description: "Suspendă contul de utilizator"
         complete: "Utilizatorul a fost suspendat"
         reason: "Utilizator suspendat prin coada de examinare"
       delete_user:

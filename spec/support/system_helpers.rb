@@ -64,6 +64,12 @@ module SystemHelpers
   end
 
   def setup_system_test
+    # `time:` freezes Ruby and the page's JavaScript clock, but not the browser's cookie-store
+    # clock. Persistent cookies use an absolute expiry based on Ruby time, so historical examples
+    # can create cookies the browser rejects as expired. The sign-in response still succeeds, but
+    # subsequent requests are anonymous. Browser state is reset after each example, so system tests
+    # only need session cookies.
+    SiteSetting.persistent_sessions = false
     SiteSetting.login_required = false
     SiteSetting.has_login_hint = false
     SiteSetting.global_notice = ""

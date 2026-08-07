@@ -228,6 +228,7 @@ export default class SidebarSection extends Component {
                 @options={{hash
                   icon=@headerActionsIcon
                   placementStrategy="absolute"
+                  btnCustomClasses="sidebar-section-header-dropdown-btn"
                 }}
                 @content={{@headerActions}}
                 @onChange={{this.handleMultipleHeaderActions}}

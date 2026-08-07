@@ -46,21 +46,21 @@ RSpec.describe "Nested view category default" do
     end
   end
 
-  describe "topic redirect" do
+  describe "topic routing" do
     before { sign_in(user) }
 
-    it "redirects to nested view when visiting a topic URL directly" do
+    it "renders nested view when visiting a topic URL directly" do
       page.visit("/t/#{topic.slug}/#{topic.id}")
 
-      expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}})
+      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
       expect(nested_view).to have_nested_view
     end
 
-    it "redirects to nested view when clicking a topic from the category page" do
+    it "renders nested view when clicking a topic from the category page" do
       page.visit("/c/#{nested_category.slug}/#{nested_category.id}")
       find(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']").click
 
-      expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}})
+      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
       expect(nested_view).to have_nested_view
     end
 
@@ -73,7 +73,7 @@ RSpec.describe "Nested view category default" do
 
       topic_list.visit_topic(topic)
 
-      expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}})
+      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
       expect(nested_view).to have_nested_view
       try_until_success { expect(page.evaluate_script("window.scrollY")).to eq(0) }
     end
@@ -85,34 +85,6 @@ RSpec.describe "Nested view category default" do
       page.visit("/t/#{normal_topic.slug}/#{normal_topic.id}")
 
       expect(page).to have_current_path(%r{/t/#{normal_topic.slug}/#{normal_topic.id}})
-      expect(nested_view).to have_no_nested_view
-    end
-
-    it "respects ?flat=1 to force flat view even in nested-default category" do
-      page.visit("/t/#{topic.slug}/#{topic.id}?flat=1")
-
-      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
-      expect(page).to have_current_path(/flat=1/)
-      expect(nested_view).to have_no_nested_view
-    end
-
-    it "does not redirect to nested when navigating within flat view (e.g. topic timeline)" do
-      page.visit("/t/#{topic.slug}/#{topic.id}?flat=1")
-      expect(nested_view).to have_no_nested_view
-
-      # Simulate the exact code path the topic timeline uses:
-      # topic.urlForPostNumber() → DiscourseURL.routeTo()
-      # This exercises the topic-url-for-post-number transformer which rewrites
-      # URLs to /nested/ for nested-default categories.
-      page.execute_script(<<~JS)
-        (function() {
-          var topic = Discourse.lookup("controller:topic").model;
-          var url = topic.urlForPostNumber(#{reply.post_number});
-          require("discourse/lib/url").default.routeTo(url);
-        })();
-      JS
-
-      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
       expect(nested_view).to have_no_nested_view
     end
   end

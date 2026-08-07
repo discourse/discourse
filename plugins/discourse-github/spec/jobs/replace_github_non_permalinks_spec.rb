@@ -25,12 +25,19 @@ describe Jobs::ReplaceGithubNonPermalinks do
       status: 200,
       body: github_response_body.to_json,
       headers: {
+        "Content-Type" => "application/json",
       },
     )
     stub_request(
       :get,
       "https://api.github.com/repos/test/onebox/commits/815ea9c0a8ffebe7bd7fcd34c10ff28c7a6b6974",
-    ).to_return(status: 200, body: github_response_body.to_json, headers: {})
+    ).to_return(
+      status: 200,
+      body: github_response_body.to_json,
+      headers: {
+        "Content-Type" => "application/json",
+      },
+    )
     stub_request(:get, "https://api.github.com/repos/test/oneblob/commits/master").to_return(
       status: 404,
     )
@@ -38,6 +45,7 @@ describe Jobs::ReplaceGithubNonPermalinks do
       status: 200,
       body: github_response_body2.to_json,
       headers: {
+        "Content-Type" => "application/json",
       },
     )
   end

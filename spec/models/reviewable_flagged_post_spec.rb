@@ -68,9 +68,50 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(actions.has?(:agree_and_keep_hidden)).to eq(true)
       end
 
-      it "returns `agree_and_restore` if the post is user deleted" do
-        post.update(user_deleted: true)
-        expect(reviewable.actions_for(guardian).has?(:agree_and_restore)).to eq(true)
+      it "does not return post visibility or delete actions if the post is user deleted" do
+        post.update!(user_deleted: true, reply_count: 3)
+
+        actions = reviewable.actions_for(guardian)
+
+        expect(actions.has?(:agree_and_keep_deleted)).to eq(true)
+        expect(actions.has?(:agree_and_keep)).to eq(false)
+        expect(actions.has?(:agree_and_keep_hidden)).to eq(false)
+        expect(actions.has?(:agree_and_edit)).to eq(false)
+        expect(actions.has?(:delete_and_agree)).to eq(false)
+        expect(actions.has?(:delete_and_agree_replies)).to eq(false)
+        expect(actions.has?(:delete_and_ignore)).to eq(false)
+        expect(actions.has?(:delete_and_ignore_replies)).to eq(false)
+      end
+
+      it "returns an unsilence action without restore actions if a silenced user deleted the flagged post" do
+        post.update!(hidden: true, user_deleted: true)
+        UserSilencer.silence(post.user, moderator, post_id: post.id)
+
+        actions = reviewable.actions_for(guardian)
+
+        expect(actions.has?(:agree_and_keep_deleted)).to eq(true)
+        expect(actions.has?(:unsilence_user_and_ignore)).to eq(true)
+        expect(actions.has?(:agree_and_silence)).to eq(false)
+        expect(actions.has?(:agree_and_keep_hidden)).to eq(false)
+        expect(actions.has?(:agree_and_restore)).to eq(false)
+        expect(actions.has?(:disagree_and_restore)).to eq(false)
+      end
+
+      it "returns ignore without restore actions if a suspended user deleted the flagged post" do
+        post.update!(hidden: true, user_deleted: true)
+        UserSuspender.new(
+          post.user,
+          suspended_till: 5.days.from_now,
+          reason: "spam",
+          by_user: moderator,
+          post_id: post.id,
+        ).suspend
+
+        actions = reviewable.actions_for(guardian)
+
+        expect(actions.has?(:ignore_and_do_nothing)).to eq(true)
+        expect(actions.has?(:agree_and_restore)).to eq(false)
+        expect(actions.has?(:disagree_and_restore)).to eq(false)
       end
 
       it "returns delete replies options if there are replies" do
@@ -88,6 +129,24 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         post.user.update(moderator: true)
         expect(reviewable.actions_for(guardian).has?(:agree_and_silence)).to eq(false)
         expect(reviewable.actions_for(guardian).has?(:agree_and_suspend)).to eq(false)
+      end
+
+      it "doesn't return the silence action if the user is already silenced" do
+        UserSilencer.silence(post.user, moderator, post_id: post.id)
+
+        actions = reviewable.actions_for(guardian)
+
+        expect(actions.has?(:agree_and_silence)).to eq(false)
+        expect(actions.has?(:agree_and_suspend)).to eq(true)
+      end
+
+      it "doesn't return the suspend action if the user is already suspended" do
+        post.user.update!(suspended_till: 1.year.from_now, suspended_at: Time.zone.now)
+
+        actions = reviewable.actions_for(guardian)
+
+        expect(actions.has?(:agree_and_suspend)).to eq(false)
+        expect(actions.has?(:agree_and_silence)).to eq(true)
       end
 
       it "doesn't end up with an empty ignore bundle when the post is already hidden and deleted" do
@@ -173,37 +232,27 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       fab!(:claimed) { Fabricate(:reviewable_claimed_topic, topic: post.topic, user: moderator) }
 
       before { SiteSetting.reviewable_claiming = "required" }
+
       it "clears the claimed topic on resolve" do
         reviewable.perform(moderator, :agree_and_keep)
+
         expect(reviewable).to be_approved
         expect(score.reload).to be_agreed
         expect(post).not_to be_hidden
         expect(ReviewableClaimedTopic.where(topic_id: post.topic.id).exists?).to eq(false)
-        expect(
-          post
-            .topic
-            .reviewables
-            .first
-            .history
-            .where(reviewable_history_type: ReviewableHistory.types[:unclaimed])
-            .size,
-        ).to eq(1)
+        expect(reviewable.history.unclaimed.size).to eq(1)
       end
 
-      it "does not log unclaimed history when topic was not claimed" do
+      it "does not log history or publish when the topic was not claimed" do
         claimed.destroy!
-        reviewable.perform(moderator, :agree_and_keep)
-        expect(reviewable).to be_approved
-        expect(score.reload).to be_agreed
-        expect(
-          post
-            .topic
-            .reviewables
-            .first
-            .history
-            .where(reviewable_history_type: ReviewableHistory.types[:unclaimed])
-            .size,
-        ).to eq(0)
+
+        messages =
+          MessageBus.track_publish("/reviewable_claimed") do
+            reviewable.perform(moderator, :agree_and_keep)
+          end
+
+        expect(reviewable.history.unclaimed).to be_empty
+        expect(messages).to be_empty
       end
 
       it "publishes reviewable_claimed message with user data when claim is removed" do
@@ -496,6 +545,22 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
   end
 
+  describe "#perform_unsilence_user_and_ignore" do
+    it "unsilences the user and resolves the reviewable without restoring the deleted post" do
+      reviewable = Fabricate(:reviewable_flagged_post)
+      flagged_post = reviewable.post
+      target_user = flagged_post.user
+      flagged_post.update!(hidden: true, user_deleted: true)
+      UserSilencer.silence(target_user, moderator, post_id: flagged_post.id)
+
+      reviewable.perform(moderator, :unsilence_user_and_ignore)
+
+      expect(target_user.reload.silenced?).to eq(false)
+      expect(flagged_post.reload.user_deleted?).to eq(true)
+      expect(reviewable.reload).to be_ignored
+    end
+  end
+
   describe "#perform_disagree" do
     it "restores a hidden post even when the author would no longer pass post validations" do
       SiteSetting.newuser_max_embedded_media = 1
@@ -529,6 +594,53 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       reviewable.perform(moderator, :disagree_and_restore)
 
       assert_pm_creation_enqueued(reviewable.post.user_id, "flags_disagreed")
+    end
+
+    it "unsilences the user if they were silenced for the post" do
+      reviewable = Fabricate(:reviewable_flagged_post)
+      target_user = reviewable.post.user
+      reviewable.post.update(
+        hidden: true,
+        hidden_at: Time.zone.now,
+        hidden_reason_id: PostActionType.types[:spam],
+      )
+      UserSilencer.silence(target_user, moderator, post_id: reviewable.post.id)
+
+      expect(target_user.reload.silenced?).to eq(true)
+
+      reviewable.perform(moderator, :disagree_and_restore)
+
+      expect(target_user.reload.silenced?).to eq(false)
+    end
+
+    context "with category group moderator" do
+      fab!(:group)
+      fab!(:category_moderator) { Fabricate(:user, refresh_auto_groups: true) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        group.add(category_moderator)
+      end
+
+      it "unsilences the user if they were silenced for a post in the moderated category" do
+        category = Fabricate(:category)
+        Fabricate(:category_moderation_group, category: category, group: group)
+
+        topic = Fabricate(:topic, category: category)
+        post = Fabricate(:post, topic: topic)
+        target_user = post.user
+
+        reviewable = PostActionCreator.spam(user, post).reviewable
+        post.update(hidden: true, hidden_at: Time.zone.now)
+        UserSilencer.silence(target_user, moderator, post_id: post.id)
+
+        expect(target_user.reload.silenced?).to eq(true)
+
+        reviewable.perform(category_moderator, :disagree_and_restore)
+
+        expect(post.reload.hidden?).to eq(false)
+        expect(target_user.reload.silenced?).to eq(false)
+      end
     end
   end
 

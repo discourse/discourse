@@ -13,11 +13,11 @@ pt:
   js:
     discourse_reactions:
       reactions_title: "Reações"
-      state_panel:
-        more_users: "e mais %{count}..."
       picker:
         react_with: "Reagir a esta publicação com: %{reaction}"
         remove_reaction: "Remover esta %{reaction} reação"
+      users_popup:
+        all: "Todos"
       main_reaction:
         add: "Gostar desta publicação"
         remove: "Remover este gosto"

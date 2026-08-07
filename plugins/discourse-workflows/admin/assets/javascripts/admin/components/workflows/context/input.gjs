@@ -5,20 +5,26 @@ import { trustHTML } from "@ember/template";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import {
-  ancestorOutputNodes,
-  inputConnectionsForNode,
-  inputFieldPrefixForConnection,
-  inputIndexForConnection,
   inputSummaryForNode,
-  nodeItemJsonPath,
-  outputIndexForConnection,
   outputSummaryForNode,
-  previousNodeForConnection,
   schemaFieldsForNodeInput,
   schemaFieldsForNodeOutput,
-} from "../../../lib/workflows/data-schema";
+} from "../../../lib/workflows/data-preview";
+import {
+  inputFieldPrefixForConnection,
+  inputIndexForConnection,
+  nodeOutputJsonPath,
+  outputIndexForConnection,
+} from "../../../lib/workflows/expression-paths";
 import processFields from "../../../lib/workflows/field-processors";
 import { nodeTypeColor, nodeTypeIcon } from "../../../lib/workflows/node-types";
+import { schemaFieldsForItems } from "../../../lib/workflows/schema-fields";
+import {
+  ancestorOutputNodes,
+  inputConnectionsForNode,
+  previousNodeForConnection,
+  resolveDeclaredOutputSchemas,
+} from "../../../lib/workflows/schema-graph";
 import DragDropHint from "./drag-drop-hint";
 import SchemaField from "./schema-field";
 
@@ -110,6 +116,11 @@ export default class InputContext extends Component {
   }
 
   @cached
+  get declaredOutputSchemas() {
+    return resolveDeclaredOutputSchemas(this.graph);
+  }
+
+  @cached
   get inputConnections() {
     return inputConnectionsForNode(this.args.node, this.graph);
   }
@@ -150,6 +161,10 @@ export default class InputContext extends Component {
 
         const inputIndex = inputIndexForConnection(connection);
         const outputIndex = outputIndexForConnection(connection);
+        const pinnedItems =
+          outputIndex === 0
+            ? this.args.session?.pinnedItemsForNode(previousNode.name)
+            : undefined;
         const recordedInputSummary = inputSummaryForNode(
           this.runData,
           this.args.node.name,
@@ -158,6 +173,7 @@ export default class InputContext extends Component {
             node: this.args.node,
             sourceNode: previousNode,
             outputIndex,
+            pinnedItems,
           }
         );
         const fields = schemaFieldsForNodeInput(
@@ -171,6 +187,9 @@ export default class InputContext extends Component {
             prefix: inputFieldPrefixForConnection(connection, previousNode, {
               primaryConnection: this.primaryInputConnection,
             }),
+            graph: this.graph,
+            pinnedItems,
+            declaredOutputSchemas: this.declaredOutputSchemas,
           }
         );
 
@@ -212,29 +231,39 @@ export default class InputContext extends Component {
     return ancestorOutputNodes(this.args.node, this.graph)
       .filter((ancestor) => !directNodeIds.has(ancestor.node.clientId))
       .map((ancestor) => {
-        const fields = schemaFieldsForNodeOutput(
-          this.runData,
-          ancestor.node.name,
-          {
-            outputIndex: ancestor.outputIndex,
-            node: ancestor.node,
-            prefix: nodeItemJsonPath(ancestor.node.name),
-          }
-        );
+        const pinnedItems =
+          ancestor.outputIndex === 0
+            ? this.args.session?.pinnedItemsForNode(ancestor.node.name)
+            : undefined;
+        const prefix = nodeOutputJsonPath(this.runData, ancestor.node.name, {
+          outputIndex: ancestor.outputIndex,
+          node: ancestor.node,
+          itemCount: pinnedItems?.length,
+        });
+        const fields = pinnedItems
+          ? schemaFieldsForItems(pinnedItems, { prefix })
+          : schemaFieldsForNodeOutput(this.runData, ancestor.node.name, {
+              outputIndex: ancestor.outputIndex,
+              node: ancestor.node,
+              prefix,
+              graph: this.graph,
+              declaredOutputSchemas: this.declaredOutputSchemas,
+            });
+        const summary = pinnedItems
+          ? { itemCount: pinnedItems.length, truncated: false }
+          : outputSummaryForNode(
+              this.runData,
+              ancestor.node.name,
+              ancestor.outputIndex,
+              { node: ancestor.node }
+            );
         return {
           name: ancestor.node.name,
           type:
             this.workflowsNodeTypes.findNodeType(ancestor.node.type) ||
             ancestor.node.type,
           fields,
-          itemCountLabel: this.itemCountLabel(
-            outputSummaryForNode(
-              this.runData,
-              ancestor.node.name,
-              ancestor.outputIndex,
-              { node: ancestor.node }
-            )
-          ),
+          itemCountLabel: this.itemCountLabel(summary),
         };
       })
       .filter((ancestor) => ancestor.fields.length);

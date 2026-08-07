@@ -13,7 +13,7 @@ RSpec.describe "Workflow Expression Editor" do
     editor_page.click_empty_state_add_node
     editor_page.select_node_type("trigger:topic_created")
     editor_page.click_add_node
-    editor_page.select_node_type("action:create_post")
+    editor_page.select_node_type("action:post", operation: "create")
     editor_page.double_click_node(1)
   end
 
@@ -61,7 +61,9 @@ RSpec.describe "Workflow Expression Editor" do
     end
 
     it "marks unclosed expressions with error decoration" do
-      expression_editor.type_in_editor("{{ $json.title")
+      # A non-reference expression so it stays raw text (a simple reference
+      # would render as an atomic pill and backspace would delete it wholesale).
+      expression_editor.type_in_editor("{{ foo.bar")
       expression_editor.move_cursor_and_delete(3, 2)
 
       expect(expression_editor).to have_syntax_error
@@ -108,7 +110,9 @@ RSpec.describe "Workflow Expression Editor" do
     before { open_expression_editor }
 
     it "shows a tooltip when hovering over a dollar variable" do
-      expression_editor.type_in_editor("{{ $json }}")
+      # An expression that stays raw (not a pill) so the $json token is present
+      # to hover; a bare reference would render as a pill.
+      expression_editor.type_in_editor("{{ $json + 1 }}")
 
       expression_editor.hover_variable("$json")
 
@@ -155,7 +159,9 @@ RSpec.describe "Workflow Expression Editor" do
     end
 
     it "highlights invalid expressions in the editor with red background" do
-      expression_editor.type_in_editor("{{ $vars. }}")
+      # A raw (non-pill) trailing-dot expression; a $-reference would render as
+      # a pill and carry its own invalid styling instead.
+      expression_editor.type_in_editor("{{ foo. }}")
 
       expect(page).to have_css(".cm-wf-invalid-expression", wait: 10)
     end

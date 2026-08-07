@@ -22,7 +22,6 @@ tr_TR:
     remind_assigns_frequency: "Kullanıcılara atanan konuları hatırlatma sıklığı."
     pending_assign_reminder_threshold: "Anımsatıcı bildirimini tetikleyen bekleyen atamaların sayısı."
     max_assigned_topics: "Bir kullanıcıya atanabilecek maksimum konu sayısı."
-    assign_allowed_on_groups: "Bu gruplardaki kullanıcılar konu atayabilir."
     enable_assign_status: "Her atamaya özelleştirilebilir bir durum alanı ekleyin."
     assign_statuses: "Her atama için kullanılabilir durumların listesi. İlk durum, her yeni atamaya uygulanan varsayılan durumdur."
     ignore_solved_topics_in_assigned_reminder: "Görev hatırlatmalarının çözülmüş konuları içermesini önleyin. Yalnızca discourse-solved eklentisi kullanıldığında geçerlidir."

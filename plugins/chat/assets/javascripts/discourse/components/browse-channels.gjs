@@ -1,16 +1,14 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { concat, hash } from "@ember/helper";
+import { concat } from "@ember/helper";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
-import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { eq } from "discourse/truth-helpers";
 import DEmptyState from "discourse/ui-kit/d-empty-state";
-import DFilterInput from "discourse/ui-kit/d-filter-input";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import { i18n } from "discourse-i18n";
 import List from "discourse/plugins/chat/discourse/components/chat/list";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
@@ -28,9 +26,37 @@ export default class BrowseChannels extends Component {
   @service siteSettings;
 
   @tracked filter = "";
+  @tracked selectedJoinedFilter = "all";
 
   get currentTab() {
     return this.args.currentTab ?? ALL;
+  }
+
+  get joinedFilters() {
+    return [
+      { label: i18n("chat.browse.filter_joined_all"), value: "all" },
+      { label: i18n("chat.browse.filter_joined_joined"), value: "joined" },
+      {
+        label: i18n("chat.browse.filter_joined_not_joined"),
+        value: "not-joined",
+      },
+    ];
+  }
+
+  @action
+  setJoinedFilter(value) {
+    this.selectedJoinedFilter = value;
+  }
+
+  @action
+  filterChannelsByJoined(listItems) {
+    if (this.selectedJoinedFilter === "joined") {
+      return listItems.filter((channel) => channel.isFollowing);
+    } else if (this.selectedJoinedFilter === "not-joined") {
+      return listItems.filter((channel) => !channel.isFollowing);
+    } else {
+      return listItems;
+    }
   }
 
   @cached
@@ -56,18 +82,17 @@ export default class BrowseChannels extends Component {
 
   @action
   setFilter(event) {
-    this.filter = event.target.value;
-    discourseDebounce(this.debouncedLoad, INPUT_DELAY);
+    discourseDebounce(
+      this,
+      this.debouncedSetFilter,
+      event.target.value,
+      INPUT_DELAY
+    );
   }
 
   @action
-  debouncedLoad() {
-    this.channelsCollection.load({ limit: 10 });
-  }
-
-  @action
-  focusFilterInput(input) {
-    schedule("afterRender", () => input?.focus());
+  debouncedSetFilter(value) {
+    this.filter = value;
   }
 
   <template>
@@ -89,11 +114,16 @@ export default class BrowseChannels extends Component {
           </ul>
         </nav>
 
-        <DFilterInput
-          {{didInsert this.focusFilterInput}}
-          @filterAction={{this.setFilter}}
-          @icons={{hash right="magnifying-glass"}}
-          placeholder={{i18n "chat.browse.filter_input_placeholder"}}
+        <DFilterControls
+          @array={{this.channelsCollection.items}}
+          @dropdownOptions={{this.joinedFilters}}
+          @dropdownValue={{this.selectedJoinedFilter}}
+          @inputPlaceholder={{i18n "chat.browse.filter_input_placeholder"}}
+          @loading={{this.channelsCollection.loading}}
+          @onDropdownFilterChange={{this.setJoinedFilter}}
+          @onTextFilterChange={{this.setFilter}}
+          @showNoResults={{false}}
+          @showResetButton={{false}}
         />
       </div>
 
@@ -101,6 +131,7 @@ export default class BrowseChannels extends Component {
         <div class="chat-browse-view__content">
           <List
             @collection={{this.channelsCollection}}
+            @filterFn={{this.filterChannelsByJoined}}
             class="chat-browse-view__cards"
             as |list|
           >

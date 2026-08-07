@@ -26,6 +26,41 @@ RSpec.describe SearchIndexer do
     expect(post_search_data.search_data).to eq("'世界':2 '你好':1")
   end
 
+  it "applies post search text modifiers with locale", :aggregate_failures do
+    cooked = "<p>hello</p>"
+    modifier_block =
+      proc do |text, modifier_post_id, modifier_cooked, locale|
+        expect(modifier_post_id).to eq(post_id)
+        expect(modifier_cooked).to eq(cooked)
+        expect(locale).to eq("ja")
+
+        "#{text} extra indexed text"
+      end
+
+    plugin_instance = Plugin::Instance.new
+    plugin_instance.register_modifier(:post_search_index_text, &modifier_block)
+
+    SearchIndexer.update_posts_index(
+      post_id: post_id,
+      topic_title: "",
+      category_name: "",
+      topic_tags: "",
+      cooked: cooked,
+      private_message: false,
+      locale: "ja",
+    )
+
+    expect(PostSearchData.find_by(post_id: post_id).raw_data).to eq("hello extra indexed text")
+  ensure
+    if plugin_instance
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin_instance,
+        :post_search_index_text,
+        &modifier_block
+      )
+    end
+  end
+
   it "extract youtube title" do
     html =
       "<div class=\"lazy-video-container\" data-video-id=\"lmFgeFh2nlw\" data-video-title=\"Metallica Mixer Explains Missing Bass on 'And Justice for All' [Exclusive]\" data-provider-name=\"youtube\"></div>"

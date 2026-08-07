@@ -13,12 +13,12 @@ da:
   js:
     discourse_reactions:
       reactions_title: "Reaktioner"
-      state_panel:
-        more_users: "og %{count} mere..."
       picker:
         react_with: "Reager på dette indlæg med: %{reaction}"
         cant_remove_reaction: "Du kan ikke længere fjerne din reaktion"
         remove_reaction: "Fjern denne %{reaction} reaktion"
+      users_popup:
+        all: "Alle"
       main_reaction:
         add: "Synes godt om dette indlæg"
         remove: "Fjern dette 'Synes godt om'"

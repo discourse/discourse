@@ -80,6 +80,8 @@ ja:
     holiday_status:
       description: "休暇中"
   discourse_post_event:
+    event_excerpt:
+      date_format: "%Y 年 %B %-d 日"
     notifications:
       before_event_reminder: "%{title} は間もなく開始します。"
       after_event_reminder: "%{title} は終了しました。"

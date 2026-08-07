@@ -15,10 +15,14 @@ module SiteSettingsHelpers
     end
   end
 
+  # GlobalSettings that affect the cache.
+  ASSET_HOST_GLOBAL_SETTINGS = %i[cdn_url s3_cdn_url s3_asset_cdn_url]
+
   def global_setting(name, value)
     SiteSetting.hidden_settings_provider.remove_hidden(name)
     SiteSetting.shadowed_settings.delete(name)
     GlobalSetting.reset_s3_cache!
+    Stylesheet::Manager.cache.clear if ASSET_HOST_GLOBAL_SETTINGS.include?(name.to_sym)
 
     GlobalSetting.stubs(name).returns(value)
 
@@ -26,6 +30,7 @@ module SiteSettingsHelpers
       SiteSetting.hidden_settings_provider.remove_hidden(name)
       SiteSetting.shadowed_settings.delete(name)
       GlobalSetting.reset_s3_cache!
+      Stylesheet::Manager.cache.clear if ASSET_HOST_GLOBAL_SETTINGS.include?(name.to_sym)
     end
   end
 

@@ -1,7 +1,5 @@
-/* eslint-disable ember/no-jquery */
 import { action, computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
-import $ from "jquery";
 import { ajax } from "discourse/lib/ajax";
 import deprecated from "discourse/lib/deprecated";
 import { isDevelopment } from "discourse/lib/environment";
@@ -91,16 +89,22 @@ export default class IconPicker extends MultiSelectComponent {
       holder = "ajax-icon-holder";
 
     if (typeof icon === "object") {
-      if ($(`${spriteEl} .${holder}`).length === 0) {
-        $(spriteEl).append(
-          `<div class="${holder}" style='display: none;'></div>`
-        );
+      if (!document.querySelector(`${spriteEl} .${holder}`)) {
+        document
+          .querySelector(spriteEl)
+          .insertAdjacentHTML(
+            "beforeend",
+            `<div class="${holder}" style='display: none;'></div>`
+          );
       }
 
-      if (!$(`${spriteEl} symbol#${strippedIconName}`).length) {
-        $(`${spriteEl} .${holder}`).append(
-          `<svg xmlns='http://www.w3.org/2000/svg'>${icon.symbol}</svg>`
-        );
+      if (!document.querySelector(`${spriteEl} symbol#${strippedIconName}`)) {
+        document
+          .querySelector(`${spriteEl} .${holder}`)
+          .insertAdjacentHTML(
+            "beforeend",
+            `<svg xmlns='http://www.w3.org/2000/svg'>${icon.symbol}</svg>`
+          );
       }
     }
 
@@ -112,7 +116,9 @@ export default class IconPicker extends MultiSelectComponent {
   }
 
   willDestroyElement() {
-    $("#svg-sprites .ajax-icon-holder").remove();
+    document
+      .querySelectorAll("#svg-sprites .ajax-icon-holder")
+      .forEach((el) => el.remove());
     super.willDestroyElement(...arguments);
 
     this._cachedIconsList = null;

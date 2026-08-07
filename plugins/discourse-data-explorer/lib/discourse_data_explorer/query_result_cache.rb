@@ -3,7 +3,7 @@
 module DiscourseDataExplorer
   class QueryResultCache
     CACHE_TTL = 24.hours.to_i
-    MAX_CACHE_SIZE = 100.kilobytes
+    MAX_CACHE_SIZE = 200.kilobytes
     MAX_CACHE_ENTRIES = 50
 
     def self.cache_key(query_id, params_hash)
@@ -14,12 +14,23 @@ module DiscourseDataExplorer
       "data_explorer:result:#{query_id}:#{digest}"
     end
 
-    def self.read(query_id, params_hash)
+    def self.read(query_id, params_hash, max_age: nil)
       key = cache_key(query_id, params_hash)
       raw = Discourse.redis.get(key)
       return nil if raw.nil?
-      MultiJson.load(raw)
+
+      result = MultiJson.load(raw)
+      return nil if max_age && !within_max_age?(result, max_age)
+
+      result
     end
+
+    def self.within_max_age?(result, max_age)
+      Time.iso8601(result["cached_at"]) >= max_age.ago
+    rescue ArgumentError, TypeError
+      false
+    end
+    private_class_method :within_max_age?
 
     def self.write(query_id, params_hash, result_json)
       payload = result_json.merge("cached_at" => Time.now.utc.iso8601)
@@ -29,6 +40,7 @@ module DiscourseDataExplorer
       key = cache_key(query_id, params_hash)
       index_key = cache_index_key(query_id)
       now = Time.now.to_f
+      prune_stale_entries(index_key, now)
       return false if limit_reached?(index_key, key)
 
       Discourse.redis.setex(key, CACHE_TTL, serialized)
@@ -55,6 +67,10 @@ module DiscourseDataExplorer
       Discourse.redis.zcard(index_key) >= MAX_CACHE_ENTRIES
     end
 
-    private_class_method :limit_reached?
+    def self.prune_stale_entries(index_key, now)
+      Discourse.redis.zremrangebyscore(index_key, "-inf", now - CACHE_TTL)
+    end
+
+    private_class_method :limit_reached?, :prune_stale_entries
   end
 end

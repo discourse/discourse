@@ -147,14 +147,29 @@ module DiscourseAi
           topic_agent_id = post.topic.custom_fields["ai_agent_id"]
           topic_agent_id = topic_agent_id.to_i if topic_agent_id.present?
 
-          agent_id = mentioned&.dig(:id) || topic_agent_id
+          authorization_user = post.user
+          if mentioned
+            agent_id = mentioned[:id]
+          else
+            agent_id = topic_agent_id
+            authorization_user = post.topic.user if topic_agent_id
+          end
 
           agent = nil
 
-          agent = DiscourseAi::Agents::Agent.find_by(user: post.user, id: agent_id.to_i) if agent_id
+          agent =
+            DiscourseAi::Agents::Agent.find_by(
+              user: authorization_user,
+              id: agent_id.to_i,
+            ) if agent_id && authorization_user
 
           if !agent && (agent_name = post.topic.custom_fields["ai_agent"])
-            agent = DiscourseAi::Agents::Agent.find_by(user: post.user, name: agent_name)
+            authorization_user = post.topic.user
+            agent =
+              DiscourseAi::Agents::Agent.find_by(
+                user: authorization_user,
+                name: agent_name,
+              ) if authorization_user
           end
 
           # edge case, llm was mentioned in an ai agent conversation
@@ -170,12 +185,15 @@ module DiscourseAi
             end
           end
 
-          agent ||= DiscourseAi::Agents::General
+          if !agent
+            agent = DiscourseAi::Agents::General
+            authorization_user = post.user
+          end
 
           bot_user = User.find(agent.user_id) if agent && agent.force_default_llm
 
           bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent.new)
-          new(bot).update_playground_with(post)
+          new(bot).update_playground_with(post, authorization_user: authorization_user)
         end
       end
 
@@ -222,8 +240,8 @@ module DiscourseAi
         @bot = bot
       end
 
-      def update_playground_with(post)
-        schedule_bot_reply(post) if can_attach?(post)
+      def update_playground_with(post, authorization_user: post.user)
+        schedule_bot_reply(post, authorization_user: authorization_user) if can_attach?(post)
       end
 
       def title_playground(post, user)
@@ -306,16 +324,12 @@ module DiscourseAi
 
         context_post_ids = nil if !channel.direct_message_channel?
 
-        max_chat_messages = 40
-        if bot.agent.class.respond_to?(:max_context_posts)
-          max_chat_messages = bot.agent.class.max_context_posts || 40
-        end
-
         if !channel.direct_message_channel?
           # we are interacting via mentions ... strip mention
           instruction_message = message.message.gsub(/@#{bot.bot_user.username}/i, "").strip
         end
 
+        context_llm = bot.llm
         context =
           DiscourseAi::Agents::BotContext.new(
             participants: participants,
@@ -330,7 +344,9 @@ module DiscourseAi
                 include_image_uploads: include_image_uploads?,
                 include_document_uploads: include_document_uploads?,
                 allowed_attachment_types: bot.model.allowed_attachment_types,
-                max_messages: max_chat_messages,
+                max_messages: DiscourseAi::Completions::PromptMessagesBuilder::MAX_CONTEXT_MESSAGES,
+                context_token_budget: context_token_budget(context_llm),
+                tokenizer: context_llm.tokenizer,
                 bot_user_ids: available_bot_user_ids,
                 instruction_message: instruction_message,
               ),
@@ -356,21 +372,39 @@ module DiscourseAi
             cancel_manager: context.cancel_manager,
           )
 
+        pending_approvals = []
         new_prompts =
           bot.reply(context) do |partial, placeholder, type|
             # no support for thinking by design
             next if type == :thinking || type == :partial_tool
+            if type == :chat_approval
+              pending_approvals << partial
+              next
+            end
             streamer << partial
           end
 
         reply = streamer.reply
         if new_prompts.length > 1 && reply
+          # Note: messages_from_chat does not read these back, so compressed
+          # context checkpoints only persist across turns for post-based
+          # replies; chat rebuilds context from the raw messages each turn.
           ChatMessageCustomPrompt.create!(message_id: reply.id, custom_prompt: new_prompts)
         end
 
         if streamer
           streamer.done
           streamer = nil
+        end
+
+        pending_approvals.each do |pending_approval|
+          post_chat_tool_approval(
+            pending_approval,
+            channel: channel,
+            guardian: guardian,
+            thread_id: reply&.thread_id || message.reload.thread_id,
+            fallback_in_reply_to_id: message.id,
+          )
         end
 
         reply
@@ -408,6 +442,30 @@ module DiscourseAi
         streamer.done if streamer
       end
 
+      # Posts the queued tool action as its own chat message carrying the
+      # Approve/Reject blocks, in the same thread as the bot's reply so it sits
+      # with the conversation. It must be a fresh message (not an edit of the
+      # reply): the chat client only renders blocks present at message creation.
+      # Scoped to bot direct-message channels; elsewhere the reviewable is still
+      # created and remains actionable from /review.
+      def post_chat_tool_approval(info, channel:, guardian:, thread_id:, fallback_in_reply_to_id:)
+        return if !channel.direct_message_channel?
+
+        raw = +"**#{info[:summary]}**\n#{info[:details]}".strip
+        raw << "\n\n_#{I18n.t("discourse_ai.ai_bot.tool_pending_approval")}_"
+
+        ChatSDK::Message.create(
+          raw: raw,
+          channel_id: channel.id,
+          guardian: guardian,
+          thread_id: thread_id,
+          in_reply_to_id: thread_id ? nil : fallback_in_reply_to_id,
+          force_thread: thread_id.blank?,
+          enforce_membership: !channel.direct_message_channel?,
+          blocks: DiscourseAi::AiBot::ChatToolApproval.pending_blocks(info[:reviewable_id]),
+        )
+      end
+
       def reply_to(
         post,
         custom_instructions: nil,
@@ -422,6 +480,7 @@ module DiscourseAi
         cancel_manager: nil,
         attributed_user: nil,
         feature_context: nil,
+        authorization_user_id: nil,
         &blk
       )
         # this is a multithreading issue
@@ -436,6 +495,8 @@ module DiscourseAi
 
         reply = +""
         post_streamer = nil
+        stream_user_ids = nil
+        stream_group_ids = nil
 
         post_type =
           (
@@ -446,12 +507,7 @@ module DiscourseAi
             end
           )
 
-        # safeguard
-        max_context_posts = 40
-        if bot.agent.class.respond_to?(:max_context_posts)
-          max_context_posts = bot.agent.class.max_context_posts || 40
-        end
-
+        context_llm = bot.llm
         context =
           DiscourseAi::Agents::BotContext.new(
             post: post,
@@ -463,7 +519,9 @@ module DiscourseAi
               DiscourseAi::Completions::PromptMessagesBuilder.messages_from_post(
                 post,
                 style: context_style,
-                max_posts: max_context_posts,
+                max_posts: DiscourseAi::Completions::PromptMessagesBuilder::MAX_CONTEXT_MESSAGES,
+                context_token_budget: context_token_budget(context_llm),
+                tokenizer: context_llm.tokenizer,
                 include_image_uploads: include_image_uploads?,
                 include_document_uploads: include_document_uploads?,
                 allowed_attachment_types: bot.model.allowed_attachment_types,
@@ -474,6 +532,16 @@ module DiscourseAi
         reply_user = bot.bot_user
         if bot.agent.class.respond_to?(:user_id)
           reply_user = User.find_by(id: bot.agent.class.user_id) || reply_user
+        end
+
+        if existing_reply_post
+          if existing_reply_post.topic_id != post.topic_id
+            raise Discourse::InvalidParameters.new(:reply_post_id)
+          end
+
+          if existing_reply_post.user_id != reply_user.id
+            raise Discourse::InvalidParameters.new(:reply_post_id)
+          end
         end
 
         stream_reply = post.topic.private_message? if stream_reply.nil?
@@ -499,14 +567,6 @@ module DiscourseAi
           reply_post = existing_reply_post
 
           if reply_post
-            if reply_post.topic_id != post.topic_id
-              raise Discourse::InvalidParameters.new(:reply_post_id)
-            end
-
-            if reply_post.user_id != reply_user.id
-              raise Discourse::InvalidParameters.new(:reply_post_id)
-            end
-
             reply_post.update_columns(raw: "", cooked: "")
             reply_post.post_custom_prompt = nil
           else
@@ -519,26 +579,23 @@ module DiscourseAi
                 skip_jobs: true,
                 post_type: post_type,
                 skip_guardian: true,
-                custom_fields: {
-                  DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD => bot.llm.llm_model.display_name,
-                  DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD => bot.llm.llm_model.id,
-                  DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD => bot.agent.id,
-                },
+                custom_fields: ai_custom_fields(authorization_user_id: authorization_user_id),
               )
           end
 
-          reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD] = bot
-            .llm
-            .llm_model
-            .display_name
-          reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD] = bot
-            .llm
-            .llm_model
-            .id
-          reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD] = bot.agent.id
-          reply_post.save_custom_fields
+          save_ai_custom_fields(reply_post, authorization_user_id: authorization_user_id)
 
-          publish_update(reply_post, { raw: "" })
+          stream_user_ids = reply_post.topic.allowed_users.pluck(:id)
+          stream_group_ids = reply_post.topic.allowed_groups.pluck(:id)
+
+          publish_update(
+            reply_post,
+            payload: {
+              raw: "",
+            },
+            user_ids: stream_user_ids,
+            group_ids: stream_group_ids,
+          )
 
           redis_stream_key = "gpt_cancel:#{reply_post.id}"
           Discourse.redis.setex(redis_stream_key, MAX_STREAM_DELAY_SECONDS, 1)
@@ -568,11 +625,18 @@ module DiscourseAi
             next if type == :structured_output && !partial.finished?
 
             if should_start_thinking?(partial:, context:, type:, started_thinking:, placeholder:)
+              reply << "\n\n" if reply.present? && !reply.end_with?("\n")
               reply << "<details class='ai-thinking'><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>\n\n"
               started_thinking = true
             elsif should_stop_thinking?(partial:, context:, type:, started_thinking:, placeholder:)
+              reply << "\n" if !reply.end_with?("\n")
               reply << "</details>\n\n"
               started_thinking = false
+            end
+
+            if type == :thinking && partial.present? && placeholder.blank? && started_thinking &&
+                 !reply.end_with?("\n")
+              reply << "\n\n"
             end
 
             reply << partial
@@ -586,12 +650,24 @@ module DiscourseAi
             if post_streamer
               post_streamer.run_later do
                 Discourse.redis.expire(redis_stream_key, MAX_STREAM_DELAY_SECONDS)
-                publish_update(reply_post, { raw: raw })
+                publish_update(
+                  reply_post,
+                  payload: {
+                    raw: raw,
+                  },
+                  user_ids: stream_user_ids,
+                  group_ids: stream_group_ids,
+                )
               end
             end
           end
 
         return if reply.blank? || silent_mode
+
+        if started_thinking
+          reply << "\n\n</details>"
+          started_thinking = false
+        end
 
         if stream_reply
           post_streamer.finish
@@ -599,7 +675,7 @@ module DiscourseAi
 
           # land the final message prior to saving so we don't clash
           reply_post.cooked = PrettyText.cook(reply)
-          publish_final_update(reply_post)
+          publish_final_update(reply_post, user_ids: stream_user_ids, group_ids: stream_group_ids)
 
           reply_post.revise(
             bot.bot_user,
@@ -607,6 +683,16 @@ module DiscourseAi
             skip_validations: true,
             skip_revision: true,
           )
+        elsif existing_reply_post
+          reply_post = existing_reply_post
+          reply_post.post_custom_prompt = nil
+          reply_post.revise(
+            bot.bot_user,
+            { raw: reply },
+            skip_validations: true,
+            force_new_version: true,
+          )
+          save_ai_custom_fields(reply_post, authorization_user_id: authorization_user_id)
         else
           reply_post =
             PostCreator.create!(
@@ -616,11 +702,7 @@ module DiscourseAi
               skip_validations: true,
               post_type: post_type,
               skip_guardian: true,
-              custom_fields: {
-                DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD => bot.llm.llm_model.display_name,
-                DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD => bot.llm.llm_model.id,
-                DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD => bot.agent.id,
-              },
+              custom_fields: ai_custom_fields(authorization_user_id: authorization_user_id),
             )
         end
 
@@ -658,6 +740,7 @@ module DiscourseAi
             raw: error_message,
             skip_validations: true,
             skip_guardian: true,
+            custom_fields: ai_custom_fields(authorization_user_id: authorization_user_id),
           )
         end
 
@@ -685,10 +768,16 @@ module DiscourseAi
           reply_post.topic.update!(participant_count: 2)
         end
         post_streamer&.finish(skip_callback: true)
-        publish_final_update(reply_post) if stream_reply
+        if stream_reply
+          publish_final_update(reply_post, user_ids: stream_user_ids, group_ids: stream_group_ids)
+        end
         if reply_post && post.post_number == 1 && post.topic.private_message? && auto_set_title
           title_playground(reply_post, post.user)
         end
+      end
+
+      def context_token_budget(llm)
+        DiscourseAi::Agents::Bot.context_token_budget(llm, bot.agent.class.max_turn_tokens)
       end
 
       def available_bot_usernames
@@ -709,6 +798,25 @@ module DiscourseAi
       end
 
       private
+
+      def ai_custom_fields(authorization_user_id: nil)
+        fields = {
+          DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD => bot.llm.llm_model.display_name,
+          DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD => bot.llm.llm_model.id,
+          DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD => bot.agent.id,
+        }
+        if authorization_user_id
+          fields[
+            DiscourseAi::AiBot::POST_AI_AGENT_AUTHORIZATION_USER_ID_FIELD
+          ] = authorization_user_id
+        end
+        fields
+      end
+
+      def save_ai_custom_fields(reply_post, authorization_user_id: nil)
+        reply_post.custom_fields.merge!(ai_custom_fields(authorization_user_id:))
+        reply_post.save_custom_fields
+      end
 
       def should_stop_thinking?(partial:, context:, type:, started_thinking:, placeholder:)
         return false if context.skip_show_thinking
@@ -733,15 +841,30 @@ module DiscourseAi
           User.joins("INNER JOIN llm_models llm ON llm.user_id = users.id").where(active: true)
       end
 
-      def publish_final_update(reply_post)
+      def publish_final_update(reply_post, user_ids:, group_ids:)
         return if @published_final_update
         if reply_post
-          publish_update(reply_post, { cooked: reply_post.cooked, done: true })
+          publish_update(
+            reply_post,
+            payload: {
+              cooked: reply_post.cooked,
+              done: true,
+            },
+            user_ids: user_ids,
+            group_ids: group_ids,
+          )
           # we subscribe at position -2 so we will always get this message
           # moving all cooked on every page load is wasteful ... this means
           # we have a benign message at the end, 2 is set to ensure last message
           # is delivered
-          publish_update(reply_post, { noop: true })
+          publish_update(
+            reply_post,
+            payload: {
+              noop: true,
+            },
+            user_ids: user_ids,
+            group_ids: group_ids,
+          )
           @published_final_update = true
         end
       end
@@ -755,13 +878,14 @@ module DiscourseAi
         true
       end
 
-      def schedule_bot_reply(post)
+      def schedule_bot_reply(post, authorization_user: post.user)
         agent_id = DiscourseAi::Agents::Agent.system_agents[bot.agent.class] || bot.agent.class.id
         ::Jobs.enqueue(
           :create_ai_reply,
           post_id: post.id,
           bot_user_id: bot.bot_user.id,
           agent_id: agent_id,
+          authorization_user_id: authorization_user&.id,
         )
       end
 
@@ -775,14 +899,18 @@ module DiscourseAi
         }
       end
 
-      def publish_update(bot_reply_post, payload)
+      def publish_update(bot_reply_post, payload:, user_ids:, group_ids:)
+        return if user_ids.blank? && group_ids.blank?
+
         payload = { post_id: bot_reply_post.id, post_number: bot_reply_post.post_number }.merge(
           payload,
         )
+
         MessageBus.publish(
           "discourse-ai/ai-bot/topic/#{bot_reply_post.topic_id}",
           payload,
-          user_ids: bot_reply_post.topic.allowed_user_ids,
+          user_ids: user_ids.presence,
+          group_ids: group_ids.presence,
           max_backlog_size: 2,
           max_backlog_age: MAX_STREAM_DELAY_SECONDS,
         )

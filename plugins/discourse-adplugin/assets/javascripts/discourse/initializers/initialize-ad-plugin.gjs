@@ -35,12 +35,5 @@ function customizePost(api) {
     </template>
   );
 
-  api.renderInOutlet(
-    "nested-roots-between",
-    <template>
-      <div class="ad-connector ad-connector--nested-root">
-        <NestedRootAd @index={{@index}} @topic={{@topic}} />
-      </div>
-    </template>
-  );
+  api.renderInOutlet("nested-roots-between", NestedRootAd);
 }

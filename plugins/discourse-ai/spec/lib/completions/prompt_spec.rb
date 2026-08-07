@@ -185,6 +185,67 @@ RSpec.describe DiscourseAi::Completions::Prompt do
       expect(model_messages.first[:content]).to eq("Hello World")
     end
 
+    it "attaches trailing thinking to the previous response" do
+      prompt.push(type: :user, content: user_msg, id: username)
+
+      thinking =
+        DiscourseAi::Completions::Thinking.new(
+          message: nil,
+          partial: false,
+          provider_info: {
+            gemini: {
+              thought_signature_parts: [{ text: "", thoughtSignature: "sig-123" }],
+            },
+          },
+        )
+
+      prompt.push_model_response(["Hello", thinking])
+
+      expect(prompt.messages.last).to include(type: :model, content: "Hello")
+      expect(prompt.messages.last[:thinking_provider_info]).to include(
+        gemini: include(thought_signature_parts: [{ text: "", thoughtSignature: "sig-123" }]),
+      )
+    end
+
+    it "merges consecutive thinking before attaching it to the response" do
+      prompt.push(type: :user, content: user_msg, id: username)
+
+      prompt.push_model_response(
+        [
+          DiscourseAi::Completions::Thinking.new(
+            message: "first",
+            provider_info: {
+              gemini: {
+                thought_signature_parts: [{ text: "", thoughtSignature: "sig-1" }],
+              },
+            },
+          ),
+          DiscourseAi::Completions::Thinking.new(
+            message: "second",
+            provider_info: {
+              gemini: {
+                grounding_metadata: {
+                  webSearchQueries: ["query"],
+                },
+              },
+            },
+          ),
+          "Hello",
+        ],
+      )
+
+      expect(prompt.messages.last[:thinking]).to eq("first\n\nsecond")
+      expect(prompt.messages.last[:thinking_provider_info]).to include(
+        gemini:
+          include(
+            thought_signature_parts: [{ text: "", thoughtSignature: "sig-1" }],
+            grounding_metadata: {
+              webSearchQueries: ["query"],
+            },
+          ),
+      )
+    end
+
     it "attaches thinking metadata to the tool call message" do
       prompt.push(type: :user, content: user_msg, id: username)
 

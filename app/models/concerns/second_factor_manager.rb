@@ -78,16 +78,20 @@ module SecondFactorManager
       )&.exists?
   end
 
-  def passkeys_for_2fa_enabled?
+  def passkeys_available_as_second_factor?
     SiteSetting.allow_passkeys_for_2fa && SiteSetting.enable_passkeys &&
       !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
-      security_keys&.where(factor_type: UserSecurityKey.factor_types[:first_factor])&.exists?
+      security_keys&.where(
+        factor_type: UserSecurityKey.factor_types[:first_factor],
+        enabled: true,
+      )&.exists?
   end
+  alias_method :passkeys_for_2fa_enabled?, :passkeys_available_as_second_factor?
 
-  # Passkey-as-2FA (`passkeys_for_2fa_enabled?`) is intentionally excluded:
-  # it only satisfies `/session/2fa`. Password login, email login, and password
-  # reset have no passkey UI yet, so counting passkeys here would make those
-  # flows skip 2FA for passkey-only users.
+  # Passkey-as-2FA (`passkeys_available_as_second_factor?`) is intentionally
+  # excluded: it only satisfies `/session/2fa`. Password login, email login,
+  # and password reset have no passkey UI yet, so counting passkeys here would
+  # make those flows skip 2FA for passkey-only users.
   def has_any_second_factor_methods_enabled?
     totp_enabled? || security_keys_enabled?
   end
@@ -115,7 +119,7 @@ module SecondFactorManager
   def authenticate_second_factor(params, server_session)
     ok_result = SecondFactorAuthenticationResult.new(true)
     if !security_keys_enabled? && !totp_or_backup_codes_enabled? &&
-         (!passkeys_for_2fa_enabled? || params[:second_factor_method].blank?)
+         (!passkeys_available_as_second_factor? || params[:second_factor_method].blank?)
       return ok_result
     end
 
@@ -152,6 +156,13 @@ module SecondFactorManager
       else
         return invalid_security_key_result
       end
+    when UserSecondFactor.methods[:passkey]
+      if authenticate_passkey(server_session, second_factor_token)
+        ok_result.used_2fa_method = UserSecondFactor.methods[:passkey]
+        return ok_result
+      else
+        return invalid_security_key_result
+      end
     end
 
     # if we have gotten down to this point without being
@@ -168,20 +179,28 @@ module SecondFactorManager
     when UserSecondFactor.methods[:backup_codes]
       return backup_codes_enabled?
     when UserSecondFactor.methods[:security_key]
-      return security_keys_enabled? || passkeys_for_2fa_enabled?
+      return security_keys_enabled?
+    when UserSecondFactor.methods[:passkey]
+      return passkeys_available_as_second_factor?
     end
     false
   end
 
   def authenticate_security_key(server_session, security_key_credential)
-    factor_types = [UserSecurityKey.factor_types[:second_factor]]
-    factor_types << UserSecurityKey.factor_types[:first_factor] if passkeys_for_2fa_enabled?
-
     ::DiscourseWebauthn::AuthenticationService.new(
       self,
       security_key_credential,
       session: server_session,
-      factor_type: factor_types,
+      factor_type: [UserSecurityKey.factor_types[:second_factor]],
+    ).authenticate_security_key
+  end
+
+  def authenticate_passkey(server_session, security_key_credential)
+    ::DiscourseWebauthn::AuthenticationService.new(
+      self,
+      security_key_credential,
+      session: server_session,
+      factor_type: [UserSecurityKey.factor_types[:first_factor]],
     ).authenticate_security_key
   end
 

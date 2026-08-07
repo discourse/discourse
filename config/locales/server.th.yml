@@ -67,7 +67,6 @@ th:
   errors: &errors
     messages:
       exclusion: ถูกจองแล้ว
-      has_already_been_used: "ได้ถูกใช้แล้ว"
       invalid: ไม่ถูกต้อง
   not_in_group:
     join_group: "เข้าร่วมกลุ่ม"
@@ -102,6 +101,11 @@ th:
       everyone: "ทุกคน"
       admins: "ผู้ดูแลระบบ"
       moderators: "ผู้ดูแล"
+      staff: "ทีมงาน"
+    default_full_names:
+      everyone: "ทุกคน"
+      admins: "แอดมิน"
+      moderators: "ผู้ดูแลระบบ"
       staff: "ทีมงาน"
   education:
     until_posts:
@@ -200,6 +204,8 @@ th:
       confirm_title: ดำเนินการต่อไปยัง %{site_name}
       logging_in_as: กำลังเข้าสู่ระบบด้วย %{username}
       confirm_button: เสร็จสิ้นการเข้าสู่ระบบ
+    device:
+      continue: "ดำเนินการต่อ"
   reports:
     post_edits:
       labels:

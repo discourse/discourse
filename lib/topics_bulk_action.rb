@@ -9,7 +9,24 @@ class TopicsBulkAction
     @operation = operation
     @changed_ids = []
     @errors = Hash.new(0)
+    @restricted_tag_errors = Hash.new(0)
     @options = options
+  end
+
+  def tag_category_errors
+    return [] if @restricted_tag_errors.empty?
+
+    category_names =
+      Category.where(id: @restricted_tag_errors.keys.map(&:first).uniq).pluck(:id, :name).to_h
+
+    @restricted_tag_errors.map do |(category_id, tag_names), count|
+      {
+        category_id: category_id,
+        category_name: category_names[category_id],
+        tag_names: tag_names,
+        count: count,
+      }
+    end
   end
 
   def self.operations
@@ -80,6 +97,8 @@ class TopicsBulkAction
     group = find_group
     topics.each do |t|
       if guardian.can_see?(t) && t.private_message?
+        next if group && !t.topic_allowed_groups.exists?(group_id: group.id)
+
         if group
           GroupArchivedMessage.move_to_inbox!(group.id, t, acting_user_id: @user.id)
         else
@@ -94,6 +113,8 @@ class TopicsBulkAction
     group = find_group
     topics.each do |t|
       if guardian.can_see?(t) && t.private_message?
+        next if group && !t.topic_allowed_groups.exists?(group_id: group.id)
+
         if group
           GroupArchivedMessage.archive!(group.id, t, acting_user_id: @user.id)
         else
@@ -155,22 +176,14 @@ class TopicsBulkAction
   def change_category
     updatable_topics = topics.where.not(category_id: @operation[:category_id])
 
-    opts = {
-      bypass_bump: true,
-      validate_post: false,
-      bypass_rate_limiter: true,
-      silent: @operation[:silent],
-      skip_revision: !SiteSetting.create_revision_on_bulk_topic_moves,
-    }
-
     updatable_topics.each do |t|
-      if guardian.can_edit?(t)
-        changes = { category_id: @operation[:category_id] }
-        if t.first_post.revise(@user, changes, opts)
-          @changed_ids << t.id
-        else
-          t.errors.full_messages.each { |msg| @errors[msg] += 1 }
-        end
+      next unless guardian.can_edit?(t) && t.first_post
+
+      changes = { category_id: @operation[:category_id] }
+      if t.first_post.revise(@user, changes, bulk_revision_opts)
+        @changed_ids << t.id
+      else
+        t.errors.full_messages.each { |msg| @errors[msg] += 1 }
       end
     end
   end
@@ -370,13 +383,33 @@ class TopicsBulkAction
     return false unless guardian.can_edit?(topic)
     return false unless topic.first_post
 
-    if topic.first_post.revise(@user, { tags: tag_names }, bulk_tag_opts)
+    if topic.first_post.revise(@user, { tags: tag_names }, bulk_revision_opts)
       @changed_ids << topic.id
       true
     else
-      topic.errors.full_messages.each { |msg| @errors[msg] += 1 }
+      not_allowed =
+        DiscourseTagging.tag_names_not_allowed_in_category(
+          topic.category,
+          tag_names,
+          restricted_to: restricted_category_ids_for(tag_names),
+        )
+      if topic.category && not_allowed.present?
+        @restricted_tag_errors[[topic.category_id, not_allowed.sort]] += 1
+      else
+        topic.errors.full_messages.each { |msg| @errors[msg] += 1 }
+      end
       false
     end
+  end
+
+  def restricted_category_ids_for(tag_names)
+    @restricted_tag_cache ||= {}
+    uncached = tag_names - @restricted_tag_cache.keys
+    if uncached.present?
+      found = DiscourseTagging.restricted_category_ids_by_tag_name(uncached)
+      uncached.each { |name| @restricted_tag_cache[name] = found.key?(name) ? found[name] : nil }
+    end
+    @restricted_tag_cache.slice(*tag_names).compact
   end
 
   def resolve_tag_names
@@ -392,13 +425,12 @@ class TopicsBulkAction
     end
   end
 
-  def bulk_tag_opts
-    {
+  def bulk_revision_opts
+    @bulk_revision_opts ||= {
       bypass_bump: true,
       validate_post: false,
       bypass_rate_limiter: true,
-      skip_revision: true,
-      silent: true,
+      silent: @operation.fetch(:silent, true),
     }
   end
 
@@ -411,7 +443,7 @@ class TopicsBulkAction
   end
 
   def topics_with_tags
-    @topics_with_tags ||= topics.includes(:first_post, :tags)
+    @topics_with_tags ||= topics.includes(:first_post, :tags, :category)
   end
 
   def dismiss_topics_since_date

@@ -13,6 +13,7 @@ module DiscourseWorkflows
           },
           group: "discourse_triggers",
           events: [:reviewable_transitioned_to],
+          output_contracts: [{ schema: Schema::REVIEWABLE_EVENT_SCHEMA }],
           properties: -> do
             {
               reviewable_types: {
@@ -34,18 +35,6 @@ module DiscourseWorkflows
           end
         end
 
-        def self.reviewable_type_options
-          Reviewable
-            .types
-            .uniq(&:sti_name)
-            .sort_by(&:name)
-            .map { |klass| { id: klass.sti_name, name: klass.name.demodulize.underscore.humanize } }
-        end
-
-        class << self
-          private :reviewable_type_options
-        end
-
         def initialize(status, reviewable)
           super(parameters: {})
           @status = status
@@ -61,26 +50,7 @@ module DiscourseWorkflows
         end
 
         def matches?(trigger_ctx)
-          reviewable_types =
-            Array.wrap(trigger_ctx.get_node_parameter("reviewable_types")).compact_blank
-
-          reviewable_types.empty? || reviewable_types.include?(@reviewable.class.sti_name)
-        end
-
-        private
-
-        def reviewable_data(reviewable)
-          {
-            id: reviewable.id,
-            type: reviewable.type,
-            status: reviewable.status,
-            target_type: reviewable.target_type,
-            target_id: reviewable.target_id,
-            topic_id: reviewable.topic_id,
-            category_id: reviewable.category_id,
-            score: reviewable.score,
-            created_at: reviewable.created_at&.iso8601,
-          }
+          matches_reviewable_types?(@reviewable, trigger_ctx.get_node_parameter("reviewable_types"))
         end
       end
     end

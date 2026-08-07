@@ -22,18 +22,31 @@ const VersionChecks = <template>
       </h4>
       <h3>
         {{dashIfEmpty @versionCheck.installed_version}}
+        {{#if @versionCheck.installedCommitsAhead}}
+          <span
+            class="commits-ahead"
+            title={{i18n
+              "admin.dashboard.commits_ahead"
+              count=@versionCheck.installedCommitsAhead
+            }}
+          >+{{@versionCheck.installedCommitsAhead}}</span>
+        {{/if}}
       </h3>
       {{#if @versionCheck.gitLink}}
-        <div class="sha-link">
-          (
+        <div class="version-links">
           <a
+            class="github-link"
             href={{@versionCheck.gitLink}}
             rel="noopener noreferrer"
             target="_blank"
+            title={{i18n
+              "admin.dashboard.commit_on_github"
+              sha=@versionCheck.shortSha
+            }}
           >
-            {{@versionCheck.shortSha}}
+            {{i18n "admin.dashboard.github"}}
+            {{dIcon "up-right-from-square"}}
           </a>
-          )
         </div>
       {{/if}}
     </div>
@@ -98,7 +111,44 @@ const VersionChecks = <template>
         </h4>
         <h3>
           {{dashIfEmpty @versionCheck.latest_version}}
+          {{#if @versionCheck.latestCommitsAhead}}
+            <span
+              class="commits-ahead"
+              title={{i18n
+                "admin.dashboard.commits_ahead"
+                count=@versionCheck.latestCommitsAhead
+              }}
+            >+{{@versionCheck.latestCommitsAhead}}</span>
+          {{/if}}
         </h3>
+        {{#if @versionCheck.latestGitLink}}
+          <div class="version-links">
+            {{#if @versionCheck.changelogLink}}
+              <a
+                class="changelog-link"
+                href={{@versionCheck.changelogLink}}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {{i18n "admin.dashboard.changelog"}}
+                {{dIcon "up-right-from-square"}}
+              </a>
+            {{/if}}
+            <a
+              class="github-link"
+              href={{@versionCheck.latestGitLink}}
+              rel="noopener noreferrer"
+              target="_blank"
+              title={{i18n
+                "admin.dashboard.commit_on_github"
+                sha=@versionCheck.latestShortSha
+              }}
+            >
+              {{i18n "admin.dashboard.github"}}
+              {{dIcon "up-right-from-square"}}
+            </a>
+          </div>
+        {{/if}}
       </div>
       <div class="version-status">
         <div class="face">
@@ -125,7 +175,14 @@ const VersionChecks = <template>
         </div>
         <div class="version-notes">
           {{#if @versionCheck.upToDate}}
-            {{i18n "admin.dashboard.up_to_date"}}
+            {{#if @versionCheck.newerCommitsAvailable}}
+              {{i18n
+                "admin.dashboard.up_to_date_newer_commits"
+                count=@versionCheck.newChangesCount
+              }}
+            {{else}}
+              {{i18n "admin.dashboard.up_to_date"}}
+            {{/if}}
           {{else}}
             <span class="critical-note">
               {{i18n "admin.dashboard.critical_available"}}

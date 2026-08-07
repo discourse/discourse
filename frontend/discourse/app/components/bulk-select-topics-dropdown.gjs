@@ -85,7 +85,6 @@ export default class BulkSelectTopicsDropdown extends Component {
         id: "defer",
         icon: "circle",
         name: i18n("topic_bulk_actions.defer.name"),
-        visible: ({ currentUser }) => currentUser.user_option.enable_defer,
       },
       {
         id: "close-topics",
@@ -340,6 +339,7 @@ export default class BulkSelectTopicsDropdown extends Component {
         break;
       case "manage-tags":
         this.showBulkTopicActionsModal(actionId, "manage_tags", {
+          allowSilent: true,
           confirmButtonTranslationKey: "topics.bulk.confirm_apply_to_topics",
         });
         break;

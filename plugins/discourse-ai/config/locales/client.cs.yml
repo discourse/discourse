@@ -38,6 +38,17 @@ cs:
             canned_reply:
               label: "Odpověď"
     discourse_ai:
+      discourse_workflows:
+        ai_agent:
+          mode: "Režim"
+      ai_tool_approval:
+        loading: "Načítá se..."
+        tool: "Akce"
+        user: "Uživatel"
+        approve: "Schválení"
+        reject: "Odmítnout"
+        approved: "Schválen"
+        rejected: "Odmítnuto"
       llm_selector:
         none: "Žádný"
       features:
@@ -65,12 +76,32 @@ cs:
           smart_dates: "Chytré datumy"
           markdown_tables: "Generovat Markdown tabulku"
           custom_prompt: "Vlastní pokyn"
+        image_caption:
+          setting_groups:
+            settings: "Nastavení"
         spam:
           name: "Spam"
       modals:
         select_option: "Vyberte možnost..."
       translations:
         title: "Překlady"
+        category_scope: "Kategorie"
+        model_progress:
+          detail:
+            retry: "Zkuste znovu"
+            columns:
+              locale: "Jazyk"
+              pending: "Čeká na schválení"
+              total: "Celkem"
+          targets:
+            post:
+              title: "Příspěvky"
+            topic:
+              title: "Témata"
+            category:
+              title: "Kategorie"
+            tag:
+              title: "Štítky"
         stats:
           eta_minutes:
             one: "%{count} minutu"
@@ -125,7 +156,15 @@ cs:
         mcp_tools_modal:
           select_all: "Vybrat vše"
           clear_all: "Zrušit vše"
+        duplicate: "Duplikovat"
+        copy_name: "Kopie %{name}"
         delete: "Smazat"
+        thinking_effort_options:
+          none: "Žádný"
+          low: "Nízká"
+          medium: "Střední"
+          high: "Vysoká"
+          max: "Max"
         response_format:
           open_modal: "Upravit"
           modal:
@@ -211,7 +250,6 @@ cs:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -219,6 +257,8 @@ cs:
           mistral: "Mistral"
           open_router: "OpenRouter"
           fake: "Přizpůsobené"
+        provider_fields:
+          region: "Region"
       related_topics:
         title: "Související témata"
         pill: "Související"
@@ -226,13 +266,7 @@ cs:
         title: "Navrhněte změny pomocí AI"
         description: "Vyberte jednu z níže uvedených možností a umělá inteligence vám navrhne novou verzi textu."
         selection_hint: "Tip: Před otevřením pomocníka můžete také vybrat část textu a přepsat pouze tuto část."
-        suggest: "Navrhnout s AI"
         suggest_errors:
-          too_many_tags:
-            one: "Můžete mít max. %{count} štítek"
-            few: "Můžete mít max. %{count} štítky"
-            many: "Můžete mít max. %{count} štítků"
-            other: "Můžete mít max. %{count} štítků"
           no_suggestions: "Nejsou k dispozici žádné návrhy"
         missing_content: "Chcete-li generovat návrhy, zadejte nějaký obsah."
         context_menu:
@@ -266,11 +300,6 @@ cs:
           select: "Vybrat"
           selected: "Zaškrtnuté"
           try_again: "Zkusit znovu"
-        image_caption:
-          button_label: "Popisek pomocí AI"
-          generating: "Generování popisku..."
-          credits: "Popisek od AI"
-          save_caption: "Uložit"
         no_content_error: "Nejprve přidejte obsah, abyste na něm mohli provádět akce AI"
       reviewables:
         ai_tool_action:
@@ -299,6 +328,7 @@ cs:
       ai_artifact:
         collapse_view_label: "Ukončení celé obrazovky (ESC nebo tlačítko Zpět)"
       ai_bot:
+        llm: "Model:"
         pm_warning: "Zprávy chatbotů s umělou inteligencí jsou pravidelně monitorovány moderátory."
         cancel_streaming: "Zastavit odpověď"
         try_again: "Zkusit znovu"

@@ -29,6 +29,14 @@ module MigrationsSpecSetup
     RSpec.configure do |config|
       config.mock_with MultiMock::Adapter.for(:rspec, :mocha)
 
+      # Partial stubs on real objects must name a method that actually exists,
+      # just like `instance_double`/`class_double` already enforce. Set on the
+      # global rspec-mocks config because `mock_with` receives the MultiMock
+      # adapter here, not the `:rspec` adapter that normally exposes this
+      # setting. The gem suites are mocha-free; Discourse core's own suite
+      # never loads this file.
+      RSpec::Mocks.configuration.verify_partial_doubles = true
+
       # Specs tagged `:rails` need a booted Rails environment (live DB
       # introspection, plugin manifests). They run in the Rails integration job,
       # not the isolated gem suite.

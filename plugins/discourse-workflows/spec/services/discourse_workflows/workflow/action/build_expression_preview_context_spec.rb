@@ -89,7 +89,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::BuildExpressionPreviewConte
         context "with a successful trigger run" do
           let(:items) { [{ "json" => { "title" => "From past run" } }] }
 
-          before do
+          let!(:execution_data) do
             Fabricate(
               :discourse_workflows_execution_data,
               execution: execution,
@@ -296,7 +296,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::BuildExpressionPreviewConte
             Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
           end
 
-          before do
+          let!(:execution_data) do
             Fabricate(
               :discourse_workflows_execution_data,
               execution:
@@ -365,7 +365,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::BuildExpressionPreviewConte
         end
 
         context "with a successful non-trigger run" do
-          before do
+          let!(:execution_data) do
             Fabricate(
               :discourse_workflows_execution_data,
               execution: execution,
@@ -397,7 +397,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::BuildExpressionPreviewConte
         end
 
         context "with no successful run" do
-          before do
+          let!(:execution_data) do
             Fabricate(
               :discourse_workflows_execution_data,
               execution: execution,

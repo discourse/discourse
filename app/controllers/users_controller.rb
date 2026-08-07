@@ -112,7 +112,7 @@ class UsersController < ApplicationController
                      ]
   skip_before_action :redirect_to_profile_if_required, only: %i[show staff_info update]
 
-  before_action :add_noindex_header, only: %i[show my_redirect]
+  before_action :add_noindex_header, only: %i[show summary my_redirect]
 
   allow_in_readonly_mode :admin_login
   allow_in_staff_writes_only_mode :email_login, :password_reset_update
@@ -324,8 +324,8 @@ class UsersController < ApplicationController
   def check_sso_email
     user = fetch_user_from_params(include_inactive: true)
 
-    unless user == current_user
-      guardian.ensure_can_check_sso_details!(user)
+    guardian.ensure_can_check_sso_email!(user)
+    if user != current_user
       StaffActionLogger.new(current_user).log_check_email(user, context: params[:context])
     end
 
@@ -340,7 +340,7 @@ class UsersController < ApplicationController
   def check_sso_payload
     user = fetch_user_from_params(include_inactive: true)
 
-    guardian.ensure_can_check_sso_details!(user)
+    guardian.ensure_can_check_sso_payload!(user)
     unless user == current_user
       StaffActionLogger.new(current_user).log_check_email(user, context: params[:context])
     end
@@ -393,7 +393,7 @@ class UsersController < ApplicationController
     params.require(:email)
 
     user = fetch_user_from_params
-    guardian.ensure_can_edit!(user)
+    guardian.ensure_can_edit_email!(user)
 
     ActiveRecord::Base.transaction do
       if change_requests = user.email_change_requests.where(new_email: params[:email]).presence
@@ -517,8 +517,6 @@ class UsersController < ApplicationController
       )
     raise Discourse::NotFound unless guardian.can_see_profile?(@user)
 
-    response.headers["X-Robots-Tag"] = "noindex"
-
     respond_to do |format|
       format.html do
         @restrict_fields = guardian.restrict_user_fields?(@user)
@@ -545,12 +543,13 @@ class UsersController < ApplicationController
         fetch_user_from_params(
           include_inactive: current_user.staff? || SiteSetting.show_inactive_accounts,
         )
+      can_see_invite_details = guardian.can_see_invite_details?(inviter)
 
       invites =
-        if filter == "pending" && guardian.can_see_invite_details?(inviter)
+        if filter == "pending" && can_see_invite_details
           Invite.includes(:topics, :groups).pending(inviter)
-        elsif filter == "expired"
-          Invite.expired(inviter)
+        elsif filter == "expired" && can_see_invite_details
+          Invite.includes(:topics, :groups).expired(inviter)
         elsif filter == "redeemed"
           Invite.redeemed_users(inviter)
         else
@@ -567,8 +566,8 @@ class UsersController < ApplicationController
         invites = invites.where(filter_sql, filter: "%#{params[:search].downcase}%")
       end
 
-      pending_count = Invite.pending(inviter).reorder(nil).count.to_i
-      expired_count = Invite.expired(inviter).reorder(nil).count.to_i
+      pending_count = can_see_invite_details ? Invite.pending(inviter).reorder(nil).count.to_i : 0
+      expired_count = can_see_invite_details ? Invite.expired(inviter).reorder(nil).count.to_i : 0
       redeemed_count = Invite.redeemed_users(inviter).reorder(nil).count.to_i
 
       render json:
@@ -683,6 +682,15 @@ class UsersController < ApplicationController
       return fail_with("login.password_too_long")
     end
 
+    if params[:username].length > UsernameValidator::MAX_CHARS * 3
+      message =
+        User.new.errors.full_message(
+          :username,
+          I18n.t("user.username.long", count: SiteSetting.max_username_length),
+        )
+      return render json: { success: false, message: message }
+    end
+
     return fail_with("login.email_too_long") if params[:email].length > 254 + 1 + 253
 
     if SiteSetting.require_invite_code &&
@@ -697,7 +705,12 @@ class UsersController < ApplicationController
 
     params[:locale] ||= I18n.locale unless current_user
 
-    new_user_params = user_params.except(:timezone)
+    new_user_params =
+      if current_user&.admin? && is_api?
+        user_params.except(:timezone)
+      else
+        user_params.except(:timezone, :title, :primary_group_id, :flair_group_id)
+      end
 
     user = User.where(staged: true).with_email(new_user_params[:email].strip.downcase).first
 
@@ -940,6 +953,7 @@ class UsersController < ApplicationController
             action: UserHistory.actions[:change_password],
           )
 
+          reset_csrf_token(request)
           logon_after_password_reset
         end
       end
@@ -1285,7 +1299,12 @@ class UsersController < ApplicationController
       if usernames.blank?
         UserSearch.new(term, options).search
       else
-        User.where(username_lower: usernames).includes(:user_option).limit(limit)
+        UserSearch
+          .new(term, options)
+          .scoped_users
+          .where(username_lower: usernames)
+          .includes(:user_option)
+          .limit(limit)
       end
     to_render = serialize_found_users(results)
 
@@ -1882,7 +1901,8 @@ class UsersController < ApplicationController
 
   def feature_topic
     user = fetch_user_from_params
-    topic = Topic.find(params[:topic_id].to_i)
+    topic = Topic.find_by(id: params[:topic_id].to_i)
+    raise Discourse::NotFound unless guardian.can_see?(topic)
 
     if !guardian.can_feature_topic?(user, topic)
       return(
@@ -2028,6 +2048,8 @@ class UsersController < ApplicationController
           ],
         )
         .to_a
+    unread_notifications =
+      Notification.filter_inaccessible_topic_notifications(guardian, unread_notifications)
 
     if unread_notifications.size < USER_MENU_LIST_LIMIT
       exclude_topic_ids = unread_notifications.filter_map(&:topic_id).uniq
@@ -2052,6 +2074,8 @@ class UsersController < ApplicationController
           .for_user_menu(current_user.id, limit: limit)
           .where(read: true, notification_type: Notification.types[:group_message_summary])
           .to_a
+      read_notifications =
+        Notification.filter_inaccessible_topic_notifications(guardian, read_notifications)
     end
 
     if unread_notifications.present?
@@ -2185,7 +2209,9 @@ class UsersController < ApplicationController
 
     editable_custom_fields = User.editable_user_custom_fields(by_staff: current_user.try(:staff?))
     permitted << { custom_fields: editable_custom_fields } if editable_custom_fields.present?
-    permitted.concat UserUpdater::OPTION_ATTR
+    permitted.concat(UserUpdater::OPTION_ATTR - [:understood_languages])
+    permitted << UserUpdater::LEGACY_SHOW_ORIGINAL_CONTENT_ATTR
+    permitted << { understood_languages: [] }
     permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
     permitted.concat UserUpdater::TAG_NAMES.keys
     permitted << UserUpdater::NOTIFICATION_SCHEDULE_ATTRS

@@ -26,8 +26,6 @@ lt:
         markdown_table: Sukurti Markdown lentelę
         explain: "Paaiškinkite"
         replace_dates: "Išmaniosios datos"
-      image_caption:
-        attribution: "Antraštė teikiama AI"
     ai_bot:
       agents:
         custom_prompt:
@@ -48,6 +46,8 @@ lt:
       tool_summary:
         github_diff: "GitHub skirtumas"
         flag_post: "Vėliavų stulpas"
+        suspend_user: "Sustabdyti naudotojo"
+        silence_user: "Nutildyti vartotoją"
         search: "Paieška"
         time: "Laikas"
         summarize: "Apibendrinti"

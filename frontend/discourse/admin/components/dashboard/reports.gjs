@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import DashboardReportEmptyState from "discourse/admin/components/dashboard/report-empty-state";
+import DashboardReportErrorState from "discourse/admin/components/dashboard/report-error-state";
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import ManageReports from "discourse/admin/components/modal/manage-reports";
 import { lookupAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
@@ -14,13 +15,12 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const VISIBLE_CAP = 10;
-
-const rendererFor = (source) => lookupAdminDashboardReportRenderer(source);
 
 export default class DashboardReports extends Component {
   @service currentUser;
@@ -31,12 +31,24 @@ export default class DashboardReports extends Component {
 
   constructor() {
     super(...arguments);
-    this.cards = this.items.map((item) => ({ ...item, payload: null }));
+    this.cards = this.items.map((item) => ({
+      ...item,
+      payload: null,
+      error: false,
+      isLoading: true,
+    }));
     this.loadPayloads();
   }
 
   get items() {
     return this.args.data?.items ?? [];
+  }
+
+  get layoutItems() {
+    return this.items.map(({ source, identifier }) => ({
+      source,
+      identifier,
+    }));
   }
 
   get canEdit() {
@@ -68,18 +80,26 @@ export default class DashboardReports extends Component {
 
     this.loading = true;
     try {
-      const payloads = await loadDashboardReports({
-        items: this.items.map(({ source, identifier }) => ({
-          source,
-          identifier,
-        })),
+      const results = await loadDashboardReports({
+        items: this.layoutItems,
         filters: this.filters,
       });
+      this.cards = this.items.map((item) => {
+        const result = results.get(item.key);
+        return {
+          ...item,
+          payload: result?.payload ?? null,
+          error: result?.error ?? false,
+          isLoading: false,
+        };
+      });
+    } catch (e) {
       this.cards = this.items.map((item) => ({
         ...item,
-        payload: payloads.get(item.key),
+        payload: null,
+        error: true,
+        isLoading: false,
       }));
-    } catch (e) {
       popupAjaxError(e);
     } finally {
       this.loading = false;
@@ -95,11 +115,9 @@ export default class DashboardReports extends Component {
 
   @action
   async removeReport(item) {
-    const nextItems = this.items
-      .filter(
-        (i) => !(i.source === item.source && i.identifier === item.identifier)
-      )
-      .map(({ source, identifier }) => ({ source, identifier }));
+    const nextItems = this.layoutItems.filter(
+      (i) => !(i.source === item.source && i.identifier === item.identifier)
+    );
 
     try {
       await ajax("/admin/dashboard/reports/layout", {
@@ -127,61 +145,79 @@ export default class DashboardReports extends Component {
       @bordered={{false}}
       @layout="grid"
       @headerActionIcon={{if this.canEdit "gear"}}
+      @headerActionLabel="admin.dashboard.reports_section.header_action"
       @headerAction={{if this.canEdit this.openReportsConfig}}
       @startDate={{@startDate}}
       @endDate={{@endDate}}
       ...attributes
     >
-      <div
-        class="db-reports"
-        {{didUpdate this.loadPayloads @data @startDate @endDate}}
-      >
-        {{#each this.cards key="key" as |card|}}
-          <div class="db-report__card" data-identifier={{card.key}}>
-            <div class="db-report__header">
-              <a href={{card.url}} class="db-report__name">{{card.title}}</a>
-              {{#if card.label}}
-                <div
-                  class={{dConcatClass
-                    "db-report__label"
-                    (concat "--" card.source)
-                  }}
-                  data-source={{card.source}}
-                >{{card.label}}</div>
-              {{/if}}
-            </div>
-            <div class="db-report__chart">
-              {{#if card.payload}}
-                {{#if card.payload.empty}}
-                  <DashboardReportEmptyState />
-                {{else}}
-                  {{#let (rendererFor card.source) as |Renderer|}}
-                    {{#if Renderer}}
-                      <Renderer
-                        @item={{card}}
-                        @payload={{card.payload}}
-                        @filters={{hash startDate=@startDate endDate=@endDate}}
-                      />
-                    {{/if}}
-                  {{/let}}
+      {{#if @fetchError}}
+        <div class="db-section__error" role="alert">
+          {{i18n "admin.dashboard.sections.reports.fetch_error"}}
+        </div>
+      {{else}}
+        <div
+          class="db-reports"
+          {{didUpdate this.loadPayloads @data @startDate @endDate}}
+        >
+          {{#each this.cards key="key" as |card|}}
+            <div class="db-report__card" data-identifier={{card.key}}>
+              <div class="db-report__header">
+                <a href={{card.url}} class="db-report__name">{{card.title}}</a>
+                {{#if card.label}}
+                  <div
+                    class={{dConcatClass
+                      "db-report__label"
+                      (concat "--" card.source)
+                    }}
+                    data-source={{card.source}}
+                  >{{card.label}}</div>
                 {{/if}}
-              {{/if}}
+              </div>
+              <div class="db-report__chart">
+                <DConditionalLoadingSpinner
+                  @condition={{card.isLoading}}
+                  @size="small"
+                >
+                  {{#if card.error}}
+                    <DashboardReportErrorState />
+                  {{else if card.payload.empty}}
+                    <DashboardReportEmptyState />
+                  {{else if card.payload}}
+                    {{#let
+                      (lookupAdminDashboardReportRenderer card.source)
+                      as |Renderer|
+                    }}
+                      {{#if Renderer}}
+                        <Renderer
+                          @item={{card}}
+                          @payload={{card.payload}}
+                          @filters={{hash
+                            startDate=@startDate
+                            endDate=@endDate
+                          }}
+                        />
+                      {{/if}}
+                    {{/let}}
+                  {{/if}}
+                </DConditionalLoadingSpinner>
+              </div>
             </div>
-          </div>
-        {{/each}}
+          {{/each}}
 
-        {{#if this.addTileVisible}}
-          <button
-            type="button"
-            class="db-report__add-report"
-            aria-label={{i18n "admin.dashboard.reports_section.add"}}
-            {{on "click" this.openReportsConfig}}
-          >
-            <span>{{dIcon "plus"}}
-              {{i18n "admin.dashboard.reports_section.add"}}</span>
-          </button>
-        {{/if}}
-      </div>
+          {{#if this.addTileVisible}}
+            <button
+              type="button"
+              class="db-report__add-report"
+              aria-label={{i18n "admin.dashboard.reports_section.add"}}
+              {{on "click" this.openReportsConfig}}
+            >
+              <span>{{dIcon "plus"}}
+                {{i18n "admin.dashboard.reports_section.add"}}</span>
+            </button>
+          {{/if}}
+        </div>
+      {{/if}}
 
       <PluginOutlet
         @name="admin-dashboard-reports-section-after"

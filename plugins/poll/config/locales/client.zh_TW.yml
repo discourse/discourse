@@ -106,5 +106,3 @@ zh_TW:
           add: 新增選項
         automatic_close:
           label: 自動關閉投票
-        show_advanced: "顯示進階選項"
-        hide_advanced: "隱藏進階選項"

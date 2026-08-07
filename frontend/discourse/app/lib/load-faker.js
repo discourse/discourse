@@ -7,7 +7,9 @@ Plugins & themes are unable to async-import npm modules directly.
 This wrapper provides them with a way to use fakerjs, while keeping the `import()` in core's codebase.
 */
 export default async function loadFaker() {
-  faker ??= await waitForPromise(import("@faker-js/faker"));
+  faker ??= await waitForPromise(
+    import(/* dynamicChunkName: "faker" */ "@faker-js/faker")
+  );
   return faker;
 }
 

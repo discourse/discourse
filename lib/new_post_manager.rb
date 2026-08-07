@@ -114,12 +114,17 @@ class NewPostManager
 
     return :category if post_needs_approval_in_its_category?(manager)
 
-    if manager.args[:image_sizes].present? &&
-         !user.in_any_groups?(SiteSetting.skip_review_media_groups_map)
-      return :contains_media
+    unless user.in_any_groups?(SiteSetting.skip_review_media_groups_map)
+      return :contains_media if contains_embedded_media?(manager.args)
     end
 
     :skip
+  end
+
+  def self.contains_embedded_media?(args)
+    return true if args[:image_sizes].present?
+
+    Post.new(raw: args[:raw], topic_id: args[:topic_id]).embedded_media_count.positive?
   end
 
   def self.post_needs_approval_in_its_category?(manager)
@@ -173,28 +178,30 @@ class NewPostManager
 
     result = manager.enqueue(reason)
 
-    I18n.with_locale(SiteSetting.default_locale) do
-      if is_fast_typer?(manager)
-        UserSilencer.auto_silence(
-          manager.user,
-          Discourse.system_user,
-          keep_posts: true,
-          reason: I18n.t("user.new_user_typed_too_fast"),
-        )
-      elsif auto_silence?(manager) || matches_auto_silence_regex?(manager)
-        UserSilencer.auto_silence(
-          manager.user,
-          Discourse.system_user,
-          keep_posts: true,
-          reason: I18n.t("user.content_matches_auto_silence_regex"),
-        )
-      elsif reason == :email_spam && is_first_post?(manager)
-        UserSilencer.auto_silence(
-          manager.user,
-          Discourse.system_user,
-          keep_posts: true,
-          reason: I18n.t("user.email_in_spam_header"),
-        )
+    if result.success? || (reason == :email_spam && is_first_post?(manager))
+      I18n.with_locale(SiteSetting.default_locale) do
+        if is_fast_typer?(manager)
+          UserSilencer.auto_silence(
+            manager.user,
+            Discourse.system_user,
+            keep_posts: true,
+            reason: I18n.t("user.new_user_typed_too_fast"),
+          )
+        elsif auto_silence?(manager) || matches_auto_silence_regex?(manager)
+          UserSilencer.auto_silence(
+            manager.user,
+            Discourse.system_user,
+            keep_posts: true,
+            reason: I18n.t("user.content_matches_auto_silence_regex"),
+          )
+        elsif reason == :email_spam && is_first_post?(manager)
+          UserSilencer.auto_silence(
+            manager.user,
+            Discourse.system_user,
+            keep_posts: true,
+            reason: I18n.t("user.email_in_spam_header"),
+          )
+        end
       end
     end
 

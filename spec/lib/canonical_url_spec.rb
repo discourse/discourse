@@ -25,6 +25,8 @@ describe CanonicalURL::ControllerExtensions do
     let(:instance) { host_class.new(Discourse::LOCALE_PARAM => "ja") }
 
     before do
+      SiteSetting.allow_user_locale = true
+      SiteSetting.set_locale_from_param = true
       SiteSetting.content_localization_enabled = true
       SiteSetting.content_localization_crawler_param = true
       SiteSetting.content_localization_supported_locales = "en|ja|es"
@@ -37,6 +39,11 @@ describe CanonicalURL::ControllerExtensions do
 
     it "returns the url unchanged when content_localization_crawler_param is false" do
       SiteSetting.content_localization_crawler_param = false
+      expect(instance.send(:append_content_localization_param, "/latest")).to eq("/latest")
+    end
+
+    it "returns the url unchanged when set_locale_from_param is false" do
+      SiteSetting.set_locale_from_param = false
       expect(instance.send(:append_content_localization_param, "/latest")).to eq("/latest")
     end
 

@@ -8,7 +8,6 @@ fa_IR:
   js:
     styleguide:
       title: "راهنمای سبک"
-      welcome: "برای شروع، از فهرست سمت چپ یک گزینه را انتخاب کنید."
       categories:
         atoms: اتم‌ها
         molecules: مولکول‌ها

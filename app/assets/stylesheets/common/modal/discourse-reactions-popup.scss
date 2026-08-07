@@ -2,7 +2,8 @@
 
 // specific d-modal overrules
 .fk-d-menu-modal.discourse-reactions-users-menu-content,
-.fk-d-menu-modal.post-liked-users-menu-content {
+.fk-d-menu-modal.post-liked-users-menu-content,
+.fk-d-menu-modal.chat-message-reaction-users-content {
   .d-modal {
     &__container {
       height: clamp(50dvh, 50dvh, 60dvh);
@@ -14,7 +15,7 @@
   }
 }
 
-.post-users-popup {
+.users-popup {
   --skeleton-shimmer-rgb: #{hexToRGB($primary-50)};
   width: 250px;
   background: var(--secondary);
@@ -51,6 +52,16 @@
     padding: var(--space-2) var(--space-4);
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+
+    // signals that the row continues past its edges; the ramps sit over the
+    // padding, so a row too short to scroll has nothing under them to fade
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      black var(--space-4),
+      black calc(100% - var(--space-6)),
+      transparent 100%
+    );
 
     @include viewport.from(sm) {
       padding: var(--space-2) var(--space-3);
@@ -216,7 +227,7 @@
       );
 
       @media (prefers-reduced-motion: no-preference) {
-        animation: post-users-popup-shimmer 1.25s infinite;
+        animation: users-popup-shimmer 1.25s infinite;
       }
     }
   }
@@ -257,7 +268,7 @@
     }
   }
 
-  @keyframes post-users-popup-shimmer {
+  @keyframes users-popup-shimmer {
     100% {
       transform: translateX(100%);
     }

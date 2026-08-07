@@ -9,7 +9,8 @@ module Reports::DailyEngagedUsers
 
       report.data = []
 
-      data = UserAction.count_daily_engaged_users(report.start_date, report.end_date)
+      data_start = report.facets.include?(:prev_period) ? report.prev_start_date : report.start_date
+      data = UserAction.count_daily_engaged_users(data_start, report.end_date)
 
       if report.facets.include?(:prev30Days)
         prev30DaysData =
@@ -20,10 +21,8 @@ module Reports::DailyEngagedUsers
       report.total = UserAction.count_daily_engaged_users if report.facets.include?(:total)
 
       if report.facets.include?(:prev_period)
-        prev_data =
-          UserAction.count_daily_engaged_users(report.prev_start_date, report.prev_end_date)
-
-        prev = prev_data.values.sum
+        data, prev_data = split_date_counts(data, report.start_date)
+        prev = prev_data.sum { |_date, count| count }
         report.prev_period = prev.zero? ? prev : (prev.to_f / prev_data.size).round(1)
       end
 

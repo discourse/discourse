@@ -196,18 +196,10 @@ class Topic < ActiveRecord::Base
             max_emojis: true,
             unique_among: {
               unless:
-                Proc.new { |t| SiteSetting.allow_duplicate_topic_titles? || t.private_message? },
-              message: :has_already_been_used,
+                Proc.new { |t| SiteSetting.duplicate_topic_titles.allowed? || t.private_message? },
+              message: :topic_title_already_used,
               allow_blank: true,
-              case_sensitive: false,
-              collection:
-                Proc.new { |t|
-                  if SiteSetting.allow_duplicate_topic_titles_category?
-                    Topic.listable_topics.where("category_id = ?", t.category_id)
-                  else
-                    Topic.listable_topics
-                  end
-                },
+              collection: ->(t) { t.duplicate_title_candidates },
             }
 
   validates :category_id,
@@ -227,6 +219,7 @@ class Topic < ActiveRecord::Base
       errors.add(:featured_link)
     end
   end
+  validate :normalize_featured_link, if: -> { featured_link.present? && featured_link_changed? }
 
   validates :external_id,
             allow_nil: true,
@@ -310,7 +303,10 @@ class Topic < ActiveRecord::Base
   has_one :nested_topic, dependent: :destroy
 
   belongs_to :image_upload, class_name: "Upload"
+  belongs_to :og_image_upload, class_name: "Upload"
   has_many :topic_thumbnails, through: :image_upload
+
+  after_save :regenerate_og_image
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data
@@ -394,6 +390,8 @@ class Topic < ActiveRecord::Base
   attr_accessor :skip_callbacks
   attr_accessor :advance_draft
 
+  OG_IMAGE_REGENERATION_COUNTER_STEP = 10
+
   before_create { initialize_default_values }
 
   after_create do
@@ -443,6 +441,52 @@ class Topic < ActiveRecord::Base
     elsif saved_changes[:category_id] && category&.read_restricted?
       UserProfile.remove_featured_topic_from_all_profiles(self)
     end
+  end
+
+  def regenerate_og_image
+    return if !(saved_changes[:title] || saved_changes[:category_id])
+    return if og_image_upload_id.blank?
+
+    if SiteSetting.generate_topic_og_image && TopicOgImageGenerator.eligible?(self)
+      Jobs.enqueue(:generate_topic_og_image, topic_id: id)
+    else
+      clear_generated_og_image!
+    end
+  end
+
+  def self.regenerate_og_image_after_replies_change(topic_id, replies_count)
+    return if !og_image_counter_regeneration_needed?(replies_count - 1, replies_count)
+
+    Topic.find_by(id: topic_id)&.enqueue_og_image_regeneration_after_counter_change(
+      previous_count: replies_count - 1,
+      current_count: replies_count,
+    )
+  end
+
+  def self.og_image_counter_regeneration_needed?(previous_count, current_count)
+    previous_count = previous_count.to_i
+    current_count = current_count.to_i
+
+    current_count >= OG_IMAGE_REGENERATION_COUNTER_STEP &&
+      previous_count / OG_IMAGE_REGENERATION_COUNTER_STEP <
+        current_count / OG_IMAGE_REGENERATION_COUNTER_STEP
+  end
+
+  def enqueue_og_image_regeneration_after_counter_change(previous_count:, current_count:)
+    return if !SiteSetting.generate_topic_og_image
+    return if og_image_upload_id.blank?
+    return if !TopicOgImageGenerator.eligible?(self)
+    return if !self.class.og_image_counter_regeneration_needed?(previous_count, current_count)
+
+    Jobs.enqueue(:generate_topic_og_image, topic_id: id)
+  end
+
+  def clear_generated_og_image!
+    old_upload_id = og_image_upload_id
+    return if old_upload_id.blank?
+
+    update_column(:og_image_upload_id, nil)
+    UploadReference.where(target: self, upload_id: old_upload_id).delete_all
   end
 
   def initialize_default_values
@@ -500,6 +544,10 @@ class Topic < ActiveRecord::Base
     subtype == TopicSubtype.moderator_warning
   end
 
+  def notify_moderators?
+    subtype == TopicSubtype.notify_moderators
+  end
+
   # all users (in groups or directly targeted) that are going to get the pm
   def all_allowed_users
     moderators_sql = " UNION #{User.moderators.to_sql}" if private_message? &&
@@ -539,6 +587,12 @@ class Topic < ActiveRecord::Base
     return unless escaped = ERB::Util.html_escape(title)
     fancy_title = Emoji.unicode_unescape(HtmlPrettify.render(escaped))
     fancy_title.length > Topic.max_fancy_title_length ? escaped : fancy_title
+  end
+
+  # Used when interpolating a topic title into a Markdown link label, where
+  # unescaped brackets or parentheses could change the resulting link.
+  def markdown_link_title
+    title.gsub(/([\\\[\]()])/) { "\\#{$1}" }
   end
 
   def fancy_title
@@ -885,6 +939,14 @@ class Topic < ActiveRecord::Base
     end
   end
 
+  def self.public_post_types_sql
+    "post_type NOT IN (#{Post.types[:small_action]}, #{Post.types[:whisper]})"
+  end
+
+  def self.staff_post_types_sql
+    "post_type <> #{Post.types[:small_action]}"
+  end
+
   # Atomically creates the next post number
   def self.next_post_number(topic_id, opts = {})
     highest =
@@ -893,22 +955,18 @@ class Topic < ActiveRecord::Base
         .first
         .to_i
 
-    # PM small_action posts only bump highest_staff_post_number, not
-    # highest_post_number, matching the exclusion in reset_highest.
-    staff_only = opts[:post_type] == Post.types[:whisper]
-    staff_only ||=
-      opts[:post_type] == Post.types[:small_action] &&
-        Topic.where(id: topic_id, archetype: Archetype.private_message).exists?
+    post_type = opts[:post_type]
 
-    if staff_only
+    return highest + 1 if post_type == Post.types[:small_action]
+
+    if post_type == Post.types[:whisper]
       result = DB.query_single(<<~SQL, highest, topic_id)
         UPDATE topics
         SET highest_staff_post_number = ? + 1
         WHERE id = ?
         RETURNING highest_staff_post_number
       SQL
-
-      result.first.to_i
+      return result.first.to_i
     else
       reply_sql = opts[:reply] ? ", reply_count = reply_count + 1" : ""
       posts_sql = opts[:post] ? ", posts_count = posts_count + 1" : ""
@@ -920,9 +978,15 @@ class Topic < ActiveRecord::Base
             #{reply_sql}
             #{posts_sql}
         WHERE id = :topic_id
-        RETURNING highest_post_number
+        RETURNING highest_post_number, posts_count
       SQL
+    end
 
+    if opts[:post]
+      highest_post_number, posts_count = result
+      regenerate_og_image_after_replies_change(topic_id, posts_count.to_i - 1)
+      highest_post_number.to_i
+    else
       result.first.to_i
     end
   end
@@ -932,9 +996,9 @@ class Topic < ActiveRecord::Base
       WITH
       X as (
         SELECT topic_id,
-               COALESCE(MAX(post_number), 0) highest_post_number
+               COALESCE(MAX(post_number), 0) highest_staff_post_number
         FROM posts
-        WHERE deleted_at IS NULL
+        WHERE deleted_at IS NULL AND #{staff_post_types_sql}
         GROUP BY topic_id
       ),
       Y as (
@@ -943,76 +1007,29 @@ class Topic < ActiveRecord::Base
                count(*) posts_count,
                max(created_at) last_posted_at
         FROM posts
-        WHERE deleted_at IS NULL AND post_type <> 4
+        WHERE deleted_at IS NULL AND #{public_post_types_sql}
         GROUP BY topic_id
       ),
       Z as (
         SELECT topic_id,
                SUM(COALESCE(posts.word_count, 0)) word_count
         FROM posts
-        WHERE deleted_at IS NULL AND post_type <> 4
+        WHERE deleted_at IS NULL AND #{public_post_types_sql}
         GROUP BY topic_id
       )
       UPDATE topics
       SET
-        highest_staff_post_number = X.highest_post_number,
+        highest_staff_post_number = X.highest_staff_post_number,
         highest_post_number = Y.highest_post_number,
         last_posted_at = Y.last_posted_at,
         posts_count = Y.posts_count,
         word_count = Z.word_count
       FROM X, Y, Z
       WHERE
-        topics.archetype <> 'private_message' AND
         X.topic_id = topics.id AND
         Y.topic_id = topics.id AND
         Z.topic_id = topics.id AND (
-          topics.highest_staff_post_number <> X.highest_post_number OR
-          topics.highest_post_number <> Y.highest_post_number OR
-          topics.last_posted_at <> Y.last_posted_at OR
-          topics.posts_count <> Y.posts_count OR
-          topics.word_count <> Z.word_count
-        )
-    SQL
-
-    DB.exec <<~SQL
-      WITH
-      X as (
-        SELECT topic_id,
-               COALESCE(MAX(post_number), 0) highest_post_number
-        FROM posts
-        WHERE deleted_at IS NULL
-        GROUP BY topic_id
-      ),
-      Y as (
-        SELECT topic_id,
-               coalesce(MAX(post_number), 0) highest_post_number,
-               count(*) posts_count,
-               max(created_at) last_posted_at
-        FROM posts
-        WHERE deleted_at IS NULL AND post_type <> 3 AND post_type <> 4
-        GROUP BY topic_id
-      ),
-      Z as (
-        SELECT topic_id,
-                SUM(COALESCE(posts.word_count, 0)) word_count
-        FROM posts
-        WHERE deleted_at IS NULL AND post_type <> 3 AND post_type <> 4
-        GROUP BY topic_id
-      )
-      UPDATE topics
-      SET
-        highest_staff_post_number = X.highest_post_number,
-        highest_post_number = Y.highest_post_number,
-        last_posted_at = Y.last_posted_at,
-        posts_count = Y.posts_count,
-        word_count = Z.word_count
-      FROM X, Y, Z
-      WHERE
-        topics.archetype = 'private_message' AND
-        X.topic_id = topics.id AND
-        Y.topic_id = topics.id AND
-        Z.topic_id = topics.id AND (
-          topics.highest_staff_post_number <> X.highest_post_number OR
+          topics.highest_staff_post_number <> X.highest_staff_post_number OR
           topics.highest_post_number <> Y.highest_post_number OR
           topics.last_posted_at <> Y.last_posted_at OR
           topics.posts_count <> Y.posts_count OR
@@ -1023,54 +1040,44 @@ class Topic < ActiveRecord::Base
 
   # If a post is deleted we have to update our highest post counters and last post information
   def self.reset_highest(topic_id)
-    archetype = Topic.where(id: topic_id).pick(:archetype)
-
-    # ignore small_action replies for private messages
-    post_type =
-      archetype == Archetype.private_message ? " AND post_type <> #{Post.types[:small_action]}" : ""
-
     result = DB.query_single(<<~SQL, topic_id:)
       UPDATE topics
       SET
         highest_staff_post_number = (
           SELECT COALESCE(MAX(post_number), 0) FROM posts
           WHERE topic_id = :topic_id AND
-                deleted_at IS NULL
+                deleted_at IS NULL AND
+                #{staff_post_types_sql}
         ),
         highest_post_number = (
           SELECT COALESCE(MAX(post_number), 0) FROM posts
           WHERE topic_id = :topic_id AND
                 deleted_at IS NULL AND
-                post_type <> 4
-                #{post_type}
+                #{public_post_types_sql}
         ),
         posts_count = (
           SELECT count(*) FROM posts
           WHERE deleted_at IS NULL AND
                 topic_id = :topic_id AND
-                post_type <> 4
-                #{post_type}
+                #{public_post_types_sql}
         ),
         word_count = (
           SELECT SUM(COALESCE(posts.word_count, 0)) FROM posts
           WHERE topic_id = :topic_id AND
                 deleted_at IS NULL AND
-                post_type <> 4
-                #{post_type}
+                #{public_post_types_sql}
         ),
         last_posted_at = (
           SELECT MAX(created_at) FROM posts
           WHERE topic_id = :topic_id AND
                 deleted_at IS NULL AND
-                post_type <> 4
-                #{post_type}
+                #{public_post_types_sql}
         ),
         last_post_user_id = COALESCE((
           SELECT user_id FROM posts
           WHERE topic_id = :topic_id AND
                 deleted_at IS NULL AND
-                post_type <> 4
-                #{post_type}
+                #{public_post_types_sql}
           ORDER BY created_at desc
           LIMIT 1
         ), last_post_user_id)
@@ -1409,15 +1416,20 @@ class Topic < ActiveRecord::Base
   # go out of sync unless you do something drastic live move posts from one topic to another.
   # this recalculates everything.
   def update_statistics!
+    update_column(:highest_post_number, Topic.reset_highest(id))
     feature_topic_users
     update_action_counts
-    self.highest_post_number = Topic.reset_highest(id)
   end
 
   def update_action_counts
-    update_column(
-      :like_count,
-      Post.where.not(post_type: Post.types[:whisper]).where(topic_id: id).sum(:like_count),
+    old_like_count = like_count
+    new_like_count =
+      Post.where.not(post_type: Post.types[:whisper]).where(topic_id: id).sum(:like_count)
+
+    update_column(:like_count, new_like_count)
+    enqueue_og_image_regeneration_after_counter_change(
+      previous_count: old_like_count,
+      current_count: new_like_count,
     )
   end
 
@@ -1751,12 +1763,12 @@ class Topic < ActiveRecord::Base
     end
 
     if topic_timer.execute_at
-      if by_user&.staff? || by_user&.trust_level == TrustLevel[4]
+      if Guardian.new(by_user).can_set_topic_timer?(self)
         topic_timer.user = by_user
       else
         topic_timer.user ||=
           (
-            if user.staff? || user.trust_level == TrustLevel[4]
+            if Guardian.new(user).can_set_topic_timer?(self)
               user
             else
               Discourse.system_user
@@ -1790,6 +1802,19 @@ class Topic < ActiveRecord::Base
 
   def acting_user=(u)
     @acting_user = u
+  end
+
+  def duplicate_title_candidates
+    candidates = Topic.listable_topics.where(category_id:)
+
+    if SiteSetting.duplicate_topic_titles.disallowed?
+      guardian = acting_user&.guardian
+      visible_topics = Topic.listable_topics.secured(guardian)
+      visible_topics = visible_topics.visible if !guardian&.can_see_unlisted_topics?
+      candidates = candidates.or(visible_topics)
+    end
+
+    candidates
   end
 
   def secure_group_ids
@@ -1970,6 +1995,10 @@ class Topic < ActiveRecord::Base
     ApplicationLayoutPreloader.banner_json_cache.clear if archetype == "banner"
   end
 
+  def plain_text_excerpt
+    ExcerptParser.to_plain_text(excerpt)
+  end
+
   def pm_with_non_human_user?
     sql = <<~SQL
     SELECT 1 FROM topics
@@ -1990,6 +2019,14 @@ class Topic < ActiveRecord::Base
 
   def featured_link_root_domain
     MiniSuffix.domain(UrlHelper.encode_and_parse(featured_link).hostname)
+  end
+
+  def normalize_featured_link
+    return if errors[:featured_link].present?
+
+    self.featured_link = UrlHelper.normalized_encode(featured_link)
+  rescue ArgumentError, URI::Error, Addressable::URI::InvalidURIError
+    errors.add(:featured_link, :invalid)
   end
 
   def self.private_message_topics_count_per_day(start_date, end_date, topic_subtype)
@@ -2271,7 +2308,7 @@ class Topic < ActiveRecord::Base
   end
 
   def limit_first_day_topics_per_day
-    apply_per_day_rate_limit_for("first-day-topics", :max_topics_in_first_day)
+    RateLimiter.new(user, "first-day-topics-per-day", user.first_day_topics_limit, 1.day.to_i)
   end
 
   def apply_per_day_rate_limit_for(key, method_name)
@@ -2330,6 +2367,7 @@ end
 #  featured_user4_id         :integer
 #  image_upload_id           :bigint
 #  last_post_user_id         :integer          not null
+#  og_image_upload_id        :bigint
 #  user_id                   :integer
 #  visibility_reason_id      :integer
 #

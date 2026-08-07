@@ -22,7 +22,8 @@ export default class DashboardSection extends Component {
             <DButton
               @icon={{@headerActionIcon}}
               @action={{@headerAction}}
-              class="btn-transparent no-text"
+              @label={{@headerActionLabel}}
+              class="btn-default btn-small"
             />
           </div>
         {{/if}}
@@ -31,6 +32,8 @@ export default class DashboardSection extends Component {
       {{#if @description}}
         <p class="db-section__intro">{{@description}}</p>
       {{/if}}
+
+      {{yield to="intro"}}
 
       <div
         class={{concat

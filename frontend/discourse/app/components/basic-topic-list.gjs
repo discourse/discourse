@@ -1,16 +1,12 @@
-/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/no-observers, ember/require-tagless-components */
+/* eslint-disable ember/no-classic-components, ember/no-observers, ember/require-tagless-components */
 import Component from "@ember/component";
 import { computed, set } from "@ember/object";
-import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
-import $ from "jquery";
 import List from "discourse/components/topic-list/list";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default class BasicTopicList extends Component {
-  @service site;
-
   init() {
     super.init(...arguments);
     const topicList = this.topicList;
@@ -60,43 +56,6 @@ export default class BasicTopicList extends Component {
     return this.topics.some(
       (topic) => typeof topic.unread_by_group_member !== "undefined"
     );
-  }
-
-  click(e) {
-    // Mobile basic-topic-list doesn't use the `topic-list-item` view so
-    // the event for the topic entrance is never wired up.
-    if (this.site.desktopView) {
-      return;
-    }
-
-    let target = $(e.target);
-    if (target.closest(".posts-map").length) {
-      const topicId = target.closest("tr").attr("data-topic-id");
-      if (topicId) {
-        if (target.prop("tagName") !== "A") {
-          let targetLinks = target.find("a");
-          if (targetLinks.length) {
-            target = targetLinks;
-          } else {
-            targetLinks = target.closest("a");
-            if (targetLinks.length) {
-              target = targetLinks;
-            } else {
-              return false;
-            }
-          }
-        }
-
-        const topic = this.topics.find(
-          (value) => value.id === parseInt(topicId, 10)
-        );
-        this.appEvents.trigger("topic-entrance:show", {
-          topic,
-          position: target.offset(),
-        });
-      }
-      return false;
-    }
   }
 
   <template>

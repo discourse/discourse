@@ -85,9 +85,7 @@ export default class QueriesEdit extends Component {
               {{/unless}}
             </div>
 
-            <div class="desc">
-              {{@controller.model.description}}
-            </div>
+            <div class="desc">{{@controller.model.description}}</div>
           {{/if}}
 
           {{#unless @controller.model.destroyed}}
@@ -116,7 +114,7 @@ export default class QueriesEdit extends Component {
               @disabled={{@controller.aiGenerating}}
             />
           {{else}}
-            <div class="query-editor">
+            <div class="query-editor {{if @controller.hideSchema 'no-schema'}}">
               <div class="query-editor__header">
                 <h3 class="query-editor__label">{{i18n
                     "explorer.sql_label"
@@ -137,7 +135,11 @@ export default class QueriesEdit extends Component {
                   </div>
 
                   <div class="right-panel">
-                    <ExplorerSchema @schema={{@controller.schema}} />
+                    <ExplorerSchema
+                      @schema={{@controller.schema}}
+                      @hideSchema={{@controller.hideSchema}}
+                      @updateHideSchema={{@controller.updateHideSchema}}
+                    />
                   </div>
                 </div>
 
@@ -200,6 +202,7 @@ export default class QueriesEdit extends Component {
                 @action={{@controller.showHelpModal}}
                 @label="explorer.help.label"
                 @icon="circle-question"
+                @disabled={{@controller.actionsBusy}}
                 class="btn-transparent query-action-bar__help"
               />
             {{/if}}
@@ -227,12 +230,14 @@ export default class QueriesEdit extends Component {
                 @action={{@controller.recover}}
                 @icon="arrow-rotate-left"
                 @label="explorer.recover"
+                @disabled={{@controller.actionsBusy}}
               />
             {{else if this.showDestroyQuery}}
               <DButton
                 @action={{@controller.destroyQuery}}
                 @icon="trash-can"
                 @label="explorer.delete"
+                @disabled={{@controller.actionsBusy}}
                 class="btn-danger"
               />
             {{/if}}
@@ -244,7 +249,7 @@ export default class QueriesEdit extends Component {
         <DConditionalLoadingSpinner @condition={{@controller.loading}} />
 
         {{#if (and (eq @controller.mode "ai") (eq @controller.view "sql"))}}
-          <div class="query-editor">
+          <div class="query-editor {{if @controller.hideSchema 'no-schema'}}">
             <div class="query-editor__header">
               <h3 class="query-editor__label">{{i18n "explorer.sql_label"}}</h3>
             </div>
@@ -263,7 +268,11 @@ export default class QueriesEdit extends Component {
                 </div>
 
                 <div class="right-panel">
-                  <ExplorerSchema @schema={{@controller.schema}} />
+                  <ExplorerSchema
+                    @schema={{@controller.schema}}
+                    @hideSchema={{@controller.hideSchema}}
+                    @updateHideSchema={{@controller.updateHideSchema}}
+                  />
                 </div>
               </div>
 

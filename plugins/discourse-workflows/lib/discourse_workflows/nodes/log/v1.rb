@@ -24,6 +24,7 @@ module DiscourseWorkflows
               },
             },
           },
+          output_contracts: [{ mode: :passthrough }],
           properties: {
             mode: {
               type: :options,
@@ -68,7 +69,7 @@ module DiscourseWorkflows
             end
           end
 
-          [[]]
+          [exec_ctx.input_items]
         end
 
         private

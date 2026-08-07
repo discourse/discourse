@@ -93,7 +93,6 @@ et:
       exclusion: on reserveeritud
       greater_than: peab olema suurem kui %{count}
       greater_than_or_equal_to: peab olema suurem või võrdne kui %{count}
-      has_already_been_used: "on juba kasutusel"
       inclusion: puudub nimekirjas
       invalid: pole korrektne
       is_invalid: "tundub segane. kas see on terve lause?"
@@ -244,6 +243,11 @@ et:
       trust_level_2: "usaldustase_2"
       trust_level_3: "usaldustase_3"
       trust_level_4: "usaldustase_4"
+    default_full_names:
+      everyone: "Kõik"
+      admins: "Adminnid"
+      moderators: "Moderaatorid"
+      staff: "Meeskond"
   education:
     until_posts:
       one: "%{count} postitus"
@@ -523,6 +527,9 @@ et:
     scopes:
       read: "Loe kõiki"
       write: "Kirjuta kõikidesse"
+    device:
+      code: "Kood"
+      continue: "Jätka"
   reports:
     default:
       labels:
@@ -581,6 +588,7 @@ et:
       labels:
         count: "Liikmed"
         share: "Jaga"
+        signups: "Registreerumised"
       levels:
         "0": "Uus"
         "1": "Tavakasutaja"
@@ -822,6 +830,10 @@ et:
     types:
       category: "Liigid"
       user: "Kasutajad"
+  posts_filter:
+    description:
+      order_latest: "Viimased postitused"
+      order_latest_topic: "Viimased teemad"
   original_poster: "Esialgne postitaja"
   most_recent_poster: "Viimane postitaja"
   frequent_poster: "Tihedam postitaja"
@@ -1078,6 +1090,8 @@ et:
               private:
                 label: "Privaatne"
   onebox:
+    google_meet:
+      meeting_code: "Kood:"
     github:
       closed: "suletud"
       status_date:

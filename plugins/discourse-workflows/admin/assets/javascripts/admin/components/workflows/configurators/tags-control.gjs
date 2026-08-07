@@ -25,6 +25,7 @@ export default class TagsControl extends Component {
   <template>
     <ExpressionWrapper
       @field={{@field}}
+      @schema={{@schema}}
       @supportsExpression={{@supportsExpression}}
       @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}

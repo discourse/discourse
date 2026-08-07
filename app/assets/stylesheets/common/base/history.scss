@@ -125,6 +125,14 @@
     }
   }
 
+  .revision__hidden-notice {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 1em 0;
+    color: var(--primary-medium);
+  }
+
   &:not(.--mode-inline) {
     .-tag-revisions .tag-revision__wrapper {
       flex: 0 1 50%;

@@ -30,6 +30,7 @@ module Chat
       attribute :data, :string
 
       validates :channel_id, presence: true
+      validates :data, length: { maximum: -> { SiteSetting.max_chat_draft_length } }
     end
 
     model :channel

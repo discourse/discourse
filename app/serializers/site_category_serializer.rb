@@ -1,14 +1,11 @@
 # frozen_string_literal: true
 
 class SiteCategorySerializer < BasicCategorySerializer
-  attributes :allowed_tags,
-             :allowed_tag_groups,
-             :allow_global_tags,
+  attributes :allow_global_tags,
              :read_only_banner,
              :form_template_ids,
+             :required_tag_groups,
              :category_types
-
-  has_many :category_required_tag_groups, key: :required_tag_groups, embed: :objects
 
   def form_template_ids
     object.form_template_ids.sort
@@ -19,22 +16,6 @@ class SiteCategorySerializer < BasicCategorySerializer
     object.category_types
   end
 
-  def include_allowed_tags?
-    SiteSetting.tagging_enabled
-  end
-
-  def allowed_tags
-    object.tags.pluck(:id, :name, :slug).map { |id, name, slug| { id: id, name: name, slug: slug } }
-  end
-
-  def include_allowed_tag_groups?
-    SiteSetting.tagging_enabled
-  end
-
-  def allowed_tag_groups
-    object.tag_groups.pluck(:name)
-  end
-
   def include_allow_global_tags?
     SiteSetting.tagging_enabled
   end
@@ -43,17 +24,18 @@ class SiteCategorySerializer < BasicCategorySerializer
     SiteSetting.tagging_enabled
   end
 
+  def required_tag_groups
+    object.category_required_tag_groups.map do |crtg|
+      entry = { min_count: crtg.min_count }
+      entry[:name] = crtg.tag_group&.name if can_edit_tags?
+      entry
+    end
+  end
+
   def name
     return I18n.t("uncategorized_category_name") if object.uncategorized?
 
-    translated_name =
-      if ContentLocalization.show_translated_category?(object, scope)
-        object.get_localization&.name
-      else
-        object.name
-      end
-
-    translated_name || object.name
+    localization&.name.presence || object.name
   end
 
   def description
@@ -62,23 +44,31 @@ class SiteCategorySerializer < BasicCategorySerializer
 
   def description_text
     return super if object.uncategorized?
-    return ERB::Util.html_escape(localized_description).html_safe if localized_description
+    return localization.description_text if localized_description
     object.description_text
   end
 
   def description_excerpt
     return super if object.uncategorized?
-    return PrettyText.excerpt(localized_description, 300) if localized_description
+    return localization.description_excerpt if localized_description
     object.description_excerpt
   end
 
   private
 
+  def can_edit_tags?
+    return @can_edit_tags if defined?(@can_edit_tags)
+    @can_edit_tags = SiteSetting.tagging_enabled && scope&.can_edit?(object)
+  end
+
+  def localization
+    return @localization if defined?(@localization)
+    @localization =
+      (object.get_localization if ContentLocalization.show_translated_category?(object, scope))
+  end
+
   def localized_description
     return @localized_description if defined?(@localized_description)
-    @localized_description =
-      if ContentLocalization.show_translated_category?(object, scope)
-        object.get_localization&.description.presence
-      end
+    @localized_description = localization&.description_first_paragraph.presence
   end
 end

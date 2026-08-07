@@ -37,58 +37,34 @@ export default class HouseAd extends AdComponent {
     return this.showAd ? `house-${this.placement}` : "";
   }
 
-  @computed(
-    "showToGroups",
-    "showAfterPost",
-    "showAfterTopicListItem",
-    "showAfterNestedRoot",
-    "showOnCurrentPage"
-  )
+  @computed("showToGroups", "showAfterPlacement", "showOnCurrentPage")
   get showAd() {
     return (
-      this.showToGroups &&
-      (this.showAfterPost ||
-        this.showAfterTopicListItem ||
-        this.showAfterNestedRoot) &&
-      this.showOnCurrentPage
+      this.showToGroups && this.showAfterPlacement && this.showOnCurrentPage
     );
   }
 
-  @computed("postNumber", "placement")
-  get showAfterPost() {
-    if (
-      !this.postNumber &&
-      this.placement !== "topic-list-between" &&
-      this.placement !== "nested-roots-between"
-    ) {
-      return true;
+  @computed("placement", "postNumber", "indexNumber")
+  get showAfterPlacement() {
+    if (this.placement === "topic-list-between") {
+      return this.isNthTopicListItem(
+        parseInt(this.site.get("house_creatives.settings.after_nth_topic"), 10)
+      );
     }
 
-    return this.isNthPost(
-      parseInt(this.site.get("house_creatives.settings.after_nth_post"), 10)
-    );
-  }
-
-  @computed("placement")
-  get showAfterTopicListItem() {
-    if (this.placement !== "topic-list-between") {
-      return true;
+    if (this.placement === "nested-roots-between") {
+      return this.isNthTopicListItem(
+        parseInt(this.site.get("house_creatives.settings.after_nth_root"), 10)
+      );
     }
 
-    return this.isNthTopicListItem(
-      parseInt(this.site.get("house_creatives.settings.after_nth_topic"), 10)
-    );
-  }
-
-  @computed("placement")
-  get showAfterNestedRoot() {
-    if (this.placement !== "nested-roots-between") {
-      return true;
+    if (this.postNumber) {
+      return this.isNthPost(
+        parseInt(this.site.get("house_creatives.settings.after_nth_post"), 10)
+      );
     }
 
-    return this.isNthTopicListItem(
-      parseInt(this.site.get("house_creatives.settings.after_nth_root"), 10)
-    );
+    return true;
   }
 
   chooseAdHtml() {

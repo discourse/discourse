@@ -18,6 +18,17 @@ RSpec.describe Jobs::CleanUpBrowserPageviewEvents do
     expect(BrowserPageviewEvent.all).to contain_exactly(fresh_event)
   end
 
+  it "deletes session engagements older than 3 months and keeps fresher ones" do
+    SiteSetting.clean_up_browser_pageview_events = true
+    fresh = BrowserPageviewSessionEngagement.create!(session_id: "fresh", created_at: 1.month.ago)
+    BrowserPageviewSessionEngagement.create!(session_id: "old", created_at: 4.months.ago)
+
+    expect { described_class.new.execute({}) }.to change {
+      BrowserPageviewSessionEngagement.count
+    }.by(-1)
+    expect(BrowserPageviewSessionEngagement.all).to contain_exactly(fresh)
+  end
+
   it "deletes scores for deleted events" do
     SiteSetting.clean_up_browser_pageview_events = true
     fresh_event = Fabricate(:browser_pageview_event, created_at: 1.month.ago)

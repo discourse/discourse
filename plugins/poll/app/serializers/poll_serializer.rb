@@ -18,7 +18,15 @@ class PollSerializer < ApplicationSerializer
              :chart_type,
              :groups,
              :title,
-             :ranked_choice_outcome
+             :ranked_choice_outcome,
+             :closed_at,
+             :closed_by
+
+  def closed_by
+    return if object.closed_by_id.blank? || object.closed_by_id == Discourse::SYSTEM_USER_ID
+
+    BasicUserSerializer.new(object.closed_by, root: false, scope:).as_json
+  end
 
   def public
     true

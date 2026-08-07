@@ -16,6 +16,9 @@ if defined?(DiscourseWorkflows)
             },
             available: -> { SiteSetting.assign_enabled },
             unavailable_reason_key: "discourse_workflows.node_unavailable.requires_assign",
+            output_contracts: [
+              { schema: DiscourseAssign::Workflows::Schema::ASSIGN_TOPIC_OUTPUT_SCHEMA },
+            ],
             capabilities: {
               run_scope: "per_item",
             },
@@ -100,7 +103,7 @@ if defined?(DiscourseWorkflows)
                 raise_node_error!(
                   I18n.t(
                     "discourse_assign.discourse_workflows.assign_topic.error",
-                    reason: result[:reason],
+                    reason: Assigner.failure_message(result[:reason], assignee),
                   ),
                 )
               end

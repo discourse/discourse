@@ -13,11 +13,11 @@ et:
       voted: "Sa hindasid seda teemat"
       vote_title: "Hinda"
       vote_title_plural: "HInnangud"
-      anonymous_button:
-        one: "Hinda"
-        other: "HInnangud"
       show_voters: "Näita vastajaid"
       vote_count_thousands: "%{count}k"
     filters:
       votes:
         title: "HInnangud"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Sildid"

@@ -13,12 +13,12 @@ vi:
   js:
     discourse_reactions:
       reactions_title: "Cảm xúc"
-      state_panel:
-        more_users: "và %{count} nữa..."
       picker:
         react_with: "Bày tỏ cảm xúc: %{reaction}"
         cant_remove_reaction: "Bạn không thể xóa biểu cảm của mình nữa"
         remove_reaction: "Gỡ biểu cảm %{reaction} này"
+      users_popup:
+        all: "Tất cả"
       main_reaction:
         add: "Thích tút này"
         remove: "Bỏ thích"

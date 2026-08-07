@@ -3,8 +3,9 @@ en:
     chat_separate_sidebar_mode: "Show separate sidebar modes for forum and chat."
     chat_enabled: "Enable chat."
     chat_pinned_messages: "Enable pinned messages in chat channels."
+    enable_new_chat_reactions_popup: "Enable the redesigned reactions popup on chat messages, showing who reacted with infinite scroll and a native mobile experience."
     enable_public_channels: "Enable public channels based on categories."
-    chat_allowed_groups: "Users in these groups can chat. Note that admins and moderators can always access chat."
+    chat_allowed_groups: "Users in these groups can chat, except anonymous users who can only view chat when added to this setting. Note that admins and moderators can always access chat."
     chat_channel_retention_days: "Chat messages in regular channels will be retained for this many days. Set to '0' to retain messages forever."
     chat_dm_retention_days: "Chat messages in personal chat channels will be retained for this many days. Set to '0' to retain messages forever."
     chat_auto_silence_duration: "Number of minutes that users will be silenced for when they exceed the chat message creation rate limit. Set to '0' to disable auto-silencing."
@@ -62,6 +63,7 @@ en:
       users_cant_be_added_to_channel: "Users can't be added to this channel."
       user_cant_be_removed_from_channel: "User can't be removed from this channel"
       channel_exists_for_category: "A channel already exists for this category and name"
+      public_channels_disabled: "Unable to create the channel because public channels are disabled. An admin can enable the 'enable public channels' site setting."
       channel_new_message_disallowed:
         archived: "The channel is archived, no new messages can be sent"
         closed: "The channel is closed, no new messages can be sent"

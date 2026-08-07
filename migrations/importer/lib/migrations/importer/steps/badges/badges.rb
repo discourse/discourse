@@ -124,7 +124,7 @@ module Migrations
             default_value: Badge::Trigger::None,
           ) do |invalid, default|
             # TODO(selase): Adopt importer framework warning implementation once available
-            puts "    #{row[:name]}: Invalid badge trigger '#{invalid}', using default '#{default}'"
+            notice("#{row[:name]}: Invalid badge trigger '#{invalid}', using default '#{default}'")
           end
         end
 
@@ -140,7 +140,7 @@ module Migrations
             #  Adopt importer framework warning implementation once available
             #  No need to log this for every badge, just once will suffice. Maybe some
             #  top-level prerequisite check with warnings
-            puts "    #{name}: Badge SQL is not enabled"
+            notice("#{name}: Badge SQL is not enabled")
             return nil
           end
 
@@ -153,7 +153,7 @@ module Migrations
             query
           rescue StandardError => e
             # TODO(selase): Adopt importer framework warning implementation once available
-            puts "    #{name}: Invalid badge query: #{e.message}"
+            notice("#{name}: Invalid badge query: #{e.message}")
             nil
           end
         end

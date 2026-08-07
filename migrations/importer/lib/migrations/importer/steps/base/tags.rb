@@ -51,13 +51,13 @@ module Migrations
             return nil if existing_id
 
             if !existing_id && RESERVED_TAGS.include?(name_lower)
-              puts "    Tag '#{cleaned_name}' is reserved"
+              notice("Tag '#{cleaned_name}' is reserved")
 
               return nil
             end
 
             if row[:locale] && SUPPORTED_LOCALES.exclude?(row[:locale])
-              puts "    Tag '#{cleaned_name}' has unsupported locale '#{row[:locale]}'"
+              notice("Tag '#{cleaned_name}' has unsupported locale '#{row[:locale]}'")
 
               row[:locale] = nil
             end

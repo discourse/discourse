@@ -19,6 +19,7 @@ module Migrations
 
           def call
             return print_usage if @options[:help]
+            require_positional!(table_name, "table_name")
 
             database = selected_database
             schema.ignore_table(table_name, reason: @options[:reason], database:)

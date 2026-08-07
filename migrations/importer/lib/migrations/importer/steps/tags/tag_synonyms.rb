@@ -54,7 +54,9 @@ module Migrations
           name = row[:name]
 
           if @tags_with_synonyms.include?(original_id)
-            puts "    Tag '#{name}' cannot become a synonym because it is already the target of one or more synonyms"
+            notice(
+              "Tag '#{name}' cannot become a synonym because it is already the target of one or more synonyms",
+            )
 
             return nil
           end
@@ -64,12 +66,14 @@ module Migrations
 
           if @synonym_tag_ids.include?(original_target_tag_id) ||
                @existing_synonym_tag_ids.include?(discourse_target_tag_id)
-            puts "    Tag '#{name}' cannot point to another synonym tag (target_tag_id: #{original_target_tag_id})"
+            notice(
+              "Tag '#{name}' cannot point to another synonym tag (target_tag_id: #{original_target_tag_id})",
+            )
             return nil
           end
 
           if original_id == original_target_tag_id
-            puts "    Tag '#{name}' cannot be synonym of itself"
+            notice("Tag '#{name}' cannot be synonym of itself")
 
             return nil
           end

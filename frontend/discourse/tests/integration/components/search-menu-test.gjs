@@ -1,9 +1,12 @@
+import { tracked } from "@glimmer/tracking";
 import {
   click,
   fillIn,
+  find,
   render,
   settled,
   triggerKeyEvent,
+  waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import SearchMenu, {
@@ -70,7 +73,20 @@ module("Integration | Component | SearchMenu", function (hooks) {
 
     await triggerKeyEvent("#icon-search-input", "keydown", "Escape");
 
-    assert.dom(".menu-panel").doesNotExist("Menu panel is gone");
+    // Wait for the panel to actually be removed.
+    const menuClosed = await waitUntil(
+      () => !document.querySelector(".menu-panel")
+    ).catch(() => false);
+
+    // If it didn't close, print out focus state in the failure message.
+    let closeDebug = "";
+    if (!menuClosed) {
+      const panelCount = document.querySelectorAll(".menu-panel").length;
+      const { activeElement } = document;
+      closeDebug = ` (activeElement=${activeElement?.id || activeElement?.nodeName}, hasFocus=${document.hasFocus()}, panelCount=${panelCount})`;
+    }
+
+    assert.dom(".menu-panel").doesNotExist(`Menu panel is closed${closeDebug}`);
 
     await click("#icon-search-input");
     await click("#icon-search-input");
@@ -103,6 +119,46 @@ module("Integration | Component | SearchMenu", function (hooks) {
     assert
       .dom(".menu-panel .search-menu-initial-options")
       .doesNotExist("Menu panel is hidden");
+  });
+
+  test("@hideResults closes the menu and keeps it closed", async function (assert) {
+    const state = new (class {
+      @tracked hidden = false;
+    })();
+
+    await render(
+      <template>
+        <SearchMenu
+          @location="test"
+          @searchInputId="icon-search-input"
+          @hideResults={{state.hidden}}
+        />
+      </template>
+    );
+
+    await click("#icon-search-input");
+    assert.dom(".menu-panel").exists("menu opens from the input");
+
+    state.hidden = true;
+    await settled();
+    assert
+      .dom(".menu-panel")
+      .doesNotExist("menu closes when results are hidden");
+
+    await click("#icon-search-input");
+    assert
+      .dom(".menu-panel")
+      .doesNotExist("menu cannot open while results are hidden");
+
+    state.hidden = false;
+    await settled();
+    assert
+      .dom(".menu-panel")
+      .doesNotExist("menu stays closed when results can show again");
+
+    find("#icon-search-input").blur();
+    await click("#icon-search-input");
+    assert.dom(".menu-panel").exists("menu can reopen from the input");
   });
 
   test("rendering without a searchInputId provided", async function (assert) {

@@ -14,6 +14,7 @@ Migrations::Tooling::Schema.table :groups do
           :full_name,
           :grant_trust_level,
           :id,
+          :incoming_email,
           :members_visibility_level,
           :membership_request_template,
           :mentionable_level,
@@ -37,7 +38,6 @@ Migrations::Tooling::Schema.table :groups do
          :email_password,
          :email_username,
          :has_messages,
-         :incoming_email,
          reason: "TODO: Figure out if we need to import these settings"
 
   ignore :smtp_enabled,

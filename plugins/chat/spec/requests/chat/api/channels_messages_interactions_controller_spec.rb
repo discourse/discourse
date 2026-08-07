@@ -105,6 +105,58 @@ RSpec.describe Chat::Api::ChannelsMessagesInteractionsController do
       end
     end
 
+    context "when user has read-only access to the category channel" do
+      fab!(:read_only_group, :group)
+      fab!(:read_only_category) do
+        Fabricate(
+          :private_category,
+          group: read_only_group,
+          permission_type: CategoryGroup.permission_types[:readonly],
+        )
+      end
+      fab!(:read_only_channel) { Fabricate(:category_channel, chatable: read_only_category) }
+      fab!(:read_only_message) do
+        Fabricate(
+          :chat_message,
+          chat_channel: read_only_channel,
+          user: Discourse.system_user,
+          blocks: [
+            {
+              type: "actions",
+              elements: [
+                {
+                  action_id: "xxx",
+                  value: "foo",
+                  type: "button",
+                  text: {
+                    type: "plain_text",
+                    text: "Click Me",
+                  },
+                },
+              ],
+            },
+          ],
+        )
+      end
+
+      before { read_only_group.add(current_user) }
+
+      it "returns 404 and does not create an interaction" do
+        expect do
+          post "/chat/api/channels/#{read_only_channel.id}/messages/#{read_only_message.id}/interactions",
+               params: {
+                 action_id: "xxx",
+               }
+        end.not_to change(Chat::MessageInteraction, :count)
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body).to include(
+          "errors" => [I18n.t("not_found")],
+          "error_type" => "not_found",
+        )
+      end
+    end
+
     context "when user is not logged in" do
       before { sign_out }
 

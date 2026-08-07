@@ -126,7 +126,7 @@ RSpec.describe "Chat composer" do
     end
 
     context "when user preference is set to send on enter" do
-      before { current_user.user_option.update!(chat_send_shortcut: 0) }
+      before { current_user.user_option.update!(send_shortcut: "enter") }
 
       context "when pressing enter" do
         it "sends the message" do
@@ -163,7 +163,7 @@ RSpec.describe "Chat composer" do
     end
 
     context "when user preference is set to send on meta + enter" do
-      before { current_user.user_option.update!(chat_send_shortcut: 1) }
+      before { current_user.user_option.update!(send_shortcut: "meta_enter") }
 
       context "when pressing enter" do
         it "adds a linebreak" do
@@ -257,7 +257,8 @@ RSpec.describe "Chat composer" do
       chat_page.visit_channel(channel_1)
 
       file_path = file_from_fixtures("logo.png", "images").path
-      cdp.with_slow_upload do
+      # Hold the upload request in-flight, without throttling everything.
+      cdp.with_pending_requests(%r{/uploads\.json}) do
         attach_file("channel-file-uploader", file_path, make_visible: true)
         expect(page).to have_css(".chat-composer-upload--in-progress")
         expect(page).to have_css(".chat-composer.is-send-disabled")

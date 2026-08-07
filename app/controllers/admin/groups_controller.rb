@@ -23,6 +23,7 @@ class Admin::GroupsController < Admin::StaffController
                  ),
                status: :unprocessable_entity
       end
+      on_model_errors(:group) { |group:| render_json_error(group) }
       on_failure { render(json: failed_json, status: :unprocessable_entity) }
     end
   end
@@ -93,18 +94,13 @@ class Admin::GroupsController < Admin::StaffController
       end
 
       if domains.size > MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP
-        raise Discourse::InvalidParameters.new(
-                I18n.t(
-                  "groups.errors.counting_too_many_email_domains",
-                  count: MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP,
-                ),
-              )
+        user_count = nil
+      else
+        user_count = Group.automatic_membership_users(domains.join("|")).count
       end
-
-      user_count = Group.automatic_membership_users(domains.join("|")).count
     end
 
-    render json: { user_count: user_count }
+    render json: { user_count: }
   end
 
   protected

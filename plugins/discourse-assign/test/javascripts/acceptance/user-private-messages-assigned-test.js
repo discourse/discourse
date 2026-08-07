@@ -11,6 +11,7 @@ import AssignedTopics from "../fixtures/assigned-topics-fixtures";
 acceptance("User Private Messages", function (needs) {
   needs.user({
     can_assign: true,
+    can_assign_globally: true,
   });
 
   needs.settings({ assign_enabled: true, assigns_user_url_path: "/" });

@@ -103,6 +103,9 @@ class TopicLinkClick < ActiveRecord::Base
       return nil
     end
 
+    guardian = args[:guardian]
+    return nil if guardian && !(guardian.can_see?(link.topic) && guardian.can_see?(link.post))
+
     return url if args[:user_id] && link.user_id == args[:user_id]
 
     # Rate limit the click counts to once in 24 hours

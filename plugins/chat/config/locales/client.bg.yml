@@ -44,6 +44,8 @@ bg:
       cancel: "Прекрати"
       cancel_reply: "Отмяна на отговора"
       chat_channels: "Канали"
+      pinned_bar:
+        title: "Закована"
       pinned: "Закована"
       browse_all_channels: "Преглед на всички канали"
       move_to_channel:
@@ -98,6 +100,8 @@ bg:
         filter_all: Всички
         filter_open: Отвори
         filter_closed: Затворена
+        filter_joined_all: "Всички"
+        filter_joined_joined: "Присъединен"
       chat_message_separator:
         today: Днес
         yesterday: Вчера
@@ -119,7 +123,11 @@ bg:
       direct_message_creator:
         title: Ново Съобщение
         prefix: "До:"
+      channel:
+        preview_card:
+          log_in: "Вход"
       create_channel:
+        description: "Описание"
         type: "Тип"
         types:
           category: "Категория"

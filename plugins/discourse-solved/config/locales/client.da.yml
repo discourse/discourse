@@ -5,6 +5,19 @@
 # https://translate.discourse.org/
 
 da:
+  admin_js:
+    admin:
+      dashboard:
+        sections:
+          support:
+            answerers:
+              staff: "Personale"
+              member: "Brugere"
+              basic: "Basis"
+            response_time:
+              buckets:
+                lt_1h: "< 1 time"
+                gt_24h: "> 24 timer"
   js:
     notifications:
       alt:
@@ -34,6 +47,8 @@ da:
       move_post_cancel: "Annuller"
       confirm_solved_removal_confirm: "Bekræft"
       confirm_solved_removal_cancel: "Annuller"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Er dit spørgsmål blevet besvaret?
         description: "Fremhæv svaret og hjælp andre ved at bruge løsningsknappen under det korrekte svar."

@@ -557,7 +557,7 @@ export default class KeyboardShortcutLib extends Service {
       }
     }
 
-    let next = selected;
+    let next;
     let newIndex = posts.indexOf(selected);
     while (true) {
       newIndex += direction;

@@ -62,6 +62,8 @@ sv:
     more_than_two_dates: "Ett inlägg i ett kalenderämne får inte innehålla mer än två datum."
     event_expired: "Evenemanget har upphört"
   discourse_post_event:
+    event_excerpt:
+      date_format: "%B %-d, %Y"
     notifications:
       before_event_reminder: "%{title} är på väg att börja."
       after_event_reminder: "%{title} har avslutats."

@@ -11,3 +11,13 @@ pt:
         feed_url: URL
         discourse_category: Categoria
         discourse_tags: Etiquetas
+        feeds:
+          edit: Editar
+          delete: Eliminar
+          save: Guardar
+        test:
+          title: Pré-visualização
+          dismiss: Ignorar
+        status:
+          enabled: Ativado
+          disabled: Desativado

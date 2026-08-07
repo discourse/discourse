@@ -36,6 +36,15 @@ module DiscourseAi
             }
           end
 
+        DiscourseAi::Completions::NativeTools.all.each do |native_tool|
+          tools << {
+            id: "#{DiscourseAi::Completions::NativeTools::PREFIX}#{native_tool.id}",
+            name: native_tool.name,
+            help: native_tool.help,
+            native: true,
+          }
+        end
+
         llms = DiscourseAi::Configuration::LlmEnumerator.values_for_serialization
         mcp_servers =
           AiMcpServer
@@ -72,6 +81,7 @@ module DiscourseAi
         ai_agent = AiAgent.new(params.except(:rag_uploads))
 
         if ai_agent.save
+          ensure_ai_agent_user(ai_agent)
           if mcp_server_ids
             sync_mcp_server_assignments(ai_agent, mcp_server_ids, mcp_server_tool_names)
           end
@@ -96,6 +106,7 @@ module DiscourseAi
         initial_attributes = @ai_agent.attributes.dup
 
         if @ai_agent.update(params.except(:rag_uploads))
+          ensure_ai_agent_user(@ai_agent)
           if mcp_server_ids
             sync_mcp_server_assignments(@ai_agent, mcp_server_ids, mcp_server_tool_names)
           end
@@ -427,6 +438,17 @@ module DiscourseAi
         ai_agent_params[:rag_uploads].to_a.map { |h| h[:id] }
       end
 
+      def ensure_ai_agent_user(agent)
+        return if agent.system? || agent.user_id.present? || !agent_needs_user?(agent)
+
+        agent.create_user!
+      end
+
+      def agent_needs_user?(agent)
+        agent.force_default_llm? || agent.allow_topic_mentions? ||
+          agent.allow_chat_direct_messages? || agent.allow_chat_channel_mentions?
+      end
+
       def ai_agent_params
         payload = ai_agent_payload
         permitted =
@@ -438,9 +460,9 @@ module DiscourseAi
             :priority,
             :top_p,
             :temperature,
+            :thinking_effort,
             :default_llm_id,
             :user_id,
-            :max_context_posts,
             :vision_enabled,
             :vision_max_pixels,
             :rag_chunk_tokens,
@@ -454,7 +476,6 @@ module DiscourseAi
             :show_thinking,
             :forced_tool_count,
             :force_default_llm,
-            :execution_mode,
             :max_turn_tokens,
             :compression_threshold,
             :require_approval,
@@ -619,8 +640,6 @@ module DiscourseAi
           },
           user_id: {
           },
-          max_context_posts: {
-          },
           vision_enabled: {
           },
           vision_max_pixels: {
@@ -647,8 +666,6 @@ module DiscourseAi
           forced_tool_count: {
           },
           force_default_llm: {
-          },
-          execution_mode: {
           },
           max_turn_tokens: {
           },

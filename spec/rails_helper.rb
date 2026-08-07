@@ -61,6 +61,8 @@ require_relative "helpers/redis_snapshot_helper"
 if ENV["LOAD_PLUGINS"] == "1"
   Dir[Rails.root.join("plugins/*/spec/plugin_helper.rb")].each { |f| require f }
 
+  Dir[Rails.root.join("plugins/*/spec/support/**/*.rb")].sort.each { |f| require f }
+
   Dir[Rails.root.join("plugins/*/spec/fabricators/**/*.rb")].each { |f| require f }
 
   Dir[Rails.root.join("plugins/*/spec/system/page_objects/**/*.rb")].each { |f| require f }
@@ -177,7 +179,7 @@ RSpec.configure do |config|
 
   config.before(:each, type: :system) do |example|
     SystemDrivers.preload_model_schemas!
-    SystemDrivers.register!(color_scheme: example.metadata[:color_scheme])
+    SystemDrivers.register!(example)
     driven_by SystemDrivers.driver_for(example)
 
     setup_system_test
@@ -203,8 +205,8 @@ RSpec.configure do |config|
 
   config.before(:each) do |example|
     if example.metadata[:type] != :system
-      EmberCli.stubs(:read_manifest!).returns(nil)
-      EmberCli.stubs(:script_chunks).returns({})
+      EmberAssets.stubs(:read_manifest!).returns(nil)
+      EmberAssets.stubs(:script_chunks).returns({})
     end
   end
 

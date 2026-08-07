@@ -70,7 +70,6 @@ sl:
     messages:
       taken: "je že uporabljeno"
       exclusion: je rezervirano
-      has_already_been_used: "je že v uporabi"
       inclusion: ni vključeno na seznam
       invalid: je neveljavno
       is_invalid_meaningful: "zdi se nejasno, večina besed vsebuje iste črke znova in znova?"
@@ -230,6 +229,11 @@ sl:
       admins: "administratorji"
       moderators: "moderatorji"
       staff: "osebje"
+    default_full_names:
+      everyone: "Vsi"
+      admins: "Administratorji"
+      moderators: "Moderatorji"
+      staff: "Osebje"
   education:
     until_posts:
       one: "%{count} prispevek"
@@ -573,6 +577,9 @@ sl:
       confirm_title: Nadaljujte na %{site_name}
       logging_in_as: Prijava kot %{username}
       confirm_button: Zaključi prijavo
+    device:
+      code: "Koda"
+      continue: "Nadaljuj"
   flags:
     errors:
       already_handled: "Prijava je bila že obdelana"
@@ -622,6 +629,7 @@ sl:
       labels:
         count: "Člani"
         share: "Deli"
+        signups: "Registracije"
       levels:
         "0": "Novi"
         "1": "Osnovni uporabnik"
@@ -753,6 +761,9 @@ sl:
       topic: "Rezultati"
       user: "Uporabniki"
     results_page: "Zadetki iskanja za '%{term}'"
+  posts_filter:
+    description:
+      order_latest_topic: "Zadnje teme"
   original_poster: "Originalni avtor"
   most_recent_poster: "Zadnji odgovarja"
   frequent_poster: "Pogosto odgovarja"
@@ -1956,6 +1967,8 @@ sl:
               private:
                 label: "Zasebni"
   onebox:
+    google_meet:
+      meeting_code: "Koda:"
     github:
       closed: "zaprto"
       status_date:
@@ -2042,7 +2055,6 @@ sl:
           complete: "Uporabnik izbrisan."
         block:
           title: "Izbriši in blokiraj uporabnika"
-          description: "Ta uporabnik bo izbrisan in njegov IP naslov in e-naslov bo blokiran."
       confirm_spam:
         title: "Da"
       not_spam:

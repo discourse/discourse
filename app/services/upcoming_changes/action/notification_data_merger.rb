@@ -9,6 +9,8 @@
 # UpcomingChanges::NotifyPromotion, and only unread notifications are considered
 # for merging.
 class UpcomingChanges::Action::NotificationDataMerger < Service::ActionBase
+  MAX_STORED_NAMES = 5
+
   option :existing_notification_data
   option :new_change_name
 
@@ -30,8 +32,8 @@ class UpcomingChanges::Action::NotificationDataMerger < Service::ActionBase
     end
 
     {
-      upcoming_change_names: merged_names,
-      upcoming_change_humanized_names: merged_humanized,
+      upcoming_change_names: merged_names.first(MAX_STORED_NAMES),
+      upcoming_change_humanized_names: merged_humanized.first(MAX_STORED_NAMES),
       count: merged_names.size,
     }
   end

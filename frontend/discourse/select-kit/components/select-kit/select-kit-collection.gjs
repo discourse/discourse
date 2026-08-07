@@ -17,7 +17,7 @@ export default class SelectKitCollection extends Component {
     }
 
     const isChildOfLock = getLockState().lockedElements.some((locked) =>
-      locked.targetElement.contains(element)
+      (locked.targetElement ?? locked).contains(element)
     );
 
     if (isChildOfLock) {

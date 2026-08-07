@@ -13,6 +13,12 @@ export default class ChatNewMessageRoute extends DiscourseRoute {
   @service router;
 
   async beforeModel(transition) {
+    if (!this.currentUser) {
+      transition.abort();
+      this.router.transitionTo("chat.channels");
+      return;
+    }
+
     const params = this.paramsFor(this.routeName);
     const recipients = params.recipients?.split(",");
 

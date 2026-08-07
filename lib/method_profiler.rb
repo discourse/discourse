@@ -2,6 +2,14 @@
 
 # see https://samsaffron.com/archive/2017/10/18/fastest-way-to-profile-a-method-in-ruby
 class MethodProfiler
+  def self.register_instrumentation_callback(callback)
+    @instrumentation_callback = callback
+  end
+
+  def self.instrumentation_callback
+    @instrumentation_callback
+  end
+
   def self.patch(klass, methods, name, no_recurse: false)
     patches =
       methods
@@ -24,9 +32,11 @@ class MethodProfiler
             start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
             #{method_name}__mp_unpatched(*args, **kwargs, &blk)
           ensure
+            elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
             data = (prof[:#{name}] ||= {duration: 0.0, calls: 0})
-            data[:duration] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+            data[:duration] += elapsed
             data[:calls] += 1
+            MethodProfiler.instrumentation_callback&.call(:#{name}, self, args, data, elapsed)
             #{"@mp_recurse_protect_#{method_name} = false" if no_recurse}
           end
         end

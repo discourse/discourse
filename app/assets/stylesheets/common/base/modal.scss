@@ -166,18 +166,23 @@ html:not(.keyboard-visible).mobile-device {
       display: none;
     }
 
-    input {
+    input:where(:not(.form-kit__control-input)) {
       width: auto;
 
       &[type="text"],
-      &[type="password"] {
+      &[type="password"],
+      &[type="number"],
+      &[type="email"] {
         width: 100%;
       }
     }
 
     textarea {
       width: 100%;
-      height: 80px;
+
+      &:not(.--expandable) {
+        height: 80px;
+      }
     }
 
     .password-confirmation {

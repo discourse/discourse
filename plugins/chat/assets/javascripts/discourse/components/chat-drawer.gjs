@@ -34,7 +34,7 @@ export default class ChatDrawer extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
 
-    if (!this.chat.userCanChat) {
+    if (!this.chat.userCanChat && !this.chat.anonymousUserCanViewPublicChat) {
       return;
     }
 
@@ -59,7 +59,7 @@ export default class ChatDrawer extends Component {
   willDestroyElement() {
     super.willDestroyElement(...arguments);
 
-    if (!this.chat.userCanChat) {
+    if (!this.chat.userCanChat && !this.chat.anonymousUserCanViewPublicChat) {
       return;
     }
 

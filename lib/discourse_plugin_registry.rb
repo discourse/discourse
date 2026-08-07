@@ -124,6 +124,7 @@ class DiscoursePluginRegistry
 
   define_filtered_register :stats
   define_filtered_register :admin_dashboard_highlight_kpis
+  define_filtered_register :admin_dashboard_sections
   define_filtered_register :bookmarkables
   define_filtered_register :admin_dashboard_report_sources
 
@@ -137,9 +138,13 @@ class DiscoursePluginRegistry
 
   define_filtered_register :flag_applies_to_types
 
+  define_filtered_register :upcoming_change_conditional_display_callbacks
+
   define_filtered_register :calendar_subscription_feeds
 
   define_filtered_register :custom_filter_mappings
+
+  define_filtered_register :acl_target_classes
 
   define_filtered_register :reviewable_types do |singleton|
     singleton.define_singleton_method("reviewable_types_lookup") do

@@ -15,6 +15,17 @@ ja:
           kpi:
             accepted_solutions:
               label: "受け入れられた解決策"
+        sections:
+          support:
+            title: "支援する"
+            answerers:
+              staff: "スタッフ"
+              member: "メンバー"
+              basic: "ベーシック"
+            response_time:
+              buckets:
+                lt_1h: "< １時間"
+                gt_24h: "> 24 時間"
   js:
     notifications:
       alt:
@@ -46,6 +57,8 @@ ja:
       move_post_cancel: "キャンセル"
       confirm_solved_removal_confirm: "確認"
       confirm_solved_removal_cancel: "キャンセル"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: 質問の回答は得られましたか？
         description: "適切な返信の下にある解決策ボタンを使って回答をハイライトし、他のユーザーを助けましょう。"

@@ -7,10 +7,11 @@ describe Jobs::PostLocalizationBackfill do
     enable_current_plugin
     assign_fake_provider_to(:ai_default_llm_model)
     SiteSetting.ai_translation_backfill_hourly_rate = 100
-    SiteSetting.ai_translation_backfill_max_age_days = 100
+    SiteSetting.ai_translation_backfill_start_date = 100.days.ago.utc.to_date.iso8601
     SiteSetting.content_localization_supported_locales = "en"
     SiteSetting.ai_translation_enabled = true
-    SiteSetting.ai_translation_excluded_categories = ""
+    SiteSetting.ai_translation_category_scope = "all"
+    SiteSetting.ai_translation_categories = ""
   end
 
   it "does not enqueue post translation when translator disabled" do

@@ -37,12 +37,31 @@ module("Unit | lib | discourse-workflows | buildScope", function () {
     assert.strictEqual(scope.$json.post.raw, "");
   });
 
-  test("trigger aliases $json", function (assert) {
+  test("$trigger resolves to the trigger node output, distinct from $json", function (assert) {
     const scope = buildScope({
-      inputFields: [{ key: "title", type: "string" }],
+      inputFields: [{ key: "current", type: "string" }],
+      ancestorNodes: [
+        {
+          node: { name: "Topic Created", type: "trigger:topic_created" },
+          fields: [{ key: "topic_title", type: "string" }],
+        },
+      ],
     });
 
-    assert.strictEqual(scope.trigger, scope.$json);
+    assert.strictEqual(scope.$trigger.topic_title, "");
+    // Distinct from the current input, and the bare `trigger` name is gone.
+    assert.notStrictEqual(scope.$trigger, scope.$json);
+    assert.strictEqual(scope.$json.topic_title, undefined);
+    assert.strictEqual(scope.trigger, undefined);
+  });
+
+  test("$trigger is an empty object when no trigger ancestor is known", function (assert) {
+    const scope = buildScope({
+      inputFields: [{ key: "current", type: "string" }],
+    });
+
+    assert.deepEqual(Object.keys(scope.$trigger), []);
+    assert.strictEqual(scope.trigger, undefined);
   });
 
   test("$input.item.json aliases $json", function (assert) {
@@ -311,6 +330,23 @@ module("Unit | lib | discourse-workflows | walkScope", function () {
       "a",
       "b",
     ]);
+  });
+
+  test("resolves array subscripts and bracket keys", function (assert) {
+    const scope = {
+      $json: { items: [{ id: 7 }, { id: 9 }], "weird key": "found" },
+    };
+    // Subscript on a nested property (the common array-index case).
+    assert.strictEqual(walkScope(scope, "$json.items[0].id"), 7);
+    assert.strictEqual(walkScope(scope, "$json.items[1].id"), 9);
+    // Bracket key on the root token.
+    assert.strictEqual(walkScope(scope, '$json["weird key"]'), "found");
+    // Known limitation: a bracket key containing a dot is split by the path
+    // parser, so it does not resolve (would need a bracket-aware tokenizer).
+    assert.strictEqual(
+      walkScope({ $json: { "a.b": 1 } }, '$json["a.b"]'),
+      undefined
+    );
   });
 
   test("resolves boolean values", function (assert) {

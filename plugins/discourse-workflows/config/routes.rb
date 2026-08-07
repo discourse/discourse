@@ -21,11 +21,16 @@ DiscourseWorkflows::Engine.routes.draw do
             execution_id: /\d+/,
           }
       get "/workflows/:id/settings" => "admin#index", :constraints => { id: /\d+/ }
+      get "/workflows/:id/versions" => "admin#index", :constraints => { id: /\d+/ }
     end
 
     scope format: :json do
       get "/workflows" => "workflows#index"
       post "/workflows" => "workflows#create"
+      get "/workflow-tags" => "workflow_tags#index"
+      post "/workflows/ai/author" => "ai_authoring#create"
+      post "/workflows/:workflow_id/ai/author" => "ai_authoring#create"
+      post "/workflows/:workflow_id/ai/apply" => "ai_authoring#apply"
       get "/workflows/:id" => "workflows#show"
       put "/workflows/:id" => "workflows#update"
       post "/workflows/:id/discard-draft" => "workflows#discard_draft"
@@ -41,13 +46,20 @@ DiscourseWorkflows::Engine.routes.draw do
       get "/templates" => "templates#index"
       get "/templates/:id" => "templates#show"
       post "/executions" => "executions#create"
+      post "/step-executions" => "step_executions#create"
       get "/executions" => "executions#index"
       get "/workflows/:workflow_id/executions" => "executions#index"
+      get "/workflows/:workflow_id/versions" => "workflow_versions#index"
+      post "/workflows/:workflow_id/versions/:version_id/restore" => "workflow_versions#restore",
+           :constraints => {
+             version_id: /[0-9a-f-]{36}/,
+           }
       delete "/executions" => "executions#destroy"
       get "/executions/:id" => "executions#show"
       get "/stats" => "stats#index"
       get "/stats/:workflow_id" => "stats#index"
       post "/expressions/evaluate" => "expressions#evaluate"
+      post "/node-previews" => "node_previews#create"
       get "/variables" => "variables#index"
       post "/variables" => "variables#create"
       put "/variables/:id" => "variables#update"
@@ -75,6 +87,8 @@ DiscourseWorkflows::Engine.routes.draw do
 
   scope "/discourse-workflows", defaults: { format: :json } do
     post "/trigger-topic-admin-button" => "topic_admin_button#create"
+    post "/trigger-post-button" => "post_button#create"
+    post "/modal-responses" => "modal_responses#create"
   end
 
   scope "/workflows", defaults: { format: :json } do

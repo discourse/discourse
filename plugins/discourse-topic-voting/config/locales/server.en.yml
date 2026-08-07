@@ -7,6 +7,7 @@ en:
 
   site_settings:
     enable_ideas_category_type_setup: "Enables the Ideas category type option during category creation setup."
+    enable_topic_voting_badges: "Enables the Topic Voting badges awarded to members when others vote for their ideas."
     topic_voting_enabled: 'Allow users to vote on topics?'
     topic_voting_enable_vote_limits: 'Limit the number of votes per user based on trust level'
     topic_voting_tl0_vote_limit: 'How many active votes are TL0 users allowed?'

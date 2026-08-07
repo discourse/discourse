@@ -7,7 +7,7 @@ const DExpandingTextArea = <template>
       {{(if @autoFocus dAutoFocus)}}
       {{! deprecated args: }}
       autocorrect={{@autocorrect}}
-      class={{@class}}
+      class="--expandable {{@class}}"
       maxlength={{@maxlength}}
       name={{@name}}
       rows={{@rows}}

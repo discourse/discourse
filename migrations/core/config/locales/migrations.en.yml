@@ -1,20 +1,36 @@
 en:
   progressbar:
+    counting: "counting…"
+    eta: "ETA"
+    failed: "failed"
+    interrupted: "interrupted"
+    interrupted_at: "interrupted at %{percent}%"
+    processed: "processed"
     skips:
-      one: "%{count} skip"
-      other: "%{count} skips"
+      one: "%{number} skip"
+      other: "%{number} skips"
     warnings:
-      one: "%{count} warning"
-      other: "%{count} warnings"
+      one: "%{number} warning"
+      other: "%{number} warnings"
     errors:
-      one: "%{count} error"
-      other: "%{count} errors"
-    estimated: "ETA: %{duration}"
-    elapsed: "Time: %{duration}"
-    processed:
-      progress: "Processed: %{current}"
-      progress_with_max: "Processed: %{current} / %{max}"
+      one: "%{number} error"
+      other: "%{number} errors"
+    finishing_up: "Finishing up…"
+    total: "Total"
+    steps:
+      one: "%{number} step"
+      other: "%{number} steps"
+    steps_failed: "%{number} failed"
+    steps_skipped: "%{number} skipped"
+
+  cli:
+    aborted: "Aborted"
 
   converter:
     default_step_title: "Converting %{type}"
     max_progress_calculation: "Calculating items took %{duration}"
+    errors:
+      header: "The conversion finished with errors:"
+      step_failed: "%{title} failed: %{error_class}: %{error_message}"
+      step_skipped: "%{title} was skipped because a dependency failed."
+      finalization_failed: "Error while finishing up: %{error_class}: %{error_message}"

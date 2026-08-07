@@ -167,8 +167,12 @@ class UserHistory < ActiveRecord::Base
         upcoming_change_toggled: 122,
         change_site_setting_groups: 123,
         upcoming_change_available: 124,
-        notified_about_composer_education: 125,
+        notified_about_composer_education: 125, # not used anymore
         recover_post: 126,
+        change_access_control_list_permissions: 127,
+        admin_onboarding_step_completed: 128,
+        admin_onboarding_completed: 129,
+        admin_onboarding_dismissed: 130,
       )
   end
 
@@ -275,6 +279,8 @@ class UserHistory < ActiveRecord::Base
       deleted_tag
       chat_channel_status_change
       chat_auto_remove_membership
+      poll_closed
+      poll_opened
       create_watched_word_group
       update_watched_word_group
       delete_watched_word_group
@@ -297,6 +303,10 @@ class UserHistory < ActiveRecord::Base
       upcoming_change_toggled
       change_site_setting_groups
       upcoming_change_available
+      change_access_control_list_permissions
+      admin_onboarding_step_completed
+      admin_onboarding_completed
+      admin_onboarding_dismissed
     ]
   end
 

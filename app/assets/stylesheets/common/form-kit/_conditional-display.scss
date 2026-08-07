@@ -3,7 +3,7 @@
 .form-kit__conditional-display {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-4);
 
   &-content {
     display: flex;
@@ -55,6 +55,17 @@
     &.--disabled {
       color: var(--primary-medium);
       cursor: not-allowed;
+    }
+
+    // Like --disabled, but the option stays clickable.
+    &.--locked {
+      color: var(--primary-medium);
+      background: var(--d-input-bg-color--disabled);
+
+      .d-icon {
+        color: currentcolor;
+        display: inline-block;
+      }
     }
 
     .d-icon {

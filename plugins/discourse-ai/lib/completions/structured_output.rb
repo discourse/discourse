@@ -58,6 +58,7 @@ module DiscourseAi
         if @partial_json_tracker.broken?
           if @done
             return nil if @type_map[prop_name.to_sym].nil?
+            log_broken_stream
             return(
               DiscourseAi::Utils::BestEffortJsonParser.extract_key(
                 @raw_response,
@@ -89,6 +90,17 @@ module DiscourseAi
         return if !@property_names.include?(key_sym)
 
         @tracked[key_sym] = value
+      end
+
+      private
+
+      def log_broken_stream
+        return if @broken_logged
+        @broken_logged = true
+        Rails.logger.warn(
+          "Discourse AI: structured output response was not valid JSON, " \
+            "falling back to best-effort parsing (#{@raw_response.bytesize} bytes)",
+        )
       end
     end
   end

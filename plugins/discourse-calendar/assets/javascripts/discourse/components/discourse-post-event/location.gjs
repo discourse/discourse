@@ -1,14 +1,32 @@
-import DCookText from "discourse/ui-kit/d-cook-text";
+import Component from "@glimmer/component";
+import { trustHTML } from "@ember/template";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import openLinksInNewTab from "discourse/plugins/discourse-calendar/discourse/modifiers/open-links-in-new-tab";
 
-const DiscoursePostEventLocation = <template>
-  {{#if @location}}
-    <section class="event__section event-location">
-      {{dIcon "location-pin"}}
+const BARE_URL_REGEX = /^https?:\/\/\S+$/;
 
-      <DCookText @rawText={{@location}} />
-    </section>
-  {{/if}}
-</template>;
+export default class DiscoursePostEventLocation extends Component {
+  get isBareLivestreamUrl() {
+    return (
+      this.args.event?.isZoomLivestream &&
+      BARE_URL_REGEX.test(this.args.event.location ?? "")
+    );
+  }
 
-export default DiscoursePostEventLocation;
+  get locationHtml() {
+    return this.isBareLivestreamUrl ? null : this.args.event?.locationHtml;
+  }
+
+  <template>
+    {{#if this.locationHtml}}
+      <section class="event__section event-location">
+        {{dIcon "location-pin"}}
+
+        <span
+          class="event-location__text"
+          {{openLinksInNewTab this.locationHtml}}
+        >{{trustHTML this.locationHtml}}</span>
+      </section>
+    {{/if}}
+  </template>
+}

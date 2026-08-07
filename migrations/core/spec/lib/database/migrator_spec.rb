@@ -75,22 +75,4 @@ RSpec.describe Migrations::Database::Migrator do
       end
     end
   end
-
-  describe "#reset!" do
-    it "deletes all DB related files" do
-      migrate(migrations_directory: "invalid", ignore_errors: true) do |db_path, storage_path|
-        File.write(File.join(storage_path, "hello_world.txt"), "Hello World!")
-
-        expect(Dir.children(storage_path)).to contain_exactly(
-          "intermediate.db",
-          "intermediate.db-shm",
-          "intermediate.db-wal",
-          "hello_world.txt",
-        )
-
-        described_class.new(db_path).reset!
-        expect(Dir.children(storage_path)).to contain_exactly("hello_world.txt")
-      end
-    end
-  end
 end

@@ -70,6 +70,8 @@ hy:
       topic: "Թեմա"
       post: "Գրառում"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "Վերագրված"
       assign_topic:
         operations:
           assign: "Վերագրել"

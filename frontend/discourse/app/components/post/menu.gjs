@@ -40,7 +40,6 @@ import PostMenuReplyButton from "./menu/buttons/reply";
 import PostMenuShareButton from "./menu/buttons/share";
 import PostMenuShowMoreButton from "./menu/buttons/show-more";
 
-const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
 
 const buttonKeys = Object.freeze({
@@ -93,9 +92,7 @@ export default class PostMenu extends Component {
     true,
     this.#prepareStaticMethodsState({ collapsed: true })
   );
-  @tracked isWhoLikedVisible = false;
-  @tracked likedUsers = [];
-  @tracked totalLikedUsers;
+
   @tracked isWhoReadVisible = false;
   @tracked readers = [];
   @tracked totalReaders;
@@ -117,7 +114,6 @@ export default class PostMenu extends Component {
       showMoreActions: this.showMoreActions,
       showLogin: this.args.showLogin,
       toggleReplies: this.args.toggleReplies,
-      toggleWhoLiked: this.toggleWhoLiked,
       toggleWhoRead: this.toggleWhoRead,
     };
   }
@@ -428,10 +424,6 @@ export default class PostMenu extends Component {
     return this.registeredButtons.get(buttonKeys.SHOW_MORE);
   }
 
-  get remainingLikedUsers() {
-    return this.totalLikedUsers - this.likedUsers.length;
-  }
-
   get remainingReaders() {
     return this.totalReaders - this.readers.length;
   }
@@ -473,10 +465,6 @@ export default class PostMenu extends Component {
         }
 
         await this.args.toggleLike();
-
-        if (!this.collapsed) {
-          await this.#fetchWhoLiked();
-        }
       },
       this.staticMethodsArgs
     );
@@ -523,23 +511,12 @@ export default class PostMenu extends Component {
     this.collapsed = false;
 
     const fetchData = [
-      !this.isWhoLikedVisible && this.#fetchWhoLiked(),
       !this.isWhoReadVisible &&
         this.args.showReadIndicator &&
         this.#fetchWhoRead(),
     ].filter(Boolean);
 
     await Promise.all(fetchData);
-  }
-
-  @action
-  toggleWhoLiked() {
-    if (this.isWhoLikedVisible) {
-      this.isWhoLikedVisible = false;
-      return;
-    }
-
-    this.#fetchWhoLiked();
   }
 
   @action
@@ -568,17 +545,6 @@ export default class PostMenu extends Component {
       );
   }
 
-  async #fetchWhoLiked() {
-    const users = await this.store.find("post-action-user", {
-      id: this.args.post.id,
-      post_action_type_id: LIKE_ACTION,
-    });
-
-    this.likedUsers = users.content.map(smallUserAttrs);
-    this.totalLikedUsers = users.totalRows;
-    this.isWhoLikedVisible = true;
-  }
-
   async #fetchWhoRead() {
     const users = await this.store.find("post-reader", {
       id: this.args.post.id,
@@ -595,9 +561,9 @@ export default class PostMenu extends Component {
       collapsed: collapsed ?? this.collapsed,
       currentUser: this.currentUser,
       filteredRepliesView: this.args.filteredRepliesView,
-      isWhoLikedVisible: this.isWhoLikedVisible,
       isWhoReadVisible: this.isWhoReadVisible,
       isWikiMode: this.isWikiMode,
+      nestedReplyView: this.args.nestedReplyView,
       repliesShown: this.args.repliesShown,
       repliesButtonDisabled: this.args.repliesButtonDisabled,
       replyDirectlyBelow:

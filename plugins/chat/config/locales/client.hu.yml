@@ -75,6 +75,8 @@ hu:
         close: "Rögzített üzenetek bezárása"
         pinned_by_you: "Általad rögzített"
         pinned_by_user: "%{username} által rögzítve"
+      pinned_bar:
+        title: "Kiemelt"
       no_pinned_messages: "Nincs rögzített üzenet ebben a csatornában."
       pin_message: "Üzenet rögzítése"
       unpin_message: "Üzenet rögzítésének feloldása"
@@ -166,12 +168,6 @@ hu:
         never: "Soha"
       separate_sidebar_mode:
         title: "Külön oldalsávos módok megjelenítése a fórum és a chat számára"
-      send_shortcut:
-        title: "Parancsikon küldése"
-        enter:
-          label: "Küldés Enterrel"
-        meta_enter:
-          label: "Küldés %{meta_key} + Enterrel"
       enable: "Csevegés engedélyezése"
       flag: "Megjelölés"
       emoji: "Emodzsi beszúrása"
@@ -214,8 +210,6 @@ hu:
       no_public_channels_cta: "Csatornák böngészése"
       kicked_from_channel: "Ezt a csatornát már nem tudja elérni."
       chat_notifications_title: "Csevegési értesítések"
-      only_chat_push_notifications:
-        title: "Csak csevegési leküldéses értesítések küldése"
       personalization_title: "Személyre szabás"
       ignore_channel_wide_mention:
         title: "A csatornaszintű említések figyelmen kívül hagyása"
@@ -264,8 +258,6 @@ hu:
         title: "Asztali csevegőértesítés hangja"
       sounds:
         none: "Egyik sem"
-        bell: "Harang"
-        ding: "Csengettyű"
       title: "csevegés"
       title_capitalized: "Csevegés"
       upload: "Fájl csatolása"
@@ -296,6 +288,8 @@ hu:
         filter_closed: Lezárt
         filter_archived: Archivált
         filter_input_placeholder: Csatorna keresése név szerint
+        filter_joined_all: "Összes"
+        filter_joined_joined: "Csatlakozott"
       chat_message_separator:
         today: Ma
         yesterday: Tegnap
@@ -346,8 +340,6 @@ hu:
         input_placeholder: Név hozzáadása
         slug_description: Az URL-ben a csatornanév helyett egy csatorna azonosító szerepel
         name: Csatorna neve
-        slug: Csatornaazonosító (nem kötelező)
-        emoji: Csatorna emoji (opcionális)
         reset_emoji: Emoji visszaállítása
       channel_edit_description_modal:
         title: Leírás szerkesztése
@@ -369,6 +361,9 @@ hu:
         memberships_count:
           one: "%{count} tag"
           other: "%{count} tag"
+        preview_card:
+          log_in: "Bejelentkezés"
+          sign_up: "Regisztráció"
       create_channel:
         threading:
           label: "Szálak engedélyezése"
@@ -405,16 +400,14 @@ hu:
             one: 'A %{group} és a %{count} egyéb csoport felhasználói a <a href="%{settingLink}" target="_blank">biztonsági beállítások</a> szerint hozzáférhetnek ehhez a csatornához.'
             other: 'A %{group} és a %{count} egyéb csoport felhasználói a <a href="%{settingLink}" target="_blank">biztonsági beállítások</a> szerint hozzáférhetnek ehhez a csatornához.'
         create: "Csatorna létrehozása"
-        description: "Leírás (nem kötelező)"
+        description: "Leírás"
         name: "Csatorna neve"
-        slug: "Csatornaazonosító (nem kötelező)"
         title: "Új csatorna"
         type: "Típus"
         types:
           category: "Kategória"
           topic: "Téma"
         emoji:
-          label: "Csatorna emoji (opcionális)"
           reset: "Emoji visszaállítása"
       reviewable:
         type: "Csevegőüzenet"
@@ -741,6 +734,8 @@ hu:
     discourse_workflows:
       nodes:
         "action:send_chat_message": "Csevegőüzenet küldése"
+      chat_message_created:
+        channel_id: "Csatorna"
       send_chat_message:
         channel_id: "Csatorna"
         message: "Üzenet"

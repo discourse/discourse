@@ -93,6 +93,7 @@ class GithubLinkback
 
   def create
     return [] if SiteSetting.github_linkback_access_token.blank?
+    return [] if client.backing_off?
 
     links = []
 
@@ -101,14 +102,19 @@ class GithubLinkback
       return [] if links.length() > SiteSetting.github_linkback_maximum_links
 
       links.each do |link|
-        case link.type
-        when :commit
-          post_commit(link)
-        when :pr
-          post_pr_or_issue(link, :pr)
-        when :issue
-          post_pr_or_issue(link, :issue)
-        else
+        begin
+          case link.type
+          when :commit
+            post_commit(link)
+          when :pr
+            post_pr_or_issue(link, :pr)
+          when :issue
+            post_pr_or_issue(link, :issue)
+          else
+            next
+          end
+        rescue Discourse::GithubApi::Error => e
+          Rails.logger.warn("Failed to post GitHub linkback for #{link.url}: #{e.message}")
           next
         end
 
@@ -138,8 +144,6 @@ class GithubLinkback
 
     return if topic_already_linked_on_github?(link)
 
-    github_url =
-      "https://api.github.com/repos/#{link.project}/issues/#{pr_or_issue_number}/comments"
     comment =
       I18n.t(
         type == :pr ? "github_linkback.pr_template" : "github_linkback.issue_template",
@@ -147,13 +151,11 @@ class GithubLinkback
         post_url: "#{Discourse.base_url}#{@post.url}",
       )
 
-    Excon.post(github_url, body: { body: comment }.to_json, headers: headers)
+    client.post("/repos/#{link.project}/issues/#{pr_or_issue_number}/comments", { body: comment })
   end
 
   def post_commit(link)
     return if topic_already_linked_on_github?(link)
-
-    github_url = "https://api.github.com/repos/#{link.project}/commits/#{link.sha}/comments"
 
     comment =
       I18n.t(
@@ -162,7 +164,7 @@ class GithubLinkback
         post_url: "#{Discourse.base_url}#{@post.url}",
       )
 
-    Excon.post(github_url, body: { body: comment }.to_json, headers: headers)
+    client.post("/repos/#{link.project}/commits/#{link.sha}/comments", { body: comment })
   end
 
   def topic_already_linked_on_github?(link)
@@ -174,38 +176,22 @@ class GithubLinkback
       end
 
     texts.any? { |text| text_links_to_topic?(text) }
-  rescue Excon::Error
+  rescue Discourse::GithubApi::Error
     false
   end
 
   def fetch_commit_comment_texts(project, sha)
-    response =
-      Excon.get(
-        "https://api.github.com/repos/#{project}/commits/#{sha}/comments?per_page=100",
-        headers:,
-        expects: [200],
-      )
-    JSON.parse(response.body).map { |comment| comment["body"].to_s }
+    client
+      .get("/repos/#{project}/commits/#{sha}/comments", per_page: 100)
+      .map { |comment| comment["body"].to_s }
   end
 
   def fetch_pr_or_issue_texts(project, number)
-    issue_response =
-      Excon.get(
-        "https://api.github.com/repos/#{project}/issues/#{number}",
-        headers:,
-        expects: [200],
-      )
-
-    comments_response =
-      Excon.get(
-        "https://api.github.com/repos/#{project}/issues/#{number}/comments?per_page=100",
-        headers:,
-        expects: [200],
-      )
-
     [
-      JSON.parse(issue_response.body)["body"].to_s,
-      *JSON.parse(comments_response.body).map { |comment| comment["body"].to_s },
+      client.get("/repos/#{project}/issues/#{number}")["body"].to_s,
+      *client
+        .get("/repos/#{project}/issues/#{number}/comments", per_page: 100)
+        .map { |comment| comment["body"].to_s },
     ]
   end
 
@@ -220,11 +206,7 @@ class GithubLinkback
       end
   end
 
-  def headers
-    {
-      "Content-Type" => "application/json",
-      "Authorization" => "token #{SiteSetting.github_linkback_access_token}",
-      "User-Agent" => "Discourse-Github-Linkback",
-    }
+  def client
+    @client ||= Discourse::GithubApi.for(token: SiteSetting.github_linkback_access_token)
   end
 end

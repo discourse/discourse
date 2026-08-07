@@ -13,7 +13,7 @@ import SecondFactorForm from "discourse/components/second-factor-form";
 import SecurityKeyForm from "discourse/components/security-key-form";
 import valueEntered from "discourse/helpers/value-entered";
 import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import { isReadOnlyError, popupAjaxError } from "discourse/lib/ajax-error";
 import { escapeExpression } from "discourse/lib/utilities";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 import DPasswordField from "discourse/ui-kit/d-password-field";
@@ -23,6 +23,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class LocalLoginForm extends Component {
+  @service login;
   @service modal;
   @service siteSettings;
 
@@ -112,7 +113,12 @@ export default class LocalLoginForm extends Component {
         this.args.flashTypeChanged("success");
       }
     } catch (e) {
-      popupAjaxError(e);
+      if (isReadOnlyError(e)) {
+        this.args.flashChanged(this.login.readOnlyLoginMessage);
+        this.args.flashTypeChanged("error");
+      } else {
+        popupAjaxError(e);
+      }
     } finally {
       this.processingEmailLink = false;
     }
@@ -129,6 +135,12 @@ export default class LocalLoginForm extends Component {
   filledSecondFactorToken(otp) {
     this.args.secondFactorTokenChanged(otp);
     this.args.login();
+  }
+
+  @action
+  showCodeLogin(event) {
+    event?.preventDefault();
+    this.args.onShowCodeLogin();
   }
 
   @action
@@ -192,15 +204,26 @@ export default class LocalLoginForm extends Component {
             {{i18n "login.email_placeholder"}}
           </label>
           {{#if @canLoginLocalWithEmail}}
-            <a
-              href
-              class={{if @loginName "" "no-login-filled"}}
-              tabindex="3"
-              id="email-login-link"
-              {{on "click" this.emailLogin}}
-            >
-              {{i18n "email_login.login_link"}}
-            </a>
+            {{#if @onShowCodeLogin}}
+              <a
+                href
+                tabindex="3"
+                id="one-time-code-link"
+                {{on "click" this.showCodeLogin}}
+              >
+                {{i18n "code_login.email_me_code"}}
+              </a>
+            {{else}}
+              <a
+                href
+                class={{if @loginName "" "no-login-filled"}}
+                tabindex="3"
+                id="email-login-link"
+                {{on "click" this.emailLogin}}
+              >
+                {{i18n "email_login.login_link"}}
+              </a>
+            {{/if}}
           {{/if}}
         </div>
         <div class="input-group">

@@ -5,12 +5,18 @@ import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import domFromString from "discourse/lib/dom-from-string";
 import applyLightbox from "discourse/lib/lightbox";
-import { escapeExpression, optionalRequire } from "discourse/lib/utilities";
+import { escapeExpression } from "discourse/lib/utilities";
 import { and } from "discourse/truth-helpers";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import { i18n } from "discourse-i18n";
 import ChatUpload from "discourse/plugins/chat/discourse/components/chat-upload";
 import Collapser from "discourse/plugins/chat/discourse/components/collapser";
+import LazyVideo from "discourse/plugins/discourse-lazy-videos/discourse/components/lazy-video" with {
+  discourseImport: "optional",
+};
+import getVideoAttributes from "discourse/plugins/discourse-lazy-videos/lib/lazy-video-attributes" with {
+  discourseImport: "optional",
+};
 
 export default class ChatMessageCollapser extends Component {
   @service siteSettings;
@@ -38,7 +44,7 @@ export default class ChatMessageCollapser extends Component {
   }
 
   get uploadsHeader() {
-    let name = "";
+    let name;
     if (this.args.uploads.length === 1) {
       const upload = this.args.uploads[0];
       name =
@@ -86,17 +92,7 @@ export default class ChatMessageCollapser extends Component {
     return [];
   }
 
-  get lazyVideoComponent() {
-    return optionalRequire(
-      "discourse/plugins/discourse-lazy-videos/discourse/components/lazy-video"
-    );
-  }
-
   lazyVideoCooked(elements) {
-    const getVideoAttributes = optionalRequire(
-      "discourse/plugins/discourse-lazy-videos/lib/lazy-video-attributes"
-    );
-
     return elements.reduce((acc, e) => {
       if (this.siteSettings.lazy_videos_enabled && lazyVideoPredicate(e)) {
         const videoAttributes = getVideoAttributes(e);
@@ -208,11 +204,9 @@ export default class ChatMessageCollapser extends Component {
               @header={{cooked.header}}
               @onToggle={{@onToggleCollapse}}
             >
-              {{#if (and cooked.videoAttributes this.lazyVideoComponent)}}
+              {{#if (and cooked.videoAttributes LazyVideo)}}
                 <div class="chat-message-collapser-lazy-video">
-                  <this.lazyVideoComponent
-                    @videoAttributes={{cooked.videoAttributes}}
-                  />
+                  <LazyVideo @videoAttributes={{cooked.videoAttributes}} />
                 </div>
               {{else}}
                 <DDecoratedHtml

@@ -12,7 +12,6 @@ export default class BulkInviteSampleCsvFile extends Component {
       ["my_awesome_group", "going"],
       ["lucy", "interested"],
       ["mark", "not_going"],
-      ["sam", "unknown"],
     ];
 
     let csv = "";

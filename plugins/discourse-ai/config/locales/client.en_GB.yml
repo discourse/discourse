@@ -13,6 +13,12 @@ en_GB:
             categories:
               label: "Categories"
     discourse_ai:
+      translations:
+        category_scope: "Categories"
+        model_progress:
+          targets:
+            category:
+              title: "Categories"
       usage:
         summary: "Summary"
       ai_agent:

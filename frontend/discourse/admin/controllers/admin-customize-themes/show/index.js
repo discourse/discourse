@@ -36,6 +36,14 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     return getURL(`/admin/themes/${this.model?.id}/preview`);
   }
 
+  @computed("model.remote_theme.remote_compat_ref", "model.remote_theme.branch")
+  get displayRemoteBranch() {
+    return (
+      this.model?.remote_theme?.remote_compat_ref ||
+      this.model?.remote_theme?.branch
+    );
+  }
+
   @computed("model.id", "model.locale")
   get getTranslationsUrl() {
     return getURL(

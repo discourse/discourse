@@ -111,6 +111,10 @@ module PageObjects
         page.has_no_css?(".ai-conversation-sidebar-link-menu__star-conversation")
       end
 
+      def has_star_conversation_menu_item?
+        page.has_css?(".ai-conversation-sidebar-link-menu__star-conversation")
+      end
+
       def has_no_sidebar_back_link?
         page.has_no_css?(".sidebar-sections__back-to-forum")
       end

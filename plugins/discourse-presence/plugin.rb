@@ -58,11 +58,19 @@ after_initialize do
         config.allowed_user_ids += topic.allowed_users.pluck(:id)
         config.allowed_group_ids += topic.allowed_groups.pluck(:id)
       elsif post.wiki
-        config.allowed_group_ids += SiteSetting.edit_wiki_post_allowed_groups_map
+        wiki_post_allowed_group_ids = SiteSetting.edit_wiki_post_allowed_groups_map
+        if secure_group_ids = topic.secure_group_ids
+          wiki_post_allowed_group_ids &= secure_group_ids
+        end
+        config.allowed_group_ids += wiki_post_allowed_group_ids
       end
 
       if !topic.private_message? && SiteSetting.edit_all_post_groups_map.present?
-        config.allowed_group_ids += SiteSetting.edit_all_post_groups_map
+        edit_all_post_group_ids = SiteSetting.edit_all_post_groups_map
+        if secure_group_ids = topic.secure_group_ids
+          edit_all_post_group_ids &= secure_group_ids
+        end
+        config.allowed_group_ids += edit_all_post_group_ids
       end
 
       if SiteSetting.enable_category_group_moderation? && topic.category

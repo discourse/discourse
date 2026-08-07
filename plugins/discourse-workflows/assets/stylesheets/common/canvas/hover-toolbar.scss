@@ -9,6 +9,7 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.15s;
+  z-index: calc(var(--z-canvas-elements) + 2);
 
   &.is-visible {
     opacity: 1;

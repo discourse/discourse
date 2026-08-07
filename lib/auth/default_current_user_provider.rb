@@ -44,6 +44,14 @@ class Auth::DefaultCurrentUserProvider
 
   TOKEN_SIZE = 32
 
+  def self.shared_session_redis_key(key)
+    "shared_session_user_auth_token_id:#{key}"
+  end
+
+  def self.store_shared_session_key(key, token_id)
+    Discourse.redis.setex(shared_session_redis_key(key), 7.days, token_id)
+  end
+
   PARAMETER_API_PATTERNS = [
     RouteMatcher.new(
       methods: :get,
@@ -101,9 +109,13 @@ class Auth::DefaultCurrentUserProvider
 
     # bypass if we have the shared session header
     if shared_key = @env["HTTP_X_SHARED_SESSION_KEY"]
-      uid = Discourse.redis.get("shared_session_key_#{shared_key}")
+      token_id = Discourse.redis.get(self.class.shared_session_redis_key(shared_key))
       user = nil
-      user = User.find_by(id: uid.to_i) if uid
+      if token_id
+        token = UserAuthToken.unexpired.find_by(id: token_id)
+        user = token&.user
+        user = nil if user && (user.suspended? || !user.active)
+      end
       @env[CURRENT_USER_KEY] = user
       return user
     end

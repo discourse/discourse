@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
@@ -10,12 +11,21 @@ import { i18n } from "discourse-i18n";
 
 const SORT_OPTIONS = [
   { value: "top", labelKey: "nested_replies.sort.top" },
+  { value: "hot", labelKey: "nested_replies.sort.hot" },
   { value: "new", labelKey: "nested_replies.sort.new" },
   { value: "old", labelKey: "nested_replies.sort.old" },
 ];
 
 export default class NestedSortSelector extends Component {
-  sortOptions = SORT_OPTIONS;
+  @service siteSettings;
+
+  get sortOptions() {
+    return SORT_OPTIONS.filter(
+      (option) =>
+        option.value !== "hot" ||
+        this.siteSettings.nested_replies_hot_sort_enabled
+    );
+  }
 
   get currentSortLabel() {
     const current = this.sortOptions.find(

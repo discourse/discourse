@@ -51,7 +51,7 @@ ru:
         channel: "Канал"
         description: "Описание"
         actions: "Действия"
-        settings: "настроек"
+        settings: "Настроек"
         no_channels: "В этой категории нет чат-каналов."
         no_channels_body: "В каждой категории можно создать несколько каналов, доступных одним и тем же участникам в зависимости от настроек безопасности категории. <a href='%{chatBrowseUrl}'>Создать канал чата</a>."
         include_subcategories: "Включить каналы подкатегорий"
@@ -77,6 +77,8 @@ ru:
         close: "Закрыть закрепленные сообщения"
         pinned_by_you: "Закреплено тобой"
         pinned_by_user: "Закреплено пользователем %{username}"
+      pinned_bar:
+        title: "Закреплена"
       no_pinned_messages: "В этом канале нет закрепленных сообщений."
       pin_message: "Закрепить сообщение"
       unpin_message: "Открепить сообщение"
@@ -174,11 +176,6 @@ ru:
         never: "Никогда"
       separate_sidebar_mode:
         title: "Показывать отдельные режимы боковой панели для форума и чата"
-      send_shortcut:
-        enter:
-          label: "Отправить с помощью Enter"
-        meta_enter:
-          label: "Отправить с помощью %{meta_key} + Enter"
       enable: "Включить чат"
       flag: "Пожаловаться"
       emoji: "Вставить эмодзи"
@@ -294,8 +291,6 @@ ru:
       no_public_channels_cta: "Просмотреть каналы"
       kicked_from_channel: "У вас больше нет доступа к этому каналу."
       chat_notifications_title: "Уведомления чата"
-      only_chat_push_notifications:
-        title: "Отправлять только push-уведомления в чате"
       personalization_title: "Персонализация"
       ignore_channel_wide_mention:
         title: "Игнорировать на канале массовые упоминания"
@@ -346,8 +341,6 @@ ru:
         title: "Звук уведомления"
       sounds:
         none: "Нет"
-        bell: "Колокольчик"
-        ding: "Звонок"
       title: "чат"
       title_capitalized: "Чат"
       upload: "Прикрепить файл"
@@ -380,6 +373,8 @@ ru:
         filter_closed: Закрытые
         filter_archived: Архивные
         filter_input_placeholder: Поиск канала по названию
+        filter_joined_all: "Все"
+        filter_joined_joined: "Регистрация"
       chat_message_separator:
         today: Сегодня
         yesterday: Вчера
@@ -430,8 +425,6 @@ ru:
         input_placeholder: Укажите название
         slug_description: Слаг канала используется в URL-адресе вместо названия канала.
         name: Название канала
-        slug: Слаг канала (необязательно)
-        emoji: Эмодзи канала (необязательно)
         reset_emoji: Сбросить эмодзи
       channel_edit_description_modal:
         title: Изменить описание
@@ -457,6 +450,9 @@ ru:
           few: "%{count} участника"
           many: "%{count} участников"
           other: "%{count} участников"
+        preview_card:
+          log_in: "Войти"
+          sign_up: "Регистрация"
       create_channel:
         threading:
           label: "Включить цепочки сообщений"
@@ -519,16 +515,14 @@ ru:
             many: 'Пользователи группы «%{group}» и ещё %{count} групп будут иметь доступ к этому каналу в соответствии с <a href="%{settingLink}" target="_blank">настройками безопасности</a>'
             other: 'Пользователи группы «%{group}» и ещё %{count} группы будут иметь доступ к этому каналу в соответствии с <a href="%{settingLink}" target="_blank">настройками безопасности</a>'
         create: "Создать канал"
-        description: "Описание (необязательно)"
+        description: "Описание"
         name: "Название канала"
-        slug: "Слаг канала (необязательно)"
         title: "Новый канал"
         type: "Тип"
         types:
           category: "Категория"
           topic: "Тема"
         emoji:
-          label: "Эмодзи канала (необязательно)"
           reset: "Сбросить эмодзи"
       reviewable:
         type: "Сообщение чата"
@@ -544,6 +538,12 @@ ru:
           other: "<span>Вы, %{commaSeparatedUsernames} и еще %{count} отреагировали с эмодзи </span>:%{emoji}:"
         single_user: "<span>%{username} отреагировал(-а) с эмодзи </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} и %{username} отреагировали с эмодзи </span>:%{emoji}:"
+        users_popup:
+          title:
+            one: "%{count} реакция"
+            few: "%{count} реакций"
+            many: "%{count} реакций"
+            other: "%{count} реакции"
         multiple_users_and_more:
           one: "<span>%{commaSeparatedUsernames} и еще %{count} отреагировали с эмодзи </span>:%{emoji}:"
           few: "<span>%{commaSeparatedUsernames} и еще %{count} отреагировали с эмодзи </span>:%{emoji}:"
@@ -872,11 +872,17 @@ ru:
         chat:
           label: "Чат"
     discourse_workflows:
+      node_unavailable:
+        requires_chat: "Для работы требуется включить плагин чата."
       nodes:
         "action:send_chat_message": "Отправить сообщение в чат"
+        "trigger:chat_message_created": "Сообщение в чате создано"
+      chat_message_created:
+        channel_id: "Канал"
       send_chat_message:
         channel_id: "Канал"
         message: "Сообщение"
       chat_approval:
         message: "Сообщение"
         channel_id: "Канал"
+        timeout_minutes: "Тайм-аут (минуты)"

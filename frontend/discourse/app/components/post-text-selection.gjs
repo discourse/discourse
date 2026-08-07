@@ -250,7 +250,9 @@ export default class PostTextSelection extends Component {
       return; // we changed the range here, so we want to go through the selection change handler again
     }
 
-    if (!window.getSelection().toString().trim().length) {
+    const selection = window.getSelection();
+
+    if (selection.isCollapsed || !selection.toString().trim().length) {
       return;
     }
 

@@ -25,7 +25,9 @@ class AdminUserListSerializer < BasicUserSerializer
              :staged,
              :second_factor_enabled,
              :can_be_deleted,
-             :silence_reason
+             :can_be_suspended,
+             :silence_reason,
+             :suspend_reason
 
   %i[days_visited posts_read_count topics_entered post_count].each do |sym|
     attributes sym
@@ -117,11 +119,27 @@ class AdminUserListSerializer < BasicUserSerializer
     @options[:include_can_be_deleted]
   end
 
+  def can_be_suspended
+    scope.can_suspend?(object) && !object.suspended?
+  end
+
+  def include_can_be_suspended?
+    @options[:include_can_be_suspended]
+  end
+
   def silence_reason
-    object.silence_reason
+    User.format_penalty_reason(@options[:silence_reasons].to_h[object.id])
   end
 
   def include_silence_reason?
     @options[:include_silence_reason]
+  end
+
+  def suspend_reason
+    User.format_penalty_reason(@options[:suspend_reasons].to_h[object.id])
+  end
+
+  def include_suspend_reason?
+    @options[:include_suspend_reason]
   end
 end

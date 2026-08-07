@@ -17,6 +17,25 @@ module DiscourseWorkflows
           capabilities: {
             run_scope: "per_item",
           },
+          output_contracts: [
+            {
+              schema: {
+                "$schema" => Schema::DRAFT_URI,
+                "type" => "object",
+                "properties" => {
+                  "topic_id" => {
+                    "type" => "integer",
+                  },
+                  "tag_names" => {
+                    "type" => "array",
+                    "items" => {
+                      "type" => "string",
+                    },
+                  },
+                },
+              },
+            },
+          ],
           properties: {
             operation: {
               type: :options,
@@ -43,7 +62,7 @@ module DiscourseWorkflows
               required: false,
               default: "system",
               ui: {
-                control: :user,
+                control: :actor,
               },
             },
           },

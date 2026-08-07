@@ -13,6 +13,7 @@ module DiscourseAi
             [
               DiscourseAi::Completions::Dialects::OpenAiResponses,
               DiscourseAi::Completions::Dialects::ChatGpt,
+              DiscourseAi::Completions::Dialects::GeminiInteractions,
               DiscourseAi::Completions::Dialects::Gemini,
               DiscourseAi::Completions::Dialects::Converse,
               DiscourseAi::Completions::Dialects::Claude,
@@ -20,6 +21,7 @@ module DiscourseAi
               DiscourseAi::Completions::Dialects::Ollama,
               DiscourseAi::Completions::Dialects::Mistral,
               DiscourseAi::Completions::Dialects::Nova,
+              DiscourseAi::Completions::Dialects::Vllm,
               DiscourseAi::Completions::Dialects::OpenAiCompatible,
             ]
           end
@@ -54,6 +56,12 @@ module DiscourseAi
 
         def tools
           @tools ||= tools_dialect.translated_tools
+        end
+
+        # provider-native built-in tools (e.g. web search) rendered into the
+        # request payload; the provider executes them server-side
+        def native_tools
+          []
         end
 
         def tool_choice
@@ -181,11 +189,42 @@ module DiscourseAi
           raise NotImplemented
         end
 
+        def max_prompt_tokens_with_reserved_output
+          reserved_output_tokens = opts[:reserved_output_tokens].to_i
+          return llm_model.max_prompt_tokens if reserved_output_tokens <= 0
+
+          [llm_model.max_prompt_tokens - reserved_output_tokens, 0].max
+        end
+
         attr_reader :prompt
 
         private
 
         attr_reader :opts, :llm_model
+
+        def user_id_for(msg)
+          msg[:id] if msg[:type].to_sym == :user && msg[:id].present?
+        end
+
+        def user_id_prefix(msg)
+          user_id = user_id_for(msg)
+          "#{user_id}: " if user_id
+        end
+
+        def prepend_user_id(content, msg)
+          prefix = user_id_prefix(msg)
+          return content unless prefix
+          return "#{prefix}#{content}" unless content.is_a?(Array)
+
+          content = content.dup
+          first_text_index = content.index { |item| item.is_a?(String) }
+          if first_text_index
+            content[first_text_index] = "#{prefix}#{content[first_text_index]}"
+          else
+            content.unshift(prefix)
+          end
+          content
+        end
 
         def strip_upload_markers(markdown, upload_shas)
           return markdown if markdown.blank? || upload_shas.blank?

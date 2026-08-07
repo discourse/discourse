@@ -7,6 +7,8 @@
   --topic-avatar-width: #{$topic-avatar-width};
   --d-border-radius: 4px;
   --d-border-radius-large: calc(var(--d-border-radius) * 2);
+  --d-border-radius-fixed: 4px; // very subtle soft borders that never make sense to change with global theming
+  --d-border-radius-pill: 1em; // pill-like elements that also shouldn't be influenced by normal border-radius
   --d-nav-pill-border-radius: var(--d-border-radius);
   --d-input-border-radius: var(--d-border-radius);
   --d-content-background: initial;

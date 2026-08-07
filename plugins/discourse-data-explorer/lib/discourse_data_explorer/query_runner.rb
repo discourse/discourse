@@ -15,7 +15,7 @@ module DiscourseDataExplorer
       result_json =
         ResultFormatConverter.convert(:json, result, query_params:, explain:, current_user:)
 
-      if cacheable?(query, explain:) && default_limit?(limit)
+      if query.id.present? && cacheable?(query, explain:) && default_limit?(limit)
         cache_key_params = resolve_params(query, raw_params)
         QueryResultCache.write(query.id, cache_key_params, result_json)
       end
@@ -23,10 +23,10 @@ module DiscourseDataExplorer
       result_json
     end
 
-    def self.cached_result(query, raw_params)
+    def self.cached_result(query, raw_params, max_age: nil)
       return nil unless cacheable?(query)
       params_hash = resolve_params(query, raw_params)
-      QueryResultCache.read(query.id, params_hash)
+      QueryResultCache.read(query.id, params_hash, max_age:)&.deep_symbolize_keys
     rescue MultiJson::ParseError
       nil
     end

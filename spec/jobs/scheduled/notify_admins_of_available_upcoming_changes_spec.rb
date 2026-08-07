@@ -184,6 +184,72 @@ RSpec.describe Jobs::NotifyAdminsOfAvailableUpcomingChanges do
     end
   end
 
+  context "when the changes were backfilled as already notified about" do
+    before do
+      SiteSetting.promote_upcoming_changes_on_status = :stable
+      UpcomingChangeEvent.delete_all
+      UpcomingChanges::Action::BackfillNotifiedEvents.call(
+        upcoming_change_names: %i[
+          test_upcoming_change
+          test_upcoming_change_b
+          test_upcoming_change_c
+        ],
+      )
+    end
+
+    it "sends no notifications, even once the site is no longer new" do
+      expect { result }.not_to change { Notification.count }
+    end
+
+    context "when a backfilled change later reaches the available status" do
+      before do
+        mock_upcoming_change_metadata(
+          {
+            test_upcoming_change_d: {
+              impact: "feature,all_members",
+              status: :experimental,
+              impact_type: "feature",
+              impact_role: "all_members",
+            },
+          },
+        )
+        UpcomingChanges::Action::BackfillNotifiedEvents.call(
+          upcoming_change_names: [:test_upcoming_change_d],
+        )
+
+        mock_upcoming_change_metadata(
+          {
+            test_upcoming_change_d: {
+              impact: "feature,all_members",
+              status: :beta,
+              impact_type: "feature",
+              impact_role: "all_members",
+            },
+          },
+        )
+        UpcomingChangeEvent.create!(
+          event_type: :status_changed,
+          upcoming_change_name: :test_upcoming_change_d,
+          event_data: {
+            previous_value: :experimental,
+            new_value: :beta,
+          },
+        )
+      end
+
+      it "notifies admins about it" do
+        result
+
+        expect(
+          Notification
+            .where(notification_type: Notification.types[:upcoming_change_available])
+            .where("data::text LIKE ?", "%test_upcoming_change_d%")
+            .count,
+        ).to eq(2)
+      end
+    end
+  end
+
   context "when an upcoming change has an old added event" do
     before { new_change_log.update!(created_at: 2.weeks.ago) }
 
@@ -324,6 +390,58 @@ RSpec.describe Jobs::NotifyAdminsOfAvailableUpcomingChanges do
     it "logs no admins_notifed_available_change events" do
       expect { result }.not_to change {
         UpcomingChangeEvent.where(event_type: :admins_notified_available_change).count
+      }
+    end
+  end
+
+  context "when an upcoming change is owned by a plugin that is not configurable" do
+    before do
+      UpcomingChanges.stubs(:owning_plugin_configurable?).with(anything).returns(true)
+      UpcomingChanges.stubs(:owning_plugin_configurable?).with(:test_upcoming_change).returns(false)
+    end
+
+    it "does not create a notification for the unavailable change but still notifies for others" do
+      result
+      data =
+        JSON.parse(
+          Notification
+            .where(notification_type: Notification.types[:upcoming_change_available])
+            .last
+            .data,
+          symbolize_names: true,
+        )
+      expect(data[:upcoming_change_names]).to eq(%w[test_upcoming_change_b])
+      expect(data[:count]).to eq(1)
+    end
+  end
+
+  context "when an upcoming change should not be displayed on this site" do
+    before do
+      UpcomingChanges::ConditionalDisplay.stubs(:should_display_test_upcoming_change?).returns(
+        false,
+      )
+    end
+
+    it "does not create a notification for the hidden change but still notifies for others" do
+      result
+      data =
+        JSON.parse(
+          Notification
+            .where(notification_type: Notification.types[:upcoming_change_available])
+            .last
+            .data,
+          symbolize_names: true,
+        )
+      expect(data[:upcoming_change_names]).to eq(%w[test_upcoming_change_b])
+      expect(data[:count]).to eq(1)
+    end
+
+    it "does not log an admins_notified_available_change event for the hidden change" do
+      expect { result }.not_to change {
+        UpcomingChangeEvent.where(
+          event_type: :admins_notified_available_change,
+          upcoming_change_name: :test_upcoming_change,
+        ).count
       }
     end
   end

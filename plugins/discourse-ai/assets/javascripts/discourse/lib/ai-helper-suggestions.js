@@ -4,7 +4,7 @@ import { i18n } from "discourse-i18n";
 
 export const MIN_CHARACTER_COUNT = 40;
 
-function tagNames(tags) {
+export function tagNames(tags) {
   return (tags ?? [])
     .map((tag) => (typeof tag === "string" ? tag : tag?.name))
     .filter(Boolean);

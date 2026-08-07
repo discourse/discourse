@@ -206,6 +206,7 @@ export default class MultiComboBox extends Component {
   <template>
     <ExpressionWrapper
       @field={{@field}}
+      @schema={{@schema}}
       @supportsExpression={{@supportsExpression}}
       @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}

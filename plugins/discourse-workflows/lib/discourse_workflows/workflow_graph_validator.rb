@@ -39,6 +39,7 @@ module DiscourseWorkflows
       return false if workflow.errors.any?
 
       validate_connections
+      validate_workflow_call_dependencies
       workflow.errors.empty?
     end
 
@@ -207,6 +208,87 @@ module DiscourseWorkflows
           I18n.t("discourse_workflows.errors.node_does_not_accept_inputs", node: target["name"]),
         )
       end
+    end
+
+    def validate_workflow_call_dependencies
+      calls = workflow_call_nodes
+      return if calls.empty?
+
+      target_ids = calls.filter_map { |node| workflow_call_target_id(node) }
+      targets_by_id =
+        DiscourseWorkflows::Workflow.includes(:active_version).where(id: target_ids).index_by(&:id)
+
+      calls.each do |node|
+        validate_workflow_call_target(node, targets_by_id[workflow_call_target_id(node)])
+      end
+
+      validate_workflow_call_cycles(calls) if workflow.errors.empty?
+    end
+
+    def validate_workflow_call_target(node, target_workflow)
+      target_id = workflow_call_target_id(node)
+      return if target_id.blank?
+
+      if workflow.id.present? && target_id == workflow.id
+        return add_call_error(:self_reference, node: node["name"])
+      end
+
+      return add_call_error(:target_not_found) if target_workflow.nil?
+      return if target_workflow.callable_as_subworkflow?
+
+      add_call_error(:target_not_callable)
+    end
+
+    def validate_workflow_call_cycles(calls)
+      return if workflow.id.blank?
+
+      edges = active_workflow_call_edges
+      edges[workflow.id] = calls.filter_map { |node| workflow_call_target_id(node) }.to_set
+
+      calls.each do |node|
+        target_id = workflow_call_target_id(node)
+        next if target_id.blank?
+
+        next unless workflow_call_reaches?(target_id, workflow.id, edges, Set.new)
+
+        add_call_error(:cycle, node: node["name"])
+      end
+    end
+
+    def add_call_error(key, **args)
+      workflow.errors.add(:base, I18n.t("discourse_workflows.errors.workflow_call.#{key}", **args))
+    end
+
+    def workflow_call_nodes
+      nodes.select { |node| node["type"] == DiscourseWorkflows::Nodes::WorkflowCall::V1.identifier }
+    end
+
+    def workflow_call_target_id(node)
+      to_workflow_id(DiscourseWorkflows::NodeData.parameters(node)["workflow_id"])
+    end
+
+    def to_workflow_id(value)
+      Integer(value, exception: false) if value.present?
+    end
+
+    def active_workflow_call_edges
+      DiscourseWorkflows::WorkflowDependency
+        .of_type("workflow_call")
+        .on_active_version
+        .pluck(:workflow_id, :dependency_key)
+        .each_with_object(
+          Hash.new { |hash, key| hash[key] = Set.new },
+        ) do |(source_id, target_key), edges|
+          target_id = to_workflow_id(target_key)
+          edges[source_id] << target_id if target_id
+        end
+    end
+
+    def workflow_call_reaches?(start_id, target_id, edges, visited)
+      return true if start_id == target_id
+      return false unless visited.add?(start_id)
+
+      edges[start_id].any? { |next_id| workflow_call_reaches?(next_id, target_id, edges, visited) }
     end
 
     def connection_records

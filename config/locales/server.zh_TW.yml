@@ -131,7 +131,6 @@ zh_TW:
       exclusion: 被保留
       greater_than: 必須大於 %{count}
       greater_than_or_equal_to: 必須大於或等於 %{count}
-      has_already_been_used: "已經被使用"
       inclusion: 不包括在這列表中
       invalid: 無效的
       is_invalid: "似乎不清楚，這是完整的句子嗎？"
@@ -313,6 +312,12 @@ zh_TW:
       trust_level_2: "信任等級 2"
       trust_level_3: "信任等級 3"
       trust_level_4: "信任等級 4"
+    default_full_names:
+      everyone: "所有使用者"
+      moderators: "板主"
+      staff: "管理員"
+      anonymous_users: "匿名的使用者"
+      logged_in_users: "登入的使用者"
     request_membership_pm:
       title: "@%{group_name} 的群組會員要求"
   education:
@@ -671,6 +676,9 @@ zh_TW:
       read: "讀取所有"
       write: "寫入所有"
       one_time_password: "建立一鍵登入"
+    device:
+      code: "代碼"
+      continue: "繼續"
     invalid_public_key: "很抱歉，公鑰無效"
     invalid_auth_redirect: "很抱歉，這個轉向不被允許"
     invalid_token: "遺失或過期的Token"
@@ -760,6 +768,7 @@ zh_TW:
         level: "信任等級"
         count: "成員"
         share: "分享"
+        signups: "註冊"
       levels:
         "0": "新使用者"
         "1": "初級使用者"
@@ -1110,7 +1119,6 @@ zh_TW:
     editing_grace_period_max_diff: "編輯寬限期允許的字元更改的最大數量，如果有更多的更改，將另儲存為另一個版本的修訂（信任等級0和1）"
     editing_grace_period_max_diff_high_trust: "編輯寬限期允許的最大字元更改數，如果更改將另存為另一個修訂版（信任級別2和更高）"
     staff_edit_locks_post: "如果版主編輯過貼文，貼文將被鎖定編輯"
-    edit_history_visible_to_public: "允許任何人查看編輯過的貼文的舊版本。當禁用時，只有工作成員才能查看。"
     delete_removed_posts_after: "貼文被作者刪除，將在 (n) 小時後被自動刪除。如果設置為 0，貼文將被立即刪除。"
     responsive_post_image_sizes: "調整燈箱預覽圖片的大小，此操作將允許像素高的 DPI 螢幕顯示。刪除所有值以禁用響應式圖片"
     fixed_category_positions: "若勾選，你將能調整並固定分類的順序。若不勾選，分類將會依照活躍程度來排序。"
@@ -1134,8 +1142,6 @@ zh_TW:
     anon_polling_interval: "匿名使用者使用者端輪詢時間間隔（單位 毫秒）"
     background_polling_interval: "客戶端輪詢的間隔，以毫秒計（當視窗在後台時）"
     cooldown_minutes_after_hiding_posts: "如果一個貼文因為標記而隱藏，使用者需要等待多少分鐘才能編輯該貼文"
-    max_topics_in_first_day: "新使用者在24小時內在發表第一帖後允許創建的主題數"
-    max_replies_in_first_day: "新使用者在24小時內在發表第一帖後允許創建的回覆數"
     tl2_additional_likes_per_day_multiplier: "增加信任等級2（成員）的贊限制，可提供一個乘數與原始值相乘"
     tl3_additional_likes_per_day_multiplier: "增加信任等級3（常規）的每日贊限制，將此設置項與原始值相乘"
     tl4_additional_likes_per_day_multiplier: "增加信任等級4（資深）的贊限制，可提供一個乘數與原始值相乘"
@@ -1489,6 +1495,10 @@ zh_TW:
       topic: "結果"
       user: "使用者"
     results_page: "「%{term}」的搜尋結果"
+  posts_filter:
+    description:
+      order_latest: " 最近貼文"
+      order_latest_topic: "最新討論話題"
   discourse_connect:
     login_error: "登入錯誤"
     not_found: "無法找到你的帳號。請聯絡網站管理人員。"
@@ -2798,6 +2808,8 @@ zh_TW:
   search_logs:
     graph_title: "搜尋計數"
   onebox:
+    google_meet:
+      meeting_code: "代碼:"
     github:
       opened: "已打開"
       closed: "不公開"
@@ -2887,7 +2899,6 @@ zh_TW:
           title: "刪除使用者"
         block:
           title: "刪除並阻擋使用者"
-          description: "這個使用者將被刪除，我們將阻擋他們的IP及郵件地址。"
       confirm_spam:
         title: "是"
       not_spam:

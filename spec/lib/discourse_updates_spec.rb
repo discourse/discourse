@@ -649,4 +649,27 @@ RSpec.describe DiscourseUpdates do
       expect(DiscourseUpdates.get_last_viewed_feature_date(user.id)).to eq(time)
     end
   end
+
+  describe "commits ahead" do
+    before { DiscourseUpdates.last_installed_version = Discourse::VERSION::STRING }
+
+    it "rewrites the git describe suffix into a ' +N' installed_describe" do
+      Discourse.stubs(:full_version).returns("v#{Discourse::VERSION::STRING}-444-gabc1234")
+      expect(version.installed_describe).to eq("v#{Discourse::VERSION::STRING} +444")
+    end
+
+    it "leaves installed_describe without a suffix when the build sits on a tag" do
+      Discourse.stubs(:full_version).returns("v#{Discourse::VERSION::STRING}")
+      expect(version.installed_describe).to eq("v#{Discourse::VERSION::STRING}")
+    end
+
+    it "exposes the latest pretty version and sha from the version check" do
+      stub_data(Discourse::VERSION::STRING, 0, false, 12.hours.ago)
+      DiscourseUpdates.latest_pretty_version = "#{Discourse::VERSION::STRING} +444"
+      DiscourseUpdates.latest_sha = "abc1234def5678"
+
+      expect(version.latest_pretty_version).to eq("#{Discourse::VERSION::STRING} +444")
+      expect(version.latest_sha).to eq("abc1234def5678")
+    end
+  end
 end

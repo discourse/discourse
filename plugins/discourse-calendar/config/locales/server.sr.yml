@@ -16,3 +16,6 @@ sr:
         week: "Nedelja"
         month: "Mesec"
         year: "Godina"
+  discourse_post_event:
+    event_excerpt:
+      date_format: "%B %-d, %Y"

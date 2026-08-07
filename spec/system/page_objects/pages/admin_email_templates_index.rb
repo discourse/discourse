@@ -31,7 +31,7 @@ module PageObjects
       end
 
       def filter_controls
-        PageObjects::Components::AdminFilterControls.new(".admin-filter-controls")
+        PageObjects::Components::DFilterControls.new(".d-filter-controls")
       end
 
       def only_overridden_checkbox

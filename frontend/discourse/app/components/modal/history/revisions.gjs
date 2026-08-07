@@ -220,13 +220,20 @@ export default class Revisions extends Component {
         />
       </span>
 
-      <LinksRedirect
-        {{didInsert @calculateBodyDiff @bodyDiffHTML}}
-        {{didUpdate @calculateBodyDiff @bodyDiffHTML}}
-        class="row body-diff"
-      >
-        {{trustHTML @bodyDiff}}
-      </LinksRedirect>
+      {{#if @diffHidden}}
+        <div class="row revision__hidden-notice">
+          {{dIcon "far-eye-slash"}}
+          <span>{{i18n "post.revisions.diff_hidden"}}</span>
+        </div>
+      {{else}}
+        <LinksRedirect
+          {{didInsert @calculateBodyDiff @bodyDiffHTML}}
+          {{didUpdate @calculateBodyDiff @bodyDiffHTML}}
+          class="row body-diff"
+        >
+          {{trustHTML @bodyDiff}}
+        </LinksRedirect>
+      {{/if}}
     </div>
   </template>
 }

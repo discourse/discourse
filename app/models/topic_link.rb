@@ -79,6 +79,9 @@ class TopicLink < ActiveRecord::Base
   def self.counts_for(guardian, topic, posts)
     return {} if posts.blank?
 
+    post_ids = visible_source_post_ids(guardian, topic, posts)
+    return {} if post_ids.blank?
+
     # Sam: this is not tidy in AR and also happens to be a critical path
     # for topic view
     builder =
@@ -122,7 +125,7 @@ class TopicLink < ActiveRecord::Base
     end
 
     # not certain if pluck is right, cause it may interfere with caching
-    builder.where("l.post_id in (:post_ids)", post_ids: posts.map(&:id))
+    builder.where("l.post_id in (:post_ids)", post_ids: post_ids)
     builder.secure_category(guardian.secure_category_ids)
 
     result = {}
@@ -142,6 +145,7 @@ class TopicLink < ActiveRecord::Base
   def self.extract_from(post)
     return if post.blank? || post.whisper? || post.user_id.blank? || post.deleted_at.present?
 
+    guardian = post.acting_user.guardian
     current_urls = []
     reflected_ids = []
 
@@ -155,7 +159,7 @@ class TopicLink < ActiveRecord::Base
       .uniq { |_, p| p }
       .each do |link, parsed|
         TopicLink.transaction do
-          url, reflected_id = ensure_entry_for(post, link, parsed)
+          url, reflected_id = ensure_entry_for(post, link, parsed, guardian)
           current_urls << url unless url.nil?
           reflected_ids << reflected_id unless reflected_id.nil?
         rescue URI::Error
@@ -176,18 +180,32 @@ class TopicLink < ActiveRecord::Base
     TopicLink.crawl_link_title(id)
   end
 
-  def self.duplicate_lookup(topic)
+  def self.duplicate_lookup(topic, guardian = Guardian.new)
     results =
       TopicLink
-        .includes(:post, :user)
+        .includes(:post, :user, :link_topic, link_post: :topic)
         .joins(:post, :user)
         .where("posts.id IS NOT NULL AND users.id IS NOT NULL")
         .where(topic_id: topic.id, reflection: false)
-        .where(posts: { hidden: false })
+        .where(
+          posts: {
+            deleted_at: nil,
+            hidden: false,
+            post_type: Topic.visible_post_types(guardian.user),
+          },
+        )
         .last(200)
 
     lookup = {}
     results.each do |tl|
+      if tl.internal? &&
+           (
+             (tl.link_topic_id && !guardian.can_see?(tl.link_topic)) ||
+               (tl.link_post_id && !guardian.can_see?(tl.link_post))
+           )
+        next
+      end
+
       normalized = tl.url.downcase.sub(%r{\Ahttps?://}, "").sub(%r{/\z}, "")
       lookup[normalized] = {
         domain: tl.domain,
@@ -200,9 +218,17 @@ class TopicLink < ActiveRecord::Base
     lookup
   end
 
+  def self.visible_source_post_ids(guardian, topic, posts)
+    return posts.map(&:id) if guardian.can_see_all_hidden_posts?(topic&.category)
+
+    posts.filter_map { |post| post.id if !post.hidden? || guardian.can_see_hidden_post?(post) }
+  end
+  private_class_method :visible_source_post_ids
+
   def self.apply_link_visibility_filters(builder, link:, target_topic:, target_posts:)
     builder.where(<<~SQL)
       #{target_topic}.deleted_at IS NULL
+      AND (#{target_topic}.id IS NULL OR #{target_topic}.visible = true)
       AND (#{link}.internal = false OR #{target_topic}.id IS NOT NULL)
       AND (#{link}.link_post_id IS NULL OR (#{target_posts}.id IS NOT NULL AND #{target_posts}.deleted_at IS NULL))
     SQL
@@ -309,7 +335,7 @@ class TopicLink < ActiveRecord::Base
     topic_link_id
   end
 
-  def self.ensure_entry_for(post, link, parsed)
+  def self.ensure_entry_for(post, link, parsed, guardian)
     url = link.url
     internal = false
     topic_id = nil
@@ -323,7 +349,7 @@ class TopicLink < ActiveRecord::Base
     elsif route = Discourse.route_for(parsed.to_s[...TopicLink.max_url_length])
       # this is a special case for the silent flag
       # in internal links
-      return nil if url && (url.split("?")[1] == "silent=true")
+      return nil if parsed&.query&.split("&")&.include?("silent=true")
 
       internal = true
 
@@ -341,11 +367,12 @@ class TopicLink < ActiveRecord::Base
 
       topic = Topic.find_by(id: topic_id) if topic_id
       topic ||= Topic.find_by(slug: topic_slug) if topic_slug.present?
+      target_visible = topic.present? && guardian.can_see?(topic)
 
-      if topic.present?
+      if target_visible
         url = +"#{Discourse.base_url_no_prefix}#{topic.relative_url}"
         url << "/#{post_number}" if post_number.to_i > 1
-      else
+      elsif topic.blank?
         topic_id = nil
       end
     end
@@ -380,7 +407,7 @@ class TopicLink < ActiveRecord::Base
     reflected_id = nil
 
     # Create the reflection if we can
-    if topic && post.topic && topic.archetype != "private_message" &&
+    if target_visible && post.topic && topic.archetype != "private_message" &&
          post.topic.archetype != "private_message" && post.topic.visible?
       prefix = Discourse.base_url_no_prefix
       reflected_url = "#{prefix}#{post.topic.relative_url(post.post_number)}"

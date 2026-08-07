@@ -464,6 +464,13 @@ export default class ChatApi extends Service {
     });
   }
 
+  messageReactionsUsers(channelId, messageId, { page = 0, limit, emoji } = {}) {
+    return ajax(`/chat/${channelId}/${messageId}/reactions-users`, {
+      type: "GET",
+      data: { page, limit, emoji },
+    });
+  }
+
   /**
    * Restores a single deleted chat message in a channel.
    *

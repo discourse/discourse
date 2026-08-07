@@ -24,6 +24,7 @@ const CLEARABLE_ATTRS = [
   "showLocalTime",
   "minimal",
   "chatEnabled",
+  "livestream",
   "allDay",
   "allowedGroups",
   "reminders",
@@ -38,11 +39,6 @@ export default class EventNodeView extends Component {
   constructor() {
     super(...arguments);
     this.args.onSetup?.(this);
-  }
-
-  @action
-  testLocationUrl(value) {
-    return this.args.pluginParams.utils.getLinkify().test(value);
   }
 
   get eventDescription() {
@@ -161,7 +157,6 @@ export default class EventNodeView extends Component {
   <template>
     <CompactEventEditor
       @initialState={{this.initialState}}
-      @urlTester={{this.testLocationUrl}}
       @onChange={{this.onChange}}
       @onDelete={{this.onDelete}}
     />

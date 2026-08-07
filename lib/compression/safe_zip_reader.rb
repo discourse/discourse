@@ -50,7 +50,7 @@ module Compression
     end
 
     def find_entry(name)
-      zip_file.find_entry(name)
+      zip_file.find_entry(name) || find_prefixed_entry(name)
     end
 
     def read_entry(entry_or_name, max_bytes:, required: false)
@@ -76,6 +76,32 @@ module Compression
     end
 
     private
+
+    # macOS Finder's "Compress" wraps the folder's contents in a root
+    # directory and adds __MACOSX metadata entries, so lookups fall back to
+    # resolving names through that wrapper directory.
+    def find_prefixed_entry(name)
+      root_prefix && zip_file.find_entry("#{root_prefix}#{name}")
+    end
+
+    def root_prefix
+      return @root_prefix if defined?(@root_prefix)
+
+      @root_prefix = compute_root_prefix
+    end
+
+    def compute_root_prefix
+      names = entries.map(&:name).reject { |name| metadata_entry?(name) }
+      first_segment, separator, _rest = names.first.to_s.partition("/")
+      return if separator.empty?
+
+      prefix = "#{first_segment}/"
+      prefix if names.all? { |name| name.start_with?(prefix) }
+    end
+
+    def metadata_entry?(name)
+      name.start_with?("__MACOSX/") || File.basename(name).start_with?(".")
+    end
 
     def resolve_entry(entry_or_name)
       entry_or_name.respond_to?(:get_input_stream) ? entry_or_name : find_entry(entry_or_name)

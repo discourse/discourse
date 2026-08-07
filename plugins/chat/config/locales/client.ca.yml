@@ -22,6 +22,8 @@ ca:
         yesterday: "Ahir"
       create: "Crea"
       cancel: "Cancel·la"
+      pinned_bar:
+        title: "Afixat"
       pinned: "Afixat"
       channel_settings:
         edit: "Edita"
@@ -58,6 +60,8 @@ ca:
         filter_all: Tot
         filter_open: Obre
         filter_closed: Tancat
+        filter_joined_all: "Tots"
+        filter_joined_joined: "Registrat"
       chat_message_separator:
         today: Avui
         yesterday: Ahir
@@ -81,6 +85,7 @@ ca:
         title: Missatge nou
         prefix: "A:"
       create_channel:
+        description: "Descripció"
         type: "Tipus"
         types:
           category: "Categoria"
@@ -169,6 +174,8 @@ ca:
             message:
               label: Missatge
     discourse_workflows:
+      chat_message_created:
+        channel_id: "Canal"
       send_chat_message:
         channel_id: "Canal"
         message: "Missatge"

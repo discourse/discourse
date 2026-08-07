@@ -20,16 +20,18 @@ const siteFixtures = {
         leader: 4,
       },
       groups: [
-        { id: 0, name: "everyone" },
-        { id: 1, name: "admins" },
-        { id: 2, name: "moderators" },
-        { id: 3, name: "staff" },
-        { id: 4, name: "custom_group" },
-        { id: 10, name: "trust_level_0" },
-        { id: 11, name: "trust_level_1" },
-        { id: 12, name: "trust_level_2" },
-        { id: 13, name: "trust_level_3" },
-        { id: 14, name: "trust_level_4" },
+        { id: 0, name: "everyone", full_name: "Everyone", automatic: true },
+        { id: 1, name: "admins", full_name: "Admins", automatic: true },
+        { id: 2, name: "moderators", full_name: "Moderators", automatic: true },
+        { id: 3, name: "staff", full_name: "Staff", automatic: true },
+        { id: 4, name: "anonymous_users", full_name: "Anonymous users", automatic: true },
+        { id: 5, name: "logged_in_users", full_name: "Logged in users", automatic: true },
+        { id: 10, name: "trust_level_0", full_name: "Trust Level 0", automatic: true },
+        { id: 11, name: "trust_level_1", full_name: "Trust Level 1", automatic: true },
+        { id: 12, name: "trust_level_2", full_name: "Trust Level 2", automatic: true },
+        { id: 13, name: "trust_level_3", full_name: "Trust Level 3", automatic: true },
+        { id: 14, name: "trust_level_4", full_name: "Trust Level 4", automatic: true },
+        { id: 50, name: "custom_group", full_name: "Custom group", automatic: false}
       ],
       filters: [
         "latest",
@@ -43,6 +45,18 @@ const siteFixtures = {
         "bookmarks",
         "hot",
         "unseen"
+      ],
+      homepage_choices: [
+        "latest",
+        "new",
+        "unseen",
+        "top",
+        "categories",
+        "read",
+        "posted",
+        "bookmarks",
+        "hot",
+        "unread"
       ],
       periods: ["all", "yearly", "quarterly", "monthly", "weekly", "daily"],
       top_menu_items: [

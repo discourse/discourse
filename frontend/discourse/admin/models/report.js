@@ -17,7 +17,7 @@ import I18n, { i18n } from "discourse-i18n";
 
 // Change this line each time report format change
 // and you want to ensure cache is reset
-export const SCHEMA_VERSION = 4;
+export const SCHEMA_VERSION = 5;
 
 export default class Report extends EmberObject {
   static groupingForDatapoints(count) {
@@ -516,7 +516,7 @@ export default class Report extends EmberObject {
         mainProperty,
         type,
         compute: (row, opts = {}) => {
-          let value = null;
+          let value;
 
           if (opts.useSortProperty) {
             value = row[label.sort_property || mainProperty];

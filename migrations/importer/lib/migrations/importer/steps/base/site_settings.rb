@@ -52,7 +52,7 @@ module Migrations
             end
 
             # TODO: Replace with logging when available
-            @log_messages.each { |message| puts "      #{message}" }
+            @log_messages.each { |message| notice(message) }
           end
 
           private

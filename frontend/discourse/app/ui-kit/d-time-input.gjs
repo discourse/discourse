@@ -37,7 +37,7 @@ function convertMinutesToString(n) {
 function convertMinutesToDurationString(n) {
   const hoursAndMinutes = convertMinutes(n);
 
-  let output = "";
+  let output;
 
   if (hoursAndMinutes.hours) {
     output = `${hoursAndMinutes.hours}h`;

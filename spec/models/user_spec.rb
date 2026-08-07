@@ -26,7 +26,9 @@ RSpec.describe User do
   describe ".in_any_groups?" do
     fab!(:group)
 
-    it "returns true if any of the group IDs are the 'everyone' auto group" do
+    it "returns true if any of the group IDs are the 'everyone' auto group with legacy group permissions" do
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+
       expect(user.in_any_groups?([group.id, Group::AUTO_GROUPS[:everyone]])).to eq(true)
     end
 
@@ -1476,6 +1478,17 @@ RSpec.describe User do
       user.update_last_seen!(second_visit_date)
       expect(user.reload.first_seen_at).to eq_time(first_visit_date)
     end
+
+    it "triggers user_seen with the previous seen timestamp" do
+      user.update_last_seen!(first_visit_date)
+
+      events =
+        DiscourseEvent.track_events(:user_seen) do
+          user.update_last_seen!(second_visit_date, force: true)
+        end
+
+      expect(events.first[:params]).to eq([user, first_visit_date])
+    end
   end
 
   describe "update_timezone_if_missing" do
@@ -1757,41 +1770,74 @@ RSpec.describe User do
   end
 
   describe "#new_user_posting_on_first_day?" do
-    def create_test_user(opts = {})
-      Fabricate(:user, { created_at: Time.zone.now }.merge(opts))
-    end
-
     it "is true for a user who has never posted" do
-      expect(create_test_user.new_user_posting_on_first_day?).to eq(true)
+      expect(Fabricate(:user, created_at: Time.zone.now).new_user_posting_on_first_day?).to eq(true)
     end
 
     it "is false if the user is moderator or admin" do
-      expect(create_test_user(moderator: true).new_user_posting_on_first_day?).to eq(false)
-      expect(create_test_user(admin: true).new_user_posting_on_first_day?).to eq(false)
+      expect(
+        Fabricate(:user, created_at: Time.zone.now, moderator: true).new_user_posting_on_first_day?,
+      ).to eq(false)
+      expect(
+        Fabricate(:user, created_at: Time.zone.now, admin: true).new_user_posting_on_first_day?,
+      ).to eq(false)
     end
 
     it "is false for a user that is TL2 or above" do
-      expect(create_test_user(trust_level: TrustLevel[2]).new_user_posting_on_first_day?).to eq(
-        false,
-      )
-      expect(create_test_user(trust_level: TrustLevel[3]).new_user_posting_on_first_day?).to eq(
-        false,
-      )
-      expect(create_test_user(trust_level: TrustLevel[0]).new_user_posting_on_first_day?).to eq(
-        true,
-      )
+      expect(
+        Fabricate(
+          :user,
+          created_at: Time.zone.now,
+          trust_level: TrustLevel[2],
+        ).new_user_posting_on_first_day?,
+      ).to eq(false)
+      expect(
+        Fabricate(
+          :user,
+          created_at: Time.zone.now,
+          trust_level: TrustLevel[3],
+        ).new_user_posting_on_first_day?,
+      ).to eq(false)
+      expect(
+        Fabricate(
+          :user,
+          created_at: Time.zone.now,
+          trust_level: TrustLevel[0],
+        ).new_user_posting_on_first_day?,
+      ).to eq(true)
     end
 
-    it "is true for a user who posted less than 24 hours ago but was created over 1 day ago" do
-      u = create_test_user(created_at: 28.hours.ago)
-      u.user_stat.update!(first_post_created_at: 1.hour.ago)
-      expect(u.new_user_posting_on_first_day?).to eq(true)
+    it "is true for a TL1 user created less than 24 hours ago" do
+      expect(
+        Fabricate(
+          :user,
+          created_at: Time.zone.now,
+          trust_level: TrustLevel[1],
+        ).new_user_posting_on_first_day?,
+      ).to eq(true)
     end
 
-    it "is false if first post was more than 24 hours ago" do
-      u = create_test_user(created_at: 28.hours.ago)
-      u.user_stat.update!(first_post_created_at: 25.hours.ago)
+    it "is false if account was created more than 24 hours ago" do
+      u = Fabricate(:user, created_at: 25.hours.ago)
       expect(u.new_user_posting_on_first_day?).to eq(false)
+    end
+  end
+
+  describe "#first_day_topics_limit" do
+    it "returns the TL1 limit for TL1 users" do
+      SiteSetting.max_topics_in_first_day = 3
+      SiteSetting.tl1_max_topics_in_first_day = 6
+
+      expect(Fabricate(:user, trust_level: TrustLevel[1]).first_day_topics_limit).to eq(6)
+    end
+  end
+
+  describe "#first_day_replies_limit" do
+    it "returns the TL1 limit for TL1 users" do
+      SiteSetting.max_replies_in_first_day = 10
+      SiteSetting.tl1_max_replies_in_first_day = 30
+
+      expect(Fabricate(:user, trust_level: TrustLevel[1]).first_day_replies_limit).to eq(30)
     end
   end
 
@@ -3035,6 +3081,16 @@ RSpec.describe User do
       expect([avatar1.id, avatar2.id]).to include(user.uploaded_avatar_id)
       expect(user.user_avatar.custom_upload_id).to eq(user.uploaded_avatar_id)
     end
+
+    it "does not set a random avatar when selectable avatar assignment on signup is disabled" do
+      SiteSetting.selectable_avatars = [Fabricate(:upload), Fabricate(:upload)]
+      SiteSetting.selectable_avatars_mode = "everyone"
+      SiteSetting.selectable_avatars_random_on_signup = false
+
+      user = Fabricate(:user)
+
+      expect(user.uploaded_avatar_id).to be_nil
+    end
   end
 
   describe "ensure_consistency!" do
@@ -3627,6 +3683,19 @@ RSpec.describe User do
       expect(admin.whisperer?).to eq(false)
     end
 
+    context "when primary_group_id is set without matching group membership" do
+      fab!(:user)
+
+      before do
+        SiteSetting.whispers_allowed_groups = group.id.to_s
+        user.update_column(:primary_group_id, group.id)
+      end
+
+      it "does not grant whisper access" do
+        expect(user).not_to be_a_whisperer
+      end
+    end
+
     it "returns true for user belonging to whisperers groups" do
       whisperer = Fabricate(:user)
       user = Fabricate(:user)
@@ -3822,8 +3891,12 @@ RSpec.describe User do
     fab!(:tag_sidebar_section_link_2) do
       Fabricate(:tag_sidebar_section_link, user: user, linkable: hidden_tag)
     end
+    fab!(:synonym) { Fabricate(:tag, target_tag: tag) }
+    fab!(:tag_sidebar_section_link_3) do
+      Fabricate(:tag_sidebar_section_link, user: user, linkable: synonym)
+    end
 
-    it "should only return tag sidebar section link records of tags that the user is allowed to see" do
+    it "should only return tag sidebar section link records of tags that the user is allowed to browse" do
       expect(user.visible_sidebar_tags).to contain_exactly(tag)
 
       user.update!(admin: true)
@@ -4242,6 +4315,41 @@ RSpec.describe User do
           SiteSetting.humanized_name(:enable_upload_debug_mode),
         )
         expect(change_stat[:description]).to eq(SiteSetting.description(:enable_upload_debug_mode))
+      end
+    end
+  end
+
+  describe "acl permissions" do
+    fab!(:acl_user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:acl_group) { Fabricate(:group).tap { |group| group.add(acl_user) } }
+    fab!(:viewable_category, :category)
+    fab!(:editable_category, :category)
+    fab!(:view_acl) do
+      Fabricate(
+        :access_control_list_with_groups,
+        target: viewable_category,
+        permission: "view",
+        groups: [acl_group],
+      )
+    end
+    fab!(:edit_acl) do
+      Fabricate(
+        :access_control_list_with_groups,
+        target: editable_category,
+        permission: "edit",
+        groups: [acl_group],
+      )
+    end
+
+    before do
+      Category.stubs(:has_mandatory_acl?).returns(true)
+      Category.stubs(:acl_is_mandatory?).returns(true)
+    end
+
+    describe "#permission_acl" do
+      it "builds an Acl::User from the acls matching the user and memoizes it" do
+        expect(acl_user.permission_acl).to be_a(Acl::User)
+        expect(acl_user.permission_acl).to equal(acl_user.permission_acl)
       end
     end
   end

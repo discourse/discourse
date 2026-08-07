@@ -1,4 +1,3 @@
-/* eslint-disable ember/no-jquery */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
@@ -15,18 +14,16 @@ import {
   shift,
 } from "@floating-ui/dom";
 import curryComponent from "ember-curry-component";
-import $ from "jquery";
 import { Promise } from "rsvp";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { deferAnonymousAction } from "discourse/lib/anonymous-action";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { emojiUrlFor } from "discourse/lib/text";
-import { and, eq, not } from "discourse/truth-helpers";
+import { eq, not } from "discourse/truth-helpers";
 import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import { i18n } from "discourse-i18n";
 import CustomReaction from "../models/discourse-reactions-custom-reaction";
 import DiscourseReactionsCounter from "./discourse-reactions-counter";
-import DiscourseReactionsDoubleButton from "./discourse-reactions-double-button";
 import DiscourseReactionsPicker from "./discourse-reactions-picker";
 import DiscourseReactionsReactionButton from "./discourse-reactions-reaction-button";
 
@@ -74,17 +71,15 @@ function moveReactionAnimation(
   fakeReaction.style.top = startPosition;
   fakeReaction.style.opacity = 0;
 
-  $(fakeReaction).animate(
-    {
-      top: endPosition,
-      opacity: 1,
-    },
-    {
-      duration: 350,
-      complete: done,
-    },
-    "swing"
-  );
+  fakeReaction
+    .animate(
+      [
+        { top: startPosition, opacity: 0 },
+        { top: endPosition, opacity: 1 },
+      ],
+      { duration: 350, easing: "ease-in-out", fill: "forwards" }
+    )
+    .finished.then(done, () => {});
 }
 
 function addReaction(list, reactionId, complete) {
@@ -100,42 +95,32 @@ function scaleReactionAnimation(mainReaction, start, end, complete) {
     return run(this, complete);
   }
 
-  return $(mainReaction)
-    .stop()
-    .css("textIndent", start)
-    .animate(
-      { textIndent: end },
-      {
-        complete,
-        step(now) {
-          $(this)
-            .css("transform", `scale(${now})`)
-            .addClass("d-icon-d-unliked")
-            .removeClass("d-icon-d-liked");
-        },
-        duration: 150,
-      },
-      "linear"
-    );
+  // Cancel any in-flight scale animation before starting a new one.
+  mainReaction.getAnimations().forEach((animation) => animation.cancel());
+
+  mainReaction.classList.add("d-icon-d-unliked");
+  mainReaction.classList.remove("d-icon-d-liked");
+
+  const animation = mainReaction.animate(
+    [{ transform: `scale(${start})` }, { transform: `scale(${end})` }],
+    { duration: 150, easing: "linear", fill: "forwards" }
+  );
+  animation.finished.then(complete, () => {});
+
+  return animation;
 }
 
 export default class DiscourseReactionsActions extends Component {
   @service dialog;
   @service capabilities;
   @service siteSettings;
-  @service site;
   @service currentUser;
   @service appEvents;
 
   @tracked reactionsPickerExpanded = false;
-  @tracked statePanelExpanded = false;
   @tracked clickOutsideDisabled = false;
 
   containerElement = null;
-
-  get useNewMenu() {
-    return this.siteSettings.enable_new_post_reactions_menu;
-  }
 
   get data() {
     return this.args.post;
@@ -210,11 +195,7 @@ export default class DiscourseReactionsActions extends Component {
   @action
   toggleReactions(event) {
     if (!this.reactionsPickerExpanded) {
-      if (this.statePanelExpanded) {
-        this.scheduleExpand("expandReactionsPicker");
-      } else {
-        this.expandReactionsPicker(event);
-      }
+      this.expandReactionsPicker(event);
     }
   }
 
@@ -567,14 +548,7 @@ export default class DiscourseReactionsActions extends Component {
     }
 
     let selector;
-    if (
-      !this.useNewMenu &&
-      this.data.reactions &&
-      this.data.reactions.length === 1 &&
-      this.data.reactions[0].id === mainReactionName
-    ) {
-      selector = `.discourse-reactions-double-button .discourse-reactions-reaction-button .d-icon`;
-    } else if (!attrs.reaction || attrs.reaction === mainReactionName) {
+    if (!attrs.reaction || attrs.reaction === mainReactionName) {
       selector = `.discourse-reactions-reaction-button .d-icon`;
     } else {
       selector = `.discourse-reactions-reaction-button .reaction-button .btn-toggle-reaction-emoji`;
@@ -621,17 +595,6 @@ export default class DiscourseReactionsActions extends Component {
   }
 
   @action
-  cancelExpand() {
-    cancel(this._expandHandler);
-  }
-
-  scheduleExpand(handler) {
-    this.cancelExpand();
-
-    this._expandHandler = later(this, this[handler], 250);
-  }
-
-  @action
   scheduleCollapse(handler) {
     this.cancelCollapse();
 
@@ -652,7 +615,7 @@ export default class DiscourseReactionsActions extends Component {
     if (this.clickOutsideDisabled) {
       return;
     }
-    if (this.reactionsPickerExpanded || this.statePanelExpanded) {
+    if (this.reactionsPickerExpanded) {
       this.collapseAllPanels();
     }
   }
@@ -660,25 +623,8 @@ export default class DiscourseReactionsActions extends Component {
   expandReactionsPicker() {
     cancel(this._collapseHandler);
     activeReactionsComponent?.collapseAllPanels();
-    this.statePanelExpanded = false;
     this.reactionsPickerExpanded = true;
     this.updateReactionsPickerPopover();
-  }
-
-  @action
-  expandStatePanel() {
-    cancel(this._collapseHandler);
-    activeReactionsComponent?.collapseAllPanels();
-    this.statePanelExpanded = true;
-    this.reactionsPickerExpanded = false;
-    this.updateReactionsStatePanel();
-  }
-
-  @action
-  collapseStatePanel() {
-    cancel(this._collapseHandler);
-    this._collapseHandler = null;
-    this.statePanelExpanded = false;
   }
 
   collapseReactionsPicker() {
@@ -695,7 +641,6 @@ export default class DiscourseReactionsActions extends Component {
       false
     );
     this._collapseHandler = null;
-    this.statePanelExpanded = false;
     this.reactionsPickerExpanded = false;
   }
 
@@ -704,14 +649,6 @@ export default class DiscourseReactionsActions extends Component {
     this.showPopover(
       ".discourse-reactions-reaction-button",
       ".discourse-reactions-picker"
-    );
-  }
-
-  @action
-  updateReactionsStatePanel() {
-    this.showPopover(
-      ".discourse-reactions-counter",
-      ".discourse-reactions-state-panel"
     );
   }
 
@@ -779,14 +716,6 @@ export default class DiscourseReactionsActions extends Component {
     }
   }
 
-  get onlyOneMainReaction() {
-    return (
-      this.data.reactions?.length === 1 &&
-      this.data.reactions[0].id ===
-        this.siteSettings.discourse_reactions_reaction_for_like
-    );
-  }
-
   get showReactionsPicker() {
     if (!this.reactionsPickerExpanded) {
       return false;
@@ -819,18 +748,7 @@ export default class DiscourseReactionsActions extends Component {
         (hash
           counter=(curryComponent
             DiscourseReactionsCounter
-            (lazyHash
-              post=this.data
-              position=@position
-              reactionsPickerExpanded=this.reactionsPickerExpanded
-              statePanelExpanded=this.statePanelExpanded
-              expandStatePanel=this.expandStatePanel
-              collapseStatePanel=this.collapseStatePanel
-              cancelCollapse=this.cancelCollapse
-              scheduleCollapse=this.scheduleCollapse
-              updatePopover=this.updateReactionsStatePanel
-              collapseAllPanels=this.collapseAllPanels
-            )
+            (lazyHash post=this.data position=@position)
           )
           button=(curryComponent
             DiscourseReactionsReactionButton
@@ -840,7 +758,6 @@ export default class DiscourseReactionsActions extends Component {
               cancelCollapse=this.cancelCollapse
               toggleFromButton=this.toggleFromButton
               toggleReactions=this.toggleReactions
-              cancelExpand=this.cancelExpand
               scheduleCollapse=this.scheduleCollapse
             )
           )
@@ -861,25 +778,6 @@ export default class DiscourseReactionsActions extends Component {
 
         {{#if (eq @position "left")}}
           <components.counter />
-        {{else if this.useNewMenu}}
-          {{#unless this.data.yours}}
-            <components.button />
-          {{/unless}}
-        {{else if this.onlyOneMainReaction}}
-          <DiscourseReactionsDoubleButton
-            @post={{this.data}}
-            @counterComponent={{components.counter}}
-            @buttonComponent={{components.button}}
-          />
-        {{else if this.site.mobileView}}
-          {{#if (not this.data.yours)}}
-            <components.counter />
-            <components.button />
-          {{else if
-            (and this.data.yours this.data.reactions this.data.reactions.length)
-          }}
-            <components.counter />
-          {{/if}}
         {{else if (not this.data.yours)}}
           <components.button />
         {{/if}}

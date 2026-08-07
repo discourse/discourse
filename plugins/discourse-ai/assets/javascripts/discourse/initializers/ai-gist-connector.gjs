@@ -12,7 +12,7 @@ export default apiInitializer((api) => {
   api.addBulkActionButton({
     label: "discourse_ai.summarization.topic.regenerate_ai_summaries",
     icon: "arrows-rotate",
-    class: "btn-default",
+    class: "regenerate-ai-summaries",
     visible: ({ topics, siteSettings, currentUser: user }) => {
       if (topics?.length > MAX_ALLOWED_REGEN) {
         return false;

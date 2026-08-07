@@ -1,14 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
+import AdminReportBody from "discourse/admin/components/admin-report-body";
 import AdminReportChart from "discourse/admin/components/admin-report-chart";
 import AdminReportCounters from "discourse/admin/components/admin-report-counters";
 import AdminReportInlineTable from "discourse/admin/components/admin-report-inline-table";
-import AdminReportLegacy from "discourse/admin/components/admin-report-legacy";
-import AdminReportNew from "discourse/admin/components/admin-report-new";
 import AdminReportRadar from "discourse/admin/components/admin-report-radar";
 import AdminReportStackedChart from "discourse/admin/components/admin-report-stacked-chart";
 import AdminReportStackedLineChart from "discourse/admin/components/admin-report-stacked-line-chart";
@@ -16,6 +16,7 @@ import AdminReportStorageStats from "discourse/admin/components/admin-report-sto
 import AdminReportTable from "discourse/admin/components/admin-report-table";
 import ReportFilterBoolComponent from "discourse/admin/components/report-filters/bool";
 import ReportFilterCategoryComponent from "discourse/admin/components/report-filters/category";
+import ReportFilterCategoryListComponent from "discourse/admin/components/report-filters/category-list";
 import ReportFilterGroupComponent from "discourse/admin/components/report-filters/group";
 import ReportFilterListComponent from "discourse/admin/components/report-filters/list";
 import { REPORT_MODES } from "discourse/admin/lib/constants";
@@ -31,6 +32,7 @@ import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { makeArray } from "discourse/lib/helpers";
 import ReportLoader from "discourse/lib/reports-loader";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const TABLE_OPTIONS = {
@@ -191,7 +193,7 @@ export default class AdminReport extends Component {
   changeGrouping(grouping) {
     const options = { chartGrouping: grouping };
 
-    if (this.siteSettings.reporting_improvements && !this.userHasCustomDates) {
+    if (!this.userHasCustomDates) {
       const endDate = moment().endOf("day");
       let startDate;
 
@@ -241,6 +243,8 @@ export default class AdminReport extends Component {
         return ReportFilterBoolComponent;
       case "category":
         return ReportFilterCategoryComponent;
+      case "category_list":
+        return ReportFilterCategoryListComponent;
       case "group":
         return ReportFilterGroupComponent;
       case "list":
@@ -291,10 +295,13 @@ export default class AdminReport extends Component {
       isTesting() ? "end" : formattedEndDate.replace(/-/g, ""),
       "[:prev_period]",
       this.args.reportOptions?.table?.limit,
-      // Convert all filter values to strings to ensure unique serialization
+      // Convert all filter values to strings to ensure unique serialization.
+      // Arrays (e.g. a category_list filter's selected ids) are mapped
+      // element-wise rather than stringified whole, so the key stays valid
+      // JSON and matches the server's own `MultiJson.dump(report.filters)`.
       this.args.filters?.customFilters
         ? JSON.stringify(this.args.filters?.customFilters, (k, v) =>
-            k ? `${v}` : v
+            Array.isArray(v) ? v.map(String) : k ? `${v}` : v
           )
         : null,
       SCHEMA_VERSION,
@@ -589,10 +596,30 @@ export default class AdminReport extends Component {
   }
 
   <template>
-    {{#if this.siteSettings.reporting_improvements}}
-      <AdminReportNew @report={{this}} @filters={{@filters}} />
+    {{#if @bare}}
+      {{! Renders only the report's visualization (chart/table/etc.) without
+      the surrounding report chrome — used by the dashboard report cards. }}
+      <div
+        class={{dConcatClass "admin-report" "--bare" this.reportClasses}}
+        {{didUpdate
+          this.fetchOrRender
+          @filters.startDate
+          @filters.endDate
+          this.preloadedData
+        }}
+      >
+        {{#if this.hasData}}
+          {{#if this.currentMode}}
+            {{component
+              this.modeComponent
+              model=this.model
+              options=this.options
+            }}
+          {{/if}}
+        {{/if}}
+      </div>
     {{else}}
-      <AdminReportLegacy @report={{this}} @filters={{@filters}} />
+      <AdminReportBody @report={{this}} @filters={{@filters}} />
     {{/if}}
   </template>
 }

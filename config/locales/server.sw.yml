@@ -105,7 +105,6 @@ sw:
       exclusion: imehifadhiwa
       greater_than: izidi %{count}
       greater_than_or_equal_to: izidi au iwe sawa na %{count}
-      has_already_been_used: "imeshatumika"
       inclusion: haijaorodheshwa
       invalid: ni batili
       is_invalid: "haieleweki vizuri, je hii sentensi iko kamili?"
@@ -229,6 +228,11 @@ sw:
       trust_level_2: "kiwango_cha_uaminifu_2"
       trust_level_3: "kiwango_cha_uaminifu_3"
       trust_level_4: "kiwango_cha_uaminifu_4"
+    default_full_names:
+      everyone: "Kila Mtu"
+      admins: "Viongozi"
+      moderators: "Wasimamizi"
+      staff: "Wasaidizi"
     request_membership_pm:
       title: "Ombi la Uanachama wa @%{group_name}"
   education:
@@ -508,6 +512,9 @@ sw:
       session_info: "Soma taarifa za kipindi cha mtumiaji"
       read: "Soma zote"
       write: "Andika zote"
+    device:
+      code: "Kodi"
+      continue: "Endelea"
   reports:
     default:
       labels:
@@ -812,7 +819,6 @@ sw:
     educate_until_posts: "Mtumiaji akianza kuandika machapisho mapya (n), onyesha paneli ya ufundishaji kwenye sehemu ya kuandika maneno."
     editing_grace_period: "Kwa sekundi (n) baada ya kuchapisha, uhariri hautatengeneza nakala mpya kwenye historia ya chapisho."
     staff_edit_locks_post: "Machapisho hayataweza kufanyiwa uhariri kama yakihaririwa na wafanyakazi"
-    edit_history_visible_to_public: "Ruhusu kila mtu aone matoleo ya kabla ya chapisho lililofanyiwa uhariri. Ikisitishwa, wasaidizi tu wataweza kuona."
     delete_removed_posts_after: "Machapisho yaliyofutwa na mwandishi yataondolewa baada ya masaa (n). Kama ikiwaset kwenye 0, machapisho yataondolewa hapo hapo."
     add_rel_nofollow_to_user_content: 'Ongeza rel nofollow kwenye maandishi yote mtumiaji aliyotoa, isipokuwa viungo vya ndani (pamoja na kikoa baba). Ukibadilisha hii, lazima urebake machapisho yote na: "rake machapishi:rebake"'
     allowed_inline_onebox_domains: "Orodha za anwani za mtandao ambazo zitawekwa kwenye boxi kama zikiunganishwa bila kichwa cha habari"
@@ -952,6 +958,10 @@ sw:
       topic: "Majibu"
       user: "Watumiaji"
     results_page: "Majibu ya utafiti ya '%{term}'"
+  posts_filter:
+    description:
+      order_latest: "Machapisho Mapya"
+      order_latest_topic: "Mada za hivi karibuni"
   discourse_connect:
     login_error: "Hitilafu Wakati wa Kuingia."
     not_found: "Akaunti yako haijapatikana. Tafadhali wasiliana na msimamizi wa tovuti."
@@ -1987,6 +1997,8 @@ sw:
   search_logs:
     graph_title: "Idadi ya Utafiti"
   onebox:
+    google_meet:
+      meeting_code: "Kodi:"
     github:
       closed: "imefungwa"
       status_date:

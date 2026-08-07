@@ -22,6 +22,8 @@ gl:
         yesterday: "Onte"
       create: "Crear"
       cancel: "Cancelar"
+      pinned_bar:
+        title: "Fixado"
       pinned: "Fixado"
       channel_settings:
         edit: "Editar"
@@ -57,6 +59,8 @@ gl:
         filter_all: Todas
         filter_open: Abrir
         filter_closed: Pechado
+        filter_joined_all: "Todas"
+        filter_joined_joined: "Uniuse"
       chat_message_separator:
         today: Hoxe
         yesterday: Onte
@@ -80,6 +84,7 @@ gl:
         title: Nova mensaxe
         prefix: "A:"
       create_channel:
+        description: "Descrición"
         type: "Tipo"
         types:
           category: "Categoría"
@@ -171,6 +176,8 @@ gl:
             message:
               label: Mensaxe
     discourse_workflows:
+      chat_message_created:
+        channel_id: "Canle"
       send_chat_message:
         channel_id: "Canle"
         message: "Mensaxe"

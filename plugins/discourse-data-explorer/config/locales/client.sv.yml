@@ -45,6 +45,10 @@ sv:
       save: "Spara ändringar"
       run: "Kör"
       delete: "Ta bort"
+      chart:
+        form:
+          label: "Diagramtyp"
+          bar: "Stapel"
       others_dirty: "En sökning har ändringar som inte har sparats och kommer att förloras om du lämnar sidan."
       run_time: "Sökning slutförd efter %{value} ms."
       result_count:

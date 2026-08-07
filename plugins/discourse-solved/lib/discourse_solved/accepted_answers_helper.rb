@@ -15,7 +15,9 @@ module DiscourseSolved
       answers =
         topic
           .topic_answers
-          .select { |ta| ta.post.present? }
+          .select do |topic_answer|
+            topic_answer.post.present? && guardian.can_see_post?(topic_answer.post)
+          end
           .sort_by { |ta| ta.post.created_at }
           .map do |ta|
             AcceptedAnswerSerializer.new(

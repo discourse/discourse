@@ -18,7 +18,6 @@ Migrations::Tooling::Schema.table :topics do
          :last_post_user_id,
          :last_posted_at,
          :like_count,
-         :locale,
          :moderator_posts_count,
          :notify_moderators_count,
          :participant_count,
@@ -28,7 +27,6 @@ Migrations::Tooling::Schema.table :topics do
          :reviewable_score,
          :score,
          :slug,
-         :slow_mode_seconds,
          :spam_count,
          :word_count,
          reason: "Calculated columns"

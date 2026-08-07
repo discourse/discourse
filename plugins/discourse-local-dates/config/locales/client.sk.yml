@@ -22,8 +22,6 @@ sk:
       create:
         form:
           insert: Vložiť
-          advanced_mode: Pokročilý režim
-          simple_mode: Jednoduchý režim
           format_description: "Formát používaný na zobrazenie dátumu používateľovi. Použite Z na zobrazenie posunu a zz pre názov časového pásma."
           timezones_title: Časové pásma na zobrazenie
           timezones_description: Časové pásma sa použijú na zobrazenie dátumov v náhľade a núdzových situáciách.

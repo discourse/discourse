@@ -1,6 +1,7 @@
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 
-module("Unit | Controller | nested – readPosts with postRegistry", function () {
+module("Unit | Controller | nested - readPosts with postRegistry", function () {
   function makePost(postNumber, read = false) {
     let _read = read;
     return {
@@ -104,5 +105,137 @@ module("Unit | Controller | nested – readPosts with postRegistry", function ()
     readPosts(999, [2]);
 
     assert.false(post.read);
+  });
+});
+
+module("Unit | Controller | nested - bulk select delegation", function (hooks) {
+  setupTest(hooks);
+
+  hooks.afterEach(function () {
+    document.getElementById("qunit-fixture").innerHTML = "";
+  });
+
+  function setTopicControllerModel(controller, postIds) {
+    controller.setProperties({
+      model: {
+        postStream: {
+          isMegaTopic: false,
+          posts: postIds.map((id) => ({ id })),
+          stream: postIds,
+        },
+      },
+    });
+    controller.selectedPostIds = [];
+  }
+
+  test("uses the topic controller selection state", function (assert) {
+    const nestedController = this.owner.lookup("controller:nested");
+    const topicController = this.owner.lookup("controller:topic");
+    const post = { id: 123 };
+
+    topicController.multiSelect = false;
+    topicController.selectedPostIds = [];
+
+    nestedController.toggleMultiSelect();
+
+    assert.true(
+      nestedController.multiSelect,
+      "reflects multi-select state from the topic controller"
+    );
+
+    nestedController.togglePostSelection(post);
+
+    assert.deepEqual(
+      topicController.selectedPostIds,
+      [post.id],
+      "selects posts through the topic controller"
+    );
+    assert.true(
+      nestedController.postSelected(post),
+      "checks selection through the topic controller"
+    );
+  });
+
+  test("selectBelow uses nested root view display order", function (assert) {
+    const nestedController = this.owner.lookup("controller:nested");
+    const topicController = this.owner.lookup("controller:topic");
+    setTopicControllerModel(topicController, [1, 10, 30, 20, 40]);
+    nestedController.contextMode = false;
+
+    document.getElementById("qunit-fixture").innerHTML = `
+      <div class="nested-view">
+        <article data-post-id="1"></article>
+        <article data-post-id="10"></article>
+        <article data-post-id="30"></article>
+        <article data-post-id="20"></article>
+        <article data-post-id="40"></article>
+      </div>
+    `;
+
+    nestedController.selectBelow({ id: 30 });
+
+    assert.deepEqual(
+      topicController.selectedPostIds,
+      [30, 20, 40],
+      "selects the clicked post and visible posts after it"
+    );
+  });
+
+  test("selectBelow uses nested context view display order", function (assert) {
+    const nestedController = this.owner.lookup("controller:nested");
+    const topicController = this.owner.lookup("controller:topic");
+    setTopicControllerModel(topicController, [1, 2, 3, 4, 5]);
+    nestedController.contextMode = true;
+
+    document.getElementById("qunit-fixture").innerHTML = `
+      <div class="nested-view">
+        <article data-post-id="5"></article>
+      </div>
+      <div class="nested-view nested-context-view">
+        <article data-post-id="1"></article>
+        <article data-post-id="2"></article>
+        <article data-post-id="3"></article>
+        <article data-post-id="4"></article>
+      </div>
+    `;
+
+    nestedController.selectBelow({ id: 3 });
+
+    assert.deepEqual(
+      topicController.selectedPostIds,
+      [3, 4],
+      "selects below from the active context view"
+    );
+  });
+
+  test("selectAll selects loaded nested post ids", function (assert) {
+    const nestedController = this.owner.lookup("controller:nested");
+    const topicController = this.owner.lookup("controller:topic");
+    const posts = [{ id: 1 }, { id: 2 }, { id: 3 }];
+    setTopicControllerModel(
+      topicController,
+      posts.map((post) => post.id)
+    );
+    nestedController.topic = {
+      postStream: {
+        posts,
+      },
+    };
+
+    nestedController.selectAll();
+
+    assert.deepEqual(
+      topicController.selectedPostIds,
+      [1, 2, 3],
+      "selects the loaded nested posts"
+    );
+    assert.false(
+      nestedController.canSelectAll,
+      "does not offer select-all once loaded nested posts are selected"
+    );
+    assert.true(
+      nestedController.canDeselectAll,
+      "offers deselect when nested posts are selected"
+    );
   });
 });

@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/no-observers, ember/require-tagless-components */
+/* eslint-disable ember/no-classic-components, ember/no-observers, ember/require-tagless-components */
 import Component from "@ember/component";
 import { computed, set } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -7,7 +7,6 @@ import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
-import $ from "jquery";
 import ClickTrack from "discourse/lib/click-track";
 import { bind } from "discourse/lib/decorators";
 import { highlightPost } from "discourse/lib/utilities";
@@ -80,11 +79,7 @@ export default class DiscourseTopic extends Component {
 
     this.scrollManager.bindScrolling(this);
     window.addEventListener("resize", this.scrolled);
-    $(this.element).on(
-      "click.discourse-redirect",
-      ".cooked a, a.track-link",
-      (e) => ClickTrack.trackClick(e, getOwner(this))
-    );
+    this.element.addEventListener("click", this._trackLinkClick);
   }
 
   willDestroyElement() {
@@ -94,7 +89,14 @@ export default class DiscourseTopic extends Component {
     window.removeEventListener("resize", this.scrolled);
 
     // Unbind link tracking
-    $(this.element).off("click.discourse-redirect", ".cooked a, a.track-link");
+    this.element.removeEventListener("click", this._trackLinkClick);
+  }
+
+  @bind
+  _trackLinkClick(event) {
+    if (event.target.closest(".cooked a, a.track-link")) {
+      ClickTrack.trackClick(event, getOwner(this));
+    }
   }
 
   gotFocus(hasFocus) {

@@ -29,6 +29,12 @@ describe "Admin Site Setting Requires Confirmation" do
     expect(settings_page).to have_overridden_setting("min_password_length", value: 12)
   end
 
+  it "shows the confirmation when submitting the change with the Enter key" do
+    settings_page.visit("min_password_length")
+    settings_page.submit_setting_with_keyboard("min_password_length", 12)
+    expect(dialog).to be_open
+  end
+
   it "does not save the new setting value if the admin cancels confirmation" do
     settings_page.visit("min_password_length")
     settings_page.change_number_setting("min_password_length", 12)
@@ -55,6 +61,26 @@ describe "Admin Site Setting Requires Confirmation" do
       settings_page.visit("can_permanently_delete")
       settings_page.toggle_bool_setting("can_permanently_delete")
       expect(dialog).to be_closed
+    end
+  end
+
+  context "with simple_on_disable confirmation type" do
+    it "shows confirmation when disabling the setting but not when enabling it" do
+      settings_page.visit("content_security_policy")
+      settings_page.toggle_bool_setting("content_security_policy")
+      expect(dialog).to be_open
+      expect(dialog).to have_content(
+        I18n.t(
+          "admin_js.admin.site_settings.requires_confirmation_messages.content_security_policy.prompt",
+        ),
+      )
+      dialog.click_yes
+      expect(dialog).to be_closed
+      expect(settings_page).to have_overridden_setting("content_security_policy")
+
+      settings_page.toggle_bool_setting("content_security_policy")
+      expect(dialog).to be_closed
+      expect(settings_page).to have_no_overridden_setting("content_security_policy")
     end
   end
 end

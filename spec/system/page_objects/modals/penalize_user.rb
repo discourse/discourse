@@ -11,8 +11,18 @@ module PageObjects
         modal.all("table tbody tr td:nth-child(2)").map(&:text)
       end
 
+      def select_similar_user(username)
+        modal.find("table tbody tr", text: username).check
+      end
+
       def modal
         find(".d-modal.#{@penalty_type}-user-modal")
+      end
+
+      def suspend(reason, date: "tomorrow")
+        fill_in_suspend_reason(reason)
+        set_future_date(date)
+        perform
       end
 
       def fill_in_suspend_reason(reason)

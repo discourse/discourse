@@ -146,7 +146,7 @@ RSpec.describe "Create channel" do
         context "for a public category" do
           before do
             channel_modal.select_category(category_1)
-            find(".-auto-join .chat-modal-create-channel__label").click
+            channel_modal.toggle_auto_join
             channel_modal.click_primary_button
           end
 
@@ -183,7 +183,7 @@ RSpec.describe "Create channel" do
           before do
             group_1.add(user_1)
             channel_modal.select_category(private_category)
-            find(".-auto-join .chat-modal-create-channel__label").click
+            channel_modal.toggle_auto_join
             channel_modal.click_primary_button
           end
 
@@ -287,6 +287,35 @@ RSpec.describe "Create channel" do
           expect(page).to have_current_path(
             chat.channel_path(created_channel.slug, created_channel.id),
           )
+        end
+
+        it "persists the selected emoji" do
+          chat_page.visit_browse
+          chat_page.new_channel_button.click
+          channel_modal.select_category(category_1)
+          channel_modal.fill_name("Cats & Dogs")
+          channel_modal.select_emoji("cat")
+          channel_modal.click_primary_button
+
+          expect(channel_modal).to be_closed
+
+          created_channel = Chat::Channel.find_by(chatable_id: category_1.id)
+          expect(created_channel.emoji).to eq("cat")
+        end
+
+        it "clears the emoji when reset before saving" do
+          chat_page.visit_browse
+          chat_page.new_channel_button.click
+          channel_modal.select_category(category_1)
+          channel_modal.fill_name("Cats & Dogs")
+          channel_modal.select_emoji("cat")
+          channel_modal.reset_emoji
+          channel_modal.click_primary_button
+
+          expect(channel_modal).to be_closed
+
+          created_channel = Chat::Channel.find_by(chatable_id: category_1.id)
+          expect(created_channel.emoji).to be_nil
         end
       end
     end

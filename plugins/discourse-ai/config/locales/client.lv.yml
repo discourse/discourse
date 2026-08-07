@@ -34,6 +34,14 @@ lv:
             canned_reply:
               label: "Atbilde"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Ielādē..."
+        tool: "Darbība"
+        user: "Lietotājs"
+        approve: "Apstiprināt"
+        reject: "Noraidīt"
+        approved: "Apstiprināt"
+        rejected: "Noraidīts"
       llm_selector:
         none: "Nav"
       features:
@@ -52,11 +60,29 @@ lv:
           reset: "Atlikt"
         search:
           name: "Meklēt"
+        image_caption:
+          setting_groups:
+            settings: "Iestatījumi"
         spam:
           name: "Spams"
       modals:
         select_option: "Izvēlieties opciju..."
       translations:
+        category_scope: "Sadaļas"
+        model_progress:
+          detail:
+            columns:
+              pending: "Gaida apstiprinājumu"
+              total: "Kopā"
+          targets:
+            post:
+              title: "Ieraksti"
+            topic:
+              title: "Tēmas"
+            category:
+              title: "Sadaļas"
+            tag:
+              title: "Birkas"
         stats:
           eta_hours:
             zero: "%{count} stundas"
@@ -93,6 +119,11 @@ lv:
         save: "Saglabāt"
         enabled: "Ieslēgts?"
         delete: "Dzēst"
+        thinking_effort_options:
+          none: "Nav"
+          low: "Zems"
+          medium: "Vidējs"
+          high: "Augsta"
         response_format:
           open_modal: "Labot"
         filters:
@@ -146,8 +177,6 @@ lv:
           title: "Nākamais"
         tests:
           success: "Veiksmīgi!"
-        providers:
-          google: "Google"
       ai_helper:
         context_menu:
           cancel: "Atcelt"
@@ -159,8 +188,6 @@ lv:
           cancel: "Atcelt"
         thumbnail_suggestions:
           try_again: "Mēģināt vēlreiz"
-        image_caption:
-          save_caption: "Saglabāt"
       embeddings:
         save: "Saglabāt"
         delete: "Dzēst"

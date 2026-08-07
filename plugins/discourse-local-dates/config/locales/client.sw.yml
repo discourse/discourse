@@ -10,8 +10,6 @@ sw:
       create:
         form:
           insert: Weka
-          advanced_mode: Hali-tumizi ya juu
-          simple_mode: Hali-tumizi rahisi
           timezones_title: Majira za saa za kuonyeshwa
           timezones_description: Majina ya saa yatatumika kuonyesha tarehe kwenye kihakiki na marejesho ya mfumo.
           recurring_title: Kurudiarudia

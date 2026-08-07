@@ -44,15 +44,20 @@ RSpec.describe DiscourseWorkflows::Workflow::ManualExecute do
     end
 
     context "when everything is valid" do
-      it { is_expected.to run_successfully }
+      it "creates a pending manual execution and enqueues a job" do
+        expect { result }.to change { DiscourseWorkflows::Execution.count }.by(1).and change {
+                Jobs::DiscourseWorkflows::ExecuteManualWorkflow.jobs.size
+              }.by(1)
 
-      it "creates a new execution record" do
-        expect { result }.to change { DiscourseWorkflows::Execution.count }.by(1)
-      end
-
-      it "records a manual execution mode" do
-        result
-        expect(result[:execution]).to be_manual
+        expect(result).to run_successfully
+        execution = result[:execution]
+        job_args = Jobs::DiscourseWorkflows::ExecuteManualWorkflow.jobs.last["args"].first
+        expect(execution).to have_attributes(status: "pending", execution_mode: "manual")
+        expect(execution.started_at).to be_nil
+        expect(
+          execution.execution_data.workflow_data["nodes"].map { |node| node["id"] },
+        ).to contain_exactly("trigger-1")
+        expect(job_args).to include("execution_id" => execution.id, "user_id" => admin.id)
       end
 
       context "when the trigger has pinned data" do
@@ -68,12 +73,11 @@ RSpec.describe DiscourseWorkflows::Workflow::ManualExecute do
           )
         end
 
-        it { is_expected.to run_successfully }
-
-        it "uses pinned items as the trigger output" do
+        it "stores pinned items in the execution snapshot" do
+          expect(result).to run_successfully
           execution = result[:execution]
-          trigger_run = execution.execution_data.run_data["Trigger-1"].first
-          expect(trigger_run["outputs"].first["items"]).to include(
+          expect(execution.trigger_data).to eq({})
+          expect(execution.execution_data.workflow_data["pinData"]["Trigger-1"]).to include(
             hash_including("json" => hash_including("post" => hash_including("id" => 42))),
           )
         end
@@ -85,9 +89,8 @@ RSpec.describe DiscourseWorkflows::Workflow::ManualExecute do
           Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
         end
 
-        it { is_expected.to run_successfully }
-
         it "runs with empty trigger data" do
+          expect(result).to run_successfully
           expect(result[:execution].trigger_data).to eq({})
         end
       end
@@ -101,23 +104,21 @@ RSpec.describe DiscourseWorkflows::Workflow::ManualExecute do
           Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
         end
 
-        fab!(:stale_topic_1) do
+        fab!(:first_stale_topic) do
           Fabricate(:topic, created_at: 48.hours.ago, last_posted_at: 48.hours.ago)
         end
-        fab!(:stale_topic_2) do
+        fab!(:second_stale_topic) do
           Fabricate(:topic, created_at: 48.hours.ago, last_posted_at: 48.hours.ago)
         end
 
-        it { is_expected.to run_successfully }
-
-        it "creates one execution carrying every stale topic as an item" do
+        it "creates one execution carrying every stale topic as trigger data" do
           expect { result }.to change { DiscourseWorkflows::Execution.count }.by(1)
 
+          expect(result).to run_successfully
           execution = result[:execution]
-          trigger_run = execution.execution_data.run_data["Trigger-1"].first
           topic_ids =
-            trigger_run["outputs"].first["items"].map { |item| item.dig("json", "topic", "id") }
-          expect(topic_ids).to match_array([stale_topic_1.id, stale_topic_2.id])
+            execution.trigger_data.map { |item| item.dig("topic", "id") || item.dig(:topic, :id) }
+          expect(topic_ids).to match_array([first_stale_topic.id, second_stale_topic.id])
         end
       end
 
@@ -139,8 +140,7 @@ RSpec.describe DiscourseWorkflows::Workflow::ManualExecute do
         it "uses the schedule trigger's manual output" do
           freeze_time Time.utc(2026, 3, 18, 9, 0)
 
-          result
-
+          expect(result).to run_successfully
           expect(result[:execution].trigger_data).to include(
             "timestamp" => "2026-03-18T09:00:00.000Z",
             "hour" => "09",

@@ -13,6 +13,9 @@ ug:
             topic_id:
               label: تېما كىملىكى
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "سۆھبەت"
       disable_holiday: "چەكلە"
       enable_holiday: "قوزغات"
       date: "چېسلا"
@@ -86,11 +89,6 @@ ug:
           every_day: "ھەر كۈنى"
         attendance:
           none: "يوق"
-        url:
-          label: "تور ئادرېسى"
-          placeholder: "تاللاشچان"
-        location:
-          label: "ئورنى"
         description:
           label: "چۈشەندۈرۈش"
         event_type:
@@ -98,3 +96,4 @@ ug:
             title: "ئاممىۋى"
       invite_user_or_group:
         invite: "يوللا"
+        success: "تەكلىپ يوللاندى"
