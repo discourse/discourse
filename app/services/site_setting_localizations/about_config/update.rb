@@ -49,32 +49,24 @@ class SiteSettingLocalizations::AboutConfig::Update
         locale: params.locale,
       ).destroy_all
     else
-      localization =
-        SiteSettingLocalization.find_by(
-          setting_name: submitted_setting[:setting_name],
-          locale: params.locale,
-        )
+      attributes = { value: submitted_setting[:value], localizer_user_id: guardian.user.id }
 
-      if localization
-        localization.update!(value: submitted_setting[:value], localizer_user_id: guardian.user.id)
-      else
-        localization =
-          SiteSettingLocalization.create_or_find_by!(
+      localization =
+        begin
+          SiteSettingLocalization.find_or_create_by!(
             setting_name: submitted_setting[:setting_name],
             locale: params.locale,
-          ) do |record|
-            record.value = submitted_setting[:value]
-            record.localizer_user_id = guardian.user.id
-          end
+          ) { |record| record.assign_attributes(attributes) }
+        rescue ActiveRecord::RecordInvalid => error
+          raise unless error.record.errors.of_kind?(:setting_name, :taken)
 
-        if localization.value != submitted_setting[:value] ||
-             localization.localizer_user_id != guardian.user.id
-          localization.update!(
-            value: submitted_setting[:value],
-            localizer_user_id: guardian.user.id,
+          SiteSettingLocalization.lock.find_by!(
+            setting_name: submitted_setting[:setting_name],
+            locale: params.locale,
           )
         end
-      end
+
+      localization.update!(attributes) unless localization.previously_new_record?
     end
   end
 
