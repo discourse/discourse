@@ -54,13 +54,13 @@ RSpec.describe Admin::Config::WelcomeBannerController do
         expect(theme_data["enable_welcome_banner"]).to eq(true)
       end
 
-      it "returns false for enable_welcome_banner when setting is not present" do
+      it "returns the effective default for enable_welcome_banner when setting is not present" do
         get "/admin/config/welcome-banner/themes-with-setting.json"
 
         expect(response.status).to eq(200)
 
         theme_data = response.parsed_body["themes"].find { |t| t["id"] == user_selectable_theme.id }
-        expect(theme_data["enable_welcome_banner"]).to eq(false)
+        expect(theme_data["enable_welcome_banner"]).to eq(true)
       end
     end
 
