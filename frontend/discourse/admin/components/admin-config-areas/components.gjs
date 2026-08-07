@@ -15,6 +15,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { extractErrorInfo } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
+import downloadBlob from "discourse/lib/download-blob";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import { descriptionForRemoteUrl } from "discourse/lib/popular-themes";
@@ -455,6 +456,17 @@ class ComponentRow extends Component {
   }
 
   @action
+  async export() {
+    try {
+      await downloadBlob(
+        getURL(`/admin/customize/themes/${this.args.component.id}/export`)
+      );
+    } catch {
+      this.dialog.alert(i18n("generic_error"));
+    }
+  }
+
+  @action
   delete() {
     return this.dialog.deleteConfirm({
       title: i18n(
@@ -636,15 +648,9 @@ class ComponentRow extends Component {
                 <dropdown.item>
                   <DButton
                     class="btn-transparent admin-config-components__export"
-                    target="_blank"
-                    rel="noopener noreferrer"
                     @label="admin.config_areas.themes_and_components.components.export"
                     @icon="download"
-                    @href={{getURL
-                      (concat
-                        "/admin/customize/themes/" @component.id "/export"
-                      )
-                    }}
+                    @action={{this.export}}
                   />
                 </dropdown.item>
                 <dropdown.item>
