@@ -47,7 +47,11 @@ describe "Topic timeline scroller drag" do
     expect(topic_page).to have_post_number(1)
     expect(page).to have_css(".timeline-scroller")
 
-    drag_with_pointer(from: ".timeline-scroller", by: { y: 120 })
+    drag_with_pointer(from: ".timeline-scroller", by: { y: 120 }) do
+      # Asserted mid-gesture, because the absence afterwards is also what a drag
+      # that never started would produce.
+      expect(page).to have_css("body.dragging")
+    end
 
     expect(page).to have_no_css("body.dragging")
   end

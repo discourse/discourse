@@ -31,6 +31,36 @@ export function centerOf(selector: string): ClientPoint {
 }
 
 /**
+ * Throws unless both ends of a drag are really registered with the primitives.
+ *
+ * Dispatching a drag at an element that is not a source, or at one that is not a
+ * target, does nothing at all. A test whose assertion is that nothing happened
+ * then passes for the wrong reason, and keeps passing after the registration is
+ * removed outright. Failing loudly here names which end was unwired instead.
+ *
+ * @param sourceSelector - CSS selector for the element the drag starts on.
+ * @param targetSelector - CSS selector for the element it is dropped on.
+ */
+export function assertDragRegistered(
+  sourceSelector: string,
+  targetSelector: string
+) {
+  const source = document.querySelector(sourceSelector);
+  const target = document.querySelector(targetSelector);
+
+  if (!source?.hasAttribute("data-drag-source")) {
+    throw new Error(
+      `${sourceSelector} is not a registered drag source, so this drag would do nothing`
+    );
+  }
+  if (!target?.hasAttribute("data-drop-target")) {
+    throw new Error(
+      `${targetSelector} is not a registered drop target, so this drag would do nothing`
+    );
+  }
+}
+
+/**
  * Dispatches one synthetic drag event and then waits a single animation frame
  * before resolving.
  *

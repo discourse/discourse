@@ -475,11 +475,28 @@ module SystemHelpers
   #
   # Like `drag_and_drop`, this bypasses Capybara's client-settle wait, so assert
   # through a retrying matcher rather than a value read once.
+  #
+  # Unlike `drag_and_drop`, which scrolls its source into view itself, this drives
+  # the mouse at absolute viewport coordinates. An element below the fold would
+  # otherwise be measured where it cannot be pressed, and the gesture would land on
+  # whatever is at that point instead — doing nothing while reporting success. So
+  # it is scrolled into view first, and measured after.
+  #
+  # Pass a block to assert on the page while the gesture is still open: it runs
+  # after the pointer has moved and before the release, so anything a drag holds
+  # for its own duration is still there to be seen. Without one, asserting only
+  # that such a mark is absent afterwards would pass just as well against a drag
+  # that never started.
   def drag_with_pointer(from:, to: nil, by: nil, steps: 10)
     raise ArgumentError, "pass exactly one of to: or by:" if to.nil? == by.nil?
 
     page.driver.with_playwright_page do |pw_page|
-      box = pw_page.query_selector(from).bounding_box
+      # Waited for rather than queried once: `query_selector` returns nil without
+      # waiting, so a not-yet-rendered element would fail as a `NoMethodError` on
+      # nil, naming neither the selector nor the timing.
+      node = pw_page.wait_for_selector(from, state: "visible")
+      node.scroll_into_view_if_needed
+      box = node.bounding_box
       start_x = box["x"] + box["width"] / 2
       start_y = box["y"] + box["height"] / 2
       end_x = to ? to[:x] : start_x + by.fetch(:x, 0)
@@ -490,8 +507,12 @@ module SystemHelpers
       # Stepped rather than a single jump: a gesture with a threshold needs to be
       # seen crossing it, not teleported past it.
       pw_page.mouse.move(end_x, end_y, steps: steps)
-      pw_page.mouse.up
     end
+
+    # Outside the driver block, so Capybara's own matchers work normally in it.
+    yield if block_given?
+
+    page.driver.with_playwright_page { |pw_page| pw_page.mouse.up }
   end
 
   def html_translation_to_text(html_translation)
