@@ -155,6 +155,7 @@ class Category < ActiveRecord::Base
   after_update :revise_category_definition, if: :saved_change_to_description?
   after_update :run_plugin_category_update_param_callbacks
   after_update :enqueue_category_hashtag_remap, if: :saved_change_to_hashtag_ref?
+  after_update :clear_page_not_found_topics_cache, if: :saved_change_to_read_restricted?
   after_destroy :trash_category_definition
   after_destroy :clear_related_site_settings
 
@@ -1455,6 +1456,11 @@ class Category < ActiveRecord::Base
       SQL
 
     result.map { |row| [row.group_id, row.permission_type] }
+  end
+
+  def clear_page_not_found_topics_cache
+    Topic.clear_page_not_found_topics_cache!
+    DB.after_commit { Topic.clear_page_not_found_topics_cache! }
   end
 
   def clear_site_cache
