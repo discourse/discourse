@@ -10,8 +10,8 @@ import { isTesting } from "discourse/lib/environment";
 import loadAce from "discourse/lib/load-ace-editor";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dResizeEdge from "discourse/ui-kit/modifiers/d-resize-edge";
 import { i18n } from "discourse-i18n";
 
 const WAITER = buildWaiter("ace-editor");
@@ -66,14 +66,9 @@ const FALLBACK_MIN_HEIGHT = 200;
 export default class AceEditor extends Component {
   @service appEvents;
 
-  /** The size reported to assistive technology; null until measured. */
-  @tracked resizeHeight = null;
-  /** The minimum reported to assistive technology. */
-  @tracked resizeMin = null;
-  /** The maximum reported to assistive technology. */
-  @tracked resizeMax = null;
-
   @tracked isLoading = true;
+  /** The resized box, handed to the separator once the editor has built it. */
+  @tracked editorContainer = null;
   editor = null;
   ace = null;
   skipChangePropagation = false;
@@ -164,7 +159,8 @@ export default class AceEditor extends Component {
 
     this.editor.on("blur", () => this.warnSCSSDeprecations());
 
-    this.refreshResizeBounds();
+    // Only now does the box the separator announces exist.
+    this.editorContainer = this.editor.container;
     this.editor.$blockScrolling = Infinity;
     this.editor.renderer.setScrollMargin(10, 10);
 
@@ -270,7 +266,6 @@ export default class AceEditor extends Component {
   @bind
   resize() {
     this.editor?.resize();
-    this.refreshResizeBounds();
   }
 
   @bind
@@ -330,22 +325,9 @@ export default class AceEditor extends Component {
       : belowHeader;
   }
 
-  /**
-   * Refreshes what the separator publishes to assistive technology. Needed because
-   * the attributes render before the editor exists, and a getter reading the DOM
-   * has no tracked dependency to re-render on.
-   */
-  @bind
-  refreshResizeBounds() {
-    this.resizeHeight = this.editorHeight() || null;
-    this.resizeMin = this.minEditorHeight();
-    this.resizeMax = this.maxEditorHeight();
-  }
-
   @bind
   onResizeDrag(size) {
     this.editor.container.style.height = `${size}px`;
-    this.refreshResizeBounds();
   }
 
   <template>
@@ -363,24 +345,17 @@ export default class AceEditor extends Component {
         >
         </div>
         {{#if @resizable}}
-          <div
+          <DResizeSeparator
             class="grippie"
-            role="separator"
-            aria-orientation="horizontal"
-            aria-label={{i18n "ace_editor.resize"}}
-            aria-valuenow={{this.resizeHeight}}
-            aria-valuemin={{this.resizeMin}}
-            aria-valuemax={{this.resizeMax}}
-            tabindex="0"
-            {{dResizeEdge
-              value=this.editorHeight
-              min=this.minEditorHeight
-              max=this.maxEditorHeight
-              axis="vertical"
-              side="start"
-              onResize=this.onResizeDrag
-            }}
-          ></div>
+            @axis="vertical"
+            @side="start"
+            @value={{this.editorHeight}}
+            @min={{this.minEditorHeight}}
+            @max={{this.maxEditorHeight}}
+            @label={{i18n "ace_editor.resize"}}
+            @onResize={{this.onResizeDrag}}
+            @observe={{this.editorContainer}}
+          />
         {{/if}}
       </DConditionalLoadingSpinner>
     </div>

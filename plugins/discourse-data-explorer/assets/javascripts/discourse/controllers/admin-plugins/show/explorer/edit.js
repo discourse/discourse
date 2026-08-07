@@ -338,36 +338,75 @@ export default class PluginsExplorerController extends Controller {
     });
   }
 
+  /**
+   * The panes the separator resizes, found from the separator's own position so the
+   * two cannot disagree about which editor they belong to.
+   *
+   * @param {HTMLElement} separator - The separator element.
+   * @returns {HTMLElement|null} The panes, or null before they render.
+   */
   @bind
-  dragMove(e) {
-    if (!e.movementX) {
-      return;
-    }
+  panesFor(separator) {
+    return separator.closest(".query-editor")?.querySelector(".panels-flex");
+  }
 
-    const editPane = document.querySelector(".query-editor");
-    const target = editPane.querySelector(".panels-flex");
+  /**
+   * The panes' current height.
+   *
+   * A function rather than a number because it is a live measurement: an arg whose
+   * compute reads no tracked state is cached for the modifier's lifetime, so every
+   * drag after the first would start from the first one's height.
+   *
+   * @returns {number} The height in pixels.
+   */
+  @bind
+  paneHeight() {
+    return this.#panes?.clientHeight ?? 0;
+  }
 
-    // we need to get the initial height / width of edit pane
-    // before we manipulate the size
-    if (!this.initialPaneWidth && !this.originalPaneHeight) {
-      this.originalPaneHeight = target.clientHeight;
-    }
+  /**
+   * The smallest the panes may be dragged to, which is the height they were first
+   * seen at. Captured once, so shrinking is bounded by the layout's own idea of a
+   * reasonable editor rather than by an arbitrary constant.
+   *
+   * @returns {number} The minimum height in pixels.
+   */
+  @bind
+  minPaneHeight() {
+    this.originalPaneHeight ??= this.paneHeight();
+    return this.originalPaneHeight;
+  }
 
-    const newHeight = Math.max(
-      this.originalPaneHeight,
-      target.clientHeight + e.movementY
-    );
-
-    target.style.height = newHeight + "px";
-
-    this.appEvents.trigger("ace:resize");
+  /**
+   * The largest the panes may be dragged to.
+   *
+   * A screenful, not the space below the header: these panes sit in a page that
+   * scrolls, so growing them lengthens the page rather than pushing anything out of
+   * view, and subtracting a header offset here would cap them below their own
+   * resting height on a short window. Past one screen the results are off-screen
+   * anyway, which is what makes a screenful the useful limit.
+   *
+   * @returns {number} The maximum height in pixels.
+   */
+  @bind
+  maxPaneHeight() {
+    return Math.max(window.innerHeight, this.minPaneHeight());
   }
 
   @bind
-  didStartDrag() {}
+  onPaneResize(size) {
+    const panes = this.#panes;
+    if (!panes) {
+      return;
+    }
 
-  @bind
-  didEndDrag() {}
+    panes.style.height = `${size}px`;
+    this.appEvents.trigger("ace:resize");
+  }
+
+  get #panes() {
+    return document.querySelector(".query-editor .panels-flex");
+  }
 
   @action
   updateGroupIds(value) {

@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { modifier } from "ember-modifier";
 import dResizeEdge from "discourse/ui-kit/modifiers/d-resize-edge";
 
 /**
@@ -12,6 +13,36 @@ const CURSOR_CLASS = {
   vertical: "d-resizing-ns",
   horizontal: "d-resizing-ew",
 };
+
+/**
+ * Watches the box being resized so the announced size keeps up with changes no
+ * gesture caused. Re-runs when `target` changes, which is what lets a consumer
+ * whose element does not exist at first render hand it over once it does.
+ */
+const observeResized = modifier((separator, [separatorComponent, target]) => {
+  const element = typeof target === "function" ? target(separator) : target;
+  if (!element) {
+    return;
+  }
+
+  const observer = new ResizeObserver(() => separatorComponent.refresh());
+  observer.observe(element);
+
+  return () => observer.disconnect();
+});
+
+/**
+ * Re-reads the size when the viewport changes. Separate from watching the box
+ * because bounds are commonly derived from the viewport — the largest a box may
+ * grow is usually what is left of the window — and a window change need not alter
+ * the box's own size, so nothing else would notice it.
+ */
+const refreshOnViewportChange = modifier((_element, [separatorComponent]) => {
+  const onViewportChange = () => separatorComponent.refresh();
+  window.addEventListener("resize", onViewportChange);
+
+  return () => window.removeEventListener("resize", onViewportChange);
+});
 
 /**
  * A one-axis resize handle that is operable and announced: the separator semantics
@@ -66,11 +97,19 @@ const CURSOR_CLASS = {
  *  - `@onResizeStart` — the gesture began. A notification; the return is ignored.
  *  - `@onResize(size)` — fired throughout the gesture; preview here.
  *  - `@onResizeEnd(size)` — fired once at the end; commit here.
- *  - `@onRegisterApi({ refresh })` — receives a handle whose `refresh()` re-reads
- *    the size. Needed only where the box can change size without the separator
- *    being touched, since nothing else can know that happened.
+ *  - `@observe` — the box being resized, so the announced size keeps up with changes
+ *    no gesture caused, such as a panel opening or a preview toggling. Viewport
+ *    changes are picked up regardless and need no arg.
+ *    Either the element, or a function receiving the separator's own element and
+ *    returning it. Pass the element when it may not exist at first render, since a
+ *    change to it re-attaches the observer; a function is resolved once, which suits
+ *    a box already around the separator when it renders.
  *
- * Attributes pass through, so a consumer keeps its own class and may add modifiers.
+ * Attributes pass through, so a consumer keeps its own class alongside this one —
+ * Glimmer merges the two rather than replacing — and may add its own modifiers.
+ *
+ * Anything passed as content renders inside the handle, for the ones that draw
+ * themselves with a real element rather than a pseudo-element.
  */
 export default class DResizeSeparator extends Component {
   /** The size and bounds as last read, for assistive technology to announce. */
@@ -96,32 +135,59 @@ export default class DResizeSeparator extends Component {
    * @returns {number|undefined} The current size.
    */
   get valueNow() {
-    return this._announced?.now ?? undefined;
+    return this.#announce("value", "now");
   }
 
   get valueMin() {
-    return this._announced?.min ?? undefined;
+    return this.#announce("min", "min");
   }
 
   get valueMax() {
-    return this._announced?.max ?? undefined;
+    return this.#announce("max", "max");
   }
 
-  @action
-  captureSize() {
-    this.#snapshot();
-    this.args.onRegisterApi?.({ refresh: this.refresh });
+  /**
+   * Resolves one announced number, from the mirror or from the arg directly.
+   *
+   * A number given as a number is already reactive, so it is read straight through:
+   * mirroring it would freeze what is announced until something else happened to
+   * trigger a re-read. Only a function needs the mirror, because a measurement has
+   * no tracked state for the template to notice changing.
+   *
+   * @param {string} argName - Which arg to resolve.
+   * @param {string} mirrorKey - Its key in the mirror.
+   * @returns {number|undefined} The number to announce.
+   */
+  #announce(argName, mirrorKey) {
+    const arg = this.args[argName];
+    if (typeof arg === "function") {
+      return this._announced?.[mirrorKey] ?? undefined;
+    }
+    return arg ?? undefined;
   }
 
+  /** Re-reads the size. Called on insert, after every report, and by the observer. */
   @action
   refresh() {
     this.#snapshot();
   }
 
+  /**
+   * Deliberately does NOT re-read the size.
+   *
+   * The modifier reports a move and then, on the last one, the commit — both in the
+   * same stack. Dirtying tracked state that the template consumes in between opens
+   * a runloop, and a consumer callback reached with one already open is invoked
+   * directly rather than through the wrapper that routes exceptions to Ember's
+   * error handler, so a consumer that throws on commit has its exception escape as
+   * an unhandled error instead. Mid-gesture there is nothing worth announcing
+   * anyway: the size is still moving, and the commit re-reads it.
+   *
+   * @param {number} size - The size the gesture is passing through.
+   */
   @action
   onResize(size) {
     this.args.onResize?.(size);
-    this.#snapshot();
   }
 
   @action
@@ -147,17 +213,26 @@ export default class DResizeSeparator extends Component {
   }
 
   <template>
+    {{! Above the splat is a default a consumer may replace; below it is something
+      this component guarantees. `tabindex` is deliberately open, because a roving
+      composite legitimately makes its inactive items unreachable, and lowering it
+      invalidates nothing else. `role` is not, because the value attributes below
+      are only meaningful on a separator, so overriding it would leave the element
+      carrying attributes its role does not allow. }}
     <div
-      data-resize-separator
-      data-resize-axis={{this.axis}}
+      class="d-resize-separator"
+      tabindex="0"
+      ...attributes
       role="separator"
+      data-resize-axis={{this.axis}}
       aria-orientation={{this.orientation}}
       aria-label={{@label}}
       aria-valuenow={{this.valueNow}}
       aria-valuemin={{this.valueMin}}
       aria-valuemax={{this.valueMax}}
-      tabindex="0"
-      {{didInsert this.captureSize}}
+      {{didInsert this.refresh}}
+      {{observeResized this @observe}}
+      {{refreshOnViewportChange this}}
       {{dResizeEdge
         value=@value
         min=@min
@@ -169,7 +244,6 @@ export default class DResizeSeparator extends Component {
         onResize=this.onResize
         onResizeEnd=this.onResizeEnd
       }}
-      ...attributes
-    ></div>
+    >{{yield}}</div>
   </template>
 }

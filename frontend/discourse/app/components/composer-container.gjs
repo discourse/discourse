@@ -38,43 +38,18 @@ import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DPopupInputTip from "discourse/ui-kit/d-popup-input-tip";
+import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import DTextField from "discourse/ui-kit/d-text-field";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
-import dResizeEdge from "discourse/ui-kit/modifiers/d-resize-edge";
 import dSwipe from "discourse/ui-kit/modifiers/d-swipe";
 import { i18n } from "discourse-i18n";
 
 // Used only if the composer's min-height computes to `auto`, which would leave
 // the resize with no lower bound at all.
 const FALLBACK_MIN_HEIGHT = 250;
-
-/**
- * Reports the composer's height to the caller whenever it changes.
- *
- * The resize separator has to publish the current height to assistive
- * technology, and it cannot be measured while the attributes render: the
- * composer is not in the DOM yet, and it stays at zero height until it opens.
- * Observing it covers opening, closing, dragging and window changes alike.
- */
-const trackComposerHeight = modifier((element, [onMeasure]) => {
-  const target = element.closest("#reply-control");
-  if (!target) {
-    return;
-  }
-
-  const observer = new ResizeObserver(([entry]) => {
-    const height = Math.round(
-      entry.borderBoxSize?.[0]?.blockSize ?? entry.contentRect.height
-    );
-    onMeasure(height > 0 ? height : null);
-  });
-  observer.observe(target);
-
-  return () => observer.disconnect();
-});
 
 const trackFieldsHeight = modifier((element, [enabled]) => {
   if (!enabled) {
@@ -133,26 +108,12 @@ export default class ComposerContainer extends Component {
   @service keyValueStore;
 
   @tracked toolbarPortalTarget;
-  /** The size reported to assistive technology; null until measured. */
-  @tracked resizeHeight = null;
-  /** The minimum reported to assistive technology; null until measured. */
-  @tracked resizeMin = null;
-  /** The maximum reported to assistive technology; null until measured. */
-  @tracked resizeMax = null;
 
   #swipeEditor = null;
   #swipeSlide = 0;
 
-  constructor() {
-    super(...arguments);
-    // The maximum is derived from the window, and a fixed-height composer does not
-    // resize with it, so its own observer never fires for this.
-    window.addEventListener("resize", this.refreshResizeBounds);
-  }
-
   willDestroy() {
     super.willDestroy(...arguments);
-    window.removeEventListener("resize", this.refreshResizeBounds);
     cancel(this.composerResizeDebounceHandler);
   }
 
@@ -288,44 +249,15 @@ export default class ComposerContainer extends Component {
   }
 
   /**
-   * Records the composer's measured height, for the separator to publish.
+   * The box the separator announces, found from the separator's own position the
+   * way the composer's retired observer did.
    *
-   * @param {number|null} height - The height in pixels, or null when the composer
-   *   is closed and has none.
+   * @param {HTMLElement} separator - The separator element.
+   * @returns {HTMLElement|null} The composer, or null before it is in the DOM.
    */
   @bind
-  refreshResizeBounds() {
-    this.setResizeHeight(this.composerHeight() || null);
-  }
-
-  @action
-  setResizeHeight(height) {
-    this.resizeHeight = height;
-    // Refreshed alongside the height because the composer's min-height is 0 until
-    // it opens, so a value read while the attributes first render is meaningless.
-    this.resizeMin = this.minComposerHeight();
-    this.resizeMax = this.maxComposerHeight();
-  }
-
-  /**
-   * The size the separator reports to assistive technology, or `undefined` before
-   * the composer has been measured — an absent `aria-valuenow` is honest, where a
-   * zero would claim the composer has no height.
-   *
-   * @returns {number|undefined} The current height, in pixels.
-   */
-  get resizeValueNow() {
-    return this.resizeHeight ?? undefined;
-  }
-
-  /** @returns {number} The smallest height, in pixels. */
-  get resizeValueMin() {
-    return this.resizeMin ?? FALLBACK_MIN_HEIGHT;
-  }
-
-  /** @returns {number} The largest height, in pixels. */
-  get resizeValueMax() {
-    return this.resizeMax ?? this.maxComposerHeight();
+  replyControlFor(separator) {
+    return separator.closest("#reply-control");
   }
 
   /**
@@ -392,8 +324,6 @@ export default class ComposerContainer extends Component {
     // becomes a drag does not suppress the composer's transitions.
     this.#replyControl?.classList.add("clear-transitions");
 
-    this.resizeHeight = size;
-
     const height = `${size}px`;
     // resuming from minimized restores the height from the model
     this.composer.model?.set("composerHeight", height);
@@ -443,27 +373,19 @@ export default class ComposerContainer extends Component {
       @cancelled={{this.composer.cancelled}}
       @save={{this.composer.saveAction}}
     >
-      <div
+      <DResizeSeparator
         class="grippie"
-        role="separator"
-        aria-orientation="horizontal"
-        aria-label={{i18n "composer.resize"}}
-        aria-valuenow={{this.resizeValueNow}}
-        aria-valuemin={{this.resizeValueMin}}
-        aria-valuemax={{this.resizeValueMax}}
-        tabindex="0"
-        {{trackComposerHeight this.setResizeHeight}}
-        {{dResizeEdge
-          value=this.composerHeight
-          min=this.minComposerHeight
-          max=this.maxComposerHeight
-          axis="vertical"
-          side="end"
-          onResizeStart=this.onResizeStart
-          onResize=this.onResizeDrag
-          onResizeEnd=this.onResizeEnd
-        }}
-      ></div>
+        @axis="vertical"
+        @side="end"
+        @value={{this.composerHeight}}
+        @min={{this.minComposerHeight}}
+        @max={{this.maxComposerHeight}}
+        @label={{i18n "composer.resize"}}
+        @observe={{this.replyControlFor}}
+        @onResizeStart={{this.onResizeStart}}
+        @onResize={{this.onResizeDrag}}
+        @onResizeEnd={{this.onResizeEnd}}
+      />
       {{#if this.composer.visible}}
         {{htmlClass (if this.composer.isPreviewVisible "composer-has-preview")}}
 

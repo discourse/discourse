@@ -9,10 +9,10 @@ import MultiSelect from "discourse/select-kit/components/multi-select";
 import { and, eq, notEq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import DTextField from "discourse/ui-kit/d-text-field";
 import DTextarea from "discourse/ui-kit/d-textarea";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import dPointerDrag from "discourse/ui-kit/modifiers/d-pointer-drag";
 import { i18n } from "discourse-i18n";
 import CodeView from "discourse/plugins/discourse-data-explorer/discourse/components/code-view";
 import ExplorerSchema from "discourse/plugins/discourse-data-explorer/discourse/components/explorer-schema";
@@ -143,17 +143,17 @@ export default class QueriesEdit extends Component {
                   </div>
                 </div>
 
-                <div
+                <DResizeSeparator
                   class="grippie"
-                  {{dPointerDrag
-                    onDragStart=@controller.didStartDrag
-                    onDrag=@controller.dragMove
-                    onDragEnd=@controller.didEndDrag
-                    onDragCancel=@controller.didEndDrag
-                    bodyClass="dragging"
-                  }}
-                >
-                </div>
+                  @axis="vertical"
+                  @side="start"
+                  @value={{@controller.paneHeight}}
+                  @min={{@controller.minPaneHeight}}
+                  @max={{@controller.maxPaneHeight}}
+                  @label={{i18n "explorer.resize_editor"}}
+                  @observe={{@controller.panesFor}}
+                  @onResize={{@controller.onPaneResize}}
+                />
 
                 <div class="clear"></div>
               {{else}}
@@ -278,18 +278,17 @@ export default class QueriesEdit extends Component {
                 </div>
               </div>
 
-              <div
+              <DResizeSeparator
                 class="grippie"
-                {{dPointerDrag
-                  onDragStart=@controller.didStartDrag
-                  onDrag=@controller.dragMove
-                  onDragEnd=@controller.didEndDrag
-                  onDragCancel=@controller.didEndDrag
-                  bodyClass="dragging"
-                }}
-              >
-                {{dIcon "discourse-expand"}}
-              </div>
+                @axis="vertical"
+                @side="start"
+                @value={{@controller.paneHeight}}
+                @min={{@controller.minPaneHeight}}
+                @max={{@controller.maxPaneHeight}}
+                @label={{i18n "explorer.resize_editor"}}
+                @observe={{@controller.panesFor}}
+                @onResize={{@controller.onPaneResize}}
+              >{{dIcon "discourse-expand"}}</DResizeSeparator>
 
               <div class="clear"></div>
             {{else}}

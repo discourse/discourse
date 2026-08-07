@@ -1,8 +1,11 @@
+import { tracked } from "@glimmer/tracking";
 import {
   find,
   render,
+  settled,
   triggerEvent,
   triggerKeyEvent,
+  waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -79,8 +82,14 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     // them through attributes without meaning to restyle anything.
     assert
       .dom(".my-handle")
-      .hasAttribute("data-resize-separator", "")
+      .hasClass("d-resize-separator", "it carries its own class")
       .hasAttribute("data-resize-axis", "vertical");
+    assert
+      .dom(".my-handle")
+      .hasClass(
+        "my-handle",
+        "and keeps the consumer's, rather than replacing it"
+      );
   });
 
   test("the styling hook names the axis being resized, not the bar's direction", async function (assert) {
@@ -220,6 +229,77 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
       );
   });
 
+  test("renders block content, for a handle that shows an affordance", async function (assert) {
+    const size = () => 300;
+
+    await render(
+      <template>
+        <DResizeSeparator
+          @axis="vertical"
+          @value={{size}}
+          @min={{100}}
+          @max={{500}}
+          @label="Resize the thing"
+          class="my-handle"
+        ><span class="my-grip">grip</span></DResizeSeparator>
+      </template>
+    );
+
+    // Some handles draw themselves with a pseudo-element, others put a real icon
+    // inside. Both have to be possible without giving up the separator semantics.
+    assert
+      .dom(".my-handle .my-grip")
+      .exists("content passed to the separator is rendered inside it");
+  });
+
+  test("the announced size settles on commit rather than following every move", async function (assert) {
+    let current = 300;
+    const size = () => current;
+    const onResize = (next) => (current = next);
+
+    await render(
+      <template>
+        <DResizeSeparator
+          @axis="vertical"
+          @side="end"
+          @value={{size}}
+          @min={{100}}
+          @max={{500}}
+          @label="Resize the thing"
+          @onResize={{onResize}}
+          class="my-handle"
+        />
+      </template>
+    );
+
+    const handle = pressable(".my-handle");
+    await triggerEvent(handle, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientY: 400,
+    });
+    await triggerEvent(handle, "pointermove", { pointerId: 1, clientY: 360 });
+
+    // Deliberately unchanged mid-gesture. The modifier reports the last move and the
+    // commit in one stack, so writing tracked state in between opens a runloop, and
+    // a consumer callback reached with one already open loses the wrapper that hands
+    // its exceptions to the framework. The composer's persistence-failure acceptance
+    // test is what guards that consequence; this pins the behaviour that avoids it.
+    assert
+      .dom(".my-handle")
+      .hasAttribute(
+        "aria-valuenow",
+        "300",
+        "nothing is announced while it moves"
+      );
+
+    await triggerEvent(handle, "pointerup", { pointerId: 1, clientY: 360 });
+
+    assert
+      .dom(".my-handle")
+      .hasAttribute("aria-valuenow", "340", "the committed size is announced");
+  });
+
   test("the cursor is held on the page for the length of the gesture", async function (assert) {
     const size = () => 300;
 
@@ -327,11 +407,72 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
       );
   });
 
-  test("refresh re-reads the size for changes the gesture cannot see", async function (assert) {
-    let current = 300;
-    const size = () => current;
-    let api;
-    const onRegisterApi = (handle) => (api = handle);
+  test("re-reads the size when the box it resizes changes on its own", async function (assert) {
+    const size = () => find(".the-box")?.clientHeight ?? null;
+    const resolve = (separator) => separator.parentElement;
+
+    await render(
+      <template>
+        <div class="the-box" style="height: 300px">
+          <DResizeSeparator
+            @axis="vertical"
+            @value={{size}}
+            @min={{100}}
+            @max={{500}}
+            @label="Resize the thing"
+            @observe={{resolve}}
+            class="my-handle"
+          />
+        </div>
+      </template>
+    );
+
+    assert.dom(".my-handle").hasAttribute("aria-valuenow", "300");
+
+    // The box can be resized by things no gesture caused — a panel opening, a
+    // preview toggling, the window changing — and the announced size has to follow
+    // without the consumer wiring anything up.
+    find(".the-box").style.height = "420px";
+    await waitUntil(
+      () => find(".my-handle").getAttribute("aria-valuenow") === "420"
+    );
+
+    assert.dom(".my-handle").hasAttribute("aria-valuenow", "420");
+  });
+
+  test("a plain value is announced as it changes, without waiting for a gesture", async function (assert) {
+    const state = new (class {
+      @tracked ceiling = 400;
+    })();
+
+    await render(
+      <template>
+        <DResizeSeparator
+          @axis="vertical"
+          @value={{120}}
+          @min={{0}}
+          @max={{state.ceiling}}
+          @label="Resize the thing"
+          class="my-handle"
+        />
+      </template>
+    );
+
+    assert.dom(".my-handle").hasAttribute("aria-valuemax", "400");
+
+    // A number given directly is already reactive, so it is read straight through
+    // rather than mirrored: snapshotting it would freeze it until something else
+    // happened to trigger a re-read.
+    state.ceiling = 900;
+    await settled();
+
+    assert.dom(".my-handle").hasAttribute("aria-valuemax", "900");
+  });
+
+  test("re-reads the bounds when the viewport changes", async function (assert) {
+    let ceiling = 500;
+    const size = () => 300;
+    const max = () => ceiling;
 
     await render(
       <template>
@@ -339,24 +480,59 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
           @axis="vertical"
           @value={{size}}
           @min={{100}}
-          @max={{500}}
+          @max={{max}}
           @label="Resize the thing"
-          @onRegisterApi={{onRegisterApi}}
           class="my-handle"
         />
       </template>
     );
 
-    assert.dom(".my-handle").hasAttribute("aria-valuenow", "300");
+    assert.dom(".my-handle").hasAttribute("aria-valuemax", "500");
 
-    // The box can change size for reasons that never touch the separator, and the
-    // owner is the only one who knows when that happened.
-    current = 420;
-    api.refresh();
-    await triggerEvent(".my-handle", "focus");
+    // How large a box may grow is usually whatever is left of the window, and a
+    // window change need not alter the box itself, so nothing else would notice.
+    ceiling = 900;
+    window.dispatchEvent(new Event("resize"));
+    await settled();
 
-    assert
-      .dom(".my-handle")
-      .hasAttribute("aria-valuenow", "420", "the announced size catches up");
+    assert.dom(".my-handle").hasAttribute("aria-valuemax", "900");
+  });
+
+  test("starts observing a box that only exists after the first render", async function (assert) {
+    const state = new (class {
+      @tracked target = null;
+    })();
+    const size = () => find(".late-box")?.clientHeight ?? null;
+
+    await render(
+      <template>
+        <div class="late-box" style="height: 200px"></div>
+        <DResizeSeparator
+          @axis="vertical"
+          @value={{size}}
+          @min={{100}}
+          @max={{500}}
+          @label="Resize the thing"
+          @observe={{state.target}}
+          class="my-handle"
+        />
+      </template>
+    );
+
+    // Nothing was being observed yet, so a change went unnoticed.
+    find(".late-box").style.height = "260px";
+    await settled();
+    assert.dom(".my-handle").hasAttribute("aria-valuenow", "200");
+
+    // A consumer that builds its own box after render hands it over once it exists.
+    state.target = find(".late-box");
+    await settled();
+
+    find(".late-box").style.height = "340px";
+    await waitUntil(
+      () => find(".my-handle").getAttribute("aria-valuenow") === "340"
+    );
+
+    assert.dom(".my-handle").hasAttribute("aria-valuenow", "340");
   });
 });

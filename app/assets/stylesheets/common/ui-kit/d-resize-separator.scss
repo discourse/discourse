@@ -1,14 +1,14 @@
-/* The handle's own cursor, keyed off the attribute the component stamps rather than
-   its `aria-orientation`: that describes the element to assistive technology and a
-   consumer may override it, neither of which should decide how this looks. Note the
+/* The handle's own cursor, keyed off the component's class and its axis attribute
+   rather than `aria-orientation`: that describes the element to assistive
+   technology, and what a thing promises AT should not decide how it looks. Note the
    attribute names the axis being RESIZED, which is the opposite of the separator's
    announced orientation. */
 
-[data-resize-separator][data-resize-axis="vertical"] {
+.d-resize-separator[data-resize-axis="vertical"] {
   cursor: ns-resize;
 }
 
-[data-resize-separator][data-resize-axis="horizontal"] {
+.d-resize-separator[data-resize-axis="horizontal"] {
   cursor: ew-resize;
 }
 

@@ -1,4 +1,11 @@
-import { click, find, triggerEvent, visit } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  settled,
+  triggerEvent,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -444,7 +451,6 @@ acceptance("Run Query", function (needs) {
   });
 
   test("dragging the grippie resizes the editor panes", async function (assert) {
-    // A default query is not editable, and the grippie only exists in edit mode.
     await visit("/admin/plugins/discourse-data-explorer/queries/2");
 
     const grippie = find(".query-editor .grippie");
@@ -455,18 +461,14 @@ acceptance("Run Query", function (needs) {
     await triggerEvent(grippie, "pointerdown", {
       button: 0,
       pointerId: 1,
-      clientX: 40,
       clientY: 200,
     });
-    // The handler bails unless the pointer also moved horizontally, so the move
-    // carries a nominal movementX alongside the vertical travel it acts on.
-    await triggerEvent(grippie, "pointermove", {
-      pointerId: 1,
-      clientX: 41,
-      clientY: 240,
-      movementX: 1,
-      movementY: 40,
-    });
+    // Straight down, with no sideways movement at all. The handle used to gate on
+    // horizontal travel while resizing on vertical, so this did nothing.
+    await triggerEvent(grippie, "pointermove", { pointerId: 1, clientY: 240 });
+    // Moves are coalesced into an animation frame, which settling does not await.
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await settled();
 
     assert.strictEqual(
       panes.style.height,
@@ -474,42 +476,35 @@ acceptance("Run Query", function (needs) {
       "the panes grow by the pointer's vertical travel"
     );
 
-    await triggerEvent(grippie, "pointerup", { pointerId: 1 });
+    await triggerEvent(grippie, "pointerup", { pointerId: 1, clientY: 240 });
     assert
       .dom(document.body)
-      .doesNotHaveClass("dragging", "the page mark is given back on release");
+      .doesNotHaveClass(
+        "d-resizing-ns",
+        "the held cursor is given back on release"
+      );
   });
 
-  test("a purely vertical drag of the grippie does not resize", async function (assert) {
+  test("the grippie is an operable separator", async function (assert) {
     await visit("/admin/plugins/discourse-data-explorer/queries/2");
 
     const grippie = find(".query-editor .grippie");
+
+    // It had no role, no tab stop and no keyboard path before this; an admin-only
+    // surface is still a surface.
+    assert
+      .dom(grippie)
+      .hasAttribute("role", "separator")
+      .hasAttribute("aria-orientation", "horizontal")
+      .hasAttribute("tabindex", "0")
+      .hasAttribute("data-resize-axis", "vertical");
     const panes = find(".query-editor .panels-flex");
-    makePressable(grippie);
+    const startingHeight = panes.clientHeight;
+    await triggerKeyEvent(grippie, "keydown", "ArrowDown");
 
-    await triggerEvent(grippie, "pointerdown", {
-      button: 0,
-      pointerId: 1,
-      clientX: 40,
-      clientY: 200,
-    });
-    await triggerEvent(grippie, "pointermove", {
-      pointerId: 1,
-      clientX: 40,
-      clientY: 240,
-      movementX: 0,
-      movementY: 40,
-    });
-
-    // Pinning a quirk rather than endorsing it: the handler gates on horizontal
-    // movement while resizing on vertical, so a straight downward drag is
-    // ignored. Changing that should be a deliberate decision, not a surprise.
-    assert.strictEqual(
-      panes.style.height,
-      "",
-      "no height is written when the pointer has not moved horizontally"
+    assert.true(
+      parseInt(panes.style.height, 10) > startingHeight,
+      "arrow keys resize it without a pointer"
     );
-
-    await triggerEvent(grippie, "pointerup", { pointerId: 1 });
   });
 });
