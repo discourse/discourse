@@ -131,7 +131,6 @@ const extension = {
     },
   },
   serializeNode: {
-    // TODO(renato): state.renderInline should escape `|` if `state.inTable`
     table(state, node) {
       state.flushClose(1);
 
@@ -170,7 +169,11 @@ const extension = {
             }
             state.out += cellIndex === 0 ? "| " : " | ";
 
+            const cellStart = state.out.length;
             state.renderInline(cell);
+            state.out =
+              state.out.slice(0, cellStart) +
+              escapeCellPipes(state.out.slice(cellStart));
 
             if (headerBuffer !== undefined) {
               if (cell.attrs.alignment === "center") {
@@ -246,6 +249,12 @@ const extension = {
     });
   },
 };
+
+// rows are split into cells before any inline rule runs, and the splitter drops
+// exactly one backslash per pipe it keeps — so this must escape unconditionally
+function escapeCellPipes(cell) {
+  return cell.replace(/\|/g, "\\|");
+}
 
 function findMaxColumns(tbody) {
   let maxColumns = 0;

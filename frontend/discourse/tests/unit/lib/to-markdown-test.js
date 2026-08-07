@@ -165,7 +165,7 @@ module("Unit | Utility | to-markdown", function (hooks) {
               <tr><th>Heading 1</th><th>Head 2</th></tr>
               <tr><td><a href="http://example.com"><img src="http://example.com/image.png" alt="Lorem" width="45" height="45"></a></td><td>ipsum</td></tr>
             </table>`;
-    markdown = `| Heading 1 | Head 2 |\n|----|----|\n| [![Lorem|45x45](http://example.com/image.png)](http://example.com) | ipsum |`;
+    markdown = `| Heading 1 | Head 2 |\n|----|----|\n| [![Lorem\\|45x45](http://example.com/image.png)](http://example.com) | ipsum |`;
     assert.strictEqual(await toMarkdown(html), markdown);
   });
 
