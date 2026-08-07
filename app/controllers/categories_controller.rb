@@ -451,6 +451,10 @@ class CategoriesController < ApplicationController
 
     Category.preload_user_fields!(guardian, categories)
 
+    if serializer == SiteCategorySerializer && Site.preloaded_category_custom_fields.present?
+      Category.preload_custom_fields(categories, Site.preloaded_category_custom_fields)
+    end
+
     render_serialized(categories, serializer, root: :categories, scope: guardian)
   end
 

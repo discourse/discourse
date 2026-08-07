@@ -1946,6 +1946,35 @@ RSpec.describe CategoriesController do
       expect(category["subcategory_count"]).to eq(1)
     end
 
+    it "returns preloaded custom fields" do
+      Site.preloaded_category_custom_fields << "bob"
+      category.upsert_custom_fields("bob" => "marley")
+
+      get "/categories/find.json", params: { slug_path_with_id: "#{category.slug}/#{category.id}" }
+
+      expect(response.parsed_body["categories"].first["custom_fields"]).to eq("bob" => "marley")
+    ensure
+      Site.reset_preloaded_category_custom_fields
+    end
+
+    it "returns all custom fields when permissions are included" do
+      Site.preloaded_category_custom_fields << "bob"
+      category.upsert_custom_fields("bob" => "marley", "tosh" => "peter")
+
+      get "/categories/find.json",
+          params: {
+            slug_path_with_id: "#{category.slug}/#{category.id}",
+            include_permissions: true,
+          }
+
+      expect(response.parsed_body["categories"].first["custom_fields"]).to eq(
+        "bob" => "marley",
+        "tosh" => "peter",
+      )
+    ensure
+      Site.reset_preloaded_category_custom_fields
+    end
+
     context "with a read restricted child category" do
       before_all { subcategory.update!(read_restricted: true) }
 
