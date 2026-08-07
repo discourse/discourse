@@ -54,6 +54,11 @@ module AdminDashboard
         raise NotImplementedError
       end
 
+      # Optional cache warm-up hook for reports mounted on the dashboard.
+      # Providers that do not cache their payloads can leave this as a no-op.
+      def self.prewarm(_identifiers, guardian:, filters: {})
+      end
+
       # Universe of items of this source. Powers the Manage Reports modal's
       # available list and search filter. Only invoked in admin-only contexts,
       # so implementations should not perform per-user access filtering here.

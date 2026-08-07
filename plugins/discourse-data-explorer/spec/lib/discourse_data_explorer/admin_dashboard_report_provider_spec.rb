@@ -31,7 +31,13 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
   let(:user_guardian) { user.guardian }
 
   before { SiteSetting.data_explorer_enabled = true }
-  after { DiscourseDataExplorer::QueryRunner.invalidate(visible_query.id) }
+  let(:query_ids_to_invalidate) { [visible_query.id] }
+
+  after do
+    query_ids_to_invalidate.each do |query_id|
+      DiscourseDataExplorer::QueryRunner.invalidate(query_id)
+    end
+  end
 
   describe ".source_name" do
     it "is 'data_explorer_query'" do
@@ -195,6 +201,84 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
       result = described_class.fetch_many(%w[-1], guardian: admin_guardian)
       expect(result["-1"]).to be_present
       expect(result["-1"][:success]).to eq(true)
+    end
+  end
+
+  describe ".prewarm" do
+    it "warms admin-only queries" do
+      described_class.prewarm(
+        [visible_query.id.to_s],
+        guardian: admin_guardian,
+        filters: {
+          start_date: "2026-01-01",
+          end_date: "2026-01-30",
+        },
+      )
+
+      cached = DiscourseDataExplorer::QueryRunner.cached_result(visible_query, {})
+      expect(cached).to be_present
+    end
+
+    it "refreshes cached admin-only queries" do
+      now = Time.now
+      freeze_time(now)
+      DiscourseDataExplorer::QueryRunner.run(visible_query, {}, current_user: admin)
+
+      freeze_time(now + 30.minutes)
+      described_class.prewarm([visible_query.id.to_s], guardian: admin_guardian)
+
+      cached = DiscourseDataExplorer::QueryRunner.cached_result(visible_query, {})
+      expect(cached[:cached_at]).to eq((now + 30.minutes).utc.iso8601)
+    end
+
+    it "uses the cache for queries with default parameters when the dashboard has no filters" do
+      query =
+        Fabricate(
+          :query,
+          sql: "-- [params]\n-- int :limit = 10\n\nSELECT :limit AS value",
+          user: admin,
+        )
+      query_ids_to_invalidate << query.id
+
+      described_class.prewarm(
+        [query.id.to_s],
+        guardian: admin_guardian,
+        filters: {
+          start_date: "2026-01-01",
+          end_date: "2026-01-30",
+        },
+      )
+
+      result = described_class.fetch_many([query.id.to_s], guardian: admin_guardian, filters: {})
+      expect(result[query.id.to_s][:cached_at]).to be_present
+    end
+
+    it "skips queries shared with a group" do
+      DiscourseDataExplorer::QueryGroup.create!(query: visible_query, group: group)
+
+      described_class.prewarm([visible_query.id.to_s], guardian: admin_guardian)
+
+      expect(DiscourseDataExplorer::QueryRunner.cached_result(visible_query, {})).to be_nil
+    end
+
+    it "skips queries with required parameters outside the dashboard filters" do
+      query =
+        Fabricate(
+          :query,
+          sql: "-- [params]\n-- int :topic_id\n\nSELECT :topic_id AS value",
+          user: admin,
+        )
+
+      described_class.prewarm(
+        [query.id.to_s],
+        guardian: admin_guardian,
+        filters: {
+          start_date: "2026-01-01",
+          end_date: "2026-01-30",
+        },
+      )
+
+      expect(DiscourseDataExplorer::QueryRunner.cached_result(query, {})).to be_nil
     end
   end
 
