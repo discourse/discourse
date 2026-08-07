@@ -82,9 +82,12 @@ class SiteSetting::Action::RemoveAndReplaceUncategorizedToggled < Service::Actio
         SiteSetting.set_and_log(:default_composer_category, snapshot["default_composer_category"])
       end
 
-      Category.find_by(id: snapshot["uncategorized_category_id"])&.upsert_custom_fields(
-        Category::SKIP_DEFINITION_CUSTOM_FIELD => false,
-      )
+      # The category is special again, so the setting covers it once more and
+      # the exemption returns to being absent rather than explicitly false.
+      CategoryCustomField.where(
+        category_id: snapshot["uncategorized_category_id"],
+        name: Category::SKIP_DEFINITION_CUSTOM_FIELD,
+      ).delete_all
     end
 
     Site.clear_cache

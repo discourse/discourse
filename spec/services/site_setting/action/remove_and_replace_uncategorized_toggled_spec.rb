@@ -144,7 +144,7 @@ RSpec.describe SiteSetting::Action::RemoveAndReplaceUncategorizedToggled do
       expect(SiteSetting.allow_uncategorized_topics).to eq(true)
       expect(SiteSetting.default_composer_category).to eq(uncategorized.id.to_s)
       expect(uncategorized.reload.uncategorized?).to eq(true)
-      expect(uncategorized.custom_fields[Category::SKIP_DEFINITION_CUSTOM_FIELD]).to eq(false)
+      expect(uncategorized.custom_fields).not_to include(Category::SKIP_DEFINITION_CUSTOM_FIELD)
     end
 
     it "does nothing when the site was not using uncategorized topics at opt-in" do
