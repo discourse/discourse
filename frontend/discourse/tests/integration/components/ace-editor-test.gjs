@@ -302,20 +302,27 @@ module("Integration | Component | AceEditor", function (hooks) {
     const editor = find(".ace_editor--resizable");
     const grippie = find(".grippie");
 
-    await triggerKeyEvent(grippie, "keydown", "ArrowDown");
+    // Released between presses: a key held down is one resize, and the size it
+    // reports is announced when it settles rather than on every repeat.
+    const press = async (key) => {
+      await triggerKeyEvent(grippie, "keydown", key);
+      await triggerKeyEvent(grippie, "keyup", key);
+    };
+
+    await press("ArrowDown");
     assert.strictEqual(editor.offsetHeight, 316, "ArrowDown grows the editor");
 
-    await triggerKeyEvent(grippie, "keydown", "ArrowUp");
+    await press("ArrowUp");
     assert.strictEqual(editor.offsetHeight, 300, "ArrowUp shrinks the editor");
 
-    await triggerKeyEvent(grippie, "keydown", "Home");
+    await press("Home");
     assert.strictEqual(
       editor.offsetHeight,
       200,
       "Home uses the minimum height"
     );
 
-    await triggerKeyEvent(grippie, "keydown", "End");
+    await press("End");
     assert.strictEqual(editor.offsetHeight, 360, "End uses the maximum height");
     assert
       .dom(grippie)

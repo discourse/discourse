@@ -24,9 +24,11 @@ class Harness {
 
   resizes = [];
   resizeEnds = [];
+  resizeStarts = 0;
 
   constructor(value = 300) {
     this.value = value;
+    this.onResizeStart = () => this.resizeStarts++;
     this.onResize = (size) => {
       this.resizes.push(size);
       this.value = size;
@@ -152,6 +154,7 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
     );
 
     await triggerKeyEvent(EDGE, "keydown", "ArrowRight");
+    await triggerKeyEvent(EDGE, "keyup", "ArrowRight");
 
     assert.deepEqual(
       state.resizeEnds,
@@ -374,26 +377,31 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
       </template>
     );
 
-    await triggerKeyEvent(EDGE, "keydown", "ArrowRight");
+    const press = async (key) => {
+      await triggerKeyEvent(EDGE, "keydown", key);
+      await triggerKeyEvent(EDGE, "keyup", key);
+    };
+
+    await press("ArrowRight");
     assert.strictEqual(
       state.value,
       316,
       "ArrowRight grows a start-docked edge"
     );
 
-    await triggerKeyEvent(EDGE, "keydown", "ArrowLeft");
+    await press("ArrowLeft");
     assert.strictEqual(state.value, 300, "ArrowLeft shrinks it again");
 
-    await triggerKeyEvent(EDGE, "keydown", "End");
+    await press("End");
     assert.strictEqual(state.value, 720, "End jumps to the maximum");
 
-    await triggerKeyEvent(EDGE, "keydown", "ArrowRight");
+    await press("ArrowRight");
     assert.strictEqual(state.value, 720, "growing past the maximum is clamped");
 
-    await triggerKeyEvent(EDGE, "keydown", "Home");
+    await press("Home");
     assert.strictEqual(state.value, 240, "Home jumps to the minimum");
 
-    await triggerKeyEvent(EDGE, "keydown", "ArrowLeft");
+    await press("ArrowLeft");
     assert.strictEqual(
       state.value,
       240,
@@ -403,7 +411,7 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
     assert.strictEqual(
       state.resizeEnds.length,
       state.resizes.length,
-      "every keyboard step is committed as well as previewed"
+      "every discrete keyboard step is committed as well as previewed"
     );
   });
 
@@ -845,24 +853,197 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
         </template>
       );
 
+      // Released between presses, so each is its own gesture. A held key is one
+      // gesture and re-reads `value` only at its start — covered separately.
       await triggerKeyEvent(EDGE, "keydown", "ArrowRight");
+      await triggerKeyEvent(EDGE, "keyup", "ArrowRight");
 
       max = 320;
       await triggerKeyEvent(EDGE, "keydown", "ArrowRight");
+      await triggerKeyEvent(EDGE, "keyup", "ArrowRight");
 
       min = 310;
       await triggerKeyEvent(EDGE, "keydown", "ArrowLeft");
+      await triggerKeyEvent(EDGE, "keyup", "ArrowLeft");
 
       assert.deepEqual(
         reads,
         { value: 3, min: 3, max: 3 },
-        "value and both bounds are read for each arrow key press"
+        "value and both bounds are read for each discrete arrow key press"
       );
       assert.deepEqual(
         state.resizeEnds,
         [316, 320, 310],
         "arrow keys clamp against bounds that changed since render"
       );
+    });
+  });
+
+  module("keyboard gesture", function () {
+    test("a held arrow key steps once per repeat, not once per settled size", async function (assert) {
+      const state = new Harness();
+      // Deliberately frozen: a caller whose size is a live measurement reports a
+      // box that is still animating toward the last size, so re-reading it on
+      // every repeat would fold most of the step away.
+      const stuckValue = () => 300;
+
+      await render(
+        <template>
+          <div
+            class="resize-edge"
+            {{dResizeEdge
+              value=stuckValue
+              min=240
+              max=720
+              onResizeStart=state.onResizeStart
+              onResize=state.onResize
+              onResizeEnd=state.onResizeEnd
+            }}
+          ></div>
+        </template>
+      );
+
+      await triggerKeyEvent(EDGE, "keydown", "ArrowRight");
+      await triggerKeyEvent(EDGE, "keydown", "ArrowRight", { repeat: true });
+      await triggerKeyEvent(EDGE, "keydown", "ArrowRight", { repeat: true });
+
+      assert.deepEqual(
+        state.resizes,
+        [316, 332, 348],
+        "each repeat steps from the size last reported, not from one that has not caught up"
+      );
+
+      await triggerKeyEvent(EDGE, "keyup", "ArrowRight");
+
+      assert.strictEqual(
+        state.resizeStarts,
+        1,
+        "the whole burst opens exactly one gesture"
+      );
+      assert.deepEqual(
+        state.resizeEnds,
+        [348],
+        "and commits once, at the size it ended on"
+      );
+    });
+
+    test("each discrete press is its own gesture", async function (assert) {
+      const state = new Harness();
+
+      await render(
+        <template>
+          <div
+            class="resize-edge"
+            {{dResizeEdge
+              value=state.value
+              min=240
+              max=720
+              onResizeStart=state.onResizeStart
+              onResize=state.onResize
+              onResizeEnd=state.onResizeEnd
+            }}
+          ></div>
+        </template>
+      );
+
+      await triggerKeyEvent(EDGE, "keydown", "ArrowRight");
+      await triggerKeyEvent(EDGE, "keyup", "ArrowRight");
+      await triggerKeyEvent(EDGE, "keydown", "ArrowRight");
+      await triggerKeyEvent(EDGE, "keyup", "ArrowRight");
+
+      assert.strictEqual(state.resizeStarts, 2, "one gesture per press");
+      assert.deepEqual(
+        state.resizeEnds,
+        [316, 332],
+        "each press commits its own size"
+      );
+    });
+
+    test("losing focus mid-burst ends the gesture", async function (assert) {
+      const state = new Harness();
+
+      await render(
+        <template>
+          <div
+            class="resize-edge"
+            tabindex="0"
+            {{dResizeEdge
+              value=state.value
+              min=240
+              max=720
+              onResizeStart=state.onResizeStart
+              onResize=state.onResize
+              onResizeEnd=state.onResizeEnd
+            }}
+          ></div>
+        </template>
+      );
+
+      await triggerKeyEvent(EDGE, "keydown", "ArrowRight");
+      // The keyup lands on whatever took focus, so without this the gesture
+      // would stay open forever and never commit.
+      await triggerEvent(EDGE, "blur");
+
+      assert.deepEqual(
+        state.resizeEnds,
+        [316],
+        "the gesture commits the size it reached"
+      );
+
+      await triggerKeyEvent(EDGE, "keyup", "ArrowRight");
+
+      assert.deepEqual(
+        state.resizeEnds,
+        [316],
+        "and a keyup arriving afterwards does not commit a second time"
+      );
+    });
+
+    test("every started gesture ends exactly once, whichever input began it", async function (assert) {
+      const state = new Harness();
+
+      await render(
+        <template>
+          <div
+            class="resize-edge"
+            tabindex="0"
+            {{dResizeEdge
+              value=state.value
+              min=240
+              max=720
+              onResizeStart=state.onResizeStart
+              onResize=state.onResize
+              onResizeEnd=state.onResizeEnd
+            }}
+          ></div>
+        </template>
+      );
+
+      const edge = find(EDGE);
+      stubPointerCapture(edge);
+
+      await triggerKeyEvent(EDGE, "keydown", "ArrowRight");
+      // A pointer taking over mid-burst must close the keyboard gesture rather
+      // than open a second one on top of it.
+      await triggerEvent(edge, "pointerdown", {
+        button: 0,
+        pointerId: 1,
+        clientX: 100,
+        clientY: 0,
+      });
+      await triggerEvent(edge, "pointerup", {
+        pointerId: 1,
+        clientX: 140,
+        clientY: 0,
+      });
+      await triggerKeyEvent(EDGE, "keyup", "ArrowRight");
+
+      assert.strictEqual(
+        state.resizeStarts,
+        state.resizeEnds.length,
+        "starts and ends stay balanced across both inputs"
+      );
+      assert.strictEqual(state.resizeStarts, 2, "one keyboard, one pointer");
     });
   });
 

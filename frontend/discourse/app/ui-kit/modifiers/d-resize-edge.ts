@@ -12,8 +12,9 @@ interface DResizeEdgeSignature {
   Args: {
     Named: {
       /**
-       * The current size, in pixels, or a function returning it. `value` is read
-       * once when a gesture starts, and on every arrow key press.
+       * The current size, in pixels, or a function returning it. Read once at the
+       * start of each gesture — a press, or the first of a run of key repeats —
+       * and never again while one is in flight.
        */
       value: number | (() => number);
 
@@ -55,24 +56,27 @@ interface DResizeEdgeSignature {
       bodyClass?: string;
 
       /**
-       * Called once when a pointer gesture begins, before anything moves. Purely
-       * a notification — the return value is ignored, and a caller whose size is
+       * Called once when a gesture begins, before anything moves. Purely a
+       * notification — the return value is ignored, and a caller whose size is
        * a live measurement supplies it by passing a function as `value`.
        *
-       * Useful because it fires for a press even if the pointer never moves, so a
-       * caller can announce the start of a resize exactly once.
+       * Useful because it fires for a press even if nothing moves, so a caller can
+       * announce the start of a resize exactly once.
        */
       onResizeStart?: () => void;
 
       /**
-       * Called while dragging, at most once per animation frame. Suitable for
-       * updating the rendered size.
+       * Called while the size is changing: at most once per animation frame while
+       * dragging, and once per key press or repeat. Suitable for updating the
+       * rendered size.
        */
       onResize?: (size: number) => void;
 
       /**
-       * Called once when the interaction finishes. Suitable for persisting the
-       * size.
+       * Called once when the gesture finishes, and always paired with one
+       * `onResizeStart`. Suitable for work that should happen once per resize
+       * rather than once per report — persisting the size, or undoing something
+       * held for the length of the gesture.
        */
       onResizeEnd?: (size: number) => void;
     };
@@ -102,6 +106,14 @@ interface DResizeEdgeSignature {
  * mouse, touch and pen alike and marks the element so that a touch drag is not
  * claimed by the browser as a scroll gesture. This modifier keeps the value
  * semantics: clamping, the logical `side` handling, and the keyboard path.
+ *
+ * Both halves report the same shape — one `onResizeStart`, any number of
+ * `onResize`, one `onResizeEnd` — so a caller can hold state for the length of a
+ * resize without caring which input performed it. A held arrow key is therefore
+ * one gesture rather than one per repeat, and its running size is kept here
+ * instead of re-read from `value`: a caller whose size is a live measurement
+ * cannot settle it between repeats, and stepping from a box still moving toward
+ * the previous size would swallow most of each step.
  *
  * ```hbs
  * <div
@@ -137,6 +149,9 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
   #named: DResizeEdgeSignature["Args"]["Named"];
 
   #onDragStart = (event: PointerEvent) => {
+    // A pointer taking over closes any key still being held, so the two inputs
+    // cannot leave two gestures open against a single end.
+    this.#endKeyboardGesture();
     this.#startCoordinate = this.#coordinate(event);
     this.#startValue = this.#read(this.#named.value);
     this.#named.onResizeStart?.();
@@ -163,37 +178,62 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
       this.#named.axis === "vertical"
         ? ["ArrowUp", "ArrowDown"]
         : ["ArrowLeft", "ArrowRight"];
-    let next;
 
-    // Each branch reads only what it needs, so a caller passing functions is not
-    // asked for a bound the pressed key does not use.
-    switch (event.key) {
-      case shrinkKey:
-        next =
-          this.#read(this.#named.value) - KEYBOARD_STEP * this.#growthDirection;
-        break;
-      case growKey:
-        next =
-          this.#read(this.#named.value) + KEYBOARD_STEP * this.#growthDirection;
-        break;
-      case "Home":
-        next = this.#read(this.#named.min);
-        break;
-      case "End":
-        next = this.#read(this.#named.max);
-        break;
-      default:
-        return;
+    if (![shrinkKey, growKey, "Home", "End"].includes(event.key)) {
+      return;
     }
 
     event.preventDefault();
 
-    const clamped = this.#clamp(next);
-    this.#named.onResize?.(clamped);
-    this.#named.onResizeEnd?.(clamped);
+    if (this.#keyboardValue === null) {
+      this.#keyboardValue = this.#read(this.#named.value);
+      this.#keyboardKey = event.key;
+      this.#named.onResizeStart?.();
+    }
+
+    let next;
+
+    switch (event.key) {
+      case shrinkKey:
+        next = this.#keyboardValue - KEYBOARD_STEP * this.#growthDirection;
+        break;
+      case growKey:
+        next = this.#keyboardValue + KEYBOARD_STEP * this.#growthDirection;
+        break;
+      case "Home":
+        next = this.#read(this.#named.min);
+        break;
+      default:
+        next = this.#read(this.#named.max);
+        break;
+    }
+
+    this.#keyboardValue = this.#clamp(next);
+    this.#named.onResize?.(this.#keyboardValue);
   };
+  #onKeyUp = (event: KeyboardEvent) => {
+    if (event.key !== this.#keyboardKey) {
+      return;
+    }
+
+    this.#endKeyboardGesture();
+  };
+  // The keyup would land on whatever took focus, so without this the gesture
+  // would stay open and never commit.
+  #onBlur = () => this.#endKeyboardGesture();
   #element: HTMLElement;
   #frame?: number;
+
+  /** The key holding the current keyboard gesture open, if any. */
+  #keyboardKey: string | null = null;
+
+  /**
+   * The running size of the current keyboard gesture, or `null` when no key is
+   * down. Held rather than re-read from `value` on each repeat, for the reason
+   * given on the class.
+   */
+  #keyboardValue: number | null = null;
+
   #pendingCoordinate = 0;
   #releaseGesture: (() => void) | null = null;
   #startCoordinate = 0;
@@ -243,6 +283,8 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     );
 
     element.addEventListener("keydown", this.#onKeyDown);
+    element.addEventListener("keyup", this.#onKeyUp);
+    element.addEventListener("blur", this.#onBlur);
   }
 
   cleanup() {
@@ -250,7 +292,13 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
 
     this.#releaseGesture?.();
     this.#releaseGesture = null;
+    // Dropped rather than committed: the element is going away, so a caller
+    // undoing gesture state has nothing left to undo it on.
+    this.#keyboardKey = null;
+    this.#keyboardValue = null;
     this.#element.removeEventListener("keydown", this.#onKeyDown);
+    this.#element.removeEventListener("keyup", this.#onKeyUp);
+    this.#element.removeEventListener("blur", this.#onBlur);
   }
 
   /**
@@ -295,6 +343,24 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     if (final) {
       this.#named.onResizeEnd?.(size);
     }
+  }
+
+  /**
+   * Commits the keyboard gesture currently open, if there is one.
+   *
+   * The state is cleared before the callback runs, so a caller that opens another
+   * gesture from it does not find this one still standing.
+   */
+  #endKeyboardGesture() {
+    if (this.#keyboardValue === null) {
+      return;
+    }
+
+    const size = this.#keyboardValue;
+
+    this.#keyboardKey = null;
+    this.#keyboardValue = null;
+    this.#named.onResizeEnd?.(size);
   }
 
   /**

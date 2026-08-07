@@ -381,6 +381,9 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     );
 
     await triggerKeyEvent(".my-handle", "keydown", "ArrowUp");
+    // The announced size settles when the key is released, the same way it
+    // settles when a pointer is.
+    await triggerKeyEvent(".my-handle", "keyup", "ArrowUp");
 
     assert.strictEqual(reports.length, 1, "a key press resizes once");
     assert
