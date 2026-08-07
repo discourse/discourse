@@ -4,9 +4,9 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { eq, not } from "discourse/truth-helpers";
+import DDragHandle from "discourse/ui-kit/d-drag-handle";
 import DReorderButtons from "discourse/ui-kit/d-reorder-buttons";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
@@ -73,12 +73,10 @@ class ConfigureRow extends Component {
       data-section-id={{@section.id}}
     >
       {{#if this.site.desktopView}}
-        <span
+        <DDragHandle
+          @label={{this.dragHandleLabel}}
           class="db-configure__drag-handle"
-          aria-hidden="true"
-          tabindex="-1"
-          title={{this.dragHandleLabel}}
-        >{{dIcon "grip-vertical"}}</span>
+        />
       {{/if}}
 
       {{! The arrows are the only keyboard path to reorder, so they render on

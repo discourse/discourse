@@ -76,7 +76,7 @@ export default class Toolbar extends Component {
           bodyClass="dragging"
         }}
       >
-        {{dIcon "grip-lines"}}
+        {{dIcon "grip-vertical"}}
       </button>
       <PluginOutletDebugButton />
       <BlockDebugButton />

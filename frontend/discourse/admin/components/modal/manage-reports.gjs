@@ -11,13 +11,13 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { and, eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DDragHandle from "discourse/ui-kit/d-drag-handle";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import DModal from "discourse/ui-kit/d-modal";
 import DReorderButtons from "discourse/ui-kit/d-reorder-buttons";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
@@ -74,9 +74,13 @@ class ManageReportsRow extends Component {
     >
 
       {{#unless this.site.mobileView}}
-        <span class="manage-reports__grip">
-          {{dIcon "grip-vertical"}}
-        </span>
+        <DDragHandle
+          @label={{i18n
+            "admin.dashboard.reports_section.modal.drag_handle"
+            title=@row.title
+          }}
+          class="manage-reports__grip"
+        />
       {{/unless}}
 
       {{! The arrows are the only keyboard path to reorder, so they render on

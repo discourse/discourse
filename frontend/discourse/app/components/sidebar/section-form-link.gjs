@@ -9,9 +9,9 @@ import { modifier } from "ember-modifier";
 import withEventValue from "discourse/helpers/with-event-value";
 import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DDragHandle from "discourse/ui-kit/d-drag-handle";
 import DIconGridPicker from "discourse/ui-kit/d-icon-grid-picker";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
@@ -43,6 +43,12 @@ export default class SectionFormLink extends Component {
    * @param {Object} params.source - The dragged source, carrying `data.link`.
    * @param {string} params.position - Whether the drop landed before or after.
    */
+  get dragHandleLabel() {
+    return i18n("sidebar.sections.custom.links.drag_handle", {
+      label: this.args.link.name,
+    });
+  }
+
   @action
   onRowDrop({ source, position }) {
     this.args.reorderCallback(source.data.link, this.args.link, position);
@@ -67,13 +73,12 @@ export default class SectionFormLink extends Component {
         class={{dConcatClass "sidebar-section-form-link" "row-wrapper"}}
       >
         {{#if this.site.desktopView}}
-          <div
+          <DDragHandle
             {{this.captureGrip}}
+            @label={{this.dragHandleLabel}}
             class="draggable"
             data-link-name={{@link.name}}
-          >
-            {{dIcon "grip-lines"}}
-          </div>
+          />
         {{/if}}
 
         <div class="input-group" role="cell">
