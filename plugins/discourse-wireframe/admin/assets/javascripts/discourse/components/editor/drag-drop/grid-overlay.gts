@@ -992,6 +992,7 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
     };
     if (this.#cellMerge.ghost) {
       this.#applyGhostStyle(this.#cellMerge.ghost, this.#cellMerge.origin);
+      this.#cellMerge.ghost.style.removeProperty("display");
       // The merge ghost is a transient drag artifact that lives outside the
       // reactive layout, so its visibility is toggled imperatively for the
       // duration of the drag and hidden again in #endCellMerge.
@@ -1078,7 +1079,11 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
   }
 
   #endCellMerge() {
-    this.#cellMerge?.ghost?.classList.remove("--visible");
+    const ghost = this.#cellMerge?.ghost;
+    ghost?.classList.remove("--visible");
+    if (ghost) {
+      ghost.style.display = "none";
+    }
     this.#cellMerge = null;
   }
 
@@ -2200,6 +2205,7 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
 
         <div
           class="wireframe-grid-ghost"
+          style="display: none;"
           aria-hidden="true"
           {{didInsert this.captureGhost}}
         ></div>

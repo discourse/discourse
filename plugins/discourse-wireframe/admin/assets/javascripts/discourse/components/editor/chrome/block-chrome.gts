@@ -1486,6 +1486,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     };
     if (ghost) {
       this.#applyGhostStyle(ghost, origin);
+      ghost.style.removeProperty("display");
       // The resize ghost is a transient drag artifact that lives outside the
       // reactive layout, so its visibility is toggled imperatively for the
       // duration of the drag and hidden again in #endGridResize.
@@ -1570,7 +1571,11 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
 
   /** Clears the current grid-resize preview session. */
   #endGridResize(): void {
-    this.#gridResize?.ghost?.classList.remove("--visible");
+    const ghost = this.#gridResize?.ghost;
+    ghost?.classList.remove("--visible");
+    if (ghost) {
+      ghost.style.display = "none";
+    }
     this.#gridResize = null;
   }
 

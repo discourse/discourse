@@ -98,6 +98,18 @@ module(
         );
     });
 
+    test("keeps the inactive resize ghost out of grid layout", async function (assert) {
+      await renderGridInEditMode(this.owner);
+
+      assert
+        .dom(".wireframe-grid-ghost")
+        .hasAttribute(
+          "style",
+          "display: none;",
+          "the hidden preview cannot create an implicit grid track"
+        );
+    });
+
     test("selecting reuses each empty cell's DOM instead of rebuilding it", async function (assert) {
       // Guards the keyed `{{#each}}`: the `emptyCells` getter returns new
       // objects every read, so without a stable key a selection change would
