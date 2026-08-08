@@ -1,4 +1,19 @@
 import { schema } from "prosemirror-markdown";
+import QuoteNodeView from "../components/quote-node-view";
+
+// null values are omitted, both when serialized and applied by the node view
+function quoteDomAttrs(node) {
+  const { username, displayName, postNumber, topicId, full } = node.attrs;
+
+  return {
+    class: "quote",
+    "data-username": username,
+    "data-post": postNumber,
+    "data-topic": topicId,
+    "data-full": full === "true" ? "true" : "false",
+    "data-display-name": displayName,
+  };
+}
 
 /** @type {RichEditorExtension} */
 const extension = {
@@ -35,17 +50,9 @@ const extension = {
         },
       ],
       toDOM(node) {
-        const { username, displayName, postNumber, topicId, full } = node.attrs;
-        const attrs = { class: "quote" };
-        attrs["data-username"] = username;
-        attrs["data-post"] = postNumber;
-        attrs["data-topic"] = topicId;
-        attrs["data-full"] = full === "true" ? "true" : "false";
-        if (displayName) {
-          attrs["data-display-name"] = displayName;
-        }
+        const { username, displayName } = node.attrs;
 
-        const domSpec = ["aside", attrs];
+        const domSpec = ["aside", quoteDomAttrs(node)];
 
         if (username) {
           domSpec.push([
@@ -59,6 +66,16 @@ const extension = {
 
         return domSpec;
       },
+    },
+  },
+
+  nodeViews: {
+    quote: {
+      component: QuoteNodeView,
+      shouldRender: ({ node }) => !!node.attrs.username,
+      tag: "aside",
+      contentTag: "blockquote",
+      attrs: quoteDomAttrs,
     },
   },
 
@@ -179,10 +196,7 @@ const extension = {
         },
 
         handleClickOn(view, pos, node, nodePos, event) {
-          if (
-            node.type.name === "quote" &&
-            event.target.classList.contains("title")
-          ) {
+          if (node.type.name === "quote" && event.target.closest(".title")) {
             view.dispatch(
               view.state.tr.setSelection(
                 NodeSelection.create(view.state.doc, nodePos)

@@ -116,6 +116,7 @@ type NodeViewComponent = ComponentLike<{
     pluginParams: PluginParams;
     onSetup: (instance: unknown) => void;
   };
+  Blocks: { default: [] };
 }>;
 
 type RenderableGlimmerNodeView = Omit<
@@ -479,7 +480,7 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
           @dom={{nodeView.dom}}
           @pluginParams={{nodeView.pluginParams}}
           @onSetup={{nodeView.setComponentInstance}}
-        />
+        >{{nodeView.contentDOM}}</nodeView.component>
       {{~/in-element~}}
     {{/each}}
   </template>
