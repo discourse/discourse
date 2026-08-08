@@ -74,6 +74,7 @@ export default class DTooltipInstance extends FloatKitInstance {
 
   @action
   async close() {
+    this.resetHoverCloseState();
     this.openedByDelayedHover = false;
     await this.tooltip.close(this);
 
@@ -111,9 +112,14 @@ export default class DTooltipInstance extends FloatKitInstance {
 
   @action
   async onPointerLeave(event: PointerEvent) {
-    if (this.untriggers.includes("hover")) {
-      await this.onUntrigger(event);
+    if (!this.untriggers.includes("hover")) {
+      return;
     }
+    if (this.hasHoverGracePeriod) {
+      this.scheduleHoverClose();
+      return;
+    }
+    await this.onUntrigger(event);
   }
 
   @action

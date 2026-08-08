@@ -80,6 +80,49 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
     };
   });
 
+  /**
+   * Extends the trigger's grace period across the content itself, so hovering onto the
+   * float keeps it open and leaving it starts the close. Focus moving within the
+   * content is not a departure, so it holds the lock rather than scheduling a close.
+   */
+  hoverGrace = modifierFn((element: HTMLElement) => {
+    const instance = this.args.instance;
+
+    const onPointerEnter = () => instance.cancelHoverClose();
+    const onPointerLeave = () => instance.scheduleHoverClose();
+    const onFocusIn = () => instance.lockHoverCloseForFocus();
+    const onFocusOut = (event: FocusEvent) => {
+      const nextFocused = event.relatedTarget;
+      if (nextFocused instanceof Node && element.contains(nextFocused)) {
+        return;
+      }
+      instance.unlockHoverCloseForFocus();
+      instance.scheduleHoverClose();
+    };
+
+    element.addEventListener("pointerenter", onPointerEnter, { passive: true });
+    element.addEventListener("pointerleave", onPointerLeave, { passive: true });
+    element.addEventListener("focusin", onFocusIn, { passive: true });
+    element.addEventListener("focusout", onFocusOut, { passive: true });
+
+    return () => {
+      element.removeEventListener("pointerenter", onPointerEnter);
+      element.removeEventListener("pointerleave", onPointerLeave);
+      element.removeEventListener("focusin", onFocusIn);
+      element.removeEventListener("focusout", onFocusOut);
+    };
+  });
+
+  /**
+   * Whether to install the grace-period listeners on the content. Only meaningful while
+   * the float is open, and only when a grace period is configured.
+   *
+   * @returns `true` when the content should participate in the grace period.
+   */
+  get supportsHoverGrace(): boolean {
+    return this.args.instance.expanded && this.options.hoverGracePeriod > 0;
+  }
+
   get contentAriaLabelledby(): string | null | undefined {
     if (this.#hasPresentationalRole) {
       return;
@@ -160,6 +203,7 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
           (modifier FloatKitCloseOnEscape @instance.close)
         )}}
         {{(if this.supportsCloseOnScroll (modifier this.closeOnScroll))}}
+        {{(if this.supportsHoverGrace (modifier this.hoverGrace))}}
         style={{this.style}}
         ...attributes
       >
