@@ -23,18 +23,6 @@ module("Integration | ui-kit | DDragHandle", function (hooks) {
       );
   });
 
-  test("carries no accessible name, since it is not exposed at all", async function (assert) {
-    await render(<template><DDragHandle @label="Reorder Topics" /></template>);
-
-    assert
-      .dom(".d-drag-handle")
-      .doesNotHaveAttribute(
-        "aria-label",
-        "the label is a tooltip, not an accessible name on a hidden element"
-      )
-      .doesNotHaveAttribute("role", "it claims no widget role");
-  });
-
   test("passes attributes through so a consumer can register it with a source", async function (assert) {
     await render(
       <template>

@@ -293,7 +293,13 @@ export function registerDragAndDropSource(
       const consumerOnDragEnd = args.onDragEnd;
       const consumerOnDrop = args.onDrop;
       const sourcePayload = {
-        type: args.type,
+        // Read from the captured payload rather than from the current args, so
+        // it agrees with `data` beside it. `type` is stamped into that payload
+        // when the drag starts, and a consumer that changed `@type` mid-drag
+        // would otherwise be handed a `type` its own `data.type` contradicts.
+        // The library types every payload value as `unknown`; this key is
+        // written by `getInitialData` above and is always the string `type`.
+        type: event.source.data?.type as string,
         data: event.source.data,
         element,
       };
@@ -320,8 +326,18 @@ export function registerDragAndDropSource(
     },
   });
 
-  return () => {
-    if (pendingConsumers) {
+  /**
+   * Tears the registration down.
+   *
+   * @param options.cancelPending - Whether to drop a drop dispatch already
+   *   scheduled for the next task. True when the consumer itself is going away,
+   *   because running its callbacks against a destroyed component is the hazard
+   *   this defers around. False when the registration is merely being replaced —
+   *   a `disabled` arg flipping, or a new handle — because the consumer is still
+   *   there and still expects to hear how its own drag ended.
+   */
+  return ({ cancelPending = true }: { cancelPending?: boolean } = {}) => {
+    if (cancelPending && pendingConsumers) {
       cancel(pendingConsumers);
       pendingConsumers = null;
     }
@@ -367,7 +383,7 @@ export function registerDragAndDropSource(
  *   press that changes a value continuously is a different gesture.
  */
 export default class DDragAndDropSourceModifier extends Modifier<DDragAndDropSourceSignature> {
-  #cleanup: (() => void) | null = null;
+  #cleanup: ReturnType<typeof registerDragAndDropSource> | null = null;
   #element: HTMLElement | null = null;
   // Replaced by `modify` before any callback can read it; the empty bag only
   // covers the window before the first run.
@@ -387,12 +403,12 @@ export default class DDragAndDropSourceModifier extends Modifier<DDragAndDropSou
     args: DragAndDropSourceArgs = {} as DragAndDropSourceArgs
   ) {
     if (this.#element && this.#element !== element) {
-      this.#detach();
+      this.#detach({ cancelPending: false });
     }
     this.#element = element;
 
     if (args?.disabled) {
-      this.#detach();
+      this.#detach({ cancelPending: false });
       return;
     }
 
@@ -406,7 +422,7 @@ export default class DDragAndDropSourceModifier extends Modifier<DDragAndDropSou
     // often rendered conditionally and its ref only reaches these args on a later
     // run, and without this the element would keep dragging from anywhere.
     if (this.#cleanup && args.dragHandle !== this.#dragHandle) {
-      this.#detach();
+      this.#detach({ cancelPending: false });
       this.#element = element;
     }
     this.#dragHandle = args.dragHandle;
@@ -416,8 +432,16 @@ export default class DDragAndDropSourceModifier extends Modifier<DDragAndDropSou
     }
   }
 
-  #detach() {
-    this.#cleanup?.();
+  /**
+   * Unregisters the source.
+   *
+   * @param options.cancelPending - Passed through to the registration's own
+   *   cleanup. Defaults to true, which is the destructor's case: only a caller
+   *   that is replacing the registration while the consumer lives on asks for
+   *   the pending drop dispatch to be kept.
+   */
+  #detach({ cancelPending = true }: { cancelPending?: boolean } = {}) {
+    this.#cleanup?.({ cancelPending });
     this.#cleanup = null;
     this.#element?.classList.remove("--dragging");
     this.#element = null;

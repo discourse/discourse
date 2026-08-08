@@ -26,6 +26,7 @@ import type {
   ExternalDragPayload,
 } from "discourse/services/drag-and-drop";
 import {
+  createEnterLeavePairing,
   type DropEffect,
   isDeepestTarget,
   toAcceptList,
@@ -223,6 +224,8 @@ export function registerDragAndDropExternalTarget(
   const isDeepest = (location: DragLocation) =>
     isDeepestTarget(location, element);
 
+  const pairing = createEnterLeavePairing();
+
   // See the note in `registerDragAndDropSource`.
   element.setAttribute("data-drop-target-external", "");
 
@@ -264,11 +267,13 @@ export function registerDragAndDropExternalTarget(
       if (args.indicator !== false) {
         showIndicator();
       }
-      args.onDragEnter?.({
-        source: decorateSource(source),
-        location,
-        element,
-      });
+      pairing.enter(() =>
+        args.onDragEnter?.({
+          source: decorateSource(source),
+          location,
+          element,
+        })
+      );
     },
     onDrag: ({ source, location }) => {
       if (!isDeepest(location)) {
@@ -279,6 +284,15 @@ export function registerDragAndDropExternalTarget(
       if (args.indicator !== false) {
         showIndicator();
       }
+      // Taking over as the deepest target without a fresh enter; see the element
+      // target, which pairs the same way.
+      pairing.enter(() =>
+        args.onDragEnter?.({
+          source: decorateSource(source),
+          location,
+          element,
+        })
+      );
       args.onDrag?.({
         source: decorateSource(source),
         location,
@@ -287,14 +301,17 @@ export function registerDragAndDropExternalTarget(
     },
     onDragLeave: ({ source, location }) => {
       clearIndicator();
-      getArgsRef().onDragLeave?.({
-        source: decorateSource(source),
-        location,
-        element,
-      });
+      pairing.leave(() =>
+        getArgsRef().onDragLeave?.({
+          source: decorateSource(source),
+          location,
+          element,
+        })
+      );
     },
     onDrop: ({ source, location }) => {
       clearIndicator();
+      pairing.reset();
       if (!isDeepest(location)) {
         return;
       }

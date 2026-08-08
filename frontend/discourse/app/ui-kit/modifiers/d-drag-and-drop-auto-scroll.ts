@@ -30,8 +30,9 @@ interface DDragAndDropAutoScrollSignature {
        * `"element"` (default) scrolls the host element; `"window"` scrolls the
        * window and ignores the element.
        *
-       * Read once, when the modifier first runs, because it decides which
-       * registration to make. Changing it later has no effect.
+       * Decides which registration to make rather than being consulted per
+       * callback, so changing it replaces the registration instead of taking
+       * effect within it.
        */
       target?: AutoScrollTarget;
     };
@@ -62,8 +63,9 @@ export type DragAndDropAutoScrollArgs =
  *   args are read on every callback, so changes to them take effect without
  *   re-registering. `target` and `element` are the exception: they are read once,
  *   here, to decide which registration to make, so changing either needs a fresh
- *   registration. The modifier reads no arg in its body and so never re-runs,
- *   which means changing `target` through it is a no-op.
+ *   registration. Through the modifier that happens on its own, because this call
+ *   reads the args inside the modifier's own tracking frame: changing any of them
+ *   tears the registration down and makes a new one.
  * @returns Cleanup function. Caller invokes it once on teardown.
  */
 export function registerDragAndDropAutoScroll(

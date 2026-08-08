@@ -103,6 +103,45 @@ export function isDeepestTarget(location: DragLocation, element: Element) {
   return location.current.dropTargets[0]?.element === element;
 }
 
+/**
+ * Keeps one registration's `onDragEnter` and `onDragLeave` in step.
+ *
+ * The underlying library fires both on every target in the hierarchy, while the
+ * contract here is that only the deepest one tells its consumer. That makes the
+ * two halves easy to get out of step in either direction: an ancestor whose
+ * enter was swallowed would otherwise still be sent a leave, and one that takes
+ * over as deepest without a fresh enter would be sent a leave it was never
+ * given an enter for. Shared because both target modifiers need exactly this and
+ * the pair drifted between them once already.
+ *
+ * @returns `enter` and `leave`, which each run the callback only when doing so
+ *   keeps the pair balanced, and `reset` for a drop, which ends the drag without
+ *   a leave.
+ */
+export function createEnterLeavePairing() {
+  let entered = false;
+
+  return {
+    enter(fire: () => void) {
+      if (entered) {
+        return;
+      }
+      entered = true;
+      fire();
+    },
+    leave(fire: () => void) {
+      if (!entered) {
+        return;
+      }
+      entered = false;
+      fire();
+    },
+    reset() {
+      entered = false;
+    },
+  };
+}
+
 function sourceFromPDND(
   pdndSource: ElementDragPayload,
   element: Element
@@ -233,7 +272,7 @@ export function registerDragAndDropTarget(
   // leave for. The underlying library sends both to every target in the
   // hierarchy, but only the deepest one is forwarded, so an ancestor would
   // otherwise be handed a leave it never had an enter for.
-  let owesLeave = false;
+  const pairing = createEnterLeavePairing();
 
   const applyIndicator = (position: DropPosition, axis: DropAxis) => {
     const className = POSITION_CLASSES[position]?.[axis];
@@ -330,13 +369,14 @@ export function registerDragAndDropTarget(
       if (args.indicator !== false) {
         applyIndicator(pos, args.axis ?? "y");
       }
-      owesLeave = true;
-      args.onDragEnter?.({
-        source: sourceFromPDND(source, element),
-        position: pos,
-        location,
-        element,
-      });
+      pairing.enter(() =>
+        args.onDragEnter?.({
+          source: sourceFromPDND(source, element),
+          position: pos,
+          location,
+          element,
+        })
+      );
     },
     onDrag: ({ source, location }) => {
       if (!isDeepest(location)) {
@@ -348,6 +388,18 @@ export function registerDragAndDropTarget(
       if (args.indicator !== false) {
         applyIndicator(pos, args.axis ?? "y");
       }
+      // Taking over as the deepest target without a fresh enter, because an
+      // ancestor never left the hierarchy for the child to be entered. The
+      // consumer is told it entered here instead: this is the target a drop
+      // would land on now, and without it the leave would be unmatched.
+      pairing.enter(() =>
+        args.onDragEnter?.({
+          source: sourceFromPDND(source, element),
+          position: pos,
+          location,
+          element,
+        })
+      );
       args.onDrag?.({
         source: sourceFromPDND(source, element),
         position: pos,
@@ -357,23 +409,23 @@ export function registerDragAndDropTarget(
     },
     onDragLeave: ({ source, location }) => {
       clearIndicators();
-      if (!owesLeave) {
-        return;
-      }
-      owesLeave = false;
-      getArgsRef().onDragLeave?.({
-        source: sourceFromPDND(source, element),
-        position: null,
-        location,
-        element,
-      });
+      pairing.leave(() =>
+        getArgsRef().onDragLeave?.({
+          source: sourceFromPDND(source, element),
+          position: null,
+          location,
+          element,
+        })
+      );
     },
     onDrop: ({ source, location }) => {
       // Unconditionally, and before the deepest check: an ancestor that stopped
       // being deepest still needs its indicator dropped, matching
       // `registerDragAndDropExternalTarget`.
       clearIndicators();
-      owesLeave = false;
+      // A drop ends the drag, so the enter it closes is not also reported as a
+      // leave.
+      pairing.reset();
       if (!isDeepest(location)) {
         return;
       }

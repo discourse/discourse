@@ -1201,6 +1201,59 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         "a destroyed source runs no consumer callback against it"
       );
     });
+
+    test("re-registering the modifier before the runloop flushes keeps them", async function (assert) {
+      const calls = [];
+      const state = new (class {
+        @tracked disabled = false;
+      })();
+      const onDragEnd = () => calls.push("dragEnd");
+      const onDrop = () => calls.push("drop");
+
+      await render(
+        <template>
+          <div
+            id="src"
+            {{dDragAndDropSource
+              type="row"
+              disabled=state.disabled
+              onDragEnd=onDragEnd
+              onDrop=onDrop
+            }}
+          >src</div>
+          <div id="tgt" {{dDragAndDropTarget accepts="row"}}>tgt</div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      await dragEvent("#src", "dragstart", {
+        dataTransfer,
+        ...centerOf("#src"),
+      });
+      await dragEvent("#tgt", "dragenter", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+      await dragEvent("#tgt", "dragover", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+
+      find("#tgt").dispatchEvent(
+        new DragEvent("drop", { bubbles: true, dataTransfer })
+      );
+      // The consumer is still here — only the registration is being replaced,
+      // which is what an arg bound to drag state does the moment the drag ends.
+      // It still expects to be told how its own drag finished.
+      state.disabled = true;
+      await settled();
+
+      assert.deepEqual(
+        calls,
+        ["dragEnd", "drop"],
+        "a source that merely re-registered still reports the drop it was in the middle of"
+      );
+    });
   });
 
   module("external target behaviour", function () {
@@ -1425,6 +1478,73 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
           "and the ancestor gives it up, so only one zone is lit at a time"
         );
     });
+
+    test("an external ancestor that never received an enter receives no leave", async function (assert) {
+      const events = [];
+      const onOuterEnter = () => events.push("outer:enter");
+      const onOuterLeave = () => events.push("outer:leave");
+      // The deepest target is the positive control, as in the element target's
+      // equivalent: without it, dispatching no lifecycle callback at all would
+      // satisfy the assertion below.
+      const onInnerEnter = () => events.push("inner:enter");
+      const onInnerLeave = () => events.push("inner:leave");
+
+      await render(
+        <template>
+          <div
+            id="outer-ext"
+            style="height: 100px"
+            {{dDragAndDropExternalTarget
+              accepts="files"
+              onDragEnter=onOuterEnter
+              onDragLeave=onOuterLeave
+            }}
+          >
+            outer
+            <div
+              id="inner-ext"
+              {{dDragAndDropExternalTarget
+                accepts="files"
+                onDragEnter=onInnerEnter
+                onDragLeave=onInnerLeave
+              }}
+            >inner</div>
+          </div>
+          <div
+            id="away-ext"
+            {{dDragAndDropExternalTarget accepts="files"}}
+          >away</div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(new File(["x"], "a.txt", { type: "text/plain" }));
+
+      // Straight onto the child, so the ancestor is in the stack but never the
+      // deepest and so never forwards an enter.
+      await dragEvent("#inner-ext", "dragenter", {
+        dataTransfer,
+        ...centerOf("#inner-ext"),
+      });
+      await dragEvent("#inner-ext", "dragover", {
+        dataTransfer,
+        ...centerOf("#inner-ext"),
+      });
+      await dragEvent("#away-ext", "dragenter", {
+        dataTransfer,
+        ...centerOf("#away-ext"),
+      });
+      await dragEvent("#away-ext", "dragover", {
+        dataTransfer,
+        ...centerOf("#away-ext"),
+      });
+
+      assert.deepEqual(
+        events,
+        ["inner:enter", "inner:leave"],
+        "the deepest target is entered and left as a pair, and the ancestor that was never entered is never left"
+      );
+    });
   });
 
   module("lifecycle callbacks stay paired", function () {
@@ -1432,6 +1552,11 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       const events = [];
       const onOuterEnter = () => events.push("outer:enter");
       const onOuterLeave = () => events.push("outer:leave");
+      // The deepest target is instrumented too, as this test's positive control:
+      // without it, an implementation that dispatched no lifecycle callback at
+      // all would satisfy the assertion below just as well as a correct one.
+      const onInnerEnter = () => events.push("inner:enter");
+      const onInnerLeave = () => events.push("inner:leave");
 
       await render(
         <template>
@@ -1449,7 +1574,12 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
             outer
             <div
               id="inner"
-              {{dDragAndDropTarget accepts="row" position="inside"}}
+              {{dDragAndDropTarget
+                accepts="row"
+                position="inside"
+                onDragEnter=onInnerEnter
+                onDragLeave=onInnerLeave
+              }}
             >inner</div>
           </div>
           <div id="away" {{dDragAndDropTarget accepts="row"}}>away</div>
@@ -1483,8 +1613,88 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
 
       assert.deepEqual(
         events,
-        [],
-        "a consumer pairing enter with leave is never handed an unmatched one"
+        ["inner:enter", "inner:leave"],
+        "the deepest target is entered and left as a pair, and the ancestor that was never entered is never left"
+      );
+    });
+
+    test("a target that becomes deepest without a fresh enter is entered and left", async function (assert) {
+      const events = [];
+      let drags = 0;
+
+      const onOuterEnter = () => events.push("outer:enter");
+      const onOuterDrag = () => drags++;
+      const onOuterLeave = () => events.push("outer:leave");
+
+      await render(
+        <template>
+          <div id="src" {{dDragAndDropSource type="row"}}>src</div>
+          <div
+            id="outer"
+            style="height: 100px"
+            {{dDragAndDropTarget
+              accepts="row"
+              position="inside"
+              onDragEnter=onOuterEnter
+              onDrag=onOuterDrag
+              onDragLeave=onOuterLeave
+            }}
+          >
+            outer
+            <div
+              id="inner"
+              {{dDragAndDropTarget accepts="row" position="inside"}}
+            >inner</div>
+          </div>
+          <div id="away" {{dDragAndDropTarget accepts="row"}}>away</div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      const outerRect = find("#outer").getBoundingClientRect();
+
+      await dragEvent("#src", "dragstart", {
+        dataTransfer,
+        ...centerOf("#src"),
+      });
+
+      // Onto the child first, so the ancestor joins the hierarchy while the
+      // child is deepest and its own enter is swallowed.
+      await dragEvent("#inner", "dragenter", {
+        dataTransfer,
+        ...centerOf("#inner"),
+      });
+      await dragEvent("#inner", "dragover", {
+        dataTransfer,
+        ...centerOf("#inner"),
+      });
+
+      // Back onto the ancestor's own area. It becomes deepest without a fresh
+      // enter, because it never left the hierarchy.
+      await dragEvent("#outer", "dragover", {
+        dataTransfer,
+        clientX: outerRect.left + 5,
+        clientY: outerRect.top + 5,
+      });
+
+      await dragEvent("#away", "dragenter", {
+        dataTransfer,
+        ...centerOf("#away"),
+      });
+      await dragEvent("#away", "dragover", {
+        dataTransfer,
+        ...centerOf("#away"),
+      });
+      await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
+
+      assert.true(
+        drags > 0,
+        "the ancestor was told about the drag once it was the deepest target"
+      );
+      assert.deepEqual(
+        events,
+        ["outer:enter", "outer:leave"],
+        "so it is entered when it takes over and left when it gives up, rather than being told only about the middle"
       );
     });
   });
