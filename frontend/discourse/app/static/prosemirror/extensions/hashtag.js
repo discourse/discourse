@@ -179,7 +179,7 @@ const extension = {
                   );
                 }
 
-                view.dispatch(change);
+                view.dispatch(change.setMeta("addToHistory", false));
 
                 const domNode = view.nodeDOM(pos);
                 if (!validHashtag || !domNode) {

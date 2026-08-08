@@ -52,7 +52,7 @@ discourse_topic_voting:
     hidden: true
     client: true
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/399365"
       requires_plugin_enabled: false
@@ -61,6 +61,7 @@ discourse_topic_voting:
     hidden: true
     client: true
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "site_setting_default,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/401731"
+      permanent_warning: false

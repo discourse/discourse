@@ -409,11 +409,8 @@ class User < ActiveRecord::Base
   def visible_sidebar_tags(user_guardian = nil)
     user_guardian ||= guardian
 
-    DiscourseTagging.filter_visible(
-      Tag.where(
-        id: SidebarSectionLink.where(user_id: id, linkable_type: "Tag").select(:linkable_id),
-      ),
-      user_guardian,
+    Tag.browsable(user_guardian).where(
+      id: sidebar_section_links.where(linkable_type: "Tag").select(:linkable_id),
     )
   end
 
@@ -564,8 +561,8 @@ class User < ActiveRecord::Base
     # including anon" and is gated behind the granular pseudogroups upcoming
     # change.
     everyone_shortcut =
-      !SiteSetting.granular_anonymous_and_logged_in_groups_permissions &&
-        group_ids.include?(Group::AUTO_GROUPS[:everyone])
+      group_ids.include?(Group::AUTO_GROUPS[:everyone]) &&
+        !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
 
     logged_in_shortcut = group_ids.include?(Group::AUTO_GROUPS[:logged_in_users])
 

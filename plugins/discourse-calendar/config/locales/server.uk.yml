@@ -75,6 +75,9 @@ uk:
     sidebar_show_upcoming_events: "Показати посилання на майбутні події на бічній панелі в розділі «Більше»."
     calendar_first_day_of_week: "Встановіть перший день тижня для відображення календаря. Доступні варіанти: субота, неділя або понеділок."
     enable_events_category_type_setup: "Вмикає опцію типу категорії «Події» під час налаштування створення категорії."
+    livestream_zoom_enabled: "Увімкнути вбудовування відео Zoom для тем прямих трансляцій."
+    livestream_zoom_sdk_key: "Ідентифікатор клієнта SDK для зустрічі Zoom."
+    livestream_zoom_sdk_secret: "Секретний ключ клієнта Zoom Meeting SDK."
     livestream_embeddable_chat_allowed_paths: "Дозволені шляхи для вбудованого чату прямої трансляції."
     livestream_enable_modal_chat_on_mobile: "Показувати чат прямої трансляції в модальному вікні на мобільному пристрої."
   discourse_calendar:
@@ -103,6 +106,9 @@ uk:
       all_events_feed_name: "%{site_title} - Усі події"
       my_events_feed_name: "%{site_title} - Мої події"
     invite_user_notification: "%{username} запросили Вас на: %{description}"
+    livestream:
+      chat:
+        topic_reference_message: "Цей канал призначений для події [%{title}] (%{url}) - відвідайте тему для подробиць та відповідайте."
     calendar_must_be_in_first_post: "Тег календаря можна використовувати лише в першому дописі теми."
     more_than_one_calendar: "Ви не можете мати більше одного календаря в публікації."
     more_than_two_dates: "Повідомлення календаря теми не може містити більше двох дат."

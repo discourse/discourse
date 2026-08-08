@@ -200,25 +200,6 @@
   .avatar {
     margin-right: 0.25em;
   }
-
-  &__controls {
-    display: flex;
-    gap: 1em;
-  }
-
-  &__search {
-    flex: 1 1 auto;
-  }
-
-  &__activation-filter.d-select {
-    flex: 0 1 auto;
-    max-width: 14em;
-    height: auto;
-
-    @media screen and (width <= 500px) {
-      max-width: none;
-    }
-  }
 }
 
 // mobile styles

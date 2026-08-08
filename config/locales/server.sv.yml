@@ -179,7 +179,6 @@ sv:
       exclusion: är reserverad
       greater_than: måste vara större än %{count}
       greater_than_or_equal_to: måste vara större eller lika med %{count}
-      has_already_been_used: "har redan använts"
       inclusion: ingår inte i listan
       invalid: är ogiltig
       is_invalid: "Verkar oklart, är det en fullständig mening?"
@@ -1481,7 +1480,6 @@ sv:
     staff_edit_locks_post: "Inlägg kommer att låsas mot redigering om de redigeras av personal"
     post_edit_time_limit: "En fn0- eller fn1-författare kan redigera eller radera sitt inlägg i (n) minuter efter att ha lagt upp ett inlägg. Ange 0 för att alltid tillåta."
     tl2_post_edit_time_limit: "En författare på fn2+ kan redigera eller radera sitt inlägg i (n) minuter efter att ha lagt upp ett inlägg. Ange 0 för att alltid tillåta."
-    edit_history_visible_to_public: "Tillåt att alla ser tidigare versioner av ett redigerat inlägg. Om detta inaktiveras kan endast personal se detta."
     delete_removed_posts_after: "Inlägg som tagits bort av författaren kommer automatiskt att raderas efter (n) timmar. Ange 0 för att omedelbart ta bort inlägg."
     notify_users_after_responses_deleted_on_flagged_post: "När ett inlägg flaggas och sedan tas bort kommer alla användare som har svarat på inlägget och fått sina svar borttagna att meddelas."
     max_image_width: "Maximal miniatyrbildsbredd för bilder i ett inlägg. Bilder med större bredd kommer att ändras i storlek och \"lightboxas\"."
@@ -1566,7 +1564,6 @@ sv:
     invalidate_inactive_admin_email_after_days: "Administratörskonton som inte har besökt webbplatsen under detta antal dagar kommer att behöva validera sin e-postadress innan de loggar in. Ställ in till 0 för att inaktivera."
     include_secure_categories_in_tag_counts: "När detta är aktiverat kommer antalet ämnen för en tagg att omfatta ämnen som finns i läsbegränsade kategorier för alla användare. När detta är inaktiverat visas normala användare endast ett antal ämnen för en tagg där alla ämnen är i offentliga kategorier."
     display_personal_messages_tag_counts: "När detta är aktiverat kommer antalet personliga meddelanden som taggats med en angiven tagg att visas."
-    top_menu: "Bestäm vilka objekt som visas på startsidans navigering och i vilken ordning."
     share_links: "Bestäm vilka objekt som syns i den delade dialogen, och i vilken ordning."
     allow_username_in_share_links: "Tillåt att användarnamn omfattas i delningslänkar. Detta är användbart för att tilldela utmärkelser baserat på unika besökare."
     site_contact_username: "Ett giltigt personalanvändarnamn att skicka alla automatiserade meddelanden ifrån. Om det lämnas tomt används standard-System-kontot."
@@ -1969,7 +1966,6 @@ sv:
     default_other_notification_level_when_replying: "Generell standardiserad bevakningssnivå när en användare svarar i ett ämne."
     default_other_external_links_in_new_tab: "Öppna externa länkar i en ny flik som standard."
     default_other_enable_quoting: "Aktivera svar med citat för markerad text som standard."
-    default_other_enable_defer: "Aktivera uppskjutande ämnesfunktioner som standard."
     default_other_dynamic_favicon: "Visa räknaren för nya/uppdaterade ämnen i webbläsaren som standard."
     default_other_skip_new_user_tips: "Hoppa över nybörjartips och utmärkelser för ny användare."
     default_topics_automatic_unpin: "Ta automatiskt ned ämnen när användaren når botten som standard."
@@ -3941,7 +3937,6 @@ sv:
           complete: "Användare raderad."
         block:
           title: "Radera och blockera användare"
-          description: "Användaren kommer att raderas, och vi blockerar också hens IP och e-postadress."
       confirm_spam:
         title: "Ja"
       not_spam:

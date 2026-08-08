@@ -14,14 +14,13 @@ zh_CN:
         highlights:
           kpi:
             accepted_solutions:
-              label: "已被接受的解决方案"
-              tooltip: "被标记为解决方案的帖子所构成的主题数量。"
+              label: "接受的解决方案"
+              tooltip: "含有被标记为解决方案的帖子的话题数量。"
         sections:
           support:
             title: "支持"
             fetch_error: "无法加载支持数据。"
-            filter:
-              all_categories: "所有类别"
+            save_error: "无法保存此设置。"
             headline:
               healthy:
                 title: "社区正在自行解决问题。"
@@ -98,7 +97,7 @@ zh_CN:
       allow_accepted_answers: "允许话题所有者和管理人员将回复标记为解决方案"
       solved_topics_auto_close_hours: "当话题被标记为已解决后，在最后回复 (n) 小时后自动关闭话题。"
       notify_on_staff_accept_solved: "当管理人员标记解决方案时通知话题创建者"
-      empty_box_on_unsolved: "在话题列表中显示未解决的话题状态"
+      empty_box_on_unsolved: "在支持的主题的话题列表中显示未解决的话题状态"
       accept_answer: "如果此回复解决了问题，请选择"
       accepted_description: "这是此话题被接受的解决方案"
       has_no_accepted_answer: "此话题尚无解决方案"
@@ -133,7 +132,7 @@ zh_CN:
         label: "我也是"
         label_with_count: "%{label} (%{count})"
         title: "我也遇到了这个问题。"
-        author_title: "你发起了这个话题。"
+        author_title: "您发起的此话题"
         closed_title: "该话题已关闭"
         archived_title: "该话题已归档"
       no_answer:

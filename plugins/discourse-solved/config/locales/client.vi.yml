@@ -13,8 +13,7 @@ vi:
       dashboard:
         sections:
           support:
-            filter:
-              all_categories: "Tất cả chuyên mục"
+            save_error: "Không thể lưu lựa chọn cho lần sau."
             answerers:
               staff: "Nhân viên"
               member: "Thành viên kênh"
@@ -22,6 +21,9 @@ vi:
             response_time:
               buckets:
                 lt_1h: "< 1 tiếng"
+                "1_4h": "1–4 giờ"
+                "4_24h": "4–24 giờ"
+                gt_24h: "> 24 giờ"
   js:
     notifications:
       alt:

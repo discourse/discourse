@@ -21,7 +21,7 @@ describe DiscoursePostEvent::Event do
   end
 
   describe "#warm_livestream_onebox" do
-    let(:livestream_url) { "https://example.com/live" }
+    let(:livestream_url) { "https://www.youtube.com/live/abc123" }
 
     fab!(:topic) { Fabricate(:topic, category: nil) }
     fab!(:post) { Fabricate(:post, topic: topic) }
@@ -68,9 +68,9 @@ describe DiscoursePostEvent::Event do
         job: :warm_livestream_onebox,
         args: {
           event_id: event.id,
-          url: "https://example.com/other-live",
+          url: "https://www.youtube.com/live/def456",
         },
-      ) { event.update!(location: "https://example.com/other-live") }
+      ) { event.update!(location: "https://www.youtube.com/live/def456") }
     end
 
     it "does not warm the onebox when an unrelated attribute changes" do
@@ -145,7 +145,7 @@ describe DiscoursePostEvent::Event do
     end
 
     it "rejects a non-Zoom livestream URL" do
-      expect(event_for("https://example.com/live")).not_to be_is_zoom_livestream
+      expect(event_for("https://www.youtube.com/live/abc123")).not_to be_is_zoom_livestream
     end
 
     it "is false when the event is not a livestream" do
@@ -173,7 +173,12 @@ describe DiscoursePostEvent::Event do
 
     it "creates the chat channel after the livestream event is committed" do
       expect {
-        Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
+        Fabricate(
+          :event,
+          post: post,
+          livestream: true,
+          location: "https://www.youtube.com/live/abc123",
+        )
       }.to change(DiscourseCalendar::Livestream::TopicChatChannel, :count).by(1)
 
       expect(post.topic.topic_chat_channel.chat_channel.chatable).to eq(category)
@@ -183,7 +188,12 @@ describe DiscoursePostEvent::Event do
       SiteSetting.chat_enabled = false
 
       expect {
-        Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
+        Fabricate(
+          :event,
+          post: post,
+          livestream: true,
+          location: "https://www.youtube.com/live/abc123",
+        )
       }.not_to change(DiscourseCalendar::Livestream::TopicChatChannel, :count)
     end
 
@@ -191,7 +201,12 @@ describe DiscoursePostEvent::Event do
       reply = Fabricate(:post, topic: topic)
 
       expect {
-        Fabricate(:event, post: reply, livestream: true, location: "https://example.com/live")
+        Fabricate(
+          :event,
+          post: reply,
+          livestream: true,
+          location: "https://www.youtube.com/live/abc123",
+        )
       }.not_to change(DiscourseCalendar::Livestream::TopicChatChannel, :count)
     end
   end
@@ -202,14 +217,78 @@ describe DiscoursePostEvent::Event do
     # enqueue (don't run) the onebox-warming job so it doesn't make a real request
     before { Jobs.run_later! }
 
-    it "keeps livestream enabled for an http(s) location" do
-      event = Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
+    it "keeps livestream enabled for an allowed host" do
+      event =
+        Fabricate(
+          :event,
+          post: post,
+          livestream: true,
+          location: "https://www.youtube.com/live/abc123",
+        )
 
       expect(event.reload.livestream).to eq(true)
     end
 
-    it "resets livestream when the location is not an http(s) URL" do
+    it "keeps livestream enabled for a host an admin added" do
+      SiteSetting.livestream_allowed_hosts = "stream.example.com"
+
+      event =
+        Fabricate(:event, post: post, livestream: true, location: "https://stream.example.com/live")
+
+      expect(event.reload.livestream).to eq(true)
+    end
+
+    it "resets livestream when the location is not an https URL" do
       event = Fabricate(:event, post: post, livestream: true, location: "Room 5")
+
+      expect(event.reload.livestream).to eq(false)
+
+      event.update!(location: "http://www.youtube.com/live/abc123")
+
+      expect(event.reload.livestream).to eq(false)
+    end
+
+    it "falls back to the url, which is what the onebox and serializers use" do
+      event =
+        Fabricate(
+          :event,
+          post: post,
+          livestream: true,
+          location: nil,
+          url: "https://www.youtube.com/live/abc123",
+        )
+
+      expect(event.reload.livestream).to eq(true)
+
+      event.update!(url: "https://example.com/live")
+
+      expect(event.reload.livestream).to eq(false)
+    end
+
+    it "resets livestream when the location host is not allowed" do
+      event = Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
+
+      expect(event.reload.livestream).to eq(false)
+    end
+
+    it "resets livestream when the location only resembles an allowed host" do
+      event =
+        Fabricate(:event, post: post, livestream: true, location: "https://youtube.com.evil.com/x")
+
+      expect(event.reload.livestream).to eq(false)
+    end
+
+    it "resets livestream when an admin removes the host from the allowlist" do
+      event =
+        Fabricate(
+          :event,
+          post: post,
+          livestream: true,
+          location: "https://www.youtube.com/live/abc123",
+        )
+      SiteSetting.livestream_allowed_hosts = "zoom.us"
+
+      event.update!(name: "Renamed")
 
       expect(event.reload.livestream).to eq(false)
     end
@@ -221,7 +300,13 @@ describe DiscoursePostEvent::Event do
     end
 
     it "resets livestream when the location is edited away from a URL" do
-      event = Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
+      event =
+        Fabricate(
+          :event,
+          post: post,
+          livestream: true,
+          location: "https://www.youtube.com/live/abc123",
+        )
       event.update!(location: "Room 5")
 
       expect(event.reload.livestream).to eq(false)
@@ -231,14 +316,20 @@ describe DiscoursePostEvent::Event do
       reply = Fabricate(:post, topic: post.topic)
       expect(reply.is_first_post?).to be(false)
 
-      event = Fabricate(:event, post: reply, livestream: true, location: "https://example.com/live")
+      event =
+        Fabricate(
+          :event,
+          post: reply,
+          livestream: true,
+          location: "https://www.youtube.com/live/abc123",
+        )
 
       expect(event.reload.livestream).to eq(false)
     end
   end
 
   describe "#raw_invitees_are_groups" do
-    fab!(:user) { Fabricate(:user, admin: true) }
+    fab!(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     fab!(:topic) { Fabricate(:topic, user: user) }
     fab!(:post) { Fabricate(:post, topic: topic) }
 
@@ -276,7 +367,7 @@ describe DiscoursePostEvent::Event do
   end
 
   describe "topic custom fields callback" do
-    let(:user) { Fabricate(:user, admin: true) }
+    let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     let!(:notified_user) { Fabricate(:user) }
     let(:topic) { Fabricate(:topic, user: user) }
     let!(:first_post) { Fabricate(:post, topic: topic) }
@@ -546,7 +637,7 @@ describe DiscoursePostEvent::Event do
   end
 
   describe "#ongoing?" do
-    let(:user) { Fabricate(:user, admin: true) }
+    let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     let(:topic) { Fabricate(:topic, user: user) }
     let!(:first_post) { Fabricate(:post, topic: topic) }
 
@@ -626,7 +717,7 @@ describe DiscoursePostEvent::Event do
   end
 
   describe "#currently_within_event_timeframe?" do
-    let(:user) { Fabricate(:user, admin: true) }
+    let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     let(:topic) { Fabricate(:topic, user: user) }
     let!(:first_post) { Fabricate(:post, topic: topic) }
 
@@ -704,7 +795,7 @@ describe DiscoursePostEvent::Event do
   end
 
   describe "#expired?" do
-    let(:user) { Fabricate(:user, admin: true) }
+    let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     let(:topic) { Fabricate(:topic, user: user) }
     let!(:first_post) { Fabricate(:post, topic: topic) }
 
@@ -1165,7 +1256,7 @@ describe DiscoursePostEvent::Event do
   end
 
   describe "syncing from raw" do
-    fab!(:user) { Fabricate(:user, admin: true) }
+    fab!(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     fab!(:topic) { Fabricate(:topic, user: user) }
     fab!(:post) { Fabricate(:post, topic: topic, user: user) }
     fab!(:upload)
@@ -1175,7 +1266,7 @@ describe DiscoursePostEvent::Event do
 
       post.update!(
         raw:
-          "[event start=\"2020-04-24 14:15\" livestream=\"true\" location=\"https://example.com/live\"]\n[/event]",
+          "[event start=\"2020-04-24 14:15\" livestream=\"true\" location=\"https://www.youtube.com/live/abc123\"]\n[/event]",
       )
       post.rebake!
       DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
@@ -1326,7 +1417,7 @@ describe DiscoursePostEvent::Event do
   end
 
   describe "post/topic image_upload_id sync on post_edited" do
-    fab!(:user) { Fabricate(:user, admin: true) }
+    fab!(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     fab!(:topic) { Fabricate(:topic, user: user) }
     fab!(:post) { Fabricate(:post, topic: topic, user: user, post_number: 1) }
     fab!(:upload)

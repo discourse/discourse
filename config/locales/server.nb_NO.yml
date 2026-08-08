@@ -117,7 +117,6 @@ nb_NO:
       exclusion: er reservert
       greater_than: må være større enn %{count}
       greater_than_or_equal_to: må være lik eller større enn %{count}
-      has_already_been_used: "har allerede blitt brukt"
       inclusion: er ikke inkludert i listen
       invalid: er ugyldig
       is_invalid: "virker uklart, er det en komplett setning?"
@@ -988,7 +987,6 @@ nb_NO:
     editing_grace_period_max_diff: "Maksimalt antall tegn for en endring utført i nådeperioden, hvis antallet overskrides lagres en ny revisjon av innlegget (tillitsnivå 0 og 1)"
     editing_grace_period_max_diff_high_trust: "Maksimalt antall tegn for en endring utført i nådeperioden, hvis antallet overskrides lagres en ny revisjon av innlegget (tillitsnivå 2 og opp)"
     staff_edit_locks_post: "Innlegg vil bli sperret for redigering av brukere hvis de har vært redigert av staben "
-    edit_history_visible_to_public: "La alle se tidligere versjoner av et redigert innlegg. Hvis det er slått av, kan kun staben se det."
     delete_removed_posts_after: "Innlegg som blir fjernet av forfatter blir automatisk slettet etter (n) timer. Sett til 0 og innleggene blir slettet øyeblikkelig."
     fixed_category_positions: "Hvis denne er valgt kan du manuelt bestemme rekkefølgen i listen over kategorier. Ellers vil kategoriene sorteres automatisk basert på aktivitet."
     add_rel_nofollow_to_user_content: 'Legg til rel nofollow på alle lenker som publiseres av brukere, bortsett fra interne lenker (inkludert foreldredomener). Hvis du endrer denne, må du rebake alle innlegg med: "rake posts:rebake"'

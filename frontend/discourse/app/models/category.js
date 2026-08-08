@@ -13,6 +13,10 @@ import {
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
+import {
+  extraSavePropertiesFor,
+  registerModelSaveProperty,
+} from "discourse/lib/model-extensions";
 import { MultiCache } from "discourse/lib/multi-cache";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
@@ -25,20 +29,19 @@ import Topic from "./topic";
 
 const CATEGORY_ASYNC_SEARCH_CACHE = {};
 const CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE = {};
-const pluginSaveProperties = new Set();
 
 let _uncategorized;
 
 /**
  * @internal
- * Adds a tracked property to the post model.
+ * Registers a property to include when saving a category.
  *
  * Intended to be used only in the plugin API.
  *
- * @param {string} propertyKey - The key of the property to track.
+ * @param {string} propertyKey - The key of the property to include.
  */
 export function _addCategoryPropertyForSave(propertyKey) {
-  pluginSaveProperties.add(propertyKey);
+  registerModelSaveProperty("category", propertyKey);
 }
 
 export default class Category extends RestModel {
@@ -557,7 +560,11 @@ export default class Category extends RestModel {
   }
 
   get subcategories() {
-    return this.site.categoriesByParentId.get(this.id) || [];
+    return applyValueTransformer(
+      "category-subcategories",
+      this.site.categoriesByParentId.get(this.id) || [],
+      { category: this }
+    );
   }
 
   get unloadedSubcategoryCount() {
@@ -872,10 +879,7 @@ export default class Category extends RestModel {
   }
 
   _pluginSaveProperties() {
-    return Array.from(pluginSaveProperties).reduce((obj, key) => {
-      obj[key] = this[key];
-      return obj;
-    }, {});
+    return extraSavePropertiesFor("category", this);
   }
 
   _permissionsForUpdate() {

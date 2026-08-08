@@ -93,6 +93,9 @@ importers:
       playwright:
         specifier: 1.59.1
         version: 1.59.1
+      postcss-selector-parser:
+        specifier: ^7.1.4
+        version: 7.1.4
       prettier:
         specifier: 3.8.1
         version: 3.8.1
@@ -550,6 +553,9 @@ importers:
       babel-plugin-ember-template-compilation:
         specifier: ^4.0.0
         version: 4.0.0
+      content-tag:
+        specifier: ^4.0.0
+        version: 4.2.0
       deprecation-silencer:
         specifier: workspace:1.0.0
         version: link:../deprecation-silencer

@@ -66,25 +66,29 @@ RSpec.describe SidebarSectionsController do
       ).to eq("タグ")
     end
 
-    it "does not return localization rows for admins editing a built-in section" do
+    it "returns localization rows only for manually created built-in section links" do
       SiteSetting.content_localization_enabled = true
       sign_in(admin)
       community_section =
         SidebarSection.find_by(section_type: SidebarSection.section_types[:community])
       topics_link = community_section.sidebar_urls.find_by(name: "Topics")
+      manual_link = Fabricate(:sidebar_url, name: "Solutions", value: "/solutions", locale: "en")
+      Fabricate(:sidebar_section_link, sidebar_section: community_section, linkable: manual_link)
       Fabricate(:sidebar_section_localization, sidebar_section: community_section, locale: "ja")
       Fabricate(:sidebar_url_localization, sidebar_url: topics_link, locale: "ja")
+      Fabricate(:sidebar_url_localization, sidebar_url: manual_link, locale: "ja", name: "解決策")
 
       get "/sidebar_sections/#{community_section.id}.json"
 
       expect(response.status).to eq(200)
       expect(response.parsed_body.dig("sidebar_section", "localizations")).to eq(nil)
+      links = response.parsed_body.dig("sidebar_section", "links")
+      expect(links.find { |link| link["id"] == topics_link.id }["localizations"]).to eq(nil)
+      expect(links.find { |link| link["id"] == topics_link.id }["can_localize"]).to eq(false)
       expect(
-        response
-          .parsed_body
-          .dig("sidebar_section", "links")
-          .filter_map { |link| link["localizations"] },
-      ).to be_empty
+        links.find { |link| link["id"] == manual_link.id }["localizations"].first["name"],
+      ).to eq("解決策")
+      expect(links.find { |link| link["id"] == manual_link.id }["can_localize"]).to eq(true)
     end
 
     it "does not allow regular users to load a public section for editing" do
@@ -209,12 +213,57 @@ RSpec.describe SidebarSectionsController do
              ],
            }
 
+      expect(response.status).to eq(403)
+      expect(SidebarSection.where(title: "custom section")).to be_empty
+    end
+
+    it "does not allow an admin to create localizations on a private section" do
+      SiteSetting.content_localization_enabled = true
+      sign_in(admin)
+
+      post "/sidebar_sections.json",
+           params: {
+             title: "private section",
+             public: false,
+             locale: "ja",
+             localizations: [{ locale: "ja", title: "カスタム" }],
+             links: [{ icon: "link", name: "categories", value: "/categories" }],
+           }
+
+      expect(response.status).to eq(403)
+      expect(SidebarSection.where(title: "private section")).to be_empty
+    end
+
+    it "allows an admin to create localizations on a public section" do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_supported_locales = "en|ja"
+      sign_in(admin)
+
+      post "/sidebar_sections.json",
+           params: {
+             title: "public section",
+             public: true,
+             locale: "en",
+             localizations: [{ locale: "ja", title: "カスタム" }],
+             links: [
+               {
+                 icon: "link",
+                 name: "categories",
+                 value: "/categories",
+                 locale: "en",
+                 localizations: [{ locale: "ja", name: "カテゴリー" }],
+               },
+             ],
+           }
+
       expect(response.status).to eq(200)
 
       sidebar_section = SidebarSection.last
-      expect(sidebar_section.locale).to eq(SiteSetting.default_locale)
-      expect(sidebar_section.localizations).to be_blank
-      expect(sidebar_section.sidebar_urls.first.localizations).to be_blank
+      expect(sidebar_section.locale).to eq("en")
+      expect(sidebar_section.localizations.pluck(:locale, :title)).to eq([%w[ja カスタム]])
+      expect(sidebar_section.sidebar_urls.first.localizations.pluck(:locale, :name)).to eq(
+        [%w[ja カテゴリー]],
+      )
     end
 
     it "does not allow moderator to create public section" do
@@ -372,7 +421,7 @@ RSpec.describe SidebarSectionsController do
             links: [{ icon: "link", id: sidebar_url_1.id, name: "latest", value: "/latest" }],
           }
 
-      expect(response.status).to eq(200)
+      expect(response.status).to eq(403)
       expect(sidebar_section.reload.locale).to eq(SiteSetting.default_locale)
     end
 
@@ -521,6 +570,32 @@ RSpec.describe SidebarSectionsController do
       expect(topics_link.reload.localizations).to be_blank
     end
 
+    it "allows admin to update manually created Community section link localizations" do
+      SiteSetting.content_localization_enabled = true
+      sign_in(admin)
+      manual_link = Fabricate(:sidebar_url, name: "Solutions", value: "/solutions", locale: "en")
+      Fabricate(:sidebar_section_link, sidebar_section: community_section, linkable: manual_link)
+
+      put "/sidebar_sections/#{community_section.id}.json",
+          params: {
+            title: "community section edited",
+            links: [
+              {
+                icon: "link",
+                id: manual_link.id,
+                name: "Solutions",
+                value: "/solutions",
+                localizations: [{ locale: "ja", name: "解決策" }],
+              },
+            ],
+          }
+
+      expect(response.status).to eq(200)
+      expect(manual_link.reload.localizations.order(:locale).pluck(:locale, :name)).to eq(
+        [%w[ja 解決策]],
+      )
+    end
+
     it "allows admin to remove public section localizations" do
       SiteSetting.content_localization_enabled = true
       sign_in(admin)
@@ -574,6 +649,44 @@ RSpec.describe SidebarSectionsController do
       expect(response.parsed_body["errors"]).to eq(
         ["Maximum 5 records are allowed. Got 6 records instead."],
       )
+    end
+
+    it "enforces the total link limit when adding links" do
+      SiteSetting.max_sidebar_section_links = 5
+      sign_in(user)
+
+      put "/sidebar_sections/#{sidebar_section.id}.json",
+          params: {
+            title: "custom section",
+            links: [
+              { icon: "link", name: "latest", value: "/latest" },
+              { icon: "link", name: "new", value: "/new" },
+              { icon: "link", name: "top", value: "/top" },
+              { icon: "link", name: "hot", value: "/hot" },
+            ],
+          }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq(
+        ["Maximum 5 records are allowed. Got 6 records instead."],
+      )
+      expect(sidebar_section.reload.sidebar_urls.count).to eq(2)
+    end
+
+    it "allows an existing over-limit section to remove links" do
+      SiteSetting.max_sidebar_section_links = 1
+      sign_in(user)
+
+      put "/sidebar_sections/#{sidebar_section.id}.json",
+          params: {
+            title: "custom section",
+            links: [
+              { id: sidebar_url_2.id, icon: "link", name: "tags", value: "/tags", _destroy: "1" },
+            ],
+          }
+
+      expect(response.status).to eq(200)
+      expect(sidebar_section.reload.sidebar_urls).to contain_exactly(sidebar_url_1)
     end
 
     it "returns 404 when updating a non-existent section" do
@@ -679,6 +792,357 @@ RSpec.describe SidebarSectionsController do
       expect(community_section.sidebar_urls[0].value).to eq("/my_posts")
       expect(community_section.sidebar_urls[1].name).to eq("topics edited")
       expect(community_section.sidebar_urls[1].value).to eq("/new")
+    end
+  end
+
+  describe "localization after the default locale changes" do
+    before do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_supported_locales = "en|hu"
+      SiteSetting.allow_user_locale = true
+      SiteSetting.default_locale = "en"
+      sign_in(admin)
+    end
+
+    it "lets an admin relabel the source language and translate into the old default" do
+      english_user = Fabricate(:user, locale: "en")
+      hungarian_user = Fabricate(:user, locale: "hu")
+
+      post "/sidebar_sections.json",
+           params: {
+             title: "Főoldal",
+             public: true,
+             locale: "en",
+             links: [{ icon: "link", name: "Főoldal", value: "/", locale: "en" }],
+           }
+      expect(response.status).to eq(200)
+
+      section = SidebarSection.last
+      link = section.sidebar_urls.first
+      expect(section.locale).to eq("en")
+      expect(link.locale).to eq("en")
+
+      SiteSetting.default_locale = "hu"
+
+      put "/sidebar_sections/#{section.id}.json",
+          params: {
+            title: "Főoldal",
+            public: true,
+            locale: "hu",
+            localizations: [{ locale: "en", title: "Homepage" }],
+            links: [
+              {
+                id: link.id,
+                icon: "link",
+                name: "Főoldal",
+                value: "/",
+                locale: "hu",
+                localizations: [{ locale: "en", name: "Homepage" }],
+              },
+            ],
+          }
+      expect(response.status).to eq(200)
+
+      expect(section.reload.locale).to eq("hu")
+      expect(link.reload.locale).to eq("hu")
+      expect(section.localizations.order(:locale).pluck(:locale, :title)).to eq([%w[en Homepage]])
+      expect(link.localizations.order(:locale).pluck(:locale, :name)).to eq([%w[en Homepage]])
+
+      sign_in(english_user)
+      get "/sidebar_sections.json"
+      english = response.parsed_body["sidebar_sections"].find { |s| s["id"] == section.id }
+      expect(english["title"]).to eq("Homepage")
+      expect(english["links"].first["name"]).to eq("Homepage")
+
+      sign_in(hungarian_user)
+      get "/sidebar_sections.json"
+      hungarian = response.parsed_body["sidebar_sections"].find { |s| s["id"] == section.id }
+      expect(hungarian["title"]).to eq("Főoldal")
+      expect(hungarian["links"].first["name"]).to eq("Főoldal")
+    end
+
+    it "drops a localization whose locale matches the section's own source locale" do
+      section = Fabricate(:sidebar_section, title: "Home", public: true, locale: "en")
+      sidebar_url = Fabricate(:sidebar_url, name: "Home", value: "/", locale: "en")
+      Fabricate(:sidebar_section_link, sidebar_section: section, linkable: sidebar_url)
+
+      SiteSetting.default_locale = "hu"
+
+      put "/sidebar_sections/#{section.id}.json",
+          params: {
+            title: "Home",
+            public: true,
+            localizations: [
+              { locale: "en", title: "Home again" },
+              { locale: "hu", title: "Főoldal" },
+            ],
+            links: [
+              {
+                id: sidebar_url.id,
+                icon: "link",
+                name: "Home",
+                value: "/",
+                localizations: [
+                  { locale: "en", name: "Home again" },
+                  { locale: "hu", name: "Főoldal" },
+                ],
+              },
+            ],
+          }
+      expect(response.status).to eq(200)
+
+      expect(section.reload.localizations.order(:locale).pluck(:locale, :title)).to eq(
+        [%w[hu Főoldal]],
+      )
+      expect(sidebar_url.reload.localizations.order(:locale).pluck(:locale, :name)).to eq(
+        [%w[hu Főoldal]],
+      )
+    end
+
+    it "destroys an existing localization that collides with the new source locale" do
+      section = Fabricate(:sidebar_section, title: "Docs", public: true, locale: "en")
+      sidebar_url = Fabricate(:sidebar_url, name: "Guide", value: "/guide", locale: "en")
+      Fabricate(:sidebar_section_link, sidebar_section: section, linkable: sidebar_url)
+      section_localization =
+        Fabricate(
+          :sidebar_section_localization,
+          sidebar_section: section,
+          locale: "hu",
+          title: "Dok",
+        )
+      url_localization =
+        Fabricate(:sidebar_url_localization, sidebar_url:, locale: "hu", name: "Útmutató")
+
+      put "/sidebar_sections/#{section.id}.json",
+          params: {
+            title: "Docs",
+            public: true,
+            locale: "hu",
+            localizations: [{ id: section_localization.id, locale: "hu", title: "Dok" }],
+            links: [
+              {
+                id: sidebar_url.id,
+                icon: "link",
+                name: "Guide",
+                value: "/guide",
+                locale: "hu",
+                localizations: [{ id: url_localization.id, locale: "hu", name: "Útmutató" }],
+              },
+            ],
+          }
+      expect(response.status).to eq(200)
+
+      expect(section.reload.locale).to eq("hu")
+      expect(section.localizations).to be_empty
+      expect(sidebar_url.reload.localizations).to be_empty
+    end
+
+    it "dedupes each link against its own source locale, not the section's" do
+      section = Fabricate(:sidebar_section, title: "Home", public: true, locale: "en")
+      sidebar_url = Fabricate(:sidebar_url, name: "Kezdőlap", value: "/", locale: "hu")
+      Fabricate(:sidebar_section_link, sidebar_section: section, linkable: sidebar_url)
+
+      put "/sidebar_sections/#{section.id}.json",
+          params: {
+            title: "Home",
+            public: true,
+            locale: "en",
+            links: [
+              {
+                id: sidebar_url.id,
+                icon: "link",
+                name: "Kezdőlap",
+                value: "/",
+                locale: "hu",
+                localizations: [
+                  { locale: "hu", name: "Kezdőlap again" },
+                  { locale: "en", name: "Home" },
+                ],
+              },
+            ],
+          }
+      expect(response.status).to eq(200)
+
+      expect(sidebar_url.reload.localizations.order(:locale).pluck(:locale, :name)).to eq(
+        [%w[en Home]],
+      )
+    end
+
+    it "keeps a regional variant of the source language instead of destroying it" do
+      SiteSetting.content_localization_supported_locales = "en|en_GB|hu"
+      section = Fabricate(:sidebar_section, title: "Docs", public: true, locale: "en")
+      sidebar_url = Fabricate(:sidebar_url, name: "Guide", value: "/guide", locale: "en")
+      Fabricate(:sidebar_section_link, sidebar_section: section, linkable: sidebar_url)
+      localization =
+        Fabricate(
+          :sidebar_section_localization,
+          sidebar_section: section,
+          locale: "en_GB",
+          title: "Docs GB",
+        )
+
+      put "/sidebar_sections/#{section.id}.json",
+          params: {
+            title: "Docs renamed",
+            public: true,
+            locale: "en",
+            localizations: [{ id: localization.id, locale: "en_GB", title: "Docs GB" }],
+            links: [
+              { id: sidebar_url.id, icon: "link", name: "Guide", value: "/guide", locale: "en" },
+            ],
+          }
+      expect(response.status).to eq(200)
+
+      expect(section.reload.localizations.pluck(:locale, :title)).to eq([%w[en_GB Docs\ GB]])
+    end
+
+    it "keeps a manually added Community section link's own source locale" do
+      community_section =
+        SidebarSection.find_by(section_type: SidebarSection.section_types[:community])
+      manual_link = Fabricate(:sidebar_url, name: "Kezdőlap", value: "/solutions", locale: "hu")
+      Fabricate(:sidebar_section_link, sidebar_section: community_section, linkable: manual_link)
+
+      put "/sidebar_sections/#{community_section.id}.json",
+          params: {
+            title: "Community",
+            links: [{ id: manual_link.id, icon: "link", name: "Kezdőlap", value: "/solutions" }],
+          }
+      expect(response.status).to eq(200)
+
+      expect(manual_link.reload.locale).to eq("hu")
+    end
+  end
+
+  describe "source locale validation" do
+    fab!(:section) { Fabricate(:sidebar_section, title: "Docs", public: true, locale: "en") }
+    fab!(:sidebar_url) { Fabricate(:sidebar_url, name: "Guide", value: "/guide", locale: "en") }
+    fab!(:section_link) do
+      Fabricate(:sidebar_section_link, sidebar_section: section, linkable: sidebar_url)
+    end
+
+    before do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.default_locale = "en"
+      sign_in(admin)
+    end
+
+    def update_section(params)
+      put "/sidebar_sections/#{section.id}.json",
+          params: { title: "Docs", public: true }.merge(params)
+    end
+
+    it "rejects a locale longer than the column allows" do
+      update_section(locale: "x" * 100)
+
+      expect(response.status).to eq(400)
+      expect(section.reload.locale).to eq("en")
+    end
+
+    it "rejects an unsupported locale on the section and on a link" do
+      update_section(locale: "klingon")
+      expect(response.status).to eq(400)
+
+      update_section(
+        links: [
+          { id: sidebar_url.id, icon: "link", name: "Guide", value: "/guide", locale: "elvish" },
+        ],
+      )
+      expect(response.status).to eq(400)
+
+      expect(section.reload.locale).to eq("en")
+      expect(sidebar_url.reload.locale).to eq("en")
+    end
+
+    it "accepts an unsupported locale that is already stored" do
+      section.update_column(:locale, "af")
+      sidebar_url.update_column(:locale, "af")
+
+      update_section(
+        locale: "af",
+        localizations: [{ locale: "en", title: "Docs EN" }],
+        links: [
+          {
+            id: sidebar_url.id,
+            icon: "link",
+            name: "Guide",
+            value: "/guide",
+            locale: "af",
+            localizations: [{ locale: "en", name: "Guide EN" }],
+          },
+        ],
+      )
+
+      expect(response.status).to eq(200)
+      expect(section.reload.locale).to eq("af")
+      expect(section.localizations.pluck(:locale, :title)).to eq([["en", "Docs EN"]])
+      expect(sidebar_url.reload.localizations.pluck(:locale, :name)).to eq([["en", "Guide EN"]])
+    end
+
+    it "falls back to the default locale when a blank locale is submitted" do
+      update_section(
+        locale: "",
+        links: [{ id: sidebar_url.id, icon: "link", name: "Guide", value: "/guide", locale: "" }],
+      )
+
+      expect(response.status).to eq(200)
+      expect(section.reload.locale).to eq("en")
+      expect(sidebar_url.reload.locale).to eq("en")
+    end
+  end
+
+  describe "localization params on a section being made public" do
+    fab!(:section) { Fabricate(:sidebar_section, title: "Docs", user: admin, locale: "en") }
+    fab!(:sidebar_url) { Fabricate(:sidebar_url, name: "Guide", value: "/guide", locale: "en") }
+    fab!(:section_link) do
+      Fabricate(:sidebar_section_link, sidebar_section: section, linkable: sidebar_url)
+    end
+
+    before do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_supported_locales = "en|ja"
+      SiteSetting.default_locale = "en"
+      sign_in(admin)
+    end
+
+    it "authorizes against the submitted visibility, not the stored one" do
+      put "/sidebar_sections/#{section.id}.json",
+          params: {
+            title: "Docs",
+            public: true,
+            locale: "ja",
+            localizations: [{ locale: "en", title: "Docs EN" }],
+            links: [
+              {
+                id: sidebar_url.id,
+                icon: "link",
+                name: "Guide",
+                value: "/guide",
+                locale: "ja",
+                localizations: [{ locale: "en", name: "Guide EN" }],
+              },
+            ],
+          }
+
+      expect(response.status).to eq(200)
+      expect(section.reload.locale).to eq("ja")
+      expect(section.localizations.pluck(:locale, :title)).to eq([["en", "Docs EN"]])
+      expect(sidebar_url.reload.localizations.pluck(:locale, :name)).to eq([["en", "Guide EN"]])
+    end
+
+    it "ignores localization params when content localization is disabled" do
+      SiteSetting.content_localization_enabled = false
+
+      put "/sidebar_sections/#{section.id}.json",
+          params: {
+            title: "Docs",
+            public: true,
+            locale: "ja",
+            localizations: [{ locale: "en", title: "Docs EN" }],
+          }
+
+      expect(response.status).to eq(200)
+      expect(section.reload.locale).to eq("en")
+      expect(section.localizations).to be_empty
     end
   end
 

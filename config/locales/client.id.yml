@@ -490,6 +490,7 @@ id:
         email: "Email"
         name: "Nama"
         fields: "bidang"
+        penalty_forever: "Selamanya"
         reject_reason: "Alasan"
         scrubbed_reason: "Alasan"
         scrub_record:
@@ -1068,7 +1069,6 @@ id:
       allow_private_messages: "Izinkan pengguna lain mengirimi saya pesan pribadi"
       external_links_in_new_tab: "Buka semua link eksternal ke dalam tab baru"
       enable_quoting: "Aktifkan balasan kutipan untuk teks yang disorot"
-      enable_defer: "Mengaktifkan tandai topik sebagai belum dibaca"
       experimental_sidebar:
         enable: "Aktifkan bilah sisi"
         options: "Pilihan"
@@ -1297,7 +1297,7 @@ id:
         default: "(standar)"
         any: "apa saja"
       homepage:
-        default: "(bawaan)"
+        default: "Asal"
       password_confirmation:
         title: "Kata Sandi Lagi"
       auth_tokens:
@@ -1319,6 +1319,8 @@ id:
         normal: "normal"
         larger: "Lebih Besar"
         largest: "Terbesar"
+      send_shortcut:
+        enter: "Enter"
       like_notification_frequency:
         title: "Beritahu jika disukai"
         always: "Selalu"
@@ -1390,13 +1392,18 @@ id:
           cancel: "Batal"
         invite_roles:
           member_tab: "Anggota"
+          admin_tab: "Staf"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
           invite_by_email: "Email"
           summary:
             role_member: "Anggota"
             role_admin: "Admin"
+            role_moderator: "Moderator"
             method_email: "Email"
             topic: "Topik"
             groups: "Grup"
+            edit: "Ubah"
         bulk_invite:
           error: "Maaf, file harus dalam format CSV"
       password:
@@ -1643,6 +1650,8 @@ id:
       filter_placeholder: Cari emoji
       objects: Objek
       flags: Flags
+    filter_controls:
+      reset: "Reset"
     composer:
       emoji: "Emoji :)"
       options: "Pilihan"
@@ -2298,6 +2307,8 @@ id:
           reset_confirm: "Yakin ingin menyetel ulang bagian ini ke bawaan?"
           always_public: "Konten di bagian ini selalu bersifat publik"
           more_menu: "Lebih banyak menu"
+          localizations:
+            remove_language: "Hapus"
           links:
             reset: "Setel ulang ke bawaan"
             name:
@@ -2526,7 +2537,6 @@ id:
               topics: "Topik"
               posts: "Pos"
             whos_posting:
-              all_categories: "Semua kategori"
               staff: "Staf"
             trust_level_pipeline:
               trust_levels:
@@ -2713,6 +2723,8 @@ id:
           enabled: "Diaktifkan"
           disabled: "Dinonaktifkan"
           reset: "Reset"
+      duplicate_topic_titles:
+        allowed: "Diizinkan"
       backups:
         menu:
           logs: "Log"

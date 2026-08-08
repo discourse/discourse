@@ -110,6 +110,8 @@ Discourse::Application.routes.draw do
         put "user_count" => "site_settings#user_count"
       end
 
+      post "onboarding/events" => "onboarding_events#create"
+
       get "reports" => "reports#index"
       get "reports/bulk" => "reports#bulk"
       get "reports/:type" => "reports#show"
@@ -465,6 +467,8 @@ Discourse::Application.routes.draw do
         get "/welcome-banner" => "welcome_banner#index"
         put "/logo" => "logo#update"
         put "/fonts" => "fonts#update"
+        get "/design-wizard" => "design_wizard#index"
+        put "/design-wizard" => "design_wizard#update"
         get "colors/:id" => "color_palettes#show"
         get "colors" => "color_palettes#index"
         get "upcoming-changes" => "upcoming_changes#index"

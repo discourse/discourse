@@ -75,8 +75,15 @@ uk:
       pinned_messages:
         title: "Закріплені повідомлення"
         close: "Закрити закріплені повідомлення"
+        dismiss: "Закрити закріплені повідомлення"
+        show: "Показати закріплені повідомлення"
         pinned_by_you: "Закріплено вами"
         pinned_by_user: "Закріплено користувачем %{username}"
+      pinned_bar:
+        title: "Закріплені"
+        see_all: "Переглянути всі закріплені повідомлення"
+        jump_to_pinned: "Перейти до закріпленого повідомлення"
+        dismiss: "Закрити закріплене повідомлення"
       no_pinned_messages: "У цьому каналі немає закріплених повідомлень."
       pin_message: "Закріпити повідомлення"
       unpin_message: "Відкріпити повідомлення"
@@ -174,12 +181,6 @@ uk:
         never: "Ніколи"
       separate_sidebar_mode:
         title: "Показувати окремі режими бічної панелі для форуму і чату"
-      send_shortcut:
-        title: "Надіслати ярлик"
-        enter:
-          label: "Надіслати за допомогою Enter"
-        meta_enter:
-          label: "Надіслати %{meta_key} + Enter"
       enable: "Увімкнути чат"
       flag: "Поскаржитися"
       emoji: "Вставити емодзі"
@@ -389,6 +390,10 @@ uk:
         ethereal: "Ефірне скло"
       title: "чат"
       title_capitalized: "Чат"
+      disabled:
+        title: "Ви вимкнули чат"
+        body: "Увімкніть його знову, щоб переглянути канали та повідомлення."
+        cta: "Мої налаштування чату"
       upload: "Прикріпити файл"
       upload_to_channel: "Завантажити до %{title}"
       upload_to_thread: "Завантажити в гілку"
@@ -421,6 +426,7 @@ uk:
         filter_input_placeholder: Пошук каналу за назвою
         filter_joined_all: "Всі"
         filter_joined_joined: "Приєднався(лась)"
+        filter_joined_not_joined: "Не приєднався"
       chat_message_separator:
         today: Сьогодні
         yesterday: Вчора
@@ -498,7 +504,23 @@ uk:
           few: "%{count} учасники"
           many: "%{count} учасників"
           other: "%{count} учасників"
+        empty_state:
+          title: "Це початок %{channelName}"
+          joined_title: "Ви перший в %{channelName}"
+          guest_tip: "Ви читаєте як гість. Розмова починається з моменту публікації дописів учасниками — приєднуйтесь, щоб стати одним із них."
+          joined_tip: "Будьте першим, хто опублікує допис та розпочне розмову."
+          members_here:
+            one: "<strong>%{count} учасник</strong> тут"
+            few: "<strong>%{count} учасники</strong> тут"
+            many: "<strong>%{count} учасників</strong> тут"
+            other: "<strong>%{count} учасників</strong> тут"
+          no_other_members: "Поки що немає інших учасників"
         preview_card:
+          guest_title: "Приєднуйтесь до %{channelName} , щоб розпочати чат"
+          guest_body: "Читання безкоштовне для всіх. Зареєструйтесь, щоб публікувати дописи, реагувати та відповідати — це займає близько 30 секунд."
+          join_body: "Ви зможете публікувати дописи та відповідати на них, і це відображатиметься у вашому списку каналів."
+          no_access_title: "Ви не можете приєднатися до %{channelName}"
+          no_access_body: "Цей канал зараз закритий для нових учасників."
           log_in: "Увійти"
           sign_up: "Зареєструватися"
       create_channel:

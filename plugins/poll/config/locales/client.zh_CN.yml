@@ -10,9 +10,15 @@ zh_CN:
       site_settings:
         categories:
           poll: "Discourse 投票"
+      logs:
+        staff_actions:
+          actions:
+            poll_closed: "投票已关闭"
+            poll_opened: "投票已开放"
   js:
     poll:
       title: "投票"
+      closed_by: "由 %{username} 关闭"
       dynamic:
         enabled_hint: "可以添加或移除选项。"
       voters:

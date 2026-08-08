@@ -136,6 +136,8 @@ uk:
             webhook_setup_failed: "Не вдалося зареєструвати вебхук у Telegram. Перевірте токен і спробуйте ще раз."
             channel_not_found: "Зазначений канал не існує в Telegram"
             forbidden: "Бот не має дозволу публікувати в цей канал"
+            invalid_api_base_url: "Базова URL-адреса Telegram API не є дійсною URL-адресою HTTPS."
+            api_base_url_blocked: "Запити до базової URL-адреси Telegram API були заблоковані. Хости в приватних мережах необхідно додати до налаштування сайту дозволених внутрішніх хостів."
         discord:
           title: "Discord"
           param:
@@ -273,3 +275,14 @@ uk:
               description: "Назву каналу ви можете знайти в налаштуваннях інтеграції чату"
             provider:
               label: Провайдер
+    discourse_workflows:
+      node_unavailable:
+        requires_chat_integration: "Потрібно ввімкнути плагін інтеграції чату"
+      nodes:
+        "action:send_chat_integration_message": "Надіслати повідомлення про інтеграцію чату"
+      node_descriptions:
+        "action:send_chat_integration_message": "Надіслати сповіщення до каналу інтеграції чату (Slack, Discord, Telegram тощо)"
+      send_chat_integration_message:
+        channel_id: "Канал"
+        configure: "Налаштувати"
+        message: "Повідомлення"

@@ -68,6 +68,10 @@ de:
         title: Slack-Nachricht senden
       send_chat_integration_message:
         title: Chat-Integration-Nachricht senden
+  discourse_workflows:
+    errors:
+      send_chat_integration_message:
+        channel_not_found: "Kanal nicht gefunden: %{channel_id}"
   chat_integration:
     all_categories: "(alle Kategorien)"
     deleted_category: "(Kategorie gelöscht)"
@@ -84,6 +88,10 @@ de:
       setting_update_failed: "Aktualisierung der Einstellungen fehlgeschlagen: %{errors}"
     provider:
       slack:
+        errors:
+          auth_error: "Das angegebene Authentifizierungstoken ist ungültig"
+          action_prohibited: "Der Bot hat keine Berechtigung, in diesem Kanal zu schreiben"
+          channel_not_found: "Der angegebene Kanal existiert nicht auf Slack"
         status:
           header: |
             *Regeln für diesen Kanal*

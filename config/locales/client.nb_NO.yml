@@ -585,6 +585,7 @@ nb_NO:
         email: "E-post"
         name: "Navn"
         fields: "Felter"
+        penalty_forever: "For alltid"
         reject_reason: "Begrunnelse"
         scrubbed_reason: "Begrunnelse"
         scrub_record:
@@ -1258,7 +1259,6 @@ nb_NO:
       allow_private_messages: "Tillat andre brukere å sende meg personlige meldinger"
       external_links_in_new_tab: "Åpne alle eksterne lenker i ny fane"
       enable_quoting: "Aktiver svar med sitat for uthevet tekst"
-      enable_defer: "Aktiver merking av emner som ulest"
       experimental_sidebar:
         enable: "Aktiver sidefelt"
         options: "Alternativer"
@@ -1672,7 +1672,7 @@ nb_NO:
         default: "(forvalg)"
         any: "alle"
       homepage:
-        default: "(forvalg)"
+        default: "Forvalg"
       password_confirmation:
         title: "Passord igjen"
       invite_code:
@@ -1715,6 +1715,9 @@ nb_NO:
         contextual: "Nytt sideinnhold"
       bookmark_after_notification:
         title: "Etter at en påminnelse om bokmerke er sendt:"
+      send_shortcut:
+        enter: "Angi"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Varsle når likt"
         always: "Alltid"
@@ -1839,20 +1842,24 @@ nb_NO:
           cancel: "Avbryt"
         invite_roles:
           member_tab: "Medlemmer"
-          admin_tab: "Adminer"
+          admin_tab: "Stab"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
           email_placeholder: "navn@example.com"
           invite_by_email: "E-post"
           restrict_domain: "Begrens til domene"
-          more_options: "Flere valg"
+          create_and_send: "Send"
           update: "Oppdater"
           summary:
             role_member: "Medlem"
             role_admin: "Admin"
+            role_moderator: "Moderator"
             method_email: "E-post"
             uses: "Maks antall bruk"
             expires: "Utløper"
             topic: "Emne"
             groups: "Grupper"
+            edit: "Rediger"
         bulk_invite:
           none: "Ingen invitasjoner til å vise på denne siden."
           text: "Bulk invitasjon"
@@ -2374,6 +2381,8 @@ nb_NO:
       medium_dark_tone: Middels mørk hudtone
       dark_tone: Mørk hudtone
       default: Egendefinerte emoji-er
+    filter_controls:
+      reset: "Tilbakestill"
     shared_drafts:
       title: "Delte utkast"
       notice: "Dette emnet er kun synlig for de som kan publisere felles utkast."
@@ -4237,6 +4246,8 @@ nb_NO:
         custom:
           save: "Lagre"
           delete: "Slett"
+          localizations:
+            remove_language: "Fjern"
           links:
             reset: "Tilbakestill til standard"
             icon:
@@ -4565,7 +4576,6 @@ nb_NO:
               posts: "Innlegg"
               share: "Del"
             whos_posting:
-              all_categories: "Alle kategorier"
               staff: "Stab"
             trust_level_pipeline:
               trust_levels:
@@ -4883,6 +4893,8 @@ nb_NO:
           enabled: "Aktivert"
           disabled: "Deaktivert"
           reset: "Tilbakestill"
+      duplicate_topic_titles:
+        allowed: "Tillatt"
       backups:
         title: "Sikkerhetskopier"
         menu:
@@ -5044,7 +5056,6 @@ nb_NO:
           delete_upload_confirm: "Slett denne opplastingen? (Draktens CSS kan slutte å virke!)"
           import_web_tip: "Pakkebrønn inneholdende drakt"
           is_private: "Drakten er i et privat git repository"
-          public_key: "Gi den følgende public keyen tilgang til repoet:"
           install: "Installer"
           installed: "Installert"
           install_popular: "Populært"
@@ -5772,6 +5783,7 @@ nb_NO:
         uploading: "Laster opp…"
         name: "Navn"
         group: "Gruppe"
+        all_groups: "Alle grupper"
         image: "Bilde"
         delete_confirm: "Sikker på at du vil slette: %{name}: emoji?"
         settings: "Instillinger"

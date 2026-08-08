@@ -320,6 +320,7 @@ sw:
         username: "Jina la mtumiaji"
         email: "Barua Pepe"
         name: "Jina"
+        penalty_forever: "Milele"
         reject_reason: "Sababu"
         scrubbed_reason: "Sababu"
         scrub_record:
@@ -893,7 +894,7 @@ sw:
         default: "(chaguo-msingi)"
         any: "yoyote"
       homepage:
-        default: "(chaguo-msingi)"
+        default: "Halisi"
       password_confirmation:
         title: "nywila upya"
       auth_tokens:
@@ -989,15 +990,20 @@ sw:
           cancel: "Ghairi"
         invite_roles:
           member_tab: "Wanachama"
-          admin_tab: "Viongozi"
+          admin_tab: "Wasaidizi"
+          staff_role_admin: "Kiongozi"
+          staff_role_moderator: "Msimamizi"
           email_placeholder: "jina@mfano.com"
           invite_by_email: "Barua Pepe"
+          create_and_send: "Tuma"
           summary:
             role_member: "Mwanachama"
             role_admin: "Kiongozi"
+            role_moderator: "Msimamizi"
             method_email: "Barua Pepe"
             topic: "Mada"
             groups: "Makundi"
+            edit: "Hariri"
         bulk_invite:
           error: "Samahani, faili hili inabidi liwe na umbizo faili la CSV"
       password:
@@ -1278,6 +1284,8 @@ sw:
       medium_dark_tone: Mwonekano mweusi wenye toni ya katikati
       dark_tone: Mwonekano wenye toni nyeusi
       default: Ishara binafsi
+    filter_controls:
+      reset: "Weka/Anzisha Upya"
     shared_drafts:
       title: "Maswadajaribio Gawiza"
       destination_category: "Kategoria Pokezi"
@@ -2345,6 +2353,8 @@ sw:
         custom:
           save: "Hifadhi"
           delete: "Futa"
+          localizations:
+            remove_language: "Ondoa"
           links:
             icon:
               label: "ikoni"
@@ -2625,7 +2635,6 @@ sw:
               posts: "Machapisho"
               share: "Shirikisha"
             whos_posting:
-              all_categories: "Kategoria Zote"
               staff: "Wasaidizi"
             trust_level_pipeline:
               trust_levels:
@@ -2990,7 +2999,6 @@ sw:
           delete_upload_confirm: "Futa upakiaji huu (CSS ya Mandhari inaweza kuacha kufanya kazi!)"
           import_web_tip: "Hifadhi yenye mandhari"
           is_private: "Mandhari ipo ndani ya hifadhi binafsi ya git"
-          public_key: "Ruhusu ufungo wa umma ufuatao ufikie hifadhi:"
           installed: "Imesanikishwa"
           install_popular: "Maarufu"
           about_theme: "Kuhusu"
@@ -3618,6 +3626,7 @@ sw:
         delete: "Futa"
         name: "Jina"
         group: "Kikundi"
+        all_groups: "Vikundi vyote"
         image: "Picha"
         delete_confirm: "Una uhakika unataka kufuta emoji ya :%{name}: ?"
         settings: "Mipangilio"

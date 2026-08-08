@@ -704,6 +704,7 @@ lt:
         email: "Epaštas"
         name: "Vardas"
         fields: "Laukai"
+        penalty_forever: "Am-inai"
         reject_reason: "Priežastis"
         scrubbed_by: "Įrašas išvalytas pagal"
         scrubbed_reason: "Priežastis"
@@ -1415,7 +1416,6 @@ lt:
       external_links_in_new_tab: "Atidaryti visas pridėtas nuorodas naujame lange"
       enable_quoting: "Įjungti citatų atsakymus pabrėžtam tekstui"
       enable_smart_lists: "Įgalinti išmaniuosius sąrašus rašant kompozitoriuje"
-      enable_defer: "Įgalinti temų žymėjimą kaip neskaitytų"
       experimental_sidebar:
         enable: "Įjungti šoninę juostą"
         options: "Nustatymai"
@@ -1742,7 +1742,7 @@ lt:
         default: "(numatyta)"
         any: "bet kuris"
       homepage:
-        default: "(numatyta)"
+        default: "Numatytasis"
       password_confirmation:
         title: "Pakartokite slaptažodį"
       invite_code:
@@ -1786,6 +1786,9 @@ lt:
         contextual: "Naujas puslapio turinys"
       bookmark_after_notification:
         title: "Išsiuntus priminimo apie žymę pranešimą:"
+      send_shortcut:
+        enter: "Įeiti"
+        meta_enter: "%{meta_key} + Įveskite"
       like_notification_frequency:
         title: "Perspėti susiejus"
         always: "Visada"
@@ -1918,21 +1921,25 @@ lt:
         invite_roles:
           member_title: "Pakviesti narius"
           member_tab: "Nariai"
-          admin_tab: "Administratoriai"
+          admin_tab: "Personalas"
+          staff_role_admin: "Administratorius"
+          staff_role_moderator: "Moderatorius"
           email_placeholder: "vardas@example.com"
           invite_by_email: "Epaštas"
           domain_placeholder: "example.com"
-          more_options: "Daugiau parinkčių"
+          create_and_send: "Siųsti"
+          create_and_copy: "Nukopijuoti nuorodą"
           update: "Atnaujinti"
           summary:
             role_member: "Narys"
             role_admin: "Administratorius"
+            role_moderator: "Moderatorius"
             method_email: "Epaštas"
             uses: "Maksimaliai naudoja"
             expires: "Galiojimo laikas baigiasi"
             topic: "Tema"
             groups: "Grupės"
-            edit: "Redaguoti kvietimą"
+            edit: "Redaguoti"
         bulk_invite:
           text: "Masinis kvietimas"
           error: "Atsiprašome, failas privalo buti CSV formato."
@@ -2426,6 +2433,8 @@ lt:
       medium_dark_tone: Vidutinio tamsumo odos tonas
       dark_tone: Tamsus odos tonas
       default: Individualūs jaustukai
+    filter_controls:
+      reset: "Atstatyti"
     shared_drafts:
       title: "Bendrinami juodraščiai"
       notice: "Ši tema matoma tik tiems, kurie gali skelbti bendrinamus juodraščius."
@@ -4082,6 +4091,9 @@ lt:
         custom:
           save: "Išsaugoti"
           delete: "Pašalinti"
+          localizations:
+            locale: "Kalba"
+            remove_language: "Pašalinti"
           links:
             reset: "Atstatyti numatytuosius nustatymus"
             icon:
@@ -4428,7 +4440,6 @@ lt:
               posts: "Pranešimai"
               share: "Dalintis"
             whos_posting:
-              all_categories: "Visos kategorijos"
               staff: "Personalas"
             trust_level_pipeline:
               trust_levels:
@@ -4781,6 +4792,8 @@ lt:
           enabled: "Galimas"
           disabled: "Uždrausta"
           reset: "Atstatyti"
+      duplicate_topic_titles:
+        allowed: "Leidžiama"
       backups:
         title: "Atsarginės kopijos"
         menu:
@@ -5753,6 +5766,7 @@ lt:
         delete: "Pašalinti"
         name: "Vardas"
         group: "Grupė"
+        all_groups: "Visos grupės"
         image: "Paveiksliukas"
         delete_confirm: "Ar tikrai nori ištrinti :%{name}: šypsenėlę?"
         settings: "Nustatymai"

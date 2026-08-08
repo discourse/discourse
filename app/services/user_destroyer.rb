@@ -46,6 +46,8 @@ class UserDestroyer
         delete_posts(user, category_topic_ids, opts)
       end
 
+      resolve_reviewables_targeting(user)
+
       user.post_actions.find_each { |post_action| post_action.remove_act!(Discourse.system_user) }
 
       # Add info about the user to staff action logs
@@ -165,6 +167,19 @@ class UserDestroyer
         if reviewable.actions_for(@guardian).has?(:reject_post)
           reviewable.perform(@actor, :reject_post)
         end
+      end
+  end
+
+  def resolve_reviewables_targeting(user)
+    Reviewable
+      .pending
+      .where(target_created_by: user)
+      .find_each do |reviewable|
+        reviewable.reviewable_notes.create!(
+          user: Discourse.system_user,
+          content: I18n.t("reviewables.target_user_deleted"),
+        )
+        reviewable.transition_to(:ignored, Discourse.system_user)
       end
   end
 

@@ -18,8 +18,6 @@ fi:
         sections:
           support:
             title: "Tuki"
-            filter:
-              all_categories: "Kaikki alueet"
             answerers:
               staff: "Henkilökunta"
               member: "Jäsenet"

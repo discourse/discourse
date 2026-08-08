@@ -31,12 +31,19 @@ class SidebarSection < ActiveRecord::Base
               maximum: MAX_TITLE_LENGTH,
             }
 
+  validates :locale, presence: true, length: { maximum: 20 }
+  validate :sidebar_urls_count_within_limit, on: :sidebar_section_update
+
   scope :public_sections, -> { where("public") }
   scope :custom_sections, -> { where(section_type: nil) }
   enum :section_type, { community: 0 }, scopes: false, suffix: true
 
   def custom_section?
     section_type.blank?
+  end
+
+  def community_section?
+    section_type == "community"
   end
 
   def reset_community!
@@ -68,12 +75,21 @@ class SidebarSection < ActiveRecord::Base
 
   private
 
+  def sidebar_urls_count_within_limit
+    count = sidebar_urls.reject(&:marked_for_destruction?).size
+    persisted_count = sidebar_urls.count(&:persisted?)
+    limit = SiteSetting.max_sidebar_section_links
+    return if count <= [limit, persisted_count].max
+
+    errors.add(:base, :too_many_sidebar_urls, limit:, count:)
+  end
+
   def set_system_user_for_public_section
     self.user_id = Discourse.system_user.id if public
   end
 
   def set_default_locale
-    self.locale ||= SiteSetting.default_locale.to_s
+    self.locale = SiteSetting.default_locale.to_s if locale.blank?
   end
 end
 

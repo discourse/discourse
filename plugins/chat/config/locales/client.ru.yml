@@ -77,6 +77,8 @@ ru:
         close: "Закрыть закрепленные сообщения"
         pinned_by_you: "Закреплено тобой"
         pinned_by_user: "Закреплено пользователем %{username}"
+      pinned_bar:
+        title: "Закреплена"
       no_pinned_messages: "В этом канале нет закрепленных сообщений."
       pin_message: "Закрепить сообщение"
       unpin_message: "Открепить сообщение"
@@ -174,11 +176,6 @@ ru:
         never: "Никогда"
       separate_sidebar_mode:
         title: "Показывать отдельные режимы боковой панели для форума и чата"
-      send_shortcut:
-        enter:
-          label: "Отправить с помощью Enter"
-        meta_enter:
-          label: "Отправить с помощью %{meta_key} + Enter"
       enable: "Включить чат"
       flag: "Пожаловаться"
       emoji: "Вставить эмодзи"

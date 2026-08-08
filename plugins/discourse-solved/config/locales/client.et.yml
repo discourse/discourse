@@ -14,8 +14,6 @@ et:
               label: "Aktsepteeritud lahendused"
         sections:
           support:
-            filter:
-              all_categories: "Kõik kategooriad"
             answerers:
               staff: "Meeskond"
               member: "Liikmed"

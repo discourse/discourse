@@ -1123,7 +1123,7 @@ RSpec.describe PostGuardian do
       expect(Guardian.new(user2).can_see?(post)).to eq(false)
     end
 
-    it "respects whispers" do
+    it "requires current whisper group membership" do
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}|#{group.id}"
 
       regular_post = post
@@ -1138,9 +1138,8 @@ RSpec.describe PostGuardian do
       expect(regular_guardian.can_see?(regular_post)).to eq(true)
       expect(regular_guardian.can_see?(whisper_post)).to eq(false)
 
-      # can see your own whispers
       regular_whisper = Fabricate(:post, post_type: Post.types[:whisper], user: regular_user)
-      expect(regular_guardian.can_see?(regular_whisper)).to eq(true)
+      expect(regular_guardian.can_see?(regular_whisper)).to eq(false)
 
       mod_guardian = Guardian.new(Fabricate(:moderator))
       expect(mod_guardian.can_see?(regular_post)).to eq(true)
@@ -1381,6 +1380,15 @@ RSpec.describe PostGuardian do
       expect(Guardian.new(post.user).can_view_edit_history?(post)).to be_truthy
     end
 
+    it "returns true for a category group moderator viewing a hidden post" do
+      SiteSetting.edit_history_visible_to_public = true
+      SiteSetting.enable_category_group_moderation = true
+      Fabricate(:category_moderation_group, category: category, group:)
+      post.update!(hidden: true)
+
+      expect(Guardian.new(user).can_view_edit_history?(post)).to be_truthy
+    end
+
     it "returns false when user can not see post" do
       post.update!(hidden: true)
 
@@ -1389,6 +1397,36 @@ RSpec.describe PostGuardian do
       guardian.stubs(:can_see_post?).returns(false)
 
       expect(guardian.can_view_edit_history?(post)).to be_falsey
+    end
+
+    context "when edit_history_visible_to_public is false" do
+      before { SiteSetting.edit_history_visible_to_public = false }
+
+      it "returns false for a regular user" do
+        expect(Guardian.new(user).can_view_edit_history?(post)).to be_falsey
+      end
+
+      it "returns true for a category group moderator" do
+        SiteSetting.enable_category_group_moderation = true
+        Fabricate(:category_moderation_group, category: category, group:)
+
+        expect(Guardian.new(user).can_view_edit_history?(post)).to be_truthy
+      end
+
+      it "returns false for a category group moderator in a different category" do
+        SiteSetting.enable_category_group_moderation = true
+        other_category = Fabricate(:category)
+        Fabricate(:category_moderation_group, category: other_category, group:)
+
+        expect(Guardian.new(user).can_view_edit_history?(post)).to be_falsey
+      end
+
+      it "returns false for a category group moderator when feature is disabled" do
+        SiteSetting.enable_category_group_moderation = false
+        Fabricate(:category_moderation_group, category: category, group:)
+
+        expect(Guardian.new(user).can_view_edit_history?(post)).to be_falsey
+      end
     end
   end
 

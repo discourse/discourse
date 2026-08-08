@@ -1083,7 +1083,7 @@ be:
         default: "(Прадвызначаная)"
         any: "любая"
       homepage:
-        default: "(Прадвызначаная)"
+        default: "Прадвызначаная"
       password_confirmation:
         title: "Пароль яшчэ раз"
       auth_tokens:
@@ -1157,15 +1157,20 @@ be:
           cancel: "Скасаваць"
         invite_roles:
           member_tab: "Члены"
-          admin_tab: "Адміністратары"
+          admin_tab: "Персанал"
+          staff_role_admin: "адміністратар"
+          staff_role_moderator: "запавольнік"
           email_placeholder: "name@example.com"
           invite_by_email: "Электронная пошта"
+          create_and_send: "Адправіць"
           summary:
             role_member: "Член"
             role_admin: "адміністратар"
+            role_moderator: "запавольнік"
             method_email: "Электронная пошта"
             topic: "Тэма"
             groups: "Груп"
+            edit: "Рэдагаваць"
       password:
         title: "Пароль"
         common: "Гэты пароль занадта папулярны."
@@ -1343,6 +1348,8 @@ be:
       to: Да
     emoji_picker:
       flags: Сцягі
+    filter_controls:
+      reset: "Скінуць"
     composer:
       options: "Параметры"
       posting_not_on_topic: "У якой тэме вы хочаце адказаць?"
@@ -1949,6 +1956,8 @@ be:
         custom:
           save: "Захаваць"
           delete: "Выдаліць"
+          localizations:
+            remove_language: "Выдаліць"
           links:
             add: "Дадаць яшчэ адну спасылку"
             delete: "Выдаліць спасылку"
@@ -2239,7 +2248,6 @@ be:
               posts: "Допісы"
               share: "Абагуліць"
             whos_posting:
-              all_categories: "Усе катэгорыі"
               staff: "Персанал"
             trust_level_pipeline:
               trust_levels:
@@ -2962,6 +2970,7 @@ be:
         delete: "выдаляць"
         name: "Імя"
         group: "Група"
+        all_groups: "Усе групы"
         image: "Выява"
         settings: "Налады"
         export: "Экспарт"

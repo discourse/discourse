@@ -86,7 +86,7 @@ interface FeaturedTagsSignature {
       sort: args.sort ?? "popular",
     }),
     skeleton: (args: { count?: number }) => ({
-      variant: "pill",
+      variant: "text",
       count: args.count ?? 10,
     }),
   },

@@ -14,6 +14,8 @@ module Jobs
         "Do not ask whether trust level is available for trigger:post_created or trigger:post_edited; it is available as user.trust_level.",
         "Do not generate fallback chains for undocumented author aliases; use the exact post.* fields from the node catalog output_contracts.",
         "trigger:user_added_to_group and trigger:user_removed_from_group expose the affected user under user.*, the selected group under group.*, and event metadata under membership.*. Use user.username for the affected username and membership.action to distinguish added vs removed if needed.",
+        "trigger:user_created and trigger:user_updated expose the affected user under user.* only, including user.username, user.trust_level, user.staged, and user.created_at. They do not expose a post or topic object. They also fire for staged users (accounts auto-created by incoming email or invites); to skip those, add condition:filter on user.staged equals false after the trigger.",
+        "trigger:reviewable_created and trigger:reviewable_approved expose the review queue item under reviewable.* only (reviewable.id, reviewable.type, reviewable.status, reviewable.target_type, reviewable.target_id, reviewable.topic_id, reviewable.category_id, reviewable.score, reviewable.created_at). They do not expose a post, topic, or user object; when a flagged post's content or author is needed, add action:post with operation get and post_id ={{ $json.reviewable.target_id }} after a condition:filter on reviewable.target_type equals Post.",
         "For named group membership checks, use workflow_resolve_entity to resolve the group, then use action:group with operation check_membership, group_id set to the resolved group id, and username ={{ $json.user.username }} when the input schema includes user.username, otherwise use the exact username field from the current input schema. It adds group_membership.in_group while preserving the original item fields. Do not use a Code node for simple group membership.",
         "For personal messages, private messages, DMs, direct messages, or PM notifications, use action:send_personal_message with recipient_usernames or recipient_group_names as arrays, title, raw, and sender_username. Resolve named users with workflow_resolve_entity(kind: user), and named groups with workflow_resolve_entity(kind: group).",
       ].freeze
@@ -128,6 +130,11 @@ module Jobs
           context_tools[
             :search_chat_channels
           ] = "Call this before asking the admin to choose a chat channel or before setting action:send_chat_message channel_id. Use returned matches; never invent channel names or IDs."
+        end
+        if ::DiscourseWorkflows::Ai::Tools::SearchChatIntegrationChannels.available?
+          context_tools[
+            :search_chat_integration_channels
+          ] = "Call this before asking the admin to choose an external chat integration channel or before setting action:send_chat_integration_message channel_id. Use returned matches; never invent provider names, channel labels, or IDs."
         end
 
         payload = {

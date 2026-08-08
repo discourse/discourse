@@ -676,6 +676,8 @@ zh_TW:
         email: "電子信箱"
         name: "名稱"
         fields: "欄位"
+        silence_reason: "禁言原因"
+        penalty_forever: "永久"
         reject_reason: "原因"
         scrubbed_reason: "原因"
         scrub_record:
@@ -1348,7 +1350,9 @@ zh_TW:
       external_links_in_new_tab: "在新分頁中開啟所有外部連結"
       enable_quoting: "允許引用劃記文字"
       enable_smart_lists: "在編輯器中編寫時啟用智慧型列表"
-      enable_defer: " 將主題標記為未讀"
+      automatically_translate: "自動翻譯以其他語言撰寫的主題和貼文"
+      content_languages:
+        understood: "我能理解的語言"
       experimental_sidebar:
         enable: "啟用側選單"
         options: "選項"
@@ -1749,7 +1753,7 @@ zh_TW:
         default: "(預設)"
         any: "任何"
       homepage:
-        default: "(預設)"
+        default: "預設"
       password_confirmation:
         title: "再次輸入密碼"
       invite_code:
@@ -1793,6 +1797,9 @@ zh_TW:
         contextual: "新的頁面內容"
       bookmark_after_notification:
         title: "發送書籤提醒通知後："
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "使用者被讚時通知提醒"
         always: "總是"
@@ -1939,21 +1946,26 @@ zh_TW:
         invite_roles:
           member_title: "邀請成員"
           member_tab: "成員"
+          admin_tab: "管理員"
+          staff_role_admin: "管理員"
+          staff_role_moderator: "板主"
           admin_email_label: "電子郵件地址"
           email_placeholder: "name@example.com"
           invite_by_email: "電子信箱"
           restrict_domain: "僅限網域"
-          more_options: "更多選項"
+          create_and_send: "傳送"
+          create_and_copy: "複製連結"
           update: "更新"
           summary:
             role_member: "成員"
             role_admin: "管理員"
+            role_moderator: "板主"
             method_email: "電子信箱"
             uses: "最大使用次數"
             expires: "過期時間"
             topic: "話題"
             groups: "群組"
-            edit: "編輯邀請"
+            edit: "編輯"
         bulk_invite:
           none: "此頁面上沒有邀請函顯示。"
           text: "批量邀請"
@@ -2469,6 +2481,8 @@ zh_TW:
       default: 自訂表情符號
     filter_input:
       clear: "清除篩選"
+    filter_controls:
+      reset: "重置"
     shared_drafts:
       title: "共享草稿"
       notice: "此話題只對可以發布共享草稿的使用者可見。"
@@ -3690,6 +3704,11 @@ zh_TW:
       share:
         title: "分享貼文#%{post_number}"
         instructions: "分享此貼文的連結:"
+      click_to_show_original: "點擊以顯示原文"
+      tap_to_show_original: "輕觸此處以顯示原文"
+      click_to_show_translation: "點擊以顯示翻譯"
+      tap_to_show_translation: "輕觸此處以顯示翻譯"
+      ai_translation_disclaimer: "由 AI 產生的翻譯可能不準確。"
     category:
       none: "( 無分類 )"
       all: "所有分類"
@@ -4416,6 +4435,10 @@ zh_TW:
           public: "所有人都可以看到"
           always_public: "本節中的內容始終是公開"
           more_menu: "更多選單"
+          localizations:
+            locale: "語言"
+            title_label: "章節標題"
+            remove_language: "移除"
           links:
             add: "新增另一個連結"
             delete: "刪除連結"
@@ -5059,7 +5082,6 @@ zh_TW:
               posts: "新發表的貼文"
               share: "分享"
             whos_posting:
-              all_categories: "所有分類"
               staff: "管理員"
             trust_level_pipeline:
               trust_levels:
@@ -5711,6 +5733,8 @@ zh_TW:
         sidebar: "側選單"
         header_dropdown: "標題下拉選單"
         legacy: "舊版"
+      duplicate_topic_titles:
+        allowed: "允許的"
       backups:
         title: "備份"
         files_title: "備份檔案"
@@ -5927,7 +5951,6 @@ zh_TW:
           finish_install: "完成佈景主題安裝"
           last_attempt: "安裝過程未完成，最後一次嘗試："
           remote_branch: "分支名稱 (選填)"
-          public_key: "授予公鑰以進入Repo（倉庫）的訪問權限："
           install: "安裝"
           installed: "已安裝"
           install_popular: "熱門"
@@ -7127,6 +7150,7 @@ zh_TW:
         uploading: "上傳中..."
         name: "名稱"
         group: "群組"
+        all_groups: "所有群組"
         created_by: "建立者"
         image: "圖片"
         alt: "自訂表情符號預覽"

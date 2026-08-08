@@ -1,6 +1,7 @@
 import type Component from "@glimmer/component";
 import type Owner from "@ember/owner";
 import type { ComponentLike } from "@glint/template";
+import type { SkeletonVariant } from "discourse/ui-kit/d-skeleton";
 
 /**
  * Public data shapes for the blocks API, shared by the `@block` decorator, the
@@ -229,7 +230,7 @@ export interface ChildArgSchema extends ArgSchema {
  */
 export interface BlockSkeletonShape {
   /** Skeleton style variant. */
-  variant?: string;
+  variant?: SkeletonVariant;
 
   /** Number of skeleton rows/items to paint. */
   count?: number;

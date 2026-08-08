@@ -4,7 +4,6 @@ import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import moment from "moment";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import bodyClass from "discourse/helpers/body-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -22,7 +21,7 @@ import EventStatus from "./event-status";
 import Image from "./image";
 import Invitees from "./invitees";
 import Livestream from "./livestream";
-import Location from "./location";
+import DiscoursePostEventLocation from "./location";
 import MoreMenu from "./more-menu";
 import Status from "./status";
 import Url from "./url";
@@ -83,7 +82,6 @@ const StatusPlaceholder = <template>
 export default class DiscoursePostEvent extends Component {
   @service currentUser;
   @service discoursePostEventApi;
-  @service embeddableChat;
   @service messageBus;
   @service siteSettings;
 
@@ -114,14 +112,6 @@ export default class DiscoursePostEvent extends Component {
 
   get event() {
     return this.fetchedEvent ?? this.args.event;
-  }
-
-  get useLivestreamLayout() {
-    return (
-      this.event.livestream &&
-      this.embeddableChat.chatChannelId &&
-      !this.embeddableChat.isChannelOpenInDrawer
-    );
   }
 
   get isPartialEvent() {
@@ -352,10 +342,10 @@ export default class DiscoursePostEvent extends Component {
                 Url=(component Url url=event.url)
                 Description=(component
                   Description
-                  description=event.description
+                  descriptionHtml=event.descriptionHtml
                   clamp=this.clampDescription
                 )
-                Location=(component Location location=event.location)
+                Location=(component DiscoursePostEventLocation event=event)
                 Dates=(component
                   Dates event=event expiredAndRecurring=this.expiredAndRecurring
                 )
@@ -385,7 +375,7 @@ export default class DiscoursePostEvent extends Component {
                   {{this.recurrenceLabel}}
                 </InfoSection>
               {{/if}}
-              <Location @location={{event.location}} />
+              <DiscoursePostEventLocation @event={{event}} />
               <Url @url={{event.url}} />
               <ChatChannel @event={{event}} />
 
@@ -409,10 +399,7 @@ export default class DiscoursePostEvent extends Component {
               {{/if}}
 
               {{#unless @hideLivestreamVideo}}
-                {{#if this.useLivestreamLayout}}
-                  {{bodyClass "livestream-topic"}}
-                {{/if}}
-                <Livestream @event={{event}} />
+                <Livestream @event={{event}} @post={{@post}} />
               {{/unless}}
             </PluginOutlet>
           {{/if}}

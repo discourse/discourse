@@ -326,6 +326,7 @@ en:
         add_group: "Add user or group"
         mandatory_acl_tooltip: "This permission is mandatory for %{name} and cannot be removed"
         mandatory: "Mandatory"
+        disallowed: "Disallowed"
     carousel:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"
@@ -826,27 +827,29 @@ en:
       pm_title: "Suggested Messages"
 
     admin_onboarding_banner:
-      launch_in_easy_steps: "Launch in %{step_count} easy steps"
+      launch_in_easy_steps: "Set up your community"
+      launch_in_easy_steps_subtitle: "%{completed_steps} of %{step_count} steps completed"
       congrats_onboarding_complete: "Congratulations on completing the onboarding process!"
+      expand: "Expand setup steps"
+      collapse: "Collapse setup steps"
+      dismiss: "Dismiss setup"
       select_theme:
         title: "Customize your site"
-        description: "Choose a starting theme for your community"
-        action: "Select theme"
-        modal_title: "Choose a theme"
-        use_theme: "Use selected theme"
-        enabled: "Selected"
-        applying_theme: "Applying theme..."
-        browse_all: "Manage themes"
+        description: "Choose colors, fonts, and a homepage."
+        action: "See options"
+        completed: "Change options"
         show_light_screenshot: "Show light screenshot"
         show_dark_screenshot: "Show dark screenshot"
       invite_collaborators:
-        title: "Invite Collaborators"
-        description: "Early members help bring your community to life"
+        title: "Invite collaborators"
+        description: "Early members bring it to life."
         action: "Create invite"
+        completed: "Invite more"
       start_posting:
-        title: "Start Posting"
-        description: "Give people something to talk about together"
+        title: "Start posting"
+        description: "Give people something to discuss."
         action: "See ideas"
+        completed: "See more ideas"
         choose_option: "How would you like to start?"
         predefined_topics: "Icebreaker templates"
         predefined_topics_subtitle: "Give new members something to talk about, pick a template to edit and make your own."
@@ -866,6 +869,45 @@ en:
           what_is_your_favorite_food:
             title: "What is your favorite food?"
             body: "Share your favorite food with the community! I'll start: I love pizza, especially with extra cheese and pepperoni."
+
+    design_wizard:
+      title: "Customize your site"
+      subtitle: "Choose colors, fonts, and a homepage."
+      step_label: "Go to step %{index}"
+      save: "Save and finish"
+      back: "Back"
+      next: "Next"
+      sections:
+        theme: "Theme"
+        colors: "Default color"
+        fonts: "Fonts"
+        homepage: "Homepage"
+      theme:
+        selected: "Selected"
+        custom_theme_notice: "Your site currently uses %{name} as its default theme. Choose a theme below to preview it. Saving will replace your current theme."
+      colors:
+        light: "Light"
+        dark: "Dark"
+        dark_only: "%{name} only has a dark mode"
+        both_modes: "Each palette includes a matching light and dark mode"
+        user_selectable: "Let members switch palettes"
+        user_selectable_description: "Show these palettes in a menu members can pick from"
+      fonts:
+        base_font: "Base font"
+        heading_font: "Heading font"
+      homepage:
+        topics: "Topics"
+        categories: "Categories"
+        topic_page_type: "Topic page type"
+        topic_pages:
+          latest: "Topics sorted by their most recent activity, newest first."
+          new: "Topics created in the last few days, newest first."
+          hot: "Topics trending right now, blending overall popularity with recent engagement."
+        category_page_style: "Category page style"
+        styles:
+          boxes: "Boxes"
+          with_topics: "Categories with topics"
+          only: "Categories only"
 
     about:
       edit: "Edit this page"
@@ -1198,10 +1240,6 @@ en:
       stale_help: "This item has been resolved by <b>%{username}</b>."
       claim_help:
         optional: "You can claim this item to prevent others from reviewing it."
-        required: "You must claim items before you can review them."
-        claimed_by_you: "You've claimed this item and can review it."
-        claimed_by_other: "This item can only be reviewed by <b>%{username}</b>."
-        automatically_claimed_by: "This item is currently being reviewed by <b>%{username}</b>."
       claim:
         title: "Claim this topic"
       unclaim:
@@ -1240,6 +1278,11 @@ en:
         email: "Email"
         name: "Name"
         fields: "Fields"
+        silenced_until: "Silenced until"
+        silence_reason: "Silence reason"
+        suspended_until: "Suspended until"
+        suspend_reason: "Suspension reason"
+        penalty_forever: "Forever"
         reject_reason: "Reason"
         scrubbed_by: "Record scrubbed by"
         scrubbed_reason: "Reason"
@@ -2082,9 +2125,12 @@ en:
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
       enable_smart_lists: "Enable smart lists when writing in the composer"
-      enable_defer: "Enable mark topics as unread"
       enable_markdown_monospace_font: "Use monospace font in composer's Markdown mode"
-      show_original_content: "Show original content instead of translated content."
+      automatically_translate: "Automatically translate topics and posts in other languages"
+      content_languages:
+        title: "Content languages"
+        understood: "Languages I understand"
+        understood_description: "Topics and posts in these languages won’t be translated. Your interface language is always considered understood."
       experimental_sidebar:
         enable: "Enable sidebar"
         options: "Options"
@@ -2565,7 +2611,7 @@ en:
         any: "any"
 
       homepage:
-        default: "(default)"
+        default: "Default"
 
       password_confirmation:
         title: "Password Again"
@@ -2616,6 +2662,11 @@ en:
         contextual: "New page content"
       bookmark_after_notification:
         title: "After a bookmark reminder notification is sent:"
+
+      send_shortcut:
+        title: "Send messages in chat-style composers with:"
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
 
       like_notification_frequency:
         title: "Notify when liked"
@@ -2800,9 +2851,8 @@ en:
           sent_title: "Invitation sent"
           member_tab: "Members"
           admin_tab: "Staff"
-          member_description: "Invite people to join this site. Share a link or send an email invitation."
-          admin_description: "Invite people to join your staff team. Admins have full access to this site."
-          moderator_description: "Invite people to join your staff team. Moderators can help manage content and members."
+          admin_description: "Admins have full access to this site, its settings, and data."
+          moderator_description: "Moderators can help manage content and members."
           staff_role_label: "Invite as"
           staff_role_admin: "Admin"
           staff_role_moderator: "Moderator"
@@ -2815,16 +2865,13 @@ en:
           invite_by_email: "Email"
           role_label: "Invite as"
           restrict_domain: "Restrict to domain"
-          restrict_domain_help: "Only people with an email at this domain can accept the link. To invite a specific person, use Email above."
+          restrict_domain_help: "Only people with an email at this domain can accept the link."
           domain_placeholder: "example.com"
           domain_invalid: "Enter a valid domain, e.g. example.com"
           arrive_at_topic_help: "Send people to a specific topic after they accept."
-          create_and_send: "Create & send"
-          create_and_copy: "Create & copy link"
-          more_options: "More options"
-          fewer_options: "Fewer options"
+          create_and_send: "Send"
+          create_and_copy: "Copy link"
           update: "Update"
-          role_locked: "The invite type can't be changed after the invite is created."
           summary:
             sent_to: "An invitation was emailed to %{email}. You can also share this link directly:"
             role: "Role"
@@ -2839,7 +2886,7 @@ en:
             expires: "Expires"
             topic: "Topic"
             groups: "Groups"
-            edit: "Edit invite"
+            edit: "Edit"
             view_invites: "View invites"
           email_sent:
             body: "An invitation was emailed to %{email}."
@@ -3076,10 +3123,15 @@ en:
     home: "Home"
     read_only_mode:
       enabled: "This site is in read only mode. Please continue to browse, but replying, likes, and other actions are disabled for now."
+      enabled_anonymous: "This site is in read only mode. Please continue to browse, but signing up and logging in are unavailable for now."
       login_disabled: "Login is disabled while the site is in read only mode."
       logout_disabled: "Logout is disabled while the site is in read only mode."
+      signup_disabled: "Signing up is disabled while the site is in read only mode."
     staff_writes_only_mode:
       enabled: "This site is in staff only mode. Please continue to browse, but replying, likes, and other actions are limited to staff members only."
+      enabled_anonymous: "This site is in staff only mode. Please continue to browse, but signing up is unavailable and only staff members can log in."
+      login_disabled: "Only staff members can log in while the site is in staff only mode."
+      signup_disabled: "Signing up is disabled while the site is in staff only mode."
 
     logs_error_rate_notice:
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
@@ -3461,6 +3513,7 @@ en:
       subcategory_count:
         one: "+%{count} subcategory"
         other: "+%{count} subcategories"
+      subcategories: "+ Subcategories"
       topic_count:
         one: "%{count} topic in this category"
         other: "%{count} topics in this category"
@@ -3489,6 +3542,10 @@ en:
         other: "Select at least %{count} items."
       components:
         filter_for_more: Filter for more…
+        multiple_categories_selector:
+          limited_results_notice:
+            one: "Showing %{shown} of %{count} category. Type to search for more."
+            other: "Showing %{shown} of %{count} categories. Type to search for more."
         categories_admin_dropdown:
           title: "Manage categories"
         tag_category_admin_dropdown:
@@ -3535,11 +3592,12 @@ en:
       clear: "Clear filter"
 
     filter_controls:
-      reset: "Reset filter"
+      reset: "Reset"
       toggle: "Toggle dropdown filters"
 
     d_icon_grid_picker:
       select_icon: "Select icon"
+      search_label: "Search icons"
       search_placeholder: "Search icons..."
       no_results: "No icons found"
       results_count:
@@ -3775,11 +3833,14 @@ en:
       italic_label: "I"
       italic_title: "Emphasis"
       italic_text: "emphasized text"
-      heading_title: "Headings"
+      text_size_title: "Text sizes"
       heading_level_n: "Heading %{levelNumber}"
       heading_level_n_title: "Heading %{levelNumber}"
       heading_level_paragraph: "Paragraph"
       heading_level_paragraph_title: "Paragraph"
+      heading_level_small: "Small"
+      heading_level_small_title: "Small text"
+      heading_level_small_text: "Small text"
       link_title: "Link"
       link_description: "enter link description here"
       link_dialog_title: "Insert link"
@@ -4005,7 +4066,6 @@ en:
         other: "%{count} open membership requests for '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - completed"
       new_features: "New features available!"
       admin_problems: "New advice on your site dashboard"
       upcoming_changes:
@@ -4568,6 +4628,8 @@ en:
         link: "Activity log"
         title: "Topic activity log"
         empty: "No topic activity to show."
+        load_more: "Load more activity"
+        updated: "Topic activity updated."
       context:
         banner: "You are viewing a single thread from this topic."
         view_full_topic: "View full topic"
@@ -5456,6 +5518,11 @@ en:
       tap_to_show_translation: "Tap here to show translation"
       ai_translation_disclaimer: "AI-generated translations may be inaccurate."
 
+    content_localization:
+      preferences:
+        title: "Content language preferences"
+        login_to_set_languages: "Log in to set more languages"
+
     category:
       none: "(no category)"
       all: "All categories"
@@ -6010,6 +6077,7 @@ en:
     invalid_video_url: This video cannot be played because the URL is invalid or unavailable.
 
     keyboard_shortcuts_help:
+      search_label: "Search shortcuts"
       search_placeholder: "Search for a shortcut by description or key combination"
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -6484,13 +6552,26 @@ en:
           always_public: "Content in this section is always public"
           more_menu: "More menu"
           localizations:
-            title: "Translations"
             locale: "Language"
+            language: "Section language"
+            language_description: "The primary language of this section's title and link names."
             title_label: "Section title"
-            link_label: "Link name"
-            add_section: "Add section title translation"
-            add_link: "Add link name translation"
-            remove: "Remove translation"
+            link_label: "Link names"
+            back: "Section content"
+            add_first: "Add translations"
+            manage:
+              one: "Manage translations (%{count} language)"
+              other: "Manage translations (%{count} languages)"
+            incomplete:
+              one: "%{count} string missing"
+              other: "%{count} strings missing"
+            add_language: "Add language"
+            remove_language: "Remove"
+            remove_language_confirm: "Remove every %{language} translation for this section?"
+            remove_cleared_confirm:
+              one: "You cleared %{count} saved translation. It will be removed. Continue?"
+              other: "You cleared %{count} saved translations. They will be removed. Continue?"
+            untranslated: "Not translated yet"
           links:
             title: "Section links"
             add: "Add another link"
@@ -7536,12 +7617,11 @@ en:
               save_error: "Couldn't save your selection for next time."
             whos_posting:
               title: "Who's posting?"
-              all_categories: "All categories"
-              include_subcategories: "Include subcategories"
               new_members: "New members"
               returning: "Returning"
               staff: "Staff"
               empty: "No posts in the selected period."
+              save_error: "Couldn't save your selection for next time."
             trust_level_pipeline:
               title: "Trust level pipeline"
               trust_levels:
@@ -7646,6 +7726,7 @@ en:
           add: "Add report"
           remove: "Remove report"
           no_data: "No data to display"
+          report_error: "Couldn't load this report"
           modal:
             title: "Manage reports"
             search_placeholder: "Search reports"
@@ -8465,6 +8546,14 @@ en:
         header_dropdown: "Header Dropdown"
         legacy: "Legacy"
 
+      homepage:
+        top_menu_default: "First item in top menu"
+
+      duplicate_topic_titles:
+        disallowed: "Disallowed"
+        allowed_across_categories: "Allowed across categories"
+        allowed: "Allowed"
+
       backups:
         title: "Backups"
         files_title: "Backup files"
@@ -8636,6 +8725,8 @@ en:
           default: "Default theme"
           settings_editor: "Settings Editor"
           show_advanced: "Show advanced"
+          maximize_editor: "Maximize editor"
+          minimize_editor: "Minimize editor"
           is_default: "Theme is enabled by default"
           user_selectable: "Theme can be selected by users"
           user_selectable_badge_label: "User selectable"
@@ -8712,10 +8803,13 @@ en:
           import_file_tip: ".tar.gz or .zip file containing theme"
           is_private: "Theme is in a private git repository"
           finish_install: "Finish Theme Installation"
+          placeholder_description: "This is a private theme that requires a deploy key to be installed in the repository's configuration. Once that is done, click the button below to finish installation."
           last_attempt: "Installation process did not finish, last attempted:"
           remote_branch: "Branch name (optional)"
           remote_branch_placeholder: "Choose a specific branch or keep empty"
-          public_key: "Grant the following public key access to the repo:"
+          public_key: "Grant the following public key read-only access to the repo:"
+          public_key_github: "Grant the following public key read-only access to the repo. See %{link} for instructions."
+          deploy_key_instructions: "GitHub deploy key instructions"
           install: "Install"
           installed: "Installed"
           screenshot: "%{name} screenshot"
@@ -8727,7 +8821,7 @@ en:
           installing_message_long_time: "Setting up your new theme is taking a little longer than expected, please hang tight…"
           duplicate_remote_theme: "The theme component “%{name}” is already installed, are you sure you want to install another copy?"
           force_install: "The theme cannot be installed because the Git repository is inaccessible. Are you sure you want to continue installing it?"
-          create_placeholder: "Create Placeholder"
+          create_placeholder: "Create placeholder"
           about_theme: "About"
           license: "License"
           version: "Version:"
@@ -9214,6 +9308,9 @@ en:
             configure_category_type: "configure category type"
             unconfigure_category_type: "unconfigure category type"
             change_access_control_list_permissions: "change access control list permissions"
+            admin_onboarding_step_completed: "complete admin onboarding step"
+            admin_onboarding_completed: "complete admin onboarding"
+            admin_onboarding_dismissed: "dismiss admin onboarding"
         screened_emails:
           title: "Screened emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -10162,6 +10259,9 @@ en:
         uploading: "Uploading…"
         name: "Name"
         group: "Group"
+        all_groups: "All groups"
+        filter_placeholder: "Search emojis by name"
+        no_results: "No emojis found."
         created_by: "Created By"
         image: "Image"
         alt: "custom emoji preview"

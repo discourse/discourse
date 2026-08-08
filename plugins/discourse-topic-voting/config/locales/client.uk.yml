@@ -52,3 +52,14 @@ uk:
           group_name: "Подія голосування за тему "
           topic_upvote: "Коли користувач голосує за тему"
           topic_unvote: "Коли користувач скасовує голосування з теми"
+    discourse_workflows:
+      node_unavailable:
+        requires_topic_voting: "Потрібно увімкнути голосування за темами"
+      nodes:
+        "trigger:topic_received_vote": "Тема отримала голоси"
+      node_descriptions:
+        "trigger:topic_received_vote": "Спрацьовує, коли користувач голосує за тему"
+      topic_received_vote:
+        category_ids_description: "Перемикання тільки для цих категорій. Залиште порожнім, щоб відповідати всім категоріям."
+        tag_names: "Теґи"
+        tag_names_description: "Активувати лише для тем, які мають хоча б один із цих тегів"

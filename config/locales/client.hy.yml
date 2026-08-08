@@ -596,6 +596,7 @@ hy:
         email: "Էլ. հասցե"
         name: "Անուն"
         fields: "Դաշտեր"
+        penalty_forever: "Ընդմիշտ"
         reject_reason: "Պատճառ"
         scrubbed_reason: "Պատճառ"
         scrub_record:
@@ -1265,7 +1266,6 @@ hy:
       external_links_in_new_tab: "Բացել բոլոր արտաքին հղումները նոր ներդիրում(tab)"
       enable_quoting: "Միացնել մեջբերմամբ պատասխանելը ընդգծված տեքստի համար"
       enable_smart_lists: "Միացնել խելացի ցուցակները խմբագրի մեջ գրելիս"
-      enable_defer: "Միացնել` թեմաները որպես չկարդացված նշելու հնարավորությունը"
       experimental_sidebar:
         enable: "Միացնել կողագոտին"
         options: "Տարբերակներ"
@@ -1667,7 +1667,7 @@ hy:
         default: "(լռելյայն)"
         any: "ցանկացած"
       homepage:
-        default: "(լռելյայն)"
+        default: "Լռելյայն"
       password_confirmation:
         title: "Կրկնել Գաղտաբառը "
       invite_code:
@@ -1710,6 +1710,8 @@ hy:
         contextual: "Նոր էջի բովանդակությունը"
       bookmark_after_notification:
         title: "Էջանիշի հիշեցման ծանուցում ուղարկելուց հետո՝"
+      send_shortcut:
+        enter: "Մուտք"
       like_notification_frequency:
         title: "Ծանուցել հավանելու դեպքում"
         always: "Միշտ"
@@ -1844,20 +1846,25 @@ hy:
         invite_roles:
           member_title: "Հրավիրեք մասնակիցներին"
           member_tab: "Անդամներ"
+          admin_tab: "Անձնակազմ"
+          staff_role_admin: "Ադմին"
+          staff_role_moderator: "Մոդերատոր"
           email_placeholder: "name@example.com"
           invite_by_email: "Էլ. հասցե"
           restrict_domain: "Սահմանափակել դոմենով"
-          more_options: "Ավելի շատ տարբերակներ"
+          create_and_send: "Ուղարկել"
+          create_and_copy: "Պատճենել հղումը"
           update: "Թարմացնել"
           summary:
             role_member: "Անդամ"
             role_admin: "Ադմին"
+            role_moderator: "Մոդերատոր"
             method_email: "Էլ. հասցե"
             uses: "Առավելագույն օգտագործման քանակը"
             expires: "Ժամկետը լրանում է"
             topic: "Թեմա"
             groups: "Խմբեր"
-            edit: "Խմբագրել հրավերը"
+            edit: "Խմբագրել"
         bulk_invite:
           none: "Այս էջում ցուցադրելու հրավերներ չկան:"
           text: "Զանգվածային Հրավեր"
@@ -2245,6 +2252,8 @@ hy:
       medium_dark_tone: Շերտի միջինից մուգ գույն
       dark_tone: Շերտի մուգ գույն
       default: Մասնավոր էմոջիներ
+    filter_controls:
+      reset: "Վերահաստատե;"
     shared_drafts:
       title: "Կիսված Սևագրեր"
       destination_category: "Նպատակային Կատեգորիա"
@@ -3728,6 +3737,8 @@ hy:
         custom:
           save: "Պահպանել"
           delete: "Ջնջել"
+          localizations:
+            remove_language: "Հեռացնել"
           links:
             reset: "Վերականգնել լռելյայն"
             icon:
@@ -4054,7 +4065,6 @@ hy:
               posts: "Գրառումներ"
               share: "Կիսվել"
             whos_posting:
-              all_categories: "Բոլոր կատեգորիաները"
               staff: "Անձնակազմ"
             trust_level_pipeline:
               trust_levels:
@@ -4396,6 +4406,8 @@ hy:
           all: "Բոլոր"
           disabled: "Անջատված"
           reset: "Վերահաստատե;"
+      duplicate_topic_titles:
+        allowed: "Թույլատրված"
       backups:
         title: "Պահուստներ"
         menu:
@@ -4560,7 +4572,6 @@ hy:
           import_web_tip: "Թեմա պարունակող ռեպոզիտորիա"
           is_private: "Թեման մասնավոր git ռեպոզիտորիայում է:"
           remote_branch: "Ճյուղի անունը (ըստ ցանկության)"
-          public_key: "Շնորհել հետևյալ public key թույլտվություն ռեպոյին՝ "
           install: "Տեղադրել"
           installed: "Տեղադրված"
           install_popular: "Ճանաչված"
@@ -5342,6 +5353,7 @@ hy:
         uploading: "Վերբեռնվում է…"
         name: "Անուն"
         group: "Խումբ"
+        all_groups: "Բոլոր խմբերը"
         created_by: "Ստեղծել է՝"
         image: "Նկար"
         alt: "մասնավոր էմոջիի նախնական դիտում "

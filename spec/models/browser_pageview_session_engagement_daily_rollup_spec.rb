@@ -157,6 +157,11 @@ RSpec.describe BrowserPageviewSessionEngagementDailyRollup do
 
     it "counts only rollup-source pageviews, even within a single session" do
       SiteSetting.dashboard_improvements = true
+      UpcomingChangeEvent.create!(
+        upcoming_change_name: "dashboard_improvements",
+        event_type: :manual_opt_in,
+        created_at: Time.utc(2026, 6, 1, 9),
+      )
       beacon_event =
         Fabricate(:browser_pageview_event, source: :beacon, created_at: Time.utc(2026, 6, 10, 9))
       Fabricate(
@@ -231,17 +236,17 @@ RSpec.describe BrowserPageviewSessionEngagementDailyRollup do
       expect(described_class.count).to eq(0)
     end
 
-    it "excludes sessions that started within the last 10 minutes" do
+    it "excludes sessions that started within the beacon settle period" do
       Fabricate(:browser_pageview_event, created_at: Time.utc(2026, 6, 20, 11, 55))
-      Fabricate(:browser_pageview_event, created_at: Time.utc(2026, 6, 20, 11, 45))
+      Fabricate(:browser_pageview_event, created_at: Time.utc(2026, 6, 20, 10, 45))
 
       described_class.aggregate(start_date:, end_date:)
 
       expect(described_class.all).to contain_exactly(have_attributes(sessions: 1))
     end
 
-    it "does not bounce a session whose second pageview arrived within the last 10 minutes" do
-      event = Fabricate(:browser_pageview_event, created_at: Time.utc(2026, 6, 20, 11, 30))
+    it "does not bounce a session whose second pageview arrived within the beacon settle period" do
+      event = Fabricate(:browser_pageview_event, created_at: Time.utc(2026, 6, 20, 10, 30))
       Fabricate(
         :browser_pageview_event,
         session_id: event.session_id,

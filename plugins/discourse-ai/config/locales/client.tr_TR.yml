@@ -231,6 +231,7 @@ tr_TR:
       discourse_workflows:
         ai_agent:
           agent_id: "Ajan"
+          mode: "Mod"
       ai_tool_approval:
         loading: "Yükleniyor..."
         agent: "Ajan"
@@ -386,16 +387,29 @@ tr_TR:
         title: "Çeviriler"
         description: "Forumunuzdaki tüm içeriği kullanıcının tercih ettiği dile otomatik olarak çevirin"
         supported_locales: "Desteklenen diller"
-        supported_locales_description: "Bu site ayarı, ziyaretçilerin yazı çevirilerine katkıda bulunmalarına da olanak tanır."
         category_scope: "Kategoriler"
+        cached_results_notice: "%{relative_time} tarihinden itibaren önbelleğe alınmış sonuçlar gösteriliyor."
+        model_progress:
+          detail:
+            retry: "Tekrar Dene"
+            columns:
+              locale: "Yerel Ayar"
+              pending: "Beklemede"
+              total: "Toplam"
+          targets:
+            post:
+              title: "Gönderiler"
+            topic:
+              title: "Konular"
+            category:
+              title: "Kategoriler"
+            tag:
+              title: "Etiketler"
         admin_actions:
-          translation_settings: "Çeviri ayarları"
-          localization_settings: "Yerelleştirme ayarları"
           enable_translations: "Otomatik çevirileri etkinleştir"
         stats:
           title: "Çeviri istatistikleri"
           backfill_disabled: "Dolgu devre dışıdır, yalnızca yeni gönderiler çevrilecektir."
-          backfill_message: "<a href='%{settingsUrl}'>Dolgu ayarları</a> %{date} tarihinden sonraki tüm gönderileri çevirmek üzere yapılandırılmıştır — bunun %{eta} süreceği tahmin edilmektedir."
           eta_minutes:
             one: "%{count} dakika"
             other: "%{count} dakika"
@@ -610,6 +624,8 @@ tr_TR:
         allowed_groups: "İzin verilen gruplar"
         confirm_delete: "Bu ajanı silmek istediğinizden emin misiniz?"
         new: "Yeni ajan"
+        duplicate: "Eş Kopya"
+        copy_name: "%{name} kopyası"
         no_agents: "Henüz hiçbir ajan oluşturmadınız"
         title: "Ajanlar"
         short_title: "Ajanlar"
@@ -900,8 +916,7 @@ tr_TR:
           anthropic-claude-opus-4-7: "Antropic'in en akıllı modeli"
           anthropic-claude-sonnet-4-6: "Hız ve maliyetin optimum dengesi"
           anthropic-claude-haiku-4-5: "Hızlı ve uygun maliyetli"
-          google-gemini-3-1-pro: "Google'ın en akıllı modeli"
-          google-gemini-3-flash: "Hızlı ve uygun maliyetli, çok modlu akıl yürütme"
+          google-gemini-3-1-pro-preview: "Google'ın en akıllı modeli"
           open_router-moonshotai-kimi-k2-6: "Moonshot'ın vizyon yeteneklerine sahip multimodal modeli"
         preseeded_model_description: "%{model} kullanan önceden yapılandırılmış açık kaynaklı model"
         configured:
@@ -939,7 +954,6 @@ tr_TR:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -1222,15 +1236,9 @@ tr_TR:
           bulk_regen_description: "Seçilen konular için hangi tür AI özetinin yeniden oluşturulacağını seçin."
           regenerate_gists_option: "Kısa açıklamalar (özetler)"
           regenerate_summaries_option: "Konu özetleri"
-          regenerate_gists_success:
-            one: "Kısa özet başarıyla yeniden oluşturuldu"
-            other: "%{count} Kısa özet başarıyla yeniden oluşturuldu"
           regenerate_gists_error:
             one: "Kısa özet yeniden oluşturulamadı"
             other: "%{count} kısa özetin yeniden oluşturulması başarısız oldu"
-          regenerate_topic_summary_success:
-            one: "Konu özeti başarıyla yeniden oluşturuldu"
-            other: "%{count} konu özeti başarıyla yeniden oluşturuldu"
           regenerate_topic_summary_error:
             one: "Konu özetini yeniden oluşturulamadı"
             other: "%{count} konu özetini yeniden oluşturulamadı"

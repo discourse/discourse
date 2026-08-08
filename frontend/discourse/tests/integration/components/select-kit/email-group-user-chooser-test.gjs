@@ -40,13 +40,13 @@ module(
       await this.subject.expand();
 
       assert
-        .dom(".email-group-user-chooser--group")
+        .dom(".email-group-user-chooser__group")
         .hasClass("--group-name-first", "applies the group-name-first style");
       assert
-        .dom(".email-group-user-chooser--group .identifier")
+        .dom(".email-group-user-chooser__group .identifier")
         .hasText("team_a", "renders the group name as the identifier");
       assert
-        .dom(".email-group-user-chooser--group .name")
+        .dom(".email-group-user-chooser__group .name")
         .hasText("Team A", "renders the full group name as the label");
     });
 
@@ -74,7 +74,7 @@ module(
 
       await this.subject.expand();
 
-      const groupRow = find(".email-group-user-chooser--group");
+      const groupRow = find(".email-group-user-chooser__group");
 
       assert
         .dom(groupRow)
@@ -116,10 +116,10 @@ module(
       await this.subject.expand();
 
       assert
-        .dom(".email-group-user-chooser--group .identifier")
+        .dom(".email-group-user-chooser__group .identifier")
         .doesNotExist("hides the equivalent group name");
       assert
-        .dom(".email-group-user-chooser--group .name")
+        .dom(".email-group-user-chooser__group .name")
         .hasText("Team A", "keeps the full group name visible");
     });
 
@@ -148,7 +148,7 @@ module(
 
       await this.subject.expand();
 
-      const userRow = find(".email-group-user-chooser--user");
+      const userRow = find(".email-group-user-chooser__user");
 
       assert
         .dom(userRow)
@@ -187,7 +187,7 @@ module(
 
       await this.subject.expand();
 
-      const userRow = find(".email-group-user-chooser--user");
+      const userRow = find(".email-group-user-chooser__user");
 
       assert
         .dom(userRow)

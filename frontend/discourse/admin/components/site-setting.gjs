@@ -1,27 +1,33 @@
 /* eslint-disable ember/no-side-effects */
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { getOwner } from "@ember/owner";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
+import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { isNone } from "@ember/utils";
+import { isEmpty, isNone } from "@ember/utils";
 import SettingValidationMessage from "discourse/admin/components/setting-validation-message";
 import Description from "discourse/admin/components/site-settings/description";
 import JobStatus from "discourse/admin/components/site-settings/job-status";
 import SiteSetting, {
   isSettingValueTrue,
 } from "discourse/admin/models/site-setting";
+import linkifySettingLinks from "discourse/admin/modifiers/linkify-setting-links";
+import Form from "discourse/components/form";
 import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import SettingDefinitionField from "discourse/components/setting-definition-field";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import { deepEqual } from "discourse/lib/object";
+import { resolveSettingFieldType } from "discourse/lib/setting-field-registry";
 import { sanitize } from "discourse/lib/text";
 import { splitString } from "discourse/lib/utilities";
 import { and, not } from "discourse/truth-helpers";
@@ -32,6 +38,7 @@ import { i18n } from "discourse-i18n";
 
 const CUSTOM_TYPES = [
   "bool",
+  "date",
   "datetime",
   "integer",
   "enum",
@@ -75,6 +82,9 @@ export default class SiteSettingComponent extends Component {
   @tracked progress = null;
   updateExistingUsers = null;
   trackChanges = true;
+  formApi = null;
+
+  #formKitData;
 
   constructor() {
     super(...arguments);
@@ -96,6 +106,19 @@ export default class SiteSettingComponent extends Component {
         `/site_setting/${this.setting.setting}/process`,
         this.onMessage
       );
+    }
+  }
+
+  @action
+  syncFormValue(_element, [wireValue]) {
+    scheduleOnce("afterRender", this, this.applyFormValue, wireValue);
+  }
+
+  applyFormValue(wireValue) {
+    const name = this.setting.setting;
+
+    if (this.toWire(this.formApi.get(name)) !== wireValue) {
+      this.formApi.set(name, this.fromWire(wireValue));
     }
   }
 
@@ -167,6 +190,10 @@ export default class SiteSettingComponent extends Component {
 
   get displayDescription() {
     return this.componentType !== "bool";
+  }
+
+  get formInlineDescription() {
+    return this.displayDescription ? null : this.setting.description;
   }
 
   get showThemeSiteSettingWarning() {
@@ -342,6 +369,23 @@ export default class SiteSettingComponent extends Component {
     return setting.type;
   }
 
+  @cached
+  get definition() {
+    return this.setting.definition;
+  }
+
+  get useFormKit() {
+    return (
+      this.trackChanges && resolveSettingFieldType(this.setting).adminReady
+    );
+  }
+
+  get formKitData() {
+    return (this.#formKitData ??= {
+      [this.setting.setting]: this.fromWire(this.setting.buffered.get("value")),
+    });
+  }
+
   get allowAny() {
     const anyValue = this.setting?.anyValue;
     return anyValue !== false;
@@ -446,8 +490,21 @@ export default class SiteSettingComponent extends Component {
   }
 
   @action
+  async submit() {
+    if (this.formApi) {
+      await this.formApi.submit();
+    } else {
+      await this.update();
+    }
+  }
+
+  @action
   async update() {
     const dirtySettings = this.dirtySettings;
+
+    if (dirtySettings.length === 0) {
+      return;
+    }
 
     for (const setting of dirtySettings) {
       if (!setting.requiresConfirmation) {
@@ -521,6 +578,46 @@ export default class SiteSettingComponent extends Component {
     if (isSettingValueTrue(value)) {
       this.adminSiteSettingStore.reveal(this.setting.setting);
     }
+  }
+
+  @action
+  registerFormApi(api) {
+    this.formApi = api;
+  }
+
+  @action
+  onFormSet(name, value) {
+    const wireValue = this.toWire(value);
+
+    if (this.setting.type === "integer" && wireValue === "") {
+      return;
+    }
+
+    this.changeValueCallback(wireValue);
+  }
+
+  toWire(value) {
+    if (this.setting.type === "bool") {
+      return isSettingValueTrue(value) ? "true" : "false";
+    }
+
+    if (this.setting.type === "integer") {
+      return isEmpty(value) ? "" : String(Math.trunc(value));
+    }
+
+    return isEmpty(value) ? "" : String(value);
+  }
+
+  fromWire(value) {
+    if (this.setting.type === "bool") {
+      return isSettingValueTrue(value);
+    }
+
+    if (this.setting.type === "integer") {
+      return isEmpty(value) ? null : parseInt(value, 10);
+    }
+
+    return value;
   }
 
   @action
@@ -649,17 +746,38 @@ export default class SiteSettingComponent extends Component {
           <Description @description={{this.setting.description}} />
           <JobStatus @status={{this.status}} @progress={{this.progress}} />
         {{else}}
-          <this.resolvedComponent
-            {{on "keydown" this._handleKeydown}}
-            @disabled={{this.isDisabled}}
-            @setting={{this.setting}}
-            @value={{this.buffered.value}}
-            @preview={{this.preview}}
-            @isSecret={{this.isSecret}}
-            @allowAny={{this.allowAny}}
-            @changeValueCallback={{this.changeValueCallback}}
-            @setValidationMessage={{this.setValidationMessage}}
-          />
+          {{#if this.useFormKit}}
+            <Form
+              @data={{this.formKitData}}
+              @onSet={{this.onFormSet}}
+              @onSubmit={{this.update}}
+              @onRegisterApi={{this.registerFormApi}}
+              {{didUpdate this.syncFormValue this.buffered.value}}
+              {{linkifySettingLinks this.formInlineDescription}}
+              as |form|
+            >
+              <SettingDefinitionField
+                @definition={{this.definition}}
+                @form={{form}}
+                @showTitle={{false}}
+                @showControlTitle={{false}}
+                @showDescription={{false}}
+                @disabled={{this.isDisabled}}
+              />
+            </Form>
+          {{else}}
+            <this.resolvedComponent
+              {{on "keydown" this._handleKeydown}}
+              @disabled={{this.isDisabled}}
+              @setting={{this.setting}}
+              @value={{this.buffered.value}}
+              @preview={{this.preview}}
+              @isSecret={{this.isSecret}}
+              @allowAny={{this.allowAny}}
+              @changeValueCallback={{this.changeValueCallback}}
+              @setValidationMessage={{this.setValidationMessage}}
+            />
+          {{/if}}
           <SettingValidationMessage
             @message={{this.setting.validationMessage}}
           />
@@ -713,7 +831,7 @@ export default class SiteSettingComponent extends Component {
       {{#if (and this.groupedDirty this.canUpdate (not @inline))}}
         <div class="setting-controls">
           <DButton
-            @action={{this.update}}
+            @action={{this.submit}}
             @icon="check"
             @isLoading={{this.disableControls}}
             @ariaLabel="admin.settings.save"

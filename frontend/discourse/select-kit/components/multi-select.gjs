@@ -250,6 +250,7 @@ export default class MultiSelect extends SelectKitComponent {
                     @item={{item}}
                     @selectKit={{this.selectKit}}
                     @mandatoryValues={{@mandatoryValues}}
+                    @mandatoryValueTitle={{@mandatoryValueTitle}}
                   />
                 {{/each}}
               {{/let}}

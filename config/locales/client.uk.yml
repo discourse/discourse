@@ -62,6 +62,7 @@ uk:
         add_group: "Додати користувача або групу"
         mandatory_acl_tooltip: "Цей дозвіл обов'язковий для %{name} і його не можна видалити"
         mandatory: "Обов’язкове"
+        disallowed: "Заборонено"
     carousel:
       go_to_slide: "Перейти до слайда %{index}"
       previous: "Попередній слайд"
@@ -1026,6 +1027,11 @@ uk:
         email: "Електронна пошта"
         name: "Імʼя"
         fields: "Поля"
+        silenced_until: "Вимкнено до"
+        silence_reason: "Причина заморожування"
+        suspended_until: "Призупинено до"
+        suspend_reason: "Причина призупинення"
+        penalty_forever: "Назавжди"
         reject_reason: "Причина"
         scrubbed_by: "Запис стерто"
         scrubbed_reason: "Причина"
@@ -1893,9 +1899,12 @@ uk:
       external_links_in_new_tab: "Відкривати всі зовнішні посилання у новій вкладці"
       enable_quoting: "Увімкнути відповіді на цитати для виділеного тексту"
       enable_smart_lists: "Увімкніть розумні списки під час запису в композитор"
-      enable_defer: "Увімкнути позначення тем як непрочитані"
       enable_markdown_monospace_font: "Використовувати моноширинний шрифт у режимі Markdown редактора тексту"
-      show_original_content: "Показати оригінальний текст замість перекладеного."
+      automatically_translate: "Автоматичний переклад тем і публікацій іншими мовами"
+      content_languages:
+        title: "Мови контенту"
+        understood: "Мови, які я розумію"
+        understood_description: "Теми та дописи цими мовами не перекладатимуться. Мова вашого інтерфейсу завжди вважається зрозумілою."
       experimental_sidebar:
         enable: "Увімкнути бічну панель"
         options: "Параметри"
@@ -2386,7 +2395,7 @@ uk:
         default: "(типово)"
         any: "будь-який"
       homepage:
-        default: "(типово)"
+        default: "Стандартна"
       password_confirmation:
         title: "Пароль ще раз"
       invite_code:
@@ -2430,6 +2439,10 @@ uk:
         contextual: "Зміст нової сторінки"
       bookmark_after_notification:
         title: "Після нагадування про закладку буде надіслано сповіщення:"
+      send_shortcut:
+        title: "Надсилайте повідомлення в редакторах у стилі чату за допомогою:"
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Повідомляти при отриманні вподобайки"
         always: "Завжди"
@@ -2598,14 +2611,17 @@ uk:
           invite_saved_with_sending_email: "Лист із запрошенням надіслано. Ви також можете скопіювати посилання нижче і поділитися ним, щоб миттєво надати доступ до цього сайту."
         invite_roles:
           member_title: "Запросити учасників"
-          admin_title: "Запросити адміністраторів"
+          admin_title: "Запросіть персонал"
           edit_title: "Редагування запрошення"
           created_title: "Запрошення створено"
           sent_title: "Запрошення надіслано"
           member_tab: "Учасники"
-          admin_tab: "Адміни"
-          member_description: "Запросіть людей приєднатися до цього сайту. Поділіться посиланням або надішліть запрошення електронною поштою."
-          admin_description: "Запрошуйте людей долучитися до вашої команди в якості адміністраторів. Адміністратори мають повний доступ до цього сайту."
+          admin_tab: "Команда обслуговування"
+          admin_description: "Адміністратори мають повний доступ до цього сайту, його налаштувань та даних."
+          moderator_description: "Модератори можуть допомагати керувати контентом та учасниками."
+          staff_role_label: "Запросити як"
+          staff_role_admin: "Адміністратор"
+          staff_role_moderator: "Модератор"
           admin_email_label: "Адреса електронної пошти"
           member_email_label: "Надіслати"
           member_email_help: "Ми надішлемо листа про запрошення на цю адресу."
@@ -2615,21 +2631,19 @@ uk:
           invite_by_email: "E-mail"
           role_label: "Запросити як"
           restrict_domain: "Обмежити доменом"
-          restrict_domain_help: "Прийняти посилання можуть лише користувачі з електронною адресою в цьому домені. Щоб запросити певну особу, скористайтеся полем \"Електронна пошта\" вище."
+          restrict_domain_help: "Тільки люди з електронною поштою в цьому домені можуть прийняти посилання."
           domain_placeholder: "example.com"
           domain_invalid: "Введіть дійсний домен, наприклад example.com"
           arrive_at_topic_help: "Після того, як люди дадуть згоду, перенаправте їх на конкретну тему."
-          create_and_send: "Створити та надіслати"
-          create_and_copy: "Створити та скопіювати посилання"
-          more_options: "Більше опцій"
-          fewer_options: "Менше опцій"
+          create_and_send: "Надіслати"
+          create_and_copy: "Скопіювати посилання"
           update: "Оновити"
-          role_locked: "Тип запрошення не можна змінити після його створення."
           summary:
             sent_to: "Запрошення було надіслано електронною поштою на адресу %{email}. Ви також можете поділитися цим посиланням безпосередньо:"
             role: "Роль"
             role_member: "Учасник"
             role_admin: "Адміністратор"
+            role_moderator: "Модератор"
             method: "Спільний доступ"
             method_link: "Посилання для поширення"
             method_email: "E-mail"
@@ -2638,7 +2652,7 @@ uk:
             expires: "Закінчується"
             topic: "Тема"
             groups: "Групи"
-            edit: "Редагувати запрошення"
+            edit: "Редагувати"
             view_invites: "Переглянути запрошення"
           email_sent:
             body: "Запрошення було надіслано електронною поштою на адресу %{email}."
@@ -2884,10 +2898,15 @@ uk:
     home: "Головна"
     read_only_mode:
       enabled: "Сайт працює в режимі \"тільки для читання\". Зараз ви можете продовжувати переглядати сайт, але інші дії будуть недоступні. "
+      enabled_anonymous: "Цей сайт перебуває в режимі лише для читання. Будь ласка, продовжуйте переглядати, але реєстрація та вхід наразі недоступні."
       login_disabled: "Вхід вимкнено, поки сайт перебуває в режимі лише для читання."
       logout_disabled: "Вихід вимкнено, поки сайт перебуває в режимі лише для читання."
+      signup_disabled: "Реєстрація вимкнена, поки сайт перебуває в режимі лише для читання."
     staff_writes_only_mode:
       enabled: "Сайт працює в режимі \"тільки для команди обслуговування\". Зараз ви можете продовжувати переглядати сайт, але інші дії доступні лише членам команди обслуговування."
+      enabled_anonymous: "Цей сайт працює лише в режимі для персоналу. Будь ласка, продовжуйте перегляд, але реєстрація недоступна, і увійти можуть лише співробітники."
+      login_disabled: "Тільки співробітники можуть увійти, коли сайт перебуває в режимі \"тільки для персоналу\"."
+      signup_disabled: "Реєстрація вимкнена, поки сайт перебуває в режимі \"тільки для персоналу\"."
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> — <a href="{url}" target="_blank">{ rate, plural,
@@ -3289,6 +3308,12 @@ uk:
         other: "Введіть хоча б %{count} елементів."
       components:
         filter_for_more: Шукати ще…
+        multiple_categories_selector:
+          limited_results_notice:
+            one: "Показано %{shown} з %{count} категорії . Введіть запит, щоб знайти більше."
+            few: "Показано %{shown} з %{count} категорій. Введіть запит, щоб знайти більше."
+            many: "Показано %{shown} з %{count} категорій . Введіть запит, щоб знайти більше."
+            other: "Показано %{shown} з %{count} категорій . Введіть запит, щоб знайти більше."
         categories_admin_dropdown:
           title: "Керування розділами"
         tag_category_admin_dropdown:
@@ -3330,7 +3355,7 @@ uk:
     filter_input:
       clear: "Очистити фільтр"
     filter_controls:
-      reset: "Скинути фільтр"
+      reset: "Скинути"
       toggle: "Перемкнути випадаючі фільтри"
     d_icon_grid_picker:
       select_icon: "Виберіть іконку"
@@ -3577,11 +3602,14 @@ uk:
       italic_label: "К"
       italic_title: "Курсив"
       italic_text: "виділення тексту курсивом"
-      heading_title: "Заголовки"
+      text_size_title: "Розміри тексту"
       heading_level_n: "Заголовок %{levelNumber}"
       heading_level_n_title: "Заголовок %{levelNumber}"
       heading_level_paragraph: "Абзац"
       heading_level_paragraph_title: "Абзац"
+      heading_level_small: "Малий"
+      heading_level_small_title: "Дрібний текст"
+      heading_level_small_text: "Дрібний текст"
       link_title: "Посилання"
       link_description: "введіть опис посилання"
       link_dialog_title: "Вставити посилання"
@@ -4459,6 +4487,8 @@ uk:
         link: "Журнал дій"
         title: "Журнал активності теми"
         empty: "Немає активності в темі для відображення."
+        load_more: "Завантажте більше активності"
+        updated: "Активність теми оновлена."
       context:
         banner: "Ви переглядаєте одну тему в цій гілці."
         view_full_topic: "Переглянути всю тему"
@@ -5377,6 +5407,10 @@ uk:
       click_to_show_translation: "Натисніть, щоб показати переклад"
       tap_to_show_translation: "Натисніть тут, щоб показати переклад"
       ai_translation_disclaimer: "Переклади, створені штучним інтелектом, можуть бути неточними."
+    content_localization:
+      preferences:
+        title: "Налаштування мови контенту"
+        login_to_set_languages: "Увійдіть, щоб налаштувати більше мов"
     category:
       none: "(без розділу)"
       all: "Всі розділи"
@@ -6126,6 +6160,7 @@ uk:
       selector_no_tags: "без теґів"
       selector_remove_filter: "прибрати фільтр"
       tags: "Теґи"
+      choose_for_topic: "Додаткові теги…"
       choose_for_topic_required:
         one: "виберіть принаймні %{count} тег…"
         few: "виберіть принаймні %{count} теги…"
@@ -6427,7 +6462,35 @@ uk:
           public: "Видно для всіх"
           always_public: "Вміст цього розділу завжди відкритий для всіх"
           more_menu: "Більше меню"
+          localizations:
+            locale: "Мова"
+            language: "Мова розділу"
+            language_description: "Основна мова заголовка та назв посилань цього розділу."
+            title_label: "Назва розділу"
+            link_label: "Назви посилань"
+            back: "Зміст розділу"
+            add_first: "Додати переклади"
+            manage:
+              one: "Керування перекладами (%{count} мова)"
+              few: "Керування перекладами (%{count} мови)"
+              many: "Керування перекладами (%{count} мов)"
+              other: "Керування перекладами (%{count} мов)"
+            incomplete:
+              one: "%{count} відсутній рядок"
+              few: "%{count} відсутні рядки"
+              many: "%{count} відсутніх рядків"
+              other: "%{count} відсутніх рядків"
+            add_language: "Додати мову"
+            remove_language: "Вилучити"
+            remove_language_confirm: "Видалити кожен переклад %{language} для цього розділу?"
+            remove_cleared_confirm:
+              one: "Ви очистили збережений %{count} переклад. Його буде видалено. Продовжити?"
+              few: "Ви очистили збережені %{count} переклади. Їх буде видалено. Продовжити?"
+              many: "Ви очистили збережені %{count} перекладів. Їх буде видалено. Продовжити?"
+              other: "Ви очистили збережені %{count} перекладів. Їх буде видалено. Продовжити?"
+            untranslated: "Ще не перекладено"
           links:
+            title: "Посилання на розділ"
             add: "Додати ще одне посилання"
             delete: "Видалити посилання"
             reset: "Відновити типові"
@@ -7476,12 +7539,11 @@ uk:
               save_error: "Не вдалося зберегти ваш вибір на наступний раз."
             whos_posting:
               title: "Хто публікує?"
-              all_categories: "Всі розділи"
-              include_subcategories: "Включити підкатегорії"
               new_members: "Нові учасники"
               returning: "Повернення"
               staff: "Команда обслуговування"
               empty: "Немає публікацій за вибраний період."
+              save_error: "Не вдалося зберегти ваш вибір на наступний раз."
             trust_level_pipeline:
               title: "Конвеєр рівня довіри"
               trust_levels:
@@ -7604,6 +7666,7 @@ uk:
           add: "Додати звіт"
           remove: "Видалити звіт"
           no_data: "Немає даних для відображення"
+          report_error: "Не вдалося завантажити цей звіт"
           modal:
             title: "Керування звітами"
             search_placeholder: "Пошук звітів"
@@ -8437,6 +8500,12 @@ uk:
         sidebar: "Бічна панель"
         header_dropdown: "Випадаючий заголовок"
         legacy: "Стара версія"
+      homepage:
+        top_menu_default: "Перший пункт у верхньому меню"
+      duplicate_topic_titles:
+        disallowed: "Заборонено"
+        allowed_across_categories: "Дозволено в різних категоріях"
+        allowed: "Дозволено"
       backups:
         title: "Backups"
         files_title: "Резервні файли"
@@ -8604,6 +8673,8 @@ uk:
           default: "Стандартна тема"
           settings_editor: "Редактор налаштувань"
           show_advanced: "Показати розширені"
+          maximize_editor: "Розгорнути редактор"
+          minimize_editor: "Згорнути редактор"
           is_default: "Активувати за замовчуванням"
           user_selectable: "Користувачі можуть вибирати стиль"
           user_selectable_badge_label: "Вибір користувача"
@@ -8684,10 +8755,13 @@ uk:
           import_file_tip: "Файл .tar.gz або .zip, що містить тему"
           is_private: "Тема знаходиться в приватному репозиторії git"
           finish_install: "Завершити встановлення теми"
+          placeholder_description: "Це приватна тема, для якої потрібно встановити ключ розгортання в конфігурації репозиторію. Після цього натисніть кнопку нижче, щоб завершити встановлення."
           last_attempt: "Процес встановлення не завершено, остання спроба:"
           remote_branch: "Назва гілки (не обов’язково)"
           remote_branch_placeholder: "Виберіть конкретну гілку або залиште поле порожнім"
-          public_key: "Надайте доступ до сховища з наступним відкритим ключем:"
+          public_key: "Надайте наступному відкритому ключу доступ лише для читання до сховища:"
+          public_key_github: "Надайте наступному відкритому ключу доступ лише для читання до сховища. Див. %{link} для інструкцій."
+          deploy_key_instructions: "Ключові інструкції з розгортання GitHub"
           install: "Install"
           installed: "Встановлена"
           screenshot: "Скріншот %{name}"
@@ -9194,6 +9268,9 @@ uk:
             configure_category_type: "налаштування типу категорії"
             unconfigure_category_type: "скасувати налаштування типу категорії"
             change_access_control_list_permissions: "змінити дозволи списку контролю доступу"
+            admin_onboarding_step_completed: "завершити етап інтеграції адміністратора"
+            admin_onboarding_completed: "повне адміністрування"
+            admin_onboarding_dismissed: "відхилити інтеграцію адміністратора"
         screened_emails:
           title: "Перевірені адреси електронної пошти"
           description: "Коли хтось намагатиметься створити новий обліковий запис, наступні електронні скриньки буде перевірено, і реєстрацію заблоковано, або вжито якихось інших дій."
@@ -10158,15 +10235,39 @@ uk:
         uploading: "Завантаження…"
         name: "Ім'я"
         group: "Група"
+        all_groups: "Усі групи"
+        filter_placeholder: "Пошук емодзі за назвою"
+        no_results: "Не знайдено емоджі."
         created_by: "Створено"
         image: "Зображення"
         alt: "попередній перегляд смайлів"
         delete_confirm: "Ви впевнені, що хочете видалити іконку :%{name}:?"
         settings: "Налаштування"
         export: "Експорт"
+        export_count: "Експорт (вибрано%{count})"
+        export_failed: "Експорт не вдався. Спробуйте ще раз."
+        select_to_export: "Виберіть для експорту"
         import: "Імпорт"
+        import_heading: "Імпортувати емодзі"
+        import_description: "Завантажте ZIP-файл, що містить маніфест emojis.csv та файли зображень."
+        import_download_sample: "Завантажте шаблон-зразок."
+        import_preview_heading: "Імпорт рецензій"
+        import_summary: "%{new} нове · %{conflicts} конфлікти · %{unchanged} без змін · %{invalid} помилки"
+        import_confirm: "Підтвердити імпорт"
+        import_unchanged_count: "%{count} без змін"
+        import_will_skip: "Без змін — пропустити"
+        import_excluded: "Виключено з імпорту"
+        import_incoming_alt: "Вхідні: %{name}"
+        import_existing_alt: "Існує: %{name}"
+        import_existing_group_alt: "Існуюча група"
+        import_use_incoming: "Використовувати нове"
+        import_keep_existing: "Зберегти існуюче"
         import_category:
           new: "Новий"
+          conflict: "Конфлікти"
+          invalid: "Помилки"
+        select_all: "Вибрати всі емодзі"
+        select: "Виберіть %{name}"
       embedding:
         get_started: "Для вбудовування на Інший сайт необхідно додати відповідний хост."
         delete: "Видалити"

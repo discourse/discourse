@@ -11,6 +11,7 @@ en:
     topic_voting:
       notification_label:
         vote_released: "Vote returned"
+        voting_closed: "Voting closed"
       hot_nav_help: "top recent topics, including those with recent votes"
       voted: "You voted on this topic"
       vote_title: "Vote"
@@ -44,3 +45,14 @@ en:
           group_name: "Topic Voting Event"
           topic_upvote: "When a user votes on a topic"
           topic_unvote: "When a user unvotes on a topic"
+    discourse_workflows:
+      node_unavailable:
+        requires_topic_voting: "Requires topic voting to be enabled"
+      nodes:
+        "trigger:topic_received_vote": "Topic received vote"
+      node_descriptions:
+        "trigger:topic_received_vote": "Fires when a user votes on a topic"
+      topic_received_vote:
+        category_ids_description: "Only trigger for topics in these categories. Leave empty to match all categories."
+        tag_names: "Tags"
+        tag_names_description: "Only trigger for topics that have at least one of these tags"

@@ -36,3 +36,6 @@ ur:
           group_name: "موضوع ووٹنگ ایونٹ"
           topic_upvote: "جب رکن کسی موضوع پر ووٹ دیتا ہے"
           topic_unvote: "جب رکن کسی موضوع پر ووٹ نہیں ڈالتا ہے"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "ٹیگز"

@@ -19,8 +19,8 @@ RSpec.describe CategoriesController do
       SiteSetting.categories_topics.times { Fabricate(:topic) }
       get "/categories"
 
-      expect(response.body).to have_tag("div#data-preloaded") do |element|
-        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.text)
         expect(json["topic_list"]).to include(%{"more_topics_url":"/latest"})
       end
     end
@@ -49,6 +49,21 @@ RSpec.describe CategoriesController do
       get "/category/something"
       expect(response).to have_http_status(:moved_permanently)
       expect(response).to redirect_to(%r{/c/#{category.slug}})
+    end
+
+    it "does not disclose restricted topic titles through legacy category permalinks" do
+      group = Fabricate(:group)
+      private_category = Fabricate(:private_category, group: group)
+      private_topic =
+        Fabricate(:topic, category: private_category, title: "Restricted fallback topic title")
+      Permalink.create!(url: "category/old-category", topic: private_topic)
+
+      get "/category/old-category"
+
+      expect(response).to have_http_status(:found)
+      expect(response).to redirect_to("/c/old-category")
+      expect(response.headers["Location"]).not_to include(private_topic.title)
+      expect(response.body).not_to include(private_topic.title)
     end
 
     it "returns the right response for a normal user" do
@@ -480,21 +495,21 @@ RSpec.describe CategoriesController do
   describe "extensibility event" do
     before { sign_in(admin) }
 
-    it "triggers a extensibility event" do
-      event =
-        DiscourseEvent
-          .track_events do
-            put "/categories/#{category.id}.json",
-                params: {
-                  name: "hello",
-                  color: "ff0",
-                  text_color: "fff",
-                }
-          end
-          .last
+    it "triggers the category updated event once" do
+      events =
+        DiscourseEvent.track_events do
+          put "/categories/#{category.id}.json",
+              params: {
+                name: "hello",
+                color: "ff0",
+                text_color: "fff",
+              }
+        end
 
-      expect(event[:event_name]).to eq(:category_updated)
-      expect(event[:params].first).to eq(category)
+      category_updated_events = events.select { |event| event[:event_name] == :category_updated }
+
+      expect(category_updated_events.size).to eq(1)
+      expect(category_updated_events.pluck(:params).map(&:first)).to all(eq(category))
     end
   end
 
@@ -1311,6 +1326,26 @@ RSpec.describe CategoriesController do
           expect(category.reply_posting_review_group_ids).to contain_exactly(mod_group_3.id)
         end
 
+        it "returns 422 for invalid posting review modes" do
+          %w[topic_posting_review_mode reply_posting_review_mode].each do |review_mode|
+            expect do
+              put "/categories/#{category.id}.json",
+                  params: {
+                    category_setting_attributes: {
+                      review_mode => "invalid",
+                    },
+                  }
+            end.not_to raise_error
+
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response.parsed_body["errors"].join(" ").downcase).to include(
+              review_mode.humanize.downcase,
+              "is not included in the list",
+            )
+            expect(category.reload.category_setting.public_send(review_mode)).to eq("no_one")
+          end
+        end
+
         it "can correctly convert blank strings to appropriate null values" do
           put "/categories/#{category.id}.json", params: { email_in: "", minimum_required_tags: "" }
           expect(response.status).to eq(200)
@@ -1954,7 +1989,7 @@ RSpec.describe CategoriesController do
 
       queries = track_sql_queries { post "/categories/search.json", params: { term: "Notfoo" } }
 
-      expect(queries.length).to eq(8)
+      expect(queries.length).to eq(6)
 
       expect(response.parsed_body["categories"].length).to eq(1)
       expect(response.parsed_body["categories"][0]["custom_fields"]).to eq("bob" => "marley")
@@ -2012,6 +2047,30 @@ RSpec.describe CategoriesController do
         post "/categories/search.json", params: { term: "Éditions" }
 
         expect(response.parsed_body["categories"].map { |c| c["name"] }).to include("Editions")
+      end
+
+      it "limits the number of term words used in SQL filters" do
+        long_term = 50.times.map { |index| "word#{index}" }.join(" ")
+
+        queries = track_sql_queries { post "/categories/search.json", params: { term: long_term } }
+
+        expect(response.status).to eq(200)
+
+        category_search_queries =
+          queries.select { |query| query.match?(/FROM "?categories"?/i) && query.match?(/ILIKE/i) }
+        ilike_counts = category_search_queries.map { |query| query.scan(/\bILIKE\b/i).size }
+
+        expect(ilike_counts).to be_present
+        expect(ilike_counts.max).to be <= 25
+      end
+
+      it "limits the term length used in SQL filters" do
+        long_term = "a" * 300
+
+        queries = track_sql_queries { post "/categories/search.json", params: { term: long_term } }
+
+        expect(response.status).to eq(200)
+        expect(queries.join("\n")).not_to include(long_term)
       end
     end
 

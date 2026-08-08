@@ -443,6 +443,7 @@ gl:
         email: "Correo electrónico"
         name: "Nome"
         fields: "Campos"
+        penalty_forever: "Sempre"
         reject_reason: "Razón"
         scrubbed_reason: "Motivo"
         scrub_record:
@@ -1308,7 +1309,7 @@ gl:
         default: "(predeterminado)"
         any: "calquera"
       homepage:
-        default: "(predeterminado)"
+        default: "Predeterminado"
       password_confirmation:
         title: "O contrasinal outra vez"
       invite_code:
@@ -1348,6 +1349,8 @@ gl:
         title: "O título da páxina de fondo presenta a conta de:"
         notifications: "Novas notificacións"
         contextual: "Contido novo da páxina"
+      send_shortcut:
+        enter: "Intro"
       like_notification_frequency:
         title: "Notificar cando reciba gústames"
         always: "Sempre"
@@ -1460,17 +1463,22 @@ gl:
           cancel: "Cancelar"
         invite_roles:
           member_tab: "Membros"
-          admin_tab: "Administradores"
+          admin_tab: "Equipo"
+          staff_role_admin: "Administrador"
+          staff_role_moderator: "Moderador"
           email_placeholder: "nome@exemplo.com"
           invite_by_email: "Enderezo de correo"
+          create_and_send: "Enviar"
           update: "Actualizar"
           summary:
             role_member: "Membro"
             role_admin: "Administrador"
+            role_moderator: "Moderador"
             method_email: "Enderezo de correo"
             expires: "Caduca"
             topic: "Tema"
             groups: "Grupos"
+            edit: "Editar"
         bulk_invite:
           none: "Non hai convites que amosar nesta páxina."
           text: "Convite en grupo"
@@ -1816,6 +1824,8 @@ gl:
       medium_dark_tone: Tono de pel medio escuro
       dark_tone: Ton de pel escuro
       default: Emojis personalizados
+    filter_controls:
+      reset: "Restabelecer"
     shared_drafts:
       title: "Borradores compartidos"
       notice: "Este tema só é visíbel para aqueles que poden ver a categoría <b>%{category}</b>."
@@ -3328,6 +3338,9 @@ gl:
         custom:
           save: "Gardar"
           delete: "Eliminar"
+          localizations:
+            locale: "Idioma"
+            remove_language: "Retirar"
           links:
             reset: "Restabelecer cos valores predeterminados"
             icon:
@@ -3668,7 +3681,6 @@ gl:
               posts: "Publicacións"
               share: "Compartir"
             whos_posting:
-              all_categories: "Todas as categorías"
               staff: "Equipo"
             trust_level_pipeline:
               trust_levels:
@@ -4024,6 +4036,8 @@ gl:
           enabled: "Activado"
           disabled: "Desactivado"
           reset: "Restabelecer"
+      duplicate_topic_titles:
+        allowed: "Permitidas"
       backups:
         title: "Copias de seguranza"
         menu:
@@ -4192,7 +4206,6 @@ gl:
           direct_install_tip: "Confirma que quere instalar <strong>%{name}</strong> desde o repositorio que se lista a seguir?"
           is_private: "O tema está nun repositorio privado de git"
           remote_branch: "Nome da ramificación (opcional)"
-          public_key: "Conceder á seguinte clave pública acceso ao repositorio:"
           install: "Instalar"
           installed: "Instalado"
           install_popular: "Destacados"
@@ -5042,6 +5055,7 @@ gl:
         delete: "Eliminar"
         name: "Nome"
         group: "Grupo"
+        all_groups: "Todos os grupos"
         image: "Imaxe"
         alt: "visualización do emoji personalizado"
         delete_confirm: "Confirma a eliminación do emoji :%{name}:?"

@@ -551,6 +551,7 @@ sv:
         email: "E-post"
         name: "Namn"
         fields: "Fält"
+        penalty_forever: "För alltid"
         reject_reason: "Anledning"
         scrubbed_reason: "Anledning"
         scrub_record:
@@ -1577,7 +1578,7 @@ sv:
         default: "(förvalt värde)"
         any: "något"
       homepage:
-        default: "(förvalt värde)"
+        default: "Standard"
       password_confirmation:
         title: "Lösenord igen"
       invite_code:
@@ -1620,6 +1621,9 @@ sv:
         contextual: "Nytt sidinnehåll"
       bookmark_after_notification:
         title: "Efter att en bokmärkespåminnelse har skickats:"
+      send_shortcut:
+        enter: "Retur"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Avisera vid gillning"
         always: "Alltid"
@@ -1745,20 +1749,25 @@ sv:
         invite_roles:
           sent_title: "Inbjudan skickad"
           member_tab: "Medlemmar"
-          admin_tab: "Administratörer"
+          admin_tab: "Personal"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
           email_placeholder: "namn@exempel.com"
           invite_by_email: "E-postadress"
           restrict_domain: "Begränsa till domän"
           domain_placeholder: "example.com"
+          create_and_send: "Skicka"
           update: "Uppdatera"
           summary:
             role_member: "Medlem"
             role_admin: "Admin"
+            role_moderator: "Moderator"
             method_email: "E-postadress"
             uses: "Max antal användningar"
             expires: "Utgår"
             topic: "Ämne"
             groups: "Grupper"
+            edit: "Redigera"
         bulk_invite:
           none: "Inga inbjudningar att visa på denna sida."
           text: "Massinbjudan"
@@ -2221,6 +2230,8 @@ sv:
       medium_dark_tone: Mellanmörk hudton
       dark_tone: Mörk hudton
       default: Anpassa emojis
+    filter_controls:
+      reset: "Återställ"
     shared_drafts:
       title: "Delade utkast"
       notice: "Detta ämne är endast synligt för de som kan publicera delade utkast."
@@ -4156,6 +4167,10 @@ sv:
           public: "Synligt för alla"
           always_public: "Innehållet i det här avsnittet är alltid offentligt"
           more_menu: "Menyn Mer"
+          localizations:
+            locale: "Språk"
+            title_label: "Avsnittstitel"
+            remove_language: "Ta bort"
           links:
             add: "Lägg till ytterligare en länk"
             delete: "Ta bort länk"
@@ -4631,7 +4646,6 @@ sv:
               posts: "Inlägg"
               share: "Dela"
             whos_posting:
-              all_categories: "Alla kategorier"
               staff: "Personal"
             trust_level_pipeline:
               trust_levels:
@@ -5145,6 +5159,8 @@ sv:
         sidebar: "Sidofält"
         header_dropdown: "Rullgardinsmeny för rubrik"
         legacy: "Äldre"
+      duplicate_topic_titles:
+        allowed: "Tillåten"
       backups:
         title: "Säkerhetskopior"
         menu:
@@ -5340,7 +5356,6 @@ sv:
           finish_install: "Slutför temainstallationen"
           last_attempt: "Installationsprocessen slutfördes inte, det senaste försöket:"
           remote_branch: "Filialnamn (valfritt)"
-          public_key: "Ge följande offentliga nyckel tillträde till lagringsplatsen:"
           install: "Installera"
           installed: "Installerad"
           install_popular: "Populära"
@@ -6344,6 +6359,7 @@ sv:
         uploading: "Laddar upp…"
         name: "Namn"
         group: "Grupp"
+        all_groups: "Alla grupper"
         image: "Bild"
         alt: "anpassa förhandsgranskning av emoji"
         delete_confirm: "Är du säker på att du vill radera emojin :%{name}:?"

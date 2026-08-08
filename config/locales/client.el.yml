@@ -871,6 +871,7 @@ el:
         email: "Email"
         name: "Όνομα"
         fields: "Πεδία"
+        penalty_forever: "Για πάντα"
         reject_reason: "Αιτία"
         scrubbed_by: "Η εγγραφή αφαιρέθηκε από"
         scrubbed_reason: "Αιτία"
@@ -1661,7 +1662,6 @@ el:
       external_links_in_new_tab: "Άνοιγε όλους τους εξωτερικούς συνδέσμους σε νέα καρτέλα"
       enable_quoting: "Το κείμενο που επισημαίνεται να παρατίθεται στην απάντηση "
       enable_smart_lists: "Ενεργοποίηση έξυπνων λιστών κατά το γράψιμο στον συνθέτη"
-      enable_defer: "Ενεργοποίηση σήμανσης θεμάτων ως αδιάβαστων"
       enable_markdown_monospace_font: "Χρήση γραμματοσειράς monospace στη λειτουργία Markdown του συνθέτη"
       experimental_sidebar:
         enable: "Ενεργοποίηση πλαϊνής γραμμής"
@@ -2088,7 +2088,7 @@ el:
         default: "(προεπιλογή)"
         any: "καθένα"
       homepage:
-        default: "(προεπιλογή)"
+        default: "Προεπιλογή"
       password_confirmation:
         title: "Επανάληψη του κωδικού πρόσβασης"
       invite_code:
@@ -2132,6 +2132,9 @@ el:
         contextual: "Νέου περιεχομένου σελίδας"
       bookmark_after_notification:
         title: "Μετά την αποστολή ειδοποίησης υπενθύμισης σελιδοδείκτη:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Ειδοποίησέ με όταν έχω \"μου αρέσει\""
         always: "Πάντα"
@@ -2295,16 +2298,20 @@ el:
           member_title: "Πρόσκληση μελών"
           sent_title: "Η πρόσκληση στάλθηκε"
           member_tab: "Μέλη"
-          admin_tab: "Διαχειριστές"
+          admin_tab: "Προσωπικό"
+          staff_role_admin: "Διαχειριστής"
+          staff_role_moderator: "Συντονιστής"
           admin_email_label: "Διεύθυνση email"
           email_placeholder: "name@example.com"
           invite_by_email: "Διεύθυνση Email"
           restrict_domain: "Περιορισμός σε τομέα"
-          more_options: "Περισσότερες επιλογές"
+          create_and_send: "Αποστολή"
+          create_and_copy: "Αντιγραφή συνδέσμου"
           update: "Ενημέρωση"
           summary:
             role_member: "Μέλος"
             role_admin: "Διαχειριστής"
+            role_moderator: "Συντονιστής"
             method: "Κοινοποίηση"
             method_email: "Διεύθυνση Email"
             restriction: "Περιορίζεται σε"
@@ -2312,7 +2319,7 @@ el:
             expires: "Λήγει"
             topic: "Νήμα"
             groups: "Ομάδες"
-            edit: "Επεξεργασία πρόσκλησης"
+            edit: "Επεξεργασία"
         bulk_invite:
           none: "Δεν υπάρχουν προσκλήσεις για εμφάνιση σε αυτή τη σελίδα."
           text: "Μαζική πρόσκληση"
@@ -2902,7 +2909,7 @@ el:
     filter_input:
       clear: "Καθαρισμός φίλτρου"
     filter_controls:
-      reset: "Επαναφορά φίλτρου"
+      reset: "Επαναφορά"
       toggle: "Εναλλαγή αναπτυσσόμενων φίλτρων"
     d_icon_grid_picker:
       select_icon: "Επιλογή εικονιδίου"
@@ -3052,7 +3059,6 @@ el:
       italic_label: "I"
       italic_title: "Έμφαση"
       italic_text: "κείμενο σε έμφαση"
-      heading_title: "Επικεφαλίδες"
       heading_level_n: "Επικεφαλίδα %{levelNumber}"
       heading_level_n_title: "Επικεφαλίδα %{levelNumber}"
       heading_level_paragraph: "Παράγραφος"
@@ -5443,6 +5449,10 @@ el:
           public: "Ορατή σε όλους"
           always_public: "Το περιεχόμενο αυτής της ενότητας είναι πάντα δημόσιο"
           more_menu: "Περισσότερο μενού"
+          localizations:
+            locale: "Γλώσσα"
+            title_label: "Τίτλος ενότητας"
+            remove_language: "Αφαίρεση"
           links:
             add: "Προσθήκη άλλου συνδέσμου"
             delete: "Διαγραφή συνδέσμου"
@@ -6304,8 +6314,6 @@ el:
               empty: "Δεν υπάρχει δραστηριότητα στην επιλεγμένη περίοδο."
             whos_posting:
               title: "Ποιός δημοσιεύει;"
-              all_categories: "Όλες οι κατηγορίες"
-              include_subcategories: "Συμπερίληψη υποκατηγοριών"
               new_members: "Νέα μέλη"
               returning: "Επιστρέφοντες"
               staff: "Προσωπικό"
@@ -7062,6 +7070,8 @@ el:
       navigation_menu:
         sidebar: "Πλαϊνή μπάρα"
         header_dropdown: "Αναπτυσσόμενο μενού επικεφαλίδας"
+      duplicate_topic_titles:
+        allowed: "Επιτρέπεται"
       backups:
         title: "Αντίγραφα ασφαλείας"
         files_title: "Αρχεία αντιγράφου ασφαλείας"
@@ -7284,7 +7294,6 @@ el:
           direct_install_tip: "Σίγουρα θέλετε να εγκαταστήσετε το <strong>%{name}</strong> από το αποθετήριο που αναφέρεται παρακάτω;"
           is_private: "Το θέμα βρίσκεται σε ένα ιδιωτικό αποθετήριο git"
           remote_branch: "Όνομα διακλάδωσης (προαιρετικό)"
-          public_key: "Παραχωρήστε στο ακόλουθο δημόσιο κλειδί πρόσβαση στο αποθετήριο:"
           install: "Εγκατάσταση"
           installed: "Εγκατεστημένα"
           screenshot: "Στιγμιότυπο οθόνης %{name}"
@@ -8508,6 +8517,7 @@ el:
         uploading: "Μεταφορτώνεται…"
         name: "Όνομα"
         group: "Ομάδα"
+        all_groups: "Όλες οι ομάδες"
         created_by: "Δημιουργήθηκε από"
         image: "Εικόνα"
         alt: "προεπισκόπηση προσαρμοσμένου emoji"

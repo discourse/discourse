@@ -223,3 +223,7 @@ hu:
               description: "A csatorna nevét a Csevegés integráció beállításaiban találja meg."
             provider:
               label: Szolgáltató
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "Csatorna"
+        message: "Üzenet"

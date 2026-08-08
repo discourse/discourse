@@ -597,6 +597,7 @@ sq:
         email: "Email"
         name: "Emri"
         fields: "Fushat"
+        penalty_forever: "Përgjithmonë"
         reject_reason: "Arsye"
         scrubbed_reason: "Arsye"
         scrub_record:
@@ -1283,7 +1284,6 @@ sq:
       external_links_in_new_tab: "Hap të gjitha lidhjet e jashtme në një tab të ri"
       enable_quoting: "Aktivizo citimin në përgjigje për tekstin e përzgjedhur"
       enable_smart_lists: "Aktivizo listat e zgjuara kur shkruhet në redaktor"
-      enable_defer: "Aktivizo shënimin e temave si të palexuara"
       experimental_sidebar:
         enable: "Aktivizo shiritin anësor"
         options: "Opsione"
@@ -1701,7 +1701,7 @@ sq:
         default: "(paracaktuar)"
         any: "ndonjë"
       homepage:
-        default: "(paracaktuar)"
+        default: "Paracaktuar"
       password_confirmation:
         title: "Rishkruani fjalëkalimin"
       invite_code:
@@ -1745,6 +1745,9 @@ sq:
         contextual: "Përmbajtja e faqes së re"
       bookmark_after_notification:
         title: "Pasi të dërgohet një njoftim rikujtues për faqeshënuesit:"
+      send_shortcut:
+        enter: "Hyni"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Njoftimet e pëlqimeve"
         always: "Gjithmonë"
@@ -1896,21 +1899,24 @@ sq:
           member_title: "Ftoni anëtarë"
           sent_title: "Ftesa u dërgua"
           member_tab: "Anëtarë"
-          admin_tab: "Administratorët"
+          admin_tab: "Stafi"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
           email_placeholder: "emri@adresa.com"
           invite_by_email: "Email"
           restrict_domain: "Kufizoni në domein"
-          more_options: "Më shumë mundësi"
+          create_and_copy: "Kopjoni lidhjen"
           update: "Përditëso"
           summary:
             role_member: "Anëtar"
             role_admin: "Admin"
+            role_moderator: "Moderator"
             method_email: "Email"
             uses: "Përdorimet maksimale"
             expires: "Skadon"
             topic: "Topic"
             groups: "Grupet"
-            edit: "Redaktoni ftesën"
+            edit: "Redaktoni"
         bulk_invite:
           none: "Nuk ka ftesë për t'u shfaqur në këtë faqe."
           text: "Ftesë me shumicë"
@@ -2444,6 +2450,8 @@ sq:
       medium_dark_tone: Lëkurë me ngjyrë mesatare të errët
       dark_tone: Toni i errët i lëkurës
       default: Emoji të personalizuara
+    filter_controls:
+      reset: "Rivendosni"
     shared_drafts:
       title: "Drafte të përbashkëta"
       notice: "Kjo temë është e dukshme vetëm për ata që mund të publikojnë drafte të përbashkëta."
@@ -3919,6 +3927,8 @@ sq:
         custom:
           save: "Ruaj"
           delete: "Fshij"
+          localizations:
+            remove_language: "Hiq"
           links:
             icon:
               label: "Ikonë"
@@ -4192,7 +4202,6 @@ sq:
               posts: "Postime"
               share: "Shpërndaje"
             whos_posting:
-              all_categories: "Të gjitha kategoritë"
               staff: "Stafi"
             trust_level_pipeline:
               trust_levels:
@@ -4407,6 +4416,8 @@ sq:
           enabled: "Aktivizuar"
           disabled: "E çaktivizuar"
           reset: "Rivendosni"
+      duplicate_topic_titles:
+        allowed: "Lejohet"
       backups:
         title: "Rezervat"
         menu:
@@ -5037,6 +5048,7 @@ sq:
         delete: "Fshij"
         name: "Emri"
         group: "Grupi"
+        all_groups: "Të gjitha grupet"
         image: "Imazh"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
         settings: "Rregullimet"

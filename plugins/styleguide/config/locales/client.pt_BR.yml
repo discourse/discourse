@@ -13,7 +13,6 @@ pt_BR:
   js:
     styleguide:
       title: "Guia de estilo"
-      welcome: "Para começar, escolha uma seção no menu à esquerda."
       categories:
         syntax: Sintaxe
         atoms: Átomos

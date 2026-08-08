@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../support/assign_allowed_group"
-
 RSpec.describe RandomAssignUtils do
   FakeAutomation = Struct.new(:id)
 

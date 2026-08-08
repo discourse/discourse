@@ -10,11 +10,4 @@ class BasicThemeSerializer < ApplicationSerializer
   def default
     true
   end
-
-  def description
-    object
-      .internal_translations(preloaded_locale_fields: object.locale_fields)
-      .find { |t| t.key == "theme_metadata.description" }
-      &.value
-  end
 end

@@ -75,6 +75,9 @@ ja:
       removed: "%{removed} を削除しました"
     provider:
       slack:
+        errors:
+          action_prohibited: "ボットには、そのチャンネルに投稿する権限がありません"
+          channel_not_found: "指定されたチャンネルは Slack に存在しません"
         status:
           header: |
             *このチャンネルのルール*

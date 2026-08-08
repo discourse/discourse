@@ -19,20 +19,48 @@ module PageObjects
         page.has_css?(".d-toggle-switch__checkbox[disabled]")
       end
 
-      def has_chart?
-        page.has_css?(".ai-translations__chart")
+      def has_overview_cards?
+        page.has_css?(".ai-translation-model-progress-overview-card", count: 4)
       end
 
-      def has_no_chart?
-        page.has_no_css?(".ai-translations__chart")
+      def has_no_overview_cards?
+        page.has_no_css?(".ai-translation-model-progress-overview-card")
       end
 
-      def has_charts_section?
-        page.has_css?(".ai-translations__charts")
+      def toggle_target(target_type)
+        page.find(
+          ".ai-translation-model-progress-overview-card[data-target-type='#{target_type}']",
+        ).click
+        self
+      end
+
+      def has_expanded_target?(target_type)
+        page.has_css?(
+          ".ai-translation-model-progress-overview-card[data-target-type='#{target_type}'][aria-expanded='true']",
+        )
+      end
+
+      def has_no_expanded_target?
+        page.has_no_css?(".ai-translation-model-progress-overview-card[aria-expanded='true']")
+      end
+
+      def has_detail_table?
+        page.has_css?(".ai-translation-model-progress-detail .d-table")
+      end
+
+      def has_no_detail_table?
+        page.has_no_css?(".ai-translation-model-progress-detail .d-table")
+      end
+
+      def has_detail_row?(locale:, translated:, pending:, denominator:)
+        page.has_css?(
+          ".ai-translation-locale-progress__row",
+          text: /#{locale}.*#{translated}.*#{pending}.*#{denominator}/m,
+        )
       end
 
       def has_locale_selector?
-        page.has_css?(".alert.alert-info .multi-select")
+        page.has_css?(".ai-translations__settings-panel .multi-select")
       end
 
       def has_translation_settings_button?

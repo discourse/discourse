@@ -153,6 +153,9 @@ fi:
               description: "Kun tämä määritetään, se asettaa ylärajan mallin luomien saneiden enimmäismäärälle. Noudattaa LLM:n tuotossaneiden enimmäisrajaa."
     discourse_ai:
       title: "Tekoäly"
+      discourse_workflows:
+        ai_agent:
+          mode: "Tila"
       ai_tool_approval:
         loading: "Ladataan..."
         tool: "Toiminto"
@@ -258,6 +261,22 @@ fi:
       translations:
         title: "Käännökset"
         category_scope: "Kategoriat"
+        model_progress:
+          detail:
+            retry: "Yritä uudelleen"
+            columns:
+              locale: "Kielialue"
+              pending: "Odottaa"
+              total: "Yhteensä"
+          targets:
+            post:
+              title: "Viestit"
+            topic:
+              title: "Aiheet"
+            category:
+              title: "Alueet"
+            tag:
+              title: "Tunnisteet"
         stats:
           eta_minutes:
             one: "%{count} minuutti"
@@ -387,6 +406,8 @@ fi:
           clear_all: "Tyhjennä kaikki"
         forced_tools: "Pakotetut työkalut"
         allowed_groups: "Sallitut ryhmät"
+        duplicate: "Monista"
+        copy_name: "Paletin %{name} kopio"
         delete: "Poista"
         temperature: "Lämpötila"
         temperature_help: "LLM:lle käytettävä lämpötila. Lisää luovuutta kasvattamalla arvoa (jätä tyhjäksi, jos haluat käyttää mallin oletusta, yleensä arvo välillä 0,0–2,0)"
@@ -600,7 +621,6 @@ fi:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"

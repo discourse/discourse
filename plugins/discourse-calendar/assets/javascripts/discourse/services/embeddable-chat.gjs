@@ -85,4 +85,20 @@ export default class EmbeddableChat extends Service {
   get topicHasLivestream() {
     return this.topic?.has_livestream;
   }
+
+  get useLivestreamLayout() {
+    return (
+      this.router.currentRouteName?.startsWith("topic.") &&
+      this.topicHasLivestream &&
+      !!this.chatChannelId &&
+      !this.isChannelOpenInDrawer
+    );
+  }
+
+  get isChatDocked() {
+    return (
+      this.useLivestreamLayout &&
+      (this.canRenderChatChannel(false) || this.canRenderChatChannel(true))
+    );
+  }
 }

@@ -16,6 +16,13 @@ RSpec.describe SiteSerializer do
     end
   end
 
+  describe "#homepage_choices" do
+    it "exposes the eligible homepage choices" do
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized[:homepage_choices]).to eq(TopMenu.homepage_choices)
+    end
+  end
+
   describe "#user_tips" do
     it "is included if enable_user_tips" do
       SiteSetting.enable_user_tips = true
@@ -119,29 +126,7 @@ RSpec.describe SiteSerializer do
     Site.reset_preloaded_category_custom_fields
   end
 
-  it "includes category tags" do
-    tag = Fabricate(:tag)
-    tag_group = Fabricate(:tag_group)
-    tag_group_2 = Fabricate(:tag_group)
-
-    category.tags << tag
-    category.tag_groups << tag_group
-    category.update!(
-      category_required_tag_groups: [
-        CategoryRequiredTagGroup.new(tag_group: tag_group_2, min_count: 1),
-      ],
-    )
-
-    serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-    c1 = serialized[:categories].find { |c| c[:id] == category.id }
-
-    expect(c1[:allowed_tags]).to contain_exactly({ id: tag.id, name: tag.name, slug: tag.slug })
-    expect(c1[:allowed_tag_groups]).to contain_exactly(tag_group.name)
-    expect(c1[:required_tag_groups]).to eq([{ name: tag_group_2.name, min_count: 1 }])
-  end
-
   it "doesn't explode when category_required_tag_group is missing" do
-    tag = Fabricate(:tag)
     tag_group = Fabricate(:tag_group)
     crtg = CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1)
     category.update!(category_required_tag_groups: [crtg])
@@ -149,9 +134,9 @@ RSpec.describe SiteSerializer do
     tag_group.delete # Bypassing hooks like this should never happen in the app
 
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-    c1 = serialized[:categories].find { |c| c[:id] == category.id }
+    serialized_category = serialized[:categories].find { |c| c[:id] == category.id }
 
-    expect(c1[:required_tag_groups]).to eq([{ name: nil, min_count: 1 }])
+    expect(serialized_category[:required_tag_groups]).to eq([{ min_count: 1 }])
   end
 
   it "returns correct notification level for categories" do

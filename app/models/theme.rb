@@ -559,7 +559,7 @@ class Theme < ActiveRecord::Base
     targets = %i[common_theme mobile_theme desktop_theme]
 
     if with_scheme
-      targets.prepend(:common, :desktop, :mobile, :admin)
+      targets.prepend(:common, :admin)
       targets.append(
         *Discourse.find_plugin_css_assets(
           mobile_view: true,
@@ -767,6 +767,13 @@ class Theme < ActiveRecord::Base
   def internal_translations(preloaded_locale_fields: nil)
     @internal_translations ||=
       translations(internal: true, preloaded_locale_fields: preloaded_locale_fields)
+  end
+
+  # preload and pass `:locale_fields` when iterating themes, to avoid N+1
+  def description(preloaded_locale_fields: locale_fields)
+    internal_translations(preloaded_locale_fields: preloaded_locale_fields)
+      .find { |translation| translation.key == "theme_metadata.description" }
+      &.value
   end
 
   def translations(internal: false, preloaded_locale_fields: nil)

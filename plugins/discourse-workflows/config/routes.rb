@@ -27,6 +27,7 @@ DiscourseWorkflows::Engine.routes.draw do
     scope format: :json do
       get "/workflows" => "workflows#index"
       post "/workflows" => "workflows#create"
+      get "/workflow-tags" => "workflow_tags#index"
       post "/workflows/ai/author" => "ai_authoring#create"
       post "/workflows/:workflow_id/ai/author" => "ai_authoring#create"
       post "/workflows/:workflow_id/ai/apply" => "ai_authoring#apply"
@@ -45,6 +46,7 @@ DiscourseWorkflows::Engine.routes.draw do
       get "/templates" => "templates#index"
       get "/templates/:id" => "templates#show"
       post "/executions" => "executions#create"
+      post "/step-executions" => "step_executions#create"
       get "/executions" => "executions#index"
       get "/workflows/:workflow_id/executions" => "executions#index"
       get "/workflows/:workflow_id/versions" => "workflow_versions#index"
@@ -57,6 +59,7 @@ DiscourseWorkflows::Engine.routes.draw do
       get "/stats" => "stats#index"
       get "/stats/:workflow_id" => "stats#index"
       post "/expressions/evaluate" => "expressions#evaluate"
+      post "/node-previews" => "node_previews#create"
       get "/variables" => "variables#index"
       post "/variables" => "variables#create"
       put "/variables/:id" => "variables#update"
@@ -84,6 +87,7 @@ DiscourseWorkflows::Engine.routes.draw do
 
   scope "/discourse-workflows", defaults: { format: :json } do
     post "/trigger-topic-admin-button" => "topic_admin_button#create"
+    post "/trigger-post-button" => "post_button#create"
     post "/modal-responses" => "modal_responses#create"
   end
 

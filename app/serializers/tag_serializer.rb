@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TagSerializer < ApplicationSerializer
-  attributes :id, :name, :slug, :topic_count, :staff, :description
+  attributes :id, :name, :slug, :topic_count, :staff, :description, :description_cooked
 
   has_many :localizations, serializer: TagLocalizationSerializer, embed: :objects
 
@@ -21,6 +21,14 @@ class TagSerializer < ApplicationSerializer
         object.get_localization&.description
       end
     translated || object.description
+  end
+
+  def description_cooked
+    translated =
+      if ContentLocalization.show_translated_tag?(object, scope)
+        object.get_localization&.description_cooked
+      end
+    translated || object.description_cooked
   end
 
   def topic_count

@@ -66,6 +66,8 @@ sk:
       cancel: "Zrušiť"
       cancel_reply: "Zrušiť odpoveď"
       chat_channels: "Kanály"
+      pinned_bar:
+        title: "Pripnutý"
       pinned: "Pripnutý"
       browse_all_channels: "Prehľadávať všetky kanály"
       see_in: "Vidieť v"
@@ -153,11 +155,6 @@ sk:
         never: "Nikdy"
       separate_sidebar_mode:
         title: "Zobraziť samostatné režimy bočného panela pre fórum a chat"
-      send_shortcut:
-        enter:
-          label: "Odoslať cez Enter"
-        meta_enter:
-          label: "Odoslať pomocou %{meta_key} + Enter"
       enable: "Povoliť chat"
       flag: "Označenie"
       emoji: "Vložte emotikon"

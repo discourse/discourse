@@ -165,6 +165,7 @@ RSpec.describe Oneboxer do
 
     it "links to an user profile" do
       user = Fabricate(:user)
+      user.user_stat.update!(post_count: 1)
 
       expect(preview("/u/does-not-exist")).to match_html(link("/u/does-not-exist"))
       expect(preview("/u/#{user.username}")).to include(user.name)
@@ -172,6 +173,7 @@ RSpec.describe Oneboxer do
 
     it "should respect enable_names site setting" do
       user = Fabricate(:user)
+      user.user_stat.update!(post_count: 1)
 
       SiteSetting.enable_names = true
       expect(preview("/u/#{user.username}")).to include(user.name)
@@ -189,6 +191,7 @@ RSpec.describe Oneboxer do
 
     it "strips HTML from user profile location" do
       user = Fabricate(:user)
+      user.user_stat.update!(post_count: 1)
       profile = user.reload.user_profile
 
       expect(preview("/u/#{user.username}")).not_to include("<span class=\"location\">")
@@ -1104,6 +1107,77 @@ RSpec.describe Oneboxer do
     expect(Oneboxer.onebox("https://allowlist.ed/iframes", invalidate_oneboxes: true)).to match(
       "iframe src",
     )
+  end
+
+  it "blocks oEmbed iframes whose source only prefix-matches an allowed onebox origin" do
+    page_url = "https://attacker.example/page"
+    oembed_url = "https://attacker.example/oembed.json"
+    malicious_iframe_src = "https://www.youtube.com.attacker.example/payload"
+
+    page_body = <<~HTML
+      <html>
+        <head>
+          <meta property="og:type" content="website">
+          <link rel="alternate" type="application/json+oembed" href="#{oembed_url}">
+        </head>
+      </html>
+    HTML
+
+    oembed_body = {
+      type: "video",
+      version: "1.0",
+      title: "Interesting content",
+      provider_name: "ContentHost",
+      provider_url: "https://attacker.example",
+      width: 560,
+      height: 315,
+      html: "<iframe src='#{malicious_iframe_src}' width='560' height='315'></iframe>",
+    }
+
+    stub_request(:any, page_url).to_return(status: 200, body: page_body)
+    stub_request(:any, oembed_url).to_return(status: 200, body: oembed_body.to_json)
+
+    onebox = Oneboxer.onebox(page_url, invalidate_oneboxes: true)
+
+    expect(onebox).not_to include("<iframe")
+    expect(onebox).not_to include(malicious_iframe_src)
+  end
+
+  it "blocks oEmbed iframes whose wildcard allowlist suffix is only in a query or fragment" do
+    page_url = "https://attacker.example/wildcard-page"
+    oembed_url = "https://attacker.example/wildcard-oembed.json"
+    malicious_iframe_sources = %w[
+      https://attacker.example?.kaltura.com/
+      https://attacker.example#.kaltura.com/
+    ]
+
+    page_body = <<~HTML
+      <html>
+        <head>
+          <meta property="og:type" content="website">
+          <link rel="alternate" type="application/json+oembed" href="#{oembed_url}">
+        </head>
+      </html>
+    HTML
+
+    oembed_body = {
+      type: "video",
+      version: "1.0",
+      title: "Interesting content",
+      provider_name: "ContentHost",
+      provider_url: "https://attacker.example",
+      width: 560,
+      height: 315,
+      html: malicious_iframe_sources.map { |source| "<iframe src='#{source}'></iframe>" }.join,
+    }
+
+    stub_request(:any, page_url).to_return(status: 200, body: page_body)
+    stub_request(:any, oembed_url).to_return(status: 200, body: oembed_body.to_json)
+
+    onebox = Oneboxer.onebox(page_url, invalidate_oneboxes: true)
+
+    expect(onebox).not_to include("<iframe")
+    malicious_iframe_sources.each { |source| expect(onebox).not_to include(source) }
   end
 
   describe "missing attributes" do

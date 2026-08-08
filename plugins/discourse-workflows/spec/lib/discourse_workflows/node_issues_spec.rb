@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::NodeIssues do
-  def node_type_class(schema)
-    Class.new { define_singleton_method(:property_schema) { schema } }
-  end
+  subject(:issues) { described_class.for_node(node, node_type) }
 
-  def node(configuration)
+  let(:configuration) { {} }
+  let(:node) do
     DiscourseWorkflows::WorkflowSnapshot::SnapshotNode.new(
       id: "n1",
       type: "action:test",
@@ -14,114 +13,196 @@ RSpec.describe DiscourseWorkflows::NodeIssues do
       parameters: configuration,
     )
   end
+  let(:node_type) do
+    Class
+      .new do
+        def initialize(schema)
+          @schema = schema
+        end
 
-  it "returns no issues when all required fields are set" do
-    schema = { form_title: { type: :string, required: true } }
-    issues = described_class.for_node(node("form_title" => "My form"), node_type_class(schema))
-    expect(issues).to be_empty
+        def property_schema
+          @schema
+        end
+      end
+      .new(schema)
   end
 
-  it "reports a top-level required field as missing" do
-    schema = { form_title: { type: :string, required: true } }
-    issues = described_class.for_node(node({}), node_type_class(schema))
-    expect(issues).to eq([{ path: "form_title", name: "form_title", message: "required" }])
+  context "when all required fields are set" do
+    let(:schema) { { form_title: { type: :string, required: true } } }
+    let(:configuration) { { "form_title" => "My form" } }
+
+    it { is_expected.to be_empty }
   end
 
-  it "treats blank strings as missing" do
-    schema = { form_title: { type: :string, required: true } }
-    issues = described_class.for_node(node("form_title" => "   "), node_type_class(schema))
-    expect(issues.size).to eq(1)
+  context "when a top-level required field is missing" do
+    let(:schema) { { form_title: { type: :string, required: true } } }
+
+    it "reports the field" do
+      expect(issues).to eq([{ path: "form_title", name: "form_title", message: "required" }])
+    end
   end
 
-  it "walks fixed collection items and reports missing nested required fields" do
-    schema = {
-      form_fields: {
-        type: :fixed_collection,
-        options: [
-          {
-            name: "values",
-            values: {
-              field_label: {
-                type: :string,
-                required: true,
-              },
-              field_type: {
-                type: :options,
-                required: true,
+  context "when a required string is blank" do
+    let(:schema) { { form_title: { type: :string, required: true } } }
+    let(:configuration) { { "form_title" => "   " } }
+
+    it "reports the field" do
+      expect(issues.size).to eq(1)
+    end
+  end
+
+  context "with missing required fields in fixed collection items" do
+    let(:schema) do
+      {
+        form_fields: {
+          type: :fixed_collection,
+          options: [
+            {
+              name: "values",
+              values: {
+                field_label: {
+                  type: :string,
+                  required: true,
+                },
+                field_type: {
+                  type: :options,
+                  required: true,
+                },
               },
             },
-          },
-        ],
-      },
-    }
-    config = {
-      "form_fields" => {
-        "values" => [
-          { "field_label" => "", "field_type" => "text" },
-          { "field_label" => "Name", "field_type" => "" },
-        ],
-      },
-    }
+          ],
+        },
+      }
+    end
+    let(:configuration) do
+      {
+        "form_fields" => {
+          "values" => [
+            { "field_label" => "", "field_type" => "text" },
+            { "field_label" => "Name", "field_type" => "" },
+          ],
+        },
+      }
+    end
 
-    paths = described_class.for_node(node(config), node_type_class(schema)).map { |i| i[:path] }
-    expect(paths).to contain_exactly(
-      "form_fields.values.0.field_label",
-      "form_fields.values.1.field_type",
-    )
+    it "reports each nested path" do
+      expect(issues.pluck(:path)).to contain_exactly(
+        "form_fields.values.0.field_label",
+        "form_fields.values.1.field_type",
+      )
+    end
   end
 
-  it "respects display_options show rules — hidden required fields are not reported" do
-    schema = {
-      page_type: {
-        type: :options,
-      },
-      completion_title: {
-        type: :string,
-        required: true,
-        display_options: {
-          show: {
-            page_type: %w[completion],
+  context "with display rules on a required field" do
+    let(:schema) do
+      {
+        page_type: {
+          type: :options,
+        },
+        completion_title: {
+          type: :string,
+          required: true,
+          display_options: {
+            show: {
+              page_type: %w[completion],
+            },
           },
         },
-      },
-    }
+      }
+    end
 
-    expect(
-      described_class.for_node(node("page_type" => "page"), node_type_class(schema)),
-    ).to be_empty
+    context "when the field is hidden" do
+      let(:configuration) { { "page_type" => "page" } }
 
-    issues = described_class.for_node(node("page_type" => "completion"), node_type_class(schema))
-    expect(issues.size).to eq(1)
+      it { is_expected.to be_empty }
+    end
+
+    context "when the field is shown" do
+      let(:configuration) { { "page_type" => "completion" } }
+
+      it "reports the field" do
+        expect(issues.size).to eq(1)
+      end
+    end
+
+    context "when the controlling parameter is an expression" do
+      let(:configuration) { { "page_type" => "={{ $json.kind }}" } }
+
+      it "does not report the blank required field" do
+        expect(issues).to be_empty
+      end
+    end
   end
 
-  it "applies field defaults before checking required" do
-    schema = { operation: { type: :options, required: true, default: "add" } }
-    expect(described_class.for_node(node({}), node_type_class(schema))).to be_empty
-  end
-
-  it "walks optional fields inside fixed collections" do
-    schema = {
-      form_fields: {
-        type: :fixed_collection,
-        options: [
-          {
-            name: "values",
-            values: {
-              field_label: {
-                type: :string,
-                required: true,
-              },
-              custom_required: {
-                type: :string,
-                required: true,
-              },
+  context "with a collection behind an expression-valued anchor" do
+    let(:schema) do
+      {
+        mode: {
+          type: :options,
+        },
+        columns: {
+          type: :fixed_collection,
+          display_options: {
+            show: {
+              mode: %w[manual],
             },
           },
-        ],
-      },
-    }
-    config = { "form_fields" => { "values" => [{ "field_label" => "Name" }] } }
-    paths = described_class.for_node(node(config), node_type_class(schema)).map { |i| i[:path] }
-    expect(paths).to eq(["form_fields.values.0.custom_required"])
+          options: [{ name: "values", values: { header: { type: :string, required: true } } }],
+        },
+      }
+    end
+    let(:configuration) do
+      { "mode" => "={{ $json.mode }}", "columns" => { "values" => [{ "header" => "" }] } }
+    end
+
+    it "suppresses issues for the whole subtree" do
+      expect(issues).to be_empty
+    end
+
+    context "when the anchor is a literal" do
+      let(:configuration) do
+        { "mode" => "manual", "columns" => { "values" => [{ "header" => "" }] } }
+      end
+
+      it "still reports the nested blank required field" do
+        expect(issues.map { |issue| issue[:path] }).to eq(["columns.values.0.header"])
+      end
+    end
+  end
+
+  context "when a required field has a default" do
+    let(:schema) { { operation: { type: :options, required: true, default: "add" } } }
+
+    it { is_expected.to be_empty }
+  end
+
+  context "with a missing optional field inside a fixed collection" do
+    let(:schema) do
+      {
+        form_fields: {
+          type: :fixed_collection,
+          options: [
+            {
+              name: "values",
+              values: {
+                field_label: {
+                  type: :string,
+                  required: true,
+                },
+                custom_required: {
+                  type: :string,
+                  required: true,
+                },
+              },
+            },
+          ],
+        },
+      }
+    end
+    let(:configuration) { { "form_fields" => { "values" => [{ "field_label" => "Name" }] } } }
+
+    it "reports the nested field" do
+      expect(issues.pluck(:path)).to eq(["form_fields.values.0.custom_required"])
+    end
   end
 end

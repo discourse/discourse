@@ -152,7 +152,9 @@ Migrations::Tooling::Schema.ignored do
   tables :admin_dashboard_reports,
          :admin_dashboard_sections,
          :browser_pageview_country_daily_rollups,
-         :browser_pageview_referrer_daily_rollups
+         :browser_pageview_referrer_daily_rollups,
+         :category_activity_daily_rollups,
+         :user_visit_daily_rollups
 
   tables :access_control_lists,
          :admin_notices,
@@ -166,6 +168,7 @@ Migrations::Tooling::Schema.ignored do
          :backup_metadata,
          :badge_types,
          :bookmarks,
+         :browser_pageview_crawler_daily_rollups,
          :browser_pageview_event_scores,
          :browser_pageview_events,
          :browser_pageview_session_engagement_daily_rollups,
@@ -189,6 +192,8 @@ Migrations::Tooling::Schema.ignored do
          :invites,
          :javascript_caches,
          :message_bus,
+         :nested_hot_post_scores,
+         :nested_hot_score_snapshots,
          :nested_topics,
          :nested_view_post_stats,
          :notifications,
@@ -208,7 +213,9 @@ Migrations::Tooling::Schema.ignored do
          :search_logs,
          :shelved_notifications,
          :sidebar_section_links,
+         :sidebar_section_localizations,
          :sidebar_sections,
+         :sidebar_url_localizations,
          :sidebar_urls,
          :site_setting_groups,
          :site_setting_localizations,

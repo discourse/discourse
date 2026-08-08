@@ -5,7 +5,7 @@
 $db-bar-height: var(--space-2);
 
 .db-support__filter {
-  .select-kit.combo-box {
+  .select-kit.multi-select.multiple-categories-selector {
     max-width: 220px;
   }
 }
@@ -46,7 +46,16 @@ $db-bar-height: var(--space-2);
     gap: var(--space-1);
     min-width: 0;
     color: var(--primary);
-    cursor: help;
+
+    &:visited {
+      color: var(--primary);
+    }
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: var(--primary);
+    }
 
     @container db-support-outcomes (width < 22rem) {
       grid-column: 1 / -1;

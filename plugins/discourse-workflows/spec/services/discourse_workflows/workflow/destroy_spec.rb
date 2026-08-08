@@ -65,5 +65,18 @@ RSpec.describe DiscourseWorkflows::Workflow::Destroy do
 
       it_behaves_like "expires workflow caches"
     end
+
+    context "when the workflow has tags" do
+      fab!(:other_workflow) { Fabricate(:discourse_workflows_workflow, tags: %w[shared]) }
+
+      before { DiscourseWorkflows::WorkflowTag.sync!(workflow:, names: %w[shared solo]) }
+
+      it "removes the mappings and prunes tags left without any workflow" do
+        result
+
+        expect(DiscourseWorkflows::WorkflowTagMapping.where(workflow_id: workflow.id)).to be_empty
+        expect(DiscourseWorkflows::WorkflowTag.pluck(:name)).to eq(%w[shared])
+      end
+    end
   end
 end

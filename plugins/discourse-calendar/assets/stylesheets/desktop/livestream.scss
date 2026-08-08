@@ -40,6 +40,36 @@
     }
   }
 
+  // the timeline is swapped for the progress bar while chat is docked, so the
+  // navigation is placed below the posts and the column it occupied is
+  // reclaimed for them
+  .container.posts {
+    // outranks themes and components sizing the timeline column themselves
+    grid-template-columns: minmax(0, 1fr) 0;
+  }
+
+  .container.posts .topic-navigation {
+    grid-area: posts;
+    grid-row: 3;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: auto;
+    margin-left: 0;
+    margin-top: var(--border-offset);
+    top: auto;
+
+    > * {
+      margin-bottom: 0;
+    }
+
+    .topic-admin-menu-trigger {
+      border-radius: 0;
+      background: var(--secondary);
+      border: 1px solid var(--primary-low);
+    }
+  }
+
   .discourse-calendar-livestream-zoom-entry {
     width: min(100%, 1444px);
     margin-left: auto;
@@ -54,7 +84,6 @@
       border-radius: 8px;
       overflow: hidden;
       background: var(--secondary);
-      display: none;
     }
   }
 }

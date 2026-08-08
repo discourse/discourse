@@ -13,7 +13,7 @@ PROJECT_ROOT = File.expand_path("..", __dir__)
 class ExternalLinter
   RUBY_EXTENSIONS = %w[rb rake thor].freeze
   PRETTIER_EXTENSIONS = %w[css scss js gjs cjs mjs ts gts mts cts].freeze
-  ESLINT_EXTENSIONS = %w[js gjs ts gts mts cts].freeze
+  ESLINT_EXTENSIONS = %w[js gjs cjs mjs ts gts mts cts].freeze
   STYLELINT_EXTENSIONS = %w[scss].freeze
 
   JS_EXTENSIONS = (PRETTIER_EXTENSIONS + ESLINT_EXTENSIONS + STYLELINT_EXTENSIONS).uniq.freeze
@@ -239,7 +239,7 @@ class LefthookLinter
     end
 
     # Check if file extension is lintable
-    lintable_extensions = %w[rb rake js gjs ts gts mts cts hbs scss css yml yaml thor]
+    lintable_extensions = %w[rb rake js gjs cjs mjs ts gts mts cts hbs scss css yml yaml thor]
     lintable_extensions.include?(ext)
   end
 

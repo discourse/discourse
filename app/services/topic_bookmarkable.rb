@@ -25,22 +25,22 @@ class TopicBookmarkable < BaseBookmarkable
   def self.list_query(user, guardian)
     topics = Topic.listable_topics.secured(guardian)
     pms = Topic.private_messages_for_user(user)
+    first_posts = guardian.filter_hidden_posts(Post.secured(guardian).where(deleted_at: nil))
     topic_bookmarks =
       user
         .bookmarks_of_type("Topic")
         .joins(
           "INNER JOIN topics ON topics.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Topic'",
         )
+        .joins("INNER JOIN posts ON posts.topic_id = topics.id AND posts.post_number = 1")
         .joins("LEFT JOIN topic_users ON topic_users.topic_id = topics.id")
         .where("topic_users.user_id = ?", user.id)
-    guardian.filter_allowed_categories(topic_bookmarks.merge(topics.or(pms)))
+    guardian.filter_allowed_categories(topic_bookmarks.merge(topics.or(pms)).merge(first_posts))
   end
 
   def self.search_query(bookmarks, query, ts_query, &bookmarkable_search)
     bookmarkable_search.call(
-      bookmarks.joins(
-        "LEFT JOIN posts ON posts.topic_id = topics.id AND posts.post_number = 1",
-      ).joins("LEFT JOIN post_search_data ON post_search_data.post_id = posts.id"),
+      bookmarks.joins("LEFT JOIN post_search_data ON post_search_data.post_id = posts.id"),
       "#{ts_query} @@ post_search_data.search_data",
     )
   end
@@ -66,7 +66,7 @@ class TopicBookmarkable < BaseBookmarkable
   end
 
   def self.can_see_bookmarkable?(guardian, bookmarkable)
-    guardian.can_see_topic?(bookmarkable)
+    guardian.can_see_post?(bookmarkable&.first_post)
   end
 
   def self.bookmark_metadata(bookmark, user)
@@ -74,7 +74,7 @@ class TopicBookmarkable < BaseBookmarkable
   end
 
   def self.validate_before_create(guardian, bookmarkable)
-    raise Discourse::InvalidAccess if bookmarkable.blank? || !guardian.can_see_topic?(bookmarkable)
+    raise Discourse::InvalidAccess if !can_see_bookmarkable?(guardian, bookmarkable)
   end
 
   def self.after_create(guardian, bookmark, opts)

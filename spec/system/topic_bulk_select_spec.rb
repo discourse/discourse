@@ -508,6 +508,43 @@ describe "Topic bulk select" do
       expect(page).to have_content(group_private_message.title)
     end
 
+    it "removes archived group messages from the current inbox after infinite-scroll pagination" do
+      # Regression test: when the paginated topic list is cached in the
+      # session, refreshing the route after a bulk archive reused the
+      # stale cached list and left archived messages visible until the
+      # user manually reloaded.
+      other_group_messages =
+        Array.new(2) do
+          Fabricate(:group_private_message_topic, user: admin, recipient_group: group)
+        end
+      all_group_messages = [group_private_message, *other_group_messages]
+
+      stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 2) do
+        sign_in(admin)
+        visit("/u/#{admin.username}/messages/group/#{group.name}")
+
+        expect(topic_list).to have_topics(count: 2)
+        page.execute_script(
+          "document.querySelector('.paginated-topics-list .load-more-sentinel').scrollIntoView()",
+        )
+        expect(topic_list).to have_topics(count: all_group_messages.size)
+
+        topic_list_header.click_bulk_select_button
+        all_group_messages.each { |topic| topic_list.click_topic_checkbox(topic) }
+
+        topic_list_header.click_bulk_select_topics_dropdown
+        topic_list_header.click_bulk_button("archive-messages")
+        expect(topic_bulk_actions_modal).to be_open
+        topic_bulk_actions_modal.click_bulk_topics_confirm
+
+        expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
+        all_group_messages.each do |topic|
+          expect(topic_list).to have_no_topic(topic)
+          expect(GroupArchivedMessage.exists?(group_id: group.id, topic_id: topic.id)).to eq(true)
+        end
+      end
+    end
+
     it "allows archiving group private messages from the group inbox page" do
       sign_in(admin)
       visit("/g/#{group.name}/messages/inbox")

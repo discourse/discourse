@@ -33,7 +33,6 @@ after_initialize do
     end
 
     on(:assigned) do |assignment|
-      require_relative "lib/discourse_workflows/nodes/assigned/v1"
       DiscourseWorkflows::EventListener.handle(DiscourseWorkflows::Nodes::Assigned::V1, assignment)
     end
   end

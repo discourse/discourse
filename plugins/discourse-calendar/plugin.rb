@@ -44,6 +44,7 @@ register_svg_icon "star"
 register_svg_icon "file-arrow-up"
 register_svg_icon "location-pin"
 register_svg_icon "arrows-up-to-line"
+register_svg_icon "zoom-join-audio"
 extend_content_security_policy(worker_src: %w[https://source.zoom.us blob:])
 
 module ::DiscourseCalendar
@@ -166,10 +167,6 @@ module ::DiscourseCalendar
           DiscoursePostEvent::Invitee.where(user_id: @user.id).index_by(&:post_id)
       end
 
-      def invitee_event_ids
-        invitees_by_post_id.keys
-      end
-
       def group_names
         return [] if @user.nil?
 
@@ -188,10 +185,6 @@ module ::DiscourseCalendar
 
       def livestream_invitees_by_post_id
         livestream_serialization_context.invitees_by_post_id
-      end
-
-      def livestream_invitee_event_ids
-        livestream_serialization_context.invitee_event_ids
       end
 
       def livestream_user_group_names
@@ -219,6 +212,8 @@ module ::DiscoursePostEvent
 end
 
 require_relative "lib/discourse_calendar/engine"
+require_relative "lib/discourse_calendar/livestream/allowed_hosts"
+require_relative "lib/discourse_calendar/livestream/allowed_hosts_validator"
 require_relative "lib/discourse_calendar/livestream/topic_extension"
 require_relative "lib/discourse_calendar/livestream/chat_channel_extension"
 require_relative "lib/discourse_calendar/livestream/zoom_url_parser"
@@ -287,6 +282,7 @@ after_initialize do
   require_relative "lib/discourse_post_event/event_validator"
   require_relative "lib/discourse_post_event/export_csv_controller_extension"
   require_relative "lib/discourse_post_event/export_csv_file_extension"
+  require_relative "lib/discourse_post_event/guardian_extensions"
   require_relative "lib/discourse_post_event/post_extension"
   require_relative "lib/discourse_post_event/topic_extension"
   require_relative "lib/discourse_post_event/rrule_generator"
@@ -327,7 +323,7 @@ after_initialize do
   reloadable_patch do
     ExportCsvController.prepend(DiscoursePostEvent::ExportCsvControllerExtension)
     Jobs::ExportCsvFile.prepend(DiscoursePostEvent::ExportPostEventCsvReportExtension)
-    Guardian.prepend(DiscoursePostEvent::GuardianExtension)
+    Guardian.prepend(DiscoursePostEvent::GuardianExtensions)
     Post.prepend(DiscoursePostEvent::PostExtension)
     ::WebHook.prepend(DiscoursePostEvent::WebHookExtension)
     Topic.prepend(DiscoursePostEvent::TopicExtension)
@@ -335,47 +331,12 @@ after_initialize do
     Chat::Channel.prepend(DiscourseCalendar::Livestream::ChatChannelExtension)
   end
 
-  add_to_class(:user, :can_create_discourse_post_event?) do
-    return @can_create_discourse_post_event if defined?(@can_create_discourse_post_event)
-    @can_create_discourse_post_event =
-      begin
-        return true if staff?
-        allowed_groups = SiteSetting.discourse_post_event_allowed_on_groups.to_s.split("|").compact
-        allowed_groups.present? &&
-          (
-            allowed_groups.include?(Group::AUTO_GROUPS[:everyone].to_s) ||
-              groups.where(id: allowed_groups).exists?
-          )
-      rescue StandardError
-        false
-      end
-  end
-
-  add_to_class(:guardian, :can_act_on_invitee?) do |invitee|
-    user && (user.id == invitee.user_id || can_act_on_discourse_post_event?(invitee.event))
-  end
-
-  add_to_class(:guardian, :can_create_discourse_post_event?) do
-    user && user.can_create_discourse_post_event?
-  end
-
   add_to_serializer(:current_user, :can_create_discourse_post_event) do
-    object.can_create_discourse_post_event?
-  end
-
-  add_to_class(:user, :can_act_on_discourse_post_event?) do |event|
-    return true if staff?
-    can_create_discourse_post_event? && Guardian.new(self).can_edit_post?(event.post)
-  rescue StandardError
-    false
-  end
-
-  add_to_class(:guardian, :can_act_on_discourse_post_event?) do |event|
-    user && user.can_act_on_discourse_post_event?(event)
+    scope.can_create_discourse_post_event?
   end
 
   add_class_method(:group, :discourse_post_event_allowed_groups) do
-    where(id: SiteSetting.discourse_post_event_allowed_on_groups.split("|").compact)
+    where(id: SiteSetting.discourse_post_event_allowed_on_groups_map)
   end
 
   TopicView.on_preload do |topic_view|
@@ -810,6 +771,14 @@ after_initialize do
 
   on(:user_destroyed) { |user| DiscoursePostEvent::Invitee.where(user_id: user.id).destroy_all }
 
+  on(:user_removed_from_group) do |user, group|
+    DiscoursePostEvent::Event
+      .where(id: DiscoursePostEvent::Invitee.unscoped.where(user_id: user.id).select(:post_id))
+      .where(status: DiscoursePostEvent::Event.statuses[:private])
+      .where("? = ANY(discourse_post_event_events.raw_invitees)", group.name)
+      .find_each(&:enforce_private_invitees!)
+  end
+
   add_post_revision_notifier_recipients do |post_revision|
     # next if no modifications
     next if !post_revision.modifications.present?
@@ -952,6 +921,20 @@ after_initialize do
 
   add_to_serializer(:topic_view, :has_livestream) { object.topic.first_post&.event&.livestream? }
 
+  add_to_serializer(
+    :topic_view,
+    :event_watching_invitee_status,
+    include_condition: -> { scope.user.present? && object.topic.first_post&.event.present? },
+  ) do
+    invitee =
+      DiscoursePostEvent::Invitee.find_by(
+        post_id: object.topic.first_post.event.id,
+        user_id: scope.user.id,
+      )
+
+    DiscoursePostEvent::Invitee.statuses[invitee.status] if invitee
+  end
+
   Chat::ChannelSerializer.include(DiscourseCalendar::Livestream::ChannelSerializerExtension)
 
   register_modifier(:chat_channel_fetcher_public_includes) do |includes|
@@ -977,11 +960,7 @@ after_initialize do
       return false if !event
 
       event.livestream? &&
-        event.can_access_livestream_chat?(
-          scope.user,
-          invitee_event_ids: livestream_invitee_event_ids,
-          group_names: livestream_user_group_names,
-        )
+        event.can_access_livestream_chat?(scope.user, group_names: livestream_user_group_names)
     end,
   ) do
     topic = object.livestream_topic_chat_channel.topic
@@ -992,11 +971,7 @@ after_initialize do
       if scope.anonymous? || !event
         false
       else
-        event.can_user_update_attendance?(
-          scope.user,
-          invitee_event_ids: livestream_invitee_event_ids,
-          group_names: livestream_user_group_names,
-        )
+        event.can_user_update_attendance?(scope.user, group_names: livestream_user_group_names)
       end
 
     {

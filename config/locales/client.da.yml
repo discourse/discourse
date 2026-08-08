@@ -687,6 +687,7 @@ da:
         email: "Email"
         name: "Navn"
         fields: "Felter"
+        penalty_forever: "Forevigt"
         reject_reason: "Årsag"
         scrubbed_reason: "Begrundelse"
         scrubbed_reject_reason: "Årsag til brugerafvisning"
@@ -1395,7 +1396,6 @@ da:
       external_links_in_new_tab: "Åbn alle eksterne links i en ny fane"
       enable_quoting: "Tillad citering af markeret tekst"
       enable_smart_lists: "Aktivér smarte lister, når du skriver i editoren"
-      enable_defer: "Aktivér markering af emner som ulæste"
       enable_markdown_monospace_font: "Brug monospace-skrifttype i editors Markdown-tilstand"
       experimental_sidebar:
         enable: "Aktiver sidebjælke"
@@ -1712,7 +1712,7 @@ da:
         default: "(standard)"
         any: "alle"
       homepage:
-        default: "(standard)"
+        default: "Standard"
       password_confirmation:
         title: "Gentag adgangskode"
       invite_code:
@@ -1755,6 +1755,9 @@ da:
         contextual: "Nyt side indhold"
       bookmark_after_notification:
         title: "Når der er sendt en notifikation om bogmærkepåmindelse:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Giv besked når andre 'Synes godt godt'"
         always: "Altid"
@@ -1888,23 +1891,27 @@ da:
           member_title: "Inviter medlemmer"
           sent_title: "Invitation sendt"
           member_tab: "Brugere"
-          admin_tab: "Admins"
+          admin_tab: "Personale"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
           admin_email_label: "E-mail adresse"
           email_placeholder: "navn@eksempel.dk"
           invite_by_email: "E-mail"
           restrict_domain: "Begræns til domæne"
-          more_options: "Flere muligheder"
+          create_and_send: "Send"
+          create_and_copy: "Kopiér link"
           update: "Opdater"
           summary:
             role_member: "Bruger"
             role_admin: "Admin"
+            role_moderator: "Moderator"
             method: "Deling"
             method_email: "E-mail"
             uses: "Maks. anvendelser"
             expires: "Udløber"
             topic: "Emne"
             groups: "Grupper"
-            edit: "Rediger invitation"
+            edit: "Rediger"
         bulk_invite:
           none: "Ingen invitationer at vise på denne side."
           text: "Masseinvitation"
@@ -2372,6 +2379,8 @@ da:
       default: Brugerdefineret humørikoner
     filter_input:
       clear: "Ryd filter"
+    filter_controls:
+      reset: "Nulstil"
     shared_drafts:
       title: "Delte kladder"
       notice: "Dette emne er kun synligt for dem, der kan udgive delte kladder."
@@ -2462,7 +2471,6 @@ da:
       italic_label: "K"
       italic_title: "Kursiv"
       italic_text: "kursiv skrift"
-      heading_title: "Overskrifter"
       heading_level_n: "Overskrift %{levelNumber}"
       heading_level_n_title: "Overskrift %{levelNumber}"
       heading_level_paragraph: "Afsnit"
@@ -4175,6 +4183,10 @@ da:
           delete: "Slet"
           public: "Synlig for alle"
           more_menu: "Mere menu"
+          localizations:
+            locale: "Sprog"
+            title_label: "Sektionens titel"
+            remove_language: "Fjern"
           links:
             add: "Tilføj endnu et link"
             delete: "Slet link"
@@ -4684,7 +4696,6 @@ da:
               posts: "Indlæg"
               share: "Del"
             whos_posting:
-              all_categories: "Alle kategorier"
               staff: "Personale"
             trust_level_pipeline:
               trust_levels:
@@ -5185,6 +5196,8 @@ da:
           reset: "Nulstil"
       navigation_menu:
         sidebar: "Sidebjælke"
+      duplicate_topic_titles:
+        allowed: "Tilladt"
       backups:
         title: "Sikkerhedskopier"
         files_title: "Sikkerhedskopi-filer"
@@ -5378,7 +5391,6 @@ da:
           import_web_advanced: "Avanceret…"
           is_private: "Temaet er i et privat git-repository"
           remote_branch: "Filialnavn (valgfrit)"
-          public_key: "Giv følgende offentlig nøgle adgang til repoen:"
           install: "Installér"
           installed: "Installeret"
           install_popular: "Populære"
@@ -6382,6 +6394,7 @@ da:
         uploading: "Overfører…"
         name: "Navn"
         group: "Gruppe"
+        all_groups: "Alle grupper"
         created_by: "Oprettet Af"
         image: "Billede"
         alt: "brugerdefineret humøikons forhåndsvisning"

@@ -354,17 +354,6 @@ export function stripWordReviewMarkup(container) {
     .forEach((el) => el.remove());
 }
 
-// Word for the web stamps lang on every text span (<span class="TextRun" lang>),
-// which the editor keeps and surfaces as literal <span lang> markup. Strip it
-// from Word's own spans only, so a lang the user added on purpose survives.
-const WORD_LANG_RUN_SELECTOR = "span[class*='TextRun'][lang]";
-
-export function stripWordLangAttributes(container) {
-  container
-    .querySelectorAll(WORD_LANG_RUN_SELECTOR)
-    .forEach((el) => el.removeAttribute("lang"));
-}
-
 /**
  * Transforms Word-specific markup in an HTML string into standard HTML:
  * converts Word lists and quote styles, and strips Word review markup
@@ -399,7 +388,6 @@ export function transformWordHtml(html) {
 
   if (isWord) {
     stripWordReviewMarkup(doc.body);
-    stripWordLangAttributes(doc.body);
   }
 
   return doc.body.innerHTML;

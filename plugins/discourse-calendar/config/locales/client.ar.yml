@@ -53,7 +53,7 @@ ar:
         header_description: "اختر منطقة لعرض العطلات الخاصة بها. سيتم استبعاد العطلات المتوقفة من تقويم عطلات فريق العمل."
       date: "التاريخ"
       add_to_calendar: "الإضافة إلى تقويم Google"
-      toggle_timezone_offset_title: "تبديل إزاحة المنطقة الزمنية"
+      toggle_timezone_offset_title: "تفعيل/إيقاف إزاحة المنطقة الزمنية"
       local_time: "التوقيت المحلي"
       region:
         title: "المنطقة"
@@ -392,6 +392,7 @@ ar:
         send_bulk_invites: "إرسال الدعوات"
         group_selector_placeholder: "اختر مجموعة..."
         user_selector_placeholder: "اختر مستخدمًا..."
+        attendance_label: "الحضور"
         inline_title: "دعوة جماعية مضمَّنة"
         csv_title: "دعوة جماعية باستخدام ملف CSV"
       upcoming_events:
@@ -469,6 +470,9 @@ ar:
         description_placeholder: "أضف وصفًا للحدث"
         event_title_placeholder: "اسم الحدث"
         create_event_button: "إنشاء حدث"
+        action_title: "إنشاء حدث جديد"
+        livestream: "بث مباشر"
+        livestream_chat_disabled: "فعِّل الدردشة لإنشاء قنوات بث مباشر."
         reminder:
           units:
             minutes:
@@ -479,31 +483,33 @@ ar:
               many: "دقائق"
               other: "دقائق"
             hours:
-              zero: "الساعات"
+              zero: "ساعة"
               one: "ساعة واحدة"
-              two: "الساعات"
-              few: "الساعات"
-              many: "الساعات"
-              other: "الساعات"
+              two: "ساعتان"
+              few: "ساعات"
+              many: "ساعة"
+              other: "ساعة"
             days:
-              zero: "أيام"
+              zero: "يوم"
               one: "يوم واحد"
-              two: "أيام"
+              two: "يومان"
               few: "أيام"
-              many: "أيام"
-              other: "أيام"
+              many: "يومًا"
+              other: "يوم"
             weeks:
-              zero: "أسابيع"
-              one: "أسبوع"
-              two: "أسابيع"
+              zero: "أسبوع"
+              one: "أسبوع واحد"
+              two: "أسبوعان"
               few: "أسابيع"
-              many: "أسابيع"
-              other: "أسابيع"
+              many: "أسبوعًا"
+              other: "أسبوع"
       composer_actions:
         create_event:
           label: "إنشاء حدث"
+          desc: "أنشِئ حدثًا جديدًا في هذه الفئة"
         create_topic:
-          label: "أنشئ موضوع"
+          label: "إنشاء موضوع"
+          desc: "أنشِئ موضوعًا عاديًا بدلًا من حدث"
       builder_modal:
         custom_fields:
           label: "الحقول المخصَّصة"
@@ -521,7 +527,7 @@ ar:
         add_reminder: "إضافة تذكير"
         show_local_time:
           label: "عرض التوقيت المحلي"
-          description: "ستُعرض التواريخ والأوقات وفقًا للمنطقة الزمنية: %{timezone}. يُستحسن استخدام هذا الإعداد للأحداث المقامة في موقع محدد، لضمان تطابق الأوقات مع المنطقة الزمنية لمكان الحدث."
+          description: "ستُعرض التواريخ والأوقات وفقًا للمنطقة الزمنية: %{timezone}. يُستحسن استخدام هذا الإعداد للأحداث المقامة في موقع محدَّد، لضمان تطابق الأوقات مع المنطقة الزمنية لمكان الحدث."
         timezone:
           label: المنطقة الزمنية
           remove_timezone: لا توجد منطقة زمنية (UTC)
@@ -545,7 +551,7 @@ ar:
           every_day: "كل يوم"
           every_weekday: "كل أيام الأسبوع"
           ordinals:
-            last: "اخر"
+            last: "آخر"
         max_attendees:
           label: "الحد الأقصى للحضور"
           placeholder: "لا يوجد حد"
@@ -554,7 +560,11 @@ ar:
         allow_chat:
           label: "تكامل الدردشة"
           checkbox_label: "إنشاء قناة دردشة خاصة بحدث معين وإدارتها"
+        livestream:
+          label: "بث مباشر"
+          checkbox_label: "قم بتضمين عنوان URL كفيديو وافتح دردشة البث المباشر للحضور"
         location:
+          label: "الموقع أو عنوان URL"
           placeholder: "أضف موقعًا أو رابطًا أو أي شيء آخر."
         description:
           label: "الوصف"

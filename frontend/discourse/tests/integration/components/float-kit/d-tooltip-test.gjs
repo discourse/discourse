@@ -163,6 +163,33 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
     assert.dom(".fk-d-tooltip__trigger").hasText("label");
   });
 
+  test("trigger expanded argument reflects the open state", async function (assert) {
+    await render(
+      <template>
+        <DTooltip @inline={{true}}>
+          <:trigger as |args|>
+            <span class="expanded-flag">{{if
+                args.expanded
+                "open"
+                "closed"
+              }}</span>
+          </:trigger>
+          <:content>content</:content>
+        </DTooltip>
+      </template>
+    );
+
+    assert
+      .dom(".expanded-flag")
+      .hasText("closed", "expanded is false when closed");
+
+    await hover();
+
+    assert
+      .dom(".expanded-flag")
+      .hasText("open", "expanded flips to true on open");
+  });
+
   test("<:content>", async function (assert) {
     await render(
       <template>

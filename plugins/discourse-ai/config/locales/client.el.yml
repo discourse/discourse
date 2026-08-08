@@ -92,6 +92,9 @@ el:
               label: "Περιεχόμενο ΠΜ"
               description: "Προαιρετικό προσαρμοσμένο μήνυμα για αποστολή στον συντάκτη"
     discourse_ai:
+      discourse_workflows:
+        ai_agent:
+          mode: "Λειτουργία"
       bot_chats:
         tab_label: "Συνομιλίες bot"
       ai_tool_approval:
@@ -145,8 +148,21 @@ el:
       translations:
         title: "Μεταφράσεις"
         category_scope: "Κατηγορίες"
-        admin_actions:
-          localization_settings: "Ρυθμίσεις τοπικοποίησης"
+        model_progress:
+          detail:
+            retry: "Επανάληψη"
+            columns:
+              pending: "Εκρεμείς"
+              total: "Σύνολο"
+          targets:
+            post:
+              title: "Αναρτήσεις"
+            topic:
+              title: "Θέματα"
+            category:
+              title: "Κατηγορίες"
+            tag:
+              title: "Ετικέτες"
         stats:
           eta_minutes:
             one: "%{count} λεπτό"
@@ -206,6 +222,8 @@ el:
           select_all: "Επιλογή όλων"
           clear_all: "Εκκαθάριση όλων"
         allowed_groups: "Επιτρεπόμενες ομάδες"
+        duplicate: "Διπλότυπο"
+        copy_name: "Αντίγραφο του %{name}"
         delete: "Διαγραφή"
         thinking_effort_options:
           none: "Κανένα"
@@ -312,7 +330,6 @@ el:
         tests:
           success: "Επιτυχία!"
         providers:
-          google: "Google"
           fake: "Προσαρμοσμένο"
         provider_fields:
           region: "Περιοχή"

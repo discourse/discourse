@@ -199,8 +199,9 @@ RSpec.describe TopicTrackingState do
 
   describe "#publish_unread" do
     let(:other_user) { Fabricate(:user) }
-
-    before { Fabricate(:topic_user_watching, topic: topic, user: other_user) }
+    let!(:other_user_watching_topic) do
+      Fabricate(:topic_user_watching, topic: topic, user: other_user)
+    end
 
     it "can correctly publish unread" do
       message =
@@ -521,7 +522,7 @@ RSpec.describe TopicTrackingState do
         expect(messages).to be_empty
       end
 
-      it "publish a read count update to every client" do
+      it "publishes a read count update to every client" do
         message =
           MessageBus
             .track_publish(read_post_key) do
@@ -533,7 +534,8 @@ RSpec.describe TopicTrackingState do
             end
             .first
 
-        expect(message.data[:type]).to eq :read
+        expect(message.data[:type]).to eq(:read)
+        expect(message.data[:readers_count]).to eq(post_2.readers_count)
       end
     end
   end

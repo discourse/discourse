@@ -13,8 +13,6 @@ fa_IR:
   js:
     discourse_reactions:
       reactions_title: "واکنش‌‌ها"
-      state_panel:
-        more_users: "و %{count} نفر دیگر..."
       picker:
         react_with: "واکنش به این نوشته با: %{reaction}"
         cant_remove_reaction: "شما دیگر واکنش خود را نمی‌توانید حذف کنید"

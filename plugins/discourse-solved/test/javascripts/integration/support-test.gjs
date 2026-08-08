@@ -1,6 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import SupportSection from "discourse/plugins/discourse-solved/admin/components/dashboard/support";
 
 function buildData(overrides = {}) {
@@ -245,5 +246,184 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
     );
 
     assert.dom(".db-support__filter").exists("shown with multiple categories");
+    assert.dom(".multiple-categories-selector").exists();
+  });
+
+  test("prefills the selector with the persisted category selection", async function (assert) {
+    const data = buildData({
+      category_options: [
+        { id: 1, name: "Support" },
+        { id: 2, name: "Help" },
+      ],
+      category_ids: [1, 2],
+    });
+
+    await render(
+      <template>
+        <SupportSection
+          @data={{data}}
+          @startDate={{startDate}}
+          @endDate={{endDate}}
+        />
+      </template>
+    );
+
+    assert.strictEqual(
+      selectKit(".multiple-categories-selector").header().value(),
+      "1,2"
+    );
+  });
+
+  test("links Topic outcomes rows to the filtered topic list, scoped to the date range and without a category restriction when solved is allowed on all topics", async function (assert) {
+    this.siteSettings.allow_solved_on_all_topics = true;
+
+    const data = buildData({ category_options: [], category_ids: [] });
+
+    await render(
+      <template>
+        <SupportSection
+          @data={{data}}
+          @startDate={{startDate}}
+          @endDate={{endDate}}
+        />
+      </template>
+    );
+
+    const dateRange = `created-after:${moment(startDate).format(
+      "YYYY-MM-DD"
+    )} created-before:${moment(endDate).add(1, "day").format("YYYY-MM-DD")}`;
+
+    assert
+      .dom(".db-support-outcomes__row:nth-child(1) a")
+      .hasAttribute(
+        "href",
+        `/filter?q=${encodeURIComponent(`status:solved ${dateRange}`)}`,
+        "resolved links to status:solved with the current date range"
+      );
+    assert
+      .dom(".db-support-outcomes__row:nth-child(2) a")
+      .hasAttribute(
+        "href",
+        `/filter?q=${encodeURIComponent(
+          `status:unsolved posts-min:2 ${dateRange}`
+        )}`,
+        "in progress links to status:unsolved posts-min:2 with the current date range"
+      );
+    assert
+      .dom(".db-support-outcomes__row:nth-child(3) a")
+      .hasAttribute(
+        "href",
+        `/filter?q=${encodeURIComponent(
+          `status:unsolved status:noreplies ${dateRange}`
+        )}`,
+        "unanswered links to status:unsolved status:noreplies with the current date range"
+      );
+  });
+
+  test("restricts Topic outcomes links to every support category when none is selected and solved is not allowed on all topics", async function (assert) {
+    this.siteSettings.allow_solved_on_all_topics = false;
+
+    const data = buildData({
+      category_options: [
+        { id: 1, name: "Bug" },
+        { id: 2, name: "Feature" },
+      ],
+      category_ids: [],
+    });
+
+    await render(
+      <template>
+        <SupportSection
+          @data={{data}}
+          @startDate={{startDate}}
+          @endDate={{endDate}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".db-support-outcomes__row:nth-child(1) a")
+      .hasAttribute(
+        "href",
+        /%3Dcategory%3Abug%2Cfeature/,
+        "restricts to every support category when none is selected"
+      );
+  });
+
+  test("restricts Topic outcomes links to the selected category when one is applied", async function (assert) {
+    this.siteSettings.allow_solved_on_all_topics = false;
+
+    const data = buildData({
+      category_options: [
+        { id: 1, name: "Bug" },
+        { id: 3, name: "Meta" },
+      ],
+      category_ids: [3],
+    });
+
+    await render(
+      <template>
+        <SupportSection
+          @data={{data}}
+          @startDate={{startDate}}
+          @endDate={{endDate}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".db-support-outcomes__row:nth-child(1) a")
+      .hasAttribute(
+        "href",
+        /%3Dcategory%3Ameta(?!%2C)/,
+        "restricts to only the selected category"
+      );
+  });
+
+  test("exposes Topic outcomes rows as focusable links, keeping the bar graphic hidden from assistive tech", async function (assert) {
+    const data = buildData();
+
+    await render(
+      <template>
+        <SupportSection
+          @data={{data}}
+          @startDate={{startDate}}
+          @endDate={{endDate}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".db-support-outcomes__bars")
+      .doesNotHaveAttribute("role", "no longer collapsed into a single img");
+    assert
+      .dom(".db-support-outcomes__label")
+      .exists({ count: 3 }, "each row renders a focusable label link");
+    assert
+      .dom(".db-support-outcomes__row:nth-child(1) a")
+      .hasAttribute(
+        "href",
+        `/filter?q=${encodeURIComponent(
+          `status:solved created-after:${moment(startDate).format(
+            "YYYY-MM-DD"
+          )} created-before:${moment(endDate)
+            .add(1, "day")
+            .format("YYYY-MM-DD")}`
+        )}`,
+        "resolved links to its full filter query"
+      );
+    assert
+      .dom(".db-support-outcomes__track")
+      .hasAttribute(
+        "aria-hidden",
+        "true",
+        "the decorative bar is hidden from assistive tech"
+      );
+    assert
+      .dom(".db-support-outcomes__share")
+      .doesNotHaveAttribute(
+        "aria-hidden",
+        "the count stays exposed to assistive tech"
+      );
   });
 });

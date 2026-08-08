@@ -724,6 +724,7 @@ ro:
         email: "Email"
         name: "Nume"
         fields: "Câmpuri"
+        penalty_forever: "Pentru totdeanua"
         reject_reason: "Motiv"
         scrubbed_reason: "Motiv"
         scrubbed_reject_reason: "Motiv respingere utilizator"
@@ -1406,7 +1407,6 @@ ro:
       external_links_in_new_tab: "Deschide toate legăturile externe într-o filă nouă"
       enable_quoting: "Activează citarea răspunsurilor pentru textul selectat"
       enable_smart_lists: "Activează listele inteligente atunci când scrii în compozitor"
-      enable_defer: "Activează marcarea subiectelor ca necitite"
       enable_markdown_monospace_font: "Folosește fontul monospace în modul Markdown al compozitorului"
       experimental_sidebar:
         options: "Opțiuni"
@@ -1671,7 +1671,7 @@ ro:
         default: "(implicit)"
         any: "oricare"
       homepage:
-        default: "(implicit)"
+        default: "Implicit"
       password_confirmation:
         title: "Confirmă parola"
       invite_code:
@@ -1698,6 +1698,8 @@ ro:
         title: "Titlul paginii în fundal afișează numărul de:"
         notifications: "Notificări noi"
         contextual: "Conținut nou al paginii"
+      send_shortcut:
+        enter: "Enter"
       like_notification_frequency:
         title: "Notificare atunci când se primește apreciere"
         always: "Întotdeauna"
@@ -1828,20 +1830,24 @@ ro:
         invite_roles:
           member_title: "Invită membri"
           member_tab: "Membri"
-          admin_tab: "Admini"
+          admin_tab: "Echipa"
+          staff_role_admin: "Administrator"
+          staff_role_moderator: "Moderator"
           admin_email_label: "Adresă email"
           email_placeholder: "nume@exemplu.comb"
           invite_by_email: "E-mail"
-          more_options: "Mai multe opțiuni"
+          create_and_send: "Trimite"
+          create_and_copy: "Copiază legătură"
           update: "Actualizează"
           summary:
             role_member: "Membru"
             role_admin: "Administrator"
+            role_moderator: "Moderator"
             method: "Partajare"
             method_email: "E-mail"
             topic: "Subiect"
             groups: "Grupuri"
-            edit: "Editează invitație"
+            edit: "Editează"
         bulk_invite:
           none: "Nu există invitații de afișat pe această pagină."
           text: "Invitație în masă"
@@ -2224,6 +2230,8 @@ ro:
       default: Emojii personalizate
     filter_input:
       clear: "Elimină filtrul"
+    filter_controls:
+      reset: "Resetare"
     composer:
       emoji: "Emoji :)"
       options: "Opțiuni"
@@ -2301,7 +2309,6 @@ ro:
       italic_label: "I"
       italic_title: "Italic"
       italic_text: "text italic"
-      heading_title: "Titluri"
       heading_level_n: "Titlu %{levelNumber}"
       heading_level_n_title: "Titlu %{levelNumber}"
       heading_level_paragraph: "Paragraf"
@@ -3738,6 +3745,8 @@ ro:
           save: "Salvează"
           delete: "Șterge"
           delete_public_confirm: "Această secțiune este vizibilă pentru toată lumea, sigur vrei să o ștergi?"
+          localizations:
+            remove_language: "Elimină"
           links:
             add: "Adaugă altă legătură"
             reset: "Resetare la valorile implicite"
@@ -4314,7 +4323,6 @@ ro:
               posts: "Articole"
               share: "Partajează"
             whos_posting:
-              all_categories: "Toate categoriile"
               staff: "Echipa"
             trust_level_pipeline:
               trust_levels:
@@ -5726,6 +5734,7 @@ ro:
         choose_files: "Alege fișiere"
         name: "Nume"
         group: "Grup"
+        all_groups: "Toate grupurile"
         created_by: "Creat de"
         image: "Imagine"
         delete_confirm: "Ești sigur că vrei să ștergi emoji-ul :%{name}:?"

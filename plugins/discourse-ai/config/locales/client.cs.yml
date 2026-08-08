@@ -38,6 +38,9 @@ cs:
             canned_reply:
               label: "Odpověď"
     discourse_ai:
+      discourse_workflows:
+        ai_agent:
+          mode: "Režim"
       ai_tool_approval:
         loading: "Načítá se..."
         tool: "Akce"
@@ -83,6 +86,22 @@ cs:
       translations:
         title: "Překlady"
         category_scope: "Kategorie"
+        model_progress:
+          detail:
+            retry: "Zkuste znovu"
+            columns:
+              locale: "Jazyk"
+              pending: "Čeká na schválení"
+              total: "Celkem"
+          targets:
+            post:
+              title: "Příspěvky"
+            topic:
+              title: "Témata"
+            category:
+              title: "Kategorie"
+            tag:
+              title: "Štítky"
         stats:
           eta_minutes:
             one: "%{count} minutu"
@@ -137,6 +156,8 @@ cs:
         mcp_tools_modal:
           select_all: "Vybrat vše"
           clear_all: "Zrušit vše"
+        duplicate: "Duplikovat"
+        copy_name: "Kopie %{name}"
         delete: "Smazat"
         thinking_effort_options:
           none: "Žádný"
@@ -229,7 +250,6 @@ cs:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"

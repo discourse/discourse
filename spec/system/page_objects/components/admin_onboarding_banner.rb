@@ -19,16 +19,12 @@ module PageObjects
         find("div##{step_id}")
       end
 
-      def step_checkbox(step_id)
-        find("div##{step_id} .onboarding-step__checkbox > svg")
-      end
-
       def step_completed?(step_id)
-        step_checkbox(step_id)[:class].include?("checked")
+        has_css?("div##{step_id} .onboarding-step__checkbox > svg.--completed")
       end
 
       def step_not_completed?(step_id)
-        !step_completed?(step_id)
+        has_no_css?("div##{step_id} .onboarding-step__checkbox > svg.--completed")
       end
 
       def click_step_action(step_id)

@@ -100,7 +100,7 @@ acceptance(`Composer`, function (needs) {
       "sets --composer-height to 40px when composer is minimized without content"
     );
 
-    await click(".toggle-fullscreen");
+    await click("#reply-control");
     await fillIn(
       ".d-editor-input",
       "this is the *content* of a new topic post"
@@ -112,7 +112,7 @@ acceptance(`Composer`, function (needs) {
       "sets --composer-height to 40px when composer is minimized to draft mode"
     );
 
-    await click(".toggle-fullscreen");
+    await click("#reply-control");
     assert.strictEqual(
       document.documentElement.style.getPropertyValue("--composer-height"),
       "var(--new-topic-composer-height, 400px)",
@@ -171,7 +171,7 @@ acceptance(`Composer`, function (needs) {
       "minimizes to the draft bar"
     );
 
-    await click(".toggle-fullscreen");
+    await click("#reply-control");
     assert.strictEqual(
       document.documentElement.style.getPropertyValue("--composer-height"),
       resizedHeight,
@@ -822,7 +822,7 @@ acceptance(`Composer`, function (needs) {
       .dom("#reply-control.draft")
       .isVisible("collapses composer to draft bar");
 
-    await click(".toggle-fullscreen");
+    await click("#reply-control");
 
     assert
       .dom("#reply-control.open")

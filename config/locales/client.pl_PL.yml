@@ -62,6 +62,7 @@ pl_PL:
         add_group: "Dodaj użytkownika lub grupę"
         mandatory_acl_tooltip: "To uprawnienie jest obowiązkowe dla %{name} i nie można go usunąć"
         mandatory: "Obowiązkowe"
+        disallowed: "Niedozwolone"
     carousel:
       go_to_slide: "Przejdź do slajdu %{index}"
       previous: "Poprzedni slajd"
@@ -1022,6 +1023,11 @@ pl_PL:
         email: "E-mail"
         name: "Imię"
         fields: "Pola"
+        silenced_until: "Wyciszony do"
+        silence_reason: "Powód wyciszenia"
+        suspended_until: "Zawieszony do"
+        suspend_reason: "Powód zawieszenia"
+        penalty_forever: "Zawsze"
         reject_reason: "Powód"
         scrubbed_by: "Rekord wyczyszczony przez"
         scrubbed_reason: "Powód"
@@ -1889,9 +1895,12 @@ pl_PL:
       external_links_in_new_tab: "Otwórz wszystkie linki zewnętrzne w nowej karcie"
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
       enable_smart_lists: "Włącz inteligentne listy podczas pisania w kompozytorze"
-      enable_defer: "Włącz opcję oznaczania tematów jako nieprzeczytanych"
       enable_markdown_monospace_font: "Użyj czcionki o stałej szerokości w trybie Markdown kompozytora"
-      show_original_content: "Pokaż oryginalną treść zamiast przetłumaczonej."
+      automatically_translate: "Automatyczne tłumaczenie tematów i postów w innych językach"
+      content_languages:
+        title: "Języki treści"
+        understood: "Języki, które rozumiem"
+        understood_description: "Tematy i wpisy w tych językach nie będą tłumaczone. Język interfejsu jest zawsze uznawany za zrozumiały."
       experimental_sidebar:
         enable: "Włącz pasek boczny"
         options: "Opcje"
@@ -2381,7 +2390,7 @@ pl_PL:
         default: "(domyślny)"
         any: "każdy"
       homepage:
-        default: "(domyślny)"
+        default: "Domyślna"
       password_confirmation:
         title: "Powtórz hasło"
       invite_code:
@@ -2425,6 +2434,10 @@ pl_PL:
         contextual: "Nowa zawartość strony"
       bookmark_after_notification:
         title: "Po wysłaniu przypomnienia o zakładce:"
+      send_shortcut:
+        title: "Wysyłaj wiadomości w kompozytorach w stylu czatu za pomocą:"
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Powiadom o polubieniach"
         always: "Zawsze"
@@ -2593,14 +2606,17 @@ pl_PL:
           invite_saved_with_sending_email: "Wiadomość z zaproszeniem została wysłana. Możesz również skopiować poniższy link i udostępnić go, aby natychmiast przyznać dostęp do tej strony."
         invite_roles:
           member_title: "Zaproś członków"
-          admin_title: "Zaproś administratorów"
+          admin_title: "Zaproś personel"
           edit_title: "Edycja zaproszenia"
           created_title: "Zaproszenie utworzone"
           sent_title: "Zaproszenie wysłane"
           member_tab: "Członkowie"
-          admin_tab: "Administratorzy"
-          member_description: "Zaproś innych do dołączenia do tej witryny. Udostępnij link lub wyślij zaproszenie e-mailem."
-          admin_description: "Zaproś osoby do dołączenia do Twojego zespołu jako administratorzy. Administratorzy mają pełny dostęp do tej witryny."
+          admin_tab: "Zespół"
+          admin_description: "Administratorzy mają pełny dostęp do tej witryny, jej ustawień i danych."
+          moderator_description: "Moderatorzy mogą pomagać w zarządzaniu treścią i użytkownikami."
+          staff_role_label: "Zaproś jako"
+          staff_role_admin: "Administrator"
+          staff_role_moderator: "Moderator"
           admin_email_label: "Adres e-mail"
           member_email_label: "Wyślij do"
           member_email_help: "Link z zaproszeniem wyślemy na ten adres e-mail."
@@ -2610,21 +2626,19 @@ pl_PL:
           invite_by_email: "E-mail"
           role_label: "Zaproś jako"
           restrict_domain: "Ogranicz do domeny"
-          restrict_domain_help: "Tylko osoby z adresem e-mail w tej domenie mogą zaakceptować link. Żeby zaprosić konkretną osobę, skorzystaj z pola „E-mail” powyżej."
+          restrict_domain_help: "Tylko osoby z adresem e-mail w tej domenie mogą zaakceptować ten link."
           domain_placeholder: "example.com"
           domain_invalid: "Wpisz poprawną domenę, np. example.com"
           arrive_at_topic_help: "Po zaakceptowaniu przekieruj użytkowników do konkretnego tematu."
-          create_and_send: "Utwórz i wyślij"
-          create_and_copy: "Utwórz i skopiuj link"
-          more_options: "Więcej opcji"
-          fewer_options: "Mniej opcji"
+          create_and_send: "Wyślij"
+          create_and_copy: "Skopiuj link"
           update: "Aktualizuj"
-          role_locked: "Po utworzeniu zaproszenia nie można zmienić jego typu."
           summary:
             sent_to: "Zaproszenie zostało wysłane e-mailem na adres %{email}. Możesz również udostępnić ten link bezpośrednio:"
             role: "Rola"
             role_member: "Uczestnik"
             role_admin: "Administrator"
+            role_moderator: "Moderator"
             method: "Udostępnianie"
             method_link: "Link do udostępniania"
             method_email: "E-mail"
@@ -2633,7 +2647,7 @@ pl_PL:
             expires: "Wygasa"
             topic: "Temat"
             groups: "Grupy"
-            edit: "Edytuj zaproszenie"
+            edit: "Edytuj"
             view_invites: "Wyświetl zaproszenia"
           email_sent:
             body: "Zaproszenie zostało wysłane e-mailem na adres %{email}."
@@ -2879,10 +2893,15 @@ pl_PL:
     home: "Strona główna"
     read_only_mode:
       enabled: "Strona jest w trybie tylko-do-odczytu. Możesz ją nadal przeglądać, ale operacje takie jak publikowanie postów, polubianie i inne są wyłączone."
+      enabled_anonymous: "Ta witryna jest w trybie tylko do odczytu. Proszę kontynuować przeglądanie, ale rejestracja i logowanie są na razie niedostępne."
       login_disabled: "Logowanie jest zablokowane, gdy strona jest w trybie tylko do odczytu."
       logout_disabled: "Wylogowanie jest zablokowane gdy strona jest w trybie tylko do odczytu."
+      signup_disabled: "Rejestracja jest wyłączona, gdy witryna działa w trybie tylko do odczytu."
     staff_writes_only_mode:
       enabled: "Ta strona jest w trybie tylko dla personelu. Kontynuuj przeglądanie, ale odpowiadanie, polubienia i inne działania są ograniczone tylko do członków personelu."
+      enabled_anonymous: "Ta witryna jest dostępna tylko dla personelu. Proszę kontynuować przeglądanie, ale rejestracja jest niedostępna i tylko pracownicy mogą się zalogować."
+      login_disabled: "Gdy witryna działa w trybie tylko dla personelu, zalogować się mogą tylko członkowie personelu."
+      signup_disabled: "Rejestracja jest niemożliwa, gdy witryna jest w trybie wyłącznie dla personelu."
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
@@ -3284,6 +3303,12 @@ pl_PL:
         other: "Wybierz co najmniej %{count} elementów."
       components:
         filter_for_more: Filtruj po więcej...
+        multiple_categories_selector:
+          limited_results_notice:
+            one: "Wyświetlanie %{shown} z kategorii %{count} . Wpisz, aby wyszukać więcej."
+            few: "Wyświetlanie %{shown} z kategorii %{count} . Wpisz, aby wyszukać więcej."
+            many: "Wyświetlanie %{shown} z kategorii %{count} . Wpisz, aby wyszukać więcej."
+            other: "Wyświetlanie %{shown} z kategorii %{count} . Wpisz, aby wyszukać więcej."
         categories_admin_dropdown:
           title: "Zarządzaj kategoriami"
         tag_category_admin_dropdown:
@@ -3325,7 +3350,7 @@ pl_PL:
     filter_input:
       clear: "Wyczyść filtr"
     filter_controls:
-      reset: "Zresetuj filtr"
+      reset: "Przywróć"
       toggle: "Przełącz filtry rozwijane"
     d_icon_grid_picker:
       select_icon: "Wybierz ikonę"
@@ -3572,11 +3597,14 @@ pl_PL:
       italic_label: "I"
       italic_title: "Wyróżnienie"
       italic_text: "wyróżniony tekst"
-      heading_title: "Nagłówki"
+      text_size_title: "Rozmiary tekstu"
       heading_level_n: "Nagłówek %{levelNumber}"
       heading_level_n_title: "Nagłówek %{levelNumber}"
       heading_level_paragraph: "Akapit"
       heading_level_paragraph_title: "Akapit"
+      heading_level_small: "Mały"
+      heading_level_small_title: "Mały tekst"
+      heading_level_small_text: "Mały tekst"
       link_title: "Link"
       link_description: "tutaj wpisz opis linku"
       link_dialog_title: "Wstaw link"
@@ -4454,6 +4482,8 @@ pl_PL:
         link: "Dziennik aktywności"
         title: "Dziennik aktywności tematu"
         empty: "Brak aktywności tematu do wyświetlenia."
+        load_more: "Załaduj więcej aktywności"
+        updated: "Zaktualizowano aktywność tematu."
       context:
         banner: "Przeglądasz pojedynczy wątek z tego tematu."
         view_full_topic: "Zobacz cały temat"
@@ -5372,6 +5402,10 @@ pl_PL:
       click_to_show_translation: "Kliknij, aby wyświetlić tłumaczenie"
       tap_to_show_translation: "Stuknij tutaj, aby wyświetlić tłumaczenie"
       ai_translation_disclaimer: "Tłumaczenia wygenerowane przez AI mogą być niedokładne."
+    content_localization:
+      preferences:
+        title: "Preferencje językowe treści"
+        login_to_set_languages: "Zaloguj się, aby ustawić więcej języków"
     category:
       none: "(brak kategorii)"
       all: "Wszystkie kategorie"
@@ -6421,7 +6455,35 @@ pl_PL:
           public: "Widoczne dla każdego"
           always_public: "Treść w tej sekcji jest zawsze publiczna"
           more_menu: "Menu więcej"
+          localizations:
+            locale: "Język"
+            language: "Język sekcji"
+            language_description: "Podstawowy język tytułu i nazw łączy tej sekcji."
+            title_label: "Tytuł sekcji"
+            link_label: "Nazwy linków"
+            back: "Zawartość sekcji"
+            add_first: "Dodaj tłumaczenia"
+            manage:
+              one: "Zarządzaj tłumaczeniami (%{count} język)"
+              few: "Zarządzaj tłumaczeniami (%{count} języki)"
+              many: "Zarządzaj tłumaczeniami (%{count} języków)"
+              other: "Zarządzaj tłumaczeniami (%{count} języków)"
+            incomplete:
+              one: "Brak %{count} ciągu"
+              few: "Brak %{count} ciągów"
+              many: "Brak %{count} ciągów"
+              other: "Brak %{count} ciągów"
+            add_language: "Dodaj język"
+            remove_language: "Usuń"
+            remove_language_confirm: "Czy usunąć każde tłumaczenie %{language} dla tej sekcji?"
+            remove_cleared_confirm:
+              one: "Wyczyściłeś %{count} zapisane tłumaczenie. Zostanie ono usunięte. Kontynuować?"
+              few: "Wyczyściłeś %{count} zapisane tłumaczenia. Zostaną one usunięte. Kontynuować?"
+              many: "Wyczyściłeś %{count} zapisanych tłumaczeń. Zostaną one usunięte. Kontynuować?"
+              other: "Wyczyściłeś %{count} zapisanych tłumaczeń. Zostaną one usunięte. Kontynuować?"
+            untranslated: "Jeszcze nie przetłumaczono"
           links:
+            title: "Linki do sekcji"
             add: "Dodaj kolejny link"
             delete: "Usuń link"
             reset: "Przywróć ustawienia domyślne"
@@ -7470,12 +7532,11 @@ pl_PL:
               save_error: "Nie udało się zapisać wyboru na następny raz."
             whos_posting:
               title: "Kto publikuje?"
-              all_categories: "Wszystkie kategorie"
-              include_subcategories: "Uwzględnij podkategorie"
               new_members: "Nowi członkowie"
               returning: "Powracający"
               staff: "Zespół"
               empty: "Brak wpisów w wybranym okresie."
+              save_error: "Nie udało się zapisać wyboru na następny raz."
             trust_level_pipeline:
               title: "Potok poziomu zaufania"
               trust_levels:
@@ -7598,6 +7659,7 @@ pl_PL:
           add: "Dodaj raport"
           remove: "Usuń raport"
           no_data: "Brak danych do wyświetlenia"
+          report_error: "Nie można załadować tego raportu"
           modal:
             title: "Zarządzaj raportami"
             search_placeholder: "Wyszukaj raporty"
@@ -8431,6 +8493,12 @@ pl_PL:
         sidebar: "Pasek boczny"
         header_dropdown: "Lista rozwijana nagłówka"
         legacy: "Przestarzały"
+      homepage:
+        top_menu_default: "Pierwsza pozycja w górnym menu"
+      duplicate_topic_titles:
+        disallowed: "Niedozwolone"
+        allowed_across_categories: "Dozwolone we wszystkich kategoriach"
+        allowed: "Dozwolone"
       backups:
         title: "Kopie zapasowe"
         files_title: "Pliki kopii zapasowej"
@@ -8598,6 +8666,8 @@ pl_PL:
           default: "Motyw domyślny"
           settings_editor: "Edytor ustawień"
           show_advanced: "Pokaż zaawansowane"
+          maximize_editor: "Maksymalizuj edytor"
+          minimize_editor: "Zminimalizuj edytor"
           is_default: "Motyw ustawiony jako domyślny"
           user_selectable: "Motyw może być ustawiany przez użytkowników"
           user_selectable_badge_label: "Możliwe do wyboru przez użytkownika"
@@ -8678,10 +8748,13 @@ pl_PL:
           import_file_tip: "Plik .tar.gz lub .zip zawierający motyw"
           is_private: "Motyw jest w prywatnym repozytorium git"
           finish_install: "Zakończ instalację motywu"
+          placeholder_description: "To prywatny motyw, który wymaga zainstalowania klucza w konfiguracji repozytorium. Po zainstalowaniu kliknij poniższy przycisk, aby zakończyć instalację."
           last_attempt: "Proces instalacji nie został zakończony, ostatnia próba:"
           remote_branch: "Nazwa oddziału (opcjonalnie)"
           remote_branch_placeholder: "Wybierz konkretną gałąź lub pozostaw puste"
-          public_key: "Podaj następujący klucz publiczny pozwalający na dostęp do repozytorium:"
+          public_key: "Udziel następującemu kluczowi publicznemu dostępu tylko do odczytu w repozytorium:"
+          public_key_github: "Przyznaj następującemu kluczowi publicznemu dostęp tylko do odczytu do repozytorium. Instrukcje znajdziesz w %{link}."
+          deploy_key_instructions: "Instrukcje wdrażania kluczy GitHub"
           install: "Zainstaluj"
           installed: "Zainstalowana"
           screenshot: "Zrzut ekranu %{name}"
@@ -9188,6 +9261,9 @@ pl_PL:
             configure_category_type: "skonfiguruj typ kategorii"
             unconfigure_category_type: "usuń konfigurację typu kategorii"
             change_access_control_list_permissions: "zmień uprawnienia listy kontroli dostępu"
+            admin_onboarding_step_completed: "ukończony etap wdrażania administratora"
+            admin_onboarding_completed: "pełne wdrożenie administratora"
+            admin_onboarding_dismissed: "odwołaj wdrożenie administratora"
         screened_emails:
           title: "Sprawdzone e-maile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -10152,6 +10228,9 @@ pl_PL:
         uploading: "Przesyłanie…"
         name: "Nazwa"
         group: "Grupa"
+        all_groups: "Wszystkie grupy"
+        filter_placeholder: "Wyszukaj emoji według nazwy"
+        no_results: "Nie znaleziono żadnych emoji."
         created_by: "Stworzone przez"
         image: "Grafika"
         alt: "podgląd niestandardowego emoji"

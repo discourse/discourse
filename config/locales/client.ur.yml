@@ -865,6 +865,7 @@ ur:
         email: "ای میل"
         name: "نام"
         fields: "خانے"
+        penalty_forever: "ہمیشہ کیلئے"
         reject_reason: "وجہ"
         scrubbed_by: "نے ریکارڈصاف کر دیا"
         scrubbed_reason: "وجہ"
@@ -1674,7 +1675,6 @@ ur:
       external_links_in_new_tab: "تمام بیرونی رابطے ایک نئے ٹیب میں کھولیں"
       enable_quoting: "نمایاں کردہ متن کے لیے جواب میں اقتباس کو فعال کریں"
       enable_smart_lists: "کمپوزر میں لکھتے وقت سمارٹ لسٹوں کو فعال کریں"
-      enable_defer: "موضوعات کو بغیر پڑھے کے بطور نشان زد کریں"
       enable_markdown_monospace_font: "کمپوزر کے مارک ڈاؤن موڈ میں مونو اسپیس فونٹ استعمال کریں۔"
       experimental_sidebar:
         enable: "سائڈبار کو فعال کریں"
@@ -2118,7 +2118,7 @@ ur:
         default: "(ڈِیفالٹ)"
         any: "کوئی"
       homepage:
-        default: "(ڈِیفالٹ)"
+        default: "ڈِیفالٹ"
       password_confirmation:
         title: "پاس ورڈ دوبارہ"
       invite_code:
@@ -2162,6 +2162,9 @@ ur:
         contextual: "نیا صفحہ کا مواد"
       bookmark_after_notification:
         title: "بُک مارک یاد دہانی کی اطلاع بھیجے جانے کے بعد:"
+      send_shortcut:
+        enter: "اَینٹر"
+        meta_enter: "%{meta_key} + درج کریں"
       like_notification_frequency:
         title: "جب لائک کیا جائے تو مطلع کریں"
         always: "ہمیشہ"
@@ -2323,22 +2326,26 @@ ur:
           member_title: "ممبران کو مدعو کریں"
           sent_title: "دعوت نامہ بھیج دیا گیا"
           member_tab: "ممبران"
-          admin_tab: "منتظمین"
+          admin_tab: "عملہ"
+          staff_role_admin: "منتظم"
+          staff_role_moderator: "نگران"
           email_placeholder: "name@example.com"
           invite_by_email: "ای میل"
           restrict_domain: "ڈومین تک محدود"
-          more_options: "مزید اختیارات"
+          create_and_send: "بھیجیں"
+          create_and_copy: "رابطہ کاپی کریں"
           update: "اپ ڈیٹ"
           summary:
             role_member: "معتمد"
             role_admin: "منتظم"
+            role_moderator: "نگران"
             method: "شیئرنگ"
             method_email: "ای میل"
             uses: "زیادہ سے زیادہ استعمال"
             expires: "میعاد ختم"
             topic: "ٹاپک"
             groups: "گروپس"
-            edit: "دعوت میں ترمیم"
+            edit: "ترمیم کریں"
         bulk_invite:
           none: "اس صفحہ پر دکھانے کے لیے کوئی دعوت نہیں ہے۔"
           text: "مجموئی دعوت نامہ"
@@ -2942,6 +2949,8 @@ ur:
       default: اپنی مرضی کے اِیمَوجی
     filter_input:
       clear: "فلٹر مٹائیں"
+    filter_controls:
+      reset: "ری سیٹ"
     d_icon_grid_picker:
       select_icon: "آئیکن منتخب کریں"
       search_placeholder: "آئیکنز ڈھونڈھیں..."
@@ -3090,7 +3099,6 @@ ur:
       italic_label: "I"
       italic_title: "آئیٹیلک"
       italic_text: "زور دیا گیا ٹَیکسٹ"
-      heading_title: "سرخیاں"
       heading_level_n: "سرخی %{levelNumber}"
       heading_level_n_title: "سرخی %{levelNumber}"
       heading_level_paragraph: "پیراگراف"
@@ -5408,6 +5416,10 @@ ur:
           public: "ہر کسی کو نظر آتا ہے"
           always_public: "اس شعبہ میں مواد ہمیشہ عوامی ہوتا ہے"
           more_menu: "مزید مینو"
+          localizations:
+            locale: "زبان"
+            title_label: "سیکشن کا عنوان"
+            remove_language: "خارج کریں"
           links:
             add: "ایک اور رابطہ شامل کریں"
             delete: "رابطہ حذف"
@@ -6245,6 +6257,7 @@ ur:
             title: "شراکت"
             fetch_error: "شراکت کی ترتیب نہیں ہو سکی۔ براہِ کرم صفحہ ریفریش کریں۔"
             activity_by_category:
+              title: "زمروں کی سرگرمی"
               category: "زُمرَہ"
               topics: "موضوعات"
               posts: "دھاگے"
@@ -6253,8 +6266,6 @@ ur:
               vs_prior: "گزشتہ"
             whos_posting:
               title: "کون فعال ہے؟"
-              all_categories: "تمام زُمرَہ جات"
-              include_subcategories: "ذیلی زمروں کو شامل کریں"
               new_members: "نئے اراکین"
               returning: "دوبارہ جڑنے والے"
               staff: "عملہ"
@@ -7049,6 +7060,8 @@ ur:
         sidebar: "سائڈبار"
         header_dropdown: "ہیڈر ڈراپ ڈاؤن"
         legacy: "میراث"
+      duplicate_topic_titles:
+        allowed: "اجازت یافتہ"
       backups:
         title: "بیک اَپس"
         files_title: "بیک اپ فائلیں"
@@ -7264,7 +7277,6 @@ ur:
           is_private: "تھِیم ایک ذاتی گِٹ رِیپَوزِٹَری میں ہے"
           last_attempt: "انسٹال کرنے کا پراسیس ختم نہیں ہوا، آخری بار کوشش کی گئی:"
           remote_branch: "برانچ کا نام (اختیاری)"
-          public_key: "رِیپَوزِٹَری کو درج ذیل پبلک کلید ایکسَیس فراہم کریں:"
           install: "انسٹال"
           installed: "انسٹال کیا ہوا"
           install_popular: "مقبول"
@@ -8240,6 +8252,7 @@ ur:
         delete: "مٹائیں"
         name: "نام"
         group: "گروپ"
+        all_groups: "تمام گروپس"
         image: "تصویر"
         alt: "حسب ضرورت ایموجی پیش نظارہ"
         delete_confirm: "کیا آپ واقعی :%{name}: اِیمَوجی حذف کرنا چاہتے ہیں؟"

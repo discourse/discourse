@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { click, render, settled, waitFor } from "@ember/test-helpers";
+import { click, render, rerender, settled, waitFor } from "@ember/test-helpers";
 import { TrackedAsyncData } from "ember-async-data";
 import { module, test } from "qunit";
 import { Promise as RsvpPromise } from "rsvp";
@@ -96,6 +96,32 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
 
       assert.dom(".content").hasText("data");
     });
+
+    test("it surfaces a synchronous throw", async function (assert) {
+      const load = () => {
+        throw new Error("sync failure");
+      };
+
+      await render(
+        <template>
+          <DAsyncContent @asyncData={{load}}>
+            <:content as |data|>
+              <div class="content">{{data}}</div>
+            </:content>
+            <:error as |error|>
+              <div class="error">{{error.message}}</div>
+            </:error>
+          </DAsyncContent>
+        </template>
+      );
+
+      assert
+        .dom(".error")
+        .hasText(
+          "sync failure",
+          "a throw becomes a rejection instead of escaping the getter and breaking the render"
+        );
+    });
   });
 
   module("@context", function () {
@@ -148,6 +174,611 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
       await click("button");
 
       assert.dom(".content").hasText("second");
+    });
+  });
+
+  // Drives the debounced tests from outside a component, so state can be changed
+  // without `click` awaiting the debounce timer in between.
+  class DebounceState {
+    @tracked context = "first";
+    @tracked rendered = true;
+    @tracked debounce = true;
+    @tracked source = null;
+  }
+
+  module("@debounce", function () {
+    // The debounced path only engages from the second evaluation onward, so this asserts
+    // after a context change rather than on first render.
+    test("it accepts a synchronous source", async function (assert) {
+      await render(
+        class extends Component {
+          @tracked context = "first";
+
+          load = (context) => context;
+
+          @action
+          changeContext() {
+            this.context = "second";
+          }
+
+          <template>
+            <button {{on "click" this.changeContext}}>Change Context</button>
+            <DAsyncContent
+              @asyncData={{this.load}}
+              @context={{this.context}}
+              @debounce={{true}}
+            >
+              <:content as |data|>
+                <div class="content">{{data}}</div>
+              </:content>
+            </DAsyncContent>
+          </template>
+        }
+      );
+
+      assert.dom(".content").hasText("first");
+
+      await click("button");
+
+      assert
+        .dom(".content")
+        .hasText("second", "a plain value settles the debounced promise");
+    });
+
+    test("it surfaces a synchronous throw", async function (assert) {
+      await render(
+        class extends Component {
+          @tracked context = "first";
+
+          load = (context) => {
+            if (context === "second") {
+              throw new Error("sync failure");
+            }
+
+            return context;
+          };
+
+          @action
+          changeContext() {
+            this.context = "second";
+          }
+
+          <template>
+            <button {{on "click" this.changeContext}}>Change Context</button>
+            <DAsyncContent
+              @asyncData={{this.load}}
+              @context={{this.context}}
+              @debounce={{true}}
+            >
+              <:content as |data|>
+                <div class="content">{{data}}</div>
+              </:content>
+              <:error as |error|>
+                <div class="error">{{error.message}}</div>
+              </:error>
+            </DAsyncContent>
+          </template>
+        }
+      );
+
+      assert.dom(".content").hasText("first");
+
+      await click("button");
+
+      assert
+        .dom(".error")
+        .hasText(
+          "sync failure",
+          "a throw rejects the debounced promise instead of escaping it unsettled"
+        );
+    });
+
+    test("it does not retain stale content after a synchronous throw", async function (assert) {
+      await render(
+        class extends Component {
+          @tracked context = "first";
+
+          load = (context) => {
+            if (context === "second") {
+              throw new Error("sync failure");
+            }
+
+            return context;
+          };
+
+          @action
+          changeContext() {
+            this.context = "second";
+          }
+
+          <template>
+            <button {{on "click" this.changeContext}}>Change Context</button>
+            <DAsyncContent
+              @asyncData={{this.load}}
+              @context={{this.context}}
+              @debounce={{true}}
+              @retainWhileReloading={{true}}
+            >
+              <:content as |data|>
+                <div class="content">{{data}}</div>
+              </:content>
+              <:error as |error|>
+                <div class="error">{{error.message}}</div>
+              </:error>
+            </DAsyncContent>
+          </template>
+        }
+      );
+
+      assert.dom(".content").hasText("first");
+
+      await click("button");
+
+      assert.dom(".error").hasText("sync failure");
+      assert
+        .dom(".content")
+        .doesNotExist(
+          "a reload that never settles would leave the stale value on screen"
+        );
+    });
+
+    test("it does not debounce the first evaluation", async function (assert) {
+      const load = (context) => context;
+
+      const renderPromise = render(
+        <template>
+          <div data-async-content-test>
+            <DAsyncContent
+              @asyncData={{load}}
+              @context="first"
+              @debounce={{true}}
+            >
+              <:content as |data|>
+                <div class="content">{{data}}</div>
+              </:content>
+            </DAsyncContent>
+          </div>
+        </template>
+      );
+
+      // Asserting before the render settles, so the transient loading phase is
+      // observable: a debounced first evaluation would delay the initial paint.
+      await waitFor("[data-async-content-test]");
+
+      assert.dom(".spinner").doesNotExist();
+      assert
+        .dom(".content")
+        .hasText("first", "a sync source resolves without waiting out a delay");
+
+      await renderPromise;
+    });
+
+    test("it honors a changed @debounce on the next evaluation", async function (assert) {
+      await render(
+        class extends Component {
+          @tracked context = "first";
+          @tracked debounce = false;
+
+          // Both in one action, so a single evaluation sees the new `@debounce`
+          // together with the new `@context`. Flipping `@debounce` on its own
+          load = (context) => context;
+
+          // would trigger an evaluation of its own that masks the defect.
+          @action
+          enableDebounceAndChangeContext() {
+            this.debounce = true;
+            this.context = "second";
+          }
+
+          <template>
+            <button
+              class="change"
+              {{on "click" this.enableDebounceAndChangeContext}}
+            >
+              Change
+            </button>
+            <DAsyncContent
+              @asyncData={{this.load}}
+              @context={{this.context}}
+              @debounce={{this.debounce}}
+            >
+              <:content as |data|>
+                <div class="content">{{data}}</div>
+              </:content>
+            </DAsyncContent>
+          </template>
+        }
+      );
+
+      const changePromise = click(".change");
+
+      // The debounced path wraps a sync source in a promise, so a pending phase
+      // appears only if the new `@debounce` was read for this evaluation rather
+      // than carried over from the previous one.
+      await waitFor(".spinner");
+      assert.dom(".spinner").exists();
+
+      await changePromise;
+      assert.dom(".content").hasText("second");
+    });
+
+    // The un-debounced path calls `@asyncData` inside the cached computation, so state it
+    // reads is autotracked; the debounced path calls it from a timer, where it cannot be.
+    // Consumers that debounce must therefore fold every reactive dependency into
+    // `@context` instead of relying on the function to track it. These two pin that
+    // asymmetry: without the un-debounced case the debounced assertion would also hold
+    // for a source that simply never re-runs.
+    test("an un-debounced source autotracks state read inside the function", async function (assert) {
+      await render(
+        class extends Component {
+          @tracked suffix = "a";
+
+          load = () => `value-${this.suffix}`;
+
+          @action
+          changeSuffix() {
+            this.suffix = "b";
+          }
+
+          <template>
+            <button {{on "click" this.changeSuffix}}>Suffix</button>
+            <DAsyncContent @asyncData={{this.load}}>
+              <:content as |data|>
+                <div class="content">{{data}}</div>
+              </:content>
+            </DAsyncContent>
+          </template>
+        }
+      );
+
+      assert.dom(".content").hasText("value-a");
+
+      await click("button");
+
+      assert
+        .dom(".content")
+        .hasText("value-b", "the reload picks up the new value");
+    });
+
+    test("a debounced source does not autotrack state read inside the function", async function (assert) {
+      await render(
+        class extends Component {
+          @tracked context = "first";
+          @tracked suffix = "a";
+
+          load = (context) => `${context}-${this.suffix}`;
+
+          @action
+          changeContext() {
+            this.context = "second";
+          }
+
+          @action
+          changeSuffix() {
+            this.suffix = "b";
+          }
+
+          <template>
+            <button
+              class="context"
+              {{on "click" this.changeContext}}
+            >Context</button>
+            <button
+              class="suffix"
+              {{on "click" this.changeSuffix}}
+            >Suffix</button>
+            <DAsyncContent
+              @asyncData={{this.load}}
+              @context={{this.context}}
+              @debounce={{true}}
+            >
+              <:content as |data|>
+                <div class="content">{{data}}</div>
+              </:content>
+            </DAsyncContent>
+          </template>
+        }
+      );
+
+      assert.dom(".content").hasText("first-a");
+
+      // Engages the debounced path, which applies from the second evaluation onward.
+      await click(".context");
+      assert.dom(".content").hasText("second-a");
+
+      await click(".suffix");
+
+      assert
+        .dom(".content")
+        .hasText(
+          "second-a",
+          "a dependency read only inside the debounced call does not restart the load"
+        );
+    });
+
+    // The first evaluation runs un-debounced, so it reaches the source through the
+    // direct call rather than the promise executor. A throw there must still reject.
+    test("it surfaces a synchronous throw on the first evaluation", async function (assert) {
+      const load = () => {
+        throw new Error("sync failure");
+      };
+
+      await render(
+        <template>
+          <DAsyncContent
+            @asyncData={{load}}
+            @context="first"
+            @debounce={{true}}
+          >
+            <:content as |data|>
+              <div class="content">{{data}}</div>
+            </:content>
+            <:error as |error|>
+              <div class="error">{{error.message}}</div>
+            </:error>
+          </DAsyncContent>
+        </template>
+      );
+
+      assert
+        .dom(".error")
+        .hasText(
+          "sync failure",
+          "the un-debounced first evaluation routes a throw to the error block too"
+        );
+    });
+
+    test("it debounces an asynchronous source", async function (assert) {
+      await render(
+        class extends Component {
+          @tracked context = "first";
+
+          load = async (context) => context;
+
+          @action
+          changeContext() {
+            this.context = "second";
+          }
+
+          <template>
+            <button {{on "click" this.changeContext}}>Change Context</button>
+            <DAsyncContent
+              @asyncData={{this.load}}
+              @context={{this.context}}
+              @debounce={{true}}
+            >
+              <:content as |data|>
+                <div class="content">{{data}}</div>
+              </:content>
+            </DAsyncContent>
+          </template>
+        }
+      );
+
+      assert.dom(".content").hasText("first");
+
+      await click("button");
+
+      assert
+        .dom(".content")
+        .hasText("second", "a promise source settles the debounced promise");
+    });
+
+    // `rerender` flushes the render without waiting out the debounce timer, so each
+    // assignment below produces its own evaluation and they all land inside a single
+    // window. `settled` then completes only if every superseded evaluation settled its
+    // promise: an abandoned one would keep an async waiter pending and hang the test.
+    test("it coalesces evaluations inside one window into a single call", async function (assert) {
+      const seen = [];
+      const state = new DebounceState();
+
+      const load = (context) => {
+        seen.push(context);
+        return context;
+      };
+
+      await render(
+        <template>
+          <DAsyncContent
+            @asyncData={{load}}
+            @context={{state.context}}
+            @debounce={{true}}
+          >
+            <:content as |data|>
+              <div class="content">{{data}}</div>
+            </:content>
+          </DAsyncContent>
+        </template>
+      );
+
+      assert.deepEqual(
+        seen,
+        ["first"],
+        "the first evaluation runs immediately"
+      );
+
+      for (const next of ["a", "b", "c"]) {
+        state.context = next;
+        await rerender();
+      }
+
+      await settled();
+
+      assert.deepEqual(
+        seen,
+        ["first", "c"],
+        "the superseded evaluations never reach the source"
+      );
+      assert.dom(".content").hasText("c");
+    });
+
+    // Turning `@debounce` off makes the next evaluation take the direct path, which must
+    // still drop the call the previous evaluation left waiting on its timer.
+    test("it drops a scheduled call when the next evaluation is not debounced", async function (assert) {
+      const seen = [];
+      const state = new DebounceState();
+
+      const load = (context) => {
+        seen.push(context);
+        return context;
+      };
+
+      await render(
+        <template>
+          <DAsyncContent
+            @asyncData={{load}}
+            @context={{state.context}}
+            @debounce={{state.debounce}}
+          >
+            <:content as |data|>
+              <div class="content">{{data}}</div>
+            </:content>
+          </DAsyncContent>
+        </template>
+      );
+
+      assert.deepEqual(seen, ["first"]);
+
+      // Schedules a debounced call for "second"...
+      state.context = "second";
+      await rerender();
+
+      // ...which this evaluation supersedes before the timer fires.
+      state.debounce = false;
+      state.context = "third";
+      await rerender();
+
+      await settled();
+
+      assert.deepEqual(
+        seen,
+        ["first", "third"],
+        "the superseded call never reaches the source"
+      );
+      assert.dom(".content").hasText("third");
+    });
+
+    // Replacing `@asyncData` outright must drop a scheduled call just as a new context
+    // does, for every shape the argument accepts.
+    test("it drops a scheduled call when @asyncData is replaced by a promise", async function (assert) {
+      const seen = [];
+      const state = new DebounceState();
+      state.source = (context) => {
+        seen.push(context);
+        return context;
+      };
+
+      await render(
+        <template>
+          <DAsyncContent
+            @asyncData={{state.source}}
+            @context={{state.context}}
+            @debounce={{true}}
+          >
+            <:content as |data|>
+              <div class="content">{{data}}</div>
+            </:content>
+          </DAsyncContent>
+        </template>
+      );
+
+      assert.deepEqual(seen, ["first"]);
+
+      state.context = "second";
+      await rerender();
+
+      state.source = Promise.resolve("replacement");
+      await rerender();
+
+      await settled();
+
+      assert.deepEqual(
+        seen,
+        ["first"],
+        "the superseded call never reaches the source"
+      );
+      assert.dom(".content").hasText("replacement");
+    });
+
+    test("it drops a scheduled call when @asyncData is replaced by a TrackedAsyncData", async function (assert) {
+      const seen = [];
+      const state = new DebounceState();
+      state.source = (context) => {
+        seen.push(context);
+        return context;
+      };
+
+      await render(
+        <template>
+          <DAsyncContent
+            @asyncData={{state.source}}
+            @context={{state.context}}
+            @debounce={{true}}
+          >
+            <:content as |data|>
+              <div class="content">{{data}}</div>
+            </:content>
+          </DAsyncContent>
+        </template>
+      );
+
+      assert.deepEqual(seen, ["first"]);
+
+      state.context = "second";
+      await rerender();
+
+      state.source = new TrackedAsyncData(Promise.resolve("replacement"));
+      await rerender();
+
+      await settled();
+
+      assert.deepEqual(
+        seen,
+        ["first"],
+        "the superseded call never reaches the source"
+      );
+      assert.dom(".content").hasText("replacement");
+    });
+
+    test("it does not invoke a debounced source after the component is destroyed", async function (assert) {
+      const seen = [];
+      const state = new DebounceState();
+
+      const load = (context) => {
+        seen.push(context);
+        return context;
+      };
+
+      await render(
+        <template>
+          {{#if state.rendered}}
+            <DAsyncContent
+              @asyncData={{load}}
+              @context={{state.context}}
+              @debounce={{true}}
+            >
+              <:content as |data|>
+                <div class="content">{{data}}</div>
+              </:content>
+            </DAsyncContent>
+          {{/if}}
+        </template>
+      );
+
+      assert.deepEqual(seen, ["first"]);
+
+      // Schedule a debounced load, then tear the component down before its timer fires.
+      state.context = "second";
+      await rerender();
+      state.rendered = false;
+
+      await settled();
+
+      assert.deepEqual(
+        seen,
+        ["first"],
+        "the scheduled load is cancelled rather than running against a dead component"
+      );
     });
   });
 

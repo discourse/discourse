@@ -24,12 +24,18 @@ import htmlClass from "discourse/helpers/html-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
+import {
+  dampenedOverdrag,
+  shouldDeferSwipeToContent,
+  SWIPE_DISTANCE_THRESHOLD,
+  SWIPE_VELOCITY_THRESHOLD,
+} from "discourse/lib/swipe-events";
 import PostLocalization from "discourse/models/post-localization";
 import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
-import { and, or } from "discourse/truth-helpers";
+import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DPopupInputTip from "discourse/ui-kit/d-popup-input-tip";
 import DTextField from "discourse/ui-kit/d-text-field";
@@ -37,6 +43,7 @@ import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
+import dSwipe from "discourse/ui-kit/modifiers/d-swipe";
 import { i18n } from "discourse-i18n";
 
 const trackFieldsHeight = modifier((element, [enabled]) => {
@@ -97,6 +104,9 @@ export default class ComposerContainer extends Component {
 
   @tracked toolbarPortalTarget;
 
+  #swipeEditor = null;
+  #swipeSlide = 0;
+
   willDestroy() {
     super.willDestroy(...arguments);
     cancel(this.composerResizeDebounceHandler);
@@ -104,6 +114,73 @@ export default class ComposerContainer extends Component {
 
   get composerRedesign() {
     return this.siteSettings.enable_composer_redesign;
+  }
+
+  @action
+  onSwipeStart(state, event) {
+    // :focus-within keeps the match when a NodeView input inside the editor
+    // is focused (which doesn't set .in-focus)
+    const editor = state.element.querySelector(
+      ".d-editor-textarea-wrapper.in-focus, .d-editor-textarea-wrapper:focus-within"
+    );
+
+    if (
+      !editor ||
+      !state.goingDown() ||
+      shouldDeferSwipeToContent(state, state.element)
+    ) {
+      event.preventDefault();
+      return;
+    }
+
+    this.#swipeEditor = editor;
+    this.#swipeSlide = -parseFloat(getComputedStyle(editor).marginTop) || 0;
+    editor.style.transition = "none";
+  }
+
+  @action
+  onSwipe(state) {
+    if (!this.#swipeEditor) {
+      return;
+    }
+
+    const pulled = Math.max(0, state.deltaY);
+    const margin =
+      pulled <= this.#swipeSlide
+        ? pulled - this.#swipeSlide
+        : dampenedOverdrag(pulled - this.#swipeSlide);
+    this.#swipeEditor.style.marginTop = `${margin}px`;
+  }
+
+  @action
+  onSwipeEnd(state) {
+    const editor = this.#swipeEditor;
+    if (!editor) {
+      return;
+    }
+    this.#swipeEditor = null;
+    editor.style.transition = "";
+
+    const dismissed =
+      state.deltaY > SWIPE_DISTANCE_THRESHOLD ||
+      state.velocityY > SWIPE_VELOCITY_THRESHOLD;
+
+    if (dismissed && editor.contains(document.activeElement)) {
+      document.activeElement.blur();
+    }
+
+    editor.style.marginTop = "";
+  }
+
+  @action
+  onSwipeCancel() {
+    const editor = this.#swipeEditor;
+    if (!editor) {
+      return;
+    }
+    this.#swipeEditor = null;
+    editor.style.transition = "";
+    editor.style.marginTop = "";
   }
 
   @action
@@ -258,6 +335,14 @@ export default class ComposerContainer extends Component {
                 'with-category'
                 'without-category'
               }}"
+            {{dSwipe
+              onDidStartSwipe=this.onSwipeStart
+              onDidSwipe=this.onSwipe
+              onDidEndSwipe=this.onSwipeEnd
+              onDidCancelSwipe=this.onSwipeCancel
+              enabled=(if this.composerRedesign true false)
+              lockBody=false
+            }}
           >
             <span class="composer-open-plugin-outlet-container">
               <PluginOutlet
@@ -483,14 +568,6 @@ export default class ComposerContainer extends Component {
                         }}
                       />
                     </div>
-
-                    {{#if this.composerRedesign}}
-                      <ComposerTitle
-                        @composer={{this.composer.model}}
-                        @lastValidatedAt={{this.composer.lastValidatedAt}}
-                        @focusTarget={{this.composer.focusTarget}}
-                      />
-                    {{/if}}
                   {{/if}}
 
                   <span>
@@ -503,6 +580,16 @@ export default class ComposerContainer extends Component {
                       }}
                     />
                   </span>
+
+                  {{#if this.composerRedesign}}
+                    {{#if this.composer.model.canEditTitle}}
+                      <ComposerTitle
+                        @composer={{this.composer.model}}
+                        @lastValidatedAt={{this.composer.lastValidatedAt}}
+                        @focusTarget={{this.composer.focusTarget}}
+                      />
+                    {{/if}}
+                  {{/if}}
                 {{/unless}}
               </div>
             </ComposerEditor>
@@ -618,40 +705,6 @@ export default class ComposerContainer extends Component {
                         @outletArgs={{lazyHash model=this.composer.model}}
                       />
                     </span>
-
-                    {{#if this.composer.allowPreview}}
-                      <a
-                        href
-                        class="btn btn-default no-text mobile-preview"
-                        title={{i18n "composer.show_preview"}}
-                        {{on "click" this.composer.togglePreview}}
-                        aria-label={{i18n "composer.show_preview"}}
-                      >
-                        {{dIcon "desktop"}}
-                      </a>
-                    {{/if}}
-
-                    {{#if this.composer.isPreviewVisible}}
-                      <DButton
-                        @action={{this.composer.togglePreview}}
-                        @title="composer.hide_preview"
-                        @ariaLabel="composer.hide_preview"
-                        @icon="pencil"
-                        class="hide-preview"
-                      />
-                    {{/if}}
-                  {{/if}}
-
-                  {{#if (and this.composer.allowPreview this.site.desktopView)}}
-                    <DButton
-                      @action={{this.composer.togglePreview}}
-                      @translatedTitle={{this.composer.toggleText}}
-                      @icon="angles-left"
-                      class={{dConcatClass
-                        "btn-transparent btn-mini-toggle toggle-preview"
-                        (unless this.composer.isPreviewVisible "active")
-                      }}
-                    />
                   {{/if}}
                 </div>
               </div>
@@ -718,28 +771,6 @@ export default class ComposerContainer extends Component {
                       {{dIcon this.composer.uploadIcon}}
                     </a>
                   {{/if}}
-
-                  {{#if this.composer.allowPreview}}
-                    <a
-                      href
-                      class="btn btn-default no-text mobile-preview"
-                      title={{i18n "composer.show_preview"}}
-                      {{on "click" this.composer.togglePreview}}
-                      aria-label={{i18n "composer.show_preview"}}
-                    >
-                      {{dIcon "desktop"}}
-                    </a>
-                  {{/if}}
-
-                  {{#if this.composer.isPreviewVisible}}
-                    <DButton
-                      @action={{this.composer.togglePreview}}
-                      @title="composer.hide_preview"
-                      @ariaLabel="composer.hide_preview"
-                      @icon="pencil"
-                      class="hide-preview"
-                    />
-                  {{/if}}
                 {{/if}}
 
                 {{#if
@@ -792,18 +823,6 @@ export default class ComposerContainer extends Component {
                       {{/if}}
                     </span>
                   </div>
-                {{/if}}
-
-                {{#if (and this.composer.allowPreview this.site.desktopView)}}
-                  <DButton
-                    @action={{this.composer.togglePreview}}
-                    @translatedTitle={{this.composer.toggleText}}
-                    @icon="angles-left"
-                    class={{dConcatClass
-                      "btn-transparent btn-small toggle-preview"
-                      (unless this.composer.isPreviewVisible "active")
-                    }}
-                  />
                 {{/if}}
               </div>
             {{/if}}

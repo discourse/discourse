@@ -1,3 +1,9 @@
+@use "lib/viewport";
+
+.filter-input.d-filter-controls__input {
+  padding-left: 0;
+}
+
 .d-filter-controls {
   display: flex;
   gap: var(--space-2);
@@ -7,7 +13,7 @@
     flex: 1 1 auto;
   }
 
-  &.--multiple-dropdowns {
+  &.--dropdowns-in-filter-drawer {
     display: flex;
     flex-direction: column;
   }
@@ -18,9 +24,18 @@
     flex: 1 1 auto;
   }
 
+  &__dropdowns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10em, 1fr));
+    gap: var(--space-2);
+  }
+
   &__dropdown {
-    max-width: min(14em, 35vw);
     flex: 1 1 auto;
+
+    &.--active {
+      border-color: var(--tertiary);
+    }
   }
 
   &__no-results {

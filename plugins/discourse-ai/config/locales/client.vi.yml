@@ -7,20 +7,74 @@
 vi:
   admin_js:
     admin:
+      api:
+        scopes:
+          descriptions:
+            ai:
+              search: "Cho phép tìm kiếm bằng Trí tuệ nhân tạo (AI Search)"
+              stream_completion: "Cho phép phát luồng phản hồi từ Đại lý Trí tuệ nhân tạo (AI Agent Stream Completions)"
+              update_agents: "Cho phép cập nhật Đại lý Trí tuệ nhân tạo (AI Agent)"
+              manage_artifacts: "Cho phép quản lý Chân thể Trí tuệ nhân tạo (AI Artifacts - danh sách, xem, tạo, cập nhật, xóa)"
+      site_settings:
+        categories:
+          discourse_ai: "Discourse AI"
       dashboard:
+        emotion:
+          title: "Cảm xúc (Emotion)"
+          description: "Bảng liệt kê số lượng bình luận được phân loại theo cảm xúc. Tùy thuộc vào phương pháp phân loại cảm xúc được chọn, các bình luận sẽ được phân loại bằng mô hình phân loại cảm xúc đã cấu hình ('SamLowe/roberta-base-go_emotions') hoặc đại lý (Agent) phân loại cảm xúc đã cấu hình.\n"
         reports:
           filters:
+            group_by:
+              label: "Nhóm theo"
             sort_by:
               label: "Sắp xếp theo"
+            tag:
+              label: "Thẻ"
+      logs:
+        staff_actions:
+          actions:
+            create_ai_llm_model: "Tạo Mô hình Ngôn ngữ lớn (LLM Model)"
+            update_ai_llm_model: "Cập nhật Mô hình Ngôn ngữ lớn (LLM Model)"
+            delete_ai_llm_model: "Xóa Mô hình Ngôn ngữ lớn (LLM Model)"
+            create_ai_agent: "Tạo Đại lý Trí tuệ nhân tạo (AI Agent)"
+            update_ai_agent: "Cập nhật Đại lý Trí tuệ nhân tạo (AI Agent)"
+            delete_ai_agent: "Xóa Đại lý Trí tuệ nhân tạo (AI Agent)"
+            create_ai_tool: "Tạo Công cụ Trí tuệ nhân tạo (AI Tool)"
+            update_ai_tool: "Cập nhật Công cụ Trí tuệ nhân tạo (AI Tool)"
+            delete_ai_tool: "Xóa Công cụ Trí tuệ nhân tạo (AI Tool)"
+            create_ai_embedding: "Tạo Nhúng dữ liệu Trí tuệ nhân tạo (AI Embedding)"
+            update_ai_embedding: "Cập nhật Nhúng dữ liệu Trí tuệ nhân tạo (AI Embedding)"
+            delete_ai_embedding: "Xóa Nhúng dữ liệu Trí tuệ nhân tạo (AI Embedding)"
+            create_ai_secret: "Tạo Mã bảo mật Trí tuệ nhân tạo (AI Secret)"
+            update_ai_secret: "Cập nhật Mã bảo mật Trí tuệ nhân tạo (AI Secret)"
+            delete_ai_secret: "Xóa Mã bảo mật Trí tuệ nhân tạo (AI Secret)"
+            update_ai_spam_settings: "Cập nhật Cài đặt Chống thư rác Trí tuệ nhân tạo"
   js:
+    discourse_workflows:
+      nodes:
+        "action:ai_agent": "Đại lí trí tuệ nhân tạo (AI Agent)"
+      node_descriptions:
+        "action:ai_agent": "Chạy Đại lý Trí tuệ nhân tạo (AI Agent) để xử lý dữ liệu hoặc tạo nội dung"
     discourse_automation:
       scriptables:
         llm_report:
           fields:
+            sender:
+              label: "Người gửi"
+              description: "Tài khoản sẽ gửi báo cáo"
+            receivers:
+              label: "Người nhận"
+              description: "Danh sách nhận báo cáo (Thư điện tử (Email) sẽ gửi trực tiếp, Tên tài khoản  sẽ nhận qua Tin nhắn riêng)"
             topic_id:
               label: "ID Chủ đề"
+              description: "Mã bài viết (Topic ID) để đăng báo cáo"
             title:
               label: "Tiêu đề"
+              description: "Tiêu đề của báo cáo"
+            days:
+              label: "Ngày"
+            model:
+              label: "Mô hình"
             categories:
               label: "Chuyên mục"
             tags:
@@ -34,14 +88,26 @@ vi:
             canned_reply:
               label: "Trả lời"
     discourse_ai:
+      post_image_captions:
+        edit: "Không có tiến trình ngôn ngữ nào."
+        title: "Đã dịch %{translated}/%{total} sang %{language}"
+        description: "Chú thích"
+        save: "Lưu chú thích"
+        saved: "Đã lưu chú thích hình ảnh Trí tuệ nhân tạo (AI)"
+      discourse_workflows:
+        ai_agent:
+          mode: "Chế độ"
       ai_tool_approval:
         loading: "Đang tải..."
+        load_error: "Không thể tải hành động đang chờ này."
+        agent: "Trợ lý AI (Agent)"
         tool: "Hoạt động"
         user: "Người dùng"
         approve: "Duyệt"
         reject: "Từ chối"
         approved: "Đã phê duyệt"
         rejected: "Từ chối"
+        awaiting_staff: "Đang chờ nhân viên phê duyệt"
       llm_selector:
         none: "Không"
       features:
@@ -69,6 +135,9 @@ vi:
           smart_dates: "Ngày thông minh"
           markdown_tables: "Tạo bảng Markdown"
         image_caption:
+          name: "Chú thích hình ảnh"
+          description: "Tự động tạo chú thích Trí tuệ nhân tạo (AI) cho hình ảnh trong bình luận, hỗ trợ người đọc và các công nghệ trợ năng"
+          post_image_captions: "Chú thích hình ảnh bình luận"
           setting_groups:
             settings: "Cài đặt"
         spam:
@@ -78,7 +147,64 @@ vi:
       translations:
         title: "Bản dịch"
         category_scope: "Danh mục"
+        category_scope_description: "Chọn phạm vi áp dụng dịch tự động cho nội dung trong tất cả chuyên mục, chuyên mục công khai hoặc các chuyên mục được chọn."
+        cached_results_notice: "Hiển thị kết quả lưu trong bộ nhớ đệm (Cache) từ %{relative_time}."
+        model_progress:
+          loading: "Đang tải tiến trình dịch"
+          overview_label: "Tiến trình dịch theo loại nội dung"
+          detail:
+            loading: "Đang tải chi tiết %{target}..."
+            load_error: "Không thể tải chi tiết %{target}."
+            retry: "Thử lại"
+            empty: "Chưa có dữ liệu tiến trình ngôn ngữ."
+            progress_label: "Đã dịch %{translated}/%{total} sang %{language}"
+            columns:
+              locale: "Ngôn ngữ"
+              translated: "Đã dịch"
+              pending: "Đang chờ xử lý"
+              eligible: "Đủ điều kiện"
+              total: "Tổng số"
+              progress: "Tiến trình"
+            eligible_help: "Không bao gồm nội dung vốn đã ở ngôn ngữ này."
+            pending_help: "Bao gồm nội dung chưa qua nhận diện ngôn ngữ."
+          targets:
+            post:
+              title: "Số lượng bài viết"
+              eligible_total:
+                other: "Có %{count} bình luận đủ điều kiện để dịch."
+              translated:
+                other: "Đã dịch xong %{count} bình luận."
+              needs_language_detection:
+                other: "%{count} bình luận cần nhận diện ngôn ngữ."
+            topic:
+              title: "Các chủ đề"
+              eligible_total:
+                other: "Có %{count} bài viết đủ điều kiện để dịch."
+              translated:
+                other: "Đã dịch xong %{count} bài viết."
+              needs_language_detection:
+                other: "%{count} bài viết cần nhận diện ngôn ngữ."
+            category:
+              title: "Chuyên mục"
+              eligible_total:
+                other: "Có %{count} chuyên mục đủ điều kiện để dịch."
+              translated:
+                other: "Đã dịch xong %{count} chuyên mục."
+              needs_language_detection:
+                other: "%{count} chuyên mục cần nhận diện ngôn ngữ."
+            tag:
+              title: "Thẻ"
+              total:
+                other: "Có %{count} thẻ đủ điều kiện để dịch."
+              translated:
+                other: "Đã dịch xong %{count} thẻ."
+              needs_language_detection:
+                other: "%{count} thẻ cần nhận diện ngôn ngữ."
+        admin_actions:
+          translation_settings: "Cài đặt Trí tuệ nhân tạo (AI)"
+          localization_settings: "Cài đặt ngôn ngữ ứng dụng"
         stats:
+          backfill_message: "<a href='%{settingsUrl}'>Cài đặt bổ sung dữ liệu (Backfill)</a> đã được thiết lập để dịch toàn bộ bình luận sau ngày %{date}."
           eta_minutes:
             other: "%{count} phút"
           eta_hours:
@@ -108,18 +234,28 @@ vi:
         export: "Xuất"
         import: "Nhập"
         description: "Mô tả"
+        max_turn_tokens: "Giới hạn Token mỗi lượt (Max turn tokens)"
+        max_turn_tokens_help: "Tổng số Token tối đa (đầu vào + đầu ra) tiêu tốn qua tất cả các lời gọi mô hình ngôn ngữ lớn (LLM) trong một lần Bot phản hồi. Để trống để mặc định dùng một nửa cửa sổ ngữ cảnh (Context window) của mô hình."
+        compression_threshold: "Ngưỡng nén (Compression threshold)"
         user: Thành viên
         save: "Lưu lại"
         enabled: "Kích hoạt"
         mcp_tools_modal:
           select_all: "Chọn hết"
           clear_all: "Xóa hết"
+        duplicate: "Nhân bản"
+        copy_name: "Bản sao của %{name}"
         delete: "Xóa"
+        thinking_effort: "Cường độ suy luận (Thinking effort)"
+        thinking_effort_help: "Mức độ suy luận mà mô hình nên thực hiện trước khi đưa ra câu trả lời. Giá trị cao hơn giúp xử lý tốt các tác vụ khó nhưng có thể làm tăng độ trễ và chi phí. Các nhà cung cấp không hỗ trợ sẽ bỏ qua cài đặt này."
         thinking_effort_options:
+          default: "Mô hình(Model) mặc định"
           none: "Không"
+          minimal: "Tối thiểu"
           low: "Thấp"
           medium: "Trung bình"
           high: "Cao"
+          xhigh: "Rất cao"
           max: "Tối đa"
         response_format:
           open_modal: "Sửa"
@@ -185,15 +321,27 @@ vi:
             custom: "Tùy chỉnh..."
           hours: "tiếng"
         usage:
+          ai_image_caption: "Chú thích hình ảnh"
           ai_summarization: "Tóm tắt"
           ai_spam: "Rác"
+        model_description:
+          open_ai-gpt-5-6-sol: "Mô hình tiên tiến nhất của OpenAI dành cho các tác vụ chuyên môn phức tạp"
+          open_ai-gpt-5-6-terra: "Cân bằng giữa trí thông minh và chi phí cho các tác vụ yêu cầu cao"
+          open_ai-gpt-5-6-luna: "Tối ưu hóa chi phí cho các tác vụ khối lượng lớn"
         next:
           title: "Kế tiếp"
         tests:
           success: "Thành công!"
         providers:
-          google: "G"
+          google_vertex_ai: "Google Vertex AI"
           fake: "Tùy biến"
+        provider_fields:
+          region: "Khu vực (Region)"
+          project_id: "Mã dự án GCP (GCP Project ID)"
+          reasoning_mode: "Chế độ suy luận"
+        provider_field_hints:
+          reasoning_mode: "Chế độ tiêu chuẩn sử dụng mặc định của nhà cung cấp. Chế độ Pro yêu cầu Responses API cùng sự hỗ trợ từ mô hình đã chọn, đồng thời sẽ làm tăng độ trễ và lượng Token tiêu thụ."
+          azure_reasoning_effort: "Các mức độ suy luận khả dụng phụ thuộc vào mô hình triển khai trên Azure. Các giá trị không được hỗ trợ sẽ bị Azure từ chối."
       related_topics:
         title: "Các chủ đề liên quan"
         pill: "Liên quan"
@@ -243,6 +391,8 @@ vi:
         semantic_search_unavailable_tooltip: "Kết quả tìm kiếm phải được sắp xếp theo mức độ Liên quan để hiển thị kết quả AI"
         ai_generated_result: "Kết quả tìm kiếm được tìm thấy bằng AI"
       ai_bot:
+        agent: "Tác nhân:"
+        llm: "Mô hình (Model):"
         try_again: "Thử lại"
         debug_ai_modal:
           request: "Yêu cầu"
@@ -271,6 +421,8 @@ vi:
           summarize: "Tóm tắt"
         topic:
           title: "Tóm tắt chủ đề"
+          regenerate_gists_started: "Đang tạo lại tóm tắt cho bài viết…"
+          regenerate_topic_summaries_started: "Đang tạo lại tóm tắt cho chủ để…"
         topic_list_layout:
           button:
             compact: "Gọn gàng"

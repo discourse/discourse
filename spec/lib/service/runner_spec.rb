@@ -87,6 +87,26 @@ RSpec.describe Service::Runner do
     end
   end
 
+  class FailureWithExistingModelErrorsService
+    include Service::Base
+
+    class Model
+      include ActiveModel::Validations
+
+      def has_changes_to_save?
+        true
+      end
+    end
+
+    model :fake_model, :fetch_fake_model
+
+    private
+
+    def fetch_fake_model
+      Model.new.tap { |model| model.errors.add(:base, "operation failed") }
+    end
+  end
+
   class SuccessWithModelService
     include Service::Base
 
@@ -225,6 +245,27 @@ RSpec.describe Service::Runner do
 
     it "allows using keyword args in blocks" do
       expect(runner.last).to eq :model_found
+    end
+
+    context "when a keyword arg has a default value" do
+      let(:actions) { <<-BLOCK }
+          proc do
+            on_success { |fake_model: :default| fake_model }
+            on_failure { |fake_model: :default| fake_model }
+          end
+        BLOCK
+
+      it "uses the value from the result when the key is present" do
+        expect(runner).to eq :model_found
+      end
+
+      context "when the key is not present in the result" do
+        let(:service) { FailureService }
+
+        it "uses the default value" do
+          expect(runner).to eq :default
+        end
+      end
     end
 
     context "when using the on_success action" do
@@ -468,6 +509,19 @@ RSpec.describe Service::Runner do
           it "runs the provided block" do
             expect(runner).to be true
           end
+        end
+      end
+
+      context "when the model already contains errors" do
+        let(:service) { FailureWithExistingModelErrorsService }
+        let(:actions) { <<-BLOCK }
+            proc do
+              on_model_errors(:fake_model) { |model| model.errors.full_messages }
+            end
+          BLOCK
+
+        it "preserves errors added by the model producer" do
+          expect(runner).to eq(["operation failed"])
         end
       end
 

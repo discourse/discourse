@@ -454,4 +454,89 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       end
     end
   end
+
+  describe "actions when the author no longer exists" do
+    fab!(:reviewable, :reviewable_queued_post)
+
+    it "only offers rejecting the post" do
+      reviewable.update_column(:target_created_by_id, nil)
+
+      actions = reviewable.actions_for(Guardian.new(moderator))
+      bundle = actions.bundles.find { |bundle| bundle.id == "#{reviewable.id}-reject-post" }
+
+      expect(actions.has?(:approve_post)).to eq(false)
+      expect(bundle.actions.map(&:server_action)).to eq(%w[reject_post])
+    end
+  end
+
+  describe "penalty actions" do
+    fab!(:reviewable, :reviewable_queued_post)
+
+    it "offers silence and suspend between the reject and delete actions" do
+      actions = reviewable.actions_for(Guardian.new(moderator))
+      bundle = actions.bundles.find { |b| b.id == "#{reviewable.id}-reject-post" }
+
+      expect(bundle.actions.map(&:server_action)).to eq(
+        %w[
+          reject_post
+          revise_and_reject_post
+          reject_and_silence
+          reject_and_suspend
+          delete_user
+          delete_user_block
+        ],
+      )
+    end
+
+    it "doesn't offer the penalties when the author can't be suspended" do
+      reviewable.target_created_by.update!(moderator: true)
+
+      actions = reviewable.actions_for(Guardian.new(moderator))
+      expect(actions.has?(:reject_and_silence)).to eq(false)
+      expect(actions.has?(:reject_and_suspend)).to eq(false)
+    end
+
+    it "doesn't offer the silence action when the author is already silenced" do
+      reviewable.target_created_by.update!(silenced_till: 1.year.from_now)
+
+      actions = reviewable.actions_for(Guardian.new(moderator))
+      expect(actions.has?(:reject_and_silence)).to eq(false)
+      expect(actions.has?(:reject_and_suspend)).to eq(true)
+    end
+
+    it "doesn't offer the suspend action when the author is already suspended" do
+      reviewable.target_created_by.update!(
+        suspended_till: 1.year.from_now,
+        suspended_at: Time.zone.now,
+      )
+
+      actions = reviewable.actions_for(Guardian.new(moderator))
+      expect(actions.has?(:reject_and_silence)).to eq(true)
+      expect(actions.has?(:reject_and_suspend)).to eq(false)
+    end
+
+    it "rejects the post and keeps the author, letting the client apply the suspension" do
+      result = nil
+      expect { result = reviewable.perform(moderator, :reject_and_suspend) }.not_to change(
+        Post,
+        :count,
+      )
+
+      expect(result.success?).to eq(true)
+      expect(reviewable.rejected?).to eq(true)
+      expect(reviewable.target_created_by.suspended?).to eq(false)
+    end
+
+    it "rejects the post and keeps the author, letting the client apply the silencing" do
+      result = nil
+      expect { result = reviewable.perform(moderator, :reject_and_silence) }.not_to change(
+        Post,
+        :count,
+      )
+
+      expect(result.success?).to eq(true)
+      expect(reviewable.rejected?).to eq(true)
+      expect(reviewable.target_created_by.silenced?).to eq(false)
+    end
+  end
 end

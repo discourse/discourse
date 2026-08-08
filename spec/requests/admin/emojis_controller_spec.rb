@@ -67,6 +67,13 @@ RSpec.describe Admin::EmojiController do
         end
       end
 
+      it "returns a controlled validation error without an upload" do
+        post "/admin/config/emoji.json", params: { name: "test" }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to eq(["File can't be blank"])
+      end
+
       context "when emoji name already exists" do
         it "should publish the right error" do
           CustomEmoji.create!(name: "test", upload: upload)
@@ -406,6 +413,15 @@ RSpec.describe Admin::EmojiController do
         expect(response.status).to eq(422)
       end
 
+      it "returns 422 when the manifest only contains headers" do
+        zip = build_emoji_zip("name,group,filename\n")
+
+        post "/admin/config/emoji/import_preview.json", params: { file: zip }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to eq([I18n.t("emoji.import.empty_manifest")])
+      end
+
       it "stores a manifest in Redis" do
         zip =
           build_emoji_zip(
@@ -442,9 +458,9 @@ RSpec.describe Admin::EmojiController do
   describe "#import_confirm" do
     let(:image_path) { Rails.root.join("spec/fixtures/images/logo.png") }
 
-    def store_manifest(user, token, rows, upload_map)
+    def store_manifest(user, token, rows)
       key = "emoji_import_preview:#{user.id}:#{token}"
-      Discourse.redis.setex(key, 2.hours.to_i, { rows: rows, upload_map: upload_map }.to_json)
+      Discourse.redis.setex(key, 2.hours.to_i, rows.to_json)
     end
 
     context "when logged in as an admin" do
@@ -461,8 +477,15 @@ RSpec.describe Admin::EmojiController do
         store_manifest(
           admin,
           token,
-          [{ name: "confirm-new", group: "default", filename: "confirm-new.png", category: "new" }],
-          { "confirm-new.png" => staged_upload.id },
+          [
+            {
+              name: "confirm-new",
+              group: "default",
+              filename: "confirm-new.png",
+              category: "new",
+              upload_id: staged_upload.id,
+            },
+          ],
         )
 
         expect do
@@ -486,10 +509,21 @@ RSpec.describe Admin::EmojiController do
           admin,
           token,
           [
-            { name: "rollback-ok", group: "default", filename: "rollback-ok.png", category: "new" },
-            { name: "", group: "default", filename: "bad.png", category: "new" },
+            {
+              name: "rollback-ok",
+              group: "default",
+              filename: "rollback-ok.png",
+              category: "new",
+              upload_id: staged_upload.id,
+            },
+            {
+              name: "",
+              group: "default",
+              filename: "bad.png",
+              category: "new",
+              upload_id: staged_upload.id,
+            },
           ],
-          { "rollback-ok.png" => staged_upload.id, "bad.png" => staged_upload.id },
         )
 
         post "/admin/config/emoji/import_confirm.json", params: { token: token }
@@ -511,7 +545,6 @@ RSpec.describe Admin::EmojiController do
               category: "identical",
             },
           ],
-          {},
         )
 
         post "/admin/config/emoji/import_confirm.json", params: { token: token }
@@ -538,9 +571,9 @@ RSpec.describe Admin::EmojiController do
               group: "new-group",
               filename: "keep-me.png",
               category: "conflict_group",
+              upload_id: staged_upload.id,
             },
           ],
-          { "keep-me.png" => staged_upload.id },
         )
 
         post "/admin/config/emoji/import_confirm.json",
@@ -589,6 +622,9 @@ RSpec.describe Admin::EmojiController do
         expect do
           delete "/admin/config/emoji/#{custom_emoji.name}.json", params: { name: "test" }
         end.to change { CustomEmoji.count }.by(-1)
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq("OK")
       end
 
       it "should log the action" do

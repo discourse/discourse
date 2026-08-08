@@ -11,12 +11,19 @@ class SidebarSectionEditSerializer < SidebarSectionSerializer
         sidebar_url,
         root: false,
         scope: scope,
-        include_localizations: scope.can_localize_sidebar_section?(object),
+        include_localizations: can_localize_sidebar_url?(sidebar_url),
+        can_localize: can_localize_sidebar_url?(sidebar_url),
       ).as_json
     end
   end
 
   def include_localizations?
-    object.localizations.loaded? && scope.can_localize_sidebar_section?(object)
+    object.localizations.loaded? && scope.can_localize_sidebar_section_title?(object)
+  end
+
+  private
+
+  def can_localize_sidebar_url?(sidebar_url)
+    scope.can_localize_sidebar_section_link?(object, sidebar_url.value)
   end
 end

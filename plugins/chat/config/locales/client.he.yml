@@ -72,6 +72,8 @@ he:
         close: "סגירת הודעות נעוצות"
         pinned_by_you: "ננעץ על ידיך"
         pinned_by_user: "ננעץ על ידי %{username}"
+      pinned_bar:
+        title: "נעוץ"
       no_pinned_messages: "אין הודעות נעוצות בערוץ הזה."
       pin_message: "נעיצת הודעה"
       unpin_message: "שליפת הודעה"
@@ -165,11 +167,6 @@ he:
         never: "לעולם לא"
       separate_sidebar_mode:
         title: "הצגת מצבי סרגל צד נפרדים עבור פורום וצ׳אט"
-      send_shortcut:
-        enter:
-          label: "שליחה עם Enter"
-        meta_enter:
-          label: "שליחה עם %{meta_key} + Enter"
       enable: "הפעלת צ׳אט"
       flag: "סימון"
       emoji: "הוספת אמוג׳י"

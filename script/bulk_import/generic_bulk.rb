@@ -575,8 +575,6 @@ class BulkImport::Generic < BulkImport::Base
     create_users(users) do |row|
       next if user_id_from_imported_id(row["id"]).present?
 
-      sso_record = JSON.parse(row["sso_record"]) if row["sso_record"].present?
-
       if row["suspension"].present?
         suspension = JSON.parse(row["suspension"])
         suspended_at = suspension["suspended_at"]
@@ -587,10 +585,14 @@ class BulkImport::Generic < BulkImport::Base
         row["username"] = "anon_#{anon_username_suffix}"
         row["email"] = "#{row["username"]}#{UserAnonymizer::EMAIL_SUFFIX}"
         row["name"] = nil
+        row["ip_address"] = nil
         row["registration_ip_address"] = nil
         row["date_of_birth"] = nil
         row["title"] = nil
+        row["sso_record"] = nil
       end
+
+      sso_record = JSON.parse(row["sso_record"]) if row["sso_record"].present?
 
       {
         imported_id: row["id"],
@@ -598,8 +600,11 @@ class BulkImport::Generic < BulkImport::Base
         original_username: row["original_username"],
         name: row["name"],
         email: row["email"],
+        locale: row["locale"],
         external_id: sso_record&.fetch("external_id", nil),
+        persist_imported_username: row["anonymized"] != 1,
         created_at: to_datetime(row["created_at"]),
+        staged: row["staged"],
         last_seen_at: to_datetime(row["last_seen_at"]),
         admin: row["admin"],
         moderator: row["moderator"],
@@ -609,6 +614,7 @@ class BulkImport::Generic < BulkImport::Base
         suspended_at: suspended_at,
         suspended_till: suspended_till,
         trust_level: row["trust_level"],
+        ip_address: row["ip_address"],
         registration_ip_address: row["registration_ip_address"],
         date_of_birth: to_date(row["date_of_birth"]),
         primary_group_id: group_id_from_imported_id(row["primary_group_id"]),
@@ -675,13 +681,25 @@ class BulkImport::Generic < BulkImport::Base
   def import_user_options
     puts "", "Importing user options..."
 
+    users_columns = table_column_names("users")
+    hide_profile_columns = %w[hide_profile_and_presence hide_profile hide_presence]
+    available_hide_profile_columns =
+      hide_profile_columns.select { |column| users_columns.include?(column) }
+    select_hide_profile_columns =
+      hide_profile_columns.map do |column|
+        available_hide_profile_columns.include?(column) ? column : "NULL AS #{column}"
+      end
+
     users = query(<<~SQL)
-      SELECT id, timezone, email_level, email_messages_level, email_digests
+      SELECT id, timezone, email_level, email_messages_level, email_digests, anonymized,
+             #{select_hide_profile_columns.join(", ")}
         FROM users
-       WHERE timezone IS NOT NULL
+       WHERE anonymized IS TRUE
+          OR timezone IS NOT NULL
           OR email_level IS NOT NULL
           OR email_messages_level IS NOT NULL
           OR email_digests IS NOT NULL
+          #{available_hide_profile_columns.map { |column| "OR #{column} IS NOT NULL" }.join("\n          ")}
        ORDER BY id
     SQL
 
@@ -691,14 +709,28 @@ class BulkImport::Generic < BulkImport::Base
       user_id = user_id_from_imported_id(row["id"])
       next unless user_id && existing_user_ids.add?(user_id)
 
-      {
+      if row["anonymized"] == 1
+        row["mailing_list_mode"] = false
+        row["email_digests"] = false
+        row["email_level"] = UserOption.email_level_types[:never]
+        row["email_messages_level"] = UserOption.email_level_types[:never]
+      end
+
+      options = {
         user_id: user_id,
         timezone: row["timezone"],
         email_level: row["email_level"],
         email_messages_level: row["email_messages_level"],
         email_digests: row["email_digests"],
-        hide_profile_and_presence: row["hide_profile_and_presence"],
+        hide_profile: row["hide_profile"],
+        hide_presence: row["hide_presence"],
       }
+      options[:mailing_list_mode] = row["mailing_list_mode"] if !row["mailing_list_mode"].nil?
+      options[:hide_profile_and_presence] = row["hide_profile_and_presence"] if !row[
+        "hide_profile_and_presence"
+      ].nil?
+
+      options
     end
 
     users.close
@@ -749,12 +781,11 @@ class BulkImport::Generic < BulkImport::Base
 
     user_fields.close
 
-    # TODO make restriction to non-anonymized users configurable
     values = query(<<~SQL)
       SELECT v.*
         FROM user_field_values v
              JOIN users u ON v.user_id = u.id
-       WHERE u.anonymized = FALSE
+       WHERE u.anonymized IS NOT TRUE
     SQL
 
     existing_user_fields =
@@ -778,6 +809,7 @@ class BulkImport::Generic < BulkImport::Base
       SELECT id, sso_record
       FROM users
       WHERE sso_record IS NOT NULL
+        AND anonymized IS NOT TRUE
       ORDER BY id
     SQL
 
@@ -802,6 +834,7 @@ class BulkImport::Generic < BulkImport::Base
       SELECT a.*, COALESCE(u.last_seen_at, u.created_at) AS last_used_at, u.email, u.username
         FROM user_associated_accounts a
              JOIN users u ON u.id = a.user_id
+       WHERE u.anonymized IS NOT TRUE
        ORDER BY a.user_id, a.provider_name
     SQL
 
@@ -1832,12 +1865,14 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     user_notes = query(<<~SQL)
-      SELECT user_id,
-             JSON_GROUP_ARRAY(JSON_OBJECT('raw', raw, 'created_by', created_by_user_id, 'created_at',
-                                          created_at)) AS note_json_text
-        FROM user_notes
-       GROUP BY user_id
-       ORDER BY user_id, id
+      SELECT un.user_id,
+             JSON_GROUP_ARRAY(JSON_OBJECT('raw', un.raw, 'created_by', un.created_by_user_id,
+                                          'created_at', un.created_at)) AS note_json_text
+        FROM user_notes un
+             JOIN users u ON u.id = un.user_id
+       WHERE u.anonymized IS NOT TRUE
+       GROUP BY un.user_id
+       ORDER BY un.user_id, un.id
     SQL
 
     existing_user_ids =
@@ -1885,10 +1920,12 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     user_note_counts = query(<<~SQL)
-      SELECT user_id, COUNT(*) AS count
-        FROM user_notes
-       GROUP BY user_id
-       ORDER BY user_id
+      SELECT un.user_id, COUNT(*) AS count
+        FROM user_notes un
+             JOIN users u ON u.id = un.user_id
+       WHERE u.anonymized IS NOT TRUE
+       GROUP BY un.user_id
+       ORDER BY un.user_id
     SQL
 
     existing_user_ids = UserCustomField.where(name: "user_notes_count").pluck(:user_id).to_set
@@ -1907,12 +1944,17 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing user custom fields..."
 
     rows = query(<<~SQL)
-      SELECT user_id, name, value, created_at
-        FROM user_custom_fields
+      SELECT ucf.user_id, ucf.name, ucf.value, ucf.created_at
+        FROM user_custom_fields ucf
+             JOIN users u ON u.id = ucf.user_id
+       WHERE u.anonymized IS NOT TRUE
     SQL
 
     existing_names = query(<<~SQL) { |rs| rs.map { |r| r["name"] } }
-        SELECT DISTINCT name FROM user_custom_fields
+        SELECT DISTINCT ucf.name
+          FROM user_custom_fields ucf
+               JOIN users u ON u.id = ucf.user_id
+         WHERE u.anonymized IS NOT TRUE
       SQL
 
     return if existing_names.empty?
@@ -1937,9 +1979,11 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Cooking signature_cooked from signature_raw..."
 
     sig_rows = query(<<~SQL)
-      SELECT user_id, value
-        FROM user_custom_fields
-       WHERE name = 'signature_raw'
+      SELECT ucf.user_id, ucf.value
+        FROM user_custom_fields ucf
+             JOIN users u ON u.id = ucf.user_id
+       WHERE ucf.name = 'signature_raw'
+         AND u.anonymized IS NOT TRUE
     SQL
 
     cooked_existing = UserCustomField.where(name: "signature_cooked").pluck(:user_id).to_set
@@ -2065,6 +2109,7 @@ class BulkImport::Generic < BulkImport::Base
       SELECT id, avatar_upload_id
         FROM users
        WHERE avatar_upload_id IS NOT NULL
+         AND anonymized IS NOT TRUE
        ORDER BY id
     SQL
 
@@ -3619,6 +3664,14 @@ class BulkImport::Generic < BulkImport::Base
     else
       result_set
     end
+  end
+
+  def table_column_names(table_name, db: @source_db)
+    @table_column_names ||= {}
+    @table_column_names[[db.object_id, table_name]] ||= query(
+      "PRAGMA table_info(#{table_name})",
+      db:,
+    ) { |rows| rows.map { |row| row["name"] }.to_set }
   end
 
   def to_date(text)

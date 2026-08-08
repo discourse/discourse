@@ -7,9 +7,9 @@
 zh_CN:
   category_types:
     events:
-      name: "事件"
-      title: "事件"
-      description: "会员可以在共享日历上查找和讨论即将举行的活动。"
+      name: "活动"
+      title: "活动"
+      description: "成员可以在共享日历上查找和讨论即将举行的活动。"
   user_api_key:
     scopes:
       "discourse-calendar:events_calendar": "阅读日历事件 feed"
@@ -51,6 +51,9 @@ zh_CN:
     use_local_event_date: "在话题标题后使用本地日期而不是相对时间。"
     discourse_post_event_allowed_on_groups: "允许创建活动的群组。"
     discourse_post_event_allowed_custom_fields: "允许让每个活动设置自定义字段的值。"
+    discourse_post_event_allowed_custom_fields_invalid: "以下自定义字段名称无效：%{names}。名称必须以字母或数字开头和结尾，并使用单个点号、破折号或下划线作为分隔符（例如：dress_code、live-stream、q.and.a）。"
+    discourse_post_event_allowed_custom_fields_collision: "在对点号、破折号和字母大小写进行标准化处理后，这些自定义字段名称会解析为相同的名称：%{names}。每个自定义字段都必须唯一。"
+    discourse_post_event_allowed_custom_fields_reserved: "这些自定义字段名称被内置活动选项（例如，名称、URL、状态、位置）保留：%{names}。请选择其他名称。"
     discourse_post_event_edit_notifications_time_extension: "活动结束后延长一段时间（以分钟为单位），让“参加”的受邀者仍可以收到原始帖子的编辑通知。"
     holiday_calendar_topic_id: "管理人员假期/缺勤日历的话题 ID。"
     holiday_status_emoji: 给节日状态设置表情图片。
@@ -72,8 +75,8 @@ zh_CN:
     sidebar_show_upcoming_events: "在边栏中的“更多”下显示近期活动链接。"
     calendar_first_day_of_week: "为日历显示设置一周的第一天。选项为星期六、星期日或星期一。"
     enable_events_category_type_setup: "在创建类别设置期间启用“活动”类别类型选项。"
-    livestream_embeddable_chat_allowed_paths: "允许嵌入直播聊天的路径。"
-    livestream_enable_modal_chat_on_mobile: "在移动设备上以模态窗口形式显示直播聊天信息。"
+    livestream_embeddable_chat_allowed_paths: "允许嵌入式直播聊天的路径。"
+    livestream_enable_modal_chat_on_mobile: "在移动设备上以模态框形式显示直播聊天信息。"
   discourse_calendar:
     category_type:
       default_calendar_view:
@@ -85,7 +88,7 @@ zh_CN:
       display_weekends:
         label: "显示周末"
       discourse_post_event_allowed_on_groups:
-        label: "能够创建活动的团体"
+        label: "可以创建活动的群组"
       use_local_event_date:
         label: "活动日期格式"
         local: "当地日期（例如，4月20日）"
@@ -95,7 +98,7 @@ zh_CN:
         event_date: "活动日期"
         latest_post: "最新帖子动态"
       sidebar_show_upcoming_events:
-        label: '在导航菜单中显示“即将举行的活动”链接'
+        label: '在导航菜单中显示“临近活动”链接'
     calendar_subscriptions:
       all_events_feed_name: "%{site_title} - 所有活动"
       my_events_feed_name: "%{site_title} - 我的活动"
@@ -103,7 +106,7 @@ zh_CN:
     calendar_must_be_in_first_post: "日历标签仅可用于话题的第一个帖子。"
     more_than_one_calendar: "一个帖子中不能有多个日历。"
     more_than_two_dates: "日历话题的帖子不能包含两个以上的日期。"
-    whisper_not_allowed: "Whispers 不能用于创建日历活动。"
+    whisper_not_allowed: "密语不能用于创建日历活动。"
     event_expired: "活动已过期"
     holiday_status:
       description: "休假"

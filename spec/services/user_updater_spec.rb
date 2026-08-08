@@ -46,6 +46,43 @@ RSpec.describe UserUpdater do
       expect(user.reload.name).to eq "Jim Tom"
     end
 
+    it "preserves explicitly submitted understood languages when the interface locale changes" do
+      user.update!(locale: "en")
+
+      UserUpdater.new(user, user).update(locale: "ja", understood_languages: %w[ja de])
+
+      expect(user.reload.locale).to eq("ja")
+      expect(user.user_option.understood_languages).to eq(%w[ja de])
+    end
+
+    it "preserves understood languages when only the interface locale changes" do
+      user.update!(locale: "en")
+      user.user_option.update!(understood_languages: ["de"])
+
+      UserUpdater.new(user, user).update(locale: "ja")
+
+      expect(user.reload.locale).to eq("ja")
+      expect(user.user_option.understood_languages).to eq(["de"])
+    end
+
+    it "preserves explicitly submitted understood languages when user locales are disabled" do
+      SiteSetting.default_locale = "en"
+      SiteSetting.allow_user_locale = false
+      user.update!(locale: "fr")
+
+      UserUpdater.new(user, user).update(understood_languages: %w[en ja])
+
+      expect(user.user_option.understood_languages).to eq(%w[en ja])
+    end
+
+    it "adapts legacy show-original updates to the positive preference" do
+      UserUpdater.new(user, user).update(show_original_content: true)
+      expect(user.reload.user_option.automatically_translate).to eq(false)
+
+      UserUpdater.new(user, user).update(show_original_content: true, automatically_translate: true)
+      expect(user.reload.user_option.automatically_translate).to eq(true)
+    end
+
     describe "the within_user_updater_transaction event" do
       it "allows plugins to perform additional updates" do
         update_attributes = { name: "Jimmmy Johnny" }
@@ -559,12 +596,35 @@ RSpec.describe UserUpdater do
     end
 
     context "when website does not include http" do
-      it "adds http before updating" do
+      it "adds http before updating if no scheme" do
         updater = UserUpdater.new(acting_user, user)
 
         updater.update(website: "example.com")
 
         expect(user.reload.user_profile.website).to eq "http://example.com"
+      end
+
+      it "returns an error for non-http scheme" do
+        updater = UserUpdater.new(acting_user, user)
+
+        expect(updater.update(website: "ftp://example.com")).to eq false
+        expect(updater.update(website: "file://example.com")).to eq false
+        expect(updater.update(website: "mailto://example.com")).to eq false
+        expect(updater.update(website: "something://example.com")).to eq false
+      end
+    end
+
+    context "when website includes http but with uppercase" do
+      it "does not add an additional http:// before" do
+        updater = UserUpdater.new(acting_user, user)
+        updater.update(website: "Http://example.com")
+        expect(user.reload.user_profile.website).to eq "Http://example.com"
+        updater.update(website: "hTtp://example.com")
+        expect(user.reload.user_profile.website).to eq "hTtp://example.com"
+        updater.update(website: "HTTP://example.com")
+        expect(user.reload.user_profile.website).to eq "HTTP://example.com"
+        updater.update(website: "HttpS://example.com")
+        expect(user.reload.user_profile.website).to eq "HttpS://example.com"
       end
     end
 
@@ -572,7 +632,8 @@ RSpec.describe UserUpdater do
       it "returns an error" do
         updater = UserUpdater.new(acting_user, user)
 
-        expect(updater.update(website: "ʔ<")).to eq nil
+        expect(updater.update(website: "ʔ<")).to eq false
+        expect(updater.update(website: "http://bad-domain-no-period")).to eq false
       end
     end
 

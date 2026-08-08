@@ -196,18 +196,10 @@ class Topic < ActiveRecord::Base
             max_emojis: true,
             unique_among: {
               unless:
-                Proc.new { |t| SiteSetting.allow_duplicate_topic_titles? || t.private_message? },
-              message: :has_already_been_used,
+                Proc.new { |t| SiteSetting.duplicate_topic_titles.allowed? || t.private_message? },
+              message: :topic_title_already_used,
               allow_blank: true,
-              case_sensitive: false,
-              collection:
-                Proc.new { |t|
-                  if SiteSetting.allow_duplicate_topic_titles_category?
-                    Topic.listable_topics.where("category_id = ?", t.category_id)
-                  else
-                    Topic.listable_topics
-                  end
-                },
+              collection: ->(t) { t.duplicate_title_candidates },
             }
 
   validates :category_id,
@@ -314,6 +306,7 @@ class Topic < ActiveRecord::Base
   belongs_to :og_image_upload, class_name: "Upload"
   has_many :topic_thumbnails, through: :image_upload
 
+  after_update :clear_page_not_found_topics_cache, if: :moved_to_read_restricted_category?
   after_save :regenerate_og_image
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
@@ -451,6 +444,15 @@ class Topic < ActiveRecord::Base
     end
   end
 
+  def self.clear_page_not_found_topics_cache!
+    Discourse.cache.keys("page_not_found_topics:*").each { |key| Discourse.cache.redis.del(key) }
+  end
+
+  def clear_page_not_found_topics_cache
+    self.class.clear_page_not_found_topics_cache!
+    DB.after_commit { self.class.clear_page_not_found_topics_cache! }
+  end
+
   def regenerate_og_image
     return if !(saved_changes[:title] || saved_changes[:category_id])
     return if og_image_upload_id.blank?
@@ -550,6 +552,10 @@ class Topic < ActiveRecord::Base
 
   def is_official_warning?
     subtype == TopicSubtype.moderator_warning
+  end
+
+  def notify_moderators?
+    subtype == TopicSubtype.notify_moderators
   end
 
   # all users (in groups or directly targeted) that are going to get the pm
@@ -1420,9 +1426,9 @@ class Topic < ActiveRecord::Base
   # go out of sync unless you do something drastic live move posts from one topic to another.
   # this recalculates everything.
   def update_statistics!
+    update_column(:highest_post_number, Topic.reset_highest(id))
     feature_topic_users
     update_action_counts
-    update_column(:highest_post_number, Topic.reset_highest(id))
   end
 
   def update_action_counts
@@ -1806,6 +1812,19 @@ class Topic < ActiveRecord::Base
 
   def acting_user=(u)
     @acting_user = u
+  end
+
+  def duplicate_title_candidates
+    candidates = Topic.listable_topics.where(category_id:)
+
+    if SiteSetting.duplicate_topic_titles.disallowed?
+      guardian = acting_user&.guardian
+      visible_topics = Topic.listable_topics.secured(guardian)
+      visible_topics = visible_topics.visible if !guardian&.can_see_unlisted_topics?
+      candidates = candidates.or(visible_topics)
+    end
+
+    candidates
   end
 
   def secure_group_ids
@@ -2243,6 +2262,10 @@ class Topic < ActiveRecord::Base
   end
 
   private
+
+  def moved_to_read_restricted_category?
+    saved_change_to_category_id? && category&.read_restricted?
+  end
 
   def invite_to_private_message(invited_by, target_user, guardian)
     if !guardian.can_send_private_message?(target_user)

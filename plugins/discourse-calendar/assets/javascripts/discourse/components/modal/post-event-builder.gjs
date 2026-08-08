@@ -21,6 +21,7 @@ import { i18n } from "discourse-i18n";
 import { recurrenceContext } from "../../lib/event-recurrence";
 import {
   attendanceTransition,
+  buildEventBlock,
   buildParams,
   customFieldFormName,
   defaultEventState,
@@ -151,7 +152,7 @@ export default class PostEventBuilder extends Component {
     set("location", value);
     this.event.location = value;
 
-    if (!isLivestreamUrl(value)) {
+    if (!isLivestreamUrl(value, this.siteSettings)) {
       set("livestream", false);
       this.event.livestream = false;
     }
@@ -325,7 +326,8 @@ export default class PostEventBuilder extends Component {
 
   get showLivestream() {
     return (
-      isLivestreamUrl(this.event.location) && this.siteSettings.chat_enabled
+      isLivestreamUrl(this.event.location, this.siteSettings) &&
+      this.siteSettings.chat_enabled
     );
   }
 
@@ -449,11 +451,6 @@ export default class PostEventBuilder extends Component {
       closed: !!this.event.isClosed,
       customFields: { ...(this.event.customFields || {}) },
     };
-  }
-
-  @action
-  urlTester(value) {
-    return /^(https?:\/\/|www\.|mailto:)/i.test(value);
   }
 
   @action
@@ -722,19 +719,8 @@ export default class PostEventBuilder extends Component {
       this.siteSettings
     );
 
-    const description = eventParams.description
-      ? `${eventParams.description}\n`
-      : "";
-    delete eventParams.description;
-
-    const markdownParams = [];
-    Object.keys(eventParams).forEach((key) => {
-      let value = eventParams[key];
-      markdownParams.push(`${key}="${value}"`);
-    });
-
     this.args.model.toolbarEvent.addText(
-      `[event ${markdownParams.join(" ")}]\n${description}[/event]`
+      buildEventBlock(eventParams, eventParams.description)
     );
     this.args.closeModal();
   }
@@ -1296,7 +1282,6 @@ export default class PostEventBuilder extends Component {
             <div class="composer-event-node">
               <CompactEventEditor
                 @initialState={{this.compactInitialState}}
-                @urlTester={{this.urlTester}}
                 @onChange={{this.onCompactChange}}
                 @namePlaceholder={{this.namePlaceholder}}
                 @hideAdvanced={{true}}

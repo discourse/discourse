@@ -13,7 +13,7 @@ RSpec.describe Migrations::StepDependencies do
     DependenciesTestModule.const_set("NotAStep", Class.new)
   end
 
-  after { Object.send(:remove_const, "DependenciesTestModule") }
+  after { remove_test_const("DependenciesTestModule") }
 
   describe ".depends_on" do
     it "resolves symbol names to sibling step classes" do
@@ -57,7 +57,7 @@ RSpec.describe Migrations::StepDependencies do
 
     context "with a top-level constant matching the step name" do
       before { Object.const_set("GlobalStep", Class.new(DependenciesTestModule::BaseStep)) }
-      after { Object.send(:remove_const, "GlobalStep") }
+      after { remove_test_const("GlobalStep") }
 
       it "doesn't resolve it" do
         # Constant lookup on a module falls back to top-level constants by

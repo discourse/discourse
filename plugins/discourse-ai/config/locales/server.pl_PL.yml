@@ -47,8 +47,7 @@ pl_PL:
         flagged_post: |
           %{score_reason}
           %{response}
-        flagged_post_response: |
-          <p>Odpowiedź modelu: %{llm_response}</p>
+        flagged_post_response: "Odpowiedź modelu: %{llm_response}"
         flagged_post_score_reason: |
           <b>Wyzwalane przez regułę <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> .</b>
         notify_author_pm:
@@ -140,7 +139,8 @@ pl_PL:
     ai_summarization_agent: "Agent do wykorzystania w funkcji podsumowania"
     ai_pm_summarization_allowed_groups: "Grupy mogą tworzyć i przeglądać podsumowania w wiadomościach prywatnych."
     ai_summary_gists_enabled: "Automatycznie generuj krótkie podsumowania najnowszych odpowiedzi w tematach"
-    ai_summary_backfill_maximum_topics_per_hour: "Liczba podsumowań tematów do uzupełnienia na godzinę."
+    ai_summary_gists_agent: "Agent służący do generowania krótkich podsumowań tematów. Podczas ich generowania zawsze wykorzystywane jest wbudowane narzędzie „final-summary”; inne narzędzia oraz skonfigurowane w agencie formaty odpowiedzi strukturalnych są ignorowane."
+    ai_summary_backfill_maximum_topics_per_hour: "Liczba podsumowań tematów do uzupełnienia na godzinę. Każde zlokalizowane streszczenie wlicza się do tego limitu."
     ai_bot_enabled: "Włącz moduł bota AI."
     ai_bot_enabled_llms: "Dostępne do wyboru LLM-y do rozmów z botami AI"
     ai_bot_enable_chat_warning: "Wyświetl ostrzeżenie po zainicjowaniu czatu PW. Można to pominąć, edytując ciąg tłumaczenia: discourse_ai.ai_bot.pm_warning"
@@ -166,8 +166,7 @@ pl_PL:
     ai_translation_categories: "Kategorie używane, gdy zakres kategorii tłumaczenia AI jest ustawiony na <strong>dołącz</strong> lub <strong>wyklucz</strong>."
     ai_translation_personal_messages: "Kontroluje, które prywatne wiadomości są tłumaczone. 'none' wyłącza tłumaczenie wiadomości prywatnych. 'group' tłumaczy tylko wiadomości prywatne grupy. 'all' tłumaczy wszystkie wiadomości prywatne."
     ai_translation_include_bot_content: "Po włączeniu tej opcji treści tworzone przez boty (identyfikatory użytkowników poniżej 0) będą również wysyłane do tłumaczenia."
-    ai_translation_max_post_length: "Maksymalna liczba znaków w poście do przetłumaczenia. Posty dłuższe niż ta liczba nie będą tłumaczone."
-    ai_translation_backfill_max_age_days: "Maksymalny wiek posta i tematu do przetłumaczenia. Posty i tematy starsze niż ten wiek nie będą tłumaczone. Wartość 0 wyłącza uzupełnianie, ale nie wyłącza tłumaczenia nowych postów."
+    ai_translation_backfill_start_date: "Data UTC, od której historyczne wpisy i tematy będą wysyłane do uzupełnienia tłumaczeń. Pozostaw puste, aby wyłączyć uzupełnianie. Nowe treści będą nadal tłumaczone."
     ai_translation_backfill_hourly_rate: "Liczba wpisów i tematów do przetłumaczenia na godzinę podczas operacji uzupełniania. Ustaw na 0, aby wyłączyć automatyczne uzupełnianie tłumaczeń dla istniejących treści."
     ai_translation_backfill_parallel_jobs: "Liczba równoległych zadań postlokalizacyjnych uruchamianych w każdym cyklu uzupełniania. Wyższe wartości zwiększają przepustowość, ale zużywają więcej zasobów."
     ai_usage_rollup_after_days: "Liczba dni przechowywania statystyk użycia AI dla każdego żądania przed ich przekształceniem w dzienne agregaty. Ustaw na 0, aby wyłączyć agregacje."
@@ -287,6 +286,7 @@ pl_PL:
     discourse_workflows:
       ai_agent:
         errors:
+          invalid_mode: "„%{mode}” nie jest obsługiwanym trybem wykonywania agenta AI."
           locked_default_llm_missing: "Agent „%{agent}” jest zablokowany na swoim domyślnym LLM, ale nie skonfigurowano żadnego prawidłowego domyślnego LLM"
           llm_not_found: "Nie znaleziono modelu LLM o identyfikatorze %{llm_model_id}"
           no_llm_configured: "Nie skonfigurowano LLM dla agenta „%{agent}”. Wybierz model LLM lub skonfiguruj domyślny LLM agenta/lokacji."
@@ -415,6 +415,9 @@ pl_PL:
       configuration_missing: "Brakuje konfiguracji wykrywania spamu przez AI. Dodaj konfigurację w sekcji „Administrator > Wtyczki > Discourse AI > Spam” przed włączeniem."
       logging_subject: "Wykrywanie spamu"
     ai_bot:
+      errors:
+        invalid_agent_id: "Określony agent AI nie istnieje lub nie masz do niego dostępu"
+        cannot_send_pm_to_agent: "Nie możesz wysyłać wiadomości osobistych do tego agenta AI"
       reply_error: "Przepraszamy, wygląda na to, że nasz system napotkał nieoczekiwany problem podczas próby udzielenia odpowiedzi.\n\n[details='Szczegóły błędu']\n%{details}\n[/details]"
       default_pm_prefix: "[PW bota AI bez tytułu]"
       thinking: "Myślenie"
@@ -467,6 +470,9 @@ pl_PL:
         discourse_helper:
           name: "Pomocnik Discourse"
           description: "Bot AI specjalizujący się w pomocy w zadaniach związanych z Discourse"
+        discourse_admin_assistant:
+          name: "Asystent administratora Discourse"
+          description: "Bot AI, który odpowiada na pytania Discourse i pomaga administratorom zarządzać ustawieniami witryny"
         web_artifact_creator:
           name: "Twórca artefaktów internetowych"
           description: "Bot AI specjalizuje się w tworzeniu interaktywnych artefaktów internetowych"
@@ -608,6 +614,12 @@ pl_PL:
         web_fetch:
           name: "Pobieranie z sieci (natywne)"
           help: "Umożliwia modelowi otwieranie i odczytywanie stron internetowych przy użyciu wbudowanego dostępu do sieci dostawcy, gdy agent jest wymuszony przez obsługiwany protokół LLM."
+        google_maps:
+          name: "Mapy Google (natywne)"
+          help: "Umożliwia modelowi korzystanie z bieżących danych o miejscu i lokalizacji Map Google, gdy agent jest zmuszony do korzystania z obsługiwanego modelu Gemini LLM."
+        code_execution:
+          name: "Wykonywanie kodu (natywne)"
+          help: "Umożliwia modelowi pisanie i uruchamianie kodu Python w piaskownicy dostawcy, gdy agent jest wymuszony do obsługiwanego Gemini LLM."
       tool_summary:
         read_artifact: "Przeczytaj artefakt sieciowy"
         search_uploaded_documents: "Wyszukaj przesłane dokumenty"
@@ -643,6 +655,7 @@ pl_PL:
         tags: "Wymień tagi"
         time: "Czas"
         summarize: "Podsumuj"
+        set_topic_summary: "Ustaw podsumowanie tematu"
         image: "Wygeneruj obraz"
         google: "Szukaj w Google"
         read: "Przeczytaj temat"
@@ -693,6 +706,7 @@ pl_PL:
         tags: "Wymień wszystkie tagi na forum"
         time: "Znajdź czas w różnych strefach czasowych"
         summary: "Podsumuj temat"
+        set_topic_summary: "Ustaw ostateczne krótkie podsumowanie tematu"
         image: "Wygeneruj obraz przy użyciu Stable Diffusion"
         create_image: "Generuj obraz przy użyciu modelu obrazu GPT Open AI"
         edit_image: "Edytuj obraz za pomocą modelu obrazu GPT Open AI"
@@ -744,6 +758,7 @@ pl_PL:
         read: "Czytanie: <a href='%{url}'>%{title}</a>"
         time: "Czas w %{timezone} wynosi %{time}"
         summarize: "Podsumowano <a href='%{url}'>%{title}</a>"
+        set_topic_summary: "Ustaw ostateczne krótkie podsumowanie tematu"
         dall_e: "%{prompt}"
         create_image: "%{prompt}"
         edit_image: "%{prompt}"

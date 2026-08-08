@@ -13,7 +13,6 @@ class CurrentUserOptionSerializer < ApplicationSerializer
              :hide_profile,
              :hide_presence,
              :title_count_mode,
-             :enable_defer,
              :timezone,
              :skip_new_user_tips,
              :default_calendar,
@@ -27,10 +26,17 @@ class CurrentUserOptionSerializer < ApplicationSerializer
              :sidebar_show_count_of_new_items,
              :composition_mode,
              :interface_color_mode,
-             :show_original_content
+             :show_original_content,
+             :send_shortcut,
+             :automatically_translate,
+             :understood_languages
 
   def likes_notifications_disabled
     object.likes_notifications_disabled?
+  end
+
+  def show_original_content
+    !object.automatically_translate
   end
 
   def include_redirected_to_top?

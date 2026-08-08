@@ -51,6 +51,9 @@ ro:
               label: "Permite postările de sistem"
               description: "Permite etichetarea postărilor create de utilizatorul sistemului."
     discourse_ai:
+      discourse_workflows:
+        ai_agent:
+          mode: "Mod"
       ai_tool_approval:
         loading: "Se încarcă..."
         tool: "Acțiune"
@@ -98,11 +101,23 @@ ro:
         title: "Traduceri"
         description: "Tradu automat tot conținutul de pe forumul tău în limba preferată de utilizator"
         supported_locales: "Limbi acceptate"
-        supported_locales_description: "Această setare a site-ului permite vizitatorilor să contribuie și la traducerea postărilor."
         category_scope: "Categorii"
+        model_progress:
+          detail:
+            columns:
+              locale: "Locală"
+              pending: "În așteptare"
+              total: "Total"
+          targets:
+            post:
+              title: "Articole"
+            topic:
+              title: "Subiecte"
+            category:
+              title: "Categorii"
+            tag:
+              title: "Etichete"
         admin_actions:
-          translation_settings: "Setări traducere"
-          localization_settings: "Setări localizare"
           enable_translations: "Activează traducerile automate"
         stats:
           title: "Statistici traducere"
@@ -154,6 +169,7 @@ ro:
         mcp_tools_modal:
           select_all: "Selectează tot"
           clear_all: "Șterge tot"
+        duplicate: "Fă duplicat"
         delete: "Șterge"
         thinking_effort_options:
           none: "Nimic"
@@ -234,7 +250,6 @@ ro:
           success: "Succes!"
           invalid_config: "Remediază mai întâi următoarele erori în configurație:"
         providers:
-          google: "Google"
           fake: "Personalizat"
         provider_fields:
           role_arn: "Rol ARN AWS Bedrock"

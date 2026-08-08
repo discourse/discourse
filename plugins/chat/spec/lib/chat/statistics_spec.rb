@@ -3,24 +3,22 @@
 describe Chat::Statistics do
   fab!(:frozen_time) { DateTime.parse("2022-07-08 09:30:00") }
 
-  def minus_time(time)
-    frozen_time - time
-  end
-
   fab!(:user1, :user)
   fab!(:user2, :user)
   fab!(:user3, :user)
   fab!(:user4, :user)
   fab!(:user5, :user)
 
-  fab!(:channel1) { Fabricate(:chat_channel, created_at: minus_time(1.hour)) }
-  fab!(:channel2) { Fabricate(:chat_channel, created_at: minus_time(2.days)) }
-  fab!(:channel3) { Fabricate(:chat_channel, created_at: minus_time(6.days)) }
-  fab!(:channel3) { Fabricate(:chat_channel, created_at: minus_time(20.days)) }
-  fab!(:channel4) { Fabricate(:chat_channel, created_at: minus_time(21.days), status: :closed) }
-  fab!(:channel5) { Fabricate(:chat_channel, created_at: minus_time(24.days)) }
-  fab!(:channel6) { Fabricate(:chat_channel, created_at: minus_time(40.days)) }
-  fab!(:channel7) { Fabricate(:chat_channel, created_at: minus_time(100.days), status: :archived) }
+  fab!(:channel1) { Fabricate(:chat_channel, created_at: frozen_time - 1.hour) }
+  fab!(:channel2) { Fabricate(:chat_channel, created_at: frozen_time - 2.days) }
+  fab!(:channel3) { Fabricate(:chat_channel, created_at: frozen_time - 6.days) }
+  fab!(:channel3) { Fabricate(:chat_channel, created_at: frozen_time - 20.days) }
+  fab!(:channel4) { Fabricate(:chat_channel, created_at: frozen_time - 21.days, status: :closed) }
+  fab!(:channel5) { Fabricate(:chat_channel, created_at: frozen_time - 24.days) }
+  fab!(:channel6) { Fabricate(:chat_channel, created_at: frozen_time - 40.days) }
+  fab!(:channel7) do
+    Fabricate(:chat_channel, created_at: frozen_time - 100.days, status: :archived)
+  end
 
   fab!(:membership1) do
     Fabricate(:user_chat_channel_membership, user: user1, chat_channel: channel1)
@@ -33,44 +31,49 @@ describe Chat::Statistics do
   end
 
   fab!(:message1) do
-    Fabricate(:chat_message, chat_channel: channel1, created_at: minus_time(5.minutes), user: user1)
+    Fabricate(
+      :chat_message,
+      chat_channel: channel1,
+      created_at: frozen_time - 5.minutes,
+      user: user1,
+    )
   end
   fab!(:message2) do
-    Fabricate(:chat_message, chat_channel: channel1, created_at: minus_time(2.days), user: user2)
+    Fabricate(:chat_message, chat_channel: channel1, created_at: frozen_time - 2.days, user: user2)
   end
   fab!(:message3) do
-    Fabricate(:chat_message, chat_channel: channel1, created_at: minus_time(6.days), user: user2)
+    Fabricate(:chat_message, chat_channel: channel1, created_at: frozen_time - 6.days, user: user2)
   end
   fab!(:message4) do
-    Fabricate(:chat_message, chat_channel: channel1, created_at: minus_time(11.days), user: user2)
+    Fabricate(:chat_message, chat_channel: channel1, created_at: frozen_time - 11.days, user: user2)
   end
   fab!(:message5) do
-    Fabricate(:chat_message, chat_channel: channel4, created_at: minus_time(12.days), user: user3)
+    Fabricate(:chat_message, chat_channel: channel4, created_at: frozen_time - 12.days, user: user3)
   end
   fab!(:message6) do
-    Fabricate(:chat_message, chat_channel: channel1, created_at: minus_time(13.days), user: user2)
+    Fabricate(:chat_message, chat_channel: channel1, created_at: frozen_time - 13.days, user: user2)
   end
   fab!(:message7) do
-    Fabricate(:chat_message, chat_channel: channel1, created_at: minus_time(16.days), user: user1)
+    Fabricate(:chat_message, chat_channel: channel1, created_at: frozen_time - 16.days, user: user1)
   end
   fab!(:message8) do
-    Fabricate(:chat_message, chat_channel: channel1, created_at: minus_time(42.days), user: user3)
+    Fabricate(:chat_message, chat_channel: channel1, created_at: frozen_time - 42.days, user: user3)
   end
   fab!(:message9) do
     Fabricate(
       :chat_message,
       chat_channel: channel1,
-      created_at: minus_time(42.days),
+      created_at: frozen_time - 42.days,
       user: user3,
-      deleted_at: minus_time(10.days),
+      deleted_at: frozen_time - 10.days,
       deleted_by: user3,
     )
   end
   fab!(:message10) do
-    Fabricate(:chat_message, chat_channel: channel1, created_at: minus_time(50.days), user: user4)
+    Fabricate(:chat_message, chat_channel: channel1, created_at: frozen_time - 50.days, user: user4)
   end
   fab!(:message10) do
-    Fabricate(:chat_message, chat_channel: channel1, created_at: minus_time(62.days), user: user4)
+    Fabricate(:chat_message, chat_channel: channel1, created_at: frozen_time - 62.days, user: user4)
   end
 
   before { freeze_time(DateTime.parse("2022-07-08 09:30:00")) }

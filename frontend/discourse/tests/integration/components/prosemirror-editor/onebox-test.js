@@ -52,7 +52,6 @@ module(
     });
 
     test("holds a lone link inline while the cursor is on its line", async function (assert) {
-      this.siteSettings.rich_editor = true;
       const [editor] = await setupRichEditor(assert, "a\n\nb");
       const { view } = editor;
 
@@ -71,7 +70,6 @@ module(
     });
 
     test("promotes a lone inline onebox to a full onebox when the cursor leaves its line", async function (assert) {
-      this.siteSettings.rich_editor = true;
       const [editor] = await setupRichEditor(assert, "a\n\nb");
       const { view } = editor;
 
@@ -92,8 +90,8 @@ module(
         .doesNotExist("is no longer an inline onebox");
       assert.strictEqual(
         editor.value,
-        `${URL}\n\nb`,
-        "serializes the full onebox on its own line, matching the cooked output"
+        `${URL} \n\nb`,
+        "leaves the markdown the user typed alone"
       );
     });
 
@@ -102,8 +100,6 @@ module(
     // onebox is a block node, so it must replace the whole paragraph rather
     // than split it and leave an empty paragraph behind.
     test("a top-level URL alone on its line becomes a full onebox with no empty paragraph before it", async function (assert) {
-      this.siteSettings.rich_editor = true;
-
       const topLevelUrl = "http://www.example.com";
       pretender.get("/onebox", () => [
         200,
@@ -137,7 +133,6 @@ module(
     // shift+enter) must split into a clean block onebox plus a paragraph for the
     // following line — not a stray empty paragraph wrapping the block.
     test("a URL followed by a hard break and text splits into onebox + paragraph", async function (assert) {
-      this.siteSettings.rich_editor = true;
       const [editor] = await setupRichEditor(assert, "x");
       const { view } = editor;
       const { schema } = view.state;
@@ -164,8 +159,8 @@ module(
       );
       assert.strictEqual(
         editor.value,
-        `${URL}\n\nasd`,
-        "the trailing line becomes its own paragraph"
+        `${URL}\nasd`,
+        "leaves the markdown the user typed alone"
       );
       assert.false(
         view.state.selection instanceof NodeSelection,

@@ -13,7 +13,6 @@ ro:
   js:
     styleguide:
       title: "Ghid stilistic"
-      welcome: "Pentru a începe, alegeți o secțiune din meniul din stânga."
       categories:
         syntax: Sintaxă
         atoms: Atomi

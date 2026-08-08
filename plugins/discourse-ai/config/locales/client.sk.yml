@@ -251,6 +251,22 @@ sk:
       translations:
         title: "Preklady"
         category_scope: "Kategórie"
+        model_progress:
+          detail:
+            retry: "Skúsiť znova"
+            columns:
+              locale: "Miestne nastavenie"
+              pending: "Čakajúce"
+              total: "Celkom"
+          targets:
+            post:
+              title: "Príspevky"
+            topic:
+              title: "Témy"
+            category:
+              title: "Kategórie"
+            tag:
+              title: "Značky"
         stats:
           eta_minutes:
             one: "%{count} minútu"
@@ -390,6 +406,8 @@ sk:
           clear_all: "Vymazať všetko"
         forced_tools: "Vynútené nástroje"
         allowed_groups: "Povolené skupiny"
+        duplicate: "Duplikát"
+        copy_name: "Kópia %{name}"
         delete: "Odstrániť"
         temperature: "Teplota"
         temperature_help: "Teplota, ktorá sa má použiť pre LLM. Zvýšte pre zvýšenie kreativity (nechajte prázdne pre použitie predvolenej hodnoty modelu, zvyčajne hodnoty od 0,0 do 2,0)"
@@ -605,7 +623,6 @@ sk:
           hugging_face: "Objímajúca tvár"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"

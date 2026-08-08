@@ -67,6 +67,9 @@ en:
     added: "Added %{added}"
     removed: "Removed %{removed}"
 
+  topics_bulk_action:
+    too_many_topic_ids: "You can only perform a bulk action on up to %{limit} topics at once."
+
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} by %{username}"
@@ -99,6 +102,10 @@ en:
       asset_too_big: "Asset %{filename} is bigger than the %{limit} limit"
       theme_too_big: "Theme is bigger than the %{limit} limit"
       git: "Error cloning git repository, access is denied or repository is not found"
+      git_authentication: "The git repository rejected the deploy key. Check that the public key has access to the repository and try again. (If you no longer have the deploy key, delete this theme and install again.)"
+      git_timeout: "The connection to the git repository timed out. Please try again later."
+      git_repository_not_found: "The git repository could not be found. Check the repository URL."
+      git_branch_not_found: "The git branch could not be found. Check the branch name."
       git_ref_not_found: "Unable to checkout git reference: %{ref}"
       git_unsupported_scheme: "Unable to clone git repo: scheme unsupported"
       unpack_failed: "Failed to unpack file"
@@ -282,6 +289,7 @@ en:
         screened_email_error: "Happens when the sender's email address was already screened."
         unsubscribe_not_allowed: "Happens when unsubscribing via email is not allowed for this user."
         email_not_allowed: "Happens when the email address is not on the allowlist or is on the blocklist."
+        email_alias_not_allowed: "Happens when the sender's address is an alias of an address already registered to an account, and normalized emails are required to be unique."
       unrecognized_error: "Unrecognized Error"
     secure_uploads_placeholder: "Redacted: This site has secure uploads enabled, visit the topic or click View Media to see the attached uploads."
     view_redacted_media: "View Media"
@@ -308,7 +316,7 @@ en:
       exclusion: is reserved
       greater_than: must be greater than %{count}
       greater_than_or_equal_to: must be greater than or equal to %{count}
-      has_already_been_used: "has already been used"
+      topic_title_already_used: "This title has already been used by <a href='%{url}'>another topic</a>."
       in: must be in %{count}
       inclusion: is not included in the list
       invalid: is invalid
@@ -865,9 +873,14 @@ en:
           attributes:
             linkable_type:
               invalid: "is not valid"
+        sidebar_section:
+          attributes:
+            base:
+              too_many_sidebar_urls: "Maximum %{limit} records are allowed. Got %{count} records instead."
         api_key:
           base:
             at_least_one_granular_scope: "at least one must be selected"
+            read_only_scope: "must be the global read scope"
 
   uncategorized_category_name: "Uncategorized"
 
@@ -1115,6 +1128,7 @@ en:
     error: "There was an error changing your email address. Perhaps the address is already in use?"
     doesnt_exist: "That email address is not associated with your account."
     error_staged: "There was an error changing your email address. The address is already in use by a staged user."
+    error_alias: "That email address is an alias of an address already in use."
     already_done: "Sorry, this confirmation link is no longer valid. Perhaps your email was already changed?"
     confirm: "Confirm"
     max_secondary_emails_error: "You have reached the maximum allowed secondary emails limit."
@@ -1510,6 +1524,7 @@ en:
         page_view_anon_browser: "Anonymous"
         page_view_logged_in_browser: "Logged in"
         page_view_crawler: "Crawlers"
+        page_view_likely_crawler: "Likely crawlers"
         page_view_embed: "Embedded pageviews"
         page_view_other: "Other traffic"
       yaxis: "Day"
@@ -1833,6 +1848,7 @@ en:
       group_email_credentials: 'There was an issue with the email credentials for the group <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. No emails will be sent from the group inbox until this problem is addressed. %{error}'
       upcoming_change_stable_opted_out: 'Your site has opted-out of the "%{upcoming_change}" upcoming change. This change has now reached the "Stable" status and may soon be removed or made permanent. Visit <a href="%{base_path}/admin/config/upcoming-changes">the upcoming changes page</a> to review details about this change.'
       content_security_policy_disabled: "The content-security-policy feature has been disabled. This is an important security feature, and should never be disabled in production environments. <a href='%{base_path}/admin/site_settings/category/all_results?filter=content_security_policy'>Re-enable it here</a>."
+      landlock: "Landlock sandboxing is unavailable in this hosting environment, so external commands run without filesystem and network isolation. This is an important security protection that should not be missing in production. Use a Linux kernel with Landlock support (5.13 or later) to restore it."
       rails_env: "Your server is running in %{env} mode."
       host_names: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
       sidekiq_check: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by Sidekiq. Please ensure at least one Sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
@@ -1913,6 +1929,7 @@ en:
     default_composer_category: "The category used to pre-populate the category dropdown when creating a new topic."
     allow_uncategorized_topics: "Allow topics to be created without a category. WARNING: If there are any uncategorized topics, you must recategorize them before turning this off."
     remove_and_replace_uncategorized: "Replaces the special Uncategorized category with a standard category of the same name, and migrates all topics over to it."
+    duplicate_topic_titles: "Whether a topic can be created with a title already used by another topic. When allowed across categories, a title can be reused as long as the topics are in different categories. Topics the author cannot see are never counted as duplicates."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
     allow_duplicate_topic_titles_category: "Allow topics with identical, duplicate titles if the category is different. {{setting:allow_duplicate_topic_titles}} must be disabled."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
@@ -1934,7 +1951,7 @@ en:
     staff_edit_locks_post: "Posts will be locked from editing if they are edited by staff members"
     post_edit_time_limit: "A tl0 or tl1 author can edit their post for (n) minutes after posting. Set to 0 for forever."
     tl2_post_edit_time_limit: "A tl2+ author can edit their post for (n) minutes after posting. Set to 0 for forever."
-    edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
+    edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members and category group moderators (for posts in their moderated categories) can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
     notify_users_after_responses_deleted_on_flagged_post: "When a post is flagged and then removed, all users that responded to the post and had their responses removed will be notified."
     max_image_width: "Maximum thumbnail width of images in a post. Images with a larger width will be resized and lightboxed."
@@ -2066,6 +2083,9 @@ en:
     allowed_iframes: "A list of iframe src URL prefixes that Discourse can safely allow in posts. * can be used to match any number of non-/ characters."
     allowed_crawler_user_agents: "User agents of web crawlers that should be allowed to access the site. WARNING! SETTING THIS WILL DISALLOW ALL CRAWLERS NOT LISTED HERE!"
     blocked_crawler_user_agents: "Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if allowlist is defined."
+    crawler_asns: "ASNs operated by verified web crawlers. Traffic from these networks is excluded from browser pageview reporting and receives a high crawler score."
+    crawler_detection_datacenter_asns: "ASNs that provide cloud, hosting, or data center services. These networks are not necessarily crawlers: their traffic receives a low-confidence crawler score and is still counted as browser traffic."
+    crawler_stale_chromium_major_version_cutoff: "Chromium major versions at or below this value in unengaged sessions receive a crawler score. Update it only after reviewing traffic; an outdated cutoff becomes less sensitive, not more aggressive."
     slow_down_crawler_user_agents: "User agents of web crawlers that should be rate limited as configured in the {{setting:slow_down_crawler_rate}} setting. Each value must be at least 3 characters long."
     slow_down_crawler_rate: "If {{setting:slow_down_crawler_user_agents}} is specified this rate will apply to all the crawlers (number of seconds delay between requests)"
     llms_txt: "Upload a text file to be served at /llms.txt for LLM crawlers. See <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> for more information."
@@ -2079,7 +2099,8 @@ en:
     suppress_secured_categories_from_admin: "Suppress private topics and PMs in some parts of UI for admins. Content will still be visible in some places. This is not a security feature: admins can always access all content on the site."
     include_secure_categories_in_tag_counts: "When enabled, count of topics for a tag will include topics that are in read restricted categories for all users. When disabled, normal users are only shown a count of topics for a tag where all the topics are in public categories."
     display_personal_messages_tag_counts: "When enabled, count of personal messages tagged with a given tag will be displayed."
-    top_menu: "Determine which items appear in the homepage navigation, and in what order."
+    default_homepage: "The page people land on when they visit the site. When not set, the first item in {{setting:top_menu}} is used. Individuals can override this in their preferences."
+    top_menu: "Determine which navigation items appear on the discovery pages, and in what order."
     custom_homepage_crawler_route: "Route shown to web crawlers when a custom homepage is enabled."
     post_menu: "Configure the visibility and order of default post menu items. Additional items added by plugins or themes are managed separately and won’t appear in this list."
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on. Additional items added by plugins or themes are managed separately and won’t appear in this list."
@@ -2101,6 +2122,7 @@ en:
     top_page_default_timeframe: "Default top page time period for anonymous users (automatically adjusts for logged in users based on their last visit)."
     moderators_view_emails: "Allow moderators to view user email addresses."
     moderators_view_ips: "Allow moderators to view user ip addresses."
+    moderators_view_sso_details: "Allow moderators to view SSO records"
     moderators_change_trust_levels: "Allow moderators to change user trust levels."
     prioritize_username_in_ux: "Show username first on user page, user card and posts (when disabled name is shown first)"
     enable_rich_text_paste: "Enable automatic HTML to Markdown conversion when pasting text into the composer."
@@ -2720,6 +2742,7 @@ en:
     emoji_autocomplete_min_chars: "Minimum number of characters required to trigger autocomplete emoji popup"
     enable_inline_emoji_translation: "Enables translation for inline emojis (without any space or punctuation before)"
     emoji_deny_list: "These emoji will not be available to use in menus or shortcodes."
+    emoji_picker_pinned_groups: "Emoji groups to pin to the top of the emoji picker. All other groups follow after any pinned groups."
     enable_gifs: "Adds a button to easily search and insert GIFs in posts."
     klipy_api_key: "Klipy API key. Required to power GIF search."
     klipy_file_detail: "Image format to use. WebP has smaller files that load quicker, while GIF provides compatibility with older browsers."
@@ -2778,7 +2801,6 @@ en:
     default_other_external_links_in_new_tab: "Open external links in a new tab by default."
     default_other_enable_quoting: "Enable quote reply for highlighted text by default."
     default_other_enable_smart_lists: "Enable smart lists when typing in the composer by default."
-    default_other_enable_defer: "Enable defer topic functionality by default."
     default_other_enable_markdown_monospace_font: "Use monospace font in composer's Markdown mode by default."
     default_other_dynamic_favicon: "Show new/updated topic count on browser icon by default."
     default_other_skip_new_user_tips: "Skip new user onboarding tips and badges."
@@ -2826,7 +2848,7 @@ en:
     verbose_user_api_key_device_auth_logging: "Log detailed diagnostics for the user API key device authorization flow"
 
     tagging_enabled: "Enable tags on topics? See the <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Admin guide to tags on Meta</a> for more information."
-    create_tag_allowed_groups: "Groups that are allowed to create tags. Admins and moderators can always create tags."
+    create_tag_allowed_groups: "Groups that are allowed to create tags. Admins can always create tags."
     edit_tags_allowed_groups: "Groups that are allowed to edit tags, tag descriptions, and tag synonyms."
     max_tags_per_topic: "The maximum tags that can be applied to a topic."
     enable_max_tags_per_email_subject: "Use {{setting:max_tags_per_email_subject}} when generating the subject of an email"
@@ -2920,7 +2942,6 @@ en:
     about_page_extra_groups_order: "Ordering of the extra groups on the about page."
     adobe_analytics_tags_url: "Adobe Analytics tags URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Groups which can view the raw email content of a post if it was created by an incoming email. This includes email headers and other technical information."
-    rich_editor: "Enable the rich editor for the composer so all users can switch between the current Markdown mode and the new rich text editor for more intuitive and user-friendly composition."
     default_composition_mode: "Set the default mode for your community's composer. Rich text mode provides a more modern, familiar writing experience for most users, while Markdown mode may be suitable for more technical audiences. Members can use a toggle in the composer toolbar to switch between modes."
     reviewable_ui_refresh: "Groups that can use the experimental new UI in the review queue."
     content_localization_enabled: "Displays localized content for users based on their browser or user language preferences. Such content may include categories, tags, posts, and topics. Supported locales are set in {{setting:content_localization_supported_locales}}."
@@ -2929,7 +2950,7 @@ en:
     content_localization_language_switcher: "Show a language switcher in the header, allowing visitors to switch between translated versions of Discourse and user-contributed content. Uses languages defined in {{setting:content_localization_supported_locales}}"
     content_localization_crawler_param: "Serve localized content to web crawlers when {{setting:content_localization_enabled}} and {{setting:set_locale_from_param}} is enabled. The list of supported locales is defined in {{setting:content_localization_supported_locales}}."
     content_localization_use_default_locale_when_unsupported: "Serve localized content in the site's default locale to users whose preferred language is not listed in 'content localization supported locales'."
-    content_localization_allow_author_localization: "Allow authors update localizations of their own topics and posts via the post menu."
+    content_localization_allow_author_localization: "Allow authors to update localizations of their own topics and posts via the post menu."
     nested_replies_enabled: "Enable the nested replies view for topics."
     nested_replies_default: "Use nested replies as the default view for all topics."
     nested_replies_hot_sort_enabled: "Allow people to sort nested replies by a demand-driven hot score. Hot scores are calculated in the background only for topics where hot sorting is requested."
@@ -2965,10 +2986,13 @@ en:
     enable_horizon_high_context_topic_cards: "Shows richer topic cards in the Horizon theme, including topic excerpts, tags, and plugin extended information."
     granular_anonymous_and_logged_in_groups_permissions: "Makes group-based site setting permissions treat 'everyone' as 'all logged-in users', and enables the new 'anonymous_users' and 'logged_in_users' pseudogroups so admins can explicitly target anonymous visitors and authenticated users."
     dashboard_improvements: "Enables the redesigned admin dashboard that lets you pin custom reports and includes improved site traffic, engagement, and other analytics tied to community success and value."
+    improved_crawler_detection: "Enables improved crawler tracking which can better detect likely crawlers and ensure traffic reporting is more accurate."
     enable_invite_modal_with_roles: "Enables a redesigned invite flow that lets admins invite someone directly as an admin. The invitee becomes a moderator on signup and an admin once the inviter confirms via email."
+    update_pending_users_reminder_default: "We are updating the default for the {{setting:pending_users_reminder_delay_minutes}} setting to 30 minutes so that staff are promptly notified when a new member is waiting for approval. If you have previously changed this setting, this change will have no effect."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
+      invalid_date: "Invalid date format. Please enter a valid date."
       invalid_datetime: "Invalid datetime format. Please ensure you've entered a valid date and time."
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
@@ -2982,6 +3006,9 @@ en:
       invalid_integer_max: "Value cannot be higher than %{max}."
       invalid_integer: "Value must be an integer."
       regex_mismatch: "Value doesn't match the required format."
+      emoji_picker_pinned_groups_invalid:
+        one: "Unknown emoji group: %{groups}."
+        other: "Unknown emoji groups: %{groups}."
       must_include_latest: "Top menu must include the 'latest' tab."
       top_menu_unread_not_allowed_with_unified_new: "The 'unread' menu item cannot be used when unified new is enabled."
       invalid_string: "Invalid value."
@@ -3224,6 +3251,7 @@ en:
     timeout_expired: "Account login timed out, please try logging in again."
     no_email: "No email address was provided. Please contact the site's administrator."
     blank_id_error: "The `external_id` is required but was blank"
+    banned_id_error: "The `external_id` value is not allowed"
     email_error: "An account could not be registered with the email address <b>%{email}</b>. Please contact the site's administrator."
     missing_secret: "Authentication failed due to missing secret. Contact the site administrators to fix this problem."
     invite_redeem_failed: "Invite redemption failed. Please contact the site's administrator."
@@ -3234,6 +3262,7 @@ en:
   original_poster: "Original Poster"
   most_recent_poster: "Most Recent Poster"
   frequent_poster: "Frequent Poster"
+  recent_poster: "Recent Poster"
   # Example: "Original Poster, Most Recent Poster"
   poster_description_joiner: ", "
 
@@ -4056,6 +4085,15 @@ en:
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         Your reply was sent from a blocked email address. Try sending from another email address, or [contact a staff member](%{base_url}/about).
+
+    email_reject_email_alias:
+      title: "Email Reject Email Alias"
+      subject_template: "[%{email_prefix}] Email issue -- unrecognized email address"
+      subject_template_improved: "%{email_prefix}: Email issue -- unrecognized email address"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        We couldn't match the address you sent from to an account on this site. Try sending from the email address you signed up with, or [contact a staff member](%{base_url}/about).
 
     email_reject_inactive_user:
       title: "Email Reject Inactive User"
@@ -5947,6 +5985,15 @@ en:
     title: "Developer Mode"
     enable_rack_mini_profiler: "Enable Rack Mini Profiler to persist across session changes for 1 hour"
     enter: "Enter Developer Mode"
+  design_wizard:
+    errors:
+      palette_unavailable: "One of the selected color palettes is not available for the selected theme."
+      site_settings_update_failed: "The site settings could not be updated."
+    palette_pairs:
+      default: "Default"
+      wcag: "WCAG"
+      solarized: "Solarized"
+      dracula: "Dracula"
   wizard:
     title: "Discourse Setup"
     step:
@@ -6080,6 +6127,7 @@ en:
     post_restored_by_author: "Post was restored by the author"
     post_deleted_by_author_after_penalty: >-
       Post was deleted by the author after the user was penalized for it. Review the penalty without restoring the post.
+    target_user_deleted: "Automatically ignored because the user account was deleted."
     priorities:
       low: "Low"
       medium: "Medium"
@@ -6223,12 +6271,12 @@ en:
       reject_user:
         title: "No"
         delete:
-          title: "Delete User"
-          description: "Delete user without blocking"
+          title: "Delete user"
+          description: "Delete the user without blocking their email or IP address"
           complete: "User deleted."
         block:
-          title: "Delete and Block User"
-          description: "The user will be deleted, and we'll block their IP and email address."
+          title: "Delete and block user"
+          description: "Delete the user and block their email and IP address"
           complete: "User deleted and blocked."
       confirm_spam:
         title: "Yes"
@@ -6239,10 +6287,12 @@ en:
         title: "Reject"
         bundle_title: "Reject…"
       reject_and_suspend:
-        title: "Reject and Suspend user"
+        title: "Reject and suspend user"
+        description: "Reject the post and prevent the user from logging in until the suspension ends"
         complete: "Post rejected and user suspended."
       reject_and_silence:
-        title: "Reject and Silence user"
+        title: "Reject and silence user"
+        description: "Reject the post and prevent the user from posting or sending messages"
         complete: "Post rejected and user silenced."
       reject_and_delete:
         title: "Reject and Delete the post"
@@ -6289,12 +6339,12 @@ en:
         bundle_title: "What do you want to do with the user?"
       silence_user:
         title: "Silence user"
-        description: "Prevent the user from posting"
+        description: "Prevent the user from posting or sending messages"
         complete: "User silenced"
         reason: "User silenced via review queue"
       suspend_user:
         title: "Suspend user"
-        description: "Suspend the user account"
+        description: "Prevent the user from logging in until the suspension ends"
         complete: "User suspended"
         reason: "User suspended via review queue"
       delete_user:
@@ -6368,13 +6418,17 @@ en:
     import:
       missing_file: "No ZIP file provided."
       missing_csv: "The ZIP must contain an emojis.csv file."
+      invalid_csv: "The emojis.csv file could not be parsed."
+      empty_manifest: "The emojis.csv file does not list any emojis."
       too_many_entries: "The ZIP contains too many entries (maximum 1000)."
       file_too_large: "One or more files in the ZIP are too large."
+      suspicious_entry: "One or more files in the ZIP have a suspicious compression ratio."
       session_expired: "Import session has expired. Please start the import again."
       validation:
         missing_name: "Name is required."
+        duplicate_name: "Name appears more than once in the CSV."
         missing_filename: "Filename is required."
-        invalid_name: "Name contains invalid characters."
+        missing_image: "Image file is missing from the ZIP."
         group_too_long: "Group name must be 20 characters or fewer."
         unsupported_extension: "File extension .%{ext} is not supported (use png, gif, or svg)."
         duplicate_filename: "Filename appears more than once in the CSV."

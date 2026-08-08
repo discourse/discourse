@@ -112,6 +112,7 @@ module DiscourseWorkflows
         resolver: nil,
         vars: nil,
         workflow: nil,
+        workflow_version: nil,
         execution_id: nil,
         resume_token: nil,
         node_id: nil,
@@ -145,6 +146,7 @@ module DiscourseWorkflows
         @resolver = resolver
         @vars = vars
         @workflow = workflow
+        @workflow_version = workflow_version
         @execution_id = execution_id
         @resume_token = resume_token
         @node_id = node_id
@@ -239,6 +241,13 @@ module DiscourseWorkflows
 
       def get_input_data(input_index = 0, _connection_type = nil)
         input_items(input_index)
+      end
+
+      def get_timezone
+        DiscourseWorkflows::WorkflowTimezone.for(
+          workflow: @workflow,
+          workflow_version: @workflow_version,
+        )
       end
 
       def continue_on_fail
@@ -515,7 +524,7 @@ module DiscourseWorkflows
 
         raw_value = get_node_parameter(field, item_index || 0, options: { raw_expressions: true })
         return :default if raw_value.nil?
-        return :expression if raw_value.is_a?(String) && raw_value.start_with?("=")
+        return :expression if Schema.expression_value?(raw_value)
 
         :static_config
       end

@@ -8,6 +8,10 @@ el:
   site_settings:
     chat_integration_mattermost_webhook_url: 'URL για το webhook του Mattermost'
     chat_integration_rocketchat_webhook_url: "Το URL για το webhook ενσωμάτωσης του Rocket Chat"
+  discourse_workflows:
+    errors:
+      send_chat_integration_message:
+        channel_not_found: "Δεν βρέθηκε το κανάλι: %{channel_id}"
   chat_integration:
     all_categories: "(όλες οι κατηγορίες)"
     group_mention_template: "επισημάνσεις της ομάδας: @%{name}"
@@ -17,6 +21,8 @@ el:
       removed: "Αφαιρέθηκε %{removed}"
     provider:
       slack:
+        errors:
+          channel_not_found: "Το καθορισμένο κανάλι δεν υπάρχει στο Slack"
         transcript:
           post_to_discourse: "Πατήστε εδώ για να συντάξετε μια ανάρτηση στο Discourse με μεταγραφή"
         messaging:

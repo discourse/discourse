@@ -21,6 +21,32 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     await formKit().submit();
   });
 
+  test("@onSubmit keeps changes dirty when submission fails", async function (assert) {
+    let formApi;
+    const registerApi = (api) => (formApi = api);
+    const onSubmit = () => Promise.reject(new Error("save failed"));
+
+    await render(
+      <template>
+        <Form
+          @data={{hash foo=1}}
+          @commitOnSubmit={{false}}
+          @onSubmit={{onSubmit}}
+          @onRegisterApi={{registerApi}}
+        />
+      </template>
+    );
+
+    await formApi.set("foo", 2);
+
+    await assert.rejects(formApi.submit(), /save failed/);
+    assert.true(formApi.isDirty, "the failed change remains dirty");
+
+    await formApi.reset();
+
+    assert.strictEqual(formApi.get("foo"), 1, "the failed change can be reset");
+  });
+
   test("@onSet", async function (assert) {
     const calls = [];
     const onSet = (name, value, data) => {
@@ -238,6 +264,27 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     setTimeout(() => {
       assert.form().hasErrors({ bar: "error_foo" });
     }, 0);
+  });
+
+  test("@onRegisterApi - commit", async function (assert) {
+    let formApi;
+    const registerApi = (api) => (formApi = api);
+
+    await render(
+      <template>
+        <Form @data={{hash foo=1}} @onRegisterApi={{registerApi}} />
+      </template>
+    );
+
+    await formApi.set("foo", 2);
+    formApi.commit();
+
+    assert.false(formApi.isDirty, "the committed form is pristine");
+
+    await formApi.set("foo", 3);
+    await formApi.reset();
+
+    assert.strictEqual(formApi.get("foo"), 2, "reset uses the committed value");
   });
 
   test("@onRegisterApi - commitField", async function (assert) {

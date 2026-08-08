@@ -709,6 +709,8 @@ ja:
         email: "メール"
         name: "名前"
         fields: "フィールド"
+        silence_reason: "投稿禁止の理由"
+        penalty_forever: "永遠"
         reject_reason: "理由"
         scrubbed_by: "レコードを削除したユーザー:"
         scrubbed_reason: "理由"
@@ -1480,8 +1482,10 @@ ja:
       external_links_in_new_tab: "すべての外部リンクを新しいタブで開く"
       enable_quoting: "選択したテキストを引用して返信する"
       enable_smart_lists: "コンポーザーに書き込む際にスマートリストを有効にする"
-      enable_defer: "トピックを未読としてマークする"
       enable_markdown_monospace_font: "作成ツールの Markdown モードで等幅フォントを使用する"
+      automatically_translate: "ほかの言語で書かれたトピックや投稿を自動翻訳する"
+      content_languages:
+        understood: "理解できる言語"
       experimental_sidebar:
         enable: "サイドバーを有効にする"
         options: "オプション"
@@ -1892,7 +1896,7 @@ ja:
         default: "(デフォルト)"
         any: "すべて"
       homepage:
-        default: "(デフォルト)"
+        default: "デフォルト"
       password_confirmation:
         title: "パスワードを再入力"
       invite_code:
@@ -1936,6 +1940,9 @@ ja:
         contextual: "新しいページのコンテンツ"
       bookmark_after_notification:
         title: "ブックマークのリマインダー通知が送信された後:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "「いいね！」された時に通知する"
         always: "常時"
@@ -2093,24 +2100,28 @@ ja:
         invite_roles:
           member_title: "メンバーの招待"
           member_tab: "メンバー"
-          admin_tab: "管理者"
+          admin_tab: "スタッフ"
+          staff_role_admin: "管理"
+          staff_role_moderator: "モデレーター"
           admin_email_label: "メールアドレス"
           email_placeholder: "name@example.com"
           invite_by_email: "メールアドレス"
           restrict_domain: "ドメインに制限"
           domain_placeholder: "example.com"
-          more_options: "その他のオプション"
+          create_and_send: "送信"
+          create_and_copy: "リンクをコピー"
           update: "更新"
           summary:
             role_member: "メンバー"
             role_admin: "管理"
+            role_moderator: "モデレーター"
             method: "共有"
             method_email: "メールアドレス"
             uses: "最大使用回数"
             expires: "有効期限"
             topic: "トピック"
             groups: "グループ"
-            edit: "招待の編集"
+            edit: "編集"
         bulk_invite:
           none: "このページに表示する招待はありません。"
           text: "一括招待"
@@ -2667,6 +2678,7 @@ ja:
     filter_input:
       clear: "フィルタをクリア"
     filter_controls:
+      reset: "リセット"
       toggle: "ドロップダウンのフィルタを切り替える"
     shared_drafts:
       title: "共有の下書き"
@@ -2786,7 +2798,6 @@ ja:
       italic_label: "I"
       italic_title: "斜体"
       italic_text: "斜体テキスト"
-      heading_title: "見出し"
       heading_level_n: "見出し %{levelNumber}"
       heading_level_n_title: "見出し %{levelNumber}"
       heading_level_paragraph: "段落"
@@ -4036,6 +4047,12 @@ ja:
         instructions: "この投稿へのリンクを共有します:"
       original_language: "元の投稿は%{language}で書かれました"
       original_language_and_outdated: "元の投稿は%{language}で書かれています。翻訳は古い可能性があります"
+      originally_written_in: "元の言語: %{language}"
+      click_to_show_original: "クリックして原文を表示"
+      tap_to_show_original: "タップして原文を表示"
+      click_to_show_translation: "クリックして翻訳を表示"
+      tap_to_show_translation: "タップして翻訳を表示"
+      ai_translation_disclaimer: "AIによる翻訳は正確でない場合があります。"
     category:
       none: "(カテゴリなし)"
       all: "すべてのカテゴリ"
@@ -4847,6 +4864,10 @@ ja:
           public: "全員に表示"
           always_public: "このセクションのコンテンツは常に公開される"
           more_menu: "その他のメニュー"
+          localizations:
+            locale: "言語"
+            title_label: "セクションのタイトル"
+            remove_language: "削除"
           links:
             add: "別のリンクを追加する"
             delete: "リンクを削除する"
@@ -5755,7 +5776,6 @@ ja:
               posts: "投稿"
               share: "共有"
             whos_posting:
-              all_categories: "すべてのカテゴリ"
               staff: "スタッフ"
             trust_level_pipeline:
               trust_levels:
@@ -6471,6 +6491,8 @@ ja:
         sidebar: "サイドバー"
         header_dropdown: "ヘッダードロップダウン"
         legacy: "レガシー"
+      duplicate_topic_titles:
+        allowed: "許可"
       backups:
         title: "バックアップ"
         files_title: "バックアップファイル"
@@ -6708,7 +6730,6 @@ ja:
           finish_install: "テーマのインストールを終了"
           last_attempt: "インストールプロセスが終了しませんでした。最終試行:"
           remote_branch: "ブランチ名 (オプション)"
-          public_key: "次の公開鍵アクセスをリポジトリに許可する:"
           install: "インストール"
           installed: "インストール済み"
           install_popular: "人気"
@@ -8022,6 +8043,7 @@ ja:
         uploading: "アップロード中…"
         name: "名前"
         group: "グループ"
+        all_groups: "すべてのグループ"
         created_by: "作成者"
         image: "画像"
         alt: "カスタム絵文字のプレビュー"

@@ -742,6 +742,7 @@ pt:
         email: "E-mail"
         name: "Nome"
         fields: "campos"
+        penalty_forever: "Para Sempre"
         reject_reason: "Motivo"
         scrubbed_by: "Registo apagado por"
         scrubbed_reason: "Motivo"
@@ -1484,7 +1485,6 @@ pt:
       external_links_in_new_tab: "Abrir todas as hiperligações externas num novo separador"
       enable_quoting: "Ativar resposta usando citação de texto destacado"
       enable_smart_lists: "Ativar as listas inteligentes quando escreve no compositor"
-      enable_defer: "Ativar a marcação de tópicos como não lidos"
       experimental_sidebar:
         enable: "Ativar a barra lateral"
         options: "Opções"
@@ -1912,7 +1912,7 @@ pt:
         default: "(predefinição)"
         any: "qualquer"
       homepage:
-        default: "(predefinição)"
+        default: "Predefinição"
       password_confirmation:
         title: "Palavra-passe Novamente"
       invite_code:
@@ -1956,6 +1956,9 @@ pt:
         contextual: "Conteúdo da nova página"
       bookmark_after_notification:
         title: "Após o envio de uma notificação de lembrete de marcador:"
+      send_shortcut:
+        enter: "Entrar"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Notificar quando alguém gostar"
         always: "Sempre"
@@ -2114,21 +2117,25 @@ pt:
         invite_roles:
           member_title: "Convidar membros"
           member_tab: "Membros"
-          admin_tab: "Administradores"
+          admin_tab: "Pessoal"
+          staff_role_admin: "Administração"
+          staff_role_moderator: "Moderador"
           email_placeholder: "name@example.com"
           invite_by_email: "E-mail"
           restrict_domain: "Restringir ao domínio"
-          more_options: "Mais opções"
+          create_and_send: "Enviar"
+          create_and_copy: "Copiar hiperligação"
           update: "Atualização"
           summary:
             role_member: "Membro"
             role_admin: "Administração"
+            role_moderator: "Moderador"
             method_email: "E-mail"
             uses: "Máximo de utilizações"
             expires: "Expira"
             topic: "Tópico"
             groups: "Grupos"
-            edit: "Editar convite"
+            edit: "Editar"
         bulk_invite:
           none: "Sem convites para exibir nesta página."
           text: "Convite em massa"
@@ -2717,6 +2724,8 @@ pt:
       medium_dark_tone: Tom de pele meio escuro
       dark_tone: Tom de pele escuro
       default: Emojis Personalizados
+    filter_controls:
+      reset: "Repor"
     shared_drafts:
       title: "Rascunhos Partilhados"
       notice: "Este tópico é visível apenas para quem pode publicar rascunhos partilhados."
@@ -2809,7 +2818,6 @@ pt:
       italic_label: "I"
       italic_title: "Itálico"
       italic_text: "texto em itálico"
-      heading_title: "Cabeçalhos"
       heading_level_n: "Cabeçalho  %{levelNumber}"
       heading_level_n_title: "Cabeçalho %{levelNumber}"
       heading_level_paragraph: "Parágrafo"
@@ -4478,6 +4486,8 @@ pt:
         custom:
           save: "Guardar"
           delete: "Eliminar"
+          localizations:
+            remove_language: "Remover"
           links:
             reset: "Restaurar ao padrão"
             icon:
@@ -4865,7 +4875,6 @@ pt:
               posts: "Mensagens"
               share: "Partilhar"
             whos_posting:
-              all_categories: "Todas as categorias"
               staff: "Pessoal"
             trust_level_pipeline:
               trust_levels:
@@ -5218,6 +5227,8 @@ pt:
           reset: "Repor"
       navigation_menu:
         sidebar: "Barra Lateral"
+      duplicate_topic_titles:
+        allowed: "Permitido"
       backups:
         title: "Fazer Cópias de Segurança"
         menu:
@@ -6053,6 +6064,7 @@ pt:
         uploading: "A enviar…"
         name: "Nome"
         group: "Grupo"
+        all_groups: "Todos os grupos"
         image: "Imagem"
         delete_confirm: "Tem a certeza que deseja eliminar o emoji :%{name}:?"
         settings: "Configurações"
