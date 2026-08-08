@@ -512,5 +512,50 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         )
       end
     end
+
+    context "when backfilling URLs" do
+      it "normalizes retained stale rows and stamps the current version" do
+        event =
+          Fabricate(
+            :browser_pageview_event,
+            url: "https://forum.example/latest/?campaign=private#section",
+          )
+        event.update_columns(normalized_url: nil, normalized_url_version: nil)
+
+        job.execute({})
+
+        event.reload
+        expect(event.normalized_url).to eq("/latest")
+        expect(event.normalized_url_version).to eq(BrowserPageviewUrlInspector::VERSION)
+      end
+
+      it "resumes bounded batches without revisiting current rows" do
+        SiteSetting.browser_pageview_referrer_backfill_batch_size = 1
+        first = Fabricate(:browser_pageview_event, url: "/first")
+        second = Fabricate(:browser_pageview_event, url: "/second")
+        [first, second].each do |event|
+          event.update_columns(normalized_url: nil, normalized_url_version: nil)
+        end
+
+        job.execute({})
+
+        expect(
+          BrowserPageviewEvent.where(normalized_url_version: nil).pluck(:id),
+        ).to contain_exactly(second.id)
+
+        job.execute({})
+
+        expect(BrowserPageviewEvent.where(normalized_url_version: nil)).to be_empty
+      end
+
+      it "does not backfill rows outside the retained window" do
+        event = Fabricate(:browser_pageview_event, url: "/expired", created_at: 4.months.ago)
+        event.update_columns(normalized_url: nil, normalized_url_version: nil)
+
+        job.execute({})
+
+        expect(event.reload.normalized_url_version).to be_nil
+      end
+    end
   end
 end

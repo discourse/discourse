@@ -6,10 +6,12 @@ class Admin::DashboardController < Admin::StaffController
   before_action :ensure_admin,
                 only: %i[
                   available_reports
+                  traffic
                   update_reports_section
                   update_configuration
                   update_section_settings
                 ]
+  before_action :ensure_dashboard_improvements_enabled, only: :traffic
 
   def index
     if dashboard_improvements?
@@ -56,6 +58,25 @@ class Admin::DashboardController < Admin::StaffController
 
   def general
     render json: AdminDashboardGeneralData.fetch_cached_stats
+  end
+
+  def traffic
+    permitted =
+      params.permit(
+        :start_date,
+        :end_date,
+        :top_url,
+        :entry_url,
+        :referrer,
+        :country,
+        :network,
+        :browser,
+        :ip,
+      )
+
+    render json: AdminDashboardSiteTrafficExplorer.call(permitted.to_h.symbolize_keys)
+  rescue ActiveRecord::QueryCanceled, PG::QueryCanceled
+    render json: { error_type: "traffic_query_timeout" }, status: :service_unavailable
   end
 
   def problems

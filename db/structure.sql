@@ -2068,7 +2068,9 @@ CREATE TABLE public.browser_pageview_events (
     score integer,
     normalized_referrer character varying(2000),
     normalized_referrer_version smallint,
-    source smallint DEFAULT 1 NOT NULL
+    source smallint DEFAULT 1 NOT NULL,
+    normalized_url character varying(2000),
+    normalized_url_version integer
 );
 
 
@@ -17618,6 +17620,13 @@ CREATE INDEX idx_bpe_session_created_at ON public.browser_pageview_events USING 
 
 
 --
+-- Name: idx_bpe_stale_normalized_url; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_stale_normalized_url ON public.browser_pageview_events USING btree (id) WHERE ((normalized_url_version IS NULL) OR (normalized_url_version < 1));
+
+
+--
 -- Name: idx_bprd_rollups_date_referrer_unique; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -23128,6 +23137,8 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260806074210'),
+('20260806074204'),
 ('20260803015314'),
 ('20260731055703'),
 ('20260730183114'),

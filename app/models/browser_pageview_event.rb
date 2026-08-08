@@ -6,6 +6,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
   MAX_REFERRER_LENGTH = 2000
   MAX_USER_AGENT_LENGTH = 1000
   MAX_NORMALIZED_REFERRER_LENGTH = 2000
+  MAX_NORMALIZED_URL_LENGTH = 2000
   RETENTION_PERIOD = 3.months
   SOURCE_PIGGYBACK = 1
   SOURCE_BEACON = 2
@@ -169,9 +170,12 @@ class BrowserPageviewEvent < ActiveRecord::Base
 
     def attributes_from_payload(payload)
       normalized_referrer = BrowserPageviewReferrerInspector.normalize(payload[:referrer])
+      normalized_url = BrowserPageviewUrlInspector.normalize(payload[:url])
 
       {
         url: payload[:url]&.slice(0, MAX_URL_LENGTH),
+        normalized_url: normalized_url&.slice(0, MAX_NORMALIZED_URL_LENGTH),
+        normalized_url_version: BrowserPageviewUrlInspector::VERSION,
         ip_address: payload[:ip_address],
         country_code: payload[:country_code]&.slice(0, 2),
         asn: payload[:asn],
@@ -227,9 +231,15 @@ class BrowserPageviewEvent < ActiveRecord::Base
     )
   end
 
+  before_validation :normalize_url
   before_save :truncate_fields
 
   private
+
+  def normalize_url
+    self.normalized_url = BrowserPageviewUrlInspector.normalize(url)
+    self.normalized_url_version = BrowserPageviewUrlInspector::VERSION
+  end
 
   def truncate_fields
     self.url = url.slice(0, MAX_URL_LENGTH) if url.present?
@@ -238,6 +248,9 @@ class BrowserPageviewEvent < ActiveRecord::Base
     self.session_id = session_id.slice(0, MAX_SESSION_ID_LENGTH) if session_id.present?
     if normalized_referrer.present?
       self.normalized_referrer = normalized_referrer.slice(0, MAX_NORMALIZED_REFERRER_LENGTH)
+    end
+    if normalized_url.present?
+      self.normalized_url = normalized_url.slice(0, MAX_NORMALIZED_URL_LENGTH)
     end
   end
 end
@@ -252,6 +265,8 @@ end
 #  ip_address                  :inet             not null
 #  normalized_referrer         :string(2000)
 #  normalized_referrer_version :integer
+#  normalized_url              :string(2000)
+#  normalized_url_version      :integer
 #  referrer                    :string(2000)
 #  score                       :integer
 #  source                      :integer          default("piggyback"), not null
@@ -269,6 +284,7 @@ end
 #  idx_bpe_ip_ua_created_at                     (ip_address,user_agent,created_at)
 #  idx_bpe_normalized_referrer_version          (normalized_referrer_version) WHERE (referrer IS NOT NULL)
 #  idx_bpe_session_created_at                   (session_id,created_at)
+#  idx_bpe_stale_normalized_url                 (id) WHERE ((normalized_url_version IS NULL) OR (normalized_url_version < 1))
 #  index_browser_pageview_events_on_created_at  (created_at) USING brin
 #  index_browser_pageview_events_on_topic_id    (topic_id)
 #  index_browser_pageview_events_on_user_id     (user_id)

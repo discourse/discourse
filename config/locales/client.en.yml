@@ -7247,6 +7247,73 @@ en:
       new_features:
         title: "What's new?"
         check_for_updates: "Check for updates"
+      site_traffic_explorer:
+        title: "Site Traffic Explorer"
+        description: "Investigate pageviews, visitor sessions, acquisition sources, and audience details."
+        loading: "Loading traffic…"
+        errors:
+          timeout: "This traffic query took too long. Choose a shorter date range and try again."
+          unexpected: "Couldn't load site traffic. Try again."
+        retry: "Try again"
+        empty: "No matching pageviews"
+        summary: "Traffic summary"
+        traffic_over_time: "Traffic over time"
+        pageviews: "Pageviews"
+        actions: "Actions"
+        metric_information: "About this metric"
+        active_filters: "Active traffic filters"
+        filter_description: "%{filter} is %{value}"
+        filter_by: "Filter by %{label}"
+        remove_filter: "Remove %{filter} filter"
+        clear_filters: "Clear all filters"
+        view_more: "View more"
+        no_dimension_data: "No data for this breakdown."
+        direct_or_unknown: "Direct / unknown"
+        cards:
+          acquisition: "Acquisition"
+          pages: "Pages"
+          visitors: "Visitors"
+        dimensions:
+          referrers: "Referrers"
+          countries: "Countries"
+          networks: "Networks"
+          top_urls: "Top URLs"
+          entry_urls: "Entry URLs"
+          browsers: "Browsers"
+          ip_addresses: "IP addresses"
+        filters:
+          top_url: "Top URL"
+          entry_url: "Entry URL"
+          referrer: "Referrer"
+          country: "Country"
+          network: "Network"
+          browser: "Browser"
+          ip: "IP address"
+        metrics:
+          pageviews:
+            label: "Pageviews"
+            tooltip: "Human pageviews matching the active filters."
+          distinct_sessions:
+            label: "Distinct sessions"
+            tooltip: "Sessions represented in the available raw pageviews before filters are applied."
+          logged_in_share:
+            label: "Logged-in share"
+            tooltip: "The share of matching human pageviews from logged-in members."
+          bounce_rate:
+            label: "Bounce rate"
+            tooltip: "The share of sessions with one pageview and less than 10 seconds of engaged time."
+          average_session_duration:
+            label: "Average session duration"
+            tooltip: "Average engaged time across sessions represented in the available raw pageviews."
+        series:
+          logged_in_human: "Logged-in human"
+          anonymous_human: "Anonymous human"
+          likely_crawler: "Likely crawler"
+        partial:
+          title: "Partial traffic data"
+          retention: "Traffic before %{date} is no longer available, so these results do not cover the full selected date range."
+          pageview_limit: "These results are limited to the most recent %{limit} pageviews in the selected date range. Choose a shorter date range to include all available traffic."
+          combined: "Traffic before %{date} is no longer available. These results are also limited to the most recent %{limit} pageviews in the selected date range. Choose a shorter date range within the available dates to include all available traffic."
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard updated:"

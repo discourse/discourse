@@ -16,6 +16,10 @@ export default function () {
         resetNamespace: true,
       });
     });
+    this.route("adminSiteTraffic", {
+      path: "/dashboard/traffic",
+      resetNamespace: true,
+    });
 
     this.route(
       "adminSiteSettings",

@@ -1104,6 +1104,7 @@ en:
       opera: "Opera"
       safari: "Safari"
       unknown: "unknown browser"
+
     device:
       android: "Android Device"
       chromebook: "Chrome OS"
@@ -1123,6 +1124,18 @@ en:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "unknown operating system"
+
+  admin_site_traffic_explorer:
+    direct_or_unknown: "Direct / unknown"
+    browsers:
+      chrome: "Chrome"
+      discoursehub: "DiscourseHub app"
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
+      unknown: "Unknown browser"
 
   change_email:
     error: "There was an error changing your email address. Perhaps the address is already in use?"
