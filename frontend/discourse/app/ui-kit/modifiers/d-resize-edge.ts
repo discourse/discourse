@@ -67,12 +67,15 @@ interface DResizeEdgeSignature {
       bodyClass?: string;
 
       /**
-       * Called once when a gesture begins, before anything moves. Purely a
-       * notification — the return value is ignored, and a caller whose size is
-       * a live measurement supplies it by passing a function as `value`.
+       * Called once when a resize begins, immediately before the first size is
+       * reported. Purely a notification — the return value is ignored, and a
+       * caller whose size is a live measurement supplies it by passing a
+       * function as `value`.
        *
-       * Useful because it fires for a press even if nothing moves, so a caller can
-       * announce the start of a resize exactly once.
+       * Fires on the first report rather than on the press, so a press that
+       * never becomes a resize opens nothing. Anything held for the length of
+       * the gesture belongs here, because it is always closed by exactly one
+       * `onResizeEnd`.
        */
       onResizeStart?: () => void;
 
@@ -88,10 +91,10 @@ interface DResizeEdgeSignature {
        * happen once per resize rather than once per report — persisting the
        * size, or undoing something held for the length of the gesture.
        *
-       * Paired with one `onResizeStart` for every gesture that reported a size.
-       * Two exits do not report: a press released without moving, which is a
-       * click rather than a resize, and teardown while a gesture is in flight,
-       * which fires no consumer callback at all.
+       * Paired with exactly one `onResizeStart`: both fire for a gesture that
+       * reported a size, and neither fires for one that did not. A press
+       * released without moving is a click rather than a resize and opens
+       * nothing, and teardown mid-gesture fires no consumer callback at all.
        */
       onResizeEnd?: (size: number, meta: ResizeReportMeta) => void;
     };
@@ -168,9 +171,9 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     // cannot leave two gestures open against a single end.
     this.#endKeyboardGesture();
     this.#rtl = undefined;
+    this.#started = false;
     this.#startCoordinate = this.#coordinate(event);
     this.#startValue = this.#read(this.#named.value);
-    this.#named.onResizeStart?.();
   };
   #onDrag = (event: PointerEvent) => {
     // A pointer can move several times between paints, so only the latest
@@ -189,12 +192,16 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     this.#cancelFrame();
 
     const coordinate = this.#coordinate(event);
-    // A press released exactly where it landed is a click, not a resize.
-    // Reporting it would hand the consumer the size it already had, which is
-    // enough to make it persist one and fire whatever it fires per resize.
-    // Compared by coordinate rather than by whether a move was seen, because a
-    // browser may coalesce a short drag into no intermediate pointer move.
-    if (coordinate === this.#startCoordinate) {
+    // A press that reported nothing and was released where it landed is a click,
+    // not a resize. Reporting it would hand the consumer the size it already
+    // had, which is enough to make it persist one. The coordinate is checked as
+    // well as `#started` because a browser may coalesce a short drag into no
+    // intermediate pointer move, and that is still a resize.
+    //
+    // A gesture that DID report is always closed, whatever the release
+    // coordinate: a drag that returned to its origin, or one along the other
+    // axis, has already told the consumer a resize was under way.
+    if (!this.#started && coordinate === this.#startCoordinate) {
       return;
     }
     this.#reportMove(coordinate, { final: true });
@@ -272,13 +279,20 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
   #releaseGesture: (() => void) | null = null;
 
   /**
-   * Whether the element reads right-to-left, sampled when the current gesture
-   * opened. Cleared at the start of each one so a document that changed
-   * direction in between is measured again.
+   * Whether the element reads right-to-left, sampled on the first read within
+   * the current gesture. Cleared at the start of each one so a document that
+   * changed direction in between is measured again.
    */
   #rtl?: boolean;
 
   #startCoordinate = 0;
+
+  /**
+   * Whether the pointer gesture in flight has reported a size, and so whether
+   * `onResizeStart` has been fired and is owed an `onResizeEnd`.
+   */
+  #started = false;
+
   #startValue = 0;
   /** The gesture args handed to `registerPointerDrag`. */
   #gestureArgs: {
@@ -384,6 +398,15 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
   #reportMove(coordinate: number, { final = false }: { final?: boolean } = {}) {
     const delta = (coordinate - this.#startCoordinate) * this.#growthDirection;
     const size = this.#clamp(this.#startValue + delta);
+
+    // Opened on the first report rather than on the press, so a press that never
+    // becomes a resize opens nothing and needs nothing closed. A consumer that
+    // suppresses transitions or announces a resize for the length of the gesture
+    // would otherwise be left holding that state after a plain click.
+    if (!this.#started) {
+      this.#started = true;
+      this.#named.onResizeStart?.();
+    }
 
     this.#named.onResize?.(size, { source: "pointer" });
 

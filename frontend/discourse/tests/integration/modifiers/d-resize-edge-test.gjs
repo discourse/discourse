@@ -486,6 +486,7 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
             value=state.value
             min=240
             max=720
+            onResizeStart=state.onResizeStart
             onResize=state.onResize
             onResizeEnd=state.onResizeEnd
           }}
@@ -515,6 +516,107 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
       state.resizeEnds,
       [],
       "and nothing is committed, so a consumer does not persist a size the user never chose"
+    );
+    assert.strictEqual(
+      state.resizeStarts,
+      0,
+      "and no gesture is opened, so nothing is left waiting to be closed"
+    );
+  });
+
+  test("a gesture that reports opens and closes exactly once", async function (assert) {
+    const state = new Harness();
+
+    await render(
+      <template>
+        <div
+          class="resize-edge"
+          {{dResizeEdge
+            axis="vertical"
+            value=state.value
+            min=240
+            max=720
+            onResizeStart=state.onResizeStart
+            onResize=state.onResize
+            onResizeEnd=state.onResizeEnd
+          }}
+        ></div>
+      </template>
+    );
+
+    const edge = find(EDGE);
+    stubPointerCapture(edge);
+
+    // Sideways on a vertical resize: the projected coordinate never changes, so
+    // the release lands on the press coordinate even though the gesture reported.
+    await triggerEvent(edge, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 100,
+      clientY: 300,
+    });
+    await triggerEvent(edge, "pointermove", {
+      button: 0,
+      pointerId: 1,
+      clientX: 200,
+      clientY: 300,
+    });
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await triggerEvent(edge, "pointerup", {
+      pointerId: 1,
+      clientX: 200,
+      clientY: 300,
+    });
+
+    assert.strictEqual(state.resizeStarts, 1, "the gesture opened once");
+    assert.strictEqual(
+      state.resizeEnds.length,
+      1,
+      "and closed once, so a consumer holding state for the gesture can release it"
+    );
+  });
+
+  test("a drag returning to its origin still closes its gesture", async function (assert) {
+    const state = new Harness();
+
+    await render(
+      <template>
+        <div
+          class="resize-edge"
+          {{dResizeEdge
+            axis="vertical"
+            value=state.value
+            min=240
+            max=720
+            onResizeStart=state.onResizeStart
+            onResize=state.onResize
+            onResizeEnd=state.onResizeEnd
+          }}
+        ></div>
+      </template>
+    );
+
+    const edge = find(EDGE);
+    stubPointerCapture(edge);
+
+    await triggerEvent(edge, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientY: 300,
+    });
+    await triggerEvent(edge, "pointermove", {
+      button: 0,
+      pointerId: 1,
+      clientY: 400,
+    });
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await triggerEvent(edge, "pointerup", { pointerId: 1, clientY: 300 });
+
+    assert.strictEqual(state.resizeStarts, 1, "the gesture opened once");
+    assert.strictEqual(
+      state.resizeEnds.length,
+      1,
+      "and closed once, even though the pointer was released where it started"
     );
   });
 

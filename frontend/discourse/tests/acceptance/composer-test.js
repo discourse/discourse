@@ -337,6 +337,37 @@ acceptance(`Composer`, function (needs) {
     );
   });
 
+  test("composer resize oracle a click on the grippie opens no resize lifecycle", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    const appEvents = this.container.lookup("service:app-events");
+    appEvents.on("composer:resize-started", () => assert.step("started"));
+    appEvents.on("composer:resize-ended", () => assert.step("ended"));
+
+    const grippie = find(".grippie");
+    stubPointerCapture(grippie);
+    await triggerEvent(grippie, "pointerdown", {
+      button: 0,
+      clientY: 400,
+      pointerId: 1,
+    });
+    await triggerEvent(grippie, "pointerup", {
+      button: 0,
+      clientY: 400,
+      pointerId: 1,
+    });
+
+    // A started without an ended strands every subscriber that undoes something
+    // on the end. Chat suppresses the drawer's transitions for the length of a
+    // composer resize and only restores them on the end, so an unclosed gesture
+    // leaves them suppressed for the rest of the session.
+    assert.verifySteps(
+      [],
+      "a press that never resized opens no gesture, so nothing is left waiting to be closed"
+    );
+  });
+
   test("grippie regression persistence failure still ends composer resize", async function (assert) {
     await visit("/");
     await click("#create-topic");
