@@ -521,6 +521,8 @@ en:
           localization_settings: "App language settings"
           enable_translations: "Enable automatic translations"
           enable_translations_disabled: "You must add a supported language to enable translations"
+          show_language_switcher: "Show a language switcher in the header"
+          show_language_switcher_description: "Lets everyone pick a language and see your site in it."
         stats:
           title: "Translation statistics"
           backfill_disabled: "Backfilling is disabled, only new posts will be translated."

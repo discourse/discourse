@@ -6,6 +6,10 @@
     border-radius: var(--d-border-radius);
   }
 
+  &__language-switcher {
+    margin-block: var(--space-3);
+  }
+
   &__toggle-container {
     margin-block-end: var(--space-3);
   }

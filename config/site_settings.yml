@@ -1934,6 +1934,8 @@ content_localization:
     client: true
     area: "localization"
     validator: "LanguageSwitcherSettingValidator"
+    depends_on:
+      - "content_localization_enabled"
   content_localization_allowed_groups:
     type: group_list
     list_type: compact

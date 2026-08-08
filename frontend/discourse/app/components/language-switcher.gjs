@@ -4,7 +4,12 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
+import {
+  LOCALE_COOKIE,
+  LOCALE_COOKIE_EXPIRY,
+} from "discourse/lib/content-localization";
 import cookie from "discourse/lib/cookie";
+import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -24,7 +29,10 @@ export default class LanguageSwitcher extends Component {
         data: { locale },
       });
     } else {
-      cookie("locale", locale, { path: "/" });
+      cookie(LOCALE_COOKIE, locale, {
+        path: getURL("/"),
+        expires: LOCALE_COOKIE_EXPIRY,
+      });
     }
 
     this.dMenu.close();
