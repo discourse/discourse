@@ -483,12 +483,12 @@ export default <template>
       class="btn btn-default"
     >{{dIcon "desktop"}}{{i18n "admin.customize.theme.preview"}}</a>
     {{#unless @controller.model.system}}
-      <a
-        class="btn btn-default export"
-        rel="noopener noreferrer"
-        target="_blank"
-        href={{@controller.downloadUrl}}
-      >{{dIcon "download"}} {{i18n "admin.export_json.button_text"}}</a>
+      <DButton
+        class="btn-default export"
+        @action={{@controller.exportTheme}}
+        @icon="download"
+        @label="admin.export_json.button_text"
+      />
     {{/unless}}
 
     {{#if @controller.showConvert}}

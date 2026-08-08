@@ -10,6 +10,7 @@ import ThemeSettings from "discourse/admin/models/theme-settings";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
+import downloadBlob from "discourse/lib/download-blob";
 import getURL from "discourse/lib/get-url";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
@@ -356,6 +357,15 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   @computed("model.user.id", "model.default")
   get showConvert() {
     return this.model?.user?.id > 0 && !this.model?.default;
+  }
+
+  @action
+  async exportTheme() {
+    try {
+      await downloadBlob(this.downloadUrl);
+    } catch {
+      this.dialog.alert(i18n("generic_error"));
+    }
   }
 
   @action
