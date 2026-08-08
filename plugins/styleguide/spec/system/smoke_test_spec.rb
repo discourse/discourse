@@ -19,6 +19,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/atoms/otp", title: "OTP" },
       { href: "/atoms/date-time-inputs", title: "Date/Time inputs" },
       { href: "/atoms/dropdowns", title: "Dropdowns" },
+      { href: "/atoms/thinking", title: "Thinking" },
       { href: "/atoms/topic-link", title: "Topic Link and Status" },
       { href: "/atoms/segmented-control", title: "Segmented Control (Button toggle group)" },
     ],
