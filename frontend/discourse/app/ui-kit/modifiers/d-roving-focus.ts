@@ -23,6 +23,20 @@ type StepOutcome =
   | { kind: "group-edge" };
 
 /**
+ * `input` types that ignore the arrow keys, so a focused one inside an item must not suppress
+ * navigation. Every other type — text and its relatives, `radio`, `range`, and the date/time
+ * family — consumes at least one arrow natively and keeps its keys.
+ */
+const NON_ARROW_INPUT_TYPES = new Set([
+  "button",
+  "checkbox",
+  "file",
+  "image",
+  "reset",
+  "submit",
+]);
+
+/**
  * Controls for moving the cursor to a live item in the roving-focus group.
  *
  * The `focus*` members return whether they landed on an item — `false` when the group is
@@ -64,7 +78,63 @@ export interface DRovingFocusApi {
    * cursor to re-read.
    */
   reannounceActive(): boolean;
+  /**
+   * Steps the cursor one item forward, as the corresponding arrow key would. `axis` picks which
+   * axis to travel in a grid; omitted, it follows the group's own orientation.
+   *
+   * Unlike the keyboard path this suppresses the EDGE callbacks — `onEdgeReach` and `onExit`
+   * announce that a *reader* pushed against a boundary, which a programmatic call has not done.
+   * `onActiveChange` still fires on a real move, because the cursor really did move.
+   */
+  focusNext(axis?: DRovingFocusAxis): DRovingFocusStepResult;
+  /** The backward counterpart of {@link DRovingFocusApi.focusNext}, with the same contract. */
+  focusPrevious(axis?: DRovingFocusAxis): DRovingFocusStepResult;
+  /** The items the cursor may legally land on, in DOM order. */
+  items(): HTMLElement[];
+  /** The item the cursor currently sits on, or `null` when there is no cursor. */
+  currentItem(): HTMLElement | null;
+  /**
+   * The position of `item` within {@link DRovingFocusApi.items}, or `-1` when it is not a member.
+   *
+   * Deliberately resolved against that list rather than by re-querying the DOM: raw selector
+   * order counts items the cursor can never land on, so an index derived that way addresses a
+   * different item than the one it names as soon as a single hidden or disabled match sits
+   * earlier in the container.
+   */
+  indexOf(item: HTMLElement): number;
+  /**
+   * Moves the cursor onto a specific element, returning `false` (and moving nothing) when it is
+   * not one of {@link DRovingFocusApi.items}. Addressing by element rather than by index is what
+   * lets a caller hold a reference across a re-render without recomputing positions.
+   */
+  focusElement(item: HTMLElement): boolean;
+  /**
+   * Active mode only — drops the cursor entirely, so nothing is highlighted and
+   * `aria-activedescendant` points at nothing until the next move seeds a new one.
+   *
+   * There is deliberately no focus-mode counterpart. There the cursor IS DOM focus, and the
+   * cursor is resolved from `document.activeElement` first, so a clear that does not blur would
+   * clear nothing — while one that did blur would strand focus on `<body>`, which is worse than
+   * the state it set out to fix.
+   *
+   * @returns Whether there was a cursor to drop.
+   */
+  clear(): boolean;
 }
+
+/**
+ * A single navigation axis. `"grid"` is absent by construction: it names a space that allows
+ * both axes, not a direction a step can travel.
+ */
+export type DRovingFocusAxis = Exclude<Orientation, "grid">;
+
+/**
+ * The outcome of an API-driven step: `"moved"` when the cursor advanced, `"edge"` when a cursor
+ * exists but is already against a boundary, and `"unavailable"` when the group has no items at
+ * all. Three-valued so a caller can tell "the run ended here" from "there is no run here" and
+ * fall back accordingly.
+ */
+export type DRovingFocusStepResult = "moved" | "edge" | "unavailable";
 
 interface DRovingFocusArgs {
   /** `"focus"` (roving tabindex, default) or `"active"` (`aria-activedescendant`). */
@@ -298,6 +368,17 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   #element: HTMLElement | null = null;
 
   #orientation: Orientation = "grid";
+
+  /**
+   * Items already demoted to `tabindex="-1"` by this group. Keyed on element IDENTITY rather
+   * than on whether the attribute is missing: items may arrive carrying an author-supplied
+   * `tabindex="0"`, and skipping those would leave the group with more than one tab stop.
+   * A `WeakSet` so removed items are not retained.
+   */
+  #stamped = new WeakSet<HTMLElement>();
+
+  /** The item currently holding the group's single tab stop, so only it needs demoting. */
+  #tabStopHolder: HTMLElement | null = null;
   #itemSelector?: string;
   #columnsOverride: number | (() => number) | null = null;
   #onActivate?: (item: HTMLElement, event: KeyboardEvent) => void;
@@ -316,8 +397,9 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   #autoActivateSelected = false;
   #activationRemovesSelected = false;
 
-  /** The element keydown is bound to: the container (focus) or controller (active). */
+  /** The ARIA anchor: the container (focus) or controller (active). */
   #listenElement: HTMLElement | null = null;
+
   #pointerElement: HTMLElement | null = null;
 
   /** Armed only while a seed is owed to a container that had no items yet. */
@@ -418,6 +500,38 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
           : false;
       }
       return false;
+    },
+    clear: () => {
+      // Mirrors what `#reconcileActive` does when the cursor's row disappears, so a cleared
+      // group is in exactly the state a vanished cursor leaves behind rather than a second,
+      // subtly different one.
+      if (this.#mode !== "active" || !this.#activeId) {
+        return false;
+      }
+      this.#activeId = null;
+      this.#listenElement?.removeAttribute("aria-activedescendant");
+      this.#clearActiveClass();
+      this.#onActiveChange?.(null);
+      return true;
+    },
+    focusNext: (axis) => this.#apiStep(axis, 1),
+    focusPrevious: (axis) => this.#apiStep(axis, -1),
+    items: () => this.#items(),
+    currentItem: () => {
+      const cells = this.#cells();
+      const index = this.#currentIndex(cells);
+      return index < 0 ? null : cells[index];
+    },
+    indexOf: (item) => this.#items().indexOf(item),
+    focusElement: (item) => {
+      // Membership is checked against the navigable list, not `contains`, so an element that
+      // matches the selector but can never hold the cursor is refused rather than silently
+      // stranding it there.
+      if (!this.#items().includes(item)) {
+        return false;
+      }
+      this.#setActive(item);
+      return true;
     },
     reannounceActive: () => {
       const id = this.#activeId;
@@ -545,7 +659,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
           return;
         }
         const delta = event.key === forwardKey ? 1 : -1;
-        outcome = this.#step(current, delta, cells, columns);
+        outcome = this.#applyStep("horizontal", delta, cells, current, columns);
         if (outcome.kind === "group-edge") {
           if (current >= 0 && this.#onExit) {
             event.preventDefault();
@@ -561,10 +675,13 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
           return;
         }
         const direction = event.key === "ArrowDown" ? 1 : -1;
-        outcome =
-          current < 0
-            ? this.#step(-1, direction, cells, columns)
-            : this.#stepRow(current, direction, cells, columns);
+        outcome = this.#applyStep(
+          "vertical",
+          direction,
+          cells,
+          current,
+          columns
+        );
         if (outcome.kind === "group-edge") {
           if (current >= 0 && this.#onEdgeReach) {
             event.preventDefault();
@@ -579,14 +696,20 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
           this.#jumpToLogicalIndex(0, "backward", event);
           return;
         }
-        outcome = this.#edgeOutcome(cells, 0, 1, last);
+        outcome = this.#applyOutcome(
+          this.#edgeOutcome(cells, 0, 1, last),
+          cells
+        );
         break;
       case "End":
         if (this.#logicalCount != null) {
           this.#jumpToLogicalIndex(this.#logicalCount - 1, "forward", event);
           return;
         }
-        outcome = this.#edgeOutcome(cells, last, -1, last);
+        outcome = this.#applyOutcome(
+          this.#edgeOutcome(cells, last, -1, last),
+          cells
+        );
         break;
       case "PageUp":
       case "PageDown": {
@@ -642,8 +765,8 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     }
 
     if (outcome.kind === "move") {
+      // The move itself was already committed by whichever branch produced the outcome.
       event.preventDefault();
-      this.#setActive(cells[outcome.index]);
       return;
     }
     // A row edge stops the cursor and consumes the key, but reports nothing: the group has not
@@ -921,12 +1044,19 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       return false;
     }
     const tag = target.tagName;
-    return (
-      tag === "INPUT" ||
-      tag === "TEXTAREA" ||
-      tag === "SELECT" ||
-      target.isContentEditable
-    );
+    if (tag === "TEXTAREA" || tag === "SELECT" || target.isContentEditable) {
+      return true;
+    }
+    if (tag !== "INPUT") {
+      return false;
+    }
+    // Not every input consumes an arrow key. A checkbox or a button-shaped input has no caret
+    // and no native arrow behaviour, so treating it as editable silently kills navigation for
+    // anyone whose cursor is on a row carrying one — a bulk-select checkbox being the case that
+    // surfaced this. Everything NOT on this list keeps bailing, which deliberately covers more
+    // than text: radio moves between options, range slides, and the date/time family steps its
+    // segments, all without a caret to notice.
+    return !NON_ARROW_INPUT_TYPES.has((target as HTMLInputElement).type);
   }
 
   /**
@@ -1116,6 +1246,146 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    * @param columns - The current column count.
    * @returns Where the cursor lands, or which kind of edge blocked it.
    */
+  /**
+   * Applies a resolved outcome, moving the cursor when it names a destination. Split out so
+   * every branch that produces an outcome commits it the same way.
+   *
+   * @returns The same outcome, so a caller can keep dispatching on it.
+   */
+  #applyOutcome(outcome: StepOutcome, cells: HTMLElement[]): StepOutcome {
+    if (outcome.kind === "move") {
+      this.#setActive(cells[outcome.index]);
+    }
+    return outcome;
+  }
+
+  /**
+   * The shared core of a single step: routes an axis to the stepper that governs it and commits
+   * the result. Both the keydown handler and the API's `focusNext`/`focusPrevious` go through
+   * here, so the two can never disagree about where a step lands.
+   *
+   * A vertical step from a *seedless* cursor deliberately uses {@link #step} rather than
+   * {@link #stepRow}: with no current row there is no row to move out of, and row arithmetic on
+   * a negative index has no meaning.
+   */
+  #applyStep(
+    axis: DRovingFocusAxis,
+    delta: 1 | -1,
+    cells: HTMLElement[],
+    current: number,
+    columns: number
+  ): StepOutcome {
+    const outcome =
+      axis === "horizontal" || current < 0
+        ? this.#step(current, delta, cells, columns)
+        : this.#stepRow(current, delta, cells, columns);
+    return this.#applyOutcome(outcome, cells);
+  }
+
+  /**
+   * The axis a step travels when the caller does not name one. A grid has no single natural
+   * axis, so it resolves to the vertical one — the axis a list-shaped consumer means by "next".
+   */
+  #naturalAxis(): DRovingFocusAxis {
+    return this.#orientation === "horizontal" ? "horizontal" : "vertical";
+  }
+
+  /**
+   * The API-side step shared by `focusNext` and `focusPrevious`. Distinct from the keydown path
+   * in exactly two ways: it never fires the edge callbacks, and it reports its outcome to the
+   * caller instead of consuming an event.
+   */
+  #apiStep(
+    axis: DRovingFocusAxis | undefined,
+    delta: 1 | -1
+  ): DRovingFocusStepResult {
+    // A non-grid group is one-dimensional, so a step needs no coordinate space at all.
+    if (this.#orientation !== "grid") {
+      return this.#stepLinear(delta);
+    }
+    const cells = this.#cells();
+    // Availability is about where the cursor may LAND, not what occupies layout. A group whose
+    // every match is present but non-navigable has a coordinate space and no run, and reporting
+    // `edge` there tells the caller it is standing at the end of something real — so it keeps
+    // the key instead of falling back. Tested against the cells rather than `#items()` so the
+    // first navigable one short-circuits, and correct because navigability implies layout.
+    if (!cells.some((cell) => this.#isNavigable(cell))) {
+      return "unavailable";
+    }
+    const outcome = this.#applyStep(
+      axis ?? this.#naturalAxis(),
+      delta,
+      cells,
+      this.#currentIndex(cells),
+      this.#columnCount()
+    );
+    return outcome.kind === "move" ? "moved" : "edge";
+  }
+
+  /**
+   * Resolves the cursor to an ELEMENT, mirroring {@link #currentIndex} but over the raw item set,
+   * so nothing has to be measured to find it. Deliberately the same resolution order — active id,
+   * then innermost-first containment of `document.activeElement`, then the established tab stop —
+   * so the two can never disagree about which item holds the cursor.
+   */
+  #currentElement(items: HTMLElement[]): HTMLElement | null {
+    if (this.#mode === "active") {
+      return items.find((el) => el.id === this.#activeId) ?? null;
+    }
+    const active = document.activeElement;
+    // Innermost first, for the reason given in `#currentIndex`: tree order places an item that
+    // CONTAINS another before it, so a forward scan resolves a nested item to its ancestor.
+    for (let i = items.length - 1; i >= 0; i--) {
+      if (items[i] === active || items[i].contains(active)) {
+        return items[i];
+      }
+    }
+    return items.find((el) => el.getAttribute("tabindex") === "0") ?? null;
+  }
+
+  /**
+   * The one-dimensional step: walks outward from the cursor and stops at the first navigable
+   * item, exactly as {@link #scan} does — but without materialising the coordinate space first.
+   *
+   * That materialisation is the whole point. `#cells()` costs a forced layout read per mounted
+   * item, so building it in order to move one place makes a single step O(items mounted): a
+   * keypress among a handful of rows would measure every item on the page. Here the expensive
+   * predicate runs only on the items actually walked over, so a step costs O(distance moved).
+   *
+   * Semantically identical to {@link #step} with `rowBound` false, which is what any non-grid
+   * orientation produces anyway.
+   */
+  #stepLinear(delta: 1 | -1): DRovingFocusStepResult {
+    // A selector query with no layout or style reads, so enumerating the set is cheap; only the
+    // navigability test inside `#scan` is not.
+    const items = this.#allItems();
+    const last = items.length - 1;
+    const current = this.#currentElement(items);
+    const from = current ? items.indexOf(current) : -1;
+
+    if (from < 0) {
+      // Seedless: with no cursor to prove a run exists, telling "nothing navigable here" from
+      // "seed the first one" may have to examine everything. This is the only O(items) path, and
+      // it runs once to establish a cursor rather than on every step.
+      const seed = this.#scan(items, delta > 0 ? 0 : last, delta, 0, last);
+      if (seed == null) {
+        return "unavailable";
+      }
+      this.#setActive(items[seed]);
+      return "moved";
+    }
+
+    const next = this.#scan(items, from + delta, delta, 0, last);
+    if (next == null) {
+      // A cursor exists, so a navigable run exists: running out of items is the END of that run,
+      // never the absence of one. Reporting it without further searching is exactly what keeps
+      // this path O(distance) — proving "unavailable" would mean examining every remaining item.
+      return "edge";
+    }
+    this.#setActive(items[next]);
+    return "moved";
+  }
+
   #step(
     index: number,
     delta: 1 | -1,
@@ -1275,9 +1545,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       this.#listenElement?.setAttribute("aria-activedescendant", id);
       this.#scrollActiveIntoView(target);
     } else {
-      for (const el of this.#allItems()) {
-        el.tabIndex = this.#tabStop && el === target ? 0 : -1;
-      }
+      this.#promoteTabStop(target);
       target.focus();
     }
     this.#onActiveChange?.(target, { pointer });
@@ -1346,23 +1614,62 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    * mid-list after a re-filter.
    */
   #seedTabStop(reseed = false): void {
-    const items = this.#items();
-    // The ATTRIBUTE, not the `tabIndex` property: every natively-focusable element reports 0
-    // without carrying the attribute, so reading the property would match the first button here
-    // and make the `aria-selected`/`aria-current` preferences below unreachable.
-    const established = reseed
-      ? undefined
-      : items.find((el) => el.getAttribute("tabindex") === "0");
-    const preferred =
-      established ??
-      items.find((el) => el.getAttribute("aria-selected") === "true") ??
-      items.find((el) => el.hasAttribute("aria-current")) ??
-      items[0];
-    for (const el of this.#allItems()) {
-      el.tabIndex = -1;
+    const all = this.#allItems();
+    // The preference below is consulted ONLY when this group takes a tab stop, so resolving it
+    // otherwise buys nothing and is not free: navigability forces a layout read and a style read
+    // per item, which on a thousand-item run is a couple of thousand forced reads computed and
+    // discarded on every `modify()` — i.e. on every load-more.
+    let preferred: HTMLElement | undefined;
+    if (this.#tabStop) {
+      // Each candidate is filtered on its CHEAP attribute first and only then tested for
+      // navigability, and every scan stops at its first hit, so the expensive predicate runs on
+      // candidates rather than on the whole set.
+      const navigable = (el: HTMLElement) => this.#isNavigable(el);
+      preferred =
+        // The ATTRIBUTE, not the `tabIndex` property: every natively-focusable element reports 0
+        // without carrying the attribute, so reading the property would match the first button
+        // here and make the `aria-selected`/`aria-current` preferences below unreachable. Read
+        // before the demotion loop, which would otherwise erase what it is looking for.
+        (reseed
+          ? undefined
+          : all.find(
+              (el) => el.getAttribute("tabindex") === "0" && navigable(el)
+            )) ??
+        all.find(
+          (el) => el.getAttribute("aria-selected") === "true" && navigable(el)
+        ) ??
+        all.find((el) => el.hasAttribute("aria-current") && navigable(el)) ??
+        all.find(navigable);
     }
-    if (this.#tabStop && preferred) {
-      preferred.tabIndex = 0;
+    // Only items this group has not demoted before, so a re-render that appends rows pays for
+    // the new ones rather than restamping the whole set. Tracked by identity, because an item
+    // may arrive already carrying `tabindex="0"` and "stamp what lacks the attribute" would
+    // leave that second tab stop standing.
+    for (const el of all) {
+      if (!this.#stamped.has(el)) {
+        el.tabIndex = -1;
+        this.#stamped.add(el);
+      }
+    }
+    this.#promoteTabStop(preferred);
+  }
+
+  /**
+   * Moves the group's single tab stop onto `target`, demoting only the item that previously held
+   * it. The exhaustive alternative rewrites `tabindex` on every matched item, which on a group
+   * spanning a page of content is a thousand attribute writes for a one-item move.
+   *
+   * @param target - The item to promote, or nothing to simply surrender the tab stop.
+   */
+  #promoteTabStop(target: HTMLElement | undefined): void {
+    if (this.#tabStopHolder && this.#tabStopHolder !== target) {
+      this.#tabStopHolder.tabIndex = -1;
+    }
+    this.#tabStopHolder = null;
+    if (this.#tabStop && target) {
+      target.tabIndex = 0;
+      this.#stamped.add(target);
+      this.#tabStopHolder = target;
     }
   }
 
@@ -1532,6 +1839,12 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     for (const el of this.#allItems()) {
       el.removeAttribute("tabindex");
     }
+    // The stamping bookkeeping mirrors what was written, so handing the attributes back has to
+    // forget it as well. Otherwise the next promotion still believes a released element holds
+    // the tab stop and demotes it — writing `tabindex="-1"` straight back onto an item this
+    // group no longer owns.
+    this.#stamped = new WeakSet();
+    this.#tabStopHolder = null;
   }
 
   /**
