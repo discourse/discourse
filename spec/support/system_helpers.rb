@@ -422,6 +422,99 @@ module SystemHelpers
     page.driver.with_playwright_page { |pw_page| pw_page.touchscreen.tap_point(x, y) }
   end
 
+  # Drives a real native drag through Playwright's CDP drag interception.
+  #
+  # Capybara's own `drag_to` synthesises mouse events (mousedown/move/up), which
+  # works for simple drags but is unreliable here: some drags fire `dragstart` and
+  # then stall with no `dragover`/`drop`/`dragend`, so the drop silently no-ops.
+  # That is what a drag into a multi-layer region tends to do.
+  #
+  # `source:` and `target:` are CSS selectors, and BOTH ends may need a position.
+  # `source_position:` matters whenever the press point decides whether a drag is
+  # an element drag at all: pressing the centre of a row that contains a text
+  # input starts a text-selection drag, which fires `dragstart` and then stalls
+  # with no further events. Point it at the row's grip instead. It is also how a
+  # drag handle is satisfied, since the press must land inside the handle while
+  # the drag itself originates from the registered element.
+  #
+  # `target_position:` (`{ x:, y: }`,
+  # relative to the target's top-left) picks where inside the target the drop
+  # lands, which is what a before/after drop zone needs: the target's centre is
+  # the ambiguous midpoint and resolves the same way every time. `steps:` smooths
+  # the pointer movement when a drag needs more intermediate moves to register.
+  #
+  # Note this does NOT wait for the client to settle. Capybara's patched node
+  # methods, `drag_to` among them, get that wait for free; driving Playwright
+  # directly bypasses it, and the wait is only reachable from the driver's own
+  # patch. So assert through a retrying matcher after calling this, not a bare
+  # equality on a value read once.
+  def drag_and_drop(source:, target:, source_position: nil, target_position: nil, steps: nil)
+    page.driver.with_playwright_page do |pw_page|
+      options = {}
+      options[:sourcePosition] = source_position if source_position
+      options[:targetPosition] = target_position if target_position
+      options[:steps] = steps if steps
+      pw_page.drag_and_drop(source, target, **options)
+    end
+  end
+
+  # Drives a press-drag-release with the real mouse, for the surfaces built on
+  # pointer events rather than native drag-and-drop.
+  #
+  # `drag_and_drop` above is NOT interchangeable with this: it goes through
+  # Playwright's CDP drag interception, which is what makes a native HTML5 drag
+  # work and which suppresses the ordinary mouse moves a pointer gesture needs. A
+  # pointer-driven surface therefore sees the press and then nothing, and looks
+  # exactly like a dead drag. Pick the helper that matches the mechanism.
+  #
+  # `from:` is a CSS selector for the element to press. `to:` is an absolute
+  # viewport point; `by:` is an offset from the press point, for when the distance
+  # matters more than the destination. Movement is broken into `steps:` so a
+  # gesture with a movement threshold actually crosses it, and so anything driven
+  # by intermediate moves sees more than one.
+  #
+  # Like `drag_and_drop`, this bypasses Capybara's client-settle wait, so assert
+  # through a retrying matcher rather than a value read once.
+  #
+  # Unlike `drag_and_drop`, which scrolls its source into view itself, this drives
+  # the mouse at absolute viewport coordinates. An element below the fold would
+  # otherwise be measured where it cannot be pressed, and the gesture would land on
+  # whatever is at that point instead — doing nothing while reporting success. So
+  # it is scrolled into view first, and measured after.
+  #
+  # Pass a block to assert on the page while the gesture is still open: it runs
+  # after the pointer has moved and before the release, so anything a drag holds
+  # for its own duration is still there to be seen. Without one, asserting only
+  # that such a mark is absent afterwards would pass just as well against a drag
+  # that never started.
+  def drag_with_pointer(from:, to: nil, by: nil, steps: 10)
+    raise ArgumentError, "pass exactly one of to: or by:" if to.nil? == by.nil?
+
+    page.driver.with_playwright_page do |pw_page|
+      # Waited for rather than queried once: `query_selector` returns nil without
+      # waiting, so a not-yet-rendered element would fail as a `NoMethodError` on
+      # nil, naming neither the selector nor the timing.
+      node = pw_page.wait_for_selector(from, state: "visible")
+      node.scroll_into_view_if_needed
+      box = node.bounding_box
+      start_x = box["x"] + box["width"] / 2
+      start_y = box["y"] + box["height"] / 2
+      end_x = to ? to[:x] : start_x + by.fetch(:x, 0)
+      end_y = to ? to[:y] : start_y + by.fetch(:y, 0)
+
+      pw_page.mouse.move(start_x, start_y)
+      pw_page.mouse.down
+      # Stepped rather than a single jump: a gesture with a threshold needs to be
+      # seen crossing it, not teleported past it.
+      pw_page.mouse.move(end_x, end_y, steps: steps)
+    end
+
+    # Outside the driver block, so Capybara's own matchers work normally in it.
+    yield if block_given?
+
+    page.driver.with_playwright_page { |pw_page| pw_page.mouse.up }
+  end
+
   def html_translation_to_text(html_translation)
     Nokogiri.HTML5(html_translation).at("body").inner_text
   end

@@ -41,6 +41,14 @@ en:
           title: "Colors"
         dialog:
           title: "Dialog"
+        drag_and_drop:
+          title: "Drag and drop"
+          positions_title: "Drop positions"
+          positions_description: "Four sibling positions plus one container position. A target toggles exactly one of these while a drag is over it."
+          live_title: "A live reorder"
+          live_description: "Drag a row onto another to see the same indicators driven by the registrars rather than pinned open."
+          resize_title: "Box resize"
+          resize_description: "The resize handles component renders the eight compass handles and reports pointer geometry; the consumer turns that into a size."
         icons:
           title: "Icons"
           full_list: "See the full list of Font Awesome Icons"

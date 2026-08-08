@@ -1,0 +1,99 @@
+/* Default treatment for the drag-and-drop vocabulary. The source and target
+   registrars stamp `data-drag-source` / `data-drop-target` on their host for the
+   lifetime of the registration, and toggle the state modifiers below during a
+   drag. Selectors are gated on the attribute rather than the class alone so
+   they cannot reach an unrelated element that happens to use the same state
+   name. Override by raising specificity, by setting `content: none` on the
+   pseudo-element to drop just the line, or by passing `indicator=false` to opt
+   out entirely.
+
+   The colour is its own custom property rather than a generic accent token, so a
+   theme or a single surface can retune drag feedback without moving every other
+   accent border in the app. It defaults to full-strength `--tertiary`: the
+   generic accent resolves to a tint blended toward the surface, which reads
+   acceptably on a dark panel but washes out against a lighter one and does not
+   reach the 3:1 WCAG 1.4.11 asks of a non-text UI component. */
+
+:root {
+  --d-drag-indicator-color: var(--tertiary);
+}
+
+@mixin d-drag-line-horizontal {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--d-drag-indicator-color);
+  pointer-events: none;
+}
+
+@mixin d-drag-line-vertical {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--d-drag-indicator-color);
+  pointer-events: none;
+}
+
+[data-drag-source] {
+  &.--dragging {
+    opacity: 0.5;
+  }
+}
+
+[data-drop-target] {
+  &.--drag-above {
+    position: relative;
+
+    &::before {
+      @include d-drag-line-horizontal;
+      top: -1px;
+    }
+  }
+
+  &.--drag-below {
+    position: relative;
+
+    &::after {
+      @include d-drag-line-horizontal;
+      bottom: -1px;
+    }
+  }
+
+  &.--drag-left {
+    position: relative;
+
+    &::before {
+      @include d-drag-line-vertical;
+      left: -1px;
+    }
+  }
+
+  &.--drag-right {
+    position: relative;
+
+    &::after {
+      @include d-drag-line-vertical;
+      right: -1px;
+    }
+  }
+
+  /* The cursor is over a container that accepts the dragged item as a child
+     rather than a sibling, so an outline distinguishes it from the four
+     sibling positions. */
+
+  &.--drag-inside {
+    outline: 2px solid var(--d-drag-indicator-color);
+    outline-offset: -2px;
+  }
+}
+
+[data-drop-target-external] {
+  &.--drag-over-external {
+    outline: 2px solid var(--d-drag-indicator-color);
+    outline-offset: -2px;
+  }
+}

@@ -9,14 +9,17 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
-import { and, eq } from "discourse/truth-helpers";
+import { and, eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DDragHandle from "discourse/ui-kit/d-drag-handle";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import DModal from "discourse/ui-kit/d-modal";
+import DReorderButtons from "discourse/ui-kit/d-reorder-buttons";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
+import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 
 const VISIBLE_CAP = 10;
@@ -25,118 +28,79 @@ const SEARCH_DEBOUNCE_MS = 200;
 class ManageReportsRow extends Component {
   @service site;
 
-  @tracked dragCssClass;
-  dragCount = 0;
-
-  isAboveElement(event) {
-    const domRect = event.currentTarget.getBoundingClientRect();
-    return event.offsetY < domRect.height / 2;
+  /**
+   * A disabled row is not part of the order, so it cannot receive a drop.
+   *
+   * @returns {boolean} Whether this row accepts the drop.
+   */
+  @action
+  canAcceptDrop() {
+    return Boolean(this.args.row.enabled && this.args.reorderable);
   }
 
+  /**
+   * Resolves a drop onto this row into a reorder.
+   *
+   * Rows travel by their stable `key`, never as objects: `visibleRows` can be
+   * search-filtered and spreads a fresh copy of each row per render, so an object
+   * would not match by identity a moment later.
+   *
+   * @param {Object} params - The drop payload.
+   * @param {Object} params.source - The dragged source, carrying `data.key`.
+   * @param {string} params.position - Whether the drop landed before or after.
+   */
   @action
-  dragStart(event) {
-    event.dataTransfer.effectAllowed = "move";
-    this.args.onDragStart(this.args.row.key);
-    this.dragCssClass = "dragging";
-  }
-
-  @action
-  dragOver(event) {
-    if (!this.args.row.enabled) {
-      return;
-    }
-    event.preventDefault();
-    if (this.dragCssClass === "dragging") {
-      return;
-    }
-    this.dragCssClass = this.isAboveElement(event)
-      ? "drag-above"
-      : "drag-below";
-  }
-
-  @action
-  dragEnter() {
-    this.dragCount++;
-  }
-
-  @action
-  dragLeave() {
-    this.dragCount--;
-    if (
-      this.dragCount === 0 &&
-      (this.dragCssClass === "drag-above" || this.dragCssClass === "drag-below")
-    ) {
-      this.dragCssClass = null;
-    }
-  }
-
-  @action
-  drop(event) {
-    if (!this.args.row.enabled) {
-      return;
-    }
-    event.preventDefault();
-    event.stopPropagation();
-    this.dragCount = 0;
-    const dropAbove = this.isAboveElement(event);
-    this.dragCssClass = null;
-    this.args.onDrop(this.args.row.key, dropAbove);
-  }
-
-  @action
-  dragEnd() {
-    this.dragCount = 0;
-    this.dragCssClass = null;
-    this.args.onDragEnd();
+  onRowDrop({ source, position }) {
+    this.args.onDrop(source.data.key, this.args.row.key, position === "before");
   }
 
   <template>
     <li
-      class={{dConcatClass
-        "manage-reports__row"
-        (if @row.enabled "--enabled")
-        this.dragCssClass
-      }}
+      class={{dConcatClass "manage-reports__row" (if @row.enabled "--enabled")}}
       data-identifier={{@row.key}}
-      draggable={{and @row.enabled @reorderable}}
-      {{on "dragstart" this.dragStart}}
-      {{on "dragover" this.dragOver}}
-      {{on "dragenter" this.dragEnter}}
-      {{on "dragleave" this.dragLeave}}
-      {{on "drop" this.drop}}
-      {{on "dragend" this.dragEnd}}
+      {{! `disabled` carries what the draggable attribute used to: the library marks
+          the host draggable unconditionally, and a disabled row must not look grabbable }}
+      {{dDragAndDropSource
+        type="dashboard-report"
+        data=(hash key=@row.key)
+        disabled=(not (and @row.enabled @reorderable))
+      }}
+      {{dDragAndDropTarget
+        accepts="dashboard-report"
+        acceptsSelf=false
+        canDrop=this.canAcceptDrop
+        onDrop=this.onRowDrop
+      }}
     >
 
       {{#unless this.site.mobileView}}
-        <span class="manage-reports__grip">
-          {{dIcon "grip-vertical"}}
-        </span>
+        <DDragHandle
+          @label={{i18n
+            "admin.dashboard.reports_section.modal.drag_handle"
+            title=@row.title
+          }}
+          class="manage-reports__grip"
+        />
       {{/unless}}
 
-      {{#if this.site.mobileView}}
-        <div class="manage-reports__order-mobile">
-          <DButton
-            @icon="arrow-up"
-            @action={{fn @onMoveUp @row}}
-            @disabled={{eq @index 0}}
-            @translatedAriaLabel={{i18n
-              "admin.dashboard.reports_section.modal.move_up"
-              title=@row.title
-            }}
-            class="manage-reports__arrow btn-transparent"
-          />
-          <DButton
-            @icon="arrow-down"
-            @action={{fn @onMoveDown @row}}
-            @disabled={{eq @index @lastEnabledIndex}}
-            @translatedAriaLabel={{i18n
-              "admin.dashboard.reports_section.modal.move_down"
-              title=@row.title
-            }}
-            class="manage-reports__arrow btn-transparent"
-          />
-        </div>
-      {{/if}}
+      {{! The arrows are the only keyboard path to reorder, so they render on
+          every viewport — the pointer drag beside them on desktop is an
+          alternative to them, not a replacement. }}
+      <DReorderButtons
+        @onMoveUp={{fn @onMoveUp @row}}
+        @onMoveDown={{fn @onMoveDown @row}}
+        @disableUp={{eq @index 0}}
+        @disableDown={{eq @index @lastEnabledIndex}}
+        @upLabel={{i18n
+          "admin.dashboard.reports_section.modal.move_up"
+          title=@row.title
+        }}
+        @downLabel={{i18n
+          "admin.dashboard.reports_section.modal.move_down"
+          title=@row.title
+        }}
+        class="manage-reports__arrows"
+      />
 
       <div class="manage-reports__row-text">
         <div class="manage-reports__row-heading">
@@ -170,6 +134,8 @@ class ManageReportsRow extends Component {
 }
 
 export default class ManageReports extends Component {
+  @service a11y;
+
   @tracked allKeys = [];
   @tracked enabledOrder = [];
   @tracked providers = [];
@@ -179,7 +145,6 @@ export default class ManageReports extends Component {
   @tracked loading = true;
   @tracked loadingMore = false;
   @tracked applying = false;
-  @tracked draggedId = null;
   itemsByKey = new Map();
 
   isEnabled = (row) => this.enabledKeys.has(row.key);
@@ -332,35 +297,49 @@ export default class ManageReports extends Component {
 
   @action
   moveUp(row) {
-    const index = this.enabledOrder.indexOf(row.key);
-    if (index <= 0) {
-      return;
-    }
-    const next = [...this.enabledOrder];
-    [next[index - 1], next[index]] = [next[index], next[index - 1]];
-    this.enabledOrder = next;
+    this.#move(row, -1);
   }
 
   @action
   moveDown(row) {
-    const index = this.enabledOrder.indexOf(row.key);
-    if (index < 0 || index === this.enabledOrder.length - 1) {
+    this.#move(row, 1);
+  }
+
+  /**
+   * Swaps a row with its neighbour in the list as displayed.
+   *
+   * Resolved against `filteredEnabledRows` rather than against `enabledOrder`,
+   * because a search filter hides rows without removing them from the order.
+   * Stepping by index in the full order would swap with a hidden neighbour: the
+   * stored order would change, an announcement would claim a move, and nothing
+   * the user can see would move. The neighbour is then located in the full order
+   * by key, so the swap lands on the right pair either way.
+   *
+   * @param {Object} row - The row to move.
+   * @param {number} delta - `-1` to move it up, `1` to move it down.
+   */
+  #move(row, delta) {
+    const visible = this.filteredEnabledRows;
+    const visibleIndex = visible.findIndex((item) => item.key === row.key);
+    const neighbour = visible[visibleIndex + delta];
+    if (visibleIndex < 0 || !neighbour) {
       return;
     }
+
+    const from = this.enabledOrder.indexOf(row.key);
+    const to = this.enabledOrder.indexOf(neighbour.key);
+    if (from < 0 || to < 0) {
+      return;
+    }
+
     const next = [...this.enabledOrder];
-    [next[index], next[index + 1]] = [next[index + 1], next[index]];
-    this.enabledOrder = next;
+    [next[from], next[to]] = [next[to], next[from]];
+    this.#reorder(next, row, visibleIndex + delta, visible.length);
   }
 
   @action
-  onDragStart(key) {
-    this.draggedId = key;
-  }
-
-  @action
-  onDrop(targetKey, dropAbove) {
-    const fromIndex = this.enabledOrder.indexOf(this.draggedId);
-    this.draggedId = null;
+  onDrop(draggedKey, targetKey, dropAbove) {
+    const fromIndex = this.enabledOrder.indexOf(draggedKey);
     if (fromIndex < 0) {
       return;
     }
@@ -381,12 +360,48 @@ export default class ManageReports extends Component {
     const next = [...this.enabledOrder];
     const [moved] = next.splice(fromIndex, 1);
     next.splice(toIndex, 0, moved);
-    this.enabledOrder = next;
+
+    // Where the row lands on screen, which is not `toIndex` while a filter is
+    // hiding rows. A reorder cannot change which rows match the filter, only
+    // their order, so the visible set is taken from before the move.
+    const visibleKeys = new Set(this.filteredEnabledRows.map((row) => row.key));
+    const nextVisible = next.filter((key) => visibleKeys.has(key));
+
+    this.#reorder(
+      next,
+      this.itemsByKey.get(draggedKey),
+      nextVisible.indexOf(draggedKey),
+      nextVisible.length
+    );
   }
 
-  @action
-  onDragEnd() {
-    this.draggedId = null;
+  /**
+   * Applies a new order and announces where the row landed.
+   *
+   * Both the arrows and the drag funnel through here, past their own no-op
+   * guards, so a move is announced exactly once and a non-move never is.
+   *
+   * `toIndex` and `total` are counted in the list the user is looking at, which
+   * is not the stored order whenever a search filter is hiding rows. Announcing
+   * a position from the full order would name a place that is not on screen.
+   * Both are required rather than defaulted for that reason: falling back to the
+   * stored order is the mistake this exists to prevent.
+   *
+   * @param {string[]} nextOrder - The new stored order.
+   * @param {Object} row - The row that moved.
+   * @param {number} toIndex - Its index in the displayed list.
+   * @param {number} total - How many rows that list holds.
+   */
+  #reorder(nextOrder, row, toIndex, total) {
+    this.enabledOrder = nextOrder;
+
+    this.a11y.announce(
+      i18n("reorder_announcement", {
+        label: row.title,
+        position: toIndex + 1,
+        total,
+      })
+    );
   }
 
   @action
@@ -448,7 +463,6 @@ export default class ManageReports extends Component {
           <ul
             class={{dConcatClass
               "manage-reports__list"
-              (if this.draggedId "--dragging")
               (if this.reorderable "--reorderable")
             }}
           >
@@ -462,9 +476,7 @@ export default class ManageReports extends Component {
                 @onToggle={{this.toggle}}
                 @onMoveUp={{this.moveUp}}
                 @onMoveDown={{this.moveDown}}
-                @onDragStart={{this.onDragStart}}
                 @onDrop={{this.onDrop}}
-                @onDragEnd={{this.onDragEnd}}
               />
             {{/each}}
           </ul>

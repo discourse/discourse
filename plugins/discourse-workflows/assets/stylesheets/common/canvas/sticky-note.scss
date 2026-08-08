@@ -137,65 +137,65 @@
     position: absolute;
     pointer-events: auto;
 
-    &.--n,
-    &.--s {
+    &--n,
+    &--s {
       left: 6px;
       right: 6px;
       height: 6px;
       cursor: ns-resize;
     }
 
-    &.--n {
+    &--n {
       top: -3px;
     }
 
-    &.--s {
+    &--s {
       bottom: -3px;
     }
 
-    &.--w,
-    &.--e {
+    &--w,
+    &--e {
       top: 6px;
       bottom: 6px;
       width: 6px;
       cursor: ew-resize;
     }
 
-    &.--w {
+    &--w {
       left: -3px;
     }
 
-    &.--e {
+    &--e {
       right: -3px;
     }
 
-    &.--nw,
-    &.--ne,
-    &.--sw,
-    &.--se {
+    &--nw,
+    &--ne,
+    &--sw,
+    &--se {
       width: 10px;
       height: 10px;
     }
 
-    &.--nw {
+    &--nw {
       top: -3px;
       left: -3px;
       cursor: nwse-resize;
     }
 
-    &.--ne {
+    &--ne {
       top: -3px;
       right: -3px;
       cursor: nesw-resize;
     }
 
-    &.--sw {
+    &--sw {
       bottom: -3px;
       left: -3px;
       cursor: nesw-resize;
     }
 
-    &.--se {
+    &--se {
       bottom: -3px;
       right: -3px;
       cursor: nwse-resize;

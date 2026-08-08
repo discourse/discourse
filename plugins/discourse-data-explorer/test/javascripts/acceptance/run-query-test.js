@@ -1,7 +1,17 @@
-import { click, visit } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  triggerEvent,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import {
+  settleGestureFrame,
+  stubPointerCapture,
+} from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import { i18n } from "discourse-i18n";
 
 acceptance("Run Query", function (needs) {
@@ -427,5 +437,61 @@ acceptance("Run Query", function (needs) {
     await visit("/g/testgroup/reports/2?run=1");
 
     assert.dom("div.query-results").exists("query results should be displayed");
+  });
+
+  test("dragging the grippie resizes the editor panes", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const grippie = find(".query-editor .grippie");
+    const panes = find(".query-editor .panels-flex");
+    stubPointerCapture(grippie);
+    const startingHeight = panes.clientHeight;
+
+    await triggerEvent(grippie, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientY: 200,
+    });
+    // Straight down, with no sideways movement at all. The handle used to gate on
+    // horizontal travel while resizing on vertical, so this did nothing.
+    await triggerEvent(grippie, "pointermove", { pointerId: 1, clientY: 240 });
+    await settleGestureFrame();
+
+    assert.strictEqual(
+      panes.style.height,
+      `${startingHeight + 40}px`,
+      "the panes grow by the pointer's vertical travel"
+    );
+
+    await triggerEvent(grippie, "pointerup", { pointerId: 1, clientY: 240 });
+    assert
+      .dom(document.body)
+      .doesNotHaveClass(
+        "d-resizing-ns",
+        "the held cursor is given back on release"
+      );
+  });
+
+  test("the grippie is an operable separator", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const grippie = find(".query-editor .grippie");
+
+    // It had no role, no tab stop and no keyboard path before this; an admin-only
+    // surface is still a surface.
+    assert
+      .dom(grippie)
+      .hasAttribute("role", "separator")
+      .hasAttribute("aria-orientation", "horizontal")
+      .hasAttribute("tabindex", "0")
+      .hasAttribute("data-resize-axis", "vertical");
+    const panes = find(".query-editor .panels-flex");
+    const startingHeight = panes.clientHeight;
+    await triggerKeyEvent(grippie, "keydown", "ArrowDown");
+
+    assert.true(
+      parseInt(panes.style.height, 10) > startingHeight,
+      "arrow keys resize it without a pointer"
+    );
   });
 });

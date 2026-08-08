@@ -346,6 +346,7 @@ const TranslationRow = <template>
 
 @tagName("")
 export default class SidebarSectionForm extends Component {
+  @service a11y;
   @service dialog;
   @service languageNameLookup;
   @service router;
@@ -557,6 +558,14 @@ export default class SidebarSectionForm extends Component {
     return this.transformedModel.secondaryLinks?.filter(
       (link) => !link._destroy
     );
+  }
+
+  get lastActiveLinkIndex() {
+    return this.activeLinks.length - 1;
+  }
+
+  get lastActiveSecondaryLinkIndex() {
+    return (this.activeSecondaryLinks?.length ?? 0) - 1;
   }
 
   @cached
@@ -797,18 +806,24 @@ export default class SidebarSectionForm extends Component {
       .focus();
   }
 
+  /**
+   * Moves a link next to the row it was dropped on, across segments if needed.
+   *
+   * Both links arrive as arguments rather than one of them being remembered from
+   * when the drag started: holding the dragged link on the component is how a
+   * corrupted `segment` used to survive from one drag into the next.
+   *
+   * @param {Object} draggedLink - The link being moved.
+   * @param {Object} targetLink - The link it was dropped onto.
+   * @param {string} position - `"before"` to insert above the target, otherwise below.
+   */
   @bind
-  setDraggedLink(link) {
-    this.draggedLink = link;
-  }
-
-  @bind
-  reorder(targetLink, above) {
-    if (this.draggedLink === targetLink) {
+  reorder(draggedLink, targetLink, position) {
+    if (draggedLink === targetLink) {
       return;
     }
 
-    const source = this.draggedLink.isPrimary
+    const source = draggedLink.isPrimary
       ? this.transformedModel.links
       : this.transformedModel.secondaryLinks;
     const destination = targetLink.isPrimary
@@ -821,18 +836,103 @@ export default class SidebarSectionForm extends Component {
       return;
     }
 
-    removeValueFromArray(source, this.draggedLink);
+    // Read before the removal, so a drop that resolves to the index the link
+    // already holds can be recognised and skipped rather than announced as a
+    // move that changed nothing.
+    const fromIndex = source.indexOf(draggedLink);
+
+    removeValueFromArray(source, draggedLink);
 
     // Read after the removal: within one segment the two arrays are the same
     // one, so a pre-removal index would be off by one when dragging downwards.
     const toPosition = destination.indexOf(targetLink);
+    const toIndex = position === "before" ? toPosition : toPosition + 1;
 
-    this.draggedLink.segment = targetLink.isPrimary ? "primary" : "secondary";
+    if (source === destination && toIndex === fromIndex) {
+      destination.splice(toIndex, 0, draggedLink);
+      return;
+    }
 
-    destination.splice(
-      above ? toPosition : toPosition + 1,
-      0,
-      this.draggedLink
+    draggedLink.segment = targetLink.isPrimary ? "primary" : "secondary";
+
+    destination.splice(toIndex, 0, draggedLink);
+
+    // Counted within the destination list, which is the one the link now belongs
+    // to, and among only its visible links: a link awaiting deletion stays in
+    // the array without being rendered, so counting the array would announce a
+    // position and a total the user cannot see. This matches what the arrows
+    // announce for the same move.
+    const visible = destination.filter((link) => !link._destroy);
+
+    this.a11y.announce(
+      i18n("reorder_announcement", {
+        label: draggedLink.name,
+        position: visible.indexOf(draggedLink) + 1,
+        total: visible.length,
+      })
+    );
+  }
+
+  @action
+  moveLinkUp(link) {
+    this.#moveLink(link, -1);
+  }
+
+  @action
+  moveLinkDown(link) {
+    this.#moveLink(link, 1);
+  }
+
+  /**
+   * Swaps a link with its neighbour in the list as displayed.
+   *
+   * Resolved against the active list rather than the underlying array, because a
+   * link awaiting deletion stays in the array with `_destroy` set and stops being
+   * rendered. Stepping by index in the underlying array would swap with a link
+   * the user cannot see: the stored order would change, an announcement would
+   * claim a move, and the visible list would be identical. The neighbour is then
+   * located in the underlying array by identity, so the swap lands on the right
+   * pair either way.
+   *
+   * Arrows stay within one segment. Primary and secondary render as two lists
+   * under separate headings, so stepping across that boundary would move a link
+   * out of the list the user is arrowing through. The drag path keeps
+   * cross-segment moves, which is why `segment` is not touched here.
+   *
+   * @param {Object} link - The link to move.
+   * @param {number} delta - `-1` to move it up, `1` to move it down.
+   */
+  #moveLink(link, delta) {
+    const visible = link.isPrimary
+      ? this.activeLinks
+      : this.activeSecondaryLinks;
+    const list = link.isPrimary
+      ? this.transformedModel.links
+      : this.transformedModel.secondaryLinks;
+
+    const visibleIndex = visible.indexOf(link);
+    const neighbour = visible[visibleIndex + delta];
+    if (visibleIndex < 0 || !neighbour) {
+      return;
+    }
+
+    const from = list.indexOf(link);
+    const to = list.indexOf(neighbour);
+    if (from < 0 || to < 0) {
+      return;
+    }
+
+    [list[from], list[to]] = [list[to], list[from]];
+
+    // Counted within the visible list, because that is the one the arrows step
+    // through — a position in the underlying array would count links the user
+    // has already deleted.
+    this.a11y.announce(
+      i18n("reorder_announcement", {
+        label: link.name,
+        position: visibleIndex + delta + 1,
+        total: visible.length,
+      })
     );
   }
 
@@ -1348,12 +1448,15 @@ export default class SidebarSectionForm extends Component {
                 </div>
               </div>
 
-              {{#each this.activeLinks as |link|}}
+              {{#each this.activeLinks key="objectId" as |link index|}}
                 <SectionFormLink
                   @link={{link}}
+                  @index={{index}}
+                  @lastIndex={{this.lastActiveLinkIndex}}
                   @deleteLink={{this.deleteLink}}
+                  @moveUp={{this.moveLinkUp}}
+                  @moveDown={{this.moveLinkDown}}
                   @reorderCallback={{this.reorder}}
-                  @setDraggedLinkCallback={{this.setDraggedLink}}
                 />
               {{/each}}
 
@@ -1370,12 +1473,15 @@ export default class SidebarSectionForm extends Component {
             {{#if this.transformedModel.sectionType}}
               <hr />
               <h3>{{i18n "sidebar.sections.custom.more_menu"}}</h3>
-              {{#each this.activeSecondaryLinks as |link|}}
+              {{#each this.activeSecondaryLinks key="objectId" as |link index|}}
                 <SectionFormLink
                   @link={{link}}
+                  @index={{index}}
+                  @lastIndex={{this.lastActiveSecondaryLinkIndex}}
                   @deleteLink={{this.deleteLink}}
+                  @moveUp={{this.moveLinkUp}}
+                  @moveDown={{this.moveLinkDown}}
                   @reorderCallback={{this.reorder}}
-                  @setDraggedLinkCallback={{this.setDraggedLink}}
                 />
               {{/each}}
               <DButton

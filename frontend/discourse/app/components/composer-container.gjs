@@ -24,6 +24,7 @@ import htmlClass from "discourse/helpers/html-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import {
   dampenedOverdrag,
   shouldDeferSwipeToContent,
@@ -31,13 +32,13 @@ import {
   SWIPE_VELOCITY_THRESHOLD,
 } from "discourse/lib/swipe-events";
 import PostLocalization from "discourse/models/post-localization";
-import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DPopupInputTip from "discourse/ui-kit/d-popup-input-tip";
+import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import DTextField from "discourse/ui-kit/d-text-field";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -45,6 +46,10 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import dSwipe from "discourse/ui-kit/modifiers/d-swipe";
 import { i18n } from "discourse-i18n";
+
+// Used only if the composer's min-height computes to `auto`, which would leave
+// the resize with no lower bound at all.
+const FALLBACK_MIN_HEIGHT = 250;
 
 const trackFieldsHeight = modifier((element, [enabled]) => {
   if (!enabled) {
@@ -243,8 +248,71 @@ export default class ComposerContainer extends Component {
     }
   }
 
+  /**
+   * The box the separator announces, found from the separator's own position the
+   * way the composer's retired observer did.
+   *
+   * @param {HTMLElement} separator - The separator element.
+   * @returns {HTMLElement|null} The composer, or null before it is in the DOM.
+   */
   @bind
-  onResizeDragStart() {
+  replyControlFor(separator) {
+    return separator.closest("#reply-control");
+  }
+
+  /**
+   * The height the next drag grows or shrinks from.
+   *
+   * Passed as a function because it is a live measurement: an arg whose compute
+   * reads no tracked state is cached for the modifier's lifetime, so a plain
+   * number would pin every drag to the first one's starting height.
+   *
+   * @returns {number} The composer's current height, in pixels.
+   */
+  @bind
+  composerHeight() {
+    return this.#replyControl?.offsetHeight ?? 0;
+  }
+
+  /**
+   * The smallest height the composer may be dragged to.
+   *
+   * Read from the stylesheet rather than hardcoded, so the two stay in step.
+   *
+   * @returns {number} The minimum height, in pixels.
+   */
+  @bind
+  minComposerHeight() {
+    const element = this.#replyControl;
+    if (!element) {
+      return FALLBACK_MIN_HEIGHT;
+    }
+    const declared = getComputedStyle(element).minHeight;
+    return parseInt(declared === "auto" ? FALLBACK_MIN_HEIGHT : declared, 10);
+  }
+
+  /**
+   * The largest height the composer may be dragged to, leaving the header
+   * visible. Live, because it moves with the window.
+   *
+   * @returns {number} The maximum height, in pixels.
+   */
+  @bind
+  maxComposerHeight() {
+    const belowHeader = window.innerHeight - headerOffset();
+    // The stylesheet also caps the composer, and dragging past that cap would
+    // report and persist a height the box never actually takes.
+    const declared = parseInt(
+      getComputedStyle(this.#replyControl ?? document.body).maxHeight,
+      10
+    );
+    return Number.isFinite(declared)
+      ? Math.min(declared, belowHeader)
+      : belowHeader;
+  }
+
+  @bind
+  onResizeStart() {
     this.appEvents.trigger("composer:resize-started");
   }
 
@@ -252,10 +320,13 @@ export default class ComposerContainer extends Component {
   onResizeDrag(size) {
     this.appEvents.trigger("composer:div-resizing");
 
+    // Added on the first move rather than on the press, so a press that never
+    // becomes a drag does not suppress the composer's transitions.
+    this.#replyControl?.classList.add("clear-transitions");
+
     const height = `${size}px`;
     // resuming from minimized restores the height from the model
     this.composer.model?.set("composerHeight", height);
-    this.keyValueStore.set({ key: "composerHeight", value: height });
     document.documentElement.style.setProperty(
       "--composer-height",
       size ? height : ""
@@ -265,8 +336,20 @@ export default class ComposerContainer extends Component {
   }
 
   @bind
-  onResizeDragEnd() {
+  onResizeEnd(size) {
+    this.#replyControl?.classList.remove("clear-transitions");
+    // Announced before persisting, because the write can throw — storage quota —
+    // and a subscriber that undoes its own drag-time state has to hear the end of
+    // every resize regardless.
     this.appEvents.trigger("composer:resize-ended");
+    // Persisted once per resize rather than on every report: the size is now
+    // reported once per animation frame instead of on a fixed throttle, and this
+    // write is the only thing that cared about the cadence.
+    this.keyValueStore.set({ key: "composerHeight", value: `${size}px` });
+  }
+
+  get #replyControl() {
+    return document.getElementById("reply-control");
   }
 
   _triggerComposerResized() {
@@ -290,18 +373,19 @@ export default class ComposerContainer extends Component {
       @cancelled={{this.composer.cancelled}}
       @save={{this.composer.saveAction}}
     >
-      <div
+      <DResizeSeparator
         class="grippie"
-        {{grippieDragResize
-          "#reply-control"
-          "top"
-          (hash
-            onResizeStart=this.onResizeDragStart
-            onThrottledDrag=this.onResizeDrag
-            onResizeEnd=this.onResizeDragEnd
-          )
-        }}
-      ></div>
+        @axis="vertical"
+        @side="end"
+        @value={{this.composerHeight}}
+        @min={{this.minComposerHeight}}
+        @max={{this.maxComposerHeight}}
+        @label={{i18n "composer.resize"}}
+        @observe={{this.replyControlFor}}
+        @onResizeStart={{this.onResizeStart}}
+        @onResize={{this.onResizeDrag}}
+        @onResizeEnd={{this.onResizeEnd}}
+      />
       {{#if this.composer.visible}}
         {{htmlClass (if this.composer.isPreviewVisible "composer-has-preview")}}
 

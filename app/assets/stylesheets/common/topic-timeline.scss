@@ -244,6 +244,13 @@
       position: relative;
       max-width: 100%;
       transform: translateZ(0);
+
+      // The padding is a sibling of the scroller, so the drag state is read from
+      // the parent the two share. Easing during a drag leaves the timeline
+      // trailing the pointer for the length of the transition.
+      &.--dragging .timeline-padding {
+        transition: none;
+      }
     }
 
     .timeline-padding {
@@ -255,14 +262,6 @@
       // the scrollarea's vertical track and thus it
       // enables taps on the track to work
       margin-left: -1em;
-
-      .widget-dragging & {
-        transition: none;
-      }
-
-      .dragging & {
-        transition: none;
-      }
     }
 
     .timeline-handle {

@@ -1,0 +1,29 @@
+/* The stacked reorder pair. Deliberately smaller than a normal button: it sits
+   beside a drag handle in a dense list row, and at full button size it drives the
+   row's height instead of fitting inside it. Positioning within the row is left
+   to the consumer, since only it knows whether the row is one line or many. */
+
+.d-reorder-buttons {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.7em;
+
+  &__button.btn {
+    padding: 0 var(--space-1);
+    min-height: 0;
+
+    /* Marked unavailable rather than disabled, so the button keeps its place in
+       the tab order at the ends of the list. It has to look the part. */
+
+    &[aria-disabled="true"] {
+      opacity: 0.4;
+      cursor: default;
+
+      &:hover,
+      &:focus {
+        background: transparent;
+        color: var(--primary-medium);
+      }
+    }
+  }
+}
