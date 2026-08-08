@@ -6,7 +6,10 @@
   padding: 1.25rem;
   border-radius: var(--d-border-radius, 10px);
   overflow: hidden;
-  min-height: 220px;
+
+  /* 220px floor, but fill a taller stretched grid cell; a no-op against an
+     auto-height parent (the percentage resolves to 0, leaving the floor). */
+  min-height: max(220px, 100%);
   isolation: isolate;
   background: var(--primary-very-low);
 

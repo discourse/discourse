@@ -1,6 +1,9 @@
 .d-block-callout {
   display: flex;
   align-items: flex-start;
+
+  /* Fill a stretched grid cell; a no-op against an auto-height parent. */
+  min-height: 100%;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
   border-radius: 4px;

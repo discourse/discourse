@@ -2,6 +2,9 @@
   position: relative;
   display: flex;
   flex-direction: column;
+
+  /* Fill a stretched grid cell; a no-op against an auto-height parent. */
+  min-height: 100%;
   gap: 1rem;
   padding: 1.5rem;
   border: 1px solid var(--primary-low);

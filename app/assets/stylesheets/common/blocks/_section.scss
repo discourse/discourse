@@ -6,7 +6,11 @@
 .d-block-section {
   position: relative;
   display: flex;
-  min-height: var(--d-block-section-min-height, auto);
+
+  /* Honor the author's min-height, but also fill a taller stretched grid cell.
+     The percentage resolves to 0 against an auto-height parent, so outside a
+     definite-height cell this is just the author's value (or 0). */
+  min-height: max(var(--d-block-section-min-height, 0px), 100%);
   padding: 2rem;
   overflow: hidden;
   background-color: var(--d-block-section-bg-color, transparent);
