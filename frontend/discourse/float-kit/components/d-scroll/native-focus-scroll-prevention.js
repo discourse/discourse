@@ -3,7 +3,7 @@ import { isCloneElement } from "discourse/float-kit/lib/utils";
 import { isKeyboardVisible } from "discourse/lib/utilities";
 import { capabilities } from "discourse/services/capabilities";
 import {
-  findClosestScrollContainer,
+  findClosestFocusPreventionContainer,
   isColorOrSelect,
   isInsidePreventionContainer,
   isNearViewportBottom,
@@ -23,8 +23,9 @@ function setupGlobalListeners() {
   const handleTouchStart = (event) => {
     const target = event.target;
     if (isInsidePreventionContainer(target)) {
-      const scrollContainer = findClosestScrollContainer(target);
-      scrollContainer?.focus({ preventScroll: true });
+      const focusPreventionContainer =
+        findClosestFocusPreventionContainer(target);
+      focusPreventionContainer?.focus({ preventScroll: true });
       document.removeEventListener("touchstart", handleTouchStart, {
         capture: true,
       });
@@ -93,8 +94,9 @@ function setupGlobalListeners() {
     const insideContainer = isInsidePreventionContainer(target);
 
     if (isActive && isText && !keyboardVisible && insideContainer) {
-      const scrollContainer = findClosestScrollContainer(target);
-      scrollContainer?.focus({ preventScroll: true });
+      const focusPreventionContainer =
+        findClosestFocusPreventionContainer(target);
+      focusPreventionContainer?.focus({ preventScroll: true });
     }
   };
 
@@ -165,16 +167,19 @@ function processPreventersChanges() {
   }
 }
 
-export default modifier((scrollContainer, [enabled]) => {
+export default modifier((focusPreventionContainer, [enabled]) => {
   if (!enabled) {
     return;
   }
 
-  scrollContainer.setAttribute("data-d-scroll-focus-prevention", "true");
+  focusPreventionContainer.setAttribute(
+    "data-d-scroll-focus-prevention",
+    "true"
+  );
   const preventerId = registerPreventer();
 
   return () => {
-    scrollContainer.removeAttribute("data-d-scroll-focus-prevention");
+    focusPreventionContainer.removeAttribute("data-d-scroll-focus-prevention");
     unregisterPreventer(preventerId);
   };
 });

@@ -1,13 +1,3 @@
-[data-d-sheet],
-[data-d-sheet] * {
-  box-sizing: border-box;
-  min-width: 0;
-  min-height: 0;
-  margin: 0;
-  -webkit-tap-highlight-color: transparent;
-  text-size-adjust: 100%;
-}
-
 [data-d-sheet~="swipe-trap-both"] {
   overscroll-behavior: contain !important;
 }
@@ -76,6 +66,7 @@
 [data-d-sheet~="view"]:not([data-d-sheet~="staging-none"])
   [data-d-sheet~="scroll-container"][data-d-sheet] {
   overflow: hidden;
+  scroll-snap-type: none;
 }
 
 [data-d-sheet~="view"]:not([data-d-sheet~="staging-none"])
@@ -129,7 +120,13 @@
   --d-sheet-default-left: 0;
 }
 
-:where([data-d-sheet~="view"][data-d-sheet~="top"]) {
+:where([data-d-sheet~="view"][data-d-sheet~="top"]),
+:where([data-d-sheet~="view"][data-d-sheet~="vertical"]) {
+  --d-sheet-default-top: 0;
+  --d-sheet-default-left: 0;
+}
+
+:where([data-d-sheet~="view"][data-d-sheet~="horizontal"]) {
   --d-sheet-default-top: 0;
   --d-sheet-default-left: 0;
 }
@@ -158,13 +155,13 @@
   --d-sheet-viewport-height: 100vh;
   --d-sheet-snap-accelerator: 1px;
   --d-sheet-edge-padding: 10px;
-  --d-sheet-view-travel-axis: initial; // aD
-  --d-sheet-view-cross-axis: initial; // aE
-  --d-sheet-content-travel-axis: initial; // aF
-  --d-sheet-content-cross-axis: initial; // aG
-  --d-sheet-front-spacer: initial; // aH
-  --d-sheet-back-spacer: initial; // aI
-  --d-sheet-first-detent-size: initial; // aK
+  --d-sheet-view-travel-axis: initial;
+  --d-sheet-view-cross-axis: initial;
+  --d-sheet-content-travel-axis: initial;
+  --d-sheet-content-cross-axis: initial;
+  --d-sheet-front-spacer: initial;
+  --d-sheet-back-spacer: initial;
+  --d-sheet-first-detent-size: initial;
   --d-sheet-travel-size: var(--d-sheet-view-travel-axis, 100%);
   --d-sheet-cross-size: var(--d-sheet-view-cross-axis, 100%);
   --d-sheet-max-overshoot-distance: min(300px, var(--d-sheet-travel-size));
@@ -258,8 +255,8 @@
   height: 100% !important;
 }
 
-[data-d-sheet~="bleeding-background"][data-d-sheet~="overshoot-inactive"][data-d-sheet~="right"],
-[data-d-sheet~="bleeding-background"][data-d-sheet~="overshoot-inactive"][data-d-sheet~="left"] {
+[data-d-sheet~="bleeding-background"][data-d-sheet~="bleed-disabled"][data-d-sheet~="right"],
+[data-d-sheet~="bleeding-background"][data-d-sheet~="bleed-disabled"][data-d-sheet~="left"] {
   width: 100% !important;
 }
 
@@ -280,8 +277,8 @@
   width: 100% !important;
 }
 
-[data-d-sheet~="bleeding-background"][data-d-sheet~="overshoot-inactive"][data-d-sheet~="start"],
-[data-d-sheet~="bleeding-background"][data-d-sheet~="overshoot-inactive"][data-d-sheet~="end"] {
+[data-d-sheet~="bleeding-background"][data-d-sheet~="bleed-disabled"][data-d-sheet~="start"],
+[data-d-sheet~="bleeding-background"][data-d-sheet~="bleed-disabled"][data-d-sheet~="end"] {
   height: 100% !important;
 }
 
@@ -555,13 +552,19 @@
 }
 
 [data-d-sheet~="content-wrapper"][data-d-sheet~="start"] {
-  top: var(--d-sheet-content-wrapper-offset);
   align-items: flex-start;
 }
 
 [data-d-sheet~="content-wrapper"][data-d-sheet~="end"] {
-  bottom: var(--d-sheet-content-wrapper-offset);
   align-items: flex-end;
+}
+
+[data-d-sheet~="content-wrapper"][data-d-sheet~="top"] {
+  top: var(--d-sheet-content-wrapper-offset);
+}
+
+[data-d-sheet~="content-wrapper"][data-d-sheet~="bottom"] {
+  bottom: var(--d-sheet-content-wrapper-offset);
 }
 
 [data-d-sheet~="content-wrapper"][data-d-sheet~="center"] {
@@ -626,12 +629,10 @@
 }
 
 [data-d-sheet~="content-wrapper"][data-d-sheet~="overshoot-active"][data-d-sheet~="left"] {
-  left: auto;
   right: var(--d-sheet-content-wrapper-overshoot-offset);
 }
 
 [data-d-sheet~="content-wrapper"][data-d-sheet~="overshoot-active"][data-d-sheet~="right"] {
-  right: auto;
   left: var(--d-sheet-content-wrapper-overshoot-offset);
 }
 
@@ -674,7 +675,6 @@
   margin: 0 !important;
   position: relative !important;
   overflow: visible !important;
-  padding-bottom: env(safe-area-inset-bottom);
 }
 
 [data-d-sheet~="content"],
@@ -842,7 +842,7 @@
   scroll-snap-align: none;
 }
 
-[data-d-sheet~="touch-target-expander"][data-d-sheet~="handle"] {
+[data-d-sheet~="touch-target-expander"] {
   position: relative;
 
   &::before {

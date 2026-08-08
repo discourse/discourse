@@ -1,22 +1,29 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
-import effect from "discourse/float-kit/helpers/effect";
+import { processBehavior } from "discourse/float-kit/lib/behavior-handler";
 import { isKeyboardVisible } from "discourse/lib/utilities";
 import { capabilities } from "discourse/services/capabilities";
+import mergeScrollAttributes from "../../modifiers/merge-scroll-attributes";
 import GestureTrapHandler from "./gesture-trap-handler";
 import isTextInput from "./is-text-input";
 import KeyboardFocusHandler from "./keyboard-focus-handler";
 import nativeFocusScrollPrevention from "./native-focus-scroll-prevention";
 import SafeAreaHandler from "./safe-area-handler";
+import ensureScrollbarThickness from "./scrollbar-thickness";
+
+function notifyScroll(controller, onScroll, event) {
+  onScroll?.({
+    ...controller.getScrollState(),
+    nativeEvent: event,
+  });
+}
 
 export default class DScrollView extends Component {
-  @tracked viewElement = null;
+  viewElement = null;
 
-  scrollStartTimeout = null;
   scrollEndTimeout = null;
   isScrolling = false;
 
@@ -34,13 +41,12 @@ export default class DScrollView extends Component {
         onScrollEnd,
         onFocusIn,
         onFocusOut,
-        setupGestureTrap,
-        setupSafeArea,
-        cleanupGestureTrap,
-        cleanupSafeArea,
+        controller,
+        onUnregister,
       }
     ) => {
-      onRegister(element);
+      ensureScrollbarThickness(element.ownerDocument);
+      onRegister(element, controller);
 
       element.addEventListener("scroll", onScroll, { passive: true });
 
@@ -51,9 +57,6 @@ export default class DScrollView extends Component {
       element.addEventListener("focusin", onFocusIn, { capture: true });
       element.addEventListener("focusout", onFocusOut, { capture: true });
 
-      setupGestureTrap();
-      setupSafeArea();
-
       return () => {
         element.removeEventListener("scroll", onScroll);
         if ("onscrollend" in window) {
@@ -61,11 +64,22 @@ export default class DScrollView extends Component {
         }
         element.removeEventListener("focusin", onFocusIn, { capture: true });
         element.removeEventListener("focusout", onFocusOut, { capture: true });
-        cleanupGestureTrap();
-        cleanupSafeArea();
+        onUnregister(element, controller);
       };
     }
   );
+
+  manageGestureTrap = modifier(() => {
+    this.gestureTrapHandler.setup();
+
+    return () => this.gestureTrapHandler.teardown();
+  });
+
+  manageSafeArea = modifier(() => {
+    this.safeAreaHandler.setup();
+
+    return () => this.safeAreaHandler.cleanup();
+  });
 
   registerStartSpy = modifier((element, _, { register, unregister }) => {
     register(element);
@@ -87,20 +101,61 @@ export default class DScrollView extends Component {
     return () => register(null);
   });
 
+  syncScrollTrapState = modifier(
+    (_element, [controller, scrollTrapX, scrollTrapY]) => {
+      if (controller) {
+        controller.scrollTrapX = scrollTrapX;
+        controller.scrollTrapY = scrollTrapY;
+      }
+    }
+  );
+
+  configureController = modifier(
+    (
+      _element,
+      [controller, axis, pageScroll, safeArea, scrollAnimationSettings]
+    ) => {
+      controller.configure({
+        axis,
+        pageScroll,
+        safeArea,
+        scrollAnimationSettings,
+      });
+    }
+  );
+
+  listenForPageScroll = modifier(
+    (_element, [controller, pageScroll, onScroll]) => {
+      if (!pageScroll || typeof onScroll !== "function") {
+        return;
+      }
+
+      const handleScroll = (event) => {
+        notifyScroll(controller, onScroll, event);
+      };
+
+      document.addEventListener("scroll", handleScroll);
+
+      return () => document.removeEventListener("scroll", handleScroll);
+    }
+  );
+
   constructor() {
     super(...arguments);
 
     registerDestructor(this, () => {
-      if (this.scrollStartTimeout) {
-        clearTimeout(this.scrollStartTimeout);
-      }
-      if (this.scrollEndTimeout) {
-        clearTimeout(this.scrollEndTimeout);
-      }
+      this.#clearScrollEndTimeout();
       this.keyboardHandler.cleanup();
       this.safeAreaHandler.cleanup();
       this.gestureTrapHandler.cleanup();
     });
+  }
+
+  #clearScrollEndTimeout() {
+    if (this.scrollEndTimeout !== null) {
+      clearTimeout(this.scrollEndTimeout);
+      this.scrollEndTimeout = null;
+    }
   }
 
   get controller() {
@@ -108,31 +163,19 @@ export default class DScrollView extends Component {
   }
 
   @action
-  handleElementRegister(element) {
+  handleElementRegister(element, controller) {
     this.viewElement = element;
-    this.configureController();
-    this.controller.registerView(element);
-    this.controller.setupOverflowObserver();
+    controller.registerView(element);
+    controller.setupOverflowObserver();
   }
 
   @action
-  setupGestureTrap() {
-    this.gestureTrapHandler.setup();
-  }
+  handleElementUnregister(element, controller) {
+    if (this.viewElement === element) {
+      this.viewElement = null;
+    }
 
-  @action
-  cleanupGestureTrap() {
-    this.gestureTrapHandler.cleanup();
-  }
-
-  @action
-  setupSafeArea() {
-    this.safeAreaHandler.setup();
-  }
-
-  @action
-  cleanupSafeArea() {
-    this.safeAreaHandler.cleanup();
+    controller.unregisterView(element);
   }
 
   @action
@@ -165,17 +208,6 @@ export default class DScrollView extends Component {
     this.controller.registerEndSpacer(element);
   }
 
-  configureController() {
-    this.controller.axis = this.args.axis ?? "y";
-    this.controller.pageScroll = this.args.pageScroll ?? false;
-    this.controller.safeArea = this.args.safeArea ?? "visual-viewport";
-    this.controller.scrollAnimationSettings = this.args
-      .scrollAnimationSettings ?? { skip: "auto" };
-    this.controller.onScroll = this.handleScroll;
-    this.controller.onScrollStart = this.handleScrollStart;
-    this.controller.onScrollEnd = this.handleScrollEnd;
-  }
-
   get needsSwipeTrapObserver() {
     return this.gestureTrapHandler.needsObserver;
   }
@@ -195,111 +227,78 @@ export default class DScrollView extends Component {
 
   @action
   onScrollEvent(event) {
-    if (this.args.onScroll) {
-      const state = this.controller.getScrollState();
-      this.args.onScroll({
-        ...state,
-        nativeEvent: event,
-      });
-    }
+    notifyScroll(this.controller, this.args.onScroll, event);
 
     if (!this.isScrolling) {
       this.isScrolling = true;
-      this.handleScrollStart();
+      this.handleScrollStart(event);
+      this.controller.setScrollOngoing(true);
     }
 
-    this.controller.scrollOngoing = true;
-
-    if (this.scrollEndTimeout) {
-      clearTimeout(this.scrollEndTimeout);
-    }
+    this.#clearScrollEndTimeout();
     this.scrollEndTimeout = setTimeout(() => {
+      this.scrollEndTimeout = null;
       this.isScrolling = false;
-      this.controller.scrollOngoing = false;
+      this.controller.setScrollOngoing(false);
       if (!("onscrollend" in window)) {
-        this.handleScrollEnd(event);
+        this.handleScrollEnd(null);
       }
     }, 90);
   }
 
   @action
   onScrollEndEvent(event) {
-    this.isScrolling = false;
-    this.controller.scrollOngoing = false;
     this.handleScrollEnd(event);
   }
 
   @action
-  handleScroll() {
-    // Called from controller if needed
-  }
+  handleScrollStart(event) {
+    const { dismissKeyboard } = processBehavior({
+      nativeEvent: event,
+      defaultBehavior: { dismissKeyboard: false },
+      handler: this.args.onScrollStart,
+    });
 
-  @action
-  handleScrollStart() {
-    if (this.args.onScrollStart) {
-      const defaultBehavior = { dismissKeyboard: false };
-
-      if (typeof this.args.onScrollStart === "function") {
-        const customEvent = {
-          changeDefault: (changedBehavior) => {
-            Object.assign(defaultBehavior, changedBehavior);
-          },
-          dismissKeyboard: defaultBehavior.dismissKeyboard,
-          nativeEvent: null,
-        };
-        this.args.onScrollStart(customEvent);
-      } else if (typeof this.args.onScrollStart === "object") {
-        Object.assign(defaultBehavior, this.args.onScrollStart);
-      }
-
-      if (
-        defaultBehavior.dismissKeyboard &&
-        !this.keyboardHandler?.scrollTriggeredByFocus &&
-        isKeyboardVisible() &&
-        this.viewElement
-      ) {
-        this.viewElement.focus({ preventScroll: true });
-      }
+    if (
+      dismissKeyboard &&
+      !this.keyboardHandler?.scrollTriggeredByFocus &&
+      isKeyboardVisible() &&
+      this.viewElement
+    ) {
+      this.viewElement.focus({ preventScroll: true });
     }
   }
 
   @action
   handleScrollEnd(event) {
-    if (this.args.onScrollEnd) {
-      this.args.onScrollEnd({ nativeEvent: event });
-    }
+    this.keyboardHandler.scrollTriggeredByFocus = false;
+
+    processBehavior({
+      nativeEvent: event,
+      defaultBehavior: {},
+      handler: this.args.onScrollEnd,
+    });
   }
 
   @action
   onFocusInsideEvent(event) {
     const target = event.target;
 
-    if (!isTextInput(target)) {
-      return;
-    }
-
     if (target === this.viewElement) {
       return;
     }
 
-    const defaultBehavior = { scrollIntoView: true };
+    const { scrollIntoView } = processBehavior({
+      nativeEvent: event,
+      defaultBehavior: { scrollIntoView: true },
+      handler: this.args.onFocusInside,
+    });
 
-    if (this.args.onFocusInside) {
-      if (typeof this.args.onFocusInside === "function") {
-        const customEvent = {
-          changeDefault: (changedBehavior) => {
-            Object.assign(defaultBehavior, changedBehavior);
-          },
-          scrollIntoView: defaultBehavior.scrollIntoView,
-          nativeEvent: event,
-        };
-        this.args.onFocusInside(customEvent);
-      } else if (typeof this.args.onFocusInside === "object") {
-        Object.assign(defaultBehavior, this.args.onFocusInside);
-      }
+    if (!isTextInput(target)) {
+      return;
     }
 
-    this.keyboardHandler.handleFocus(event, defaultBehavior.scrollIntoView);
+    this.keyboardHandler.handleFocus(event, scrollIntoView);
   }
 
   @action
@@ -307,54 +306,15 @@ export default class DScrollView extends Component {
     this.keyboardHandler.handleBlur(event);
   }
 
-  @action
-  scrollElementIntoView(element) {
-    if (!element || !this.viewElement) {
-      return;
-    }
-
-    const elementRect = element.getBoundingClientRect();
-    const viewRect = this.viewElement.getBoundingClientRect();
-
-    const isFullyVisible =
-      elementRect.top >= viewRect.top &&
-      elementRect.bottom <= viewRect.bottom &&
-      elementRect.left >= viewRect.left &&
-      elementRect.right <= viewRect.right;
-
-    if (isFullyVisible) {
-      return;
-    }
-
-    const axis = this.args.axis ?? "y";
-    if (axis === "y") {
-      if (elementRect.top < viewRect.top) {
-        const scrollTop =
-          this.viewElement.scrollTop - (viewRect.top - elementRect.top);
-        this.viewElement.scrollTo({ top: scrollTop, behavior: "smooth" });
-      } else if (elementRect.bottom > viewRect.bottom) {
-        const scrollTop =
-          this.viewElement.scrollTop + (elementRect.bottom - viewRect.bottom);
-        this.viewElement.scrollTo({ top: scrollTop, behavior: "smooth" });
-      }
-    } else {
-      if (elementRect.left < viewRect.left) {
-        const scrollLeft =
-          this.viewElement.scrollLeft - (viewRect.left - elementRect.left);
-        this.viewElement.scrollTo({ left: scrollLeft, behavior: "smooth" });
-      } else if (elementRect.right > viewRect.right) {
-        const scrollLeft =
-          this.viewElement.scrollLeft + (elementRect.right - viewRect.right);
-        this.viewElement.scrollTo({ left: scrollLeft, behavior: "smooth" });
-      }
-    }
-  }
-
   get viewDataAttribute() {
-    const parts = ["root", "view"];
+    const parts = ["view"];
     const axis = this.args.axis ?? "y";
 
     parts.push(`axis-${axis}`);
+
+    if (this.args.pageScroll) {
+      parts.push("page-scroll");
+    }
 
     if (this.controller?.scrollOngoing) {
       parts.push("scroll-ongoing");
@@ -368,6 +328,10 @@ export default class DScrollView extends Component {
     const axis = this.args.axis ?? "y";
 
     parts.push(`axis-${axis}`);
+
+    if (this.args.pageScroll) {
+      parts.push("page-scroll");
+    }
 
     const showScrollbar = this.args.nativeScrollbar ?? true;
     if (!showScrollbar) {
@@ -408,7 +372,7 @@ export default class DScrollView extends Component {
     }
 
     const scrollGesture = this.args.scrollGesture ?? "auto";
-    if (scrollGesture === false) {
+    if (scrollGesture !== "auto") {
       parts.push("no-scroll-gesture");
     }
 
@@ -417,6 +381,10 @@ export default class DScrollView extends Component {
     }
     if (this.controller?.overflowY) {
       parts.push("overflow-y");
+    }
+
+    if (this.gestureTrapHandler.swipeTrapIncapable) {
+      parts.push("swipe-trap-incapable");
     }
 
     return parts.join(" ");
@@ -457,14 +425,6 @@ export default class DScrollView extends Component {
     );
   }
 
-  @action
-  syncScrollTrapState(scrollTrapX, scrollTrapY, controller) {
-    if (controller) {
-      controller.scrollTrapX = scrollTrapX;
-      controller.scrollTrapY = scrollTrapY;
-    }
-  }
-
   get computedTabIndex() {
     const hasOverflow =
       this.controller?.overflowX || this.controller?.overflowY;
@@ -503,11 +463,23 @@ export default class DScrollView extends Component {
   }
 
   get startSpacerDataScroll() {
-    return `start-spacer axis-${this.axis}`;
+    return [
+      "start-spacer",
+      `axis-${this.axis}`,
+      this.args.pageScroll && "page-scroll",
+    ]
+      .filter(Boolean)
+      .join(" ");
   }
 
   get endSpacerDataScroll() {
-    return `end-spacer axis-${this.axis}`;
+    return [
+      "end-spacer",
+      `axis-${this.axis}`,
+      this.args.pageScroll && "page-scroll",
+    ]
+      .filter(Boolean)
+      .join(" ");
   }
 
   get spacerStyle() {
@@ -515,30 +487,36 @@ export default class DScrollView extends Component {
   }
 
   <template>
-    {{effect
-      this.syncScrollTrapState
-      this.scrollTrapX
-      this.scrollTrapY
-      this.controller
-    }}
-
-    <div data-d-scroll={{this.viewDataAttribute}} ...attributes>
+    <div ...attributes {{mergeScrollAttributes this.viewDataAttribute}}>
       <div
         data-d-scroll={{this.scrollContainerDataAttribute}}
         style={{this.combinedStyle}}
         tabindex={{this.computedTabIndex}}
         role={{this.computedRole}}
+        {{this.configureController
+          this.controller
+          @axis
+          @pageScroll
+          @safeArea
+          @scrollAnimationSettings
+        }}
+        {{this.listenForPageScroll this.controller @pageScroll @onScroll}}
+        {{this.syncScrollTrapState
+          this.controller
+          this.scrollTrapX
+          this.scrollTrapY
+        }}
         {{this.registerElement
           onRegister=this.handleElementRegister
           onScroll=this.onScrollEvent
           onScrollEnd=this.onScrollEndEvent
           onFocusIn=this.onFocusInsideEvent
           onFocusOut=this.onBlurInsideEvent
-          setupGestureTrap=this.setupGestureTrap
-          setupSafeArea=this.setupSafeArea
-          cleanupGestureTrap=this.cleanupGestureTrap
-          cleanupSafeArea=this.cleanupSafeArea
+          controller=this.controller
+          onUnregister=this.handleElementUnregister
         }}
+        {{this.manageGestureTrap @axis @scrollGestureTrap @pageScroll}}
+        {{this.manageSafeArea @axis @safeArea @sheet}}
         {{nativeFocusScrollPrevention this.shouldPreventNativeFocus}}
       >
         {{#if this.needsSwipeTrapObserver}}

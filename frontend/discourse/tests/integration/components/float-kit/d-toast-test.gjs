@@ -1,6 +1,6 @@
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { render, triggerEvent } from "@ember/test-helpers";
+import { render, triggerEvent, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DToast from "discourse/float-kit/components/d-toast";
 import DToastInstance from "discourse/float-kit/lib/d-toast-instance";
@@ -26,33 +26,43 @@ function createCustomToastInstance(owner, options, newClose) {
 module("Integration | Component | FloatKit | DToast", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("swipe up to close", async function (assert) {
+  test("touch movement without native scrolling does not close", async function (assert) {
     let closing = false;
     forceMobile();
     const toast = createCustomToastInstance(getOwner(this), {}, () => {
       closing = true;
     });
 
-    await render(<template><DToast @toast={{toast}} /></template>);
+    await render(
+      <template>
+        <section class="fk-d-toasts"><DToast @toast={{toast}} /></section>
+      </template>
+    );
+    await waitFor(".d-toast");
 
-    assert.dom(".fk-d-toast").exists();
+    assert
+      .dom(".d-toast")
+      .doesNotHaveAttribute("role", "the toast preset has no sheet role");
 
-    await triggerEvent(".fk-d-toast", "touchstart", {
+    await triggerEvent(".d-toast", "touchstart", {
       touches: [{ clientX: 0, clientY: 0 }],
       changedTouches: [{ clientX: 0, clientY: 0 }],
     });
 
-    await triggerEvent(".fk-d-toast", "touchmove", {
+    await triggerEvent(".d-toast", "touchmove", {
       touches: [{ clientX: 0, clientY: -100 }],
       changedTouches: [{ clientX: 0, clientY: -100 }],
     });
 
-    await triggerEvent(".fk-d-toast", "touchend", {
+    await triggerEvent(".d-toast", "touchend", {
       touches: [{ clientX: 0, clientY: -100 }],
       changedTouches: [{ clientX: 0, clientY: -100 }],
     });
 
-    assert.true(closing);
+    assert.false(
+      closing,
+      "touch events only update touch state; native scrolling owns swipe dismissal"
+    );
   });
 
   test("duration", async function (assert) {
@@ -62,43 +72,24 @@ module("Integration | Component | FloatKit | DToast", function (hooks) {
     });
     await withSilencedDeprecationsAsync(
       "float-kit.d-toast.duration",
-      async () => await render(<template><DToast @toast={{toast}} /></template>)
+      async () =>
+        assert.strictEqual(
+          toast.duration,
+          9999,
+          "it accepts an arbitrary duration for backwards compatibility"
+        )
     );
-
-    assert
-      .dom(".fk-d-toast")
-      .hasAttribute(
-        "data-test-duration",
-        "9999",
-        "it accepts an arbitrary duration for backwards compatibility"
-      );
 
     toast = new DToastInstance(getOwner(this), {
       duration: "short",
       data: { message: "test" },
     });
-    await render(<template><DToast @toast={{toast}} /></template>);
-
-    assert
-      .dom(".fk-d-toast")
-      .hasAttribute(
-        "data-test-duration",
-        "3000",
-        "it `converts `short` to 3000ms"
-      );
+    assert.strictEqual(toast.duration, 3000, "it converts `short` to 3000ms");
 
     toast = new DToastInstance(getOwner(this), {
       duration: "long",
       data: { message: "test" },
     });
-    await render(<template><DToast @toast={{toast}} /></template>);
-
-    assert
-      .dom(".fk-d-toast")
-      .hasAttribute(
-        "data-test-duration",
-        "5000",
-        "it `converts `long` to 5000ms"
-      );
+    assert.strictEqual(toast.duration, 5000, "it converts `long` to 5000ms");
   });
 });

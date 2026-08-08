@@ -1,22 +1,82 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import effect from "discourse/float-kit/helpers/effect";
+import { modifier } from "ember-modifier";
 import { capabilities } from "discourse/services/capabilities";
-import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import mergeSheetAttributes from "../../modifiers/merge-sheet-attributes";
 import Outlet from "./outlet";
 
 const DEFAULT_BACKDROP_TRAVEL_ANIMATION = {
   opacity: ({ progress }) => Math.min(progress * 0.33, 0.33),
 };
+const UNSET = Symbol("unset");
 
 export default class Backdrop extends Component {
   @service themeColorManager;
 
-  @tracked backdropElement = null;
+  syncBackdrop = modifier((backdropElement, [sheet, swipeable]) => {
+    if (!sheet) {
+      return;
+    }
 
+    sheet.registerBackdrop(backdropElement, swipeable);
+
+    return () => {
+      sheet.unregisterBackdrop(backdropElement);
+    };
+  });
+  syncThemeColorDimming = modifier(
+    (
+      backdropElement,
+      [sheet, shouldUseThemeColorDimmingOverlay, travelAnimation]
+    ) => {
+      if (!sheet || !shouldUseThemeColorDimmingOverlay) {
+        return;
+      }
+
+      const opacityFn = travelAnimation?.opacity;
+      if (typeof opacityFn !== "function") {
+        return;
+      }
+
+      if (!this.themeColorManager.getAndStoreUnderlyingThemeColorAsRGBArray()) {
+        return;
+      }
+
+      const dimmingOverlayId = sheet.themeColorAdapter.dimmingOverlayId;
+      const backgroundColor =
+        window.getComputedStyle(backdropElement).backgroundColor ||
+        "rgb(0,0,0)";
+
+      const overlay = this.themeColorManager.updateThemeColorDimmingOverlay({
+        abortRemoval: true,
+        dimmingOverlayId,
+        color: backgroundColor,
+        alpha: this._themeColorDimmingAlpha,
+      });
+
+      const unregisterTravelAnimation = sheet.registerTravelAnimation({
+        callback: (progress) => {
+          const opacity = opacityFn({ progress });
+          this._themeColorDimmingAlpha = opacity;
+          backdropElement.style.setProperty("opacity", opacity);
+          this.themeColorManager.updateThemeColorDimmingOverlayAlphaValue(
+            overlay,
+            opacity
+          );
+        },
+      });
+
+      return () => {
+        unregisterTravelAnimation?.();
+        this.themeColorManager.removeThemeColorDimmingOverlay(dimmingOverlayId);
+      };
+    }
+  );
+  #travelAnimationInput = UNSET;
+  #effectiveTravelAnimation;
+  #outletTravelAnimationInput = UNSET;
+  #outletThemeColorDimming;
+  #outletTravelAnimation;
   _themeColorDimmingAlpha = 0;
 
   get swipeable() {
@@ -34,10 +94,12 @@ export default class Backdrop extends Component {
   }
 
   get effectiveTravelAnimation() {
-    const userAnimation = this.args.travelAnimation;
+    return this.#resolveEffectiveTravelAnimation(this.args.travelAnimation);
+  }
 
-    if (userAnimation === null) {
-      return null;
+  #resolveEffectiveTravelAnimation(userAnimation) {
+    if (userAnimation === this.#travelAnimationInput) {
+      return this.#effectiveTravelAnimation;
     }
 
     const merged = { ...DEFAULT_BACKDROP_TRAVEL_ANIMATION, ...userAnimation };
@@ -47,7 +109,10 @@ export default class Backdrop extends Component {
       merged.opacity = ({ progress }) => start + (end - start) * progress;
     }
 
-    return merged;
+    this.#travelAnimationInput = userAnimation;
+    this.#effectiveTravelAnimation = merged;
+
+    return this.#effectiveTravelAnimation;
   }
 
   get shouldUseThemeColorDimmingOverlay() {
@@ -59,101 +124,52 @@ export default class Backdrop extends Component {
   }
 
   get outletTravelAnimation() {
-    if (this.shouldUseThemeColorDimmingOverlay) {
-      return { ...this.effectiveTravelAnimation, opacity: "ignore" };
-    }
-    return this.effectiveTravelAnimation;
+    const travelAnimation = this.effectiveTravelAnimation;
+    const useThemeColorDimming = this.shouldUseThemeColorDimmingOverlay;
+
+    return this.#resolveOutletTravelAnimation(
+      travelAnimation,
+      useThemeColorDimming
+    );
   }
 
-  @action
-  setBackdropElement(element) {
-    this.backdropElement = element;
-  }
-
-  @action
-  syncBackdrop(sheet, backdropElement, swipeable) {
-    if (!sheet || !backdropElement) {
-      return;
+  #resolveOutletTravelAnimation(travelAnimation, useThemeColorDimming) {
+    if (
+      travelAnimation === this.#outletTravelAnimationInput &&
+      useThemeColorDimming === this.#outletThemeColorDimming
+    ) {
+      return this.#outletTravelAnimation;
     }
 
-    sheet.registerBackdrop(backdropElement, swipeable);
+    this.#outletTravelAnimationInput = travelAnimation;
+    this.#outletThemeColorDimming = useThemeColorDimming;
+    this.#outletTravelAnimation = useThemeColorDimming
+      ? { ...travelAnimation, opacity: "ignore" }
+      : travelAnimation;
 
-    return () => {
-      sheet.unregisterBackdrop(backdropElement);
-    };
-  }
-
-  @action
-  syncThemeColorDimming(
-    sheet,
-    backdropElement,
-    shouldUseThemeColorDimmingOverlay,
-    travelAnimation
-  ) {
-    if (!sheet || !backdropElement || !shouldUseThemeColorDimmingOverlay) {
-      return;
-    }
-
-    const opacityFn = travelAnimation?.opacity;
-    if (typeof opacityFn !== "function") {
-      return;
-    }
-
-    if (!this.themeColorManager.getAndStoreUnderlyingThemeColorAsRGBArray()) {
-      return;
-    }
-
-    const dimmingOverlayId = sheet.themeColorAdapter.dimmingOverlayId;
-    const backgroundColor =
-      window.getComputedStyle(backdropElement).backgroundColor || "rgb(0,0,0)";
-
-    const overlay = this.themeColorManager.updateThemeColorDimmingOverlay({
-      abortRemoval: true,
-      dimmingOverlayId,
-      color: backgroundColor,
-      alpha: this._themeColorDimmingAlpha,
-    });
-
-    const unregisterTravelAnimation = sheet.registerTravelAnimation({
-      callback: (progress) => {
-        const opacity = opacityFn({ progress });
-        this._themeColorDimmingAlpha = opacity;
-        backdropElement.style.setProperty("opacity", opacity);
-        this.themeColorManager.updateThemeColorDimmingOverlayAlphaValue(
-          overlay,
-          opacity
-        );
-      },
-    });
-
-    return () => {
-      unregisterTravelAnimation?.();
-      this.themeColorManager.removeThemeColorDimmingOverlay(dimmingOverlayId);
-      this._themeColorDimmingAlpha = 0;
-    };
+    return this.#outletTravelAnimation;
   }
 
   <template>
     {{#if @sheet}}
-      {{effect this.syncBackdrop @sheet this.backdropElement this.swipeable}}
-      {{effect
-        this.syncThemeColorDimming
-        @sheet
-        this.backdropElement
-        this.shouldUseThemeColorDimmingOverlay
-        this.effectiveTravelAnimation
-      }}
       <Outlet
         @sheet={{@sheet}}
         @travelAnimation={{this.outletTravelAnimation}}
         @stackingAnimation={{@stackingAnimation}}
-        data-d-sheet={{concatClass
+        {{this.syncBackdrop @sheet this.swipeable}}
+        {{this.syncThemeColorDimming
+          @sheet
+          this.shouldUseThemeColorDimmingOverlay
+          this.effectiveTravelAnimation
+        }}
+        ...attributes
+        {{mergeSheetAttributes
           "backdrop"
           (if @sheet.scrollContainerShouldBePassThrough "no-pointer-events")
         }}
-        {{didInsert this.setBackdropElement}}
-        ...attributes
-      />
+      >
+        {{yield}}
+      </Outlet>
     {{/if}}
   </template>
 }

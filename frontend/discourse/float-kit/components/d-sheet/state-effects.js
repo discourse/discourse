@@ -14,6 +14,20 @@ export function buildStateEffects(controller) {
     },
     {
       machine: "staging",
+      state: "open",
+      timing: "immediate",
+      handler: "handleSkippedOpening",
+    },
+    {
+      machine: "staging",
+      state: "open",
+      timing: "after-paint",
+      callback: () => {
+        requestAnimationFrame(() => controller.completeSkippedOpening());
+      },
+    },
+    {
+      machine: "staging",
       state: "closing",
       timing: "after-paint",
       callback: () => {
@@ -36,16 +50,58 @@ export function buildStateEffects(controller) {
     {
       machine: "openness",
       state: "open",
-      guard: () => {
-        const msg = controller.state.openness.lastProcessedMessage;
-        return [
-          EVENTS.NEXT,
-          EVENTS.PREPARED,
-          EVENTS.STEP,
-          EVENTS.READY_TO_OPEN,
-        ].includes(msg?.type);
+      callback: (message) => {
+        if (
+          [
+            EVENTS.NEXT,
+            EVENTS.PREPARED,
+            EVENTS.STEP,
+            EVENTS.READY_TO_OPEN,
+          ].includes(message?.type)
+        ) {
+          controller.handleOpen(message);
+        }
       },
-      callback: (message) => controller.handleOpen(message),
+    },
+    {
+      machine: "openness",
+      state: "open",
+      timing: "after-paint",
+      guard: () => controller.state.staging.isNone,
+      callback: () => controller.setupIntersectionObserver(),
+    },
+    {
+      machine: "openness",
+      state: "open",
+      timing: "before-paint",
+      guard: () => controller.state.skip.isOpening,
+      callback: () => controller.startSkippedOpeningTravel(),
+    },
+    {
+      machine: "openness",
+      state: "open",
+      timing: "immediate",
+      type: "exit",
+      callback: () => controller.cleanupIntersectionObserver(),
+    },
+    {
+      machine: "openness",
+      state: "open",
+      timing: "immediate",
+      type: "exit",
+      callback: () => controller.handleManualTravelEnd(),
+    },
+    {
+      machine: "openness",
+      state: "open.swipe:ongoing",
+      timing: "immediate",
+      callback: () => controller.handleManualTravelStart(),
+    },
+    {
+      machine: "openness",
+      state: "open.swipe:ended",
+      timing: "immediate",
+      callback: () => controller.handleManualTravelEnd(),
     },
     {
       machine: "openness",
@@ -69,6 +125,12 @@ export function buildStateEffects(controller) {
       machine: "openness",
       state: "closed.status:safe-to-unmount",
       handler: "handleClosedSafeToUnmount",
+    },
+    {
+      machine: "longRunning",
+      state: "false",
+      timing: "before-paint",
+      callback: () => controller.removeAllOutletPersistedStyles(),
     },
     {
       machine: "openness",
@@ -224,15 +286,9 @@ export function buildStateEffects(controller) {
     },
     {
       machine: "touch",
-      state: "ongoing",
-      timing: "immediate",
-      callback: () => controller.touchHandler.handleScrollStart(),
-    },
-    {
-      machine: "touch",
       state: "ended",
       timing: "immediate",
-      callback: () => controller.touchHandler.handleScrollEnd(),
+      callback: () => controller.handleTouchEnded(),
     },
   ];
 }

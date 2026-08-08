@@ -22,17 +22,28 @@ export default class SheetRegistry extends Service {
   }
 
   register(controller) {
+    if (this.sheetLayerStore.hasSheet(controller)) {
+      return;
+    }
+
     this.sheetLayerStore.registerSheet(controller);
 
     if (controller.inertOutside) {
       this.applyScrollLock();
       this.controllersWithScrollLock.add(controller.id);
+      controller.view?.setAttribute("aria-modal", "true");
     }
 
     this.sheetLayerStore.recalculateInertOutside();
   }
 
   unregister(controller) {
+    controller.view?.removeAttribute("aria-modal");
+
+    if (!this.sheetLayerStore.hasSheet(controller)) {
+      return;
+    }
+
     if (this.controllersWithScrollLock.has(controller.id)) {
       this.removeScrollLock();
       this.controllersWithScrollLock.delete(controller.id);
@@ -55,6 +66,10 @@ export default class SheetRegistry extends Service {
   }
 
   updateInertOutside(controller, inertOutside) {
+    if (!this.sheetLayerStore.hasSheet(controller)) {
+      return;
+    }
+
     this.updateScrollLock(controller, inertOutside);
 
     if (controller.view) {

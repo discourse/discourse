@@ -1,5 +1,7 @@
 import { on } from "@ember/modifier";
 import DButton from "discourse/ui-kit/d-button";
+import mergeSheetAttributes from "../../modifiers/merge-sheet-attributes";
+import outletAnimationModifier from "./outlet-animation-modifier";
 import SheetActionBase from "./sheet-action-base";
 
 export default class Trigger extends SheetActionBase {
@@ -12,7 +14,7 @@ export default class Trigger extends SheetActionBase {
   get ariaExpanded() {
     const actionType = this.actionType;
     if (actionType === "present" || actionType === "dismiss") {
-      return this.sheet?.isPresented ?? false;
+      return this.sheet?.isPresented ? "true" : "false";
     }
     return undefined;
   }
@@ -58,8 +60,15 @@ export default class Trigger extends SheetActionBase {
       aria-controls={{this.sheetId}}
       aria-expanded={{this.ariaExpanded}}
       {{on "click" this.handleClick}}
+      {{outletAnimationModifier this.sheet @travelAnimation @stackingAnimation}}
       class="btn-default"
       ...attributes
+      {{mergeSheetAttributes
+        "outlet"
+        "trigger"
+        "touch-target-expander"
+        (if this.sheet.isStackAnimating "animating")
+      }}
     >
       {{yield}}
     </DButton>

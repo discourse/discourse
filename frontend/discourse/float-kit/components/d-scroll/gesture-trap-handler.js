@@ -6,8 +6,8 @@ export default class GestureTrapHandler {
   @tracked xTrap = false;
   @tracked yTrap = false;
   @tracked keyboardVisible = false;
-  isAtStart = true;
-  isAtEnd = true;
+  isAtStart = false;
+  isAtEnd = false;
   startSpyElement = null;
   endSpyElement = null;
   observer = null;
@@ -16,20 +16,13 @@ export default class GestureTrapHandler {
     this.view = view;
   }
 
-  get effectiveTrap() {
-    if (this.view.args.scrollGestureOvershoot === false) {
-      return true;
-    }
-    return this.view.args.scrollGestureTrap ?? false;
-  }
-
   get needsObserver() {
     const values = this.normalizedTrapValues;
     return values.xStart !== values.xEnd || values.yStart !== values.yEnd;
   }
 
   getTrapValue(edge, axisKey) {
-    const trap = this.effectiveTrap;
+    const trap = this.view.args.scrollGestureTrap ?? false;
 
     if (typeof trap === "boolean") {
       return trap;
@@ -111,7 +104,14 @@ export default class GestureTrapHandler {
 
   @action
   handleResize() {
-    this.keyboardVisible = isKeyboardVisible();
+    const nestedPreventionContainer = this.view.viewElement?.matches(
+      '[data-d-scroll~="scroll-container"]:not([data-d-scroll~="swipe-trap-incapable"]) *, [data-d-sheet~="view"] *'
+    );
+    const nextKeyboardVisible =
+      isKeyboardVisible() && !nestedPreventionContainer;
+    if (this.keyboardVisible !== nextKeyboardVisible) {
+      this.keyboardVisible = nextKeyboardVisible;
+    }
   }
 
   setup() {
@@ -121,6 +121,7 @@ export default class GestureTrapHandler {
 
     this.xTrap = values.xStart;
     this.yTrap = values.yStart;
+    this.handleResize();
 
     if (window.visualViewport) {
       window.visualViewport.addEventListener("resize", this.handleResize);
@@ -175,7 +176,7 @@ export default class GestureTrapHandler {
     this.endSpyElement = null;
   }
 
-  cleanup() {
+  teardown() {
     if (window.visualViewport) {
       window.visualViewport.removeEventListener("resize", this.handleResize);
     }
@@ -185,8 +186,15 @@ export default class GestureTrapHandler {
       this.observer = null;
     }
 
+    if (this.keyboardVisible) {
+      this.keyboardVisible = false;
+    }
+  }
+
+  cleanup() {
+    this.teardown();
+
     this.startSpyElement = null;
     this.endSpyElement = null;
-    this.keyboardVisible = false;
   }
 }

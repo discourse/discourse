@@ -86,7 +86,7 @@ class DStackNested extends Component {
   }
 
   <template>
-    <DSheet.Root @forComponent={{@stackRoot}} as |sheet|>
+    <DSheet.Root @forComponent={{@stackRoot}} @sheetRole="dialog" as |sheet|>
       {{yield
         (hash
           Trigger=(component
@@ -128,6 +128,7 @@ export default class DStack extends Component {
       <DSheet.Root
         @componentId={{this.componentId}}
         @forComponent={{stack.stackId}}
+        @sheetRole="dialog"
         @defaultPresented={{@defaultPresented}}
         @presented={{@presented}}
         @onPresentedChange={{@onPresentedChange}}

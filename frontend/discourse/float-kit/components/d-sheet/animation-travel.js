@@ -18,6 +18,7 @@ const RECOGNIZED_EASINGS = new Set([
 
 export default class AnimationTravel {
   controller;
+  #travelToken = 0;
 
   constructor(controller) {
     this.controller = controller;
@@ -25,6 +26,49 @@ export default class AnimationTravel {
 
   get exitingAnimationDefaults() {
     return EXITING_ANIMATION_DEFAULTS;
+  }
+
+  syncSkipStates() {
+    const openingShouldSkip = Boolean(
+      this.#getAnimationConfigForTravel(null, "entering").skip
+    );
+    const closingShouldSkip = Boolean(
+      this.#getAnimationConfigForTravel(null, "exiting").skip
+    );
+    const { skip } = this.controller.state;
+
+    if (skip.isOpening !== openingShouldSkip) {
+      if (openingShouldSkip) {
+        skip.enableOpening();
+      } else {
+        skip.disableOpening();
+      }
+    }
+
+    if (skip.isClosing !== closingShouldSkip) {
+      if (closingShouldSkip) {
+        skip.enableClosing();
+      } else {
+        skip.disableClosing();
+      }
+    }
+  }
+
+  cancelActiveTravel() {
+    this.#travelToken++;
+  }
+
+  #beginTravel() {
+    const token = ++this.#travelToken;
+    const controller = this.controller;
+
+    return () => {
+      return (
+        token !== this.#travelToken ||
+        controller.isDestroying ||
+        controller.isDestroyed
+      );
+    };
   }
 
   #getSnapBackAcceleratorSize() {
@@ -104,8 +148,13 @@ export default class AnimationTravel {
     return this.#resolveAnimationSettings(settings, fallback);
   }
 
-  animateToDetent(detentIndex, animationConfig = null) {
+  animateToDetent(
+    detentIndex,
+    animationConfig = null,
+    programmaticDetentTravel = null
+  ) {
     const c = this.controller;
+    const isTravelCancelled = this.#beginTravel();
     const hasProgressValues = c.dimensions?.progressValueAtDetents?.length;
 
     if (
@@ -114,18 +163,26 @@ export default class AnimationTravel {
       !c.dimensions ||
       !hasProgressValues
     ) {
+      let stagingAdvanced = false;
+
       if (c.state.openness.isClosing && detentIndex === 0) {
         c.state.openness.completeAnimation();
         c.state.staging.advance();
+        stagingAdvanced = true;
       }
       if (c.state.openness.isOpening) {
         c.state.openness.completeAnimation();
         c.state.staging.advance();
+        stagingAdvanced = true;
       }
       if (c.state.position.isFrontOpening || c.state.position.isFrontClosing) {
         c.state.position.advance();
         c.stackingAdapter?.notifyParentPositionMachineNext();
       }
+      if (stagingAdvanced) {
+        c.scheduleTrackDimensionRecalculation();
+      }
+      c.completeActiveDetentNotification?.(programmaticDetentTravel);
       return;
     }
 
@@ -136,7 +193,9 @@ export default class AnimationTravel {
 
     const settings = this.#getRawAnimationSettings(travelType);
     const trackToTravelOn =
-      (typeof settings === "object" && settings?.track) || c.tracks;
+      travelType !== "stepping" && typeof settings === "object"
+        ? settings?.track
+        : undefined;
 
     travelToDetent({
       destinationDetent: detentIndex,
@@ -159,22 +218,20 @@ export default class AnimationTravel {
       onTravel: c.onTravel,
       onTravelStart: c.onTravelStart,
       runOnTravelStart: true,
-      onTravelEnd: () => this.#handleTravelEnd(),
+      onTravelEnd: () => this.#handleTravelEnd(programmaticDetentTravel),
+      onProgrammaticScroll: c.markProgrammaticScroll,
+      isTravelCancelled,
     });
   }
 
-  #handleTravelEnd() {
+  #handleTravelEnd(programmaticDetentTravel) {
     const c = this.controller;
-    const exactProgress =
-      c.dimensions?.exactProgressValueAtDetents?.[c.currentSegment[0]];
-
-    if (exactProgress !== undefined) {
-      c.lastProcessedProgress = exactProgress;
-      c.stackingAdapter?.updateTravelProgress(exactProgress);
+    if (c.isDestroying || c.isDestroyed) {
+      return;
     }
 
-    c.onTravelEnd?.();
-
+    const exactProgress =
+      c.dimensions?.exactProgressValueAtDetents?.[c.currentSegment[0]];
     const animationState = c.state.staging.current;
     const wasOpening = c.state.openness.isOpening;
     const wasClosing = c.state.openness.isClosing;
@@ -197,15 +254,26 @@ export default class AnimationTravel {
 
     if (shouldAdvanceAnimation) {
       c.state.staging.advance();
+      c.scheduleTrackDimensionRecalculation();
     }
 
     if (wasOpen && wasStepping) {
       c.updateTravelStatus("idleInside");
     }
+
+    c.onTravelEnd?.();
+
+    if (exactProgress !== undefined) {
+      c.lastProcessedProgress = exactProgress;
+      c.stackingAdapter?.updateTravelProgress(exactProgress);
+    }
+
+    c.completeActiveDetentNotification?.(programmaticDetentTravel);
   }
 
   recalculateAndTravel(detentIndex) {
     const c = this.controller;
+    const isTravelCancelled = this.#beginTravel();
 
     if (!c.scrollContainer || !c.contentWrapper || !c.dimensions) {
       return;
@@ -221,7 +289,6 @@ export default class AnimationTravel {
       tracks: c.tracks,
       travelAnimations: c.travelAnimations,
       belowSheetsInStack: c.belowSheetsInStack,
-      trackToTravelOn: c.tracks,
       behavior: "instant",
       runTravelCallbacksAndAnimations: false,
       runOnTravelStart: false,
@@ -232,11 +299,14 @@ export default class AnimationTravel {
       hasOppositeTracks: c.tracks === "horizontal" || c.tracks === "vertical",
       snapBackAcceleratorTravelAxisSize:
         c.dimensions?.snapOutAccelerator?.travelAxis?.unitless || 0,
+      onProgrammaticScroll: c.markProgrammaticScroll,
+      isTravelCancelled,
     });
   }
 
   stepToStuckPosition(direction, onComplete) {
     const c = this.controller;
+    const isTravelCancelled = this.#beginTravel();
 
     if (!c.scrollContainer || !c.dimensions?.detentMarkers) {
       return;
@@ -260,7 +330,6 @@ export default class AnimationTravel {
       tracks: c.tracks,
       travelAnimations: c.travelAnimations,
       belowSheetsInStack: c.belowSheetsInStack,
-      trackToTravelOn: c.tracks,
       animationConfig: { skip: true },
       setSegment: c.setSegment,
       swipeOutDisabledWithDetent:
@@ -268,7 +337,10 @@ export default class AnimationTravel {
       contentPlacement: c.contentPlacement,
       hasOppositeTracks: c.tracks === "horizontal" || c.tracks === "vertical",
       snapBackAcceleratorTravelAxisSize: this.#getSnapBackAcceleratorSize(),
+      onTravel: c.onTravel,
       onTravelEnd: onComplete,
+      onProgrammaticScroll: c.markProgrammaticScroll,
+      isTravelCancelled,
     });
   }
 }

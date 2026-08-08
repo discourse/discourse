@@ -1,20 +1,27 @@
 import { fn } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import mergeSheetAttributes from "../../modifiers/merge-sheet-attributes";
+import Outlet from "./outlet";
 
 const BleedingBackground = <template>
-  <div
-    data-d-sheet={{concatClass
+  <Outlet
+    @sheet={{@sheet}}
+    @travelAnimation={{@travelAnimation}}
+    @stackingAnimation={{@stackingAnimation}}
+    {{didInsert (fn @sheet.setBleedingBackgroundPresent true)}}
+    {{willDestroy (fn @sheet.setBleedingBackgroundPresent false)}}
+    ...attributes
+    {{mergeSheetAttributes
       "bleeding-background"
       @sheet.contentPlacementAttribute
       @sheet.tracks
       @sheet.stagingAttribute
+      (if @sheet.isCenteredTrack "bleed-disabled")
     }}
-    {{didInsert (fn @sheet.setBleedingBackgroundPresent true)}}
-    {{willDestroy (fn @sheet.setBleedingBackgroundPresent false)}}
-    ...attributes
-  ></div>
+  >
+    {{yield}}
+  </Outlet>
 </template>;
 
 export default BleedingBackground;

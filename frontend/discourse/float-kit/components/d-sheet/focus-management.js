@@ -1,27 +1,6 @@
 import { processBehavior } from "discourse/float-kit/lib/behavior-handler";
+import { getFocusableElements } from "./focus-utils";
 
-const FOCUSABLE_SELECTOR = [
-  "input:not([disabled]):not([type=hidden])",
-  "select:not([disabled])",
-  "textarea:not([disabled])",
-  "button:not([disabled])",
-  "a[href]",
-  "area[href]",
-  "summary",
-  "iframe",
-  "object",
-  "embed",
-  "audio[controls]",
-  "video[controls]",
-  "[contenteditable]",
-  "[tabindex]:not([disabled])",
-].join(",");
-const SKIPPABLE_SELECTORS = [
-  "[aria-hidden='true']",
-  "[aria-hidden='true'] *",
-  "[inert]",
-  "[inert] *",
-];
 const AUTOFOCUS_SKIP_SELECTOR = "[data-d-sheet~='scroll-container']";
 const SCROLL_VIEW_SELECTOR = "[data-d-scroll~='view']";
 function getFirstSafeElement(elements) {
@@ -31,39 +10,6 @@ function getFirstSafeElement(elements) {
     }
   }
   return elements[0];
-}
-function getFocusableElements(container, additionalSkipSelectors = []) {
-  if (!container) {
-    return { safelyTabbableElements: [] };
-  }
-
-  const skipSelector = [
-    ...additionalSkipSelectors,
-    ...SKIPPABLE_SELECTORS,
-  ].join(",");
-
-  const elements = [
-    ...(container.matches(FOCUSABLE_SELECTOR) ? [container] : []),
-    ...container.querySelectorAll(FOCUSABLE_SELECTOR),
-  ];
-
-  const elementsWithData = elements.map((element) => ({
-    element,
-    tabbable: element.matches(':not([hidden]):not([tabindex^="-"])'),
-    skippable:
-      element.matches(skipSelector) ||
-      !(
-        element.offsetWidth ||
-        element.offsetHeight ||
-        element.getClientRects().length
-      ),
-  }));
-
-  const safelyTabbableElements = elementsWithData
-    .filter((data) => data.tabbable && !data.skippable)
-    .map((data) => data.element);
-
-  return { safelyTabbableElements };
 }
 
 export default class FocusManagement {

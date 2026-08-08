@@ -9,7 +9,7 @@ import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const DETENTS = ["66vh"];
 const BottomSheetScrollArea = <template>
-  <DSheet.Scroll.Root as |controller|>
+  <DSheet.Scroll.Root class="bottom-sheet__scroll-root" as |controller|>
     <DSheet.Scroll.View
       class="bottom-sheet__scroll-view"
       @scrollGesture={{if @reachedLastDetent "auto" false}}
@@ -17,6 +17,7 @@ const BottomSheetScrollArea = <template>
       @safeArea="layout-viewport"
       @onScrollStart={{hash dismissKeyboard=true}}
       @controller={{controller}}
+      @sheet={{@sheet}}
     >
       <DSheet.Scroll.Content
         class="bottom-sheet__scroll-content"
@@ -111,7 +112,9 @@ const BottomSheetContent = <template>
           {{yield
             (hash
               ScrollArea=(component
-                BottomSheetScrollArea reachedLastDetent=@reachedLastDetent
+                BottomSheetScrollArea
+                reachedLastDetent=@reachedLastDetent
+                sheet=@sheet
               )
               Trigger=(component DSheet.Trigger sheet=@sheet)
               expand=(fn @sheet.stepToDetent 2)
@@ -131,7 +134,7 @@ const BottomSheetContent = <template>
           {{yield
             (hash
               ScrollArea=(component
-                BottomSheetScrollArea reachedLastDetent=false
+                BottomSheetScrollArea reachedLastDetent=false sheet=@sheet
               )
               Trigger=(component DSheet.Trigger sheet=@sheet)
               dismiss=@sheet.requestDismiss
@@ -159,6 +162,7 @@ export default class DBottomSheet extends Component {
     <DSheet.Root
       class="bottom-sheet"
       @componentId={{this.componentId}}
+      @sheetRole="dialog"
       @defaultPresented={{@defaultPresented}}
       @presented={{@presented}}
       @onPresentedChange={{@onPresentedChange}}

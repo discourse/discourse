@@ -109,6 +109,7 @@ export default class AssignTopicSheet extends Component {
           <content.Stack as |editStack|>
             <AssignmentsList
               @assignments={{this.assignments}}
+              @sheet={{content.sheet}}
               @topic={{@topic}}
               @onEditAssignment={{fn this.onEditAssignment editStack.present}}
               @onRemoveAssignment={{this.unassign}}

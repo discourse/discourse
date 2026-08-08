@@ -1,5 +1,7 @@
+import mergeSheetAttributes from "../../../modifiers/merge-sheet-attributes";
+
 const DSheetSpecialWrapperContent = <template>
-  <div data-d-sheet="scroll-trap-stabilizer" ...attributes>
+  <div ...attributes {{mergeSheetAttributes "scroll-trap-stabilizer"}}>
     {{yield}}
   </div>
 </template>;

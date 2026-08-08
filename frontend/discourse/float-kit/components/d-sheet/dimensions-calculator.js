@@ -40,13 +40,11 @@ export default class DimensionCalculator {
   calculateDimensions(track, contentPlacement, options = {}) {
     const context = this.#buildContext(track, contentPlacement, options);
     const dimensions = this.#parseInitialDimensions(context);
-
-    this.#applyVariables(dimensions, context);
-
     const detents = this.#calculateDetents(dimensions, context);
     Object.assign(dimensions, detents);
 
-    this.#applyVariables(dimensions, context);
+    this.#calculateDerivedDimensions(dimensions, context);
+    this.#applyVariables(dimensions);
 
     return dimensions;
   }
@@ -197,8 +195,7 @@ export default class DimensionCalculator {
     return progressAtDetents;
   }
 
-  #applyVariables(dimensions, context) {
-    const { view: viewElement } = this.elements;
+  #calculateDerivedDimensions(dimensions, context) {
     const {
       contentPlacement,
       isCenteredTrack,
@@ -208,8 +205,6 @@ export default class DimensionCalculator {
       snapOutAcceleration,
       webkitSmallSpacerMode,
     } = context;
-
-    this.#applyViewContentStyles(dimensions, viewElement);
 
     const viewSize = dimensions.view.travelAxis.unitless;
     const contentSize = dimensions.content.travelAxis.unitless;
@@ -250,21 +245,27 @@ export default class DimensionCalculator {
       travelAxis: createDimensionValue(backSpacerSize),
     };
 
+    dimensions.snapOutAccelerator = {
+      travelAxis: createDimensionValue(snapOutAccelerator),
+    };
+  }
+
+  #applyVariables(dimensions) {
+    const { view: viewElement } = this.elements;
+
+    this.#applyViewContentStyles(dimensions, viewElement);
+
     viewElement.style.setProperty(
       "--d-sheet-front-spacer",
-      `${frontSpacerSize}px`
+      dimensions.frontSpacer.travelAxis.px
     );
 
     viewElement.style.setProperty(
       "--d-sheet-back-spacer",
-      `${backSpacerSize}px`
+      dimensions.backSpacer.travelAxis.px
     );
 
-    this.#applyDetentAcceleratorStyles(
-      dimensions,
-      viewElement,
-      snapOutAccelerator
-    );
+    this.#applyDetentAcceleratorStyles(dimensions, viewElement);
   }
 
   #applyViewContentStyles(dimensions, viewElement) {
@@ -286,7 +287,7 @@ export default class DimensionCalculator {
     );
   }
 
-  #applyDetentAcceleratorStyles(dimensions, viewElement, snapOutAccelerator) {
+  #applyDetentAcceleratorStyles(dimensions, viewElement) {
     if (dimensions.detentMarkers?.length > 0) {
       viewElement.style.setProperty(
         "--d-sheet-first-detent-size",
@@ -294,13 +295,9 @@ export default class DimensionCalculator {
       );
     }
 
-    dimensions.snapOutAccelerator = {
-      travelAxis: createDimensionValue(snapOutAccelerator),
-    };
-
     viewElement.style.setProperty(
       "--d-sheet-snap-accelerator",
-      `${snapOutAccelerator}px`
+      dimensions.snapOutAccelerator.travelAxis.px
     );
   }
 

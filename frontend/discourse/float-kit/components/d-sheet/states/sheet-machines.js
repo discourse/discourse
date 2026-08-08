@@ -120,14 +120,18 @@ export const SHEET_MACHINES = [
                     },
                     { target: "flushing-to-preparing-opening" },
                   ],
-                  "": "safe-to-unmount",
+                  [EVENTS.FLUSH_COMPLETE]: "safe-to-unmount",
                 },
               },
               "flushing-to-preparing-open": {
-                messages: { "": "preparing-open" },
+                messages: {
+                  [EVENTS.FLUSH_COMPLETE]: "preparing-open",
+                },
               },
               "flushing-to-preparing-opening": {
-                messages: { "": "preparing-opening" },
+                messages: {
+                  [EVENTS.FLUSH_COMPLETE]: "preparing-opening",
+                },
               },
               "preparing-open": {},
               "preparing-opening": {},

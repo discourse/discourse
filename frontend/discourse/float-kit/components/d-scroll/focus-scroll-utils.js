@@ -1,3 +1,6 @@
+const FOCUS_PREVENTION_CONTAINER_SELECTOR =
+  '[data-d-scroll~="scroll-container"], [data-d-sheet~="view"]';
+
 export function isColorOrSelect(element) {
   if (!element) {
     return false;
@@ -35,11 +38,10 @@ export function isNearViewportBottom(element) {
   );
 }
 export function isInsidePreventionContainer(element) {
-  const scrollContainer = element?.closest(
-    '[data-d-scroll~="scroll-container"]'
+  return findClosestFocusPreventionContainer(element)?.matches(
+    '[data-d-scroll-focus-prevention="true"]'
   );
-  return scrollContainer?.matches('[data-d-scroll-focus-prevention="true"]');
 }
-export function findClosestScrollContainer(element) {
-  return element?.closest('[data-d-scroll~="scroll-container"]');
+export function findClosestFocusPreventionContainer(element) {
+  return element?.closest(FOCUS_PREVENTION_CONTAINER_SELECTOR);
 }

@@ -1,17 +1,32 @@
 import { action } from "@ember/object";
+import { cancel, next, scheduleOnce } from "@ember/runloop";
 import { getScrollBehavior } from "discourse/lib/utilities";
 
 export function waitForScrollEnd(element, callback, timeout = 300) {
   let timeoutId;
+  let active = true;
   let lastScrollTop = element.scrollTop;
 
-  const finish = () => {
+  function cleanup() {
+    if (!active) {
+      return;
+    }
+
+    active = false;
     clearTimeout(timeoutId);
     element.removeEventListener("scroll", onScroll);
-    callback();
-  };
+  }
 
-  const onScroll = () => {
+  function finish() {
+    if (!active) {
+      return;
+    }
+
+    cleanup();
+    callback();
+  }
+
+  function onScroll() {
     const currentScrollTop = element.scrollTop;
     if (currentScrollTop > lastScrollTop) {
       finish();
@@ -20,10 +35,12 @@ export function waitForScrollEnd(element, callback, timeout = 300) {
     lastScrollTop = currentScrollTop;
     clearTimeout(timeoutId);
     timeoutId = setTimeout(finish, timeout);
-  };
+  }
 
   timeoutId = setTimeout(finish, timeout);
   element.addEventListener("scroll", onScroll);
+
+  return cleanup;
 }
 
 export default class SafeAreaHandler {
@@ -32,6 +49,9 @@ export default class SafeAreaHandler {
   updateTimeout = null;
   readdListenerTimeout = null;
   fallbackUpdateTimeout = null;
+  scrollEndCleanup = null;
+  initialUpdateTask = null;
+  viewElement = null;
 
   constructor(view) {
     this.view = view;
@@ -49,6 +69,7 @@ export default class SafeAreaHandler {
     }
 
     const viewElement = this.view.viewElement;
+    this.viewElement = viewElement;
 
     window.visualViewport.addEventListener("resize", this.handleResize);
 
@@ -58,6 +79,25 @@ export default class SafeAreaHandler {
       });
     }
 
+    if (this.view.args.sheet) {
+      this.initialUpdateTask = next(this, this.scheduleInitialUpdate);
+    } else {
+      this.scheduleInitialUpdate();
+    }
+  }
+
+  @action
+  scheduleInitialUpdate() {
+    this.initialUpdateTask = scheduleOnce(
+      "afterRender",
+      this,
+      this.runInitialUpdate
+    );
+  }
+
+  @action
+  runInitialUpdate() {
+    this.initialUpdateTask = null;
     this.update();
   }
 
@@ -103,7 +143,14 @@ export default class SafeAreaHandler {
   }
 
   cleanup() {
-    const viewElement = this.view.viewElement;
+    const viewElement = this.viewElement;
+
+    this.cancelScrollEndWait();
+
+    if (this.initialUpdateTask) {
+      cancel(this.initialUpdateTask);
+      this.initialUpdateTask = null;
+    }
 
     if (window.visualViewport) {
       window.visualViewport.removeEventListener("resize", this.handleResize);
@@ -126,6 +173,12 @@ export default class SafeAreaHandler {
     this.updateTimeout = null;
     this.readdListenerTimeout = null;
     this.fallbackUpdateTimeout = null;
+    this.viewElement = null;
+  }
+
+  cancelScrollEndWait() {
+    this.scrollEndCleanup?.();
+    this.scrollEndCleanup = null;
   }
 
   getViewBoundsWithBorder() {
@@ -156,6 +209,65 @@ export default class SafeAreaHandler {
     };
   }
 
+  getSheetContentRestingBounds() {
+    const sheet = this.view.args.sheet;
+    const dimensions = sheet?.dimensions;
+    const sheetView = sheet?.view;
+
+    if (!sheet || !dimensions || !sheetView) {
+      return null;
+    }
+
+    const dimensionAxis = sheet.isVerticalTrack ? "travelAxis" : "crossAxis";
+    const viewSize = dimensions.view?.[dimensionAxis]?.unitless;
+    const contentSize = dimensions.content?.[dimensionAxis]?.unitless;
+
+    if (!Number.isFinite(viewSize) || !Number.isFinite(contentSize)) {
+      return null;
+    }
+
+    const { top: viewTop, bottom: viewBottom } =
+      sheetView.getBoundingClientRect();
+    const inset = (viewSize - contentSize) / 2;
+
+    switch (sheet.contentPlacement) {
+      case "left":
+      case "right":
+      case "center":
+        return { top: viewTop + inset, bottom: viewBottom - inset };
+      case "top":
+        return { top: viewTop, bottom: viewBottom - 2 * inset };
+      case "bottom":
+        return { top: viewTop + 2 * inset, bottom: viewBottom };
+      default:
+        return null;
+    }
+  }
+
+  getEffectiveViewBounds() {
+    const viewBounds = this.getViewBoundsWithBorder();
+    const sheet = this.view.args.sheet;
+
+    if (!sheet) {
+      return viewBounds;
+    }
+
+    const restingBounds = this.getSheetContentRestingBounds();
+    const sheetContent = sheet.content;
+
+    if (!restingBounds || !sheetContent) {
+      return null;
+    }
+
+    const currentSheetBounds = sheetContent.getBoundingClientRect();
+
+    return {
+      top: restingBounds.top + (viewBounds.top - currentSheetBounds.top),
+      bottom:
+        restingBounds.bottom - (currentSheetBounds.bottom - viewBounds.bottom),
+    };
+  }
+
   update({
     scrollIntoPlace = true,
     scrollBehavior = getScrollBehavior(),
@@ -181,7 +293,11 @@ export default class SafeAreaHandler {
     const effectiveSafeArea =
       safeArea ?? this.view.args.safeArea ?? "visual-viewport";
 
-    const viewBounds = this.getViewBoundsWithBorder();
+    const viewBounds = this.getEffectiveViewBounds();
+    if (!viewBounds) {
+      return;
+    }
+
     const viewTop = viewBounds.top;
     const viewBottom = viewBounds.bottom;
 
@@ -211,6 +327,8 @@ export default class SafeAreaHandler {
     ) {
       return;
     }
+
+    this.cancelScrollEndWait();
 
     let verticalScrollOffsetRequired = 0;
     if (endSpacerElement) {
@@ -251,7 +369,11 @@ export default class SafeAreaHandler {
 
         this.previousEndHeight = endSpacerHeight;
 
-        waitForScrollEnd(viewElement, () => {
+        const scrollEndCleanup = waitForScrollEnd(viewElement, () => {
+          if (this.scrollEndCleanup === scrollEndCleanup) {
+            this.scrollEndCleanup = null;
+          }
+
           if (viewElement && contentFits) {
             viewElement.scrollTo({
               top: 0,
@@ -260,6 +382,7 @@ export default class SafeAreaHandler {
           }
           setSpacerHeights();
         });
+        this.scrollEndCleanup = scrollEndCleanup;
       }
     } else {
       setSpacerHeights();

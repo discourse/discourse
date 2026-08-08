@@ -72,6 +72,7 @@ export default class AssigneesList extends Component {
         @safeArea="layout-viewport"
         @onScrollStart={{hash dismissKeyboard=true}}
         @controller={{controller}}
+        @sheet={{@sheet}}
       >
         <DSheet.Scroll.Content
           class="SheetWithDetent-scrollContent"

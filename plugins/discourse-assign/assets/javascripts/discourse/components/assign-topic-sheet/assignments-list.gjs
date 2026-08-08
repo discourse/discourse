@@ -9,6 +9,7 @@ const AssignmentsList = <template>
       @safeArea="layout-viewport"
       @onScrollStart={{hash dismissKeyboard=true}}
       @controller={{controller}}
+      @sheet={{@sheet}}
     >
       <DSheet.Scroll.Content
         class="assignments-list"
