@@ -439,12 +439,33 @@ bin/qunit --module "Integration | Component | DIconGridPicker"   # 32 — the ot
 The last two matter because the a11y service's own tests are named
 `Integration | Component | A11y | LiveRegions`, not `ui-kit` — a `ui-kit`-only run misses them.
 
+Three a11y suites now ride along. They are matched by the `ui-kit` filter, but are worth naming
+because each covers a defect class the others cannot see — see
+[A11Y-TEST-TIERS.md](./A11Y-TEST-TIERS.md):
+
+```bash
+bin/qunit --filter "APG | combobox"        # 64 — APG conformance, per renderer
+bin/qunit --filter "DSelect announcements" #  6 — what the live regions say, and how often
+bin/qunit --filter "DSelect utterances"    #  5 — what a row says when the cursor lands on it
+bin/qunit --filter "DSelect axe floor"     #  4 — axe, gated narrowly and otherwise recorded
+```
+
+**"a skipped row still occupies a position" now has an executable reproduction.** It was previously
+findable only by listening, and is still open. `DSelect utterances: reachable rows speak contiguous
+positions` composes each row's spoken phrase and observes `[1,2,4]` over four rows whose third is
+disabled: the unreachable row consumes position 3, and every row claims "of 4" where only three can be
+visited. It is a `test.todo`, so it reports green while the defect exists and **fails once fixed** —
+that failure is the signal to promote it to a plain `test`, not a regression. Neither the attribute
+checks nor the accessibility-tree snapshot can see this: `hasContiguousPositions()` counts every
+rendered row rather than only the reachable ones, and Playwright does not serialize position at all.
+
 QUnit is not the whole gate. Scroll, real focus order and native activation only exist in a
 browser, so six system specs now ride along — all in the **styleguide plugin**, which is still
 the only surface rendering `DSelect` (they move to core `spec/system` once a real consumer does):
 
 ```bash
-bin/rspec plugins/styleguide/spec/system/d_select_bounded_reveal_spec.rb \
+bin/rspec plugins/styleguide/spec/system/d_select_a11y_contract_spec.rb \
+          plugins/styleguide/spec/system/d_select_bounded_reveal_spec.rb \
           plugins/styleguide/spec/system/d_select_cursor_source_spec.rb \
           plugins/styleguide/spec/system/d_select_multi_chip_roving_spec.rb \
           plugins/styleguide/spec/system/d_select_no_probe_spec.rb \
@@ -460,10 +481,29 @@ options to measure loading — it reads the loaded frontier from the highest rea
 
 The previously-noted pre-existing failure (`Integration | ui-kit | DDateTimeInput: allows
 mutations through actions`) is **gone** — it ran and passed in the run above, so it was fixed
-upstream. No gate test is reliably red, but `d_select_cursor_source_spec` is a known
-intermittent (see the task above): it has failed a full-suite run and then passed the same
-seed, so treat a lone failure there as unproven rather than as either a regression or noise,
-and re-run the seed before drawing a conclusion.
+upstream.
+
+`d_select_cursor_source_spec`'s known intermittency has had its **cause addressed, but the fix is
+unverified** — see the blocker below. It waited for any option and then read
+`.options.first[:"aria-setsize"]`, which is a check-then-fetch race: the row that satisfied the wait
+and the row re-queried afterwards need not be the same one, because the virtualizer can swap the
+mounted window in between. Both reads are now single waiting matchers that name the attribute
+(`have_css("… [aria-setsize='-1']")`), so they cannot sample a row before its value is published —
+and unlike a retry, they do not paper over the race they exist to observe.
+
+**Blocker: this spec is currently red on the base branch, for an unrelated reason.** `combobox.open`
+times out because the unconditionally-rendered `select-aria-probe` intercepts the pointer event:
+
+```
+<button class="btn btn-small btn-flat">…</button> from <div class="select-aria-probe">…</div>
+  subtree intercepts pointer events
+```
+
+Verified by checking out the spec at `HEAD` and running it unmodified — it fails identically, so this
+is not a regression from the change above. The probe was added as a diagnostic (`dde449fd5ca`) and is
+slated to become a dev-tool under PR #41891; until it stops overlaying the trigger, the spec cannot
+run and the race fix cannot be confirmed. Deciding what to do about the probe is a separate call —
+it needs either a pointer-events carve-out or to move out of the click path.
 
 `pnpm lint:types` does **not** check `.js` tests — `tsconfig-base.json` sets `allowJs` with no
 `checkJs`. A test asserting a typed engine API should be `.ts` so the checker guards it; runtime

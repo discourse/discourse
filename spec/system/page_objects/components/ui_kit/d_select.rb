@@ -291,6 +291,89 @@ module PageObjects
           JS
         end
 
+        # A Playwright locator scoped to this instance's overlay, for the accessibility-tree
+        # assertions Capybara has no equivalent for.
+        def playwright_locator(selector = "[role='listbox']")
+          page.driver.with_playwright_page { |pw_page| pw_page.locator(in_panel(selector)) }
+        end
+
+        # A Playwright locator scoped to this instance's TRIGGER, which is a disjoint subtree from the
+        # panel — `playwright_locator` prefixes with `[data-content]` and so can never reach it. The
+        # selection chips live here, not in the overlay.
+        def playwright_trigger_locator(selector = nil)
+          target = selector ? "#{@root} #{selector}" : @root
+          page.driver.with_playwright_page { |pw_page| pw_page.locator(target) }
+        end
+
+        # The browser-computed accessibility tree for this instance's panel, as Playwright's YAML.
+        #
+        # Reads roles, accessible names, and the state properties Playwright serializes
+        # (`expanded`, `selected`, `checked`, `disabled`, `level`). Deliberately NOT a cursor
+        # assertion: the serializer never reads `aria-activedescendant`, and its `[active]` marker
+        # is real DOM focus emitted only in AI mode. Use `active_descendant_state` for the cursor.
+        def panel_aria_snapshot(selector = "[role='listbox']")
+          playwright_locator(selector).aria_snapshot
+        end
+
+        # The full state of the combobox cursor, keeping the three failure shapes distinct.
+        #
+        # `active_option_index` collapses them all to nil, which is right for "where did the jump
+        # land" but wrong for a contract: an absent descendant, one whose id no longer resolves, and
+        # one pointing at a non-option are three different defects, and the dangling case is the one
+        # a stale highlight hides behind.
+        #
+        # @return [Hash] `status` is one of "no_controller", "absent", "dangling", "not_option",
+        #   "ok". When "ok", also carries `index`, `posinset`, `setsize` and `selected`.
+        def active_descendant_state
+          page.evaluate_script(<<~JS)
+            (function () {
+              const root = "#{@root}";
+              const controller =
+                document.querySelector(root + " [role='combobox']") ||
+                document.querySelector(root + "[role='combobox']");
+              if (!controller) {
+                return { status: "no_controller" };
+              }
+
+              const id = controller.getAttribute("aria-activedescendant");
+              if (id === null) {
+                return { status: "absent" };
+              }
+
+              const active = document.getElementById(id);
+              if (!active) {
+                return { status: "dangling", id };
+              }
+              if (active.getAttribute("role") !== "option") {
+                return { status: "not_option", id, role: active.getAttribute("role") };
+              }
+
+              const index = Number(active.dataset.index);
+              return {
+                status: "ok",
+                id,
+                index: Number.isInteger(index) ? index : null,
+                posinset: active.getAttribute("aria-posinset"),
+                setsize: active.getAttribute("aria-setsize"),
+                selected: active.getAttribute("aria-selected"),
+              };
+            })()
+          JS
+        end
+
+        # The `aria-posinset` values of the mounted rows, in DOM order.
+        #
+        # A row a keyboard user cannot land on must not consume a position, or the count read out
+        # disagrees with the rows actually reachable — "4 of 6" one step from "6 of 6". Windowing
+        # means this covers the mounted slice, not the whole list.
+        def mounted_positions
+          page.evaluate_script(<<~JS)
+            [...document.querySelectorAll("#{option_selector}")].map((el) =>
+              Number(el.getAttribute("aria-posinset"))
+            )
+          JS
+        end
+
         # Whether DOM focus rests on a mounted listbox option (focus-mode surfaces move real
         # focus into the list). Distinguishes a landed jump from focus dropped to `<body>`.
         def focused_option_index

@@ -114,6 +114,7 @@ import {
 import { resetHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
 import { clearToolbarCallbacks } from "discourse/ui-kit/d-editor";
 import I18n from "discourse-i18n";
+import { setupComboboxAssertions } from "./aria-patterns/assertions";
 import { setupDSelectAssertions } from "./d-select-assertions";
 import { setupFormKitAssertions } from "./form-kit-assertions";
 import { setupNotificationsTrackingAssertions } from "./notifications-tracking-assertions";
@@ -493,6 +494,7 @@ QUnit.assert.containsInstance = function (collection, klass, message) {
 
 setupFormKitAssertions();
 setupDSelectAssertions();
+setupComboboxAssertions();
 setupNotificationsTrackingAssertions();
 
 export async function selectDate(selector, date) {
