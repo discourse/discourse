@@ -1,6 +1,15 @@
 @import "colors";
 @import "typography";
 
+// Still a mixin because the sandbox hero shares this surface with the select showcases. The
+// example card's copy was inlined upstream, so nothing outside this file includes it.
+@mixin styleguide-surface {
+  border: 1px solid var(--content-border-color);
+  border-radius: var(--d-border-radius);
+  background-color: var(--secondary);
+  padding: 1rem;
+}
+
 .styleguide {
   // The comfortable reading measure, for prose that sits directly on the page with nothing
   // bounding it. Prose INSIDE a box does not get this: the box is already the measure, and
@@ -437,8 +446,562 @@
   }
 }
 
+/* Example layout ------------------------------------------------------------------------- */
+
+// One control width for the whole page, declared once on the section root. 28rem rather than a
+// per-family value because it is the only figure with a documented bound in both directions:
+// widening past it stops the seven reviewer chips wrapping, which an assertion reads via their
+// offsets, and narrowing it makes the two-line category rows wrap far enough to overlap, so a
+// row intercepts the click meant for the one below it. Both failures are silent-ish.
+.select-examples {
+  --styleguide-control-width: 28rem;
+}
+
+// A control fills its card. The card's track already sets a sensible width, and a second cap
+// inside it only produced a ragged right edge that read as a rendering fault.
+.select-examples__control,
+.select-showcases__control {
+  width: 100%;
+  min-width: 0;
+}
+
+// The exception, and the only place the token is still spent: on a full-row card the container
+// is deliberately far wider than any select should be, so the control keeps a readable cap.
+.styleguide-example.--wide {
+  .select-examples__control,
+  .select-showcases__control {
+    width: min(100%, var(--styleguide-control-width));
+  }
+}
+
+// A card whose subject is a difference keeps both specimens inside it, so the comparison is one
+// claim rather than two half-claims in adjacent cards. Each slot keeps the page's control width
+// and they drop to one column when the card is too narrow to hold both.
+.select-examples__pair {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.select-examples__pair-item {
+  flex: 1 1 var(--styleguide-control-width);
+  min-width: 0;
+}
+
+.select-examples__pair-label {
+  margin-block-end: var(--space-2);
+  font-size: var(--font-down-1);
+  color: var(--primary-high);
+}
+
+/* Row archetypes ------------------------------------------------------------------------- */
+
+/* Three shapes, used across every example so ~50 demos read as one designed system rather
+   than fifty improvisations. Structural rows (group header, footer, limit, empty, error) are
+   the component's own chrome and are deliberately NOT restyled here. */
+
+// A chip mirroring its row's glyph. The gap is the chip's own, not the row's: a chip sits inside
+// the trigger's tighter rhythm.
+.select-examples__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+// Trailing status, pushed to the far edge so it reads as a property of the row rather than as
+// part of the name.
+.select-examples__status {
+  margin-inline-start: auto;
+  color: var(--primary-medium);
+  flex: none;
+}
+
+// The debounce dispatch log: what the source was actually asked, in order.
+.select-examples__query-log {
+  margin: 0.35rem 0 0;
+  padding-inline-start: 1.25rem;
+  font-family: var(--d-font-family--monospace);
+  font-size: var(--font-down-1);
+}
+
+.select-examples__row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  width: 100%;
+
+  // Leading glyph + label + optional trailing meta. The archetype most consumers copy.
+  &--glyph {
+    .d-icon {
+      color: var(--primary-medium);
+      flex: none;
+    }
+  }
+
+  // Avatar + two lines + optional trailing badge. Expensive-looking, so used sparingly.
+  &--identity {
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}
+
+.select-examples__avatar {
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+
+  // The trigger is one line tall, so a selection reuses the row markup at a size that fits it.
+  &.--small {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+// A category colour as a leading dot, for rows where the category is context rather than the
+// value being chosen.
+.select-examples__bullet {
+  flex: none;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--bullet-color, var(--primary-medium));
+}
+
+.select-examples__group-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.select-examples__footer-count {
+  color: var(--token-color-text-subtle);
+  font-size: var(--font-down-1);
+}
+
+.select-examples__error-message {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--token-color-text-subtle);
+
+  .d-icon {
+    color: var(--danger);
+  }
+}
+
+// Three specimens of one claim, side by side. Narrower than the paired layout because the
+// comparison is between states rather than between two whole examples.
+.select-examples__triple {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+
+  // A flex basis rather than a control width: three specimens rather than two, and these
+  // slots hold the select directly with no __control wrapper to size.
+  .select-examples__pair-item {
+    flex-basis: 16rem;
+  }
+}
+
+.select-examples__details {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.select-examples__primary {
+  color: var(--token-color-text-default);
+  font-weight: var(--token-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.select-examples__secondary,
+.select-examples__meta {
+  color: var(--token-color-text-subtle);
+  font-size: var(--font-down-1);
+  overflow-wrap: anywhere;
+}
+
+.select-examples__meta {
+  margin-inline-start: auto;
+  flex: none;
+}
+
+.select-examples__timezone-offset {
+  display: inline-flex;
+  flex: none;
+  justify-content: center;
+  min-width: 1.25rem;
+  padding: 0.125rem 0.2rem;
+  border: 1px solid var(--token-color-border-default);
+  border-radius: var(--d-border-radius);
+  background: var(--token-color-surface-hovered);
+  color: var(--token-color-text-subtle);
+  font-family: var(--d-font-family--monospace);
+  font-size: var(--font-down-2);
+  line-height: var(--line-height-small);
+}
+
+/* The hero --------------------------------------------------------------------------------- */
+.select-hero {
+  @include styleguide-surface;
+
+  // What sets the hero apart is its position and its content — three controls in a row above
+  // the sub-navigation — not a different inset from the cards below it.
+  margin-bottom: 2rem;
+
+  &__caption {
+    color: var(--primary-high);
+    margin: 0 0 1rem;
+  }
+
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1 1 14rem;
+    min-width: 0;
+
+    &--wide {
+      flex: 2 1 20rem;
+    }
+  }
+
+  &__label {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    font-weight: 600;
+  }
+}
+
+/* Picker rows.
+
+   Only the shapes the shared archetypes cannot express live here: a category row (which follows
+   core's own two-line structure so the two do not drift), and the leading or trailing elements
+   specific to one picker. Everything else uses `.select-examples__row`. */
+
+.select-showcases {
+  /* Category rows, shaped like core's `.category-row`: the badge and its counts on one line,
+     the description below. Kept structurally identical so a change to one is obvious in the
+     other. */
+
+  &__category {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    width: 100%;
+  }
+
+  &__category-status {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    max-width: 100%;
+    gap: 0 0.5em;
+
+    // The renderer returns the badge, its count and its read-only marker inside ONE wrapper
+    // element, so the gap has to be applied in here rather than on the row. Core gets this from
+    // `.select-kit .category-row`, which a ui-kit row never matches.
+    .badge-category__wrapper {
+      display: inline-flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0 0.5em;
+      max-width: 100%;
+    }
+
+    .topic-count {
+      color: var(--primary-medium);
+      font-size: var(--font-down-1);
+      font-weight: normal;
+      white-space: nowrap;
+    }
+
+    .read-only {
+      padding: 0.1em 0.5em;
+      border-radius: var(--d-border-radius);
+      background: var(--primary-low-mid);
+      color: var(--secondary);
+      font-size: var(--font-down-1);
+      font-weight: normal;
+      white-space: nowrap;
+    }
+  }
+
+  &__category-desc {
+    color: var(--token-color-text-subtle);
+    font-size: var(--font-down-1);
+    line-height: var(--line-height-large);
+    overflow-wrap: anywhere;
+
+    // The selected option is bold; a full sentence of bold secondary text is not.
+    font-weight: normal;
+  }
+
+  &__group-header {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-width: 0;
+  }
+
+  /* The colour-scheme swatch strip: the value made visible. */
+  &__swatches {
+    display: inline-flex;
+    flex: none;
+    border-radius: var(--d-border-radius);
+    overflow: hidden;
+    border: 1px solid var(--primary-low);
+  }
+
+  &__swatch {
+    width: 1rem;
+    height: 1rem;
+    background: var(--swatch-color);
+  }
+
+  &__shortcode {
+    color: var(--token-color-text-subtle);
+    font-size: var(--font-down-2);
+    margin-inline-start: auto;
+    flex: none;
+  }
+
+  /* "Automatic" is a property, not a measurement, so it reads as a pill rather than as the
+     trailing number the other pickers use. */
+
+  &__pill {
+    flex: none;
+    padding: 0.05em 0.4em;
+    border-radius: var(--d-border-radius);
+    background: var(--primary-low);
+    color: var(--primary-high);
+    font-size: var(--font-down-2);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  &__badge-icon {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+
+    &.--gold .d-icon {
+      color: var(--gold);
+    }
+
+    &.--silver .d-icon {
+      color: var(--silver);
+    }
+
+    &.--bronze .d-icon {
+      color: var(--bronze);
+    }
+
+    img {
+      width: 1.2em;
+      height: 1.2em;
+    }
+  }
+}
+
 .more-topics-examples {
   .more-topics__container {
     flex-grow: 1;
+  }
+}
+
+.styleguide-virtual-list {
+  /* The border goes on a wrapper, never on the scroll element: box spacing there
+     offsets the engine's measured total from the DOM scroll height. */
+  border: 1px solid var(--primary-low);
+
+  .d-virtual-list {
+    height: 400px;
+  }
+
+  &--tall .d-virtual-list {
+    height: 600px;
+  }
+
+  &__note {
+    color: var(--primary-medium);
+  }
+
+  &__controls {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+    margin-bottom: 0.5em;
+  }
+
+  &__status {
+    color: var(--primary-medium);
+  }
+
+  &__row {
+    /* Border-box so the declared height IS the measured height. Under the default
+       content-box the border makes each row a pixel taller than the estimate, and
+       the total drifts upward as rows are measured. */
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    height: 44px;
+    padding: 0 1em;
+    border-bottom: 1px solid var(--primary-very-low);
+
+    &--selected {
+      background: var(--tertiary-low);
+      font-weight: bold;
+    }
+  }
+
+  &__vrow {
+    /* Intrinsic height rather than a fixed one, so wrapped text of varying length
+       gives each row a different height and forces re-measurement. */
+    box-sizing: border-box;
+    padding: 0.5em 1em;
+    border-bottom: 1px solid var(--primary-very-low);
+    line-height: 1.4;
+  }
+}
+
+/* The keyboard group ----------------------------------------------------------------------- */
+.select-keyboard {
+  &__steps,
+  &__notes {
+    color: var(--primary-high);
+    margin: 1rem 0 0;
+    padding-inline-start: 1.25rem;
+    max-width: 62ch;
+
+    li {
+      margin-bottom: 0.35rem;
+    }
+  }
+
+  // A transcript, not a console: bounded height, newest first, quiet enough to sit beside the
+  // control it describes without competing with it.
+  &__transcript {
+    margin-top: 1rem;
+    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-border-radius);
+    background: var(--primary-very-low);
+    padding: 0.75rem;
+  }
+
+  &__transcript-title {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: 0 0 0.5rem;
+  }
+
+  &__transcript-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__transcript-entry {
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+    padding: 0.2rem 0;
+    border-bottom: 1px solid var(--primary-low);
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  &__transcript-empty {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    margin: 0;
+  }
+}
+
+// Fixed, not sticky: only one styleguide group renders at a time and sticky is bounded by its
+// container, so anything scoped to a group vanishes the moment you switch away from it.
+.select-aria-probe {
+  position: fixed;
+  right: 1em;
+  bottom: 1em;
+  z-index: 100;
+  max-width: 28em;
+  padding: 0.75em 1em;
+  border: 1px solid var(--primary-low);
+  border-radius: var(--d-border-radius);
+  background: var(--secondary);
+  font-size: var(--font-down-1);
+
+  &__title {
+    font-weight: 700;
+    margin: 0;
+  }
+
+  &__hint {
+    color: var(--primary-medium);
+    margin: 0.25em 0 0.75em;
+  }
+
+  &__rows {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.15em 1em;
+    margin: 0;
+
+    dt {
+      color: var(--primary-medium);
+      font-family: var(--d-font-family--monospace);
+    }
+
+    dd {
+      margin: 0;
+      font-family: var(--d-font-family--monospace);
+      word-break: break-all;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.25em;
+    margin-bottom: 0.75em;
+  }
+
+  &__timeline {
+    list-style: none;
+    max-height: 12em;
+    overflow-y: auto;
+    margin: 0.75em 0 0;
+    padding: 0.5em 0 0;
+    border-top: 1px solid var(--primary-low);
+    font-family: var(--d-font-family--monospace);
+    word-break: break-all;
+
+    li {
+      margin-bottom: 0.25em;
+    }
+  }
+
+  &__seq {
+    color: var(--primary-medium);
+  }
+
+  &__label {
+    font-weight: 700;
   }
 }
