@@ -858,12 +858,17 @@ export default class SidebarSectionForm extends Component {
     destination.splice(toIndex, 0, draggedLink);
 
     // Counted within the destination list, which is the one the link now belongs
-    // to — a cross-segment move lands at a position in the segment it arrived in.
+    // to, and among only its visible links: a link awaiting deletion stays in
+    // the array without being rendered, so counting the array would announce a
+    // position and a total the user cannot see. This matches what the arrows
+    // announce for the same move.
+    const visible = destination.filter((link) => !link._destroy);
+
     this.a11y.announce(
       i18n("reorder_announcement", {
         label: draggedLink.name,
-        position: toIndex + 1,
-        total: destination.length,
+        position: visible.indexOf(draggedLink) + 1,
+        total: visible.length,
       })
     );
   }
@@ -1443,7 +1448,7 @@ export default class SidebarSectionForm extends Component {
                 </div>
               </div>
 
-              {{#each this.activeLinks as |link index|}}
+              {{#each this.activeLinks key="objectId" as |link index|}}
                 <SectionFormLink
                   @link={{link}}
                   @index={{index}}
@@ -1468,7 +1473,7 @@ export default class SidebarSectionForm extends Component {
             {{#if this.transformedModel.sectionType}}
               <hr />
               <h3>{{i18n "sidebar.sections.custom.more_menu"}}</h3>
-              {{#each this.activeSecondaryLinks as |link index|}}
+              {{#each this.activeSecondaryLinks key="objectId" as |link index|}}
                 <SectionFormLink
                   @link={{link}}
                   @index={{index}}

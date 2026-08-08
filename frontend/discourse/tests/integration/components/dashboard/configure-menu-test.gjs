@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { click, find, findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -339,6 +340,48 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
       );
   });
 
+  test("the pressed arrow keeps focus once the row has moved", async function (assert) {
+    // A live list, unlike the sibling tests: the row has to actually move for
+    // this to say anything about what happens to focus when it does.
+    const state = new (class {
+      @tracked sections = [...FOUR_SECTIONS];
+    })();
+    const onReorder = (from, to) => {
+      const next = [...state.sections];
+      const [moved] = next.splice(from, 1);
+      next.splice(to, 0, moved);
+      state.sections = next;
+    };
+    const noop = () => {};
+
+    await render(
+      <template>
+        <ConfigureMenu
+          @sections={{state.sections}}
+          @onReorder={{onReorder}}
+          @onToggleVisibility={{noop}}
+        />
+      </template>
+    );
+
+    const downArrow =
+      '[data-section-id="highlights"] .d-reorder-buttons__button:last-child';
+    await click(downArrow);
+
+    assert.deepEqual(
+      state.sections.map((section) => section.id),
+      ["reports", "highlights", "traffic", "engagement"],
+      "the row moved, so focus has something to survive"
+    );
+    // Without this a keyboard user is dropped to the top of the document after
+    // one press and cannot make a second one, which defeats the arrows entirely.
+    assert.strictEqual(
+      document.activeElement,
+      find(downArrow),
+      "focus stays on the same row's arrow rather than falling back to the body"
+    );
+  });
+
   test("desktop arrow buttons fire @onReorder", async function (assert) {
     const sections = FOUR_SECTIONS;
     const calls = [];
@@ -597,12 +640,20 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
       .dom(
         '[data-section-id="highlights"] .d-reorder-buttons__button:first-child'
       )
-      .isDisabled("first row's up arrow is disabled");
+      .hasAttribute(
+        "aria-disabled",
+        "true",
+        "first row's up arrow is unavailable"
+      );
     assert
       .dom(
         '[data-section-id="engagement"] .d-reorder-buttons__button:last-child'
       )
-      .isDisabled("last row's down arrow is disabled");
+      .hasAttribute(
+        "aria-disabled",
+        "true",
+        "last row's down arrow is unavailable"
+      );
   });
 });
 
@@ -703,17 +754,28 @@ module(
         .dom(
           '[data-section-id="highlights"] .d-reorder-buttons__button:first-child'
         )
-        .isDisabled("first row's up arrow is disabled");
+        .hasAttribute(
+          "aria-disabled",
+          "true",
+          "first row's up arrow is unavailable"
+        );
       assert
         .dom(
           '[data-section-id="engagement"] .d-reorder-buttons__button:last-child'
         )
-        .isDisabled("last row's down arrow is disabled");
+        .hasAttribute(
+          "aria-disabled",
+          "true",
+          "last row's down arrow is unavailable"
+        );
       assert
         .dom(
           '[data-section-id="reports"] .d-reorder-buttons__button:first-child'
         )
-        .isNotDisabled("middle row's up arrow is enabled");
+        .doesNotHaveAttribute(
+          "aria-disabled",
+          "middle row's up arrow is available"
+        );
     });
   }
 );

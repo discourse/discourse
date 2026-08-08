@@ -392,5 +392,26 @@ acceptance(
         "and the announced position counts the rows on screen, not the stored order"
       );
     });
+
+    test("a drag announces the same displayed position the arrow does", async function (assert) {
+      const a11y = getOwner(this).lookup("service:a11y");
+      await openModal(this);
+      await fillIn(".manage-reports__search-wrapper .filter-input", "Matching");
+
+      await dragReport("core_report:signups", "core_report:topics", "below");
+
+      assert.deepEqual(
+        enabledKeys(),
+        ["core_report:topics", "core_report:signups"],
+        "the drag reaches the same order the arrow did"
+      );
+      // The stored order is three long and the row lands third in it, so an
+      // announcement counted there would say "3 of 3" for a list showing two.
+      assert.strictEqual(
+        a11y.politeMessage,
+        "Moved Matching signups to position 2 of 2",
+        "so it announces the same position, counted on screen rather than in the stored order"
+      );
+    });
   }
 );

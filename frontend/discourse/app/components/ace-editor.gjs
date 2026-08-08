@@ -65,7 +65,6 @@ const FALLBACK_MIN_HEIGHT = 250;
 
 export default class AceEditor extends Component {
   @service appEvents;
-  @service capabilities;
 
   @tracked isLoading = true;
   /** The resized box, handed to the separator once the editor has built it. */
@@ -313,12 +312,7 @@ export default class AceEditor extends Component {
    */
   @bind
   maxEditorHeight() {
-    // A tablet has no sticky header eating the top of the viewport, so the
-    // editor may use its full height. Carried over from the shared modifier this
-    // replaced, where the same branch existed.
-    const belowHeader = this.capabilities.isTablet
-      ? window.innerHeight
-      : window.innerHeight - headerOffset();
+    const belowHeader = window.innerHeight - headerOffset();
     const container = this.editor?.container;
     if (!container) {
       return belowHeader;

@@ -209,6 +209,19 @@ module PageObjects
         find("button[aria-label='Move #{name} down']").send_keys(:enter)
       end
 
+      # Presses whatever the previous move left focused, rather than looking the
+      # button up again. Finding it by name would pass even if focus had been
+      # lost, which is most of what there is to get wrong here.
+      def press_focused_link_arrow
+        page.driver.with_playwright_page { |pw_page| pw_page.keyboard.press("Enter") }
+      end
+
+      # The accessible name of whatever currently holds focus, for asserting the
+      # arrows are reachable by tabbing rather than only clickable.
+      def focused_label
+        page.evaluate_script("document.activeElement?.getAttribute('aria-label')")
+      end
+
       # Read from the name inputs, not from the drag handles, so it reports the
       # order on a touch screen too — where no handle renders.
       def link_names

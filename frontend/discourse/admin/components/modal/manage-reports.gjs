@@ -360,32 +360,39 @@ export default class ManageReports extends Component {
     const next = [...this.enabledOrder];
     const [moved] = next.splice(fromIndex, 1);
     next.splice(toIndex, 0, moved);
-    this.#reorder(next, this.itemsByKey.get(draggedKey), toIndex);
+
+    // Where the row lands on screen, which is not `toIndex` while a filter is
+    // hiding rows. A reorder cannot change which rows match the filter, only
+    // their order, so the visible set is taken from before the move.
+    const visibleKeys = new Set(this.filteredEnabledRows.map((row) => row.key));
+    const nextVisible = next.filter((key) => visibleKeys.has(key));
+
+    this.#reorder(
+      next,
+      this.itemsByKey.get(draggedKey),
+      nextVisible.indexOf(draggedKey),
+      nextVisible.length
+    );
   }
 
   /**
-   * Commits a new enabled order and announces where the row landed.
-   *
-   * Both arrows and the drag funnel through here, past their own no-op guards, so
-   * a move is announced exactly once and a non-move never is.
-   *
-   * @param {string[]} nextOrder - The reordered keys, ready to commit.
-   * @param {Object} row - The row that moved, read for its title.
-   * @param {number} toIndex - Its index within `nextOrder`.
-   */
-  /**
    * Applies a new order and announces where the row landed.
+   *
+   * Both the arrows and the drag funnel through here, past their own no-op
+   * guards, so a move is announced exactly once and a non-move never is.
    *
    * `toIndex` and `total` are counted in the list the user is looking at, which
    * is not the stored order whenever a search filter is hiding rows. Announcing
    * a position from the full order would name a place that is not on screen.
+   * Both are required rather than defaulted for that reason: falling back to the
+   * stored order is the mistake this exists to prevent.
    *
    * @param {string[]} nextOrder - The new stored order.
    * @param {Object} row - The row that moved.
    * @param {number} toIndex - Its index in the displayed list.
    * @param {number} total - How many rows that list holds.
    */
-  #reorder(nextOrder, row, toIndex, total = nextOrder.length) {
+  #reorder(nextOrder, row, toIndex, total) {
     this.enabledOrder = nextOrder;
 
     this.a11y.announce(

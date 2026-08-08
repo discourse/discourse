@@ -535,13 +535,25 @@ module(
 
       assert
         .dom(arrowSelector("Primary 1", "up"))
-        .isDisabled("the first link has nothing above it");
+        .hasAttribute(
+          "aria-disabled",
+          "true",
+          "the first link has nothing above it"
+        );
       assert
         .dom(arrowSelector("Primary 2", "down"))
-        .isDisabled("the last primary link has nothing below it");
+        .hasAttribute(
+          "aria-disabled",
+          "true",
+          "the last primary link has nothing below it"
+        );
       assert
         .dom(arrowSelector("Secondary 1", "up"))
-        .isDisabled("each list boundary is counted within that list");
+        .hasAttribute(
+          "aria-disabled",
+          "true",
+          "each list boundary is counted within that list"
+        );
       assert
         .dom(arrowSelector("Primary 1", "down"))
         .isEnabled("a link with a row below it can still move down");
@@ -564,6 +576,48 @@ module(
         a11y.politeMessage,
         "Moved Primary 1 to position 2 of 2",
         "the position is counted within the visible list"
+      );
+    });
+
+    test(`${ORACLE} walks a link down the list with repeated presses`, async function (assert) {
+      this.model = { section: sectionWithThreePrimaryLinks() };
+      await renderForm(this);
+
+      await moveLink("Primary 1", "down");
+
+      // Through whatever holds focus, which is what a keyboard user presses a
+      // second time. Selecting by label instead would find the right button no
+      // matter where focus went, and so would pass even if the arrows were
+      // unusable: on an unkeyed list the row keeps its DOM node and takes on a
+      // different link, so the second press would move the wrong one back.
+      await click(document.activeElement);
+
+      assert.deepEqual(
+        renderedLinks().primary,
+        ["Primary 2", "Primary 3", "Primary 1"],
+        "the link keeps moving instead of swapping back and forth"
+      );
+    });
+
+    test(`${ORACLE} announces a drag by the position the user can see`, async function (assert) {
+      const a11y = getOwner(this).lookup("service:a11y");
+      this.model = { section: sectionWithThreePrimaryLinks() };
+      await renderForm(this);
+
+      await click(`${rowSelector("Primary 1")} .delete-link`);
+      await dragLink("Primary 3", "Primary 2", "above");
+
+      assert.deepEqual(
+        renderedLinks().primary,
+        ["Primary 3", "Primary 2"],
+        "the drag reorders the visible list"
+      );
+      // The underlying array still holds the deleted link, so counting there
+      // would announce a position and a total the user cannot see.
+      assert.strictEqual(
+        a11y.politeMessage,
+        "Moved Primary 3 to position 1 of 2",
+        "and the announcement counts only the links still on screen"
       );
     });
 

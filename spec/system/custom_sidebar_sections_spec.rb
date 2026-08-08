@@ -317,6 +317,10 @@ describe "Custom sidebar sections" do
 
     sidebar.edit_custom_section("My section")
 
+    # Asserted before the move: without it, a run where the order already matched
+    # would pass whether or not the arrow did anything.
+    expect(section_modal.link_names).to eq(["Sidebar Tags", "Sidebar Categories", "Sidebar Latest"])
+
     section_modal.move_link_down("Sidebar Tags")
 
     try_until_success do
@@ -325,12 +329,26 @@ describe "Custom sidebar sections" do
       )
     end
 
+    # Focus is where the arrows live or die: the row moves in the DOM under the
+    # pressed button, and a lost focus makes a second press impossible.
+    expect(section_modal.focused_label).to eq("Move Sidebar Tags down")
+
+    # So the second press goes through whatever holds focus, not through another
+    # lookup by name, which would pass even if focus had been dropped.
+    section_modal.press_focused_link_arrow
+
+    try_until_success do
+      expect(section_modal.link_names).to eq(
+        ["Sidebar Categories", "Sidebar Latest", "Sidebar Tags"],
+      )
+    end
+
     section_modal.save
     expect(section_modal).to be_closed
 
     try_until_success do
       expect(sidebar.primary_section_links("my-section")).to eq(
-        ["Sidebar Categories", "Sidebar Tags", "Sidebar Latest"],
+        ["Sidebar Categories", "Sidebar Latest", "Sidebar Tags"],
       )
     end
   end
