@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -12,6 +13,10 @@ import {
   getCollapsedSidebarSectionKey,
   getSidebarSectionContentId,
 } from "discourse/lib/sidebar/helpers";
+import {
+  isExplicitWebLinkDrag,
+  isWebLinkDrag,
+} from "discourse/lib/sidebar/link-drop";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -23,6 +28,11 @@ export default class SidebarSection extends Component {
   @service router;
   @service sidebarState;
 
+  @tracked linkDropActive = false;
+  @tracked linkDropIndex;
+  @tracked linkDropLinkCount = 0;
+  linkDragDepth = 0;
+
   sidebarSectionContentId = getSidebarSectionContentId(this.args.sectionName);
   collapsedSidebarSectionKey = getCollapsedSidebarSectionKey(
     this.args.sectionName
@@ -32,12 +42,14 @@ export default class SidebarSection extends Component {
     super(...arguments);
 
     this.router.on("routeDidChange", this, this.expandIfActive);
+    document.addEventListener("dragend", this.resetLinkDrop);
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
 
     this.router.off("routeDidChange", this, this.expandIfActive);
+    document.removeEventListener("dragend", this.resetLinkDrop);
 
     this.args.willDestroy?.();
   }
@@ -140,6 +152,82 @@ export default class SidebarSection extends Component {
     }
   }
 
+  @action
+  handleLinkDragEnter(event) {
+    if (!this.args.linkDropEnabled || !isWebLinkDrag(event.dataTransfer)) {
+      return;
+    }
+
+    event.preventDefault();
+    this.linkDragDepth++;
+  }
+
+  @action
+  handleLinkDragOver(event) {
+    if (!this.args.linkDropEnabled || !isWebLinkDrag(event.dataTransfer)) {
+      return;
+    }
+
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "copy";
+    this.linkDropActive = isExplicitWebLinkDrag(event.dataTransfer);
+    this.updateLinkDropIndex(event);
+  }
+
+  updateLinkDropIndex(event) {
+    if (!this.linkDropActive) {
+      this.linkDropIndex = undefined;
+      return;
+    }
+
+    const links = Array.from(
+      event.currentTarget.querySelectorAll("[data-sidebar-custom-link]")
+    );
+    const index = links.findIndex((link) => {
+      const { top, height } = link.getBoundingClientRect();
+      return event.clientY < top + height / 2;
+    });
+
+    this.linkDropLinkCount = links.length;
+    this.linkDropIndex = index === -1 ? links.length : index;
+  }
+
+  get linkDropAtEnd() {
+    return this.linkDropActive && this.linkDropIndex === this.linkDropLinkCount;
+  }
+
+  @action
+  handleLinkDragLeave(event) {
+    if (!this.args.linkDropEnabled || !isWebLinkDrag(event.dataTransfer)) {
+      return;
+    }
+
+    this.linkDragDepth = Math.max(0, this.linkDragDepth - 1);
+    if (this.linkDragDepth === 0) {
+      this.resetLinkDrop();
+    }
+  }
+
+  @action
+  handleLinkDrop(event) {
+    if (!this.args.linkDropEnabled || !isWebLinkDrag(event.dataTransfer)) {
+      return;
+    }
+
+    event.preventDefault();
+    const linkDropIndex = this.linkDropIndex;
+    this.resetLinkDrop();
+    this.args.onLinkDrop?.(event.dataTransfer, linkDropIndex);
+  }
+
+  @bind
+  resetLinkDrop() {
+    this.linkDragDepth = 0;
+    this.linkDropLinkCount = 0;
+    this.linkDropActive = false;
+    this.linkDropIndex = undefined;
+  }
+
   get headerCaretIcon() {
     return this.displaySectionContent ? "angle-down" : "angle-right";
   }
@@ -164,10 +252,16 @@ export default class SidebarSection extends Component {
     {{#if this.displaySection}}
       <div
         {{didInsert this.setExpandedState}}
+        {{on "dragenter" this.handleLinkDragEnter}}
+        {{on "dragover" this.handleLinkDragOver}}
+        {{on "dragleave" this.handleLinkDragLeave}}
+        {{on "drop" this.handleLinkDrop}}
         data-section-name={{@sectionName}}
         class={{dConcatClass
           "sidebar-section"
           "sidebar-section-wrapper"
+          (if @linkDropEnabled "is-link-drop-enabled")
+          (if this.linkDropActive "is-link-drop-active")
           (if
             this.displaySectionContent
             "sidebar-section--expanded"
@@ -243,8 +337,15 @@ export default class SidebarSection extends Component {
             id={{this.sidebarSectionContentId}}
             class="sidebar-section-content"
           >
-            {{yield}}
+            {{yield (hash linkDropIndex=this.linkDropIndex)}}
           </ul>
+        {{/if}}
+
+        {{#if this.linkDropAtEnd}}
+          <div
+            class="sidebar-section-link-drop-indicator"
+            aria-hidden="true"
+          ></div>
         {{/if}}
       </div>
     {{/if}}
