@@ -22,7 +22,9 @@ describe "UiKit | DSelect page regressions" do
   it "renders backticked identifiers in card prose as inline code" do
     visit "/styleguide/molecules/select?group=start"
 
-    description = find("[data-test-example-description]", match: :first)
+    # Addressed by class: layer 7's reviewed component emits a test hook on the title only, so
+    # the BEM class is the stable handle for every other slot.
+    description = find(".styleguide-example__description", match: :first)
     expect(description).to have_css("code", text: "@value")
     expect(description).to have_no_text("`")
   end
