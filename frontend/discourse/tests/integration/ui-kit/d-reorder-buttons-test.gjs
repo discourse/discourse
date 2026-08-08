@@ -56,13 +56,15 @@ module("Integration | ui-kit | DReorderButtons", function (hooks) {
   });
 
   test("each end of the list disables only its own direction", async function (assert) {
-    const noop = () => {};
+    const calls = [];
+    const onMoveUp = () => calls.push("up");
+    const onMoveDown = () => calls.push("down");
 
     await render(
       <template>
         <DReorderButtons
-          @onMoveUp={{noop}}
-          @onMoveDown={{noop}}
+          @onMoveUp={{onMoveUp}}
+          @onMoveDown={{onMoveDown}}
           @disableUp={{true}}
           @disableDown={{false}}
           @upLabel="Move up"
@@ -71,8 +73,31 @@ module("Integration | ui-kit | DReorderButtons", function (hooks) {
       </template>
     );
 
-    assert.dom(".d-reorder-buttons__button:first-child").isDisabled();
-    assert.dom(".d-reorder-buttons__button:last-child").isNotDisabled();
+    // Marked unavailable rather than carrying the `disabled` attribute, so the
+    // button keeps its place in the tab order at the ends of the list. The
+    // component is what refuses the press, which is why that is asserted too.
+    assert
+      .dom(".d-reorder-buttons__button:first-child")
+      .hasAttribute("aria-disabled", "true")
+      .isNotDisabled();
+    assert
+      .dom(".d-reorder-buttons__button:last-child")
+      .doesNotHaveAttribute("aria-disabled")
+      .isNotDisabled();
+
+    await click(".d-reorder-buttons__button:first-child");
+    assert.deepEqual(
+      calls,
+      [],
+      "pressing the unavailable direction does nothing"
+    );
+
+    await click(".d-reorder-buttons__button:last-child");
+    assert.deepEqual(
+      calls,
+      ["down"],
+      "while the available one still runs its callback"
+    );
   });
 
   test("keeps the tab order, so the pair is the keyboard path", async function (assert) {

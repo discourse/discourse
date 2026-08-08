@@ -1,4 +1,7 @@
-import type { TemplateOnlyComponent } from "@ember/component/template-only";
+import Component from "@glimmer/component";
+import { action } from "@ember/object";
+import { schedule } from "@ember/runloop";
+import { modifier } from "ember-modifier";
 import DButton from "discourse/ui-kit/d-button";
 
 /**
@@ -6,6 +9,9 @@ import DButton from "discourse/ui-kit/d-button";
  * forwarded, and because a consumer normally binds its item with `fn`.
  */
 type ReorderCallback = (...args: unknown[]) => void;
+
+/** Which of the pair was pressed. */
+type Direction = "up" | "down";
 
 interface DReorderButtonsSignature {
   Args: {
@@ -70,26 +76,80 @@ interface DReorderButtonsSignature {
  * @see The `dDragAndDropSource` / `dDragAndDropTarget` pair for the drag half of
  *   the same surface.
  */
-const DReorderButtons: TemplateOnlyComponent<DReorderButtonsSignature> =
+export default class DReorderButtons extends Component<DReorderButtonsSignature> {
+  /**
+   * Holds each button so focus can be taken back after a move.
+   *
+   * A ref rather than a query, because several of these render in one list and
+   * the row this pair belongs to moves out from under any selector.
+   */
+  captureButton = modifier((element: HTMLElement, [direction]: [Direction]) => {
+    this.#buttons.set(direction, element);
+    return () => this.#buttons.delete(direction);
+  });
+  #buttons = new Map<Direction, HTMLElement>();
+
+  @action
+  moveDown(...args: unknown[]) {
+    this.#move("down", this.args.disableDown, this.args.onMoveDown, args);
+  }
+
+  @action
+  moveUp(...args: unknown[]) {
+    this.#move("up", this.args.disableUp, this.args.onMoveUp, args);
+  }
+
+  /**
+   * Runs a direction unless it is unavailable, then takes focus back.
+   *
+   * The disabled args are honoured here rather than by the `disabled` attribute
+   * so the button stays focusable: it is announced as disabled, but a keyboard
+   * user who reaches the end of the list keeps their place in the tab order
+   * instead of being dropped to the top of the document.
+   *
+   * @param direction - Which button was pressed.
+   * @param disabled - Whether that direction is unavailable.
+   * @param callback - The consumer's handler for it.
+   * @param args - Whatever the consumer bound with `fn`, plus the event.
+   */
+  #move(
+    direction: Direction,
+    disabled: boolean | undefined,
+    callback: ReorderCallback | undefined,
+    args: unknown[]
+  ) {
+    if (disabled) {
+      return;
+    }
+
+    callback?.(...args);
+
+    // Reordering moves this row within its list, and moving a focused element
+    // in the DOM blurs it, so a keyboard user would otherwise land on the body
+    // after one press and be unable to make a second.
+    schedule("afterRender", () => this.#buttons.get(direction)?.focus());
+  }
+
   <template>
     <span class="d-reorder-buttons" ...attributes>
       <DButton
+        {{this.captureButton "up"}}
         @icon="chevron-up"
-        @action={{@onMoveUp}}
-        @disabled={{@disableUp}}
+        @action={{this.moveUp}}
         @translatedAriaLabel={{@upLabel}}
         @translatedTitle={{@upLabel}}
+        aria-disabled={{if @disableUp "true"}}
         class="btn-flat d-reorder-buttons__button"
       />
       <DButton
+        {{this.captureButton "down"}}
         @icon="chevron-down"
-        @action={{@onMoveDown}}
-        @disabled={{@disableDown}}
+        @action={{this.moveDown}}
         @translatedAriaLabel={{@downLabel}}
         @translatedTitle={{@downLabel}}
+        aria-disabled={{if @disableDown "true"}}
         class="btn-flat d-reorder-buttons__button"
       />
     </span>
-  </template>;
-
-export default DReorderButtons;
+  </template>
+}

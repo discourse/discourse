@@ -1,7 +1,13 @@
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { click, render, settled, triggerKeyEvent } from "@ember/test-helpers";
+import {
+  click,
+  focus,
+  render,
+  settled,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import noop from "discourse/helpers/noop";
 import { forceMobile } from "discourse/lib/mobile";
@@ -238,7 +244,7 @@ module("Integration | ui-kit | DModal", function (hooks) {
       <template>
         <DModal @inline={{true}}>
           <:body>
-            body content
+            <input class="body-input" type="text" />
           </:body>
           <:footer>
             <DButton
@@ -251,9 +257,52 @@ module("Integration | ui-kit | DModal", function (hooks) {
       </template>
     );
 
-    await triggerKeyEvent(".d-modal__body", "keydown", "Enter");
+    // From a text input rather than the body element. The modal autofocuses, so
+    // with nothing else focusable the focus would land on the footer button
+    // itself, where Enter belongs to that button rather than to the modal.
+    await focus(".body-input");
+    await triggerKeyEvent(".body-input", "keydown", "Enter");
 
     assert.true(actionCalled, "pressing enter triggers the default button");
+  });
+
+  test("enter on a focused button triggers that button, not the default action", async function (assert) {
+    const calls = [];
+    const onBody = () => calls.push("body");
+    const onFooter = () => calls.push("footer");
+
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+            <DButton
+              @action={{onBody}}
+              @translatedLabel="Body action"
+              class="body-button"
+            />
+          </:body>
+          <:footer>
+            <DButton
+              @action={{onFooter}}
+              @translatedLabel="Perform action"
+              class="btn-primary"
+            />
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    await focus(".body-button");
+    await triggerKeyEvent(".body-button", "keydown", "Enter");
+
+    // The modal listens on the document in the capture phase, so it sees Enter
+    // before the button does. Without an exemption it submits the modal out from
+    // under any body control a keyboard user is standing on.
+    assert.deepEqual(
+      calls,
+      ["body"],
+      "the focused button runs its own action and the modal is not submitted"
+    );
   });
 
   test("enter inside select-kit does not trigger default action", async function (assert) {

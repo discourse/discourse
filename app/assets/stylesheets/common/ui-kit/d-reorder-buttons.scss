@@ -11,5 +11,19 @@
   &__button.btn {
     padding: 0 var(--space-1);
     min-height: 0;
+
+    /* Marked unavailable rather than disabled, so the button keeps its place in
+       the tab order at the ends of the list. It has to look the part. */
+
+    &[aria-disabled="true"] {
+      opacity: 0.4;
+      cursor: default;
+
+      &:hover,
+      &:focus {
+        background: transparent;
+        color: var(--primary-medium);
+      }
+    }
   }
 }

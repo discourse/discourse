@@ -403,11 +403,16 @@ export default class DModal extends Component<DModalSignature> {
       return false;
     }
 
-    // skip when in a form, textarea, or select-kit element
+    // Skip when in a form, textarea, or select-kit element, and when a button
+    // holds focus: this listens on the document in the capture phase, so it sees
+    // Enter before the focused control does. Without the button exemption,
+    // pressing Enter on any button in the body submits the modal instead of
+    // running that button, which is what a keyboard user is actually asking for.
     if (
       (event.target as HTMLElement)?.closest("form") ||
       document.activeElement?.closest("form") ||
       document.activeElement?.nodeName === "TEXTAREA" ||
+      document.activeElement?.nodeName === "BUTTON" ||
       document.activeElement?.closest(".select-kit")
     ) {
       return false;
