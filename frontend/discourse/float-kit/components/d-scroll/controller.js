@@ -3,8 +3,6 @@ import { action } from "@ember/object";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 
 export default class ScrollController {
-  @tracked startSpacerHeight = 0;
-  @tracked endSpacerHeight = 0;
   @tracked scrollOngoing = false;
   @tracked overflowX = false;
   @tracked overflowY = false;
@@ -19,23 +17,24 @@ export default class ScrollController {
   safeArea = "visual-viewport";
   scrollAnimationSettings = { skip: "auto" };
   pageScroll = false;
-  onScroll = null;
-  onScrollStart = null;
-  onScrollEnd = null;
-  scrollingActive = false;
-  scrollStartTime = null;
-  scrollEndTimeout = null;
   resizeObserver = null;
 
   constructor(options = {}) {
-    if (options.axis) {
-      this.axis = options.axis;
-    }
-    if (options.scrollAnimationSettings) {
-      this.scrollAnimationSettings = options.scrollAnimationSettings;
-    }
-    if (options.pageScroll !== undefined) {
-      this.pageScroll = options.pageScroll;
+    this.configure(options);
+  }
+
+  configure(options = {}) {
+    const previousAxis = this.axis;
+
+    this.axis = options.axis ?? "y";
+    this.pageScroll = options.pageScroll ?? false;
+    this.safeArea = options.safeArea ?? "visual-viewport";
+    this.scrollAnimationSettings = options.scrollAnimationSettings ?? {
+      skip: "auto",
+    };
+
+    if (this.viewElement && previousAxis !== this.axis) {
+      this.updateOverflowState();
     }
   }
 
@@ -56,11 +55,31 @@ export default class ScrollController {
   }
 
   @action
+  unregisterView(element) {
+    if (this.viewElement !== element) {
+      return;
+    }
+
+    this.#unobserveElement(element);
+    this.viewElement = null;
+  }
+
+  @action
   registerContent(element) {
     this.#unobserveElement(this.contentElement);
     this.contentElement = element;
     this.#observeElement(element);
     this.updateOverflowState();
+  }
+
+  @action
+  unregisterContent(element) {
+    if (this.contentElement !== element) {
+      return;
+    }
+
+    this.#unobserveElement(element);
+    this.contentElement = null;
   }
 
   @action
@@ -114,10 +133,22 @@ export default class ScrollController {
       return;
     }
 
-    if (this.axis === "y") {
-      this.overflowY = el.scrollHeight > el.clientHeight;
-    } else {
-      this.overflowX = el.scrollWidth > el.clientWidth;
+    const nextOverflowX = this.axis === "x" && el.scrollWidth > el.clientWidth;
+    const nextOverflowY =
+      this.axis === "y" && el.scrollHeight > el.clientHeight;
+
+    if (this.overflowX !== nextOverflowX) {
+      this.overflowX = nextOverflowX;
+    }
+    if (this.overflowY !== nextOverflowY) {
+      this.overflowY = nextOverflowY;
+    }
+  }
+
+  @action
+  setScrollOngoing(value) {
+    if (this.scrollOngoing !== value) {
+      this.scrollOngoing = value;
     }
   }
 
@@ -199,7 +230,9 @@ export default class ScrollController {
   }
 
   getScrollBehavior(animationSettings) {
-    const skip = animationSettings?.skip ?? "default";
+    const settings =
+      animationSettings === undefined ? { skip: "default" } : animationSettings;
+    const skip = settings?.skip;
 
     if (skip === true) {
       return "instant";
@@ -224,10 +257,6 @@ export default class ScrollController {
 
   @action
   cleanup() {
-    if (this.scrollEndTimeout) {
-      clearTimeout(this.scrollEndTimeout);
-      this.scrollEndTimeout = null;
-    }
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
       this.resizeObserver = null;
@@ -236,16 +265,10 @@ export default class ScrollController {
     this.contentElement = null;
     this.startSpacerElement = null;
     this.endSpacerElement = null;
-    this.onScroll = null;
-    this.onScrollStart = null;
-    this.onScrollEnd = null;
   }
 
   @action
   updateSpacerHeights(startHeight, endHeight) {
-    this.startSpacerHeight = startHeight;
-    this.endSpacerHeight = endHeight;
-
     if (this.startSpacerElement) {
       this.startSpacerElement.style.setProperty("height", startHeight + "px");
     }

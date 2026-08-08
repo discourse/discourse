@@ -32,6 +32,7 @@ export default class SheetStackRegistry extends Service {
   }
 
   unregisterStack(stackId) {
+    this.removeAllOutletPersistedStyles(stackId);
     this.stacks.delete(stackId);
     this.stackSheets.delete(stackId);
     this.stackingCounts.delete(stackId);
@@ -55,6 +56,16 @@ export default class SheetStackRegistry extends Service {
     };
   }
 
+  removeAllOutletPersistedStyles(stackId) {
+    const stack = this.stacks.get(stackId);
+
+    for (const animation of stack?.stackingAnimations ?? []) {
+      for (const property of animation.animatedProperties ?? []) {
+        animation.target?.style.removeProperty(property);
+      }
+    }
+  }
+
   registerSheetWithStack(stackId, controller) {
     const sheets = this.stackSheets.get(stackId);
     if (!sheets) {
@@ -67,7 +78,7 @@ export default class SheetStackRegistry extends Service {
 
     sheets.push(controller);
     controller.stackId = stackId;
-    controller.stackingIndex = sheets.length - 1;
+    controller.stackingIndex = -1;
 
     this.updateBelowSheetsInStack(stackId);
   }
@@ -125,9 +136,7 @@ export default class SheetStackRegistry extends Service {
     const stack = this.stacks.get(stackId);
     const sheetsCount = sheets.length;
 
-    sheets.forEach((sheet, index) => {
-      sheet.stackingIndex = sheetsCount - 1 - index;
-
+    sheets.forEach((sheet) => {
       const sheetsBelow = sheets.filter(
         (s) => s.stackingIndex > sheet.stackingIndex
       );
@@ -160,19 +169,21 @@ export default class SheetStackRegistry extends Service {
 
     const totalCount = sortedSheets.length;
 
-    for (let r = 0; r < totalCount; r++) {
-      const sheet = sortedSheets[r];
-      sheet.selfAndAboveTravelProgressSum = [];
+    for (let sheetIndex = 0; sheetIndex < totalCount; sheetIndex++) {
+      const sheet = sortedSheets[sheetIndex];
+      const progressSums = new Array(totalCount).fill(0);
+      let cumulativeProgress = 0;
 
-      for (let o = 0; o < totalCount; o++) {
-        if (o <= r) {
-          sheet.selfAndAboveTravelProgressSum[o] = 0;
-        } else {
-          sheet.selfAndAboveTravelProgressSum[o] = sortedSheets
-            .slice(r + 1, o + 1)
-            .reduce((sum, s) => sum + (s.travelProgress || 0), 0);
-        }
+      for (
+        let aboveIndex = sheetIndex + 1;
+        aboveIndex < totalCount;
+        aboveIndex++
+      ) {
+        cumulativeProgress += sortedSheets[aboveIndex].travelProgress || 0;
+        progressSums[aboveIndex] = cumulativeProgress;
       }
+
+      sheet.selfAndAboveTravelProgressSum = progressSums;
     }
   }
 
@@ -273,6 +284,9 @@ export default class SheetStackRegistry extends Service {
     const currentCount = this.stackingCounts.get(stackId) || 0;
     const newCount = Math.max(0, currentCount - 1);
     this.stackingCounts.set(stackId, newCount);
+    if (newCount === 0) {
+      this.removeAllOutletPersistedStyles(stackId);
+    }
     return newCount;
   }
 
@@ -311,12 +325,12 @@ export default class SheetStackRegistry extends Service {
     return "none";
   }
 
-  updateSheetStackingIndex(controller, positionValue) {
+  updateSheetStackingIndex(controller, stackingIndex) {
     if (!controller || !controller.stackId) {
       return;
     }
 
-    controller.positionValueForStacking = positionValue;
-    this.updateSelfAndAboveTravelProgressSumInStack(controller.stackId);
+    controller.stackingIndex = stackingIndex;
+    this.updateBelowSheetsInStack(controller.stackId);
   }
 }

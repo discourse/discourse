@@ -1,23 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { trackedObject } from "@ember/reactive/collections";
-import { schedule } from "@ember/runloop";
+import { cancel, schedule } from "@ember/runloop";
 
-const DEBUG = {
-  enabled: false,
-  log(...args) {
-    if (this.enabled) {
-      // eslint-disable-next-line no-console
-      console.log("[StateMachine]", ...args);
-    }
-  },
-};
-
-if (typeof window !== "undefined") {
-  window.debugSheetsStateMachine = () => {
-    DEBUG.enabled = true;
-    DEBUG.log("Debug logging enabled");
-  };
-}
 const AUTOMATIC_TRANSITION = "";
 const TIMING = {
   IMMEDIATE: "immediate",
@@ -28,10 +12,14 @@ const TYPE = {
   ENTER: "enter",
   EXIT: "exit",
 };
+
+function asArray(value) {
+  return Array.isArray(value) ? value : [value];
+}
+
 class StateMachine {
   @tracked current;
   definition;
-  context = {};
   nestedMachines = trackedObject();
   lastProcessedMessage = null;
   #messageQueue = [];
@@ -45,6 +33,9 @@ class StateMachine {
   #silentMachines = new Set();
   #parentGroup = null;
   #machineName = null;
+  #isDestroyed = false;
+  #scheduledRunLoopTasks = new Set();
+  #scheduledAnimationFrames = new Set();
 
   constructor(definition, initialState, options = {}) {
     this.definition = definition;
@@ -57,13 +48,12 @@ class StateMachine {
   }
 
   send(message, context = {}) {
+    if (this.#isDestroyed) {
+      return false;
+    }
+
     const normalizedMessage =
       typeof message === "string" ? { type: message } : message;
-
-    DEBUG.log(
-      `send: ${normalizedMessage.type}, current: ${this.current}, context:`,
-      context
-    );
 
     this.#messageQueue.push({ message: normalizedMessage, context });
 
@@ -112,6 +102,10 @@ class StateMachine {
     guard = true,
     type = TYPE.ENTER,
   }) {
+    if (this.#isDestroyed) {
+      return () => {};
+    }
+
     const id = Symbol();
     const subscription = { id, timing, state, transition, callback, guard };
 
@@ -127,9 +121,27 @@ class StateMachine {
   }
 
   cleanup() {
+    if (this.#isDestroyed) {
+      return;
+    }
+
+    this.#isDestroyed = true;
+
+    for (const task of this.#scheduledRunLoopTasks) {
+      cancel(task);
+    }
+    this.#scheduledRunLoopTasks.clear();
+
+    for (const frame of this.#scheduledAnimationFrames) {
+      cancelAnimationFrame(frame);
+    }
+    this.#scheduledAnimationFrames.clear();
+
     this.#subscriptions = [];
     this.#entryActions = [];
     this.#exitActions = [];
+    this.#messageQueue = [];
+    this.#isProcessingQueue = false;
   }
 
   getStateConfig(statePath) {
@@ -189,10 +201,7 @@ class StateMachine {
     this.#silentMachines.clear();
 
     if (stateConfig?.machines) {
-      // Normalize to array if single object
-      const machinesArray = Array.isArray(stateConfig.machines)
-        ? stateConfig.machines
-        : [stateConfig.machines];
+      const machinesArray = asArray(stateConfig.machines);
 
       this.#currentStateMachines = machinesArray;
       for (const machineDef of machinesArray) {
@@ -236,7 +245,13 @@ class StateMachine {
 
       if (result.transitioned) {
         anyTransitioned = true;
-        if (!result.silent) {
+        if (result.silent) {
+          this.#notifyImmediateSubscribers(
+            message,
+            result.enteredStates,
+            result.exitedStates
+          );
+        } else {
           this.#notifySubscribers(
             message,
             result.enteredStates,
@@ -251,23 +266,14 @@ class StateMachine {
   }
 
   #processMessage(message, context = {}) {
-    // Merge context into message for guards
     const enrichedMessage = { ...message, ...context };
     const previousState = this.current;
     const previousNestedStates = { ...this.nestedMachines };
 
-    DEBUG.log(
-      `processMessage: type=${message.type}, previousState=${previousState}, nestedStates:`,
-      previousNestedStates
-    );
-
-    const mainStateResult = this.#tryMainStateTransition(
-      enrichedMessage,
-      context
-    );
+    const mainStateResult = this.#tryMainStateTransition(enrichedMessage);
     if (mainStateResult) {
       this.#processAutomaticTransitions();
-      this.#processNestedMachinesSilently(enrichedMessage, context);
+      this.#processNestedMachinesSilently(enrichedMessage);
 
       const { entered, exited } = this.#calculateStateChanges(
         previousState,
@@ -281,14 +287,12 @@ class StateMachine {
       };
     }
 
-    const nestedResult = this.#tryNestedMachineTransition(
-      enrichedMessage,
-      context
-    );
+    const nestedResult = this.#tryNestedMachineTransition(enrichedMessage);
     if (nestedResult) {
       const { entered, exited } = this.#calculateStateChanges(
         previousState,
-        previousNestedStates
+        previousNestedStates,
+        { includeUnchangedCurrentState: !nestedResult.silent }
       );
       return {
         transitioned: true,
@@ -306,15 +310,11 @@ class StateMachine {
     };
   }
 
-  #tryMainStateTransition(message, context) {
+  #tryMainStateTransition(message) {
     const messageType = message.type;
     const currentStateConfig = this.getStateConfig(this.current);
 
     let transitions = currentStateConfig?.messages?.[messageType];
-    DEBUG.log(
-      `processMessage: checking main state transitions, found:`,
-      transitions ? "yes" : "no"
-    );
 
     if (!transitions) {
       const parentState = this.#getParentState(this.current);
@@ -328,12 +328,12 @@ class StateMachine {
       return false;
     }
 
-    return this.#tryTransitions(transitions, message, context, (target) =>
+    return this.#tryTransitions(transitions, message, (target) =>
       this.#transitionToState(target)
     );
   }
 
-  #tryNestedMachineTransition(message, context) {
+  #tryNestedMachineTransition(message) {
     const messageType = message.type;
     const currentStateConfig = this.getStateConfig(this.current);
 
@@ -341,10 +341,7 @@ class StateMachine {
       return null;
     }
 
-    // Normalize to array if single object
-    const machinesArray = Array.isArray(currentStateConfig.machines)
-      ? currentStateConfig.machines
-      : [currentStateConfig.machines];
+    const machinesArray = asArray(currentStateConfig.machines);
 
     for (const machineDef of machinesArray) {
       const machineName = machineDef.name;
@@ -359,7 +356,6 @@ class StateMachine {
       const transitioned = this.#tryTransitions(
         machineStateConfig.messages[messageType],
         message,
-        context,
         (target) => {
           if (this.#isCrossLevelTransition(target, machineDef)) {
             this.#transitionToState(target);
@@ -378,14 +374,11 @@ class StateMachine {
     return null;
   }
 
-  #tryTransitions(transitions, message, context, onSuccess) {
-    const transitionList = Array.isArray(transitions)
-      ? transitions
-      : [transitions];
+  #tryTransitions(transitions, message, onSuccess) {
+    const transitionList = asArray(transitions);
 
     for (const transition of transitionList) {
       if (typeof transition === "string") {
-        DEBUG.log(`tryTransitions: direct target "${transition}"`);
         onSuccess(transition);
         return true;
       }
@@ -399,22 +392,17 @@ class StateMachine {
           previousStates,
           message
         );
-        DEBUG.log(
-          `tryTransitions: guard "${transition.guard}" -> ${guardPassed}`
-        );
         if (!guardPassed) {
           continue;
         }
       }
 
       if (transition.target) {
-        DEBUG.log(`tryTransitions: target "${transition.target}"`);
         onSuccess(transition.target);
         return true;
       }
     }
 
-    DEBUG.log(`tryTransitions: no valid transition found`);
     return false;
   }
 
@@ -428,9 +416,6 @@ class StateMachine {
   }
 
   #transitionToState(targetState) {
-    const previousState = this.current;
-    DEBUG.log(`transitionToState: ${previousState} -> ${targetState}`);
-
     // Check for machine prefix when part of a group (e.g., "position:front.status:idle")
     if (this.#parentGroup) {
       const colonIndex = targetState.indexOf(":");
@@ -441,7 +426,6 @@ class StateMachine {
           this.#parentGroup.hasMachine(potentialMachineName) &&
           potentialMachineName !== this.#machineName
         ) {
-          DEBUG.log(`transitionToState: delegating to ${potentialMachineName}`);
           this.#parentGroup.transitionTo(targetState);
           return;
         }
@@ -466,15 +450,12 @@ class StateMachine {
     const mainState = targetState.substring(0, dotIndex);
     const rest = targetState.substring(dotIndex + 1);
 
-    DEBUG.log(`transitionToState: nested MACHINE path, mainState=${mainState}`);
-
     this.current = mainState;
 
     const stateConfig = this.getStateConfig(mainState);
     const newMachines = stateConfig?.machines || null;
 
     if (this.#machinesAreDifferent(this.#currentStateMachines, newMachines)) {
-      DEBUG.log(`transitionToState: reinitializing nested machines`);
       this.nestedMachines = trackedObject();
       this.#initializeNestedMachines(mainState);
     }
@@ -482,9 +463,6 @@ class StateMachine {
     const machineColonIndex = rest.indexOf(":");
     const machineName = rest.substring(0, machineColonIndex);
     const machineState = rest.substring(machineColonIndex + 1);
-    DEBUG.log(
-      `transitionToState: setting nested machine ${machineName}=${machineState}`
-    );
     this.#setNestedMachineState(machineName, machineState);
   }
 
@@ -507,11 +485,16 @@ class StateMachine {
     if (!oldMachines || !newMachines) {
       return true;
     }
-    if (oldMachines.length !== newMachines.length) {
+
+    const oldMachineList = asArray(oldMachines);
+    const newMachineList = asArray(newMachines);
+
+    if (oldMachineList.length !== newMachineList.length) {
       return true;
     }
-    for (let i = 0; i < oldMachines.length; i++) {
-      if (oldMachines[i].name !== newMachines[i].name) {
+
+    for (let i = 0; i < oldMachineList.length; i++) {
+      if (oldMachineList[i].name !== newMachineList[i].name) {
         return true;
       }
     }
@@ -519,10 +502,7 @@ class StateMachine {
   }
 
   #isCrossLevelTransition(target, machineDef) {
-    if (machineDef.states?.[target]) {
-      return false;
-    }
-    return true;
+    return !machineDef.states?.[target];
   }
 
   #processAutomaticTransitions() {
@@ -546,7 +526,6 @@ class StateMachine {
     const transitioned = this.#tryTransitions(
       currentStateConfig.messages[AUTOMATIC_TRANSITION],
       { type: AUTOMATIC_TRANSITION },
-      {},
       (target) => this.#transitionToState(target)
     );
 
@@ -568,10 +547,7 @@ class StateMachine {
       return;
     }
 
-    // Normalize to array if single object
-    const machinesArray = Array.isArray(currentStateConfig.machines)
-      ? currentStateConfig.machines
-      : [currentStateConfig.machines];
+    const machinesArray = asArray(currentStateConfig.machines);
 
     for (const machineDef of machinesArray) {
       const machineName = machineDef.name;
@@ -589,7 +565,6 @@ class StateMachine {
       const transitioned = this.#tryTransitions(
         machineStateConfig.messages[AUTOMATIC_TRANSITION],
         { type: AUTOMATIC_TRANSITION },
-        {},
         (target) => this.#setNestedMachineState(machineName, target)
       );
 
@@ -617,10 +592,7 @@ class StateMachine {
       return;
     }
 
-    // Normalize to array if single object
-    const machinesArray = Array.isArray(currentStateConfig.machines)
-      ? currentStateConfig.machines
-      : [currentStateConfig.machines];
+    const machinesArray = asArray(currentStateConfig.machines);
 
     const machineDef = machinesArray.find((m) => m.name === machineName);
     if (!machineDef) {
@@ -635,7 +607,6 @@ class StateMachine {
       const transitioned = this.#tryTransitions(
         machineStateConfig.messages[AUTOMATIC_TRANSITION],
         { type: AUTOMATIC_TRANSITION },
-        {},
         (target) => this.#setNestedMachineState(machineName, target)
       );
 
@@ -645,21 +616,15 @@ class StateMachine {
     }
   }
 
-  #processNestedMachinesSilently(message, context) {
+  #processNestedMachinesSilently(message) {
     const messageType = message.type;
     const currentStateConfig = this.getStateConfig(this.current);
 
-    DEBUG.log(`processNestedMachinesSilently: message=${messageType}`);
-
     if (!currentStateConfig?.machines) {
-      DEBUG.log(`processNestedMachinesSilently: no machines to process`);
       return;
     }
 
-    // Normalize to array if single object
-    const machinesArray = Array.isArray(currentStateConfig.machines)
-      ? currentStateConfig.machines
-      : [currentStateConfig.machines];
+    const machinesArray = asArray(currentStateConfig.machines);
 
     for (const machineDef of machinesArray) {
       if (!machineDef.silentOnly) {
@@ -671,22 +636,11 @@ class StateMachine {
         this.getNestedMachineState(machineName) || machineDef.initial;
       const machineStateConfig = machineDef.states?.[currentMachineState];
 
-      DEBUG.log(
-        `processNestedMachinesSilently: checking silentOnly machine "${machineName}", currentState="${currentMachineState}"`
-      );
-
       if (machineStateConfig?.messages?.[messageType]) {
-        DEBUG.log(
-          `processNestedMachinesSilently: "${machineName}" handles "${messageType}"`
-        );
         this.#tryTransitions(
           machineStateConfig.messages[messageType],
           message,
-          context,
           (target) => {
-            DEBUG.log(
-              `processNestedMachinesSilently: "${machineName}" transitioning to "${target}"`
-            );
             if (!this.#isCrossLevelTransition(target, machineDef)) {
               this.#setNestedMachineState(machineName, target);
             }
@@ -728,18 +682,20 @@ class StateMachine {
     );
   }
 
-  #calculateStateChanges(previousState, previousNestedStates) {
+  #calculateStateChanges(
+    previousState,
+    previousNestedStates,
+    { includeUnchangedCurrentState = true } = {}
+  ) {
     const entered = [];
     const exited = [];
 
     const parentState = this.current.split(".")[0];
     const prevParentState = previousState.split(".")[0];
 
-    DEBUG.log(
-      `calculateStateChanges: previousState=${previousState}, currentState=${this.current}`
-    );
-
-    entered.push(this.current);
+    if (includeUnchangedCurrentState || this.current !== previousState) {
+      entered.push(this.current);
+    }
 
     if (this.current !== previousState) {
       exited.push(previousState);
@@ -767,24 +723,17 @@ class StateMachine {
       }
     }
 
-    DEBUG.log(`calculateStateChanges: entered=`, entered, `exited=`, exited);
     return { entered, exited };
   }
 
   #notifySubscribers(message, enteredStates, exitedStates) {
-    DEBUG.log(
-      `notifySubscribers: message=${message.type}, enteredStates=`,
-      enteredStates,
-      `exitedStates=`,
-      exitedStates
-    );
-    DEBUG.log(
-      `notifySubscribers: ${this.#exitActions.length} exit actions, ${this.#entryActions.length} entry actions, ${this.#subscriptions.length} subscriptions`
-    );
+    this.#notifyImmediateSubscribers(message, enteredStates, exitedStates);
+    this.#dispatchTimedSubscriptions(message);
+  }
 
+  #notifyImmediateSubscribers(message, enteredStates, exitedStates) {
     this.#dispatchExitActions(message, exitedStates);
     this.#dispatchEntryActions(message, enteredStates);
-    this.#dispatchTimedSubscriptions(message);
   }
 
   #dispatchExitActions(message, exitedStates) {
@@ -794,11 +743,7 @@ class StateMachine {
       const guardPasses =
         typeof sub.guard === "function" ? sub.guard() : sub.guard;
 
-      DEBUG.log(
-        `notifySubscribers: exit action for state="${sub.state}", wasExited=${wasExited}, transitionMatches=${transitionMatches}, guardPasses=${guardPasses}`
-      );
       if (wasExited && transitionMatches && guardPasses) {
-        DEBUG.log(`notifySubscribers: FIRING exit callback for "${sub.state}"`);
         sub.callback(message);
       }
     }
@@ -811,13 +756,7 @@ class StateMachine {
       const guardPasses =
         typeof sub.guard === "function" ? sub.guard() : sub.guard;
 
-      DEBUG.log(
-        `notifySubscribers: entry action for state="${sub.state}", wasEntered=${wasEntered}, transitionMatches=${transitionMatches}, guardPasses=${guardPasses}`
-      );
       if (wasEntered && transitionMatches && guardPasses) {
-        DEBUG.log(
-          `notifySubscribers: FIRING entry callback for "${sub.state}"`
-        );
         sub.callback(message);
       }
     }
@@ -846,7 +785,7 @@ class StateMachine {
     }
 
     if (beforePaintSubs) {
-      schedule("afterRender", () => {
+      this.#scheduleAfterRender(() => {
         for (const sub of beforePaintSubs) {
           if (this.#evaluateSubscriptionConditions(sub, message)) {
             sub.callback(message);
@@ -856,8 +795,8 @@ class StateMachine {
     }
 
     if (afterPaintSubs) {
-      schedule("afterRender", () => {
-        requestAnimationFrame(() => {
+      this.#scheduleAfterRender(() => {
+        this.#scheduleAnimationFrame(() => {
           for (const sub of afterPaintSubs) {
             if (this.#evaluateSubscriptionConditions(sub, message)) {
               sub.callback(message);
@@ -866,6 +805,29 @@ class StateMachine {
         });
       });
     }
+  }
+
+  #scheduleAfterRender(callback) {
+    let task;
+    task = schedule("afterRender", () => {
+      this.#scheduledRunLoopTasks.delete(task);
+
+      if (!this.#isDestroyed) {
+        callback();
+      }
+    });
+    this.#scheduledRunLoopTasks.add(task);
+  }
+
+  #scheduleAnimationFrame(callback) {
+    const frame = requestAnimationFrame(() => {
+      this.#scheduledAnimationFrames.delete(frame);
+
+      if (!this.#isDestroyed) {
+        callback();
+      }
+    });
+    this.#scheduledAnimationFrames.add(frame);
   }
 
   #evaluateSubscriptionConditions(sub, message) {
@@ -899,31 +861,11 @@ class StateMachine {
   }
 
   #didEnterState(sub, enteredStates) {
-    const subStates = Array.isArray(sub.state) ? sub.state : [sub.state];
-
-    for (const subState of subStates) {
-      const found = enteredStates.includes(subState);
-      DEBUG.log(
-        `didEnterState: checking "${subState}" in`,
-        enteredStates,
-        `-> ${found}`
-      );
-      if (found) {
-        return true;
-      }
-    }
-    return false;
+    return asArray(sub.state).some((state) => enteredStates.includes(state));
   }
 
   #didExitState(sub, exitedStates) {
-    const subStates = Array.isArray(sub.state) ? sub.state : [sub.state];
-
-    for (const subState of subStates) {
-      if (exitedStates.includes(subState)) {
-        return true;
-      }
-    }
-    return false;
+    return asArray(sub.state).some((state) => exitedStates.includes(state));
   }
 }
 

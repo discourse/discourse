@@ -10,10 +10,7 @@ export default class Portal extends Component {
   }
 
   get shouldRender() {
-    if (this.args.shouldRenderView !== undefined) {
-      return this.args.shouldRenderView;
-    }
-    return this.args.sheet?.isPresented ?? false;
+    return this.args.shouldRenderView ?? true;
   }
 
   <template>

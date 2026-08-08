@@ -94,7 +94,7 @@ export default class OpennessState {
   flushComplete() {
     this.#machine.send({
       machine: "openness:closed.status",
-      type: "",
+      type: EVENTS.FLUSH_COMPLETE,
     });
   }
 

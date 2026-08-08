@@ -1,6 +1,7 @@
 import { action } from "@ember/object";
 import { cancel, run, schedule } from "@ember/runloop";
 import Service from "@ember/service";
+import setupFocusContainment from "discourse/float-kit/components/d-sheet/focus-containment";
 import { processBehavior } from "discourse/float-kit/lib/behavior-handler";
 
 const inertRefCounts = new WeakMap();
@@ -17,6 +18,8 @@ export default class SheetLayerStore extends Service {
   automaticLayerDetectionObserver = null;
   automaticLayerDetectionView = null;
   recalculateInertTimeout = null;
+  focusContainmentCleanup = null;
+  focusContainmentLastElement = null;
   clickOutsideCleanup = null;
   escapeKeyCleanup = null;
   pointerDownTarget = null;
@@ -26,6 +29,7 @@ export default class SheetLayerStore extends Service {
     cancel(this.recalculateInertTimeout);
     this.cleanupInert();
     this.#cleanupAutomaticLayerDetection();
+    this.focusContainmentLastElement = null;
     this.#cleanupClickOutsideListener();
     this.#cleanupEscapeKeyListener();
   }
@@ -42,6 +46,13 @@ export default class SheetLayerStore extends Service {
     }
 
     this.#syncGlobalListeners();
+  }
+
+  hasSheet(controllerOrId) {
+    const id =
+      typeof controllerOrId === "string" ? controllerOrId : controllerOrId?.id;
+
+    return id ? this.controllers.has(id) : false;
   }
 
   unregisterSheet(controllerOrId) {
@@ -108,6 +119,8 @@ export default class SheetLayerStore extends Service {
   }
 
   cleanupInert() {
+    this.#cleanupFocusContainment();
+
     if (this.mutationObserver) {
       this.mutationObserver.disconnect();
       this.mutationObserver = null;
@@ -371,10 +384,11 @@ export default class SheetLayerStore extends Service {
 
     if (!hasInertOutside || sheetsInOrder.length === 0) {
       this.#cleanupAutomaticLayerDetection();
+      this.focusContainmentLastElement = null;
       return;
     }
 
-    const rootElements = new Set();
+    const focusContainmentRootElements = new Set();
 
     let automaticLayerDetectionView = null;
 
@@ -382,11 +396,7 @@ export default class SheetLayerStore extends Service {
       const sheet = sheetsInOrder[i];
 
       if (sheet.view) {
-        rootElements.add(sheet.view);
-      }
-
-      if (sheet.rootElement) {
-        rootElements.add(sheet.rootElement);
+        focusContainmentRootElements.add(sheet.view);
       }
 
       if (sheet.inertOutside) {
@@ -395,20 +405,55 @@ export default class SheetLayerStore extends Service {
       }
     }
 
-    this.#setupAutomaticLayerDetection(automaticLayerDetectionView);
+    if (!automaticLayerDetectionView) {
+      this.#cleanupAutomaticLayerDetection();
+      this.focusContainmentLastElement = null;
+      return;
+    }
 
-    document.querySelectorAll("[aria-live]").forEach((el) => {
-      rootElements.add(el);
-    });
+    this.#setupAutomaticLayerDetection(automaticLayerDetectionView);
 
     for (const element of this.#automaticLayerElements()) {
       if (element.isConnected) {
-        rootElements.add(element);
+        focusContainmentRootElements.add(element);
       }
     }
 
-    this.#moveFocusIfNecessary(rootElements, sheetsInOrder);
-    this.#applyInert(rootElements);
+    const guardElements = this.#setupFocusContainment(
+      focusContainmentRootElements,
+      automaticLayerDetectionView
+    );
+
+    this.#moveFocusIfNecessary(focusContainmentRootElements, sheetsInOrder);
+
+    const inertRootElements = new Set([
+      ...focusContainmentRootElements,
+      ...guardElements,
+    ]);
+    document.querySelectorAll("[aria-live]").forEach((element) => {
+      inertRootElements.add(element);
+    });
+
+    this.#applyInert(inertRootElements);
+  }
+
+  #setupFocusContainment(rootElements, viewElement) {
+    const { cleanup, guardElements } = setupFocusContainment({
+      rootElements: [...rootElements],
+      viewElement,
+      getElementFocusedLast: () => this.focusContainmentLastElement,
+      setElementFocusedLast: (element) => {
+        this.focusContainmentLastElement = element;
+      },
+    });
+
+    this.focusContainmentCleanup = cleanup;
+    return guardElements;
+  }
+
+  #cleanupFocusContainment() {
+    this.focusContainmentCleanup?.();
+    this.focusContainmentCleanup = null;
   }
 
   #targetIsInAutomaticLayer(target) {

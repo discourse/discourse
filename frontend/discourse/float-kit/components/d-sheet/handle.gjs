@@ -1,5 +1,7 @@
 import { on } from "@ember/modifier";
 import { i18n } from "discourse-i18n";
+import mergeSheetAttributes from "../../modifiers/merge-sheet-attributes";
+import outletAnimationModifier from "./outlet-animation-modifier";
 import SheetActionBase from "./sheet-action-base";
 
 export default class Handle extends SheetActionBase {
@@ -18,8 +20,12 @@ export default class Handle extends SheetActionBase {
     );
   }
 
-  get isPresented() {
-    return this.sheet?.isPresented ?? false;
+  get ariaExpanded() {
+    if (this.actionType === "dismiss") {
+      return this.sheet?.isPresented ? "true" : "false";
+    }
+
+    return undefined;
   }
 
   get root() {
@@ -44,12 +50,19 @@ export default class Handle extends SheetActionBase {
   <template>
     <button
       type="button"
-      data-d-sheet="touch-target-expander handle"
       disabled={{this.isDisabled}}
-      aria-expanded={{this.isPresented}}
+      aria-expanded={{this.ariaExpanded}}
       aria-controls={{this.sheetId}}
       {{on "click" this.handleClick}}
+      {{outletAnimationModifier this.sheet @travelAnimation @stackingAnimation}}
       ...attributes
+      {{mergeSheetAttributes
+        "outlet"
+        "trigger"
+        "touch-target-expander"
+        "handle"
+        (if this.sheet.isStackAnimating "animating")
+      }}
     >
       {{#if (has-block)}}
         {{yield}}

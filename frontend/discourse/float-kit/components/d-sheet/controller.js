@@ -1,9 +1,10 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
-import { trackedArray } from "@ember/reactive/collections";
 import { next, schedule } from "@ember/runloop";
+import { processBehavior } from "discourse/float-kit/lib/behavior-handler";
 import { capabilities } from "discourse/services/capabilities";
+import { createTweenFunction } from "./animation";
 import AnimationTravel from "./animation-travel";
 import {
   placementToAttribute,
@@ -21,7 +22,7 @@ import StateHelper from "./state-helper";
 import { EVENTS } from "./state-machine-events";
 import ThemeColorAdapter from "./theme-color-adapter";
 import TimeoutManager from "./timeout-manager";
-import { TouchHandler } from "./touch-handler";
+import { resolveTravelTrack } from "./travel";
 
 const BROWSER_SUPPORTS_REQUIRED_FEATURES = (() => {
   const supportsScrollSnap =
@@ -39,6 +40,8 @@ const BROWSER_SUPPORTS_REQUIRED_FEATURES = (() => {
 const RENDER_AFFECTING_OPTIONS = new Set([
   "contentPlacement",
   "role",
+  "snapOutAcceleration",
+  "snapToEndDetentsAcceleration",
   "tracks",
   "swipe",
   "swipeDismissal",
@@ -48,6 +51,29 @@ const RENDER_AFFECTING_OPTIONS = new Set([
   "pageScroll",
   "inertOutside",
 ]);
+
+const DIMENSION_AFFECTING_OPTIONS = new Set([
+  "contentPlacement",
+  "role",
+  "snapOutAcceleration",
+  "snapToEndDetentsAcceleration",
+  "swipe",
+  "swipeDismissal",
+  "swipeOvershoot",
+  "tracks",
+]);
+
+const OPPOSITE_TRACK_AXES = Object.freeze({
+  "bottom:top": "vertical",
+  "left:right": "horizontal",
+  "right:left": "horizontal",
+  "top:bottom": "vertical",
+});
+
+const STAGING_STATE_BY_ANIMATION_OPTION = Object.freeze({
+  enteringAnimationSettings: "isOpening",
+  exitingAnimationSettings: "isClosing",
+});
 
 export default class Controller {
   static EVENT_HANDLER_DEFAULTS = {
@@ -65,11 +91,12 @@ export default class Controller {
   };
 
   static OPTION_DEFAULTS = {
-    role: "dialog",
+    contentPlacement: "bottom",
+    role: undefined,
     swipe: true,
     swipeDismissal: true,
     swipeOvershoot: true,
-    swipeTrap: true,
+    swipeTrap: undefined,
     onFocusInside: null,
     nativeFocusScrollPrevention: true,
     pageScroll: false,
@@ -86,29 +113,29 @@ export default class Controller {
     onTravelEnd: null,
     sheetStackRegistry: null,
     sheetRegistry: null,
+    tracks: "bottom",
   };
 
   static get browserSupportsRequiredFeatures() {
     return BROWSER_SUPPORTS_REQUIRED_FEATURES;
   }
 
-  @tracked view = null;
-  @tracked rootElement = null;
-  @tracked content = null;
-  @tracked contentWrapper = null;
-  @tracked scrollContainer = null;
-  @tracked backdrop = null;
-
   @tracked titleElement = null;
   @tracked descriptionElement = null;
-
   @tracked bleedingBackgroundPresent = false;
   @tracked isPresented = false;
   @tracked safeToUnmount = true;
   @tracked detentsConfig = null;
   @tracked backdropSwipeable = true;
   @tracked configurationVersion = 0;
-  detentMarkers = trackedArray();
+
+  view = null;
+  content = null;
+  contentWrapper = null;
+  scrollContainer = null;
+  backdrop = null;
+  rootElement = null;
+  detentMarkers = [];
   id = guidFor(this);
 
   dimensions = null;
@@ -150,11 +177,9 @@ export default class Controller {
   onTravelStart = null;
   onTravelEnd = null;
   onActiveDetentChange = null;
-  onTravelProgressChange = null;
   onSafeToUnmountChange = null;
   onFocusInside = null;
   focusManagement = null;
-  touchHandler;
   timeoutManager;
   detentManager;
   domAttributes;
@@ -167,21 +192,32 @@ export default class Controller {
   rootComponent = null;
   isDestroying = false;
   isDestroyed = false;
+  markProgrammaticScroll = () => {
+    this.#programmaticScrollPending = true;
+  };
   #configurationVersionBumpScheduled = false;
+  #dimensionRecalculationPending = false;
+  #dimensionRecalculationScheduled = false;
+  #dimensionsTrack = null;
+  #manualTravelOngoing = false;
+  #pendingActiveDetentNotification = null;
+  #programmaticScrollPending = false;
+  #progressBeforeDimensionRecalculation = null;
+  #renderConfigurationPending = false;
+  #trackDimensionRecalculationScheduled = false;
   #contentPlacement = "bottom";
   #inertOutside = true;
   #nativeFocusScrollPrevention = true;
   #pageScroll = false;
-  #role = "dialog";
+  #role;
   #subscriptionDefinitions = [];
   #swipe = true;
   #swipeDismissal = true;
   #swipeOvershoot = true;
-  #swipeTrap = true;
+  #swipeTrap;
   #tracks = "bottom";
 
   constructor() {
-    this.touchHandler = new TouchHandler(this);
     this.focusManagement = new FocusManagement(this);
     this.timeoutManager = new TimeoutManager();
     this.detentManager = new DetentManager(this);
@@ -191,6 +227,7 @@ export default class Controller {
     this.stackingAdapter = new StackingAdapter(this);
     this.state = new StateHelper();
     this.animationTravel = new AnimationTravel(this);
+    this.animationTravel.syncSkipStates();
     this.themeColorAdapter = new ThemeColorAdapter();
     this.#subscriptionDefinitions = buildStateEffects(this);
     this.setupSubscriptions();
@@ -216,7 +253,17 @@ export default class Controller {
 
   get tracks() {
     this.configurationVersion;
-    return this.#tracks;
+
+    let animationTrack;
+    if (this.state?.staging.isOpening) {
+      animationTrack = this.enteringAnimationSettings?.track;
+    } else if (this.state?.staging.isClosing) {
+      animationTrack = this.exitingAnimationSettings?.track;
+    }
+
+    return (
+      OPPOSITE_TRACK_AXES[`${this.#tracks}:${animationTrack}`] ?? this.#tracks
+    );
   }
 
   set tracks(value) {
@@ -288,17 +335,36 @@ export default class Controller {
 
   configure(options = {}) {
     let configurationChanged = false;
+    let inertOutsideChanged = false;
     const assignConfig = (key, value) => {
-      if (this[key] !== value) {
+      const currentValue = key === "tracks" ? this.#tracks : this[key];
+      const stagingState = STAGING_STATE_BY_ANIMATION_OPTION[key];
+      const stagingTrackChanged =
+        stagingState &&
+        this.state.staging[stagingState] &&
+        currentValue?.track !== value?.track;
+
+      if (currentValue !== value) {
         this[key] = value;
-        if (RENDER_AFFECTING_OPTIONS.has(key)) {
+        if (key === "inertOutside") {
+          inertOutsideChanged = true;
+        }
+        if (RENDER_AFFECTING_OPTIONS.has(key) || stagingTrackChanged) {
           configurationChanged = true;
+        }
+        if (DIMENSION_AFFECTING_OPTIONS.has(key) || stagingTrackChanged) {
+          this.#invalidateDimensions();
         }
       }
     };
 
     if ("role" in options) {
-      assignConfig("role", options.role ?? Controller.OPTION_DEFAULTS.role);
+      assignConfig(
+        "role",
+        options.role === undefined
+          ? Controller.OPTION_DEFAULTS.role
+          : options.role
+      );
     }
 
     if (options.activeDetent !== undefined) {
@@ -316,15 +382,17 @@ export default class Controller {
     }
 
     if ("detents" in options) {
-      this.detentsConfig = options.detents;
+      this.detents = options.detents;
     }
 
-    const result = resolveTracksAndPlacement(options, {
-      tracks: this.tracks,
-      contentPlacement: this.contentPlacement,
-    });
-    assignConfig("tracks", result.tracks);
-    assignConfig("contentPlacement", result.contentPlacement);
+    if ("tracks" in options || "contentPlacement" in options) {
+      const result = resolveTracksAndPlacement(
+        options,
+        Controller.OPTION_DEFAULTS
+      );
+      assignConfig("tracks", result.tracks);
+      assignConfig("contentPlacement", result.contentPlacement);
+    }
 
     const propsToAssign = [
       "swipe",
@@ -351,8 +419,24 @@ export default class Controller {
 
     for (const key of propsToAssign) {
       if (key in options) {
-        assignConfig(key, options[key] ?? Controller.OPTION_DEFAULTS[key]);
+        assignConfig(
+          key,
+          options[key] === undefined
+            ? Controller.OPTION_DEFAULTS[key]
+            : options[key]
+        );
       }
+    }
+
+    if (inertOutsideChanged && this.isPresented) {
+      this.applyInertOutside();
+    }
+
+    if (
+      "enteringAnimationSettings" in options ||
+      "exitingAnimationSettings" in options
+    ) {
+      this.animationTravel.syncSkipStates();
     }
 
     const eventHandlers = [
@@ -377,11 +461,15 @@ export default class Controller {
       }
     }
 
-    this.themeColorAdapter.configure(options);
-
     if (configurationChanged) {
-      this.#scheduleConfigurationVersionBump();
+      this.#scheduleRenderConfigurationUpdate();
     }
+  }
+
+  #scheduleRenderConfigurationUpdate() {
+    this.#renderConfigurationPending = true;
+    this.#scheduleConfigurationVersionBump();
+    this.#scheduleDimensionRecalculation();
   }
 
   #scheduleConfigurationVersionBump() {
@@ -400,6 +488,73 @@ export default class Controller {
 
       this.configurationVersion++;
     });
+  }
+
+  #invalidateDimensions() {
+    const shouldRecalculate =
+      this.dimensions !== null || this.#dimensionRecalculationPending;
+
+    if (this.dimensions && !this.#dimensionRecalculationPending) {
+      this.#progressBeforeDimensionRecalculation =
+        this.#currentProgressForDimensionRecalculation(this.dimensions);
+    }
+
+    this.cleanupIntersectionObserver();
+    this.dimensions = null;
+
+    if (!shouldRecalculate) {
+      return;
+    }
+
+    this.#dimensionRecalculationPending = true;
+    this.#scheduleDimensionRecalculation();
+  }
+
+  #scheduleDimensionRecalculation() {
+    if (this.#dimensionRecalculationScheduled) {
+      return;
+    }
+
+    this.#dimensionRecalculationScheduled = true;
+
+    next(() => {
+      schedule("afterRender", () => {
+        this.#dimensionRecalculationScheduled = false;
+
+        if (this.isDestroying || this.isDestroyed) {
+          return;
+        }
+
+        this.#renderConfigurationPending = false;
+        this.calculateDimensionsIfReady();
+      });
+    });
+  }
+
+  #currentProgressForDimensionRecalculation(dimensions) {
+    const progressValues = dimensions?.progressValueAtDetents;
+
+    if (!progressValues?.length) {
+      return 0;
+    }
+
+    return progressValues[this.currentSegment[1]]?.exact ?? 1;
+  }
+
+  #closestDetentToProgress(progress, dimensions) {
+    const progressValues = dimensions.exactProgressValueAtDetents;
+    let closestIndex = 0;
+
+    for (let index = 1; index < progressValues.length; index++) {
+      if (
+        Math.abs(progressValues[index] - progress) <
+        Math.abs(progressValues[closestIndex] - progress)
+      ) {
+        closestIndex = index;
+      }
+    }
+
+    return closestIndex;
   }
 
   setupSubscriptions() {
@@ -448,33 +603,36 @@ export default class Controller {
   }
 
   get resolvedSwipeTrap() {
-    const trapValue = this.inertOutside ? true : this.swipeTrap;
+    const trapValue = this.swipeTrap;
 
-    let n;
+    let trapAxes;
     if (typeof trapValue === "boolean") {
-      n = { x: trapValue, y: trapValue };
+      trapAxes = { x: trapValue, y: trapValue };
     } else if (trapValue && typeof trapValue === "object") {
-      n = { x: trapValue.x, y: trapValue.y };
+      trapAxes = { x: trapValue.x, y: trapValue.y };
     } else {
-      n = { x: false, y: false };
+      trapAxes = { x: undefined, y: undefined };
     }
 
-    let a, r;
+    let trapHorizontal, trapVertical;
     const travelAxis = this.isHorizontalTrack ? "horizontal" : "vertical";
+    const appleModalTrap = capabilities.isAppleMobile && this.inertOutside;
 
     if (travelAxis === "vertical") {
-      a = n.x;
-      r = n.y !== false && n.y !== null && n.y !== undefined ? n.y : true;
+      trapHorizontal = trapAxes.x;
+      trapVertical =
+        appleModalTrap ||
+        (!capabilities.isAndroidChromiumBrowser && (trapAxes.y ?? true));
     } else if (travelAxis === "horizontal") {
-      r = n.y;
-      a = n.x !== false && n.x !== null && n.x !== undefined ? n.x : true;
+      trapVertical = appleModalTrap || trapAxes.y;
+      trapHorizontal = trapAxes.x ?? true;
     }
 
-    if (a && !r) {
+    if (trapHorizontal && !trapVertical) {
       return "horizontal";
-    } else if (!a && r) {
+    } else if (!trapHorizontal && trapVertical) {
       return "vertical";
-    } else if (a && r) {
+    } else if (trapHorizontal && trapVertical) {
       return "both";
     }
     return "none";
@@ -524,16 +682,14 @@ export default class Controller {
   }
 
   set detents(value) {
-    const oldValue = this.detentsConfig;
-    this.detentsConfig = value;
-
-    if (oldValue !== value) {
-      this.detentMarkers = trackedArray();
-
-      if (this.view && this.content && this.scrollContainer) {
-        this.recalculateDimensionsFromResize();
-      }
+    if (this.detentsConfig === value) {
+      return;
     }
+
+    this.detentsConfig = value;
+    this.detentMarkers.splice(this.detents.length);
+    this.#invalidateDimensions();
+    this.#scheduleRenderConfigurationUpdate();
   }
 
   get swipeDisabled() {
@@ -650,8 +806,33 @@ export default class Controller {
     }
   }
 
-  notifyTravel(progress) {
-    this.onTravel?.({ progress });
+  #scheduleSegmentNotifications(segment) {
+    queueMicrotask(() => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
+      const [start, end] = segment;
+      if (this.travelRange.start === start && this.travelRange.end === end) {
+        return;
+      }
+
+      this.updateTravelRange(start, end);
+
+      if (start === end) {
+        if (this.#pendingActiveDetentNotification === null) {
+          this.onActiveDetentChange?.(end);
+        }
+      }
+    });
+  }
+
+  notifyTravel(progress, segment) {
+    this.onTravel?.({
+      progress,
+      range: segment ? { start: segment[0], end: segment[1] } : undefined,
+      progressAtDetents: this.dimensions?.exactProgressValueAtDetents,
+    });
   }
 
   get mergedStaging() {
@@ -665,9 +846,13 @@ export default class Controller {
   @action
   setSegment(segment) {
     const prevSegment = this.currentSegment;
-    this.currentSegment = segment;
+    this.#scheduleSegmentNotifications(segment);
 
-    this.updateTravelRange(segment[0], segment[1]);
+    if (prevSegment[0] === segment[0] && prevSegment[1] === segment[1]) {
+      return;
+    }
+
+    this.currentSegment = segment;
 
     if (this.swipeOutDisabledWithDetent) {
       const { backStuck, frontStuck, shouldStep } =
@@ -695,11 +880,38 @@ export default class Controller {
 
     if (segment[0] === segment[1]) {
       this.activeDetent = segment[0];
-
-      if (this.onActiveDetentChange) {
-        this.onActiveDetentChange(this.activeDetent);
-      }
     }
+  }
+
+  #prepareProgrammaticDetentTravel(detent) {
+    const travel = { detent, type: "travel" };
+    this.#pendingActiveDetentNotification = travel;
+    this.onActiveDetentChange?.(detent);
+    return travel;
+  }
+
+  completeActiveDetentNotification(notification) {
+    if (!notification) {
+      return;
+    }
+
+    queueMicrotask(() => {
+      if (this.#pendingActiveDetentNotification === notification) {
+        this.#pendingActiveDetentNotification = null;
+      }
+    });
+  }
+
+  #startProgrammaticDetentTravel(detent) {
+    const travel = this.#prepareProgrammaticDetentTravel(detent);
+    this.animationTravel.animateToDetent(detent, null, travel);
+  }
+
+  #notifyDismissedDetent() {
+    const notification = { detent: 0, type: "dismissal" };
+    this.#pendingActiveDetentNotification = notification;
+    this.onActiveDetentChange?.(0);
+    return notification;
   }
 
   @action
@@ -709,10 +921,12 @@ export default class Controller {
 
   handleOpening() {
     this.isPresented = true;
+    this.domAttributes.setHidden();
     this.updateTravelStatus("travellingIn");
     this.focusManagement.capturePreviouslyFocusedElement();
 
     this.state.longRunning.start();
+    this.#scheduleDimensionRecalculation();
     this.state.beginEnterAnimation(false);
     this.stackingAdapter.notifyParentOfOpening(false);
 
@@ -721,11 +935,35 @@ export default class Controller {
     }
   }
 
+  handleSkippedOpening() {
+    this.isPresented = true;
+    this.domAttributes.setHidden();
+    this.state.longRunning.start();
+    this.stackingAdapter.notifyParentOfOpening(true);
+  }
+
+  completeSkippedOpening() {
+    if (this.isDestroying || this.isDestroyed || !this.state.staging.isOpen) {
+      return;
+    }
+
+    this.state.position.readyToGoFront(true);
+    this.state.openness.readyToOpen(true);
+    this.state.staging.advance();
+  }
+
+  startSkippedOpeningTravel() {
+    this.calculateDimensionsIfReady();
+    this.#startProgrammaticDetentTravel(this.targetDetent);
+  }
+
   #startOpeningAnimation() {
     this.resetViewStyles();
     this.calculateDimensionsIfReady();
+    this.#recalculateDimensionsForCurrentTrack();
+    this.setInitialScrollPosition();
     this.domAttributes.setHidden();
-    this.animationTravel.animateToDetent(this.targetDetent);
+    this.#startProgrammaticDetentTravel(this.targetDetent);
   }
 
   startOpeningAnimation() {
@@ -735,13 +973,18 @@ export default class Controller {
   #notifyElementsRegisteredIfReady() {
     if (
       this.view &&
+      this.content &&
       this.scrollContainer &&
       this.contentWrapper &&
+      this.dimensions &&
       this.state.elements.isNotReady
     ) {
-      // Defer to next run loop to avoid updating tracked state during render
       next(() => {
-        if (this.state.elements.isNotReady) {
+        if (
+          !this.isDestroying &&
+          !this.isDestroyed &&
+          this.state.elements.isNotReady
+        ) {
           this.state.elements.markRegistered();
         }
       });
@@ -749,12 +992,8 @@ export default class Controller {
   }
 
   handleOpen(message) {
-    if (this.state.longRunning.isActive) {
-      this.state.longRunning.end();
-    }
-
     this.updateScrollSnapBehavior();
-    this.updateTravelRange(this.activeDetent, this.activeDetent);
+    this.#scheduleSegmentNotifications([this.activeDetent, this.activeDetent]);
     this.updateTravelStatus("idleInside");
     this.applyInertOutside();
 
@@ -766,39 +1005,17 @@ export default class Controller {
       this.state.staging.advance();
     }
 
-    this.#setupIntersectionObserver();
-
     if (message?.type === EVENTS.STEP) {
       this.handleStepMessage(message);
     }
-  }
-
-  #setupIntersectionObserver() {
-    if (this.swipeDisabled || this.swipeOutDisabledWithDetent) {
-      return;
-    }
-
-    requestAnimationFrame(() => {
-      if (
-        this.state.openness.isOpen &&
-        !this.swipeDisabled &&
-        !this.swipeOutDisabledWithDetent
-      ) {
-        this.setupIntersectionObserver();
-      }
-    });
   }
 
   handleStepMessage(message) {
     this.state.stepAnimation();
     this.updateTravelStatus("stepping");
 
-    if (message.detent !== undefined) {
-      this.animationTravel.animateToDetent(message.detent);
-    } else {
-      const nextDetent = this.activeDetent + 1;
-      this.animationTravel.animateToDetent(nextDetent);
-    }
+    const destinationDetent = message.detent ?? this.activeDetent + 1;
+    this.#startProgrammaticDetentTravel(destinationDetent);
   }
 
   handleClosing() {
@@ -808,31 +1025,46 @@ export default class Controller {
     this.stackingAdapter.notifyParentOfClosing();
 
     if (this.state.skip.isClosing) {
-      this.handleClosingWithoutAnimation();
+      const travel = this.#prepareProgrammaticDetentTravel(0);
+      this.handleClosingWithoutAnimation(travel);
       return;
     }
 
+    this.#recalculateDimensionsForCurrentTrack();
     this.domAttributes.disableScrollSnap();
-    this.animationTravel.animateToDetent(
-      0,
-      this.animationTravel.exitingAnimationDefaults
-    );
+    this.#startProgrammaticDetentTravel(0);
   }
 
-  handleClosingWithoutAnimation() {
+  handleClosingWithoutAnimation(programmaticDetentTravel) {
     this.state.skip.disableClosing();
 
     this.stackingAdapter.notifyBelowSheets(0);
 
     requestAnimationFrame(() => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
       this.handleStateTransition({ type: EVENTS.NEXT });
+      this.animationTravel.syncSkipStates();
+      this.completeActiveDetentNotification(programmaticDetentTravel);
     });
   }
 
   handleClosedPending() {
+    if (this.rootComponent?.effectivePresented) {
+      this.rootComponent.dismiss();
+    }
+
     this.state.longRunning.end();
     this.#handleImmediateCloseIfNeeded();
     this.#scheduleFlushToSafeToUnmount();
+    this.rootComponent?.deactivateSheetLayer(true);
+
+    const notification = this.#pendingActiveDetentNotification;
+    if (notification?.type === "dismissal") {
+      this.completeActiveDetentNotification(notification);
+    }
   }
 
   #handleImmediateCloseIfNeeded() {
@@ -843,29 +1075,42 @@ export default class Controller {
     this.focusManagement.captureFocusWasInsideOnClose();
     this.state.beginImmediateClose(true);
     this.updateTravelStatus("travellingOut");
-    this.state.skip.disableClosing();
-    this.state.position.goOut();
-    this.stackingAdapter.notifyParentOfClosingImmediate();
+    this.animationTravel.syncSkipStates();
+    const configuredSkip = this.state.skip.isClosing;
 
+    if (configuredSkip) {
+      this.onTravelStart?.();
+    }
+    this.state.position.goOut();
+
+    if (configuredSkip) {
+      this.notifyTravel(0, [0, 0]);
+      this.aggregatedTravelCallback(0, createTweenFunction(0));
+    }
     this.stackingAdapter.notifyBelowSheets(0);
+    if (configuredSkip) {
+      this.onTravelEnd?.();
+      this.lastProcessedProgress = 0;
+      this.stackingAdapter.updateTravelProgress(0);
+    }
+    this.stackingAdapter.notifyParentOfClosingImmediate();
   }
 
   #scheduleFlushToSafeToUnmount() {
-    this.timeoutManager.schedule(
+    this.timeoutManager.scheduleNative(
       "pendingFlush",
       () => {
         if (this.state.openness.isClosedPending) {
           this.state.openness.flushComplete();
         }
       },
-      16
+      3000
     );
   }
 
   handleClosedSafeToUnmount() {
     const wasLongRunning = this.state.longRunning.isActive;
 
-    // Reset presentation flags
     this.isPresented = false;
     if (this.state.stuck.isFront) {
       this.state.stuck.endFront();
@@ -878,23 +1123,19 @@ export default class Controller {
       this.state.longRunning.end();
     }
 
-    // Reset elementsReady state machine for next open cycle
     if (this.state.elements.isReady) {
       this.state.elements.reset();
     }
 
-    // Reset travel state
     this.activeDetent = 0;
     this.currentSegment = [0, 0];
     this.dimensions = null;
     this.lastProcessedProgress = null;
 
-    // Advance position machine if needed
     if (!this.state.position.isOut && this.state.position.isFrontClosing) {
       this.state.position.advance();
     }
 
-    // Notify travel status change
     this.updateTravelStatus("idleOutside");
     this.updateTravelRange(0, 0);
   }
@@ -910,6 +1151,7 @@ export default class Controller {
   }
 
   #calculateDimensions() {
+    const tracks = this.tracks;
     const calculator = new DimensionCalculator({
       view: this.view,
       content: this.content,
@@ -917,26 +1159,41 @@ export default class Controller {
       detentMarkers: this.detentMarkers,
     });
 
-    return calculator.calculateDimensions(
-      this.tracks,
+    const dimensions = calculator.calculateDimensions(
+      tracks,
       this.contentPlacement,
       this.#getDimensionCalculatorOptions()
     );
+
+    this.#dimensionsTrack = tracks;
+    return dimensions;
   }
 
   calculateDimensionsIfReady() {
+    if (this.#renderConfigurationPending || this.state.openness.isClosed) {
+      return;
+    }
+
+    const expectedMarkerCount = this.detents.length;
+    const registeredMarkers = this.detentMarkers.slice(0, expectedMarkerCount);
     const hasRequiredMarkers =
-      this.detentsConfig === undefined || this.detentMarkers.length > 0;
+      registeredMarkers.length === expectedMarkerCount &&
+      registeredMarkers.every((marker) => marker?.isConnected);
 
     if (
       this.view &&
       this.content &&
       this.scrollContainer &&
-      hasRequiredMarkers &&
-      !this.dimensions
+      hasRequiredMarkers
     ) {
-      this.dimensions = this.#calculateDimensions();
-      this.setInitialScrollPosition();
+      if (this.#dimensionRecalculationPending) {
+        this.#dimensionRecalculationPending = false;
+        this.recalculateDimensionsFromResize({ remapToClosest: true });
+      } else if (!this.dimensions) {
+        this.dimensions = this.#calculateDimensions();
+        this.setInitialScrollPosition();
+        this.#notifyElementsRegisteredIfReady();
+      }
     }
   }
 
@@ -945,20 +1202,24 @@ export default class Controller {
       return;
     }
 
-    const isHorizontal = this.isHorizontalTrack;
+    const configuredEnteringTrack = this.state.staging.isOpening
+      ? this.enteringAnimationSettings?.track
+      : undefined;
+    const enteringTrack = resolveTravelTrack(
+      configuredEnteringTrack,
+      this.tracks
+    );
+    const isHorizontal = enteringTrack === "left" || enteringTrack === "right";
+    const isBackTrack = enteringTrack === "bottom" || enteringTrack === "right";
 
-    if (this.tracks === "bottom" || this.tracks === "right") {
-      if (isHorizontal) {
-        this.scrollContainer.scrollLeft = 0;
-      } else {
-        this.scrollContainer.scrollTop = 0;
-      }
+    if (isHorizontal) {
+      this.scrollContainer.scrollLeft = isBackTrack
+        ? 0
+        : this.scrollContainer.scrollWidth;
     } else {
-      if (isHorizontal) {
-        this.scrollContainer.scrollLeft = this.scrollContainer.scrollWidth;
-      } else {
-        this.scrollContainer.scrollTop = this.scrollContainer.scrollHeight;
-      }
+      this.scrollContainer.scrollTop = isBackTrack
+        ? 0
+        : this.scrollContainer.scrollHeight;
     }
   }
 
@@ -991,6 +1252,22 @@ export default class Controller {
     this.observerManager.setupIntersectionObserver();
   }
 
+  restoreRestingDetentAfterLayout() {
+    const [segmentStart, segmentEnd] = this.currentSegment;
+
+    if (
+      !this.state.openness.isOpen ||
+      !this.scrollContainer ||
+      !this.contentWrapper ||
+      !this.dimensions ||
+      segmentStart !== segmentEnd
+    ) {
+      return;
+    }
+
+    this.animationTravel.recalculateAndTravel(segmentEnd);
+  }
+
   cleanupIntersectionObserver() {
     this.observerManager.cleanupIntersectionObserver();
   }
@@ -999,10 +1276,25 @@ export default class Controller {
   registerView(view) {
     this.view = view;
     this.resetViewStyles();
+    if (this.state.openness.isOpening) {
+      this.domAttributes.setHidden();
+    }
     this.calculateDimensionsIfReady();
     this.setupResizeObserver();
     this.sheetRegistry?.sheetLayerStore?.recalculateInertOutside();
     this.#notifyElementsRegisteredIfReady();
+  }
+
+  @action
+  unregisterView(view) {
+    if (this.view !== view) {
+      return;
+    }
+
+    this.cleanupIntersectionObserver();
+    this.observerManager.unobserveResizeTarget(view);
+    this.view = null;
+    this.dimensions = null;
   }
 
   @action
@@ -1030,36 +1322,111 @@ export default class Controller {
     });
   }
 
-  recalculateDimensionsFromResize() {
-    this.dimensions = this.#calculateDimensions();
+  #recalculateDimensionsForCurrentTrack() {
+    if (
+      !this.view ||
+      !this.content ||
+      !this.scrollContainer ||
+      !this.dimensions ||
+      this.#dimensionsTrack === this.tracks
+    ) {
+      return;
+    }
 
-    if (this.state.openness.isOpen) {
+    this.recalculateDimensionsFromResize();
+  }
+
+  scheduleTrackDimensionRecalculation() {
+    if (this.#trackDimensionRecalculationScheduled) {
+      return;
+    }
+
+    this.#trackDimensionRecalculationScheduled = true;
+
+    next(() => {
+      schedule("afterRender", () => {
+        this.#trackDimensionRecalculationScheduled = false;
+
+        if (this.isDestroying || this.isDestroyed) {
+          return;
+        }
+
+        this.#recalculateDimensionsForCurrentTrack();
+      });
+    });
+  }
+
+  recalculateDimensionsFromResize({ remapToClosest = false } = {}) {
+    const [segmentStart, segmentEnd] = this.currentSegment;
+    const currentDetent = segmentStart === segmentEnd ? segmentEnd : null;
+    const previousProgress =
+      this.#progressBeforeDimensionRecalculation ??
+      this.#currentProgressForDimensionRecalculation(this.dimensions);
+    const dimensions = this.#calculateDimensions();
+    const destinationDetent = remapToClosest
+      ? this.#closestDetentToProgress(previousProgress, dimensions)
+      : currentDetent === null
+        ? null
+        : Math.min(
+            currentDetent,
+            dimensions.exactProgressValueAtDetents.length - 1
+          );
+
+    this.#progressBeforeDimensionRecalculation = null;
+    this.dimensions = dimensions;
+
+    if (remapToClosest) {
+      this.targetDetent = destinationDetent;
+      this.setSegment([destinationDetent, destinationDetent]);
+    }
+
+    if (destinationDetent !== null) {
+      this.lastProcessedProgress =
+        dimensions.exactProgressValueAtDetents[destinationDetent];
+    }
+
+    const updateIntersectionObserver = () => {
       if (!this.swipeDisabled && !this.swipeOutDisabledWithDetent) {
         this.setupIntersectionObserver();
       } else {
         this.cleanupIntersectionObserver();
       }
+    };
+
+    if (destinationDetent > 0 && this.state.openness.isOpen) {
+      this.animationTravel.recalculateAndTravel(destinationDetent);
     }
 
-    if (this.activeDetent > 0 && this.state.openness.isOpen) {
-      requestAnimationFrame(() => {
-        if (!this.isDestroying && !this.isDestroyed) {
-          this.animationTravel.recalculateAndTravel(this.activeDetent);
-        }
-      });
+    if (this.state.openness.isOpen) {
+      updateIntersectionObserver();
     }
   }
 
   cleanup() {
-    this.timeoutManager.cleanup();
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
 
-    this.touchHandler.detach();
+    this.isDestroying = true;
+    this.animationTravel.cancelActiveTravel();
+    this.timeoutManager.cleanup();
+    this.removeAllOutletPersistedStyles();
+
     this.observerManager.cleanup();
     this.unregisterBackdrop(this.backdrop);
     this.domAttributes.cleanup();
     this.focusManagement.cleanup();
     this.state.cleanup();
     this.stackingAdapter?.removeStagingFromStack();
+
+    this.view = null;
+    this.rootElement = null;
+    this.content = null;
+    this.contentWrapper = null;
+    this.scrollContainer = null;
+    this.detentMarkers.length = 0;
+    this.dimensions = null;
+    this.isDestroyed = true;
   }
 
   executeAutoFocusOnPresent() {
@@ -1088,6 +1455,18 @@ export default class Controller {
     this.content = content;
     this.calculateDimensionsIfReady();
     this.setupResizeObserver();
+  }
+
+  @action
+  unregisterContent(content) {
+    if (this.content !== content) {
+      return;
+    }
+
+    this.cleanupIntersectionObserver();
+    this.observerManager.unobserveResizeTarget(content);
+    this.content = null;
+    this.dimensions = null;
   }
 
   @action
@@ -1121,11 +1500,29 @@ export default class Controller {
   }
 
   @action
+  unregisterContentWrapper(contentWrapper) {
+    if (this.contentWrapper === contentWrapper) {
+      this.contentWrapper = null;
+    }
+  }
+
+  @action
   registerScrollContainer(scrollContainer) {
     this.scrollContainer = scrollContainer;
 
     this.calculateDimensionsIfReady();
     this.#notifyElementsRegisteredIfReady();
+  }
+
+  @action
+  unregisterScrollContainer(scrollContainer) {
+    if (this.scrollContainer !== scrollContainer) {
+      return;
+    }
+
+    this.timeoutManager.clear("scrollEnd");
+    this.scrollContainer = null;
+    this.dimensions = null;
   }
 
   updateScrollSnapBehavior() {
@@ -1138,6 +1535,11 @@ export default class Controller {
 
   @action
   handleScrollStateChange() {
+    if (this.#programmaticScrollPending) {
+      this.#programmaticScrollPending = false;
+      return;
+    }
+
     if (!this.state.openness.isOpen || this.state.staging.current !== "none") {
       return;
     }
@@ -1265,21 +1667,45 @@ export default class Controller {
 
     this.lastProcessedProgress = smoothedProgress;
 
-    this.aggregatedTravelCallback(smoothedProgress);
-    this.onTravelProgressChange?.(smoothedProgress);
-
-    this.stackingAdapter.notifyBelowSheets(smoothedProgress);
-
-    this.notifyTravel(smoothedProgress);
-
     const segment =
       this.scrollProgressCalculator.determineSegment(smoothedProgress);
     if (segment) {
       this.setSegment(segment);
-      if (segment[0] === 0 && segment[1] === 0 && smoothedProgress <= 0) {
-        return;
-      }
     }
+
+    this.aggregatedTravelCallback(smoothedProgress);
+
+    this.stackingAdapter.notifyBelowSheets(smoothedProgress);
+
+    this.notifyTravel(smoothedProgress, segment);
+  }
+
+  handleManualTravelStart() {
+    if (this.#manualTravelOngoing) {
+      return;
+    }
+
+    this.#manualTravelOngoing = true;
+    this.onTravelStart?.();
+  }
+
+  handleManualTravelEnd() {
+    if (!this.#manualTravelOngoing) {
+      return;
+    }
+
+    this.#manualTravelOngoing = false;
+    this.onTravelEnd?.();
+
+    const exactProgress =
+      this.dimensions?.exactProgressValueAtDetents?.[this.currentSegment[0]];
+
+    if (exactProgress === undefined) {
+      return;
+    }
+
+    this.lastProcessedProgress = exactProgress;
+    this.stackingAdapter.updateTravelProgress(exactProgress);
   }
 
   @action
@@ -1294,28 +1720,14 @@ export default class Controller {
 
   @action
   handleFocus(event) {
-    if (!this.scrollContainer || !this.scrollContainer.contains(event.target)) {
-      return;
-    }
-
-    if (this.onFocusInside) {
-      this.onFocusInside({
-        nativeEvent: event,
-      });
-    }
+    processBehavior({
+      nativeEvent: event,
+      defaultBehavior: {},
+      handler: this.onFocusInside,
+    });
   }
 
-  onTouchGestureStart() {
-    this.state.openness.swipeStart();
-    this.updateTravelStatus("stepping");
-  }
-
-  onTouchGestureEnd() {
-    this.state.openness.swipeEnd();
-    if (this.state.openness.isOpen) {
-      this.updateTravelStatus("idleInside");
-    }
-
+  handleTouchEnded() {
     if (
       this.edgeAlignedNoOvershoot &&
       this.snapToEndDetentsAcceleration === "auto" &&
@@ -1340,6 +1752,15 @@ export default class Controller {
     }
   }
 
+  handleSwipeOut() {
+    if (!this.state.openness.isOpen) {
+      return;
+    }
+
+    this.#notifyDismissedDetent();
+    this.handleStateTransition("SWIPED_OUT");
+  }
+
   stepToStuckPosition(direction) {
     if (this.state.stuck.isFront) {
       this.state.stuck.endFront();
@@ -1358,9 +1779,20 @@ export default class Controller {
   }
 
   @action
-  registerDetentMarker(detentMarker) {
-    this.detentMarkers.push(detentMarker);
+  registerDetentMarker(detentMarker, index) {
+    this.detentMarkers.splice(this.detents.length);
+    this.detentMarkers[index] = detentMarker;
     this.calculateDimensionsIfReady();
+  }
+
+  @action
+  unregisterDetentMarker(detentMarker, index) {
+    if (this.detentMarkers[index] !== detentMarker) {
+      return;
+    }
+
+    this.detentMarkers[index] = null;
+    this.#invalidateDimensions();
   }
 
   @action
@@ -1405,8 +1837,19 @@ export default class Controller {
     };
   }
 
+  removeAllOutletPersistedStyles() {
+    for (const animations of [this.travelAnimations, this.stackingAnimations]) {
+      for (const animation of animations) {
+        for (const property of animation.animatedProperties ?? []) {
+          animation.target?.style.removeProperty(property);
+        }
+      }
+    }
+  }
+
   @action
   open() {
+    this.animationTravel.syncSkipStates();
     this.focusManagement.capturePreviouslyFocusedElement();
     this.state.broadcastOpen();
   }
@@ -1422,21 +1865,17 @@ export default class Controller {
 
   @action
   close() {
-    const wasOpen = this.state.openness.isOpen;
+    this.animationTravel.syncSkipStates();
     this.handleStateTransition({ type: EVENTS.CLOSE });
-
-    if (wasOpen && this.state.openness.isOpen) {
-      this.evaluateCloseMessage();
-    }
   }
 
   @action
   requestDismiss() {
     if (this.rootComponent) {
       this.rootComponent.dismiss();
+    } else {
+      this.close();
     }
-
-    this.close();
   }
 
   evaluateCloseMessage() {
@@ -1449,24 +1888,19 @@ export default class Controller {
     const isSteppingWithSwipeOutDisabled =
       this.swipeOutDisabledWithDetent &&
       this.currentSegment[0] !== this.currentSegment[1];
-    const rootRequestedDismiss =
-      this.rootComponent?.effectivePresented === false;
     const canActuallyClose =
       this.state.position.isFront &&
-      (!atInitialSegment || rootRequestedDismiss) &&
+      !atInitialSegment &&
       !isSteppingWithSwipeOutDisabled;
 
     if (!canActuallyClose) {
-      if (rootRequestedDismiss) {
-        return;
-      }
-
       if (this.rootComponent?.effectivePresented === false) {
         this.rootComponent.present();
       }
       return;
     }
 
+    this.#notifyDismissedDetent();
     this.state.staging.actuallyClose();
     this.handleStateTransition({ type: EVENTS.ACTUALLY_CLOSE });
   }

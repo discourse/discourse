@@ -35,13 +35,16 @@ export default class ScrollProgressCalculator {
     const maxClamp = this.#getMaxClamp();
 
     const isTopOrLeft = tracks === "top" || tracks === "left";
+    const isCenteredTrack = tracks === "horizontal" || tracks === "vertical";
     const rawProgress = this.#calculateRawProgress({
       scrollPosition,
       contentSize,
+      scrollSize,
       effectiveContentSize,
       edgePadding,
       snapAccelerator,
       isTopOrLeft,
+      isCenteredTrack,
     });
 
     const clampedProgress = Math.max(
@@ -82,13 +85,28 @@ export default class ScrollProgressCalculator {
   #calculateRawProgress({
     scrollPosition,
     contentSize,
+    scrollSize,
     effectiveContentSize,
     edgePadding,
     snapAccelerator,
     isTopOrLeft,
+    isCenteredTrack,
   }) {
     const { contentPlacement, dimensions, swipeOutDisabledWithDetent } =
       this.controller;
+
+    if (isCenteredTrack) {
+      const centerOffset = (scrollSize - contentSize) / 2;
+      const restingPosition = dimensions?.webkitSmallSpacerMode
+        ? 0
+        : snapAccelerator + scrollSize - centerOffset;
+      const travelSize = contentSize + centerOffset;
+
+      return Math.max(
+        1 - Math.abs(scrollPosition - restingPosition) / travelSize,
+        0
+      );
+    }
 
     if (dimensions?.webkitSmallSpacerMode) {
       return isTopOrLeft
@@ -133,21 +151,13 @@ export default class ScrollProgressCalculator {
     for (let i = 0; i < n; i++) {
       const { before, after } = detents[i];
 
-      // Moving between detents
       if (progress > after && i + 1 < n && progress < detents[i + 1].before) {
         return [i, i + 1];
       }
 
-      // Snapped to detent
       if (progress > before && progress < after) {
         return [i, i];
       }
-    }
-
-    // Fallback: if progress >= 1, set to last detent
-    if (progress >= 1) {
-      const lastDetent = n - 1;
-      return [lastDetent, lastDetent];
     }
 
     return null;

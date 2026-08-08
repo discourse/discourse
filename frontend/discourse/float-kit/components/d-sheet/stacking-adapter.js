@@ -52,6 +52,7 @@ export default class StackingAdapter {
         skipOpening,
       }
     );
+    this.updateStackingIndexWithPositionValue();
   }
 
   notifyParentOfClosing() {
@@ -74,6 +75,7 @@ export default class StackingAdapter {
       this.stackId,
       this.controller
     );
+    this.updateStackingIndexWithPositionValue();
   }
 
   updateTravelProgress(progress) {
@@ -119,6 +121,7 @@ export default class StackingAdapter {
     if (parentSheet) {
       parentSheet.sendToPositionMachine(EVENTS.NEXT);
     }
+    this.updateStackingIndexWithPositionValue();
   }
 
   updateStagingInStack(staging) {
@@ -154,7 +157,11 @@ export default class StackingAdapter {
       return;
     }
 
-    const positionValue = this.controller.state?.position?.current ?? "out";
-    this.registry.updateSheetStackingIndex(this.controller, positionValue);
+    const outOffset = this.controller.state?.position?.isOut ? 1 : 0;
+
+    this.registry.updateSheetStackingIndex(
+      this.controller,
+      this.controller.coveredCount - outOffset
+    );
   }
 }

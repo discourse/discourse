@@ -64,9 +64,7 @@ export default class SheetActionBase extends Component {
     return this.sheet?.id;
   }
 
-  executeAction() {
-    // Implemented by subclasses
-  }
+  executeAction() {}
 
   beforeExecuteAction() {}
   executeStepAction() {

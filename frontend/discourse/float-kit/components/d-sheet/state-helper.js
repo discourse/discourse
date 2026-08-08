@@ -119,10 +119,7 @@ export default class StateHelper {
   }
 
   flushClosedStatus() {
-    this.#sheetMachines.getMachine(MACHINE_NAMES.OPENNESS).send({
-      machine: "openness:closed.status",
-      type: "",
-    });
+    this.openness.flushComplete();
   }
 
   broadcastOpen() {

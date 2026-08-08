@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { registerDestructor } from "@ember/destroyable";
+import mergeScrollAttributes from "../../modifiers/merge-scroll-attributes";
 import ScrollController from "./controller";
 
 export default class DScrollRoot extends Component {
@@ -13,5 +14,9 @@ export default class DScrollRoot extends Component {
     });
   }
 
-  <template>{{yield this.controller}}</template>
+  <template>
+    <div ...attributes {{mergeScrollAttributes "root"}}>
+      {{yield this.controller}}
+    </div>
+  </template>
 }

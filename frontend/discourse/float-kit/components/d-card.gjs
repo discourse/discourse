@@ -6,7 +6,7 @@ import DSheet from "./d-sheet";
 
 class DCardContent extends Component {
   @action
-  backdropTravelAnimation(progress) {
+  backdropTravelAnimation({ progress }) {
     return Math.min(0.4 * progress, 0.4);
   }
 
@@ -26,7 +26,7 @@ class DCardContent extends Component {
         }}
       >
         <DSheet.Backdrop
-          @travelAnimation={{this.backdropTravelAnimation}}
+          @travelAnimation={{hash opacity=this.backdropTravelAnimation}}
           @themeColorDimming="auto"
           @sheet={{@sheet}}
         />
@@ -57,6 +57,7 @@ export default class DCard extends Component {
   <template>
     <DSheet.Root
       @componentId={{this.componentId}}
+      @sheetRole="dialog"
       @defaultPresented={{@defaultPresented}}
       @presented={{@presented}}
       @onPresentedChange={{@onPresentedChange}}

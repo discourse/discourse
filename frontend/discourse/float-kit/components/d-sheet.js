@@ -1,5 +1,6 @@
 import ScrollContent from "./d-scroll/content";
 import ScrollRoot from "./d-scroll/root";
+import ScrollTrigger from "./d-scroll/trigger";
 import ScrollView from "./d-scroll/view";
 import Backdrop from "./d-sheet/backdrop";
 import BleedingBackground from "./d-sheet/bleeding-background";
@@ -39,6 +40,7 @@ const DSheet = {
     Root: ScrollRoot,
     View: ScrollView,
     Content: ScrollContent,
+    Trigger: ScrollTrigger,
   },
   Stack: {
     Root: StackRoot,

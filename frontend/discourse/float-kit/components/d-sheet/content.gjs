@@ -1,31 +1,55 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
+import { untrack } from "@glimmer/validator";
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { getOwner } from "@ember/owner";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { trustHTML } from "@ember/template";
 import curryComponent from "ember-curry-component";
+import { modifier } from "ember-modifier";
 import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import ContentTag from "./content-tag";
+import registerSheetElement from "./register-sheet-element";
 import scrollListenerModifier from "./scroll-listener-modifier";
 
 export default class Content extends Component {
-  stylesForDetentMarker(detents, index) {
-    const currentDetent = detents[index];
-    const prevDetent = index > 0 ? detents[index - 1] : "0px";
+  preserveRestingDetent = modifier((element, [sheet, staging]) => {
+    if (!["go-down", "going-down", "going-up", "none"].includes(staging)) {
+      return;
+    }
 
-    return trustHTML(
-      `--d-sheet-marker-prev: ${prevDetent}; --d-sheet-marker-current: ${currentDetent}; --d-sheet-marker-index: ${index};`
+    element.getBoundingClientRect();
+    untrack(() => sheet.restoreRestingDetentAfterLayout());
+  });
+  registerDetentMarker = modifier((element, [sheet, index]) => {
+    sheet.registerDetentMarker(element, index);
+
+    return () => sheet.unregisterDetentMarker(element, index);
+  });
+  syncDetentMarkerStyles = modifier((element, [detents, index]) => {
+    element.style.setProperty(
+      "--d-sheet-marker-prev",
+      index > 0 ? detents[index - 1] : "0px"
     );
-  }
+    element.style.setProperty("--d-sheet-marker-current", detents[index]);
+    element.style.setProperty("--d-sheet-marker-index", index);
+  });
 
+  @cached
   get contentTag() {
+    const component = this;
+
     return curryComponent(
       ContentTag,
       {
-        sheet: this.args.sheet,
-        travelAnimation: this.args.travelAnimation,
-        stackingAnimation: this.args.stackingAnimation,
+        get sheet() {
+          return component.args.sheet;
+        },
+        get travelAnimation() {
+          return component.args.travelAnimation;
+        },
+        get stackingAnimation() {
+          return component.args.stackingAnimation;
+        },
       },
       getOwner(this)
     );
@@ -48,7 +72,11 @@ export default class Content extends Component {
         (unless @sheet.swipeOvershoot "overshoot-inactive")
         (if @sheet.scrollContainerShouldBePassThrough "no-pointer-events")
       }}
-      {{didInsert @sheet.registerScrollContainer}}
+      {{registerSheetElement
+        @sheet.registerScrollContainer
+        @sheet.unregisterScrollContainer
+      }}
+      {{this.preserveRestingDetent @sheet @sheet.state.staging.current}}
       {{scrollListenerModifier
         @sheet.processScrollFrame
         @sheet.state.openness.isScrollOngoing
@@ -73,7 +101,10 @@ export default class Content extends Component {
           )
           @sheet.tracks
         }}
-        {{didInsert @sheet.registerContentWrapper}}
+        {{registerSheetElement
+          @sheet.registerContentWrapper
+          @sheet.unregisterContentWrapper
+        }}
       >
         {{yield this.contentTag}}
       </div>
@@ -86,8 +117,8 @@ export default class Content extends Component {
               @sheet.tracks
               (if @sheet.swipeOutDisabledWithDetent "swipe-out-disabled")
             }}
-            style={{this.stylesForDetentMarker @sheet.detents index}}
-            {{didInsert @sheet.registerDetentMarker}}
+            {{this.syncDetentMarkerStyles @sheet.detents index}}
+            {{this.registerDetentMarker @sheet index}}
           ></div>
         {{/each}}
       </div>

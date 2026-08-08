@@ -1,3 +1,4 @@
+import { cancel } from "@ember/runloop";
 import discourseLater from "discourse/lib/later";
 
 export default class ObserverManager {
@@ -13,6 +14,8 @@ export default class ObserverManager {
   #wheelListener = null;
   #wheelInteractionDetected = false;
   #wheelCleanup = null;
+  #wheelTimer = null;
+  #intersectionFrame = null;
 
   constructor(controller) {
     this.#controller = controller;
@@ -60,7 +63,13 @@ export default class ObserverManager {
       if (!entry.isIntersecting && this.#controller.state.openness.isOpen) {
         this.#controller.domAttributes?.hideForSwipeOut();
 
-        requestAnimationFrame(() => {
+        this.#intersectionFrame = requestAnimationFrame(() => {
+          this.#intersectionFrame = null;
+
+          if (this.#controller.isDestroying || this.#controller.isDestroyed) {
+            return;
+          }
+
           if (this.#wheelInteractionDetected) {
             this.#handleWheelSwipeOut();
           } else {
@@ -88,7 +97,13 @@ export default class ObserverManager {
     this.#wheelCleanup = () =>
       window.removeEventListener("wheel", blockWheel, { passive: false });
 
-    discourseLater(() => {
+    this.#wheelTimer = discourseLater(() => {
+      this.#wheelTimer = null;
+
+      if (this.#controller.isDestroying || this.#controller.isDestroyed) {
+        return;
+      }
+
       this.#wheelCleanup?.();
       this.#wheelCleanup = null;
       this.#triggerSwipeOut();
@@ -96,12 +111,26 @@ export default class ObserverManager {
   }
 
   #triggerSwipeOut() {
+    if (!this.#controller.state.openness.isOpen) {
+      return;
+    }
+
     this.#controller.domAttributes?.disableScrollSnap();
     this.#controller.state.skip.enableClosing();
-    this.#controller.handleStateTransition("SWIPED_OUT");
+    this.#controller.handleSwipeOut();
   }
 
   cleanupIntersectionObserver() {
+    if (this.#intersectionFrame !== null) {
+      cancelAnimationFrame(this.#intersectionFrame);
+      this.#intersectionFrame = null;
+    }
+
+    if (this.#wheelTimer) {
+      cancel(this.#wheelTimer);
+      this.#wheelTimer = null;
+    }
+
     if (this.#intersectionObserver) {
       this.#intersectionObserver.disconnect();
       this.#intersectionObserver = null;
@@ -132,8 +161,13 @@ export default class ObserverManager {
             this.#resizeObserverOnResize?.();
           } else if (entry.target === this.#resizeObservedContent) {
             if (this.#contentFirstObservation) {
-              this.#controller.calculateDimensionsIfReady();
               this.#contentFirstObservation = false;
+
+              if (this.#controller.dimensions) {
+                this.#resizeObserverOnResize?.();
+              } else {
+                this.#controller.calculateDimensionsIfReady();
+              }
               continue;
             }
             this.#resizeObserverOnResize?.();
@@ -164,6 +198,20 @@ export default class ObserverManager {
       this.#resizeObservedContent = content;
       this.#contentFirstObservation = true;
       this.#resizeObserver.observe(content, { box: "border-box" });
+    }
+  }
+
+  unobserveResizeTarget(element) {
+    if (element === this.#resizeObservedView) {
+      this.#resizeObserver?.unobserve(element);
+      this.#resizeObservedView = null;
+      this.#viewFirstObservation = true;
+    }
+
+    if (element === this.#resizeObservedContent) {
+      this.#resizeObserver?.unobserve(element);
+      this.#resizeObservedContent = null;
+      this.#contentFirstObservation = true;
     }
   }
 

@@ -57,8 +57,17 @@ module("Integration | Component | FloatKit | d-card", function (hooks) {
     );
 
     await waitFor(".d-card");
+    await new Promise((resolve) => setTimeout(resolve, 750));
 
-    assert.dom(".d-card").exists();
+    assert
+      .dom(".d-card")
+      .hasAttribute("role", "dialog", "the card preset is a dialog")
+      .isVisible("the settled card remains visible");
+    assert.notStrictEqual(
+      getComputedStyle(find(".d-card")).opacity,
+      "0",
+      "the settled card remains opaque"
+    );
   });
 
   test("closes when dismiss trigger is clicked", async function (assert) {
@@ -80,7 +89,13 @@ module("Integration | Component | FloatKit | d-card", function (hooks) {
     await click(".btn");
     await waitFor("[data-d-sheet~='view']:not([data-d-sheet~='closed'])");
     await click(".dismiss-btn");
-    await waitUntil(() => !find(".d-card"), { timeout: 3000 });
+    await waitFor(".d-card[data-d-sheet~='closed']", { timeout: 3000 });
+
+    const closedRect = find(".d-card").getBoundingClientRect();
+    assert.true(closedRect.width <= 1, "the pending card width is collapsed");
+    assert.true(closedRect.height <= 1, "the pending card height is collapsed");
+
+    await waitUntil(() => !find(".d-card"), { timeout: 5000 });
 
     assert.dom(".d-card").doesNotExist();
   });
@@ -99,9 +114,18 @@ module("Integration | Component | FloatKit | d-card", function (hooks) {
 
     await click(".btn");
     await waitFor(".d-card");
+    await waitUntil(
+      () => find("[data-d-sheet~='backdrop']")?.style.opacity === "0.4",
+      { timeout: 3000 }
+    );
 
     assert.dom(".d-card").exists();
-    assert.dom("[data-d-sheet~='backdrop']").exists();
+    assert
+      .dom("[data-d-sheet~='backdrop']")
+      .hasStyle(
+        { opacity: "0.4" },
+        "the card applies its configured backdrop animation"
+      );
   });
 
   test("controlled mode with @presented and @onPresentedChange", async function (assert) {
@@ -144,7 +168,14 @@ module("Integration | Component | FloatKit | d-card", function (hooks) {
     assert.dom(".d-card").exists();
 
     await click(".dismiss-btn");
-    await waitUntil(() => !find(".d-card"), { timeout: 3000 });
+    await waitFor(".d-card[data-d-sheet~='closed']", { timeout: 3000 });
+
+    const closedRect = find(".d-card").getBoundingClientRect();
+    assert.true(closedRect.width <= 1, "the pending card width is collapsed");
+    assert.true(closedRect.height <= 1, "the pending card height is collapsed");
+    assert.false(state.presented, "the controlled state is dismissed");
+
+    await waitUntil(() => !find(".d-card"), { timeout: 5000 });
 
     assert.false(state.presented);
     assert.dom(".d-card").doesNotExist();
@@ -178,7 +209,13 @@ module("Integration | Component | FloatKit | d-card", function (hooks) {
     assert.dom(".d-card").exists("the yielded present action opens the card");
 
     await click(".dismiss-btn");
-    await waitUntil(() => !find(".d-card"), { timeout: 3000 });
+    await waitFor(".d-card[data-d-sheet~='closed']", { timeout: 3000 });
+
+    const closedRect = find(".d-card").getBoundingClientRect();
+    assert.true(closedRect.width <= 1, "the pending card width is collapsed");
+    assert.true(closedRect.height <= 1, "the pending card height is collapsed");
+
+    await waitUntil(() => !find(".d-card"), { timeout: 5000 });
 
     assert
       .dom(".d-card")
@@ -203,7 +240,13 @@ module("Integration | Component | FloatKit | d-card", function (hooks) {
     assert.dom(".d-card").exists();
 
     await triggerKeyEvent(document, "keydown", "Escape");
-    await waitUntil(() => !find(".d-card"), { timeout: 3000 });
+    await waitFor(".d-card[data-d-sheet~='closed']", { timeout: 3000 });
+
+    const closedRect = find(".d-card").getBoundingClientRect();
+    assert.true(closedRect.width <= 1, "the pending card width is collapsed");
+    assert.true(closedRect.height <= 1, "the pending card height is collapsed");
+
+    await waitUntil(() => !find(".d-card"), { timeout: 5000 });
 
     assert.dom(".d-card").doesNotExist();
   });
@@ -230,7 +273,14 @@ module("Integration | Component | FloatKit | d-card", function (hooks) {
     await click(".btn");
     await waitFor("[data-d-sheet~='view']:not([data-d-sheet~='closed'])");
     await click(".dismiss-btn");
-    await waitUntil(() => !find(".d-card"), { timeout: 3000 });
+    await waitFor(".d-card[data-d-sheet~='closed']", { timeout: 3000 });
+
+    const closedRect = find(".d-card").getBoundingClientRect();
+    assert.true(closedRect.width <= 1, "the pending card width is collapsed");
+    assert.true(closedRect.height <= 1, "the pending card height is collapsed");
+    assert.false(closedCalled, "the callback waits until unmount is safe");
+
+    await waitUntil(() => !find(".d-card"), { timeout: 5000 });
 
     assert.true(closedCalled);
   });

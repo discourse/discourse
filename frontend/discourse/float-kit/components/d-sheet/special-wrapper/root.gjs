@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { capabilities } from "discourse/services/capabilities";
-import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import mergeSheetAttributes from "../../../modifiers/merge-sheet-attributes";
 import { scrollTrapModifier } from "../scroll-trap-modifier";
 
 export default class DSheetSpecialWrapperRoot extends Component {
@@ -16,15 +16,15 @@ export default class DSheetSpecialWrapperRoot extends Component {
 
   <template>
     <@tag
-      data-d-sheet={{concatClass
+      {{scrollTrapModifier this.active}}
+      ...attributes
+      {{mergeSheetAttributes
         "scroll-trap-root"
         "special-wrapper-root"
         (if this.perpendicularAxis (concat "scroll-" this.perpendicularAxis))
         (if this.active "scroll-trap-active" "scroll-trap-inactive")
         "scroll-trap-optimised"
       }}
-      {{scrollTrapModifier this.active}}
-      ...attributes
     >
       {{yield}}
     </@tag>

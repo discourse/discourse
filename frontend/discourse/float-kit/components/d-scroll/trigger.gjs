@@ -14,30 +14,36 @@ export default class DScrollTrigger extends Component {
       }
     }
 
-    if (pressEvent.runAction && this.args.action && this.args.controller) {
-      this.executeAction();
+    if (pressEvent.forceFocus) {
+      pressEvent.nativeEvent.currentTarget?.focus({ preventScroll: true });
     }
 
-    if (this.args.onClick) {
-      this.args.onClick(pressEvent.nativeEvent);
+    if (pressEvent.runAction && this.executeAction()) {
+      pressEvent.changeDefault({ forceFocus: false, runAction: false });
+      return;
     }
 
-    pressEvent.changeDefault({ runAction: false });
+    this.args.onClick?.(pressEvent.nativeEvent);
+    pressEvent.changeDefault({ forceFocus: false, runAction: false });
   }
 
   executeAction() {
     const { action: scrollAction, controller } = this.args;
     if (!scrollAction || !controller) {
-      return;
+      return false;
     }
 
     const { type, progress, distance, animationSettings } = scrollAction;
 
     if (type === "scroll-to") {
       controller.scrollTo({ progress, distance, animationSettings });
+      return true;
     } else if (type === "scroll-by") {
       controller.scrollBy({ progress, distance, animationSettings });
+      return true;
     }
+
+    return false;
   }
 
   <template>

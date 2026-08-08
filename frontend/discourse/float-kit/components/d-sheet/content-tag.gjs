@@ -1,6 +1,6 @@
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import mergeSheetAttributes from "../../modifiers/merge-sheet-attributes";
 import outletAnimationModifier from "./outlet-animation-modifier";
+import registerSheetElement from "./register-sheet-element";
 
 const ContentTag = <template>
   <div
@@ -12,7 +12,7 @@ const ContentTag = <template>
       (if @sheet.scrollContainerShouldBePassThrough "no-pointer-events")
       (unless @sheet.bleedingBackgroundPresent "no-bleeding-background")
     }}
-    {{didInsert @sheet.registerContent}}
+    {{registerSheetElement @sheet.registerContent @sheet.unregisterContent}}
     {{outletAnimationModifier @sheet @travelAnimation @stackingAnimation}}
   >
     {{yield}}

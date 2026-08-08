@@ -31,10 +31,9 @@ export default class KeyboardFocusHandler {
       return;
     }
 
-    // Set flag immediately to prevent keyboard dismiss during keyboard opening
-    // This must happen before any scroll events can fire from visualViewport resize
     this.scrollTriggeredByFocus = true;
 
+    this.removeResizeListener();
     this.clearTimeouts();
 
     const elementRect = target.getBoundingClientRect();

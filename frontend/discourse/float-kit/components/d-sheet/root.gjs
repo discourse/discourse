@@ -1,13 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { untrack } from "@glimmer/validator";
 import { registerDestructor } from "@ember/destroyable";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { schedule } from "@ember/runloop";
+import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import effect from "discourse/float-kit/helpers/effect";
+import { modifier } from "ember-modifier";
+import mergeSheetAttributes from "../../modifiers/merge-sheet-attributes";
 import Controller from "./controller";
+import outletAnimationModifier from "./outlet-animation-modifier";
 
 export default class Root extends Component {
   @service sheetRegistry;
@@ -16,9 +17,45 @@ export default class Root extends Component {
 
   @tracked sheet;
   @tracked internalPresented = false;
+  syncPresented = modifier((_element, [presented]) => {
+    if (presented === this.#lastPresented) {
+      return;
+    }
+
+    this.#cancelPresentationTask();
+    const previous = this.#lastPresented;
+    this.#lastPresented = presented;
+
+    this.#presentationTask = schedule("afterRender", () => {
+      this.#presentationTask = null;
+
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
+      if (presented) {
+        this.openSheet();
+      } else if (previous !== undefined) {
+        this.#cleanupPendingOpen();
+        this.#reopenAfterClose = false;
+        this.sheet.close();
+      }
+    });
+  });
+  syncConfiguration = modifier((_element, [sheet], options) => {
+    const configuration = { ...options };
+    untrack(() => sheet.configure(configuration));
+  });
+  registerRootElement = modifier((element, [sheet]) => {
+    sheet.registerRootElement(element);
+
+    return () => sheet.unregisterRootElement(element);
+  });
   #lastPresented;
+  #presentationTask = null;
   #pendingOpenSubscription = null;
   #reopenAfterClose = false;
+  #sheetLayerActive = false;
 
   constructor(owner, args) {
     super(owner, args);
@@ -26,7 +63,6 @@ export default class Root extends Component {
     this.createController();
     this.sheet.rootComponent = this;
 
-    // Apply defaultPresented for uncontrolled mode
     if (!this.isControlled && this.args.defaultPresented) {
       this.internalPresented = true;
     }
@@ -36,6 +72,7 @@ export default class Root extends Component {
     }
 
     registerDestructor(this, () => {
+      this.#cancelPresentationTask();
       this.#cleanupPendingOpen();
       if (this.args.componentId) {
         this.sheetLayerStore.unregisterRoot(this.args.componentId);
@@ -44,49 +81,11 @@ export default class Root extends Component {
     });
   }
 
-  @action
-  syncPresented(presented) {
-    if (presented === this.#lastPresented) {
-      return;
+  #cancelPresentationTask() {
+    if (this.#presentationTask) {
+      cancel(this.#presentationTask);
+      this.#presentationTask = null;
     }
-
-    const previous = this.#lastPresented;
-    this.#lastPresented = presented;
-
-    schedule("afterRender", () => {
-      if (presented) {
-        this.openSheet();
-      } else if (previous !== undefined) {
-        this.#cleanupPendingOpen();
-        this.#reopenAfterClose = false;
-        this.sheet.close();
-      }
-    });
-  }
-
-  @action
-  syncConfiguration(
-    activeDetent,
-    onActiveDetentChange,
-    onSafeToUnmountChange,
-    role,
-    inertOutside
-  ) {
-    const sheet = this.sheet;
-
-    schedule("afterRender", () => {
-      if (this.sheet !== sheet) {
-        return;
-      }
-
-      sheet.configure({
-        activeDetent,
-        onActiveDetentChange,
-        onSafeToUnmountChange,
-        role,
-        inertOutside,
-      });
-    });
   }
 
   get isControlled() {
@@ -100,8 +99,10 @@ export default class Root extends Component {
     return this.isControlled ? this.args.presented : this.internalPresented;
   }
 
-  get shouldRenderView() {
-    return this.effectivePresented || !this.sheet.safeToUnmount;
+  get sheetRole() {
+    return this.args.sheetRole !== undefined
+      ? this.args.sheetRole
+      : this.args.role;
   }
 
   @action
@@ -122,28 +123,36 @@ export default class Root extends Component {
     }
   }
 
-  @action
-  registerRootElement(element) {
-    this.sheet.registerRootElement(element);
-  }
-
-  @action
-  unregisterRootElement(element) {
-    this.sheet.unregisterRootElement(element);
-  }
-
   #cleanupCurrentSheet(focusOnDismiss = false) {
     if (this.sheet.stackId) {
       this.sheetStackRegistry.unregisterSheetFromStack(this.sheet);
     }
+    this.deactivateSheetLayer(focusOnDismiss);
+
+    this.sheet.cleanup();
+  }
+
+  #activateSheetLayer() {
+    if (this.#sheetLayerActive) {
+      return;
+    }
+
+    this.sheetRegistry.register(this.sheet);
+    this.#sheetLayerActive = true;
+  }
+
+  deactivateSheetLayer(focusOnDismiss = false) {
+    if (!this.#sheetLayerActive) {
+      return;
+    }
+
     this.sheetRegistry.unregister(this.sheet);
+    this.#sheetLayerActive = false;
 
     if (focusOnDismiss) {
       this.sheetLayerStore.flushInertOutside();
       this.sheet.executeAutoFocusOnDismiss();
     }
-
-    this.sheet.cleanup();
   }
 
   #cleanupPendingOpen() {
@@ -170,16 +179,12 @@ export default class Root extends Component {
       },
     });
 
-    this.sheet.onTravelProgressChange = (progress) => {
-      this.sheetStackRegistry.updateSheetTravelProgress(this.sheet, progress);
-    };
-
     this.sheet.configure({
       defaultActiveDetent: this.args.defaultActiveDetent,
       activeDetent: this.args.activeDetent,
       onActiveDetentChange: this.args.onActiveDetentChange,
       onSafeToUnmountChange: this.args.onSafeToUnmountChange,
-      role: this.args.role,
+      role: this.sheetRole,
       inertOutside: this.args.inertOutside,
       sheetStackRegistry: this.sheetStackRegistry,
       sheetRegistry: this.sheetRegistry,
@@ -210,6 +215,7 @@ export default class Root extends Component {
 
     if (!this.sheet.safeToUnmount) {
       this.#reopenAfterClose = true;
+      this.#activateSheetLayer();
       this.sheet.open();
       return;
     }
@@ -247,7 +253,7 @@ export default class Root extends Component {
   }
 
   doOpenSheet(stackId) {
-    this.sheetRegistry.register(this.sheet);
+    this.#activateSheetLayer();
 
     if (stackId) {
       this.sheetStackRegistry.registerSheetWithStack(stackId, this.sheet);
@@ -275,20 +281,24 @@ export default class Root extends Component {
   }
 
   <template>
-    {{effect this.syncPresented this.effectivePresented}}
-    {{effect
-      this.syncConfiguration
-      @activeDetent
-      @onActiveDetentChange
-      @onSafeToUnmountChange
-      @role
-      @inertOutside
-    }}
     <div
-      data-d-sheet="root"
-      {{didInsert this.registerRootElement}}
-      {{willDestroy this.unregisterRootElement}}
+      {{this.syncPresented this.effectivePresented}}
+      {{this.syncConfiguration
+        this.sheet
+        activeDetent=@activeDetent
+        onActiveDetentChange=@onActiveDetentChange
+        onSafeToUnmountChange=@onSafeToUnmountChange
+        role=this.sheetRole
+        inertOutside=@inertOutside
+      }}
+      {{this.registerRootElement this.sheet}}
+      {{outletAnimationModifier this.sheet @travelAnimation @stackingAnimation}}
       ...attributes
+      {{mergeSheetAttributes
+        "outlet"
+        "root"
+        (if this.sheet.isStackAnimating "animating")
+      }}
     >
       {{yield this.sheet}}
     </div>

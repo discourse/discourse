@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { service } from "@ember/service";
-import concatClass from "discourse/ui-kit/helpers/d-concat-class";
+import mergeSheetStackAttributes from "../modifiers/merge-sheet-stack-attributes";
 import outletAnimationModifier from "./d-sheet/outlet-animation-modifier";
 
 export default class SheetStackOutlet extends Component {
@@ -10,6 +11,7 @@ export default class SheetStackOutlet extends Component {
     return this.args.stackId ?? this.args.forComponent;
   }
 
+  @cached
   get animationTarget() {
     const stackId = this.stackId;
 
@@ -35,12 +37,9 @@ export default class SheetStackOutlet extends Component {
 
   <template>
     <div
-      data-d-sheet-stack={{concatClass
-        "outlet"
-        (if this.isAnimating "animating")
-      }}
       {{outletAnimationModifier this.animationTarget null @stackingAnimation}}
       ...attributes
+      {{mergeSheetStackAttributes "outlet" (if this.isAnimating "animating")}}
     >
       {{yield}}
     </div>
