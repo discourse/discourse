@@ -5,10 +5,7 @@ import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DVirtualList from "discourse/ui-kit/d-virtual-list";
-import {
-  disableVirtualization,
-  enableVirtualization,
-} from "discourse/ui-kit/lib/virtualizer";
+import { disableVirtualization } from "discourse/ui-kit/lib/virtualizer";
 
 const estimateSize = () => 40;
 
@@ -31,7 +28,7 @@ module("Integration | ui-kit | DVirtualList | inert", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.afterEach(function () {
-    enableVirtualization();
+    disableVirtualization();
   });
 
   test("disabled virtualization renders all rows without invoking callbacks", async function (assert) {

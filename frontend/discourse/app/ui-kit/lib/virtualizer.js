@@ -15,9 +15,14 @@ import {
  * package directly, so the engine stays swappable behind the wall.
  *
  * The dependency is pinned to an EXACT version in `package.json` (no caret): the
- * adapter relies on `_didMount()`/`_willUpdate()`, which are part of virtual-core's
+ * adapter relies on `_didMount()`/`_willUpdate()`, which are part of the engine's
  * framework-adapter surface and can shift between minor releases. Gate any upgrade
  * on the ui-kit virtualizer test suite.
+ *
+ * The pin carries more weight than it looks. This module reaches the engine through
+ * an unchecked cast, and the repo does not compile with strict null checks, so a
+ * renamed internal or a changed virtual-item shape would type-check clean and fail
+ * only at runtime. The suite is the only thing standing behind an upgrade.
  */
 
 let VIRTUALIZATION_ENABLED = true;
@@ -28,23 +33,47 @@ let VIRTUALIZATION_ENABLED = true;
  * empty window and rows would never render. Toggling this off makes `DVirtualList`
  * yield all items in normal flow. Mirrors `disableLoadMoreObserver()`.
  *
- * Tests that disable virtualization must re-enable it in teardown, mirroring the
- * explicit load-more observer setup/teardown in `tests/setup-tests.js`.
+ * `tests/setup-tests.js` disables virtualization for EVERY test and re-enables it
+ * in teardown, so the render-all fallback is the default a test sees. A test that
+ * needs the real engine opts in with {@link enableVirtualization}.
+ *
+ * Opting out is opting out of coverage: the fallback is a genuinely different code
+ * path, in which the row index and the item can never disagree. Any consumer whose
+ * behaviour depends on windowing needs its own companion module that opts back in,
+ * or its suite proves nothing about what ships.
+ *
+ * The flag is read at render time and is not reactive, so it must be set before the
+ * first render of a `DVirtualList`; flipping it afterwards does not re-render one
+ * that already mounted.
  */
 export function disableVirtualization() {
   VIRTUALIZATION_ENABLED = false;
 }
 
+/** Restore real windowing after {@link disableVirtualization}. */
 export function enableVirtualization() {
   VIRTUALIZATION_ENABLED = true;
 }
 
+/**
+ * Whether rows are windowed. False means the render-all fallback is active.
+ *
+ * @returns {boolean}
+ */
 export function isVirtualizationEnabled() {
   return VIRTUALIZATION_ENABLED;
 }
 
 const STABLE_KEYS = new WeakMap();
+
+/**
+ * Keys for symbol items. A strong map, unlike the object one, so a symbol used as
+ * an item is retained for the life of the tab. Acceptable because symbols are
+ * sentinel values a consumer defines a fixed number of, not per-row data — but it
+ * is the one entry here that does not release.
+ */
 const STABLE_SYMBOL_KEYS = new Map();
+
 const KEY_NAMESPACE = "d-virtual-list:key:";
 let stableKeyCounter = 0;
 
@@ -59,10 +88,6 @@ let stableKeyCounter = 0;
  *
  * A consumer whose ids are immutable AND who rebuilds its item objects each render
  * (so object identity is NOT stable) should instead pass `@key` — see {@link keyFor}.
- *
- * Ordinary string, number, and bigint items act as their own keys. Other
- * primitives are normalized into a reserved namespace, and strings beginning
- * with that namespace are escaped so they cannot collide with generated keys.
  *
  * @param {unknown} item
  * @returns {number | string | bigint}
@@ -100,16 +125,16 @@ export function stableKeyFor(item) {
 }
 
 /**
- * The row key for an item, given an optional `@key` FIELD NAME. When `field` is
- * set and the row is a non-null object, the row keys by `item[field]` (routed
- * through {@link stableKeyFor}, so a domain value inherits the same namespace
- * escaping and can never collide with a generated object key). Otherwise — no
- * field, or a nullish/primitive row — it falls back to identity keying, so every
- * item shape `stableKeyFor` already supports keeps working.
+ * The row key for an item, given an optional `@key` FIELD NAME. Field values are
+ * routed through {@link stableKeyFor} so a domain value inherits its namespace
+ * escaping and can never collide with a generated object key.
  *
- * The field value must be PRESENT and UNIQUE per logical row: two rows with a
- * missing/duplicate field value alias to one key (a duplicate `{{#each}}` key and
- * shared measurement), exactly as two `===` items would.
+ * The field value must be UNIQUE per logical row: two rows sharing one value
+ * alias to one key (a duplicate `{{#each}}` key and shared measurement), exactly
+ * as two `===` items would. A row whose field is ABSENT is not treated that way —
+ * it falls back to identity keying, because otherwise every such row would
+ * collapse onto the single key that a nullish value normalizes to, which is a
+ * collision the consumer never asked for and cannot see.
  *
  * The single source of truth for both keying paths (the modifier's `getItemKey`
  * and the component's render-all fallback), so the two can never drift.
@@ -120,27 +145,12 @@ export function stableKeyFor(item) {
  */
 export function keyFor(item, field) {
   if (field != null && item != null && typeof item === "object") {
-    return stableKeyFor(item[field]);
+    const value = item[field];
+    return value == null ? stableKeyFor(item) : stableKeyFor(value);
   }
   return stableKeyFor(item);
 }
 
-/**
- * Construct a virtual-core `Virtualizer` wired for a scrollable DOM element.
- * Callers supply `count`, `getScrollElement`, `estimateSize`, `getItemKey`,
- * `overscan`, and `onChange`; the element-observer plumbing is filled in here.
- *
- * @param {object} options
- * @returns {Virtualizer}
- */
-/**
- * The element-adapter plumbing every element-backed virtualizer needs. These are
- * required options with no defaults, and `setOptions` replaces the whole options
- * object rather than merging into the previous one — so they must be re-supplied
- * on every update, not just at construction. Dropping them leaves the engine
- * unable to scroll (`scrollToFn is not a function`) the moment anything asks it
- * to move, which includes prepend anchoring and every `scrollTo*` API call.
- */
 /**
  * The engine's viewport-rect callbacks, keyed by engine.
  *
@@ -155,6 +165,41 @@ const RECT_CALLBACKS = new WeakMap();
 function observeElementRectWithHandle(instance, callback) {
   RECT_CALLBACKS.set(instance, callback);
   return observeElementRect(instance, callback);
+}
+
+/**
+ * The engine's scroll-offset callbacks, keyed by engine.
+ *
+ * Held for the same reason as the viewport callbacks: the engine learns the
+ * offset only from a real `scroll` event, which the browser delivers
+ * asynchronously even for a programmatic scroll. Holding the callback lets a
+ * caller state the new offset directly instead of counterfeiting a DOM event —
+ * which would reach the engine flagged as user scrolling and latch its
+ * `isScrolling` for the reset delay, suppressing synchronous row measurement
+ * for that whole window.
+ */
+const OFFSET_CALLBACKS = new WeakMap();
+
+function observeElementOffsetWithHandle(instance, callback) {
+  OFFSET_CALLBACKS.set(instance, callback);
+  return observeElementOffset(instance, callback);
+}
+
+/**
+ * Tell the engine the viewport's current scroll offset, without pretending a
+ * user scrolled. A no-op before the engine has mounted or once it has torn down.
+ *
+ * @param {{ scrollElement?: HTMLElement | null }} virtualizer
+ */
+export function pushScrollOffset(virtualizer) {
+  const callback = OFFSET_CALLBACKS.get(virtualizer);
+  const element = virtualizer?.scrollElement;
+
+  if (!callback || !element) {
+    return;
+  }
+
+  callback(element.scrollTop, false);
 }
 
 /**
@@ -180,10 +225,19 @@ export function remeasureViewport(virtualizer) {
   });
 }
 
+/**
+ * The element-adapter plumbing every element-backed virtualizer needs.
+ * `scrollToFn` and the two element observers are required with no engine
+ * default, and `setOptions` replaces the whole options object rather than
+ * merging into the previous one — so they must be re-supplied on every update,
+ * not just at construction. Dropping them leaves the engine unable to scroll
+ * (`scrollToFn is not a function`) the moment anything asks it to move, which
+ * includes prepend anchoring and every `scrollTo*` API call.
+ */
 const ELEMENT_ADAPTER = {
   scrollToFn: elementScroll,
   observeElementRect: observeElementRectWithHandle,
-  observeElementOffset,
+  observeElementOffset: observeElementOffsetWithHandle,
   measureElement,
 };
 
@@ -202,6 +256,18 @@ const ELEMENT_ADAPTER = {
  * `aria-posinset` order, screen-reader browse order, and the roving-focus NodeList
  * all depend on it.
  *
+ * The callback is contained here because this is the one consumer callback the
+ * engine invokes from inside its own memoized computation. Letting it throw
+ * would leave that memo holding committed dependencies with no result, so every
+ * later call short-circuits to `undefined` and the render crashes on it from
+ * then on. Degrading to the unextended window keeps the list alive instead.
+ *
+ * Recovery is NOT automatic: the degraded result is a successful one as far as
+ * the engine is concerned, so it is cached against the extractor identity and
+ * the range. A callback that merely stops throwing is not consulted again until
+ * one of those changes — which, for a consumer following the documented
+ * reactivity contract, happens on the next input change.
+ *
  * @param {(indices: readonly number[], range: { startIndex: number, endIndex: number, overscan: number, count: number }) => readonly number[] | null | undefined} pins Returns extra indices to keep mounted.
  * @returns {(range: { startIndex: number, endIndex: number, overscan: number, count: number }) => number[]}
  */
@@ -210,7 +276,16 @@ export function rangeExtractorWithPins(pins) {
     const indices = defaultRangeExtractor(range);
     const merged = new Set(indices);
 
-    for (const index of pins(indices, range) ?? []) {
+    let extra;
+    try {
+      extra = pins(indices, range) ?? [];
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error("[d-virtual-list] pinnedIndices threw: ", e);
+      extra = [];
+    }
+
+    for (const index of extra) {
       if (Number.isInteger(index) && index >= 0 && index < range.count) {
         merged.add(index);
       }
@@ -220,6 +295,14 @@ export function rangeExtractorWithPins(pins) {
   };
 }
 
+/**
+ * Construct an element-backed virtualizer. Callers supply `count`,
+ * `getScrollElement`, `estimateSize`, `getItemKey`, `overscan`, and `onChange`;
+ * the element-observer plumbing is filled in here.
+ *
+ * @param {object} options
+ * @returns {object} An element-backed virtualizer instance.
+ */
 export function createElementVirtualizer(options) {
   return new Virtualizer({ ...ELEMENT_ADAPTER, ...options });
 }
