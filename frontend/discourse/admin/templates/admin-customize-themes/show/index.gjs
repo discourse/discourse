@@ -485,7 +485,8 @@ export default <template>
     {{#unless @controller.model.system}}
       <DButton
         class="btn-default export"
-        @action={{@controller.exportTheme}}
+        @href={{@controller.downloadUrl}}
+        @action={{@controller.exportAction}}
         @icon="download"
         @label="admin.export_json.button_text"
       />

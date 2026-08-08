@@ -16,6 +16,7 @@ import { ajax } from "discourse/lib/ajax";
 import { extractErrorInfo } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import downloadBlob from "discourse/lib/download-blob";
+import { attachmentDownloadStrategy } from "discourse/lib/download-strategy";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import { descriptionForRemoteUrl } from "discourse/lib/popular-themes";
@@ -455,6 +456,10 @@ class ComponentRow extends Component {
     }
   }
 
+  get exportAction() {
+    return attachmentDownloadStrategy() === "native" ? undefined : this.export;
+  }
+
   @action
   async export() {
     try {
@@ -650,7 +655,12 @@ class ComponentRow extends Component {
                     class="btn-transparent admin-config-components__export"
                     @label="admin.config_areas.themes_and_components.components.export"
                     @icon="download"
-                    @action={{this.export}}
+                    @href={{getURL
+                      (concat
+                        "/admin/customize/themes/" @component.id "/export"
+                      )
+                    }}
+                    @action={{this.exportAction}}
                   />
                 </dropdown.item>
                 <dropdown.item>
