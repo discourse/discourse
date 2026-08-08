@@ -149,8 +149,8 @@ interface DResizeHandlesSignature<Payload extends string | number> {
  * current / delta), not pixels-vs-grid-lines-vs-fractions. The consumer's
  * `@onResize` does the math (e.g. map the pointer to a grid cell, or a px
  * delta, or a column fraction), paints its own preview, and commits on
- * `@onResizeEnd`. Only one handle drags at a time, so the session is a single
- * set of fields — no per-handle state.
+ * `@onResizeEnd`. Each handle drags independently, and a touch screen can hold
+ * two at once, so what a gesture was pressed at is tracked per pointer.
  *
  * The common case — a box's 8 edge/corner handles — is built in: pass
  * `@handleClass` and the component renders the eight compass handles, each
@@ -179,9 +179,17 @@ interface DResizeHandlesSignature<Payload extends string | number> {
 export default class DResizeHandles<
   Payload extends string | number = BoxDirection,
 > extends Component<DResizeHandlesSignature<Payload>> {
-  #originX = 0;
-  #originY = 0;
-  #handleRect: DOMRect | null = null;
+  /**
+   * What each in-flight gesture was pressed at, keyed by its pointer.
+   *
+   * Per pointer rather than per component: every handle registers its own
+   * gesture, and the engine keeps concurrent pointers alive, so two fingers on
+   * two handles of the same box would otherwise share and overwrite one origin.
+   */
+  #sessions = new Map<
+    number,
+    { originX: number; originY: number; handleRect: DOMRect | null }
+  >();
 
   /**
    * The resolved handle descriptors: explicit `@handles` when given, otherwise
@@ -202,11 +210,13 @@ export default class DResizeHandles<
 
   @action
   onHandleDown(payload: Payload, event: PointerEvent) {
-    this.#originX = event.clientX;
-    this.#originY = event.clientY;
-    this.#handleRect =
-      (event.currentTarget as HTMLElement | null)?.getBoundingClientRect() ??
-      null;
+    this.#sessions.set(event.pointerId, {
+      originX: event.clientX,
+      originY: event.clientY,
+      handleRect:
+        (event.currentTarget as HTMLElement | null)?.getBoundingClientRect() ??
+        null,
+    });
     // Propagate the consumer's veto: returning false aborts the drag.
     const started = this.args.onResizeStart?.(
       payload,
@@ -214,10 +224,10 @@ export default class DResizeHandles<
     );
 
     // A vetoed press starts no gesture, so no terminal callback arrives to
-    // close it and the session fields would otherwise describe a drag that
-    // never happened.
+    // close it and the session would otherwise describe a drag that never
+    // happened.
     if (started === false) {
-      this.#reset();
+      this.#reset(event);
     }
 
     return started;
@@ -231,37 +241,41 @@ export default class DResizeHandles<
   @action
   onHandleUp(payload: Payload, event: PointerEvent) {
     this.args.onResizeEnd?.(payload, this.#dragInfo(payload, event));
-    this.#reset();
+    this.#reset(event);
   }
 
   @action
   onHandleCancel(payload: Payload, event: PointerEvent) {
     this.args.onResizeCancel?.(payload, this.#dragInfo(payload, event));
-    this.#reset();
+    this.#reset(event);
   }
 
   #dragInfo(
     payload: Payload,
     event: PointerEvent
   ): DResizeHandleDragInfo<Payload> {
+    const session = this.#sessions.get(event.pointerId);
+    const originX = session?.originX ?? event.clientX;
+    const originY = session?.originY ?? event.clientY;
+
     return {
       // The callback's own payload rather than the session snapshot: with
       // positional keys, a descriptor list that changes mid-drag rebinds the
       // handler while the snapshot still holds what was pressed.
       payload,
       event,
-      origin: { x: this.#originX, y: this.#originY },
+      origin: { x: originX, y: originY },
       current: { x: event.clientX, y: event.clientY },
       delta: {
-        x: event.clientX - this.#originX,
-        y: event.clientY - this.#originY,
+        x: event.clientX - originX,
+        y: event.clientY - originY,
       },
-      handleRect: this.#handleRect,
+      handleRect: session?.handleRect ?? null,
     };
   }
 
-  #reset() {
-    this.#handleRect = null;
+  #reset(event: PointerEvent) {
+    this.#sessions.delete(event.pointerId);
   }
 
   #boxHandles(): DResizeHandleDescriptor<Payload>[] {

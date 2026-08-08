@@ -1,4 +1,5 @@
-import { find, render, triggerEvent } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import { find, render, settled, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
@@ -98,6 +99,164 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       ["start:e", "resize:e:30,10", "end:e"],
       "reports the handle payload and the origin→current delta"
     );
+  });
+
+  test("a vetoed press starts no gesture", async function (assert) {
+    const handles = [{ payload: "e", class: "handle-e" }];
+    const events = [];
+    const onResizeStart = () => false;
+    const onResize = (payload, info) =>
+      events.push(`resize:${payload}:${info.delta.x}`);
+    const onResizeEnd = (payload) => events.push(`end:${payload}`);
+
+    await render(
+      <template>
+        <DResizeHandles
+          @handles={{handles}}
+          @onResizeStart={{onResizeStart}}
+          @onResize={{onResize}}
+          @onResizeEnd={{onResizeEnd}}
+        />
+      </template>
+    );
+
+    stubPointerCapture(".handle-e");
+    await triggerEvent(".handle-e", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 100,
+      clientY: 50,
+    });
+    await triggerEvent(".handle-e", "pointermove", {
+      pointerId: 1,
+      clientX: 130,
+      clientY: 50,
+    });
+    await triggerEvent(".handle-e", "pointerup", {
+      pointerId: 1,
+      clientX: 130,
+      clientY: 50,
+    });
+
+    assert.deepEqual(
+      events,
+      [],
+      "returning false from the start callback refuses the drag outright"
+    );
+  });
+
+  test("the reported payload follows a descriptor list that changes mid-drag", async function (assert) {
+    const state = new (class {
+      @tracked handles = [{ payload: "first", class: "handle-x" }];
+    })();
+    const events = [];
+    const onResize = (payload) => events.push(payload);
+
+    await render(
+      <template>
+        <DResizeHandles @handles={{state.handles}} @onResize={{onResize}} />
+      </template>
+    );
+
+    stubPointerCapture(".handle-x");
+    await triggerEvent(".handle-x", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 100,
+      clientY: 50,
+    });
+    await triggerEvent(".handle-x", "pointermove", {
+      pointerId: 1,
+      clientX: 120,
+      clientY: 50,
+    });
+
+    state.handles = [{ payload: "second", class: "handle-x" }];
+    await settled();
+
+    await triggerEvent(".handle-x", "pointermove", {
+      pointerId: 1,
+      clientX: 140,
+      clientY: 50,
+    });
+
+    // The payload comes from the callback's own binding rather than a snapshot
+    // taken at the press, so it always names the descriptor the handler is
+    // currently bound to.
+    assert.deepEqual(
+      events,
+      ["first", "second"],
+      "the payload tracks the rebound descriptor"
+    );
+
+    await triggerEvent(".handle-x", "pointerup", {
+      pointerId: 1,
+      clientX: 140,
+      clientY: 50,
+    });
+  });
+
+  test("two handles dragged at once keep their own origins", async function (assert) {
+    const handles = [
+      { payload: "nw", class: "handle-nw" },
+      { payload: "se", class: "handle-se" },
+    ];
+    const events = [];
+    const onResize = (payload, info) =>
+      events.push(`${payload}:${info.delta.x},${info.delta.y}`);
+
+    await render(
+      <template>
+        <DResizeHandles @handles={{handles}} @onResize={{onResize}} />
+      </template>
+    );
+
+    stubPointerCapture(".handle-nw");
+    stubPointerCapture(".handle-se");
+
+    // Two fingers on two handles of the same box. Each gesture has its own
+    // pointer id, so the engine keeps both live, and one must not overwrite the
+    // other's origin.
+    await triggerEvent(".handle-nw", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 100,
+      clientY: 100,
+    });
+    await triggerEvent(".handle-se", "pointerdown", {
+      button: 0,
+      pointerId: 2,
+      clientX: 400,
+      clientY: 400,
+    });
+
+    await triggerEvent(".handle-nw", "pointermove", {
+      pointerId: 1,
+      clientX: 120,
+      clientY: 120,
+    });
+    await triggerEvent(".handle-se", "pointermove", {
+      pointerId: 2,
+      clientX: 430,
+      clientY: 430,
+    });
+
+    assert.deepEqual(
+      events,
+      ["nw:20,20", "se:30,30"],
+      "each handle reports the delta from its own press, not from the other's"
+    );
+
+    await triggerEvent(".handle-nw", "pointerup", {
+      pointerId: 1,
+      clientX: 120,
+      clientY: 120,
+    });
+    await triggerEvent(".handle-se", "pointerup", {
+      pointerId: 2,
+      clientX: 430,
+      clientY: 430,
+    });
   });
 
   test("@stopPropagation keeps the press from reaching an ancestor", async function (assert) {
