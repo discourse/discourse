@@ -24,6 +24,8 @@
     "start": "./rolldown.mjs"
   },
   "dependencies": {
+    "@atlaskit/pragmatic-drag-and-drop": "^1.7.4",
+    "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^2.1.4",
     "@codemirror/autocomplete": "^6.20.3",
     "@codemirror/commands": "^6.10.3",
     "@codemirror/lang-javascript": "^6.2.5",
@@ -140,6 +142,7 @@
     "ansi-to-html": "^0.7.2",
     "babel-plugin-debug-macros": "^2.0.0",
     "babel-plugin-ember-template-compilation": "^4.0.0",
+    "content-tag": "^4.0.0",
     "deprecation-silencer": "workspace:1.0.0",
     "discourse-i18n": "workspace:*",
     "discourse-markdown-it": "workspace:1.0.0",

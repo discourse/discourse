@@ -259,7 +259,7 @@ module("Integration | Component | Nested | Post", function (hooks) {
       "hydrates the focused path with the fetched child"
     );
     assert.strictEqual(
-      this.fetchedChildrenCache.get(2).childNodes,
+      this.fetchedChildrenCache.get("1:2").childNodes,
       focusedPath[0].children,
       "stores the fetched children in the shared cache"
     );

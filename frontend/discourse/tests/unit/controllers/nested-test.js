@@ -205,6 +205,25 @@ module("Unit | Controller | nested", function (hooks) {
     );
   });
 
+  test("deleting a regular post does not expose the activity log", function (assert) {
+    const topic = buildTopic(this.store, 724);
+    const post = buildPost(this.store, topic, 2001, 2);
+
+    this.controller.topic = topic;
+    this.controller.postRegistry.set(post.post_number, post);
+
+    this.controller._onMessage(
+      { type: "deleted", id: post.id, user_id: this.currentUser.id },
+      null,
+      123
+    );
+
+    assert.false(
+      Boolean(this.controller.topic.has_activity_log),
+      "keeps the activity link hidden"
+    );
+  });
+
   test("context view ignores queued new root replies", async function (assert) {
     const topic = buildTopic(this.store, 724);
     const contextRoot = buildPost(this.store, topic, 1001, 2);

@@ -41,6 +41,8 @@ RSpec.describe Admin::DashboardController do
 
   describe "#index" do
     shared_examples "version info present" do
+      before { SiteSetting.dashboard_improvements = false }
+
       it "returns discourse version info" do
         get "/admin/dashboard.json"
 
@@ -50,7 +52,10 @@ RSpec.describe Admin::DashboardController do
     end
 
     shared_examples "version info absent" do
-      before { SiteSetting.version_checks = false }
+      before do
+        SiteSetting.dashboard_improvements = false
+        SiteSetting.version_checks = false
+      end
 
       it "does not return discourse version info" do
         get "/admin/dashboard.json"
@@ -122,6 +127,12 @@ RSpec.describe Admin::DashboardController do
 
       let(:section_payloads) do
         response.parsed_body["sections"].index_by { |section| section["id"] }
+      end
+
+      def signups_kpi_value
+        highlights =
+          response.parsed_body["sections"].find { |section| section["id"] == "highlights" }
+        highlights["data"]["kpis"].find { |kpi| kpi["type"] == "new_signups" }["value"]
       end
 
       context "with highlights_data" do
@@ -256,12 +267,18 @@ RSpec.describe Admin::DashboardController do
         end
 
         it "does not expose admin-only browser pageview cards to moderators" do
+          SiteSetting.use_legacy_pageviews = false
           SiteSetting.persist_browser_pageview_events = true
           configure_dashboard_sections(%w[traffic])
 
           country_code = "US"
           normalized_referrer = "sensitive-referrer.example"
           event_date = Time.zone.local(2026, 5, 2, 12)
+          UpcomingChangeEvent.create!(
+            upcoming_change_name: "dashboard_improvements",
+            event_type: :manual_opt_in,
+            created_at: Time.zone.local(2026, 5, 1, 9),
+          )
 
           2.times do
             Fabricate(
@@ -486,6 +503,23 @@ RSpec.describe Admin::DashboardController do
           expect(items.first).to include("source" => "core_report", "identifier" => "signups")
           expect(items.first["title"]).to be_present
         end
+      end
+
+      it "serves the default window from the warmed report cache" do
+        configure_dashboard_sections(%w[highlights])
+        admin.update!(last_seen_at: 1.hour.ago)
+        params = { start_date: 29.days.ago.to_date.to_s, end_date: Time.zone.now.to_date.to_s }
+
+        Jobs::WarmDashboardReports.new.execute({})
+        Fabricate(:user, created_at: 2.days.ago)
+
+        get "/admin/dashboard.json", params: params
+        warmed_signups = signups_kpi_value
+
+        Discourse.cache.clear
+        get "/admin/dashboard.json", params: params
+
+        expect(signups_kpi_value).to eq(warmed_signups + 1)
       end
 
       it "denies non-staff users" do
@@ -760,6 +794,12 @@ RSpec.describe Admin::DashboardController do
 
     before { SiteSetting.dashboard_improvements = true }
 
+    after do
+      DiscoursePluginRegistry._raw_admin_dashboard_sections.reject! do |entry|
+        entry[:value][:id] == "support"
+      end
+    end
+
     it "persists the selected category ids and returns 204 for admins" do
       sign_in(admin)
 
@@ -782,6 +822,32 @@ RSpec.describe Admin::DashboardController do
       sign_in(admin)
 
       put "/admin/dashboard/sections/engagement/settings/activity_by_category.json",
+          params: {
+            category_ids: (1..11).to_a,
+          }
+
+      expect(response.status).to eq(400)
+      expect(AdminDashboardSectionConfiguration.settings_for("engagement")).to eq({})
+    end
+
+    it "persists the selected category ids and returns 204 for whos_posting" do
+      sign_in(admin)
+
+      put "/admin/dashboard/sections/engagement/settings/whos_posting.json",
+          params: {
+            category_ids: [category_3.id, category.id, category_2.id],
+          }
+
+      expect(response.status).to eq(204)
+      expect(AdminDashboardSectionConfiguration.settings_for("engagement")).to eq(
+        { "whos_posting" => { "category_ids" => [category_3.id, category.id, category_2.id] } },
+      )
+    end
+
+    it "returns 400 when more than ten categories are given for whos_posting" do
+      sign_in(admin)
+
+      put "/admin/dashboard/sections/engagement/settings/whos_posting.json",
           params: {
             category_ids: (1..11).to_a,
           }
@@ -854,6 +920,38 @@ RSpec.describe Admin::DashboardController do
           }
 
       expect(response.status).to eq(404)
+    end
+
+    it "resolves a plugin-registered setting's permit shape and persists it" do
+      plugin = Plugin::Instance.new
+      fake_setting =
+        Class.new do
+          def self.permit
+            [:category_id]
+          end
+
+          def self.validate(attrs)
+            { "category_id" => attrs[:category_id].to_i }
+          end
+        end
+      plugin.register_admin_dashboard_section(
+        id: "support",
+        enabled: -> { true },
+        settings: {
+          "category_id" => fake_setting,
+        },
+      ) { {} }
+      sign_in(admin)
+
+      put "/admin/dashboard/sections/support/settings/category_id.json",
+          params: {
+            category_id: category.id,
+          }
+
+      expect(response.status).to eq(204)
+      expect(AdminDashboardSectionConfiguration.settings_for("support")).to eq(
+        { "category_id" => { "category_id" => category.id } },
+      )
     end
   end
 
@@ -1144,11 +1242,23 @@ RSpec.describe Admin::DashboardController do
       end
     end
 
+    let(:raising_provider) do
+      Class.new(AdminDashboard::Reports::SourceProvider) do
+        def self.source_name = "raising_source"
+        def self.fetch_many(identifiers, guardian:, filters: {})
+          identifiers.each_with_object({}) do |id, h|
+            raise "boom" if id == "broken"
+            h[id.to_s] = { id: id.to_s }
+          end
+        end
+      end
+    end
+
     let(:plugin) { Plugin::Instance.new }
 
     after do
       DiscoursePluginRegistry._raw_admin_dashboard_report_sources.reject! do |entry|
-        entry[:value] == fake_provider
+        entry[:value] == fake_provider || entry[:value] == raising_provider
       end
     end
 
@@ -1205,7 +1315,7 @@ RSpec.describe Admin::DashboardController do
         expect(items.map { |i| [i["identifier"], i["data"]["id"]] }).to eq([%w[a a], %w[b b]])
       end
 
-      it "returns data: nil for items whose source has no registered provider" do
+      it "returns data: nil, error: false for items whose source has no registered provider" do
         post "/admin/dashboard/reports/bulk.json",
              params: {
                items: [{ source: "totally_unregistered", identifier: "x" }],
@@ -1215,7 +1325,25 @@ RSpec.describe Admin::DashboardController do
         items = response.parsed_body["items"]
         expect(items.size).to eq(1)
         expect(items.first["data"]).to be_nil
+        expect(items.first["error"]).to eq(false)
         expect(items.first["source"]).to eq("totally_unregistered")
+      end
+
+      it "returns error: true for an item whose provider raises, without affecting other items" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(raising_provider, plugin)
+
+        post "/admin/dashboard/reports/bulk.json",
+             params: {
+               items: [
+                 { source: "raising_source", identifier: "broken" },
+                 { source: "raising_source", identifier: "ok" },
+               ],
+             }
+
+        expect(response.status).to eq(200)
+        items = response.parsed_body["items"].index_by { |item| item["identifier"] }
+        expect(items["broken"]).to include("data" => nil, "error" => true)
+        expect(items["ok"]).to include("data" => { "id" => "ok" }, "error" => false)
       end
 
       it "returns data shaped by the dashboard filters" do

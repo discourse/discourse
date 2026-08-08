@@ -16,6 +16,7 @@ module DiscourseAi
           3. Attempt to keep the translated title length close to the original when possible.
           4. Match the tone and register of the source text. Do not default to formal address unless the source is itself formal.
           5. For ambiguous terms or phrases, do not translate word-for-word in isolation. Derive the intended meaning from the full context of the title before choosing a translation.
+          6. Never use ASCII double quotes (") inside the translation. For quoted text or UI labels, use the target language's native quotation marks — for example German „…“, French «…», Japanese 「…」.
 
           The text to translate will be provided in JSON format with the following structure:
           {"content": "Title to translate", "target_locale": "Target language code"}
@@ -60,6 +61,13 @@ module DiscourseAi
               output:
                 "Heathrow closed: flight disruption expected to continue in coming days, says London airport management",
             }.to_json,
+          ],
+          [
+            {
+              content: "Permanently Delete does not show (even after 5 minutes)",
+              target_locale: "de",
+            }.to_json,
+            { output: "„Endgültig löschen“ wird nicht angezeigt (auch nach 5 Minuten)" }.to_json,
           ],
         ]
       end

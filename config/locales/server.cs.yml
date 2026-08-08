@@ -316,7 +316,6 @@ cs:
       exclusion: je rezervováno
       greater_than: musí být větší než %{count}
       greater_than_or_equal_to: musí být větší nebo rovno %{count}
-      has_already_been_used: "již byl použit"
       in: musí být v %{count}
       inclusion: není zahrnutý v seznamu
       invalid: je neplatný
@@ -1870,7 +1869,6 @@ cs:
     staff_edit_locks_post: "Příspěvky budou zablokovány pro úpravy, pokud je upraví členové redakce."
     post_edit_time_limit: "Autor úrovně důvěry 0 nebo 1 může svůj příspěvek upravovat po dobu (n) minut po zveřejnění. Nastavte na 0 pro neomezené úpravy."
     tl2_post_edit_time_limit: "Autor úrovně důvěry 2 a vyšší může svůj příspěvek upravovat po dobu (n) minut po zveřejnění. Nastavte na 0 pro neomezené úpravy."
-    edit_history_visible_to_public: "Umožnit všem zobrazit předchozí verze upraveného příspěvku. Pokud je tato možnost zakázána, mohou je zobrazit pouze členové redakce."
     delete_removed_posts_after: "Příspěvky odstraněné autorem budou automaticky smazány po (n) hodinách. Pokud je nastaveno na 0, příspěvky budou smazány okamžitě."
     notify_users_after_responses_deleted_on_flagged_post: "Když je příspěvek nahlášen a poté odstraněn, budou o tom informováni všichni uživatelé, kteří na příspěvek reagovali a jejichž reakce byly odstraněny."
     max_image_width: "Maximální šířka miniatur obrázků v příspěvku. Šiřší obrázky budou zmenšeny a zobrazeny jako lightbox."
@@ -1972,7 +1970,6 @@ cs:
     suppress_secured_categories_from_admin: "Potlačit soukromá témata a SZ v některých částech uživatelského rozhraní pro administrátory. Obsah bude na některých místech stále viditelný. Toto není bezpečnostní funkce: administrátoři mají vždy přístup k celému obsahu tohoto webu."
     include_secure_categories_in_tag_counts: "Pokud je tato možnost povolena, počet témat pro daný štítek bude zahrnovat i témata, která jsou v kategoriích s omezeným čtením pro všechny uživatele. Pokud je tato možnost zakázána, běžným uživatelům se zobrazí pouze počet témat pro štítek, u kterého jsou všechna témata ve veřejných kategoriích."
     display_personal_messages_tag_counts: "Pokud je tato možnost povolena, zobrazí se počet soukromých zpráv označených daným štítkem."
-    top_menu: "Určete, které položky se zobrazují v navigaci na domovské stránce a v jakém pořadí."
     post_menu: "Nastavení viditelnosti a pořadí výchozích položek nabídky příspěvků. Další položky přidané pluginy nebo motivy jsou spravovány samostatně a v tomto seznamu se nezobrazí."
     post_menu_hidden_items: "Položky nabídky, které se mají ve výchozím nastavení skrýt v nabídce příspěvku, pokud se na ně neklikne rozbalením menu tlačítkem s třemi tečkami. Další položky přidané pluginy nebo motivy jsou spravovány samostatně a v tomto seznamu se nezobrazí."
     share_links: "Určete, které položky se zobrazí v dialogovém okně sdílení a v jakém pořadí."
@@ -4486,7 +4483,6 @@ cs:
           complete: "Uživatel smazán."
         block:
           title: "Odstranit a blokovat uživatele"
-          description: "Uživatel bude smazán a zablokujeme jeho IP a e-mailovou adresu."
           complete: "Uživatel smazán a zablokován."
       confirm_spam:
         title: "Ano"
@@ -4541,12 +4537,10 @@ cs:
         bundle_title: "Co chcete udělat s tímto uživatelem?"
       silence_user:
         title: "Ztišit uživatele"
-        description: "Zabránit uživateli v publikování příspěvků"
         complete: "Uživatel ztišen"
         reason: "Uživatel ztišen prostřednictvím fronty revizí"
       suspend_user:
         title: "Pozastavit uživatele"
-        description: "Pozastavit uživatelský účet"
         complete: "Uživatel pozastaven"
         reason: "Pozastavení uživatele prostřednictvím fronty revizí"
       delete_user:

@@ -149,7 +149,6 @@ ko:
       exclusion: 예약됨
       greater_than: '%{count}보다 커야 함'
       greater_than_or_equal_to: '%{count}보다 크거나 같아야 함'
-      has_already_been_used: "이미 사용됨"
       inclusion: 리스트에 없음
       invalid: 유효하지 않음
       is_invalid: "명확하지 않은 것 같습니다. 완전한 문장인가요?"
@@ -1309,7 +1308,6 @@ ko:
     staff_edit_locks_post: "운영진이 게시물을 편집하면 게시물이 편집되지 않게 잠깁니다."
     post_edit_time_limit: "tl0 또는 tl1 작성자는 게시 후 (n)분 동안 게시물을 편집할 수 있습니다. 영원히 하려면 0으로 설정하세요."
     tl2_post_edit_time_limit: "tl2+ 작성자는 게시 후 (n)분 동안 게시물을 편집할 수 있습니다. 영원히 하려면 0으로 설정하세요."
-    edit_history_visible_to_public: "모든 사용자가 편집된 게시물의 기존 버전을 보도록 허용합니다. 비활성화하면 운영진만 볼 수 있습니다."
     delete_removed_posts_after: "작성자가 제거한 게시물은 (n)시간 뒤 자동으로 삭제됩니다. 0으로 설정 시 즉시 삭제됩니다."
     notify_users_after_responses_deleted_on_flagged_post: "게시물이 신고되어 제거되면 게시물에 반응을 보였거나 반응이 제거된 모든 사용자에게 알림이 전송됩니다."
     responsive_post_image_sizes: "라이트 박스 미리보기 이미지의 크기를 조정하여 다음 픽셀 비율의 높은 DPI 화면을 허용합니다. 반응형 이미지를 비활성화하려면 모든 값을 제거하세요."
@@ -1729,7 +1727,6 @@ ko:
     default_other_notification_level_when_replying: "사용자가 주제에 댓글을 달 때의 글로벌 디폴트 알림 레벨입니다."
     default_other_external_links_in_new_tab: "기본적으로 새 탭에서 외부 링크를 엽니다."
     default_other_enable_quoting: "기본적으로 하이라이트된 텍스트에 대한 인용 댓글을 활성화합니다."
-    default_other_enable_defer: "기본적으로 주제 함수 기능 연기를 활성화합니다."
     default_other_enable_markdown_monospace_font: "마크다운 모드에서 글 작성시 기본적으로 고정폭 글꼴 사용"
     default_other_dynamic_favicon: "기본적으로 브라우저 아이콘에 신규/업데이트된 주제 수를 표시합니다."
     default_other_skip_new_user_tips: "신규 사용자 온보딩 팁 및 배지를 건너뜁니다."
@@ -3663,7 +3660,6 @@ ko:
           complete: "사용자 삭제됨."
         block:
           title: "사용자 삭제 및 차단"
-          description: "사용자가 삭제되고 IP 및 이메일 주소가 차단됩니다."
       confirm_spam:
         title: "예"
       not_spam:

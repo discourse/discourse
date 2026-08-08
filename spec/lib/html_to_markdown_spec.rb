@@ -399,6 +399,35 @@ RSpec.describe HtmlToMarkdown do
     )
   end
 
+  it "nests lists that are siblings of the <li> they belong to" do
+    expect(html_to_markdown(<<-HTML)).to eq(
+      <ul>
+        <li>Fruits</li>
+        <ul>
+            <li>🍏</li>
+            <li>🍐</li>
+            <li>🍌</li>
+        </ul>
+        <li>Vegetables</li>
+        <ul>
+            <li>🍆</li>
+            <li>🍅</li>
+            <li>🍄</li>
+        </ul>
+      </ul>
+    HTML
+      "- Fruits\n  - 🍏\n  - 🍐\n  - 🍌\n- Vegetables\n  - 🍆\n  - 🍅\n  - 🍄",
+    )
+
+    expect(html_to_markdown("<ol><li>🍆</li><ol><li>🍅</li></ol><li>🍄</li></ol>")).to eq(
+      "1. 🍆\n   1. 🍅\n1. 🍄",
+    )
+  end
+
+  it "separates a nested list from the <li> that follows it" do
+    expect(html_to_markdown("<ul><ol><li>🍏</li></ol><li>🍐</li></ul>")).to eq("1. 🍏\n- 🍐")
+  end
+
   it "supports bare <li>" do
     expect(html_to_markdown("<li>I'm alone</li>")).to eq("- I'm alone")
   end

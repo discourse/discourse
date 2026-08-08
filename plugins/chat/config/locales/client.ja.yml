@@ -66,6 +66,8 @@ ja:
       starred: "スター付き"
       starred_channels: "スター付きのチャンネル"
       starred_channels_empty: "まだどのチャンネルにもスターを設定していません。チャンネルにスターを設定すると、ここで素早くアクセスできます。"
+      pinned_bar:
+        title: "固定"
       pinned: "固定"
       browse_all_channels: "すべてのチャンネルを閲覧する"
       see_in: "表示:"
@@ -149,12 +151,6 @@ ja:
         never: "なし"
       separate_sidebar_mode:
         title: "フォーラムとチャットに個別のサイドバーモードを表示する"
-      send_shortcut:
-        title: "送信ショートカット"
-        enter:
-          label: "Enter で送信"
-        meta_enter:
-          label: "%{meta_key} + Enter で送信"
       enable: "チャットを有効にする"
       flag: "通報する"
       emoji: "絵文字を挿入する"

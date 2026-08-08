@@ -278,7 +278,6 @@ es:
       exclusion: está reservado
       greater_than: debe ser mayor que %{count}
       greater_than_or_equal_to: debe ser mayor o igual que %{count}
-      has_already_been_used: "ya se ha utilizado"
       in: debe estar en %{count}
       inclusion: no está incluido en la lista
       invalid: no es válido
@@ -1744,7 +1743,6 @@ es:
     staff_edit_locks_post: "Se bloqueará la posibilidad de editar publicaciones si estas son editadas por un miembro del equipo."
     post_edit_time_limit: "Un autor con nivel de confianza 0 o 1 puede editar sus publicaciones hasta (n) minutos después de su creación. Poner a 0 para permitir ediciones siempre."
     tl2_post_edit_time_limit: "Un autor con NC2 puede editar su publicación durante (n) minutos luego de publicarla. Establece el valor en 0 para que siempre pueda hacerlo."
-    edit_history_visible_to_public: "Permitir a todos ver las versiones previas de una publicación editada. Si se desactiva, solo los miembros del equipo podrán verlas."
     delete_removed_posts_after: "Las publicaciones eliminadas por su autor se eliminarán automáticamente después de (n) horas. Si se establece este valor a 0, las publicaciones se eliminarán inmediatamente."
     notify_users_after_responses_deleted_on_flagged_post: "Al borrar una publicación reportada, notificar a los usuarios que hayan respondido y se vaya a borrar su respuesta."
     max_image_width: "Anchura máxima de las miniaturas de las imágenes de una publicación. Las imágenes con una anchura mayor se redimensionarán y se mostrarán en lightbox."
@@ -1849,7 +1847,6 @@ es:
     suppress_secured_categories_from_admin: "Suprimir temas privados y MPs en algunas partes de la IU para administradores. El contenido seguirá siendo visible en algunos lugares. No se trata de una característica de seguridad: los administradores siempre pueden acceder a todo el contenido del sitio."
     include_secure_categories_in_tag_counts: "Si está activada, el recuento de temas de una etiqueta incluirá los temas que estén en categorías de lectura restringida para todos los usuarios. Si está desactivada, a los usuarios normales solo se les mostrará un recuento de temas para una etiqueta en la que todos los temas estén en categorías públicas."
     display_personal_messages_tag_counts: "Si está activada, se mostrará el recuento de mensajes personales etiquetados con una etiqueta determinada."
-    top_menu: "Determina qué elementos aparecen en la navegación de la página de inicio y en qué orden."
     post_menu: "Configura la visibilidad y el orden de los elementos predeterminados del menú de la publicación. Los elementos adicionales añadidos por plugins o temas se gestionan por separado y no aparecerán en esta lista."
     post_menu_hidden_items: "Los elementos del menú que se ocultarán por defecto en el menú de la publicación a menos que se haga clic en una elipsis de expansión. Los elementos adicionales añadidos por plugins o temas se gestionan por separado y no aparecerán en esta lista."
     share_links: "Determinar los elementos que aparecen en el widget de compartir y su orden."
@@ -2349,7 +2346,6 @@ es:
     default_other_external_links_in_new_tab: "Abrir enlaces externos en una nueva pestaña por defecto."
     default_other_enable_quoting: "Activar respuesta citando texto seleccionado por defecto."
     default_other_enable_smart_lists: "Activar por defecto las listas inteligentes al escribir en el compositor."
-    default_other_enable_defer: "Activar la funcionalidad de temas diferidos por defecto."
     default_other_enable_markdown_monospace_font: "Usar fuente monoespaciada en el modo Markdown del compositor por defecto."
     default_other_dynamic_favicon: "Mostrar la cantidad de temas nuevos/actualizados en el icono del navegador por defecto."
     default_other_skip_new_user_tips: "Omitir consejos y medallas de bienvenida."
@@ -2458,7 +2454,6 @@ es:
     about_page_extra_groups_order: "Ordenación de los grupos adicionales en la página Acerca de."
     adobe_analytics_tags_url: "URL de las etiquetas de Adobe Analytics (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Grupos que pueden ver el contenido sin procesar de un correo electrónico si se creó mediante un correo electrónico entrante. Esto incluye los encabezados del correo electrónico y otra información técnica."
-    rich_editor: "Activa el editor enriquecido del compositor para que todos los usuarios puedan cambiar entre el modo Markdown actual y el nuevo editor de texto enriquecido para una edición más intuitiva y fácil de usar."
     default_composition_mode: "Establece el modo predeterminado para el compositor de tu comunidad. El modo de texto enriquecido ofrece una experiencia de escritura más moderna y familiar para la mayoría de los usuarios, mientras que el modo Markdown puede ser adecuado para usuarios con conocimientos técnicos. Los miembros pueden usar un interruptor en la barra de herramientas del compositor para cambiar de un modo a otro."
     reviewable_ui_refresh: "Grupos que pueden usar la nueva interfaz de usuario experimental en la cola de revisión."
     content_localization_use_default_locale_when_unsupported: "Ofrece contenido traducido en la configuración regional por defecto del sitio a los usuarios cuyo idioma preferido no figure en «content localization supported locales»."
@@ -5073,11 +5068,9 @@ es:
         title: "No"
         delete:
           title: "Eliminar usuario"
-          description: "Eliminar usuario sin bloquearlo"
           complete: "Usuario eliminado."
         block:
           title: "Eliminar y bloquear usuario"
-          description: "El usuario será eliminado y bloquearemos su IP y su dirección de correo electrónico."
           complete: "Usuario eliminado y bloqueado."
       confirm_spam:
         title: "Sí"
@@ -5137,12 +5130,10 @@ es:
         bundle_title: "¿Qué quieres hacer con el usuario?"
       silence_user:
         title: "Silenciar al usuario"
-        description: "Evitar que el usuario siga publicando"
         complete: "Usuario silenciado"
         reason: "Usuario silenciado a través de la cola de revisión"
       suspend_user:
         title: "Suspender al usuario"
-        description: "Suspender la cuenta del usuario"
         complete: "Usuario suspendido"
         reason: "Usuario suspendido a través de la cola de revisión"
       delete_user:

@@ -20,9 +20,9 @@ RSpec.describe Stylesheet::Watcher do
     end
 
     it "infers core targets from top-level stylesheet filenames" do
-      path = Rails.root.join("app/assets/stylesheets/mobile.scss")
+      path = Rails.root.join("app/assets/stylesheets/wizard.scss")
 
-      expect(watcher.path_data(path.to_s, [])).to include(target: "mobile", plugin_name: nil)
+      expect(watcher.path_data(path.to_s, [])).to include(target: "wizard", plugin_name: nil)
     end
 
     it "infers special core targets from top-level filenames" do

@@ -13,7 +13,6 @@ hu:
   js:
     styleguide:
       title: "Stílus útmutató"
-      welcome: "A kezdéshez válasszon egy szakaszt a bal oldali menüből."
       categories:
         syntax: Szintaxis
         atoms: Atomok

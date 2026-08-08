@@ -136,7 +136,7 @@ module DiscourseCalendar
         end
 
         it "returns not found when the livestream URL is not a supported Zoom URL" do
-          event.update!(location: "https://example.com/stream")
+          event.update!(location: "https://www.youtube.com/live/abc123")
 
           get "/discourse-calendar/livestream/zoom/signature.json", params: { topic_id: topic.id }
 

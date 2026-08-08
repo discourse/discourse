@@ -96,6 +96,27 @@ module("Unit | lib | discourse-workflows | node-issues", function () {
     );
   });
 
+  test("waives required issues while the gate holds an expression", function (assert) {
+    const schema = {
+      operation: { type: "options", default: "add" },
+      username: {
+        type: "string",
+        required: true,
+        display_options: { show: { operation: ["add", "remove"] } },
+      },
+    };
+
+    assert.deepEqual(
+      getNodeIssues({ operation: "={{ $json.op }}" }, schema),
+      []
+    );
+
+    assert.deepEqual(
+      getNodeIssues({ operation: "add" }, schema).map((i) => i.path),
+      ["username"]
+    );
+  });
+
   test("walks optional fields inside fixed collections", function (assert) {
     const schema = {
       form_fields: {

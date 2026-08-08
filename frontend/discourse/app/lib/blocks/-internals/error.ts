@@ -7,6 +7,7 @@
 import { DEBUG } from "@glimmer/env";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import type { ValidationContext } from "discourse/lib/blocks/-internals/utils";
+import type { ValidationErrorDetails } from "discourse/lib/blocks/-internals/validation/args";
 
 /* Value Display Helpers */
 
@@ -847,6 +848,12 @@ export interface BlockErrorOptions {
    * or "[0].args.showIcon").
    */
   path?: string;
+  /**
+   * Structured payload for consumers that surface field-level errors. A single
+   * detail for a strict-mode throw, or an array when permissive validation
+   * accumulates several.
+   */
+  details?: ValidationErrorDetails | ValidationErrorDetails[] | null;
 }
 
 /**
@@ -863,7 +870,12 @@ export interface BlockErrorOptions {
 export class BlockError extends Error {
   path?: string;
 
+  /** Structured payload for consumers that surface field-level errors. */
+  details: ValidationErrorDetails | ValidationErrorDetails[] | null;
+
   /**
+   * Creates a new BlockError.
+   *
    * @param message - The error message.
    * @param options - Error options.
    */
@@ -871,6 +883,7 @@ export class BlockError extends Error {
     super(message, options);
     this.name = "BlockError";
     this.path = options?.path;
+    this.details = options?.details ?? null;
   }
 }
 
@@ -924,8 +937,13 @@ export function raiseBlockError(
     error.name = "BlockError";
     error.message = fullMessage;
     error.path = context.path;
+    // @ts-expect-error - Adding details property to Error for BlockError compatibility
+    error.details = context?.details ?? null;
   } else {
-    error = new BlockError(fullMessage, { path: context?.path });
+    error = new BlockError(fullMessage, {
+      path: context?.path,
+      details: context?.details ?? null,
+    });
   }
 
   throw error;

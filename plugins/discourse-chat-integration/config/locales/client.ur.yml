@@ -184,3 +184,8 @@ ur:
               description: "آپ چیٹ انٹیگریشن ترتیبات میں چینل کا نام تلاش کر سکتے ہیں۔"
             provider:
               label: پرووَائیڈر
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "چَینل"
+        configure: "ترتیب دیں"
+        message: "پیغام"

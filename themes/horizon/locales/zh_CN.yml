@@ -20,4 +20,4 @@ zh_CN:
     description: "一个简单、美观的主题，可以改善 Discourse 站点的开箱即用体验。"
     settings:
       topic_card_high_context:
-        description: "启用后，会在主题卡片上显示更多上下文信息，包括标签、摘要、已解决状态、分配用户和投票数。"
+        description: "启用后，会在话题卡片上显示更多上下文信息，包括标签、摘要、已解决状态、指定的用户和投票数"

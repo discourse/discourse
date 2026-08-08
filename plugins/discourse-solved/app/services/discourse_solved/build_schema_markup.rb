@@ -54,11 +54,12 @@ class DiscourseSolved::BuildSchemaMarkup
       .select { |post| DiscourseSolved::SchemaUtils.eligible_answer?(post) }
   end
 
-  def fetch_html(topic:, accepted_answers:, suggested_answers:)
+  def fetch_html(topic:, guardian:, accepted_answers:, suggested_answers:)
     question_json =
       DiscourseSolved::QuestionSchemaSerializer.new(
         topic,
         root: false,
+        scope: guardian,
         accepted_answers: accepted_answers,
         suggested_answers: suggested_answers,
       ).serializable_hash

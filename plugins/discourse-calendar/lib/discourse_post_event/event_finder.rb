@@ -97,13 +97,20 @@ module DiscoursePostEvent
       # If no user, can only see non-private events
       return events.where.not(status: private_status) if user.nil?
 
-      # User can see private events if they are invited to them
-      events.where(
-        "discourse_post_event_events.status != ? OR (discourse_post_event_events.status = ? AND EXISTS (SELECT 1 FROM discourse_post_event_invitees WHERE post_id = discourse_post_event_events.id AND user_id = ?))",
-        private_status,
-        private_status,
-        user.id,
-      )
+      # User can see private events if they still belong to an invited group.
+      events.where(<<~SQL, private_status, private_status, user.id)
+          discourse_post_event_events.status != ?
+          OR (
+            discourse_post_event_events.status = ?
+            AND EXISTS (
+              SELECT 1
+              FROM group_users
+              INNER JOIN groups ON groups.id = group_users.group_id
+              WHERE group_users.user_id = ?
+                AND groups.name = ANY(discourse_post_event_events.raw_invitees)
+            )
+          )
+        SQL
     end
 
     def self.filter_by_dates(events, params)

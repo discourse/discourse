@@ -8,7 +8,7 @@ module Jobs
 
     def execute(args)
       return if !SiteSetting.content_localization_enabled
-      return if !DiscourseAi::Translation.backfill_enabled?
+      return if !DiscourseAi::Translation.backfill_enabled?(target: SidebarSection)
 
       llm_model = find_llm_model
       return if llm_model.blank?

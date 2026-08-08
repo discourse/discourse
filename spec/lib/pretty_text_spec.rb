@@ -1463,6 +1463,51 @@ RSpec.describe PrettyText do
             <p><a href="https://vimeo.com/1">https://vimeo.com/1</a></p>
           HTML
         end
+
+        it "leaves a malformed Vimeo source without rendering it as markup" do
+          iframe_source = "https://player.vimeo.com/video/123'></a><img src=x onerror=alert(1)>"
+          html = %(<iframe src="#{iframe_source}"></iframe>)
+
+          fragment = Nokogiri::HTML5.fragment(described_class.format_for_email(html, post))
+
+          aggregate_failures do
+            expect(fragment.css("img")).to be_empty
+            expect(fragment.at_css("iframe")["src"]).to eq(iframe_source)
+          end
+        end
+
+        it "leaves a non-Vimeo iframe containing the player domain unchanged" do
+          iframe_source =
+            "https://www.instagram.com/?x=player.vimeo.com/<img src=x onerror=alert(1)>"
+          html = %(<iframe src="#{iframe_source}"></iframe>)
+
+          fragment = Nokogiri::HTML5.fragment(described_class.format_for_email(html, post))
+
+          aggregate_failures do
+            expect(fragment.css("a")).to be_empty
+            expect(fragment.at_css("iframe")["src"]).to eq(iframe_source)
+          end
+        end
+
+        it "converts an unlisted Vimeo embed using its hash" do
+          html = %(<iframe src="https://player.vimeo.com/video/508864124?h=fcbbcc92fa"></iframe>)
+
+          expect(described_class.format_for_email(html, post)).to match_html(<<~HTML)
+            <p><a href="https://vimeo.com/508864124/fcbbcc92fa">https://vimeo.com/508864124/fcbbcc92fa</a></p>
+          HTML
+        end
+
+        it "leaves an iframe with a non-http data-original-href unchanged" do
+          html =
+            %(<iframe src="https://player.vimeo.com/video/1" data-original-href="javascript:alert(1)"></iframe>)
+
+          fragment = Nokogiri::HTML5.fragment(described_class.format_for_email(html, post))
+
+          aggregate_failures do
+            expect(fragment.css("a")).to be_empty
+            expect(fragment.at_css("iframe")["data-original-href"]).to eq("javascript:alert(1)")
+          end
+        end
       end
 
       describe "#strip_secure_uploads" do
@@ -1543,6 +1588,35 @@ RSpec.describe PrettyText do
           expect(md).to include("data-stripped-secure-upload=\"#{url}\"")
           expect(md).to include("data-width=\"20\"")
           expect(md).to include("data-height=\"20\"")
+        end
+
+        it "keeps a crafted secure upload URL as attribute data" do
+          url =
+            %(#{Discourse.base_url}/secure-uploads/original/1X/a"><img src=x onerror=alert(1)>b.png)
+
+          fragment =
+            Nokogiri::HTML5.fragment(described_class.format_for_email(%(<img src='#{url}'>), post))
+          notice = fragment.at_css("div.secure-upload-notice")
+
+          aggregate_failures do
+            expect(fragment.css("img")).to be_empty
+            expect(notice["data-stripped-secure-upload"]).to eq(url)
+          end
+        end
+
+        it "discards non-numeric secure upload dimensions" do
+          html =
+            %(<img src="/secure-uploads/original/1X/testimage.png" width="20 onmouseover=alert(1) x" height="20">)
+
+          notice =
+            Nokogiri::HTML5.fragment(described_class.format_for_email(html, post)).at_css(
+              "div.secure-upload-notice",
+            )
+
+          aggregate_failures do
+            expect(notice.attributes.keys).not_to include("onmouseover", "data-width")
+            expect(notice["data-height"]).to eq("20")
+          end
         end
       end
     end

@@ -274,7 +274,6 @@ fi:
       exclusion: on varattu
       greater_than: täytyy olla suurempi kuin %{count}
       greater_than_or_equal_to: täytyy olla yhtä suuri tai suurempi kuin %{count}
-      has_already_been_used: "on jo käytetty"
       inclusion: ei ole listalla
       invalid: ei kelpaa
       is_invalid: "vaikuttaa epäselvältä, olihan se kokonainen virke?"
@@ -1700,7 +1699,6 @@ fi:
     staff_edit_locks_post: "Viesti lukitaan muokkauksilta, jos henkilökunnan jäsen muokkaa sitä"
     post_edit_time_limit: "Lt0- tai lt1-kirjoittaja voi muokata viestiään (n) minuutin ajan viestin lähettämisen jälkeen. Aseta 0, niin viestiä voi muokata aina."
     tl2_post_edit_time_limit: "Vähintään Lt2-kirjoittaja voi muokata viestiään (n) minuutin ajan viestin lähettämisen jälkeen. Aseta 0, niin viestiä voi muokata aina."
-    edit_history_visible_to_public: "Salli kaikkien nähdä muokatun viestin edelliset versiot. Jos asetus poistetaan käytöstä, vain henkilökunta näkee versiot."
     delete_removed_posts_after: "Kirjoittajan poistamat viestit poistetaan automaattisesti (n) tunnin kuluttua. Jos arvoksi asetetaan 0, viestit poistetaan välittömästi."
     notify_users_after_responses_deleted_on_flagged_post: "Kun viesti liputetaan ja poistetaan tämän jälkeen, kaikille viestiin vastanneille käyttäjille, joiden vastaukset on poistettu, ilmoitetaan."
     max_image_width: "Viestin kuvien pikkukuvan enimmäisleveys. Leveämpien kuvien kokoa muutetaan ja ne näytetään lightboxissa."
@@ -1799,7 +1797,6 @@ fi:
     suppress_secured_categories_from_admin: "Estä yksityiset ketjut ja yksityisviestit joissakin ylläpitäjien käyttöliittymän osissa. Sisältö näkyy edelleen joissain paikoissa. Tämä ei ole turvallisuusominaisuus: ylläpitäjillä on aina pääsy kaikkeen sivuston sisältöön."
     include_secure_categories_in_tag_counts: "Kun tämä on käytössä, tunnisteen ketjujen määrä sisältää ketjut, jotka kuuluvat kaikkien käyttäjien lukurajoitetuille alueille. Kun tämä ei ole käytössä, normaaleille käyttäjille näytetään vain ketjujen määrä tunnisteelle, joissa kaikki ketjut ovat julkisilla alueilla."
     display_personal_messages_tag_counts: "Kun tämä on käytössä, tietyllä tunnisteella merkittyjen henkilökohtaisten viestien määrä näytetään."
-    top_menu: "Määritä, mitkä kohteet näytetään aloitussivun navigoinnissa ja missä järjestyksessä."
     post_menu: "Määritä oletusviestivalikkokohteiden näkyvyys ja järjestys. Lisäosien tai teemojen lisäämiä kohteita hallitaan erikseen, eivätkä ne näy tässä luettelossa."
     post_menu_hidden_items: "Viestivalikossa oletusarvoisesti piilotettavat valikkokohteet, ellei laajennusvalintaa ole napsautettu. Lisäosien tai teemojen lisäämiä kohteita hallitaan erikseen, eivätkä ne näy tässä luettelossa."
     share_links: "Mitkä kohteet näytetään jakamisvalintaikkunassa ja missä järjestyksessä."
@@ -2276,7 +2273,6 @@ fi:
     default_other_external_links_in_new_tab: "Avaa oletuksena ulkopuoliset linkit uudessa välilehdessä."
     default_other_enable_quoting: "Ota oletuksena käyttöön lainaaminen valitsemalla tekstiä."
     default_other_enable_smart_lists: "Ota älykkäät luettelot käyttöön kirjoittaessasi kirjoitustilassa oletuksena."
-    default_other_enable_defer: "Ota ketjun lykkäystoiminto käyttöön oletuksena."
     default_other_enable_markdown_monospace_font: "Käytä tasalevyistä fonttia kirjoitustilan Markdown-tilassa oletuksena."
     default_other_dynamic_favicon: "Näytä oletuksena uusien/päivittyneiden ketjujen määrä selaimen kuvakkeessa."
     default_other_skip_new_user_tips: "Ohita uuden käyttäjän aloittamisvinkit ja -kunniamerkit."
@@ -2374,7 +2370,6 @@ fi:
     about_page_extra_groups_order: "Lisäryhmien järjestys Tietoja-sivulla."
     adobe_analytics_tags_url: "Adobe Analytics -tunnisteiden URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Ryhmät, jotka voivat tarkastella viestin raakaa sähköpostisisältöä, jos se on luotu saapuvasta sähköpostista. Tämä sisältää sähköpostin ylätunnisteet ja muut tekniset tiedot."
-    rich_editor: "Ota käyttöön kirjoitustilan muotoilueditori, jotta kaikki käyttäjät voivat vaihtaa nykyisen Markdown-tilan ja uuden muotoilutekstieditorin välillä, joka tarjoaa intuitiivisemman ja käyttäjäystävällisemmän kirjoituskokemuksen."
     default_composition_mode: "Aseta yhteisösi kirjoitustilan oletustila. Muotoilutila tarjoaa useimmille käyttäjille modernimman ja tutumman kirjoituskokemuksen, kun taas markdown-tila saattaa sopia teknisemmälle yleisölle. Jäsenet voivat vaihtaa tilojen välillä kirjoitustilan työkalupalkin valitsimella."
     reviewable_ui_refresh: "Ryhmät, jotka voivat käyttää kokeellista uutta käyttöliittymää tarkastusjonossa."
     errors:
@@ -4676,7 +4671,6 @@ fi:
           complete: "Käyttäjä poistettu."
         block:
           title: "Poista ja estä käyttäjä"
-          description: "Käyttäjä poistetaan ja hänen IP-osoitteensa sekä sähköpostiosoitteensa estetään."
           complete: "Käyttäjä poistettu ja estetty."
       confirm_spam:
         title: "Kyllä"

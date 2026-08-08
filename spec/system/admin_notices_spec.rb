@@ -4,6 +4,7 @@ describe "Admin Notices" do
   let(:admin_dashboard) { PageObjects::Pages::AdminDashboard.new }
 
   before do
+    SiteSetting.dashboard_improvements = false
     Fabricate(:admin_notice)
 
     I18n.backend.store_translations(:en, dashboard: { problem: { test_notice: "Houston" } })
@@ -22,6 +23,27 @@ describe "Admin Notices" do
       admin_dashboard.dismiss_notice(I18n.t("dashboard.problem.test_notice"))
 
       expect(admin_dashboard).to have_no_admin_notice(I18n.t("dashboard.problem.test_notice"))
+    end
+
+    it "warns the admin when the Sidekiq queue is too large" do
+      Jobs.stubs(:last_job_performed_at).returns(1.second.ago)
+      Jobs.stubs(:queued).returns(100_000)
+
+      admin_dashboard.visit
+
+      expect(admin_dashboard).to have_admin_notice(
+        I18n.t("dashboard.problem.queue_size", queue_size: 100_000),
+      )
+    end
+
+    it "warns the admin when Sidekiq is not processing queued jobs" do
+      Jobs.stubs(:last_job_performed_at).returns(20.minutes.ago)
+      Jobs.stubs(:queued).returns(1)
+
+      admin_dashboard.visit
+
+      message = Nokogiri::HTML5.fragment(I18n.t("dashboard.problem.sidekiq_check")).text
+      expect(admin_dashboard).to have_admin_notice(message)
     end
   end
 

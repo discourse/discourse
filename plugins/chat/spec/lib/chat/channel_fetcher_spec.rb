@@ -12,13 +12,8 @@ describe Chat::ChannelFetcher do
   fab!(:user1) { Fabricate(:user, group_ids: [chatters.id]) }
   fab!(:user2, :user)
 
-  def guardian
-    Guardian.new(user1)
-  end
-
-  def memberships
-    Chat::UserChatChannelMembership.where(user: user1)
-  end
+  let(:guardian) { user1.guardian }
+  let(:memberships) { Chat::UserChatChannelMembership.where(user: user1) }
 
   before { SiteSetting.chat_allowed_groups = chatters }
 
@@ -50,13 +45,15 @@ describe Chat::ChannelFetcher do
 
   describe ".tracking_state" do
     context "when user is member of the channel" do
-      before do
+      fab!(:category_channel_membership) do
         Fabricate(:user_chat_channel_membership, chat_channel: category_channel, user: user1)
       end
 
       context "with unread messages" do
-        before do
+        fab!(:first_unread_message) do
           Fabricate(:chat_message, chat_channel: category_channel, message: "hi", user: user2)
+        end
+        fab!(:second_unread_message) do
           Fabricate(:chat_message, chat_channel: category_channel, message: "bonjour", user: user2)
         end
 
@@ -92,7 +89,7 @@ describe Chat::ChannelFetcher do
 
     context "when user is not member of the channel" do
       context "when the channel has new messages" do
-        before do
+        fab!(:new_channel_message) do
           Fabricate(:chat_message, chat_channel: category_channel, message: "hi", user: user2)
         end
 

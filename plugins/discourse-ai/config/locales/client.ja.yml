@@ -199,6 +199,9 @@ ja:
               description: "システムユーザーが作成した投稿のタグ付けを許可します。"
     discourse_ai:
       title: "AI"
+      discourse_workflows:
+        ai_agent:
+          mode: "モード"
       ai_tool_approval:
         loading: "読み込み中..."
         tool: "操作"
@@ -336,16 +339,28 @@ ja:
         title: "翻訳"
         description: "フォーラムのすべてのコンテンツをユーザーの優先言語に自動的に翻訳します"
         supported_locales: "サポートされている言語"
-        supported_locales_description: "このサイト設定では、訪問者も投稿の翻訳に貢献できます。"
         category_scope: "カテゴリ"
+        model_progress:
+          detail:
+            retry: "再試行"
+            columns:
+              locale: "ロケール"
+              pending: "保留中"
+              total: "総合"
+          targets:
+            post:
+              title: "投稿"
+            topic:
+              title: "トピック"
+            category:
+              title: "カテゴリ"
+            tag:
+              title: "タグ"
         admin_actions:
-          translation_settings: "翻訳の設定"
-          localization_settings: "ローカリゼーションの設定"
           enable_translations: "自動翻訳を有効にする"
         stats:
           title: "翻訳の統計"
           backfill_disabled: "バックフィルは無効です。新しい投稿のみが翻訳されます。"
-          backfill_message: "%{date} 以降のすべての投稿を翻訳するように<a href='%{settingsUrl}'>バックフィル設定</a>が構成されています。これには %{eta} かかることが予測されます。"
           eta_minutes:
             other: "%{count} 分"
           eta_hours:
@@ -496,6 +511,8 @@ ja:
           clear_all: "すべてクリア"
         forced_tools: "強制されたツール"
         allowed_groups: "許可されたグループ"
+        duplicate: "複製"
+        copy_name: "%{name} のコピー"
         delete: "削除"
         temperature: "Temperature"
         temperature_help: "LLM に使用する Temperature。値を増やすと創造性が増加します (モデルのデフォルトを使用する場合は空白にします。一般に 0.0～2.0 の値です)"
@@ -681,7 +698,7 @@ ja:
           anthropic-claude-opus-4-7: "Anthropic の最もインテリジェントなモデル"
           anthropic-claude-sonnet-4-6: "速度とコストの最適なバランス"
           anthropic-claude-haiku-4-5: "高速でコスト効率に優れています"
-          google-gemini-3-1-pro: "Google の最もインテリジェントなモデル"
+          google-gemini-3-1-pro-preview: "Google の最もインテリジェントなモデル"
         preseeded_model_description: "%{model} を利用する事前構成済みのオープンソースモデル"
         configured:
           title: "構成済みの LLM"
@@ -717,7 +734,6 @@ ja:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -973,12 +989,8 @@ ja:
           bulk_regen_description: "選択されたトピックに対して再生成する AI 要約の種類を選択します。"
           regenerate_gists_option: "短い要約 (要点)"
           regenerate_summaries_option: "トピックの要約"
-          regenerate_gists_success:
-            other: "%{count} 件の短い要約を再生成しました"
           regenerate_gists_error:
             other: "%{count} 件の短い要約の再生成に失敗しました"
-          regenerate_topic_summary_success:
-            other: "%{count} 件のトピック要約を再生成しました"
           regenerate_topic_summary_error:
             other: "%{count} 件のトピック要約の再生成に失敗しました"
         topic_list_layout:

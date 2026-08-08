@@ -50,8 +50,12 @@ de:
             update_ai_spam_settings: "KI-Spam-Einstellungen aktualisieren"
   js:
     discourse_workflows:
+      node_unavailable:
+        requires_ai: "Erfordert die Aktivierung des KI-Plug-ins."
       nodes:
         "action:ai_agent": "KI-Agent"
+      node_descriptions:
+        "action:ai_agent": "Lass einen KI-Agenten laufen, um Daten zu verarbeiten oder Inhalte zu generieren"
     discourse_automation:
       scriptables:
         llm_report:
@@ -231,6 +235,20 @@ de:
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
+          forced_llm_notice_description: "Dieser Agent ist an sein konfiguriertes Standard-LLM gebunden. Der Workflow kann dies nicht überschreiben."
+          llm_model_id: "LLM-Modell"
+          llm_model_default: "Agenten-Standard verwenden"
+          llm_model_default_with_name: "Agenten-Standard verwenden (%{value})"
+          mode: "Modus"
+          prompt: "Aufforderung"
+          runner_username: "Ausführen als"
+          runner_username_tooltip: "Benutzer, dessen Berechtigungen für die Sichtbarkeit von Uploads und KI-Agent-Tools verwendet werden. Nutze das System für die automatisierte Abwicklung von Workflows."
+          upload_ids: "Upload-IDs"
+          upload_ids_tooltip: "Optionale Upload-IDs, die an die Aufforderung angehängt werden sollen. Bild-Uploads sind enthalten, wenn der Agent Vision aktiviert hat; Dokumenten-Uploads sind enthalten, wenn das ausgewählte LLM ihren Dateityp unterstützt."
+          upload_ids_placeholder: "={{ $json.post.upload_ids }}"
+          select_agent: "Wähle einen Agenten aus …"
+      bot_chats:
+        tab_label: "Bot-Chats"
       ai_tool_approval:
         loading: "Wird geladen …"
         agent: "Agent"
@@ -278,6 +296,7 @@ de:
             integrations: "Integrationen"
         nav:
           enabled: "Aktiviert"
+          not_enabled: "Nicht aktiviert"
         filters:
           all: "Gesamt"
           text: "Suche nach Funktionen, Agenten, LLM oder Gruppen …"
@@ -308,6 +327,9 @@ de:
             related_topics: "Verwandte Themen"
             semantic_search: "Semantische Suche"
         admin_dashboard:
+          name: "Admin-Dashboard"
+          description: "Hilft Community-Managern dabei, wichtige Veränderungen zu erkennen und zu entscheiden, worauf sie als Nächstes achten sollten"
+          highlights: "Highlights"
           setting_groups:
             settings: "Grundlegende Einstellungen"
         discord:
@@ -386,16 +408,29 @@ de:
         title: "Übersetzungen"
         description: "Übersetze alle Inhalte in deinem Forum automatisch in die bevorzugte Sprache des Benutzers"
         supported_locales: "Unterstützte Sprachen"
-        supported_locales_description: "Diese Website-Einstellung ermöglicht es auch Besuchern, Übersetzungen von Beiträgen beizutragen."
         category_scope: "Kategorien"
+        cached_results_notice: "Zeigt zwischengespeicherte Ergebnisse von %{relative_time}."
+        model_progress:
+          detail:
+            retry: "Erneut versuchen"
+            columns:
+              locale: "Gebietsschema"
+              pending: "Ausstehend"
+              total: "Gesamt"
+          targets:
+            post:
+              title: "Beiträge"
+            topic:
+              title: "Themen"
+            category:
+              title: "Kategorien"
+            tag:
+              title: "Schlagwörter"
         admin_actions:
-          translation_settings: "Übersetzungseinstellungen"
-          localization_settings: "Lokalisierungseinstellungen"
           enable_translations: "Automatische Übersetzungen aktivieren"
         stats:
           title: "Übersetzungsstatistiken"
           backfill_disabled: "Rückwirkende Übersetzung ist deaktiviert; nur neue Beiträge werden übersetzt."
-          backfill_message: "<a href='%{settingsUrl}'>Die Einstellungen für die rückwirkende Übersetzung</a> sind so konfiguriert, dass alle Beiträge nach %{date} übersetzt werden – dies wird voraussichtlich %{eta} dauern."
           eta_minutes:
             one: "%{count} Minute"
             other: "%{count} Minuten"
@@ -440,6 +475,7 @@ de:
         spam_detected: "Spam erkannt"
         custom_instructions_placeholder: "Websitespezifische Anweisungen für die KI zur genaueren Identifizierung von Spam"
         enable: "Aktivieren"
+        enabled_locked_tip: "Die KI-Spam-Erkennung lässt sich auf dieser Website nicht deaktivieren."
         spam_tip: "Die KI-Spamerkennung scannt die ersten 3 Beiträge aller neuen Benutzer zu öffentlichen Themen. Sie meldet sie zur Überprüfung und blockiert Benutzer, wenn es sich wahrscheinlich um Spam handelt."
         settings_saved: "Einstellungen gespeichert"
         spam_description: "Identifiziert potenziellen Spam mithilfe des ausgewählten LLMs und meldet ihn den Moderatoren der Website in der Warteschlange zur Überprüfung."
@@ -518,6 +554,7 @@ de:
         credit_allocations: "Guthabenzuweisungen"
       ai_agent:
         ai_tools: "Tools"
+        native_tools_help: "Anbietereigene Tools wie die Websuche oder das Abrufen von Seiten werden angezeigt, wenn „Immer das Standard-Sprachmodell verwenden“ aktiviert ist und das ausgewählte Standard-Sprachmodell diese unterstützt."
         mcp_servers: "MCP-Server"
         mcp_server_tools_help: "Ausgewählte MCP-Server stellen standardmäßig alle ihre Tools bereit. Um den Tokenverbrauch zu reduzieren und die Toolauswahl übersichtlicher zu gestalten, kann die Auswahl pro Agent eingeschränkt werden."
         mcp_server_tool_count:
@@ -548,6 +585,9 @@ de:
         no_llm_selected: "Kein Sprachmodell ausgewählt"
         use_parent_llm: "Sprachmodell des Agenten verwenden"
         compression_threshold_help: "Prozentualer Anteil der Kontextnutzung (20–99), bei dem die automatische Komprimierung einsetzt. Niedrigere Werte lösen die Komprimierung früher aus, sodass mehr Spielraum erhalten bleibt."
+        vision_enabled: Bild-Uploads einbeziehen
+        vision_enabled_help: Wenn diese Option aktiviert ist, kann dieser Agent Bilder aus Beiträgen und Chats einbeziehen, wenn das ausgewählte Modell die Bildeingabe unterstützt.
+        vision_max_pixels: Maximale Bildgröße
         vision_max_pixel_sizes:
           low: Niedrige Qualität – am günstigsten (256 x 256)
           medium: Mittlere Qualität (512 x 512)
@@ -610,7 +650,10 @@ de:
         allowed_groups: "Zulässige Gruppen"
         confirm_delete: "Bist du sicher, dass du diesen Agenten löschen möchtest?"
         new: "Neuer Agent"
+        duplicate: "Duplizieren"
+        copy_name: "Kopie von %{name}"
         no_agents: "Du hast noch keine Agenten erstellt"
+        manage_agents: "Agenten verwalten"
         title: "Agenten"
         short_title: "Agenten"
         delete: "Löschen"
@@ -849,6 +892,9 @@ de:
         max_output_tokens: "Maximale Ausgabetoken"
         url: "URL des Dienstes, der das Modell hostet"
         api_key: "API-Schlüssel des Dienstes, der das Modell hostet"
+        vision_enabled: "Unterstützt Bildeingabe"
+        allowed_attachment_types: "Erlaubte Dokumentanhänge"
+        attachment_types_placeholder: "Erweiterungen auswählen oder eingeben (z. B. pdf, txt, csv, docx, xlsx)"
         ai_bot_user: "KI-Bot-Benutzer"
         cost_input: "Eingabekosten"
         cost_cached_input: "Eingabekosten für Zwischengespeichertes"
@@ -866,6 +912,7 @@ de:
           group: "Gruppe"
           max_tokens: "Max. Token"
           max_usages: "Max. Verwendungen"
+          max_cost: "Max. Kosten"
           duration: "Dauer"
           confirm_delete: "Bist du sicher, dass du dieses Kontingent löschen willst?"
           add: "Kontingent hinzufügen"
@@ -877,7 +924,11 @@ de:
             custom: "Benutzerdefiniert …"
           hours: "Stunden"
           max_tokens_help: "Maximale Anzahl von Token (Wörtern und Zeichen), die jeder Benutzer in dieser Gruppe innerhalb der angegebenen Dauer verwenden kann. Token sind die Einheiten, die von KI-Modellen zur Textverarbeitung verwendet werden – etwa 1 Token = 4 Zeichen oder 3/4 eines Wortes."
+          max_tokens_required: "Muss gesetzt werden, wenn die maximalen Verwendungen und maximalen Kosten nicht festgelegt sind"
           max_usages_help: "Die maximale Anzahl von Benutzern in dieser Gruppe, die das KI-Modell innerhalb der angegebenen Dauer nutzen können. Dieses Kontingent wird für jeden einzelnen Nutzer verfolgt und nicht für die ganze Gruppe."
+          max_usages_required: "Muss gesetzt werden, wenn die maximalen Token und maximalen Kosten nicht festgelegt sind"
+          max_cost_help: "Die maximal geschätzten Kosten, die jeder Benutzer dieser Gruppe innerhalb des angegebenen Zeitraums für dieses KI-Modell ausgeben kann, basieren auf den konfigurierten Eingabe-, Ausgabe-, zwischengespeicherten Eingabe- und Cache-Schreib-Preisen des Modells."
+          max_cost_required: "Muss gesetzt werden, wenn die maximalen Token und maximalen Verwendungen nicht festgelegt sind"
         credit_allocation:
           credits_remaining: "Verbleibendes Guthaben: %{remaining} von %{total} (%{percentage} %)"
           soft_limit_warning: "Für dieses Modell sind heute noch %{percentage} % des KI-Guthabens übrig."
@@ -900,9 +951,13 @@ de:
           anthropic-claude-opus-4-7: "Das intelligenteste Modell von Anthropic"
           anthropic-claude-sonnet-4-6: "Optimales Gleichgewicht zwischen Geschwindigkeit und Kosten"
           anthropic-claude-haiku-4-5: "Schnell und kosteneffizient"
-          google-gemini-3-1-pro: "Googles intelligentestes Modell"
-          google-gemini-3-flash: "Schnell und kosteneffizient mit multimodaler Argumentation"
+          google-gemini-3-1-pro-preview: "Googles intelligentestes Modell"
           open_router-moonshotai-kimi-k2-6: "Moonshots multimodales Modell mit Bildverarbeitungsfunktionen"
+          open_router-deepseek-deepseek-v4-flash: "DeepSeeks neuestes Hochleistungsmodell mit Kontext von 1 Million"
+          open_router-minimax-minimax-m2-7: "Das MiniMax-Modell mit großem Kontext"
+          open_router-x-ai-grok-4-1-fast: "Das schnelle multimodale Modell von xAI mit sehr großem Kontext"
+          open_router-z-ai-glm-5-1: "Das schlussfolgernde Modell von Z-AI"
+          open_router-qwen-qwen3-6-plus: "Qwens multimodales Modell mit Kontext von 1 Million"
         preseeded_model_description: "Vorkonfiguriertes Open-Source-Modell unter Verwendung von %{model}"
         configured:
           title: "Konfigurierte LLMs"
@@ -921,11 +976,15 @@ de:
           success: "Erfolg!"
           invalid_config: "Behebe zunächst die folgenden Fehler in deiner Konfiguration:"
           failure: "Beim Versuch, das Modell zu kontaktieren, wurde dieser Fehler zurückgegeben: %{error}"
+          failure_non_streaming: "Nicht-Streaming-Anfrage fehlgeschlagen: %{error}"
+          failure_streaming: "Streaming-Anfrage fehlgeschlagen: %{error}"
         hints:
           max_prompt_tokens: "Die maximale Anzahl von Token, die das Modell in einer einzigen Anfrage verarbeiten kann"
           max_output_tokens: "Die maximale Anzahl von Token, die das Modell in einer einzigen Anfrage generieren kann"
           display_name: "Der Name, der verwendet wird, um dieses Modell in der Benutzeroberfläche deiner Website zu referenzieren."
           name: "Wir fügen dies in den API-Aufruf ein, um anzugeben, welches Modell wir verwenden werden"
+          vision_enabled: "Ob dieses Modell/dieser Anbieter Bilder empfangen und verstehen kann."
+          allowed_attachment_types: "Wähle aus, welche Arten von Dokumentanhängen konvertiert oder weitergeleitet werden dürfen. Lass das Feld leer, um Dokumentanhänge zu unterbinden. Bilder werden separat geregelt."
           cost_input: "Die Kosten für die Eingabe pro 1 Million Token für dieses Modell"
           cost_cached_input: "Die Kosten für zwischengespeicherte Eingabetoken pro 1 Mio. Token für dieses Modell (beim Lesen aus dem Aufforderungs-Zwischenspeicher)."
           cost_cache_write: "Die Kosten für zwischengespeicherte Schreibtoken pro 1 Mio. Token für dieses Modell (beim Schreiben in den Aufforderungs-Zwischenspeicher)."
@@ -939,7 +998,6 @@ de:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -963,6 +1021,9 @@ de:
           disable_streaming: "Streaming-Vervollständigung deaktivieren (Streaming-Anfragen in Nicht-Streaming-Anfragen umwandeln)"
           reasoning_effort: "Argumentationsaufwand (gilt nur für Argumentationsmodelle)"
           service_tier: "Service-Stufe (Flex = geringere Kosten/höhere Latenzzeit, Priority = schnellere Verarbeitung)"
+          reasoning_parser: "vLLM-Schlussfolgerungs-Parser"
+          thinking_override: "Denken überschreiben"
+          thinking_token_budget: "Token-Budget für das Denken"
           enable_reasoning: "Argumentation aktivieren (nur für Argumentationsmodelle anwendbar)"
           adaptive_thinking: "Aktiviere adaptives Denken (empfohlen für Claude-4.6-Modelle)"
           enable_thinking: "Aktiviere das Denken (Gemini-2.5-Modelle – verwendet Token-Budget)"
@@ -976,6 +1037,11 @@ de:
           prompt_caching_tool_results: "Tool-Ergebnisse - Zwischenspeichern, wenn Tool-Ergebnisse vorhanden sind (empfohlen)"
           prompt_caching_always: "Immer - Immer zwischengespeicherte Aufforderungen verwenden"
           effort: "Anstrengungsgrad"
+        provider_field_hints:
+          reasoning_parser: "Muss mit der Einstellung „--reasoning-parser“ des vLLM-Servers übereinstimmen. Discourse kann den Parser nicht pro Anfrage wechseln; es nutzt diese Einstellung, um die Anfrageoptionen anzupassen."
+          thinking_override: "Erzwinge optional, dass unterstützte vLLM-Chat-Vorlagen das Denken für jede Anfrage aktivieren oder deaktivieren. Nicht unterstützte Parser behalten den Serverstandard bei."
+          reasoning_effort: "Sendet die vLLM-Option „reasoning_effort“ an Parser, die diese unterstützen."
+          thinking_token_budget: "Optionale Obergrenze für das Schlussfolgerungstoken. Erfordert einen vLLM-Reasoning-Parser und wird ignoriert, wenn der Schlussfolgerungsaufwand „None“ ist."
       related_topics:
         title: "Verwandte Themen"
         pill: "Verwandt"
@@ -983,6 +1049,9 @@ de:
         title: "Änderungen mit KI vorschlagen"
         description: "Wähle eine der folgenden Optionen und die KI schlägt dir eine neue Version des Textes vor."
         selection_hint: "Tipp: Du kannst auch einen Teil des Textes auswählen, bevor du den Assistenten öffnest, um nur diesen Teil neu zu schreiben."
+        suggest: "KI-Vorschläge anzeigen"
+        choose: "Entscheide für mich"
+        suggestions: "Vorschläge"
         suggest_errors:
           no_suggestions: "Keine Vorschläge verfügbar"
         missing_content: "Bitte gib einige Inhalte ein, um Vorschläge zu generieren."
@@ -1180,12 +1249,18 @@ de:
             other: "Nachricht muss mindestens %{count} Zeichen lang sein"
           messages_sidebar_title: "Unterhaltungen"
           starred: "Mit Sternchen"
+          star_conversation: "Unterhaltung mit Sternchen markieren"
+          unstar_conversation: "Sternchen von Unterhaltung entfernen"
+          open_conversation_menu: "Unterhaltungsmenü öffnen"
           today: "Heute"
           last_7_days: "Letzte 7 Tage"
           last_30_days: "Letzte 30 Tage"
           upload_files: "Dateien hochladen"
           uploads_in_progress: "Absenden nicht möglich, solange Uploads nicht abgeschlossen sind"
+          show_toolbar: "Formatierungsleiste anzeigen"
+          hide_toolbar: "Formatierungsleiste ausblenden"
           scroll_to_bottom: "Nach unten scrollen"
+          streaming_below: "Neuer Inhalt unten"
           editing_post: "Beitrag wird bearbeitet "
       sentiments:
         dashboard:
@@ -1222,15 +1297,9 @@ de:
           bulk_regen_description: "Wähle aus, welche Art von KI-Zusammenfassung für die ausgewählten Themen neu erstellt werden soll."
           regenerate_gists_option: "Kurzzusammenfassungen (Zentrale Punkte)"
           regenerate_summaries_option: "Themenzusammenfassungen"
-          regenerate_gists_success:
-            one: "Kurzzusammenfassung erfolgreich neu generiert"
-            other: "%{count} Kurzzusammenfassungen erfolgreich neu generiert"
           regenerate_gists_error:
             one: "Kurzzusammenfassung konnte nicht neu generiert werden"
             other: "%{count} Kurzzusammenfassungen konnten nicht neu generiert werden"
-          regenerate_topic_summary_success:
-            one: "Themenzusammenfassung erfolgreich neu generiert"
-            other: "%{count} Themenzusammenfassungen erfolgreich neu generiert"
           regenerate_topic_summary_error:
             one: "Themenzusammenfassung konnte nicht neu generiert werden"
             other: "%{count} Themenzusammenfassungen konnten nicht neu generiert werden"

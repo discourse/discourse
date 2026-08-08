@@ -12,7 +12,7 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import DTextField from "discourse/ui-kit/d-text-field";
 import DTextarea from "discourse/ui-kit/d-textarea";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import dDraggable from "discourse/ui-kit/modifiers/d-draggable";
+import dPointerDrag from "discourse/ui-kit/modifiers/d-pointer-drag";
 import { i18n } from "discourse-i18n";
 import CodeView from "discourse/plugins/discourse-data-explorer/discourse/components/code-view";
 import ExplorerSchema from "discourse/plugins/discourse-data-explorer/discourse/components/explorer-schema";
@@ -145,10 +145,10 @@ export default class QueriesEdit extends Component {
 
                 <div
                   class="grippie"
-                  {{dDraggable
-                    didStartDrag=@controller.didStartDrag
-                    didEndDrag=@controller.didEndDrag
-                    dragMove=@controller.dragMove
+                  {{dPointerDrag
+                    onDragStart=@controller.didStartDrag
+                    onDrag=@controller.dragMove
+                    onDragEnd=@controller.didEndDrag
                   }}
                 >
                 </div>
@@ -278,10 +278,10 @@ export default class QueriesEdit extends Component {
 
               <div
                 class="grippie"
-                {{dDraggable
-                  didStartDrag=@controller.didStartDrag
-                  didEndDrag=@controller.didEndDrag
-                  dragMove=@controller.dragMove
+                {{dPointerDrag
+                  onDragStart=@controller.didStartDrag
+                  onDrag=@controller.dragMove
+                  onDragEnd=@controller.didEndDrag
                 }}
               >
                 {{dIcon "discourse-expand"}}

@@ -8,7 +8,6 @@ describe "Composer - Event preview focus" do
   before do
     SiteSetting.calendar_enabled = true
     SiteSetting.discourse_post_event_enabled = true
-    SiteSetting.rich_editor = false
     sign_in(admin)
   end
 

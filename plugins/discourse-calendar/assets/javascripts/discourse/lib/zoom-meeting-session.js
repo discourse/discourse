@@ -1,5 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { setOwner } from "@ember/owner";
+import { isEmpty } from "@ember/utils";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import fetchZoomJoinPayload from "./fetch-zoom-join-payload";
 import { loadZoomMeetingSdkEmbedded } from "./load-zoom-meeting-sdk";
@@ -19,6 +21,7 @@ export default class ZoomMeetingSession {
   @tracked errorMessage;
   @tracked isJoining = false;
   @tracked isJoined = false;
+  @tracked hasJoinedAudio = false;
   @tracked showZoomFrame = false;
   @tracked retryCountdown = null;
   @tracked isRetryingNow = false;
@@ -33,11 +36,14 @@ export default class ZoomMeetingSession {
 
   #tornDown = false;
 
-  constructor(owner, { topicId, canJoin, onBeforeJoinAttempt }) {
+  constructor(owner, { topicId, canJoin, onBeforeJoinAttempt, onJoined }) {
     setOwner(this, owner);
     this.topicId = topicId;
     this.canJoin = canJoin;
     this.onBeforeJoinAttempt = onBeforeJoinAttempt;
+    this.onJoined = onJoined;
+
+    document.addEventListener("visibilitychange", this.onVisibilityChange);
   }
 
   teardown() {
@@ -45,6 +51,7 @@ export default class ZoomMeetingSession {
     clearInterval(this.retryTimer);
     cancelAnimationFrame(this.layoutFrame);
     cancelAnimationFrame(this.videoSyncFrame);
+    document.removeEventListener("visibilitychange", this.onVisibilityChange);
     this.zoomClient?.leaveMeeting?.();
   }
 
@@ -93,6 +100,7 @@ export default class ZoomMeetingSession {
       }
 
       this.isJoined = true;
+      this.onJoined?.();
       this.stopRetrying();
     } catch (err) {
       const serializedError = serializeZoomError(err);
@@ -122,13 +130,37 @@ export default class ZoomMeetingSession {
     } finally {
       this.isJoining = false;
 
-      this.layoutFrame = window.requestAnimationFrame(() =>
-        syncZoomLayout(this.element)
-      );
-      this.videoSyncFrame = window.requestAnimationFrame(() =>
-        this.syncVideoSize()
-      );
+      this.scheduleViewSync();
     }
+  }
+
+  // Both the frame callbacks below and the resize observer the modifier
+  // attaches are suspended while the document is hidden, so a join that lands
+  // in a background tab leaves Zoom rendering at whatever size it was last
+  // told about. `onVisibilityChange` picks the work back up on return.
+  scheduleViewSync() {
+    if (document.hidden) {
+      return;
+    }
+
+    cancelAnimationFrame(this.layoutFrame);
+    cancelAnimationFrame(this.videoSyncFrame);
+
+    this.layoutFrame = window.requestAnimationFrame(() =>
+      syncZoomLayout(this.element)
+    );
+    this.videoSyncFrame = window.requestAnimationFrame(() =>
+      this.syncVideoSize()
+    );
+  }
+
+  @bind
+  onVisibilityChange() {
+    if (document.hidden || this.#tornDown || !this.zoomClient) {
+      return;
+    }
+
+    this.scheduleViewSync();
   }
 
   async performJoin() {
@@ -169,6 +201,8 @@ export default class ZoomMeetingSession {
         }
       });
 
+      this.zoomClient.on("user-updated", () => this.syncAudioState());
+
       this.zoomClientInitialized = true;
     }
 
@@ -180,6 +214,16 @@ export default class ZoomMeetingSession {
       userName: zoomJoinPayload.user_name,
       userEmail: zoomJoinPayload.user_email,
     });
+
+    this.syncAudioState();
+  }
+
+  // Joining the meeting does not connect audio: `audio` stays "" until the user
+  // picks computer or phone audio in Zoom's own controls. `user-updated` carries
+  // only the properties that changed, so the value is re-read from the client
+  // rather than taken from the payload.
+  syncAudioState() {
+    this.hasJoinedAudio = !isEmpty(this.zoomClient?.getCurrentUser?.()?.audio);
   }
 
   syncVideoSize() {
@@ -196,6 +240,7 @@ export default class ZoomMeetingSession {
 
   leaveZoom() {
     this.isJoined = false;
+    this.hasJoinedAudio = false;
     this.showZoomFrame = false;
 
     // Deletes inline styles that Zoom applies which leaves a big empty box on

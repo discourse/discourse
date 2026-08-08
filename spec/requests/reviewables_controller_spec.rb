@@ -605,6 +605,86 @@ RSpec.describe ReviewablesController do
         end
       end
 
+      context "when a category moderator cannot see the flag's PM topic" do
+        subject(:show_reviewable) { get "/review/#{reviewable.id}.json" }
+
+        fab!(:post)
+        fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+        fab!(:category_moderator, :user)
+        fab!(:group)
+        fab!(:category_moderation_group) do
+          Fabricate(:category_moderation_group, category: post.topic.category, group:)
+        end
+
+        let(:flag_reason) { "this is the flag reason" }
+        let(:result) { PostActionCreator.notify_moderators(user, post, flag_reason) }
+        let(:reviewable) { result.reviewable }
+        let(:reviewable_score) { result.reviewable_score }
+        let(:meta_topic) { reviewable_score.meta_topic }
+
+        let(:response_body) { response.parsed_body }
+        let(:serialized_score) { response_body["reviewable_scores"].first }
+        let(:conversation_id) { serialized_score["reviewable_conversation_id"] }
+        let(:conversation) do
+          response_body["reviewable_conversations"].find { |convo| convo["id"] == conversation_id }
+        end
+        let(:flagger_post) do
+          response_body["conversation_posts"].find do |convo_post|
+            convo_post["id"] == conversation["conversation_post_ids"].first
+          end
+        end
+
+        before do
+          SiteSetting.enable_category_group_moderation = false
+          reviewable_score
+          SiteSetting.enable_category_group_moderation = true
+          group.add(category_moderator)
+          sign_in(category_moderator)
+        end
+
+        it "cannot see the flag's PM topic directly" do
+          expect(category_moderator.guardian.can_see_topic?(meta_topic)).to eq(false)
+        end
+
+        context "when the conversation belongs to the flag being reviewed" do
+          it "returns the notify moderators conversation" do
+            show_reviewable
+
+            expect(response.code).to eq("200")
+            expect(conversation_id).to eq(meta_topic.id)
+            expect(conversation).to be_present
+            expect(flagger_post).to include(
+              "user_id" => user.id,
+              "excerpt" => a_string_including(flag_reason),
+            )
+          end
+        end
+
+        context "when the score points at an unrelated notify_moderators message" do
+          let(:unrelated_flag_reason) { "unrelated flag reason" }
+          let(:unrelated_post) { Fabricate(:post) }
+          let(:unrelated_result) do
+            PostActionCreator.notify_moderators(user, unrelated_post, unrelated_flag_reason)
+          end
+
+          before do
+            SiteSetting.enable_category_group_moderation = false
+            reviewable_score.update!(meta_topic: unrelated_result.reviewable_score.meta_topic)
+            SiteSetting.enable_category_group_moderation = true
+          end
+
+          it "does not return the conversation" do
+            show_reviewable
+
+            expect(response.code).to eq("200")
+            expect(conversation_id).to be_blank
+            expect(response_body["reviewable_conversations"]).to be_blank
+            expect(response_body["conversation_posts"]).to be_blank
+            expect(response.body).not_to include(unrelated_flag_reason)
+          end
+        end
+      end
+
       context "with an inaccessible conversation" do
         it "does not serialize the conversation" do
           SiteSetting.enable_category_group_moderation = true
@@ -1202,18 +1282,22 @@ RSpec.describe ReviewablesController do
     end
 
     describe "#scrub" do
-      it "only allows admins to scrub reviewables" do
-        moderator = Fabricate(:moderator)
+      let(:user) { Fabricate(:user).tap(&:activate) }
+      let(:reviewable) { ReviewableUser.find_by(target: user) }
 
+      before do
         Jobs.run_immediately!
         SiteSetting.must_approve_users = true
-        user = Fabricate(:user)
-        user.activate
-        reviewable = ReviewableUser.find_by(target: user)
+      end
 
-        sign_in(moderator)
+      def reject_user
         put "/review/#{reviewable.id}/perform/delete_user.json?version=0"
         expect(response.status).to eq(200)
+      end
+
+      it "only allows admins to scrub reviewables" do
+        sign_in(Fabricate(:moderator))
+        reject_user
 
         put "/review/#{reviewable.id}/scrub.json?reason=spam"
         expect(response.status).to eq(403)
@@ -1224,12 +1308,6 @@ RSpec.describe ReviewablesController do
       end
 
       it "doesn't allow scrubbing of reviewables that haven't been rejected" do
-        Jobs.run_immediately!
-        SiteSetting.must_approve_users = true
-        user = Fabricate(:user)
-        user.activate
-        reviewable = ReviewableUser.find_by(target: user)
-
         sign_in(admin)
         put "/review/#{reviewable.id}/scrub.json?reason=spam"
         expect(response.status).to eq(404)
@@ -1251,21 +1329,25 @@ RSpec.describe ReviewablesController do
       end
 
       it "doesn't allow scrubbing of reviewables that have already been scrubbed" do
-        Jobs.run_immediately!
-        SiteSetting.must_approve_users = true
-        user = Fabricate(:user)
-        user.activate
-        reviewable = ReviewableUser.find_by(target: user)
-
         sign_in(admin)
-        put "/review/#{reviewable.id}/perform/delete_user.json?version=0"
-        expect(response.status).to eq(200)
+        reject_user
 
         put "/review/#{reviewable.id}/scrub.json?reason=spam"
         expect(response.status).to eq(200)
 
         put "/review/#{reviewable.id}/scrub.json?reason=spam"
         expect(response.status).to eq(403)
+      end
+
+      it "allows scrubbing of rejected reviewables whose user couldn't be deleted" do
+        Fabricate(:post, user: user)
+
+        sign_in(admin)
+        reject_user
+        expect(User.exists?(user.id)).to eq(true)
+
+        put "/review/#{reviewable.id}/scrub.json?reason=spam"
+        expect(response.status).to eq(200)
       end
     end
 
@@ -1286,6 +1368,65 @@ RSpec.describe ReviewablesController do
         expect(response.code).to eq("200")
         json = response.parsed_body
         expect(json["count"]).to eq(1)
+      end
+    end
+  end
+
+  shared_context "with a private-message reviewable" do
+    fab!(:pm_author, :user)
+    fab!(:pm_recipient, :user)
+    fab!(:outsider_moderator, :moderator)
+    fab!(:pm_topic) { Fabricate(:private_message_topic, user: pm_author, recipient: pm_recipient) }
+    fab!(:pm_post) do
+      Fabricate(
+        :post,
+        topic: pm_topic,
+        user: pm_author,
+        raw: "the confidential body of a private message xyzsecret481",
+      )
+    end
+
+    fab!(:unescalated_pm_reviewable) do
+      ReviewablePost.needs_review!(
+        target: pm_post,
+        created_by: Discourse.system_user,
+        reviewable_by_moderator: true,
+      )
+    end
+  end
+
+  describe "#index" do
+    context "when a reviewable targets a private message" do
+      include_context "with a private-message reviewable"
+
+      it "returns no private-message reviewable, body, or unseen count to a moderator outside the conversation" do
+        sign_in(outsider_moderator)
+
+        get "/review.json"
+
+        expect(response.status).to eq(200)
+        listed_ids = response.parsed_body["reviewables"].map { |reviewable| reviewable["id"] }
+        expect(listed_ids).not_to include(unescalated_pm_reviewable.id)
+        expect(response.body).not_to include(pm_post.raw)
+        expect(response.parsed_body["meta"]["unseen_reviewable_count"]).to eq(0)
+      end
+    end
+  end
+
+  describe "#perform" do
+    context "when a reviewable targets a private message" do
+      include_context "with a private-message reviewable"
+
+      it "returns 404 and leaves the post intact for a moderator outside the conversation" do
+        sign_in(outsider_moderator)
+
+        put "/review/#{unescalated_pm_reviewable.id}/perform/reject_and_delete.json",
+            params: {
+              version: unescalated_pm_reviewable.version,
+            }
+
+        expect(response.status).to eq(404)
+        expect(pm_post.reload.trashed?).to eq(false)
       end
     end
   end

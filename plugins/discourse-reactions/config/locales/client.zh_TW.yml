@@ -13,8 +13,6 @@ zh_TW:
   js:
     discourse_reactions:
       reactions_title: "反應"
-      state_panel:
-        more_users: "和%{count}更多。"
       picker:
         react_with: "對這篇文章的反應是： %{reaction}"
         cant_remove_reaction: "您無法再移除您的反應"

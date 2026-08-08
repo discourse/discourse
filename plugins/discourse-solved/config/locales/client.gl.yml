@@ -10,8 +10,6 @@ gl:
       dashboard:
         sections:
           support:
-            filter:
-              all_categories: "Todas as categorías"
             answerers:
               staff: "Equipo"
               member: "Membros"

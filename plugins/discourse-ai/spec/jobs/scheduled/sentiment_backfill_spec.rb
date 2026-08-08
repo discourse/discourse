@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../../support/sentiment_inference_stubs"
-
 RSpec.describe Jobs::SentimentBackfill do
   subject(:job) { described_class.new }
 

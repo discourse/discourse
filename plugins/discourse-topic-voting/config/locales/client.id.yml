@@ -12,3 +12,6 @@ id:
         other: "%{count} suara"
       show_voters: "Tunjukkan siapa yang memilih"
       vote_count_thousands: "%{count}k"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Label"

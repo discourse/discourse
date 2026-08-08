@@ -2,10 +2,8 @@
 
 <%- if rtl? %>
   <%= discourse_stylesheet_preload_tag(:common_rtl) %>
-  <%= discourse_stylesheet_preload_tag(mobile_device? ? :mobile_rtl : :desktop_rtl) %>
 <%- else %>
   <%= discourse_stylesheet_preload_tag(:common) %>
-  <%= discourse_stylesheet_preload_tag(mobile_device? ? :mobile : :desktop) %>
 <%- end %>
 
 <%- if staff? %>

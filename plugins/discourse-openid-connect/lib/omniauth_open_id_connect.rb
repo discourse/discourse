@@ -144,6 +144,15 @@ module OmniAuth
           fail!(:jwt_nonce_verify_failed, e)
         rescue SubVerifyError => e
           fail!(:openid_connect_sub_mismatch, e)
+        rescue Faraday::Error => e
+          detail =
+            if e.is_a?(Faraday::TimeoutError)
+              "timed out after #{GlobalSetting.openid_connect_request_timeout_seconds}s"
+            else
+              "failed"
+            end
+          Rails.logger.error("OIDC Log: request #{detail}: #{e.class} #{e.message}")
+          fail!(:openid_connect_request_failed, e)
         end
       end
 

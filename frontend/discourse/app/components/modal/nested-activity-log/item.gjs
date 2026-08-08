@@ -1,21 +1,19 @@
 import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import {
   customGroupActionCodes,
+  default as PostSmallAction,
   GROUP_ACTION_CODES,
-  ICONS,
 } from "discourse/components/post/small-action";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import { userPath } from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
 import DUserAvatar from "discourse/ui-kit/d-user-avatar";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-
-const ACTIVITY_LOG_ICONS = {
-  topic_created: "plus",
-};
 
 // `action_codes.*` translations interpolate %{who}/%{when}/%{path} at arbitrary
 // positions inside a translated sentence, so the substitutions have to be HTML
@@ -47,9 +45,8 @@ function mentionLinkFor(code, who) {
 }
 
 export default class NestedActivityLogItem extends Component {
-  get iconName() {
-    const code = this.args.action.action_code;
-    return ACTIVITY_LOG_ICONS[code] || ICONS[code] || "exclamation";
+  get isSynthetic() {
+    return this.args.action.synthetic;
   }
 
   get description() {
@@ -61,33 +58,45 @@ export default class NestedActivityLogItem extends Component {
       return null;
     }
     return {
+      id: this.args.action.user_id,
       username: this.args.action.username,
       avatar_template: this.args.action.avatar_template,
     };
   }
 
   <template>
-    <li class="nested-activity-log-modal__item">
-      <span class="nested-activity-log-modal__icon" aria-hidden="true">
-        {{dIcon this.iconName}}
-      </span>
-      <div class="nested-activity-log-modal__content">
-        <div class="nested-activity-log-modal__desc">
-          {{#if this.user}}
-            <DUserAvatar
-              @ariaHidden={{true}}
-              @size="small"
-              @user={{this.user}}
-            />
-          {{/if}}
-          <span>{{this.description}}</span>
-        </div>
-        {{#if @action.cooked}}
-          <div class="nested-activity-log-modal__message">
-            {{trustHTML @action.cooked}}
+    <li
+      class={{dConcatClass
+        "nested-activity-log-modal__item"
+        (if this.isSynthetic "--synthetic")
+      }}
+    >
+      {{#if this.isSynthetic}}
+        <span class="nested-activity-log-modal__icon" aria-hidden="true">
+          {{dIcon "plus"}}
+        </span>
+        <div class="nested-activity-log-modal__content">
+          <div class="nested-activity-log-modal__desc">
+            {{#if this.user}}
+              <DUserAvatar
+                @ariaHidden={{false}}
+                @size="small"
+                @user={{this.user}}
+              />
+            {{/if}}
+            <span>{{this.description}}</span>
           </div>
-        {{/if}}
-      </div>
+        </div>
+      {{else}}
+        <PostSmallAction
+          class="nested-activity-log-modal__post"
+          @elementId="nested-activity-log-post-{{@action.id}}"
+          @post={{@action}}
+          @editPost={{fn @editPost @action}}
+          @deletePost={{fn @deletePost @action}}
+          @recoverPost={{fn @recoverPost @action}}
+        />
+      {{/if}}
     </li>
   </template>
 }

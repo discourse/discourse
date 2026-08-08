@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { EDIT } from "discourse/models/composer";
+import { ADD_TRANSLATION, EDIT } from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
 
 export default class PostImageCaptionEditor extends Service {
@@ -16,10 +16,12 @@ export default class PostImageCaptionEditor extends Service {
   @tracked loadingKey = null;
 
   get canEditCurrentComposer() {
+    const action = this.composer.model?.action;
+
     return Boolean(
       this.siteSettings.ai_post_image_captions_enabled &&
-      this.composer.model?.action === EDIT &&
-      this.currentPostId
+      this.currentPostId &&
+      (action === EDIT || (action === ADD_TRANSLATION && this.currentLocale))
     );
   }
 
@@ -28,6 +30,10 @@ export default class PostImageCaptionEditor extends Service {
   }
 
   get currentLocale() {
+    if (this.composer.model?.action === ADD_TRANSLATION) {
+      return this.composer.selectedTranslationLocale;
+    }
+
     return this.composer.model?.locale;
   }
 

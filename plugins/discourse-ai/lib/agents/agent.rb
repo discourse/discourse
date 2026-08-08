@@ -89,6 +89,7 @@ module DiscourseAi
         def all_available_tools
           tools = [
             Tools::ListCategories,
+            Tools::ListUsers,
             Tools::Time,
             Tools::Search,
             Tools::Read,
@@ -266,6 +267,10 @@ module DiscourseAi
 
       def required_tools
         []
+      end
+
+      def stop_chain_on_pending_approval?
+        false
       end
 
       def temperature

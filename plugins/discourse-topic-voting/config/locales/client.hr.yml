@@ -29,3 +29,6 @@ hr:
       my_votes:
         title: "Moji glasovi"
         help: "teme o kojima ste glasali"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Oznake"

@@ -2,8 +2,6 @@
 
 module DiscoursePostEvent
   class EventParser
-    HTTP_URL_REGEXP = URI::DEFAULT_PARSER.make_regexp(%w[http https])
-
     VALID_OPTIONS = [
       :start,
       :end,
@@ -25,6 +23,8 @@ module DiscoursePostEvent
       :"all-day",
       :image,
     ]
+
+    LEGACY_ESCAPED_ATTRS = %w[data-location]
 
     def self.extract_events(post)
       cooked = PrettyText.cook(post.raw, topic_id: post.topic_id, user_id: post.user_id)
@@ -49,9 +49,9 @@ module DiscoursePostEvent
 
             if value && valid_options.include?(name)
               event ||= {}
-              event[name.sub("data-", "").to_sym] = if %w[data-name data-url data-image].include?(
-                   name,
-                 )
+              value = CGI.unescapeHTML(value) if LEGACY_ESCAPED_ATTRS.include?(name)
+              event[name.sub("data-", "").to_sym] = case name
+              when "data-name", "data-url", "data-image", "data-location"
                 value
               else
                 CGI.escapeHTML(value)
@@ -65,7 +65,7 @@ module DiscoursePostEvent
               end
             end
           end
-          event[:description] = doc.text.strip if event
+          event[:description] = to_markdown(doc) if event
           event
         end
         .compact
@@ -81,26 +81,62 @@ module DiscoursePostEvent
       "data-#{dasherized}"
     end
 
-    def self.linkify_description(text, post: nil)
+    INLINE_MARKDOWN_FEATURES = %w[emoji linkify]
+    INLINE_MARKDOWN_IT_RULES = %w[link linkify entity escape newline]
+    INLINE_CACHE_VERSION = 2
+
+    def self.cook_inline(text, post: nil)
       text = text.to_s
-
-      html = +""
-      cursor = 0
-      text.scan(HTTP_URL_REGEXP) do
-        match = Regexp.last_match
-        html << ERB::Util.html_escape(text[cursor...match.begin(0)])
-        escaped_url = ERB::Util.html_escape(match[0])
-        html << "<a href=\"#{escaped_url}\">#{escaped_url}</a>"
-        cursor = match.end(0)
-      end
-      html << ERB::Util.html_escape(text[cursor..])
-      html.gsub!(/\r\n?|\n/, "<br>")
-
-      doc = Nokogiri::HTML5.fragment(html)
       add_nofollow = post.nil? || post.add_nofollow?
-      PrettyText.add_rel_attributes_to_user_content(doc, add_nofollow)
 
-      doc.to_html
+      Discourse
+        .cache
+        .fetch(
+          "post-event-inline:#{INLINE_CACHE_VERSION}:#{Digest::SHA1.hexdigest(text)}:#{add_nofollow}",
+          expires_in: 1.week,
+        ) do
+          cooked =
+            PrettyText.cook(
+              text,
+              features_override: INLINE_MARKDOWN_FEATURES,
+              markdown_it_rules: INLINE_MARKDOWN_IT_RULES,
+              omit_nofollow: !add_nofollow,
+            )
+          fragment = Nokogiri::HTML5.fragment(cooked)
+          content = fragment.children.reject(&:blank?)
+          if content.length == 1 && content.first.name == "p"
+            content.first.inner_html
+          else
+            fragment.to_html
+          end
+        end
+    end
+
+    def self.inline_text(text)
+      cooked = cook_inline(text)
+      PrettyText.excerpt(cooked, cooked.length, strip_links: true, text_entities: true)
+    end
+
+    def self.linkable_url?(url)
+      url = url.to_s.downcase
+      schemes = %w[http https mailto] | SiteSetting.allowed_href_schemes.split("|")
+      schemes.any? { |scheme| url.start_with?("#{scheme}:") }
+    end
+
+    def self.to_markdown(node)
+      fragment = node.dup
+      fragment
+        .css("img.emoji")
+        .each { |img| img.replace(img.document.create_text_node(img["alt"].to_s)) }
+      fragment
+        .css("a[href]")
+        .each do |a|
+          href = a["href"].to_s
+          next if !linkable_url?(href)
+          markdown = a.text == href ? href : "[#{a.text}](#{href})"
+          a.replace(a.document.create_text_node(markdown))
+        end
+      fragment.text.strip
     end
   end
 end

@@ -19,7 +19,7 @@ zh_CN:
     openid_connect_allow_association_change: "允许用户从 OpenID Connect 提供商断开并重新连接其 Discourse 帐户"
     openid_connect_verbose_logging: "将详细的 openid-connect 身份验证信息记录到 `/logs`。常规使用期间应保持禁用。"
     openid_connect_authorize_parameters: "从 /auth/oidc 到 IDP 授权端点的重定向中将包含的 URL 参数"
-    openid_connect_overrides_email: "每次登录时，使用 openid-connect 值覆盖用户的电子邮件地址。其作用与 {{setting:auth_overrides_email}} 设置相同，但专门用于 OpenID Connect 登录。"
+    openid_connect_overrides_email: "每次登录时，使用 openid-connect 值覆盖用户的电子邮件地址。运作方式与 {{setting:auth_overrides_email}} 相同，但仅适用于 OpenID Connect 登录。"
     openid_connect_claims: "明确定义声明以用于不基于范围传回数据的提供商。(JSON)"
     openid_connect_groups_claim: "OIDC 令牌中以字符串数组形式包含用户群组信息的声明名称。留空则禁用群组同步。"
     openid_connect_user_field_mappings: "将 OIDC 声明映射到 Discourse 用户字段。每个条目将 OIDC 声明名称与 Discourse 用户字段的数字 ID 配对。"

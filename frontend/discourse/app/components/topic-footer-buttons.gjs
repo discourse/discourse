@@ -47,15 +47,6 @@ export default class TopicFooterButtons extends Component {
     set(this, "topic.details.can_invite_to", value);
   }
 
-  @computed("currentUser.user_option.enable_defer")
-  get canDefer() {
-    return this.currentUser?.user_option?.enable_defer;
-  }
-
-  set canDefer(value) {
-    set(this, "currentUser.user_option.enable_defer", value);
-  }
-
   @computed("topic.archived", "topic.closed", "topic.deleted")
   get inviteDisabled() {
     return this.topic?.archived || this.topic?.closed || this.topic?.deleted;

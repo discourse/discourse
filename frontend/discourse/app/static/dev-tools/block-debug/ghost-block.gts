@@ -84,6 +84,9 @@ export default class GhostBlock extends Component<GhostBlockSignature> {
     if (this.args.failureType === FAILURE_TYPE.NO_VISIBLE_CHILDREN) {
       return i18n("js.blocks.ghost_reasons.no_visible_children_hint");
     }
+    if (this.args.failureType === FAILURE_TYPE.UNKNOWN_BLOCK) {
+      return i18n("js.blocks.ghost_reasons.unknown_block_hint");
+    }
     return i18n("js.blocks.ghost_reasons.condition_failed_hint");
   }
 
@@ -96,6 +99,7 @@ export default class GhostBlock extends Component<GhostBlockSignature> {
     if (
       this.args.failureType === FAILURE_TYPE.OPTIONAL_MISSING ||
       this.args.failureType === FAILURE_TYPE.NO_VISIBLE_CHILDREN ||
+      this.args.failureType === FAILURE_TYPE.UNKNOWN_BLOCK ||
       this.args.failureReason
     ) {
       return i18n("js.blocks.ghost.status");
@@ -115,6 +119,9 @@ export default class GhostBlock extends Component<GhostBlockSignature> {
     if (this.args.failureType === FAILURE_TYPE.NO_VISIBLE_CHILDREN) {
       return i18n("js.blocks.ghost.no_visible_children");
     }
+    if (this.args.failureType === FAILURE_TYPE.UNKNOWN_BLOCK) {
+      return i18n("js.blocks.ghost.unknown_block");
+    }
     if (this.args.failureReason) {
       return i18n("js.blocks.ghost.hidden");
     }
@@ -132,6 +139,7 @@ export default class GhostBlock extends Component<GhostBlockSignature> {
     return (
       this.args.failureType !== FAILURE_TYPE.OPTIONAL_MISSING &&
       this.args.failureType !== FAILURE_TYPE.NO_VISIBLE_CHILDREN &&
+      this.args.failureType !== FAILURE_TYPE.UNKNOWN_BLOCK &&
       !this.args.failureReason
     );
   }

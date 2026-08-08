@@ -64,6 +64,8 @@ fi:
       cancel: "Peruuta"
       cancel_reply: "Peruuta vastaus"
       chat_channels: "Kanavat"
+      pinned_bar:
+        title: "Kiinnitetty"
       pinned: "Kiinnitetty"
       browse_all_channels: "Selaa kaikkia kanavia"
       see_in: "Katso:"
@@ -145,11 +147,6 @@ fi:
         never: "Ei koskaan"
       separate_sidebar_mode:
         title: "Näytä erilliset sivupalkkitilat foorumille ja chatille"
-      send_shortcut:
-        enter:
-          label: "Lähetä painamalla Enter-näppäintä"
-        meta_enter:
-          label: "Lähetä painamalla %{meta_key} + Enter"
       enable: "Ota chat käyttöön"
       flag: "Liputa"
       emoji: "Lisää emoji"

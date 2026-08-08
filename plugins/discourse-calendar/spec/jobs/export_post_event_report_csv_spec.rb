@@ -10,9 +10,9 @@ describe Jobs::ExportCsvFile do
 
   describe "#execute" do
     context "when the requesting user is admin" do
-      let(:user) { Fabricate(:user, admin: true) }
-      let(:user_1) { Fabricate(:user) }
-      let(:user_2) { Fabricate(:user) }
+      let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
+      let(:user_1) { Fabricate(:user, refresh_auto_groups: true) }
+      let(:user_2) { Fabricate(:user, refresh_auto_groups: true) }
       let(:topic) { Fabricate(:topic, user: user) }
       let(:post1) { Fabricate(:post, topic: topic) }
       let(:post_event) { Fabricate(:event, post: post1) }

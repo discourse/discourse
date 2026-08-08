@@ -29,3 +29,6 @@ bg:
         help: "теми, за които сте гласували"
     search:
       most_votes: "Най-много гласове"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Етикети"

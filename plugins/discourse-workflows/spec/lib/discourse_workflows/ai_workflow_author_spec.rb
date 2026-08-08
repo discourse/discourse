@@ -31,6 +31,7 @@ RSpec.describe DiscourseWorkflows::AiWorkflowAuthor do
       "parameters.runner_username",
       "parameters.upload_ids",
       "Use search_chat_channels before asking the admin to choose a chat channel",
+      "Use search_chat_integration_channels before asking the admin to choose an external chat integration channel",
       "call workflow_validate_script with the exact mode and code",
       "Do not add a Code node only to copy trigger fields forward",
       "create_ai_agent",
@@ -47,5 +48,19 @@ RSpec.describe DiscourseWorkflows::AiWorkflowAuthor do
 
     SiteSetting.chat_enabled = true
     expect(described_class.new.tools).to include(DiscourseWorkflows::Ai::Tools::SearchChatChannels)
+  end
+
+  it "includes external chat integration channel search only when the integration is enabled" do
+    skip "Chat Integration plugin is not available" if !defined?(DiscourseChatIntegration::Channel)
+
+    SiteSetting.chat_integration_enabled = false
+    expect(described_class.new.tools).not_to include(
+      DiscourseWorkflows::Ai::Tools::SearchChatIntegrationChannels,
+    )
+
+    SiteSetting.chat_integration_enabled = true
+    expect(described_class.new.tools).to include(
+      DiscourseWorkflows::Ai::Tools::SearchChatIntegrationChannels,
+    )
   end
 end

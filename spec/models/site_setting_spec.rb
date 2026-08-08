@@ -49,6 +49,25 @@ RSpec.describe SiteSetting do
     end
   end
 
+  describe "pending_users_reminder_delay_minutes" do
+    it "defaults to 30 while the update_pending_users_reminder_default change is enabled" do
+      expect(SiteSetting.pending_users_reminder_delay_minutes).to eq(480)
+
+      SiteSetting.update_pending_users_reminder_default = true
+      expect(SiteSetting.pending_users_reminder_delay_minutes).to eq(30)
+
+      SiteSetting.update_pending_users_reminder_default = false
+      expect(SiteSetting.pending_users_reminder_delay_minutes).to eq(480)
+    end
+
+    it "keeps a value an admin has set when the change is enabled" do
+      SiteSetting.pending_users_reminder_delay_minutes = 60
+
+      SiteSetting.update_pending_users_reminder_default = true
+      expect(SiteSetting.pending_users_reminder_delay_minutes).to eq(60)
+    end
+  end
+
   describe "top_menu" do
     describe "validations" do
       it "always demands latest" do
@@ -77,9 +96,37 @@ RSpec.describe SiteSetting do
     end
 
     describe "homepage" do
-      it "has homepage" do
+      it "uses default_homepage when set" do
+        SiteSetting.default_homepage = "bookmarks"
+        expect(SiteSetting.homepage).to eq("bookmarks")
+      end
+
+      it "falls back to the first top_menu item when default_homepage is not set" do
         SiteSetting.top_menu = "bookmarks|latest"
         expect(SiteSetting.homepage).to eq("bookmarks")
+      end
+
+      it "falls back to the first top_menu item when the persisted value's filter is no longer registered" do
+        SiteSetting.top_menu = "categories|latest"
+
+        filters = Discourse.filters
+        Discourse.stubs(:filters).returns(filters + [:votes])
+        SiteSetting.default_homepage = "votes"
+        expect(SiteSetting.homepage).to eq("votes")
+
+        Discourse.stubs(:filters).returns(filters)
+        expect(SiteSetting.homepage).to eq("categories")
+      end
+
+      it "falls back when the persisted value is no longer an eligible choice" do
+        SiteSetting.enable_unified_new = false
+        SiteSetting.top_menu = "categories|latest"
+        SiteSetting.default_homepage = "unread"
+        expect(SiteSetting.homepage).to eq("unread")
+
+        # enabling unified-new removes unread from the eligible homepage choices
+        SiteSetting.enable_unified_new = true
+        expect(SiteSetting.homepage).to eq("categories")
       end
     end
   end

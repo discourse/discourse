@@ -13,7 +13,6 @@ ur:
   js:
     styleguide:
       title: "اسٹائل گائڈ"
-      welcome: "شروع کرنے کےلئے ، بائیں طرف والے مینو میں سے ایک سیکشن منتخب کریں۔"
       categories:
         syntax: نحو
         atoms: ایٹم

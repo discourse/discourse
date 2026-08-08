@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 de:
+  rss_polling:
+    errors:
+      unknown_author_username: "Es wurde kein Benutzer mit dem Benutzernamen „%{username}“ gefunden."

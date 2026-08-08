@@ -10,10 +10,7 @@ RSpec.describe "Ideas Category Type Setup" do
   let(:dialog) { PageObjects::Components::Dialog.new }
   let(:toast) { PageObjects::Components::Toasts.new }
 
-  before do
-    SiteSetting.enable_ideas_category_type_setup = true
-    sign_in(admin)
-  end
+  before { sign_in(admin) }
 
   it "works with correct defaults and configures site settings and category setting automatically" do
     visit("/new-category/setup")
@@ -79,25 +76,6 @@ RSpec.describe "Ideas Category Type Setup" do
           subject: "topic_voting_tl0_vote_limit",
         ),
       ).to be_empty
-    end
-  end
-
-  context "when the ideas category type setup is disabled" do
-    before { SiteSetting.enable_ideas_category_type_setup = false }
-
-    it "does not show the ideas category type" do
-      visit("/new-category/setup")
-      expect(page).to have_no_css(".category-type-cards__card.--category-type-ideas")
-    end
-
-    it "does not show the tab for the ideas category type when editing an existing category" do
-      ideas_category = Fabricate(:category, name: "Ideas")
-      DiscourseTopicVoting::Categories::Types::Ideas.configure_category(
-        ideas_category,
-        guardian: admin.guardian,
-      )
-      visit("/c/#{ideas_category.slug}/edit/ideas")
-      expect(page).to have_no_css(".d-nav-submenu__tabs .edit-category-ideas")
     end
   end
 

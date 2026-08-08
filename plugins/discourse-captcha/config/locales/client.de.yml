@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  js:
+    discourse_captcha:
+      missing_token: "Bitte schließe die Captcha-Aufgabe ab."
+      verification_failed: "Captcha-Verifizierung fehlgeschlagen. Bitte versuche es erneut."
+      placeholder: Platzhalter
+      contact_system_administrator: "Es ist ein Problem mit deinem Captcha-Anbieter aufgetreten. Falls dieses Problem weiterhin besteht, kontaktiere bitte einen Systemadministrator"

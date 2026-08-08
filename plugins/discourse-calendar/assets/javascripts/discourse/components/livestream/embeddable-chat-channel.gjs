@@ -106,6 +106,8 @@ export default class EmbedableChatChannel extends Component {
               @channel={{channel}}
               @context={{LIVESTREAM_CHAT_CONTEXT}}
               @hiddenMessageIds={{this.hiddenMessageIds}}
+              @disableKeystrokeCapture={{true}}
+              @disableAutoFocus={{true}}
             />
           {{/each}}
         {{/if}}

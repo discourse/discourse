@@ -93,13 +93,14 @@ RSpec.describe DiscourseAi::Agents::Tools::FlagPost do
     expect(post.reload).to be_hidden
   end
 
-  it "escapes llm response and automation name in automation flag reasons" do
+  it "sanitizes the llm response and renders the automation name literally" do
+    automation_name = %(rule"><img src=x onerror=1>)
     context =
       DiscourseAi::Agents::BotContext.new(
-        post: post,
+        post:,
         feature_context: {
           automation_id: "123",
-          automation_name: %(rule"><img src=x onerror=1>),
+          automation_name:,
           llm_response: "<img src=x onerror=alert(1)>",
           base_path: Discourse.base_path,
         },
@@ -117,10 +118,19 @@ RSpec.describe DiscourseAi::Agents::Tools::FlagPost do
 
     expect(result[:status]).to eq("flagged")
 
-    score_reason = ReviewablePost.last.reviewable_scores.first.reason
-    expect(score_reason).to include("&lt;img src=x onerror=alert(1)&gt;")
-    expect(score_reason).to include("rule&quot;&gt;&lt;img src=x onerror=1&gt;")
-    expect(score_reason).not_to include("<img src=x onerror=alert(1)>")
-    expect(score_reason).not_to include(%(rule"><img src=x onerror=1>))
+    score = ReviewablePost.last.reviewable_scores.first
+    serialized =
+      ReviewableScoreSerializer.new(score, scope: Discourse.system_user.guardian, root: nil)
+
+    expect(serialized.reason).to match_html(<<~HTML)
+      <p>
+        <b>
+          Triggered by the
+          <a href="/admin/plugins/automation/123">#{CGI.escapeHTML(automation_name)}</a>
+          rule.
+        </b>
+      </p>
+      <p>Response from the model: <img src=""></p>
+    HTML
   end
 end

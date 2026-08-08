@@ -8,7 +8,7 @@ describe DiscoursePostEvent::Invitee do
     SiteSetting.discourse_post_event_enabled = true
   end
 
-  let(:user) { Fabricate(:user, admin: true) }
+  let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
   let(:user_1) { Fabricate(:user) }
   let(:topic) { Fabricate(:topic, user: user) }
   let(:post1) { Fabricate(:post, topic: topic) }

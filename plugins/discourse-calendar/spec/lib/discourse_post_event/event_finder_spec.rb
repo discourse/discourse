@@ -14,8 +14,15 @@ describe DiscoursePostEvent::EventFinder do
 
   describe "by attending user" do
     fab!(:attending_user, :user)
+    fab!(:invited_group) { Fabricate(:group, users: [attending_user]) }
     fab!(:public_event) { Fabricate(:event, status: DiscoursePostEvent::Event.statuses[:public]) }
-    fab!(:private_event) { Fabricate(:event, status: DiscoursePostEvent::Event.statuses[:private]) }
+    fab!(:private_event) do
+      Fabricate(
+        :event,
+        status: DiscoursePostEvent::Event.statuses[:private],
+        raw_invitees: [invited_group.name],
+      )
+    end
     fab!(:another_event) { Fabricate(:event, status: DiscoursePostEvent::Event.statuses[:public]) }
 
     fab!(:attending_public_event) do
@@ -55,12 +62,8 @@ describe DiscoursePostEvent::EventFinder do
       ).to match_array([public_event, private_event])
     end
 
-    it "includes private events if the searching user is also invited" do
-      DiscoursePostEvent::Invitee.create!(
-        user: current_user,
-        event: private_event,
-        status: DiscoursePostEvent::Invitee.statuses[:going],
-      )
+    it "includes private events if the searching user belongs to an invited group" do
+      invited_group.add(current_user)
 
       expect(
         finder.search(current_user, { attending_user: attending_user.username }),

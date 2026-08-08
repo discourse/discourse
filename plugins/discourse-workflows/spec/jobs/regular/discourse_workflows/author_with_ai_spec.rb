@@ -133,6 +133,9 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
     allow(DiscourseWorkflows::Ai::Tools::SearchChatChannels).to receive(:available?).and_return(
       true,
     )
+    allow(DiscourseWorkflows::Ai::Tools::SearchChatIntegrationChannels).to receive(
+      :available?,
+    ).and_return(true)
 
     described_class.new.execute(
       session_id: session.id,
@@ -154,6 +157,9 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
     expect(payload.dig("context_tools", "workflow_node_catalog")).to include("node parameters")
     expect(payload.dig("context_tools", "workflow_graph_context")).to include("current graph")
     expect(payload.dig("context_tools", "search_chat_channels")).to include("never invent")
+    expect(payload.dig("context_tools", "search_chat_integration_channels")).to include(
+      "never invent",
+    )
     expect(payload.dig("context_tools", "workflow_validate_script")).to include("exact Code node")
     expect(payload.dig("context_tools", "workflow_authoring_result")).to include("final response")
     expect(payload["trigger_author_field_facts"]).to include(

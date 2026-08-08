@@ -1,6 +1,10 @@
 import { fillIn, triggerEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import User from "discourse/models/user";
+import {
+  acceptance,
+  updateCurrentUser,
+} from "discourse/tests/helpers/qunit-helpers";
 
 const INPUT = "#ai-bot-conversations-input";
 
@@ -80,5 +84,34 @@ acceptance("AI Bot - Conversations IME handling", function (needs) {
     });
 
     assert.strictEqual(conversationRequests, 0, "did not submit");
+  });
+
+  test("Enter does not submit with the meta_enter send shortcut", async function (assert) {
+    updateCurrentUser({
+      user_option: {
+        ...User.current().user_option,
+        send_shortcut: "meta_enter",
+      },
+    });
+    await prepareDraft();
+
+    await triggerEvent(INPUT, "keydown", { key: "Enter" });
+    await triggerEvent(INPUT, "beforeinput", { inputType: "insertLineBreak" });
+
+    assert.strictEqual(conversationRequests, 0, "did not submit");
+  });
+
+  test("Meta+Enter submits with the meta_enter send shortcut", async function (assert) {
+    updateCurrentUser({
+      user_option: {
+        ...User.current().user_option,
+        send_shortcut: "meta_enter",
+      },
+    });
+    await prepareDraft();
+
+    await triggerEvent(INPUT, "keydown", { key: "Enter", metaKey: true });
+
+    assert.strictEqual(conversationRequests, 1, "submitted once");
   });
 });

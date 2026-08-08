@@ -69,6 +69,8 @@ cs:
       starred: "Oblíbené"
       starred_channels: "Oblíbené kanály"
       starred_channels_empty: "Zatím jste neoznačili žádné kanály jako oblíbené. Ty se zde objeví pro rychlejší přístup."
+      pinned_bar:
+        title: "Připnuto"
       pinned: "Připnuto"
       browse_all_channels: "Procházet všechny kanály"
       see_in: "Zobrazit v"
@@ -161,12 +163,6 @@ cs:
         never: "Nikdy"
       separate_sidebar_mode:
         title: "Zobrazit samostatné režimy postranního panelu pro fórum a chat"
-      send_shortcut:
-        title: "Zkratka pro odeslání"
-        enter:
-          label: "Odeslat pomocí Enter"
-        meta_enter:
-          label: "Odeslat pomocí %{meta_key} + Enter"
       enable: "Povolit chat"
       flag: "Nahlášení"
       emoji: "Vložit emotikon"

@@ -33,3 +33,6 @@ da:
       web_hooks:
         voting_event:
           group_name: "Emne Afstemningshændelse"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Mærker"

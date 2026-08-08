@@ -47,6 +47,7 @@ pl_PL:
             many: "Webinarium jeszcze się nie rozpoczęło. Ponawiam próbę dołączenia za %{count} sekund..."
             other: "Webinarium jeszcze się nie rozpoczęło. Ponawiam próbę dołączenia za %{count} sekund..."
           not_started_trying_again: "Próbuję ponownie dołączyć do webinarium..."
+          join_audio_hint: "Kliknij %{icon} powyżej, aby dołączyć do audio"
         chat:
           rsvp_to_event: "Potwierdź obecność na wydarzeniu, aby rozpocząć czat"
           rsvp_to_event_with_link: "Potwierdź obecność na <a href='%{url}'>wydarzeniu</a> , aby rozpocząć czat"

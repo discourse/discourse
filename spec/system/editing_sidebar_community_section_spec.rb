@@ -28,7 +28,10 @@ RSpec.describe "Editing Sidebar Community Section" do
 
     modal = sidebar.click_community_section_more_button.click_customize_community_section_button
     modal.fill_link("Topics", "/latest", "paper-plane")
-    modal.topics_link.drag_to(modal.review_link, delay: 0.4)
+    drag_and_drop(
+      source: ".draggable[data-link-name='Topics']",
+      target: ".draggable[data-link-name='Review']",
+    )
     modal.save
     modal.confirm_update
 
@@ -54,6 +57,35 @@ RSpec.describe "Editing Sidebar Community Section" do
     expect(sidebar.primary_section_icons("community")).to eq(
       %w[layer-group user inbox flag wrench paper-plane ellipsis-vertical],
     )
+  end
+
+  it "lets an admin localize manually created Community section links" do
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_supported_locales = "ja"
+    user.update!(locale: "ja")
+
+    sign_in(admin)
+
+    visit("/latest")
+
+    modal = sidebar.click_community_section_more_button.click_customize_community_section_button
+    modal.add_link
+    modal.fill_last_link("Solutions Leaderboard", "/solutions-leaderboard")
+    modal.open_translations
+    modal.add_language("ja")
+    modal.fill_translation("ja", "Solutions Leaderboard", "ソリューションリーダーボード")
+    modal.close_translations
+    modal.add_link
+    modal.fill_last_link("Untranslated Link", "/untranslated-link")
+    modal.save
+    modal.confirm_update
+
+    sign_in(user)
+
+    visit("/latest")
+
+    expect(sidebar).to have_community_section_link("ソリューションリーダーボード", href: "/solutions-leaderboard")
+    expect(sidebar).to have_community_section_link("Untranslated Link", href: "/untranslated-link")
   end
 
   it "allows admin to edit community section when no secondary section links" do

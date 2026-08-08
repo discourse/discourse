@@ -20,6 +20,8 @@ class UserOption < ActiveRecord::Base
   self.ignored_columns = [
     "enable_experimental_sidebar", # TODO: Remove when 20250804021210_drop_enable_experimental_sidebar_user_option has been promoted to pre-deploy
     "only_chat_push_notifications", # TODO(2027-01): replaced by push_notification_level; drop the column in a follow-up PR once this has shipped
+    "chat_send_shortcut", # TODO(2027-01): replaced by send_shortcut; drop the column in a follow-up PR once this has shipped
+    "enable_defer", # TODO(2027-02): the preference was removed; drop the column in a follow-up PR once this has shipped
   ]
 
   self.primary_key = :user_id
@@ -33,6 +35,7 @@ class UserOption < ActiveRecord::Base
 
   enum :default_calendar, { none_selected: 0, ics: 1, google: 2 }, scopes: false
   enum :push_notification_level, { none: 0, all: 1, chat_only: 2 }, prefix: true, scopes: false
+  enum :send_shortcut, { enter: 0, meta_enter: 1 }, prefix: true, scopes: false
 
   def self.ensure_consistency!
     sql = <<~SQL
@@ -73,6 +76,7 @@ class UserOption < ActiveRecord::Base
   validates :email_level, inclusion: { in: UserOption.email_level_types.values }
   validates :email_messages_level, inclusion: { in: UserOption.email_level_types.values }
   validates :timezone, timezone: true
+  validate :understood_languages_are_supported, if: :will_save_change_to_understood_languages?
 
   def set_defaults
     self.mailing_list_mode = SiteSetting.default_email_mailing_list_mode
@@ -85,7 +89,6 @@ class UserOption < ActiveRecord::Base
 
     self.enable_quoting = SiteSetting.default_other_enable_quoting
     self.enable_smart_lists = SiteSetting.default_other_enable_smart_lists
-    self.enable_defer = SiteSetting.default_other_enable_defer
     self.enable_markdown_monospace_font = SiteSetting.default_other_enable_markdown_monospace_font
     self.external_links_in_new_tab = SiteSetting.default_other_external_links_in_new_tab
     self.dynamic_favicon = SiteSetting.default_other_dynamic_favicon
@@ -246,6 +249,14 @@ class UserOption < ActiveRecord::Base
 
   private
 
+  def understood_languages_are_supported
+    if understood_languages.all? { |locale| LocaleSiteSetting.supported_locales.include?(locale) }
+      return
+    end
+
+    errors.add(:understood_languages, :invalid)
+  end
+
   def update_hide_profile_and_presence
     if hide_profile_changed? || hide_presence_changed?
       self.hide_profile_and_presence = hide_profile || hide_presence
@@ -269,6 +280,7 @@ end
 #  allow_private_messages                         :boolean          default(TRUE), not null
 #  auto_image_caption                             :boolean          default(FALSE), not null
 #  auto_track_topics_after_msecs                  :integer
+#  automatically_translate                        :boolean          default(TRUE), not null
 #  automatically_unpin_topics                     :boolean          default(TRUE), not null
 #  bookmark_auto_delete_preference                :integer          default(3), not null
 #  chat_announce_new_messages                     :boolean          default(TRUE), not null
@@ -278,7 +290,6 @@ end
 #  chat_new_message_sound                         :boolean          default(FALSE), not null
 #  chat_quick_reaction_type                       :integer          default("frequent"), not null
 #  chat_quick_reactions_custom                    :string
-#  chat_send_shortcut                             :integer          default("enter"), not null
 #  chat_separate_sidebar_mode                     :integer          default("default"), not null
 #  chat_sound                                     :string
 #  composition_mode                               :integer          default(1), not null
@@ -296,7 +307,6 @@ end
 #  email_messages_level                           :integer          default(0), not null
 #  email_previous_replies                         :integer          default(2), not null
 #  enable_allowed_pm_users                        :boolean          default(FALSE), not null
-#  enable_defer                                   :boolean          default(FALSE), not null
 #  enable_markdown_monospace_font                 :boolean          default(TRUE), not null
 #  enable_quoting                                 :boolean          default(TRUE), not null
 #  enable_smart_lists                             :boolean          default(TRUE), not null
@@ -321,6 +331,7 @@ end
 #  policy_email_frequency                         :integer          default("never"), not null
 #  push_notification_level                        :integer          default("all"), not null
 #  seen_popups                                    :integer          is an Array
+#  send_shortcut                                  :integer          default("enter"), not null
 #  show_original_content                          :boolean          default(FALSE), not null
 #  show_thread_title_prompts                      :boolean          default(TRUE), not null
 #  sidebar_link_to_filtered_list                  :boolean          default(FALSE), not null
@@ -333,6 +344,7 @@ end
 #  timezone                                       :string
 #  title_count_mode_key                           :integer          default(0), not null
 #  topics_unread_when_closed                      :boolean          default(TRUE), not null
+#  understood_languages                           :string           default([]), not null, is an Array
 #  watched_precedence_over_muted                  :boolean          default(FALSE), not null
 #  color_scheme_id                                :integer
 #  dark_scheme_id                                 :integer

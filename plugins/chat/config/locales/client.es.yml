@@ -75,6 +75,8 @@ es:
         close: "Cerrar mensajes anclados."
         pinned_by_you: "Anclado por ti"
         pinned_by_user: "Anclado por %{username}"
+      pinned_bar:
+        title: "Anclado"
       no_pinned_messages: "No hay mensajes anclados en este canal."
       pin_message: "Anclar mensaje"
       unpin_message: "Desanclar mensaje"
@@ -166,12 +168,6 @@ es:
         never: "Nunca"
       separate_sidebar_mode:
         title: "Mostrar modos separados en la barra lateral para el foro y el chat"
-      send_shortcut:
-        title: "Enviar atajo"
-        enter:
-          label: "Enviar mediante Intro"
-        meta_enter:
-          label: "Enviar por %{meta_key} + Intro"
       enable: "Activar chat"
       flag: "Denunciar"
       emoji: "Insertar emoji"

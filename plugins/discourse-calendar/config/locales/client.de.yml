@@ -389,6 +389,7 @@ de:
         send_bulk_invites: "Einladungen versenden"
         group_selector_placeholder: "Gruppe auswählen …"
         user_selector_placeholder: "Benutzer auswählen …"
+        attendance_label: "Teilnahme"
         inline_title: "Inline-Masseneinladung"
         csv_title: "CSV-Masseneinladung"
       upcoming_events:
@@ -420,7 +421,7 @@ de:
           leave_event: "Ereignis verlassen"
           status:
             going: "Dabei"
-            not_going: "Nicht teilnehmen"
+            not_going: "Nicht dabei"
             interested: "Interessiert"
             going_count:
               one: "%{count} nimmt teil"
@@ -452,16 +453,18 @@ de:
         name_placeholder: "Name des Ereignisses"
         end_date_placeholder: "Enddatum"
         location_placeholder: "Ort oder URL hinzufügen"
-        max_attendees_placeholder: "Unbegrenzte Teilnehmeranzahl"
+        max_attendees_placeholder: "Unbegrenzte Teilnehmerzahl"
         max_attendees_display:
-          one: "Max %{count} Teilnehmer"
-          other: "Max %{count} Teilnehmer"
-        no_rsvps_label: "Keine Anmeldung erforderlich"
+          one: "Max. %{count} Teilnehmer"
+          other: "Max. %{count} Teilnehmer"
+        no_rsvps_label: "Keine Teilnahmeerfassung"
         description_placeholder: "Beschreibung hinzufügen"
         event_title_placeholder: "Name des Ereignisses"
         create_event_button: "Ereignis erstellen"
         action_title: "Erstelle ein neues Ereignis"
         all_day: "Ganztägig"
+        livestream: "Livestream"
+        livestream_chat_disabled: "Aktiviere den Chat, um Livestream-Kanäle zu erstellen."
         reminder:
           units:
             minutes:
@@ -476,9 +479,9 @@ de:
             weeks:
               one: "Woche"
               other: "Wochen"
-          before: "%{unit} bevor"
+          before: "%{unit} davor"
           after: "%{unit} danach"
-          notification_title: "Benachrichtige Teilnehmer"
+          notification_title: "Teilnehmer benachrichtigen"
           bump_topic_title: "Thema automatisch nach oben verschieben"
           remove: "Benachrichtigung entfernen"
       composer_actions:
@@ -486,7 +489,7 @@ de:
           label: "Ereignis erstellen"
           desc: "Erstelle ein neues Ereignis in dieser Kategorie"
         create_topic:
-          label: "Erstelle ein neues Thema"
+          label: "Thema erstellen"
           desc: "Erstelle ein reguläres Thema statt eines Ereignisses"
       builder_modal:
         custom_fields:
@@ -520,7 +523,7 @@ de:
           label: "Erinnerungen"
           types:
             bump_topic: "Thema automatisch nach oben verschieben"
-            notification: "Benachrichtige Teilnehmer"
+            notification: "Teilnehmer benachrichtigen"
           units:
             minutes: "Minuten"
             hours: "Stunden"
@@ -539,25 +542,29 @@ de:
           every_week: "Jeden %{weekday}"
           every_two_weeks: "Alle zwei Wochen am %{weekday}"
           every_four_weeks: "Alle 4 Wochen am %{weekday}"
-          every_month: "Am %{ordinal} %{weekday} jeden Monat"
+          every_month: "Monatlich am %{ordinal} %{weekday}"
           ordinals:
             first: "ersten"
             second: "zweiten"
             third: "dritten"
             fourth: "vierten"
-            last: "Zuletzt gewählter Termin"
+            last: "letzten"
         max_attendees:
           label: "Maximale Teilnehmerzahl"
           placeholder: "Keine Begrenzung"
         attendance:
-          label: "Wie viele Mitglieder können an diesem Event teilnehmen?"
-          unlimited: "unbegrenzt"
-          up_to: "Bis zu..."
-          none: "Keine Auswahl"
+          label: "Wie viele Mitglieder können die Teilnahme an diesem Event anmelden?"
+          unlimited: "Unbegrenzt"
+          up_to: "Bis zu …"
+          none: "Keine Erfassung"
         allow_chat:
           label: "Chat-Integration"
           checkbox_label: "Erstelle und verwalte ereignisspezifische Chat-Kanäle"
+        livestream:
+          label: "Livestream"
+          checkbox_label: "URL als Video einbetten und Livestream-Chat für Teilnehmer öffnen"
         location:
+          label: "Ort oder URL"
           placeholder: "Füge einen Ort, einen Link oder etwas anderes hinzu."
         description:
           label: "Beschreibung"
@@ -568,13 +575,13 @@ de:
         invitees:
           label: "Eingeladene Gruppen"
         event_type:
-          label: "Teilnahme Typ"
+          label: "Art der Teilnahme"
           public:
             title: "Öffentlich"
             description: "Jeder kann teilnehmen."
           private:
-            title: "Nur eingeladene können teilnehmen."
-            description: "Nur Mitglieder der ausgewählten Gruppe können teilnehmen."
+            title: "Nur auf Einladung"
+            description: "Nur Mitglieder der ausgewählten Gruppen können teilnehmen."
         delete_confirmation_message: "Dieses Ereignis löschen?"
         image:
           label: "Ereignisbild"

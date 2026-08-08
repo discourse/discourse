@@ -273,3 +273,8 @@ nl:
               description: "Je kunt de kanaalnaam vinden in de Chatintegratie-instellingen"
             provider:
               label: Provider
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "Kanaal"
+        configure: "Configureren"
+        message: "Bericht"

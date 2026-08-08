@@ -24,13 +24,15 @@ export default class AdminUsersListShowController extends Controller {
   @tracked displayBulkActions = false;
   @tracked bulkSelectedUsersMap = {};
 
+  @tracked activation = null;
+  @tracked refreshing = false;
+  @tracked listFilter = null;
+  @tracked initialFilter = null;
+
   query = null;
   order = null;
   asc = null;
-  activation = null;
   showEmails = false;
-  refreshing = false;
-  listFilter = null;
   lastSelected = null;
 
   _page = 1;
@@ -146,24 +148,30 @@ export default class AdminUsersListShowController extends Controller {
       });
   }
 
-  @action
-  onListFilterChange(event) {
-    this.set("listFilter", event.target.value);
-    discourseDebounce(this, this._listFilterChanged, INPUT_DELAY);
+  get showEmptyState() {
+    return (
+      !this.refreshing &&
+      this.users.length === 0 &&
+      !this.listFilter &&
+      !this.activation
+    );
   }
 
-  _listFilterChanged() {
-    // `filter` is deliberately not a registered query param (its name would
-    // clash with the :filter segment), so sync the URL without a transition
+  @action
+  onListFilterChange(event) {
+    this.listFilter = event.target.value;
+    discourseDebounce(this, this.resetFilters, INPUT_DELAY);
+  }
+
+  @action
+  onResetFilters() {
+    this.listFilter = null;
+    this.activation = null;
+    // `filter` is owned by the filter controls; drop the remaining params here
     const url = new URL(window.location.href);
     url.searchParams.delete("username");
-    if (this.listFilter) {
-      url.searchParams.set("filter", this.listFilter);
-    } else {
-      url.searchParams.delete("filter");
-    }
+    url.searchParams.delete("activation");
     DiscourseURL.replaceState(url.pathname + url.search);
-
     this.resetFilters();
   }
 
@@ -191,8 +199,16 @@ export default class AdminUsersListShowController extends Controller {
   }
 
   @action
-  updateActivation(value) {
-    this.set("activation", value);
+  onActivationChange(value) {
+    this.activation = value === "all" ? null : value;
+    const url = new URL(window.location.href);
+    if (this.activation) {
+      url.searchParams.set("activation", this.activation);
+    } else {
+      url.searchParams.delete("activation");
+    }
+    DiscourseURL.replaceState(url.pathname + url.search);
+    this.resetFilters();
   }
 
   @action

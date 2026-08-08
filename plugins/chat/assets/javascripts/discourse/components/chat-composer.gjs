@@ -23,6 +23,7 @@ import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { SEND_SHORTCUT_META_ENTER } from "discourse/lib/constants";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import { cloneJSON } from "discourse/lib/object";
@@ -414,10 +415,9 @@ export default class ChatComposer extends Component {
     }
 
     if (event.key === "Enter") {
-      const shortcutPreference =
-        this.currentUser.user_option.chat_send_shortcut;
+      const shortcutPreference = this.currentUser.user_option.send_shortcut;
       const send =
-        (shortcutPreference === "enter" && !event.shiftKey) ||
+        (shortcutPreference !== SEND_SHORTCUT_META_ENTER && !event.shiftKey) ||
         event.ctrlKey ||
         event.metaKey;
 

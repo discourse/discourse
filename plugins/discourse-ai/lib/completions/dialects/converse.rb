@@ -107,7 +107,7 @@ module DiscourseAi
         end
 
         def user_msg(msg)
-          content_array = [msg[:content]].flatten
+          content_array = [prepend_user_id(msg[:content], msg)].flatten
 
           content_array =
             to_encoded_content_array(

@@ -845,6 +845,8 @@ es:
         email: "Correo electrónico"
         name: "Nombre"
         fields: "Campos"
+        silence_reason: "Motivo para silenciar"
+        penalty_forever: "Para siempre"
         reject_reason: "Motivo"
         scrubbed_by: "Registro borrado por"
         scrubbed_reason: "Motivo"
@@ -1644,7 +1646,6 @@ es:
       external_links_in_new_tab: "Abrir todos los enlaces externos en una nueva pestaña"
       enable_quoting: "Activar respuesta citando el texto seleccionado"
       enable_smart_lists: "Activar listas inteligentes al escribir en el compositor"
-      enable_defer: "Activar marcar temas como no leídos"
       enable_markdown_monospace_font: "Usar fuente monoespaciada en el modo Markdown del compositor"
       experimental_sidebar:
         enable: "Activar barra lateral"
@@ -2094,7 +2095,7 @@ es:
         default: "(por defecto)"
         any: "cualquiera"
       homepage:
-        default: "(por defecto)"
+        default: "Por defecto"
       password_confirmation:
         title: "Vuelve a introducir la contraseña"
       invite_code:
@@ -2138,6 +2139,9 @@ es:
         contextual: "Contenido nuevo en la página"
       bookmark_after_notification:
         title: "Después de enviar una notificación de recordatorio de marcador:"
+      send_shortcut:
+        enter: "Intro"
+        meta_enter: "%{meta_key} + Intro"
       like_notification_frequency:
         title: "Notificar cuando me dan me gusta"
         always: "Siempre"
@@ -2299,16 +2303,20 @@ es:
           member_title: "Invitar a miembros"
           sent_title: "Invitación enviada"
           member_tab: "Miembros"
-          admin_tab: "Administradores"
+          admin_tab: "Personal"
+          staff_role_admin: "Administrador"
+          staff_role_moderator: "Moderador"
           admin_email_label: "Dirección de correo electrónico"
           email_placeholder: "nombre@ejemplo.com"
           invite_by_email: "Correo electrónico"
           restrict_domain: "Restringir a un dominio"
-          more_options: "Más opciones"
+          create_and_send: "Enviar"
+          create_and_copy: "Copiar enlace"
           update: "Actualizar"
           summary:
             role_member: "Miembro"
             role_admin: "Administrador"
+            role_moderator: "Moderador"
             method: "Compartir"
             method_email: "Correo electrónico"
             restriction: "Restringido a"
@@ -2316,7 +2324,7 @@ es:
             expires: "Caduca"
             topic: "Tema"
             groups: "Grupos"
-            edit: "Editar invitación"
+            edit: "Editar"
         bulk_invite:
           none: "No hay invitaciones para mostrar en esta página."
           text: "Invitaciones en masa"
@@ -2916,7 +2924,7 @@ es:
     filter_input:
       clear: "Limpiar filtro"
     filter_controls:
-      reset: "Quitar filtro"
+      reset: "Restablecer"
       toggle: "Activar/desactivar filtros desplegables"
     d_icon_grid_picker:
       select_icon: "Seleccionar icono"
@@ -3055,7 +3063,6 @@ es:
       italic_label: "I"
       italic_title: "Cursiva"
       italic_text: "Texto en cursiva"
-      heading_title: "Encabezados"
       heading_level_n: "Encabezado %{levelNumber}"
       heading_level_n_title: "Encabezado %{levelNumber}"
       heading_level_paragraph: "Párrafo"
@@ -5361,6 +5368,10 @@ es:
           public: "Visible para todos"
           always_public: "El contenido de esta sección es siempre público"
           more_menu: "Menú Más"
+          localizations:
+            locale: "Idioma"
+            title_label: "Título de la sección"
+            remove_language: "Eliminar"
           links:
             add: "Añadir otro enlace"
             delete: "Eliminar enlace"
@@ -6309,7 +6320,6 @@ es:
               posts: "Publicaciones"
               share: "Compartir"
             whos_posting:
-              all_categories: "Todas las categorías"
               staff: "Personal"
             trust_level_pipeline:
               trust_levels:
@@ -7036,6 +7046,8 @@ es:
         sidebar: "Barra lateral"
         header_dropdown: "Menú desplegable de encabezado"
         legacy: "Heredado"
+      duplicate_topic_titles:
+        allowed: "Permitidos"
       backups:
         title: "Copias de seguridad"
         files_title: "Archivos de copia de seguridad"
@@ -7279,7 +7291,6 @@ es:
           finish_install: "Terminar la instalación del tema"
           last_attempt: "La instalación no ha terminado, último intento:"
           remote_branch: "Nombre de la rama (opcional)"
-          public_key: "Conceda la siguiente clave pública de acceso al repositorio:"
           install: "Instalar"
           installed: "Instalado"
           install_popular: "Popular"
@@ -8635,6 +8646,7 @@ es:
         uploading: "Subiendo…"
         name: "Nombre"
         group: "Grupo"
+        all_groups: "Todos los grupos"
         created_by: "Creado por"
         image: "Imagen"
         alt: "vista previa de emoji personalizado"

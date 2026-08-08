@@ -1,9 +1,7 @@
-/* eslint-disable ember/no-observers */
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { observes } from "@ember-decorators/object";
 import Permalink from "discourse/admin/models/permalink";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
@@ -20,13 +18,20 @@ export default class AdminPermalinksIndexController extends Controller {
   @tracked filter = null;
   @autoTrackedArray model;
 
-  get showSearch() {
-    return !!(this.model.length || this.filter);
+  get showEmptyList() {
+    return !this.loading && !this.filter && this.model.length === 0;
   }
 
-  @observes("filter")
-  show() {
-    discourseDebounce(this, this.#debouncedShow, INPUT_DELAY);
+  @action
+  onFilterChange(event) {
+    this.filter = event.target.value;
+    discourseDebounce(this, this.#loadPermalinks, INPUT_DELAY);
+  }
+
+  @action
+  onResetFilters() {
+    this.filter = null;
+    this.#loadPermalinks();
   }
 
   @action
@@ -56,7 +61,7 @@ export default class AdminPermalinksIndexController extends Controller {
     });
   }
 
-  async #debouncedShow() {
+  async #loadPermalinks() {
     this.loading = true;
 
     try {

@@ -224,3 +224,70 @@ module("Component | ChatChannel | status on mentions", function (hooks) {
     return `.mention[href='/u/${username}'] .user-status-message img`;
   }
 });
+
+module("Component | ChatChannel | autofocus", function (hooks) {
+  setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    pretender.get(`/chat/api/channels/1/messages`, () =>
+      response({ messages: [], meta: { can_delete_self: true } })
+    );
+    pretender.get(`/chat/api/me/channels`, () =>
+      response({ direct_message_channels: [], public_channels: [] })
+    );
+
+    this.channel = new ChatFabricators(getOwner(this)).channel({
+      id: 1,
+      meta: { can_join_chat_channel: false },
+    });
+    this.channel.currentUserMembership = { following: true };
+  });
+
+  test("captures bare keystrokes and focuses the composer by default", async function (assert) {
+    await render(
+      <template><ChatChannel @channel={{this.channel}} /></template>
+    );
+
+    assert.dom(".chat-composer__input").isFocused("composer is focused");
+    assert.true(pressKey("j").defaultPrevented, "keystroke is captured");
+  });
+
+  test("leaves keystrokes alone when capture is disabled", async function (assert) {
+    await render(
+      <template>
+        <ChatChannel
+          @channel={{this.channel}}
+          @disableKeystrokeCapture={{true}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".chat-composer__input")
+      .isFocused("composer is still focused on insert");
+    assert.false(
+      pressKey("j").defaultPrevented,
+      "keystroke is left for the host page"
+    );
+  });
+
+  test("skips focusing the composer when autofocus is disabled", async function (assert) {
+    await render(
+      <template>
+        <ChatChannel @channel={{this.channel}} @disableAutoFocus={{true}} />
+      </template>
+    );
+
+    assert.dom(".chat-composer__input").isNotFocused("composer is not focused");
+  });
+
+  function pressKey(key) {
+    const event = new KeyboardEvent("keydown", {
+      key,
+      bubbles: true,
+      cancelable: true,
+    });
+    document.body.dispatchEvent(event);
+    return event;
+  }
+});

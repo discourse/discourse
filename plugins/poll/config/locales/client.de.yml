@@ -10,9 +10,15 @@ de:
       site_settings:
         categories:
           poll: "Discourse Umfrage"
+      logs:
+        staff_actions:
+          actions:
+            poll_closed: "Umfrage geschlossen"
+            poll_opened: "Umfrage geöffnet"
   js:
     poll:
       title: "Umfrage"
+      closed_by: "Geschlossen von %{username}"
       dynamic:
         enabled_hint: "Optionen können hinzugefügt oder entfernt werden."
       voters:

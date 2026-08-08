@@ -69,6 +69,8 @@ sv:
       removed: "Tog bort %{removed}"
     provider:
       slack:
+        errors:
+          action_prohibited: "Hjälpredan har inte behörighet att publicera inlägg i den kanalen"
         status:
           header: |
             *Regler för denna kanal*

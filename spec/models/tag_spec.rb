@@ -1,14 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Tag do
-  def make_some_tags(count: 3, tag_a_topic: false)
-    if tag_a_topic
-      Fabricate.times(count, :tag, topics: [Fabricate(:topic)])
-    else
-      Fabricate.times(count, :tag)
-    end
-  end
-
   let(:tag) { Fabricate(:tag) }
   let(:tag2) { Fabricate(:tag) }
   let(:topic) { Fabricate(:topic, tags: [tag]) }
@@ -84,7 +76,7 @@ RSpec.describe Tag do
 
   describe "#top_tags" do
     context "when nothing has been tagged" do
-      let!(:tags) { make_some_tags(tag_a_topic: false) }
+      let!(:tags) { Fabricate.times(3, :tag) }
 
       it "returns nothing" do
         expect(Tag.top_tags.sort).to be_empty
@@ -92,7 +84,8 @@ RSpec.describe Tag do
     end
 
     context "when something has been tagged" do
-      let!(:tags) { make_some_tags(tag_a_topic: true) }
+      let!(:tagged_topic) { Fabricate(:topic) }
+      let!(:tags) { Fabricate.times(3, :tag, topics: [tagged_topic]) }
 
       it "returns all tags" do
         expect(Tag.top_tags).to contain_exactly(
@@ -102,7 +95,7 @@ RSpec.describe Tag do
     end
 
     context "with categories" do
-      let(:tags) { make_some_tags(count: 4) }
+      let(:tags) { Fabricate.times(4, :tag) }
       let(:category1) { Fabricate(:category) }
       let(:private_category) { Fabricate(:category) }
       let!(:topics) do
@@ -147,7 +140,7 @@ RSpec.describe Tag do
     end
 
     context "with category-specific tags" do
-      let(:tags) { make_some_tags(count: 3) }
+      let(:tags) { Fabricate.times(3, :tag) }
       let(:category1) { Fabricate(:category, tags: [tags[0]]) } # only one tag allowed in this category
       let(:category2) { Fabricate(:category) }
       let!(:topics) do
@@ -181,6 +174,7 @@ RSpec.describe Tag do
     end
 
     context "with hidden tags" do
+      fab!(:moderator)
       let(:hidden_tag) { Fabricate(:tag, name: "hidden") }
       let!(:staff_tag_group) do
         Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
@@ -204,6 +198,27 @@ RSpec.describe Tag do
           { id: hidden_tag.id, name: hidden_tag.name, slug: hidden_tag.slug },
         )
       end
+
+      it "doesn't return tags hidden from moderators to a moderator" do
+        admin_only_tag = Fabricate(:tag, name: "admin-only")
+        Fabricate(:tag_group, permissions: { "admins" => 1 }, tag_names: [admin_only_tag.name])
+        Fabricate(:topic, tags: [admin_only_tag])
+
+        expect(Tag.top_tags(guardian: Guardian.new(moderator))).to_not include(
+          { id: admin_only_tag.id, name: admin_only_tag.name, slug: admin_only_tag.slug },
+        )
+      end
+    end
+
+    it "doesn't return synonyms" do
+      target_tag = Fabricate(:tag)
+      Fabricate(:topic, tags: [target_tag, Fabricate(:tag, target_tag: target_tag)])
+      serialized_target_tag = { id: target_tag.id, name: target_tag.name, slug: target_tag.slug }
+
+      expect(Tag.top_tags).to contain_exactly(serialized_target_tag)
+      expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:admin)))).to contain_exactly(
+        serialized_target_tag,
+      )
     end
 
     context "with numeric-only tag names" do
@@ -234,11 +249,13 @@ RSpec.describe Tag do
         )
       end
 
-      it "returns localized names when localization enabled and user not in tag locale" do
+      it "returns localized tag names independently of topic and post translation preferences" do
         SiteSetting.content_localization_enabled = true
         I18n.locale = "ja"
+        user = Fabricate(:user, locale: "ja")
+        user.user_option.update!(automatically_translate: false)
 
-        expect(Tag.top_tags).to include(
+        expect(Tag.top_tags(guardian: Guardian.new(user))).to include(
           { id: localized_tag.id, name: "猫", slug: localized_tag.slug },
         )
       end
@@ -277,7 +294,9 @@ RSpec.describe Tag do
       )
     end
 
-    before { 2.times { |i| Fabricate(:tag, topics: [personal_message], name: "tag-#{i}") } }
+    let!(:personal_message_tags) do
+      2.times { |i| Fabricate(:tag, topics: [personal_message], name: "tag-#{i}") }
+    end
 
     it "returns nothing if user is not a staff" do
       expect(Tag.pm_tags(guardian: Guardian.new(regular_user))).to be_empty
@@ -384,6 +403,41 @@ RSpec.describe Tag do
       expect(tag2.public_topic_count).to eq(0)
       expect(tag3.staff_topic_count).to eq(0)
       expect(tag3.public_topic_count).to eq(0)
+    end
+  end
+
+  describe ".browsable" do
+    fab!(:admin)
+    fab!(:browsable_tag, :tag)
+    fab!(:hidden_tag, :tag)
+    fab!(:synonym) { Fabricate(:tag, target_tag: browsable_tag) }
+    fab!(:admin_tag_group) do
+      Fabricate(:tag_group, permissions: { "admins" => 1 }, tag_names: [hidden_tag.name])
+    end
+
+    it "excludes synonyms, and tags the guardian is not allowed to see" do
+      expect(Tag.browsable(Guardian.new)).to contain_exactly(browsable_tag)
+      expect(Tag.browsable(Guardian.new(admin))).to contain_exactly(browsable_tag, hidden_tag)
+    end
+  end
+
+  describe ".without_pm_only_tags" do
+    fab!(:admin)
+    fab!(:used_tag) { Fabricate(:tag, public_topic_count: 1, staff_topic_count: 1) }
+    fab!(:pm_only_tag) { Fabricate(:tag, pm_topic_count: 1) }
+
+    it "excludes tags only used in personal messages" do
+      expect(Tag.without_pm_only_tags(Guardian.new)).to contain_exactly(used_tag)
+      expect(Tag.without_pm_only_tags(Guardian.new(user))).to contain_exactly(used_tag)
+    end
+
+    it "keeps them for a guardian allowed to tag personal messages" do
+      SiteSetting.pm_tags_allowed_for_groups = Group::AUTO_GROUPS[:admins]
+
+      expect(Tag.without_pm_only_tags(Guardian.new(admin))).to contain_exactly(
+        used_tag,
+        pm_only_tag,
+      )
     end
   end
 
@@ -638,13 +692,56 @@ RSpec.describe Tag do
   end
 
   describe "description" do
-    it "uses the HTMLSanitizer to remove unsafe tags and attributes" do
+    it "preserves the raw markdown source and cooks it into a safe description_cooked" do
+      tag.description = "Topics about **markdown** and a < b"
+      tag.save!
+
+      expect(tag.description).to eq("Topics about **markdown** and a < b")
+      expect(tag.description_cooked).to include("<strong>markdown</strong>")
+      expect(tag.description_cooked).to include("a &lt; b")
+    end
+
+    it "sanitizes unsafe markup when cooking, without mutating the raw source" do
       tag.description =
         "<div>hi</div><script>a=0;</script> <a onclick='const a=0;' href=\"https://www.discourse.org\">discourse</a>"
       tag.save!
-      expect(tag.description.strip).to eq(
-        "<div>hi</div>a=0; <a href=\"https://www.discourse.org\">discourse</a>",
-      )
+
+      expect(tag.description).to include("<script>")
+      expect(tag.description_cooked).not_to include("<script>")
+      expect(tag.description_cooked).not_to include("onclick")
+      expect(tag.description_cooked).to include('href="https://www.discourse.org"')
+    end
+
+    it "clears description_cooked when the description is blank" do
+      tag.update!(description: "something")
+      expect(tag.description_cooked).to be_present
+
+      tag.update!(description: "")
+      expect(tag.description_cooked).to be_nil
+    end
+
+    it "stamps the baked version on save" do
+      tag.update!(description: "**hi**")
+      expect(tag.description_cooked_version).to eq(HasCookedTagDescription::BAKED_VERSION)
+    end
+
+    describe ".rebake_old" do
+      it "reconciles rows with missing or stale cooked HTML and leaves current ones alone" do
+        tag.update!(description: "**current**")
+        stale = Fabricate(:tag, description: "**stale**")
+        stale.update_columns(description_cooked: nil, description_cooked_version: nil)
+
+        expect(Tag.rebake_old(100)).to eq([])
+
+        expect(stale.reload.description_cooked).to include("<strong>stale</strong>")
+        expect(stale.description_cooked_version).to eq(HasCookedTagDescription::BAKED_VERSION)
+        expect(
+          Tag.where(
+            "description_cooked_version IS NULL OR description_cooked_version < ?",
+            HasCookedTagDescription::BAKED_VERSION,
+          ),
+        ).to be_empty
+      end
     end
   end
 

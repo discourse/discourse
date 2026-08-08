@@ -3,10 +3,12 @@
 RSpec.describe "Styleguide Smoke Test" do
   fab!(:admin)
 
+  let(:styleguide) { PageObjects::Pages::Styleguide.new }
+
   # keep this hash updated when adding, removing or renaming components
   sections = {
-    "SYNTAX" => [{ href: "/syntax/bem", title: "BEM" }],
-    "ATOMS" => [
+    "syntax" => [{ href: "/syntax/bem", title: "BEM" }],
+    "atoms" => [
       { href: "/atoms/typography", title: "Typography" },
       { href: "/atoms/font-scale", title: "Font System" },
       { href: "/atoms/buttons", title: "Buttons" },
@@ -20,7 +22,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/atoms/topic-link", title: "Topic Link and Status" },
       { href: "/atoms/segmented-control", title: "Segmented Control (Button toggle group)" },
     ],
-    "MOLECULES" => [
+    "molecules" => [
       { href: "/molecules/bread-crumbs", title: "Bread Crumbs" },
       { href: "/molecules/categories", title: "Categories" },
       { href: "/molecules/char-counter", title: "Character Counter" },
@@ -38,7 +40,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/molecules/topic-notifications", title: "Topic Notifications" },
       { href: "/molecules/topic-timer-info", title: "Topic Timers" },
     ],
-    "ORGANISMS" => [
+    "organisms" => [
       { href: "/organisms/post", title: "Post" },
       { href: "/organisms/post-list", title: "Post List" },
       { href: "/organisms/post-oneboxes", title: "Post Oneboxes" },
@@ -65,19 +67,28 @@ RSpec.describe "Styleguide Smoke Test" do
   # declared in the sections hash above
   it "renders the index page correctly and collect information about the available page" do
     visit "/styleguide"
-    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Styleguide")
+    expect(styleguide).to have_heading("Styleguide")
 
     existing_sections = {}
     page
-      .all(".styleguide-menu > ul")
+      .all(".sidebar-sections.styleguide-panel .sidebar-section[data-section-name]")
       .each do |section_node|
-        section = section_node.find(".styleguide-heading").text.strip
+        # Keyed on the section name rather than the header's text: the name is the contract the
+        # panel actually declares, where the text depends on translation and on casing applied
+        # by the stylesheet.
+        section = section_node["data-section-name"].delete_prefix("styleguide-category-")
 
         existing_sections[section] ||= []
         items = existing_sections[section]
 
-        anchors = section_node.all("li a")
-        anchors.each { |anchor| items << { title: anchor.text.strip, href: anchor[:href] } }
+        section_node
+          .all(".sidebar-section-link")
+          .each do |link|
+            items << {
+              title: link.find(".sidebar-section-link-content-text").text.strip,
+              href: link[:href],
+            }
+          end
       end
 
     expect(existing_sections.keys).to match_array(sections.keys)
@@ -97,11 +108,27 @@ RSpec.describe "Styleguide Smoke Test" do
     end
   end
 
+  it "shows the not found page for a section that does not exist" do
+    visit "/styleguide/molecules/does-not-exist"
+
+    expect(page).to have_css(".page-not-found")
+    expect(styleguide).to have_no_heading("Styleguide")
+  end
+
+  it "shows the reader the trail back to the styleguide index" do
+    visit "/styleguide/atoms/buttons"
+
+    expect(styleguide).to have_breadcrumb("Styleguide")
+    expect(styleguide).to have_breadcrumb("Buttons")
+  end
+
   it "renders the index page correctly on a site with no default color schemes" do
     SiteSetting.default_theme_id = Fabricate(:theme).id
     visit "/styleguide"
 
-    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Styleguide")
+    expect(styleguide).to have_heading("Styleguide")
+    # There is nothing to switch to, so the selector hides itself rather than offering a no-op.
+    expect(styleguide).to have_no_color_selector
   end
 
   # uses the sections hash to generate a test for each page and check if it renders correctly
@@ -116,7 +143,7 @@ RSpec.describe "Styleguide Smoke Test" do
         it "renders the #{section}: #{item[:title]} page correctly" do
           visit "/styleguide/#{item[:href]}"
 
-          expect(page).to have_css(".styleguide-contents h1.section-title", text: item[:title])
+          expect(styleguide).to have_heading(item[:title])
         end
       end
     end
@@ -130,7 +157,7 @@ RSpec.describe "Styleguide Smoke Test" do
 
     it "renders a page using HighlightedCode for anonymous users" do
       visit "/styleguide/atoms/font-scale"
-      expect(page).to have_css(".styleguide-contents h1.section-title", text: "Font System")
+      expect(styleguide).to have_heading("Font System")
       expect(page).to have_css("code.hljs")
     end
   end
@@ -149,7 +176,7 @@ RSpec.describe "Styleguide Smoke Test" do
       moderator = Fabricate(:moderator)
       sign_in(moderator)
       visit "/styleguide"
-      expect(page).to have_css(".styleguide-contents h1.section-title", text: "Styleguide")
+      expect(styleguide).to have_heading("Styleguide")
     end
   end
 end

@@ -42,6 +42,37 @@ RSpec.describe TopicPostersSummary do
       end
     end
 
+    context "when the last poster is also the topic creator and the topic has many posters" do
+      fab!(:featured_user1, :user)
+      fab!(:featured_user2, :user)
+      fab!(:featured_user3, :user)
+      fab!(:featured_user4, :user)
+
+      let!(:topic) do
+        Fabricate(
+          :topic,
+          user: topic_creator,
+          last_poster: topic_creator,
+          featured_user1: featured_user1,
+          featured_user2: featured_user2,
+          featured_user3: featured_user3,
+          featured_user4: featured_user4,
+        )
+      end
+
+      let!(:summary) { described_class.new(topic).summary }
+
+      it "puts the recent poster after frequent posters" do
+        expect(summary.map(&:user)).to eq(
+          [topic_creator, featured_user1, featured_user2, featured_user3, featured_user4],
+        )
+        expect(summary[1].description).to eq(I18n.t(:frequent_poster))
+        expect(summary[2].description).to eq(I18n.t(:frequent_poster))
+        expect(summary[3].description).to eq(I18n.t(:recent_poster))
+        expect(summary[4].description).to eq(I18n.t(:recent_poster))
+      end
+    end
+
     context "when the topic has many posters" do
       let!(:last_poster) { Fabricate(:user) }
       fab!(:featured_user1, :user)
@@ -67,6 +98,9 @@ RSpec.describe TopicPostersSummary do
         expect(summary.map(&:user)).to eq(
           [topic_creator, featured_user1, featured_user2, featured_user3, last_poster],
         )
+        expect(summary[1].description).to eq(I18n.t(:frequent_poster))
+        expect(summary[2].description).to eq(I18n.t(:frequent_poster))
+        expect(summary[3].description).to eq(I18n.t(:recent_poster))
         # If more than one user, attach the latest class
         expect(summary.last.extras).to eq "latest"
       end

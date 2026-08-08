@@ -1,6 +1,6 @@
 import { triggerEvent } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
-import { module, skip, test } from "qunit";
+import { module, test } from "qunit";
 import sinon from "sinon";
 import { processBrowserAttentionChange } from "discourse/lib/user-presence";
 
@@ -47,6 +47,7 @@ module("Unit | Service | human-activity-tracker", function (hooks) {
 
     this.tracker = this.owner.lookup("service:human-activity-tracker");
     this.tracker.now = () => this.clock.ms;
+    this.tracker.trustedEvent = () => true;
     this.tracker.transport = (body) => this.sent.push(body);
     this.tracker.scheduleFlush = (callback) => {
       this.flushTick = callback;
@@ -67,11 +68,28 @@ module("Unit | Service | human-activity-tracker", function (hooks) {
     assert.strictEqual(this.sent.length, 0);
   });
 
-  // TODO: Flaky, skipped while investigating a global getBoundingClientRect error.
-  skip("counts interaction events and reports them on flush", async function (assert) {
+  test("ignores untrusted synthetic events", async function (assert) {
+    this.tracker.trustedEvent = (event) => event.isTrusted;
+
     await triggerEvent(document.body, "keydown");
     await triggerEvent(document.body, "mousedown");
-    await triggerEvent(document.body, "scroll");
+    await triggerEvent(document.body, "mousemove", {
+      clientX: 10,
+      clientY: 10,
+    });
+    await triggerEvent(document.body, "mousemove", {
+      clientX: 20,
+      clientY: 20,
+    });
+    pagehide();
+
+    assert.strictEqual(this.sent.length, 0);
+  });
+
+  test("counts interaction events and reports them on flush", function (assert) {
+    window.dispatchEvent(new Event("keydown"));
+    window.dispatchEvent(new Event("mousedown"));
+    window.dispatchEvent(new Event("scroll"));
     pagehide();
 
     const payload = this.sent.at(-1);

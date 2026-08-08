@@ -104,6 +104,8 @@ RSpec.describe ExternalUploadManager do
       end
 
       context "when the upload does get changed by the UploadCreator" do
+        subject(:manager) { ExternalUploadManager.new(external_upload_stub, force_optimize: true) }
+
         let(:object_file) { file_from_fixtures("should_be_jpeg.heic", "images") }
         let(:object_size) { 1.megabyte }
         let(:external_upload_stub) do

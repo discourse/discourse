@@ -366,12 +366,6 @@ module TopicGuardian
     topic&.slow_mode_seconds.to_i > 0 && @user.human? && !is_staff?
   end
 
-  private
-
-  def can_delete_own_topic?(topic)
-    topic.posts_count <= 1 && topic.created_at? && topic.created_at > 24.hours.ago
-  end
-
   def private_message_topic_scope(scope)
     pm_scope = scope.private_messages_for_user(user)
 
@@ -381,6 +375,12 @@ module TopicGuardian
       SQL
 
     pm_scope
+  end
+
+  private
+
+  def can_delete_own_topic?(topic)
+    topic.posts_count <= 1 && topic.created_at? && topic.created_at > 24.hours.ago
   end
 
   def secured_regular_topic_scope(scope, topic_ids:)

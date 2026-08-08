@@ -8,7 +8,6 @@ import {
   postRNWebviewMessage,
 } from "discourse/lib/utilities";
 import DiscourseRoute from "discourse/routes/discourse";
-import { i18n } from "discourse-i18n";
 
 export default class extends DiscourseRoute {
   @service capabilities;
@@ -35,18 +34,23 @@ export default class extends DiscourseRoute {
     const { canSignUp } = this.controllerFor("application");
     const { isOnlyOneExternalLoginMethod, singleExternalLogin } = this.login;
     const redirect = auth_immediately || login_required || !from || wantsTo;
+    const homepage = `discovery.${login_required ? "login-required" : defaultHomepage()}`;
 
     // Can't sign up when the site is read-only
     if (isReadOnly) {
-      transition.abort();
-      dialog.alert(i18n("read_only_mode.login_disabled"));
+      if (from) {
+        transition.abort();
+      } else {
+        router.replaceWith(homepage).followRedirects();
+      }
+
+      dialog.alert(this.login.readOnlySignupMessage);
       return;
     }
 
     // In some cases, the user is only allowed to log in, not sign up
     if (!canSignUp && (invite_only || !auth_immediately)) {
-      const route = `discovery.${login_required ? "login-required" : defaultHomepage()}`;
-      router.replaceWith(route).followRedirects();
+      router.replaceWith(homepage).followRedirects();
       return;
     }
 

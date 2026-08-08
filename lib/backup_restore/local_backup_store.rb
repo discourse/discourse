@@ -43,7 +43,9 @@ module BackupRestore
 
     def download_file(filename, destination, failure_message = "")
       path = path_from_filename(filename)
-      Discourse::Utils.execute_command("cp", path, destination, failure_message: failure_message)
+      FileUtils.cp(path, destination)
+    rescue SystemCallError => error
+      raise [failure_message, error.message].filter(&:present?).join("\n")
     end
 
     private

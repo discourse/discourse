@@ -24,6 +24,41 @@ RSpec.describe UserEmail do
     end
   end
 
+  describe ".normalize" do
+    it "removes dots from the local part and everything between + and @" do
+      expect(UserEmail.normalize("a.b+c@example.com")).to eq("ab@example.com")
+      expect(UserEmail.normalize("a.b@example.com")).to eq("ab@example.com")
+      expect(UserEmail.normalize("ab@example.com")).to eq("ab@example.com")
+    end
+
+    it "keeps dots in the domain" do
+      expect(UserEmail.normalize("a.b@mail.example.com")).to eq("ab@mail.example.com")
+    end
+
+    it "returns nil when there is no local part or domain" do
+      expect(UserEmail.normalize("a.b")).to be_nil
+      expect(UserEmail.normalize("@example.com")).to be_nil
+      expect(UserEmail.normalize("")).to be_nil
+      expect(UserEmail.normalize(nil)).to be_nil
+    end
+  end
+
+  describe ".find_by_normalized" do
+    it "finds an email whose normalized form matches" do
+      user_email = user.user_emails.create!(email: "a.b@example.com", primary: false)
+
+      expect(UserEmail.find_by_normalized("a.b+c@example.com")).to eq(user_email)
+      expect(UserEmail.find_by_normalized("A.B@example.com")).to eq(user_email)
+      expect(UserEmail.find_by_normalized("ac@example.com")).to be_nil
+    end
+
+    it "does not match rows without a normalized email" do
+      user.user_emails.update_all(normalized_email: nil)
+
+      expect(UserEmail.find_by_normalized("a.b")).to be_nil
+    end
+  end
+
   describe "normalized_email" do
     it "checks if normalized email is unique" do
       SiteSetting.normalize_emails = true

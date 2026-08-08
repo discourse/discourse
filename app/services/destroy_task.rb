@@ -162,6 +162,8 @@ class DestroyTask
     ApplicationRequest.delete_all
     IncomingLink.delete_all
     UserVisit.delete_all
+    UserVisitDailyRollup.delete_all
+    CategoryActivityDailyRollup.delete_all
     UserProfileView.delete_all
     UserProfile.update_all(views: 0)
     PostAction.unscoped.delete_all

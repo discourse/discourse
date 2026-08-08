@@ -13,13 +13,11 @@ describe DiscoursePolicy::PolicyController do
     group.add(user2)
   end
 
-  def raw
-    <<~MD
+  let(:raw) { <<~MD }
       [policy group=#{group.name}]
       I always open **doors**!
       [/policy]
     MD
-  end
 
   it "allows users to accept/reject policy" do
     post = create_post(raw: raw, user: moderator)
@@ -156,13 +154,11 @@ describe DiscoursePolicy::PolicyController do
   describe "private policy restrictions" do
     fab!(:admin)
 
-    def private_raw
-      <<~MD
+    let(:private_raw) { <<~MD }
         [policy group=#{group.name} private=true]
         I always open **doors**!
         [/policy]
       MD
-    end
 
     it "denies non-admin access to accepted users for a private policy" do
       post = create_post(raw: private_raw, user: moderator)

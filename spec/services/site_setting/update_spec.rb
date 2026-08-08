@@ -97,6 +97,26 @@ RSpec.describe SiteSetting::Update do
           expect { result }.to change { SiteSetting.max_category_nesting }.to(3)
         end
       end
+
+      context "when the hidden setting is an upcoming change" do
+        let(:setting_name) { :enable_upload_debug_mode }
+        let(:new_value) { true }
+
+        before do
+          mock_upcoming_change_metadata(
+            {
+              enable_upload_debug_mode: {
+                impact: "other,developers",
+                status: :stable,
+                impact_type: "other",
+                impact_role: "developers",
+              },
+            },
+          )
+        end
+
+        it { is_expected.to run_successfully }
+      end
     end
 
     context "when a user changes a setting shadowed by a global variable" do

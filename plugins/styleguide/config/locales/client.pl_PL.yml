@@ -13,7 +13,7 @@ pl_PL:
   js:
     styleguide:
       title: "Przewodnik po stylach"
-      welcome: "Aby rozpocząć, wybierz sekcję z menu po lewej stronie."
+      welcome: "Aby rozpocząć, wybierz sekcję z menu nawigacji."
       categories:
         syntax: Składnia
         atoms: Atomy

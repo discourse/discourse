@@ -25,11 +25,16 @@ import {
   _freezeOutletRegistry,
   _registerOutlet,
   getAllOutlets,
+  getAllOutletsWithMetadata,
   getCustomOutlet,
+  getOutletMetadata,
   isOutletRegistryFrozen,
   isValidOutlet,
 } from "discourse/lib/blocks/-internals/registry/outlet";
-import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
+import {
+  BLOCK_OUTLETS,
+  CORE_OUTLET_METADATA,
+} from "discourse/lib/registry/block-outlets";
 import {
   resetBlockRegistryForTesting,
   setTestSourceIdentifier,
@@ -722,7 +727,9 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
       assert.true(isValidOutlet("custom-outlet"));
       assert.deepEqual(getCustomOutlet("custom-outlet"), {
         name: "custom-outlet",
+        displayName: undefined,
         description: undefined,
+        category: undefined,
       });
     });
 
@@ -733,6 +740,22 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
 
       const outlet = getCustomOutlet("described-outlet");
       assert.strictEqual(outlet.description, "A test outlet for descriptions");
+    });
+
+    test("registers outlet with displayName + category", function (assert) {
+      _registerOutlet("decorated-outlet", {
+        displayName: "Decorated Outlet",
+        description: "Carries the full metadata payload.",
+        category: "Layout",
+      });
+
+      const outlet = getCustomOutlet("decorated-outlet");
+      assert.strictEqual(outlet.displayName, "Decorated Outlet");
+      assert.strictEqual(
+        outlet.description,
+        "Carries the full metadata payload."
+      );
+      assert.strictEqual(outlet.category, "Layout");
     });
 
     test("registers plugin outlet (namespace:name)", function (assert) {
@@ -878,6 +901,93 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
       );
       assert.true(allOutlets.includes("first-custom"));
       assert.true(allOutlets.includes("second-custom"));
+    });
+  });
+
+  module("getOutletMetadata", function () {
+    test("returns full metadata for core outlets", function (assert) {
+      const meta = getOutletMetadata("homepage-blocks");
+      assert.strictEqual(meta.name, "homepage-blocks");
+      assert.strictEqual(
+        meta.displayName,
+        CORE_OUTLET_METADATA["homepage-blocks"].displayName
+      );
+      assert.strictEqual(
+        meta.description,
+        CORE_OUTLET_METADATA["homepage-blocks"].description
+      );
+      assert.true(meta.isCore);
+      assert.strictEqual(meta.namespaceType, "core");
+    });
+
+    test("returns full metadata for plugin outlets with displayName fallback", function (assert) {
+      setTestSourceIdentifier("plugin:chat");
+      _registerOutlet("chat:thread-actions", {
+        description: "Just a description.",
+      });
+
+      const meta = getOutletMetadata("chat:thread-actions");
+      assert.strictEqual(meta.name, "chat:thread-actions");
+      assert.strictEqual(
+        meta.displayName,
+        "chat:thread-actions",
+        "displayName falls back to the outlet name when unset"
+      );
+      assert.strictEqual(meta.description, "Just a description.");
+      assert.false(meta.isCore);
+      assert.strictEqual(meta.namespaceType, "plugin");
+    });
+
+    test("propagates explicit displayName + category for plugin outlets", function (assert) {
+      setTestSourceIdentifier("plugin:chat");
+      _registerOutlet("chat:thread-header", {
+        displayName: "Thread Header",
+        category: "Chat",
+      });
+
+      const meta = getOutletMetadata("chat:thread-header");
+      assert.strictEqual(meta.displayName, "Thread Header");
+      assert.strictEqual(meta.category, "Chat");
+    });
+
+    test("returns null for unregistered outlets", function (assert) {
+      assert.strictEqual(getOutletMetadata("not-registered"), null);
+    });
+  });
+
+  module("getAllOutletsWithMetadata", function () {
+    test("includes every core outlet with resolved metadata", function (assert) {
+      const all = getAllOutletsWithMetadata();
+      const byName = new Map(all.map((entry) => [entry.name, entry]));
+
+      BLOCK_OUTLETS.forEach((coreOutlet) => {
+        const entry = byName.get(coreOutlet);
+        assert.notStrictEqual(
+          entry,
+          undefined,
+          `should include core outlet: ${coreOutlet}`
+        );
+        assert.true(entry.isCore);
+        assert.strictEqual(entry.namespaceType, "core");
+        assert.strictEqual(typeof entry.displayName, "string");
+      });
+    });
+
+    test("includes custom outlets with their metadata", function (assert) {
+      setTestSourceIdentifier("plugin:chat");
+      _registerOutlet("chat:thread-actions", {
+        displayName: "Thread Actions",
+        description: "...",
+        category: "Chat",
+      });
+
+      const all = getAllOutletsWithMetadata();
+      const entry = all.find((e) => e.name === "chat:thread-actions");
+      assert.notStrictEqual(entry, undefined);
+      assert.strictEqual(entry.displayName, "Thread Actions");
+      assert.strictEqual(entry.category, "Chat");
+      assert.false(entry.isCore);
+      assert.strictEqual(entry.namespaceType, "plugin");
     });
   });
 

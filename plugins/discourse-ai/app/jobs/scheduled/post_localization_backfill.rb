@@ -8,7 +8,7 @@ module Jobs
     REDIS_KEY = "discourse-ai:localize_posts:in_progress"
 
     def execute(args)
-      return if !DiscourseAi::Translation.backfill_enabled?
+      return if !DiscourseAi::Translation.backfill_enabled?(target: Post)
 
       # Skip if previous batch is still running
       return if Discourse.redis.get(REDIS_KEY).to_i > 0

@@ -7,6 +7,7 @@ import { i18n } from "discourse-i18n";
 import {
   implicitValueFor,
   isSingleValueOperator,
+  operatorOptionsForType,
   operatorsForType,
 } from "../../../lib/workflows/condition-operators";
 import Collection from "./collection";
@@ -31,7 +32,7 @@ function conditionSchema(type) {
   return {
     type: "options",
     required: true,
-    options: operatorsForType(type, { context: "data_table" }),
+    options: operatorOptionsForType(type, { context: "data_table" }),
   };
 }
 

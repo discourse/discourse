@@ -7,27 +7,32 @@ describe SidebarSectionSerializer do
     Fabricate(:sidebar_section, title: "Participate", public: true, locale: "en")
   end
   fab!(:sidebar_url) { Fabricate(:sidebar_url, name: "Welcome", value: "/welcome", locale: "en") }
-
-  before do
+  fab!(:sidebar_section_link) do
     Fabricate(:sidebar_section_link, sidebar_section:, linkable: sidebar_url)
+  end
+  fab!(:sidebar_section_localization) do
     Fabricate(:sidebar_section_localization, sidebar_section:, locale: "ja", title: "参加")
+  end
+  fab!(:sidebar_url_localization) do
     Fabricate(:sidebar_url_localization, sidebar_url:, locale: "ja", name: "ようこそ")
   end
 
-  def serialized_for(guardian)
-    reloaded =
-      SidebarSection.includes(:localizations, sidebar_urls: :localizations).find(sidebar_section.id)
-    described_class.new(reloaded, scope: guardian, root: false).as_json
+  let(:reloaded_section) do
+    SidebarSection.includes(:localizations, sidebar_urls: :localizations).find(sidebar_section.id)
+  end
+  let(:serialized_for_user) do
+    described_class.new(reloaded_section, scope: Guardian.new(user), root: false).as_json
+  end
+  let(:serialized_for_admin) do
+    described_class.new(reloaded_section, scope: Guardian.new(admin), root: false).as_json
   end
 
   it "returns localized section titles and link names when content localization is enabled" do
     SiteSetting.content_localization_enabled = true
 
     I18n.with_locale("ja") do
-      json = serialized_for(Guardian.new(user))
-
-      expect(json[:title]).to eq("参加")
-      expect(json[:links].first[:name]).to eq("ようこそ")
+      expect(serialized_for_user[:title]).to eq("参加")
+      expect(serialized_for_user[:links].first[:name]).to eq("ようこそ")
     end
   end
 
@@ -35,20 +40,18 @@ describe SidebarSectionSerializer do
     SiteSetting.content_localization_enabled = false
 
     I18n.with_locale("ja") do
-      json = serialized_for(Guardian.new(user))
-
-      expect(json[:title]).to eq("Participate")
-      expect(json[:links].first[:name]).to eq("Welcome")
+      expect(serialized_for_user[:title]).to eq("Participate")
+      expect(serialized_for_user[:links].first[:name]).to eq("Welcome")
     end
   end
 
   it "does not expose localization rows in the regular presentation payload" do
     SiteSetting.content_localization_enabled = true
 
-    expect(serialized_for(Guardian.new(user))[:localizations]).to eq(nil)
-    expect(serialized_for(Guardian.new(user))[:links].first[:localizations]).to eq(nil)
-    expect(serialized_for(Guardian.new(admin))[:localizations]).to eq(nil)
-    expect(serialized_for(Guardian.new(admin))[:links].first[:localizations]).to eq(nil)
+    expect(serialized_for_user[:localizations]).to eq(nil)
+    expect(serialized_for_user[:links].first[:localizations]).to eq(nil)
+    expect(serialized_for_admin[:localizations]).to eq(nil)
+    expect(serialized_for_admin[:links].first[:localizations]).to eq(nil)
   end
 
   it "returns source labels and localization rows from the edit serializer" do
@@ -96,15 +99,18 @@ describe SidebarSectionSerializer do
     end
   end
 
-  it "returns original labels for built-in sections with localizations" do
+  it "returns localized labels only for manually created built-in section links" do
     SiteSetting.content_localization_enabled = true
     community_section =
       SidebarSection.find_by(section_type: SidebarSection.section_types[:community])
     community_section.update!(locale: "en")
     topics_link = community_section.sidebar_urls.find_by(name: "Topics")
     topics_link.update!(locale: "en")
+    manual_link = Fabricate(:sidebar_url, name: "Solutions", value: "/solutions", locale: "en")
+    Fabricate(:sidebar_section_link, sidebar_section: community_section, linkable: manual_link)
     Fabricate(:sidebar_section_localization, sidebar_section: community_section, locale: "ja")
     Fabricate(:sidebar_url_localization, sidebar_url: topics_link, locale: "ja")
+    Fabricate(:sidebar_url_localization, sidebar_url: manual_link, locale: "ja", name: "解決策")
 
     I18n.with_locale("ja") do
       reloaded =
@@ -115,8 +121,10 @@ describe SidebarSectionSerializer do
 
       expect(json[:title]).to eq("Community")
       expect(json[:links].find { |link| link[:id] == topics_link.id }[:name]).to eq("Topics")
+      expect(json[:links].find { |link| link[:id] == manual_link.id }[:name]).to eq("解決策")
       expect(json[:localizations]).to eq(nil)
       expect(json[:links].find { |link| link[:id] == topics_link.id }[:localizations]).to eq(nil)
+      expect(json[:links].find { |link| link[:id] == manual_link.id }[:localizations]).to eq(nil)
     end
   end
 end

@@ -45,3 +45,6 @@ el:
           group_name: "Συμβάν ψηφοφορίας θέματος"
           topic_upvote: "Όταν ένας χρήστης ψηφίζει σε ένα θέμα"
           topic_unvote: "Όταν ένας χρήστης αφαιρεί την ψήφο του σε ένα θέμα"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Ετικέτες"

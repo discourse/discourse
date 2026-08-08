@@ -49,3 +49,6 @@ zh_CN:
           group_name: "话题投票事件"
           topic_upvote: "当用户对某个话题投票时"
           topic_unvote: "当用户对某个话题取消投票时"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "标签"

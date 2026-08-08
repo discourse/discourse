@@ -8,7 +8,6 @@ sv:
   js:
     styleguide:
       title: "Stilguide"
-      welcome: "Kom igång genom att välja ett avsnitt i menyn till vänster."
       categories:
         syntax: Syntax
         atoms: Atomer

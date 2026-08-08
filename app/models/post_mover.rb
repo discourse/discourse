@@ -51,6 +51,7 @@ class PostMover
         new_topic =
           Topic.create!(
             user: post.user,
+            acting_user: user,
             title: title,
             category_id: category_id,
             created_at: post.created_at,
@@ -118,6 +119,8 @@ class PostMover
         @first_post_number_moved = posts.last.post_number + 1
       end
     end
+
+    @moving_post_ids = posts.map(&:id)
 
     create_temp_table
     move_each_post
@@ -747,10 +750,12 @@ class PostMover
   end
 
   def update_reviewables
-    Reviewable.where(target_type: "Post", target_id: @post_ids).update_all(
-      topic_id: @destination_topic.id,
-      category_id: @destination_topic.category_id,
-    )
+    Reviewable.where(
+      target_type: "Post",
+      target_id: @moving_post_ids,
+      topic_id: @original_topic.id,
+      category_id: @original_topic.category_id,
+    ).update_all(topic_id: @destination_topic.id, category_id: @destination_topic.category_id)
   end
 
   def watch_new_topic

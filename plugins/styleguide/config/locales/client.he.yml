@@ -13,7 +13,6 @@ he:
   js:
     styleguide:
       title: "מדריך סגנון"
-      welcome: "כדי להתחיל, יש לבחור בסעיף מהתפריט שמימין."
       categories:
         syntax: תחביר
         atoms: אטומים

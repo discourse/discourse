@@ -38,13 +38,18 @@ Discourse is large with long history. Understand context before changes.
 bin/qunit --help # detailed help
 bin/qunit path/to/test-file.js  # Run all tests in file
 bin/qunit path/to/tests/directory # Run all tests in directory
+bin/qunit --filter "Some text" # Case-insensitive substring match on "module: test name"
+bin/qunit --filter "/Foo|Bar/i" # Slash-wrapped value is a regex (include the "i" flag); use for alternation
 
 # Linting
 bin/lint --fix path/to/file path/to/another/file
 bin/lint --fix --recent # Lint all recently changed files
 ```
 
-ALWAYS lint any changes you make with `bin/lint --fix`
+Run `bin/lint --fix` once after implementation is complete and before handing
+off completed changes, committing, or pushing. During iterative edits, only run
+lint when it helps diagnose an issue. Prefer passing the specific changed files;
+use `bin/lint --fix --recent` only when appropriate.
 
 ## Site Settings
 - Configured in `config/site_settings.yml` or `config/settings.yml` for plugins

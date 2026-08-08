@@ -358,6 +358,116 @@ RSpec.describe CategorySerializer do
     end
   end
 
+  describe "#allowed_tags" do
+    subject(:json) { described_class.new(category, scope: scope, root: false).as_json }
+
+    fab!(:attached_tag) { Fabricate(:tag, name: "category-allowed-tag") }
+
+    before { category.tags << attached_tag }
+
+    context "for a non-editor" do
+      let(:scope) { user.guardian }
+
+      it "is not included" do
+        expect(json).not_to have_key(:allowed_tags)
+      end
+    end
+
+    context "for an editor" do
+      let(:scope) { admin.guardian }
+
+      it "is included with all tag entries" do
+        expect(json[:allowed_tags]).to contain_exactly(
+          { id: attached_tag.id, name: attached_tag.name, slug: attached_tag.slug },
+        )
+      end
+    end
+
+    context "when tagging is disabled" do
+      let(:scope) { admin.guardian }
+
+      before { SiteSetting.tagging_enabled = false }
+
+      it "is not included" do
+        expect(json).not_to have_key(:allowed_tags)
+      end
+    end
+  end
+
+  describe "#allowed_tag_groups" do
+    subject(:json) { described_class.new(category, scope: scope, root: false).as_json }
+
+    fab!(:attached_tag_group) { Fabricate(:tag_group, name: "category-allowed-group") }
+
+    before { category.tag_groups << attached_tag_group }
+
+    context "for a non-editor" do
+      let(:scope) { user.guardian }
+
+      it "is not included" do
+        expect(json).not_to have_key(:allowed_tag_groups)
+      end
+    end
+
+    context "for an editor" do
+      let(:scope) { admin.guardian }
+
+      it "is included with all tag-group names" do
+        expect(json[:allowed_tag_groups]).to contain_exactly(attached_tag_group.name)
+      end
+    end
+
+    context "when tagging is disabled" do
+      let(:scope) { admin.guardian }
+
+      before { SiteSetting.tagging_enabled = false }
+
+      it "is not included" do
+        expect(json).not_to have_key(:allowed_tag_groups)
+      end
+    end
+  end
+
+  describe "#required_tag_groups" do
+    subject(:json) { described_class.new(category, scope: scope, root: false).as_json }
+
+    fab!(:required_tag_group) { Fabricate(:tag_group, name: "category-required-group") }
+
+    fab!(:category_required_tag_group) do
+      CategoryRequiredTagGroup.create!(
+        category: category,
+        tag_group: required_tag_group,
+        min_count: 2,
+      )
+    end
+
+    context "for a non-editor" do
+      let(:scope) { user.guardian }
+
+      it "omits the tag-group name from each entry" do
+        expect(json[:required_tag_groups]).to eq([{ min_count: 2 }])
+      end
+    end
+
+    context "for an editor" do
+      let(:scope) { admin.guardian }
+
+      it "includes the tag-group name in each entry" do
+        expect(json[:required_tag_groups]).to eq([{ name: required_tag_group.name, min_count: 2 }])
+      end
+    end
+
+    context "when tagging is disabled" do
+      let(:scope) { admin.guardian }
+
+      before { SiteSetting.tagging_enabled = false }
+
+      it "is not included" do
+        expect(json).not_to have_key(:required_tag_groups)
+      end
+    end
+  end
+
   describe "#category_type_settings" do
     let(:type_a) do
       Class.new(Categories::Types::Base) do

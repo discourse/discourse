@@ -25,6 +25,7 @@ RSpec.describe DiscourseSolved::AdminDashboardSupportController do
         "whos_answering",
         "response_time_distribution",
         "category_options",
+        "category_ids",
       )
     end
 
@@ -33,10 +34,31 @@ RSpec.describe DiscourseSolved::AdminDashboardSupportController do
 
       get "/admin/plugins/solved/dashboard-support.json",
           params: {
-            category_id: support_category.id,
+            category_ids: [support_category.id],
           }
 
       expect(response.status).to eq(200)
+      expect(response.parsed_body["category_ids"]).to eq([support_category.id])
+    end
+
+    it "accepts multiple categories in a comma-separated string" do
+      sign_in(admin)
+      other_support_category = Fabricate(:category)
+      other_support_category.custom_fields[
+        DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD
+      ] = "true"
+      other_support_category.save!
+
+      get "/admin/plugins/solved/dashboard-support.json",
+          params: {
+            category_ids: "#{support_category.id},#{other_support_category.id}",
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["category_ids"]).to contain_exactly(
+        support_category.id,
+        other_support_category.id,
+      )
     end
 
     it "is available to moderators" do

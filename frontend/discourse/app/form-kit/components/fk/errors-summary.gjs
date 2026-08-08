@@ -49,12 +49,20 @@ export default class FKErrorsSummary extends Component {
         <ul class="form-kit__errors-summary-list">
           {{#each-in @errors as |name error|}}
             <li>
-              <a
-                rel="noopener noreferrer"
-                href="#control-{{this.normalizeName name}}"
-                {{on "click" this.focusField}}
-              >{{error.title}}</a>:
-              {{this.concatErrors error.messages}}
+              {{! Errors with a title point at a specific control: render the
+                  title as a focus-the-field link. Errors without a title are
+                  form-level (not tied to a single input) — render the message
+                  on its own, with no anchor or label prefix. }}
+              {{#if error.title}}
+                <a
+                  rel="noopener noreferrer"
+                  href="#control-{{this.normalizeName name}}"
+                  {{on "click" this.focusField}}
+                >{{error.title}}</a>:
+                {{this.concatErrors error.messages}}
+              {{else}}
+                {{this.concatErrors error.messages}}
+              {{/if}}
             </li>
           {{/each-in}}
         </ul>

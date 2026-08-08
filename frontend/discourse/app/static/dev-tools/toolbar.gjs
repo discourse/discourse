@@ -5,8 +5,8 @@ import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import dDraggable from "discourse/ui-kit/modifiers/d-draggable";
 import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
+import dPointerDrag from "discourse/ui-kit/modifiers/d-pointer-drag";
 import I18n, { i18n } from "discourse-i18n";
 import BlockDebugButton from "./block-debug/button";
 import PluginOutletDebugButton from "./plugin-outlet-debug/button";
@@ -35,7 +35,7 @@ export default class Toolbar extends Component {
     const realTop = event.target
       .closest(".dev-tools-toolbar")
       .getBoundingClientRect().top;
-    const dragStartedAtY = event.pageY || event.touches[0].pageY;
+    const dragStartedAtY = event.pageY;
     this.activeDragOffset = dragStartedAtY - realTop;
   }
 
@@ -46,7 +46,7 @@ export default class Toolbar extends Component {
 
   @action
   dragMove(event) {
-    const dragY = event.pageY || event.touches[0].pageY;
+    const dragY = event.pageY;
     this.top = dragY - this.activeDragOffset;
   }
 
@@ -68,13 +68,13 @@ export default class Toolbar extends Component {
         type="button"
         title={{i18n "dev_tools.drag_to_move"}}
         class="gripper"
-        {{dDraggable
-          didStartDrag=this.didStartDrag
-          didEndDrag=this.didEndDrag
-          dragMove=this.dragMove
+        {{dPointerDrag
+          onDragStart=this.didStartDrag
+          onDrag=this.dragMove
+          onDragEnd=this.didEndDrag
         }}
       >
-        {{dIcon "grip-lines"}}
+        {{dIcon "grip-vertical"}}
       </button>
       <PluginOutletDebugButton />
       <BlockDebugButton />

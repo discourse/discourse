@@ -12,13 +12,11 @@ import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Session from "discourse/models/session";
 import { i18n } from "discourse-i18n";
 
-const ALL_FILTER = "all";
 const DEFAULT_GROUP = "default";
 
 export default class AdminEmojis extends Service {
   @service dialog;
 
-  @tracked filter = ALL_FILTER;
   @tracked sorting = ["group", "name"];
   @tracked selectedEmojis = new Set();
   @tracked isSelecting = false;
@@ -30,40 +28,9 @@ export default class AdminEmojis extends Service {
     this.#fetchEmojis();
   }
 
-  get filteredEmojis() {
-    if (!this.filter || this.filter === ALL_FILTER) {
-      return this.emojis;
-    } else {
-      return this.emojis.filter((e) => e.group === this.filter);
-    }
-  }
-
-  get sortedEmojis() {
-    return this.filteredEmojis.toSorted((a, b) => a.name.localeCompare(b.name));
-  }
-
   get emojiGroups() {
     return uniqueItemsFromArray(
       [DEFAULT_GROUP].concat(this.emojis.map((e) => e.group))
-    );
-  }
-
-  get filteringGroups() {
-    return [ALL_FILTER].concat(this.emojiGroups);
-  }
-
-  get allVisibleSelected() {
-    const visible = this.sortedEmojis;
-    return (
-      visible.length > 0 &&
-      visible.every((e) => this.selectedEmojis.has(e.get("name")))
-    );
-  }
-
-  get someVisibleSelected() {
-    return (
-      !this.allVisibleSelected &&
-      this.sortedEmojis.some((e) => this.selectedEmojis.has(e.get("name")))
     );
   }
 
@@ -146,10 +113,13 @@ export default class AdminEmojis extends Service {
   }
 
   @action
-  toggleAllVisible() {
-    const emojis = this.sortedEmojis;
+  toggleAllVisible(emojis) {
     const next = new Set(this.selectedEmojis);
-    if (this.allVisibleSelected) {
+    const allVisibleSelected = emojis.every((emoji) =>
+      this.selectedEmojis.has(emoji.get("name"))
+    );
+
+    if (allVisibleSelected) {
       emojis.forEach((e) => next.delete(e.get("name")));
     } else {
       emojis.forEach((e) => next.add(e.get("name")));

@@ -51,6 +51,7 @@ All services use `Service::Base`. They're organized under `app/services/upcoming
 | `NotifyPromotions` | Iterates all changes and calls `NotifyPromotion` for each |
 | `NotifyPromotion` | Handles one promotion — checks policies, merges notifications, fires events |
 | `NotificationDataMerger` | Consolidates multiple change notifications into one to avoid spam (used by both the weekly availability job and `NotifyPromotion`) |
+| `BackfillNotifiedEvents` | Marks the changes that already exist as notified about, at site creation and on plugin enable — see [Back-Catalogue Notification Suppression](#back-catalogue-notification-suppression) |
 
 **`SiteSetting::UpsertGroups`** — Manages group assignments for settings (upserts `SiteSettingGroup`, refreshes caches, notifies clients).
 
@@ -188,7 +189,7 @@ Current examples, all of which set `requires_plugin_enabled: false`:
 
 | Change | Why it must work with the plugin off |
 |---|---|
-| `enable_events_category_type_setup` (calendar), `enable_support_category_type_setup` (solved), `enable_ideas_category_type_setup` (topic-voting) | Offers a category type whose `enable_plugin` hook turns the plugin on when an admin picks it. Core registers category types *without* the plugin enabled — see `Categories::Types::Base#enable_plugin`. |
+| `enable_support_category_type_setup` (solved) | Offers a category type whose `enable_plugin` hook turns the plugin on when an admin picks it. Core registers category types *without* the plugin enabled — see `Categories::Types::Base#enable_plugin`. |
 | `enable_discourse_reactions_by_default` (reactions) | An `upcoming_change_default_override` that flips `discourse_reactions_enabled` from `false` to `true`. Gating it on the plugin being enabled means it can never fire. |
 | `enable_discourse_workflows` (workflows) | *Is* the plugin's `enabled_site_setting`. That row is how an admin opts into the plugin at all, so it *must* opt out — otherwise the default gate would gate the change on itself. |
 
@@ -222,6 +223,8 @@ enable_your_feature_name:
 #### Key Behaviors
 
 - **Opt-in only**: Omitting `body_class` (or setting it `false`) means no body class — the default. Add it only when you actually have CSS keyed on `uc-{name}`.
+- **Always wrap in `:where()`**: Style the class as `:where(.uc-{name})`, never a bare `.uc-{name}`, so the transitional class adds zero specificity and stays safe to unwrap and delete later — the `discourse/uc-classes-in-where` stylelint rule enforces this.
+- **Put the CSS in dedicated files** imported from `app/assets/stylesheets/common/upcoming-changes/_index.scss`.
 - **Enabled-for-user gated**: The class only appears for users the change is enabled for (via `currentUserUpcomingChanges`), not globally. Anonymous/ineligible users won't get it.
 - **Integrity-checked**: `body_class` is in the integrity spec's `allowed_keys` and must be a boolean — see [Mocking Metadata](#mocking-metadata) for how to set it in tests.
 
@@ -298,9 +301,22 @@ When multiple changes need notifications, `NotificationDataMerger` consolidates 
 
 For "change available" notifications specifically, merging also happens across the *batch* processed by the weekly `NotifyAdminsOfAvailableUpcomingChanges` job — for admins without an existing unread notification, the job builds a single new notification per admin that lists every newly-available change in that run, rather than emitting one notification per change.
 
-### New Site Notification Suppression
+### Back-Catalogue Notification Suppression
 
-Notifications for "change available" and "promoted" are skipped on new sites (determined by `Migration::Helpers.new_site?` in `lib/migration/helpers.rb` — a site is "new" if its first schema migration was less than 1 hour ago). Both the weekly `NotifyAdminsOfAvailableUpcomingChanges` job and the `NotifyPromotion` service guard on `UpcomingChanges.should_notify_admins?`. This prevents freshly provisioned sites from being flooded with notifications for every existing upcoming change on their first run. The tracking/detection steps still execute — only the notification delivery is suppressed.
+Admins should never be notified about changes that pre-date their ability to act on them. Two mechanisms cover this.
+
+**The one-hour window.** `UpcomingChanges.should_notify_admins?` is false while `Migration::Helpers.new_site?` is true (a site is "new" if its first schema migration was less than 1 hour ago). Both the weekly `NotifyAdminsOfAvailableUpcomingChanges` job and the `NotifyPromotion` service guard on it. This only covers the first hour, so it is a backstop, not the main mechanism — the weekly job runs weekly, and `NotifyPromotion` fires as soon as the hour elapses.
+
+**Backfilled events.** `UpcomingChanges::Action::BackfillNotifiedEvents` writes `added` plus the appropriate notified event (`admins_notified_available_change` at `promote_upcoming_changes_on_status - 1`, `admins_notified_automatic_promotion` at/above the promote status) so both notification paths permanently treat those changes as handled. It is called from:
+
+- `db/fixtures/995_upcoming_changes.rb`, on new sites (skipped in development so notifications remain testable locally). This covers every *installed* plugin's changes too, enabled or not — plugin settings are registered regardless of enabled state, so they are already in `SiteSetting.upcoming_change_site_settings`.
+- The `:site_setting_changed` handler in `config/initializers/015-track-upcoming-change-toggle.rb`, when a plugin's `enabled_site_setting` is turned on. Until that moment `ConditionalDisplay` is the only thing holding the plugin's notifications back, so enabling it would otherwise release the whole back-catalogue at once.
+
+Changes below the notification threshold at backfill time are deliberately left alone, so they notify normally when they later reach it.
+
+**Promotion still happens.** The backfill only suppresses *notifications*. `NotifyPromotion` keys its "already handled?" policy (`promotion_not_already_handled`) on the `automatically_promoted` event, and separately skips only the notification steps when an `admins_notified_automatic_promotion` event exists. So a backfilled change still gets its `automatically_promoted` event and still fires `DiscourseEvent(:upcoming_change_enabled)`. That matters because the event is what applies a change's real side effects, and because the `automatically_promoted` record is read elsewhere as the "when did this turn on" anchor — see `BrowserPageviewEvent#beacon_cutover_date` and `SiteSetting::Action::RemoveAndReplaceUncategorizedToggled::SNAPSHOT_EVENT_TYPES`.
+
+When adding a policy to `NotifyPromotion`, be clear about which of the two questions it answers. A policy aborts the whole service, so anything about *notification* belongs in the `notify_admins?` guard instead — putting it in a policy would silently stop the change from promoting.
 
 ### Group-Based Access
 

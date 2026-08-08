@@ -14,10 +14,14 @@ RSpec.describe "AI Composer helper" do
     Group.find_by(id: Group::AUTO_GROUPS[:admins]).add(user)
     assign_fake_provider_to(:ai_default_llm_model)
     SiteSetting.ai_helper_custom_prompt_agent = custom_prompts_agent.id
+    DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
     SiteSetting.ai_helper_enabled = true
+    DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
     Jobs.run_immediately!
     sign_in(user)
   end
+
+  after { DiscourseAi::AiHelper::Assistant.clear_prompt_cache! }
 
   let(:input) { "The rain in spain stays mainly in the Plane." }
   let(:composer) { PageObjects::Components::Composer.new }

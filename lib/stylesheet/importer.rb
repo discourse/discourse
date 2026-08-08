@@ -64,23 +64,14 @@ module Stylesheet
 
         CSS
 
-      if SiteSetting.rich_editor
-        contents << <<~CSS
-          #{font_css(jetbrains_mono)}
-          #{render_font_special_properties(jetbrains_mono, "body")}
-          :root {
-            --d-font-family--monospace: #{jetbrains_mono[:stack]};
-          }
+      contents << <<~CSS
+        #{font_css(jetbrains_mono)}
+        #{render_font_special_properties(jetbrains_mono, "body")}
+        :root {
+          --d-font-family--monospace: #{jetbrains_mono[:stack]};
+        }
 
-        CSS
-      else
-        contents << <<~CSS
-          :root {
-            --d-font-family--monospace: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono", menlo, monaco, consolas, monospace;
-          }
-
-        CSS
-      end
+      CSS
 
       contents
     end

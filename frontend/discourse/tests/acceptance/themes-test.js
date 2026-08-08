@@ -183,7 +183,7 @@ acceptance("Theme", function (needs) {
       .dom(".admin-install-theme-modal .d-modal__footer .install-theme-warning")
       .exists("Git warning is displayed");
 
-    await click(".admin-install-theme-modal .d-modal__footer .btn-danger");
+    await click(".admin-install-theme-modal .d-modal__footer .btn-default");
 
     assert.dom(".admin-install-theme-modal").doesNotExist("modal is closed");
   });

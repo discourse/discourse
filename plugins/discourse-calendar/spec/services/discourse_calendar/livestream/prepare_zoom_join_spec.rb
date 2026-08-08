@@ -101,7 +101,7 @@ RSpec.describe DiscourseCalendar::Livestream::PrepareZoomJoin do
     end
 
     context "when the livestream URL is not a supported Zoom URL" do
-      before { event.update!(location: "https://example.com/stream") }
+      before { event.update!(location: "https://www.youtube.com/live/abc123") }
 
       it { is_expected.to fail_to_find_a_model(:zoom_join_data) }
     end

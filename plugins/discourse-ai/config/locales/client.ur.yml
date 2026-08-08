@@ -59,6 +59,9 @@ ur:
             hide_topic:
               label: "موضوع چھپائیں"
     discourse_ai:
+      discourse_workflows:
+        ai_agent:
+          mode: "موڈ"
       ai_tool_approval:
         loading: "لوڈ ہو رہا ہے..."
         tool: "عمل"
@@ -101,6 +104,22 @@ ur:
       translations:
         title: "ترجمہ"
         category_scope: "زمرہ جات"
+        model_progress:
+          detail:
+            retry: "دوبارہ کوشش"
+            columns:
+              locale: "لوکیل"
+              pending: "زیراِلتواء"
+              total: "حاصل جمع"
+          targets:
+            post:
+              title: "دھاگے"
+            topic:
+              title: "موضوعات"
+            category:
+              title: "زمرہ جات"
+            tag:
+              title: "ٹیگز"
         stats:
           eta_minutes:
             one: "%{count} منٹ"
@@ -150,6 +169,7 @@ ur:
         mcp_tools_modal:
           select_all: "سبھی منتخب کریں"
           clear_all: "سبھی ہٹا دیں"
+        duplicate: "نقل"
         delete: "حذف کریں"
         thinking_effort_options:
           none: "کوئی نہیں"
@@ -230,7 +250,6 @@ ur:
         tests:
           success: "کامیابی!"
         providers:
-          google: "گُوگَل"
           fake: "اپنی مرضی کا"
       related_topics:
         title: "متعلقہ موضوعات"
@@ -245,6 +264,8 @@ ur:
           copy: "کاپی"
           copied: "کاپی کر لیا!"
           cancel: "منسوخ"
+          insert_footnote: "حوالہ درج کریں"
+          footnote_disabled: "خودکار اندراج غیر فعال، کاپی بٹن پر کلک کریں اور اسے اپنے طور پر ترمیم کریں۔"
         thumbnail_suggestions:
           try_again: "دوبارہ کوشش کریں"
       embeddings:

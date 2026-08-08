@@ -53,26 +53,33 @@ RSpec.describe ApplicationController do
     context "when cache_control_bfcache_compatibility is enabled" do
       before { SiteSetting.cache_control_bfcache_compatibility = true }
 
-      it "sets bfcache-compatible cache control headers" do
+      it "sets bfcache-compatible cache control headers and includes the stale document reload script" do
         get "/latest"
 
         expect(response.status).to eq(200)
-        expect(response.headers["Cache-Control"]).to eq("no-cache")
+        expect(response.headers["Cache-Control"]).to eq("no-cache, private")
+        expect(response.body).to include("bfcache-stale-document-check")
       end
 
       it "sets bfcache-compatible cache control headers on 404" do
         get "/invalid-urlllllllllll"
 
         expect(response.status).to eq(404)
-        expect(response.headers["Cache-Control"]).to eq("no-cache")
+        expect(response.headers["Cache-Control"]).to eq("no-cache, private")
       end
 
       it "sets bfcache-compatible cache control headers on 403" do
         get "/latest.json", headers: { HTTP_API_KEY: "invalid-api-key" }
 
         expect(response.status).to eq(403)
-        expect(response.headers["Cache-Control"]).to eq("no-cache")
+        expect(response.headers["Cache-Control"]).to eq("no-cache, private")
       end
+    end
+
+    it "does not include the stale document reload script in the HTML document by default" do
+      get "/latest"
+
+      expect(response.body).not_to include("bfcache-stale-document-check")
     end
   end
 
@@ -594,6 +601,59 @@ RSpec.describe ApplicationController do
 
           expect(response.body).to include('<svg id="user"')
           expect(response.body).to include('class="emoji"')
+        end
+      end
+
+      it "does not retain topics moved to a restricted category" do
+        Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
+        topic = Fabricate(:topic_with_op, title: "restricted 404 cache topic")
+        private_category = Fabricate(:private_category, group: Group[:staff])
+
+        get "/missing-route"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to include(topic.title)
+
+        admin = sign_in(Fabricate(:admin))
+        put "/t/#{topic.id}.json", params: { category_id: private_category.id }
+
+        expect(response).to have_http_status(:ok)
+
+        delete "/session/#{admin.username}.json"
+        get "/missing-route"
+
+        aggregate_failures do
+          expect(response).to have_http_status(:not_found)
+          expect(response.body).not_to include(topic.title)
+        end
+      end
+
+      it "does not retain topics after a category becomes restricted" do
+        Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
+        category = Fabricate(:category)
+        topic = Fabricate(:topic_with_op, title: "restricted category 404 cache topic", category:)
+
+        get "/missing-route"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to include(topic.title)
+
+        admin = sign_in(Fabricate(:admin))
+        put "/categories/#{category.id}.json",
+            params: {
+              permissions: {
+                Group[:staff].name => CategoryGroup.permission_types[:full],
+              },
+            }
+
+        expect(response).to have_http_status(:ok)
+
+        delete "/session/#{admin.username}.json"
+        get "/missing-route"
+
+        aggregate_failures do
+          expect(response).to have_http_status(:not_found)
+          expect(response.body).not_to include(topic.title)
         end
       end
 
@@ -1752,8 +1812,8 @@ RSpec.describe ApplicationController do
       it "does not include banner info for anonymous users" do
         get "/login"
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           expect(json["banner"]).to eq("{}")
         end
       end
@@ -1762,8 +1822,8 @@ RSpec.describe ApplicationController do
         sign_in(user)
         get "/"
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           expect(JSON.parse(json["banner"])["html"]).to eq("<p>A banner topic</p>")
         end
       end
@@ -1774,8 +1834,8 @@ RSpec.describe ApplicationController do
       it "does include banner info for anonymous users" do
         get "/login"
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           expect(JSON.parse(json["banner"])["html"]).to eq("<p>A banner topic</p>")
         end
       end
@@ -1784,7 +1844,7 @@ RSpec.describe ApplicationController do
     context "with content localization enabled" do
       def banner_html
         preloaded = Nokogiri::HTML5.fragment(response.body).css("#data-preloaded").first
-        JSON.parse(JSON.parse(preloaded["data-preloaded"])["banner"])["html"]
+        JSON.parse(JSON.parse(preloaded.text)["banner"])["html"]
       end
 
       before do
@@ -1862,9 +1922,7 @@ RSpec.describe ApplicationController do
 
   describe "preloading data" do
     def preloaded_json
-      JSON.parse(
-        Nokogiri::HTML5.fragment(response.body).css("div#data-preloaded").first["data-preloaded"],
-      )
+      JSON.parse(Nokogiri::HTML5.fragment(response.body).css("script#data-preloaded").first.text)
     end
 
     context "when user is anon" do
@@ -1883,6 +1941,8 @@ RSpec.describe ApplicationController do
             "activatedThemes",
             "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
             "themeSiteSettingOverrides",
+            "themeBlockLayouts",
+            "themeBlockLayoutMeta",
             "upcomingChanges",
           ],
         )
@@ -1910,6 +1970,8 @@ RSpec.describe ApplicationController do
             "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
             "currentUser",
             "themeSiteSettingOverrides",
+            "themeBlockLayouts",
+            "themeBlockLayoutMeta",
             "topicTrackingStates",
             "topicTrackingStateMeta",
             "upcomingChanges",
@@ -1939,6 +2001,8 @@ RSpec.describe ApplicationController do
             "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
             "currentUser",
             "themeSiteSettingOverrides",
+            "themeBlockLayouts",
+            "themeBlockLayoutMeta",
             "topicTrackingStates",
             "topicTrackingStateMeta",
             "fontMap",
@@ -2004,10 +2068,27 @@ RSpec.describe ApplicationController do
 
   describe "color definition stylesheets" do
     let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"]) }
+    let!(:light_scheme) do
+      ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Solarized Light"])
+    end
 
     before do
       Theme.find_default.update!(dark_color_scheme_id: dark_scheme.id)
       SiteSetting.interface_color_selector = "sidebar_footer"
+    end
+
+    context "when scheme cookies contain HTML" do
+      it "does not add injected links to the page" do
+        injected_link =
+          '<link rel="modulepreload" data-plugin-name="poc" href="https://example.com/xss.js">'
+        cookies[:color_scheme_id] = %(#{light_scheme.id}">#{injected_link})
+        cookies[:dark_scheme_id] = %(#{dark_scheme.id}">#{injected_link})
+
+        get "/"
+
+        injected_links = css_select('link[rel="modulepreload"][data-plugin-name="poc"]')
+        expect(injected_links).to be_empty
+      end
     end
 
     context "with early hints" do

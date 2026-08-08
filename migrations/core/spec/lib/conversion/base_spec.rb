@@ -22,7 +22,7 @@ RSpec.describe Migrations::Conversion::Base do
 
     after do
       Migrations::Database::IntermediateDB.setup(nil)
-      Object.send(:remove_const, "TemporaryConverterModule")
+      remove_test_const("TemporaryConverterModule")
     end
 
     it "builds one reporter, then runs the scheduler over the filtered steps" do
@@ -59,6 +59,10 @@ RSpec.describe Migrations::Conversion::Base do
   describe "#steps" do
     subject(:converter) { TemporaryConverterModule::Converter.new(nil) }
 
+    # `filter_steps` is private; expose it through a subclass to assert the
+    # exact order `--only`/`--skip` produce.
+    let(:base) { Class.new(described_class) { public :filter_steps }.new(nil) }
+
     before do
       Object.const_set(
         "TemporaryConverterModule",
@@ -72,7 +76,7 @@ RSpec.describe Migrations::Conversion::Base do
       )
     end
 
-    after { Object.send(:remove_const, "TemporaryConverterModule") }
+    after { remove_test_const("TemporaryConverterModule") }
 
     it "discovers `Step` subclasses" do
       expect(converter.steps).to contain_exactly(
@@ -122,7 +126,7 @@ RSpec.describe Migrations::Conversion::Base do
 
       # `--only categories` pulls in the `users` dependency; it has to run
       # before `categories` because the filtered list is executed as-is.
-      filtered = converter.send(:filter_steps, converter.steps, ["categories"], [])
+      filtered = base.filter_steps(converter.steps, ["categories"], [])
 
       expect(filtered).to eq(
         [TemporaryConverterModule::Users, TemporaryConverterModule::Categories],
@@ -135,7 +139,7 @@ RSpec.describe Migrations::Conversion::Base do
       # `run` sorts the full step set first and filters afterwards, so
       # re-running a single step keeps working even when its dependency
       # isn't part of the filtered set.
-      filtered = converter.send(:filter_steps, converter.steps, ["categories"], ["users"])
+      filtered = base.filter_steps(converter.steps, ["categories"], ["users"])
 
       expect(filtered).to eq([TemporaryConverterModule::Categories])
     end

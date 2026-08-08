@@ -30,3 +30,6 @@ sv:
         help: "ämnen du röstade i"
     search:
       most_votes: "Flest röster"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Taggar"

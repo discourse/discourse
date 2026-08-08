@@ -21,8 +21,15 @@ end
 # getaddrinfo patch. Instead, open the socket with `Socket.tcp`, then set up a `TCPSocket`
 # instance with the result.
 module FinalDestinationTCPSocketPatch
-  def open(host, port, local_host = nil, local_port = nil, **kwargs)
+  # Takes *args because TCPServer inherits this singleton method and
+  # `TCPServer.open(port)` has fewer arguments — a fixed host/port signature
+  # fails the arity check before `super` can run. A bare `super` forwards the
+  # original arguments untouched.
+  def open(*args, **kwargs)
+    host = args[0]
     return super unless FinalDestination::Connector.token?(host)
+
+    _, port, local_host, local_port = args
 
     socket =
       Socket.tcp(

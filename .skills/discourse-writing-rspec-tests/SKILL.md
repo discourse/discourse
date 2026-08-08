@@ -16,6 +16,7 @@ Discourse uses RSpec for testing. Follow these patterns for all test types.
 - **Don't assert that internal methods are or aren't called** — assertions like `SomeService.expects(:some_method).never` (or `.once`, `.with(...)`) couple the test to internal implementation details that the caller shouldn't care about. Assert on the observable outcome instead: returned value, persisted state, emitted event, response body, rendered output. If the implementation is later refactored, inlined, or renamed, a behavior-focused test still passes when the behavior is correct.
 - **Capture infrastructure side effects without mocking internals** — use `DiscourseEvent.track_events` and `MessageBus.track_publish` when asserting emitted events or published messages instead of expecting calls to `trigger` or `publish`.
 - **Prefer readability over DRYness** — tests are documentation. Some duplication is fine. Avoid deep `shared_examples`/`let` chains that hurt readability.
+- **Choose the smallest fitting test primitive** — use `fab!` for records shared across examples, `let` for lazy per-example values, `let!` when a per-example record must exist before the action, and `subject` for the operation under test. Use inline `Fabricate` for a record local to one example. Because `fab!` uses TestProf `let_it_be`, it cannot depend on `let` or other per-example setup. Keep `let` value-oriented rather than hiding a parameterized helper in a Proc or lambda. When parameterized behavior needs a name to keep one spec readable, define a small method in that example group; do not introduce one merely to wrap a simple `Fabricate`, `create!`, or direct call. Move the method into a focused, auto-loaded `spec/support` module only when it is shared by multiple spec files. Search `spec/fabricators` before creating setup by hand, and define a derived fabricator for a recurring record shape.
 - **Test edge cases** — nil inputs, empty collections, boundary values, permission failures — not just happy paths.
 - **Keep tests independent** — no test should depend on another test's execution or shared mutable state.
 - **Verify placement in parent context** — before adding a new test, always read the surrounding `describe`/`context` block to confirm the test belongs there. Check that the parent context's description, `let`/`fab!` setup, and `before` hooks match the scenario being tested. A misplaced test inherits the wrong setup and produces misleading results.
@@ -28,31 +29,6 @@ Discourse uses RSpec for testing. Follow these patterns for all test types.
 - **Optimise for human readability** — minimise context overload when reading an example. Avoid too many indirections.
 - **Limit nesting to 2 levels** — avoid more than 2 levels of `describe`/`context` nesting. Instead of deeply nested contexts, put the full scenario description in the `it` block itself. Flat tests are easier to read and maintain.
 - **Avoid double negatives in descriptions** — write test descriptions that state the positive condition. For example, prefer `"returns true when topic_approval_type is approval or pre_approval"` over `"returns true when topic_approval_type is not none"`. Be specific about the values being tested.
-
-## Test Data with Fabricators
-
-Use `fab!` for shared test data, or `Fabricate` inline within the test example:
-
-```rb
-fab!(:user)
-fab!(:category)
-fab!(:tag)
-fab!(:topic) { Fabricate(:topic, category: category, tags: [tag]) }
-
-it "displays the topic" do
-  sign_in(user)
-  visit("/")
-end
-
-it "creates a new topic" do
-  new_category = Fabricate(:category, name: "Special")
-  # ... test using new_category
-end
-```
-
-Never use `before` blocks for Fabricate calls. Use `let!` only when absolutely necessary.
-
-Fabricators live in `spec/fabricators/` in core and each plugin. Search for an existing fabricator before hand-rolling setup. Name shared data for the role it plays (`fab!(:topic_creator)`, not `fab!(:user)`). For recurring non-default data, define a derived fabricator (`Fabricator(:variant, from: :base)`) named for its data state rather than adding a scenario-specific helper.
 
 ## Test Efficiency
 

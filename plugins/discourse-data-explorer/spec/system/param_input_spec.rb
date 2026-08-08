@@ -72,11 +72,23 @@ RSpec.describe "Param input" do
         ignore_fields = %i[user_id post_id topic_id category_id group_id group_list user_list]
 
         if param.default.present? && ignore_fields.exclude?(param.type)
-          expect(page).to have_field(
-            param.identifier,
-            with: simple_normalize(param.type, param.default),
-            visible: :all,
-          )
+          normalized_default =
+            case param.type
+            when :date
+              param.default.to_date.to_s
+            when :time
+              param.default.to_time.strftime("%H:%M")
+            when :datetime
+              param.default.to_datetime.strftime("%Y-%m-%dT%H:%M")
+            when :boolean
+              param.default == "#null" ? "#null" : param.default ? "on" : "off"
+            when :boolean_three
+              param.default == "#null" ? "#null" : param.default ? "Y" : "N"
+            else
+              param.default.to_s
+            end
+
+          expect(page).to have_field(param.identifier, with: normalized_default, visible: :all)
         end
       end
   end
@@ -151,22 +163,5 @@ RSpec.describe "Param input" do
       expect(page).to have_field("limit", with: "25")
       expect(page).to have_field("name", with: "override")
     end
-  end
-end
-
-def simple_normalize(type, value)
-  case type
-  when :date
-    value.to_date.to_s
-  when :time
-    value.to_time.strftime("%H:%M")
-  when :datetime
-    value.to_datetime.strftime("%Y-%m-%dT%H:%M")
-  when :boolean
-    value == "#null" ? "#null" : value ? "on" : "off"
-  when :boolean_three
-    value == "#null" ? "#null" : value ? "Y" : "N"
-  else
-    value.to_s
   end
 end

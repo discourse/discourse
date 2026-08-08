@@ -35,6 +35,18 @@ module DiscourseWorkflows
         Webhook::Action::DeactivateWebhooks.call(workflow: workflow)
       end
 
+      def manual_payload_for(workflow:, trigger_node:, user:)
+        return {} if trigger_node["type"] == "trigger:manual"
+
+        node_type_class = node_type_for(trigger_node)
+        if node_type_class.respond_to?(:trigger_data_for)
+          return node_type_class.trigger_data_for(TriggerNodeContext.new(trigger_node))
+        end
+        return {} unless node_type_class&.capability_enabled?(:synthesizes_manual_data)
+
+        manual_trigger_data(workflow:, trigger_node:, user:)
+      end
+
       def manual_trigger_data(workflow:, trigger_node:, user:)
         workflow_version = workflow.workflow_versions.find_by(version_id: workflow.version_id)
         node_type_class = node_type_for(trigger_node)

@@ -9,7 +9,7 @@ vi:
     admin:
       site_settings:
         categories:
-          discourse_gamification: "Discourse Gamification"
+          discourse_gamification: "Trò chơi hóa Discourse (Discourse Gamification)"
   js:
     gamification_score: "Danh vọng"
     gamification:
@@ -33,7 +33,10 @@ vi:
         none: "Chưa có bảng xếp hạng nào được tạo."
         confirm_destroy: "Bạn có chắc muốn xóa bảng xếp hạng này?"
         section:
+          time_period: "Khoảng thời gian"
+          time_period_description: "Cấu hình khoảng ngày và thời gian mặc định hiển thị trên bảng xếp hạng."
           groups: "Nhóm"
+          groups_description: "Quản lý danh sách thành viên được tính điểm và có quyền xem bảng xếp hạng này."
         date:
           range: "Khoảng thời gian từ / đến"
           from: "Từ ngày"
@@ -48,9 +51,28 @@ vi:
         default_period: "Khoảng thời gian mặc định"
         default_period_help: "Đặt khoảng thời gian mặc định để hiển thị cho bảng xếp hạng này."
         period_filter_disabled: "Vô hiệu hóa bộ lọc khoảng thời gian"
+        scoring_configuration: "Cấu hình tính điểm"
+        scoring_configuration_description: "Ghi đè quy tắc tính điểm chung cho bảng xếp hạng này. Để trống các trường nếu muốn dùng thiết lập mặc định hệ thống."
+        scorable_categories: "Chuyên mục tính điểm"
+        scorable_categories_help: "Danh sách chuyên mục được tính điểm. Để trống để áp dụng cài đặt chung."
+        score_overrides: "Trọng số điểm thưởng"
+        score_overrides_help: "Thay đổi giá trị điểm cho từng thao tác. Để trống để dùng mặc định, hoặc nhập 0 để tắt tính điểm cho thao tác đó."
         weight:
+          like_given: "Đã thả thích"
+          like_received: "Nhận lượt thích"
           post_created: "Tút đã được tạo"
+          topic_created: "Bài viết đã tạo"
           solution: "Giải pháp"
+          day_visited: "Số ngày truy cập"
+          flag_created: "Báo cáo vi phạm đã tạo"
+          post_read: "Bình luận đã đọc"
+          time_read: "Thời gian đọc"
+          user_invited: "Thành viên đã mời"
+          reaction_given: "Đã bày tỏ cảm xúc"
+          reaction_received: "Nhận lượt cảm xúc"
+          chat_message_created: "Tin nhắn trò chuyện đã gửi"
+          chat_reaction_given: "Đã bày tỏ cảm xúc trong trò chuyện"
+          chat_reaction_received: "Nhận cảm xúc trong trò chuyện"
         period:
           all_time: "Từ trước tới nay"
           yearly: "Hàng năm"

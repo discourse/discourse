@@ -11,7 +11,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { number } from "discourse/lib/formatter";
 import Category from "discourse/models/category";
-import CategorySelector from "discourse/select-kit/components/category-selector";
+import MultipleCategoriesSelector from "discourse/select-kit/components/multiple-categories-selector";
 import { eq } from "discourse/truth-helpers";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -170,7 +170,7 @@ export default class ActivityByCategory extends Component {
           }}
         </LinkTo>
 
-        <CategorySelector
+        <MultipleCategoriesSelector
           @categories={{this.selectedCategories}}
           @onChange={{this.onCategoriesChange}}
           @options={{hash maximum=MAX_CATEGORIES}}

@@ -821,6 +821,95 @@ RSpec.describe Group do
     expect(Group.desired_trust_level_groups(2)).to contain_exactly(10, 11, 12)
   end
 
+  describe ".refresh_automatic_groups_for_user!" do
+    def automatic_group_ids_for(user)
+      GroupUser.where(user:, group_id: Group.auto_groups_between(:admins, :trust_level_4)).pluck(
+        :group_id,
+      )
+    end
+
+    it "adds the cumulative trust level groups without materializing implicit pseudogroups" do
+      user = Fabricate(:user)
+      user.update_column(:trust_level, TrustLevel[3])
+
+      described_class.refresh_automatic_groups_for_user!(user)
+
+      expect(automatic_group_ids_for(user)).to contain_exactly(
+        *Group::AUTO_GROUPS.values_at(
+          :trust_level_0,
+          :trust_level_1,
+          :trust_level_2,
+          :trust_level_3,
+        ),
+      )
+      expect(
+        GroupUser.where(
+          user:,
+          group_id: Group::AUTO_GROUPS.values_at(:everyone, :anonymous_users, :logged_in_users),
+        ),
+      ).to be_empty
+    end
+
+    it "adds the automatic groups matching the user's staff roles" do
+      admin = Fabricate(:user)
+      admin.update_columns(admin: true, trust_level: TrustLevel[4])
+      moderator = Fabricate(:user)
+      moderator.update_column(:moderator, true)
+
+      described_class.refresh_automatic_groups_for_user!(admin)
+      described_class.refresh_automatic_groups_for_user!(moderator)
+
+      expect(automatic_group_ids_for(admin)).to contain_exactly(
+        *Group::AUTO_GROUPS.values_at(
+          :admins,
+          :staff,
+          :trust_level_0,
+          :trust_level_1,
+          :trust_level_2,
+          :trust_level_3,
+          :trust_level_4,
+        ),
+      )
+      expect(automatic_group_ids_for(moderator)).to contain_exactly(
+        *Group::AUTO_GROUPS.values_at(:moderators, :staff, :trust_level_0, :trust_level_1),
+      )
+    end
+
+    it "removes stale automatic memberships while preserving custom groups" do
+      user = Fabricate(:user)
+      custom_group = Fabricate(:group)
+      custom_group.add(user)
+      user.update_columns(admin: true, trust_level: TrustLevel[4])
+      described_class.refresh_automatic_groups_for_user!(user)
+
+      user.update_columns(admin: false, trust_level: TrustLevel[0])
+      described_class.refresh_automatic_groups_for_user!(user)
+      described_class.refresh_automatic_groups_for_user!(user)
+
+      expect(automatic_group_ids_for(user)).to contain_exactly(Group::AUTO_GROUPS[:trust_level_0])
+      expect(user.groups).to include(custom_group)
+    end
+
+    it "adds automatic memberships to staged users" do
+      user = Fabricate(:staged)
+      user.update_columns(admin: true, moderator: true, trust_level: TrustLevel[4])
+      described_class.refresh_automatic_groups_for_user!(user)
+
+      expect(automatic_group_ids_for(user)).to contain_exactly(
+        *Group::AUTO_GROUPS.values_at(
+          :admins,
+          :moderators,
+          :staff,
+          :trust_level_0,
+          :trust_level_1,
+          :trust_level_2,
+          :trust_level_3,
+          :trust_level_4,
+        ),
+      )
+    end
+  end
+
   it "correctly handles trust level changes" do
     user = Fabricate(:user, trust_level: 2)
     Group.user_trust_level_change!(user.id, 2)

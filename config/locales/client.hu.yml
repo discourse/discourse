@@ -831,6 +831,8 @@ hu:
         email: "E-mail"
         name: "Név"
         fields: "Mezők"
+        silence_reason: "Némítás oka"
+        penalty_forever: "Örökké"
         reject_reason: "Ok"
         scrubbed_by: "Rekordot törölte:"
         scrubbed_reason: "Ok"
@@ -1629,7 +1631,6 @@ hu:
       external_links_in_new_tab: "Az összes külső hivatkozás megnyitása új lapon"
       enable_quoting: "A kijelölt szöveg idézése a válaszban"
       enable_smart_lists: "Intelligens listák engedélyezése a szerkesztőben való íráskor"
-      enable_defer: "A témák olvasatlanként való megjelölésének engedélyezése"
       enable_markdown_monospace_font: "Fix szélességű betűkészlet használata a szerkesztő Markdown módjában"
       experimental_sidebar:
         enable: "Oldalsáv engedélyezése"
@@ -2067,7 +2068,7 @@ hu:
         default: "(alapértelmezett)"
         any: "bármely"
       homepage:
-        default: "(alapértelmezett)"
+        default: "Alapértelmezett"
       password_confirmation:
         title: "Jelszó újra"
       invite_code:
@@ -2111,6 +2112,9 @@ hu:
         contextual: "Új oldal tartalma"
       bookmark_after_notification:
         title: "Könyvjelző-emlékeztető értesítés elküldése után:"
+      send_shortcut:
+        enter: "Belépés"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Értesítés kedvelés esetén"
         always: "Mindig"
@@ -2272,17 +2276,21 @@ hu:
           member_title: "Tagok meghívása"
           sent_title: "Meghívó elküldve"
           member_tab: "Tagok"
-          admin_tab: "Adminisztrátorok"
+          admin_tab: "Stáb"
+          staff_role_admin: "Adminisztrátor"
+          staff_role_moderator: "Moderátor"
           admin_email_label: "E-mail-cím"
           email_placeholder: "név@example.com"
           invite_by_email: "E-mail:"
           restrict_domain: "Domainre korlátozás"
           domain_placeholder: "example.com"
-          more_options: "További lehetőségek"
+          create_and_send: "Küldés"
+          create_and_copy: "Hivatkozás másolása"
           update: "Frissítés"
           summary:
             role_member: "Tag"
             role_admin: "Adminisztrátor"
+            role_moderator: "Moderátor"
             method: "Megosztás"
             method_email: "E-mail:"
             restriction: "Korlátozva a következőre:"
@@ -2290,7 +2298,7 @@ hu:
             expires: "Lejár"
             topic: "Téma"
             groups: "Csoportok"
-            edit: "Meghívó szerkesztése"
+            edit: "Szerkesztés"
         bulk_invite:
           none: "Nincs megjeleníthető meghívó ezen az oldalon."
           text: "Tömeges meghívás"
@@ -2886,7 +2894,7 @@ hu:
     filter_input:
       clear: "Szűrő kiürítése"
     filter_controls:
-      reset: "Szűrő visszaállítása"
+      reset: "Alaphelyzetbe állítás"
       toggle: "Legördülő szűrők be- és kikapcsolása"
     shared_drafts:
       title: "Megosztott vázlatok"
@@ -3015,7 +3023,6 @@ hu:
       italic_label: "I"
       italic_title: "Dőlt"
       italic_text: "dőlt szöveg"
-      heading_title: "Címsorok"
       heading_level_n: "Címsor %{levelNumber}"
       heading_level_n_title: "Címsor %{levelNumber}"
       heading_level_paragraph: "Bekezdés"
@@ -5251,6 +5258,10 @@ hu:
           public: "Mindenki számára látható"
           always_public: "Az ebben a részben található tartalom mindig nyilvános"
           more_menu: "További menü"
+          localizations:
+            locale: "Nyelv"
+            title_label: "A szakasz címe"
+            remove_language: "Eltávolítás"
           links:
             add: "Újabb link hozzáadása"
             delete: "Link törlése"
@@ -6188,7 +6199,6 @@ hu:
               posts: "Bejegyzések"
               share: "Megosztás"
             whos_posting:
-              all_categories: "Minden kategória"
               staff: "Stáb"
             trust_level_pipeline:
               trust_levels:
@@ -6914,6 +6924,8 @@ hu:
         sidebar: "Oldalsáv"
         header_dropdown: "Fejléc legördülő menü"
         legacy: "Hagyaték"
+      duplicate_topic_titles:
+        allowed: "Engedélyezett"
       backups:
         title: "Biztonsági mentések"
         files_title: "Biztonsági mentés fájlok"
@@ -7155,7 +7167,6 @@ hu:
           finish_install: "Téma telepítésének befejezése"
           last_attempt: "A telepítési folyamat nem fejeződött be, utolsó próbálkozás:"
           remote_branch: "Branch neve (nem kötelező)"
-          public_key: "Adja meg a következő nyilvános kulcsú hozzáférést a repóhoz:"
           install: "Telepítés"
           installed: "Telepítve"
           install_popular: "Népszerű"
@@ -8508,6 +8519,7 @@ hu:
         uploading: "Feltöltés…"
         name: "Név"
         group: "Csoport"
+        all_groups: "Összes csoport"
         created_by: "Készítette:"
         image: "Kép"
         alt: "egyéni emodzsi előnézete"

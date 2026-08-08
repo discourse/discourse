@@ -3,18 +3,6 @@
 RSpec.describe Jobs::DiscourseWorkflows::ExecuteManualWorkflow do
   fab!(:admin)
 
-  def pending_execution(workflow:, trigger_node_id: "trigger-1", trigger_data: {})
-    DiscourseWorkflows::Execution.create_pending_manual!(
-      workflow: workflow,
-      trigger_node_id: trigger_node_id,
-      trigger_data: trigger_data,
-    )
-  end
-
-  def execute_job(execution_id, user_id: admin.id)
-    described_class.new.execute(execution_id: execution_id, user_id: user_id)
-  end
-
   it "claims and completes a pending execution without creating a duplicate" do
     graph =
       build_workflow_graph do |builder|
@@ -23,9 +11,17 @@ RSpec.describe Jobs::DiscourseWorkflows::ExecuteManualWorkflow do
         builder.chain "trigger-1", "log-1"
       end
     workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
-    execution = pending_execution(workflow: workflow)
+    execution =
+      DiscourseWorkflows::Execution.create_pending_manual!(
+        workflow:,
+        trigger_node_id: "trigger-1",
+        trigger_data: {
+        },
+      )
 
-    expect do execute_job(execution.id) end.not_to change { DiscourseWorkflows::Execution.count }
+    expect do
+      described_class.new.execute(execution_id: execution.id, user_id: admin.id)
+    end.not_to change { DiscourseWorkflows::Execution.count }
 
     execution.reload
     expect(execution.status).to eq("success")
@@ -39,9 +35,15 @@ RSpec.describe Jobs::DiscourseWorkflows::ExecuteManualWorkflow do
   it "skips the execution when the plugin is disabled" do
     SiteSetting.enable_discourse_workflows = false
     workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
-    execution = pending_execution(workflow: workflow)
+    execution =
+      DiscourseWorkflows::Execution.create_pending_manual!(
+        workflow:,
+        trigger_node_id: "trigger-1",
+        trigger_data: {
+        },
+      )
 
-    execute_job(execution.id)
+    described_class.new.execute(execution_id: execution.id, user_id: admin.id)
 
     execution.reload
     expect(execution.status).to eq("skipped")
@@ -50,11 +52,17 @@ RSpec.describe Jobs::DiscourseWorkflows::ExecuteManualWorkflow do
 
   it "leaves a non-pending execution untouched" do
     workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
-    execution = pending_execution(workflow: workflow)
+    execution =
+      DiscourseWorkflows::Execution.create_pending_manual!(
+        workflow:,
+        trigger_node_id: "trigger-1",
+        trigger_data: {
+        },
+      )
     execution.update!(status: :running)
     before_updated_at = execution.updated_at
 
-    execute_job(execution.id)
+    described_class.new.execute(execution_id: execution.id, user_id: admin.id)
 
     execution.reload
     expect(execution.status).to eq("running")
@@ -62,7 +70,9 @@ RSpec.describe Jobs::DiscourseWorkflows::ExecuteManualWorkflow do
   end
 
   it "no-ops when the execution is missing" do
-    expect { execute_job(-1) }.not_to change { DiscourseWorkflows::Execution.count }
+    expect { described_class.new.execute(execution_id: -1, user_id: admin.id) }.not_to change {
+      DiscourseWorkflows::Execution.count
+    }
   end
 
   it "runs the stored draft snapshot instead of the current or published workflow" do
@@ -81,10 +91,16 @@ RSpec.describe Jobs::DiscourseWorkflows::ExecuteManualWorkflow do
         builder.chain "trigger-1", "draft-log"
       end
     workflow.update!(nodes: draft_graph[:nodes], connections: draft_graph[:connections])
-    execution = pending_execution(workflow: workflow)
+    execution =
+      DiscourseWorkflows::Execution.create_pending_manual!(
+        workflow:,
+        trigger_node_id: "trigger-1",
+        trigger_data: {
+        },
+      )
     workflow.update!(nodes: published_graph[:nodes], connections: published_graph[:connections])
 
-    execute_job(execution.id)
+    described_class.new.execute(execution_id: execution.id, user_id: admin.id)
 
     expect(execution.reload.execution_data.steps_array.map { |step| step["node_id"] }).to include(
       "draft-log",
@@ -94,9 +110,17 @@ RSpec.describe Jobs::DiscourseWorkflows::ExecuteManualWorkflow do
   it "records errors on the existing execution" do
     graph = build_workflow_graph { |builder| builder.node "trigger-1", "trigger:manual" }
     workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
-    execution = pending_execution(workflow: workflow, trigger_node_id: "missing-trigger")
+    execution =
+      DiscourseWorkflows::Execution.create_pending_manual!(
+        workflow:,
+        trigger_node_id: "missing-trigger",
+        trigger_data: {
+        },
+      )
 
-    expect do execute_job(execution.id) end.not_to change { DiscourseWorkflows::Execution.count }
+    expect do
+      described_class.new.execute(execution_id: execution.id, user_id: admin.id)
+    end.not_to change { DiscourseWorkflows::Execution.count }
 
     expect(execution.reload).to have_attributes(status: "error", error: include("missing-trigger"))
   end

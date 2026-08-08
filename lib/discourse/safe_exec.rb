@@ -1,20 +1,11 @@
 # frozen_string_literal: true
 
-begin
-  require "landlock"
-rescue LoadError
-end
+require "landlock"
 
 module Discourse
   class SafeExec
     DEFAULT_READ_PATHS = %w[/bin /etc /lib /lib64 /usr].freeze
     DEFAULT_EXECUTE_PATHS = %w[/bin /lib /lib64 /usr].freeze
-    LANDLOCK_COMMAND_ERROR =
-      if defined?(::Landlock::SafeExec::CommandError)
-        ::Landlock::SafeExec::CommandError
-      else
-        Class.new(StandardError)
-      end
 
     def self.capture(
       *command,
@@ -34,20 +25,20 @@ module Discourse
       max_output_bytes: nil,
       truncate_output: false
     )
-      if defined?(::Landlock::SafeExec)
+      if ::Landlock.supported?
         result =
-          ::Landlock::SafeExec.capture(
-            *command,
+          ::Landlock.capture(
+            command,
             read: read,
             write: write,
             execute: execute,
             timeout: timeout,
             failure_message: failure_message,
             success_status_codes: success_status_codes,
-            env: env || {},
-            inherit_env: !unsetenv_others,
+            env: env,
+            unsetenv_others: unsetenv_others,
             chdir: chdir,
-            connect_tcp: connect_tcp,
+            connect_tcp: Array(connect_tcp),
             bind_tcp: bind_tcp,
             rlimits: rlimits,
             seccomp_deny_network: seccomp_deny_network,
@@ -70,9 +61,10 @@ module Discourse
           failure_message: failure_message,
           success_status_codes: success_status_codes,
           chdir: chdir || ".",
+          unsetenv_others: unsetenv_others,
         )
       end
-    rescue LANDLOCK_COMMAND_ERROR => e
+    rescue ::Landlock::CommandError => e
       raise Discourse::Utils::CommandError.new(
               e.message,
               stdout: e.stdout,
@@ -82,23 +74,15 @@ module Discourse
     end
 
     def self.landlock_supported?
-      defined?(::Landlock::SafeExec) && ::Landlock::SafeExec.supported?
+      ::Landlock.supported?
     end
 
     def self.default_read_paths
-      if defined?(::Landlock::SafeExec)
-        ::Landlock::SafeExec.default_read_paths
-      else
-        existing_paths(DEFAULT_READ_PATHS)
-      end
+      existing_paths(DEFAULT_READ_PATHS)
     end
 
     def self.default_execute_paths
-      if defined?(::Landlock::SafeExec)
-        ::Landlock::SafeExec.default_execute_paths
-      else
-        existing_paths(DEFAULT_EXECUTE_PATHS)
-      end
+      existing_paths(DEFAULT_EXECUTE_PATHS)
     end
 
     def self.existing_paths(paths)

@@ -278,7 +278,6 @@ nl:
       exclusion: is gereserveerd
       greater_than: moet groter zijn dan %{count}
       greater_than_or_equal_to: moet groter zijn dan of gelijk zijn aan %{count}
-      has_already_been_used: "is al gebruikt"
       in: moet tussen %{count} zijn
       inclusion: komt niet voor in de lijst
       invalid: is ongeldig
@@ -1749,7 +1748,6 @@ nl:
     staff_edit_locks_post: "Berichten worden vergrendeld voor bewerking als ze door medewerkers worden bewerkt"
     post_edit_time_limit: "Een TL0- of TL1-schrijver kan een eigen bericht (n) minuten na plaatsing bewerken. Stel dit in op 0 voor altijd."
     tl2_post_edit_time_limit: "Een TL2+-schrijver kan een eigen bericht (n) minuten na plaatsing bewerken. Stel dit in op 0 voor altijd."
-    edit_history_visible_to_public: "Toestaan dat iedereen vorige versies van een bewerkt bericht kan zien. Als dit is uitgeschakeld, kunnen alleen medewerkers dat bekijken."
     delete_removed_posts_after: "Door de schrijver verwijderde berichten worden na (n) uur automatisch verwijderd. Als dit ingesteld is op 0, worden berichten direct verwijderd."
     notify_users_after_responses_deleted_on_flagged_post: "Wanneer een bericht wordt gemarkeerd en vervolgens wordt verwijderd, worden alle gebruikers die op het bericht hebben gereageerd en waarvan de reacties zijn verwijderd hiervan op de hoogte gesteld."
     max_image_width: "Maximale miniatuurbreedte van afbeeldingen in een bericht. Afbeeldingen met een grotere breedte worden verkleind en in een lightbox geplaatst."
@@ -1856,7 +1854,6 @@ nl:
     suppress_secured_categories_from_admin: "Onderdruk privétopics en PB's in sommige delen van de gebruikersinterface voor beheerders. Content zal op sommige plaatsen nog zichtbaar zijn. Dit is geen beveiligingsfunctie: beheerders hebben altijd toegang tot alle content op de site."
     include_secure_categories_in_tag_counts: "Indien ingeschakeld, omvat het aantal topics voor een tag ook topics die in leesbeperkte categorieën staan voor alle gebruikers. Indien uitgeschakeld, krijgen normale gebruikers alleen het aantal topics voor een tag te zien waarbij alle topics in openbare categorieën staan."
     display_personal_messages_tag_counts: "Indien ingeschakeld, wordt het aantal persoonlijke berichten weergegeven dat is getagd met een bepaalde tag."
-    top_menu: "Bepaal welke items in de startpaginanavigatie worden weergegeven en in welke volgorde."
     post_menu: "Configureer de zichtbaarheid en volgorde van standaardopties in het plaatsingsmenu. Aanvullende opties die zijn toegevoegd door plug-ins of thema's worden afzonderlijk beheerd en komen niet voor in deze lijst."
     post_menu_hidden_items: "De menuopties die standaard worden verborgen in het plaatsingsmenu tenzij er op een uitvouwellips wordt geklikt. Aanvullende opties die zijn toegevoegd door plug-ins of thema's worden afzonderlijk beheerd en komen niet voor in deze lijst."
     share_links: "Bepaal welke items in de deeldialoog worden weergegeven en in welke volgorde."
@@ -2359,7 +2356,6 @@ nl:
     default_other_external_links_in_new_tab: "Externe links standaard in een nieuw tabblad openen."
     default_other_enable_quoting: "Antwoord-met-citaat voor gemarkeerde tekst standaard inschakelen."
     default_other_enable_smart_lists: "Schakel slimme lijsten bij typen in de editor standaard in."
-    default_other_enable_defer: "Topicnegeerfunctionaliteit standaard inschakelen."
     default_other_enable_markdown_monospace_font: "Gebruik standaard een monospace lettertype in de Markdown-modus van de editor."
     default_other_dynamic_favicon: "Aantal nieuwe / bijgewerkte topics standaard weergeven op browserpictogram."
     default_other_skip_new_user_tips: "Onboarding-tips en -badges voor nieuwe gebruikers overslaan."
@@ -2469,7 +2465,6 @@ nl:
     about_page_extra_groups_order: "Volgorde van de extra groepen op de Over-pagina."
     adobe_analytics_tags_url: "URL Adobe Analytics-tags ('https://assets.adobedtm.com/...')"
     view_raw_email_allowed_groups: "Groepen die de ruwe e-mailinhoud van een bericht kunnen bekijken als het is gemaakt door een inkomende e-mail. Dit omvat e-mailheaders en andere technische gegevens."
-    rich_editor: "Schakel de rich text editor in, zodat alle gebruikers kunnen schakelen tussen de huidige Markdown-modus en de nieuwe rich text editor voor intuïtiever en gebruiksvriendelijker schrijven."
     default_composition_mode: "Stel de standaardmodus in voor de editor van je community. De rich text modus biedt een modernere, vertrouwde schrijfervaring voor de meeste gebruikers, terwijl de Markdown-modus geschikter kan zijn voor een technischer publiek. Leden kunnen van modus wisselen met een schakelaar op de editorwerkbalk."
     reviewable_ui_refresh: "Groepen die de experimentele nieuwe gebruikersinterface in de beoordelingswachtrij kunnen gebruiken."
     content_localization_use_default_locale_when_unsupported: "Bied gelokaliseerde content in de standaardtaal van de site aan gebruikers aan van wie de voorkeurstaal niet is opgenomen in 'content localization supported locales'."
@@ -2478,7 +2473,6 @@ nl:
     nested_replies_default: "Gebruik geneste antwoorden als standaard weergave voor alle topics."
     nested_replies_default_sort: "Standaard sorteeralgoritme voor de weergave met geneste antwoorden."
     nested_replies_max_depth: "Maximale visuele nestdiepte voor antwoorden in thread. Berichten die dieper zijn dan dit tonen een link 'Doorgaan met deze thread'."
-    nested_replies_backfill_batch_size: "Aantal topics om statistieken van geneste antwoorden aan te vullen per geplande run."
     nested_replies_cap_nesting_depth: "Beperk antwoordnesting op de maximale visuele diepte. Als dit is ingeschakeld, worden antwoorden op het diepste niveau opnieuw gelijkliggend in plaats van onderliggend."
     floating_dismiss_topics_on_mobile: "Toont een zwevende knop 'Negeren...' op mobiel voor de topiclijst voor eenvoudigere toegang en om ruimte vrij te maken bovenaan de topiclijst"
     enable_simplified_category_creation: "Maakt eenvoudigere flow voor het maken van categorieën mogelijk met minder opties en een schonere interface."
@@ -5169,11 +5163,9 @@ nl:
         title: "Nee"
         delete:
           title: "Gebruiker verwijderen"
-          description: "Gebruiker verwijderen zonder te blokkeren"
           complete: "Gebruiker verwijderd."
         block:
           title: "Gebruiker verwijderen en blokkeren"
-          description: "De gebruiker wordt verwijderd, en het IP- en e-mailadres ervan geblokkeerd."
           complete: "Gebruiker verwijderd en geblokkeerd."
       confirm_spam:
         title: "Ja"
@@ -5233,12 +5225,10 @@ nl:
         bundle_title: "Wat wil je met de gebruiker doen?"
       silence_user:
         title: "Gebruiker dempen"
-        description: "Voorkom dat de gebruiker berichten plaatst"
         complete: "Gebruiker gedempt"
         reason: "Gebruiker gedempt via beoordelingswachtrij"
       suspend_user:
         title: "Gebruiker schorsen"
-        description: "Schors het gebruikersaccount"
         complete: "Gebruiker geschorst"
         reason: "Gebruiker geschorst via beoordelingswachtrij"
       delete_user:

@@ -37,3 +37,6 @@ vi:
           group_name: "Sự kiện ủng hộ chủ đề"
           topic_upvote: "Khi thành viên ủng hộ cho một chủ đề"
           topic_unvote: "Khi thành viên hủy ủng hộ cho một chủ đề"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Thẻ"

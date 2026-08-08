@@ -16,6 +16,12 @@ class Category < ActiveRecord::Base
   SLUG_REF_SEPARATOR = ":"
   DEFAULT_TEXT_COLORS = %w[FFFFFF 000000]
 
+  # Set on a category that intentionally has no definition topic, so
+  # `ensure_consistency!` does not backfill one for it.
+  SKIP_DEFINITION_CUSTOM_FIELD = "skip_category_definition"
+
+  register_custom_field_type(SKIP_DEFINITION_CUSTOM_FIELD, :boolean)
+
   belongs_to :topic
   belongs_to :topic_only_relative_url,
              -> { select "id, title, slug" },
@@ -149,6 +155,7 @@ class Category < ActiveRecord::Base
   after_update :revise_category_definition, if: :saved_change_to_description?
   after_update :run_plugin_category_update_param_callbacks
   after_update :enqueue_category_hashtag_remap, if: :saved_change_to_hashtag_ref?
+  after_update :clear_page_not_found_topics_cache, if: :saved_change_to_read_restricted?
   after_destroy :trash_category_definition
   after_destroy :clear_related_site_settings
 
@@ -187,10 +194,7 @@ class Category < ActiveRecord::Base
 
   has_many :category_tags, dependent: :destroy
   has_many :tags, through: :category_tags
-  has_many :none_synonym_tags,
-           -> { where(target_tag_id: nil) },
-           through: :category_tags,
-           source: :tag
+  has_many :base_tags, -> { where(target_tag_id: nil) }, through: :category_tags, source: :tag
   has_many :category_tag_groups, dependent: :destroy
   has_many :tag_groups, through: :category_tag_groups
 
@@ -608,7 +612,7 @@ class Category < ActiveRecord::Base
   end
 
   def create_category_definition
-    return if skip_category_definition
+    return if skip_category_definition || custom_fields[SKIP_DEFINITION_CUSTOM_FIELD]
 
     Topic.transaction do
       t =
@@ -1452,6 +1456,11 @@ class Category < ActiveRecord::Base
       SQL
 
     result.map { |row| [row.group_id, row.permission_type] }
+  end
+
+  def clear_page_not_found_topics_cache
+    Topic.clear_page_not_found_topics_cache!
+    DB.after_commit { Topic.clear_page_not_found_topics_cache! }
   end
 
   def clear_site_cache

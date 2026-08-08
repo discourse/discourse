@@ -1,38 +1,18 @@
-import Component from "@glimmer/component";
-import TopicList from "discourse/components/topic-list/list";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
+import TopicListExample from "../../examples/organisms/topic-list";
+import topicListSource from "../../examples/organisms/topic-list?source=file";
+import TopicListWithoutPostersExample from "../../examples/organisms/topic-list-without-posters";
+import topicListWithoutPostersSource from "../../examples/organisms/topic-list-without-posters?source=file";
 
-export default class TopicListOrganism extends Component {
-  get topicListCode() {
-    return `
-import TopicList from "discourse/components/topic-list/list";
+export default <template>
+  <StyleguideExample @title="<TopicList>" @code={{topicListSource}}>
+    <TopicListExample @topics={{@dummy.topics}} />
+  </StyleguideExample>
 
-<template>
-  <TopicList @topics={{@dummy.topics}} @showPosters={{true}} />
+  <StyleguideExample
+    @title="<TopicList> - hide posters"
+    @code={{topicListWithoutPostersSource}}
+  >
+    <TopicListWithoutPostersExample @topics={{@dummy.topics}} />
+  </StyleguideExample>
 </template>
-    `;
-  }
-
-  get topicListHidePostersCode() {
-    return `
-import TopicList from "discourse/components/topic-list/list";
-
-<template>
-  <TopicList @topics={{@dummy.topics}} @showPosters={{false}} />
-</template>
-    `;
-  }
-
-  <template>
-    <StyleguideExample @title="<TopicList>" @code={{this.topicListCode}}>
-      <TopicList @topics={{@dummy.topics}} @showPosters={{true}} />
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="<TopicList> - hide posters>"
-      @code={{this.topicListHidePostersCode}}
-    >
-      <TopicList @topics={{@dummy.topics}} @showPosters={{false}} />
-    </StyleguideExample>
-  </template>
-}

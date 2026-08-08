@@ -167,6 +167,17 @@ describe OmniAuth::Strategies::OpenIDConnect do
         expect(@app_called).to eq(false)
       end
 
+      it "fails gracefully when an upstream request errors" do
+        stub_request(:post, "https://id.example.com/token").to_timeout
+
+        callback_response = strategy.callback_phase
+        expect(callback_response[0]).to eq(302)
+        expect(callback_response[1]["Location"]).to eq(
+          "/auth/failure?message=openid_connect_request_failed&strategy=openidconnect",
+        )
+        expect(@app_called).to eq(false)
+      end
+
       context "with userinfo disabled" do
         before do
           stub_request(:post, "https://id.example.com/token").with(

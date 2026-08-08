@@ -557,6 +557,7 @@ ko:
         email: "이메일"
         name: "이름"
         fields: "필드"
+        penalty_forever: "영원히"
         reject_reason: "이유"
         scrubbed_reason: "이유"
         scrub_record:
@@ -1174,7 +1175,6 @@ ko:
       external_links_in_new_tab: "새 탭에서 모든 외부 링크 열기"
       enable_quoting: "하이라이트된 텍스트에 대한 인용 댓글 활성화"
       enable_smart_lists: "글 작성 모드에서 스마트 목록 활성화"
-      enable_defer: "글을 읽지 않은 상태로 표시 활성화"
       enable_markdown_monospace_font: "마크다운 모드에서 글 작성시 고정폭 글꼴 사용"
       experimental_sidebar:
         enable: "사이드바 활성화"
@@ -1498,7 +1498,7 @@ ko:
         default: "(기본)"
         any: "모두"
       homepage:
-        default: "(기본)"
+        default: "기본"
       password_confirmation:
         title: "비밀번호 다시 입력"
       invite_code:
@@ -1538,6 +1538,9 @@ ko:
         title: "배경 페이지 제목에 다음 개수가 표시됩니다."
         notifications: "새 알림"
         contextual: "새 페이지 콘텐츠"
+      send_shortcut:
+        enter: "시작하다"
+        meta_enter: "%{meta_key} + 엔터"
       like_notification_frequency:
         title: "좋아요 받았을 때 알림"
         always: "항상"
@@ -1673,21 +1676,26 @@ ko:
         invite_roles:
           member_title: "회원 초대"
           member_tab: "회원"
-          admin_tab: "관리자"
+          admin_tab: "스태프"
+          staff_role_admin: "관리자"
+          staff_role_moderator: "운영자"
           email_placeholder: "이메일 주소"
           invite_by_email: "이메일"
           restrict_domain: "도메인으로 제한"
           domain_placeholder: "example.com"
-          more_options: "추가 옵션"
+          create_and_send: "보내기"
+          create_and_copy: "링크 복사"
           update: "업데이트"
           summary:
             role_member: "회원"
             role_admin: "관리자"
+            role_moderator: "운영자"
             method_email: "이메일"
             uses: "최대 사용"
             expires: "만료"
             topic: "글"
             groups: "그룹"
+            edit: "편집"
         bulk_invite:
           none: "이 페이지에 표시할 초대장이 없습니다."
           text: "일괄 초대"
@@ -2061,6 +2069,8 @@ ko:
       medium_dark_tone: 중간 정도 어두운 피부색
       dark_tone: 어두운 피부색
       default: 사용자 지정 이모티콘
+    filter_controls:
+      reset: "리셋"
     shared_drafts:
       title: "공유 초안"
       notice: "이 글은 공유 초안을 게시할 수 있는 사용자만 볼 수 있습니다."
@@ -3698,6 +3708,9 @@ ko:
         custom:
           save: "저장"
           delete: "삭제하기"
+          localizations:
+            locale: "언어"
+            remove_language: "제거"
           links:
             reset: "기본값으로 재설정"
             icon:
@@ -4071,7 +4084,6 @@ ko:
               posts: "글"
               share: "공유하기"
             whos_posting:
-              all_categories: "모든 카테고리"
               staff: "스태프"
             trust_level_pipeline:
               trust_levels:
@@ -4466,6 +4478,8 @@ ko:
           reset: "리셋"
       navigation_menu:
         sidebar: "사이드바"
+      duplicate_topic_titles:
+        allowed: "허용됨"
       backups:
         title: "백업"
         menu:
@@ -4633,7 +4647,6 @@ ko:
           is_private: "테마는 비공개 Git 저장소에 있습니다"
           finish_install: "테마 설치 완료"
           remote_branch: "브랜치 이름(선택사항)"
-          public_key: "다음 공개 키 액세스를 저장소에 부여하세요."
           install: "설치"
           installed: "설치됨"
           install_popular: "인기"
@@ -5531,6 +5544,7 @@ ko:
         delete: "삭제하기"
         name: "이름"
         group: "그룹"
+        all_groups: "모든 그룹"
         image: "이미지"
         alt: "맞춤 이모티콘 미리보기"
         delete_confirm: ":%{name}: 이모티콘을 삭제할까요?"

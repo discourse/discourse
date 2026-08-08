@@ -61,11 +61,11 @@ module DiscoursePostEvent
     def reset_invalid_livestream
       return unless livestream?
 
-      self.livestream = false unless livestream_location? && post&.is_first_post?
+      self.livestream = false unless allowed_livestream_url? && post&.is_first_post?
     end
 
-    def livestream_location?
-      location.to_s.match?(%r{\Ahttps?://}i)
+    def allowed_livestream_url?
+      DiscourseCalendar::Livestream::AllowedHosts.allows_url?(livestream_url)
     end
 
     def create_livestream_chat_channel
@@ -399,24 +399,35 @@ module DiscoursePostEvent
         end
     end
 
-    # unlike can_user_update_attendance?, this stays true after the event
+    def user_in_invited_group?(user, group_names: nil)
+      return false if user.blank? || raw_invitees.blank?
+
+      return (Array(raw_invitees) & Array(group_names)).any? unless group_names.nil?
+
+      GroupUser.where(
+        user_id: user.id,
+        group_id: Group.where(name: raw_invitees).select(:id),
+      ).exists?
+    end
+
+    # Unlike can_user_update_attendance?, this stays true after the event
     # closes or expires so attendees keep access to the livestream chat.
     #
     # Callers serializing many events at once (e.g. the chat channel list) can
-    # pass preloaded invitee_event_ids/group_names to avoid a per-event query.
-    def can_access_livestream_chat?(user, invitee_event_ids: nil, group_names: nil)
+    # pass preloaded group_names to avoid a per-event query.
+    def can_access_livestream_chat?(user, group_names: nil)
       return true if !private?
       return false if user.blank?
       return true if user.admin?
 
-      invited?(user, invitee_event_ids:, group_names:)
+      user_in_invited_group?(user, group_names:)
     end
 
-    def can_user_update_attendance?(user, invitee_event_ids: nil, group_names: nil)
-      return false if closed || expired?
+    def can_user_update_attendance?(user, group_names: nil)
+      return false if user.blank? || closed || expired?
       return true if public?
 
-      private? && invited?(user, invitee_event_ids:, group_names:)
+      private? && user_in_invited_group?(user, group_names:)
     end
 
     def sync_image_to_post_and_topic(generate_thumbnails: false)
@@ -582,14 +593,6 @@ module DiscoursePostEvent
     end
 
     private
-
-    def invited?(user, invitee_event_ids: nil, group_names: nil)
-      if invitee_event_ids && group_names
-        invitee_event_ids.include?(id) || (Array(raw_invitees) & Array(group_names)).any?
-      else
-        invitees.exists?(user_id: user.id) || user.groups.where(name: Array(raw_invitees)).exists?
-      end
-    end
 
     def reset_invitees_topic_tracking
       topic_id = post&.topic_id

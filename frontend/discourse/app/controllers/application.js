@@ -95,9 +95,9 @@ export default class ApplicationController extends Controller {
     return this.showFooter && this.siteSettings.enable_powered_by_discourse;
   }
 
-  @computed
   get canSignUp() {
     return (
+      !this.site.isReadOnly &&
       !this.siteSettings.invite_only &&
       this.siteSettings.allow_new_registrations &&
       !this.siteSettings.enable_discourse_connect

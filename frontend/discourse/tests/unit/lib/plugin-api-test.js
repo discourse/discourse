@@ -3,6 +3,7 @@ import EmberObject, { computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { block } from "discourse/blocks";
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
@@ -14,6 +15,11 @@ import {
   isValidOutlet,
   resetBlockRegistryForTesting,
 } from "discourse/tests/helpers/block-testing";
+import DeprecationCounter from "discourse/tests/helpers/deprecation-counter";
+import {
+  disableRaiseOnDeprecation,
+  enableRaiseOnDeprecation,
+} from "discourse/tests/helpers/raise-on-deprecation";
 
 module("Unit | Utility | plugin-api", function (hooks) {
   setupTest(hooks);
@@ -243,6 +249,114 @@ module("Unit | Utility | plugin-api", function (hooks) {
       "original reopened, reopened2, prepended",
       "it works when rolled back and re-applied multiple times"
     );
+  });
+
+  module("model deprecation", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      disableRaiseOnDeprecation();
+      // the deprecations below are expected, keep them out of the test output
+      // and out of the counter
+      sinon.stub(console, "warn");
+      this.counterStub = sinon.stub(
+        DeprecationCounter.prototype,
+        "incrementCount"
+      );
+
+      getOwner(this).register(
+        "model:test-model",
+        class extends EmberObject {
+          static someStaticMethod() {
+            return "original static";
+          }
+
+          someMethod() {
+            return "original";
+          }
+        }
+      );
+    });
+
+    nestedHooks.afterEach(function () {
+      enableRaiseOnDeprecation();
+    });
+
+    test("modifyClass deprecates for model types", function (assert) {
+      withPluginApi((api) => {
+        api.modifyClass(
+          "model:test-model",
+          (Superclass) =>
+            class extends Superclass {
+              someMethod() {
+                return `${super.someMethod()} modified`;
+              }
+            }
+        );
+      });
+
+      assert.true(
+        this.counterStub.calledWith("discourse.modify-class-model"),
+        "triggers the deprecation"
+      );
+
+      assert.strictEqual(
+        getOwner(this).lookup("model:test-model").someMethod(),
+        "original modified",
+        "still applies the modification"
+      );
+    });
+
+    test("modifyClassStatic deprecates for model types", function (assert) {
+      withPluginApi((api) => {
+        api.modifyClassStatic("model:test-model", {
+          pluginId: "plugin-api-test",
+
+          someStaticMethod() {
+            return "overridden static";
+          },
+        });
+      });
+
+      assert.true(
+        this.counterStub.calledWith("discourse.modify-class-model"),
+        "triggers the deprecation"
+      );
+
+      assert.strictEqual(
+        getOwner(this)
+          .resolveRegistration("model:test-model")
+          .someStaticMethod(),
+        "overridden static",
+        "still applies the modification"
+      );
+    });
+
+    test("does not deprecate for other types", function (assert) {
+      getOwner(this).register(
+        "test-thingy:main",
+        class {
+          someMethod() {
+            return "original";
+          }
+        }
+      );
+
+      withPluginApi((api) => {
+        api.modifyClass(
+          "test-thingy:main",
+          (Superclass) =>
+            class extends Superclass {
+              someMethod() {
+                return `${super.someMethod()} modified`;
+              }
+            }
+        );
+      });
+
+      assert.false(
+        this.counterStub.calledWith("discourse.modify-class-model"),
+        "does not trigger the deprecation"
+      );
+    });
   });
 
   module("Block APIs", function (nestedHooks) {

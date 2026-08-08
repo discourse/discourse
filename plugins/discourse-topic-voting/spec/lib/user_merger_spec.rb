@@ -8,11 +8,9 @@ describe DiscourseTopicVoting::UserMerger do
   fab!(:topic3, :topic)
   fab!(:topic4, :topic)
 
-  before { SiteSetting.topic_voting_enabled = true }
+  subject(:user_merger) { UserMerger.new(source_user, target_user) }
 
-  def merge_users!
-    UserMerger.new(source_user, target_user).merge!
-  end
+  before { SiteSetting.topic_voting_enabled = true }
 
   context "when merging users with votes" do
     it "transfers source user votes to target user" do
@@ -22,7 +20,7 @@ describe DiscourseTopicVoting::UserMerger do
       expect(source_user.vote_count).to eq(2)
       expect(target_user.vote_count).to eq(0)
 
-      merge_users!
+      user_merger.merge!
 
       target_user.reload
       expect(target_user.vote_count).to eq(2)
@@ -36,7 +34,7 @@ describe DiscourseTopicVoting::UserMerger do
       DiscourseTopicVoting::Vote.create!(user: target_user, topic: topic1)
       DiscourseTopicVoting::Vote.create!(user: source_user, topic: topic2)
 
-      merge_users!
+      user_merger.merge!
 
       target_user.reload
       expect(target_user.vote_count).to eq(2)
@@ -53,7 +51,7 @@ describe DiscourseTopicVoting::UserMerger do
       DiscourseTopicVoting::Vote.create!(user: target_user, topic: topic2)
       DiscourseTopicVoting::Vote.create!(user: source_user, topic: topic3)
 
-      merge_users!
+      user_merger.merge!
 
       target_user.reload
       expect(target_user.vote_count).to eq(3)
@@ -72,7 +70,7 @@ describe DiscourseTopicVoting::UserMerger do
       DiscourseTopicVoting::Vote.create!(user: source_user, topic: topic1, archive: true)
       DiscourseTopicVoting::Vote.create!(user: source_user, topic: topic2, archive: false)
 
-      merge_users!
+      user_merger.merge!
 
       target_user.reload
       expect(target_user.topics_with_vote.pluck(:topic_id)).to contain_exactly(topic2.id)
@@ -90,7 +88,7 @@ describe DiscourseTopicVoting::UserMerger do
       expect(topic1.topic_vote_count.votes_count).to eq(1)
       expect(topic2.topic_vote_count.votes_count).to eq(2)
 
-      merge_users!
+      user_merger.merge!
 
       topic1.reload
       topic2.reload
@@ -111,7 +109,7 @@ describe DiscourseTopicVoting::UserMerger do
       expect(source_user.reached_voting_limit?).to eq(true)
       expect(target_user.reached_voting_limit?).to eq(false)
 
-      merge_users!
+      user_merger.merge!
 
       target_user.reload
       expect(target_user.vote_count).to eq(3)
@@ -121,14 +119,14 @@ describe DiscourseTopicVoting::UserMerger do
     it "handles merge when source user has no votes" do
       DiscourseTopicVoting::Vote.create!(user: target_user, topic: topic1)
 
-      expect { merge_users! }.not_to raise_error
+      expect { user_merger.merge! }.not_to raise_error
 
       target_user.reload
       expect(target_user.vote_count).to eq(1)
     end
 
     it "handles merge when both users have no votes" do
-      expect { merge_users! }.not_to raise_error
+      expect { user_merger.merge! }.not_to raise_error
 
       target_user.reload
       expect(target_user.vote_count).to eq(0)
@@ -140,7 +138,7 @@ describe DiscourseTopicVoting::UserMerger do
       DiscourseTopicVoting::Vote.create!(user: target_user, topic: topic1)
       DiscourseTopicVoting::Vote.create!(user: target_user, topic: topic2)
 
-      merge_users!
+      user_merger.merge!
 
       target_user.reload
       expect(target_user.vote_count).to eq(2)
@@ -152,7 +150,7 @@ describe DiscourseTopicVoting::UserMerger do
       vote = DiscourseTopicVoting::Vote.create!(user: source_user, topic: topic1)
       vote.update_column(:created_at, created_at)
 
-      merge_users!
+      user_merger.merge!
 
       merged_vote = DiscourseTopicVoting::Vote.find_by(user_id: target_user.id, topic_id: topic1.id)
       expect(merged_vote.created_at.to_i).to eq(created_at.to_i)
@@ -162,7 +160,7 @@ describe DiscourseTopicVoting::UserMerger do
       DiscourseTopicVoting::Vote.create!(user: source_user, topic: topic1, archive: true)
       DiscourseTopicVoting::Vote.create!(user: target_user, topic: topic1, archive: false)
 
-      merge_users!
+      user_merger.merge!
 
       target_user.reload
       expect(target_user.topics_with_vote.pluck(:topic_id)).to contain_exactly(topic1.id)
@@ -185,7 +183,7 @@ describe DiscourseTopicVoting::UserMerger do
       expect(topic1.topic_vote_count.votes_count).to eq(3)
       expect(topic2.topic_vote_count.votes_count).to eq(1)
 
-      merge_users!
+      user_merger.merge!
 
       topic1.reload
       topic2.reload

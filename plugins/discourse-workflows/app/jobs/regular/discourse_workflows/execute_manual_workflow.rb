@@ -28,6 +28,7 @@ module Jobs
             execution_mode: :manual,
             workflow_snapshot: workflow_snapshot,
             existing_execution: execution,
+            step_node_id: args[:step_node_id],
           )
 
         ::DiscourseWorkflows::Executor.new(

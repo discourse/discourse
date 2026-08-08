@@ -32,6 +32,7 @@ module DiscourseAi
             cohere
             open_ai
             google
+            gemini_interactions
             google_vertex_ai
             azure
             samba_nova

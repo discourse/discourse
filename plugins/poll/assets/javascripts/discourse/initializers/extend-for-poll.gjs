@@ -1,4 +1,3 @@
-import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import { bind } from "discourse/lib/decorators";
@@ -88,32 +87,27 @@ function initializePolls(api) {
       }
   );
 
-  api.modifyClass(
-    "model:post",
-    (Superclass) =>
-      class extends Superclass {
-        @tracked polls_votes = trackedObject();
-        @tracked pollsObject = trackedObject();
-        @tracked _polls;
+  api.addModelField("post", "polls_votes", { type: "object" });
+  api.addModelField("post", "pollsObject", { type: "object" });
+  api.addModelField("post", "_polls");
 
-        get polls() {
-          return this._polls;
-        }
+  api.addModelAccessor("post", "polls", {
+    get() {
+      return this._polls;
+    },
+    set(value) {
+      this._polls = value;
+      this._refreshPollsObject();
+    },
+  });
 
-        set polls(value) {
-          this._polls = value;
-          this._refreshPollsObject();
-        }
-
-        _refreshPollsObject() {
-          for (const rawPoll of this.polls) {
-            const name = rawPoll.name;
-            this.pollsObject[name] ||= trackedObject();
-            Object.assign(this.pollsObject[name], rawPoll);
-          }
-        }
-      }
-  );
+  api.addModelMethod("post", "_refreshPollsObject", function () {
+    for (const rawPoll of this.polls) {
+      const name = rawPoll.name;
+      this.pollsObject[name] ||= trackedObject();
+      Object.assign(this.pollsObject[name], rawPoll);
+    }
+  });
 
   api.decorateCookedElement(attachPolls, { onlyStream: true });
 

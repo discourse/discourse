@@ -4,7 +4,11 @@ RSpec.describe Chat::MessageProcessor do
   fab!(:message, :chat_message)
 
   it "cooks using the last_editor_id of the message" do
-    Chat::Message.expects(:cook).with(message.message, user_id: message.last_editor_id)
+    Chat::Message.expects(:cook).with(
+      message.message,
+      user_id: message.last_editor_id,
+      author_username: message.user.username,
+    )
     described_class.new(message)
   end
 
@@ -12,6 +16,7 @@ RSpec.describe Chat::MessageProcessor do
     Chat::Message.expects(:cook).with(
       message.message,
       user_id: message.last_editor_id,
+      author_username: message.user.username,
       invalidate_oneboxes: true,
     )
     described_class.new(message, invalidate_oneboxes: true)

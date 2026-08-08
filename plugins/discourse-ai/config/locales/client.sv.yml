@@ -75,6 +75,20 @@ sv:
       translations:
         title: "Översättningar"
         category_scope: "Kategorier"
+        model_progress:
+          detail:
+            columns:
+              pending: "Väntande"
+              total: "Totalt"
+          targets:
+            post:
+              title: "Inlägg"
+            topic:
+              title: "Ämnen"
+            category:
+              title: "Kategorier"
+            tag:
+              title: "Taggar"
         stats:
           eta_minutes:
             one: "%{count} minut"
@@ -114,6 +128,7 @@ sv:
         save: "Spara"
         enabled: "Aktiverad?"
         allowed_groups: "Tillåtna grupper"
+        duplicate: "Duplicera"
         delete: "Ta bort"
         thinking_effort_options:
           none: "Ingen"
@@ -192,7 +207,6 @@ sv:
         tests:
           success: "Klart!"
         providers:
-          google: "Google"
           fake: "Anpassad"
         provider_fields:
           region: "Region"

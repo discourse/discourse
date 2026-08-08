@@ -10,10 +10,10 @@ module DiscourseWorkflows
         "notContains" => { types: %w[string array].freeze, needs_value: true }.freeze,
         "empty" => { types: %w[string array].freeze, needs_value: false }.freeze,
         "notEmpty" => { types: %w[string array].freeze, needs_value: false }.freeze,
-        "gt" => { types: %w[number].freeze, needs_value: true }.freeze,
-        "lt" => { types: %w[number].freeze, needs_value: true }.freeze,
-        "gte" => { types: %w[number].freeze, needs_value: true }.freeze,
-        "lte" => { types: %w[number].freeze, needs_value: true }.freeze,
+        "gt" => { types: %w[number string].freeze, needs_value: true }.freeze,
+        "lt" => { types: %w[number string].freeze, needs_value: true }.freeze,
+        "gte" => { types: %w[number string].freeze, needs_value: true }.freeze,
+        "lte" => { types: %w[number string].freeze, needs_value: true }.freeze,
         "true" => { types: %w[boolean].freeze, needs_value: false }.freeze,
         "false" => { types: %w[boolean].freeze, needs_value: false }.freeze,
       }.freeze
@@ -107,9 +107,23 @@ module DiscourseWorkflows
           left.blank?
         when "notEmpty"
           left.present?
+        when "gt", "lt", "gte", "lte"
+          compare_ordered_strings(left, right, operation)
         else
           false
         end
+      end
+
+      def self.compare_ordered_strings(left, right, operation)
+        return false if right.nil?
+
+        numeric_left = coerce_number(left)
+        numeric_right = coerce_number(right)
+        if numeric_left && numeric_right
+          return compare_values(numeric_left, numeric_right, operation)
+        end
+
+        compare_values(left, right, operation)
       end
 
       def self.evaluate_number(left, right, operation)

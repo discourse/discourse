@@ -20,7 +20,8 @@ module DiscourseWorkflows
                :last_execution_status,
                :last_execution_at,
                :last_execution_run_data,
-               :pin_data
+               :pin_data,
+               :tags
 
     attribute :created_by
     attribute :updated_by
@@ -109,6 +110,10 @@ module DiscourseWorkflows
           .order(created_at: :desc)
           .first
       execution&.execution_data&.run_data
+    end
+
+    def tags
+      object.tags.map(&:name)
     end
 
     def pin_data

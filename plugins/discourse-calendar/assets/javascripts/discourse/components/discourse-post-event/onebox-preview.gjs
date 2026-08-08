@@ -4,7 +4,7 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import Dates from "./dates";
-import Location from "./location";
+import DiscoursePostEventLocation from "./location";
 
 export default class DiscoursePostEventOneboxPreview extends Component {
   @service discoursePostEventApi;
@@ -61,7 +61,7 @@ export default class DiscoursePostEventOneboxPreview extends Component {
             </div>
           </header>
           <Dates @event={{this.event}} />
-          <Location @location={{this.event.location}} />
+          <DiscoursePostEventLocation @event={{this.event}} />
         </div>
       </div>
     {{else}}

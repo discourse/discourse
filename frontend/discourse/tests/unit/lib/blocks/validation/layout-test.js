@@ -36,14 +36,15 @@ module("Unit | Lib | blocks/validation/layout", function () {
       assert.true(VALID_ENTRY_KEYS.includes("conditions"));
       assert.true(VALID_ENTRY_KEYS.includes("classNames"));
       assert.true(VALID_ENTRY_KEYS.includes("id"));
+      assert.true(VALID_ENTRY_KEYS.includes("overrides"));
     });
 
     test("is frozen", function (assert) {
       assert.true(Object.isFrozen(VALID_ENTRY_KEYS));
     });
 
-    test("has exactly 7 keys", function (assert) {
-      assert.strictEqual(VALID_ENTRY_KEYS.length, 7);
+    test("has exactly 8 keys", function (assert) {
+      assert.strictEqual(VALID_ENTRY_KEYS.length, 8);
     });
   });
 

@@ -24,6 +24,8 @@ sr:
         yesterday: "Juče"
       all_loaded: "Prikaz svih poruka"
       cancel: "Odustani"
+      pinned_bar:
+        title: "Zakvačeno"
       pinned: "Zakvačeno"
       channel_settings:
         edit: "Izmeni"

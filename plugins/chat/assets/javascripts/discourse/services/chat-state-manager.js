@@ -166,6 +166,10 @@ export default class ChatStateManager extends Service {
     return this.isFullPageActive || this.isDrawerActive;
   }
 
+  get isDrawerCollapsed() {
+    return this.isDrawerActive && !this.isDrawerExpanded;
+  }
+
   get isPinnedMessagesPaneOpen() {
     return this.router.currentRouteName === "chat.channel.pins";
   }
@@ -195,8 +199,10 @@ export default class ChatStateManager extends Service {
   }
 
   get lastKnownChatURL() {
-    if (this._chatURL) {
-      return this._chatURL;
+    const url = this._chatURL;
+
+    if (url) {
+      return withoutPrefix(url);
     }
 
     // On mobile or drawer mode, default to starred channels if user has any

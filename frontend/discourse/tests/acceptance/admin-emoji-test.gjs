@@ -1,4 +1,11 @@
-import { click, currentURL, triggerEvent, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  fillIn,
+  select,
+  triggerEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance, createFile } from "discourse/tests/helpers/qunit-helpers";
@@ -96,6 +103,32 @@ acceptance("Admin - Emoji", function (needs) {
       .doesNotExist("checkboxes not shown before selecting mode");
   });
 
+  test("filters custom emojis by name", async function (assert) {
+    await visit("/admin/config/emoji");
+
+    await fillIn(".filter-input", "party");
+
+    assert
+      .dom(".admin-emoji-list tbody .d-table__row")
+      .exists({ count: 1 }, "only the emoji matching by name is shown");
+    assert
+      .dom(".admin-emoji-list tbody")
+      .containsText(":partyblob:", "shows the matching emoji");
+  });
+
+  test("filters custom emojis by group", async function (assert) {
+    await visit("/admin/config/emoji");
+
+    await select(".d-filter-controls__dropdown", "fun");
+
+    assert
+      .dom(".admin-emoji-list tbody .d-table__row")
+      .exists({ count: 1 }, "only emojis in the selected group are shown");
+    assert
+      .dom(".admin-emoji-list tbody")
+      .containsText(":partyblob:", "shows the emoji in the selected group");
+  });
+
   // ─── Select to export flow ─────────────────────────────────────────────────
 
   test("clicking select-to-export enters selecting mode and shows checkboxes", async function (assert) {
@@ -173,6 +206,19 @@ acceptance("Admin - Emoji", function (needs) {
     assert
       .dom(".admin-emoji-list__select:checked")
       .doesNotExist("all rows deselected after clicking select-all again");
+  });
+
+  test("select-all only selects emojis visible through the filters", async function (assert) {
+    await visit("/admin/config/emoji");
+
+    await fillIn(".filter-input", "party");
+    await click(".admin-emoji-list__select-to-export");
+    await click(".admin-emoji-list__select-all");
+    await fillIn(".filter-input", "");
+
+    assert
+      .dom(".admin-emoji-list__select:checked")
+      .exists({ count: 1 }, "only the filtered emoji is selected");
   });
 
   test("selecting a row makes header select-all indeterminate", async function (assert) {

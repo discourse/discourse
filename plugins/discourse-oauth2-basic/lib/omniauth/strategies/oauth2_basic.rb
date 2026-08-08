@@ -24,6 +24,19 @@ class OmniAuth::Strategies::Oauth2Basic < ::OmniAuth::Strategies::OAuth2
     end
   end
 
+  def callback_phase
+    super
+  rescue Faraday::Error => e
+    detail =
+      if e.is_a?(Faraday::TimeoutError)
+        "timed out after #{GlobalSetting.oauth2_request_timeout_seconds}s"
+      else
+        "failed"
+      end
+    Rails.logger.warn("OAuth2 Basic: token request #{detail}: #{e.class} #{e.message}")
+    fail!(:oauth2_basic_request_failed, e)
+  end
+
   def callback_url
     Discourse.base_url_no_prefix + script_name + callback_path
   end

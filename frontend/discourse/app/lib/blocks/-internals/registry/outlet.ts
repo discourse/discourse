@@ -1,20 +1,56 @@
 import { DEBUG } from "@glimmer/env";
+import type { BlockNamespaceType } from "discourse/blocks/types";
 import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
+import { parseBlockName } from "discourse/lib/blocks/-internals/patterns";
 import { isTesting } from "discourse/lib/environment";
-import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
+import {
+  BLOCK_OUTLETS,
+  CORE_OUTLET_METADATA,
+} from "discourse/lib/registry/block-outlets";
 import {
   assertRegistryNotFrozen,
   validateNamePattern,
   validateSourceNamespace,
 } from "./helpers";
 
+/**
+ * The fully-resolved display metadata for a registered outlet (core or
+ * custom), as returned by {@link getOutletMetadata}. Optional fields are
+ * resolved to defaults so callers don't have to.
+ */
+export interface OutletMetadataEntry {
+  /** The full outlet identifier (e.g. `"chat:thread-actions"`). */
+  name: string;
+
+  /** Human-readable label for display purposes. */
+  displayName: string | null;
+
+  /** One-line summary of where the outlet renders. */
+  description: string | null;
+
+  /** Optional sub-grouping label (free-form, e.g. `"Layout"`). */
+  category: string | null;
+
+  /** True for the outlets baked into core. */
+  isCore: boolean;
+
+  /** Derived from the outlet name's namespace prefix. */
+  namespaceType: BlockNamespaceType;
+}
+
 /** Metadata recorded for a custom block outlet. */
 interface CustomOutletMetadata {
   /** The outlet name. */
   name: string;
 
+  /** Human-readable label for display purposes. */
+  displayName?: string;
+
   /** Human-readable description. */
   description?: string;
+
+  /** Optional sub-grouping label. */
+  category?: string;
 }
 
 /*
@@ -70,6 +106,61 @@ export function getCustomOutlet(
   return customOutletRegistry.get(name);
 }
 
+/**
+ * Returns the fully-resolved display metadata for any registered outlet
+ * (core or custom). Defaults are applied for optional fields so callers
+ * don't have to.
+ *
+ * Defaults:
+ * - `displayName` defaults to `name` itself when the registration didn't
+ *   set one. Consumers can still apply additional title-casing at display
+ *   time.
+ * - `description`, `category` default to `null`.
+ *
+ * @param name - The full outlet name.
+ * @returns The metadata, or `null` for unregistered names.
+ */
+export function getOutletMetadata(name: string): OutletMetadataEntry | null {
+  const coreMeta = CORE_OUTLET_METADATA[name];
+  if (coreMeta) {
+    return {
+      name,
+      displayName: coreMeta.displayName ?? name,
+      description: coreMeta.description ?? null,
+      category: coreMeta.category ?? null,
+      isCore: true,
+      namespaceType: "core",
+    };
+  }
+
+  const custom = customOutletRegistry.get(name);
+  if (custom) {
+    const parsed = parseBlockName(name);
+    return {
+      name,
+      displayName: custom.displayName ?? name,
+      description: custom.description ?? null,
+      category: custom.category ?? null,
+      isCore: false,
+      namespaceType: parsed?.type ?? "core",
+    };
+  }
+
+  return null;
+}
+
+/**
+ * Returns the fully-resolved display metadata for every registered outlet.
+ * Used by the blocks service to list outlets with their metadata.
+ *
+ * @returns The metadata for every registered outlet.
+ */
+export function getAllOutletsWithMetadata(): OutletMetadataEntry[] {
+  return getAllOutlets()
+    .map((name) => getOutletMetadata(name))
+    .filter((m): m is OutletMetadataEntry => m != null);
+}
+
 /*
  * Internal Functions
  */
@@ -86,8 +177,14 @@ export function _freezeOutletRegistry(): void {
 
 /** Options for {@link _registerOutlet}. */
 interface RegisterOutletOptions {
-  /** Human-readable description. */
+  /** Human-readable label for display purposes. Defaults to the outlet name. */
+  displayName?: string;
+
+  /** One-line summary of where the outlet renders. */
   description?: string;
+
+  /** Optional free-form grouping label (e.g. `"Layout"`). */
+  category?: string;
 }
 
 /**
@@ -148,7 +245,9 @@ export function _registerOutlet(
 
   customOutletRegistry.set(outletName, {
     name: outletName,
+    displayName: options.displayName,
     description: options.description,
+    category: options.category,
   });
 }
 

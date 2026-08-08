@@ -17,11 +17,18 @@ module Migrations
     # side effects apart from its output and clock (both can be injected), so it
     # can be tested without threads or a real terminal.
     class Tui < Reporter
+      # How long `close` waits for the render thread to drain before killing it.
+      CLOSE_TIMEOUT = 5
+      private_constant :CLOSE_TIMEOUT
+
       def initialize(fps: 10, output: $stdout, titles: [])
+        raise ArgumentError, "fps must be greater than 0" if fps <= 0
+
         super()
         @queue = Thread::Queue.new
         @progress = {}
         @progress_mutex = Mutex.new
+        @output = output
         @renderer = Renderer.new(output:, titles:)
         @frame = 1.0 / fps
         @closed = false
@@ -77,15 +84,16 @@ module Migrations
         return if @closed
         @closed = true
         enqueue([:close])
-        @render_thread.join
 
-        # The render loop's `ensure` already restored the terminal. If the loop
-        # crashed, report it here so it isn't lost. Don't raise: `close` itself
-        # runs inside the run's `ensure`.
-        return unless @render_error
+        if @render_thread.join(CLOSE_TIMEOUT).nil?
+          # The render thread is wedged (e.g. blocked in `write` on a stopped
+          # tty). `close` runs inside the run's `ensure`, so it must not hang.
+          @render_thread.kill
+          warn("TUI reporter did not stop in time and was killed.")
+          show_cursor_best_effort
+        end
 
-        warn("TUI reporter crashed: #{@render_error.class}: #{@render_error.message}")
-        warn(@render_error.backtrace.first(5).join("\n")) if @render_error.backtrace
+        report_render_error
       end
 
       private
@@ -98,15 +106,58 @@ module Migrations
 
       def render_loop
         # Redraw on a terminal resize while we run; the ensure below puts the
-        # previous handler back.
-        @winch_prev = Signal.trap("WINCH") { @renderer.mark_resize }
+        # previous handler back. Some platforms have no WINCH signal, where
+        # `Signal.trap` raises — run without resize support rather than crash.
+        begin
+          @winch_prev = Signal.trap("WINCH") { @renderer.mark_resize }
+          @winch_installed = true
+        rescue StandardError
+          @winch_installed = false
+        end
+
         @renderer.on_start
         run_frames
-      rescue StandardError => e
+      rescue Exception => e
+        # The thread boundary: nothing may escape, or `close`'s `join` would
+        # re-raise it inside the run's `ensure`. Fatal errors land in the render
+        # error report like everything else.
         @render_error = e
       ensure
-        Signal.trap("WINCH", @winch_prev || "DEFAULT")
+        # Two independent steps: a failure restoring the trap must not skip the
+        # terminal restore, and vice versa. Neither may raise out of the ensure.
+        restore_winch_trap
+        finalize_renderer
+      end
+
+      def restore_winch_trap
+        Signal.trap("WINCH", @winch_prev || "DEFAULT") if @winch_installed
+      rescue StandardError
+        nil
+      end
+
+      def finalize_renderer
         @renderer.finalize
+      rescue StandardError => e
+        @render_error ||= e
+      end
+
+      # The render loop's `ensure` already restored the terminal. If the loop
+      # crashed, report it here so it isn't lost. Don't raise: `close` runs
+      # inside the run's `ensure`.
+      def report_render_error
+        return unless @render_error
+
+        warn("TUI reporter crashed: #{@render_error.class}: #{@render_error.message}")
+        warn(@render_error.backtrace.first(5).join("\n")) if @render_error.backtrace
+      end
+
+      # `write_nonblock`: the render thread was most likely killed because it was
+      # blocked writing to this same output, so a plain `write` here could block
+      # `close` all over again.
+      def show_cursor_best_effort
+        @output.write_nonblock(Ansi::SHOW_CURSOR)
+      rescue StandardError
+        nil
       end
 
       # Draws a frame at a steady rate until the close event arrives. Each frame
@@ -123,8 +174,17 @@ module Migrations
         end
       end
 
+      # Take the whole map and leave a fresh one behind, so a progress report
+      # racing its step's `:finish` can't linger and be re-applied as a no-op on
+      # every frame for the rest of the run. A finishing step still sees its last
+      # value: the drain (and its `flush_progress`) runs before this swap.
       def apply_coalesced_progress
-        snapshot = @progress_mutex.synchronize { @progress.dup }
+        snapshot =
+          @progress_mutex.synchronize do
+            current = @progress
+            @progress = {}
+            current
+          end
         snapshot.each { |id, values| @renderer.apply([:progress, id, *values]) }
       end
 

@@ -68,6 +68,20 @@ te:
       translations:
         title: "అనువాదాలు"
         category_scope: "వర్గాలు"
+        model_progress:
+          detail:
+            columns:
+              pending: "పెండింగు"
+              total: "మొత్తం"
+          targets:
+            post:
+              title: "పోస్ట్‌లు"
+            topic:
+              title: "విషయాలు"
+            category:
+              title: "వర్గాలు"
+            tag:
+              title: "ట్యాగులు"
         stats:
           eta_minutes:
             one: "ఒక నిమిషం"
@@ -100,6 +114,7 @@ te:
         user: సభ్యుడు
         save: "సేవ్ చేయండి"
         enabled: "ప్రారంభించబడిందా?"
+        duplicate: "నకిలీ చేయండి"
         delete: "తొలగించండి"
         thinking_effort_options:
           none: "ఏదీ లేదు"
@@ -166,7 +181,6 @@ te:
         next:
           title: "తదుపరి"
         providers:
-          google: "గూగుల్"
           fake: "అనుకూల"
       ai_helper:
         context_menu:

@@ -546,6 +546,16 @@ RSpec.describe NestedTopicsController, type: :request do
 
         expect(response.parsed_body["topic"]["has_activity_log"]).to eq(true)
       end
+
+      it "stays true for staff when the only small_action is deleted and recoverable" do
+        action = Fabricate(:small_action, topic: topic, user: admin, action_code: "closed.enabled")
+        action.trash!(admin)
+
+        sign_in(admin)
+        get show_url(topic, page: 0)
+
+        expect(response.parsed_body["topic"]["has_activity_log"]).to eq(true)
+      end
     end
 
     it "paginates with has_more_roots" do
@@ -1675,7 +1685,7 @@ RSpec.describe NestedTopicsController, type: :request do
     end
   end
 
-  describe "GET activity" do
+  describe "#activity" do
     def activity_url(topic)
       "/n/#{topic.slug}/#{topic.id}/activity.json"
     end
@@ -1694,8 +1704,10 @@ RSpec.describe NestedTopicsController, type: :request do
 
       actions = response.parsed_body["small_actions"]
       expect(actions.length).to eq(1)
+      expect(actions[0]["synthetic"]).to eq(true)
       expect(actions[0]["action_code"]).to eq("topic_created")
       expect(actions[0]["username"]).to eq(user.username)
+      expect(response.parsed_body["has_more"]).to eq(false)
     end
 
     it "returns small action posts in chronological order after topic_created" do
@@ -1716,6 +1728,107 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(actions[3]["action_code"]).to eq("invited_user")
       expect(actions[3]["action_code_who"]).to eq("testuser")
       expect(actions[1]["username"]).to eq(admin.username)
+    end
+
+    it "returns post permissions needed by the activity controls" do
+      action =
+        Fabricate(
+          :small_action,
+          topic: topic,
+          user: admin,
+          action_code: "closed.enabled",
+          raw: "Staff-editable activity body",
+        )
+
+      sign_in(user)
+      get activity_url(topic)
+
+      serialized_action =
+        response.parsed_body["small_actions"].find { |item| item["id"] == action.id }
+      expect(serialized_action).to include(
+        "can_edit" => false,
+        "can_delete" => false,
+        "can_recover" => false,
+      )
+
+      sign_in(admin)
+      get activity_url(topic)
+
+      serialized_action =
+        response.parsed_body["small_actions"].find { |item| item["id"] == action.id }
+      expect(serialized_action).to include(
+        "can_edit" => true,
+        "can_delete" => true,
+        "can_recover" => false,
+      )
+      expect(serialized_action).to include(
+        "post_number" => action.post_number,
+        "post_type" => Post.types[:small_action],
+        "topic_id" => topic.id,
+        "user_id" => admin.id,
+      )
+    end
+
+    it "keeps deleted activity available to staff for recovery" do
+      deleted_action =
+        Fabricate(
+          :small_action,
+          topic: topic,
+          user: admin,
+          action_code: "closed.enabled",
+          raw: "Recoverable activity body",
+        )
+      deleted_action.trash!(admin)
+
+      sign_in(user)
+      get activity_url(topic)
+      expect(response.parsed_body["small_actions"].map { |item| item["id"] }).not_to include(
+        deleted_action.id,
+      )
+
+      sign_in(admin)
+      get activity_url(topic)
+
+      serialized_action =
+        response.parsed_body["small_actions"].find { |item| item["id"] == deleted_action.id }
+      expect(serialized_action).to include(
+        "can_edit" => true,
+        "can_delete" => true,
+        "can_recover" => true,
+      )
+      expect(serialized_action["deleted_at"]).to be_present
+    end
+
+    it "paginates activity without repeating the synthetic entry" do
+      stub_const(described_class, :ACTIVITY_PAGE_SIZE, 2) do
+        actions =
+          3.times.map do |index|
+            Fabricate(
+              :small_action,
+              topic: topic,
+              user: admin,
+              action_code: "closed.enabled",
+              raw: "Activity body #{index}",
+            )
+          end
+
+        sign_in(user)
+        get activity_url(topic), params: { page: 0 }
+
+        first_page = response.parsed_body
+        expect(first_page["small_actions"].map { |item| item["id"] }).to eq(
+          [nil, actions[0].id, actions[1].id],
+        )
+        expect(first_page["small_actions"].first["synthetic"]).to eq(true)
+        expect(first_page["has_more"]).to eq(true)
+
+        get activity_url(topic), params: { page: 1 }
+
+        second_page = response.parsed_body
+        expect(second_page["small_actions"].map { |item| item["id"] }).to eq([actions[2].id])
+        expect(second_page["small_actions"]).to all(exclude("synthetic"))
+        expect(second_page["has_more"]).to eq(false)
+      end
     end
 
     it "does not expose hidden small-action posts to users who cannot see them" do

@@ -40,3 +40,6 @@ pt_BR:
           group_name: "Evento de votação no tópico"
           topic_upvote: "Quando um(a) usuário(a) votar em um tópico"
           topic_unvote: "Quando um(a) usuário(a) cancelar o voto em um tópico"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Tags"

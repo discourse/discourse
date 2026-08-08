@@ -750,6 +750,12 @@ module DiscourseTagging
     guardian&.is_admin? ? query : query.where(id: visible_tags(guardian).select(:id))
   end
 
+  def self.visible_tag_ids(tags, guardian = nil)
+    ids = tags.map(&:id).uniq
+    return ids.to_set if ids.empty? || guardian&.is_admin?
+    visible_tags(guardian).where(id: ids).pluck(:id).to_set
+  end
+
   def self.filter_visible_in_accessible_categories(query, guardian = nil)
     return query if guardian.nil? || guardian.is_admin?
 
@@ -770,6 +776,13 @@ module DiscourseTagging
           ON ctg.tag_group_id = tgm.tag_group_id AND ctg.category_id IN (:ids)
       )
     SQL
+  end
+
+  def self.without_pm_only_tags(tags, guardian)
+    return tags if guardian.can_tag_pms?
+
+    topic_count_column = Tag.topic_count_column(guardian)
+    tags.reject { |tag| tag.pm_topic_count > 0 && tag.public_send(topic_count_column) == 0 }
   end
 
   def self.hidden_tags(guardian = nil)

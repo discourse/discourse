@@ -860,6 +860,8 @@ tr_TR:
         email: "E-posta"
         name: "Ad"
         fields: "Alanlar"
+        silence_reason: "Susturulma sebebi"
+        penalty_forever: "Sonsuza dek"
         reject_reason: "Sebep"
         scrubbed_by: "Kaydı temizleyen:"
         scrubbed_reason: "Sebep"
@@ -1659,7 +1661,6 @@ tr_TR:
       external_links_in_new_tab: "Tüm dış bağlantıları yeni sekmede aç"
       enable_quoting: "Vurgulanan metin için alıntı yanıtını etkinleştir"
       enable_smart_lists: "Bestecide yazarken akıllı listeleri etkinleştirin"
-      enable_defer: "Konuları okunmadı olarak işaretlemeyi etkinleştir"
       enable_markdown_monospace_font: "Bestecinin Markdown modunda monospace yazı tipini kullanın"
       experimental_sidebar:
         enable: "Kenar çubuğunu etkinleştir"
@@ -2109,7 +2110,7 @@ tr_TR:
         default: "(varsayılan)"
         any: "herhangi"
       homepage:
-        default: "(varsayılan)"
+        default: "Varsayılan"
       password_confirmation:
         title: "Şifreyi Tekrarlayın"
       invite_code:
@@ -2153,6 +2154,9 @@ tr_TR:
         contextual: "Yeni sayfa içeriği"
       bookmark_after_notification:
         title: "Bir yer imi anımsatıcı bildirimi gönderildikten sonra:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Beğenildiğinde bildir"
         always: "Her zaman"
@@ -2314,17 +2318,21 @@ tr_TR:
           member_title: "Üye davet edin"
           sent_title: "Davet gönderildi"
           member_tab: "Üyeler"
-          admin_tab: "Yöneticiler"
+          admin_tab: "Personel"
+          staff_role_admin: "Yönetici"
+          staff_role_moderator: "Moderatör"
           admin_email_label: "E-posta adresi"
           email_placeholder: "ad@ornek.com"
           invite_by_email: "E-posta"
           restrict_domain: "Alan adıyla kısıtla"
           domain_placeholder: "example.com"
-          more_options: "Daha fazla seçenek"
+          create_and_send: "Gönder"
+          create_and_copy: "Bağlantıyı kopyala"
           update: "Güncelle"
           summary:
             role_member: "Üye"
             role_admin: "Yönetici"
+            role_moderator: "Moderatör"
             method: "Paylaşma"
             method_email: "E-posta"
             restriction: "Sınırlı"
@@ -2332,7 +2340,7 @@ tr_TR:
             expires: "Bitiş tarihi"
             topic: "Konu"
             groups: "Gruplar"
-            edit: "Daveti düzenleyin"
+            edit: "Düzenle"
         bulk_invite:
           none: "Bu sayfada görüntülenecek davet yok."
           text: "Toplu Davet"
@@ -2932,7 +2940,7 @@ tr_TR:
     filter_input:
       clear: "Filtreyi temizle"
     filter_controls:
-      reset: "Filtreyi sıfırla"
+      reset: "Sıfırla"
       toggle: "Açılır filtreleri değiştir"
     d_icon_grid_picker:
       select_icon: "Simgeyi seç"
@@ -3082,7 +3090,6 @@ tr_TR:
       italic_label: "I"
       italic_title: "Vurgulama"
       italic_text: "vurgulanan yazı"
-      heading_title: "Başlıklar"
       heading_level_n: "Başlık %{levelNumber}"
       heading_level_n_title: "Başlık %{levelNumber}"
       heading_level_paragraph: "Paragraf"
@@ -5447,6 +5454,10 @@ tr_TR:
           public: "Herkese görünür"
           always_public: "Bu bölümdeki içerik her zaman herkese açıktır"
           more_menu: "Daha fazla menü"
+          localizations:
+            locale: "Dil"
+            title_label: "Bölüm başlığı"
+            remove_language: "Kaldır"
           links:
             add: "Başka bir bağlantı ekle"
             delete: "Bağlantıyı sil"
@@ -6405,7 +6416,6 @@ tr_TR:
               posts: "Gönderi"
               share: "Paylaş"
             whos_posting:
-              all_categories: "Tüm kategoriler"
               staff: "Personel"
             trust_level_pipeline:
               trust_levels:
@@ -7134,6 +7144,8 @@ tr_TR:
         sidebar: "Kenar çubuğu"
         header_dropdown: "Başlık Açılır Menüsü"
         legacy: "Eski"
+      duplicate_topic_titles:
+        allowed: "İzin Verildi"
       backups:
         title: "Yedeklemeler"
         files_title: "Yedekleme dosyaları"
@@ -7377,7 +7389,6 @@ tr_TR:
           finish_install: "Tema Yüklemesini Bitir"
           last_attempt: "Yükleme işlemi bitmedi, son deneme zamanı:"
           remote_branch: "Şube adı (isteğe bağlı)"
-          public_key: "Depoya aşağıdaki herkese açık anahtar erişimini verin:"
           install: "Yükle"
           installed: "Yüklendi"
           install_popular: "Popüler"
@@ -8741,6 +8752,7 @@ tr_TR:
         uploading: "Yükleniyor…"
         name: "Ad"
         group: "Grup"
+        all_groups: "Tüm gruplar"
         created_by: "Oluşturan:"
         image: "Görüntü"
         alt: "özel emoji ön izlemesi"

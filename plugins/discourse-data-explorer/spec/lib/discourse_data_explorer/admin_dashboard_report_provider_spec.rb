@@ -163,6 +163,29 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
       expect(payload[:columns]).to include("value")
     end
 
+    it "uses cached results that are less than an hour old" do
+      DiscourseDataExplorer::QueryRunner.run(visible_query, {}, current_user: admin)
+
+      result = described_class.fetch_many([visible_query.id.to_s], guardian: admin_guardian)
+      payload = result[visible_query.id.to_s]
+
+      expect(payload[:cached_at]).to be_present
+      expect(payload[:empty]).to eq(false)
+    end
+
+    it "runs queries when their cached results are over an hour old" do
+      now = Time.now
+      freeze_time(now)
+      DiscourseDataExplorer::QueryRunner.run(visible_query, {}, current_user: admin)
+
+      freeze_time(now + 1.hour + 1.second)
+      result = described_class.fetch_many([visible_query.id.to_s], guardian: admin_guardian)
+      payload = result[visible_query.id.to_s]
+
+      expect(payload[:success]).to eq(true)
+      expect(payload["cached_at"]).to be_nil
+    end
+
     it "skips zero and non-numeric identifiers" do
       result = described_class.fetch_many(%w[0 abc], guardian: admin_guardian)
       expect(result).to be_empty

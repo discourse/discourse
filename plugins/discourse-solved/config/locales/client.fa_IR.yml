@@ -14,8 +14,6 @@ fa_IR:
               label: "راه حل مورد قبول"
         sections:
           support:
-            filter:
-              all_categories: "همه‌ی دسته‌بندی‌ها"
             answerers:
               staff: "همکاران"
               member: "اعضاء"

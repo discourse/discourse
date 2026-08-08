@@ -61,6 +61,18 @@ RSpec.describe UserSerializer do
       expect(json[:group_users]).to eq([])
       expect(json[:second_factor_enabled]).to eq(false)
     end
+
+    it "computes the legacy localization preference from automatically_translate" do
+      user.user_option.automatically_translate = false
+      user.user_option.show_original_content = false
+
+      json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
+
+      expect(json[:user_option]).to include(
+        automatically_translate: false,
+        show_original_content: true,
+      )
+    end
   end
 
   context "with a user" do

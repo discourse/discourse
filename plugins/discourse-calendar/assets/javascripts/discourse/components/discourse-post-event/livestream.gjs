@@ -1,7 +1,9 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { optionalRequire } from "discourse/lib/utilities";
 import { eventHasLivestream } from "../../lib/livestream-utils";
 import LivestreamZoomEntry from "../livestream/zoom-entry";
@@ -65,14 +67,31 @@ export default class Livestream extends Component {
       : trustHTML(this.args.event?.livestreamOnebox ?? "");
   }
 
+  // Once playback starts the post has to stay rendered: cloaking it tears down
+  // the component holding the stream, taking any joined Zoom session with it.
+  @action
+  preventCloak() {
+    const postId = this.args.post?.id;
+
+    if (postId) {
+      withPluginApi((api) => api.preventCloak(postId));
+    }
+  }
+
   <template>
     {{#if this.show}}
       <section class="event__section event-livestream">
         {{#if this.isZoomLivestream}}
-          <LivestreamZoomEntry @event={{@event}} />
+          <LivestreamZoomEntry
+            @event={{@event}}
+            @onJoined={{this.preventCloak}}
+          />
         {{else if this.hasLivestreamOnebox}}
           {{#if this.videoAttributes}}
-            <this.lazyVideo @videoAttributes={{this.videoAttributes}} />
+            <this.lazyVideo
+              @videoAttributes={{this.videoAttributes}}
+              @onLoadedVideo={{this.preventCloak}}
+            />
           {{else}}
             {{this.oneboxHtml}}
           {{/if}}

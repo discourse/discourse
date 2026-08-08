@@ -5,31 +5,54 @@
 # https://translate.discourse.org/
 
 vi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Hướng dẫn thiết kế giao diện Discourse (Discourse Styleguide)"
   js:
     styleguide:
-      welcome: "Để bắt đầu, hãy chọn một phần từ menu bên trái."
+      title: "Hướng dẫn thiết kế (Styleguide)"
+      welcome: "Để bắt đầu, hãy chọn một mục từ menu điều hướng."
       categories:
+        syntax: Cú pháp
         atoms: Nguyên tử
         molecules: Phân tử
+        organisms: Thành phần phức hợp (Organisms)
       sections:
+        bem:
+          title: "Quy chuẩn BEM (Block Element Modifier)"
         typography:
           title: "Kiểu chữ"
           example: "Chào mừng đến với Discourse"
+          paragraph: "Đây là đoạn văn bản mẫu được sử dụng để kiểm tra hiển thị phông chữ, cỡ chữ và khoảng cách dòng trên giao diện hệ thống. Đoạn văn này chứa đầy đủ các ký tự tiếng Việt có dấu nhằm mục đích đảm bảo hệ thống không bị lỗi hiển thị."
         date_time_inputs:
           title: "Ngày/giờ nhập"
+        menus:
+          title: "Trình đơn (Menus)"
+        multi_select:
+          title: "Chọn nhiều mục"
+        toasts:
+          title: "Thông báo nổi (Toasts)"
         font_scale:
           title: "Hệ thống phông chữ"
         colors:
           title: "Màu sắc"
+        dialog:
+          title: "Hộp thoại thông báo"
         icons:
           title: "Biểu tượng"
           full_list: "Xem danh sách đầy đủ các biểu tượng Font Awesome"
+        forms:
+          title: "Biểu mẫu"
         buttons:
           title: "Nút"
         dropdowns:
           title: "Trình đơn thả xuống"
         categories:
           title: "Chuyên mục"
+        bread_crumbs:
+          title: "Thanh điều hướng phân cấp (Breadcrumbs)"
         navigation:
           title: "Điều hướng"
         navigation_bar:
@@ -38,6 +61,8 @@ vi:
           title: "Điều hướng ngăn xếp"
         categories_list:
           title: "Danh sách Chuyên mục"
+        topic_link:
+          title: "Liên kết và trạng thái bài viết"
         topic_list_item:
           title: "Mục danh sách chủ đề"
         topic_statuses:
@@ -56,6 +81,12 @@ vi:
           title: "Thông báo chủ đề"
         post:
           title: "Tút"
+        post_list:
+          title: "Danh sách bình luận"
+          empty_example: "Trạng thái rỗng của <PostList />"
+          populated_example: "Trạng thái có dữ liệu của <PostList />"
+        post_oneboxes:
+          title: "Bản xem trước liên kết (Oneboxes)"
         topic_map:
           title: "Bản đồ chủ đề"
         site_header:
@@ -64,18 +95,30 @@ vi:
           title: "Thêm chủ đề"
         post_menu:
           title: "Menu tút"
+        docked_composer:
+          title: "Khung soạn thảo đính kèm"
         modal:
           title: "Cửa sổ bật lên"
           header: "Phương thức Tiêu đề"
           footer: "Phương thức Chân trang"
+          open: "Mở cửa sổ tùy chọn"
         user_about:
           title: "Hộp Giới thiệu Người dùng"
         header_icons:
           title: "Biểu tượng tiêu đề"
         spinners:
           title: "Con quay"
+        otp:
+          title: "Mã xác thực một lần (OTP)"
         empty_state:
           title: "Trạng thái trống"
         tooltips:
+          title: "Chú thích công cụ (Tooltips)"
           description: "Mô tả"
           header: "Header"
+          hover_to_see: "Di chuột vào đây để xem chú thích"
+        char_counter:
+          title: "Bộ đếm ký tự"
+          placeholder: "Nhập văn bản tại đây..."
+        segmented_control:
+          title: "Nhóm nút chuyển đổi (Segmented Control)"

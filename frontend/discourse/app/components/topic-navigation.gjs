@@ -17,6 +17,7 @@ import SwipeEvents, {
   shouldCloseMenu,
 } from "discourse/lib/swipe-events";
 import TrackedMediaQuery from "discourse/lib/tracked-media-query";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import JumpToPost from "./modal/jump-to-post";
@@ -126,6 +127,14 @@ export default class TopicNavigation extends Component {
       return true;
     }
 
+    return applyValueTransformer(
+      "topic-navigation-render-timeline",
+      this.#fitsTimeline,
+      { topic: this.args.topic }
+    );
+  }
+
+  get #fitsTimeline() {
     if (this.site.mobileView || EmbedMode.enabled) {
       return false;
     }

@@ -69,6 +69,27 @@ RSpec.describe Middleware::AnonymousCache do
       end
     end
 
+    describe "per color scheme cache" do
+      it "handles valid color scheme keys only", :aggregate_failures do
+        color_scheme = Fabricate(:color_scheme)
+
+        with_no_scheme_key = new_helper.cache_key
+        with_bad_scheme_key =
+          new_helper(
+            "HTTP_COOKIE" => %(color_scheme_id=#{color_scheme.id}"><link rel="modulepreload">),
+          ).cache_key
+        with_color_scheme_key =
+          new_helper("HTTP_COOKIE" => "color_scheme_id=#{color_scheme.id}").cache_key
+        with_dark_scheme_key =
+          new_helper("HTTP_COOKIE" => "dark_scheme_id=#{color_scheme.id}").cache_key
+
+        expect(with_bad_scheme_key).to eq(with_no_scheme_key)
+        expect(with_color_scheme_key).not_to eq(with_no_scheme_key)
+        expect(with_dark_scheme_key).not_to eq(with_no_scheme_key)
+        expect(with_color_scheme_key).not_to eq(with_dark_scheme_key)
+      end
+    end
+
     context "with header or cookie based custom locale" do
       it "handles different languages" do
         # Normally does not check the language header
@@ -124,12 +145,19 @@ RSpec.describe Middleware::AnonymousCache do
       }.not_to raise_error
     end
 
-    it "handles showing original content" do
-      show_orig_key =
-        new_helper("HTTP_COOKIE" => ContentLocalization::SHOW_ORIGINAL_COOKIE).cache_key
+    it "keys only on the resolved automatic translation preference" do
       regular_key = new_helper.cache_key
+      enabled_key =
+        new_helper(
+          "HTTP_COOKIE" => "#{ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE}=true",
+        ).cache_key
+      disabled_key =
+        new_helper(
+          "HTTP_COOKIE" => "#{ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE}=false",
+        ).cache_key
 
-      expect(show_orig_key).not_to eq(regular_key)
+      expect(enabled_key).to eq(regular_key)
+      expect(disabled_key).not_to eq(regular_key)
     end
 
     context "when cached" do

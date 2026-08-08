@@ -54,7 +54,6 @@ class SiteSetting < ActiveRecord::Base
     default_other_external_links_in_new_tab
     default_other_enable_quoting
     default_other_enable_smart_lists
-    default_other_enable_defer
     default_other_dynamic_favicon
     default_other_like_notification_frequency
     default_other_skip_new_user_tips
@@ -190,7 +189,13 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.homepage
-    top_menu_items[0].name
+    configured = default_homepage.presence
+
+    if configured && TopMenu.homepage_choices.include?(configured)
+      configured
+    else
+      top_menu_items[0].name
+    end
   end
 
   def self.anonymous_menu_items
@@ -198,6 +203,8 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.anonymous_homepage
+    return homepage if anonymous_menu_items.include?(homepage)
+
     top_menu_items
       .map { |item| item.name }
       .select { |item| anonymous_menu_items.include?(item) }

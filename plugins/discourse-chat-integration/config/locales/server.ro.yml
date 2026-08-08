@@ -22,6 +22,9 @@ ro:
       removed: "%{removed} a fost eliminată"
     provider:
       slack:
+        errors:
+          action_prohibited: "Botul nu are permisiunea de a posta pe canalul respectiv"
+          channel_not_found: "Canalul specificat nu există pe Slack"
         status:
           rule_string_tags_suffix: " cu etichetele: *%{tags}*"
         messaging:

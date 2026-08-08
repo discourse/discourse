@@ -1,26 +1,57 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import ResponsiveLivestreamChatIcon from "../components/livestream/responsive-livestream-chat-icon";
 
-function showCustomBBCode(isGoing = false) {
+const GOING = "going";
+
+function showCustomBBCode(element, isGoing) {
   // show the content within the [preview] tag if the user is not going to the event
-  document.querySelectorAll(".cooked .preview").forEach((e) => {
+  element.querySelectorAll(".preview").forEach((e) => {
     e.style.setProperty("display", !isGoing ? "block" : "none", "important");
   });
 
   // show the content within the [hidden] tag if the user is going to the event
-  document.querySelectorAll(".cooked .hidden").forEach((e) => {
+  element.querySelectorAll(".hidden").forEach((e) => {
     e.style.setProperty("display", isGoing ? "block" : "none", "important");
   });
 }
 
-async function onAcceptInvite({ status }) {
-  if (status === "going") {
-    showCustomBBCode(true);
-    document.body.classList.add("confirmed-event-assistance");
-  } else if (status !== "going") {
-    showCustomBBCode(false);
-    document.body.classList.remove("confirmed-event-assistance");
+function attendanceStatus(container) {
+  const router = container.lookup("service:router");
+
+  if (!router.currentRouteName?.startsWith("topic.")) {
+    return undefined;
   }
+
+  return container.lookup("controller:topic").model
+    ?.event_watching_invitee_status;
+}
+
+function updateEventStyles(container) {
+  const status = attendanceStatus(container);
+
+  if (status === undefined) {
+    document.body.classList.remove("confirmed-event-assistance");
+    return;
+  }
+
+  document.body.classList.toggle(
+    "confirmed-event-assistance",
+    status === GOING
+  );
+
+  document
+    .querySelectorAll(".cooked")
+    .forEach((cooked) => showCustomBBCode(cooked, status === GOING));
+}
+
+function onAttendanceChange(container, { status }) {
+  // the topic is serialized once per visit, so the answer is kept in sync to
+  // survive later navigation within the topic
+  container
+    .lookup("controller:topic")
+    .model?.set("event_watching_invitee_status", status ?? null);
+
+  updateEventStyles(container);
 }
 
 function overrideChat(api, container) {
@@ -41,9 +72,7 @@ function overrideChat(api, container) {
 
   events.forEach((event) => {
     appEvents.on(event, (data) => {
-      onAcceptInvite({
-        ...data,
-      });
+      onAttendanceChange(container, { ...data });
     });
   });
 
@@ -51,51 +80,30 @@ function overrideChat(api, container) {
     before: "chat",
   });
 
-  api.onPageChange((url) => {
-    const store = container.lookup("service:store");
-    const topic = container.lookup("controller:topic");
-    const allowedPaths =
-      siteSettings.livestream_embeddable_chat_allowed_paths.split("|");
-
-    // non livestream topics
-    if (
-      allowedPaths.every(
-        (path) => !url.includes(path) && !url.startsWith(path)
-      ) ||
-      !topic?.model?.chat_channel_id
-    ) {
-      return false;
-    }
-
-    updateEventStylesByStatus(topic, store, currentUser);
+  api.onPageChange(() => {
+    updateEventStyles(container);
   });
+
+  // posts entered further down the stream are cooked after the styles are
+  // applied, so they are decorated as they render
+  api.decorateCookedElement(
+    (element) => {
+      const status = attendanceStatus(container);
+
+      if (status !== undefined) {
+        showCustomBBCode(element, status === GOING);
+      }
+    },
+    { onlyStream: true }
+  );
 }
 
-async function updateEventStylesByStatus(topic, store, currentUser) {
-  let isGoing;
-  try {
-    const topicPost = parseInt(
-      document.getElementById("post_1").dataset.postId,
-      10
-    );
-    const attendees = await store.findAll("discourse-post-event-invitee", {
-      undefined,
-      post_id: topicPost,
-      type: "going",
-    });
-    isGoing = attendees.content.some(
-      (attendee) => attendee.user.id === currentUser.id
-    );
-    showCustomBBCode(isGoing);
-  } catch {
-    // no event found
-  } finally {
-    if (!isGoing) {
-      document.body.classList.remove("confirmed-event-assistance");
-    } else {
-      document.body.classList.add("confirmed-event-assistance");
-    }
-  }
+function collapseTimeline(api, container) {
+  api.registerValueTransformer(
+    "topic-navigation-render-timeline",
+    ({ value }) =>
+      container.lookup("service:embeddable-chat").isChatDocked ? false : value
+  );
 }
 
 export default {
@@ -103,6 +111,7 @@ export default {
   initialize(container) {
     withPluginApi((api) => {
       overrideChat(api, container);
+      collapseTimeline(api, container);
     });
   },
 };

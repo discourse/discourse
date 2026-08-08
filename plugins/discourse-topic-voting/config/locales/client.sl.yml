@@ -19,3 +19,6 @@ sl:
     filters:
       votes:
         title: "Glasovi"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Oznake"

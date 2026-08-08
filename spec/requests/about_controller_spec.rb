@@ -100,16 +100,16 @@ RSpec.describe AboutController do
         expect(response.body).to include(%(meta name="description" content="日本語の説明"))
       end
 
-      it "uses original values when the user prefers original content" do
+      it "localizes site settings independently of topic and post translation preferences" do
         user = Fabricate(:user, locale: "ja")
-        user.user_option.update!(show_original_content: true)
+        user.user_option.update!(automatically_translate: false)
         sign_in(user)
 
         get "/about.json", params: { Discourse::LOCALE_PARAM => "ja" }
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body.dig("about", "title")).to eq("English title")
-        expect(response.parsed_body.dig("about", "description")).to eq("English description")
+        expect(response.parsed_body.dig("about", "title")).to eq("日本語タイトル")
+        expect(response.parsed_body.dig("about", "description")).to eq("日本語の説明")
       end
     end
 

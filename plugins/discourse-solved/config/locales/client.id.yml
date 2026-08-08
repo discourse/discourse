@@ -14,8 +14,6 @@ id:
               label: "Solusi yang diterima"
         sections:
           support:
-            filter:
-              all_categories: "Semua kategori"
             answerers:
               staff: "Staf"
               member: "Anggota"

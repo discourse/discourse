@@ -1,5 +1,3 @@
-import escape from "discourse/lib/escape";
-
 let customTagSectionLinkPrefixIcons = {};
 
 export function registerCustomTagSectionLinkPrefixIcon({
@@ -36,8 +34,10 @@ export default class BaseTagSectionLink {
     return this.tagName;
   }
 
+  // The link text already names the tag. A title here would only repeat the
+  // description as a mouse-only tooltip that screen readers announce.
   get title() {
-    return escape(this.tag.description);
+    return null;
   }
 
   get prefixType() {

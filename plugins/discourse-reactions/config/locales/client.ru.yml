@@ -13,15 +13,6 @@ ru:
   js:
     discourse_reactions:
       reactions_title: "Реакции"
-      state_panel:
-        more_users: "и еще %{count}..."
-        show_users: "Показать больше пользователей"
-        hide_users: "Показать меньше пользователей"
-        reaction_group:
-          one: "%{reaction}: %{count} пользователь"
-          few: "%{reaction}: %{count} пользователей"
-          many: "%{reaction}: %{count} пользователей"
-          other: "%{reaction}: %{count} пользователи"
       reaction:
         forbidden: "Вам запрещено реагировать на этот пост или менять свою реакцию на него."
       picker:

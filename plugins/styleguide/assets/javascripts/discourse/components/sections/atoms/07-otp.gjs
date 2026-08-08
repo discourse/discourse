@@ -1,64 +1,15 @@
-import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import DOtp from "discourse/ui-kit/d-otp";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
+import CallbacksExample from "../../examples/atoms/otp/callbacks";
+import callbacksSource from "../../examples/atoms/otp/callbacks?source=file";
+import SlotsExample from "../../examples/atoms/otp/slots";
+import slotsSource from "../../examples/atoms/otp/slots?source=file";
 
-export default class OTP extends Component {
-  @tracked filledOutput;
-  @tracked changedOutput;
+export default <template>
+  <StyleguideExample @title="DOtp" @code={{callbacksSource}}>
+    <CallbacksExample />
+  </StyleguideExample>
 
-  @action
-  filled(otp) {
-    this.filledOutput = `filled: ${otp}`;
-  }
-
-  @action
-  changed(otp) {
-    this.filledOutput = null;
-
-    if (otp.length) {
-      this.changedOutput = `changed: ${otp}`;
-    } else {
-      this.changedOutput = null;
-    }
-  }
-
-  get codeSample1() {
-    return `import DOTP from "discourse/components/d-otp";
-
-<template>
-  <DOTP @onFill={{this.filled}} @onChange={{this.changed}} />
-</template>`;
-  }
-
-  get codeSample2() {
-    return `import DOTP from "discourse/components/d-otp";
-
-<template>
-  <DOTP @slots={{4}} />
-</template>`;
-  }
-
-  <template>
-    <StyleguideExample @title="DOTP" @code={{this.codeSample1}}>
-      <DOtp @onFill={{this.filled}} @onChange={{this.changed}} />
-
-      {{#if this.changedOutput}}
-        <output>
-          {{#if this.changedOutput}}
-            <p>{{this.changedOutput}}</p>
-          {{/if}}
-
-          {{#if this.filledOutput}}
-            <p>{{this.filledOutput}}</p>
-          {{/if}}
-        </output>
-      {{/if}}
-    </StyleguideExample>
-
-    <StyleguideExample @title="DOTP @slots={{4}}" @code={{this.codeSample2}}>
-      <DOtp @slots={{4}} />
-    </StyleguideExample>
-  </template>
-}
+  <StyleguideExample @title="DOtp @slots={{4}}" @code={{slotsSource}}>
+    <SlotsExample />
+  </StyleguideExample>
+</template>

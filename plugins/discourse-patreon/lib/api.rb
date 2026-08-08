@@ -54,6 +54,11 @@ module Patreon
 
       case response.status
       when 200
+        # An inline check is never re-evaluated elsewhere, so a successful
+        # response is the only thing that can resolve it.
+        tracker = ProblemCheckTracker[:access_token_invalid]
+        tracker.no_problem! if tracker.failing?
+
         return JSON.parse response.body
       when 401
         ProblemCheckTracker[:access_token_invalid].problem!

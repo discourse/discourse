@@ -68,7 +68,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicCreated::V1 do
     it "matches topics in subcategories by default" do
       expect(
         described_class.new(subcategory_topic).matches?(
-          trigger_context("category_id" => topic.category_id.to_s),
+          trigger_context("category_ids" => [topic.category_id.to_s]),
         ),
       ).to eq(true)
     end
@@ -77,7 +77,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicCreated::V1 do
       expect(
         described_class.new(subcategory_topic).matches?(
           trigger_context(
-            "category_id" => topic.category_id.to_s,
+            "category_ids" => [topic.category_id.to_s],
             "include_subcategories" => false,
           ),
         ),
@@ -88,11 +88,74 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicCreated::V1 do
       expect(
         described_class.new(topic).matches?(
           trigger_context(
-            "category_id" => topic.category_id.to_s,
+            "category_ids" => [topic.category_id.to_s],
             "include_subcategories" => false,
           ),
         ),
       ).to eq(true)
+    end
+
+    it "matches topics in any of the configured categories" do
+      other_category = Fabricate(:category)
+
+      expect(
+        described_class.new(topic).matches?(
+          trigger_context("category_ids" => [other_category.id.to_s, topic.category_id.to_s]),
+        ),
+      ).to eq(true)
+    end
+
+    it "does not match topics outside the configured categories" do
+      expect(
+        described_class.new(topic).matches?(
+          trigger_context("category_ids" => [Fabricate(:category).id.to_s]),
+        ),
+      ).to eq(false)
+    end
+
+    it "matches all categories when the configured list is empty" do
+      expect(described_class.new(topic).matches?(trigger_context("category_ids" => []))).to eq(true)
+    end
+
+    it "expands subcategories for every configured category" do
+      other_parent = Fabricate(:category)
+      other_subcategory = Fabricate(:category, parent_category: other_parent)
+      other_subcategory_topic = Fabricate(:topic, category: other_subcategory, user: user)
+
+      parameters = trigger_context("category_ids" => [topic.category_id.to_s, other_parent.id.to_s])
+
+      expect(described_class.new(subcategory_topic).matches?(parameters)).to eq(true)
+      expect(described_class.new(other_subcategory_topic).matches?(parameters)).to eq(true)
+    end
+
+    it "supports the legacy scalar category_id parameter" do
+      expect(
+        described_class.new(topic).matches?(
+          trigger_context("category_id" => topic.category_id.to_s),
+        ),
+      ).to eq(true)
+      expect(
+        described_class.new(topic).matches?(
+          trigger_context("category_id" => Fabricate(:category).id.to_s),
+        ),
+      ).to eq(false)
+    end
+
+    it "prefers category_ids over a stale category_id parameter" do
+      expect(
+        described_class.new(topic).matches?(
+          trigger_context(
+            "category_ids" => [Fabricate(:category).id.to_s],
+            "category_id" => topic.category_id.to_s,
+          ),
+        ),
+      ).to eq(false)
+    end
+
+    it "does not match when the configured value is an unresolved expression" do
+      expect(
+        described_class.new(topic).matches?(trigger_context("category_ids" => ["=$json.x"])),
+      ).to eq(false)
     end
 
     it "matches only topics when topic type is blank" do

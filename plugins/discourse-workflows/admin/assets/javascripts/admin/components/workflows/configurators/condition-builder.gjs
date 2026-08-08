@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { i18n } from "discourse-i18n";
 import {
   isSingleValueOperator,
+  operatorOptionsForType,
   operatorsForType,
 } from "../../../lib/workflows/condition-operators";
 import { schemaFieldsForNodeInput } from "../../../lib/workflows/data-preview";
@@ -150,7 +151,7 @@ function operationSchema(item) {
   return (OPERATION_SCHEMAS[type] ??= {
     type: "options",
     required: true,
-    options: operatorsForType(type),
+    options: operatorOptionsForType(type),
     ui: { expression: true },
   });
 }

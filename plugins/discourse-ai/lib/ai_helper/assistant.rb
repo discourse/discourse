@@ -134,37 +134,26 @@ module DiscourseAi
           )
         context = attach_user_context(context, user, force_default_locale: force_default_locale)
 
-        bad_json = false
         json_summary_schema_key = bot.agent.response_format&.first.to_h
 
         schema_key = json_summary_schema_key["key"]&.to_sym
         schema_type = json_summary_schema_key["type"]
 
-        if schema_type == "array"
-          helper_response = []
-        else
-          helper_response = +""
-        end
+        structured_output = nil
+        helper_response = +""
 
         buffer_blk =
           Proc.new do |partial, _, type|
             if type == :structured_output && schema_type
-              helper_chunk = partial.read_buffered_property(schema_key)
-              next if helper_chunk.nil? || helper_chunk.empty?
+              structured_output = partial
 
-              if schema_type == "array"
-                if helper_chunk.is_a?(Array)
-                  helper_chunk.each do |item|
-                    helper_response << item if helper_response.exclude?(item)
-                  end
+              if schema_type == "string"
+                helper_chunk = partial.read_buffered_property(schema_key)
+                if helper_chunk.present?
+                  helper_response << helper_chunk
+                  block.call(helper_chunk) if block
                 end
-              elsif schema_type == "string"
-                helper_response << helper_chunk
-              else
-                helper_response = helper_chunk
               end
-
-              block.call(helper_chunk) if block && !bad_json
             elsif type.blank?
               # Assume response is a regular completion.
               helper_response << partial
@@ -173,6 +162,16 @@ module DiscourseAi
           end
 
         bot.reply(context, &buffer_blk)
+
+        if schema_type && schema_type != "string"
+          # Non-string properties aren't streamed to callers; a single read at
+          # the end avoids transient placeholders the partial-JSON parser emits
+          # for incomplete elements (e.g. a trailing nil while an array is
+          # mid-stream).
+          helper_response = structured_output&.read_buffered_property(schema_key)
+          helper_response = helper_response.compact if helper_response.is_a?(Array)
+          helper_response = [] if schema_type == "array" && helper_response.nil?
+        end
 
         helper_response
       end

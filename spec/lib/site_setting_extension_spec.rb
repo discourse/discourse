@@ -184,6 +184,19 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe ".after_fork" do
+    it "refreshes the site settings" do
+      settings.setting(:hello, 1)
+      settings.hello = 100
+
+      settings.provider.save(:hello, 200, SiteSetting.types[:integer])
+
+      settings.after_fork
+
+      expect(settings.hello).to eq(200)
+    end
+  end
+
   describe "DiscourseEvent" do
     before do
       settings.setting(:test_setting, 1)
@@ -1884,7 +1897,7 @@ RSpec.describe SiteSettingExtension do
     end
 
     context "when a setting also has an alias after renaming" do
-      before { SiteSetting.stubs(:deprecated_setting_alias).returns("some_old_setting") }
+      before { SiteSetting.stubs(:deprecated_setting_aliases).returns(["some_old_setting"]) }
 
       it "is included with the keywords" do
         expect(SiteSetting.keywords(:clean_up_inactive_users_after_days)).to include(

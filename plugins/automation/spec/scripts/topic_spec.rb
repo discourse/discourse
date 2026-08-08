@@ -181,7 +181,7 @@ describe "Topic" do
           Topic.count
         }
 
-        expect(Rails.logger.errors.first).to match(/Title has already been used/)
+        expect(Rails.logger.errors.first).to match(/This title has already been used/)
       end
     end
   end

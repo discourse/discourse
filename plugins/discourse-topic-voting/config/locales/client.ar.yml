@@ -54,3 +54,6 @@ ar:
           group_name: "حدث التصويت على موضوع"
           topic_upvote: "عندما يقوم المستخدم بالتصويت على موضوع"
           topic_unvote: "عندما يقوم المستخدم بإلغاء التصويت على موضوع"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "الوسوم"

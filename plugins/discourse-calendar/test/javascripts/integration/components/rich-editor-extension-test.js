@@ -59,15 +59,12 @@ module("Integration | Component | RichEditorExtension", function (hooks) {
   Object.entries(testCases).forEach(([name, tests]) => {
     tests.forEach(([markdown, expectedHtml, expectedMarkdown]) => {
       test(name, async function (assert) {
-        this.siteSettings.rich_editor = true;
-
         await testMarkdown(assert, markdown, expectedHtml, expectedMarkdown);
       });
     });
   });
 
   test("event preserves allowed custom fields", async function (assert) {
-    this.siteSettings.rich_editor = true;
     this.siteSettings.discourse_post_event_allowed_custom_fields =
       "fancy_field";
 
@@ -82,7 +79,6 @@ module("Integration | Component | RichEditorExtension", function (hooks) {
   });
 
   test("event preserves custom fields with uppercase letters", async function (assert) {
-    this.siteSettings.rich_editor = true;
     this.siteSettings.discourse_post_event_allowed_custom_fields = "dress_CODE";
 
     await testMarkdown(

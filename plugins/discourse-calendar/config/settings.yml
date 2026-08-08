@@ -79,6 +79,7 @@ discourse_calendar:
     default: ""
     allow_any: false
     refresh: true
+    mandatory_values: "1|2" # admins, moderators
   displayed_invitees_limit:
     default: 10
     client: false
@@ -137,10 +138,16 @@ discourse_calendar:
     hidden: true
     client: true
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/401309"
       requires_plugin_enabled: false
+  livestream_allowed_hosts:
+    type: host_list
+    default: "youtube.com|youtu.be|twitch.tv|zoom.us|kick.com|tiktok.com|instagram.com|facebook.com"
+    client: true
+    hidden: true
+    validator: "DiscourseCalendar::Livestream::AllowedHostsValidator"
   livestream_zoom_enabled:
     default: false
     client: true

@@ -65,7 +65,7 @@ acceptance("Post event - composer", function (needs) {
     assert
       .dom(".d-editor-input")
       .hasValue(
-        `[event start="2022-07-01 12:00" status="public" timezone="Europe/Paris" end="2022-07-01 13:00" reminders="notification.15.minutes"]\n[/event]`,
+        `[event start="2022-07-01 12:00" status=public timezone=Europe/Paris end="2022-07-01 13:00" reminders=notification.15.minutes]\n[/event]`,
         "bbcode is correct"
       );
   });

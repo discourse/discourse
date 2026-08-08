@@ -71,7 +71,10 @@ class Post < ActiveRecord::Base
   has_many :reviewables, as: :target, dependent: :destroy
 
   validates_with PostValidator, unless: :skip_validation
-  validates :edit_reason, length: { maximum: 1000 }
+  MAX_EDIT_REASON_LENGTH = 1000
+  validates :edit_reason, length: { maximum: MAX_EDIT_REASON_LENGTH }
+
+  before_save :ensure_edit_reason_length
 
   after_commit :index_search
 
@@ -1222,6 +1225,13 @@ class Post < ActiveRecord::Base
   end
 
   private
+
+  def ensure_edit_reason_length
+    return if edit_reason.blank? || edit_reason.length <= MAX_EDIT_REASON_LENGTH
+
+    errors.add(:edit_reason, :too_long, count: MAX_EDIT_REASON_LENGTH)
+    throw :abort
+  end
 
   def access_control_post_id_for_upload
     id

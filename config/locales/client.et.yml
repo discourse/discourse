@@ -413,6 +413,7 @@ et:
         email: "E-post"
         name: "Nimi"
         fields: "Väljad"
+        penalty_forever: "Igavesti"
         reject_reason: "Põhjus"
         scrubbed_reason: "Põhjus"
         scrub_record:
@@ -1100,7 +1101,7 @@ et:
         default: "(vaikimisi)"
         any: "iga"
       homepage:
-        default: "(vaikimisi)"
+        default: "Vaikimisi"
       password_confirmation:
         title: "Salasõna uuesti"
       auth_tokens:
@@ -1206,15 +1207,20 @@ et:
           cancel: "Tühista"
         invite_roles:
           member_tab: "Liikmed"
-          admin_tab: "Adminnid"
+          admin_tab: "Meeskond"
+          staff_role_admin: "Adminn"
+          staff_role_moderator: "Moderaator"
           email_placeholder: "nimi@näide.ee"
           invite_by_email: "E-post"
+          create_and_send: "Saada"
           summary:
             role_member: "Liige"
             role_admin: "Adminn"
+            role_moderator: "Moderaator"
             method_email: "E-post"
             topic: "Teema"
             groups: "Rühmad"
+            edit: "Muuda"
         bulk_invite:
           error: "Vabandust, fail peab olema CSV-vormingus."
       password:
@@ -1480,6 +1486,8 @@ et:
       medium_dark_tone: Keskmiselt tume nahatoon
       dark_tone: Tume nahatoon
       default: Kohandatud emodži
+    filter_controls:
+      reset: "Nulli"
     shared_drafts:
       destination_category: "Sihtkategooria"
     composer:
@@ -2669,6 +2677,8 @@ et:
         custom:
           save: "Salvesta"
           delete: "Kustuta"
+          localizations:
+            remove_language: "Eemalda"
           links:
             icon:
               label: "Ikoon"
@@ -2964,7 +2974,6 @@ et:
               posts: "Postitust"
               share: "Jaga"
             whos_posting:
-              all_categories: "Kõik foorumid"
               staff: "Meeskond"
             trust_level_pipeline:
               trust_levels:
@@ -3239,6 +3248,8 @@ et:
           enabled: "Sisse lülitatud"
           disabled: "Välja lülitatud"
           reset: "Nulli"
+      duplicate_topic_titles:
+        allowed: "Lubatud"
       backups:
         title: "Varukoopiad"
         menu:
@@ -3970,6 +3981,7 @@ et:
         uploading: "Laadin üles..."
         name: "Nimi"
         group: "Rühm"
+        all_groups: "Kõik rühmad"
         image: "Pilt"
         delete_confirm: "Kas oled kindel, et soovid kustutada emotikoni :%{name}:?"
         settings: "Sätted"

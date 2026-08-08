@@ -404,8 +404,6 @@ hu:
         confirm_payment: Fizetés megerősítése
         success: Visszalépés
       admin:
-        unconfigured: 'A Stripe nincs megfelelően konfigurálva. További információkért lásd a Discourse Meta oldalt.'
-        on_meta: Diskurzus előfizetések a Meta oldalon
         dashboard:
           title: Vezérlőpult
           table:

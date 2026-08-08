@@ -14,14 +14,49 @@ fr:
     chat_integration:
       menu_title: "Intégrations du chat"
       settings: "Paramètres"
+      nav:
+        providers: "Fournisseurs"
+        providers_description: "Configurer les intégrations aux fournisseurs de chat"
+      add_provider: "Ajouter un fournisseur"
+      view_provider_settings: "Afficher les paramètres du fournisseur"
       more_providers: "Plus"
+      confirm_setup_provider: "Voulez-vous vraiment activer le fournisseur %{provider} ? Vous pourrez le désactiver ultérieurement dans l'onglet Paramètres."
+      setup_provider_modal:
+        title: "Configurer le fournisseur %{provider}"
+        setup_instructions: "Fournissez les informations suivantes pour configurer le fournisseur %{provider}. %{additionalInstructions}"
+        confirm_setup: "Confirmer la configuration"
+        success: "Le fournisseur %{provider} a été configuré."
+        slack:
+          instructions: "Un jeton d'accès ou une URL de webhook sortant est requis."
+          at_least_one_required: "Saisissez un jeton d'accès ou une URL de webhook sortant."
+          access_token:
+            title: "Jeton d'accès"
+            description: "Jeton d'accès OAuth du bot Slack"
+          outbound_webhook_url:
+            title: "URL du webhook sortant"
+            description: "URL du webhook sortant de Slack"
+        telegram:
+          instructions: "Le jeton d'accès sera validé lors de l'enregistrement."
+          access_token:
+            title: "Jeton d'accès"
+            description: "Jeton d'accès du bot Telegram fourni par BotFather"
+      empty_state:
+        title: "Connectez votre plateforme de chat"
+        body: "Envoyez des notifications de Discourse vers le chat de votre équipe. Choisissez un fournisseur pour commencer."
       channels_title: "Canaux"
+      channels_description: "Configurez les canaux du fournisseur %{provider}."
+      no_channels: "Aucun canal n'a encore été configuré."
+      channel_actions: "Actions du canal"
+      add_first_channel: "Ajoutez votre premier canal %{provider}"
       channels_with_errors: "Certains canaux de ce fournisseur ont échoué la dernière fois que des messages ont été envoyés. Cliquez sur les icônes d'erreur pour en savoir plus."
+      channel_exception: "Une erreur inconnue s'est produite lors du dernier envoi d'un message à ce canal."
       group_mention_template: "Mentions de : @%{name}"
       group_message_template: "Messages à : @%{name}"
       choose_group: "(Choisir un groupe)"
       all_categories: "(Toutes les catégories)"
       all_tags: "(Toutes les étiquettes)"
+      create_rule: "Créer une règle"
+      add_channel: "Ajouter un canal"
       delete_channel: "Supprimer"
       test_channel: "Test"
       edit_channel: "Modifier"
@@ -29,10 +64,14 @@ fr:
       test_modal:
         title: "Envoyer un message de test"
         topic: "Sujet"
+        send: "Envoyer un message de test"
         close: "Fermer"
+        error: "Une erreur inconnue s'est produite lors de l'envoi du message. Consultez les journaux du site pour en savoir plus."
         success: "Message envoyé avec succès"
       type:
         normal: Normal
+        group_message: Message de groupe
+        group_mention: Mention de groupe
       filter:
         mute: 'Mettre en sourdine'
         follow: 'Première publication uniquement'
@@ -53,6 +92,9 @@ fr:
           ok: "Valide"
           fail: "Format invalide"
       edit_rule_modal:
+        edit_title: Modifier la règle
+        create_title: Créer une règle
+        save: Enregistrer la règle
         cancel: Annuler
         provider: Fournisseur
         type: Type
@@ -73,8 +115,13 @@ fr:
           param:
             identifier:
               title: Canal
+              help: "Par exemple, #canal ou @nom_utilisateur"
           errors:
+            at_least_one_required: "Saisissez un jeton d'accès ou une URL de webhook sortant."
+            invalid_webhook_url: "L'URL du webhook sortant doit être un lien https://hooks.slack.com/services/... valide."
+            auth_error: "Le jeton d'authentification fourni n'est pas valide."
             action_prohibited: "Ce bot n'a pas l'autorisation de publier dans ce canal"
+            channel_not_found: "Le canal indiqué n'existe pas sur Slack."
         telegram:
           title: "Telegram"
           param:
@@ -85,8 +132,12 @@ fr:
               title: ID du chat
               help: Un numéro qui vous est donné par le bot ou un identifiant de canal de diffusion sous la forme de @channelname
           errors:
+            access_token_required: "Un jeton d'accès au bot est requis."
+            webhook_setup_failed: "Impossible d'enregistrer le webhook auprès de Telegram. Vérifiez le jeton, puis réessayez."
             channel_not_found: "Le canal spécifié n'existe pas sur Telegram"
             forbidden: "Ce bot n'a pas l'autorisation de publier dans ce canal"
+            invalid_api_base_url: "Le paramètre de site relatif à l'URL de base de l'API Telegram ne contient pas une URL HTTPS valide."
+            api_base_url_blocked: "Les requêtes vers l'URL de base de l'API Telegram ont été bloquées. Les hôtes des réseaux privés doivent être ajoutés au paramètre de site des hôtes internes autorisés."
         discord:
           title: "Discord"
           param:
@@ -95,6 +146,7 @@ fr:
               help: "Un nom pour décrire le canal. Il n'est pas utilisé pour la connexion à Discord."
             webhook_url:
               title: URL du webhook
+              help: L'URL du webhook créée dans les paramètres de votre serveur Discord doit respecter le format https://discord.com/api/webhooks/<webhook-id>/<webhook-token>
         guilded:
           title: "Guilded"
           param:
@@ -109,6 +161,7 @@ fr:
           param:
             identifier:
               title: Canal
+              help: "Par exemple, #canal ou @nom_utilisateur"
           errors:
             channel_not_found: "Le canal spécifié n'existe pas sur Mattermost"
         matrix:
@@ -119,6 +172,7 @@ fr:
               help: "Un nom pour décrire le canal. Il n'est pas utilisé pour la connexion à Matrix."
             room_id:
               title: "ID du salon"
+              help: "L'« identifiant privé » du salon. Il doit ressembler à !abcdefghijk"
           errors:
             unknown_token: "Le jeton d'accès est invalide"
             unknown_room: "L'ID du salon est invalide"
@@ -138,6 +192,7 @@ fr:
           param:
             identifier:
               title: Canal
+              help: "Par exemple, #canal ou @nom_utilisateur"
           errors:
             invalid_channel: "Le canal spécifié n'existe pas sur Rocket.Chat"
         gitter:
@@ -145,6 +200,7 @@ fr:
           param:
             name:
               title: "Nom"
+              help: "Nom d'un salon Gitter, par exemple gitterHQ/services"
             webhook_url:
               title: "URL du webhook"
               help: "L'adresse URL fournie lorsque vous créez une nouvelle intégration dans un espace de discussion Gitter."
@@ -219,3 +275,14 @@ fr:
               description: "Vous pouvez trouver le nom du canal dans les paramètres d'intégration de discussion"
             provider:
               label: Fournisseur
+    discourse_workflows:
+      node_unavailable:
+        requires_chat_integration: "Nécessite l'activation de l'extension Chat Integration"
+      nodes:
+        "action:send_chat_integration_message": "Envoyer un message d'intégration de chat"
+      node_descriptions:
+        "action:send_chat_integration_message": "Envoyer une notification à un canal d'intégration de chat (Slack, Discord, Telegram, etc.)"
+      send_chat_integration_message:
+        channel_id: "Canal"
+        configure: "Configurer"
+        message: "Message"

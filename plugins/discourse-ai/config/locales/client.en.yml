@@ -245,6 +245,10 @@ en:
           llm_model_id: "LLM model"
           llm_model_default: "Use agent default"
           llm_model_default_with_name: "Use agent default (%{value})"
+          mode: "Mode"
+          mode_description: "Choose whether the agent runs once per input item or once for all of them. Each run is a separate request to the LLM."
+          mode_run_once_for_each_item: "Run once for each item"
+          mode_run_once_for_all_items: "Run once for all items"
           prompt: "Prompt"
           runner_username: "Run as"
           runner_username_tooltip: "User whose permissions are used for upload visibility and AI agent tools. Use system for workflow-owned automation."
@@ -434,17 +438,93 @@ en:
         title: "Translations"
         description: "Automatically translate all content on your forum to the user's preferred language"
         supported_locales: "Supported languages"
-        supported_locales_description: "This site setting also allows visitors to contribute post translations."
         category_scope: "Categories"
-        category_scope_description: "Choose whether automatic translations use all categories, public categories, or selected categories."
+        category_scope_description: "Choose whether automatic translations apply to content in all categories, public categories, or selected categories."
+        cached_results_notice: "Showing cached results from %{relative_time}."
+        model_progress:
+          loading: "Loading translation progress"
+          overview_label: "Translation progress by content type"
+          detail:
+            loading: "Loading %{target} details..."
+            load_error: "%{target} details could not be loaded."
+            retry: "Retry"
+            empty: "No language progress is available."
+            progress_label: "%{translated} of %{total} translated into %{language}"
+            columns:
+              locale: "Locale"
+              translated: "Translated"
+              pending: "Pending"
+              eligible: "Eligible"
+              total: "Total"
+              progress: "Progress"
+            eligible_help: "Content already in this language is excluded."
+            pending_help: "Includes content that still needs language detection."
+          targets:
+            post:
+              title: "Posts"
+              eligible_total:
+                one: "There is %{count} eligible post for translation."
+                other: "There are %{count} eligible posts for translation."
+              translated:
+                one: "%{count} post has been fully translated."
+                other: "%{count} posts have been fully translated."
+              needs_language_detection:
+                one: "%{count} post still needs language detection."
+                other: "%{count} posts still need language detection."
+              all_translated:
+                one: "The eligible post is fully translated."
+                other: "All %{count} eligible posts are fully translated."
+            topic:
+              title: "Topics"
+              eligible_total:
+                one: "There is %{count} eligible topic for translation."
+                other: "There are %{count} eligible topics for translation."
+              translated:
+                one: "%{count} topic has been fully translated."
+                other: "%{count} topics have been fully translated."
+              needs_language_detection:
+                one: "%{count} topic still needs language detection."
+                other: "%{count} topics still need language detection."
+              all_translated:
+                one: "The eligible topic is fully translated."
+                other: "All %{count} eligible topics are fully translated."
+            category:
+              title: "Categories"
+              eligible_total:
+                one: "There is %{count} eligible category for translation."
+                other: "There are %{count} eligible categories for translation."
+              translated:
+                one: "%{count} category has been fully translated."
+                other: "%{count} categories have been fully translated."
+              needs_language_detection:
+                one: "%{count} category still needs language detection."
+                other: "%{count} categories still need language detection."
+              all_translated:
+                one: "The eligible category is fully translated."
+                other: "All %{count} eligible categories are fully translated."
+            tag:
+              title: "Tags"
+              total:
+                one: "There is %{count} tag for translation."
+                other: "There are %{count} tags for translation."
+              translated:
+                one: "%{count} tag has been fully translated."
+                other: "%{count} tags have been fully translated."
+              needs_language_detection:
+                one: "%{count} tag still needs language detection."
+                other: "%{count} tags still need language detection."
+              all_translated:
+                one: "The tag is fully translated."
+                other: "All %{count} tags are fully translated."
         admin_actions:
-          translation_settings: "Translation settings"
-          localization_settings: "Localization settings"
+          translation_settings: "AI settings"
+          localization_settings: "App language settings"
           enable_translations: "Enable automatic translations"
+          enable_translations_disabled: "You must add a supported language to enable translations"
         stats:
           title: "Translation statistics"
           backfill_disabled: "Backfilling is disabled, only new posts will be translated."
-          backfill_message: "<a href='%{settingsUrl}'>Backfill settings</a> are configured to translate all posts after %{date} — this is estimated to take %{eta}."
+          backfill_message: "<a href='%{settingsUrl}'>Backfill settings</a> are configured to translate all posts after %{date}."
           eta_minutes:
             one: "%{count} minute"
             other: "%{count} minutes"
@@ -670,6 +750,10 @@ en:
         allowed_groups: "Allowed groups"
         confirm_delete: "Are you sure you want to delete this agent?"
         new: "New agent"
+        new_group: "New or duplicate agent"
+        duplicate: "Duplicate"
+        duplicate_search: "Duplicate an agent"
+        copy_name: "Copy of %{name}"
         no_agents: "You have not created any agents yet"
         manage_agents: "Manage agents"
         title: "Agents"
@@ -986,8 +1070,8 @@ en:
           anthropic-claude-opus-4-7: "Anthropic's most intelligent model"
           anthropic-claude-sonnet-4-6: "Optimal balance of speed and cost"
           anthropic-claude-haiku-4-5: "Fast and cost-effective"
-          google-gemini-3-1-pro: "Google's most intelligent model"
-          google-gemini-3-flash: "Fast and cost-efficient with multimodal reasoning"
+          google-gemini-3-1-pro-preview: "Google's most intelligent model"
+          google-gemini-3-6-flash: "Fast, frontier-level intelligence for agentic workloads"
           open_ai-gpt-5-6-sol: "OpenAI's frontier model for complex professional work"
           open_ai-gpt-5-6-terra: "Balances intelligence and cost for demanding workloads"
           open_ai-gpt-5-6-luna: "Optimized for cost-sensitive, high-volume workloads"
@@ -1041,7 +1125,8 @@ en:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
+          google: "Google Gemini (Legacy API)"
+          gemini_interactions: "Google Gemini"
           google_vertex_ai: "Google Vertex AI"
           azure: "Azure"
           ollama: "Ollama"
@@ -1076,6 +1161,7 @@ en:
           adaptive_thinking: "Enable adaptive thinking (recommended for Claude 4.6 models)"
           enable_thinking: "Enable thinking (Gemini 2.5 models - uses token budget)"
           thinking_level: "Thinking level (Gemini 3 models - controls reasoning depth)"
+          gemini_interactions_thinking_level: "Thinking level"
           thinking_tokens: "Number of tokens used for thinking"
           reasoning_tokens: "Number of tokens used for reasoning"
           disable_temperature: "Disable temperature (some thinking models don't support temperature)"
@@ -1363,15 +1449,11 @@ en:
           bulk_regen_description: "Choose which type of AI summary to regenerate for the selected topics."
           regenerate_gists_option: "Short summaries (gists)"
           regenerate_summaries_option: "Topic summaries"
-          regenerate_gists_success:
-            one: "Short summary regenerated successfully"
-            other: "%{count} short summaries regenerated successfully"
+          regenerate_gists_started: "Regenerating short summaries…"
           regenerate_gists_error:
             one: "Failed to regenerate short summary"
             other: "Failed to regenerate %{count} short summaries"
-          regenerate_topic_summary_success:
-            one: "Topic summary regenerated successfully"
-            other: "%{count} topic summaries regenerated successfully"
+          regenerate_topic_summaries_started: "Regenerating topic summaries…"
           regenerate_topic_summary_error:
             one: "Failed to regenerate topic summary"
             other: "Failed to regenerate %{count} topic summaries"

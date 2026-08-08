@@ -8,7 +8,7 @@ describe PostSerializer do
   end
 
   context "when post has an event" do
-    let(:user) { Fabricate(:user, admin: true) }
+    let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     let(:topic_1) { Fabricate(:topic, user: user) }
     let(:post_1) { Fabricate(:post, topic: topic_1) }
     let!(:post_event_1) { Fabricate(:event, post: post_1) }

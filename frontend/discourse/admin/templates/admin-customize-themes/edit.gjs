@@ -1,4 +1,3 @@
-import { LinkTo } from "@ember/routing";
 import AdminThemeEditor from "discourse/admin/components/admin-theme-editor";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
@@ -6,34 +5,15 @@ import { i18n } from "discourse-i18n";
 export default <template>
   <div class="current-style {{if @controller.maximized 'maximized'}}">
     <div class="wrapper">
-      <div class="editor-information">
-        <DButton
-          @title="go_back"
-          @action={{@controller.goBack}}
-          @icon="chevron-left"
-          class="btn-default btn-small editor-back-button"
-        />
-
-        <span class="editor-theme-name-wrapper">
-          {{i18n "admin.customize.theme.edit_css_html"}}
-          <LinkTo
-            @route={{@controller.showRouteName}}
-            @model={{@controller.model.id}}
-            @replace={{true}}
-            class="editor-theme-name"
-          >
-            {{@controller.model.name}}
-          </LinkTo>
-        </span>
-      </div>
-
       <AdminThemeEditor
         @theme={{@controller.model}}
         @editRouteName={{@controller.editRouteName}}
+        @showRouteName={{@controller.showRouteName}}
         @currentTargetName={{@controller.currentTargetName}}
         @fieldName={{@controller.fieldName}}
         @fieldAdded={{@controller.fieldAdded}}
         @maximized={{@controller.maximized}}
+        @goBack={{@controller.goBack}}
         @save={{@controller.save}}
         class="editor-container"
       />

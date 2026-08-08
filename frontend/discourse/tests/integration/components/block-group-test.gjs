@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
-import { render } from "@ember/test-helpers";
+import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks";
-import BlockOutlet from "discourse/blocks/block-outlet";
+import BlockOutlet, { _getOutletLayouts } from "discourse/blocks/block-outlet";
 import BlockGroup from "discourse/blocks/builtin/block-group";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import {
@@ -446,6 +446,67 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
     // Verify tab content panels are rendered
     const tabPanels = document.querySelectorAll(".tab-panel");
     assert.strictEqual(tabPanels.length, 3, "three tab panels rendered");
+  });
+
+  test("containerArgs mutations propagate reactively to the parent", async function (assert) {
+    @block("reactive-tabs-container", {
+      container: true,
+      childArgs: {
+        tabName: { type: "string", required: true },
+      },
+    })
+    class ReactiveTabsContainer extends Component {
+      <template>
+        <div class="reactive-tabs">
+          {{#each @children as |child|}}
+            <span class="tab-label" data-tab={{child.containerArgs.tabName}}>
+              {{child.containerArgs.tabName}}
+            </span>
+          {{/each}}
+        </div>
+      </template>
+    }
+
+    @block("reactive-tab-content")
+    class ReactiveTabContent extends Component {
+      <template>
+        <div class="tab-body">Body</div>
+      </template>
+    }
+
+    withPluginApi((api) =>
+      api.renderBlocks("hero-blocks", [
+        {
+          block: ReactiveTabsContainer,
+          children: [
+            {
+              block: ReactiveTabContent,
+              containerArgs: { tabName: "initial" },
+            },
+          ],
+        },
+      ])
+    );
+
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+    assert
+      .dom(".tab-label")
+      .hasAttribute("data-tab", "initial", "initial render shows initial name");
+
+    // Mutate the registered entry's containerArgs in place. `assignStableKeys`
+    // wraps `entry.containerArgs` in a trackedObject Proxy, so this set
+    // dirties the per-key tag the parent's template opened at render time
+    // and triggers a re-render — no layout swap needed.
+    const layoutData = _getOutletLayouts().get("hero-blocks");
+    const containerEntry = layoutData.layout[0];
+    containerEntry.children[0].containerArgs.tabName = "updated";
+
+    await settled();
+
+    assert
+      .dom(".tab-label")
+      .hasAttribute("data-tab", "updated", "DOM reflects the mutation");
   });
 
   test("data-block-id attribute is set when id is provided", async function (assert) {

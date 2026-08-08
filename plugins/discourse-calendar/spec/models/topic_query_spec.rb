@@ -2,7 +2,7 @@
 
 describe TopicQuery do
   describe "sorts events" do
-    fab!(:user) { Fabricate(:user, admin: true) }
+    fab!(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     fab!(:notified_user, :user)
     fab!(:topic_1) { Fabricate(:topic, user: user) }
     fab!(:topic_2) { Fabricate(:topic, user: user) }

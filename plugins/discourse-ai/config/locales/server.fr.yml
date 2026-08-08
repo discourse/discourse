@@ -75,7 +75,6 @@ fr:
     ai_summarization_enabled: "Activer la fonction de synthèse"
     ai_pm_summarization_allowed_groups: "Groupes autorisés à créer et à afficher des résumés dans les MP."
     ai_summary_gists_enabled: "Générez automatiquement de brefs résumés des dernières réponses dans les sujets"
-    ai_summary_backfill_maximum_topics_per_hour: "Nombre de résumés de sujets à compléter par heure."
     ai_bot_enabled: "Activez le module du robot IA."
     ai_bot_allowed_groups: "Lorsque le robot GPT aura accès aux messages privés, il répondra aux membres de ces groupes."
     ai_bot_debugging_allowed_groups: "Autoriser ces groupes à voir un bouton de débogage sur les publications qui affiche la demande et la réponse brutes de l'IA"
@@ -88,7 +87,6 @@ fr:
     ai_discord_app_public_key: "La clé publique de l'application Discord à laquelle vous souhaitez connecter la recherche Discord"
     ai_discord_search_mode: "Sélectionnez le mode de recherche à utiliser pour la recherche Discord"
     ai_discord_allowed_guilds: "Guildes Discord (serveurs) dans lesquelles le robot est autorisé à effectuer des recherches"
-    ai_translation_backfill_max_age_days: "L'âge maximal des publications et sujets à traduire. Les publications et sujets antérieurs à cette date ne seront pas traduits. 0 désactive le remplissage, mais ne désactive pas la traduction des nouvelles publications."
   reviewables:
     reasons:
       flagged_by_toxicity: L'extension IA l'a signalé après l'avoir classé comme toxique.
@@ -427,7 +425,7 @@ fr:
         github_file_content: "Récupérer le contenu des fichiers depuis un dépôt GitHub"
         random_picker: "Choisissez un nombre aléatoire ou un élément aléatoire d'une liste"
         categories: "Répertorier toutes les catégories visibles publiquement sur le forum"
-        delete_topic: "Supprimez un sujet"
+        delete_topic: "Supprimer un sujet"
         search: "Rechercher dans tous les sujets publics sur le forum"
         tags: "Répertorier toutes les étiquettes du forum"
         time: "Trouver l'heure dans différents fuseaux horaires"
@@ -493,32 +491,32 @@ fr:
           raw: "Lors de ma recherche pour %{query}, vous m'avez montré les informations suivantes :\n\n%{context}\n\nPoursuivons la conversation."
       close_topic:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
       unlist_topic:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
       delete_topic:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
       edit_tags:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
       edit_category:
         errors:
-          not_found: "Sujet non trouvé."
-          category_not_found: "Catégorie non trouvée ."
+          not_found: "Sujet introuvable."
+          category_not_found: "Catégorie introuvable."
       set_topic_timer:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
       set_slow_mode:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
       move_posts:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
       assign:
         errors:
-          not_found: "Sujet non trouvé."
+          not_found: "Sujet introuvable."
     reviewables:
       ai_tool_action:
         approve:
@@ -573,17 +571,33 @@ fr:
         choose_model: "Définissez d'abord 'ai embeddings selected model'."
     llm_models:
       missing_provider_param: "%{param} ne peut pas être vide"
+      secret_not_found: "L'identifiant sélectionné n'existe pas."
       bedrock_invalid_url: "Veuillez remplir tous les champs pour utiliser ce modèle."
+      bedrock_missing_auth: "AWS Bedrock nécessite la configuration d'un ID de clé d'accès ou d'un ARN de rôle."
     ai_staff_action_logger:
       updated: "mis à jour"
       set: "défini"
       removed: "supprimé"
+    translation:
+      errors:
+        disabled: "La fonctionnalité de traduction par IA n'est pas entièrement configurée."
+        all_posts_translated: "Toutes les publications de ce sujet sont déjà traduites."
+    llm_credit_allocation:
+      limit_exceeded_user: "Cette communauté a atteint sa limite de crédits IA pour aujourd'hui. Veuillez réessayer dans %{reset_time} ou contactez l'administrateur de votre site pour obtenir plus d'informations."
+      limit_exceeded_admin: "Vous avez atteint votre limite de crédit IA. Veuillez réessayer après %{reset_time}."
     errors:
       quota_exceeded: "Vous avez dépassé le quota pour ce modèle. Veuillez réessayer dans %{relative_time}."
+      quota_required: "Vous devez spécifier le nombre maximal de jetons, d'utilisations ou le coût pour ce modèle."
       no_query_specified: Le paramètre de requête est obligatoire, veuillez le spécifier.
+      no_user_for_agent: Aucun utilisateur n'est associé à l'agent spécifié.
+      agent_not_found: "L'agent spécifié n'existe pas. Vérifiez les paramètres agent_name ou agent_id (anciens : persona_name ou persona_id)."
       no_user_specified: Le nom d'utilisateur ou le paramètre user_unique_id est obligatoire. Veuillez le préciser.
       user_not_found: L'utilisateur spécifié n'existe pas. Vérifiez le paramètre du nom d'utilisateur.
+      agent_disabled: "L'agent spécifié est désactivé. Vérifiez les paramètres agent_name ou agent_id (anciennement : persona_name ou persona_id)."
       user_not_allowed: L'utilisateur n'est pas autorisé à participer au sujet.
+      ambiguous_tool_results: "Spécifiez soit tool_results, soit tool_result, mais pas les deux."
+      invalid_tool_results: "Le paramètre tool_results n'est pas valide : %{details}"
+      too_many_tool_results: "Le paramètre tool_results peut inclure au maximum %{max} éléments."
       prompt_message_length: Le message %{idx} dépasse la limite de 1 000 caractères.
       custom_tool_exists:
         one: "L'outil personnalisé portant le nom %{names} existe déjà."

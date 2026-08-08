@@ -39,6 +39,7 @@
     { "path": "plugins/discourse-templates" },
     { "path": "plugins/discourse-topic-voting" },
     { "path": "plugins/discourse-user-notes" },
+    { "path": "plugins/discourse-wireframe" },
     { "path": "plugins/discourse-zendesk-plugin" },
     { "path": "plugins/footnote" },
     { "path": "plugins/poll" },

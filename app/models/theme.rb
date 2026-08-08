@@ -96,6 +96,7 @@ class Theme < ActiveRecord::Base
   after_create :update_child_components
   before_update :check_editable_attributes, if: :system?
   before_destroy :raise_invalid_parameters, if: :system?
+  after_commit :trigger_theme_destroyed_event, on: :destroy
 
   scope :user_selectable, -> { where("user_selectable OR id = ?", SiteSetting.default_theme_id) }
 
@@ -248,6 +249,12 @@ class Theme < ActiveRecord::Base
     Theme.expire_site_cache!
   end
 
+  # Fired after the destroy transaction commits so external tooling can clean up
+  # records keyed by this theme.
+  def trigger_theme_destroyed_event
+    DiscourseEvent.trigger(:theme_destroyed, self)
+  end
+
   def self.compiler_version
     get_set_cache "compiler_version" do
       dependencies = [
@@ -364,6 +371,16 @@ class Theme < ActiveRecord::Base
 
       all_ids - disabled_ids
     end
+  end
+
+  # Returns `base` if no theme already uses it, otherwise appends the lowest
+  # free ` 2`/` 3`/… suffix — e.g. "My theme (copy)" → "My theme (copy) 2".
+  def self.uniquify_name(base)
+    return base unless Theme.where(name: base).exists?
+
+    suffix = 2
+    suffix += 1 while Theme.where(name: "#{base} #{suffix}").exists?
+    "#{base} #{suffix}"
   end
 
   def set_default!
@@ -542,7 +559,7 @@ class Theme < ActiveRecord::Base
     targets = %i[common_theme mobile_theme desktop_theme]
 
     if with_scheme
-      targets.prepend(:common, :desktop, :mobile, :admin)
+      targets.prepend(:common, :admin)
       targets.append(
         *Discourse.find_plugin_css_assets(
           mobile_view: true,
@@ -750,6 +767,13 @@ class Theme < ActiveRecord::Base
   def internal_translations(preloaded_locale_fields: nil)
     @internal_translations ||=
       translations(internal: true, preloaded_locale_fields: preloaded_locale_fields)
+  end
+
+  # preload and pass `:locale_fields` when iterating themes, to avoid N+1
+  def description(preloaded_locale_fields: locale_fields)
+    internal_translations(preloaded_locale_fields: preloaded_locale_fields)
+      .find { |translation| translation.key == "theme_metadata.description" }
+      &.value
   end
 
   def translations(internal: false, preloaded_locale_fields: nil)

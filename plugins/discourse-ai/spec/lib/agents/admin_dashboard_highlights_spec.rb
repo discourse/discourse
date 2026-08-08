@@ -5,7 +5,6 @@ RSpec.describe DiscourseAi::Agents::AdminDashboardHighlights do
     instance = described_class.new
 
     expect(instance.tools).to eq([])
-    expect(instance.temperature).to eq(0)
     expect(instance.response_format).to eq([{ "key" => "highlight", "type" => "string" }])
   end
 

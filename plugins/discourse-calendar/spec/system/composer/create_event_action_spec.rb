@@ -10,7 +10,6 @@ describe "Composer - Create event action" do
   before do
     SiteSetting.calendar_enabled = true
     SiteSetting.discourse_post_event_enabled = true
-    SiteSetting.enable_events_category_type_setup = true
     DiscourseCalendar::Categories::Types::Events.configure_category(
       events_category,
       guardian: admin.guardian,

@@ -76,6 +76,7 @@
 !/plugins/discourse-cakeday
 !/plugins/discourse-rewind
 !/plugins/discourse-workflows
+!/plugins/discourse-wireframe
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated
@@ -140,6 +141,7 @@ frontend/discourse-i18n/src/index.d.ts.map
 /plugins/discourse-ai/config/eval-llms.local.yml
 
 # AI customization
+/AGENTS.override.md
 /.claude
 /.cursor
 .playwright-mcp

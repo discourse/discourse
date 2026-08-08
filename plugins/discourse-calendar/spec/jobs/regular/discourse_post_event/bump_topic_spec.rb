@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Jobs::DiscoursePostEventBumpTopic do
-  let(:admin_1) { Fabricate(:user, admin: true) }
+  let(:admin_1) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
   let(:topic_1) { Fabricate(:topic, user: admin_1) }
 
   before do

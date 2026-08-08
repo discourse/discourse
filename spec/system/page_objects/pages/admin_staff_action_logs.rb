@@ -24,6 +24,14 @@ module PageObjects
         has_no_css?(log_row_selector(user_history))
       end
 
+      def has_no_injected_detail_element?(user_history)
+        has_no_css?("#{log_row_selector(user_history)} .details img[onerror]")
+      end
+
+      def has_details_text?(user_history, text)
+        has_css?("#{log_row_selector(user_history)} .details", text: text)
+      end
+
       def filter_by_action(action)
         filter = PageObjects::Components::SelectKit.new("#staff-action-logs-action-filter")
         filter.search(I18n.t("admin_js.admin.logs.staff_actions.actions.#{action}"))

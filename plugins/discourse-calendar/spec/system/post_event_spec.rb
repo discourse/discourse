@@ -83,7 +83,7 @@ describe "Post event" do
       find(".d-editor-input").click
 
       expect(composer).to have_value <<~EVENT.strip
-        [event start="2025-06-15 15:00" status="public" timezone="#{timezone}" end="2025-06-15 16:00" reminders="notification.15.minutes"]
+        [event start="2025-06-15 15:00" status=public timezone=#{timezone} end="2025-06-15 16:00" reminders=notification.15.minutes]
         foo
         bar
         [/event]
@@ -120,8 +120,8 @@ describe "Post event" do
       preview.find(".composer-event__all-day-toggle .d-toggle-switch__label").click
       find(".d-editor-input").click
 
-      expect(composer).to have_value(/start="2024-06-01"/)
-      expect(composer).to have_value(/end="2024-06-03"/)
+      expect(composer).to have_value(/start=2024-06-01/)
+      expect(composer).to have_value(/end=2024-06-03/)
     end
 
     context "when showLocalTime is set and the event crosses midnight relative to the viewer",

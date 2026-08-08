@@ -14,7 +14,6 @@ export default {
         api.addSaveableUserOption("chat_enabled");
         api.addSaveableUserOption("chat_quick_reaction_type");
         api.addSaveableUserOption("chat_quick_reactions_custom");
-        api.addSaveableUserOption("chat_send_shortcut");
         api.addSaveableUserOption("chat_separate_sidebar_mode");
         api.addSaveableUserOption("show_thread_title_prompts");
         // Notification settings (rendered on the notifications preferences tab)

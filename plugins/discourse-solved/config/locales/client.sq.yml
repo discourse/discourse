@@ -10,8 +10,6 @@ sq:
       dashboard:
         sections:
           support:
-            filter:
-              all_categories: "Të gjitha kategoritë"
             answerers:
               staff: "Stafi"
               member: "Anëtarë"

@@ -263,3 +263,8 @@ ru:
               description: "Название канала можно найти в настройках плагина Chat Integration."
             provider:
               label: Поставщик
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "Канал"
+        configure: "Настроить"
+        message: "Сообщение"

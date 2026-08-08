@@ -88,17 +88,6 @@ RSpec.describe "User chat preferences" do
     end
   end
 
-  it "can select send shorcut sidebar mode" do
-    user_preferences_chat_page.visit
-    form.field("chat_send_shortcut").select("meta_enter")
-    form.submit
-    user_preferences_chat_page.visit
-
-    expect(
-      form.field("chat_send_shortcut").component.find("input[type='radio'][value='meta_enter']"),
-    ).to be_checked
-  end
-
   it "can select and save separate sidebar mode" do
     user_preferences_chat_page.visit
     form.field("chat_separate_sidebar_mode").select("fullscreen")

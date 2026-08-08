@@ -17,8 +17,6 @@ cs:
               label: "Přijatá řešení"
         sections:
           support:
-            filter:
-              all_categories: "Všechny kategorie"
             answerers:
               staff: "Redakce"
               member: "Členové"

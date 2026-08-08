@@ -29,3 +29,6 @@ bs_BA:
         help: "teme o kojima ste glasali"
     search:
       most_votes: "Većina glasova"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Oznake"

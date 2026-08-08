@@ -50,3 +50,6 @@ nl:
           group_name: "Topicstemgebeurtenis"
           topic_upvote: "Wanneer een gebruiker stemt bij een topic"
           topic_unvote: "Wanneer een gebruiker een stem bij een topic intrekt"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Tags"

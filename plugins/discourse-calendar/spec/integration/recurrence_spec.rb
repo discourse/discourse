@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "discourse_post_event_recurrence" do
-  let(:user_1) { Fabricate(:user, admin: true) }
+  let(:user_1) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
   let(:topic_1) { Fabricate(:topic, user: user_1) }
   let(:post_1) { Fabricate(:post, topic: topic_1) }
   let(:starts_at) { Time.zone.parse("2020-09-10 19:00") }

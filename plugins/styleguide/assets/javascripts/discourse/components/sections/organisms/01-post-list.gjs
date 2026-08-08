@@ -1,48 +1,22 @@
-import Component from "@glimmer/component";
-import PostList from "discourse/components/post-list";
 import { i18n } from "discourse-i18n";
+import PostListExample from "../../examples/organisms/post-list";
+import postListSource from "../../examples/organisms/post-list?source=file";
+import PostListEmptyExample from "../../examples/organisms/post-list-empty";
+import postListEmptySource from "../../examples/organisms/post-list-empty?source=file";
 import StyleguideExample from "../../styleguide-example";
 
-export default class StyleguidePostList extends Component {
-  get emptyPostListCode() {
-    return `
-import PostList from "discourse/components/post-list";
+export default <template>
+  <StyleguideExample
+    @title={{i18n "styleguide.sections.post_list.empty_example"}}
+    @code={{postListEmptySource}}
+  >
+    <PostListEmptyExample />
+  </StyleguideExample>
 
-<template>
-  <PostList @posts="" @additionalItemClasses="styleguide-post-list-item" />
+  <StyleguideExample
+    @title={{i18n "styleguide.sections.post_list.populated_example"}}
+    @code={{postListSource}}
+  >
+    <PostListExample @posts={{@dummy.postList}} />
+  </StyleguideExample>
 </template>
-    `;
-  }
-
-  get populatedPostListCode() {
-    return `
-import PostList from "discourse/components/post-list";
-
-<template>
-  <PostList
-    @posts={{@dummy.postList}}
-    @additionalItemClasses="styleguide-post-list-item"
-  />
-</template>
-    `;
-  }
-
-  <template>
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.post_list.empty_example"}}
-      @code={{this.emptyPostListCode}}
-    >
-      <PostList @posts="" @additionalItemClasses="styleguide-post-list-item" />
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.post_list.populated_example"}}
-      @code={{this.populatedPostListCode}}
-    >
-      <PostList
-        @posts={{@dummy.postList}}
-        @additionalItemClasses="styleguide-post-list-item"
-      />
-    </StyleguideExample>
-  </template>
-}

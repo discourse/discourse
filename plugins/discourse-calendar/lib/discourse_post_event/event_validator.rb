@@ -38,7 +38,7 @@ module DiscoursePostEvent
       return false unless can_invite_groups?(extracted_event)
 
       if @post.acting_user && @post.event
-        if !@post.acting_user.can_act_on_discourse_post_event?(@post.event)
+        if !@post.acting_user.guardian.can_act_on_discourse_post_event?(@post.event)
           @post.errors.add(
             :base,
             I18n.t(
@@ -48,7 +48,7 @@ module DiscoursePostEvent
           return false
         end
       else
-        if !@post.acting_user || !@post.acting_user.can_create_discourse_post_event?
+        if !@post.acting_user.guardian.can_create_discourse_post_event?
           @post.errors.add(
             :base,
             I18n.t(
@@ -140,7 +140,6 @@ module DiscoursePostEvent
     private
 
     def can_invite_groups?(event)
-      guardian = Guardian.new(@post.acting_user)
       return true unless event[:"allowed-groups"]
 
       event[:"allowed-groups"]
@@ -153,7 +152,7 @@ module DiscoursePostEvent
               nil
             end
 
-          if !group || !guardian.can_see_group?(group)
+          if !group || !@post.acting_user.guardian.can_see_group?(group)
             @post.errors.add(
               :base,
               I18n.t("discourse_post_event.errors.models.event.invalid_allowed_groups"),
@@ -161,7 +160,7 @@ module DiscoursePostEvent
             return false
           end
 
-          if !guardian.can_see_group_members?(group)
+          if !@post.acting_user.guardian.can_see_group_members?(group)
             @post.errors.add(
               :base,
               I18n.t(

@@ -21,8 +21,10 @@ module DiscourseWorkflows
       capabilities: {
       },
       output_contracts: [],
+      output_schema_resolver: nil,
       palette_visible: true,
       available: true,
+      previewable: false,
     }.freeze
 
     def self.inherited(subclass)
@@ -71,6 +73,10 @@ module DiscourseWorkflows
       description_value(:palette_visible)
     end
 
+    def self.previewable?
+      description_value(:previewable)
+    end
+
     def self.available?
       description_value(:available)
     end
@@ -78,15 +84,15 @@ module DiscourseWorkflows
     def self.unavailable_reason_key(configuration = nil)
       return nil unless description.key?(:unavailable_reason_key)
 
-      description_value(:unavailable_reason_key, configuration: configuration)
+      description_value(:unavailable_reason_key, configuration:)
     end
 
     def self.inputs(configuration = {})
-      description_value(:inputs, configuration: configuration)
+      description_value(:inputs, configuration:)
     end
 
     def self.outputs(configuration = {})
-      description_value(:outputs, configuration: configuration)
+      description_value(:outputs, configuration:)
     end
 
     def self.properties
@@ -98,7 +104,7 @@ module DiscourseWorkflows
     end
 
     def self.webhooks(configuration = {})
-      Array(description_value(:webhooks, configuration: configuration)).map do |webhook|
+      Array(description_value(:webhooks, configuration:)).map do |webhook|
         webhook.deep_symbolize_keys
       end
     end
@@ -118,13 +124,20 @@ module DiscourseWorkflows
     def self.output_schemas(configuration = {}, input_schemas: [])
       input_schema = Schema.union(*input_schemas.compact)
 
-      active_output_contracts(configuration).map do |contract|
-        Schema.resolve(
-          contract.fetch(:schema),
-          mode: contract.fetch(:mode),
-          input_schema: input_schema,
-        )
+      active_output_contracts(configuration).map.with_index do |candidates, index|
+        resolved =
+          Schema.union(
+            *candidates.map do |contract|
+              Schema.resolve(contract.fetch(:schema), mode: contract.fetch(:mode), input_schema:)
+            end,
+          )
+
+        Schema.augment(resolved, active_output_extensions(index, configuration))
       end
+    end
+
+    def self.output_schema_resolver
+      description_value(:output_schema_resolver)
     end
 
     def self.output_contracts
@@ -145,18 +158,48 @@ module DiscourseWorkflows
     EMPTY_OUTPUT_CONTRACT = { schema: {}, mode: :replace, display_options: {} }.freeze
 
     def self.active_output_contracts(configuration = {})
-      output_contracts.map do |contract|
-        active =
-          contract
-            .fetch(:variants)
-            .find { |variant| Schema.visible?(variant.fetch(:display_options), configuration) }
-        active ||= contract.except(:variants) if Schema.visible?(
-          contract.fetch(:display_options),
-          configuration,
-        )
-        active || EMPTY_OUTPUT_CONTRACT
-      end
+      output_contracts.map { |contract| contract_candidates(contract, configuration) }
     end
+
+    def self.active_output_extensions(output_index, configuration = {})
+      contract = output_contracts[output_index]
+      return [] if contract.nil?
+
+      contract
+        .fetch(:extensions)
+        .select { |extension| Schema.visible?(extension.fetch(:display_options), configuration) }
+        .map { |extension| extension.fetch(:schema) }
+    end
+
+    def self.contract_candidates(contract, configuration)
+      candidates = []
+
+      contract
+        .fetch(:variants)
+        .each do |variant|
+          state = Schema.display_state(variant.fetch(:display_options), configuration)
+          next if state == :hidden
+
+          candidates << variant
+          # Nothing after a definite match can be picked at runtime.
+          return candidates if state == :visible
+        end
+
+      if Schema.visible?(contract.fetch(:display_options), configuration)
+        candidates << contract.except(:variants)
+      end
+      # An unknown schema absorbs the union of everything it contends with, so
+      # drop it rather than let it erase what the others declare.
+      candidates.reject! { |candidate| unknown_contract?(candidate) }
+
+      candidates.presence || [EMPTY_OUTPUT_CONTRACT]
+    end
+    private_class_method :contract_candidates
+
+    def self.unknown_contract?(contract)
+      contract.fetch(:mode) == :replace && Schema.unknown?(contract.fetch(:schema))
+    end
+    private_class_method :unknown_contract?
 
     def self.event_name
       Array(description[:events]).first
@@ -196,6 +239,10 @@ module DiscourseWorkflows
           Array(contract[:variants]).map do |variant|
             normalize_contract_fields(variant.deep_symbolize_keys)
           end,
+        extensions:
+          Array(contract[:extensions]).map do |extension|
+            normalize_contract_fields(extension.deep_symbolize_keys)
+          end,
       )
     end
     private_class_method :normalize_output_contract
@@ -208,7 +255,7 @@ module DiscourseWorkflows
 
       {
         schema: Schema.normalize(contract.fetch(:schema, {})),
-        mode: mode,
+        mode:,
         display_options: contract.fetch(:display_options, {}),
       }
     end
@@ -221,10 +268,69 @@ module DiscourseWorkflows
         .filter_map { |name| name.strip.presence }
     end
 
+    def self.normalize_category_ids(value)
+      Array.wrap(value).filter_map { |entry| entry.to_s.strip.presence&.to_i }.uniq
+    end
+
+    # TODO JOFFREY (01-2027): drop the category_id fallback once the post_migrate
+    # stripping the legacy key has been promoted.
+    def self.category_ids_parameter(trigger_ctx)
+      value = trigger_ctx.get_node_parameter("category_ids")
+      value = trigger_ctx.get_node_parameter("category_id") if value.nil?
+      normalize_category_ids(value)
+    end
+
+    def self.expand_subcategory_ids(category_ids)
+      category_ids.flat_map { |id| ::Category.subcategory_ids(id) }.uniq
+    end
+
+    def self.matches_category_ids?(topic_category_id, category_ids, include_subcategories: true)
+      return true if category_ids.empty?
+
+      category_ids = expand_subcategory_ids(category_ids) if include_subcategories != false
+      category_ids.include?(topic_category_id)
+    end
+
+    def self.matches_user_groups?(user, group_ids)
+      raw_group_ids = Array.wrap(group_ids).reject(&:blank?)
+      return true if raw_group_ids.empty?
+
+      group_ids =
+        raw_group_ids.filter_map do |group_id|
+          value = group_id.to_s
+          value.to_i if value.match?(/\A\d+\z/)
+        end
+      group_ids.present? && !!user&.in_any_groups?(group_ids)
+    end
+
+    def self.matches_reviewable_types?(reviewable, reviewable_types)
+      reviewable_types = Array.wrap(reviewable_types).compact_blank
+      reviewable_types.empty? || reviewable_types.include?(reviewable.class.sti_name)
+    end
+
+    def self.reviewable_type_options
+      Reviewable
+        .types
+        .uniq(&:sti_name)
+        .sort_by(&:name)
+        .map { |klass| { id: klass.sti_name, name: klass.name.demodulize.underscore.humanize } }
+    end
+
     def self.trust_level_options
       TrustLevel.levels.map do |name, level|
         { value: level.to_s, label_key: "trust_levels.names.#{name}" }
       end
+    end
+
+    def self.expression_value?(value)
+      Schema.expression_value?(value)
+    end
+
+    def self.validate_timezone_configuration(configuration, errors)
+      timezone = (configuration || {}).deep_stringify_keys["timezone"].presence
+      return if timezone.nil? || expression_value?(timezone) || WorkflowTimezone.valid?(timezone)
+
+      errors.add(:base, I18n.t("discourse_workflows.errors.invalid_timezone", timezone: timezone))
     end
 
     def initialize(**)
@@ -260,6 +366,50 @@ module DiscourseWorkflows
       self.class.normalize_tag_names(value)
     end
 
+    def category_ids_parameter(trigger_ctx)
+      self.class.category_ids_parameter(trigger_ctx)
+    end
+
+    def matches_category_ids?(topic_category_id, category_ids, include_subcategories: true)
+      self.class.matches_category_ids?(topic_category_id, category_ids, include_subcategories:)
+    end
+
+    def resolve_timezone(exec_ctx, item_index)
+      timezone = exec_ctx.get_node_parameter("timezone", item_index, default: nil).to_s.presence
+      return exec_ctx.get_timezone if timezone.nil?
+
+      if !WorkflowTimezone.valid?(timezone)
+        raise_node_error!(
+          I18n.t("discourse_workflows.errors.invalid_timezone", timezone: timezone),
+          item_index: item_index,
+        )
+      end
+
+      timezone
+    end
+
+    def matches_user_groups?(user, group_ids)
+      self.class.matches_user_groups?(user, group_ids)
+    end
+
+    def matches_reviewable_types?(reviewable, reviewable_types)
+      self.class.matches_reviewable_types?(reviewable, reviewable_types)
+    end
+
+    def reviewable_data(reviewable)
+      {
+        id: reviewable.id,
+        type: reviewable.type,
+        status: reviewable.status,
+        target_type: reviewable.target_type,
+        target_id: reviewable.target_id,
+        topic_id: reviewable.topic_id,
+        category_id: reviewable.category_id,
+        score: reviewable.score,
+        created_at: reviewable.created_at&.iso8601,
+      }
+    end
+
     def wrap(data, paired_item: nil)
       Item.wrap(data, paired_item:)
     end
@@ -282,22 +432,26 @@ module DiscourseWorkflows
     )
       DiscourseWorkflows::Executor::NodeExecutionContext.serialize_post(
         post,
-        guardian: guardian,
-        include_raw: include_raw,
-        include_cooked: include_cooked,
+        guardian:,
+        include_raw:,
+        include_cooked:,
       )
     end
 
     def serialize_topic(topic, guardian: Discourse.system_user.guardian, custom_field_names: [])
       DiscourseWorkflows::Executor::NodeExecutionContext.serialize_topic(
         topic,
-        guardian: guardian,
-        custom_field_names: custom_field_names,
+        guardian:,
+        custom_field_names:,
       )
     end
 
+    def topic_data(topic, scope: Discourse.system_user.guardian)
+      serialize_record(topic, DiscourseWorkflows::TopicListItemSerializer, scope:)
+    end
+
     def serialize_user(user, guardian: Discourse.system_user.guardian)
-      DiscourseWorkflows::Executor::NodeExecutionContext.serialize_user(user, guardian: guardian)
+      DiscourseWorkflows::Executor::NodeExecutionContext.serialize_user(user, guardian:)
     end
 
     def with_paired_item(item, paired_item)

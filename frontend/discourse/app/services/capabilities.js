@@ -21,6 +21,15 @@ class _Capabilities {
   isWinphone = ua.includes("Windows Phone");
   isIpadOS = ua.includes("Mac OS") && !/iPhone|iPod/.test(ua) && this.touch;
   isIOS = (/iPhone|iPod/.test(ua) || this.isIpadOS) && !window.MSStream;
+  // iPadOS Safari masquerades as desktop macOS (frozen "Mac OS X 10_15_7"
+  // token); Safari's Version/ token tracks the iOS version there instead.
+  iosMajorVersion = this.isIOS
+    ? parseInt(
+        ua.match(/(?:iPhone|iPad|iPod).*? OS (\d+)_/)?.[1] ??
+          ua.match(/Version\/(\d+)/)?.[1],
+        10
+      ) || null
+    : null;
   isApple =
     APPLE_NAVIGATOR_PLATFORMS.test(navigator.platform) ||
     (navigator.userAgentData &&

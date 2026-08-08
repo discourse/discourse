@@ -23,7 +23,6 @@ export const CHAT_ATTRS = [
   "show_thread_title_prompts",
   "chat_email_frequency",
   "chat_separate_sidebar_mode",
-  "chat_send_shortcut",
   "chat_quick_reaction_type",
   "chat_quick_reactions_custom",
 ];
@@ -34,8 +33,6 @@ export const HEADER_INDICATOR_PREFERENCE_NEVER = "never";
 export const HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS = "dm_and_mentions";
 export const HEADER_INDICATOR_PREFERENCE_ALL_NEW = "all_new";
 export const HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS = "only_mentions";
-export const CHAT_SEND_SHORTCUT_ENTER = "enter";
-export const CHAT_SEND_SHORTCUT_META_ENTER = "meta_enter";
 export const CHAT_QUICK_REACTION_TYPE_FREQUENT = "frequent";
 export const CHAT_QUICK_REACTION_TYPE_CUSTOM = "custom";
 export const CHAT_SEPARATE_SIDEBAR_MODE_ALWAYS = "always";

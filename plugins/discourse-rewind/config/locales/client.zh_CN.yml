@@ -84,7 +84,7 @@ zh_CN:
         ai_usage:
           title: AI 使用
           total_requests: 请求总数
-          total_tokens: 词元总数
+          total_tokens: token 总数
           success_rate: 成功率
           favorite_features: 使用最多的功能
           favorite_models: 最常用的 AI 模型

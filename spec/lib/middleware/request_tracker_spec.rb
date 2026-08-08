@@ -331,7 +331,7 @@ RSpec.describe Middleware::RequestTracker do
         Middleware::RequestTracker.log_request(data)
       end
 
-      it "counts beacon pageview with embed flag as page_view_embed" do
+      it "counts embed views from the beacon instead of the piggyback when beacons are enabled" do
         SiteSetting.dashboard_improvements = true
         SiteSetting.trigger_browser_pageview_events = true
         body = {
@@ -352,10 +352,19 @@ RSpec.describe Middleware::RequestTracker do
             0.1,
           )
         Middleware::RequestTracker.log_request(data)
+
+        piggyback_data =
+          Middleware::RequestTracker.get_data(
+            env("HTTP_DISCOURSE_TRACK_VIEW" => "1", "HTTP_DISCOURSE_TRACK_VIEW_EMBED" => "true"),
+            ["200", {}],
+            0.1,
+          )
+        Middleware::RequestTracker.log_request(piggyback_data)
         CachedCounting.flush
 
         expect(data[:is_embed]).to eq(true)
-        expect(ApplicationRequest.page_view_embed.first.count).to eq(1)
+        expect(piggyback_data[:is_embed]).to eq(true)
+        expect(ApplicationRequest.page_view_embed.sum(:count)).to eq(1)
         expect(ApplicationRequest.page_view_anon_browser_beacon.sum(:count)).to eq(0)
       end
 
@@ -1390,6 +1399,46 @@ RSpec.describe Middleware::RequestTracker do
         expect(status).to eq(200)
 
         status, _ = middleware.call(env2)
+        expect(status).to eq(200)
+      end
+    end
+
+    describe "health check rate limits" do
+      def health_check_env(ip, subfolder: nil)
+        request_env = env(:path => "#{subfolder}/srv/status", "REMOTE_ADDR" => ip)
+        request_env.merge!("SCRIPT_NAME" => subfolder, "PATH_INFO" => "/srv/status") if subfolder
+        request_env
+      end
+
+      before do
+        global_setting :max_reqs_per_ip_per_10_seconds, 1
+        global_setting :max_reqs_per_ip_mode, "block"
+      end
+
+      it "gives each backend its own budget in subfolder installs" do
+        Discourse.stubs(:os_hostname).returns("backend-1")
+        status, _ = middleware.call(health_check_env("1.2.3.4", subfolder: "/forum"))
+        expect(status).to eq(200)
+
+        Discourse.stubs(:os_hostname).returns("backend-2")
+        status, _ = middleware.call(health_check_env("1.2.3.4", subfolder: "/forum"))
+        expect(status).to eq(200)
+
+        Discourse.stubs(:os_hostname).returns("backend-1")
+        status, headers = middleware.call(health_check_env("1.2.3.4", subfolder: "/forum"))
+        expect(status).to eq(429)
+        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("health_check_10_secs_limit")
+      end
+
+      it "keeps other paths on a separate rate limit budget" do
+        status, _ = middleware.call(health_check_env("1.2.3.4"))
+        expect(status).to eq(200)
+
+        status, headers = middleware.call(health_check_env("1.2.3.4"))
+        expect(status).to eq(429)
+        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("health_check_10_secs_limit")
+
+        status, _ = middleware.call(env("REMOTE_ADDR" => "1.2.3.4"))
         expect(status).to eq(200)
       end
     end

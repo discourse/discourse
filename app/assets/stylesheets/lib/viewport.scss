@@ -1,35 +1,21 @@
-@use "sass:map";
+@use "breakpoints";
 
-$breakpoints: (
-  sm: 40rem,
-  md: 48rem,
-  lg: 64rem,
-  xl: 80rem,
-  2xl: 96rem,
-);
-
-@function _get-breakpoint($bp) {
-  @if not map.has-key($breakpoints, $bp) {
-    @error "Invalid breakpoint: #{$bp}";
-  }
-
-  @return map.get($breakpoints, $bp);
-}
+$breakpoints: breakpoints.$breakpoints;
 
 @mixin from($bp) {
-  @media (width >= #{_get-breakpoint($bp)}) {
+  @media (width >= #{breakpoints.get($bp)}) {
     @content;
   }
 }
 
 @mixin until($bp) {
-  @media (width < #{_get-breakpoint($bp)}) {
+  @media (width < #{breakpoints.get($bp)}) {
     @content;
   }
 }
 
 @mixin between($from, $until) {
-  @media (#{_get-breakpoint($from)} <= width < #{_get-breakpoint($until)}) {
+  @media (#{breakpoints.get($from)} <= width < #{breakpoints.get($until)}) {
     @content;
   }
 }

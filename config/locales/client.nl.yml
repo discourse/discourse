@@ -847,6 +847,8 @@ nl:
         email: "E-mailadres"
         name: "Naam"
         fields: "Velden"
+        silence_reason: "Reden van dempen"
+        penalty_forever: "Voor altijd"
         reject_reason: "Reden"
         scrubbed_by: "Record gescrubd door"
         scrubbed_reason: "Reden"
@@ -1646,7 +1648,6 @@ nl:
       external_links_in_new_tab: "Alle externe links openen op een nieuw tabblad"
       enable_quoting: "Antwoorden met citaat inschakelen voor gemarkeerde tekst"
       enable_smart_lists: "Schakel slimme lijsten in bij schrijven in de editor"
-      enable_defer: "Als gelezen markeren van topics inschakelen"
       enable_markdown_monospace_font: "Gebruik een monospace lettertype in de Markdown-modus van de editor"
       experimental_sidebar:
         enable: "Zijbalk inschakelen"
@@ -2096,7 +2097,7 @@ nl:
         default: "(standaard)"
         any: "alle"
       homepage:
-        default: "(standaard)"
+        default: "Standaard"
       password_confirmation:
         title: "Wachtwoord opnieuw"
       invite_code:
@@ -2140,6 +2141,9 @@ nl:
         contextual: "Nieuwe pagina-inhoud"
       bookmark_after_notification:
         title: "Nadat een herinneringsmelding voor een bladwijzer is verzonden:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Melding sturen bij like"
         always: "Altijd"
@@ -2301,16 +2305,20 @@ nl:
           member_title: "Leden uitnodigen"
           sent_title: "Uitnodiging gestuurd"
           member_tab: "Leden"
-          admin_tab: "Beheerders"
+          admin_tab: "Medewerker"
+          staff_role_admin: "Beheerder"
+          staff_role_moderator: "Moderator"
           admin_email_label: "E-mailadres"
           email_placeholder: "naam@voorbeeld.com"
           invite_by_email: "E-mailadres"
           restrict_domain: "Beperken tot domein"
-          more_options: "Meer opties"
+          create_and_send: "Sturen"
+          create_and_copy: "Link kopiëren"
           update: "Bijwerken"
           summary:
             role_member: "Lid"
             role_admin: "Beheerder"
+            role_moderator: "Moderator"
             method: "Delen"
             method_email: "E-mailadres"
             restriction: "Beperkt tot"
@@ -2318,7 +2326,7 @@ nl:
             expires: "Verloopt"
             topic: "Topic"
             groups: "Groepen"
-            edit: "Uitnodiging bewerken"
+            edit: "Bewerken"
         bulk_invite:
           none: "Geen uitnodigingen om weer te geven op deze pagina."
           text: "Bulkuitnodiging"
@@ -2918,7 +2926,7 @@ nl:
     filter_input:
       clear: "Filter wissen"
     filter_controls:
-      reset: "Filter resetten"
+      reset: "Resetten"
       toggle: "Vervolgkeuzemenufilters in-/uitschakelen"
     d_icon_grid_picker:
       select_icon: "Selecteer pictogram"
@@ -3059,7 +3067,6 @@ nl:
       italic_label: "I"
       italic_title: "Cursief"
       italic_text: "Cursieve tekst"
-      heading_title: "Koppen"
       heading_level_n: "Kop %{levelNumber}"
       heading_level_n_title: "Kop %{levelNumber}"
       heading_level_paragraph: "Alinea"
@@ -5421,6 +5428,10 @@ nl:
           public: "Zichtbaar voor iedereen"
           always_public: "Content in deze sectie is altijd openbaar"
           more_menu: "Menu Meer"
+          localizations:
+            locale: "Taal"
+            title_label: "Sectietitel"
+            remove_language: "Verwijderen"
           links:
             add: "Nog een link toevoegen"
             delete: "Link verwijderen"
@@ -6379,7 +6390,6 @@ nl:
               posts: "Berichten"
               share: "Delen"
             whos_posting:
-              all_categories: "Alle categorieën"
               staff: "Medewerker"
             trust_level_pipeline:
               trust_levels:
@@ -7108,6 +7118,8 @@ nl:
         sidebar: "Zijbalk"
         header_dropdown: "Vervolgkeuzelijst kop"
         legacy: "Verouderd"
+      duplicate_topic_titles:
+        allowed: "Toegestaan"
       backups:
         title: "Back-ups"
         files_title: "Back-upbestanden"
@@ -7351,7 +7363,6 @@ nl:
           finish_install: "Thema-installatie voltooien"
           last_attempt: "Installatieproces is niet voltooid, laatste poging:"
           remote_branch: "Branchnaam (optioneel)"
-          public_key: "De volgende openbare sleutel toegang tot de repo verlenen:"
           install: "Installeren"
           installed: "Geïnstalleerd"
           install_popular: "Populair"
@@ -8715,6 +8726,7 @@ nl:
         uploading: "Uploaden…"
         name: "Naam"
         group: "Groep"
+        all_groups: "Alle groepen"
         created_by: "Gemaakt door"
         image: "Afbeelding"
         alt: "voorbeeld van aangepaste emoji"

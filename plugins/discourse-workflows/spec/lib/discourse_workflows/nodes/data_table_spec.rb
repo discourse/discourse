@@ -35,7 +35,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
   end
 
   describe ".load_options_context" do
-    def load_options(filter: nil)
+    subject(:options) do
       context =
         DiscourseWorkflows::LoadOptionsContext.new(
           method_name: "data_tables",
@@ -46,21 +46,24 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       described_class.load_options_context(context)
     end
 
+    let(:filter) { nil }
+
     it "marks reserved columns" do
-      tables = load_options
-      table_meta = tables.find { |dt| dt[:id] == data_table.id }
+      table_meta = options.find { |dt| dt[:id] == data_table.id }
       column_names_reserved = table_meta[:columns].select { |c| c[:reserved] }.map { |c| c[:name] }
 
       expect(column_names_reserved).to contain_exactly("id", "created_at", "updated_at")
       expect(table_meta[:columns].find { |c| c[:name] == "email" }).not_to have_key(:reserved)
     end
 
-    it "filters data tables by the filter term" do
-      Fabricate(:discourse_workflows_data_table, name: "projects")
+    context "with a filter term" do
+      let(:filter) { "cont" }
 
-      expect(load_options(filter: "cont").map { |table| table[:id] }).to contain_exactly(
-        data_table.id,
-      )
+      it "filters data tables" do
+        Fabricate(:discourse_workflows_data_table, name: "projects")
+
+        expect(options.map { |table| table[:id] }).to contain_exactly(data_table.id)
+      end
     end
   end
 

@@ -64,6 +64,8 @@ ar:
       schema:
         title: "مخطط قاعدة البيانات"
         filter: "بحث..."
+        hide: "إخفاء المخطط"
+        show: "إظهار المخطط"
         sensitive: "قد تتضمَّن محتويات هذا العمود معلومات حساسة أو سرية بشكلٍ خاص. يُرجى توخي الحذر عند استخدام محتويات هذا العمود."
       types:
         bool:
@@ -80,7 +82,13 @@ ar:
       sql_label: "SQL"
       chart:
         form:
+          label: "نوع الرسم البياني"
+          line: "خطي"
           bar: "شريط"
+          stacked: "أعمدة مكدَّسة"
+          dual_axis: "محور مزدوج"
+        tooltip:
+          total: "الإجمالي: %{count}"
       others_dirty: "يحتوي الاستعلام على تغييرات غير محفوظة سيتم فقدها إذا انتقلت بعيدًا."
       run_time: "اكتمل الاستعلام في %{value} مللي ثانية."
       cached_result_notice: "عرض النتائج المخزنة مؤقتًا منذ %{relative_time}"
@@ -126,12 +134,27 @@ ar:
             data_explorer:
               run_queries: "تشغيل استعلامات مستكشف البيانات. يمكنك تقييد مفتاح واجهة برمجة التطبيقات (API) إلى مجموعة من الاستعلامات عن طريق تحديد معرِّفات الاستعلامات."
     discourse_workflows:
+      node_unavailable:
+        requires_data_explorer: "يتطلَّب تفعيل المكوِّن الإضافي \"مستكشف البيانات\""
       nodes:
         "action:sql": "مستكشف البيانات"
+      node_descriptions:
+        "action:sql": "شغِّل استعلام SQL للقراءة فقط على قاعدة البيانات"
       sql:
+        operation: "العملية"
+        operation_description: "كيفية تشغيل الاستعلام"
         queries: "الاستعلامات"
+        raw: "SQL خام"
         query_id: "استعلام"
+        query_id_description: "حدِّد استعلامًا محفوظًا لتشغيله"
+        query_params: "معلمات الاستعلام"
+        query_params_description: "املأ المعلمات للاستعلام المحدَّد"
+        query: "استعلام SQL"
+        query_description: "اكتب استعلام SQL للقراءة فقط. أعلِن المعلمات باستخدام صيغة \"مستكشف البيانات\"، ثم عيِّن قيمها أدناه. ⭐⭐⭐"
+        params: "معلمات الاستعلام"
+        params_description: "يمكن استخدام المعلمات بصيغة :my_param في استعلام SQL."
         add_param: "إضافة معلمة"
+        param_name: "المعلمة"
         param_value: "القيمة"
         output:
           results: "النتائج"

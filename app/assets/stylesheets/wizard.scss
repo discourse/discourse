@@ -116,9 +116,18 @@ body.wizard {
     #wizard-main {
       position: fixed;
       inset: 0;
-      justify-content: safe center;
+
+      // inset must size the box alone; height + padding on a content-box
+      // element pushes it past the viewport and skews centering
+      height: auto;
       padding: 1.5rem;
       overflow: auto;
+    }
+
+    // auto margins center the step when short, but unlike justify-content:
+    // center keep the top reachable when a tall step overflows
+    .wizard-container__step {
+      margin-block: auto;
     }
 
     #wizard-main::after {
@@ -147,7 +156,6 @@ body.wizard {
   background-color: var(--secondary);
   box-shadow: 0 10px 30px light-dark(rgb(123, 95, 226, 0.15), transparent);
   box-sizing: border-box;
-  margin: 1em auto;
   border-radius: 16px;
   padding: 3em;
 
@@ -156,7 +164,6 @@ body.wizard {
   }
 
   &__step {
-    margin-top: 1em;
     max-width: 700px;
     width: 100%;
 

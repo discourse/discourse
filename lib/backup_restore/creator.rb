@@ -203,14 +203,11 @@ module BackupRestore
 
       archive_filename = File.join(@archive_directory, @backup_filename)
 
-      Discourse::Utils.execute_command(
-        "mv",
-        @dump_filename,
-        archive_filename,
-        failure_message: "Failed to move database dump file.",
-      )
+      FileUtils.mv(@dump_filename, archive_filename)
 
       remove_tmp_directory
+    rescue SystemCallError => error
+      raise "Failed to move database dump file.\n#{error.message}"
     end
 
     def create_archive
@@ -219,8 +216,10 @@ module BackupRestore
       tar_filename = "#{@archive_basename}.tar"
 
       log "Making sure archive does not already exist..."
-      Discourse::Utils.execute_command("rm", "-f", tar_filename)
-      Discourse::Utils.execute_command("rm", "-f", "#{tar_filename}.gz")
+      [tar_filename, "#{tar_filename}.gz"].each do |filename|
+        File.delete(filename)
+      rescue Errno::ENOENT
+      end
 
       log "Creating empty archive..."
       Discourse::Utils.execute_command(

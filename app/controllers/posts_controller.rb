@@ -174,6 +174,7 @@ class PostsController < ApplicationController
   def raw_email
     params.require(:id)
     post = Post.unscoped.find(params[:id].to_i)
+    guardian.ensure_can_see!(post)
     guardian.ensure_can_view_raw_email!(post)
     text, html = Email.extract_parts(post.raw_email)
     render json: { raw_email: post.raw_email, text_part: text, html_part: html }
@@ -728,9 +729,16 @@ class PostsController < ApplicationController
     guardian.ensure_can_change_post_type!
     post = find_post_from_params
     params.require(:post_type)
-    raise Discourse::InvalidParameters.new(:post_type) if Post.types[params[:post_type].to_i].blank?
+    post_type = params[:post_type].to_i
+    unless PostRevisor.valid_post_type?(post_type)
+      raise Discourse::InvalidParameters.new(:post_type)
+    end
 
-    post.revise(current_user, post_type: params[:post_type].to_i)
+    if post.is_first_post? && post_type == Post.types[:whisper]
+      raise Discourse::InvalidParameters.new(:post_type)
+    end
+
+    post.revise(current_user, post_type: post_type)
 
     render body: nil
   end
@@ -1095,6 +1103,7 @@ class PostsController < ApplicationController
       post_revision = PostRevision.find_by(post_id: post.id, number: version + 1)
       if post_revision
         guardian.ensure_can_see!(post_revision)
+        guardian.ensure_can_view_post_version!(post, version)
         post.revert_to(version)
       end
     end

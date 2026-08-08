@@ -71,6 +71,20 @@ nb_NO:
       translations:
         title: "Oversettelser"
         category_scope: "Kategorier"
+        model_progress:
+          detail:
+            columns:
+              pending: "Venter"
+              total: "Totalt"
+          targets:
+            post:
+              title: "Innlegg"
+            topic:
+              title: "Emner"
+            category:
+              title: "Kategorier"
+            tag:
+              title: "Stikkord"
         stats:
           eta_minutes:
             one: "%{count} minutt"
@@ -178,7 +192,6 @@ nb_NO:
         tests:
           success: "Suksess!"
         providers:
-          google: "Google"
           fake: "Egendefinert"
       ai_helper:
         context_menu:

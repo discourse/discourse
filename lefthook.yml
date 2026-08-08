@@ -37,9 +37,9 @@ pre-commit:
       run: pnpm pprettier --list-different {staged_files}
     eslint:
       glob: &eslint_glob
-        - "frontend/**/*.{js,gjs,ts,gts,mts,cts}"
-        - "plugins/**/*.{js,gjs,ts,gts,mts,cts}"
-        - "themes/**/*.{js,gjs,ts,gts,mts,cts}"
+        - "frontend/**/*.{js,gjs,ts,gts,mts,cts,cjs,mjs}"
+        - "plugins/**/*.{js,gjs,ts,gts,mts,cts,cjs,mjs}"
+        - "themes/**/*.{js,gjs,ts,gts,mts,cts,cjs,mjs}"
       run: pnpm eslint --max-warnings 0 {staged_files}
     yaml-syntax:
       glob: &yaml_glob "**/*.{yaml,yml}"

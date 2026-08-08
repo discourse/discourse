@@ -52,6 +52,10 @@ RSpec.describe Chat::ListChannelPins do
         expect(result[:pins]).to contain_exactly(pin_1, pin_2)
       end
 
+      it "orders pins by timeline (oldest message first)" do
+        expect(result[:pins].map(&:chat_message_id)).to eq([message_1.id, message_2.id])
+      end
+
       it "returns membership" do
         expect(result[:membership]).to eq(membership)
       end

@@ -39,6 +39,9 @@ const postExcerpt = helper(([post]) => {
 const MOBILE_ROOT_VIEW_COLLAPSE_DEPTH = 3;
 const STORED_SCROLL_ANCHORS = Object.create(null);
 
+// Exported so system specs can wait out the full restoration window.
+export const SCROLL_RESTORE_WINDOW_MS = 1250;
+
 export default class Nested extends Component {
   @service appEvents;
   @service currentUser;
@@ -62,21 +65,57 @@ export default class Nested extends Component {
   #retryTimer = null;
   #highlightTimer = null;
   #lastScrollKey = null;
+  #lastRestoredScrollY = null;
+  #activeScrollAnchorKey = null;
+  #cancelledScrollAnchorKey = null;
   #restoringStoredScroll = false;
+  #scrollRestoreCompletionTimer = null;
+  #scrollRestoreTimers = [];
   #onPopstate = () => {
     this.#restoringStoredScroll = true;
     next(this, this.syncFocusFromURL);
   };
-  #onScroll = () => this.persistScrollAnchor();
+  #onScroll = () => this.#handleScroll();
+  #onUserScrollIntent = () => this.#cancelUserScrollRestoration();
+  #onUserScrollKey = (event) => {
+    if (
+      [
+        "ArrowDown",
+        "ArrowUp",
+        "End",
+        "Home",
+        "PageDown",
+        "PageUp",
+        " ",
+      ].includes(event.key)
+    ) {
+      this.#cancelUserScrollRestoration();
+    }
+  };
   #onPageHide = () => this.persistScrollAnchor();
 
   constructor() {
     super(...arguments);
-    this.#restoringStoredScroll = Boolean(this.#loadStoredScrollAnchor());
+    this.#restoringStoredScroll = Boolean(
+      this.args.scrollAnchor || this.#loadStoredScrollAnchor()
+    );
     this.applyInitialFocusedPath();
     window.addEventListener("popstate", this.#onPopstate);
     window.addEventListener("scroll", this.#onScroll, { passive: true });
+    window.addEventListener("touchmove", this.#onUserScrollIntent, {
+      passive: true,
+    });
+    window.addEventListener("wheel", this.#onUserScrollIntent, {
+      passive: true,
+    });
+    window.addEventListener("keydown", this.#onUserScrollKey);
     document.addEventListener("scroll", this.#onScroll, { passive: true });
+    document.addEventListener("touchmove", this.#onUserScrollIntent, {
+      passive: true,
+    });
+    document.addEventListener("wheel", this.#onUserScrollIntent, {
+      passive: true,
+    });
     window.addEventListener("pagehide", this.#onPageHide);
     this.router.on("routeWillChange", this.persistScrollAnchor);
     this.appEvents.on("keyboard:move-selection", this, this.maybeLoadMoreRoots);
@@ -111,11 +150,17 @@ export default class Nested extends Component {
     );
     cancel(this.#nextTimer);
     cancel(this.#retryTimer);
+    this.#cancelScrollRestoration();
     clearTimeout(this.#highlightTimer);
     this.persistScrollAnchor();
     window.removeEventListener("popstate", this.#onPopstate);
     window.removeEventListener("scroll", this.#onScroll);
+    window.removeEventListener("touchmove", this.#onUserScrollIntent);
+    window.removeEventListener("wheel", this.#onUserScrollIntent);
+    window.removeEventListener("keydown", this.#onUserScrollKey);
     document.removeEventListener("scroll", this.#onScroll);
+    document.removeEventListener("touchmove", this.#onUserScrollIntent);
+    document.removeEventListener("wheel", this.#onUserScrollIntent);
     window.removeEventListener("pagehide", this.#onPageHide);
     this.router.off("routeWillChange", this.persistScrollAnchor);
     this.viewportTracker.destroy();
@@ -186,6 +231,18 @@ export default class Nested extends Component {
 
   get rootScrollAnchor() {
     return this.mobileReturnAnchor || this.args.scrollAnchor;
+  }
+
+  get rootPostScrollAnchor() {
+    return this.postLevelScrollAnchor(this.rootScrollAnchor);
+  }
+
+  get focusedPostScrollAnchor() {
+    return this.postLevelScrollAnchor(this.args.scrollAnchor);
+  }
+
+  postLevelScrollAnchor(anchor) {
+    return Number.isFinite(anchor?.scrollY) ? null : anchor;
   }
 
   get focusedNode() {
@@ -265,6 +322,58 @@ export default class Nested extends Component {
     return this.findScrollAnchor();
   }
 
+  #handleScroll() {
+    if (!this.#restoringStoredScroll) {
+      this.persistScrollAnchor();
+      return;
+    }
+
+    if (this.#isRestoredScrollEcho()) {
+      return;
+    }
+
+    this.#cancelledScrollAnchorKey =
+      this.#activeScrollAnchorKey ||
+      this.#scrollAnchorRestoreKey(this.args.scrollAnchor);
+    this.#cancelScrollRestoration({ clearAnchor: true });
+    this.persistScrollAnchor();
+  }
+
+  #isRestoredScrollEcho() {
+    return (
+      this.#lastRestoredScrollY != null &&
+      Math.abs(window.scrollY - this.#lastRestoredScrollY) <= 2
+    );
+  }
+
+  #cancelUserScrollRestoration() {
+    if (!this.#restoringStoredScroll && !this.args.scrollAnchor) {
+      return;
+    }
+
+    this.#cancelledScrollAnchorKey =
+      this.#activeScrollAnchorKey ||
+      this.#scrollAnchorRestoreKey(this.args.scrollAnchor);
+    this.#cancelScrollRestoration({ clearAnchor: true });
+    this.persistScrollAnchor();
+  }
+
+  #cancelScrollRestoration({ clearAnchor = false } = {}) {
+    for (const timer of this.#scrollRestoreTimers) {
+      clearTimeout(timer);
+    }
+    this.#scrollRestoreTimers = [];
+
+    clearTimeout(this.#scrollRestoreCompletionTimer);
+    this.#scrollRestoreCompletionTimer = null;
+    if (clearAnchor) {
+      this.args.clearScrollAnchor?.();
+    }
+    this.#activeScrollAnchorKey = null;
+    this.#lastRestoredScrollY = null;
+    this.#restoringStoredScroll = false;
+  }
+
   @action
   persistScrollAnchor() {
     if (this.isDestroying || this.isDestroyed || this.#restoringStoredScroll) {
@@ -288,23 +397,60 @@ export default class Nested extends Component {
       return;
     }
 
+    this.#cancelledScrollAnchorKey = null;
     this.#restoreScrollAnchorAfterRender(anchor);
   }
 
+  @action
+  restoreUpdatedScrollAnchor() {
+    if (!this.args.scrollAnchor) {
+      return;
+    }
+
+    const anchorKey = this.#scrollAnchorRestoreKey(this.args.scrollAnchor);
+    if (anchorKey && anchorKey === this.#cancelledScrollAnchorKey) {
+      return;
+    }
+
+    this.#restoreScrollAnchorAfterRender(this.args.scrollAnchor);
+  }
+
   #restoreScrollAnchorAfterRender(anchor) {
+    this.#cancelScrollRestoration();
+    this.#activeScrollAnchorKey = this.#scrollAnchorRestoreKey(anchor);
     this.#restoringStoredScroll = true;
+
+    const initialScrollY = window.scrollY;
+
     schedule("afterRender", () => {
+      if (!this.#restoringStoredScroll) {
+        return;
+      }
+
+      if (Math.abs(window.scrollY - initialScrollY) > 2) {
+        this.#cancelScrollRestoration({ clearAnchor: true });
+        return;
+      }
+
       this.#restoreScrollAnchor(anchor);
       for (const delay of [50, 150, 300, 600, 1000]) {
-        setTimeout(() => this.#restoreScrollAnchor(anchor), delay);
+        const timer = setTimeout(() => {
+          if (this.#restoringStoredScroll) {
+            this.#restoreScrollAnchor(anchor);
+          }
+        }, delay);
+        this.#scrollRestoreTimers.push(timer);
       }
-      setTimeout(() => (this.#restoringStoredScroll = false), 1250);
+      this.#scrollRestoreCompletionTimer = setTimeout(() => {
+        this.#cancelScrollRestoration({ clearAnchor: true });
+      }, SCROLL_RESTORE_WINDOW_MS);
     });
   }
 
   #restoreScrollAnchor(anchor) {
     if (Number.isFinite(anchor.scrollY)) {
       window.scrollTo(0, anchor.scrollY);
+      this.#lastRestoredScrollY = window.scrollY;
       return;
     }
 
@@ -315,7 +461,20 @@ export default class Nested extends Component {
     if (element) {
       const rect = element.getBoundingClientRect();
       window.scrollTo(0, window.scrollY + rect.top - anchor.offsetFromTop);
+      this.#lastRestoredScrollY = window.scrollY;
     }
+  }
+
+  #scrollAnchorRestoreKey(anchor) {
+    if (!anchor) {
+      return null;
+    }
+
+    return [
+      anchor.postNumber,
+      anchor.scrollY ?? "",
+      anchor.offsetFromTop ?? "",
+    ].join(":");
   }
 
   #saveStoredScrollAnchor(anchor, postNumber = this.args.postNumber) {
@@ -669,7 +828,8 @@ export default class Nested extends Component {
       {{didInsert this.scheduleTargetScroll}}
       {{didInsert this.restoreStoredScrollAnchor}}
       {{didUpdate this.scheduleTargetScroll @targetPostNumber @rootNodes}}
-      {{didUpdate this.restoreStoredScrollAnchor @scrollAnchor}}
+      {{didUpdate this.restoreUpdatedScrollAnchor @scrollAnchor}}
+      {{didUpdate this.restoreUpdatedScrollAnchor @rootNodes}}
       {{didUpdate this.applyInitialFocusedPath @initialFocusedPath}}
       {{this.viewportTracker.setup
         eyeline=false
@@ -783,7 +943,7 @@ export default class Nested extends Component {
                 @unhidePost={{@unhidePost}}
                 @expansionState={{@expansionState}}
                 @fetchedChildrenCache={{@fetchedChildrenCache}}
-                @scrollAnchor={{@scrollAnchor}}
+                @scrollAnchor={{this.focusedPostScrollAnchor}}
                 @registerPost={{this.viewportTracker.registerPost}}
                 @getCloakingData={{this.viewportTracker.getCloakingData}}
                 @cloakAbove={{this.cloakAbove}}
@@ -924,7 +1084,7 @@ export default class Nested extends Component {
               @unhidePost={{@unhidePost}}
               @expansionState={{@expansionState}}
               @fetchedChildrenCache={{@fetchedChildrenCache}}
-              @scrollAnchor={{this.rootScrollAnchor}}
+              @scrollAnchor={{this.rootPostScrollAnchor}}
               @registerPost={{this.viewportTracker.registerPost}}
               @getCloakingData={{this.viewportTracker.getCloakingData}}
               @cloakAbove={{this.cloakAbove}}

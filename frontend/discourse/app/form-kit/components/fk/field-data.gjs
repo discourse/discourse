@@ -207,12 +207,22 @@ export default class FKFieldData extends Component {
   }
 
   /**
-   * Indicates whether to show the field's title.
-   * Defaults to `true`.
+   * Indicates whether to show the title rendered by the field container.
+   * Has no effect on controls that render the title themselves; see
+   * `showControlTitle`. Defaults to `true`.
    * @type {boolean}
    */
   get showTitle() {
     return this.args.showTitle ?? true;
+  }
+
+  /**
+   * Indicates whether a control that renders the field's title itself, inline
+   * in its own markup, should render it. Defaults to `true`.
+   * @type {boolean}
+   */
+  get showControlTitle() {
+    return this.args.showControlTitle ?? true;
   }
 
   /**

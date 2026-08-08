@@ -4,6 +4,8 @@ class TopicsController < ApplicationController
   include TagParamLimit
   include EmbedModeHandler
 
+  MAX_BULK_TOPIC_IDS = 1_000
+
   requires_login only: %i[
                    timings
                    destroy_timings
@@ -364,7 +366,8 @@ class TopicsController < ApplicationController
   end
 
   def destroy_timings
-    topic_id = params[:topic_id].to_i
+    topic = find_visible_topic_from_topic_id
+    topic_id = topic.id
 
     if params[:last].to_s == "1"
       PostTiming.destroy_last_for(current_user, topic_id: topic_id)
@@ -1107,7 +1110,7 @@ class TopicsController < ApplicationController
   def timings
     allowed_params = topic_params
 
-    topic_id = allowed_params[:topic_id].to_i
+    topic_id = find_visible_topic_from_topic_id.id
     topic_time = allowed_params[:topic_time].to_i
     timings = allowed_params[:timings].to_h || {}
 
@@ -1156,7 +1159,12 @@ class TopicsController < ApplicationController
       unless Array === params[:topic_ids]
         raise Discourse::InvalidParameters.new("Expecting topic_ids to contain a list of topic ids")
       end
-      topic_ids = params[:topic_ids].map { |t| t.to_i }
+      topic_ids = params[:topic_ids].map { |topic_id| topic_id.to_i }.uniq
+      if topic_ids.size > MAX_BULK_TOPIC_IDS
+        raise Discourse::InvalidParameters.new(
+                I18n.t("topics_bulk_action.too_many_topic_ids", limit: MAX_BULK_TOPIC_IDS),
+              )
+      end
     elsif params[:filter] == "unread"
       topic_ids = bulk_unread_topic_ids
     else
@@ -1585,7 +1593,7 @@ class TopicsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        @tags = SiteSetting.tagging_enabled ? @topic_view.topic.tags.visible(guardian) : []
+        @tags = @topic_view.visible_tags
 
         if SiteSetting.content_localization_enabled && use_crawler_layout?
           helpers.localize_topic_view_content(@topic_view)

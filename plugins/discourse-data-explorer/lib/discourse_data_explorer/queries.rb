@@ -252,19 +252,19 @@ module DiscourseDataExplorer
           id: -42,
           name: "Crawler and Bot Traffic Overview",
           description:
-            "Buckets recent pageviews by bot-likelihood score from Discourse's built-in crawler detection, from 'definitely user' to 'definitely crawler'. WARNING: requires browser pageview event collection to be enabled (hidden site setting trigger_browser_pageview_events); without it no events are recorded and this report will be empty. Accepts an 'hours' parameter, defaults to the last 24 hours.",
+            "Buckets recent beacon pageviews by bot-likelihood score from Discourse's built-in crawler detection. Scoring lags live traffic, so the newest pageviews sit in the 'not scored' bucket alongside those that carried no bot signals at all, rather than counting as users. WARNING: requires browser pageview event collection (hidden site setting persist_browser_pageview_events) and scoring (hidden site setting experimental_detect_crawler_pageviews); without both, every pageview lands in 'not scored'. Accepts an 'hours' parameter, defaults to the last 24 hours.",
         },
         "crawler-traffic-detailed": {
           id: -43,
           name: "Crawler and Bot Traffic Detailed Report",
           description:
-            "Row-per-IP breakdown of likely bot pageview activity, with the individual signals that drove the score (automated user agent, known crawler network, velocity, session churn, rapid navigation, bad referrer). WARNING: requires browser pageview event collection to be enabled (hidden site setting trigger_browser_pageview_events); without it no events are recorded and this report will be empty. Accepts 'hours' and 'min_score' parameters.",
+            "Row-per-IP breakdown of likely bot pageview activity, with the individual signals that drove the score (automated user agent, known crawler network, velocity, session churn, rapid navigation, bad referrer, no measured interaction). WARNING: requires browser pageview event collection (hidden site setting persist_browser_pageview_events) and scoring (hidden site setting experimental_detect_crawler_pageviews); without both this report will be empty. Accepts 'hours' and 'min_score' parameters.",
         },
         "suspected-bot-networks": {
           id: -44,
           name: "Suspected Automated Traffic by IP and Network",
           description:
-            "Networks (ASNs) and IPs generating high pageview volume with bot-like session patterns (near 1.0 views per session, rotating user agents, systematic topic harvesting), sorted so a scrape spread across many IPs on one network floats to the top. WARNING: requires browser pageview event collection to be enabled (hidden site setting trigger_browser_pageview_events); without it no events are recorded and this report will be empty. Accepts a 'days_ago' parameter, defaults to the last 3 days.",
+            "Networks (ASNs) and IPs generating high pageview volume with bot-like session patterns (near 1.0 views per session, rotating user agents, systematic topic harvesting), sorted so a scrape spread across many IPs on one network floats to the top. WARNING: requires browser pageview event collection to be enabled (hidden site setting persist_browser_pageview_events); without it no events are recorded and this report will be empty. Accepts a 'days_ago' parameter, defaults to the last 3 days.",
         },
       }.with_indifferent_access
 
@@ -1513,17 +1513,16 @@ module DiscourseDataExplorer
       -- int :hours = 24
 
       WITH events AS (
-          SELECT COALESCE(score, 0) AS score
+          SELECT score
           FROM browser_pageview_events
           WHERE created_at >= NOW() - (:hours * INTERVAL '1 hour')
+            AND source = #{BrowserPageviewEvent::SOURCE_BEACON}
       )
-      SELECT 'Definitely user (0)' AS bucket, COUNT(*) FILTER (WHERE score = 0) AS pageviews FROM events
+      SELECT 'Not scored (pending or no signals)' AS bucket, COUNT(*) FILTER (WHERE score IS NULL) AS pageviews FROM events
       UNION ALL
-      SELECT 'Very likely user (1-40)', COUNT(*) FILTER (WHERE score BETWEEN 1 AND 40) FROM events
+      SELECT 'Very likely user (under 60)', COUNT(*) FILTER (WHERE score < 60) FROM events
       UNION ALL
-      SELECT 'Maybe crawler (41-99)', COUNT(*) FILTER (WHERE score BETWEEN 41 AND 99) FROM events
-      UNION ALL
-      SELECT 'Definitely crawler (100+)', COUNT(*) FILTER (WHERE score >= 100) FROM events
+      SELECT 'Likely crawler (60+)', COUNT(*) FILTER (WHERE score >= 60) FROM events
       SQL
 
       queries["crawler-traffic-detailed"]["sql"] = <<~SQL
@@ -1542,24 +1541,40 @@ module DiscourseDataExplorer
           COUNT(*) AS pageviews,
           MAX(s.automation_ua_score) AS automation_ua,
           MAX(s.known_asn_score) AS known_asn,
+          MAX(s.datacenter_asn_score) AS datacenter_asn,
+          MAX(s.single_request_no_referrer_score) AS single_request_no_referrer,
+          MAX(s.stale_browser_score) AS stale_browser,
           MAX(s.velocity_score) AS velocity,
           MAX(s.churn_score) AS churn,
           MAX(s.rapid_nav_score) AS rapid_nav,
+          MAX(s.ip_rotation_score) AS ip_rotation,
           MAX(s.referrer_score) AS referrer,
+          MAX(s.engagement_score) AS no_engagement,
           NULLIF(
               CONCAT_WS(', ',
                   CASE WHEN MAX(s.automation_ua_score) > 0 THEN 'automation UA' END,
                   CASE WHEN MAX(s.known_asn_score) > 0 THEN 'known crawler ASN' END,
+                  CASE WHEN MAX(s.datacenter_asn_score) > 0 THEN 'datacenter ASN' END,
+                  CASE
+                    WHEN MAX(s.single_request_no_referrer_score) = #{CrawlerScorer::SINGLE_REQUEST_NO_REFERRER_SCORE + CrawlerScorer::SINGLE_REQUEST_LOCALE_PARAM_BONUS}
+                      THEN 'single direct locale request (+' || MAX(s.single_request_no_referrer_score) || ')'
+                    WHEN MAX(s.single_request_no_referrer_score) > 0
+                      THEN 'single direct request (+' || MAX(s.single_request_no_referrer_score) || ')'
+                  END,
+                  CASE WHEN MAX(s.stale_browser_score) > 0 THEN 'stale Chromium (+' || MAX(s.stale_browser_score) || ')' END,
                   CASE WHEN MAX(s.velocity_score) > 0 THEN 'high velocity (+' || MAX(s.velocity_score) || ')' END,
                   CASE WHEN MAX(s.churn_score) > 0 THEN 'session churn (+' || MAX(s.churn_score) || ')' END,
                   CASE WHEN MAX(s.rapid_nav_score) > 0 THEN 'rapid navigation' END,
-                  CASE WHEN MAX(s.referrer_score) > 0 THEN 'bad referrer (+' || MAX(s.referrer_score) || ')' END
+                  CASE WHEN MAX(s.ip_rotation_score) > 0 THEN 'ip rotation (+' || MAX(s.ip_rotation_score) || ')' END,
+                  CASE WHEN MAX(s.referrer_score) > 0 THEN 'bad referrer (+' || MAX(s.referrer_score) || ')' END,
+                  CASE WHEN MAX(s.engagement_score) > 0 THEN 'no measured interaction (+' || MAX(s.engagement_score) || ')' END
               ),
               ''
           ) AS reasons
       FROM browser_pageview_events e
       JOIN browser_pageview_event_scores s ON s.event_id = e.id
       WHERE e.created_at >= NOW() - (:hours * INTERVAL '1 hour')
+          AND e.source = #{BrowserPageviewEvent::SOURCE_BEACON}
           AND e.score > :min_score
       GROUP BY e.ip_address, e.user_agent, e.asn, e.country_code, e.user_id, e.session_id
       ORDER BY max_score DESC, pageviews DESC
@@ -1586,6 +1601,7 @@ module DiscourseDataExplorer
           (array_agg(user_agent ORDER BY created_at DESC))[1] AS sample_user_agent
       FROM browser_pageview_events
       WHERE created_at >= CURRENT_DATE - :days_ago
+          AND source = #{BrowserPageviewEvent::SOURCE_BEACON}
       GROUP BY ip_address, asn, country_code
       ORDER BY asn_total_pageviews DESC, pageviews DESC
       LIMIT 100

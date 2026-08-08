@@ -122,6 +122,7 @@ RSpec.describe DiscourseWorkflows::Executor::FilterParameter do
   describe ".supported_operation?" do
     it "uses the runtime type and operation contract" do
       expect(described_class.supported_operation?("number", "gte")).to eq(true)
+      expect(described_class.supported_operation?("string", "gte")).to eq(true)
       expect(described_class.supported_operation?("number", "contains")).to eq(false)
       expect(described_class.supported_operation?("integer", "equals")).to eq(false)
       expect(described_class.operation_needs_value?("equals")).to eq(true)
@@ -192,6 +193,36 @@ RSpec.describe DiscourseWorkflows::Executor::FilterParameter do
 
       it "returns false for unknown operations" do
         expect(described_class.evaluate_type("string", "a", "b", "unknown", {})).to be(false)
+      end
+
+      it "compares numeric strings numerically" do
+        expect(described_class.evaluate_type("string", "10", "9", "gt", {})).to be(true)
+        expect(described_class.evaluate_type("string", "9", "10", "gt", {})).to be(false)
+        expect(described_class.evaluate_type("string", "9", "10", "lt", {})).to be(true)
+        expect(described_class.evaluate_type("string", "10", "10", "gte", {})).to be(true)
+        expect(described_class.evaluate_type("string", "10", "10", "lte", {})).to be(true)
+        expect(described_class.evaluate_type("string", "10.5", "10", "gt", {})).to be(true)
+      end
+
+      it "falls back to lexicographic ordering for non numeric strings" do
+        expect(described_class.evaluate_type("string", "2026-02-01", "2026-01-01", "gt", {})).to be(
+          true,
+        )
+        expect(described_class.evaluate_type("string", "2026-01-01", "2026-02-01", "gt", {})).to be(
+          false,
+        )
+        expect(described_class.evaluate_type("string", "apple", "banana", "lt", {})).to be(true)
+      end
+
+      it "returns false when ordering against a missing value" do
+        expect(described_class.evaluate_type("string", "10", nil, "gt", {})).to be(false)
+      end
+
+      it "applies case insensitivity to ordering" do
+        options = { "caseSensitive" => false }
+        expect(described_class.evaluate_type("string", "Apple", "banana", "lt", options)).to be(
+          true,
+        )
       end
     end
 

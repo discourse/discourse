@@ -36,6 +36,8 @@ class CategoriesController < ApplicationController
   MIN_CATEGORIES_TOPICS = 5
   MAX_CATEGORIES_TOPICS = 100
   MAX_CATEGORIES_LIMIT = 25
+  MAX_CATEGORY_SEARCH_TERM_LENGTH = 250
+  MAX_CATEGORY_SEARCH_WORDS = 25
 
   def redirect
     return if handle_permalink("/category/#{params[:path]}")
@@ -137,6 +139,9 @@ class CategoriesController < ApplicationController
           Categories::TypeRegistry.counts
         end
 
+    # NOTE: Keep in mind types may not be visible if their visible? method relies
+    # on an upcoming change, and that upcoming change's plugin is not configurable,
+    # as is the case with some discourse hosted sites.
     render json: {
              types: Categories::TypeRegistry.list(only_visible: true, guardian:),
              counts: counts_by_type,
@@ -310,8 +315,6 @@ class CategoriesController < ApplicationController
         end
       end
 
-      DiscourseEvent.trigger(:category_updated, cat) if result
-
       result
     end
   end
@@ -466,7 +469,7 @@ class CategoriesController < ApplicationController
   end
 
   def search
-    term = params[:term].to_s.strip
+    term = params[:term].to_s.strip[0, MAX_CATEGORY_SEARCH_TERM_LENGTH]
     parent_category_id = params[:parent_category_id].to_i if params[:parent_category_id].present?
     include_uncategorized =
       (
@@ -509,7 +512,13 @@ class CategoriesController < ApplicationController
 
     categories = Category.secured(guardian)
 
-    if term.present? && words = term.split
+    if term.present?
+      words = []
+      term.scan(/\S+/) do |word|
+        words << word
+        break if words.size >= MAX_CATEGORY_SEARCH_WORDS
+      end
+
       words.each do |word|
         categories =
           categories.where(
@@ -546,8 +555,6 @@ class CategoriesController < ApplicationController
           :uploaded_logo_dark,
           :uploaded_background,
           :uploaded_background_dark,
-          :tags,
-          :tag_groups,
           :form_templates,
           category_required_tag_groups: :tag_group,
         )

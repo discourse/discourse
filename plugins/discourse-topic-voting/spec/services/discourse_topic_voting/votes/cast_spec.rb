@@ -101,6 +101,15 @@ RSpec.describe DiscourseTopicVoting::Votes::Cast do
         expect { result }.not_to change(Jobs::EmitWebHookEvent.jobs, :size)
       end
 
+      it "triggers the vote created event" do
+        events = DiscourseEvent.track_events(:topic_voting_vote_created) { result }
+
+        expect(events.size).to eq(1)
+        expect(events.first[:params].first).to eq(
+          DiscourseTopicVoting::Vote.find_by(user: user, topic: topic),
+        )
+      end
+
       it "enqueues the backfill badges job" do
         expect { result }.to change(Jobs::DiscourseTopicVoting::BackfillBadges.jobs, :size).by(1)
         expect(Jobs::DiscourseTopicVoting::BackfillBadges.jobs.last["args"].first).to include(

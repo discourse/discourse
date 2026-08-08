@@ -79,7 +79,7 @@ metadata: Jane's story
 number: 13
 these tools, jane began her work.
 
-As she typed away at her keyboard, Jane couldnât help but feel a sense of excitement bubbling up inside her. This was no ordinary project; this was a chance to create something truly extraordinary. She poured her heart and soul into every line of code, crafting algorithms that would make even the most advanced AI systems [[look]] like mere calculators.
+As she typed away at her keyboard, Jane couldn’t help but feel a sense of excitement bubbling up inside her. This was no ordinary project; this was a chance to create something truly extraordinary. She poured her heart and soul into every line of code, crafting algorithms that would make even the most advanced AI systems [[look]] like mere calculators.
 
 metadata: Jane's story
 number: 14
@@ -91,7 +91,7 @@ metadata: Jane's story
 number: 15
 jane left no stone unturned.
 
-As the weeks turned into months, Janeâs creation began to take shape. It was a thing of beauty, a masterpiece of artificial intelligence that could engage in witty banter, offer sage advice, and even tell the occasional joke (though its sense of humor was admittedly a bit on the quirky side). Jane beamed with pride as she watched her AI converse with humans, marveling at its ability to understand and respond to even the most complex of queries.
+As the weeks turned into months, Jane’s creation began to take shape. It was a thing of beauty, a masterpiece of artificial intelligence that could engage in witty banter, offer sage advice, and even tell the occasional joke (though its sense of humor was admittedly a bit on the quirky side). Jane beamed with pride as she watched her AI converse with humans, marveling at its ability to understand and respond to even the most complex of queries.
 
 metadata: Jane's story
 number: 16

@@ -544,6 +544,27 @@ RSpec.describe(Tags::Search) do
       end
     end
 
+    context "with a tag only used in personal messages" do
+      fab!(:category)
+      fab!(:pm_only_tag) { Fabricate(:tag, name: "pmonly", pm_topic_count: 1) }
+
+      let(:params) { { q: "pmonly", categoryId: category.id, filterForInput: true, limit: 5 } }
+
+      it "returns the tag as selectable instead of mislabeling it as unusable" do
+        row = result[:tags].find { |tag| tag[:name] == "pmonly" }
+        expect(row).to be_present
+        expect(row[:disabled]).to be_blank
+        expect(result[:forbidden]).to be_nil
+        expect(result[:forbidden_message]).to be_nil
+      end
+
+      it "does not expose the PM tag count to users who cannot tag PMs" do
+        SiteSetting.display_personal_messages_tag_counts = true
+        row = result[:tags].find { |tag| tag[:name] == "pmonly" }
+        expect(row).not_to have_key(:pm_count)
+      end
+    end
+
     context "when a hidden tag does not leak via forbidden" do
       fab!(:hidden_tag) { Fabricate(:tag, name: "secrethidden") }
 

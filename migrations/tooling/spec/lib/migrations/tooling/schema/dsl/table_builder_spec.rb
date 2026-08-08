@@ -72,7 +72,7 @@ RSpec.describe Migrations::Tooling::Schema::DSL::TableBuilder do
         expect do
           Migrations::Tooling::Schema.table :"log_#{method}" do
             synthetic!
-            send(method, *(:id if method == :include))
+            public_send(method, *(:id if method == :include))
           end
         end.to raise_error(
           Migrations::Tooling::Schema::ConfigError,

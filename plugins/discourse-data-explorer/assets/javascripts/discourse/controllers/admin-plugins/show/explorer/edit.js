@@ -11,6 +11,7 @@ import { i18n } from "discourse-i18n";
 import QueryHelp from "discourse/plugins/discourse-data-explorer/discourse/components/modal/query-help";
 import { ParamValidationError } from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
 import { subscribeToAiGeneration } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-generation";
+import { dataExplorerAiQueriesEnabled } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-query-availability";
 import { defaultView } from "discourse/plugins/discourse-data-explorer/discourse/lib/chart-helpers";
 import {
   dataExplorerStore,
@@ -145,7 +146,7 @@ export default class PluginsExplorerController extends Controller {
   }
 
   get aiQueriesEnabled() {
-    return this.siteSettings.data_explorer_ai_queries_enabled;
+    return dataExplorerAiQueriesEnabled(this.siteSettings);
   }
 
   get regenerateDisabled() {

@@ -13,7 +13,13 @@ RSpec.describe DiscourseAi::AgentImporter do
           secret_contracts: [{ alias: "giphy_api_key" }],
         )
       end
-      fab!(:ai_agent) { Fabricate(:ai_agent, tools: [["custom-#{ai_tool.id}", nil, false]]) }
+      fab!(:ai_agent) do
+        Fabricate(
+          :ai_agent,
+          allowed_group_ids: [Group::AUTO_GROUPS[:staff]],
+          tools: [["custom-#{ai_tool.id}", nil, false]],
+        )
+      end
 
       let!(:export_json) { DiscourseAi::AgentExporter.new(agent: ai_agent).export }
 
@@ -25,6 +31,7 @@ RSpec.describe DiscourseAi::AgentImporter do
         agent = importer.import!
 
         expect(agent).to be_persisted
+        expect(agent.allowed_group_ids).to eq([Group::AUTO_GROUPS[:staff]])
         expect(agent.tools.first.first).to start_with("custom-")
 
         tool_id = agent.tools.first.first.split("-", 2).last.to_i
@@ -111,6 +118,7 @@ RSpec.describe DiscourseAi::AgentImporter do
           name: "Test Agent",
           description: "New description",
           system_prompt: "New prompt",
+          allowed_group_ids: [Group::AUTO_GROUPS[:staff]],
           tools: [
             ["custom-#{existing_tool.id}", nil, false],
             ["custom-#{new_tool.id}", nil, false],
@@ -129,6 +137,7 @@ RSpec.describe DiscourseAi::AgentImporter do
         expect(agent.id).to eq(existing_agent.id)
         expect(agent.description).to eq("New description")
         expect(agent.system_prompt).to eq("New prompt")
+        expect(agent.allowed_group_ids).to eq([Group::AUTO_GROUPS[:staff]])
         expect(agent.tools.length).to eq(2)
       end
 

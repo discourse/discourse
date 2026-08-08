@@ -119,6 +119,47 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
+  describe ".viewable_by" do
+    fab!(:admin)
+    fab!(:pm_author, :user)
+    fab!(:pm_recipient, :user)
+    fab!(:outsider_moderator, :moderator)
+    fab!(:pm_topic) { Fabricate(:private_message_topic, user: pm_author, recipient: pm_recipient) }
+    fab!(:pm_post) { Fabricate(:post, topic: pm_topic, user: pm_author) }
+    fab!(:reviewable) do
+      ReviewablePost.needs_review!(
+        target: pm_post,
+        created_by: Discourse.system_user,
+        reviewable_by_moderator: true,
+      )
+    end
+
+    it "excludes private-message reviewables from moderators outside the conversation" do
+      expect(described_class.viewable_by(outsider_moderator)).not_to exist(id: reviewable.id)
+    end
+
+    it "includes private-message reviewables for admins" do
+      expect(described_class.viewable_by(admin)).to exist(id: reviewable.id)
+    end
+
+    it "includes private-message reviewables for participating moderators" do
+      participant_moderator = Fabricate(:moderator)
+      participant_topic =
+        Fabricate(:private_message_topic, user: pm_author, recipient: participant_moderator)
+      participant_post = Fabricate(:post, topic: participant_topic, user: pm_author)
+      participant_reviewable =
+        ReviewablePost.needs_review!(
+          target: participant_post,
+          created_by: Discourse.system_user,
+          reviewable_by_moderator: true,
+        )
+
+      expect(described_class.viewable_by(participant_moderator)).to exist(
+        id: participant_reviewable.id,
+      )
+    end
+  end
+
   describe ".list_for" do
     fab!(:user)
 

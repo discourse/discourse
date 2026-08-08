@@ -87,6 +87,11 @@ export function extractError(error, defaultMessage) {
   return extractErrorInfo(error, defaultMessage).message;
 }
 
+export function isReadOnlyError(error) {
+  const xhr = error.jqXHR ?? error;
+  return xhr.status === 503 && xhr.responseJSON?.error_type === "read_only";
+}
+
 export function throwAjaxError(undoCallback, defaultMessage) {
   return function (error) {
     // If we provided an `undo` callback

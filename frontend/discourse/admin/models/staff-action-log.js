@@ -80,15 +80,9 @@ export default class StaffActionLog extends RestModel {
     ];
 
     if (!this.useCustomModalForDetails) {
+      lines.push(format("admin.logs.staff_actions.new_value", this.new_value));
       lines.push(
-        format("admin.logs.staff_actions.new_value", this.new_value, false)
-      );
-      lines.push(
-        format(
-          "admin.logs.staff_actions.previous_value",
-          this.previous_value,
-          false
-        )
+        format("admin.logs.staff_actions.previous_value", this.previous_value)
       );
     }
 

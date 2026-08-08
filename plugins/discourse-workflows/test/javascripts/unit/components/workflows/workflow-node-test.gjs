@@ -1,6 +1,7 @@
 import { module, test } from "qunit";
 import {
   shouldEnableManualTrigger,
+  shouldShowExecuteStep,
   shouldShowManualTrigger,
 } from "discourse/plugins/discourse-workflows/admin/components/workflows/canvas/workflow-node";
 
@@ -51,6 +52,33 @@ module("Unit | Component | Workflows | Canvas | WorkflowNode", function () {
         },
       })
     );
+  });
+
+  test("shows execute step only for non-trigger nodes", function (assert) {
+    assert.true(
+      shouldShowExecuteStep({
+        name: "HTTP request",
+        type: "action:http_request",
+        typeVersion: "1.0",
+      })
+    );
+    assert.true(
+      shouldShowExecuteStep({
+        name: "If",
+        type: "condition:if",
+        typeVersion: "1.0",
+      })
+    );
+
+    assert.false(
+      shouldShowExecuteStep({
+        name: "Post created",
+        type: "trigger:post_created",
+        typeVersion: "1.0",
+      })
+    );
+    assert.false(shouldShowExecuteStep({ name: "No type" }));
+    assert.false(shouldShowExecuteStep(undefined));
   });
 
   test("does not show or enable manual trigger for action nodes with pinned data", function (assert) {

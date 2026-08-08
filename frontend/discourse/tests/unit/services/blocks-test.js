@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
+import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks";
@@ -100,6 +101,68 @@ module("Unit | Service | blocks", function (hooks) {
     });
   });
 
+  module("thumbnails", function () {
+    // Stand-ins for the resolved thumbnail component. These tests exercise
+    // resolution/caching, not rendering, so a plain marker suffices.
+    const STUB_THUMBNAIL = { name: "stub-thumbnail" };
+
+    test("thumbnailData resolves a lazy loader to its component", async function (assert) {
+      const loader = () => Promise.resolve(STUB_THUMBNAIL);
+
+      const data = this.blocks.thumbnailData(loader);
+      await settled();
+
+      assert.true(data.isResolved, "the loader resolves");
+      assert.strictEqual(
+        data.value,
+        STUB_THUMBNAIL,
+        "it resolves to the component"
+      );
+    });
+
+    test("thumbnailData unwraps a module default export", async function (assert) {
+      const loader = () => Promise.resolve({ default: STUB_THUMBNAIL });
+
+      const data = this.blocks.thumbnailData(loader);
+      await settled();
+
+      assert.strictEqual(
+        data.value,
+        STUB_THUMBNAIL,
+        "the module's default export is unwrapped"
+      );
+    });
+
+    test("thumbnailData caches one resolution per loader", function (assert) {
+      const loader = () => Promise.resolve(STUB_THUMBNAIL);
+
+      assert.strictEqual(
+        this.blocks.thumbnailData(loader),
+        this.blocks.thumbnailData(loader),
+        "the same loader returns the same cached instance"
+      );
+    });
+
+    test("prefetchThumbnails warms lazy loader thumbnails", async function (assert) {
+      const loader = () => Promise.resolve(STUB_THUMBNAIL);
+
+      @block("prefetch-thumb-block", { thumbnail: loader })
+      class PrefetchThumbBlock extends Component {}
+
+      withTestBlockRegistration(() => registerBlock(PrefetchThumbBlock));
+
+      this.blocks.prefetchThumbnails();
+      await settled();
+
+      const data = this.blocks.thumbnailData(loader);
+      assert.true(
+        data.isResolved,
+        "the block's thumbnail is already resolved after prefetch"
+      );
+      assert.strictEqual(data.value, STUB_THUMBNAIL);
+    });
+  });
+
   module("block outlet", function () {
     test("hasLayout returns false when no layout is registered", function (assert) {
       assert.false(this.blocks.hasLayout("hero-blocks"));
@@ -133,6 +196,62 @@ module("Unit | Service | blocks", function (hooks) {
       assert.true(types.includes("user"));
       assert.true(types.includes("setting"));
       assert.true(types.includes("viewport"));
+    });
+
+    test("listConditionTypes returns full metadata for each built-in", function (assert) {
+      const all = this.blocks.listConditionTypes();
+      const byType = new Map(all.map((entry) => [entry.type, entry]));
+
+      const user = byType.get("user");
+      assert.notStrictEqual(user, undefined, "user condition is listed");
+      assert.strictEqual(user.displayName, "User");
+      assert.strictEqual(typeof user.description, "string");
+      assert.strictEqual(user.namespaceType, "core");
+      assert.strictEqual(user.sourceType, "outletArgs");
+      assert.notStrictEqual(
+        user.argsSchema.loggedIn,
+        undefined,
+        "argsSchema includes declared args"
+      );
+
+      const viewport = byType.get("viewport");
+      assert.strictEqual(viewport.displayName, "Viewport");
+
+      const route = byType.get("route");
+      assert.strictEqual(route.displayName, "Route");
+
+      const setting = byType.get("setting");
+      assert.strictEqual(setting.displayName, "Setting");
+      assert.strictEqual(setting.sourceType, "object");
+
+      const outletArg = byType.get("outlet-arg");
+      assert.strictEqual(outletArg.displayName, "Outlet argument");
+    });
+
+    test("listConditionTypes falls back displayName to titleCase of type", function (assert) {
+      @blockCondition({
+        type: "plugin-side:weather-check",
+        args: {},
+      })
+      class WeatherCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+
+      withTestConditionRegistration(() => {
+        registerConditionType(WeatherCondition);
+      });
+
+      const all = this.blocks.listConditionTypes();
+      const weather = all.find((c) => c.type === "plugin-side:weather-check");
+      assert.notStrictEqual(weather, undefined, "custom condition is listed");
+      assert.strictEqual(
+        weather.displayName,
+        "Plugin Side Weather Check",
+        "displayName defaults to a titleCase of the type ID"
+      );
+      assert.strictEqual(weather.description, null);
     });
   });
 

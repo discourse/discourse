@@ -12,6 +12,7 @@ vi:
           poll: "Discourse Poll"
   js:
     poll:
+      closed_by: "Đóng bởi %{username}"
       dynamic:
         enabled_hint: "Có thể thêm hoặc xóa các tùy chọn."
       voters:

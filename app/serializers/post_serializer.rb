@@ -284,7 +284,7 @@ class PostSerializer < BasicPostSerializer
 
   def include_localized_oneboxes?
     SiteSetting.content_localization_enabled && @topic_view.present? &&
-      !ContentLocalization.show_original?(scope) &&
+      ContentLocalization.automatically_translate?(scope) &&
       @topic_view.localized_oneboxes[object.id].present?
   end
 

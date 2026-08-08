@@ -254,6 +254,56 @@ RSpec.describe Emoji do
     end
   end
 
+  describe ".grouped" do
+    before { Emoji.clear_cache }
+
+    it "returns all groups with standard groups present" do
+      groups = Emoji.grouped
+      expect(groups.keys).to include("flags", "smileys_&_emotion")
+    end
+
+    it "preserves standard group order when no groups are pinned" do
+      SiteSetting.emoji_picker_pinned_groups = ""
+      keys = Emoji.grouped.keys
+      expect(keys.index("smileys_&_emotion")).to be < keys.index("flags")
+    end
+
+    it "pins a standard group to the top" do
+      SiteSetting.emoji_picker_pinned_groups = "flags"
+      expect(Emoji.grouped.keys.first).to eq("flags")
+    end
+
+    it "pins multiple groups in the configured order" do
+      SiteSetting.emoji_picker_pinned_groups = "flags|activities"
+      keys = Emoji.grouped.keys
+      expect(keys[0]).to eq("flags")
+      expect(keys[1]).to eq("activities")
+    end
+
+    it "pins a custom group to the top" do
+      CustomEmoji.create!(name: "partyblob", upload_id: 9999, group: "reactions")
+      Emoji.clear_cache
+      SiteSetting.emoji_picker_pinned_groups = "reactions"
+      expect(Emoji.grouped.keys.first).to eq("reactions")
+    end
+
+    it "silently ignores pinned groups that no longer exist" do
+      # Simulate a group that was valid when saved but has since been deleted
+      SiteSetting.stubs(:emoji_picker_pinned_groups).returns("nonexistent_group")
+      expect { Emoji.grouped }.not_to raise_error
+      expect(Emoji.grouped.keys).not_to include("nonexistent_group")
+    end
+
+    it "keeps unpinned groups after pinned ones" do
+      SiteSetting.emoji_picker_pinned_groups = "flags"
+      keys = Emoji.grouped.keys
+      flags_index = keys.index("flags")
+      smileys_index = keys.index("smileys_&_emotion")
+      expect(flags_index).to eq(0)
+      expect(smileys_index).to be > flags_index
+    end
+  end
+
   describe ".load_standard" do
     it "removes nil emojis" do
       expect(Emoji.load_standard.any?(&:nil?)).to be(false)

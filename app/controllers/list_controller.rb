@@ -90,8 +90,11 @@ class ListController < ApplicationController
 
       if Discourse.anonymous_filters.include?(filter)
         @description = SiteSetting.site_description
-        @rss = filter
-        @rss_description = filter
+
+        if feed_route_exists?(filter)
+          @rss = filter
+          @rss_description = filter
+        end
 
         # Note the first is the default and we don't add a title
         if (filter.to_s != current_homepage) && use_crawler_layout?
@@ -381,6 +384,26 @@ class ListController < ApplicationController
   end
 
   private
+
+  def self.feed_route_exists?(filter)
+    @feed_route_exists ||= {}
+    @feed_route_exists.fetch(filter) do
+      @feed_route_exists[filter] = begin
+        Rails.application.routes.url_for(
+          controller: "list",
+          action: "#{filter}_feed",
+          only_path: true,
+        )
+        true
+      rescue ActionController::UrlGenerationError
+        false
+      end
+    end
+  end
+
+  def feed_route_exists?(filter)
+    self.class.feed_route_exists?(filter)
+  end
 
   def topic_query(user = current_user, opts = {})
     TopicQuery.new(user, build_topic_list_options.merge(opts))

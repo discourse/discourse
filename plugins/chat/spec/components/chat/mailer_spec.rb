@@ -205,8 +205,7 @@ describe Chat::Mailer do
       let!(:thread) do
         Fabricate(:chat_thread, channel: followed_channel, original_message: chat_message)
       end
-
-      before do
+      let!(:thread_membership) do
         Fabricate(
           :user_chat_thread_membership,
           user: user,

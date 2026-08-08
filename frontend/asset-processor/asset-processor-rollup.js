@@ -10,6 +10,7 @@ import EmberThisFallback from "ember-this-fallback";
 import StripTestSelectorsPlugin from "strip-test-selectors/src/strip-test-selectors";
 import { browsers } from "../discourse/config/targets";
 import babelTransformModuleRenames from "../discourse/lib/babel-transform-module-renames";
+import discourseSourceImports from "../discourse/lib/discourse-source-imports.mjs";
 import AddThemeGlobals from "./add-theme-globals";
 import BabelResolveCoreImports from "./babel-resolve-core-imports";
 import BabelResolvePluginImports from "./babel-resolve-plugin-imports";
@@ -57,6 +58,7 @@ async function performRollup(modules, opts) {
       console.info(level, message);
     },
     plugins: [
+      discourseSourceImports({ fs }),
       discourseFileSearch(),
       discourseVirtualLoader({
         isTheme: !!opts.themeId,

@@ -11,7 +11,17 @@ RSpec.describe DiscourseWorkflows::Modal::Respond do
     fab!(:user)
 
     let(:dependencies) { { guardian: user.guardian } }
-    let(:params) { { action_id: action_id("approve") } }
+    let(:action) { "approve" }
+    let(:target_user_id) { user.id }
+    let(:action_id) do
+      DiscourseWorkflows::InteractiveResume.action_id(
+        execution_id: execution.id,
+        resume_token: execution.resume_token,
+        action:,
+        target_user_id:,
+      )
+    end
+    let(:params) { { action_id: } }
 
     fab!(:workflow) do
       graph =
@@ -47,15 +57,6 @@ RSpec.describe DiscourseWorkflows::Modal::Respond do
       ).run
     end
 
-    def action_id(action, target_user_id: user.id)
-      DiscourseWorkflows::InteractiveResume.action_id(
-        execution_id: execution.id,
-        resume_token: execution.resume_token,
-        action: action,
-        target_user_id: target_user_id,
-      )
-    end
-
     it "pauses at the modal node before being resumed" do
       expect(execution.status).to eq("waiting")
     end
@@ -85,7 +86,7 @@ RSpec.describe DiscourseWorkflows::Modal::Respond do
     end
 
     context "when the action is not one of the configured buttons" do
-      let(:params) { { action_id: action_id("delete") } }
+      let(:action) { "delete" }
 
       it { is_expected.to fail_to_find_a_model(:resume_request) }
     end

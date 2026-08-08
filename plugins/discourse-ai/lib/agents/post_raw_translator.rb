@@ -20,7 +20,7 @@ module DiscourseAi
           5. For ambiguous terms or phrases, do not translate word-for-word in isolation. Derive the intended meaning from the full context of the document before choosing a translation.
           6. Ensure the translation only contains the original language and the target language.
           7. Match the tone and register of the source text. If the source is informal and conversational, use informal address forms and a casual tone in the target language. Do not default to formal address (e.g. German Sie, French vous) unless the source text is itself formal.
-          8. For any quoted text, use the target language's native quotation marks — for example German „…", French «…», Japanese 「…」 — rather than ASCII quotes.
+          8. For any quoted text, use the target language's native quotation marks — for example German „…“, French «…», Japanese 「…」 — rather than ASCII quotes.
 
           Follow these instructions on what NOT to do:
           9. Do not translate code snippets or programming language names, but ensure that any comments within the code are translated. Code can be represented in ``` or in single ` backticks or in <code> HTML tags.

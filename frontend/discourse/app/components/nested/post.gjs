@@ -385,10 +385,18 @@ export default class NestedPost extends Component {
     });
   }
 
+  get childCacheKey() {
+    return `${this.args.topic?.id}:${this.args.post.post_number}`;
+  }
+
   async childrenForMobileFocus() {
-    const cached = this.args.fetchedChildrenCache?.get(
-      this.args.post.post_number
-    );
+    const cacheKey = this.childCacheKey;
+    const identityKey = [
+      this.args.topic?.id,
+      this.args.post.post_number,
+      this.args.sort,
+    ].join(":");
+    const cached = this.args.fetchedChildrenCache?.get(cacheKey);
     if (cached) {
       return cached.childNodes;
     }
@@ -406,14 +414,25 @@ export default class NestedPost extends Component {
       const data = await ajax(
         `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.post.post_number}.json?${query}`
       );
-      if (this.isDestroying || this.isDestroyed) {
+      if (
+        this.isDestroying ||
+        this.isDestroyed ||
+        this.childCacheKey !== cacheKey ||
+        [this.args.topic?.id, this.args.post.post_number, this.args.sort].join(
+          ":"
+        ) !== identityKey
+      ) {
         return null;
       }
 
-      const childNodes = (data.children || []).map((child) =>
-        processNode(this.store, this.args.topic, child)
-      );
-      this.args.fetchedChildrenCache?.set(this.args.post.post_number, {
+      const childNodes = (data.children || [])
+        .filter(
+          (child) =>
+            child.topic_id != null &&
+            String(child.topic_id) === String(this.args.topic?.id)
+        )
+        .map((child) => processNode(this.store, this.args.topic, child));
+      this.args.fetchedChildrenCache?.set(cacheKey, {
         childNodes,
         page: data.page,
         hasMore: data.has_more || false,

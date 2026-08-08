@@ -1,0 +1,50 @@
+# Lucide icons used by the wireframe.
+#
+# One name per line, using the canonical Lucide name. Find names at
+# https://lucide.dev/icons/.
+#
+# After editing this file, regenerate the sprite:
+#   bin/rake wireframe:lucide_sprite
+#
+# In development, the sprite is also regenerated automatically at boot
+# whenever this file is newer than `lucide.svg` next to it.
+#
+# Each entry registers an icon at `wf-<name>` (the `wf-` prefix is added
+# automatically in plugin.rb).
+
+align-center-horizontal
+align-center-vertical
+align-end-horizontal
+align-end-vertical
+align-start-horizontal
+align-start-vertical
+move-horizontal
+stretch-horizontal
+stretch-vertical
+align-horizontal-justify-start
+align-horizontal-justify-center
+align-horizontal-justify-end
+align-horizontal-space-between
+align-horizontal-space-around
+align-horizontal-distribute-center
+align-vertical-justify-start
+align-vertical-justify-center
+align-vertical-justify-end
+align-vertical-space-between
+align-vertical-space-around
+align-vertical-distribute-center
+align-left
+align-center
+align-right
+wrap-text
+
+# Layout mode picker: stack / row / grid / tiles. Grid uses a structured
+# region glyph (deliberate placement); tiles uses a uniform-cell grid.
+arrow-down
+arrow-right
+layout-dashboard
+grid-3x2
+
+# View drawer: simulation status + reset glyphs.
+rotate-ccw
+info

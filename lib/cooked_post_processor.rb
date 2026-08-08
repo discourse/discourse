@@ -212,7 +212,7 @@ class CookedPostProcessor
         query = Rack::Utils.parse_nested_query(uri.query)
         next if !query.delete("u")
 
-        uri.query = query.map { |k, v| "#{k}=#{v}" }.join("&").presence
+        uri.query = Rack::Utils.build_nested_query(query).presence
         a["href"] = uri.to_s
       end
   end

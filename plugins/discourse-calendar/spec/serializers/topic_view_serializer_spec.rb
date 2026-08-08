@@ -132,6 +132,56 @@ RSpec.describe TopicViewSerializer do
     end
   end
 
+  describe "#event_watching_invitee_status" do
+    fab!(:viewer, :user)
+
+    def parsed_json_for(user)
+      JSON.parse(
+        described_class.new(TopicView.new(topic), scope: Guardian.new(user), root: false).to_json,
+      )
+    end
+
+    def create_event
+      DiscoursePostEvent::Event.create!(
+        id: first_post.id,
+        original_starts_at: 1.hour.from_now,
+        original_ends_at: 2.hours.from_now,
+      )
+    end
+
+    it "returns the status the current user answered with" do
+      event = create_event
+      DiscoursePostEvent::Invitee.create_attendance!(viewer.id, event.id, :going)
+
+      expect(parsed_json_for(viewer)["event_watching_invitee_status"]).to eq("going")
+    end
+
+    it "is null when the current user has not answered" do
+      create_event
+
+      expect(parsed_json_for(viewer)["event_watching_invitee_status"]).to be_nil
+    end
+
+    it "is not included when the topic has no event" do
+      first_post
+
+      expect(parsed_json_for(viewer)).not_to have_key("event_watching_invitee_status")
+    end
+
+    it "is not included for anonymous users" do
+      create_event
+
+      expect(parsed_json_for(nil)).not_to have_key("event_watching_invitee_status")
+    end
+
+    it "is not affected by other users' answers" do
+      event = create_event
+      DiscoursePostEvent::Invitee.create_attendance!(Fabricate(:user).id, event.id, :going)
+
+      expect(parsed_json_for(viewer)["event_watching_invitee_status"]).to be_nil
+    end
+  end
+
   describe "#chat_channel_id" do
     fab!(:category)
     fab!(:viewer, :user)
@@ -149,7 +199,7 @@ RSpec.describe TopicViewSerializer do
         id: first_post.id,
         original_starts_at: 1.hour.from_now,
         original_ends_at: 2.hours.from_now,
-        location: "https://example.com/live",
+        location: "https://www.youtube.com/live/abc123",
         status: DiscoursePostEvent::Event.statuses[status],
         raw_invitees:,
         livestream:,

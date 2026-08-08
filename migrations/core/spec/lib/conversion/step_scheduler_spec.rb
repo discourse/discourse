@@ -1,48 +1,57 @@
 # frozen_string_literal: true
 
+# Fake StepCoordinator: announces its step, then blocks until the example
+# releases it, so we can drive ordering and concurrency without forking.
+class FakeCoordinator
+  attr_reader :step_class
+
+  def initialize(
+    step_class,
+    scheduler,
+    events:,
+    outcome: :done,
+    raise_in_run: false,
+    raise_signal: false
+  )
+    @step_class = step_class
+    @scheduler = scheduler
+    @events = events
+    @outcome = outcome
+    @raise_in_run = raise_in_run
+    @raise_signal = raise_signal
+    @finish = Queue.new
+  end
+
+  def run
+    @events << @step_class.name.demodulize
+    @finish.pop
+
+    raise Interrupt if @raise_signal
+    raise "unhandled error in #{@step_class.name.demodulize}" if @raise_in_run
+
+    if @outcome == :failed
+      @scheduler.record_failure(
+        @step_class,
+        RuntimeError.new("boom in #{@step_class.name.demodulize}"),
+      )
+    end
+
+    @outcome
+  end
+
+  def finish!
+    @finish << true
+  end
+
+  # Simulate `count` of this step's workers finishing early, handing their forks
+  # back to the scheduler while `run` is still blocked (the step isn't done yet).
+  def release!(count = 1)
+    @scheduler.release_forks(@step_class, count)
+  end
+end
+
 RSpec.describe Migrations::Conversion::StepScheduler do
   let(:events) { Queue.new }
-
-  # Fake StepCoordinator: announces its step, then blocks until the example
-  # releases it, so we can drive ordering and concurrency without forking.
-  class FakeCoordinator
-    attr_reader :step_class
-
-    def initialize(step_class, scheduler, events:, outcome: :done, raise_in_run: false)
-      @step_class = step_class
-      @scheduler = scheduler
-      @events = events
-      @outcome = outcome
-      @raise_in_run = raise_in_run
-      @finish = Queue.new
-    end
-
-    def run
-      @events << @step_class.name.demodulize
-      @finish.pop
-
-      raise "unhandled error in #{@step_class.name.demodulize}" if @raise_in_run
-
-      if @outcome == :failed
-        @scheduler.record_failure(
-          @step_class,
-          RuntimeError.new("boom in #{@step_class.name.demodulize}"),
-        )
-      end
-
-      @outcome
-    end
-
-    def finish!
-      @finish << true
-    end
-
-    # Simulate `count` of this step's workers finishing early, handing their forks
-    # back to the scheduler while `run` is still blocked (the step isn't done yet).
-    def release!(count = 1)
-      @scheduler.release_forks(@step_class, count)
-    end
-  end
 
   # Builds named step classes in a throwaway namespace so `depends_on` (which
   # resolves names lexically) and the class-name tie-break have real classes to
@@ -94,6 +103,7 @@ RSpec.describe Migrations::Conversion::StepScheduler do
             events:,
             outcome: options.fetch(:outcome, :done),
             raise_in_run: options.fetch(:raise_in_run, false),
+            raise_signal: options.fetch(:raise_signal, false),
           )
         [step_class, coordinator]
       end
@@ -259,6 +269,21 @@ RSpec.describe Migrations::Conversion::StepScheduler do
     expect(events).to be_empty
   end
 
+  it "records a failure when a coordinator is interrupted by a signal" do
+    a, b = define_steps(:A, :B)
+    scheduler, by_name = build_scheduler([a, b], config: { a => { raise_signal: true } })
+
+    runner = run_in_background(scheduler)
+
+    expect([events.pop, events.pop].sort).to eq(%w[A B])
+    by_name["A"].finish!
+    by_name["B"].finish!
+
+    # The signal path must record the error, so the summary names it instead of
+    # rendering the step with an empty error class and message.
+    expect { runner.join }.to raise_error(Migrations::Conversion::ConvertError, /Interrupt/)
+  end
+
   it "still finishes when a coordinator raises instead of reporting back" do
     a, b = define_steps(:A, :B)
     scheduler, by_name = build_scheduler([a, b], config: { a => { raise_in_run: true } })
@@ -292,5 +317,21 @@ RSpec.describe Migrations::Conversion::StepScheduler do
     expect { runner.join }.to raise_error(Migrations::Conversion::ConvertError) do |error|
       expect(error.message).to include("merge boom")
     end
+  end
+
+  it "keeps the in-flight exception when teardown draining also fails" do
+    # The wait loop raised (a Ctrl-C Interrupt in `@condition.wait`) and draining
+    # then raises too. The teardown error must not replace the operator's Ctrl-C.
+    consolidator = instance_double(Migrations::Conversion::Consolidator, enqueue: nil)
+    allow(consolidator).to receive(:drain).and_raise(StandardError.new("drain boom"))
+    allow(Migrations::Conversion::Consolidator).to receive(:new).and_return(consolidator)
+
+    a, b = define_steps(:A, :B)
+    scheduler, = build_scheduler([a, b])
+    allow(scheduler).to receive(:schedule).and_raise(Interrupt)
+
+    runner = run_in_background(scheduler)
+
+    expect { runner.join }.to raise_error(Interrupt)
   end
 end

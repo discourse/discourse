@@ -17,8 +17,6 @@ sk:
               label: "Prijaté riešenia"
         sections:
           support:
-            filter:
-              all_categories: "Všetky kategórie"
             answerers:
               staff: "Personál"
               member: "Členovia"

@@ -19,8 +19,8 @@ RSpec.describe ListController do
 
       expect(response.status).to eq(200)
       expect(response.body).not_to include(SiteSetting.klipy_api_key)
-      expect(response.body).to have_tag("div#data-preloaded") do |element|
-        data_preloaded = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        data_preloaded = JSON.parse(element.current_scope.text)
         site_settings = JSON.parse(data_preloaded["siteSettings"])
 
         expect(site_settings).not_to have_key("klipy_api_key")
@@ -205,6 +205,28 @@ RSpec.describe ListController do
       expect(response.status).to eq(200)
       parsed = response.parsed_body
       expect(parsed["topic_list"]["topics"].length).to eq(1)
+    end
+
+    it "serializes topic excerpts only when they are explicitly requested" do
+      post = create_post
+      post.topic.update!(excerpt: "A hand-picked excerpt")
+
+      get "/latest.json", params: { topic_ids: post.topic_id.to_s }
+      expect(response.parsed_body["topic_list"]["topics"].first["excerpt"]).to eq(nil)
+
+      get "/latest.json", params: { topic_ids: post.topic_id.to_s, include_excerpts: "false" }
+      expect(response.parsed_body["topic_list"]["topics"].first["excerpt"]).to eq(nil)
+
+      get "/latest.json", params: { topic_ids: post.topic_id.to_s, include_excerpts: "true" }
+      expect(response.parsed_body["topic_list"]["topics"].first["excerpt"]).to eq(
+        "A hand-picked excerpt",
+      )
+    end
+
+    it "should return a 400 response when `include_excerpts` is not a boolean" do
+      get "/latest.json?include_excerpts=yes"
+
+      expect(response.status).to eq(400)
     end
 
     it "shows correct title if topic list is set for homepage" do
@@ -433,6 +455,57 @@ RSpec.describe ListController do
       get "/#{filter}", params: { _escaped_fragment_: "true" }
 
       expect(response.body).to include(I18n.t("js.filters.with_topics", filter: filter))
+    end
+  end
+
+  describe "rss feed discovery" do
+    it "advertises the feed for anonymous filters with a feed route" do
+      topic
+      get "/latest", params: { _escaped_fragment_: "true" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include("latest.rss")
+    end
+
+    it "omits the feed for anonymous filters without a feed route" do
+      topic
+      sign_in(user)
+
+      SiteSetting.anonymous_menu_items
+      anonymous_filters = Discourse.anonymous_filters
+      Discourse.stubs(:anonymous_filters).returns(anonymous_filters + [:new])
+
+      get "/new", params: { _escaped_fragment_: "true" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("application/rss+xml")
+    end
+  end
+
+  describe "crawler homepage rendering" do
+    fab!(:homepage_topic) { Fabricate(:post).topic }
+
+    before do
+      SiteSetting.has_login_hint = false
+      SiteSetting.top_menu = "latest|new|bookmarks|categories"
+    end
+
+    it "renders the crawler homepage without error for each reachable filter" do
+      %w[latest categories top hot new bookmarks].each do |filter|
+        SiteSetting.default_homepage = filter
+        get "/", params: { _escaped_fragment_: "true" }
+
+        expect(response.status).to eq(200), "expected 200 for default_homepage=#{filter}"
+        expect(response.body).not_to include("finish-installation")
+      end
+    end
+
+    it "falls back to an anon-visible list when the homepage is a user-scoped filter" do
+      SiteSetting.default_homepage = "bookmarks"
+      get "/", params: { _escaped_fragment_: "true" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(homepage_topic.title)
     end
   end
 
@@ -1286,6 +1359,23 @@ RSpec.describe ListController do
     end
   end
 
+  describe "topics_by with public profiles hidden" do
+    fab!(:profile_user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:profile_topic) { Fabricate(:topic, user: profile_user) }
+
+    before do
+      profile_user.user_stat.update!(post_count: 1)
+      SiteSetting.hide_user_profiles_from_public = true
+    end
+
+    it "does not disclose a user's topics to anonymous users" do
+      get "/topics/created-by/#{profile_user.username}.json"
+
+      expect(response).to have_http_status(:not_found)
+      expect(response.body).not_to include(profile_topic.title)
+    end
+  end
+
   describe "private_messages" do
     it "returns 403 error when the user can't see private message" do
       sign_in(Fabricate(:user))
@@ -1517,6 +1607,19 @@ RSpec.describe ListController do
 
       get "/c/hello/#{category.id}"
       expect(response.status).to eq(200)
+    end
+
+    it "does not disclose restricted topic titles through category route permalink fallbacks" do
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      private_topic =
+        Fabricate(:topic, category: private_category, title: "Restricted list fallback topic title")
+      Permalink.create!(url: "c/old-category/999", topic: private_topic)
+
+      get "/c/old-category/999"
+
+      expect(response).to have_http_status(:not_found)
+      expect(response.headers["Location"]).to be_nil
+      expect(response.body).not_to include(private_topic.title)
     end
 
     context "with encoded slugs" do

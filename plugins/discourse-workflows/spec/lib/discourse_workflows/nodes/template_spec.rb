@@ -9,186 +9,271 @@ RSpec.describe DiscourseWorkflows::Nodes::Template::V1 do
 
   fab!(:execution) { Fabricate(:discourse_workflows_execution, workflow: workflow) }
 
-  def execute_template(
-    template = nil,
-    mode: nil,
-    input_items: [{ "json" => {} }],
-    vars: {},
-    workflow: nil,
-    execution_id: nil
-  )
-    parameters = template.nil? ? {} : { "template" => template }
-    parameters["mode"] = mode if mode
-    resolver_context = { "$json" => input_items.first&.dig("json") || {} }
-    sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context, vars: vars)
-    resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
-    exec_ctx =
-      DiscourseWorkflows::Executor::NodeExecutionContext.new(
-        input_items: input_items,
-        parameters: parameters,
-        property_schema: described_class.property_schema,
-        resolver: resolver,
-        vars: vars,
-        workflow: workflow,
-        execution_id: execution_id,
-      )
+  subject(:template_result) { described_class.new.execute(execution_context).first }
 
-    described_class.new.execute(exec_ctx).first
-  ensure
-    resolver&.dispose
-    sandbox&.dispose
+  let(:template) { nil }
+  let(:mode) { nil }
+  let(:template_parameters) { { "template" => template, "mode" => mode }.compact }
+  let(:execution_items) { [{ "json" => {} }] }
+  let(:input_groups) { nil }
+  let(:template_vars) { {} }
+  let(:workflow_context) { nil }
+  let(:execution_id) { nil }
+  let(:resolver_context) { { "$json" => execution_items.first&.dig("json") || {} } }
+  let(:sandbox) { DiscourseWorkflows::JsSandbox.new(resolver_context, vars: template_vars) }
+  let(:resolver) { DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox) }
+  let(:execution_context) do
+    DiscourseWorkflows::Executor::NodeExecutionContext.new(
+      input_items: execution_items,
+      input_groups: input_groups,
+      parameters: template_parameters,
+      property_schema: described_class.property_schema,
+      resolver: resolver,
+      vars: template_vars,
+      workflow: workflow_context,
+      execution_id: execution_id,
+    )
+  end
+
+  after do
+    resolver.dispose
+    sandbox.dispose
   end
 
   describe "#execute" do
-    it "renders a single output from all input items" do
-      result =
-        execute_template(
-          "{% for item in items %}{{ item.name }} {% endfor %}",
-          input_items: [{ "json" => { "name" => "Alice" } }, { "json" => { "name" => "Bob" } }],
-        )
+    context "with multiple input items" do
+      let(:template) { "{% for item in items %}{{ item.name }} {% endfor %}" }
+      let(:execution_items) do
+        [{ "json" => { "name" => "Alice" } }, { "json" => { "name" => "Bob" } }]
+      end
 
-      expect(result.map { |item| item["json"] }).to eq([{ "template" => "Alice Bob " }])
+      it "renders a single output from all input items" do
+        expect(template_result.map { |item| item["json"] }).to eq([{ "template" => "Alice Bob " }])
+      end
+
+      it "links the output item to every source item" do
+        expect(template_result.first["pairedItem"]).to eq([{ "item" => 0 }, { "item" => 1 }])
+      end
     end
 
-    it "renders one output per input item in each-item mode" do
-      SiteSetting.title = "Each Item Forum"
+    context "in each-item mode" do
+      let(:template) do
+        "{{ item.name }} {{ item.item_index }}/{{ items_count }} {{ site_settings.title }}"
+      end
+      let(:mode) { "runOnceForEachItem" }
+      let(:execution_items) do
+        [
+          { "json" => { "name" => "Alice", "item_index" => 99 } },
+          { "json" => { "name" => "Bob", "items_count" => 99 } },
+        ]
+      end
 
-      result =
-        execute_template(
-          "{{ item.name }} {{ item.item_index }}/{{ items_count }} {{ site_settings.title }}",
-          mode: "runOnceForEachItem",
-          input_items: [
-            { "json" => { "name" => "Alice", "item_index" => 99 } },
-            { "json" => { "name" => "Bob", "items_count" => 99 } },
+      it "renders one output per input item" do
+        SiteSetting.title = "Each Item Forum"
+
+        expect(template_result.map { |item| item["json"] }).to eq(
+          [
+            { "template" => "Alice 1/2 Each Item Forum" },
+            { "template" => "Bob 2/2 Each Item Forum" },
           ],
         )
+        expect(template_result.map { |item| item["pairedItem"] }).to eq(
+          [{ "item" => 0 }, { "item" => 1 }],
+        )
+      end
+    end
 
-      expect(result.map { |item| item["json"] }).to eq(
+    context "with workflow metadata and variables" do
+      let(:template) do
+        "{% for item in items %}{{ item.name }} {% endfor %}" \
+          "count={{ items_count }} var={{ vars.project }} " \
+          "workflow={{ workflow.name }} execution={{ execution.id }} " \
+          "{% for item in items %}item={{ item.item.json.name }} index={{ item.item_index }} {% endfor %}"
+      end
+      let(:execution_items) do
         [
-          { "template" => "Alice 1/2 Each Item Forum" },
-          { "template" => "Bob 2/2 Each Item Forum" },
-        ],
-      )
-      expect(result.map { |item| item["pairedItem"] }).to eq([{ "item" => 0 }, { "item" => 1 }])
-    end
-
-    it "exposes workflow metadata and all input items" do
-      input_items = [
-        {
-          "json" => {
-            "name" => "Alice",
-            "vars" => {
-              "project" => "Ignored",
-            },
-            "item" => {
-              "json" => {
-                "name" => "Ignored",
+          {
+            "json" => {
+              "name" => "Alice",
+              "vars" => {
+                "project" => "Ignored",
               },
+              "item" => {
+                "json" => {
+                  "name" => "Ignored",
+                },
+              },
+              "item_index" => 99,
             },
-            "item_index" => 99,
           },
-        },
-        { "json" => { "name" => "Bob" } },
-      ]
+          { "json" => { "name" => "Bob" } },
+        ]
+      end
+      let(:template_vars) { { "project" => "Workflows" } }
+      let(:workflow_context) { workflow }
+      let(:execution_id) { execution.id }
 
-      result =
-        execute_template(
-          "{% for item in items %}{{ item.name }} {% endfor %}" \
-            "count={{ items_count }} var={{ vars.project }} " \
-            "workflow={{ workflow.name }} execution={{ execution.id }} " \
-            "{% for item in items %}item={{ item.item.json.name }} index={{ item.item_index }} {% endfor %}",
-          input_items: input_items,
-          vars: {
-            "project" => "Workflows",
-          },
-          workflow: workflow,
-          execution_id: execution.id,
+      it "exposes them with all input items" do
+        expect(template_result.first["json"]).to eq(
+          "template" =>
+            "Alice Bob count=2 var=Workflows workflow=Template workflow execution=#{execution.id} " \
+              "item=Alice index=1 item=Bob index=2 ",
         )
+      end
+    end
 
-      expect(result.first["json"]).to eq(
-        "template" =>
-          "Alice Bob count=2 var=Workflows workflow=Template workflow execution=#{execution.id} " \
-            "item=Alice index=1 item=Bob index=2 ",
+    context "with site settings" do
+      let(:template) do
+        "title={{ site_settings.title }} " \
+          "secret={{ site_settings.discourse_connect_secret }} " \
+          "hidden={{ site_settings.vapid_public_key }}"
+      end
+
+      it "exposes public settings and filters private settings" do
+        SiteSetting.title = "Liquid Forum"
+
+        expect(template_result.first["json"]).to eq(
+          "template" => "title=Liquid Forum secret=[FILTERED] hidden=[FILTERED]",
+        )
+      end
+    end
+
+    context "with extra fields in an input item" do
+      let(:template) { "{% for item in items %}{{ item.name }}{% endfor %}" }
+      let(:execution_items) { [{ "json" => { "name" => "Alice", "extra" => "ignored" } }] }
+
+      it "emits only the template field", :aggregate_failures do
+        expect(template_result.first["json"]).to eq("template" => "Alice")
+        expect(template_result.first["json"]).to match_node_output_schema(described_class)
+      end
+    end
+
+    context "with missing variables" do
+      let(:template) { "Hello {{ missing }}" }
+
+      it "renders them as blank strings" do
+        expect(template_result.first["json"]).to eq("template" => "Hello ")
+      end
+    end
+
+    context "with HTML in a value" do
+      let(:template) { "{% for item in items %}{{ item.value }}{% endfor %}" }
+      let(:execution_items) { [{ "json" => { "value" => "<b>bold</b>" } }] }
+
+      it "uses default Liquid output rules" do
+        expect(template_result.first["json"]).to eq("template" => "<b>bold</b>")
+      end
+    end
+
+    context "without a template" do
+      let(:execution_items) do
+        [{ "json" => { "name" => "Alice" } }, { "json" => { "name" => "Bob" } }]
+      end
+
+      it "defaults to one showing item loop syntax" do
+        expect(template_result.first["json"]).to eq("template" => <<~TEXT)
+            Items:
+            - 1: Alice
+            - 2: Bob
+          TEXT
+      end
+    end
+
+    context "with invalid Liquid syntax" do
+      let(:template) { "{% for item in items %}" }
+
+      it "raises a node error" do
+        expect { template_result }.to raise_error(DiscourseWorkflows::NodeError, /Invalid template/)
+      end
+    end
+
+    context "with an invalid mode" do
+      let(:template) { "Hello" }
+      let(:mode) { "invalid" }
+
+      it "raises a node error" do
+        expect { template_result }.to raise_error(
+          DiscourseWorkflows::NodeError,
+          /Invalid Template mode/,
+        )
+      end
+    end
+  end
+
+  describe "multiple inputs" do
+    it "accepts several connections on its main input" do
+      expect(described_class.input_ports).to contain_exactly(
+        include(key: "main", required: false, multiple: true),
       )
     end
 
-    it "exposes site settings and filters private settings" do
-      SiteSetting.title = "Liquid Forum"
+    context "with several connected branches" do
+      let(:template) do
+        "{% for u in inputs[1] %}@{{ u.username }} {% endfor %}| {{ inputs[0][0].title }}"
+      end
+      let(:execution_items) { [{ "json" => { "title" => "Topics" } }] }
+      let(:input_groups) do
+        {
+          "input_1" => [{ "json" => { "title" => "Topics" } }],
+          "input_2" => [
+            { "json" => { "username" => "ann" } },
+            { "json" => { "username" => "bob" } },
+          ],
+        }
+      end
 
-      result =
-        execute_template(
-          "title={{ site_settings.title }} " \
-            "secret={{ site_settings.discourse_connect_secret }} " \
-            "hidden={{ site_settings.vapid_public_key }}",
-        )
-
-      expect(result.first["json"]).to eq(
-        "template" => "title=Liquid Forum secret=[FILTERED] hidden=[FILTERED]",
-      )
+      it "exposes each connected branch under inputs" do
+        expect(template_result.first["json"]).to eq("template" => "@ann @bob | Topics")
+      end
     end
 
-    it "emits only the template field", :aggregate_failures do
-      result =
-        execute_template(
-          "{% for item in items %}{{ item.name }}{% endfor %}",
-          input_items: [{ "json" => { "name" => "Alice", "extra" => "ignored" } }],
-        )
+    context "with a template reading items" do
+      let(:template) { "{{ items[0].title }}/{{ items_count }}" }
+      let(:execution_items) { [{ "json" => { "title" => "Topics" } }] }
+      let(:input_groups) do
+        {
+          "input_1" => [{ "json" => { "title" => "Topics" } }],
+          "input_2" => [{ "json" => { "username" => "ann" } }],
+        }
+      end
 
-      expect(result.first["json"]).to eq("template" => "Alice")
-      expect(result.first["json"]).to match_node_output_schema(described_class)
+      it "keeps items pointing at the first input" do
+        expect(template_result.first["json"]).to eq("template" => "Topics/1")
+      end
     end
 
-    it "links the output item to every source item" do
-      result =
-        execute_template(
-          "{% for item in items %}{{ item.name }}{% endfor %}",
-          input_items: [{ "json" => { "name" => "Alice" } }, { "json" => { "name" => "Bob" } }],
-        )
+    context "with a single connected input" do
+      let(:template) { "{{ inputs[0][0].name }}" }
+      let(:execution_items) { [{ "json" => { "name" => "Alice" } }] }
 
-      expect(result.first["pairedItem"]).to eq([{ "item" => 0 }, { "item" => 1 }])
+      it "exposes it as inputs[0]" do
+        expect(template_result.first["json"]).to eq("template" => "Alice")
+      end
+    end
+  end
+
+  describe "resource limits" do
+    context "with a runaway loop without a ceiling" do
+      let(:template) { "{% for i in (1..1000000) %}x{% endfor %}" }
+
+      it "raises a node error instead of rendering it" do
+        expect { template_result }.to raise_error(DiscourseWorkflows::NodeError, /Invalid template/)
+      end
     end
 
-    it "renders missing variables as blank strings" do
-      result = execute_template("Hello {{ missing }}")
+    context "with a report-sized template" do
+      let(:template) do
+        "{% for t in items %}{{ t.title }}{% for p in t.posts %} {{ p.n }}{% endfor %}\n{% endfor %}"
+      end
+      let(:execution_items) do
+        (1..20).map do |index|
+          { "json" => { "title" => "Topic #{index}", "posts" => (1..20).map { |n| { "n" => n } } } }
+        end
+      end
 
-      expect(result.first["json"]).to eq("template" => "Hello ")
-    end
-
-    it "uses default Liquid output rules" do
-      result =
-        execute_template(
-          "{% for item in items %}{{ item.value }}{% endfor %}",
-          input_items: [{ "json" => { "value" => "<b>bold</b>" } }],
-        )
-
-      expect(result.first["json"]).to eq("template" => "<b>bold</b>")
-    end
-
-    it "defaults to a template showing item loop syntax" do
-      result =
-        execute_template(
-          input_items: [{ "json" => { "name" => "Alice" } }, { "json" => { "name" => "Bob" } }],
-        )
-
-      expect(result.first["json"]).to eq("template" => <<~TEXT)
-          Items:
-          - 1: Alice
-          - 2: Bob
-        TEXT
-    end
-
-    it "raises a node error for invalid Liquid syntax" do
-      expect { execute_template("{% for item in items %}") }.to raise_error(
-        DiscourseWorkflows::NodeError,
-        /Invalid template/,
-      )
-    end
-
-    it "raises a node error for invalid mode" do
-      expect { execute_template("Hello", mode: "invalid") }.to raise_error(
-        DiscourseWorkflows::NodeError,
-        /Invalid Template mode/,
-      )
+      it "renders well within the limits" do
+        expect(template_result.first["json"]["template"].lines.length).to eq(20)
+      end
     end
   end
 end

@@ -637,8 +637,8 @@ RSpec.describe SearchController do
         end
       end
 
-      context "when show_original cookie is set" do
-        before { cookies[ContentLocalization::SHOW_ORIGINAL_COOKIE] = "true" }
+      context "when automatic translation is disabled by cookie" do
+        before { cookies[ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE] = "false" }
 
         it "returns original blurb in search results" do
           with_search_indexer_enabled { SearchIndexer.index(localized_post.topic, force: true) }

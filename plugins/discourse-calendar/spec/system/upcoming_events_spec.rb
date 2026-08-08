@@ -117,9 +117,8 @@ describe "Upcoming Events" do
       find("a", text: "Event with long description").click
 
       expect(post_event_page).to have_description_clamped
-      expect(post_event_page).to have_description(
-        "Join us for a great event with bold text and more details!",
-      )
+      expect(post_event_page).to have_description("Join us for a great event")
+      expect(post_event_page).to have_description("with bold text and more details!")
       expect(post_event_page).to have_description_toggle
 
       post_event_page.click_description_toggle

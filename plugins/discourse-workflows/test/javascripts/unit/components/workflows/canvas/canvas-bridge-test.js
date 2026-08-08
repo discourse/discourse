@@ -317,6 +317,227 @@ module("Unit | Canvas Bridge", function (hooks) {
     bridge.destroy();
   });
 
+  test("pointer jitter below the drag lenience does not move a picked node", async function (assert) {
+    const dragged = [];
+    const bridge = await createReteEditor(container, {
+      callbacks: noopCallbacks({
+        onNodeDragged: (id, position) => dragged.push({ id, ...position }),
+      }),
+      nodeTypes: NODE_TYPES,
+    });
+
+    await bridge.syncState(
+      [{ clientId: "n1", type: "trigger:manual", position: { x: 0, y: 0 } }],
+      []
+    );
+
+    const view = bridge.area.nodeViews.get("n1");
+    await bridge.area.emit({ type: "nodepicked", data: { id: "n1" } });
+
+    await view.translate(2, 2);
+    assert.deepEqual(
+      view.position,
+      { x: 0, y: 0 },
+      "a sub-lenience move is swallowed"
+    );
+    assert.deepEqual(dragged, [], "no drag is reported");
+
+    await view.translate(6, 0);
+    assert.deepEqual(
+      view.position,
+      { x: 6, y: 0 },
+      "the node moves once the pointer passes the lenience radius"
+    );
+
+    await view.translate(1, 0);
+    assert.deepEqual(
+      view.position,
+      { x: 1, y: 0 },
+      "sub-lenience deltas apply normally once dragging has started"
+    );
+    assert.deepEqual(dragged, [
+      { id: "n1", x: 6, y: 0 },
+      { id: "n1", x: 1, y: 0 },
+    ]);
+
+    bridge.destroy();
+  });
+
+  test("a jittery double-click opens the node without moving it", async function (assert) {
+    const doubleClicked = [];
+    const dragged = [];
+    const bridge = await createReteEditor(container, {
+      callbacks: noopCallbacks({
+        onNodeDoubleClick: (id) => doubleClicked.push(id),
+        onNodeDragged: (id, position) => dragged.push({ id, ...position }),
+      }),
+      nodeTypes: NODE_TYPES,
+    });
+
+    await bridge.syncState(
+      [{ clientId: "n1", type: "trigger:manual", position: { x: 0, y: 0 } }],
+      []
+    );
+
+    const view = bridge.area.nodeViews.get("n1");
+    const pointerup = () =>
+      bridge.area.emit({
+        type: "pointerup",
+        data: {
+          position: { x: 0, y: 0 },
+          event: {
+            button: 0,
+            target: { closest: () => null },
+            clientX: 0,
+            clientY: 0,
+          },
+        },
+      });
+
+    await bridge.area.emit({ type: "nodepicked", data: { id: "n1" } });
+    await view.translate(2, 1);
+    await pointerup();
+    await bridge.area.emit({ type: "nodepicked", data: { id: "n1" } });
+    await pointerup();
+
+    assert.deepEqual(doubleClicked, ["n1"], "the double-click is detected");
+    assert.deepEqual(view.position, { x: 0, y: 0 }, "the node did not move");
+    assert.deepEqual(dragged, [], "no position change was reported");
+
+    bridge.destroy();
+  });
+
+  test("the drag lenience is measured in screen pixels", async function (assert) {
+    const bridge = await createReteEditor(container, {
+      callbacks: noopCallbacks(),
+      nodeTypes: NODE_TYPES,
+    });
+
+    await bridge.syncState(
+      [{ clientId: "n1", type: "trigger:manual", position: { x: 0, y: 0 } }],
+      []
+    );
+    await bridge.zoomAtViewportCenter(0.25);
+
+    const view = bridge.area.nodeViews.get("n1");
+    await bridge.area.emit({ type: "nodepicked", data: { id: "n1" } });
+
+    await view.translate(10, 0);
+    assert.deepEqual(
+      view.position,
+      { x: 0, y: 0 },
+      "10 canvas pixels is only 2.5 screen pixels when zoomed out"
+    );
+
+    await view.translate(20, 0);
+    assert.deepEqual(
+      view.position,
+      { x: 20, y: 0 },
+      "20 canvas pixels crosses the screen-space lenience"
+    );
+
+    bridge.destroy();
+  });
+
+  test("releasing the pointer stops the drag lenience from swallowing translations", async function (assert) {
+    const bridge = await createReteEditor(container, {
+      callbacks: noopCallbacks(),
+      nodeTypes: NODE_TYPES,
+    });
+
+    await bridge.syncState(
+      [{ clientId: "n1", type: "trigger:manual", position: { x: 0, y: 0 } }],
+      []
+    );
+
+    const view = bridge.area.nodeViews.get("n1");
+    await bridge.area.emit({ type: "nodepicked", data: { id: "n1" } });
+    await view.translate(2, 0);
+    assert.deepEqual(view.position, { x: 0, y: 0 });
+
+    await bridge.area.emit({
+      type: "pointerup",
+      data: {
+        position: { x: 0, y: 0 },
+        event: {
+          button: 0,
+          target: { closest: () => null },
+          clientX: 0,
+          clientY: 0,
+        },
+      },
+    });
+
+    await view.translate(2, 0);
+    assert.deepEqual(
+      view.position,
+      { x: 2, y: 0 },
+      "translations after release are not swallowed"
+    );
+
+    bridge.destroy();
+  });
+
+  test("connection dragging marks the container and the source node", async function (assert) {
+    const bridge = await createReteEditor(container, {
+      callbacks: noopCallbacks(),
+      nodeTypes: NODE_TYPES,
+    });
+
+    await bridge.syncState(
+      [
+        { clientId: "n1", type: "trigger:manual", position: { x: 0, y: 0 } },
+        {
+          clientId: "n2",
+          type: "action:http_request",
+          position: { x: 200, y: 0 },
+        },
+      ],
+      []
+    );
+
+    const socket = { nodeId: "n1", side: "output", key: "main" };
+    await bridge.connectionPlugin.emit({
+      type: "connectionpick",
+      data: { socket },
+    });
+
+    assert.true(
+      container.classList.contains("is-connection-dragging"),
+      "the canvas is marked while a connection is dragged"
+    );
+    assert.true(
+      bridge.area.nodeViews
+        .get("n1")
+        .element.classList.contains("is-connection-source"),
+      "the node the drag started from is marked"
+    );
+    assert.false(
+      bridge.area.nodeViews
+        .get("n2")
+        .element.classList.contains("is-connection-source"),
+      "other nodes are not marked"
+    );
+
+    await bridge.connectionPlugin.emit({
+      type: "connectiondrop",
+      data: { initial: socket, socket: null, created: false },
+    });
+
+    assert.false(
+      container.classList.contains("is-connection-dragging"),
+      "the canvas marker is cleared on drop"
+    );
+    assert.false(
+      bridge.area.nodeViews
+        .get("n1")
+        .element.classList.contains("is-connection-source"),
+      "the source node marker is cleared on drop"
+    );
+
+    bridge.destroy();
+  });
+
   test("syncState manages connections and creates connection entries", async function (assert) {
     const bridge = await createReteEditor(container, {
       callbacks: noopCallbacks(),
@@ -728,6 +949,56 @@ module("Unit | Canvas Bridge", function (hooks) {
     );
 
     bridge.destroy();
+  });
+
+  test("autoArrange stacks branch targets in output port order", async function (assert) {
+    const nodes = [
+      {
+        clientId: "branch",
+        type: "action:data_table",
+        position: { x: 0, y: 0 },
+      },
+      {
+        clientId: "empty",
+        type: "action:http_request",
+        position: { x: 0, y: 0 },
+      },
+      {
+        clientId: "results",
+        type: "action:http_request",
+        position: { x: 0, y: 0 },
+      },
+    ];
+    const connections = [
+      {
+        sourceClientId: "branch",
+        sourceOutput: "results",
+        targetClientId: "results",
+      },
+      {
+        sourceClientId: "branch",
+        sourceOutput: "no_results",
+        targetClientId: "empty",
+      },
+    ];
+
+    // stored connection order must not matter, only output port order
+    for (const stored of [connections, [...connections].reverse()]) {
+      const bridge = await createReteEditor(container, {
+        callbacks: noopCallbacks(),
+        nodeTypes: NODE_TYPES,
+      });
+      await bridge.syncState(nodes, stored);
+
+      const positions = await bridge.autoArrange();
+
+      assert.true(
+        positions.get("results").y < positions.get("empty").y,
+        "first output's target is above second output's target"
+      );
+
+      bridge.destroy();
+    }
   });
 
   test("containerToCanvas converts coordinates based on transform", async function (assert) {

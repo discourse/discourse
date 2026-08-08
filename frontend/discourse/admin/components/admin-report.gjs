@@ -16,6 +16,7 @@ import AdminReportStorageStats from "discourse/admin/components/admin-report-sto
 import AdminReportTable from "discourse/admin/components/admin-report-table";
 import ReportFilterBoolComponent from "discourse/admin/components/report-filters/bool";
 import ReportFilterCategoryComponent from "discourse/admin/components/report-filters/category";
+import ReportFilterCategoryListComponent from "discourse/admin/components/report-filters/category-list";
 import ReportFilterGroupComponent from "discourse/admin/components/report-filters/group";
 import ReportFilterListComponent from "discourse/admin/components/report-filters/list";
 import { REPORT_MODES } from "discourse/admin/lib/constants";
@@ -242,6 +243,8 @@ export default class AdminReport extends Component {
         return ReportFilterBoolComponent;
       case "category":
         return ReportFilterCategoryComponent;
+      case "category_list":
+        return ReportFilterCategoryListComponent;
       case "group":
         return ReportFilterGroupComponent;
       case "list":
@@ -292,10 +295,13 @@ export default class AdminReport extends Component {
       isTesting() ? "end" : formattedEndDate.replace(/-/g, ""),
       "[:prev_period]",
       this.args.reportOptions?.table?.limit,
-      // Convert all filter values to strings to ensure unique serialization
+      // Convert all filter values to strings to ensure unique serialization.
+      // Arrays (e.g. a category_list filter's selected ids) are mapped
+      // element-wise rather than stringified whole, so the key stays valid
+      // JSON and matches the server's own `MultiJson.dump(report.filters)`.
       this.args.filters?.customFilters
         ? JSON.stringify(this.args.filters?.customFilters, (k, v) =>
-            k ? `${v}` : v
+            Array.isArray(v) ? v.map(String) : k ? `${v}` : v
           )
         : null,
       SCHEMA_VERSION,

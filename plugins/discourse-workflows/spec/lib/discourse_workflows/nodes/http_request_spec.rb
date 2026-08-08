@@ -179,7 +179,53 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
 
       expect { execute_node(configuration: config, item: item) }.to raise_error(
         DiscourseWorkflows::NodeError,
-        "HTTP GET https://api.example.com/fail?token=[FILTERED] failed with status 404",
+        "HTTP GET https://api.example.com/fail?token=[FILTERED] failed with status 404: Not Found",
+      )
+    end
+
+    it "includes the response body in the error message" do
+      stub_request(:post, "https://api.example.com/categories").to_return(
+        status: 422,
+        body: { errors: ["Group PrivateGroup has no access to the parent category"] }.to_json,
+        headers: {
+          "content-type" => "application/json",
+        },
+      )
+
+      config = {
+        "method" => "POST",
+        "url" => "https://api.example.com/categories",
+        "body_json" => "{}",
+      }
+
+      expect { execute_node(configuration: config, item: item) }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        /failed with status 422: \{"errors":\["Group PrivateGroup has no access/,
+      )
+    end
+
+    it "truncates long response bodies in the error message" do
+      body = "x" * (DiscourseWorkflows::Executor::HttpClient::ERROR_BODY_MAX_BYTES * 2)
+      stub_request(:get, "https://api.example.com/fail").to_return(status: 500, body:)
+
+      config = { "method" => "GET", "url" => "https://api.example.com/fail" }
+
+      expect { execute_node(configuration: config, item: item) }.to raise_error(
+        DiscourseWorkflows::NodeError,
+      ) do |error|
+        expect(error.message).to end_with("…")
+        expect(error.message.bytesize).to be < body.bytesize
+      end
+    end
+
+    it "omits the description when the failed response has no body" do
+      stub_request(:get, "https://api.example.com/empty").to_return(status: 503, body: "")
+
+      config = { "method" => "GET", "url" => "https://api.example.com/empty" }
+
+      expect { execute_node(configuration: config, item: item) }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        "HTTP GET https://api.example.com/empty failed with status 503",
       )
     end
 

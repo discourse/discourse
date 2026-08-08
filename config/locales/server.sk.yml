@@ -316,7 +316,6 @@ sk:
       exclusion: je rezervované
       greater_than: musí byť viac ako %{count}
       greater_than_or_equal_to: musí byť väčšie alebo rovné %{count}
-      has_already_been_used: "je už použité"
       inclusion: nie je v zozname
       invalid: je nesprávne
       is_invalid: "je to nejasné, je to kompletná veta?"
@@ -1848,7 +1847,6 @@ sk:
     staff_edit_locks_post: "Príspevky budú uzamknuté pred úpravou, ak ich upravujú členovia personálu"
     post_edit_time_limit: "Autor tl0 alebo tl1 môže upravovať svoj príspevok (n) minút po odoslaní. Nastavte na 0 navždy."
     tl2_post_edit_time_limit: "Autor tl2+ môže upravovať svoj príspevok (n) minút po odoslaní. Nastavte na 0 navždy."
-    edit_history_visible_to_public: "Povoliť všetkým zobrazenie predchádzajúcich verzií upraveného príspevku. Pokiaľ je to vypnuté, verzie vidí iba obslužný personál"
     delete_removed_posts_after: "Príspevky zmazané autorom budú automaticky zmazané po (n) hodinách. Pokiaľ je nastavená 0, príspevky budú zmazané okamžite."
     notify_users_after_responses_deleted_on_flagged_post: "Keď je príspevok označený a potom odstránený, všetci používatelia, ktorí reagovali na príspevok a ich odpovede boli odstránené, budú upozornení."
     max_image_width: "Maximálna šírka miniatúr obrázkov v príspevku. Obrázky s väčšou šírkou sa zmenšia a zobrazia sa v lightboxe."
@@ -1947,7 +1945,6 @@ sk:
     suppress_secured_categories_from_admin: "Potlačenie súkromných tém a PM v niektorých častiach používateľského rozhrania pre administrátorov. Obsah bude na niektorých miestach stále viditeľný. Toto nie je bezpečnostná funkcia: administrátori majú vždy prístup ku všetkému obsahu na stránke."
     include_secure_categories_in_tag_counts: "Ak je táto možnosť povolená, počet tém pre značku bude zahŕňať témy, ktoré sú v kategóriách s obmedzeným čítaním pre všetkých používateľov. Ak je vypnuté, bežným používateľom sa zobrazí len počet tém pre značku, v ktorej sú všetky témy vo verejných kategóriách."
     display_personal_messages_tag_counts: "Ak je táto možnosť povolená, zobrazí sa počet osobných správ označených danou značkou."
-    top_menu: "Určite, ktoré položky a v akom poradí sa zobrazia v navigácii na domovskej stránke."
     post_menu: "Konfigurácia viditeľnosti a poradia predvolených položiek ponuky príspevku. Ďalšie položky pridané zásuvnými modulmi alebo témami sa spravujú samostatne a v tomto zozname sa nezobrazia."
     post_menu_hidden_items: "Položky ponuky, ktoré sa majú predvolene skryť v ponuke príspevku, pokiaľ sa neklikne na rozbaľovaciu elipsu. Ďalšie položky pridané zásuvnými modulmi alebo témami sa spravujú samostatne a v tomto zozname sa nezobrazia."
     share_links: "Uveďte, ktoré položky sa maju zobraziť v zdieľacom dialógu a v akom poradí."
@@ -2423,7 +2420,6 @@ sk:
     default_other_external_links_in_new_tab: "Štandardne otvárať externé odkazy v novej záložke."
     default_other_enable_quoting: "Štandardne na vybraný text zapnúť citované odpovede."
     default_other_enable_smart_lists: "Predvolene povoľte inteligentné zoznamy pri zadávaní v kompozitore."
-    default_other_enable_defer: "Povolenie funkcie odloženia témy v predvolenom nastavení."
     default_other_dynamic_favicon: "Štandardne zobraziť počet nových/aktualizovaných tém v ikone prehliadača."
     default_other_skip_new_user_tips: "Preskočiť tipy a odznaky na registráciu nového používateľa."
     default_other_like_notification_frequency: "Nastavuje frekvenciu, s akou používatelia dostávajú oznámenia o lajkoch v predvolenom nastavení. Používatelia, ktorí si neupravili nastavenia upozornení, sa budú riadiť týmto predvoleným správaním."
@@ -2518,7 +2514,6 @@ sk:
     about_page_extra_groups_order: "Usporiadanie ďalších skupín na stránke o používateľovi."
     adobe_analytics_tags_url: "Adresa URL značiek Adobe Analytics (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Skupiny, ktoré môžu zobraziť nespracovaný obsah e-mailu, ak bol príspevok vytvorený pomocou prichádzajúceho e-mailu. To zahŕňa hlavičky e-mailov a ďalšie technické informácie."
-    rich_editor: "Povoľte editor formátovaného textu pre autora, aby všetci používatelia mohli prepínať medzi aktuálnym režimom Markdown a novým editorom formátovaného textu pre intuitívnejšiu a užívateľsky prívetivejšiu tvorbu textu."
     default_composition_mode: "Nastavenie predvoleného režimu pre skladateľa vašej komunity. Režim Rich text poskytuje modernejšie a známejšie písanie pre väčšinu používateľov, zatiaľ čo režim Markdown môže byť vhodný pre technickejšie publikum. Členovia môžu na prepínanie medzi režimami používať prepínač na paneli nástrojov kompozitora."
     reviewable_ui_refresh: "Skupiny, ktoré môžu používať nové experimentálne používateľské rozhranie vo fronte revízií."
     errors:
@@ -5001,7 +4996,6 @@ sk:
           complete: "Používateľ odstránený."
         block:
           title: "Odstránenie a blokovanie používateľa"
-          description: "Používateľ bude vymazaný a my zablokujeme jeho IP a e-mailovú adresu."
           complete: "Používateľ vymazaný a zablokovaný."
       confirm_spam:
         title: "Áno"

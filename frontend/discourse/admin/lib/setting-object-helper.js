@@ -30,7 +30,8 @@ export default class SettingObjectHelper {
       return this.settingObj.get("valueProperty");
     }
 
-    if (isPresent(this.validValues?.[0]?.value)) {
+    const first = this.validValues?.[0];
+    if (first && typeof first === "object" && "value" in first) {
       return "value";
     }
     return null;

@@ -51,6 +51,7 @@ class FKForm extends Component {
       set: this.set,
       setProperties: this.setProperties,
       get: this.get,
+      commit: this.commit,
       commitField: this.commitField,
       submit: this.onSubmit,
       reset: this.onReset,
@@ -198,6 +199,11 @@ class FKForm extends Component {
   }
 
   @action
+  commit() {
+    this.formData.save();
+  }
+
+  @action
   commitField(name) {
     this.formData.commitField(name);
   }
@@ -270,7 +276,9 @@ class FKForm extends Component {
       await this.validate([...this.fields.values()]);
 
       if (this.formData.isValid) {
-        this.formData.save();
+        if (this.args.commitOnSubmit !== false) {
+          this.formData.save();
+        }
 
         await this.args.onSubmit?.(this.formData.draftData);
       } else {
@@ -393,6 +401,7 @@ const Form = <template>
   {{#each (array @data) as |data|}}
     <FKForm
       @data={{data}}
+      @commitOnSubmit={{@commitOnSubmit}}
       @onSubmit={{@onSubmit}}
       @validate={{@validate}}
       @validateOn={{@validateOn}}

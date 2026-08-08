@@ -15,29 +15,17 @@ RSpec.describe PostTiming do
       p1.topic_id
     end
 
-    def timing(user_id, post_number)
-      PostTiming.create!(topic_id: topic_id, user_id: user_id, post_number: post_number, msecs: 0)
-    end
-
-    def topic_user(user_id, last_read_post_number)
-      TopicUser.create!(
-        topic_id: topic_id,
-        user_id: user_id,
-        last_read_post_number: last_read_post_number,
-      )
-    end
-
     it "works correctly" do
-      timing(1, 1)
-      timing(2, 1)
-      timing(2, 2)
-      timing(3, 1)
-      timing(3, 2)
-      timing(3, 3)
+      PostTiming.create!(topic_id:, user_id: 1, post_number: 1, msecs: 0)
+      PostTiming.create!(topic_id:, user_id: 2, post_number: 1, msecs: 0)
+      PostTiming.create!(topic_id:, user_id: 2, post_number: 2, msecs: 0)
+      PostTiming.create!(topic_id:, user_id: 3, post_number: 1, msecs: 0)
+      PostTiming.create!(topic_id:, user_id: 3, post_number: 2, msecs: 0)
+      PostTiming.create!(topic_id:, user_id: 3, post_number: 3, msecs: 0)
 
-      _tu_one = topic_user(1, 1)
-      _tu_two = topic_user(2, 2)
-      _tu_three = topic_user(3, 3)
+      TopicUser.create!(topic_id:, user_id: 1, last_read_post_number: 1)
+      TopicUser.create!(topic_id:, user_id: 2, last_read_post_number: 2)
+      TopicUser.create!(topic_id:, user_id: 3, last_read_post_number: 3)
 
       PostTiming.pretend_read(topic_id, 2, 3)
 

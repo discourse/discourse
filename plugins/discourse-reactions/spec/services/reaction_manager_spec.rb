@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseReactions::ReactionManager do
-  def reaction_manager(reaction_value)
+  subject(:reaction_manager) do
     described_class.new(reaction_value: reaction_value, user: user, post: post)
   end
+
+  let(:reaction_value) { "-1" }
 
   fab!(:user)
   fab!(:post)
@@ -16,10 +18,12 @@ RSpec.describe DiscourseReactions::ReactionManager do
 
   describe ".toggle!" do
     context "when user is silenced" do
+      let(:reaction_value) { "clap" }
+
       before { user.update!(silenced_till: 1.year.from_now) }
 
       it "raises InvalidAccess when trying to toggle reaction" do
-        expect { reaction_manager("clap").toggle! }.to raise_error(Discourse::InvalidAccess)
+        expect { reaction_manager.toggle! }.to raise_error(Discourse::InvalidAccess)
       end
     end
 
@@ -55,41 +59,43 @@ RSpec.describe DiscourseReactions::ReactionManager do
 
     context "when the user has not yet reacted to the post" do
       context "when the new reaction matches discourse_reactions_reaction_for_like" do
+        let(:reaction_value) { "clap" }
+
         it "does create a PostAction record" do
-          expect { reaction_manager("clap").toggle! }.to change { PostAction.count }.by(1)
+          expect { reaction_manager.toggle! }.to change { PostAction.count }.by(1)
         end
 
         it "does not create a ReactionUser record" do
-          expect { reaction_manager("clap").toggle! }.not_to change {
+          expect { reaction_manager.toggle! }.not_to change {
             DiscourseReactions::ReactionUser.count
           }
         end
 
         it "creates a reaction notification" do
-          expect { reaction_manager("clap").toggle! }.to change { Notification.count }.by(1)
+          expect { reaction_manager.toggle! }.to change { Notification.count }.by(1)
         end
       end
 
       context "when the new reaction does not match discourse_reactions_reaction_for_like" do
+        let(:reaction_value) { "+1" }
+
         it "does create a PostAction record" do
-          expect { reaction_manager("+1").toggle! }.to change { PostAction.count }
+          expect { reaction_manager.toggle! }.to change { PostAction.count }
         end
 
         it "does create a ReactionUser record" do
-          expect { reaction_manager("+1").toggle! }.to change {
-            DiscourseReactions::ReactionUser.count
-          }
+          expect { reaction_manager.toggle! }.to change { DiscourseReactions::ReactionUser.count }
         end
 
         it "creates a reaction notification" do
-          expect { reaction_manager("+1").toggle! }.to change { Notification.count }.by(1)
+          expect { reaction_manager.toggle! }.to change { Notification.count }.by(1)
         end
 
         context "when the reaction is in discourse_reactions_excluded_from_like" do
           before { SiteSetting.discourse_reactions_excluded_from_like = "+1" }
 
           it "does not create a PostAction record" do
-            expect { reaction_manager("+1").toggle! }.not_to change { PostAction.count }
+            expect { reaction_manager.toggle! }.not_to change { PostAction.count }
           end
         end
       end
@@ -103,16 +109,16 @@ RSpec.describe DiscourseReactions::ReactionManager do
 
         context "when the user has permission to delete the ReactionUser" do
           it "removes the ReactionUser for the old +1 reaction" do
-            reaction_manager("-1").toggle!
+            reaction_manager.toggle!
             expect(DiscourseReactions::ReactionUser.find_by(id: reaction_user.id)).to be_nil
           end
 
           it "removes any PostAction that exists as well" do
-            expect { reaction_manager("-1").toggle! }.to change { PostAction.count }.by(-1)
+            expect { reaction_manager.toggle! }.to change { PostAction.count }.by(-1)
           end
 
           it "adds a new ReactionUser record for the new reaction -1 but not PostAction because of discourse_reactions_excluded_from_like" do
-            reaction_manager("-1").toggle!
+            reaction_manager.toggle!
             expect(
               DiscourseReactions::ReactionUser.find_by(
                 reaction: reaction_minus_one,
@@ -130,7 +136,7 @@ RSpec.describe DiscourseReactions::ReactionManager do
           end
 
           it "adds a new ReactionUser record and a PostAction record for reaction hugs" do
-            reaction_manager("hugs").toggle!
+            described_class.new(reaction_value: "hugs", user: user, post: post).toggle!
             expect(
               DiscourseReactions::ReactionUser.find_by(
                 reaction: reaction_hugs,
@@ -149,7 +155,7 @@ RSpec.describe DiscourseReactions::ReactionManager do
 
           it "deletes any notifications for the old Reaction and creates a notification for the new reaction" do
             DiscourseReactions::ReactionNotification.new(reaction_plus_one, user).create
-            expect { reaction_manager("-1").toggle! }.not_to change { Notification.count }
+            expect { reaction_manager.toggle! }.not_to change { Notification.count }
             expect(
               Notification.where(
                 notification_type: Notification.types[:reaction],
@@ -161,7 +167,7 @@ RSpec.describe DiscourseReactions::ReactionManager do
           end
 
           it "removes the Reaction record attached to the post when no more users have reacted to it" do
-            expect { reaction_manager("-1").toggle! }.to change {
+            expect { reaction_manager.toggle! }.to change {
               DiscourseReactions::Reaction.where(id: reaction_plus_one).count
             }.by(-1)
           end
@@ -170,7 +176,7 @@ RSpec.describe DiscourseReactions::ReactionManager do
             before { reaction_user.update!(reaction: reaction_minus_one) }
 
             it "does not add a new ReactionUser record, just removes the old one" do
-              expect { reaction_manager("-1").toggle! }.to change {
+              expect { reaction_manager.toggle! }.to change {
                 DiscourseReactions::ReactionUser.count
               }.by(-1).and change { PostAction.count }.by(-1)
             end
@@ -185,7 +191,7 @@ RSpec.describe DiscourseReactions::ReactionManager do
           end
 
           it "raises an error" do
-            expect { reaction_manager("-1").toggle! }.to raise_error(Discourse::InvalidAccess)
+            expect { reaction_manager.toggle! }.to raise_error(Discourse::InvalidAccess)
           end
         end
       end
@@ -202,18 +208,18 @@ RSpec.describe DiscourseReactions::ReactionManager do
 
         context "when the user has permission to delete the PostAction" do
           it "removes the PostAction" do
-            expect { reaction_manager("-1").toggle! }.to change { PostAction.count }.by(-1)
+            expect { reaction_manager.toggle! }.to change { PostAction.count }.by(-1)
           end
 
           it "removes the Reaction record attached to the post" do
-            expect { reaction_manager("-1").toggle! }.to change {
+            expect { reaction_manager.toggle! }.to change {
               DiscourseReactions::Reaction.where(id: reaction_clap).count
             }.by(-1)
           end
 
           it "deletes any notifications for the old Reaction and creates a notification for the new reaction" do
             DiscourseReactions::ReactionNotification.new(reaction_clap, user).create
-            expect { reaction_manager("-1").toggle! }.not_to change { Notification.count }
+            expect { reaction_manager.toggle! }.not_to change { Notification.count }
             expect(
               Notification.where(
                 notification_type: Notification.types[:reaction],
@@ -233,7 +239,7 @@ RSpec.describe DiscourseReactions::ReactionManager do
           end
 
           it "raises an error" do
-            expect { reaction_manager("-1").toggle! }.to raise_error(Discourse::InvalidAccess)
+            expect { reaction_manager.toggle! }.to raise_error(Discourse::InvalidAccess)
           end
         end
       end

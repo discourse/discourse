@@ -735,6 +735,8 @@ fi:
         email: "Sähköposti"
         name: "Nimi"
         fields: "Kentät"
+        silence_reason: "Hiljennyksen syy"
+        penalty_forever: "Ikuisesti"
         reject_reason: "Syy"
         scrubbed_by: "Tietueen puhdisti"
         scrubbed_reason: "Syy"
@@ -1480,7 +1482,6 @@ fi:
       external_links_in_new_tab: "Avaa sivuston ulkopuoliset linkit uudessa välilehdessä"
       enable_quoting: "Ota käyttöön viestin lainaaminen tekstiä valitsemalla"
       enable_smart_lists: "Ota älykkäät luettelot käyttöön kirjoittaessasi kirjoitustilassa"
-      enable_defer: "Ota ketjujen merkitseminen lukemattomiksi käyttöön"
       enable_markdown_monospace_font: "Käytä tasalevyistä fonttia kirjoitustilan markdown-tilassa"
       experimental_sidebar:
         enable: "Ota sivupalkki käyttöön"
@@ -1908,7 +1909,7 @@ fi:
         default: "(oletus)"
         any: "mikä tahansa"
       homepage:
-        default: "(oletus)"
+        default: "Oletus"
       password_confirmation:
         title: "Salasana uudelleen"
       invite_code:
@@ -1952,6 +1953,9 @@ fi:
         contextual: "Uusi sivusisältö"
       bookmark_after_notification:
         title: "Kun kirjanmerkkimuistutusilmoitus on lähetetty:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Ilmoita, kun viestistäni tykätään"
         always: "Aina"
@@ -2111,24 +2115,28 @@ fi:
           member_title: "Kutsu jäseniä"
           sent_title: "Kutsu lähetetty"
           member_tab: "Jäsenet"
-          admin_tab: "Ylläpitäjät"
+          admin_tab: "Henkilökunta"
+          staff_role_admin: "Ylläpitäjä"
+          staff_role_moderator: "Valvoja"
           admin_email_label: "Sähköpostiosoite"
           email_placeholder: "nimi@esimerkki.fi"
           invite_by_email: "Sähköpostiosoite"
           restrict_domain: "Rajoita verkkotunnukseen"
           domain_placeholder: "example.com"
-          more_options: "Lisää vaihtoehtoja"
+          create_and_send: "Lähetä"
+          create_and_copy: "Kopioi linkki"
           update: "Päivitä"
           summary:
             role_member: "Konkari"
             role_admin: "Ylläpitäjä"
+            role_moderator: "Valvoja"
             method: "Jakaminen"
             method_email: "Sähköpostiosoite"
             uses: "Käyttökertoja enintään"
             expires: "Vanhenee"
             topic: "Ketju"
             groups: "Ryhmät"
-            edit: "Muokkaa kutsua"
+            edit: "Muokkaa"
         bulk_invite:
           none: "Ei näytettäviä kutsuja tällä sivulla."
           text: "Joukkokutsu"
@@ -2707,6 +2715,8 @@ fi:
       default: Mukautetut emojit
     filter_input:
       clear: "Tyhjennä suodatin"
+    filter_controls:
+      reset: "Palauta"
     shared_drafts:
       title: "Jaetut luonnokset"
       notice: "Tämä ketju näkyy vain niille, jotka voivat julkaista jaettuja luonnoksia."
@@ -2823,7 +2833,6 @@ fi:
       italic_label: "I"
       italic_title: "Kursiivi"
       italic_text: "kursivoitu teksti"
-      heading_title: "Otsikot"
       heading_level_n: "Otsikko %{levelNumber}"
       heading_level_n_title: "Otsikko %{levelNumber}"
       heading_level_paragraph: "Kappale"
@@ -4862,6 +4871,10 @@ fi:
           public: "Näkyy kaikille"
           always_public: "Tämän osion sisältö on aina julkista"
           more_menu: "Lisää-valikko"
+          localizations:
+            locale: "Kieli"
+            title_label: "Osion otsikko"
+            remove_language: "Poista"
           links:
             add: "Lisää toinen linkki"
             delete: "Poista linkki"
@@ -5682,7 +5695,6 @@ fi:
               posts: "Viestejä"
               share: "Jaa"
             whos_posting:
-              all_categories: "Kaikki alueet"
               staff: "Henkilökunta"
             trust_level_pipeline:
               trust_levels:
@@ -6398,6 +6410,8 @@ fi:
         sidebar: "Sivupalkki"
         header_dropdown: "Yläpalkin avattava valikko"
         legacy: "Vanha"
+      duplicate_topic_titles:
+        allowed: "Sallittu"
       backups:
         title: "Varmuuskopiot"
         files_title: "Varmuuskopiotiedostot"
@@ -6628,7 +6642,6 @@ fi:
           finish_install: "Viimeistele teeman asennus"
           last_attempt: "Asennusprosessi ei päättynyt, viimeisin yritys:"
           remote_branch: "Haaran nimi (valinnainen)"
-          public_key: "Anna tietovaraston käyttöoikeus seuraavalle julkiselle avaimelle:"
           install: "Asenna"
           installed: "Asennettu"
           install_popular: "Suosittuja"
@@ -7911,6 +7924,7 @@ fi:
         uploading: "Ladataan…"
         name: "Nimi"
         group: "Ryhmä"
+        all_groups: "Kaikki ryhmät"
         created_by: "Luonut"
         image: "Kuva"
         alt: "mukautetun emojin esikatselu"

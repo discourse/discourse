@@ -1,6 +1,8 @@
+import { tracked } from "@glimmer/tracking";
 import {
   click,
   fillIn,
+  find,
   render,
   settled,
   triggerKeyEvent,
@@ -117,6 +119,46 @@ module("Integration | Component | SearchMenu", function (hooks) {
     assert
       .dom(".menu-panel .search-menu-initial-options")
       .doesNotExist("Menu panel is hidden");
+  });
+
+  test("@hideResults closes the menu and keeps it closed", async function (assert) {
+    const state = new (class {
+      @tracked hidden = false;
+    })();
+
+    await render(
+      <template>
+        <SearchMenu
+          @location="test"
+          @searchInputId="icon-search-input"
+          @hideResults={{state.hidden}}
+        />
+      </template>
+    );
+
+    await click("#icon-search-input");
+    assert.dom(".menu-panel").exists("menu opens from the input");
+
+    state.hidden = true;
+    await settled();
+    assert
+      .dom(".menu-panel")
+      .doesNotExist("menu closes when results are hidden");
+
+    await click("#icon-search-input");
+    assert
+      .dom(".menu-panel")
+      .doesNotExist("menu cannot open while results are hidden");
+
+    state.hidden = false;
+    await settled();
+    assert
+      .dom(".menu-panel")
+      .doesNotExist("menu stays closed when results can show again");
+
+    find("#icon-search-input").blur();
+    await click("#icon-search-input");
+    assert.dom(".menu-panel").exists("menu can reopen from the input");
   });
 
   test("rendering without a searchInputId provided", async function (assert) {

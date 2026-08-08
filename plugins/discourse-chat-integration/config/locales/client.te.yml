@@ -85,3 +85,6 @@ te:
               label: సందేశం పంపించండి
             url:
               label: URL
+    discourse_workflows:
+      send_chat_integration_message:
+        message: "సందేశం పంపించండి"

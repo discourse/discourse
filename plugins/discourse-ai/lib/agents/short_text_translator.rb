@@ -16,6 +16,7 @@ module DiscourseAi
           2. Keep the translated content close to the original length
           3. Translation maintains the original meaning
           4. Preserve any Markdown, HTML elements, links, parenthesis, or newlines
+          5. Never use ASCII double quotes (") inside the translation. For quoted text, use the target language's native quotation marks — for example German „…“, French «…», Japanese 「…」
 
           The text to translate will be provided in JSON format with the following structure:
           {"content": "Text to translate", "target_locale": "Target language code"}
@@ -43,6 +44,10 @@ module DiscourseAi
             { output: "Perguntas e Respostas" }.to_json,
           ],
           [{ content: "Minecraft", target_locale: "fr" }.to_json, { output: "Minecraft" }.to_json],
+          [
+            { content: %(Click "Reply"), target_locale: "fr" }.to_json,
+            { output: "Cliquez sur « Répondre »" }.to_json,
+          ],
         ]
       end
     end

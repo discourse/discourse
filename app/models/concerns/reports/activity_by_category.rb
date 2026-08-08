@@ -110,80 +110,16 @@ module Reports::ActivityByCategory
     end
 
     def period_data(prev_start, current_start, current_end, requested_ids, secure_category_ids)
-      builder = DB.build <<~SQL
-        SELECT
-          c.id,
-          c.name,
-          c.color,
-          c.slug,
-          COALESCE(t.topics_current, 0) AS topics_current,
-          COALESCE(p.posts_current, 0) AS posts_current,
-          COALESCE(v.page_views_current, 0) AS page_views_current,
-          COALESCE(t.topics_prior, 0) AS topics_prior,
-          COALESCE(p.posts_prior, 0) AS posts_prior,
-          COALESCE(v.page_views_prior, 0) AS page_views_prior
-        FROM categories c
-        LEFT JOIN (
-          SELECT category_id,
-            COUNT(*) FILTER (WHERE created_at >= :current_start) AS topics_current,
-            COUNT(*) FILTER (WHERE created_at <= :current_start) AS topics_prior
-          FROM topics
-          WHERE created_at >= :prev_start
-            AND created_at <= :current_end
-            AND deleted_at IS NULL
-            AND archetype = 'regular'
-          GROUP BY category_id
-        ) t ON t.category_id = c.id
-        LEFT JOIN (
-          SELECT topics.category_id,
-            COUNT(*) FILTER (WHERE posts.created_at >= :current_start) AS posts_current,
-            COUNT(*) FILTER (WHERE posts.created_at <= :current_start) AS posts_prior
-          FROM posts
-          INNER JOIN topics ON topics.id = posts.topic_id
-          WHERE posts.created_at >= :prev_start
-            AND posts.created_at <= :current_end
-            AND posts.deleted_at IS NULL
-            AND posts.post_type = :regular_post_type
-            AND topics.deleted_at IS NULL
-            AND topics.archetype = 'regular'
-          GROUP BY topics.category_id
-        ) p ON p.category_id = c.id
-        LEFT JOIN (
-          SELECT topics.category_id,
-            COALESCE(SUM(tvs.anonymous_views + tvs.logged_in_views)
-              FILTER (WHERE tvs.viewed_at >= :current_start), 0) AS page_views_current,
-            COALESCE(SUM(tvs.anonymous_views + tvs.logged_in_views)
-              FILTER (WHERE tvs.viewed_at <= :current_start), 0) AS page_views_prior
-          FROM topic_view_stats tvs
-          INNER JOIN topics ON topics.id = tvs.topic_id
-          WHERE tvs.viewed_at >= :prev_start
-            AND tvs.viewed_at <= :current_end
-            AND topics.deleted_at IS NULL
-            AND topics.archetype = 'regular'
-          GROUP BY topics.category_id
-        ) v ON v.category_id = c.id
-        /*where*/
-      SQL
-
-      builder.where(<<~SQL)
-        (COALESCE(t.topics_current, 0) + COALESCE(p.posts_current, 0) + COALESCE(v.page_views_current, 0)) > 0
-        OR (COALESCE(t.topics_prior, 0) + COALESCE(p.posts_prior, 0) + COALESCE(v.page_views_prior, 0)) > 0
-      SQL
-
-      if requested_ids.present?
-        builder.where("c.id IN (:requested_ids)", requested_ids: requested_ids)
-      end
-
-      builder.secure_category(secure_category_ids) unless secure_category_ids.nil?
-
       current_period = {}
       prior_period = {}
-      builder
-        .query(
-          prev_start: prev_start,
-          current_start: current_start,
-          current_end: current_end,
-          regular_post_type: Post.types[:regular],
+
+      CategoryActivityDailyRollup
+        .period_totals(
+          prev_start: prev_start.to_date,
+          current_start: current_start.to_date,
+          current_end: current_end.to_date,
+          category_ids: requested_ids,
+          secure_category_ids: secure_category_ids,
         )
         .each do |row|
           if row.topics_current + row.posts_current + row.page_views_current > 0
@@ -205,6 +141,7 @@ module Reports::ActivityByCategory
             }
           end
         end
+
       [current_period, prior_period]
     end
   end

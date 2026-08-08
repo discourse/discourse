@@ -749,6 +749,8 @@ sk:
         email: "Email"
         name: "Meno"
         fields: "Polia"
+        silence_reason: "Dôvod ticha"
+        penalty_forever: "Vždy"
         reject_reason: "Dôvod"
         scrubbed_by: "Záznam vymazaný"
         scrubbed_reason: "Dôvod"
@@ -1540,7 +1542,6 @@ sk:
       external_links_in_new_tab: "Otvárať všekty externé odkazy na novej karte"
       enable_quoting: "Umožniť odpoveď s citáciou z označeného textu"
       enable_smart_lists: "Povolenie inteligentných zoznamov pri písaní v aplikácii Composer"
-      enable_defer: "Povoliť označenie tém ako neprečítaných"
       experimental_sidebar:
         enable: "Povoliť bočný panel"
         options: "Možnosti"
@@ -2007,7 +2008,7 @@ sk:
         default: "(predvolené)"
         any: "hocijaký"
       homepage:
-        default: "(predvolené)"
+        default: "Predvolené"
       password_confirmation:
         title: "Heslo znova"
       invite_code:
@@ -2051,6 +2052,9 @@ sk:
         contextual: "Nový obsah stránky"
       bookmark_after_notification:
         title: "Po odoslaní upozornenia na pripomenutie záložky:"
+      send_shortcut:
+        enter: "Zadajte"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Oznámiť pri lajknutí"
         always: "Vždy"
@@ -2216,23 +2220,27 @@ sk:
           member_title: "Pozvať členov"
           sent_title: "Pozvánka bola odoslaná"
           member_tab: "Členovia"
-          admin_tab: "Administrátori"
+          admin_tab: "Personál"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderátor"
           admin_email_label: "E-mailová adresa"
           email_placeholder: "meno@príklad.com"
           invite_by_email: "Email"
           restrict_domain: "Obmedziť na doménu"
-          more_options: "Ďalšie možnosti"
+          create_and_send: "Odoslať"
+          create_and_copy: "Kopírovať odkaz"
           update: "Aktualizovať"
           summary:
             role_member: "Člen"
             role_admin: "Admin"
+            role_moderator: "Moderátor"
             method: "Zdieľanie"
             method_email: "Email"
             uses: "Maximálne využitie"
             expires: "Platnosť vyprší"
             topic: "Téma"
             groups: "Skupiny"
-            edit: "Upraviť pozvánku"
+            edit: "Upraviť"
         bulk_invite:
           none: "Na tejto stránke nie sú žiadne pozvánky na zobrazenie."
           text: "Hromadné pozvanie"
@@ -2867,6 +2875,8 @@ sk:
       default: Vlastné emotikony
     filter_input:
       clear: "Vymazať filter"
+    filter_controls:
+      reset: "Resetovať"
     shared_drafts:
       title: "Zdieľané návrhy"
       notice: "Táto téma je viditeľná len pre tých, ktorí môžu zverejňovať zdieľané návrhy."
@@ -2997,7 +3007,6 @@ sk:
       italic_label: "I"
       italic_title: "Zdôraznene"
       italic_text: "zdôraznený text"
-      heading_title: "Nadpisy"
       heading_level_n: "Nadpis %{levelNumber}"
       heading_level_n_title: "Nadpis %{levelNumber}"
       heading_level_paragraph: "Odsek"
@@ -5246,6 +5255,10 @@ sk:
           public: "Viditeľné pre každého"
           always_public: "Obsah v tejto časti je vždy verejný"
           more_menu: "Ďalšie menu"
+          localizations:
+            locale: "Jazyk"
+            title_label: "Názov sekcie"
+            remove_language: "Odstrániť"
           links:
             add: "Pridať ďalší odkaz"
             delete: "Odstrániť odkaz"
@@ -6088,7 +6101,6 @@ sk:
               posts: "Príspevky"
               share: "Zdieľať"
             whos_posting:
-              all_categories: "Všetky kategórie"
               staff: "Personál"
             trust_level_pipeline:
               trust_levels:
@@ -6825,6 +6837,8 @@ sk:
         sidebar: "Bočný panel"
         header_dropdown: "Rozbaľovacia ponuka hlavičky"
         legacy: "Odkaz"
+      duplicate_topic_titles:
+        allowed: "Povolené"
       backups:
         title: "Zálohy"
         files_title: "Súbory zálohy"
@@ -7052,7 +7066,6 @@ sk:
           finish_install: "Dokončiť inštaláciu témy"
           last_attempt: "Proces inštalácie sa nedokončil, posledný pokus:"
           remote_branch: "Názov pobočky (voliteľné)"
-          public_key: "Poskytnite prístup k repo nasledujúcemu verejnému kľúču:"
           install: "Inštalácia"
           installed: "Nainštalované"
           install_popular: "Populárne"
@@ -8377,6 +8390,7 @@ sk:
         uploading: "Nahrávanie..."
         name: "Meno"
         group: "Skupina"
+        all_groups: "Všetky skupiny"
         created_by: "Vytvoril"
         image: "Obrázok"
         alt: "náhľad vlastných emoji"

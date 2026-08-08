@@ -15,6 +15,7 @@ vi:
       create: "Tạo"
       ai:
         generate: "Khởi tạo"
+        regenerate: "Cập nhật truy vấn"
         optional: "tùy chọn"
       import:
         label: "Nhập"

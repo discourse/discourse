@@ -735,6 +735,8 @@ it:
         email: "Email"
         name: "Nome"
         fields: "Campi"
+        silence_reason: "Motivo del silenzio"
+        penalty_forever: "Per sempre"
         reject_reason: "Motivo"
         scrubbed_by: "Record cancellato da"
         scrubbed_reason: "Motivo"
@@ -1480,7 +1482,6 @@ it:
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
       enable_quoting: "Abilita \"rispondi citando\" il testo evidenziato"
       enable_smart_lists: "Abilita gli elenchi smart quando scrivi nel compositore"
-      enable_defer: "Abilita opzione di contrassegnare gli argomenti come non letti"
       enable_markdown_monospace_font: "Utilizza il font monospace nella modalità Markdown del compositore"
       experimental_sidebar:
         enable: "Abilita barra laterale"
@@ -1908,7 +1909,7 @@ it:
         default: "(default)"
         any: "tutti"
       homepage:
-        default: "(predefinita)"
+        default: "Predefinito"
       password_confirmation:
         title: "Ripeti la password"
       invite_code:
@@ -1952,6 +1953,9 @@ it:
         contextual: "Nuovo contenuto nella pagina"
       bookmark_after_notification:
         title: "Dopo l'invio di una notifica di promemoria per segnalibri:"
+      send_shortcut:
+        enter: "Invio"
+        meta_enter: "%{meta_key} + Invio"
       like_notification_frequency:
         title: "Notifica alla ricezione di \"Mi piace\"."
         always: "Sempre"
@@ -2111,24 +2115,28 @@ it:
           member_title: "Invita membri"
           sent_title: "Invito inviato"
           member_tab: "Membri"
-          admin_tab: "Amministratori"
+          admin_tab: "Staff"
+          staff_role_admin: "Amministrazione"
+          staff_role_moderator: "Moderatore"
           admin_email_label: "Indirizzo e-mail"
           email_placeholder: "nome@esempio.com"
           invite_by_email: "E-mail"
           restrict_domain: "Limita al dominio"
           domain_placeholder: "example.com"
-          more_options: "Altre opzioni"
+          create_and_send: "Invia"
+          create_and_copy: "Copia link"
           update: "Aggiorna"
           summary:
             role_member: "Membro"
             role_admin: "Amministrazione"
+            role_moderator: "Moderatore"
             method: "Condivisione"
             method_email: "E-mail"
             uses: "Limite max di utilizzi"
             expires: "Scadenza"
             topic: "Argomento"
             groups: "Gruppi"
-            edit: "Modifica invito"
+            edit: "Modifica"
         bulk_invite:
           none: "Nessun invito da visualizzare in questa pagina."
           text: "Inviti di gruppo"
@@ -2707,6 +2715,8 @@ it:
       default: Emoji personalizzate
     filter_input:
       clear: "Cancella il filtro"
+    filter_controls:
+      reset: "Reimposta"
     shared_drafts:
       title: "Bozze condivise"
       notice: "Questo argomento è visibile solo a coloro che possono pubblicare bozze condivise."
@@ -2820,7 +2830,6 @@ it:
       italic_label: "I"
       italic_title: "Corsivo"
       italic_text: "testo in corsivo"
-      heading_title: "Titoli"
       heading_level_n: "Titolo %{levelNumber}"
       heading_level_n_title: "Titolo %{levelNumber}"
       heading_level_paragraph: "Paragrafo"
@@ -4859,6 +4868,10 @@ it:
           public: "Visibile a tutti"
           always_public: "Il contenuto di questa sezione è sempre pubblico"
           more_menu: "Menu Altro"
+          localizations:
+            locale: "Lingua"
+            title_label: "Titolo della sezione"
+            remove_language: "Rimuovi"
           links:
             add: "Aggiungi un altro link"
             delete: "Elimina link"
@@ -5679,7 +5692,6 @@ it:
               posts: "Messaggi"
               share: "Condividi"
             whos_posting:
-              all_categories: "Tutte le categorie"
               staff: "Staff"
             trust_level_pipeline:
               trust_levels:
@@ -6396,6 +6408,8 @@ it:
         sidebar: "Barra laterale"
         header_dropdown: "Intestazione a discesa"
         legacy: "Compatibile"
+      duplicate_topic_titles:
+        allowed: "Consentito"
       backups:
         title: "Backup"
         files_title: "File di backup"
@@ -6624,7 +6638,6 @@ it:
           finish_install: "Completa l'installazione del tema"
           last_attempt: "Il processo di installazione non si è concluso, ultimo tentativo:"
           remote_branch: "Nome del branch (opzionale)"
-          public_key: "Concedi l'accesso all'archivio con la seguente chiave pubblica:"
           install: "Installa"
           installed: "Installato"
           install_popular: "Popolare"
@@ -7902,6 +7915,7 @@ it:
         uploading: "Caricamento…"
         name: "Nome"
         group: "Gruppo"
+        all_groups: "Tutti i gruppi"
         created_by: "Creato da"
         image: "Immagine"
         alt: "anteprima emoji personalizzata"

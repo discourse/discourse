@@ -12,10 +12,10 @@ import { not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import DResponsiveTable from "discourse/ui-kit/d-responsive-table";
-import DSelect from "discourse/ui-kit/d-select";
 import DTableHeaderToggle from "discourse/ui-kit/d-table-header-toggle";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -23,6 +23,18 @@ import dFormatDuration from "discourse/ui-kit/helpers/d-format-duration";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
+
+const ACTIVATION_FILTER_OPTIONS = [
+  { value: "all", label: i18n("admin.users.activation_filter.all") },
+  {
+    value: "activated",
+    label: i18n("admin.users.activation_filter.activated"),
+  },
+  {
+    value: "not_activated",
+    label: i18n("admin.users.activation_filter.not_activated"),
+  },
+];
 
 export default <template>
   <DPageSubheader @titleLabel={{@controller.title}}>
@@ -47,443 +59,452 @@ export default <template>
 
   <PluginOutlet @name="admin-users-list-show-before" />
 
-  <div class="d-admin-filter admin-users-list__controls">
-    <div class="admin-filter__input-container admin-users-list__search">
-      <input
-        class="admin-filter__input"
-        type="text"
-        dir="auto"
-        value={{@controller.listFilter}}
-        placeholder={{@controller.searchHint}}
-        title={{@controller.searchHint}}
-        {{on "input" @controller.onListFilterChange}}
-      />
-    </div>
-    {{#if @controller.showActivationFilter}}
-      <DSelect
-        @value={{@controller.activation}}
-        @onChange={{@controller.updateActivation}}
-        @nonePlaceholder={{i18n "admin.users.activation_filter.all"}}
-        class="admin-users-list__activation-filter"
-        aria-label={{i18n "admin.users.activation_filter.label"}}
-        as |select|
-      >
-        <select.Option @value="activated">
-          {{i18n "admin.users.activation_filter.activated"}}
-        </select.Option>
-        <select.Option @value="not_activated">
-          {{i18n "admin.users.activation_filter.not_activated"}}
-        </select.Option>
-      </DSelect>
-    {{/if}}
-    {{#if @controller.displayBulkActions}}
-      <div class="bulk-actions-dropdown">
-        <DMenu
-          @autofocus={{true}}
-          @identifier="bulk-select-admin-users-dropdown"
-          @triggerClass="btn-default"
-        >
-          <:trigger>
-            <span class="d-button-label">
-              {{i18n "admin.users.bulk_actions.title"}}
-            </span>
-            {{dIcon "angle-down"}}
-          </:trigger>
+  <DFilterControls
+    @array={{@controller.users}}
+    @inputPlaceholder={{@controller.searchHint}}
+    @initialTextFilter={{@controller.initialFilter}}
+    @textFilterQueryParam="filter"
+    @noResultsMessage={{i18n "search.no_results"}}
+    @onTextFilterChange={{@controller.onListFilterChange}}
+    @onResetFilters={{@controller.onResetFilters}}
+    @loading={{@controller.refreshing}}
+    @dropdownOptions={{if
+      @controller.showActivationFilter
+      ACTIVATION_FILTER_OPTIONS
+    }}
+    @dropdownValue={{or @controller.activation "all"}}
+    @onDropdownFilterChange={{@controller.onActivationChange}}
+  >
+    <:actions>
+      {{#if @controller.displayBulkActions}}
+        <div class="bulk-actions-dropdown">
+          <DMenu
+            @autofocus={{true}}
+            @identifier="bulk-select-admin-users-dropdown"
+            @triggerClass="btn-default"
+          >
+            <:trigger>
+              <span class="d-button-label">
+                {{i18n "admin.users.bulk_actions.title"}}
+              </span>
+              {{dIcon "angle-down"}}
+            </:trigger>
 
-          <:content>
-            <DDropdownMenu as |dropdown|>
-              <dropdown.item>
-                <DButton
-                  @translatedLabel={{i18n
-                    "admin.users.bulk_actions.suspend.label"
-                  }}
-                  @icon="ban"
-                  @action={{@controller.openBulkSuspendConfirmation}}
-                  class="bulk-suspend btn-danger"
-                />
-              </dropdown.item>
-              <dropdown.item>
-                <DButton
-                  @translatedLabel={{i18n
-                    "admin.users.bulk_actions.delete.label"
-                  }}
-                  @icon="trash-can"
-                  @action={{@controller.openBulkDeleteConfirmation}}
-                  class="bulk-delete btn-danger"
-                />
-              </dropdown.item>
-            </DDropdownMenu>
-          </:content>
-        </DMenu>
-      </div>
-    {{/if}}
-  </div>
-  <DLoadMore @action={{@controller.loadMore}} class="users-list-container">
-    {{#if @controller.users}}
-      <DResponsiveTable
-        @className={{dConcatClass "users-list" @controller.query}}
-        @ariaLabel={{@controller.title}}
-        @style={{trustHTML
-          (concat
-            "grid-template-columns: minmax(min-content, 2fr) repeat("
-            (trustHTML @controller.columnCount)
-            ", minmax(min-content, 1fr))"
-          )
-        }}
-      >
-        <:header>
-          <div class="directory-table__column-header-wrapper">
-            <DButton
-              class="btn-flat bulk-select"
-              @icon="list-check"
-              @action={{@controller.toggleBulkSelect}}
-            />
-            {{#if @controller.bulkSelect}}
+            <:content>
+              <DDropdownMenu as |dropdown|>
+                <dropdown.item>
+                  <DButton
+                    @translatedLabel={{i18n
+                      "admin.users.bulk_actions.suspend.label"
+                    }}
+                    @icon="ban"
+                    @action={{@controller.openBulkSuspendConfirmation}}
+                    class="bulk-suspend btn-danger"
+                  />
+                </dropdown.item>
+                <dropdown.item>
+                  <DButton
+                    @translatedLabel={{i18n
+                      "admin.users.bulk_actions.delete.label"
+                    }}
+                    @icon="trash-can"
+                    @action={{@controller.openBulkDeleteConfirmation}}
+                    class="bulk-delete btn-danger"
+                  />
+                </dropdown.item>
+              </DDropdownMenu>
+            </:content>
+          </DMenu>
+        </div>
+      {{/if}}
+    </:actions>
+
+    <:aboveContent>
+      {{! only spin above the table when there are no rows yet; otherwise the
+      pagination spinner lives below the table (see :content) so loading more
+      doesn't shove the table down }}
+      {{#unless @controller.users.length}}
+        <DConditionalLoadingSpinner @condition={{@controller.refreshing}} />
+      {{/unless}}
+
+      {{#if @controller.showEmptyState}}
+        <p class="admin-users-list__no-results">{{i18n "search.no_results"}}</p>
+      {{/if}}
+    </:aboveContent>
+
+    <:content as |users|>
+      <DLoadMore @action={{@controller.loadMore}} class="users-list-container">
+        <DResponsiveTable
+          @className={{dConcatClass "users-list" @controller.query}}
+          @ariaLabel={{@controller.title}}
+          @style={{trustHTML
+            (concat
+              "grid-template-columns: minmax(min-content, 2fr) repeat("
+              (trustHTML @controller.columnCount)
+              ", minmax(min-content, 1fr))"
+            )
+          }}
+        >
+          <:header>
+            <div class="directory-table__column-header-wrapper">
               <DButton
-                class="btn-flat bulk-select-all"
-                @label="admin.users.bulk_actions.select_all"
-                @action={{@controller.bulkSelectAll}}
+                class="btn-flat bulk-select"
+                @icon="list-check"
+                @action={{@controller.toggleBulkSelect}}
               />
-              <DButton
-                class="btn-flat bulk-clear-all"
-                @label="admin.users.bulk_actions.clear_all"
-                @action={{@controller.bulkClearAll}}
+              {{#if @controller.bulkSelect}}
+                <DButton
+                  class="btn-flat bulk-select-all"
+                  @label="admin.users.bulk_actions.select_all"
+                  @action={{@controller.bulkSelectAll}}
+                />
+                <DButton
+                  class="btn-flat bulk-clear-all"
+                  @label="admin.users.bulk_actions.clear_all"
+                  @action={{@controller.bulkClearAll}}
+                />
+              {{/if}}
+              <DTableHeaderToggle
+                @onToggle={{@controller.updateOrder}}
+                @field="username"
+                @labelKey="username"
+                @order={{@controller.order}}
+                @asc={{@controller.asc}}
+                @automatic={{true}}
+                class="directory-table__column-header--username"
+              />
+            </div>
+            <DTableHeaderToggle
+              @onToggle={{@controller.updateOrder}}
+              @field="email"
+              @labelKey="email"
+              @order={{@controller.order}}
+              @asc={{@controller.asc}}
+              @automatic={{true}}
+              class={{if
+                @controller.showEmails
+                "directory-table__column-header--email"
+                "hidden"
+              }}
+            />
+            <DTableHeaderToggle
+              @onToggle={{@controller.updateOrder}}
+              @field="last_emailed"
+              @labelKey="admin.users.last_emailed"
+              @order={{@controller.order}}
+              @asc={{@controller.asc}}
+              @automatic={{true}}
+            />
+            <DTableHeaderToggle
+              @onToggle={{@controller.updateOrder}}
+              @field="seen"
+              @labelKey="last_seen"
+              @order={{@controller.order}}
+              @asc={{@controller.asc}}
+              @automatic={{true}}
+            />
+            {{#unless
+              (or @controller.showSilenceReason @controller.showSuspendReason)
+            }}
+              <DTableHeaderToggle
+                @onToggle={{@controller.updateOrder}}
+                @field="topics_viewed"
+                @labelKey="admin.user.topics_entered"
+                @order={{@controller.order}}
+                @asc={{@controller.asc}}
+                @automatic={{true}}
+              />
+            {{/unless}}
+            <DTableHeaderToggle
+              @onToggle={{@controller.updateOrder}}
+              @field="posts_read"
+              @labelKey="admin.user.posts_read_count"
+              @order={{@controller.order}}
+              @asc={{@controller.asc}}
+              @automatic={{true}}
+            />
+            <DTableHeaderToggle
+              @onToggle={{@controller.updateOrder}}
+              @field="read_time"
+              @labelKey="admin.user.time_read"
+              @order={{@controller.order}}
+              @asc={{@controller.asc}}
+              @automatic={{true}}
+            />
+            <DTableHeaderToggle
+              @onToggle={{@controller.updateOrder}}
+              @field="created"
+              @labelKey="created"
+              @order={{@controller.order}}
+              @asc={{@controller.asc}}
+              @automatic={{true}}
+            />
+            {{#if @controller.showSilenceReason}}
+              <DTableHeaderToggle
+                @onToggle={{@controller.updateOrder}}
+                @field="silence_reason"
+                @labelKey="admin.users.silence_reason"
+                @order={{@controller.order}}
+                @asc={{@controller.asc}}
+                @automatic={{true}}
+                class="directory-table__column-header--silence-reason"
               />
             {{/if}}
-            <DTableHeaderToggle
-              @onToggle={{@controller.updateOrder}}
-              @field="username"
-              @labelKey="username"
-              @order={{@controller.order}}
-              @asc={{@controller.asc}}
-              @automatic={{true}}
-              class="directory-table__column-header--username"
-            />
-          </div>
-          <DTableHeaderToggle
-            @onToggle={{@controller.updateOrder}}
-            @field="email"
-            @labelKey="email"
-            @order={{@controller.order}}
-            @asc={{@controller.asc}}
-            @automatic={{true}}
-            class={{if
-              @controller.showEmails
-              "directory-table__column-header--email"
-              "hidden"
-            }}
-          />
-          <DTableHeaderToggle
-            @onToggle={{@controller.updateOrder}}
-            @field="last_emailed"
-            @labelKey="admin.users.last_emailed"
-            @order={{@controller.order}}
-            @asc={{@controller.asc}}
-            @automatic={{true}}
-          />
-          <DTableHeaderToggle
-            @onToggle={{@controller.updateOrder}}
-            @field="seen"
-            @labelKey="last_seen"
-            @order={{@controller.order}}
-            @asc={{@controller.asc}}
-            @automatic={{true}}
-          />
-          {{#unless
-            (or @controller.showSilenceReason @controller.showSuspendReason)
-          }}
-            <DTableHeaderToggle
-              @onToggle={{@controller.updateOrder}}
-              @field="topics_viewed"
-              @labelKey="admin.user.topics_entered"
-              @order={{@controller.order}}
-              @asc={{@controller.asc}}
-              @automatic={{true}}
-            />
-          {{/unless}}
-          <DTableHeaderToggle
-            @onToggle={{@controller.updateOrder}}
-            @field="posts_read"
-            @labelKey="admin.user.posts_read_count"
-            @order={{@controller.order}}
-            @asc={{@controller.asc}}
-            @automatic={{true}}
-          />
-          <DTableHeaderToggle
-            @onToggle={{@controller.updateOrder}}
-            @field="read_time"
-            @labelKey="admin.user.time_read"
-            @order={{@controller.order}}
-            @asc={{@controller.asc}}
-            @automatic={{true}}
-          />
-          <DTableHeaderToggle
-            @onToggle={{@controller.updateOrder}}
-            @field="created"
-            @labelKey="created"
-            @order={{@controller.order}}
-            @asc={{@controller.asc}}
-            @automatic={{true}}
-          />
-          {{#if @controller.showSilenceReason}}
-            <DTableHeaderToggle
-              @onToggle={{@controller.updateOrder}}
-              @field="silence_reason"
-              @labelKey="admin.users.silence_reason"
-              @order={{@controller.order}}
-              @asc={{@controller.asc}}
-              @automatic={{true}}
-              class="directory-table__column-header--silence-reason"
-            />
-          {{/if}}
-          {{#if @controller.showSuspendReason}}
-            <DTableHeaderToggle
-              @onToggle={{@controller.updateOrder}}
-              @field="suspend_reason"
-              @labelKey="admin.users.suspend_reason"
-              @order={{@controller.order}}
-              @asc={{@controller.asc}}
-              @automatic={{true}}
-              class="directory-table__column-header--suspend-reason"
-            />
-          {{/if}}
-          <PluginOutlet
-            @name="admin-users-list-thead-after"
-            @outletArgs={{lazyHash order=@controller.order asc=@controller.asc}}
-          />
-
-          {{#if @controller.siteSettings.must_approve_users}}
-            <div class="directory-table__column-header">{{i18n
-                "admin.users.approved"
-              }}</div>
-          {{/if}}
-          <div class="directory-table__column-header">&nbsp;</div>
-
-        </:header>
-
-        <:body>
-          {{#each @controller.users as |user|}}
-            <div
-              class="user
-                {{user.selected}}
-                {{unless user.active 'not-activated'}}
-                directory-table__row"
-              data-user-id={{user.id}}
-            >
-              <div class="directory-table__cell username">
-                {{#if @controller.bulkSelect}}
-                  {{#if (or user.can_be_deleted user.can_be_suspended)}}
-                    <input
-                      type="checkbox"
-                      class="directory-table__cell-bulk-select"
-                      checked={{get @controller.bulkSelectedUsersMap user.id}}
-                      data-user-id={{user.id}}
-                      {{on
-                        "click"
-                        (fn @controller.bulkSelectItemToggle user.id)
-                      }}
-                    />
-                  {{else}}
-                    <DTooltip
-                      @identifier="bulk-action-unavailable-reason"
-                      @placement="bottom-start"
-                    >
-                      <:trigger>
-                        <input
-                          type="checkbox"
-                          class="directory-table__cell-bulk-select"
-                          disabled={{true}}
-                        />
-                      </:trigger>
-                      <:content>
-                        {{i18n
-                          "admin.users.bulk_actions.staff_cant_be_actioned"
-                        }}
-                      </:content>
-                    </DTooltip>
-                  {{/if}}
-                {{/if}}
-                <a
-                  class="avatar"
-                  href={{user.path}}
-                  data-user-card={{user.username}}
-                >
-                  {{dAvatar user imageSize="small"}}
-                </a>
-                <LinkTo @route="adminUser" @model={{user}}>
-                  {{user.username}}
-                </LinkTo>
-                {{#if user.staged}}
-                  {{dIcon "far-envelope" title="user.staged"}}
-                {{/if}}
-              </div>
-              <div
-                class="directory-table__cell email
-                  {{if @controller.showEmails '' 'hidden'}}"
-              >
-                <span class="directory-table__value">
-                  {{~user.email~}}
-                </span>
-              </div>
-
-              {{#if user.last_emailed_at}}
-                <div
-                  class="directory-table__cell last-emailed"
-                  title={{rawDate user.last_emailed_at}}
-                >
-                  <span class="directory-table__label">
-                    <span>{{i18n "admin.users.last_emailed"}}</span>
-                  </span>
-                  <span class="directory-table__value">
-                    {{dFormatDuration user.last_emailed_age}}
-                  </span>
-                </div>
-              {{else}}
-                <div class="directory-table__cell last-emailed">
-                  <span class="directory-table__label">
-                    <span>{{i18n "admin.users.last_emailed"}}</span>
-                  </span>
-                  <span class="directory-table__value">
-                    {{dFormatDuration user.last_emailed_age}}
-                  </span>
-                </div>
-              {{/if}}
-
-              <div
-                class="directory-table__cell last-seen"
-                title={{rawDate user.last_seen_at}}
-              >
-                <span class="directory-table__label">
-                  <span>{{i18n "last_seen"}}</span>
-                </span>
-                <span class="directory-table__value">
-                  {{dFormatDuration user.last_seen_age}}
-                </span>
-              </div>
-
-              {{#unless
-                (or @controller.showSilenceReason @controller.showSuspendReason)
-              }}
-                <div class="directory-table__cell topics-entered">
-                  <span class="directory-table__label">
-                    <span>{{i18n "admin.user.topics_entered"}}</span>
-                  </span>
-                  <span class="directory-table__value">
-                    {{dNumber user.topics_entered}}
-                  </span>
-                </div>
-              {{/unless}}
-              <div class="directory-table__cell posts-read">
-                <span class="directory-table__label">
-                  <span>{{i18n "admin.user.posts_read_count"}}</span>
-                </span>
-                <span class="directory-table__value">
-                  {{dNumber user.posts_read_count}}
-                </span>
-              </div>
-              <div class="directory-table__cell time-read">
-                <span class="directory-table__label">
-                  <span>{{i18n "admin.user.time_read"}}</span>
-                </span>
-                <span class="directory-table__value">
-                  {{dFormatDuration user.time_read}}
-                </span>
-              </div>
-              <div
-                class="directory-table__cell created"
-                title={{rawDate user.created_at}}
-              >
-                <span class="directory-table__label">
-                  <span>{{i18n "created"}}</span>
-                </span>
-                <span class="directory-table__value">
-                  {{dFormatDuration user.created_at_age}}
-                </span>
-              </div>
-
-              {{#if @controller.showSilenceReason}}
-                <div
-                  class="directory-table__cell silence_reason"
-                  title={{@controller.stripHtml user.silence_reason}}
-                >
-                  <span class="directory-table__label">
-                    <span>{{i18n "admin.users.silence_reason"}}</span>
-                  </span>
-                  <span class="directory-table__value">
-                    {{trustHTML user.silence_reason}}
-                  </span>
-                </div>
-              {{/if}}
-
-              {{#if @controller.showSuspendReason}}
-                <div
-                  class="directory-table__cell suspend_reason"
-                  title={{@controller.stripHtml user.suspend_reason}}
-                >
-                  <span class="directory-table__label">
-                    <span>{{i18n "admin.users.suspend_reason"}}</span>
-                  </span>
-                  <span class="directory-table__value">
-                    {{trustHTML user.suspend_reason}}
-                  </span>
-                </div>
-              {{/if}}
-
-              <PluginOutlet
-                @name="admin-users-list-td-after"
-                @outletArgs={{lazyHash user=user query=@controller.query}}
+            {{#if @controller.showSuspendReason}}
+              <DTableHeaderToggle
+                @onToggle={{@controller.updateOrder}}
+                @field="suspend_reason"
+                @labelKey="admin.users.suspend_reason"
+                @order={{@controller.order}}
+                @asc={{@controller.asc}}
+                @automatic={{true}}
+                class="directory-table__column-header--suspend-reason"
               />
+            {{/if}}
+            <PluginOutlet
+              @name="admin-users-list-thead-after"
+              @outletArgs={{lazyHash
+                order=@controller.order
+                asc=@controller.asc
+              }}
+            />
 
-              {{#if @controller.siteSettings.must_approve_users}}
-                <div class="directory-table__cell">
-                  <span class="directory-table__label">
-                    <span>{{i18n "admin.users.approved"}}</span>
-                  </span>
+            {{#if @controller.siteSettings.must_approve_users}}
+              <div class="directory-table__column-header">{{i18n
+                  "admin.users.approved"
+                }}</div>
+            {{/if}}
+            <div class="directory-table__column-header">&nbsp;</div>
+
+          </:header>
+
+          <:body>
+            {{#each users as |user|}}
+              <div
+                class="user
+                  {{user.selected}}
+                  {{unless user.active 'not-activated'}}
+                  directory-table__row"
+                data-user-id={{user.id}}
+              >
+                <div class="directory-table__cell username">
+                  {{#if @controller.bulkSelect}}
+                    {{#if (or user.can_be_deleted user.can_be_suspended)}}
+                      <input
+                        type="checkbox"
+                        class="directory-table__cell-bulk-select"
+                        checked={{get @controller.bulkSelectedUsersMap user.id}}
+                        data-user-id={{user.id}}
+                        {{on
+                          "click"
+                          (fn @controller.bulkSelectItemToggle user.id)
+                        }}
+                      />
+                    {{else}}
+                      <DTooltip
+                        @identifier="bulk-action-unavailable-reason"
+                        @placement="bottom-start"
+                      >
+                        <:trigger>
+                          <input
+                            type="checkbox"
+                            class="directory-table__cell-bulk-select"
+                            disabled={{true}}
+                          />
+                        </:trigger>
+                        <:content>
+                          {{i18n
+                            "admin.users.bulk_actions.staff_cant_be_actioned"
+                          }}
+                        </:content>
+                      </DTooltip>
+                    {{/if}}
+                  {{/if}}
+                  <a
+                    class="avatar"
+                    href={{user.path}}
+                    data-user-card={{user.username}}
+                  >
+                    {{dAvatar user imageSize="small"}}
+                  </a>
+                  <LinkTo @route="adminUser" @model={{user}}>
+                    {{user.username}}
+                  </LinkTo>
+                  {{#if user.staged}}
+                    {{dIcon "far-envelope" title="user.staged"}}
+                  {{/if}}
+                </div>
+                <div
+                  class="directory-table__cell email
+                    {{if @controller.showEmails '' 'hidden'}}"
+                >
                   <span class="directory-table__value">
-                    {{i18nYesNo user.approved}}
+                    {{~user.email~}}
                   </span>
                 </div>
-              {{/if}}
 
-              <div
-                class={{dConcatClass
-                  "directory-table__cell"
-                  "user-role"
-                  (if
-                    (not
-                      (or user.admin user.moderator user.second_factor_enabled)
-                    )
-                    "--empty"
+                {{#if user.last_emailed_at}}
+                  <div
+                    class="directory-table__cell last-emailed"
+                    title={{rawDate user.last_emailed_at}}
+                  >
+                    <span class="directory-table__label">
+                      <span>{{i18n "admin.users.last_emailed"}}</span>
+                    </span>
+                    <span class="directory-table__value">
+                      {{dFormatDuration user.last_emailed_age}}
+                    </span>
+                  </div>
+                {{else}}
+                  <div class="directory-table__cell last-emailed">
+                    <span class="directory-table__label">
+                      <span>{{i18n "admin.users.last_emailed"}}</span>
+                    </span>
+                    <span class="directory-table__value">
+                      {{dFormatDuration user.last_emailed_age}}
+                    </span>
+                  </div>
+                {{/if}}
+
+                <div
+                  class="directory-table__cell last-seen"
+                  title={{rawDate user.last_seen_at}}
+                >
+                  <span class="directory-table__label">
+                    <span>{{i18n "last_seen"}}</span>
+                  </span>
+                  <span class="directory-table__value">
+                    {{dFormatDuration user.last_seen_age}}
+                  </span>
+                </div>
+
+                {{#unless
+                  (or
+                    @controller.showSilenceReason @controller.showSuspendReason
                   )
                 }}
-              >
-                <span class="directory-table__label">
-                  <span>{{i18n "admin.users.status"}}</span>
-                </span>
-                <span class="directory-table__value">
-                  {{#if user.admin}}
-                    {{dIcon "shield-halved" title="admin.title"}}
-                  {{/if}}
-                  {{#if user.moderator}}
-                    {{dIcon "shield-halved" title="admin.moderator"}}
-                  {{/if}}
-                  {{#if user.second_factor_enabled}}
-                    {{dIcon "lock" title="admin.user.second_factor_enabled"}}
-                  {{/if}}
-                </span>
+                  <div class="directory-table__cell topics-entered">
+                    <span class="directory-table__label">
+                      <span>{{i18n "admin.user.topics_entered"}}</span>
+                    </span>
+                    <span class="directory-table__value">
+                      {{dNumber user.topics_entered}}
+                    </span>
+                  </div>
+                {{/unless}}
+                <div class="directory-table__cell posts-read">
+                  <span class="directory-table__label">
+                    <span>{{i18n "admin.user.posts_read_count"}}</span>
+                  </span>
+                  <span class="directory-table__value">
+                    {{dNumber user.posts_read_count}}
+                  </span>
+                </div>
+                <div class="directory-table__cell time-read">
+                  <span class="directory-table__label">
+                    <span>{{i18n "admin.user.time_read"}}</span>
+                  </span>
+                  <span class="directory-table__value">
+                    {{dFormatDuration user.time_read}}
+                  </span>
+                </div>
+                <div
+                  class="directory-table__cell created"
+                  title={{rawDate user.created_at}}
+                >
+                  <span class="directory-table__label">
+                    <span>{{i18n "created"}}</span>
+                  </span>
+                  <span class="directory-table__value">
+                    {{dFormatDuration user.created_at_age}}
+                  </span>
+                </div>
+
+                {{#if @controller.showSilenceReason}}
+                  <div
+                    class="directory-table__cell silence_reason"
+                    title={{@controller.stripHtml user.silence_reason}}
+                  >
+                    <span class="directory-table__label">
+                      <span>{{i18n "admin.users.silence_reason"}}</span>
+                    </span>
+                    <span class="directory-table__value">
+                      {{trustHTML user.silence_reason}}
+                    </span>
+                  </div>
+                {{/if}}
+
+                {{#if @controller.showSuspendReason}}
+                  <div
+                    class="directory-table__cell suspend_reason"
+                    title={{@controller.stripHtml user.suspend_reason}}
+                  >
+                    <span class="directory-table__label">
+                      <span>{{i18n "admin.users.suspend_reason"}}</span>
+                    </span>
+                    <span class="directory-table__value">
+                      {{trustHTML user.suspend_reason}}
+                    </span>
+                  </div>
+                {{/if}}
+
                 <PluginOutlet
-                  @name="admin-users-list-icon"
-                  @connectorTagName="div"
+                  @name="admin-users-list-td-after"
                   @outletArgs={{lazyHash user=user query=@controller.query}}
                 />
+
+                {{#if @controller.siteSettings.must_approve_users}}
+                  <div class="directory-table__cell">
+                    <span class="directory-table__label">
+                      <span>{{i18n "admin.users.approved"}}</span>
+                    </span>
+                    <span class="directory-table__value">
+                      {{i18nYesNo user.approved}}
+                    </span>
+                  </div>
+                {{/if}}
+
+                <div
+                  class={{dConcatClass
+                    "directory-table__cell"
+                    "user-role"
+                    (if
+                      (not
+                        (or
+                          user.admin user.moderator user.second_factor_enabled
+                        )
+                      )
+                      "--empty"
+                    )
+                  }}
+                >
+                  <span class="directory-table__label">
+                    <span>{{i18n "admin.users.status"}}</span>
+                  </span>
+                  <span class="directory-table__value">
+                    {{#if user.admin}}
+                      {{dIcon "shield-halved" title="admin.title"}}
+                    {{/if}}
+                    {{#if user.moderator}}
+                      {{dIcon "shield-halved" title="admin.moderator"}}
+                    {{/if}}
+                    {{#if user.second_factor_enabled}}
+                      {{dIcon "lock" title="admin.user.second_factor_enabled"}}
+                    {{/if}}
+                  </span>
+                  <PluginOutlet
+                    @name="admin-users-list-icon"
+                    @connectorTagName="div"
+                    @outletArgs={{lazyHash user=user query=@controller.query}}
+                  />
+                </div>
               </div>
-            </div>
-          {{/each}}
-        </:body>
-      </DResponsiveTable>
-    {{else if (not @controller.refreshing)}}
-      <p>{{i18n "search.no_results"}}</p>
-    {{/if}}
-    <DConditionalLoadingSpinner @condition={{@controller.refreshing}} />
-  </DLoadMore>
+            {{/each}}
+          </:body>
+        </DResponsiveTable>
+
+        <DConditionalLoadingSpinner @condition={{@controller.refreshing}} />
+      </DLoadMore>
+    </:content>
+  </DFilterControls>
 </template>

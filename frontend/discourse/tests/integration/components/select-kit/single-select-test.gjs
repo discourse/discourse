@@ -221,6 +221,40 @@ module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
     assert.strictEqual(this.subject.selectedRow().value(), this.value);
   });
 
+  test("selects a row with a blank value", async function (assert) {
+    setDefaultState(this, {
+      content: [{ id: "", name: "default" }, ...DEFAULT_CONTENT],
+      value: "",
+    });
+
+    await render(
+      <template>
+        <SingleSelect
+          @value={{this.value}}
+          @content={{this.content}}
+          @nameProperty={{this.nameProperty}}
+          @valueProperty={{this.valueProperty}}
+          @onChange={{this.onChange}}
+        />
+      </template>
+    );
+
+    assert.strictEqual(this.subject.header().name(), "default");
+
+    await this.subject.expand();
+    await this.subject.selectRowByValue(1);
+    assert.strictEqual(this.subject.header().name(), "foo");
+
+    await this.subject.expand();
+    await this.subject.selectRowByValue("");
+    assert.strictEqual(
+      this.subject.header().name(),
+      "default",
+      "selecting the blank-value row selects it rather than clearing"
+    );
+    assert.strictEqual(this.value, "");
+  });
+
   test("none:string", async function (assert) {
     I18n.translations[I18n.locale].js.test = { none: "(default)" };
     setDefaultState(this, { value: 1 });

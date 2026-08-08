@@ -132,13 +132,7 @@ module DiscourseAi
             prompt = section_prompt(topic, section, guidance)
 
             summary =
-              llm.generate(
-                prompt,
-                temperature: 0.6,
-                max_tokens: 400,
-                user: bot_user,
-                feature_name: "summarize_tool",
-              )
+              llm.generate(prompt, max_tokens: 400, user: bot_user, feature_name: "summarize_tool")
 
             summaries << summary
           end
@@ -155,7 +149,6 @@ module DiscourseAi
 
             llm.generate(
               concatenation_prompt,
-              temperature: 0.6,
               max_tokens: 500,
               user: bot_user,
               feature_name: "summarize_tool",

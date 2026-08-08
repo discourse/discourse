@@ -60,6 +60,12 @@ export interface PositioningOptions {
     content: HTMLElement,
     result: ComputePositionReturn & { arrowElement?: HTMLElement }
   ) => void;
+
+  /**
+   * Called each time a position has been applied — so once per call, and once per `autoUpdate`
+   * reposition. See `TooltipOptions.onPositioned`.
+   */
+  onPositioned?: ((content: HTMLElement) => void) | null;
 }
 
 interface DetectOverflowOptions {
@@ -110,6 +116,10 @@ export async function updatePosition(
   } else {
     applyComputedPosition(content, result, arrowElement);
   }
+
+  // After the position is applied, so a consumer that renders from its own size measures a
+  // float that already has one.
+  options.onPositioned?.(content);
 }
 
 function buildMiddleware(

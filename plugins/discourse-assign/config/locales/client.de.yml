@@ -31,6 +31,8 @@ de:
       status_change: "Zuordnungsstatus geändert für %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Filter „Nicht zugeordnet“ zur Kategorie hinzufügen"
+      additional_assign_allowed_groups: "Zusätzliche Gruppen mit Zuordnungsberechtigung"
+      additional_assign_allowed_groups_description: "Mitglieder dieser Gruppen können Themen dieser Kategorie zuordnen. Gruppen, die bereits global berechtigt sind, werden hier angezeigt und können nicht entfernt werden. Die Einstellungen der übergeordneten Kategorie gelten nicht für Unterkategorien."
       cant_act: "Du kannst nicht auf Meldungen reagieren, die anderen Benutzern zugeordnet wurden."
       cant_act_unclaimed: "Du musst das Thema übernehmen, bevor du Meldungen behandeln kannst."
       topic_search_placeholder: "Themen nach Titel oder Beitragsinhalt suchen"
@@ -201,12 +203,22 @@ de:
       topic: "Thema"
       post: "Beitrag"
     discourse_workflows:
+      node_unavailable:
+        requires_assign: "Erfordert die Aktivierung des Zuordnen-Plug-ins."
       nodes:
         "action:assign_topic": "Thema zuordnen"
         "trigger:assigned": "Zugeordnet"
+      node_descriptions:
+        "action:assign_topic": "Ein Thema zuordnen oder die Zuordnung aufheben"
+        "trigger:assigned": "Wird ausgelöst, wenn ein Thema oder ein Beitrag zugeordnet wird"
       assign_topic:
+        operation: "Aktion"
         operations:
           assign: "Zuordnen"
           unassign: "Zuordnung aufheben"
         topic_id: "Themen-ID"
         assignee: "Zugeordnete Person"
+        replace_existing: "Bestehende Zuordnung ersetzen"
+      assigned:
+        topic_assignments_only: "Nur auslösen, wenn das Zuordnungsziel das Thema ist, nicht ein einzelner Beitrag"
+        topic_assignments_only_description: "Nur Themenzuordnungen"

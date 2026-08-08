@@ -1,0 +1,11 @@
+plugins:
+  wireframe_enabled:
+    default: false
+    client: true
+  wireframe_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "1"
+    allow_any: false
+    refresh: true
+    client: true

@@ -1,6 +1,83 @@
 # frozen_string_literal: true
 
 RSpec.describe SiteController do
+  describe "#site" do
+    fab!(:staff_group) { Group[:staff] }
+    fab!(:private_category) { Fabricate(:private_category, group: staff_group) }
+    fab!(:public_category, :category)
+
+    # Tags anonymous users are allowed to see.
+    fab!(:visible_tag) do
+      Fabricate(:tag, name: "visible-tag", description: "visible tag description")
+    end
+    fab!(:public_category_tag) do
+      Fabricate(:tag, name: "public-category-tag", description: "public category tag description")
+    end
+
+    # Tags anonymous users must not see, one per restriction mechanism.
+    fab!(:category_restricted_tag) do
+      Fabricate(
+        :tag,
+        name: "category-restricted-tag",
+        description: "category restricted tag description",
+      )
+    end
+    fab!(:category_tag_group_restricted_tag) do
+      Fabricate(
+        :tag,
+        name: "category-tag-group-restricted-tag",
+        description: "category tag group restricted tag description",
+      )
+    end
+    fab!(:permission_restricted_tag) do
+      Fabricate(
+        :tag,
+        name: "permission-restricted-tag",
+        description: "permission restricted tag description",
+      )
+    end
+
+    fab!(:category_restricted_tag_group) do
+      Fabricate(:tag_group, tags: [category_tag_group_restricted_tag])
+    end
+    fab!(:staff_tag_group) do
+      Fabricate(
+        :tag_group,
+        permissions: {
+          "staff" => 1,
+        },
+        tag_names: [permission_restricted_tag.name],
+      )
+    end
+
+    before do
+      CategoryTag.create!(category: public_category, tag: public_category_tag)
+      CategoryTag.create!(category: private_category, tag: category_restricted_tag)
+      CategoryTagGroup.create!(category: private_category, tag_group: category_restricted_tag_group)
+
+      SiteSetting.default_navigation_menu_tags = [
+        visible_tag,
+        public_category_tag,
+        category_restricted_tag,
+        category_tag_group_restricted_tag,
+        permission_restricted_tag,
+      ].map(&:name).join("|")
+    end
+
+    it "serializes only the tags anonymous users are allowed to see" do
+      get "/site.json"
+
+      expect(response.status).to eq(200)
+      serialized_tags = response.parsed_body.fetch("anonymous_default_navigation_menu_tags")
+      expect(
+        serialized_tags.map { |serialized_tag| serialized_tag.values_at("name", "description") },
+      ).to contain_exactly(
+        [visible_tag.name, visible_tag.description],
+        [public_category_tag.name, public_category_tag.description],
+      )
+    end
+  end
+
   describe "#basic_info" do
     it "is visible always even for sites requiring login" do
       upload = Fabricate(:upload)

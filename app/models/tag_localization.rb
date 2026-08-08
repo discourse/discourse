@@ -2,12 +2,12 @@
 
 class TagLocalization < ActiveRecord::Base
   include LocaleMatchable
-  include HasSanitizableFields
+  include HasCookedTagDescription
 
   belongs_to :tag
 
   before_validation :clean_name
-  before_save :sanitize_description
+  before_save :cook_description
 
   validates :locale, presence: true, length: { maximum: 20 }
   validates :name, presence: true
@@ -19,26 +19,25 @@ class TagLocalization < ActiveRecord::Base
   def clean_name
     self.name = DiscourseTagging.clean_tag(name) if name.present?
   end
-
-  def sanitize_description
-    self.description = sanitize_field(description) if description_changed?
-  end
 end
 
 # == Schema Information
 #
 # Table name: tag_localizations
 #
-#  id          :bigint           not null, primary key
-#  description :string(1000)
-#  locale      :string(20)       not null
-#  name        :string           not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  tag_id      :bigint           not null
+#  id                         :bigint           not null, primary key
+#  description                :string(1000)
+#  description_cooked         :string(2000)
+#  description_cooked_version :integer
+#  locale                     :string(20)       not null
+#  name                       :string           not null
+#  created_at                 :datetime         not null
+#  updated_at                 :datetime         not null
+#  tag_id                     :bigint           not null
 #
 # Indexes
 #
-#  index_tag_localizations_on_tag_id             (tag_id)
-#  index_tag_localizations_on_tag_id_and_locale  (tag_id,locale) UNIQUE
+#  index_tag_localizations_on_description_cooked_version  (description_cooked_version)
+#  index_tag_localizations_on_tag_id                      (tag_id)
+#  index_tag_localizations_on_tag_id_and_locale           (tag_id,locale) UNIQUE
 #

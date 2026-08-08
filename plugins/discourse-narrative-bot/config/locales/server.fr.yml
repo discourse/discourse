@@ -178,7 +178,7 @@ fr:
           [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
           [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-
-          Super ! Ça fonctionne pour la plupart <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> des liens. N'oubliez pas, ils doivent être sur une ligne vide, sans rien devant ni derrière.
+          Super ! Ça fonctionne pour la plupart des liens <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">. N'oubliez pas qu'ils doivent être sur une ligne vide, sans rien devant ni derrière.
         not_found: |-
           Je regrette, mais je n'ai pas trouvé de lien dans votre réponse ! :cry:
 
@@ -191,7 +191,7 @@ fr:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
-          Si vous l'aimez (et qui n'aime pas les licornes ?) appuyez sur le bouton « J'aime » :heart: sous ce message pour me le faire savoir.
+          Si vous l'aimez (et qui n'aime pas les licornes ?) appuyez sur le bouton « J'aime » :heart: sous cette publication pour me le faire savoir.
 
           Pouvez-vous **répondre avec une image ?** N'importe laquelle fera l'affaire ! Glissez et déposez, appuyez sur le bouton d'envoi d'images, ou copiez simplement son lien.
         reply: |-
@@ -210,7 +210,7 @@ fr:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
-          Si vous l'aimez (et qui n'aime pas les licornes ?) allez-y, appuyez sur le bouton « J'aime » :heart: sous ce message pour me le faire savoir.
+          Si vous l'aimez (et qui n'aime pas les licornes ?), appuyez sur le bouton « J'aime » :heart: sous cette publication pour me le faire savoir.
         reply: |-
           Merci d'avoir apprécié mon message !
         not_found: |-
@@ -249,7 +249,7 @@ fr:
           La sélection de n'importe quel texte dans mon message fera apparaître le bouton <kbd>**Citer**</kbd>. L'utilisation de la fonction « Répondre » avec le texte sélectionné fonctionnera également ! Pouvez-vous réessayer ?
       bookmark:
         instructions: |-
-          Si vous souhaitez en savoir plus, sélectionnez <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> en dessous et <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **ajoutez ce message direct aux signets**. Si vous le faites, vous pourriez recevoir un :gift: prochainement !
+          Si vous souhaitez en savoir plus, sélectionnez <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> en dessous et <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **ajoutez ce message personnel aux signets**. Si vous le faites, vous pourriez recevoir un :gift: prochainement !
         reply: |-
           Excellent ! Vous pouvez désormais retrouver facilement notre conversation à tout moment, directement depuis [l'onglet des signets de votre profil](%{bookmark_url}). Sélectionnez simplement votre photo de profil dans le coin supérieur droit &#8599;
         not_found: |-
@@ -286,7 +286,7 @@ fr:
           (Et oui, mon nom d'utilisateur est écrit « _disco_ », comme dans la folie des années 1970. J'adore [la vie nocturne !](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
-          Nous aimons que nos discussions soient amicales et nous comptons sur vous pour veiller à ce que [la civilité règne](%{guidelines_url}). Si vous rencontrez un problème, veuillez le signaler pour en informer son auteur ou [notre personnel](%{about_url}). Il y a de nombreuses raisons valables de signaler un contenu, qui vont de la simple suggestion pour scinder un sujet en deux jusqu'au signalement d'une infraction flagrante de nos normes communautaires. Si vous sélectionnez **Autre chose**, une conversation privée sera engagée avec les modérateurs pour vous donner la possibilité de leur adresser vos questions.
+          Nous aimons que nos discussions soient amicales et nous comptons sur vous pour veiller à ce que [la civilité règne](%{guidelines_url}). Si vous rencontrez un problème, veuillez le signaler pour en informer son auteur ou [nos responsables](%{about_url}). Il y a de nombreuses raisons valables de signaler un contenu, qui vont de la simple suggestion pour scinder un sujet en deux jusqu'au signalement d'une infraction flagrante de nos normes communautaires. Si vous sélectionnez **Autre chose**, une conversation privée sera engagée avec les modérateurs pour vous donner la possibilité de leur adresser vos questions.
 
           > :imp: J'ai écrit quelque chose de désagréable ici
 

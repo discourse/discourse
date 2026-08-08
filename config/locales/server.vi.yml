@@ -72,6 +72,10 @@ vi:
       about_json_values: "about.json chứa các giá trị không hợp lệ: %{errors}"
       modifier_values: "Các công cụ sửa đổi about.json chứa các giá trị không hợp lệ: %{errors}"
       git: "Lỗi nhân bản kho git, truy cập bị từ chối hoặc không tìm thấy kho lưu trữ"
+      git_authentication: "Kho lưu trữ Git (Repository) đã từ chối khóa triển khai (Deploy key). Vui lòng kiểm tra xem khóa công khai (Public key) đã được cấp quyền truy cập vào kho lưu trữ chưa và thử lại. (Nếu không còn khóa triển khai, hãy xóa giao diện này và cài đặt lại.)"
+      git_timeout: "Kết nối tới kho lưu trữ Git bị hết thời gian chờ (Timeout). Vui lòng thử lại sau."
+      git_repository_not_found: "Không tìm thấy kho lưu trữ Git. Vui lòng kiểm tra lại đường dẫn (URL) kho lưu trữ."
+      git_branch_not_found: "Không tìm thấy nhánh Git (Branch). Vui lòng kiểm tra lại tên nhánh."
       git_ref_not_found: "Không thể kiểm tra tham chiếu git: %{ref}"
       unpack_failed: "Tệp bị giải nén thất bại"
       file_too_big: "Tệp chưa được nén quá lớn."
@@ -91,6 +95,9 @@ vi:
       default_not_match_type: "Đặt kiểu giá trị mặc định `%{name}` không khớp với kiểu cài đặt."
       enum_value_not_valid: "Giá trị đã chọn không phải là một trong những lựa chọn enum."
       number_value_not_valid_min_max: "Giá trị phãi nằm giữa %{min} và %{max}."
+      resolve_group_membership_requires_list: "resolve_group_membership chỉ có thể sử dụng với kiểu: danh sách (list)"
+      resolve_group_membership_requires_group_list: "resolve_group_membership yêu cầu list_type: nhóm (group)"
+      resolve_group_membership_requires_groups_property: "resolve_group_membership chỉ có thể sử dụng với kiểu: các nhóm (groups) trong lược đồ đối tượng (Object schema). Thuộc tính không hợp lệ: %{property}"
       objects:
         required: "phải hiện hành"
         not_valid_integer_value: "phải là một số nguyên"
@@ -129,6 +136,7 @@ vi:
     view_redacted_media: "Xem phương tiện"
   errors: &errors
     format: ! "%{attribute} %{message}"
+    diff_too_complex: "Có quá nhiều thay đổi để hiển thị."
     messages:
       too_long_validation:
         other: "cho phép tối đa %{count} ký tự; bạn đã nhập %{length}."
@@ -144,7 +152,7 @@ vi:
       exclusion: được dành riêng
       greater_than: phải lớn hơn %{count}
       greater_than_or_equal_to: phải lớn hơn hoặc bằng %{count}
-      has_already_been_used: "đã được sử dụng"
+      topic_title_already_used: "Tiêu đề này đã được sử dụng bởi <a href='%{url}'>một chủ đề khác</a>."
       inclusion: không được bao gồm trong danh sách
       invalid: là không hợp lệ
       is_invalid: "có vẻ không rõ ràng, nó là một câu hoàn chỉnh?"
@@ -193,6 +201,7 @@ vi:
     onebox:
       invalid_address: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì không thể tìm thấy máy chủ %{hostname}. Thay vì xem trước, chỉ một liên kết sẽ xuất hiện trong tút của bạn :cry:"
       error_response: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì máy chủ web trả về mã lỗi là %{status_code}. Thay vì xem trước, chỉ một liên kết sẽ xuất hiện trong tút của bạn. :cry:"
+      bot_challenge: "Rất tiếc, không thể tạo bản xem trước cho trang web này do máy chủ web yêu cầu xác minh người dùng trên trình duyệt. Bài viết sẽ chỉ hiển thị liên kết thay vì bản xem trước. :cry:"
       missing_data:
         other: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì không thể tìm thấy các thẻ oEmbed / OpenGraph sau: %{missing_attributes}"
   word_connector:
@@ -210,6 +219,10 @@ vi:
       invalid_access: "Bạn không được phép xem tài nguyên đã yêu cầu."
     requires_groups: "Lời mời không được lưu vì không thể truy cập được chủ đề được chỉ định. Thêm một trong các nhóm sau: %{groups}."
     domain_not_allowed: "Email của bạn không thể được sử dụng để đổi lời mời này."
+    admin_invite_requires_email: "Lời mời quản trị viên phải được gửi đến một địa chỉ thư điện tử (Email)"
+    admin_invite_requires_admin_inviter: "Chỉ quản trị viên mới có thể tạo lời mời quản trị viên"
+    moderator_invite_requires_email: "Lời mời điều hành viên phải được gửi đến một địa chỉ thư điện tử (Email)"
+    moderator_invite_requires_staff_inviter: "Chỉ ban quản trị mới có thể tạo lời mời điều hành viên"
   bulk_invite:
     file_should_be_csv: "Tệp được tải lên phải có định dạng csv."
     max_rows: "%{max_bulk_invites} lời mời đầu tiên đã được gửi. Hãy thử chia tệp thành các phần nhỏ hơn."
@@ -804,10 +817,13 @@ vi:
       types:
         staff: "Nhân viên"
     trust_level_pipeline:
+      description: "Sự chuyển dịch của thành viên giữa các cấp độ tin cậy trong khoảng thời gian đã chọn. Bao gồm số thành viên hiện tại ở từng cấp độ, tỷ lệ so với tổng số thành viên, số lượng thành viên được thăng cấp hoặc hạ cấp và số lượt đăng ký mới."
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
         count: "Thành viên kênh"
         share: "Chia sẻ"
+        promoted_in: "Thăng cấp"
+        demoted_in: "Hạ cấp"
         signups: "Thành viên mới"
       levels:
         "0": "Chủ đề mới"
@@ -1062,6 +1078,7 @@ vi:
         total_views: Tổng số
   dashboard:
     problem:
+      landlock: "Môi trường cô lập (Sandboxing) Landlock không khả dụng trên hạ tầng lưu trữ này, khiến các lệnh bên ngoài chạy mà không có sự cách ly về mạng và hệ thống tệp. Đây là tính năng bảo mật quan trọng cần có trên hệ thống chính thức (Production). Vui lòng sử dụng nhân Linux (Linux kernel) hỗ trợ Landlock (từ bản 5.13 trở lên) để khôi phục."
       rails_env: "Máy chủ của bạn đang chạy trong chế độ %{env}."
       host_names: "Cài đặt của bạn config/database.yml đang sử dụng hostname mặc định. Cập nhật lại để sử dụng hostname của bạn"
       queue_size: "Có %{queue_size} công việc đang chờ xử lý trong hàng đợi. Điều này chứng tỏ có vấn đề đã xảy ra với tiến trình Sidekiq, hoặc bạn cần tăng số lượng Sidekiq workers ()."
@@ -1091,13 +1108,15 @@ vi:
     search_query_log_max_size: "Số lượng truy vấn tìm kiếm tối đa cần lưu giữ"
     search_query_log_max_retention_days: "Khoảng thời gian tối đa để giữ các truy vấn tìm kiếm, tính bằng ngày."
     allow_uncategorized_topics: "Cho phép các chủ đề được tạo ra mà không gán chuyên mục. LƯU Ý: Nếu có bất kỳ chủ đề nào chưa gán chuyên mục, bạn phải phân loại chúng trước khi thay đổi."
+    remove_and_replace_uncategorized: "Thay thế chuyên mục mặc định \"Chưa phân loại\" bằng một chuyên mục tiêu chuẩn cùng tên và chuyển toàn bộ bài viết sang chuyên mục mới đó."
+    duplicate_topic_titles: "Cho phép tạo bài viết mới trùng tiêu đề với bài viết đã có hay không. Khi chọn 'Cho phép trên các chuyên mục khác nhau', tiêu đề có thể dùng lại nếu thuộc các chuyên mục riêng biệt. Những bài viết mà người tạo không có quyền xem sẽ không tính là trùng lặp."
     allow_duplicate_topic_titles: "Cho phép các chủ đề trùng tiêu đề."
     unique_posts_mins: "Trong bao nhiêu phút người sử dụng có thể viết tút khác với nội dung giống nhau"
     educate_until_posts: "Khi thành viên bắt đầu đăng (n) tút đầu tiên, hiện pop-up để hướng dẫn họ khi soạn thảo."
     crawl_images: "Lấy hình ảnh tử URL bên ngoài để thêm vào đúng chiều dài và chiều cao."
     download_remote_images_threshold: "Dung lượng tối thiểu cần để tải ảnh từ xa về lưu trữ (tính bằng phần trăm)"
     editing_grace_period: "Trong khoảng (n) giây sau khi gửi tút, chỉnh sửa sẽ không tạo ra một phiên bản mới trong bài lịch sử tút."
-    edit_history_visible_to_public: "Cho phép mọi người nhìn thấy phiên bản trước khi chỉnh sửa tút. Khi không cho phép, chỉ nhân viên có thể xem."
+    edit_history_visible_to_public: "Cho phép mọi người xem lịch sử các bản chỉnh sửa của bài viết. Khi tắt, chỉ ban quản trị và điều hành viên chuyên mục mới có quyền xem."
     delete_removed_posts_after: "Tút đã được xóa bởi tác giả sẽ được tự động xóa sau (n) giờ. Nếu cài là 0, bài viết sẽ được xóa ngay lập tức."
     notify_users_after_responses_deleted_on_flagged_post: "Khi một tút bị báo cáo và sau đó bị xóa, tất cả thành viên đã phản hồi tút và đã xóa phản hồi của họ sẽ được thông báo."
     fixed_category_positions: "Nếu được bật, bạn sẽ có thể sắp xếp chuyên mục theo một thứ tự cố định. Nếu không bật, chuyên mục sẽ được sắp xếp theo thứ tử hoạt động."
@@ -1105,6 +1124,7 @@ vi:
     post_excerpt_maxlength: "Chiều dài tối đa của đoạn trích / tóm tắt chủ đề."
     post_onebox_maxlength: "Số ký tự tối đa của một bài onebox Discourse."
     facebook_app_access_token: "Mã thông báo được tạo từ bí mật và ID ứng dụng Facebook của bạn. Được sử dụng để tạo hộp thư Instagram."
+    apple_touch_icon: "Biểu tượng (Icon) dành cho thiết bị Apple. Không dùng định dạng SVG. Không nên dùng nền trong suốt. Ảnh sẽ tự động chỉnh về kích thước 180x180 pixel. Nếu để trống, hệ thống sẽ dùng {{setting:large_icon}}."
     notification_email: "Địa chỉ email 'Từ:' được dùng để gửi các email thiết yếu của hệ thống. Các tên miền quy định ở đây phải có SPF, DKIM và bản ghi PTR phải được thiết lập chính xác cho email đến."
     force_https: "Buộc trang web của bạn chỉ sử dụng HTTPS. CẢNH BÁO: KHÔNG kích hoạt tính năng này cho đến khi bạn xác minh HTTPS được thiết lập đầy đủ và hoạt động hoàn toàn ở mọi nơi! Bạn đã kiểm tra CDN của mình, tất cả thông tin đăng nhập xã hội và bất kỳ biểu trưng / phụ thuộc bên ngoài nào để đảm bảo tất cả chúng đều tương thích với HTTPS?"
     summary_score_threshold: "Số điểm tối thiểu yêu cầu cho một tút bao gồm 'Tóm tắt chủ đề này'"
@@ -1116,6 +1136,10 @@ vi:
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "How often should the clients poll in milliseconds (when the window is in the background)"
     cooldown_minutes_after_hiding_posts: "Số phút một thành viên phải chờ trước khi họ có thể sửa một tút bị ẩn bởi báo cáo cộng đồng"
+    max_topics_in_first_day: "Số lượng bài viết tối đa người dùng ở cấp độ tin cậy 0 được phép tạo trong 24 giờ đầu tiên sau khi mở tài khoản"
+    max_replies_in_first_day: "Số lượng phản hồi tối đa người dùng ở cấp độ tin cậy 0 được phép tạo trong 24 giờ đầu tiên sau khi mở tài khoản"
+    tl1_max_topics_in_first_day: "Số lượng bài viết tối đa người dùng ở cấp độ tin cậy 1 được phép tạo trong 24 giờ đầu tiên sau khi mở tài khoản"
+    tl1_max_replies_in_first_day: "Số lượng phản hồi tối đa người dùng ở cấp độ tin cậy 1 được phép tạo trong 24 giờ đầu tiên sau khi mở tài khoản"
     tl2_additional_likes_per_day_multiplier: "Tăng giới hạn thích mỗi ngày cho mức độ tin tưởng 2 (thành viên) bằng cách nhân với số này"
     tl3_additional_likes_per_day_multiplier: "Tăng giới hạn thích mỗi ngày cho mức độ tin tưởng 3 (bình thường) bằng cách nhân với số này"
     tl4_additional_likes_per_day_multiplier: "Tăng giới hạn thích mỗi ngày cho mức độ tin tưởng 4 (dẫn đầu) bằng cách nhân với số này"
@@ -1130,9 +1154,11 @@ vi:
     ga_universal_auto_link_domains: "Bật tính năng theo dõi tên miền chéo của Google Universal Analytics. Các liên kết gửi đi tới các miền này sẽ có id ứng dụng khách được thêm vào chúng. Xem <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Hướng dẫn theo dõi tên miền chéo của Google.</a>"
     moderators_change_post_ownership: "Cho phép kiểm duyệt viên thay đổi quyền sở hữu tút"
     cors_origins: "Cho phép CORS (Cross-Origin Requests). Mỗi nguyên gốc phải kèm theo http:// hoặc https://. Biến env DISCOURSE_ENABLE_CORS phải được đặt là 'true' để bật CORS."
+    content_security_policy_report_uri: "Gửi báo cáo vi phạm chính sách bảo mật nội dung (CSP) đến đường dẫn (URL) này thông qua chỉ thị <code>report-uri</code>. Để trống nếu muốn tắt tính năng báo cáo."
     content_security_policy_frame_ancestors: "Hạn chế người có thể nhúng trang web này vào iframe thông qua CSP. Kiểm soát các máy chủ được phép trên <a href='%{base_path}/admin/customize/embedding'>Nhúng</a>"
     invalidate_inactive_admin_email_after_days: "Các tài khoản quản trị viên chưa truy cập trang web trong số ngày này sẽ cần xác thực lại địa chỉ email của họ trước khi đăng nhập. Đặt thành 0 để tắt."
-    top_menu: "Xác định các mục nào hiển thị trong các điều khiển điều hướng trên trang chủ, và theo thứ tự nào."
+    default_homepage: "Trang đích người dùng sẽ thấy đầu tiên khi truy cập diễn đàn. Nếu không thiết lập, hệ thống sẽ dùng mục đầu tiên trong {{setting:top_menu}}. Mỗi cá nhân có thể thay đổi lại trong phần cài đặt cá nhân."
+    top_menu: "Xác định các mục điều hướng xuất hiện trên trang khám phá và thứ tự hiển thị của chúng."
     share_links: "Xác định các mục nào hiển thị trên hộp thoại chia sẻ, và theo thứ tự nào."
     site_contact_username: "Tên tài khoản quản trị viên hợp lệ để gửi tất cả các thông báo tự động. Nếu để trống, tài khoản mặc định của hệ thống sẽ được sử dụng."
     send_welcome_message: "Gửi tất cả các thành viên mới một thông điệp chào mừng kèm theo hướng dẫn nhanh."
@@ -1164,6 +1190,7 @@ vi:
     discourse_connect_overrides_website: "Ghi đè trang web của người dùng bằng giá trị tải từ DiscourseConnect và ngăn các thay đổi cục bộ."
     discourse_connect_overrides_profile_background: "Ghi đè nền hồ sơ người dùng bằng giá trị tải từ DiscourseConnect."
     discourse_connect_overrides_card_background: "Ghi đè nền thẻ người dùng bằng giá trị tải từ DiscourseConnect."
+    enable_local_logins_via_code: "Cho phép thành viên đăng ký và đăng nhập nhanh hơn bằng mã xác thực một lần (OTP) gửi qua thư điện tử (Email)."
     allow_new_registrations: "Cho phép đăng ký người dùng mới. Bỏ chọn để bất cứ ai cũng có thể tạo tài khoản mới."
     enable_signup_cta: "Hiện thông báo với thành viên ẩn danh khi họ quay lại để yêu cầu họ đăng ký tài khoản."
     enable_google_oauth2_logins: "Bật xác thực Google Oauth2. Đây là phương thức xác thực mà Google hiện đang hỗ trợ. Yêu cầu khóa và bí mật. Xem <a href='https://meta.discourse.org/t/15858' target='_blank'>Định cấu hình đăng nhập Google cho Discourse</a>."
@@ -1210,6 +1237,7 @@ vi:
     s3_upload_bucket: "Tên Amazon S3 để lưu trữ các file sẽ được upload. CHÚ Ý: phải là chữ thường, không cách và không gạch dưới."
     s3_cdn_url: "CDN URL được sử dụng cho tất cả các tài nguyên S3 (vd: https://cdn.somewhere.com). CHÚ Ý: sau khi thay đổi thiết lập này bạn phải tạo lại các bài viết cũ."
     avatar_sizes: "Danh sách những kích thước hình đại diện tự động khởi tạo."
+    selectable_avatars_random_on_signup: "Gán ảnh đại diện (Avatar) ngẫu nhiên cho người dùng mới từ {{setting:selectable_avatars}}."
     allow_all_attachments_for_group_messages: "Cho phép các email có đính kèm trong tin nhắn nhóm."
     default_invitee_trust_level: "Độ tin cậy mặc định (0-4) cho thành viên được mời."
     default_trust_level: "Độ tin cậy mặc định (0-4) cho tất cả các thành viên mới. CHÚ Ý! Thay đổi thiết lập này sẽ đặt bạn vào nguy cơ spam cao."
@@ -1329,6 +1357,8 @@ vi:
     embed_post_limit: "Số lượng tối đa bài viết được nhúng."
     embed_username_required: "Tên tài khoản để tạo chủ đề là bắt buộc."
     slug_generation_method: "Chọn phương thức tạo slug. 'encoded' sẽ tạo ra phần trăm chuỗi mã hóa. 'none' sẽ tắt slug."
+    emoji_picker_pinned_groups: "Các nhóm biểu tượng cảm xúc (Emoji) được ghim lên trên cùng trong bảng chọn. Các nhóm còn lại sẽ hiển thị phía dưới nhóm được ghim."
+    klipy_api_key: "Khóa API (API Key) Klipy. Bắt buộc để sử dụng tính năng tìm kiếm ảnh động (GIF)."
     approve_post_count: "Số lượng bài viết từ một thành viên mới hoặc thành viên cũ phải được duyệt"
     notify_about_queued_posts_after: "Nếu có tút đang chờ được xem xét trong hơn nhiều giờ này, hãy gửi thông báo cho tất cả kiểm duyệt viên. Đặt thành 0 để tắt các thông báo này."
     auto_close_messages_post_count: "Số lượng tút tối đa được phép trong một tin nhắn trước khi nó tự động đóng (0 để tắt)"
@@ -1363,6 +1393,30 @@ vi:
     dashboard_visible_tabs: "Chọn tab bảng điều khiển nào được hiển thị."
     dashboard_general_tab_activity_metrics: "Chọn các báo cáo sẽ được hiển thị dưới dạng chỉ số hoạt động trên tab chung."
     suggest_weekends_in_date_pickers: "Bao gồm các ngày cuối tuần (Thứ Bảy và Chủ Nhật) trong đề xuất chọn ngày (tắt tính năng này nếu bạn chỉ sử dụng Discourse vào các ngày trong tuần, thứ Hai đến thứ Sáu)."
+    enable_composer_redesign: "Bật giao diện khung soạn thảo mới."
+    prioritize_recently_used_tags: "Khi thêm thẻ (Tag) lúc tạo hoặc sửa bài viết, hiển thị các thẻ người dùng đã sử dụng gần đây lên đầu danh sách, trước các thẻ phổ biến nhất của diễn đàn."
+    nested_replies_hot_sort_enabled: "Cho phép người dùng sắp xếp phản hồi phân cấp theo điểm nổi bật (Hot score). Điểm nổi bật được tính toán ngầm chỉ đối với các bài viết có yêu cầu sắp xếp nổi bật."
+    nested_replies_hot_like_weight: " Trọng số áp dụng cho từng điểm lượt thích (Like) của phản hồi khi tính toán độ nổi bật trong phản hồi phân cấp."
+    nested_replies_hot_reply_weight: "Trọng số áp dụng cho mỗi phản hồi trực tiếp khi tính toán độ nổi bật trong phản hồi phân cấp."
+    nested_replies_hot_freshness_max_bonus: "Điểm thưởng cho bài mới  (Freshness bonus) tối đa cộng thêm vào điểm nổi bật của phản hồi phân cấp mới tạo."
+    nested_replies_hot_freshness_half_life_hours: "Số giờ mà sau đó Điểm thưởng cho bài mới (Freshness bonus) của phản hồi phân cấp giảm đi một nửa."
+    nested_replies_hot_child_penalty: "Điểm nổi bật bị trừ cho mỗi cấp cha khi độ nổi bật của các phản hồi con truyền ngược lên trên."
+    nested_replies_hot_small_topic_post_limit: "Giới hạn số lượng bình luận tối đa của bài viết sẽ dùng cách sắp xếp hàng đầu mà không cần tính toán điểm nổi bật của phản hồi phân cấp."
+    nested_replies_hot_max_inactivity_days: "Số ngày tối đa tính từ bình luận công khai mới nhất của bài viết còn được phép dùng kiểu sắp xếp nổi bật. Các bài viết cũ hơn sẽ chuyển sang sắp xếp hàng đầu mà không tính hoặc làm mới điểm nổi bật."
+    nested_replies_hot_snapshot_ttl_minutes: "Số phút mà một bản chụp (Snapshot) điểm nổi bật của phản hồi phân cấp giữ trạng thái mới trước khi yêu cầu làm mới được đưa vào hàng chờ."
+    nested_replies_hot_max_stale_age_days: "Thời gian tối đa (tính theo ngày) mà một bản chụp điểm nổi bật phản hồi phân cấp cũ vẫn có thể được hiển thị."
+    nested_replies_hot_refresh_requests_per_minute: "Số yêu cầu làm mới điểm nổi bật phản hồi phân cấp tối đa được chấp nhận từ một người gửi trong mỗi phút."
+    nested_replies_hot_max_topics_per_run: "Số lượng bài viết trong hàng chờ tối đa được kiểm tra trong mỗi lần tiến trình (Job) tính điểm nổi bật phản hồi phân cấp thực thi."
+    nested_replies_hot_max_job_runtime_ms: "Thời gian chạy tối đa (tính bằng mili-giây) cho mỗi lần tiến trình tính điểm nổi bật phản hồi phân cấp thực thi."
+    nested_replies_hot_max_statement_timeout_ms: "Thời gian chờ câu lệnh PostgreSQL (Statement timeout) tối đa (mili-giây) cho một lần tính toán điểm nổi bật phản hồi phân cấp."
+    nested_replies_hot_lock_timeout_ms: "Thời gian chờ khóa cơ sở dữ liệu PostgreSQL (Lock wait) tối đa (mili-giây) cho tác vụ xử lý điểm nổi bật phản hồi phân cấp."
+    nested_replies_hot_failure_cooldown_minutes: "Số phút chờ trước khi thử tính toán lại điểm nổi bật của phản hồi phân cấp bị lỗi."
+    nested_replies_hot_max_pending_topics: "Số lượng bài viết tối đa chờ trong hàng đợi tính điểm nổi bật phản hồi phân cấp."
+    nested_replies_hot_max_queue_age_minutes: "Thời gian tối đa (tính theo phút) một yêu cầu tính điểm nổi bật phản hồi phân cấp có thể chờ trong hàng đợi trước khi bị hủy."
+    nested_replies_hot_preload_depth_penalty: "Mức độ ưu tiên bị trừ cho mỗi cấp độ sâu khi chọn mở rộng trước các phản hồi phân cấp ở chế độ xem nổi bật."
+    nested_replies_backfill_batch_size: "Số lượng bài viết được xử lý trong mỗi đợt bổ sung dữ liệu thống kê phản hồi phân cấp."
+    nested_replies_stats_maintenance_enabled: "Duy trì dữ liệu thống kê phản hồi phân cấp ngay cả khi tính năng này đã bị tắt."
+    enable_invite_modal_with_roles: "Bật quy trình mời thành viên giao diện mới, cho phép quản trị viên mời trực tiếp ai đó làm quản trị viên. Người được mời sẽ trở thành điều hành viên ngay khi đăng ký và chính thức lên quản trị viên sau khi người mời xác nhận qua thư điện tử (Email)."
     errors:
       invalid_email: "Địa chỉ email sai"
       invalid_username: "Không có thành viên với tên đăng nhập này"
@@ -1371,6 +1425,8 @@ vi:
       invalid_integer_max: "Giá trị không thể cao hơn %{max}."
       invalid_integer: "Giá trị phải là một số nguyên"
       regex_mismatch: "Giá trị không giống với định dạng"
+      emoji_picker_pinned_groups_invalid:
+        other: "Nhóm biểu tượng cảm xúc (Emoji) không xác định: %{groups}."
       must_include_latest: "Top menu phải kèm theo tab 'latest'."
       invalid_string: "Giá trị không hợp lệ."
       invalid_string_min_max: "Phải nằm giữa %{min} và %{max} ký tự."
@@ -1379,12 +1435,15 @@ vi:
       invalid_string_max:
         other: "Không nhiều hơn %{count} ký tự."
       invalid_reply_by_email_address: "Giá trị phải chứa '%{reply_key}' và phải khác với email thông báo."
+      invalid_csp_report_uri: "Giá trị phải là một đường dẫn (URL) http:// hoặc https:// hợp lệ và không chứa khoảng trắng, dấu chấm phẩy hoặc dấu phẩy."
       pop3_polling_host_is_empty: "Bạn phải thiết lập 'pop3 polling host' trước khi kích hoạt POP3 polling."
       pop3_polling_username_is_empty: "Bạn phải thiết lập 'pop3 polling username' trước khi kích hoạt POP3 polling."
       pop3_polling_password_is_empty: "Bạn phải thiết lập 'pop3 polling password' trước khi kích hoạt POP3 polling."
       pop3_polling_authentication_failed: "Chứng thực POP3 thất bại, xin hãy kiểm tra lại thông tin."
       reply_by_email_address_is_empty: "Bạn phải thiết lập 'reply by email address' trước khi kích hoạt trả lời bằng email."
       user_locale_not_enabled: "Bạn phải bật 'allow user locale' trước khi kích hoạt thiết lập này."
+      content_localization_language_switcher_requirements: "Bộ chuyển đổi ngôn ngữ yêu cầu phải bật {{setting:set_locale_from_cookie}} cùng {{setting:allow_user_locale}}, đồng thời {{setting:content_localization_supported_locales}} phải có ít nhất một ngôn ngữ. {{settings:content_localization_language_switcher,set_locale_from_cookie,allow_user_locale,content_localization_supported_locales|Tất cả cài đặt bắt buộc}}"
+      content_localization_crawler_param_requirements: "Bạn cần bật tùy chọn 'Đặt ngôn ngữ từ tham số' trước khi kích hoạt cài đặt này."
   search:
     within_post: "#%{post_number} bởi %{username}"
     types:
@@ -1480,6 +1539,7 @@ vi:
       group: "Lọc chủ đề theo nhóm"
       groups_any: "Hiển thị chủ đề thuộc bất kỳ nhóm cụ thể (phân cách bằng dấu phẩy)"
       groups_all: "Hiển thị chủ đề với tất cả nhóm cụ thể (phân tách bằng dấu cộng)"
+      exclude_group: "Loại trừ các bài viết có người tham gia thuộc các nhóm cụ thể"
       locale: "Lọc chủ đề theo ngôn ngữ gốc"
       locale_any: "Hiển thị chủ đề được viết ban đầu bằng bất kỳ ngôn ngữ nào trong số các ngôn ngữ cụ thể (phân cách bằng dấu phẩy)"
       exclude_locale: "Loại trừ chủ đề được viết ban đầu bằng một ngôn ngữ cụ thể"
@@ -1488,10 +1548,12 @@ vi:
     account_not_approved: "Tài khoản của bạn chưa được BQT chấp thuận, bạn sẽ nhận được email thông báo khi được chấp nhận."
     unknown_error: "Đã có vấn đề xảy ra với tài khoản của bạn, xin hãy liên hệ với BQT."
     timeout_expired: "Đăng nhập tài khoản hết hạn, xin hãy thử đăng nhập lại."
+    banned_id_error: "Giá trị `external_id` không được phép sử dụng"
     missing_secret: "Xác thực không thành công do thiếu bí mật. Liên hệ với quản trị viên trang web để khắc phục sự cố này."
   original_poster: "Người viết gốc"
   most_recent_poster: "Người Gửi Mới Đây"
   frequent_poster: "Người Gửi Thường Xuyên"
+  recent_poster: "Người bình luận gần đây"
   redirected_to_top_reasons:
     new_user: "Chào mừng đến với cộng dồng của chúng tôi! Ở đây có những chủ để phổ biến."
     not_seen_in_a_month: "Chào mừng quay trở lại! Chúng tôi thấy bạn truy cập một khoảng thời gian. Ở đây có những tút hot từ lúc bạn đi."
@@ -1561,6 +1623,7 @@ vi:
     email_too_long: "Email bạn cung cấp quá dài. Địa chỉ email phải không quá 254 ký tự, và tên miền phải không quá 253 ký tự."
     wrong_invite_code: "Mã mời bạn đã nhập không chính xác."
     reserved_username: "Tên đăng nhập không được cho phép."
+    missing_full_name: "Vui lòng nhập đầy đủ họ và tên"
     auth_complete: "Xác thực đã hoàn tất."
     click_to_continue: "Nhấn vào đây để tiếp tục."
     already_logged_in: "Lấy làm tiếc! Lời mời này dành cho người dùng mới, những người chưa có tài khoản."
@@ -2170,8 +2233,255 @@ vi:
       Trang web này được vận hành bởi đội ngũ điều hành thân thiện của bạn [đội ngũ điều hành thân thiện](%{base_path}/about) và *bạn*, cộng đồng. Nếu bạn có bất kỳ câu hỏi nào khác về cách thức hoạt động của trang web này, hãy mở một chủ đề mới tại %{feedback_category} và cùng thảo luận! Nếu có vấn đề cấp bách hoặc khẩn cấp không thể giải quyết qua chủ đề meta hoặc báo cáo, hãy [liên hệ với các moderator](%{base_path}/about).
   tos_topic:
     title: "Điều khoản Dịch vụ"
+    body: |
+      <h2 id="heading--change-me"><a href="#heading--change-me">Thay đổi nội dung này</a></h2>
+
+      Quản trị viên diễn đàn thân mến, dưới đây là văn bản mẫu cho điều khoản sử dụng và chính sách riêng tư. Vui lòng tùy chỉnh lại cho phù hợp với diễn đàn của bạn.
+
+      Các điều khoản này hiện chưa áp dụng, nhưng có thể sẽ điều chỉnh việc sử dụng diễn đàn tại <%{base_url}> trong tương lai. Khi đó, để tiếp tục sử dụng diễn đàn, bạn phải đồng ý với các điều khoản này với %{company_name}, công ty vận hành diễn đàn.
+
+      Công ty có thể cung cấp các sản phẩm và dịch vụ khác theo các điều khoản riêng. Các điều khoản này chỉ áp dụng cho việc sử dụng diễn đàn.
+
+      Chuyển nhanh đến:
+
+      - [Điều khoản quan trọng](#heading--important-terms)
+      - [Quyền sử dụng diễn đàn](#heading--permission)
+      - [Điều kiện sử dụng diễn đàn](#heading--conditions)
+      - [Quy định sử dụng](#heading--acceptable-use)
+      - [Tiêu chuẩn nội dung](#heading--content-standards)
+      - [Xử lý vi phạm](#heading--enforcement)
+      - [Tài khoản của bạn](#heading--your-account)
+      - [Nội dung của bạn](#heading--your-content)
+      - [Trách nhiệm của bạn](#heading--responsibility)
+      - [Tuyên bố miễn trừ trách nhiệm](#heading--disclaimers)
+      - [Giới hạn trách nhiệm pháp lý](#heading--liability)
+      - [Ý kiến đóng góp](#heading--feedback)
+      - [Chấm dứt dịch vụ](#heading--termination)
+      - [Giải quyết tranh chấp](#heading--disputes)
+      - [Điều khoản chung](#heading--general)
+      - [Liên hệ](#heading--contact)
+      - [Thay đổi điều khoản](#heading--changes)
+
+      <h2 id="heading--important-terms"><a href="#heading--important-terms">Điều khoản quan trọng</a></h2>
+
+      ***Các điều khoản này bao gồm một số quy định quan trọng ảnh hưởng đến quyền và trách nhiệm của bạn, chẳng hạn như miễn trừ trách nhiệm tại mục [Tuyên bố miễn trừ trách nhiệm](#heading--disclaimers), giới hạn trách nhiệm pháp lý của công ty tại mục [Giới hạn trách nhiệm pháp lý](#heading--liability), cam kết bồi thường cho công ty nếu bạn vi phạm quy định tại mục [Trách nhiệm của bạn](#heading--responsibility), và thỏa thuận giải quyết tranh chấp bằng trọng tài tại mục [Giải quyết tranh chấp](#heading--disputes).***
+
+      <h2 id="heading--permission"><a href="#heading--permission">Quyền sử dụng diễn đàn</a></h2>
+
+      Tuân thủ các điều khoản này, công ty cấp quyền cho bạn sử dụng diễn đàn. Mọi người dùng đều phải đồng ý với các điều khoản này khi tham gia.
+
+      <h2 id="heading--conditions"><a href="#heading--conditions">Điều kiện sử dụng diễn đàn</a></h2>
+
+      Quyền sử dụng diễn đàn của bạn phải tuân thủ các điều kiện sau:
+
+      1. Bạn phải từ đủ 18 tuổi trở lên.
+
+      2. Bạn không được tiếp tục sử dụng diễn đàn nếu công ty thông báo trực tiếp về việc chấm dứt quyền truy cập của bạn.
+
+      3. Bạn phải sử dụng diễn đàn tuân theo [Quy định sử dụng](#heading--acceptable-use) và [Tiêu chuẩn nội dung](#heading--content-standards).
+
+      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Quy định sử dụng</a></h2>
+
+      1. Không được vi phạm pháp luật khi sử dụng diễn đàn.
+
+      2. Không được sử dụng hoặc cố gắng sử dụng tài khoản của người khác khi chưa được cho phép.
+
+      3. Không được mua, bán hoặc giao dịch tên người dùng hay các mã định danh duy nhất khác trên diễn đàn.
+
+      4. Không được gửi quảng cáo, thư dây chuyền hoặc các hình thức lôi kéo khác, cũng như không thu thập địa chỉ email hay dữ liệu cá nhân cho mục đích thương mại.
+
+      5. Không được tự động hóa truy cập hoặc theo dõi diễn đàn bằng công cụ như web crawler, phần mềm mở rộng trình duyệt (Plugin/Extension) hay chương trình máy tính không phải trình duyệt web tiêu chuẩn. Bạn chỉ được phép quét dữ liệu (Crawl) để lập chỉ mục cho các máy cụ tìm kiếm công khai.
+
+      6. Không được dùng diễn đàn để gửi thư điện tử (Email) đến danh sách phân phối, nhóm tin hoặc các hộp thư nhóm.
+
+      7. Không được giả mạo hoặc cố ý gây hiểu nhầm rằng bạn có liên kết hoặc được sự bảo trợ từ công ty.
+
+      8. Không được nhúng liên kết trực tiếp (Hotlink) đến hình ảnh hoặc các nội dung phi văn bản của diễn đàn lên các trang web khác.
+
+      9. Không được xóa bỏ các dấu hiệu nhận diện bản quyền hoặc sở hữu trí tuệ khỏi tài liệu tải về từ diễn đàn.
+
+      10. Không được hiển thị bất kỳ phần nào của diễn đàn trên trang web khác bằng thẻ `<iframe>`.
+
+      11. Không được vô hiệu hóa, né tránh hoặc phá vỡ các biện pháp bảo mật và giới hạn truy cập của diễn đàn.
+
+      12. Không được gây áp lực lên hạ tầng diễn đàn bằng số lượng yêu cầu bất thường hoặc cố ý làm quá tải hệ thống thông tin.
+
+      13. Không được mạo danh người khác trên diễn đàn.
+
+      14. Không được khuyến khích hoặc giúp đỡ bất kỳ ai vi phạm các điều khoản này.
+
+      <h2 id="heading--content-standards"><a href="#heading--content-standards">Tiêu chuẩn nội dung</a></h2>
+
+      1. Không đăng tải nội dung bất hợp pháp, xúc phạm hoặc gây hại cho người khác, bao gồm hành vi quấy rối, không phù hợp, lăng mạ hoặc thù thịnh.
+
+      2. Không đăng tải nội dung vi phạm pháp luật, xâm phạm quyền sở hữu trí tuệ, vi phạm quyền riêng tư hoặc phá vỡ các thỏa thuận với bên thứ ba.
+
+      3. Không gửi nội dung chứa mã độc máy tính như vi-rút (Virus) hay phần mềm độc hại/gián điệp (Spyware).
+
+      4. Không đăng nội dung giữ chỗ chỉ để chiếm dụng địa chỉ, tên người dùng hoặc mã định danh.
+
+      5. Không sử dụng diễn đàn để tiết lộ thông tin mà bạn không có quyền công khai, chẳng hạn như thông tin bảo mật hoặc dữ liệu cá nhân của người khác.
+
+      <h2 id="heading--enforcement"><a href="#heading--enforcement">Xử lý vi phạm</a></h2>
+
+      Công ty có quyền điều tra và xử lý các hành vi vi phạm điều khoản này theo quy định pháp luật. Công ty có thể thông báo và hợp tác với cơ quan chức năng để truy cứu trách nhiệm đối với các hành vi vi phạm.
+
+      Công ty bảo lưu quyền thay đổi, chỉnh sửa hoặc xóa nội dung trên diễn đàn vì bất kỳ lý do gì. Nếu phát hiện nội dung vi phạm điều khoản, vui lòng [liên hệ với chúng tôi ngay lập tức](#heading--contact).
+
+      <h2 id="heading--your-account"><a href="#heading--your-account">Tài khoản của bạn</a></h2>
+
+      Bạn cần tạo và đăng nhập tài khoản để sử dụng một số tính năng của diễn đàn.
+
+      Khi đăng ký, bạn cần cung cấp một số thông tin cá nhân. Bạn cam kết cung cấp tối thiểu một địa chỉ thư điện tử (Email) hợp lệ và duy trì cập nhật địa chỉ này. Bạn có thể đóng tài khoản bất kỳ lúc nào bằng cách gửi email đến <%{contact_email}>.
+
+      Bạn chịu trách nhiệm cho mọi hoạt động diễn ra dưới tài khoản của mình, cho đến khi tài khoản được đóng hoặc bạn thông báo cho công ty rằng tài khoản đã bị xâm nhập. Vui lòng chọn mật khẩu an toàn và giữ bảo mật.
+
+      Công ty có thể giới hạn, tạm dừng hoặc đóng tài khoản của bạn nếu có yêu cầu gỡ bỏ do vi phạm bản quyền, hoặc khi có lý do hợp lý cho thấy bạn đã vi phạm các điều khoản này.
+
+      <h2 id="heading--your-content"><a href="#heading--your-content">Nội dung của bạn</a></h2>
+
+      Các điều khoản này không chuyển giao quyền sở hữu trí tuệ đối với nội dung bạn chia sẻ trên diễn đàn (như thông tin tài khoản, bài viết, bình luận) cho công ty. Ngược lại, bạn cũng không có quyền sở hữu đối với tài sản trí tuệ của công ty.
+
+      Bạn hoàn toàn chịu trách nhiệm về nội dung mình đăng tải. Bạn cam kết không gây hiểu nhầm rằng nội dung của bạn được bảo trợ hoặc phê duyệt bởi công ty. Công ty không có nghĩa vụ phải lưu trữ, duy trì hoặc cung cấp bản sao nội dung của bạn.
+
+      Nội dung bạn đăng tải thuộc sở hữu của bạn. Tuy nhiên, tối thiểu bạn cấp cho công ty quyền cung cấp nội dung đó tới những người dùng khác trên diễn đàn. Quyền này cho phép công ty sao chép, xuất bản và phân tích nội dung bạn gửi.
+
+      Khi nội dung bị gỡ bỏ khỏi diễn đàn, quyền hạn của công ty sẽ chấm dứt khi bản sao cuối cùng xóa khỏi hệ thống sao lưu và bộ nhớ đệm (Cache). Các giấy phép khác bạn áp dụng cho nội dung (như [Creative Commons](https://creativecommons.org)) vẫn có thể tiếp tục có hiệu lực.
+
+      Công ty không chịu trách nhiệm nếu người khác sử dụng lại nội dung của bạn vi phạm các điều khoản giấy phép mà bạn đã thiết lập.
+
+      <h2 id="heading--responsibility"><a href="#heading--responsibility">Trách nhiệm của bạn</a></h2>
+
+      Bạn đồng ý bồi thường cho công ty trước các khiếu nại pháp lý từ bên thứ ba liên quan đến việc bạn vi phạm các điều khoản này. Hai bên cam kết thông báo cho nhau sớm nhất có thể về các khiếu nại phát sinh. Bạn đồng ý để công ty kiểm soát việc điều tra, bào chữa và thương lượng hòa giải.
+
+      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Tuyên bố miễn trừ trách nhiệm</a></h2>
+
+      ***Bạn chấp nhận mọi rủi ro khi sử dụng diễn đàn và các nội dung trên diễn đàn. Trong phạm vi pháp luật cho phép, công ty cung cấp dịch vụ nguyên trạng ("as is") mà không có bất kỳ sự bảo đảm nào.***
+
+      Diễn đàn có thể chứa liên kết tới các dịch vụ do bên thứ ba vận hành. Công ty không bảo đảm cho các dịch vụ hoặc nội dung từ các bên này.
+
+      <h2 id="heading--liability"><a href="#heading--liability">Giới hạn trách nhiệm pháp lý</a></h2>
+
+      ***Công ty và các nhà cung cấp sẽ không chịu trách nhiệm cho các thiệt hại do vi phạm hợp đồng mà nhân viên không thể lường trước một cách hợp lý.***
+
+      ***Trong phạm vi pháp luật cho phép, tổng trách nhiệm pháp lý đối với các khiếu nại liên quan đến diễn đàn sẽ bị giới hạn ở mức 50 USD.***
+
+      <h2 id="heading--feedback"><a href="#heading--feedback">Ý kiến đóng góp</a></h2>
+
+      Công ty luôn hoan nghênh các đóng góp và gợi ý của bạn. Xem mục [Liên hệ](#heading--contact) bên dưới để biết cách gửi phản hồi.
+
+      Bạn đồng ý rằng công ty có toàn quyền sử dụng các ý kiến đóng góp đó mà không cần thông báo, xin phép hay trả phí. Vui lòng không gửi các thông tin mà bạn cho là bảo mật hoặc thuộc sở hữu riêng.
+
+      <h2 id="heading--termination"><a href="#heading--termination">Chấm dứt dịch vụ</a></h2>
+
+      Bạn hoặc công ty có thể chấm dứt thỏa thuận này bất kỳ lúc nào. Khi chấm dứt, quyền sử dụng diễn đàn của bạn cũng sẽ kết thúc.
+
+      <h2 id="heading--disputes"><a href="#heading--disputes">Giải quyết tranh chấp</a></h2>
+
+      %{governing_law} sẽ điều chỉnh mọi tranh chấp liên quan đến các điều khoản này hoặc việc sử dụng diễn đàn của bạn.
+
+      Mọi tranh chấp sẽ được giải quyết tại tòa án thuộc %{city_for_disputes}.
+
+      <h2 id="heading--general"><a href="#heading--general">Điều khoản chung</a></h2>
+
+      Nếu bất kỳ điều khoản nào không thể thi hành, điều khoản đó sẽ được điều chỉnh ở mức tối thiểu để có thể thi hành, hoặc sẽ bị gỡ bỏ.
+
+      Bạn không được chuyển nhượng thỏa thuận này. Công ty có thể chuyển nhượng thỏa thuận cho các công ty liên kết hoặc đơn vị nhận sáp nhập/mua lại.
+
+      Các điều khoản này cấu thành toàn bộ thỏa thuận giữa bạn và công ty về việc sử dụng diễn đàn.
+
+      <h2 id="heading--contact"><a href="#heading--contact">Liên hệ</a></h2>
+
+      Bạn có thể gửi thông báo hoặc thắc mắc cho công ty qua địa chỉ thư điện tử (Email) <%{contact_email}>.
+
+      <h2 id="heading--changes"><a href="#heading--changes">Thay đổi điều khoản</a></h2>
+
+      Lần cập nhật gần nhất là [INSERT LAST UPDATE DATE HERE]. Công ty có thể tiếp tục cập nhật điều khoản và sẽ thông báo trên diễn đàn hoặc qua email.
   privacy_topic:
     title: "Chính sách Riêng tư"
+    body: |
+      ## [Quản trị viên diễn đàn thân mến, dưới đây là bản mẫu chính sách riêng tư mà bạn nên tùy chỉnh cho phù hợp với diễn đàn của mình.]
+
+      <a name="collect"></a>
+
+      ## [Chúng tôi thu thập những thông tin nào?](#collect)
+
+      Chúng tôi thu thập thông tin khi bạn đăng ký tài khoản, đọc, viết bài hoặc tương tác với các nội dung trên diễn đàn.
+
+      Khi đăng ký, bạn có thể được yêu cầu nhập tên và địa chỉ thư điện tử (Email). Bạn vẫn có thể truy cập diễn đàn mà không cần đăng ký. Địa chỉ email sẽ được xác thực qua một liên kết duy nhất.
+
+      Khi bạn đăng bài, hệ thống sẽ ghi nhận địa chỉ IP. Nhật ký máy chủ (Server log) cũng có thể lưu trữ địa chỉ IP của mọi yêu cầu gửi đến hệ thống.
+
+      <a name="use"></a>
+
+      ## [Chúng tôi sử dụng thông tin của bạn làm gì?](#use)
+
+      Thông tin thu thập được có thể dùng để:
+
+      * Cá nhân hóa trải nghiệm của bạn &mdash; giúp đáp ứng tốt hơn các nhu cầu cá nhân.
+      * Cải thiện diễn đàn &mdash; liên tục nâng cấp chất lượng dựa trên phản hồi của bạn.
+      * Nâng cao dịch vụ hỗ trợ &mdash; xử lý các yêu cầu trợ giúp hiệu quả hơn.
+      * Gửi email định kỳ &mdash; gửi thông báo về các thay đổi bài viết, phản hồi tên người dùng hoặc trả lời thắc mắc.
+
+      <a name="protect"></a>
+
+      ## [Chúng tôi bảo vệ thông tin của bạn như thế nào?](#protect)
+
+      Chúng tôi áp dụng nhiều biện pháp bảo mật để đảm bảo an toàn cho thông tin cá nhân của bạn khi nhập, gửi hoặc truy cập.
+
+      <a name="data-retention"></a>
+
+      ## [Chính sách lưu trữ dữ liệu ra sao?](#data-retention)
+
+      Chúng tôi cam kết:
+
+      * Lưu trữ nhật ký máy chủ chứa địa chỉ IP không quá [SỐ NGÀY] ngày.
+
+      <a name="cookies"></a>
+
+      ## [Chúng tôi có sử dụng cookie không?](#cookies)
+
+      Có. Cookie là các tệp nhỏ được lưu trên ổ cứng máy tính thông qua trình duyệt web (nếu bạn cho phép), giúp diễn đàn nhận diện trình duyệt và liên kết với tài khoản đã đăng ký của bạn.
+
+      Chúng tôi dùng cookie để lưu cài đặt cá nhân cho các lần truy cập sau và phân tích dữ liệu lượng truy cập.
+
+      <a name="disclose"></a>
+
+      ## [Chúng tôi có tiết lộ thông tin ra bên ngoài không?](#disclose)
+
+      Chúng tôi không bán, giao dịch hoặc chuyển giao thông tin cá nhân của bạn cho bên thứ ba. Điều này không bao gồm các đối tác tin cậy hỗ trợ vận hành diễn đàn, miễn là họ cam kết bảo mật thông tin. Chúng tôi cũng có thể cung cấp thông tin khi có yêu cầu pháp lý hoặc để bảo vệ quyền lợi, tài sản và an toàn.
+
+      <a name="third-party"></a>
+
+      ## [Liên kết của bên thứ ba](#third-party)
+
+      Đôi khi, chúng tôi có thể đưa liên kết đến các sản phẩm/dịch vụ của bên thứ ba. Các trang web này có chính sách riêng tư độc lập. Chúng tôi không chịu trách nhiệm cho nội dung hay hoạt động của các trang web liên kết đó.
+
+      <a name="coppa"></a>
+
+      ## [Tuân thủ đạo luật bảo vệ quyền riêng tư của trẻ em trên mạng (COPPA)](#coppa)
+
+      Diễn đàn và các dịch vụ chỉ dành cho người từ đủ 18 tuổi trở lên. Nếu máy chủ đặt tại Hoa Kỳ và bạn dưới 18 tuổi, vui lòng không sử dụng trang web này theo quy định của COPPA.
+
+      <a name="online"></a>
+
+      ## [Phạm vi áp dụng chính sách](#online)
+
+      Chính sách riêng tư trực tuyến này chỉ áp dụng cho thông tin thu thập qua trang web, không áp dụng cho thông tin thu thập ngoại tuyến (Offline).
+
+      <a name="consent"></a>
+
+      ## [Sự đồng ý của bạn](#consent)
+
+      Khi sử dụng diễn đàn, bạn đồng ý với chính sách riêng tư của chúng tôi.
+
+      <a name="changes"></a>
+
+      ## [Thay đổi chính sách riêng tư](#changes)
+
+      Mọi thay đổi về chính sách riêng tư sẽ được cập nhật công khai tại trang này.
+
+      Tài liệu này áp dụng giấy phép CC-BY-SA. Lần cập nhật gần nhất: [INSERT LAST UPDATE DATE HERE].
   badges:
     editor:
       name: Lần Đầu Sửa Tút
@@ -2454,6 +2764,8 @@ vi:
     api_key:
       revoked: Đã thu hồi
   reviewables:
+    post_deleted_by_author_after_penalty: >-
+      Bài viết đã bị tác giả xóa sau khi người dùng bị xử phạt. Xem xét lại án phạt mà không cần khôi phục bài viết.
     priorities:
       low: "Thấp"
       medium: "Trung bình"
@@ -2472,6 +2784,8 @@ vi:
         title: "Đồng ý"
       agree_and_keep_deleted:
         title: "Giữ tút bị xóa"
+        description: "Đồng ý với báo cáo vi phạm và giữ nguyên trạng thái xóa bài viết."
+        complete: "Đã giữ nguyên trạng thái xóa bài viết."
       delete:
         title: "Xóa"
         complete: "Tút đã bị xóa."
@@ -2489,6 +2803,10 @@ vi:
         title: "Bỏ qua"
       ignore_and_do_nothing:
         title: "Không làm gì cả"
+      unsilence_user_and_ignore:
+        title: "Hủy cấm ngôn người dùng và bỏ qua"
+        description: "Hủy cấm ngôn người dùng và xóa báo cáo vi phạm khỏi hàng chờ xét duyệt mà không khôi phục bài viết bị xóa."
+        complete: " Đã hủy cấm ngôn người dùng và bỏ qua báo cáo vi phạm."
       approve:
         title: "Đồng ý"
       approve_post:
@@ -2508,7 +2826,6 @@ vi:
           complete: "Người dùng đã bị xóa."
         block:
           title: "Xóa và Chặn Người Dùng"
-          description: "Người dùng sẽ bị xóa và chúng tôi sẽ chặn IP và địa chỉ email của họ."
       confirm_spam:
         title: "Đồng ý"
       not_spam:
@@ -2539,6 +2856,26 @@ vi:
 
       Không cần thực hiện hành động nào vào lúc này, tuy nhiên, đây được coi là phương pháp bảo mật tốt để chu kỳ tất cả các thông tin quan trọng của bạn vài năm một lần.
   fallback_username: "người dùng"
+  emoji:
+    export:
+      no_selection: "Chọn ít nhất một biểu tượng cảm xúc (Emoji) để xuất."
+    import:
+      missing_file: "Chưa cung cấp tệp ZIP."
+      missing_csv: "Tệp ZIP phải chứa tệp danh sách emojis.csv."
+      invalid_csv: "Không thể đọc hoặc phân tích tệp emojis.csv."
+      empty_manifest: "Tệp emojis.csv không có danh sách biểu tượng cảm xúc (Emoji) nào."
+      too_many_entries: "Tệp ZIP chứa quá nhiều tệp con (Tối đa 1000 tệp)."
+      file_too_large: "Một hoặc nhiều tệp trong tệp ZIP vượt quá dung lượng cho phép."
+      suspicious_entry: "Một hoặc nhiều tệp trong tệp ZIP có tỷ lệ nén bất thường."
+      session_expired: "Phiên nhập dữ liệu đã hết hạn. Vui lòng thực hiện lại từ đầu."
+      validation:
+        missing_name: "Bắt buộc phải nhập tên."
+        duplicate_name: "Tên xuất hiện nhiều hơn một lần trong tệp CSV."
+        missing_filename: "Bắt buộc phải có tên tệp."
+        missing_image: "Tệp hình ảnh không có trong tệp ZIP."
+        group_too_long: "Tên nhóm phải từ 20 ký tự trở xuống."
+        unsupported_extension: "Định dạng tệp .%{ext} không được hỗ trợ (chỉ dùng png, gif hoặc svg)."
+        duplicate_filename: "Tên tệp xuất hiện nhiều hơn một lần trong tệp CSV."
   activemodel:
     errors:
       <<: *errors

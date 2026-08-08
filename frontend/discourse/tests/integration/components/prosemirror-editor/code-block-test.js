@@ -7,10 +7,6 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    hooks.beforeEach(function () {
-      this.siteSettings.rich_editor = true;
-    });
-
     const select = (lang = "") =>
       `<select contenteditable="false" class="code-language-select"><option>${lang}</option><option>javascript</option><option>ruby</option><option>sql</option></select>`;
 

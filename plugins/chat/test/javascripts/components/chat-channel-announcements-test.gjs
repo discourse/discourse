@@ -1,7 +1,9 @@
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import A11yLiveRegions from "discourse/components/a11y/live-regions";
+import A11yLiveRegions, {
+  IDLE_ANNOUNCEMENT,
+} from "discourse/components/a11y/live-regions";
 import {
   disableClearA11yAnnouncementsInTests,
   enableClearA11yAnnouncementsInTests,
@@ -78,6 +80,8 @@ module(
         .hasText("otheruser: Hello there");
     });
 
+    // A region with nothing to announce holds `IDLE_ANNOUNCEMENT`, not nothing: one that idles
+    // empty cannot speak the same message twice — see `A11yLiveRegions`.
     test("does not announce the current user's own messages", async function (assert) {
       await render(
         <template>
@@ -90,7 +94,9 @@ module(
         user: { id: this.currentUser.id, username: this.currentUser.username },
       });
 
-      assert.dom("#a11y-announcements-polite").hasNoText();
+      assert
+        .dom("#a11y-announcements-polite")
+        .hasText(IDLE_ANNOUNCEMENT, "your own message is not announced to you");
     });
 
     test("does not announce messages from ignored users", async function (assert) {
@@ -105,7 +111,12 @@ module(
 
       await publishSentMessage();
 
-      assert.dom("#a11y-announcements-polite").hasNoText();
+      assert
+        .dom("#a11y-announcements-polite")
+        .hasText(
+          IDLE_ANNOUNCEMENT,
+          "a message from an ignored user is not announced"
+        );
     });
 
     test("does not announce hidden messages", async function (assert) {
@@ -118,7 +129,9 @@ module(
 
       await publishSentMessage({ hidden: true });
 
-      assert.dom("#a11y-announcements-polite").hasNoText();
+      assert
+        .dom("#a11y-announcements-polite")
+        .hasText(IDLE_ANNOUNCEMENT, "a hidden message is not announced");
     });
 
     test("announces an image-only message as an image", async function (assert) {
@@ -192,7 +205,12 @@ module(
 
       await publishSentMessage();
 
-      assert.dom("#a11y-announcements-polite").hasNoText();
+      assert
+        .dom("#a11y-announcements-polite")
+        .hasText(
+          IDLE_ANNOUNCEMENT,
+          "nothing is announced once the user has opted out"
+        );
     });
 
     test("coalesces a burst of messages into a single summary", async function (assert) {

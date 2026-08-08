@@ -1,14 +1,4 @@
 body.chat-enabled.livestream-topic.confirmed-event-assistance {
-  #post_1 {
-    .topic-avatar {
-      display: none;
-    }
-
-    .topic-meta-data {
-      margin: 0;
-    }
-  }
-
   .topic-navigation {
     display: none;
   }
@@ -17,7 +7,7 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
     width: 100%;
 
     .topic-body {
-      width: 100%;
+      flex: 1;
       margin-right: 1em;
     }
   }
@@ -64,9 +54,30 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
     width: 100%;
   }
 
+  &__audio-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+    margin: 0;
+    padding: var(--space-2);
+
+    // intentionally hardcoded zoom values
+    border-radius: 9px;
+    background: rgb(36, 36, 36);
+    color: rgb(255, 255, 255);
+    border: 1px solid rgb(0, 255, 145);
+  }
+
   &__frame {
+    // The frame has to lay out as soon as a join starts, not once Zoom mounts:
+    // the component view is initialized with a video size measured from this
+    // element, and a collapsed element measures zero.
+    display: none;
+
     // Zoom sets `display` inline on this element when it mounts, which beats
-    // anything declared here. Only `justify-content` and `padding-top` apply.
+    // anything declared here. Only `justify-content` and `padding-top` apply
+    // from then on.
     //
     // Until the meeting is joined the widget is a small dialog (spinner,
     // "meeting has not started"), so it is centred. Once joined it fills the
@@ -109,6 +120,7 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
   &__waiting-wrapper {
     border: 1px solid var(--primary-300);
     border-radius: var(--d-border-radius);
+    overflow: hidden;
   }
 
   &__waiting {

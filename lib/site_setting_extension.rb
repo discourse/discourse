@@ -268,10 +268,10 @@ module SiteSettingExtension
     @deprecated_settings ||= SiteSettings::DeprecatedSettings::SETTINGS.map(&:first).to_set
   end
 
-  def deprecated_setting_alias(setting_name)
+  def deprecated_setting_aliases(setting_name)
     SiteSettings::DeprecatedSettings::SETTINGS
-      .find { |setting| setting.second.to_s == setting_name.to_s }
-      &.first
+      .select { |setting| setting.second.to_s == setting_name.to_s }
+      .map(&:first)
   end
 
   def theme_site_settings_json(theme_id)
@@ -594,7 +594,7 @@ module SiteSettingExtension
   # Merges the provider values of site settings (whether it be from the DB or wherever)
   # and theme site settings with the default values of those settings, also taking into
   # account shadowed site settings and upcoming change behaviour.
-  def refresh!(refresh_site_settings: true, refresh_theme_site_settings: true)
+  def refresh!(refresh_site_settings: true, refresh_theme_site_settings: true, clear_caches: true)
     mutex.synchronize do
       ensure_listen_for_changes
 
@@ -669,10 +669,12 @@ module SiteSettingExtension
 
       refresh_theme_site_settings! if refresh_theme_site_settings
 
-      clear_cache!(
-        expire_theme_site_setting_cache:
-          ThemeSiteSetting.can_access_db? && refresh_theme_site_settings,
-      )
+      if clear_caches
+        clear_cache!(
+          expire_theme_site_setting_cache:
+            ThemeSiteSetting.can_access_db? && refresh_theme_site_settings,
+        )
+      end
     end
   end
 
@@ -736,6 +738,7 @@ module SiteSettingExtension
   def after_fork
     @process_id = nil
     ensure_listen_for_changes
+    RailsMultisite::ConnectionManagement.safe_each_connection { refresh!(clear_caches: false) }
   end
 
   def raise_invalid_setting_access(setting_name)
@@ -1130,6 +1133,12 @@ module SiteSettingExtension
         end
       end
     else
+      enum_wrapper =
+        if type_supervisor.get_type(name) == :enum
+          klass = type_supervisor.get_enum_class(name)
+          klass if klass.respond_to?(:wrap)
+        end
+
       define_singleton_method clean_name do |scoped_to = nil|
         if themeable[clean_name]
           if scoped_to.nil? || !scoped_to.key?(:theme_id) || scoped_to[:theme_id].nil?
@@ -1142,7 +1151,8 @@ module SiteSettingExtension
           # then we will just fall back further down bellow to the current site setting value.
           settings_overridden_for_theme = theme_site_settings[scoped_to[:theme_id]]
           if settings_overridden_for_theme && settings_overridden_for_theme.key?(clean_name)
-            return settings_overridden_for_theme[clean_name]
+            value = settings_overridden_for_theme[clean_name]
+            return enum_wrapper ? enum_wrapper.wrap(value.to_s) : value
           end
         end
 
@@ -1167,6 +1177,8 @@ module SiteSettingExtension
           return (mandatory_values[name].split("|") | value.to_s.split("|")).join("|")
         end
 
+        return enum_wrapper.wrap(value.to_s) if enum_wrapper
+
         value
       end
     end
@@ -1189,8 +1201,8 @@ module SiteSettingExtension
     elsif setting_type == :group_list
       define_singleton_method("#{clean_name}_map") do
         ids = public_send(clean_name).to_s.split("|").map(&:to_i)
-        if SiteSetting.granular_anonymous_and_logged_in_groups_permissions &&
-             ids.include?(Group::AUTO_GROUPS[:everyone])
+        if ids.include?(Group::AUTO_GROUPS[:everyone]) &&
+             SiteSetting.granular_anonymous_and_logged_in_groups_permissions
           ids =
             ids
               .map do |id|

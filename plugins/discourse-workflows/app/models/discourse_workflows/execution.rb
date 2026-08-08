@@ -56,6 +56,33 @@ module DiscourseWorkflows
       end
     end
 
+    def self.create_pending_step!(workflow:, node_id:, trigger_data: {}, run_data: {})
+      transaction do
+        create!(
+          workflow: workflow,
+          workflow_version_id: workflow.version_id,
+          trigger_node_id: node_id,
+          trigger_data: trigger_data,
+          status: :pending,
+          execution_mode: :manual,
+        ).tap do |execution|
+          ExecutionData.create!(
+            execution: execution,
+            workflow_data: WorkflowSnapshot.from_workflow(workflow, published: false).to_h,
+            data: {
+              "entries" => {
+              },
+              "context" => {
+              },
+              "node_contexts" => {
+              },
+              "run_data" => run_data,
+            },
+          )
+        end
+      end
+    end
+
     def self.purge_old
       retention_days = SiteSetting.workflow_executions_retention_days
       return if retention_days <= 0

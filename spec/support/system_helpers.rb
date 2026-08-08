@@ -422,6 +422,31 @@ module SystemHelpers
     page.driver.with_playwright_page { |pw_page| pw_page.touchscreen.tap_point(x, y) }
   end
 
+  # Performs a genuine native HTML5 drag-and-drop via Playwright. Use this for
+  # any native drag in a system test — both the core drag-and-drop modifiers
+  # and plain `draggable="true"` elements — in preference to Capybara's `drag_to`.
+  #
+  # Capybara's `drag_to` drives the drag with synthetic CDP mouse events
+  # (mousedown/move/up). That works for simple drags, but is unreliable: some
+  # drags fire `dragstart` and then stall (no `dragover`/`drop`/`dragend`), so
+  # the drop silently no-ops — seen with drags that cross into complex,
+  # multi-layer regions of a page. Playwright's own `drag_and_drop` uses CDP
+  # drag interception, which drives the full native sequence reliably.
+  #
+  # `source:` and `target:` are CSS selectors. `target_position:` (`{ x:, y: }`,
+  # relative to the target's top-left) picks where inside the target the drop
+  # lands — needed to hit a smart-row target's before/after zone, whose centre
+  # is the ambiguous midpoint. `steps:` smooths the pointer movement when a drag
+  # needs more intermediate moves to register.
+  def drag_and_drop(source:, target:, target_position: nil, steps: nil)
+    page.driver.with_playwright_page do |pw_page|
+      options = {}
+      options[:targetPosition] = target_position if target_position
+      options[:steps] = steps if steps
+      pw_page.drag_and_drop(source, target, **options)
+    end
+  end
+
   def html_translation_to_text(html_translation)
     Nokogiri.HTML5(html_translation).at("body").inner_text
   end

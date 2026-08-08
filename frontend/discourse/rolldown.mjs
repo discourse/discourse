@@ -5,12 +5,14 @@ import AnsiToHtml from "ansi-to-html";
 import * as fs from "fs";
 import * as path from "path";
 import { dev } from "rolldown/experimental";
+import {
+  BUILD_STATUS_FILE,
+  MANIFEST_DIR,
+} from "./lib/rolldown-devserver-lock.mjs";
 import { buildConfig } from "./rolldown.config.mjs";
 
 const ansiConverter = new AnsiToHtml({ newline: true, escapeXML: true });
 const CWD_PREFIX = `${process.cwd()}/`;
-const MANIFEST_DIR = "./dist/manifest";
-const BUILD_STATUS_FILE = `${MANIFEST_DIR}/build.json`;
 
 let buildStart = Date.now();
 let initialBuild = true;

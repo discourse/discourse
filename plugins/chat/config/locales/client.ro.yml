@@ -27,6 +27,8 @@ ro:
         yesterday: "Ieri"
       create: "Creează"
       cancel: "Anulează"
+      pinned_bar:
+        title: "Fixat"
       pinned: "Fixat"
       move_to_channel:
         instructions:
@@ -60,11 +62,6 @@ ro:
         title: "Afișați indicatorul de activitate în antet"
         all_new: "Toate mesajele noi"
         never: "Niciodată"
-      send_shortcut:
-        enter:
-          label: "Trimite prin Enter"
-        meta_enter:
-          label: "Trimite prin %{meta_key} + Enter"
       flag: "Marchează cu marcaj de avertizare"
       join: "Alătură-te"
       last_visit: "ultima vizită"

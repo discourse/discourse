@@ -14,6 +14,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
         :chatable_id,
         :chatable_type,
         :include_subcategories,
+        channel_ids: [],
       )
 
     options = { filter: permitted[:filter], limit: (permitted[:limit] || 25).to_i }
@@ -21,6 +22,9 @@ class Chat::Api::ChannelsController < Chat::ApiController
     options[:status] = Chat::Channel.statuses[permitted[:status]] ? permitted[:status] : nil
     options[:chatable_id] = permitted[:chatable_id]
     options[:chatable_type] = permitted[:chatable_type]
+    # A curated set of channel ids (the featured-channels block); restricts the
+    # results to those channels while keeping the guardian's visibility scope.
+    options[:ids] = permitted[:channel_ids] if permitted[:channel_ids].present?
 
     if options[:chatable_type] == "Category"
       options[:include_subcategories] = ActiveModel::Type::Boolean.new.cast(
@@ -83,6 +87,9 @@ class Chat::Api::ChannelsController < Chat::ApiController
       end
       on_model_not_found(:category) { raise ActiveRecord::RecordNotFound }
       on_failed_policy(:can_create_channel) { raise Discourse::InvalidAccess }
+      on_failed_policy(:public_channels_enabled) do
+        render_json_error(I18n.t("chat.errors.public_channels_disabled"))
+      end
       on_failed_policy(:can_create_channel_in_category) { raise Discourse::InvalidAccess }
       on_failed_policy(:category_channel_does_not_exist) do
         raise Discourse::InvalidParameters.new(I18n.t("chat.errors.channel_exists_for_category"))
@@ -128,7 +135,6 @@ class Chat::Api::ChannelsController < Chat::ApiController
       end
       on_model_not_found(:channel) { raise ActiveRecord::RecordNotFound }
       on_failed_policy(:check_channel_permission) { raise Discourse::InvalidAccess }
-      on_failed_policy(:no_direct_message_channel) { raise Discourse::InvalidAccess }
     end
   end
 

@@ -183,6 +183,7 @@ module PostGuardian
     return false if !trusted_with_post_edits?
 
     if is_my_own?(post)
+      return false if !is_staff? && !Topic.visible_post_types(@user).include?(post.post_type)
       return false if @user.silenced?
 
       return can_edit_hidden_post?(post) if post.hidden?
@@ -310,7 +311,7 @@ module PostGuardian
     return false if post.blank?
     return true if is_admin?
     return false unless can_see_post_topic?(post)
-    return false unless is_my_own?(post) || Topic.visible_post_types(@user).include?(post.post_type)
+    return false if Topic.visible_post_types(@user).exclude?(post.post_type)
     return true if is_moderator? || is_category_group_moderator?(post.topic.category)
     if (!post.trashed? || can_see_deleted_post?(post)) &&
          (!post.hidden? || can_see_hidden_post?(post))
@@ -368,7 +369,7 @@ module PostGuardian
     return false if !authenticated?
     return false if !can_see_post?(post)
 
-    is_staff? || is_my_own?(post)
+    is_staff? || is_my_own?(post) || is_category_group_moderator?(post.topic.category)
   end
 
   def can_change_post_owner?

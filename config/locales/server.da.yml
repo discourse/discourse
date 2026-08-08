@@ -145,7 +145,6 @@ da:
       exclusion: er reserveret
       greater_than: skal være større end %{count}
       greater_than_or_equal_to: skal være større eller lig med %{count}
-      has_already_been_used: "er allerede blevet brugt"
       inclusion: er ikke inkluderet i listen
       invalid: er ugyldig
       is_invalid: "virker upræcis, er det en hel sætning?"
@@ -1340,7 +1339,6 @@ da:
     download_remote_images_threshold: "Minimum hukommelse påkrævet på drev for at downloade billeder lokalt (i procent)"
     editing_grace_period: "For (n) sekunder efter postering, vil redigering ikke skabe et nyt indlæg."
     staff_edit_locks_post: "Indlæg vil være låst fra redigering, hvis de redigeres af personalet"
-    edit_history_visible_to_public: "Tillad alle at se tidligere versioner af et redigeret indlæg. Når slået fra, kan kun administrator se dette."
     delete_removed_posts_after: "Indlæg, fjernet af forfatteren, vil blive automatisk slettet efter (n) hours. Såfremt værdien sat til 0 vil indlæg blive fjernet straks."
     fixed_category_positions: "Hvis afkrydset, vil du være i stand til at arrangere kategorier i en fast rækkefølge. Hvis ikke afkrydset vil de være listet i en rækkefølge baseret på aktivitet."
     add_rel_nofollow_to_user_content: 'Tilføj rel nofollow til alt indsendt brugerindhold, undtagen interne links (herunder overordnede domæner). Hvis du ændrer dette, skal du gen-bage alle indlæg med: "rake indlæg:rebake“'
@@ -3247,7 +3245,6 @@ da:
           complete: "Bruger slettet."
         block:
           title: "Slet og Blokér Bruger"
-          description: "Brugeren vil blive slettet, og vi vil blokere deres IP og e-mail-adresse."
       confirm_spam:
         title: "Ja"
       not_spam:

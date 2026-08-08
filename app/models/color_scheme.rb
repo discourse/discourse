@@ -331,6 +331,17 @@ class ColorScheme < ActiveRecord::Base
     @hex_cache ||= DistributedCache.new("scheme_hex_for_name")
   end
 
+  def self.valid_ids_cache
+    @valid_ids_cache ||= DistributedCache.new("color_scheme_valid_ids")
+  end
+
+  # Used on the hot anonymous cache path (Middleware::AnonymousCache), so the
+  # set of valid ids is cached in-process to avoid a DB query per request.
+  def self.valid_id(id)
+    id = Integer(id, exception: false)
+    id if id && valid_ids_cache.defer_get_set("ids") { pluck(:id).to_set }.include?(id)
+  end
+
   default_scope { where(remote_copy: false) }
 
   attr_accessor :is_base
@@ -556,6 +567,7 @@ class ColorScheme < ActiveRecord::Base
 
   def dump_caches
     self.class.hex_cache.clear
+    self.class.valid_ids_cache.clear
     ApplicationSerializer.expire_cache_fragment!("user_color_schemes")
   end
 

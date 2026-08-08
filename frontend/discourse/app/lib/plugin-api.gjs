@@ -2,7 +2,12 @@
 import $ from "jquery";
 import { registerAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { registerAdminDashboardSection } from "discourse/admin/lib/admin-dashboard-sections";
-import { _renderBlocks } from "discourse/blocks/block-outlet";
+import {
+  _clearLayoutLayer,
+  _renderBlocks,
+  _setLayoutLayer,
+  LAYOUT_LAYERS,
+} from "discourse/blocks/block-outlet";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
 import { addCardClickListenerSelector } from "discourse/components/card-contents-base";
@@ -74,6 +79,15 @@ import {
   registerHighlightJSPlugin,
 } from "discourse/lib/highlight-syntax";
 import { registerIconRenderer, replaceIcon } from "discourse/lib/icon-library";
+import {
+  defineModelAccessor,
+  defineModelMethod,
+  defineModelResettableField,
+  registerModelCallback,
+  registerModelField,
+  registerModelSaveProperty,
+  stampModelClass,
+} from "discourse/lib/model-extensions";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { registerOnBeforeCategoryTypesChange } from "discourse/lib/on-before-category-types-change";
@@ -274,9 +288,11 @@ class _PluginApi {
    *   }
    * });
    * ```
+   *
+   * Deprecated for `model:` types — use the `addModel*` APIs instead.
    **/
   modifyClass(resolverName, changes, opts) {
-    this.#deprecateModifyClass(resolverName);
+    this.#deprecateModifyClass(resolverName, "modifyClass");
 
     const klass = this._resolveClass(resolverName, opts);
     if (!klass) {
@@ -313,8 +329,12 @@ class _PluginApi {
    *   superFinder() { return []; }
    * });
    * ```
+   *
+   * Deprecated for `model:` types — use the `addModel*` APIs instead.
    **/
   modifyClassStatic(resolverName, changes, opts) {
+    this.#deprecateModifyClass(resolverName, "modifyClassStatic");
+
     const klass = this._resolveClass(resolverName, opts);
     if (!klass) {
       return;
@@ -748,6 +768,212 @@ class _PluginApi {
    */
   addTrackedTopicProperties(...names) {
     names.forEach((name) => _addTrackedTopicProperty(name));
+  }
+
+  // Resolves the `model:<name>` class; `stamp` marks it so instances can
+  // resolve their model name at construction.
+  _resolveModelClass(modelName, { stamp = false } = {}) {
+    const klass = this._resolveClass(`model:${modelName}`);
+    if (!klass) {
+      return;
+    }
+    if (stamp) {
+      stampModelClass(klass.class, modelName);
+    }
+    return klass.class;
+  }
+
+  /**
+   * Adds a tracked data field to a store model, so a property your plugin adds
+   * (e.g. one included in the server payload) is reactive in the UI.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {string} name - The name of the field to add.
+   * @param {Object} [options]
+   * @param {(*|Function)} [options.defaultValue] - Value when the server omits
+   *   the field (default `undefined`). A function runs per instance at
+   *   construction — before the payload (server wins) and too early for create
+   *   args — for per-record mutable defaults, e.g. `() => ({})`.
+   * @param {("array"|"object"|"set")} [options.type] - Store the field as a
+   *   reactive collection, created fresh per instance so it is never shared.
+   * @param {boolean} [options.resettable] - Requires a function `defaultValue`;
+   *   resets to it when the derived value changes, and a manual assignment
+   *   sticks until then.
+   *
+   * @example
+   * api.addModelField("bookmark", "is_pinned", { defaultValue: false });
+   * api.addModelField("post", "comments", { type: "array" });
+   * api.addModelField("post", "polls_votes", { type: "object" });
+   * api.addModelField("post", "meta", { defaultValue: () => ({}) });
+   * api.addModelField("composer", "createAsPostVoting", {
+   *   resettable: true,
+   *   defaultValue() {
+   *     return !!this.category?.create_as_post_voting_default;
+   *   },
+   * });
+   */
+  addModelField(modelName, name, options = {}) {
+    const klass = this._resolveModelClass(modelName, { stamp: true });
+    if (!klass) {
+      return;
+    }
+
+    if (options.resettable) {
+      if (typeof options.defaultValue !== "function") {
+        throw new Error(
+          "addModelField: `resettable` requires `defaultValue` to be a function (the initializer to reset to)."
+        );
+      }
+      defineModelResettableField(klass, name, options.defaultValue);
+    } else {
+      registerModelField(modelName, name, options);
+    }
+  }
+
+  /**
+   * Adds an accessor (getter and/or setter) to a store model.
+   *
+   * Defined on the prototype (works in templates and with autotracking). For a
+   * single side, prefer `addModelGetter` / `addModelSetter`.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {string} name - The name of the property to add.
+   * @param {Object} accessor
+   * @param {Function} [accessor.get] - Getter, called with the instance as `this`.
+   * @param {Function} [accessor.set] - Setter, called with the new value.
+   *
+   * @example
+   * api.addModelAccessor("post", "polls", {
+   *   get() {
+   *     return this._polls;
+   *   },
+   *   set(value) {
+   *     this._polls = value;
+   *   },
+   * });
+   */
+  addModelAccessor(modelName, name, accessor) {
+    const klass = this._resolveModelClass(modelName);
+    if (klass) {
+      defineModelAccessor(klass, name, accessor);
+    }
+  }
+
+  /**
+   * Adds a getter (computed/derived property) to a store model. Shorthand for
+   * `addModelAccessor` with only a getter.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {string} name - The name of the getter to add.
+   * @param {Function} getter - Called with the model instance as `this`.
+   *
+   * @example
+   * api.addModelGetter("bookmark", "isPinned", function () {
+   *   return this.is_pinned;
+   * });
+   */
+  addModelGetter(modelName, name, getter) {
+    this.addModelAccessor(modelName, name, { get: getter });
+  }
+
+  /**
+   * Adds a setter to a store model. Shorthand for `addModelAccessor` with only a
+   * setter.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "topic".
+   * @param {string} name - The name of the setter to add.
+   * @param {Function} setter - Called with the new value; the instance is `this`.
+   *
+   * @example
+   * api.addModelSetter("topic", "related_topics", function (value) {
+   *   this._relatedTopicsRecords = value;
+   * });
+   */
+  addModelSetter(modelName, name, setter) {
+    this.addModelAccessor(modelName, name, { set: setter });
+  }
+
+  /**
+   * Adds an instance method to a store model.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {string} name - The name of the method to add.
+   * @param {Function} fn - Called with the model instance as `this`.
+   *
+   * @example
+   * api.addModelMethod("bookmark", "togglePin", function () {
+   *   this.is_pinned = !this.is_pinned;
+   * });
+   */
+  addModelMethod(modelName, name, fn) {
+    const klass = this._resolveModelClass(modelName);
+    if (klass) {
+      defineModelMethod(klass, name, fn);
+    }
+  }
+
+  /**
+   * Registers a property to include in a model's save payload.
+   *
+   * For persisting a field your plugin adds (see `addModelField`). By default
+   * `instance[name]` is sent; pass `valueFn` (bound to the instance) to send a
+   * computed value, e.g. to nest data under `custom_fields`.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "group".
+   * @param {string} name - The name of the property to include when saving.
+   * @param {Function} [valueFn] - Returns the value to send; called with the
+   *   model instance as `this`.
+   *
+   * @example
+   * api.addModelSaveProperty("group", "assignable_level");
+   * api.addModelSaveProperty("group", "custom_fields", function () {
+   *   return { my_field: this.my_field };
+   * });
+   */
+  addModelSaveProperty(modelName, name, valueFn) {
+    if (this._resolveModelClass(modelName, { stamp: true })) {
+      registerModelSaveProperty(modelName, name, valueFn);
+    }
+  }
+
+  /**
+   * Registers a callback to run on a model's lifecycle.
+   *
+   * Runs with the model instance as `this`, replacing `modifyClass` overrides
+   * of `init`/`save`. `init` fires per instance after create args are applied.
+   * Create/update events fire on the standard store save path (and for `Group`,
+   * which also fires destroy); other models with a custom `save()` (e.g.
+   * `Category`) don't. `after*` callbacks returning a promise are awaited.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {("init"|"beforeCreate"|"afterCreate"|"beforeUpdate"|"afterUpdate"|"beforeDestroy"|"afterDestroy"|"beforeSave"|"afterSave")} event -
+   *   The lifecycle event. "beforeSave"/"afterSave" fire for both create and update.
+   * @param {Function} fn - Called with nothing (init/destroy), the request props
+   *   (before create/update), or the server result (after*).
+   *
+   * @example
+   * api.addModelCallback("bookmark", "afterSave", function (result) {
+   *   // ...
+   * });
+   */
+  addModelCallback(modelName, event, fn) {
+    if (this._resolveModelClass(modelName, { stamp: true })) {
+      registerModelCallback(modelName, event, fn);
+    }
   }
 
   /**
@@ -3473,11 +3699,18 @@ class _PluginApi {
    * Blocks can have conditions that determine when they render. Conditions support
    * AND logic (array), OR logic (`any`), and NOT logic (`not`).
    *
+   * By default a layout is an editable seed; pass `overridable: false` to ship a
+   * locked, authoritative layout that outranks theme edits. The flag — not the
+   * caller — decides, so plugins and theme JS use this same method.
+   *
    * @experimental This API is under active development and may change or be removed
    * in future releases without prior notice. Use with caution in production environments.
    *
    * @param {string} outletName - The block outlet identifier
    * @param {Array<import("discourse/blocks/types").LayoutEntry>} blocks - Array of layout entries
+   * @param {Object} [options] - Registration options
+   * @param {boolean} [options.overridable=true] - `true` ships an editable seed; `false` ships a locked, authoritative layout
+   * @param {string|number|null} [options.sourceId] - An opaque id for the registering source, recorded as provenance
    *
    * @example
    * ```javascript
@@ -3519,11 +3752,103 @@ class _PluginApi {
    * ]);
    * ```
    */
-  renderBlocks(outletName, blocks) {
+  renderBlocks(outletName, blocks, options = {}) {
     // Capture call site here, excluding this method, so the stack trace
     // points directly to the user's code that called api.renderBlocks().
     const callSiteError = captureCallSite(this.renderBlocks);
-    _renderBlocks(outletName, blocks, this.container, callSiteError);
+    _renderBlocks(outletName, blocks, this.container, {
+      ...options,
+      callSiteError,
+    });
+  }
+
+  /**
+   * Publishes a layout for a specific layer of a block outlet. The block
+   * resolution chain walks layers in fixed precedence order — `session-draft`
+   * first, then `theme` (last entry in the theme stack wins), then
+   * `code-default` — and renders the highest-priority layer that has a
+   * layout set.
+   *
+   * Use this for:
+   * - Hydrating theme-shipped layouts at boot from the active theme stack
+   *   (`layer: "theme"`, with the originating `themeId`).
+   * - Publishing in-progress edits as a session draft
+   *   (`layer: "session-draft"`).
+   *
+   * The existing `api.renderBlocks(...)` continues to write into the
+   * `code-default` layer and is the right call for plugins / core that want
+   * to ship a default layout.
+   *
+   * @experimental This API is under active development and may change or be
+   * removed in future releases without prior notice.
+   *
+   * @param {string} outletName - The block outlet identifier.
+   * @param {"session-draft"|"theme"} layer - The layer to publish to.
+   * @param {Array<import("discourse/blocks/block-outlet").LayoutEntry>} layout - The layout entries.
+   * @param {Object} [options]
+   * @param {number} [options.themeId] - Required when `layer === "theme"`. The
+   *   id of the theme this layout originated from.
+   * @param {number} [options.themeStackIndex] - The theme's rank in the active
+   *   stack. The maximum-ranked theme owns the outlet.
+   * @param {boolean} [options.lazy=false] - When true, defers layout
+   *   validation until `BlockOutlet` first reads the entry at render
+   *   time. Use this for boot-time hydration paths where blocks
+   *   referenced by name may be registered later in the same tick by
+   *   other initializers — eager validation would race those
+   *   registrations and reject before the registry settled.
+   * @param {boolean} [options.permissive=false] - When true, validation
+   *   errors don't reject the resolved-layout Promise. The error is
+   *   captured on the layer entry's `validationWarnings` array and the
+   *   layout is returned as-is. Use this for layers fed by user
+   *   authoring (the `session-draft` layer, theme-
+   *   shipped block layouts that may contain typos, etc.) where a
+   *   structural failure shouldn't crash the page. Code-default layers
+   *   should generally stay strict — those are author-controlled and
+   *   strict validation surfaces install-time mistakes.
+   * @returns {Promise<Array<import("discourse/blocks/block-outlet").LayoutEntry>>|undefined}
+   *   The validated-layout Promise (eager mode) or `undefined` (lazy mode).
+   * @throws {Error} If the layer name is unknown, or `options.themeId` is
+   *   missing for the "theme" layer. (Validation errors surface
+   *   asynchronously via the returned Promise — or, in lazy mode, when
+   *   `BlockOutlet` first reads the entry.)
+   */
+  setLayoutLayer(outletName, layer, layout, options = {}) {
+    const callSiteError = captureCallSite(this.setLayoutLayer);
+    return _setLayoutLayer(outletName, layer, layout, this.container, {
+      ...options,
+      callSiteError,
+    });
+  }
+
+  /**
+   * Clears one layer's layout for an outlet. For the `theme` layer, an
+   * optional `options.themeId` targets a specific theme; omitting it clears
+   * every theme's layout for that outlet. If clearing leaves the outlet with
+   * no layouts at any layer, the outlet falls back to "no layout" (the
+   * `<:before>` and `<:after>` slots will yield `hasLayout` as `false`).
+   *
+   * @experimental This API is under active development and may change or be
+   * removed in future releases without prior notice.
+   *
+   * @param {string} outletName - The block outlet identifier.
+   * @param {"session-draft"|"theme"|"code-default"} layer - The layer to clear.
+   * @param {Object} [options]
+   * @param {number} [options.themeId] - When clearing the "theme" layer,
+   *   targets a specific theme. Omit to clear every theme's layout.
+   */
+  clearLayoutLayer(outletName, layer, options = {}) {
+    _clearLayoutLayer(outletName, layer, options);
+  }
+
+  /**
+   * The set of layer names accepted by `api.setLayoutLayer` /
+   * `api.clearLayoutLayer`, exposed as a constant for callers that want to
+   * avoid duplicating the string literals.
+   *
+   * @returns {Readonly<{SESSION_DRAFT: string, THEME: string, CODE_DEFAULT: string}>}
+   */
+  get LAYOUT_LAYERS() {
+    return LAYOUT_LAYERS;
   }
 
   /**
@@ -3591,13 +3916,20 @@ class _PluginApi {
    *
    * @param {string} outletName - The outlet name (must follow naming conventions).
    * @param {Object} [options] - Outlet configuration options.
-   * @param {string} [options.description] - Human-readable description of the outlet.
+   * @param {string} [options.displayName] - Human-readable label shown in
+   *   an outlet inventory surfaced to consumers. Defaults to the outlet name.
+   * @param {string} [options.description] - One-line summary of where the
+   *   outlet renders.
+   * @param {string} [options.category] - Optional free-form grouping label
+   *   for an outlet inventory surfaced to consumers (e.g. `"Layout"`).
    *
    * @example
    * ```javascript
    * // In a pre-initializer
    * api.registerBlockOutlet("chat:message-actions", {
+   *   displayName: "Chat message actions",
    *   description: "Actions displayed below chat messages",
+   *   category: "Chat",
    * });
    *
    * // Later, in an api-initializer
@@ -3656,17 +3988,18 @@ class _PluginApi {
     _registerConditionType(ConditionClass);
   }
 
-  // eslint-disable-next-line no-unused-vars
-  #deprecateModifyClass(className) {
-    // display notification messages for deprecated classes
-    // e.g:
-    //
-    // if (DEPRECATED_CLASSES.includes(className)) {
-    //   deprecated(
-    //     `Using api.modifyClass for \`${className}\` has been deprecated and is no longer a supported override.`,
-    //     DEPRECATION_OPTIONS
-    //   );
-    // }
+  #deprecateModifyClass(resolverName, apiName) {
+    if (!resolverName.startsWith("model:")) {
+      return;
+    }
+
+    deprecated(
+      `Using api.${apiName} on \`${resolverName}\` is deprecated. Use the \`addModelField\`, \`addModelAccessor\`/\`addModelGetter\`/\`addModelSetter\`, \`addModelMethod\`, \`addModelSaveProperty\` and \`addModelCallback\` APIs instead.`,
+      {
+        id: "discourse.modify-class-model",
+        since: "2026.8",
+      }
+    );
   }
 }
 

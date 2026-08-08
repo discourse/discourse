@@ -10,3 +10,6 @@ sq:
       vote_title: "Voto"
       show_voters: "Shfaq votuesit"
       vote_count_thousands: "%{count}k"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Etiketat"

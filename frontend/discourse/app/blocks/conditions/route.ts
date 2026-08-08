@@ -105,6 +105,8 @@ interface RouteConditionArgs {
  */
 @blockCondition({
   type: "route",
+  displayName: "Route",
+  description: "Match by current URL, page type, or route query parameters.",
   args: {
     urls: { type: "array", itemType: "string" },
     pages: { type: "array", itemType: "string", itemEnum: VALID_PAGE_TYPES },

@@ -70,6 +70,21 @@ zh_TW:
       translations:
         title: "翻譯"
         category_scope: "分類"
+        model_progress:
+          detail:
+            retry: "重試"
+            columns:
+              pending: "等待中"
+              total: "總計"
+          targets:
+            post:
+              title: "新發表的貼文"
+            topic:
+              title: "話題"
+            category:
+              title: "分類"
+            tag:
+              title: "標記"
         stats:
           eta_minutes:
             other: "%{count} 分"
@@ -107,6 +122,7 @@ zh_TW:
         enabled: "啟用?"
         mcp_tools_modal:
           clear_all: "清除全部"
+        duplicate: "複製"
         delete: "刪除"
         thinking_effort_options:
           none: "無"
@@ -183,7 +199,6 @@ zh_TW:
           title: "執行測試"
           success: "成功!"
         providers:
-          google: "Google"
           fake: "客製"
       ai_helper:
         context_menu:

@@ -46,6 +46,8 @@ da:
       cancel: "Annuller"
       cancel_reply: "Annuller svar"
       chat_channels: "Kanaler"
+      pinned_bar:
+        title: "Fastgjort"
       pinned: "Fastgjort"
       browse_all_channels: "Gennemse alle kanaler"
       move_to_channel:

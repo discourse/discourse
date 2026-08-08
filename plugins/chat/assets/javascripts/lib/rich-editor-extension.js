@@ -72,10 +72,15 @@ const extension = {
         const formattedDateTime = moment(node.attrs.datetime).format(
           i18n("dates.long_no_year")
         );
-        userElement.innerHTML = `
-          <span class="chat-transcript-username">${node.attrs.username}</span>
-          <span class="chat-transcript-datetime">${formattedDateTime}</span>
-        `;
+        const usernameElement = document.createElement("span");
+        usernameElement.classList.add("chat-transcript-username");
+        usernameElement.textContent = node.attrs.username;
+        userElement.appendChild(usernameElement);
+
+        const datetimeElement = document.createElement("span");
+        datetimeElement.classList.add("chat-transcript-datetime");
+        datetimeElement.textContent = formattedDateTime;
+        userElement.appendChild(datetimeElement);
 
         const messagesElement = document.createElement("div");
         messagesElement.classList.add("chat-transcript-messages");

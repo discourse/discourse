@@ -20,32 +20,33 @@ RSpec.describe DiscourseWorkflows::Nodes::Modal::V1 do
     }
   end
 
-  def build_exec_ctx(configuration, ctx_user: nil, execution_id: 7, resume_token: "tok-7")
+  let(:execution_configuration) { config }
+  let(:context_user) { user }
+  let(:execution_context) do
     DiscourseWorkflows::Executor::NodeExecutionContext.new(
       input_items: [{ "json" => {} }],
-      parameters: configuration,
+      parameters: execution_configuration,
       property_schema: described_class.property_schema,
       node_context: {
       },
       resolver: DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} }, sandbox: sandbox),
-      user: ctx_user,
-      execution_id: execution_id,
-      resume_token: resume_token,
+      user: context_user,
+      execution_id: 7,
+      resume_token: "tok-7",
     )
   end
 
   describe "#execute" do
     it "publishes the modal to the triggering user and pauses the execution" do
-      exec_ctx = build_exec_ctx(config, ctx_user: user)
-      allow(exec_ctx).to receive(:put_execution_to_wait).and_call_original
+      allow(execution_context).to receive(:put_execution_to_wait).and_call_original
 
       messages =
         MessageBus.track_publish(described_class.user_channel(user.id)) do
-          result = described_class.new(parameters: config).execute(exec_ctx)
-          expect(result).to eq([exec_ctx.input_items])
+          result = described_class.new(parameters: config).execute(execution_context)
+          expect(result).to eq([execution_context.input_items])
         end
 
-      expect(exec_ctx).to have_received(:put_execution_to_wait).with(nil)
+      expect(execution_context).to have_received(:put_execution_to_wait).with(nil)
       expect(messages.size).to eq(1)
       message = messages.first
       expect(message.user_ids).to eq([user.id])
@@ -67,67 +68,75 @@ RSpec.describe DiscourseWorkflows::Nodes::Modal::V1 do
       )
     end
 
-    it "binds the target user into the action ids so another user's token differs" do
-      configuration = config.merge("target_user" => other_user.username)
-      exec_ctx = build_exec_ctx(configuration, ctx_user: user)
+    context "with a configured target user" do
+      let(:execution_configuration) { config.merge("target_user" => other_user.username) }
 
-      messages =
-        MessageBus.track_publish(described_class.user_channel(other_user.id)) do
-          described_class.new(parameters: configuration).execute(exec_ctx)
-        end
+      it "binds the target user into the action ids" do
+        messages =
+          MessageBus.track_publish(described_class.user_channel(other_user.id)) do
+            described_class.new(parameters: execution_configuration).execute(execution_context)
+          end
 
-      action_id = messages.first.data[:buttons].first["action_id"]
-      payload = DiscourseWorkflows::InteractiveResume.action_payload(action_id)
-      expect(payload["target_user_id"]).to eq(other_user.id)
-      expect(payload["target_user_id"]).not_to eq(user.id)
+        action_id = messages.first.data[:buttons].first["action_id"]
+        payload = DiscourseWorkflows::InteractiveResume.action_payload(action_id)
+        expect(payload["target_user_id"]).to eq(other_user.id)
+        expect(payload["target_user_id"]).not_to eq(user.id)
+      end
+
+      it "sends the modal to the target instead of the triggering user" do
+        messages =
+          MessageBus.track_publish(described_class.user_channel(other_user.id)) do
+            described_class.new(parameters: execution_configuration).execute(execution_context)
+          end
+
+        expect(messages.size).to eq(1)
+        expect(messages.first.user_ids).to eq([other_user.id])
+      end
     end
 
-    it "sends the modal to a configured target user instead of the triggering user" do
-      configuration = config.merge("target_user" => other_user.username)
-      exec_ctx = build_exec_ctx(configuration, ctx_user: user)
+    context "without a target user" do
+      let(:context_user) { nil }
 
-      messages =
-        MessageBus.track_publish(described_class.user_channel(other_user.id)) do
-          described_class.new(parameters: configuration).execute(exec_ctx)
-        end
-
-      expect(messages.size).to eq(1)
-      expect(messages.first.user_ids).to eq([other_user.id])
+      it "raises a node error" do
+        expect {
+          described_class.new(parameters: config).execute(execution_context)
+        }.to raise_error(
+          DiscourseWorkflows::NodeError,
+          I18n.t("discourse_workflows.errors.modal.no_target_user"),
+        )
+      end
     end
 
-    it "raises when no target user can be resolved" do
-      exec_ctx = build_exec_ctx(config, ctx_user: nil)
+    context "with a missing configured target user" do
+      let(:execution_configuration) { config.merge("target_user" => "ghost") }
 
-      expect { described_class.new(parameters: config).execute(exec_ctx) }.to raise_error(
-        DiscourseWorkflows::NodeError,
-        I18n.t("discourse_workflows.errors.modal.no_target_user"),
-      )
+      it "raises a node error" do
+        expect {
+          described_class.new(parameters: execution_configuration).execute(execution_context)
+        }.to raise_error(
+          DiscourseWorkflows::NodeError,
+          I18n.t("discourse_workflows.errors.modal.user_not_found", username: "ghost"),
+        )
+      end
     end
 
-    it "raises when the configured target user does not exist" do
-      configuration = config.merge("target_user" => "ghost")
-      exec_ctx = build_exec_ctx(configuration, ctx_user: user)
+    context "without buttons" do
+      let(:execution_configuration) { config.merge("buttons" => { "values" => [] }) }
 
-      expect { described_class.new(parameters: configuration).execute(exec_ctx) }.to raise_error(
-        DiscourseWorkflows::NodeError,
-        I18n.t("discourse_workflows.errors.modal.user_not_found", username: "ghost"),
-      )
-    end
+      it "shows an informational modal without waiting" do
+        allow(execution_context).to receive(:put_execution_to_wait)
 
-    it "shows an informational modal without waiting when there are no buttons" do
-      configuration = config.merge("buttons" => { "values" => [] })
-      exec_ctx = build_exec_ctx(configuration, ctx_user: user)
-      allow(exec_ctx).to receive(:put_execution_to_wait)
+        messages =
+          MessageBus.track_publish(described_class.user_channel(user.id)) do
+            result =
+              described_class.new(parameters: execution_configuration).execute(execution_context)
+            expect(result).to eq([execution_context.input_items])
+          end
 
-      messages =
-        MessageBus.track_publish(described_class.user_channel(user.id)) do
-          result = described_class.new(parameters: configuration).execute(exec_ctx)
-          expect(result).to eq([exec_ctx.input_items])
-        end
-
-      expect(exec_ctx).not_to have_received(:put_execution_to_wait)
-      expect(messages.size).to eq(1)
-      expect(messages.first.data[:buttons]).to eq([])
+        expect(execution_context).not_to have_received(:put_execution_to_wait)
+        expect(messages.size).to eq(1)
+        expect(messages.first.data[:buttons]).to eq([])
+      end
     end
   end
 

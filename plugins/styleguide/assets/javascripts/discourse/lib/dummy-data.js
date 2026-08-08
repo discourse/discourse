@@ -240,9 +240,6 @@ export function createData(store) {
     warningTopic,
   ];
 
-  let sentence =
-    "Donec viverra lacus id sapien aliquam, tempus tincidunt urna porttitor.";
-
   let cooked = `<p>Lorem ipsum dolor sit amet, et nec quis viderer prompta, ex omnium ponderum insolens eos, sed discere invenire principes in. Fuisset constituto per ad. Est no scripta propriae facilisis, viderer impedit deserunt in mel. Quot debet facilisis ne vix, nam in detracto tacimates. At quidam petentium vulputate pro. Alia iudico repudiandae ad vel, erat omnis epicuri eos id. Et illum dolor graeci vel, quo feugiat consulatu ei.</p>
 
     <p>Case everti equidem ius ea, ubique veritus vim id. Eros omnium conclusionemque qui te, usu error alienum imperdiet ut, ex ius meis adipisci. Libris reprehendunt eos ex, mea at nisl suavitate. Altera virtute democritum pro cu, melius latine in ius.</p>`;
@@ -601,28 +598,7 @@ export function createData(store) {
   ];
 
   _data = {
-    options: [
-      { id: 1, name: "Orange" },
-      { id: 2, name: "Blue" },
-      { id: 3, name: "Red" },
-      { id: 4, name: "Yellow" },
-    ],
-
     categories,
-
-    buttonSizes: [
-      { class: "btn-large", text: "large" },
-      { class: "", text: "default" },
-      { class: "btn-small", text: "small" },
-    ],
-
-    buttonStates: [
-      { class: "", text: "normal" },
-      { class: "btn-hover", text: "hover" },
-      { disabled: true, text: "disabled" },
-    ],
-
-    toggleSwitchState: true,
 
     navItems: ["latest", "categories", "top"].map((name) => {
       let item = NavItem.fromText(name);
@@ -647,45 +623,10 @@ export function createData(store) {
 
     topics: bunchOfTopics,
 
-    sentence,
-    short_sentence: "Lorem ipsum dolor sit amet.",
-    soon: moment().add(2, "days"),
-
     transformedPost,
     postModel,
     postList,
     oneboxPosts,
-
-    user,
-
-    userWithUnread: createUser({
-      unread_notifications: 3,
-      unread_high_priority_notifications: 7,
-    }),
-
-    lorem: cooked,
-    shortLorem:
-      "Lorem ipsum dolor sit amet, et nec quis viderer prompta, ex omnium ponderum insolens eos, sed discere invenire principes in. Fuisset constituto per ad. Est no scripta propriae facilisis, viderer impedit deserunt in mel. Quot debet facilisis ne vix, nam in detracto tacimates. At quidam petentium vulputate pro. Alia iudico repudiandae ad vel, erat omnis epicuri eos id. Et illum dolor graeci vel, quo feugiat consulatu ei.",
-
-    topicTimerUpdateDate: "2017-10-18 18:00",
-
-    groups: [
-      { name: "staff", id: 1, automatic: false },
-      { name: "lounge", id: 2, automatic: true },
-      { name: "admin", id: 3, automatic: false },
-    ],
-
-    groupNames: ["staff", "lounge", "admin"],
-
-    selectedGroups: [1, 2],
-
-    settings: "bold|italic|strike|underline",
-
-    colors: "f49|c89|564897",
-
-    charCounterContent: "",
-
-    selectedTags: ["apple", "orange", "potato"],
   };
 
   return _data;

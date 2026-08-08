@@ -81,3 +81,6 @@ be:
               label: Паказаць выдаленыя паведамленні...
             url:
               label: URL спасылка
+    discourse_workflows:
+      send_chat_integration_message:
+        message: "Паведамленне"

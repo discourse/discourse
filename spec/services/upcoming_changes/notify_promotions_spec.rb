@@ -210,16 +210,16 @@ RSpec.describe UpcomingChanges::NotifyPromotions do
         end
       end
 
-      context "when settings are already notified about promotion" do
+      context "when settings have already been promoted" do
         before do
           UpcomingChangeEvent.create!(
-            event_type: :admins_notified_automatic_promotion,
+            event_type: :automatically_promoted,
             upcoming_change_name: :enable_upload_debug_mode,
             acting_user: Discourse.system_user,
           )
         end
 
-        it "does not notify admins again for the already-notified setting" do
+        it "does not notify admins again for the already-promoted setting" do
           expect { result }.not_to change {
             Notification
               .where(notification_type: Notification.types[:upcoming_change_automatically_promoted])
@@ -228,7 +228,7 @@ RSpec.describe UpcomingChanges::NotifyPromotions do
           }
         end
 
-        it "does not trigger event for the already-notified setting" do
+        it "does not trigger event for the already-promoted setting" do
           events = DiscourseEvent.track_events { result }
           expect(
             events.select do |e|
@@ -241,9 +241,45 @@ RSpec.describe UpcomingChanges::NotifyPromotions do
         it "returns the correct error and error key" do
           expect(result[:change_notification_statuses][:enable_upload_debug_mode]).to match(
             success: false,
-            error: "Setting enable_upload_debug_mode has already notified admins about promotion",
-            error_key: :already_notified_about_promotion,
+            error: "Setting enable_upload_debug_mode has already been promoted",
+            error_key: :already_promoted,
           )
+        end
+      end
+
+      context "when settings are marked as already notified about, but not promoted" do
+        before do
+          UpcomingChangeEvent.create!(
+            event_type: :admins_notified_automatic_promotion,
+            upcoming_change_name: :enable_upload_debug_mode,
+            acting_user: Discourse.system_user,
+          )
+        end
+
+        it "does not notify admins" do
+          expect { result }.not_to change {
+            Notification
+              .where(notification_type: Notification.types[:upcoming_change_automatically_promoted])
+              .where("data::text LIKE ?", "%enable_upload_debug_mode%")
+              .count
+          }
+        end
+
+        it "still promotes the change, so its side effects run" do
+          events = DiscourseEvent.track_events { result }
+
+          expect(
+            events.select do |e|
+              e[:event_name] == :upcoming_change_enabled &&
+                e[:params].first == :enable_upload_debug_mode
+            end,
+          ).to be_present
+          expect(
+            UpcomingChangeEvent.exists?(
+              event_type: :automatically_promoted,
+              upcoming_change_name: :enable_upload_debug_mode,
+            ),
+          ).to eq(true)
         end
       end
 

@@ -1,85 +1,74 @@
-import { tracked } from "@glimmer/tracking";
 import { Assignment } from "./assignment";
 
 export function extendTopicModel(api) {
-  api.modifyClass(
-    "model:topic",
-    (Superclass) =>
-      class extends Superclass {
-        @tracked assigned_to_group;
-        @tracked assigned_to_group_id;
-        @tracked assigned_to_user;
-        @tracked assigned_to_user_id;
-        @tracked assignment_note;
-        @tracked assignment_status;
-        @tracked can_assign;
-        @tracked indirectly_assigned_to;
+  api.addModelField("topic", "assigned_to_group");
+  api.addModelField("topic", "assigned_to_group_id");
+  api.addModelField("topic", "assigned_to_user");
+  api.addModelField("topic", "assigned_to_user_id");
+  api.addModelField("topic", "assignment_note");
+  api.addModelField("topic", "assignment_status");
+  api.addModelField("topic", "can_assign");
+  api.addModelField("topic", "indirectly_assigned_to");
 
-        assignees() {
-          const result = [];
+  api.addModelMethod("topic", "assignees", function () {
+    const result = [];
 
-          if (this.assigned_to_user) {
-            result.push(this.assigned_to_user);
-          }
+    if (this.assigned_to_user) {
+      result.push(this.assigned_to_user);
+    }
 
-          const postAssignees = this.assignedPosts().map((p) => p.assigned_to);
-          result.push(...postAssignees);
-          return result;
-        }
+    const postAssignees = this.assignedPosts().map((p) => p.assigned_to);
+    result.push(...postAssignees);
+    return result;
+  });
 
-        uniqueAssignees() {
-          const map = new Map();
-          this.assignees().forEach((user) => map.set(user.username, user));
-          return [...map.values()];
-        }
+  api.addModelMethod("topic", "uniqueAssignees", function () {
+    const map = new Map();
+    this.assignees().forEach((user) => map.set(user.username, user));
+    return [...map.values()];
+  });
 
-        assignedPosts() {
-          if (!this.indirectly_assigned_to) {
-            return [];
-          }
+  api.addModelMethod("topic", "assignedPosts", function () {
+    if (!this.indirectly_assigned_to) {
+      return [];
+    }
 
-          return Object.entries(this.indirectly_assigned_to).map(
-            ([key, value]) => {
-              value.postId = key;
-              return value;
-            }
-          );
-        }
+    return Object.entries(this.indirectly_assigned_to).map(([key, value]) => {
+      value.postId = key;
+      return value;
+    });
+  });
 
-        assignments() {
-          return [this.topicAssignment(), ...this.postAssignments()].filter(
-            (item) => item != null
-          );
-        }
+  api.addModelMethod("topic", "assignments", function () {
+    return [this.topicAssignment(), ...this.postAssignments()].filter(
+      (item) => item != null
+    );
+  });
 
-        postAssignments() {
-          if (!this.indirectly_assigned_to) {
-            return [];
-          }
+  api.addModelMethod("topic", "postAssignments", function () {
+    if (!this.indirectly_assigned_to) {
+      return [];
+    }
 
-          return Object.entries(this.indirectly_assigned_to).map(
-            ([key, value]) => {
-              value.postId = key;
-              return Assignment.fromPost(value);
-            }
-          );
-        }
+    return Object.entries(this.indirectly_assigned_to).map(([key, value]) => {
+      value.postId = key;
+      return Assignment.fromPost(value);
+    });
+  });
 
-        topicAssignment() {
-          return Assignment.fromTopic(this);
-        }
+  api.addModelMethod("topic", "topicAssignment", function () {
+    return Assignment.fromTopic(this);
+  });
 
-        isAssigned() {
-          return this.assigned_to_user || this.assigned_to_group;
-        }
+  api.addModelMethod("topic", "isAssigned", function () {
+    return this.assigned_to_user || this.assigned_to_group;
+  });
 
-        isAssignedTo(user) {
-          return this.assigned_to_user?.username === user.username;
-        }
+  api.addModelMethod("topic", "isAssignedTo", function (user) {
+    return this.assigned_to_user?.username === user.username;
+  });
 
-        hasAssignedPosts() {
-          return !!this.postAssignments().length;
-        }
-      }
-  );
+  api.addModelMethod("topic", "hasAssignedPosts", function () {
+    return !!this.postAssignments().length;
+  });
 }

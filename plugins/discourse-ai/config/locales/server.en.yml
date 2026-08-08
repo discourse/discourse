@@ -39,8 +39,7 @@ en:
         flagged_post: |
           %{score_reason}
           %{response}
-        flagged_post_response: |
-          <p>Response from the model: %{llm_response}</p>
+        flagged_post_response: "Response from the model: %{llm_response}"
         flagged_post_score_reason: |
           <b>Triggered by the <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> rule.</b>
         notify_author_pm:
@@ -139,7 +138,8 @@ en:
     ai_summarization_agent: "Agent to use for summarize feature"
     ai_pm_summarization_allowed_groups: "Groups allowed to create and view summaries in PMs."
     ai_summary_gists_enabled: "Generate brief summaries of latest replies in topics automatically"
-    ai_summary_backfill_maximum_topics_per_hour: "Number of topic summaries to backfill per hour."
+    ai_summary_gists_agent: "Agent used to generate brief topic summaries. Gist generation always uses the built-in final-summary tool; other tools and structured response formats configured on the agent are ignored."
+    ai_summary_backfill_maximum_topics_per_hour: "Number of topic summaries to backfill per hour. Each localized gist counts toward this limit."
 
     ai_bot_enabled: "Enable the AI Bot module."
     ai_bot_enabled_llms: "LLMs available to select for AI bot conversations"
@@ -170,8 +170,7 @@ en:
     ai_translation_categories: "Categories used when the AI translation category scope is set to <strong>include</strong> or <strong>exclude</strong>."
     ai_translation_personal_messages: "Controls which personal messages are translated. 'none' disables PM translation. 'group' translates only group PMs. 'all' translates all PMs."
     ai_translation_include_bot_content: "When enabled, content written by bots (user IDs below 0) will also be sent for translation."
-    ai_translation_max_post_length: "The maximum number of characters for a post to be translated. Posts longer than this will not be translated."
-    ai_translation_backfill_max_age_days: "The maximum age of a post and topic to be translated. Posts and topics older than this will not be translated. 0 disables backfilling, but will not disable translation of new posts."
+    ai_translation_backfill_start_date: "The UTC date from which historical posts and topics will be sent for translation backfilling. Leave blank to disable backfilling. New content will continue to be translated."
     ai_translation_backfill_hourly_rate: "The number of posts and topics to translate per hour during backfill operations. Set to 0 to disable automatic backfilling of translations for existing content."
     ai_translation_backfill_parallel_jobs: "The number of parallel post localization jobs to run per backfill cycle. Higher values increase throughput but consume more resources."
     ai_usage_rollup_after_days: "Number of days to keep per-request AI usage stats before rolling them into daily aggregates. Set to 0 to disable rollups."
@@ -293,6 +292,7 @@ en:
     discourse_workflows:
       ai_agent:
         errors:
+          invalid_mode: "'%{mode}' is not a supported AI agent execution mode."
           locked_default_llm_missing: "Agent '%{agent}' is locked to its default LLM, but no valid default LLM is configured"
           llm_not_found: "LLM model with id %{llm_model_id} not found"
           no_llm_configured: "No LLM is configured for agent '%{agent}'. Select an LLM model or configure an agent/site default LLM."
@@ -424,6 +424,9 @@ en:
       logging_subject: "Spam detection"
 
     ai_bot:
+      errors:
+        invalid_agent_id: "The specified AI agent does not exist or you do not have access to it"
+        cannot_send_pm_to_agent: "You cannot send personal messages to this AI agent"
       reply_error: "Sorry, it looks like our system encountered an unexpected issue while trying to reply.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Untitled AI bot PM]"
       thinking: "Thinking"
@@ -621,6 +624,12 @@ en:
         web_fetch:
           name: "Web Fetch (native)"
           help: "Lets the model open and read web pages using the provider's built-in web access, when the agent is forced to a supported LLM."
+        google_maps:
+          name: "Google Maps (native)"
+          help: "Lets the model use current Google Maps place and location data, when the agent is forced to a supported Gemini LLM."
+        code_execution:
+          name: "Code execution (native)"
+          help: "Lets the model write and run Python code in the provider's sandbox, when the agent is forced to a supported Gemini LLM."
       tool_summary:
         read_artifact: "Read a web artifact"
         search_uploaded_documents: "Search uploaded documents"
@@ -633,6 +642,7 @@ en:
         github_diff: "GitHub diff"
         random_picker: "Random Picker"
         categories: "List categories"
+        users: "List users"
         flag_post: "Flag post"
         close_topic: "Close topic"
         suspend_user: "Suspend user"
@@ -656,6 +666,7 @@ en:
         tags: "List tags"
         time: "Time"
         summarize: "Summarize"
+        set_topic_summary: "Set topic summary"
         image: "Generate image"
         google: "Search Google"
         read: "Read topic"
@@ -683,6 +694,7 @@ en:
         github_diff: "Retrieve a GitHub pull request or commit diff"
         random_picker: "Pick a random number or a random element of a list"
         categories: "List all publicly visible categories on the forum"
+        users: "List users on the forum"
         flag_post: "Flag the current post for staff review"
         close_topic: "Close or open a topic"
         suspend_user: "Suspend (ban) a user, blocking them from logging in or posting"
@@ -706,6 +718,7 @@ en:
         tags: "List all tags on the forum"
         time: "Find time in various time zones"
         summary: "Summarize a topic"
+        set_topic_summary: "Set the final short topic summary"
         image: "Generate image using Stable Diffusion"
         create_image: "Generate image using Open AI GPT image model"
         edit_image: "Edit image using Open AI GPT image model"
@@ -755,6 +768,7 @@ en:
         read: "Reading: <a href='%{url}'>%{title}</a>"
         time: "Time in %{timezone} is %{time}"
         summarize: "Summarized <a href='%{url}'>%{title}</a>"
+        set_topic_summary: "Set the final short topic summary"
         dall_e: "%{prompt}"
         create_image: "%{prompt}"
         edit_image: "%{prompt}"
@@ -762,6 +776,9 @@ en:
         categories:
           one: "Found %{count} category"
           other: "Found %{count} categories"
+        users:
+          one: "Found %{count} user"
+          other: "Found %{count} users"
         tags:
           one: "Found %{count} tag"
           other: "Found %{count} tags"

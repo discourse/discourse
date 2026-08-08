@@ -6,6 +6,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n, { i18n } from "discourse-i18n";
 import { subscribeToAiGeneration } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-generation";
+import { dataExplorerAiQueriesEnabled } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-query-availability";
 import { defaultView } from "discourse/plugins/discourse-data-explorer/discourse/lib/chart-helpers";
 import {
   dataExplorerStore,
@@ -85,7 +86,7 @@ export default class AdminPluginsExplorerNew extends Controller {
   }
 
   get aiQueriesEnabled() {
-    return this.siteSettings.data_explorer_ai_queries_enabled;
+    return dataExplorerAiQueriesEnabled(this.siteSettings);
   }
 
   @action
@@ -246,12 +247,9 @@ export default class AdminPluginsExplorerNew extends Controller {
       this.toasts.success({
         data: { message: i18n("explorer.query_created") },
       });
-      // Run the query straight away — there's nothing new to do on the edit
-      // page first, so save and show the results in one step.
       this.router.transitionTo(
         "adminPlugins.show.explorer.edit",
-        result.target.id,
-        { queryParams: { run: true } }
+        result.target.id
       );
     } catch (error) {
       popupAjaxError(error);

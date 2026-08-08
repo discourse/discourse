@@ -73,6 +73,8 @@ en:
     sidebar_show_upcoming_events: "Show upcoming events link in the sidebar under 'More'."
     calendar_first_day_of_week: "Set the first day of the week for calendar display. Options are Saturday, Sunday, or Monday."
     enable_events_category_type_setup: "Enables the Events category type option during category creation setup."
+    livestream_allowed_hosts: "Hosts that can be used as an event livestream."
+    livestream_allowed_hosts_invalid: "These entries are not hosts: %{hosts}. Enter the host on its own (for example zoom.us), which allows every URL on it and its subdomains."
     livestream_zoom_enabled: "Enable Zoom video embedding for livestream topics."
     livestream_zoom_sdk_key: "Zoom Meeting SDK client ID."
     livestream_zoom_sdk_secret: "Zoom Meeting SDK client secret."

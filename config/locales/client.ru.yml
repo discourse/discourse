@@ -964,6 +964,8 @@ ru:
         email: "Эл. почта"
         name: "Имя"
         fields: "Поля"
+        silence_reason: "Причина заморозки"
+        penalty_forever: "Навсегда"
         reject_reason: "Причина"
         scrubbed_by: "Запись удалена пользователем"
         scrubbed_reason: "Причина"
@@ -1802,7 +1804,6 @@ ru:
       external_links_in_new_tab: "Открывать все внешние ссылки в новой вкладке"
       enable_quoting: "Разрешить отвечать с цитированием выделенного текста"
       enable_smart_lists: "Включать умные списки при написании в редакторе"
-      enable_defer: "Включить функцию отметки тем как непрочитанных"
       enable_markdown_monospace_font: "Использовать моноширинный шрифт в режиме Markdown редактора"
       experimental_sidebar:
         enable: "Включить боковую панель"
@@ -2289,7 +2290,7 @@ ru:
         default: "(по умолчанию)"
         any: "любые"
       homepage:
-        default: "(по умолчанию)"
+        default: "Домашнюю страницу"
       password_confirmation:
         title: "Пароль ещё раз"
       invite_code:
@@ -2333,6 +2334,9 @@ ru:
         contextual: "Количество контента новой страницы"
       bookmark_after_notification:
         title: "После отправки напоминания о закладке:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Уведомлять при получении лайка"
         always: "Всегда"
@@ -2502,17 +2506,21 @@ ru:
           member_title: "Пригласите участников"
           sent_title: "Приглашение отправлено"
           member_tab: "Участники"
-          admin_tab: "Администраторы"
+          admin_tab: "Персонал"
+          staff_role_admin: "Администрирование"
+          staff_role_moderator: "Модератор"
           admin_email_label: "Адрес электронной почты"
           email_placeholder: "имя@пример.com"
           invite_by_email: "Эл. почта"
           restrict_domain: "Ограничить по домену"
           domain_placeholder: "example.com"
-          more_options: "Другие варианты"
+          create_and_send: "Отправить"
+          create_and_copy: "Копировать ссылку"
           update: "Обновить"
           summary:
             role_member: "Участник"
             role_admin: "Администрирование"
+            role_moderator: "Модератор"
             method: "Распространение"
             method_email: "Эл. почта"
             restriction: "Ограничено"
@@ -2520,7 +2528,7 @@ ru:
             expires: "Срок действия"
             topic: "Тема"
             groups: "Группы"
-            edit: "Изменение приглашение"
+            edit: "Изменить"
         bulk_invite:
           none: "Нет приглашений для отображения на этой странице."
           text: "Массовое приглашение"
@@ -3180,7 +3188,7 @@ ru:
     filter_input:
       clear: "Очистить фильтр"
     filter_controls:
-      reset: "Сбросить фильтры"
+      reset: "Сбросить"
     d_icon_grid_picker:
       select_icon: "Выбрать иконки"
       search_placeholder: "Искать иконки..."
@@ -3338,7 +3346,6 @@ ru:
       italic_label: "К"
       italic_title: "Курсив"
       italic_text: "текст, выделенный курсивом"
-      heading_title: "Заголовки"
       heading_level_n: "Заголовок %{levelNumber}"
       heading_level_n_title: "Заголовок %{levelNumber}"
       heading_level_paragraph: "Абзац"
@@ -5804,6 +5811,10 @@ ru:
           public: "Видно всем"
           always_public: "Контент в этом разделе всегда публичный"
           more_menu: "Меню «Еще»"
+          localizations:
+            locale: "Язык"
+            title_label: "Заголовок раздела"
+            remove_language: "Отозвать"
           links:
             add: "Добавить еще ссылку"
             delete: "Удалить ссылку"
@@ -6751,7 +6762,6 @@ ru:
               posts: "Записи"
               share: "Поделиться"
             whos_posting:
-              all_categories: "Все разделы"
               staff: "Персонал"
             trust_level_pipeline:
               trust_levels:
@@ -7509,6 +7519,8 @@ ru:
         sidebar: "Боковая панель"
         header_dropdown: "Выпадающий список заголовка"
         legacy: "Старая версия"
+      duplicate_topic_titles:
+        allowed: "Разрешённые"
       backups:
         title: "Резервные копии"
         files_title: "Резервные файлы"
@@ -7758,7 +7770,6 @@ ru:
           finish_install: "Завершить установку темы"
           last_attempt: "Процесс установки не завершен, последняя попытка:"
           remote_branch: "Имя ветки (необязательно)"
-          public_key: "Предоставьте доступ к репозиторию со следующим открытым ключом:"
           install: "Установить"
           installed: "Установленные"
           install_popular: "Популярные"
@@ -9174,6 +9185,7 @@ ru:
         uploading: "Загрузка…"
         name: "Название"
         group: "Группа"
+        all_groups: "Все группы"
         created_by: "Создано"
         image: "Изображение"
         alt: "предпросмотр пользовательских эмодзи"

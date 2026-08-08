@@ -11,6 +11,7 @@ class SiteSerializer < ApplicationSerializer
     :trust_levels,
     :groups,
     :filters,
+    :homepage_choices,
     :periods,
     :top_menu_items,
     :anonymous_top_menu_items,
@@ -223,6 +224,10 @@ class SiteSerializer < ApplicationSerializer
     Discourse.filters.map(&:to_s)
   end
 
+  def homepage_choices
+    TopMenu.homepage_choices
+  end
+
   def periods
     TopTopic.periods.map(&:to_s)
   end
@@ -361,11 +366,10 @@ class SiteSerializer < ApplicationSerializer
   def anonymous_default_navigation_menu_tags
     @anonymous_default_navigation_menu_tags ||=
       begin
-        tag_names =
-          SiteSetting.default_navigation_menu_tags.split("|") -
-            DiscourseTagging.hidden_tag_names(scope)
+        tags = Tag.where(name: SiteSetting.default_navigation_menu_tags.split("|"))
+        tags = DiscourseTagging.filter_visible(tags, scope)
 
-        serialize_tags(Tag.where(name: tag_names).order(:name))
+        serialize_tags(tags.order(:name))
       end
   end
 

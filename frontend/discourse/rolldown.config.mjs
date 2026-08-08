@@ -2,11 +2,15 @@ import * as fs from "fs";
 import { basename, relative } from "path";
 import { viteAliasPlugin, viteImportGlobPlugin } from "rolldown/experimental";
 import discourseChunkNamesPlugin from "./lib/discourse-chunk-names.mjs";
+import discourseSourceImports from "./lib/discourse-source-imports.mjs";
 import dynamicChunkUrlPlugin from "./lib/dynamic-chunk-url-plugin.mjs";
 import writeResolverConfig from "./lib/embroider-vite-resolver-options.mjs";
 import maybeBabel from "./lib/maybe-babel.mjs";
 import optimizedEmber from "./lib/optimized-ember.mjs";
+import { exitIfDevServerRunning } from "./lib/rolldown-devserver-lock.mjs";
 import wrapTestModulesPlugin from "./lib/wrap-test-modules-plugin.mjs";
+
+exitIfDevServerRunning();
 
 writeResolverConfig(
   {
@@ -113,6 +117,7 @@ export function buildConfig({ devMode } = {}) {
     plugins: [
       viteAliasPlugin({ entries: aliases }),
       dynamicChunkUrlPlugin(),
+      discourseSourceImports(),
       optimizedEmber(),
       viteImportGlobPlugin(),
       maybeBabel({

@@ -1,6 +1,9 @@
 import Component from "@glimmer/component";
 import { inject as controller } from "@ember/controller";
-import Header from "discourse/components/header";
+import SiteHeaderExample from "../../examples/organisms/site-header";
+import siteHeaderSource from "../../examples/organisms/site-header?source=file";
+import SiteHeaderInTopicExample from "../../examples/organisms/site-header-in-topic";
+import siteHeaderInTopicSource from "../../examples/organisms/site-header-in-topic?source=file";
 import StyleguideExample from "../../styleguide-example";
 
 export default class SiteHeaderStyleguideExample extends Component {
@@ -10,47 +13,19 @@ export default class SiteHeaderStyleguideExample extends Component {
     return this.application.sidebarEnabled;
   }
 
-  get headerCode() {
-    return `import Header from "discourse/components/header";
-
-<template>
-  <div inert class="d-header-wrap">
-    <Header @sidebarEnabled={{this.sidebarEnabled}} />
-  </div>
-</template>`;
-  }
-
-  get headerInTopicCode() {
-    return `import Header from "discourse/components/header";
-
-<template>
-  <div inert class="d-header-wrap">
-    <Header
-      @sidebarEnabled={{this.sidebarEnabled}}
-      @topicInfo={{@dummy.topic}}
-      @topicInfoVisible={{true}}
-    />
-  </div>
-</template>`;
-  }
-
   <template>
-    <StyleguideExample @title="site header" @code={{this.headerCode}}>
-      <div inert class="d-header-wrap">
-        <Header @sidebarEnabled={{this.sidebarEnabled}} />
-      </div>
+    <StyleguideExample @title="site header" @code={{siteHeaderSource}}>
+      <SiteHeaderExample @sidebarEnabled={{this.sidebarEnabled}} />
     </StyleguideExample>
+
     <StyleguideExample
       @title="site header - in topic - scrolled"
-      @code={{this.headerInTopicCode}}
+      @code={{siteHeaderInTopicSource}}
     >
-      <div inert class="d-header-wrap">
-        <Header
-          @sidebarEnabled={{this.sidebarEnabled}}
-          @topicInfo={{@dummy.topic}}
-          @topicInfoVisible={{true}}
-        />
-      </div>
+      <SiteHeaderInTopicExample
+        @sidebarEnabled={{this.sidebarEnabled}}
+        @topic={{@dummy.topic}}
+      />
     </StyleguideExample>
   </template>
 }

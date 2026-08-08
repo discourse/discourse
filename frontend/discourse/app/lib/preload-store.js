@@ -58,6 +58,15 @@ const PreloadStore = {
   },
 };
 
+export function readPreloadedData() {
+  const element = document.getElementById("data-preloaded");
+  if (!element) {
+    return;
+  }
+
+  return JSON.parse(element.textContent);
+}
+
 export function populatePreloadStore() {
   let setupData;
   const setupDataElement = document.getElementById("data-discourse-setup");
@@ -65,12 +74,7 @@ export function populatePreloadStore() {
     setupData = setupDataElement.dataset;
   }
 
-  let preloaded;
-  const preloadedDataElement = document.getElementById("data-preloaded");
-  if (preloadedDataElement) {
-    preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);
-  }
-
+  const preloaded = readPreloadedData();
   const keys = preloaded ? Object.keys(preloaded) : [];
   if (keys.length === 0 && !isTesting()) {
     throw "No preload data found in #data-preloaded. Unable to boot Discourse.";

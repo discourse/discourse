@@ -9,7 +9,6 @@ RSpec.describe "Events Category Type Setup" do
   let(:toast) { PageObjects::Components::Toasts.new }
 
   before do
-    SiteSetting.enable_events_category_type_setup = true
     SiteSetting.calendar_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     sign_in(admin)
@@ -43,25 +42,6 @@ RSpec.describe "Events Category Type Setup" do
     expect(SiteSetting.calendar_categories).to include(
       "categoryId=#{category.id};weekends=true;defaultView=month",
     )
-  end
-
-  context "when the events category type setup is disabled" do
-    before { SiteSetting.enable_events_category_type_setup = false }
-
-    it "does not show the events category type" do
-      visit("/new-category/setup")
-      expect(page).to have_no_css(".category-type-cards__card.--category-type-events")
-    end
-
-    it "does not show the tab for the events category type when editing an existing category" do
-      events_category = Fabricate(:category, name: "Events")
-      DiscourseCalendar::Categories::Types::Events.configure_category(
-        events_category,
-        guardian: admin.guardian,
-      )
-      visit("/c/#{events_category.slug}/edit/events")
-      expect(page).to have_no_css(".d-nav-submenu__tabs .edit-category-events")
-    end
   end
 
   context "when there is an events category already configured" do

@@ -114,7 +114,7 @@ module Discourse
         next if File.symlink?(destination) && File.readlink(destination) == source
 
         temp_destination = Rails.root.join("tmp", SecureRandom.hex).to_s
-        execute_command("ln", "-s", source, temp_destination)
+        File.symlink(source, temp_destination)
 
         begin
           File.rename(temp_destination, destination)
@@ -164,6 +164,7 @@ module Discourse
         failure_message: "",
         success_status_codes: [0],
         chdir: ".",
+        unsetenv_others: false,
         unsafe_shell: false
       )
         env = nil
@@ -183,7 +184,10 @@ module Discourse
 
         args = command
         args = [env] + command if env
-        stdout, stderr, status = Open3.capture3(*args, chdir: chdir)
+
+        spawn_options = { chdir: chdir }
+        spawn_options[:unsetenv_others] = true if unsetenv_others
+        stdout, stderr, status = Open3.capture3(*args, **spawn_options)
 
         if !status.exited? || !success_status_codes.include?(status.exitstatus)
           message = [command.join(" "), failure_message, stderr].filter(&:present?).join("\n")

@@ -40,6 +40,23 @@ describe Jobs::DetectTranslateTopic do
     job.execute({ topic_id: topic.id })
   end
 
+  it "enqueues a known source-locale gist when translation credits are unavailable" do
+    SiteSetting.ai_summarization_enabled = true
+    SiteSetting.ai_summary_gists_enabled = true
+    topic.update!(locale: "en")
+    DiscourseAi::Translation.expects(:credits_available_for_topic_detection?).returns(false)
+    DiscourseAi::Translation::TopicLocalizer.expects(:localize).never
+
+    expect { job.execute({ topic_id: topic.id }) }.to change {
+      Jobs::FastTrackTopicGist.jobs.size
+    }.by(1)
+
+    expect(Jobs::FastTrackTopicGist.jobs.last["args"].first).to include(
+      "topic_id" => topic.id,
+      "locale" => "en",
+    )
+  end
+
   it "detects locale" do
     allow(DiscourseAi::Translation::TopicLocaleDetector).to receive(:detect_locale).with(
       topic,
@@ -57,11 +74,53 @@ describe Jobs::DetectTranslateTopic do
     job.execute({ topic_id: topic.id })
   end
 
+  it "enqueues gists in the source and translated target locales" do
+    SiteSetting.ai_summarization_enabled = true
+    SiteSetting.ai_summary_gists_enabled = true
+    SiteSetting.content_localization_enabled = true
+    topic.update!(locale: "en")
+
+    expect { job.execute({ topic_id: topic.id }) }.to change {
+      Jobs::FastTrackTopicGist.jobs.size
+    }.by(2)
+
+    job_args = Jobs::FastTrackTopicGist.jobs.last(2).map { |queued_job| queued_job["args"].first }
+    expect(job_args).to contain_exactly(
+      include("topic_id" => topic.id, "locale" => "en"),
+      include("topic_id" => topic.id, "locale" => "ja"),
+    )
+  end
+
+  it "enqueues a source-locale gist when translation targets become empty" do
+    SiteSetting.ai_summarization_enabled = true
+    SiteSetting.ai_summary_gists_enabled = true
+    SiteSetting.content_localization_supported_locales = ""
+    topic.update!(locale: "en")
+
+    expect { job.execute({ topic_id: topic.id }) }.to change {
+      Jobs::FastTrackTopicGist.jobs.size
+    }.by(1)
+
+    job_args = Jobs::FastTrackTopicGist.jobs.last["args"].first
+    expect(job_args).to include("topic_id" => topic.id, "locale" => "en")
+  end
+
   it "skips bot topics by default" do
     topic.update!(user: Discourse.system_user)
     DiscourseAi::Translation::TopicLocalizer.expects(:localize).never
 
     job.execute({ topic_id: topic.id })
+  end
+
+  it "enqueues a known source gist when bot translation is disabled" do
+    SiteSetting.ai_summarization_enabled = true
+    SiteSetting.ai_summary_gists_enabled = true
+    topic.update!(user: Discourse.system_user, locale: "en")
+    DiscourseAi::Translation::TopicLocalizer.expects(:localize).never
+
+    expect { job.execute({ topic_id: topic.id }) }.to change {
+      Jobs::FastTrackTopicGist.jobs.size
+    }.by(1)
   end
 
   it "translates bot topics when force is true" do

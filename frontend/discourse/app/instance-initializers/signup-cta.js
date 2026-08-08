@@ -9,7 +9,7 @@ const PROMPT_HIDE_DURATION = ONE_DAY;
 export default {
   initialize(owner) {
     const appEvents = owner.lookup("service:app-events");
-    const { canSignUp } = owner.lookup("controller:application");
+    const applicationController = owner.lookup("controller:application");
     const currentUser = owner.lookup("service:current-user");
     const keyValueStore = owner.lookup("service:key-value-store");
     const screenTrack = owner.lookup("service:screen-track");
@@ -24,9 +24,6 @@ export default {
     if (!enable_signup_cta) {
       return;
     }
-    if (!canSignUp) {
-      return;
-    }
     if (login_required) {
       return;
     }
@@ -35,6 +32,10 @@ export default {
     }
 
     function checkSignupCtaRequirements() {
+      if (!applicationController.canSignUp) {
+        return; // signup is unavailable
+      }
+
       if (session.get("showSignupCta")) {
         return; // already shown
       }

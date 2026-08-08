@@ -860,6 +860,8 @@ pt_BR:
         email: "E-mail"
         name: "Nome"
         fields: "Campos"
+        silence_reason: "Motivo do silêncio"
+        penalty_forever: "Para sempre"
         reject_reason: "Motivo"
         scrubbed_by: "Registro removido por"
         scrubbed_reason: "Motivo"
@@ -1665,9 +1667,7 @@ pt_BR:
       external_links_in_new_tab: "Abrir todos os links externos em uma nova aba"
       enable_quoting: "Ativar resposta citando o texto destacado"
       enable_smart_lists: "Ativar listas inteligentes ao escrever no compositor"
-      enable_defer: "Ativar tópicos marcados como não lidos"
       enable_markdown_monospace_font: "Usar fonte monoespacial no modo Markdown do compositor"
-      show_original_content: "Exibir conteúdo original em vez de conteúdo traduzido."
       experimental_sidebar:
         enable: "Ativar barra lateral"
         options: "Opções"
@@ -2113,7 +2113,7 @@ pt_BR:
         default: "(padrão)"
         any: "qualquer"
       homepage:
-        default: "(padrão)"
+        default: "Padrão"
       password_confirmation:
         title: "Senha outra vez"
       invite_code:
@@ -2157,6 +2157,9 @@ pt_BR:
         contextual: "Novo conteúdo da página"
       bookmark_after_notification:
         title: "Depois que uma notificação de lembrete de marcador é enviada:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Notificar ao receber curtida"
         always: "Sempre"
@@ -2318,17 +2321,21 @@ pt_BR:
           member_title: "Convidar membros(as)"
           sent_title: "Convite enviado"
           member_tab: "Membros"
-          admin_tab: "Administradores(as):"
+          admin_tab: "Equipe"
+          staff_role_admin: "Administração"
+          staff_role_moderator: "Moderador(a)"
           admin_email_label: "Endereço de e-mail"
           email_placeholder: "nome@exemplo.com"
           invite_by_email: "E-mail"
           restrict_domain: "Restringir a domínio"
           domain_placeholder: "example.com"
-          more_options: "Mais opções"
+          create_and_send: "Enviar"
+          create_and_copy: "Copiar link"
           update: "Atualizar"
           summary:
             role_member: "Membro"
             role_admin: "Administração"
+            role_moderator: "Moderador(a)"
             method: "Compartilhamento"
             method_email: "E-mail"
             restriction: "Restrito a"
@@ -2336,7 +2343,7 @@ pt_BR:
             expires: "Expira"
             topic: "Tópico"
             groups: "Grupos"
-            edit: "Editar convite"
+            edit: "Editar"
         bulk_invite:
           none: "Nenhum convite para exibir nesta página."
           text: "Convite em massa"
@@ -2954,7 +2961,7 @@ pt_BR:
     filter_input:
       clear: "Limpar filtro"
     filter_controls:
-      reset: "Redefinir filtro"
+      reset: "Redefinir"
       toggle: "Alternar filtros suspensos"
     d_icon_grid_picker:
       select_icon: "Selecionar ícone"
@@ -3094,7 +3101,6 @@ pt_BR:
       italic_label: "I"
       italic_title: "Realce"
       italic_text: "texto realçado"
-      heading_title: "Cabeçalhos"
       heading_level_n: "Cabeçalho %{levelNumber}"
       heading_level_n_title: "Cabeçalho %{levelNumber}"
       heading_level_paragraph: "Parágrafo"
@@ -5330,6 +5336,10 @@ pt_BR:
           public: "Visível para todos(as)"
           always_public: "O conteúdo nesta seção é sempre público"
           more_menu: "Menu Mais"
+          localizations:
+            locale: "Idioma"
+            title_label: "Título da seção"
+            remove_language: "Remover"
           links:
             add: "Adicionar outro link"
             delete: "Excluir link"
@@ -6271,7 +6281,6 @@ pt_BR:
               posts: "Postagens"
               share: "Compartilhar"
             whos_posting:
-              all_categories: "Todas as categorias"
               staff: "Equipe"
             trust_level_pipeline:
               trust_levels:
@@ -7006,6 +7015,8 @@ pt_BR:
         sidebar: "Barra lateral"
         header_dropdown: "Menu dropdown de cabeçalho"
         legacy: "Legado"
+      duplicate_topic_titles:
+        allowed: "Permitido(a)"
       backups:
         title: "Backups"
         files_title: "Arquivos de cópia de segurança"
@@ -7249,7 +7260,6 @@ pt_BR:
           finish_install: "Concluir a instalação do tema"
           last_attempt: "O processo de instalação não foi concluído, última tentativa:"
           remote_branch: "Nome da unidade (opcional)"
-          public_key: "Conceder o seguinte acesso da chave pública ao repo:"
           install: "Instalar"
           installed: "Instalado(a)"
           install_popular: "Mais acessados(as)"
@@ -8605,6 +8615,7 @@ pt_BR:
         uploading: "Enviando…"
         name: "Nome"
         group: "Grupo"
+        all_groups: "Todos os grupos"
         created_by: "Criador(a):"
         image: "Imagem"
         alt: "pré-visualização do emoji personalizado"

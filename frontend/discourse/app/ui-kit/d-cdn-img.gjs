@@ -1,7 +1,17 @@
+// @ts-check
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { getURLWithCDN } from "discourse/lib/get-url";
 
+/**
+ * Renders a CDN-rewritten `<img>`. The consumer's `...attributes` are forwarded
+ * to the image element.
+ *
+ * @extends {Component<{
+ *   Args: { src?: string, width?: number, height?: number },
+ *   Element: HTMLImageElement,
+ * }>}
+ */
 export default class DCdnImg extends Component {
   get cdnSrc() {
     return getURLWithCDN(this.args.src);

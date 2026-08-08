@@ -6,10 +6,10 @@ export default class DiscourseWorkflowsIndexRoute extends DiscourseRoute {
   @service store;
 
   async model() {
-    const [workflows, stats] = await Promise.all([
+    const [workflows, workflowTags] = await Promise.all([
       this.store.findAll("discourse-workflows-workflow"),
-      ajax("/admin/plugins/discourse-workflows/stats.json"),
+      ajax("/admin/plugins/discourse-workflows/workflow-tags.json"),
     ]);
-    return { workflows, stats };
+    return { workflows, workflowTags: workflowTags.workflow_tags };
   }
 }

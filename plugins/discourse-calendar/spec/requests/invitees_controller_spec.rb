@@ -9,7 +9,7 @@ module DiscoursePostEvent
       sign_in(user)
     end
 
-    let(:user) { Fabricate(:user, admin: true) }
+    let(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     let(:topic_1) { Fabricate(:topic, user: user) }
     let(:post_1) { Fabricate(:post, user: user, topic: topic_1) }
 
@@ -37,6 +37,44 @@ module DiscoursePostEvent
           get "/discourse-post-event/events/#{post_event_1.id}/invitees.json"
 
           expect(response.status).to eq(200)
+        end
+      end
+
+      context "for a private event in a public topic" do
+        fab!(:event_owner, :admin)
+        fab!(:public_topic) { Fabricate(:topic, user: event_owner) }
+        fab!(:public_post) { Fabricate(:post, user: event_owner, topic: public_topic) }
+        fab!(:viewer, :user)
+        fab!(:invitee_user, :user)
+        fab!(:restricted_group) do
+          Fabricate(
+            :group,
+            visibility_level: Group.visibility_levels[:owners],
+            members_visibility_level: Group.visibility_levels[:owners],
+          ).tap { |group| group.add(invitee_user) }
+        end
+        fab!(:private_event) do
+          Fabricate(
+            :event,
+            post: public_post,
+            status: DiscoursePostEvent::Event.statuses[:private],
+            raw_invitees: [restricted_group.name],
+          )
+        end
+
+        before do
+          private_event.create_invitees(
+            [{ user_id: invitee_user.id, status: Invitee.statuses[:going] }],
+          )
+        end
+
+        it "does not disclose private event invitees to uninvited users" do
+          sign_in(viewer)
+
+          get "/discourse-post-event/events/#{private_event.id}/invitees.json"
+
+          expect(response.body).not_to include(invitee_user.username)
+          expect(response.status).to eq(403)
         end
       end
 
@@ -373,7 +411,7 @@ module DiscoursePostEvent
       SiteSetting.discourse_post_event_enabled = true
     end
 
-    fab!(:admin_user) { Fabricate(:user, admin: true) }
+    fab!(:admin_user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     fab!(:topic) { Fabricate(:topic, user: admin_user) }
     fab!(:post_1) { Fabricate(:post, user: admin_user, topic: topic) }
     fab!(:event) { Fabricate(:event, post: post_1) }
@@ -409,6 +447,38 @@ module DiscoursePostEvent
     it "requires login for destroy" do
       delete "/discourse-post-event/events/#{event.id}/invitees/#{invitee.id}.json"
       expect(response.status).to eq(403)
+    end
+
+    context "for a private event in a public topic" do
+      fab!(:private_event_post) { Fabricate(:post, user: admin_user, topic: topic) }
+      fab!(:restricted_group) do
+        Fabricate(
+          :group,
+          visibility_level: Group.visibility_levels[:owners],
+          members_visibility_level: Group.visibility_levels[:owners],
+        ).tap { |group| group.add(invitee_user) }
+      end
+      fab!(:private_event) do
+        Fabricate(
+          :event,
+          post: private_event_post,
+          status: DiscoursePostEvent::Event.statuses[:private],
+          raw_invitees: [restricted_group.name],
+        )
+      end
+
+      before do
+        private_event.create_invitees(
+          [{ user_id: invitee_user.id, status: DiscoursePostEvent::Invitee.statuses[:going] }],
+        )
+      end
+
+      it "does not disclose private event invitees to anonymous viewers" do
+        get "/discourse-post-event/events/#{private_event.id}/invitees.json"
+
+        expect(response.body).not_to include(invitee_user.username)
+        expect(response.status).to eq(403)
+      end
     end
   end
 end

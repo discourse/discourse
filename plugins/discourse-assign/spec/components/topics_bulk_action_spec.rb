@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../support/assign_allowed_group"
-
 describe TopicsBulkAction do
   fab!(:post)
   fab!(:post1, :post)
@@ -14,7 +12,7 @@ describe TopicsBulkAction do
 
   include_context "with group that is allowed to assign"
 
-  before { add_to_assign_allowed_group(user) }
+  before { assign_allowed_group.add(user) }
 
   describe "assign_topics" do
     it "assigns multiple topics to a user" do

@@ -3,10 +3,62 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import { waitForPromise } from "@ember/test-waiters";
+import { resolveAllShortUrls } from "pretty-text/upload-short-url";
+import { ajax } from "discourse/lib/ajax";
+import { cook } from "discourse/lib/text";
 import DCookText from "discourse/ui-kit/d-cook-text";
+import DDecoratedHtml, {
+  applyHtmlDecorators,
+} from "discourse/ui-kit/d-decorated-html";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { i18n } from "discourse-i18n";
+
+class DecoratedPreviewCookText extends Component {
+  @service siteSettings;
+
+  @tracked cooked = null;
+
+  constructor(owner, args) {
+    super(owner, args);
+    this.loadCookedText();
+  }
+
+  @action
+  async loadCookedText() {
+    const rawText = this.args.rawText;
+    const cooked = await waitForPromise(cook(rawText, { previewing: true }));
+
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    if (this.args.rawText !== rawText) {
+      return;
+    }
+
+    this.cooked = trustHTML(cooked);
+  }
+
+  @action
+  decoratePreview(preview, helper) {
+    applyHtmlDecorators(preview, helper);
+    resolveAllShortUrls(ajax, this.siteSettings, preview);
+  }
+
+  <template>
+    <div {{didUpdate this.loadCookedText @rawText}}>
+      <DDecoratedHtml
+        @className="d-editor-preview"
+        @decorate={{this.decoratePreview}}
+        @html={{this.cooked}}
+      />
+    </div>
+  </template>
+}
 
 export default class DEditorOriginalTranslationPreview extends Component {
   @tracked showOriginal = true;
@@ -93,7 +145,7 @@ export default class DEditorOriginalTranslationPreview extends Component {
           {{/if}}
         {{else}}
           {{#if this.translationText}}
-            <DCookText @rawText={{this.translationText}} />
+            <DecoratedPreviewCookText @rawText={{this.translationText}} />
           {{else}}
             <div class="d-editor-translation-preview-empty">
               {{i18n "composer.translations.no_translation_yet"}}

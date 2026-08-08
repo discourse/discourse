@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+# Concurrent transactional structure loads exhaust PostgreSQL's shared lock-tracking memory.
+if !Discourse.is_parallel_test?
+  ActiveRecord::Tasks::DatabaseTasks.structure_load_flags = { postgresql: "--single-transaction" }
+end
+
 # No ActiveRecord for these models. Avoids the "unknown OID" warnings.
 # We need it in core, because plugins are not loaded in core tests,
 # but the tables are likely still present in the test database.

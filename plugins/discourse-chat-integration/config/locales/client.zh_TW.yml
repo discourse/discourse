@@ -91,3 +91,6 @@ zh_TW:
           fields:
             channel_name:
               label: 變更名稱
+    discourse_workflows:
+      send_chat_integration_message:
+        message: "訊息"

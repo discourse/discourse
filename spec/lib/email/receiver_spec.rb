@@ -1041,6 +1041,24 @@ RSpec.describe Email::Receiver do
       Fabricate(:user, email: "tl3@bar.com", trust_level: TrustLevel[3])
       expect { process(:tl3_user) }.to raise_error(Email::Receiver::InsufficientTrustLevelError)
     end
+
+    context "when the sender's address is an alias of a registered address" do
+      before { Fabricate(:user, email: "dis.course@bar.com") }
+
+      it "raises an EmailAliasNotAllowed if normalize_emails is enabled" do
+        SiteSetting.normalize_emails = true
+
+        expect { process(:new_user) }.to raise_error(Email::Receiver::EmailAliasNotAllowed)
+        expect(IncomingEmail.last.error).to eq("Email::Receiver::EmailAliasNotAllowed")
+      end
+
+      it "stages a new user if normalize_emails is disabled" do
+        SiteSetting.normalize_emails = false
+
+        expect { process(:new_user) }.to change(Topic, :count)
+        expect(Topic.last.user.email).to eq("discourse@bar.com")
+      end
+    end
   end
 
   describe "#reply_by_email_address_regex" do
@@ -1814,12 +1832,13 @@ RSpec.describe Email::Receiver do
           SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
         end
 
-        def create_post_reply_key(value)
-          Fabricate(:post_reply_key, reply_key: value, user: user2, post: post)
-        end
-
         it "when bounce without verp" do
-          create_post_reply_key("4f97315cc828096c9cb34c6f1a0d6fe8")
+          Fabricate(
+            :post_reply_key,
+            reply_key: "4f97315cc828096c9cb34c6f1a0d6fe8",
+            user: user2,
+            post: post,
+          )
 
           expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
           post = Post.last
@@ -1836,10 +1855,10 @@ RSpec.describe Email::Receiver do
 
         context "when bounce with verp" do
           let(:bounce_key) { "14b08c855160d67f2e0c2f8ef36e251e" }
-
-          before do
-            SiteSetting.reply_by_email_address = "foo+%{reply_key}@discourse.org"
-            create_post_reply_key(bounce_key)
+          let!(:bounce_post_reply_key) do
+            Fabricate(:post_reply_key, reply_key: bounce_key, user: user2, post: post)
+          end
+          let!(:bounce_email_log) do
             Fabricate(
               :email_log,
               to_address: email_address,
@@ -1848,6 +1867,8 @@ RSpec.describe Email::Receiver do
               post: post,
             )
           end
+
+          before { SiteSetting.reply_by_email_address = "foo+%{reply_key}@discourse.org" }
 
           it "creates a post with the bounce error" do
             expect { process(:hard_bounce_via_verp) }.to raise_error(
@@ -2056,6 +2077,23 @@ RSpec.describe Email::Receiver do
         This is the *reply*!
 
         </details>
+      MD
+      end
+
+      it "keeps the lists and only elides the signature from word emails" do
+        expect { process(:word_html_reply) }.to change { topic.posts.count }
+        expect(topic.posts.last.raw).to eq <<~MD.strip
+        This is the **body** of the email.
+
+        - a bullet
+        - another bullet
+
+        And these are the steps to follow:
+
+        1. a first step
+        1. a second step
+
+        That's all folks!
       MD
       end
 

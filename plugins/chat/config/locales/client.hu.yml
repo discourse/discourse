@@ -75,6 +75,8 @@ hu:
         close: "Rögzített üzenetek bezárása"
         pinned_by_you: "Általad rögzített"
         pinned_by_user: "%{username} által rögzítve"
+      pinned_bar:
+        title: "Kiemelt"
       no_pinned_messages: "Nincs rögzített üzenet ebben a csatornában."
       pin_message: "Üzenet rögzítése"
       unpin_message: "Üzenet rögzítésének feloldása"
@@ -166,12 +168,6 @@ hu:
         never: "Soha"
       separate_sidebar_mode:
         title: "Külön oldalsávos módok megjelenítése a fórum és a chat számára"
-      send_shortcut:
-        title: "Parancsikon küldése"
-        enter:
-          label: "Küldés Enterrel"
-        meta_enter:
-          label: "Küldés %{meta_key} + Enterrel"
       enable: "Csevegés engedélyezése"
       flag: "Megjelölés"
       emoji: "Emodzsi beszúrása"

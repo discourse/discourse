@@ -1,46 +1,72 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import DMenu from "discourse/float-kit/components/d-menu";
 import { loadColorSchemeStylesheet } from "discourse/lib/color-scheme-picker";
 import { currentThemeId } from "discourse/lib/theme-selector";
 import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import { i18n } from "discourse-i18n";
 
 const DARK = "dark";
 const LIGHT = "light";
+const AUTO = "auto";
 
-function colorSchemeOverride(type) {
-  const lightScheme = document.querySelector("link.light-scheme");
-  const darkScheme =
+const AUTO_LIGHT_MEDIA = "(prefers-color-scheme: light)";
+const AUTO_DARK_MEDIA = "(prefers-color-scheme: dark)";
+
+const ICONS = {
+  [LIGHT]: "sun",
+  [DARK]: "moon",
+  [AUTO]: "circle-half-stroke",
+};
+
+function lightSchemeStylesheet() {
+  return document.querySelector("link.light-scheme");
+}
+
+function darkSchemeStylesheet() {
+  return (
     document.querySelector("link.dark-scheme") ||
-    document.querySelector("link#cs-preview-dark");
+    document.querySelector("link#cs-preview-dark")
+  );
+}
 
-  if (!lightScheme && !darkScheme) {
+/** The mode the document is currently showing, which outlives any one instance of this component. */
+function appliedColorMode() {
+  if (darkSchemeStylesheet()?.media === "all") {
+    return DARK;
+  }
+
+  if (lightSchemeStylesheet()?.media === "all") {
+    return LIGHT;
+  }
+
+  return AUTO;
+}
+
+function applyColorMode(mode) {
+  const lightScheme = lightSchemeStylesheet();
+  const darkScheme = darkSchemeStylesheet();
+
+  if (!lightScheme || !darkScheme) {
     return;
   }
 
-  switch (type) {
+  switch (mode) {
     case DARK:
-      lightScheme.origMedia = lightScheme.media;
       lightScheme.media = "none";
-      darkScheme.origMedia = darkScheme.media;
       darkScheme.media = "all";
       break;
     case LIGHT:
-      lightScheme.origMedia = lightScheme.media;
       lightScheme.media = "all";
-      darkScheme.origMedia = darkScheme.media;
       darkScheme.media = "none";
       break;
     default:
-      if (lightScheme.origMedia) {
-        lightScheme.media = lightScheme.origMedia;
-        lightScheme.removeAttribute("origMedia");
-      }
-      if (darkScheme.origMedia) {
-        darkScheme.media = darkScheme.origMedia;
-        darkScheme.removeAttribute("origMedia");
-      }
+      lightScheme.media = AUTO_LIGHT_MEDIA;
+      darkScheme.media = AUTO_DARK_MEDIA;
       break;
   }
 }
@@ -48,7 +74,9 @@ function colorSchemeOverride(type) {
 export default class ToggleColorMode extends Component {
   @service site;
 
-  @tracked colorSchemeOverride = this.default;
+  // Seeded from the document rather than from a preference, because this component is rebuilt on
+  // every styleguide navigation while the mode it applied stays on the page.
+  @tracked mode = appliedColorMode();
   @tracked shouldRender = true;
 
   constructor() {
@@ -70,21 +98,70 @@ export default class ToggleColorMode extends Component {
     }
   }
 
-  get default() {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? DARK
-      : LIGHT;
+  get icon() {
+    return ICONS[this.mode];
   }
 
   @action
-  toggle() {
-    this.colorSchemeOverride = this.colorSchemeOverride === DARK ? LIGHT : DARK;
-    colorSchemeOverride(this.colorSchemeOverride);
+  select(mode, dMenu) {
+    applyColorMode(mode);
+
+    // Read back rather than assume: with the dark stylesheet still loading nothing was applied,
+    // and the trigger has to keep showing the mode that is actually on screen.
+    this.mode = appliedColorMode();
+    dMenu.close();
   }
 
   <template>
     {{#if this.shouldRender}}
-      <DButton @action={{this.toggle}} class="toggle-color-mode">Toggle color</DButton>
+      <DMenu
+        @icon={{this.icon}}
+        @identifier="styleguide-color-mode"
+        @animated={{false}}
+        @title={{i18n "sidebar.footer.interface_color_selector.title"}}
+        @ariaLabel={{i18n
+          "sidebar.footer.interface_color_selector.aria_label"
+          mode=this.mode
+        }}
+        @triggerClass="btn-default btn-small"
+        class="toggle-color-mode"
+        data-current-mode={{this.mode}}
+      >
+        <:content as |dMenu|>
+          <DDropdownMenu as |dropdown|>
+            <dropdown.item>
+              <DButton
+                class="toggle-color-mode__light-option"
+                @icon="sun"
+                @translatedLabel={{i18n
+                  "sidebar.footer.interface_color_selector.light"
+                }}
+                @action={{fn this.select LIGHT dMenu}}
+              />
+            </dropdown.item>
+            <dropdown.item>
+              <DButton
+                class="toggle-color-mode__dark-option"
+                @icon="moon"
+                @translatedLabel={{i18n
+                  "sidebar.footer.interface_color_selector.dark"
+                }}
+                @action={{fn this.select DARK dMenu}}
+              />
+            </dropdown.item>
+            <dropdown.item>
+              <DButton
+                class="toggle-color-mode__auto-option"
+                @icon="circle-half-stroke"
+                @translatedLabel={{i18n
+                  "sidebar.footer.interface_color_selector.auto"
+                }}
+                @action={{fn this.select AUTO dMenu}}
+              />
+            </dropdown.item>
+          </DDropdownMenu>
+        </:content>
+      </DMenu>
     {{/if}}
   </template>
 }

@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::SyncAccessControlForUploads do
+  subject(:run_job) { described_class.new.execute(upload_ids: upload_ids) }
+
   let(:upload1) { Fabricate(:upload) }
   let(:upload2) { Fabricate(:upload) }
   let(:upload3) { Fabricate(:secure_upload) }
   let(:upload_ids) { [upload1.id, upload2.id, upload3.id] }
-
-  def run_job
-    described_class.new.execute(upload_ids: upload_ids)
-  end
 
   it "does nothing if not using external storage" do
     Upload.expects(:where).never

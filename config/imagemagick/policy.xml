@@ -33,6 +33,7 @@
   <policy domain="coder" rights="read|write" pattern="{HEIC,HEIF}"/>
   <!-- MSVG: SVG dimension reads; the plain SVG coder stays denied -->
   <policy domain="coder" rights="read|write" pattern="MSVG"/>
+  <policy domain="coder" rights="read|write" pattern="MVG"/>
   <!-- XC: LetterAvatar canvas -->
   <policy domain="coder" rights="read|write" pattern="XC"/>
   <!-- ICC/ICM: RT_sRGB.icm "-profile" on resize/crop/downsize -->

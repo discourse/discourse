@@ -9,7 +9,7 @@ require "tempfile"
 # catches rendering artifacts a unit test can't — the reconstructed screen comes
 # from AnsiScreen.
 RSpec.describe Migrations::Reporting::Tui do
-  DRIVER = TuiReporterDriver::PATH
+  let(:driver) { TuiReporterDriver::PATH }
 
   # Runs the driver to completion, returns [raw_output, status]. `actions` is a
   # list of [delay_seconds, :signal|:resize, arg] performed against the PTY.
@@ -17,7 +17,7 @@ RSpec.describe Migrations::Reporting::Tui do
     env = { "TUI_DRIVER_SCENARIO" => scenario, "TERM" => term }
     env["TUI_DRIVER_STTY_FILE"] = stty_file if stty_file
 
-    reader, _writer, pid = PTY.spawn(env, "bundle", "exec", "ruby", DRIVER)
+    reader, _writer, pid = PTY.spawn(env, "bundle", "exec", "ruby", driver)
     reader.winsize = [rows, cols]
 
     out = +"".b
@@ -53,7 +53,7 @@ RSpec.describe Migrations::Reporting::Tui do
   def run_piped(scenario:, term: "xterm-256color")
     Tempfile.create("tui-pipe") do |file|
       env = { "TUI_DRIVER_SCENARIO" => scenario, "TERM" => term }
-      pid = spawn(env, "bundle", "exec", "ruby", DRIVER, out: file.path, err: File::NULL)
+      pid = spawn(env, "bundle", "exec", "ruby", driver, out: file.path, err: File::NULL)
       _, status = Process.wait2(pid)
       [File.read(file.path), status]
     end
@@ -103,7 +103,7 @@ RSpec.describe Migrations::Reporting::Tui do
 
     expect(status.exitstatus).to eq(0)
     expect(out).not_to match(/\e\[/) # no cursor/color control sequences
-    expect(out).to match(/^✓ Categories [\d,]+ \(\d+:\d{2}\)$/)
+    expect(out).to match(/^✓ Categories [\d,]+ \((<1s|\d+:\d{2})\)$/)
     expect(out).to match(/Users \d+%/) # 10% progress log
   end
 
@@ -112,6 +112,6 @@ RSpec.describe Migrations::Reporting::Tui do
 
     expect(status.exitstatus).to eq(0)
     expect(out).not_to match(/\e\[/)
-    expect(out).to match(/✓ Categories [\d,]+ \(\d+:\d{2}\)/)
+    expect(out).to match(/✓ Categories [\d,]+ \((<1s|\d+:\d{2})\)/)
   end
 end

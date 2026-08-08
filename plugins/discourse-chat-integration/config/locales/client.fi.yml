@@ -219,3 +219,8 @@ fi:
               description: "Löydät kanavan nimen chat-integraation asetuksista"
             provider:
               label: Palveluntarjoaja
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "Kanava"
+        configure: "Määritä"
+        message: "Viesti"

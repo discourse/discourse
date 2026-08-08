@@ -1,3 +1,14 @@
+@use "lib/viewport";
+
+.chat-thread:has(.chat-channel-preview-card) {
+  .--channel-thread & {
+    @include viewport.from(sm) {
+      padding-bottom: var(--space-8);
+      box-sizing: border-box;
+    }
+  }
+}
+
 .chat-channel-preview-card {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -17,6 +28,12 @@
   width: max-content;
   min-width: 60%;
   box-sizing: border-box;
+
+  .--channel-thread & {
+    @include viewport.from(sm) {
+      display: none;
+    }
+  }
 
   &.--no-access {
     grid-template-columns: auto 1fr;

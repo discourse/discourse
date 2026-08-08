@@ -6,7 +6,7 @@ RSpec.describe ProblemCheck::TranslationOverrides do
   around { |example| allow_missing_translations(&example) }
 
   describe ".call" do
-    before { Fabricate(:translation_override, status: status) }
+    let!(:translation_override) { Fabricate(:translation_override, status: status) }
 
     context "when there are outdated translation overrides" do
       let(:status) { "outdated" }

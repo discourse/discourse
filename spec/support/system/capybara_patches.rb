@@ -258,7 +258,7 @@ module PlaywrightSoftReset
     private
 
     def soft_reset_enabled?
-      return false if ENV["CAPYBARA_PLAYWRIGHT_SOFT_RESET"] != "1"
+      return false if ENV["CAPYBARA_PLAYWRIGHT_SOFT_RESET"] == "0"
       !(callback_on_save_screenrecord? || @callback_on_save_trace)
     end
   end

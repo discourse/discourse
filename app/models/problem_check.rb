@@ -80,6 +80,7 @@ class ProblemCheck
     ProblemCheck::GroupEmailCredentials,
     ProblemCheck::HostNames,
     ProblemCheck::ImageMagick,
+    ProblemCheck::Landlock,
     ProblemCheck::MissingAwsSnsTopicArn,
     ProblemCheck::MissingMailgunApiKey,
     ProblemCheck::OutOfDateThemes,
@@ -159,6 +160,12 @@ class ProblemCheck
   end
 
   def self.cleanup_trackers
+    # A disabled check never runs, so it can't clear its own trackers/notices.
+    unless enabled?
+      ProblemCheckTracker.where(identifier:).destroy_all
+      return
+    end
+
     current_targets = targets.call
     return if current_targets.empty?
 
@@ -218,13 +225,15 @@ class ProblemCheck
       override_data.merge(
         target.present? ? translation_data(target) : translation_data,
       ).symbolize_keys
+    notice_details = problem_details.merge(details)
+    notice_details[AdminNotice::TRANSLATION_KEY_DETAIL] = override_key if override_key
 
     Problem.new(
       I18n.t(override_key || translation_key, base_path: Discourse.base_path, **problem_details),
       priority: config.priority,
       identifier:,
       target: target_identifier,
-      details: problem_details.merge(details),
+      details: notice_details,
     )
   end
 

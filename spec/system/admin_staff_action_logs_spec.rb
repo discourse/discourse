@@ -19,6 +19,16 @@ describe "Admin staff action logs" do
       custom_type: "update_flag",
     )
   end
+
+  fab!(:history_with_html_value) do
+    Fabricate(
+      :user_history,
+      action: UserHistory.actions[:change_name],
+      previous_value: "Old name",
+      new_value: %(<img src=x onerror="alert('xss')">),
+    )
+  end
+
   let(:staff_action_logs_page) { PageObjects::Pages::AdminStaffActionLogs.new }
 
   before { sign_in(current_user) }
@@ -35,6 +45,16 @@ describe "Admin staff action logs" do
     expect(staff_action_logs_page.log_row(history_2)).to have_content(
       I18n.t("admin_js.admin.logs.staff_actions.actions.topic_closed"),
     ).and have_css("[data-link-topic-id='#{history_2.topic_id}']")
+  end
+
+  it "keeps staff action details as text" do
+    visit "/admin/logs/staff_action_logs"
+
+    expect(staff_action_logs_page).to have_no_injected_detail_element(history_with_html_value)
+    expect(staff_action_logs_page).to have_details_text(
+      history_with_html_value,
+      %(<img src=x onerror="alert('xss')">),
+    )
   end
 
   it "can filter by type of action" do

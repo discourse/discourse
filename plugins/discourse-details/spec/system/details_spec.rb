@@ -7,10 +7,7 @@ describe "Details button" do
   let(:rich) { composer.rich_editor }
 
   context "with rich editor" do
-    before do
-      SiteSetting.rich_editor = true
-      sign_in(admin)
-    end
+    before { sign_in(admin) }
 
     it "uses the text selection for content" do
       visit("/new-topic")

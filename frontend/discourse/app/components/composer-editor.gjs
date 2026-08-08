@@ -126,6 +126,10 @@ export default class ComposerEditor extends Component {
     });
   }
 
+  get composerRedesign() {
+    return this.siteSettings.enable_composer_redesign;
+  }
+
   willDestroyElement() {
     super.willDestroyElement(...arguments);
     this.uppyComposerUpload.teardown();
@@ -149,7 +153,7 @@ export default class ComposerEditor extends Component {
       );
 
       let key;
-      if (this.siteSettings.rich_editor && this.currentUser.useRichEditor) {
+      if (this.currentUser.useRichEditor) {
         key = allowImages
           ? "reply_placeholder_rte"
           : "reply_placeholder_rte_no_images";
@@ -323,7 +327,9 @@ export default class ComposerEditor extends Component {
       this.textManipulation.putCursorAtEnd();
     }
 
-    const destroyComposerPosition = setupComposerPosition(input);
+    const destroyComposerPosition = setupComposerPosition(input, {
+      swipeToCollapse: this.siteSettings.enable_composer_redesign,
+    });
 
     return () => {
       destroyComposerPosition();
@@ -1003,6 +1009,7 @@ export default class ComposerEditor extends Component {
         @onSetup={{this.setupEditor}}
         @disableSubmit={{this.composer.disableSubmit}}
         @toolbarPortalTarget={{this.toolbarPortalTarget}}
+        @renderYieldAboveContainer={{this.composerRedesign}}
         {{didInsert this._composerEditorInitEditor}}
         {{willDestroy this._composerEditorDestroyEditor}}
         {{didInsert this._composerEditorInitPreview}}

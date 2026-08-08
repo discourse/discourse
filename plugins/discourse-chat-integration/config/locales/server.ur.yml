@@ -53,6 +53,8 @@ ur:
     group_message_template: "پیغامات: @%{name} کیلئے"
     provider:
       slack:
+        errors:
+          action_prohibited: "بَوٹ کو اُس چینل پر پوسٹ کرنے کی اجازت نہیں ہے"
         status:
           header: |
             *اِس چینل کیلئے اصول*

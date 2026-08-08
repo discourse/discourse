@@ -7,7 +7,6 @@ function initializeEventBuilder(api) {
   const currentUser = api.getCurrentUser();
   const modal = api.container.lookup("service:modal");
   const composer = api.container.lookup("service:composer");
-  const siteSettings = api.container.lookup("service:site-settings");
 
   api.addComposerToolbarPopupMenuOption({
     action: (toolbarEvent) => {
@@ -28,8 +27,7 @@ function initializeEventBuilder(api) {
       // either the ProseMirror node view (rich-text) or the markdown preview
       // pane. Fall back to the modal when there's no visible surface (preview
       // toggled off, or mobile where it's behind a tap).
-      const richTextMode =
-        siteSettings.rich_editor && currentUser.useRichEditor;
+      const richTextMode = currentUser.useRichEditor;
       if (richTextMode || composer.isPreviewVisible) {
         const params = `start="${start.format("YYYY-MM-DD HH:mm")}" end="${end.format("YYYY-MM-DD HH:mm")}" status="public" timezone="${timezone}" reminders="${reminderToBBCode(reminder)}"`;
         toolbarEvent.addText(`[event ${params}]\n[/event]`);

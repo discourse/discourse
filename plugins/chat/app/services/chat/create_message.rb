@@ -66,7 +66,7 @@ module Chat
     model :channel
     step :enforce_membership
     model :membership
-    policy :allowed_to_create_message_in_channel, class_name: Chat::Channel::Policy::MessageCreation
+    policy :channel_allows_message_creation, class_name: Chat::Channel::Policy::MessageCreation
     model :reply, optional: true
     policy :ensure_reply_consistency
     model :thread, optional: true
@@ -167,7 +167,12 @@ module Chat
         message: params.message,
         uploads: uploads,
         thread: thread,
-        cooked: ::Chat::Message.cook(params.message, user_id: guardian.user.id),
+        cooked:
+          ::Chat::Message.cook(
+            params.message,
+            user_id: guardian.user.id,
+            author_username: guardian.user.username,
+          ),
         cooked_version: ::Chat::Message::BAKED_VERSION,
         streaming: options.streaming,
         blocks: params.blocks,

@@ -44,11 +44,15 @@ ar:
     map_events_to_color: "تعيين لون لكل وسم أو فئة."
     map_events_title: "يستبدل \"الأحداث\" في عنوان الشريط الجانبي \"الأحداث القادمة\" لكل فئة."
     calendar_enabled: "قم بتفعيل المكوِّن الإضافي لتقويم Discourse. سيضيف ذلك دعمًا لعلامة [calendar][/calendar] في أول منشور في الموضوع."
+    discourse_post_event_enabled: "يفعِّل ميزات الحدث. ملاحظة: يحتاج أيضًا إلى {{setting:calendar_enabled}} لتفعيله."
     displayed_invitees_limit: "يحد من أعداد المدعوين المعروضة في حدث."
     display_post_event_date_on_topic_title: "يعرض تاريخ الحدث بعد عنوان الموضوع."
     use_local_event_date: "استخدام التاريخ المحلي بعد عنوان الموضوع بدلًا من الوقت النسبي."
     discourse_post_event_allowed_on_groups: "المجموعات المسموح لها بإنشاء الأحداث."
     discourse_post_event_allowed_custom_fields: "يتيح السماح لكل حدث بتحديد قيمة الحقول المخصَّصة."
+    discourse_post_event_allowed_custom_fields_invalid: "أسماء الحقول المخصصة هذه غير صالحة: %{names}. يجب أن تبدأ الأسماء وتنتهي بحرف أو رقم، وأن تستخدم نقاطًا فردية أو شرطات أو شرطات سفلية كفواصل (على سبيل المثال: dress_code, live-stream, q.and.a)."
+    discourse_post_event_allowed_custom_fields_collision: "تشير أسماء الحقول المخصَّصة هذه إلى الاسم نفسه بعد تطبيع النقاط والشرطات وحالة الأحرف: %{names}. يجب أن يكون كل حقل مخصَّص مميزًا."
+    discourse_post_event_allowed_custom_fields_reserved: "أسماء الحقول المخصَّصة هذه محجوزة من قِبل خيارات الأحداث المدمجة (على سبيل المثال، الاسم، وعنوان URL، والحالة، والموقع): %{names}. يُرجى اختيار أسماء مختلفة."
     discourse_post_event_edit_notifications_time_extension: "يمد (بالدقائق) الفترة بعد نهاية حدث عندما يستمر المدعوون ذوي الحالة `going` في تلقي الإشعارات عند التعديل في المنشور الأصلي."
     holiday_calendar_topic_id: "معرِّف الموضوع لتقويم العطلات/الغياب لفريق العمل"
     holiday_status_emoji: يحدِّد الرمز التعبيري المستخدم في حالة العطلة.
@@ -69,6 +73,9 @@ ar:
     event_participation_buttons: "قائمة أزرار المشاركة في الأحداث التي يمكن للمستخدمين استخدامها."
     sidebar_show_upcoming_events: "عرض رابط الأحداث القادمة في الشريط الجانبي ضمن \"المزيد\"."
     calendar_first_day_of_week: "حدد اليوم الأول من الأسبوع لعرض التقويم. الخيارات المتاحة هي السبت، أو الأحد، أو الاثنين."
+    enable_events_category_type_setup: "تفعيل خيار نوع الفئة \"الأحداث\" خلال إعداد إنشاء الفئة"
+    livestream_embeddable_chat_allowed_paths: "المسارات المسموح بها لدردشة البث المباشر القابلة للتضمين"
+    livestream_enable_modal_chat_on_mobile: "عرض دردشة البث المباشر في نافذة منبثقة على الجوَّال"
   discourse_calendar:
     category_type:
       default_calendar_view:
@@ -83,6 +90,7 @@ ar:
     calendar_must_be_in_first_post: "لا يمكن استخدام علامة التقويم إلا في المنشور الأول في الموضوع."
     more_than_one_calendar: "لا يمكن أن يكون لديك أكثر من تقويم واحد في المنشور."
     more_than_two_dates: "لا يمكن أن يحتوي منشور ضمن موضوع في التقويم على أكثر من تاريخين."
+    whisper_not_allowed: "لا يمكن استخدام الهمسات لإنشاء أحداث التقويم."
     event_expired: "انتهى الحدث"
     holiday_status:
       description: "في عطلة"

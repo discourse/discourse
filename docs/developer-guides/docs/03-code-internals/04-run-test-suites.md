@@ -20,22 +20,29 @@ In general, when working on core tests you should enable "Skip Plugins", and whe
 
 ### Core
 
-Navigate to the root of the Ember application (`app/assets/javascripts/discourse`) in the Discourse repository and make sure you have run `pnpm install` since you last pulled in upstream changes.
-
-From there, you can use standard Ember-CLI tooling to run the tests - check out the ["How to Run Tests" section of the Ember Guides](https://guides.emberjs.com/release/testing/#toc_how-to-run-tests). We also have [Ember Exam](https://ember-cli.github.io/ember-exam/) installed which provides some very useful randomization and parallelisation flags.
+From the root directory of Discourse, use `bin/qunit` (make sure you have run `pnpm install` since you last pulled in upstream changes). It wraps [Ember Exam](https://ember-cli.github.io/ember-exam/) for randomization and parallelisation, and by default runs against the running Rails server and existing JS assets. Run `bin/qunit --help` for the full list of options.
 
 Here are some useful examples:
 
 ```sh
-# Run entire core test suite across 5 'headless' instances of Chrome in parallel:
-pnpm ember exam --parallel 5 --load-balance
+# Run a single test file, or every test in a directory:
+bin/qunit frontend/discourse/tests/integration/components/bookmark-test.gjs
+bin/qunit frontend/discourse/tests/integration/components
 
-# Run all tests which contain a certain string in their module/test name:
-pnpm ember exam --filter "Integration | Component | bookmark"
+# Run the entire core suite across 5 headless Chrome instances in parallel:
+bin/qunit --parallel 5
 
-# Run in "server" mode, which gives you a URL to load in a browser for easier debugging:
-pnpm ember exam --filter "somefilter" --server
+# Run all tests whose "module: test name" contains a substring (case-insensitive):
+bin/qunit --filter "Integration | Component | bookmark"
+
+# Slash-wrap the value to match with a regular expression, e.g. for alternation:
+bin/qunit --filter "/bookmark|reaction/i"
+
+# Spin up an isolated server and run in a visible browser for easier debugging:
+bin/qunit --standalone --no-headless
 ```
+
+> :information_source: `--filter` is forwarded to QUnit: a plain value matches as a case-insensitive substring, while a slash-wrapped value like `/foo/i` matches as a regular expression. Include the `i` flag for case-insensitive regex matching.
 
 ### Plugins
 

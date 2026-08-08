@@ -1,495 +1,132 @@
-import Component from "@glimmer/component";
-import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
-import { not } from "discourse/truth-helpers";
-import DButton from "discourse/ui-kit/d-button";
-import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
-import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
+import DangerSizesExample from "../../examples/atoms/buttons/danger-sizes";
+import dangerSizesSource from "../../examples/atoms/buttons/danger-sizes?source=file";
+import DangerStatesExample from "../../examples/atoms/buttons/danger-states";
+import dangerStatesSource from "../../examples/atoms/buttons/danger-states?source=file";
+import FlatSizesExample from "../../examples/atoms/buttons/flat-sizes";
+import flatSizesSource from "../../examples/atoms/buttons/flat-sizes?source=file";
+import FlatStatesExample from "../../examples/atoms/buttons/flat-states";
+import flatStatesSource from "../../examples/atoms/buttons/flat-states?source=file";
+import IconSizesExample from "../../examples/atoms/buttons/icon-sizes";
+import iconSizesSource from "../../examples/atoms/buttons/icon-sizes?source=file";
+import IconStatesExample from "../../examples/atoms/buttons/icon-states";
+import iconStatesSource from "../../examples/atoms/buttons/icon-states?source=file";
+import IconTextSizesExample from "../../examples/atoms/buttons/icon-text-sizes";
+import iconTextSizesSource from "../../examples/atoms/buttons/icon-text-sizes?source=file";
+import IconTextStatesExample from "../../examples/atoms/buttons/icon-text-states";
+import iconTextStatesSource from "../../examples/atoms/buttons/icon-text-states?source=file";
+import LinkExample from "../../examples/atoms/buttons/link";
+import linkSource from "../../examples/atoms/buttons/link?source=file";
+import PrimarySizesExample from "../../examples/atoms/buttons/primary-sizes";
+import primarySizesSource from "../../examples/atoms/buttons/primary-sizes?source=file";
+import PrimaryStatesExample from "../../examples/atoms/buttons/primary-states";
+import primaryStatesSource from "../../examples/atoms/buttons/primary-states?source=file";
+import TextSizesExample from "../../examples/atoms/buttons/text-sizes";
+import textSizesSource from "../../examples/atoms/buttons/text-sizes?source=file";
+import TextStatesExample from "../../examples/atoms/buttons/text-states";
+import textStatesSource from "../../examples/atoms/buttons/text-states?source=file";
+import ToggleSwitchExample from "../../examples/atoms/buttons/toggle-switch";
+import toggleSwitchSource from "../../examples/atoms/buttons/toggle-switch?source=file";
+import TransparentStatesExample from "../../examples/atoms/buttons/transparent-states";
+import transparentStatesSource from "../../examples/atoms/buttons/transparent-states?source=file";
 
-export default class Buttons extends Component {
-  get btnIconSizesCode() {
-    return `
-import DButton from "discourse/components/d-button";
+export default <template>
+  <StyleguideExample
+    @title="DButton - icon only - sizes (large, default, small)"
+    @code={{iconSizesSource}}
+  >
+    <IconSizesExample />
+  </StyleguideExample>
 
-// Size classes: btn-large, btn-default, btn-small
-<template>
-  <DButton @icon="xmark" @disabled={{false}} class="btn-large" />
-  <DButton @icon="xmark" @disabled={{false}} class="btn-default" />
-  <DButton @icon="xmark" @disabled={{false}} class="btn-small" />
+  <StyleguideExample
+    @title="DButton - icon only - states"
+    @code={{iconStatesSource}}
+  >
+    <IconStatesExample />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="DButton - text only - sizes (large, default, small)"
+    @code={{textSizesSource}}
+  >
+    <TextSizesExample />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="DButton - text only - states"
+    @code={{textStatesSource}}
+  >
+    <TextStatesExample />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="DButton - icon and text - sizes (large, default, small)"
+    @code={{iconTextSizesSource}}
+  >
+    <IconTextSizesExample />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="DButton - icon and text - states"
+    @code={{iconTextStatesSource}}
+  >
+    <IconTextStatesExample />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="DButton - icon and text - sizes"
+    @code={{primarySizesSource}}
+  >
+    <PrimarySizesExample />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="DButton - icon and text - btn-primary - states"
+    @code={{primaryStatesSource}}
+  >
+    <PrimaryStatesExample />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="DButton - icon and text - btn-danger - sizes"
+    @code={{dangerSizesSource}}
+  >
+    <DangerSizesExample />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="DButton - icon and text - btn-danger - states"
+    @code={{dangerStatesSource}}
+  >
+    <DangerStatesExample />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="DButton - btn-flat - icon only - sizes"
+    @code={{flatSizesSource}}
+  >
+    <FlatSizesExample />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="DButton - btn-flat - states"
+    @code={{flatStatesSource}}
+  >
+    <FlatStatesExample />
+  </StyleguideExample>
+
+  <StyleguideExample
+    @title="DButton - btn-transparent - states"
+    @code={{transparentStatesSource}}
+  >
+    <TransparentStatesExample />
+  </StyleguideExample>
+
+  <StyleguideExample @title="DButton - link" @code={{linkSource}}>
+    <LinkExample />
+  </StyleguideExample>
+
+  <StyleguideExample @title="DToggleSwitch" @code={{toggleSwitchSource}}>
+    <ToggleSwitchExample />
+  </StyleguideExample>
 </template>
-    `;
-  }
-
-  get btnIconStatesCode() {
-    return `
-import DButton from "discourse/components/d-button";
-
-// Available states: normal, hover, disabled
-<template>
-  <DButton @icon="xmark" @disabled={{false}} class="btn-default" />
-  <DButton @icon="xmark" @disabled={{false}} class="btn-default btn-hover" />
-  <DButton @icon="xmark" @disabled={{true}} class="btn-default" />
-</template>
-    `;
-  }
-
-  get btnTextSizesCode() {
-    return `
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-
-<template>
-  {{#each @dummy.buttonSizes as |bs|}}
-    <DButton
-      @translatedLabel={{bs.text}}
-      @disabled={{bs.disabled}}
-      class={{concatClass "btn-default" bs.class}}
-    />
-  {{/each}}
-</template>
-    `;
-  }
-
-  get btnTextStatesCode() {
-    return `
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-
-<template>
-  {{#each @dummy.buttonStates as |bs|}}
-    <DButton
-      @translatedLabel={{bs.text}}
-      @disabled={{bs.disabled}}
-      class={{concatClass "btn-default" bs.class}}
-    />
-  {{/each}}
-</template>
-    `;
-  }
-
-  get btnDefaultIconTextSizesCode() {
-    return `
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-
-<template>
-  {{#each @dummy.buttonSizes as |bs|}}
-    <DButton
-      @icon="plus"
-      @translatedLabel={{bs.text}}
-      @disabled={{bs.disabled}}
-      class={{concatClass "btn-default" bs.class}}
-    />
-  {{/each}}
-</template>
-    `;
-  }
-
-  get btnDefaultIconTextStatesCode() {
-    return `
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-
-<template>
-  {{#each @dummy.buttonStates as |bs|}}
-    <DButton
-      @icon="plus"
-      @translatedLabel={{bs.text}}
-      @disabled={{bs.disabled}}
-      class={{concatClass "btn-default" bs.class}}
-    />
-  {{/each}}
-</template>
-    `;
-  }
-
-  get btnPrimaryIconTextSizesCode() {
-    return `
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-
-<template>
-  {{#each @dummy.buttonSizes as |bs|}}
-    <DButton
-      @icon="plus"
-      @translatedLabel={{bs.text}}
-      @disabled={{bs.disabled}}
-      class={{concatClass "btn-primary" bs.class}}
-    />
-  {{/each}}
-</template>
-    `;
-  }
-
-  get btnPrimaryIconTextStatesCode() {
-    return `
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-
-<template>
-  {{#each @dummy.buttonStates as |bs|}}
-    <DButton
-      @icon="plus"
-      @translatedLabel={{bs.text}}
-      @disabled={{bs.disabled}}
-      class={{concatClass "btn-primary" bs.class}}
-    />
-  {{/each}}
-</template>
-    `;
-  }
-
-  get btnDangerIconTextSizesCode() {
-    return `
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-
-<template>
-  {{#each @dummy.buttonSizes as |bs|}}
-    <DButton
-      @icon="trash-can"
-      @translatedLabel={{bs.text}}
-      @disabled={{bs.disabled}}
-      class={{concatClass "btn-danger" bs.class}}
-    />
-  {{/each}}
-</template>
-    `;
-  }
-
-  get btnDangerIconTextStatesCode() {
-    return `
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-
-<template>
-  {{#each @dummy.buttonStates as |bs|}}
-    <DButton
-      @icon="trash-can"
-      @translatedLabel={{bs.text}}
-      @disabled={{bs.disabled}}
-      class={{concatClass "btn-danger" bs.class}}
-    />
-  {{/each}}
-</template>
-    `;
-  }
-
-  get btnFlatSizesCode() {
-    return `
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-
-<template>
-  {{#each @dummy.buttonSizes as |bs|}}
-    <DButton
-      @icon="trash-can"
-      @disabled={{bs.disabled}}
-      @translatedTitle={{bs.title}}
-      class={{concatClass "btn-flat" bs.class}}
-    />
-  {{/each}}
-</template>
-    `;
-  }
-
-  get btnFlatStatesCode() {
-    return `
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-
-<template>
-  {{#each @dummy.buttonStates as |bs|}}
-    <DButton
-      @icon="trash-can"
-      @disabled={{bs.disabled}}
-      @translatedLabel={{bs.text}}
-      class={{concatClass "btn-flat" bs.class}}
-    />
-  {{/each}}
-</template>
-    `;
-  }
-
-  get btnTransparentStatesCode() {
-    return `
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-
-<template>
-  {{#each @dummy.buttonStates as |bs|}}
-    <DButton
-      @icon="trash-can"
-      @disabled={{bs.disabled}}
-      @translatedLabel={{bs.text}}
-      class={{concatClass "btn-transparent" bs.class}}
-    />
-  {{/each}}
-</template>
-    `;
-  }
-
-  get buttonLinkCode() {
-    return `
-import DButton from "discourse/components/d-button";
-
-<template>
-  {{#each @dummy.buttonStates as |bs|}}
-    <DButton
-      @icon="trash-can"
-      @translatedLabel={{bs.text}}
-      @display="link"
-      class={{bs.class}}
-      @disabled={{bs.disabled}}
-    />
-  {{/each}}
-</template>
-    `;
-  }
-
-  get toggleSwitchCode() {
-    return `
-import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
-import { not } from "discourse/truth-helpers";
-
-<template>
-  <DToggleSwitch
-    @state={{@dummy.toggleSwitchState}}
-    {{on
-      "click"
-      (fn (mut @dummy.toggleSwitchState) (not @dummy.toggleSwitchState))
-    }}
-  />
-  <DToggleSwitch
-    disabled="true"
-    @state={{true}}
-    title="Disabled with state=true"
-  />
-  <DToggleSwitch
-    disabled="true"
-    @state={{false}}
-    title="Disabled with state=false"
-  />
-</template>
-    `;
-  }
-
-  <template>
-    {{this.availableSizes}}
-
-    <StyleguideExample
-      @title="DButton - icon only - sizes (large, default, small)"
-      @code={{this.btnIconSizesCode}}
-    >
-      {{#each @dummy.buttonSizes as |bs|}}
-        <DButton
-          @icon="xmark"
-          @translatedTitle={{bs.text}}
-          @disabled={{bs.disabled}}
-          class={{dConcatClass "btn-default" bs.class}}
-        />
-      {{/each}}
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="DButton - icon only - states"
-      @code={{this.btnIconStatesCode}}
-    >
-      {{#each @dummy.buttonStates as |bs|}}
-        <DButton
-          @icon="xmark"
-          @translatedTitle={{bs.text}}
-          @disabled={{bs.disabled}}
-          class={{dConcatClass "btn-default" bs.class}}
-        />
-      {{/each}}
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="DButton - text only - sizes (large, default, small)"
-      @code={{this.btnTextSizesCode}}
-    >
-      {{#each @dummy.buttonSizes as |bs|}}
-        <DButton
-          @translatedLabel={{bs.text}}
-          @disabled={{bs.disabled}}
-          class={{dConcatClass "btn-default" bs.class}}
-        />
-      {{/each}}
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="DButton - text only - states"
-      @code={{this.btnTextStatesCode}}
-    >
-      {{#each @dummy.buttonStates as |bs|}}
-        <DButton
-          @translatedLabel={{bs.text}}
-          @disabled={{bs.disabled}}
-          class={{dConcatClass "btn-default" bs.class}}
-        />
-      {{/each}}
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="DButton - icon and text - sizes (large, default, small)"
-      @code={{this.btnDefaultIconTextSizesCode}}
-    >
-      {{#each @dummy.buttonSizes as |bs|}}
-        <DButton
-          @icon="plus"
-          @translatedLabel={{bs.text}}
-          @disabled={{bs.disabled}}
-          class={{dConcatClass "btn-default" bs.class}}
-        />
-      {{/each}}
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="DButton - icon and text - states"
-      @code={{this.btnDefaultIconTextStatesCode}}
-    >
-      {{#each @dummy.buttonStates as |bs|}}
-        <DButton
-          @icon="plus"
-          @translatedLabel={{bs.text}}
-          @disabled={{bs.disabled}}
-          class={{dConcatClass "btn-default" bs.class}}
-        />
-      {{/each}}
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="DButton - icon and text - sizes"
-      @code={{this.btnPrimaryIconTextSizesCode}}
-    >
-      {{#each @dummy.buttonSizes as |bs|}}
-        <DButton
-          @icon="plus"
-          @translatedLabel={{bs.text}}
-          @disabled={{bs.disabled}}
-          class={{dConcatClass "btn-primary" bs.class}}
-        />
-      {{/each}}
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="DButton - icon and text - btn-primary - states"
-      @code={{this.btnPrimaryIconTextStatesCode}}
-    >
-      {{#each @dummy.buttonStates as |bs|}}
-        <DButton
-          @icon="plus"
-          @translatedLabel={{bs.text}}
-          @disabled={{bs.disabled}}
-          class={{dConcatClass "btn-primary" bs.class}}
-        />
-      {{/each}}
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="DButton - icon and text - btn-danger - sizes"
-      @code={{this.btnDangerIconTextSizesCode}}
-    >
-      {{#each @dummy.buttonSizes as |bs|}}
-        <DButton
-          @icon="trash-can"
-          @translatedLabel={{bs.text}}
-          @disabled={{bs.disabled}}
-          class={{dConcatClass "btn-danger" bs.class}}
-        />
-      {{/each}}
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="DButton - icon and text - btn-danger - states"
-      @code={{this.btnDangerIconTextStatesCode}}
-    >
-      {{#each @dummy.buttonStates as |bs|}}
-        <DButton
-          @icon="trash-can"
-          @translatedLabel={{bs.text}}
-          @disabled={{bs.disabled}}
-          class={{dConcatClass "btn-danger" bs.class}}
-        />
-      {{/each}}
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="DButton - btn-flat - icon only - sizes"
-      @code={{this.btnFlatSizesCode}}
-    >
-      {{#each @dummy.buttonSizes as |bs|}}
-        <DButton
-          @icon="trash-can"
-          @disabled={{bs.disabled}}
-          @translatedTitle={{bs.title}}
-          class={{dConcatClass "btn-flat" bs.class}}
-        />
-      {{/each}}
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="DButton - btn-flat - states"
-      @code={{this.btnFlatStatesCode}}
-    >
-      {{#each @dummy.buttonStates as |bs|}}
-        <DButton
-          @icon="trash-can"
-          @disabled={{bs.disabled}}
-          @translatedLabel={{bs.text}}
-          class={{dConcatClass "btn-flat" bs.class}}
-        />
-      {{/each}}
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="DButton - btn-transparent - states"
-      @code={{this.btnTransparentStatesCode}}
-    >
-      {{#each @dummy.buttonStates as |bs|}}
-        <DButton
-          @icon="trash-can"
-          @disabled={{bs.disabled}}
-          @translatedLabel={{bs.text}}
-          class={{dConcatClass "btn-transparent" bs.class}}
-        />
-      {{/each}}
-    </StyleguideExample>
-
-    <StyleguideExample @title="DButton - link" @code={{this.buttonLinkCode}}>
-      {{#each @dummy.buttonStates as |bs|}}
-        <DButton
-          @icon="trash-can"
-          @translatedLabel={{bs.text}}
-          @display="link"
-          class={{bs.class}}
-          @disabled={{bs.disabled}}
-        />
-      {{/each}}
-    </StyleguideExample>
-
-    <StyleguideExample @title="DToggleSwitch" @code={{this.toggleSwitchCode}}>
-      <DToggleSwitch
-        @state={{@dummy.toggleSwitchState}}
-        {{on
-          "click"
-          (fn (mut @dummy.toggleSwitchState) (not @dummy.toggleSwitchState))
-        }}
-      />
-      <DToggleSwitch
-        disabled="true"
-        @state={{true}}
-        title="Disabled with state=true"
-      />
-      <DToggleSwitch
-        disabled="true"
-        @state={{false}}
-        title="Disabled with state=false"
-      />
-    </StyleguideExample>
-  </template>
-}

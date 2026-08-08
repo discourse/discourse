@@ -66,6 +66,10 @@ module PageObjects
         has_css?(".themes-cards-container > .admin-config-area-card", count: count)
       end
 
+      def has_theme_named?(name)
+        has_css?(".theme-card.#{name.parameterize}")
+      end
+
       def has_install_more_themes_card?
         has_css?(
           ".theme-card.--install-more",
@@ -91,6 +95,10 @@ module PageObjects
 
       def click_edit(theme)
         find_theme_card(theme).find(".edit").click
+      end
+
+      def click_edit_by_name(name)
+        find(".theme-card.#{name.parameterize}").find(".edit").click
       end
 
       def click_install_button

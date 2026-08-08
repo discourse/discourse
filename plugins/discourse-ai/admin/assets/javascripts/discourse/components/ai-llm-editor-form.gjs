@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { concat, fn, get } from "@ember/helper";
+import { fn, get } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { later } from "@ember/runloop";
@@ -22,6 +22,7 @@ import AiLlmAttachmentTypes from "discourse/plugins/discourse-ai/discourse/compo
 import {
   isProviderParamHidden,
   normalizeProviderParams,
+  providerParamLabel,
 } from "discourse/plugins/discourse-ai/discourse/lib/llm-provider-param-helpers";
 import DurationSelector from "./ai-quota-duration-selector";
 import AiSecretSelector from "./ai-secret-selector";
@@ -410,9 +411,7 @@ export default class AiLlmEditorForm extends Component {
               }}
                 <object.Field
                   @name={{name}}
-                  @title={{i18n
-                    (concat "discourse_ai.llms.provider_fields." name)
-                  }}
+                  @title={{i18n (providerParamLabel name params)}}
                   @tooltip={{if params.tooltip (i18n params.tooltip)}}
                   @helpText={{if params.helpText (i18n params.helpText)}}
                   @showTitle={{not (eq params.type "checkbox")}}

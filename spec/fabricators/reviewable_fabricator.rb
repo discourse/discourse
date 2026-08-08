@@ -32,6 +32,29 @@ Fabricator(:reviewable_queued_post_topic, class_name: :reviewable_queued_post) d
   end
 end
 
+Fabricator(:suspect_user_reviewable, class_name: :reviewable_user) do
+  reviewable_by_moderator true
+  created_by { Discourse.system_user }
+  target { Fabricate(:user, approved: false) }
+  payload do |attrs|
+    {
+      "username" => attrs[:target].username,
+      "name" => attrs[:target].name,
+      "email" => attrs[:target].email,
+    }
+  end
+  status { :pending }
+
+  after_create do |reviewable|
+    reviewable.add_score(
+      Discourse.system_user,
+      ReviewableScore.types[:needs_approval],
+      reason: :suspect_user,
+      force_review: true,
+    )
+  end
+end
+
 Fabricator(:reviewable_queued_post) do
   reviewable_by_moderator true
   type "ReviewableQueuedPost"

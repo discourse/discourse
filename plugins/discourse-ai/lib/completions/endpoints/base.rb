@@ -58,6 +58,7 @@ module DiscourseAi
               DiscourseAi::Completions::Endpoints::OpenAi,
               DiscourseAi::Completions::Endpoints::OpenAiResponses,
               DiscourseAi::Completions::Endpoints::HuggingFace,
+              DiscourseAi::Completions::Endpoints::GeminiInteractions,
               DiscourseAi::Completions::Endpoints::Gemini,
               DiscourseAi::Completions::Endpoints::GoogleVertexAi,
               DiscourseAi::Completions::Endpoints::Vllm,

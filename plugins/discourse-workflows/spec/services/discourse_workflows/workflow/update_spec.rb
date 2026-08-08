@@ -28,6 +28,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Update do
       attrs = { workflow_id: workflow.id, name:, error_workflow_id:, nodes:, connections: }
       attrs[:timezone] = timezone unless timezone == :not_provided
       attrs[:static_data] = static_data unless static_data == :not_provided
+      attrs[:tags] = tags unless tags == :not_provided
       attrs
     end
     let(:dependencies) { { guardian: user.guardian } }
@@ -35,6 +36,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Update do
     let(:error_workflow_id) { nil }
     let(:timezone) { :not_provided }
     let(:static_data) { :not_provided }
+    let(:tags) { :not_provided }
     let(:nodes) { [] }
     let(:connections) { {} }
 
@@ -191,6 +193,64 @@ RSpec.describe DiscourseWorkflows::Workflow::Update do
             DiscourseWorkflows::WorkflowVersion.find_by(version_id: active_version_id).name,
           ).to eq(active_version_name)
         end
+      end
+    end
+
+    context "when too many tags are provided" do
+      let(:tags) { (1..11).map { |index| "tag-#{index}" } }
+
+      it { is_expected.to fail_a_contract }
+    end
+
+    context "when a tag contains a comma" do
+      let(:tags) { ["ops,billing"] }
+
+      it { is_expected.to fail_a_contract }
+    end
+
+    context "when tags are provided" do
+      let(:nodes) { nil }
+      let(:connections) { nil }
+      let(:tags) { ["Ops", " billing ", "ops"] }
+
+      it { is_expected.to run_successfully }
+
+      it "assigns the normalized tags without creating a new version" do
+        version_id = workflow.version_id
+
+        expect { result }.not_to change { DiscourseWorkflows::WorkflowVersion.count }
+
+        workflow.reload
+        expect(workflow.tags.map(&:name)).to eq(%w[billing ops])
+        expect(workflow.version_id).to eq(version_id)
+      end
+    end
+
+    context "when tags are cleared" do
+      let(:nodes) { nil }
+      let(:connections) { nil }
+      let(:tags) { [] }
+
+      before { DiscourseWorkflows::WorkflowTag.sync!(workflow:, names: %w[ops]) }
+
+      it "removes the tags and prunes the orphaned tag" do
+        result
+
+        expect(workflow.reload.tags).to be_empty
+        expect(DiscourseWorkflows::WorkflowTag.exists?(name: "ops")).to eq(false)
+      end
+    end
+
+    context "when tags are not provided" do
+      let(:nodes) { nil }
+      let(:connections) { nil }
+
+      before { DiscourseWorkflows::WorkflowTag.sync!(workflow:, names: %w[ops]) }
+
+      it "leaves the existing tags untouched" do
+        result
+
+        expect(workflow.reload.tags.map(&:name)).to eq(%w[ops])
       end
     end
 

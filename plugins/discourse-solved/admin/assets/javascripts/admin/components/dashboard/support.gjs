@@ -1,22 +1,24 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
+import { service } from "@ember/service";
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { durationTiny } from "discourse/lib/formatter";
-import ComboBox from "discourse/select-kit/components/combo-box";
+import Category from "discourse/models/category";
+import MultipleCategoriesSelector from "discourse/select-kit/components/multiple-categories-selector";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import SupportResponseTime from "./support/response-time";
 import SupportTopicOutcomes from "./support/topic-outcomes";
 import SupportWhosAnswering from "./support/whos-answering";
 
-const ALL_CATEGORIES = "all";
+const MAX_CATEGORIES = 10;
 
 const DeltaPill = <template>
   {{#if @delta.hasDelta}}
@@ -31,9 +33,22 @@ const DeltaPill = <template>
 </template>;
 
 export default class SupportSection extends Component {
-  @tracked categoryId = ALL_CATEGORIES;
+  @service currentUser;
+  @service siteSettings;
+  @service toasts;
+
+  @tracked selectedCategories = [];
   @tracked override = null;
   @tracked loading = false;
+
+  constructor() {
+    super(...arguments);
+
+    this.selectedCategories = (this.args.data?.category_ids ?? [])
+      .map((id) => Category.findById(id))
+      .filter(Boolean);
+    this.appliedCategoryIds = this.selectedCategories.map((c) => c.id);
+  }
 
   // The active payload: the category-filtered refetch when present, otherwise
   // the data supplied by the main dashboard request.
@@ -47,14 +62,11 @@ export default class SupportSection extends Component {
     return (this.args.data?.category_options?.length ?? 0) > 1;
   }
 
-  get categoryOptions() {
-    return [
-      {
-        id: ALL_CATEGORIES,
-        name: i18n("admin.dashboard.sections.support.filter.all_categories"),
-      },
-      ...(this.args.data?.category_options ?? []),
-    ];
+  get blockedCategories() {
+    const allowedIds = new Set(
+      (this.args.data?.category_options ?? []).map((option) => option.id)
+    );
+    return Category.list().filter((category) => !allowedIds.has(category.id));
   }
 
   get headline() {
@@ -160,15 +172,122 @@ export default class SupportSection extends Component {
     };
   }
 
+  get appliedCategories() {
+    return (this.data?.category_ids ?? [])
+      .map((id) => Category.findById(id))
+      .filter(Boolean);
+  }
+
+  get categoryFilterTerm() {
+    if (this.appliedCategories.length > 0) {
+      return this.#categoryTerm(this.appliedCategories);
+    }
+
+    if (this.siteSettings.allow_solved_on_all_topics) {
+      return null;
+    }
+
+    const allSupport = (this.args.data?.category_options ?? [])
+      .map((option) => Category.findById(option.id))
+      .filter(Boolean);
+
+    return allSupport.length > 0 ? this.#categoryTerm(allSupport) : null;
+  }
+
+  #categoryTerm(categories) {
+    const slugs = categories.map((category) => Category.slugFor(category, ":"));
+    // `=` restricts to these exact categories, excluding subcategories, to
+    // match the dashboard's own count (accepted answers are opt-in per
+    // category and never inherited by subcategories).
+    return `=category:${slugs.join(",")}`;
+  }
+
+  get dateRangeTerms() {
+    const terms = [];
+    if (this.args.startDate) {
+      terms.push(
+        `created-after:${moment(this.args.startDate).format("YYYY-MM-DD")}`
+      );
+    }
+    if (this.args.endDate) {
+      // `created-before:D` matches created_at <= midnight on D, so pass the
+      // following day to cover all of the selected end date (the dashboard's
+      // own count instead runs through that day's end_of_day).
+      terms.push(
+        `created-before:${moment(this.args.endDate)
+          .add(1, "day")
+          .format("YYYY-MM-DD")}`
+      );
+    }
+    return terms;
+  }
+
+  get outcomeQueries() {
+    const statusTermsByRow = {
+      resolved: ["status:solved"],
+      in_progress: ["status:unsolved", "posts-min:2"],
+      unanswered: ["status:unsolved", "status:noreplies"],
+    };
+
+    return Object.fromEntries(
+      Object.entries(statusTermsByRow).map(([key, statusTerms]) => {
+        const q = [
+          ...statusTerms,
+          ...this.dateRangeTerms,
+          this.categoryFilterTerm,
+        ]
+          .filter(Boolean)
+          .join(" ");
+        return [key, { q }];
+      })
+    );
+  }
+
   @action
-  onCategoryChange(categoryId) {
-    this.categoryId = categoryId;
+  onCategoriesChange(categories) {
+    this.selectedCategories = categories;
+  }
+
+  @action
+  onClose() {
+    const ids = this.selectedCategories.map((c) => c.id);
+    const unchanged =
+      ids.length === this.appliedCategoryIds.length &&
+      ids.every((id) => this.appliedCategoryIds.includes(id));
+
+    if (unchanged) {
+      return;
+    }
+
+    this.appliedCategoryIds = ids;
     this.refetch();
+    this.#persistSelection();
+  }
+
+  #persistSelection() {
+    if (!this.currentUser?.admin) {
+      return;
+    }
+
+    ajax("/admin/dashboard/sections/support/settings/categories.json", {
+      type: "PUT",
+      contentType: "application/json",
+      data: JSON.stringify({
+        category_ids: this.selectedCategories.map((c) => c.id),
+      }),
+    }).catch(() => {
+      this.toasts.error({
+        duration: "short",
+        data: {
+          message: i18n("admin.dashboard.sections.support.save_error"),
+        },
+      });
+    });
   }
 
   @action
   onPeriodChange() {
-    if (this.categoryId === ALL_CATEGORIES) {
+    if (this.selectedCategories.length === 0) {
       this.override = null;
     } else {
       this.refetch();
@@ -185,8 +304,9 @@ export default class SupportSection extends Component {
     if (this.args.endDate) {
       data.end_date = moment(this.args.endDate).format("YYYY-MM-DD");
     }
-    if (this.categoryId !== ALL_CATEGORIES) {
-      data.category_id = this.categoryId;
+    const ids = this.selectedCategories.map((c) => c.id);
+    if (ids.length > 0) {
+      data.category_ids = ids.join(",");
     }
 
     try {
@@ -292,12 +412,12 @@ export default class SupportSection extends Component {
 
         {{#if this.showFilter}}
           <div class="db-support__filter">
-            <ComboBox
-              @content={{this.categoryOptions}}
-              @value={{this.categoryId}}
-              @onChange={{this.onCategoryChange}}
-              @valueProperty="id"
-              @nameProperty="name"
+            <MultipleCategoriesSelector
+              @categories={{this.selectedCategories}}
+              @blockedCategories={{this.blockedCategories}}
+              @onChange={{this.onCategoriesChange}}
+              @onClose={{this.onClose}}
+              @options={{hash maximum=MAX_CATEGORIES none="category.all"}}
             />
           </div>
         {{/if}}
@@ -305,7 +425,10 @@ export default class SupportSection extends Component {
         <div class="db-section__row-group">
           <div class="db-section__row">
             <div class="db-section__row-block db-support-outcomes">
-              <SupportTopicOutcomes @outcomes={{this.data.topic_outcomes}} />
+              <SupportTopicOutcomes
+                @outcomes={{this.data.topic_outcomes}}
+                @queries={{this.outcomeQueries}}
+              />
 
             </div>
             <div class="db-section__row-block db-support-response">

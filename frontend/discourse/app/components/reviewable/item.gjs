@@ -31,6 +31,7 @@ import { clipboardCopy } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import { PENDING } from "discourse/models/reviewable";
+import { CLAIMED, UNCLAIMED } from "discourse/models/reviewable-history";
 import Topic from "discourse/models/topic";
 import { eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
@@ -128,15 +129,6 @@ export default class ReviewableItem extends Component {
       this.activeTab = "timeline";
       this.insightsOpened = false;
     }
-  }
-
-  @computed("reviewable.claimed_by.automatic")
-  get autoClaimed() {
-    return this.reviewable?.claimed_by?.automatic;
-  }
-
-  set autoClaimed(value) {
-    set(this, "reviewable.claimed_by.automatic", value);
   }
 
   @computed(
@@ -257,27 +249,6 @@ export default class ReviewableItem extends Component {
     return this.siteSettings?.reviewable_claiming !== "required";
   }
 
-  @computed("siteSettings.reviewable_claiming", "reviewable.claimed_by")
-  get claimHelp() {
-    if (this.reviewable?.claimed_by) {
-      if (this.reviewable?.claimed_by?.user.id === this.currentUser.id) {
-        return i18n("review.claim_help.claimed_by_you");
-      } else if (this.reviewable?.claimed_by?.automatic) {
-        return i18n("review.claim_help.automatically_claimed_by", {
-          username: this.reviewable?.claimed_by?.user.username,
-        });
-      } else {
-        return i18n("review.claim_help.claimed_by_other", {
-          username: this.reviewable?.claimed_by?.user.username,
-        });
-      }
-    }
-
-    return this.siteSettings?.reviewable_claiming === "optional"
-      ? i18n("review.claim_help.optional")
-      : i18n("review.claim_help.required");
-  }
-
   // Find a component to render, if one exists. For example:
   // `ReviewableUser` will return `reviewable/user` or `reviewable-user`.
   // The former is the new reviewable component, so will only be returned if it exists.
@@ -370,30 +341,25 @@ export default class ReviewableItem extends Component {
       return;
     }
 
-    const now = new Date().toISOString();
-
     const user = this.store.createRecord("user", data.user);
-    if (data.claimed) {
-      this.reviewable.set("claimed_by", { user, automatic: data.automatic });
-      this.reviewable.set("reviewable_histories", [
-        ...this.reviewable.reviewable_histories,
-        {
-          reviewable_history_type: 3,
-          created_at: now,
-          created_by: user,
-        },
-      ]);
-    } else {
-      this.reviewable.set("claimed_by", null);
-      this.reviewable.set("reviewable_histories", [
-        ...this.reviewable.reviewable_histories,
-        {
-          reviewable_history_type: 4,
-          created_at: now,
-          created_by: user,
-        },
-      ]);
+
+    this.reviewable.set(
+      "claimed_by",
+      data.claimed ? { user, automatic: data.automatic } : null
+    );
+
+    if (data.automatic || this.reviewable.status !== PENDING) {
+      return;
     }
+
+    this.reviewable.set("reviewable_histories", [
+      ...this.reviewable.reviewable_histories,
+      {
+        reviewable_history_type: data.claimed ? CLAIMED : UNCLAIMED,
+        created_at: new Date().toISOString(),
+        created_by: user,
+      },
+    ]);
   }
 
   @bind
@@ -441,28 +407,31 @@ export default class ReviewableItem extends Component {
             reviewable
           )
         )
-        .catch(popupAjaxError)
         .finally(() => {
           this.set("updating", false);
           this.disabled = false;
         });
     };
 
-    if (performableAction.client_action) {
-      let actionMethod =
-        this[`client${classify(performableAction.client_action)}`];
-      if (actionMethod) {
-        if (await this.#claimReviewable()) {
-          await actionMethod.call(this, reviewable, performAction);
+    try {
+      if (performableAction.client_action) {
+        let actionMethod =
+          this[`client${classify(performableAction.client_action)}`];
+        if (actionMethod) {
+          if (await this.#claimReviewable()) {
+            await actionMethod.call(this, reviewable, performAction);
+          }
+        } else {
+          // eslint-disable-next-line no-console
+          console.error(
+            `No handler for ${performableAction.client_action} found`
+          );
         }
       } else {
-        // eslint-disable-next-line no-console
-        console.error(
-          `No handler for ${performableAction.client_action} found`
-        );
+        await performAction();
       }
-    } else {
-      await performAction();
+    } catch (error) {
+      popupAjaxError(error);
     }
 
     return this.#unclaimAutomaticReviewable();
@@ -561,7 +530,7 @@ export default class ReviewableItem extends Component {
     if (adminTools) {
       let createdBy = reviewable.get("target_created_by");
       let postId = reviewable.get("post_id");
-      let postEdit = reviewable.get("raw");
+      let postEdit = reviewable.get("raw") ?? reviewable.get("payload.raw");
 
       return adminTools[adminToolMethod](createdBy, {
         postId,

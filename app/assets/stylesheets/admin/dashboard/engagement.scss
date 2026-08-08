@@ -1,7 +1,26 @@
+@use "lib/container";
+
 .db-activity {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  container-type: inline-size;
+  container-name: db-activity;
+
+  .db-section__row-block-header {
+    align-items: center;
+    gap: var(--space-2);
+
+    @include container.until(sm, db-activity) {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .select-kit.multi-select.multiple-categories-selector {
+        max-width: none;
+        width: 100%;
+      }
+    }
+  }
 
   th,
   td {
@@ -94,7 +113,10 @@
   container-name: db-whos-posting;
 
   .db-section__row-block-header {
-    @container db-whos-posting (width < 22rem) {
+    align-items: center;
+    gap: var(--space-2);
+
+    @include container.until(sm, db-whos-posting) {
       flex-direction: column;
       align-items: flex-start;
     }
@@ -108,22 +130,15 @@
     flex-grow: 1;
     min-width: 0;
 
-    @container db-whos-posting (width < 22rem) {
+    @include container.until(sm, db-whos-posting) {
       width: 100%;
+      align-items: flex-start;
 
-      .select-kit.combo-box.category-chooser {
+      .select-kit.multi-select.multiple-categories-selector {
         max-width: none;
+        width: 100%;
       }
     }
-  }
-
-  &__subcategories {
-    display: flex;
-    align-items: center;
-    gap: var(--space-1);
-    font-size: var(--font-down-1-rem);
-    color: var(--primary-medium);
-    cursor: pointer;
   }
 
   &__bars {
@@ -272,13 +287,5 @@
     &.--demoted {
       background: var(--danger);
     }
-  }
-}
-
-.db-whos-posting,
-.db-activity {
-  .db-section__row-block-header {
-    align-items: center;
-    gap: var(--space-2);
   }
 }

@@ -47,3 +47,6 @@ ru:
           group_name: "Событие голосования по теме"
           topic_upvote: "Когда пользователь голосует за тему"
           topic_unvote: "Когда пользователь отменяет голосование по теме"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Теги"

@@ -222,31 +222,6 @@ basic:
     client: true
     default: false
     area: "localization"
-  allow_user_locale:
-    client: true
-    default: true
-    area: "localization"
-  set_locale_from_accept_language_header:
-    default: false
-    client: true
-    validator: "AllowUserLocaleEnabledValidator"
-    area: "localization"
-    depends_on:
-      - "allow_user_locale"
-  set_locale_from_cookie:
-    default: false
-    client: true
-    validator: "AllowUserLocaleEnabledValidator"
-    area: "localization"
-    depends_on:
-      - "allow_user_locale"
-  set_locale_from_param:
-    default: false
-    client: true
-    validator: "AllowUserLocaleEnabledValidator"
-    area: "localization"
-    depends_on:
-      - "allow_user_locale"
   support_mixed_text_direction:
     client: true
     default: false
@@ -315,6 +290,13 @@ basic:
     upcoming_change_default_override:
       upcoming_change: "enable_unified_new"
       new_default: "latest|new|hot|categories"
+  default_homepage:
+    client: true
+    refresh: true
+    type: enum
+    default: ""
+    enum: "HomepageSiteSetting"
+    area: "interface"
   custom_homepage_crawler_route:
     type: enum
     default: "latest"
@@ -646,11 +628,14 @@ basic:
     max: 86400
     hidden: true
     client: true
-  experimental_detect_crawler_pageviews:
-    default: false
-    hidden: true
   crawler_automation_user_agents:
     default: "HeadlessChrome|Playwright|Puppeteer|Selenium|PhantomJS|jsdom"
+    hidden: true
+  crawler_stale_chromium_major_version_cutoff:
+    default: 138
+    type: integer
+    min: 1
+    max: 999
     hidden: true
   interface_color_selector:
     client: true
@@ -711,6 +696,7 @@ login:
       status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/407068"
+      permanent_warning: false
       allow_enabled_for:
         - everyone
   enable_passkeys:
@@ -973,6 +959,9 @@ login:
     min: -1
     default: 480
     area: "login"
+    upcoming_change_default_override:
+      upcoming_change: "update_pending_users_reminder_default"
+      new_default: 30
   persistent_sessions:
     default: true
     area: "login"
@@ -1405,7 +1394,7 @@ posting:
     client: true
     hidden: true
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "other,all_members"
       allow_enabled_for:
         - everyone
@@ -1413,12 +1402,17 @@ posting:
         - allow_uncategorized_topics
         - suppress_uncategorized_badge
       learn_more_url: "https://meta.discourse.org/t/-/406373"
+  duplicate_topic_titles:
+    default: "disallowed"
+    type: enum
+    enum: "DuplicateTopicTitlesSiteSetting"
+    area: "posts_and_topics"
   allow_duplicate_topic_titles:
     default: false
-    area: "posts_and_topics"
+    hidden: true
   allow_duplicate_topic_titles_category:
     default: false
-    area: "posts_and_topics"
+    hidden: true
   min_title_similar_length:
     client: true
     default: 10
@@ -1695,6 +1689,15 @@ posting:
     client: true
     refresh: true
     area: "emojis"
+  emoji_picker_pinned_groups:
+    type: list
+    list_type: simple
+    allow_any: true
+    default: ""
+    client: true
+    refresh: true
+    validator: "EmojiPickerPinnedGroupsValidator"
+    area: "emojis"
   enable_gifs:
     default: false
     client: true
@@ -1902,17 +1905,35 @@ posting:
     type: integer
     min: 1
     hidden: true
-  rich_editor:
-    client: true
-    default: true
-    hidden: true
-    area: "posts_and_topics"
 
 content_localization:
+  allow_user_locale:
+    client: true
+    default: true
+    area: "localization"
   content_localization_enabled:
     client: true
     default: false
     area: "localization"
+  content_localization_supported_locales:
+    default: ""
+    type: list
+    client: true
+    list_type: locale
+    allow_any: false
+    enum: "LocaleSiteSetting"
+    area: "localization"
+    validator: "ContentLocalizationLocalesValidator"
+  content_localization_language_switcher:
+    type: enum
+    choices:
+      - none
+      - anonymous
+      - all
+    default: none
+    client: true
+    area: "localization"
+    validator: "LanguageSwitcherSettingValidator"
   content_localization_allowed_groups:
     type: group_list
     list_type: compact
@@ -1925,29 +1946,10 @@ content_localization:
     default: true
     client: true
     area: "localization"
-  content_localization_supported_locales:
-    default: ""
-    type: list
-    client: true
-    list_type: locale
-    allow_any: false
-    enum: "LocaleSiteSetting"
-    area: "localization"
-    validator: "ContentLocalizationLocalesValidator"
   content_localization_max_locales:
     default: 10
     type: integer
     hidden: true
-  content_localization_language_switcher:
-    type: enum
-    choices:
-      - none
-      - anonymous
-      - all
-    default: none
-    client: true
-    area: "localization"
-    validator: "LanguageSwitcherSettingValidator"
   content_localization_crawler_param:
     default: false
     area: "localization"
@@ -1955,6 +1957,27 @@ content_localization:
   content_localization_use_default_locale_when_unsupported:
     default: true
     area: "localization"
+  set_locale_from_accept_language_header:
+    default: false
+    client: true
+    validator: "AllowUserLocaleEnabledValidator"
+    area: "localization"
+    depends_on:
+      - "allow_user_locale"
+  set_locale_from_cookie:
+    default: false
+    client: true
+    validator: "AllowUserLocaleEnabledValidator"
+    area: "localization"
+    depends_on:
+      - "allow_user_locale"
+  set_locale_from_param:
+    default: false
+    client: true
+    validator: "AllowUserLocaleEnabledValidator"
+    area: "localization"
+    depends_on:
+      - "allow_user_locale"
 
 nested_replies:
   nested_replies_enabled:
@@ -3078,6 +3101,9 @@ security:
   moderators_view_ips:
     default: true
     client: true
+  moderators_view_sso_details:
+    default: false
+    client: true
   moderators_change_trust_levels:
     default: true
   non_crawler_user_agents:
@@ -3098,15 +3124,23 @@ security:
   crawler_check_bypass_agents:
     hidden: true
     default: "cubot|MetaIAB"
-  # 16509/14618=AWS, 396982=Google Cloud, 15169/36040=Google, 8075=Microsoft,
-  # 714=Apple, 13238=Yandex, 32934=Meta, 13335=Cloudflare,
-  # 140577=Ahrefs, 210743=Babbar, 7941=Internet Archive,
-  # 16276=OVH, 24940=Hetzner, 136907=Huawei Cloud, 51747=Internet Vikings,
-  # 4134/4837=China Telecom/Unicom, 5089=Virgin, 55836=Reliance Jio,
-  # 5410=Bouygues, 701=Verizon, 6805=Telefonica, 45899=VNPT
+  # 38365/55967=Baidu, 140577=Ahrefs, 210743=Babbar, 7941=Internet Archive,
+  # 13238=Yandex
   crawler_asns:
     hidden: true
-    default: "16509|16276|714|13238|14618|136907|32934|15169|4134|4837|24940|396982|8075|51747|140577|45899|210743|13335|36040|5089|55836|5410|701|7941|6805"
+    default: "38365|55967|140577|210743|7941|13238"
+    type: list
+    list_type: compact
+  # 16509/14618=AWS, 16276=OVH, 136907/55990=Huawei Cloud,
+  # 24940=Hetzner, 396982=Google Cloud, 8075=Microsoft, 51747=Internet Vikings,
+  # 13335=Cloudflare, 45090=Tencent Cloud, 23724=China Telecom IDC,
+  # 37963=Alibaba Cloud, 55960=Sinnet, 203020=HostRoyale,
+  # 63835=China Telecom Changsha IDC, 58540=China Telecom Jinan IDC,
+  # 58541=China Telecom Qingdao IDC, 58563=China Telecom Hubei IDC,
+  # 58461=China Telecom Hangzhou IDC
+  crawler_detection_datacenter_asns:
+    hidden: true
+    default: "16509|16276|14618|136907|24940|396982|8075|51747|13335|45090|55990|23724|37963|55960|203020|63835|58540|58541|58563|58461"
     type: list
     list_type: compact
   cors_origins:
@@ -3214,6 +3248,7 @@ security:
     area: "group_permissions"
   cache_control_bfcache_compatibility:
     default: false
+    client: true
     hidden: true
 
 onebox:
@@ -4295,9 +4330,6 @@ user_preferences:
   default_other_enable_quoting:
     default: true
     area: "user_defaults"
-  default_other_enable_defer:
-    default: false
-    area: "user_defaults"
   default_other_enable_smart_lists:
     default: true
     area: "user_defaults"
@@ -4499,7 +4531,7 @@ tags:
     area: "categories_and_tags"
   create_tag_allowed_groups:
     default: "1|2|13" # auto group admins, moderators, trust_level_3
-    mandatory_values: "1|2" # auto group admins, moderators
+    mandatory_values: "1" # auto group admins
     type: group_list
     allow_any: false
     refresh: true
@@ -4652,7 +4684,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/389820"
   enable_composer_redesign:
@@ -4661,7 +4693,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "conceptual"
+      status: "experimental"
       impact: "other,all_members"
       body_class: true
       learn_more_url: "https://meta.discourse.org/t/-/407849"
@@ -4671,7 +4703,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403635"
   prioritize_recently_used_tags:
@@ -4703,7 +4735,7 @@ experimental:
     client: true
     refresh: true
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/404728"
   enable_rich_text_paste:
@@ -4789,9 +4821,18 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,admins"
       learn_more_url: "https://meta.discourse.org/t/-/404528"
+  improved_crawler_detection:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "conceptual"
+      impact: "other,all_members"
+      allow_enabled_for:
+        - everyone
   admin_dashboard_reports_seeded:
     default: false
     hidden: true
@@ -4800,6 +4841,17 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "experimental"
+      status: "beta"
       impact: "feature,admins"
       learn_more_url: "https://meta.discourse.org/t/-/407727"
+  update_pending_users_reminder_default:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "site_setting_default,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/408429"
+      permanent_warning: false
+      allow_enabled_for:
+        - everyone

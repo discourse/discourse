@@ -94,6 +94,8 @@ export default class ChangeOwnerModal extends Component {
           @options={{hash
             maximum=1
             filterPlaceholder="topic.change_owner.placeholder"
+            filterIcon="magnifying-glass"
+            useHeaderFilter=true
           }}
         />
       </:body>

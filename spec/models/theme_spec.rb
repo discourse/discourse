@@ -520,8 +520,6 @@ RSpec.describe Theme do
     expect(messages.first.data.map { |d| d[:target] }).to contain_exactly(
       :common,
       :admin,
-      :desktop,
-      :mobile,
       :common_theme,
     )
   end
@@ -663,6 +661,24 @@ RSpec.describe Theme do
       translations = theme.internal_translations
       expect(translations.map(&:key)).to contain_exactly("theme_metadata.description")
       expect(translations.map(&:value)).to contain_exactly("Description of my theme")
+    end
+
+    it "exposes the theme_metadata.description translation as the description" do
+      expect(theme.description).to be_nil
+
+      ThemeField.create!(
+        theme_id: theme.id,
+        name: "en",
+        type_id: ThemeField.types[:yaml],
+        target_id: Theme.targets[:translations],
+        value: <<~YAML,
+        en:
+          theme_metadata:
+            description: "Description of my theme"
+      YAML
+      )
+
+      expect(Theme.find(theme.id).description).to eq("Description of my theme")
     end
 
     it "can create a hash of overridden values" do

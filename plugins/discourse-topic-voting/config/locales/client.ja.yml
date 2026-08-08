@@ -37,3 +37,6 @@ ja:
           group_name: "トピック投票イベント"
           topic_upvote: "ユーザーがトピックに投票するとき"
           topic_unvote: "ユーザーがトピックへの投票を取り消すとき"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "タグ"

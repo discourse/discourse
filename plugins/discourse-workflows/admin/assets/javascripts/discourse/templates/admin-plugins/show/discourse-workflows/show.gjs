@@ -8,6 +8,7 @@ import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import DNavItem from "discourse/ui-kit/d-nav-item";
 import WorkflowEditableTitle from "discourse/plugins/discourse-workflows/admin/components/workflows/editable-title";
 import Stats from "discourse/plugins/discourse-workflows/admin/components/workflows/stats";
+import WorkflowTagsEditor from "discourse/plugins/discourse-workflows/admin/components/workflows/tags-editor";
 
 class WorkflowShowPage extends Component {
   get workflow() {
@@ -40,10 +41,14 @@ class WorkflowShowPage extends Component {
 
     <div class="admin-config-page__main-area">
       <div class="workflows-header">
-        <WorkflowEditableTitle
-          @value={{this.workflow.name}}
-          @onSave={{this.updateName}}
-        />
+        <div class="workflows-header__title-area">
+          <WorkflowEditableTitle
+            @value={{this.workflow.name}}
+            @onSave={{this.updateName}}
+          />
+
+          <WorkflowTagsEditor @workflow={{this.workflow}} />
+        </div>
 
         <Stats @stats={{this.stats}} />
       </div>

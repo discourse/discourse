@@ -99,6 +99,10 @@ describe TopicViewSerializer do
     fab!(:reaction_user_heart_ignored) do
       Fabricate(:reaction_user, reaction: heart, user: another_ignored)
     end
+    fab!(:ignored_user_record) { Fabricate(:ignored_user, user: viewer, ignored_user: ignored) }
+    fab!(:another_ignored_user_record) do
+      Fabricate(:ignored_user, user: viewer, ignored_user: another_ignored)
+    end
     fab!(:like_other_post_2) do
       Fabricate(
         :post_action,
@@ -117,34 +121,27 @@ describe TopicViewSerializer do
     end
 
     let(:topic) { post_1.topic }
-
-    before do
-      SiteSetting.discourse_reactions_like_icon = "heart"
-      SiteSetting.discourse_reactions_enabled_reactions = "otter|heart"
-      Fabricate(:ignored_user, user: viewer, ignored_user: ignored)
-      Fabricate(:ignored_user, user: viewer, ignored_user: another_ignored)
-    end
-
-    def serialize_for(user)
-      TopicViewSerializer.new(
-        TopicView.new(topic, user),
-        scope: Guardian.new(user),
+    let(:serialized_topic_view) do
+      described_class.new(
+        TopicView.new(topic, viewer),
+        scope: Guardian.new(viewer),
         root: false,
       ).as_json
     end
 
-    it "excludes ignored users from preloaded :reactions" do
-      json = serialize_for(viewer)
+    before do
+      SiteSetting.discourse_reactions_like_icon = "heart"
+      SiteSetting.discourse_reactions_enabled_reactions = "otter|heart"
+    end
 
-      posts = json[:post_stream][:posts]
+    it "excludes ignored users from preloaded :reactions" do
+      posts = serialized_topic_view[:post_stream][:posts]
       expect(posts[0][:reactions]).to contain_exactly({ id: "otter", type: :emoji, count: 1 })
       expect(posts[1][:reactions]).to contain_exactly({ id: "heart", type: :emoji, count: 1 })
     end
 
     it "excludes ignored users from preloaded :reaction_users_count" do
-      json = serialize_for(viewer)
-
-      posts = json[:post_stream][:posts]
+      posts = serialized_topic_view[:post_stream][:posts]
       expect(posts[0][:reaction_users_count]).to eq(1)
       expect(posts[1][:reaction_users_count]).to eq(1)
     end
@@ -162,7 +159,12 @@ describe TopicViewSerializer do
     end
 
     it "still shows global counts for viewers with no ignored users" do
-      json = serialize_for(other_user)
+      json =
+        described_class.new(
+          TopicView.new(topic, other_user),
+          scope: Guardian.new(other_user),
+          root: false,
+        ).as_json
 
       posts = json[:post_stream][:posts]
       expect(posts[0][:reactions]).to contain_exactly(

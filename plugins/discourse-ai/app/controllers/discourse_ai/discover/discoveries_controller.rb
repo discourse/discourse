@@ -7,7 +7,7 @@ module DiscourseAi
 
       requires_plugin PLUGIN_NAME
       requires_login
-      before_action :check_permissions
+      before_action :check_permissions!
 
       def reply
         if ai_discover_agent.default_llm_id.blank? && SiteSetting.ai_default_llm_model.blank?
@@ -69,12 +69,13 @@ module DiscourseAi
         @discover_agent ||= AiAgent.find_by_id_from_cache(SiteSetting.ai_discover_agent)
       end
 
-      def check_permissions
-        if ai_discover_agent.nil? || current_user.nil? ||
-             !current_user.in_any_groups?(ai_discover_agent.allowed_group_ids.to_a)
-          raise Discourse::InvalidAccess.new
+      def check_permissions!
+        raise Discourse::InvalidAccess if !SiteSetting.ai_discover_enabled
+        raise Discourse::InvalidAccess if ai_discover_agent.nil?
+        raise Discourse::InvalidAccess if current_user.nil?
+        if !current_user.in_any_groups?(ai_discover_agent.allowed_group_ids.to_a)
+          raise Discourse::InvalidAccess
         end
-
         raise Discourse::InvalidAccess if guardian.is_silenced?
       end
     end

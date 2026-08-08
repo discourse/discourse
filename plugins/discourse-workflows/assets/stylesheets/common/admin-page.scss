@@ -13,6 +13,14 @@
   justify-content: space-between;
   margin-bottom: 0.5em;
   gap: 1em;
+
+  &__title-area {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-1);
+    min-width: 0;
+  }
 }
 
 .workflows-editable-title {

@@ -287,6 +287,25 @@ class LlmModel < ActiveRecord::Base
       mistral: {
         disable_native_tools: :checkbox,
       },
+      gemini_interactions: {
+        disable_native_tools: :checkbox,
+        thinking_level: {
+          type: :enum,
+          values: %w[default minimal low medium high],
+          default: "default",
+          label: "discourse_ai.llms.provider_fields.gemini_interactions_thinking_level",
+        },
+        disable_temperature: {
+          type: :checkbox,
+          hidden_if: :thinking_level,
+        },
+        disable_top_p: :checkbox,
+        service_tier: {
+          type: :enum,
+          values: %w[default standard flex priority],
+          default: "default",
+        },
+      },
       google: {
         disable_native_tools: :checkbox,
         enable_thinking: :checkbox,

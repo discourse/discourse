@@ -444,6 +444,46 @@ helloWorld();</code>consectetur.`;
     assert.false(markdown.includes("old removed phrase"));
   });
 
+  test("drops the lang spans a publishing tool wraps each sentence in", async function (assert) {
+    const html = `<p><span class="sentence" lang="en">So I have heard.</span> <span class="sentence" lang="en">At one time.</span></p>`;
+
+    assert.strictEqual(
+      await toMarkdown(html),
+      "So I have heard. At one time.",
+      "removes generated lang spans"
+    );
+  });
+
+  test("keeps the space a dropped lang span held at its edge", async function (assert) {
+    const html = `<p><span class="sentence" lang="en">So I have heard. </span><span class="sentence" lang="en">At one time.</span></p>`;
+
+    assert.strictEqual(
+      await toMarkdown(html),
+      "So I have heard. At one time.",
+      "sentences stay separated"
+    );
+  });
+
+  test("drops an authored lang span too, arriving as HTML (accepted)", async function (assert) {
+    const html = `<p>He said <span lang="ja">日本語</span> loudly.</p>`;
+
+    assert.strictEqual(
+      await toMarkdown(html),
+      "He said 日本語 loudly.",
+      "only markdown carries lang into the composer"
+    );
+  });
+
+  test("keeps the markup a dropped lang span wrapped", async function (assert) {
+    const html = `<p><span lang="en">A <b>bold</b> <mark>marked</mark> <ruby lang="ja">漢<rt>かん</rt></ruby> line.</span></p>`;
+
+    assert.strictEqual(
+      await toMarkdown(html),
+      'A **bold** <mark>marked</mark> <ruby lang="ja">漢<rt>かん</rt></ruby> line.',
+      "preserves nested markup"
+    );
+  });
+
   test("drops the document-language spans Word for the web stamps on runs", async function (assert) {
     const html = `<div class="OutlineElement"><p class="Paragraph">
       <span class="TextRun" lang="EN-GB"><span class="NormalTextRun" lang="EN-GB">Note:</span></span>

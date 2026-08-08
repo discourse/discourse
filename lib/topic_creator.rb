@@ -156,7 +156,7 @@ class TopicCreator
       visible: @opts[:visible],
     }
 
-    %i[subtype archetype import_mode advance_draft locale].each do |key|
+    %i[subtype import_mode advance_draft locale].each do |key|
       topic_params[key] = @opts[key] if @opts[key].present?
     end
 
@@ -184,6 +184,15 @@ class TopicCreator
     topic_params[:pinned_globally] = @opts[:pinned_globally] if @opts[:pinned_globally].present?
     topic_params[:external_id] = @opts[:external_id] if @opts[:external_id].present?
     topic_params[:featured_link] = @opts[:featured_link]
+
+    if @opts[:archetype].present?
+      topic = Topic.new(topic_params)
+
+      if @opts[:archetype] == Archetype.private_message ||
+           @guardian.can_change_archetype?(topic, @opts[:archetype])
+        topic_params[:archetype] = @opts[:archetype]
+      end
+    end
 
     topic_params
   end
@@ -322,6 +331,8 @@ class TopicCreator
         display_name = email.split("@").first
 
         if user = find_or_create_user(email, display_name)
+          check_can_send_permission!(topic, user)
+
           if !@added_users.include?(user)
             @added_users << user
             topic.topic_allowed_users.build(user_id: user.id)
@@ -330,7 +341,7 @@ class TopicCreator
         end
       end
     ensure
-      rollback_with!(topic, :target_user_not_found) unless len == emails.length
+      rollback_with!(topic, :target_user_not_found) if topic.errors.blank? && len != emails.length
     end
   end
 

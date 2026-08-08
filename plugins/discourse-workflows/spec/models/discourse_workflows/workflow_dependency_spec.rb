@@ -7,11 +7,6 @@ RSpec.describe DiscourseWorkflows::WorkflowDependency do
   before { described_class.clear_cache! }
   after { described_class.clear_cache! }
 
-  def index(workflow)
-    version = workflow.workflow_versions.find_by(version_id: workflow.version_id)
-    DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow, version: version)
-  end
-
   describe ".active_node_types" do
     it "returns the node types referenced by the active version of a published workflow" do
       graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:topic_closed" }
@@ -44,7 +39,8 @@ RSpec.describe DiscourseWorkflows::WorkflowDependency do
           g.chain "t1", "m1"
         end
       workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
-      index(workflow)
+      version = workflow.workflow_versions.find_by(version_id: workflow.version_id)
+      DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow, version:)
 
       expect(described_class.cached_user_modals?).to eq(true)
     end
@@ -57,7 +53,8 @@ RSpec.describe DiscourseWorkflows::WorkflowDependency do
           g.chain "t1", "a1"
         end
       workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
-      index(workflow)
+      version = workflow.workflow_versions.find_by(version_id: workflow.version_id)
+      DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow, version:)
 
       expect(described_class.cached_user_modals?).to eq(false)
     end

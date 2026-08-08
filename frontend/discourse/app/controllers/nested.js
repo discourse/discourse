@@ -630,7 +630,7 @@ export default class NestedController extends Controller {
   @action
   showActivityLog() {
     this.modal.show(NestedActivityLog, {
-      model: { topic: this.topic },
+      model: { topic: this.topic, editPost: this.editPost },
     });
   }
 
@@ -787,7 +787,15 @@ export default class NestedController extends Controller {
     const topicId = this.topic?.id;
     try {
       const postData = await ajax(`/posts/${data.id}.json`);
-      if (this.topic?.id !== topicId) {
+      if (
+        this.topic?.id !== topicId ||
+        !this.#postBelongsToTopic(postData, topicId)
+      ) {
+        return;
+      }
+
+      if (this.#isActivityLogPost(postData)) {
+        this.#notifyActivityChanged(data);
         return;
       }
 
@@ -829,14 +837,33 @@ export default class NestedController extends Controller {
   // small_action posts (close/open/etc.) belong in the activity log, not the tree;
   // whispers with an action_code (e.g. assigns) are likewise activity-log-only.
   #isVisibleInTree(postData) {
+    return !this.#isActivityLogPost(postData);
+  }
+
+  #isActivityLogPost(postData) {
     const postTypes = this.site.post_types;
     if (postData.post_type === postTypes.small_action) {
-      return false;
+      return true;
     }
     if (postData.post_type === postTypes.whisper && postData.action_code) {
-      return false;
+      return true;
     }
-    return true;
+    return false;
+  }
+
+  #notifyActivityChanged(data) {
+    const topicId = this.topic?.id;
+    if (topicId) {
+      this.topic = this.store.createRecord("topic", {
+        id: topicId,
+        has_activity_log: true,
+      });
+    }
+    this.appEvents.trigger("nested-replies:activity-changed", {
+      topicId,
+      postId: data.id,
+      type: data.type,
+    });
   }
 
   #visibleParentPostNumber(postData) {
@@ -861,6 +888,13 @@ export default class NestedController extends Controller {
     return ancestors.length > maxDepth ? ancestors[maxDepth - 1] : replyTo;
   }
 
+  #postBelongsToTopic(postData, topicId = this.topic?.id) {
+    return (
+      postData?.topic_id != null &&
+      String(postData.topic_id) === String(topicId)
+    );
+  }
+
   #isPostKnown(postId) {
     if (this.rootNodes.some((n) => n.post.id === postId)) {
       return true;
@@ -878,6 +912,9 @@ export default class NestedController extends Controller {
 
   async #handlePostChanged(data) {
     if (data.type === "deleted") {
+      if (this.topic?.has_activity_log) {
+        this.#notifyActivityChanged(data);
+      }
       this.#markPostDeletedLocally(data.id);
       return;
     }
@@ -885,7 +922,15 @@ export default class NestedController extends Controller {
     const topicId = this.topic?.id;
     try {
       const postData = await ajax(`/posts/${data.id}.json`);
-      if (this.topic?.id !== topicId) {
+      if (
+        this.topic?.id !== topicId ||
+        !this.#postBelongsToTopic(postData, topicId)
+      ) {
+        return;
+      }
+
+      if (this.#isActivityLogPost(postData)) {
+        this.#notifyActivityChanged(data);
         return;
       }
 
@@ -943,7 +988,10 @@ export default class NestedController extends Controller {
 
     const newNodes = [];
     for (const result of results) {
-      if (result.status === "fulfilled") {
+      if (
+        result.status === "fulfilled" &&
+        this.#postBelongsToTopic(result.value, topicId)
+      ) {
         newNodes.push(this.#processNode({ ...result.value, children: [] }));
       }
     }

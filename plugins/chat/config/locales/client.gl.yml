@@ -22,6 +22,8 @@ gl:
         yesterday: "Onte"
       create: "Crear"
       cancel: "Cancelar"
+      pinned_bar:
+        title: "Fixado"
       pinned: "Fixado"
       channel_settings:
         edit: "Editar"

@@ -93,6 +93,9 @@ export default class Tooltips extends Component {
     };
   }
 
+  // These samples are curated rather than sourced from a module: each bakes in
+  // the current value of the controls panel, so it changes as the reader edits
+  // it and no static module could express it.
   get tooltipCode() {
     const contentValue = this._content.toString().replace(/"/g, '\\"');
 

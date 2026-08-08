@@ -255,7 +255,6 @@ ja:
       exclusion: は予約されています
       greater_than: は %{count} より大きい値である必要があります
       greater_than_or_equal_to: は %{count} 以上である必要があります
-      has_already_been_used: "はすでに使用されています"
       in: '%{count} 内である必要があります'
       inclusion: はリストに含まれていません
       invalid: は無効です
@@ -1644,7 +1643,6 @@ ja:
     staff_edit_locks_post: "スタッフメンバーが編集した投稿は編集できなくなります"
     post_edit_time_limit: "TL0 または TL1 作成者は投稿後 (n) 分間、投稿を編集できる。0 に設定すると永久に編集できます。"
     tl2_post_edit_time_limit: "TL2 以上の作成者は投稿後 (n) 分間、投稿を編集できる。0 に設定すると永久に編集できます。"
-    edit_history_visible_to_public: "編集した投稿の前のバージョンをすべてのユーザーが閲覧することを許可する。無効である場合、スタッフメンバーのみが閲覧できます。"
     delete_removed_posts_after: "作成者が削除した投稿は (n) 時間後に自動的に削除される。0 に設置すると、投稿は直ちに削除されます。"
     notify_users_after_responses_deleted_on_flagged_post: "投稿が通報されてから削除されると、投稿に返信した後にそれが削除されたすべてのユーザーに通知されます。"
     max_image_width: "投稿内の画像サムネイルの最大幅。これより大きい画像はサイズ変更され、ライトボックス化されます。"
@@ -1748,7 +1746,6 @@ ja:
     suppress_secured_categories_from_admin: "管理者の一部の UI で非公開のトピックと PM を非表示にします。コンテンツは引き続き一部の場所で表示されます。これはセキュリティ機能ではありません。管理者はサイト上のすべてのコンテンツにいつでもアクセスできます。"
     include_secure_categories_in_tag_counts: "有効にすると、タグのトピック数には、すべてのユーザーに対して読み取りが制限されたカテゴリにあるトピックが含まれます。無効にすると、通常のユーザーは、すべてのトピックが公開カテゴリにあるタグのトピック数のみが表示されます。"
     display_personal_messages_tag_counts: "有効にすると、指定されたタグが付けられた個人メッセージの数が表示されます。"
-    top_menu: "ホームページのナビゲーションにどの項目がどの順序で表示されるかを指定します。"
     post_menu: "デフォルトの投稿メニュー項目の表示状態と順序を構成します。プラグインまたはテーマによって追加される追加項目は個別に管理されるため、このリストには表示されません。"
     post_menu_hidden_items: "展開記号がクリックされない限り投稿メニューでデフォルトで非表示になるメニュー項目。プラグインまたはテーマによって追加される追加項目は個別に管理されるため、このリストには表示されません。"
     share_links: "共有ダイアログに表示する項目、表示順を指定。"
@@ -2238,7 +2235,6 @@ ja:
     default_other_external_links_in_new_tab: "デフォルトで、外部リンクを新しいタブで開く。"
     default_other_enable_quoting: "デフォルトで、選択したテキストを引用して返信する。"
     default_other_enable_smart_lists: "コンポーザーに入力する際にスマートリストをデフォルトで有効にする。"
-    default_other_enable_defer: "デフォルトで、トピックの延期機能を有効にする。"
     default_other_enable_markdown_monospace_font: "作成ツールの Markdown モードでは、デフォルトで等幅フォントを使用する。"
     default_other_dynamic_favicon: "デフォルトで、ブラウザアイコンに新規/更新されたトピック数を表示する。"
     default_other_skip_new_user_tips: "新規ユーザーオンボーディングのヒントとバッジをスキップします。"
@@ -2340,7 +2336,6 @@ ja:
     about_page_extra_groups_order: "情報ページの追加グループの順序。"
     adobe_analytics_tags_url: "Adobe Analytics タグの URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "受信メールで作成された場合に、投稿の生のメールコンテンツを表示できるグループ。これには、メールのヘッダーやその他の技術情報が含まれます。"
-    rich_editor: "作成ツールでリッチエディターを有効にして、すべてのユーザーがより直感的で使いやすく作成できるように、現在の Markdown モードと新しいリッチテキストエディターを切り替えられるようにする。"
     default_composition_mode: "コミュニティーの作成ツールのデフォルトモードを設定する。リッチテキストモードでは、よりモダンでほとんどのユーザーが使い慣れた書き心地を得られます。Markdown モードはより技術的な知識を持つユーザーに適しています。メンバーは作成ツールのツールバーにあるトグルでモードを切り替えられます。"
     reviewable_ui_refresh: "レビューキューで実験的な新しい UI を使用できるグループ。"
     content_localization_use_default_locale_when_unsupported: "優先言語が 'content localization supported locales' に含まれていないユーザーに、サイトのデフォルトのロケールでローカライズされたコンテンツを配信する。"
@@ -4812,11 +4807,9 @@ ja:
         title: "いいえ"
         delete:
           title: "ユーザーの削除"
-          description: "ブロックせずにユーザーを削除します"
           complete: "ユーザーは削除されました。"
         block:
           title: "ユーザーの削除とブロック"
-          description: "ユーザーは削除され、その IP とメールアドレスはブロックされます。"
           complete: "ユーザーを削除してブロックしました。"
       confirm_spam:
         title: "はい"
@@ -4876,12 +4869,10 @@ ja:
         bundle_title: "ユーザーをどうしますか？"
       silence_user:
         title: "ユーザーを投稿禁止にする"
-        description: "ユーザーが投稿できないようにします"
         complete: "ユーザーを投稿禁止にしました"
         reason: "ユーザーはレビューキューを通じて投稿禁止にされました"
       suspend_user:
         title: "ユーザーを凍結する"
-        description: "ユーザーアカウントを凍結します"
         complete: "ユーザーを凍結しました"
         reason: "ユーザーはレビューキューを通じて凍結されました"
       delete_user:

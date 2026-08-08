@@ -49,6 +49,24 @@ describe "Admin Reports" do
     )
   end
 
+  it "lets admins pick multiple categories to filter a report" do
+    category_1 = Fabricate(:category)
+    category_2 = Fabricate(:category)
+
+    reports_page.visit_report("activity_by_category")
+
+    expect(reports_page).to have_rendered_report("activity_by_category")
+    expect(reports_page).to have_category_filter
+
+    filter = reports_page.category_filter
+    filter.expand
+    filter.select_row_by_value(category_1.id)
+    filter.select_row_by_value(category_2.id)
+
+    expect(reports_page).to have_selected_category(category_1)
+    expect(reports_page).to have_selected_category(category_2)
+  end
+
   it "lets admins filter report groups from URLs and controls" do
     reports_page.visit_index(group: "engagement")
 

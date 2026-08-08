@@ -73,22 +73,21 @@ class Admin::ThemesController < Admin::AdminController
           return render_json_error I18n.t("themes.import_error.ssh_key_gone")
         end
 
+        if params[:placeholder]
+          if private_key.blank?
+            return render_json_error I18n.t("themes.import_error.git_authentication")
+          end
+
+          @theme = create_remote_theme_placeholder(remote, branch:, private_key:)
+          return render json: serialize_data(@theme, ThemeSerializer), status: :created
+        end
+
         @theme =
           RemoteTheme.import_theme(remote, theme_user, private_key: private_key, branch: branch)
         render json: serialize_data(@theme, ThemeSerializer), status: :created
       rescue RemoteTheme::ImportError => e
         if params[:force]
-          theme_name = params[:remote].gsub(/.git\z/, "").split("/").last
-
-          remote_theme = RemoteTheme.new
-          remote_theme.private_key = private_key
-          remote_theme.branch = params[:branch] ? params[:branch] : nil
-          remote_theme.remote_url = params[:remote]
-          remote_theme.save!
-
-          @theme = Theme.new(user_id: theme_user&.id || -1, name: theme_name)
-          @theme.remote_theme = remote_theme
-          @theme.save!
+          @theme = create_remote_theme_placeholder(remote, branch:, private_key:)
 
           render json: serialize_data(@theme, ThemeSerializer), status: :created
         else
@@ -128,6 +127,21 @@ class Admin::ThemesController < Admin::AdminController
   rescue Theme::SettingsMigrationError => err
     render_json_error err.message
   end
+
+  def create_remote_theme_placeholder(remote, branch:, private_key:)
+    Theme.transaction do
+      remote_theme =
+        RemoteTheme.create!(remote_url: remote, branch: branch, private_key: private_key)
+
+      Theme.create!(
+        user_id: theme_user&.id || -1,
+        name: remote.gsub(/\.git\z/, "").split("/").last,
+        remote_theme: remote_theme,
+      )
+    end
+  end
+
+  private :create_remote_theme_placeholder
 
   def index
     @themes = Theme.strict_loading.include_relations.order(:name)
@@ -213,7 +227,10 @@ class Admin::ThemesController < Admin::AdminController
     @theme.remote_theme.update_remote_version if params[:theme][:remote_check]
 
     if params[:theme][:remote_update]
-      @theme.remote_theme.update_from_remote(raise_if_theme_save_fails: false)
+      @theme.remote_theme.update_from_remote(
+        raise_if_theme_save_fails: false,
+        raise_on_import_error: true,
+      )
     else
       @theme.save
     end

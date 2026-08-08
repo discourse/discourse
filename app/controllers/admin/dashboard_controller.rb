@@ -163,6 +163,7 @@ class Admin::DashboardController < Admin::StaffController
           current_user: current_user,
           start_date: params[:start_date],
           end_date: params[:end_date],
+          parallel: !mini_profiler_flamegraph_request?,
         ),
       problems: serialized_problems,
     }

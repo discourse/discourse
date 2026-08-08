@@ -11,7 +11,7 @@ class SidebarSectionSerializer < ApplicationSerializer
         sidebar_url,
         root: false,
         scope: scope,
-        show_translated_name: object.public? && object.custom_section?,
+        show_translated_name: show_translated_sidebar_url?(sidebar_url),
       ).as_json
     end
   end
@@ -30,5 +30,14 @@ class SidebarSectionSerializer < ApplicationSerializer
 
   def include_localizations?
     false
+  end
+
+  private
+
+  def show_translated_sidebar_url?(sidebar_url)
+    return false if !object.public?
+    return true if object.custom_section?
+
+    object.community_section? && !sidebar_url.built_in_community_section_link?
   end
 end

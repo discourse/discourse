@@ -221,7 +221,12 @@ export default class DAccessControl extends Component {
    * gated behind an async search request.
    */
   get defaultAvailableGrantees() {
-    return this.availableGroups.map(groupGranteeResult);
+    return this.availableGroups.map((group) =>
+      groupGranteeResult(
+        group,
+        this.disabledGrantees.includes(granteeValue("group", group.id))
+      )
+    );
   }
 
   get availableGroups() {
@@ -249,6 +254,25 @@ export default class DAccessControl extends Component {
    */
   get excludedGrantees() {
     return this.acl.map((entry) => granteeValue(entry.type, entry.id));
+  }
+
+  /**
+   * Grantees where it's impossible for them to be added because of a combination
+   * of banned ACL rules, e.g. if the anonymous_users group cannot view, edit, or
+   * manage. We disable so we can show a message/tooltip so it's not confusing
+   * where the grantee went.
+   */
+  get disabledGrantees() {
+    return this.availableGroups
+      .filter((group) => {
+        const availablePermissions = this.excludeBannedPermissions(
+          this.permissionOptions.filter((opt) => opt.id !== REMOVE_ACTION.id),
+          { type: "group", id: group.id }
+        );
+
+        return availablePermissions.length === 0;
+      })
+      .map((group) => granteeValue("group", group.id));
   }
 
   /**
@@ -367,6 +391,7 @@ export default class DAccessControl extends Component {
             defaultSearchResults=this.defaultAvailableGrantees
           )
           excludedGrantees=this.excludedGrantees
+          disabledGrantees=this.disabledGrantees
           filterable=true
           includeGroups=true
           maximum=1

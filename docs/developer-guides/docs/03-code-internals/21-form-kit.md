@@ -1939,13 +1939,25 @@ Using the `setProperties` helper yielded by the form:
 
 - `name` (string): The name of the field that is invalid.
 - `error` (object): The error's data
-  - `title` (string): The title of the error, usually the translated name of the field
+  - `title` (string, optional): The title of the error, usually the translated name of the field
   - `message` (string): The error message
 
 **Example**
 
 ```js
 addError("foo", { title: "Foo", message: "This should be another thing." });
+```
+
+**Form-level errors**
+
+Omit `title` to add a form-level error — one that isn't tied to a single
+field (e.g. a cross-field rule like "set at least one of …"). The errors
+summary renders it as the message on its own, with no field-focus link or
+label prefix. `name` is still required as a unique key, but it doesn't need
+to match a real field; use a synthetic key so it won't collide with one.
+
+```js
+addError("_form:0", { message: "Set at least one of: title, icon." });
 ```
 
 # Customize

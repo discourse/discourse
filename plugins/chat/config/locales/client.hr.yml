@@ -45,6 +45,8 @@ hr:
       cancel: "Odustani"
       cancel_reply: "Otkaži odgovor"
       chat_channels: "Kanali"
+      pinned_bar:
+        title: "Zakvačeno"
       pinned: "Zakvačeno"
       move_to_channel:
         title: "Premještanje poruka na kanal"

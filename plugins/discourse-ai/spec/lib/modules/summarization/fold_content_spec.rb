@@ -38,14 +38,87 @@ RSpec.describe DiscourseAi::Summarization::FoldContent do
 
       expect(result.summarized_text).to eq(summary)
     end
+
+    it "captures a tool-backed topic gist without structured output" do
+      custom_agent =
+        Fabricate(:ai_agent, response_format: [{ "key" => "fragile", "type" => "string" }])
+      SiteSetting.ai_summary_gists_agent = custom_agent.id
+      gist_summarizer = DiscourseAi::Summarization.topic_gist(topic, locale: "ja")
+      expect(gist_summarizer.bot.agent.response_format).to be_nil
+      expect(gist_summarizer.bot.returns_json?).to eq(false)
+      tool_call =
+        DiscourseAi::Completions::ToolCall.new(
+          id: "call_1",
+          name: "set_topic_summary",
+          parameters: {
+            summary: "日本語の要約",
+          },
+        )
+
+      result =
+        DiscourseAi::Completions::Llm.with_prepared_responses([tool_call]) do |spy|
+          gist_summarizer
+            .summarize(user)
+            .tap do
+              expect(spy.completions).to eq(1)
+              expect(spy.model_params[:response_format]).to be_nil
+            end
+        end
+
+      expect(result).to have_attributes(summarized_text: "日本語の要約", locale: "ja")
+    end
+
+    it "does not persist a gist when the model omits the summary tool" do
+      gist_summarizer = DiscourseAi::Summarization.topic_gist(topic, locale: "ja")
+
+      expect do
+        DiscourseAi::Completions::Llm.with_prepared_responses(["plain text"]) do
+          gist_summarizer.summarize(user)
+        end
+      end.to raise_error(DiscourseAi::Summarization::FoldContent::MissingToolOutput)
+
+      expect(AiSummary.gist.where(target: topic, locale: "ja")).to be_empty
+    end
   end
 
   describe "#existing_summary" do
+    it "finds a gist stored under an equivalent regional locale" do
+      existing_gist =
+        Fabricate(
+          :topic_ai_gist,
+          target: topic,
+          locale: "pt",
+          highest_target_number: topic.highest_post_number,
+          original_content_sha: AiSummary.build_sha("1"),
+        )
+      regional_summarizer = DiscourseAi::Summarization.topic_gist(topic, locale: "pt_BR")
+
+      expect(regional_summarizer.existing_summary).to eq(existing_gist)
+    end
+
+    it "finds and deletes a complete summary stored under an equivalent regional locale" do
+      existing_summary =
+        Fabricate(
+          :ai_summary,
+          target: topic,
+          locale: "pt",
+          highest_target_number: topic.highest_post_number,
+          original_content_sha: AiSummary.build_sha("1"),
+        )
+      regional_summarizer = DiscourseAi::Summarization.topic_summary(topic, locale: "pt_BR")
+
+      expect(regional_summarizer.existing_summary).to eq(existing_summary)
+
+      regional_summarizer.delete_cached_summaries!
+      expect(AiSummary.find_by(id: existing_summary.id)).to be_nil
+    end
+
     context "when a summary already exists" do
       fab!(:ai_summary) do
         Fabricate(
           :ai_summary,
           target: topic,
+          locale: SiteSetting.default_locale,
           highest_target_number: topic.highest_post_number,
           original_content_sha: AiSummary.build_sha("1"),
         )

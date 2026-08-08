@@ -80,6 +80,53 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
     };
   });
 
+  hoverGrace = modifierFn((element) => {
+    const instance = this.args.instance;
+
+    const onPointerEnter = () => instance.cancelHoverClose();
+    const onPointerLeave = () => instance.scheduleHoverClose();
+    const onFocusIn = () => instance.lockHoverCloseForFocus();
+    const onFocusOut = (event) => {
+      if (event.relatedTarget && element.contains(event.relatedTarget)) {
+        return;
+      }
+      instance.unlockHoverCloseForFocus();
+      instance.scheduleHoverClose();
+    };
+
+    element.addEventListener("pointerenter", onPointerEnter, { passive: true });
+    element.addEventListener("pointerleave", onPointerLeave, { passive: true });
+    element.addEventListener("focusin", onFocusIn, { passive: true });
+    element.addEventListener("focusout", onFocusOut, { passive: true });
+
+    return () => {
+      element.removeEventListener("pointerenter", onPointerEnter);
+      element.removeEventListener("pointerleave", onPointerLeave);
+      element.removeEventListener("focusin", onFocusIn);
+      element.removeEventListener("focusout", onFocusOut);
+    };
+  });
+
+  get supportsHoverGrace() {
+    return this.args.instance.expanded && this.options.hoverGracePeriod > 0;
+  }
+
+  get contentAriaLabelledby(): string | null | undefined {
+    if (this.#hasPresentationalRole) {
+      return;
+    }
+
+    return this.args.instance.id;
+  }
+
+  /**
+   * `presentation` prohibits an accessible name outright, and `none` is its synonym, so a
+   * container in either role must not be labelled by its trigger.
+   */
+  get #hasPresentationalRole() {
+    return this.args.role === "none" || this.args.role === "presentation";
+  }
+
   get supportsCloseOnClickOutside() {
     return this.options.closeOnClickOutside;
   }
@@ -118,7 +165,6 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
       @inline={{@inline}}
       @portalOutletElement={{@instance.portalOutletElement}}
     >
-      {{! eslint-disable-next-line ember/template-no-unsupported-role-attributes }}
       <div
         class={{dConcatClass
           @mainClass
@@ -127,8 +173,7 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
         }}
         data-identifier={{this.options.identifier}}
         data-content
-        aria-labelledby={{@instance.id}}
-        aria-expanded={{if @instance.expanded "true" "false"}}
+        aria-labelledby={{this.contentAriaLabelledby}}
         role={{@role}}
         {{FloatKitApplyFloatingUi this.trigger this.options @instance}}
         {{this.trapInteractionPropagation}}
@@ -146,6 +191,7 @@ export default class DFloatBody extends Component<DFloatBodySignature> {
           (modifier FloatKitCloseOnEscape @instance.close)
         )}}
         {{(if this.supportsCloseOnScroll (modifier this.closeOnScroll))}}
+        {{(if this.supportsHoverGrace (modifier this.hoverGrace))}}
         style={{this.style}}
         ...attributes
       >

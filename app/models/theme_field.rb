@@ -14,7 +14,7 @@ class ThemeField < ActiveRecord::Base
            class_name: "JavascriptCache",
            dependent: :destroy,
            autosave: true
-  has_one :upload_reference, as: :target, dependent: :destroy
+  has_many :upload_references, as: :target, dependent: :destroy
   has_one :theme_settings_migration, dependent: :destroy
 
   validates :value, { length: { maximum: 1024**2 } }
@@ -27,6 +27,8 @@ class ThemeField < ActiveRecord::Base
            type_id == ThemeField.types[:theme_upload_var]
        ) && saved_change_to_upload_id?
       UploadReference.ensure_exist!(upload_ids: [upload_id], target: self)
+    elsif type_id == ThemeField.types[:block_layout] && saved_change_to_value?
+      BlockLayoutUploads.sync!(target: self, value:)
     end
   end
 
@@ -97,8 +99,19 @@ class ThemeField < ActiveRecord::Base
         js: 6,
         theme_screenshot_upload_var: 7,
         json: 8,
+        block_layout: 9,
       )
   end
+
+  # Maximum nesting depth allowed in a block_layout field. Mirrors the
+  # client-side limit (`MAX_LAYOUT_DEPTH` in lib/blocks/-internals/patterns.js)
+  # so the structural Ruby check rejects payloads the JS validator would
+  # also reject.
+  BLOCK_LAYOUT_MAX_DEPTH = 20
+
+  # Currently-supported block_layout schema version. Bump when the on-disk
+  # JSON shape changes.
+  BLOCK_LAYOUT_SCHEMA_VERSION = 1
 
   def self.theme_var_type_ids
     @theme_var_type_ids ||= [2]
@@ -363,6 +376,38 @@ class ThemeField < ActiveRecord::Base
     Theme.targets[:migrations] == target_id
   end
 
+  def block_layout_field?
+    type_id == ThemeField.types[:block_layout]
+  end
+
+  # Validates a block_layout value JSON for structure and depth, returning
+  # the canonical re-serialised JSON on success and raising on failure.
+  # Caller is responsible for catching the raised error and storing it on
+  # `self.error`.
+  #
+  # Validation here is structural only: it rejects malformed JSON, missing /
+  # unknown schema versions, non-object entries, missing `block` references,
+  # and over-deep nesting. Block-class resolution and condition validation
+  # happen client-side at hydration time so MiniRacer doesn't have to be
+  # wired up just to bake a layout.
+  def bake_block_layout!
+    parsed = JSON.parse(value)
+    raise "block_layout payload must be a JSON object." unless parsed.is_a?(Hash)
+
+    schema_version = parsed["schema_version"]
+    unless schema_version == BLOCK_LAYOUT_SCHEMA_VERSION
+      raise "Unsupported block_layout schema_version: #{schema_version.inspect} " \
+              "(expected #{BLOCK_LAYOUT_SCHEMA_VERSION})."
+    end
+
+    layout = parsed["layout"]
+    raise "block_layout requires a \"layout\" array." unless layout.is_a?(Array)
+
+    validate_block_layout_entries!(layout, 0)
+
+    parsed.to_json
+  end
+
   def ensure_baked!
     needs_baking = !value_baked || compiler_version != Theme.compiler_version
     return unless needs_baking
@@ -392,6 +437,18 @@ class ThemeField < ActiveRecord::Base
       self.compiler_version = Theme.compiler_version
     elsif migration_field?
       self.value_baked = "baked"
+      self.compiler_version = Theme.compiler_version
+    elsif block_layout_field?
+      begin
+        self.value_baked = bake_block_layout!
+        self.error = nil
+      rescue JSON::ParserError => e
+        self.value_baked = nil
+        self.error = "Invalid block_layout JSON: #{e.message}"
+      rescue => e
+        self.value_baked = nil
+        self.error = e.message
+      end
       self.compiler_version = Theme.compiler_version
     end
 
@@ -470,6 +527,52 @@ class ThemeField < ActiveRecord::Base
 
   def contains_optimized_link?(text)
     OptimizedImage::URL_REGEX.match?(text)
+  end
+
+  # Walks every entry in a block_layout's `layout` tree (and their nested
+  # `children`) checking shape and depth. Raises with a path-prefixed
+  # message on the first violation. The caller catches and stores the
+  # message on `self.error`.
+  def validate_block_layout_entries!(entries, depth, path = "layout")
+    if depth > BLOCK_LAYOUT_MAX_DEPTH
+      raise "Layout exceeds maximum nesting depth of #{BLOCK_LAYOUT_MAX_DEPTH} at #{path}."
+    end
+
+    raise "Expected an array at #{path}, got #{entries.class}." unless entries.is_a?(Array)
+
+    entries.each_with_index do |entry, index|
+      entry_path = "#{path}[#{index}]"
+      raise "Each entry must be an object at #{entry_path}." unless entry.is_a?(Hash)
+
+      block_ref = entry["block"]
+      unless block_ref.is_a?(String) && !block_ref.empty?
+        raise "Each entry requires a non-empty \"block\" string at #{entry_path}."
+      end
+
+      # A block may declare a code-defined inner composition; an entry that
+      # references one can carry per-part argument overrides keyed by a
+      # dot-delimited part-id path. Each value is that inner block's own args
+      # (an object). The structure is opaque here beyond being an object of
+      # objects — the client owns the merge/lock semantics.
+      overrides = entry["overrides"]
+      unless overrides.nil?
+        unless overrides.is_a?(Hash)
+          raise "\"overrides\" must be an object at #{entry_path}.overrides."
+        end
+        overrides.each do |part_path, part_args|
+          unless part_args.is_a?(Hash)
+            raise "Override at #{entry_path}.overrides[\"#{part_path}\"] must be an object."
+          end
+        end
+      end
+
+      children = entry["children"]
+      next if children.nil?
+
+      raise "Children must be an array at #{entry_path}.children." unless children.is_a?(Array)
+
+      validate_block_layout_entries!(children, depth + 1, "#{entry_path}.children")
+    end
   end
 
   def contains_ember_css_selector?(text)
@@ -602,6 +705,18 @@ class ThemeField < ActiveRecord::Base
       types: :js,
       targets: :migrations,
       canonical: ->(h) { "migrations/settings/#{h[:name]}.js" },
+    ),
+    # block_layouts/<outlet>.json — JSON layouts for the block-outlet
+    # system. The capture group accepts any filename-safe
+    # characters; namespaced outlets (e.g. `chat:thread-blocks`) encode the
+    # `:` separator as `__` on disk to keep filenames portable across
+    # platforms. The decoding happens at field-set time, not in the regex.
+    ThemeFileMatcher.new(
+      regex: %r{\Ablock_layouts/(?<name>[a-z0-9_\-]+)\.json\z},
+      names: nil,
+      types: :block_layout,
+      targets: :common,
+      canonical: ->(h) { "block_layouts/#{h[:name]}.json" },
     ),
   ]
 

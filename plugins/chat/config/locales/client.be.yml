@@ -21,6 +21,8 @@ be:
         yesterday: "учора"
       create: "стварыць"
       cancel: "адмяніць"
+      pinned_bar:
+        title: "Замацаваныя"
       pinned: "замацаваныя"
       channel_settings:
         edit: "рэдагаваць"

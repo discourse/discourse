@@ -21,6 +21,8 @@ bs_BA:
         yesterday: "Yesterday"
       create: "napravi"
       cancel: "Odustani"
+      pinned_bar:
+        title: "Zakačena"
       pinned: "Zakačena"
       channel_settings:
         edit: "Edit"

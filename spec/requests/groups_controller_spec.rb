@@ -743,6 +743,39 @@ RSpec.describe GroupsController do
     end
   end
 
+  describe "shared draft visibility" do
+    it "omits shared draft posts from posts and mentions endpoints", :aggregate_failures do
+      SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:staff]
+      shared_drafts_category = Fabricate(:category)
+      SiteSetting.shared_drafts_category = shared_drafts_category.id
+      shared_draft_topic =
+        Fabricate(
+          :topic,
+          title: "Secret Shared Draft Group Topic",
+          category: shared_drafts_category,
+        )
+      shared_draft_post =
+        Fabricate(
+          :post,
+          user: user,
+          topic: shared_draft_topic,
+          raw: "secret shared draft group post",
+        )
+      Fabricate(:shared_draft, topic: shared_draft_topic, category: Fabricate(:category))
+      GroupMention.create!(post: shared_draft_post, group: group)
+
+      sign_in(user2)
+      ["/groups/#{group.name}/posts.json", "/groups/#{group.name}/mentions.json"].each do |path|
+        get path
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["posts"]).to be_empty
+        expect(response.body).not_to include(shared_draft_topic.title)
+        expect(response.body).not_to include(shared_draft_post.raw)
+      end
+    end
+  end
+
   describe "#posts" do
     it "ensures the group can be seen" do
       sign_in(user)
@@ -1672,6 +1705,50 @@ RSpec.describe GroupsController do
         expect(group.group_tag_notification_defaults.first&.tag).to eq(tag)
 
         expect(Jobs::AutomaticGroupMembership.jobs.first["args"].first["group_id"]).to eq(group.id)
+      end
+
+      it "keeps SMTP email settings unchanged for moderators", :aggregate_failures do
+        SiteSetting.enable_smtp = true
+        group.update!(
+          allow_unknown_sender_topic_replies: false,
+          email_from_alias: "group-alias@example.com",
+          email_password: "secret_smtp_pass",
+          email_username: "group@example.com",
+          smtp_enabled: true,
+          smtp_port: 587,
+          smtp_server: "smtp.example.com",
+          smtp_ssl_mode: Group.smtp_ssl_modes[:starttls],
+        )
+
+        put "/groups/#{group.id}.json",
+            params: {
+              group: {
+                allow_unknown_sender_topic_replies: true,
+                email_from_alias: "evil-alias@example.com",
+                email_password: "attacker_controlled_pass",
+                email_username: "attacker@example.com",
+                flair_color: "BBB",
+                smtp_enabled: false,
+                smtp_port: 25,
+                smtp_server: "evil.attacker.example.com",
+                smtp_ssl_mode: Group.smtp_ssl_modes[:none],
+              },
+              update_existing_users: false,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq("OK")
+
+        group.reload
+        expect(group.flair_color).to eq("BBB")
+        expect(group.smtp_server).to eq("smtp.example.com")
+        expect(group.smtp_port).to eq(587)
+        expect(group.smtp_ssl_mode).to eq(Group.smtp_ssl_modes[:starttls])
+        expect(group.smtp_enabled).to eq(true)
+        expect(group.email_username).to eq("group@example.com")
+        expect(group.email_password).to eq("secret_smtp_pass")
+        expect(group.email_from_alias).to eq("group-alias@example.com")
+        expect(group.allow_unknown_sender_topic_replies).to eq(false)
       end
 
       it "should be able to update an automatic group" do

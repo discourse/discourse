@@ -109,8 +109,6 @@ export async function testMarkdown(
  */
 export function testRenderedMarkdown(markdown, assertions) {
   return async function (assert) {
-    this.siteSettings.rich_editor = true;
-
     const [editorClass] = await setupRichEditor(assert, markdown);
 
     // The editor is already in the DOM, so we can use assert.dom directly

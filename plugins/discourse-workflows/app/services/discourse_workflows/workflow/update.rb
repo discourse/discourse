@@ -12,14 +12,20 @@ module DiscourseWorkflows
       attribute :error_workflow_id, default: -> { NOT_PROVIDED }
       attribute :timezone, default: -> { NOT_PROVIDED }
       attribute :static_data, default: -> { NOT_PROVIDED }
+      attribute :tags, default: -> { NOT_PROVIDED }
       attribute :nodes
       attribute :connections
       attribute :autosaved, :boolean, default: false
+
+      before_validation do
+        self.tags = DiscourseWorkflows::WorkflowTag.normalize_all(tags) if tags_provided?
+      end
 
       validates :workflow_id, presence: true
       validates :name, presence: true, length: { maximum: 100 }, if: :name_provided?
       validate :timezone_is_valid
       validate :static_data_is_valid_map
+      validate :tags_are_valid, if: :tags_provided?
 
       def updatable_attributes
         attrs = {}
@@ -45,6 +51,10 @@ module DiscourseWorkflows
         static_data != NOT_PROVIDED
       end
 
+      def tags_provided?
+        tags != NOT_PROVIDED
+      end
+
       def graph_data_provided?
         !nodes.nil? || !connections.nil?
       end
@@ -62,6 +72,10 @@ module DiscourseWorkflows
 
         errors.add(:static_data, :invalid)
       end
+
+      def tags_are_valid
+        DiscourseWorkflows::WorkflowTag.validate_names(tags, errors)
+      end
     end
 
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
@@ -73,6 +87,7 @@ module DiscourseWorkflows
       transaction do
         model :workflow, :update_workflow
         model :workflow, :save_workflow
+        only_if(:tags_provided) { step :sync_tags }
         only_if(:graph_data_provided) do
           step :populate_graph
           only_if(:versioned_payload_changed) do
@@ -97,6 +112,14 @@ module DiscourseWorkflows
 
     def graph_data_provided(params:)
       params.graph_data_provided?
+    end
+
+    def tags_provided(params:)
+      params.tags_provided?
+    end
+
+    def sync_tags(workflow:, params:)
+      DiscourseWorkflows::WorkflowTag.sync!(workflow:, names: params.tags)
     end
 
     def versioned_payload_changed(workflow:, previous_versioned_payload:)

@@ -664,6 +664,8 @@ fa_IR:
         email: "ایمیل"
         name: "نام"
         fields: "فیلدها"
+        silence_reason: "دلیل سکوت"
+        penalty_forever: "همیشه"
         reject_reason: "دلیل"
         scrubbed_reason: "دلیل"
         scrub_record:
@@ -1357,7 +1359,6 @@ fa_IR:
       external_links_in_new_tab: "همهٔ پیوندهای خروجی را در یک تب جدید باز کن"
       enable_quoting: "فعال کردن نقل قول گرفتن از متن انتخاب شده"
       enable_smart_lists: "هنگام نوشتن در ابزار نوشتن، لیست های هوشمند را فعال کن"
-      enable_defer: "علامت گذاری موضوعات به عنوان خوانده نشده را فعال کن"
       experimental_sidebar:
         enable: "فعال کردن نوار کناری"
         options: "تنظیمات"
@@ -1777,7 +1778,7 @@ fa_IR:
         default: "(پیش‌فرض)"
         any: "هر"
       homepage:
-        default: "(پیش‌فرض)"
+        default: "پیش‌فرض"
       password_confirmation:
         title: "رمز عبور را مجدد وارد نمایید"
       invite_code:
@@ -1821,6 +1822,9 @@ fa_IR:
         contextual: "محتوای تازه ی صفحه"
       bookmark_after_notification:
         title: "پس از ارسال آگاه‌سازی یادآوری نشانک:"
+      send_shortcut:
+        enter: "وارد شدن "
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "وقتی پسندیده شد اعلام کن"
         always: "همیشه"
@@ -1975,22 +1979,26 @@ fa_IR:
         invite_roles:
           member_title: "دعوت‌نامه عضوها"
           member_tab: "اعضاء"
-          admin_tab: "مدیران ارشد"
+          admin_tab: "همکاران"
+          staff_role_admin: "مدیر کل"
+          staff_role_moderator: "ناظر"
           admin_email_label: "آدرس ایمیل"
           email_placeholder: "name@example.com"
           invite_by_email: "ایمیل"
           restrict_domain: "محدود کردن دامنه"
-          more_options: "گزینه‌های بیشتر"
+          create_and_send: "ارسال"
+          create_and_copy: "رونوشت پیوند"
           update: "به‌روزرسانی"
           summary:
             role_member: "عضو"
             role_admin: "مدیر کل"
+            role_moderator: "ناظر"
             method_email: "ایمیل"
             uses: "حداکثر استفاده"
             expires: "انقضاء"
             topic: "موضوع"
             groups: "گروه‌ها"
-            edit: "ویرایش دعوت‌نامه"
+            edit: "ویرایش"
         bulk_invite:
           none: "دعوتنامه ای برای نمایش در این صفحه موجود نیست."
           text: "دعوت به تعداد بالا"
@@ -2539,6 +2547,8 @@ fa_IR:
       default: ایموجی های مخصوص
     filter_input:
       clear: "حذف کردن فیلتر"
+    filter_controls:
+      reset: "بازنشانی"
     shared_drafts:
       title: "پیش‌نویس‌های اشتراک‌گذاشته شده"
       notice: "این موضوع تنها برای کسانی قابل مشاهده است، که می‌توانند پیش‌نویس‌های اشتراک‌گذاشته شده را منتشر کنند."
@@ -4603,6 +4613,10 @@ fa_IR:
           public: "قابل مشاهده برای همه"
           always_public: "محتوای این بخش همیشه عمومی است"
           more_menu: "فهرست انتخاب بیشتر"
+          localizations:
+            locale: "زبان"
+            title_label: "عنوان بخش"
+            remove_language: "پاک کردن"
           links:
             add: "پیوند دیگری اضافه کنید"
             delete: "حذف پیوند"
@@ -5185,7 +5199,6 @@ fa_IR:
               posts: "فرسته‌ها"
               share: "اشتراک‌گذاری"
             whos_posting:
-              all_categories: "همه‌ی دسته‌بندی‌ها"
               staff: "همکاران"
             trust_level_pipeline:
               trust_levels:
@@ -5832,6 +5845,8 @@ fa_IR:
         sidebar: "نوار کناری"
         header_dropdown: "فهرست کشویی سربرگ"
         legacy: "حالت قدیمی"
+      duplicate_topic_titles:
+        allowed: "مجاز"
       backups:
         title: "پشتیبان گیری"
         files_title: "فایل‌های پشتیبان"
@@ -6043,7 +6058,6 @@ fa_IR:
           finish_install: "پایان نصب پوسته"
           last_attempt: "مراحل نصب تمام نشد، آخرین تلاش:"
           remote_branch: "نام شاخه (اختیاری)"
-          public_key: "به کلید عمومی زیر اجازه دسترسی به مخزن بدهید:"
           install: "نصب"
           installed: "نصب"
           install_popular: "محبوب"
@@ -7169,6 +7183,7 @@ fa_IR:
         uploading: "در حال بارگذاری…"
         name: "نام"
         group: "گروه"
+        all_groups: "همه گروه‌ها"
         created_by: "ایجاد شده توسط"
         image: "تصویر"
         alt: "پیش نمایش ایموجی سفارشی"

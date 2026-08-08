@@ -267,6 +267,12 @@
 }
 
 .d-modal.group-add-members-modal {
+  @include viewport.until(sm) {
+    .d-modal__body {
+      overflow-y: visible;
+    }
+  }
+
   .input-group {
     margin-bottom: 0.5em;
 
@@ -597,6 +603,18 @@
   .d-modal.change-ownership-modal {
     .d-modal__body {
       flex: 1;
+    }
+  }
+}
+
+.change-ownership-modal {
+  .d-modal__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+
+    .select-kit-header--filter {
+      width: 100%;
     }
   }
 }

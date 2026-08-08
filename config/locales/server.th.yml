@@ -67,7 +67,6 @@ th:
   errors: &errors
     messages:
       exclusion: ถูกจองแล้ว
-      has_already_been_used: "ได้ถูกใช้แล้ว"
       invalid: ไม่ถูกต้อง
   not_in_group:
     join_group: "เข้าร่วมกลุ่ม"

@@ -40,3 +40,6 @@ es:
           group_name: "Evento de votación de tema"
           topic_upvote: "Cuando un usuario vota sobre un tema"
           topic_unvote: "Cuando un usuario cancela el voto sobre un tema"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Etiquetas"

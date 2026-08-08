@@ -1242,7 +1242,7 @@ lv:
         default: "(noklusējums)"
         any: "jebkura"
       homepage:
-        default: "(noklusējums)"
+        default: "Noklusējums"
       password_confirmation:
         title: "Parole vēlreiz"
       invite_code:
@@ -1269,6 +1269,8 @@ lv:
         title: "Fona lapas nosaukumā ir redzams:"
         notifications: "Jauni paziņojumi"
         contextual: "Jauns lapas saturs"
+      send_shortcut:
+        enter: "Ievadīt"
       like_notification_frequency:
         title: "Paziņot, ja saņemta atzinība"
         always: "Vienmēr"
@@ -1368,17 +1370,22 @@ lv:
           cancel: "Atcelt"
         invite_roles:
           member_tab: "Dalībnieki"
-          admin_tab: "Administratori"
+          admin_tab: "Personāls"
+          staff_role_admin: "Administrators"
+          staff_role_moderator: "Moderātors"
           email_placeholder: "vards@piemers.com"
           invite_by_email: "E-pasts"
+          create_and_send: "Sūtīt"
           summary:
             role_member: "Biedrs"
             role_admin: "Administrators"
+            role_moderator: "Moderātors"
             method_email: "E-pasts"
             uses: "Maksimāli izmantojams"
             expires: "Derīguma termiņš beidzas"
             topic: "Tēmas"
             groups: "Grupas"
+            edit: "Labot"
         bulk_invite:
           success: "Fails veiksmīgi lejuplādēts, jums paziņos, kad process beidzies."
           error: "Atvainojiet, failam jābūt CSV formātā."
@@ -1696,6 +1703,8 @@ lv:
       medium_dark_tone: Vidēji tumša ādas krāsa
       dark_tone: Tumša ādas krāsa
       default: Lietotāja emoji
+    filter_controls:
+      reset: "Atlikt"
     shared_drafts:
       title: "Kopīgotie melnraksti"
       notice: "Šī tēma ir redzama tikai tiem, kuri var publicēt koplietotos melnrakstus."
@@ -2815,6 +2824,8 @@ lv:
         custom:
           save: "Saglabāt"
           delete: "Dzēst"
+          localizations:
+            remove_language: "Atcelt"
           links:
             reset: "Atiestatīt uz noklusējumu"
             icon:
@@ -3092,7 +3103,6 @@ lv:
               posts: "Ieraksti"
               share: "Dalīties"
             whos_posting:
-              all_categories: "Visas sadaļas"
               staff: "Personāls"
             trust_level_pipeline:
               trust_levels:
@@ -3332,6 +3342,8 @@ lv:
           enabled: "Ieslēgts"
           disabled: "Atslēgt"
           reset: "Atlikt"
+      duplicate_topic_titles:
+        allowed: "Atļauts"
       backups:
         title: "Rezerves kopijas"
         menu:
@@ -4001,6 +4013,7 @@ lv:
         delete: "Dzēst"
         name: "Nosaukums"
         group: "Grupa"
+        all_groups: "Visas grupas"
         image: "Attēls"
         delete_confirm: "Vai tiešām vēlies dzēst šo :%{name}: smaidiņu?"
         settings: "Iestatījumi"

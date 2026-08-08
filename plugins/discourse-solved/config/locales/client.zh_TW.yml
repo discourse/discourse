@@ -14,8 +14,6 @@ zh_TW:
               label: "接受的解決方案"
         sections:
           support:
-            filter:
-              all_categories: "所有分類"
             answerers:
               staff: "管理員"
               member: "成員"

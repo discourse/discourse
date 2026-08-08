@@ -14,7 +14,6 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.siteSettings.rich_editor = true;
       this.siteSettings.chat_enabled = true;
 
       // This is necessary for the chat transcripts to work in JS, because this
@@ -63,6 +62,24 @@ haha **ok** _cool_
       assert.dom(".chat-transcript-channel img[title='tada']").exists();
 
       assert.strictEqual(value, singleMessageSingleUserMarkdown);
+    });
+
+    test("escapes HTML in transcript usernames", async function (assert) {
+      const transcriptWithHtmlUsername = `[chat quote="<b>marker</b>;29856;2025-03-20T07:13:04Z"]
+haha
+[/chat]
+`;
+      await setupRichEditor(assert, transcriptWithHtmlUsername);
+
+      const rootElement = document.querySelector(
+        ".ProseMirror .chat-transcript"
+      );
+      assert
+        .dom(".chat-transcript-user .chat-transcript-username", rootElement)
+        .hasText("<b>marker</b>", "renders transcript username markup as text");
+      assert
+        .dom(".chat-transcript-user .chat-transcript-username b", rootElement)
+        .doesNotExist("does not render markup from transcript usernames");
     });
 
     test("multiple messages from multiple different users", async function (assert) {

@@ -20,6 +20,8 @@ const FRAME_SELECTOR = ".discourse-calendar-livestream-zoom-entry__frame";
 const JOIN_BUTTON_SELECTOR =
   ".discourse-calendar-livestream-zoom-entry .btn-primary";
 const LEAVE_BUTTON_SELECTOR = ".zoom-MuiButton-root";
+const AUDIO_HINT_SELECTOR =
+  ".discourse-calendar-livestream-zoom-entry__audio-hint";
 
 const COUNTDOWN_TEXT = `The webinar hasn't started yet. Retrying join in ${RETRY_DELAY_SECONDS} seconds...`;
 const ERROR_TEXT =
@@ -214,7 +216,7 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
     assert.dom(".discourse-calendar-livestream-zoom-entry").doesNotExist();
   });
 
-  test("renders nothing for anonymous users", async function (assert) {
+  test("renders button for anonymous users", async function (assert) {
     stubCapabilities(getOwner(this), { lg: true });
     getOwner(this).unregister("service:current-user");
 
@@ -222,7 +224,145 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
       <template><LivestreamZoomEntry @event={{this.event}} /></template>
     );
 
-    assert.dom(".discourse-calendar-livestream-zoom-entry").doesNotExist();
+    assert.dom(".discourse-calendar-livestream-zoom-entry").exists();
+  });
+
+  test("shows the audio hint only once the meeting is joined", async function (assert) {
+    stubCapabilities(getOwner(this), { lg: true });
+    const performJoin = sinon.stub(ZoomMeetingSession.prototype, "performJoin");
+    const join = deferred();
+    performJoin.returns(join.promise);
+
+    await render(
+      <template><LivestreamZoomEntry @event={{this.event}} /></template>
+    );
+
+    assert.dom(AUDIO_HINT_SELECTOR).doesNotExist("hidden before joining");
+
+    click(JOIN_BUTTON_SELECTOR);
+    await settled();
+
+    assert.dom(AUDIO_HINT_SELECTOR).doesNotExist("hidden while joining");
+
+    join.resolve();
+    await settled();
+
+    assert.dom(AUDIO_HINT_SELECTOR).hasText("Click above to join audio");
+    assert.dom(`${AUDIO_HINT_SELECTOR} .d-icon-zoom-join-audio`).exists();
+  });
+
+  test("notifies once the desktop session has joined", async function (assert) {
+    stubCapabilities(getOwner(this), { lg: true });
+    const performJoin = sinon.stub(ZoomMeetingSession.prototype, "performJoin");
+    const join = deferred();
+    performJoin.returns(join.promise);
+    this.onJoined = sinon.fake();
+
+    await render(
+      <template>
+        <LivestreamZoomEntry
+          @event={{this.event}}
+          @onJoined={{this.onJoined}}
+        />
+      </template>
+    );
+
+    await click(JOIN_BUTTON_SELECTOR);
+
+    assert.false(
+      this.onJoined.called,
+      "does not notify while the join is still in flight"
+    );
+
+    join.resolve();
+    await settled();
+
+    assert.strictEqual(
+      this.onJoined.callCount,
+      1,
+      "notifies once the session is joined"
+    );
+  });
+
+  test("does not notify when the join fails", async function (assert) {
+    stubCapabilities(getOwner(this), { lg: true });
+    sinon
+      .stub(ZoomMeetingSession.prototype, "performJoin")
+      .rejects(new Error("nope"));
+    this.onJoined = sinon.fake();
+
+    await render(
+      <template>
+        <LivestreamZoomEntry
+          @event={{this.event}}
+          @onJoined={{this.onJoined}}
+        />
+      </template>
+    );
+
+    await click(JOIN_BUTTON_SELECTOR);
+
+    assert.false(this.onJoined.called);
+  });
+
+  test("does not notify when the component is torn down mid-join", async function (assert) {
+    stubCapabilities(getOwner(this), { lg: true });
+    const performJoin = sinon.stub(ZoomMeetingSession.prototype, "performJoin");
+    const join = deferred();
+    performJoin.returns(join.promise);
+    this.onJoined = sinon.fake();
+
+    await render(
+      <template>
+        <LivestreamZoomEntry
+          @event={{this.event}}
+          @onJoined={{this.onJoined}}
+        />
+      </template>
+    );
+
+    await click(JOIN_BUTTON_SELECTOR);
+    await clearRender();
+
+    join.resolve();
+    await settled();
+
+    assert.false(
+      this.onJoined.called,
+      "the session was torn down before it could join"
+    );
+  });
+
+  test("hides the audio hint once the user connects audio", async function (assert) {
+    stubCapabilities(getOwner(this), { lg: true });
+    const captured = captureSession();
+    sinon.stub(ZoomMeetingSession.prototype, "performJoin").resolves();
+
+    await render(
+      <template><LivestreamZoomEntry @event={{this.event}} /></template>
+    );
+
+    await click(JOIN_BUTTON_SELECTOR);
+
+    const { session } = captured;
+    session.zoomClient = {
+      getCurrentUser: () => ({ userId: 1, audio: "" }),
+      updateVideoOptions: () => {},
+    };
+
+    session.syncAudioState();
+    await settled();
+
+    assert.dom(AUDIO_HINT_SELECTOR).exists("audio is not connected yet");
+
+    session.zoomClient.getCurrentUser = () => ({
+      userId: 1,
+      audio: "computer",
+    });
+    session.syncAudioState();
+    await settled();
+
+    assert.dom(AUDIO_HINT_SELECTOR).doesNotExist();
   });
 
   module("when marking attendance", function (innerHooks) {

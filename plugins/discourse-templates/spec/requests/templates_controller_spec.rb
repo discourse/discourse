@@ -97,6 +97,24 @@ describe DiscourseTemplates::TemplatesController do
         expect(parsed["templates"]).to eq(expected_response)
       end
 
+      it "omits tags hidden by tag group permissions" do
+        SiteSetting.discourse_templates_categories = templates_sub_category_everyone.id.to_s
+        hidden_tag = Fabricate(:tag, topics: [template_item6], name: "staff-only")
+        Fabricate(
+          :tag_group,
+          permissions: {
+            "staff" => TagGroupPermission.permission_types[:full],
+          },
+          tag_names: [hidden_tag.name],
+        )
+
+        get "/discourse_templates"
+
+        expect(response.status).to eq(200)
+        template = response.parsed_body["templates"].find { |item| item["id"] == template_item6.id }
+        expect(template["tags"]).to contain_exactly(everyone_tag.name)
+      end
+
       it "should list topics from multiple parent categories" do
         SiteSetting.discourse_templates_categories = [
           templates_sub_category_everyone,

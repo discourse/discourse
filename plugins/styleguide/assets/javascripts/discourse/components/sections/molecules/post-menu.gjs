@@ -1,35 +1,9 @@
-import Component from "@glimmer/component";
-import PostMenu from "discourse/components/post/menu";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
+import PostMenuExample from "../../examples/molecules/post-menu";
+import postMenuSource from "../../examples/molecules/post-menu?source=file";
 
-export default class CharCounterMolecule extends Component {
-  get sampleCode() {
-    return `
-import PostMenu from "discourse/components/post/menu";
-
-<template>
-  <PostMenu
-    @post={{@dummy.transformedPost}}
-    @canCreatePost={{true}}
-    @showFlags={{true}}
-    @showLogin={{true}}
-    @showReadIndicator={{true}}
-    @toggleLike={{true}}
-  />
+export default <template>
+  <StyleguideExample @title="<PostMenu>" @code={{postMenuSource}}>
+    <PostMenuExample @post={{@dummy.transformedPost}} />
+  </StyleguideExample>
 </template>
-    `;
-  }
-
-  <template>
-    <StyleguideExample @title="<PostMenu>" @code={{this.sampleCode}}>
-      <PostMenu
-        @post={{@dummy.transformedPost}}
-        @canCreatePost={{true}}
-        @showFlags={{true}}
-        @showLogin={{true}}
-        @showReadIndicator={{true}}
-        @toggleLike={{true}}
-      />
-    </StyleguideExample>
-  </template>
-}

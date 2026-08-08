@@ -1,0 +1,18 @@
+/* Table block — semantic table whose cells hold blocks. */
+.d-block-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--primary-low);
+    text-align: start;
+    vertical-align: top;
+  }
+
+  th {
+    font-weight: 600;
+    background: var(--primary-very-low);
+  }
+}

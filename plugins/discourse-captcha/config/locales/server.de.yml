@@ -1,0 +1,20 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  dashboard:
+    problem:
+      hcaptcha_configuration: "Es gibt ein Problem mit deiner hCaptcha-Konfiguration für `site_key` oder `secret_key`"
+      recaptcha_configuration: "Es gibt ein Problem mit deiner ReCaptcha -Konfiguration für `site_key` oder `secret_key`"
+  site_settings:
+    discourse_captcha_enabled: "Aktiviere die Captcha-Verifizierung für die Registrierung neuer Benutzer. Dazu musst du unten entweder hCaptcha oder reCaptcha konfigurieren."
+    discourse_captcha_provider: "Wähle einen Captcha-Anbieter aus. Dazu musst du ein Konto bei dem ausgewählten Anbieter haben."
+    hcaptcha_site_key: "hCaptcha-Website-Schlüssel aus deinem <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>-Konto"
+    hcaptcha_secret_key: "Geheimer hCaptcha-Schlüssel aus deinem <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>-Konto"
+    recaptcha_site_key: "ReCaptcha-Website-Schlüssel aus deinem <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a>-Konto"
+    recaptcha_secret_key: "ReCaptcha-Geheimschlüssel aus deinem <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a>-Konto"
+  captcha_verification_failed: "Captcha-Verifizierung fehlgeschlagen"
+  captcha_not_configured: "Captcha ist aktiviert, aber nicht richtig konfiguriert. Bitte wende dich an den Administrator der Website."

@@ -29,8 +29,13 @@ vi:
       create: "Tạo"
       cancel: "Hủy"
       chat_channels: "Các kênh"
+      pinned_bar:
+        title: "Đã ghim"
       pinned: "Đã ghim"
       browse_all_channels: "Xem tất cả kênh"
+      delete_messages:
+        confirm:
+          other: "Bạn có chắc chắn muốn xoá %{count} tin nhắn không vậy?"
       channel_settings:
         edit: "Sửa"
         add: "Thêm"
@@ -63,12 +68,6 @@ vi:
         never: "Không bao giờ"
       separate_sidebar_mode:
         title: "Tác riêng thanh bên cho diễn đàn và chat"
-      send_shortcut:
-        title: "Gửi lối tắt"
-        enter:
-          label: "Gửi bằng cách nhấn Enter"
-        meta_enter:
-          label: "Gửi bằng %{meta_key} + Enter"
       enable: "Bật chat"
       flag: "Báo cáo"
       join: "Tham gia"
@@ -78,12 +77,29 @@ vi:
           header:
             some: "Một số người dùng sẽ không được thông báo"
             all: "Sẽ không ai được thông báo"
+      screen_reader:
+        new_message: "%{username}: %{message}"
+        new_messages:
+          other: "%{count} tin nhắn mới"
+        new_image:
+          other: "%{username} đã gửi %{count} hình ảnh"
+        new_attachment:
+          other: "%{username} đã gửi %{count} tệp đính kèm"
+        new_message_with_image:
+          other: "%{username}: %{message} (kèm %{count} hình ảnh)"
+        new_message_with_attachment:
+          other: "%{username} : %{message} (kèm %{count} tệp đính kèm)"
       no_direct_message_channels: "Bạn chưa nhắn riêng!"
       no_public_channels: "Bạn chưa tham gia kênh nào!"
       chat_notifications_title: "Thông báo chat"
       personalization_title: "Cá nhân hóa"
+      accessibility_title: "Trợ năng"
       ignore_channel_wide_mention:
         title: "Bỏ qua các lượt nhắc trên toàn kênh"
+      announce_new_messages:
+        title: "Đọc thông báo tin nhắn mới cho trình đọc màn hình"
+      new_message_sound:
+        title: "Phát âm thanh khi có tin nhắn mới lúc đang mở trò chuyện"
       open_full_page: "Mở cửa sổ chat toàn màn hình"
       close_full_page: "Đóng cửa sổ chat toàn màn hình"
       reply: "Trả lời"
@@ -97,6 +113,10 @@ vi:
         title: "Âm thanh thông báo chat trên desktop"
       sounds:
         none: "Không có gì"
+      disabled:
+        title: "Bạn đã tắt trò chuyện"
+        body: "Bật lại để xem các kênh và tin nhắn."
+        cta: "Cài đặt trò chuyện cá nhân"
       channel_status:
         closed: "Đã đóng"
         open: "Mở"
@@ -110,6 +130,7 @@ vi:
         filter_input_placeholder: Tìm kênh theo tên
         filter_joined_all: "Tất cả"
         filter_joined_joined: "Đã tham gia"
+        filter_joined_not_joined: "Chưa tham gia"
       chat_message_separator:
         today: Hôm nay
         yesterday: Hôm qua
@@ -140,8 +161,22 @@ vi:
         title: Tin nhắn mới
         prefix: "Tới:"
       channel:
+        empty_state:
+          title: "Đây là phần bắt đầu của %{channelName}"
+          joined_title: "Bạn là người đầu tiên tham gia %{channelName}!"
+          guest_tip: "Bạn đang xem với tư cách khách. Cuộc trò chuyện sẽ bắt đầu ngay khi có thành viên gửi tin nhắn — hãy tham gia để cùng trò chuyện."
+          joined_tip: "Hãy là người đầu tiên gửi tin nhắn và bắt đầu cuộc trò chuyện."
+          members_here:
+            other: "Có <strong>%{count} thành viên</strong> ở đây"
+          no_other_members: "Chưa có thành viên nào khác"
         preview_card:
+          guest_title: "Tham gia %{channelName} để bắt đầu trò chuyện"
+          guest_body: "Mọi người đều có thể đọc tự do. Khi đăng ký tài khoản , bạn có thể : gửi tin nhắn, bày tỏ cảm xúc và phản hồi — tất cả chỉ mất khoảng 30 giây!"
+          join_body: "Bạn có thể đăng bài, phản hồi và kênh sẽ hiển thị trong danh sách của bạn."
+          no_access_title: "Không thể tham gia %{channelName}"
+          no_access_body: "Kênh này hiện chưa mở cho thành viên mới."
           log_in: "Đăng nhập"
+          sign_up: "Đăng ký"
       create_channel:
         description: "Mô tả"
         type: "Loại"

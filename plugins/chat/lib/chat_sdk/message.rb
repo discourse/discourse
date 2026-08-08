@@ -95,9 +95,6 @@ module ChatSDK
         on_model_not_found(:membership) do
           raise "Couldn't find membership for user with id: `#{guardian.user.id}`"
         end
-        on_failed_policy(:can_join_channel) do
-          raise "User with id: `#{guardian.user.id}` can't join this channel"
-        end
         on_failed_policy(:can_stop_streaming) do
           raise "User with id: `#{guardian.user.id}` can't stop streaming this message"
         end
@@ -148,9 +145,6 @@ module ChatSDK
             raise "Couldn't find thread with id: `#{thread_id}`"
           end
           on_failed_policy(:accept_blocks) { raise "Only bots can create messages with blocks" }
-          on_failed_policy(:allowed_to_join_channel) do
-            raise "User with id: `#{guardian.user.id}` can't join this channel"
-          end
           on_failed_contract { |contract| raise contract.errors.full_messages.join(", ") }
           on_success { |message_instance:| message_instance }
           on_failure { raise "Unexpected error" }

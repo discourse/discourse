@@ -6,8 +6,6 @@ import EmojiPicker from "discourse/components/emoji-picker";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse/lib/environment";
-import { translateModKey } from "discourse/lib/utilities";
-import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import {
@@ -15,8 +13,6 @@ import {
   CHAT_QUICK_REACTION_TYPE_CUSTOM,
   CHAT_QUICK_REACTION_TYPE_FREQUENT,
   CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT,
-  CHAT_SEND_SHORTCUT_ENTER,
-  CHAT_SEND_SHORTCUT_META_ENTER,
   CHAT_SEPARATE_SIDEBAR_MODE_ALWAYS,
   CHAT_SEPARATE_SIDEBAR_MODE_FULLSCREEN,
   CHAT_SEPARATE_SIDEBAR_MODE_NEVER,
@@ -34,21 +30,6 @@ export default class Chat extends Component {
       {
         label: i18n("chat.quick_reaction_type.options.custom"),
         value: CHAT_QUICK_REACTION_TYPE_CUSTOM,
-      },
-    ];
-  }
-
-  get chatSendShortcutOptions() {
-    return [
-      {
-        label: i18n("chat.send_shortcut.enter.label"),
-        value: CHAT_SEND_SHORTCUT_ENTER,
-      },
-      {
-        label: i18n("chat.send_shortcut.meta_enter.label", {
-          meta_key: translateModKey(PLATFORM_KEY_MODIFIER),
-        }),
-        value: CHAT_SEND_SHORTCUT_META_ENTER,
       },
     ];
   }
@@ -84,7 +65,6 @@ export default class Chat extends Component {
       chat_announce_new_messages: userOption.chat_announce_new_messages,
       chat_new_message_sound: userOption.chat_new_message_sound,
       chat_separate_sidebar_mode: userOption.chat_separate_sidebar_mode,
-      chat_send_shortcut: userOption.chat_send_shortcut,
     };
   }
 
@@ -175,21 +155,6 @@ export default class Chat extends Component {
             </field.Control>
           </form.Field>
         {{/if}}
-        <form.Field
-          @title={{i18n "chat.send_shortcut.title"}}
-          @name="chat_send_shortcut"
-          @format="large"
-          @type="radio-group"
-          as |field|
-        >
-          <field.Control as |radioGroup|>
-            {{#each this.chatSendShortcutOptions as |option|}}
-              <radioGroup.Radio @value={{option.value}}>
-                {{option.label}}
-              </radioGroup.Radio>
-            {{/each}}
-          </field.Control>
-        </form.Field>
         <form.Field
           @title={{i18n "chat.separate_sidebar_mode.title"}}
           @name="chat_separate_sidebar_mode"

@@ -103,6 +103,6 @@ html {
   --discourse_id-border: var(--discourse_id-background) !important;
 }
 
-.uc-modernize-foundation-theme {
+:where(.uc-modernize-foundation-theme) {
   --d-sidebar-active-background: var(--d-selected) !important;
 }

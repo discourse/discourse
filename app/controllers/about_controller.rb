@@ -8,12 +8,7 @@ class AboutController < ApplicationController
   def index
     return redirect_to path("/login") if SiteSetting.login_required? && current_user.nil?
 
-    @about =
-      About.new(
-        current_user,
-        locale: I18n.locale,
-        show_original: ContentLocalization.show_original?(guardian),
-      )
+    @about = About.new(current_user, locale: I18n.locale)
     @title = "#{I18n.t("js.about.simple_title")} - #{@about.title}"
     @description_meta = @about.description
     respond_to do |format|

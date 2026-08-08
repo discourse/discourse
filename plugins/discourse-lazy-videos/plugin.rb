@@ -4,7 +4,7 @@
 # about: Lazy loading for embedded videos
 # version: 0.1
 # authors: Jan Cernik
-# url: https://github.com/discourse/discourse-lazy-videos
+# url: https://github.com/discourse/discourse/blob/main/plugins/discourse-lazy-videos
 
 enabled_site_setting :lazy_videos_enabled
 

@@ -517,7 +517,7 @@ describe DiscourseAi::Automation::LlmTriage do
     )
   end
 
-  it "escapes llm response and automation name in the flagged post message" do
+  it "sanitizes the llm response and renders the automation name literally" do
     automation = Fabricate(:automation, script: "llm_triage", name: %(rule"><img src=x onerror=1>))
 
     DiscourseAi::Completions::Llm.with_prepared_responses(["<img src=x onerror=alert(1)>"]) do
@@ -530,12 +530,22 @@ describe DiscourseAi::Automation::LlmTriage do
       )
     end
 
-    score_reason = ReviewablePost.last.reviewable_scores.first.reason
+    score = ReviewablePost.last.reviewable_scores.first
+    serialized =
+      ReviewableScoreSerializer.new(score, scope: Discourse.system_user.guardian, root: nil)
 
-    expect(score_reason).to include("&lt;img src=x onerror=alert(1)&gt;")
-    expect(score_reason).to include("rule&quot;&gt;&lt;img src=x onerror=1&gt;")
-    expect(score_reason).not_to include("<img src=x onerror=alert(1)>")
-    expect(score_reason).not_to include(%(rule"><img src=x onerror=1>))
+    expect(serialized.reason).to match_html(<<~HTML)
+      <p>
+        <b>
+          Triggered by the
+          <a href="/admin/plugins/automation/#{automation.id}">
+            #{CGI.escapeHTML(automation.name)}
+          </a>
+          rule.
+        </b>
+      </p>
+      <p>Response from the model: <img src=""></p>
+    HTML
   end
 
   it "only sends one PM when multiple rules flag the same post" do

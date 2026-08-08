@@ -832,6 +832,15 @@ RSpec.describe TopicEmbed do
         "\n<hr>\n<small>This is a companion discussion topic for the original entry at <a href='http://www.discourse.org/%23%3C/a%3E%3Cimg%20src=x%20onerror=alert(%22document.domain%22);%3E'>http://www.discourse.org/%23%3C/a%3E%3Cimg%20src=x%20onerror=alert(%22document.domain%22);%3E</a></small>\n"
       expect(html).to eq(expected_html)
     end
+
+    it "escapes the URL in the raw HTML footer" do
+      url = "http://eviltrout.com/'onmouseover='window.topicEmbedXssExecuted=true"
+      link = Nokogiri::HTML5.fragment(TopicEmbed.imported_from_html(url)).at_css("a")
+
+      expect(link["href"]).to eq(url)
+      expect(link["onmouseover"]).to be_nil
+      expect(link.text).to eq(url)
+    end
   end
 
   describe ".expanded_for" do

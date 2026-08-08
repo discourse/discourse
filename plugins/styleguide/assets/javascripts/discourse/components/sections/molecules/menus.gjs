@@ -38,38 +38,6 @@ export default class Menus extends Component {
     this._content = trustHTML(value);
   }
 
-  get templateCode() {
-    return `<DMenu
-  @label={{html-safe "${this.label}"}}
-  @content={{html-safe "${this.content}"}}
-/>`;
-  }
-
-  get templateCodeContent() {
-    return `<DMenu @maxWidth={{100}}>
-  <:trigger>
-     ${this.label}
-  </:trigger>
-  <:content>
-    ${this.content}
-  </:content>
-</DMenu>`;
-  }
-
-  get serviceCode() {
-    return `this.menu.register(
-  document.queryselector(".my-element"),
-  { content: htmlSafe(${this.content}) }
-);`;
-  }
-
-  get serviceCodeComponent() {
-    return `this.menu.register(
-  document.queryselector(".my-element"),
-  { component: MyComponent, data: { foo: 1 } }
-);`;
-  }
-
   @action
   toggleArrow() {
     this.arrow = !this.arrow;

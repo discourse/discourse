@@ -2,6 +2,10 @@
 
 RSpec::Matchers.define :be_chill_about_it do
   match { |service| expect(service.call).to be_blank }
+
+  failure_message do |service|
+    "Expected check to be chill about it, but it had a problem: #{service.call.inspect}"
+  end
 end
 
 RSpec::Matchers.define :have_a_problem do

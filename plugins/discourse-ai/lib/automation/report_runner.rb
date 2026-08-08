@@ -53,7 +53,7 @@ module DiscourseAi
         exclude_category_ids: nil,
         exclude_tags: nil,
         top_p: 0.1,
-        temperature: 0.2,
+        temperature: nil,
         suppress_notifications: false,
         automation: nil
       )

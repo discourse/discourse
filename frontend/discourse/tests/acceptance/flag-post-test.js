@@ -155,6 +155,21 @@ acceptance(`flagging`, function (needs) {
       );
   });
 
+  test("Flag for Review requires a selected reason", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await openFlagModal();
+
+    assert
+      .dom(".flag-modal__flag-for-review")
+      .isDisabled("stays disabled until a reason is selected");
+
+    await click("#radio_inappropriate");
+
+    assert
+      .dom(".flag-modal__flag-for-review")
+      .isNotDisabled("enables once a non-require_message reason is selected");
+  });
+
   test("Can delete spammer from spam", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openFlagModal();

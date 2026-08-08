@@ -231,6 +231,7 @@ es:
       discourse_workflows:
         ai_agent:
           agent_id: "Agente"
+          mode: "Modo"
       ai_tool_approval:
         loading: "Cargando..."
         agent: "Agente"
@@ -386,16 +387,29 @@ es:
         title: "Traducciones"
         description: "Traduce automáticamente todo el contenido de tu foro al idioma preferido del usuario"
         supported_locales: "Idiomas compatibles"
-        supported_locales_description: "Este ajuste del sitio también permite a los visitantes contribuir con traducciones de las publicaciones."
         category_scope: "Categorías"
+        cached_results_notice: "Mostrando resultados en caché de %{relative_time}."
+        model_progress:
+          detail:
+            retry: "Reintentar"
+            columns:
+              locale: "Idioma local"
+              pending: "Pendiente"
+              total: "Total"
+          targets:
+            post:
+              title: "Publicaciones"
+            topic:
+              title: "Temas"
+            category:
+              title: "Categorías"
+            tag:
+              title: "Etiquetas"
         admin_actions:
-          translation_settings: "Ajustes de traducción"
-          localization_settings: "Ajustes de localización"
           enable_translations: "Activar traducciones automáticas"
         stats:
           title: "Estadísticas de traducción"
           backfill_disabled: "El relleno está desactivado, solo se traducirán las publicaciones nuevas."
-          backfill_message: "Los <a href='%{settingsUrl}'>ajustes de relleno</a> están configurados para traducir todas las publicaciones posteriores a %{date}. Se estima que tardará %{eta}."
           eta_minutes:
             one: "%{count} minuto"
             other: "%{count} minutos"
@@ -607,6 +621,8 @@ es:
         allowed_groups: "Grupos permitidos"
         confirm_delete: "¿Seguro que quieres eliminar este agente?"
         new: "Nuevo agente"
+        duplicate: "Duplicar"
+        copy_name: "Copiar de %{name}"
         no_agents: "Aún no has creado ningún agente"
         title: "Agentes"
         short_title: "Agentes"
@@ -897,8 +913,7 @@ es:
           anthropic-claude-opus-4-7: "El modelo antrópico más inteligente"
           anthropic-claude-sonnet-4-6: "Equilibrio óptimo entre velocidad y coste"
           anthropic-claude-haiku-4-5: "Rápido y rentable"
-          google-gemini-3-1-pro: "El modelo de Google más inteligente"
-          google-gemini-3-flash: "Rápido y rentable con razonamiento multimodal"
+          google-gemini-3-1-pro-preview: "El modelo de Google más inteligente"
           open_router-moonshotai-kimi-k2-6: "Modelo multimodal de Moonshot con capacidades de visión"
         preseeded_model_description: "Modelo de código abierto preconfigurado que utiliza %{model}"
         configured:
@@ -936,7 +951,6 @@ es:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -1213,15 +1227,9 @@ es:
           bulk_regen_description: "Selecciona qué tipo de resumen de IA quieres regenerar para los temas seleccionados."
           regenerate_gists_option: "Resúmenes breves (gists)"
           regenerate_summaries_option: "Resúmenes de temas"
-          regenerate_gists_success:
-            one: "El resumen breve se ha regenerado correctamente"
-            other: "%{count} resúmenes breves se han regenerado correctamente"
           regenerate_gists_error:
             one: "Error al regenerar el resumen breve"
             other: "Error al regenerar %{count} resúmenes breves"
-          regenerate_topic_summary_success:
-            one: "El resumen del tema se ha regenerado correctamente"
-            other: "%{count} resúmenes de temas se han regenerado correctamente"
           regenerate_topic_summary_error:
             one: "Error al regenerar el resumen del tema"
             other: "Error al regenerar %{count} resúmenes de temas"

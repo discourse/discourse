@@ -93,9 +93,7 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
   end
 
   def run_migration(theme, enable_gifs: false)
-    expect {
-      DiscourseGifsMigration.migrate_component(theme, enable_gifs: enable_gifs)
-    }.to output.to_stdout
+    expect { DiscourseGifsMigration.migrate_component(theme, enable_gifs:) }.to output.to_stdout
   end
 
   describe ".find_component_in_db" do
@@ -334,14 +332,20 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
     end
 
     context "with theme translation overrides" do
-      def add_translation_override(theme, key, value, locale: "en")
-        ThemeTranslationOverride.create!(theme:, locale:, translation_key: key, value:)
-      end
-
       it "migrates customised strings (per locale) to the matching core site text",
          :aggregate_failures do
-        add_translation_override(component, "gif.composer_title", "Add a GIF")
-        add_translation_override(component, "gif.modal_title", "Chercher des GIFs", locale: "fr")
+        ThemeTranslationOverride.create!(
+          theme: component,
+          locale: "en",
+          translation_key: "gif.composer_title",
+          value: "Add a GIF",
+        )
+        ThemeTranslationOverride.create!(
+          theme: component,
+          locale: "fr",
+          translation_key: "gif.modal_title",
+          value: "Chercher des GIFs",
+        )
 
         run_migration(component)
 
@@ -357,7 +361,12 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
       end
 
       it "skips overrides of keys with no core equivalent" do
-        add_translation_override(component, "gif.query", "Keyword")
+        ThemeTranslationOverride.create!(
+          theme: component,
+          locale: "en",
+          translation_key: "gif.query",
+          value: "Keyword",
+        )
 
         run_migration(component)
 
@@ -401,9 +410,7 @@ RSpec.describe "tasks/migrate_discourse_gifs_to_core" do
   end
 
   describe "the themes:discourse_gifs:migrate task" do
-    def run_task
-      capture_stdout { Rake::Task["themes:discourse_gifs:migrate"].invoke }
-    end
+    subject(:run_task) { capture_stdout { Rake::Task["themes:discourse_gifs:migrate"].invoke } }
 
     before { allow(DiscourseGifsMigration).to receive(:migrate_all) }
 

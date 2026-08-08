@@ -9,7 +9,7 @@ class DiscourseSolved::AdminDashboardSupportController < ::Admin::StaffControlle
                start_date: params[:start_date],
                end_date: params[:end_date],
                current_user: current_user,
-               category_id: params[:category_id],
+               category_ids: params[:category_ids],
              )
   end
 end

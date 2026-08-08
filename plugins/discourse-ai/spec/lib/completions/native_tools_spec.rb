@@ -4,6 +4,7 @@ RSpec.describe DiscourseAi::Completions::NativeTools do
   before { enable_current_plugin }
 
   fab!(:gemini_model)
+  fab!(:gemini_interactions_model)
   fab!(:anthropic_model)
   fab!(:openai_chat_model) do
     Fabricate(:llm_model, url: "https://api.openai.com/v1/chat/completions")
@@ -14,8 +15,11 @@ RSpec.describe DiscourseAi::Completions::NativeTools do
   fab!(:bedrock_model)
 
   describe ".supported_ids_for" do
-    it "supports Gemini grounding and URL context" do
+    it "supports provider-native Gemini tools" do
       expect(described_class.supported_ids_for(gemini_model)).to eq(%w[web_search web_fetch])
+      expect(described_class.supported_ids_for(gemini_interactions_model)).to eq(
+        %w[web_search web_fetch google_maps code_execution],
+      )
     end
 
     it "supports Anthropic web search and fetch" do
@@ -42,6 +46,10 @@ RSpec.describe DiscourseAi::Completions::NativeTools do
       expect(described_class.valid?("native-web_search")).to eq(true)
       expect(described_class.valid?("web_fetch")).to eq(true)
       expect(described_class.valid?("native-web_fetch")).to eq(true)
+      expect(described_class.valid?("google_maps")).to eq(true)
+      expect(described_class.valid?("native-google_maps")).to eq(true)
+      expect(described_class.valid?("code_execution")).to eq(true)
+      expect(described_class.valid?("native-code_execution")).to eq(true)
       expect(described_class.valid?("nope")).to eq(false)
     end
 
@@ -67,6 +75,25 @@ RSpec.describe DiscourseAi::Completions::NativeTools do
 
       dialect = DiscourseAi::Completions::Dialects::Gemini.new(prompt, gemini_model)
       expect(dialect.tools).to eq([{ google_search: {} }, { url_context: {} }])
+    end
+
+    it "renders Gemini Interactions native tools" do
+      prompt =
+        DiscourseAi::Completions::Prompt.new("system", messages: [{ type: :user, content: "hi" }])
+      prompt.native_tools = %w[web_search web_fetch google_maps code_execution]
+
+      dialect =
+        DiscourseAi::Completions::Dialects::GeminiInteractions.new(
+          prompt,
+          gemini_interactions_model,
+        )
+
+      expect(dialect.tools).to contain_exactly(
+        { type: "google_search" },
+        { type: "url_context" },
+        { type: "google_maps" },
+        { type: "code_execution" },
+      )
     end
 
     it "renders google_search alongside function declarations for Gemini" do

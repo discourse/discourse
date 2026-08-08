@@ -13,11 +13,13 @@ he:
       logged_in_as: "נכנסת בתור"
       permissions_header: 'ההרשאה הזאת תאפשר ל־„%{application_name}” לבצע:'
       redirect_warning: "האימות יפנה אותך אל"
+      copy_key: "העתקת מפתח"
       copied: "הועתק!"
       otp_description: 'לאפשר ל־„%{application_name}” לגשת לאתר הזה?'
       no_trust_level: "אין לך את דרגת האמון הנדרשת כדי לגשת ל־API של המשתמשים, סליחה"
       generic_error: "לא הצלחנו לייצר את מפתחות ה־API של המשתמש, ייתכן שיכולת זו הושבתה על ידי הנהלת האתר, עמך הסליחה"
       device:
+        title: "אישור יישום"
         code: "קוד"
         continue: "המשך"
         authorize_title: 'אישור של „%{application_name}”'
@@ -235,9 +237,12 @@ he:
       to_placeholder: "עד תאריך"
     date_range_picker:
       apply: "החלה"
+      start_date: "מועד התחלה"
+      end_date: "מועד סיום"
       presets:
         last_7_days: "7 הימים האחרונים"
         last_30_days: "30 הימים האחרונים"
+        last_3_months: "3 החודשים האחרונים"
         last_6_months: "חצי השנה האחרונה"
         last_year: "שנה שעברה"
     languages:
@@ -940,6 +945,8 @@ he:
         email: "דוא״ל"
         name: "שם"
         fields: "שדות"
+        silence_reason: "סיבת השתקה"
+        penalty_forever: "לנצח"
         reject_reason: "סיבה"
         scrubbed_reason: "סיבה"
         scrubbed_reject_reason: "סיבת דחיית המשתמש"
@@ -1776,8 +1783,11 @@ he:
       external_links_in_new_tab: "פתיחת כל הקישורים החיצוניים בלשונית חדשה"
       enable_quoting: "הפעלת תגובת ציטוט לטקסט מסומן"
       enable_smart_lists: "הפעלת רשימות חכמות בעת כתיבה בחלון עריכת הודעות"
-      enable_defer: "הפעלת סימון נושאים כלא נקראו"
       enable_markdown_monospace_font: "להשתמש בגופן ברוחב אחיד במצב ה־Markdown בכתיבת הודעה"
+      automatically_translate: "לתרגם אוטומטית נושאים ופוסטים בשפות אחרות"
+      content_languages:
+        title: "שפות תוכן"
+        understood: "שפות שאני מבין או מבינה"
       experimental_sidebar:
         enable: "הפעלת סרגל צד"
         options: "אפשרויות"
@@ -2250,7 +2260,7 @@ he:
         default: "(ברירת מחדל)"
         any: "כלשהו"
       homepage:
-        default: "(ברירת מחדל)"
+        default: "ברירת מחדל"
       password_confirmation:
         title: "סיסמה שוב"
       invite_code:
@@ -2294,6 +2304,9 @@ he:
         contextual: "תוכן חדש בדף"
       bookmark_after_notification:
         title: "לאחר שליחת התראה על תזכורת סימניה:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "‎%{meta_key} + Enter"
       like_notification_frequency:
         title: "התראה כשנאהב"
         always: "תמיד"
@@ -2459,16 +2472,20 @@ he:
           member_title: "הזמנת חברים"
           sent_title: "נשלחה הזמנה"
           member_tab: "חברים"
-          admin_tab: "מנהלים ראשיים"
+          admin_tab: "סגל"
+          staff_role_admin: "הנהלה"
+          staff_role_moderator: "מפקח"
           admin_email_label: "כתובת דוא״ל"
           email_placeholder: "name@example.com"
           invite_by_email: "דוא״ל"
           restrict_domain: "הגבלה לשם תחום"
-          more_options: "אפשרויות נוספות"
+          create_and_send: "שליחה"
+          create_and_copy: "העתקת קישור"
           update: "עדכון"
           summary:
             role_member: "חברים"
             role_admin: "הנהלה"
+            role_moderator: "מפקח"
             method: "שיתוף"
             method_email: "דוא״ל"
             restriction: "מוגבלת לכדי"
@@ -2476,7 +2493,7 @@ he:
             expires: "תפוג"
             topic: "נושא"
             groups: "קבוצות"
-            edit: "עריכת הזמנה"
+            edit: "עריכה"
         bulk_invite:
           none: "אין הזמנות להצגה בעמוד הזה."
           text: "הזמנה כמותית"
@@ -3125,7 +3142,7 @@ he:
     filter_input:
       clear: "פינוי המסנן"
     filter_controls:
-      reset: "איפוס המסנן"
+      reset: "איפוס"
     d_icon_grid_picker:
       select_icon: "נא לבחור סמל"
       search_placeholder: "חיפוש סמלים…"
@@ -3279,7 +3296,6 @@ he:
       italic_label: "I"
       italic_title: "נטוי"
       italic_text: "טקסט נטוי"
-      heading_title: "כותרות"
       heading_level_n: "כותרת %{levelNumber}"
       heading_level_n_title: "כותרת %{levelNumber}"
       heading_level_paragraph: "פסקה"
@@ -4837,6 +4853,10 @@ he:
         instructions: "שיתוף קישור לפוסט זה:"
       original_language: "הפוסט הזה נכתב במקור ב%{language}"
       original_language_and_outdated: "הפוסט הזה נכתב במקור ב%{language}. יכול להיות שהתרגום לא עדכני"
+    content_localization:
+      preferences:
+        title: "העדפות שפת תוכן"
+        login_to_set_languages: "יש להיכנס כדי להגדיר שפות נוספות"
     category:
       none: "(ללא קטגוריה)"
       all: "כל הקטגוריות"
@@ -5773,6 +5793,10 @@ he:
           public: "גלוי לכולם"
           always_public: "התוכן בסעיף הזה הוא תמיד ציבורי"
           more_menu: "תפריט נוסף"
+          localizations:
+            locale: "שפה"
+            title_label: "כותרת מקטע"
+            remove_language: "הסרה"
           links:
             add: "הוספת קישור נוסף"
             delete: "מחיקת קישור"
@@ -6723,7 +6747,6 @@ he:
               posts: "פרסומים"
               share: "שיתוף"
             whos_posting:
-              all_categories: "כל הקטגוריות"
               new_members: "חברים חדשים"
               staff: "סגל"
             trust_level_pipeline:
@@ -7482,6 +7505,8 @@ he:
         sidebar: "סרגל צד"
         header_dropdown: "שורת כותרת נגללת"
         legacy: "מיושן"
+      duplicate_topic_titles:
+        allowed: "מותר"
       backups:
         title: "גיבויים"
         files_title: "גיבוי קבצים"
@@ -7726,7 +7751,6 @@ he:
           finish_install: "סיום התקנת ערכת עיצוב"
           last_attempt: "תהליך ההתקנה לא הסתיים, ניסיון אחרון:"
           remote_branch: "שם ענף (רשות)"
-          public_key: "להעניק למפתח הציבורי הבא גישה למאגר:"
           install: "התקנה"
           installed: "הותקן"
           install_popular: "נפוץ"
@@ -9100,6 +9124,7 @@ he:
         uploading: "בהליכי העלאה…"
         name: "שם"
         group: "קבוצה"
+        all_groups: "כל הקבוצות"
         created_by: "נוצר על ידי"
         image: "תמונה"
         alt: "תצוגה מקדימה של אמוג׳י מותאם"

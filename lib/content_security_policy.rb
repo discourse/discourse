@@ -8,10 +8,16 @@ class ContentSecurityPolicy
       new.build(theme_id, base_url: base_url, path_info: path_info, report_only: report_only)
     end
 
-    def nonce_placeholder(response_headers)
+    def nonce_placeholder(response_headers, request_env: nil)
       response_headers[
         ::Middleware::CspScriptNonceInjector::PLACEHOLDER_HEADER
-      ] ||= "[[csp_nonce_placeholder_#{SecureRandom.hex}]]"
+      ] ||= if request_env.nil? || request_env[::Middleware::AnonymousCache::CACHEABLE_ENV]
+        "[[csp_nonce_placeholder_#{SecureRandom.hex}]]"
+      else
+        request_env[::Middleware::CspScriptNonceInjector::NONCE_ENV] ||= SecureRandom.alphanumeric(
+          25,
+        )
+      end
     end
   end
 

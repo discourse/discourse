@@ -57,6 +57,8 @@ pl_PL:
     added_and_removed: "Dodano %{added} i usunięto %{removed}"
     added: "Dodano %{added}"
     removed: "Usunięto %{removed}"
+  topics_bulk_action:
+    too_many_topic_ids: "Można wykonać akcję zbiorczą maksymalnie dla %{limit} tematów naraz."
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} przez %{username}"
@@ -89,6 +91,10 @@ pl_PL:
       asset_too_big: "Zasób %{filename} jest większy niż limit %{limit}"
       theme_too_big: "Motyw jest większy niż limit %{limit}"
       git: "Podczas klonowania repozytorium git wystąpił błąd: dostęp jest zabroniony albo repozytorium nie istnieje"
+      git_authentication: "Repozytorium Git odrzuciło klucz wdrożenia. Sprawdź, czy klucz publiczny ma dostęp do repozytorium i spróbuj ponownie. (Jeśli nie masz już klucza wdrożenia, usuń ten motyw i zainstaluj go ponownie)."
+      git_timeout: "Połączenie z repozytorium Git przekroczyło limit czasu. Spróbuj ponownie później."
+      git_repository_not_found: "Nie znaleziono repozytorium Git. Sprawdź adres URL repozytorium."
+      git_branch_not_found: "Nie znaleziono gałęzi git. Sprawdź nazwę gałęzi."
       git_ref_not_found: "Nie można sprawdzić odwołania git: %{ref}"
       git_unsupported_scheme: "Nie można sklonować repozytorium git: schemat nieobsługiwany"
       unpack_failed: "Błąd przy rozpakowywaniu pliku"
@@ -297,6 +303,7 @@ pl_PL:
         screened_email_error: "Dzieje się tak, gdy adres e-mail nadawcy został już sprawdzony."
         unsubscribe_not_allowed: "Zdarza się, kiedy anulowanie subskrypcji przez e‐mail nie jest dozwolone dla tego użytkownika."
         email_not_allowed: "Zdarza się, gdy adres e-mail nie znajduje się na liście dozwolonych adresów lub jest na liście zablokowanych."
+        email_alias_not_allowed: "Dzieje się tak, gdy adres nadawcy jest aliasem adresu już zarejestrowanego na koncie, a znormalizowane adresy e-mail muszą być unikalne."
       unrecognized_error: "Niezidentyfikowany błąd"
     secure_uploads_placeholder: "Redacted: Ta strona ma włączone bezpieczne przesyłanie plików, odwiedź temat lub kliknij wyświetl media, aby zobaczyć załączone pliki."
     view_redacted_media: "Wyświetl załączniki"
@@ -324,7 +331,7 @@ pl_PL:
       exclusion: jest zarezerwowane
       greater_than: musi być większe niż %{count}
       greater_than_or_equal_to: musi być większe lub równe %{count}
-      has_already_been_used: "został już użyty"
+      topic_title_already_used: "Ten tytuł został już użyty przez <a href='%{url}'>inny temat</a>."
       in: musi być w %{count}
       inclusion: nie jest zawarty w liście
       invalid: jest nieprawidłowy
@@ -461,6 +468,8 @@ pl_PL:
     email_xor_domain: "Pola adresu e-mail i domeny nie są dozwolone jednocześnie"
     admin_invite_requires_email: "Zaproszenia administratora muszą być wysyłane na adres e-mail"
     admin_invite_requires_admin_inviter: "Tylko administratorzy mogą tworzyć zaproszenia administratorów"
+    moderator_invite_requires_email: "Zaproszenia moderatorów muszą być wysyłane na adres e-mail"
+    moderator_invite_requires_staff_inviter: "Tylko personel może tworzyć zaproszenia moderatorów"
     existing_user_success: "Zaproszenie zostało pomyślnie zrealizowane"
     email_invites_disabled: "Wysyłanie zaproszeń e-mailem jest wyłączone"
   bulk_invite:
@@ -898,9 +907,14 @@ pl_PL:
           attributes:
             linkable_type:
               invalid: "nie jest prawidłowy"
+        sidebar_section:
+          attributes:
+            base:
+              too_many_sidebar_urls: "Dozwolona jest maksymalna liczba rekordów: %{limit} . Zamiast tego otrzymano %{count} rekordów."
         api_key:
           base:
             at_least_one_granular_scope: "co najmniej jeden musi być wybrany"
+            read_only_scope: "musi to być globalny zakres odczytu"
       <<: *errors
   uncategorized_category_name: "Bez kategorii"
   general_category_name: "Ogólne"
@@ -1185,6 +1199,7 @@ pl_PL:
     error: "Podczas próby zmiany Twojego adresu email wystąpił błąd. Być może ten adres jest już używany?"
     doesnt_exist: "Ten adres e-mail nie jest powiązany z Twoim kontem."
     error_staged: "Podczas próby zmiany Twojego adresu email wystąpił błąd. Być może ten adres jest już używany?"
+    error_alias: "Ten adres e-mail jest aliasem adresu, który jest już w użyciu."
     already_done: "Przepraszamy, ten link aktywujący konto jest już nieważny. Być może Twój e-mail został zmieniony?"
     confirm: "Potwierdź"
     max_secondary_emails_error: "Osiągnąłeś maksymalny dozwolony limit dodatkowych e-maili."
@@ -1565,6 +1580,7 @@ pl_PL:
         page_view_anon_browser: "Anonimowi"
         page_view_logged_in_browser: "Zalogowani"
         page_view_crawler: "Boty indeksujące"
+        page_view_likely_crawler: "Prawdopodobne roboty indeksujące"
         page_view_embed: "Osadzone wyświetlenia stron"
         page_view_other: "Inny ruch"
       yaxis: "Dzień"
@@ -1886,6 +1902,7 @@ pl_PL:
       group_email_credentials: 'Wystąpił problem z poświadczeniami e-mail dla grupy <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Wiadomości e-mail nie będą wysyłane z grupowej skrzynki odbiorczej do czasu rozwiązania tego problemu. %{error}'
       upcoming_change_stable_opted_out: 'Twoja witryna zrezygnowała z nadchodzącej zmiany „%{upcoming_change}”. Zmiana ta uzyskała status „Stabilna” i może wkrótce zostać usunięta lub wprowadzona na stałe. Odwiedź <a href="%{base_path}/admin/config/upcoming-changes">stronę nadchodzących zmian</a> , aby zapoznać się ze szczegółowymi informacjami na temat tej zmiany.'
       content_security_policy_disabled: "Funkcja Content-Security-Policy została wyłączona. To ważna funkcja bezpieczeństwa, której nigdy nie należy wyłączać w środowiskach produkcyjnych. <a href='%{base_path}/admin/site_settings/category/all_results?filter=content_security_policy'>Włącz ją ponownie tutaj</a>."
+      landlock: "Sandboxing Landlock jest niedostępny w tym środowisku hostingowym, dlatego polecenia zewnętrzne działają bez izolacji systemu plików i sieci. To ważne zabezpieczenie, którego nie powinno brakować w środowisku produkcyjnym. Aby je przywrócić, użyj jądra Linux z obsługą Landlock (wersja 5.13 lub nowsza)."
       rails_env: "Twój serwer działa w trybie %{env}"
       host_names: "Twój plik config/database.yml używa domyślnej nazwy serwera localhost. Zmień go by używał nazwy serwera Twojej strony."
       sidekiq_check: 'Sidekiq nie działa. Wiele zadań, takich jak wysyłanie e-maili, jest wykonywanych asynchronicznie przez Sidekiq. Upewnij się, że co najmniej jeden proces Sidekiq jest uruchomiony. <a href="https://github.com/mperham/sidekiq" target="_blank">Dowiedz się więcej o Sidekiq tutaj</a>.'
@@ -1969,6 +1986,7 @@ pl_PL:
     default_composer_category: "Kategoria używana do wstępnego wypełnienia listy wyboru kategorii podczas tworzenia nowego tematu."
     allow_uncategorized_topics: "Zezwól na tworzenie tematów bez kategorii. UWAGA: jeśli jest jakiś nieskategoryzowany temat, musisz go przypisać do kategorii, zanim wyłączysz tę opcję."
     remove_and_replace_uncategorized: "Zastępuje specjalną kategorię Bez kategorii standardową kategorią o tej samej nazwie i migruje do niej wszystkie tematy."
+    duplicate_topic_titles: "Czy temat może zostać utworzony z tytułem już używanym w innym temacie. Jeśli jest to dozwolone w różnych kategoriach, tytuł może być ponownie użyty, o ile tematy należą do różnych kategorii. Tematy, których autor nie widzi, nigdy nie są liczone jako duplikaty."
     allow_duplicate_topic_titles: "Pozwól na tworzenie tematów o identycznych tytułach."
     allow_duplicate_topic_titles_category: "Zezwól na tematy z identycznymi, zduplikowanymi tytułami, jeśli kategoria jest inna. {{setting:allow_duplicate_topic_titles}} musi być wyłączone."
     unique_posts_mins: "Ile minut musi upłynąć zanim użytkownik będzie mógł/mogła ponownie zrobić wpis z tą samą treścią"
@@ -1990,7 +2008,7 @@ pl_PL:
     staff_edit_locks_post: "Wpisy zostaną zablokowane przed edycją, jeśli będą edytowane przez członków personelu"
     post_edit_time_limit: "Autor tl0 lub tl1 może edytować swój wpis przez (n) minut po opublikowaniu. Ustaw na zawsze na 0."
     tl2_post_edit_time_limit: "Autor tl2 + może edytować swój wpis przez (n) minut po opublikowaniu. Ustaw na zawsze na 0."
-    edit_history_visible_to_public: "Pozwól wszystkim zobaczyć poprzednie wersje edytowanego posta. Gdy wyłączone, tylko członkowie personelu mogą je przeglądać."
+    edit_history_visible_to_public: "Zezwól wszystkim na przeglądanie poprzednich wersji edytowanego wpisu. Po wyłączeniu tej opcji tylko członkowie zespołu i moderatorzy grup kategorii (w przypadku wpisów w moderowanych przez nich kategoriach) będą mogli je przeglądać."
     delete_removed_posts_after: "Wpisy usunięte przez autora będą automatycznie zlikwidowane po (n) godzinach. Jeżeli liczba godzin będzie wynosić 0, to zostaną usunięte natychmiast. "
     notify_users_after_responses_deleted_on_flagged_post: "Gdy wpis zostanie oflagowany, a następnie usunięty, wszyscy użytkownicy, którzy na niego odpowiedzieli, a ich odpowiedzi zostały usunięte, zostaną powiadomieni."
     max_image_width: "Maksymalna szerokość miniatur obrazów w poście. Obrazy o większej szerokości zostaną przeskalowane i podświetlone."
@@ -2112,6 +2130,9 @@ pl_PL:
     allowed_iframes: "Lista prefiksów adresów URL iframe, które Discourse może bezpiecznie dopuszczać w postach. Znak * można użyć w celu dopasowania dowolnej liczby znaków innych niż /."
     allowed_crawler_user_agents: "Agenci użytkowników dla robotów indeksujących, które powinny mieć dostęp do strony. OSTRZEŻENIE! USTAWIENIE TEGO SPOWODUJE BLOKADE ROBOTÓW, KTÓRE NIE SĄ NA LIŚCIE!"
     blocked_crawler_user_agents: "Unikalne słowo bez rozróżniania wielkości liter w ciągu znaków, które identyfikują crawlery internetowe, które nie powinny mieć dostępu do witryny. Nie ma zastosowania, jeśli dozwolona lista jest zdefiniowana."
+    crawler_asns: "Sieci ASN obsługiwane przez zweryfikowane roboty indeksujące. Ruch z tych sieci jest wykluczany z raportów dotyczących wyświetleń stron w przeglądarce i otrzymuje wysoką ocenę robota indeksującego."
+    crawler_detection_datacenter_asns: "Sieci ASN świadczące usługi w chmurze, hostingu lub centrów danych. Sieci te niekoniecznie są robotami indeksującymi: ich ruch otrzymuje ocenę niskiego poziomu zaufania robota indeksującego i nadal jest liczony jako ruch przeglądarki."
+    crawler_stale_chromium_major_version_cutoff: "Główne wersje Chromium o wartości równej lub niższej w sesjach bez zaangażowania otrzymują wynik robota indeksującego. Aktualizuj go dopiero po przeanalizowaniu ruchu; nieaktualny próg staje się mniej wrażliwy, a nie bardziej agresywny."
     slow_down_crawler_user_agents: "Agenty użytkownika robotów indeksujących sieć, które powinny mieć ograniczenie przepustowości zgodnie z konfiguracją w ustawieniu {{setting:slow_down_crawler_rate}} . Każda wartość musi mieć co najmniej 3 znaki."
     slow_down_crawler_rate: "Jeżeli określono {{setting:slow_down_crawler_user_agents}} , ta szybkość będzie dotyczyć wszystkich robotów indeksujących (liczba sekund opóźnienia między żądaniami)"
     llms_txt: "Prześlij plik tekstowy, który będzie udostępniany w katalogu /llms.txt robotom LLM. Więcej informacji znajdziesz na stronie <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> ."
@@ -2125,7 +2146,8 @@ pl_PL:
     suppress_secured_categories_from_admin: "Ogranicz prywatne tematy i prywatne wiadomości w niektórych częściach interfejsu użytkownika dla administratorów. Treść nadal będzie widoczna w niektórych miejscach. To nie jest funkcja bezpieczeństwa: administratorzy zawsze mają dostęp do całej zawartości na stronie."
     include_secure_categories_in_tag_counts: "Gdy opcja ta jest włączona, liczba tematów dla tagu będzie obejmować tematy, które znajdują się w kategoriach z ograniczeniami odczytu dla wszystkich użytkowników. Gdy opcja ta jest wyłączona, zwykłym użytkownikom wyświetlana jest tylko liczba tematów dla tagu, w którym wszystkie tematy znajdują się w kategoriach publicznych."
     display_personal_messages_tag_counts: "Gdy ta opcja jest włączona, zostanie wyświetlona liczba prywatnych wiadomości oznaczonych danym tagiem."
-    top_menu: "Określ, które elementy pojawiają się w nawigacji na stronie głównej i w jakiej kolejności."
+    default_homepage: "Strona, na której użytkownicy lądują po wejściu na witrynę. Jeśli nie jest ustawiona, używany jest pierwszy element w {{setting:top_menu}} . Użytkownicy mogą zmienić to ustawienie w swoich preferencjach."
+    top_menu: "Określ, które elementy nawigacyjne będą wyświetlane na stronach odkrywania i w jakiej kolejności."
     custom_homepage_crawler_route: "Trasa pokazywana robotom sieciowym, gdy włączona jest niestandardowa strona główna."
     post_menu: "Skonfiguruj widoczność i kolejność domyślnych elementów menu postów. Dodatkowe elementy dodane przez wtyczki lub motywy są zarządzane osobno i nie pojawią się na tej liście."
     post_menu_hidden_items: "Elementy menu, które mają być domyślnie ukrywane w menu posta, chyba że zostanie kliknięty wielokropek. Dodatkowe elementy dodane przez wtyczki lub motywy są zarządzane osobno i nie pojawią się na tej liście."
@@ -2147,6 +2169,7 @@ pl_PL:
     top_page_default_timeframe: "Domyślny okres górnej strony dla anonimowych użytkowników (automatycznie dostosowuje się do zalogowanych użytkowników na podstawie ich ostatniej wizyty)."
     moderators_view_emails: "Zezwalaj moderatorom na przeglądanie adresów e-mail użytkowników."
     moderators_view_ips: "Zezwól moderatorom na przeglądanie adresów IP użytkowników."
+    moderators_view_sso_details: "Zezwól moderatorom na przeglądanie rekordów SSO"
     moderators_change_trust_levels: "Zezwól moderatorom na zmianę poziomu zaufania użytkowników."
     prioritize_username_in_ux: "Pokaż nazwę użytkownika jako pierwszą na stronie użytkownika, jego karcie i w postach (gdy opcja jest wyłączona, pełna nazwa jest wyświetlana jako pierwsza)"
     enable_rich_text_paste: "Włącz automatyczną konwersję HTML na Markdown podczas wklejania tekstu do kompozytora."
@@ -2638,6 +2661,7 @@ pl_PL:
     emoji_autocomplete_min_chars: "Minimalna liczba znaków wymagana do wywołania wyskakującego okienka z autouzupełnianiem"
     enable_inline_emoji_translation: "Włącza tłumaczenie wbudowanych emoji (bez spacji i znaków interpunkcyjnych przed)"
     emoji_deny_list: "Tych emoji nie będzie można używać w menu ani w shortcodes."
+    emoji_picker_pinned_groups: "Grupy emoji do przypięcia na górze selektora emoji. Wszystkie pozostałe grupy pojawią się po przypięciu."
     enable_gifs: "Dodaje przycisk umożliwiający łatwe wyszukiwanie i wstawianie plików GIF do wpisów."
     klipy_api_key: "Klucz API Klipy. Wymagany do obsługi wyszukiwania GIF-ów."
     klipy_file_detail: "Format obrazu do użycia. WebP ma mniejsze pliki, które ładują się szybciej, natomiast GIF zapewnia zgodność ze starszymi przeglądarkami."
@@ -2687,7 +2711,6 @@ pl_PL:
     default_other_external_links_in_new_tab: "Otwórz linki zewnętrzne w nowej karcie domyślnie."
     default_other_enable_quoting: "Domyślnie zezwól na podświetlone cytowane odpowiedzi."
     default_other_enable_smart_lists: "Domyślnie włącz inteligentne listy podczas pisania w kompozytorze."
-    default_other_enable_defer: "Domyślnie włącz funkcję odroczenia tematu."
     default_other_enable_markdown_monospace_font: "Domyślnie używaj czcionki monospace w trybie Markdown kompozytora."
     default_other_dynamic_favicon: "Domyślnie pokazuj liczbę nowych/zaktualizowanych tematów w ikonie przeglądarki."
     default_other_skip_new_user_tips: "Pomiń wskazówki i odznaki dotyczące wprowadzania nowych użytkowników."
@@ -2808,7 +2831,6 @@ pl_PL:
     about_page_extra_groups_order: "Kolejność dodatkowych grup na stronie „O nas”."
     adobe_analytics_tags_url: "Adres URL znaczników Adobe Analytics (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Grupy, które mogą wyświetlać nieprzetworzoną treść wiadomości e-mail, jeśli została ona utworzona przez przychodzącą wiadomość e-mail. Obejmuje to nagłówki wiadomości e-mail i inne informacje techniczne."
-    rich_editor: "Włącz wzbogacony edytor dla kompozytora, aby wszyscy użytkownicy mogli przełączać się między obecnym trybem Markdown a nowym edytorem tekstu wzbogaconego, co zapewni bardziej intuicyjne i łatwiejsze w obsłudze tworzenie treści."
     default_composition_mode: "Ustaw domyślny tryb dla kompozytora w swojej społeczności. Tryb RTF zapewnia bardziej nowoczesne i znajome środowisko pisania dla większości użytkowników, natomiast tryb Markdown może być odpowiedni dla odbiorców o bardziej technicznym zacięciu. Członkowie mogą przełączać się między trybami za pomocą przełącznika na pasku narzędzi kompozytora."
     reviewable_ui_refresh: "Grupy, które mogą korzystać z nowego eksperymentalnego interfejsu użytkownika w kolejce recenzji."
     content_localization_enabled: "Wyświetla zlokalizowaną treść dla użytkowników na podstawie ich przeglądarki lub preferencji językowych. Taka treść może obejmować kategorie, tagi, posty i tematy. Obsługiwane ustawienia regionalne są ustawione w {{setting:content_localization_supported_locales}}."
@@ -2841,7 +2863,8 @@ pl_PL:
     nested_replies_hot_preload_depth_penalty: "Priorytet jest zmniejszany dla każdego poziomu głębokości podczas wybierania zagnieżdżonych odpowiedzi do wstępnego rozwinięcia w widoku aktywnym."
     nested_replies_default_sort: "Domyślny algorytm sortowania dla widoku zagnieżdżonych odpowiedzi."
     nested_replies_max_depth: "Maksymalna głębokość wizualnego zagnieżdżenia dla odpowiedzi w wątkach. Wpisy o większej głębokości wyświetlają link „Kontynuuj ten wątek”."
-    nested_replies_backfill_batch_size: "Liczba tematów, dla których należy uzupełnić statystyki zagnieżdżonych odpowiedzi na każde zaplanowane uruchomienie."
+    nested_replies_backfill_batch_size: "Liczba tematów do przetworzenia na jedną zagnieżdżoną partię uzupełniania statystyk odpowiedzi."
+    nested_replies_stats_maintenance_enabled: "Zachowaj statystyki zagnieżdżonych odpowiedzi, nawet gdy zagnieżdżone odpowiedzi są wyłączone."
     nested_replies_cap_nesting_depth: "Ogranicz zagnieżdżanie odpowiedzi do maksymalnej głębokości wizualnej. Po włączeniu tej opcji odpowiedzi na najgłębszym poziomie będą ponownie traktowane jako równorzędne, a nie podrzędne."
     enable_new_defaults_for_trust_level_3_requirements: "Zaktualizowaliśmy domyślne wymagania TL3, aby były bardziej rozsądne dla członków dużych, aktywnych społeczności. Jeśli wcześniej nadpisano te ustawienia, ta nadchodząca zmiana nie będzie miała żadnego wpływu."
     floating_dismiss_topics_on_mobile: "Wyświetla na urządzeniu mobilnym pływający przycisk „Odrzuć...” dla listy tematów, aby ułatwić dostęp i zwolnić miejsce u góry listy tematów"
@@ -2852,9 +2875,12 @@ pl_PL:
     enable_horizon_high_context_topic_cards: "Wyświetla bogatsze karty tematyczne w motywie Horizon, obejmujące fragmenty tematów, tagi i rozszerzone informacje o wtyczce."
     granular_anonymous_and_logged_in_groups_permissions: "Wprowadza uprawnienia witryn oparte na grupach, które traktują „wszystkich” jako „wszystkich zalogowanych użytkowników” oraz włącza nowe pseudogrupy „anonimowi_użytkownicy” i „zalogowani_użytkownicy”, dzięki czemu administratorzy mogą wyraźnie określać mianem anonimowych odwiedzających i uwierzytelnionych użytkowników."
     dashboard_improvements: "Umożliwia dostęp do przeprojektowanego pulpitu administracyjnego, który umożliwia przypinanie niestandardowych raportów i obejmuje ulepszone dane dotyczące ruchu w witrynie, zaangażowania i inne analizy powiązane z sukcesem i wartością społeczności."
+    improved_crawler_detection: "Umożliwia ulepszone śledzenie robotów indeksujących, co pozwala na lepsze wykrywanie prawdopodobnych robotów i zapewnia dokładniejsze raportowanie ruchu sieciowego."
     enable_invite_modal_with_roles: "Umożliwia przeprojektowany proces zapraszania, który pozwala administratorom zapraszać kogoś bezpośrednio jako administratora. Zaproszona osoba staje się moderatorem po rejestracji, a administratorem po potwierdzeniu zaproszenia przez osobę zapraszającą e-mailem."
+    update_pending_users_reminder_default: "Aktualizujemy domyślną wartość ustawienia {{setting:pending_users_reminder_delay_minutes}} na 30 minut, aby personel był szybko powiadamiany o oczekiwaniu na zatwierdzenie nowego członka. Jeśli to ustawienie zostało już wcześniej zmienione, ta zmiana nie będzie miała żadnego efektu."
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
+      invalid_date: "Nieprawidłowy format daty. Wpisz poprawną datę."
       invalid_datetime: "Nieprawidłowy format daty i godziny. Upewnij się, że wprowadzono prawidłową datę i godzinę."
       invalid_email: "Nieprawidłowy adres e-mail."
       invalid_username: "Użytkownik o takiej nazwie nie istnieje."
@@ -2868,6 +2894,11 @@ pl_PL:
       invalid_integer_max: "Wartość nie może być wyższa niż %{max}."
       invalid_integer: "Wartość musi być liczbą całkowitą."
       regex_mismatch: "Wartość nie jest zgodna z wymaganym formatem."
+      emoji_picker_pinned_groups_invalid:
+        one: "Nieznana grupa emoji: %{groups}."
+        few: "Nieznane grupy emoji: %{groups}."
+        many: "Nieznane grupy emoji: %{groups}."
+        other: "Nieznane grupy emoji: %{groups}."
       must_include_latest: "Górne menu musi zawierać zakładkę 'aktualne'."
       top_menu_unread_not_allowed_with_unified_new: "Pozycji menu „nieprzeczytane” nie można użyć, gdy włączona jest opcja ujednoliconych nowych."
       invalid_string: "Nieprawidłowa wartość."
@@ -3110,6 +3141,7 @@ pl_PL:
     timeout_expired: "Upłynął limit czasu logowania, spróbuj zalogować się ponownie."
     no_email: "Nie podano adresu e-mail. Skontaktuj się z administratorem witryny."
     blank_id_error: "`external_id` jest wymagane, ale jest puste"
+    banned_id_error: "Wartość `external_id` jest niedozwolona"
     email_error: "Konto nie może być zarejestrowane pod adresem e-mail <b>%{email}</b>. Skontaktuj się z administratorem witryny."
     missing_secret: "Uwierzytelnianie nie powiodło się z powodu braku sekretnego klucza. Skontaktuj się z administratorami, aby rozwiązać ten problem."
     invite_redeem_failed: "Zaproszenie nie powiodło się. Skontaktuj się z administratorem serwisu."
@@ -3119,6 +3151,7 @@ pl_PL:
   original_poster: "Autor pierwszego wpisu"
   most_recent_poster: "Autor najnowszego wpisu"
   frequent_poster: "Aktywny uczestnik"
+  recent_poster: "Autor ostatniego wpisu"
   poster_description_joiner: ", "
   redirected_to_top_reasons:
     new_user: "Witamy w naszej społeczności! Oto najpopularniejsze najnowsze tematy."
@@ -3939,6 +3972,14 @@ pl_PL:
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
         Twoja odpowiedź została wysłana z zablokowanego adresu email. Spróbuj ją wysłać z innego adresu email, lub [skontaktuj się z obsługą] %{base_url}/o nas).
+    email_reject_email_alias:
+      title: "Odrzuć e-mail Alias ​​e-mail"
+      subject_template: "[%{email_prefix}] Problem z pocztą e-mail – nierozpoznany adres e-mail"
+      subject_template_improved: "%{email_prefix}: Problem z pocztą e-mail – nierozpoznany adres e-mail"
+      text_body_template: |
+        Przepraszamy, ale Twoja wiadomość e-mail wysłana na adres %{destination} (zatytułowana %{former_title}) nie dotarła.
+
+        Nie udało nam się dopasować adresu, z którego wysłałeś wiadomość na konto w tej witrynie. Spróbuj wysłać wiadomość z adresu e-mail użytego do rejestracji lub [skontaktuj się z pracownikiem](%{base_url}/about).
     email_reject_inactive_user:
       title: "Email odrzucony Użytkownik nieaktywny"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - nieaktywny użytkownik"
@@ -5850,6 +5891,7 @@ pl_PL:
     post_restored_by_author: "Wpis został przywrócony przez autora"
     post_deleted_by_author_after_penalty: >-
       Wpis został usunięty przez autora po tym, jak użytkownik został za to ukarany. Zapoznaj się z karą bez przywracania wpisu.
+    target_user_deleted: "Automatycznie zignorowano, ponieważ konto użytkownika zostało usunięte."
     priorities:
       low: "Niski"
       medium: "Średni"
@@ -5995,11 +6037,11 @@ pl_PL:
         title: "Nie"
         delete:
           title: "Usuń użytkownika"
-          description: "Usuń użytkownika bez blokowania"
+          description: "Usuń użytkownika bez blokowania jego adresu e-mail lub adresu IP"
           complete: "Użytkownik usunięty."
         block:
           title: "Usuń i zablokuj użytkownika"
-          description: "Użytkownik zostanie usunięty, a my zablokujemy jego adres IP i e-mail."
+          description: "Usuń użytkownika i zablokuj jego adres e-mail i adres IP"
           complete: "Użytkownik usunięty i zablokowany."
       confirm_spam:
         title: "Tak"
@@ -6011,9 +6053,11 @@ pl_PL:
         bundle_title: "Odrzuć…"
       reject_and_suspend:
         title: "Odrzuć i zawieś użytkownika"
+        description: "Odrzuć wpis i zablokuj użytkownikowi możliwość logowania się do czasu zakończenia zawieszenia"
         complete: "Post odrzucony, a użytkownik zawieszony."
       reject_and_silence:
         title: "Odrzuć i wycisz użytkownika"
+        description: "Odrzuć wpis i zablokuj użytkownikowi możliwość publikowania wpisów lub wysyłania wiadomości"
         complete: "Post odrzucony, a użytkownik wyciszony."
       reject_and_delete:
         title: "Odrzuć i usuń post"
@@ -6059,12 +6103,12 @@ pl_PL:
         bundle_title: "Co chcesz zrobić z użytkownikiem?"
       silence_user:
         title: "Wycisz użytkownika"
-        description: "Zablokuj użytkownikowi możliwość tworzenia wpisów"
+        description: "Zablokuj użytkownikowi możliwość publikowania lub wysyłania wiadomości"
         complete: "Użytkownik wyciszony"
         reason: "Użytkownik uciszony przez kolejkę recenzji"
       suspend_user:
         title: "Zawieś użytkownika"
-        description: "Zawieś konto użytkownika"
+        description: "Zablokuj użytkownikowi możliwość logowania się do momentu zakończenia zawieszenia"
         complete: "Użytkownik zawieszony"
         reason: "Użytkownik zawieszony przez kolejkę recenzji"
       delete_user:
@@ -6131,13 +6175,17 @@ pl_PL:
     import:
       missing_file: "Nie dostarczono pliku ZIP."
       missing_csv: "Plik ZIP musi zawierać plik emojis.csv."
+      invalid_csv: "Nie można przeanalizować pliku emojis.csv."
+      empty_manifest: "Plik emojis.csv nie zawiera żadnych emoji."
       too_many_entries: "Plik ZIP zawiera zbyt wiele wpisów (maksymalnie 1000)."
       file_too_large: "Jeden lub więcej plików w pliku ZIP jest za duży."
+      suspicious_entry: "Jeden lub więcej plików w pliku ZIP ma podejrzany stopień kompresji."
       session_expired: "Sesja importu wygasła. Rozpocznij import ponownie."
       validation:
         missing_name: "Nazwa jest wymagana."
+        duplicate_name: "Nazwa pojawia się więcej niż raz w pliku CSV."
         missing_filename: "Nazwa pliku jest wymagana."
-        invalid_name: "Nazwa zawiera nieprawidłowe znaki."
+        missing_image: "Brak pliku obrazu w pliku ZIP."
         group_too_long: "Nazwa grupy może mieć maksymalnie 20 znaków."
         unsupported_extension: "Rozszerzenie pliku .%{ext} nie jest obsługiwane (użyj formatu png, gif lub svg)."
         duplicate_filename: "Nazwa pliku pojawia się więcej niż raz w pliku CSV."

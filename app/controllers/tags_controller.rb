@@ -48,41 +48,30 @@ class TagsController < ::ApplicationController
     @description_meta = I18n.t("tags.title")
     @title = @description_meta
 
-    show_all_tags = guardian.can_admin_tags? && guardian.is_admin?
     preload_localizations = SiteSetting.content_localization_enabled
+    base_tags_includes = preload_localizations ? { base_tags: :localizations } : :base_tags
 
     if SiteSetting.tags_listed_by_group
-      ungrouped_tags = Tag.where("tags.id NOT IN (SELECT tag_id FROM tag_group_memberships)")
-      ungrouped_tags = ungrouped_tags.used_tags_in_regular_topics(guardian) unless show_all_tags
+      ungrouped_tags =
+        Tag.browsable(guardian).where("tags.id NOT IN (SELECT tag_id FROM tag_group_memberships)")
+      ungrouped_tags = ungrouped_tags.used_tags_in_regular_topics(guardian) unless show_all_tags?
       ungrouped_tags = ungrouped_tags.order(:id)
       ungrouped_tags = ungrouped_tags.includes(:localizations) if preload_localizations
 
-      tag_group_includes =
-        preload_localizations ? { none_synonym_tags: :localizations } : :none_synonym_tags
+      tag_groups = TagGroup.visible(guardian).order("name ASC").includes(base_tags_includes).to_a
 
       grouped_tag_counts =
-        TagGroup
-          .visible(guardian)
-          .order("name ASC")
-          .includes(tag_group_includes)
-          .map do |tag_group|
-            {
-              id: tag_group.id,
-              name: tag_group.name,
-              tags: self.class.tag_counts_json(tag_group.none_synonym_tags, guardian),
-            }
-          end
+        tag_counts_json_per_owner(tag_groups).map do |tag_group, group_tags|
+          { id: tag_group.id, name: tag_group.name, tags: group_tags }
+        end
 
       @tags = self.class.tag_counts_json(ungrouped_tags, guardian)
       @extras = { tag_groups: grouped_tag_counts }
     else
-      tags = show_all_tags ? Tag.all : Tag.used_tags_in_regular_topics(guardian)
+      tags = Tag.browsable(guardian)
+      tags = tags.used_tags_in_regular_topics(guardian) unless show_all_tags?
       tags = tags.order(:id)
-      unrestricted_tags = DiscourseTagging.filter_visible(tags.where(target_tag_id: nil), guardian)
-      unrestricted_tags = unrestricted_tags.includes(:localizations) if preload_localizations
-
-      category_includes =
-        preload_localizations ? { none_synonym_tags: :localizations } : :none_synonym_tags
+      tags = tags.includes(:localizations) if preload_localizations
 
       categories =
         Category
@@ -90,25 +79,16 @@ class TagsController < ::ApplicationController
             "id IN (SELECT category_id FROM category_tags WHERE category_id IN (?))",
             guardian.allowed_category_ids,
           )
-          .includes(category_includes)
+          .includes(base_tags_includes)
           .order(:id)
+          .to_a
 
       category_tag_counts =
-        categories
-          .map do |c|
-            category_tags =
-              self.class.tag_counts_json(
-                DiscourseTagging.filter_visible(c.none_synonym_tags, guardian),
-                guardian,
-              )
+        tag_counts_json_per_owner(categories).filter_map do |category, category_tags|
+          { id: category.id, tags: category_tags } if category_tags.present?
+        end
 
-            next if category_tags.empty?
-
-            { id: c.id, tags: category_tags }
-          end
-          .compact
-
-      @tags = self.class.tag_counts_json(unrestricted_tags, guardian)
+      @tags = self.class.tag_counts_json(tags, guardian)
       @extras = { categories: category_tag_counts }
     end
 
@@ -123,7 +103,10 @@ class TagsController < ::ApplicationController
 
   def list
     offset = params[:offset].to_i || 0
-    tags = guardian.can_admin_tags? ? Tag.all : Tag.visible(guardian)
+    only_tags = params[:only_tags]
+
+    tags = only_tags.present? ? Tag.visible(guardian) : Tag.browsable(guardian)
+    tags = tags.without_pm_only_tags(guardian) unless show_all_tags?
 
     load_more_query_params = { offset: offset + 1 }
 
@@ -132,7 +115,7 @@ class TagsController < ::ApplicationController
       load_more_query_params[:filter] = filter
     end
 
-    if only_tags = params[:only_tags]
+    if only_tags
       tags = tags.where("LOWER(tags.name) IN (?)", only_tags.split(",").map(&:downcase))
       load_more_query_params[:only_tags] = only_tags
     end
@@ -495,6 +478,24 @@ class TagsController < ::ApplicationController
 
   private
 
+  def show_all_tags?
+    guardian.can_admin_tags? && guardian.is_admin?
+  end
+
+  def without_pm_only_tags(tags)
+    return tags if show_all_tags?
+    DiscourseTagging.without_pm_only_tags(tags, guardian)
+  end
+
+  def tag_counts_json_per_owner(owners)
+    visible_tag_ids = DiscourseTagging.visible_tag_ids(owners.flat_map(&:base_tags), guardian)
+
+    owners.map do |owner|
+      tags = owner.base_tags.select { |tag| visible_tag_ids.include?(tag.id) }
+      [owner, self.class.tag_counts_json(without_pm_only_tags(tags), guardian)]
+    end
+  end
+
   def fetch_tag(raise_not_found: true)
     if params[:tag_id].present?
       # Try finding by ID first
@@ -569,49 +570,47 @@ class TagsController < ::ApplicationController
 
   def self.tag_counts_json(tags, guardian)
     show_pm_tags = guardian.can_tag_pms?
+    target_tag_ids = tags.filter_map(&:target_tag_id).uniq
     target_tags =
-      Tag
-        .visible(guardian)
-        .where(id: tags.filter_map(&:target_tag_id).uniq)
-        .select(:id, :name, :slug)
-
-    tags
-      .map do |t|
-        topic_count = t.public_send(Tag.topic_count_column(guardian))
-
-        next if topic_count == 0 && t.pm_topic_count > 0 && !show_pm_tags
-
-        tag_name = t.name
-        tag_description = t.description
-
-        if ContentLocalization.show_translated_tag?(t, guardian)
-          localization = t.get_localization
-          tag_name = localization&.name || tag_name
-          tag_description = localization&.description || tag_description
-        end
-
-        attrs = {
-          id: t.id,
-          text: tag_name,
-          name: tag_name,
-          slug: t.slug.presence || "#{t.id}-tag",
-          description: tag_description,
-          count: topic_count,
-          pm_only: topic_count == 0 && t.pm_topic_count > 0,
-          target_tag:
-            if t.target_tag_id
-              target = target_tags.find { |x| x.id == t.target_tag_id }
-              target ? { id: target.id, name: target.name, slug: target.slug } : nil
-            end,
-        }
-
-        if show_pm_tags && SiteSetting.display_personal_messages_tag_counts
-          attrs[:pm_count] = t.pm_topic_count
-        end
-
-        attrs
+      if target_tag_ids.present?
+        Tag.visible(guardian).where(id: target_tag_ids).select(:id, :name, :slug)
+      else
+        []
       end
-      .compact
+
+    tags.map do |t|
+      topic_count = t.public_send(Tag.topic_count_column(guardian))
+
+      tag_name = t.name
+      tag_description = t.description
+
+      if ContentLocalization.show_translated_tag?(t, guardian)
+        localization = t.get_localization
+        tag_name = localization&.name || tag_name
+        tag_description = localization&.description || tag_description
+      end
+
+      attrs = {
+        id: t.id,
+        text: tag_name,
+        name: tag_name,
+        slug: t.slug.presence || "#{t.id}-tag",
+        description: tag_description,
+        count: topic_count,
+        pm_only: topic_count == 0 && t.pm_topic_count > 0,
+        target_tag:
+          if t.target_tag_id
+            target = target_tags.find { |x| x.id == t.target_tag_id }
+            target ? { id: target.id, name: target.name, slug: target.slug } : nil
+          end,
+      }
+
+      if show_pm_tags && SiteSetting.display_personal_messages_tag_counts
+        attrs[:pm_count] = t.pm_topic_count
+      end
+
+      attrs
+    end
   end
 
   def set_category
@@ -626,7 +625,8 @@ class TagsController < ::ApplicationController
 
     if !@filter_on_category
       permalink = Permalink.find_by_url("c/#{params[:category_slug_path_with_id]}")
-      if permalink.present? && permalink.category_id
+      if permalink.present? && permalink.category_id &&
+           guardian.can_see_permalink_target?(permalink)
         return(
           redirect_to "#{Discourse.base_path}/tags#{permalink.target_url}/#{params[:tag_name]}",
                       status: :moved_permanently

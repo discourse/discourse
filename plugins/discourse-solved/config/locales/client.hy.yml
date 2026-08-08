@@ -14,8 +14,6 @@ hy:
               label: "Ընդունված լուծումներ"
         sections:
           support:
-            filter:
-              all_categories: "Բոլոր կատեգորիաները"
             answerers:
               staff: "Անձնակազմ"
               member: "Անդամներ"

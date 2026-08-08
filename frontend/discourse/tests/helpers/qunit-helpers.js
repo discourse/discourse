@@ -45,16 +45,18 @@ import { clearPluginHeaderActionComponents } from "discourse/lib/admin-plugin-he
 import { resetAdditionalReportModes } from "discourse/lib/admin-report-additional-modes";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
-import deprecated from "discourse/lib/deprecated";
+import deprecated, { clearBacklog } from "discourse/lib/deprecated";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
 import { visible as isVisible } from "discourse/lib/dom-utils";
 import { clearRegisteredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
+import { resetFitCoordinator } from "discourse/lib/fit-coordinator";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { restoreBaseUri } from "discourse/lib/get-url";
 import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
 import { reset as resetLinkLookup } from "discourse/lib/link-lookup";
 import { resetMentions } from "discourse/lib/link-mentions";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
+import { resetModelExtensions } from "discourse/lib/model-extensions";
 import { resetModelTransformers } from "discourse/lib/model-transformers";
 import { resetNotificationTypeRenderers } from "discourse/lib/notification-types-manager";
 import { cloneJSON, deepMerge } from "discourse/lib/object";
@@ -94,6 +96,7 @@ import User from "discourse/models/user";
 import { clearResolverOptions } from "discourse/resolver";
 import { _clearSnapshots as _clearComposerActionsSnapshotsOld } from "discourse/select-kit/components/composer-actions";
 import { enableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
+import { resetDragAndDropForTesting } from "discourse/services/drag-and-drop";
 import {
   clearDisabledDefaultKeyboardBindings,
   clearExtraKeyboardShortcutHelp,
@@ -261,7 +264,9 @@ export function testCleanup(container, app) {
   resetItemSelectCallbacks();
   resetUserMenuTabs();
   resetLinkLookup();
+  resetModelExtensions();
   resetModelTransformers();
+  resetFitCoordinator();
   resetMentions();
   resetProsemirrorEngine();
   cleanupTemporaryModuleRegistrations();
@@ -286,6 +291,8 @@ export function testCleanup(container, app) {
   _resetOutletLayoutsForTesting();
   resetBlockRegistryForTesting();
   resetDebugCallbacks();
+  resetDragAndDropForTesting();
+  clearBacklog();
 }
 
 function cleanupCssGeneratorTags() {

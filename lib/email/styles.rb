@@ -472,9 +472,7 @@ module Email
         .search(".hashtag-cooked")
         .each do |hashtag|
           hashtag.children.each(&:remove)
-          hashtag.add_child(<<~HTML)
-          <span>##{hashtag["data-slug"]}</span>
-        HTML
+          hashtag.add_child(hashtag.document.create_text_node("##{hashtag["data-slug"]}"))
         end
     end
 

@@ -82,3 +82,6 @@ id:
           fields:
             message:
               label: pesan
+    discourse_workflows:
+      send_chat_integration_message:
+        message: "pesan"

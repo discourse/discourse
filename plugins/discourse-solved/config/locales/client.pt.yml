@@ -14,8 +14,6 @@ pt:
               label: "Soluções aceites"
         sections:
           support:
-            filter:
-              all_categories: "Todas as categorias"
             answerers:
               staff: "Pessoal"
               member: "Membros"

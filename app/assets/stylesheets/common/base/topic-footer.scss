@@ -135,10 +135,15 @@
     width: auto;
     margin-top: var(--border-offset);
 
-    .topic-admin-menu-trigger {
+    .topic-admin-menu-trigger,
+    .topic-content-language-preferences {
       border-radius: 0;
       background: var(--secondary);
       border: 1px solid var(--primary-low);
+    }
+
+    .topic-admin-menu-trigger + .topic-content-language-preferences {
+      margin-inline-start: var(--border-offset);
     }
   }
 }

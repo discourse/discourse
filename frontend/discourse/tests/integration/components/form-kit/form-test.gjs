@@ -21,6 +21,32 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     await formKit().submit();
   });
 
+  test("@onSubmit keeps changes dirty when submission fails", async function (assert) {
+    let formApi;
+    const registerApi = (api) => (formApi = api);
+    const onSubmit = () => Promise.reject(new Error("save failed"));
+
+    await render(
+      <template>
+        <Form
+          @data={{hash foo=1}}
+          @commitOnSubmit={{false}}
+          @onSubmit={{onSubmit}}
+          @onRegisterApi={{registerApi}}
+        />
+      </template>
+    );
+
+    await formApi.set("foo", 2);
+
+    await assert.rejects(formApi.submit(), /save failed/);
+    assert.true(formApi.isDirty, "the failed change remains dirty");
+
+    await formApi.reset();
+
+    assert.strictEqual(formApi.get("foo"), 1, "the failed change can be reset");
+  });
+
   test("@onSet", async function (assert) {
     const calls = [];
     const onSet = (name, value, data) => {
@@ -93,6 +119,41 @@ module("Integration | Component | FormKit | Form", function (hooks) {
       foo: "incorrect type, required",
       bar: "error",
     });
+  });
+
+  test("@validate - form-level error without a title", async function (assert) {
+    const validate = async (data, { addError }) => {
+      // A titled error is tied to a control and renders as a focus link.
+      addError("foo", { title: "Foo", message: "incorrect type" });
+      // A titleless error is form-level and renders as a bare message.
+      addError("_form:0", { message: "Pick at least one option." });
+    };
+
+    await render(
+      <template>
+        <Form @data={{hash foo=1}} @validate={{validate}} as |form|>
+          <form.Field @type="input" @name="foo" @title="Foo" />
+        </Form>
+      </template>
+    );
+
+    await formKit().submit();
+
+    const items = [
+      ...query(".form-kit__errors-summary-list").querySelectorAll("li"),
+    ];
+    assert.strictEqual(items.length, 2, "both errors are listed");
+
+    const titled = items.find((li) => li.querySelector("a"));
+    assert.dom(titled).hasText("Foo: incorrect type");
+
+    const formLevel = items.find((li) => !li.querySelector("a"));
+    assert
+      .dom(formLevel)
+      .hasText(
+        "Pick at least one option.",
+        "form-level error shows the message with no anchor or prefix"
+      );
   });
 
   test("@validateOn", async function (assert) {
@@ -203,6 +264,27 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     setTimeout(() => {
       assert.form().hasErrors({ bar: "error_foo" });
     }, 0);
+  });
+
+  test("@onRegisterApi - commit", async function (assert) {
+    let formApi;
+    const registerApi = (api) => (formApi = api);
+
+    await render(
+      <template>
+        <Form @data={{hash foo=1}} @onRegisterApi={{registerApi}} />
+      </template>
+    );
+
+    await formApi.set("foo", 2);
+    formApi.commit();
+
+    assert.false(formApi.isDirty, "the committed form is pristine");
+
+    await formApi.set("foo", 3);
+    await formApi.reset();
+
+    assert.strictEqual(formApi.get("foo"), 2, "reset uses the committed value");
   });
 
   test("@onRegisterApi - commitField", async function (assert) {

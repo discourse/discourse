@@ -933,7 +933,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
         ctx.http_request(method: "GET", url: "https://api.example.com/retry")
       }.to raise_error(
         DiscourseWorkflows::NodeError,
-        "HTTP GET https://api.example.com/retry failed with status 503",
+        "HTTP GET https://api.example.com/retry failed with status 503: unavailable",
       )
       expect(WebMock).to have_requested(:get, "https://api.example.com/retry").once
     end
@@ -950,7 +950,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
         ctx.http_request(method: "POST", url: "https://api.example.com/retry")
       }.to raise_error(
         DiscourseWorkflows::NodeError,
-        "HTTP POST https://api.example.com/retry failed with status 503",
+        "HTTP POST https://api.example.com/retry failed with status 503: unavailable",
       )
       expect(WebMock).to have_requested(:post, "https://api.example.com/retry").once
     end

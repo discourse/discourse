@@ -1,0 +1,30 @@
+/* Styles for the built-in blocks shipped from `app/blocks/builtin`.
+   Pure reader-page rendering — anything that only matters while editing
+   lives with the editing tooling, not here. */
+
+@import "_stretched-link";
+@import "_layout";
+@import "_section";
+@import "_card";
+@import "_link-list";
+@import "_stats";
+@import "_list";
+@import "_carousel";
+@import "_tabs";
+@import "_accordion";
+@import "_table";
+@import "_media-leaves";
+@import "_featured-data";
+@import "_text";
+@import "_image";
+@import "_callout";
+@import "_category-card";
+@import "_category-banner";
+@import "_cta-banner";
+@import "_featured-categories";
+@import "_featured-badges";
+@import "_featured-topics";
+@import "_media-card";
+@import "_new-topic-button";
+@import "_recent-topics";
+@import "_topic-card";

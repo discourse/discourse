@@ -9,45 +9,45 @@ describe ContentLocalization do
     end
   end
 
-  describe ".show_original?" do
-    it "returns true when cookie is present" do
-      scope = create_scope(cookie: ContentLocalization::SHOW_ORIGINAL_COOKIE)
-
-      expect(ContentLocalization.show_original?(scope)).to be true
+  describe ".automatically_translate?" do
+    it "defaults to true for anonymous users and supports the positive cookie" do
+      expect(ContentLocalization.automatically_translate?(create_scope)).to be true
+      expect(
+        ContentLocalization.automatically_translate?(
+          create_scope(cookie: "#{ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE}=true"),
+        ),
+      ).to be true
+      expect(
+        ContentLocalization.automatically_translate?(
+          create_scope(cookie: "#{ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE}=false"),
+        ),
+      ).to be false
     end
 
-    it "returns false when cookie is absent" do
-      scope = create_scope
-
-      expect(ContentLocalization.show_original?(scope)).to be false
-    end
-
-    it "returns true when user preference is set" do
+    it "always uses the logged-in user's preference instead of cookies" do
       user = Fabricate(:user)
-      user.user_option.update!(show_original_content: true)
-      scope = create_scope(user: user)
+      user.user_option.update!(automatically_translate: false)
 
-      expect(ContentLocalization.show_original?(scope)).to be true
+      expect(ContentLocalization.automatically_translate?(create_scope(user: user))).to be false
+
+      user.user_option.update!(automatically_translate: true)
+      scope =
+        create_scope(user:, cookie: "#{ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE}=false")
+
+      expect(ContentLocalization.automatically_translate?(scope)).to be true
     end
+  end
 
-    it "returns false when user preference is not set and no cookie" do
+  describe ".understands?" do
+    it "matches the logged-in user's languages using normalized locales" do
       user = Fabricate(:user)
-      scope = create_scope(user: user)
+      user.user_option.update!(understood_languages: %w[en_GB ja])
+      scope = create_scope(user:)
 
-      expect(ContentLocalization.show_original?(scope)).to be false
-    end
-
-    it "returns false when user preference is not set but cookie is present for a logged-in user" do
-      user = Fabricate(:user)
-      scope = create_scope(user: user, cookie: ContentLocalization::SHOW_ORIGINAL_COOKIE)
-
-      expect(ContentLocalization.show_original?(scope)).to be false
-    end
-
-    it "returns true when cookie is present for an anonymous user" do
-      scope = create_scope(cookie: ContentLocalization::SHOW_ORIGINAL_COOKIE)
-
-      expect(ContentLocalization.show_original?(scope)).to be true
+      expect(ContentLocalization.understands?("en", scope)).to be true
+      expect(ContentLocalization.understands?("ja-JP", scope)).to be true
+      expect(ContentLocalization.understands?("de", scope)).to be false
+      expect(ContentLocalization.understands?("en", create_scope)).to be false
     end
   end
 
@@ -98,8 +98,16 @@ describe ContentLocalization do
         expect(ContentLocalization.show_translated_post?(post, scope)).to be false
       end
 
-      it "returns false when show_original? is true" do
-        scope = create_scope(cookie: ContentLocalization::SHOW_ORIGINAL_COOKIE)
+      it "returns false when automatic translation is disabled" do
+        scope = create_scope(cookie: "#{ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE}=false")
+
+        expect(ContentLocalization.show_translated_post?(post, scope)).to be false
+      end
+
+      it "returns false when the user understands the post's language" do
+        user = Fabricate(:user)
+        user.user_option.update!(understood_languages: ["ja"])
+        scope = create_scope(user:)
 
         expect(ContentLocalization.show_translated_post?(post, scope)).to be false
       end
@@ -146,8 +154,16 @@ describe ContentLocalization do
         expect(ContentLocalization.show_translated_topic?(topic, scope)).to be false
       end
 
-      it "returns false when show_original? is true" do
-        scope = create_scope(cookie: ContentLocalization::SHOW_ORIGINAL_COOKIE)
+      it "returns false when automatic translation is disabled" do
+        scope = create_scope(cookie: "#{ContentLocalization::AUTOMATICALLY_TRANSLATE_COOKIE}=false")
+
+        expect(ContentLocalization.show_translated_topic?(topic, scope)).to be false
+      end
+
+      it "returns false when the user understands the topic's language" do
+        user = Fabricate(:user)
+        user.user_option.update!(understood_languages: ["ja"])
+        scope = create_scope(user:)
 
         expect(ContentLocalization.show_translated_topic?(topic, scope)).to be false
       end

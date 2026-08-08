@@ -36,6 +36,9 @@ hr:
             canned_reply:
               label: "Odgovor"
     discourse_ai:
+      discourse_workflows:
+        ai_agent:
+          mode: "Modus"
       ai_tool_approval:
         loading: "Očitavanje..."
         tool: "Akcija"
@@ -74,6 +77,21 @@ hr:
       translations:
         title: "Prijevodi"
         category_scope: "Kategorije"
+        model_progress:
+          detail:
+            columns:
+              locale: "Lokalizacija"
+              pending: "Na čekanju"
+              total: "Ukupno"
+          targets:
+            post:
+              title: "Postovi"
+            topic:
+              title: "Tema"
+            category:
+              title: "Kategorije"
+            tag:
+              title: "Oznake"
         stats:
           eta_minutes:
             one: "%{count} minuta"
@@ -117,6 +135,8 @@ hr:
         mcp_tools_modal:
           clear_all: "Obriši sve"
         allowed_groups: "Dopuštene grupe"
+        duplicate: "Dupliciraj"
+        copy_name: "Kopija %{name}"
         delete: "Izbriši"
         thinking_effort_options:
           none: "Ništa"
@@ -192,7 +212,6 @@ hr:
         tests:
           success: "Uspjeh!"
         providers:
-          google: "Google"
           fake: "Posebna"
       ai_helper:
         context_menu:

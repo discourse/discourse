@@ -2,14 +2,20 @@
 
 Fabricator(:discourse_workflows_workflow, class_name: "DiscourseWorkflows::Workflow") do
   transient :published
+  transient :tags
 
   name { sequence(:name) { |n| "Workflow #{n}" } }
   created_by { Fabricate(:user) }
   after_create do |workflow, attrs|
     version = workflow.initial_snapshot!(user: workflow.created_by)
     workflow.update_columns(active_version_id: workflow.version_id) if attrs[:published]
+    DiscourseWorkflows::WorkflowTag.sync!(workflow:, names: attrs[:tags]) if attrs[:tags]
     DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow.reload, version:)
   end
+end
+
+Fabricator(:discourse_workflows_workflow_tag, class_name: "DiscourseWorkflows::WorkflowTag") do
+  name { sequence(:name) { |n| "tag-#{n}" } }
 end
 
 Fabricator(:discourse_workflows_execution, class_name: "DiscourseWorkflows::Execution") do

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe DiscoursePostEvent::EventOneboxData do
-  fab!(:author, :user) { Fabricate(:user, admin: true) }
+  fab!(:author, :user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
   fab!(:reader, :user)
 
   before do

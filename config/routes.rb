@@ -110,6 +110,8 @@ Discourse::Application.routes.draw do
         put "user_count" => "site_settings#user_count"
       end
 
+      post "onboarding/events" => "onboarding_events#create"
+
       get "reports" => "reports#index"
       get "reports/bulk" => "reports#bulk"
       get "reports/:type" => "reports#show"
@@ -263,6 +265,11 @@ Discourse::Application.routes.draw do
         resources :form_templates, constraints: AdminConstraint.new, path: "/form-templates" do
           collection { get "preview" => "form_templates#preview" }
         end
+
+        post "block-layouts" => "block_layouts#publish"
+        delete "block-layouts" => "block_layouts#destroy"
+        post "block-layouts/export" => "block_layouts#export"
+        post "block-layouts/duplicate" => "block_layouts#duplicate"
 
         get "themes/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id" => "themes#index"
@@ -460,6 +467,8 @@ Discourse::Application.routes.draw do
         get "/welcome-banner" => "welcome_banner#index"
         put "/logo" => "logo#update"
         put "/fonts" => "fonts#update"
+        get "/design-wizard" => "design_wizard#index"
+        put "/design-wizard" => "design_wizard#update"
         get "colors/:id" => "color_palettes#show"
         get "colors" => "color_palettes#index"
         get "upcoming-changes" => "upcoming_changes#index"
@@ -1359,6 +1368,7 @@ Discourse::Application.routes.draw do
     resources :badges, only: [:index]
     get "/badges/:id(/:slug)" => "badges#show", :constraints => { format: /(json|html|rss)/ }
     resources :user_badges, only: %i[index create destroy] do
+      collection { get "featured" => "user_badges#featured", :constraints => { format: :json } }
       put "toggle_favorite" => "user_badges#toggle_favorite", :constraints => { format: :json }
     end
 

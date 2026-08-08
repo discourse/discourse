@@ -26,4 +26,14 @@ RSpec.describe UserOption do
       expect(described_class.new.chat_quick_reaction_type).to eq("frequent")
     end
   end
+
+  describe "#chat_send_shortcut" do
+    fab!(:user)
+
+    it "persists legacy updater assignments to send_shortcut" do
+      expect(UserUpdater.new(user, user).update(chat_send_shortcut: "meta_enter")).to eq(true)
+
+      expect(user.user_option.reload.send_shortcut).to eq("meta_enter")
+    end
+  end
 end

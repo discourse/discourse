@@ -58,6 +58,20 @@ RSpec.describe "Sidebar New Topic Button" do
     end
   end
 
+  context "when another panel has taken over the sidebar" do
+    fab!(:admin)
+
+    before { sign_in(admin) }
+
+    it "hides the button in the admin sidebar and brings it back on the way out" do
+      visit("/admin")
+      expect(page).to have_no_css(".sidebar-new-topic-button__wrapper")
+
+      visit("/latest")
+      expect(page).to have_css(".sidebar-new-topic-button__wrapper")
+    end
+  end
+
   context "for anon" do
     it "does not render the sidebar button for anons" do
       visit("/latest")

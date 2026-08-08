@@ -36,6 +36,12 @@ de:
       llm_triage:
         title: Beiträge mithilfe von KI sortieren
         description: "Beiträge mithilfe eines großen Sprachmodells sortieren"
+        flagged_post: |
+          %{score_reason}
+          %{response}
+        flagged_post_response: "Antwort des Modells: %{llm_response}"
+        flagged_post_score_reason: |
+          <b>Ausgelöst durch die Regel <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> .</b>
         notify_author_pm:
           subject: "Dein Beitrag wurde vorübergehend zur Überprüfung entfernt"
           body: |
@@ -52,6 +58,7 @@ de:
         description: "Themen mithilfe von KI automatisch mit Schlagwörtern versehen"
   site_settings:
     discourse_ai_enabled: "Aktiviere das Discourse-KI-Plug-in."
+    enable_ai_bot_starred_conversations: "Ermögliche es Benutzern, Unterhaltungen mit KI-Bots mit einem Sternchen zu markieren und diese in einem dazugehörigen Bereich in der Seitenleiste anzuzeigen."
     ai_default_llm_model: "Das Standard-LLM-Modell, das für alle KI-Funktionen verwendet wird"
     ai_artifact_security: "Das KI-Artefaktsystem generiert IFRAMEs mit ausführbarem Code. Der strikte Modus erfordert einen zusätzlichen Klick zum Ausführen des Codes. Der laxe Modus führt Code sofort aus. Im Hybridmodus kann der Benutzer data-ai-artifact-autorun angeben, um den Code sofort anzuzeigen. Der deaktivierte Modus deaktiviert das Artefaktsystem."
     ai_toxicity_enabled: "Aktiviere das Toxizitätsmodul."
@@ -70,6 +77,12 @@ de:
     ai_sentiment_enabled: "Aktiviere das Stimmungsmodul."
     ai_sentiment_inference_service_api_endpoint: "URL, unter der die API für das Stimmungsmodul läuft"
     ai_sentiment_inference_service_api_key: "API-Schlüssel für die Stimmungsmodul-API"
+    ai_sentiment_model_configs: "Endpunkte des Klassifikationsmodells, die für die Inferenz verwendet werden sollen. Bei der Stimmungsanalyse werden Beiträge als positiv, neutral oder negativ klassifiziert. Bei der Emotionsanalyse werden Beiträge anhand der unterstützten Emotionsbezeichnungen klassifiziert."
+    ai_sentiment_models: "Endpunkte des Klassifikationsmodells, die für die Inferenz verwendet werden sollen. Bei der Stimmungsanalyse werden Beiträge als positiv, neutral oder negativ klassifiziert. Bei der Emotionsanalyse werden Beiträge anhand der unterstützten Emotionsbezeichnungen klassifiziert."
+    ai_sentiment_sentiment_classification_strategy: "Backend für die Stimmungsklassifizierung."
+    ai_sentiment_sentiment_agent: "Agent, der für die Stimmungsklassifizierung verwendet werden soll, wenn das Stimmungs-Backend „Agent“ ist."
+    ai_sentiment_emotion_classification_strategy: "Backend für die Emotionsklassifizierung."
+    ai_sentiment_emotion_agent: "Agent, der für die Emotionsklassifizierung verwendet werden soll, wenn das Emotions-Backend „Agent“ ist."
     ai_nsfw_detection_enabled: "Aktiviere das NSFW-Modul."
     ai_nsfw_inference_service_api_endpoint: "URL, unter der die API für das NSFW-Modul läuft"
     ai_nsfw_inference_service_api_key: "API-Schlüssel für die NSFW-API"
@@ -105,11 +118,12 @@ de:
     ai_embeddings_semantic_related_age_penalty: "Wende eine exponentielle Altersstrafe auf Themen in semantischen Suchergebnissen an. 0,0 = kein Abzug, 0,3 = leichte Tendenz zu kürzlich aktiven Inhalten, 1,0+ = starke Tendenz zur Aktualität."
     ai_embeddings_semantic_related_age_time_scale: "Zeitskala in Tagen für die Berechnung der Altersstrafe. Themen, die so viele Tage inaktiv sind, erhalten ~50 % Strafe bei \"penalty\"=1,0. Verwende 365 für die jährliche Skala, 90 für die vierteljährliche Skala."
     ai_embeddings_per_post_enabled: Erstelle Einbettungen für jeden Beitrag
+    ai_admin_dashboard_enabled: "Aktiviere die KI-Funktionen im Admin-Dashboard."
+    ai_admin_dashboard_highlights_agent: "Ein Agent, der bedeutende Community-Veränderungen im Admin-Dashboard erklärt."
     ai_summarization_enabled: "Aktiviere die Zusammenfassungsfunktion"
     ai_summarization_agent: "Der Agent, der für die Zusammenfassungsfunktion verwendet werden soll"
     ai_pm_summarization_allowed_groups: "Gruppen, die Zusammenfassungen in PN erstellen und ansehen dürfen."
     ai_summary_gists_enabled: "Erstelle automatisch kurze Zusammenfassungen der letzten Antworten in Themen"
-    ai_summary_backfill_maximum_topics_per_hour: "Anzahl der Themenzusammenfassungen, die pro Stunde nachgeholt werden."
     ai_bot_enabled: "Aktiviere das KI-Bot-Modul."
     ai_bot_enabled_llms: "LLMs zur Auswahl für KI-Bot-Unterhaltungen"
     ai_bot_enable_chat_warning: "Zeigt eine Warnung an, wenn der PN-Chat initiiert wird. Kann durch Bearbeiten der Übersetzungszeichenfolge überschrieben werden: discourse_ai.ai_bot.pm_warning"
@@ -119,6 +133,7 @@ de:
     ai_bot_add_to_header: "Eine Schaltfläche in der Kopfzeile anzeigen, um eine PN mit einem KI-Bot zu starten"
     ai_bot_add_to_community_section: "Einen Link im Community-Bereich der Seitenleiste anzeigen, um eine PN mit einem KI-Bot zu starten"
     ai_bot_github_access_token: "GitHub-Zugangstoken für die Verwendung mit den GitHub-KI-Tools (erforderlich für die Suchunterstützung)"
+    ai_bot_enable_docked_composer: "Aktiviere den angedockten Editor im Chat-Stil für Unterhaltungen mit KI-Bots anstelle des standardmäßigen schwebenden Editors."
     ai_discover_enabled: "Entdeckungs-Suchfunktion aktivieren"
     ai_discover_agent: "Der Agent, der für die Entdeckungsfunktion verwendet werden soll"
     ai_google_custom_search_api_key: "API-Schlüssel für die Google Custom Search API, siehe: https://developers.google.com/custom-search"
@@ -132,8 +147,6 @@ de:
     ai_translation_enabled: "KI-Übersetzungsfunktion aktivieren"
     ai_translation_personal_messages: "Legt fest, welche persönlichen Nachrichten übersetzt werden. „none“ deaktiviert die Übersetzung von privaten Nachrichten. „group“ übersetzt nur private Gruppennachrichten. „all“ übersetzt alle privaten Nachrichten."
     ai_translation_include_bot_content: "Wenn diese Option aktiviert ist, werden auch Inhalte, die von Bots (Benutzer-IDs unter 0) geschrieben wurden, zur Übersetzung gesendet."
-    ai_translation_max_post_length: "Die maximale Zeichenanzahl eines zu übersetzenden Beitrags. Längere Beiträge werden nicht übersetzt."
-    ai_translation_backfill_max_age_days: "Das maximale Alter eines Beitrags oder Themas, das übersetzt werden soll. Beiträge und Themen, die älter sind, werden nicht übersetzt. 0 deaktiviert die rückwirkende Übersetzung, aber nicht die Übersetzung von neuen Beiträgen."
     ai_translation_backfill_hourly_rate: "Die Anzahl der Beiträge und Themen, die bei der rückwirkenden Übersetzung pro Stunde übersetzt werden. Setze den Wert auf 0, um rückwirkende Übersetzungen zu deaktivieren."
     ai_translation_backfill_parallel_jobs: "Die Anzahl der parallel auszuführenden Beitragslokalisierungsaufträge pro Backfill-Zyklus. Höhere Werte steigern den Durchsatz, verbrauchen aber mehr Ressourcen."
     ai_usage_rollup_after_days: "Anzahl der Tage, für die KI-Nutzungsstatistiken pro Anfrage gespeichert werden, bevor sie in tägliche Aggregatwerte einfließen. Auf 0 setzen, um die Aggregation zu deaktivieren."
@@ -247,6 +260,12 @@ de:
       change_description: "Beschreibung ändern"
       copied: "Wurde in Zwischenablage kopiert"
     unknown_model: "Unbekanntes KI-Modell"
+    discourse_workflows:
+      ai_agent:
+        errors:
+          locked_default_llm_missing: "Der Agent „%{agent}“ ist auf sein Standard-LLM festgelegt, es ist jedoch kein gültiges Standard-LLM konfiguriert"
+          llm_not_found: "LLM-Modell mit der ID %{llm_model_id} wurde nicht gefunden"
+          no_llm_configured: "Für den Agenten „%{agent}“ ist kein LLM konfiguriert. Wähle ein LLM-Modell aus oder konfiguriere ein Standard-LLM für den Agenten bzw. die Website."
     tools:
       custom_name: "%{name} (benutzerdefiniert)"
       presets:
@@ -367,6 +386,11 @@ de:
         cannot_delete_system_agent: "System-Agenten können nicht gelöscht werden, bitte deaktiviere ihn stattdessen"
         cannot_edit_system_agent: "System-Agenten können nur umbenannt werden. Du darfst keine Tools oder die System-Eingabeaufforderung bearbeiten, sondern musst ihn deaktivieren und eine Kopie erstellen"
         cannot_have_duplicate_tools: "Es kann keine doppelten Werkzeuge geben"
+        native_tool_requires_forced_llm: "Anbietereigene Tools benötigen ein Standard-LLM mit aktivierter Option „Standard-LLM erzwingen“."
+        native_tool_unsupported_by_llm: "Das ausgewählte Standard-LLM unterstützt eines der aktivierten anbietereigenen Tools nicht"
+        admin_dashboard_highlights:
+          name: "Highlights des Admin-Dashboards"
+          description: "Verfasst die kurze Zusammenfassung, die oben im Admin-Dashboard angezeigt wird, und erklärt, was sich geändert hat und worauf in diesem Zeitraum zu achten ist"
         github_helper:
           name: "GitHub-Helfer"
           description: "KI-Bot, der auf die Unterstützung bei GitHub-bezogenen Aufgaben und Fragen spezialisiert ist"
@@ -471,6 +495,12 @@ de:
         chat_thread_titler:
           name: "Chat-Thread-Titelgenerator"
           description: "Standard-Agent für die automatische Generierung von Chat-Thread-Titeln"
+        sentiment_classifier:
+          name: "Stimmungsklassifikator"
+          description: "Standard-Agent, der die Stimmungsklassifizierung unterstützt"
+        emotion_classifier:
+          name: "Emotionsklassifikator"
+          description: "Standard-Agent, der die Emotionsklassifizierung unterstützt"
       topic_not_found: "Zusammenfassung nicht verfügbar, Thema nicht gefunden!"
       summarizing: "Thema zusammenfassen"
       searching: "Suche nach: „%{query}“"
@@ -527,6 +557,13 @@ de:
           flag_type:
             name: "Meldungs-Typ"
             description: "Steuert, ob der Beitrag überprüft, ausgeblendet, gelöscht oder als Spam behandelt wird."
+      native_tools:
+        web_search:
+          name: "Websuche (nativ)"
+          help: "Ermöglicht es dem Modell, mithilfe der integrierten Suchfunktion des Anbieters im Internet zu suchen, wenn der Agent auf ein unterstütztes LLM festgelegt ist."
+        web_fetch:
+          name: "Web Fetch (nativ)"
+          help: "Ermöglicht es dem Modell, Websites über den integrierten Webzugriff des Anbieters zu öffnen und zu lesen, wenn der Agent auf ein unterstütztes LLM festgelegt ist."
       tool_summary:
         read_artifact: "Ein Web-Artefakt lesen"
         search_uploaded_documents: "Hochgeladene Dokumente durchsuchen"
@@ -555,6 +592,7 @@ de:
         grant_badge: "Abzeichen verleihen"
         list_reviewables: "Warteschlange zur Überprüfung auflisten"
         perform_reviewable_action: "Aktion der Warteschlange zur Überprüfung"
+        add_reviewable_note: "Notiz zur Warteschlange zur Überprüfung hinzufügen"
         assign: "Thema zuordnen"
         mark_as_solved: "Als gelöst markieren"
         search: "Suche"
@@ -600,6 +638,7 @@ de:
         grant_badge: "Einem Benutzer ein Abzeichen verleihen"
         list_reviewables: "Ausstehende Einträge der Warteschlange zur Überprüfung mit optionaler Filterung auflisten"
         perform_reviewable_action: "Eine Aktion für einen Eintrag in der Warteschlange zur Überprüfung ausführen"
+        add_reviewable_note: "Notiz zu einem Eintrag in der Warteschlange zur Überprüfung hinzufügen"
         assign: "Einem Benutzer oder einer Gruppe ein Thema zuweisen oder die Zuweisung aufheben"
         mark_as_solved: "Einen Beitrag als akzeptierte Lösung markieren oder die Markierung aufheben"
         search: "Alle öffentlichen Themen im Forum durchsuchen"
@@ -645,6 +684,7 @@ de:
         grant_badge: "Vergabe des Abzeichens '%{badge_name}' an %{username}"
         list_reviewables: "Auflistung der Einträge der Warteschlange zur Überprüfung (Typ: %{type})"
         perform_reviewable_action: "Durchführen von %{action} auf zu überprüfendem %{reviewable_id}"
+        add_reviewable_note: "Notiz wird zu prüfenden Eintrag %{reviewable_id} hinzugefügt"
         assign: "Zuweisung des Themas %{topic_id} (zugewiesen: %{assigned})"
         mark_as_solved: "Markieren des Beitrags %{post_id} als gelöst (gelöst: %{solved})"
         read: "Wird gelesen: <a href='%{url}'>%{title}</a>"
@@ -693,6 +733,7 @@ de:
         already_flagged: "Der Beitrag wurde bereits zur Überprüfung markiert."
         flagged: "Der Beitrag wurde zur Überprüfung markiert."
         reason: "Der KI-Bot hat diesen Beitrag gemeldet.\n\nGrund: %{reason}"
+        score_reason: "Der KI-Bot hat diesen Beitrag gemeldet."
       close_topic:
         errors:
           not_found: "Thema nicht gefunden."
@@ -814,6 +855,9 @@ de:
         errors:
           not_allowed: "Du darfst auf die Warteschlange zur Überprüfung nicht zugreifen"
           not_found: "Eintrag der Warteschlange nicht gefunden"
+          no_note: "Um einen Eintrag in der Warteschlange zur Überprüfung mit einer Notiz zu versehen, ist eine Notiz erforderlich"
+          failed: "Die Notiz konnte nicht hinzugefügt werden"
+        success: "Notiz wurde erfolgreich zum Eintrag %{reviewable_id} in der Warteschlange zur Überprüfung hinzugefügt"
     reviewables:
       ai_tool_action:
         title: "KI-Tool Aktion"
@@ -847,12 +891,16 @@ de:
           positive: "Positiv"
           negative: "Negativ"
           neutral: "Neutral"
+    discord:
+      configuration:
+        agent_user_required: "Dem Discord-Suchagenten muss ein Benutzer zugeordnet sein, bevor der Discord-Agentenmodus aktiviert werden kann."
     llm:
       configuration:
         create_llm: "Du musst einen LLM einrichten, bevor du diese Funktion aktivierst"
         disable_modules_first: "Du musst zuerst diese Module deaktivieren: %{settings}"
         set_llm_first: "Stelle zuerst %{setting} ein"
         model_unreachable: "Wir konnten keine Antwort von diesem Modell abrufen. Überprüfe zuerst deine Einstellungen."
+        empty_response: "Das Modell hat eine leere Antwort zurückgegeben."
         invalid_seeded_model: "Du kannst dieses Modell nicht mit dieser Funktion verwenden"
         invalid_agent_response_format: "Der ausgewählte Agent muss ein Antwortformat mit einem booleschen Feld namens „spam“ haben."
         must_select_model: "Du musst zuerst ein LLM auswählen"
@@ -898,10 +946,13 @@ de:
       limit_exceeded_admin: "Du hast dein KI-Guthabenlimit erreicht. Bitte versuche es erneut nach %{reset_time}."
     errors:
       quota_exceeded: "Du hast das Kontingent für dieses Modell überschritten. Bitte versuche es erneut in %{relative_time}."
+      quota_required: "Du musst für dieses Modell die maximale Anzahl an Token, die maximale Anzahl an Verwendungen oder die maximalen Kosten angeben"
       no_query_specified: Der Abfrageparameter ist erforderlich, bitte gib ihn an.
       no_user_for_agent: Der angegebene Agent hat keinen Benutzer, der mit ihm verbunden ist.
+      agent_not_found: "Der angegebene Agent existiert nicht. Überprüfe die Parameter „agent_name“ oder „agent_id“ (früher: „persona_name“ oder „persona_id“)."
       no_user_specified: Der Benutzername oder der Parameter user_unique_id ist erforderlich. Bitte gib ihn an.
       user_not_found: Der angegebene Benutzer existiert nicht. Überprüfe den Parameter username.
+      agent_disabled: "Der angegebene Agent ist deaktiviert. Überprüfe die Parameter „agent_name“ oder „agent_id“ (früher: „persona_name“ oder „persona_id“)."
       no_default_llm: Der Agent muss ein default_llm definiert haben.
       user_not_allowed: Der Benutzer darf nicht am Thema teilnehmen.
       invalid_stream_resume_token: Der resume_token ist ungültig oder abgelaufen.

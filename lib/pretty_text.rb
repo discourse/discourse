@@ -20,6 +20,10 @@ module PrettyText
   BLOCKED_HOTLINKED_SRC_ATTR = "data-blocked-hotlinked-src"
   BLOCKED_HOTLINKED_SRCSET_ATTR = "data-blocked-hotlinked-srcset"
 
+  VIMEO_PLAYER_HOST = "player.vimeo.com"
+  VIMEO_PLAYER_PATH = %r{\A/video/(?<id>\d+)/?\z}
+  VIMEO_UNLISTED_HASH = /\A[a-zA-Z0-9]+\z/
+
   @mutex = Mutex.new
   @ctx_init = Mutex.new
 
@@ -533,7 +537,7 @@ module PrettyText
   def self.convert_hashtag_links_to_plaintext(doc)
     doc
       .css("a.hashtag-cooked")
-      .each { |hashtag| hashtag.replace("##{hashtag.attributes["data-slug"]}") }
+      .each { |hashtag| hashtag.replace(doc.document.create_text_node("##{hashtag["data-slug"]}")) }
   end
 
   def self.strip_links(string)
@@ -580,14 +584,46 @@ module PrettyText
     doc
       .css("iframe[src*='player.vimeo.com']")
       .each do |iframe|
-        if iframe["data-original-href"].present?
-          vimeo_url = UrlHelper.normalized_encode(iframe["data-original-href"])
-        else
-          vimeo_id = iframe["src"].split("/").last.sub("?h=", "/")
-          vimeo_url = "https://vimeo.com/#{vimeo_id}"
-        end
-        iframe.replace Nokogiri::HTML5.fragment("<p><a href='#{vimeo_url}'>#{vimeo_url}</a></p>")
+        vimeo_url = vimeo_url_from_iframe(iframe)
+        next if vimeo_url.blank?
+
+        paragraph = doc.document.create_element("p")
+        link = doc.document.create_element("a")
+        link["href"] = vimeo_url
+        link.content = vimeo_url
+        paragraph.add_child(link)
+        iframe.replace(paragraph)
       end
+  end
+
+  def self.vimeo_url_from_iframe(iframe)
+    if iframe["data-original-href"].present?
+      url = UrlHelper.normalized_encode(iframe["data-original-href"])
+      scheme = UrlHelper.relaxed_parse(url)&.scheme
+      return %w[http https].include?(scheme) ? url : nil
+    end
+
+    uri = UrlHelper.relaxed_parse(iframe["src"].to_s)
+    return nil if uri.nil? || uri.host&.downcase != VIMEO_PLAYER_HOST
+
+    video_id = VIMEO_PLAYER_PATH.match(uri.path.to_s)&.[](:id)
+    return nil if video_id.nil?
+
+    unlisted_hash = vimeo_unlisted_hash(uri.query)
+    if unlisted_hash
+      "https://vimeo.com/#{video_id}/#{unlisted_hash}"
+    else
+      "https://vimeo.com/#{video_id}"
+    end
+  end
+
+  def self.vimeo_unlisted_hash(query)
+    return nil if query.blank?
+
+    hash = URI.decode_www_form(query).to_h["h"]
+    hash if hash&.match?(VIMEO_UNLISTED_HASH)
+  rescue ArgumentError
+    nil
   end
 
   def self.strip_secure_uploads(doc)
@@ -684,14 +720,31 @@ module PrettyText
   end
 
   def self.secure_uploads_placeholder(doc, url, onebox_type: false, width: nil, height: nil)
-    data_width = width ? "data-width=#{width}" : ""
-    data_height = height ? "data-height=#{height}" : ""
-    data_onebox_type = onebox_type ? "data-onebox-type='#{onebox_type}'" : ""
-    <<~HTML
-    <div class="secure-upload-notice" data-stripped-secure-upload="#{url}" #{data_onebox_type} #{data_width} #{data_height}>
-      #{I18n.t("emails.secure_uploads_placeholder")} <a class='stripped-secure-view-upload' href="#{url}">#{I18n.t("emails.view_redacted_media")}</a>.
-    </div>
-    HTML
+    notice = doc.document.create_element("div")
+    notice["class"] = "secure-upload-notice"
+    notice["data-stripped-secure-upload"] = url.to_s
+    notice["data-onebox-type"] = onebox_type.to_s if onebox_type
+
+    width = numeric_dimension(width)
+    height = numeric_dimension(height)
+    notice["data-width"] = width if width
+    notice["data-height"] = height if height
+
+    link = doc.document.create_element("a")
+    link["class"] = "stripped-secure-view-upload"
+    link["href"] = url.to_s
+    link.content = I18n.t("emails.view_redacted_media")
+
+    notice.add_child(
+      doc.document.create_text_node("#{I18n.t("emails.secure_uploads_placeholder")} "),
+    )
+    notice.add_child(link)
+    notice.add_child(doc.document.create_text_node("."))
+    notice
+  end
+
+  def self.numeric_dimension(value)
+    value.to_s[/\A\d+\z/]
   end
 
   def self.format_for_email(html, post = nil)

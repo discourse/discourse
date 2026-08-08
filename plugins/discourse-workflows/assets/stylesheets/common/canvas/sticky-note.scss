@@ -1,6 +1,6 @@
 .workflow-sticky-note {
   position: absolute;
-  z-index: 0;
+  z-index: -1;
   border-radius: 4px;
   box-shadow: 0 2px 8px rgb(0 0 0 / 0.12);
   pointer-events: auto;
@@ -22,6 +22,10 @@
       opacity: 1;
       pointer-events: auto;
     }
+  }
+
+  &.is-editing {
+    z-index: calc(var(--z-canvas-elements) + 1);
   }
 
   &.is-selected {

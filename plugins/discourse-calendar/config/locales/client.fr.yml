@@ -7,9 +7,17 @@
 fr:
   admin_js:
     admin:
+      calendar: "Calendrier et événements"
       site_settings:
         categories:
           discourse_post_event: "Événement Discourse"
+          discourse_calendar: "Calendrier et événements"
+      web_hooks:
+        calendar_event:
+          group_name: "Événement du calendrier"
+          calendar_event_created: "Événement du calendrier créé"
+          calendar_event_updated: "Événement du calendrier mis à jour"
+          calendar_event_destroyed: "Événement du calendrier supprimé"
   js:
     notifications:
       titles:
@@ -27,10 +35,25 @@ fr:
     discourse_calendar:
       livestream:
         zoom:
+          join: "Rejoindre dans Zoom"
           chat: "Discussion"
+          open_in_zoom: "Ouvrir dans Zoom"
+          load_error: "Vous avez quitté le webinaire ou nous ne parvenons pas à charger Zoom sur cette page."
+          too_early: "Vous pourrez rejoindre le webinaire à l'approche de l'heure de début de l'événement."
+          view_topic: "Afficher le sujet de l'événement"
+          not_started_retrying:
+            one: "Le webinaire n'a pas encore commencé. Nouvelle tentative de connexion dans %{count} seconde..."
+            other: "Le webinaire n'a pas encore commencé. Nouvelle tentative de connexion dans %{count} secondes..."
+          not_started_trying_again: "Nouvelle tentative de connexion au webinaire en cours..."
+        chat:
+          rsvp_to_event: "Confirmez votre participation à l'événement pour commencer à discuter"
+          rsvp_to_event_with_link: "Confirmez votre participation à <a href='%{url}'>l'événement</a> pour commencer à discuter"
+          rsvp_body: "Échangez avec les autres participants avant, pendant et après l'événement."
       invite_user_notification: "%{username} vous a invité(e) à rejoindre : %{description}"
       preferences:
-        all_events: "Tous les événements"
+        all_events: "Calendrier Discourse - Tous les événements"
+        all_events_description: "Tous les événements du forum"
+        my_events: "Calendrier Discourse : mes événements"
         my_events_description: "Événements auxquels vous participez ou qui vous intéressent"
       on_holiday: "En vacances"
       disable_holiday: "Désactiver"
@@ -39,7 +62,8 @@ fr:
       holidays:
         header_title: "Vacances"
         pick_region_description: "Choisissez une région pour voir les jours fériés de cette région."
-        disabled_holidays_description: "Les vacances pour personnes handicapées seront exclues du calendrier des jours fériés du personnel."
+        disabled_holidays_description: "Les congés désactivés ne figureront pas dans le calendrier des congés des responsables."
+        header_description: "Sélectionnez une région pour afficher ses jours fériés. Les jours fériés désactivés seront exclus du calendrier des jours fériés des responsables."
       date: "Date"
       add_to_calendar: "Ajouter à Google Agenda"
       toggle_timezone_offset_title: "Activer/désactiver le décalage horaire"
@@ -48,7 +72,7 @@ fr:
         title: "Région"
         none: "Aucune"
         use_current_region: "Utiliser la région actuelle"
-        select_region: "Choisir une région..."
+        select_region: "Sélectionnez une région..."
         names:
           ae: "Émirats arabes unis"
           ar: "Argentine"
@@ -325,6 +349,7 @@ fr:
       search: "Recherche…"
       group_availability: "disponibilité de %{group}"
     discourse_post_event:
+      new_event: "Nouvel événement"
       notifications:
         before_event_reminder: "Un événement est sur le point de commencer"
         after_event_reminder: "Un événement est terminé"
@@ -357,6 +382,7 @@ fr:
       bulk_invite: "Invitation groupée"
       close_event: "Fermer l'événement"
       open_event: "Ouvrir l'événement"
+      destroy_event: "Supprimer l'événement"
       invitees_modal:
         title_invited: "Participation à l'événement"
         title_participated: "Liste des utilisateurs ayant participé"
@@ -376,6 +402,7 @@ fr:
         send_bulk_invites: "Envoyer des invitations"
         group_selector_placeholder: "Choisir un groupe…"
         user_selector_placeholder: "Choisir un utilisateur…"
+        attendance_label: "Participation"
         inline_title: "Invitation groupée en ligne"
         csv_title: "Invitation groupée au format CSV"
       upcoming_events:
@@ -388,6 +415,7 @@ fr:
       upcoming_events_list:
         title: "Événements à venir"
         empty: "Aucun événement à venir"
+        all_day: "Toute la journée"
         error: "Échec de la récupération des événements"
         try_again: "Réessayer"
         view_all: "Tout voir"
@@ -401,9 +429,12 @@ fr:
       models:
         invitee:
           no_users: "Aucun utilisateur trouvé"
+          this_event: "Cet événement"
+          this_and_following: "Cet événement et tous les événements suivants"
           leave_event: "Quitter l'événement"
           status:
             going: "Participera"
+            not_going: "Je ne participe pas"
             interested: "Intéressé(e)"
             going_count:
               one: "%{count} utilisateur participera"
@@ -420,6 +451,7 @@ fr:
         event:
           expired: "Expiré"
           closed: "Fermé"
+          full: "Complet"
           status:
             standalone:
               title: "Indépendant"
@@ -432,8 +464,20 @@ fr:
               description: "Un événement privé ne peut être rejoint que par les utilisateurs invités."
       composer:
         name_placeholder: "Nom de l'événement"
+        end_date_placeholder: "Date de fin"
+        location_placeholder: "Ajouter un lieu ou une URL"
+        max_attendees_placeholder: "Nombre illimité de participants"
+        max_attendees_display:
+          one: "%{count} participant maximum"
+          other: "%{count} participants maximum"
+        no_rsvps_label: "Ne pas recueillir les confirmations de participation"
+        description_placeholder: "Ajouter une description de l'événement"
         event_title_placeholder: "Nom de l'événement"
         create_event_button: "Créer un événement"
+        action_title: "Créer un nouvel événement"
+        all_day: "Toute la journée"
+        livestream: "Diffusion en direct"
+        livestream_chat_disabled: "Activez le chat pour créer des canaux de diffusion en direct."
         reminder:
           units:
             minutes:
@@ -448,9 +492,18 @@ fr:
             weeks:
               one: "semaine"
               other: "semaines"
+          before: "%{unit} avant"
+          after: "%{unit} après"
+          notification_title: "Informer les participants"
+          bump_topic_title: "Remonter automatiquement le sujet"
+          remove: "Supprimer le rappel"
       composer_actions:
         create_event:
           label: "Créer un événement"
+          desc: "Créer un événement dans cette catégorie"
+        create_topic:
+          label: "Créer un sujet"
+          desc: "Créer un sujet standard plutôt qu'un événement"
       builder_modal:
         custom_fields:
           label: "Champs personnalisés"
@@ -458,6 +511,7 @@ fr:
           description: "Les champs personnalisés autorisés sont définis dans les paramètres du site. Les champs personnalisés sont utilisés pour transmettre des données à d'autres extensions."
         create_event_title: "Créer un événement"
         update_event_title: "Modifier l'événement"
+        advanced_settings_title: "Paramètres avancés"
         confirm_delete: "Voulez-vous vraiment supprimer cet événement ?"
         confirm_close: "Voulez-vous vraiment fermer cet événement ?"
         confirm_open: "Voulez-vous vraiment ouvrir cet événement ?"
@@ -473,8 +527,16 @@ fr:
           remove_timezone: Pas de fuseau horaire (UTC)
         starts_at:
           label: "Date de début"
+        ends_at:
+          label: "Date de fin"
+        all_day:
+          label: "Événement sur toute la journée"
+          description: "Un événement d'une journée entière n'aura pas d'horaires précis, seulement une date. Il se déroulera du début à la fin de la journée."
         reminders:
           label: "Rappels"
+          types:
+            bump_topic: "Remonter automatiquement le sujet"
+            notification: "Informer les participants"
           units:
             minutes: "minutes"
             hours: "heures"
@@ -483,19 +545,39 @@ fr:
           periods:
             before: "avant"
             after: "après"
+        recurrence_until:
+          label: "Jusqu'au (cette date incluse)"
         recurrence:
           label: "Périodicité"
           none: "Pas de périodicité"
           every_day: "Tous les jours"
           every_weekday: "Chaque jour de la semaine"
+          every_week: "Chaque %{weekday}"
+          every_two_weeks: "Tous les deux %{weekday}"
+          every_four_weeks: "Toutes les 4 semaines le %{weekday}"
+          every_month: "Le %{ordinal} %{weekday} de chaque mois"
           ordinals:
+            first: "premier"
+            second: "deuxième"
+            third: "troisième"
+            fourth: "quatrième"
             last: "dernier"
+        max_attendees:
+          label: "Nombre maximal de participants"
+          placeholder: "Aucune limite"
         attendance:
+          label: "Combien de membres peuvent confirmer leur présence à cet événement ?"
+          unlimited: "Illimité"
+          up_to: "Jusqu'à..."
           none: "Jamais"
         allow_chat:
           label: "Intégrations de la messagerie instantanée"
           checkbox_label: "Créez et gérez un canal de discussion spécifique à un événement"
+        livestream:
+          label: "Diffusion en direct"
+          checkbox_label: "Intégrez l'URL sous forme de vidéo et ouvrez le chat de diffusion en direct pour les participants."
         location:
+          label: "Emplacement ou URL"
           placeholder: "Ajoutez un lieu, un lien ou autre."
         description:
           label: "Description"
@@ -506,8 +588,16 @@ fr:
         invitees:
           label: "Groupes invités"
         event_type:
+          label: "Type de participation"
           public:
             title: "Public"
+            description: "Tout le monde peut participer."
+          private:
+            title: "Sur invitation uniquement"
+            description: "Seuls les membres des groupes sélectionnés peuvent y assister."
+        delete_confirmation_message: "Supprimer cet événement ?"
+        image:
+          label: "Image de l'événement"
       invite_user_or_group:
         title: "Avertir les utilisateurs ou les groupes"
         invite: "Envoyer"

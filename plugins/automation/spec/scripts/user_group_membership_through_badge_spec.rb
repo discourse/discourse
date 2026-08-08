@@ -19,13 +19,8 @@ describe "UserGroupMembershipThroughBadge" do
     BadgeGranter.clear_queue!
   end
 
-  def target_group_member?(user_ids)
-    GroupUser.exists?(group_id: target_group.id, user_id: user_ids)
-  end
-
-  def owns_badge?(user_ids)
-    UserBadge.exists?(user_id: user_ids, badge_id: badge.id)
-  end
+  let(:target_group_memberships) { GroupUser.where(group_id: target_group.id) }
+  let(:badge_grants) { UserBadge.where(badge_id: badge.id) }
 
   context "with invalid field values" do
     let(:fake_logger) { FakeLogger.new }
@@ -86,7 +81,7 @@ describe "UserGroupMembershipThroughBadge" do
         before { BadgeGranter.grant(badge, user) }
 
         it "adds user to group" do
-          expect(target_group_member?([user.id])).to eq(false)
+          expect(target_group_memberships.where(user_id: user.id).exists?).to eq(false)
 
           expect do
             automation.trigger!(
@@ -95,8 +90,8 @@ describe "UserGroupMembershipThroughBadge" do
             )
           end.to change { target_group.users.count }.by(1)
 
-          expect(target_group_member?([user.id])).to eq(true)
-          expect(owns_badge?([user.id])).to eq(true)
+          expect(target_group_memberships.where(user_id: user.id).exists?).to eq(true)
+          expect(badge_grants.where(user_id: user.id).exists?).to eq(true)
         end
 
         it "does nothing if user is an existing group member" do
@@ -116,7 +111,7 @@ describe "UserGroupMembershipThroughBadge" do
           expect(GroupUser.find_by(group_id: target_group.id, user_id: user.id)).to eq(
             current_membership,
           )
-          expect(owns_badge?([user.id])).to eq(true)
+          expect(badge_grants.where(user_id: user.id).exists?).to eq(true)
         end
 
         it "does not add other badge owners" do
@@ -132,15 +127,15 @@ describe "UserGroupMembershipThroughBadge" do
             )
           end.to change { target_group.reload.users.count }.by(1)
 
-          expect(target_group_member?([user.id])).to eq(true)
-          expect(owns_badge?([user.id])).to eq(true)
+          expect(target_group_memberships.where(user_id: user.id).exists?).to eq(true)
+          expect(badge_grants.where(user_id: user.id).exists?).to eq(true)
         end
       end
 
       context "when user does not have badge" do
         it "does not add user to group" do
-          expect(target_group_member?([user.id])).to eq(false)
-          expect(owns_badge?([user.id])).to eq(false)
+          expect(target_group_memberships.where(user_id: user.id).exists?).to eq(false)
+          expect(badge_grants.where(user_id: user.id).exists?).to eq(false)
 
           expect do
             automation.trigger!(
@@ -149,8 +144,8 @@ describe "UserGroupMembershipThroughBadge" do
             )
           end.not_to change { target_group.users.count }
 
-          expect(target_group_member?([user.id])).to eq(false)
-          expect(owns_badge?([user.id])).to eq(false)
+          expect(target_group_memberships.where(user_id: user.id).exists?).to eq(false)
+          expect(badge_grants.where(user_id: user.id).exists?).to eq(false)
         end
 
         it "does not add other badge owners" do
@@ -166,8 +161,8 @@ describe "UserGroupMembershipThroughBadge" do
             )
           end.not_to change { target_group.reload.users.count }
 
-          expect(target_group_member?([user.id])).to eq(false)
-          expect(owns_badge?([user.id])).to eq(false)
+          expect(target_group_memberships.where(user_id: user.id).exists?).to eq(false)
+          expect(badge_grants.where(user_id: user.id).exists?).to eq(false)
           expect(target_group.users.count).to eq(0)
         end
       end
@@ -182,29 +177,29 @@ describe "UserGroupMembershipThroughBadge" do
       before { badge_owners.each { |u| BadgeGranter.grant(badge, u) } }
 
       it "adds all users with badge to group" do
-        expect(target_group_member?(badge_owner_ids)).to eq(false)
-        expect(target_group_member?(non_badge_owner_ids)).to eq(false)
+        expect(target_group_memberships.where(user_id: badge_owner_ids).exists?).to eq(false)
+        expect(target_group_memberships.where(user_id: non_badge_owner_ids).exists?).to eq(false)
 
         expect do
           automation.trigger!("kind" => DiscourseAutomation::Triggers::RECURRING)
         end.to change { target_group.reload.users.count }.by(badge_owners.size)
 
-        expect(target_group_member?(badge_owner_ids)).to eq(true)
-        expect(target_group_member?(non_badge_owner_ids)).to eq(false)
+        expect(target_group_memberships.where(user_id: badge_owner_ids).exists?).to eq(true)
+        expect(target_group_memberships.where(user_id: non_badge_owner_ids).exists?).to eq(false)
       end
 
       it "skips existing group members with badge" do
         badge_owners.each { |u| target_group.add(u) }
 
-        expect(target_group_member?(badge_owner_ids)).to eq(true)
-        expect(target_group_member?(non_badge_owner_ids)).to eq(false)
+        expect(target_group_memberships.where(user_id: badge_owner_ids).exists?).to eq(true)
+        expect(target_group_memberships.where(user_id: non_badge_owner_ids).exists?).to eq(false)
 
         expect do
           automation.trigger!("kind" => DiscourseAutomation::Triggers::RECURRING)
         end.not_to change { target_group.reload.users.count }
 
-        expect(target_group_member?(badge_owner_ids)).to eq(true)
-        expect(target_group_member?(non_badge_owner_ids)).to eq(false)
+        expect(target_group_memberships.where(user_id: badge_owner_ids).exists?).to eq(true)
+        expect(target_group_memberships.where(user_id: non_badge_owner_ids).exists?).to eq(false)
       end
     end
 
@@ -220,32 +215,32 @@ describe "UserGroupMembershipThroughBadge" do
       end
 
       it "removes existing members without badge" do
-        expect(target_group_member?(other_users.map(&:id))).to eq(true)
+        expect(target_group_memberships.where(user_id: other_users.map(&:id)).exists?).to eq(true)
 
         expect do
           automation.trigger!("kind" => DiscourseAutomation::Triggers::RECURRING)
         end.to change { target_group.reload.users.count }.by(-other_users.count)
 
-        expect(target_group_member?(other_users.map(&:id))).to eq(false)
+        expect(target_group_memberships.where(user_id: other_users.map(&:id)).exists?).to eq(false)
       end
 
       it "keeps existing members with badge" do
         BadgeGranter.grant(badge, user)
         target_group.add(user)
 
-        expect(target_group_member?(other_users.map(&:id))).to eq(true)
-        expect(owns_badge?(other_users.map(&:id))).to eq(false)
-        expect(target_group_member?([user.id])).to eq(true)
-        expect(owns_badge?([user.id])).to eq(true)
+        expect(target_group_memberships.where(user_id: other_users.map(&:id)).exists?).to eq(true)
+        expect(badge_grants.where(user_id: other_users.map(&:id)).exists?).to eq(false)
+        expect(target_group_memberships.where(user_id: user.id).exists?).to eq(true)
+        expect(badge_grants.where(user_id: user.id).exists?).to eq(true)
 
         expect do
           automation.trigger!("kind" => DiscourseAutomation::Triggers::RECURRING)
         end.to change { target_group.reload.users.count }
 
-        expect(target_group_member?(other_users.map(&:id))).to eq(false)
-        expect(owns_badge?(other_users.map(&:id))).to eq(false)
-        expect(target_group_member?([user.id])).to eq(true)
-        expect(owns_badge?([user.id])).to eq(true)
+        expect(target_group_memberships.where(user_id: other_users.map(&:id)).exists?).to eq(false)
+        expect(badge_grants.where(user_id: other_users.map(&:id)).exists?).to eq(false)
+        expect(target_group_memberships.where(user_id: user.id).exists?).to eq(true)
+        expect(badge_grants.where(user_id: user.id).exists?).to eq(true)
       end
     end
 
@@ -262,15 +257,15 @@ describe "UserGroupMembershipThroughBadge" do
       it "keeps existing members without badge" do
         other_users.each { |u| target_group.add(u) }
 
-        expect(target_group_member?(other_users.map(&:id))).to eq(true)
-        expect(owns_badge?(other_users.map(&:id))).to eq(false)
+        expect(target_group_memberships.where(user_id: other_users.map(&:id)).exists?).to eq(true)
+        expect(badge_grants.where(user_id: other_users.map(&:id)).exists?).to eq(false)
 
         expect do
           automation.trigger!("kind" => DiscourseAutomation::Triggers::RECURRING)
         end.not_to change { target_group.reload.users.count }
 
-        expect(target_group_member?(other_users.map(&:id))).to eq(true)
-        expect(owns_badge?(other_users.map(&:id))).to eq(false)
+        expect(target_group_memberships.where(user_id: other_users.map(&:id)).exists?).to eq(true)
+        expect(badge_grants.where(user_id: other_users.map(&:id)).exists?).to eq(false)
       end
     end
 

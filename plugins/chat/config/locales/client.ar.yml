@@ -79,6 +79,8 @@ ar:
         close: "إغلاق الرسائل المثبتة"
         pinned_by_you: "أنت ثبتها"
         pinned_by_user: "ثبتها %{username}"
+      pinned_bar:
+        title: "مثبَّت"
       no_pinned_messages: "لا توجد رسائل مثبتة في هذه القناة."
       pin_message: "تثبيت الرسالة"
       unpin_message: "إلغاء تثبيت الرسالة"
@@ -182,12 +184,6 @@ ar:
         never: "أبدًا"
       separate_sidebar_mode:
         title: "إظهار أوضاع الشريط الجانبي المنفصلة للمنتدى والدردشة"
-      send_shortcut:
-        title: "إرسال اختصار"
-        enter:
-          label: "الإرسال بواسطة مفتاح Enter"
-        meta_enter:
-          label: "الإرسال بواسطة مفتاحَي %{meta_key} + Enter"
       enable: "تفعيل الدردشة"
       flag: "الإبلاغ"
       emoji: "إدراج رمز تعبيري"
@@ -366,6 +362,11 @@ ar:
         title: "صوت إشعارات دردشة سطح المكتب"
       sounds:
         none: "لا يوجد"
+        classic: "كلاسيكي ونقي"
+        soft: "ماريمبا هادئة"
+        retro: "ريترو 8-بت"
+        bubble: "فقاعة لعوبة"
+        ethereal: "زجاج أثيري"
       title: "دردشة"
       title_capitalized: "الدردشة"
       upload: "إرفاق ملف"
@@ -452,6 +453,8 @@ ar:
         input_placeholder: أضِف اسمًا
         slug_description: يتم استخدام مسار للقناة في عنوان URL بدلًا من اسم القناة
         name: اسم القناة
+        slug: مسار القناة
+        emoji: الرمز التعبيري للقناة
         reset_emoji: إعادة تعيين الرمز التعبيري
       channel_edit_description_modal:
         title: تعديل الوصف
@@ -534,12 +537,14 @@ ar:
         create: "إنشاء قناة"
         description: "الوصف"
         name: "اسم القناة"
+        slug: "مسار القناة"
         title: "قناة جديدة"
         type: "النوع"
         types:
           category: "الفئة"
           topic: "الموضوع"
         emoji:
+          label: "الرمز التعبيري للقناة"
           reset: "إعادة تعيين الرمز التعبيري"
       reviewable:
         type: "رسالة دردشة"
@@ -750,7 +755,7 @@ ar:
       flagging:
         action: "الإبلاغ عن الرسالة"
       emoji_picker:
-        favorites: "المستخدمة بشكلٍٍ متكرر"
+        favorites: "المستخدمة بشكلٍ متكرر"
         smileys_&_emotion: "الرموز التعبيرية"
         objects: "الأشياء"
         people_&_body: "الأشخاص والجسم"
@@ -883,7 +888,7 @@ ar:
           composer_bold: "%{shortcut} غامق (أداة الإنشاء فقط)"
           composer_italic: "%{shortcut} مائل (أداة الإنشاء فقط)"
           composer_code: "%{shortcut} رمز برمجي (أداة الإنشاء فقط)"
-          drawer_toggle: "%{shortcut} لتبديل لوحة الدردشة"
+          drawer_toggle: "%{shortcut} لتفعيل/إيقاف لوحة الدردشة"
           drawer_close: "%{shortcut} إغلاق درج الدردشة"
           mark_all_channels_read: "%{shortcut} وضع علامة \"مقروءة\" على كل القنوات"
     topic_statuses:
@@ -920,13 +925,33 @@ ar:
         chat:
           label: "الدردشة"
     discourse_workflows:
+      node_unavailable:
+        requires_chat: "يتطلَّب تفعيل المكوِّن الإضافي للدردشة"
       nodes:
+        "action:send_chat_message": "إرسال رسالة دردشة"
+        "action:chat_approval": "الموافقة على الدردشة"
         "trigger:chat_message_created": "إنشاء رسالة دردشة"
+      node_descriptions:
+        "action:send_chat_message": "أرسل رسالة إلى قناة دردشة"
+        "action:chat_approval": "أرسل طلب موافقة إلى قناة دردشة وانتظار ردًا"
+        "trigger:chat_message_created": "يتم تشغيله عند إنشاء رسالة دردشة جديدة"
       chat_message_created:
         channel_id: "القناة"
+        channel_id_description: "اترك هذا الحقل فارغًا للتطبيق على جميع قنوات الدردشة."
       send_chat_message:
         channel_id: "القناة"
-        message: "رسالة"
+        message: "الرسالة"
       chat_approval:
-        message: "رسالة"
+        message: "الرسالة"
+        approve_label: "تسمية زر الموافقة"
+        approve_label_description: "يتم تعيين الاسم الافتراضي إلى \"موافقة\" إذا تم تركه فارغًا."
+        deny_label: "تسمية زر الرفض"
+        deny_label_description: "يتم تعيين الاسم الافتراضي إلى \"رفض\" إذا تم تركه فارغًا."
         channel_id: "القناة"
+        channel_id_description: "قناة الدردشة التي سيتم إرسال رسالة الموافقة إليها."
+        timeout_minutes: "المهلة الزمنية (بالدقائق)"
+        timeout_minutes_description: "اترك هذا الحقل فارغًا لعدم تعيين مهلة زمنية."
+        timeout_action: "عند انتهاء المهلة"
+        timeout_action_description: "ماذا يحدث عند انتهاء المهلة الزمنية للموافقة."
+        timeout_action_deny: "المتابعة كمرفوض"
+        timeout_action_fail: "إفشال سير العمل"

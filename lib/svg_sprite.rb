@@ -50,6 +50,7 @@ module SvgSprite
         caret-up
         certificate
         chart-bar
+        chart-column
         chart-pie
         check
         chevron-down
@@ -174,6 +175,7 @@ module SvgSprite
         file
         file-lines
         filter
+        filter-circle-xmark
         flag
         flask
         folder

@@ -72,4 +72,28 @@ module("Integration | Component | DSegmentedControl", function (hooks) {
 
     assert.dom(".d-segmented-control__legend").hasText("Time period");
   });
+
+  test("per-item title gives an icon-only segment an accessible name", async function (assert) {
+    const iconItems = [
+      { value: "left", icon: "align-left", title: "Align left" },
+      { value: "center", icon: "align-center", title: "Align center" },
+    ];
+
+    await render(
+      <template>
+        <DSegmentedControl @name="align" @items={{iconItems}} @value="left" />
+      </template>
+    );
+
+    assert
+      .dom(".d-segmented-control__input[value='left']")
+      .hasAttribute("aria-label", "Align left", "the radio carries the title");
+    assert
+      .dom(".d-segmented-control__label")
+      .hasAttribute(
+        "title",
+        "Align left",
+        "and the label shows it as a tooltip"
+      );
+  });
 });

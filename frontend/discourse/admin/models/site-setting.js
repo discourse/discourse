@@ -9,6 +9,7 @@ import {
 import SettingObjectHelper from "discourse/admin/lib/setting-object-helper";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -126,7 +127,11 @@ export default class SiteSetting extends EmberObject {
 
   @computed("settingObjectHelper.allowsNone")
   get allowsNone() {
-    return this.settingObjectHelper?.allowsNone;
+    return applyValueTransformer(
+      "site-setting-allows-none",
+      this.settingObjectHelper?.allowsNone,
+      { siteSetting: this }
+    );
   }
 
   set allowsNone(value) {
@@ -157,7 +162,7 @@ export default class SiteSetting extends EmberObject {
   get definition() {
     return {
       key: this.setting,
-      label: this.humanized_name,
+      label: this.humanized_name || this.setting,
       description: trustHTML(this.description),
       type: this.type,
       list_type: this.list_type,

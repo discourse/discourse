@@ -1,14 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Viewport-based mobile mode" do
-  it "has both stylesheets, and updates classes at runtime" do
+  it "updates classes at runtime" do
     visit "/"
-
-    mobile_stylesheet = find("link[rel=stylesheet][href*='stylesheets/mobile']", visible: false)
-    desktop_stylesheet = find("link[rel=stylesheet][href*='stylesheets/desktop']", visible: false)
-
-    expect(mobile_stylesheet["media"]).to include("width < 40rem")
-    expect(desktop_stylesheet["media"]).to include("width >= 40rem")
 
     expect(page).to have_css("html.desktop-view")
     expect(page).not_to have_css("html.mobile-view")

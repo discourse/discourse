@@ -29,6 +29,7 @@ const FADEOUT_CLASS = "-fade-out";
 export default class ChatChannelRow extends Component {
   @service capabilities;
   @service chat;
+  @service chatApi;
   @service menu;
   @service site;
 
@@ -128,10 +129,32 @@ export default class ChatChannelRow extends Component {
   @bind
   onSwipeEnd() {
     if (this.isAtThreshold) {
-      this.rowStyle = trustHTML("margin-right: 0px;");
-      this.shouldRemoveChannel = true;
+      if (this.isSwipeToClearNotifications) {
+        this.#clearNotifications();
+        this.shouldReset = true;
+      } else {
+        this.rowStyle = trustHTML("margin-right: 0px;");
+        this.shouldRemoveChannel = true;
+      }
     } else {
       this.shouldReset = true;
+    }
+  }
+
+  #clearNotifications() {
+    const channel = this.args.channel;
+    if (!channel.currentUserMembership) {
+      return;
+    }
+
+    const lastMessageId = channel.lastMessage?.id;
+    channel.tracking.reset();
+    channel.updateLastViewedAt();
+
+    if (lastMessageId) {
+      this.chatApi
+        .markChannelAsRead(channel.id, lastMessageId)
+        .catch(popupAjaxError);
     }
   }
 
@@ -186,7 +209,15 @@ export default class ChatChannelRow extends Component {
   }
 
   get shouldHandleSwipe() {
-    return this.capabilities.touch && this.args.channel.isDirectMessageChannel;
+    if (!this.capabilities.touch) {
+      return false;
+    }
+
+    return this.args.channel.isDirectMessageChannel || this.channelHasUnread;
+  }
+
+  get isSwipeToClearNotifications() {
+    return !this.args.channel.isDirectMessageChannel;
   }
 
   get leaveDirectMessageLabel() {
@@ -297,10 +328,13 @@ export default class ChatChannelRow extends Component {
         <div
           class={{dConcatClass
             "chat-channel-row__action-btn"
+            (if this.isSwipeToClearNotifications "--clear" "--remove")
             (if this.isAtThreshold "-at-threshold" "-not-at-threshold")
           }}
         >
-          {{dIcon "circle-xmark"}}
+          {{dIcon
+            (if this.isSwipeToClearNotifications "circle-check" "circle-xmark")
+          }}
         </div>
       {{/if}}
     </LinkTo>

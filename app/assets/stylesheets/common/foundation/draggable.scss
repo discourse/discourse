@@ -1,0 +1,73 @@
+/* Default styles for the drag-and-drop modifier vocabulary
+   (`{{draggable-item}}` + `{{drop-target}}`). The modifiers toggle these
+   class names on their host elements during a drag; consumers can raise
+   specificity to override when they need a different treatment. */
+
+.is-dragging {
+  opacity: 0.5;
+}
+
+%drag-line-indicator {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--tertiary);
+  pointer-events: none;
+}
+
+.is-drag-above {
+  position: relative;
+
+  &::before {
+    @extend %drag-line-indicator;
+    top: -1px;
+  }
+}
+
+.is-drag-below {
+  position: relative;
+
+  &::after {
+    @extend %drag-line-indicator;
+    bottom: -1px;
+  }
+}
+
+%drag-line-indicator-vertical {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--tertiary);
+  pointer-events: none;
+}
+
+.is-drag-left {
+  position: relative;
+
+  &::before {
+    @extend %drag-line-indicator-vertical;
+    left: -1px;
+  }
+}
+
+.is-drag-right {
+  position: relative;
+
+  &::after {
+    @extend %drag-line-indicator-vertical;
+    right: -1px;
+  }
+}
+
+/* `inside` mode: the cursor is over a container that accepts the dragged
+   item as a child rather than a sibling — surfaced with an outline
+   instead of a single line to distinguish it from above/below/left/right. */
+
+.is-drag-inside {
+  outline: 2px solid var(--tertiary);
+  outline-offset: -2px;
+}

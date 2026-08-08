@@ -41,6 +41,11 @@ module AdminDashboard
       # Expensive data fetch. Called by the bulk endpoint to load chart/table
       # content. Providers own their own caching.
       #
+      # A payload hash may include a truthy `:error` key to report a failure
+      # that happened while producing that identifier's data (e.g. a bad
+      # query) without raising — the bulk endpoint surfaces this the same
+      # way it surfaces an unhandled exception from `fetch_many` itself.
+      #
       # @param identifiers [Array<String>]
       # @param guardian [Guardian]
       # @param filters [Hash] dashboard-level filter values (date range, etc).

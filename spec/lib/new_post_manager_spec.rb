@@ -295,6 +295,7 @@ RSpec.describe NewPostManager do
     end
 
     context "with media" do
+      let(:empty_image_sizes) { {} }
       let(:manager_opts) do
         {
           raw: "this is new post content",
@@ -319,6 +320,53 @@ RSpec.describe NewPostManager do
 
         expect(result.action).to eq(:enqueued)
         expect(result.reason).to eq(:contains_media)
+      end
+
+      it "queues an image for review when image dimensions are missing" do
+        SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_1]
+        manager =
+          NewPostManager.new(
+            user,
+            manager_opts.merge(
+              raw: "![image](upload://abcdefghijklmnopqrstuvwx.jpeg)",
+              image_sizes: empty_image_sizes,
+            ),
+          )
+
+        result = NewPostManager.default_handler(manager)
+
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:contains_media)
+      end
+
+      it "queues embedded video for review when image dimensions are missing" do
+        SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_1]
+        manager =
+          NewPostManager.new(
+            user,
+            manager_opts.merge(
+              raw:
+                '<video controls><source src="https://example.com/video.mp4" type="video/mp4"></video>',
+              image_sizes: empty_image_sizes,
+            ),
+          )
+
+        result = NewPostManager.default_handler(manager)
+
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:contains_media)
+      end
+
+      it "does not queue plain text or emoji when image dimensions are missing" do
+        SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_1]
+        results =
+          ["plain text without media", "content with an emoji :mask:"].map do |raw|
+            manager =
+              NewPostManager.new(user, manager_opts.merge(raw: raw, image_sizes: empty_image_sizes))
+            NewPostManager.default_handler(manager)
+          end
+
+        expect(results).to eq([nil, nil])
       end
 
       it "does not enqueue the post if the poster is a trusted user" do

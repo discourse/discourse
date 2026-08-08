@@ -1,14 +1,23 @@
 # frozen_string_literal: true
 
 class CustomEmoji < ActiveRecord::Base
+  DEFAULT_GROUP = "default"
+  MAX_GROUP_LENGTH = 20
+
   belongs_to :upload
   belongs_to :user
 
   has_many :upload_references, as: :target, dependent: :destroy
 
   validates :name, presence: true, uniqueness: true
+  validates :group, length: { maximum: MAX_GROUP_LENGTH }
   validates :upload_id, presence: true
   validates :user_id, presence: true
+
+  def self.normalize_group(group)
+    normalized = group.to_s.strip.downcase.presence
+    normalized == DEFAULT_GROUP ? nil : normalized
+  end
 
   before_validation :set_default_user_id, on: :create
 

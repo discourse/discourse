@@ -118,6 +118,20 @@ id:
         select_option: "Memilih sebuah pilihan..."
       translations:
         category_scope: "Kategori"
+        model_progress:
+          detail:
+            columns:
+              pending: "tertunda"
+              total: "Jumlah"
+          targets:
+            post:
+              title: "Pos"
+            topic:
+              title: "Topik"
+            category:
+              title: "Kategori"
+            tag:
+              title: "Label"
         stats:
           eta_minutes:
             other: "%{count} menit"
@@ -210,8 +224,6 @@ id:
           running: "Tes berlangsung..."
           success: "Sukses!"
           failure: "Mencoba menghubungi model menghasilkan kesalahan ini: %{error}"
-        providers:
-          google: "Google"
         provider_fields:
           region: "Wilayah"
       ai_helper:

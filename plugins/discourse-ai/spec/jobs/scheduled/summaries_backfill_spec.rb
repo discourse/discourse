@@ -17,6 +17,10 @@ RSpec.describe Jobs::SummariesBackfill do
     SiteSetting.ai_summary_gists_enabled = true
   end
 
+  def summary_tool_call(summary, id:)
+    DiscourseAi::Completions::ToolCall.new(id:, name: "set_topic_summary", parameters: { summary: })
+  end
+
   describe "#current_budget" do
     let(:type) { AiSummary.summary_types[:complete] }
 
@@ -45,42 +49,101 @@ RSpec.describe Jobs::SummariesBackfill do
     it "only selects posts with enough words" do
       topic.update!(word_count: 100)
 
-      expect(job.backfill_candidates(type)).to be_empty
+      expect(job.backfill_candidates(type, locale: :source)).to be_empty
     end
 
     it "ignores up to date summaries" do
-      Fabricate(:ai_summary, target: topic, highest_target_number: 2, updated_at: 10.minutes.ago)
+      Fabricate(
+        :ai_summary,
+        target: topic,
+        locale: SiteSetting.default_locale,
+        highest_target_number: 2,
+        updated_at: 10.minutes.ago,
+      )
 
-      expect(job.backfill_candidates(type)).to be_empty
+      expect(job.backfill_candidates(type, locale: :source)).to be_empty
     end
 
     it "ignores outdated summaries updated less than five minutes ago" do
-      Fabricate(:ai_summary, target: topic, highest_target_number: 1, updated_at: 4.minutes.ago)
+      Fabricate(
+        :ai_summary,
+        target: topic,
+        locale: SiteSetting.default_locale,
+        highest_target_number: 1,
+        updated_at: 4.minutes.ago,
+      )
 
-      expect(job.backfill_candidates(type)).to be_empty
+      expect(job.backfill_candidates(type, locale: :source)).to be_empty
     end
 
     it "orders candidates by topic#last_posted_at" do
       topic.update!(last_posted_at: 1.minute.ago)
       topic_2 = Fabricate(:topic, word_count: 200, last_posted_at: 2.minutes.ago)
 
-      expect(job.backfill_candidates(type).map(&:id)).to contain_exactly(topic.id, topic_2.id)
+      expect(job.backfill_candidates(type, locale: :source).map(&:id)).to contain_exactly(
+        topic.id,
+        topic_2.id,
+      )
     end
 
     it "prioritizes topics without summaries" do
       topic_2 =
         Fabricate(:topic, word_count: 200, last_posted_at: 2.minutes.ago, highest_post_number: 1)
       topic.update!(last_posted_at: 1.minute.ago)
-      Fabricate(:ai_summary, target: topic, updated_at: 1.hour.ago, highest_target_number: 1)
+      Fabricate(
+        :ai_summary,
+        target: topic,
+        locale: SiteSetting.default_locale,
+        updated_at: 1.hour.ago,
+        highest_target_number: 1,
+      )
 
-      expect(job.backfill_candidates(type).map(&:id)).to contain_exactly(topic_2.id, topic.id)
+      expect(job.backfill_candidates(type, locale: :source).map(&:id)).to contain_exactly(
+        topic_2.id,
+        topic.id,
+      )
     end
 
     it "respects max age setting" do
       SiteSetting.ai_summary_backfill_topic_max_age_days = 1
       topic.update!(last_posted_at: 2.days.ago)
 
-      expect(job.backfill_candidates(type)).to be_empty
+      expect(job.backfill_candidates(type, locale: :source)).to be_empty
+    end
+
+    it "selects missing gist locales independently" do
+      gist_type = AiSummary.summary_types[:gist]
+      Fabricate(:topic_ai_gist, target: topic, locale: "en", highest_target_number: 2)
+
+      expect(job.backfill_candidates(gist_type, locale: "en")).to be_empty
+      expect(job.backfill_candidates(gist_type, locale: "ja").map(&:id)).to contain_exactly(
+        topic.id,
+      )
+    end
+
+    it "selects a missing complete source locale independently" do
+      topic.update!(locale: "en")
+      Fabricate(:ai_summary, target: topic, locale: "he", highest_target_number: 2)
+
+      expect(job.backfill_candidates(type, locale: :source).map(&:id)).to contain_exactly(topic.id)
+
+      Fabricate(:ai_summary, target: topic, locale: "en", highest_target_number: 2)
+      expect(job.backfill_candidates(type, locale: :source)).to be_empty
+    end
+
+    it "treats configured regional locales as the same base language" do
+      gist_type = AiSummary.summary_types[:gist]
+      Fabricate(:topic_ai_gist, target: topic, locale: "pt", highest_target_number: 2)
+
+      expect(job.backfill_candidates(gist_type, locale: "pt_BR")).to be_empty
+    end
+
+    it "matches source locales by base language and case" do
+      gist_type = AiSummary.summary_types[:gist]
+      topic.update!(locale: "EN-gb")
+      Fabricate(:topic_ai_gist, target: topic, locale: "en", highest_target_number: 2)
+
+      expect(job.backfill_candidates(gist_type, locale: :source)).to be_empty
     end
   end
 
@@ -89,8 +152,20 @@ RSpec.describe Jobs::SummariesBackfill do
       topic_2 =
         Fabricate(:topic, word_count: 200, last_posted_at: 2.minutes.ago, highest_post_number: 1)
       topic.update!(last_posted_at: 1.minute.ago)
-      Fabricate(:ai_summary, target: topic, updated_at: 3.hours.ago, highest_target_number: 1)
-      Fabricate(:topic_ai_gist, target: topic, updated_at: 3.hours.ago, highest_target_number: 1)
+      Fabricate(
+        :ai_summary,
+        target: topic,
+        locale: SiteSetting.default_locale,
+        updated_at: 3.hours.ago,
+        highest_target_number: 1,
+      )
+      Fabricate(
+        :topic_ai_gist,
+        target: topic,
+        locale: "en",
+        updated_at: 3.hours.ago,
+        highest_target_number: 1,
+      )
 
       summary_1 = "Summary of topic_2"
       gist_1 = "Gist of topic_2"
@@ -98,30 +173,98 @@ RSpec.describe Jobs::SummariesBackfill do
       gist_2 = "Updated gist of topic"
 
       DiscourseAi::Completions::Llm.with_prepared_responses(
-        [gist_1, gist_2, summary_1, summary_2],
+        [
+          summary_tool_call(gist_1, id: "gist_1"),
+          summary_tool_call(gist_2, id: "gist_2"),
+          summary_1,
+          summary_2,
+        ],
       ) { job.execute({}) }
 
-      expect(AiSummary.complete.find_by(target: topic_2).summarized_text).to eq(summary_1)
-      expect(AiSummary.gist.find_by(target: topic_2).summarized_text).to eq(gist_1)
-      expect(AiSummary.complete.find_by(target: topic).summarized_text).to eq(summary_2)
-      expect(AiSummary.gist.find_by(target: topic).summarized_text).to eq(gist_2)
+      expect(
+        AiSummary
+          .complete
+          .find_by(target: topic_2, locale: SiteSetting.default_locale)
+          .summarized_text,
+      ).to eq(summary_1)
+      expect(AiSummary.gist.find_by(target: topic_2, locale: "en").summarized_text).to eq(gist_1)
+      expect(
+        AiSummary
+          .complete
+          .find_by(target: topic, locale: SiteSetting.default_locale)
+          .summarized_text,
+      ).to eq(summary_2)
+      expect(AiSummary.gist.find_by(target: topic, locale: "en").summarized_text).to eq(gist_2)
 
       # Queue has to be empty if we just generated all summaries
-      expect(job.backfill_candidates(AiSummary.summary_types[:complete])).to be_empty
-      expect(job.backfill_candidates(AiSummary.summary_types[:gist])).to be_empty
+      expect(
+        job.backfill_candidates(AiSummary.summary_types[:complete], locale: :source),
+      ).to be_empty
+      expect(job.backfill_candidates(AiSummary.summary_types[:gist], locale: "en")).to be_empty
 
       # Queue still empty when they are up to date and time passes.
       AiSummary.update_all(updated_at: 20.minutes.ago)
-      expect(job.backfill_candidates(AiSummary.summary_types[:complete])).to be_empty
-      expect(job.backfill_candidates(AiSummary.summary_types[:gist])).to be_empty
+      expect(
+        job.backfill_candidates(AiSummary.summary_types[:complete], locale: :source),
+      ).to be_empty
+      expect(job.backfill_candidates(AiSummary.summary_types[:gist], locale: "en")).to be_empty
+    end
+
+    it "continues after one gist fails and still backfills complete summaries" do
+      successful_topic =
+        Fabricate(:topic, word_count: 200, last_posted_at: 2.minutes.ago, highest_post_number: 1)
+      topic.update!(last_posted_at: 1.minute.ago)
+
+      successful_gist = "Successful gist"
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [
+          "The model skipped the required tool",
+          summary_tool_call(successful_gist, id: "successful_gist"),
+          "Complete summary after failure",
+          "Second complete summary",
+        ],
+      ) { expect { job.execute({}) }.not_to raise_error }
+
+      expect(AiSummary.gist.find_by(target: topic, locale: "en")).to be_nil
+      expect(AiSummary.gist.find_by(target: successful_topic, locale: "en")).to have_attributes(
+        summarized_text: successful_gist,
+      )
+      expect(AiSummary.complete.where(target: [topic, successful_topic]).count).to eq(2)
+    end
+
+    it "stops a batch after repeated consecutive failures" do
+      3.times do |index|
+        Fabricate(
+          :topic,
+          word_count: 200,
+          last_posted_at: (index + 2).minutes.ago,
+          highest_post_number: 1,
+        )
+      end
+      SiteSetting.ai_summary_backfill_maximum_topics_per_hour = 48
+      48.times do
+        Fabricate(:ai_summary, origin: AiSummary.origins[:system], created_at: 1.minute.ago)
+      end
+
+      unused_tool_call = summary_tool_call("Should not be generated", id: "unused")
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["Missing tool 1", "Missing tool 2", "Missing tool 3", unused_tool_call],
+      ) do |spy|
+        job.execute({})
+        expect(spy.completions).to eq(described_class::MAX_CONSECUTIVE_FAILURES)
+      end
+
+      expect(AiSummary.gist).to be_empty
     end
 
     it "updates the highest_target_number if the summary turned to be up to date" do
+      SiteSetting.ai_summary_gists_enabled = false
       og_highest_post_number = topic.highest_post_number
       existing_summary =
         Fabricate(
           :ai_summary,
           target: topic,
+          locale: SiteSetting.default_locale,
           updated_at: 3.hours.ago,
           highest_target_number: og_highest_post_number,
         )
@@ -131,6 +274,52 @@ RSpec.describe Jobs::SummariesBackfill do
       job.execute({})
 
       expect(existing_summary.reload.highest_target_number).to eq(og_highest_post_number + 1)
+    end
+
+    it "rotates locale priority between runs" do
+      topic.update!(locale: "fr")
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_supported_locales = "en|ja"
+      SiteSetting.ai_summary_backfill_maximum_topics_per_hour = 12
+      interval = 5.minutes.to_i
+      current_slot = Time.zone.now.to_i / interval
+      rotation_one = Time.zone.at((current_slot - (current_slot % 3) + 1) * interval)
+
+      freeze_time(rotation_one) do
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [summary_tool_call("Japanese gist", id: "ja_gist"), "Complete summary"],
+        ) { job.execute({}) }
+      end
+
+      expect(AiSummary.gist.find_by(target: topic)).to have_attributes(locale: "ja")
+    end
+
+    it "distributes the gist budget across locales before repeating a locale" do
+      second_topic =
+        Fabricate(:topic, word_count: 200, last_posted_at: 2.minutes.ago, highest_post_number: 1)
+      topic.update!(locale: "fr", last_posted_at: 1.minute.ago)
+      second_topic.update!(locale: "fr")
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_supported_locales = "en|ja"
+      SiteSetting.ai_summary_backfill_maximum_topics_per_hour = 48
+      interval = 5.minutes.to_i
+      current_slot = Time.zone.now.to_i / interval
+      rotation_zero = Time.zone.at((current_slot - (current_slot % 3)) * interval)
+
+      responses =
+        4.times.map { |index| summary_tool_call("Gist #{index}", id: "gist_#{index}") } +
+          ["Complete summary 1", "Complete summary 2"]
+
+      freeze_time(rotation_zero) do
+        DiscourseAi::Completions::Llm.with_prepared_responses(responses) { job.execute({}) }
+      end
+
+      expect(AiSummary.gist.where(target: topic).pluck(:locale)).to contain_exactly(
+        "en",
+        "ja",
+        "fr",
+      )
+      expect(AiSummary.gist.where(target: second_topic).pluck(:locale)).to eq(["en"])
     end
 
     it "caches the LlmModel and reuses it for all summaries in a batch" do
@@ -149,7 +338,12 @@ RSpec.describe Jobs::SummariesBackfill do
         .returns(LlmModel.last)
 
       DiscourseAi::Completions::Llm.with_prepared_responses(
-        %w[gist_1 gist_2 summary_1 summary_2],
+        [
+          summary_tool_call("gist_1", id: "gist_1"),
+          summary_tool_call("gist_2", id: "gist_2"),
+          "summary_1",
+          "summary_2",
+        ],
       ) { job.execute({}) }
 
       # Should only call LlmModel.find_by once for the entire batch, not once per topic

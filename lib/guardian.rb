@@ -432,7 +432,8 @@ class Guardian
   end
 
   def can_change_trust_level?(user)
-    user && (is_admin? || (is_moderator? && SiteSetting.moderators_change_trust_levels))
+    user &&
+      (is_admin? || (is_moderator? && SiteSetting.moderators_change_trust_levels && !user.staff?))
   end
 
   # Support sites that have to approve users

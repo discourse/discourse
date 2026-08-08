@@ -24,6 +24,7 @@ import {
   toAsciiPrintable,
   unicodeSlugify,
 } from "discourse/lib/utilities";
+import Site from "discourse/models/site";
 import {
   mdTable,
   mdTableNonUniqueHeadings,
@@ -109,6 +110,48 @@ module("Unit | Utilities", function (hooks) {
       "top",
       "default homepage is the first item in the top_menu site setting"
     );
+  });
+
+  test("defaultHomepage prefers the default_homepage site setting", function (assert) {
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+    siteSettings.top_menu = "top|latest|hot";
+    siteSettings.default_homepage = "hot";
+    initializeDefaultHomepage(siteSettings);
+
+    assert.strictEqual(
+      defaultHomepage(),
+      "hot",
+      "default homepage is pulled from the default_homepage site setting"
+    );
+  });
+
+  test("defaultHomepage ignores a default_homepage value that is no longer an eligible choice", function (assert) {
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+    siteSettings.top_menu = "top|latest|hot";
+    siteSettings.default_homepage = "votes";
+
+    const site = Site.current();
+    const originalChoices = site.homepage_choices;
+
+    try {
+      site.set("homepage_choices", ["latest", "top", "hot"]);
+      initializeDefaultHomepage(siteSettings);
+      assert.strictEqual(
+        defaultHomepage(),
+        "top",
+        "an ineligible value falls back to the first top_menu item"
+      );
+
+      site.set("homepage_choices", ["latest", "top", "hot", "votes"]);
+      initializeDefaultHomepage(siteSettings);
+      assert.strictEqual(
+        defaultHomepage(),
+        "votes",
+        "an eligible value is used"
+      );
+    } finally {
+      site.set("homepage_choices", originalChoices);
+    }
   });
 
   test("setDefaultHomepage", function (assert) {

@@ -2,6 +2,8 @@
 
 describe "Post calendar" do
   fab!(:admin)
+  fab!(:calendar_user) { Fabricate(:user, trust_level: 1) }
+  fab!(:viewer, :user)
 
   let(:calendar_post) { create_post(user: admin, raw: "[calendar]\n[/calendar]") }
 
@@ -10,7 +12,23 @@ describe "Post calendar" do
     SiteSetting.calendar_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     SiteSetting.holiday_calendar_topic_id = calendar_post.topic.id
-    sign_in(admin)
+    sign_in(viewer)
+  end
+
+  it "sanitizes markup from calendar replies in tooltips", time: Time.utc(2026, 8, 1, 12, 0) do
+    create_post(
+      user: calendar_user,
+      topic: calendar_post.topic,
+      raw:
+        "`<a id=\"calendar-tooltip-link\" href=\"https://example.com\" style=\"position: fixed; inset: 0; z-index: 9999\">Cover page</a>` [date=\"2026-08-02\"]",
+    )
+
+    visit(calendar_post.topic.url)
+
+    expect(page.status_code).to eq(200)
+    find(".fc-event", text: calendar_user.username).hover
+    expect(page).to have_css("[data-identifier='post-event-tooltip']")
+    expect(page).to have_no_css("#calendar-tooltip-link")
   end
 
   it "shows the calendar on the post" do

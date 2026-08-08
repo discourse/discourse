@@ -10,12 +10,18 @@ const MIN_VIDEO_HEIGHT = 135;
 const MAX_VIDEO_HEIGHT = 810;
 
 export function computeZoomViewSize(root) {
+  // Zoom is configured with this size once, at init, and only ever corrects it
+  // if a later sync gets through. Falling back to the minimum because the root
+  // happened to measure zero locks the component view into a 240px video for
+  // the rest of the session, so measure the container it sits in instead.
+  const measuredWidth =
+    root?.getBoundingClientRect().width ||
+    root?.parentElement?.getBoundingClientRect().width ||
+    0;
+
   const width = Math.max(
     MIN_VIDEO_WIDTH,
-    Math.min(
-      MAX_VIDEO_WIDTH,
-      Math.floor(root?.getBoundingClientRect().width || 0)
-    )
+    Math.min(MAX_VIDEO_WIDTH, Math.floor(measuredWidth))
   );
 
   const height = Math.max(

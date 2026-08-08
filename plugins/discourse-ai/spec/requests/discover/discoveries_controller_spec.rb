@@ -118,5 +118,22 @@ RSpec.describe DiscourseAi::Discover::DiscoveriesController do
         end
       end
     end
+
+    context "when discovery is disabled" do
+      before do
+        SiteSetting.ai_discover_agent = ai_agent.id
+        SiteSetting.ai_discover_enabled = false
+        group.add(user)
+      end
+
+      it "rejects continuing a conversation without creating a private message" do
+        expect {
+          post "/discourse-ai/discoveries/continue-convo", params: { query:, context: }
+        }.not_to change(Topic, :count)
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to be_present
+      end
+    end
   end
 end

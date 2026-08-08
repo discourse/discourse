@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import routeAction from "discourse/helpers/route-action";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import PostVotingAnswerButton from "../components/post-voting-answer-button";
 import PostVotingAnswerHeader, {
   ORDER_BY_ACTIVITY_FILTER,
@@ -36,13 +35,7 @@ function initPlugin(api, container) {
 }
 
 function customizePost(api) {
-  api.modifyClass(
-    "model:post",
-    (Superclass) =>
-      class extends Superclass {
-        @autoTrackedArray comments;
-      }
-  );
+  api.addModelField("post", "comments", { type: "array" });
 
   api.addTrackedPostProperties(
     "comments_count",
@@ -51,22 +44,16 @@ function customizePost(api) {
     "post_voting_vote_count"
   );
 
-  api.modifyClass(
-    "model:post-stream",
-    (Superclass) =>
-      class extends Superclass {
-        orderStreamByActivity() {
-          this.cancelFilter();
-          this.set("filter", ORDER_BY_ACTIVITY_FILTER);
-          return this.refresh({ refreshInPlace: true });
-        }
+  api.addModelMethod("post-stream", "orderStreamByActivity", function () {
+    this.cancelFilter();
+    this.set("filter", ORDER_BY_ACTIVITY_FILTER);
+    return this.refresh({ refreshInPlace: true });
+  });
 
-        orderStreamByVotes() {
-          this.cancelFilter();
-          return this.refresh({ refreshInPlace: true });
-        }
-      }
-  );
+  api.addModelMethod("post-stream", "orderStreamByVotes", function () {
+    this.cancelFilter();
+    return this.refresh({ refreshInPlace: true });
+  });
 
   api.renderAfterWrapperOutlet(
     "post-avatar",

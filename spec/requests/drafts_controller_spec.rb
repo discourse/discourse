@@ -50,6 +50,23 @@ RSpec.describe DraftsController do
       expect(response.parsed_body["drafts"].first["title"]).to eq(nil)
     end
 
+    it "omits display user names when names are disabled" do
+      SiteSetting.enable_names = false
+      topic_author = Fabricate(:user, name: "Hidden Full Name")
+      topic = Fabricate(:topic, user: topic_author)
+      Draft.set(user, "topic_#{topic.id}", 0, { reply: "draft reply" }.to_json)
+
+      sign_in(user)
+      get "/drafts.json"
+
+      draft = response.parsed_body["drafts"].first
+
+      expect(response.status).to eq(200)
+      expect(draft).to include("username" => topic_author.username)
+      expect(draft).not_to have_key("name")
+      expect(response.body).not_to include(topic_author.name)
+    end
+
     it "returns categories when lazy load categories is enabled" do
       SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
       category = Fabricate(:category)

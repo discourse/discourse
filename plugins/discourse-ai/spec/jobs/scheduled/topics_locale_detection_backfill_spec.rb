@@ -11,6 +11,7 @@ describe Jobs::TopicsLocaleDetectionBackfill do
     enable_current_plugin
     SiteSetting.ai_translation_enabled = true
     SiteSetting.ai_translation_backfill_hourly_rate = 100
+    SiteSetting.ai_translation_backfill_start_date = 1.day.ago.utc.to_date.iso8601
     SiteSetting.content_localization_supported_locales = "en"
     SiteSetting.ai_translation_category_scope = "all"
     SiteSetting.ai_translation_categories = ""
@@ -139,7 +140,7 @@ describe Jobs::TopicsLocaleDetectionBackfill do
     end
   end
 
-  describe "with max age limit" do
+  describe "with a backfill start date" do
     fab!(:old_topic) do
       Fabricate(:topic, locale: nil, created_at: 10.days.ago, category: topic.category)
     end
@@ -150,18 +151,18 @@ describe Jobs::TopicsLocaleDetectionBackfill do
     before do
       DiscourseAi::Translation::TopicLocaleDetector.expects(:detect_locale).at_least_once
 
-      SiteSetting.ai_translation_backfill_max_age_days = 5
+      SiteSetting.ai_translation_backfill_start_date = 5.days.ago.utc.to_date.iso8601
     end
 
-    it "only processes topics within the age limit" do
+    it "only processes topics created after the start date" do
       DiscourseAi::Translation::TopicLocaleDetector.expects(:detect_locale).with(new_topic).once
       DiscourseAi::Translation::TopicLocaleDetector.expects(:detect_locale).with(old_topic).never
 
       job.execute({ limit: 10 })
     end
 
-    it "processes all topics when setting is large" do
-      SiteSetting.ai_translation_backfill_max_age_days = 100
+    it "processes older topics when the start date is earlier" do
+      SiteSetting.ai_translation_backfill_start_date = 100.days.ago.utc.to_date.iso8601
 
       DiscourseAi::Translation::TopicLocaleDetector.expects(:detect_locale).with(new_topic).once
       DiscourseAi::Translation::TopicLocaleDetector.expects(:detect_locale).with(old_topic).once

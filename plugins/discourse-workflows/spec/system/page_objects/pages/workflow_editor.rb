@@ -19,6 +19,21 @@ module PageObjects
           self
         end
 
+        def add_tag(tag)
+          find(".workflows-tags-editor__manage").click
+          tag_selector =
+            PageObjects::Components::SelectKit.new(".workflows-tags-editor .list-setting")
+          tag_selector.expand
+          tag_selector.search(tag)
+          tag_selector.select_row_by_value(tag)
+          find(".workflows-tags-editor__done").click
+          self
+        end
+
+        def has_header_tag?(tag)
+          page.has_css?(".workflows-tags-editor .d-table-badge", text: tag)
+        end
+
         def has_node_configurator?
           page.has_css?(".workflows-configurator-modal")
         end

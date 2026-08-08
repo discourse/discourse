@@ -36,10 +36,15 @@ ar:
         description: تشغيل أداة الذكاء الاصطناعي عند تفعيل الأتمتة
       llm_agent_triage:
         title: فرز المنشورات باستخدام وكيل الذكاء الاصطناعي
-        description: "الرد على المنشورات باستخدام وكيل ذكاء اصطناعي محدد"
+        description: "الرد على المنشورات باستخدام وكيل ذكاء اصطناعي محدَّد"
       llm_triage:
         title: فرز المنشورات باستخدام الذكاء الاصطناعي
         description: "فرز المنشورات باستخدام نموذج اللغة الكبير"
+        flagged_post: |
+          %{score_reason}
+          %{response}
+        flagged_post_score_reason: |
+          <b>تم تشغيله من قِبل قاعدة <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a>.</b>
         notify_author_pm:
           subject: "تمت إزالة منشورك مؤقتًا للمراجعة."
           body: |
@@ -109,11 +114,12 @@ ar:
     ai_embeddings_semantic_related_age_penalty: "طبق معامل خفض القيمة بناءً على العمر الأسي للمواضيع ضمن نتائج البحث الدلالي؛ علمًا بأن القيمة 0.0 ترمز لغياب الخفض، والقيمة 0.3 تعكس ميلًا هينًا للمحتوى الذي نُشر حديثًا، في حين تشير القيمة 1.0 وما فوقها إلى ميل شديد نحو الحداثة."
     ai_embeddings_semantic_related_age_time_scale: "النطاق الزمني المقدر بالأيام والمستخدم في احتساب معامل خفض القيمة بناءً على العمر؛ فالمواضيع التي تظل غير نشطة طوال هذه المدة تخضع لخفض قدره 50% تقريبًا في حال ضبط الخفض عند 1.0. يمكن تعيين القيمة 365 لاعتماد مقياس سنوي، أو القيمة 90 لاعتماد مقياس ربع سنوي."
     ai_embeddings_per_post_enabled: إنشاء التضمينات لكل منشور
+    ai_admin_dashboard_enabled: "تفعيل ميزات الذكاء الاصطناعي على لوحة معلومات المسؤول"
+    ai_admin_dashboard_highlights_agent: "الوكيل الذي يوضِّح التحولات البارزة في المجتمع على لوحة معلومات المسؤول"
     ai_summarization_enabled: "تفعيل ميزة التلخيص"
     ai_summarization_agent: "الوكيل المستخدم لميزة التلخيص"
     ai_pm_summarization_allowed_groups: "المجموعات المسموح لها بإنشاء الملخصات وعرضها في الرسائل الخاصة"
     ai_summary_gists_enabled: "إنشاء ملخصات قصيرة لأحدث الردود في الموضوعات تلقائيًا"
-    ai_summary_backfill_maximum_topics_per_hour: "عدد ملخصات الموضوعات المطلوب ملؤها في الساعة."
     ai_bot_enabled: "تفعيل وحدة روبوت الذكاء الاصطناعي"
     ai_bot_enabled_llms: "نماذج اللغات الكبيرة المتوفرة للاختيار لإدارة محادثات روبوتات الذكاء الاصطناعي"
     ai_bot_enable_chat_warning: "عرض تحذير عند بدء الدردشة في رسالة خاصة. يمكن تجاوزه عن طريق تعديل سلسلة الترجمة: discourse_ai.ai_bot.pm_warning"
@@ -137,12 +143,10 @@ ar:
     ai_translation_enabled: "تفعيل ميزة الترجمة بالذكاء الاصطناعي"
     ai_translation_personal_messages: "تحدد هذه الإعدادات أي الرسائل الشخصية يتم ترجمتها. خيار \"none\" يعطّل ترجمة الرسائل الشخصية. خيار \"group\" يترجم فقط الرسائل الجماعية. خيار \"all\" يترجم جميع الرسائل الشخصية."
     ai_translation_include_bot_content: "عند التفعيل، سيتم أيضًا إرسال المحتوى المكتوب بواسطة الروبوتات (معرفات المستخدم أقل من 0) للترجمة."
-    ai_translation_max_post_length: "الحد الأقصى لعدد الأحرف في المنشور ليتم ترجمته. المنشورات التي تتجاوز هذا الحد لن تُترجم."
-    ai_translation_backfill_max_age_days: "الحد الأقصى لعمر المنشور والموضوع الذي سيتم ترجمته. المنشورات والموضوعات الأقدم من ذلك لن تُترجم. القيمة 0 تمنع الترجمة الرجعية، لكنها لن تمنع ترجمة المنشورات الجديدة."
     ai_translation_backfill_hourly_rate: "يحدد هذا الخيار عدد المنشورات والموضوعات التي تُترجم كل ساعة أثناء إعادة ملء البيانات السابقة. ضع القيمة 0 لإيقاف الترجمة التلقائية للمحتوى الحالي."
     ai_translation_backfill_parallel_jobs: "عدد مهام توطين المنشورات التي تُنفَّذ بالتوازي في كل دورة تعبئة لاحقة. القيم الأعلى تزيد من معدل المعالجة لكنها تستهلك موارد أكثر."
     ai_usage_rollup_after_days: "المدة الزمنية بالأيام للاحتفاظ ببيانات استهلاك الذكاء الاصطناعي التفصيلية لكل طلب قبل تحويلها إلى ملخصات يومية مجمعة؛ علمًا بأن تعيين القيمة عند 0 سيؤدي إلى إيقاف ميزة التجميع."
-    ai_audit_logs_purge_after_days: "حذف سجلات تدقيق واجهة AI API الأقدم من هذه المدة المحددة بالأيام؛ حيث يتم تعيين المهلة تلقائيًا عند 6 أشهر تقريبًا، ويمكنك وضع القيمة 0 لضمان بقاء السجلات مخزنة دائمًا."
+    ai_audit_logs_purge_after_days: "حذف سجلات تدقيق واجهة AI API الأقدم من هذه المدة المحدَّدة بالأيام؛ حيث يتم تعيين المهلة تلقائيًا عند 6 أشهر تقريبًا، ويمكنك وضع القيمة 0 لضمان بقاء السجلات مخزنة دائمًا."
   reviewables:
     reasons:
       flagged_by_toxicity: أبلغ المكوِّن الإضافي الذي يعمل بالذكاء الاصطناعي عن هذا بعد تصنيفه كمحتوى مسيء.
@@ -256,6 +260,12 @@ ar:
       change_description: "تغيير الوصف"
       copied: "تم النسخ إلى الحافظة"
     unknown_model: "نموذج ذكاء اصطناعي غير معروف"
+    discourse_workflows:
+      ai_agent:
+        errors:
+          locked_default_llm_missing: "الوكيل \"%{agent}\" مقيَّد إلى نموذج اللغة الكبير (LLM) الافتراضي الخاص به، لكن لم تتم تهيئة أي نموذج لغة كبير (LLM) افتراضي صالح."
+          llm_not_found: "لم يتم العثور على نموذج اللغة الكبير (LLM) الذي يحمل المعرِّف %{llm_model_id}."
+          no_llm_configured: "لم تتم تهيئة أي نموذج لغة كبير (LLM) للوكيل \"%{agent}\". حدِّد نموذج اللغة الكبير (LLM) أو قم بتهيئة نموذج اللغة الكبير (LLM) الافتراضي للوكيل/الموقع."
     tools:
       custom_name: "%{name} (custom)"
       presets:
@@ -290,7 +300,7 @@ ar:
         alias_not_unique: "الاسم المستعار السري `%{alias}` مكرر."
       secret_bindings:
         invalid_payload: "الروابط السرية يجب أن تكون مصفوفة."
-        secret_not_found: "بيانات الاعتماد المحددة غير موجودة."
+        secret_not_found: "بيانات الاعتماد المحدَّدة غير موجودة."
         alias_not_declared: "لم يتم الإعلان عن الاسم المستعار \"%{alias}\" في هذه الأداة."
       secret_runtime:
         alias_not_declared: "لم يتم الإعلان عن الاسم المستعار \"%{alias}\" لبيانات الاعتماد في هذه الأداة."
@@ -299,7 +309,7 @@ ar:
         secret_not_found: "الاسم المستعار \"%{alias}\" لبيانات الاعتماد مرتبط ببيانات اعتماد مفقودة."
         unknown_error: "يتعذر حل بيانات الاعتماد المطلوبة."
     mcp_servers:
-      secret_not_found: "بيانات الاعتماد المحددة غير موجودة."
+      secret_not_found: "بيانات الاعتماد المحدَّدة غير موجودة."
       invalid_url_not_https: "يجب أن يكون عنوان URL بصيغة HTTPS صالحًا"
       invalid_url_not_reachable: "يجب أن يشير إلى عنوان يمكن الوصول إليه بشكل عام"
       oauth_client_id_required: "يجب إدخال معرّف عميل OAuth لإتمام التسجيل اليدوي للعميل."
@@ -362,7 +372,7 @@ ar:
       invalid_error_type: "تم إدخال نوع خطأ غير صالح"
       unexpected: "حدث خطأ غير متوقع"
       bot_user_update_failed: "فشل تحديث مستخدم روبوت فحص المحتوى العشوائي"
-      configuration_missing: "إعدادات كشف الرسائل العشوائية بالذكاء الاصطناعي مفقودة. أضف الإعدادات من 'المسؤول > المكونات الإضافية > Discourse AI > المحتوى العشوائي' قبل التفعيل."
+      configuration_missing: "إعدادات كشف الرسائل العشوائية بالذكاء الاصطناعي مفقودة. أضف الإعدادات من 'المسؤول > المكوِّنات الإضافية > Discourse AI > المحتوى العشوائي' قبل التفعيل."
       logging_subject: "اكتشاف المحتوى العشوائي"
     ai_bot:
       reply_error: "عذرًا، يبدو أن نظامنا واجه مشكلة غير متوقعة أثناء محاولة الرد.\n\n[details='Error details']\n%{details}\n[/details]"
@@ -370,12 +380,17 @@ ar:
       thinking: "التفكير"
       tool_pending_approval: "يتطلب هذا الإجراء موافقة أحد المشرفين قبل تنفيذه."
       chat_tool_approval:
-        unexpected_error: "حدث خطأ غير متوقع"
+        unexpected_error: "حدث خطأ غير متوقَّع"
       agents:
         default_llm_required: "نموذج اللغة الكبير الافتراضي مطلوب قبل تفعيل الدردشة"
-        cannot_delete_system_agent: "لا يمكن حذف وكلاء النظام، يُرجى تعطيلها بدلًا من ذلك"
-        cannot_edit_system_agent: "يمكن إعادة تسمية وكلاء النظام فقط، ولا يجوز لك تعديل الأدوات أو رسائل مطالبة النظام. بل يمكنك تعطيلها وإنشاء نسخة منها."
+        cannot_delete_system_agent: "لا يمكن حذف وكلاء النظام، يُرجى إيقافها بدلًا من ذلك"
+        cannot_edit_system_agent: "يمكن إعادة تسمية وكلاء النظام فقط، ولا يجوز لك تعديل الأدوات أو رسائل مطالبة النظام. بل يمكنك إيقافها وإنشاء نسخة منها."
         cannot_have_duplicate_tools: "لا يمكن وجود أدوات مكررة"
+        native_tool_requires_forced_llm: "تتطلَّب الأدوات الأصلية لمقدِّم الخدمة استخدام نموذج لغة كبير (LLM) افتراضي مع تفعيل خيار \"فرض نموذج اللغة الكبير الافتراضي\"."
+        native_tool_unsupported_by_llm: "نموذج اللغة الكبير (LLM) الافتراضي المحدَّد لا يدعم إحدى الأدوات الأصلية لمقدِّم الخدمة المفعَّلة."
+        admin_dashboard_highlights:
+          name: "ملخص لوحة معلومات المسؤول"
+          description: "كتابة التقرير الموجز المعروض في أعلى لوحة تحكُّم المسؤول، والذي يوضِّح التغييرات التي طرأت وما يستحق الاهتمام خلال هذه الفترة."
         github_helper:
           name: "مساعد GitHub"
           description: "روبوت ذكاء اصطناعي متخصص في المساعدة على المهام والأسئلة المتعلقة بمنصة GitHub"
@@ -536,6 +551,13 @@ ar:
           flag_type:
             name: "نوع البلاغ"
             description: "يتحكم فيما إذا كان سيتم مراجعة المنشور، أو إخفاؤه، أو حذفه، أو اعتباره بريدًا عشوائيًا."
+      native_tools:
+        web_search:
+          name: "البحث في الويب (أصلي)"
+          help: "يسمح للنموذج بالبحث في الويب باستخدام ميزة البحث المدمج لدى مقدِّم الخدمة، عندما يُفرَض على الوكيل استخدام نموذج لغة كبير (LLM) مدعوم."
+        web_fetch:
+          name: "جلب البيانات من الويب (أصلي)"
+          help: "يسمح للنموذج بفتح صفحات الويب وقراءتها باستخدام ميزة الوصول إلى الويب المدمج لدى مقدِّم الخدمة، عندما يُفرَض على الوكيل استخدام نموذج لغة كبير (LLM) مدعوم."
       tool_summary:
         read_artifact: "قراءة أداة ويب"
         search_uploaded_documents: "البحث في المستندات المُحمّلة"
@@ -564,6 +586,7 @@ ar:
         grant_badge: "منح شارة"
         list_reviewables: "قائمة انتظار المراجعة"
         perform_reviewable_action: "إجراءات قائمة انتظار المراجعة"
+        add_reviewable_note: "إضافة ملاحظة إلى قائمة انتظار المراجعة"
         assign: "تعيين موضوع"
         mark_as_solved: "وضع علامة \"تم الحل\""
         search: "البحث"
@@ -604,11 +627,12 @@ ar:
         edit_tags: "تعديل الوسوم الخاصة بموضوع ما"
         edit_category: "نقل موضوع إلى فئة أخرى"
         set_topic_timer: "تعيين مؤقت على موضوع لإغلاقه أو فتحه أو حذفه أو رفعه"
-        set_slow_mode: "تفعيل أو تعطيل الوضع البطيء في موضوع"
+        set_slow_mode: "تفعيل أو إيقاف الوضع البطيء في موضوع"
         move_posts: "نقل منشورات إلى موضوع جديد أو موجود مسبقًا"
         grant_badge: "منح شارة لمستخدم"
         list_reviewables: "عرض عناصر قائمة انتظار المراجعة المعلقة مع إمكانية التصفية"
         perform_reviewable_action: "تنفيذ إجراء على عنصر في قائمة انتظار المراجعة"
+        add_reviewable_note: "إضافة ملاحظة إلى عنصر في قائمة انتظار المراجعة"
         assign: "تعيين موضوع أو إلغاء تعيينه لمستخدم أو مجموعة"
         mark_as_solved: "تحديد المنشور أو إلغاء تحديده كحل معتمد"
         search: "البحث في جميع الموضوعات العامة في المنتدى"
@@ -658,6 +682,7 @@ ar:
         grant_badge: "منح الشارة ‘%{badge_name}’ للمستخدم %{username}"
         list_reviewables: "عرض عناصر قائمة انتظار المراجعة (النوع: %{type})"
         perform_reviewable_action: "تنفيذ الإجراء %{action} على عنصر المراجعة %{reviewable_id}"
+        add_reviewable_note: "جارٍ إضافة ملاحظة إلى عنصر المراجعة %{reviewable_id}"
         assign: "تعيين الموضوع %{topic_id} (مُعيّن: %{assigned})"
         mark_as_solved: "تحديد المنشور %{post_id} كحلّ (تم الحل: %{solved})"
         read: "القراءة: <a href='%{url}'>%{title}</a>"
@@ -738,6 +763,7 @@ ar:
         already_flagged: "تم الإبلاغ عن المنشور بالفعل وهو قيد المراجعة."
         flagged: "تم الإبلاغ عن المنشور للمراجعة."
         reason: "قام روبوت الذكاء الاصطناعي بالإبلاغ عن هذا المنشور.\n\nالسبب: %{reason}"
+        score_reason: "أبلغ روبوت الذكاء الاصطناعي عن هذا المنشور."
       close_topic:
         errors:
           not_found: "الموضوع غير موجود."
@@ -824,7 +850,7 @@ ar:
         success: "تم منح الشارة بنجاح."
       assign:
         errors:
-          plugin_not_installed: "لم يتم تثبيت المكون الإضافي discourse-assign."
+          plugin_not_installed: "لم يتم تثبيت المكوِّن الإضافي discourse-assign."
           not_found: "الموضوع غير موجود."
           not_allowed: "غير مسموح لك بتعيين هذا الموضوع."
           no_reason: "يجب تحديد سبب لتعيين الموضوع أو إلغاء تعيينه."
@@ -833,7 +859,7 @@ ar:
         success: "تم تحديث تعيين الموضوع بنجاح."
       mark_as_solved:
         errors:
-          plugin_not_installed: "لم يتم تثبيت المكون الإضافي discourse-solved."
+          plugin_not_installed: "لم يتم تثبيت المكوِّن الإضافي discourse-solved."
           no_reason: "يجب تحديد سبب لتحديد المنشور كحل أو إلغاء ذلك."
           action_failed: "فشل تحديث حالة الحل."
         success: "تم تحديث حالة الحل بنجاح."
@@ -842,7 +868,7 @@ ar:
           not_allowed: "غير مسموح لك بالاطلاع على قائمة انتظار المراجعة"
           invalid_type: "نوع عنصر المراجعة غير صالح"
           invalid_status: "الحالة غير صالحة. يجب أن تكون إحدى القيم التالية: pending، approved، rejected، ignored، deleted، reviewed، all."
-        empty: "لم يتم العثور على عناصر في قائمة انتظار المراجعة تطابق عوامل التصفية المحددة"
+        empty: "لم يتم العثور على عناصر في قائمة انتظار المراجعة تطابق عوامل التصفية المحدَّدة"
         found:
           zero: "تم العثور على %{count} من العناصر في قائمة انتظار المراجعة"
           one: "تم العثور على عنصر واحد (%{count}) في قائمة انتظار المراجعة"
@@ -862,7 +888,10 @@ ar:
       add_reviewable_note:
         errors:
           not_allowed: "لا تملك صلاحية الوصول إلى قائمة انتظار المراجعة"
-          not_found: "تعذّر العثور على عنصر في قائمة انتظار المراجعة"
+          not_found: "تعذَّر العثور على عنصر في قائمة انتظار المراجعة"
+          no_note: "يلزم كتابة ملاحظة لإضافة ملاحظة إلى عنصر في قائمة انتظار المراجعة."
+          failed: "فشلت إضافة الملاحظة"
+        success: "تمت إضافة ملاحظة بنجاح إلى عنصر قائمة انتظار المراجعة %{reviewable_id}"
     reviewables:
       ai_tool_action:
         title: "إجراء أداة الذكاء الاصطناعي"
@@ -874,7 +903,7 @@ ar:
         tool_not_found: "لم تعد الأداة '%{tool_name}' متاحة."
         bot_user_missing: "لم يعد مستخدم الروبوت موجودًا."
         execution_error: "فشل تنفيذ الأداة: %{error}"
-        execution_error_unknown: "حدث خطأ غير متوقع"
+        execution_error_unknown: "حدث خطأ غير متوقَّع"
     summarization:
       configuration_hint:
         zero: "قم بتكوين هذه الإعدادات أولًا: %{settings}"
@@ -900,16 +929,19 @@ ar:
           positive: "إيجابية"
           negative: "سلبية"
           neutral: "محايدة"
+    discord:
+      configuration:
+        agent_user_required: "يجب أن يكون لوكيل البحث في Discord مستخدم مرتبط به قبل أن يتم تفعيل وضع وكيل Discord."
     llm:
       configuration:
         create_llm: "يجب إعداد نموذج اللغة الكبير (LLM) قبل تفعيل هذه الميزة"
-        disable_modules_first: "يجب تعطيل هذه الوحدات أولًا: %{settings}"
+        disable_modules_first: "يجب إيقاف هذه الوحدات أولًا: %{settings}"
         set_llm_first: "اضبط %{setting} أولًا"
         model_unreachable: "لم نتمكن من الحصول على رد من هذا النموذج. تحقَّق من إعداداتك أولًا."
         invalid_seeded_model: "لا يمكنك استخدام هذا النموذج مع هذه الميزة"
-        invalid_agent_response_format: "يجب أن يكون لدى الوكيل المحدد تنسيق استجابة يشمل حقلًا منطقيًا باسم \"عشوائي\""
+        invalid_agent_response_format: "يجب أن يكون لدى الوكيل المحدَّد تنسيق استجابة يشمل حقلًا منطقيًا باسم \"عشوائي\""
         must_select_model: "يجب عليك تحديد نموذج لغة كبير أولًا"
-        invalid_llm_id: "النموذج اللغوي الكبير المحدد غير صالح"
+        invalid_llm_id: "النموذج اللغوي الكبير المحدَّد غير صالح"
       endpoints:
         not_configured: "%{display_name} (لم يتم التكوين)"
         configuration_hint:
@@ -933,7 +965,7 @@ ar:
       delete_failed: "هذا النموذج قيد الاستخدام حاليًا. قم بتحديث `ai embeddings selected model` أولًا."
       cannot_edit_builtin: "لا يمكنك تعديل نموذج مُدمَج."
       secret_required: "يجب تحديد بيانات الاعتماد"
-      secret_not_found: "بيانات الاعتماد المحددة غير موجودة"
+      secret_not_found: "بيانات الاعتماد المحدَّدة غير موجودة"
       configuration:
         disable_embeddings: "يجب عليك إيقاف 'ai embeddings enabled' أولًا."
         choose_model: "قم بتعيين 'ai embeddings selected model' أولًا."
@@ -943,7 +975,7 @@ ar:
     llm_models:
       missing_provider_param: "لا يمكن ترك %{param} فارغة"
       secret_required: "يجب تحديد بيانات الاعتماد"
-      secret_not_found: "بيانات الاعتماد المحددة غير موجودة"
+      secret_not_found: "بيانات الاعتماد المحدَّدة غير موجودة"
       bedrock_invalid_url: "يُرجى ملء جميع الحقول لاستخدام هذا النموذج."
       bedrock_missing_auth: "يتطلب AWS Bedrock إما تكوين معرّف مفتاح الوصول أو معرّف ARN للدور"
     ai_staff_action_logger:
@@ -959,12 +991,13 @@ ar:
       limit_exceeded_admin: "لقد وصلت إلى حد رصيد الذكاء الاصطناعي المخصص لك. يرجى المحاولة مرة أخرى بعد %{reset_time}."
     errors:
       quota_exceeded: "لقد تجاوزت الحصة المُخصَّصة لهذا النموذج. يُرجى إعادة المحاولة بعد %{relative_time}."
+      quota_required: "يجب عليك تحديد الحد الأقصى للرموز أو الاستخدامات أو التكلفة لهذا النموذج"
       no_query_specified: معلمة الاستعلام مطلوبة، يُرجى تحديدها.
-      no_user_for_agent: الوكيل المحدد غير مرتبط بأي مستخدم.
-      agent_not_found: "الوكيل المحدد غير موجود. يُرجى التحقق من معلمات agent_name أو agent_id (أو المعلمات القديمة: persona_name أو persona_id)."
+      no_user_for_agent: الوكيل المحدَّد غير مرتبط بأي مستخدم.
+      agent_not_found: "الوكيل المحدَّد غير موجود. يُرجى التحقق من معلمات agent_name أو agent_id (أو المعلمات القديمة: persona_name أو persona_id)."
       no_user_specified: اسم المستخدم أو معلمة user_unique_id مطلوبة، يُرجى تحديدها.
       user_not_found: المستخدم المحدَّد غير موجود. تحقَّق من معلمة username.
-      agent_disabled: "الوكيل المحدد غير مُفعّل. يُرجى التحقق من معلمات agent_name أو agent_id (أو المعلمات القديمة: persona_name أو persona_id)."
+      agent_disabled: "الوكيل المحدَّد غير مُفعّل. يُرجى التحقق من معلمات agent_name أو agent_id (أو المعلمات القديمة: persona_name أو persona_id)."
       no_default_llm: يجب تحديد نموذج لغوي افتراضي للوكيل (default_llm).
       user_not_allowed: غير مسموح للمستخدم بالمشاركة في الموضوع.
       invalid_stream_resume_token: رمز resume_token غير صالح أو انتهت صلاحيته.

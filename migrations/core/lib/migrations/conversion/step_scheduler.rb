@@ -24,7 +24,9 @@ module Migrations
       #   merges shards into (held directly, so an inline step swapping the
       #   IntermediateDB connection can't divert a background merge)
       # @param budget [Integer] the most steps (forks) to run at once, usually cores - 1
-      # @param max_parallel_steps [Integer, nil] a lower cap from `--max-parallel-steps`
+      # @param max_parallel_steps [Integer, nil] a lower cap on the fork budget from
+      #   `--max-parallel-steps`; it caps concurrent worker forks, not steps (a
+      #   partitioned step consumes several)
       # @param no_fork [Boolean] run each step inline, one at a time (`--no-fork`)
       def initialize(
         step_classes:,
@@ -59,9 +61,10 @@ module Migrations
         # finish (`release_forks`); the rest returns when the step ends
         # (`step_finished`).
         @reserved_forks = {}
+        @preplans = {}
         @threads = []
         @failures = {}
-        @merge_errors = []
+        @finalization_errors = []
       end
 
       attr_reader :budget
@@ -72,19 +75,39 @@ module Migrations
         Process.warmup
         @consolidator = Consolidator.new(@shard_manager, @writer, @fork_mutex)
 
-        @mutex.synchronize do
-          loop do
-            schedule
-            break if all_finished?
-            @condition.wait(@mutex)
+        begin
+          @mutex.synchronize do
+            loop do
+              schedule
+              break if all_finished?
+              @condition.wait(@mutex)
+            end
+          end
+        ensure
+          # The wait loop can raise (Ctrl-C lands in `@condition.wait`) while the
+          # coordinator threads and the consolidator still run; join and drain
+          # them before `Base#run`'s ensure tears down the IntermediateDB and
+          # shards under them. Ctrl-C reaches the forked children too (same
+          # process group), so the join is quick; under --no-fork the inline step
+          # finishes first, which we accept — killing a thread mid-write is worse.
+          begin
+            @threads.each(&:join)
+            join_leftover_preplans
+            # Every step is done, but the background merges may still be catching
+            # up. Show a "finishing up" status until they drain, so the display
+            # doesn't sit silently at 100%.
+            @finalization_errors = @reporter.finalizing { @consolidator.drain }
+          rescue StandardError => e
+            # Two cases land here. The wait loop finished and only this teardown
+            # raised: record the error and the summary below reports it. The wait
+            # loop itself raised (typically the operator's Ctrl-C in
+            # `@condition.wait`): an ensure that raises would replace that
+            # in-flight exception, so record instead — the run exits on the
+            # original error and never reaches the summary.
+            @finalization_errors << e
           end
         end
 
-        @threads.each(&:join)
-        # Every step is done, but the background merges may still be catching up.
-        # Show a "finishing up" status until they drain, so the display doesn't sit
-        # silently at 100%.
-        @merge_errors = @reporter.finalizing { @consolidator.drain }
         report_summary(monotonic_time - started_at)
         raise_summary_if_unsuccessful
       end
@@ -129,6 +152,10 @@ module Migrations
         ready_steps.each do |step_class|
           forks = forks_for(step_class)
           if forks > @available_forks
+            # Waiting for forks is exactly the window to count in: compute the
+            # step's plan now so it doesn't spend its first seconds counting once
+            # the forks finally free up.
+            preplan(step_class, forks)
             # Let single-fork steps use a running partitioned step's freed forks
             # instead of idling. With nothing partitioned running, stop instead, so
             # a waiting partitioned step can gather the whole budget at once.
@@ -151,8 +178,28 @@ module Migrations
         [@budget - 1, 1].max
       end
 
+      # Computes a fork-starved step's plan (row count + partition boundaries) in
+      # the background, overlapped with the steps still holding the forks; the
+      # coordinator picks it up through `Thread#value` when the step starts. One
+      # live planner at a time keeps the extra load on the source bounded. Safe
+      # because `fork_count` is deterministic (`forks_for`) and the source is
+      # static — the plan is the same one the coordinator would compute later.
+      def preplan(step_class, fork_count)
+        return if @no_fork
+        return if @preplans.key?(step_class)
+        return if @preplans.values.any?(&:alive?)
+
+        @preplans[step_class] = Thread.new do
+          Thread.current.name = "plan_#{step_class.name.demodulize}"
+          # The coordinator surfaces a planning failure via `value`; without this,
+          # the thread would also report the exception to stderr on its own.
+          Thread.current.report_on_exception = false
+          StepCoordinator.compute_plan(step_class:, step_factory: @step_factory, fork_count:)
+        end
+      end
+
       def spawn_coordinator(step_class, fork_count)
-        coordinator = build_coordinator(step_class, fork_count)
+        coordinator = build_coordinator(step_class, fork_count, @preplans.delete(step_class))
 
         @threads << Thread.new do
           Thread.current.name = "step_#{step_class.name.demodulize}"
@@ -160,11 +207,10 @@ module Migrations
           outcome = :failed
           begin
             outcome = coordinator.run
-          rescue SignalException
-            outcome = :failed
-          rescue StandardError => e
-            # Must be recorded even if `run` should have handled it, or the step
-            # never reaches a terminal state and the scheduler waits on it forever.
+          rescue SignalException, StandardError => e
+            # The backstop for anything `run` didn't record itself — without it
+            # the step's summary entry would be empty (a signal) or the failure
+            # lost entirely (an unexpected StandardError).
             record_failure(step_class, e)
             outcome = :failed
           ensure
@@ -173,7 +219,7 @@ module Migrations
         end
       end
 
-      def build_coordinator(step_class, fork_count)
+      def build_coordinator(step_class, fork_count, plan)
         StepCoordinator.new(
           step_class:,
           step_factory: @step_factory,
@@ -184,7 +230,19 @@ module Migrations
           consolidator: @consolidator,
           fork_count:,
           no_fork: @no_fork,
+          plan:,
         )
+      end
+
+      # A preplanned step that got skipped (its dependency failed) leaves its
+      # planner behind; let it finish so its source connection cleans up. Its
+      # failure, if any, has no step to fail — the step never ran.
+      def join_leftover_preplans
+        @preplans.each_value do |planner|
+          planner.join
+        rescue StandardError
+          # ignored
+        end
       end
 
       def step_finished(step_class, outcome)
@@ -262,12 +320,12 @@ module Migrations
       def raise_summary_if_unsuccessful
         failed = @states.select { |_, state| state == :failed }.keys
         skipped = @states.select { |_, state| state == :skipped }.keys
-        return if failed.empty? && skipped.empty? && @merge_errors.empty?
+        return if failed.empty? && skipped.empty? && @finalization_errors.empty?
 
         raise ConvertError.new(
                 failures: failed.to_h { |step_class| [step_class, @failures[step_class]] },
                 skipped:,
-                merge_errors: @merge_errors,
+                finalization_errors: @finalization_errors,
               )
       end
     end

@@ -1,21 +1,26 @@
 /* eslint-disable ember/routes-segments-snake-case */
 export default {
-  resource: "admin.adminPlugins",
-  path: "/plugins",
+  resource: "admin.adminPlugins.show",
 
   map() {
-    this.route("discourse-subscriptions", function () {
-      this.route("products", function () {
+    // Route names are shared across every plugin nested under the show route,
+    // so they are prefixed. The paths keep the URLs they had before.
+    this.route(
+      "discourse-subscriptions-products",
+      { path: "products" },
+      function () {
         this.route("show", { path: "/:product-id" }, function () {
           this.route("plans", function () {
             this.route("show", { path: "/:plan-id" });
           });
         });
-      });
+      }
+    );
 
-      this.route("coupons");
+    this.route("discourse-subscriptions-coupons", { path: "coupons" });
 
-      this.route("subscriptions");
+    this.route("discourse-subscriptions-subscriptions", {
+      path: "subscriptions",
     });
   },
 };

@@ -147,3 +147,7 @@ fa_IR:
               label: نام کانال
             provider:
               label: ارائه‌دهنده
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "کانال"
+        message: "پیام"

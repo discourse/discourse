@@ -136,9 +136,9 @@ def migrate_data
       # duplicate topic titles must be temporarily enabled to ensure that all
       # canned replies can be imported since there is no guarantee that a previous
       # topic does not exist with the same title
-      allow_duplicate_topic_titles = SiteSetting.allow_duplicate_topic_titles
+      duplicate_topic_titles = SiteSetting.duplicate_topic_titles
 
-      SiteSetting.allow_duplicate_topic_titles = true
+      SiteSetting.duplicate_topic_titles = "allowed"
 
       (replies_v1 || {}).each_with_index do |(_, reply), index|
         position = index + 1
@@ -157,7 +157,7 @@ def migrate_data
       end
 
       # restores the setting to the previous value after importing the topics
-      SiteSetting.allow_duplicate_topic_titles = allow_duplicate_topic_titles
+      SiteSetting.duplicate_topic_titles = duplicate_topic_titles
     end
     puts "", "Canned replies migration to templates finished!"
   rescue StandardError => e
