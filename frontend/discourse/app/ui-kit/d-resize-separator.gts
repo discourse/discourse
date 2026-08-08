@@ -302,11 +302,27 @@ export default class DResizeSeparator extends Component<DResizeSeparatorSignatur
    * derived, because what matters here are measurements the template cannot observe.
    */
   #snapshot() {
-    this._announced = {
-      now: this.#read(this.args.value) ?? undefined,
-      min: this.#read(this.args.min),
-      max: this.#read(this.args.max),
-    };
+    const now = this.#read(this.args.value) ?? undefined;
+    const min = this.#read(this.args.min);
+    const max = this.#read(this.args.max);
+    const announced = this._announced;
+
+    // Assigning invalidates whether or not the numbers differ, so a refresh that
+    // read the same three would re-render the announced values for no change.
+    // That is the common case rather than the rare one: the box observer and the
+    // viewport listener both refresh during a window resize, landing two
+    // refreshes in one frame, and a viewport change need not resize the box at
+    // all.
+    if (
+      announced &&
+      announced.now === now &&
+      announced.min === min &&
+      announced.max === max
+    ) {
+      return;
+    }
+
+    this._announced = { now, min, max };
   }
 
   #read(arg: Measurement) {
