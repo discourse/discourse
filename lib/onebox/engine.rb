@@ -27,15 +27,15 @@ module Onebox
       origins.map do |origin|
         escaped_origin = Regexp.escape(origin)
         if origin.start_with?("*.", "https://*.", "http://*.")
-          escaped_origin = escaped_origin.sub("\\*", "[^/?#]*")
+          escaped_origin = escaped_origin.sub("\\*") { "[^/\\\\?#]*" }
         end
 
         origin_boundary =
-          if origin.match?(%r{\Ahttps?://[^/?#]+\z}i)
+          if origin.match?(%r{\Ahttps?://[^/\\?#]+\z}i)
             if origin.match?(/:\d+\z/)
-              "(?:[/?#]|\\z)"
+              "(?:[/\\\\?#]|\\z)"
             else
-              "(?::\\d+(?:[/?#]|\\z)|[/?#]|\\z)"
+              "(?::\\d+(?:[/\\\\?#]|\\z)|[/\\\\?#]|\\z)"
             end
           else
             ""
