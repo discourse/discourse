@@ -31,7 +31,6 @@ class NginxTestProxy
     @tmpdir = Dir.mktmpdir("nginx-spec-")
     @port = available_port
     FileUtils.mkdir_p(File.join(@tmpdir, "cache"))
-    FileUtils.mkdir_p(File.join(@tmpdir, "public"))
     FileUtils.mkdir_p(File.join(@tmpdir, "outlets"))
     File.write(sample_config_path, test_config)
     File.write(wrapper_config_path, wrapper_config)
@@ -68,7 +67,7 @@ class NginxTestProxy
   end
 
   def url
-    "http://localhost:#{port}"
+    "http://127.0.0.1:#{port}"
   end
 
   def get(path)
@@ -90,7 +89,7 @@ class NginxTestProxy
       .gsub("/var/nginx/cache", File.join(@tmpdir, "cache"))
       .gsub("/var/log/nginx/access.log", File.join(@tmpdir, "access.log"))
       .gsub("/var/log/nginx/error.log", File.join(@tmpdir, "error.log"))
-      .gsub("/var/www/discourse/public", File.join(@tmpdir, "public"))
+      .gsub("/var/www/discourse/public", Rails.root.join("frontend/discourse/dist").to_s)
       .gsub("conf.d/outlets/", File.join(@tmpdir, "outlets/"))
       .lines
       .map { |line| line.match?(/^\s*brotli/) ? "# #{line}" : line }

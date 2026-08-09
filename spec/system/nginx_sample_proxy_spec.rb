@@ -9,7 +9,7 @@ RSpec.describe "Nginx sample proxy" do
       @original_app_host = config.app_host
       config.app_host = @proxy.url
     end
-    SiteSetting.force_hostname = "localhost"
+    SiteSetting.force_hostname = "127.0.0.1"
     SiteSetting.port = @proxy.port
   end
 
