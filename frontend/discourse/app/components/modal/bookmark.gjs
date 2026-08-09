@@ -9,6 +9,8 @@ import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import ItsATrap from "@discourse/itsatrap";
 import { Promise } from "rsvp";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { extractError } from "discourse/lib/ajax-error";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import discourseLater from "discourse/lib/later";
@@ -388,6 +390,11 @@ export default class BookmarkModal extends Component {
             aria-label={{i18n "post.bookmarks.name_input_label"}}
           />
         </div>
+
+        <PluginOutlet
+          @name="bookmark-modal-after-name"
+          @outletArgs={{lazyHash bookmark=this.bookmark}}
+        />
 
         <div class="bookmark-options-panel">
           <label
