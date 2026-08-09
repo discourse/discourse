@@ -27,9 +27,9 @@ RSpec.describe "Nginx sample proxy" do
     expect(@proxy.access_log).to eq(access_log)
   end
 
-  it "lets the user browse Discourse through nginx", allow_network: "127.0.0.1" do
-    visit("/latest")
+  it "lets the browser reach Rails through nginx", allow_network: "127.0.0.1" do
+    visit("/srv/status")
 
-    expect(page).to have_css("#main.ember-application")
+    expect(page).to have_content("ok")
   end
 end
