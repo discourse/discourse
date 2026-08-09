@@ -22,9 +22,9 @@ const SKIPPABLE_SELECTORS = [
   "[inert] *",
 ];
 
-export function getFocusableElements(container, additionalSkipSelectors = []) {
+function getElementsWithData(container, additionalSkipSelectors = []) {
   if (!container) {
-    return { safelyFocusableElements: [], safelyTabbableElements: [] };
+    return [];
   }
 
   const skipSelector = [
@@ -35,7 +35,7 @@ export function getFocusableElements(container, additionalSkipSelectors = []) {
     ...(container.matches(FOCUSABLE_SELECTOR) ? [container] : []),
     ...container.querySelectorAll(FOCUSABLE_SELECTOR),
   ];
-  const elementsWithData = elements.map((element) => ({
+  return elements.map((element) => ({
     element,
     tabbable: element.matches(':not([hidden]):not([tabindex^="-"])'),
     skippable:
@@ -46,6 +46,19 @@ export function getFocusableElements(container, additionalSkipSelectors = []) {
         element.getClientRects().length
       ),
   }));
+}
+
+export function getAllTabbableElements(container) {
+  return getElementsWithData(container)
+    .filter(({ tabbable }) => tabbable)
+    .map(({ element }) => element);
+}
+
+export function getFocusableElements(container, additionalSkipSelectors = []) {
+  const elementsWithData = getElementsWithData(
+    container,
+    additionalSkipSelectors
+  );
 
   return {
     safelyFocusableElements: elementsWithData

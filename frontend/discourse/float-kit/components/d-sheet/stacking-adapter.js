@@ -2,7 +2,7 @@ import { createTweenFunction } from "./animation";
 import { EVENTS } from "./state-machine-events";
 
 export default class StackingAdapter {
-  stackPosition = 0;
+  #countedInStack = false;
 
   constructor(controller) {
     this.controller = controller;
@@ -20,24 +20,33 @@ export default class StackingAdapter {
     return Boolean(this.stackId && this.registry);
   }
 
-  handleTravelStatusChange(status, previousStatus) {
+  handleTravelStatusChange(status) {
     if (!this.isStackEnabled) {
       return;
     }
 
-    const stackingCount = this.registry.getStackingCount(this.stackId);
-
-    if (previousStatus !== "stepping" && status === "idleInside") {
-      if (this.stackPosition === 0) {
-        this.stackPosition = stackingCount + 1;
-      }
+    if (!this.#countedInStack && status !== "idleOutside") {
+      this.#countedInStack = true;
       this.registry.incrementStackingCount(this.stackId);
-      this.updateStackingIndexWithPositionValue();
-    } else if (status === "idleOutside") {
-      this.stackPosition = 0;
-      this.registry.decrementStackingCount(this.stackId);
+    } else if (this.#countedInStack && status === "idleOutside") {
+      this.releaseStackingCount();
+    }
+
+    if (status === "idleInside" || status === "idleOutside") {
       this.updateStackingIndexWithPositionValue();
     }
+  }
+
+  releaseStackingCount() {
+    if (!this.#countedInStack) {
+      return;
+    }
+
+    if (this.isStackEnabled) {
+      this.registry.decrementStackingCount(this.stackId);
+    }
+
+    this.#countedInStack = false;
   }
 
   notifyParentOfOpening(skipOpening = false) {

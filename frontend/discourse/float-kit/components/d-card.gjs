@@ -1,53 +1,52 @@
 import Component from "@glimmer/component";
-import { array, hash } from "@ember/helper";
-import { action } from "@ember/object";
+import { hash } from "@ember/helper";
 import { guidFor } from "@ember/object/internals";
 import DSheet from "./d-sheet";
 
-class DCardContent extends Component {
-  @action
-  backdropTravelAnimation({ progress }) {
-    return Math.min(0.4 * progress, 0.4);
-  }
-
-  <template>
-    <DSheet.Portal @sheet={{@sheet}}>
-      <DSheet.View
-        class="d-card"
+const ENTERING_ANIMATION_SETTINGS = Object.freeze({
+  easing: "spring",
+  stiffness: 260,
+  damping: 20,
+  mass: 1,
+});
+const BACKDROP_TRAVEL_ANIMATION = Object.freeze({
+  opacity: ({ progress }) => Math.min(0.4 * progress, 0.4),
+});
+const CONTENT_TRAVEL_ANIMATION = Object.freeze({
+  scale: Object.freeze([0.8, 1]),
+});
+const DCardContent = <template>
+  <DSheet.Portal @sheet={{@sheet}}>
+    <DSheet.View
+      class="d-card"
+      @sheet={{@sheet}}
+      @contentPlacement="center"
+      @tracks="top"
+      @bottomColorHint={{false}}
+      @enteringAnimationSettings={{ENTERING_ANIMATION_SETTINGS}}
+    >
+      <DSheet.Backdrop
+        @travelAnimation={{BACKDROP_TRAVEL_ANIMATION}}
+        @themeColorDimming="auto"
         @sheet={{@sheet}}
-        @contentPlacement="center"
-        @tracks="top"
-        @bottomColorHint={{false}}
-        @enteringAnimationSettings={{hash
-          easing="spring"
-          stiffness=260
-          damping=20
-          mass=1
-        }}
+      />
+      <DSheet.Content
+        @travelAnimation={{CONTENT_TRAVEL_ANIMATION}}
+        @sheet={{@sheet}}
+        as |ContentTag|
       >
-        <DSheet.Backdrop
-          @travelAnimation={{hash opacity=this.backdropTravelAnimation}}
-          @themeColorDimming="auto"
-          @sheet={{@sheet}}
-        />
-        <DSheet.Content
-          @travelAnimation={{hash scale=(array 0.8 1)}}
-          @sheet={{@sheet}}
-          as |ContentTag|
-        >
-          <ContentTag class="d-card-content">
-            {{yield
-              (hash
-                Trigger=(component DSheet.Trigger sheet=@sheet)
-                dismiss=@sheet.requestDismiss
-              )
-            }}
-          </ContentTag>
-        </DSheet.Content>
-      </DSheet.View>
-    </DSheet.Portal>
-  </template>
-}
+        <ContentTag class="d-card-content">
+          {{yield
+            (hash
+              Trigger=(component DSheet.Trigger sheet=@sheet)
+              dismiss=@sheet.requestDismiss
+            )
+          }}
+        </ContentTag>
+      </DSheet.Content>
+    </DSheet.View>
+  </DSheet.Portal>
+</template>;
 
 export default class DCard extends Component {
   get componentId() {

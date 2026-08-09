@@ -58,10 +58,13 @@ export default class StagingState {
     });
   }
 
-  actuallyStep() {
-    this.#machine.send(EVENTS.ACTUALLY_STEP, {
-      opennessState: this.#openness.current,
-    });
+  actuallyStep(detent, behavior) {
+    this.#machine.send(
+      { type: EVENTS.ACTUALLY_STEP, detent, behavior },
+      {
+        opennessState: this.#openness.current,
+      }
+    );
   }
 
   advance() {

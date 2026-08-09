@@ -12,6 +12,9 @@ import { module, test } from "qunit";
 import DCard from "discourse/float-kit/components/d-card";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
+const OPEN_VIEW_SELECTOR =
+  "[data-d-sheet~='view'][data-d-sheet~='staging-none']:not([data-d-sheet~='closed'])";
+
 module("Integration | Component | FloatKit | d-card", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -87,9 +90,24 @@ module("Integration | Component | FloatKit | d-card", function (hooks) {
     );
 
     await click(".btn");
-    await waitFor("[data-d-sheet~='view']:not([data-d-sheet~='closed'])");
+    await waitFor(OPEN_VIEW_SELECTOR);
     await click(".dismiss-btn");
     await waitFor(".d-card[data-d-sheet~='closed']", { timeout: 3000 });
+
+    assert
+      .dom(".d-card")
+      .hasAttribute(
+        "aria-hidden",
+        "true",
+        "the pending card is hidden from assistive technology"
+      );
+    assert
+      .dom(".dismiss-btn")
+      .hasAttribute(
+        "tabindex",
+        "-1",
+        "pending card actions are removed from the tab order"
+      );
 
     const closedRect = find(".d-card").getBoundingClientRect();
     assert.true(closedRect.width <= 1, "the pending card width is collapsed");
@@ -162,7 +180,7 @@ module("Integration | Component | FloatKit | d-card", function (hooks) {
     assert.false(state.presented);
 
     await click(".btn");
-    await waitFor("[data-d-sheet~='view']:not([data-d-sheet~='closed'])");
+    await waitFor(OPEN_VIEW_SELECTOR);
 
     assert.true(state.presented);
     assert.dom(".d-card").exists();
@@ -204,7 +222,7 @@ module("Integration | Component | FloatKit | d-card", function (hooks) {
     );
 
     await click(".present-btn");
-    await waitFor("[data-d-sheet~='view']:not([data-d-sheet~='closed'])");
+    await waitFor(OPEN_VIEW_SELECTOR);
 
     assert.dom(".d-card").exists("the yielded present action opens the card");
 
@@ -235,7 +253,7 @@ module("Integration | Component | FloatKit | d-card", function (hooks) {
     );
 
     await click(".btn");
-    await waitFor("[data-d-sheet~='view']:not([data-d-sheet~='closed'])");
+    await waitFor(OPEN_VIEW_SELECTOR);
 
     assert.dom(".d-card").exists();
 
@@ -271,7 +289,7 @@ module("Integration | Component | FloatKit | d-card", function (hooks) {
     );
 
     await click(".btn");
-    await waitFor("[data-d-sheet~='view']:not([data-d-sheet~='closed'])");
+    await waitFor(OPEN_VIEW_SELECTOR);
     await click(".dismiss-btn");
     await waitFor(".d-card[data-d-sheet~='closed']", { timeout: 3000 });
 

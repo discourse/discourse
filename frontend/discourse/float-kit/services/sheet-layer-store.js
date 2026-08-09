@@ -3,6 +3,7 @@ import { cancel, run, schedule } from "@ember/runloop";
 import Service from "@ember/service";
 import setupFocusContainment from "discourse/float-kit/components/d-sheet/focus-containment";
 import { processBehavior } from "discourse/float-kit/lib/behavior-handler";
+import { isCloneElement } from "discourse/float-kit/lib/utils";
 
 const inertRefCounts = new WeakMap();
 
@@ -18,8 +19,10 @@ export default class SheetLayerStore extends Service {
   automaticLayerDetectionObserver = null;
   automaticLayerDetectionView = null;
   recalculateInertTimeout = null;
+  recoverFocusOnNextRecalculation = false;
   focusContainmentCleanup = null;
   focusContainmentLastElement = null;
+  protectedRootElements = [];
   clickOutsideCleanup = null;
   escapeKeyCleanup = null;
   pointerDownTarget = null;
@@ -27,6 +30,8 @@ export default class SheetLayerStore extends Service {
   willDestroy() {
     super.willDestroy();
     cancel(this.recalculateInertTimeout);
+    this.recalculateInertTimeout = null;
+    this.recoverFocusOnNextRecalculation = false;
     this.cleanupInert();
     this.#cleanupAutomaticLayerDetection();
     this.focusContainmentLastElement = null;
@@ -52,7 +57,36 @@ export default class SheetLayerStore extends Service {
     const id =
       typeof controllerOrId === "string" ? controllerOrId : controllerOrId?.id;
 
-    return id ? this.controllers.has(id) : false;
+    if (!id) {
+      return false;
+    }
+
+    return typeof controllerOrId === "string"
+      ? this.controllers.has(id)
+      : this.controllers.get(id) === controllerOrId;
+  }
+
+  findContainingSheet(element, excludedController) {
+    if (!element) {
+      return null;
+    }
+
+    for (let index = this.sheetOrder.length - 1; index >= 0; index--) {
+      const controller = this.controllers.get(this.sheetOrder[index]);
+
+      if (!controller || controller === excludedController) {
+        continue;
+      }
+
+      if (
+        controller.view?.contains(element) ||
+        controller.rootElement?.contains(element)
+      ) {
+        return controller;
+      }
+    }
+
+    return null;
   }
 
   unregisterSheet(controllerOrId) {
@@ -60,6 +94,13 @@ export default class SheetLayerStore extends Service {
       typeof controllerOrId === "string" ? controllerOrId : controllerOrId?.id;
 
     if (!id) {
+      return;
+    }
+
+    if (
+      typeof controllerOrId !== "string" &&
+      this.controllers.get(id) !== controllerOrId
+    ) {
       return;
     }
 
@@ -77,8 +118,15 @@ export default class SheetLayerStore extends Service {
     this.rootsByComponentId.set(componentId, rootComponent);
   }
 
-  unregisterRoot(componentId) {
+  unregisterRoot(componentId, rootComponent) {
     if (!componentId) {
+      return;
+    }
+
+    if (
+      rootComponent &&
+      this.rootsByComponentId.get(componentId) !== rootComponent
+    ) {
       return;
     }
 
@@ -91,31 +139,36 @@ export default class SheetLayerStore extends Service {
 
   @action
   registerAutomaticLayerElement(element) {
-    if (element) {
+    if (element && !this.manualAutomaticLayerElements.has(element)) {
       this.manualAutomaticLayerElements.add(element);
-      this.recalculateInertOutside();
+      this.recalculateInertOutside({ recoverFocus: true });
     }
   }
 
   @action
   unregisterAutomaticLayerElement(element) {
-    if (element) {
-      this.manualAutomaticLayerElements.delete(element);
-      this.recalculateInertOutside();
+    if (element && this.manualAutomaticLayerElements.delete(element)) {
+      this.recalculateInertOutside({ recoverFocus: true });
     }
   }
 
-  recalculateInertOutside() {
+  recalculateInertOutside({ recoverFocus = false } = {}) {
     cancel(this.recalculateInertTimeout);
+    this.recoverFocusOnNextRecalculation = recoverFocus;
 
     this.recalculateInertTimeout = schedule("afterRender", () => {
-      this.#runInertOutsideRecalculation();
+      this.recalculateInertTimeout = null;
+      this.recoverFocusOnNextRecalculation = false;
+      this.#runInertOutsideRecalculation(recoverFocus);
     });
   }
 
   flushInertOutside() {
+    const recoverFocus = this.recoverFocusOnNextRecalculation;
     cancel(this.recalculateInertTimeout);
-    this.#runInertOutsideRecalculation();
+    this.recalculateInertTimeout = null;
+    this.recoverFocusOnNextRecalculation = false;
+    this.#runInertOutsideRecalculation(recoverFocus);
   }
 
   cleanupInert() {
@@ -137,6 +190,7 @@ export default class SheetLayerStore extends Service {
     }
 
     this.inertElements = new Set();
+    this.protectedRootElements = [];
   }
 
   consumeEscapeKey(event) {
@@ -235,14 +289,16 @@ export default class SheetLayerStore extends Service {
 
     const focusState = this.layerFocusState.get(sheetId) || {};
     const activeElement = document.activeElement;
-    const focusWasInside =
-      focusState.focusWasInsideOnClose ||
-      (!!viewElement && !!activeElement && viewElement.contains(activeElement));
+    const focusWasInside = focusState.focusWasInsideOnClose;
 
     focusState.focusWasInsideOnClose = false;
     this.layerFocusState.set(sheetId, focusState);
 
-    if (!focusWasInside && document.contains(activeElement)) {
+    if (
+      !focusWasInside ||
+      (!viewElement?.contains(activeElement) &&
+        document.contains(activeElement))
+    ) {
       focusState.elementFocusedLastBeforeShowing = null;
       this.layerFocusState.set(sheetId, focusState);
       return;
@@ -254,7 +310,7 @@ export default class SheetLayerStore extends Service {
       handler: onDismissAutoFocus,
     });
 
-    if (behavior.focus === false) {
+    if (!behavior.focus) {
       focusState.elementFocusedLastBeforeShowing = null;
       this.layerFocusState.set(sheetId, focusState);
       return;
@@ -299,15 +355,15 @@ export default class SheetLayerStore extends Service {
       nativeEvent: event,
     });
 
-    if (behavior.nativePreventDefault !== false) {
+    if (behavior.nativePreventDefault) {
       event.preventDefault();
     }
 
-    if (behavior.dismiss !== false && sheet.role !== "alertdialog") {
+    if (behavior.dismiss && sheet.role !== "alertdialog") {
       sheet.requestDismiss();
     }
 
-    if (behavior.stopOverlayPropagation === false && layerIndex > 0) {
+    if (!behavior.stopOverlayPropagation && layerIndex > 0) {
       this.#processEscapeOnLayer({
         sheetsInOrder,
         layerIndex: layerIndex - 1,
@@ -327,7 +383,6 @@ export default class SheetLayerStore extends Service {
     }
 
     const target = event.target;
-    const content = sheet.content;
     const view = sheet.view;
     const rootElement = sheet.rootElement;
 
@@ -336,8 +391,9 @@ export default class SheetLayerStore extends Service {
     }
 
     const isClickOutside =
-      (view && !view.contains(target)) ||
-      (view && content && !content.contains(target));
+      target === sheet.scrollContainer ||
+      target === sheet.backdrop ||
+      (view && !view.contains(target));
 
     if (!isClickOutside) {
       return;
@@ -375,66 +431,105 @@ export default class SheetLayerStore extends Service {
     return orderedControllers;
   }
 
-  #runInertOutsideRecalculation() {
-    this.cleanupInert();
-
+  #runInertOutsideRecalculation(recoverFocus = false) {
     const sheetsInOrder = this.#orderedControllers();
-
     const hasInertOutside = sheetsInOrder.some((sheet) => sheet.inertOutside);
 
     if (!hasInertOutside || sheetsInOrder.length === 0) {
+      this.cleanupInert();
       this.#cleanupAutomaticLayerDetection();
       this.focusContainmentLastElement = null;
       return;
     }
 
-    const focusContainmentRootElements = new Set();
+    let { rootElements, viewElement } =
+      this.#collectFocusContainmentState(sheetsInOrder);
 
-    let automaticLayerDetectionView = null;
+    if (!viewElement) {
+      this.cleanupInert();
+      this.#cleanupAutomaticLayerDetection();
+      this.focusContainmentLastElement = null;
+      return;
+    }
+
+    let protectedRootElements =
+      this.#collectProtectedRootElements(rootElements);
+    const rootsChanged =
+      this.automaticLayerDetectionView !== viewElement ||
+      !this.#elementArraysAreEqual(
+        this.protectedRootElements,
+        protectedRootElements
+      );
+
+    if (rootsChanged) {
+      this.cleanupInert();
+      this.#cleanupAutomaticLayerDetection();
+      this.#setupAutomaticLayerDetection(viewElement);
+
+      ({ rootElements, viewElement } =
+        this.#collectFocusContainmentState(sheetsInOrder));
+      protectedRootElements = this.#collectProtectedRootElements(rootElements);
+
+      const guardElements = this.#setupFocusContainment(
+        rootElements,
+        viewElement
+      );
+      const inertRootElements = new Set([
+        ...protectedRootElements,
+        ...guardElements,
+      ]);
+
+      this.#applyInert(inertRootElements);
+      this.protectedRootElements = protectedRootElements;
+    }
+
+    if (recoverFocus) {
+      this.#moveFocusIfNecessary(rootElements, sheetsInOrder);
+    }
+  }
+
+  #collectFocusContainmentState(sheetsInOrder) {
+    const rootElements = new Set();
+    let viewElement = null;
 
     for (let i = sheetsInOrder.length - 1; i >= 0; i--) {
       const sheet = sheetsInOrder[i];
 
       if (sheet.view) {
-        focusContainmentRootElements.add(sheet.view);
+        rootElements.add(sheet.view);
       }
 
       if (sheet.inertOutside) {
-        automaticLayerDetectionView = sheet.view;
+        viewElement = sheet.view;
         break;
       }
     }
 
-    if (!automaticLayerDetectionView) {
-      this.#cleanupAutomaticLayerDetection();
-      this.focusContainmentLastElement = null;
-      return;
-    }
-
-    this.#setupAutomaticLayerDetection(automaticLayerDetectionView);
-
     for (const element of this.#automaticLayerElements()) {
       if (element.isConnected) {
-        focusContainmentRootElements.add(element);
+        rootElements.add(element);
       }
     }
 
-    const guardElements = this.#setupFocusContainment(
-      focusContainmentRootElements,
-      automaticLayerDetectionView
-    );
+    return { rootElements, viewElement };
+  }
 
-    this.#moveFocusIfNecessary(focusContainmentRootElements, sheetsInOrder);
-
-    const inertRootElements = new Set([
-      ...focusContainmentRootElements,
-      ...guardElements,
-    ]);
+  #collectProtectedRootElements(rootElements) {
+    const protectedRootElements = new Set(rootElements);
     document.querySelectorAll("[aria-live]").forEach((element) => {
-      inertRootElements.add(element);
+      protectedRootElements.add(element);
     });
 
-    this.#applyInert(inertRootElements);
+    return [...protectedRootElements];
+  }
+
+  #elementArraysAreEqual(first, second) {
+    if (first.length !== second.length) {
+      return false;
+    }
+
+    const firstElements = new Set(first);
+    return second.every((element) => firstElements.has(element));
   }
 
   #setupFocusContainment(rootElements, viewElement) {
@@ -472,7 +567,7 @@ export default class SheetLayerStore extends Service {
 
   #moveFocusIfNecessary(rootElements, sheetsInOrder) {
     const activeElement = document.activeElement;
-    if (!activeElement || activeElement === document.body) {
+    if (!activeElement) {
       return;
     }
 
@@ -485,12 +580,13 @@ export default class SheetLayerStore extends Service {
     }
 
     const topmostSheet = sheetsInOrder[sheetsInOrder.length - 1];
-    if (topmostSheet?.view) {
-      topmostSheet.view.focus({ preventScroll: true });
+    if (topmostSheet?.canAcceptDismissRequest) {
+      topmostSheet.executeAutoFocusOnPresent?.();
     }
   }
 
   #applyInert(rootElements) {
+    const rootElementsArray = [...rootElements];
     const inertElements = new Set();
 
     const treeWalker = document.createTreeWalker(
@@ -517,7 +613,7 @@ export default class SheetLayerStore extends Service {
           if (
             (node instanceof HTMLElement &&
               node.getAttribute("role") === "row") ||
-            [...rootElements].some((root) => node.contains(root))
+            rootElementsArray.some((root) => node.contains(root))
           ) {
             return NodeFilter.FILTER_SKIP;
           }
@@ -608,7 +704,7 @@ export default class SheetLayerStore extends Service {
 
     this.automaticLayerDetectionObserver = new MutationObserver(() => {
       if (this.#scanAutomaticLayerElements(viewElement)) {
-        this.recalculateInertOutside();
+        this.recalculateInertOutside({ recoverFocus: true });
       }
     });
 
@@ -666,7 +762,8 @@ export default class SheetLayerStore extends Service {
   #isIgnoredAutomaticLayerElement(element) {
     return (
       element.tagName === "SCRIPT" ||
-      element.matches("[data-d-sheet], [data-d-sheet-clone]")
+      element.matches("[data-d-sheet]") ||
+      isCloneElement(element)
     );
   }
 

@@ -12,13 +12,71 @@ import {
 import isTextInput from "./is-text-input";
 
 const globalState = {
-  preventers: new Set(),
+  preventers: new Map(),
+  pendingFocusJobs: new Map(),
   cleanup: null,
   idCounter: 0,
 };
+
 function generatePreventerId() {
   return `d-scroll-focus-prevention-${++globalState.idCounter}`;
 }
+
+function cancelPendingFocusJob(focusPreventionContainer) {
+  const job = globalState.pendingFocusJobs.get(focusPreventionContainer);
+
+  if (!job) {
+    return;
+  }
+
+  clearTimeout(job.timeout);
+  job.clone.remove();
+  globalState.pendingFocusJobs.delete(focusPreventionContainer);
+}
+
+function cancelAllPendingFocusJobs() {
+  for (const job of globalState.pendingFocusJobs.values()) {
+    clearTimeout(job.timeout);
+    job.clone.remove();
+  }
+
+  globalState.pendingFocusJobs.clear();
+}
+
+function schedulePendingFocusJob(
+  focusPreventionContainer,
+  relatedTarget,
+  clone
+) {
+  cancelPendingFocusJob(focusPreventionContainer);
+
+  const job = {
+    clone,
+    timeout: setTimeout(() => {
+      if (globalState.pendingFocusJobs.get(focusPreventionContainer) !== job) {
+        return;
+      }
+
+      globalState.pendingFocusJobs.delete(focusPreventionContainer);
+
+      try {
+        if (
+          relatedTarget.isConnected &&
+          findClosestFocusPreventionContainer(relatedTarget) ===
+            focusPreventionContainer &&
+          isInsidePreventionContainer(relatedTarget)
+        ) {
+          relatedTarget.focus({ preventScroll: true });
+        }
+      } finally {
+        clone.remove();
+      }
+    }, 32),
+  };
+
+  globalState.pendingFocusJobs.set(focusPreventionContainer, job);
+}
+
 function setupGlobalListeners() {
   const handleTouchStart = (event) => {
     const target = event.target;
@@ -48,6 +106,9 @@ function setupGlobalListeners() {
       return;
     }
 
+    const focusPreventionContainer =
+      findClosestFocusPreventionContainer(relatedTarget);
+
     if (isColorOrSelect(relatedTarget)) {
       document.addEventListener("touchstart", handleTouchStart, {
         capture: true,
@@ -76,11 +137,7 @@ function setupGlobalListeners() {
       clone.style.setProperty("transform", "translateY(-3000px) scale(0)");
       document.documentElement.appendChild(clone);
       clone.focus({ preventScroll: true });
-
-      setTimeout(() => {
-        relatedTarget.focus({ preventScroll: true });
-        clone.remove();
-      }, 32);
+      schedulePendingFocusJob(focusPreventionContainer, relatedTarget, clone);
     } else {
       relatedTarget.focus({ preventScroll: true });
     }
@@ -136,18 +193,24 @@ function setupGlobalListeners() {
     });
     document.removeEventListener("touchend", handleTouchEnd, { capture: true });
     document.removeEventListener("focusin", handleFocusIn);
+    cancelAllPendingFocusJobs();
   };
 }
-function registerPreventer() {
+
+function registerPreventer(focusPreventionContainer) {
   const id = generatePreventerId();
-  globalState.preventers.add(id);
+  globalState.preventers.set(id, focusPreventionContainer);
   processPreventersChanges();
   return id;
 }
+
 function unregisterPreventer(id) {
+  const focusPreventionContainer = globalState.preventers.get(id);
   globalState.preventers.delete(id);
+  cancelPendingFocusJob(focusPreventionContainer);
   processPreventersChanges();
 }
+
 function processPreventersChanges() {
   if (!capabilities.isWebKit || !capabilities.isAppleMobile) {
     return;
@@ -176,7 +239,7 @@ export default modifier((focusPreventionContainer, [enabled]) => {
     "data-d-scroll-focus-prevention",
     "true"
   );
-  const preventerId = registerPreventer();
+  const preventerId = registerPreventer(focusPreventionContainer);
 
   return () => {
     focusPreventionContainer.removeAttribute("data-d-scroll-focus-prevention");

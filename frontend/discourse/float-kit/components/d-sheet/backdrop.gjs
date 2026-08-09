@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { guidFor } from "@ember/object/internals";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { capabilities } from "discourse/services/capabilities";
@@ -12,6 +13,8 @@ const UNSET = Symbol("unset");
 
 export default class Backdrop extends Component {
   @service themeColorManager;
+
+  dimmingOverlayId = guidFor(this);
 
   syncBackdrop = modifier((backdropElement, [sheet, swipeable]) => {
     if (!sheet) {
@@ -42,7 +45,7 @@ export default class Backdrop extends Component {
         return;
       }
 
-      const dimmingOverlayId = sheet.themeColorAdapter.dimmingOverlayId;
+      const { dimmingOverlayId } = this;
       const backgroundColor =
         window.getComputedStyle(backdropElement).backgroundColor ||
         "rgb(0,0,0)";
@@ -80,17 +83,15 @@ export default class Backdrop extends Component {
   _themeColorDimmingAlpha = 0;
 
   get swipeable() {
-    return this.args.swipeable ?? true;
+    return this.args.swipeable === undefined ? true : this.args.swipeable;
   }
 
   get effectiveThemeColorDimming() {
-    const dimming = this.args.themeColorDimming ?? false;
-    if (dimming === "auto") {
-      return (
-        capabilities.isWebKit && !capabilities.isStandaloneWithBlackTranslucent
-      );
-    }
-    return Boolean(dimming);
+    return (
+      this.args.themeColorDimming === "auto" &&
+      capabilities.isWebKit &&
+      !capabilities.isStandaloneWithBlackTranslucent
+    );
   }
 
   get effectiveTravelAnimation() {

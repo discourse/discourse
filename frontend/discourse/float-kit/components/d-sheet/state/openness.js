@@ -43,6 +43,13 @@ export default class OpennessState {
     return this.#machine.matches("open.scroll:ended");
   }
 
+  get areScrollEndedAfterPaintEffectsRun() {
+    return (
+      this.isScrollEnded &&
+      this.#machine.matches("open.scrollEndedAfterPaintEffectsRun:true")
+    );
+  }
+
   get isSwipeOngoing() {
     return this.#machine.matches("open.swipe:ongoing");
   }
@@ -63,12 +70,24 @@ export default class OpennessState {
     }
   }
 
+  markScrollEndedAfterPaintEffectsRun() {
+    this.#machine.send(EVENTS.OCCURRED);
+  }
+
+  resetScrollEndedAfterPaintEffects() {
+    this.#machine.send(EVENTS.RESET);
+  }
+
   swipeStart() {
     this.#machine.send(EVENTS.SWIPE_START);
   }
 
   swipeEnd() {
     this.#machine.send(EVENTS.SWIPE_END);
+  }
+
+  swipeReset() {
+    this.#machine.send(EVENTS.SWIPE_RESET);
   }
 
   completeAnimation() {

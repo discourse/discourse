@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { untrack } from "@glimmer/validator";
 import { registerDestructor } from "@ember/destroyable";
 import { action } from "@ember/object";
+import { guidFor } from "@ember/object/internals";
 import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
@@ -17,6 +18,8 @@ export default class Root extends Component {
 
   @tracked sheet;
   @tracked internalPresented = false;
+  @tracked viewConfigurationProvider = null;
+  sheetId = guidFor(this);
   syncPresented = modifier((_element, [presented]) => {
     if (presented === this.#lastPresented) {
       return;
@@ -46,20 +49,35 @@ export default class Root extends Component {
     const configuration = { ...options };
     untrack(() => sheet.configure(configuration));
   });
+  syncViewConfiguration = modifier((_element, [sheet, provider]) => {
+    provider?.configureSheetController(sheet);
+  });
   registerRootElement = modifier((element, [sheet]) => {
     sheet.registerRootElement(element);
 
     return () => sheet.unregisterRootElement(element);
   });
+  syncComponentId = modifier((_element, [componentId]) => {
+    this.#updateComponentIdRegistration(componentId);
+  });
+  syncStackTarget = modifier((_element, [stackId]) => {
+    this.#updateStackTarget(stackId);
+  });
   #lastPresented;
   #presentationTask = null;
   #pendingOpenSubscription = null;
+  #pendingOpenToken = 0;
   #reopenAfterClose = false;
+  #registeredComponentId = null;
   #sheetLayerActive = false;
+  #stackSyncTask = null;
+  #stackSyncToken = 0;
+  #stackTarget = null;
 
   constructor(owner, args) {
     super(owner, args);
 
+    this.#stackTarget = this.stackId;
     this.createController();
     this.sheet.rootComponent = this;
 
@@ -67,18 +85,33 @@ export default class Root extends Component {
       this.internalPresented = true;
     }
 
-    if (this.args.componentId) {
-      this.sheetLayerStore.registerRoot(this.args.componentId, this);
-    }
+    this.#updateComponentIdRegistration(this.args.componentId);
 
     registerDestructor(this, () => {
       this.#cancelPresentationTask();
+      this.#cancelStackSyncTask();
       this.#cleanupPendingOpen();
-      if (this.args.componentId) {
-        this.sheetLayerStore.unregisterRoot(this.args.componentId);
-      }
+      this.#updateComponentIdRegistration(null);
       this.#cleanupCurrentSheet();
     });
+  }
+
+  #updateComponentIdRegistration(componentId) {
+    const nextComponentId = componentId || null;
+
+    if (nextComponentId === this.#registeredComponentId) {
+      return;
+    }
+
+    if (this.#registeredComponentId) {
+      this.sheetLayerStore.unregisterRoot(this.#registeredComponentId, this);
+    }
+
+    this.#registeredComponentId = nextComponentId;
+
+    if (nextComponentId) {
+      this.sheetLayerStore.registerRoot(nextComponentId, this);
+    }
   }
 
   #cancelPresentationTask() {
@@ -86,6 +119,73 @@ export default class Root extends Component {
       cancel(this.#presentationTask);
       this.#presentationTask = null;
     }
+  }
+
+  #cancelStackSyncTask() {
+    this.#stackSyncToken++;
+
+    if (this.#stackSyncTask) {
+      cancel(this.#stackSyncTask);
+      this.#stackSyncTask = null;
+    }
+  }
+
+  #updateStackTarget(stackId) {
+    const nextStackTarget = stackId || null;
+
+    if (nextStackTarget === this.#stackTarget) {
+      return;
+    }
+
+    this.#stackTarget = nextStackTarget;
+    this.#scheduleStackTargetSync();
+  }
+
+  #scheduleStackTargetSync() {
+    this.#cancelStackSyncTask();
+
+    const stackTarget = this.#stackTarget;
+    if (!stackTarget) {
+      return;
+    }
+
+    const token = this.#stackSyncToken;
+    this.#stackSyncTask = schedule("afterRender", () => {
+      this.#stackSyncTask = null;
+
+      if (
+        token !== this.#stackSyncToken ||
+        this.isDestroying ||
+        this.isDestroyed ||
+        stackTarget !== this.#stackTarget ||
+        stackTarget !== this.stackId
+      ) {
+        return;
+      }
+
+      this.#reconcileStackTarget(stackTarget);
+    });
+  }
+
+  #reconcileStackTarget(stackTarget) {
+    if (this.#pendingOpenSubscription) {
+      this.#cleanupPendingOpen();
+
+      if (this.effectivePresented) {
+        this.openSheet();
+      }
+      return;
+    }
+
+    if (
+      this.sheet.stackId === stackTarget ||
+      !this.sheet.state.openness.isOpen ||
+      !this.sheet.state.staging.isNone
+    ) {
+      return;
+    }
+
+    this.sheetStackRegistry.reparentSheet(stackTarget, this.sheet);
   }
 
   get isControlled() {
@@ -103,6 +203,16 @@ export default class Root extends Component {
     return this.args.sheetRole !== undefined
       ? this.args.sheetRole
       : this.args.role;
+  }
+
+  registerViewConfigurationProvider(provider) {
+    this.viewConfigurationProvider = provider;
+  }
+
+  unregisterViewConfigurationProvider(provider) {
+    if (this.viewConfigurationProvider === provider) {
+      this.viewConfigurationProvider = null;
+    }
   }
 
   @action
@@ -156,6 +266,8 @@ export default class Root extends Component {
   }
 
   #cleanupPendingOpen() {
+    this.#pendingOpenToken++;
+
     if (this.#pendingOpenSubscription) {
       this.#pendingOpenSubscription();
       this.#pendingOpenSubscription = null;
@@ -164,6 +276,7 @@ export default class Root extends Component {
 
   createController() {
     this.sheet = new Controller();
+    this.sheet.id = this.sheetId;
 
     this.sheet.state.subscribe("openness", {
       timing: "immediate",
@@ -176,7 +289,14 @@ export default class Root extends Component {
       state: "open",
       callback: () => {
         this.#reopenAfterClose = false;
+        this.#scheduleStackTargetSync();
       },
+    });
+
+    this.sheet.state.subscribe("staging", {
+      timing: "immediate",
+      state: "none",
+      callback: () => this.#scheduleStackTargetSync(),
     });
 
     this.sheet.configure({
@@ -214,7 +334,10 @@ export default class Root extends Component {
     this.#cleanupPendingOpen();
 
     if (!this.sheet.safeToUnmount) {
-      this.#reopenAfterClose = true;
+      this.#reopenAfterClose =
+        this.sheet.state.staging.isClosing ||
+        this.sheet.state.openness.isClosing ||
+        this.sheet.state.openness.isClosedPending;
       this.#activateSheetLayer();
       this.sheet.open();
       return;
@@ -236,14 +359,24 @@ export default class Root extends Component {
       return;
     }
 
+    const pendingOpenToken = ++this.#pendingOpenToken;
     this.#pendingOpenSubscription = animatingParent.state.subscribe(
       "position",
       {
         timing: "immediate",
         state: ["out", "front.status:idle", "covered.status:idle"],
         callback: () => {
+          if (pendingOpenToken !== this.#pendingOpenToken) {
+            return;
+          }
+
           this.#cleanupPendingOpen();
           if (!this.effectivePresented) {
+            return;
+          }
+
+          if (this.stackId !== stackId) {
+            this.openSheet();
             return;
           }
           this.doOpenSheet(stackId);
@@ -283,14 +416,17 @@ export default class Root extends Component {
   <template>
     <div
       {{this.syncPresented this.effectivePresented}}
+      {{this.syncComponentId @componentId}}
+      {{this.syncStackTarget @forComponent}}
       {{this.syncConfiguration
         this.sheet
+        defaultActiveDetent=@defaultActiveDetent
         activeDetent=@activeDetent
         onActiveDetentChange=@onActiveDetentChange
         onSafeToUnmountChange=@onSafeToUnmountChange
         role=this.sheetRole
-        inertOutside=@inertOutside
       }}
+      {{this.syncViewConfiguration this.sheet this.viewConfigurationProvider}}
       {{this.registerRootElement this.sheet}}
       {{outletAnimationModifier this.sheet @travelAnimation @stackingAnimation}}
       ...attributes

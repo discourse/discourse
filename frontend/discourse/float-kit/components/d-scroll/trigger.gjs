@@ -1,30 +1,27 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import DSheetTrigger from "discourse/float-kit/components/d-sheet/trigger";
+import { processBehavior } from "discourse/float-kit/lib/behavior-handler";
 
 export default class DScrollTrigger extends Component {
   @action
-  handlePress(pressEvent) {
-    if (this.args.onPress) {
-      if (typeof this.args.onPress === "function") {
-        this.args.onPress(pressEvent);
-      } else {
-        pressEvent.changeDefault(this.args.onPress);
-      }
+  handleClick(event) {
+    const behavior = processBehavior({
+      nativeEvent: event,
+      defaultBehavior: { forceFocus: true, runAction: true },
+      handler: this.args.onPress,
+    });
+
+    if (behavior.forceFocus) {
+      event.currentTarget?.focus({ preventScroll: true });
     }
 
-    if (pressEvent.forceFocus) {
-      pressEvent.nativeEvent.currentTarget?.focus({ preventScroll: true });
-    }
-
-    if (pressEvent.runAction && this.executeAction()) {
-      pressEvent.changeDefault({ forceFocus: false, runAction: false });
+    if (behavior.runAction && this.executeAction()) {
       return;
     }
 
-    this.args.onClick?.(pressEvent.nativeEvent);
-    pressEvent.changeDefault({ forceFocus: false, runAction: false });
+    this.args.onClick?.(event);
   }
 
   executeAction() {
@@ -48,11 +45,11 @@ export default class DScrollTrigger extends Component {
 
   <template>
     {{#if @asChild}}
-      {{yield (hash handlePress=this.handlePress)}}
+      {{yield (hash handlePress=this.handleClick)}}
     {{else}}
-      <DSheetTrigger @onPress={{this.handlePress}} ...attributes>
+      <button type="button" {{on "click" this.handleClick}} ...attributes>
         {{yield}}
-      </DSheetTrigger>
+      </button>
     {{/if}}
   </template>
 }

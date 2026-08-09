@@ -140,30 +140,7 @@ export const SHEET_MACHINES = [
         ],
       },
       opening: {
-        messages: {
-          [EVENTS.NEXT]: [
-            {
-              guard: GUARD_NAMES.OPENING_CLOSE_REQUESTED,
-              target: "closing",
-            },
-            { target: "open" },
-          ],
-        },
-        machines: [
-          {
-            name: "evaluateCloseMessage",
-            silentOnly: true,
-            initial: MACHINE_STATE.FALSE,
-            states: {
-              [MACHINE_STATE.FALSE]: {
-                messages: { [EVENTS.CLOSE]: MACHINE_STATE.TRUE },
-              },
-              [MACHINE_STATE.TRUE]: {
-                messages: { [EVENTS.CLOSE]: MACHINE_STATE.TRUE },
-              },
-            },
-          },
-        ],
+        messages: { [EVENTS.NEXT]: "open" },
       },
       open: {
         messages: {
@@ -180,7 +157,6 @@ export const SHEET_MACHINES = [
               target: "closing",
             },
           ],
-          [EVENTS.STEP]: "open",
         },
         machines: [
           {
@@ -189,6 +165,19 @@ export const SHEET_MACHINES = [
             states: {
               ended: { messages: { [EVENTS.SCROLL_START]: "ongoing" } },
               ongoing: { messages: { [EVENTS.SCROLL_END]: "ended" } },
+            },
+          },
+          {
+            name: "scrollEndedAfterPaintEffectsRun",
+            silentOnly: true,
+            initial: MACHINE_STATE.FALSE,
+            states: {
+              [MACHINE_STATE.FALSE]: {
+                messages: { [EVENTS.OCCURRED]: MACHINE_STATE.TRUE },
+              },
+              [MACHINE_STATE.TRUE]: {
+                messages: { [EVENTS.RESET]: MACHINE_STATE.FALSE },
+              },
             },
           },
           {
@@ -207,7 +196,10 @@ export const SHEET_MACHINES = [
               unstarted: { messages: { [EVENTS.SWIPE_START]: "ongoing" } },
               ongoing: { messages: { [EVENTS.SWIPE_END]: "ended" } },
               ended: {
-                messages: { [EVENTS.SWIPE_START]: "ongoing" },
+                messages: {
+                  [EVENTS.SWIPE_START]: "ongoing",
+                  [EVENTS.SWIPE_RESET]: "unstarted",
+                },
               },
             },
           },
@@ -246,6 +238,7 @@ export const SHEET_MACHINES = [
   },
   {
     name: MACHINE_NAMES.SCROLL_CONTAINER_TOUCH,
+    silentOnly: true,
     initial: "ended",
     states: {
       ended: { messages: { [EVENTS.TOUCH_START]: "ongoing" } },

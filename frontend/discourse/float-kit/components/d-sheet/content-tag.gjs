@@ -10,7 +10,7 @@ const ContentTag = <template>
       @sheet.contentPlacementAttribute
       @sheet.tracks
       (if @sheet.scrollContainerShouldBePassThrough "no-pointer-events")
-      (unless @sheet.bleedingBackgroundPresent "no-bleeding-background")
+      (if @sheet.bleedingBackgroundPresent "bleeding-background-present")
     }}
     {{registerSheetElement @sheet.registerContent @sheet.unregisterContent}}
     {{outletAnimationModifier @sheet @travelAnimation @stackingAnimation}}

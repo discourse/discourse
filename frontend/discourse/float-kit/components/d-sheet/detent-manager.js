@@ -1,3 +1,5 @@
+import { cached } from "@glimmer/tracking";
+
 export default class DetentManager {
   controller;
 
@@ -5,10 +7,11 @@ export default class DetentManager {
     this.controller = controller;
   }
 
+  @cached
   get effectiveDetents() {
     const config = this.controller.detentsConfig;
 
-    if (config === null || config === undefined) {
+    if (!config) {
       return ["var(--d-sheet-content-travel-axis)"];
     }
 
@@ -53,17 +56,6 @@ export default class DetentManager {
     );
   }
 
-  shouldAutoStepToStuckPosition() {
-    const { controller } = this;
-    return (
-      controller.edgeAlignedNoOvershoot &&
-      controller.snapToEndDetentsAcceleration === "auto" &&
-      controller.state.openness.isScrollEnded &&
-      !controller.state.openness.isSwipeOngoing &&
-      controller.state.openness.isOpen
-    );
-  }
-
   determineStuckPosition(segment, prevSegment) {
     const [start, end] = segment;
     const [prevStart, prevEnd] = prevSegment || [];
@@ -71,22 +63,15 @@ export default class DetentManager {
 
     let backStuck = false;
     let frontStuck = false;
-    let shouldStep = null;
 
     if (start !== prevStart || end !== prevEnd) {
       if (this.controller.edgeAlignedNoOvershoot && start === 1 && end === 1) {
         backStuck = true;
-        if (this.shouldAutoStepToStuckPosition()) {
-          shouldStep = "back";
-        }
       } else if (start === detentCount && end === detentCount) {
         frontStuck = true;
-        if (this.shouldAutoStepToStuckPosition()) {
-          shouldStep = "front";
-        }
       }
     }
 
-    return { backStuck, frontStuck, shouldStep };
+    return { backStuck, frontStuck };
   }
 }

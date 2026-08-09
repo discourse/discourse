@@ -20,6 +20,8 @@ export default class SheetStackOutlet extends Component {
     }
 
     return {
+      sheetStackRegistry: this.sheetStackRegistry,
+      stackId,
       registerStackingAnimation: (animation) =>
         this.sheetStackRegistry.registerStackingAnimation(stackId, animation),
     };
@@ -37,7 +39,12 @@ export default class SheetStackOutlet extends Component {
 
   <template>
     <div
-      {{outletAnimationModifier this.animationTarget null @stackingAnimation}}
+      {{outletAnimationModifier
+        this.animationTarget
+        null
+        @stackingAnimation
+        stackOutlet=true
+      }}
       ...attributes
       {{mergeSheetStackAttributes "outlet" (if this.isAnimating "animating")}}
     >

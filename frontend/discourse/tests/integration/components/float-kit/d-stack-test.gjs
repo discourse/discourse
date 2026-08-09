@@ -4,18 +4,21 @@ import {
   find,
   findAll,
   render,
+  rerender,
   settled,
   triggerKeyEvent,
   waitFor,
   waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import DSheet from "discourse/float-kit/components/d-sheet";
 import DStack from "discourse/float-kit/components/d-stack";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | FloatKit | d-stack", function (hooks) {
   setupRenderingTest(hooks);
+  hooks.afterEach(() => sinon.restore());
 
   test("opens when trigger is clicked", async function (assert) {
     await render(
@@ -80,7 +83,9 @@ module("Integration | Component | FloatKit | d-stack", function (hooks) {
     );
 
     await click(".btn");
-    await waitFor("[data-d-sheet~='view']:not([data-d-sheet~='closed'])");
+    await waitFor(
+      ".d-stack__view[data-d-sheet~='staging-none']:not([data-d-sheet~='closed'])"
+    );
     await click(".dismiss-btn");
     await waitFor(".d-stack__view[data-d-sheet~='closed']", {
       timeout: 3000,
@@ -147,7 +152,9 @@ module("Integration | Component | FloatKit | d-stack", function (hooks) {
     assert.false(state.presented);
 
     await click(".btn");
-    await waitFor("[data-d-sheet~='view']:not([data-d-sheet~='closed'])");
+    await waitFor(
+      ".d-stack__view[data-d-sheet~='staging-none']:not([data-d-sheet~='closed'])"
+    );
 
     assert.true(state.presented);
     assert.dom(".d-stack__view").exists();
@@ -184,7 +191,9 @@ module("Integration | Component | FloatKit | d-stack", function (hooks) {
     );
 
     await click(".btn");
-    await waitFor("[data-d-sheet~='view']:not([data-d-sheet~='closed'])");
+    await waitFor(
+      ".d-stack__view[data-d-sheet~='staging-none']:not([data-d-sheet~='closed'])"
+    );
 
     assert.dom(".d-stack__view").exists();
 
@@ -225,7 +234,9 @@ module("Integration | Component | FloatKit | d-stack", function (hooks) {
     );
 
     await click(".btn");
-    await waitFor("[data-d-sheet~='view']:not([data-d-sheet~='closed'])");
+    await waitFor(
+      ".d-stack__view[data-d-sheet~='staging-none']:not([data-d-sheet~='closed'])"
+    );
     await click(".dismiss-btn");
     await waitFor(".d-stack__view[data-d-sheet~='closed']", {
       timeout: 3000,
@@ -306,6 +317,76 @@ module("Integration | Component | FloatKit | d-stack", function (hooks) {
     await waitFor(".close-nested");
 
     assert.dom(".d-stack__view").exists({ count: 2 });
+  });
+
+  test("nested stack registers its component ID", async function (assert) {
+    const sheetLayerStore = this.owner.lookup("service:sheet-layer-store");
+
+    await render(
+      <template>
+        <DStack
+          @componentId="registered-parent-stack"
+          @defaultPresented={{true}}
+          as |stack|
+        >
+          <stack.Content as |content|>
+            <content.Stack as |nested|>
+              <nested.Trigger class="registered-nested-trigger">
+                Open nested
+              </nested.Trigger>
+            </content.Stack>
+          </stack.Content>
+        </DStack>
+      </template>
+    );
+
+    await waitFor(".registered-nested-trigger");
+
+    const controlledSheetId = find(".registered-nested-trigger").getAttribute(
+      "aria-controls"
+    );
+    const nestedRegistration = [
+      ...sheetLayerStore.rootsByComponentId.entries(),
+    ].find(
+      ([componentId, root]) =>
+        componentId !== "registered-parent-stack" &&
+        root.sheet.id === controlledSheetId
+    );
+
+    assert.true(
+      Boolean(nestedRegistration),
+      "the nested Trigger resolves a registered Root"
+    );
+
+    const [componentId, nestedRoot] = nestedRegistration;
+    const previousController = nestedRoot.sheet;
+
+    assert.strictEqual(
+      sheetLayerStore.getRootByComponentId(componentId),
+      nestedRoot,
+      "the nested component ID resolves through sheet-layer-store"
+    );
+
+    nestedRoot.handleSheetClosed();
+    await settled();
+
+    assert.notStrictEqual(
+      nestedRoot.sheet,
+      previousController,
+      "the nested Root replaces its closed Controller"
+    );
+    assert.strictEqual(
+      sheetLayerStore.getRootByComponentId(componentId),
+      nestedRoot,
+      "the component ID keeps resolving after Controller replacement"
+    );
+    assert
+      .dom(".registered-nested-trigger")
+      .hasAttribute(
+        "aria-controls",
+        nestedRoot.sheet.id,
+        "the Trigger resolves the replacement Controller"
+      );
   });
 
   test("closing nested stack returns to parent", async function (assert) {
@@ -616,6 +697,160 @@ module("Integration | Component | FloatKit | d-stack", function (hooks) {
       registeredStack.stackingAnimations[0],
       initialRegistration,
       "the staging-only render does not replace the animation registration"
+    );
+  });
+
+  test("stack animation temporarily disables descendant scroll ports", async function (assert) {
+    const stackId = "scroll-suppression-stack";
+    const registry = this.owner.lookup("service:sheet-stack-registry");
+
+    await render(
+      <template>
+        <DSheet.Stack.Root @componentId={{stackId}} as |stack|>
+          <stack.Outlet style="--d-scroll-ua-scrollbar-thickness: 13px;">
+            <div
+              class="vertical-scroll-port"
+              data-d-scroll="scroll-container axis-y overflow-y"
+              style="overflow-y: auto;"
+            ></div>
+            <div
+              class="horizontal-scroll-port"
+              data-d-scroll="scroll-container axis-x overflow-x"
+              style="overflow-x: auto;"
+            ></div>
+          </stack.Outlet>
+        </DSheet.Stack.Root>
+      </template>
+    );
+
+    assert.strictEqual(
+      getComputedStyle(find(".vertical-scroll-port")).overflowY,
+      "auto",
+      "the scroll port is enabled while the stack is idle"
+    );
+
+    registry.updateSheetStagingInStack(stackId, "sheet-id", "opening");
+    await settled();
+
+    const verticalStyle = getComputedStyle(find(".vertical-scroll-port"));
+    const horizontalStyle = getComputedStyle(find(".horizontal-scroll-port"));
+
+    assert
+      .dom("[data-d-sheet-stack~='outlet']")
+      .hasAttribute(
+        "data-d-sheet-stack",
+        /animating/,
+        "the stack outlet exposes the global animation state"
+      );
+    assert.strictEqual(
+      verticalStyle.overflowY,
+      "hidden",
+      "the descendant scroll port is disabled during stack animation"
+    );
+    assert.strictEqual(
+      verticalStyle.overflowAnchor,
+      "none",
+      "the descendant scroll port does not anchor during stack animation"
+    );
+    assert.strictEqual(
+      verticalStyle.paddingRight,
+      "13px",
+      "the hidden vertical scrollbar keeps its layout space"
+    );
+    assert.strictEqual(
+      horizontalStyle.paddingBottom,
+      "13px",
+      "the hidden horizontal scrollbar keeps its layout space"
+    );
+
+    registry.updateSheetStagingInStack(stackId, "sheet-id", "none");
+    await settled();
+
+    assert.strictEqual(
+      getComputedStyle(find(".vertical-scroll-port")).overflowY,
+      "auto",
+      "the descendant scroll port is restored when animation settles"
+    );
+  });
+
+  test("caches content stacking animation until tracks change", async function (assert) {
+    const state = new (class {
+      @tracked renderVersion = 0;
+    })();
+    const originalMatchMedia = window.matchMedia.bind(window);
+    let changeListener;
+    const stackMediaQuery = {
+      matches: false,
+      addEventListener(type, listener) {
+        if (type === "change") {
+          changeListener = listener;
+        }
+      },
+      removeEventListener() {},
+    };
+
+    sinon.stub(window, "matchMedia").callsFake((query) => {
+      return query === "(min-width: 700px)"
+        ? stackMediaQuery
+        : originalMatchMedia(query);
+    });
+
+    await render(
+      <template>
+        <DStack
+          @componentId="cached-animation-stack"
+          @defaultPresented={{true}}
+          data-render-version={{state.renderVersion}}
+          as |stack|
+        >
+          <stack.Content>Content</stack.Content>
+        </DStack>
+      </template>
+    );
+
+    await waitFor(".d-stack__content");
+
+    const sheetLayerStore = this.owner.lookup("service:sheet-layer-store");
+    const root = sheetLayerStore.getRootByComponentId("cached-animation-stack");
+    const { sheet } = root;
+    const initialRegistration = sheet.stackingAnimations[0];
+
+    assert.true(
+      "translateY" in initialRegistration.config,
+      "the initial mobile animation follows the vertical track"
+    );
+
+    state.renderVersion++;
+    await rerender();
+
+    assert.strictEqual(
+      sheet.stackingAnimations[0],
+      initialRegistration,
+      "an unrelated render keeps the animation registration"
+    );
+    assert.strictEqual(
+      sheet.stackingAnimations.length,
+      1,
+      "an unrelated render keeps exactly one animation registration"
+    );
+
+    stackMediaQuery.matches = true;
+    changeListener();
+    await settled();
+
+    assert.strictEqual(
+      sheet.stackingAnimations.length,
+      1,
+      "a track change still leaves one animation registration"
+    );
+    assert.notStrictEqual(
+      sheet.stackingAnimations[0],
+      initialRegistration,
+      "a track change replaces the cached animation registration"
+    );
+    assert.true(
+      "translateX" in sheet.stackingAnimations[0].config,
+      "the replacement animation follows the horizontal track"
     );
   });
 });

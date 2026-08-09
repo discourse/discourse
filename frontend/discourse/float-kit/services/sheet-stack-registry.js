@@ -1,3 +1,4 @@
+import { untrack } from "@glimmer/validator";
 import { guidFor } from "@ember/object/internals";
 import { trackedMap } from "@ember/reactive/collections";
 import Service from "@ember/service";
@@ -11,6 +12,11 @@ export default class SheetStackRegistry extends Service {
 
   registerStack(stack) {
     const id = stack.id || guidFor(stack);
+
+    if (untrack(() => this.stacks.get(id))) {
+      this.updateBelowSheetsInStack(id);
+      return id;
+    }
 
     const stackObject = {
       ...stack,
@@ -60,9 +66,7 @@ export default class SheetStackRegistry extends Service {
     const stack = this.stacks.get(stackId);
 
     for (const animation of stack?.stackingAnimations ?? []) {
-      for (const property of animation.animatedProperties ?? []) {
-        animation.target?.style.removeProperty(property);
-      }
+      animation.restorePersistedStyles?.();
     }
   }
 
@@ -83,6 +87,38 @@ export default class SheetStackRegistry extends Service {
     this.updateBelowSheetsInStack(stackId);
   }
 
+  reparentSheet(stackId, controller) {
+    if (
+      !stackId ||
+      !controller ||
+      controller.stackId === stackId ||
+      !this.stackSheets.has(stackId)
+    ) {
+      return false;
+    }
+
+    const { travelStatus } = controller;
+    const staging = controller.state?.staging?.current;
+    const isActive = travelStatus && travelStatus !== "idleOutside";
+
+    this.unregisterSheetFromStack(controller);
+    this.registerSheetWithStack(stackId, controller);
+
+    if (staging) {
+      this.updateSheetStagingInStack(stackId, controller.id, staging);
+    }
+
+    if (travelStatus) {
+      controller.stackingAdapter?.handleTravelStatusChange(travelStatus);
+    }
+
+    if (isActive) {
+      controller.stackingAdapter?.notifyParentOfOpening(true);
+    }
+
+    return controller.stackId === stackId;
+  }
+
   unregisterSheetFromStack(controller) {
     const stackId = controller.stackId;
     if (!stackId) {
@@ -93,8 +129,14 @@ export default class SheetStackRegistry extends Service {
 
     const sheets = this.stackSheets.get(stackId);
     if (!sheets) {
+      controller.stackId = null;
+      controller.stackingAdapter?.releaseStackingCount();
+      controller.stackingIndex = -1;
+      controller.belowSheetsInStack = [];
       return;
     }
+
+    controller.stackingAdapter?.releaseStackingCount();
 
     const index = sheets.indexOf(controller);
     const parentSheet = index > 0 ? sheets[index - 1] : null;
@@ -267,10 +309,6 @@ export default class SheetStackRegistry extends Service {
     } else if (positionState?.matches("covered.status:indeterminate")) {
       parentSheet.sendToPositionMachine(EVENTS.GOTO_FRONT);
     }
-  }
-
-  getStackingCount(stackId) {
-    return this.stackingCounts.get(stackId) || 0;
   }
 
   incrementStackingCount(stackId) {

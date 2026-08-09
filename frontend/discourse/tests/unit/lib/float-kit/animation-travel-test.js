@@ -16,7 +16,6 @@ function dimensions() {
     exactProgressValueAtDetents: [0, 1],
     progressValueAtDetents: [{ exact: 0 }, { exact: 1 }],
     snapOutAccelerator: { travelAxis: { unitless: 10 } },
-    swipeOutDisabledWithDetent: false,
     view: { travelAxis: { unitless: 100 } },
   };
 }
@@ -37,7 +36,35 @@ function multiDetentDimensions() {
     exactProgressValueAtDetents: [0, 0.5, 1],
     progressValueAtDetents: [{ exact: 0 }, { exact: 0.5 }, { exact: 1 }],
     snapOutAccelerator: { travelAxis: { unitless: 10 } },
-    swipeOutDisabledWithDetent: false,
+    view: { travelAxis: { unitless: 100 } },
+  };
+}
+
+function threeDetentDimensions() {
+  return {
+    content: { travelAxis: { unitless: 90 } },
+    detentMarkers: [
+      {
+        accumulatedOffsets: { travelAxis: { unitless: 30 } },
+        travelAxis: { unitless: 30 },
+      },
+      {
+        accumulatedOffsets: { travelAxis: { unitless: 60 } },
+        travelAxis: { unitless: 30 },
+      },
+      {
+        accumulatedOffsets: { travelAxis: { unitless: 90 } },
+        travelAxis: { unitless: 30 },
+      },
+    ],
+    exactProgressValueAtDetents: [0, 1 / 3, 2 / 3, 1],
+    progressValueAtDetents: [
+      { exact: 0 },
+      { exact: 1 / 3 },
+      { exact: 2 / 3 },
+      { exact: 1 },
+    ],
+    snapOutAccelerator: { travelAxis: { unitless: 10 } },
     view: { travelAxis: { unitless: 100 } },
   };
 }
@@ -100,6 +127,7 @@ function prepareController({ tracks, animationSettings, settingsKey }, calls) {
     });
 
   controller.recalculateDimensionsFromResize();
+  controller.targetDetent = 1;
   calls.length = 0;
 
   return { controller, scrollContainer };
@@ -250,6 +278,177 @@ module("Unit | Lib | float-kit | animation-travel", function (hooks) {
       scrollContainer.scrollTop,
       10000,
       "the stepping animation ignores animation tracks and travels on the bottom track"
+    );
+
+    controller.cleanup();
+  });
+
+  test("resize travel uses the snap-back accelerator", function (assert) {
+    const controller = new Controller();
+    const resizedDimensions = multiDetentDimensions();
+    resizedDimensions.snapOutAccelerator.travelAxis.unitless = 70;
+    const scrollContainer = {
+      scrollLeft: 0,
+      scrollTop: 0,
+      scrollTo(left, top) {
+        this.scrollLeft = left;
+        this.scrollTop = top;
+      },
+    };
+
+    controller.configure({
+      swipeOvershoot: false,
+      snapToEndDetentsAcceleration: "auto",
+      tracks: "top",
+    });
+    controller.contentPlacement = "top";
+    controller.view = document.createElement("div");
+    controller.contentWrapper = document.createElement("div");
+    controller.scrollContainer = scrollContainer;
+    controller.dimensions = resizedDimensions;
+
+    controller.animationTravel.recalculateAndTravel(1);
+
+    assert.strictEqual(
+      scrollContainer.scrollTop,
+      40,
+      "the resting position uses Silk's 10px snap-back padding"
+    );
+
+    controller.cleanup();
+  });
+
+  test("travel uses the controller's current dismissal constraint", function (assert) {
+    const scrollContainer = {
+      scrollLeft: 0,
+      scrollTop: 0,
+      scrollTo(left, top) {
+        this.scrollLeft = left;
+        this.scrollTop = top;
+      },
+    };
+    const controller = {
+      belowSheetsInStack: [],
+      contentPlacement: "bottom",
+      contentWrapper: document.createElement("div"),
+      dimensions: threeDetentDimensions(),
+      isDestroyed: false,
+      isDestroying: false,
+      markProgrammaticScroll() {},
+      scrollContainer,
+      setSegment() {},
+      snapToEndDetentsAcceleration: "auto",
+      swipeOutDisabledWithDetent: true,
+      tracks: "bottom",
+      travelAnimations: [],
+      view: document.createElement("div"),
+    };
+
+    new AnimationTravel(controller).recalculateAndTravel(2);
+
+    assert.strictEqual(
+      scrollContainer.scrollTop,
+      30,
+      "the resting detent excludes the first detent's swipe-out range"
+    );
+  });
+
+  test("unrecognized exiting easing uses the exiting fallback", function (assert) {
+    const animationFrames = stubAnimationFrameQueue();
+    const animationOptions = [];
+    const animationListeners = new Map();
+    const controller = new Controller();
+
+    controller.activeDetent = 1;
+    controller.currentSegment = [1, 1];
+    controller.view = document.createElement("div");
+    controller.contentWrapper = document.createElement("div");
+    controller.scrollContainer = {
+      scrollLeft: 0,
+      scrollTop: 0,
+      scrollTo() {},
+    };
+    controller.dimensions = dimensions();
+    controller.exitingAnimationSettings = {
+      duration: 5,
+      easing: "cubic-bezier(0, 0, 1, 1)",
+    };
+    controller.view.getBoundingClientRect = () => ({ left: 0, top: 0 });
+    controller.contentWrapper.getBoundingClientRect = () => ({
+      left: 0,
+      top: 0,
+    });
+    controller.contentWrapper.animate = (_keyframes, options) => {
+      animationOptions.push(options);
+      return {
+        addEventListener(type, callback) {
+          animationListeners.set(type, callback);
+        },
+        cancel() {
+          animationListeners.get("cancel")?.();
+        },
+        removeEventListener(type, callback) {
+          if (animationListeners.get(type) === callback) {
+            animationListeners.delete(type);
+          }
+        },
+      };
+    };
+
+    controller.animationTravel.animateToDetent(0);
+    animationFrames.flush();
+    animationFrames.flush(1);
+
+    assert.strictEqual(
+      animationOptions[0].duration,
+      322,
+      "the exiting spring defaults replace an unrecognized easing"
+    );
+
+    controller.cleanup();
+  });
+
+  test("stuck correction travels without public callbacks or outlet animations", function (assert) {
+    const calls = [];
+    const controller = new Controller();
+    const scrollContainer = {
+      scrollLeft: 0,
+      scrollTop: 0,
+      scrollTo(left, top) {
+        this.scrollLeft = left;
+        this.scrollTop = top;
+      },
+    };
+
+    controller.activeDetent = 2;
+    controller.currentSegment = [2, 2];
+    controller.tracks = "top";
+    controller.contentPlacement = "top";
+    controller.view = document.createElement("div");
+    controller.contentWrapper = document.createElement("div");
+    controller.scrollContainer = scrollContainer;
+    controller.dimensions = multiDetentDimensions();
+    controller.onTravelStart = () => calls.push("start");
+    controller.onTravel = () => calls.push("travel");
+    controller.onTravelEnd = () => calls.push("end");
+    controller.travelAnimations.push({
+      callback: () => calls.push("outlet"),
+    });
+    controller.belowSheetsInStack.push({
+      aggregatedStackingCallback: () => calls.push("stack"),
+    });
+
+    controller.animationTravel.stepToStuckPosition("back");
+
+    assert.strictEqual(
+      scrollContainer.scrollTop,
+      30,
+      "the position is corrected"
+    );
+    assert.deepEqual(
+      calls,
+      [],
+      "correction is silent for public, outlet, and stacking callbacks"
     );
 
     controller.cleanup();

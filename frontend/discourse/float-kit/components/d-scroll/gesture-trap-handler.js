@@ -22,7 +22,10 @@ export default class GestureTrapHandler {
   }
 
   getTrapValue(edge, axisKey) {
-    const trap = this.view.args.scrollGestureTrap ?? false;
+    const trap =
+      this.view.args.scrollGestureTrap === undefined
+        ? false
+        : this.view.args.scrollGestureTrap;
 
     if (typeof trap === "boolean") {
       return trap;
@@ -46,7 +49,7 @@ export default class GestureTrapHandler {
     const yStart = this.getTrapValue("yStart", "y");
     const yEnd = this.getTrapValue("yEnd", "y");
 
-    const axis = this.view.args.axis ?? "y";
+    const axis = this.view.args.axis === undefined ? "y" : this.view.args.axis;
 
     if (axis === "y") {
       const normalizedX = xStart !== xEnd ? true : xStart;
@@ -58,12 +61,9 @@ export default class GestureTrapHandler {
   }
 
   get swipeTrapIncapable() {
-    return this.view.args.pageScroll ?? false;
-  }
-
-  get currentTrap() {
-    const axis = this.view.args.axis ?? "y";
-    return axis === "y" ? this.yTrap : this.xTrap;
+    return this.view.args.pageScroll === undefined
+      ? false
+      : this.view.args.pageScroll;
   }
 
   handleIntersection(axis, values, entries) {
@@ -116,7 +116,7 @@ export default class GestureTrapHandler {
 
   setup() {
     const viewElement = this.view.viewElement;
-    const axis = this.view.args.axis ?? "y";
+    const axis = this.view.args.axis === undefined ? "y" : this.view.args.axis;
     const values = this.normalizedTrapValues;
 
     this.xTrap = values.xStart;

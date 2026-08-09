@@ -2,7 +2,7 @@ import { cancel } from "@ember/runloop";
 import discourseLater from "discourse/lib/later";
 
 export default class TimeoutManager {
-  timeouts = new Map();
+  tasks = new Map();
 
   schedule(key, callback, delay) {
     this.#schedule(key, callback, delay, discourseLater, cancel);
@@ -12,24 +12,33 @@ export default class TimeoutManager {
     this.#schedule(key, callback, delay, setTimeout, clearTimeout);
   }
 
+  scheduleAnimationFrame(key, callback) {
+    this.clear(key);
+    const frame = requestAnimationFrame(() => {
+      this.tasks.delete(key);
+      callback();
+    });
+    this.tasks.set(key, () => cancelAnimationFrame(frame));
+  }
+
   #schedule(key, callback, delay, scheduleTimeout, cancelTimeout) {
     this.clear(key);
     const timer = scheduleTimeout(() => {
-      this.timeouts.delete(key);
+      this.tasks.delete(key);
       callback();
     }, delay);
-    this.timeouts.set(key, () => cancelTimeout(timer));
+    this.tasks.set(key, () => cancelTimeout(timer));
   }
 
   clear(key) {
-    this.timeouts.get(key)?.();
-    this.timeouts.delete(key);
+    this.tasks.get(key)?.();
+    this.tasks.delete(key);
   }
 
   cleanup() {
-    for (const cancelTimeout of this.timeouts.values()) {
-      cancelTimeout();
+    for (const cancelTask of this.tasks.values()) {
+      cancelTask();
     }
-    this.timeouts.clear();
+    this.tasks.clear();
   }
 }

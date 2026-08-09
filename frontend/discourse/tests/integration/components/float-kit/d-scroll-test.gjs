@@ -4,6 +4,7 @@ import { find, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import DSheet from "discourse/float-kit/components/d-sheet";
+import { capabilities } from "discourse/services/capabilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | FloatKit | d-scroll", function (hooks) {
@@ -155,10 +156,213 @@ module("Integration | Component | FloatKit | d-scroll", function (hooks) {
     );
     assert
       .dom("[data-d-scroll~='view']")
-      .hasAttribute("data-d-scroll", /consumer-view-token/);
+      .hasAttribute("data-d-scroll", /consumer-view-token/)
+      .hasAttribute(
+        "data-d-scroll",
+        /scroll-auto/,
+        "the View exposes the default scroll animation variant"
+      );
     assert
       .dom("[data-d-scroll~='content']")
       .hasAttribute("data-d-scroll", /consumer-content-token/);
+    assert
+      .dom("[data-d-scroll~='scroll-container']")
+      .hasAttribute(
+        "data-d-scroll",
+        /native-scrollbar/,
+        "the scrolling port exposes the default native scrollbar variant"
+      );
+  });
+
+  test("Content mirrors only consumer data tokens to its scrolling port", async function (assert) {
+    this.contentToken = "consumer-content-initial overflow-x";
+    this.showContent = true;
+    this.captureController = (controller) => {
+      this.scrollController = controller;
+    };
+
+    await render(
+      <template>
+        <DSheet.Scroll.Root as |scroll|>
+          <span {{didInsert (fn this.captureController scroll)}}></span>
+          <DSheet.Scroll.View @controller={{scroll}} @safeArea="none">
+            {{#if this.showContent}}
+              <DSheet.Scroll.Content
+                @controller={{scroll}}
+                class="mirrored-scroll-content"
+                data-consumer-attribute="inner-only"
+                data-d-scroll={{this.contentToken}}
+              >
+                Content
+              </DSheet.Scroll.Content>
+            {{/if}}
+          </DSheet.Scroll.View>
+        </DSheet.Scroll.Root>
+      </template>
+    );
+
+    const initialScrollContainer = find("[data-d-scroll~='scroll-container']");
+    const initialContent = find(".mirrored-scroll-content");
+
+    assert.true(
+      initialScrollContainer.dataset.dScroll
+        .split(" ")
+        .includes("consumer-content-initial"),
+      "the initial consumer token is mirrored to the scrolling port"
+    );
+    assert.true(
+      initialContent.dataset.dScroll
+        .split(" ")
+        .includes("consumer-content-initial"),
+      "the consumer token remains on Content"
+    );
+    assert.notStrictEqual(
+      initialScrollContainer,
+      initialContent,
+      "the scrolling port and Content remain distinct elements"
+    );
+    assert.false(
+      initialScrollContainer.classList.contains("mirrored-scroll-content"),
+      "Content's class is not mirrored"
+    );
+    assert.false(
+      initialScrollContainer.hasAttribute("data-consumer-attribute"),
+      "other consumer attributes remain on Content"
+    );
+
+    this.scrollController.overflowX = true;
+    await settled();
+
+    assert.true(
+      initialScrollContainer.dataset.dScroll.split(" ").includes("overflow-x"),
+      "the consumer token can become an outer structural token"
+    );
+
+    this.set("contentToken", "consumer-content-initial");
+    await settled();
+
+    assert.true(
+      initialScrollContainer.dataset.dScroll.split(" ").includes("overflow-x"),
+      "removing the consumer token preserves its structural replacement"
+    );
+
+    this.set("contentToken", "consumer-content-initial overflow-x");
+    this.scrollController.overflowX = false;
+    await settled();
+
+    assert.true(
+      initialScrollContainer.dataset.dScroll.split(" ").includes("overflow-x"),
+      "the mirror claims a consumer token when structural ownership ends"
+    );
+    assert.true(
+      initialScrollContainer.dataset.dScroll
+        .split(" ")
+        .includes("no-overflow-x"),
+      "the structural no-overflow state remains alongside the consumer token"
+    );
+
+    this.set("contentToken", "consumer-content-updated");
+    await settled();
+
+    const updatedOuterTokens =
+      initialScrollContainer.dataset.dScroll.split(" ");
+    assert.false(
+      updatedOuterTokens.includes("consumer-content-initial"),
+      "the previous mirrored token is removed"
+    );
+    assert.true(
+      updatedOuterTokens.includes("consumer-content-updated"),
+      "the updated consumer token is mirrored"
+    );
+    assert.true(
+      updatedOuterTokens.includes("scroll-container"),
+      "the outer structural token is preserved"
+    );
+    assert.false(
+      updatedOuterTokens.includes("overflow-x"),
+      "the claimed token is removed when neither consumer nor structure needs it"
+    );
+    assert.true(
+      updatedOuterTokens.includes("no-overflow-x"),
+      "removing the collision preserves the structural no-overflow token"
+    );
+
+    this.set("showContent", false);
+    await settled();
+
+    const detachedOuterTokens =
+      initialScrollContainer.dataset.dScroll.split(" ");
+    assert.false(
+      detachedOuterTokens.includes("consumer-content-updated"),
+      "teardown removes the token owned by the mirror"
+    );
+
+    this.set("showContent", true);
+    await settled();
+
+    const replacementScrollContainer = find(
+      "[data-d-scroll~='scroll-container']"
+    );
+    assert.notStrictEqual(
+      replacementScrollContainer,
+      initialScrollContainer,
+      "the replacement Content owns a new scrolling port"
+    );
+    assert.true(
+      replacementScrollContainer.dataset.dScroll
+        .split(" ")
+        .includes("consumer-content-updated"),
+      "the current consumer token is mirrored to the replacement port"
+    );
+  });
+
+  test("Content owns the scrolling port lifecycle", async function (assert) {
+    this.showContent = true;
+    this.captureController = (controller) => {
+      this.scrollController = controller;
+    };
+
+    await render(
+      <template>
+        <DSheet.Scroll.Root as |scroll|>
+          <span {{didInsert (fn this.captureController scroll)}}></span>
+          <DSheet.Scroll.View @controller={{scroll}} @safeArea="none">
+            {{#if this.showContent}}
+              <DSheet.Scroll.Content @controller={{scroll}}>
+                Content
+              </DSheet.Scroll.Content>
+            {{/if}}
+          </DSheet.Scroll.View>
+        </DSheet.Scroll.Root>
+      </template>
+    );
+
+    const firstScrollPort = this.scrollController.viewElement;
+    assert.dom("[data-d-scroll~='scroll-container']").exists({ count: 1 });
+
+    this.set("showContent", false);
+    await settled();
+
+    assert
+      .dom("[data-d-scroll~='view']")
+      .exists("the View boundary remains rendered");
+    assert
+      .dom("[data-d-scroll~='scroll-container']")
+      .doesNotExist("removing Content removes its scrolling port");
+    assert.strictEqual(
+      this.scrollController.viewElement,
+      null,
+      "the removed scrolling port is unregistered"
+    );
+
+    this.set("showContent", true);
+    await settled();
+
+    assert.notStrictEqual(
+      this.scrollController.viewElement,
+      firstScrollPort,
+      "replacing Content registers its new scrolling port"
+    );
   });
 
   test("View measures the user-agent scrollbar thickness", async function (assert) {
@@ -190,15 +394,21 @@ module("Integration | Component | FloatKit | d-scroll", function (hooks) {
   test("scrollbar shims require a trapped axis without overflow", async function (assert) {
     await render(
       <template>
-        <div class="x-trap" data-d-scroll="scroll-container trap-x"></div>
-        <div class="y-trap" data-d-scroll="scroll-container trap-y"></div>
+        <div
+          class="x-trap"
+          data-d-scroll="scroll-container trap-x overflow-x no-overflow-x no-overflow-y"
+        ></div>
+        <div
+          class="y-trap"
+          data-d-scroll="scroll-container trap-y no-overflow-x no-overflow-y"
+        ></div>
         <div
           class="x-trap-with-overflow"
-          data-d-scroll="scroll-container trap-x overflow-y"
+          data-d-scroll="scroll-container trap-x no-overflow-x overflow-y"
         ></div>
         <div
           class="y-trap-with-overflow"
-          data-d-scroll="scroll-container trap-y overflow-x"
+          data-d-scroll="scroll-container trap-y overflow-x no-overflow-y"
         ></div>
       </template>
     );
@@ -236,7 +446,7 @@ module("Integration | Component | FloatKit | d-scroll", function (hooks) {
     assert.strictEqual(
       getComputedStyle(find(".x-trap")).overscrollBehaviorX,
       "none",
-      "a trapped x axis without overflow prevents gesture propagation"
+      "structural no-overflow wins a colliding positive consumer token"
     );
     assert.strictEqual(
       getComputedStyle(find(".y-trap")).overscrollBehaviorY,
@@ -287,15 +497,25 @@ module("Integration | Component | FloatKit | d-scroll", function (hooks) {
           <div data-d-sheet="outlet animating">
             <div
               class="animated-horizontal-scroll-port"
-              data-d-scroll="scroll-container axis-x overflow-x"
+              data-d-scroll="scroll-container axis-x overflow-x native-scrollbar"
             ></div>
             <div
               class="animated-horizontal-scroll-port-without-scrollbar"
               data-d-scroll="scroll-container axis-x overflow-x no-scrollbar"
             ></div>
             <div
+              class="animated-horizontal-scroll-port-with-null-scrollbar"
+              data-d-scroll="scroll-container axis-x overflow-x"
+            ></div>
+            <div
               class="animated-vertical-scroll-port"
               data-d-scroll="scroll-container axis-y overflow-y"
+            ></div>
+          </div>
+          <div data-d-sheet="view staging-opening">
+            <div
+              class="standalone-animated-horizontal-scroll-port"
+              data-d-scroll="scroll-container axis-x overflow-x native-scrollbar"
             ></div>
           </div>
           <div
@@ -326,6 +546,25 @@ module("Integration | Component | FloatKit | d-scroll", function (hooks) {
       ).paddingBottom,
       "0px",
       "animation does not reserve an intentionally hidden horizontal scrollbar"
+    );
+    assert.strictEqual(
+      getComputedStyle(
+        find(".animated-horizontal-scroll-port-with-null-scrollbar")
+      ).paddingBottom,
+      "0px",
+      "a null scrollbar variant does not reserve horizontal space"
+    );
+    assert.strictEqual(
+      getComputedStyle(find(".standalone-animated-horizontal-scroll-port"))
+        .paddingBottom,
+      "13px",
+      "standalone staging reserves horizontal scrollbar space"
+    );
+    assert.strictEqual(
+      getComputedStyle(find(".standalone-animated-horizontal-scroll-port"))
+        .overflowX,
+      "hidden",
+      "standalone staging suppresses the nested scroll port"
     );
     assert.strictEqual(
       getComputedStyle(find(".animated-vertical-scroll-port")).paddingRight,
@@ -643,6 +882,46 @@ module("Integration | Component | FloatKit | d-scroll", function (hooks) {
       .exists("the unseen end spy is not assumed to be intersecting");
   });
 
+  test("horizontal gesture spies occupy Silk's opposing grid edges", async function (assert) {
+    await render(
+      <template>
+        <DSheet.Scroll.Root as |scroll|>
+          <DSheet.Scroll.View
+            @axis="x"
+            @controller={{scroll}}
+            @safeArea="none"
+            @scrollGestureTrap={{hash xStart=true xEnd=false}}
+          >
+            <DSheet.Scroll.Content @controller={{scroll}}>
+              <p>Content</p>
+            </DSheet.Scroll.Content>
+          </DSheet.Scroll.View>
+        </DSheet.Scroll.Root>
+      </template>
+    );
+
+    const startSpyStyle = getComputedStyle(
+      find("[data-d-scroll~='spy-start']")
+    );
+    const endSpyStyle = getComputedStyle(find("[data-d-scroll~='spy-end']"));
+
+    assert.strictEqual(
+      startSpyStyle.gridColumnStart,
+      "-1",
+      "the start spy occupies the final explicit grid line"
+    );
+    assert.strictEqual(
+      endSpyStyle.gridColumnStart,
+      "auto",
+      "the end spy auto-places at the opposing edge"
+    );
+    assert.strictEqual(
+      endSpyStyle.marginLeft,
+      "-2px",
+      "the end spy overlaps the edge by two pixels"
+    );
+  });
+
   test("keeps controller configuration in sync with view arguments", async function (assert) {
     this.axis = "y";
     this.pageScroll = false;
@@ -718,6 +997,130 @@ module("Integration | Component | FloatKit | d-scroll", function (hooks) {
       this.scrollController.scrollAnimationSettings,
       { skip: false },
       "the animation settings update"
+    );
+  });
+
+  test("preserves explicit null View arguments", async function (assert) {
+    this.axis = null;
+    this.pageScroll = null;
+    this.safeArea = null;
+    this.scrollAnimationSettings = null;
+    this.nullValue = null;
+    this.captureController = (controller) => {
+      this.scrollController = controller;
+    };
+
+    await render(
+      <template>
+        <DSheet.Scroll.Root as |scroll|>
+          <span {{didInsert (fn this.captureController scroll)}}></span>
+          <DSheet.Scroll.View
+            @axis={{this.axis}}
+            @controller={{scroll}}
+            @nativeFocusScrollPrevention={{this.nullValue}}
+            @nativeScrollbar={{this.nullValue}}
+            @pageScroll={{this.pageScroll}}
+            @safeArea={{this.safeArea}}
+            @scrollAnchoring={{this.nullValue}}
+            @scrollAnimationSettings={{this.scrollAnimationSettings}}
+            @scrollGesture={{this.nullValue}}
+            @scrollGestureOvershoot={{this.nullValue}}
+            @scrollGestureTrap={{this.nullValue}}
+            @scrollPadding={{this.nullValue}}
+            @scrollSnapType={{this.nullValue}}
+            @scrollTimelineName={{this.nullValue}}
+          >
+            <DSheet.Scroll.Content @controller={{scroll}}>
+              <p>Content</p>
+            </DSheet.Scroll.Content>
+          </DSheet.Scroll.View>
+        </DSheet.Scroll.Root>
+      </template>
+    );
+
+    assert.strictEqual(this.scrollController.axis, null);
+    assert.strictEqual(this.scrollController.pageScroll, null);
+    assert.strictEqual(this.scrollController.safeArea, null);
+    assert.strictEqual(this.scrollController.scrollAnimationSettings, null);
+
+    const scrollContainer = find("[data-d-scroll~='scroll-container']");
+    assert
+      .dom(scrollContainer)
+      .doesNotHaveAttribute(
+        "data-d-scroll-focus-prevention",
+        "null does not enable native focus prevention"
+      )
+      .hasAttribute("role", "region")
+      .hasAttribute("data-d-scroll", /no-scroll-gesture/);
+    assert.false(
+      /axis-(?:x|y)|no-anchoring|no-overshoot|(?:native|no)-scrollbar|scroll-(?:auto|skip|smooth)/.test(
+        scrollContainer.dataset.dScroll
+      ),
+      "null arguments do not emit default or boolean style variants"
+    );
+    assert.strictEqual(scrollContainer.style.scrollPadding, "");
+    assert.strictEqual(scrollContainer.style.scrollTimeline, "");
+    assert.dom("[data-d-scroll~='start-spacer']").doesNotExist();
+    assert.dom("[data-d-scroll~='end-spacer']").doesNotExist();
+
+    const scrollCalls = [];
+    scrollContainer.scrollTo = (options) => scrollCalls.push(options);
+    this.scrollController.scrollTo({
+      distance: 10,
+      animationSettings: { skip: true },
+    });
+
+    assert.deepEqual(
+      scrollCalls,
+      [{ left: 10, behavior: "instant" }],
+      "a null axis follows Silk's non-y imperative branch"
+    );
+  });
+
+  test("treats a null safe area as the layout viewport", async function (assert) {
+    this.nullValue = null;
+    this.captureController = (controller) => {
+      this.scrollController = controller;
+    };
+
+    await render(
+      <template>
+        <DSheet.Scroll.Root as |scroll|>
+          <span {{didInsert (fn this.captureController scroll)}}></span>
+          <DSheet.Scroll.View
+            @controller={{scroll}}
+            @safeArea={{this.nullValue}}
+          >
+            <DSheet.Scroll.Content @controller={{scroll}}>
+              <p>Content</p>
+            </DSheet.Scroll.Content>
+          </DSheet.Scroll.View>
+        </DSheet.Scroll.Root>
+      </template>
+    );
+
+    const handler = this.scrollController.viewOwner.safeAreaHandler;
+    sinon.stub(handler, "getEffectiveViewBounds").returns({
+      top: 0,
+      bottom: 1000,
+    });
+    sinon.stub(handler, "getVisualViewportBounds").returns({
+      top: 0,
+      bottom: 400,
+    });
+    sinon.stub(window, "innerHeight").value(800);
+    const startSpacer = find("[data-d-scroll~='start-spacer']");
+    const endSpacer = find("[data-d-scroll~='end-spacer']");
+    handler.previousStartHeight = 0;
+    handler.previousEndHeight = 0;
+
+    handler.update({ scrollIntoPlace: false, scrollBehavior: "instant" });
+
+    assert.strictEqual(startSpacer.style.height, "0px");
+    assert.strictEqual(
+      endSpacer.style.height,
+      "200px",
+      "null uses the layout viewport rather than the smaller visual viewport"
     );
   });
 
@@ -940,6 +1343,79 @@ module("Integration | Component | FloatKit | d-scroll", function (hooks) {
     );
   });
 
+  test("resets scroll state when a conditional View is replaced", async function (assert) {
+    this.showScroll = true;
+    this.handleScrollStart = sinon.spy();
+
+    await render(
+      <template>
+        <DSheet.Scroll.Root as |scroll|>
+          {{#if this.showScroll}}
+            <DSheet.Scroll.View
+              @controller={{scroll}}
+              @onScrollStart={{this.handleScrollStart}}
+              @safeArea="none"
+            >
+              <DSheet.Scroll.Content @controller={{scroll}}>
+                <p>Content</p>
+              </DSheet.Scroll.Content>
+            </DSheet.Scroll.View>
+          {{/if}}
+        </DSheet.Scroll.Root>
+      </template>
+    );
+
+    const clock = sinon.useFakeTimers({
+      toFake: ["setTimeout", "clearTimeout"],
+    });
+    const originalScrollContainer = find("[data-d-scroll~='scroll-container']");
+
+    originalScrollContainer.dispatchEvent(new Event("scroll"));
+    await settled();
+
+    assert
+      .dom("[data-d-scroll~='view'][data-d-scroll~='scroll-ongoing']")
+      .exists("the initial View exposes the active scroll state");
+    assert.strictEqual(
+      this.handleScrollStart.callCount,
+      1,
+      "the initial scroll starts once"
+    );
+
+    this.set("showScroll", false);
+    await settled();
+    this.set("showScroll", true);
+    await settled();
+
+    const replacementScrollContainer = find(
+      "[data-d-scroll~='scroll-container']"
+    );
+    assert.notStrictEqual(
+      replacementScrollContainer,
+      originalScrollContainer,
+      "the conditional View is replaced"
+    );
+    assert
+      .dom("[data-d-scroll~='view'][data-d-scroll~='scroll-ongoing']")
+      .doesNotExist("the replacement View has no stale scroll state");
+
+    replacementScrollContainer.dispatchEvent(new Event("scroll"));
+    await settled();
+
+    assert.strictEqual(
+      this.handleScrollStart.callCount,
+      2,
+      "scrolling the replacement View starts a new scroll"
+    );
+    assert
+      .dom("[data-d-scroll~='view'][data-d-scroll~='scroll-ongoing']")
+      .exists("the replacement View exposes its new active scroll state");
+
+    this.set("showScroll", false);
+    await settled();
+    clock.restore();
+  });
+
   test("scroll-start changeDefault updates the event behavior", async function (assert) {
     this.handleScrollStart = (event) => {
       this.scrollStartEvent = event;
@@ -976,6 +1452,112 @@ module("Integration | Component | FloatKit | d-scroll", function (hooks) {
       scrollEvent,
       "the behavior event exposes the native scroll event"
     );
+  });
+
+  test("scroll end repaints the active text input on iOS", async function (assert) {
+    sinon.stub(capabilities, "isIOS").get(() => true);
+
+    await render(
+      <template>
+        <DSheet.Scroll.Root as |scroll|>
+          <DSheet.Scroll.View @controller={{scroll}} @safeArea="none">
+            <DSheet.Scroll.Content @controller={{scroll}}>
+              <input data-test-input style="opacity: 0.75 !important" />
+            </DSheet.Scroll.Content>
+          </DSheet.Scroll.View>
+        </DSheet.Scroll.Root>
+      </template>
+    );
+
+    const clock = sinon.useFakeTimers({
+      toFake: ["setTimeout", "clearTimeout"],
+    });
+    const inputElement = find("[data-test-input]");
+    inputElement.focus();
+
+    find("[data-d-scroll~='scroll-container']").dispatchEvent(
+      new Event("scrollend")
+    );
+
+    assert.strictEqual(
+      inputElement.style.getPropertyValue("opacity"),
+      "0.9999",
+      "the active input is repainted"
+    );
+    assert.strictEqual(
+      inputElement.style.getPropertyPriority("opacity"),
+      "important",
+      "the repaint opacity wins the cascade"
+    );
+
+    clock.tick(55);
+
+    assert.strictEqual(
+      inputElement.style.getPropertyValue("opacity"),
+      "0.75",
+      "the original inline opacity is restored"
+    );
+    assert.strictEqual(
+      inputElement.style.getPropertyPriority("opacity"),
+      "important",
+      "the original inline priority is restored"
+    );
+
+    find("[data-d-scroll~='scroll-container']").dispatchEvent(
+      new Event("scrollend")
+    );
+    inputElement.style.setProperty("opacity", "0.5");
+    clock.tick(55);
+
+    assert.strictEqual(
+      inputElement.style.getPropertyValue("opacity"),
+      "0.5",
+      "a consumer opacity update is not replaced by stale repaint state"
+    );
+    assert.strictEqual(
+      inputElement.style.getPropertyPriority("opacity"),
+      "",
+      "a consumer priority update is preserved"
+    );
+    clock.restore();
+  });
+
+  test("destroying View restores a pending iOS repaint", async function (assert) {
+    sinon.stub(capabilities, "isIOS").get(() => true);
+    this.showScroll = true;
+
+    await render(
+      <template>
+        <DSheet.Scroll.Root as |scroll|>
+          {{#if this.showScroll}}
+            <DSheet.Scroll.View @controller={{scroll}} @safeArea="none">
+              <DSheet.Scroll.Content @controller={{scroll}}>
+                <input data-test-input />
+              </DSheet.Scroll.Content>
+            </DSheet.Scroll.View>
+          {{/if}}
+        </DSheet.Scroll.Root>
+      </template>
+    );
+
+    const clock = sinon.useFakeTimers({
+      toFake: ["setTimeout", "clearTimeout"],
+    });
+    const inputElement = find("[data-test-input]");
+    inputElement.focus();
+    find("[data-d-scroll~='scroll-container']").dispatchEvent(
+      new Event("scrollend")
+    );
+
+    this.set("showScroll", false);
+    await settled();
+
+    assert.strictEqual(
+      inputElement.style.getPropertyValue("opacity"),
+      "",
+      "destruction restores the detached input immediately"
+    );
+    clock.restore();
   });
 
   test("focus-inside changeDefault updates the event behavior", async function (assert) {
@@ -1084,5 +1666,24 @@ module("Integration | Component | FloatKit | d-scroll", function (hooks) {
       ["press", "focus", "action"],
       "a handled action focuses first and does not continue to onClick"
     );
+    assert.dom(trigger).hasAttribute("type", "button", "it is a plain button");
+    assert
+      .dom(trigger)
+      .doesNotHaveAttribute(
+        "aria-expanded",
+        "a scroll action does not expose sheet presentation state"
+      )
+      .doesNotHaveAttribute(
+        "aria-controls",
+        "a scroll action does not claim to control a sheet"
+      )
+      .doesNotHaveAttribute(
+        "aria-haspopup",
+        "a scroll action does not expose a sheet popup"
+      )
+      .doesNotHaveAttribute(
+        "data-d-sheet",
+        "a scroll action has no sheet structural tokens"
+      );
   });
 });

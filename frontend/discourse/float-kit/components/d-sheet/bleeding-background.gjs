@@ -1,16 +1,19 @@
-import { fn } from "@ember/helper";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { modifier } from "ember-modifier";
 import mergeSheetAttributes from "../../modifiers/merge-sheet-attributes";
 import Outlet from "./outlet";
+
+const syncPresence = modifier((_element, [setPresence]) => {
+  setPresence(true);
+
+  return () => setPresence(false);
+});
 
 const BleedingBackground = <template>
   <Outlet
     @sheet={{@sheet}}
     @travelAnimation={{@travelAnimation}}
     @stackingAnimation={{@stackingAnimation}}
-    {{didInsert (fn @sheet.setBleedingBackgroundPresent true)}}
-    {{willDestroy (fn @sheet.setBleedingBackgroundPresent false)}}
+    {{syncPresence @sheet.setBleedingBackgroundPresent}}
     ...attributes
     {{mergeSheetAttributes
       "bleeding-background"

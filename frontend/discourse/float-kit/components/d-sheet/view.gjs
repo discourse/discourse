@@ -1,7 +1,10 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { untrack } from "@glimmer/validator";
+import { registerDestructor } from "@ember/destroyable";
 import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { cancel, schedule } from "@ember/runloop";
 import { modifier as modifierFn } from "ember-modifier";
 import { capabilities } from "discourse/services/capabilities";
 import { or } from "discourse/truth-helpers";
@@ -15,15 +18,66 @@ import { scrollTrapModifier } from "./scroll-trap-modifier";
 
 export default class View extends Component {
   configureSheet = modifierFn((_element, [sheet, configuration]) => {
-    untrack(() => sheet?.configure(configuration));
+    this.#configure(sheet, configuration);
   });
+  #configuredSheet;
+  #configuredConfiguration;
+  #configurationProviderRegistration = null;
+  #configurationRoot = null;
 
   constructor(owner, args) {
     super(owner, args);
 
-    untrack(() => this.args.sheet?.configure(this.configuration));
+    this.#configure(this.args.sheet, this.configuration);
+    this.#scheduleConfigurationProviderRegistration();
+
+    registerDestructor(this, () => {
+      if (this.#configurationProviderRegistration) {
+        cancel(this.#configurationProviderRegistration);
+        this.#configurationProviderRegistration = null;
+      }
+
+      this.#configurationRoot?.unregisterViewConfigurationProvider(this);
+      this.#configurationRoot = null;
+    });
   }
 
+  #scheduleConfigurationProviderRegistration() {
+    const root = this.args.sheet?.rootComponent;
+    if (!root) {
+      return;
+    }
+
+    this.#configurationProviderRegistration = schedule("afterRender", () => {
+      this.#configurationProviderRegistration = null;
+
+      if (this.isDestroying || this.isDestroyed || root.isDestroying) {
+        return;
+      }
+
+      this.#configurationRoot = root;
+      root.registerViewConfigurationProvider(this);
+    });
+  }
+
+  configureSheetController(sheet) {
+    this.#configure(sheet, this.configuration);
+  }
+
+  #configure(sheet, configuration) {
+    if (
+      sheet === this.#configuredSheet &&
+      configuration === this.#configuredConfiguration
+    ) {
+      return;
+    }
+
+    this.#configuredSheet = sheet;
+    this.#configuredConfiguration = configuration;
+    untrack(() => sheet?.configure(configuration));
+  }
+
+  @cached
   get configuration() {
     return {
       contentPlacement: this.args.contentPlacement,
@@ -45,7 +99,6 @@ export default class View extends Component {
       onTravelRangeChange: this.args.onTravelRangeChange,
       onTravelStart: this.args.onTravelStart,
       onTravelStatusChange: this.args.onTravelStatusChange,
-      pageScroll: this.args.pageScroll,
       snapOutAcceleration: this.args.snapOutAcceleration,
       snapToEndDetentsAcceleration: this.args.snapToEndDetentsAcceleration,
       steppingAnimationSettings: this.args.steppingAnimationSettings,
@@ -68,9 +121,6 @@ export default class View extends Component {
   <template>
     {{#if this.shouldRender}}
       <div
-        id={{@sheet.id}}
-        tabindex="-1"
-        role={{@sheet.role}}
         aria-labelledby={{@sheet.labelledById}}
         aria-describedby={{@sheet.describedById}}
         {{this.configureSheet @sheet this.configuration}}
@@ -78,6 +128,9 @@ export default class View extends Component {
         {{registerSheetElement @sheet.registerView @sheet.unregisterView}}
         {{on "focus" @sheet.handleFocus capture=true}}
         ...attributes
+        id={{@sheet.id}}
+        tabindex="-1"
+        role={{@sheet.role}}
         {{mergeSheetAttributes
           "view"
           @sheet.tracks
@@ -128,6 +181,7 @@ export default class View extends Component {
             "scroll-trap-root"
             "secondary-scroll-trap"
             "no-pointer-events"
+            (if @sheet.scrollContainerShouldBePassThrough "pass-through")
             "scroll-trap-active"
             "scroll-both"
             "scroll-trap-marker"

@@ -8,6 +8,7 @@ import {
   createOutletAnimationKeyframe,
   normalizeOutletAnimationConfig,
 } from "./outlet-animation-config";
+import TravelLifecycle from "./travel-lifecycle";
 
 const NEVER_CANCELLED = () => false;
 
@@ -148,31 +149,30 @@ function animateTarget({
   keyframes,
   animationOptions,
   transformOrigin,
+  persistStyle,
+  lifecycle,
 }) {
   if (transformOrigin) {
-    target.style.transformOrigin = transformOrigin;
+    if (persistStyle) {
+      persistStyle("transform-origin", transformOrigin);
+    } else {
+      target.style.transformOrigin = transformOrigin;
+    }
   }
 
   const animation = target.animate(keyframes, animationOptions);
-
-  return new Promise((resolve) => {
-    const cleanup = () => {
-      animation.removeEventListener("finish", onEnd);
-      animation.removeEventListener("cancel", onEnd);
-    };
-    const onEnd = () => {
-      const finalKeyframe = keyframes[keyframes.length - 1];
-      if (finalKeyframe && animation.playState === "finished") {
-        Object.entries(finalKeyframe).forEach(([property, value]) => {
-          target.style.setProperty(toKebabCase(property), value);
-        });
-      }
-      cleanup();
-      resolve();
-    };
-
-    animation.addEventListener("finish", onEnd);
-    animation.addEventListener("cancel", onEnd);
+  return lifecycle.waitForAnimation(animation, () => {
+    const finalKeyframe = keyframes[keyframes.length - 1];
+    if (finalKeyframe) {
+      Object.entries(finalKeyframe).forEach(([property, value]) => {
+        const cssProperty = toKebabCase(property);
+        if (persistStyle) {
+          persistStyle(cssProperty, value);
+        } else {
+          target.style.setProperty(cssProperty, value);
+        }
+      });
+    }
   });
 }
 export function resolveDestinationDetent(desiredDetent, activeDetent) {
@@ -292,12 +292,13 @@ export function executeSheetTravel(config) {
     onTravel,
     onTravelStart,
     onTravelEnd,
-    onProgrammaticScroll,
     runOnTravelStart,
     dimensions,
     trackToTravelOn,
     isTravelCancelled = NEVER_CANCELLED,
   } = config;
+
+  const lifecycle = new TravelLifecycle(isTravelCancelled);
 
   const stackingAnimations = [];
 
@@ -315,8 +316,8 @@ export function executeSheetTravel(config) {
     onTravelStart();
   }
 
-  if (isTravelCancelled()) {
-    return;
+  if (lifecycle.cancelled) {
+    return () => lifecycle.cancel();
   }
 
   const shouldAnimateContent =
@@ -376,13 +377,12 @@ export function executeSheetTravel(config) {
 
   if (progressValuesArray.length === 0) {
     revealView(view);
-    onProgrammaticScroll?.();
     setScrollPosition(scrollContainer, scrollAxis, positionToScrollTo);
     setSegment([destinationDetent, destinationDetent]);
     if (onTravelEnd) {
       onTravelEnd();
     }
-    return;
+    return () => lifecycle.cancel();
   }
 
   const filteredProgressValues = [];
@@ -428,32 +428,22 @@ export function executeSheetTravel(config) {
         }))
     : [{ transform: "translateY(0px)" }, { transform: "translateY(0px)" }];
   const setScroll = () => {
-    onProgrammaticScroll?.();
-    setScrollPosition(scrollContainer, scrollAxis, finalScrollPosition);
+    scrollContainer.scrollTo({
+      left: scrollAxis === "x" ? finalScrollPosition : 0,
+      top: scrollAxis === "y" ? finalScrollPosition : 0,
+    });
   };
   const animateContent = () => {
     if (!needsTransform || !contentWrapper) {
       return Promise.resolve();
     }
 
-    return new Promise((resolve) => {
-      const contentAnimation = contentWrapper.animate(transformKeyframes, {
-        duration,
-        easing: easingValue,
-        delay,
-      });
-      const cleanup = () => {
-        contentAnimation.removeEventListener("finish", onEnd);
-        contentAnimation.removeEventListener("cancel", onEnd);
-      };
-      const onEnd = () => {
-        cleanup();
-        resolve();
-      };
-
-      contentAnimation.addEventListener("finish", onEnd);
-      contentAnimation.addEventListener("cancel", onEnd);
+    const contentAnimation = contentWrapper.animate(transformKeyframes, {
+      duration,
+      easing: easingValue,
+      delay,
     });
+    return lifecycle.waitForAnimation(contentAnimation);
   };
   const animateTravelCallbacks = () => {
     const animationOptions = { duration, easing: easingValue, delay };
@@ -497,15 +487,53 @@ export function executeSheetTravel(config) {
             keyframes,
             animationOptions,
             transformOrigin: getTransformOrigin(anim.config),
+            persistStyle: anim.persistStyle,
+            lifecycle,
           })
         );
       });
 
+    const reportTravelProgress = (progress, segment) => {
+      for (let i = 0; i < travelAnimations.length; i++) {
+        const travelAnimation = travelAnimations[i];
+        if (travelAnimation.callback && !travelAnimation.config) {
+          travelAnimation.callback(progress);
+          if (lifecycle.cancelled) {
+            return false;
+          }
+        }
+      }
+
+      onTravel?.({
+        progress,
+        range: { start: segment[0], end: segment[1] },
+        progressAtDetents: dimensions.exactProgressValueAtDetents,
+      });
+
+      if (lifecycle.cancelled) {
+        return false;
+      }
+
+      setSegment(segment);
+      return !lifecycle.cancelled;
+    };
+
     return new Promise((resolve) => {
       let startTime = null;
+      let settled = false;
+      let stopWatchingCancellation = () => {};
+      const finish = () => {
+        if (settled) {
+          return;
+        }
+
+        settled = true;
+        stopWatchingCancellation();
+        resolve();
+      };
       const progressReportLoop = (timestamp) => {
-        if (isTravelCancelled()) {
-          resolve();
+        if (lifecycle.cancelled) {
+          finish();
           return;
         }
 
@@ -520,13 +548,11 @@ export function executeSheetTravel(config) {
           const progress =
             currentProgress + progressDelta * progressValuesArray[frameIndex];
 
-          let currentSegment = [0, 0];
+          let currentSegment = null;
           if (progress < 0) {
             currentSegment = [0, 0];
-            setSegment(currentSegment);
           } else if (progress > 1) {
             currentSegment = [1, 1];
-            setSegment(currentSegment);
           } else if (dimensions?.progressValueAtDetents) {
             const detents = dimensions.progressValueAtDetents;
             for (let i = 0; i < detents.length; i++) {
@@ -537,60 +563,53 @@ export function executeSheetTravel(config) {
                 progress < detents[i + 1].before
               ) {
                 currentSegment = [i, i + 1];
-                setSegment(currentSegment);
               } else if (progress > detent.before && progress < detent.after) {
                 currentSegment = [i, i];
-                setSegment(currentSegment);
               }
             }
           }
 
-          for (let i = 0; i < travelAnimations.length; i++) {
-            const anim = travelAnimations[i];
-            if (anim.callback && !anim.config) {
-              anim.callback(progress);
-              if (isTravelCancelled()) {
-                resolve();
-                return;
-              }
-            }
+          if (
+            currentSegment &&
+            !reportTravelProgress(progress, currentSegment)
+          ) {
+            finish();
+            return;
           }
 
-          if (onTravel) {
-            onTravel({
-              progress,
-              range: { start: currentSegment[0], end: currentSegment[1] },
-              progressAtDetents: dimensions.exactProgressValueAtDetents,
-            });
-          }
-
-          if (isTravelCancelled()) {
-            resolve();
+          if (lifecycle.cancelled) {
+            finish();
           } else {
-            requestAnimationFrame(progressReportLoop);
+            lifecycle.requestFrame(progressReportLoop);
           }
         } else {
           const lastDetent = Math.min(
             (dimensions?.progressValueAtDetents?.length ?? 1) - 1,
             destinationDetent
           );
-          setSegment([lastDetent, lastDetent]);
+          const finalSegment = [lastDetent, lastDetent];
 
-          Promise.all(allAnimationPromises).then(resolve);
+          if (!reportTravelProgress(targetProgress, finalSegment)) {
+            finish();
+            return;
+          }
+
+          Promise.all(allAnimationPromises).then(finish);
         }
       };
 
-      requestAnimationFrame(progressReportLoop);
+      stopWatchingCancellation = lifecycle.onCancel(finish);
+      lifecycle.requestFrame(progressReportLoop);
     });
   };
 
-  requestAnimationFrame(() => {
-    if (isTravelCancelled()) {
+  lifecycle.requestFrame(() => {
+    if (lifecycle.cancelled) {
       return;
     }
 
-    requestAnimationFrame(() => {
-      if (isTravelCancelled()) {
+    lifecycle.requestFrame(() => {
+      if (lifecycle.cancelled) {
         return;
       }
 
@@ -598,12 +617,14 @@ export function executeSheetTravel(config) {
       setScroll();
 
       Promise.all([animateContent(), animateTravelCallbacks()]).then(() => {
-        if (!isTravelCancelled() && onTravelEnd) {
+        if (!lifecycle.cancelled && onTravelEnd) {
           onTravelEnd();
         }
       });
     });
   });
+
+  return () => lifecycle.cancel();
 }
 export function travelToDetent(config) {
   const {
@@ -667,8 +688,14 @@ export function travelToDetent(config) {
   const behavior =
     config.behavior || (animationConfig?.skip ? "instant" : "smooth");
 
+  if (isTravelCancelled()) {
+    return;
+  }
+
+  onProgrammaticScroll?.();
+
   if (behavior === "smooth") {
-    executeSheetTravel({
+    return executeSheetTravel({
       destinationDetent: resolvedDestination,
       setSegment,
       view,
@@ -683,7 +710,6 @@ export function travelToDetent(config) {
       onTravel,
       onTravelStart,
       onTravelEnd,
-      onProgrammaticScroll,
       runOnTravelStart,
       dimensions,
       trackToTravelOn: trackToTravelOnResolved,
@@ -699,7 +725,6 @@ export function travelToDetent(config) {
     }
 
     revealView(view);
-    onProgrammaticScroll?.();
     setScrollPosition(scrollContainer, scrollAxis, positionToScrollTo);
 
     setSegment([resolvedDestination, resolvedDestination]);

@@ -3,19 +3,21 @@ import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { modifier } from "ember-modifier";
 import DSheet from "discourse/float-kit/components/d-sheet";
 import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
-const DETENTS = ["66vh"];
+const DETENTS = Object.freeze(["66vh"]);
+const SCROLL_GESTURE_TRAP = Object.freeze({ yEnd: true });
+const SCROLL_START_BEHAVIOR = Object.freeze({ dismissKeyboard: true });
 const BottomSheetScrollArea = <template>
   <DSheet.Scroll.Root class="bottom-sheet__scroll-root" as |controller|>
     <DSheet.Scroll.View
       class="bottom-sheet__scroll-view"
       @scrollGesture={{if @reachedLastDetent "auto" false}}
-      @scrollGestureTrap={{hash yEnd=true}}
+      @scrollGestureTrap={{SCROLL_GESTURE_TRAP}}
       @safeArea="layout-viewport"
-      @onScrollStart={{hash dismissKeyboard=true}}
+      @onScrollStart={{SCROLL_START_BEHAVIOR}}
       @controller={{controller}}
       @sheet={{@sheet}}
     >
@@ -30,6 +32,15 @@ const BottomSheetScrollArea = <template>
 </template>;
 class ExpandableView extends Component {
   view;
+  registerView = modifier((element) => {
+    this.view = element;
+
+    return () => {
+      if (this.view === element) {
+        this.view = null;
+      }
+    };
+  });
 
   @action
   handleTravelStatusChange(status) {
@@ -48,34 +59,31 @@ class ExpandableView extends Component {
   @action
   handleTravel(event) {
     if (event.progress < 0.999 && this.view) {
-      if (!this.view.contains(document.activeElement)) {
-        this.view.focus();
-      }
+      this.view.focus();
     }
   }
 
-  @action
-  registerView(element) {
-    this.view = element;
+  get travelHandler() {
+    return this.args.reachedLastDetent ? this.handleTravel : undefined;
   }
 
   <template>
     <DSheet.View
-      class="bottom-sheet__view"
+      class="bottom-sheet__view --expandable"
       @sheet={{@sheet}}
       @detents={{unless @reachedLastDetent DETENTS}}
       @swipeOvershoot={{false}}
       @onTravelStatusChange={{this.handleTravelStatusChange}}
       @onTravelRangeChange={{this.handleTravelRangeChange}}
-      @onTravel={{this.handleTravel}}
-      {{didInsert this.registerView}}
+      @onTravel={{this.travelHandler}}
+      {{this.registerView}}
     >
       {{yield}}
     </DSheet.View>
   </template>
 }
 const BottomSheetInnerContent = <template>
-  <DSheet.Backdrop @sheet={{@sheet}} />
+  <DSheet.Backdrop @sheet={{@sheet}} @themeColorDimming="auto" />
   <DSheet.Content @sheet={{@sheet}} as |ContentTag|>
     <ContentTag
       class={{concatClass

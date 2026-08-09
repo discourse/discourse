@@ -5,8 +5,9 @@ import StackingAdapter from "discourse/float-kit/components/d-sheet/stacking-ada
 function createSheet(id, registry) {
   const position = {
     isOut: true,
-    matches() {
-      return false;
+    matchedState: null,
+    matches(state) {
+      return state === this.matchedState;
     },
   };
   const controller = {
@@ -14,9 +15,13 @@ function createSheet(id, registry) {
     coveredCount: 0,
     id,
     sheetStackRegistry: registry,
-    state: { position },
+    state: { position, staging: { current: "none" } },
+    travelStatus: "idleOutside",
     travelProgress: 0,
-    sendToPositionMachine() {},
+    positionMessages: [],
+    sendToPositionMachine(message) {
+      this.positionMessages.push(message);
+    },
   };
 
   controller.stackingAdapter = new StackingAdapter(controller);
@@ -42,16 +47,198 @@ function uncover(controller) {
 module("Unit | Service | sheet-stack-registry", function (hooks) {
   setupTest(hooks);
 
+  test("preserves an existing stack when it is registered again", function (assert) {
+    const registry = this.owner.lookup("service:sheet-stack-registry");
+    const stackId = registry.registerStack({ id: "stack" });
+    const registeredStack = registry.stacks.get(stackId);
+    const sheet = createSheet("sheet", registry);
+    let animationCalls = 0;
+
+    registry.registerSheetWithStack(stackId, sheet);
+    registry.registerStackingAnimation(stackId, {
+      callback() {
+        animationCalls++;
+      },
+    });
+    registry.updateSheetStagingInStack(stackId, sheet.id, "opening");
+
+    assert.strictEqual(registry.registerStack({ id: stackId }), stackId);
+    assert.strictEqual(
+      registry.stacks.get(stackId),
+      registeredStack,
+      "the existing stack object is retained"
+    );
+    assert.strictEqual(
+      registry.getTopmostSheetInStack(stackId),
+      sheet,
+      "the registered sheet is retained"
+    );
+    assert.strictEqual(
+      registry.getMergedStagingForStack(stackId),
+      "not-none",
+      "the sheet staging is retained"
+    );
+
+    registeredStack.aggregatedStackingCallback(1, () => {});
+
+    assert.strictEqual(
+      animationCalls,
+      1,
+      "the registered animation remains active"
+    );
+  });
+
+  test("reparents an active sheet without replacing its controller", function (assert) {
+    const registry = this.owner.lookup("service:sheet-stack-registry");
+    const sourceStackId = registry.registerStack({ id: "source-stack" });
+    const targetStackId = registry.registerStack({ id: "target-stack" });
+    const sourceParent = createSheet("source-parent", registry);
+    const targetParent = createSheet("target-parent", registry);
+    const movingSheet = createSheet("moving-sheet", registry);
+
+    const registerActiveSheet = (stackId, sheet) => {
+      registry.registerSheetWithStack(stackId, sheet);
+      moveInside(sheet);
+      sheet.travelStatus = "idleInside";
+      sheet.stackingAdapter.handleTravelStatusChange(sheet.travelStatus);
+      registry.updateSheetStagingInStack(
+        stackId,
+        sheet.id,
+        sheet.state.staging.current
+      );
+    };
+
+    registerActiveSheet(sourceStackId, sourceParent);
+    registerActiveSheet(sourceStackId, movingSheet);
+    registerActiveSheet(targetStackId, targetParent);
+
+    const sheetId = movingSheet.id;
+    sourceParent.positionMessages.length = 0;
+    targetParent.positionMessages.length = 0;
+    sourceParent.state.position.matchedState = "covered.status:idle";
+
+    assert.true(registry.reparentSheet(targetStackId, movingSheet));
+    assert.strictEqual(movingSheet.id, sheetId, "the sheet identity is stable");
+    assert.strictEqual(
+      movingSheet.stackId,
+      targetStackId,
+      "the controller points at the target stack"
+    );
+    assert.deepEqual(
+      registry.stackSheets.get(sourceStackId).map(({ id }) => id),
+      [sourceParent.id],
+      "the source stack releases only the moving sheet"
+    );
+    assert.deepEqual(
+      registry.stackSheets.get(targetStackId).map(({ id }) => id),
+      [targetParent.id, movingSheet.id],
+      "the target stack receives the same controller in order"
+    );
+    assert.strictEqual(
+      registry.stackingCounts.get(sourceStackId),
+      1,
+      "the active count leaves the source stack"
+    );
+    assert.strictEqual(
+      registry.stackingCounts.get(targetStackId),
+      2,
+      "the active count moves to the target stack"
+    );
+    assert.false(
+      registry.stackStagingData.get(sourceStackId).has(sheetId),
+      "the source stack releases the staging entry"
+    );
+    assert.strictEqual(
+      registry.stackStagingData.get(targetStackId).get(sheetId),
+      "none",
+      "the target stack receives the current staging entry"
+    );
+    assert.strictEqual(
+      sourceParent.positionMessages.length,
+      1,
+      "the source parent is restored once"
+    );
+    assert.deepEqual(
+      targetParent.positionMessages,
+      [{ type: "READY_TO_GO_DOWN", skipOpening: true }],
+      "the target parent is covered once without replaying entry travel"
+    );
+
+    assert.false(
+      registry.reparentSheet(targetStackId, movingSheet),
+      "repeating the target is a no-op"
+    );
+    assert.strictEqual(
+      registry.stackSheets
+        .get(targetStackId)
+        .filter((sheet) => sheet === movingSheet).length,
+      1,
+      "the no-op cannot duplicate the controller"
+    );
+  });
+
+  test("reparents after the source stack has already unmounted", function (assert) {
+    const registry = this.owner.lookup("service:sheet-stack-registry");
+    const sourceStackId = registry.registerStack({ id: "removed-stack" });
+    const targetStackId = registry.registerStack({ id: "remaining-stack" });
+    const movingSheet = createSheet("orphaned-sheet", registry);
+
+    registry.registerSheetWithStack(sourceStackId, movingSheet);
+    moveInside(movingSheet);
+    movingSheet.travelStatus = "idleInside";
+    movingSheet.stackingAdapter.handleTravelStatusChange(
+      movingSheet.travelStatus
+    );
+
+    assert.strictEqual(
+      registry.stackingCounts.get(sourceStackId),
+      1,
+      "the active sheet is initially counted in its source stack"
+    );
+
+    registry.unregisterStack(sourceStackId);
+
+    assert.true(registry.reparentSheet(targetStackId, movingSheet));
+    assert.strictEqual(
+      registry.getTopmostSheetInStack(targetStackId),
+      movingSheet,
+      "the target stack receives the same controller"
+    );
+    assert.strictEqual(
+      registry.stackingCounts.get(targetStackId),
+      1,
+      "the active sheet is counted once in the target stack"
+    );
+    assert.false(
+      registry.stackingCounts.has(sourceStackId),
+      "detaching cannot recreate state for the removed stack"
+    );
+    assert.strictEqual(
+      movingSheet.stackId,
+      targetStackId,
+      "the stale source ID is replaced by the target ID"
+    );
+    assert.strictEqual(
+      movingSheet.stackingIndex,
+      0,
+      "the active sheet receives its target-stack index"
+    );
+  });
+
   test("clears persisted stack outlet styles at lifecycle boundaries", function (assert) {
     const registry = this.owner.lookup("service:sheet-stack-registry");
     const stackId = registry.registerStack({ id: "stack" });
     const target = document.createElement("div");
+    let restoreCount = 0;
 
     target.style.transform = "scale(0.9)";
     target.style.transformOrigin = "0 50%";
     registry.registerStackingAnimation(stackId, {
-      animatedProperties: new Set(["transform"]),
       target,
+      restorePersistedStyles() {
+        restoreCount++;
+        target.style.transform = "rotate(5deg)";
+      },
     });
 
     registry.incrementStackingCount(stackId);
@@ -59,8 +246,8 @@ module("Unit | Service | sheet-stack-registry", function (hooks) {
 
     assert.strictEqual(
       target.style.transform,
-      "",
-      "the last closing sheet removes the persisted animation value"
+      "rotate(5deg)",
+      "the last closing sheet delegates restoration to the animation owner"
     );
     assert.notStrictEqual(
       target.style.transformOrigin,
@@ -73,8 +260,39 @@ module("Unit | Service | sheet-stack-registry", function (hooks) {
 
     assert.strictEqual(
       target.style.transform,
-      "",
-      "unregistering the stack provides the cleanup fallback"
+      "rotate(5deg)",
+      "unregistering the stack delegates restoration to the animation owner"
+    );
+    assert.strictEqual(
+      restoreCount,
+      2,
+      "each stack lifecycle boundary requests one ownership-aware restoration"
+    );
+  });
+
+  test("releases stack state when a sheet unmounts while entering", function (assert) {
+    const registry = this.owner.lookup("service:sheet-stack-registry");
+    const stackId = registry.registerStack({ id: "stack" });
+    const sheet = createSheet("sheet", registry);
+    const target = document.createElement("div");
+
+    registry.registerSheetWithStack(stackId, sheet);
+    registry.registerStackingAnimation(stackId, {
+      target,
+      restorePersistedStyles() {
+        target.style.transform = "rotate(5deg)";
+      },
+    });
+
+    sheet.stackingAdapter.handleTravelStatusChange("entering", "idleOutside");
+    target.style.transform = "scale(0.9)";
+
+    registry.unregisterSheetFromStack(sheet);
+
+    assert.strictEqual(
+      target.style.transform,
+      "rotate(5deg)",
+      "unregistering an active sheet restores the owned stack styles"
     );
   });
 

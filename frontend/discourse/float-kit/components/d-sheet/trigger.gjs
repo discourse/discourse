@@ -44,7 +44,6 @@ export default class Trigger extends SheetActionBase {
         this.executeStepAction();
         break;
       case "present":
-      default:
         if (root) {
           root.present();
         } else {

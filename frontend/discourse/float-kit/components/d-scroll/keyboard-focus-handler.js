@@ -31,8 +31,6 @@ export default class KeyboardFocusHandler {
       return;
     }
 
-    this.scrollTriggeredByFocus = true;
-
     this.removeResizeListener();
     this.clearTimeouts();
 
@@ -60,7 +58,10 @@ export default class KeyboardFocusHandler {
       const result = this.view.updateSafeArea({
         scrollIntoPlace: false,
         scrollBehavior: "smooth",
-        safeArea: this.view.args.safeArea ?? "visual-viewport",
+        safeArea:
+          this.view.args.safeArea === undefined
+            ? "visual-viewport"
+            : this.view.args.safeArea,
       });
       if (result?.spacersHeightSetter) {
         result.spacersHeightSetter();
@@ -106,13 +107,15 @@ export default class KeyboardFocusHandler {
 
     this.keyboardAlreadyOpen = false;
 
-    const currentSafeArea = this.view.args.safeArea ?? "visual-viewport";
+    const currentSafeArea =
+      this.view.args.safeArea === undefined
+        ? "visual-viewport"
+        : this.view.args.safeArea;
     this.view.updateSafeArea({
       scrollBehavior: getScrollBehavior(),
       safeArea: currentSafeArea === "none" ? "none" : "layout-viewport",
     });
 
-    this.scrollTriggeredByFocus = false;
     this.clearTimeouts();
     this.removeResizeListener();
     this.focusedElement = null;

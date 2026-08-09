@@ -1,6 +1,5 @@
+import { isCloneElement } from "discourse/float-kit/lib/utils";
 import { getFocusableElements } from "./focus-utils";
-
-const CLONE_SELECTOR = "[data-d-sheet-clone]";
 
 function createGuard() {
   const guard = document.createElement("div");
@@ -41,6 +40,7 @@ export default function setupFocusContainment({
 }) {
   const roots = rootElements.filter((element) => element?.isConnected);
   const guards = new Map();
+  const focusFrames = new Set();
 
   for (const rootElement of roots) {
     const before = createGuard();
@@ -69,7 +69,7 @@ export default function setupFocusContainment({
 
   const handleFocusIn = (event) => {
     const target = event.target;
-    if (!(target instanceof Element) || target.matches(CLONE_SELECTOR)) {
+    if (!(target instanceof Element) || isCloneElement(target)) {
       return;
     }
 
@@ -112,7 +112,18 @@ export default function setupFocusContainment({
     if (target === event.target) {
       event.preventDefault();
       event.stopPropagation();
-      requestAnimationFrame(() => focus(target));
+      let frame = null;
+      let ranSynchronously = false;
+      frame = requestAnimationFrame(() => {
+        ranSynchronously = true;
+        if (frame !== null) {
+          focusFrames.delete(frame);
+        }
+        focus(target);
+      });
+      if (!ranSynchronously) {
+        focusFrames.add(frame);
+      }
     } else {
       focus(target);
     }
@@ -147,6 +158,10 @@ export default function setupFocusContainment({
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("focusout", handleFocusOut);
       document.removeEventListener("focusin", handleFocusIn);
+      for (const frame of focusFrames) {
+        cancelAnimationFrame(frame);
+      }
+      focusFrames.clear();
       for (const guard of guards.keys()) {
         guard.remove();
       }

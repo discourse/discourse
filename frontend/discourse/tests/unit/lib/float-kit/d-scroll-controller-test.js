@@ -1,4 +1,5 @@
 import { track, validateTag, valueForTag } from "@glimmer/validator";
+import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import ScrollController from "discourse/float-kit/components/d-scroll/controller";
@@ -6,6 +7,15 @@ import { prefersReducedMotion } from "discourse/lib/utilities";
 
 module("Unit | FloatKit | d-scroll controller", function (hooks) {
   setupTest(hooks);
+
+  test("starts with Silk's optimistic overflow state", function (assert) {
+    const controller = new ScrollController();
+
+    assert.true(controller.overflowX, "x overflow starts enabled");
+    assert.true(controller.overflowY, "y overflow starts enabled");
+
+    controller.cleanup();
+  });
 
   test("same scroll state does not dirty tracked consumers", function (assert) {
     const controller = new ScrollController();
@@ -38,7 +48,7 @@ module("Unit | FloatKit | d-scroll controller", function (hooks) {
     controller.cleanup();
   });
 
-  test("overflow updates only dirty changed axes", function (assert) {
+  test("overflow updates only dirty changed axes", async function (assert) {
     const controller = new ScrollController();
     const view = {
       clientHeight: 100,
@@ -48,6 +58,7 @@ module("Unit | FloatKit | d-scroll controller", function (hooks) {
     };
 
     controller.registerView(view);
+    await settled();
 
     assert.false(
       controller.overflowX,
@@ -65,6 +76,7 @@ module("Unit | FloatKit | d-scroll controller", function (hooks) {
     );
 
     controller.configure({ axis: "x" });
+    await settled();
 
     assert.true(controller.overflowX, "the new active x axis is overflowing");
     assert.false(controller.overflowY, "the inactive y axis is reset");
@@ -104,5 +116,42 @@ module("Unit | FloatKit | d-scroll controller", function (hooks) {
     );
 
     controller.cleanup();
+  });
+
+  test("invalid imperative scroll distances are ignored", function (assert) {
+    const calls = [];
+    const controller = new ScrollController();
+    controller.registerView({
+      scrollBy: (options) => calls.push(["by", options]),
+      scrollTo: (options) => calls.push(["to", options]),
+    });
+
+    controller.scrollTo({ progress: null });
+    controller.scrollTo({ distance: "invalid" });
+    controller.scrollBy({ progress: null });
+    controller.scrollBy({ distance: "invalid" });
+
+    assert.deepEqual(calls, [], "no invalid call reaches the scroll target");
+    controller.cleanup();
+  });
+
+  test("cleanup cancels a pending overflow measurement", async function (assert) {
+    const controller = new ScrollController();
+    let layoutRead = false;
+    const view = {
+      get scrollWidth() {
+        layoutRead = true;
+        return 0;
+      },
+    };
+
+    controller.registerView(view);
+    controller.cleanup();
+    await settled();
+
+    assert.false(
+      layoutRead,
+      "the destroyed controller performs no deferred layout read"
+    );
   });
 });

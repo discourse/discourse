@@ -45,7 +45,9 @@ export default class SheetActionBase extends Component {
   }
 
   get triggerAction() {
-    return this.args.action ?? this.defaultAction;
+    return this.args.action === undefined
+      ? this.defaultAction
+      : this.args.action;
   }
 
   get actionType() {
@@ -68,7 +70,7 @@ export default class SheetActionBase extends Component {
 
   beforeExecuteAction() {}
   executeStepAction() {
-    if (this.stepDetent !== undefined) {
+    if (this.stepDetent != null) {
       this.sheet?.stepToDetent(this.stepDetent);
     } else if (this.stepDirection === "down") {
       this.sheet?.stepDown();

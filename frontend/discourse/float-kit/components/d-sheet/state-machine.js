@@ -34,6 +34,7 @@ class StateMachine {
   #parentGroup = null;
   #machineName = null;
   #isDestroyed = false;
+  #latestTimedSubscriptionTokens = new Map();
   #scheduledRunLoopTasks = new Set();
   #scheduledAnimationFrames = new Set();
 
@@ -140,6 +141,7 @@ class StateMachine {
     this.#subscriptions = [];
     this.#entryActions = [];
     this.#exitActions = [];
+    this.#latestTimedSubscriptionTokens.clear();
     this.#messageQueue = [];
     this.#isProcessingQueue = false;
   }
@@ -191,6 +193,7 @@ class StateMachine {
   }
 
   #unsubscribe(id) {
+    this.#latestTimedSubscriptionTokens.delete(id);
     this.#subscriptions = this.#subscriptions.filter((s) => s.id !== id);
     this.#entryActions = this.#entryActions.filter((s) => s.id !== id);
     this.#exitActions = this.#exitActions.filter((s) => s.id !== id);
@@ -292,7 +295,7 @@ class StateMachine {
       const { entered, exited } = this.#calculateStateChanges(
         previousState,
         previousNestedStates,
-        { includeUnchangedCurrentState: !nestedResult.silent }
+        { includeUnchangedCurrentState: false }
       );
       return {
         transitioned: true,
@@ -571,7 +574,8 @@ class StateMachine {
       if (transitioned) {
         const { entered, exited } = this.#calculateStateChanges(
           previousState,
-          previousNestedStates
+          previousNestedStates,
+          { includeUnchangedCurrentState: false }
         );
         if (!this.#isSilentMachine(machineName)) {
           this.#notifySubscribers(
@@ -728,7 +732,7 @@ class StateMachine {
 
   #notifySubscribers(message, enteredStates, exitedStates) {
     this.#notifyImmediateSubscribers(message, enteredStates, exitedStates);
-    this.#dispatchTimedSubscriptions(message);
+    this.#dispatchTimedSubscriptions(message, enteredStates, exitedStates);
   }
 
   #notifyImmediateSubscribers(message, enteredStates, exitedStates) {
@@ -762,32 +766,50 @@ class StateMachine {
     }
   }
 
-  #dispatchTimedSubscriptions(message) {
+  #dispatchTimedSubscriptions(message, enteredStates, exitedStates) {
     let beforePaintSubs = null;
     let afterPaintSubs = null;
 
     for (const sub of this.#subscriptions) {
-      if (!this.#evaluateSubscriptionConditions(sub, message)) {
+      if (this.#didExitState(sub, exitedStates)) {
+        this.#latestTimedSubscriptionTokens.delete(sub.id);
+      }
+
+      if (!this.#didEnterState(sub, enteredStates)) {
         continue;
       }
+
+      if (
+        !this.#matchesSubscriptionState(sub) ||
+        !this.#matchesTransition(sub, message)
+      ) {
+        continue;
+      }
+
+      const token = Symbol();
+      const timedSubscription = { sub, token };
+      this.#latestTimedSubscriptionTokens.set(sub.id, token);
 
       if (sub.timing === TIMING.BEFORE_PAINT) {
         if (!beforePaintSubs) {
           beforePaintSubs = [];
         }
-        beforePaintSubs.push(sub);
+        beforePaintSubs.push(timedSubscription);
       } else if (sub.timing === TIMING.AFTER_PAINT) {
         if (!afterPaintSubs) {
           afterPaintSubs = [];
         }
-        afterPaintSubs.push(sub);
+        afterPaintSubs.push(timedSubscription);
       }
     }
 
     if (beforePaintSubs) {
       this.#scheduleAfterRender(() => {
-        for (const sub of beforePaintSubs) {
-          if (this.#evaluateSubscriptionConditions(sub, message)) {
+        for (const { sub, token } of beforePaintSubs) {
+          if (
+            this.#consumeLatestTimedSubscription(sub, token) &&
+            this.#evaluateSubscriptionConditions(sub, message)
+          ) {
             sub.callback(message);
           }
         }
@@ -797,14 +819,26 @@ class StateMachine {
     if (afterPaintSubs) {
       this.#scheduleAfterRender(() => {
         this.#scheduleAnimationFrame(() => {
-          for (const sub of afterPaintSubs) {
-            if (this.#evaluateSubscriptionConditions(sub, message)) {
+          for (const { sub, token } of afterPaintSubs) {
+            if (
+              this.#consumeLatestTimedSubscription(sub, token) &&
+              this.#evaluateSubscriptionConditions(sub, message)
+            ) {
               sub.callback(message);
             }
           }
         });
       });
     }
+  }
+
+  #consumeLatestTimedSubscription(sub, token) {
+    if (this.#latestTimedSubscriptionTokens.get(sub.id) !== token) {
+      return false;
+    }
+
+    this.#latestTimedSubscriptionTokens.delete(sub.id);
+    return true;
   }
 
   #scheduleAfterRender(callback) {
@@ -831,16 +865,19 @@ class StateMachine {
   }
 
   #evaluateSubscriptionConditions(sub, message) {
-    let stateMatches;
-    if (Array.isArray(sub.state)) {
-      stateMatches = sub.state.some((s) => this.matches(s));
-    } else {
-      stateMatches = this.matches(sub.state);
-    }
+    const stateMatches = this.#matchesSubscriptionState(sub);
     const transitionMatches = this.#matchesTransition(sub, message);
     const guardPasses =
       typeof sub.guard === "function" ? sub.guard() : sub.guard;
     return stateMatches && transitionMatches && guardPasses;
+  }
+
+  #matchesSubscriptionState(sub) {
+    if (Array.isArray(sub.state)) {
+      return sub.state.some((state) => this.matches(state));
+    }
+
+    return this.matches(sub.state);
   }
 
   #matchesTransition(sub, message) {

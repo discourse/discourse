@@ -48,7 +48,6 @@ export default class SafeAreaHandler {
   previousEndHeight = 0;
   updateTimeout = null;
   readdListenerTimeout = null;
-  fallbackUpdateTimeout = null;
   scrollEndCleanup = null;
   initialUpdateTask = null;
   viewElement = null;
@@ -58,8 +57,11 @@ export default class SafeAreaHandler {
   }
 
   get isNeeded() {
-    const axis = this.view.args.axis ?? "y";
-    const safeArea = this.view.args.safeArea ?? "visual-viewport";
+    const axis = this.view.args.axis === undefined ? "y" : this.view.args.axis;
+    const safeArea =
+      this.view.args.safeArea === undefined
+        ? "visual-viewport"
+        : this.view.args.safeArea;
     return axis === "y" && safeArea !== "none";
   }
 
@@ -120,10 +122,6 @@ export default class SafeAreaHandler {
     if (this.readdListenerTimeout) {
       clearTimeout(this.readdListenerTimeout);
     }
-    if (this.fallbackUpdateTimeout) {
-      clearTimeout(this.fallbackUpdateTimeout);
-    }
-
     this.updateTimeout = setTimeout(() => {
       this.update();
 
@@ -136,10 +134,6 @@ export default class SafeAreaHandler {
         }
       }, 200);
     }, 1);
-
-    this.fallbackUpdateTimeout = setTimeout(() => {
-      this.update();
-    }, 350);
   }
 
   cleanup() {
@@ -166,13 +160,8 @@ export default class SafeAreaHandler {
     if (this.readdListenerTimeout) {
       clearTimeout(this.readdListenerTimeout);
     }
-    if (this.fallbackUpdateTimeout) {
-      clearTimeout(this.fallbackUpdateTimeout);
-    }
-
     this.updateTimeout = null;
     this.readdListenerTimeout = null;
-    this.fallbackUpdateTimeout = null;
     this.viewElement = null;
   }
 
@@ -290,8 +279,12 @@ export default class SafeAreaHandler {
       return;
     }
 
+    const configuredSafeArea =
+      this.view.args.safeArea === undefined
+        ? "visual-viewport"
+        : this.view.args.safeArea;
     const effectiveSafeArea =
-      safeArea ?? this.view.args.safeArea ?? "visual-viewport";
+      safeArea === undefined ? configuredSafeArea : safeArea;
 
     const viewBounds = this.getEffectiveViewBounds();
     if (!viewBounds) {

@@ -8,7 +8,6 @@ const NON_TEXT_INPUT_TYPES = new Set([
   "button",
   "submit",
   "reset",
-  "hidden",
 ]);
 
 export default function isTextInput(element) {

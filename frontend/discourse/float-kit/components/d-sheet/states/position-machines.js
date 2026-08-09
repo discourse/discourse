@@ -101,7 +101,6 @@ export const POSITION_MACHINES = [
                   ],
                   [EVENTS.READY_TO_GO_UP]: "going-up",
                   [EVENTS.GO_UP]: "indeterminate",
-                  [EVENTS.GOTO_FRONT]: "position:front.status:idle",
                 },
               },
               "come-back": {

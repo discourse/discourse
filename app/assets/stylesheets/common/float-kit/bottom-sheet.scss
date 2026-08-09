@@ -1,5 +1,10 @@
 .bottom-sheet__view {
   height: calc(max(100dvh, 100lvh) + 60px);
+
+  &.--expandable {
+    top: 0;
+    bottom: initial;
+  }
 }
 
 .bottom-sheet__content {

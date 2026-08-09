@@ -4,7 +4,7 @@ export default modifier((element, [handler, isScrollOngoing]) => {
   if (!isScrollOngoing) {
     return;
   }
-  let rafId;
+  let rafId = null;
   function loop() {
     handler();
     rafId = requestAnimationFrame(loop);
@@ -12,7 +12,7 @@ export default modifier((element, [handler, isScrollOngoing]) => {
 
   loop();
   return () => {
-    if (rafId) {
+    if (rafId !== null) {
       cancelAnimationFrame(rafId);
     }
   };

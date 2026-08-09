@@ -22,9 +22,16 @@ export function normalizeOutletAnimationConfig(config) {
   const templates = [];
   const staticStyles = new Map();
   const animatedProperties = new Set();
+  const willChangeProperties = new Set();
 
   if (!config) {
-    return { animatedProperties, staticStyles, templates };
+    return {
+      animatedProperties,
+      staticStyles,
+      styleTemplates: [],
+      templates,
+      willChangeProperties,
+    };
   }
 
   const properties = Object.hasOwn(config, "properties")
@@ -32,7 +39,21 @@ export function normalizeOutletAnimationConfig(config) {
     : config;
 
   for (const [property, value] of Object.entries(properties)) {
-    if (!value || value === "ignore") {
+    if (!value) {
+      continue;
+    }
+
+    if (property === "willChange") {
+      continue;
+    }
+
+    if (TRANSFORM_PROPS.has(property) || property === "transform") {
+      willChangeProperties.add("transform");
+    } else if (property === "opacity") {
+      willChangeProperties.add("opacity");
+    }
+
+    if (value === "ignore") {
       continue;
     }
 
@@ -78,7 +99,18 @@ export function normalizeOutletAnimationConfig(config) {
     animatedProperties.add("transform");
   }
 
-  return { animatedProperties, staticStyles, templates };
+  const styleTemplates = templates.map(([property, animationFunction]) => [
+    toKebabCase(property),
+    animationFunction,
+  ]);
+
+  return {
+    animatedProperties,
+    staticStyles,
+    styleTemplates,
+    templates,
+    willChangeProperties,
+  };
 }
 
 export function createOutletAnimationKeyframe(templates, progress) {

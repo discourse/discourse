@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { array, hash } from "@ember/helper";
 import { guidFor } from "@ember/object/internals";
 import TrackedMediaQuery from "discourse/lib/tracked-media-query";
@@ -60,6 +61,7 @@ const DStackSharedContent = <template>
   </DSheet.Portal>
 </template>;
 class DStackContent extends Component {
+  @cached
   get stackingAnimation() {
     return stackingAnimationFor(this.args.tracks);
   }
@@ -81,12 +83,18 @@ class DStackNested extends Component {
     return guidFor(this);
   }
 
+  @cached
   get stackingAnimation() {
     return stackingAnimationFor(this.args.tracks);
   }
 
   <template>
-    <DSheet.Root @forComponent={{@stackRoot}} @sheetRole="dialog" as |sheet|>
+    <DSheet.Root
+      @componentId={{this.componentId}}
+      @forComponent={{@stackRoot}}
+      @sheetRole="dialog"
+      as |sheet|
+    >
       {{yield
         (hash
           Trigger=(component

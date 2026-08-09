@@ -1,8 +1,6 @@
-import { tracked } from "@glimmer/tracking";
 import StateMachine from "./state-machine";
 
 export default class StateMachineGroup {
-  @tracked version = 0;
   #machines = new Map();
   #guards;
 
@@ -32,21 +30,12 @@ export default class StateMachineGroup {
   }
 
   send(message, context = {}) {
-    let anyTransitioned = false;
     for (const machine of this.#machines.values()) {
-      if (machine.send(message, context)) {
-        anyTransitioned = true;
-      }
-    }
-    if (anyTransitioned) {
-      this.version++;
+      machine.send(message, context);
     }
   }
 
   toStrings() {
-    // Trigger reactivity
-    void this.version;
-
     const result = [];
     for (const [name, machine] of this.#machines) {
       for (const state of machine.toStrings()) {
@@ -68,7 +57,12 @@ export default class StateMachineGroup {
     const machine = this.#machines.get(machineName);
     if (machine) {
       machine.transitionToState(statePath);
-      this.version++;
+    }
+  }
+
+  cleanup() {
+    for (const machine of this.#machines.values()) {
+      machine.cleanup();
     }
   }
 }

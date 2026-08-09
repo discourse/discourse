@@ -6,6 +6,7 @@ export default class ObserverManager {
   #intersectionObserver = null;
   #resizeObserver = null;
 
+  #resizeObserverOnInitialContentResize = null;
   #resizeObserverOnResize = null;
   #resizeObservedView = null;
   #resizeObservedContent = null;
@@ -63,6 +64,7 @@ export default class ObserverManager {
       if (!entry.isIntersecting && this.#controller.state.openness.isOpen) {
         this.#controller.domAttributes?.hideForSwipeOut();
 
+        this.#cancelIntersectionFrame();
         this.#intersectionFrame = requestAnimationFrame(() => {
           this.#intersectionFrame = null;
 
@@ -81,6 +83,8 @@ export default class ObserverManager {
   }
 
   #handleWheelSwipeOut() {
+    this.#cleanupWheelSwipeOut();
+
     let lastDeltaY = 100000;
 
     const blockWheel = (e) => {
@@ -97,7 +101,11 @@ export default class ObserverManager {
     this.#wheelCleanup = () =>
       window.removeEventListener("wheel", blockWheel, { passive: false });
 
-    this.#wheelTimer = discourseLater(() => {
+    const wheelTimer = discourseLater(() => {
+      if (this.#wheelTimer !== wheelTimer) {
+        return;
+      }
+
       this.#wheelTimer = null;
 
       if (this.#controller.isDestroying || this.#controller.isDestroyed) {
@@ -108,6 +116,7 @@ export default class ObserverManager {
       this.#wheelCleanup = null;
       this.#triggerSwipeOut();
     }, 100);
+    this.#wheelTimer = wheelTimer;
   }
 
   #triggerSwipeOut() {
@@ -121,15 +130,8 @@ export default class ObserverManager {
   }
 
   cleanupIntersectionObserver() {
-    if (this.#intersectionFrame !== null) {
-      cancelAnimationFrame(this.#intersectionFrame);
-      this.#intersectionFrame = null;
-    }
-
-    if (this.#wheelTimer) {
-      cancel(this.#wheelTimer);
-      this.#wheelTimer = null;
-    }
+    this.#cancelIntersectionFrame();
+    this.#cleanupWheelSwipeOut();
 
     if (this.#intersectionObserver) {
       this.#intersectionObserver.disconnect();
@@ -140,6 +142,22 @@ export default class ObserverManager {
       window.removeEventListener("wheel", this.#wheelListener);
       this.#wheelListener = null;
     }
+  }
+
+  #cancelIntersectionFrame() {
+    if (this.#intersectionFrame === null) {
+      return;
+    }
+
+    cancelAnimationFrame(this.#intersectionFrame);
+    this.#intersectionFrame = null;
+  }
+
+  #cleanupWheelSwipeOut() {
+    if (this.#wheelTimer) {
+      cancel(this.#wheelTimer);
+      this.#wheelTimer = null;
+    }
 
     if (this.#wheelCleanup) {
       this.#wheelCleanup();
@@ -147,7 +165,8 @@ export default class ObserverManager {
     }
   }
 
-  setupResizeObserver(onResize) {
+  setupResizeObserver({ onInitialContentResize, onResize }) {
+    this.#resizeObserverOnInitialContentResize = onInitialContentResize;
     this.#resizeObserverOnResize = onResize;
 
     if (!this.#resizeObserver) {
@@ -162,12 +181,7 @@ export default class ObserverManager {
           } else if (entry.target === this.#resizeObservedContent) {
             if (this.#contentFirstObservation) {
               this.#contentFirstObservation = false;
-
-              if (this.#controller.dimensions) {
-                this.#resizeObserverOnResize?.();
-              } else {
-                this.#controller.calculateDimensionsIfReady();
-              }
+              this.#resizeObserverOnInitialContentResize?.();
               continue;
             }
             this.#resizeObserverOnResize?.();
@@ -177,6 +191,25 @@ export default class ObserverManager {
     }
 
     this.#observeResizeTargets();
+  }
+
+  resetResizeObservationCycle() {
+    this.#viewFirstObservation = true;
+    this.#contentFirstObservation = true;
+
+    if (!this.#resizeObserver) {
+      return;
+    }
+
+    for (const target of [
+      this.#resizeObservedView,
+      this.#resizeObservedContent,
+    ]) {
+      if (target) {
+        this.#resizeObserver.unobserve(target);
+        this.#resizeObserver.observe(target, { box: "border-box" });
+      }
+    }
   }
 
   #observeResizeTargets() {
@@ -222,6 +255,7 @@ export default class ObserverManager {
       this.#resizeObserver.disconnect();
       this.#resizeObserver = null;
     }
+    this.#resizeObserverOnInitialContentResize = null;
     this.#resizeObserverOnResize = null;
     this.#resizeObservedView = null;
     this.#resizeObservedContent = null;

@@ -2,8 +2,9 @@ import { cancel } from "@ember/runloop";
 import discourseLater from "discourse/lib/later";
 
 export default class DOMAttributes {
-  overflowTimer = null;
   controller;
+  #overflowState = null;
+  #overflowTimer = null;
 
   constructor(controller) {
     this.controller = controller;
@@ -80,20 +81,51 @@ export default class DOMAttributes {
   }
 
   temporarilyHideOverflow(duration) {
-    if (!this.scrollContainer) {
+    const element = this.scrollContainer;
+
+    if (!element) {
       return;
     }
 
-    cancel(this.overflowTimer);
+    this.#restoreOverflow();
 
-    this.scrollContainer.style.setProperty("overflow", "hidden");
+    this.#overflowState = {
+      element,
+      priority: element.style.getPropertyPriority("overflow"),
+      value: element.style.getPropertyValue("overflow"),
+    };
+    element.style.setProperty("overflow", "hidden");
 
-    this.overflowTimer = discourseLater(() => {
-      this.scrollContainer?.style.removeProperty("overflow");
+    this.#overflowTimer = discourseLater(() => {
+      this.#overflowTimer = null;
+      this.#restoreOverflow();
     }, duration);
   }
 
+  #restoreOverflow() {
+    if (this.#overflowTimer) {
+      cancel(this.#overflowTimer);
+      this.#overflowTimer = null;
+    }
+
+    const state = this.#overflowState;
+    this.#overflowState = null;
+
+    if (
+      !state ||
+      state.element.style.getPropertyValue("overflow") !== "hidden"
+    ) {
+      return;
+    }
+
+    if (state.value) {
+      state.element.style.setProperty("overflow", state.value, state.priority);
+    } else {
+      state.element.style.removeProperty("overflow");
+    }
+  }
+
   cleanup() {
-    cancel(this.overflowTimer);
+    this.#restoreOverflow();
   }
 }

@@ -1,13 +1,27 @@
 import { tracked } from "@glimmer/tracking";
-import { click, find, render, waitFor, waitUntil } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  focus,
+  render,
+  settled,
+  waitFor,
+  waitUntil,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import DBottomSheet from "discourse/float-kit/components/d-bottom-sheet";
 import DCard from "discourse/float-kit/components/d-card";
 import DStack from "discourse/float-kit/components/d-stack";
+import { capabilities } from "discourse/services/capabilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+
+const OPEN_VIEW_SELECTOR =
+  "[data-d-sheet~='view'][data-d-sheet~='staging-none']:not([data-d-sheet~='closed'])";
 
 module("Integration | Component | FloatKit | d-bottom-sheet", function (hooks) {
   setupRenderingTest(hooks);
+  hooks.afterEach(() => sinon.restore());
 
   test("opens when trigger is clicked", async function (assert) {
     await render(
@@ -74,7 +88,7 @@ module("Integration | Component | FloatKit | d-bottom-sheet", function (hooks) {
     );
 
     await click(".btn");
-    await waitFor("[data-d-sheet~='view']:not([data-d-sheet~='closed'])");
+    await waitFor(OPEN_VIEW_SELECTOR);
     await click(".dismiss-btn");
     await waitFor("[data-d-sheet~='view'][data-d-sheet~='closed']", {
       timeout: 3000,
@@ -128,7 +142,7 @@ module("Integration | Component | FloatKit | d-bottom-sheet", function (hooks) {
     );
 
     await click(".open-bottom-sheet");
-    await waitFor(".close-bottom-sheet");
+    await waitFor(OPEN_VIEW_SELECTOR);
     await click(".close-bottom-sheet");
     await waitFor("[data-d-sheet~='view'][data-d-sheet~='closed']", {
       timeout: 3000,
@@ -183,6 +197,33 @@ module("Integration | Component | FloatKit | d-bottom-sheet", function (hooks) {
     assert.dom("[data-d-sheet~='backdrop']").exists();
   });
 
+  test("uses automatic theme-color dimming", async function (assert) {
+    const themeColorManager = this.owner.lookup("service:theme-color-manager");
+    const captureUnderlyingColor = sinon
+      .stub(themeColorManager, "getAndStoreUnderlyingThemeColorAsRGBArray")
+      .returns(false);
+
+    sinon.stub(capabilities, "isWebKit").value(true);
+    sinon
+      .stub(capabilities, "isStandaloneWithBlackTranslucent")
+      .get(() => false);
+
+    await render(
+      <template>
+        <DBottomSheet @defaultPresented={{true}} as |bs|>
+          <bs.Content>Content</bs.Content>
+        </DBottomSheet>
+      </template>
+    );
+
+    await waitUntil(() => captureUnderlyingColor.called, { timeout: 3000 });
+
+    assert.true(
+      captureUnderlyingColor.calledOnce,
+      "the preset enables the WebKit theme-color dimming overlay"
+    );
+  });
+
   test("controlled mode with @presented and @onPresentedChange", async function (assert) {
     const state = new (class {
       @tracked presented = false;
@@ -213,7 +254,7 @@ module("Integration | Component | FloatKit | d-bottom-sheet", function (hooks) {
     assert.false(state.presented);
 
     await click(".btn");
-    await waitFor("[data-d-sheet~='view']:not([data-d-sheet~='closed'])");
+    await waitFor(OPEN_VIEW_SELECTOR);
 
     assert.true(state.presented);
     assert.dom("[data-d-sheet~='view']").exists();
@@ -259,6 +300,73 @@ module("Integration | Component | FloatKit | d-bottom-sheet", function (hooks) {
 
     assert.dom("[data-d-sheet~='view']").exists();
     assert.dom(".bottom-sheet__content.--expandable").exists();
+    assert
+      .dom(".bottom-sheet__view.--expandable")
+      .exists("the expandable View exposes its layout variant");
+
+    const view = find(".bottom-sheet__view");
+    const viewStyle = getComputedStyle(view);
+    assert.strictEqual(
+      viewStyle.top,
+      "0px",
+      "the expandable View starts at the top"
+    );
+    assert.true(
+      view.getBoundingClientRect().bottom > window.innerHeight,
+      "the expandable View extends below the layout viewport"
+    );
+  });
+
+  test("travel only dismisses the keyboard after expansion", async function (assert) {
+    await render(
+      <template>
+        <DBottomSheet
+          @componentId="keyboard-sheet"
+          @defaultPresented={{true}}
+          @expandable={{true}}
+          as |bs|
+        >
+          <bs.Content as |content|>
+            <input aria-label="Keyboard target" class="keyboard-target" />
+            {{#if content.isExpanded}}
+              <span data-expanded></span>
+            {{/if}}
+          </bs.Content>
+        </DBottomSheet>
+      </template>
+    );
+
+    await waitFor(
+      ".bottom-sheet__view[data-d-sheet~='staging-none']:not([data-d-sheet~='closed'])"
+    );
+
+    const root = this.owner
+      .lookup("service:sheet-layer-store")
+      .getRootByComponentId("keyboard-sheet");
+    const inputElement = find(".keyboard-target");
+    const viewElement = find(".bottom-sheet__view");
+
+    await focus(".keyboard-target");
+    root.sheet.notifyTravel(0.5, [0, 1]);
+
+    assert.strictEqual(
+      document.activeElement,
+      inputElement,
+      "travel at the first detent leaves the text input focused"
+    );
+
+    root.sheet.setSegment([2, 2]);
+    await waitFor("[data-expanded]");
+    await settled();
+
+    await focus(".keyboard-target");
+    root.sheet.notifyTravel(0.5, [2, 1]);
+
+    assert.strictEqual(
+      document.activeElement,
+      viewElement,
+      "travel from the expanded detent moves focus to the View"
+    );
   });
 
   test("expandable scroll areas fill the Root layout boundary", async function (assert) {
@@ -313,7 +421,7 @@ module("Integration | Component | FloatKit | d-bottom-sheet", function (hooks) {
     );
 
     await click(".btn");
-    await waitFor("[data-d-sheet~='view']:not([data-d-sheet~='closed'])");
+    await waitFor(OPEN_VIEW_SELECTOR);
     await click(".dismiss-btn");
     await waitFor("[data-d-sheet~='view'][data-d-sheet~='closed']", {
       timeout: 3000,

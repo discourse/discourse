@@ -64,11 +64,13 @@ export default class Handle extends SheetActionBase {
         (if this.sheet.isStackAnimating "animating")
       }}
     >
-      {{#if (has-block)}}
-        {{yield}}
-      {{else}}
-        <span class="sr-only">{{this.defaultText}}</span>
-      {{/if}}
+      <span class="sr-only">
+        {{#if (has-block)}}
+          {{yield}}
+        {{else}}
+          {{this.defaultText}}
+        {{/if}}
+      </span>
     </button>
   </template>
 }

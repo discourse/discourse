@@ -1,7 +1,6 @@
 import { fn, hash } from "@ember/helper";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import DButton from "discourse/ui-kit/d-button";
+import registerSheetElement from "./register-sheet-element";
 
 const Header = <template>
   <div class="d-sheet-header">
@@ -37,8 +36,7 @@ const Header = <template>
       <h2
         class="d-sheet-header__title"
         id={{@sheet.titleId}}
-        {{didInsert @sheet.registerTitle}}
-        {{willDestroy @sheet.unregisterTitle}}
+        {{registerSheetElement @sheet.registerTitle @sheet.unregisterTitle}}
       >
         {{yield to="title"}}
       </h2>

@@ -2,10 +2,10 @@ import { processBehavior } from "discourse/float-kit/lib/behavior-handler";
 import { getFocusableElements } from "./focus-utils";
 
 const AUTOFOCUS_SKIP_SELECTOR = "[data-d-sheet~='scroll-container']";
-const SCROLL_VIEW_SELECTOR = "[data-d-scroll~='view']";
+const SCROLL_CONTAINER_SELECTOR = "[data-d-scroll~='scroll-container']";
 function getFirstSafeElement(elements) {
   for (let i = 0; i < elements.length; ++i) {
-    if (!elements[i].matches(SCROLL_VIEW_SELECTOR)) {
+    if (!elements[i].matches(SCROLL_CONTAINER_SELECTOR)) {
       return elements[i];
     }
   }
@@ -68,7 +68,7 @@ export default class FocusManagement {
       handler: this.controller.onPresentAutoFocus,
     });
 
-    if (behavior.focus === false) {
+    if (!behavior.focus) {
       return;
     }
 

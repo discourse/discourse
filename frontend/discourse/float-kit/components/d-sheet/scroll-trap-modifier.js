@@ -11,18 +11,30 @@ function needsIOSRubberBandWorkaround() {
 function scrollToCenter(element) {
   element.scrollTo(SCROLL_CENTER_POSITION, SCROLL_CENTER_POSITION);
 }
-function applyIOSRubberBandWorkaround(element) {
-  element.style.setProperty("overflow", "hidden");
-  setTimeout(() => {
-    element.style.setProperty("overflow", "auto");
-  }, IOS_OVERFLOW_RESTORE_DELAY_MS);
-}
 export const scrollTrapModifier = modifierFn((element, [active]) => {
   if (!active) {
     return;
   }
 
   const requiresIOSWorkaround = needsIOSRubberBandWorkaround();
+  let overflowRestoreTimer = null;
+  let originalOverflow = null;
+
+  const applyIOSRubberBandWorkaround = () => {
+    if (!originalOverflow) {
+      originalOverflow = {
+        priority: element.style.getPropertyPriority("overflow"),
+        value: element.style.getPropertyValue("overflow"),
+      };
+    }
+
+    clearTimeout(overflowRestoreTimer);
+    element.style.setProperty("overflow", "hidden");
+    overflowRestoreTimer = setTimeout(() => {
+      overflowRestoreTimer = null;
+      element.style.setProperty("overflow", "auto");
+    }, IOS_OVERFLOW_RESTORE_DELAY_MS);
+  };
 
   scrollToCenter(element);
   const handleScroll = (e) => {
@@ -30,7 +42,7 @@ export const scrollTrapModifier = modifierFn((element, [active]) => {
     scrollToCenter(target);
 
     if (requiresIOSWorkaround) {
-      applyIOSRubberBandWorkaround(target);
+      applyIOSRubberBandWorkaround();
     }
   };
 
@@ -43,6 +55,20 @@ export const scrollTrapModifier = modifierFn((element, [active]) => {
   resizeObserver.observe(element, { box: "border-box" });
 
   return () => {
+    clearTimeout(overflowRestoreTimer);
+
+    if (originalOverflow) {
+      if (originalOverflow.value) {
+        element.style.setProperty(
+          "overflow",
+          originalOverflow.value,
+          originalOverflow.priority
+        );
+      } else {
+        element.style.removeProperty("overflow");
+      }
+    }
+
     element.removeEventListener("scroll", handleScroll);
     resizeObserver.disconnect();
   };

@@ -5,11 +5,24 @@ export function buildStateEffects(controller) {
     {
       machine: "staging",
       state: "opening",
+      timing: "immediate",
+      handler: "ensurePresented",
+    },
+    {
+      machine: "staging",
+      state: "opening",
+      timing: "before-paint",
+      handler: "handleOpeningTravelStart",
+    },
+    {
+      machine: "staging",
+      state: "opening",
       timing: "after-paint",
       callback: () => {
-        requestAnimationFrame(() => {
-          controller.state.openness.readyToOpen(false);
-        });
+        controller.timeoutManager.scheduleAnimationFrame(
+          "stagingOpeningReady",
+          () => controller.state.openness.readyToOpen(false)
+        );
       },
     },
     {
@@ -21,10 +34,25 @@ export function buildStateEffects(controller) {
     {
       machine: "staging",
       state: "open",
+      timing: "immediate",
+      handler: "ensurePresented",
+    },
+    {
+      machine: "staging",
+      state: "open",
       timing: "after-paint",
       callback: () => {
-        requestAnimationFrame(() => controller.completeSkippedOpening());
+        controller.timeoutManager.scheduleAnimationFrame(
+          "stagingOpenReady",
+          () => controller.completeSkippedOpening()
+        );
       },
+    },
+    {
+      machine: "staging",
+      state: "closing",
+      timing: "immediate",
+      handler: "ensureDismissed",
     },
     {
       machine: "staging",
@@ -52,12 +80,9 @@ export function buildStateEffects(controller) {
       state: "open",
       callback: (message) => {
         if (
-          [
-            EVENTS.NEXT,
-            EVENTS.PREPARED,
-            EVENTS.STEP,
-            EVENTS.READY_TO_OPEN,
-          ].includes(message?.type)
+          [EVENTS.NEXT, EVENTS.PREPARED, EVENTS.READY_TO_OPEN].includes(
+            message?.type
+          )
         ) {
           controller.handleOpen(message);
         }
@@ -82,7 +107,11 @@ export function buildStateEffects(controller) {
       state: "open",
       timing: "immediate",
       type: "exit",
-      callback: () => controller.cleanupIntersectionObserver(),
+      callback: () => {
+        controller.cleanupIntersectionObserver();
+        controller.timeoutManager.clear("scrollEnd");
+        controller.resetWebkitSmallSpacerTransform();
+      },
     },
     {
       machine: "openness",
@@ -115,11 +144,28 @@ export function buildStateEffects(controller) {
       transition: EVENTS.CLOSE,
       callback: () => controller.evaluateCloseMessage(),
     },
+    {
+      machine: "openness",
+      state: "open.evaluateStepMessage:true",
+      transition: EVENTS.STEP,
+      callback: (message) => controller.evaluateStepMessage(message),
+    },
+    {
+      machine: "openness",
+      state: "open.evaluateStepMessage:false",
+      transition: EVENTS.STEP,
+      callback: (message) => controller.evaluateStepMessage(message),
+    },
     { machine: "openness", state: "closing", handler: "handleClosing" },
     {
       machine: "openness",
       state: "closed.status:pending",
       handler: "handleClosedPending",
+    },
+    {
+      machine: "openness",
+      state: "closed.status:pending",
+      callback: () => controller.state.openness.swipeReset(),
     },
     {
       machine: "openness",
@@ -222,13 +268,23 @@ export function buildStateEffects(controller) {
       machine: "openness",
       state: "open.scroll:ongoing",
       callback: () => {
+        controller.markScrollOccurred();
+        controller.state.openness.resetScrollEndedAfterPaintEffects();
         const currentProgress =
+          controller.lastProcessedProgress ??
           controller.dimensions?.progressValueAtDetents?.[
-            controller.activeDetent
-          ]?.exact ?? 0;
+            controller.currentSegment[1]
+          ]?.exact ??
+          0;
         controller.progressSmoother =
           controller.createProgressSmoother(currentProgress);
       },
+    },
+    {
+      machine: "openness",
+      state: "open.scroll:ended",
+      timing: "after-paint",
+      callback: () => controller.handleScrollEndedAfterPaint(),
     },
     {
       machine: "staging",
@@ -255,6 +311,12 @@ export function buildStateEffects(controller) {
       timing: "immediate",
       callback: () =>
         controller.stackingAdapter?.updateStagingInStack("stepping"),
+    },
+    {
+      machine: "staging",
+      state: "stepping",
+      timing: "after-paint",
+      handler: "handleStepMessage",
     },
     {
       machine: "staging",

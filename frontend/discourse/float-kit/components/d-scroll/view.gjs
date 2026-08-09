@@ -10,7 +10,6 @@ import mergeScrollAttributes from "../../modifiers/merge-scroll-attributes";
 import GestureTrapHandler from "./gesture-trap-handler";
 import isTextInput from "./is-text-input";
 import KeyboardFocusHandler from "./keyboard-focus-handler";
-import nativeFocusScrollPrevention from "./native-focus-scroll-prevention";
 import SafeAreaHandler from "./safe-area-handler";
 import ensureScrollbarThickness from "./scrollbar-thickness";
 
@@ -26,6 +25,10 @@ export default class DScrollView extends Component {
 
   scrollEndTimeout = null;
   isScrolling = false;
+  repaintTimeout = null;
+  repaintElement = null;
+  originalRepaintOpacity = "";
+  originalRepaintOpacityPriority = "";
 
   keyboardHandler = new KeyboardFocusHandler(this);
   safeAreaHandler = new SafeAreaHandler(this);
@@ -143,8 +146,13 @@ export default class DScrollView extends Component {
   constructor() {
     super(...arguments);
 
+    const controller = this.controller;
+    controller.registerViewOwner(this);
+
     registerDestructor(this, () => {
-      this.#clearScrollEndTimeout();
+      controller.unregisterViewOwner(this);
+      this.#resetScrollingState();
+      this.#restoreRepaintElement();
       this.keyboardHandler.cleanup();
       this.safeAreaHandler.cleanup();
       this.gestureTrapHandler.cleanup();
@@ -156,6 +164,43 @@ export default class DScrollView extends Component {
       clearTimeout(this.scrollEndTimeout);
       this.scrollEndTimeout = null;
     }
+  }
+
+  #resetScrollingState() {
+    this.#clearScrollEndTimeout();
+    this.isScrolling = false;
+  }
+
+  #restoreRepaintElement() {
+    if (this.repaintTimeout !== null) {
+      clearTimeout(this.repaintTimeout);
+      this.repaintTimeout = null;
+    }
+
+    if (!this.repaintElement) {
+      return;
+    }
+
+    const repaintElement = this.repaintElement;
+    this.repaintElement = null;
+
+    if (
+      repaintElement.style.getPropertyValue("opacity") === "0.9999" &&
+      repaintElement.style.getPropertyPriority("opacity") === "important"
+    ) {
+      if (this.originalRepaintOpacity === "") {
+        repaintElement.style.removeProperty("opacity");
+      } else {
+        repaintElement.style.setProperty(
+          "opacity",
+          this.originalRepaintOpacity,
+          this.originalRepaintOpacityPriority
+        );
+      }
+    }
+
+    this.originalRepaintOpacity = "";
+    this.originalRepaintOpacityPriority = "";
   }
 
   get controller() {
@@ -172,6 +217,7 @@ export default class DScrollView extends Component {
   @action
   handleElementUnregister(element, controller) {
     if (this.viewElement === element) {
+      this.#resetScrollingState();
       this.viewElement = null;
     }
 
@@ -278,6 +324,26 @@ export default class DScrollView extends Component {
       defaultBehavior: {},
       handler: this.args.onScrollEnd,
     });
+
+    const activeElement = document.activeElement;
+    if (!capabilities.isIOS || !isTextInput(activeElement)) {
+      return;
+    }
+
+    if (this.repaintTimeout === null) {
+      this.repaintElement = activeElement;
+      this.originalRepaintOpacity =
+        activeElement.style.getPropertyValue("opacity");
+      this.originalRepaintOpacityPriority =
+        activeElement.style.getPropertyPriority("opacity");
+      activeElement.style.setProperty("opacity", "0.9999", "important");
+    }
+
+    clearTimeout(this.repaintTimeout);
+    this.repaintTimeout = setTimeout(() => {
+      this.repaintTimeout = null;
+      this.#restoreRepaintElement();
+    }, 55);
   }
 
   @action
@@ -308,9 +374,11 @@ export default class DScrollView extends Component {
 
   get viewDataAttribute() {
     const parts = ["view"];
-    const axis = this.args.axis ?? "y";
+    const axis = this.args.axis === undefined ? "y" : this.args.axis;
 
-    parts.push(`axis-${axis}`);
+    if (axis !== null) {
+      parts.push(`axis-${axis}`);
+    }
 
     if (this.args.pageScroll) {
       parts.push("page-scroll");
@@ -320,48 +388,57 @@ export default class DScrollView extends Component {
       parts.push("scroll-ongoing");
     }
 
+    const scrollAnimationToken = this.scrollAnimationDataAttribute;
+    if (scrollAnimationToken) {
+      parts.push(scrollAnimationToken);
+    }
+
     return parts.join(" ");
   }
 
   get scrollContainerDataAttribute() {
     const parts = ["scroll-container"];
-    const axis = this.args.axis ?? "y";
+    const axis = this.args.axis === undefined ? "y" : this.args.axis;
 
-    parts.push(`axis-${axis}`);
+    if (axis !== null) {
+      parts.push(`axis-${axis}`);
+    }
 
     if (this.args.pageScroll) {
       parts.push("page-scroll");
     }
 
-    const showScrollbar = this.args.nativeScrollbar ?? true;
-    if (!showScrollbar) {
+    const nativeScrollbar =
+      this.args.nativeScrollbar === undefined
+        ? true
+        : this.args.nativeScrollbar;
+    if (nativeScrollbar === true) {
+      parts.push("native-scrollbar");
+    } else if (nativeScrollbar === false) {
       parts.push("no-scrollbar");
     }
 
-    const anchoring = this.args.scrollAnchoring ?? true;
-    if (!anchoring) {
+    if (this.args.scrollAnchoring === false) {
       parts.push("no-anchoring");
     }
 
-    const snapType = this.args.scrollSnapType ?? "none";
+    const snapType =
+      this.args.scrollSnapType === undefined
+        ? "none"
+        : this.args.scrollSnapType;
     if (snapType === "proximity") {
       parts.push("snap-proximity");
     } else if (snapType === "mandatory") {
       parts.push("snap-mandatory");
     }
 
-    const overshoot = this.args.scrollGestureOvershoot ?? true;
-    if (!overshoot) {
+    if (this.args.scrollGestureOvershoot === false) {
       parts.push("no-overshoot");
     }
 
-    const skipAnimation = this.args.scrollAnimationSettings?.skip ?? "auto";
-    if (skipAnimation === true) {
-      parts.push("scroll-skip");
-    } else if (skipAnimation === false) {
-      parts.push("scroll-smooth");
-    } else {
-      parts.push("scroll-auto");
+    const scrollAnimationToken = this.scrollAnimationDataAttribute;
+    if (scrollAnimationToken) {
+      parts.push(scrollAnimationToken);
     }
 
     if (this.scrollTrapX) {
@@ -371,17 +448,14 @@ export default class DScrollView extends Component {
       parts.push("trap-y");
     }
 
-    const scrollGesture = this.args.scrollGesture ?? "auto";
+    const scrollGesture =
+      this.args.scrollGesture === undefined ? "auto" : this.args.scrollGesture;
     if (scrollGesture !== "auto") {
       parts.push("no-scroll-gesture");
     }
 
-    if (this.controller?.overflowX) {
-      parts.push("overflow-x");
-    }
-    if (this.controller?.overflowY) {
-      parts.push("overflow-y");
-    }
+    parts.push(this.controller?.overflowX ? "overflow-x" : "no-overflow-x");
+    parts.push(this.controller?.overflowY ? "overflow-y" : "no-overflow-y");
 
     if (this.gestureTrapHandler.swipeTrapIncapable) {
       parts.push("swipe-trap-incapable");
@@ -390,14 +464,41 @@ export default class DScrollView extends Component {
     return parts.join(" ");
   }
 
+  get scrollAnimationDataAttribute() {
+    const skipAnimation =
+      this.args.scrollAnimationSettings === undefined
+        ? "auto"
+        : this.args.scrollAnimationSettings?.skip;
+
+    switch (skipAnimation) {
+      case true:
+        return "scroll-skip";
+      case false:
+        return "scroll-smooth";
+      case "auto":
+        return "scroll-auto";
+    }
+
+    return null;
+  }
+
   get scrollPaddingStyle() {
-    const padding = this.args.scrollPadding ?? "auto";
+    const padding =
+      this.args.scrollPadding === undefined ? "auto" : this.args.scrollPadding;
+
+    if (padding === null) {
+      return null;
+    }
+
     return `scroll-padding: ${padding};`;
   }
 
   get scrollTimelineStyle() {
-    const timelineName = this.args.scrollTimelineName ?? "none";
-    const axis = this.args.axis ?? "y";
+    const timelineName =
+      this.args.scrollTimelineName === undefined
+        ? "none"
+        : this.args.scrollTimelineName;
+    const axis = this.args.axis === undefined ? "y" : this.args.axis;
     return `scroll-timeline: ${timelineName} ${axis};`;
   }
 
@@ -410,7 +511,9 @@ export default class DScrollView extends Component {
   }
 
   get shouldPreventNativeFocus() {
-    return this.args.nativeFocusScrollPrevention ?? true;
+    return this.args.nativeFocusScrollPrevention === undefined
+      ? true
+      : this.args.nativeFocusScrollPrevention;
   }
 
   get scrollTrapX() {
@@ -438,7 +541,8 @@ export default class DScrollView extends Component {
   }
 
   get computedRole() {
-    const pageScroll = this.args.pageScroll ?? false;
+    const pageScroll =
+      this.args.pageScroll === undefined ? false : this.args.pageScroll;
 
     if (pageScroll) {
       return undefined;
@@ -447,7 +551,23 @@ export default class DScrollView extends Component {
   }
 
   get axis() {
-    return this.args.axis ?? "y";
+    return this.args.axis === undefined ? "y" : this.args.axis;
+  }
+
+  get scrollGestureTrap() {
+    return this.args.scrollGestureTrap;
+  }
+
+  get pageScroll() {
+    return this.args.pageScroll;
+  }
+
+  get safeArea() {
+    return this.args.safeArea;
+  }
+
+  get sheet() {
+    return this.args.sheet;
   }
 
   get startSpyDataScroll() {
@@ -487,74 +607,19 @@ export default class DScrollView extends Component {
   }
 
   <template>
-    <div ...attributes {{mergeScrollAttributes this.viewDataAttribute}}>
-      <div
-        data-d-scroll={{this.scrollContainerDataAttribute}}
-        style={{this.combinedStyle}}
-        tabindex={{this.computedTabIndex}}
-        role={{this.computedRole}}
-        {{this.configureController
-          this.controller
-          @axis
-          @pageScroll
-          @safeArea
-          @scrollAnimationSettings
-        }}
-        {{this.listenForPageScroll this.controller @pageScroll @onScroll}}
-        {{this.syncScrollTrapState
-          this.controller
-          this.scrollTrapX
-          this.scrollTrapY
-        }}
-        {{this.registerElement
-          onRegister=this.handleElementRegister
-          onScroll=this.onScrollEvent
-          onScrollEnd=this.onScrollEndEvent
-          onFocusIn=this.onFocusInsideEvent
-          onFocusOut=this.onBlurInsideEvent
-          controller=this.controller
-          onUnregister=this.handleElementUnregister
-        }}
-        {{this.manageGestureTrap @axis @scrollGestureTrap @pageScroll}}
-        {{this.manageSafeArea @axis @safeArea @sheet}}
-        {{nativeFocusScrollPrevention this.shouldPreventNativeFocus}}
-      >
-        {{#if this.needsSwipeTrapObserver}}
-          <div
-            data-d-scroll={{this.startSpyDataScroll}}
-            {{this.registerStartSpy
-              register=this.registerStartSpyElement
-              unregister=this.unregisterStartSpyElement
-            }}
-          ></div>
-        {{/if}}
-        {{#if this.shouldRenderSpacers}}
-          <div
-            data-d-scroll={{this.startSpacerDataScroll}}
-            style={{this.spacerStyle}}
-            {{this.registerStartSpacer
-              register=this.registerStartSpacerElement
-            }}
-          ></div>
-        {{/if}}
-        {{yield}}
-        {{#if this.shouldRenderSpacers}}
-          <div
-            data-d-scroll={{this.endSpacerDataScroll}}
-            style={{this.spacerStyle}}
-            {{this.registerEndSpacer register=this.registerEndSpacerElement}}
-          ></div>
-        {{/if}}
-        {{#if this.needsSwipeTrapObserver}}
-          <div
-            data-d-scroll={{this.endSpyDataScroll}}
-            {{this.registerEndSpy
-              register=this.registerEndSpyElement
-              unregister=this.unregisterEndSpyElement
-            }}
-          ></div>
-        {{/if}}
-      </div>
+    <div
+      ...attributes
+      {{mergeScrollAttributes this.viewDataAttribute}}
+      {{this.configureController
+        this.controller
+        @axis
+        @pageScroll
+        @safeArea
+        @scrollAnimationSettings
+      }}
+      {{this.listenForPageScroll this.controller @pageScroll @onScroll}}
+    >
+      {{yield}}
     </div>
   </template>
 }

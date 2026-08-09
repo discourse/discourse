@@ -60,8 +60,8 @@ export default class StateHelper {
     this.staging.actuallyClose(skipClosing);
   }
 
-  stepAnimation() {
-    this.staging.actuallyStep();
+  stepAnimation(detent, behavior) {
+    this.staging.actuallyStep(detent, behavior);
   }
 
   subscribe(machineName, options) {
@@ -92,20 +92,8 @@ export default class StateHelper {
   }
 
   cleanup() {
-    for (const machine of [
-      this.#sheetMachines.getMachine(MACHINE_NAMES.OPENNESS),
-      this.#sheetMachines.getMachine(MACHINE_NAMES.STAGING),
-      this.#positionMachines.getMachine(MACHINE_NAMES.POSITION),
-      this.#sheetMachines.getMachine(MACHINE_NAMES.SCROLL_CONTAINER_TOUCH),
-      this.#sheetMachines.getMachine(MACHINE_NAMES.LONG_RUNNING),
-      this.#sheetMachines.getMachine(MACHINE_NAMES.SKIP_OPENING),
-      this.#sheetMachines.getMachine(MACHINE_NAMES.SKIP_CLOSING),
-      this.#sheetMachines.getMachine(MACHINE_NAMES.BACK_STUCK),
-      this.#sheetMachines.getMachine(MACHINE_NAMES.FRONT_STUCK),
-      this.#sheetMachines.getMachine(MACHINE_NAMES.ELEMENTS_READY),
-    ]) {
-      machine.cleanup();
-    }
+    this.#sheetMachines.cleanup();
+    this.#positionMachines.cleanup();
   }
 
   sendToPosition(message, context = {}) {

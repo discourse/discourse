@@ -18,6 +18,7 @@ const RECOGNIZED_EASINGS = new Set([
 
 export default class AnimationTravel {
   controller;
+  #activeTravelCleanup = null;
   #travelToken = 0;
 
   constructor(controller) {
@@ -56,10 +57,13 @@ export default class AnimationTravel {
 
   cancelActiveTravel() {
     this.#travelToken++;
+    this.#activeTravelCleanup?.();
+    this.#activeTravelCleanup = null;
   }
 
   #beginTravel() {
-    const token = ++this.#travelToken;
+    this.cancelActiveTravel();
+    const token = this.#travelToken;
     const controller = this.controller;
 
     return () => {
@@ -69,6 +73,18 @@ export default class AnimationTravel {
         controller.isDestroyed
       );
     };
+  }
+
+  #setActiveTravelCleanup(cleanup, isTravelCancelled) {
+    if (typeof cleanup !== "function") {
+      return;
+    }
+
+    if (isTravelCancelled()) {
+      cleanup();
+    } else {
+      this.#activeTravelCleanup = cleanup;
+    }
   }
 
   #getSnapBackAcceleratorSize() {
@@ -81,12 +97,7 @@ export default class AnimationTravel {
 
   #hasRecognizedEasing(settings, preset) {
     const easing = settings?.easing;
-    return (
-      preset ||
-      easing === "spring" ||
-      RECOGNIZED_EASINGS.has(easing) ||
-      (typeof easing === "string" && easing.startsWith("cubic-bezier"))
-    );
+    return preset || easing === "spring" || RECOGNIZED_EASINGS.has(easing);
   }
 
   #resolveAnimationSettings(settings, fallback) {
@@ -151,7 +162,8 @@ export default class AnimationTravel {
   animateToDetent(
     detentIndex,
     animationConfig = null,
-    programmaticDetentTravel = null
+    behavior = null,
+    runOnTravelStart = true
   ) {
     const c = this.controller;
     const isTravelCancelled = this.#beginTravel();
@@ -182,7 +194,6 @@ export default class AnimationTravel {
       if (stagingAdvanced) {
         c.scheduleTrackDimensionRecalculation();
       }
-      c.completeActiveDetentNotification?.(programmaticDetentTravel);
       return;
     }
 
@@ -197,7 +208,8 @@ export default class AnimationTravel {
         ? settings?.track
         : undefined;
 
-    travelToDetent({
+    let travelCompleted = false;
+    const cleanup = travelToDetent({
       destinationDetent: detentIndex,
       currentDetent: c.activeDetent,
       dimensions: c.dimensions,
@@ -208,23 +220,30 @@ export default class AnimationTravel {
       travelAnimations: c.travelAnimations,
       belowSheetsInStack: c.belowSheetsInStack,
       trackToTravelOn,
+      behavior,
       animationConfig: resolvedConfig,
       setSegment: c.setSegment,
-      swipeOutDisabledWithDetent:
-        c.dimensions?.swipeOutDisabledWithDetent ?? false,
+      swipeOutDisabledWithDetent: c.swipeOutDisabledWithDetent,
       contentPlacement: c.contentPlacement,
       hasOppositeTracks: c.tracks === "horizontal" || c.tracks === "vertical",
       snapBackAcceleratorTravelAxisSize: this.#getSnapBackAcceleratorSize(),
       onTravel: c.onTravel,
       onTravelStart: c.onTravelStart,
-      runOnTravelStart: true,
-      onTravelEnd: () => this.#handleTravelEnd(programmaticDetentTravel),
+      runOnTravelStart,
+      onTravelEnd: () => {
+        travelCompleted = true;
+        this.#handleTravelEnd();
+      },
       onProgrammaticScroll: c.markProgrammaticScroll,
       isTravelCancelled,
     });
+    if (!travelCompleted) {
+      this.#setActiveTravelCleanup(cleanup, isTravelCancelled);
+    }
   }
 
-  #handleTravelEnd(programmaticDetentTravel) {
+  #handleTravelEnd() {
+    this.#activeTravelCleanup = null;
     const c = this.controller;
     if (c.isDestroying || c.isDestroyed) {
       return;
@@ -267,8 +286,6 @@ export default class AnimationTravel {
       c.lastProcessedProgress = exactProgress;
       c.stackingAdapter?.updateTravelProgress(exactProgress);
     }
-
-    c.completeActiveDetentNotification?.(programmaticDetentTravel);
   }
 
   recalculateAndTravel(detentIndex) {
@@ -279,7 +296,7 @@ export default class AnimationTravel {
       return;
     }
 
-    travelToDetent({
+    const cleanup = travelToDetent({
       destinationDetent: detentIndex,
       currentDetent: detentIndex,
       dimensions: c.dimensions,
@@ -293,18 +310,17 @@ export default class AnimationTravel {
       runTravelCallbacksAndAnimations: false,
       runOnTravelStart: false,
       setSegment: c.setSegment,
-      swipeOutDisabledWithDetent:
-        c.dimensions?.swipeOutDisabledWithDetent ?? false,
+      swipeOutDisabledWithDetent: c.swipeOutDisabledWithDetent,
       contentPlacement: c.contentPlacement,
       hasOppositeTracks: c.tracks === "horizontal" || c.tracks === "vertical",
-      snapBackAcceleratorTravelAxisSize:
-        c.dimensions?.snapOutAccelerator?.travelAxis?.unitless || 0,
+      snapBackAcceleratorTravelAxisSize: this.#getSnapBackAcceleratorSize(),
       onProgrammaticScroll: c.markProgrammaticScroll,
       isTravelCancelled,
     });
+    this.#setActiveTravelCleanup(cleanup, isTravelCancelled);
   }
 
-  stepToStuckPosition(direction, onComplete) {
+  stepToStuckPosition(direction) {
     const c = this.controller;
     const isTravelCancelled = this.#beginTravel();
 
@@ -315,12 +331,7 @@ export default class AnimationTravel {
     const lastDetent = c.dimensions.detentMarkers.length;
     const destinationDetent = direction === "front" ? lastDetent : 1;
 
-    const overflowTimeout = CSS.supports("overscroll-behavior", "none")
-      ? 1
-      : 10;
-    c.domAttributes?.temporarilyHideOverflow(overflowTimeout);
-
-    travelToDetent({
+    const cleanup = travelToDetent({
       destinationDetent,
       currentDetent: c.activeDetent,
       dimensions: c.dimensions,
@@ -330,17 +341,17 @@ export default class AnimationTravel {
       tracks: c.tracks,
       travelAnimations: c.travelAnimations,
       belowSheetsInStack: c.belowSheetsInStack,
-      animationConfig: { skip: true },
+      behavior: "instant",
+      runTravelCallbacksAndAnimations: false,
+      runOnTravelStart: false,
       setSegment: c.setSegment,
-      swipeOutDisabledWithDetent:
-        c.dimensions?.swipeOutDisabledWithDetent ?? false,
+      swipeOutDisabledWithDetent: c.swipeOutDisabledWithDetent,
       contentPlacement: c.contentPlacement,
       hasOppositeTracks: c.tracks === "horizontal" || c.tracks === "vertical",
       snapBackAcceleratorTravelAxisSize: this.#getSnapBackAcceleratorSize(),
-      onTravel: c.onTravel,
-      onTravelEnd: onComplete,
       onProgrammaticScroll: c.markProgrammaticScroll,
       isTravelCancelled,
     });
+    this.#setActiveTravelCleanup(cleanup, isTravelCancelled);
   }
 }

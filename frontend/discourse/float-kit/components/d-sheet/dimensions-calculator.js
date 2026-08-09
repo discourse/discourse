@@ -62,7 +62,11 @@ export default class DimensionCalculator {
       webkitSmallSpacerMode = false,
     } = options;
 
-    const useAutoEdgePadding = snapToEndDetentsAcceleration === "auto";
+    const endDetentEdgePadding = edgeAlignedNoOvershoot
+      ? snapToEndDetentsAcceleration === "auto"
+        ? AUTO_EDGE_PADDING
+        : 1
+      : 0;
 
     return {
       track,
@@ -71,14 +75,9 @@ export default class DimensionCalculator {
       isCenteredTrack,
       travelProp: isHorizontal ? "width" : "height",
       crossProp: isHorizontal ? "height" : "width",
-      swipeOutDisabledWithDetent:
-        !isCenteredTrack && swipeOutDisabledWithDetent,
-      frontSpacerEdgePadding:
-        !isCenteredTrack && swipeOutDisabledWithDetent && useAutoEdgePadding
-          ? AUTO_EDGE_PADDING
-          : 0,
-      backSpacerEdgePadding:
-        edgeAlignedNoOvershoot && useAutoEdgePadding ? AUTO_EDGE_PADDING : 0,
+      swipeOutDisabledWithDetent,
+      frontSpacerEdgePadding: endDetentEdgePadding,
+      backSpacerEdgePadding: endDetentEdgePadding,
       snapOutAcceleration,
       webkitSmallSpacerMode,
     };
@@ -320,6 +319,11 @@ export default class DimensionCalculator {
       return isCenteredTrack ? viewSize / 2 + 1 : 1;
     }
 
+    if (swipeOutDisabledWithDetent) {
+      const firstDetentSize = detentMarkers?.[0]?.travelAxis?.unitless ?? 0;
+      return contentSize - firstDetentSize + frontSpacerEdgePadding;
+    }
+
     if (isCenteredTrack) {
       return (
         viewSize / 2 +
@@ -327,11 +331,6 @@ export default class DimensionCalculator {
         (viewSize - contentSize) / 2 +
         snapOutAccelerator
       );
-    }
-
-    if (swipeOutDisabledWithDetent) {
-      const firstDetentSize = detentMarkers?.[0]?.travelAxis?.unitless ?? 0;
-      return contentSize - firstDetentSize + frontSpacerEdgePadding;
     }
 
     if (contentPlacement === "center") {

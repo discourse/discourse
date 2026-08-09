@@ -142,7 +142,7 @@ module("Integration | Component | FloatKit | d-sheet", function (hooks) {
     );
   });
 
-  test("a dismiss click during an opening rerender closes the sheet", async function (assert) {
+  test("a dismiss click during an opening rerender does not interrupt opening", async function (assert) {
     const state = new (class {
       @tracked renderCount = 0;
     })();
@@ -155,7 +155,6 @@ module("Integration | Component | FloatKit | d-sheet", function (hooks) {
       const view = find("[data-d-sheet~='view']");
       frameSamples.push({
         hidden: view?.dataset.dSheet.split(" ").includes("hidden"),
-        openness: sheetController?.state.openness.current,
       });
 
       if (state.renderCount < 8) {
@@ -197,27 +196,27 @@ module("Integration | Component | FloatKit | d-sheet", function (hooks) {
     );
 
     await click(".dismiss-during-opening");
-    await waitUntil(() => sheetController.state.openness.isClosedPending, {
+    await waitUntil(() => sheetController.state.openness.isOpen, {
       timeout: 3000,
     });
 
     assert.false(
       frameSamples.some(({ hidden }) => hidden),
-      "opening rerenders never flash the sheet before dismissal"
+      "opening rerenders remain visible throughout the request"
     );
     assert.false(
       sheetController.rootComponent.effectivePresented,
       "the dismiss click updates presentation"
     );
     assert.true(
-      sheetController.state.openness.isClosedPending,
-      "the sheet remains closed after the animation finishes"
+      sheetController.state.openness.isOpen,
+      "the opening completion still resolves to open"
     );
   });
 
   test("a resize correction completes before closing travel", async function (assert) {
     const OriginalResizeObserver = window.ResizeObserver;
-    let resizeObserverCallback;
+    const resizeObserverCallbacks = new Map();
     let sheetController;
     const captureSheet = (_element, [sheet]) => {
       sheetController = sheet;
@@ -225,12 +224,26 @@ module("Integration | Component | FloatKit | d-sheet", function (hooks) {
 
     window.ResizeObserver = class {
       constructor(callback) {
-        resizeObserverCallback = callback;
+        this.callback = callback;
       }
 
-      observe() {}
-      unobserve() {}
-      disconnect() {}
+      observe(element) {
+        resizeObserverCallbacks.set(element, this.callback);
+      }
+
+      unobserve(element) {
+        if (resizeObserverCallbacks.get(element) === this.callback) {
+          resizeObserverCallbacks.delete(element);
+        }
+      }
+
+      disconnect() {
+        for (const [element, callback] of resizeObserverCallbacks) {
+          if (callback === this.callback) {
+            resizeObserverCallbacks.delete(element);
+          }
+        }
+      }
     };
 
     try {
@@ -271,18 +284,32 @@ module("Integration | Component | FloatKit | d-sheet", function (hooks) {
         return recalculateAndTravel(...args);
       };
 
-      resizeObserverCallback([{ target: sheetController.content }]);
-      find(".resize-race-close").click();
+      resizeObserverCallbacks.get(sheetController.content)([
+        { target: sheetController.content },
+      ]);
 
-      await waitUntil(() => sheetController.state.openness.isClosedPending, {
-        timeout: 3000,
-      });
+      assert.strictEqual(
+        staleResizeTravelCount,
+        0,
+        "the initial content observation only refreshes geometry"
+      );
+
+      resizeObserverCallbacks.get(sheetController.content)([
+        { target: sheetController.content },
+      ]);
 
       assert.strictEqual(
         staleResizeTravelCount,
         1,
         "the synchronous resize correction runs before the exit travel"
       );
+
+      find(".resize-race-close").click();
+
+      await waitUntil(() => sheetController.state.openness.isClosedPending, {
+        timeout: 3000,
+      });
+
       assert.true(
         sheetController.state.openness.isClosedPending,
         "the exit travel reaches the pending closed state"
@@ -419,6 +446,71 @@ module("Integration | Component | FloatKit | d-sheet", function (hooks) {
       changes,
       [2],
       "the controlled active detent change is reported once"
+    );
+  });
+
+  test("uses the latest default active detent on first presentation", async function (assert) {
+    const state = new (class {
+      @tracked defaultActiveDetent = 1;
+    })();
+    const detents = ["30vh"];
+    let sheetController;
+
+    const captureSheet = (_element, [sheet]) => {
+      sheetController = sheet;
+    };
+    const updateDefaultActiveDetent = () => {
+      state.defaultActiveDetent = 2;
+    };
+
+    await render(
+      <template>
+        <DSheet.Root
+          @defaultActiveDetent={{state.defaultActiveDetent}}
+          as |sheet|
+        >
+          <div hidden {{didInsert captureSheet sheet}}></div>
+          <button
+            type="button"
+            class="update-default-active-detent"
+            {{on "click" updateDefaultActiveDetent}}
+          >
+            Update default detent
+          </button>
+          <DSheet.Trigger @sheet={{sheet}} class="open-updated-default-sheet">
+            Open
+          </DSheet.Trigger>
+          <DSheet.Portal @sheet={{sheet}}>
+            <DSheet.View @sheet={{sheet}} @detents={{detents}}>
+              <DSheet.Content @sheet={{sheet}} as |ContentTag|>
+                <ContentTag>Content</ContentTag>
+              </DSheet.Content>
+            </DSheet.View>
+          </DSheet.Portal>
+        </DSheet.Root>
+      </template>
+    );
+
+    await click(".update-default-active-detent");
+
+    assert.strictEqual(
+      sheetController.targetDetent,
+      2,
+      "the closed Controller receives the updated opening detent"
+    );
+
+    await click(".open-updated-default-sheet");
+    await waitUntil(
+      () =>
+        sheetController.state.openness.isOpen &&
+        sheetController.activeDetent === 2,
+      { timeout: 3000 }
+    );
+
+    assert.strictEqual(
+      sheetController.activeDetent,
+      2,
+      "the first presentation settles at the latest default detent"
     );
   });
 

@@ -73,6 +73,26 @@ module("Unit | Lib | float-kit | safe-area-handler", function (hooks) {
     );
   });
 
+  test("viewport resize performs one deferred geometry update", function (assert) {
+    const viewElement = document.createElement("div");
+    const handler = new SafeAreaHandler({ viewElement });
+    const update = sinon.stub(handler, "update");
+
+    handler.handleResize();
+    clock.tick(1);
+
+    assert.strictEqual(update.callCount, 1, "the initial deferred update runs");
+
+    clock.tick(349);
+
+    assert.strictEqual(
+      update.callCount,
+      1,
+      "no redundant fallback layout pass runs"
+    );
+    handler.cleanup();
+  });
+
   test("predicts safe-area bounds at a sheet's resting detent", function (assert) {
     const viewportHeight = window.innerHeight;
     const viewElement = document.createElement("div");

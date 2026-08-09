@@ -1,13 +1,15 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { cancel, scheduleOnce } from "@ember/runloop";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 
 export default class ScrollController {
   @tracked scrollOngoing = false;
-  @tracked overflowX = false;
-  @tracked overflowY = false;
+  @tracked overflowX = true;
+  @tracked overflowY = true;
   @tracked scrollTrapX = false;
   @tracked scrollTrapY = false;
+  viewOwner = null;
   viewElement = null;
   contentElement = null;
 
@@ -18,6 +20,7 @@ export default class ScrollController {
   scrollAnimationSettings = { skip: "auto" };
   pageScroll = false;
   resizeObserver = null;
+  overflowUpdateTask = null;
 
   constructor(options = {}) {
     this.configure(options);
@@ -26,15 +29,18 @@ export default class ScrollController {
   configure(options = {}) {
     const previousAxis = this.axis;
 
-    this.axis = options.axis ?? "y";
-    this.pageScroll = options.pageScroll ?? false;
-    this.safeArea = options.safeArea ?? "visual-viewport";
-    this.scrollAnimationSettings = options.scrollAnimationSettings ?? {
-      skip: "auto",
-    };
+    this.axis = options.axis === undefined ? "y" : options.axis;
+    this.pageScroll =
+      options.pageScroll === undefined ? false : options.pageScroll;
+    this.safeArea =
+      options.safeArea === undefined ? "visual-viewport" : options.safeArea;
+    this.scrollAnimationSettings =
+      options.scrollAnimationSettings === undefined
+        ? { skip: "auto" }
+        : options.scrollAnimationSettings;
 
     if (this.viewElement && previousAxis !== this.axis) {
-      this.updateOverflowState();
+      this.scheduleOverflowUpdate();
     }
   }
 
@@ -46,12 +52,22 @@ export default class ScrollController {
     return this.usesWindowScroll ? window : this.viewElement;
   }
 
+  registerViewOwner(owner) {
+    this.viewOwner = owner;
+  }
+
+  unregisterViewOwner(owner) {
+    if (this.viewOwner === owner) {
+      this.viewOwner = null;
+    }
+  }
+
   @action
   registerView(element) {
     this.#unobserveElement(this.viewElement);
     this.viewElement = element;
     this.#observeElement(element);
-    this.updateOverflowState();
+    this.scheduleOverflowUpdate();
   }
 
   @action
@@ -62,6 +78,7 @@ export default class ScrollController {
 
     this.#unobserveElement(element);
     this.viewElement = null;
+    this.setScrollOngoing(false);
   }
 
   @action
@@ -69,7 +86,7 @@ export default class ScrollController {
     this.#unobserveElement(this.contentElement);
     this.contentElement = element;
     this.#observeElement(element);
-    this.updateOverflowState();
+    this.scheduleOverflowUpdate();
   }
 
   @action
@@ -111,7 +128,7 @@ export default class ScrollController {
     this.#observeElement(this.startSpacerElement);
     this.#observeElement(this.endSpacerElement);
 
-    this.updateOverflowState();
+    this.scheduleOverflowUpdate();
   }
 
   #observeElement(element) {
@@ -124,6 +141,21 @@ export default class ScrollController {
     if (element && this.resizeObserver) {
       this.resizeObserver.unobserve(element);
     }
+  }
+
+  @action
+  scheduleOverflowUpdate() {
+    this.overflowUpdateTask ??= scheduleOnce(
+      "afterRender",
+      this,
+      this.runScheduledOverflowUpdate
+    );
+  }
+
+  @action
+  runScheduledOverflowUpdate() {
+    this.overflowUpdateTask = null;
+    this.updateOverflowState();
   }
 
   @action
@@ -159,7 +191,7 @@ export default class ScrollController {
 
   @action
   getDistance() {
-    if (this.axis === "x") {
+    if (this.axis !== "y") {
       return this.usesWindowScroll
         ? window.scrollX
         : this.viewElement?.scrollLeft;
@@ -169,7 +201,7 @@ export default class ScrollController {
 
   @action
   getAvailableDistance() {
-    if (this.axis === "x") {
+    if (this.axis !== "y") {
       return this.usesWindowScroll
         ? document.body.scrollWidth - window.innerWidth
         : this.viewElement?.scrollWidth - this.viewElement?.offsetWidth;
@@ -190,16 +222,16 @@ export default class ScrollController {
 
     const targetDistance =
       distance ??
-      (progress !== undefined ? progress * this.getAvailableDistance() : NaN);
+      (progress != null ? progress * this.getAvailableDistance() : NaN);
 
-    if (Number.isNaN(targetDistance)) {
+    if (Number.isNaN(Number(targetDistance))) {
       return;
     }
 
     const behavior = this.getScrollBehavior(animationSettings);
 
     target.scrollTo({
-      [this.axis === "x" ? "left" : "top"]: targetDistance,
+      [this.axis === "y" ? "top" : "left"]: targetDistance,
       behavior,
     });
   }
@@ -215,16 +247,16 @@ export default class ScrollController {
 
     const deltaDistance =
       distance ??
-      (progress !== undefined ? progress * this.getAvailableDistance() : NaN);
+      (progress != null ? progress * this.getAvailableDistance() : NaN);
 
-    if (Number.isNaN(deltaDistance)) {
+    if (Number.isNaN(Number(deltaDistance))) {
       return;
     }
 
     const behavior = this.getScrollBehavior(animationSettings);
 
     target.scrollBy({
-      [this.axis === "x" ? "left" : "top"]: deltaDistance,
+      [this.axis === "y" ? "top" : "left"]: deltaDistance,
       behavior,
     });
   }
@@ -257,10 +289,16 @@ export default class ScrollController {
 
   @action
   cleanup() {
+    if (this.overflowUpdateTask) {
+      cancel(this.overflowUpdateTask);
+      this.overflowUpdateTask = null;
+    }
+
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
       this.resizeObserver = null;
     }
+    this.viewOwner = null;
     this.viewElement = null;
     this.contentElement = null;
     this.startSpacerElement = null;
