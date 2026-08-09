@@ -108,11 +108,24 @@ class NginxTestProxy
       }
 
       http {
+        include #{mime_types_path};
+        default_type application/octet-stream;
         client_body_temp_path #{File.join(@tmpdir, "client_body_temp")};
         proxy_temp_path #{File.join(@tmpdir, "proxy_temp")};
         include #{sample_config_path};
       }
     NGINX
+  end
+
+  def mime_types_path
+    executable = self.class.executable
+    candidates = [
+      ENV["NGINX_MIME_TYPES"],
+      executable && File.expand_path("../conf/mime.types", File.dirname(executable)),
+      "/etc/nginx/mime.types",
+    ]
+
+    candidates.compact.find { |path| File.file?(path) } || raise("nginx mime.types not found")
   end
 
   def wait_until_ready
