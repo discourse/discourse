@@ -399,6 +399,10 @@ module PageObjects
         select_text_range(RICH_EDITOR, start_index, length)
       end
 
+      def select_code_block
+        select_all_content("#{RICH_EDITOR} pre code")
+      end
+
       def submit
         find("#{@composer_id} .save-or-cancel .create").click
       end

@@ -1,6 +1,11 @@
+import { triggerKeyEvent } from "@ember/test-helpers";
+import { TextSelection } from "prosemirror-state";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { testMarkdown } from "discourse/tests/helpers/rich-editor-helper";
+import {
+  setupRichEditor,
+  testMarkdown,
+} from "discourse/tests/helpers/rich-editor-helper";
 
 module(
   "Integration | Component | prosemirror-editor - code-block extension",
@@ -69,6 +74,57 @@ module(
         },
         "```\nconsole.log('Hello, world!');\n```",
         true
+      );
+    });
+
+    test("Tab indents selected code block lines with two spaces", async function (assert) {
+      const markdown =
+        '```csharp\n      this.board.acl = [\n        {\n          type: "group",\n        },\n      ];\n```';
+      const [editor] = await setupRichEditor(assert, markdown);
+      const { view } = editor;
+      const codeBlock = view.state.doc.firstChild;
+
+      view.dispatch(
+        view.state.tr.setSelection(
+          TextSelection.create(view.state.doc, 7, codeBlock.content.size + 1)
+        )
+      );
+      await triggerKeyEvent(".ProseMirror", "keydown", "Tab");
+
+      assert.strictEqual(
+        view.state.doc.firstChild.textContent,
+        '        this.board.acl = [\n          {\n            type: "group",\n          },\n        ];',
+        "all partially selected lines are indented"
+      );
+      assert.strictEqual(
+        view.state.doc.textBetween(
+          view.state.selection.from,
+          view.state.selection.to
+        ),
+        'this.board.acl = [\n          {\n            type: "group",\n          },\n        ];',
+        "the code remains selected after indenting"
+      );
+    });
+
+    test("Shift-Tab removes up to two spaces from selected code block lines", async function (assert) {
+      const markdown = "```\n  one\n two\nthree\n```";
+      const [editor] = await setupRichEditor(assert, markdown);
+      const { view } = editor;
+      const codeBlock = view.state.doc.firstChild;
+
+      view.dispatch(
+        view.state.tr.setSelection(
+          TextSelection.create(view.state.doc, 1, codeBlock.content.size + 1)
+        )
+      );
+      await triggerKeyEvent(".ProseMirror", "keydown", "Tab", {
+        shiftKey: true,
+      });
+
+      assert.strictEqual(
+        view.state.doc.firstChild.textContent,
+        "one\ntwo\nthree",
+        "each selected line is outdented as far as possible"
       );
     });
   }
