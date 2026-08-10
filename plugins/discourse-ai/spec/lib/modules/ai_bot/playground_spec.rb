@@ -69,6 +69,16 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     AiAgent.agent_cache.flush!
   end
 
+  describe "#title_playground" do
+    it "updates the topic title when the LLM returns multiple text blocks" do
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [["A concise ", "conversation title"]],
+      ) { playground.title_playground(second_post, user) }
+
+      expect(pm.reload.title).to eq("A concise conversation title")
+    end
+  end
+
   describe "is_bot_user_id?" do
     it "properly detects ALL bots as bot users" do
       agent = Fabricate(:ai_agent, enabled: false)
