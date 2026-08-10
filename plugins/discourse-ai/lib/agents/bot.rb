@@ -261,13 +261,8 @@ module DiscourseAi
 
           if !tool_found
             ongoing_chain = false
-            text = result
-
             # we must strip out thinking and other types of blocks
-            if result.is_a?(Array)
-              text = +""
-              result.each { |item| text << item if item.is_a?(String) }
-            end
+            text = DiscourseAi::Completions::Llm.text_from_response(result)
             raw_context << [text, bot_user&.username]
           end
 
@@ -612,7 +607,7 @@ module DiscourseAi
             return :skipped
           end
 
-        summary = summary.is_a?(Array) ? summary.select { |s| s.is_a?(String) }.join : summary
+        summary = DiscourseAi::Completions::Llm.text_from_response(summary)
         return :skipped if summary.blank?
 
         summary_tokens = tokenizer.size(summary)

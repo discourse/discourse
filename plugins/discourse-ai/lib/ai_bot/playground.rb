@@ -292,12 +292,10 @@ module DiscourseAi
           )
 
         new_title =
-          bot
-            .llm
-            .generate(title_prompt, user: user, feature_name: "bot_title")
-            .strip
-            .split("\n")
-            .last
+          DiscourseAi::Completions::Llm.text_from_response(
+            bot.llm.generate(title_prompt, user: user, feature_name: "bot_title"),
+          )
+        new_title = new_title.strip.split("\n").last
 
         PostRevisor.new(post.topic.first_post, post.topic).revise!(
           bot.bot_user,
