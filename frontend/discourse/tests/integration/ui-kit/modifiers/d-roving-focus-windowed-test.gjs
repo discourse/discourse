@@ -177,10 +177,11 @@ module(
       );
     });
 
-    test("onEdgeReach fires at vertical edges and prevents the key", async function (assert) {
-      const edges = [];
+    test("onBoundary fires at vertical edges and prevents the key", async function (assert) {
+      const boundaries = [];
       const prevented = {};
-      const onEdgeReach = (direction) => edges.push(direction);
+      const onBoundary = (direction, axis) =>
+        boundaries.push(`${axis}:${direction}`);
 
       await render(
         <template>
@@ -190,7 +191,7 @@ module(
             {{dRovingFocus
               orientation="vertical"
               itemSelector="[role=option]"
-              onEdgeReach=onEdgeReach
+              onBoundary=onBoundary
             }}
           >
             <button class="a" role="option">A</button>
@@ -206,8 +207,8 @@ module(
       await focus(".b");
       await triggerKeyEvent(".b", "keydown", "ArrowDown");
       assert.deepEqual(
-        edges,
-        ["forward"],
+        boundaries,
+        ["vertical:forward"],
         "ArrowDown at the end reaches forward"
       );
       assert.true(prevented.ArrowDown, "ArrowDown at the end is prevented");
@@ -216,17 +217,18 @@ module(
       await focus(".a");
       await triggerKeyEvent(".a", "keydown", "ArrowUp");
       assert.deepEqual(
-        edges,
-        ["forward", "backward"],
+        boundaries,
+        ["vertical:forward", "vertical:backward"],
         "ArrowUp at the start reaches backward exactly once"
       );
       assert.true(prevented.ArrowUp, "ArrowUp at the start is prevented");
       assert.dom(".a").isFocused("the cursor stays on the first item");
     });
 
-    test("onEdgeReach does not fire without a cursor and ArrowDown seeds the first item", async function (assert) {
-      const edges = [];
-      const onEdgeReach = (direction) => edges.push(direction);
+    test("onBoundary does not fire without a cursor and ArrowDown seeds the first item", async function (assert) {
+      const boundaries = [];
+      const onBoundary = (direction, axis) =>
+        boundaries.push(`${axis}:${direction}`);
 
       await render(
         <template>
@@ -236,7 +238,7 @@ module(
               orientation="vertical"
               itemSelector="[role=option]"
               tabStop=false
-              onEdgeReach=onEdgeReach
+              onBoundary=onBoundary
             }}
           >
             <button class="a" role="option">A</button>
@@ -247,7 +249,7 @@ module(
 
       await triggerKeyEvent(".a", "keydown", "ArrowDown");
       assert.deepEqual(
-        edges,
+        boundaries,
         [],
         "ArrowDown without a cursor does not reach an edge"
       );
@@ -256,9 +258,10 @@ module(
         .isFocused("ArrowDown without a cursor seeds the first item");
     });
 
-    test("onEdgeReach does not fire while moving within the list or wrapping", async function (assert) {
-      const edges = [];
-      const onEdgeReach = (direction) => edges.push(direction);
+    test("onBoundary does not fire while moving within the list or wrapping", async function (assert) {
+      const boundaries = [];
+      const onBoundary = (direction, axis) =>
+        boundaries.push(`${axis}:${direction}`);
 
       await render(
         <template>
@@ -268,7 +271,7 @@ module(
               orientation="vertical"
               itemSelector="[role=option]"
               wrap=true
-              onEdgeReach=onEdgeReach
+              onBoundary=onBoundary
             }}
           >
             <button class="a" role="option">A</button>
@@ -281,7 +284,11 @@ module(
       await focus(".a");
       await triggerKeyEvent(".a", "keydown", "ArrowDown");
       assert.dom(".b").isFocused("ArrowDown moves within the list");
-      assert.deepEqual(edges, [], "a non-edge move does not reach an edge");
+      assert.deepEqual(
+        boundaries,
+        [],
+        "a non-edge move does not reach an edge"
+      );
 
       await focus(".c");
       await triggerKeyEvent(".c", "keydown", "ArrowDown");
@@ -289,25 +296,24 @@ module(
 
       await triggerKeyEvent(".a", "keydown", "ArrowUp");
       assert.dom(".c").isFocused("ArrowUp wraps to the last item");
-      assert.deepEqual(edges, [], "wrapping suppresses edge callbacks");
+      assert.deepEqual(
+        boundaries,
+        [],
+        "wrapping suppresses the boundary callback"
+      );
     });
 
-    test("Home, End, and horizontal keys do not fire onEdgeReach", async function (assert) {
-      const edges = [];
-      const exits = [];
-      const onEdgeReach = (direction) => edges.push(direction);
-      const onExit = (direction) => exits.push(direction);
+    test("Home, End, and horizontal keys do not fire onBoundary", async function (assert) {
+      const boundaries = [];
+      const onBoundary = (direction, axis) =>
+        boundaries.push(`${axis}:${direction}`);
 
       await render(
         <template>
           <div
             role="listbox"
-            {{dRovingFocus
-              itemSelector="[role=option]"
-              columns=1
-              onEdgeReach=onEdgeReach
-              onExit=onExit
-            }}
+            style="display: grid; grid-template-columns: repeat(1, 40px);"
+            {{dRovingFocus itemSelector="[role=option]" onBoundary=onBoundary}}
           >
             <button class="a" role="option">A</button>
             <button class="b" role="option">B</button>
@@ -316,8 +322,8 @@ module(
         </template>
       );
 
-      // `onEdgeReach` is unreachable from Home/End/ArrowRight/ArrowLeft by construction, so an
-      // empty `edges` proves nothing on its own. Each step asserts where the cursor actually
+      // Home and End move without reporting anything, while the horizontal arrows at either end
+      // report a boundary on their own axis. Each step also asserts where the cursor actually
       // landed, which is what would catch a key being mis-routed to the wrong axis.
       await focus(".b");
       await triggerKeyEvent(".b", "keydown", "Home");
@@ -334,14 +340,9 @@ module(
       assert.dom(".a").isFocused("ArrowLeft at the first item does not move");
 
       assert.deepEqual(
-        edges,
-        [],
-        "none of these keys reaches the vertical edge callback"
-      );
-      assert.deepEqual(
-        exits,
-        ["forward", "backward"],
-        "horizontal edge keys remain onExit's domain"
+        boundaries,
+        ["horizontal:forward", "horizontal:backward"],
+        "only the two horizontal ends report, and they report the horizontal axis — Home and End reach no boundary at all"
       );
     });
   }

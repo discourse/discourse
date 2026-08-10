@@ -11,12 +11,11 @@ module(
     test("rovingApi: focusNext seeds the first navigable item when no cursor exists", async function (assert) {
       let api = null;
       const changes = [];
-      const exits = [];
-      const edges = [];
+      const boundaries = [];
       const register = (value) => (api = value);
       const onActiveChange = (item) => changes.push(item);
-      const onExit = (direction) => exits.push(direction);
-      const onEdgeReach = (direction) => edges.push(direction);
+      const onBoundary = (direction, axis) =>
+        boundaries.push(`${axis}:${direction}`);
 
       await render(
         <template>
@@ -28,8 +27,7 @@ module(
               tabStop=false
               onRegisterApi=register
               onActiveChange=onActiveChange
-              onExit=onExit
-              onEdgeReach=onEdgeReach
+              onBoundary=onBoundary
             }}
           >
             <button class="item" role="option">A</button>
@@ -54,26 +52,20 @@ module(
         "seeding through focusNext fires onActiveChange for the landed item"
       );
       assert.deepEqual(
-        exits,
+        boundaries,
         [],
-        "seeding through focusNext does not fire onExit"
-      );
-      assert.deepEqual(
-        edges,
-        [],
-        "seeding through focusNext does not fire onEdgeReach"
+        "seeding through focusNext does not fire onBoundary"
       );
     });
 
     test("rovingApi: focusNext moves once then returns edge without firing callbacks", async function (assert) {
       let api = null;
       const changes = [];
-      const exits = [];
-      const edges = [];
+      const boundaries = [];
       const register = (value) => (api = value);
       const onActiveChange = (item) => changes.push(item);
-      const onExit = (direction) => exits.push(direction);
-      const onEdgeReach = (direction) => edges.push(direction);
+      const onBoundary = (direction, axis) =>
+        boundaries.push(`${axis}:${direction}`);
 
       await render(
         <template>
@@ -84,8 +76,7 @@ module(
               itemSelector="[role=option]"
               onRegisterApi=register
               onActiveChange=onActiveChange
-              onExit=onExit
-              onEdgeReach=onEdgeReach
+              onBoundary=onBoundary
             }}
           >
             <button class="item" role="option">A</button>
@@ -136,19 +127,17 @@ module(
         [],
         "an edge result does not fire onActiveChange when nothing moved"
       );
-      assert.deepEqual(exits, [], "an api edge suppresses onExit");
-      assert.deepEqual(edges, [], "an api edge suppresses onEdgeReach");
+      assert.deepEqual(boundaries, [], "an api edge suppresses onBoundary");
     });
 
     test("rovingApi: focusPrevious moves once then returns edge without firing callbacks", async function (assert) {
       let api = null;
       const changes = [];
-      const exits = [];
-      const edges = [];
+      const boundaries = [];
       const register = (value) => (api = value);
       const onActiveChange = (item) => changes.push(item);
-      const onExit = (direction) => exits.push(direction);
-      const onEdgeReach = (direction) => edges.push(direction);
+      const onBoundary = (direction, axis) =>
+        boundaries.push(`${axis}:${direction}`);
 
       await render(
         <template>
@@ -159,8 +148,7 @@ module(
               itemSelector="[role=option]"
               onRegisterApi=register
               onActiveChange=onActiveChange
-              onExit=onExit
-              onEdgeReach=onEdgeReach
+              onBoundary=onBoundary
             }}
           >
             <button class="item" role="option">A</button>
@@ -213,17 +201,19 @@ module(
         [],
         "a backward edge does not fire onActiveChange when nothing moved"
       );
-      assert.deepEqual(exits, [], "a backward api edge suppresses onExit");
-      assert.deepEqual(edges, [], "a backward api edge suppresses onEdgeReach");
+      assert.deepEqual(
+        boundaries,
+        [],
+        "a backward api edge suppresses onBoundary"
+      );
     });
 
     test("rovingApi: focusNext returns unavailable for a group with no items", async function (assert) {
       let api = null;
-      const exits = [];
-      const edges = [];
+      const boundaries = [];
       const register = (value) => (api = value);
-      const onExit = (direction) => exits.push(direction);
-      const onEdgeReach = (direction) => edges.push(direction);
+      const onBoundary = (direction, axis) =>
+        boundaries.push(`${axis}:${direction}`);
 
       await render(
         <template>
@@ -232,8 +222,7 @@ module(
             {{dRovingFocus
               itemSelector="[role=option]"
               onRegisterApi=register
-              onExit=onExit
-              onEdgeReach=onEdgeReach
+              onBoundary=onBoundary
             }}
           ></div>
         </template>
@@ -245,24 +234,18 @@ module(
         "focusNext reports that the group has no items to fall back from"
       );
       assert.deepEqual(
-        exits,
+        boundaries,
         [],
-        "an unavailable focusNext call does not fire onExit"
-      );
-      assert.deepEqual(
-        edges,
-        [],
-        "an unavailable focusNext call does not fire onEdgeReach"
+        "an unavailable focusNext call does not fire onBoundary"
       );
     });
 
     test("rovingApi: focusPrevious returns unavailable for a group with no items", async function (assert) {
       let api = null;
-      const exits = [];
-      const edges = [];
+      const boundaries = [];
       const register = (value) => (api = value);
-      const onExit = (direction) => exits.push(direction);
-      const onEdgeReach = (direction) => edges.push(direction);
+      const onBoundary = (direction, axis) =>
+        boundaries.push(`${axis}:${direction}`);
 
       await render(
         <template>
@@ -271,8 +254,7 @@ module(
             {{dRovingFocus
               itemSelector="[role=option]"
               onRegisterApi=register
-              onExit=onExit
-              onEdgeReach=onEdgeReach
+              onBoundary=onBoundary
             }}
           ></div>
         </template>
@@ -284,24 +266,18 @@ module(
         "focusPrevious reports that the group has no items to fall back from"
       );
       assert.deepEqual(
-        exits,
+        boundaries,
         [],
-        "an unavailable focusPrevious call does not fire onExit"
-      );
-      assert.deepEqual(
-        edges,
-        [],
-        "an unavailable focusPrevious call does not fire onEdgeReach"
+        "an unavailable focusPrevious call does not fire onBoundary"
       );
     });
 
     test("rovingApi: focusNext returns unavailable when every layout cell is non-navigable", async function (assert) {
       let api = null;
-      const exits = [];
-      const edges = [];
+      const boundaries = [];
       const register = (value) => (api = value);
-      const onExit = (direction) => exits.push(direction);
-      const onEdgeReach = (direction) => edges.push(direction);
+      const onBoundary = (direction, axis) =>
+        boundaries.push(`${axis}:${direction}`);
 
       await render(
         <template>
@@ -310,8 +286,7 @@ module(
             {{dRovingFocus
               itemSelector="[role=option]"
               onRegisterApi=register
-              onExit=onExit
-              onEdgeReach=onEdgeReach
+              onBoundary=onBoundary
             }}
           >
             <button role="option" aria-disabled="true">ARIA disabled</button>
@@ -340,24 +315,18 @@ module(
         "currentItem remains null when no navigable run exists"
       );
       assert.deepEqual(
-        exits,
+        boundaries,
         [],
-        "an unavailable focusNext call does not fire onExit"
-      );
-      assert.deepEqual(
-        edges,
-        [],
-        "an unavailable focusNext call does not fire onEdgeReach"
+        "an unavailable focusNext call does not fire onBoundary"
       );
     });
 
     test("rovingApi: focusPrevious returns unavailable when every layout cell is non-navigable", async function (assert) {
       let api = null;
-      const exits = [];
-      const edges = [];
+      const boundaries = [];
       const register = (value) => (api = value);
-      const onExit = (direction) => exits.push(direction);
-      const onEdgeReach = (direction) => edges.push(direction);
+      const onBoundary = (direction, axis) =>
+        boundaries.push(`${axis}:${direction}`);
 
       await render(
         <template>
@@ -366,8 +335,7 @@ module(
             {{dRovingFocus
               itemSelector="[role=option]"
               onRegisterApi=register
-              onExit=onExit
-              onEdgeReach=onEdgeReach
+              onBoundary=onBoundary
             }}
           >
             <button role="option" aria-disabled="true">ARIA disabled</button>
@@ -396,14 +364,9 @@ module(
         "currentItem remains null when no navigable run exists"
       );
       assert.deepEqual(
-        exits,
+        boundaries,
         [],
-        "an unavailable focusPrevious call does not fire onExit"
-      );
-      assert.deepEqual(
-        edges,
-        [],
-        "an unavailable focusPrevious call does not fire onEdgeReach"
+        "an unavailable focusPrevious call does not fire onBoundary"
       );
     });
 
@@ -462,11 +425,10 @@ module(
 
     test("rovingApi: focusNext honors horizontal and vertical axes in a grid", async function (assert) {
       let api = null;
-      const exits = [];
-      const edges = [];
+      const boundaries = [];
       const register = (value) => (api = value);
-      const onExit = (direction) => exits.push(direction);
-      const onEdgeReach = (direction) => edges.push(direction);
+      const onBoundary = (direction, axis) =>
+        boundaries.push(`${axis}:${direction}`);
 
       await render(
         <template>
@@ -476,8 +438,7 @@ module(
             {{dRovingFocus
               itemSelector="[role=option]"
               onRegisterApi=register
-              onExit=onExit
-              onEdgeReach=onEdgeReach
+              onBoundary=onBoundary
             }}
           >
             <button
@@ -564,21 +525,24 @@ module(
         "edge",
         "vertical focusNext reports the measured bottom edge"
       );
-      assert.deepEqual(exits, [], "grid focusNext api calls suppress onExit");
       assert.deepEqual(
-        edges,
+        boundaries,
         [],
-        "grid focusNext api calls suppress onEdgeReach"
+        "grid focusNext api calls suppress onBoundary"
+      );
+      assert.deepEqual(
+        boundaries,
+        [],
+        "grid focusNext api calls suppress onBoundary"
       );
     });
 
     test("rovingApi: focusPrevious honors horizontal and vertical axes in a grid", async function (assert) {
       let api = null;
-      const exits = [];
-      const edges = [];
+      const boundaries = [];
       const register = (value) => (api = value);
-      const onExit = (direction) => exits.push(direction);
-      const onEdgeReach = (direction) => edges.push(direction);
+      const onBoundary = (direction, axis) =>
+        boundaries.push(`${axis}:${direction}`);
 
       await render(
         <template>
@@ -588,8 +552,7 @@ module(
             {{dRovingFocus
               itemSelector="[role=option]"
               onRegisterApi=register
-              onExit=onExit
-              onEdgeReach=onEdgeReach
+              onBoundary=onBoundary
             }}
           >
             <button
@@ -676,14 +639,9 @@ module(
         "vertical focusPrevious reports the measured top edge"
       );
       assert.deepEqual(
-        exits,
+        boundaries,
         [],
-        "grid focusPrevious api calls suppress onExit"
-      );
-      assert.deepEqual(
-        edges,
-        [],
-        "grid focusPrevious api calls suppress onEdgeReach"
+        "grid focusPrevious api calls suppress onBoundary"
       );
     });
 
