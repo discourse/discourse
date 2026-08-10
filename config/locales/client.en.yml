@@ -61,8 +61,6 @@ en:
         mandatory: "Mandatory"
         disallowed: "Disallowed"
         required_permission_not_added: "At least one grantee must have %{permission} permission for this %{typeName}"
-        board_access_self_removal_cancelled: "Your permission change was cancelled because it would have removed your own access to this %{typeName}. Please modify permissions and retry."
-        board_access_self_removal_warning: "You are about to remove your own access to this %{typeName}. This will prevent you from managing or editing it in the future. Are you sure you want to continue?"
     carousel:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"

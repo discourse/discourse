@@ -77,5 +77,14 @@ module AclTarget
     def acl_is_banned?(acl)
       has_banned_acl? && banned_acl.any? { |banned_acl| AclTarget.acl_matches?(acl, banned_acl) }
     end
+
+    def has_warn_of_loss?
+      defined?(warn_of_loss).present? && warn_of_loss.length.positive?
+    end
+
+    def acl_is_warn_of_loss?(acl)
+      has_warn_of_loss? &&
+        warn_of_loss.any? { |warn_of_loss| acl[:permission].to_s == warn_of_loss.to_s }
+    end
   end
 end

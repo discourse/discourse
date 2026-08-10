@@ -64,8 +64,8 @@ export default class DAccessControlField extends Component {
         });
         return;
       } else {
-        evaluation.current_user_will_lose_permission =
-          err.jqXHR.responseJSON.extras.current_user_will_lose_permission;
+        Object.assign(evaluation, err.jqXHR.responseJSON.extras);
+        evaluation.errorMessage = err.jqXHR.responseJSON.errors[0];
       }
     }
 
@@ -76,9 +76,7 @@ export default class DAccessControlField extends Component {
     // TODO (martin) Do we want to show a specific message based on "downgrade" e.g. you will no longerbe able
     // to manage but you can still view?
     const confirmed = await this.dialog.confirm({
-      message: i18n("access_control.manage.board_access_self_removal_warning", {
-        typeName: this.args.aclTarget.name,
-      }),
+      message: evaluation.errorMessage,
     });
 
     if (confirmed) {
@@ -87,15 +85,16 @@ export default class DAccessControlField extends Component {
       this.confirmedAclFingerprint = fingerprint;
       // TODO (martin) Do we need to reload the page or something here? E.g. what happens
       // if the  permission for even being able to view this thing disappears?
-    } else {
-      addError(name, {
-        title: this.args.title,
-        message: i18n(
-          "access_control.manage.board_access_self_removal_cancelled",
-          { typeName: this.args.aclTarget.name }
-        ),
-      });
     }
+    // else {
+    //   addError(name, {
+    //     title: this.args.title,
+    //     message: i18n(
+    //       "access_control.manage.board_access_self_removal_cancelled",
+    //       { typeName: this.args.aclTarget.name }
+    //     ),
+    //   });
+    // }
   }
 
   <template>
