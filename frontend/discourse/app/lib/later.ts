@@ -1,3 +1,4 @@
+import { DEBUG } from "@glimmer/env";
 import { later, type Timer } from "@ember/runloop";
 import { isTesting } from "discourse/lib/environment";
 
