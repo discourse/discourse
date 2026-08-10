@@ -47,6 +47,9 @@ const Negatives = <template>
   {{! @glint-expect-error - auto-scroll moves the host element or the window }}
   <div {{dDragAndDropAutoScroll target="document"}}></div>
 
+  {{! @glint-expect-error - auto-scroll filters external drags by the same closed set of kinds the external target does }}
+  <div {{dDragAndDropAutoScroll accepts="images"}}></div>
+
   {{! @glint-expect-error - the element and external targets report different payloads }}
   <li {{dDragAndDropTarget accepts="link" onDrop=onExternalDrop}}></li>
 

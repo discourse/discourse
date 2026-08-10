@@ -1,9 +1,16 @@
 import type { ElementDragPayload } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import type { ExternalDragPayload as NativeExternalDragPayload } from "@atlaskit/pragmatic-drag-and-drop/external/adapter";
 import {
   autoScrollForElements,
   autoScrollWindowForElements,
 } from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/element";
+import {
+  autoScrollForExternal,
+  autoScrollWindowForExternal,
+} from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/external";
 import { modifier } from "ember-modifier";
+import type { ExternalDragKind } from "discourse/services/drag-and-drop";
+import { matchesExternalKind } from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
 import { matchesDragType } from "discourse/ui-kit/modifiers/d-drag-and-drop-monitor";
 
 /** Which direction the container is allowed to scroll while a drag is in flight. */
@@ -22,6 +29,15 @@ interface DDragAndDropAutoScrollSignature {
        * engage on any drag (rare).
        */
       types?: string | string[];
+
+      /**
+       * Also auto-scroll for drags coming from outside the window, engaging on
+       * these external kinds. Opt-in and separate from `types` because the two
+       * describe different drags: `types` names a discriminator our own sources
+       * stamp, which a payload dragged in from another application has no way of
+       * carrying. Omit it and an external drag scrolls nothing.
+       */
+      accepts?: ExternalDragKind | ExternalDragKind[];
 
       /** Defaults to `"vertical"`. */
       axis?: AutoScrollAxis;
@@ -78,20 +94,43 @@ export function registerDragAndDropAutoScroll(
   const matchesType = ({ source }: { source: ElementDragPayload }) =>
     matchesDragType(getArgsRef().types, source);
 
+  const matchesKind = ({ source }: { source: NativeExternalDragPayload }) =>
+    matchesExternalKind(getArgsRef().accepts, source);
+
   const getAllowedAxis = () => getArgsRef().axis ?? "vertical";
 
   const args = getArgsRef();
-  if (args.target === "window") {
-    return autoScrollWindowForElements({
-      canScroll: matchesType,
-      getAllowedAxis,
-    });
+  const scrollsWindow = args.target === "window";
+
+  const cleanups = [
+    scrollsWindow
+      ? autoScrollWindowForElements({ canScroll: matchesType, getAllowedAxis })
+      : autoScrollForElements({
+          element: args.element,
+          canScroll: matchesType,
+          getAllowedAxis,
+        }),
+  ];
+
+  // The two adapters are independent registrations, so an external drag scrolls
+  // only where a consumer asked for it. Registering one unconditionally would
+  // start scrolling every container for every file dragged over the window.
+  if (args.accepts) {
+    cleanups.push(
+      scrollsWindow
+        ? autoScrollWindowForExternal({
+            canScroll: matchesKind,
+            getAllowedAxis,
+          })
+        : autoScrollForExternal({
+            element: args.element,
+            canScroll: matchesKind,
+            getAllowedAxis,
+          })
+    );
   }
-  return autoScrollForElements({
-    element: args.element,
-    canScroll: matchesType,
-    getAllowedAxis,
-  });
+
+  return () => cleanups.forEach((cleanup) => cleanup());
 }
 
 /**
@@ -116,6 +155,15 @@ export function registerDragAndDropAutoScroll(
  * ></span>
  * ```
  *
+ * Add `accepts` to scroll for payloads dragged in from outside the window too,
+ * which is a separate registration and does not happen without it:
+ *
+ * ```hbs
+ * <div class="scroll-container"
+ *   {{dDragAndDropAutoScroll types=(array "card") accepts="urls"}}
+ * >
+ * ```
+ *
  * Guide to choosing between the gesture primitives:
  * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
  *
@@ -130,6 +178,7 @@ export default modifier<DDragAndDropAutoScrollSignature>(
     // `registerDragAndDropAutoScroll` for why that is fine.
     registerDragAndDropAutoScroll(() => ({
       types: args.types,
+      accepts: args.accepts,
       axis: args.axis ?? "vertical",
       target: args.target ?? "element",
       element,

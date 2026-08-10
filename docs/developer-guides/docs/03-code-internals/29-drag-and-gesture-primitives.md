@@ -81,6 +81,12 @@ a single destination: callbacks get `position: null` and the indicator is one
 `--drag-over-external` class. Most external targets want that; a drop zone is a
 destination, not a slot.
 
+Auto-scroll splits the same way. `dDragAndDropAutoScroll` registers for element
+drags by default and scrolls nothing for a payload dragged in from outside;
+`accepts` adds the external registration beside it. So a scroll container that a
+drop can land in wants both, and a container attached without `accepts` will
+look wired up while leaving an incoming drag stuck at the fold.
+
 ## An ancestor that must stay lit reads the service
 
 Only the deepest accepted target receives the lifecycle callbacks. That is

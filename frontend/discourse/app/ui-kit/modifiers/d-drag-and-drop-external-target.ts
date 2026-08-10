@@ -95,6 +95,32 @@ const KIND_HANDLERS = Object.freeze({
 });
 
 /**
+ * Whether an incoming external drag is one of the named kinds.
+ *
+ * An empty or missing filter matches every external drag, mirroring how the
+ * element target treats an absent `accepts`. Shared so anything filtering on the
+ * external vocabulary — a drop target, an auto-scroll registration — agrees on
+ * what a kind name means; the element-side counterpart is `matchesDragType`.
+ *
+ * @param accepts - The kind filter as the consumer supplied it.
+ * @param source - The raw payload the underlying library reports.
+ */
+export function matchesExternalKind(
+  accepts: ExternalDragKind | ExternalDragKind[] | undefined,
+  source: NativeExternalDragPayload
+) {
+  const kinds = toAcceptList(accepts);
+  if (kinds.length === 0) {
+    return true;
+  }
+  return kinds.some((kind) => {
+    const handler = KIND_HANDLERS[kind];
+    // Unknown kind names fail closed — better than silently matching.
+    return handler ? handler.contains({ source }) : false;
+  });
+}
+
+/**
  * Builds the decorated source object exposed to consumer callbacks.
  * Wraps PDND's raw payload (`{types, items, getStringData}`) with the
  * `contains*` / `get*` helpers bound to that payload, so the
@@ -265,22 +291,8 @@ export function registerDragAndDropExternalTarget(
     isIndicating = false;
   };
 
-  /**
-   * Resolves the `accepts` arg against the raw PDND source payload.
-   * Empty / missing `accepts` accepts every external drag, mirroring
-   * the element variant's "no filter = accept all" behaviour.
-   */
-  const acceptsSource = (sourcePayload: NativeExternalDragPayload) => {
-    const kinds = toAcceptList(getArgsRef().accepts);
-    if (kinds.length === 0) {
-      return true;
-    }
-    return kinds.some((kind) => {
-      const handler = KIND_HANDLERS[kind];
-      // Unknown kind names fail closed — better than silently matching.
-      return handler ? handler.contains({ source: sourcePayload }) : false;
-    });
-  };
+  const acceptsSource = (sourcePayload: NativeExternalDragPayload) =>
+    matchesExternalKind(getArgsRef().accepts, sourcePayload);
 
   const isDeepest = (location: DragLocation) =>
     isDeepestTarget(location, element);
