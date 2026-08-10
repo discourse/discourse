@@ -576,6 +576,107 @@ module("Integration | Modifier | d-resize-edge", function (hooks) {
     );
   });
 
+  test("a key pressed during a pointer drag does not open a second gesture", async function (assert) {
+    const state = new Harness();
+
+    await render(
+      <template>
+        <div
+          class="resize-edge"
+          {{dResizeEdge
+            axis="vertical"
+            value=state.value
+            min=240
+            max=720
+            onResizeStart=state.onResizeStart
+            onResize=state.onResize
+            onResizeEnd=state.onResizeEnd
+          }}
+        ></div>
+      </template>
+    );
+
+    const edge = find(EDGE);
+    stubPointerCapture(edge);
+
+    await triggerEvent(edge, "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientY: 300,
+    });
+    await triggerEvent(edge, "pointermove", {
+      button: 0,
+      pointerId: 1,
+      clientY: 400,
+    });
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    // A key reaching the edge while the pointer still holds it. Releasing that
+    // key must not close anything: the pointer's gesture is still open, and a
+    // consumer told the resize ended would drop the state it is holding for a
+    // drag that is still in flight.
+    await triggerKeyEvent(edge, "keydown", "ArrowDown");
+    await triggerKeyEvent(edge, "keyup", "ArrowDown");
+
+    assert.strictEqual(
+      state.resizeStarts,
+      1,
+      "the pointer's gesture is the only one open"
+    );
+    assert.deepEqual(
+      state.resizeEnds,
+      [],
+      "and it is still open, because the pointer has not been released"
+    );
+
+    await triggerEvent(edge, "pointerup", { pointerId: 1, clientY: 400 });
+
+    assert.strictEqual(
+      state.resizeEnds.length,
+      1,
+      "the release closes it, once"
+    );
+  });
+
+  test("a held key is committed when the window loses focus", async function (assert) {
+    const state = new Harness();
+
+    await render(
+      <template>
+        <div
+          class="resize-edge"
+          tabindex="0"
+          {{dResizeEdge
+            axis="vertical"
+            value=state.value
+            min=240
+            max=720
+            onResizeStart=state.onResizeStart
+            onResize=state.onResize
+            onResizeEnd=state.onResizeEnd
+          }}
+        ></div>
+      </template>
+    );
+
+    const edge = find(EDGE);
+
+    await triggerKeyEvent(edge, "keydown", "ArrowDown");
+
+    assert.strictEqual(state.resizeStarts, 1, "the key opened a gesture");
+
+    // The keyup lands on whatever has focus now, which is no longer this page,
+    // so the gesture has to be closed here or it stays open indefinitely.
+    window.dispatchEvent(new Event("blur"));
+    await settled();
+
+    assert.deepEqual(
+      state.resizeEnds,
+      [state.value],
+      "losing the window closes it at the size reached"
+    );
+  });
+
   test("a drag returning to its origin still closes its gesture", async function (assert) {
     const state = new Harness();
 

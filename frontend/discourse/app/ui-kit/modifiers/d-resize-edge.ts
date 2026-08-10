@@ -91,10 +91,15 @@ interface DResizeEdgeSignature {
        * happen once per resize rather than once per report — persisting the
        * size, or undoing something held for the length of the gesture.
        *
-       * Paired with exactly one `onResizeStart`: both fire for a gesture that
-       * reported a size, and neither fires for one that did not. A press
-       * released without moving is a click rather than a resize and opens
-       * nothing, and teardown mid-gesture fires no consumer callback at all.
+       * Every one of these is preceded by exactly one `onResizeStart`, and a
+       * gesture that reported no size fires neither: a press released without
+       * moving is a click rather than a resize, and opens nothing.
+       *
+       * The converse does not hold. Teardown mid-gesture fires no consumer
+       * callback at all, so a gesture that had reported and is then torn down
+       * leaves its `onResizeStart` unclosed. State held for the length of a
+       * resize therefore has to be released on the consumer's own destruction
+       * too, not on this alone.
        */
       onResizeEnd?: (size: number, meta: ResizeReportMeta) => void;
     };
@@ -170,6 +175,7 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     // A pointer taking over closes any key still being held, so the two inputs
     // cannot leave two gestures open against a single end.
     this.#endKeyboardGesture();
+    this.#pointerActive = true;
     this.#rtl = undefined;
     this.#started = false;
     this.#startCoordinate = this.#coordinate(event);
@@ -190,6 +196,7 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     // still pending is dropped first: letting it fire afterwards would report a
     // stale intermediate size over the committed one.
     this.#cancelFrame();
+    this.#pointerActive = false;
 
     const coordinate = this.#coordinate(event);
     // A press that reported nothing and was released where it landed is a click,
@@ -207,6 +214,13 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     this.#reportMove(coordinate, { final: true });
   };
   #onKeyDown = (event: KeyboardEvent) => {
+    // The mirror of the pointer closing a held key: a key must not open a second
+    // gesture over a drag in flight either, or its release would report the
+    // resize ended while the pointer is still dragging.
+    if (this.#pointerActive) {
+      return;
+    }
+
     // A modified arrow belongs to whatever binding claims it — back, word-wise
     // motion, selection — and the separator merely happens to hold focus. The
     // window-splitter pattern defines no modified bindings of its own.
@@ -260,7 +274,9 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     this.#endKeyboardGesture();
   };
   // The keyup would land on whatever took focus, so without this the gesture
-  // would stay open and never commit.
+  // would stay open and never commit. Bound to the window as well as the
+  // element: focus leaving the page entirely, or the page being replaced, takes
+  // the keyup with it without the element ever seeing a blur.
   #onBlur = () => this.#endKeyboardGesture();
   #element: HTMLElement;
   #frame?: number;
@@ -276,6 +292,13 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
   #keyboardValue: number | null = null;
 
   #pendingCoordinate = 0;
+
+  /**
+   * Whether a pointer gesture is in flight, which locks the keyboard path out
+   * for its duration.
+   */
+  #pointerActive = false;
+
   #releaseGesture: (() => void) | null = null;
 
   /**
@@ -341,6 +364,8 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     element.addEventListener("keydown", this.#onKeyDown);
     element.addEventListener("keyup", this.#onKeyUp);
     element.addEventListener("blur", this.#onBlur);
+    window.addEventListener("blur", this.#onBlur);
+    window.addEventListener("pagehide", this.#onBlur);
   }
 
   cleanup() {
@@ -352,9 +377,12 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     // undoing gesture state has nothing left to undo it on.
     this.#keyboardKey = null;
     this.#keyboardValue = null;
+    this.#pointerActive = false;
     this.#element.removeEventListener("keydown", this.#onKeyDown);
     this.#element.removeEventListener("keyup", this.#onKeyUp);
     this.#element.removeEventListener("blur", this.#onBlur);
+    window.removeEventListener("blur", this.#onBlur);
+    window.removeEventListener("pagehide", this.#onBlur);
   }
 
   /**

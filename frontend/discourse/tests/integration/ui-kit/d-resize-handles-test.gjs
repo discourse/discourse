@@ -101,10 +101,11 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
     );
   });
 
-  test("a vetoed press starts no gesture", async function (assert) {
+  test("a vetoed press starts no gesture and does not spoil the next one", async function (assert) {
     const handles = [{ payload: "e", class: "handle-e" }];
     const events = [];
-    const onResizeStart = () => false;
+    const state = { veto: true };
+    const onResizeStart = () => (state.veto ? false : undefined);
     const onResize = (payload, info) =>
       events.push(`resize:${payload}:${info.delta.x}`);
     const onResizeEnd = (payload) => events.push(`end:${payload}`);
@@ -142,6 +143,34 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
       events,
       [],
       "returning false from the start callback refuses the drag outright"
+    );
+
+    // The same pointer presses again, elsewhere, and is accepted this time.
+    // Each press records where it began under the pointer's own id, so this
+    // measures from 200 rather than carrying anything over from the press that
+    // was refused.
+    state.veto = false;
+    await triggerEvent(".handle-e", "pointerdown", {
+      button: 0,
+      pointerId: 1,
+      clientX: 200,
+      clientY: 50,
+    });
+    await triggerEvent(".handle-e", "pointermove", {
+      pointerId: 1,
+      clientX: 230,
+      clientY: 50,
+    });
+    await triggerEvent(".handle-e", "pointerup", {
+      pointerId: 1,
+      clientX: 230,
+      clientY: 50,
+    });
+
+    assert.deepEqual(
+      events,
+      ["resize:e:30", "end:e"],
+      "the accepted press measures from where it began"
     );
   });
 
@@ -182,7 +211,9 @@ module("Integration | ui-kit | DResizeHandles", function (hooks) {
 
     // The payload comes from the callback's own binding rather than a snapshot
     // taken at the press, so it always names the descriptor the handler is
-    // currently bound to.
+    // currently bound to. Pinned here because the per-pointer session holds the
+    // press coordinates and could plausibly be made to hold the payload too,
+    // which would freeze it at what was pressed.
     assert.deepEqual(
       events,
       ["first", "second"],
