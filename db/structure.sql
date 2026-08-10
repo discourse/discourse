@@ -12471,7 +12471,6 @@ ALTER SEQUENCE public.web_hook_events_daily_aggregates_id_seq OWNED BY public.we
 --
 
 CREATE SEQUENCE public.web_hook_events_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -23134,6 +23133,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260729153343'),
 ('20260728162521'),
 ('20260728162516'),
+('20260728150000'),
 ('20260728134532'),
 ('20260728071552'),
 ('20260728050038'),
