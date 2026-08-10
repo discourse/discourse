@@ -979,7 +979,7 @@ RSpec.describe UsersController do
       context "with local logins disabled" do
         before do
           SiteSetting.enable_local_logins = false
-          SiteSetting.enable_google_oauth2_logins = true
+          enable_auth_provider(:google_oauth2)
         end
 
         it "blocks registration without authenticator information" do
@@ -1462,7 +1462,7 @@ RSpec.describe UsersController do
           )
 
           Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter]
-          SiteSetting.enable_twitter_logins = true
+          enable_auth_provider(:twitter)
           get "/auth/twitter/callback.json"
         end
 
@@ -1544,7 +1544,7 @@ RSpec.describe UsersController do
             info: OmniAuth::AuthHash::InfoHash.new(nickname: "testosama", name: "Osama Test"),
           )
           Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter]
-          SiteSetting.enable_twitter_logins = true
+          enable_auth_provider(:twitter)
           get "/auth/twitter/callback.json"
         end
 
@@ -5466,7 +5466,7 @@ RSpec.describe UsersController do
         context "for an external provider" do
           before do
             sign_in(admin)
-            SiteSetting.enable_google_oauth2_logins = true
+            enable_auth_provider(:google_oauth2)
             UserAssociatedAccount.create!(
               user: user1,
               provider_uid: "myuid",

@@ -757,6 +757,7 @@ login:
     hidden: true
   enable_google_oauth2_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   google_oauth2_client_id:
     default: ""
@@ -794,6 +795,7 @@ login:
     area: "authenticators"
   enable_twitter_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   twitter_consumer_key:
     default: ""
@@ -806,6 +808,7 @@ login:
     area: "authenticators"
   enable_facebook_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   facebook_app_id:
     client: true
@@ -819,6 +822,7 @@ login:
     area: "authenticators"
   enable_github_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   github_client_id:
     default: ""
@@ -831,6 +835,7 @@ login:
     area: "authenticators"
   enable_discord_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   discord_client_id:
     default: ""
@@ -846,7 +851,7 @@ login:
     area: "authenticators"
   enable_linkedin_oidc_logins:
     default: false
-    validator: "LinkedinOidcCredentialsValidator"
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   linkedin_oidc_client_id:
     default: ""

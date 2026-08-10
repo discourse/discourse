@@ -15,8 +15,12 @@ class Auth::GithubAuthenticator < Auth::ManagedAuthenticator
     "https://github.com"
   end
 
-  def enabled?
-    SiteSetting.enable_github_logins
+  def enable_setting
+    :enable_github_logins
+  end
+
+  def required_settings
+    %i[github_client_id github_client_secret]
   end
 
   def after_authenticate(auth_token, existing_account: nil)

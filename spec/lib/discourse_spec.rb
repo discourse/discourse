@@ -250,12 +250,28 @@ RSpec.describe Discourse do
 
   describe "enabled_authenticators" do
     it "only returns enabled authenticators" do
+      SiteSetting.twitter_consumer_key = "consumer_key"
+      SiteSetting.twitter_consumer_secret = "consumer_secret"
+
       expect(Discourse.enabled_authenticators.length).to be(0)
       expect { SiteSetting.enable_twitter_logins = true }.to change {
         Discourse.enabled_authenticators.length
       }.by(1)
       expect(Discourse.enabled_authenticators.length).to be(1)
       expect(Discourse.enabled_authenticators.first).to be_instance_of(Auth::TwitterAuthenticator)
+    end
+
+    it "does not return an enabled authenticator once its credentials are removed" do
+      SiteSetting.twitter_consumer_key = "consumer_key"
+      SiteSetting.twitter_consumer_secret = "consumer_secret"
+      SiteSetting.enable_twitter_logins = true
+
+      expect { SiteSetting.twitter_consumer_secret = "" }.to change {
+        Discourse.enabled_authenticators.length
+      }.by(-1)
+
+      expect(SiteSetting.enable_twitter_logins).to eq(true)
+      expect(Discourse.enabled_authenticators).to be_empty
     end
   end
 

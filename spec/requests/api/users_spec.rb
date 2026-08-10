@@ -179,7 +179,7 @@ RSpec.describe "users" do
         let(:external_id) { "myuid" }
 
         before do
-          SiteSetting.enable_google_oauth2_logins = true
+          enable_auth_provider(:google_oauth2)
           UserAssociatedAccount.create!(
             user: user,
             provider_uid: "myuid",

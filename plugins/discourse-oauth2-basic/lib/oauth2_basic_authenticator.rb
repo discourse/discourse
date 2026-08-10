@@ -5,6 +5,14 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
     "oauth2_basic"
   end
 
+  def enable_setting
+    :oauth2_enabled
+  end
+
+  def required_settings
+    %i[oauth2_client_id oauth2_client_secret oauth2_authorize_url oauth2_token_url]
+  end
+
   def can_revoke?
     SiteSetting.oauth2_allow_association_change
   end
@@ -322,10 +330,6 @@ class OAuth2BasicAuthenticator < Auth::ManagedAuthenticator
       end
     end
     result
-  end
-
-  def enabled?
-    SiteSetting.oauth2_enabled
   end
 
   def request_timeout_seconds
