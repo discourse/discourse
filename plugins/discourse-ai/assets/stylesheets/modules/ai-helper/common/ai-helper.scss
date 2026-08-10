@@ -260,7 +260,6 @@
 .suggest-titles-button {
   position: absolute;
 
-  #reply-control &,
   .edit-topic-title & {
     background: var(--primary-low);
     right: var(--space-1);
@@ -269,20 +268,11 @@
     padding: 0.4em;
     font-size: var(--font-down-1-rem);
     z-index: z("composer", "dropdown");
+    transform: translateY(50%);
 
     .d-icon {
       color: var(--tertiary);
     }
-  }
-
-  .edit-topic-title & {
-    transform: translateY(50%);
-  }
-
-  #reply-control & {
-    transform: translateY(
-      calc(50% - 0.25em)
-    ); // .25em = half of input margin-bottom padding
   }
 }
 
@@ -293,12 +283,6 @@
     // because we need another layer to put the AI icon above dropdowns
     // while also keeping them below the composer tips
     z-index: z("composer", "dropdown") + 2;
-  }
-
-  .showing-ai-suggestions {
-    #reply-title {
-      padding-right: 2em;
-    }
   }
 }
 
@@ -544,6 +528,12 @@
     .mobile-view & {
       z-index: z("mobile-composer");
     }
+  }
+
+  .spinner {
+    height: 1rem;
+    width: 1rem;
+    margin: var(--space-4) var(--space-6);
   }
 }
 
