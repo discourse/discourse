@@ -1,3 +1,4 @@
+import { assert, runInDebug } from "@ember/debug";
 import { registerDestructor } from "@ember/destroyable";
 import { guidFor } from "@ember/object/internals";
 import type Owner from "@ember/owner";
@@ -11,11 +12,11 @@ type Orientation = "grid" | "horizontal" | "vertical";
  * The result of one navigation step.
  *
  * The two edges are deliberately distinct. `"group-edge"` means the cursor is at the end of the
- * whole group, which is what `onExit`/`onEdgeReach` report so a consumer can hand off elsewhere.
- * `"row-edge"` means the cursor did not move but has not left anything either: the key is consumed
- * and nothing is reported. That covers a closed grid row — a consumer that moves focus away on
- * `onExit` must not be triggered from the middle of a grid — and also a wrap that resolved back
- * onto the cursor, where `wrap` has promised no edge will be reported.
+ * whole group, which is what `onBoundary` reports so a consumer can hand off elsewhere or fetch
+ * more. `"row-edge"` means the cursor did not move but has not left anything either: the key is
+ * consumed and nothing is reported. That covers a closed grid row — a consumer that moves focus
+ * away on `onBoundary` must not be triggered from the middle of a grid — and also a wrap that
+ * resolved back onto the cursor, where `wrap` has promised no edge will be reported.
  */
 type StepOutcome =
   | { kind: "move"; index: number }
@@ -82,8 +83,8 @@ export interface DRovingFocusApi {
    * Steps the cursor one item forward, as the corresponding arrow key would. `axis` picks which
    * axis to travel in a grid; omitted, it follows the group's own orientation.
    *
-   * Unlike the keyboard path this suppresses the EDGE callbacks — `onEdgeReach` and `onExit`
-   * announce that a *reader* pushed against a boundary, which a programmatic call has not done.
+   * Unlike the keyboard path this suppresses the EDGE callback — `onBoundary` announces that a
+   * *reader* pushed against a boundary, which a programmatic call has not done.
    * `onActiveChange` still fires on a real move, because the cursor really did move.
    */
   focusNext(axis?: DRovingFocusAxis): DRovingFocusStepResult;
@@ -146,18 +147,8 @@ interface DRovingFocusArgs {
    * there whatever this says.
    */
   orientation?: Orientation;
-  /**
-   * CSS selector matching the navigable items within the container. Required in practice —
-   * without it the modifier matches nothing and no key does anything.
-   */
-  itemSelector?: string;
-  /**
-   * Column count override, as a number or a `() => number` re-read on each keydown. Applies only
-   * under `orientation="grid"` in `"focus"` mode, where it replaces the CSS derivation entirely;
-   * every other configuration has a single axis and ignores it. Use it for a tile layout that is
-   * not a real CSS grid.
-   */
-  columns?: number | (() => number) | null;
+  /** CSS selector matching the navigable items within the container. */
+  itemSelector: string;
   /**
    * Called when an item is activated: Enter or Space in `"focus"` mode, Enter only in `"active"`
    * mode, where Space belongs to the controller's caret. Only fires when the key landed on the
@@ -179,25 +170,29 @@ interface DRovingFocusArgs {
     meta?: { pointer: boolean }
   ) => void;
   /**
-   * Called at a horizontal end of the GROUP when `wrap` is false and a cursor is present;
-   * wrapping suppresses it. Requires `"horizontal"` or `"grid"` orientation. Under a
-   * multi-column grid a row edge is not a group edge, so an interior row does not fire this.
+   * Called when an arrow key would move the cursor past an end of the GROUP, with `wrap` false
+   * and a cursor already present; wrapping suppresses it. Deliberately reports the boundary
+   * rather than prescribing a response: handing off to a neighbouring control and fetching more
+   * rows are both legitimate, and which one applies is the consumer's business.
    *
-   * The direction is LOGICAL — `"forward"` means past the last item in DOM order, whichever
-   * arrow key produced it. In a right-to-left group that is ArrowLeft, so a consumer handing off
-   * to a neighbouring control must resolve the physical side itself.
+   * `direction` is LOGICAL — `"forward"` means past the last item in DOM order, whichever arrow
+   * key produced it. In a right-to-left group the forward horizontal key is ArrowLeft, so a
+   * consumer handing off to a neighbouring control must resolve the physical side itself.
    *
-   * Never fires under `selectionMode="active"`, which does not claim the horizontal arrows.
+   * `axis` names the axis travelled, and the two are not symmetric. `"horizontal"` requires
+   * `"horizontal"` or `"grid"` orientation and never fires under `selectionMode="active"`, which
+   * leaves the horizontal arrows to its controller's caret. `"vertical"` requires `"vertical"`
+   * or `"grid"` in `"focus"` mode, but fires in `"active"` mode whatever `orientation` says,
+   * because there the vertical axis is always the live one. A consumer that means "leave the
+   * widget" must therefore branch on `axis` rather than treat every boundary alike.
+   *
+   * Under a multi-column grid a ROW edge is not a group edge, so an interior row never fires
+   * this — otherwise a consumer would be dragged away mid-traversal.
    */
-  onExit?: (direction: "forward" | "backward") => void;
-  /**
-   * The vertical counterpart to {@link DRovingFocusArgs.onExit}: called when ArrowDown or ArrowUp
-   * would move past the edge with `wrap` false and a cursor present. `"forward"` is down,
-   * `"backward"` is up. Requires `"vertical"` or `"grid"` orientation in `"focus"` mode; in
-   * `"active"` mode the vertical axis is always live, whatever `orientation` says. A windowed
-   * list uses it to scroll or fetch the next rows before the cursor reaches the true end.
-   */
-  onEdgeReach?: (direction: "forward" | "backward") => void;
+  onBoundary?: (
+    direction: "forward" | "backward",
+    axis: DRovingFocusAxis
+  ) => void;
   /**
    * The total number of navigable logical rows. Setting it is what makes PageUp/PageDown page:
    * without it those keys are left alone entirely so a scrollable container pages natively, Home
@@ -325,7 +320,9 @@ interface DRovingFocusSignature {
  * navigable ones would land a vertical step a column adrift. The column count is derived from
  * the resolved `grid-template-columns` at keydown time, never from element geometry
  * (`offsetTop`/`offsetLeft`), so a responsive grid that reflows is handled without
- * re-configuration; passing `columns` opts out of that derivation.
+ * re-configuration. Only a CSS grid publishes a track list, so a group laid out some other
+ * two-dimensional way (wrapping flex, multi-column) navigates on one axis, and says so in
+ * development.
  *
  * The modifier is deliberately role-agnostic: the consumer supplies the container
  * and item roles (`role="listbox"`/`"grid"` + `role="option"`, and, for active mode,
@@ -380,14 +377,15 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   /** The item currently holding the group's single tab stop, so only it needs demoting. */
   #tabStopHolder: HTMLElement | null = null;
   #itemSelector?: string;
-  #columnsOverride: number | (() => number) | null = null;
   #onActivate?: (item: HTMLElement, event: KeyboardEvent) => void;
   #onActiveChange?: (
     item: HTMLElement | null,
     meta?: { pointer: boolean }
   ) => void;
-  #onExit?: (direction: "forward" | "backward") => void;
-  #onEdgeReach?: (direction: "forward" | "backward") => void;
+  #onBoundary?: (
+    direction: "forward" | "backward",
+    axis: DRovingFocusAxis
+  ) => void;
   #logicalCount?: number;
   #onJump?: (target: number, direction: "forward" | "backward") => void;
   #wrap = false;
@@ -415,6 +413,9 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
 
   /** Whether `modify()` has run at least once, so the first run is not mistaken for a reset. */
   #hasRun = false;
+
+  /** Set once a group has reported a two-dimensional layout it cannot measure, so it warns once. */
+  #warnedUndetectedSecondAxis = false;
 
   /**
    * Monotonic counter behind minted ids. Never reset, so an id cannot be reissued to a second
@@ -594,6 +595,13 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    * @param event - The keydown from the container (focus mode) or the controller (active mode).
    */
   #handleKeydown = (event: KeyboardEvent): void => {
+    // Mid-composition every key belongs to the IME: the candidate window navigates with the
+    // arrows and commits with Enter, and the browser reports both here. Checked before the mode
+    // and chord guards because it holds in every configuration.
+    if (event.isComposing) {
+      return;
+    }
+
     // In focus mode the listener sits on the items' container, so a keydown can
     // bubble up from an editable descendant (a text field embedded inside an
     // item). Let that surface keep its own caret and selection keys — including
@@ -661,9 +669,9 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
         const delta = event.key === forwardKey ? 1 : -1;
         outcome = this.#applyStep("horizontal", delta, cells, current, columns);
         if (outcome.kind === "group-edge") {
-          if (current >= 0 && this.#onExit) {
+          if (current >= 0 && this.#onBoundary) {
             event.preventDefault();
-            this.#onExit(delta > 0 ? "forward" : "backward");
+            this.#onBoundary(delta > 0 ? "forward" : "backward", "horizontal");
           }
           return;
         }
@@ -683,9 +691,12 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
           columns
         );
         if (outcome.kind === "group-edge") {
-          if (current >= 0 && this.#onEdgeReach) {
+          if (current >= 0 && this.#onBoundary) {
             event.preventDefault();
-            this.#onEdgeReach(direction > 0 ? "forward" : "backward");
+            this.#onBoundary(
+              direction > 0 ? "forward" : "backward",
+              "vertical"
+            );
           }
           return;
         }
@@ -851,12 +862,17 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
 
     this.#mode = nextMode;
     this.#orientation = named.orientation ?? "grid";
+    // Asserted rather than merely typed: a consumer casting this modifier to a hand-written
+    // `ModifierLike` signature bypasses the type entirely, and without a selector the group binds
+    // its listener, matches nothing, and silently swallows every key.
+    assert(
+      "dRovingFocus requires an `itemSelector` matching the navigable items",
+      named.itemSelector
+    );
     this.#itemSelector = named.itemSelector;
-    this.#columnsOverride = named.columns ?? null;
     this.#onActivate = named.onActivate;
     this.#onActiveChange = named.onActiveChange;
-    this.#onExit = named.onExit;
-    this.#onEdgeReach = named.onEdgeReach;
+    this.#onBoundary = named.onBoundary;
     this.#logicalCount = named.logicalCount;
     this.#onJump = named.onJump;
     this.#wrap = named.wrap ?? false;
@@ -1099,15 +1115,15 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   /**
    * The number of columns the cursor navigates by.
    *
-   * Only a `"grid"` group in `"focus"` mode has a second axis, so both other cases resolve to
-   * one column BEFORE `columns` is read: `columns` is a grid-only override, and honouring it
-   * elsewhere makes a vertical step skip rows on an axis that has none. Active mode leaves the
-   * horizontal arrows to its controller's caret, so its cursor can never reach a second column
-   * — deriving one would strand every item outside the first.
+   * Only a `"grid"` group in `"focus"` mode has a second axis, so both other cases resolve to one
+   * column without measuring anything. Active mode leaves the horizontal arrows to its
+   * controller's caret, so its cursor can never reach a second column — deriving one would
+   * strand every item outside the first.
    *
    * Otherwise derived from the resolved `grid-template-columns` track list
-   * (e.g. `"96px 96px 96px"` → 3), which the browser resolves even for `repeat(auto-fill, …)`.
-   * Falls back to a single column when the computed value is empty or `none`.
+   * (e.g. `"96px 96px 96px"` → 3), which the browser resolves even for `repeat(auto-fill, …)`,
+   * so a responsive grid that reflows needs no re-configuration. Falls back to a single column
+   * when the computed value is empty or `none`.
    *
    * @returns The column count, at least 1.
    */
@@ -1115,41 +1131,63 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     if (this.#mode === "active" || this.#orientation !== "grid") {
       return 1;
     }
-    if (typeof this.#columnsOverride === "function") {
-      return this.#sanitizeColumns(this.#columnsOverride());
-    }
-    if (typeof this.#columnsOverride === "number") {
-      return this.#sanitizeColumns(this.#columnsOverride);
-    }
     if (!this.#element) {
       return 1;
     }
-    const tracks = getComputedStyle(this.#element).gridTemplateColumns;
-    if (!tracks || tracks === "none") {
-      return 1;
-    }
+    // One read serves both the track list and the degradation check below, so the diagnostic
+    // costs no extra style resolution.
+    const style = getComputedStyle(this.#element);
+    const tracks = style.gridTemplateColumns;
     // Named grid lines survive into the computed value (`[full-start] 300px [mid] 300px`) and
     // are not tracks; counting them reads a two-track grid as five columns. `subgrid` is not a
-    // track either. (`none` cannot appear here — it can only ever be the whole value, handled
-    // above.)
-    const count = tracks
-      .trim()
-      .replace(/\[[^\]]*\]/g, " ")
-      .split(/\s+/)
-      .filter((token) => token && token !== "subgrid").length;
-    return count >= 1 ? count : 1;
+    // track either.
+    const count =
+      !tracks || tracks === "none"
+        ? 1
+        : tracks
+            .trim()
+            .replace(/\[[^\]]*\]/g, " ")
+            .split(/\s+/)
+            .filter((token) => token && token !== "subgrid").length || 1;
+    if (count === 1) {
+      this.#warnUndetectedSecondAxis(style);
+    }
+    return count;
   }
 
   /**
-   * Coerces a consumer-supplied column count into a usable positive integer. A measured
-   * callback (`() => width / tileWidth`) can hand back a fraction, which would otherwise
-   * produce a fractional index and dereference a hole in the item list.
+   * Warns, once per group, when a container that LOOKS two-dimensional resolved to one column.
    *
-   * @param value - The raw override value.
-   * @returns A whole column count of at least 1.
+   * Only a CSS grid publishes a track list, so a flex-wrap or multi-column tile set reports a
+   * single column and its second axis silently disappears — the cursor steps one tile at a time
+   * where the reader sees rows. Deliberately narrow: a plain block container resolving to one
+   * column is the overwhelmingly common case and is CORRECT, so warning on every such group
+   * would train the warning away. The fix is to lay the group out with CSS grid, which is also
+   * what makes the derivation responsive.
+   *
+   * @param style - The container's resolved style, already read for the track list.
    */
-  #sanitizeColumns(value: number): number {
-    return Number.isFinite(value) ? Math.max(1, Math.floor(value)) : 1;
+  #warnUndetectedSecondAxis(style: CSSStyleDeclaration): void {
+    const wrappingFlex =
+      (style.display === "flex" || style.display === "inline-flex") &&
+      style.flexWrap.startsWith("wrap");
+    const multiColumn = Number(style.columnCount) > 1;
+    if (!wrappingFlex && !multiColumn) {
+      return;
+    }
+    runInDebug(() => {
+      if (this.#warnedUndetectedSecondAxis) {
+        return;
+      }
+      this.#warnedUndetectedSecondAxis = true;
+      // eslint-disable-next-line no-console
+      console.warn(
+        `dRovingFocus: orientation="grid" on a ${
+          wrappingFlex ? "wrapping flex" : "multi-column"
+        } container, which publishes no column track list, so the group navigates on one axis. ` +
+          `Lay it out with CSS grid to get the second axis.`
+      );
+    });
   }
 
   /**
@@ -1228,24 +1266,6 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     }
   }
 
-  /**
-   * One step along the row axis, skipping cells the cursor may not land on.
-   *
-   * Under `orientation="grid"` with more than one column a row is closed on both sides: per
-   * the WAI-ARIA grid pattern, Right on a row's last cell does not move to the next row's
-   * first cell. That is reported as `"row-edge"` rather than `"group-edge"` so it stays
-   * silent — `onExit` means "leaving the group", and firing it from an interior row would
-   * drag a consumer's focus away mid-traversal.
-   *
-   * Keyed strictly on the orientation, never on geometry: a `"horizontal"` group whose items
-   * visually wrap onto several lines is still one logical row.
-   *
-   * @param index - The cursor's current position, or a negative value for no cursor.
-   * @param delta - `1` to move forward through DOM order, `-1` to move back.
-   * @param cells - The coordinate space to move through.
-   * @param columns - The current column count.
-   * @returns Where the cursor lands, or which kind of edge blocked it.
-   */
   /**
    * Applies a resolved outcome, moving the cursor when it names a destination. Split out so
    * every branch that produces an outcome commits it the same way.
@@ -1386,6 +1406,24 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     return "moved";
   }
 
+  /**
+   * One step along the row axis, skipping cells the cursor may not land on.
+   *
+   * Under `orientation="grid"` with more than one column a row is closed on both sides: per
+   * the WAI-ARIA grid pattern, Right on a row's last cell does not move to the next row's
+   * first cell. That is reported as `"row-edge"` rather than `"group-edge"` so it stays
+   * silent — a consumer that hands focus off on `onBoundary` must not be triggered from an
+   * interior row.
+   *
+   * Keyed strictly on the orientation, never on geometry: a `"horizontal"` group whose items
+   * visually wrap onto several lines is still one logical row.
+   *
+   * @param index - The cursor's current position, or a negative value for no cursor.
+   * @param delta - `1` to move forward through DOM order, `-1` to move back.
+   * @param cells - The coordinate space to move through.
+   * @param columns - The current column count.
+   * @returns Where the cursor lands, or which kind of edge blocked it.
+   */
   #step(
     index: number,
     delta: 1 | -1,
@@ -1422,7 +1460,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       if (wrapped != null) {
         // Landing back on the cursor is not a move — reporting one would fire `onActiveChange`
         // for a cursor that never went anywhere — but it is still a wrap, so it must not fall
-        // through to the edge branch either: `wrap` promises to suppress `onExit`.
+        // through to the edge branch either: `wrap` promises to suppress `onBoundary`.
         return wrapped === index
           ? { kind: "row-edge" }
           : { kind: "move", index: wrapped };

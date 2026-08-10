@@ -10,6 +10,7 @@ import {
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 
@@ -162,34 +163,6 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     assert
       .dom(".b")
       .isFocused("ArrowLeft from the first item wraps to the last");
-  });
-
-  test("columns override takes precedence over CSS derivation", async function (assert) {
-    // The container really is a four-track CSS grid, so the override has something to take
-    // precedence OVER. Without the four tracks there is no derivation and the test would pass
-    // against an implementation that consulted CSS first and only fell back to `columns`.
-    await render(
-      <template>
-        <div
-          role="listbox"
-          style="display: grid; grid-template-columns: repeat(4, 40px);"
-          {{dRovingFocus itemSelector="[role=option]" columns=2}}
-        >
-          <button class="i0" role="option">0</button>
-          <button class="i1" role="option">1</button>
-          <button class="i2" role="option">2</button>
-          <button class="i3" role="option">3</button>
-        </div>
-      </template>
-    );
-
-    await focus(".i0");
-    await triggerKeyEvent(".i0", "keydown", "ArrowDown");
-    assert
-      .dom(".i2")
-      .isFocused(
-        "ArrowDown moves by the overridden column count (2), not the four CSS tracks"
-      );
   });
 
   test("skips hidden and disabled items", async function (assert) {
@@ -1098,9 +1071,10 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     assert.dom(".a").hasAttribute("tabindex", "-1");
   });
 
-  test("focus mode: onExit fires at a horizontal edge with the travel direction", async function (assert) {
-    const exits = [];
-    const onExit = (direction) => exits.push(direction);
+  test("focus mode: onBoundary fires at a horizontal edge with the travel direction", async function (assert) {
+    const boundaries = [];
+    const onBoundary = (direction, axis) =>
+      boundaries.push(`${axis}:${direction}`);
 
     await render(
       <template>
@@ -1109,7 +1083,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           {{dRovingFocus
             orientation="horizontal"
             itemSelector="[role=option]"
-            onExit=onExit
+            onBoundary=onBoundary
           }}
         >
           <button class="a" role="option">A</button>
@@ -1121,25 +1095,24 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     await focus(".b");
     await triggerKeyEvent(".b", "keydown", "ArrowRight");
     assert.deepEqual(
-      exits,
-      ["forward"],
+      boundaries,
+      ["horizontal:forward"],
       "ArrowRight past the last item exits forward"
     );
 
     await focus(".a");
     await triggerKeyEvent(".a", "keydown", "ArrowLeft");
     assert.deepEqual(
-      exits,
-      ["forward", "backward"],
+      boundaries,
+      ["horizontal:forward", "horizontal:backward"],
       "ArrowLeft past the first item exits backward"
     );
   });
 
-  test("focus mode: onExit does not fire on a vertical key or with no cursor", async function (assert) {
-    const exits = [];
-    const edges = [];
-    const onExit = (direction) => exits.push(direction);
-    const onEdgeReach = (direction) => edges.push(direction);
+  test("focus mode: onBoundary does not fire on a vertical key or with no cursor", async function (assert) {
+    const boundaries = [];
+    const onBoundary = (direction, axis) =>
+      boundaries.push(`${axis}:${direction}`);
 
     await render(
       <template>
@@ -1148,8 +1121,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           {{dRovingFocus
             orientation="horizontal"
             itemSelector="[role=option]"
-            onExit=onExit
-            onEdgeReach=onEdgeReach
+            onBoundary=onBoundary
             tabStop=false
           }}
         >
@@ -1162,12 +1134,12 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     // tabStop=false leaves no tab stop, so with nothing focused the cursor is -1.
     // Arrowing with no cursor must not report an edge exit.
     await triggerKeyEvent(".a", "keydown", "ArrowLeft");
-    assert.deepEqual(exits, [], "ArrowLeft with no cursor does not exit");
+    assert.deepEqual(boundaries, [], "ArrowLeft with no cursor does not exit");
 
-    // Under horizontal orientation a vertical key is not ours. `onExit` is unreachable from
-    // ArrowDown by construction, so asserting only that would hold even with the orientation
-    // gate deleted: the load-bearing assertion is that the cursor DID NOT MOVE, plus the
-    // vertical callback staying silent too.
+    // Under horizontal orientation a vertical key is not ours. A silent `onBoundary` alone would
+    // hold even with the orientation gate deleted, since the group has only two items and
+    // ArrowDown from the first would land on the second rather than an edge — so the
+    // load-bearing assertion is that the cursor DID NOT MOVE.
     await focus(".a");
     await triggerKeyEvent(".a", "keydown", "ArrowDown");
     assert
@@ -1176,11 +1148,10 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         "ArrowDown under horizontal orientation does not move the cursor"
       );
     assert.deepEqual(
-      exits,
+      boundaries,
       [],
-      "ArrowDown under horizontal orientation does not exit"
+      "and reports no boundary on an axis the group does not claim"
     );
-    assert.deepEqual(edges, [], "and it does not reach a vertical edge either");
   });
 
   test("focus mode: onRegisterApi yields focus controls that move focus", async function (assert) {
@@ -1279,18 +1250,16 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   });
 
   test("grid: ArrowDown inside the last row reaches the edge instead of jumping sideways", async function (assert) {
-    const edges = [];
-    const onEdgeReach = (direction) => edges.push(direction);
+    const boundaries = [];
+    const onBoundary = (direction, axis) =>
+      boundaries.push(`${axis}:${direction}`);
 
     await render(
       <template>
         <div
           role="listbox"
-          {{dRovingFocus
-            itemSelector="[role=option]"
-            columns=3
-            onEdgeReach=onEdgeReach
-          }}
+          style="display: grid; grid-template-columns: repeat(3, 40px);"
+          {{dRovingFocus itemSelector="[role=option]" onBoundary=onBoundary}}
         >
           <button class="i0" role="option">0</button>
           <button class="i1" role="option">1</button>
@@ -1308,21 +1277,23 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     assert.dom(".i3").isFocused("ArrowDown from the last row does not move");
     assert.deepEqual(
-      edges,
-      ["forward"],
+      boundaries,
+      ["vertical:forward"],
       "it reports the bottom edge rather than clamping laterally to the last item"
     );
   });
 
   test("grid: ArrowRight stops at a row edge without reporting a group exit", async function (assert) {
-    const exits = [];
-    const onExit = (direction) => exits.push(direction);
+    const boundaries = [];
+    const onBoundary = (direction, axis) =>
+      boundaries.push(`${axis}:${direction}`);
 
     await render(
       <template>
         <div
           role="listbox"
-          {{dRovingFocus itemSelector="[role=option]" columns=3 onExit=onExit}}
+          style="display: grid; grid-template-columns: repeat(3, 40px);"
+          {{dRovingFocus itemSelector="[role=option]" onBoundary=onBoundary}}
         >
           <button class="i0" role="option">0</button>
           <button class="i1" role="option">1</button>
@@ -1335,24 +1306,29 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     );
 
     // i2 closes row 0. A row edge is not the end of the group, so the cursor stops and
-    // nothing is reported: `onExit` means "leaving the group", and firing it from an
+    // nothing is reported: `onBoundary` means "leaving the group", and firing it from an
     // interior row would drag a consumer's focus out mid-traversal.
     await focus(".i2");
     await triggerKeyEvent(".i2", "keydown", "ArrowRight");
     assert
       .dom(".i2")
       .isFocused("ArrowRight at a row edge does not wrap onto the next row");
-    assert.deepEqual(exits, [], "and a row edge is not a group exit");
+    assert.deepEqual(boundaries, [], "and a row edge is not a group exit");
 
-    // The true end of the group still exits.
+    // The true end of the group still reports one.
     await focus(".i5");
     await triggerKeyEvent(".i5", "keydown", "ArrowRight");
-    assert.deepEqual(exits, ["forward"], "the last item still exits forward");
+    assert.deepEqual(
+      boundaries,
+      ["horizontal:forward"],
+      "the last item still exits forward"
+    );
   });
 
   test("horizontal orientation never row-clamps, however the items wrap visually", async function (assert) {
-    const exits = [];
-    const onExit = (direction) => exits.push(direction);
+    const boundaries = [];
+    const onBoundary = (direction, axis) =>
+      boundaries.push(`${axis}:${direction}`);
 
     // The multi-chips shape: a horizontal group whose items wrap onto several lines. Visual
     // rows are not logical rows, so clamping must key off `orientation`, never geometry.
@@ -1364,7 +1340,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
           {{dRovingFocus
             orientation="horizontal"
             itemSelector="[role=option]"
-            onExit=onExit
+            onBoundary=onBoundary
           }}
         >
           <button class="i0" role="option" style="width: 30px;">0</button>
@@ -1380,7 +1356,11 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     assert
       .dom(".i3")
       .isFocused("a wrapped horizontal group keeps moving across lines");
-    assert.deepEqual(exits, [], "and does not report an exit mid-traversal");
+    assert.deepEqual(
+      boundaries,
+      [],
+      "and does not report an exit mid-traversal"
+    );
   });
 
   test("grid: geometry follows the rendered cells, not the navigable ones", async function (assert) {
@@ -1388,7 +1368,8 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       <template>
         <div
           role="listbox"
-          {{dRovingFocus itemSelector="[role=option]" columns=3}}
+          style="display: grid; grid-template-columns: repeat(3, 40px);"
+          {{dRovingFocus itemSelector="[role=option]"}}
         >
           <button class="i0" role="option">0</button>
           <button class="i1" role="option" aria-disabled="true">1</button>
@@ -1433,16 +1414,15 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       .isFocused("ArrowDown moves by two tracks, not by the token count");
   });
 
-  test("columns is ignored under a non-grid orientation", async function (assert) {
+  // The container is a real three-track CSS grid, so a derivation that ignored the orientation
+  // would find three columns and step ArrowDown three items at a time.
+  test("a non-grid orientation derives no column count", async function (assert) {
     await render(
       <template>
         <div
           role="listbox"
-          {{dRovingFocus
-            orientation="vertical"
-            itemSelector="[role=option]"
-            columns=3
-          }}
+          style="display: grid; grid-template-columns: repeat(3, 40px);"
+          {{dRovingFocus orientation="vertical" itemSelector="[role=option]"}}
         >
           <button class="i0" role="option">0</button>
           <button class="i1" role="option">1</button>
@@ -1467,12 +1447,12 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
         <input class="search" role="combobox" />
         <div
           role="listbox"
+          style="display: grid; grid-template-columns: repeat(3, 40px);"
           {{dRovingFocus
             selectionMode="active"
             controllerElement=".search"
             itemSelector="[role=option]"
             activeClass="--active"
-            columns=3
           }}
         >
           <button class="i0" role="option">0</button>
@@ -1566,9 +1546,106 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     assert.dom(".a").isFocused("Alt+ArrowDown does not navigate");
   });
 
+  // While an IME is composing, the browser still reports the arrows and Enter the candidate
+  // window is using to choose a character. Acting on them navigates the group out from under a
+  // reader who is mid-word, and swallows the commit.
+  test("focus mode: keys mid-composition are left to the IME", async function (assert) {
+    const activated = [];
+    const onActivate = (item) => activated.push(item.className);
+    const prevented = {};
+
+    await render(
+      <template>
+        <div
+          class="list"
+          role="listbox"
+          {{dRovingFocus
+            orientation="vertical"
+            itemSelector="[role=option]"
+            onActivate=onActivate
+          }}
+        >
+          <button class="a" role="option">A</button>
+          <button class="b" role="option">B</button>
+        </div>
+      </template>
+    );
+    document
+      .querySelector(".list")
+      .addEventListener(
+        "keydown",
+        (e) => (prevented[e.key] = e.defaultPrevented)
+      );
+
+    await focus(".a");
+
+    for (const key of ["ArrowDown", "ArrowUp"]) {
+      await triggerEvent(".a", "keydown", { key, isComposing: true });
+      assert.dom(".a").isFocused(`${key} mid-composition does not navigate`);
+      assert.false(
+        prevented[key],
+        `${key} mid-composition is left for the candidate window`
+      );
+    }
+
+    await triggerEvent(".a", "keydown", { key: "Enter", isComposing: true });
+    assert.deepEqual(
+      activated,
+      [],
+      "Enter mid-composition commits a candidate rather than activating"
+    );
+    assert.false(prevented.Enter, "and it reaches the IME un-prevented");
+  });
+
+  test("active mode: keys mid-composition leave the highlight alone", async function (assert) {
+    await render(
+      <template>
+        <input class="search" role="combobox" />
+        <div
+          role="listbox"
+          {{dRovingFocus
+            selectionMode="active"
+            controllerElement=".search"
+            itemSelector="[role=option]"
+            activeClass="--active"
+          }}
+        >
+          <button class="a" role="option">A</button>
+          <button class="b" role="option">B</button>
+        </div>
+      </template>
+    );
+
+    await focus(".search");
+    await triggerKeyEvent(".search", "keydown", "ArrowDown");
+    assert
+      .dom(".a")
+      .hasClass("--active", "the highlight starts on the first item");
+
+    await triggerEvent(".search", "keydown", {
+      key: "ArrowDown",
+      isComposing: true,
+    });
+
+    assert
+      .dom(".a")
+      .hasClass(
+        "--active",
+        "composing ArrowDown does not advance the highlight"
+      );
+    assert
+      .dom(".search")
+      .hasAttribute(
+        "aria-activedescendant",
+        document.querySelector(".a").id,
+        "and the controller still points at the unmoved item"
+      );
+  });
+
   test("focus mode: wrapping onto the only navigable item is not an exit", async function (assert) {
-    const exits = [];
-    const onExit = (direction) => exits.push(direction);
+    const boundaries = [];
+    const onBoundary = (direction, axis) =>
+      boundaries.push(`${axis}:${direction}`);
     const changes = [];
     const onActiveChange = (item) => changes.push(item?.className ?? null);
 
@@ -1580,7 +1657,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
             orientation="horizontal"
             itemSelector="[role=option]"
             wrap=true
-            onExit=onExit
+            onBoundary=onBoundary
             onActiveChange=onActiveChange
           }}
         >
@@ -1596,7 +1673,7 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     assert.dom(".a").isFocused("the only navigable item keeps the cursor");
     assert.deepEqual(
-      exits,
+      boundaries,
       [],
       "a wrapping group does not report an exit, even when the wrap lands where it started"
     );
@@ -1793,6 +1870,175 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     await triggerKeyEvent(".b", "keydown", "ArrowRight");
     assert.dom(".a").isFocused("and ArrowRight moves back");
+  });
+
+  // The reported direction is LOGICAL, so it is derived from which key advances DOM order, not
+  // from which physical arrow was pressed. An implementation keyed on "ArrowRight means forward"
+  // reports "backward" here.
+  test("focus mode: an RTL boundary reports the logical direction", async function (assert) {
+    const boundaries = [];
+    const onBoundary = (direction, axis) =>
+      boundaries.push(`${axis}:${direction}`);
+
+    await render(
+      <template>
+        <div
+          dir="rtl"
+          role="listbox"
+          {{dRovingFocus
+            orientation="horizontal"
+            itemSelector="[role=option]"
+            onBoundary=onBoundary
+          }}
+        >
+          <button class="a" role="option">A</button>
+          <button class="b" role="option">B</button>
+        </div>
+      </template>
+    );
+
+    await focus(".b");
+    await triggerKeyEvent(".b", "keydown", "ArrowLeft");
+    assert.deepEqual(
+      boundaries,
+      ["horizontal:forward"],
+      "ArrowLeft past the last item in DOM order is a FORWARD horizontal boundary in RTL"
+    );
+
+    await focus(".a");
+    await triggerKeyEvent(".a", "keydown", "ArrowRight");
+    assert.deepEqual(
+      boundaries,
+      ["horizontal:forward", "horizontal:backward"],
+      "and ArrowRight past the first item is backward"
+    );
+  });
+
+  // The vertical axis used to be a separate callback, so a grid consumer that wired only the
+  // horizontal one heard nothing at the bottom row. One callback reports both, which is why the
+  // axis is not optional.
+  test("grid: a vertical group edge reports the vertical axis", async function (assert) {
+    const boundaries = [];
+    const onBoundary = (direction, axis) =>
+      boundaries.push(`${axis}:${direction}`);
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          style="display: grid; grid-template-columns: repeat(3, 40px);"
+          {{dRovingFocus itemSelector="[role=option]" onBoundary=onBoundary}}
+        >
+          <button class="i0" role="option">0</button>
+          <button class="i1" role="option">1</button>
+          <button class="i2" role="option">2</button>
+          <button class="i3" role="option">3</button>
+          <button class="i4" role="option">4</button>
+          <button class="i5" role="option">5</button>
+        </div>
+      </template>
+    );
+
+    await focus(".i4");
+    await triggerKeyEvent(".i4", "keydown", "ArrowDown");
+    assert.dom(".i4").isFocused("the bottom row has nowhere further to go");
+    assert.deepEqual(
+      boundaries,
+      ["vertical:forward"],
+      "the bottom row reports a forward VERTICAL boundary, not a horizontal one"
+    );
+
+    await focus(".i1");
+    await triggerKeyEvent(".i1", "keydown", "ArrowUp");
+    assert.deepEqual(
+      boundaries,
+      ["vertical:forward", "vertical:backward"],
+      "and the top row reports backward on the same axis"
+    );
+  });
+
+  test("grid: a wrapping flex container warns that it has no second axis", async function (assert) {
+    const warn = sinon.stub(console, "warn");
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          style="display: flex; flex-wrap: wrap; width: 80px;"
+          {{dRovingFocus itemSelector="[role=option]"}}
+        >
+          <button class="i0" role="option">0</button>
+          <button class="i1" role="option">1</button>
+          <button class="i2" role="option">2</button>
+          <button class="i3" role="option">3</button>
+        </div>
+      </template>
+    );
+
+    await focus(".i0");
+    await triggerKeyEvent(".i0", "keydown", "ArrowDown");
+
+    assert.true(
+      warn.calledOnce,
+      "a wrapping flex group says it cannot find its second axis"
+    );
+    assert.true(
+      warn.firstCall.args[0].includes("wrapping flex"),
+      "and names the layout it could not measure"
+    );
+
+    await triggerKeyEvent(".i1", "keydown", "ArrowDown");
+    assert.true(
+      warn.calledOnce,
+      "and does not repeat itself on every keystroke"
+    );
+  });
+
+  test("grid: a real CSS grid does not warn", async function (assert) {
+    const warn = sinon.stub(console, "warn");
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          style="display: grid; grid-template-columns: repeat(2, 40px);"
+          {{dRovingFocus itemSelector="[role=option]"}}
+        >
+          <button class="i0" role="option">0</button>
+          <button class="i1" role="option">1</button>
+          <button class="i2" role="option">2</button>
+          <button class="i3" role="option">3</button>
+        </div>
+      </template>
+    );
+
+    await focus(".i0");
+    await triggerKeyEvent(".i0", "keydown", "ArrowDown");
+
+    assert.dom(".i2").isFocused("the second axis works");
+    assert.false(warn.called, "so nothing is warned about");
+  });
+
+  test("a plain one-column list does not warn", async function (assert) {
+    const warn = sinon.stub(console, "warn");
+
+    await render(
+      <template>
+        <div role="listbox" {{dRovingFocus itemSelector="[role=option]"}}>
+          <button class="i0" role="option">0</button>
+          <button class="i1" role="option">1</button>
+        </div>
+      </template>
+    );
+
+    await focus(".i0");
+    await triggerKeyEvent(".i0", "keydown", "ArrowDown");
+
+    assert.dom(".i1").isFocused("one column steps one item");
+    assert.false(
+      warn.called,
+      "a block container resolving to one column is correct, not a degradation"
+    );
   });
 
   test("focus mode: an item disabled while it holds the tab stop does not keep it", async function (assert) {
@@ -2038,18 +2284,16 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
   });
 
   test("grid: a blocked column reaches the edge instead of sliding into another column", async function (assert) {
-    const edges = [];
-    const onEdgeReach = (direction) => edges.push(direction);
+    const boundaries = [];
+    const onBoundary = (direction, axis) =>
+      boundaries.push(`${axis}:${direction}`);
 
     await render(
       <template>
         <div
           role="listbox"
-          {{dRovingFocus
-            itemSelector="[role=option]"
-            columns=3
-            onEdgeReach=onEdgeReach
-          }}
+          style="display: grid; grid-template-columns: repeat(3, 40px);"
+          {{dRovingFocus itemSelector="[role=option]" onBoundary=onBoundary}}
         >
           <button class="i0" role="option">0</button>
           <button class="i1" role="option">1</button>
@@ -2071,25 +2315,23 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     assert.dom(".i1").isFocused("the cursor stays in its own column");
     assert.deepEqual(
-      edges,
-      ["forward"],
+      boundaries,
+      ["vertical:forward"],
       "and reports the bottom edge rather than moving diagonally"
     );
   });
 
   test("grid: a column blocked above a ragged last row does not skip into it", async function (assert) {
-    const edges = [];
-    const onEdgeReach = (direction) => edges.push(direction);
+    const boundaries = [];
+    const onBoundary = (direction, axis) =>
+      boundaries.push(`${axis}:${direction}`);
 
     await render(
       <template>
         <div
           role="listbox"
-          {{dRovingFocus
-            itemSelector="[role=option]"
-            columns=3
-            onEdgeReach=onEdgeReach
-          }}
+          style="display: grid; grid-template-columns: repeat(3, 40px);"
+          {{dRovingFocus itemSelector="[role=option]" onBoundary=onBoundary}}
         >
           <button class="i0" role="option">0</button>
           <button class="i1" role="option">1</button>
@@ -2110,25 +2352,23 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     assert.dom(".i2").isFocused("the cursor stays put");
     assert.deepEqual(
-      edges,
-      ["forward"],
+      boundaries,
+      ["vertical:forward"],
       "and reports the bottom of its column rather than skipping a row"
     );
   });
 
   test("grid: a last row with nothing navigable in it is an edge, not a sideways move", async function (assert) {
-    const edges = [];
-    const onEdgeReach = (direction) => edges.push(direction);
+    const boundaries = [];
+    const onBoundary = (direction, axis) =>
+      boundaries.push(`${axis}:${direction}`);
 
     await render(
       <template>
         <div
           role="listbox"
-          {{dRovingFocus
-            itemSelector="[role=option]"
-            columns=2
-            onEdgeReach=onEdgeReach
-          }}
+          style="display: grid; grid-template-columns: repeat(2, 40px);"
+          {{dRovingFocus itemSelector="[role=option]" onBoundary=onBoundary}}
         >
           <button class="i0" role="option">0</button>
           <button class="i1" role="option">1</button>
@@ -2146,25 +2386,23 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     assert.dom(".i2").isFocused("the cursor stays put");
     assert.deepEqual(
-      edges,
-      ["forward"],
+      boundaries,
+      ["vertical:forward"],
       "and it reports the bottom edge rather than stepping across its own row"
     );
   });
 
   test("grid: a rectangular grid takes no ragged fallback when the cell below is the last one", async function (assert) {
-    const edges = [];
-    const onEdgeReach = (direction) => edges.push(direction);
+    const boundaries = [];
+    const onBoundary = (direction, axis) =>
+      boundaries.push(`${axis}:${direction}`);
 
     await render(
       <template>
         <div
           role="listbox"
-          {{dRovingFocus
-            itemSelector="[role=option]"
-            columns=3
-            onEdgeReach=onEdgeReach
-          }}
+          style="display: grid; grid-template-columns: repeat(3, 40px);"
+          {{dRovingFocus itemSelector="[role=option]" onBoundary=onBoundary}}
         >
           <button class="i0" role="option">0</button>
           <button class="i1" role="option">1</button>
@@ -2185,25 +2423,23 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     assert.dom(".i2").isFocused("the cursor stays in its own column");
     assert.deepEqual(
-      edges,
-      ["forward"],
+      boundaries,
+      ["vertical:forward"],
       "and a blocked cell at the end of a full grid is an edge, not a ragged row"
     );
   });
 
   test("grid: a ragged last row takes no fallback when the cursor's own column is merely blocked", async function (assert) {
-    const edges = [];
-    const onEdgeReach = (direction) => edges.push(direction);
+    const boundaries = [];
+    const onBoundary = (direction, axis) =>
+      boundaries.push(`${axis}:${direction}`);
 
     await render(
       <template>
         <div
           role="listbox"
-          {{dRovingFocus
-            itemSelector="[role=option]"
-            columns=3
-            onEdgeReach=onEdgeReach
-          }}
+          style="display: grid; grid-template-columns: repeat(3, 40px);"
+          {{dRovingFocus itemSelector="[role=option]" onBoundary=onBoundary}}
         >
           <button class="i0" role="option">0</button>
           <button class="i1" role="option">1</button>
@@ -2225,8 +2461,8 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
 
     assert.dom(".i4").isFocused("the cursor stays in its own column");
     assert.deepEqual(
-      edges,
-      ["forward"],
+      boundaries,
+      ["vertical:forward"],
       "and a ragged row only rescues a column that is absent, not one that is blocked"
     );
   });
