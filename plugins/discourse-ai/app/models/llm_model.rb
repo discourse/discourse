@@ -806,11 +806,11 @@ end
 #  tokenizer                :string           not null
 #  url                      :string
 #  vision_enabled           :boolean          default(FALSE), not null
-#  vision_llm_model_id      :bigint
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
 #  ai_secret_id             :bigint
 #  user_id                  :integer
+#  vision_llm_model_id      :bigint
 #
 # Indexes
 #
