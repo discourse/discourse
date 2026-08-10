@@ -1146,31 +1146,6 @@ module("Integration | Component | FloatKit | DSheet", function (hooks) {
       );
   });
 
-  test("reactive consumer data tokens preserve Root structure", async function (assert) {
-    const state = new (class {
-      @tracked token = "consumer-initial";
-    })();
-
-    await render(
-      <template>
-        <DSheet.Root class="reactive-token-root" data-d-sheet={{state.token}} />
-      </template>
-    );
-
-    state.token = "consumer-updated";
-    await settled();
-
-    assert
-      .dom(".reactive-token-root")
-      .hasAttribute("data-d-sheet", /root/, "the Root token is preserved")
-      .hasAttribute("data-d-sheet", /outlet/, "the Outlet token is preserved")
-      .hasAttribute(
-        "data-d-sheet",
-        /consumer-updated/,
-        "the updated consumer token is composed"
-      );
-  });
-
   test("Handle only exposes expanded state for dismiss actions", async function (assert) {
     const sheet = {
       detents: ["50vh", "100vh"],

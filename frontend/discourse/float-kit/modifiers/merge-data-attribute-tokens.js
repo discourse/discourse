@@ -45,7 +45,11 @@ export default function mergeDataAttributeTokens(attributeName) {
         consumerTokensOverride
       );
 
-      this.#observeElement(element);
+      if (mirrorTo) {
+        this.#observeElement(element);
+      } else {
+        this.#disconnectObserver();
+      }
     }
 
     #extraTokens(positional) {
