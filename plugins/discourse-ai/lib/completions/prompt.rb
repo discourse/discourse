@@ -175,6 +175,17 @@ module DiscourseAi
         allowed_attachment_types: nil
       )
         if message[:content].is_a?(Array)
+          allowed_kinds =
+            allowed_upload_kinds(allow_images: allow_images, allow_documents: allow_documents)
+          return [] if allowed_kinds.empty?
+
+          encoded_uploads =
+            message[:content].filter_map do |content|
+              next if !content.is_a?(Hash) || !content.key?(:encoded_upload)
+
+              encoded_upload = content[:encoded_upload]
+              encoded_upload if allowed_kinds.include?(encoded_upload[:kind])
+            end
           upload_ids =
             message[:content]
               .map do |content|
@@ -182,19 +193,16 @@ module DiscourseAi
               end
               .compact
           if !upload_ids.empty?
-            allowed_kinds =
-              allowed_upload_kinds(allow_images: allow_images, allow_documents: allow_documents)
-            return [] if allowed_kinds.empty?
-
-            return(
+            encoded_uploads.concat(
               UploadEncoder.encode(
                 upload_ids: upload_ids,
                 max_pixels: max_pixels,
                 allowed_kinds: allowed_kinds,
                 allowed_attachment_types: allowed_attachment_types,
-              )
+              ),
             )
           end
+          return encoded_uploads
         end
 
         []
@@ -226,16 +234,22 @@ module DiscourseAi
       )
         return [content] unless content.is_a?(Array)
 
-        content.map do |c|
-          if c.is_a?(Hash) && c.key?(:upload_id)
+        allowed_kinds =
+          allowed_upload_kinds(allow_images: allow_images, allow_documents: allow_documents)
+
+        content.map do |content_part|
+          if content_part.is_a?(Hash) && content_part.key?(:encoded_upload)
+            encoded_upload = content_part[:encoded_upload]
+            encoded_upload if allowed_kinds.include?(encoded_upload[:kind])
+          elsif content_part.is_a?(Hash) && content_part.key?(:upload_id)
             encode_upload(
-              c[:upload_id],
+              content_part[:upload_id],
               allow_images: allow_images,
               allow_documents: allow_documents,
               allowed_attachment_types: allowed_attachment_types,
             )
           else
-            c
+            content_part
           end
         end
       end
@@ -319,8 +333,16 @@ module DiscourseAi
 
         if message[:content].is_a?(Array)
           message[:content].each do |content|
-            if !content.is_a?(String) && !(content.is_a?(Hash) && content.keys == [:upload_id])
-              raise ArgumentError, "Array message content must be a string or {upload_id: ...} "
+            encoded_upload = content[:encoded_upload] if content.is_a?(Hash)
+            valid_encoded_upload =
+              content.is_a?(Hash) && content.keys == [:encoded_upload] &&
+                encoded_upload.is_a?(Hash) && %i[image document].include?(encoded_upload[:kind]) &&
+                encoded_upload[:mime_type].is_a?(String) && encoded_upload[:base64].is_a?(String)
+            valid_upload =
+              content.is_a?(Hash) && (content.keys == [:upload_id] || valid_encoded_upload)
+            if !content.is_a?(String) && !valid_upload
+              raise ArgumentError,
+                    "Array message content must be a string, {upload_id: ...}, or {encoded_upload: ...}"
             end
           end
         else

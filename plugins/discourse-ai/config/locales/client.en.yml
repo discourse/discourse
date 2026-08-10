@@ -688,7 +688,7 @@ en:
         compression_threshold: "Compression threshold"
         compression_threshold_help: "Percentage of context usage (20–99) at which automatic compression kicks in. Lower values trigger compression earlier, preserving more headroom."
         vision_enabled: Include image uploads
-        vision_enabled_help: If enabled, this agent can include images from posts and chats when the selected model supports image input.
+        vision_enabled_help: If enabled, this agent can include images from posts and chats when the selected model uses native image input or delegates image handling to another model.
         vision_max_pixels: Maximum image size
         vision_max_pixel_sizes:
           low: Low quality - cheapest (256x256)
@@ -1012,6 +1012,18 @@ en:
         url: "URL of the service hosting the model"
         api_key: "API Key of the service hosting the model"
         vision_enabled: "Supports image input"
+        vision_mode: "Image handling"
+        vision_mode_help: "Disabled prevents image processing. Use another model adds a view image tool backed by a native vision model. Native image input sends images directly to this model."
+        vision_modes:
+          disabled:
+            title: "Disabled"
+          delegated:
+            title: "Use another model"
+          native:
+            title: "Native image input"
+        vision_model: "Vision model"
+        vision_model_help: "Delegation adds model requests, latency, and cost. Only models with native image input are available."
+        no_native_vision_models: "Configure a model with native image input before using another model for vision."
         allowed_attachment_types: "Allowed document attachments"
         attachment_types_placeholder: "Select or type extensions (e.g., pdf, txt, csv, docx, xlsx)"
         ai_bot_user: "AI bot User"
@@ -1063,6 +1075,7 @@ en:
           ai_embeddings_semantic_search: "AI search"
           ai_spam: "Spam"
           automation: "Automation (%{agent})"
+          vision_delegate: "Vision for model (%{agent})"
         in_use_warning:
           one: "This model is currently used by %{settings}. If misconfigured, the feature won't work as expected."
           other: "This model is currently used by the following: %{settings}. If misconfigured, features won't work as expected. "

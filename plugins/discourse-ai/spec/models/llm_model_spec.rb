@@ -148,6 +148,61 @@ RSpec.describe LlmModel do
     end
   end
 
+  describe "vision delegation" do
+    fab!(:native_model) do
+      Fabricate(:llm_model, display_name: "Native vision", vision_enabled: true)
+    end
+
+    it "represents disabled, native, and delegated modes without changing native capability" do
+      disabled_model = Fabricate(:llm_model)
+      delegated_model = Fabricate(:llm_model, vision_llm_model: native_model)
+
+      expect(disabled_model.vision_mode).to eq("disabled")
+      expect(native_model.vision_mode).to eq("native")
+      expect(delegated_model.vision_mode).to eq("delegated")
+      expect(delegated_model).to be_delegated_vision
+      expect(delegated_model).not_to be_vision_enabled
+    end
+
+    it "rejects native delegation, self-reference, and non-native targets" do
+      disabled_target = Fabricate(:llm_model, display_name: "Disabled target")
+      model = Fabricate.build(:llm_model, vision_enabled: true, vision_llm_model: native_model)
+      expect(model).not_to be_valid
+
+      model = Fabricate(:llm_model)
+      model.vision_llm_model = model
+      expect(model).not_to be_valid
+
+      model.vision_llm_model = disabled_target
+      expect(model).not_to be_valid
+    end
+
+    it "rejects delegation chains" do
+      delegate = Fabricate(:llm_model, vision_llm_model: native_model)
+      model = Fabricate.build(:llm_model, vision_llm_model: delegate)
+
+      expect(model).not_to be_valid
+    end
+
+    it "reports configured delegation but fails closed for a missing target" do
+      model = Fabricate(:llm_model, vision_llm_model: native_model)
+      model.update_column(:vision_llm_model_id, 99_999_999)
+      model.reload
+
+      expect(model.vision_mode).to eq("delegated")
+      expect(model).not_to be_delegated_vision
+    end
+
+    it "protects a vision target from deletion and demotion" do
+      dependent = Fabricate(:llm_model, display_name: "Text model", vision_llm_model: native_model)
+
+      expect(native_model.destroy).to eq(false)
+      expect(native_model.errors.full_messages.join).to include(dependent.display_name)
+      expect(native_model.update(vision_enabled: false)).to eq(false)
+      expect(native_model.errors.full_messages.join).to include(dependent.display_name)
+    end
+  end
+
   describe "allowed_attachment_types" do
     it "normalizes markdown attachments to md" do
       model = Fabricate.build(:llm_model)

@@ -6840,7 +6840,8 @@ CREATE TABLE public.llm_models (
     max_output_tokens integer,
     cache_write_cost double precision DEFAULT 0.0,
     allowed_attachment_types text[] DEFAULT '{}'::text[] NOT NULL,
-    ai_secret_id bigint
+    ai_secret_id bigint,
+    vision_llm_model_id bigint
 );
 
 
@@ -20271,6 +20272,13 @@ CREATE INDEX index_llm_models_on_ai_secret_id ON public.llm_models USING btree (
 
 
 --
+-- Name: index_llm_models_on_vision_llm_model_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_llm_models_on_vision_llm_model_id ON public.llm_models USING btree (vision_llm_model_id);
+
+
+--
 -- Name: index_llm_quota_usages_on_llm_quota_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -23128,6 +23136,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260810012238'),
 ('20260803015314'),
 ('20260731055703'),
 ('20260730183114'),
