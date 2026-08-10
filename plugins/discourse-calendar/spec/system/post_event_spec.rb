@@ -290,6 +290,7 @@ describe "Post event" do
       post_event_page.going_all_following
 
       expect(post_event_page).to have_going_status
+      expect(post_event_page).to have_selected_status(:going)
       invitee = DiscoursePostEvent::Invitee.find_by(user_id: rsvp_user.id, post_id: post.id)
       expect(invitee.status).to eq(DiscoursePostEvent::Invitee.statuses[:going])
       expect(invitee.recurring).to eq(true)
@@ -303,9 +304,33 @@ describe "Post event" do
       post_event_page.going_this_event
 
       expect(post_event_page).to have_going_status
+      expect(post_event_page).to have_selected_status(:going)
       invitee = DiscoursePostEvent::Invitee.find_by(user_id: rsvp_user.id, post_id: post.id)
       expect(invitee.status).to eq(DiscoursePostEvent::Invitee.statuses[:going])
       expect(invitee.recurring).to eq(false)
+    end
+
+    it "marks only the chosen attendance as selected" do
+      raw = "[event status='public' start='2222-02-22 14:22']\n[/event]"
+      post = PostCreator.create!(admin, title: "My test meetup event", raw:)
+
+      visit(post.topic.url)
+
+      expect(post_event_page).to have_no_selected_status(:going)
+      expect(post_event_page).to have_pressed_status(:going, pressed: false)
+
+      post_event_page.going
+
+      expect(post_event_page).to have_selected_status(:going)
+      expect(post_event_page).to have_pressed_status(:going)
+      expect(post_event_page).to have_no_selected_status(:interested)
+      expect(post_event_page).to have_no_selected_status(:not_going)
+
+      post_event_page.not_going
+
+      expect(post_event_page).to have_selected_status(:not_going)
+      expect(post_event_page).to have_no_selected_status(:going)
+      expect(post_event_page).to have_pressed_status(:going, pressed: false)
     end
 
     it "renders without a dropdown on non-recurring events" do
