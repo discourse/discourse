@@ -6,7 +6,7 @@ module DiscourseAi
       requires_plugin PLUGIN_NAME
 
       def index
-        llms = LlmModel.all.includes(:llm_quotas).order(:display_name)
+        llms = LlmModel.all.includes(:llm_quotas, :vision_llm_model).order(:display_name)
 
         render json: {
                  ai_llms:
@@ -231,12 +231,16 @@ module DiscourseAi
             :api_key,
             :ai_secret_id,
             :vision_enabled,
+            :vision_llm_model_id,
+            :vision_mode,
             :input_cost,
             :cached_input_cost,
             :cache_write_cost,
             :output_cost,
             allowed_attachment_types: [],
           )
+
+        normalize_vision_params!(permitted, updating: updating)
 
         provider = updating ? updating.provider : permitted[:provider]
         permit_url = provider != LlmModel::BEDROCK_PROVIDER_NAME
@@ -266,6 +270,50 @@ module DiscourseAi
         end
 
         permitted
+      end
+
+      def normalize_vision_params!(permitted, updating:)
+        mode_supplied = permitted.key?(:vision_mode)
+        target_supplied = permitted.key?(:vision_llm_model_id)
+        legacy_supplied = permitted.key?(:vision_enabled)
+        mode = permitted.delete(:vision_mode)&.to_s
+
+        if mode_supplied
+          permitted[:requested_vision_mode] = mode || ""
+          case mode
+          when "native"
+            permitted[:vision_enabled] = true
+            permitted[:vision_llm_model_id] = nil
+          when "delegated"
+            permitted[:vision_enabled] = false
+            permitted[:vision_llm_model_id] = permitted[:vision_llm_model_id].presence
+          when "disabled"
+            permitted[:vision_enabled] = false
+            permitted[:vision_llm_model_id] = nil
+          end
+          return
+        end
+
+        if updating
+          if target_supplied
+            permitted[:vision_llm_model_id] = permitted[:vision_llm_model_id].presence
+            permitted[:vision_enabled] = false if permitted[:vision_llm_model_id].present?
+          elsif legacy_supplied && updating.delegated_vision_configured?
+            permitted.delete(:vision_enabled)
+          elsif legacy_supplied
+            permitted[:vision_enabled] = ActiveModel::Type::Boolean.new.cast(
+              permitted[:vision_enabled],
+            )
+            permitted[:vision_llm_model_id] = nil
+          end
+        elsif target_supplied && permitted[:vision_llm_model_id].present? && !legacy_supplied
+          permitted[:vision_enabled] = false
+        else
+          permitted[:vision_enabled] = ActiveModel::Type::Boolean.new.cast(
+            permitted[:vision_enabled],
+          ) || false
+          permitted[:vision_llm_model_id] = nil
+        end
       end
 
       def sanitize_dependent_params!(prov_params, field_definitions)
@@ -305,6 +353,8 @@ module DiscourseAi
           max_output_tokens: {
           },
           vision_enabled: {
+          },
+          vision_llm_model_id: {
           },
           api_key: {
             type: :sensitive,

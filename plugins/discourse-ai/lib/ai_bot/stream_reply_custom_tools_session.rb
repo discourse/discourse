@@ -109,6 +109,7 @@ module DiscourseAi
             post: @source_post,
             user: @user,
             custom_instructions: @custom_instructions,
+            server_owned_tools: false,
             messages:
               DiscourseAi::Completions::PromptMessagesBuilder.messages_from_post(
                 @source_post,
@@ -119,7 +120,8 @@ module DiscourseAi
                     @bot.agent.class.max_turn_tokens,
                   ),
                 tokenizer: context_llm.tokenizer,
-                include_image_uploads: @bot.agent.class.vision_enabled,
+                include_image_uploads:
+                  @bot.agent.class.vision_enabled && @bot.model.native_vision?,
                 include_document_uploads: @bot.model.allowed_attachment_types.present?,
                 allowed_attachment_types: @bot.model.allowed_attachment_types,
                 bot_usernames: available_bot_usernames,

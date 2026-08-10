@@ -74,6 +74,22 @@ RSpec.describe DiscourseAi::Completions::Prompt do
       expect(encoded[2]).to eq("this was an image")
     end
 
+    it "filters pre-encoded uploads by the allowed kinds" do
+      encoded_image = { kind: :image, mime_type: "image/png", base64: "aW1hZ2U=" }
+      encoded_document = { kind: :document, mime_type: "application/pdf", base64: "ZG9jdW1lbnQ=" }
+      content = ["uploads", { encoded_upload: encoded_image }, { encoded_upload: encoded_document }]
+
+      expect(
+        prompt.content_with_encoded_uploads(content, allow_images: false, allow_documents: true),
+      ).to eq(["uploads", nil, encoded_document])
+    end
+
+    it "rejects malformed pre-encoded uploads" do
+      expect do
+        prompt.push(type: :user, content: [{ encoded_upload: { kind: :image } }])
+      end.to raise_error(ArgumentError, /Array message content/)
+    end
+
     it "only encodes documents when explicitly allowed" do
       prompt.push(type: :user, content: ["this is a pdf", { upload_id: pdf_upload.id }])
 

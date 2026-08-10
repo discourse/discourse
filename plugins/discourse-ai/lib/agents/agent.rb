@@ -320,8 +320,29 @@ module DiscourseAi
           .uniq
       end
 
+      def runtime_tools(llm: nil, context: nil)
+        tools = available_tools.reject { |tool| tool.signature[:name] == Tools::ViewImage.name }
+
+        if automatic_vision_tool_enabled?(context) && llm&.llm_model&.delegated_vision?
+          tools += [Tools::ViewImage]
+        end
+
+        tools.uniq
+      end
+
+      def automatic_vision_tool_enabled?(context)
+        context&.server_owned_tools != false && self.class.vision_enabled
+      end
+
+      def defer_forced_tool_for_vision?
+        false
+      end
+
       def craft_prompt(context, llm: nil)
-        available_tools = self.available_tools
+        available_tools = runtime_tools(llm: llm, context: context)
+        context.runtime_tools = available_tools
+        context.runtime_tools_llm_model_id = llm&.llm_model&.id
+        messages = delegated_vision_messages(context, llm)
         system_insts = replace_placeholders(system_prompt, context)
 
         prompt_insts = <<~TEXT.strip
@@ -348,7 +369,7 @@ module DiscourseAi
         prompt =
           DiscourseAi::Completions::Prompt.new(
             prompt_insts,
-            messages: post_system_examples.concat(context.messages),
+            messages: post_system_examples.concat(messages),
             topic_id: context.topic_id,
             post_id: context.post_id,
           )
@@ -379,6 +400,76 @@ module DiscourseAi
 
       protected
 
+      def delegated_vision_messages(context, llm)
+        return context.messages if !automatic_vision_tool_enabled?(context)
+        return context.messages if !llm&.llm_model&.delegated_vision?
+        return context.messages if !self.class.vision_enabled
+
+        context.messages.deep_dup.map do |message|
+          next message if message[:type].to_sym != :user
+
+          message[:content] = delegated_vision_content(message[:content], context)
+          message
+        end
+      end
+
+      def delegated_vision_content(content, context)
+        seen_upload_ids = Set.new
+
+        if content.is_a?(String)
+          replace_delegated_image_references(content, context, seen_upload_ids)
+        elsif content.is_a?(Array)
+          content.filter_map do |part|
+            if part.is_a?(Hash) && part.key?(:upload_id)
+              upload = Upload.find_by(id: part[:upload_id])
+              next part if upload.blank? || !image_upload?(upload)
+              next if seen_upload_ids.include?(upload.id)
+
+              delegated_image_handle(upload, context, seen_upload_ids)
+            elsif part.is_a?(String)
+              replace_delegated_image_references(part, context, seen_upload_ids)
+            else
+              part
+            end
+          end
+        else
+          content
+        end
+      end
+
+      def replace_delegated_image_references(content, context, seen_upload_ids)
+        content.gsub(
+          %r{!\[[^\]]*\]\((upload://[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]{1,10})?)\)},
+        ) do |markdown|
+          upload = upload_from_short_url(Regexp.last_match(1))
+          next markdown if upload.blank? || !image_upload?(upload)
+          next "" if seen_upload_ids.include?(upload.id)
+
+          delegated_image_handle(upload, context, seen_upload_ids) || "[Image unavailable]"
+        end
+      end
+
+      def upload_from_short_url(short_url)
+        sha1 = Upload.sha1_from_short_url(short_url)
+        Upload.find_by(sha1: sha1) if sha1
+      end
+
+      def delegated_image_handle(upload, context, seen_upload_ids)
+        return if !prompt_guardian(context).can_see_upload?(upload)
+
+        seen_upload_ids << upload.id
+        context.register_image_upload(upload.id)
+        "[Image available through view_image: upload_id #{upload.id}]"
+      end
+
+      def prompt_guardian(context)
+        context.image_guardian
+      end
+
+      def image_upload?(upload)
+        DiscourseAi::Completions::UploadEncoder.image_upload?(upload)
+      end
+
       def replace_placeholders(content, context)
         replaced =
           content.gsub(/\{(\w+)\}/) do |match|
@@ -396,7 +487,14 @@ module DiscourseAi
         function_name = tool_call.name
         return nil if function_name.nil?
 
-        tool_klass = available_tools.find { |c| c.signature.dig(:name) == function_name }
+        exposed_tools =
+          if context&.runtime_tools.present? &&
+               context.runtime_tools_llm_model_id == llm&.llm_model&.id
+            context.runtime_tools
+          else
+            available_tools.reject { |tool| tool.signature[:name] == Tools::ViewImage.name }
+          end
+        tool_klass = exposed_tools.find { |tool| tool.signature.dig(:name) == function_name }
         return nil if tool_klass.nil?
 
         arguments =
@@ -444,10 +542,14 @@ module DiscourseAi
 
           if param[:type] == "array" && value
             value =
-              begin
-                JSON.parse(value)
-              rescue JSON::ParserError
-                [value.to_s]
+              if value.is_a?(Array)
+                value
+              else
+                begin
+                  JSON.parse(value)
+                rescue JSON::ParserError, TypeError
+                  [value.to_s]
+                end
               end
           elsif param[:type] == "string" && value
             value = strip_quotes(value).to_s
