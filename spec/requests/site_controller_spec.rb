@@ -153,6 +153,19 @@ RSpec.describe SiteController do
     end
   end
 
+  describe "#emoji" do
+    fab!(:custom_emoji)
+
+    it "returns the custom emoji" do
+      get "/site/emoji.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to contain_exactly(
+        a_hash_including("name" => custom_emoji.name, "url" => custom_emoji.upload.url),
+      )
+    end
+  end
+
   describe "#statistics" do
     after { DiscoursePluginRegistry.reset! }
 
