@@ -47,8 +47,11 @@ module DiscourseAi
           end
       end
 
+      CATDOC_CONFIG_PATH = "/etc/catdocrc"
+
       def self.sandbox_read_paths(path)
-        Discourse::SafeExec.default_read_paths + [File.realpath(path)]
+        Discourse::SafeExec.default_read_paths +
+          Discourse::SafeExec.existing_paths([CATDOC_CONFIG_PATH]) + [File.realpath(path)]
       end
     end
   end
