@@ -25,3 +25,8 @@ en:
       recalculate_scores_remaining: "You’ve reached the maximum number of recalculating scores. Please wait %{time_left} before trying again."
   errors:
     leaderboard_positions_not_ready: "We are generating your leaderboard. Try again in a few minutes."
+  discourse_gamification:
+    discourse_workflows:
+      gamification_score:
+        invalid_points: "Points must be a non-zero whole number, got: %{points}"
+        invalid_date: "Invalid date: %{date}"
