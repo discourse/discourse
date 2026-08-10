@@ -121,7 +121,6 @@ export default class AiComposerHelperMenu extends Component {
     if (option.name === "generate_titles") {
       return this.menu.show(document.querySelector(".ai-helper-trigger"), {
         identifier: "ai-title-suggester",
-        contentClass: "ai-suggestions-menu",
         modalForMobile: true,
         interactive: true,
         component: AiTitleSuggestionsMenu,

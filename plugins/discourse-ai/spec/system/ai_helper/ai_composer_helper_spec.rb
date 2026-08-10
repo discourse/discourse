@@ -287,6 +287,19 @@ RSpec.describe "AI Composer helper" do
         expect(ai_suggestion_dropdown).to have_no_dropdown
       end
     end
+
+    it "only offers title suggestions when there is sufficient content in the composer" do
+      trigger_composer_helper("abc")
+
+      expect(ai_helper_menu).to have_context_menu
+      expect(ai_helper_menu).to have_no_option(mode)
+
+      ai_helper_menu.press_escape_key
+      composer.fill_content(input)
+      composer.click_toolbar_button("ai-helper-trigger")
+
+      expect(ai_helper_menu).to have_option(mode)
+    end
   end
 
   context "when suggesting a category inline when editing a topic" do

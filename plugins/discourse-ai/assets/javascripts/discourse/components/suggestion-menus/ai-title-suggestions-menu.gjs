@@ -45,7 +45,7 @@ export default class AiTitleSuggestionsMenu extends Component {
   }
 
   <template>
-    <div {{didInsert this.loadSuggestions}}>
+    <div class="ai-suggestions-menu" {{didInsert this.loadSuggestions}}>
       {{#if this.loading}}
         <div class="ai-suggestions-menu__loading">{{dIcon "spinner"}}</div>
       {{else if this.suggestions.length}}

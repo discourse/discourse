@@ -17,6 +17,10 @@ module PageObjects
         ).click
       end
 
+      def has_option?(mode)
+        page.has_css?("#{OPTIONS_STATE_SELECTOR} li[data-value=\"#{mode}\"]")
+      end
+
       def has_no_option?(mode)
         page.has_no_css?("#{OPTIONS_STATE_SELECTOR} li[data-value=\"#{mode}\"]")
       end

@@ -504,7 +504,8 @@
   }
 }
 
-.fk-d-menu {
+.fk-d-menu,
+.fk-d-menu-modal {
   &[data-identifier="ai-composer-helper-menu"],
   &[data-identifier="ai-title-suggester"] {
     z-index: z("modal", "dialog");
@@ -513,12 +514,11 @@
       z-index: z("header") + 1;
     }
 
-    .mobile-view & {
-      z-index: z("mobile-composer");
-    }
-
     .ai-suggestions-menu {
+      max-width: 100%;
+
       &__loading {
+        text-align: center;
         padding: var(--space-2);
 
         .d-icon-spinner {
@@ -535,6 +535,10 @@
 
       &__empty-text {
         font-size: var(--font-down-1-rem);
+      }
+
+      .d-button-label {
+        @include ellipsis;
       }
     }
   }
