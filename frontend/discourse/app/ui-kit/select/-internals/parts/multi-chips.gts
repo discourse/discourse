@@ -11,6 +11,7 @@ import DSkeleton from "discourse/ui-kit/d-skeleton";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dRovingFocus, {
   type DRovingFocusApi,
+  type DRovingFocusAxis,
 } from "discourse/ui-kit/modifiers/d-roving-focus";
 import type VariantPresenter from "discourse/ui-kit/select/-internals/coordinators/variant-presenter";
 import keepAboveKeyboard from "discourse/ui-kit/select/-internals/modifiers/keep-above-keyboard";
@@ -111,14 +112,22 @@ export default class MultiChips extends Component<MultiChipsSignature> {
   }
 
   /**
-   * Returns focus to the query input when the roving cursor steps off the right (input-side)
-   * edge of the chip group. At the left edge (`backward`) it stays on the first chip.
+   * Returns focus to the query input when the roving cursor steps off the input-side end of the
+   * chip group. At the other end (`backward`) it stays on the first chip.
    *
-   * @param direction - The travel direction that hit the edge.
+   * Branches on `axis` because `onBoundary` reports both. This group is horizontal, so a vertical
+   * boundary cannot reach it today; handing focus away on one would be wrong rather than merely
+   * unreachable, so the guard is stated rather than assumed.
+   *
+   * @param direction - The travel direction that hit the boundary.
+   * @param axis - The axis the cursor was travelling.
    */
   @action
-  exitChipsToInput(direction: "forward" | "backward"): void {
-    if (direction === "forward") {
+  exitChipsToInput(
+    direction: "forward" | "backward",
+    axis: DRovingFocusAxis
+  ): void {
+    if (axis === "horizontal" && direction === "forward") {
       this.args.focusInput();
     }
   }
@@ -216,7 +225,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
             tabStop=false
             orientation="horizontal"
             itemSelector=".d-combobox__chip-remove"
-            onExit=this.exitChipsToInput
+            onBoundary=this.exitChipsToInput
             onRegisterApi=@onRegisterChipRoving
           )
         )}}

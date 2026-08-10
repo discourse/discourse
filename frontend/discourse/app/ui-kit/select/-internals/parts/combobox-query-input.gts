@@ -149,16 +149,10 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
       return;
     }
 
-    // Mid-composition: swallow the navigation/commit keys (and block `dRovingFocus`, which
-    // also listens on this input) so composing a candidate never opens or selects.
+    // Mid-composition every key belongs to the IME, so composing a candidate never opens or
+    // selects. `dRovingFocus` declines composing keys itself, so this only has to stop the
+    // open/select handling below.
     if (event.isComposing) {
-      if (
-        event.key === "Enter" ||
-        event.key === "ArrowDown" ||
-        event.key === "ArrowUp"
-      ) {
-        event.stopImmediatePropagation();
-      }
       return;
     }
 
