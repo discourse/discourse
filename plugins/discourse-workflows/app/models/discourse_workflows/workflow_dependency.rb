@@ -53,6 +53,7 @@ module DiscourseWorkflows
           workflow_id: published_trigger.workflow_id,
           label: parameters["label"],
           icon: parameters["icon"],
+          post_number: DiscourseWorkflows::Nodes::PostButton::V1.resolved_post_number(parameters),
           position: DiscourseWorkflows::Nodes::PostButton::V1.resolved_position(parameters),
           confirmation: parameters["confirmation"] == true,
           confirmation_message: parameters["confirmation_message"].presence,

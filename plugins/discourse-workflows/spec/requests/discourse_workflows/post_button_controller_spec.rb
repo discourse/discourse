@@ -24,6 +24,7 @@ RSpec.describe DiscourseWorkflows::PostButtonController do
     it "requires authentication" do
       post "/discourse-workflows/trigger-post-button.json",
            params: {
+             workflow_id: workflow.id,
              trigger_node_id: "trigger-1",
              post_id: post_record.id,
            }
@@ -36,6 +37,7 @@ RSpec.describe DiscourseWorkflows::PostButtonController do
 
       post "/discourse-workflows/trigger-post-button.json",
            params: {
+             workflow_id: workflow.id,
              trigger_node_id: "trigger-1",
              post_id: post_record.id,
            }
@@ -49,6 +51,7 @@ RSpec.describe DiscourseWorkflows::PostButtonController do
       it "returns 204 on success" do
         post "/discourse-workflows/trigger-post-button.json",
              params: {
+               workflow_id: workflow.id,
                trigger_node_id: "trigger-1",
                post_id: post_record.id,
              }
@@ -59,6 +62,7 @@ RSpec.describe DiscourseWorkflows::PostButtonController do
       it "enqueues an ExecuteWorkflow job" do
         post "/discourse-workflows/trigger-post-button.json",
              params: {
+               workflow_id: workflow.id,
                trigger_node_id: "trigger-1",
                post_id: post_record.id,
              }
@@ -80,6 +84,7 @@ RSpec.describe DiscourseWorkflows::PostButtonController do
       it "returns 404 when trigger node does not exist" do
         post "/discourse-workflows/trigger-post-button.json",
              params: {
+               workflow_id: workflow.id,
                trigger_node_id: "nonexistent",
                post_id: post_record.id,
              }
@@ -92,6 +97,7 @@ RSpec.describe DiscourseWorkflows::PostButtonController do
 
         post "/discourse-workflows/trigger-post-button.json",
              params: {
+               workflow_id: workflow.id,
                trigger_node_id: "trigger-1",
                post_id: post_record.id,
              }
@@ -105,11 +111,36 @@ RSpec.describe DiscourseWorkflows::PostButtonController do
 
         post "/discourse-workflows/trigger-post-button.json",
              params: {
+               workflow_id: workflow.id,
                trigger_node_id: "trigger-1",
                post_id: private_post.id,
              }
 
         expect(response).to have_http_status(:not_found)
+      end
+
+      it "returns 403 without enqueuing when the configured post number does not match" do
+        update_workflow_node(workflow, "trigger-1") do |node|
+          node.merge(
+            "parameters" => {
+              "label" => "Run workflow",
+              "icon" => "bolt",
+              "group_ids" => [group.id],
+              "post_number" => post_record.post_number + 1,
+            },
+          )
+        end
+        publish_workflow!(workflow)
+
+        expect do
+          post "/discourse-workflows/trigger-post-button.json",
+               params: {
+                 workflow_id: workflow.id,
+                 trigger_node_id: "trigger-1",
+                 post_id: post_record.id,
+               }
+        end.not_to change { Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.size }
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end
