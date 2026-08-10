@@ -2759,6 +2759,9 @@ hy:
     title: "Մուտք գործել անվտանգ ռեժիմ"
     enter: "Մուտք գործել Ապահով Ռեժիմ"
     must_select: "Դուք պետք է ընտրեք առնվազն մեկ տարբերակ՝ անվտանգ ռեժիմ մուտք գործելու համար:"
+  design_wizard:
+    palette_pairs:
+      default: "Լռելյայն"
   wizard:
     title: "Discourse Տեղադրում"
     step:

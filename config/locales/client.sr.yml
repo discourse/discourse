@@ -364,14 +364,17 @@ sr:
     admin_onboarding_banner:
       select_theme:
         title: "Prilagodite svoj sajt"
-        description: "Izaberite početnu temu za svoju zajednicu"
-        action: "Izaberi temu"
-        modal_title: "Izaberite temu"
-        browse_all: "Upravljanje temama"
         show_light_screenshot: "Prikaži svetli snimak ekrana"
         show_dark_screenshot: "Prikaži tamni snimak ekrana"
       start_posting:
         back: "Nazad"
+    design_wizard:
+      title: "Prilagodite svoj sajt"
+      back: "Nazad"
+      next: "Dalje"
+      homepage:
+        topics: "Teme"
+        categories: "Kategorije"
     about:
       edit: "Izmeni ovu stranu"
       simple_title: "O nama"
@@ -663,9 +666,6 @@ sr:
         optional: "opciono"
       claim_help:
         optional: "Možete tražiti prava da sprečite ostale da ga pregledaju"
-        required: "Morate prihvatiti stavke pre nego što ih možete pregledati."
-        claimed_by_you: "Prihvatili ste ovu stavku i možete je pregledati."
-        claimed_by_other: "Samo <b>%{username}</b> može pregledati ovu stavku."
       awaiting_approval: "Čeka odobrenje"
       delete: "Obriši"
       settings:
@@ -1800,6 +1800,8 @@ sr:
       optional_at_signup: "Opciono"
     shortcut_modifier_key:
       alt: "Alt"
+    category_row:
+      subcategories: "+ Podkategorije"
     select_kit:
       delete_item: "Obriši %{name}"
       default_header_text: Odaberite…

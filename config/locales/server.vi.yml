@@ -2720,6 +2720,9 @@ vi:
       button: "Đăng ký"
     resend_email:
       title: "Gửi lại email kích hoạt"
+  design_wizard:
+    palette_pairs:
+      default: "Mặc định"
   wizard:
     step:
       setup:

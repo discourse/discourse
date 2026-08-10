@@ -512,26 +512,16 @@ de:
       pill: "Empfohlen"
       pm_title: "Vorgeschlagene Nachrichten"
     admin_onboarding_banner:
-      launch_in_easy_steps: "Starte in %{step_count} einfachen Schritten"
       congrats_onboarding_complete: "Herzlichen Glückwunsch zum Abschluss des Onboarding-Prozesses!"
       select_theme:
         title: "Passe deine Website an"
-        description: "Wähle ein Starttheme für deine Community"
-        action: "Theme auswählen"
-        modal_title: "Wähle ein Theme aus"
-        use_theme: "Ausgewähltes Theme verwenden"
-        enabled: "Ausgewählt"
-        applying_theme: "Theme wird angewendet …"
-        browse_all: "Themes verwalten"
         show_light_screenshot: "Hellen Screenshot anzeigen"
         show_dark_screenshot: "Dunklen Screenshot anzeigen"
       invite_collaborators:
         title: "Mitwirkende einladen"
-        description: "Die ersten Mitglieder tragen dazu bei, deine Community zum Leben zu erwecken"
         action: "Einladung erstellen"
       start_posting:
         title: "Beginne mit dem Erstellen von Beiträgen"
-        description: "Gib den Leuten etwas, worüber sie gemeinsam reden können"
         action: "Ideen ansehen"
         choose_option: "Wie möchtest du anfangen?"
         predefined_topics: "Vorlagen für Fragen zum Einstieg"
@@ -552,6 +542,27 @@ de:
           what_is_your_favorite_food:
             title: "Was ist dein Lieblingsessen?"
             body: "Teile dein Lieblingsessen mit der Community! Ich fange an: Ich liebe Pizza, besonders mit extra viel Käse und Peperoni."
+    design_wizard:
+      title: "Passe deine Website an"
+      back: "Zurück"
+      next: "Weiter"
+      sections:
+        theme: "Theme"
+        fonts: "Schriftarten"
+        homepage: "Homepage"
+      theme:
+        selected: "Ausgewählt"
+      colors:
+        light: "Hell"
+        dark: "Dunkel"
+      fonts:
+        base_font: "Basisschriftart"
+        heading_font: "Überschrift-Schriftart"
+      homepage:
+        topics: "Themen"
+        categories: "Kategorien"
+        styles:
+          boxes: "Boxen"
     about:
       edit: "Diese Seite bearbeiten"
       simple_title: "Über uns"
@@ -858,10 +869,6 @@ de:
       stale_help: "Dieses Element wurde durch <b>%{username}</b> gelöst."
       claim_help:
         optional: "Du kannst dieses Element reservieren, damit andere es nicht überprüfen."
-        required: "Du musst Elemente reservieren, bevor du sie überprüfen kannst."
-        claimed_by_you: "Du hast dieses Element reserviert und kannst es überprüfen."
-        claimed_by_other: "Dieses Element kann nur von <b>%{username}</b> überprüft werden."
-        automatically_claimed_by: "Dieses Element wird derzeit von <b>%{username}</b> überprüft."
       claim:
         title: "Dieses Thema übernehmen"
       unclaim:
@@ -2945,6 +2952,7 @@ de:
       subcategory_count:
         one: "+%{count} Unterkategorie"
         other: "+%{count} Unterkategorien"
+      subcategories: "+ Unterkategorien"
       topic_count:
         one: "%{count} Thema in dieser Kategorie"
         other: "%{count} Themen in dieser Kategorie"
@@ -3017,6 +3025,7 @@ de:
       toggle: "Dropdowns zum Filtern anzeigen/ausblenden"
     d_icon_grid_picker:
       select_icon: "Symbol auswählen"
+      search_label: "Symbole durchsuchen"
       search_placeholder: "Symbole durchsuchen..."
       no_results: "Keine Symbole gefunden"
       results_count:
@@ -3455,7 +3464,6 @@ de:
         other: "%{count} offene Mitgliedschaftsanfragen für „%{group_name}“"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} – abgeschlossen"
       new_features: "Neue Funktionen verfügbar!"
       admin_problems: "Neue Ratschläge auf deinem Website-Dashboard"
       upcoming_changes:

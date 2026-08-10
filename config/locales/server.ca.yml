@@ -2751,6 +2751,9 @@ ca:
     title: "Entra en mode segur"
     enter: "Entra en mode segur"
     must_select: "Cal seleccionar almenys una opció per a entrar en mode segur."
+  design_wizard:
+    palette_pairs:
+      default: "Per defecte"
   wizard:
     title: "Instal·lació de Discourse"
     step:

@@ -2789,6 +2789,10 @@ fa_IR:
     title: "ورود به حالت امن"
     no_themes: "غیرفعال کردن پوسته‌ها و اجزای پوسته"
     enter: "فعال‌سازی حالت امن"
+  design_wizard:
+    palette_pairs:
+      default: "پیش‌فرض"
+      dracula: "دراکولا"
   wizard:
     title: "راه اندازی Discourse"
     step:

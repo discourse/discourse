@@ -2750,6 +2750,9 @@ hr:
       help: "Za početak registrirajte novi korisnički račun."
     resend_email:
       title: "Ponovno pošaljite e-poštu za aktivaciju"
+  design_wizard:
+    palette_pairs:
+      default: "Zadano"
   wizard:
     step:
       setup:

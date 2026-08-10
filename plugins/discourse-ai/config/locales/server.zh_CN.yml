@@ -111,6 +111,8 @@ zh_CN:
     ai_image_caption_agent: "用于 AI 图片摘要功能的智能体。自定义智能体必须启用图片上传功能，并使用具备视觉功能的 LLM。"
     ai_post_image_captions_enabled: "为帖子图片启用 AI 摘要。生成缺失的图片摘要需要配置 {{setting:ai_image_caption_agent}}。"
     ai_post_image_captions_per_post_limit: "每篇帖子可添加图片摘要的数量上限。"
+    ai_post_image_captions_backfill_hourly_rate: "每小时可通过 AI 生成的图片标题进行回填的最大帖子数量。设置为 0 可禁用回填功能。"
+    ai_post_image_captions_backfill_max_age_days: "可通过 AI 生成的图片标题进行回填的帖子的最大留存天数。"
     post_ai_helper_allowed_groups: "能够在帖子中访问 AI 助手功能的用户群组"
     ai_helper_post_illustrator_agent: "用于 AI 助手插图帖子功能的智能体。注意：您还必须创建一个图像生成工具（管理 > 插件 > Discourse AI > 工具），此功能才能正常工作。"
     ai_helper_chat_thread_title_agent: "用于生成聊天消息串标题的智能体。"
@@ -157,8 +159,11 @@ zh_CN:
     ai_discord_search_agent: "用于 Discord 搜索的智能体。"
     ai_discord_allowed_guilds: "允许机器人搜索的 Discord 公会（服务器）"
     ai_translation_enabled: "启用 AI 翻译功能"
+    ai_translation_category_scope: "选择 AI 翻译可以使用的类别。包含和排除选项使用 {{setting:ai_translation_categories}}。个人信息由 {{setting:ai_translation_personal_messages}} 控制。"
+    ai_translation_categories: "当 AI 翻译类别范围设置为<strong>包含</strong>或<strong>排除</strong>时所使用的类别。"
     ai_translation_personal_messages: "控制哪些个人消息需要翻译。'none' 表示禁用个人消息翻译。'group' 仅翻译群组个人消息。'all' 翻译所有个人消息。"
     ai_translation_include_bot_content: "启用后，机器人（用户 ID 小于 0）编写的内容也将发送进行翻译。"
+    ai_translation_backfill_start_date: "历史帖子和话题将被发送进行翻译回填的起始 UTC 日期。留空可禁用回填功能。将继续翻译新内容。"
     ai_translation_backfill_hourly_rate: "回填操作期间每小时翻译的帖子和话题数量。设置为 0 可禁用现有内容的自动翻译回填。"
     ai_translation_backfill_parallel_jobs: "每个回填周期中并行运行的后置本地化任务数量。数值越高吞吐量越大，但会占用更多资源。"
     ai_usage_rollup_after_days: "每次请求的 AI 使用数据在被汇总到每日统计之前要保留的天数。设为 0 表示不进行汇总。"
@@ -173,6 +178,7 @@ zh_CN:
       description: "此报告按类别对帖子进行情绪分析，每个帖子和类别都有积极、消极和中性分数。"
     overall_sentiment:
       title: "整体情绪"
+      description: "该图表会对被分类为正面或负面的帖子数量进行对比。仅当帖子的正面或负面分数高于设定的阈值分数时，才会对帖子进行计算。这意味着不会显示情感分类为中性帖子。个人信息 (PM) 也会被排除在外。根据选定的情感分类方法，会使用已配置的情感分类模型 ('cardiffnlp/twitter-roberta-base-sentiment-latest') 或已配置的情感分类智能体对帖子进行分类。"
       xaxis: "积极 (%)"
       yaxis: "日期"
     emotion_admiration:
@@ -274,6 +280,7 @@ zh_CN:
     discourse_workflows:
       ai_agent:
         errors:
+          invalid_mode: "'%{mode}' 不是受支持的 AI 智能体执行模式。"
           locked_default_llm_missing: "智能体 '%{agent}' 被锁定为其默认 LLM，但未配置有效的默认 LLM"
           llm_not_found: "找不到 ID 为 %{llm_model_id} 的 LLM 模型"
           no_llm_configured: "没有为智能体 '%{agent}' 配置 LLM。请选择一个 LLM 模型，或配置智能体/站点默认 LLM。"
@@ -366,6 +373,19 @@ zh_CN:
         explain: "解释"
         illustrate_post: "为帖子创建插图"
         replace_dates: "智能日期"
+      image_caption:
+        aria_description: "%{description}（标题由 AI 生成）"
+    image_caption:
+      configuration:
+        agent_missing: "为 AI 图片标题选择已有的智能体。"
+        agent_vision_disabled: "AI 图片标题智能体必须启用图片上传功能。"
+        llm_missing: "AI 图片标题智能体必须使用 LLM。"
+        llm_vision_disabled: "AI 图片标题智能体必须使用具备视觉能力的 LLM。"
+    post_image_captions:
+      errors:
+        description_blank: "标题不能为空。"
+        description_too_long:
+          other: "One\n标题包含的字符数不得超过 %{count}。\nOther\n标题包含的字符数不得超过 %{count}。"
     share_ai:
       read_more: "阅读完整语音稿"
       onebox_title: "与 %{llm_name} 的 AI 对话"
@@ -386,6 +406,9 @@ zh_CN:
       configuration_missing: "缺少 AI 垃圾信息检测配置。请先在“管理 > 插件 > Discourse AI > 垃圾信息”中添加配置，然后再启用。"
       logging_subject: "垃圾信息检测"
     ai_bot:
+      errors:
+        invalid_agent_id: "指定的 AI 智能体不存在，或者您没有访问权限。"
+        cannot_send_pm_to_agent: "您无法向该 AI 智能体发送个人信息"
       reply_error: "抱歉，我们的系统在尝试回复时似乎遇到了意外问题。\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[无标题 AI 机器人私信]"
       thinking: "正在思考"
@@ -438,6 +461,9 @@ zh_CN:
         discourse_helper:
           name: "Discourse 助手"
           description: "专门帮助处理 Discourse 相关任务的 AI 机器人"
+        discourse_admin_assistant:
+          name: "Discourse 管理员助手"
+          description: "AI 机器人会回答 Discourse 问题，并帮助管理员管理站点设置"
         web_artifact_creator:
           name: "Web 工件创建工具"
           description: "专门用于创建交互式 Web 工件的 AI 机器人"
@@ -482,6 +508,7 @@ zh_CN:
           description: "支持助手的翻译工具功能的默认智能体"
         image_captioner:
           name: "图片标题"
+          description: "支持图片标题功能的默认智能体"
         locale_detector:
           name: "语言区域检测工具"
           description: "通过检测给定文本（帖子、标题等）的语言区域来支持翻译功能"
@@ -596,6 +623,7 @@ zh_CN:
         github_diff: "GitHub 差异"
         random_picker: "随机选择器"
         categories: "列出类别"
+        users: "列出用户"
         flag_post: "标记帖子"
         close_topic: "关闭话题"
         suspend_user: "封禁用户"
@@ -647,6 +675,7 @@ zh_CN:
         github_diff: "检索 GitHub 拉取请求或提交差异"
         random_picker: "选择一个随机数或列表的随机元素"
         categories: "列出论坛上所有公开可见的类别"
+        users: "列出论坛上的用户"
         flag_post: "标记当前帖子供管理人员审核"
         close_topic: "关闭或打开话题"
         suspend_user: "封禁用户，禁止其登录和发帖。"
@@ -726,6 +755,8 @@ zh_CN:
         image: "%{prompt}"
         categories:
           other: "找到 %{count} 个类别"
+        users:
+          other: "One\n已找到 %{count} 个用户\nOther\n已找到 %{count} 个用户"
         tags:
           other: "找到 %{count} 个标签"
         search:

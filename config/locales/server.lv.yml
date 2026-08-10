@@ -543,6 +543,9 @@ lv:
       button: "Reģistrēties"
     resend_email:
       title: "Atkārtoti nosūtīt aktivācijas e-pastu"
+  design_wizard:
+    palette_pairs:
+      default: "Noklusējums"
   wizard:
     step:
       setup:

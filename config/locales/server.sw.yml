@@ -1982,6 +1982,9 @@ sw:
       message: "<p>Tumekutumia tena barua ya uanzishaji<b>%{email}</b>"
   safe_mode:
     enter: "Ingia Hali-tumizi iliyo salama"
+  design_wizard:
+    palette_pairs:
+      default: "Halisi"
   wizard:
     title: "Mpangilio wa Discourse"
     step:

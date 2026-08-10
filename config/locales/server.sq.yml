@@ -1422,6 +1422,9 @@ sq:
       title: "Konfirmoni emailin tuaj"
     resend_email:
       title: "Dërgo përsëri emailin e aktivizimit"
+  design_wizard:
+    palette_pairs:
+      default: "Paracaktuar"
   wizard:
     step:
       setup:

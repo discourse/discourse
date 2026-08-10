@@ -1077,6 +1077,9 @@ et:
   safe_mode:
     title: "Sisene turvalisse režiimi"
     enter: "Sisene turvalisse režiimi"
+  design_wizard:
+    palette_pairs:
+      default: "Vaikimisi"
   wizard:
     title: "Discourse sätted"
     step:

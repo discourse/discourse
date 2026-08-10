@@ -247,6 +247,9 @@ zh_CN:
           llm_model_default: "使用智能体默认值"
           llm_model_default_with_name: "使用智能体默认值 (%{value})"
           mode: "模式"
+          mode_description: "选择智能体会为每个输入条目运行一次，还是为所有输入条目统一运行一次。每一次运行都会向 LLM 发出单独的请求。"
+          mode_run_once_for_each_item: "为每个条目运行一次"
+          mode_run_once_for_all_items: "为所有条目统一运行一次"
           prompt: "提示"
           runner_username: "运行身份："
           runner_username_tooltip: "其权限用于控制上传内容可见性和 AI 智能体工具的用户。使用 system 实现符合工作流的自动化操作。"
@@ -427,23 +430,62 @@ zh_CN:
             load_error: "%{target} 详细信息无法加载。"
             retry: "重试"
             empty: "没有可用的语言进度。"
+            progress_label: "已将 %{translated} 个条目（共 %{total} 个）翻译为 %{language}"
             columns:
               locale: "语言区域"
+              translated: "已翻译条目数"
               pending: "待处理"
+              eligible: "符合条件的条目数"
               total: "总计"
+              progress: "进度"
+            eligible_help: "排除已使用此语言的内容。"
+            pending_help: "包含仍需进行语言检测的内容。"
           targets:
             post:
               title: "帖子"
+              eligible_total:
+                other: "One\n有 %{count} 个符合条件的帖子需要翻译。\nOther\n有 %{count} 个符合条件的帖子需要翻译。"
+              translated:
+                other: "One\n%{count} 个帖子已翻译完毕。\nOther\n%{count} 个帖子已翻译完毕。"
+              needs_language_detection:
+                other: "One\n%{count} 个帖子仍需进行语言检测。\nOther\n%{count} 个帖子仍需进行语言检测。"
+              all_translated:
+                other: "One\n符合条件的帖子已翻译完毕。\nOther\n全部 %{count} 个符合条件的帖子已翻译完毕。"
             topic:
               title: "话题"
+              eligible_total:
+                other: "One\n有 %{count} 个符合条件的话题需要翻译。\nOther\n有 %{count} 个符合条件的话题需要翻译。"
+              translated:
+                other: "One\n%{count} 个话题已翻译完毕。\nOther\n%{count} 个话题已翻译完毕。"
+              needs_language_detection:
+                other: "One\n%{count} 个话题仍需进行语言检测。\nOther\n%{count} 个话题仍需进行语言检测。"
+              all_translated:
+                other: "One\n符合条件的话题已翻译完毕。\nOther\n全部 %{count} 个符合条件的话题已翻译完毕。"
             category:
               title: "类别"
+              eligible_total:
+                other: "One\n有 %{count} 个符合条件的类别需要翻译。\nOther\n有 %{count} 个符合条件的类别需要翻译。"
+              translated:
+                other: "One\n%{count} 个类别已翻译完毕。\nOther\n%{count} 个类别已翻译完毕。"
+              needs_language_detection:
+                other: "One\n%{count} 个类别仍需进行语言检测。\nOther\n%{count} 个类别仍需进行语言检测。"
+              all_translated:
+                other: "One\n符合条件的类别已翻译完毕。\nOther\n全部 %{count} 个符合条件的类别已翻译完毕。"
             tag:
               title: "标签"
+              total:
+                other: "One\n有 %{count} 个标签需要翻译。\nOther\n有 %{count} 个标签需要翻译。"
+              translated:
+                other: "One\n%{count} 个标签已翻译完毕。\nOther\n%{count} 个标签已翻译完毕。"
+              needs_language_detection:
+                other: "One\n%{count} 个标签仍需进行语言检测。\nOther\n%{count} 个标签仍需进行语言检测。"
+              all_translated:
+                other: "One\n标签已翻译完毕。\nOther\n全部 %{count} 个标签已翻译完毕。"
         admin_actions:
           translation_settings: "AI 设置"
           localization_settings: "应用语言设置"
           enable_translations: "启用自动翻译"
+          enable_translations_disabled: "您必须添加受支持的语言才能启用翻译功能。"
         stats:
           title: "翻译统计"
           backfill_disabled: "回填功能已禁用，仅翻译新帖子。"
@@ -659,7 +701,9 @@ zh_CN:
         allowed_groups: "允许的群组"
         confirm_delete: "确定要删除此智能体吗？"
         new: "新建智能体"
+        new_group: "新建或复制智能体"
         duplicate: "复制"
+        duplicate_search: "复制智能体"
         copy_name: "%{name} 的副本"
         no_agents: "您尚未创建任何智能体。"
         manage_agents: "管理智能体"

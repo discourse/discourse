@@ -320,6 +320,20 @@ ca:
     admin_onboarding_banner:
       start_posting:
         back: "Enrere"
+    design_wizard:
+      back: "Enrere"
+      next: "Següent"
+      sections:
+        theme: "Aparença"
+        homepage: "Pàgina principal"
+      colors:
+        light: "Clar"
+        dark: "Fosc"
+      homepage:
+        topics: "Temes"
+        categories: "Categories"
+        styles:
+          boxes: "Caixes"
     about:
       edit: "Edita aquesta pàgina"
       simple_title: "Quant a"
@@ -489,9 +503,6 @@ ca:
         optional: "opcional"
       claim_help:
         optional: "Podeu reclamar aquest element per a impedir que altres el revisin."
-        required: "Heu de reclamar elements abans de poder revisar-los"
-        claimed_by_you: "Heu reclamat aquest element i podeu revisar-lo"
-        claimed_by_other: "Aquest element sols pot ser revisat per <b>%{username}</b>."
       awaiting_approval: "Esperant aprovació"
       delete: "Suprimeix"
       settings:
@@ -1675,6 +1686,8 @@ ca:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Retorn"
+    category_row:
+      subcategories: "+ Subcategories"
     select_kit:
       delete_item: "Suprimeix %{name}"
       no_content: No s'han trobat coincidències

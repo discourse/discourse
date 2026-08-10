@@ -3125,6 +3125,9 @@ da:
     title: "Gå ind i fejlsikret tilstand"
     enter: "Gå ind i fejlsikret tilstand"
     must_select: "Du skal vælge mindst én mulighed for at gå i fejlsikret tilstand."
+  design_wizard:
+    palette_pairs:
+      default: "Standard"
   wizard:
     title: "Discourse Opsætning"
     step:
