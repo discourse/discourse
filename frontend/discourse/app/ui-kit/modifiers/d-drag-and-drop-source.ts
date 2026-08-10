@@ -207,6 +207,12 @@ export function registerDragAndDropSource(
   // the row, runs them against a destroyed component one task later.
   let pendingConsumers: Parameters<typeof cancel>[0] | null = null;
 
+  /** Whether a drag from this element is in flight. */
+  let dragging = false;
+
+  /** A teardown waiting for the drag in flight to finish, if there is one. */
+  let teardownWhenIdle: (() => void) | null = null;
+
   const cleanup = draggable({
     element,
     // Read once, here: the underlying library keeps this in the config captured
@@ -266,6 +272,7 @@ export function registerDragAndDropSource(
     },
     onDragStart: (event) => {
       const args = getArgsRef();
+      dragging = true;
       element.classList.add("--dragging");
       const sourcePayload = {
         type: args.type,
@@ -279,6 +286,7 @@ export function registerDragAndDropSource(
     },
     onDrop: (event) => {
       const args = getArgsRef();
+      dragging = false;
       // Source-private cleanup runs synchronously. These touch only
       // state owned by the source element / source modifier; nothing
       // downstream (target callbacks, native bubble-phase listeners)
@@ -322,9 +330,35 @@ export function registerDragAndDropSource(
         if (landed) {
           consumerOnDrop?.({ source: sourcePayload, location });
         }
+        // A teardown that was held back for this drag. Run last, so the
+        // unregistration cannot land in the middle of the library's own dispatch.
+        const deferred = teardownWhenIdle;
+        teardownWhenIdle = null;
+        deferred?.();
       });
     },
   });
+
+  const teardown = () => {
+    cleanup();
+    element.classList.remove("--dragging");
+    element.removeAttribute("data-drag-source");
+  };
+
+  /**
+   * Drops everything this registration is still owed: a dispatch already
+   * scheduled, and a teardown waiting on a drag that will now never be reported.
+   */
+  const abandon = () => {
+    if (pendingConsumers) {
+      cancel(pendingConsumers);
+      pendingConsumers = null;
+    }
+    if (teardownWhenIdle) {
+      teardownWhenIdle = null;
+      teardown();
+    }
+  };
 
   /**
    * Tears the registration down.
@@ -335,15 +369,29 @@ export function registerDragAndDropSource(
    *   this defers around. False when the registration is merely being replaced —
    *   a `disabled` arg flipping, or a new handle — because the consumer is still
    *   there and still expects to hear how its own drag ended.
+   * @returns `null` once nothing is outstanding, or a function dropping what
+   *   still is. A caller that kept the pending work has to hold onto this: it is
+   *   the only remaining way to reach it, and the caller may yet go away before
+   *   the drag it kept reports.
    */
   return ({ cancelPending = true }: { cancelPending?: boolean } = {}) => {
-    if (cancelPending && pendingConsumers) {
-      cancel(pendingConsumers);
-      pendingConsumers = null;
+    if (cancelPending) {
+      abandon();
+      teardown();
+      return null;
     }
-    cleanup();
-    element.classList.remove("--dragging");
-    element.removeAttribute("data-drag-source");
+
+    if (dragging) {
+      // Unregistering now would take the element out of the library's dispatch
+      // mid-drag, so the drop it is about to report — and with it the
+      // `onDragEnd` every drag is promised — would never arrive. The consumer
+      // is still here to receive it, so the teardown waits for the drag.
+      teardownWhenIdle = teardown;
+      return abandon;
+    }
+
+    teardown();
+    return pendingConsumers ? abandon : null;
   };
 }
 
@@ -392,9 +440,21 @@ export default class DDragAndDropSourceModifier extends Modifier<DDragAndDropSou
   /** The handle the live registration was created with, to detect a change. */
   #dragHandle: Element | undefined = undefined;
 
+  /**
+   * Drops what a detached registration is still owed. Held here rather than left
+   * in the registration's own closure, which went away with the cleanup function
+   * that reached it: a consumer can be destroyed after its registration was
+   * replaced but before the drag it kept has reported.
+   */
+  #abandonDetached: (() => void) | null = null;
+
   constructor(owner: Owner, args: ArgsFor<DDragAndDropSourceSignature>) {
     super(owner, args);
-    registerDestructor(this, (instance) => instance.#detach());
+    registerDestructor(this, (instance) => {
+      instance.#detach();
+      instance.#abandonDetached?.();
+      instance.#abandonDetached = null;
+    });
   }
 
   modify(
@@ -428,6 +488,11 @@ export default class DDragAndDropSourceModifier extends Modifier<DDragAndDropSou
     this.#dragHandle = args.dragHandle;
 
     if (!this.#cleanup) {
+      // Anything still winding down is dropped first. Two registrations on one
+      // element is not a state the library supports, and the previous one is
+      // only ever kept alive to report a drag that has now been superseded.
+      this.#abandonDetached?.();
+      this.#abandonDetached = null;
       this.#cleanup = registerDragAndDropSource(element, () => this.#args);
     }
   }

@@ -59,13 +59,17 @@ export type DragAndDropAutoScrollArgs =
  *
  * Library-agnostic by design: PDND auto-scroll is imported only here.
  *
- * @param getArgsRef - Closure returning the latest args. The `types` and `axis`
- *   args are read on every callback, so changes to them take effect without
- *   re-registering. `target` and `element` are the exception: they are read once,
- *   here, to decide which registration to make, so changing either needs a fresh
- *   registration. Through the modifier that happens on its own, because this call
- *   reads the args inside the modifier's own tracking frame: changing any of them
- *   tears the registration down and makes a new one.
+ * @param getArgsRef - Closure returning the latest args. `types` and `axis` are
+ *   re-read on every callback, so a caller driving this imperatively can change
+ *   what its closure returns and have the change take without re-registering.
+ *   `target` and `element` are read once, here, to decide which registration to
+ *   make, so changing either needs a fresh one.
+ *
+ *   Through the modifier below that distinction does not arise: the closure is
+ *   invoked in the modifier body, which consumes every arg it reads, so changing
+ *   any of them re-runs the modifier and replaces the registration. That is
+ *   accepted rather than worked around — auto-scroll args rarely change, and a
+ *   replacement between drags costs nothing.
  * @returns Cleanup function. Caller invokes it once on teardown.
  */
 export function registerDragAndDropAutoScroll(
@@ -120,9 +124,10 @@ export function registerDragAndDropAutoScroll(
  */
 export default modifier<DDragAndDropAutoScrollSignature>(
   (element, _positional, args) =>
-    // Read args INSIDE the closure, not via destructure in the body —
-    // a destructure here would mark the args' tags consumed and force
-    // the modifier to re-run (re-registering PDND) on every change.
+    // The closure is the shape the registrar reads args through, not a way of
+    // avoiding consumption: it is invoked in the body, so every arg it reads is
+    // consumed here and any change re-runs this modifier. See the note on
+    // `registerDragAndDropAutoScroll` for why that is fine.
     registerDragAndDropAutoScroll(() => ({
       types: args.types,
       axis: args.axis ?? "vertical",

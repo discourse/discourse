@@ -11,7 +11,9 @@ import {
 } from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
 import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
 import { registerDragAndDropMonitor } from "discourse/ui-kit/modifiers/d-drag-and-drop-monitor";
-import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
+import dDragAndDropSource, {
+  registerDragAndDropSource,
+} from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 
 module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
@@ -1252,6 +1254,117 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         calls,
         ["dragEnd", "drop"],
         "a source that merely re-registered still reports the drop it was in the middle of"
+      );
+    });
+
+    test("a caller that kept the dispatch can still drop it afterwards", async function (assert) {
+      const calls = [];
+      const args = {
+        type: "row",
+        onDragEnd: () => calls.push("dragEnd"),
+        onDrop: () => calls.push("drop"),
+      };
+
+      await render(
+        <template>
+          <div id="src">src</div>
+          <div id="tgt" {{dDragAndDropTarget accepts="row"}}>tgt</div>
+        </template>
+      );
+
+      const release = registerDragAndDropSource(find("#src"), () => args);
+
+      const dataTransfer = new DataTransfer();
+      await dragEvent("#src", "dragstart", {
+        dataTransfer,
+        ...centerOf("#src"),
+      });
+      await dragEvent("#tgt", "dragenter", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+      await dragEvent("#tgt", "dragover", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+
+      find("#tgt").dispatchEvent(
+        new DragEvent("drop", { bubbles: true, dataTransfer })
+      );
+
+      // Detached without cancelling, which is what replacing a registration
+      // under a living consumer does. The dispatch is still scheduled, and this
+      // closure was the only thing that could reach it.
+      const abandon = release({ cancelPending: false });
+
+      assert.strictEqual(
+        typeof abandon,
+        "function",
+        "keeping the dispatch hands back a way to drop it later"
+      );
+
+      abandon();
+      await settled();
+
+      assert.deepEqual(
+        calls,
+        [],
+        "so a consumer that goes away after the hand-off is still never called"
+      );
+    });
+
+    test("a source disabled mid-drag still reports how that drag ended", async function (assert) {
+      const calls = [];
+      const state = new (class {
+        @tracked disabled = false;
+      })();
+      const onDragEnd = () => calls.push("dragEnd");
+      const onDrop = () => calls.push("drop");
+
+      await render(
+        <template>
+          <div
+            id="src"
+            {{dDragAndDropSource
+              type="row"
+              disabled=state.disabled
+              onDragEnd=onDragEnd
+              onDrop=onDrop
+            }}
+          >src</div>
+          <div id="tgt" {{dDragAndDropTarget accepts="row"}}>tgt</div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      await dragEvent("#src", "dragstart", {
+        dataTransfer,
+        ...centerOf("#src"),
+      });
+      await dragEvent("#tgt", "dragenter", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+
+      // Disabled while the drag is still in flight, which a consumer binding
+      // the arg to anything that changes mid-drag will do. The drag itself
+      // carries on — the browser is holding it, not the page.
+      state.disabled = true;
+      await settled();
+
+      await dragEvent("#tgt", "dragover", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+      await dragEvent("#tgt", "drop", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+
+      assert.deepEqual(
+        calls,
+        ["dragEnd", "drop"],
+        "the consumer is still told how its drag finished, as it is promised for every drag"
       );
     });
   });
