@@ -668,6 +668,9 @@ sr:
     groups:
       errors:
         empty_permissions: "Grupa oznaka mora imati najmanje jedno ovlašćenje."
+  design_wizard:
+    palette_pairs:
+      default: "Подразумевано"
   wizard:
     step:
       setup:

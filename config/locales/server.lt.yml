@@ -2552,6 +2552,9 @@ lt:
     title: "Įeikite į saugųjį režimą"
     enter: "Įeikite į saugųjį režimą"
     must_select: "Norėdami įjungti saugųjį režimą, turite pasirinkti bent vieną parinktį."
+  design_wizard:
+    palette_pairs:
+      default: "Numatytasis"
   wizard:
     title: "Discourse sąranka"
     step:

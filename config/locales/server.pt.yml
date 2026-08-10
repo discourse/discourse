@@ -2078,6 +2078,9 @@ pt:
   safe_mode:
     title: "Entrar em modo de segurança"
     enter: "Entrar em Modo de Segurança"
+  design_wizard:
+    palette_pairs:
+      default: "Predefinição"
   wizard:
     title: "Configuração do Discourse"
     step:

@@ -2749,7 +2749,7 @@ pl_PL:
     max_user_api_key_expiry_days: "Maksymalny okres ważności (w dniach), o który klienci mogą poprosić w przypadku kluczy API użytkownika"
     verbose_user_api_key_device_auth_logging: "Rejestruj szczegółową diagnostykę przepływu autoryzacji urządzenia z kluczem API użytkownika"
     tagging_enabled: "Włączyć tagi w tematach? Więcej informacji można znaleźć w <a href=\"https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041\">przewodniku administratora po tagach w Meta</a>."
-    create_tag_allowed_groups: "Grupy, które mogą tworzyć tagi. Administratorzy i moderatorzy zawsze mogą tworzyć tagi."
+    create_tag_allowed_groups: "Grupy, które mogą tworzyć tagi. Administratorzy zawsze mogą tworzyć tagi."
     edit_tags_allowed_groups: "Grupy, które mają uprawnienia do edycji tagów, opisów tagów i synonimów tagów."
     max_tags_per_topic: "Maksymalna liczba tagów, które mogą zostać połączone z tematem."
     enable_max_tags_per_email_subject: "Użyj {{setting:max_tags_per_email_subject}} podczas generowania tematu wiadomości e-mail"
@@ -2839,7 +2839,7 @@ pl_PL:
     content_localization_language_switcher: "Pokaż przełącznik języka w nagłówku, umożliwiający odwiedzającym przełączanie się między przetłumaczonymi wersjami Discourse a treściami dodanymi przez użytkowników. Używa języków zdefiniowanych w {{setting:content_localization_supported_locales}}"
     content_localization_crawler_param: "Wyświetlaj lokalną zawartość robotom indeksującym sieć, gdy włączone są opcje {{setting:content_localization_enabled}} i {{setting:set_locale_from_param}} . Lista obsługiwanych ustawień regionalnych jest zdefiniowana w {{setting:content_localization_supported_locales}}."
     content_localization_use_default_locale_when_unsupported: "Wyświetlaj zlokalizowaną treść w domyślnych ustawieniach regionalnych witryny użytkownikom, których preferowany język nie znajduje się na liście „ustawień regionalnych obsługiwanych przez lokalizację treści”."
-    content_localization_allow_author_localization: "Zezwól autorom na aktualizowanie lokalizacji własnych tematów i wpisów poprzez menu wpisów."
+    content_localization_allow_author_localization: "Zezwól autorom na aktualizowanie lokalizacji własnych tematów i postów poprzez menu wpisów."
     nested_replies_enabled: "Włącz widok zagnieżdżonych odpowiedzi dla tematów."
     nested_replies_default: "Użyj zagnieżdżonych odpowiedzi jako domyślnego widoku dla wszystkich tematów."
     nested_replies_hot_sort_enabled: "Zezwól użytkownikom na sortowanie zagnieżdżonych odpowiedzi według wyniku „gorących odpowiedzi” ustalanego na żądanie. Wyniki „gorących odpowiedzi” są obliczane w tle tylko dla tematów, w których wymagane jest sortowanie „gorących odpowiedzi”."
@@ -5760,6 +5760,15 @@ pl_PL:
     title: "Tryb programisty"
     enable_rack_mini_profiler: "Włącz funkcję Rack Mini Profiler, aby zmiany w sesjach były zachowywane przez 1 godzinę"
     enter: "Przejdź do trybu programisty"
+  design_wizard:
+    errors:
+      palette_unavailable: "Jedna z wybranych palet kolorów nie jest dostępna dla wybranego motywu."
+      site_settings_update_failed: "Nie udało się zaktualizować ustawień witryny."
+    palette_pairs:
+      default: "Domyślna"
+      wcag: "WCAG"
+      solarized: "Solaryzowana"
+      dracula: "Dracula"
   wizard:
     title: "Instalacja Discourse"
     step:

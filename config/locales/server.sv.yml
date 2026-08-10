@@ -3748,6 +3748,10 @@ sv:
     deprecation_error_label: Se till att Javascript-utfasningar ger upphov till ett fel
     enter: "Starta felsäkert läge"
     must_select: "Du måste välja minst ett alternativ för att aktivera felsäkert läge."
+  design_wizard:
+    palette_pairs:
+      default: "Standard"
+      dracula: "Dracula"
   wizard:
     title: "Discourse-inställningar"
     step:

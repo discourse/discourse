@@ -2573,7 +2573,6 @@ fr:
     max_user_api_key_expiry_days: "Durée de validité maximale, en jours, que les clients peuvent demander pour les clés API utilisateur."
     verbose_user_api_key_device_auth_logging: "Consigne des diagnostics détaillés pour le processus d'autorisation des appareils utilisant une clé API utilisateur."
     tagging_enabled: "Activer les balises sur les sujets ? Consultez le <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>guide d'administration sur les étiquettes sur Meta</a> pour obtenir plus d'informations."
-    create_tag_allowed_groups: "Groupes autorisés à créer des étiquettes. Les administrateurs et les modérateurs peuvent toujours créer des étiquettes."
     edit_tags_allowed_groups: "Groupes autorisés à modifier les étiquettes, les descriptions d'étiquettes et les synonymes d'étiquettes."
     max_tags_per_topic: "Le nombre maximal d'étiquettes pouvant être ajoutées à un sujet."
     enable_max_tags_per_email_subject: "Utilise {{setting:max_tags_per_email_subject}} lors de la génération de l'objet d'un e-mail"
@@ -2663,7 +2662,6 @@ fr:
     content_localization_language_switcher: "Affiche un sélecteur de langue dans l'en-tête, permettant aux visiteurs de passer d'une version traduite de Discourse et du contenu publié par les utilisateurs à une autre. Utilise les langues définies dans {{setting:content_localization_supported_locales}}."
     content_localization_crawler_param: "Fournit du contenu localisé aux robots d'exploration Web lorsque {{setting:content_localization_enabled}} et {{setting:set_locale_from_param}} sont activés. La liste des langues prises en charge est définie dans {{setting:content_localization_supported_locales}}."
     content_localization_use_default_locale_when_unsupported: "Fournit du contenu localisé dans la langue par défaut du site aux utilisateurs dont la langue préférée ne figure pas dans la liste des langues prises en charge pour la localisation du contenu."
-    content_localization_allow_author_localization: "Autorise les auteurs à mettre à jour les localisations de leurs propres sujets et publications à partir du menu de la publication."
     nested_replies_enabled: "Active l'affichage des réponses imbriquées pour les sujets."
     nested_replies_default: "Utilise les réponses imbriquées comme affichage par défaut pour tous les sujets."
     nested_replies_hot_sort_enabled: "Autorise le tri des réponses imbriquées selon un score de popularité calculé à la demande. Les scores de popularité sont calculés en arrière-plan uniquement pour les sujets dans lesquels ce tri est demandé."
@@ -5319,6 +5317,10 @@ fr:
     title: "Mode développeur"
     enable_rack_mini_profiler: "Activer Rack Mini Profiler pendant 1 heure, y compris après les changements de session"
     enter: "Accéder au mode développeur"
+  design_wizard:
+    palette_pairs:
+      default: "Par défaut"
+      dracula: "Dracula"
   wizard:
     title: "Configuration de Discourse"
     step:

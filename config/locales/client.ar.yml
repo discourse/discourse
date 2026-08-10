@@ -58,6 +58,11 @@ ar:
         access_permission_viewer: "مشاهد"
         access_permission_viewer_description: "يمكنه عرض محتوى هذا الكيان"
         access_permission_remove: "إزالة"
+        access_permission_remove_description: "إزالة الإذن لهذا المستفيد"
+        add_group: "إضافة مستخدم أو مجموعة"
+        mandatory_acl_tooltip: "هذا الإذن إلزامي لـ %{name} ولا يمكن إزالته"
+        mandatory: "إلزامي"
+        disallowed: "غير مسموح به"
     carousel:
       go_to_slide: "الانتقال إلى الشريحة %{index}"
       previous: "الشريحة السابقة"
@@ -134,6 +139,7 @@ ar:
           few: "%{count} د"
           many: "%{count} د"
           other: "%{count} د"
+        x_minutes_seconds: "%{minutes}د %{seconds}ث"
         about_x_hours:
           zero: "%{count} س"
           one: "%{count} س"
@@ -644,26 +650,16 @@ ar:
       pill: "مُقترح"
       pm_title: "الرسائل المقترحة"
     admin_onboarding_banner:
-      launch_in_easy_steps: "الإطلاق عبر %{step_count} خطوات سهلة"
       congrats_onboarding_complete: "تهانينا على إكمال عملية الانضمام!"
       select_theme:
         title: "تخصيص موقعك"
-        description: "اختر سمةً مبدئية لمجتمعك"
-        action: "تحديد السمة"
-        modal_title: "اختيار سمة"
-        use_theme: "استخدام السمة المحدَّدة"
-        enabled: "محدَّدة"
-        applying_theme: "جارٍ تطبيق السمة..."
-        browse_all: "إدارة السمات"
         show_light_screenshot: "عرض لقطة شاشة للوضع الفاتح"
         show_dark_screenshot: "عرض لقطة شاشة للوضع الداكن"
       invite_collaborators:
         title: "دعوة المتعاونين"
-        description: "يساهم الأعضاء الأوائل في إثراء مجتمعك"
         action: "إنشاء دعوة"
       start_posting:
         title: "بدء النشر"
-        description: "امنح الناس موضوعًا يتحدثون عنه معًا"
         action: "اطّلع على الأفكار"
         choose_option: "كيف تود أن تبدأ؟"
         predefined_topics: "قوالب لكسر حالة السكوت"
@@ -684,6 +680,27 @@ ar:
           what_is_your_favorite_food:
             title: "ما طعامك المفضل؟"
             body: "شارك طعامك المفضل مع المجتمع! سأبدأ: أنا أحب البيتزا، وخاصة مع إضافة الجبن والبيبروني."
+    design_wizard:
+      title: "تخصيص موقعك"
+      back: "رجوع"
+      next: "التالي"
+      sections:
+        theme: "السمة"
+        fonts: "الخطوط"
+        homepage: "الصفحة الرئيسية"
+      theme:
+        selected: "محدَّدة"
+      colors:
+        light: "فاتح"
+        dark: "داكن"
+      fonts:
+        base_font: "الخط الأساسي"
+        heading_font: "خط العنوان"
+      homepage:
+        topics: "الموضوعات"
+        categories: "الفئات"
+        styles:
+          boxes: "مربعات"
     about:
       edit: "تعديل هذه الصفحة"
       simple_title: "نبذة"
@@ -1094,16 +1111,13 @@ ar:
       stale_help: "تم حل هذا العنصر بواسطة <b>%{username}</b>."
       claim_help:
         optional: "يمكنك المطالبة بهذا العنصر لمنع الآخرين من مراجعته."
-        required: "يجب عليك المطالبة بالعناصر قبل أن تتمكن من مراجعتها."
-        claimed_by_you: "لقد طالبت بهذا العنصر ويمكنك مراجعته."
-        claimed_by_other: "لا يمكن مراجعة هذا العنصر إلا بواسطة <b>%{username}</b>."
-        automatically_claimed_by: "هذا العنصر قيد المراجعة حاليًا من طرف <b>%{username}</b>."
       claim:
         title: "المطالبة بهذا الموضوع"
       unclaim:
         help: "أزل هذه المطالبة"
       awaiting_approval: "في انتظار الموافقة"
       delete: "حذف"
+      delete_confirm: "هل تريد بالتأكيد حذف هذا العنصر من قائمة انتظار المراجعة؟"
       settings:
         saved: "تم الحفظ"
         save_changes: "حفظ التغييرات"
@@ -1997,14 +2011,17 @@ ar:
       desktop_notifications:
         label: "الإشعارات المباشرة"
         push_level:
+          title: "الإشعارات الفورية…"
           none: "متوقفة"
           all: "مفعَّلة"
+          chat_only: "مفعَّل للدردشة فقط"
         not_supported: "عذرًا، لا يدعم هذا المتصفح الإشعارات."
         perm_default: "تشغيل الإشعارات"
         perm_denied_btn: "تم رفض الإذن"
         perm_denied_expl: "لقد رفضت منح الإذن بإرسال الإشعارات. يمكنك السماح بالإشعارات في إعدادات المتصفح."
         disable: "إيقاف الإشعارات"
         enable: "تفعيل الإشعارات"
+        enable_failed: "تعذَّر تفعيل الإشعارات. إما أن متصفحك حظر الطلب أو أن خدمة الإشعارات الفورية غير متوفرة."
         each_browser_note: "ملاحظة: عليك تغيير هذا الإعداد في كل متصفح تستخدمه. سيتم إيقاف جميع الإشعارات إذا أوقفت الإشعارات من قائمة المستخدم، بغض النظر عن هذا الإعداد."
         consent_prompt: "هل تريد تلقي إشعارات فورية عند رد الأشخاص على منشوراتك؟"
       dismiss: "تجاهل"
@@ -2800,24 +2817,38 @@ ar:
           invite_saved_with_sending_email: "تم إرسال البريد الإلكتروني للدعوة. يمكنك أيضًا نسخ الرابط أدناه ومشاركته لمنح الوصول إلى هذا الموقع على الفور."
         invite_roles:
           member_title: "دعوة أعضاء"
+          admin_title: "دعوة فريق العمل"
+          edit_title: "جارٍ تعديل الدعوة"
+          created_title: "تم إنشاء الدعوة"
           sent_title: "تم إرسال الدعوة"
           member_tab: "الأعضاء"
           admin_tab: "فريق العمل"
+          staff_role_label: "الدعوة في دور"
           staff_role_admin: "مسؤول"
           staff_role_moderator: "مشرف"
           admin_email_label: "عنوان البريد الإلكتروني"
+          member_email_label: "إرسال إلى"
+          member_email_help: "سنرسل رابط دعوة عبر البريد الإلكتروني إلى هذا العنوان."
           email_placeholder: "name@example.com"
+          invite_by: "الدعوة عبر"
+          invite_by_link: "رابط قابل للمشاركة"
           invite_by_email: "البريد الإلكتروني"
+          role_label: "الدعوة في دور"
           restrict_domain: "التقييد إلى النطاق"
           domain_placeholder: "example.com"
+          domain_invalid: "أدخل نطاقًا صالحًا، مثل example.com"
+          arrive_at_topic_help: "أرسل الأشخاص إلى موضوع محدَّد بعد قبولهم."
           create_and_send: "إرسال"
           create_and_copy: "نسخ الرابط"
           update: "تحديث"
           summary:
+            sent_to: "تم إرسال دعوة إليك عبر البريد الإلكتروني على %{email}. يمكنك أيضًا مشاركة هذا الرابط مباشرةً:"
+            role: "الدور"
             role_member: "عضو"
             role_admin: "مسؤول"
             role_moderator: "مشرف"
             method: "طريقة المشاركة"
+            method_link: "رابط قابل للمشاركة"
             method_email: "البريد الإلكتروني"
             restriction: "مقيَّد إلى"
             uses: "الحد الأقصى لمرات الاستخدام"
@@ -2825,6 +2856,9 @@ ar:
             topic: "الموضوع"
             groups: "المجموعات"
             edit: "تعديل"
+            view_invites: "عرض الدعوات"
+          email_sent:
+            body: "تم إرسال دعوة عبر البريد الإلكتروني إلى %{email}."
         bulk_invite:
           none: "لا توجد دعوات لعرضها على هذه الصفحة."
           text: "دعوة جماعية"
@@ -3239,6 +3273,7 @@ ar:
     created: "تاريخ الإنشاء"
     created_lowercase: "تاريخ الإنشاء"
     trust_level: "مستوى الثقة"
+    search_hint: "أسماء المستخدمين أو عناوين البريد الإلكتروني (مفصولة بفاصلة أو مسافة)، أو عنوان IP"
     create_account:
       header_title: "مرحبًا!"
       disclaimer: "يشير التسجيل إلى موافقتك على <a href='%{privacy_link}' target='blank'>سياسة الخصوصية</a> و<a href='%{tos_link}' target='blank'>شروط الخدمة</a>."
@@ -3446,6 +3481,13 @@ ar:
       disabled: "لا تعرض"
       sidebar_footer: "يُعرض في تذييل الشريط الجانبي"
       header: "يُعرض في رأس الصفحة"
+    category_scope:
+      all: "جميع الفئات العامة والخاصة"
+      public: "الفئات العامة"
+      include: "تضمين الفئات المحدَّدة (بما في ذلك الفئات الفرعية)"
+      include_strict: "تضمين الفئات المحدَّدة (دون الفئات الفرعية)"
+      exclude: "استبعاد الفئات المحدَّدة (بما في ذلك الفئات الفرعية)"
+      exclude_strict: "استبعاد الفئات المحدَّدة (دون الفئات الفرعية)"
     welcome_banner_location:
       above_topic_content: "فوق محتوى الموضوع"
       below_site_header: "أسفل رأس الموقع"
@@ -3473,6 +3515,7 @@ ar:
         few: "+%{count} فئات فرعية"
         many: "+%{count} فئة فرعية"
         other: "+%{count} فئة فرعية"
+      subcategories: "+ الفئات الفرعية"
       topic_count:
         zero: "%{count} موضوع في هذه الفئة"
         one: "موضوع واحد (%{count}) في هذه الفئة"
@@ -3561,6 +3604,7 @@ ar:
       toggle: "تفعيل/إيقاف عوامل تصفية القائمة المنسدلة"
     d_icon_grid_picker:
       select_icon: "تحديد أيقونة"
+      search_label: "بحث عن أيقونات"
       search_placeholder: "بحث عن أيقونات..."
       no_results: "لم يتم العثور على أي أيقونات"
       results_count:
@@ -3583,6 +3627,8 @@ ar:
     gifs:
       modal_title: "البحث عن صور GIF"
       composer_title: "إدراج GIF"
+      placeholder: "البحث في KLIPY"
+      powered_by: "مدعوم من Klipy"
       no_results: "أدخل كلمة رئيسية أعلاه للبحث عن صور GIF."
       browse_categories: "التصفُّح حسب الفئة"
       bad_api_key: "مفتاح واجهة برمجة تطبيقات Klipy مفقود أو غير صالح. يُرجى التحقُّق من إعداد مفتاح واجهة برمجة تطبيقات صور GIF."
@@ -4087,7 +4133,6 @@ ar:
         other: "%{count} طلب عضوية مفتوح للمجموعة \"%{group_name}\""
       reaction: "‏<span>⁨%{username}⁩</span> ‏%{description}"
       reaction_2: "<span>%{username} و%{username2}</span> %{description}"
-      votes_released: "%{description} - اكتمل"
       new_features: "تتوفَّر ميزات جديدة!"
       admin_problems: "نصيحة جديدة بشأن لوحة معلومات موقعك"
       upcoming_changes:
@@ -4799,6 +4844,11 @@ ar:
       all_replies: "جميع الردود"
       category_settings:
         default_nested_view: "استخدام العرض المتداخل كعرض افتراضي للموضوعات في هذه الفئة"
+        convert_existing: "تحويل الموضوعات الحالية"
+        convert_existing_description: "لن تستخدم الموضوعات الحالية في هذه الفئة الردود المتداخلة حتى تقوم بتحويلها. شغِّل هذا الإعداد مرة واحدة لتبديلها إلى العرض المتداخل."
+        convert_existing_confirm: "هل تريد تحويل جميع الموضوعات الحالية في هذه الفئة إلى ردود متداخلة؟"
+        convert_existing_complete: "تم تحويل الموضوعات الحالية إلى ردود متداخلة."
+        save_first: "احفظ إعداد هذه الفئة قبل تحويل الموضوعات الحالية."
       no_replies: "لا توجد ردود بعد."
       deleted_post_placeholder: "[تم الحذف]"
       ignored_post_placeholder: "[التجاهل]"
@@ -5551,7 +5601,9 @@ ar:
         modal:
           title: "الترجمات"
           confirm_delete: "هل أنت متأكد أنك تريد حذف الترجمات للغة '%{languageCode}'؟"
+          language_notice: "حدِّد لغة المنشور الأصلي حتى يتمكن النظام من عرض الترجمة للقرَّاء."
           post_language: "لغة المنشور"
+          topic_language: "لغة عنوان الموضوع"
           discard_language_change: "تجاهل التغيير"
         success: "تم تحديث الترجمات بنجاح"
         post_language_selector:
@@ -7836,7 +7888,7 @@ ar:
           header_description: "خصّص القالب الذي تُعرض ضمنه جميع رسائل البريد الإلكتروني بصيغة HTML، وطبِّق النمط باستخدام CSS"
         staff_action_logs:
           title: "السجلات والفحص"
-          header_description: "تتيح لك السجلات والفحص مراقبة مجتمعك وإدارته، ما يضمن أن يظل آمنًا ومحترمًا. يمكنك عرض سجلات جميع الإجراءات التي اتخذها أعضاء طاقم العمل، وسجلات البحث، وتكوين فحص المستخدمين"
+          header_description: "تتيح لك السجلات والفحص مراقبة مجتمعك وإدارته، ما يضمن أن يظل آمنًا ومحترمًا. يمكنك عرض سجلات جميع الإجراءات التي اتخذها أعضاء فريق العمل، وسجلات البحث، وتكوين فحص المستخدمين"
           keywords: "سجلات الأخطاء|إجراءات فريق العمل|رسائل البريد الإلكتروني التي تم فحصها|عناوين IP التي تم فحصها|عناوين URL التي تم فحصها|سجلات البحث"
           sub_pages:
             screened_emails:
@@ -9597,7 +9649,7 @@ ar:
           post_approved: "الموافقة على المنشور"
       logs:
         title: "السجلات والفحص"
-        description: "تتيح لك السجلات والفحص مراقبة مجتمعك وإدارته، ممّا يضمن أن يظل آمنًا ومحترمًا. يمكنك عرض سجلات جميع الإجراءات التي اتخذها أعضاء طاقم العمل، وسجلات البحث، وتكوين فحص المستخدمين."
+        description: "تتيح لك السجلات والفحص مراقبة مجتمعك وإدارته، ممّا يضمن أن يظل آمنًا ومحترمًا. يمكنك عرض سجلات جميع الإجراءات التي اتخذها أعضاء فريق العمل، وسجلات البحث، وتكوين فحص المستخدمين."
         nav_title: "السجلات"
         action: "الإجراء"
         created_at: "تاريخ الإنشاء"
@@ -9758,6 +9810,9 @@ ar:
             configure_category_type: "إعداد نوع الفئة"
             unconfigure_category_type: "إلغاء تهيئة نوع الفئة"
             change_access_control_list_permissions: "تغيير أذونات قائمة التحكُّم في الوصول"
+            admin_onboarding_step_completed: "إكمال خطوة تهيئة المسؤول"
+            admin_onboarding_completed: "إكمال تهيئة المسؤول"
+            admin_onboarding_dismissed: "تجاهل تهيئة المسؤول"
         screened_emails:
           title: "عناوين البريد الإلكتروني الخاضعة للمراقبة"
           description: "عندما يحاول شخص ما إنشاء حساب جديد، سيتم التحقُّق من عناوين البريد الإلكتروني التالية وحظر التسجيل، أو اتخاذ إجراء آخر."
@@ -9795,6 +9850,7 @@ ar:
             header: "الرأس"
             full_page: "صفحة كاملة"
             click_through_only: "الكل (النقر إلى الظهور فقط)"
+            non_staff_only: "المستخدمين غير طاقم العمل"
           header_search_results: "نتائج البحث عن الرأس"
         logster:
           title: "سجلات الأخطاء"
@@ -9971,7 +10027,7 @@ ar:
           title: "الإجراءات الجماعية"
           select_all: "تحديد الكل"
           clear_all: "مسح الكل"
-          staff_cant_be_actioned: "لا يمكن حذف هذا المستخدم أو تعليق حسابه لأنه أحد أعضاء طاقم العمل"
+          staff_cant_be_actioned: "لا يمكن حذف هذا المستخدم أو تعليق حسابه لأنه أحد أعضاء فريق العمل"
           no_users_can_be_deleted: "لا يمكن حذف أيٍّ من المستخدمين المحدَّدين."
           no_users_can_be_suspended: "لا يمكن تعليق أيٍّ من المستخدمين المحدَّدين."
           too_many_selected_users:
@@ -10282,7 +10338,12 @@ ar:
           other: "يتعذَّر حذف جميع المنشورات لأن المستخدم لديه أكثر من %{count} منشور. (delete_all_posts_max)"
         delete_confirm_title: "هل تريد بالتأكيد حذف هذا المستخدم؟ لا يمكن التراجع عن هذا الإجراء!"
         delete_confirm: "يُفضَّل عامةً إخفاء هوية المستخدمين بدلًا من حذفهم؛ لتجنُّب إزالة المحتوى من المناقشات الحالية."
+        delete_and_block: "حذف البريد الإلكتروني وعنوان IP وحظرهما"
+        delete_and_block_description: "حذف المستخدم وحظر عنوان بريده الإلكتروني وعنوان IP الخاص به"
+        delete_and_block_email: "الحذف وحظر عنوان البريد الإلكتروني"
+        delete_and_block_email_description: "حذف المستخدم وحظر عنوان بريده الإلكتروني، ولكن مع السماح بإعادة استخدام عنوان IP الخاص به"
         delete_dont_block: "حذف المستخدم"
+        delete_dont_block_description: "حذف المستخدم دون حظر عنوان بريده الإلكتروني أو عنوان IP الخاص به"
         deleting_user: "جارٍ حذف المستخدم…"
         deleted: "تم حذف المستخدم."
         delete_failed: "حدث خطأ في أثناء حذف المستخدم. تأكَّد من حذف جميع المنشورات قبل حذف المستخدم."
@@ -10485,6 +10546,13 @@ ar:
           few: "لا يُطبق هذا الإعداد إلا عند تفعيل %{dependencyLinks}."
           many: "لا يُطبق هذا الإعداد إلا عند تفعيل %{dependencyLinks}."
           other: "لا يُطبق هذا الإعداد إلا عند تفعيل %{dependencyLinks}."
+        depends_on_values_notice:
+          zero: "ينطبق هذا الإعداد فقط عند ضبط %{dependencyLinks} على قيمة متوافقة."
+          one: "ينطبق هذا الإعداد فقط عند ضبط %{dependencyLinks} على قيمة متوافقة."
+          two: "ينطبق هذا الإعداد فقط عند ضبط %{dependencyLinks} على قيمتين متوافقتين."
+          few: "ينطبق هذا الإعداد فقط عند ضبط %{dependencyLinks} على قيم متوافقة."
+          many: "ينطبق هذا الإعداد فقط عند ضبط %{dependencyLinks} على قيم متوافقة."
+          other: "ينطبق هذا الإعداد فقط عند ضبط %{dependencyLinks} على قيم متوافقة."
         discard:
           zero: "تجاهل التغييرات"
           one: "تجاهل التغيير"
@@ -10753,15 +10821,38 @@ ar:
         name: "الاسم"
         group: "المجموعة"
         all_groups: "جميع المجموعات"
+        filter_placeholder: "البحث عن الرموز التعبيرية بالاسم"
+        no_results: "لم يتم العثور على رموز تعبيرية."
         created_by: "تم إنشاؤه بواسطة"
         image: "الصورة"
         alt: "معاينة الرمز التعبيري المخصَّص"
         delete_confirm: "هل تريد بالتأكيد حذف الرمز التعبيري :%{name}:؟"
         settings: "الإعدادات"
         export: "تصدير"
+        export_count: "تصدير (تم تحديد %{count})"
+        export_failed: "فشلت عملية التصدير. يُرجى إعادة المحاولة."
+        select_to_export: "تحديد للتصدير"
         import: "استيراد"
+        import_heading: "استيراد الرموز التعبيرية"
+        import_description: "حمِّل ملف ZIP يحتوي على ملف بيان emojis.csv وملفات الصور."
+        import_download_sample: "تنزيل نموذج قالب"
+        import_preview_heading: "مراجعة عملية الاستيراد"
+        import_summary: "جديدة: %{new} · تعارضات: %{conflicts} · دون تغيير: %{unchanged} · أخطاء: %{invalid} "
+        import_confirm: "تأكيد عملية الاستيراد"
+        import_unchanged_count: "دون تغيير: %{count}"
+        import_will_skip: "دون تغيير - سيتم تخطيها"
+        import_excluded: "مستثناة من عملية الاستيراد"
+        import_incoming_alt: "الواردة: %{name}"
+        import_existing_alt: "الحالية: %{name}"
+        import_existing_group_alt: "المجموعة الحالية"
+        import_use_incoming: "استخدام الجديد"
+        import_keep_existing: "الاحتفاظ بالحالي"
         import_category:
           new: "الجديدة"
+          conflict: "التعارضات"
+          invalid: "الأخطاء"
+        select_all: "تحديد جميع الرموز التعبيرية"
+        select: "تحديد %{name}"
       embedding:
         get_started: "إذا كنت تريد تضمين Discourse في موقع آخر، فابدأ بإضافة مضيفه."
         delete: "حذف"

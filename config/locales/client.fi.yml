@@ -431,10 +431,28 @@ fi:
       pill: "Ehdotukset"
       pm_title: "Viestiehdotukset"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Valittu"
       start_posting:
         back: "Takaisin"
+    design_wizard:
+      back: "Takaisin"
+      next: "Seuraava"
+      sections:
+        theme: "Värimaailma"
+        fonts: "Fontit"
+        homepage: "Aloitussivu"
+      theme:
+        selected: "Valittu"
+      colors:
+        light: "Vaalea"
+        dark: "Tumma"
+      fonts:
+        base_font: "Perusfontti"
+        heading_font: "Otsikon fontti"
+      homepage:
+        topics: "Aiheet"
+        categories: "Kategoriat"
+        styles:
+          boxes: "Laatikot"
     about:
       edit: "Muokkaa tätä sivua"
       simple_title: "Tietoa"
@@ -700,10 +718,6 @@ fi:
         optional: "valinnainen"
       claim_help:
         optional: "Voit osoittaa tämän kohteen itsellesi, jolloin muut eivät voi käsitellä sitä."
-        required: "Sinun täytyy osoittaa kohde itsellesi, ennen kuin voit käsitellä sen."
-        claimed_by_you: "Osoitit tämän itsellesi ja voit nyt käsitellä sen."
-        claimed_by_other: "Tämän voi käsitellä vain <b>%{username}</b>."
-        automatically_claimed_by: "Tätä asiaa käsittelee parhaillaan <b>%{username}</b>."
       awaiting_approval: "Odottaa hyväksyntää"
       delete: "Poista"
       settings:
@@ -2655,6 +2669,7 @@ fi:
       subcategory_count:
         one: "+%{count} ala-alue"
         other: "+%{count} ala-aluetta"
+      subcategories: "+ Ala-alueet"
       topic_count:
         one: "%{count} ketju tällä alueella"
         other: "%{count} ketjua tällä alueella"
@@ -3001,7 +3016,6 @@ fi:
         other: "%{count} avointa jäsenhakemusta ryhmään '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} – valmis"
       new_features: "Uusia ominaisuuksia saatavilla!"
       admin_problems: "Uusia suosituksia sivustosi hallintapaneelissa"
       dismiss_confirmation:

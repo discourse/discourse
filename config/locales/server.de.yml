@@ -2540,7 +2540,6 @@ de:
     max_user_api_key_expiry_days: "Maximale Gültigkeitsdauer in Tagen, innerhalb derer Clients Benutzer-API-Schlüssel anfordern können"
     verbose_user_api_key_device_auth_logging: "Detaillierte Diagnosen für den Autorisierungsablauf des Benutzer-API-Schlüssels protokollieren"
     tagging_enabled: "Schlagwörter für Themen aktivieren? Weitere Informationen findest du in der <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Administrator-Anleitung zu Schlagwörtern auf Meta</a>."
-    create_tag_allowed_groups: "Gruppen, die Schlagwörter erstellen dürfen. Administratoren und Moderatoren können immer Schlagwörter erstellen."
     edit_tags_allowed_groups: "Gruppen, die Schlagwörter, Schlagwort-Beschreibungen und -Synonyme bearbeiten dürfen."
     max_tags_per_topic: "Maximale Anzahl an Schlagwörtern, die einem Thema hinzugefügt werden können."
     enable_max_tags_per_email_subject: "{{setting:max_tags_per_email_subject}} beim Erstellen des Betreffs einer E-Mail verwenden"
@@ -2628,7 +2627,6 @@ de:
     content_localization_language_switcher: "Zeige einen Sprachumschalter in der Kopfzeile an, mit dem Besucher die Sprache der Discourse-Oberfläche und der von Benutzern erstellten Inhalten ändern können. Nutzt die Sprachen, die in {{setting:content_localization_supported_locales}} festgelegt wurden."
     content_localization_crawler_param: "Liefert lokalisierte Inhalte an Webcrawler, wenn {{setting:content_localization_enabled}} und {{setting:set_locale_from_param}} aktiviert sind. Die Liste der unterstützten Sprachumgebungen ist in {{setting:content_localization_supported_locales}} definiert."
     content_localization_use_default_locale_when_unsupported: "Biete Benutzern, deren bevorzugte Sprache nicht in 'content localization supported locales' konfiguriert ist, lokalisierte Inhalte in der Standardsprache der Website an."
-    content_localization_allow_author_localization: "Ermögliche es Autoren, die Lokalisierungen ihrer eigenen Themen und Beiträge über das Beitragsmenü zu aktualisieren."
     nested_replies_enabled: "Aktiviere die Ansicht für verschachtelte Antworten in Themen."
     nested_replies_default: "Verwende verschachtelte Antworten als Standardansicht für alle Themen."
     nested_replies_default_sort: "Standard-Sortieralgorithmus für die Ansicht mit verschachtelten Antworten."
@@ -5155,6 +5153,10 @@ de:
     title: "Entwicklermodus"
     enable_rack_mini_profiler: "Rack Mini Profiler für 1 Stunde sitzungsunabhängig aktivieren"
     enter: "Entwicklermodus betreten"
+  design_wizard:
+    palette_pairs:
+      default: "Standard"
+      dracula: "Dracula"
   wizard:
     title: "Discourse einrichten"
     step:

@@ -11,3 +11,8 @@ zh_CN:
       verification_failed: "验证码验证失败，请重试。"
       placeholder: 占位符
       contact_system_administrator: "您的验证码提供商出现问题，如果问题仍然存在，请联系系统管理员。"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_captcha: "Discourse 验证码"

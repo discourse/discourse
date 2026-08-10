@@ -4276,6 +4276,10 @@ cs:
     deprecation_error_label: Umožnit, aby zastaralé Javascripty vyvolaly chybu
     enter: "Vstoupit do bezpečného režimu"
     must_select: "Chcete-li vstoupit do bezpečného režimu, musíte vybrat alespoň jednu možnost."
+  design_wizard:
+    palette_pairs:
+      default: "Výchozí"
+      dracula: "Drákula"
   wizard:
     title: "Nastavení Discourse"
     step:

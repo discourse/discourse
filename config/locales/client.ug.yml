@@ -481,8 +481,6 @@ ug:
       pm_title: "تەۋسىيە ئۇچۇر"
     admin_onboarding_banner:
       select_theme:
-        enabled: "تاللاندى"
-        browse_all: "ئۆرنەك باشقۇرۇش"
         show_light_screenshot: "سۇس ئېكران كۆرۈنۈشىنى كۆرسەت"
         show_dark_screenshot: "قېنىق ئېكران كۆرۈنۈشىنى كۆرسەت"
       invite_collaborators:
@@ -491,6 +489,26 @@ ug:
       start_posting:
         title: "يوللاشنى باشلا"
         back: "كەينى"
+    design_wizard:
+      back: "كەينى"
+      next: "كېيىنكى"
+      sections:
+        theme: "ئۆرنەك"
+        fonts: "خەت نۇسخا"
+        homepage: "باش بەت"
+      theme:
+        selected: "تاللاندى"
+      colors:
+        light: "يورۇق"
+        dark: "قاراڭغۇ"
+      fonts:
+        base_font: "ئاساسى خەت نۇسخىسى"
+        heading_font: "ماۋزۇ خەت نۇسخىسى"
+      homepage:
+        topics: "تېما"
+        categories: "سەھىپە"
+        styles:
+          boxes: "قۇتا"
     about:
       edit: "بۇ بەتنى تەھرىرلە"
       simple_title: "ھەققىدە"
@@ -768,10 +786,6 @@ ug:
         optional: "تاللاشچان"
       claim_help:
         optional: "سىز باشقىلارنىڭ تەكشۈرۈشىنىڭ ئالدىنى ئېلىش ئۈچۈن بۇ تۈرنى تەلەپ قىلسىڭىز بولىدۇ."
-        required: "ئاۋال تۈرنى تەلەپ قىلىپ ئاندىن ئۇلارنى تەكشۈرۈپ تەستىقلىيالايسىز."
-        claimed_by_you: "بۇ تۈرنى تەلەپ قىلدىڭىز، تەكشۈرۈپ تەستىقلىيالايسىز."
-        claimed_by_other: "بۇ تۈرنى پەقەت <b>%{username}</b>لا تەكشۈرۈپ تەستىقلىيالايدۇ."
-        automatically_claimed_by: "ھازىر بۇ تۈرنى <b>%{username}</b> تەكشۈرۈۋاتىدۇ."
       claim:
         title: "تېما تەلەپ قىلىدۇ"
       unclaim:
@@ -2793,6 +2807,7 @@ ug:
       subcategory_count:
         one: "+%{count} تارماق سەھىپە"
         other: "+%{count} تارماق سەھىپە"
+      subcategories: "+ تارماق سەھىپە"
       topic_count:
         one: "بۇ سەھىپىدە %{count} تېما بار"
         other: "بۇ سەھىپىدە %{count} تېما بار"
@@ -3180,7 +3195,6 @@ ug:
         other: "«%{group_name}» نىڭ %{count} ئوچۇق ئەزالىق ئىلتىماسى"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - تاماملاندى"
       new_features: "يېڭى ئىقتىدار مەۋجۇت!"
       admin_problems: "يېڭى تەۋسىيە بېكىتىڭىزنىڭ باشقۇرۇش تاختىسىدا كۆرۈنىدۇ"
       upcoming_changes:

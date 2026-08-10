@@ -632,6 +632,7 @@ pl_PL:
         github_diff: "Różnica GitHub"
         random_picker: "Losowy selektor"
         categories: "Wymień kategorie"
+        users: "Wyświetl użytkowników"
         flag_post: "Oflaguj post"
         close_topic: "Zamknij temat"
         suspend_user: "Zawieś użytkownika"
@@ -683,6 +684,7 @@ pl_PL:
         github_diff: "Pobierz pull request z GitHub lub zatwierdź różnicę"
         random_picker: "Wybierz losową liczbę lub losowy element listy"
         categories: "Wyświetl wszystkie publicznie widoczne kategorie na forum"
+        users: "Wyświetl użytkowników na forum"
         flag_post: "Oflaguj bieżący wpis do sprawdzenia przez zespół"
         close_topic: "Zamknij lub otwórz temat"
         suspend_user: "Zawieś (zablokuj) użytkownika, uniemożliwiając mu logowanie się lub publikowanie"
@@ -768,6 +770,11 @@ pl_PL:
           few: "Znaleziono %{count} kategorie"
           many: "Znaleziono %{count} kategorii"
           other: "Znaleziono %{count} kategorii"
+        users:
+          one: "Znaleziono %{count} użytkownika"
+          few: "Znaleziono %{count} użytkowników"
+          many: "Znaleziono %{count} użytkowników"
+          other: "Znaleziono %{count} użytkowników"
         tags:
           one: "Znaleziono %{count} tag"
           few: "Znaleziono %{count} tagi"

@@ -13,6 +13,11 @@ zh_CN:
   js:
     styleguide:
       title: "样式指南"
+      welcome: "首先，从导航菜单中选择一个部分。"
+      example:
+        toggle_code: "切换代码示例"
+        try_this: "请尝试此方法："
+        code_region: "源片段：%{title}"
       categories:
         syntax: 语法
         atoms: 原子

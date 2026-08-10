@@ -435,6 +435,7 @@ zh_CN:
         empty_state:
           title: "这是 %{channelName} 的开始"
           joined_title: "你是 %{channelName} 中的第一个用户"
+          direct_message_title: "开始与 %{name} 的对话"
           guest_tip: "您目前以访客身份阅读。讨论从用户发帖的那一刻起就开始了——加入我们，成为其中一员吧！"
           joined_tip: "抢先发帖，开启讨论。"
           members_here:

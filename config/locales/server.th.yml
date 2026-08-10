@@ -537,6 +537,9 @@ th:
       button: "ลงทะเบียน"
     resend_email:
       title: "ส่งอีเมลยืนยันตัวตนอีกครั้ง"
+  design_wizard:
+    palette_pairs:
+      default: "ค่าเริ่มต้น"
   wizard:
     step:
       setup:
