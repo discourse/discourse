@@ -35,6 +35,17 @@ RSpec.describe Onebox::Engine::RestreamOnebox do
   end
 
   describe "#to_html" do
+    it "is registered so the matcher selects it for a player URL" do
+      options = {
+        allowed_iframe_regexes:
+          Onebox::Engine.origins_to_regexes(Onebox::Engine.all_iframe_origins),
+      }
+
+      expect(Onebox::Matcher.new("https://player.restream.io/?token=abc", options).oneboxed).to eq(
+        described_class,
+      )
+    end
+
     it "renders the player iframe in the sanitized onebox output" do
       html = Onebox.preview("https://player.restream.io/?token=abc").to_s
 
