@@ -314,6 +314,25 @@ export function registerDragAndDropTarget(
   const isDeepest = (location: DragLocation) =>
     isDeepestTarget(location, element);
 
+  /**
+   * Closes an open enter, if there is one.
+   *
+   * Called both when the library reports a leave and when this element merely
+   * stops being the deepest target, which the library reports as nothing at all
+   * because the element never left the hierarchy. Without the second case an
+   * ancestor superseded by one of its own children would keep an enter open for
+   * the rest of the drag.
+   */
+  const reportLeave = (source: ElementDragPayload, location: DragLocation) =>
+    pairing.leave(() =>
+      getArgsRef().onDragLeave?.({
+        source: sourceFromPDND(source, element),
+        position: null,
+        location,
+        element,
+      })
+    );
+
   // See the note in `registerDragAndDropSource`: the stylesheet gates the state
   // modifiers on this attribute, and an attribute survives a consumer rebinding
   // `class`.
@@ -362,6 +381,7 @@ export function registerDragAndDropTarget(
       // sending it a leave, so clearing here is the only chance to drop it.
       if (!isDeepest(location)) {
         clearIndicators();
+        reportLeave(source, location);
         return;
       }
       const args = getArgsRef();
@@ -381,6 +401,7 @@ export function registerDragAndDropTarget(
     onDrag: ({ source, location }) => {
       if (!isDeepest(location)) {
         clearIndicators();
+        reportLeave(source, location);
         return;
       }
       const args = getArgsRef();
@@ -409,14 +430,7 @@ export function registerDragAndDropTarget(
     },
     onDragLeave: ({ source, location }) => {
       clearIndicators();
-      pairing.leave(() =>
-        getArgsRef().onDragLeave?.({
-          source: sourceFromPDND(source, element),
-          position: null,
-          location,
-          element,
-        })
-      );
+      reportLeave(source, location);
     },
     onDrop: ({ source, location }) => {
       // Unconditionally, and before the deepest check: an ancestor that stopped

@@ -1545,6 +1545,144 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         "the deepest target is entered and left as a pair, and the ancestor that was never entered is never left"
       );
     });
+
+    test("an external target that becomes deepest without a fresh enter is entered and left", async function (assert) {
+      const events = [];
+      let drags = 0;
+
+      const onOuterEnter = () => events.push("outer:enter");
+      const onOuterDrag = () => drags++;
+      const onOuterLeave = () => events.push("outer:leave");
+
+      await render(
+        <template>
+          <div
+            id="outer-ext"
+            style="height: 100px"
+            {{dDragAndDropExternalTarget
+              accepts="files"
+              onDragEnter=onOuterEnter
+              onDrag=onOuterDrag
+              onDragLeave=onOuterLeave
+            }}
+          >
+            outer
+            <div
+              id="inner-ext"
+              {{dDragAndDropExternalTarget accepts="files"}}
+            >inner</div>
+          </div>
+          <div
+            id="away-ext"
+            {{dDragAndDropExternalTarget accepts="files"}}
+          >away</div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(new File(["x"], "a.txt", { type: "text/plain" }));
+      const outerRect = find("#outer-ext").getBoundingClientRect();
+
+      // Onto the child first, so the ancestor joins the hierarchy while the
+      // child is deepest and its own enter is swallowed.
+      await dragEvent("#inner-ext", "dragenter", {
+        dataTransfer,
+        ...centerOf("#inner-ext"),
+      });
+      await dragEvent("#inner-ext", "dragover", {
+        dataTransfer,
+        ...centerOf("#inner-ext"),
+      });
+
+      // Back onto the ancestor's own area. It becomes deepest without a fresh
+      // enter, because it never left the hierarchy.
+      await dragEvent("#outer-ext", "dragover", {
+        dataTransfer,
+        clientX: outerRect.left + 5,
+        clientY: outerRect.top + 5,
+      });
+
+      await dragEvent("#away-ext", "dragenter", {
+        dataTransfer,
+        ...centerOf("#away-ext"),
+      });
+      await dragEvent("#away-ext", "dragover", {
+        dataTransfer,
+        ...centerOf("#away-ext"),
+      });
+
+      assert.true(
+        drags > 0,
+        "the ancestor was told about the drag once it was the deepest target"
+      );
+      assert.deepEqual(
+        events,
+        ["outer:enter", "outer:leave"],
+        "so it is entered when it takes over and left when it gives up, matching the element target"
+      );
+    });
+
+    test("an external ancestor superseded by a child is left before the drop lands", async function (assert) {
+      const events = [];
+      const onOuterEnter = () => events.push("outer:enter");
+      const onOuterLeave = () => events.push("outer:leave");
+      const onInnerDrop = () => events.push("inner:drop");
+
+      await render(
+        <template>
+          <div
+            id="outer-ext"
+            style="height: 100px"
+            {{dDragAndDropExternalTarget
+              accepts="files"
+              onDragEnter=onOuterEnter
+              onDragLeave=onOuterLeave
+            }}
+          >
+            outer
+            <div
+              id="inner-ext"
+              {{dDragAndDropExternalTarget accepts="files" onDrop=onInnerDrop}}
+            >inner</div>
+          </div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(new File(["x"], "a.txt", { type: "text/plain" }));
+      const outerRect = find("#outer-ext").getBoundingClientRect();
+
+      // The ancestor's own area first, so it is genuinely entered.
+      await dragEvent("#outer-ext", "dragenter", {
+        dataTransfer,
+        clientX: outerRect.left + 5,
+        clientY: outerRect.top + 5,
+      });
+      await dragEvent("#outer-ext", "dragover", {
+        dataTransfer,
+        clientX: outerRect.left + 5,
+        clientY: outerRect.top + 5,
+      });
+
+      await dragEvent("#inner-ext", "dragenter", {
+        dataTransfer,
+        ...centerOf("#inner-ext"),
+      });
+      await dragEvent("#inner-ext", "dragover", {
+        dataTransfer,
+        ...centerOf("#inner-ext"),
+      });
+      await dragEvent("#inner-ext", "drop", {
+        dataTransfer,
+        ...centerOf("#inner-ext"),
+      });
+
+      assert.deepEqual(
+        events,
+        ["outer:enter", "outer:leave", "inner:drop"],
+        "the ancestor is left as soon as the child takes over, so a drop never lands with its enter still open"
+      );
+    });
   });
 
   module("lifecycle callbacks stay paired", function () {
@@ -1695,6 +1833,165 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         events,
         ["outer:enter", "outer:leave"],
         "so it is entered when it takes over and left when it gives up, rather than being told only about the middle"
+      );
+    });
+
+    test("an ancestor superseded by a child is left before the drop lands", async function (assert) {
+      const events = [];
+      const onOuterEnter = () => events.push("outer:enter");
+      const onOuterLeave = () => events.push("outer:leave");
+      // Recording the drop pins the ordering as well as the pairing: the
+      // ancestor has to be left when the child takes over, not once the drag is
+      // already over.
+      const onInnerDrop = () => events.push("inner:drop");
+
+      await render(
+        <template>
+          <div id="src" {{dDragAndDropSource type="row"}}>src</div>
+          <div
+            id="outer"
+            style="height: 100px"
+            {{dDragAndDropTarget
+              accepts="row"
+              position="inside"
+              onDragEnter=onOuterEnter
+              onDragLeave=onOuterLeave
+            }}
+          >
+            outer
+            <div
+              id="inner"
+              {{dDragAndDropTarget
+                accepts="row"
+                position="inside"
+                onDrop=onInnerDrop
+              }}
+            >inner</div>
+          </div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      const outerRect = find("#outer").getBoundingClientRect();
+
+      await dragEvent("#src", "dragstart", {
+        dataTransfer,
+        ...centerOf("#src"),
+      });
+
+      // The ancestor's own area first, so it is genuinely entered.
+      await dragEvent("#outer", "dragenter", {
+        dataTransfer,
+        clientX: outerRect.left + 5,
+        clientY: outerRect.top + 5,
+      });
+      await dragEvent("#outer", "dragover", {
+        dataTransfer,
+        clientX: outerRect.left + 5,
+        clientY: outerRect.top + 5,
+      });
+
+      // Then onto the child. The ancestor stays in the hierarchy, so no leave
+      // arrives from the library and the target has to synthesise one.
+      await dragEvent("#inner", "dragenter", {
+        dataTransfer,
+        ...centerOf("#inner"),
+      });
+      await dragEvent("#inner", "dragover", {
+        dataTransfer,
+        ...centerOf("#inner"),
+      });
+
+      await dragEvent("#inner", "drop", {
+        dataTransfer,
+        ...centerOf("#inner"),
+      });
+      await dragEvent("#src", "dragend", { dataTransfer, ...centerOf("#src") });
+
+      assert.deepEqual(
+        events,
+        ["outer:enter", "outer:leave", "inner:drop"],
+        "the ancestor is left as soon as the child takes over, so a drop never lands with its enter still open"
+      );
+    });
+
+    test("a second drag over the same target is entered again", async function (assert) {
+      const events = [];
+      const onEnter = () => events.push("enter");
+      const onLeave = () => events.push("leave");
+      const onDrop = () => events.push("drop");
+
+      await render(
+        <template>
+          <div id="src" {{dDragAndDropSource type="row"}}>src</div>
+          <div
+            id="target"
+            {{dDragAndDropTarget
+              accepts="row"
+              position="inside"
+              onDragEnter=onEnter
+              onDragLeave=onLeave
+              onDrop=onDrop
+            }}
+          >target</div>
+          <div id="away" {{dDragAndDropTarget accepts="row"}}>away</div>
+        </template>
+      );
+
+      const firstTransfer = new DataTransfer();
+      await dragEvent("#src", "dragstart", {
+        dataTransfer: firstTransfer,
+        ...centerOf("#src"),
+      });
+      await dragEvent("#target", "dragenter", {
+        dataTransfer: firstTransfer,
+        ...centerOf("#target"),
+      });
+      await dragEvent("#target", "dragover", {
+        dataTransfer: firstTransfer,
+        ...centerOf("#target"),
+      });
+      // A drop closes the enter without reporting a leave, so the target has to
+      // forget it was entered or the next drag's enter is swallowed.
+      await dragEvent("#target", "drop", {
+        dataTransfer: firstTransfer,
+        ...centerOf("#target"),
+      });
+      await dragEvent("#src", "dragend", {
+        dataTransfer: firstTransfer,
+        ...centerOf("#src"),
+      });
+
+      const secondTransfer = new DataTransfer();
+      await dragEvent("#src", "dragstart", {
+        dataTransfer: secondTransfer,
+        ...centerOf("#src"),
+      });
+      await dragEvent("#target", "dragenter", {
+        dataTransfer: secondTransfer,
+        ...centerOf("#target"),
+      });
+      await dragEvent("#target", "dragover", {
+        dataTransfer: secondTransfer,
+        ...centerOf("#target"),
+      });
+      await dragEvent("#away", "dragenter", {
+        dataTransfer: secondTransfer,
+        ...centerOf("#away"),
+      });
+      await dragEvent("#away", "dragover", {
+        dataTransfer: secondTransfer,
+        ...centerOf("#away"),
+      });
+      await dragEvent("#src", "dragend", {
+        dataTransfer: secondTransfer,
+        ...centerOf("#src"),
+      });
+
+      assert.deepEqual(
+        events,
+        ["enter", "drop", "enter", "leave"],
+        "each drag gets its own enter, and the second one is still paired with a leave"
       );
     });
   });

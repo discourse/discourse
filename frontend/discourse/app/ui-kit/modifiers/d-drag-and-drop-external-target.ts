@@ -226,6 +226,24 @@ export function registerDragAndDropExternalTarget(
 
   const pairing = createEnterLeavePairing();
 
+  /**
+   * Closes an open enter, if there is one. Mirrors the element target: an
+   * ancestor superseded by one of its own children is never sent a leave by the
+   * library, so it has to synthesise one or the enter stays open for the rest of
+   * the drag.
+   */
+  const reportLeave = (
+    source: NativeExternalDragPayload,
+    location: DragLocation
+  ) =>
+    pairing.leave(() =>
+      getArgsRef().onDragLeave?.({
+        source: decorateSource(source),
+        location,
+        element,
+      })
+    );
+
   // See the note in `registerDragAndDropSource`.
   element.setAttribute("data-drop-target-external", "");
 
@@ -261,6 +279,7 @@ export function registerDragAndDropExternalTarget(
       // sent a leave, so clearing here is the only chance to drop it.
       if (!isDeepest(location)) {
         clearIndicator();
+        reportLeave(source, location);
         return;
       }
       const args = getArgsRef();
@@ -278,6 +297,7 @@ export function registerDragAndDropExternalTarget(
     onDrag: ({ source, location }) => {
       if (!isDeepest(location)) {
         clearIndicator();
+        reportLeave(source, location);
         return;
       }
       const args = getArgsRef();
@@ -301,13 +321,7 @@ export function registerDragAndDropExternalTarget(
     },
     onDragLeave: ({ source, location }) => {
       clearIndicator();
-      pairing.leave(() =>
-        getArgsRef().onDragLeave?.({
-          source: decorateSource(source),
-          location,
-          element,
-        })
-      );
+      reportLeave(source, location);
     },
     onDrop: ({ source, location }) => {
       clearIndicator();
