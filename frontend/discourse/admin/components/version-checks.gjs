@@ -12,10 +12,7 @@ const VersionChecks = <template>
     </h2>
   </div>
 
-  <div
-    class="dashboard-stats version-check
-      {{if @versionCheck.critical_updates 'critical' 'normal'}}"
-  >
+  <div class="dashboard-stats version-check">
     <div class="version-number">
       <h4>
         {{i18n "admin.dashboard.installed_version"}}
@@ -157,14 +154,7 @@ const VersionChecks = <template>
               {{dIcon "far-face-smile"}}
             </span>
           {{else}}
-            <span
-              class="icon
-                {{if
-                  @versionCheck.critical_updates
-                  'critical-updates-available'
-                  'updates-available'
-                }}"
-            >
+            <span class="icon updates-available">
               {{#if @versionCheck.behindByOneVersion}}
                 {{dIcon "far-face-meh"}}
               {{else}}
@@ -184,12 +174,7 @@ const VersionChecks = <template>
               {{i18n "admin.dashboard.up_to_date"}}
             {{/if}}
           {{else}}
-            <span class="critical-note">
-              {{i18n "admin.dashboard.critical_available"}}
-            </span>
-            <span class="normal-note">
-              {{i18n "admin.dashboard.updates_available"}}
-            </span>
+            {{i18n "admin.dashboard.updates_available"}}
             {{i18n "admin.dashboard.please_update"}}
           {{/if}}
         </div>
