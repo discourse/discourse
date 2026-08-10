@@ -1,21 +1,19 @@
 import { find, findAll, triggerEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import {
+  externalDragOver,
+  simulateExternalDrag,
+} from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
 
 function linkDataTransfer() {
-  return {
-    types: ["text/uri-list", "text/html"],
-    dropEffect: null,
-    getData(type) {
-      if (type === "text/uri-list") {
-        return "https://example.com/useful";
-      }
-      if (type === "text/html") {
-        return '<a href="https://example.com/useful">Useful link</a>';
-      }
-      return "";
-    },
-  };
+  const dataTransfer = new DataTransfer();
+  dataTransfer.setData("text/uri-list", "https://example.com/useful");
+  dataTransfer.setData(
+    "text/html",
+    '<a href="https://example.com/useful">Useful link</a>'
+  );
+  return dataTransfer;
 }
 
 acceptance("Sidebar web link drop", function (needs) {
@@ -90,26 +88,18 @@ acceptance("Sidebar web link drop", function (needs) {
     await visit("/");
 
     const dataTransfer = linkDataTransfer();
-    await triggerEvent("#d-sidebar", "dragenter", { dataTransfer });
-    await triggerEvent("#d-sidebar", "dragover", { dataTransfer });
+    await externalDragOver("#d-sidebar", { dataTransfer });
 
     assert
       .dom(".sidebar-link-drop-target")
       .exists("shows the new-section drop target");
-    assert.strictEqual(
-      dataTransfer.dropEffect,
-      "copy",
-      "indicates that the link will be copied"
-    );
 
     await triggerEvent("#d-sidebar", "dragleave", { dataTransfer });
     assert
       .dom(".sidebar-link-drop-target")
       .doesNotExist("clears the target after leaving the sidebar");
 
-    await triggerEvent("#d-sidebar", "dragenter", { dataTransfer });
-    await triggerEvent("#d-sidebar", "dragover", { dataTransfer });
-    await triggerEvent("#d-sidebar", "drop", { dataTransfer });
+    await simulateExternalDrag("#d-sidebar", { dataTransfer });
 
     assert
       .dom(".sidebar-section-form-modal")
@@ -137,8 +127,7 @@ acceptance("Sidebar web link drop", function (needs) {
     const existingLinks = findAll(`${section} [data-sidebar-custom-link]`);
     const clientY = existingLinks[1].getBoundingClientRect().top;
     const dataTransfer = linkDataTransfer();
-    await triggerEvent(section, "dragenter", { dataTransfer, clientY });
-    await triggerEvent(section, "dragover", { dataTransfer, clientY });
+    await externalDragOver(section, { dataTransfer, coordinates: { clientY } });
 
     assert
       .dom(existingLinks[1])

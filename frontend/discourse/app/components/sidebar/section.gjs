@@ -14,16 +14,17 @@ import {
   getCollapsedSidebarSectionKey,
   getSidebarSectionContentId,
 } from "discourse/lib/sidebar/helpers";
-import {
-  isExplicitWebLinkDrag,
-  isWebLinkDrag,
-} from "discourse/lib/sidebar/link-drop";
+import { WEB_LINK_KINDS } from "discourse/lib/sidebar/link-drop";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
 import { i18n } from "discourse-i18n";
 import SectionHeader from "./section-header";
+
+/** Dropping a link here copies it into the section; it does not move anything. */
+const copyDropEffect = () => "copy";
 
 export default class SidebarSection extends Component {
   @service keyValueStore;
@@ -33,7 +34,6 @@ export default class SidebarSection extends Component {
   @tracked linkDropActive = false;
   @tracked linkDropIndex;
   @tracked linkDropLinkCount = 0;
-  linkDragDepth = 0;
 
   sidebarSectionContentId = getSidebarSectionContentId(this.args.sectionName);
   collapsedSidebarSectionKey = getCollapsedSidebarSectionKey(
@@ -44,14 +44,12 @@ export default class SidebarSection extends Component {
     super(...arguments);
 
     this.router.on("routeDidChange", this, this.expandIfActive);
-    document.addEventListener("dragend", this.resetLinkDrop);
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
 
     this.router.off("routeDidChange", this, this.expandIfActive);
-    document.removeEventListener("dragend", this.resetLinkDrop);
 
     this.args.willDestroy?.();
   }
@@ -159,80 +157,65 @@ export default class SidebarSection extends Component {
     }
   }
 
-  @action
-  handleLinkDragEnter(event) {
-    if (!this.args.linkDropEnabled || !isWebLinkDrag(event.dataTransfer)) {
-      return;
-    }
-
-    event.preventDefault();
-    this.linkDragDepth++;
+  get linkDropAtEnd() {
+    return this.linkDropActive && this.linkDropIndex === this.linkDropLinkCount;
   }
 
+  /**
+   * Files are their own drag with their own destinations, and a section only
+   * knows what to do with a URL. Gated here rather than by leaving the target
+   * off, so a section that becomes droppable mid-drag does not have to register
+   * one halfway through.
+   */
   @action
-  handleLinkDragOver(event) {
-    if (!this.args.linkDropEnabled || !isWebLinkDrag(event.dataTransfer)) {
-      return;
-    }
-
-    event.preventDefault();
-    event.dataTransfer.dropEffect = "copy";
-    this.linkDropActive = isExplicitWebLinkDrag(event.dataTransfer);
-    this.updateLinkDropIndex(event);
+  canDropLink({ source }) {
+    return Boolean(this.args.linkDropEnabled) && !source.containsFiles();
   }
 
-  updateLinkDropIndex(event) {
+  /**
+   * Tracks where in this section's links a drop would land.
+   *
+   * The section is the drop target, not the rows: a link row is not somewhere a
+   * drop can land in its own right, it only marks an offset within the section
+   * the drop is already going to. So the position is measured here against the
+   * rows rather than delegated to a target on each of them.
+   */
+  @action
+  trackLinkDrop({ source, location, element }) {
+    // A drag carrying only text may well turn out to hold nothing droppable, so
+    // the insertion point stays hidden until the drag declares a real URL.
+    this.linkDropActive = source.containsURLs();
+
     if (!this.linkDropActive) {
       this.linkDropIndex = undefined;
       return;
     }
 
     const links = Array.from(
-      event.currentTarget.querySelectorAll("[data-sidebar-custom-link]")
+      element.querySelectorAll("[data-sidebar-custom-link]")
     );
+    const { clientY } = location.current.input;
     const index = links.findIndex((link) => {
       const { top, height } = link.getBoundingClientRect();
-      return event.clientY < top + height / 2;
+      return clientY < top + height / 2;
     });
 
     this.linkDropLinkCount = links.length;
     this.linkDropIndex = index === -1 ? links.length : index;
   }
 
-  get linkDropAtEnd() {
-    return this.linkDropActive && this.linkDropIndex === this.linkDropLinkCount;
-  }
-
   @action
-  handleLinkDragLeave(event) {
-    if (!this.args.linkDropEnabled || !isWebLinkDrag(event.dataTransfer)) {
-      return;
-    }
-
-    this.linkDragDepth = Math.max(0, this.linkDragDepth - 1);
-    if (this.linkDragDepth === 0) {
-      this.resetLinkDrop();
-    }
-  }
-
-  @action
-  handleLinkDrop(event) {
-    if (!this.args.linkDropEnabled || !isWebLinkDrag(event.dataTransfer)) {
-      return;
-    }
-
-    event.preventDefault();
-    const linkDropIndex = this.linkDropIndex;
-    this.resetLinkDrop();
-    this.args.onLinkDrop?.(event.dataTransfer, linkDropIndex);
-  }
-
-  @bind
-  resetLinkDrop() {
-    this.linkDragDepth = 0;
+  clearLinkDrop() {
     this.linkDropLinkCount = 0;
     this.linkDropActive = false;
     this.linkDropIndex = undefined;
+  }
+
+  @action
+  dropLink({ source }) {
+    const linkDropIndex = this.linkDropIndex;
+    this.clearLinkDrop();
+    this.args.onLinkDrop?.(source, linkDropIndex);
   }
 
   get headerCaretIcon() {
@@ -259,10 +242,16 @@ export default class SidebarSection extends Component {
     {{#if this.displaySection}}
       <div
         {{didInsert this.setExpandedState}}
-        {{on "dragenter" this.handleLinkDragEnter}}
-        {{on "dragover" this.handleLinkDragOver}}
-        {{on "dragleave" this.handleLinkDragLeave}}
-        {{on "drop" this.handleLinkDrop}}
+        {{dDragAndDropExternalTarget
+          accepts=WEB_LINK_KINDS
+          canDrop=this.canDropLink
+          getDropEffect=copyDropEffect
+          indicator=false
+          onDragEnter=this.trackLinkDrop
+          onDrag=this.trackLinkDrop
+          onDragLeave=this.clearLinkDrop
+          onDrop=this.dropLink
+        }}
         data-section-name={{@sectionName}}
         class={{dConcatClass
           "sidebar-section"

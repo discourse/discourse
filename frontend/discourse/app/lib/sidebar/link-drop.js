@@ -1,48 +1,41 @@
 import { SIDEBAR_URL } from "discourse/lib/constants";
 
-const EXPLICIT_LINK_TYPES = ["text/uri-list", "text/x-moz-url"];
-// Some sources expose URLs only as text, so drops accept broadly while visuals require URL types.
-const LINK_TYPES = [...EXPLICIT_LINK_TYPES, "text/html", "text/plain"];
+/**
+ * The external drag kinds a dragged-in web link can arrive as, for a target's
+ * `accepts` filter. Broader than the URL types alone because some sources
+ * expose a link only as HTML or as plain text.
+ */
+export const WEB_LINK_KINDS = ["urls", "html", "text"];
 
-function dragTypes(dataTransfer) {
-  return Array.from(dataTransfer?.types || [], (type) => type.toLowerCase());
-}
-
-export function isWebLinkDrag(dataTransfer) {
-  const types = dragTypes(dataTransfer);
-
-  return (
-    !types.includes("files") &&
-    LINK_TYPES.some((linkType) => types.includes(linkType))
-  );
-}
-
-export function isExplicitWebLinkDrag(dataTransfer) {
-  const types = dragTypes(dataTransfer);
-
-  return (
-    !types.includes("files") &&
-    EXPLICIT_LINK_TYPES.some((linkType) => types.includes(linkType))
-  );
-}
-
-export function extractDroppedWebLink(dataTransfer) {
-  if (!dataTransfer) {
+/**
+ * Turns an incoming external drag into a sidebar link, or nothing when it
+ * carries no usable web URL.
+ *
+ * Reads the payload through the drop target's decorated source rather than a
+ * raw `DataTransfer`, so the URL types are already parsed: comment lines are
+ * stripped from a uri-list, and Firefox's alternating URL/title format is
+ * reduced to its URLs. What is left here is deciding which candidate to take
+ * and what to call it.
+ *
+ * @param {Object} source - The decorated external drag payload.
+ * @returns {Object|undefined} A link ready for the section form.
+ */
+export function extractDroppedWebLink(source) {
+  if (!source) {
     return;
   }
 
-  const uriList = uris(dataTransfer.getData("text/uri-list") || "");
-  const [mozUri, mozName] = lines(dataTransfer.getData("text/x-moz-url") || "");
-  const htmlLink = linkFromHtml(dataTransfer.getData("text/html") || "");
-  const plainText = (dataTransfer.getData("text/plain") || "").trim();
+  const htmlLink = linkFromHtml(source.getHTML());
+  const firefoxNames = firefoxUrlNames(source);
   const candidate = [
-    ...uriList.map((value, index) => ({
+    ...source.getURLs().map((value, index) => ({
       value,
-      name: index === 0 ? htmlLink?.name : undefined,
+      // A uri-list carries no titles, so the dragged anchor's own text names its
+      // first entry. Firefox sends titles of its own, which pair off by index.
+      name: firefoxNames[index] ?? (index === 0 ? htmlLink?.name : undefined),
     })),
-    { value: mozUri, name: mozName },
     htmlLink,
-    { value: plainText },
+    { value: (source.getText() || "").trim() },
   ]
     .filter(Boolean)
     .find(({ value }) => validWebUrl(value));
@@ -61,12 +54,27 @@ export function extractDroppedWebLink(dataTransfer) {
   };
 }
 
-function uris(value) {
-  return lines(value).filter((line) => line && !line.startsWith("#"));
-}
+/**
+ * Titles from Firefox's own URL format, which alternates URL and title lines.
+ *
+ * Only consulted when the standard type is absent, because that is the same
+ * order the URLs were resolved in: reading titles from one format while the
+ * URLs came from the other would pair each link with a stranger's name.
+ */
+function firefoxUrlNames(source) {
+  if (source.getStringData("text/uri-list") != null) {
+    return [];
+  }
 
-function lines(value) {
-  return value.split(/\r?\n/).map((line) => line.trim());
+  const raw = source.getStringData("text/x-moz-url");
+  if (!raw) {
+    return [];
+  }
+
+  return raw
+    .split("\n")
+    .filter((_, index) => index % 2 === 1)
+    .map((line) => line.trim());
 }
 
 function linkFromHtml(value) {

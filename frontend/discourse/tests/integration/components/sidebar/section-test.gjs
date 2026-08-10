@@ -1,7 +1,43 @@
-import { click, render, triggerEvent } from "@ember/test-helpers";
+import { click, find, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Section from "discourse/components/sidebar/section";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import {
+  centerOf,
+  dragEvent,
+  externalDragOver,
+  simulateExternalDrag,
+} from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
+
+/** A drag carrying a real URL, the way a link dragged from another tab arrives. */
+function urlTransfer() {
+  const dataTransfer = new DataTransfer();
+  dataTransfer.setData("text/uri-list", "https://example.com/dropped");
+  return dataTransfer;
+}
+
+/** Selected text, which may or may not turn out to contain a URL. */
+function textTransfer() {
+  const dataTransfer = new DataTransfer();
+  dataTransfer.setData("text/html", "<p>some selected text</p>");
+  dataTransfer.setData("text/plain", "some selected text");
+  return dataTransfer;
+}
+
+function fileTransfer() {
+  const dataTransfer = new DataTransfer();
+  dataTransfer.items.add(
+    new File(["payload"], "a.txt", { type: "text/plain" })
+  );
+  return dataTransfer;
+}
+
+/** Past the midpoint of every link, so a drop lands at the end of the list. */
+function belowAllLinks() {
+  return {
+    clientY: find(".sidebar-section").getBoundingClientRect().bottom - 2,
+  };
+}
 
 module("Integration | Component | Sidebar | Section", function (hooks) {
   setupRenderingTest(hooks);
@@ -74,16 +110,12 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
   });
 
   test("accepts web link drops when enabled", async function (assert) {
-    this.dataTransfer = {
-      types: ["text/uri-list"],
-      dropEffect: null,
-    };
-    this.onLinkDrop = (dataTransfer, linkDropIndex) => {
+    this.onLinkDrop = (source, linkDropIndex) => {
       assert.step("drop");
       assert.strictEqual(
-        dataTransfer,
-        this.dataTransfer,
-        "passes the dropped data to the handler"
+        source.getURLs()[0],
+        "https://example.com/dropped",
+        "passes the dropped payload to the handler"
       );
       assert.strictEqual(linkDropIndex, 2, "drops after the final link");
     };
@@ -102,8 +134,10 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
       </template>
     );
 
-    await triggerEvent(".sidebar-section", "dragover", {
-      dataTransfer: this.dataTransfer,
+    const dataTransfer = urlTransfer();
+    await externalDragOver(".sidebar-section", {
+      dataTransfer,
+      coordinates: belowAllLinks(),
     });
 
     assert
@@ -112,14 +146,10 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
     assert
       .dom(".sidebar-section-link-drop-indicator")
       .exists("shows where the link will be appended");
-    assert.strictEqual(
-      this.dataTransfer.dropEffect,
-      "copy",
-      "indicates that the link will be copied"
-    );
 
     await triggerEvent(".sidebar-section", "drop", {
-      dataTransfer: this.dataTransfer,
+      dataTransfer,
+      ...belowAllLinks(),
     });
 
     assert.verifySteps(["drop"], "invokes the drop handler once");
@@ -132,11 +162,6 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
   });
 
   test("does not advertise ambiguous text as a link", async function (assert) {
-    const dataTransfer = {
-      types: ["text/html", "text/plain"],
-      dropEffect: null,
-    };
-
     await render(
       <template>
         <Section
@@ -147,7 +172,9 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
       </template>
     );
 
-    await triggerEvent(".sidebar-section", "dragover", { dataTransfer });
+    await externalDragOver(".sidebar-section", {
+      dataTransfer: textTransfer(),
+    });
 
     assert
       .dom(".sidebar-section")
@@ -157,12 +184,7 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
       );
   });
 
-  test("tracks nested drag enter and leave events", async function (assert) {
-    const dataTransfer = {
-      types: ["text/uri-list"],
-      dropEffect: null,
-    };
-
+  test("stays active while the cursor is over its own contents", async function (assert) {
     await render(
       <template>
         <Section
@@ -173,20 +195,28 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
       </template>
     );
 
-    await triggerEvent(".sidebar-section", "dragenter", { dataTransfer });
-    await triggerEvent(".sidebar-section-header-text", "dragenter", {
+    const dataTransfer = urlTransfer();
+    await externalDragOver(".sidebar-section", { dataTransfer });
+
+    // Driven event by event: the header text is deliberately not a drop target,
+    // which is what this test is about, so the helper's registration guard
+    // would refuse it.
+    const overHeader = centerOf(".sidebar-section-header-text");
+    await dragEvent(".sidebar-section-header-text", "dragenter", {
       dataTransfer,
+      ...overHeader,
     });
-    await triggerEvent(".sidebar-section-header-text", "dragover", {
+    await dragEvent(".sidebar-section-header-text", "dragover", {
       dataTransfer,
-    });
-    await triggerEvent(".sidebar-section-header-text", "dragleave", {
-      dataTransfer,
+      ...overHeader,
     });
 
     assert
       .dom(".sidebar-section")
-      .hasClass("is-link-drop-active", "keeps the nested drag active");
+      .hasClass(
+        "is-link-drop-active",
+        "a descendant that is not itself a drop target does not take the section's place"
+      );
 
     await triggerEvent(".sidebar-section", "dragleave", { dataTransfer });
 
@@ -198,12 +228,7 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
       );
   });
 
-  test("clears the drop state when dragging ends", async function (assert) {
-    const dataTransfer = {
-      types: ["text/uri-list"],
-      dropEffect: null,
-    };
-
+  test("clears the drop state when the drag is abandoned", async function (assert) {
     await render(
       <template>
         <Section
@@ -214,24 +239,24 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
       </template>
     );
 
-    await triggerEvent(".sidebar-section", "dragenter", { dataTransfer });
-    await triggerEvent(".sidebar-section", "dragover", { dataTransfer });
+    const dataTransfer = urlTransfer();
+    await externalDragOver(".sidebar-section", { dataTransfer });
     assert
       .dom(".sidebar-section")
       .hasClass("is-link-drop-active", "shows the active drop state");
 
     await triggerEvent(document, "dragend", { dataTransfer });
+
     assert
       .dom(".sidebar-section")
-      .doesNotHaveClass("is-link-drop-active", "clears the drop state");
+      .doesNotHaveClass(
+        "is-link-drop-active",
+        "a drag released outside any target still ends the hover state"
+      );
   });
 
   test("does not accept non-link drops", async function (assert) {
     this.onLinkDrop = () => assert.step("drop");
-    const dataTransfer = {
-      types: ["Files"],
-      dropEffect: null,
-    };
 
     await render(
       <template>
@@ -244,8 +269,9 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
       </template>
     );
 
-    await triggerEvent(".sidebar-section", "dragover", { dataTransfer });
-    await triggerEvent(".sidebar-section", "drop", { dataTransfer });
+    await simulateExternalDrag(".sidebar-section", {
+      dataTransfer: fileTransfer(),
+    });
 
     assert
       .dom(".sidebar-section")
@@ -255,10 +281,6 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
 
   test("does not accept web link drops when disabled", async function (assert) {
     this.onLinkDrop = () => assert.step("drop");
-    const dataTransfer = {
-      types: ["text/uri-list"],
-      dropEffect: null,
-    };
 
     await render(
       <template>
@@ -271,8 +293,9 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
       </template>
     );
 
-    await triggerEvent(".sidebar-section", "dragover", { dataTransfer });
-    await triggerEvent(".sidebar-section", "drop", { dataTransfer });
+    await simulateExternalDrag(".sidebar-section", {
+      dataTransfer: urlTransfer(),
+    });
 
     assert
       .dom(".sidebar-section")

@@ -1,59 +1,30 @@
 import { module, test } from "qunit";
-import {
-  extractDroppedWebLink,
-  isExplicitWebLinkDrag,
-  isWebLinkDrag,
-} from "discourse/lib/sidebar/link-drop";
+import { extractDroppedWebLink } from "discourse/lib/sidebar/link-drop";
 
-function dataTransfer(data = {}, types = Object.keys(data)) {
+/**
+ * Stands in for the decorated payload a drop target hands its consumer. Each
+ * accessor is stated outright rather than derived from the others, so a test
+ * says exactly what the browser put on the drag and cannot accidentally assert
+ * against a reimplementation of the library that normally parses it.
+ */
+function externalSource({ urls = [], html = null, text = null, strings = {} }) {
   return {
-    types,
-    getData(type) {
-      return data[type] || "";
-    },
+    getURLs: () => urls,
+    getHTML: () => html,
+    getText: () => text,
+    getStringData: (mediaType) => strings[mediaType] ?? null,
   };
 }
 
 module("Unit | Lib | Sidebar | link-drop", function () {
-  test("recognizes supported link drag types but not files", function (assert) {
-    assert.true(
-      isWebLinkDrag(dataTransfer({}, ["text/uri-list"])),
-      "URI lists are recognized"
-    );
-    assert.true(
-      isWebLinkDrag(dataTransfer({}, ["text/html", "text/plain"])),
-      "HTML links are recognized"
-    );
-    assert.false(
-      isWebLinkDrag(dataTransfer({}, ["Files", "text/uri-list"])),
-      "file drags are excluded"
-    );
-    assert.false(
-      isWebLinkDrag(dataTransfer({}, ["application/json"])),
-      "unrelated data is excluded"
-    );
-  });
-
-  test("distinguishes explicit link types from ambiguous text", function (assert) {
-    assert.true(
-      isExplicitWebLinkDrag(dataTransfer({}, ["text/uri-list"])),
-      "URI lists provide an explicit link affordance"
-    );
-    assert.false(
-      isExplicitWebLinkDrag(dataTransfer({}, ["text/html", "text/plain"])),
-      "selected text does not provide an explicit link affordance"
-    );
-    assert.false(
-      isExplicitWebLinkDrag(dataTransfer({}, ["Files", "text/uri-list"])),
-      "file drags are excluded"
-    );
-  });
-
-  test("extracts the first valid URL from a URI list", function (assert) {
+  test("takes the first URL it can actually use", function (assert) {
     const link = extractDroppedWebLink(
-      dataTransfer({
-        "text/uri-list":
-          "# A useful link\r\nnot a URL\r\nhttps://example.com/first\r\nhttps://example.com/second",
+      externalSource({
+        urls: [
+          "not a URL",
+          "https://example.com/first",
+          "https://example.com/second",
+        ],
       })
     );
 
@@ -65,16 +36,16 @@ module("Unit | Lib | Sidebar | link-drop", function () {
         value: "https://example.com/first",
         segment: "primary",
       },
-      "the first non-comment URL is used"
+      "entries that are not usable URLs are passed over rather than failing the drop"
     );
   });
 
   test("uses dragged link text as the default name", function (assert) {
     const link = extractDroppedWebLink(
-      dataTransfer({
-        "text/uri-list": "https://example.com/article",
-        "text/html":
-          '<a href="https://example.com/article">  Example   article </a>',
+      externalSource({
+        urls: ["https://example.com/article"],
+        html: '<a href="https://example.com/article">  Example   article </a>',
+        strings: { "text/uri-list": "https://example.com/article" },
       })
     );
 
@@ -85,23 +56,48 @@ module("Unit | Lib | Sidebar | link-drop", function () {
     );
   });
 
-  test("supports Firefox link data and plain URL fallback", function (assert) {
-    const firefoxLink = extractDroppedWebLink(
-      dataTransfer({
-        "text/x-moz-url": "https://example.com/firefox\nFirefox title",
+  test("keeps the title Firefox supplies alongside its own URL format", function (assert) {
+    const link = extractDroppedWebLink(
+      externalSource({
+        urls: ["https://example.com/firefox"],
+        strings: {
+          "text/x-moz-url": "https://example.com/firefox\nFirefox title",
+        },
       })
-    );
-    const plainLink = extractDroppedWebLink(
-      dataTransfer({ "text/plain": "https://www.example.org/plain" })
     );
 
     assert.strictEqual(
-      firefoxLink.name,
+      link.name,
       "Firefox title",
-      "Firefox's supplied title is used"
+      "the title is read back out of the format the URL came from"
     );
+  });
+
+  test("ignores Firefox titles when the URLs came from the standard type", function (assert) {
+    const link = extractDroppedWebLink(
+      externalSource({
+        urls: ["https://example.com/standard"],
+        strings: {
+          "text/uri-list": "https://example.com/standard",
+          "text/x-moz-url": "https://example.com/other\nA different page",
+        },
+      })
+    );
+
     assert.strictEqual(
-      plainLink.name,
+      link.name,
+      "example.com",
+      "a title is only trusted to name the URL it was sent beside"
+    );
+  });
+
+  test("falls back to plain text, named after its host", function (assert) {
+    const link = extractDroppedWebLink(
+      externalSource({ text: "https://www.example.org/plain" })
+    );
+
+    assert.strictEqual(
+      link.name,
       "example.org",
       "the hostname is used for a plain URL"
     );
@@ -117,16 +113,15 @@ module("Unit | Lib | Sidebar | link-drop", function () {
       "selected text",
     ]) {
       assert.strictEqual(
-        extractDroppedWebLink(dataTransfer({ "text/plain": value })),
+        extractDroppedWebLink(externalSource({ text: value })),
         undefined,
         `${value} is rejected`
       );
     }
 
     assert.strictEqual(
-      extractDroppedWebLink(
-        dataTransfer({ "text/plain": "http://example.com" })
-      ).value,
+      extractDroppedWebLink(externalSource({ text: "http://example.com" }))
+        .value,
       "http://example.com/",
       "HTTP URLs are accepted"
     );

@@ -81,8 +81,8 @@ export default class Section {
   }
 
   @bind
-  dropLink(dataTransfer, linkDropIndex) {
-    const link = extractDroppedWebLink(dataTransfer);
+  dropLink(source, linkDropIndex) {
+    const link = extractDroppedWebLink(source);
 
     if (link) {
       return this.openForm(link, linkDropIndex);
