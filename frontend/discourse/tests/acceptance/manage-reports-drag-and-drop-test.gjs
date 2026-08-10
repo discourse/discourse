@@ -413,5 +413,63 @@ acceptance(
         "so it announces the same position, counted on screen rather than in the stored order"
       );
     });
+
+    test("a filtered drag leaves the hidden row in the slot it held", async function (assert) {
+      await openModal(this);
+      await fillIn(".manage-reports__search-wrapper .filter-input", "Matching");
+
+      await dragReport("core_report:signups", "core_report:topics", "below");
+
+      await fillIn(".manage-reports__search-wrapper .filter-input", "");
+
+      assert.deepEqual(
+        enabledKeys(),
+        ["core_report:topics", "core_report:posts", "core_report:signups"],
+        "the two rows on screen swap the slots they held, and the row between them keeps its own"
+      );
+    });
+
+    test("an arrow leaves the hidden row in the same slot a drag does", async function (assert) {
+      await openModal(this);
+      await fillIn(".manage-reports__search-wrapper .filter-input", "Matching");
+
+      await click(
+        `${rowSelector("core_report:signups")} .d-reorder-buttons__button:last-child`
+      );
+
+      await fillIn(".manage-reports__search-wrapper .filter-input", "");
+
+      assert.deepEqual(
+        enabledKeys(),
+        ["core_report:topics", "core_report:posts", "core_report:signups"],
+        "so the two ways of reordering persist the same order rather than disagreeing about the hidden row"
+      );
+    });
+
+    test("a drag that changes nothing on screen changes nothing at all", async function (assert) {
+      const a11y = getOwner(this).lookup("service:a11y");
+      await openModal(this);
+      await fillIn(".manage-reports__search-wrapper .filter-input", "Matching");
+
+      const before = a11y.politeMessage;
+
+      // Below the row shown above it, which is the position it already holds.
+      // In the stored order it is a move, because of the row hidden between.
+      await dragReport("core_report:topics", "core_report:signups", "below");
+
+      assert.strictEqual(
+        a11y.politeMessage,
+        before,
+        "a drop onto the position the row already occupies announces nothing"
+      );
+
+      await fillIn(".manage-reports__search-wrapper .filter-input", "");
+
+      assert.deepEqual(
+        enabledKeys(),
+        ["core_report:signups", "core_report:posts", "core_report:topics"],
+        "and stores nothing, rather than quietly moving the row the user cannot see"
+      );
+    });
   }
 );

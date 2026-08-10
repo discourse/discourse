@@ -556,7 +556,10 @@ module(
         );
       assert
         .dom(arrowSelector("Primary 1", "down"))
-        .isEnabled("a link with a row below it can still move down");
+        .doesNotHaveAttribute(
+          "aria-disabled",
+          "a link with a row below it can still move down"
+        );
     });
 
     test(`${ORACLE} steps over a link awaiting deletion`, async function (assert) {
@@ -576,6 +579,32 @@ module(
         a11y.politeMessage,
         "Moved Primary 1 to position 2 of 2",
         "the position is counted within the visible list"
+      );
+    });
+
+    test(`${ORACLE} a drag over a link awaiting deletion that changes nothing announces nothing`, async function (assert) {
+      const a11y = getOwner(this).lookup("service:a11y");
+      this.model = { section: sectionWithThreePrimaryLinks() };
+      await renderForm(this);
+
+      await click(`${rowSelector("Primary 2")} .delete-link`);
+
+      const before = a11y.politeMessage;
+
+      // Below the link shown above it, which is the position it already holds.
+      // In the underlying array it reads as a move, because of the deleted link
+      // sitting between the two.
+      await dragLink("Primary 3", "Primary 1", "below");
+
+      assert.deepEqual(
+        renderedLinks().primary,
+        ["Primary 1", "Primary 3"],
+        "the visible list is the one it already was"
+      );
+      assert.strictEqual(
+        a11y.politeMessage,
+        before,
+        "so nothing is announced, rather than a position the link never left"
       );
     });
 

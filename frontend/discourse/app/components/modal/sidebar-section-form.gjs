@@ -836,10 +836,15 @@ export default class SidebarSectionForm extends Component {
       return;
     }
 
-    // Read before the removal, so a drop that resolves to the index the link
-    // already holds can be recognised and skipped rather than announced as a
-    // move that changed nothing.
+    // Both read before the removal. The array index is where the link goes back
+    // if the drop turns out to be a non-move; the displayed index is what that
+    // is decided on, because a link awaiting deletion stays in the array without
+    // being rendered, so a drop that lands the link where it already sits reads
+    // as a move in the array and as nothing at all on screen.
     const fromIndex = source.indexOf(draggedLink);
+    const fromVisibleIndex = source
+      .filter((link) => !link._destroy)
+      .indexOf(draggedLink);
 
     removeValueFromArray(source, draggedLink);
 
@@ -848,8 +853,17 @@ export default class SidebarSectionForm extends Component {
     const toPosition = destination.indexOf(targetLink);
     const toIndex = position === "before" ? toPosition : toPosition + 1;
 
-    if (source === destination && toIndex === fromIndex) {
-      destination.splice(toIndex, 0, draggedLink);
+    // The same landing spot counted in the list as displayed. `visible` is taken
+    // between the removal and the insertion, so it holds every link that will be
+    // on screen afterwards except the one being moved. Counting the array
+    // instead would name a position and a total including links the user has
+    // already deleted, and the arrows announce the displayed one.
+    const visible = destination.filter((link) => !link._destroy);
+    const toVisibleIndex =
+      visible.indexOf(targetLink) + (position === "before" ? 0 : 1);
+
+    if (source === destination && toVisibleIndex === fromVisibleIndex) {
+      destination.splice(fromIndex, 0, draggedLink);
       return;
     }
 
@@ -857,18 +871,11 @@ export default class SidebarSectionForm extends Component {
 
     destination.splice(toIndex, 0, draggedLink);
 
-    // Counted within the destination list, which is the one the link now belongs
-    // to, and among only its visible links: a link awaiting deletion stays in
-    // the array without being rendered, so counting the array would announce a
-    // position and a total the user cannot see. This matches what the arrows
-    // announce for the same move.
-    const visible = destination.filter((link) => !link._destroy);
-
     this.a11y.announce(
       i18n("reorder_announcement", {
         label: draggedLink.name,
-        position: visible.indexOf(draggedLink) + 1,
-        total: visible.length,
+        position: toVisibleIndex + 1,
+        total: visible.length + 1,
       })
     );
   }

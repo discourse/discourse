@@ -185,6 +185,15 @@ export default class ManageReports extends Component {
     );
   }
 
+  /**
+   * The enabled keys in the order they appear on screen, which is the order both
+   * reorder paths work in. Not the same as `enabledOrder` whenever a search
+   * filter is hiding rows.
+   */
+  get #visibleOrder() {
+    return this.filteredEnabledRows.map((row) => row.key);
+  }
+
   get visibleRows() {
     return [
       ...this.filteredEnabledRows.map((row) => ({ ...row, enabled: true })),
@@ -308,44 +317,37 @@ export default class ManageReports extends Component {
   /**
    * Swaps a row with its neighbour in the list as displayed.
    *
-   * Resolved against `filteredEnabledRows` rather than against `enabledOrder`,
-   * because a search filter hides rows without removing them from the order.
-   * Stepping by index in the full order would swap with a hidden neighbour: the
-   * stored order would change, an announcement would claim a move, and nothing
-   * the user can see would move. The neighbour is then located in the full order
-   * by key, so the swap lands on the right pair either way.
-   *
    * @param {Object} row - The row to move.
    * @param {number} delta - `-1` to move it up, `1` to move it down.
    */
   #move(row, delta) {
-    const visible = this.filteredEnabledRows;
-    const visibleIndex = visible.findIndex((item) => item.key === row.key);
-    const neighbour = visible[visibleIndex + delta];
-    if (visibleIndex < 0 || !neighbour) {
+    const visible = this.#visibleOrder;
+    const fromIndex = visible.indexOf(row.key);
+    const toIndex = fromIndex + delta;
+    if (fromIndex < 0 || toIndex < 0 || toIndex >= visible.length) {
       return;
     }
 
-    const from = this.enabledOrder.indexOf(row.key);
-    const to = this.enabledOrder.indexOf(neighbour.key);
-    if (from < 0 || to < 0) {
-      return;
-    }
+    const nextVisible = [...visible];
+    [nextVisible[fromIndex], nextVisible[toIndex]] = [
+      nextVisible[toIndex],
+      nextVisible[fromIndex],
+    ];
 
-    const next = [...this.enabledOrder];
-    [next[from], next[to]] = [next[to], next[from]];
-    this.#reorder(next, row, visibleIndex + delta, visible.length);
+    this.#reorder(
+      this.#storedOrderFrom(nextVisible),
+      row,
+      toIndex,
+      nextVisible.length
+    );
   }
 
   @action
   onDrop(draggedKey, targetKey, dropAbove) {
-    const fromIndex = this.enabledOrder.indexOf(draggedKey);
-    if (fromIndex < 0) {
-      return;
-    }
-
-    const targetIndex = this.enabledOrder.indexOf(targetKey);
-    if (targetIndex < 0) {
+    const visible = this.#visibleOrder;
+    const fromIndex = visible.indexOf(draggedKey);
+    const targetIndex = visible.indexOf(targetKey);
+    if (fromIndex < 0 || targetIndex < 0) {
       return;
     }
 
@@ -353,25 +355,42 @@ export default class ManageReports extends Component {
     if (fromIndex < toIndex) {
       toIndex -= 1;
     }
+    // Resolved in the displayed list, so a drop that lands the row where it
+    // already sits is a non-move even when a hidden row makes it look like one
+    // in the stored order.
     if (fromIndex === toIndex) {
       return;
     }
 
-    const next = [...this.enabledOrder];
-    const [moved] = next.splice(fromIndex, 1);
-    next.splice(toIndex, 0, moved);
-
-    // Where the row lands on screen, which is not `toIndex` while a filter is
-    // hiding rows. A reorder cannot change which rows match the filter, only
-    // their order, so the visible set is taken from before the move.
-    const visibleKeys = new Set(this.filteredEnabledRows.map((row) => row.key));
-    const nextVisible = next.filter((key) => visibleKeys.has(key));
+    const nextVisible = [...visible];
+    const [moved] = nextVisible.splice(fromIndex, 1);
+    nextVisible.splice(toIndex, 0, moved);
 
     this.#reorder(
-      next,
+      this.#storedOrderFrom(nextVisible),
       this.itemsByKey.get(draggedKey),
-      nextVisible.indexOf(draggedKey),
+      toIndex,
       nextVisible.length
+    );
+  }
+
+  /**
+   * Rebuilds the stored order from a reordered displayed list.
+   *
+   * A reorder permutes the rows the user can see among the slots they occupy,
+   * so a row a search filter is hiding keeps the slot it already held. Letting
+   * a move carry rows across hidden ones would persist a change nothing on
+   * screen accounts for, and the user would find it once they cleared the
+   * filter.
+   *
+   * @param {string[]} nextVisible - The displayed keys in their new order.
+   * @returns {string[]} The full stored order.
+   */
+  #storedOrderFrom(nextVisible) {
+    const remaining = [...nextVisible];
+    const visible = new Set(nextVisible);
+    return this.enabledOrder.map((key) =>
+      visible.has(key) ? remaining.shift() : key
     );
   }
 
