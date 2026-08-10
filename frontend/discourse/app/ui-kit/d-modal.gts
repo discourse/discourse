@@ -39,25 +39,38 @@ export const CLOSE_INITIATED_BY_SWIPE_DOWN = "initiatedBySwipeDown";
 
 /**
  * Controls that do something with Enter of their own: activate, insert a
- * newline, follow a link, open a disclosure.
+ * newline, follow a link, open a disclosure or a file picker.
  *
- * A plain text input is deliberately absent. Outside a form it does nothing with
- * Enter, and a form is matched separately, so exempting it would only stop the
- * modal submitting where it always has.
+ * Membership is by evidence, not by looking interactive. A plain text input and
+ * a `select` both do nothing with Enter outside a form, and a form is matched
+ * separately, so exempting either would take the key away from the modal and
+ * give it to nothing. Anything whose Enter behaviour has not been confirmed
+ * stays out until it has been.
  */
 const ENTER_HANDLING_CONTROLS = [
   "button",
   "a[href]",
-  "select",
   "summary",
   "textarea",
   'input[type="button"]',
+  'input[type="file"]',
   'input[type="image"]',
   'input[type="reset"]',
   'input[type="submit"]',
   '[role="button"]',
   '[contenteditable]:not([contenteditable="false"])',
 ].join(", ");
+
+/**
+ * A primary action that cannot be acted on, so there is nothing for Enter to do.
+ *
+ * All three are needed and each misses what the others catch: the attribute is
+ * the only one that sees a button rendered as a link, since `:disabled` applies
+ * to form controls alone; `:disabled` is the only one that sees a control
+ * disabled by an ancestor `fieldset`, which carries no attribute of its own; and
+ * `aria-disabled` is the only one that sees a control kept focusable on purpose.
+ */
+const UNAVAILABLE_PRIMARY = '[disabled], :disabled, [aria-disabled="true"]';
 
 const SWIPE_VELOCITY_THRESHOLD = 0.4;
 const SWIPE_CLOSE_DISTANCE_RATIO = 0.25;
@@ -408,13 +421,17 @@ export default class DModal extends Component<DModalSignature> {
     }
 
     if (event.key === "Enter" && this.#shouldTriggerClickOnEnter(event)) {
+      // The first primary is the modal's primary action, and stays so whether or
+      // not it can currently act. Excluding unavailable ones in the selector
+      // instead would not find nothing, it would find the NEXT primary along —
+      // which in a footer that pairs a disabled submit with a close button means
+      // Enter closing the modal.
       const primary = this._wrapperElement?.querySelector<HTMLElement>(
         ".d-modal__footer .btn-primary"
       );
-      // Only claimed when there is something to claim it for. A modal with no
-      // primary action has nothing to submit, and swallowing the key there would
-      // suppress whatever the browser would otherwise have done with it.
-      if (primary) {
+      // Swallowing the key with nothing to submit would suppress whatever the
+      // browser, or the focused control, would otherwise have done with it.
+      if (primary && !primary.matches(UNAVAILABLE_PRIMARY)) {
         primary.click();
         event.preventDefault();
       }

@@ -431,6 +431,232 @@ module("Integration | ui-kit | DModal", function (hooks) {
     );
   });
 
+  test("enter does not fall through a disabled primary to the next one", async function (assert) {
+    const calls = [];
+    const onUpload = () => calls.push("upload");
+    const onClose = () => calls.push("close");
+
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+            <input class="body-input" type="text" />
+          </:body>
+          <:footer>
+            <DButton
+              @action={{onUpload}}
+              @translatedLabel="Upload"
+              @disabled={{true}}
+              class="btn-primary"
+            />
+            <DButton
+              @action={{onClose}}
+              @translatedLabel="Close"
+              class="btn-primary"
+            />
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    await focus(".body-input");
+    await triggerKeyEvent(".body-input", "keydown", "Enter");
+
+    // The first primary is the modal's primary action whether or not it can act.
+    // Skipping past it lands the press on a different button entirely, which in
+    // a real footer is the one that closes the modal.
+    assert.deepEqual(
+      calls,
+      [],
+      "a disabled primary means nothing to submit, not submit the next thing along"
+    );
+  });
+
+  test("enter is not claimed for a primary disabled by an ancestor fieldset", async function (assert) {
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+            <input class="body-input" type="text" />
+          </:body>
+          <:footer>
+            <fieldset disabled>
+              <DButton @translatedLabel="Perform action" class="btn-primary" />
+            </fieldset>
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    let defaultPrevented = null;
+    const bodyInput = find(".body-input");
+    const observe = (event) => {
+      defaultPrevented = event.defaultPrevented;
+    };
+    bodyInput.addEventListener("keydown", observe);
+    try {
+      await focus(".body-input");
+      await triggerKeyEvent(".body-input", "keydown", "Enter");
+    } finally {
+      bodyInput.removeEventListener("keydown", observe);
+    }
+
+    // Asserted on the key rather than the action: the browser suppresses a click
+    // on a fieldset-disabled control anyway, so whether the action ran says
+    // nothing about whether the modal thought it had something to submit.
+    // Claiming the key is the part that is actually the modal's doing.
+    assert.false(
+      defaultPrevented,
+      "a control inside a disabled fieldset carries no attribute of its own, and is still nothing to submit"
+    );
+  });
+
+  test("enter does not run a disabled primary rendered as a link", async function (assert) {
+    let actionCalled = false;
+    const someAction = () => {
+      actionCalled = true;
+    };
+
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+            <input class="body-input" type="text" />
+          </:body>
+          <:footer>
+            <DButton
+              @action={{someAction}}
+              @translatedLabel="Perform action"
+              @href="/somewhere"
+              @disabled={{true}}
+              class="btn-primary"
+            />
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    await focus(".body-input");
+    await triggerKeyEvent(".body-input", "keydown", "Enter");
+
+    // An anchor is not a form control, so it never matches `:disabled` however
+    // it was marked. The attribute is what is actually there.
+    assert.false(
+      actionCalled,
+      "a primary marked unavailable is not clicked, whichever tag it renders as"
+    );
+  });
+
+  test("enter on a focused select still submits the modal", async function (assert) {
+    let actionCalled = false;
+    const someAction = () => {
+      actionCalled = true;
+    };
+
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+
+            <select class="body-select">
+              <option value="a">A</option>
+            </select>
+          </:body>
+          <:footer>
+            <DButton
+              @action={{someAction}}
+              @translatedLabel="Perform action"
+              class="btn-primary"
+            />
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    await focus(".body-select");
+    await triggerKeyEvent(".body-select", "keydown", "Enter");
+
+    // A select does nothing with Enter of its own outside a form, so exempting
+    // it would take the key from the modal and hand it to nothing.
+    assert.true(
+      actionCalled,
+      "the modal keeps the key, because the select has no use for it"
+    );
+  });
+
+  test("enter on a focused file input is left to the file input", async function (assert) {
+    let actionCalled = false;
+    const someAction = () => {
+      actionCalled = true;
+    };
+
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+            <input class="body-file" type="file" />
+          </:body>
+          <:footer>
+            <DButton
+              @action={{someAction}}
+              @translatedLabel="Upload"
+              class="btn-primary"
+            />
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    await focus(".body-file");
+    await triggerKeyEvent(".body-file", "keydown", "Enter");
+
+    // Enter on a file input opens its picker, so the modal must not take the key
+    // and submit instead.
+    assert.false(
+      actionCalled,
+      "the file input keeps the key rather than the modal submitting under it"
+    );
+  });
+
+  test("enter with a primary that cannot be clicked is left to the browser", async function (assert) {
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+            <input class="body-input" type="text" />
+          </:body>
+          <:footer>
+            <DButton
+              @translatedLabel="Upload"
+              @disabled={{true}}
+              class="btn-primary"
+            />
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    let defaultPrevented = null;
+    const bodyInput = find(".body-input");
+    const observe = (event) => {
+      defaultPrevented = event.defaultPrevented;
+    };
+    bodyInput.addEventListener("keydown", observe);
+    try {
+      await focus(".body-input");
+      await triggerKeyEvent(".body-input", "keydown", "Enter");
+    } finally {
+      bodyInput.removeEventListener("keydown", observe);
+    }
+
+    // Clicking a disabled primary does nothing, so claiming the key for it
+    // spends the press on nothing at all.
+    assert.false(
+      defaultPrevented,
+      "a primary that cannot act is not something to claim the key for"
+    );
+  });
+
   test("enter inside select-kit does not trigger default action", async function (assert) {
     let actionCalled = false;
     const someAction = () => {
