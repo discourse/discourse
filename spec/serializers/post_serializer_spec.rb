@@ -297,6 +297,44 @@ RSpec.describe PostSerializer do
     end
   end
 
+  describe "#cooked for a post hidden pending media review" do
+    fab!(:author, :user)
+    fab!(:post) do
+      Fabricate(
+        :post,
+        user: author,
+        hidden: true,
+        hidden_reason_id: Post.hidden_reasons[:media_pending_review],
+      )
+    end
+
+    def cooked_for(user)
+      PostSerializer.new(post, scope: Guardian.new(user), root: false).as_json[:cooked]
+    end
+
+    it "explains the pending review to the author" do
+      expect(cooked_for(author)).to eq(
+        I18n.t("media_review.post_hidden_yours", path: "/my/messages"),
+      )
+    end
+
+    it "shows a generic notice to other users" do
+      expect(cooked_for(Fabricate(:user))).to eq(I18n.t("media_review.post_hidden"))
+      expect(cooked_for(nil)).to eq(I18n.t("media_review.post_hidden"))
+    end
+
+    it "shows the real content to staff" do
+      expect(cooked_for(Fabricate(:admin))).to eq(post.cooked)
+    end
+
+    it "keeps the flag copy for flag-hidden posts" do
+      post.update!(hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached])
+
+      expect(cooked_for(author)).to eq(I18n.t("flagging.you_must_edit", path: "/my/messages"))
+      expect(cooked_for(Fabricate(:user))).to eq(I18n.t("flagging.user_must_edit"))
+    end
+  end
+
   context "with a post with notices" do
     fab!(:user) { Fabricate(:user, trust_level: 1) }
     fab!(:user_tl1) { Fabricate(:user, trust_level: 1) }

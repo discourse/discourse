@@ -1876,6 +1876,82 @@ describe PostRevisor do
     end
   end
 
+  context "when skip_review_media_groups requires media review" do
+    fab!(:post) { Fabricate(:post, user:, raw: "this is a plain text post") }
+
+    let(:revisor) { PostRevisor.new(post) }
+    let(:raw_with_image) { "#{post.raw}\n\n![image](upload://sherlock.jpeg)" }
+
+    before do
+      SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_3]
+      SiteSetting.editing_grace_period = 1.minute
+    end
+
+    it "queues the post for review when a grace period edit adds media" do
+      expect {
+        revisor.revise!(
+          post.user,
+          { raw: raw_with_image },
+          revised_at: post.updated_at + 10.seconds,
+        )
+      }.to change(ReviewablePost, :count).by(1)
+
+      expect(post.reload.revisions).to be_empty
+      expect(ReviewablePost.last.reviewable_scores.last.reason).to eq("contains_media")
+    end
+
+    it "does not queue the post when the revision restores content the author deleted" do
+      expect {
+        revisor.revise!(post.user, { raw: raw_with_image }, recovering_post: true)
+      }.not_to change(ReviewablePost, :count)
+    end
+
+    it "does not queue the post when the revision skips validations" do
+      expect {
+        revisor.revise!(
+          post.user,
+          { raw: raw_with_image },
+          revised_at: post.updated_at + 10.seconds,
+          skip_validations: true,
+        )
+      }.not_to change(ReviewablePost, :count)
+    end
+
+    it "hides the post until staff review the added media" do
+      revisor.revise!(post.user, { raw: raw_with_image }, revised_at: post.updated_at + 10.seconds)
+
+      expect(post.reload.hidden).to eq(true)
+      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:media_pending_review])
+      expect(post.topic.reload.visible).to eq(false)
+    end
+
+    it "keeps the post hidden when a follow-up edit does not add new media" do
+      revisor.revise!(post.user, { raw: raw_with_image }, revised_at: post.updated_at + 10.seconds)
+      expect(post.reload.hidden).to eq(true)
+
+      PostRevisor.new(post).revise!(
+        post.user,
+        { raw: "#{raw_with_image}\n\nsome more text" },
+        revised_at: post.updated_at + 20.seconds,
+      )
+
+      expect(post.reload.hidden).to eq(true)
+    end
+
+    it "does not unhide a flag-hidden post while a media review is pending" do
+      revisor.revise!(post.user, { raw: raw_with_image }, revised_at: post.updated_at + 10.seconds)
+      post.reload.update!(hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached])
+
+      PostRevisor.new(post).revise!(
+        post.user,
+        { raw: "#{raw_with_image}\n\nedited to address feedback" },
+        revised_at: post.updated_at + 20.seconds,
+      )
+
+      expect(post.reload.hidden).to eq(true)
+    end
+  end
+
   describe "topic bumping" do
     subject(:post_revisor) { PostRevisor.new(post) }
 

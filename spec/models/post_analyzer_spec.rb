@@ -216,6 +216,54 @@ RSpec.describe PostAnalyzer do
     end
   end
 
+  describe "embedded_media_keys" do
+    it "is empty without media" do
+      post_analyzer = PostAnalyzer.new("hello :wink: world", default_topic_id)
+      expect(post_analyzer.embedded_media_keys).to be_empty
+    end
+
+    it "keys media on its source" do
+      raw = "<video><source src='http://bbc.co.uk/sherlock.mp4'></video>"
+      post_analyzer = PostAnalyzer.new(raw, default_topic_id)
+
+      expect(post_analyzer.embedded_media_keys).to eq(["http://bbc.co.uk/sherlock.mp4"])
+    end
+
+    it "keys an upload on its source, scaled or not" do
+      plain = PostAnalyzer.new("![sherlock](upload://sherlock.jpeg)", default_topic_id)
+      scaled = PostAnalyzer.new("![sherlock|500x500](upload://sherlock.jpeg)", default_topic_id)
+
+      expect(plain.embedded_media_keys).to eq(["/images/transparent.png upload://sherlock.jpeg"])
+      expect(scaled.embedded_media_keys).to eq(plain.embedded_media_keys)
+    end
+
+    it "keys a picture on both its source and its image" do
+      raw =
+        "<picture><source srcset='http://bbc.co.uk/a.png'><img src='http://bbc.co.uk/sherlock.png'></picture>"
+      post_analyzer = PostAnalyzer.new(raw, default_topic_id)
+
+      expect(post_analyzer.embedded_media_keys).to eq(
+        ["http://bbc.co.uk/a.png http://bbc.co.uk/sherlock.png"],
+      )
+    end
+
+    it "keys a video on both its poster and its source" do
+      raw =
+        "<video poster='http://bbc.co.uk/sherlock.png'><source src='http://bbc.co.uk/a.mp4'></video>"
+      post_analyzer = PostAnalyzer.new(raw, default_topic_id)
+
+      expect(post_analyzer.embedded_media_keys).to eq(
+        ["http://bbc.co.uk/a.mp4 http://bbc.co.uk/sherlock.png"],
+      )
+    end
+
+    it "falls back to the markup for media without a source" do
+      post_analyzer = PostAnalyzer.new("<img alt='sherlock'>", default_topic_id)
+
+      expect(post_analyzer.embedded_media_keys).to eq(['<img alt="sherlock">'])
+    end
+  end
+
   describe "link_count" do
     let(:raw_post_one_link_md) { "[sherlock](http://www.bbc.co.uk/programmes/b018ttws)" }
     let(:raw_post_two_links_html) do

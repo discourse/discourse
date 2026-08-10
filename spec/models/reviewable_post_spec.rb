@@ -3,6 +3,155 @@
 RSpec.describe ReviewablePost do
   fab!(:admin)
 
+  describe ".queue_for_media_review_if_possible" do
+    fab!(:author) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:post) { Fabricate(:post, user: author, raw: "this is a plain text post") }
+
+    let(:image_markdown) { "![image](upload://sherlock.jpeg)" }
+    let(:other_image_markdown) { "![image](upload://moriarty.jpeg)" }
+
+    before { SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_3] }
+
+    def queue(raw, editor: author, previous_raw: post.raw)
+      post.raw = raw
+      described_class.queue_for_media_review_if_possible(post, editor, previous_raw:)
+    end
+
+    it "queues the post when an edit adds media" do
+      expect { queue("#{post.raw}\n\n#{image_markdown}") }.to change(ReviewablePost, :count).by(1)
+
+      reviewable = ReviewablePost.last
+      expect(reviewable.target).to eq(post)
+      expect(reviewable).to be_pending
+      expect(reviewable.reviewable_scores.last.reason).to eq("contains_media")
+    end
+
+    it "queues the post when an edit replaces the media" do
+      expect { queue(other_image_markdown, previous_raw: image_markdown) }.to change(
+        ReviewablePost,
+        :count,
+      ).by(1)
+    end
+
+    it "queues the post even when a flag is already pending" do
+      Fabricate(:reviewable_flagged_post, target: post, topic: post.topic)
+
+      expect { queue("#{post.raw}\n\n#{image_markdown}") }.to change(ReviewablePost, :count).by(1)
+    end
+
+    it "does not queue the post when the raw is unchanged" do
+      expect { queue(post.raw) }.not_to change(ReviewablePost, :count)
+    end
+
+    it "does not queue the post when the edit leaves the media alone" do
+      expect {
+        queue("behold: #{image_markdown}", previous_raw: "look: #{image_markdown}")
+      }.not_to change(ReviewablePost, :count)
+    end
+
+    it "does not queue the post when the edit removes the media" do
+      expect { queue("no more media", previous_raw: image_markdown) }.not_to change(
+        ReviewablePost,
+        :count,
+      )
+    end
+
+    it "does not queue the post when the editor is a staff member" do
+      expect { queue("#{post.raw}\n\n#{image_markdown}", editor: admin) }.not_to change(
+        ReviewablePost,
+        :count,
+      )
+    end
+
+    it "does not queue the post when the editor is a bot" do
+      expect { queue("#{post.raw}\n\n#{image_markdown}", editor: Fabricate(:bot)) }.not_to change(
+        ReviewablePost,
+        :count,
+      )
+    end
+
+    it "does not queue the post when the editor is in a skip group" do
+      SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_1]
+
+      expect { queue("#{post.raw}\n\n#{image_markdown}") }.not_to change(ReviewablePost, :count)
+    end
+
+    it "does not score the post again when a media reviewable is already pending" do
+      reviewable = described_class.queue_for_review(post)
+
+      expect { queue("#{post.raw}\n\n#{image_markdown}") }.not_to change {
+        reviewable.reload.reviewable_scores.count
+      }
+    end
+
+    it "does not queue the post when it is not a regular post" do
+      post.update!(post_type: Post.types[:whisper])
+
+      expect { queue("#{post.raw}\n\n#{image_markdown}") }.not_to change(ReviewablePost, :count)
+    end
+
+    it "does not queue the post when it is in a private message" do
+      pm_post = Fabricate(:private_message_post, user: author)
+      previous_raw = pm_post.raw
+      pm_post.raw = "#{previous_raw}\n\n#{image_markdown}"
+
+      expect {
+        described_class.queue_for_media_review_if_possible(pm_post, author, previous_raw:)
+      }.not_to change(ReviewablePost, :count)
+    end
+
+    it "hides the post and unlists the topic until staff review the media" do
+      expect { queue("#{post.raw}\n\n#{image_markdown}") }.to change { post.reload.hidden }.to(
+        true,
+      ).and change { post.topic.reload.visible }.to(false)
+
+      expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:media_pending_review])
+      expect(post.topic.visibility_reason_id).to eq(Topic.visibility_reasons[:media_pending_review])
+    end
+
+    it "hides the post even when a media reviewable is already pending" do
+      described_class.queue_for_review(post)
+
+      expect { queue("#{post.raw}\n\n#{image_markdown}") }.to change { post.reload.hidden }.to(true)
+    end
+
+    it "notifies the author that their post is hidden" do
+      expect_enqueued_with(
+        job: :send_system_message,
+        args: {
+          user_id: author.id,
+          message_type: "post_hidden_media_pending_review",
+        },
+      ) { queue("#{post.raw}\n\n#{image_markdown}") }
+    end
+
+    it "does not unlist the topic when the hidden post is a reply" do
+      reply = Fabricate(:post, topic: post.topic, user: author)
+      reply.raw = "#{reply.raw}\n\n#{image_markdown}"
+
+      described_class.queue_for_media_review_if_possible(reply, author, previous_raw: "reply")
+
+      expect(reply.reload.hidden).to eq(true)
+      expect(reply.topic.reload.visible).to eq(true)
+    end
+
+    it "does not overwrite the visibility reason of a manually unlisted topic" do
+      post.topic.update_status(
+        "visible",
+        false,
+        admin,
+        { visibility_reason_id: Topic.visibility_reasons[:manually_unlisted] },
+      )
+
+      queue("#{post.raw}\n\n#{image_markdown}")
+
+      expect(post.reload.hidden).to eq(true)
+      expect(post.topic.reload.visibility_reason_id).to eq(
+        Topic.visibility_reasons[:manually_unlisted],
+      )
+    end
+  end
+
   describe "#build_actions" do
     let(:post) { Fabricate.build(:post) }
     let(:reviewable) { ReviewablePost.new(target: post, target_created_by: post.user) }
@@ -133,11 +282,38 @@ RSpec.describe ReviewablePost do
         expect(result.transition_to).to eq :approved
         expect(post.reload.hidden).to eq(false)
       end
+
+      it "relists the topic when the post was hidden pending media review" do
+        post.hide!(
+          nil,
+          Post.hidden_reasons[:media_pending_review],
+          visibility_reason_id: Topic.visibility_reasons[:media_pending_review],
+        )
+
+        result = reviewable.reload.perform admin, :approve_and_unhide
+
+        expect(result.transition_to).to eq :approved
+        expect(post.reload.hidden).to eq(false)
+        expect(post.topic.reload.visible).to eq(true)
+      end
     end
 
     describe "#perform_reject_and_delete" do
       it "transitions to the rejected state and deletes the post" do
         result = reviewable.perform admin, :reject_and_delete
+
+        expect(result.transition_to).to eq :rejected
+        expect(Post.where(id: post.id).exists?).to eq(false)
+      end
+
+      it "deletes a post that was hidden pending media review" do
+        post.hide!(
+          nil,
+          Post.hidden_reasons[:media_pending_review],
+          visibility_reason_id: Topic.visibility_reasons[:media_pending_review],
+        )
+
+        result = reviewable.reload.perform admin, :reject_and_delete
 
         expect(result.transition_to).to eq :rejected
         expect(Post.where(id: post.id).exists?).to eq(false)

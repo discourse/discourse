@@ -176,6 +176,7 @@ class Post < ActiveRecord::Base
         flagged_by_tl4_user: 6,
         email_authentication_result_header: 7,
         imported_as_unlisted: 8,
+        media_pending_review: 9,
       )
   end
 
@@ -305,6 +306,7 @@ class Post < ActiveRecord::Base
     raw_mentions
     linked_hosts
     embedded_media_count
+    embedded_media_keys
     attachment_count
     link_count
     raw_links
@@ -642,7 +644,12 @@ class Post < ActiveRecord::Base
       topic_including_deleted.read_restricted_category?
   end
 
-  def hide!(post_action_type_id, reason = nil, custom_message: nil)
+  def hide!(
+    post_action_type_id,
+    reason = nil,
+    custom_message: nil,
+    visibility_reason_id: Topic.visibility_reasons[:op_flag_threshold_reached]
+  )
     return if hidden?
 
     reason ||=
@@ -666,13 +673,8 @@ class Post < ActiveRecord::Base
       any_visible_posts_in_topic =
         Post.exists?(topic_id: topic_id, hidden: false, post_type: Post.types[:regular])
 
-      if is_first_post? || !any_visible_posts_in_topic
-        topic.update_status(
-          "visible",
-          false,
-          Discourse.system_user,
-          { visibility_reason_id: Topic.visibility_reasons[:op_flag_threshold_reached] },
-        )
+      if (is_first_post? || !any_visible_posts_in_topic) && topic.visible
+        topic.update_status("visible", false, Discourse.system_user, { visibility_reason_id: })
         should_update_user_stat = false
       end
 
@@ -683,17 +685,16 @@ class Post < ActiveRecord::Base
 
     # inform user
     if user.present?
-      options = {
-        url: url,
-        edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts,
-        flag_reason:
-          I18n.t(
-            "flag_reasons.#{post_action_type_view.types[post_action_type_id]}",
-            locale: SiteSetting.default_locale,
-            base_path: Discourse.base_path,
-            default: PostActionType.names[post_action_type_id],
-          ),
-      }
+      options = { url:, edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts }
+
+      if post_action_type_id.present?
+        options[:flag_reason] = I18n.t(
+          "flag_reasons.#{post_action_type_view.types[post_action_type_id]}",
+          locale: SiteSetting.default_locale,
+          base_path: Discourse.base_path,
+          default: PostActionType.names[post_action_type_id],
+        )
+      end
 
       message = custom_message
       message = hiding_again ? :post_hidden_again : :post_hidden if message.nil?
@@ -710,7 +711,28 @@ class Post < ActiveRecord::Base
     topic.reset_bumped_at if should_reset_bumped_at
   end
 
-  def unhide!
+  def awaiting_media_review?
+    return true if hidden_reason_id == Post.hidden_reasons[:media_pending_review]
+
+    ReviewablePost
+      .pending
+      .where(target: self)
+      .joins(:reviewable_scores)
+      .where(reviewable_scores: { reason: "contains_media" })
+      .exists?
+  end
+
+  def hidden_notice_key(for_author: false)
+    if hidden_reason_id == Post.hidden_reasons[:media_pending_review]
+      for_author ? "media_review.post_hidden_yours" : "media_review.post_hidden"
+    else
+      for_author ? "flagging.you_must_edit" : "flagging.user_must_edit"
+    end
+  end
+
+  def unhide!(force: false)
+    return if !force && awaiting_media_review?
+
     Post.transaction do
       update!(hidden: false)
       should_update_user_stat = true
@@ -718,11 +740,14 @@ class Post < ActiveRecord::Base
       # NOTE: We have to consider `nil` a valid reason here because historically
       # topics didn't have a visibility_reason_id, if we didn't do this we would
       # break backwards compat since we cannot backfill data.
-      hidden_because_of_op_flagging =
-        topic.visibility_reason_id == Topic.visibility_reasons[:op_flag_threshold_reached] ||
-          topic.visibility_reason_id.nil?
+      hidden_because_op_was_hidden =
+        topic.visibility_reason_id.nil? ||
+          [
+            Topic.visibility_reasons[:op_flag_threshold_reached],
+            Topic.visibility_reasons[:media_pending_review],
+          ].include?(topic.visibility_reason_id)
 
-      if is_first_post? && hidden_because_of_op_flagging
+      if is_first_post? && hidden_because_op_was_hidden
         topic.update_status(
           "visible",
           true,

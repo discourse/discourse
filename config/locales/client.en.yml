@@ -5639,6 +5639,7 @@ en:
         manually_unlisted: "This topic was manually unlisted by an admin or moderator"
         manually_relisted: "This topic was manually relisted by an admin or moderator"
         bulk_action: "This topic's visibility was changed because of a bulk action performed by a user"
+        media_pending_review: "This topic was automatically unlisted because a recent edit added media that is awaiting staff review"
     posts: "Posts"
     pending_posts:
       label: "Pending"

@@ -56,17 +56,19 @@ class PostAnalyzer
 
   # How many images are present in the post
   def embedded_media_count
-    return 0 if @raw.blank?
+    embedded_media_elements.count
+  end
 
-    # TODO - do we need to look for tags other than img, video and audio?
-    cooked_stripped
-      .css("img", "video", "audio")
-      .reject do |t|
-        if dom_class = t["class"]
-          (Post.allowed_image_classes & dom_class.split).count > 0
-        end
-      end
-      .count
+  def embedded_media_keys
+    embedded_media_elements.map do |element|
+      element = element.parent if element.parent&.name == "picture"
+
+      srcs =
+        [element, *element.css("*")].flat_map(&:attribute_nodes)
+          .filter_map { |attr| attr.value if attr.name.match?(/src|poster/) }
+
+      srcs.empty? ? element.to_html : srcs.sort.join(" ")
+    end
   end
 
   # How many attachments are present in the post
@@ -151,6 +153,19 @@ class PostAnalyzer
   end
 
   private
+
+  def embedded_media_elements
+    return [] if @raw.blank?
+
+    # TODO - do we need to look for tags other than img, video and audio?
+    cooked_stripped
+      .css("img", "video", "audio")
+      .reject do |t|
+        if dom_class = t["class"]
+          (Post.allowed_image_classes & dom_class.split).count > 0
+        end
+      end
+  end
 
   def link_is_a_mention?(l)
     href = l["href"].to_s

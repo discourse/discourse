@@ -48,6 +48,7 @@ class Topic < ActiveRecord::Base
         manually_unlisted: 3,
         manually_relisted: 4,
         bulk_action: 5,
+        media_pending_review: 6,
         unknown: 99,
       )
   end

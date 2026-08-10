@@ -606,6 +606,16 @@ RSpec.describe PostGuardian do
 
       expect(Guardian.new(user).can_edit_hidden_post?(post)).to be_falsey
     end
+
+    it "returns true within the cooldown when the post is hidden pending media review" do
+      post.update!(
+        hidden: true,
+        hidden_at: 1.minute.ago,
+        hidden_reason_id: Post.hidden_reasons[:media_pending_review],
+      )
+
+      expect(Guardian.new(user).can_edit_hidden_post?(post)).to be_truthy
+    end
   end
 
   describe "#can_change_post_owner?" do
