@@ -77,6 +77,7 @@ const bundle = await rolldown({
     },
   ],
   resolve: { extensions: [".js", ".mjs", ".cjs", ".json"] },
+  tsconfig: false,
 });
 
 const { output } = await bundle.generate({
