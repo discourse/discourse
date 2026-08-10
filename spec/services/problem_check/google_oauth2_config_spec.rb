@@ -33,7 +33,7 @@ RSpec.describe ProblemCheck::GoogleOauth2Config do
 
       it do
         expect(check).to have_a_problem.with_priority("low").with_message(
-          'The server is configured to allow signup and login with Google OAuth2 (enable_google_oauth2_logins), but the client id and client secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">See this guide to learn more</a>.',
+          '{{setting:enable_google_oauth2_logins}} is on, but {{setting:google_oauth2_client_id}} must still be set. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">See this guide to learn more</a>.',
         )
       end
     end
@@ -48,7 +48,7 @@ RSpec.describe ProblemCheck::GoogleOauth2Config do
 
       it do
         expect(check).to have_a_problem.with_priority("low").with_message(
-          'The server is configured to allow signup and login with Google OAuth2 (enable_google_oauth2_logins), but the client id and client secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">See this guide to learn more</a>.',
+          '{{setting:enable_google_oauth2_logins}} is on, but {{setting:google_oauth2_client_secret}} must still be set. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">See this guide to learn more</a>.',
         )
       end
     end

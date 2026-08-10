@@ -13,7 +13,7 @@ RSpec.describe Users::AssociateAccountsController do
 
   context "when attempting reconnect" do
     before do
-      SiteSetting.enable_google_oauth2_logins = true
+      enable_auth_provider(:google_oauth2)
       OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
         provider: "google_oauth2",
         uid: "12345",

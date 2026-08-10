@@ -332,7 +332,22 @@ module Helpers
   def enable_current_plugin
     plugin = Discourse.plugins_by_name[directory_from_caller.split("/").last]
     return if plugin.enabled?
+    return if enable_auth_provider(plugin.enabled_site_setting)
     SiteSetting.public_send("#{plugin.enabled_site_setting}=", true)
+  end
+
+  # Only blank settings are filled, so a spec can set anything it reads first.
+  # Ten digits is the one placeholder every credential `regex:` accepts.
+  def enable_auth_provider(name)
+    authenticator =
+      Discourse.authenticators.find { it.enable_setting == name.to_sym || it.name == name.to_s }
+    return false if authenticator.nil?
+
+    authenticator.required_settings.each do |setting|
+      SiteSetting.set(setting, "1234567890") if SiteSetting.get(setting).blank?
+    end
+    SiteSetting.set(authenticator.enable_setting, true)
+    true
   end
 
   def mock_upcoming_change_metadata(metadata)

@@ -14,7 +14,7 @@ shared_examples "social authentication scenarios" do
 
   context "when user does not exist" do
     context "with Facebook" do
-      before { SiteSetting.enable_facebook_logins = true }
+      before { enable_auth_provider(:facebook) }
       after { reset_omniauth_config(:facebook) }
 
       it "fills the signup form" do
@@ -34,7 +34,7 @@ shared_examples "social authentication scenarios" do
     end
 
     context "with Google" do
-      before { SiteSetting.enable_google_oauth2_logins = true }
+      before { enable_auth_provider(:google_oauth2) }
       after { reset_omniauth_config(:google_oauth2) }
 
       it "fills the signup form" do
@@ -71,7 +71,7 @@ shared_examples "social authentication scenarios" do
     end
 
     context "with Github" do
-      before { SiteSetting.enable_github_logins = true }
+      before { enable_auth_provider(:github) }
       after { reset_omniauth_config(:github) }
 
       it "fills the signup form" do
@@ -146,7 +146,7 @@ shared_examples "social authentication scenarios" do
     end
 
     context "with Twitter" do
-      before { SiteSetting.enable_twitter_logins = true }
+      before { enable_auth_provider(:twitter) }
       after { reset_omniauth_config(:twitter) }
 
       it "fills the signup form" do
@@ -182,7 +182,7 @@ shared_examples "social authentication scenarios" do
     end
 
     context "with Discord" do
-      before { SiteSetting.enable_discord_logins = true }
+      before { enable_auth_provider(:discord) }
       after { reset_omniauth_config(:discord) }
 
       it "fills the signup form" do
@@ -201,11 +201,7 @@ shared_examples "social authentication scenarios" do
     end
 
     context "with Linkedin" do
-      before do
-        SiteSetting.linkedin_oidc_client_id = "12345"
-        SiteSetting.linkedin_oidc_client_secret = "abcde"
-        SiteSetting.enable_linkedin_oidc_logins = true
-      end
+      before { enable_auth_provider(:linkedin_oidc) }
       after { reset_omniauth_config(:linkedin_oidc) }
 
       it "fills the signup form" do
@@ -225,7 +221,7 @@ shared_examples "social authentication scenarios" do
 
     # These tests use Google, but they should be the same for all providers
     context "when opening the external auth from /login" do
-      before { SiteSetting.enable_google_oauth2_logins = true }
+      before { enable_auth_provider(:google_oauth2) }
       after { reset_omniauth_config(:google_oauth2) }
 
       it "fills the signup form" do
@@ -245,7 +241,7 @@ shared_examples "social authentication scenarios" do
 
     context "when overriding local fields" do
       before do
-        SiteSetting.enable_google_oauth2_logins = true
+        enable_auth_provider(:google_oauth2)
         SiteSetting.auth_overrides_name = true
         SiteSetting.auth_overrides_username = true
       end
@@ -270,7 +266,7 @@ shared_examples "social authentication scenarios" do
 
     context "when skipping the signup form" do
       before do
-        SiteSetting.enable_google_oauth2_logins = true
+        enable_auth_provider(:google_oauth2)
         SiteSetting.auth_skip_create_confirm = true
       end
       after { reset_omniauth_config(:google_oauth2) }
@@ -297,7 +293,7 @@ shared_examples "social authentication scenarios" do
 
     context "when there is only one external login method enabled" do
       before do
-        SiteSetting.enable_google_oauth2_logins = true
+        enable_auth_provider(:google_oauth2)
         SiteSetting.enable_local_logins = false
       end
       after { reset_omniauth_config(:google_oauth2) }
@@ -438,7 +434,7 @@ shared_examples "social authentication scenarios" do
     end
 
     context "with Facebook" do
-      before { SiteSetting.enable_facebook_logins = true }
+      before { enable_auth_provider(:facebook) }
       after { reset_omniauth_config(:facebook) }
 
       it "logs in user" do
@@ -501,7 +497,7 @@ shared_examples "social authentication scenarios" do
     end
 
     context "with Google" do
-      before { SiteSetting.enable_google_oauth2_logins = true }
+      before { enable_auth_provider(:google_oauth2) }
       after { reset_omniauth_config(:google_oauth2) }
 
       it "logs in user" do
@@ -514,7 +510,7 @@ shared_examples "social authentication scenarios" do
     end
 
     context "with Github" do
-      before { SiteSetting.enable_github_logins = true }
+      before { enable_auth_provider(:github) }
       after { reset_omniauth_config(:github) }
 
       it "logs in user" do
@@ -527,7 +523,7 @@ shared_examples "social authentication scenarios" do
     end
 
     context "with Twitter" do
-      before { SiteSetting.enable_twitter_logins = true }
+      before { enable_auth_provider(:twitter) }
       after { reset_omniauth_config(:twitter) }
 
       it "logs in user" do
@@ -546,7 +542,7 @@ shared_examples "social authentication scenarios" do
     end
 
     context "with Discord" do
-      before { SiteSetting.enable_discord_logins = true }
+      before { enable_auth_provider(:discord) }
       after { reset_omniauth_config(:discord) }
 
       it "logs in user" do
@@ -559,11 +555,7 @@ shared_examples "social authentication scenarios" do
     end
 
     context "with Linkedin" do
-      before do
-        SiteSetting.linkedin_oidc_client_id = "12345"
-        SiteSetting.linkedin_oidc_client_secret = "abcde"
-        SiteSetting.enable_linkedin_oidc_logins = true
-      end
+      before { enable_auth_provider(:linkedin_oidc) }
       after { reset_omniauth_config(:linkedin_oidc) }
 
       it "logs in user" do
@@ -577,7 +569,7 @@ shared_examples "social authentication scenarios" do
   end
 
   context "when the provider returns an error" do
-    before { SiteSetting.enable_google_oauth2_logins = true }
+    before { enable_auth_provider(:google_oauth2) }
 
     it "shows the unauthorized error message" do
       visit("/auth/failure?message=unauthorized")
