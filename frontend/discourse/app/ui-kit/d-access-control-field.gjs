@@ -13,7 +13,7 @@ export default class DAccessControlField extends Component {
   @tracked confirmedAclFingerprint = null;
 
   @action
-  async validateAccess(name, value, { addError }) {
+  async validateAccess(name, value, { addError, preventSubmit }) {
     const acl = value || [];
 
     if (this.args.mustHavePermissions) {
@@ -85,16 +85,9 @@ export default class DAccessControlField extends Component {
       this.confirmedAclFingerprint = fingerprint;
       // TODO (martin) Do we need to reload the page or something here? E.g. what happens
       // if the  permission for even being able to view this thing disappears?
+    } else {
+      preventSubmit();
     }
-    // else {
-    //   addError(name, {
-    //     title: this.args.title,
-    //     message: i18n(
-    //       "access_control.manage.board_access_self_removal_cancelled",
-    //       { typeName: this.args.aclTarget.name }
-    //     ),
-    //   });
-    // }
   }
 
   <template>

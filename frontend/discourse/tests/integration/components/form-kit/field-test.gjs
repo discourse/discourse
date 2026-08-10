@@ -275,6 +275,34 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       .hasError("error", "the callback has the addError helper as param");
   });
 
+  test("@validate can prevent the current submission", async function (assert) {
+    const onSubmit = sinon.spy();
+    const validate = (_name, _value, { preventSubmit }) => preventSubmit();
+
+    await render(
+      <template>
+        <Form @data={{hash foo="bar"}} @onSubmit={{onSubmit}} as |form|>
+          <form.Field
+            @type="input"
+            @name="foo"
+            @title="Foo"
+            @validate={{validate}}
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
+
+          <form.Submit />
+        </Form>
+      </template>
+    );
+
+    await formKit().submit();
+
+    assert.false(onSubmit.called, "the submission callback is not called");
+    assert.form().hasNoErrors("no validation error is displayed");
+  });
+
   test("@showTitle", async function (assert) {
     await render(
       <template>
