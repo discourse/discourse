@@ -4,7 +4,7 @@ module DiscourseWorkflows
   module Nodes
     module Topic
       class V1 < NodeType
-        OPERATIONS = %w[create get list close archive set_custom_fields].freeze
+        OPERATIONS = %w[create get list close archive bump set_custom_fields].freeze
         MAX_LIMIT = 100
         DEFAULT_LIMIT = 30
         CUSTOM_FIELD_OPTIONS_LIMIT = 100
@@ -48,7 +48,21 @@ module DiscourseWorkflows
               required: true,
               display_options: {
                 show: {
-                  operation: %w[get close archive set_custom_fields],
+                  operation: %w[get close archive bump set_custom_fields],
+                },
+              },
+            },
+            silent: {
+              type: :boolean,
+              required: false,
+              default: false,
+              ui: {
+                control: :boolean,
+                expression: true,
+              },
+              display_options: {
+                show: {
+                  operation: ["bump"],
                 },
               },
             },
@@ -217,6 +231,7 @@ module DiscourseWorkflows
                 "operation" =>
                   exec_ctx.get_node_parameter("operation", item_index, default: "create"),
                 "topic_id" => exec_ctx.get_node_parameter("topic_id", item_index),
+                "silent" => exec_ctx.get_node_parameter("silent", item_index, default: false),
                 "title" => exec_ctx.get_node_parameter("title", item_index),
                 "raw" => exec_ctx.get_node_parameter("raw", item_index),
                 "category_id" => exec_ctx.get_node_parameter("category_id", item_index),
@@ -250,6 +265,8 @@ module DiscourseWorkflows
             wrap(close_topic(exec_ctx, config, item_index))
           when "archive"
             wrap(archive_topic(exec_ctx, config, item_index))
+          when "bump"
+            wrap(bump_topic(exec_ctx, config, item_index))
           when "set_custom_fields"
             wrap(set_custom_fields(exec_ctx, config, item_index))
           else
@@ -371,6 +388,32 @@ module DiscourseWorkflows
           guardian.ensure_can_archive_topic!(topic)
 
           topic.update_status("archived", true, actor)
+
+          topic.reload
+          {
+            topic: exec_ctx.serialize_topic(topic, guardian: guardian),
+            post: post_data(topic.first_post),
+          }
+        end
+
+        def bump_topic(exec_ctx, config, item_index)
+          topic = ::Topic.find(config["topic_id"])
+          actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          guardian = actor.guardian
+          guardian.ensure_can_see!(topic)
+          guardian.ensure_can_update_bumped_at!
+
+          if config["silent"].present?
+            topic.update_column(:bumped_at, Time.zone.now)
+          elsif topic.add_small_action(
+                actor,
+                "autobumped",
+                nil,
+                bump: true,
+                skip_guardian: true,
+              ).blank?
+            raise_node_error!(I18n.t("discourse_workflows.errors.topic.bump_failed"))
+          end
 
           topic.reload
           {

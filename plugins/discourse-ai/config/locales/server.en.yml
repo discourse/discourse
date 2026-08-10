@@ -642,6 +642,7 @@ en:
         github_diff: "GitHub diff"
         random_picker: "Random Picker"
         categories: "List categories"
+        users: "List users"
         flag_post: "Flag post"
         close_topic: "Close topic"
         suspend_user: "Suspend user"
@@ -693,6 +694,7 @@ en:
         github_diff: "Retrieve a GitHub pull request or commit diff"
         random_picker: "Pick a random number or a random element of a list"
         categories: "List all publicly visible categories on the forum"
+        users: "List users on the forum"
         flag_post: "Flag the current post for staff review"
         close_topic: "Close or open a topic"
         suspend_user: "Suspend (ban) a user, blocking them from logging in or posting"
@@ -774,6 +776,9 @@ en:
         categories:
           one: "Found %{count} category"
           other: "Found %{count} categories"
+        users:
+          one: "Found %{count} user"
+          other: "Found %{count} users"
         tags:
           one: "Found %{count} tag"
           other: "Found %{count} tags"

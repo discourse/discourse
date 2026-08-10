@@ -29,6 +29,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DCopyButton from "discourse/ui-kit/d-copy-button";
 import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
 import DModal from "discourse/ui-kit/d-modal";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const FORM = "form";
@@ -78,6 +79,10 @@ export default class CreateInviteWithRoles extends Component {
     }
 
     this.initialStaffRole = this.staffRole;
+  }
+
+  get allowEmailInvites() {
+    return this.siteSettings.allow_email_invites;
   }
 
   get canInviteAdmins() {
@@ -564,7 +569,10 @@ export default class CreateInviteWithRoles extends Component {
               @data={{this.adminFormData}}
               @onSubmit={{this.onAdminFormSubmit}}
               @onRegisterApi={{this.registerApi}}
-              class="create-invite-with-roles-modal__admin-form"
+              class={{dConcatClass
+                "create-invite-with-roles-modal__admin-form"
+                (if this.submitDisabled "--disabled" "")
+              }}
               as |form|
             >
               {{#unless this.inviteCreated}}
@@ -580,6 +588,7 @@ export default class CreateInviteWithRoles extends Component {
                   <field.Control
                     @title={{this.staffRoleLabel}}
                     class="--inline"
+                    disabled={{this.submitDisabled}}
                     as |radioGroup|
                   >
                     {{#each this.staffRoleItems as |item|}}
@@ -611,6 +620,7 @@ export default class CreateInviteWithRoles extends Component {
                   autocomplete="off"
                   data-1p-ignore
                   data-lpignore="true"
+                  disabled={{this.submitDisabled}}
                   placeholder={{i18n
                     "user.invited.invite_roles.email_placeholder"
                   }}
@@ -677,9 +687,11 @@ export default class CreateInviteWithRoles extends Component {
                       <Condition @name="link">{{i18n
                           "user.invited.invite_roles.invite_by_link"
                         }}</Condition>
-                      <Condition @name="email">{{i18n
-                          "user.invited.invite_roles.invite_by_email"
-                        }}</Condition>
+                      {{#if this.allowEmailInvites}}
+                        <Condition @name="email">{{i18n
+                            "user.invited.invite_roles.invite_by_email"
+                          }}</Condition>
+                      {{/if}}
                     </conditional.Conditions>
                   </fieldset>
                 {{/unless}}
@@ -901,11 +913,13 @@ export default class CreateInviteWithRoles extends Component {
           <DButton
             @label="user.invited.invite.cancel"
             @action={{this.cancel}}
+            disabled={{this.submitDisabled}}
             class="btn-transparent cancel-button"
           />
           <AdvancedModeToggle
             @active={{this.showAdvanced}}
             @onToggle={{this.toggleAdvanced}}
+            disabled={{this.submitDisabled}}
           />
         {{else if (eq this.screen "summary")}}
           <DButton

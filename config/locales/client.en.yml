@@ -563,27 +563,29 @@ en:
       pm_title: "Suggested Messages"
 
     admin_onboarding_banner:
-      launch_in_easy_steps: "Launch in %{step_count} easy steps"
+      launch_in_easy_steps: "Set up your community"
+      launch_in_easy_steps_subtitle: "%{completed_steps} of %{step_count} steps completed"
       congrats_onboarding_complete: "Congratulations on completing the onboarding process!"
+      expand: "Expand setup steps"
+      collapse: "Collapse setup steps"
+      dismiss: "Dismiss setup"
       select_theme:
         title: "Customize your site"
-        description: "Choose a starting theme for your community"
-        action: "Select theme"
-        modal_title: "Choose a theme"
-        use_theme: "Use selected theme"
-        enabled: "Selected"
-        applying_theme: "Applying theme..."
-        browse_all: "Manage themes"
+        description: "Choose colors, fonts, and a homepage."
+        action: "See options"
+        completed: "Change options"
         show_light_screenshot: "Show light screenshot"
         show_dark_screenshot: "Show dark screenshot"
       invite_collaborators:
-        title: "Invite Collaborators"
-        description: "Early members help bring your community to life"
+        title: "Invite collaborators"
+        description: "Early members bring it to life."
         action: "Create invite"
+        completed: "Invite more"
       start_posting:
-        title: "Start Posting"
-        description: "Give people something to talk about together"
+        title: "Start posting"
+        description: "Give people something to discuss."
         action: "See ideas"
+        completed: "See more ideas"
         choose_option: "How would you like to start?"
         predefined_topics: "Icebreaker templates"
         predefined_topics_subtitle: "Give new members something to talk about, pick a template to edit and make your own."
@@ -603,6 +605,45 @@ en:
           what_is_your_favorite_food:
             title: "What is your favorite food?"
             body: "Share your favorite food with the community! I'll start: I love pizza, especially with extra cheese and pepperoni."
+
+    design_wizard:
+      title: "Customize your site"
+      subtitle: "Choose colors, fonts, and a homepage."
+      step_label: "Go to step %{index}"
+      save: "Save and finish"
+      back: "Back"
+      next: "Next"
+      sections:
+        theme: "Theme"
+        colors: "Default color"
+        fonts: "Fonts"
+        homepage: "Homepage"
+      theme:
+        selected: "Selected"
+        custom_theme_notice: "Your site currently uses %{name} as its default theme. Choose a theme below to preview it. Saving will replace your current theme."
+      colors:
+        light: "Light"
+        dark: "Dark"
+        dark_only: "%{name} only has a dark mode"
+        both_modes: "Each palette includes a matching light and dark mode"
+        user_selectable: "Let members switch palettes"
+        user_selectable_description: "Show these palettes in a menu members can pick from"
+      fonts:
+        base_font: "Base font"
+        heading_font: "Heading font"
+      homepage:
+        topics: "Topics"
+        categories: "Categories"
+        topic_page_type: "Topic page type"
+        topic_pages:
+          latest: "Topics sorted by their most recent activity, newest first."
+          new: "Topics created in the last few days, newest first."
+          hot: "Topics trending right now, blending overall popularity with recent engagement."
+        category_page_style: "Category page style"
+        styles:
+          boxes: "Boxes"
+          with_topics: "Categories with topics"
+          only: "Categories only"
 
     about:
       edit: "Edit this page"
@@ -3761,7 +3802,6 @@ en:
         other: "%{count} open membership requests for '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - completed"
       new_features: "New features available!"
       admin_problems: "New advice on your site dashboard"
       upcoming_changes:

@@ -222,31 +222,6 @@ basic:
     client: true
     default: false
     area: "localization"
-  allow_user_locale:
-    client: true
-    default: true
-    area: "localization"
-  set_locale_from_accept_language_header:
-    default: false
-    client: true
-    validator: "AllowUserLocaleEnabledValidator"
-    area: "localization"
-    depends_on:
-      - "allow_user_locale"
-  set_locale_from_cookie:
-    default: false
-    client: true
-    validator: "AllowUserLocaleEnabledValidator"
-    area: "localization"
-    depends_on:
-      - "allow_user_locale"
-  set_locale_from_param:
-    default: false
-    client: true
-    validator: "AllowUserLocaleEnabledValidator"
-    area: "localization"
-    depends_on:
-      - "allow_user_locale"
   support_mixed_text_direction:
     client: true
     default: false
@@ -1932,10 +1907,33 @@ posting:
     hidden: true
 
 content_localization:
+  allow_user_locale:
+    client: true
+    default: true
+    area: "localization"
   content_localization_enabled:
     client: true
     default: false
     area: "localization"
+  content_localization_supported_locales:
+    default: ""
+    type: list
+    client: true
+    list_type: locale
+    allow_any: false
+    enum: "LocaleSiteSetting"
+    area: "localization"
+    validator: "ContentLocalizationLocalesValidator"
+  content_localization_language_switcher:
+    type: enum
+    choices:
+      - none
+      - anonymous
+      - all
+    default: none
+    client: true
+    area: "localization"
+    validator: "LanguageSwitcherSettingValidator"
   content_localization_allowed_groups:
     type: group_list
     list_type: compact
@@ -1948,29 +1946,10 @@ content_localization:
     default: true
     client: true
     area: "localization"
-  content_localization_supported_locales:
-    default: ""
-    type: list
-    client: true
-    list_type: locale
-    allow_any: false
-    enum: "LocaleSiteSetting"
-    area: "localization"
-    validator: "ContentLocalizationLocalesValidator"
   content_localization_max_locales:
     default: 10
     type: integer
     hidden: true
-  content_localization_language_switcher:
-    type: enum
-    choices:
-      - none
-      - anonymous
-      - all
-    default: none
-    client: true
-    area: "localization"
-    validator: "LanguageSwitcherSettingValidator"
   content_localization_crawler_param:
     default: false
     area: "localization"
@@ -1978,6 +1957,27 @@ content_localization:
   content_localization_use_default_locale_when_unsupported:
     default: true
     area: "localization"
+  set_locale_from_accept_language_header:
+    default: false
+    client: true
+    validator: "AllowUserLocaleEnabledValidator"
+    area: "localization"
+    depends_on:
+      - "allow_user_locale"
+  set_locale_from_cookie:
+    default: false
+    client: true
+    validator: "AllowUserLocaleEnabledValidator"
+    area: "localization"
+    depends_on:
+      - "allow_user_locale"
+  set_locale_from_param:
+    default: false
+    client: true
+    validator: "AllowUserLocaleEnabledValidator"
+    area: "localization"
+    depends_on:
+      - "allow_user_locale"
 
 nested_replies:
   nested_replies_enabled:
@@ -4531,7 +4531,7 @@ tags:
     area: "categories_and_tags"
   create_tag_allowed_groups:
     default: "1|2|13" # auto group admins, moderators, trust_level_3
-    mandatory_values: "1|2" # auto group admins, moderators
+    mandatory_values: "1" # auto group admins
     type: group_list
     allow_any: false
     refresh: true

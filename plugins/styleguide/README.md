@@ -59,10 +59,88 @@ from being possible.
 ### Layout
 
 ```
-examples/<group>/<section>/<name>.gjs
+examples/<category>/<section>/<name>.gjs
+examples/<category>/<name>.gjs          # flat, for a section with few examples
 ```
 
-`<group>` is `atoms`, `molecules` or `organisms`; `<section>` is the section
-file name without its numeric prefix; `<name>` is a kebab-case slug for the
-variant. Import with a relative specifier and no file extension, and name the
-bindings `<Name>Example` and `<name>Source`.
+`<category>` is `atoms`, `molecules` or `organisms`; `<section>` is the section
+file name without its numeric prefix; and `<name>` is a kebab-case slug for the
+variant. Both shapes are in use: a section with only a handful of examples keeps
+them flat under `<category>`, named for the example rather than the section, and
+a section with enough of them to be worth grouping gets its own directory.
+Import with a relative specifier and no file extension, and name the bindings
+`<Name>Example` and `<name>Source`.
+
+When a section is split into groups (see below), put the group slug between the
+section and the name so the source tree stays correlated with the page's
+navigation. No section does this yet, so this level is a convention for the
+first one that adopts groups rather than a rule the tree currently follows:
+
+```
+examples/<category>/<section>/<group>/<name>.gjs
+```
+
+## Card anatomy
+
+`<StyleguideExample>` has a fixed set of slots, each on its own row, so cards in
+a group line up with each other rather than drifting with the prose above them.
+All of `@description`, `@tryThis` and `@note` take either a string or a named
+block; a block wins when both are given.
+
+| Slot | What belongs there |
+| --- | --- |
+| `@title` | The capability being shown. |
+| `@description` | What this example proves. Prefer supplying one. |
+| `@tryThis` | Something the reader can do to see it happen. Omit when there is nothing to do. |
+| default block | The live component. |
+| `@note` | What to notice afterwards. Give a list in the block the class `styleguide-example__note-list`. |
+| `@code` | The `?source=` import, revealed by a toggle. |
+
+Backticks render as inline `<code>` in the three prose slots — `@description`,
+`@tryThis` and `@note` — so an argument or block name can sit in a sentence
+without splitting it across keys. `@title` and the group heading and description
+render their text as-is.
+
+```yaml
+some_key: "never mutates `@value`"
+```
+
+`@headingLevel` defaults to `2`, which suits an ungrouped page whose only
+heading above the card is the page's own `h1`.
+
+Two opt-in classes are available to markup an example yields:
+`styleguide-example__result`, for the element a demo writes its output into,
+which belongs in the default block; and `styleguide-example__note-list`, for a
+list, which belongs in a `note` block. A card may also take `class="--wide"` to
+span a whole grid row; put a wide card first in its group, since the grid places
+cards sparsely and a wide card elsewhere sits flush only when the cards before
+it happen to fill their row.
+
+## Groups
+
+A long section can be split into named groups reachable from a sticky subnav,
+with the active group carried in a `?group=` query param so a link addresses one
+group rather than a whole page. Pass an ordered manifest of
+`{ id, title, description }`; it is the single source of truth for both the
+subnav and the group order. The pills are real links, not tabs. Pass
+`@ariaLabel` too — the subnav is a `<nav>` landmark and needs a name.
+
+`StyleguideGroup` yields a `StyleguideExample` already curried to
+`@headingLevel={{3}}`, so a grouped page keeps a correct `h1` → `h2` → `h3`
+outline without each call site restating it:
+
+```gjs
+<StyleguideGroups
+  @groups={{this.groups}}
+  @section={{@section}}
+  @active={{@group}}
+  @ariaLabel={{i18n "styleguide.sections.thing.groups.aria_label"}}
+  as |Group|
+>
+  <Group @id="start" as |Example|>
+    <Example @title="<DThing>" @code={{thingSource}}>
+      <ThingExample />
+    </Example>
+  </Group>
+</StyleguideGroups>
+```

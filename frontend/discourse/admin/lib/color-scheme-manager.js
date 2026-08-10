@@ -1,6 +1,105 @@
 import ColorScheme from "discourse/admin/models/color-scheme";
 import { ajax } from "discourse/lib/ajax";
 
+const MODES = ["light", "dark"];
+
+function schemeLink(mode) {
+  return document.querySelector(`link.${mode}-scheme`);
+}
+
+/**
+ * @typedef {Object} ColorSchemeLinkState
+ * @property {?{href: ?string, media: ?string}} light
+ * @property {?{href: ?string, media: ?string}} dark
+ */
+
+/**
+ * Snapshots the light/dark stylesheet links so a preview can be undone.
+ *
+ * @returns {ColorSchemeLinkState}
+ */
+export function captureColorSchemeLinks() {
+  return Object.fromEntries(
+    MODES.map((mode) => {
+      const link = schemeLink(mode);
+
+      return [
+        mode,
+        link
+          ? {
+              href: link.getAttribute("href"),
+              media: link.getAttribute("media"),
+            }
+          : null,
+      ];
+    })
+  );
+}
+
+/**
+ * Restores links snapshotted by {@link captureColorSchemeLinks}.
+ *
+ * @param {?ColorSchemeLinkState} original
+ */
+export function restoreColorSchemeLinks(original) {
+  if (!original) {
+    return;
+  }
+
+  for (const mode of MODES) {
+    const link = schemeLink(mode);
+    const originalLink = original[mode];
+
+    if (!link || !originalLink) {
+      continue;
+    }
+
+    for (const attribute of ["href", "media"]) {
+      if (originalLink[attribute] === null) {
+        link.removeAttribute(attribute);
+      } else {
+        link.setAttribute(attribute, originalLink[attribute]);
+      }
+    }
+
+    link.removeAttribute("data-scheme-id");
+  }
+}
+
+/**
+ * Which color mode the page is currently rendering.
+ *
+ * @returns {"light" | "dark"}
+ */
+export function renderedColorMode() {
+  const isActive = (link) =>
+    link &&
+    link.media !== "none" &&
+    window.matchMedia(link.media || "all").matches;
+
+  const lightIsActive = isActive(schemeLink("light"));
+  const darkIsActive = isActive(schemeLink("dark"));
+
+  return darkIsActive && !lightIsActive ? "dark" : "light";
+}
+
+/**
+ * Forces the page to render one color mode.
+ *
+ * @param {"light" | "dark"} mode
+ */
+export function showColorMode(mode) {
+  const lightTag = schemeLink("light");
+  const darkTag = schemeLink("dark");
+
+  if (lightTag && darkTag) {
+    lightTag.media = mode === "light" ? "all" : "none";
+    darkTag.media = mode === "dark" ? "all" : "none";
+  } else {
+    (lightTag ?? darkTag)?.setAttribute("media", "all");
+  }
+}
+
 /**
  * Apply color scheme by updating stylesheet links
  *
@@ -8,11 +107,19 @@ import { ajax } from "discourse/lib/ajax";
  * @param {Object} options
  * @param {boolean} options.replace - replace existing tags? (default: false)
  * @param {boolean} options.save - save changes to the server? (default: false)
+ * @param {number} options.themeId - compile against this theme's color
+ *   definitions instead of the default theme's (default: none)
+ * @param {"light" | "dark"} options.mode - stylesheet to replace
  * @returns {Promise}
  */
 
 export async function applyColorScheme(scheme, options = {}) {
-  const { replace = false, save = false } = options;
+  const {
+    replace = false,
+    save = false,
+    themeId = null,
+    mode = "light",
+  } = options;
 
   try {
     if (save && scheme?.save) {
@@ -69,13 +176,19 @@ export async function applyColorScheme(scheme, options = {}) {
       return;
     }
 
-    const data = await ajax(`/color-scheme-stylesheet/${id}.json`);
+    const themeSegment = themeId === null ? "" : `/${themeId}`;
+    const data = await ajax(
+      `/color-scheme-stylesheet/${id}${themeSegment}.json`
+    );
 
-    if (data?.new_href && lightTag) {
-      lightTag.href = data.new_href;
+    const targetTag =
+      mode === "dark" ? (darkTag ?? lightTag) : (lightTag ?? darkTag);
+
+    if (data?.new_href && targetTag) {
+      targetTag.href = data.new_href;
 
       if (replace) {
-        lightTag.setAttribute("data-scheme-id", id);
+        targetTag.setAttribute("data-scheme-id", id);
       }
     }
 
@@ -107,7 +220,7 @@ export async function setDefaultColorScheme(
 
   try {
     if (previewMode === "live") {
-      await applyColorScheme(scheme, { replace: true });
+      await applyColorScheme(scheme, { replace: true, mode });
     }
 
     if (!defaultTheme) {

@@ -3819,6 +3819,28 @@ RSpec.describe Topic do
     end
   end
 
+  describe ".clear_page_not_found_topics_cache!" do
+    it "clears every locale without traversing a large Redis keyspace" do
+      cache_keys =
+        I18n.available_locales.map do |locale|
+          Discourse.cache.normalize_key("page_not_found_topics:#{locale}")
+        end
+      post_keys = 10_000.times.map { |index| Discourse.cache.normalize_key("post:#{index}") }
+
+      Discourse.cache.redis.pipelined do |pipeline|
+        cache_keys.each { |key| pipeline.set(key, "cached topic suggestions") }
+        post_keys.each { |key| pipeline.set(key, "post") }
+      end
+      allow(Discourse.cache.redis).to receive(:scan_each).and_raise(Timeout::Error)
+
+      expect { described_class.clear_page_not_found_topics_cache! }.not_to raise_error
+      expect(Discourse.cache.redis.mget(*cache_keys)).to all be_nil
+      expect(Discourse.cache.redis.mget(*post_keys)).to all eq("post")
+    ensure
+      Discourse.cache.redis.del(*post_keys) if post_keys
+    end
+  end
+
   describe "#auto_close_threshold_reached?" do
     fab!(:post)
     fab!(:reviewable) { Fabricate(:reviewable_flagged_post, target: post, topic: post.topic) }

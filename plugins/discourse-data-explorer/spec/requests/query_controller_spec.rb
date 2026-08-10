@@ -594,7 +594,7 @@ describe DiscourseDataExplorer::QueryController do
 
         cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil)
         expect(cached).to be_present
-        expect(cached["rows"]).to eq([[23]])
+        expect(cached[:rows]).to eq([[23]])
       end
 
       it "returns cached results in show response" do
