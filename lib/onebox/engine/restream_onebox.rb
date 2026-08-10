@@ -29,7 +29,6 @@ module Onebox
             width="#{width}"
             height="#{height}"
             frameborder="0"
-            allow="autoplay"
             allowfullscreen
           ></iframe>
         HTML

@@ -35,13 +35,16 @@ RSpec.describe Onebox::Engine::RestreamOnebox do
   end
 
   describe "#to_html" do
-    it "emits the player iframe pointing at the original URL" do
-      html = described_class.new("https://player.restream.io/?token=abc").to_html
+    it "renders the player iframe in the sanitized onebox output" do
+      html = Onebox.preview("https://player.restream.io/?token=abc").to_s
 
       expect(html).to include('class="restream-onebox"')
       expect(html).to include('src="https://player.restream.io/?token=abc"')
       expect(html).to include("allowfullscreen")
-      expect(html).to include('allow="autoplay"')
+      # The core onebox sanitizer does not permit the `allow` attribute, so
+      # autoplay delegation is intentionally not emitted for this cross-origin
+      # player (the browser gates unmuted autoplay anyway).
+      expect(html).not_to include("autoplay")
     end
   end
 end
