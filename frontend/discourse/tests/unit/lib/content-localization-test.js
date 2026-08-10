@@ -3,6 +3,7 @@ import { module, test } from "qunit";
 import {
   AUTOMATICALLY_TRANSLATE_COOKIE,
   automaticallyTranslate,
+  languageSwitcherEnabled,
   normalizeUnderstoodLanguages,
 } from "discourse/lib/content-localization";
 import cookie, { removeCookie } from "discourse/lib/cookie";
@@ -60,6 +61,52 @@ module("Unit | Lib | content-localization", function (hooks) {
       normalizeUnderstoodLanguages(["en"], "ja"),
       ["en"],
       "the interface language does not change explicit selections"
+    );
+  });
+
+  test("resolves whether the language switcher is available", function (assert) {
+    const settings = {
+      content_localization_enabled: true,
+      allow_user_locale: true,
+      content_localization_language_switcher: "all",
+      content_localization_supported_locales: "es|fr",
+    };
+
+    assert.true(
+      languageSwitcherEnabled(settings),
+      "a fully configured site offers the switcher"
+    );
+    assert.true(
+      languageSwitcherEnabled({
+        ...settings,
+        content_localization_language_switcher: "anonymous",
+      }),
+      "the anonymous audience still counts as enabled"
+    );
+    assert.false(
+      languageSwitcherEnabled({
+        ...settings,
+        content_localization_language_switcher: "none",
+      }),
+      "the switcher can be turned off"
+    );
+    assert.false(
+      languageSwitcherEnabled({
+        ...settings,
+        content_localization_enabled: false,
+      }),
+      "it requires content localization"
+    );
+    assert.false(
+      languageSwitcherEnabled({ ...settings, allow_user_locale: false }),
+      "it requires user locales to be allowed"
+    );
+    assert.false(
+      languageSwitcherEnabled({
+        ...settings,
+        content_localization_supported_locales: "",
+      }),
+      "it requires at least one configured locale"
     );
   });
 });

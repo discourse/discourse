@@ -284,6 +284,32 @@ describe "Admin AI translations" do
       expect(translations_page).to have_no_overview_cards
     end
 
+    it "enables the language switcher along with translations" do
+      SiteSetting.ai_translation_enabled = false
+      SiteSetting.content_localization_language_switcher = "none"
+
+      translations_page.visit
+
+      expect(translations_page.language_switcher_checkbox).to be_checked
+      translations_page.toggle_translations
+
+      wait_for { SiteSetting.ai_translation_enabled }
+      expect(SiteSetting.content_localization_enabled).to eq(true)
+      expect(SiteSetting.content_localization_language_switcher).to eq("all")
+    end
+
+    it "leaves the language switcher off when the admin opts out" do
+      SiteSetting.ai_translation_enabled = false
+      SiteSetting.content_localization_language_switcher = "none"
+
+      translations_page.visit
+      translations_page.language_switcher_checkbox.click
+      translations_page.toggle_translations
+
+      wait_for { SiteSetting.ai_translation_enabled }
+      expect(SiteSetting.content_localization_language_switcher).to eq("none")
+    end
+
     it "keeps toggle disabled when no locales are configured" do
       SiteSetting.ai_translation_enabled = false
       SiteSetting.content_localization_supported_locales = ""
