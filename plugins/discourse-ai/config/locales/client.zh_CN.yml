@@ -426,19 +426,57 @@ zh_CN:
             load_error: "%{target} 详细信息无法加载。"
             retry: "重试"
             empty: "没有可用的语言进度。"
+            progress_label: "已将 %{translated} 个条目（共 %{total} 个）翻译为 %{language}"
             columns:
               locale: "语言区域"
+              translated: "已翻译条目数"
               pending: "待处理"
+              eligible: "符合条件的条目数"
               total: "总计"
+              progress: "进度"
+            eligible_help: "排除已使用此语言的内容。"
+            pending_help: "包含仍需进行语言检测的内容。"
           targets:
             post:
               title: "帖子"
+              eligible_total:
+                other: "One\n有 %{count} 个符合条件的帖子需要翻译。\nOther\n有 %{count} 个符合条件的帖子需要翻译。"
+              translated:
+                other: "One\n%{count} 个帖子已翻译完毕。\nOther\n%{count} 个帖子已翻译完毕。"
+              needs_language_detection:
+                other: "One\n%{count} 个帖子仍需进行语言检测。\nOther\n%{count} 个帖子仍需进行语言检测。"
+              all_translated:
+                other: "One\n符合条件的帖子已翻译完毕。\nOther\n全部 %{count} 个符合条件的帖子已翻译完毕。"
             topic:
               title: "话题"
+              eligible_total:
+                other: "One\n有 %{count} 个符合条件的话题需要翻译。\nOther\n有 %{count} 个符合条件的话题需要翻译。"
+              translated:
+                other: "One\n%{count} 个话题已翻译完毕。\nOther\n%{count} 个话题已翻译完毕。"
+              needs_language_detection:
+                other: "One\n%{count} 个话题仍需进行语言检测。\nOther\n%{count} 个话题仍需进行语言检测。"
+              all_translated:
+                other: "One\n符合条件的话题已翻译完毕。\nOther\n全部 %{count} 个符合条件的话题已翻译完毕。"
             category:
               title: "类别"
+              eligible_total:
+                other: "One\n有 %{count} 个符合条件的类别需要翻译。\nOther\n有 %{count} 个符合条件的类别需要翻译。"
+              translated:
+                other: "One\n%{count} 个类别已翻译完毕。\nOther\n%{count} 个类别已翻译完毕。"
+              needs_language_detection:
+                other: "One\n%{count} 个类别仍需进行语言检测。\nOther\n%{count} 个类别仍需进行语言检测。"
+              all_translated:
+                other: "One\n符合条件的类别已翻译完毕。\nOther\n全部 %{count} 个符合条件的类别已翻译完毕。"
             tag:
               title: "标签"
+              total:
+                other: "One\n有 %{count} 个标签需要翻译。\nOther\n有 %{count} 个标签需要翻译。"
+              translated:
+                other: "One\n%{count} 个标签已翻译完毕。\nOther\n%{count} 个标签已翻译完毕。"
+              needs_language_detection:
+                other: "One\n%{count} 个标签仍需进行语言检测。\nOther\n%{count} 个标签仍需进行语言检测。"
+              all_translated:
+                other: "One\n标签已翻译完毕。\nOther\n全部 %{count} 个标签已翻译完毕。"
         admin_actions:
           translation_settings: "AI 设置"
           localization_settings: "应用语言设置"

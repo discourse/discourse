@@ -12,6 +12,7 @@ zh_CN:
       description: "成员可以在这里提交想法并投票选出他们最想要的想法。"
   site_settings:
     enable_ideas_category_type_setup: "在类别创建设置期间启用“创意”类别类型选项。"
+    enable_topic_voting_badges: "启用话题投票徽章，当其他用户为成员的创意投票时，系统会向该成员发放徽章。"
     topic_voting_enabled: '允许用户为话题投票？'
     topic_voting_enable_vote_limits: '根据信任级别限制每位用户的投票数'
     topic_voting_tl0_vote_limit: '信任级别为 0 的用户有多少次投票机会？'

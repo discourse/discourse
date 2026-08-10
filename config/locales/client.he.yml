@@ -23,6 +23,11 @@ he:
         code: "קוד"
         continue: "המשך"
         authorize_title: 'אישור של „%{application_name}”'
+        expiry_notice: "תפוגה: %{expires_at}"
+        no_expiry_warning: "המפתח הזה לא יפוג אוטומטית. כדאי לאשר את זה רק אם היישום אמין לחלוטין בעיניך."
+        complete: "אימות הושלם"
+        denied: "אימות נדחה"
+        return_to_cli: "אפשר לחזור עכשיו למסוף או היישום שלך."
     blocks:
       ghost:
         status: "מצב"
@@ -43,6 +48,8 @@ he:
       manage:
         access_permission_editor: "עורכים"
         access_permission_remove: "הסרה"
+        mandatory: "חובה"
+        disallowed: "אסור"
     carousel:
       go_to_slide: "מעבר לשקופית %{index}"
       previous: "השקופית הקודמת"
@@ -787,6 +794,7 @@ he:
           many: "+%{count} טיוטות נוספות"
           other: "+%{count} טיוטות נוספות"
     embed_mode:
+      allow_access: "לאפשר גישה"
       editing_post: "רשומה נערכת"
       reply_placeholder: "כתיבת תגובה…"
       signin_flow:
