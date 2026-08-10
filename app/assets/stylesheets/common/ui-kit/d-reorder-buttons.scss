@@ -13,16 +13,21 @@
     min-height: 0;
 
     /* Marked unavailable rather than disabled, so the button keeps its place in
-       the tab order at the ends of the list. It has to look the part. */
+       the tab order at the ends of the list. Mirrors what core paints for a real
+       disabled button, minus the focus rule: the whole point of staying
+       focusable is that a keyboard user can still see where they are. */
 
     &[aria-disabled="true"] {
       opacity: 0.4;
-      cursor: default;
+      cursor: not-allowed;
 
-      &:hover,
-      &:focus {
-        background: transparent;
-        color: var(--primary-medium);
+      &:hover {
+        background: var(--d-button-flat-bg-color);
+        color: var(--d-button-default-text-color);
+
+        .d-icon {
+          color: var(--d-button-flat-icon-color);
+        }
       }
     }
   }

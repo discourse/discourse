@@ -37,6 +37,28 @@ export const CLOSE_INITIATED_BY_CLICK_OUTSIDE = "initiatedByClickOut";
 export const CLOSE_INITIATED_BY_MODAL_SHOW = "initiatedByModalShow";
 export const CLOSE_INITIATED_BY_SWIPE_DOWN = "initiatedBySwipeDown";
 
+/**
+ * Controls that do something with Enter of their own: activate, insert a
+ * newline, follow a link, open a disclosure.
+ *
+ * A plain text input is deliberately absent. Outside a form it does nothing with
+ * Enter, and a form is matched separately, so exempting it would only stop the
+ * modal submitting where it always has.
+ */
+const ENTER_HANDLING_CONTROLS = [
+  "button",
+  "a[href]",
+  "select",
+  "summary",
+  "textarea",
+  'input[type="button"]',
+  'input[type="image"]',
+  'input[type="reset"]',
+  'input[type="submit"]',
+  '[role="button"]',
+  '[contenteditable]:not([contenteditable="false"])',
+].join(", ");
+
 const SWIPE_VELOCITY_THRESHOLD = 0.4;
 const SWIPE_CLOSE_DISTANCE_RATIO = 0.25;
 const SWIPE_SETTLE_EASING = "cubic-bezier(0.32, 0.72, 0, 1)";
@@ -386,10 +408,16 @@ export default class DModal extends Component<DModalSignature> {
     }
 
     if (event.key === "Enter" && this.#shouldTriggerClickOnEnter(event)) {
-      this._wrapperElement
-        ?.querySelector<HTMLElement>(".d-modal__footer .btn-primary")
-        ?.click();
-      event.preventDefault();
+      const primary = this._wrapperElement?.querySelector<HTMLElement>(
+        ".d-modal__footer .btn-primary"
+      );
+      // Only claimed when there is something to claim it for. A modal with no
+      // primary action has nothing to submit, and swallowing the key there would
+      // suppress whatever the browser would otherwise have done with it.
+      if (primary) {
+        primary.click();
+        event.preventDefault();
+      }
     }
   }
 
@@ -403,16 +431,16 @@ export default class DModal extends Component<DModalSignature> {
       return false;
     }
 
-    // Skip when in a form, textarea, or select-kit element, and when a button
-    // holds focus: this listens on the document in the capture phase, so it sees
-    // Enter before the focused control does. Without the button exemption,
-    // pressing Enter on any button in the body submits the modal instead of
-    // running that button, which is what a keyboard user is actually asking for.
+    // Skip when in a form or a select-kit element, and when focus is on
+    // something that acts on Enter itself: this listens on the document in the
+    // capture phase, so it sees Enter before the focused control does. Without
+    // the exemption, pressing Enter submits the modal out from under whatever
+    // control a keyboard user is standing on, which is never what they asked
+    // for.
     if (
       (event.target as HTMLElement)?.closest("form") ||
       document.activeElement?.closest("form") ||
-      document.activeElement?.nodeName === "TEXTAREA" ||
-      document.activeElement?.nodeName === "BUTTON" ||
+      document.activeElement?.closest(ENTER_HANDLING_CONTROLS) ||
       document.activeElement?.closest(".select-kit")
     ) {
       return false;

@@ -117,7 +117,10 @@ module PageObjects
       end
 
       def arrow_selector(identifier, direction, disabled:)
-        state = disabled ? "[disabled]" : ":not([disabled])"
+        # `aria-disabled`, not the real attribute: an arrow at the end of the
+        # list stays focusable so a keyboard user keeps their place in the tab
+        # order.
+        state = disabled ? "[aria-disabled='true']" : ":not([aria-disabled])"
 
         "#{row_selector(identifier)} .manage-reports__arrows " \
           "button#{state} .d-icon-chevron-#{direction}"

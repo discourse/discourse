@@ -3,6 +3,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import {
   click,
+  find,
   focus,
   render,
   settled,
@@ -266,6 +267,65 @@ module("Integration | ui-kit | DModal", function (hooks) {
     assert.true(actionCalled, "pressing enter triggers the default button");
   });
 
+  test("enter with nothing focusable in the body is left to the autofocused button", async function (assert) {
+    let calls = 0;
+    const someAction = () => {
+      calls++;
+    };
+
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+            <p class="body-text">Nothing focusable here.</p>
+          </:body>
+          <:footer>
+            <DButton
+              @action={{someAction}}
+              @translatedLabel="Perform action"
+              class="btn-primary"
+            />
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    assert
+      .dom(document.activeElement)
+      .hasClass(
+        "btn-primary",
+        "with nothing focusable in the body, the modal autofocuses the footer button"
+      );
+
+    // Captured on the footer rather than the document: the modal listens on the
+    // root in the capture phase, so this runs after it and before the button's
+    // own handler, which prevents the default itself.
+    let defaultPrevented = null;
+    const footer = find(".d-modal__footer");
+    const observe = (event) => {
+      defaultPrevented = event.defaultPrevented;
+    };
+    footer.addEventListener("keydown", observe, { capture: true });
+    try {
+      await triggerKeyEvent(".btn-primary", "keydown", "Enter");
+    } finally {
+      footer.removeEventListener("keydown", observe, { capture: true });
+    }
+
+    // The focused button acts on Enter itself. The modal clicking it as well
+    // would run the action twice, and swallowing the key would stop it running
+    // at all.
+    assert.strictEqual(
+      calls,
+      1,
+      "the focused button runs its action exactly once"
+    );
+    assert.false(
+      defaultPrevented,
+      "and the modal leaves the key alone rather than claiming it"
+    );
+  });
+
   test("enter on a focused button triggers that button, not the default action", async function (assert) {
     const calls = [];
     const onBody = () => calls.push("body");
@@ -302,6 +362,72 @@ module("Integration | ui-kit | DModal", function (hooks) {
       calls,
       ["body"],
       "the focused button runs its own action and the modal is not submitted"
+    );
+  });
+
+  test("enter on a focused link is left to the link", async function (assert) {
+    let actionCalled = false;
+    const someAction = () => {
+      actionCalled = true;
+    };
+
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+
+            <a class="body-link" href="#somewhere">A link</a>
+          </:body>
+          <:footer>
+            <DButton
+              @action={{someAction}}
+              @translatedLabel="Perform action"
+              class="btn-primary"
+            />
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    await focus(".body-link");
+    await triggerKeyEvent(".body-link", "keydown", "Enter");
+
+    assert.false(
+      actionCalled,
+      "the link is what the user is standing on, so the modal is not submitted out from under it"
+    );
+  });
+
+  test("enter with no primary button is left to the browser", async function (assert) {
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+            <input class="body-input" type="text" />
+          </:body>
+          <:footer>
+            <DButton @translatedLabel="Not primary" class="btn-danger" />
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    let defaultPrevented = null;
+    const bodyInput = find(".body-input");
+    const observe = (event) => {
+      defaultPrevented = event.defaultPrevented;
+    };
+    bodyInput.addEventListener("keydown", observe);
+    try {
+      await focus(".body-input");
+      await triggerKeyEvent(".body-input", "keydown", "Enter");
+    } finally {
+      bodyInput.removeEventListener("keydown", observe);
+    }
+
+    assert.false(
+      defaultPrevented,
+      "with nothing to submit, the key is left alone rather than swallowed"
     );
   });
 

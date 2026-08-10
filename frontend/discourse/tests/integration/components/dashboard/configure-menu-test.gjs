@@ -654,6 +654,12 @@ module("Integration | Component | Dashboard | ConfigureMenu", function (hooks) {
         "true",
         "last row's down arrow is unavailable"
       );
+    assert
+      .dom('[data-section-id="reports"] .d-reorder-buttons__button:first-child')
+      .doesNotHaveAttribute(
+        "aria-disabled",
+        "middle row's up arrow is available"
+      );
   });
 });
 

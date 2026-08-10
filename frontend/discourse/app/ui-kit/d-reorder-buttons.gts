@@ -1,4 +1,6 @@
 import Component from "@glimmer/component";
+import { assert } from "@ember/debug";
+import { isDestroyed, isDestroying } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { modifier } from "ember-modifier";
@@ -7,6 +9,10 @@ import DButton from "discourse/ui-kit/d-button";
 /**
  * Invoked when a direction is pressed. Variadic because the press event is
  * forwarded, and because a consumer normally binds its item with `fn`.
+ *
+ * Focus is taken back onto the pressed button once the list has re-rendered, so
+ * a consumer that moves focus of its own in response to a reorder will find this
+ * one wins.
  */
 type ReorderCallback = (...args: unknown[]) => void;
 
@@ -59,6 +65,12 @@ interface DReorderButtonsSignature {
  * Compact by design: it sits beside a drag handle in a dense list row and must
  * not drive the row's height. Layout within the row stays the consumer's, so
  * pass a class for anything positional such as `align-self`.
+ *
+ * Owns focus across a move: the pressed button is refocused once the list has
+ * re-rendered, because reordering moves the row in the DOM and that blurs
+ * whatever it contains. Without it a keyboard user lands on the body after one
+ * press. There is deliberately no way to switch this off — a reorder pair that
+ * cannot be pressed twice is not a keyboard path.
  *
  * @example
  * <DReorderButtons
@@ -127,7 +139,18 @@ export default class DReorderButtons extends Component<DReorderButtonsSignature>
     // Reordering moves this row within its list, and moving a focused element
     // in the DOM blurs it, so a keyboard user would otherwise land on the body
     // after one press and be unable to make a second.
-    schedule("afterRender", () => this.#buttons.get(direction)?.focus());
+    schedule("afterRender", () => {
+      if (isDestroying(this) || isDestroyed(this)) {
+        return;
+      }
+
+      const button = this.#buttons.get(direction);
+      // The pair renders both directions unconditionally — the unavailable one
+      // is marked, not removed — so a missing button means focus is about to be
+      // dropped on the floor without anything saying so.
+      assert(`d-reorder-buttons: no ${direction} button to focus`, button);
+      button.focus();
+    });
   }
 
   <template>
