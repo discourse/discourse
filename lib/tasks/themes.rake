@@ -326,7 +326,11 @@ def update_themes(version_cache: Concurrent::Map.new)
 end
 
 desc "Update themes & theme components"
-task "themes:update": %w[environment assets:precompile:asset_processor] do
+task "themes:update": %w[
+       environment
+       assets:precompile:asset_processor
+       assets:precompile:pretty_text
+     ] do
   if ENV["RAILS_DB"].present?
     update_themes
   else

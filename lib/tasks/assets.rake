@@ -161,8 +161,16 @@ task "assets:precompile:asset_processor": "environment" do
   AssetProcessor.load_or_build_processor_source
 end
 
+task "assets:precompile:pretty_text": "environment" do
+  PrettyText.load_or_build_core_bundle
+end
+
 # Run these tasks **before** Rails' "assets:precompile" task
-task "assets:precompile": %w[assets:precompile:before assets:precompile:asset_processor]
+task "assets:precompile": %w[
+       assets:precompile:before
+       assets:precompile:asset_processor
+       assets:precompile:pretty_text
+     ]
 
 # Run these tasks **after** Rails' "assets:precompile" task
 Rake::Task["assets:precompile"].enhance do
