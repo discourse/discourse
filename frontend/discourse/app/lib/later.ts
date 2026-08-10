@@ -26,7 +26,7 @@ function discourseLater(...args: unknown[]): Timer {
   // spread of unknowns can satisfy; this wrapper only relays the arguments.
   const relay = later as (...args: unknown[]) => Timer;
 
-  if (isTesting() && typeof [...args].at(-1) === "number") {
+  if (DEBUG && isTesting() && typeof [...args].at(-1) === "number") {
     const shortenedArgs = args.slice(0, -1);
     shortenedArgs.push(TESTING_WAIT_MS);
 
