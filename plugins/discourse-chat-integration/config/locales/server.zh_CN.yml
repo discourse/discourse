@@ -74,6 +74,10 @@ zh_CN:
     errors:
       send_chat_integration_message:
         channel_not_found: "未找到频道： %{channel_id}"
+        provider_disabled: "聊天集成提供商已禁用或缺失：%{provider}"
+        provider_failed: "%{provider} 提供商无法发送消息"
+        provider_failed_with_details: "%{provider} 提供商无法发送消息：%{details}"
+        message_required: "消息为必填项"
   chat_integration:
     all_categories: "（所有类别）"
     deleted_category: "（已删除的类别）"

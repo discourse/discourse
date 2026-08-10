@@ -15,12 +15,15 @@ zh_CN:
           name: "数据资源管理器查询生成器"
           description: "从自然语言生成数据资源管理器的 SQL 查询"
       tool_help:
+        find_queries: "查找可作为实用示例的现有数据资源管理器查询"
         run_sql: "运行 SQL 查询并返回结果"
         submit_query: "提交最终生成的查询"
       tool_summary:
+        find_queries: "正在查找示例查询"
         run_sql: "正在运行 SQL 查询"
         submit_query: "正在提交生成的查询"
       tool_description:
+        find_queries: "已找到 %{sedarch} 的示例查询"
         run_sql: "已运行 SQL 查询"
         submit_query: "提交的生成查询 %{name}"
   discourse_data_explorer:

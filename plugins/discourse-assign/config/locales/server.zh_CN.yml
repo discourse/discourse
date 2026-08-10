@@ -42,6 +42,7 @@ zh_CN:
         nobody: "筛选未指定给任何人的话题"
         anyone: "筛选指定给任何人的话题"
     already_claimed: "该话题已被认领。"
+    no_assignee: "未选择受理人。"
     already_assigned: "主题已被指定给 @%{username}"
     too_many_assigns: "@%{username} 已达到指定话题的最大数量 (%{max})。"
     too_many_assigns_for_topic: "已达到每个话题 %{limit} 个任务指定的限制。"

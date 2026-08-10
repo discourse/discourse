@@ -75,6 +75,8 @@ fr:
     sidebar_show_upcoming_events: "Afficher le lien des événements à venir dans la barre latérale sous « Plus »."
     calendar_first_day_of_week: "Choisissez le premier jour de la semaine à afficher dans le calendrier. Les options sont samedi, dimanche ou lundi."
     enable_events_category_type_setup: "Active l'option de type de catégorie « Événements » lors de la configuration de la création d'une catégorie."
+    livestream_allowed_hosts: "Hôtes pouvant être utilisés pour la diffusion en direct d'un événement."
+    livestream_allowed_hosts_invalid: "Ces entrées ne sont pas des hôtes : %{hosts}. Saisissez uniquement le nom d'hôte (par exemple, zoom.us), ce qui autorise toutes les URL de cet hôte et de ses sous-domaines."
     livestream_zoom_enabled: "Active l'intégration des vidéos Zoom dans les sujets de diffusion en direct."
     livestream_zoom_sdk_key: "Identifiant client du SDK Zoom Meeting."
     livestream_zoom_sdk_secret: "Secret client du SDK Zoom Meeting."
