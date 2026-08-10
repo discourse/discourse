@@ -155,6 +155,7 @@ module DiscourseAi
               if schema_type == "array"
                 if helper_chunk.is_a?(Array)
                   helper_chunk.each do |item|
+                    next if item.blank?
                     helper_response << item if helper_response.exclude?(item)
                   end
                 end
@@ -445,7 +446,7 @@ module DiscourseAi
         when TRANSLATE
           "language"
         when GENERATE_TITLES
-          "heading"
+          "discourse-h1"
         when PROOFREAD
           "spell-check"
         when MARKDOWN_TABLE
