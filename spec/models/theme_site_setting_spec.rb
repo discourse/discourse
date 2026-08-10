@@ -26,10 +26,12 @@ RSpec.describe ThemeSiteSetting do
         {
           theme_1.id => {
             enable_welcome_banner: false,
+            navigation_menu: "sidebar",
             search_experience: "search_field",
           },
           theme_2.id => {
             enable_welcome_banner: true,
+            navigation_menu: "sidebar",
             search_experience: "search_icon",
           },
         },
