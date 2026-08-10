@@ -11,7 +11,6 @@ RSpec.describe "Styleguide color mode selector" do
 
   before do
     SiteSetting.styleguide_enabled = true
-    SiteSetting.navigation_menu = "sidebar"
     Theme.find_default.update!(dark_color_scheme_id: dark_scheme.id)
     sign_in(admin)
   end
