@@ -56,7 +56,7 @@ module AdminDashboard
 
       # Optional cache warm-up hook for reports mounted on the dashboard.
       # Providers that do not cache their payloads can leave this as a no-op.
-      def self.prewarm(_identifiers, guardian:, filters: {})
+      def self.prewarm(identifiers, guardian:, filters: {})
       end
 
       # Universe of items of this source. Powers the Manage Reports modal's
