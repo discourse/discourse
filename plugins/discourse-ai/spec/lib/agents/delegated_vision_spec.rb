@@ -92,6 +92,39 @@ RSpec.describe DelegatedVisionTestAgent do
     expect(context.image_upload_authorized?(image_upload.id)).to eq(true)
   end
 
+  it "loads delegated image references in one query" do
+    second_image_upload = Fabricate(:image_upload).reload
+    third_image_upload = Fabricate(:image_upload).reload
+    context =
+      DiscourseAi::Agents::BotContext.new(
+        user: user,
+        messages: [
+          {
+            type: :user,
+            content: [
+              "compare ![first](#{image_upload.short_url})",
+              { upload_id: second_image_upload.id },
+            ],
+          },
+          { type: :user, content: "then inspect ![third](#{third_image_upload.short_url})" },
+        ],
+      )
+    delegated_llm = delegated_model.to_llm
+    prompt = nil
+
+    queries = track_sql_queries { prompt = agent.craft_prompt(context, llm: delegated_llm) }
+    upload_queries = queries.grep(/FROM "?uploads"?/)
+    prompt_content =
+      prompt.messages.last(2).flat_map { |message| Array(message[:content]) }.join(" ")
+
+    expect(upload_queries.size).to eq(1)
+    expect(prompt_content).to include(
+      "upload_id #{image_upload.id}",
+      "upload_id #{second_image_upload.id}",
+      "upload_id #{third_image_upload.id}",
+    )
+  end
+
   it "deduplicates images represented by both markdown and upload parts" do
     context =
       DiscourseAi::Agents::BotContext.new(
