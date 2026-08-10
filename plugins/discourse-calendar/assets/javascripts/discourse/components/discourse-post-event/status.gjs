@@ -13,6 +13,9 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
+const statusButtonClass = (selected) =>
+  selected ? "btn-primary" : "btn-default";
+
 const GoingDropdown = <template>
   <DDropdownMenu as |dropdown|>
     <dropdown.item
@@ -90,6 +93,14 @@ export default class DiscoursePostEventStatus extends Component {
 
   get isGoing() {
     return this.watchingInviteeStatus === "going";
+  }
+
+  get isInterested() {
+    return this.watchingInviteeStatus === "interested";
+  }
+
+  get isNotGoing() {
+    return this.watchingInviteeStatus === "not_going";
   }
 
   get isGoingThisEvent() {
@@ -228,7 +239,10 @@ export default class DiscoursePostEventStatus extends Component {
               {{#if @event.recurrence}}
                 {{#if this.site.mobileView}}
                   <DMenu
-                    class="btn btn-default going-button"
+                    class={{dConcatClass
+                      "going-button"
+                      (statusButtonClass this.isGoing)
+                    }}
                     @identifier="discourse-post-event-going-menu"
                     @icon={{this.goingTriggerIcon}}
                     @label={{this.goingTriggerLabel}}
@@ -243,7 +257,8 @@ export default class DiscoursePostEventStatus extends Component {
                 {{else}}
                   <DComboButton class="going-button --has-menu" as |combo|>
                     <combo.Button
-                      class="btn-default"
+                      class={{statusButtonClass this.isGoing}}
+                      @ariaPressed={{this.isGoing}}
                       @disabled={{this.goingButtonDisabled}}
                       @icon={{this.goingTriggerIcon}}
                       @label={{if
@@ -255,7 +270,7 @@ export default class DiscoursePostEventStatus extends Component {
                     />
                     <combo.Menu
                       @identifier="discourse-post-event-going-menu"
-                      @triggerClass="btn-default"
+                      @triggerClass={{statusButtonClass this.isGoing}}
                       @disabled={{this.goingButtonDisabled}}
                       @onRegisterApi={{this.registerGoingMenu}}
                     >
@@ -265,7 +280,11 @@ export default class DiscoursePostEventStatus extends Component {
                 {{/if}}
               {{else}}
                 <DButton
-                  class="btn-default going-button"
+                  class={{dConcatClass
+                    "going-button"
+                    (statusButtonClass this.isGoing)
+                  }}
+                  @ariaPressed={{this.isGoing}}
                   @disabled={{this.goingButtonDisabled}}
                   @icon="check"
                   @label={{if
@@ -291,7 +310,11 @@ export default class DiscoursePostEventStatus extends Component {
             }}
           >
             <DButton
-              class="btn-default interested-button"
+              class={{dConcatClass
+                "interested-button"
+                (statusButtonClass this.isInterested)
+              }}
+              @ariaPressed={{this.isInterested}}
               @icon="star"
               @label="discourse_post_event.models.invitee.status.interested"
               @action={{fn this.changeWatchingInviteeStatus "interested"}}
@@ -309,7 +332,11 @@ export default class DiscoursePostEventStatus extends Component {
               }}
             >
               <DButton
-                class="btn-default not-going-button"
+                class={{dConcatClass
+                  "not-going-button"
+                  (statusButtonClass this.isNotGoing)
+                }}
+                @ariaPressed={{this.isNotGoing}}
                 @icon="xmark"
                 @label="discourse_post_event.models.invitee.status.not_going"
                 @action={{fn this.changeWatchingInviteeStatus "not_going"}}

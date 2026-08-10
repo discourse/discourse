@@ -273,19 +273,6 @@ $show-interested: inherit;
         display: $show-interested;
       }
 
-      &.status-going .going-button > .d-icon,
-      &.status-going .going-button .d-combo-button-button .d-icon {
-        color: var(--success);
-      }
-
-      &.status-interested .interested-button .d-icon {
-        color: $interested;
-      }
-
-      &.status-not_going .not-going-button .d-icon {
-        color: var(--danger);
-      }
-
       .not-going-button span {
         white-space: nowrap;
       }
