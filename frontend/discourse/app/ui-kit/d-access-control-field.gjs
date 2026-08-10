@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
@@ -9,8 +8,6 @@ import { i18n } from "discourse-i18n";
 export default class DAccessControlField extends Component {
   @service site;
   @service dialog;
-
-  @tracked confirmedAclFingerprint = null;
 
   @action
   async validateAccess(name, value, { addError, preventSubmit }) {
@@ -30,13 +27,6 @@ export default class DAccessControlField extends Component {
           }),
         });
       }
-    }
-
-    const fingerprint = JSON.stringify(acl);
-
-    // The user already confirmed this exact proposed ACL.
-    if (this.confirmedAclFingerprint === fingerprint) {
-      return;
     }
 
     let evaluation = {};
@@ -64,6 +54,7 @@ export default class DAccessControlField extends Component {
         });
         return;
       } else {
+        // extras is where we store current_user_will_lose_permission and loss_warning_permissions
         Object.assign(evaluation, err.jqXHR.responseJSON.extras);
         evaluation.errorMessage = err.jqXHR.responseJSON.errors[0];
       }
@@ -73,23 +64,18 @@ export default class DAccessControlField extends Component {
       return;
     }
 
-    // TODO (martin) Do we want to show a specific message based on "downgrade" e.g. you will no longerbe able
-    // to manage but you can still view?
-    //
-    // Yes...if loss_warning_permissions is present/not empty we should reload after modal closes.
     const confirmed = await this.dialog.confirm({
       message: evaluation.errorMessage,
     });
 
-    if (confirmed) {
-      // TODO (martin) Not even sure we need this? If you confirm then we save, and whatever
-      // form generally goes away ...
-      this.confirmedAclFingerprint = fingerprint;
-      // TODO (martin) Do we need to reload the page or something here? E.g. what happens
-      // if the  permission for even being able to view this thing disappears?
-    } else {
+    if (!confirmed) {
       preventSubmit();
+      return;
     }
+
+    this.args.onAccessLossConfirmed?.({
+      permissions: evaluation.loss_warning_permissions ?? [],
+    });
   }
 
   <template>

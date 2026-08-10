@@ -123,6 +123,7 @@ import DAccessControlField from "discourse/ui-kit/d-access-control-field";
   @description={{i18n "plugin.target.access_description"}}
   @aclTarget={{this.aclTarget}}
   @onChange={{this.aclChanged}}
+  @onAccessLossConfirmed={{this.accessLossConfirmed}}
   @mustHavePermissions={{array "manage"}}
   @transformPermissionOptions={{this.transformPermissionOptions}}
 />
@@ -134,6 +135,7 @@ The wrapper owns a FormKit custom field named `acl` and supplies `site.groups` t
 - `@title` and `@description`: field metadata.
 - `@aclTarget`: `{ type, id, name }`, passed through to `DAccessControl` and the evaluation request.
 - `@onChange`: writes the controlled ACL value back to the parent form.
+- `@onAccessLossConfirmed`: optional callback invoked after the current user confirms a warning that they will lose access. It receives `{ permissions }`, where `permissions` contains the target's configured `loss_warning_permissions` and is empty when the user will lose all access without a configured warning permission. Consumers can use this to defer route refreshes or reloads until their save succeeds.
 - `@transformPermissionOptions`: passed through to `DAccessControl`.
 - `@mustHavePermissions`: optional permission strings. At least one ACL entry must have one of them or the field adds a visible validation error.
 
@@ -148,7 +150,9 @@ aclChanged(acl) {
 }
 ```
 
-On submission, the field posts the proposed ACL to `/access-control/evaluate.json`. If the current user would lose access or a configured `loss_warning_permissions` permission, it displays the server-provided confirmation message. Confirming allows submission and memoizes that exact ACL to avoid a duplicate prompt. Cancelling calls FormKit's `preventSubmit()`; this skips commit and `@onSubmit` without showing an extra validation error.
+On submission, the field posts the proposed ACL to `/access-control/evaluate.json`. If the current user would lose access or a configured `loss_warning_permissions` permission, it displays the server-provided confirmation message. Confirming allows submission. Cancelling calls FormKit's `preventSubmit()`; this skips commit and `@onSubmit` without showing an extra validation error.
+
+Keep post-save lifecycle behavior in the consumer. For example, a modal can set a flag from `@onAccessLossConfirmed`, save through its FormKit `@onSubmit`, and pass the flag to its caller through `closeModal(data)`. The promise returned by `modal.show()` resolves with that data after the modal closes, at which point the caller can refresh or reload. Reset a previously set flag when `@onChange` receives another ACL draft, and never reload when confirmation is cancelled or the save fails.
 
 `preventSubmit()` only affects the current validation pass. It does not roll back the edited ACL, mark the form invalid, or affect a later submission attempt.
 
