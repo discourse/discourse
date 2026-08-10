@@ -245,7 +245,8 @@
   }
 }
 
-.suggestion-button {
+.suggestion-button,
+.ai-split-topic-suggestion-button {
   .d-icon-spinner {
     animation: spin 1s linear infinite;
   }
@@ -361,12 +362,6 @@
     .multi-select {
       flex: 1;
       margin-bottom: 0;
-    }
-  }
-
-  .ai-split-topic-suggestion-button {
-    .d-icon-spinner {
-      animation: spin 1s linear infinite;
     }
   }
 }
@@ -528,12 +523,14 @@
     .mobile-view & {
       z-index: z("mobile-composer");
     }
-  }
 
-  .spinner {
-    height: 1rem;
-    width: 1rem;
-    margin: var(--space-4) var(--space-6);
+    .ai-suggestions-menu__loading {
+      padding: var(--space-2);
+
+      .d-icon-spinner {
+        animation: spin 1s linear infinite;
+      }
+    }
   }
 }
 

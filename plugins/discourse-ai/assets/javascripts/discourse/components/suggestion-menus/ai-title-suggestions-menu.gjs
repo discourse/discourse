@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import {
   fetchTitleSuggestions,
   showSuggestionsError,
@@ -48,14 +48,14 @@ export default class AiTitleSuggestionsMenu extends Component {
 
   <template>
     <div {{didInsert this.loadSuggestions}}>
-      <DConditionalLoadingSpinner @condition={{this.loading}}>
-        {{#if this.suggestions.length}}
-          <AiTitleSuggestionsList
-            @suggestions={{this.suggestions}}
-            @onSelect={{this.applySuggestion}}
-          />
-        {{/if}}
-      </DConditionalLoadingSpinner>
+      {{#if this.loading}}
+        <div class="ai-suggestions-menu__loading">{{dIcon "spinner"}}</div>
+      {{else if this.suggestions.length}}
+        <AiTitleSuggestionsList
+          @suggestions={{this.suggestions}}
+          @onSelect={{this.applySuggestion}}
+        />
+      {{/if}}
     </div>
   </template>
 }
