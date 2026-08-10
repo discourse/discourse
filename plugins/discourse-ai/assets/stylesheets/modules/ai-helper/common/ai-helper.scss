@@ -233,13 +233,6 @@
 
 // Suggest Titles Related
 .showing-ai-suggestions {
-  .title-input {
-    // border on focus should be on top of suggestion button
-    input:focus {
-      z-index: 1;
-    }
-  }
-
   #edit-title {
     padding-right: 2em;
   }

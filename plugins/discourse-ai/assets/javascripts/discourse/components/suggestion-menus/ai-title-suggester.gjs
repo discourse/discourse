@@ -28,9 +28,6 @@ export default class AiTitleSuggester extends Component {
       this.args.topicState === "edit";
 
     document
-      .querySelector(".composer-fields")
-      ?.classList.toggle("showing-ai-suggestions", showTrigger);
-    document
       .querySelector(".edit-topic-title")
       ?.classList.toggle("showing-ai-suggestions", showTrigger);
 
