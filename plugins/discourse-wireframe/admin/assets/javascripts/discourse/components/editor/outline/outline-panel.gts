@@ -17,7 +17,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropSourceUntyped from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dDragAndDropTargetUntyped from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
-import dRovingFocusUntyped from "discourse/ui-kit/modifiers/d-roving-focus";
+import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
 import OutlineRowActions from "discourse/plugins/discourse-wireframe/discourse/components/editor/outline/outline-row-actions";
 import {
@@ -123,29 +123,6 @@ interface OutlinePanelSignature {
   /** The panel accepts no named arguments. */
   Args: Record<string, never>;
 }
-
-// TODO(devxp-typescript-pending): drop once d-roving-focus is authored in .ts
-// with a real Signature, then import it directly.
-const dRovingFocus = dRovingFocusUntyped as unknown as ModifierLike<{
-  /** Roving-focus modifier arguments. */
-  Args: {
-    /** Named roving-focus options. */
-    Named: {
-      /** Keyboard navigation orientation. */
-      orientation: "horizontal" | "vertical" | "grid";
-      /** Selector matching focusable rows. */
-      itemSelector: string;
-      /** Handles activation of the focused row. */
-      onActivate: (element: HTMLElement, event: KeyboardEvent) => void;
-      /** Value that reseeds the roving focus group. */
-      itemsKey: unknown;
-    };
-    /** This modifier accepts no positional arguments. */
-    Positional: [];
-  };
-  /** Element owning the roving focus group. */
-  Element: HTMLElement;
-}>;
 
 // TODO(devxp-typescript-pending): drop once d-drag-and-drop-source is authored
 // in .ts with a real Signature, then import it directly.

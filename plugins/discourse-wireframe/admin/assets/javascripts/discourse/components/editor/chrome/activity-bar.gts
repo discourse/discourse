@@ -1,39 +1,18 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { service } from "@ember/service";
-import { type ModifierLike } from "@glint/template";
 import { modifier } from "ember-modifier";
 import type TooltipService from "discourse/float-kit/services/tooltip";
 import { isTesting } from "discourse/lib/environment";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dRovingFocusUntyped from "discourse/ui-kit/modifiers/d-roving-focus";
+import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
 import ActivityEntryTooltip from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/activity-entry-tooltip";
 import WireframeRailService, {
   type WireframeRailPanel,
 } from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-rail";
 import type WireframeValidationService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-validation";
-
-// TODO(devxp-typescript-pending): drop once d-roving-focus is authored in .gts
-// with a real Signature. Its .d.ts declares a bare `DefaultSignature` (no named
-// args), so a direct call rejects the args this rail passes.
-const dRovingFocus = dRovingFocusUntyped as unknown as ModifierLike<{
-  /** Element whose descendants participate in roving focus. */
-  Element: HTMLElement;
-  /** Roving-focus configuration. */
-  Args: {
-    /** Named roving-focus configuration. */
-    Named: {
-      /** Direction in which focus moves. */
-      orientation?: "vertical" | "horizontal";
-      /** Selector identifying focusable items. */
-      itemSelector?: string;
-    };
-    /** This modifier accepts no positional arguments. */
-    Positional: [];
-  };
-}>;
 
 /**
  * A static rail entry: its target panel plus the icon and i18n keys the button

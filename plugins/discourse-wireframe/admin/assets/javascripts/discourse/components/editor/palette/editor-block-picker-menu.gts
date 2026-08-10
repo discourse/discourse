@@ -8,7 +8,7 @@ import { service } from "@ember/service";
 import { type ModifierLike } from "@glint/template";
 import DButton from "discourse/ui-kit/d-button";
 import dAutoFocusUntyped from "discourse/ui-kit/modifiers/d-auto-focus";
-import dRovingFocusUntyped from "discourse/ui-kit/modifiers/d-roving-focus";
+import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
 import BlockTile from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/block-tile";
 import type { BlockPaletteEntry } from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
@@ -29,39 +29,6 @@ const dAutoFocus = dAutoFocusUntyped as unknown as ModifierLike<{
       selectText?: boolean;
       /** Whether focusing avoids scrolling the input into view. */
       preventScroll?: boolean;
-    };
-    /** This modifier accepts no positional arguments. */
-    Positional: [];
-  };
-}>;
-
-// TODO(devxp-typescript-pending): drop once d-roving-focus is authored in .gts
-// with a real Signature. Its DefaultSignature rejects the named args this
-// combobox passes.
-const dRovingFocus = dRovingFocusUntyped as unknown as ModifierLike<{
-  /** Results container whose descendants participate in roving focus. */
-  Element: HTMLElement;
-  /** Roving-focus configuration. */
-  Args: {
-    /** Named roving-focus options. */
-    Named: {
-      /** Whether navigation moves focus or only active state. */
-      selectionMode?: "focus" | "active";
-      /** Element retaining DOM focus in active-descendant mode. */
-      controllerElement?: Element | null;
-      /** Selector identifying navigable result items. */
-      itemSelector?: string;
-      /** Value that invalidates the current item collection. */
-      itemsKey?: string;
-      /** Class applied to the active result. */
-      activeClass?: string;
-      /** Handles activation of the current result. */
-      onActivate?: (
-        /** Activated result element. */
-        element: HTMLElement,
-        /** Optional activation event. */
-        event?: Event
-      ) => void;
     };
     /** This modifier accepts no positional arguments. */
     Positional: [];

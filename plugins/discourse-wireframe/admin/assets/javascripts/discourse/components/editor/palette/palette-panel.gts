@@ -8,7 +8,7 @@ import { type ModifierLike } from "@glint/template";
 import type A11yService from "discourse/services/a11y";
 import type BlocksService from "discourse/services/blocks";
 import dDragAndDropSourceUntyped from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
-import dRovingFocusUntyped from "discourse/ui-kit/modifiers/d-roving-focus";
+import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
 import BlockTile from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/block-tile";
 import {
@@ -43,30 +43,6 @@ type DragPreviewArgs = {
   /** Palette tile being dragged. */
   element: HTMLElement;
 };
-
-// TODO(devxp-typescript-pending): drop once d-roving-focus is authored in .ts
-// with a real Signature, then import it directly.
-const dRovingFocus = dRovingFocusUntyped as unknown as ModifierLike<{
-  /** Roving-focus modifier arguments. */
-  Args: {
-    /** Named modifier arguments. */
-    Named: {
-      /** Selector matching focusable palette tiles. */
-      itemSelector: string;
-      /** Handles keyboard activation of a focused tile. */
-      onActivate: (
-        /** Activated palette tile. */
-        element: HTMLElement,
-        /** Keyboard event that activated the tile. */
-        event: KeyboardEvent
-      ) => void;
-    };
-    /** This modifier accepts no positional arguments. */
-    Positional: [];
-  };
-  /** Element owning the roving-focus group. */
-  Element: HTMLElement;
-}>;
 
 // TODO(devxp-typescript-pending): drop once d-drag-and-drop-source is authored
 // in .ts with a real Signature, then import it directly.

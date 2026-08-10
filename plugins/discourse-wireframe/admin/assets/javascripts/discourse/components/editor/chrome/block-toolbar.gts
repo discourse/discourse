@@ -15,7 +15,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropSourceUntyped from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dFitUntyped from "discourse/ui-kit/modifiers/d-fit";
-import dRovingFocusUntyped from "discourse/ui-kit/modifiers/d-roving-focus";
+import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
 import {
   computeTier,
@@ -172,28 +172,6 @@ const dDragAndDropSource =
       Positional: [];
     };
   }>;
-
-// TODO(devxp-typescript-pending): drop once d-roving-focus is authored in .ts
-// with a real Signature. Its DefaultSignature rejects named args, so the named
-// contract this bar uses is declared here.
-const dRovingFocus = dRovingFocusUntyped as unknown as ModifierLike<{
-  /** Element owning the roving focus group. */
-  Element: HTMLElement;
-  /** Roving-focus modifier arguments. */
-  Args: {
-    /** Named roving-focus options. */
-    Named: {
-      /** Keyboard navigation orientation. */
-      orientation?: "horizontal" | "vertical";
-      /** Selector matching focusable items. */
-      itemSelector?: string;
-      /** Value that reseeds the roving focus group. */
-      itemsKey?: string;
-    };
-    /** This modifier accepts no positional arguments. */
-    Positional: [];
-  };
-}>;
 
 // TODO(devxp-typescript-pending): drop once d-fit is authored in .ts with a
 // real Signature, then import it directly.
