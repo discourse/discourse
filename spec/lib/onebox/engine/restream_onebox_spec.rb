@@ -42,8 +42,7 @@ RSpec.describe Onebox::Engine::RestreamOnebox do
       expect(html).to include('src="https://player.restream.io/?token=abc"')
       expect(html).to include("allowfullscreen")
       # The core onebox sanitizer does not permit the `allow` attribute, so
-      # autoplay delegation is intentionally not emitted for this cross-origin
-      # player (the browser gates unmuted autoplay anyway).
+      # autoplay delegation is intentionally not emitted
       expect(html).not_to include("autoplay")
     end
   end
