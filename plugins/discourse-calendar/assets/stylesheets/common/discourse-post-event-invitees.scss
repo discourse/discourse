@@ -51,19 +51,6 @@
           font-weight: bold;
         }
       }
-
-      .status {
-        margin-left: auto;
-        margin-right: 0.5em;
-
-        &.going {
-          color: var(--success);
-        }
-
-        &.not_going {
-          color: var(--danger);
-        }
-      }
     }
   }
 }

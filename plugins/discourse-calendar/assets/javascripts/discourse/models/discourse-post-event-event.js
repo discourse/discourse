@@ -41,7 +41,6 @@ export default class DiscoursePostEventEvent {
     return new DiscoursePostEventEvent(args);
   }
 
-  @tracked title;
   @tracked rrule;
   @tracked name;
   @tracked categoryId;
@@ -184,10 +183,6 @@ export default class DiscoursePostEventEvent {
 
   get isPrivate() {
     return this.status === "private";
-  }
-
-  get imageUrl() {
-    return this.imageUpload?.url;
   }
 
   get currentlyWithinEventTimeframe() {
