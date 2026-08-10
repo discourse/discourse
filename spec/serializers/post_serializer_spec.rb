@@ -141,6 +141,21 @@ RSpec.describe PostSerializer do
       expect(json[:reviewable_score_count]).to eq(1)
       expect(json[:reviewable_score_pending_count]).to eq(1)
     end
+
+    it "omits the reviewable data when the reviewable type is no longer defined" do
+      reviewable.update_columns(type: "ReviewableDoesntExist", type_source: "some-plugin")
+      moderator = Fabricate(:moderator)
+
+      json = PostSerializer.new(post, scope: Guardian.new(moderator), root: false).as_json
+      expect(json[:reviewable_id]).to eq(nil)
+      expect(json[:reviewable_score_count]).to eq(0)
+
+      serializer = PostSerializer.new(post, scope: Guardian.new(moderator), root: false)
+      serializer.topic_view = TopicView.new(post.topic, moderator)
+      json = serializer.as_json
+      expect(json[:reviewable_id]).to eq(0)
+      expect(json[:reviewable_score_count]).to eq(0)
+    end
   end
 
   context "with a post by a nuked user" do
