@@ -9,19 +9,6 @@
     }
   }
 
-  .event-actions {
-    .event-status {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-
-      button {
-        padding: 0 0.6em;
-        height: 2.5em;
-      }
-    }
-  }
-
   .event-invitees-status {
     font-size: var(--font-down-1);
   }

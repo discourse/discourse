@@ -8,10 +8,6 @@ a.holiday {
   cursor: default;
 }
 
-.combo-box.user-timezone {
-  min-width: 15em;
-}
-
 .grouped-event {
   --fc-event-bg-color: var(--primary-low);
   --fc-event-border-color: var(--primary-low-mid);
@@ -26,23 +22,19 @@ a.holiday {
   box-sizing: border-box;
   margin-bottom: 1rem;
 
-  &[data-size="auto"],
-  &.auto {
+  &[data-size="auto"] {
     height: auto;
   }
 
-  &[data-size="small"],
-  &.small {
+  &[data-size="small"] {
     height: 175px;
   }
 
-  &[data-size="medium"],
-  &.medium {
+  &[data-size="medium"] {
     height: 300px;
   }
 
-  &[data-size="large"],
-  &.large {
+  &[data-size="large"] {
     height: 600px;
   }
 }
@@ -117,12 +109,6 @@ a.holiday {
   box-sizing: border-box;
   overflow-y: auto;
 
-  .group-timezones-header {
-    .title {
-      font-weight: 700;
-    }
-  }
-
   .group-timezone,
   .group-timezone-new-day {
     box-sizing: border-box;
@@ -153,14 +139,6 @@ a.holiday {
     background-color: var(--calendar-normal);
     transition: opacity 0.4s;
     opacity: 0.5;
-
-    &:first-child {
-      margin-left: 0;
-    }
-
-    &:last-child {
-      margin-right: 0;
-    }
 
     &.close-to-working-hours {
       background-color: var(--calendar-close-to-working-hours);

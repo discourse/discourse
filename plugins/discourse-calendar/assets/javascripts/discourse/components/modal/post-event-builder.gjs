@@ -407,22 +407,6 @@ export default class PostEventBuilder extends Component {
     return this.args.model.event?.post?.topic?.title;
   }
 
-  get userTimezone() {
-    return this.currentUser?.user_option?.timezone || moment.tz.guess();
-  }
-
-  get statusText() {
-    const status =
-      this.event.status === "standalone"
-        ? "public"
-        : this.event.status || "public";
-    return i18n(`discourse_post_event.models.event.status.${status}.title`);
-  }
-
-  get eventNamePlaceholder() {
-    return i18n("discourse_post_event.composer.name_placeholder");
-  }
-
   get compactInitialState() {
     return {
       ...defaultEventState(),
