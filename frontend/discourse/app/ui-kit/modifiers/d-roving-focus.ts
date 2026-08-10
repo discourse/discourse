@@ -436,7 +436,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   #mode: SelectionMode = "focus";
 
   /** Stable controls registered with the consumer for moving the cursor within the group. */
-  #api: DRovingFocusApi = {
+  #api: DRovingFocusApi = Object.freeze({
     focusFirst: () => {
       const items = this.#items();
       if (!items.length) {
@@ -568,7 +568,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       });
       return true;
     },
-  };
+  });
 
   /**
    * Active mode only — the `id` of the currently-highlighted item. Tracked here
@@ -1655,9 +1655,10 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   }
 
   /**
-   * Moves the group's single tab stop onto `target`, demoting only the item that previously held
-   * it. The exhaustive alternative rewrites `tabindex` on every matched item, which on a group
-   * spanning a page of content is a thousand attribute writes for a one-item move.
+   * Makes `target` programmatically focusable and, when the group takes a tab stop, moves that
+   * stop onto it — demoting only the item that previously held it. The exhaustive alternative
+   * rewrites `tabindex` on every matched item, which on a group spanning a page of content is a
+   * thousand attribute writes for a one-item move.
    *
    * @param target - The item to promote, or nothing to simply surrender the tab stop.
    */
@@ -1666,9 +1667,19 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       this.#tabStopHolder.tabIndex = -1;
     }
     this.#tabStopHolder = null;
-    if (this.#tabStop && target) {
-      target.tabIndex = 0;
-      this.#stamped.add(target);
+    if (!target) {
+      return;
+    }
+    // In focus mode the cursor IS DOM focus, and `focus()` is a no-op on an element that carries
+    // no tabindex and is not natively focusable — a group of plain `div` or `tr` items would
+    // report a move it never made. So `tabStop` governs only whether Tab can REACH the cursor;
+    // the cursor itself is always programmatically focusable.
+    //
+    // Written on every move rather than once at mount, because an identity already recorded in
+    // `#stamped` would otherwise never have its attribute restored if anything removed it.
+    target.tabIndex = this.#tabStop ? 0 : -1;
+    this.#stamped.add(target);
+    if (this.#tabStop) {
       this.#tabStopHolder = target;
     }
   }
