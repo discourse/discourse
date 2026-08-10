@@ -28,7 +28,7 @@ RSpec.describe AccessControlList::EvaluateModification do
         [{ type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" }]
       end
 
-      def self.warn_of_loss
+      def self.loss_warning_permissions
         []
       end
     end
@@ -79,8 +79,10 @@ RSpec.describe AccessControlList::EvaluateModification do
         it { is_expected.to fail_a_policy(:user_will_have_permission) }
       end
 
-      context "when the new ACL is missing the permission(s) defined by the target as warn_of_loss permissions" do
-        before { EvaluateModificationTestTargetClass.stubs(:warn_of_loss).returns(["manage"]) }
+      context "when the new ACL is missing a loss warning permission defined by the target" do
+        before do
+          EvaluateModificationTestTargetClass.stubs(:loss_warning_permissions).returns(["manage"])
+        end
 
         it { is_expected.to fail_a_policy(:user_will_not_lose_permission) }
       end

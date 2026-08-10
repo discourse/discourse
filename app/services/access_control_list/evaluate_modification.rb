@@ -37,8 +37,10 @@ class AccessControlList::EvaluateModification
   end
 
   def user_will_not_lose_permission(target_type_klass:, acl_user_will_have:)
-    return true if !target_type_klass.has_warn_of_loss?
-    (target_type_klass.warn_of_loss - acl_user_will_have.map { |acl| acl[:permission] }).empty?
+    return true if !target_type_klass.has_loss_warning_permissions?
+    (
+      target_type_klass.loss_warning_permissions - acl_user_will_have.map { |acl| acl[:permission] }
+    ).empty?
   end
 
   def user_will_have_permission(acl_user_will_have:)

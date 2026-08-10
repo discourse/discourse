@@ -39,7 +39,7 @@ class AccessControlListsController < ApplicationController
           {
             extras: {
               current_user_will_lose_permission: true,
-              warn_of_loss_permissions: target_type_klass.warn_of_loss,
+              loss_warning_permissions: target_type_klass.loss_warning_permissions,
             },
           },
         )
