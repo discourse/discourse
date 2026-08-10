@@ -101,6 +101,7 @@ RSpec.describe SiteSerializer do
           workflow_id: post_button_workflow.id,
           label: "Run workflow",
           icon: "bolt",
+          post_number: nil,
           position: "last",
           confirmation: false,
           confirmation_message: nil,
@@ -152,6 +153,7 @@ RSpec.describe SiteSerializer do
           "parameters" => {
             "label" => "Run workflow",
             "group_ids" => [Group::AUTO_GROUPS[:logged_in_users]],
+            "post_number" => "2",
             "position" => "more_menu",
             "confirmation" => true,
             "confirmation_message" => "Really run this?",
@@ -169,11 +171,78 @@ RSpec.describe SiteSerializer do
           workflow_id: post_button_workflow.id,
           label: "Run workflow",
           icon: nil,
+          post_number: 2,
           position: "more_menu",
           confirmation: true,
           confirmation_message: "Really run this?",
         },
       )
+    end
+
+    it "serializes numeric post numbers as integers without leaking group ids" do
+      update_workflow_node(post_button_workflow, "trigger-1") do |node|
+        node.merge(
+          "parameters" => {
+            "label" => "Run workflow",
+            "group_ids" => [group.id],
+            "post_number" => 3,
+          },
+        )
+      end
+      publish_workflow!(post_button_workflow)
+
+      member_guardian = Guardian.new(member)
+      data =
+        described_class.new(Site.new(member_guardian), scope: member_guardian, root: false).as_json
+
+      expect(data[:post_button_workflows]).to contain_exactly(
+        {
+          trigger_node_id: "trigger-1",
+          workflow_id: post_button_workflow.id,
+          label: "Run workflow",
+          icon: nil,
+          post_number: 3,
+          position: "last",
+          confirmation: false,
+          confirmation_message: nil,
+        },
+      )
+    end
+
+    it "serializes malformed and nonpositive post numbers to the invalid sentinel" do
+      ["invalid", 0].each do |post_number|
+        update_workflow_node(post_button_workflow, "trigger-1") do |node|
+          node.merge(
+            "parameters" => {
+              "label" => "Run workflow",
+              "group_ids" => [group.id],
+              "post_number" => post_number,
+            },
+          )
+        end
+        publish_workflow!(post_button_workflow)
+
+        member_guardian = Guardian.new(member)
+        data =
+          described_class.new(
+            Site.new(member_guardian),
+            scope: member_guardian,
+            root: false,
+          ).as_json
+
+        expect(data[:post_button_workflows]).to contain_exactly(
+          {
+            trigger_node_id: "trigger-1",
+            workflow_id: post_button_workflow.id,
+            label: "Run workflow",
+            icon: nil,
+            post_number: DiscourseWorkflows::Nodes::PostButton::V1::INVALID_POST_NUMBER,
+            position: "last",
+            confirmation: false,
+            confirmation_message: nil,
+          },
+        )
+      end
     end
   end
 end

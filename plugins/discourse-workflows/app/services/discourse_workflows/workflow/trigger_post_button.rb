@@ -5,6 +5,7 @@ module DiscourseWorkflows
     include Service::Base
 
     params do
+      attribute :workflow_id, :integer
       attribute :trigger_node_id, :string
       attribute :post_id, :integer
 
@@ -16,17 +17,27 @@ module DiscourseWorkflows
     policy :can_use_post_button
     model :post
     policy :can_see_post
+    policy :can_trigger_for_post
     step :enqueue_workflow
 
     private
 
     def fetch_published_trigger(params:)
-      DiscourseWorkflows::Workflow::Action::FindPublishedTriggers.call(
-        trigger_type: "trigger:post_button",
-        filter: ->(published_trigger) do
-          published_trigger.trigger_node_id == params.trigger_node_id
-        end,
-      ).first
+      matches =
+        DiscourseWorkflows::Workflow::Action::FindPublishedTriggers.call(
+          trigger_type: "trigger:post_button",
+          filter: ->(published_trigger) do
+            published_trigger.trigger_node_id == params.trigger_node_id
+          end,
+        )
+
+      if params.workflow_id
+        return(
+          matches.find { |published_trigger| published_trigger.workflow_id == params.workflow_id }
+        )
+      end
+
+      matches.one? ? matches.first : nil
     end
 
     def can_use_post_button(published_trigger:, guardian:)
@@ -42,6 +53,13 @@ module DiscourseWorkflows
 
     def can_see_post(post:, guardian:)
       guardian.can_see?(post)
+    end
+
+    def can_trigger_for_post(published_trigger:, post:)
+      DiscourseWorkflows::Nodes::PostButton::V1.matches_post_number?(
+        post,
+        NodeData.parameters(published_trigger.trigger_node),
+      )
     end
 
     def enqueue_workflow(published_trigger:, post:, guardian:)
