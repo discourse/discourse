@@ -1,6 +1,6 @@
 ---
 name: discourse-acl-authoring
-description: Use when creating, editing, or reviewing Discourse access-control-list features built on AccessControlList, AclTarget, Guardian ACL helpers, AccessControlListManager, mandatory_acl, banned_acl, Site access_control metadata, plugin ACL target registration, or the DAccessControl UI component.
+description: Use when creating, editing, or reviewing Discourse access-control-list features built on AccessControlList, AclTarget, Guardian ACL helpers, AccessControlListManager, mandatory_acl, banned_acl, loss_warning_permissions, ACL modification evaluation, Site access_control metadata, plugin ACL target registration, DAccessControl, or DAccessControlField.
 ---
 
 # Discourse ACL Authoring
@@ -12,7 +12,7 @@ Use this skill before adding or reviewing ACL-backed resource permissions in Dis
 1. Identify the target resource and desired permission vocabulary. Prefer simple strings such as `view`, `edit`, and `manage`, but confirm the target's domain semantics.
 2. Read [references/backend-model.md](references/backend-model.md) when touching `AccessControlList`, `AclTarget`, `Acl::Target`, `Acl::User`, `Guardian`, `User#permission_acl`, or target visibility queries.
 3. Read [references/manager-and-plugin-integration.md](references/manager-and-plugin-integration.md) when writing ACLs, creating target models, registering plugin target classes, serializing ACLs, or integrating services/controllers.
-4. Read [references/frontend-d-access-control.md](references/frontend-d-access-control.md) when using or customizing `DAccessControl`.
+4. Read [references/frontend-d-access-control.md](references/frontend-d-access-control.md) when using or customizing `DAccessControl`, `DAccessControlField`, or FormKit ACL validation.
 5. Read [references/testing-and-review.md](references/testing-and-review.md) when adding specs or reviewing an ACL feature.
 6. Also load `.skills/discourse-service-authoring` for `Service::Base` changes, `.skills/discourse-writing-rspec-tests` for RSpec, and `.skills/discourse-writing-js-tests` for QUnit.
 
@@ -24,6 +24,9 @@ Use this skill before adding or reviewing ACL-backed resource permissions in Dis
 - Use Guardian ACL helpers or `AclTarget` visibility scopes for checks and target scopes instead of hand-querying ACL tables in controllers.
 - Register plugin ACL targets with `DiscoursePluginRegistry.register_acl_target_class` so `Site#access_control` exposes mandatory and banned ACL metadata to the frontend.
 - Treat `banned_acl` as a server-enforced restriction. `DAccessControl` hides banned permission choices for UX, but `AccessControlListManager` must still reject submitted banned entries.
+- Define `loss_warning_permissions` as permission strings whose loss by the current actor requires confirmation. Provide the target-specific server translation used by `AccessControlList::EvaluateModification`.
+- Prefer `DAccessControlField` inside FormKit. It owns required-permission validation, evaluates the proposed ACL, and uses FormKit's `preventSubmit` to cancel a submission without manufacturing a validation error.
+- Keep the default class-name `acl_target_key` when using `DAccessControlField`; its `@aclTarget.type` currently serves as both the Ruby class identifier and frontend metadata key.
 - Do not claim user ACL support is complete. Backend support is partially wired for `allowed_user_ids` in expansion, flattening, preloading, lookup helpers, matching scopes, and cleanup jobs, but `DAccessControl` remains group-first and does not yet provide complete user ACL editing.
 
 ## Local Anchors
@@ -34,8 +37,9 @@ Use this skill before adding or reviewing ACL-backed resource permissions in Dis
 - Guardian helpers: `lib/guardian.rb`
 - User ACL cache: `app/models/user.rb`
 - Write manager: `app/services/access_control_list_manager.rb`
+- Modification evaluation: `app/services/access_control_list/evaluate_modification.rb`, `app/controllers/access_control_lists_controller.rb`
 - Deleted grantee cleanup: `app/jobs/regular/cleanup_acls_for_deleted.rb`, `app/models/group.rb`, `app/models/user.rb`
 - Site metadata: `app/models/site.rb`, `app/serializers/site_serializer.rb`
-- Frontend component: `frontend/discourse/app/ui-kit/d-access-control.gjs`
-- Core specs: `spec/models/access_control_list_spec.rb`, `spec/models/concerns/acl_target_spec.rb`, `spec/lib/acl/target_spec.rb`, `spec/jobs/regular/cleanup_acls_for_deleted_spec.rb`, `spec/services/access_control_list_manager_spec.rb`, `spec/serializers/site_serializer_spec.rb`, `frontend/discourse/tests/integration/components/d-access-control-test.gjs`
+- Frontend components: `frontend/discourse/app/ui-kit/d-access-control.gjs`, `frontend/discourse/app/ui-kit/d-access-control-field.gjs`
+- Core specs: `spec/models/access_control_list_spec.rb`, `spec/models/concerns/acl_target_spec.rb`, `spec/lib/acl/target_spec.rb`, `spec/jobs/regular/cleanup_acls_for_deleted_spec.rb`, `spec/services/access_control_list_manager_spec.rb`, `spec/services/access_control_list/evaluate_modification_spec.rb`, `spec/serializers/site_serializer_spec.rb`, `frontend/discourse/tests/integration/components/d-access-control-test.gjs`, `frontend/discourse/tests/integration/components/form-kit/field-test.gjs`
 - Plugin consumer example: `plugins/discourse-kanban` or the external `discourse-kanban` checkout when present.

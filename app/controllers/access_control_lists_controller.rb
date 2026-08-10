@@ -25,7 +25,6 @@ class AccessControlListsController < ApplicationController
 
   def evaluate
     AccessControlList::EvaluateModification.call(service_params) do |result|
-      puts result.inspect_steps
       on_success { render json: success_json.merge({ current_user_will_lose_permissions: false }) }
       on_failed_contract { |contract| render_json_error(contract.errors.full_messages) }
       on_model_not_found(:target_type_klass) { raise Discourse::InvalidParameters }

@@ -75,6 +75,8 @@ export default class DAccessControlField extends Component {
 
     // TODO (martin) Do we want to show a specific message based on "downgrade" e.g. you will no longerbe able
     // to manage but you can still view?
+    //
+    // Yes...if loss_warning_permissions is present/not empty we should reload after modal closes.
     const confirmed = await this.dialog.confirm({
       message: evaluation.errorMessage,
     });
