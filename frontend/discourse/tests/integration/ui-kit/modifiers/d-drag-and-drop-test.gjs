@@ -1,8 +1,9 @@
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { find, render, settled } from "@ember/test-helpers";
+import { find, render, settled, setupOnerror } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   centerOf,
@@ -1257,62 +1258,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       );
     });
 
-    test("a caller that kept the dispatch can still drop it afterwards", async function (assert) {
-      const calls = [];
-      const args = {
-        type: "row",
-        onDragEnd: () => calls.push("dragEnd"),
-        onDrop: () => calls.push("drop"),
-      };
-
-      await render(
-        <template>
-          <div id="src">src</div>
-          <div id="tgt" {{dDragAndDropTarget accepts="row"}}>tgt</div>
-        </template>
-      );
-
-      const release = registerDragAndDropSource(find("#src"), () => args);
-
-      const dataTransfer = new DataTransfer();
-      await dragEvent("#src", "dragstart", {
-        dataTransfer,
-        ...centerOf("#src"),
-      });
-      await dragEvent("#tgt", "dragenter", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
-      await dragEvent("#tgt", "dragover", {
-        dataTransfer,
-        ...centerOf("#tgt"),
-      });
-
-      find("#tgt").dispatchEvent(
-        new DragEvent("drop", { bubbles: true, dataTransfer })
-      );
-
-      // Detached without cancelling, which is what replacing a registration
-      // under a living consumer does. The dispatch is still scheduled, and this
-      // closure was the only thing that could reach it.
-      const abandon = release({ cancelPending: false });
-
-      assert.strictEqual(
-        typeof abandon,
-        "function",
-        "keeping the dispatch hands back a way to drop it later"
-      );
-
-      abandon();
-      await settled();
-
-      assert.deepEqual(
-        calls,
-        [],
-        "so a consumer that goes away after the hand-off is still never called"
-      );
-    });
-
     test("a source disabled mid-drag still reports how that drag ended", async function (assert) {
       const calls = [];
       const state = new (class {
@@ -1366,6 +1311,372 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         ["dragEnd", "drop"],
         "the consumer is still told how its drag finished, as it is promised for every drag"
       );
+    });
+
+    test("a source re-enabled mid-drag leaves only one registration behind", async function (assert) {
+      const warn = sinon.stub(console, "warn");
+      const state = new (class {
+        @tracked disabled = false;
+      })();
+
+      await render(
+        <template>
+          <div
+            id="src"
+            {{dDragAndDropSource type="row" disabled=state.disabled}}
+          >src</div>
+          <div id="tgt" {{dDragAndDropTarget accepts="row"}}>tgt</div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      await dragEvent("#src", "dragstart", {
+        dataTransfer,
+        ...centerOf("#src"),
+      });
+
+      // Disabled while the drag is live, which keeps the registration alive to
+      // report the drop, then enabled again before that drop arrives. The one
+      // being kept has to be let go of before a replacement is made.
+      state.disabled = true;
+      await settled();
+      state.disabled = false;
+      await settled();
+
+      const duplicate = warn
+        .getCalls()
+        .some((call) =>
+          String(call.args[0]).includes("already registered a `draggable`")
+        );
+
+      assert.false(
+        duplicate,
+        "the element carries one registration, not two competing for the same drag"
+      );
+    });
+
+    test("superseding a detached source keeps the callbacks it still owes", async function (assert) {
+      const calls = [];
+      const args = {
+        type: "row",
+        onDragEnd: () => calls.push("dragEnd"),
+        onDrop: () => calls.push("drop"),
+      };
+
+      await render(
+        <template>
+          <div id="src">src</div>
+          <div id="tgt" {{dDragAndDropTarget accepts="row"}}>tgt</div>
+        </template>
+      );
+
+      const release = registerDragAndDropSource(find("#src"), () => args);
+
+      const dataTransfer = new DataTransfer();
+      await dragEvent("#src", "dragstart", {
+        dataTransfer,
+        ...centerOf("#src"),
+      });
+      await dragEvent("#tgt", "dragenter", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+      await dragEvent("#tgt", "dragover", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+
+      find("#tgt").dispatchEvent(
+        new DragEvent("drop", { bubbles: true, dataTransfer })
+      );
+
+      const work = release({ cancelPending: false });
+
+      // Something has taken this registration's place, which says nothing about
+      // the drag that already finished. The consumer is still there and is still
+      // owed the end of it.
+      work.supersede();
+      await settled();
+
+      assert.deepEqual(
+        calls,
+        ["dragEnd", "drop"],
+        "being replaced does not cost the consumer the drag it had already completed"
+      );
+      assert.false(
+        work.outstanding(),
+        "and once it has fired the work reports itself finished, so a holder can let go"
+      );
+    });
+
+    test("detached work reports itself outstanding until its dispatch fires", async function (assert) {
+      const args = { type: "row", onDragEnd: () => {}, onDrop: () => {} };
+
+      await render(
+        <template>
+          <div id="src">src</div>
+          <div id="tgt" {{dDragAndDropTarget accepts="row"}}>tgt</div>
+        </template>
+      );
+
+      const release = registerDragAndDropSource(find("#src"), () => args);
+
+      const dataTransfer = new DataTransfer();
+      await dragEvent("#src", "dragstart", {
+        dataTransfer,
+        ...centerOf("#src"),
+      });
+      await dragEvent("#tgt", "dragenter", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+      await dragEvent("#tgt", "dragover", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+
+      find("#tgt").dispatchEvent(
+        new DragEvent("drop", { bubbles: true, dataTransfer })
+      );
+
+      const work = release({ cancelPending: false });
+
+      assert.true(
+        work.outstanding(),
+        "a dispatch is still scheduled, so a holder has to keep it"
+      );
+
+      await settled();
+
+      assert.false(
+        work.outstanding(),
+        "and stops being owed once that dispatch has run"
+      );
+    });
+
+    test("abandoning a detached source drops the callbacks it still owes", async function (assert) {
+      const calls = [];
+      const args = {
+        type: "row",
+        onDragEnd: () => calls.push("dragEnd"),
+        onDrop: () => calls.push("drop"),
+      };
+
+      await render(
+        <template>
+          <div id="src">src</div>
+          <div id="tgt" {{dDragAndDropTarget accepts="row"}}>tgt</div>
+        </template>
+      );
+
+      const release = registerDragAndDropSource(find("#src"), () => args);
+
+      const dataTransfer = new DataTransfer();
+      await dragEvent("#src", "dragstart", {
+        dataTransfer,
+        ...centerOf("#src"),
+      });
+      await dragEvent("#tgt", "dragenter", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+      await dragEvent("#tgt", "dragover", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+
+      find("#tgt").dispatchEvent(
+        new DragEvent("drop", { bubbles: true, dataTransfer })
+      );
+
+      // Detaching without cancelling hands the outstanding work back, because
+      // this closure was the only thing that could still reach it.
+      const work = release({ cancelPending: false });
+      assert.strictEqual(
+        typeof work?.abandon,
+        "function",
+        "keeping the dispatch hands back a way to reach it"
+      );
+
+      // The consumer itself is going away, which is the one reason to take the
+      // dispatch back.
+      work.abandon();
+      await settled();
+
+      assert.deepEqual(
+        calls,
+        [],
+        "a consumer that is gone is not called for the drag it completed"
+      );
+    });
+
+    test("a source disabled and re-enabled mid-drag still reports how that drag ended", async function (assert) {
+      const calls = [];
+      const state = new (class {
+        @tracked disabled = false;
+      })();
+      const onDragEnd = () => calls.push("dragEnd");
+      const onDrop = () => calls.push("drop");
+
+      await render(
+        <template>
+          <div
+            id="src"
+            {{dDragAndDropSource
+              type="row"
+              disabled=state.disabled
+              onDragEnd=onDragEnd
+              onDrop=onDrop
+            }}
+          >src</div>
+          <div id="tgt" {{dDragAndDropTarget accepts="row"}}>tgt</div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      await dragEvent("#src", "dragstart", {
+        dataTransfer,
+        ...centerOf("#src"),
+      });
+      await dragEvent("#tgt", "dragenter", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+
+      // Detached mid-drag, then replaced before the drop. Whichever registration
+      // ends up holding the element has to be the one that reports, because the
+      // consumer is promised the end of every drag it started.
+      state.disabled = true;
+      await settled();
+      state.disabled = false;
+      await settled();
+
+      await dragEvent("#tgt", "dragover", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+      await dragEvent("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
+
+      assert.deepEqual(
+        calls,
+        ["dragEnd", "drop"],
+        "replacing the registration mid-drag does not cost the consumer the end of it"
+      );
+    });
+
+    test("a source disabled mid-drag and then destroyed drops its callbacks", async function (assert) {
+      const calls = [];
+      const state = new (class {
+        @tracked disabled = false;
+        @tracked rendered = true;
+      })();
+      const onDragEnd = () => calls.push("dragEnd");
+      const onDrop = () => calls.push("drop");
+
+      await render(
+        <template>
+          {{#if state.rendered}}
+            <div
+              id="src"
+              {{dDragAndDropSource
+                type="row"
+                disabled=state.disabled
+                onDragEnd=onDragEnd
+                onDrop=onDrop
+              }}
+            >src</div>
+          {{/if}}
+          <div id="tgt" {{dDragAndDropTarget accepts="row"}}>tgt</div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      await dragEvent("#src", "dragstart", {
+        dataTransfer,
+        ...centerOf("#src"),
+      });
+      await dragEvent("#tgt", "dragenter", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+      await dragEvent("#tgt", "dragover", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+
+      // Detached, but kept alive to report the drag it is in the middle of.
+      state.disabled = true;
+      await settled();
+
+      // The drop schedules the consumer callbacks, and the row goes away before
+      // the runloop flushes them. Whatever is still holding that dispatch has to
+      // be reachable from here, or nothing can call it off.
+      find("#tgt").dispatchEvent(
+        new DragEvent("drop", { bubbles: true, dataTransfer })
+      );
+      state.rendered = false;
+      await settled();
+
+      assert.deepEqual(
+        calls,
+        [],
+        "a destroyed consumer runs no callback for the drag its registration was keeping"
+      );
+    });
+
+    test("a consumer that throws does not strand the registration", async function (assert) {
+      let thrown = 0;
+      setupOnerror(() => thrown++);
+
+      const state = new (class {
+        @tracked disabled = false;
+      })();
+      const onDragEnd = () => {
+        throw new Error("consumer blew up");
+      };
+
+      await render(
+        <template>
+          <div
+            id="src"
+            {{dDragAndDropSource
+              type="row"
+              disabled=state.disabled
+              onDragEnd=onDragEnd
+            }}
+          >src</div>
+          <div id="tgt" {{dDragAndDropTarget accepts="row"}}>tgt</div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      await dragEvent("#src", "dragstart", {
+        dataTransfer,
+        ...centerOf("#src"),
+      });
+      await dragEvent("#tgt", "dragenter", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+
+      // Detached mid-drag, so the teardown is waiting on the drop that is about
+      // to dispatch into a consumer that throws.
+      state.disabled = true;
+      await settled();
+
+      await dragEvent("#tgt", "dragover", {
+        dataTransfer,
+        ...centerOf("#tgt"),
+      });
+      await dragEvent("#tgt", "drop", { dataTransfer, ...centerOf("#tgt") });
+
+      assert.strictEqual(thrown, 1, "the consumer's error is not swallowed");
+      assert
+        .dom("#src")
+        .doesNotHaveAttribute(
+          "data-drag-source",
+          "and the registration is still torn down, rather than left on the element for good"
+        );
     });
   });
 

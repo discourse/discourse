@@ -161,6 +161,33 @@ interface DDragAndDropSourceSignature {
 }
 
 /**
+ * What a registration still owes after being detached without cancelling, and
+ * the two different reasons for letting go of it.
+ *
+ * They are not interchangeable, and picking the wrong one is silent: a dispatch
+ * belongs to a drag that already finished, so cancelling it robs a consumer that
+ * is still there of the `onDragEnd` it was promised, while leaving a waiting
+ * teardown in place lets a second registration land on the same element.
+ */
+export interface DetachedSourceWork {
+  /**
+   * Something has taken this registration's place. Runs a teardown that was
+   * waiting on a drag, and leaves a scheduled dispatch to fire.
+   */
+  supersede: () => void;
+
+  /** The consumer is going away. Drops everything, dispatch included. */
+  abandon: () => void;
+
+  /**
+   * Whether anything is still owed. Goes false once the dispatch has fired and
+   * no teardown is waiting, which a caller holding these has no other way to
+   * find out — so without it they accumulate for as long as it lives.
+   */
+  outstanding: () => boolean;
+}
+
+/**
  * The drag source's named args, for a consumer driving
  * {@link registerDragAndDropSource} imperatively rather than through the
  * modifier.
@@ -323,18 +350,23 @@ export function registerDragAndDropSource(
       // order is fixed and a drag schedules exactly one.
       pendingConsumers = next(() => {
         pendingConsumers = null;
-        // Lifecycle before dispatch: a consumer that only needs to undo its
-        // drag-time state hears about every drag, while one that performs an
-        // operation is not asked to perform it for a drag the user gave up on.
-        consumerOnDragEnd?.({ source: sourcePayload, location });
-        if (landed) {
-          consumerOnDrop?.({ source: sourcePayload, location });
+        try {
+          // Lifecycle before dispatch: a consumer that only needs to undo its
+          // drag-time state hears about every drag, while one that performs an
+          // operation is not asked to perform it for a drag the user gave up on.
+          consumerOnDragEnd?.({ source: sourcePayload, location });
+          if (landed) {
+            consumerOnDrop?.({ source: sourcePayload, location });
+          }
+        } finally {
+          // A teardown that was held back for this drag. Run last, so the
+          // unregistration cannot land in the middle of the library's own
+          // dispatch, and in a `finally`, because a consumer that throws would
+          // otherwise leave the element registered for good.
+          const deferred = teardownWhenIdle;
+          teardownWhenIdle = null;
+          deferred?.();
         }
-        // A teardown that was held back for this drag. Run last, so the
-        // unregistration cannot land in the middle of the library's own dispatch.
-        const deferred = teardownWhenIdle;
-        teardownWhenIdle = null;
-        deferred?.();
       });
     },
   });
@@ -346,19 +378,32 @@ export function registerDragAndDropSource(
   };
 
   /**
-   * Drops everything this registration is still owed: a dispatch already
-   * scheduled, and a teardown waiting on a drag that will now never be reported.
+   * Runs a teardown that was waiting on a drag, because something has taken this
+   * registration's place and the drag it was waiting for will never report.
+   *
+   * Deliberately leaves a scheduled dispatch alone: that belongs to a drag which
+   * already finished, and the consumer it belongs to is still there.
+   */
+  const supersede = () => {
+    if (teardownWhenIdle) {
+      teardownWhenIdle = null;
+      teardown();
+    }
+  };
+
+  /**
+   * Drops everything this registration is still owed, for a consumer that is
+   * going away: the scheduled dispatch as well as any waiting teardown.
    */
   const abandon = () => {
     if (pendingConsumers) {
       cancel(pendingConsumers);
       pendingConsumers = null;
     }
-    if (teardownWhenIdle) {
-      teardownWhenIdle = null;
-      teardown();
-    }
+    supersede();
   };
+
+  const outstanding = () => Boolean(pendingConsumers || teardownWhenIdle);
 
   /**
    * Tears the registration down.
@@ -369,12 +414,13 @@ export function registerDragAndDropSource(
    *   this defers around. False when the registration is merely being replaced —
    *   a `disabled` arg flipping, or a new handle — because the consumer is still
    *   there and still expects to hear how its own drag ended.
-   * @returns `null` once nothing is outstanding, or a function dropping what
-   *   still is. A caller that kept the pending work has to hold onto this: it is
-   *   the only remaining way to reach it, and the caller may yet go away before
-   *   the drag it kept reports.
+   * @returns `null` once nothing is outstanding, or the work still owed. A
+   *   caller that kept it has to hold onto this: it is the only remaining way to
+   *   reach it, and the two ways of letting go are not interchangeable.
    */
-  return ({ cancelPending = true }: { cancelPending?: boolean } = {}) => {
+  return ({
+    cancelPending = true,
+  }: { cancelPending?: boolean } = {}): DetachedSourceWork | null => {
     if (cancelPending) {
       abandon();
       teardown();
@@ -387,11 +433,11 @@ export function registerDragAndDropSource(
       // `onDragEnd` every drag is promised — would never arrive. The consumer
       // is still here to receive it, so the teardown waits for the drag.
       teardownWhenIdle = teardown;
-      return abandon;
+      return { supersede, abandon, outstanding };
     }
 
     teardown();
-    return pendingConsumers ? abandon : null;
+    return pendingConsumers ? { supersede, abandon, outstanding } : null;
   };
 }
 
@@ -441,19 +487,22 @@ export default class DDragAndDropSourceModifier extends Modifier<DDragAndDropSou
   #dragHandle: Element | undefined = undefined;
 
   /**
-   * Drops what a detached registration is still owed. Held here rather than left
-   * in the registration's own closure, which went away with the cleanup function
-   * that reached it: a consumer can be destroyed after its registration was
-   * replaced but before the drag it kept has reported.
+   * Registrations that were replaced while still owing the consumer something.
+   * Held here rather than left in their own closures, which went away with the
+   * cleanup functions that reached them: a consumer can be destroyed after its
+   * registration was replaced but before the drag it kept has reported.
+   *
+   * A set rather than one, because a replaced registration keeps owing a
+   * dispatch until it fires, and there is no way to observe that it has.
    */
-  #abandonDetached: (() => void) | null = null;
+  #detached = new Set<DetachedSourceWork>();
 
   constructor(owner: Owner, args: ArgsFor<DDragAndDropSourceSignature>) {
     super(owner, args);
     registerDestructor(this, (instance) => {
       instance.#detach();
-      instance.#abandonDetached?.();
-      instance.#abandonDetached = null;
+      instance.#detached.forEach((work) => work.abandon());
+      instance.#detached.clear();
     });
   }
 
@@ -488,11 +537,12 @@ export default class DDragAndDropSourceModifier extends Modifier<DDragAndDropSou
     this.#dragHandle = args.dragHandle;
 
     if (!this.#cleanup) {
-      // Anything still winding down is dropped first. Two registrations on one
-      // element is not a state the library supports, and the previous one is
-      // only ever kept alive to report a drag that has now been superseded.
-      this.#abandonDetached?.();
-      this.#abandonDetached = null;
+      // Anything still holding the element is let go of first: two registrations
+      // on one element is not a state the library supports. Only the teardowns
+      // though — a dispatch already scheduled belongs to a drag that finished,
+      // and this consumer is still here to be told how.
+      this.#detached.forEach((work) => work.supersede());
+      this.#pruneDetached();
       this.#cleanup = registerDragAndDropSource(element, () => this.#args);
     }
   }
@@ -506,9 +556,28 @@ export default class DDragAndDropSourceModifier extends Modifier<DDragAndDropSou
    *   the pending drop dispatch to be kept.
    */
   #detach({ cancelPending = true }: { cancelPending?: boolean } = {}) {
-    this.#cleanup?.({ cancelPending });
+    const work = this.#cleanup?.({ cancelPending }) ?? null;
+    if (work) {
+      this.#detached.add(work);
+    }
+    this.#pruneDetached();
     this.#cleanup = null;
     this.#element?.classList.remove("--dragging");
     this.#element = null;
+  }
+
+  /**
+   * Forgets detached registrations that have finished what they were kept for.
+   *
+   * They cannot report this themselves, so without a sweep on each detach and
+   * re-registration one is retained per drag for as long as this modifier lives,
+   * each holding its element and the library's cleanup.
+   */
+  #pruneDetached() {
+    this.#detached.forEach((work) => {
+      if (!work.outstanding()) {
+        this.#detached.delete(work);
+      }
+    });
   }
 }

@@ -133,7 +133,12 @@ interface DDragAndDropExternalTargetSignature {
        */
       indicator?: boolean;
 
-      /** The cursor entered this target with a compatible external drag in flight. */
+      /**
+       * This target became the one a drop would land on, with a compatible
+       * external drag in flight. Usually the cursor entering it, but also a
+       * nested target that was covering it going away, so it can fire without
+       * the cursor moving.
+       */
       onDragEnter?: (event: ExternalDropTargetEvent) => void;
 
       /**
@@ -142,7 +147,19 @@ interface DDragAndDropExternalTargetSignature {
        */
       onDrag?: (event: ExternalDropTargetEvent) => void;
 
-      /** The cursor left this target. */
+      /**
+       * This target stopped being the one a drop would land on. The cursor
+       * leaving it, or a nested target taking over while the cursor is still
+       * inside it.
+       *
+       * Tracks the role rather than the callbacks: fires only for a target that
+       * had taken the role, and only once each time it gives it up, whether or
+       * not an `onDragEnter` was supplied to observe it being taken.
+       *
+       * Not every taking is given up here, though. A drop ends the drag without
+       * a leave, and so does the target being torn down mid-drag, so drag-time
+       * state has to be released on the consumer's own destruction too.
+       */
       onDragLeave?: (event: ExternalDropTargetEvent) => void;
 
       /** The drag was released on this target. */
