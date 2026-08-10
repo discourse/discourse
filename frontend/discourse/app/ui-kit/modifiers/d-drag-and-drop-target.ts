@@ -62,8 +62,8 @@ export interface DropTargetEvent {
 
 /**
  * Per-axis state modifier classes toggled while the cursor is hovering with a
- * compatible drag in flight. Paired with the `data-drop-target` attribute the
- * registrar stamps, and styled by
+ * compatible drag in flight. Paired with the `data-drop-target` /
+ * `data-drop-target-external` attribute the registrar stamps, and styled by
  * `app/assets/stylesheets/common/ui-kit/d-drag-and-drop.scss`, which draws a 2px
  * accent line above/below the row by default; consumers can override with their
  * own treatment when a different look is needed.
@@ -73,6 +73,77 @@ const POSITION_CLASSES = Object.freeze({
   after: { y: "--drag-below", x: "--drag-right" },
   inside: { y: "--drag-inside", x: "--drag-inside" },
 });
+
+/** How a target decides where a drop would land. */
+export interface DropPositionOptions {
+  /** A fixed position, which wins over the midpoint math entirely. */
+  position?: DropPosition;
+
+  /** The axis the midpoint is measured along. Defaults to `"y"`. */
+  axis?: DropAxis;
+}
+
+/**
+ * Where a drop would land relative to an element: the `position` arg when one is
+ * fixed, otherwise which side of the element's midpoint the pointer is on.
+ *
+ * Shared with the external target, which resolves position identically — the two
+ * would otherwise each carry their own copy of the same midpoint comparison.
+ *
+ * @param element - The target element to measure against.
+ * @param input - The pointer position, as the underlying library reports it.
+ * @param options - The consumer's `position` / `axis` args.
+ */
+export function resolveDropPosition(
+  element: Element,
+  input: DragInput,
+  { position, axis = "y" }: DropPositionOptions
+): DropPosition {
+  if (position) {
+    return position;
+  }
+  const rect = element.getBoundingClientRect();
+  if (axis === "x") {
+    return input.clientX < rect.left + rect.width / 2 ? "before" : "after";
+  }
+  return input.clientY < rect.top + rect.height / 2 ? "before" : "after";
+}
+
+/**
+ * Keeps at most one positional indicator class on an element, so moving from one
+ * position to another swaps rather than accumulates.
+ *
+ * Shared with the external target for the same reason as
+ * {@link resolveDropPosition}: both draw from one class vocabulary, and a second
+ * copy of the swap logic is how the two would drift apart.
+ *
+ * @param element - The element to carry the class.
+ * @returns `apply`, which swaps in the class for a position/axis pair, and
+ *   `clear`, which removes whichever one is currently on.
+ */
+export function createPositionIndicator(element: Element) {
+  let activeClass: string | null = null;
+
+  return {
+    apply(position: DropPosition, axis: DropAxis) {
+      const className = POSITION_CLASSES[position]?.[axis];
+      if (!className || activeClass === className) {
+        return;
+      }
+      if (activeClass) {
+        element.classList.remove(activeClass);
+      }
+      element.classList.add(className);
+      activeClass = className;
+    },
+    clear() {
+      if (activeClass) {
+        element.classList.remove(activeClass);
+        activeClass = null;
+      }
+    },
+  };
+}
 
 /**
  * One value, several, or nothing, as a list. Shared with the external target,
@@ -283,31 +354,12 @@ export function registerDragAndDropTarget(
   element: Element,
   getArgsRef: () => DragAndDropTargetArgs
 ) {
-  let activeClass: string | null = null;
+  const indicator = createPositionIndicator(element);
   // Whether this wrapper has forwarded an enter the consumer is still owed a
   // leave for. The underlying library sends both to every target in the
   // hierarchy, but only the deepest one is forwarded, so an ancestor would
   // otherwise be handed a leave it never had an enter for.
   const pairing = createEnterLeavePairing();
-
-  const applyIndicator = (position: DropPosition, axis: DropAxis) => {
-    const className = POSITION_CLASSES[position]?.[axis];
-    if (!className || activeClass === className) {
-      return;
-    }
-    if (activeClass) {
-      element.classList.remove(activeClass);
-    }
-    element.classList.add(className);
-    activeClass = className;
-  };
-
-  const clearIndicators = () => {
-    if (activeClass) {
-      element.classList.remove(activeClass);
-      activeClass = null;
-    }
-  };
 
   const acceptsType = (type: unknown) => {
     const list = toAcceptList(getArgsRef().accepts);
@@ -315,16 +367,8 @@ export function registerDragAndDropTarget(
   };
 
   const resolvePosition = (input: DragInput): DropPosition => {
-    const args = getArgsRef();
-    if (args.position) {
-      return args.position;
-    }
-    const axis = args.axis ?? "y";
-    const rect = element.getBoundingClientRect();
-    if (axis === "x") {
-      return input.clientX < rect.left + rect.width / 2 ? "before" : "after";
-    }
-    return input.clientY < rect.top + rect.height / 2 ? "before" : "after";
+    const { position, axis } = getArgsRef();
+    return resolveDropPosition(element, input, { position, axis });
   };
 
   const isDeepest = (location: DragLocation) =>
@@ -396,14 +440,14 @@ export function registerDragAndDropTarget(
       // showing stale, and PDND keeps an ancestor in the hierarchy rather than
       // sending it a leave, so clearing here is the only chance to drop it.
       if (!isDeepest(location)) {
-        clearIndicators();
+        indicator.clear();
         reportLeave(source, location);
         return;
       }
       const args = getArgsRef();
       const pos = resolvePosition(location.current.input);
       if (args.indicator !== false) {
-        applyIndicator(pos, args.axis ?? "y");
+        indicator.apply(pos, args.axis ?? "y");
       }
       pairing.enter(() =>
         args.onDragEnter?.({
@@ -416,14 +460,14 @@ export function registerDragAndDropTarget(
     },
     onDrag: ({ source, location }) => {
       if (!isDeepest(location)) {
-        clearIndicators();
+        indicator.clear();
         reportLeave(source, location);
         return;
       }
       const args = getArgsRef();
       const pos = resolvePosition(location.current.input);
       if (args.indicator !== false) {
-        applyIndicator(pos, args.axis ?? "y");
+        indicator.apply(pos, args.axis ?? "y");
       }
       // Taking over as the deepest target without a fresh enter, because an
       // ancestor never left the hierarchy for the child to be entered. The
@@ -445,14 +489,14 @@ export function registerDragAndDropTarget(
       });
     },
     onDragLeave: ({ source, location }) => {
-      clearIndicators();
+      indicator.clear();
       reportLeave(source, location);
     },
     onDrop: ({ source, location }) => {
       // Unconditionally, and before the deepest check: an ancestor that stopped
       // being deepest still needs its indicator dropped, matching
       // `registerDragAndDropExternalTarget`.
-      clearIndicators();
+      indicator.clear();
       // A drop ends the drag, so the enter it closes is not also reported as a
       // leave.
       pairing.reset();
@@ -471,7 +515,7 @@ export function registerDragAndDropTarget(
 
   return () => {
     cleanup();
-    clearIndicators();
+    indicator.clear();
     element.removeAttribute("data-drop-target");
   };
 }

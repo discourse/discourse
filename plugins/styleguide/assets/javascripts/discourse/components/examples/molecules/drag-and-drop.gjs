@@ -14,6 +14,8 @@ import { i18n } from "discourse-i18n";
  * state class that produces it. Rendered as static swatches so the vocabulary is
  * readable without holding a drag open, and stamped with the real
  * `data-drop-target` attribute because the stylesheet gates every rule on it.
+ *
+ * Both target flavours reach these, so the swatches stand for either.
  */
 const POSITIONS = [
   { state: "--drag-above", label: "above" },
@@ -114,6 +116,23 @@ export default class DragAndDropExample extends Component {
               <code>{{position.state}}</code>
             </div>
           {{/each}}
+        </div>
+      </section>
+
+      <section class="styleguide--drag-and-drop__external">
+        <h3>{{i18n "styleguide.sections.drag_and_drop.external_title"}}</h3>
+        <p>{{i18n "styleguide.sections.drag_and_drop.external_description"}}</p>
+
+        <div class="styleguide--drag-and-drop__swatches">
+          <div class="styleguide--drag-and-drop__swatch">
+            <div
+              data-drop-target-external
+              class="styleguide--drag-and-drop__box --drag-over-external"
+            >
+              external
+            </div>
+            <code>--drag-over-external</code>
+          </div>
         </div>
       </section>
 

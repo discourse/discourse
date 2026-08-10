@@ -73,6 +73,28 @@ only one uploads.
 A file dropped on the modifier will not upload. Reach for the modifier only when
 you genuinely want the raw payload.
 
+Where the two targets do agree is on _position_. Give the external target an
+`axis` and it resolves `before` / `after` from the cursor midpoint and draws the
+same `--drag-above` / `--drag-below` indicators the element target does, which is
+what a row an incoming link should land beside needs. Without an `axis` it stays
+a single destination: callbacks get `position: null` and the indicator is one
+`--drag-over-external` class. Most external targets want that; a drop zone is a
+destination, not a slot.
+
+## An ancestor that must stay lit reads the service
+
+Only the deepest accepted target receives the lifecycle callbacks. That is
+usually what you want, and it is why nested targets do not double-handle a
+drop — but it also means an ancestor target goes dark the moment a descendant
+claims the drag.
+
+So a container that should stay highlighted for the whole drag while its rows
+each light up in turn cannot get that from a target of its own. Read
+`@service dragAndDrop` there instead — `isDragging`, `acceptsExternal(kind)`,
+`accepts(type)` — and leave the targets to the rows. This is the same
+read-versus-respond split as the boundary below, arriving from a different
+direction.
+
 ## The monitor reacts; the service holds state
 
 - **`dDragAndDropMonitor`** takes `types` plus `onDragStart` / `onDrag` /

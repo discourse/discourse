@@ -41,6 +41,9 @@ const Negatives = <template>
   {{! @glint-expect-error - the external vocabulary is a closed set of kinds, unlike the free-form drag types the element target filters on }}
   <div {{dDragAndDropExternalTarget accepts="images"}}></div>
 
+  {{! @glint-expect-error - both targets resolve position the same way, so the external one rejects the same axes }}
+  <div {{dDragAndDropExternalTarget accepts="urls" axis="z"}}></div>
+
   {{! @glint-expect-error - auto-scroll moves the host element or the window }}
   <div {{dDragAndDropAutoScroll target="document"}}></div>
 

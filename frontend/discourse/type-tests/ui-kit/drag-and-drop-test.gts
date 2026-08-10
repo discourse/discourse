@@ -100,6 +100,13 @@ const Positives = <template>
     }}
   ></div>
 
+  {{! An external target is a slot rather than a destination once it takes a
+      position, and speaks the same vocabulary the element target does }}
+  <li {{dDragAndDropExternalTarget accepts="urls" axis="y" onDrop=noop}}></li>
+  <li
+    {{dDragAndDropExternalTarget accepts="urls" position="inside" onDrop=noop}}
+  ></li>
+
   {{! A monitor is global, so any sentinel element carries it }}
   <div {{dDragAndDropMonitor types=acceptedTypes onDrag=noop}}></div>
 

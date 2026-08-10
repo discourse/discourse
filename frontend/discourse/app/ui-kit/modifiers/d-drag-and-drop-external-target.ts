@@ -27,8 +27,12 @@ import type {
 } from "discourse/services/drag-and-drop";
 import {
   createEnterLeavePairing,
+  createPositionIndicator,
+  type DropAxis,
   type DropEffect,
+  type DropPosition,
   isDeepestTarget,
+  resolveDropPosition,
   toAcceptList,
 } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 
@@ -55,6 +59,12 @@ export interface ExternalDropTargetEvent {
   /** The incoming payload, with the read helpers bound to it. */
   source: ExternalDragPayload;
 
+  /**
+   * Where the drop would land, `null` when the drag has left and also when the
+   * target asked for no position at all — see `axis`.
+   */
+  position: DropPosition | null;
+
   /** The drag's location history. */
   location: DragLocation;
 
@@ -63,12 +73,12 @@ export interface ExternalDropTargetEvent {
 }
 
 /**
- * State modifier class toggled on the target while a compatible
- * external drag is hovering. External drags don't carry a position
- * (they replace, they don't reorder), so a single class — not the
- * before/after/inside split the element variant uses — is enough.
- * Mirrors `--drag-*` from the element modifier so consumers can style
- * with a parallel selector set.
+ * State modifier class toggled on the target while a compatible external drag
+ * is hovering, for a target that resolves no position: it is a single
+ * destination, so there is only one thing to say about it. A target that does
+ * resolve a position uses the element variant's `--drag-above` / `--drag-below`
+ * / `--drag-inside` instead, and never both — the two answer the same question
+ * at different resolutions.
  */
 const INDICATOR_CLASS = "--drag-over-external";
 
@@ -121,6 +131,26 @@ interface DDragAndDropExternalTargetSignature {
        */
       accepts?: ExternalDragKind | ExternalDragKind[];
 
+      /**
+       * A fixed drop position. When set, `axis` and the midpoint logic are
+       * ignored. Supplying it opts the target into resolving a position at all —
+       * see `axis`.
+       */
+      position?: DropPosition;
+
+      /**
+       * Drives the indicator class selection and the midpoint position math,
+       * exactly as on the element target.
+       *
+       * Supplying either this or `position` is what opts a target into
+       * resolving a position: without one, callbacks are told `position: null`
+       * and the indicator is the single `--drag-over-external` class. Most
+       * external targets want that — a drop zone is one destination, not a slot
+       * in a list. Reach for an axis when the target IS a slot, such as a row a
+       * dragged-in link should land above or below.
+       */
+      axis?: DropAxis;
+
       /** Synchronous gate. Returning `false` refuses the drop. */
       canDrop?: (feedback: ExternalDropTargetFeedback) => boolean | void;
 
@@ -150,7 +180,7 @@ interface DDragAndDropExternalTargetSignature {
       /**
        * This target stopped being the one a drop would land on. The cursor
        * leaving it, or a nested target taking over while the cursor is still
-       * inside it.
+       * inside it. `position` is `null`.
        *
        * Tracks the role rather than the callbacks: fires only for a target that
        * had taken the role, and only once each time it gives it up, whether or
@@ -204,8 +234,21 @@ export function registerDragAndDropExternalTarget(
   getArgsRef: () => DragAndDropExternalTargetArgs
 ) {
   let isIndicating = false;
+  const positionIndicator = createPositionIndicator(element);
 
-  const showIndicator = () => {
+  const resolvePosition = (input: DragInput): DropPosition | null => {
+    const { position, axis } = getArgsRef();
+    if (!position && !axis) {
+      return null;
+    }
+    return resolveDropPosition(element, input, { position, axis });
+  };
+
+  const showIndicator = (position: DropPosition | null) => {
+    if (position) {
+      positionIndicator.apply(position, getArgsRef().axis ?? "y");
+      return;
+    }
     if (isIndicating) {
       return;
     }
@@ -214,6 +257,7 @@ export function registerDragAndDropExternalTarget(
   };
 
   const clearIndicator = () => {
+    positionIndicator.clear();
     if (!isIndicating) {
       return;
     }
@@ -256,6 +300,7 @@ export function registerDragAndDropExternalTarget(
     pairing.leave(() =>
       getArgsRef().onDragLeave?.({
         source: decorateSource(source),
+        position: null,
         location,
         element,
       })
@@ -300,12 +345,14 @@ export function registerDragAndDropExternalTarget(
         return;
       }
       const args = getArgsRef();
+      const position = resolvePosition(location.current.input);
       if (args.indicator !== false) {
-        showIndicator();
+        showIndicator(position);
       }
       pairing.enter(() =>
         args.onDragEnter?.({
           source: decorateSource(source),
+          position,
           location,
           element,
         })
@@ -318,20 +365,23 @@ export function registerDragAndDropExternalTarget(
         return;
       }
       const args = getArgsRef();
+      const position = resolvePosition(location.current.input);
       if (args.indicator !== false) {
-        showIndicator();
+        showIndicator(position);
       }
       // Taking over as the deepest target without a fresh enter; see the element
       // target, which pairs the same way.
       pairing.enter(() =>
         args.onDragEnter?.({
           source: decorateSource(source),
+          position,
           location,
           element,
         })
       );
       args.onDrag?.({
         source: decorateSource(source),
+        position,
         location,
         element,
       });
@@ -348,6 +398,7 @@ export function registerDragAndDropExternalTarget(
       }
       getArgsRef().onDrop?.({
         source: decorateSource(source),
+        position: resolvePosition(location.current.input),
         location,
         element,
       });
@@ -396,9 +447,22 @@ export function registerDragAndDropExternalTarget(
  * }}>...</div>
  * ```
  *
+ * A slot rather than a destination — `axis` opts into the element target's
+ * before/after position, for a row an incoming payload should land beside:
+ *
+ * ```hbs
+ * <li {{dDragAndDropExternalTarget
+ *   accepts="urls"
+ *   axis="y"
+ *   onDrop=this.insertBeside
+ * }}>...</li>
+ * ```
+ *
  * Nested targets: only the deepest accepted target receives the
  * lifecycle callbacks, so an ancestor decorated with this modifier
- * doesn't double-handle a drop the child already claimed.
+ * doesn't double-handle a drop the child already claimed. An ancestor that
+ * should stay lit throughout should therefore read `@service dragAndDrop`
+ * rather than register a target of its own.
  *
  * Guide to choosing between the gesture primitives:
  * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`

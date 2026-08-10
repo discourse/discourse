@@ -44,7 +44,14 @@
   }
 }
 
-[data-drop-target] {
+/* Both target flavours draw from one position vocabulary, because "a drop would
+   land above this row" means the same thing whether the payload came from
+   another element or from outside the window. An external target only reaches
+   these once it has been given an `axis` or a `position`; without one it gets
+   the single class below instead. */
+
+[data-drop-target],
+[data-drop-target-external] {
   &.--drag-above {
     position: relative;
 

@@ -8,7 +8,9 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   centerOf,
   dragEvent,
+  externalDragOver,
   simulateDrag,
+  simulateExternalDrag,
 } from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
 import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
 import { registerDragAndDropMonitor } from "discourse/ui-kit/modifiers/d-drag-and-drop-monitor";
@@ -1695,17 +1697,6 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       return dataTransfer;
     }
 
-    async function externalDrop(selector, dataTransfer) {
-      // No `dragstart`: a drag beginning outside the page is what routes it to
-      // the external adapter rather than the element one.
-      for (const type of ["dragenter", "dragover", "drop"]) {
-        await dragEvent(selector, type, {
-          dataTransfer,
-          ...centerOf(selector),
-        });
-      }
-    }
-
     test("hands the consumer a payload it can read without importing the library", async function (assert) {
       let seen = null;
       const onDrop = ({ source }) => {
@@ -1724,7 +1715,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         </template>
       );
 
-      await externalDrop("#ext", fileTransfer());
+      await simulateExternalDrag("#ext", { dataTransfer: fileTransfer() });
 
       assert.deepEqual(
         seen,
@@ -1751,7 +1742,9 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         </template>
       );
 
-      await externalDrop("#files-only", textTransfer());
+      await simulateExternalDrag("#files-only", {
+        dataTransfer: textTransfer(),
+      });
 
       assert.deepEqual(
         drops,
@@ -1765,7 +1758,9 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
           "and it lights no indicator on the way past"
         );
 
-      await externalDrop("#text-only", textTransfer());
+      await simulateExternalDrag("#text-only", {
+        dataTransfer: textTransfer(),
+      });
 
       assert.deepEqual(
         drops,
@@ -1792,7 +1787,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         </template>
       );
 
-      await externalDrop("#ext", fileTransfer());
+      await simulateExternalDrag("#ext", { dataTransfer: fileTransfer() });
 
       assert.strictEqual(drops, 0, "the synchronous gate refuses the drop");
     });
@@ -1815,14 +1810,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       );
 
       const dataTransfer = fileTransfer();
-      await dragEvent("#ext", "dragenter", {
-        dataTransfer,
-        ...centerOf("#ext"),
-      });
-      await dragEvent("#ext", "dragover", {
-        dataTransfer,
-        ...centerOf("#ext"),
-      });
+      await externalDragOver("#ext", { dataTransfer });
 
       assert
         .dom("#ext")
@@ -1837,6 +1825,246 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         drops,
         1,
         "suppressing the indicator does not suppress the drop"
+      );
+    });
+
+    test("external drop position resolves either side of the cursor midpoint", async function (assert) {
+      const drops = [];
+      const onDrop = (payload) => drops.push(payload.position);
+
+      await render(
+        <template>
+          <div
+            id="ext"
+            style="height: 100px"
+            {{dDragAndDropExternalTarget accepts="text" axis="y" onDrop=onDrop}}
+          >ext</div>
+        </template>
+      );
+
+      const rect = find("#ext").getBoundingClientRect();
+
+      await simulateExternalDrag("#ext", {
+        dataTransfer: textTransfer(),
+        coordinates: { clientY: rect.top + 5 },
+      });
+      await simulateExternalDrag("#ext", {
+        dataTransfer: textTransfer(),
+        coordinates: { clientY: rect.top + rect.height - 5 },
+      });
+
+      assert.deepEqual(
+        drops,
+        ["before", "after"],
+        "an external drop lands before or after the target depending on which side of its midpoint the cursor is"
+      );
+    });
+
+    test("external drop position drives the same indicator classes the element target uses", async function (assert) {
+      await render(
+        <template>
+          <div
+            id="ext"
+            style="height: 100px"
+            {{dDragAndDropExternalTarget accepts="text" axis="y"}}
+          >ext</div>
+        </template>
+      );
+
+      const rect = find("#ext").getBoundingClientRect();
+      const dataTransfer = textTransfer();
+
+      await externalDragOver("#ext", {
+        dataTransfer,
+        coordinates: { clientY: rect.top + 5 },
+      });
+
+      assert
+        .dom("#ext")
+        .hasClass("--drag-above", "the indicator marks the upper half")
+        .doesNotHaveClass(
+          "--drag-over-external",
+          "and the positionless hover class is not also applied"
+        );
+
+      await externalDragOver("#ext", {
+        dataTransfer,
+        coordinates: { clientY: rect.top + rect.height - 5 },
+      });
+
+      assert
+        .dom("#ext")
+        .hasClass("--drag-below", "crossing the midpoint swaps the indicator")
+        .doesNotHaveClass(
+          "--drag-above",
+          "rather than accumulating both positions"
+        );
+    });
+
+    test("external drop position honours the x axis", async function (assert) {
+      const drops = [];
+      const onDrop = (payload) => drops.push(payload.position);
+
+      await render(
+        <template>
+          <div
+            id="ext"
+            style="width: 200px"
+            {{dDragAndDropExternalTarget accepts="text" axis="x" onDrop=onDrop}}
+          >ext</div>
+        </template>
+      );
+
+      const rect = find("#ext").getBoundingClientRect();
+
+      await simulateExternalDrag("#ext", {
+        dataTransfer: textTransfer(),
+        coordinates: { clientX: rect.left + 5 },
+      });
+
+      assert.deepEqual(
+        drops,
+        ["before"],
+        "the midpoint is measured along the named axis"
+      );
+      assert
+        .dom("#ext")
+        .doesNotHaveClass(
+          "--drag-above",
+          "and the class comes from the x vocabulary, not the y one"
+        );
+    });
+
+    test("external drop position takes a fixed position over the midpoint", async function (assert) {
+      const drops = [];
+      const onDrop = (payload) => drops.push(payload.position);
+
+      await render(
+        <template>
+          <div
+            id="ext"
+            style="height: 100px"
+            {{dDragAndDropExternalTarget
+              accepts="text"
+              position="inside"
+              onDrop=onDrop
+            }}
+          >ext</div>
+        </template>
+      );
+
+      const rect = find("#ext").getBoundingClientRect();
+      const dataTransfer = textTransfer();
+
+      await externalDragOver("#ext", {
+        dataTransfer,
+        coordinates: { clientY: rect.top + 5 },
+      });
+
+      assert
+        .dom("#ext")
+        .hasClass(
+          "--drag-inside",
+          "a fixed position ignores which half the cursor is in"
+        );
+
+      await dragEvent("#ext", "drop", {
+        dataTransfer,
+        clientY: rect.top + 5,
+        clientX: rect.left + 5,
+      });
+
+      assert.deepEqual(drops, ["inside"], "and reports itself on the drop");
+    });
+
+    test("external drop position is null once the drag leaves", async function (assert) {
+      const seen = [];
+      const onDragEnter = (payload) => seen.push(["enter", payload.position]);
+      const onDragLeave = (payload) => seen.push(["leave", payload.position]);
+
+      await render(
+        <template>
+          <div
+            id="ext"
+            style="height: 100px"
+            {{dDragAndDropExternalTarget
+              accepts="text"
+              axis="y"
+              onDragEnter=onDragEnter
+              onDragLeave=onDragLeave
+            }}
+          >ext</div>
+        </template>
+      );
+
+      const rect = find("#ext").getBoundingClientRect();
+      const dataTransfer = textTransfer();
+
+      await externalDragOver("#ext", {
+        dataTransfer,
+        coordinates: { clientY: rect.top + 5 },
+      });
+      await dragEvent("#ext", "dragleave", {
+        dataTransfer,
+        ...centerOf("#ext"),
+      });
+
+      assert.deepEqual(
+        seen,
+        [
+          ["enter", "before"],
+          ["leave", null],
+        ],
+        "the position is where a drop would have landed while hovering, and nothing once there is nowhere to land"
+      );
+      assert
+        .dom("#ext")
+        .doesNotHaveClass("--drag-above", "and the indicator is dropped");
+    });
+
+    test("external drop position stays out of the way when neither arg is given", async function (assert) {
+      const drops = [];
+      const onDrop = (payload) => drops.push(payload.position);
+
+      await render(
+        <template>
+          <div
+            id="ext"
+            style="height: 100px"
+            {{dDragAndDropExternalTarget accepts="text" onDrop=onDrop}}
+          >ext</div>
+        </template>
+      );
+
+      const rect = find("#ext").getBoundingClientRect();
+      const dataTransfer = textTransfer();
+
+      await externalDragOver("#ext", {
+        dataTransfer,
+        coordinates: { clientY: rect.top + 5 },
+      });
+
+      assert
+        .dom("#ext")
+        .hasClass(
+          "--drag-over-external",
+          "a target that asked for no position keeps the single hover class"
+        )
+        .doesNotHaveClass(
+          "--drag-above",
+          "rather than being opted into the positional vocabulary"
+        );
+
+      await dragEvent("#ext", "drop", {
+        dataTransfer,
+        clientY: rect.top + 5,
+        clientX: rect.left + 5,
+      });
+
+      assert.deepEqual(
+        drops,
+        [null],
+        "and reports no position, because it was never asked to resolve one"
       );
     });
   });
