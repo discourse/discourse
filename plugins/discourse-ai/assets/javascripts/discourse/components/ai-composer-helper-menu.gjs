@@ -11,6 +11,7 @@ import AiHelperOptionsList from "../components/ai-helper-options-list";
 import ModalDiffModal from "../components/modal/diff-modal";
 import ThumbnailSuggestion from "../components/modal/thumbnail-suggestions";
 import AiTitleSuggestionsMenu from "../components/suggestion-menus/ai-title-suggestions-menu";
+import { MIN_CHARACTER_COUNT } from "../lib/ai-helper-suggestions";
 
 export default class AiComposerHelperMenu extends Component {
   @service modal;
@@ -66,7 +67,13 @@ export default class AiComposerHelperMenu extends Component {
       prompts = prompts.filter((p) => p.name !== "custom_prompt");
     }
 
-    if (!this.siteSettings.ai_helper_enabled_features.includes("suggestions")) {
+    const canSuggestTitles =
+      this.siteSettings.ai_helper_enabled_features.includes("suggestions") &&
+      this.composer.model?.canEditTitle &&
+      !this.composer.model?.disableTitleInput &&
+      this.composer.model?.reply?.length > MIN_CHARACTER_COUNT;
+
+    if (!canSuggestTitles) {
       prompts = prompts.filter((p) => p.name !== "generate_titles");
     }
 
