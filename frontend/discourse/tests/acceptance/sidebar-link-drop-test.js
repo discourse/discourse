@@ -163,3 +163,83 @@ acceptance("Sidebar web link drop", function (needs) {
       .doesNotExist("does not also create a new section");
   });
 });
+
+/**
+ * A public section, which only an admin may edit. Whether a link can be dropped
+ * into one has to follow that, or the drag offers a new section to the very
+ * people who could have edited this one.
+ */
+function publicSection() {
+  return [
+    {
+      id: 910,
+      title: "Announcements",
+      slug: "announcements",
+      public: true,
+      section_type: null,
+      links: [
+        {
+          id: 911,
+          name: "Existing link",
+          value: "https://example.org/existing",
+          icon: "link",
+          external: true,
+          segment: "primary",
+        },
+      ],
+    },
+  ];
+}
+
+const PUBLIC_SECTION = '.sidebar-section[data-section-name="announcements"]';
+
+acceptance("Sidebar web link drop | public section, admin", function (needs) {
+  needs.user({ admin: true, sidebar_sections: publicSection() });
+  needs.settings({ navigation_menu: "sidebar" });
+
+  test("a public section takes a dropped link for someone who can edit it", async function (assert) {
+    await visit("/");
+
+    await externalDragOver(PUBLIC_SECTION, {
+      dataTransfer: linkDataTransfer(),
+    });
+
+    assert
+      .dom(PUBLIC_SECTION)
+      .hasClass(
+        "is-link-drop-active",
+        "an admin can edit a public section, so a link dropped on it goes in"
+      );
+    assert
+      .dom(".sidebar-link-drop-target")
+      .doesNotExist("and is not offered a new section instead");
+  });
+});
+
+acceptance(
+  "Sidebar web link drop | public section, regular user",
+  function (needs) {
+    needs.user({ admin: false, sidebar_sections: publicSection() });
+    needs.settings({ navigation_menu: "sidebar" });
+
+    test("a public section refuses a dropped link for someone who cannot edit it", async function (assert) {
+      await visit("/");
+
+      await externalDragOver(PUBLIC_SECTION, {
+        dataTransfer: linkDataTransfer(),
+      });
+
+      assert
+        .dom(PUBLIC_SECTION)
+        .doesNotHaveClass(
+          "is-link-drop-active",
+          "a section this user cannot edit does not take the drop"
+        );
+      assert
+        .dom(".sidebar-link-drop-target")
+        .exists(
+          "the sidebar claims it instead, offering a section of their own"
+        );
+    });
+  }
+);

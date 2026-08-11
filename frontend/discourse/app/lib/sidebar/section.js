@@ -41,8 +41,24 @@ export default class Section {
     return this.section.public && this.currentUser?.staff;
   }
 
+  /**
+   * Whether the current user may change this section's links at all. A public
+   * section is an admin's to edit; anyone else only owns their own.
+   */
+  get #canEditLinks() {
+    return !this.section.public || this.currentUser?.admin;
+  }
+
+  /**
+   * Dropping a link onto a section is a way of editing it, so it follows the
+   * same permission. Offering a section that cannot be edited would leave an
+   * admin dragging onto a public section and being handed a new one instead.
+   *
+   * A built-in section is excluded on top of that: its links come from the
+   * server and are not the user's to add to.
+   */
   get canAcceptLinkDrop() {
-    return this.section.public === false && !this.section.section_type;
+    return Boolean(this.#canEditLinks) && !this.section.section_type;
   }
 
   async openForm(link, linkDropIndex) {
@@ -90,7 +106,7 @@ export default class Section {
   }
 
   get headerActions() {
-    if (!this.section.public || this.currentUser?.admin) {
+    if (this.#canEditLinks) {
       return [
         {
           action: () => this.openForm(),
