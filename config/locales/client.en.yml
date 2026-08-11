@@ -7289,6 +7289,7 @@ en:
           browsers: "Browser"
           ip_addresses: "IP address"
         filters:
+          traffic_type: "Traffic type"
           top_url: "Top URL"
           entry_url: "Entry URL"
           referrer: "Referrer"

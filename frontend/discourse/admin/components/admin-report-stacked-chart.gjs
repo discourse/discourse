@@ -128,6 +128,11 @@ export default class AdminReportStackedChart extends Component {
               const ci = legend.chart;
               const req = chartData[index].req;
 
+              if (chartOptions.onLegendClick) {
+                chartOptions.onLegendClick(req);
+                return;
+              }
+
               if (ci.isDatasetVisible(index)) {
                 ci.hide(index);
                 if (!chartOptions.hiddenLabels.includes(req)) {

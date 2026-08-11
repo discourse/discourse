@@ -9,7 +9,7 @@ class AdminDashboardSiteTrafficExplorer
   STATEMENT_TIMEOUT_MS = 10_000
   private_constant :STATEMENT_TIMEOUT_MS
 
-  FILTER_KEYS = %i[top_url entry_url referrer country network browser ip].freeze
+  FILTER_KEYS = %i[traffic_type top_url entry_url referrer country network browser ip].freeze
   private_constant :FILTER_KEYS
 
   FILTER_DIMENSIONS = {
@@ -26,9 +26,13 @@ class AdminDashboardSiteTrafficExplorer
   BROWSER_VALUES = %w[edge firefox chrome safari unknown].freeze
   private_constant :BROWSER_VALUES
 
+  TRAFFIC_TYPE_VALUES = %w[logged_in anonymous likely_crawler].freeze
+  private_constant :TRAFFIC_TYPE_VALUES
+
   params do
     attribute :start_date, :date
     attribute :end_date, :date
+    attribute :traffic_type, :string
     attribute :top_url, :string
     attribute :entry_url, :string
     attribute :referrer, :string
@@ -58,6 +62,10 @@ class AdminDashboardSiteTrafficExplorer
       raise Discourse::InvalidParameters.new(key) if value.blank?
 
       case key
+      when :traffic_type
+        traffic_type = value.to_s
+        raise Discourse::InvalidParameters.new(key) if !TRAFFIC_TYPE_VALUES.include?(traffic_type)
+        traffic_type
       when :top_url, :entry_url
         BrowserPageviewReferrerInspector.normalize_site_path(value) ||
           raise(Discourse::InvalidParameters.new(key))
@@ -131,6 +139,7 @@ class AdminDashboardSiteTrafficExplorer
       network_asn: filters[:network],
       browser: filters[:browser],
       ip_address: filters[:ip],
+      traffic_type: filters[:traffic_type],
       current_hostname: BrowserPageviewReferrerInspector.normalize_host(Discourse.current_hostname),
       crawler_detection_enabled: UpcomingChanges.enabled?(:improved_crawler_detection),
       crawler_threshold: CrawlerScorer::BOT_SCORE_THRESHOLD,
@@ -278,6 +287,23 @@ class AdminDashboardSiteTrafficExplorer
           AND (:network_asn IS NULL OR asn = :network_asn)
           AND (:browser IS NULL OR browser = :browser)
           AND (:ip_address IS NULL OR host(ip_address) = :ip_address)
+          AND (
+            :traffic_type IS NULL
+            OR (
+              :traffic_type = 'logged_in'
+              AND NOT likely_crawler
+              AND user_id IS NOT NULL
+            )
+            OR (
+              :traffic_type = 'anonymous'
+              AND NOT likely_crawler
+              AND user_id IS NULL
+            )
+            OR (
+              :traffic_type = 'likely_crawler'
+              AND likely_crawler
+            )
+          )
       ),
       sessions AS (
         SELECT session_id, COUNT(*) AS pageviews
@@ -298,7 +324,9 @@ class AdminDashboardSiteTrafficExplorer
       ),
       traffic_summary AS (
         SELECT
-          COUNT(*) FILTER (WHERE NOT likely_crawler)::integer AS pageviews,
+          COUNT(*) FILTER (
+            WHERE :traffic_type IS NOT NULL OR NOT likely_crawler
+          )::integer AS pageviews,
           COUNT(*) FILTER (
             WHERE NOT likely_crawler AND user_id IS NOT NULL
           )::integer AS logged_in_pageviews
@@ -307,7 +335,9 @@ class AdminDashboardSiteTrafficExplorer
       series_rows AS (
         SELECT
           created_at::date AS date,
-          COUNT(*) FILTER (WHERE NOT likely_crawler)::integer AS pageviews,
+          COUNT(*) FILTER (
+            WHERE :traffic_type IS NOT NULL OR NOT likely_crawler
+          )::integer AS pageviews,
           COUNT(*) FILTER (
             WHERE NOT likely_crawler AND user_id IS NOT NULL
           )::integer AS logged_in_human_pageviews,
@@ -544,12 +574,14 @@ class AdminDashboardSiteTrafficExplorer
       next if value.nil?
 
       canonical_value = key == :network ? "AS#{value}" : value
-      dimension = FILTER_DIMENSIONS.fetch(key)
-      {
-        key: key,
-        value: canonical_value,
-        label: dimension_label(dimension, canonical_value, representative_ips[key.to_s]),
-      }
+      label =
+        if key == :traffic_type
+          I18n.t("admin_site_traffic_explorer.traffic_types.#{canonical_value}")
+        else
+          dimension = FILTER_DIMENSIONS.fetch(key)
+          dimension_label(dimension, canonical_value, representative_ips[key.to_s])
+        end
+      { key: key, value: canonical_value, label: label }
     end
   end
 

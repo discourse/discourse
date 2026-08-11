@@ -1491,7 +1491,7 @@ RSpec.describe Admin::DashboardController do
       before { sign_in(admin) }
 
       it "summarizes every traffic dimension for the selected dates" do
-        get "/admin/dashboard/traffic.json", params: request_params
+        get "/admin/dashboard/site-traffic-explorer.json", params: request_params
 
         expect(status: response.status, body: response.parsed_body).to eq(
           status: 200,
@@ -1556,7 +1556,8 @@ RSpec.describe Admin::DashboardController do
       end
 
       it "applies the direct referrer filter" do
-        get "/admin/dashboard/traffic.json", params: request_params.merge(referrer: "")
+        get "/admin/dashboard/site-traffic-explorer.json",
+            params: request_params.merge(referrer: "")
 
         expect(status: response.status, body: response.parsed_body).to eq(
           status: 200,
@@ -1629,7 +1630,8 @@ RSpec.describe Admin::DashboardController do
           created_at: "2026-05-10 10:00:00",
         )
 
-        get "/admin/dashboard/traffic.json", params: request_params.merge(start_date: "2026-01-01")
+        get "/admin/dashboard/site-traffic-explorer.json",
+            params: request_params.merge(start_date: "2026-01-01")
 
         expect(status: response.status, body: response.parsed_body).to eq(
           status: 200,
@@ -1737,7 +1739,7 @@ RSpec.describe Admin::DashboardController do
       end
 
       it "returns no more than the configured pageview cap" do
-        get "/admin/dashboard/traffic.json", params: request_params
+        get "/admin/dashboard/site-traffic-explorer.json", params: request_params
 
         expect(status: response.status, body: response.parsed_body).to eq(
           status: 200,
@@ -1830,7 +1832,8 @@ RSpec.describe Admin::DashboardController do
         sign_in(admin)
         SiteSetting.stubs(:admin_site_traffic_event_cap).returns(2)
 
-        get "/admin/dashboard/traffic.json", params: request_params.merge(start_date: "2026-01-01")
+        get "/admin/dashboard/site-traffic-explorer.json",
+            params: request_params.merge(start_date: "2026-01-01")
 
         expect(status: response.status, body: response.parsed_body).to eq(
           status: 200,
@@ -1915,7 +1918,7 @@ RSpec.describe Admin::DashboardController do
       sign_in(admin)
       DB.stubs(:query_hash).raises(ActiveRecord::QueryCanceled, "statement timeout")
 
-      get "/admin/dashboard/traffic.json", params: request_params
+      get "/admin/dashboard/site-traffic-explorer.json", params: request_params
 
       expect(status: response.status, body: response.parsed_body).to eq(
         status: 503,
@@ -1928,7 +1931,7 @@ RSpec.describe Admin::DashboardController do
     it "does not allow moderators to read traffic details" do
       sign_in(moderator)
 
-      get "/admin/dashboard/traffic.json", params: request_params
+      get "/admin/dashboard/site-traffic-explorer.json", params: request_params
 
       expect(status: response.status, body: response.parsed_body).to eq(
         status: 404,
@@ -1942,7 +1945,7 @@ RSpec.describe Admin::DashboardController do
     it "does not allow regular users to read traffic details" do
       sign_in(user)
 
-      get "/admin/dashboard/traffic.json", params: request_params
+      get "/admin/dashboard/site-traffic-explorer.json", params: request_params
 
       expect(status: response.status, body: response.parsed_body).to eq(
         status: 404,
@@ -1954,7 +1957,7 @@ RSpec.describe Admin::DashboardController do
     end
 
     it "does not allow anonymous users to read traffic details" do
-      get "/admin/dashboard/traffic.json", params: request_params
+      get "/admin/dashboard/site-traffic-explorer.json", params: request_params
 
       expect(status: response.status, body: response.parsed_body).to eq(
         status: 404,
@@ -1969,7 +1972,7 @@ RSpec.describe Admin::DashboardController do
       sign_in(admin)
       SiteSetting.dashboard_improvements = false
 
-      get "/admin/dashboard/traffic.json", params: request_params
+      get "/admin/dashboard/site-traffic-explorer.json", params: request_params
 
       expect(status: response.status, body: response.parsed_body).to eq(
         status: 404,

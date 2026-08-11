@@ -65,6 +65,7 @@ class Admin::DashboardController < Admin::StaffController
       params.permit(
         :start_date,
         :end_date,
+        :traffic_type,
         :top_url,
         :entry_url,
         :referrer,

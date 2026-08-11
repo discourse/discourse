@@ -3,7 +3,7 @@
 module PageObjects
   module Pages
     class AdminSiteTrafficExplorer < PageObjects::Pages::Base
-      PATH = "/admin/dashboard/traffic"
+      PATH = "/admin/dashboard/site-traffic-explorer"
       METRIC_KEYS = {
         "Pageviews" => "pageviews",
         "Distinct sessions" => "distinct_sessions",
@@ -12,6 +12,7 @@ module PageObjects
         "Average session duration" => "average_session_duration",
       }.freeze
       FILTER_LABELS = {
+        "traffic_type" => "Traffic type",
         "top_url" => "Top URL",
         "entry_url" => "Entry URL",
         "referrer" => "Referrer",
@@ -21,8 +22,10 @@ module PageObjects
         "ip" => "IP address",
       }.freeze
 
-      def visit(start_date:, end_date:)
-        page.visit("#{PATH}?end_date=#{end_date}&range=custom&start_date=#{start_date}")
+      def visit(start_date:, end_date:, traffic_type: nil)
+        path = "#{PATH}?end_date=#{end_date}&range=custom&start_date=#{start_date}"
+        path += "&traffic_type=#{traffic_type}" if traffic_type
+        page.visit(path)
         self
       end
 

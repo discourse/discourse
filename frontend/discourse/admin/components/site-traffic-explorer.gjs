@@ -15,6 +15,11 @@ import I18n, { i18n } from "discourse-i18n";
 const SKELETON_METRICS = Array.from({ length: 4 });
 const SKELETON_BREAKDOWNS = Array.from({ length: 3 });
 const SKELETON_ROWS = Array.from({ length: 5 });
+const TRAFFIC_TYPE_BY_SERIES = {
+  page_view_logged_in_browser: "logged_in",
+  page_view_anon_browser: "anonymous",
+  page_view_likely_crawler: "likely_crawler",
+};
 
 export default class SiteTrafficExplorer extends Component {
   @service a11y;
@@ -87,7 +92,19 @@ export default class SiteTrafficExplorer extends Component {
   }
 
   get chartOptions() {
-    return { hideYAxisGridLines: true };
+    const activeSeries = Object.entries(TRAFFIC_TYPE_BY_SERIES).find(
+      ([, trafficType]) => trafficType === this.args.trafficType
+    )?.[0];
+
+    return {
+      hideYAxisGridLines: true,
+      hiddenLabels: activeSeries
+        ? Object.keys(TRAFFIC_TYPE_BY_SERIES).filter(
+            (series) => series !== activeSeries
+          )
+        : [],
+      onLegendClick: this.toggleTrafficType,
+    };
   }
 
   get series() {
@@ -193,6 +210,11 @@ export default class SiteTrafficExplorer extends Component {
     }
   }
 
+  @action
+  toggleTrafficType(series) {
+    this.args.toggleTrafficType(TRAFFIC_TYPE_BY_SERIES[series]);
+  }
+
   #number(value) {
     return I18n.toNumber(value ?? 0, { precision: 0 });
   }
@@ -223,7 +245,7 @@ export default class SiteTrafficExplorer extends Component {
             @label={{i18n "admin.dashboard.title"}}
           />
           <DBreadcrumbsItem
-            @path="/admin/dashboard/traffic"
+            @path="/admin/dashboard/site-traffic-explorer"
             @label={{i18n "admin.site_traffic_explorer.title"}}
           />
         </:breadcrumbs>

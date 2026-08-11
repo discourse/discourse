@@ -17,7 +17,7 @@ export default function () {
       });
     });
     this.route("adminSiteTraffic", {
-      path: "/dashboard/traffic",
+      path: "/dashboard/site-traffic-explorer",
       resetNamespace: true,
     });
 

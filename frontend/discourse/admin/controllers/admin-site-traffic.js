@@ -12,6 +12,7 @@ import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 
 const FILTER_KEYS = [
+  "traffic_type",
   "top_url",
   "entry_url",
   "referrer",
@@ -35,6 +36,7 @@ export default class AdminSiteTrafficController extends Controller {
   @tracked range = DEFAULT_PERIOD;
   @tracked start_date = null;
   @tracked end_date = null;
+  @tracked traffic_type = null;
   @tracked top_url = null;
   @tracked entry_url = null;
   @tracked referrer = null;
@@ -154,9 +156,12 @@ export default class AdminSiteTrafficController extends Controller {
     this.fetchError = null;
 
     try {
-      const traffic = await ajax("/admin/dashboard/traffic.json", {
-        data: this.#requestParams(),
-      });
+      const traffic = await ajax(
+        "/admin/dashboard/site-traffic-explorer.json",
+        {
+          data: this.#requestParams(),
+        }
+      );
 
       if (fetchId === this.#fetchId) {
         this.traffic = this.#localizeCountryLabels(traffic);
@@ -194,6 +199,12 @@ export default class AdminSiteTrafficController extends Controller {
   @action
   setFilter(key, row) {
     this[key] = row.value;
+    this.fetchTraffic();
+  }
+
+  @action
+  toggleTrafficType(trafficType) {
+    this.traffic_type = this.traffic_type === trafficType ? null : trafficType;
     this.fetchTraffic();
   }
 

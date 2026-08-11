@@ -150,7 +150,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
     traffic.click_see_details
 
     expect(page).to have_current_path(
-      "/admin/dashboard/traffic?end_date=2026-05-12&range=custom&start_date=2026-05-01",
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&start_date=2026-05-01",
     )
   end
 

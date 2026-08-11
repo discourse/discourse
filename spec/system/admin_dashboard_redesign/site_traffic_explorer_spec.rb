@@ -190,6 +190,19 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_series_total(label: "likely-crawler", value: "1")
     expect(traffic).to have_no_partial_data_warning
 
+    traffic.visit(start_date: "2026-05-01", end_date: "2026-05-12", traffic_type: "likely_crawler")
+    expect(traffic).to have_filter_pill(dimension: "traffic_type", label: "Likely crawlers")
+    expect(traffic).to have_metric(label: "Pageviews", value: "1")
+    expect(traffic).to have_metric(label: "Distinct sessions", value: "1")
+    expect(traffic).to have_series_total(label: "logged-in-human", value: "0")
+    expect(traffic).to have_series_total(label: "anonymous-human", value: "0")
+    expect(traffic).to have_series_total(label: "likely-crawler", value: "1")
+    expect(page).to have_current_path(
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&start_date=2026-05-01&traffic_type=likely_crawler",
+    )
+    traffic.remove_filter("traffic_type")
+    expect(traffic).to have_metric(label: "Pageviews", value: "3")
+
     expect(traffic).to have_card_tabs(card: "acquisition", tabs: %w[Referrers Countries Networks])
     expect(traffic).to have_card_tabs(card: "pages", tabs: ["Top URLs", "Entry URLs"])
     expect(traffic).to have_card_tabs(card: "visitors", tabs: ["Browsers", "IP addresses"])
@@ -205,7 +218,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_filter_pill(dimension: "entry_url", label: "/latest")
     expect(traffic).to have_metric(label: "Pageviews", value: "1")
     expect(page).to have_current_path(
-      "/admin/dashboard/traffic?end_date=2026-05-12&entry_url=%2Flatest&range=custom&start_date=2026-05-01",
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&entry_url=%2Flatest&range=custom&start_date=2026-05-01",
     )
     traffic.remove_filter("entry_url")
 
@@ -213,7 +226,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_filter_pill(dimension: "referrer", label: "Direct / unknown")
     expect(traffic).to have_metric(label: "Pageviews", value: "1")
     expect(page).to have_current_path(
-      "/admin/dashboard/traffic?end_date=2026-05-12&range=custom&referrer=&start_date=2026-05-01",
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&referrer=&start_date=2026-05-01",
     )
     traffic.remove_filter("referrer")
 
@@ -221,7 +234,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_filter_pill(dimension: "referrer", label: "search.example")
     expect(traffic).to have_metric(label: "Pageviews", value: "1")
     expect(page).to have_current_path(
-      "/admin/dashboard/traffic?end_date=2026-05-12&range=custom&referrer=search.example&start_date=2026-05-01",
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&referrer=search.example&start_date=2026-05-01",
     )
     traffic.remove_filter("referrer")
 
@@ -230,7 +243,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_filter_pill(dimension: "network", label: "Example Network (AS64496)")
     expect(traffic).to have_metric(label: "Pageviews", value: "2")
     expect(page).to have_current_path(
-      "/admin/dashboard/traffic?end_date=2026-05-12&network=AS64496&range=custom&start_date=2026-05-01",
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&network=AS64496&range=custom&start_date=2026-05-01",
     )
     traffic.remove_filter("network")
 
@@ -239,7 +252,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_filter_pill(dimension: "browser", label: "Chrome")
     expect(traffic).to have_metric(label: "Pageviews", value: "2")
     expect(page).to have_current_path(
-      "/admin/dashboard/traffic?browser=chrome&end_date=2026-05-12&range=custom&start_date=2026-05-01",
+      "/admin/dashboard/site-traffic-explorer?browser=chrome&end_date=2026-05-12&range=custom&start_date=2026-05-01",
     )
     traffic.remove_filter("browser")
 
@@ -251,7 +264,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_metric(label: "Distinct sessions", value: "2")
     expect(traffic).to have_metric(label: "Bounce rate", value: "50%")
     expect(page).to have_current_path(
-      "/admin/dashboard/traffic?country=US&end_date=2026-05-12&range=custom&start_date=2026-05-01",
+      "/admin/dashboard/site-traffic-explorer?country=US&end_date=2026-05-12&range=custom&start_date=2026-05-01",
     )
 
     traffic.remove_filter("country")
@@ -275,14 +288,14 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_metric(label: "Distinct sessions", value: "1")
     expect(traffic).to have_metric(label: "Bounce rate", value: "0%")
     expect(page).to have_current_path(
-      "/admin/dashboard/traffic?country=US&end_date=2026-05-12&range=custom&start_date=2026-05-01&top_url=%2Ftop",
+      "/admin/dashboard/site-traffic-explorer?country=US&end_date=2026-05-12&range=custom&start_date=2026-05-01&top_url=%2Ftop",
     )
 
     traffic.select_tab(card: "visitors", tab: "IP addresses")
     traffic.filter_row(card: "visitors", label: "192.0.2.1")
     expect(traffic).to have_filter_pill(dimension: "ip", label: "192.0.2.1")
     expect(page).to have_current_path(
-      "/admin/dashboard/traffic?country=US&end_date=2026-05-12&ip=192.0.2.1&range=custom&start_date=2026-05-01&top_url=%2Ftop",
+      "/admin/dashboard/site-traffic-explorer?country=US&end_date=2026-05-12&ip=192.0.2.1&range=custom&start_date=2026-05-01&top_url=%2Ftop",
     )
 
     page.refresh
@@ -292,7 +305,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_filter_pill(dimension: "ip", label: "192.0.2.1")
     expect(traffic).to have_metric(label: "Pageviews", value: "1")
     expect(page).to have_current_path(
-      "/admin/dashboard/traffic?country=US&end_date=2026-05-12&ip=192.0.2.1&range=custom&start_date=2026-05-01&top_url=%2Ftop",
+      "/admin/dashboard/site-traffic-explorer?country=US&end_date=2026-05-12&ip=192.0.2.1&range=custom&start_date=2026-05-01&top_url=%2Ftop",
     )
 
     traffic.remove_filter("country")
@@ -305,13 +318,13 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     traffic.select_date_preset("Last 7 days")
 
     expect(traffic).to have_date_range("Last 7 days")
-    expect(page).to have_current_path("/admin/dashboard/traffic?range=last_7_days")
+    expect(page).to have_current_path("/admin/dashboard/site-traffic-explorer?range=last_7_days")
 
     traffic.select_custom_date_range(start_date: "2026-05-01", end_date: "2026-05-12")
 
     expect(traffic).to have_date_range("May 1, 2026 – May 12, 2026")
     expect(page).to have_current_path(
-      "/admin/dashboard/traffic?end_date=2026-05-12&range=custom&start_date=2026-05-01",
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&start_date=2026-05-01",
     )
   end
 
