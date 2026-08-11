@@ -121,7 +121,7 @@ jobs:
           git config --global user.name "Discourse CI"
 
       - name: Start redis
-        run: redis-server /etc/redis/redis.conf &
+        run: redis-server /etc/redis/redis.conf --daemonize yes --logfile ""
 
       - name: Start Postgres
         run: |
@@ -289,6 +289,8 @@ jobs:
 
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
+        env:
+          LD_PRELOAD: /usr/lib/libjemalloc.so.1
         run: bin/turbo_rspec --use-runtime-info --verbose --format=progress --profile=50
 
       - name: Prepare Chrome environment for QUnit
@@ -310,6 +312,8 @@ jobs:
 
       - name: Plugins RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
+        env:
+          LD_PRELOAD: /usr/lib/libjemalloc.so.1
         run: |
           bin/rake plugin:turbo_spec['*','--verbose --format=progress --use-runtime-info --profile=50']
 
@@ -338,12 +342,14 @@ jobs:
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
+          LD_PRELOAD: /usr/lib/libjemalloc.so.1
           CHECKOUT_TIMEOUT: 10
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
 
       - name: Core Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core-plugins'
         env:
+          LD_PRELOAD: /usr/lib/libjemalloc.so.1
           CHECKOUT_TIMEOUT: 10
         run: |
           RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
@@ -351,6 +357,7 @@ jobs:
       - name: Official Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'official-plugins'
         env:
+          LD_PRELOAD: /usr/lib/libjemalloc.so.1
           CHECKOUT_TIMEOUT: 10
         run: |
           RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="$(script/list_bundled_plugins '/*' | paste -sd, -)" --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
@@ -358,12 +365,14 @@ jobs:
       - name: Chat System Tests
         if: matrix.build_type == 'system' && matrix.target == 'chat'
         env:
+          LD_PRELOAD: /usr/lib/libjemalloc.so.1
           CHECKOUT_TIMEOUT: 10
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/chat/spec/system
 
       - name: Theme System Tests
         if: matrix.build_type == 'system' && matrix.target == 'themes'
         env:
+          LD_PRELOAD: /usr/lib/libjemalloc.so.1
           CHECKOUT_TIMEOUT: 10
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system themes/*/spec/system
 

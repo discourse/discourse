@@ -48,8 +48,7 @@ jobs:
           git config --global user.name "Discourse CI"
 
       - name: Start redis
-        run: |
-          redis-server /etc/redis/redis.conf &
+        run: redis-server /etc/redis/redis.conf --daemonize yes --logfile ""
 
       - name: Start Postgres
         run: |
@@ -123,4 +122,6 @@ jobs:
           fi
 
       - name: RSpec
+        env:
+          LD_PRELOAD: /usr/lib/libjemalloc.so.1
         run: bin/rspec --default-path migrations/spec
