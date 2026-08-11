@@ -525,6 +525,23 @@ RSpec.describe PostDestroyer do
       expect(history.created_by).to eq(Discourse.system_user)
     end
 
+    it "resolves reviewables whose type is no longer defined when the author deletes their post" do
+      reply = create_post(topic: post.topic)
+      reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
+      reviewable.update_columns(type: "ReviewableDoesntExist", type_source: "some-plugin")
+
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect(reply.reload.user_deleted).to eq(true)
+
+      reviewable = Reviewable.find(reviewable.id)
+      expect(reviewable).to be_a(Reviewable::UnknownType)
+      expect(reviewable).to be_ignored
+      expect(reviewable.type_source).to eq("some-plugin")
+      expect(reviewable.reviewable_scores.first.reviewed_by_id).to eq(Discourse.system_user.id)
+      expect(reviewable.reviewable_histories.last.reviewable_history_type).to eq("transitioned")
+    end
+
     it "does not restore reviewable when manually ignored by moderator" do
       reply = create_post(topic: post.topic)
       result = PostActionCreator.spam(coding_horror, reply)

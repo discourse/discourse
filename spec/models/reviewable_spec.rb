@@ -407,6 +407,35 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
+  describe "loading a reviewable whose type is no longer defined" do
+    fab!(:admin)
+    fab!(:reviewable, :reviewable_flagged_post)
+
+    before { reviewable.update_columns(type: "ReviewableDoesntExist", type_source: "some-plugin") }
+
+    it "loads it as an unknown type instead of raising" do
+      unknown = Reviewable.find(reviewable.id)
+
+      expect(unknown).to be_a(Reviewable::UnknownType)
+      expect(unknown.type).to eq("ReviewableDoesntExist")
+      expect(unknown.actions_for(admin.guardian).to_a).to be_empty
+    end
+
+    it "keeps the type and source when transitioned" do
+      unknown = Reviewable.find(reviewable.id)
+
+      expect(unknown.transition_to(:ignored, admin)).to eq(true)
+
+      expect(Reviewable.where(id: reviewable.id).pick(:type, :type_source)).to eq(
+        %w[ReviewableDoesntExist some-plugin],
+      )
+    end
+
+    it "is excluded from the review queue" do
+      expect(Reviewable.list_for(admin)).to be_empty
+    end
+  end
+
   describe ".unknown_types_and_sources" do
     it "returns an empty array when no unknown types are present" do
       expect(Reviewable.unknown_types_and_sources).to eq([])

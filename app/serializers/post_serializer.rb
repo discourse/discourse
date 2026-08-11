@@ -738,7 +738,11 @@ class PostSerializer < BasicPostSerializer
   end
 
   def reviewable
-    @reviewable ||= Reviewable.where(target: object).includes(:reviewable_scores).first
+    @reviewable ||=
+      Reviewable
+        .where(target: object, type: Reviewable.sti_names)
+        .includes(:reviewable_scores)
+        .first
   end
 
   def reviewable_scores
