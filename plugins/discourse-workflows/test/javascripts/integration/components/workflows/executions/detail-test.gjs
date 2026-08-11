@@ -73,7 +73,7 @@ module(
       assert
         .dom(".workflows-execution-detail__no-output")
         .hasText(
-          "This node produced no output data, so it did not pass any items to connected nodes. To pass an empty item instead, turn on Always output data in this node's Settings tab.",
+          "This node produced no output data, so the execution stopped and no items were passed to connected nodes. To continue the execution with an empty item, turn on Always output data in this node's Settings tab.",
           "the execution explains empty-output routing and how to emit an item"
         );
       assert

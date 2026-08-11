@@ -246,7 +246,7 @@ module(
       assert
         .dom(".workflows-context-panel__empty")
         .hasText(
-          "This node produced no output data, so it did not pass any items to connected nodes. To pass an empty item instead, turn on Always output data in this node's Settings tab.",
+          "This node produced no output data, so the execution stopped and no items were passed to connected nodes. To continue the execution with an empty item, turn on Always output data in this node's Settings tab.",
           "the empty state explains how to continue the execution"
         );
     });
@@ -323,7 +323,7 @@ module(
       assert
         .dom(".workflows-context-panel__empty")
         .hasText(
-          "This node produced no output data, so it did not pass any items to connected nodes. To pass an empty item instead, turn on Always output data in this node's Settings tab.",
+          "This node produced no output data, so the execution stopped and no items were passed to connected nodes. To continue the execution with an empty item, turn on Always output data in this node's Settings tab.",
           "the latest zero-item run explains how to continue the execution"
         );
     });
