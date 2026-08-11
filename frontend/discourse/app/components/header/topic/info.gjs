@@ -149,7 +149,10 @@ export default class Info extends Component {
               <div class="categories-wrapper">
                 <PluginOutlet
                   @name="header-categories-wrapper"
-                  @outletArgs={{lazyHash category=@topicInfo.category}}
+                  @outletArgs={{lazyHash
+                    category=@topicInfo.category
+                    topic=@topicInfo
+                  }}
                 >
                   {{#if @topicInfo.category.parentCategory}}
                     {{#if
