@@ -2,6 +2,14 @@ discourse_post_voting:
   post_voting_enabled:
     client: true
     default: false
+  post_voting_enabled_categories:
+    type: category_list
+    client: true
+    default: ""
+  post_voting_enabled_categories_include_subcategories:
+    type: bool
+    client: true
+    default: false
   post_voting_undo_vote_action_window:
     default: 10
   post_voting_comment_enabled:

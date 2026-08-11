@@ -14,6 +14,21 @@ enabled_site_setting :post_voting_enabled
 
 module ::PostVoting
   PLUGIN_NAME = "discourse-post-voting"
+
+  def self.post_voting_enabled_for?(category_id)
+    allowed_categories = allowed_category_ids
+    return true if allowed_categories.blank?
+
+    category_id.present? && allowed_categories.include?(category_id.to_i)
+  end
+
+  def self.allowed_category_ids
+    category_ids = SiteSetting.post_voting_enabled_categories_map
+    return category_ids if category_ids.blank?
+    return category_ids if !SiteSetting.post_voting_enabled_categories_include_subcategories
+
+    category_ids.flat_map { |category_id| Category.subcategory_ids(category_id) }.uniq
+  end
 end
 
 require_relative "lib/post_voting/engine"
@@ -219,7 +234,8 @@ after_initialize do
 
     category = Category.find_by(id: category_id)
 
-    if category&.create_as_post_voting_default || category&.only_post_voting_in_this_category
+    if PostVoting.post_voting_enabled_for?(category_id) &&
+         (category&.create_as_post_voting_default || category&.only_post_voting_in_this_category)
       args[:subtype] = Topic::POST_VOTING_SUBTYPE
     end
 

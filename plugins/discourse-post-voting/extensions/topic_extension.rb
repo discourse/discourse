@@ -55,7 +55,8 @@ module PostVoting
     end
 
     def is_post_voting?
-      SiteSetting.post_voting_enabled && subtype == Topic::POST_VOTING_SUBTYPE && !nested_view?
+      SiteSetting.post_voting_enabled && subtype == Topic::POST_VOTING_SUBTYPE && !nested_view? &&
+        PostVoting.post_voting_enabled_for?(category_id)
     end
 
     # class methods
@@ -85,6 +86,8 @@ module PostVoting
 
       if !SiteSetting.post_voting_enabled
         errors.add(:base, I18n.t("topic.post_voting.errors.post_voting_not_enabled"))
+      elsif !PostVoting.post_voting_enabled_for?(category_id)
+        errors.add(:base, I18n.t("topic.post_voting.errors.post_voting_not_enabled_in_category"))
       elsif archetype != Archetype.default
         errors.add(:base, I18n.t("topic.post_voting.errors.subtype_not_allowed"))
       end
