@@ -306,12 +306,10 @@
 
   // clean up selector once the uc- body class is no longer in the way
   .show-preview .d-editor-container.--markdown-editor-enabled {
-    .d-editor-textarea-column {
-      border-right: none;
-    }
-
     .d-editor-preview-wrapper {
-      margin-top: var(--space-2);
+      border-left: 1px solid var(--primary-low);
+      margin: 0;
+      padding: var(--space-2) var(--space-4);
     }
   }
 
