@@ -6,11 +6,12 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import moment from "moment";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
-import { applyValueTransformer } from "discourse/lib/transformer";
 import Category from "discourse/models/category";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -102,13 +103,16 @@ export default class AiTranslations extends Component {
     return this.creditStatus?.hard_limit_reached === true;
   }
 
-  get maxLocaleWarning() {
-    return applyValueTransformer(
-      "ai-translation-max-locales-warning",
-      i18n("discourse_ai.translations.max_locales_reached", {
-        max: this.siteSettings.content_localization_max_locales,
-      })
-    );
+  get maxLocaleToast() {
+    const max = this.siteSettings.content_localization_max_locales;
+    return {
+      duration: "short",
+      data: {
+        message: i18n("discourse_ai.translations.max_locales_reached", {
+          max,
+        }),
+      },
+    };
   }
 
   get creditLimitWarningMessage() {
@@ -221,12 +225,7 @@ export default class AiTranslations extends Component {
       this.siteSettings.content_localization_max_locales &&
       locales.length > this.siteSettings.content_localization_max_locales
     ) {
-      this.toasts.error({
-        duration: "short",
-        data: {
-          message: this.maxLocaleWarning,
-        },
-      });
+      this.toasts.error(this.maxLocaleToast);
       return;
     }
     this.selectedLocales = locales;
@@ -634,6 +633,14 @@ export default class AiTranslations extends Component {
                   />
                 {{/if}}
               </div>
+              <PluginOutlet
+                @name="ai-translations-locale-info"
+                @connectorTagName="div"
+                @outletArgs={{lazyHash
+                  localesCount=this.selectedLocales.length
+                  maxLocales=this.siteSettings.content_localization_max_locales
+                }}
+              />
             </div>
           </div>
           <div class="setting">
