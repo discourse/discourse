@@ -44,14 +44,6 @@
 
   .reply-area {
     padding: 0 !important;
-
-    @include viewport.until(sm) {
-      &:has(.d-editor-textarea-wrapper.in-focus) {
-        .reply-to {
-          pointer-events: none;
-        }
-      }
-    }
   }
 
   .composer-controls {
@@ -153,6 +145,7 @@
     .select-kit.multi-select .multi-select-header {
       border: 0;
       padding: var(--space-3) var(--space-4);
+      border-radius: 0;
 
       &:active {
         border: 0;
@@ -172,20 +165,21 @@
   }
 
   .title-input {
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--primary-low);
+
     #reply-title {
       border: 0;
       padding: var(--space-4);
-      font-size: var(--font-up-4);
-      font-weight: bold;
+      font-weight: 600;
       margin-bottom: 0 !important;
       padding-bottom: var(--space-3) !important;
+      padding-right: var(--space-3) !important;
+      flex-basis: unset !important;
 
       &::placeholder {
         color: var(--primary-medium);
-      }
-
-      @include viewport.until(sm) {
-        font-size: var(--font-up-2);
       }
 
       &:focus {
@@ -195,10 +189,11 @@
 
     // TODO move to plugin css when UC is removed
     .suggest-titles-button {
-      right: var(--space-4) !important;
-      top: var(--space-4);
+      position: relative;
       bottom: unset !important;
+      right: unset !important;
       transform: none !important;
+      margin-inline-end: var(--space-3);
     }
   }
 
@@ -242,7 +237,27 @@
         border-top-left-radius: var(--d-border-radius-large);
         border-top-right-radius: var(--d-border-radius-large);
         padding-top: var(--space-4);
+
+        &::before {
+          content: "";
+          position: absolute;
+          inset-block-start: var(--space-2);
+          inset-inline-start: 50%;
+          transform: translateX(-50%);
+          width: 15vw;
+          height: 5px;
+          background: var(--primary-medium);
+          border-radius: var(--d-border-radius-pill);
+        }
       }
+    }
+  }
+
+  @include viewport.until(sm) {
+    #reply-control.has-composer-fields
+      .reply-area:has(.d-editor-textarea-wrapper.in-focus)
+      .reply-to {
+      pointer-events: none;
     }
   }
 
@@ -273,6 +288,11 @@
 
     .composer-fields {
       grid-area: fields;
+
+      @include viewport.until(sm) {
+        max-width: 100vw;
+        box-sizing: border-box;
+      }
     }
 
     .d-editor-textarea-column {
@@ -287,12 +307,10 @@
 
   // clean up selector once the uc- body class is no longer in the way
   .show-preview .d-editor-container.--markdown-editor-enabled {
-    .d-editor-textarea-column {
-      border-right: none;
-    }
-
     .d-editor-preview-wrapper {
-      margin-top: var(--space-2);
+      border-left: 1px solid var(--primary-low);
+      margin: 0;
+      padding: var(--space-2) var(--space-4);
     }
   }
 
