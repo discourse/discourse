@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe PostVoting do
+  fab!(:user)
   fab!(:category)
   fab!(:other_category, :category)
   fab!(:subcategory) { Fabricate(:category, parent_category: category) }
@@ -208,6 +209,96 @@ RSpec.describe PostVoting do
       SiteSetting.post_voting_category_mode = "all_categories"
 
       expect(override_for(Fabricate(:category))).to eq(nil)
+    end
+
+    it "keeps a value supplied while the category is being created" do
+      SiteSetting.post_voting_category_mode = "opt_in"
+
+      fresh = Category.new(name: "Fresh", slug: "fresh", user: Discourse.system_user)
+      fresh.custom_fields[PostVoting::ALLOW_POST_VOTING] = true
+      fresh.save!
+
+      expect(override_for(fresh)).to eq(true)
+      expect(PostVoting.post_voting_enabled_for?(fresh.id)).to eq(true)
+    end
+
+    it "keeps an explicit opt out supplied while the category is being created" do
+      SiteSetting.post_voting_category_mode = "opt_out"
+      set_override(category, true)
+
+      fresh = Fabricate.build(:category, parent_category: category, user: Discourse.system_user)
+      fresh.custom_fields[PostVoting::ALLOW_POST_VOTING] = false
+      fresh.save!
+
+      expect(override_for(fresh)).to eq(false)
+      expect(PostVoting.post_voting_enabled_for?(fresh.id)).to eq(false)
+    end
+  end
+
+  describe "disabling and re-enabling a category" do
+    fab!(:topic) { Fabricate(:topic, category: category, subtype: Topic::POST_VOTING_SUBTYPE) }
+    fab!(:question) { create_post(topic: topic) }
+    fab!(:answer) { create_post(topic: topic) }
+    fab!(:comment) { Fabricate(:post_voting_comment, post: answer) }
+
+    before do
+      SiteSetting.post_voting_enabled = true
+      SiteSetting.post_voting_category_mode = "opt_out"
+      PostVoting::VoteManager.vote(answer, user)
+    end
+
+    def serialized_answer
+      serializer = PostSerializer.new(answer.reload, scope: Guardian.new(user), root: false)
+      serializer.topic_view = TopicView.new(topic.reload, user)
+      serializer.as_json
+    end
+
+    def disallow_post_voting
+      category.upsert_custom_fields(PostVoting::ALLOW_POST_VOTING => false)
+      PostVoting.clear_category_overrides_cache(after_commit: false)
+    end
+
+    def allow_post_voting
+      category.upsert_custom_fields(PostVoting::ALLOW_POST_VOTING => true)
+      PostVoting.clear_category_overrides_cache(after_commit: false)
+    end
+
+    it "hides the voting features without discarding anything, and restores them" do
+      expect(topic.reload).to be_is_post_voting
+      expect(answer.reload.qa_vote_count).to eq(1)
+      expect(serialized_answer[:post_voting_vote_count]).to eq(1)
+      expect(serialized_answer[:comments].size).to eq(1)
+
+      disallow_post_voting
+
+      expect(topic.reload).not_to be_is_post_voting
+      expect(serialized_answer).not_to have_key(:post_voting_vote_count)
+      expect(serialized_answer).not_to have_key(:comments)
+
+      # Nothing was deleted or rewritten while it was switched off.
+      expect(topic.subtype).to eq(Topic::POST_VOTING_SUBTYPE)
+      expect(answer.reload.qa_vote_count).to eq(1)
+      expect(PostVotingVote.where(votable: answer).count).to eq(1)
+      expect(PostVotingComment.where(post: answer).count).to eq(1)
+
+      allow_post_voting
+
+      expect(topic.reload).to be_is_post_voting
+      expect(answer.reload.qa_vote_count).to eq(1)
+      expect(serialized_answer[:post_voting_vote_count]).to eq(1)
+      expect(serialized_answer[:post_voting_has_votes]).to eq(true)
+      expect(serialized_answer[:comments].size).to eq(1)
+      expect(PostVotingVote.where(votable: answer).pluck(:user_id)).to eq([user.id])
+    end
+
+    it "keeps the answer ordering that post voting applies once it is restored" do
+      disallow_post_voting
+
+      expect(TopicView.new(topic, user).posts.map(&:id)).to include(question.id, answer.id)
+
+      allow_post_voting
+
+      expect(TopicView.new(topic, user).posts.first.id).to eq(question.id)
     end
   end
 end

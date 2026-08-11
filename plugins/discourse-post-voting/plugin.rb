@@ -41,6 +41,12 @@ module ::PostVoting
     category_overrides[category_id.to_i]
   end
 
+  def self.stored_category_override(category_id)
+    CategoryModeSiteSetting.normalize_override(
+      ::CategoryCustomField.where(category_id: category_id, name: ALLOW_POST_VOTING).pick(:value),
+    )
+  end
+
   # Deliberately not `defer_get_set`: that writes the computed value from a
   # deferred job, which can land after an invalidating `clear` and resurrect a
   # stale resolution.
@@ -390,6 +396,10 @@ after_initialize do
     if SiteSetting.post_voting_category_mode == PostVoting::CategoryModeSiteSetting::ALL_CATEGORIES
       next
     end
+
+    # A value can be submitted with the category itself, and this event fires
+    # after that has committed. Inheriting unconditionally would overwrite it.
+    next if !PostVoting.stored_category_override(category.id).nil?
 
     inherited =
       if category.parent_category_id
