@@ -296,19 +296,22 @@ export default class WorkflowsEditor extends Component {
   }
 
   @action
-  async registerApi(api) {
+  registerApi(api) {
     this.formApi = api;
+  }
 
-    if (!this.args.initialNodeId || this.initialNodeHandled) {
+  @action
+  openInitialNode() {
+    if (
+      !this.args.initialNodeId ||
+      this.initialNodeHandled ||
+      this.isDestroying ||
+      this.isDestroyed
+    ) {
       return;
     }
 
     this.initialNodeHandled = true;
-    await this.workflowsNodeTypes.load();
-
-    if (this.isDestroying || this.isDestroyed) {
-      return;
-    }
 
     if (!this.editNode(this.args.initialNodeId, { updateUrl: false })) {
       this.router.replaceWith(
@@ -1535,6 +1538,7 @@ export default class WorkflowsEditor extends Component {
           @onConnectionDelete={{this.deleteConnection}}
           @onNodeDragEnd={{this.handleSubmit}}
           @onAreaReady={{this.initializeUndo}}
+          @onReady={{this.openInitialNode}}
           @onUndo={{this.undo}}
           @onRedo={{this.redo}}
           @canUndo={{this.canUndo}}
