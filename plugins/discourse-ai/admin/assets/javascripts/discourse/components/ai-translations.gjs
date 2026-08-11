@@ -633,14 +633,25 @@ export default class AiTranslations extends Component {
                   />
                 {{/if}}
               </div>
-              <PluginOutlet
-                @name="ai-translations-locale-info"
-                @connectorTagName="div"
-                @outletArgs={{lazyHash
-                  localesCount=this.selectedLocales.length
-                  maxLocales=this.siteSettings.content_localization_max_locales
-                }}
-              />
+              {{#if this.siteSettings.content_localization_max_locales}}
+                <div class="ai-translations__locale-info">
+                  <p class="ai-translations__locale-count">
+                    {{i18n
+                      "discourse_ai.translations.locale_count"
+                      count=this.selectedLocales.length
+                      max=this.siteSettings.content_localization_max_locales
+                    }}
+                  </p>
+                  <PluginOutlet
+                    @name="ai-translations-locale-info"
+                    @connectorTagName="div"
+                    @outletArgs={{lazyHash
+                      localesCount=this.selectedLocales.length
+                      maxLocales=this.siteSettings.content_localization_max_locales
+                    }}
+                  />
+                </div>
+              {{/if}}
             </div>
           </div>
           <div class="setting">

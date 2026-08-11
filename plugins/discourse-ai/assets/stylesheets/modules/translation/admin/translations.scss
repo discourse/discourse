@@ -66,6 +66,19 @@
     }
   }
 
+  &__locale-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+  }
+
+  &__locale-count {
+    margin: 0;
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+  }
+
   .settings .setting {
     padding: var(--space-2);
 
