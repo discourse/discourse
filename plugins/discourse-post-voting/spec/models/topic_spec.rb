@@ -56,8 +56,10 @@ describe Topic do
 
       it "should not allow Post Voting topics to be created when the category is not allowed" do
         SiteSetting.post_voting_enabled = true
+        SiteSetting.post_voting_category_mode = "opt_in"
         allowed_category = Fabricate(:category)
-        SiteSetting.post_voting_enabled_categories = allowed_category.id.to_s
+        allowed_category.custom_fields[PostVoting::ALLOW_POST_VOTING] = "true"
+        allowed_category.save!
 
         topic =
           Fabricate.build(
@@ -124,7 +126,7 @@ describe Topic do
   describe "#is_post_voting?" do
     before { SiteSetting.post_voting_enabled = true }
 
-    it "returns true for all categories when no categories are restricted" do
+    it "returns true in every category in the default mode" do
       expect(topic).to be_is_post_voting
     end
 
@@ -135,9 +137,11 @@ describe Topic do
       expect(topic).not_to be_is_post_voting
     end
 
-    it "returns false when the topic category is not in the restricted categories" do
+    it "returns false when the topic category has not opted in" do
+      SiteSetting.post_voting_category_mode = "opt_in"
       allowed_category = Fabricate(:category)
-      SiteSetting.post_voting_enabled_categories = allowed_category.id.to_s
+      allowed_category.custom_fields[PostVoting::ALLOW_POST_VOTING] = "true"
+      allowed_category.save!
 
       expect(topic).not_to be_is_post_voting
 

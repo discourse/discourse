@@ -125,12 +125,18 @@ acceptance("composer (restricted post voting categories)", function (needs) {
   needs.settings({
     post_voting_enabled: true,
     enable_new_composer_actions: true,
-    post_voting_enabled_categories: "5",
+    post_voting_category_mode: "opt_in",
   });
 
   needs.hooks.afterEach(function () {
     restrictedCreateTopicPayload = null;
   });
+
+  // `post_voting_allowed` is what the server resolves from the category
+  // override, its ancestors, and the mode.
+  function allowPostVoting(categoryId) {
+    Category.findById(categoryId).set("post_voting_allowed", true);
+  }
 
   needs.pretender((server, helper) => {
     server.post("/posts", (request) => {
@@ -162,6 +168,8 @@ acceptance("composer (restricted post voting categories)", function (needs) {
   });
 
   test("shows the post voting toggle for an allowed category", async function (assert) {
+    allowPostVoting(5);
+
     await visit("/");
     await click("#create-topic");
 
@@ -223,6 +231,8 @@ acceptance("composer (restricted post voting categories)", function (needs) {
   });
 
   test("turns post voting off when moving to a disallowed category", async function (assert) {
+    allowPostVoting(5);
+
     await visit("/");
     await click("#create-topic");
 
@@ -261,7 +271,9 @@ acceptance("composer (restricted post voting categories)", function (needs) {
     );
   });
 
-  test("hides the post voting toggle for a subcategory of an allowed category", async function (assert) {
+  test("shows the post voting toggle for a subcategory the server resolved as allowed", async function (assert) {
+    allowPostVoting(22);
+
     await visit("/");
     await click("#create-topic");
 
@@ -273,12 +285,12 @@ acceptance("composer (restricted post voting categories)", function (needs) {
 
     assert
       .dom("[data-action-id='togglePostVoting']")
-      .doesNotExist(
-        "subcategories are not allowed unless the setting includes them"
-      );
+      .exists("a subcategory that inherits its parent's opt-in");
   });
 
   test("submits the topic as Post Voting formatted in an allowed category", async function (assert) {
+    allowPostVoting(5);
+
     await visit("/");
     await click("#create-topic");
 
@@ -301,47 +313,45 @@ acceptance("composer (restricted post voting categories)", function (needs) {
   });
 });
 
-acceptance(
-  "composer (restricted post voting categories, with subcategories)",
-  function (needs) {
-    needs.user();
-    needs.settings({
-      post_voting_enabled: true,
-      enable_new_composer_actions: true,
-      post_voting_enabled_categories: "5",
-      post_voting_enabled_categories_include_subcategories: true,
-    });
+acceptance("composer (post voting opt out mode)", function (needs) {
+  needs.user();
+  needs.settings({
+    post_voting_enabled: true,
+    enable_new_composer_actions: true,
+    post_voting_category_mode: "opt_out",
+  });
 
-    test("shows the post voting toggle for a subcategory of an allowed category", async function (assert) {
-      await visit("/");
-      await click("#create-topic");
+  test("shows the post voting toggle for a category that has not opted out", async function (assert) {
+    Category.findById(2).set("post_voting_allowed", true);
 
-      const categoryChooser = selectKit(".category-chooser");
-      await categoryChooser.expand();
-      await categoryChooser.selectRowByValue(22);
+    await visit("/");
+    await click("#create-topic");
 
-      await click(".composer-actions-trigger");
+    const categoryChooser = selectKit(".category-chooser");
+    await categoryChooser.expand();
+    await categoryChooser.selectRowByValue(2);
 
-      assert
-        .dom("[data-action-id='togglePostVoting']")
-        .exists("subcategories are allowed when the setting includes them");
-    });
+    await click(".composer-actions-trigger");
 
-    test("hides the post voting toggle for a category outside the allowed tree", async function (assert) {
-      await visit("/");
-      await click("#create-topic");
+    assert
+      .dom("[data-action-id='togglePostVoting']")
+      .exists("opt out mode allows post voting by default");
+  });
 
-      const categoryChooser = selectKit(".category-chooser");
-      await categoryChooser.expand();
-      await categoryChooser.selectRowByValue(2);
+  test("hides the post voting toggle for a category that has opted out", async function (assert) {
+    Category.findById(5).set("post_voting_allowed", false);
 
-      await click(".composer-actions-trigger");
+    await visit("/");
+    await click("#create-topic");
 
-      assert
-        .dom("[data-action-id='togglePostVoting']")
-        .doesNotExist(
-          "including subcategories does not widen the allowed categories"
-        );
-    });
-  }
-);
+    const categoryChooser = selectKit(".category-chooser");
+    await categoryChooser.expand();
+    await categoryChooser.selectRowByValue(5);
+
+    await click(".composer-actions-trigger");
+
+    assert
+      .dom("[data-action-id='togglePostVoting']")
+      .doesNotExist("the category opted out");
+  });
+});

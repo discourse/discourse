@@ -1,6 +1,8 @@
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
+const ALL_CATEGORIES = "all_categories";
+
 const vote = function (type, data) {
   return ajax("/post_voting/vote", {
     type,
@@ -24,24 +26,11 @@ const whoVoted = function (data) {
 };
 
 const postVotingEnabledForCategory = function (category, siteSettings) {
-  const allowed = (siteSettings.post_voting_enabled_categories || "")
-    .split("|")
-    .map((id) => parseInt(id, 10))
-    .filter((id) => !Number.isNaN(id));
-
-  if (allowed.length === 0) {
+  if (siteSettings.post_voting_category_mode === ALL_CATEGORIES) {
     return true;
   }
 
-  if (!category) {
-    return false;
-  }
-
-  if (siteSettings.post_voting_enabled_categories_include_subcategories) {
-    return category.ancestors.some((ancestor) => allowed.includes(ancestor.id));
-  }
-
-  return allowed.includes(category.id);
+  return !!category?.post_voting_allowed;
 };
 
 export { removeVote, castVote, whoVoted, postVotingEnabledForCategory };

@@ -20,6 +20,17 @@ en:
 
     category:
       post_voting_settings_heading: Post Voting
+      allow_post_voting: Allow post voting in this category.
+      post_voting_subcategories:
+        enable:
+          one: "Also allow post voting in this category's %{count} subcategory?"
+          other: "Also allow post voting in this category's %{count} subcategories?"
+        disable:
+          one: "Also stop allowing post voting in this category's %{count} subcategory?"
+          other: "Also stop allowing post voting in this category's %{count} subcategories?"
+        pending:
+          one: "Will apply to %{count} subcategory when you save."
+          other: "Will apply to %{count} subcategories when you save."
       create_as_post_voting_default: New topics default to Post Voting topics in this category.
       only_post_voting_in_this_category: New topics can only be Post Voting topics in this category.
 
@@ -52,6 +63,10 @@ en:
       one: answer
       other: answers
     post_voting:
+      category_mode:
+        all_categories: "All categories"
+        opt_in: "Only categories that opt in"
+        opt_out: "All categories except those that opt out"
       post:
         post_voting_comment:
           composer:

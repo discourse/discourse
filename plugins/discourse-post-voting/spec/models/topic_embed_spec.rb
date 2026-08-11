@@ -62,8 +62,7 @@ describe TopicEmbed do
   end
 
   it "doesn't set the post voting subtype in a category excluded from post voting, even when the category opts in" do
-    allowed_category = Fabricate(:category)
-    SiteSetting.post_voting_enabled_categories = allowed_category.id.to_s
+    SiteSetting.post_voting_category_mode = "opt_in"
     category.custom_fields[PostVoting::CREATE_AS_POST_VOTING_DEFAULT] = true
     category.save!
 
@@ -81,9 +80,10 @@ describe TopicEmbed do
   end
 
   it "sets the post voting subtype in an allowed category that opts in" do
+    SiteSetting.post_voting_category_mode = "opt_in"
     category.custom_fields[PostVoting::CREATE_AS_POST_VOTING_DEFAULT] = true
+    category.custom_fields[PostVoting::ALLOW_POST_VOTING] = "true"
     category.save!
-    SiteSetting.post_voting_enabled_categories = category.id.to_s
 
     Jobs.run_immediately!
     imported_post =
