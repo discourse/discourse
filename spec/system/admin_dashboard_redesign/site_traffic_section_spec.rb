@@ -165,12 +165,16 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
     )
   end
 
-  it "keeps the traffic explorer action hidden from a moderator" do
+  it "keeps the aggregate traffic report available to moderators" do
+    SiteSetting.enable_site_traffic_explorer = true
     sign_in(moderator)
 
     dashboard.visit_with_query(range: "custom", start_date: "2026-05-01", end_date: "2026-05-12")
+    dashboard.site_traffic.click_see_details
 
-    expect(dashboard.site_traffic).to have_no_see_details_link
+    expect(page).to have_current_path(
+      "/admin/reports/site_traffic?end_date=2026-05-12&start_date=2026-05-01",
+    )
   end
 
   context "with top countries and top referrers cards" do

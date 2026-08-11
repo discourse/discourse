@@ -167,6 +167,12 @@ export default class DashboardTraffic extends Component {
     return { range: this.args.period };
   }
 
+  get showTrafficExplorerLink() {
+    return (
+      this.currentUser.admin && this.siteSettings.enable_site_traffic_explorer
+    );
+  }
+
   formatHeadlineCount(value) {
     if (value >= 1_000_000) {
       const formatted = I18n.toNumber(value / 1_000_000, { precision: 1 });
@@ -397,30 +403,28 @@ export default class DashboardTraffic extends Component {
               class="db-section__traffic-chart-canvas"
             />
           </div>
-          {{#if this.currentUser.admin}}
-            {{#if this.siteSettings.enable_site_traffic_explorer}}
-              <LinkTo
-                class="db-traffic__see-details"
-                @route="adminSiteTraffic"
-                @query={{this.explorerQuery}}
-              >
-                {{i18n "admin.dashboard.site_traffic.see_details"}}
-                {{dIcon "arrow-right"}}
-              </LinkTo>
-            {{else}}
-              <LinkTo
-                class="db-traffic__see-details"
-                @route="adminReports.show"
-                @model="site_traffic"
-                @query={{hash
-                  start_date=this.reportQuery.start_date
-                  end_date=this.reportQuery.end_date
-                }}
-              >
-                {{i18n "admin.dashboard.site_traffic.see_details"}}
-                {{dIcon "arrow-right"}}
-              </LinkTo>
-            {{/if}}
+          {{#if this.showTrafficExplorerLink}}
+            <LinkTo
+              class="db-traffic__see-details"
+              @route="adminSiteTraffic"
+              @query={{this.explorerQuery}}
+            >
+              {{i18n "admin.dashboard.site_traffic.see_details"}}
+              {{dIcon "arrow-right"}}
+            </LinkTo>
+          {{else}}
+            <LinkTo
+              class="db-traffic__see-details"
+              @route="adminReports.show"
+              @model="site_traffic"
+              @query={{hash
+                start_date=this.reportQuery.start_date
+                end_date=this.reportQuery.end_date
+              }}
+            >
+              {{i18n "admin.dashboard.site_traffic.see_details"}}
+              {{dIcon "arrow-right"}}
+            </LinkTo>
           {{/if}}
         {{else}}
           <div class="db-section__traffic-chart">
