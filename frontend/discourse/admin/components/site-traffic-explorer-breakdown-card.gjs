@@ -77,17 +77,20 @@ export default class SiteTrafficExplorerBreakdownCard extends Component {
   }
 
   @action
-  openModal() {
-    this.modal.show(SiteTrafficExplorerBreakdownModal, {
+  async openModal() {
+    const result = await this.modal.show(SiteTrafficExplorerBreakdownModal, {
       model: {
         title: this.activeTab.label,
         columnLabel: this.activeTab.columnLabel,
         dimension: this.activeTab.dimension,
         rows: this.rows,
-        filter: this.filter,
         rowLink: this.rowLink,
       },
     });
+
+    if (result?.filterRow) {
+      this.filter(result.filterRow);
+    }
   }
 
   @action

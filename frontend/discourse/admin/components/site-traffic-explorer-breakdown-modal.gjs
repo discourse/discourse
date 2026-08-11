@@ -21,8 +21,7 @@ export default class SiteTrafficExplorerBreakdownModal extends Component {
 
   @action
   filter(row) {
-    this.args.closeModal();
-    this.args.model.filter(row);
+    this.args.closeModal({ filterRow: row });
   }
 
   <template>
