@@ -74,9 +74,7 @@ class Admin::DashboardController < Admin::StaffController
         :ip,
       )
 
-    AdminDashboardSiteTrafficExplorer::Fetch.call(
-      service_params.deep_merge(params: permitted.to_h),
-    ) do
+    AdminDashboardSiteTrafficExplorer.call(service_params.deep_merge(params: permitted.to_h)) do
       on_success { |traffic:| render json: traffic }
       on_failed_contract { raise Discourse::InvalidParameters }
       on_exceptions do

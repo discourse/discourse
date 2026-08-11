@@ -31,6 +31,7 @@ const PERIOD_COPY_KEYS = {
 
 export default class DashboardTraffic extends Component {
   @service currentUser;
+  @service siteSettings;
 
   hiddenLabels = ["page_view_crawler"];
 

@@ -8,22 +8,22 @@ export default <template>
     class="site-traffic-explorer__metric {{if @primary '--primary'}}"
     data-test-site-traffic-metric={{@name}}
   >
-    <span class="site-traffic-explorer__metric-copy">
-      {{#if @compact}}
-        <SiteTrafficPageviewCount @value={{@value}} as |formattedValue|>
-          <span
-            class="db-section__metric-number site-traffic-explorer__metric-value"
-          >{{formattedValue}}</span>
-        </SiteTrafficPageviewCount>
-      {{else}}
+    {{#if @compact}}
+      <SiteTrafficPageviewCount @value={{@value}} as |formattedValue|>
         <span
           class="db-section__metric-number site-traffic-explorer__metric-value"
-        >{{@value}}</span>
-      {{/if}}
-      <span class="site-traffic-explorer__metric-label-row">
-        <span
-          class="db-section__metric-label site-traffic-explorer__metric-label"
-        >{{@label}}</span>
+        >{{formattedValue}}</span>
+      </SiteTrafficPageviewCount>
+    {{else}}
+      <span
+        class="db-section__metric-number site-traffic-explorer__metric-value"
+      >{{@value}}</span>
+    {{/if}}
+    <span class="site-traffic-explorer__metric-label-row">
+      <span
+        class="db-section__metric-label site-traffic-explorer__metric-label"
+      >{{@label}}</span>
+      {{#if @tooltip}}
         <DTooltip
           class="db-section__info"
           @identifier={{concat "site-traffic-explorer-" @name "-tooltip"}}
@@ -32,7 +32,7 @@ export default <template>
         >
           <:content>{{@tooltip}}</:content>
         </DTooltip>
-      </span>
+      {{/if}}
     </span>
   </div>
 </template>

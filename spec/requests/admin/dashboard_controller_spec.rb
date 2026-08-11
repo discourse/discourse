@@ -1601,8 +1601,7 @@ RSpec.describe Admin::DashboardController do
     end
 
     context "when the selected date range exceeds retention" do
-      it "returns partial retained results and the available start date",
-         time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      it "returns partial retained results and the available start date" do
         sign_in(admin)
         chrome = "Mozilla/5.0 AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36"
         firefox = "Mozilla/5.0 Firefox/126.0"
@@ -1827,7 +1826,7 @@ RSpec.describe Admin::DashboardController do
         )
       end
 
-      it "returns both partial-data reasons", time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+      it "returns both partial-data reasons" do
         sign_in(admin)
         SiteSetting.stubs(:admin_site_traffic_event_cap).returns(2)
 
@@ -1914,10 +1913,7 @@ RSpec.describe Admin::DashboardController do
 
     it "returns a service unavailable response when the traffic query times out" do
       sign_in(admin)
-      AdminDashboardSiteTrafficExplorer.stubs(:call).raises(
-        ActiveRecord::QueryCanceled,
-        "statement timeout",
-      )
+      DB.stubs(:query_hash).raises(ActiveRecord::QueryCanceled, "statement timeout")
 
       get "/admin/dashboard/traffic.json", params: request_params
 

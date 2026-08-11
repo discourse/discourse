@@ -9,7 +9,6 @@ import SiteTrafficFilterPills from "discourse/admin/components/site-traffic-filt
 import SiteTrafficMetric from "discourse/admin/components/site-traffic-metric";
 import { formatMinutesSeconds } from "discourse/lib/formatter";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
-import DButton from "discourse/ui-kit/d-button";
 import DPageHeader from "discourse/ui-kit/d-page-header";
 import I18n, { i18n } from "discourse-i18n";
 
@@ -30,7 +29,6 @@ export default class SiteTrafficExplorer extends Component {
       {
         name: "pageviews",
         label: i18n("admin.site_traffic_explorer.metrics.pageviews.label"),
-        tooltip: i18n("admin.site_traffic_explorer.metrics.pageviews.tooltip"),
         value: this.summary.pageviews ?? 0,
         compact: true,
       },
@@ -38,9 +36,6 @@ export default class SiteTrafficExplorer extends Component {
         name: "distinct_sessions",
         label: i18n(
           "admin.site_traffic_explorer.metrics.distinct_sessions.label"
-        ),
-        tooltip: i18n(
-          "admin.site_traffic_explorer.metrics.distinct_sessions.tooltip"
         ),
         value: this.#number(this.summary.distinct_sessions),
       },
@@ -250,13 +245,14 @@ export default class SiteTrafficExplorer extends Component {
         />
 
         {{#if @fetchError}}
-          <div class="site-traffic-explorer__error" role="alert">
-            <p>{{this.fetchErrorMessage}}</p>
-            <DButton
-              @action={{@retry}}
-              @label="admin.site_traffic_explorer.retry"
-              class="btn-primary"
-            />
+          <div
+            class="db-section__wrapper --column site-traffic-explorer__report"
+          >
+            <div class="db-section__traffic-chart site-traffic-explorer__chart">
+              <div class="db-section__traffic-chart-message" role="alert">
+                {{this.fetchErrorMessage}}
+              </div>
+            </div>
           </div>
         {{else}}
           {{#if @loading}}

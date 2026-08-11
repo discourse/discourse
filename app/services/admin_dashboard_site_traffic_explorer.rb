@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class AdminDashboardSiteTrafficExplorer
+  include Service::Base
+
   DIMENSION_LIMIT = 50
   STATEMENT_TIMEOUT_MS = 10_000
   FILTER_KEYS = %i[top_url entry_url referrer country network browser ip].freeze
@@ -20,89 +22,94 @@ class AdminDashboardSiteTrafficExplorer
   private_constant :FILTER_DIMENSIONS
   private_constant :BROWSER_VALUES
 
-  def self.call(params)
-    new(params).call
+  params do
+    attribute :start_date, :date
+    attribute :end_date, :date
+    attribute :top_url, :string
+    attribute :entry_url, :string
+    attribute :referrer, :string
+    attribute :country, :string
+    attribute :network, :string
+    attribute :browser, :string
+    attribute :ip, :string
+
+    validates :start_date, :end_date, presence: true
+    validate :start_date_precedes_end_date
+
+    def filters
+      FILTER_KEYS.to_h { |key| [key, normalize_filter(key, public_send(key))] }
+    end
+
+    private
+
+    def start_date_precedes_end_date
+      return if start_date.blank? || end_date.blank? || start_date <= end_date
+
+      errors.add(:start_date, :invalid)
+    end
+
+    def normalize_filter(key, value)
+      return nil if value.nil?
+      return "" if key == :referrer && value == ""
+      raise Discourse::InvalidParameters.new(key) if value.blank?
+
+      case key
+      when :top_url, :entry_url
+        BrowserPageviewReferrerInspector.normalize_site_path(value) ||
+          raise(Discourse::InvalidParameters.new(key))
+      when :country
+        country = value.to_s.upcase
+        raise Discourse::InvalidParameters.new(key) if !country.match?(/\A[A-Z]{2}\z/)
+        country
+      when :network
+        match = value.to_s.match(/\AAS(\d+)\z/)
+        raise Discourse::InvalidParameters.new(key) if !match
+        match[1].to_i
+      when :browser
+        browser = value.to_s
+        raise Discourse::InvalidParameters.new(key) if !BROWSER_VALUES.include?(browser)
+        browser
+      when :ip
+        IPAddr.new(value.to_s).to_s
+      when :referrer
+        BrowserPageviewReferrerInspector.normalize("https://#{value}")&.split("/", 2)&.first ||
+          raise(Discourse::InvalidParameters.new(key))
+      end
+    rescue IPAddr::Error
+      raise Discourse::InvalidParameters.new(key)
+    end
   end
 
-  def initialize(params)
-    @params = params.with_indifferent_access
-    @start_date = parse_date(:start_date)
-    @end_date = parse_date(:end_date)
-    raise Discourse::InvalidParameters.new(:start_date) if @start_date > @end_date
+  try(ActiveRecord::QueryCanceled, PG::QueryCanceled) { step :load_traffic }
 
-    @filters = normalize_filters
-  end
+  private
 
-  def call
-    row = execute_query
+  def load_traffic(params:)
+    filters = params.filters
+    row = execute_query(start_date: params.start_date, end_date: params.end_date, filters:)
 
-    result = {
-      partial_data: partial_data(row.fetch("pageview_limited")),
+    traffic = {
+      partial_data: partial_data(row.fetch("pageview_limited"), start_date: params.start_date),
       summary: row.fetch("summary"),
       series: row.fetch("series"),
       series_colors: series_colors,
       dimensions: decorate_dimensions(row.fetch("dimensions")),
     }
-    active_filters = decorate_active_filters(row.fetch("active_filter_representative_ips"))
-    result[:active_filters] = active_filters if active_filters.any?
-    result
+    active_filters =
+      decorate_active_filters(row.fetch("active_filter_representative_ips"), filters:)
+    traffic[:active_filters] = active_filters if active_filters.any?
+    context[:traffic] = traffic
   end
 
-  private
-
-  attr_reader :start_date, :end_date, :filters
-
-  def parse_date(key)
-    value = @params.fetch(key)
-    value.is_a?(Date) ? value : Date.iso8601(value)
-  rescue Date::Error, KeyError, TypeError
-    raise Discourse::InvalidParameters.new(key)
-  end
-
-  def normalize_filters
-    FILTER_KEYS.to_h { |key| [key, normalize_filter(key, @params[key])] }
-  end
-
-  def normalize_filter(key, value)
-    return nil if value.nil?
-    return "" if key == :referrer && value == ""
-    raise Discourse::InvalidParameters.new(key) if value.blank?
-
-    case key
-    when :top_url, :entry_url
-      BrowserPageviewReferrerInspector.normalize_site_path(value) ||
-        raise(Discourse::InvalidParameters.new(key))
-    when :country
-      country = value.to_s.upcase
-      raise Discourse::InvalidParameters.new(key) if !country.match?(/\A[A-Z]{2}\z/)
-      country
-    when :network
-      match = value.to_s.match(/\AAS(\d+)\z/)
-      raise Discourse::InvalidParameters.new(key) if !match
-      match[1].to_i
-    when :browser
-      browser = value.to_s
-      raise Discourse::InvalidParameters.new(key) if !BROWSER_VALUES.include?(browser)
-      browser
-    when :ip
-      IPAddr.new(value.to_s).to_s
-    when :referrer
-      BrowserPageviewReferrerInspector.normalize("https://#{value}")&.split("/", 2)&.first ||
-        raise(Discourse::InvalidParameters.new(key))
-    end
-  rescue IPAddr::Error
-    raise Discourse::InvalidParameters.new(key)
-  end
-
-  def execute_query
+  def execute_query(start_date:, end_date:, filters:)
     ActiveRecord::Base.transaction(requires_new: true) do
       DB.exec("SET TRANSACTION READ ONLY")
       DB.exec("SET LOCAL statement_timeout = #{STATEMENT_TIMEOUT_MS}")
-      DB.query_hash(query, query_params).first
+      DB.query_hash(query, query_params(start_date:, end_date:, filters:)).first
     end
   end
 
-  def query_params
+  def query_params(start_date:, end_date:, filters:)
     retention_cutoff = BrowserPageviewEvent.retention_cutoff.to_date
     effective_start_date = [start_date, retention_cutoff].max
     cap = SiteSetting.admin_site_traffic_event_cap
@@ -207,8 +214,8 @@ class AdminDashboardSiteTrafficExplorer
           user_agent,
           CASE
             WHEN user_agent ~* 'Edg' THEN 'edge'
-            WHEN user_agent ~* '(Opera|OPR|SamsungBrowser|Vivaldi|YaBrowser)' THEN 'unknown'
-            WHEN user_agent ~* '(Firefox|FxiOS)' THEN 'firefox'
+            WHEN user_agent ~* '(Opera|OPR)' THEN 'unknown'
+            WHEN user_agent ~* 'Firefox' THEN 'firefox'
             WHEN user_agent ~* '(Chrome|CriOS)' THEN 'chrome'
             WHEN user_agent ~* 'Safari' THEN 'safari'
             ELSE 'unknown'
@@ -502,7 +509,7 @@ class AdminDashboardSiteTrafficExplorer
     SQL
   end
 
-  def partial_data(pageview_limited)
+  def partial_data(pageview_limited, start_date:)
     retention_limited = start_date < BrowserPageviewEvent.retention_cutoff.to_date
     return nil if !retention_limited && !pageview_limited
 
@@ -528,7 +535,7 @@ class AdminDashboardSiteTrafficExplorer
     end
   end
 
-  def decorate_active_filters(representative_ips)
+  def decorate_active_filters(representative_ips, filters:)
     filters.filter_map do |key, value|
       next if value.nil?
 

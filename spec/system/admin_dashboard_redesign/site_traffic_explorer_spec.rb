@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
-  include ThemeScreenshotMarker
-
   fab!(:admin)
 
   let(:traffic) { PageObjects::Pages::AdminSiteTrafficExplorer.new }
@@ -200,9 +198,6 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_row(card: "pages", label: "/top", count: "2")
     expect(traffic).to have_url_link(card: "pages", label: "/top", href: "/top")
 
-    screenshot_marker(label: "site-traffic-explorer-overview")
-    next if ENV["TAKE_SCREENSHOTS"] == "1"
-
     traffic.select_tab(card: "pages", tab: "Entry URLs")
     expect(traffic).to have_row(card: "pages", label: "/latest", count: "1")
     expect(traffic).to have_url_link(card: "pages", label: "/latest", href: "/latest")
@@ -231,8 +226,8 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     traffic.remove_filter("referrer")
 
     traffic.select_tab(card: "acquisition", tab: "Networks")
-    traffic.filter_row(card: "acquisition", label: "AS64496 Example Network")
-    expect(traffic).to have_filter_pill(dimension: "network", label: "AS64496 Example Network")
+    traffic.filter_row(card: "acquisition", label: "Example Network (AS64496)")
+    expect(traffic).to have_filter_pill(dimension: "network", label: "Example Network (AS64496)")
     expect(traffic).to have_metric(label: "Pageviews", value: "2")
     expect(page).to have_current_path(
       "/admin/dashboard/traffic?end_date=2026-05-12&network=AS64496&range=custom&start_date=2026-05-01",
@@ -300,7 +295,9 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       "/admin/dashboard/traffic?country=US&end_date=2026-05-12&ip=192.0.2.1&range=custom&start_date=2026-05-01&top_url=%2Ftop",
     )
 
-    traffic.clear_filters
+    traffic.remove_filter("country")
+    traffic.remove_filter("top_url")
+    traffic.remove_filter("ip")
 
     expect(traffic).to have_no_filter_pills
     expect(traffic).to have_metric(label: "Pageviews", value: "3")

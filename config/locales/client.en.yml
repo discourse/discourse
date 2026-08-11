@@ -7254,12 +7254,10 @@ en:
         errors:
           timeout: "This traffic query took too long. Choose a shorter date range and try again."
           unexpected: "Couldn't load site traffic. Try again."
-        retry: "Try again"
         empty: "No matching pageviews"
         summary: "Traffic summary"
         traffic_over_time: "Traffic over time"
         pageviews: "Pageviews"
-        actions: "Actions"
         metric_information: "About this metric"
         active_filters: "Active traffic filters"
         filter_description: "%{filter} is <strong>%{value}</strong>"
@@ -7301,10 +7299,8 @@ en:
         metrics:
           pageviews:
             label: "Pageviews"
-            tooltip: "Human pageviews matching the active filters."
           distinct_sessions:
             label: "Distinct sessions"
-            tooltip: "Sessions represented in the matching raw pageviews."
           logged_in_share:
             label: "Logged-in share"
           bounce_rate:

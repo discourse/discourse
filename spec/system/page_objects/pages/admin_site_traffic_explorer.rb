@@ -123,11 +123,6 @@ module PageObjects
         self
       end
 
-      def clear_filters
-        find_button("Clear all filters").click
-        self
-      end
-
       def expand(card)
         within("[data-test-site-traffic-card='#{card}']") { find_button("View more").click }
         self

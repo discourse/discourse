@@ -26,7 +26,6 @@
     padding-inline-start: var(--space-3);
     border-radius: 2rem;
     background: var(--primary-low);
-    color: var(--primary);
   }
 
   &__filter-remove {
@@ -34,30 +33,15 @@
   }
 
   &__partial-warning {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-2);
     margin: 0;
   }
 
-  &__error,
   &__empty {
     border-radius: var(--d-border-radius);
     padding: var(--space-3) var(--space-4);
   }
 
-  &__error {
-    border-inline-start: 3px solid var(--danger);
-    background: var(--danger-low);
-
-    p {
-      margin: 0 0 var(--space-3);
-    }
-  }
-
   &__skeleton {
-    gap: 0;
-
     .db-skeleton__section-wrapper {
       overflow: hidden;
       padding-bottom: 0;
@@ -71,10 +55,6 @@
     .db-skeleton__chart {
       height: 360px;
       min-height: 260px;
-    }
-
-    .db-skeleton__row {
-      margin-block-start: 0;
     }
 
     @include viewport.until(md) {
@@ -150,13 +130,14 @@
   }
 
   &__metric {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
     min-width: 0;
 
     &.--primary {
-      .site-traffic-explorer__metric-copy {
-        flex-flow: row wrap;
-        align-items: baseline;
-      }
+      flex-flow: row wrap;
+      align-items: baseline;
 
       .site-traffic-explorer__metric-value,
       .site-traffic-explorer__metric-label {
@@ -167,16 +148,8 @@
     }
   }
 
-  &__metric-copy {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    min-width: 0;
-  }
-
   &__metric-value {
     overflow-wrap: anywhere;
-    color: var(--primary);
     font-variant-numeric: tabular-nums;
   }
 
@@ -243,13 +216,11 @@
   }
 
   &__breakdown-list {
+    @include unstyled-list;
     display: flex;
     flex-direction: column;
     min-width: 0;
-    margin: 0;
-    padding: 0;
     font-size: var(--font-down-1-rem);
-    list-style: none;
   }
 
   &__row {
@@ -271,9 +242,7 @@
     text-align: start;
 
     > span:not(.site-traffic-explorer__row-count) {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      @include ellipsis;
     }
   }
 
@@ -281,17 +250,14 @@
     flex-shrink: 0;
     margin-inline-start: auto;
     color: var(--primary-medium);
-    font-weight: normal;
     font-variant-numeric: tabular-nums;
   }
 
   &__row-link {
+    @include ellipsis;
     min-width: 0;
-    overflow: hidden;
     color: inherit;
     text-decoration: none;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 
     &:focus-visible {
       color: var(--tertiary);
@@ -368,11 +334,6 @@
   }
 
   @include viewport.until(sm) {
-    &__partial-warning {
-      align-items: flex-start;
-      flex-direction: column;
-    }
-
     &__chart {
       height: 18rem;
     }

@@ -78,10 +78,12 @@ class BrowserPageviewReferrerInspector
       end
       .join("&")
   end
+  private_class_method :filter_query
 
   def self.normalized_path(uri)
     uri.path.to_s.sub(%r{/+\z}, "")
   end
+  private_class_method :normalized_path
 
   def self.parse_uri(raw)
     return nil if raw.blank?
@@ -90,6 +92,5 @@ class BrowserPageviewReferrerInspector
   rescue Addressable::URI::InvalidURIError, ArgumentError, TypeError
     nil
   end
-
-  private_class_method :filter_query, :normalized_path, :parse_uri
+  private_class_method :parse_uri
 end
