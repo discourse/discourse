@@ -168,15 +168,18 @@ class NewPostManager
       end
     elsif manager.args[:category]
       category = Category.find_by(id: manager.args[:category])
+      skip_topic_validations =
+        manager.args[:via_email] && manager.user.staged? && manager.args[:skip_validations]
 
-      unless manager.user.guardian.can_create_topic_on_category?(category)
+      unless skip_topic_validations || manager.user.guardian.can_create_topic_on_category?(category)
         result = NewPostResult.new(:created_post, false)
         result.errors.add(:base, I18n.t("js.errors.reasons.forbidden"))
         return result
       end
     end
 
-    result = manager.enqueue(reason)
+    creator_opts = skip_topic_validations ? { skip_validations: true } : {}
+    result = manager.enqueue(reason, creator_opts: creator_opts)
 
     if result.success? || (reason == :email_spam && is_first_post?(manager))
       I18n.with_locale(SiteSetting.default_locale) do
