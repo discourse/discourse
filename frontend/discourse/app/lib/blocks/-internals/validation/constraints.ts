@@ -333,11 +333,7 @@ export function validateConstraints(
 
     // Handle requires constraint (object format)
     if (constraintType === "requires") {
-      if (
-        typeof argNamesValue === "object" &&
-        argNamesValue !== null &&
-        !Array.isArray(argNamesValue)
-      ) {
+      if (typeof argNamesValue === "object" && !Array.isArray(argNamesValue)) {
         error = validateRequires(
           argNamesValue as Record<string, string>,
           args,

@@ -241,7 +241,7 @@ const createChildBlock: CreateChildBlockFn = (entry, owner, debugContext) => {
     asGhost(reason: string): ChildBlockResult | null {
       const ghostResult = createDebugGhost(
         {
-          name: blockMeta?.blockName || "unknown",
+          name: blockMeta?.blockName,
           id,
           args: argsWithDefaults,
           containerArgs,

@@ -203,8 +203,8 @@ export type DebugGhostData = Omit<ChildBlockResult, "key">;
  * Data describing a block to ghost, passed to the BLOCK_DEBUG callback.
  */
 export interface DebugGhostBlockData {
-  /** The block name. */
-  name: string;
+  /** The block name; absent when the block carries no decorator metadata. */
+  name: string | undefined;
   /** The block's unique ID (if set). */
   id?: string;
   /** Block arguments. */
