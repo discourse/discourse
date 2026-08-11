@@ -491,26 +491,16 @@ el:
       pill: "Προτεινόμενα"
       pm_title: "Προτεινόμενα μηνύματα"
     admin_onboarding_banner:
-      launch_in_easy_steps: "Εκκίνηση σε %{step_count} εύκολα βήματα"
       congrats_onboarding_complete: "Συγχαρητήρια για την ολοκλήρωση της διαδικασίας ενσωμάτωσης!"
       select_theme:
         title: "Προσαρμόστε τον ιστότοπό σας"
-        description: "Επιλέξτε ένα αρχικό θέμα για την κοινότητά σας"
-        action: "Επιλογή θέματος"
-        modal_title: "Επιλέξτε ένα θέμα"
-        use_theme: "Χρήση επιλεγμένου θέματος"
-        enabled: "Επιλεγμένο"
-        applying_theme: "Γίνεται εφαρμογή θέματος..."
-        browse_all: "Διαχείριση θεμάτων"
         show_light_screenshot: "Εμφάνιση φωτεινού στιγμιότυπου οθόνης"
         show_dark_screenshot: "Εμφάνιση σκοτεινού στιγμιότυπου οθόνης"
       invite_collaborators:
         title: "Προσκαλέστε συνεργάτες"
-        description: "Τα πρώτα μέλη βοηθούν να ζωντανέψει η κοινότητά σας"
         action: "Δημιουργία πρόσκλησης"
       start_posting:
         title: "Ξεκινήστε να αναρτάτε"
-        description: "Δώστε στον κόσμο κάτι για να συζητήσουν μαζί"
         action: "Δείτε ιδέες"
         choose_option: "Πώς θα θέλατε να ξεκινήσετε;"
         predefined_topics: "Πρότυπα για το σπάσιμο του πάγου"
@@ -531,6 +521,27 @@ el:
           what_is_your_favorite_food:
             title: "Ποιο είναι το αγαπημένο σας φαγητό;"
             body: "Μοιραστείτε το αγαπημένο σας φαγητό με την κοινότητα! Θα ξεκινήσω: Λατρεύω την πίτσα, ειδικά με έξτρα τυρί και πεπερόνι."
+    design_wizard:
+      title: "Προσαρμόστε τον ιστότοπό σας"
+      back: "Πίσω"
+      next: "Επόμενο"
+      sections:
+        theme: "Θέμα"
+        fonts: "Γραμματοσειρές"
+        homepage: "Αρχική Σελίδα"
+      theme:
+        selected: "Επιλεγμένο"
+      colors:
+        light: "Φωτεινή"
+        dark: "Σκοτεινή"
+      fonts:
+        base_font: "Βασική γραμματοσειρά"
+        heading_font: "Γραμματοσειρά επικεφαλίδας"
+      homepage:
+        topics: "Θέματα"
+        categories: "Κατηγορίες"
+        styles:
+          boxes: "Κουτιά"
     about:
       edit: "Επεξεργασία αυτής της σελίδας"
       simple_title: "Σχετικά"
@@ -831,10 +842,6 @@ el:
       stale_help: "Αυτό το στοιχείο έχει επιλυθεί από <b>%{username}</b>."
       claim_help:
         optional: "Μπορείτε να υποβάλετε αξίωση για αυτό το στοιχείο για να αποτρέψετε την αξιολόγηση από άλλους."
-        required: "Πρέπει να διεκδικήσετε στοιχεία για να μπορέσετε να τα ελέγξετε."
-        claimed_by_you: "Έχετε διεκδικήσει αυτό το στοιχείο και μπορείτε να το ελέγξετε."
-        claimed_by_other: "Αυτό το στοιχείο μπορεί να αναθεωρηθεί μόνο από τον/την <b>%{username}</b>."
-        automatically_claimed_by: "Αυτό το στοιχείο αναθεωρείται αυτήν τη στιγμή από <b>%{username}</b>."
       claim:
         title: "Διεκδικήστε αυτό το θέμα"
       unclaim:
@@ -871,6 +878,7 @@ el:
         email: "Email"
         name: "Όνομα"
         fields: "Πεδία"
+        penalty_forever: "Για πάντα"
         reject_reason: "Αιτία"
         scrubbed_by: "Η εγγραφή αφαιρέθηκε από"
         scrubbed_reason: "Αιτία"
@@ -1661,7 +1669,6 @@ el:
       external_links_in_new_tab: "Άνοιγε όλους τους εξωτερικούς συνδέσμους σε νέα καρτέλα"
       enable_quoting: "Το κείμενο που επισημαίνεται να παρατίθεται στην απάντηση "
       enable_smart_lists: "Ενεργοποίηση έξυπνων λιστών κατά το γράψιμο στον συνθέτη"
-      enable_defer: "Ενεργοποίηση σήμανσης θεμάτων ως αδιάβαστων"
       enable_markdown_monospace_font: "Χρήση γραμματοσειράς monospace στη λειτουργία Markdown του συνθέτη"
       experimental_sidebar:
         enable: "Ενεργοποίηση πλαϊνής γραμμής"
@@ -2132,6 +2139,9 @@ el:
         contextual: "Νέου περιεχομένου σελίδας"
       bookmark_after_notification:
         title: "Μετά την αποστολή ειδοποίησης υπενθύμισης σελιδοδείκτη:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Ειδοποίησέ με όταν έχω \"μου αρέσει\""
         always: "Πάντα"
@@ -2302,7 +2312,8 @@ el:
           email_placeholder: "name@example.com"
           invite_by_email: "Διεύθυνση Email"
           restrict_domain: "Περιορισμός σε τομέα"
-          more_options: "Περισσότερες επιλογές"
+          create_and_send: "Αποστολή"
+          create_and_copy: "Αντιγραφή συνδέσμου"
           update: "Ενημέρωση"
           summary:
             role_member: "Μέλος"
@@ -2315,7 +2326,7 @@ el:
             expires: "Λήγει"
             topic: "Νήμα"
             groups: "Ομάδες"
-            edit: "Επεξεργασία πρόσκλησης"
+            edit: "Επεξεργασία"
         bulk_invite:
           none: "Δεν υπάρχουν προσκλήσεις για εμφάνιση σε αυτή τη σελίδα."
           text: "Μαζική πρόσκληση"
@@ -2839,6 +2850,7 @@ el:
       subcategory_count:
         one: "+%{count} υποκατηγορία"
         other: "+%{count} υποκατηγορίες"
+      subcategories: "+ Υποκατηγορίες"
       topic_count:
         one: "%{count} θέμα σε αυτήν την κατηγορία"
         other: "%{count} θέματα σε αυτήν την κατηγορία"
@@ -2905,10 +2917,11 @@ el:
     filter_input:
       clear: "Καθαρισμός φίλτρου"
     filter_controls:
-      reset: "Επαναφορά φίλτρου"
+      reset: "Επαναφορά"
       toggle: "Εναλλαγή αναπτυσσόμενων φίλτρων"
     d_icon_grid_picker:
       select_icon: "Επιλογή εικονιδίου"
+      search_label: "Αναζητήστε εικονίδια"
       search_placeholder: "Αναζητήστε εικονίδια..."
       no_results: "Δεν βρέθηκαν εικονίδια"
       results_count:
@@ -3055,7 +3068,6 @@ el:
       italic_label: "I"
       italic_title: "Έμφαση"
       italic_text: "κείμενο σε έμφαση"
-      heading_title: "Επικεφαλίδες"
       heading_level_n: "Επικεφαλίδα %{levelNumber}"
       heading_level_n_title: "Επικεφαλίδα %{levelNumber}"
       heading_level_paragraph: "Παράγραφος"
@@ -3271,7 +3283,6 @@ el:
         other: "%{count} ανοιχτά αιτήματα συμμετοχής για '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - ολοκληρώθηκε"
       new_features: "Νέες δυνατότητες διαθέσιμες!"
       admin_problems: "Νέα συμβουλή στον πίνακα ελέγχου του ιστότοπού σας"
       upcoming_changes:
@@ -5447,9 +5458,9 @@ el:
           always_public: "Το περιεχόμενο αυτής της ενότητας είναι πάντα δημόσιο"
           more_menu: "Περισσότερο μενού"
           localizations:
-            title: "Μεταφράσεις"
             locale: "Γλώσσα"
             title_label: "Τίτλος ενότητας"
+            remove_language: "Αφαίρεση"
           links:
             add: "Προσθήκη άλλου συνδέσμου"
             delete: "Διαγραφή συνδέσμου"
@@ -7067,6 +7078,8 @@ el:
       navigation_menu:
         sidebar: "Πλαϊνή μπάρα"
         header_dropdown: "Αναπτυσσόμενο μενού επικεφαλίδας"
+      duplicate_topic_titles:
+        allowed: "Επιτρέπεται"
       backups:
         title: "Αντίγραφα ασφαλείας"
         files_title: "Αρχεία αντιγράφου ασφαλείας"
@@ -7289,7 +7302,6 @@ el:
           direct_install_tip: "Σίγουρα θέλετε να εγκαταστήσετε το <strong>%{name}</strong> από το αποθετήριο που αναφέρεται παρακάτω;"
           is_private: "Το θέμα βρίσκεται σε ένα ιδιωτικό αποθετήριο git"
           remote_branch: "Όνομα διακλάδωσης (προαιρετικό)"
-          public_key: "Παραχωρήστε στο ακόλουθο δημόσιο κλειδί πρόσβαση στο αποθετήριο:"
           install: "Εγκατάσταση"
           installed: "Εγκατεστημένα"
           screenshot: "Στιγμιότυπο οθόνης %{name}"
@@ -8513,6 +8525,7 @@ el:
         uploading: "Μεταφορτώνεται…"
         name: "Όνομα"
         group: "Ομάδα"
+        all_groups: "Όλες οι ομάδες"
         created_by: "Δημιουργήθηκε από"
         image: "Εικόνα"
         alt: "προεπισκόπηση προσαρμοσμένου emoji"

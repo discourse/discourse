@@ -10,6 +10,7 @@ import DataTableColumns from "../../components/workflows/configurators/data-tabl
 import DataTableConditionBuilder from "../../components/workflows/configurators/data-table-condition-builder";
 import DataTableSelect from "../../components/workflows/configurators/data-table-select";
 import DefaultInputControl from "../../components/workflows/configurators/default-input-control";
+import FieldPathControl from "../../components/workflows/configurators/field-path-control";
 import FilterQuery from "../../components/workflows/configurators/filter-query";
 import GroupSelect from "../../components/workflows/configurators/group-select";
 import IconControl from "../../components/workflows/configurators/icon-control";
@@ -18,6 +19,7 @@ import MultiInput from "../../components/workflows/configurators/multi-input";
 import NoticeControl from "../../components/workflows/configurators/notice-control";
 import QueryParams from "../../components/workflows/configurators/query-params";
 import SelectControl from "../../components/workflows/configurators/select-control";
+import SummarizeAggregations from "../../components/workflows/configurators/summarize-aggregations";
 import TagsControl from "../../components/workflows/configurators/tags-control";
 import TimezoneControl from "../../components/workflows/configurators/timezone-control";
 import UrlPreview from "../../components/workflows/configurators/url-preview";
@@ -36,6 +38,10 @@ const FIELD_CONTROL_REGISTRY = {
   },
   data_table_columns: { kind: "standalone", renderer: DataTableColumns },
   query_params: { kind: "standalone", renderer: QueryParams },
+  summarize_aggregations: {
+    kind: "standalone",
+    renderer: SummarizeAggregations,
+  },
   user_seen_trigger_options: {
     kind: "standalone",
     renderer: UserSeenTriggerOptions,
@@ -58,6 +64,7 @@ const FIELD_CONTROL_REGISTRY = {
   multi_combo_box: { kind: "field", type: "custom", renderer: MultiComboBox },
   multi_input: { kind: "field", type: "custom", renderer: MultiInput },
   filter_query: { kind: "field", type: "custom", renderer: FilterQuery },
+  field_path: { kind: "field", type: "custom", renderer: FieldPathControl },
   url_preview: { kind: "field", type: "custom", renderer: UrlPreview },
   tags: { kind: "field", type: "custom", renderer: TagsControl },
   category: { kind: "field", type: "custom", renderer: CategoryControl },
@@ -72,6 +79,11 @@ const FIELD_CONTROL_REGISTRY = {
   checkbox: { kind: "field", type: "checkbox", renderer: DefaultInputControl },
   textarea: { kind: "field", type: "textarea", renderer: DefaultInputControl },
   time: { kind: "field", type: "input-time", renderer: DefaultInputControl },
+  date_time: {
+    kind: "field",
+    type: "input-datetime-local",
+    renderer: DefaultInputControl,
+  },
   timezone: { kind: "field", type: "custom", renderer: TimezoneControl },
 
   default: {

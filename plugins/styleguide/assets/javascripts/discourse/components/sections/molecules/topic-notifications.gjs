@@ -1,25 +1,25 @@
-import Component from "@glimmer/component";
-import TopicNotificationsButton from "discourse/select-kit/components/topic-notifications-button";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
+import TopicNotificationsButtonExample from "../../examples/molecules/topic-notifications-button";
+import topicNotificationsButtonSource from "../../examples/molecules/topic-notifications-button?source=file";
 
-export default class TopicNotifications extends Component {
-  expandedCode = `<TopicNotificationsButton @topic={{@dummy.topic}} @expanded={{true}} />`;
+export default <template>
+  <StyleguideExample
+    @title="<TopicNotificationsButton> expanded"
+    @code={{topicNotificationsButtonSource}}
+  >
+    <TopicNotificationsButtonExample
+      @topic={{@dummy.topic}}
+      @expanded={{true}}
+    />
+  </StyleguideExample>
 
-  defaultCode = `<TopicNotificationsButton @topic={{@dummy.topic}} @expanded={{false}} />`;
-
-  <template>
-    <StyleguideExample
-      @title="<TopicNotificationsButton> expanded"
-      @code={{this.expandedCode}}
-    >
-      <TopicNotificationsButton @topic={{@dummy.topic}} @expanded={{true}} />
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title="<TopicNotificationsButton>"
-      @code={{this.defaultCode}}
-    >
-      <TopicNotificationsButton @topic={{@dummy.topic}} @expanded={{false}} />
-    </StyleguideExample>
-  </template>
-}
+  <StyleguideExample
+    @title="<TopicNotificationsButton>"
+    @code={{topicNotificationsButtonSource}}
+  >
+    <TopicNotificationsButtonExample
+      @topic={{@dummy.topic}}
+      @expanded={{false}}
+    />
+  </StyleguideExample>
+</template>

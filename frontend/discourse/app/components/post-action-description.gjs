@@ -6,6 +6,7 @@ import {
 } from "discourse/components/post/small-action";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import { userPath } from "discourse/lib/url";
+import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 export function actionDescriptionHtml(actionCode, createdAt, username, path) {
@@ -17,13 +18,14 @@ export function actionDescriptionHtml(actionCode, createdAt, username, path) {
 
   let who = "";
   if (username) {
+    const escapedUsername = escapeExpression(username);
     if (
       GROUP_ACTION_CODES.includes(actionCode) ||
       customGroupActionCodes.includes(actionCode)
     ) {
-      who = `<a class="mention-group" href="/g/${username}">@${username}</a>`;
+      who = `<a class="mention-group" href="/g/${encodeURIComponent(username)}">@${escapedUsername}</a>`;
     } else {
-      who = `<a class="mention" href="${userPath(username)}">@${username}</a>`;
+      who = `<a class="mention" href="${userPath(encodeURIComponent(username))}">@${escapedUsername}</a>`;
     }
   }
   return trustHTML(i18n(`action_codes.${actionCode}`, { who, when, path }));

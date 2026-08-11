@@ -69,7 +69,7 @@ module DiscourseAi
     def self.flag_post_response(reason:, llm_response: nil)
       I18n.t(
         "discourse_automation.scriptables.llm_triage.flagged_post_response",
-        llm_response: ERB::Util.html_escape(llm_response.presence || reason),
+        llm_response: llm_response.presence || reason,
       )
     end
 

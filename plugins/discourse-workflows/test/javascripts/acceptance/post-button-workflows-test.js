@@ -51,6 +51,26 @@ acceptance("Discourse Workflows | Post button", function (needs) {
         confirmation: false,
         confirmation_message: null,
       },
+      {
+        trigger_node_id: "trigger-1",
+        workflow_id: 6,
+        label: "Only post two",
+        icon: null,
+        post_number: 2,
+        position: "last",
+        confirmation: false,
+        confirmation_message: null,
+      },
+      {
+        trigger_node_id: "trigger-1",
+        workflow_id: 7,
+        label: "Any post",
+        icon: null,
+        post_number: null,
+        position: "last",
+        confirmation: false,
+        confirmation_message: null,
+      },
     ],
   });
 
@@ -78,6 +98,11 @@ acceptance("Discourse Workflows | Post button", function (needs) {
     await click("#post_1 .post-controls .workflow-post-button-1");
 
     const params = new URLSearchParams(lastRequestBody);
+    assert.strictEqual(
+      params.get("workflow_id"),
+      "1",
+      "submits the workflow id"
+    );
     assert.strictEqual(
       params.get("trigger_node_id"),
       "trigger-1",
@@ -118,6 +143,30 @@ acceptance("Discourse Workflows | Post button", function (needs) {
     assert
       .dom("#post_1 .post-controls .workflow-post-button-5")
       .exists("the button falls back gracefully when its anchor is absent");
+  });
+
+  test("filters workflow buttons by post number", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    assert
+      .dom("#post_1 .post-controls .workflow-post-button-6")
+      .doesNotExist("the restricted workflow is absent from post one");
+    assert
+      .dom("#post_2 .post-controls .workflow-post-button-6")
+      .exists("the restricted workflow renders on post two");
+
+    assert
+      .dom("#post_1 .post-controls .workflow-post-button-1")
+      .exists("a workflow without a post number renders on post one");
+    assert
+      .dom("#post_2 .post-controls .workflow-post-button-1")
+      .exists("a workflow without a post number renders on post two");
+    assert
+      .dom("#post_1 .post-controls .workflow-post-button-7")
+      .exists("a workflow with a null post number renders on post one");
+    assert
+      .dom("#post_2 .post-controls .workflow-post-button-7")
+      .exists("a workflow with a null post number renders on post two");
   });
 
   test("show-more buttons render in the show-more menu", async function (assert) {

@@ -129,6 +129,12 @@ RSpec.describe Admin::DashboardController do
         response.parsed_body["sections"].index_by { |section| section["id"] }
       end
 
+      def signups_kpi_value
+        highlights =
+          response.parsed_body["sections"].find { |section| section["id"] == "highlights" }
+        highlights["data"]["kpis"].find { |kpi| kpi["type"] == "new_signups" }["value"]
+      end
+
       context "with highlights_data" do
         let(:highlights_data) { section_payloads["highlights"]&.dig("data") }
 
@@ -497,6 +503,23 @@ RSpec.describe Admin::DashboardController do
           expect(items.first).to include("source" => "core_report", "identifier" => "signups")
           expect(items.first["title"]).to be_present
         end
+      end
+
+      it "serves the default window from the warmed report cache" do
+        configure_dashboard_sections(%w[highlights])
+        admin.update!(last_seen_at: 1.hour.ago)
+        params = { start_date: 29.days.ago.to_date.to_s, end_date: Time.zone.now.to_date.to_s }
+
+        Jobs::WarmDashboardReports.new.execute({})
+        Fabricate(:user, created_at: 2.days.ago)
+
+        get "/admin/dashboard.json", params: params
+        warmed_signups = signups_kpi_value
+
+        Discourse.cache.clear
+        get "/admin/dashboard.json", params: params
+
+        expect(signups_kpi_value).to eq(warmed_signups + 1)
       end
 
       it "denies non-staff users" do
@@ -1219,11 +1242,23 @@ RSpec.describe Admin::DashboardController do
       end
     end
 
+    let(:raising_provider) do
+      Class.new(AdminDashboard::Reports::SourceProvider) do
+        def self.source_name = "raising_source"
+        def self.fetch_many(identifiers, guardian:, filters: {})
+          identifiers.each_with_object({}) do |id, h|
+            raise "boom" if id == "broken"
+            h[id.to_s] = { id: id.to_s }
+          end
+        end
+      end
+    end
+
     let(:plugin) { Plugin::Instance.new }
 
     after do
       DiscoursePluginRegistry._raw_admin_dashboard_report_sources.reject! do |entry|
-        entry[:value] == fake_provider
+        entry[:value] == fake_provider || entry[:value] == raising_provider
       end
     end
 
@@ -1280,7 +1315,7 @@ RSpec.describe Admin::DashboardController do
         expect(items.map { |i| [i["identifier"], i["data"]["id"]] }).to eq([%w[a a], %w[b b]])
       end
 
-      it "returns data: nil for items whose source has no registered provider" do
+      it "returns data: nil, error: false for items whose source has no registered provider" do
         post "/admin/dashboard/reports/bulk.json",
              params: {
                items: [{ source: "totally_unregistered", identifier: "x" }],
@@ -1290,7 +1325,25 @@ RSpec.describe Admin::DashboardController do
         items = response.parsed_body["items"]
         expect(items.size).to eq(1)
         expect(items.first["data"]).to be_nil
+        expect(items.first["error"]).to eq(false)
         expect(items.first["source"]).to eq("totally_unregistered")
+      end
+
+      it "returns error: true for an item whose provider raises, without affecting other items" do
+        DiscoursePluginRegistry.register_admin_dashboard_report_source(raising_provider, plugin)
+
+        post "/admin/dashboard/reports/bulk.json",
+             params: {
+               items: [
+                 { source: "raising_source", identifier: "broken" },
+                 { source: "raising_source", identifier: "ok" },
+               ],
+             }
+
+        expect(response.status).to eq(200)
+        items = response.parsed_body["items"].index_by { |item| item["identifier"] }
+        expect(items["broken"]).to include("data" => nil, "error" => true)
+        expect(items["ok"]).to include("data" => { "id" => "ok" }, "error" => false)
       end
 
       it "returns data shaped by the dashboard filters" do

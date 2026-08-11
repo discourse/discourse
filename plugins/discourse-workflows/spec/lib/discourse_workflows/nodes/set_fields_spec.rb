@@ -69,6 +69,38 @@ RSpec.describe DiscourseWorkflows::Nodes::SetFields::V1 do
       expect(result).to eq({ "a" => false, "b" => false, "c" => false, "d" => true })
     end
 
+    it "casts boolean values resolved from expressions" do
+      config = { "include_other_fields" => false }.merge(
+        assignments(
+          assignment("from_true", "={{ $json.enabled }}", "boolean"),
+          assignment("from_false", "={{ $json.disabled }}", "boolean"),
+          assignment("from_number", "={{ $json.count }}", "boolean"),
+          assignment("from_missing", "={{ $json.nope }}", "boolean"),
+        ),
+      )
+
+      result =
+        execute_node(
+          configuration: config,
+          item: {
+            "json" => {
+              "enabled" => true,
+              "disabled" => false,
+              "count" => 1,
+            },
+          },
+        )
+
+      expect(result).to eq(
+        {
+          "from_true" => true,
+          "from_false" => false,
+          "from_number" => true,
+          "from_missing" => false,
+        },
+      )
+    end
+
     it "casts float values" do
       config = { "include_other_fields" => false }.merge(
         assignments(assignment("score", "3.14", "float"), assignment("whole", "7", "float")),

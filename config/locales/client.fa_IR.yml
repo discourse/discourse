@@ -369,10 +369,24 @@ fa_IR:
       pill: "پیشنهادی"
       pm_title: "پیام‌های پیشنهادی"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "انتخاب شده"
       start_posting:
         back: "بازگشت"
+    design_wizard:
+      back: "بازگشت"
+      next: "بعدی"
+      sections:
+        theme: "قالب"
+        homepage: "صفحه اصلی"
+      theme:
+        selected: "انتخاب شده"
+      colors:
+        light: "روشن"
+        dark: "تیره"
+      homepage:
+        topics: "موضوعات"
+        categories: "دسته‌بندی‌ها"
+        styles:
+          boxes: "جعبه‌ها"
     about:
       edit: "ویرایش این صفحه"
       simple_title: "درباره"
@@ -630,10 +644,6 @@ fa_IR:
         optional: "اختیاری"
       claim_help:
         optional: "می‌توانید این مورد را درخواست کنید تا دیگران را از بازنگری آن بازنگه دارید."
-        required: "قبل از بازنگری موارد باید آن‌ها را درخواست دهید."
-        claimed_by_you: "می‌توانید این مورد را درخواست کنید و آن را بازنگری کنید."
-        claimed_by_other: "این مورد فقط توسط کاربر<b>%{username} </b>قابل بازنگری است."
-        automatically_claimed_by: "این مورد توسط <b>%{username}</b> در حال بازنگری است."
       awaiting_approval: "منتظر تایید"
       delete: "حذف"
       settings:
@@ -664,6 +674,8 @@ fa_IR:
         email: "ایمیل"
         name: "نام"
         fields: "فیلدها"
+        silence_reason: "دلیل سکوت"
+        penalty_forever: "همیشه"
         reject_reason: "دلیل"
         scrubbed_reason: "دلیل"
         scrub_record:
@@ -1357,7 +1369,6 @@ fa_IR:
       external_links_in_new_tab: "همهٔ پیوندهای خروجی را در یک تب جدید باز کن"
       enable_quoting: "فعال کردن نقل قول گرفتن از متن انتخاب شده"
       enable_smart_lists: "هنگام نوشتن در ابزار نوشتن، لیست های هوشمند را فعال کن"
-      enable_defer: "علامت گذاری موضوعات به عنوان خوانده نشده را فعال کن"
       experimental_sidebar:
         enable: "فعال کردن نوار کناری"
         options: "تنظیمات"
@@ -1821,6 +1832,9 @@ fa_IR:
         contextual: "محتوای تازه ی صفحه"
       bookmark_after_notification:
         title: "پس از ارسال آگاه‌سازی یادآوری نشانک:"
+      send_shortcut:
+        enter: "وارد شدن "
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "وقتی پسندیده شد اعلام کن"
         always: "همیشه"
@@ -1982,7 +1996,8 @@ fa_IR:
           email_placeholder: "name@example.com"
           invite_by_email: "ایمیل"
           restrict_domain: "محدود کردن دامنه"
-          more_options: "گزینه‌های بیشتر"
+          create_and_send: "ارسال"
+          create_and_copy: "رونوشت پیوند"
           update: "به‌روزرسانی"
           summary:
             role_member: "عضو"
@@ -1993,7 +2008,7 @@ fa_IR:
             expires: "انقضاء"
             topic: "موضوع"
             groups: "گروه‌ها"
-            edit: "ویرایش دعوت‌نامه"
+            edit: "ویرایش"
         bulk_invite:
           none: "دعوتنامه ای برای نمایش در این صفحه موجود نیست."
           text: "دعوت به تعداد بالا"
@@ -2484,6 +2499,7 @@ fa_IR:
       subcategory_count:
         one: "+%{count} زیر دسته"
         other: "+%{count} زیر دسته"
+      subcategories: "+ دسته‌‌بندی‌های فرزند"
       topic_count:
         one: "%{count} موضوع در این دسته"
         other: "%{count} موضوع در این دسته"
@@ -2542,6 +2558,8 @@ fa_IR:
       default: ایموجی های مخصوص
     filter_input:
       clear: "حذف کردن فیلتر"
+    filter_controls:
+      reset: "بازنشانی"
     shared_drafts:
       title: "پیش‌نویس‌های اشتراک‌گذاشته شده"
       notice: "این موضوع تنها برای کسانی قابل مشاهده است، که می‌توانند پیش‌نویس‌های اشتراک‌گذاشته شده را منتشر کنند."
@@ -2790,7 +2808,6 @@ fa_IR:
         other: "%{count} درخواست عضویت باز برای '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}، %{username2}</span> %{description}"
-      votes_released: "%{description} - تکمیل شد"
       new_features: "ویژگی‌های جدید در دسترس است!"
       admin_problems: "توصیه‌های جدید در پیشخوان سایت شما"
       dismiss_confirmation:
@@ -4607,10 +4624,9 @@ fa_IR:
           always_public: "محتوای این بخش همیشه عمومی است"
           more_menu: "فهرست انتخاب بیشتر"
           localizations:
-            title: "ترجمه‌ها"
             locale: "زبان"
             title_label: "عنوان بخش"
-            link_label: "نام پیوند"
+            remove_language: "پاک کردن"
           links:
             add: "پیوند دیگری اضافه کنید"
             delete: "حذف پیوند"
@@ -5839,6 +5855,8 @@ fa_IR:
         sidebar: "نوار کناری"
         header_dropdown: "فهرست کشویی سربرگ"
         legacy: "حالت قدیمی"
+      duplicate_topic_titles:
+        allowed: "مجاز"
       backups:
         title: "پشتیبان گیری"
         files_title: "فایل‌های پشتیبان"
@@ -6050,7 +6068,6 @@ fa_IR:
           finish_install: "پایان نصب پوسته"
           last_attempt: "مراحل نصب تمام نشد، آخرین تلاش:"
           remote_branch: "نام شاخه (اختیاری)"
-          public_key: "به کلید عمومی زیر اجازه دسترسی به مخزن بدهید:"
           install: "نصب"
           installed: "نصب"
           install_popular: "محبوب"
@@ -7176,6 +7193,7 @@ fa_IR:
         uploading: "در حال بارگذاری…"
         name: "نام"
         group: "گروه"
+        all_groups: "همه گروه‌ها"
         created_by: "ایجاد شده توسط"
         image: "تصویر"
         alt: "پیش نمایش ایموجی سفارشی"

@@ -184,6 +184,21 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "#client_settings_hash" do
+    it "memoizes the hash until a setting changes" do
+      settings.setting(:string_type, "haha", client: true)
+      settings.refresh!
+
+      hash = settings.client_settings_hash
+      expect(hash[:string_type]).to eq("haha")
+      expect(settings.client_settings_hash).to be(hash)
+
+      settings.string_type = "changed"
+
+      expect(settings.client_settings_hash[:string_type]).to eq("changed")
+    end
+  end
+
   describe ".after_fork" do
     it "refreshes the site settings" do
       settings.setting(:hello, 1)
@@ -1084,9 +1099,15 @@ RSpec.describe SiteSettingExtension do
       settings.default_locale = "zh_CN"
     end
 
-    it "expires the cache" do
+    it "expires the client settings caches" do
+      settings.refresh!
+      expect(JSON.parse(settings.client_settings_json)["default_locale"]).to eq("en")
+      expect(settings.client_settings_hash[:default_locale]).to eq("en")
+
       settings.default_locale = "zh_CN"
-      expect(Discourse.cache.exist?(SiteSettingExtension.client_settings_cache_key)).to be_falsey
+
+      expect(JSON.parse(settings.client_settings_json)["default_locale"]).to eq("zh_CN")
+      expect(settings.client_settings_hash[:default_locale]).to eq("zh_CN")
     end
 
     it "refreshes the client" do
@@ -1394,8 +1415,6 @@ RSpec.describe SiteSettingExtension do
         settings.setting(:test_setting, "value", client: true)
         settings.refresh!
 
-        cache_key = SiteSettingExtension.client_settings_cache_key
-
         call_count = 0
         allow(settings).to receive(:client_settings_json_uncached) do
           call_count += 1
@@ -1409,19 +1428,15 @@ RSpec.describe SiteSettingExtension do
         # First call fails
         result1 = settings.client_settings_json
         expect(result1).to eq("")
-        # Verify error was NOT cached in Redis
-        expect(Discourse.cache.exist?(cache_key)).to be_falsey
 
         # Second call should retry (not use cached error) and succeed
         result2 = settings.client_settings_json
         expect(result2).to eq('{"default_locale":"en","test_setting":"value"}')
         expect(call_count).to eq(2) # Both calls executed, error was not cached
 
-        # Verify success was cached in Redis
-        expect(Discourse.cache.exist?(cache_key)).to be_truthy
-        expect(Discourse.cache.read(cache_key)).to eq(
-          '{"default_locale":"en","test_setting":"value"}',
-        )
+        # Success is memoized; further calls do not regenerate
+        expect(settings.client_settings_json).to eq(result2)
+        expect(call_count).to eq(2)
       end
     end
   end

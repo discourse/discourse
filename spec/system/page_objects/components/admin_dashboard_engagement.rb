@@ -4,8 +4,8 @@ module PageObjects
   module Components
     class AdminDashboardEngagement < PageObjects::Components::Base
       SECTION = "[data-section-id='engagement']"
-      ACTIVITY_CATEGORY_FILTER = "#{SECTION} .db-activity .category-selector"
-      WHOS_POSTING_CATEGORY_FILTER = "#{SECTION} .db-whos-posting .category-selector"
+      ACTIVITY_CATEGORY_FILTER = "#{SECTION} .db-activity .multiple-categories-selector"
+      WHOS_POSTING_CATEGORY_FILTER = "#{SECTION} .db-whos-posting .multiple-categories-selector"
       ACTIVITY_CATEGORY_CELL = "#{SECTION} .db-activity-table__cell-category"
 
       def activity_category_filter

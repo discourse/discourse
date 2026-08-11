@@ -60,7 +60,7 @@ module PageObjects
       end
 
       def description_textarea
-        find("textarea[name='description']")
+        find(".form-kit__field[data-name='description'] textarea.d-editor-input")
       end
 
       def fill_name(value)

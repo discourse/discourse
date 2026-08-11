@@ -19,8 +19,10 @@ uk:
     chat_integration_slack_transcript_quote: Загорнути стенограму slack у теги [quote]?
     errors:
       chat_integration_slack_api_configs_are_empty: "Ви повинні ввести або вихідну URL-адресу веб-хука, або маркер доступу"
+      chat_integration_telegram_api_base_url_invalid: "Базова URL-адреса Telegram API має бути дійсною URL-адресою HTTPS без облікових даних, рядка запиту або фрагмента"
     chat_integration_telegram_enabled: "Увімкніть постачальника інтеграції чату Telegram"
     chat_integration_telegram_access_token: "Токен доступу вашого бота від ботбатька Telegram"
+    chat_integration_telegram_api_base_url: "Базова URL-адреса, яка використовується для запитів API бота Telegram. Змінюйте це лише під час маршрутизації запитів через довірений проксі-сервер HTTPS. Хости в приватних мережах також потрібно додати до налаштування сайту дозволених внутрішніх хостів."
     chat_integration_telegram_excerpt_length: "Довжина витягу телеграмового повідомлення"
     chat_integration_telegram_enable_slash_commands: "Дозвольте керувати підписками на телеграм за допомогою слеша «косої риски»"
     chat_integration_discord_enabled: "Увімкніть постачальника послуг з інтеграції чату Discord"
@@ -68,6 +70,14 @@ uk:
         title: Надіслати Slack повідомлення
       send_chat_integration_message:
         title: Надіслати повідомлення про чат-інтеграцію
+  discourse_workflows:
+    errors:
+      send_chat_integration_message:
+        channel_not_found: "Канал не знайдено: %{channel_id}"
+        provider_disabled: "Постачальник інтеграції чату вимкнено або відсутній: %{provider}"
+        provider_failed: "Постачальник %{provider} не зміг надіслати повідомлення"
+        provider_failed_with_details: "Постачальник %{provider} не зміг надіслати повідомлення: %{details}"
+        message_required: "Потрібне повідомлення"
   chat_integration:
     all_categories: "(усі розділи)"
     deleted_category: "(видалена категорія)"
@@ -84,6 +94,10 @@ uk:
       setting_update_failed: "Не вдалося оновити налаштування: %{errors}"
     provider:
       slack:
+        errors:
+          auth_error: "Наданий токен автентифікації недійсний"
+          action_prohibited: "Бот не має дозволу на публікацію в цьому каналі"
+          channel_not_found: "Зазначений канал не існує в Slack"
         status:
           header: |
             *Правила для цього каналу*

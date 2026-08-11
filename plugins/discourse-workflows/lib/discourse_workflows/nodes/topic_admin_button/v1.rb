@@ -43,10 +43,6 @@ module DiscourseWorkflows
         end
 
         private
-
-        def topic_data(topic)
-          serialize_record(topic, TopicListItemSerializer)
-        end
       end
     end
   end

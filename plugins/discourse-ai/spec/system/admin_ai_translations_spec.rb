@@ -81,9 +81,7 @@ describe "Admin AI translations" do
       )
       expect(page).to have_css(".ai-translations__locale-input-row .multi-select")
       expect(page).to have_css(".ai-translations__category-input-row .combo-box")
-      expect(page).to have_css(
-        ".ai-translations__settings-panel > .setting:first-child .d-toggle-switch",
-      )
+      expect(translations_page).to have_toggle
       expect(page).to have_no_css(".ai-translations__settings-panel.alert-info")
 
       expect(translations_page).to have_overview_cards
@@ -114,10 +112,10 @@ describe "Admin AI translations" do
       )
     end
 
-    it "navigates to app language settings when clicking the app language button" do
+    it "takes the user to content localization settings when clicking the localization settings button" do
       find(".ai-localization-settings-button").click
 
-      expect(page).to have_current_path("/admin/config/localization")
+      expect(page).to have_current_path("/admin/site_settings/category/content_localization")
     end
 
     it "toggles the selected target for the upcoming details panel" do
@@ -284,6 +282,32 @@ describe "Admin AI translations" do
 
       expect(translations_page).to have_toggle
       expect(translations_page).to have_no_overview_cards
+    end
+
+    it "enables the language switcher along with translations" do
+      SiteSetting.ai_translation_enabled = false
+      SiteSetting.content_localization_language_switcher = "none"
+
+      translations_page.visit
+
+      expect(translations_page.language_switcher_checkbox).to be_checked
+      translations_page.toggle_translations
+
+      wait_for { SiteSetting.ai_translation_enabled }
+      expect(SiteSetting.content_localization_enabled).to eq(true)
+      expect(SiteSetting.content_localization_language_switcher).to eq("all")
+    end
+
+    it "leaves the language switcher off when the admin opts out" do
+      SiteSetting.ai_translation_enabled = false
+      SiteSetting.content_localization_language_switcher = "none"
+
+      translations_page.visit
+      translations_page.language_switcher_checkbox.click
+      translations_page.toggle_translations
+
+      wait_for { SiteSetting.ai_translation_enabled }
+      expect(SiteSetting.content_localization_language_switcher).to eq("none")
     end
 
     it "keeps toggle disabled when no locales are configured" do

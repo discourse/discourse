@@ -2,7 +2,7 @@
 
 class BrowserPageviewSessionEngagement < ActiveRecord::Base
   MAX_SESSION_ID_LENGTH = 32
-  BEACON_SETTLE_PERIOD = 10.minutes
+  BEACON_SETTLE_PERIOD = 30.minutes
 
   INTERACTION_COLUMNS = %i[
     mouse_move_events
@@ -14,6 +14,13 @@ class BrowserPageviewSessionEngagement < ActiveRecord::Base
   ]
 
   GREATEST_COLUMNS = INTERACTION_COLUMNS + %i[engaged_seconds time_to_first_interaction_ms]
+
+  MIN_DISTINCT_INTERACTIONS = 2
+
+  def self.engaged_sql(table)
+    signals = INTERACTION_COLUMNS.map { |column| "(#{table}.#{column} > 0)::int" }.join(" + ")
+    "(#{signals}) >= #{MIN_DISTINCT_INTERACTIONS}"
+  end
 
   def self.upsert_from_payload(
     session_id:,

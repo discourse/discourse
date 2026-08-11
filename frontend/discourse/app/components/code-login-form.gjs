@@ -16,7 +16,7 @@ import WelcomeHeader from "discourse/components/welcome-header";
 import lazyHash from "discourse/helpers/lazy-hash";
 import valueEntered from "discourse/helpers/value-entered";
 import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import { isReadOnlyError, popupAjaxError } from "discourse/lib/ajax-error";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import discourseDebounce from "discourse/lib/debounce";
 import escape from "discourse/lib/escape";
@@ -36,6 +36,7 @@ import { i18n } from "discourse-i18n";
 const RESEND_COOLDOWN_SECONDS = 30;
 
 export default class CodeLoginForm extends Component {
+  @service login;
   @service site;
   @service modal;
 
@@ -321,7 +322,11 @@ export default class CodeLoginForm extends Component {
 
       this.redirectAfterLogin(result?.redirect_url);
     } catch (e) {
-      popupAjaxError(e);
+      if (isReadOnlyError(e)) {
+        this.codeError = this.login.readOnlyLoginMessage;
+      } else {
+        popupAjaxError(e);
+      }
     } finally {
       this.verifying = false;
     }

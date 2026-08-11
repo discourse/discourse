@@ -3,9 +3,71 @@
 module PageObjects
   module Pages
     class AdminAiAgent < PageObjects::Pages::Base
+      def visit_list
+        page.visit("/admin/plugins/discourse-ai/ai-agents")
+        self
+      end
+
       def visit_edit(agent)
         page.visit("/admin/plugins/discourse-ai/ai-agents/#{agent.id}/edit")
         self
+      end
+
+      def open_duplicate_menu
+        page.find("button.duplicate-agent-menu-trigger").click
+        self
+      end
+
+      def filter_duplicates(value)
+        page.find("[data-test-duplicate-agent-filter]").fill_in(with: value)
+        self
+      end
+
+      def duplicate_from_list(name)
+        page.find("[data-test-duplicate-agent-option]", text: name).click
+        self
+      end
+
+      def has_duplicate_option?(name)
+        page.has_css?("[data-test-duplicate-agent-option]", text: name)
+      end
+
+      def has_no_duplicate_option?(name)
+        page.has_no_css?("[data-test-duplicate-agent-option]", text: name)
+      end
+
+      def duplicate
+        page.find(".ai-agent-editor__duplicate").click
+        self
+      end
+
+      def has_floating_actions?
+        page.has_css?(".form-kit__actions.is-floating")
+      end
+
+      def has_no_floating_actions?
+        page.has_no_css?(".form-kit__actions.is-floating")
+      end
+
+      def has_form_field_value?(name, value)
+        page.has_field?(name, with: value)
+      end
+
+      def has_agent_enabled_state?(enabled)
+        page.has_css?(
+          ".form-kit__field[data-name='enabled'] button[role='switch'][aria-checked='#{enabled}']",
+          visible: :all,
+        )
+      end
+
+      def has_agent_user?(username = nil)
+        options = username ? { text: username } : {}
+        page.has_css?(".ai-agent-editor__ai_bot_user a", **options)
+      end
+
+      def has_no_agent_user?(username = nil)
+        options = username ? { text: username } : {}
+        page.has_no_css?(".ai-agent-editor__ai_bot_user a", **options)
       end
 
       def form

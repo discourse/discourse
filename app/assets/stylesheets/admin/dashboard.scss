@@ -689,14 +689,6 @@
     }
   }
 
-  &.critical .version-notes .normal-note {
-    display: none;
-  }
-
-  &.normal .version-notes .critical-note {
-    display: none;
-  }
-
   .face .fa {
     font-size: var(--font-up-4);
   }
@@ -783,7 +775,7 @@
 
 .admin-new-feature-item__screenshot {
   margin-bottom: 1em;
-  width: 100%;
+  max-width: 100%;
 }
 
 .admin-new-feature-item__tooltip-header {

@@ -3,6 +3,33 @@
 class NestedTopicsController < ApplicationController
   include EmbedModeHandler
 
+  ACTIVITY_PAGE_SIZE = 50
+  ACTIVITY_POST_ATTRIBUTES = %i[
+    id
+    name
+    username
+    avatar_template
+    created_at
+    cooked
+    cooked_hidden
+    post_number
+    post_type
+    topic_id
+    user_id
+    version
+    action_code
+    action_code_who
+    action_code_path
+    deleted_at
+    user_deleted
+    can_edit
+    can_delete
+    can_recover
+    moderator?
+    admin?
+    staff?
+  ].freeze
+
   skip_before_action :check_xhr, only: %i[show context]
 
   before_action :ensure_nested_replies_enabled
@@ -72,47 +99,30 @@ class NestedTopicsController < ApplicationController
 
   # GET /n/:slug/:topic_id/activity
   def activity
-    post_types = [Post.types[:small_action]]
-    post_types << Post.types[:whisper] if guardian.user&.whisperer?
-
-    posts =
-      @topic
-        .posts
-        .where(post_type: post_types)
-        .where.not(action_code: [nil, ""])
-        .includes(:user)
-        .order(:created_at)
+    page = params[:page].to_i.clamp(0, 1000)
+    posts = activity_posts.offset(page * ACTIVITY_PAGE_SIZE).limit(ACTIVITY_PAGE_SIZE + 1).to_a
+    has_more = posts.length > ACTIVITY_PAGE_SIZE
+    posts = posts.first(ACTIVITY_PAGE_SIZE)
+    posts.each { |post| post.topic = @topic }
 
     Post.preload_custom_fields(posts, %w[action_code_who action_code_path])
+    actions = serialize_data(posts, PostSerializer, only: ACTIVITY_POST_ATTRIBUTES)
 
-    creator = @topic.user
-    actions = [
-      {
-        action_code: "topic_created",
-        created_at: @topic.created_at,
-        username: creator&.username,
-        avatar_template: creator&.avatar_template,
-      },
-    ]
+    if page.zero?
+      creator = @topic.user
+      actions.unshift(
+        {
+          synthetic: true,
+          action_code: "topic_created",
+          created_at: @topic.created_at,
+          user_id: creator&.id,
+          username: creator&.username,
+          avatar_template: creator&.avatar_template,
+        },
+      )
+    end
 
-    actions.concat(
-      posts
-        .select { |post| guardian.can_see_post?(post) }
-        .map do |post|
-          {
-            id: post.id,
-            action_code: post.action_code,
-            action_code_who: post.custom_fields["action_code_who"],
-            action_code_path: post.custom_fields["action_code_path"],
-            created_at: post.created_at,
-            username: post.user&.username,
-            avatar_template: post.user&.avatar_template,
-            cooked: post.cooked,
-          }
-        end,
-    )
-
-    render json: { small_actions: actions }
+    render json: { small_actions: actions, has_more: has_more }
   end
 
   # PUT /n/:slug/:topic_id/toggle
@@ -129,6 +139,23 @@ class NestedTopicsController < ApplicationController
   private
 
   TOPIC_ROUTE_QUERY_PARAMS = %w[sort collapse_replies context embed_mode class_name].freeze
+
+  def activity_posts
+    post_types = [Post.types[:small_action]]
+    post_types << Post.types[:whisper] if guardian.user&.whisperer?
+
+    posts = @topic.posts
+    posts = posts.with_deleted if guardian.can_see_deleted_posts?(@topic.category)
+
+    posts =
+      posts
+        .where(post_type: post_types)
+        .where.not(action_code: [nil, ""])
+        .includes(:user)
+        .order(:created_at, :id)
+
+    guardian.filter_hidden_posts(posts, category: @topic.category)
+  end
 
   def list_roots_response(page:)
     result = nil

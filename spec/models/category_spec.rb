@@ -1427,6 +1427,16 @@ RSpec.describe Category do
       expect(category_destroyed.reload.topic).to_not eq(nil)
       expect(category_trashed.reload.topic).to_not eq(nil)
     end
+
+    it "does not create a category topic for a category exempted from definition topics" do
+      category = Fabricate(:category_with_definition)
+      category.topic.destroy!
+      category.upsert_custom_fields(Category::SKIP_DEFINITION_CUSTOM_FIELD => true)
+
+      Category.ensure_consistency!
+
+      expect(category.reload.topic_id).to eq(nil)
+    end
   end
 
   describe "#find_by_slug_path" do

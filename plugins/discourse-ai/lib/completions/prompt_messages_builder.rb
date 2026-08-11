@@ -171,6 +171,17 @@ module DiscourseAi
         guardian = Guardian.new(post.user)
 
         context.reverse_each do |raw, username, custom_prompt, upload_ids, created_at|
+          filtered_upload_ids =
+            filtered_upload_ids_for_prompt(
+              upload_ids,
+              include_image_uploads: include_image_uploads,
+              include_document_uploads: include_document_uploads,
+              allowed_attachment_types: allowed_attachment_types,
+              guardian: guardian,
+            )
+          remaining_upload_ids = Array(filtered_upload_ids).dup
+          uploads_by_id = Upload.where(id: remaining_upload_ids).index_by(&:id)
+
           custom_prompt_translation =
             Proc.new do |message|
               # We can't keep backwards-compatibility for stored functions.
@@ -190,6 +201,19 @@ module DiscourseAi
                 custom_context[:provider_data] = provider_data if provider_data.is_a?(Hash)
                 custom_context[:created_at] = created_at
 
+                if custom_context[:type] == :model && remaining_upload_ids.present?
+                  content_text = message_text(custom_context[:content])
+                  referenced_upload_ids =
+                    remaining_upload_ids.select do |upload_id|
+                      upload = uploads_by_id[upload_id]
+                      upload && content_text.include?(upload.short_url)
+                    end
+                  if referenced_upload_ids.present?
+                    custom_context[:upload_ids] = referenced_upload_ids
+                    remaining_upload_ids -= referenced_upload_ids
+                  end
+                end
+
                 builder.push(**custom_context)
               end
             end
@@ -201,13 +225,7 @@ module DiscourseAi
 
             context[:id] = username if context[:type] == :user
 
-            context[:upload_ids] = filtered_upload_ids_for_prompt(
-              upload_ids,
-              include_image_uploads: include_image_uploads,
-              include_document_uploads: include_document_uploads,
-              allowed_attachment_types: allowed_attachment_types,
-              guardian: guardian,
-            )
+            context[:upload_ids] = filtered_upload_ids
             context[:created_at] = created_at
 
             builder.push(**context)

@@ -452,7 +452,7 @@ const extension = {
 
             if (removeDecorations.length || tr.docChanged) {
               tr.setMeta(plugin, { removeDecorations });
-              view.dispatch(tr);
+              view.dispatch(tr.setMeta("addToHistory", false));
             }
           },
         };

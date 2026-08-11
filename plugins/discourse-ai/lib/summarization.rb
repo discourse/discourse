@@ -81,11 +81,9 @@ module DiscourseAi
 
       def display_locale(topic, scope:)
         source_locale = raw_source_locale(topic)
-        should_show_localized_content =
-          SiteSetting.content_localization_enabled && !ContentLocalization.show_original?(scope)
 
         locale =
-          if should_show_localized_content
+          if ContentLocalization.show_translated_topic?(topic, scope)
             SiteSetting.content_localization_locales.find do |supported_locale|
               LocaleNormalizer.is_same?(supported_locale, I18n.locale)
             end || source_locale
@@ -135,6 +133,7 @@ module DiscourseAi
         if output_tool
           agent.define_singleton_method(:available_tools) { [output_tool] }
           agent.define_singleton_method(:force_tool_use) { [output_tool] }
+          agent.define_singleton_method(:defer_forced_tool_for_vision?) { true }
           agent.define_singleton_method(:forced_tool_count) { 1 }
           agent.define_singleton_method(:response_format) { nil }
         end

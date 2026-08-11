@@ -4,12 +4,6 @@ describe EmberAssets do
   describe "cache" do
     after { EmberAssets.clear_cache! }
 
-    def simulate_request_cache_clearance
-      # this method is defined by ActiveSupport::CurrentAttributes
-      # and is called before/after every web request
-      EmberAssets.reset
-    end
-
     context "in development" do
       before { Rails.env.stubs(:development?).returns(true) }
 
@@ -17,7 +11,7 @@ describe EmberAssets do
         EmberAssets.cache[:foo] = "bar"
         expect(EmberAssets.cache[:foo]).to eq("bar")
 
-        simulate_request_cache_clearance
+        EmberAssets.reset
 
         expect(EmberAssets.cache[:foo]).to eq(nil)
       end
@@ -30,7 +24,7 @@ describe EmberAssets do
         EmberAssets.cache[:foo] = "bar"
         expect(EmberAssets.cache[:foo]).to eq("bar")
 
-        simulate_request_cache_clearance
+        EmberAssets.reset
 
         # In production, persists across requests
         expect(EmberAssets.cache[:foo]).to eq("bar")

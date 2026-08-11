@@ -70,6 +70,14 @@ zh_CN:
         title: 发送 Slack 消息
       send_chat_integration_message:
         title: 发送聊天集成消息
+  discourse_workflows:
+    errors:
+      send_chat_integration_message:
+        channel_not_found: "未找到频道： %{channel_id}"
+        provider_disabled: "聊天集成提供商已禁用或缺失：%{provider}"
+        provider_failed: "%{provider} 提供商无法发送消息"
+        provider_failed_with_details: "%{provider} 提供商无法发送消息：%{details}"
+        message_required: "消息为必填项"
   chat_integration:
     all_categories: "（所有类别）"
     deleted_category: "（已删除的类别）"
@@ -86,6 +94,10 @@ zh_CN:
       setting_update_failed: "无法更新设置：%{errors}"
     provider:
       slack:
+        errors:
+          auth_error: "提供的身份验证令牌无效"
+          action_prohibited: "机器人没有权限在该频道发帖"
+          channel_not_found: "指定的频道在 Slack 上不存在"
         status:
           header: |
             *此频道的规则*

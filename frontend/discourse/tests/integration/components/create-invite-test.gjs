@@ -1,6 +1,7 @@
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import CreateInvite from "discourse/components/modal/create-invite";
+import Invite from "discourse/models/invite";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
@@ -214,6 +215,66 @@ module("Integration | Component | CreateInvite", function (hooks) {
       .isFocused(
         "focus moves to the copy/share button after the invite is created"
       );
+  });
+
+  test("clearing the restrictTo field of a domain invite", async function (assert) {
+    const model = {
+      editing: true,
+      invite: Invite.create({
+        id: 42,
+        domain: "example.com",
+        expires_at: "2030-01-01",
+      }),
+    };
+
+    let requestBody;
+    pretender.put("/invites/42", (request) => {
+      requestBody = new URLSearchParams(request.requestBody);
+      return response({ id: 42, domain: null });
+    });
+
+    await render(
+      <template><CreateInvite @inline={{true}} @model={{model}} /></template>
+    );
+
+    await formKit().field("restrictTo").fillIn("");
+    await click(".save-invite");
+
+    assert.strictEqual(
+      requestBody.get("domain"),
+      "",
+      "sends a blank domain so the server drops the restriction"
+    );
+  });
+
+  test("changing the restrictTo field of a domain invite", async function (assert) {
+    const model = {
+      editing: true,
+      invite: Invite.create({
+        id: 42,
+        domain: "example.com",
+        expires_at: "2030-01-01",
+      }),
+    };
+
+    let requestBody;
+    pretender.put("/invites/42", (request) => {
+      requestBody = new URLSearchParams(request.requestBody);
+      return response({ id: 42, domain: "other.com" });
+    });
+
+    await render(
+      <template><CreateInvite @inline={{true}} @model={{model}} /></template>
+    );
+
+    await formKit().field("restrictTo").fillIn("other.com");
+    await click(".save-invite");
+
+    assert.strictEqual(
+      requestBody.get("domain"),
+      "other.com",
+      "sends the new domain"
+    );
   });
 
   test("the expiresAfterDays field", async function (assert) {

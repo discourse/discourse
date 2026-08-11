@@ -668,6 +668,9 @@ sr:
     groups:
       errors:
         empty_permissions: "Grupa oznaka mora imati najmanje jedno ovlašćenje."
+  design_wizard:
+    palette_pairs:
+      default: "Подразумевано"
   wizard:
     step:
       setup:
@@ -729,6 +732,9 @@ sr:
         delete:
           title: "Obriši Korisnika"
           complete: "Korisnik izbrisan."
+        block:
+          title: "Obriši i blokiraj korisnika"
+          description: "Obrišite korisnika i blokirajte njihovu email i IP adresu"
       confirm_spam:
         title: "Da"
       not_spam:

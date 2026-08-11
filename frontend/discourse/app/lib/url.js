@@ -33,6 +33,7 @@ const SERVER_SIDE_ONLY = [
   /\.json$/,
   /^\/logs($|\/)/,
   /^\/admin\/customize\/watched_words\/action\/[^\/]+\/download$/,
+  /^\/admin\/customize\/themes\/\d+\/export$/,
   /^\/pub\//,
   /^\/invites\//,
   /^\/styleguide/,

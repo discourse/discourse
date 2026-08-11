@@ -100,6 +100,21 @@ fa_IR:
       translations:
         title: "ترجمه‌ها"
         category_scope: "دسته‌بندی‌ها"
+        model_progress:
+          detail:
+            columns:
+              locale: "زبان"
+              pending: "در انتظار"
+              total: "مجموع"
+          targets:
+            post:
+              title: "فرسته‌ها"
+            topic:
+              title: "موضوعات"
+            category:
+              title: "دسته‌بندی‌ها"
+            tag:
+              title: "برچسب‌ها"
         stats:
           eta_minutes:
             one: "%{count} دقیقه"
@@ -143,6 +158,7 @@ fa_IR:
         enabled: "فعال شده؟"
         mcp_tools_modal:
           clear_all: "پاکسازی همه"
+        duplicate: "تکراری"
         delete: "حذف"
         thinking_effort_options:
           none: "هیچ‌کدام"
@@ -224,7 +240,6 @@ fa_IR:
           success: "موفقیت!"
           failure: "در حال ارتباط با مدل این خطا رخ داد: %{error}"
         providers:
-          google: "گوگل"
           fake: "سفارشی"
         provider_fields:
           region: "منطقه"

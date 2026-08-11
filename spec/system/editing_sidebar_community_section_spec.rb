@@ -68,7 +68,10 @@ RSpec.describe "Editing Sidebar Community Section" do
     modal = sidebar.click_community_section_more_button.click_customize_community_section_button
     modal.add_link
     modal.fill_last_link("Solutions Leaderboard", "/solutions-leaderboard")
-    modal.add_last_link_localization("ソリューションリーダーボード")
+    modal.open_translations
+    modal.add_language("ja")
+    modal.fill_translation("ja", "Solutions Leaderboard", "ソリューションリーダーボード")
+    modal.close_translations
     modal.add_link
     modal.fill_last_link("Untranslated Link", "/untranslated-link")
     modal.save

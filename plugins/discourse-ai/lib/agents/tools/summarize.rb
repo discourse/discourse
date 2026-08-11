@@ -132,12 +132,13 @@ module DiscourseAi
             prompt = section_prompt(topic, section, guidance)
 
             summary =
-              llm.generate(
-                prompt,
-                temperature: 0.6,
-                max_tokens: 400,
-                user: bot_user,
-                feature_name: "summarize_tool",
+              DiscourseAi::Completions::Llm.text_from_response(
+                llm.generate(
+                  prompt,
+                  max_tokens: 400,
+                  user: bot_user,
+                  feature_name: "summarize_tool",
+                ),
               )
 
             summaries << summary
@@ -153,13 +154,14 @@ module DiscourseAi
                 "concatenated the disjoint summaries, creating a cohesive narrative:\n#{summaries.join("\n")}}",
             }
 
-            llm.generate(
-              concatenation_prompt,
-              temperature: 0.6,
-              max_tokens: 500,
-              user: bot_user,
-              feature_name: "summarize_tool",
-            )
+            result =
+              llm.generate(
+                concatenation_prompt,
+                max_tokens: 500,
+                user: bot_user,
+                feature_name: "summarize_tool",
+              )
+            DiscourseAi::Completions::Llm.text_from_response(result)
           else
             summaries.first
           end

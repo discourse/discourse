@@ -8,7 +8,6 @@ gl:
   js:
     styleguide:
       title: "Guía de estilo"
-      welcome: "Para comezar, escolla unha sección do menú da esquerda."
       categories:
         atoms: Átomos
         molecules: Moléculas

@@ -67,7 +67,6 @@ th:
   errors: &errors
     messages:
       exclusion: ถูกจองแล้ว
-      has_already_been_used: "ได้ถูกใช้แล้ว"
       invalid: ไม่ถูกต้อง
   not_in_group:
     join_group: "เข้าร่วมกลุ่ม"
@@ -538,6 +537,9 @@ th:
       button: "ลงทะเบียน"
     resend_email:
       title: "ส่งอีเมลยืนยันตัวตนอีกครั้ง"
+  design_wizard:
+    palette_pairs:
+      default: "ค่าเริ่มต้น"
   wizard:
     step:
       setup:

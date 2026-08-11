@@ -168,8 +168,11 @@ class Admin::BadgesController < Admin::AdminController
   end
 
   def destroy
+    badge = find_badge
+
+    return render_json_error(I18n.t("badges.errors.cant_delete_system_badge")) if badge.system?
+
     Badge.transaction do
-      badge = find_badge
       StaffActionLogger.new(current_user).log_badge_deletion(badge)
       badge.clear_user_titles!
       badge.destroy!

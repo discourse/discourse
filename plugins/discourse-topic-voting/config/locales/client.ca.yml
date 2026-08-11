@@ -23,3 +23,6 @@ ca:
     filters:
       votes:
         title: "Vots"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Etiquetes"

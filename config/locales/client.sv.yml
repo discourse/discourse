@@ -323,10 +323,27 @@ sv:
       pill: "Föreslagna"
       pm_title: "Föreslagna meddelanden"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Markerat"
       start_posting:
         back: "Tillbaka"
+    design_wizard:
+      back: "Tillbaka"
+      next: "Nästa"
+      sections:
+        theme: "Tema"
+        fonts: "Typsnitt"
+        homepage: "Hemsida"
+      theme:
+        selected: "Markerat"
+      colors:
+        light: "Ljust"
+        dark: "Mörkt"
+      fonts:
+        heading_font: "Typsnitt för rubrik"
+      homepage:
+        topics: "Ämnen"
+        categories: "Kategorier"
+        styles:
+          boxes: "Boxar"
     about:
       edit: "Redigera denna sida"
       simple_title: "Om"
@@ -518,9 +535,6 @@ sv:
         optional: "valfritt"
       claim_help:
         optional: "Du kan göra anspråk på detta för att förhindra andra från att granska det."
-        required: "Du måste göra anspråk innan du kan granska dem."
-        claimed_by_you: "Du har gjort anspråk på detta och kan nu granska det."
-        claimed_by_other: "Detta föremål kan enbart granskas av <b>%{username}</b>."
       awaiting_approval: "Inväntar godkännande"
       delete: "Radera"
       settings:
@@ -551,6 +565,7 @@ sv:
         email: "E-post"
         name: "Namn"
         fields: "Fält"
+        penalty_forever: "För alltid"
         reject_reason: "Anledning"
         scrubbed_reason: "Anledning"
         scrub_record:
@@ -1620,6 +1635,9 @@ sv:
         contextual: "Nytt sidinnehåll"
       bookmark_after_notification:
         title: "Efter att en bokmärkespåminnelse har skickats:"
+      send_shortcut:
+        enter: "Retur"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Avisera vid gillning"
         always: "Alltid"
@@ -1752,6 +1770,7 @@ sv:
           invite_by_email: "E-postadress"
           restrict_domain: "Begränsa till domän"
           domain_placeholder: "example.com"
+          create_and_send: "Skicka"
           update: "Uppdatera"
           summary:
             role_member: "Medlem"
@@ -1762,6 +1781,7 @@ sv:
             expires: "Utgår"
             topic: "Ämne"
             groups: "Grupper"
+            edit: "Redigera"
         bulk_invite:
           none: "Inga inbjudningar att visa på denna sida."
           text: "Massinbjudan"
@@ -2169,6 +2189,7 @@ sv:
       subcategory_count:
         one: "+%{count} underkategori"
         other: "+%{count} underkategorier"
+      subcategories: "+ Underkategorier"
       topic_count:
         one: "%{count} ämne i den här kategorin"
         other: "%{count} ämnen i den här kategorin"
@@ -2224,6 +2245,8 @@ sv:
       medium_dark_tone: Mellanmörk hudton
       dark_tone: Mörk hudton
       default: Anpassa emojis
+    filter_controls:
+      reset: "Återställ"
     shared_drafts:
       title: "Delade utkast"
       notice: "Detta ämne är endast synligt för de som kan publicera delade utkast."
@@ -2459,7 +2482,6 @@ sv:
         other: "%{count} öppna medlemsansökningar för '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span>%{description}"
-      votes_released: "%{description} - slutförd"
       new_features: "Nya funktioner tillgängliga!"
       admin_problems: "Nytt råd på din webbplats översiktspanel"
       dismiss_confirmation:
@@ -4160,10 +4182,9 @@ sv:
           always_public: "Innehållet i det här avsnittet är alltid offentligt"
           more_menu: "Menyn Mer"
           localizations:
-            title: "Översättningar"
             locale: "Språk"
             title_label: "Avsnittstitel"
-            link_label: "Länknamn"
+            remove_language: "Ta bort"
           links:
             add: "Lägg till ytterligare en länk"
             delete: "Ta bort länk"
@@ -5152,6 +5173,8 @@ sv:
         sidebar: "Sidofält"
         header_dropdown: "Rullgardinsmeny för rubrik"
         legacy: "Äldre"
+      duplicate_topic_titles:
+        allowed: "Tillåten"
       backups:
         title: "Säkerhetskopior"
         menu:
@@ -5347,7 +5370,6 @@ sv:
           finish_install: "Slutför temainstallationen"
           last_attempt: "Installationsprocessen slutfördes inte, det senaste försöket:"
           remote_branch: "Filialnamn (valfritt)"
-          public_key: "Ge följande offentliga nyckel tillträde till lagringsplatsen:"
           install: "Installera"
           installed: "Installerad"
           install_popular: "Populära"
@@ -6351,6 +6373,7 @@ sv:
         uploading: "Laddar upp…"
         name: "Namn"
         group: "Grupp"
+        all_groups: "Alla grupper"
         image: "Bild"
         alt: "anpassa förhandsgranskning av emoji"
         delete_confirm: "Är du säker på att du vill radera emojin :%{name}:?"

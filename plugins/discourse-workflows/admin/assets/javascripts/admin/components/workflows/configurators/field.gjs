@@ -10,6 +10,7 @@ import {
   fieldShowDescription,
   fieldShowLabel,
   fieldSupportsExpression,
+  fieldType,
   findNodeType,
   isExpression,
   propertyDescription,
@@ -119,6 +120,9 @@ export default class Field extends Component {
     if (schema.required) {
       rules.push("required");
     }
+    if (fieldType(schema) === "integer" && !this.supportsExpression) {
+      rules.push("integer");
+    }
     if (schema.min != null || schema.max != null) {
       const min = schema.min ?? Number.MIN_SAFE_INTEGER;
       const max = schema.max ?? Number.MAX_SAFE_INTEGER;
@@ -218,6 +222,8 @@ export default class Field extends Component {
               @nodeDefinition={{this.nodeDefinition}}
               @nodeParameters={{@nodeParameters}}
               @nodes={{@nodes}}
+              @nodeTypes={{@nodeTypes}}
+              @connections={{@connections}}
               @formApi={{@formApi}}
               @session={{@session}}
               @supportsExpression={{this.supportsExpression}}
@@ -238,6 +244,8 @@ export default class Field extends Component {
             @nodeDefinition={{this.nodeDefinition}}
             @nodeParameters={{@nodeParameters}}
             @nodes={{@nodes}}
+            @nodeTypes={{@nodeTypes}}
+            @connections={{@connections}}
             @formApi={{@formApi}}
             @session={{@session}}
             @supportsExpression={{this.supportsExpression}}

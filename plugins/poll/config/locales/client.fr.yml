@@ -10,8 +10,17 @@ fr:
       site_settings:
         categories:
           poll: "Sondage Discourse"
+      logs:
+        staff_actions:
+          actions:
+            poll_closed: "sondage fermé"
+            poll_opened: "sondage ouvert"
   js:
     poll:
+      title: "Sondage"
+      closed_by: "Fermé par %{username}"
+      dynamic:
+        enabled_hint: "Des options peuvent être ajoutées ou supprimées."
       voters:
         one: "votant"
         other: "votants"
@@ -148,6 +157,8 @@ fr:
           step: Pas
         poll_public:
           label: Afficher les votants
+        poll_dynamic:
+          label: Autoriser l'ajout ou la suppression d'options après la publication du sondage.
         poll_title:
           label: Titre (facultatif)
         poll_options:

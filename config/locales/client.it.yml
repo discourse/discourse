@@ -431,10 +431,28 @@ it:
       pill: "Suggeriti"
       pm_title: "Messaggi Suggeriti"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Selezionato"
       start_posting:
         back: "Indietro"
+    design_wizard:
+      back: "Indietro"
+      next: "Avanti"
+      sections:
+        theme: "Tema"
+        fonts: "Caratteri"
+        homepage: "Homepage"
+      theme:
+        selected: "Selezionato"
+      colors:
+        light: "Chiaro"
+        dark: "Scuro"
+      fonts:
+        base_font: "Font di base"
+        heading_font: "Carattere dell'intestazione"
+      homepage:
+        topics: "Argomenti"
+        categories: "Categorie"
+        styles:
+          boxes: "Riquadri"
     about:
       edit: "Modifica questa pagina"
       simple_title: "Informazioni"
@@ -700,10 +718,6 @@ it:
         optional: "facoltativo"
       claim_help:
         optional: "Puoi rivendicare questo elemento per evitare che altri lo revisionino."
-        required: "Per poter revisionare gli elementi devi prima rivendicarli."
-        claimed_by_you: "Hai rivendicato questo elemento e puoi revisionarlo."
-        claimed_by_other: "Questo elemento può essere rivisto esclusivamente da <b>%{username}</b>."
-        automatically_claimed_by: "Questo articolo è attualmente in fase di revisione da parte di <b>%{username}</b>."
       awaiting_approval: "In attesa di approvazione"
       delete: "Elimina"
       settings:
@@ -735,6 +749,8 @@ it:
         email: "Email"
         name: "Nome"
         fields: "Campi"
+        silence_reason: "Motivo del silenzio"
+        penalty_forever: "Per sempre"
         reject_reason: "Motivo"
         scrubbed_by: "Record cancellato da"
         scrubbed_reason: "Motivo"
@@ -1480,7 +1496,6 @@ it:
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
       enable_quoting: "Abilita \"rispondi citando\" il testo evidenziato"
       enable_smart_lists: "Abilita gli elenchi smart quando scrivi nel compositore"
-      enable_defer: "Abilita opzione di contrassegnare gli argomenti come non letti"
       enable_markdown_monospace_font: "Utilizza il font monospace nella modalità Markdown del compositore"
       experimental_sidebar:
         enable: "Abilita barra laterale"
@@ -1952,6 +1967,9 @@ it:
         contextual: "Nuovo contenuto nella pagina"
       bookmark_after_notification:
         title: "Dopo l'invio di una notifica di promemoria per segnalibri:"
+      send_shortcut:
+        enter: "Invio"
+        meta_enter: "%{meta_key} + Invio"
       like_notification_frequency:
         title: "Notifica alla ricezione di \"Mi piace\"."
         always: "Sempre"
@@ -2119,7 +2137,8 @@ it:
           invite_by_email: "E-mail"
           restrict_domain: "Limita al dominio"
           domain_placeholder: "example.com"
-          more_options: "Altre opzioni"
+          create_and_send: "Invia"
+          create_and_copy: "Copia link"
           update: "Aggiorna"
           summary:
             role_member: "Membro"
@@ -2131,7 +2150,7 @@ it:
             expires: "Scadenza"
             topic: "Argomento"
             groups: "Gruppi"
-            edit: "Modifica invito"
+            edit: "Modifica"
         bulk_invite:
           none: "Nessun invito da visualizzare in questa pagina."
           text: "Inviti di gruppo"
@@ -2650,6 +2669,7 @@ it:
       subcategory_count:
         one: "+%{count} sottocategoria"
         other: "+%{count} sottocategorie"
+      subcategories: "+ Sottocategorie"
       topic_count:
         one: "%{count} argomento in questa categoria"
         other: "%{count} argomenti in questa categoria"
@@ -2710,6 +2730,8 @@ it:
       default: Emoji personalizzate
     filter_input:
       clear: "Cancella il filtro"
+    filter_controls:
+      reset: "Reimposta"
     shared_drafts:
       title: "Bozze condivise"
       notice: "Questo argomento è visibile solo a coloro che possono pubblicare bozze condivise."
@@ -2823,7 +2845,6 @@ it:
       italic_label: "I"
       italic_title: "Corsivo"
       italic_text: "testo in corsivo"
-      heading_title: "Titoli"
       heading_level_n: "Titolo %{levelNumber}"
       heading_level_n_title: "Titolo %{levelNumber}"
       heading_level_paragraph: "Paragrafo"
@@ -2992,7 +3013,6 @@ it:
         other: "%{count} richieste di iscrizione aperte per '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - completato"
       new_features: "Nuove funzionalità disponibili!"
       admin_problems: "Nuovo avviso sul dashboard del tuo sito"
       dismiss_confirmation:
@@ -4863,9 +4883,9 @@ it:
           always_public: "Il contenuto di questa sezione è sempre pubblico"
           more_menu: "Menu Altro"
           localizations:
-            title: "Traduzioni"
             locale: "Lingua"
             title_label: "Titolo della sezione"
+            remove_language: "Rimuovi"
           links:
             add: "Aggiungi un altro link"
             delete: "Elimina link"
@@ -6402,6 +6422,8 @@ it:
         sidebar: "Barra laterale"
         header_dropdown: "Intestazione a discesa"
         legacy: "Compatibile"
+      duplicate_topic_titles:
+        allowed: "Consentito"
       backups:
         title: "Backup"
         files_title: "File di backup"
@@ -6630,7 +6652,6 @@ it:
           finish_install: "Completa l'installazione del tema"
           last_attempt: "Il processo di installazione non si è concluso, ultimo tentativo:"
           remote_branch: "Nome del branch (opzionale)"
-          public_key: "Concedi l'accesso all'archivio con la seguente chiave pubblica:"
           install: "Installa"
           installed: "Installato"
           install_popular: "Popolare"
@@ -7908,6 +7929,7 @@ it:
         uploading: "Caricamento…"
         name: "Nome"
         group: "Gruppo"
+        all_groups: "Tutti i gruppi"
         created_by: "Creato da"
         image: "Immagine"
         alt: "anteprima emoji personalizzata"

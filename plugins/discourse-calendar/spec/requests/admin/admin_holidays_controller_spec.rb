@@ -2,7 +2,7 @@
 
 module Admin::DiscourseCalendar
   describe AdminHolidaysController do
-    fab!(:admin) { Fabricate(:user, admin: true) }
+    fab!(:admin) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
     fab!(:member, :user)
 
     before { SiteSetting.calendar_enabled = calendar_enabled }

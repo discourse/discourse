@@ -41,7 +41,6 @@ export default class DiscoursePostEventEvent {
     return new DiscoursePostEventEvent(args);
   }
 
-  @tracked title;
   @tracked rrule;
   @tracked name;
   @tracked categoryId;
@@ -51,6 +50,7 @@ export default class DiscoursePostEventEvent {
   @tracked duration;
   @tracked rawInvitees;
   @tracked location;
+  @tracked locationHtml;
   @tracked url;
   @tracked description;
   @tracked descriptionHtml;
@@ -97,6 +97,7 @@ export default class DiscoursePostEventEvent {
     this.rawInvitees = args.raw_invitees;
     this.sampleInvitees = args.sample_invitees || [];
     this.location = args.location;
+    this.locationHtml = args.location_html;
     this.url = args.url;
     this.description = args.description;
     this.descriptionHtml = args.description_html;
@@ -184,10 +185,6 @@ export default class DiscoursePostEventEvent {
     return this.status === "private";
   }
 
-  get imageUrl() {
-    return this.imageUpload?.url;
-  }
-
   get currentlyWithinEventTimeframe() {
     return isWithinEventTimeframe(this.allDay, this.startsAt, this.endsAt);
   }
@@ -211,6 +208,7 @@ export default class DiscoursePostEventEvent {
     this.allDay = event.allDay;
     this.duration = event.duration;
     this.location = event.location;
+    this.locationHtml = event.locationHtml;
     this.url = event.url;
     this.timezone = event.timezone;
     this.showLocalTime = event.showLocalTime;

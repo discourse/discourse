@@ -13,6 +13,8 @@ require_relative "lib/omniauth/strategies/oauth2_basic"
 require_relative "lib/oauth2_faraday_formatter"
 require_relative "lib/oauth2_basic_authenticator"
 
+GlobalSetting.add_default :oauth2_request_timeout_seconds, 10
+
 register_site_setting_area("oauth2")
 register_admin_config_login_route("oauth2")
 

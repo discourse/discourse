@@ -274,7 +274,6 @@ it:
       exclusion: è riservato
       greater_than: deve essere maggiore di %{count}
       greater_than_or_equal_to: deve essere maggiore o uguale a %{count}
-      has_already_been_used: "è già stato usato"
       inclusion: non è incluso nella lista
       invalid: non è valido
       is_invalid: "sembra poco chiaro, è una frase completa?"
@@ -1694,7 +1693,6 @@ it:
     staff_edit_locks_post: "I post saranno bloccati dalla modifica se sono modificati dai membri dello staff"
     post_edit_time_limit: "Un autore TL0 o TL1 può modificare il proprio messaggio per (n) minuti dopo la pubblicazione. Impostando l'opzione a 0, essa è sempre attiva."
     tl2_post_edit_time_limit: "Un autore TL2+ può modificare il proprio messaggio per (n) minuti dopo la pubblicazione. Impostando l'opzione a 0, essa è sempre attiva."
-    edit_history_visible_to_public: "Permetti a tutti di vedere le precedenti versioni di un messaggio modificato. Se disabilitato solo i membri dello staff possono vederle."
     delete_removed_posts_after: "I messaggi rimossi dall'autore saranno automaticamente cancellati dopo (n) ore. Se impostato a 0, i messaggi saranno cancellati subito."
     notify_users_after_responses_deleted_on_flagged_post: "Quando un messaggio viene segnalato e poi cancellato, tutti gli utenti che avevano risposto al messaggio e le cui risposte di conseguenza sono state cancellate, riceveranno una notifica."
     max_image_width: "Larghezza massima delle miniature delle immagini in un messaggio. Le immagini con una larghezza maggiore verranno ridimensionate e rimpicciolite."
@@ -2270,7 +2268,6 @@ it:
     default_other_external_links_in_new_tab: "Apri i collegamenti esterni in una nuova scheda di default. "
     default_other_enable_quoting: "Attivazione predefinita di risposta con citazione per il testo evidenziato."
     default_other_enable_smart_lists: "Abilita per impostazione predefinita gli elenchi smart quando digiti nel compositore."
-    default_other_enable_defer: "Abilita la funzionalità di rinvio di lettura dell'argomento per impostazione predefinita."
     default_other_enable_markdown_monospace_font: "Utilizza il font monospace nella modalità Markdown del compositore per impostazione predefinita."
     default_other_dynamic_favicon: "Per impostazione predefinita mostra il conteggio degli argomenti nuovi/aggiornati sull'icona del browser."
     default_other_skip_new_user_tips: "Salta i suggerimenti e i distintivi per l'inserimento dei nuovi utenti."
@@ -2306,7 +2303,6 @@ it:
     revoke_user_api_keys_unused_days: "Numero di giorni trascorsi dall'ultimo utilizzo di una chiave API utente prima che venga revocata automaticamente (0 per mai)"
     revoke_user_api_keys_maxlife_days: "Numero di giorni prima che una chiave API utente venga revocata automaticamente (0 per mai)"
     tagging_enabled: "Vuoi abilitare le etichette per gli argomenti? Per ulteriori informazioni, consulta <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>la guida alle etichette per amministratori su Meta</a>."
-    create_tag_allowed_groups: "Gruppi a cui è consentito creare etichette. Ad amministratori e moderatori è sempre consentito creare etichette."
     edit_tags_allowed_groups: "Gruppi a cui è consentito modificare etichette, descrizioni di etichette e sinonimi di etichette."
     max_tags_per_topic: "Il numero massimo di etichette che si possono applicare ad un argomento."
     max_tags_per_email_subject: "Il numero massimo di tag che possono essere nell'oggetto di un'e-mail"
@@ -2368,7 +2364,6 @@ it:
     about_page_extra_groups_order: "Ordinamento dei gruppi extra nella pagina Informazioni."
     adobe_analytics_tags_url: "URL dei tag di Adobe Analytics (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Gruppi a cui è consentito visualizzare il contenuto email sorgente di un messaggio se questo viene generato da un'email in arrivo. Include l'intestazione dell'email e altre informazioni tecniche."
-    rich_editor: "Abilita l'editor avanzato per il compositore in modo che tutti gli utenti possano passare dalla modalità Markdown attuale al nuovo editor di rich text per una composizione più intuitiva e facile da usare."
     default_composition_mode: "Imposta la modalità predefinita per il compositore della tua community. La modalità Rich Text offre un'esperienza di scrittura più moderna e familiare per la maggior parte degli utenti, mentre la modalità Markdown potrebbe essere adatta a un pubblico più tecnico. I membri possono utilizzare un interruttore nella barra degli strumenti del compositore per passare da una modalità all'altra."
     reviewable_ui_refresh: "Gruppi che possono utilizzare la nuova interfaccia utente sperimentale nella coda di revisione."
     errors:
@@ -4396,6 +4391,10 @@ it:
     deprecation_error_label: Fai in modo che le deprecazioni di Javascript generino un errore
     enter: "Avvia Modalità Sicura"
     must_select: "È necessario selezionare almeno un'opzione per accedere alla modalità sicura."
+  design_wizard:
+    palette_pairs:
+      default: "Predefinito"
+      dracula: "Dracula"
   wizard:
     title: "Configurazione Discourse"
     step:
@@ -4628,7 +4627,6 @@ it:
           complete: "Utente eliminato."
         block:
           title: "Elimina e blocca Utente"
-          description: "L'utente sarà eliminato, e ne bloccheremo l'IP e l'indirizzo email."
           complete: "Utente eliminato e bloccato."
       confirm_spam:
         title: "Sì"

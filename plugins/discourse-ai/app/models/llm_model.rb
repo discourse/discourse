@@ -102,6 +102,12 @@ class LlmModel < ActiveRecord::Base
   has_many :llm_feature_credit_costs, dependent: :destroy
   belongs_to :user
   belongs_to :ai_secret, optional: true
+  belongs_to :vision_llm_model, class_name: "LlmModel", optional: true
+  has_many :vision_dependents, class_name: "LlmModel", foreign_key: :vision_llm_model_id
+
+  attr_accessor :requested_vision_mode
+
+  before_destroy :ensure_no_vision_dependents
 
   validates :display_name, presence: true, length: { maximum: 100 }
   validates :tokenizer, presence: true, inclusion: DiscourseAi::Completions::Llm.tokenizer_names
@@ -120,6 +126,14 @@ class LlmModel < ActiveRecord::Base
             },
             allow_nil: true
   validate :required_provider_params
+  validate :valid_vision_configuration
+  validate :vision_dependents_require_native_vision
+  validates :requested_vision_mode,
+            inclusion: {
+              in: %w[disabled delegated native],
+            },
+            allow_nil: true
+  validates :vision_llm_model_id, numericality: { only_integer: true }, allow_nil: true
   scope :in_use,
         -> do
           model_ids = DiscourseAi::Configuration::LlmEnumerator.global_usage.keys
@@ -287,6 +301,25 @@ class LlmModel < ActiveRecord::Base
       mistral: {
         disable_native_tools: :checkbox,
       },
+      gemini_interactions: {
+        disable_native_tools: :checkbox,
+        thinking_level: {
+          type: :enum,
+          values: %w[default minimal low medium high],
+          default: "default",
+          label: "discourse_ai.llms.provider_fields.gemini_interactions_thinking_level",
+        },
+        disable_temperature: {
+          type: :checkbox,
+          hidden_if: :thinking_level,
+        },
+        disable_top_p: :checkbox,
+        service_tier: {
+          type: :enum,
+          values: %w[default standard flex priority],
+          default: "default",
+        },
+      },
       google: {
         disable_native_tools: :checkbox,
         enable_thinking: :checkbox,
@@ -452,6 +485,30 @@ class LlmModel < ActiveRecord::Base
     DiscourseAi::Completions::Llm.proxy(self)
   end
 
+  def native_vision?
+    vision_enabled?
+  end
+
+  def delegated_vision_configured?
+    !native_vision? && vision_llm_model_id.present?
+  end
+
+  def delegated_vision?
+    delegated_vision_configured? && vision_llm_model&.native_vision? &&
+      vision_llm_model.vision_llm_model_id.nil?
+  end
+
+  def vision_mode
+    return "native" if native_vision?
+    return "delegated" if delegated_vision_configured?
+
+    "disabled"
+  end
+
+  def agent_image_capable?
+    native_vision? || delegated_vision?
+  end
+
   def identifier
     "#{id}"
   end
@@ -596,6 +653,68 @@ class LlmModel < ActiveRecord::Base
 
   private
 
+  def valid_vision_configuration
+    if requested_vision_mode == "delegated" && vision_llm_model_id.blank?
+      errors.add(:vision_llm_model_id, I18n.t("discourse_ai.llm_models.vision_model_required"))
+      return
+    end
+
+    if vision_enabled? && vision_llm_model_id.present?
+      errors.add(:base, I18n.t("discourse_ai.llm_models.native_vision_cannot_delegate"))
+      return
+    end
+
+    return if vision_llm_model_id.blank?
+
+    target = vision_llm_model
+    if target.blank?
+      errors.add(:vision_llm_model_id, I18n.t("discourse_ai.llm_models.vision_model_not_found"))
+    elsif target == self
+      errors.add(
+        :vision_llm_model_id,
+        I18n.t("discourse_ai.llm_models.vision_model_cannot_be_self"),
+      )
+    elsif !target.native_vision? || target.vision_llm_model_id.present?
+      errors.add(
+        :vision_llm_model_id,
+        I18n.t("discourse_ai.llm_models.vision_model_must_be_native"),
+      )
+    end
+  end
+
+  def vision_dependents_require_native_vision
+    if new_record? ||
+         !will_save_change_to_vision_enabled? && !will_save_change_to_vision_llm_model_id?
+      return
+    end
+    return if vision_enabled? && vision_llm_model_id.nil?
+
+    dependent_names = vision_dependents.order(:display_name).pluck(:display_name)
+    return if dependent_names.empty?
+
+    errors.add(
+      :base,
+      I18n.t(
+        "discourse_ai.llm_models.vision_model_has_dependents",
+        models: dependent_names.join(", "),
+      ),
+    )
+  end
+
+  def ensure_no_vision_dependents
+    dependent_names = vision_dependents.order(:display_name).pluck(:display_name)
+    return if dependent_names.empty?
+
+    errors.add(
+      :base,
+      I18n.t(
+        "discourse_ai.llm_models.vision_model_has_dependents",
+        models: dependent_names.join(", "),
+      ),
+    )
+    throw :abort
+  end
+
   def param_active?(key)
     val = provider_params&.dig(key.to_s)
     return false if val.nil? || val == false || val == "false" || val == "default" || val == ""
@@ -691,8 +810,10 @@ end
 #  updated_at               :datetime         not null
 #  ai_secret_id             :bigint
 #  user_id                  :integer
+#  vision_llm_model_id      :bigint
 #
 # Indexes
 #
-#  index_llm_models_on_ai_secret_id  (ai_secret_id)
+#  index_llm_models_on_ai_secret_id         (ai_secret_id)
+#  index_llm_models_on_vision_llm_model_id  (vision_llm_model_id)
 #

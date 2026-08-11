@@ -115,9 +115,6 @@ export default {
       title: "topic.defer.help",
       action: "deferTopic",
       classNames: ["defer-topic"],
-      displayed() {
-        return this.canDefer;
-      },
       dropdown() {
         return this.site.mobileView;
       },

@@ -11,6 +11,7 @@ RSpec.describe "Nested view real-time updates" do
   end
 
   let(:nested_view) { PageObjects::Pages::NestedView.new }
+  let(:activity_log) { PageObjects::Components::NestedActivityLog.new }
 
   before do
     SiteSetting.nested_replies_enabled = true
@@ -120,23 +121,23 @@ RSpec.describe "Nested view real-time updates" do
   end
 
   describe "small_action posts" do
-    it "does not insert close/open small_actions into the tree" do
+    it "adds the activity link and updates the modal without inserting the action into the tree" do
       nested_view.visit_nested(topic)
       expect(nested_view).to have_root_post(root_reply)
+      expect(nested_view).to have_no_activity_log_link
 
       small_action = topic.add_small_action(admin, "closed.enabled")
 
-      # A real reply published right after — once it surfaces, the small_action's
-      # message bus event has already been delivered (same channel, in order),
-      # so we can safely assert it never landed in the tree.
-      new_reply =
-        PostCreator.create!(other_user, topic_id: topic.id, raw: "Real reply that must show")
-
-      expect(page).to have_css(".nested-view__new-replies-btn", wait: 10)
-      find(".nested-view__new-replies-btn").click
-
-      expect(nested_view).to have_root_post(new_reply)
+      expect(nested_view).to have_activity_log_link
       expect(page).to have_no_css("[data-post-number='#{small_action.post_number}']")
+
+      nested_view.open_activity_log
+      expect(activity_log).to have_item(small_action)
+
+      revised = PostRevisor.new(small_action)
+      revised.revise!(admin, raw: "Updated through the message bus")
+
+      expect(activity_log).to have_item_text(small_action, "Updated through the message bus")
     end
   end
 end

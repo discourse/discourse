@@ -3,14 +3,7 @@
 RSpec.describe User do
   let(:user) { Fabricate(:user) }
   let(:profile_page_url) { "#{Discourse.base_url}/users/#{user.username}" }
-
-  def i18n_post_args(extra = {})
-    { base_uri: "" }.merge(extra)
-  end
-
-  def i18n_t(key, params = {})
-    I18n.t(key, i18n_post_args.merge(params))
-  end
+  let(:i18n_post_args) { { base_uri: "" } }
 
   before do
     stub_image_size
@@ -26,8 +19,9 @@ RSpec.describe User do
       user
 
       expected_raw =
-        i18n_t(
+        I18n.t(
           "discourse_narrative_bot.new_user_narrative.hello.message",
+          **i18n_post_args,
           username: user.username,
           title: SiteSetting.title,
         )
@@ -54,10 +48,10 @@ RSpec.describe User do
           expect { user }.to change { Topic.count }.by(1)
 
           expect(Topic.last.title).to eq(
-            i18n_t("discourse_narrative_bot.new_user_narrative.hello.title").gsub(
-              /:robot:/,
-              "",
-            ).strip,
+            I18n
+              .t("discourse_narrative_bot.new_user_narrative.hello.title", **i18n_post_args)
+              .gsub(/:robot:/, "")
+              .strip,
           )
         end
       end
@@ -69,7 +63,7 @@ RSpec.describe User do
           expect { user }.to change { Topic.count }.by(1)
 
           expect(Topic.last.title).to eq(
-            i18n_t("discourse_narrative_bot.new_user_narrative.hello.title"),
+            I18n.t("discourse_narrative_bot.new_user_narrative.hello.title", **i18n_post_args),
           )
         end
 
@@ -80,7 +74,11 @@ RSpec.describe User do
             expect { user }.to change { Topic.count }.by(1)
 
             expect(Topic.last.title).to eq(
-              i18n_t("system_messages.welcome_user.subject_template", site_name: SiteSetting.title),
+              I18n.t(
+                "system_messages.welcome_user.subject_template",
+                **i18n_post_args,
+                site_name: SiteSetting.title,
+              ),
             )
           end
         end

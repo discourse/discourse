@@ -11,10 +11,30 @@ module Jobs
 
       aggregate_pageviews
       aggregate_engagement
+      aggregate_crawlers
       backfill_referrers
     end
 
     private
+
+    def aggregate_crawlers
+      return if !UpcomingChanges.enabled?(:improved_crawler_detection)
+
+      start_date, end_date = crawler_aggregation_window
+      return if start_date.nil?
+
+      BrowserPageviewCrawlerDailyRollup.aggregate(start_date: start_date, end_date: end_date)
+    end
+
+    def crawler_aggregation_window
+      end_date = Time.zone.today
+
+      if BrowserPageviewCrawlerDailyRollup.none?
+        [earliest_event_date, end_date]
+      else
+        [1.day.ago.to_date, end_date]
+      end
+    end
 
     def aggregate_pageviews
       start_date, end_date = pageview_aggregation_window
@@ -48,15 +68,17 @@ module Jobs
       end_date = Time.zone.today
 
       if BrowserPageviewCountryDailyRollup.none? && BrowserPageviewReferrerDailyRollup.none?
-        earliest_event_date =
-          BrowserPageviewEvent
-            .where(BrowserPageviewEvent.rollup_source_condition)
-            .minimum(:created_at)
-            &.to_date
         [earliest_event_date, end_date]
       else
         [1.day.ago.to_date, end_date]
       end
+    end
+
+    def earliest_event_date
+      BrowserPageviewEvent
+        .where(BrowserPageviewEvent.rollup_source_condition)
+        .minimum(:created_at)
+        &.to_date
     end
 
     def backfill_referrers

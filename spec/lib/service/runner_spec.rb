@@ -247,6 +247,27 @@ RSpec.describe Service::Runner do
       expect(runner.last).to eq :model_found
     end
 
+    context "when a keyword arg has a default value" do
+      let(:actions) { <<-BLOCK }
+          proc do
+            on_success { |fake_model: :default| fake_model }
+            on_failure { |fake_model: :default| fake_model }
+          end
+        BLOCK
+
+      it "uses the value from the result when the key is present" do
+        expect(runner).to eq :model_found
+      end
+
+      context "when the key is not present in the result" do
+        let(:service) { FailureService }
+
+        it "uses the default value" do
+          expect(runner).to eq :default
+        end
+      end
+    end
+
     context "when using the on_success action" do
       let(:actions) { <<-BLOCK }
           proc do

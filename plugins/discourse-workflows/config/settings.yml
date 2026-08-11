@@ -6,7 +6,7 @@ plugins:
     upcoming_change:
       status: "experimental"
       impact: "feature,admins"
-      learn_more_url: "https://meta.discourse.org/t/-/406990"
+      learn_more_url: "https://meta.discourse.org/t/-/407100"
       allow_enabled_for:
         - everyone
       requires_plugin_enabled: false

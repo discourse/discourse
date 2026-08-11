@@ -364,14 +364,17 @@ sr:
     admin_onboarding_banner:
       select_theme:
         title: "Prilagodite svoj sajt"
-        description: "Izaberite početnu temu za svoju zajednicu"
-        action: "Izaberi temu"
-        modal_title: "Izaberite temu"
-        browse_all: "Upravljanje temama"
         show_light_screenshot: "Prikaži svetli snimak ekrana"
         show_dark_screenshot: "Prikaži tamni snimak ekrana"
       start_posting:
         back: "Nazad"
+    design_wizard:
+      title: "Prilagodite svoj sajt"
+      back: "Nazad"
+      next: "Dalje"
+      homepage:
+        topics: "Teme"
+        categories: "Kategorije"
     about:
       edit: "Izmeni ovu stranu"
       simple_title: "O nama"
@@ -663,9 +666,6 @@ sr:
         optional: "opciono"
       claim_help:
         optional: "Možete tražiti prava da sprečite ostale da ga pregledaju"
-        required: "Morate prihvatiti stavke pre nego što ih možete pregledati."
-        claimed_by_you: "Prihvatili ste ovu stavku i možete je pregledati."
-        claimed_by_other: "Samo <b>%{username}</b> može pregledati ovu stavku."
       awaiting_approval: "Čeka odobrenje"
       delete: "Obriši"
       settings:
@@ -697,6 +697,7 @@ sr:
         email: "E-mail"
         name: "Ime foruma"
         fields: "Polja"
+        penalty_forever: "Zauvek"
         reject_reason: "Razlog"
         scrubbed_reason: "Razlog"
         scrub_record:
@@ -1558,7 +1559,6 @@ sr:
           staff_role_moderator: "Moderator"
           email_placeholder: "ime@primer.com"
           invite_by_email: "E-mail"
-          more_options: "Više opcija"
           summary:
             role_member: "Član"
             role_admin: "Admin"
@@ -1566,6 +1566,7 @@ sr:
             method_email: "E-mail"
             topic: "Tema"
             groups: "Grupe"
+            edit: "Izmeni"
       password:
         title: "Šifra"
         common: "Ta šifra je pre česta."
@@ -1799,6 +1800,8 @@ sr:
       optional_at_signup: "Opciono"
     shortcut_modifier_key:
       alt: "Alt"
+    category_row:
+      subcategories: "+ Podkategorije"
     select_kit:
       delete_item: "Obriši %{name}"
       default_header_text: Odaberite…
@@ -1813,6 +1816,8 @@ sr:
     emoji_picker:
       filter_placeholder: Traži emotikone
       flags: Zastave
+    filter_controls:
+      reset: "Reset"
     composer:
       emoji: "Emotikoni :)"
       options: "Opcije"
@@ -2728,6 +2733,8 @@ sr:
           edit: "Uredite prilagođeni odeljak"
           save: "Sačuvaj"
           delete: "Obriši"
+          localizations:
+            remove_language: "Ukloni"
           links:
             icon:
               label: "Ikona"
@@ -3845,6 +3852,7 @@ sr:
         delete: "Obriši"
         name: "Ime"
         group: "Grupa"
+        all_groups: "Sve grupe"
         image: "Slika"
         delete_confirm: "Jeste li sigurni da želite izbrisati :%{name}: emoji?"
         settings: "Podešavanja"

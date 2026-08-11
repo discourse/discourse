@@ -73,6 +73,15 @@ RSpec.describe DiscourseAi::Completions::StructuredOutput do
       expect(structured_output.read_buffered_property(:status)).to eq("")
     end
 
+    it "streams pretty-printed JSON" do
+      pretty_json = JSON.pretty_generate(message: 'Hello, "world"!')
+      pretty_json.each_char.each_slice(4) { |chunk| structured_output << chunk.join }
+      structured_output.finish
+
+      expect(structured_output.broken?).to eq(false)
+      expect(structured_output.read_buffered_property(:message)).to eq('Hello, "world"!')
+    end
+
     it "supports array types" do
       chunks = [
         +"{ \"",

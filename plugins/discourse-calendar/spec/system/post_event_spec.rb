@@ -83,7 +83,7 @@ describe "Post event" do
       find(".d-editor-input").click
 
       expect(composer).to have_value <<~EVENT.strip
-        [event start="2025-06-15 15:00" status="public" timezone="#{timezone}" end="2025-06-15 16:00" reminders="notification.15.minutes"]
+        [event start="2025-06-15 15:00" status=public timezone=#{timezone} end="2025-06-15 16:00" reminders=notification.15.minutes]
         foo
         bar
         [/event]
@@ -120,8 +120,8 @@ describe "Post event" do
       preview.find(".composer-event__all-day-toggle .d-toggle-switch__label").click
       find(".d-editor-input").click
 
-      expect(composer).to have_value(/start="2024-06-01"/)
-      expect(composer).to have_value(/end="2024-06-03"/)
+      expect(composer).to have_value(/start=2024-06-01/)
+      expect(composer).to have_value(/end=2024-06-03/)
     end
 
     context "when showLocalTime is set and the event crosses midnight relative to the viewer",
@@ -290,6 +290,7 @@ describe "Post event" do
       post_event_page.going_all_following
 
       expect(post_event_page).to have_going_status
+      expect(post_event_page).to have_selected_status(:going)
       invitee = DiscoursePostEvent::Invitee.find_by(user_id: rsvp_user.id, post_id: post.id)
       expect(invitee.status).to eq(DiscoursePostEvent::Invitee.statuses[:going])
       expect(invitee.recurring).to eq(true)
@@ -303,9 +304,33 @@ describe "Post event" do
       post_event_page.going_this_event
 
       expect(post_event_page).to have_going_status
+      expect(post_event_page).to have_selected_status(:going)
       invitee = DiscoursePostEvent::Invitee.find_by(user_id: rsvp_user.id, post_id: post.id)
       expect(invitee.status).to eq(DiscoursePostEvent::Invitee.statuses[:going])
       expect(invitee.recurring).to eq(false)
+    end
+
+    it "marks only the chosen attendance as selected" do
+      raw = "[event status='public' start='2222-02-22 14:22']\n[/event]"
+      post = PostCreator.create!(admin, title: "My test meetup event", raw:)
+
+      visit(post.topic.url)
+
+      expect(post_event_page).to have_no_selected_status(:going)
+      expect(post_event_page).to have_pressed_status(:going, pressed: false)
+
+      post_event_page.going
+
+      expect(post_event_page).to have_selected_status(:going)
+      expect(post_event_page).to have_pressed_status(:going)
+      expect(post_event_page).to have_no_selected_status(:interested)
+      expect(post_event_page).to have_no_selected_status(:not_going)
+
+      post_event_page.not_going
+
+      expect(post_event_page).to have_selected_status(:not_going)
+      expect(post_event_page).to have_no_selected_status(:going)
+      expect(post_event_page).to have_pressed_status(:going, pressed: false)
     end
 
     it "renders without a dropdown on non-recurring events" do

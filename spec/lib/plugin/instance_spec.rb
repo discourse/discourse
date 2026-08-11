@@ -460,10 +460,12 @@ TEXT
       DiscoursePluginRegistry.serialized_current_user_fields << "has_car"
       user = Fabricate(:user)
       user.custom_fields["has_car"] = "true"
+      user.custom_fields["has_bike"] = "true"
       user.save!
 
       payload = JSON.parse(CurrentUserSerializer.new(user, scope: Guardian.new(user)).to_json)
       expect(payload["current_user"]["custom_fields"]["has_car"]).to eq("true")
+      expect(payload["current_user"]["custom_fields"]).not_to have_key("has_bike")
 
       payload = JSON.parse(UserSerializer.new(user, scope: Guardian.new(user)).to_json)
       expect(payload["user"]["custom_fields"]["has_car"]).to eq("true")
@@ -1294,7 +1296,7 @@ TEXT
         )
       }.to raise_error(
         ArgumentError,
-        "0 is not a valid value. Must be one of RequestTracker::RateLimiters::User, RequestTracker::RateLimiters::IP",
+        "0 is not a valid value. Must be one of RequestTracker::RateLimiters::User, RequestTracker::RateLimiters::HealthCheck, RequestTracker::RateLimiters::IP",
       )
     end
 
@@ -1310,7 +1312,7 @@ TEXT
         )
       }.to raise_error(
         ArgumentError,
-        "0 is not a valid value. Must be one of RequestTracker::RateLimiters::User, RequestTracker::RateLimiters::IP",
+        "0 is not a valid value. Must be one of RequestTracker::RateLimiters::User, RequestTracker::RateLimiters::HealthCheck, RequestTracker::RateLimiters::IP",
       )
     end
 
@@ -1342,11 +1344,15 @@ TEXT
         RequestTracker::RateLimiters::User,
       )
 
-      expect(Middleware::RequestTracker.rate_limiters_stack[1].superclass).to eq(
+      expect(Middleware::RequestTracker.rate_limiters_stack[1]).to eq(
+        RequestTracker::RateLimiters::HealthCheck,
+      )
+
+      expect(Middleware::RequestTracker.rate_limiters_stack[2].superclass).to eq(
         RequestTracker::RateLimiters::Base,
       )
 
-      expect(Middleware::RequestTracker.rate_limiters_stack[2]).to eq(
+      expect(Middleware::RequestTracker.rate_limiters_stack[3]).to eq(
         RequestTracker::RateLimiters::IP,
       )
     end
@@ -1366,10 +1372,14 @@ TEXT
       )
 
       expect(Middleware::RequestTracker.rate_limiters_stack[1]).to eq(
+        RequestTracker::RateLimiters::HealthCheck,
+      )
+
+      expect(Middleware::RequestTracker.rate_limiters_stack[2]).to eq(
         RequestTracker::RateLimiters::IP,
       )
 
-      expect(Middleware::RequestTracker.rate_limiters_stack[2].superclass).to eq(
+      expect(Middleware::RequestTracker.rate_limiters_stack[3].superclass).to eq(
         RequestTracker::RateLimiters::Base,
       )
     end

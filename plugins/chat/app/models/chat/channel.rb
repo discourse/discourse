@@ -240,12 +240,21 @@ module Chat
     def mark_all_threads_as_read(user: nil)
       return if !threading_enabled
 
-      DB.exec(<<~SQL, channel_id: id)
+      params = { channel_id: id }
+      user_condition = ""
+
+      if user
+        params[:user_id] = user.id
+        user_condition = "AND user_chat_thread_memberships.user_id = :user_id"
+      end
+
+      DB.exec(<<~SQL, params)
         UPDATE user_chat_thread_memberships
         SET last_read_message_id = chat_threads.last_message_id
         FROM chat_threads
         WHERE user_chat_thread_memberships.thread_id = chat_threads.id
-        #{user ? "AND user_chat_thread_memberships.user_id = #{user.id}" : ""}
+        AND chat_threads.channel_id = :channel_id
+        #{user_condition}
         AND (
           user_chat_thread_memberships.last_read_message_id < chat_threads.last_message_id OR
           user_chat_thread_memberships.last_read_message_id IS NULL

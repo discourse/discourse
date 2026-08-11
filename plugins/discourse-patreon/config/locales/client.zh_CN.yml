@@ -19,6 +19,8 @@ zh_CN:
       title: 'Patreon'
       header:
         rules: '筛选器'
+      unconfigured: "Patreon 尚未连接。有关详细信息，请参阅 <a href='%{url}' target='_blank'>Discourse Meta 上的文档</a>。"
+      configure_tokens: '前往设置'
       group: '群组'
       rewards: '奖励'
       filter: '筛选'

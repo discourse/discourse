@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import moment from "moment";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
@@ -13,7 +14,7 @@ import Category from "discourse/models/category";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import MultiSelect from "discourse/select-kit/components/multi-select";
-import { eq } from "discourse/truth-helpers";
+import { eq, not } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
@@ -40,6 +41,12 @@ export default class AiTranslations extends Component {
     this.args.model?.translation_enabled &&
     !this.args.model?.no_locales_configured;
   @tracked enabled = this.args.model?.enabled;
+  // Pre-checked during first-time setup so enabling translations also surfaces the switcher;
+  // reflects the real setting once translations are already on.
+  @tracked
+  languageSwitcherRequested =
+    this.siteSettings.content_localization_language_switcher !== "none" ||
+    !this.translationEnabled;
   @tracked
   selectedLocales = this.siteSettings.content_localization_supported_locales
     ? this.siteSettings.content_localization_supported_locales.split("|")
@@ -148,12 +155,30 @@ export default class AiTranslations extends Component {
     );
   }
 
+  get hasSavedLocales() {
+    return this.originalLocales.length > 0;
+  }
+
   get isToggleDisabled() {
     return (
       this.isTogglingTranslation ||
-      (this.args.model?.no_locales_configured &&
-        this.originalLocales.length === 0)
+      !this.hasSavedLocales ||
+      this.selectedLocales.length === 0
     );
+  }
+
+  get toggleDisabledReason() {
+    if (this.hasSavedLocales && this.selectedLocales.length > 0) {
+      return null;
+    }
+
+    return i18n(
+      "discourse_ai.translations.admin_actions.enable_translations_disabled"
+    );
+  }
+
+  get languageSwitcherValue() {
+    return this.languageSwitcherRequested ? "all" : "none";
   }
 
   get availableLocales() {
@@ -207,10 +232,6 @@ export default class AiTranslations extends Component {
         }
       );
       this.originalLocales = [...this.selectedLocales];
-
-      if (this.selectedLocales.length > 0) {
-        this.args.model.no_locales_configured = false;
-      }
 
       if (this.translationEnabled) {
         window.location.reload();
@@ -286,31 +307,65 @@ export default class AiTranslations extends Component {
   }
 
   @action
+  async toggleLanguageSwitcher(event) {
+    const previous = this.languageSwitcherRequested;
+    this.languageSwitcherRequested = event.target.checked;
+
+    // Not yet enabled: the value is applied together with the enable toggle.
+    if (!this.translationEnabled) {
+      return;
+    }
+
+    try {
+      await ajax(
+        "/admin/site_settings/content_localization_language_switcher",
+        {
+          type: "PUT",
+          data: {
+            content_localization_language_switcher: this.languageSwitcherValue,
+          },
+        }
+      );
+    } catch (e) {
+      this.languageSwitcherRequested = previous;
+      popupAjaxError(e);
+    }
+  }
+
+  @action
   async toggleTranslationEnabled() {
     if (this.isTogglingTranslation) {
       return;
     }
 
-    if (!this.translationEnabled && this.originalLocales.length === 0) {
+    if (!this.translationEnabled && !this.hasSavedLocales) {
       return;
     }
 
     this.isTogglingTranslation = true;
     try {
-      if (!this.translationEnabled && this.originalLocales.length > 0) {
-        await ajax("/admin/site_settings/content_localization_enabled", {
+      if (!this.translationEnabled && this.hasSavedLocales) {
+        await ajax("/admin/site_settings/bulk_update", {
           type: "PUT",
-          data: { content_localization_enabled: true },
+          data: {
+            settings: {
+              content_localization_enabled: { value: true },
+              content_localization_language_switcher: {
+                value: this.languageSwitcherValue,
+              },
+              ai_translation_enabled: { value: true },
+            },
+          },
+        });
+      } else {
+        await ajax("/admin/site_settings/ai_translation_enabled", {
+          type: "PUT",
+          data: { ai_translation_enabled: false },
         });
       }
-
-      await ajax("/admin/site_settings/ai_translation_enabled", {
-        type: "PUT",
-        data: { ai_translation_enabled: !this.translationEnabled },
-      });
       this.translationEnabled = !this.translationEnabled;
 
-      if (this.translationEnabled && !this.args.model.no_locales_configured) {
+      if (this.translationEnabled && this.hasSavedLocales) {
         this.enabled = true;
       } else {
         this.enabled = false;
@@ -498,7 +553,8 @@ export default class AiTranslations extends Component {
           />
           <actions.Default
             @label="discourse_ai.translations.admin_actions.localization_settings"
-            @route="adminConfig.localization.settings"
+            @route="adminSiteSettingsCategory"
+            @routeModels="content_localization"
             class="ai-localization-settings-button"
           />
         </:actions>
@@ -512,14 +568,6 @@ export default class AiTranslations extends Component {
       {{/if}}
 
       <div class="ai-translations__settings-panel settings">
-        <div class="setting ai-translations__toggle-container">
-          <DToggleSwitch
-            @state={{this.translationEnabled}}
-            @label="discourse_ai.translations.admin_actions.enable_translations"
-            disabled={{this.isToggleDisabled}}
-            {{on "click" this.toggleTranslationEnabled}}
-          />
-        </div>
         <div class="ai-translations__settings-fields">
           <div class="setting">
             <div class="setting-label">
@@ -646,6 +694,46 @@ export default class AiTranslations extends Component {
                 }}</div>
             </div>
           </div>
+        </div>
+        <div class="setting ai-translations__language-switcher">
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              checked={{this.languageSwitcherRequested}}
+              disabled={{not this.hasSavedLocales}}
+              {{on "input" this.toggleLanguageSwitcher}}
+            />
+            <span>{{i18n
+                "discourse_ai.translations.admin_actions.show_language_switcher"
+              }}</span>
+          </label>
+          <div class="desc">{{i18n
+              "discourse_ai.translations.admin_actions.show_language_switcher_description"
+            }}</div>
+        </div>
+        <div class="setting ai-translations__toggle-container">
+          {{#if this.toggleDisabledReason}}
+            <DTooltip
+              @content={{this.toggleDisabledReason}}
+              class="ai-translations__toggle-disabled-tooltip"
+            >
+              <:trigger>
+                <DToggleSwitch
+                  @state={{this.translationEnabled}}
+                  @label="discourse_ai.translations.admin_actions.enable_translations"
+                  disabled={{this.isToggleDisabled}}
+                  {{on "click" this.toggleTranslationEnabled}}
+                />
+              </:trigger>
+            </DTooltip>
+          {{else}}
+            <DToggleSwitch
+              @state={{this.translationEnabled}}
+              @label="discourse_ai.translations.admin_actions.enable_translations"
+              disabled={{this.isToggleDisabled}}
+              {{on "click" this.toggleTranslationEnabled}}
+            />
+          {{/if}}
         </div>
       </div>
 

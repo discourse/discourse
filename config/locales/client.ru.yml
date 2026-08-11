@@ -554,19 +554,12 @@ ru:
       pill: "Похожие"
       pm_title: "Похожие сообщения"
     admin_onboarding_banner:
-      launch_in_easy_steps: "Запуск в %{step_count} простых шагах"
       congrats_onboarding_complete: "Поздравляем с завершением процесса адаптации!"
-      select_theme:
-        use_theme: "Использовать выбранную тему"
-        enabled: "Выбрано"
-        applying_theme: "Применение темы..."
       invite_collaborators:
         title: "Пригласить соавторов"
-        description: "Первые участники помогают оживить ваше сообщество."
         action: "Создать приглашение"
       start_posting:
         title: "Начать публикацию"
-        description: "Дайте людям тему для совместного обсуждения."
         action: "Посмотреть идеи"
         choose_option: "С чего бы вы хотели начать?"
         predefined_topics: "Шаблоны для начала разговора"
@@ -587,6 +580,26 @@ ru:
           what_is_your_favorite_food:
             title: "Какое ваше любимое блюдо?"
             body: "Поделитесь своими любимыми блюдами с сообществом! Я начну: я обожаю пиццу, особенно с большим количеством сыра и пепперони."
+    design_wizard:
+      back: "Назад"
+      next: "Далее"
+      sections:
+        theme: "тема"
+        fonts: "Шрифты"
+        homepage: "Главная страница"
+      theme:
+        selected: "Выбрано"
+      colors:
+        light: "Светлый"
+        dark: "Темная"
+      fonts:
+        base_font: "Базовый шрифт"
+        heading_font: "Шрифт заголовка"
+      homepage:
+        topics: "Новые темы"
+        categories: "Категории"
+        styles:
+          boxes: "Блоки"
     about:
       edit: "Отредактировать эту страницу"
       simple_title: "О форуме"
@@ -925,10 +938,6 @@ ru:
       stale_help: "Данная проблема решена пользователем <b>%{username}</b>."
       claim_help:
         optional: "Вы можете зарезервировать этот контент за собой, чтобы другие не могли заняться его модерацией."
-        required: "Вы должны зарезервировать контент за собой, прежде чем заняться его модерацией."
-        claimed_by_you: "Вы зарезервировали этот контент за собой и можете смело заняться его модерацией."
-        claimed_by_other: "Этот контент может быть отмодерирован только пользователем <b>%{username}</b>."
-        automatically_claimed_by: "Этот элемент сейчас проверяется пользователем <b>%{username}</b>."
       claim:
         title: "Заявить права на эту тему"
       awaiting_approval: "В ожидании подтверждения"
@@ -964,6 +973,8 @@ ru:
         email: "Эл. почта"
         name: "Имя"
         fields: "Поля"
+        silence_reason: "Причина заморозки"
+        penalty_forever: "Навсегда"
         reject_reason: "Причина"
         scrubbed_by: "Запись удалена пользователем"
         scrubbed_reason: "Причина"
@@ -1802,7 +1813,6 @@ ru:
       external_links_in_new_tab: "Открывать все внешние ссылки в новой вкладке"
       enable_quoting: "Разрешить отвечать с цитированием выделенного текста"
       enable_smart_lists: "Включать умные списки при написании в редакторе"
-      enable_defer: "Включить функцию отметки тем как непрочитанных"
       enable_markdown_monospace_font: "Использовать моноширинный шрифт в режиме Markdown редактора"
       experimental_sidebar:
         enable: "Включить боковую панель"
@@ -2333,6 +2343,9 @@ ru:
         contextual: "Количество контента новой страницы"
       bookmark_after_notification:
         title: "После отправки напоминания о закладке:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Уведомлять при получении лайка"
         always: "Всегда"
@@ -2510,7 +2523,8 @@ ru:
           invite_by_email: "Эл. почта"
           restrict_domain: "Ограничить по домену"
           domain_placeholder: "example.com"
-          more_options: "Другие варианты"
+          create_and_send: "Отправить"
+          create_and_copy: "Копировать ссылку"
           update: "Обновить"
           summary:
             role_member: "Участник"
@@ -2523,7 +2537,7 @@ ru:
             expires: "Срок действия"
             topic: "Тема"
             groups: "Группы"
-            edit: "Изменение приглашение"
+            edit: "Изменить"
         bulk_invite:
           none: "Нет приглашений для отображения на этой странице."
           text: "Массовое приглашение"
@@ -3107,6 +3121,7 @@ ru:
         few: "+%{count} подкатегории"
         many: "+%{count} подкатегорий"
         other: "+%{count} подкатегории"
+      subcategories: "+ Подкатегории"
       topic_count:
         one: "%{count} тема в этой категории"
         few: "%{count} темы в этой категории"
@@ -3183,9 +3198,10 @@ ru:
     filter_input:
       clear: "Очистить фильтр"
     filter_controls:
-      reset: "Сбросить фильтры"
+      reset: "Сбросить"
     d_icon_grid_picker:
       select_icon: "Выбрать иконки"
+      search_label: "Искать иконки"
       search_placeholder: "Искать иконки..."
       no_results: "Иконки не найдены"
       favorites: "Избранное"
@@ -3341,7 +3357,6 @@ ru:
       italic_label: "К"
       italic_title: "Курсив"
       italic_text: "текст, выделенный курсивом"
-      heading_title: "Заголовки"
       heading_level_n: "Заголовок %{levelNumber}"
       heading_level_n_title: "Заголовок %{levelNumber}"
       heading_level_paragraph: "Абзац"
@@ -3555,7 +3570,6 @@ ru:
         other: "%{count} открытого запроса на вступление в группу «%{group_name}»"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} — завершено"
       new_features: "Появились новые функции!"
       admin_problems: "Новый совет в панели управления сайта"
       upcoming_changes:
@@ -5808,9 +5822,9 @@ ru:
           always_public: "Контент в этом разделе всегда публичный"
           more_menu: "Меню «Еще»"
           localizations:
-            title: "Переводы"
             locale: "Язык"
             title_label: "Заголовок раздела"
+            remove_language: "Отозвать"
           links:
             add: "Добавить еще ссылку"
             delete: "Удалить ссылку"
@@ -7515,6 +7529,8 @@ ru:
         sidebar: "Боковая панель"
         header_dropdown: "Выпадающий список заголовка"
         legacy: "Старая версия"
+      duplicate_topic_titles:
+        allowed: "Разрешённые"
       backups:
         title: "Резервные копии"
         files_title: "Резервные файлы"
@@ -7764,7 +7780,6 @@ ru:
           finish_install: "Завершить установку темы"
           last_attempt: "Процесс установки не завершен, последняя попытка:"
           remote_branch: "Имя ветки (необязательно)"
-          public_key: "Предоставьте доступ к репозиторию со следующим открытым ключом:"
           install: "Установить"
           installed: "Установленные"
           install_popular: "Популярные"
@@ -9180,6 +9195,7 @@ ru:
         uploading: "Загрузка…"
         name: "Название"
         group: "Группа"
+        all_groups: "Все группы"
         created_by: "Создано"
         image: "Изображение"
         alt: "предпросмотр пользовательских эмодзи"

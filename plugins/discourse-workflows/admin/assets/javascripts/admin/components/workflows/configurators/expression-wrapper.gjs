@@ -127,6 +127,11 @@ function plainValueForModeToggle(value, schema = {}) {
     return plainArrayValueForModeToggle(value);
   }
 
+  if (type === "boolean") {
+    const literal = wholeExpressionBody(value) ?? value.slice(1);
+    return ["true", "1"].includes(literal.trim().toLowerCase());
+  }
+
   const body = wholeExpressionBody(value);
   if (body) {
     const parsedLiteral = parseJsonLiteral(body);
@@ -153,24 +158,11 @@ export default class ExpressionWrapper extends Component {
   }
 
   get expressionMode() {
-    if (this.args.expressionMode !== undefined) {
-      return Boolean(this.args.expressionMode);
-    }
-
     return isExpression(this.args.field?.value);
-  }
-
-  get modeItems() {
-    return this.args.modeItems || MODE_ITEMS;
   }
 
   @action
   toggleMode(value) {
-    if (this.args.onModeChange) {
-      this.args.onModeChange(value);
-      return;
-    }
-
     const wantsDynamic = value === "dynamic";
     if (wantsDynamic === this.expressionMode) {
       return;
@@ -278,7 +270,7 @@ export default class ExpressionWrapper extends Component {
 
       {{#if @supportsExpression}}
         <DSegmentedControl
-          @items={{this.modeItems}}
+          @items={{MODE_ITEMS}}
           @value={{if this.expressionMode "dynamic" "plain"}}
           @onSelect={{this.toggleMode}}
           @size="small"

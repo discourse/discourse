@@ -278,7 +278,6 @@ hu:
       exclusion: foglalt
       greater_than: nagyobbnak kell lennie, mint %{count}
       greater_than_or_equal_to: nagyobb vagy egyenlőnek kell lennie, mint %{count}
-      has_already_been_used: "már használatban van"
       in: '%{count} között kell lennie'
       inclusion: nincs benne a listában
       invalid: érvénytelen
@@ -1731,7 +1730,6 @@ hu:
     staff_edit_locks_post: "A bejegyzések szerkesztése le lesz tiltva, ha azokat a stáb tagjai szerkesztették"
     post_edit_time_limit: "Egy 0. vagy 1. megbízhatósági szintű szerző (n) percig szerkesztheti a bejegyzését a közzététel után. Állítsa 0-ra, ha örökre engedélyezni akarja."
     tl2_post_edit_time_limit: "Egy 2. vagy magasabb megbízhatósági szintű szerző (n) percig szerkesztheti a bejegyzését a közzététel után. Állítsa 0-ra, ha örökre engedélyezni akarja."
-    edit_history_visible_to_public: "Mindenki számára engedélyezi, hogy lássa egy szerkesztett bejegyzés korábbi verzióit. Ha ki van kapcsolva, csak a stáb tagjai tekinthetik meg."
     delete_removed_posts_after: "A szerző által eltávolított bejegyzések (n) óra elteltével automatikusan törlődnek. Ha 0-ra állítja, a bejegyzések azonnal törlődnek."
     notify_users_after_responses_deleted_on_flagged_post: "Ha egy bejegyzést jelentenek, majd eltávolítanak, akkor minden olyan felhasználó értesítést kap, aki válaszolt a bejegyzésre, és ezért a válaszait eltávolították."
     max_image_width: "A bejegyzésben lévő képek indexképének maximális szélessége. A nagyobb szélességű képeket a rendszer átméretezi és dobozba helyezi."
@@ -2333,7 +2331,6 @@ hu:
     default_other_external_links_in_new_tab: "Alapértelmezés szerint nyissa meg a külső hivatkozásokat egy új lapon."
     default_other_enable_quoting: "Alapértelmezés szerint a kijelölt szöveg idézése a válaszban."
     default_other_enable_smart_lists: "Az intelligens listák alapértelmezés szerinti engedélyezése a szerkesztőbe íráskor."
-    default_other_enable_defer: "Alapértelmezés szerint engedélyezze a téma elhalasztása funkciót."
     default_other_enable_markdown_monospace_font: "Alapértelmezés szerint monospace betűtípust használ a szerkesztő Markdown módjában."
     default_other_dynamic_favicon: "Alapértelmezés szerint az új/frissített témák számának megjelenítése a böngésző ikonján."
     default_other_skip_new_user_tips: "A tippek és jelvények kihagyása az új felhasználók regisztrációjakor"
@@ -2367,7 +2364,6 @@ hu:
     revoke_user_api_keys_unused_days: "A felhasználói API kulcs utolsó használata óta eltelt napok száma, mielőtt automatikusan visszavonásra kerül (0 esetén soha)"
     revoke_user_api_keys_maxlife_days: "A felhasználói API kulcs automatikus visszavonása előtti napok száma (0 esetén soha)"
     tagging_enabled: "Engedélyezi a címkéket a témákhoz? További információért tekintse meg az <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Adminisztrátori útmutató a címkékhez</a> című cikket a Meta oldalon."
-    create_tag_allowed_groups: "Címkék létrehozására jogosult csoportok. Az adminisztrátorok és a moderátorok mindig létrehozhatnak címkéket."
     edit_tags_allowed_groups: "Csoportok, amelyek jogosultak címkék, címkeleírások és címkeszinonimák szerkesztésére."
     max_tags_per_topic: "A témához maximálisan hozzárendelhető címkék száma."
     max_tags_per_email_subject: "Az e-mail tárgyában található címkék maximális száma"
@@ -2437,11 +2433,9 @@ hu:
     about_page_extra_groups_order: "Az extra csoportok sorrendje a névjegy oldalon."
     adobe_analytics_tags_url: "Adobe Analytics címkék URL-je (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Csoportok, amelyek megtekinthetik egy bejegyzés nyers e-mail tartalmát, ha azt bejövő e-mailből hozták létre. Ez magában foglalja az e-mail fejléceket és egyéb technikai információkat."
-    rich_editor: "Engedélyezze a gazdag szerkesztőt a szerző számára, hogy minden felhasználó válthasson a jelenlegi Markdown mód és az új gazdag szövegszerkesztő között az intuitívabb és felhasználóbarátabb komponálás érdekében."
     default_composition_mode: "Állítsd be a közösséged szövegszerkesztőjének alapértelmezett módját. A Rich Text mód modernebb, ismerősebb írási élményt nyújt a legtöbb felhasználó számára, míg a Markdown mód a technikaibb közönség számára lehet alkalmasabb. A tagok a szövegszerkesztő eszköztárán található kapcsolóval válthatnak a módok között."
     reviewable_ui_refresh: "Csoportok, amelyek használhatják a kísérleti új felhasználói felületet a felülvizsgálati sorban."
     content_localization_use_default_locale_when_unsupported: "A webhely alapértelmezett területi beállításainak megfelelően lokalizált tartalmat jelenítsen meg azoknak a felhasználóknak, akiknek az előnyben részesített nyelve nem szerepel a „tartalom lokalizációjában támogatott területek” listában."
-    content_localization_allow_author_localization: "Lehetővé teheti a szerzők számára saját témáik és bejegyzéseik lokalizációjának frissítését a bejegyzések menüjén keresztül."
     floating_dismiss_topics_on_mobile: "Megjelenít egy lebegő „Elvetés...” gombot mobilon a témalistához a könnyebb hozzáférés és a témalista tetején lévő hely felszabadítása érdekében."
     enable_simplified_category_creation: "Leegyszerűsített kategória-létrehozási folyamatot tesz lehetővé kevesebb opcióval és letisztultabb felülettel."
     reporting_improvements: "Navigációs, megjelenésbeli és használhatósági fejlesztések a Discourse adminisztrátori jelentéseihez."
@@ -4662,6 +4656,10 @@ hu:
     title: "Fejlesztői mód"
     enable_rack_mini_profiler: "Engedélyezze a Rack Mini Profiler 1 órás megőrzését a munkamenet-változások között"
     enter: "Belépés a Fejlesztői módba"
+  design_wizard:
+    palette_pairs:
+      default: "Alapértelmezett"
+      dracula: "Drakula"
   wizard:
     title: "Discourse telepítő"
     step:
@@ -4921,11 +4919,9 @@ hu:
         title: "Nem"
         delete:
           title: "Felhasználó törlése"
-          description: "Felhasználó törlése blokkolás nélkül"
           complete: "Felhasználó törölve."
         block:
           title: "Felhasználó törlése és blokkolása"
-          description: "A felhasználót töröljük, IP-címét és e-mail címét pedig blokkoljuk."
           complete: "Felhasználó törölve és letiltva."
       confirm_spam:
         title: "Igen"
@@ -4985,12 +4981,10 @@ hu:
         bundle_title: "Mit szeretnél csinálni a felhasználóval?"
       silence_user:
         title: "Felhasználó némítása"
-        description: "Felhasználó letiltása a posztolásról"
         complete: "Felhasználó elnémítva"
         reason: "Felhasználó elnémítva a felülvizsgálati soron keresztül"
       suspend_user:
         title: "Felhasználó felfüggesztése"
-        description: "Felhasználói fiók felfüggesztése"
         complete: "Felhasználó felfüggesztve"
         reason: "Felhasználó felfüggesztve a felülvizsgálati sor miatt"
       delete_user:

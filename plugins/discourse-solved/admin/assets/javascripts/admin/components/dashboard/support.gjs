@@ -11,7 +11,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { durationTiny } from "discourse/lib/formatter";
 import Category from "discourse/models/category";
-import CategorySelector from "discourse/select-kit/components/category-selector";
+import MultipleCategoriesSelector from "discourse/select-kit/components/multiple-categories-selector";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import SupportResponseTime from "./support/response-time";
@@ -34,6 +34,7 @@ const DeltaPill = <template>
 
 export default class SupportSection extends Component {
   @service currentUser;
+  @service siteSettings;
   @service toasts;
 
   @tracked selectedCategories = [];
@@ -169,6 +170,77 @@ export default class SupportSection extends Component {
           : `${slower ? "+" : "-"}${durationTiny(Math.abs(diff))}`,
       deltaClass: diff === 0 ? "--neutral" : slower ? "--neg" : "--pos",
     };
+  }
+
+  get appliedCategories() {
+    return (this.data?.category_ids ?? [])
+      .map((id) => Category.findById(id))
+      .filter(Boolean);
+  }
+
+  get categoryFilterTerm() {
+    if (this.appliedCategories.length > 0) {
+      return this.#categoryTerm(this.appliedCategories);
+    }
+
+    if (this.siteSettings.allow_solved_on_all_topics) {
+      return null;
+    }
+
+    const allSupport = (this.args.data?.category_options ?? [])
+      .map((option) => Category.findById(option.id))
+      .filter(Boolean);
+
+    return allSupport.length > 0 ? this.#categoryTerm(allSupport) : null;
+  }
+
+  #categoryTerm(categories) {
+    const slugs = categories.map((category) => Category.slugFor(category, ":"));
+    // `=` restricts to these exact categories, excluding subcategories, to
+    // match the dashboard's own count (accepted answers are opt-in per
+    // category and never inherited by subcategories).
+    return `=category:${slugs.join(",")}`;
+  }
+
+  get dateRangeTerms() {
+    const terms = [];
+    if (this.args.startDate) {
+      terms.push(
+        `created-after:${moment(this.args.startDate).format("YYYY-MM-DD")}`
+      );
+    }
+    if (this.args.endDate) {
+      // `created-before:D` matches created_at <= midnight on D, so pass the
+      // following day to cover all of the selected end date (the dashboard's
+      // own count instead runs through that day's end_of_day).
+      terms.push(
+        `created-before:${moment(this.args.endDate)
+          .add(1, "day")
+          .format("YYYY-MM-DD")}`
+      );
+    }
+    return terms;
+  }
+
+  get outcomeQueries() {
+    const statusTermsByRow = {
+      resolved: ["status:solved"],
+      in_progress: ["status:unsolved", "posts-min:2"],
+      unanswered: ["status:unsolved", "status:noreplies"],
+    };
+
+    return Object.fromEntries(
+      Object.entries(statusTermsByRow).map(([key, statusTerms]) => {
+        const q = [
+          ...statusTerms,
+          ...this.dateRangeTerms,
+          this.categoryFilterTerm,
+        ]
+          .filter(Boolean)
+          .join(" ");
+        return [key, { q }];
+      })
+    );
   }
 
   @action
@@ -340,7 +412,7 @@ export default class SupportSection extends Component {
 
         {{#if this.showFilter}}
           <div class="db-support__filter">
-            <CategorySelector
+            <MultipleCategoriesSelector
               @categories={{this.selectedCategories}}
               @blockedCategories={{this.blockedCategories}}
               @onChange={{this.onCategoriesChange}}
@@ -353,7 +425,10 @@ export default class SupportSection extends Component {
         <div class="db-section__row-group">
           <div class="db-section__row">
             <div class="db-section__row-block db-support-outcomes">
-              <SupportTopicOutcomes @outcomes={{this.data.topic_outcomes}} />
+              <SupportTopicOutcomes
+                @outcomes={{this.data.topic_outcomes}}
+                @queries={{this.outcomeQueries}}
+              />
 
             </div>
             <div class="db-section__row-block db-support-response">

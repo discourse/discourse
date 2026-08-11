@@ -13,7 +13,7 @@ describe "Details button" do
       visit("/new-topic")
       composer.fill_content("test :+1:").toggle_rich_editor.select_all
       find(".toolbar-menu__options-trigger").click
-      find("button[title='Hide details']").click
+      find("button[data-name='details']").click
 
       expect(rich).to have_css(
         "details img.emoji[src=\"/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}\"]",

@@ -100,6 +100,8 @@ module DiscourseWorkflows
       data_table_columns
       data_table_condition_builder
       data_table_select
+      date_time
+      field_path
       filter_query
       group_select
       icon
@@ -109,6 +111,7 @@ module DiscourseWorkflows
       password
       query_params
       select
+      summarize_aggregations
       tags
       textarea
       time

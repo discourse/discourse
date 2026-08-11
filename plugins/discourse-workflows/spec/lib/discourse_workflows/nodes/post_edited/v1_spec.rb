@@ -57,6 +57,7 @@ RSpec.describe DiscourseWorkflows::Nodes::PostEdited::V1 do
         trust_level_name: TrustLevel.name(user.trust_level),
       )
       expect(output[:topic][:id]).to eq(topic.id)
+      expect(output[:topic][:user_id]).to eq(topic.user_id)
       expect(output[:topic][:tags].map { |topic_tag| topic_tag[:name] }).to eq(["test-tag"])
       expect(output).not_to have_key(:cooked)
     end

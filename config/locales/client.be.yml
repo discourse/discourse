@@ -427,6 +427,18 @@ be:
     admin_onboarding_banner:
       start_posting:
         back: "Назад"
+    design_wizard:
+      back: "Назад"
+      next: "Далей"
+      sections:
+        theme: "Тэма"
+        homepage: "Галоўная старонка"
+      colors:
+        light: "Светлая"
+        dark: "Цёмная"
+      homepage:
+        topics: "тэмы"
+        categories: "катэгорыі"
     about:
       edit: "Рэдагаваць гэту старонку"
       simple_title: "Пра сайт"
@@ -1162,6 +1174,7 @@ be:
           staff_role_moderator: "запавольнік"
           email_placeholder: "name@example.com"
           invite_by_email: "Электронная пошта"
+          create_and_send: "Адправіць"
           summary:
             role_member: "Член"
             role_admin: "адміністратар"
@@ -1169,6 +1182,7 @@ be:
             method_email: "Электронная пошта"
             topic: "Тэма"
             groups: "Груп"
+            edit: "Рэдагаваць"
       password:
         title: "Пароль"
         common: "Гэты пароль занадта папулярны."
@@ -1334,6 +1348,8 @@ be:
       required_at_signup: "Абавязкова"
     welcome_banner_page_visibility:
       homepage: "Галоўная старонка"
+    category_row:
+      subcategories: "+ Падкатэгорыі"
     select_kit:
       delete_item: "Выдаліць %{name}"
       components:
@@ -1346,6 +1362,8 @@ be:
       to: Да
     emoji_picker:
       flags: Сцягі
+    filter_controls:
+      reset: "Скінуць"
     composer:
       options: "Параметры"
       posting_not_on_topic: "У якой тэме вы хочаце адказаць?"
@@ -1952,6 +1970,8 @@ be:
         custom:
           save: "Захаваць"
           delete: "Выдаліць"
+          localizations:
+            remove_language: "Выдаліць"
           links:
             add: "Дадаць яшчэ адну спасылку"
             delete: "Выдаліць спасылку"
@@ -2964,6 +2984,7 @@ be:
         delete: "выдаляць"
         name: "Імя"
         group: "Група"
+        all_groups: "Усе групы"
         image: "Выява"
         settings: "Налады"
         export: "Экспарт"

@@ -132,9 +132,7 @@ module("Integration | Component | AiTranslations", function (hooks) {
     pretender.put("/admin/site_settings/ai_translation_enabled", () =>
       response({})
     );
-    pretender.put("/admin/site_settings/content_localization_enabled", () =>
-      response({})
-    );
+    pretender.put("/admin/site_settings/bulk_update", () => response({}));
 
     await render(<template><AiTranslations @model={{this.model}} /></template>);
 
@@ -166,6 +164,100 @@ module("Integration | Component | AiTranslations", function (hooks) {
     assert
       .dom(".ai-translation-locale-progress__translated-value")
       .hasText("8", "the refreshed response is rendered");
+  });
+
+  test("disables the toggle as soon as every supported language is removed", async function (assert) {
+    this.model = {
+      ...this.model,
+      enabled: false,
+      translation_enabled: false,
+    };
+    pretender.put(
+      "/admin/site_settings/content_localization_supported_locales",
+      () => response({})
+    );
+
+    await render(<template><AiTranslations @model={{this.model}} /></template>);
+
+    const toggle =
+      ".ai-translations__toggle-container .d-toggle-switch__checkbox";
+    assert
+      .dom(toggle)
+      .isNotDisabled("the toggle is usable while locales exist");
+
+    await click(".ai-translations__locale-input-row .setting-controls__undo");
+    assert
+      .dom(toggle)
+      .isDisabled("clearing the locale selection disables the toggle");
+    assert.dom(".ai-translations__toggle-disabled-tooltip").exists();
+
+    await click(".ai-translations__locale-input-row .setting-controls__ok");
+    assert
+      .dom(toggle)
+      .isDisabled("the toggle stays disabled after saving no locales");
+  });
+
+  test("enables the language switcher along with translations", async function (assert) {
+    let bulkUpdate;
+    this.model = {
+      ...this.model,
+      enabled: false,
+      translation_enabled: false,
+    };
+    this.siteSettings.content_localization_language_switcher = "none";
+    pretender.put("/admin/site_settings/bulk_update", (request) => {
+      bulkUpdate = decodeURIComponent(request.requestBody);
+      return response({});
+    });
+
+    await render(<template><AiTranslations @model={{this.model}} /></template>);
+
+    assert
+      .dom(".ai-translations__language-switcher input[type='checkbox']")
+      .isChecked("first-time setup opts into the switcher by default");
+
+    await click(
+      ".ai-translations__toggle-container .d-toggle-switch__checkbox"
+    );
+
+    assert.true(
+      bulkUpdate.includes(
+        "settings[content_localization_language_switcher][value]=all"
+      ),
+      "enabling translations turns the switcher on in the same request"
+    );
+    assert.true(
+      bulkUpdate.includes("settings[ai_translation_enabled][value]=true"),
+      "translations are enabled in the same request"
+    );
+  });
+
+  test("respects opting out of the language switcher before enabling", async function (assert) {
+    let bulkUpdate;
+    this.model = {
+      ...this.model,
+      enabled: false,
+      translation_enabled: false,
+    };
+    this.siteSettings.content_localization_language_switcher = "none";
+    pretender.put("/admin/site_settings/bulk_update", (request) => {
+      bulkUpdate = decodeURIComponent(request.requestBody);
+      return response({});
+    });
+
+    await render(<template><AiTranslations @model={{this.model}} /></template>);
+
+    await click(".ai-translations__language-switcher input[type='checkbox']");
+    await click(
+      ".ai-translations__toggle-container .d-toggle-switch__checkbox"
+    );
+
+    assert.true(
+      bulkUpdate.includes(
+        "settings[content_localization_language_switcher][value]=none"
+      ),
+      "the switcher stays off when the admin unchecks it"
+    );
   });
 
   test("shows the fixed backfill start date", async function (assert) {

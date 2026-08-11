@@ -211,6 +211,50 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
 
   before { enable_current_plugin }
 
+  describe "DNS SRV endpoints" do
+    let(:domain) { "_openai._tcp.example.com" }
+    let(:resolved_url) { "https://llm.example.com:8443" }
+    let(:response_body) { { choices: [{ message: { content: "hello" } }] }.to_json }
+
+    before do
+      resource = Resolv::DNS::Resource::IN::SRV.new(1, 1, 8443, "llm.example.com")
+      Resolv::DNS
+        .any_instance
+        .stubs(:getresources)
+        .with(domain, Resolv::DNS::Resource::IN::SRV)
+        .returns([resource])
+      Discourse.cache.delete("dns_srv_lookup:#{domain}")
+    end
+
+    it "uses the configured path" do
+      model.update!(url: "srv://#{domain}/custom/chat/completions")
+      request =
+        stub_request(:post, "#{resolved_url}/custom/chat/completions").to_return(
+          status: 200,
+          body: response_body,
+        )
+
+      DiscourseAi::Completions::Llm.proxy(model).generate("test", user: user)
+
+      expect(request).to have_been_requested
+    end
+
+    it "uses the fallback path when no path is configured" do
+      request =
+        stub_request(:post, "#{resolved_url}/v1/chat/completions").to_return(
+          status: 200,
+          body: response_body,
+        )
+
+      ["srv://#{domain}", "srv://#{domain}/"].each do |url|
+        model.update!(url: url)
+        DiscourseAi::Completions::Llm.proxy(model).generate("test", user: user)
+      end
+
+      expect(request).to have_been_requested.twice
+    end
+  end
+
   describe "max tokens for reasoning models" do
     it "uses max_completion_tokens for reasoning models" do
       model.update!(name: "o3-mini", max_output_tokens: 999)

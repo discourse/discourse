@@ -50,7 +50,6 @@ after_initialize do
 
   reloadable_patch do
     register_category_type(DiscourseTopicVoting::Categories::Types::Ideas)
-    CategoriesController.prepend(DiscourseTopicVoting::CategoriesControllerExtension)
     Category.prepend(DiscourseTopicVoting::CategoryExtension)
     ListController.prepend(DiscourseTopicVoting::ListControllerExtension)
     Topic.prepend(DiscourseTopicVoting::TopicExtension)

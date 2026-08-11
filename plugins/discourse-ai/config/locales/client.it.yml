@@ -153,6 +153,9 @@ it:
               description: "Quando viene specificato un valore, imposta il limite massimo del numero di token generabili dal modello. Rispetta il limite massimo di token di output del LLM"
     discourse_ai:
       title: "IA"
+      discourse_workflows:
+        ai_agent:
+          mode: "Modalità"
       ai_tool_approval:
         loading: "In caricamento..."
         tool: "Azione"
@@ -258,6 +261,22 @@ it:
       translations:
         title: "Traduzioni"
         category_scope: "Categorie"
+        model_progress:
+          detail:
+            retry: "Riprova"
+            columns:
+              locale: "Localizzazione"
+              pending: "In attesa"
+              total: "Totale"
+          targets:
+            post:
+              title: "Messaggi"
+            topic:
+              title: "Argomenti"
+            category:
+              title: "Categorie"
+            tag:
+              title: "Etichette"
         stats:
           eta_minutes:
             one: "%{count} minuto"
@@ -387,6 +406,8 @@ it:
           clear_all: "Deseleziona tutto"
         forced_tools: "Strumenti forzati"
         allowed_groups: "Gruppi ammessi"
+        duplicate: "Duplica"
+        copy_name: "Copia di %{name}"
         delete: "Elimina"
         temperature: "Temperatura"
         temperature_help: "Temperatura da utilizzare per LLM. Aumenta per aumentare la creatività (lascia vuoto per utilizzare il modello predefinito, generalmente un valore compreso tra 0,0 e 2,0)"
@@ -600,7 +621,6 @@ it:
           hugging_face: "Hugging Face"
           cohere: "Cohere"
           open_ai: "OpenAI"
-          google: "Google"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"

@@ -36,7 +36,12 @@ RSpec.describe DiscourseCalendar::Livestream do
           SiteSetting.calendar_enabled = true
           SiteSetting.chat_pinned_messages = true
           post = Fabricate(:post, topic: topic)
-          Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
+          Fabricate(
+            :event,
+            post: post,
+            livestream: true,
+            location: "https://www.youtube.com/live/abc123",
+          )
         end
 
         it "creates a chat channel" do
@@ -128,7 +133,7 @@ RSpec.describe DiscourseCalendar::Livestream do
             :event,
             post: malicious_post,
             livestream: true,
-            location: "https://example.com/live",
+            location: "https://www.youtube.com/live/abc123",
           )
 
           channel = malicious.reload.topic_chat_channel.chat_channel
@@ -155,7 +160,12 @@ RSpec.describe DiscourseCalendar::Livestream do
           SiteSetting.calendar_enabled = true
           SiteSetting.chat_pinned_messages = false
           post = Fabricate(:post, topic: topic)
-          Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
+          Fabricate(
+            :event,
+            post: post,
+            livestream: true,
+            location: "https://www.youtube.com/live/abc123",
+          )
         end
 
         it "posts the topic reference message without pinning it" do

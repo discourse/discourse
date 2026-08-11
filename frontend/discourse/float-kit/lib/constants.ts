@@ -48,6 +48,15 @@ export type VisibilityOptimizer =
   (typeof VISIBILITY_OPTIMIZERS)[keyof typeof VISIBILITY_OPTIMIZERS];
 
 /**
+ * The ARIA roles a float's content element may carry: `dialog` for a panel that owns widgets of
+ * its own, and the two presentational values for a container that must not sit between a control
+ * and the elements it references. Deliberately closed — a role outside this set has not been
+ * reconciled with the ARIA the content emits (see `DFloatBody`), so widening it is a decision to
+ * make here rather than at a call site.
+ */
+export type FloatContentRole = "dialog" | "none" | "presentation";
+
+/**
  * A relayed lifecycle or trigger callback (`onShow`, `onClose`, `beforeTrigger`, …).
  * These are handed straight to consumers that pass functions of varying arity and
  * return type, so the signature is deliberately broad-but-real: it accepts any
@@ -117,8 +126,16 @@ export interface TooltipOptions {
   /** Whether FloatKit attaches the trigger event listeners itself, rather than the caller driving it through the service API. */
   listeners: boolean;
 
-  /** The maximum width of the content, in pixels. */
-  maxWidth: number;
+  /** How long to keep an interactive float open after the pointer leaves it. */
+  hoverGracePeriod: number;
+
+  /**
+   * The maximum width of the content: a number in pixels, or any CSS `max-width` value. Pass
+   * `"none"` alongside `matchTriggerWidth` — the two are both applied inline, so a numeric cap
+   * silently wins over the matched width and a trigger wider than the cap gets a narrower
+   * overlay.
+   */
+  maxWidth: number | string;
 
   /** Passed as the `@data` argument to a `component` rendered as the content. */
   data: unknown;
@@ -156,6 +173,24 @@ export interface TooltipOptions {
   /** Called after the float shows. */
   onShow: FloatCallback | null;
 
+  /**
+   * Called with the float's content element once it has been placed.
+   *
+   * Positioning is what gives a float its size, and it resolves asynchronously — so content
+   * that renders from a measurement of itself computes that measurement against a float that
+   * has no size yet. Such content re-measures here rather than waiting for a resize to be
+   * observed, which happens on the browser's schedule and is not guaranteed to be prompt.
+   *
+   * This fires on every placement, not once per open: with `autoUpdate` on (the default) an
+   * ancestor scroll, an element resize or a layout shift each reposition the float and call
+   * back. A callback that re-renders from its own measurement therefore has to reach a fixed
+   * point, since a size change it causes is itself a reposition trigger.
+   *
+   * A menu that renders as a mobile modal has no placement to compute and never repositions.
+   * It calls back once, after the modal is inserted, with the modal element.
+   */
+  onPositioned: FloatCallback | null;
+
   /** Called with the float instance when it is created, so callers can control it programmatically. */
   onRegisterApi: FloatCallback | null;
 
@@ -164,11 +199,18 @@ export interface TooltipOptions {
 }
 
 /**
- * The options for a menu: every tooltip option plus the menu-only extras (focus
- * management, the mobile modal, identifier grouping, and the class/width overrides
+ * The options for a menu: every tooltip option plus the menu-only extras (the content role,
+ * focus management, the mobile modal, identifier grouping, and the class/width overrides
  * the menu template forwards to its trigger and content).
  */
 export interface MenuOptions extends TooltipOptions {
+  /**
+   * The ARIA role for the content element. `dialog` suits a panel that holds its own widgets.
+   * A popup that is only a list should pass `none`, so the container does not sit between the
+   * control and the items its `aria-activedescendant` points at.
+   */
+  contentRole: FloatContentRole;
+
   /** Whether to focus the content when the menu opens. */
   autofocus: boolean;
 
@@ -300,6 +342,7 @@ export const TOOLTIP: { options: TooltipOptions; portalOutletId: string } = {
     inline: null,
     interactive: false,
     listeners: false,
+    hoverGracePeriod: 0,
     maxWidth: 350,
     data: null,
     offset: 10,
@@ -313,6 +356,7 @@ export const TOOLTIP: { options: TooltipOptions; portalOutletId: string } = {
     trapTab: true,
     onClose: null,
     onShow: null,
+    onPositioned: null,
     onRegisterApi: null,
     portalOutletElement: null,
   },
@@ -333,6 +377,7 @@ export const MENU: { options: MenuOptions; portalOutletId: string } = {
     identifier: null,
     interactive: true,
     listeners: false,
+    hoverGracePeriod: 0,
     maxWidth: 400,
     data: null,
     offset: 10,
@@ -344,8 +389,10 @@ export const MENU: { options: MenuOptions; portalOutletId: string } = {
     fallbackPlacements: FLOAT_UI_PLACEMENTS,
     autoUpdate: true,
     trapTab: true,
+    contentRole: "dialog",
     onClose: null,
     onShow: null,
+    onPositioned: null,
     onRegisterApi: null,
     modalForMobile: false,
     inline: null,

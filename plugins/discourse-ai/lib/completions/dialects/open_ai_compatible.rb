@@ -19,6 +19,10 @@ module DiscourseAi
           @tools ||= tools_dialect.translated_tools
         end
 
+        def embed_user_ids?
+          true
+        end
+
         def max_prompt_tokens
           return llm_model.max_prompt_tokens if llm_model&.max_prompt_tokens
 

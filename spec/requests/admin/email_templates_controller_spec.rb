@@ -357,7 +357,7 @@ RSpec.describe Admin::EmailTemplatesController do
         end
       end
 
-      context "when subject has plural keys" do
+      context "when subject or body has plural keys" do
         it "doesn't update the subject" do
           old_subject = I18n.t("system_messages.pending_users_reminder.subject_template")
           expect(old_subject).to be_a(Hash)
@@ -379,6 +379,54 @@ RSpec.describe Admin::EmailTemplatesController do
           expect(I18n.t("system_messages.pending_users_reminder.text_body_template")).to eq(
             "Lorem ipsum",
           )
+        end
+
+        it "returns validation errors without creating overrides for pluralized templates" do
+          templates = [
+            {
+              key: "system_messages.pending_users_reminder",
+              subject: "",
+              body: "Body with %{invalid} interpolation key",
+              invalid_attribute: "Body",
+            },
+            {
+              key: "system_messages.reviewables_reminder",
+              subject: "Subject with %{invalid} interpolation key",
+              body: "",
+              invalid_attribute: "Subject",
+            },
+          ]
+
+          templates.each do |template|
+            subject_key = "#{template[:key]}.subject_template"
+            body_key = "#{template[:key]}.text_body_template"
+            expect([I18n.t(subject_key), I18n.t(body_key)]).to include(be_a(Hash))
+
+            put "/admin/email/templates/#{template[:key]}",
+                params: {
+                  email_template: template.slice(:subject, :body),
+                },
+                headers: headers
+
+            expect(response.status).to eq(422)
+            expect(response.parsed_body["errors"]).to eq(
+              [
+                "<b>#{template[:invalid_attribute]}</b>: #{
+                  I18n.t(
+                    "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
+                    keys: "invalid",
+                    count: 1,
+                  )
+                }",
+              ],
+            )
+            expect(
+              TranslationOverride.where(
+                locale: I18n.locale,
+                translation_key: [subject_key, body_key],
+              ),
+            ).to be_empty
+          end
         end
       end
     end

@@ -1,3 +1,5 @@
+import { getOwner } from "@ember/owner";
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import {
   attendanceTransition,
@@ -38,7 +40,9 @@ const LONG_DEFAULT = {
   period: "before",
 };
 
-module("Unit | Lib | raw-event-helper", function () {
+module("Unit | Lib | raw-event-helper", function (hooks) {
+  setupTest(hooks);
+
   test("removeEvent", function (assert) {
     assert.strictEqual(
       removeEvent('[event start="2024-01-01"]\nDescription\n[/event]'),
@@ -70,19 +74,13 @@ module("Unit | Lib | raw-event-helper", function () {
 
     assert.strictEqual(
       replaceRaw(params, raw),
-      'Some text \n[event param1="newValue1" param2="value2"]\n[/event]\n more text',
+      "Some text \n[event param1=newValue1 param2=value2]\n[/event]\n more text",
       "updates existing parameters and adds new ones"
     );
 
     assert.false(
       replaceRaw(params, "No event tag here"),
       "returns false when no event tag is found"
-    );
-
-    assert.strictEqual(
-      replaceRaw({ foo: 'bar"quoted' }, '[event original="value"]\n[/event]'),
-      '[event foo="barquoted"]\n[/event]',
-      "escapes double quotes in parameter values"
     );
 
     assert.strictEqual(
@@ -96,7 +94,7 @@ module("Unit | Lib | raw-event-helper", function () {
         { name: "", location: "Paris" },
         '[event original="value"]\n[/event]'
       ),
-      '[event location="Paris"]\n[/event]',
+      "[event location=Paris]\n[/event]",
       "omits empty name parameter"
     );
 
@@ -105,7 +103,7 @@ module("Unit | Lib | raw-event-helper", function () {
         { name: "   ", location: "Berlin" },
         '[event original="value"]\n[/event]'
       ),
-      '[event location="Berlin"]\n[/event]',
+      "[event location=Berlin]\n[/event]",
       "omits whitespace-only name parameter"
     );
   });
@@ -122,10 +120,44 @@ module("Unit | Lib | raw-event-helper", function () {
       '[event start="2024-06-15 10:00" name="Demo"]\nbody line\n[/event]'
     );
 
-    assert.strictEqual(
-      buildEventBlock(parsed.attrs, parsed.description),
-      parsed.full,
+    const rebuilt = buildEventBlock(parsed.attrs, parsed.description);
+    assert.deepEqual(
+      parseEventBlock(rebuilt).attrs,
+      parsed.attrs,
       "buildEventBlock round-trips parsed values"
+    );
+  });
+
+  test("parseEventBlock keeps brackets inside quoted attr values", function (assert) {
+    const parsed = parseEventBlock(
+      '[event start="2024-06-15" location="[RSVP](https://zoom.example.com/j/123)"]\n[/event]'
+    );
+
+    assert.deepEqual(parsed.attrs, {
+      start: "2024-06-15",
+      location: "[RSVP](https://zoom.example.com/j/123)",
+    });
+  });
+
+  test("parseEventBlock reads the quote pairs the rich editor emits", function (assert) {
+    const parsed = parseEventBlock(
+      '[event start=«2024-06-15 10:00» location=“Sam\'s "Release"”]\n[/event]'
+    );
+
+    assert.deepEqual(parsed.attrs, {
+      start: "2024-06-15 10:00",
+      location: 'Sam\'s "Release"',
+    });
+  });
+
+  test("buildEventBlock preserves values containing quotes", function (assert) {
+    const attrs = { location: 'Sam\'s "Release" party' };
+    const rebuilt = buildEventBlock(attrs, "");
+
+    assert.deepEqual(
+      parseEventBlock(rebuilt).attrs,
+      attrs,
+      "quotes survive the serialize/parse round-trip"
     );
   });
 
@@ -483,79 +515,207 @@ module("Unit | Lib | raw-event-helper", function () {
     );
   });
 
-  test("isLivestreamUrl only accepts http(s) URLs for major livestreaming platforms", function (assert) {
+  test("isLivestreamUrl only accepts https URLs for major livestreaming platforms", function (assert) {
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+
     assert.false(
-      isLivestreamUrl("https://example.com/live"),
+      isLivestreamUrl("https://example.com/live", siteSettings),
       "does not accept arbitrary URLs"
     );
     assert.false(
-      isLivestreamUrl("http://example.com/live"),
+      isLivestreamUrl("http://example.com/live", siteSettings),
       "does not accept arbitrary URLs"
     );
     assert.false(
-      isLivestreamUrl("HTTPS://EXAMPLE.COM"),
+      isLivestreamUrl("http://www.youtube.com/watch?v=1", siteSettings),
+      "rejects http on an allowed host"
+    );
+    assert.false(
+      isLivestreamUrl("HTTPS://EXAMPLE.COM", siteSettings),
       "does not accept arbitrary URLs"
     );
-    assert.false(isLivestreamUrl("www.example.com"), "rejects schemeless www");
-    assert.false(isLivestreamUrl("mailto:host@example.com"), "rejects mailto");
-    assert.false(isLivestreamUrl("Room 5"), "rejects plain text");
-    assert.false(isLivestreamUrl(null), "handles null");
-    assert.false(isLivestreamUrl(undefined), "handles undefined");
+    assert.false(
+      isLivestreamUrl("www.example.com", siteSettings),
+      "rejects schemeless www"
+    );
+    assert.false(
+      isLivestreamUrl("youtube.com/watch?v=dQw4w9WgXcQ", siteSettings),
+      "rejects a schemeless allowed host, which the save path would not retain"
+    );
+    assert.false(
+      isLivestreamUrl("mailto:host@example.com", siteSettings),
+      "rejects mailto"
+    );
+    assert.false(
+      isLivestreamUrl("ftp://youtube.com/watch", siteSettings),
+      "rejects a non-https scheme on an allowed host"
+    );
+    assert.false(
+      isLivestreamUrl("https://", siteSettings),
+      "rejects a bare scheme"
+    );
+    assert.false(isLivestreamUrl("Room 5", siteSettings), "rejects plain text");
+    assert.false(isLivestreamUrl(null, siteSettings), "handles null");
+    assert.false(isLivestreamUrl(undefined, siteSettings), "handles undefined");
 
     assert.true(
-      isLivestreamUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ"),
+      isLivestreamUrl(
+        "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        siteSettings
+      ),
       "accepts YouTube"
     );
     assert.true(
-      isLivestreamUrl("https://youtu.be/dQw4w9WgXcQ"),
+      isLivestreamUrl("https://youtu.be/dQw4w9WgXcQ", siteSettings),
       "accepts YouTube short link"
     );
     assert.true(
-      isLivestreamUrl("https://www.twitch.tv/username"),
+      isLivestreamUrl("https://www.twitch.tv/username", siteSettings),
       "accepts Twitch"
     );
     assert.true(
-      isLivestreamUrl("https://www.facebook.com/username/videos/123456789"),
+      isLivestreamUrl(
+        "https://www.facebook.com/username/videos/123456789",
+        siteSettings
+      ),
       "accepts Facebook"
     );
     assert.true(
-      isLivestreamUrl("https://www.tiktok.com/@username/video/123456789"),
+      isLivestreamUrl(
+        "https://www.tiktok.com/@username/video/123456789",
+        siteSettings
+      ),
       "accepts TikTok"
     );
     assert.true(
-      isLivestreamUrl("https://www.instagram.com/tv/123456789"),
+      isLivestreamUrl("https://www.instagram.com/tv/123456789", siteSettings),
       "accepts Instagram"
     );
-    assert.true(isLivestreamUrl("https://zoom.us/j/123456789"), "accepts Zoom");
+    assert.true(
+      isLivestreamUrl("https://zoom.us/j/123456789", siteSettings),
+      "accepts Zoom"
+    );
   });
 
   test("isLivestreamUrl accepts subdomains of livestreaming platforms", function (assert) {
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+
     assert.true(
-      isLivestreamUrl("https://us06web.zoom.us/j/123456789?pwd=secret"),
+      isLivestreamUrl(
+        "https://us06web.zoom.us/j/123456789?pwd=secret",
+        siteSettings
+      ),
       "accepts the vanity subdomain Zoom actually hands out"
     );
     assert.true(
-      isLivestreamUrl("https://gaming.youtube.com/watch?v=dQw4w9WgXcQ"),
+      isLivestreamUrl(
+        "https://gaming.youtube.com/watch?v=dQw4w9WgXcQ",
+        siteSettings
+      ),
       "accepts a YouTube subdomain"
     );
     assert.true(
-      isLivestreamUrl("HTTPS://US06WEB.ZOOM.US/j/123456789"),
+      isLivestreamUrl("HTTPS://US06WEB.ZOOM.US/j/123456789", siteSettings),
       "is case-insensitive"
     );
   });
 
   test("isLivestreamUrl rejects hosts that merely resemble a platform", function (assert) {
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+
     assert.false(
-      isLivestreamUrl("https://notzoom.us/j/123456789"),
+      isLivestreamUrl("https://notzoom.us/j/123456789", siteSettings),
       "rejects a host ending in the platform name"
     );
     assert.false(
-      isLivestreamUrl("https://zoom.us.evil.com/j/123456789"),
+      isLivestreamUrl("https://zoom.us.evil.com/j/123456789", siteSettings),
       "rejects a host starting with the platform name"
     );
     assert.false(
-      isLivestreamUrl("https://myyoutube.com/watch?v=1"),
+      isLivestreamUrl("https://myyoutube.com/watch?v=1", siteSettings),
       "rejects a host prefixed with the platform name"
+    );
+    assert.false(
+      isLivestreamUrl("https://youtube.com@evil.com/live", siteSettings),
+      "rejects a platform name smuggled into the userinfo"
+    );
+    assert.false(
+      isLivestreamUrl("https://youtube.com\t@evil.com/live", siteSettings),
+      "rejects userinfo hidden behind a stripped control character"
+    );
+    assert.false(
+      isLivestreamUrl("https://youtube.com。evil.com/live", siteSettings),
+      "rejects a separator that only looks like a label boundary"
+    );
+  });
+
+  // The browser resolves these to a host the admin did allow, so the save path
+  // keeps the livestream flag and the editor has to agree.
+  test("isLivestreamUrl matches the host the browser would connect to", function (assert) {
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+
+    assert.true(
+      isLivestreamUrl("https://youtube.com\\@evil.com/live", siteSettings),
+      "resolves a backslash as a path separator"
+    );
+    assert.true(
+      isLivestreamUrl("https://%79outube.com/live", siteSettings),
+      "decodes percent escapes in the host"
+    );
+    assert.true(
+      isLivestreamUrl("https://ｙoutube.com/live", siteSettings),
+      "maps Unicode to the host it resolves to"
+    );
+    assert.true(
+      isLivestreamUrl("https://youtube.com./live", siteSettings),
+      "ignores a fully qualified trailing dot"
+    );
+  });
+
+  test("isLivestreamUrl follows the livestream_allowed_hosts setting", function (assert) {
+    const custom = { livestream_allowed_hosts: "stream.example.com|vimeo.com" };
+
+    assert.true(
+      isLivestreamUrl("https://stream.example.com/live/1", custom),
+      "accepts an admin-added host"
+    );
+    assert.true(
+      isLivestreamUrl("https://player.vimeo.com/video/123", custom),
+      "accepts subdomains of an admin-added host"
+    );
+    assert.false(
+      isLivestreamUrl("https://www.youtube.com/watch?v=1", custom),
+      "rejects a default host the admin removed"
+    );
+
+    assert.true(
+      isLivestreamUrl("https://vimeo.com/123", {
+        livestream_allowed_hosts: "VIMEO.com",
+      }),
+      "canonicalizes a list entry before comparing"
+    );
+    assert.false(
+      isLivestreamUrl("https://vimeo.com/123", {
+        livestream_allowed_hosts: "https://vimeo.com/videos",
+      }),
+      "ignores a list entry that is not a bare host, as the validator rejects it on save"
+    );
+    assert.false(
+      isLivestreamUrl("https://youtube.com/live", {
+        livestream_allowed_hosts: "ｙoutube.com",
+      }),
+      "ignores a non-ASCII list entry, which the validator requires in punycode"
+    );
+
+    assert.false(
+      isLivestreamUrl("https://www.youtube.com/watch?v=1", {
+        livestream_allowed_hosts: "",
+      }),
+      "an empty list allows nothing"
+    );
+    assert.false(
+      isLivestreamUrl("https://www.youtube.com/watch?v=1", {}),
+      "a missing setting allows nothing"
     );
   });
 });

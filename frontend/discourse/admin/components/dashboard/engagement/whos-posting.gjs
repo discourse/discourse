@@ -9,7 +9,7 @@ import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Category from "discourse/models/category";
-import CategorySelector from "discourse/select-kit/components/category-selector";
+import MultipleCategoriesSelector from "discourse/select-kit/components/multiple-categories-selector";
 import { i18n } from "discourse-i18n";
 
 const ROW_ORDER = ["new_members", "returning", "staff"];
@@ -176,7 +176,7 @@ export default class WhosPosting extends Component {
           {{i18n "admin.dashboard.sections.engagement.whos_posting.title"}}
         </LinkTo>
         <div class="db-whos-posting__filter">
-          <CategorySelector
+          <MultipleCategoriesSelector
             @categories={{this.selectedCategories}}
             @onChange={{this.onCategoriesChange}}
             @onClose={{this.onClose}}

@@ -6,6 +6,12 @@ module PageObjects
       class PostEvent < PageObjects::Pages::Base
         TRIGGER_MENU_SELECTOR = ".discourse-post-event-more-menu-trigger"
 
+        STATUS_BUTTONS = {
+          going: ".going-button",
+          interested: ".interested-button",
+          not_going: ".not-going-button",
+        }.freeze
+
         def open_more_menu
           try_until_success do
             locator("#{TRIGGER_MENU_SELECTOR}:not(.--saving)").click
@@ -16,6 +22,11 @@ module PageObjects
 
         def going
           locator(".going-button").click
+          self
+        end
+
+        def not_going
+          locator(".not-going-button").click
           self
         end
 
@@ -33,6 +44,18 @@ module PageObjects
 
         def has_going_status?
           has_css?(".event-status.status-going")
+        end
+
+        def has_selected_status?(status)
+          has_css?(status_button_selector(status, ".btn-primary"))
+        end
+
+        def has_no_selected_status?(status)
+          has_no_css?(status_button_selector(status, ".btn-primary"))
+        end
+
+        def has_pressed_status?(status, pressed: true)
+          has_css?(status_button_selector(status, "[aria-pressed='#{pressed}']"))
         end
 
         def has_going_count?(count)
@@ -143,6 +166,13 @@ module PageObjects
 
         def edit
           open_more_menu { locator(".edit-event").click }
+        end
+
+        private
+
+        def status_button_selector(status, state)
+          button = ".event-status #{STATUS_BUTTONS.fetch(status)}"
+          "#{button}#{state}, #{button} #{state}"
         end
       end
     end

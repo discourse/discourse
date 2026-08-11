@@ -490,22 +490,12 @@ pt_BR:
       pill: "Sugestões"
       pm_title: "Mensagens sugeridas"
     admin_onboarding_banner:
-      launch_in_easy_steps: "Comece em %{step_count} passos fáceis"
       congrats_onboarding_complete: "Parabéns por concluir o processo de integração!"
-      select_theme:
-        action: "Selecionar tema"
-        modal_title: "Escolha um tema"
-        use_theme: "Usar tema selecionado"
-        enabled: "Selecionado(a)"
-        applying_theme: "Aplicando tema..."
-        browse_all: "Gerenciar temas"
       invite_collaborators:
         title: "Convidar colaboradores"
-        description: "Os primeiros membros ajudam a dar vida à sua comunidade."
         action: "Criar convite"
       start_posting:
         title: "Comece a postar"
-        description: "Dê às pessoas algo sobre o que conversar."
         action: "Ver ideias"
         choose_option: "Como você gostaria de começar?"
         predefined_topics: "Modelos para quebrar o gelo"
@@ -526,6 +516,26 @@ pt_BR:
           what_is_your_favorite_food:
             title: "Qual é a sua comida favorita?"
             body: "Compartilhe sua comida favorita com a comunidade! Eu começo: adoro pizza, principalmente com bastante queijo e pepperoni."
+    design_wizard:
+      back: "Voltar"
+      next: "Próximo"
+      sections:
+        theme: "Tema"
+        fonts: "Fontes"
+        homepage: "Página Inicial"
+      theme:
+        selected: "Selecionado(a)"
+      colors:
+        light: "Claro"
+        dark: "Escuro"
+      fonts:
+        base_font: "Fonte de base"
+        heading_font: "Fonte do cabeçalho"
+      homepage:
+        topics: "Tópicos"
+        categories: "Categorias"
+        styles:
+          boxes: "Caixas de seleção"
     about:
       edit: "Editar esta página"
       simple_title: "Sobre"
@@ -820,10 +830,6 @@ pt_BR:
       stale_help: "Este item foi resolvido por <b>%{username}</b>."
       claim_help:
         optional: "Você pode reivindicar este item para impedir que outras pessoas o revisem."
-        required: "Você precisa reivindicar itens antes de poder revisá-los."
-        claimed_by_you: "Você reivindicou este item e pode revisá-lo."
-        claimed_by_other: "Este item só pode ser revisado por <b>%{username}</b>."
-        automatically_claimed_by: "Este item está sendo revisado por <b>%{username}</b>."
       claim:
         title: "Reivindicar este tópico"
       unclaim:
@@ -860,6 +866,8 @@ pt_BR:
         email: "E-mail"
         name: "Nome"
         fields: "Campos"
+        silence_reason: "Motivo do silêncio"
+        penalty_forever: "Para sempre"
         reject_reason: "Motivo"
         scrubbed_by: "Registro removido por"
         scrubbed_reason: "Motivo"
@@ -1665,9 +1673,7 @@ pt_BR:
       external_links_in_new_tab: "Abrir todos os links externos em uma nova aba"
       enable_quoting: "Ativar resposta citando o texto destacado"
       enable_smart_lists: "Ativar listas inteligentes ao escrever no compositor"
-      enable_defer: "Ativar tópicos marcados como não lidos"
       enable_markdown_monospace_font: "Usar fonte monoespacial no modo Markdown do compositor"
-      show_original_content: "Exibir conteúdo original em vez de conteúdo traduzido."
       experimental_sidebar:
         enable: "Ativar barra lateral"
         options: "Opções"
@@ -2157,6 +2163,9 @@ pt_BR:
         contextual: "Novo conteúdo da página"
       bookmark_after_notification:
         title: "Depois que uma notificação de lembrete de marcador é enviada:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Notificar ao receber curtida"
         always: "Sempre"
@@ -2326,7 +2335,8 @@ pt_BR:
           invite_by_email: "E-mail"
           restrict_domain: "Restringir a domínio"
           domain_placeholder: "example.com"
-          more_options: "Mais opções"
+          create_and_send: "Enviar"
+          create_and_copy: "Copiar link"
           update: "Atualizar"
           summary:
             role_member: "Membro"
@@ -2339,7 +2349,7 @@ pt_BR:
             expires: "Expira"
             topic: "Tópico"
             groups: "Grupos"
-            edit: "Editar convite"
+            edit: "Editar"
         bulk_invite:
           none: "Nenhum convite para exibir nesta página."
           text: "Convite em massa"
@@ -2890,6 +2900,7 @@ pt_BR:
       subcategory_count:
         one: "+%{count} subcategoria"
         other: "+%{count} subcategorias"
+      subcategories: "+ Subcategorias"
       topic_count:
         one: "%{count} tópico nesta categoria"
         other: "%{count} tópicos nesta categoria"
@@ -2957,10 +2968,11 @@ pt_BR:
     filter_input:
       clear: "Limpar filtro"
     filter_controls:
-      reset: "Redefinir filtro"
+      reset: "Redefinir"
       toggle: "Alternar filtros suspensos"
     d_icon_grid_picker:
       select_icon: "Selecionar ícone"
+      search_label: "Buscar ícones"
       search_placeholder: "Buscar ícones..."
       no_results: "Nenhum ícone encontrado"
       results_count:
@@ -3097,7 +3109,6 @@ pt_BR:
       italic_label: "I"
       italic_title: "Realce"
       italic_text: "texto realçado"
-      heading_title: "Cabeçalhos"
       heading_level_n: "Cabeçalho %{levelNumber}"
       heading_level_n_title: "Cabeçalho %{levelNumber}"
       heading_level_paragraph: "Parágrafo"
@@ -3294,7 +3305,6 @@ pt_BR:
         other: "%{count} pedidos de associação abertas para \"%{group_name}\""
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - concluído(a)"
       new_features: "Novos recursos disponíveis!"
       admin_problems: "Nova recomendação no painel de controle do seu site"
       upcoming_changes:
@@ -5334,9 +5344,9 @@ pt_BR:
           always_public: "O conteúdo nesta seção é sempre público"
           more_menu: "Menu Mais"
           localizations:
-            title: "Traduções"
             locale: "Idioma"
             title_label: "Título da seção"
+            remove_language: "Remover"
           links:
             add: "Adicionar outro link"
             delete: "Excluir link"
@@ -7012,6 +7022,8 @@ pt_BR:
         sidebar: "Barra lateral"
         header_dropdown: "Menu dropdown de cabeçalho"
         legacy: "Legado"
+      duplicate_topic_titles:
+        allowed: "Permitido(a)"
       backups:
         title: "Backups"
         files_title: "Arquivos de cópia de segurança"
@@ -7255,7 +7267,6 @@ pt_BR:
           finish_install: "Concluir a instalação do tema"
           last_attempt: "O processo de instalação não foi concluído, última tentativa:"
           remote_branch: "Nome da unidade (opcional)"
-          public_key: "Conceder o seguinte acesso da chave pública ao repo:"
           install: "Instalar"
           installed: "Instalado(a)"
           install_popular: "Mais acessados(as)"
@@ -8611,6 +8622,7 @@ pt_BR:
         uploading: "Enviando…"
         name: "Nome"
         group: "Grupo"
+        all_groups: "Todos os grupos"
         created_by: "Criador(a):"
         image: "Imagem"
         alt: "pré-visualização do emoji personalizado"

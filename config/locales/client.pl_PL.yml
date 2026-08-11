@@ -584,27 +584,29 @@ pl_PL:
       pill: "Sugerowane"
       pm_title: "Sugerowane wiadomości"
     admin_onboarding_banner:
-      launch_in_easy_steps: "Uruchom w %{step_count} prostych krokach"
+      launch_in_easy_steps: "Skonfiguruj swoją społeczność"
+      launch_in_easy_steps_subtitle: "Wykonano %{completed_steps} z %{step_count} kroków"
       congrats_onboarding_complete: "Gratulacje z okazji ukończenia procesu wdrażania!"
+      expand: "Rozwiń kroki konfiguracji"
+      collapse: "Zwiń kroki konfiguracji"
+      dismiss: "Odrzuć konfigurację"
       select_theme:
         title: "Dostosuj swoją witrynę"
-        description: "Wybierz motyw początkowy dla swojej społeczności"
-        action: "Wybierz motyw"
-        modal_title: "Wybierz motyw"
-        use_theme: "Użyj wybranego motywu"
-        enabled: "Wybrany"
-        applying_theme: "Stosowanie motywu..."
-        browse_all: "Zarządzaj motywami"
+        description: "Wybierz kolory, czcionki i stronę główną."
+        action: "Zobacz opcje"
+        completed: "Zmień opcje"
         show_light_screenshot: "Pokaż jasny zrzut ekranu"
         show_dark_screenshot: "Pokaż ciemny zrzut ekranu"
       invite_collaborators:
         title: "Zaproś współpracowników"
-        description: "Pierwsi członkowie pomagają ożywić Twoją społeczność"
+        description: "Pierwsi członkowie wcielają ją w życie."
         action: "Utwórz zaproszenie"
+        completed: "Zaproś więcej"
       start_posting:
         title: "Rozpocznij publikowanie"
-        description: "Daj ludziom temat do wspólnej rozmowy"
+        description: "Daj ludziom temat do dyskusji."
         action: "Zobacz pomysły"
+        completed: "Zobacz więcej pomysłów"
         choose_option: "Jak chcesz zacząć?"
         predefined_topics: "Szablony przełamujące lody"
         predefined_topics_subtitle: "Daj nowym członkom temat do rozmów, wybierz szablon do edycji i stwórz swój własny."
@@ -624,6 +626,44 @@ pl_PL:
           what_is_your_favorite_food:
             title: "Jakie jest twoje ulubione jedzenie?"
             body: "Podziel się swoim ulubionym jedzeniem ze społecznością! Zacznę: uwielbiam pizzę, szczególnie z dodatkowym serem i pepperoni."
+    design_wizard:
+      title: "Dostosuj swoją witrynę"
+      subtitle: "Wybierz kolory, czcionki i stronę główną."
+      step_label: "Przejdź do kroku %{index}"
+      save: "Zapisz i zakończ"
+      back: "Wstecz"
+      next: "Dalej"
+      sections:
+        theme: "Motyw"
+        colors: "Domyślny kolor"
+        fonts: "Czcionki"
+        homepage: "Strona główna"
+      theme:
+        selected: "Wybrany"
+        custom_theme_notice: "Twoja witryna używa obecnie motywu %{name} jako domyślnego. Wybierz motyw poniżej, aby go podejrzeć. Zapisanie spowoduje zastąpienie obecnego motywu."
+      colors:
+        light: "Jasny"
+        dark: "Ciemny"
+        dark_only: "%{name} ma tylko tryb ciemny"
+        both_modes: "Każda paleta zawiera pasujący tryb jasny i ciemny"
+        user_selectable: "Umożliw członkom zmianę palet"
+        user_selectable_description: "Pokaż te palety w menu, z którego członkowie mogą wybierać"
+      fonts:
+        base_font: "Czcionka podstawowa"
+        heading_font: "Czcionka nagłówków"
+      homepage:
+        topics: "Tematy"
+        categories: "Kategorie"
+        topic_page_type: "Typ strony tematu"
+        topic_pages:
+          latest: "Tematy posortowane według ostatniej aktywności, najnowsze na początku."
+          new: "Tematy utworzone w ciągu ostatnich kilku dni, najnowsze na początku."
+          hot: "Tematy, które są obecnie popularne, łącząc ogólną popularność z niedawnym zaangażowaniem."
+        category_page_style: "Styl strony kategorii"
+        styles:
+          boxes: "Pola"
+          with_topics: "Kategorie z tematami"
+          only: "Tylko kategorie"
     about:
       edit: "Edytuj tę stronę"
       simple_title: "O stronie"
@@ -980,10 +1020,6 @@ pl_PL:
       stale_help: "Ten element został rozwiązany przez <b>%{username}</b>."
       claim_help:
         optional: "Możesz przejąć tę pozycję, aby uniemożliwić innym jego sprawdzenie."
-        required: "Musisz przejąć tę pozycję, zanim będziesz mógł/mogła je przejrzeć."
-        claimed_by_you: "Przejęto tę pozycję i możesz ją teraz przejrzeć."
-        claimed_by_other: "Tę pozycję może zrecenzować tylko <b>%{username}</b>."
-        automatically_claimed_by: "Ta pozycja jest obecnie sprawdzana przez <b>%{username}</b>."
       claim:
         title: "Przejmij ten temat"
       unclaim:
@@ -1023,6 +1059,11 @@ pl_PL:
         email: "E-mail"
         name: "Imię"
         fields: "Pola"
+        silenced_until: "Wyciszony do"
+        silence_reason: "Powód wyciszenia"
+        suspended_until: "Zawieszony do"
+        suspend_reason: "Powód zawieszenia"
+        penalty_forever: "Zawsze"
         reject_reason: "Powód"
         scrubbed_by: "Rekord wyczyszczony przez"
         scrubbed_reason: "Powód"
@@ -1890,9 +1931,12 @@ pl_PL:
       external_links_in_new_tab: "Otwórz wszystkie linki zewnętrzne w nowej karcie"
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
       enable_smart_lists: "Włącz inteligentne listy podczas pisania w kompozytorze"
-      enable_defer: "Włącz opcję oznaczania tematów jako nieprzeczytanych"
       enable_markdown_monospace_font: "Użyj czcionki o stałej szerokości w trybie Markdown kompozytora"
-      show_original_content: "Pokaż oryginalną treść zamiast przetłumaczonej."
+      automatically_translate: "Automatyczne tłumaczenie tematów i postów w innych językach"
+      content_languages:
+        title: "Języki treści"
+        understood: "Języki, które rozumiem"
+        understood_description: "Tematy i wpisy w tych językach nie będą tłumaczone. Język interfejsu jest zawsze uznawany za zrozumiały."
       experimental_sidebar:
         enable: "Włącz pasek boczny"
         options: "Opcje"
@@ -2426,6 +2470,10 @@ pl_PL:
         contextual: "Nowa zawartość strony"
       bookmark_after_notification:
         title: "Po wysłaniu przypomnienia o zakładce:"
+      send_shortcut:
+        title: "Wysyłaj wiadomości w kompozytorach w stylu czatu za pomocą:"
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "Powiadom o polubieniach"
         always: "Zawsze"
@@ -2600,9 +2648,8 @@ pl_PL:
           sent_title: "Zaproszenie wysłane"
           member_tab: "Członkowie"
           admin_tab: "Zespół"
-          member_description: "Zaproś innych do dołączenia do tej witryny. Udostępnij link lub wyślij zaproszenie e-mailem."
-          admin_description: "Zaproś ludzi do dołączenia do Twojego zespołu. Administratorzy mają pełny dostęp do tej witryny."
-          moderator_description: "Zaproś ludzi do swojego zespołu. Moderatorzy mogą pomóc w zarządzaniu treścią i członkami."
+          admin_description: "Administratorzy mają pełny dostęp do tej witryny, jej ustawień i danych."
+          moderator_description: "Moderatorzy mogą pomagać w zarządzaniu treścią i użytkownikami."
           staff_role_label: "Zaproś jako"
           staff_role_admin: "Administrator"
           staff_role_moderator: "Moderator"
@@ -2615,16 +2662,13 @@ pl_PL:
           invite_by_email: "E-mail"
           role_label: "Zaproś jako"
           restrict_domain: "Ogranicz do domeny"
-          restrict_domain_help: "Tylko osoby z adresem e-mail w tej domenie mogą zaakceptować link. Żeby zaprosić konkretną osobę, skorzystaj z pola „E-mail” powyżej."
+          restrict_domain_help: "Tylko osoby z adresem e-mail w tej domenie mogą zaakceptować ten link."
           domain_placeholder: "example.com"
           domain_invalid: "Wpisz poprawną domenę, np. example.com"
           arrive_at_topic_help: "Po zaakceptowaniu przekieruj użytkowników do konkretnego tematu."
-          create_and_send: "Utwórz i wyślij"
-          create_and_copy: "Utwórz i skopiuj link"
-          more_options: "Więcej opcji"
-          fewer_options: "Mniej opcji"
+          create_and_send: "Wyślij"
+          create_and_copy: "Skopiuj link"
           update: "Aktualizuj"
-          role_locked: "Po utworzeniu zaproszenia nie można zmienić jego typu."
           summary:
             sent_to: "Zaproszenie zostało wysłane e-mailem na adres %{email}. Możesz również udostępnić ten link bezpośrednio:"
             role: "Rola"
@@ -2639,7 +2683,7 @@ pl_PL:
             expires: "Wygasa"
             topic: "Temat"
             groups: "Grupy"
-            edit: "Edytuj zaproszenie"
+            edit: "Edytuj"
             view_invites: "Wyświetl zaproszenia"
           email_sent:
             body: "Zaproszenie zostało wysłane e-mailem na adres %{email}."
@@ -2885,10 +2929,15 @@ pl_PL:
     home: "Strona główna"
     read_only_mode:
       enabled: "Strona jest w trybie tylko-do-odczytu. Możesz ją nadal przeglądać, ale operacje takie jak publikowanie postów, polubianie i inne są wyłączone."
+      enabled_anonymous: "Ta witryna jest w trybie tylko do odczytu. Proszę kontynuować przeglądanie, ale rejestracja i logowanie są na razie niedostępne."
       login_disabled: "Logowanie jest zablokowane, gdy strona jest w trybie tylko do odczytu."
       logout_disabled: "Wylogowanie jest zablokowane gdy strona jest w trybie tylko do odczytu."
+      signup_disabled: "Rejestracja jest wyłączona, gdy witryna działa w trybie tylko do odczytu."
     staff_writes_only_mode:
       enabled: "Ta strona jest w trybie tylko dla personelu. Kontynuuj przeglądanie, ale odpowiadanie, polubienia i inne działania są ograniczone tylko do członków personelu."
+      enabled_anonymous: "Ta witryna jest dostępna tylko dla personelu. Proszę kontynuować przeglądanie, ale rejestracja jest niedostępna i tylko pracownicy mogą się zalogować."
+      login_disabled: "Gdy witryna działa w trybie tylko dla personelu, zalogować się mogą tylko członkowie personelu."
+      signup_disabled: "Rejestracja jest niemożliwa, gdy witryna jest w trybie wyłącznie dla personelu."
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
@@ -3255,6 +3304,7 @@ pl_PL:
         few: "+%{count} podkategorie"
         many: "+%{count} podkategorii"
         other: "+%{count} podkategorii"
+      subcategories: "+ Podkategorie"
       topic_count:
         one: "%{count} temat w tej kategorii"
         few: "%{count} tematy w tej kategorii"
@@ -3290,6 +3340,12 @@ pl_PL:
         other: "Wybierz co najmniej %{count} elementów."
       components:
         filter_for_more: Filtruj po więcej...
+        multiple_categories_selector:
+          limited_results_notice:
+            one: "Wyświetlanie %{shown} z kategorii %{count} . Wpisz, aby wyszukać więcej."
+            few: "Wyświetlanie %{shown} z kategorii %{count} . Wpisz, aby wyszukać więcej."
+            many: "Wyświetlanie %{shown} z kategorii %{count} . Wpisz, aby wyszukać więcej."
+            other: "Wyświetlanie %{shown} z kategorii %{count} . Wpisz, aby wyszukać więcej."
         categories_admin_dropdown:
           title: "Zarządzaj kategoriami"
         tag_category_admin_dropdown:
@@ -3331,10 +3387,11 @@ pl_PL:
     filter_input:
       clear: "Wyczyść filtr"
     filter_controls:
-      reset: "Zresetuj filtr"
+      reset: "Przywróć"
       toggle: "Przełącz filtry rozwijane"
     d_icon_grid_picker:
       select_icon: "Wybierz ikonę"
+      search_label: "Szukaj ikon"
       search_placeholder: "Szukaj ikon..."
       no_results: "Nie znaleziono ikon"
       results_count:
@@ -3578,11 +3635,14 @@ pl_PL:
       italic_label: "I"
       italic_title: "Wyróżnienie"
       italic_text: "wyróżniony tekst"
-      heading_title: "Nagłówki"
+      text_size_title: "Rozmiary tekstu"
       heading_level_n: "Nagłówek %{levelNumber}"
       heading_level_n_title: "Nagłówek %{levelNumber}"
       heading_level_paragraph: "Akapit"
       heading_level_paragraph_title: "Akapit"
+      heading_level_small: "Mały"
+      heading_level_small_title: "Mały tekst"
+      heading_level_small_text: "Mały tekst"
       link_title: "Link"
       link_description: "tutaj wpisz opis linku"
       link_dialog_title: "Wstaw link"
@@ -3820,7 +3880,6 @@ pl_PL:
         other: "%{count} otwartych wniosków o członkostwo dla '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - zakończone"
       new_features: "Dostępne są nowe funkcje!"
       admin_problems: "Nowe porady w panelu administratora"
       upcoming_changes:
@@ -4460,6 +4519,8 @@ pl_PL:
         link: "Dziennik aktywności"
         title: "Dziennik aktywności tematu"
         empty: "Brak aktywności tematu do wyświetlenia."
+        load_more: "Załaduj więcej aktywności"
+        updated: "Zaktualizowano aktywność tematu."
       context:
         banner: "Przeglądasz pojedynczy wątek z tego tematu."
         view_full_topic: "Zobacz cały temat"
@@ -5378,6 +5439,10 @@ pl_PL:
       click_to_show_translation: "Kliknij, aby wyświetlić tłumaczenie"
       tap_to_show_translation: "Stuknij tutaj, aby wyświetlić tłumaczenie"
       ai_translation_disclaimer: "Tłumaczenia wygenerowane przez AI mogą być niedokładne."
+    content_localization:
+      preferences:
+        title: "Preferencje językowe treści"
+        login_to_set_languages: "Zaloguj się, aby ustawić więcej języków"
     category:
       none: "(brak kategorii)"
       all: "Wszystkie kategorie"
@@ -5935,6 +6000,7 @@ pl_PL:
     cannot_render_video: Nie można wyrenderować tego wideo, ponieważ Twoja przeglądarka nie obsługuje tego kodeka.
     invalid_video_url: Nie można odtworzyć tego filmu, ponieważ adres URL jest nieprawidłowy lub niedostępny.
     keyboard_shortcuts_help:
+      search_label: "Skróty wyszukiwania"
       search_placeholder: "Wyszukaj skrót według opisu lub kombinacji klawiszy"
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -6428,13 +6494,32 @@ pl_PL:
           always_public: "Treść w tej sekcji jest zawsze publiczna"
           more_menu: "Menu więcej"
           localizations:
-            title: "Tłumaczenia"
             locale: "Język"
+            language: "Język sekcji"
+            language_description: "Podstawowy język tytułu i nazw łączy tej sekcji."
             title_label: "Tytuł sekcji"
-            link_label: "Nazwa linku"
-            add_section: "Dodaj tłumaczenie tytułu sekcji"
-            add_link: "Dodaj tłumaczenie nazwy linku"
-            remove: "Usuń tłumaczenie"
+            link_label: "Nazwy linków"
+            back: "Zawartość sekcji"
+            add_first: "Dodaj tłumaczenia"
+            manage:
+              one: "Zarządzaj tłumaczeniami (%{count} język)"
+              few: "Zarządzaj tłumaczeniami (%{count} języki)"
+              many: "Zarządzaj tłumaczeniami (%{count} języków)"
+              other: "Zarządzaj tłumaczeniami (%{count} języków)"
+            incomplete:
+              one: "Brak %{count} ciągu"
+              few: "Brak %{count} ciągów"
+              many: "Brak %{count} ciągów"
+              other: "Brak %{count} ciągów"
+            add_language: "Dodaj język"
+            remove_language: "Usuń"
+            remove_language_confirm: "Czy usunąć każde tłumaczenie %{language} dla tej sekcji?"
+            remove_cleared_confirm:
+              one: "Wyczyściłeś %{count} zapisane tłumaczenie. Zostanie ono usunięte. Kontynuować?"
+              few: "Wyczyściłeś %{count} zapisane tłumaczenia. Zostaną one usunięte. Kontynuować?"
+              many: "Wyczyściłeś %{count} zapisanych tłumaczeń. Zostaną one usunięte. Kontynuować?"
+              other: "Wyczyściłeś %{count} zapisanych tłumaczeń. Zostaną one usunięte. Kontynuować?"
+            untranslated: "Jeszcze nie przetłumaczono"
           links:
             title: "Linki do sekcji"
             add: "Dodaj kolejny link"
@@ -7612,6 +7697,7 @@ pl_PL:
           add: "Dodaj raport"
           remove: "Usuń raport"
           no_data: "Brak danych do wyświetlenia"
+          report_error: "Nie można załadować tego raportu"
           modal:
             title: "Zarządzaj raportami"
             search_placeholder: "Wyszukaj raporty"
@@ -8447,6 +8533,10 @@ pl_PL:
         legacy: "Przestarzały"
       homepage:
         top_menu_default: "Pierwsza pozycja w górnym menu"
+      duplicate_topic_titles:
+        disallowed: "Niedozwolone"
+        allowed_across_categories: "Dozwolone we wszystkich kategoriach"
+        allowed: "Dozwolone"
       backups:
         title: "Kopie zapasowe"
         files_title: "Pliki kopii zapasowej"
@@ -8614,6 +8704,8 @@ pl_PL:
           default: "Motyw domyślny"
           settings_editor: "Edytor ustawień"
           show_advanced: "Pokaż zaawansowane"
+          maximize_editor: "Maksymalizuj edytor"
+          minimize_editor: "Zminimalizuj edytor"
           is_default: "Motyw ustawiony jako domyślny"
           user_selectable: "Motyw może być ustawiany przez użytkowników"
           user_selectable_badge_label: "Możliwe do wyboru przez użytkownika"
@@ -8694,10 +8786,13 @@ pl_PL:
           import_file_tip: "Plik .tar.gz lub .zip zawierający motyw"
           is_private: "Motyw jest w prywatnym repozytorium git"
           finish_install: "Zakończ instalację motywu"
+          placeholder_description: "To prywatny motyw, który wymaga zainstalowania klucza w konfiguracji repozytorium. Po zainstalowaniu kliknij poniższy przycisk, aby zakończyć instalację."
           last_attempt: "Proces instalacji nie został zakończony, ostatnia próba:"
           remote_branch: "Nazwa oddziału (opcjonalnie)"
           remote_branch_placeholder: "Wybierz konkretną gałąź lub pozostaw puste"
-          public_key: "Podaj następujący klucz publiczny pozwalający na dostęp do repozytorium:"
+          public_key: "Udziel następującemu kluczowi publicznemu dostępu tylko do odczytu w repozytorium:"
+          public_key_github: "Przyznaj następującemu kluczowi publicznemu dostęp tylko do odczytu do repozytorium. Instrukcje znajdziesz w %{link}."
+          deploy_key_instructions: "Instrukcje wdrażania kluczy GitHub"
           install: "Zainstaluj"
           installed: "Zainstalowana"
           screenshot: "Zrzut ekranu %{name}"
@@ -9204,6 +9299,9 @@ pl_PL:
             configure_category_type: "skonfiguruj typ kategorii"
             unconfigure_category_type: "usuń konfigurację typu kategorii"
             change_access_control_list_permissions: "zmień uprawnienia listy kontroli dostępu"
+            admin_onboarding_step_completed: "ukończony etap wdrażania administratora"
+            admin_onboarding_completed: "pełne wdrożenie administratora"
+            admin_onboarding_dismissed: "odwołaj wdrożenie administratora"
         screened_emails:
           title: "Sprawdzone e-maile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -10168,6 +10266,9 @@ pl_PL:
         uploading: "Przesyłanie…"
         name: "Nazwa"
         group: "Grupa"
+        all_groups: "Wszystkie grupy"
+        filter_placeholder: "Wyszukaj emoji według nazwy"
+        no_results: "Nie znaleziono żadnych emoji."
         created_by: "Stworzone przez"
         image: "Grafika"
         alt: "podgląd niestandardowego emoji"

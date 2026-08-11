@@ -481,8 +481,6 @@ ug:
       pm_title: "تەۋسىيە ئۇچۇر"
     admin_onboarding_banner:
       select_theme:
-        enabled: "تاللاندى"
-        browse_all: "ئۆرنەك باشقۇرۇش"
         show_light_screenshot: "سۇس ئېكران كۆرۈنۈشىنى كۆرسەت"
         show_dark_screenshot: "قېنىق ئېكران كۆرۈنۈشىنى كۆرسەت"
       invite_collaborators:
@@ -491,6 +489,26 @@ ug:
       start_posting:
         title: "يوللاشنى باشلا"
         back: "كەينى"
+    design_wizard:
+      back: "كەينى"
+      next: "كېيىنكى"
+      sections:
+        theme: "ئۆرنەك"
+        fonts: "خەت نۇسخا"
+        homepage: "باش بەت"
+      theme:
+        selected: "تاللاندى"
+      colors:
+        light: "يورۇق"
+        dark: "قاراڭغۇ"
+      fonts:
+        base_font: "ئاساسى خەت نۇسخىسى"
+        heading_font: "ماۋزۇ خەت نۇسخىسى"
+      homepage:
+        topics: "تېما"
+        categories: "سەھىپە"
+        styles:
+          boxes: "قۇتا"
     about:
       edit: "بۇ بەتنى تەھرىرلە"
       simple_title: "ھەققىدە"
@@ -768,10 +786,6 @@ ug:
         optional: "تاللاشچان"
       claim_help:
         optional: "سىز باشقىلارنىڭ تەكشۈرۈشىنىڭ ئالدىنى ئېلىش ئۈچۈن بۇ تۈرنى تەلەپ قىلسىڭىز بولىدۇ."
-        required: "ئاۋال تۈرنى تەلەپ قىلىپ ئاندىن ئۇلارنى تەكشۈرۈپ تەستىقلىيالايسىز."
-        claimed_by_you: "بۇ تۈرنى تەلەپ قىلدىڭىز، تەكشۈرۈپ تەستىقلىيالايسىز."
-        claimed_by_other: "بۇ تۈرنى پەقەت <b>%{username}</b>لا تەكشۈرۈپ تەستىقلىيالايدۇ."
-        automatically_claimed_by: "ھازىر بۇ تۈرنى <b>%{username}</b> تەكشۈرۈۋاتىدۇ."
       claim:
         title: "تېما تەلەپ قىلىدۇ"
       unclaim:
@@ -808,6 +822,8 @@ ug:
         email: "ئېلخەت"
         name: "ئىسمى"
         fields: "بۆلەك"
+        silence_reason: "ئۈنسىز قىلىش سەۋەبى"
+        penalty_forever: "مەڭگۈ"
         reject_reason: "سەۋەبى"
         scrubbed_by: "خاتىرە ئۆچۈرگۈچى"
         scrubbed_reason: "سەۋەبى"
@@ -1598,7 +1614,6 @@ ug:
       external_links_in_new_tab: "بارلىق سىرتقى ئۇلانمىنى يېڭى بەتكۈچتە ئاچىدۇ"
       enable_quoting: "يورۇتۇلغان تېكىستنىڭ نەقىللىق جاۋاب بېرىشىنى قوزغىتىدۇ"
       enable_smart_lists: "تەھرىرلىگۈچتە يازغاندا ئەقلىي تىزىمنى قوزغىتىدۇ"
-      enable_defer: "تېمىغا ئوقۇلمىدى بەلگىسى سېلىشنى قوزغىتىدۇ"
       enable_markdown_monospace_font: "تەھرىرلىگۈچتىكى Markdown ھالىتىدە تەڭ كەڭلىكتىكى خەت نۇسخسىنى ئىشلىتىدۇ"
       experimental_sidebar:
         enable: "يانبالداقنى قوزغات"
@@ -2073,6 +2088,9 @@ ug:
         contextual: "يېڭى بەت مەزمۇنى"
       bookmark_after_notification:
         title: "خەتكۈچ ئەسكەرتىش ئۇقتۇرۇشى يوللىغاندىن كېيىن:"
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "ياقتۇرغاندا ئۇقتۇر"
         always: "ھەمىشە"
@@ -2242,7 +2260,8 @@ ug:
           invite_by_email: "ئېلخەت"
           restrict_domain: "دائىرە بىلەنلا چەكلىنىدۇ"
           domain_placeholder: "example.com"
-          more_options: "تېخىمۇ كۆپ تاللانما"
+          create_and_send: "يوللا"
+          create_and_copy: "ئۇلانما كۆچۈر"
           update: "يېڭىلا"
           summary:
             role_member: "ئەزا"
@@ -2254,7 +2273,7 @@ ug:
             expires: "ۋاقتى توشىدۇ"
             topic: "تېما"
             groups: "گۇرۇپپا"
-            edit: "تەكلىپ تەھرىر"
+            edit: "تەھرىر"
         bulk_invite:
           none: "بۇ بەتتە كۆرسىتىلىدىغان تەكلىپنامە يوق."
           text: "توپ تەكلىپ"
@@ -2788,6 +2807,7 @@ ug:
       subcategory_count:
         one: "+%{count} تارماق سەھىپە"
         other: "+%{count} تارماق سەھىپە"
+      subcategories: "+ تارماق سەھىپە"
       topic_count:
         one: "بۇ سەھىپىدە %{count} تېما بار"
         other: "بۇ سەھىپىدە %{count} تېما بار"
@@ -2850,6 +2870,7 @@ ug:
     filter_input:
       clear: "سۈزگۈچنى تازىلا"
     filter_controls:
+      reset: "ئەسلىگە قايتۇر"
       toggle: "تارتما سۈزگۈچنى ئالماشتۇرىدۇ"
     shared_drafts:
       title: "دەسلەپكى نۇسخا ھەمبەھىر"
@@ -2978,7 +2999,6 @@ ug:
       italic_label: "I"
       italic_title: "يانتۇ"
       italic_text: "يانتۇ تېكىست"
-      heading_title: "ماۋزۇ"
       heading_level_n: "ماۋزۇ %{levelNumber}"
       heading_level_n_title: "ماۋزۇ %{levelNumber}"
       heading_level_paragraph: "ئابزاس"
@@ -3175,7 +3195,6 @@ ug:
         other: "«%{group_name}» نىڭ %{count} ئوچۇق ئەزالىق ئىلتىماسى"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
-      votes_released: "%{description} - تاماملاندى"
       new_features: "يېڭى ئىقتىدار مەۋجۇت!"
       admin_problems: "يېڭى تەۋسىيە بېكىتىڭىزنىڭ باشقۇرۇش تاختىسىدا كۆرۈنىدۇ"
       upcoming_changes:
@@ -5125,9 +5144,9 @@ ug:
           always_public: "بۇ بۆلەكتىكى مەزمۇنلار ھەمىشە ئاشكارا"
           more_menu: "تېخىمۇ كۆپ تىزىملىك"
           localizations:
-            title: "تەرجىمە"
             locale: "تىل"
             title_label: "بۆلەك ماۋزۇسى"
+            remove_language: "چىقىرىۋەت"
           links:
             add: "باشقا ئۇلانما قوش"
             delete: "ئۇلانما ئۆچۈر"
@@ -6716,6 +6735,8 @@ ug:
         sidebar: "يانبالداق"
         header_dropdown: "ماۋزۇ تارتما تىزىملىك"
         legacy: "كونا نەشرى"
+      duplicate_topic_titles:
+        allowed: "يول قويغان"
       backups:
         title: "زاپاس"
         files_title: "ھۆججەت زاپاسلايدۇ"
@@ -6954,7 +6975,6 @@ ug:
           finish_install: "ئۆرنەك ئورنىتىش تامام"
           last_attempt: "ئورنىتىش جەريانى تاماملانمىدى، ئاخىرقى سىنىغىنى:"
           remote_branch: "شاخ ئىسمى (تاللاشچان)"
-          public_key: "تۆۋەندىكى ئاممىۋى ئاچقۇچقا خەزىنە زىيارەت ئىجازىتىنى بېرىدۇ:"
           install: "ئورنات"
           installed: "ئورنىتىلدى"
           install_popular: "ئالقىشلىق"
@@ -8257,6 +8277,7 @@ ug:
         uploading: "يۈكلەۋاتىدۇ…"
         name: "ئىسمى"
         group: "گۇرۇپپا"
+        all_groups: "بارلىق گۇرۇپپىلار"
         created_by: "قۇرغۇچى"
         image: "سۈرەت"
         alt: "ئىختىيارى چىراي ئىپادەنى ئالدىن كۆزەت"

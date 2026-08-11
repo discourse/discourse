@@ -18,6 +18,10 @@ export default class AdminPluginConfigPage extends Component {
     return headerActionComponentForPlugin(this.args.plugin.dasherizedName);
   }
 
+  get hideTabs() {
+    return this.adminPluginNavManager.currentConfigNav.links.length <= 1;
+  }
+
   linkText(navLink) {
     if (navLink.label) {
       return i18n(navLink.label);
@@ -33,6 +37,7 @@ export default class AdminPluginConfigPage extends Component {
         @descriptionLabel={{@plugin.about}}
         @learnMoreUrl={{@plugin.linkUrl}}
         @headerActionComponent={{this.headerActionComponent}}
+        @hideTabs={{this.hideTabs}}
       >
         <:breadcrumbs>
           <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />

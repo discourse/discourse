@@ -137,7 +137,7 @@ module(
       assert.dom(".db-activity__empty").exists();
     });
 
-    test("includes a CategorySelector for filtering", async function (assert) {
+    test("includes a category selector for filtering", async function (assert) {
       await render(
         <template>
           <ActivityByCategory
@@ -148,7 +148,7 @@ module(
         </template>
       );
 
-      assert.dom(".category-selector").exists();
+      assert.dom(".multiple-categories-selector").exists();
     });
 
     test("prefills the selector with the categories shown by default", async function (assert) {
@@ -163,7 +163,7 @@ module(
       );
 
       assert.strictEqual(
-        selectKit(".category-selector").header().value(),
+        selectKit(".multiple-categories-selector").header().value(),
         "1,2,3"
       );
     });

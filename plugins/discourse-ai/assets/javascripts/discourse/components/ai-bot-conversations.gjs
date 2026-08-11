@@ -17,6 +17,7 @@ import UserAutocompleteResults from "discourse/components/user-autocomplete-resu
 import bodyClass from "discourse/helpers/body-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { SEND_SHORTCUT_META_ENTER } from "discourse/lib/constants";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
@@ -40,6 +41,7 @@ export default class AiBotConversations extends Component {
   @service aiCredits;
   @service aiBotConversationsHiddenSubmit;
   @service capabilities;
+  @service currentUser;
   @service mediaOptimizationWorker;
   @service site;
   @service siteSettings;
@@ -232,12 +234,30 @@ export default class AiBotConversations extends Component {
       value.target?.value || value;
   }
 
+  get sendOnMetaEnter() {
+    return (
+      this.currentUser?.user_option?.send_shortcut === SEND_SHORTCUT_META_ENTER
+    );
+  }
+
   @action
   handleKeyDown(event) {
     if (event.target.tagName !== "TEXTAREA") {
       return;
     }
     if (event.key === "Enter") {
+      // Meta/ctrl+Enter never produces an insertLineBreak beforeinput, so it
+      // must be handled here rather than in handleBeforeInput.
+      if (
+        this.sendOnMetaEnter &&
+        !event.isComposing &&
+        (event.metaKey || event.ctrlKey)
+      ) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.prepareAndSubmitToBot();
+        return;
+      }
       this.shiftHeldOnEnter = event.shiftKey;
     }
   }
@@ -249,7 +269,11 @@ export default class AiBotConversations extends Component {
     // browsers regardless of compositionend/keydown ordering quirks.
     const shiftHeld = this.shiftHeldOnEnter;
     this.shiftHeldOnEnter = false;
-    if (event.inputType !== "insertLineBreak" || shiftHeld) {
+    if (
+      event.inputType !== "insertLineBreak" ||
+      shiftHeld ||
+      this.sendOnMetaEnter
+    ) {
       return;
     }
     event.preventDefault();

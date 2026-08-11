@@ -283,9 +283,11 @@ class _PluginApi {
    *   }
    * });
    * ```
+   *
+   * Deprecated for `model:` types — use the `addModel*` APIs instead.
    **/
   modifyClass(resolverName, changes, opts) {
-    this.#deprecateModifyClass(resolverName);
+    this.#deprecateModifyClass(resolverName, "modifyClass");
 
     const klass = this._resolveClass(resolverName, opts);
     if (!klass) {
@@ -322,8 +324,12 @@ class _PluginApi {
    *   superFinder() { return []; }
    * });
    * ```
+   *
+   * Deprecated for `model:` types — use the `addModel*` APIs instead.
    **/
   modifyClassStatic(resolverName, changes, opts) {
+    this.#deprecateModifyClass(resolverName, "modifyClassStatic");
+
     const klass = this._resolveClass(resolverName, opts);
     if (!klass) {
       return;
@@ -3871,17 +3877,18 @@ class _PluginApi {
     _registerConditionType(ConditionClass);
   }
 
-  // eslint-disable-next-line no-unused-vars
-  #deprecateModifyClass(className) {
-    // display notification messages for deprecated classes
-    // e.g:
-    //
-    // if (DEPRECATED_CLASSES.includes(className)) {
-    //   deprecated(
-    //     `Using api.modifyClass for \`${className}\` has been deprecated and is no longer a supported override.`,
-    //     DEPRECATION_OPTIONS
-    //   );
-    // }
+  #deprecateModifyClass(resolverName, apiName) {
+    if (!resolverName.startsWith("model:")) {
+      return;
+    }
+
+    deprecated(
+      `Using api.${apiName} on \`${resolverName}\` is deprecated. Use the \`addModelField\`, \`addModelAccessor\`/\`addModelGetter\`/\`addModelSetter\`, \`addModelMethod\`, \`addModelSaveProperty\` and \`addModelCallback\` APIs instead.`,
+      {
+        id: "discourse.modify-class-model",
+        since: "2026.8",
+      }
+    );
   }
 }
 

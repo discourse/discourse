@@ -26,16 +26,17 @@ describe TagLocalizationCreator do
     )
   end
 
-  it "sanitizes unsafe description HTML", :aggregate_failures do
+  it "cooks the description into a safe description_cooked", :aggregate_failures do
     unsafe_description =
       '<script>alert("xss")</script><a href="https://example.com" onclick="alert(1)">link</a>'
-    sanitized_description = Fabricate(:tag, description: unsafe_description).description
+    cooked_description = Fabricate(:tag, description: unsafe_description).description_cooked
 
     localization =
       described_class.create(tag:, locale:, name:, description: unsafe_description, user:)
 
-    expect(localization.description).to eq(sanitized_description)
-    expect(localization.description).not_to match(/<script|onclick/i)
+    expect(localization.description).to eq(unsafe_description)
+    expect(localization.description_cooked).to eq(cooked_description)
+    expect(localization.description_cooked).not_to match(/<script|onclick/i)
   end
 
   it "creates localization without description" do

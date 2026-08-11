@@ -394,12 +394,26 @@ zh_TW:
       pill: "建議"
       pm_title: "推薦訊息"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "已選"
       invite_collaborators:
         title: "邀請協作者"
       start_posting:
         back: "上一步"
+    design_wizard:
+      back: "上一步"
+      next: "下一步"
+      sections:
+        theme: "主題"
+        homepage: "主頁"
+      theme:
+        selected: "已選"
+      colors:
+        light: "輕亮"
+        dark: "黑暗"
+      homepage:
+        topics: "話題"
+        categories: "分類"
+        styles:
+          boxes: "匣"
     about:
       edit: "編輯此頁"
       simple_title: "關於"
@@ -643,10 +657,6 @@ zh_TW:
         optional: "選擇性"
       claim_help:
         optional: "您可以聲明此項目以防止其他人審核。"
-        required: "您必須先審核項目才能查看它們。"
-        claimed_by_you: "您已聲明此項目，並可以查看。"
-        claimed_by_other: "此項目只能給<b>%{username}</b>來審核。"
-        automatically_claimed_by: "這個項目目前由 <b>%{username}</b> 審核。"
       awaiting_approval: "等待審核"
       delete: "刪除"
       settings:
@@ -676,6 +686,8 @@ zh_TW:
         email: "電子信箱"
         name: "名稱"
         fields: "欄位"
+        silence_reason: "禁言原因"
+        penalty_forever: "永久"
         reject_reason: "原因"
         scrubbed_reason: "原因"
         scrub_record:
@@ -1348,7 +1360,9 @@ zh_TW:
       external_links_in_new_tab: "在新分頁中開啟所有外部連結"
       enable_quoting: "允許引用劃記文字"
       enable_smart_lists: "在編輯器中編寫時啟用智慧型列表"
-      enable_defer: " 將主題標記為未讀"
+      automatically_translate: "自動翻譯以其他語言撰寫的主題和貼文"
+      content_languages:
+        understood: "我能理解的語言"
       experimental_sidebar:
         enable: "啟用側選單"
         options: "選項"
@@ -1793,6 +1807,9 @@ zh_TW:
         contextual: "新的頁面內容"
       bookmark_after_notification:
         title: "發送書籤提醒通知後："
+      send_shortcut:
+        enter: "Enter"
+        meta_enter: "%{meta_key} + Enter"
       like_notification_frequency:
         title: "使用者被讚時通知提醒"
         always: "總是"
@@ -1946,7 +1963,8 @@ zh_TW:
           email_placeholder: "name@example.com"
           invite_by_email: "電子信箱"
           restrict_domain: "僅限網域"
-          more_options: "更多選項"
+          create_and_send: "傳送"
+          create_and_copy: "複製連結"
           update: "更新"
           summary:
             role_member: "成員"
@@ -1957,7 +1975,7 @@ zh_TW:
             expires: "過期時間"
             topic: "話題"
             groups: "群組"
-            edit: "編輯邀請"
+            edit: "編輯"
         bulk_invite:
           none: "此頁面上沒有邀請函顯示。"
           text: "批量邀請"
@@ -2419,6 +2437,7 @@ zh_TW:
     category_row:
       subcategory_count:
         other: "+%{count} 個子類別"
+      subcategories: "+ 次分類"
       topic_count:
         other: "%{count}個話題在此分類"
       read_only: "唯讀"
@@ -2473,6 +2492,8 @@ zh_TW:
       default: 自訂表情符號
     filter_input:
       clear: "清除篩選"
+    filter_controls:
+      reset: "重置"
     shared_drafts:
       title: "共享草稿"
       notice: "此話題只對可以發布共享草稿的使用者可見。"
@@ -2703,7 +2724,6 @@ zh_TW:
         other: "%{count} 個未處理的加入「%{group_name}」的成員資格請求"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}、%{username2}</span> %{description}"
-      votes_released: "%{description} - 已完成"
       new_features: "有新功能可用！"
       admin_problems: "有新的建議出現在後台儀表板"
       dismiss_confirmation:
@@ -3694,6 +3714,11 @@ zh_TW:
       share:
         title: "分享貼文#%{post_number}"
         instructions: "分享此貼文的連結:"
+      click_to_show_original: "點擊以顯示原文"
+      tap_to_show_original: "輕觸此處以顯示原文"
+      click_to_show_translation: "點擊以顯示翻譯"
+      tap_to_show_translation: "輕觸此處以顯示翻譯"
+      ai_translation_disclaimer: "由 AI 產生的翻譯可能不準確。"
     category:
       none: "( 無分類 )"
       all: "所有分類"
@@ -4421,9 +4446,9 @@ zh_TW:
           always_public: "本節中的內容始終是公開"
           more_menu: "更多選單"
           localizations:
-            title: "翻譯"
             locale: "語言"
             title_label: "章節標題"
+            remove_language: "移除"
           links:
             add: "新增另一個連結"
             delete: "刪除連結"
@@ -5718,6 +5743,8 @@ zh_TW:
         sidebar: "側選單"
         header_dropdown: "標題下拉選單"
         legacy: "舊版"
+      duplicate_topic_titles:
+        allowed: "允許的"
       backups:
         title: "備份"
         files_title: "備份檔案"
@@ -5934,7 +5961,6 @@ zh_TW:
           finish_install: "完成佈景主題安裝"
           last_attempt: "安裝過程未完成，最後一次嘗試："
           remote_branch: "分支名稱 (選填)"
-          public_key: "授予公鑰以進入Repo（倉庫）的訪問權限："
           install: "安裝"
           installed: "已安裝"
           install_popular: "熱門"
@@ -7134,6 +7160,7 @@ zh_TW:
         uploading: "上傳中..."
         name: "名稱"
         group: "群組"
+        all_groups: "所有群組"
         created_by: "建立者"
         image: "圖片"
         alt: "自訂表情符號預覽"

@@ -55,7 +55,17 @@ RSpec.describe Post do
   end
 
   it { is_expected.to validate_presence_of :raw }
-  it { is_expected.to validate_length_of(:edit_reason).is_at_most(1000) }
+  it { is_expected.to validate_length_of(:edit_reason).is_at_most(Post::MAX_EDIT_REASON_LENGTH) }
+
+  it "rejects oversized edit reasons when validations are skipped" do
+    post = Fabricate(:post)
+    post.edit_reason = "a" * (Post::MAX_EDIT_REASON_LENGTH + 1)
+
+    expect(post.save(validate: false)).to be_falsey
+    expect(post.errors.full_messages).to include(
+      "Edit reason is too long (maximum is #{Post::MAX_EDIT_REASON_LENGTH} characters)",
+    )
+  end
 
   # Min/max body lengths, respecting padding
   it { is_expected.not_to allow_value("x").for(:raw) }

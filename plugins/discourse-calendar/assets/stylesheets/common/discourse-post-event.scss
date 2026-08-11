@@ -18,10 +18,6 @@ $show-interested: inherit;
   margin: var(--space-1) 0;
 }
 
-.composer-onebox-node {
-  white-space: normal;
-}
-
 .discourse-post-event {
   display: flex;
   justify-content: center;
@@ -80,34 +76,6 @@ $show-interested: inherit;
     section:last-child {
       padding-bottom: 0.75em;
     }
-
-    .widget-dropdown {
-      margin: 0;
-
-      .widget-dropdown-header.disabled {
-        pointer-events: none;
-      }
-
-      .widget-dropdown-item {
-        &:not(.separator) {
-          padding: 0.5em;
-        }
-
-        .d-icon + span {
-          margin-left: 0.5em;
-        }
-      }
-    }
-  }
-
-  &.is-loading {
-    align-items: center;
-    justify-content: center;
-  }
-
-  &.has-event {
-    display: flex;
-    flex-direction: column;
   }
 
   .event-header {
@@ -118,29 +86,6 @@ $show-interested: inherit;
 
     .more-dropdown {
       margin-left: auto;
-
-      &.has-no-actions {
-        display: none;
-      }
-
-      .widget-dropdown {
-        .widget-dropdown-header {
-          .d-icon {
-            margin: 0;
-          }
-
-          .label {
-            display: none;
-          }
-        }
-
-        .item-closeEvent {
-          .d-icon,
-          span {
-            color: var(--danger);
-          }
-        }
-      }
     }
 
     &__controls {
@@ -237,10 +182,6 @@ $show-interested: inherit;
         &.closed {
           color: var(--danger-medium);
         }
-
-        .d-icon {
-          margin-right: 0.5em;
-        }
       }
     }
   }
@@ -273,28 +214,9 @@ $show-interested: inherit;
         display: $show-interested;
       }
 
-      &.status-going .going-button > .d-icon,
-      &.status-going .going-button .d-combo-button-button .d-icon {
-        color: var(--success);
-      }
-
-      &.status-interested .interested-button .d-icon {
-        color: $interested;
-      }
-
-      &.status-not_going .not-going-button .d-icon {
-        color: var(--danger);
-      }
-
       .not-going-button span {
         white-space: nowrap;
       }
-    }
-  }
-
-  .event-creator {
-    .username {
-      margin-left: 0.25em;
     }
   }
 
@@ -305,34 +227,6 @@ $show-interested: inherit;
     justify-content: center;
     overflow-y: auto;
     flex-direction: column;
-
-    .header {
-      display: none;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1em;
-      width: 100%;
-
-      .show-all {
-        margin-left: 0.5em;
-      }
-
-      .event-invitees-status {
-        font-weight: 700;
-        display: flex;
-
-        span:not(:last-child)::after {
-          content: "-";
-          font-weight: 400;
-          margin: 0 0.3em;
-        }
-
-        .event-status-invited {
-          font-weight: 600;
-          color: var(--primary-medium);
-        }
-      }
-    }
 
     .event-invitees-avatars {
       padding: 0;
@@ -544,21 +438,10 @@ $show-interested: inherit;
   // not ideal but a decent low tech solution
   height: 24px;
 
-  .participants {
-    margin-left: 0.5em;
-    color: var(--primary-medium);
-  }
-
   .discourse-local-date {
     .d-icon {
       display: none;
     }
-  }
-
-  .separator {
-    color: var(--primary-high);
-    margin: 0 0.5em;
-    text-align: center;
   }
 }
 

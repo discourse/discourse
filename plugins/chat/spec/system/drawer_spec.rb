@@ -157,6 +157,54 @@ RSpec.describe "Drawer" do
     end
   end
 
+  context "when the drawer is collapsed" do
+    fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
+    fab!(:membership) do
+      Fabricate(:user_chat_channel_membership, user: current_user, chat_channel: channel)
+    end
+
+    before { SiteSetting.chat_search_enabled = true }
+
+    it "only keeps the navbar controls which are usable when collapsed" do
+      drawer_page.visit_channel(channel)
+
+      expect(page).to have_selector(".c-navbar__star-channel-button")
+      expect(page).to have_selector(".c-navbar__filter")
+      expect(page).to have_selector(".c-navbar__threads-list-button")
+
+      drawer_page.collapse
+
+      expect(page).to have_selector(".chat-drawer:not(.is-expanded)")
+      expect(page).to have_no_selector(".c-navbar__star-channel-button")
+      expect(page).to have_no_selector(".c-navbar__filter")
+      expect(page).to have_no_selector(".c-navbar__threads-list-button")
+      expect(page).to have_selector(".c-navbar__close-drawer-button")
+
+      drawer_page.expand
+
+      expect(page).to have_selector(".chat-drawer.is-expanded")
+      expect(page).to have_selector(".c-navbar__star-channel-button")
+      expect(page).to have_selector(".c-navbar__filter")
+      expect(page).to have_selector(".c-navbar__threads-list-button")
+    end
+
+    it "can be expanded with the keyboard" do
+      drawer_page.visit_channel(channel)
+      drawer_page.collapse
+
+      expect(page).to have_selector(".chat-drawer:not(.is-expanded)")
+      expect(drawer_page.toggle_button_width).to be <= 1 # not visible to pointer users
+
+      drawer_page.focus_toggle_button
+
+      expect(drawer_page.toggle_button_width).to be > 1
+
+      drawer_page.expand_with_keyboard
+
+      expect(page).to have_selector(".chat-drawer.is-expanded")
+    end
+  end
+
   context "when going from drawer to full page" do
     fab!(:channel_1, :chat_channel)
     fab!(:channel_2, :chat_channel)

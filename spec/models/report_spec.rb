@@ -1726,6 +1726,63 @@ RSpec.describe Report do
 
         expect(reports.data.map { |r| r[:req] }).not_to include("page_view_embed")
       end
+
+      context "for likely crawlers" do
+        before { SiteSetting.improved_crawler_detection = true }
+
+        it "reclassifies likely crawlers out of the logged in and anonymous series" do
+          10.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+          20.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+          CachedCounting.flush
+
+          Fabricate(
+            :browser_pageview_crawler_daily_rollup,
+            date: Time.zone.today,
+            logged_in: true,
+            count: 4,
+          )
+          Fabricate(
+            :browser_pageview_crawler_daily_rollup,
+            date: Time.zone.today,
+            logged_in: false,
+            count: 6,
+          )
+
+          series = reports.data.index_by { |r| r[:req] }
+
+          expect(series.keys).to eq(
+            %w[
+              page_view_logged_in_browser
+              page_view_anon_browser
+              page_view_likely_crawler
+              page_view_crawler
+              page_view_other
+            ],
+          )
+          expect(series["page_view_logged_in_browser"][:data][0][:y]).to eq(6)
+          expect(series["page_view_anon_browser"][:data][0][:y]).to eq(14)
+          expect(series["page_view_likely_crawler"][:data][0][:y]).to eq(10)
+        end
+
+        it "leaves the series out and keeps counts intact when the change is disabled" do
+          SiteSetting.improved_crawler_detection = false
+
+          10.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+          CachedCounting.flush
+
+          Fabricate(
+            :browser_pageview_crawler_daily_rollup,
+            date: Time.zone.today,
+            logged_in: false,
+            count: 6,
+          )
+
+          series = reports.data.index_by { |r| r[:req] }
+
+          expect(series.keys).not_to include("page_view_likely_crawler")
+          expect(series["page_view_anon_browser"][:data][0][:y]).to eq(10)
+        end
+      end
     end
   end
 
@@ -1908,11 +1965,11 @@ RSpec.describe Report do
       Report.cache(exception_report)
     end
 
-    it "caches valid reports for 35 minutes" do
+    it "caches valid reports for 60 minutes" do
       Discourse
         .cache
         .expects(:write)
-        .with(Report.cache_key(valid_report), valid_report.as_json, expires_in: 35.minutes)
+        .with(Report.cache_key(valid_report), valid_report.as_json, expires_in: 60.minutes)
       Report.cache(valid_report)
     end
   end

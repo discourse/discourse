@@ -50,6 +50,7 @@ module DiscourseAi
           name: ai_agent.name,
           description: ai_agent.description,
           system_prompt: ai_agent.system_prompt,
+          allowed_group_ids: ai_agent.allowed_group_ids,
           examples: ai_agent.examples,
           temperature: ai_agent.temperature,
           top_p: ai_agent.top_p,

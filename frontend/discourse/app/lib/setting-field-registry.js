@@ -85,11 +85,13 @@ registerSettingFieldType("bool", {
   ...INLINE,
   type: "checkbox",
   includeDescription: false,
+  adminReady: true,
   renderer: BoolControl,
 });
 registerSettingFieldType("integer", {
   ...INLINE,
   type: "input-number",
+  adminReady: true,
   renderer: IntegerControl,
 });
 registerSettingFieldType("duration", {

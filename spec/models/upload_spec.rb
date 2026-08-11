@@ -930,6 +930,12 @@ RSpec.describe Upload do
     let(:white_image) { Fabricate(:image_upload, color: "white") }
     let(:red_image) { Fabricate(:image_upload, color: "red") }
     let(:high_color_image) { Fabricate(:image_upload, color: "#000A00F00", color_depth: 16) }
+    let(:tiny_image) do
+      upload = Fabricate(:upload, extension: "png")
+      file = file_from_fixtures("cropped.png")
+      upload.update!(url: Discourse.store.store_upload(file, upload))
+      upload
+    end
     let(:not_an_image) do
       upload = Fabricate(:upload)
 
@@ -967,6 +973,18 @@ RSpec.describe Upload do
       # EF is closer to F00 than F0
       expect(high_color_image.dominant_color(calculate_if_missing: true)).to eq("009FEF")
       expect(high_color_image.dominant_color).to eq("009FEF")
+
+      uncached_tiny_color = tiny_image.dominant_color
+
+      expect(uncached_tiny_color).to eq(nil)
+
+      calculated_tiny_color = tiny_image.dominant_color(calculate_if_missing: true)
+
+      expect(calculated_tiny_color).to eq("524F40")
+
+      cached_tiny_color = tiny_image.dominant_color
+
+      expect(cached_tiny_color).to eq(calculated_tiny_color)
     end
 
     it "can be backfilled" do
@@ -1058,6 +1076,22 @@ RSpec.describe Upload do
       )
 
       expect { u.update!(dominant_color: "abcd") }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+  end
+
+  describe "#target_image_quality" do
+    let(:local_path) { Rails.root.join("spec/fixtures/images/logo.jpg").to_s }
+
+    it "returns nil when the target quality is higher than the source quality" do
+      target_quality = upload.target_image_quality(local_path, 100)
+
+      expect(target_quality).to eq(nil)
+    end
+
+    it "returns the target quality when it is lower than the source quality" do
+      target_quality = upload.target_image_quality(local_path, 10)
+
+      expect(target_quality).to eq(10)
     end
   end
 
