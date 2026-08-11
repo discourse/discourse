@@ -4,9 +4,9 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import AdminReportStackedChart from "discourse/admin/components/admin-report-stacked-chart";
 import DashboardDateRange from "discourse/admin/components/dashboard/date-range";
-import SiteTrafficBreakdownCard from "discourse/admin/components/site-traffic-breakdown-card";
-import SiteTrafficFilterPills from "discourse/admin/components/site-traffic-filter-pills";
-import SiteTrafficMetric from "discourse/admin/components/site-traffic-metric";
+import SiteTrafficExplorerBreakdownCard from "discourse/admin/components/site-traffic-explorer-breakdown-card";
+import SiteTrafficExplorerFilterPills from "discourse/admin/components/site-traffic-explorer-filter-pills";
+import SiteTrafficExplorerMetric from "discourse/admin/components/site-traffic-explorer-metric";
 import { formatMinutesSeconds } from "discourse/lib/formatter";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DPageHeader from "discourse/ui-kit/d-page-header";
@@ -257,7 +257,7 @@ export default class SiteTrafficExplorer extends Component {
       </DPageHeader>
 
       <div class="admin-container site-traffic-explorer__content">
-        <SiteTrafficFilterPills
+        <SiteTrafficExplorerFilterPills
           @filters={{@activeFilters}}
           @removeFilter={{@removeFilter}}
         />
@@ -336,7 +336,7 @@ export default class SiteTrafficExplorer extends Component {
                       {{i18n "admin.site_traffic_explorer.summary"}}
                     </h2>
                     <div class="db-section__subintro">
-                      <SiteTrafficMetric
+                      <SiteTrafficExplorerMetric
                         @name={{this.primaryMetric.name}}
                         @label={{this.primaryMetric.label}}
                         @tooltip={{this.primaryMetric.tooltip}}
@@ -347,7 +347,7 @@ export default class SiteTrafficExplorer extends Component {
                     </div>
                     <div class="db-section__metrics">
                       {{#each this.secondaryMetrics as |metric|}}
-                        <SiteTrafficMetric
+                        <SiteTrafficExplorerMetric
                           @name={{metric.name}}
                           @label={{metric.label}}
                           @tooltip={{metric.tooltip}}
@@ -379,7 +379,7 @@ export default class SiteTrafficExplorer extends Component {
                   </div>
 
                   <div class="db-section__row site-traffic-explorer__cards">
-                    <SiteTrafficBreakdownCard
+                    <SiteTrafficExplorerBreakdownCard
                       @name="acquisition"
                       @title={{i18n
                         "admin.site_traffic_explorer.cards.acquisition"
@@ -388,14 +388,14 @@ export default class SiteTrafficExplorer extends Component {
                       @dimensions={{@traffic.dimensions}}
                       @setFilter={{@setFilter}}
                     />
-                    <SiteTrafficBreakdownCard
+                    <SiteTrafficExplorerBreakdownCard
                       @name="pages"
                       @title={{i18n "admin.site_traffic_explorer.cards.pages"}}
                       @tabs={{this.pagesTabs}}
                       @dimensions={{@traffic.dimensions}}
                       @setFilter={{@setFilter}}
                     />
-                    <SiteTrafficBreakdownCard
+                    <SiteTrafficExplorerBreakdownCard
                       @name="visitors"
                       @title={{i18n
                         "admin.site_traffic_explorer.cards.visitors"

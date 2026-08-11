@@ -6,7 +6,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
-export default class SiteTrafficFilterPills extends Component {
+export default class SiteTrafficExplorerFilterPills extends Component {
   @action
   filterLabel(key) {
     return i18n(`admin.site_traffic_explorer.filters.${key}`);

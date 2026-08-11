@@ -1,5 +1,5 @@
 import { concat } from "@ember/helper";
-import SiteTrafficPageviewCount from "discourse/admin/components/site-traffic-pageview-count";
+import SiteTrafficExplorerPageviewCount from "discourse/admin/components/site-traffic-explorer-pageview-count";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { i18n } from "discourse-i18n";
 
@@ -9,11 +9,11 @@ export default <template>
     data-test-site-traffic-metric={{@name}}
   >
     {{#if @compact}}
-      <SiteTrafficPageviewCount @value={{@value}} as |formattedValue|>
+      <SiteTrafficExplorerPageviewCount @value={{@value}} as |formattedValue|>
         <span
           class="db-section__metric-number site-traffic-explorer__metric-value"
         >{{formattedValue}}</span>
-      </SiteTrafficPageviewCount>
+      </SiteTrafficExplorerPageviewCount>
     {{else}}
       <span
         class="db-section__metric-number site-traffic-explorer__metric-value"

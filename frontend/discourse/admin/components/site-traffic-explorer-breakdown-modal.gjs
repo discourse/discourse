@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import SiteTrafficDimensionLabel from "discourse/admin/components/site-traffic-dimension-label";
-import SiteTrafficPageviewCount from "discourse/admin/components/site-traffic-pageview-count";
+import SiteTrafficExplorerDimensionLabel from "discourse/admin/components/site-traffic-explorer-dimension-label";
+import SiteTrafficExplorerPageviewCount from "discourse/admin/components/site-traffic-explorer-pageview-count";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
-export default class SiteTrafficBreakdownModal extends Component {
+export default class SiteTrafficExplorerBreakdownModal extends Component {
   get rows() {
     return this.args.model.rows.slice(0, 50);
   }
@@ -56,13 +56,13 @@ export default class SiteTrafficBreakdownModal extends Component {
                         target={{rowLink.target}}
                         class="site-traffic-explorer__row-link"
                       >
-                        <SiteTrafficDimensionLabel
+                        <SiteTrafficExplorerDimensionLabel
                           @dimension={{@model.dimension}}
                           @row={{row}}
                         />
                       </a>
                     {{else}}
-                      <SiteTrafficDimensionLabel
+                      <SiteTrafficExplorerDimensionLabel
                         @dimension={{@model.dimension}}
                         @row={{row}}
                       />
@@ -75,7 +75,7 @@ export default class SiteTrafficBreakdownModal extends Component {
                   <div class="d-table__mobile-label">
                     {{i18n "admin.site_traffic_explorer.pageviews"}}
                   </div>
-                  <SiteTrafficPageviewCount
+                  <SiteTrafficExplorerPageviewCount
                     @value={{row.pageviews}}
                     as |formattedValue|
                   >
@@ -86,7 +86,7 @@ export default class SiteTrafficBreakdownModal extends Component {
                       @action={{this.filter}}
                       @actionParam={{row}}
                     />
-                  </SiteTrafficPageviewCount>
+                  </SiteTrafficExplorerPageviewCount>
                 </td>
               </tr>
             {{/each}}

@@ -12,7 +12,7 @@ const BROWSER_ICONS = {
   unknown: "globe",
 };
 
-export default class SiteTrafficDimensionLabel extends Component {
+export default class SiteTrafficExplorerDimensionLabel extends Component {
   @action
   countryFlag(value) {
     return countryFlag(value);

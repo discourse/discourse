@@ -5,9 +5,9 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import SiteTrafficBreakdownModal from "discourse/admin/components/site-traffic-breakdown-modal";
-import SiteTrafficDimensionLabel from "discourse/admin/components/site-traffic-dimension-label";
-import SiteTrafficPageviewCount from "discourse/admin/components/site-traffic-pageview-count";
+import SiteTrafficExplorerBreakdownModal from "discourse/admin/components/site-traffic-explorer-breakdown-modal";
+import SiteTrafficExplorerDimensionLabel from "discourse/admin/components/site-traffic-explorer-dimension-label";
+import SiteTrafficExplorerPageviewCount from "discourse/admin/components/site-traffic-explorer-pageview-count";
 import getURL from "discourse/lib/get-url";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
@@ -15,7 +15,7 @@ import { i18n } from "discourse-i18n";
 
 const CARD_ROW_LIMIT = 8;
 
-export default class SiteTrafficBreakdownCard extends Component {
+export default class SiteTrafficExplorerBreakdownCard extends Component {
   @service modal;
 
   @tracked activeTabIndex = 0;
@@ -78,7 +78,7 @@ export default class SiteTrafficBreakdownCard extends Component {
 
   @action
   openModal() {
-    this.modal.show(SiteTrafficBreakdownModal, {
+    this.modal.show(SiteTrafficExplorerBreakdownModal, {
       model: {
         title: this.activeTab.label,
         columnLabel: this.activeTab.columnLabel,
@@ -176,7 +176,7 @@ export default class SiteTrafficBreakdownCard extends Component {
                       target={{rowLink.target}}
                       class="site-traffic-explorer__row-link"
                     >
-                      <SiteTrafficDimensionLabel
+                      <SiteTrafficExplorerDimensionLabel
                         @dimension={{this.activeTab.dimension}}
                         @row={{row}}
                       />
@@ -187,14 +187,14 @@ export default class SiteTrafficBreakdownCard extends Component {
                       aria-label={{this.filterLabel row}}
                       {{on "click" (fn this.filter row)}}
                     >
-                      <SiteTrafficPageviewCount
+                      <SiteTrafficExplorerPageviewCount
                         @value={{row.pageviews}}
                         as |formattedValue|
                       >
                         <span class="site-traffic-explorer__row-count">
                           {{formattedValue}}
                         </span>
-                      </SiteTrafficPageviewCount>
+                      </SiteTrafficExplorerPageviewCount>
                     </button>
                   </span>
                 {{else}}
@@ -206,19 +206,19 @@ export default class SiteTrafficBreakdownCard extends Component {
                     {{on "click" (fn this.filter row)}}
                   >
                     <span>
-                      <SiteTrafficDimensionLabel
+                      <SiteTrafficExplorerDimensionLabel
                         @dimension={{this.activeTab.dimension}}
                         @row={{row}}
                       />
                     </span>
-                    <SiteTrafficPageviewCount
+                    <SiteTrafficExplorerPageviewCount
                       @value={{row.pageviews}}
                       as |formattedValue|
                     >
                       <span class="site-traffic-explorer__row-count">
                         {{formattedValue}}
                       </span>
-                    </SiteTrafficPageviewCount>
+                    </SiteTrafficExplorerPageviewCount>
                   </button>
                 {{/if}}
               {{/let}}
