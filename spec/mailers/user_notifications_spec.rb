@@ -1178,7 +1178,7 @@ RSpec.describe UserNotifications do
         expect(message.text_part.body.to_s).not_to include(topic.slug)
       end
 
-      it "includes respond instructions with highlight styling for staged users" do
+      it "still links back to the topic for staged users" do
         skip_types = %i[linked quoted mentioned group_mentioned]
         if skip_types.include?(notification_type)
           skip "Staged users don't receive #{notification_type} emails"
@@ -1202,8 +1202,9 @@ RSpec.describe UserNotifications do
           )
         message = mailer.message
 
-        html_body = message.html_part.body.to_s
-        expect(html_body).to include("footer undecorated-link-footer highlight")
+        slugless_path = notification.post.topic.slugless_url
+        expect(message.html_part.body.to_s).to include(slugless_path)
+        expect(message.text_part.body.to_s).to include(slugless_path)
       end
     end
   end
