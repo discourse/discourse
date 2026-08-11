@@ -216,6 +216,17 @@ interface DRovingFocusArgs {
   wrap?: boolean;
   /** Focus mode: whether one item is reachable with Tab (default `true`). */
   tabStop?: boolean;
+  /**
+   * Focus mode: whether removing the item that holds focus moves the cursor to the item that
+   * took its place, rather than letting focus fall to `body` (default `true`).
+   *
+   * Only fires when focus was genuinely lost, so a reader who moved focus elsewhere before the
+   * removal keeps it. When the group empties entirely nothing happens: where focus should go
+   * with no items left is the consumer's decision.
+   *
+   * Turn it off to place focus yourself, e.g. onto a control outside the group.
+   */
+  restoreLostFocus?: boolean;
   /** Class toggled on the active item in `"active"` mode. */
   activeClass?: string | null;
   /**
@@ -390,6 +401,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   #onJump?: (target: number, direction: "forward" | "backward") => void;
   #wrap = false;
   #tabStop = true;
+  #restoreLostFocus = true;
   #activeClass: string | null = null;
   #autoActivateFirst = false;
   #autoActivateSelected = false;
@@ -398,7 +410,8 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   /** The ARIA anchor: the container (focus) or controller (active). */
   #listenElement: HTMLElement | null = null;
 
-  #pointerElement: HTMLElement | null = null;
+  /** The container the shared `mousedown`/`focusin` listeners are currently bound to. */
+  #boundContainer: HTMLElement | null = null;
 
   /** Armed only while a seed is owed to a container that had no items yet. */
   #pendingSeed: MutationObserver | null = null;
@@ -416,6 +429,24 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
 
   /** Set once a group has reported a two-dimensional layout it cannot measure, so it warns once. */
   #warnedUndetectedSecondAxis = false;
+
+  /** Set once a group has reported that it can draw no focus indicator, so it warns once. */
+  #warnedNoIndicator = false;
+
+  /**
+   * Focus mode — the item that last held focus, and its index among ALL items, navigable or not.
+   * Kept so a removal can be told apart from focus simply moving away, and so the replacement
+   * item can be addressed positionally once the old one is gone.
+   */
+  #lastFocusedItem: HTMLElement | null = null;
+
+  #lastFocusedIndex = -1;
+
+  /**
+   * The items present at the end of the previous `modify()`. Only ever asked whether ANY of them
+   * survives, which is what separates an item being deleted from the whole list being replaced.
+   */
+  #previousItems: HTMLElement[] = [];
 
   /**
    * Monotonic counter behind minted ids. Never reset, so an id cannot be reissued to a second
@@ -821,6 +852,41 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     this.#setActive(target, true);
   };
 
+  /**
+   * Focus mode — keeps the tab stop on whichever item actually holds focus, so the group is
+   * re-entered where the reader left it rather than where seeding put it. Without this, clicking
+   * the fifth option, tabbing away and tabbing back lands on the first.
+   *
+   * Bound on `focusin` rather than extended from the pointer handler because focus also arrives
+   * with no pointer event at all, and a pointer-only fix would leave those cases behind.
+   *
+   * Only restamps; it never moves focus and never reports a cursor move. The cursor is already
+   * wherever focus is, so calling {@link DRovingFocusArgs.onActiveChange} here would report a
+   * move that the arrow path has already reported, or invent one the reader did not make.
+   */
+  #handleFocusIn = (event: FocusEvent): void => {
+    if (this.#mode !== "focus" || !this.#itemSelector) {
+      return;
+    }
+    const target = (event.target as HTMLElement | null)?.closest<HTMLElement>(
+      this.#itemSelector
+    );
+    // `closest` walks past the container, so a matching ANCESTOR would otherwise be promoted
+    // into a tab stop this group never owned.
+    if (!target || !this.#element?.contains(target)) {
+      return;
+    }
+    if (!this.#isNavigable(target)) {
+      return;
+    }
+    this.#promoteTabStop(target);
+    this.#lastFocusedItem = target;
+    // `#allItems` and not `#items`: navigability forces a style read per item, and this runs on
+    // every focus change, so filtering here would make one cursor step cost the mounted count.
+    // The navigable filter is applied at restore time instead, which is rare.
+    this.#lastFocusedIndex = this.#allItems().indexOf(target);
+  };
+
   constructor(owner: Owner, args: ArgsFor<DRovingFocusSignature>) {
     super(owner, args);
     registerDestructor(this, () => this.#cleanup());
@@ -877,6 +943,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     this.#onJump = named.onJump;
     this.#wrap = named.wrap ?? false;
     this.#tabStop = named.tabStop ?? true;
+    this.#restoreLostFocus = named.restoreLostFocus ?? true;
     this.#activeClass = named.activeClass ?? null;
     this.#autoActivateFirst = named.autoActivateFirst ?? false;
     this.#autoActivateSelected = named.autoActivateSelected ?? false;
@@ -906,27 +973,34 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       this.#listenElement?.addEventListener("keydown", this.#handleKeydown);
     }
 
-    // The cursor follows a pointer press onto the item it lands on. Without this, activating an
-    // item by pointer rebuilds the list, and the reconcile below finds no cursor to preserve and
-    // seeds one at the top — marking a row the reader never touched, and pointing
-    // `aria-activedescendant` at it. Bound to the container (items come and go), and on
-    // `mousedown` so the cursor is in place before any consumer click handler rebuilds them.
-    if (this.#pointerElement !== element) {
-      this.#pointerElement?.removeEventListener(
+    // Bound to the container, not the items, because items come and go. `mousedown` rather than
+    // click so the cursor is in place before any consumer handler rebuilds the list: otherwise
+    // activating by pointer leaves the reconcile below with no cursor to preserve, and it seeds
+    // one at the top — marking a row the reader never touched and pointing
+    // `aria-activedescendant` at it.
+    if (this.#boundContainer !== element) {
+      this.#boundContainer?.removeEventListener(
         "mousedown",
         this.#handlePointerDown
       );
-      this.#pointerElement = element;
+      this.#boundContainer?.removeEventListener("focusin", this.#handleFocusIn);
+      this.#boundContainer = element;
       element.addEventListener("mousedown", this.#handlePointerDown);
+      element.addEventListener("focusin", this.#handleFocusIn);
     }
 
     // Recorded before seeding, since seeding is the act that writes to the DOM.
     this.#enteredModes.add(this.#mode);
     if (this.#mode === "active") {
+      this.#warnMissingFocusIndicator();
       this.#reconcileActive(resetKeyChanged);
     } else {
       this.#seedTabStop(resetKeyChanged);
+      // After seeding, so the restored item takes the tab stop from whatever seeding picked.
+      this.#restoreFocusLostToRemoval();
     }
+    // Recorded last, so the next run compares against what this one ended with.
+    this.#previousItems = this.#allItems();
 
     // Registered last, so a consumer that drives the cursor from inside the callback acts on a
     // bound listener and an already-seeded group.
@@ -1103,6 +1177,12 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     if (el.matches(":disabled")) {
       return false;
     }
+    // `inert` is inherited by the whole subtree, so this must be an ancestor walk rather than a
+    // self-only attribute read. Nothing below catches it: an inert element still renders and
+    // still occupies layout, yet `focus()` on it is a no-op.
+    if (el.closest("[inert]")) {
+      return false;
+    }
     if (!this.#occupiesLayout(el)) {
       return false;
     }
@@ -1167,6 +1247,89 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    *
    * @param style - The container's resolved style, already read for the track list.
    */
+  /**
+   * Focus mode — puts the cursor back after the item holding it left the DOM.
+   *
+   * Removing the focused element drops focus to `body`, which leaves the reader with no position
+   * at all and nothing to navigate from. The practice page names this as essential, and calls
+   * for focus to land on the item following the one that was removed.
+   *
+   * Three deliberate limits.
+   *
+   * It runs only when focus was genuinely LOST: a reader who moved focus away before the removal
+   * still holds it, and reclaiming it would be a worse bug than the one this fixes.
+   *
+   * It runs only when the group SURVIVED. If nothing from the previous set is still in the
+   * document the list was replaced rather than edited — a re-filter answering a new question —
+   * and tab-stop seeding deliberately never moves focus on a re-render. Restoring there would
+   * yank the reader into a result set they did not ask to be in.
+   *
+   * And it does nothing when the group empties, because where focus belongs with no items left
+   * depends on what surrounds the group, which only the consumer knows.
+   */
+  #restoreFocusLostToRemoval(): void {
+    const remembered = this.#lastFocusedItem;
+    if (!this.#restoreLostFocus || !remembered || remembered.isConnected) {
+      return;
+    }
+    // Gone either way, so stop tracking it before deciding whether to act on it.
+    this.#lastFocusedItem = null;
+
+    if (!this.#previousItems.some((el) => el.isConnected)) {
+      return;
+    }
+
+    const doc = this.#element?.ownerDocument;
+    const active = doc?.activeElement;
+    if (active && active !== doc?.body) {
+      return;
+    }
+
+    const all = this.#allItems();
+    if (!all.length) {
+      return;
+    }
+    // The index the removed item held now addresses whatever took its place, so scan outward
+    // from there: forward first, which is the spec's "the item following the deleted one", then
+    // backward, which is what "the deleted item was last" collapses to.
+    const start = Math.min(this.#lastFocusedIndex, all.length - 1);
+    let target: HTMLElement | undefined;
+    for (let i = start; i < all.length && !target; i++) {
+      target = this.#isNavigable(all[i]) ? all[i] : undefined;
+    }
+    for (let i = start - 1; i >= 0 && !target; i--) {
+      target = this.#isNavigable(all[i]) ? all[i] : undefined;
+    }
+    if (target) {
+      this.#setActive(target);
+    }
+  }
+
+  /**
+   * Active mode keeps DOM focus on the controller, so the only things that can show the reader
+   * where the cursor is are {@link DRovingFocusArgs.activeClass} and markup the consumer renders
+   * from {@link DRovingFocusArgs.onActiveChange}. With neither, `aria-activedescendant` points at
+   * an item nothing marks, and the practice page requires the focus indicator to always be
+   * visible.
+   */
+  #warnMissingFocusIndicator(): void {
+    if (this.#activeClass || this.#onActiveChange) {
+      return;
+    }
+    runInDebug(() => {
+      if (this.#warnedNoIndicator) {
+        return;
+      }
+      this.#warnedNoIndicator = true;
+      // eslint-disable-next-line no-console
+      console.warn(
+        `dRovingFocus: selectionMode="active" with neither activeClass nor onActiveChange, so ` +
+          `nothing marks the active item and the cursor is invisible. Pass activeClass, or ` +
+          `render the highlight yourself from onActiveChange.`
+      );
+    });
+  }
+
   #warnUndetectedSecondAxis(style: CSSStyleDeclaration): void {
     const wrappingFlex =
       (style.display === "flex" || style.display === "inline-flex") &&
@@ -1643,9 +1806,10 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
 
   /**
    * Focus mode — stamps every item with an explicit tabindex. When `tabStop` is enabled, prefers
-   * an already-established tab stop, else an `[aria-selected="true"]`/`[aria-current]` item, else
-   * the first item. Does NOT move focus, so re-seeding after a re-render (or while the user is
-   * typing in a separate search field) never yanks focus.
+   * an already-established tab stop, else an item marked
+   * `[aria-selected="true"]`/`[aria-checked="true"]`/`[aria-current]`, else the first item. Does
+   * NOT move focus, so re-seeding after a re-render (or while the user is typing in a separate
+   * search field) never yanks focus.
    *
    * @param reseed - Ignore an established tab stop and pick afresh, because the items now answer
    * a different question (`resetKey`). Without this a surviving row keeps the tab stop buried
@@ -1675,6 +1839,11 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
             )) ??
         all.find(
           (el) => el.getAttribute("aria-selected") === "true" && navigable(el)
+        ) ??
+        // A radio group expresses its chosen value as `aria-checked`, never `aria-selected`, so
+        // reading only the latter loses the reader's choice on every re-entry.
+        all.find(
+          (el) => el.getAttribute("aria-checked") === "true" && navigable(el)
         ) ??
         all.find((el) => el.hasAttribute("aria-current") && navigable(el)) ??
         all.find(navigable);
@@ -1909,16 +2078,19 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       this.#reannounceTimer = undefined;
     }
     this.#listenElement?.removeEventListener("keydown", this.#handleKeydown);
-    this.#pointerElement?.removeEventListener(
+    this.#boundContainer?.removeEventListener(
       "mousedown",
       this.#handlePointerDown
     );
+    this.#boundContainer?.removeEventListener("focusin", this.#handleFocusIn);
     // Every mode this instance ran in, not just the current one: a modifier that spent part of
     // its life in active mode and ended in focus mode still has that mode's ids and attribute to
     // give back.
     this.#exitEnteredModes();
     this.#listenElement = null;
-    this.#pointerElement = null;
+    this.#boundContainer = null;
+    this.#lastFocusedItem = null;
+    this.#previousItems = [];
     this.#element = null;
     this.#registeredApiCallback?.(null);
     this.#registeredApiCallback = undefined;
