@@ -49,6 +49,7 @@ export default class PostEventBuilder extends Component {
     this.event.status === "standalone" ? "public" : this.event.status;
   @tracked previousMaxAttendees = this.event.maxAttendees || null;
   @tracked attendanceMode = this.#initAttendanceMode();
+  @tracked urlRevealed = !!this.event.url;
 
   // FormKit clones @data once on mount and treats it as immutable. Reading
   // tracked event properties from a getter would invalidate this on every
@@ -324,6 +325,17 @@ export default class PostEventBuilder extends Component {
     ];
   }
 
+  @action
+  revealUrl() {
+    this.urlRevealed = true;
+  }
+
+  get locationLabel() {
+    return this.urlRevealed
+      ? "discourse_post_event.builder_modal.location.label"
+      : "discourse_post_event.builder_modal.location.label_or_url";
+  }
+
   get showLivestream() {
     return (
       isLivestreamUrl(this.event.location, this.siteSettings) &&
@@ -491,6 +503,7 @@ export default class PostEventBuilder extends Component {
       // Entering advanced — re-snapshot from the (possibly compact-edited)
       // event before the form mounts.
       this.formData = this.#snapshotFormData();
+      this.urlRevealed ||= !!this.event.url;
       this.screen = "advanced";
     }
   }
@@ -845,9 +858,7 @@ export default class PostEventBuilder extends Component {
 
                 <form.Field
                   @name="location"
-                  @title={{i18n
-                    "discourse_post_event.builder_modal.location.label"
-                  }}
+                  @title={{i18n this.locationLabel}}
                   @type="input"
                   @format="full"
                   @onSet={{this.syncLocationToEvent}}
@@ -859,6 +870,34 @@ export default class PostEventBuilder extends Component {
                     }}
                   />
                 </form.Field>
+
+                {{#if this.urlRevealed}}
+                  <form.Field
+                    @name="url"
+                    @title={{i18n
+                      "discourse_post_event.builder_modal.url.label"
+                    }}
+                    @type="input"
+                    @format="full"
+                    @onSet={{fn this.syncFieldToEvent "url"}}
+                    as |field|
+                  >
+                    <field.Control
+                      placeholder={{i18n
+                        "discourse_post_event.builder_modal.url.placeholder"
+                      }}
+                    />
+                  </form.Field>
+                {{else}}
+                  <form.Container @format="full">
+                    <DButton
+                      @action={{this.revealUrl}}
+                      @icon="plus"
+                      @label="discourse_post_event.builder_modal.url.add"
+                      class="btn-default add-event-url"
+                    />
+                  </form.Container>
+                {{/if}}
 
                 {{#if this.showLivestream}}
                   <form.Field

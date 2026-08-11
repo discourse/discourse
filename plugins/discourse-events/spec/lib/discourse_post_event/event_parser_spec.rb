@@ -288,4 +288,87 @@ describe DiscoursePostEvent::EventParser do
       expect(event[:"my.field"]).to eq("5")
     end
   end
+
+  describe ".valid_url?" do
+    it "accepts URIs, with or without a scheme" do
+      expect(described_class.valid_url?("https://zoom.us/j/1")).to eq(true)
+      expect(described_class.valid_url?("meet.google.com/phv-rbyy-gsh")).to eq(true)
+      expect(described_class.valid_url?("mailto:someone@example.com")).to eq(true)
+      expect(described_class.valid_url?("https://münchen.example/fest")).to eq(true)
+    end
+
+    it "accepts a blank value so the field can be cleared" do
+      expect(described_class.valid_url?(nil)).to eq(true)
+      expect(described_class.valid_url?("  ")).to eq(true)
+    end
+
+    it "rejects anything that would resolve nowhere" do
+      expect(described_class.valid_url?("Room 5")).to eq(false)
+      expect(described_class.valid_url?("[RSVP](https://zoom.us/j/1)")).to eq(false)
+      expect(described_class.valid_url?("https://example.com/\r\nX-INJECTED:evil")).to eq(false)
+    end
+  end
+
+  describe ".url_restates_location?" do
+    it "ignores scheme and a trailing slash" do
+      expect(described_class.url_restates_location?("https://zoom.us/j/1/", "zoom.us/j/1")).to eq(
+        true,
+      )
+    end
+
+    it "sees through a markdown link, since location is cooked" do
+      expect(
+        described_class.url_restates_location?(
+          "https://zoom.us/j/55",
+          "[RSVP](https://zoom.us/j/55)",
+        ),
+      ).to eq(true)
+    end
+
+    it "keeps a venue and a separate registration page apart" do
+      expect(
+        described_class.url_restates_location?("https://ti.to/x", "Discourse HQ, Denver"),
+      ).to eq(false)
+      expect(
+        described_class.url_restates_location?(
+          "https://meet.google.com/cuo",
+          "meet.google.com/phv",
+        ),
+      ).to eq(false)
+    end
+
+    it "is false when either side is blank" do
+      expect(described_class.url_restates_location?("https://zoom.us/j/1", nil)).to eq(false)
+      expect(described_class.url_restates_location?(nil, "zoom.us/j/1")).to eq(false)
+    end
+  end
+
+  describe ".normalize_links" do
+    def present(location)
+      described_class.normalize_links(described_class.cook_inline(location))
+    end
+
+    it "upgrades an inferred scheme to https and keeps it off screen" do
+      expect(present("meet.google.com/abc")).to eq(
+        '<a href="https://meet.google.com/abc" rel="noopener nofollow ugc">meet.google.com/abc</a>',
+      )
+    end
+
+    it "hides a scheme the author did write" do
+      expect(present("https://zoom.us/j/1")).to include(">zoom.us/j/1</a>")
+      expect(present("https://zoom.us/j/1")).to include('href="https://zoom.us/j/1"')
+    end
+
+    it "does not silently upgrade an explicit http link" do
+      expect(present("http://intranet.example/room")).to include(
+        'href="http://intranet.example/room"',
+      )
+      expect(present("http://intranet.example/room")).to include(">intranet.example/room</a>")
+    end
+
+    it "leaves custom link text and plain text alone" do
+      expect(present("[RSVP](https://zoom.us/j/55)")).to include(">RSVP</a>")
+      expect(present("Room 5")).to eq("Room 5")
+    end
+  end
 end

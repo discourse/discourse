@@ -27,6 +27,7 @@ module DiscoursePostEvent
     attributes :description_html
     attributes :location
     attributes :location_html
+    attributes :url_restates_location
     attributes :watching_invitee
     attributes :chat_enabled
     attributes :livestream
@@ -206,7 +207,18 @@ module DiscoursePostEvent
     end
 
     def location_html
-      EventParser.cook_inline(object.location, post: object.post)
+      @location_html ||=
+        EventParser.normalize_links(EventParser.cook_inline(object.location, post: object.post))
+    end
+
+    def url_restates_location
+      return false if object.location.blank?
+
+      EventParser.url_restates_location?(
+        object.url,
+        object.location,
+        cooked_location: location_html,
+      )
     end
   end
 end

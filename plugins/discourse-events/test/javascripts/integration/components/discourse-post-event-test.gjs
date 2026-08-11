@@ -136,4 +136,50 @@ module("Integration | Component | DiscoursePostEvent", function (hooks) {
       .dom(".event-recurrence")
       .hasText("Every Thursday", "uses the date's weekday, not the prior day");
   });
+
+  test("renders location and url side by side when they differ", async function (assert) {
+    stubApi.call(
+      this,
+      buildEvent({
+        location: "Discourse HQ, Denver",
+        location_html: "Discourse HQ, Denver",
+        url: "https://ti.to/discourse/meetup",
+        url_restates_location: false,
+      })
+    );
+
+    const event = { id: 1 };
+    await render(<template><DiscoursePostEvent @event={{event}} /></template>);
+    await waitFor(".event-location");
+
+    assert.dom(".event-location").includesText("Discourse HQ, Denver");
+    assert
+      .dom(".event-url a")
+      .hasAttribute(
+        "href",
+        "https://ti.to/discourse/meetup",
+        "a venue plus a registration page is a legitimate pairing"
+      );
+  });
+
+  test("renders the link once when url only restates location", async function (assert) {
+    stubApi.call(
+      this,
+      buildEvent({
+        location: "zoom.us/j/123",
+        location_html:
+          '<a href="http://zoom.us/j/123" rel="nofollow ugc">zoom.us/j/123</a>',
+        url: "https://zoom.us/j/123/",
+        url_restates_location: true,
+      })
+    );
+
+    const event = { id: 1 };
+    await render(<template><DiscoursePostEvent @event={{event}} /></template>);
+    await waitFor(".event-location");
+
+    assert
+      .dom(".event-url")
+      .doesNotExist("the same link is not worth two rows");
+  });
 });

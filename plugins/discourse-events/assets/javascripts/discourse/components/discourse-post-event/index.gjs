@@ -118,6 +118,10 @@ export default class DiscoursePostEvent extends Component {
     return !this.args.event?.creator;
   }
 
+  get displayUrl() {
+    return this.event?.urlRestatesLocation ? null : this.event?.url;
+  }
+
   get loadingDetails() {
     return this.isLoading && this.isPartialEvent;
   }
@@ -339,7 +343,7 @@ export default class DiscoursePostEvent extends Component {
               @outletArgs={{lazyHash
                 event=event
                 Section=(component InfoSection event=event)
-                Url=(component Url url=event.url)
+                Url=(component Url url=this.displayUrl)
                 Description=(component
                   Description
                   descriptionHtml=event.descriptionHtml
@@ -376,7 +380,7 @@ export default class DiscoursePostEvent extends Component {
                 </InfoSection>
               {{/if}}
               <DiscoursePostEventLocation @event={{event}} />
-              <Url @url={{event.url}} />
+              <Url @url={{this.displayUrl}} />
               <ChatChannel @event={{event}} />
 
               {{#if event.stats}}
