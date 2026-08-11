@@ -4,8 +4,14 @@ class AdminDashboardSiteTrafficExplorer
   include Service::Base
 
   DIMENSION_LIMIT = 50
+  private_constant :DIMENSION_LIMIT
+
   STATEMENT_TIMEOUT_MS = 10_000
+  private_constant :STATEMENT_TIMEOUT_MS
+
   FILTER_KEYS = %i[top_url entry_url referrer country network browser ip].freeze
+  private_constant :FILTER_KEYS
+
   FILTER_DIMENSIONS = {
     top_url: "top_urls",
     entry_url: "entry_urls",
@@ -15,11 +21,9 @@ class AdminDashboardSiteTrafficExplorer
     browser: "browsers",
     ip: "ip_addresses",
   }.freeze
-  BROWSER_VALUES = %w[edge firefox chrome safari unknown].freeze
-  private_constant :DIMENSION_LIMIT
-  private_constant :STATEMENT_TIMEOUT_MS
-  private_constant :FILTER_KEYS
   private_constant :FILTER_DIMENSIONS
+
+  BROWSER_VALUES = %w[edge firefox chrome safari unknown].freeze
   private_constant :BROWSER_VALUES
 
   params do
