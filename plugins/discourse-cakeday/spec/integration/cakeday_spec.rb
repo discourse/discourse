@@ -71,8 +71,7 @@ RSpec.describe "Anniversaries and Birthdays" do
       end
 
       it "accounts for the current user's timezone" do
-        # Asia/Calcutta is +5.5 hours from UTC
-        current_user.user_option.update!(timezone: "Asia/Calcutta")
+        current_user.user_option.update!(timezone: "Asia/Kolkata")
 
         freeze_time(time) do
           created_at = time - 1.year
@@ -95,6 +94,12 @@ RSpec.describe "Anniversaries and Birthdays" do
           body = response.parsed_body
           expect(body["anniversaries"].map { |u| u["id"] }).to contain_exactly(user3.id, user4.id)
         end
+      end
+
+      it "handles legacy timezone aliases without SQL errors" do
+        current_user.user_option.update!(timezone: "Asia/Calcutta")
+        get "/cakeday/anniversaries.json", params: { filter: "today" }
+        expect(response.status).to eq(200)
       end
 
       it "handles Nuku'alofa timezone without SQL errors" do
