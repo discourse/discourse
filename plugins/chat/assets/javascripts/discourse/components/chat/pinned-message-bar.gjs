@@ -218,19 +218,6 @@ export default class ChatPinnedMessageBar extends Component {
   @action
   dismiss() {
     dismissPinsUpTo(this.args.channel, newestPinId(this.pins));
-    this.#markPinsAsRead();
-  }
-
-  // without this the navbar button that replaces the bar would carry an unread
-  // dot for the very pin just dismissed
-  #markPinsAsRead() {
-    const membership = this.args.channel.currentUserMembership;
-    if (!membership) {
-      return;
-    }
-    membership.lastViewedPinsAt = new Date();
-    membership.hasUnseenPins = false;
-    this.chatApi.markPinsAsRead(this.args.channel.id).catch(() => {});
   }
 
   <template>

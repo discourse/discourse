@@ -65,9 +65,6 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
     this.siteSettings.chat_pinned_messages = true;
     this.channel = new ChatFabricators(getOwner(this)).channel();
     this.noop = () => {};
-    pretender.put(`/chat/api/channels/${this.channel.id}/pins/read`, () =>
-      response({})
-    );
   });
 
   test("does not render when the channel has no pins", async function (assert) {
@@ -318,30 +315,6 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
     await click(".chat-pinned-bar__dismiss");
 
     assert.dom(".chat-pinned-bar").hasClass("--dismissed");
-  });
-
-  test("marks pins as read when dismissing", async function (assert) {
-    this.channel.pinnedMessagesCount = 1;
-    this.channel.currentUserMembership.hasUnseenPins = true;
-    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
-      pinResponse(this.channel, 1)
-    );
-
-    await render(
-      <template>
-        <ChatPinnedMessageBar
-          @channel={{this.channel}}
-          @onJumpToMessage={{this.noop}}
-        />
-      </template>
-    );
-
-    await click(".chat-pinned-bar__dismiss");
-
-    assert.false(
-      this.channel.currentUserMembership.hasUnseenPins,
-      "the navbar button that replaces the bar can't show an unread dot for a dismissed pin"
-    );
   });
 
   test("offers the inline dismiss to pin managers too", async function (assert) {

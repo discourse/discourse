@@ -37,10 +37,9 @@ export default class ChatNavbarPinnedMessagesButton extends Component {
         class="c-navbar__pinned-messages-btn btn no-text btn-transparent"
         {{on "click" this.handleClick}}
       >
+        {{! no unread dot: this button only exists once the bar was dismissed,
+        so it would flag pins the user chose to hide }}
         {{dIcon "thumbtack"}}
-        {{#if @channel.hasUnseenPins}}
-          <span class="c-navbar__pinned-messages-btn__unread-indicator"></span>
-        {{/if}}
       </LinkTo>
     {{/if}}
   </template>
