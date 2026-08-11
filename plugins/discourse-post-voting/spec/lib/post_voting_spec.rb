@@ -67,6 +67,35 @@ RSpec.describe PostVoting do
     end
   end
 
+  describe "the resolution cache" do
+    before { SiteSetting.post_voting_category_mode = "opt_out" }
+
+    it "does not store a snapshot taken before an invalidation" do
+      set_override(category, true)
+
+      expect(PostVoting.post_voting_enabled_for?(category.id)).to eq(true)
+
+      PostVoting.clear_category_overrides_cache(after_commit: false)
+
+      interfered = false
+      allow(PostVoting).to receive(:resolve_category_overrides).and_wrap_original do |original|
+        snapshot = original.call
+
+        if !interfered
+          interfered = true
+          category.upsert_custom_fields(PostVoting::ALLOW_POST_VOTING => false)
+          PostVoting.clear_category_overrides_cache(after_commit: false)
+        end
+
+        snapshot
+      end
+
+      PostVoting.category_overrides
+
+      expect(PostVoting.post_voting_enabled_for?(category.id)).to eq(false)
+    end
+  end
+
   describe "selecting a mode" do
     it "sets every category to not allowed for opt_in" do
       SiteSetting.post_voting_category_mode = "opt_in"
@@ -112,22 +141,36 @@ RSpec.describe PostVoting do
 
       expect(override_for(category)).to eq(nil)
     end
-  end
 
-  describe "enabling the plugin" do
-    it "fills in categories missed by a mode change made while it was disabled" do
+    it "applies a mode chosen while the plugin was disabled once it is enabled" do
+      SiteSetting.post_voting_category_mode = "opt_in"
+
+      expect(override_for(category)).to eq(false)
+
       SiteSetting.post_voting_enabled = false
       SiteSetting.post_voting_category_mode = "opt_out"
-
-      expect(override_for(category)).to eq(nil)
-
       SiteSetting.post_voting_enabled = true
       PostVoting.clear_category_overrides_cache(after_commit: false)
 
       expect(override_for(category)).to eq(true)
       expect(override_for(subcategory)).to eq(true)
+      expect(PostVoting.post_voting_enabled_for?(category.id)).to eq(true)
     end
 
+    it "applies the last mode chosen when several are tried while disabled" do
+      SiteSetting.post_voting_category_mode = "opt_out"
+      SiteSetting.post_voting_enabled = false
+      SiteSetting.post_voting_category_mode = "all_categories"
+      SiteSetting.post_voting_category_mode = "opt_in"
+      SiteSetting.post_voting_enabled = true
+      PostVoting.clear_category_overrides_cache(after_commit: false)
+
+      expect(override_for(category)).to eq(false)
+      expect(PostVoting.post_voting_enabled_for?(category.id)).to eq(false)
+    end
+  end
+
+  describe "enabling the plugin" do
     it "fills in categories created while it was disabled" do
       SiteSetting.post_voting_category_mode = "opt_in"
       SiteSetting.post_voting_enabled = false

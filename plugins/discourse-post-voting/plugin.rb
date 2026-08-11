@@ -18,6 +18,7 @@ module ::PostVoting
   PLUGIN_NAME = "discourse-post-voting"
   ALLOW_POST_VOTING = "allow_post_voting"
   APPLY_TO_SUBCATEGORIES = "apply_post_voting_to_subcategories"
+  RECONCILED_MODE = "reconciled_category_mode"
 
   def self.overrides_cache
     @overrides_cache ||= ::DistributedCache.new("post_voting_category_overrides")
@@ -47,21 +48,33 @@ module ::PostVoting
     )
   end
 
-  # Deliberately not `defer_get_set`: that writes the computed value from a
-  # deferred job, which can land after an invalidating `clear` and resurrect a
-  # stale resolution.
   def self.category_overrides
     cache = overrides_cache
     cached = cache["overrides"]
     return cached if cached
 
+    generation = cache["generation"]
     resolved = resolve_category_overrides
-    cache["overrides"] = resolved
+
+    if cache["generation"] == generation
+      cache["overrides"] = resolved
+      cache.delete("overrides") if cache["generation"] != generation
+    end
+
     resolved
   end
 
   def self.clear_category_overrides_cache(after_commit: true)
-    overrides_cache.clear(after_commit: after_commit)
+    clear = -> do
+      overrides_cache.clear(after_commit: false)
+      overrides_cache["generation"] = SecureRandom.hex(8)
+    end
+
+    if after_commit && !GlobalSetting.skip_db?
+      ::DB.after_commit { clear.call }
+    else
+      clear.call
+    end
   end
 
   def self.resolve_category_overrides
@@ -78,10 +91,23 @@ module ::PostVoting
   # setting always shows the value in force rather than a blank that means
   # something different in each mode.
   def self.reset_category_overrides!
+    ::PluginStore.set(PLUGIN_NAME, RECONCILED_MODE, SiteSetting.post_voting_category_mode)
     return if SiteSetting.post_voting_category_mode == CategoryModeSiteSetting::ALL_CATEGORIES
 
     write_category_overrides(::Category.pluck(:id), mode_default)
     invalidate_category_caches
+  end
+
+  def self.reconciled_mode
+    ::PluginStore.get(PLUGIN_NAME, RECONCILED_MODE)
+  end
+
+  def self.reconcile_category_overrides!
+    if reconciled_mode == SiteSetting.post_voting_category_mode
+      backfill_missing_category_overrides!
+    else
+      reset_category_overrides!
+    end
   end
 
   def self.backfill_missing_category_overrides!
@@ -425,10 +451,8 @@ after_initialize do
     PostVoting.reset_category_overrides! if name == :post_voting_category_mode
   end
 
-  # `on` only fires while the plugin is enabled, so anything that happened
-  # while it was off has to be reconciled when it comes back on.
   on_enabled_change do |_old_value, new_value|
-    PostVoting.backfill_missing_category_overrides! if new_value
+    PostVoting.reconcile_category_overrides! if new_value
   end
 
   add_model_callback(:post, :before_create) do
