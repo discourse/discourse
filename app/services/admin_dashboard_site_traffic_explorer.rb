@@ -94,7 +94,7 @@ class AdminDashboardSiteTrafficExplorer
     end
   end
 
-  try(ActiveRecord::QueryCanceled, PG::QueryCanceled) { step :load_traffic }
+  step :load_traffic
 
   private
 
@@ -113,6 +113,8 @@ class AdminDashboardSiteTrafficExplorer
       decorate_active_filters(row.fetch("active_filter_representative_ips"), filters:)
     traffic[:active_filters] = active_filters if active_filters.any?
     context[:traffic] = traffic
+  rescue ActiveRecord::QueryCanceled, PG::QueryCanceled
+    fail!("traffic_query_timeout")
   end
 
   def execute_query(start_date:, end_date:, filters:)

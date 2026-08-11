@@ -71,7 +71,8 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
       it "returns the timeout failure and leaves the connection usable" do
         transaction_depth = ActiveRecord::Base.connection.open_transactions
 
-        expect(result).to fail_with_exception(ActiveRecord::QueryCanceled)
+        expect(result).to fail_a_step(:load_traffic)
+        expect(result["result.step.load_traffic"].error).to eq("traffic_query_timeout")
         expect(
           [ActiveRecord::Base.connection.open_transactions, DB.query_single("SELECT 1")],
         ).to eq([transaction_depth, [1]])
@@ -81,7 +82,10 @@ RSpec.describe AdminDashboardSiteTrafficExplorer do
     context "when the query is canceled by PostgreSQL" do
       before { DB.stubs(:query_hash).raises(PG::QueryCanceled, "statement timeout") }
 
-      it { is_expected.to fail_with_exception(PG::QueryCanceled) }
+      it "returns the named timeout failure" do
+        expect(result).to fail_a_step(:load_traffic)
+        expect(result["result.step.load_traffic"].error).to eq("traffic_query_timeout")
+      end
     end
 
     context "when the query succeeds" do

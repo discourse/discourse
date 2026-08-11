@@ -78,8 +78,8 @@ class Admin::DashboardController < Admin::StaffController
     AdminDashboardSiteTrafficExplorer.call(service_params.deep_merge(params: permitted.to_h)) do
       on_success { |traffic:| render json: traffic }
       on_failed_contract { raise Discourse::InvalidParameters }
-      on_exceptions do
-        render json: { error_type: "traffic_query_timeout" }, status: :service_unavailable
+      on_failed_step(:load_traffic) do |step|
+        render json: { error_type: step.error }, status: :service_unavailable
       end
     end
   end
