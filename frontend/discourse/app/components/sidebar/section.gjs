@@ -14,12 +14,17 @@ import {
   getCollapsedSidebarSectionKey,
   getSidebarSectionContentId,
 } from "discourse/lib/sidebar/helpers";
-import { WEB_LINK_KINDS } from "discourse/lib/sidebar/link-drop";
+import {
+  WEB_LINK_ADOPTION,
+  WEB_LINK_KINDS,
+  webLinkPayload,
+} from "discourse/lib/sidebar/link-drop";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
+import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 import SectionHeader from "./section-header";
 
@@ -169,7 +174,10 @@ export default class SidebarSection extends Component {
    */
   @action
   canDropLink({ source }) {
-    return Boolean(this.args.linkDropEnabled) && !source.containsFiles();
+    return (
+      Boolean(this.args.linkDropEnabled) &&
+      !webLinkPayload(source).containsFiles()
+    );
   }
 
   /**
@@ -184,7 +192,7 @@ export default class SidebarSection extends Component {
   trackLinkDrop({ source, location, element }) {
     // A drag carrying only text may well turn out to hold nothing droppable, so
     // the insertion point stays hidden until the drag declares a real URL.
-    this.linkDropActive = source.containsURLs();
+    this.linkDropActive = webLinkPayload(source).containsURLs();
 
     if (!this.linkDropActive) {
       this.linkDropIndex = undefined;
@@ -215,7 +223,9 @@ export default class SidebarSection extends Component {
   dropLink({ source }) {
     const linkDropIndex = this.linkDropIndex;
     this.clearLinkDrop();
-    this.args.onLinkDrop?.(source, linkDropIndex);
+    // Unwrapped here so `onLinkDrop` keeps taking a decorated payload whichever
+    // target reported the drop, and the section model needs no change.
+    this.args.onLinkDrop?.(webLinkPayload(source), linkDropIndex);
   }
 
   get headerCaretIcon() {
@@ -244,6 +254,18 @@ export default class SidebarSection extends Component {
         {{didInsert this.setExpandedState}}
         {{dDragAndDropExternalTarget
           accepts=WEB_LINK_KINDS
+          canDrop=this.canDropLink
+          getDropEffect=copyDropEffect
+          indicator=false
+          onDragEnter=this.trackLinkDrop
+          onDrag=this.trackLinkDrop
+          onDragLeave=this.clearLinkDrop
+          onDrop=this.dropLink
+        }}
+        {{! The same drop, for a link the browser started dragging from this
+            page rather than from outside the window. }}
+        {{dDragAndDropTarget
+          adopts=WEB_LINK_ADOPTION
           canDrop=this.canDropLink
           getDropEffect=copyDropEffect
           indicator=false

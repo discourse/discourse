@@ -12,11 +12,14 @@ import bodyClass from "discourse/helpers/body-class";
 import { bind } from "discourse/lib/decorators";
 import {
   extractDroppedWebLink,
+  WEB_LINK_ADOPTION,
   WEB_LINK_KINDS,
+  webLinkPayload,
 } from "discourse/lib/sidebar/link-drop";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
+import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 
 /** Dropping a link here copies it into the sidebar; it does not move anything. */
@@ -69,7 +72,7 @@ export default class Sidebar extends Component {
    */
   @action
   trackLinkDrag({ source }) {
-    this.linkDragActive = source.containsURLs();
+    this.linkDragActive = webLinkPayload(source).containsURLs();
   }
 
   @action
@@ -81,7 +84,7 @@ export default class Sidebar extends Component {
   createSectionFromLink({ source }) {
     this.clearLinkDrag();
 
-    const link = extractDroppedWebLink(source);
+    const link = extractDroppedWebLink(webLinkPayload(source));
     if (!link) {
       return;
     }
@@ -101,7 +104,10 @@ export default class Sidebar extends Component {
    */
   @action
   canDropLink({ source }) {
-    return Boolean(this.#canAcceptLinkDrop) && !source.containsFiles();
+    return (
+      Boolean(this.#canAcceptLinkDrop) &&
+      !webLinkPayload(source).containsFiles()
+    );
   }
 
   get switchPanelButtons() {
@@ -145,6 +151,18 @@ export default class Sidebar extends Component {
     <nav
       {{dDragAndDropExternalTarget
         accepts=WEB_LINK_KINDS
+        canDrop=this.canDropLink
+        getDropEffect=copyDropEffect
+        indicator=false
+        onDragEnter=this.trackLinkDrag
+        onDrag=this.trackLinkDrag
+        onDragLeave=this.clearLinkDrag
+        onDrop=this.createSectionFromLink
+      }}
+      {{! The same offer, for a link the browser started dragging from this page
+          rather than from outside the window. }}
+      {{dDragAndDropTarget
+        adopts=WEB_LINK_ADOPTION
         canDrop=this.canDropLink
         getDropEffect=copyDropEffect
         indicator=false

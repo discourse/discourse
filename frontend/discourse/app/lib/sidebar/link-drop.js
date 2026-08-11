@@ -8,6 +8,44 @@ import { SIDEBAR_URL } from "discourse/lib/constants";
 export const WEB_LINK_KINDS = ["urls", "html", "text"];
 
 /**
+ * Lets the sidebar accept a link the browser started dragging from this page —
+ * a topic row, a category, a link in a post — none of which register a drag
+ * source, and there are far too many kinds to.
+ *
+ * Matches on the anchor rather than on the payload's declared kinds: a web link
+ * has to accept plain text, since some sources publish a URL only that way, and
+ * a dragged text selection carries plain text too. Requiring an `http(s)` anchor
+ * is what separates them.
+ */
+export const WEB_LINK_ADOPTION = {
+  type: "web-link",
+  match: ({ element }) => {
+    const anchor = element.closest("a[href]");
+    if (!anchor) {
+      return false;
+    }
+    try {
+      return ["http:", "https:"].includes(new URL(anchor.href).protocol);
+    } catch {
+      return false;
+    }
+  },
+};
+
+/**
+ * The native payload, wherever the drag came from.
+ *
+ * An external drop target hands its payload directly; an adopted one carries it
+ * on `native`, because the rest of that source describes an element drag. Both
+ * read the same from here on.
+ *
+ * @param {Object} source - The source a drop target reported.
+ */
+export function webLinkPayload(source) {
+  return source.native ?? source;
+}
+
+/**
  * Turns an incoming external drag into a sidebar link, or nothing when it
  * carries no usable web URL.
  *
