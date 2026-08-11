@@ -425,6 +425,8 @@ Discourse::Application.routes.draw do
         get "content/posts-and-topics" => "site_settings#index"
         get "content/stats-and-thresholds" => "site_settings#index"
         get "developer" => "site_settings#index"
+        get "mcp" => "site_settings#index"
+        get "mcp/*path" => "site_settings#index"
         get "files" => "site_settings#index"
         get "interface" => "site_settings#index"
         get "legal" => "site_settings#index"
@@ -1912,6 +1914,37 @@ Discourse::Application.routes.draw do
     root to: "home_page#blank", constraints: HomePageConstraint.new("blank"), as: "home_page_blank"
 
     get "/custom" => "home_page#custom"
+
+    post "/mcp" => "mcp#create"
+    match "/mcp" => "mcp#method_not_allowed", :via => %i[get delete put patch options]
+
+    get "/.well-known/oauth-protected-resource/mcp" => "mcp_oauth_metadata#protected_resource"
+    get "/.well-known/oauth-authorization-server" => "mcp_oauth_metadata#authorization_server"
+    get "/.well-known/openid-configuration" => "mcp_oauth_metadata#authorization_server"
+
+    get "/oauth2/mcp/authorize" => "mcp_oauth_authorizations#show", :as => :oauth2_mcp_authorize
+    post "/oauth2/mcp/authorize" => "mcp_oauth_authorizations#create"
+    post "/oauth2/mcp/token" => "mcp_oauth_tokens#create"
+    post "/oauth2/mcp/revoke" => "mcp_oauth_tokens#revoke"
+
+    scope "/admin/mcp", constraints: AdminConstraint.new do
+      get "/overview" => "admin/mcp#overview"
+      get "/capabilities" => "admin/mcp#capabilities"
+      put "/configuration" => "admin/mcp#update_configuration"
+      put "/capabilities" => "admin/mcp#update_capabilities"
+      put "/capabilities/emergency-block" => "admin/mcp#emergency_block"
+      get "/clients" => "admin/mcp_clients#index"
+      post "/clients" => "admin/mcp_clients#create"
+      get "/clients/:id" => "admin/mcp_clients#show"
+      put "/clients/:id/block" => "admin/mcp_clients#block"
+      post "/clients/:id/refresh" => "admin/mcp_clients#refresh"
+      get "/authorizations" => "admin/mcp_authorizations#index"
+      delete "/authorizations/:id" => "admin/mcp_authorizations#destroy"
+      get "/activity" => "admin/mcp_activity#index"
+    end
+
+    get "/u/:username/preferences/mcp-authorizations" => "mcp_user_authorizations#index"
+    delete "/u/:username/preferences/mcp-authorizations/:id" => "mcp_user_authorizations#destroy"
 
     get "/user-api-key/new" => "user_api_keys#new"
     post "/user-api-key" => "user_api_keys#create"

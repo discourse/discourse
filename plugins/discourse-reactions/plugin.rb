@@ -431,3 +431,36 @@ after_initialize do
     end
   end
 end
+
+after_initialize do
+  require_relative "lib/discourse_reactions/mcp_tools"
+  register_mcp_tool(
+    "discourse-reactions.post_reaction.set",
+    title: "Set post reaction",
+    description: "Adds, changes, or removes the authenticated user's reaction to a visible post.",
+    implementation: DiscourseReactions::McpTools::SetReaction,
+    input_schema: {
+      type: "object",
+      properties: {
+        post_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        reaction: {
+          type: "string",
+          minLength: 1,
+          maxLength: 100,
+        },
+      },
+      required: %w[post_id reaction],
+      additionalProperties: false,
+    },
+    required_scopes: %w[discourse-reactions:write],
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+    },
+    risk: :write,
+    availability: -> { SiteSetting.discourse_reactions_enabled },
+  )
+end

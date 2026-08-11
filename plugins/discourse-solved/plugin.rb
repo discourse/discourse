@@ -435,3 +435,34 @@ after_initialize do
   DiscourseDev::DiscourseSolved.populate(self)
   DiscourseAutomation::EntryPoint.inject(self) if defined?(DiscourseAutomation)
 end
+
+after_initialize do
+  require_relative "lib/discourse_solved/mcp_tools"
+  register_mcp_tool(
+    "discourse-solved.solution.set",
+    title: "Set accepted solution",
+    description: "Accepts or unaccepts a post as the topic solution when permitted.",
+    implementation: DiscourseSolved::McpTools::SetSolution,
+    input_schema: {
+      type: "object",
+      properties: {
+        post_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        accepted: {
+          type: "boolean",
+        },
+      },
+      required: %w[post_id accepted],
+      additionalProperties: false,
+    },
+    required_scopes: %w[discourse-solved:write],
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+    },
+    risk: :write,
+    availability: -> { SiteSetting.solved_enabled },
+  )
+end

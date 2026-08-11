@@ -6988,6 +6988,358 @@ ALTER SEQUENCE public.llm_quotas_id_seq OWNED BY public.llm_quotas.id;
 
 
 --
+-- Name: mcp_audit_logs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mcp_audit_logs (
+    id bigint NOT NULL,
+    occurred_at timestamp(6) without time zone NOT NULL,
+    bucket_at timestamp(6) without time zone,
+    occurrences integer DEFAULT 1 NOT NULL,
+    user_id integer,
+    mcp_oauth_client_id bigint,
+    mcp_server_profile_id bigint,
+    request_id character varying,
+    method character varying,
+    capability character varying,
+    outcome character varying NOT NULL,
+    http_status integer,
+    duration_ms integer,
+    target jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: mcp_audit_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mcp_audit_logs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mcp_audit_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mcp_audit_logs_id_seq OWNED BY public.mcp_audit_logs.id;
+
+
+--
+-- Name: mcp_oauth_access_tokens; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mcp_oauth_access_tokens (
+    id bigint NOT NULL,
+    token_hash character varying NOT NULL,
+    mcp_oauth_authorization_id bigint NOT NULL,
+    mcp_oauth_client_id bigint NOT NULL,
+    mcp_server_profile_id bigint NOT NULL,
+    user_id integer NOT NULL,
+    resource character varying NOT NULL,
+    scopes character varying[] DEFAULT '{}'::character varying[] NOT NULL,
+    grant_version integer NOT NULL,
+    expires_at timestamp(6) without time zone NOT NULL,
+    last_used_at timestamp(6) without time zone,
+    revoked_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: mcp_oauth_access_tokens_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mcp_oauth_access_tokens_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mcp_oauth_access_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mcp_oauth_access_tokens_id_seq OWNED BY public.mcp_oauth_access_tokens.id;
+
+
+--
+-- Name: mcp_oauth_authorization_codes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mcp_oauth_authorization_codes (
+    id bigint NOT NULL,
+    code_hash character varying NOT NULL,
+    mcp_oauth_authorization_id bigint NOT NULL,
+    redirect_uri character varying NOT NULL,
+    resource character varying NOT NULL,
+    code_challenge character varying NOT NULL,
+    code_challenge_method character varying DEFAULT 'S256'::character varying NOT NULL,
+    scopes character varying[] DEFAULT '{}'::character varying[] NOT NULL,
+    grant_version integer NOT NULL,
+    expires_at timestamp(6) without time zone NOT NULL,
+    consumed_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: mcp_oauth_authorization_codes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mcp_oauth_authorization_codes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mcp_oauth_authorization_codes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mcp_oauth_authorization_codes_id_seq OWNED BY public.mcp_oauth_authorization_codes.id;
+
+
+--
+-- Name: mcp_oauth_authorization_scopes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mcp_oauth_authorization_scopes (
+    id bigint NOT NULL,
+    mcp_oauth_authorization_id bigint NOT NULL,
+    name character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: mcp_oauth_authorization_scopes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mcp_oauth_authorization_scopes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mcp_oauth_authorization_scopes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mcp_oauth_authorization_scopes_id_seq OWNED BY public.mcp_oauth_authorization_scopes.id;
+
+
+--
+-- Name: mcp_oauth_authorizations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mcp_oauth_authorizations (
+    id bigint NOT NULL,
+    user_id integer NOT NULL,
+    mcp_oauth_client_id bigint NOT NULL,
+    mcp_server_profile_id bigint NOT NULL,
+    resource character varying NOT NULL,
+    status character varying DEFAULT 'active'::character varying NOT NULL,
+    client_metadata_hash character varying,
+    consent_revision integer DEFAULT 1 NOT NULL,
+    grant_version integer DEFAULT 1 NOT NULL,
+    consented_at timestamp(6) without time zone NOT NULL,
+    revoked_at timestamp(6) without time zone,
+    revoked_reason character varying,
+    revoked_by_user_id integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: mcp_oauth_authorizations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mcp_oauth_authorizations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mcp_oauth_authorizations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mcp_oauth_authorizations_id_seq OWNED BY public.mcp_oauth_authorizations.id;
+
+
+--
+-- Name: mcp_oauth_clients; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mcp_oauth_clients (
+    id bigint NOT NULL,
+    client_id character varying NOT NULL,
+    name character varying NOT NULL,
+    registration_type character varying NOT NULL,
+    trust_state character varying DEFAULT 'approved'::character varying NOT NULL,
+    metadata_uri character varying,
+    metadata_hash character varying,
+    metadata_expires_at timestamp(6) without time zone,
+    metadata jsonb DEFAULT '{}'::jsonb NOT NULL,
+    redirect_uris character varying[] DEFAULT '{}'::character varying[] NOT NULL,
+    last_seen_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: mcp_oauth_clients_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mcp_oauth_clients_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mcp_oauth_clients_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mcp_oauth_clients_id_seq OWNED BY public.mcp_oauth_clients.id;
+
+
+--
+-- Name: mcp_oauth_refresh_tokens; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mcp_oauth_refresh_tokens (
+    id bigint NOT NULL,
+    token_hash character varying NOT NULL,
+    family_id character varying NOT NULL,
+    mcp_oauth_authorization_id bigint NOT NULL,
+    parent_id bigint,
+    replacement_id bigint,
+    scopes character varying[] DEFAULT '{}'::character varying[] NOT NULL,
+    grant_version integer NOT NULL,
+    expires_at timestamp(6) without time zone NOT NULL,
+    consumed_at timestamp(6) without time zone,
+    revoked_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: mcp_oauth_refresh_tokens_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mcp_oauth_refresh_tokens_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mcp_oauth_refresh_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mcp_oauth_refresh_tokens_id_seq OWNED BY public.mcp_oauth_refresh_tokens.id;
+
+
+--
+-- Name: mcp_server_profile_capabilities; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mcp_server_profile_capabilities (
+    id bigint NOT NULL,
+    mcp_server_profile_id bigint NOT NULL,
+    kind character varying NOT NULL,
+    identifier character varying NOT NULL,
+    enabled boolean DEFAULT false NOT NULL,
+    emergency_blocked boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: mcp_server_profile_capabilities_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mcp_server_profile_capabilities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mcp_server_profile_capabilities_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mcp_server_profile_capabilities_id_seq OWNED BY public.mcp_server_profile_capabilities.id;
+
+
+--
+-- Name: mcp_server_profiles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mcp_server_profiles (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    enabled boolean DEFAULT false NOT NULL,
+    instructions text,
+    allowed_group_ids integer[] DEFAULT '{}'::integer[] NOT NULL,
+    allowed_scopes character varying[] DEFAULT '{}'::character varying[] NOT NULL,
+    catalog_revision integer DEFAULT 1 NOT NULL,
+    consent_revision integer DEFAULT 1 NOT NULL,
+    cache_ttl_ms integer DEFAULT 300000 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: mcp_server_profiles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mcp_server_profiles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mcp_server_profiles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mcp_server_profiles_id_seq OWNED BY public.mcp_server_profiles.id;
+
+
+--
 -- Name: message_bus; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -13856,6 +14208,69 @@ ALTER TABLE ONLY public.llm_quotas ALTER COLUMN id SET DEFAULT nextval('public.l
 
 
 --
+-- Name: mcp_audit_logs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_audit_logs ALTER COLUMN id SET DEFAULT nextval('public.mcp_audit_logs_id_seq'::regclass);
+
+
+--
+-- Name: mcp_oauth_access_tokens id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_access_tokens ALTER COLUMN id SET DEFAULT nextval('public.mcp_oauth_access_tokens_id_seq'::regclass);
+
+
+--
+-- Name: mcp_oauth_authorization_codes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_authorization_codes ALTER COLUMN id SET DEFAULT nextval('public.mcp_oauth_authorization_codes_id_seq'::regclass);
+
+
+--
+-- Name: mcp_oauth_authorization_scopes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_authorization_scopes ALTER COLUMN id SET DEFAULT nextval('public.mcp_oauth_authorization_scopes_id_seq'::regclass);
+
+
+--
+-- Name: mcp_oauth_authorizations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_authorizations ALTER COLUMN id SET DEFAULT nextval('public.mcp_oauth_authorizations_id_seq'::regclass);
+
+
+--
+-- Name: mcp_oauth_clients id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_clients ALTER COLUMN id SET DEFAULT nextval('public.mcp_oauth_clients_id_seq'::regclass);
+
+
+--
+-- Name: mcp_oauth_refresh_tokens id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_refresh_tokens ALTER COLUMN id SET DEFAULT nextval('public.mcp_oauth_refresh_tokens_id_seq'::regclass);
+
+
+--
+-- Name: mcp_server_profile_capabilities id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_server_profile_capabilities ALTER COLUMN id SET DEFAULT nextval('public.mcp_server_profile_capabilities_id_seq'::regclass);
+
+
+--
+-- Name: mcp_server_profiles id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_server_profiles ALTER COLUMN id SET DEFAULT nextval('public.mcp_server_profiles_id_seq'::regclass);
+
+
+--
 -- Name: message_bus id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -16332,6 +16747,78 @@ ALTER TABLE ONLY public.llm_quotas
 
 
 --
+-- Name: mcp_audit_logs mcp_audit_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_audit_logs
+    ADD CONSTRAINT mcp_audit_logs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mcp_oauth_access_tokens mcp_oauth_access_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_access_tokens
+    ADD CONSTRAINT mcp_oauth_access_tokens_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mcp_oauth_authorization_codes mcp_oauth_authorization_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_authorization_codes
+    ADD CONSTRAINT mcp_oauth_authorization_codes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mcp_oauth_authorization_scopes mcp_oauth_authorization_scopes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_authorization_scopes
+    ADD CONSTRAINT mcp_oauth_authorization_scopes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mcp_oauth_authorizations mcp_oauth_authorizations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_authorizations
+    ADD CONSTRAINT mcp_oauth_authorizations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mcp_oauth_clients mcp_oauth_clients_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_clients
+    ADD CONSTRAINT mcp_oauth_clients_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mcp_oauth_refresh_tokens mcp_oauth_refresh_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_oauth_refresh_tokens
+    ADD CONSTRAINT mcp_oauth_refresh_tokens_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mcp_server_profile_capabilities mcp_server_profile_capabilities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_server_profile_capabilities
+    ADD CONSTRAINT mcp_server_profile_capabilities_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mcp_server_profiles mcp_server_profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_server_profiles
+    ADD CONSTRAINT mcp_server_profiles_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: message_bus message_bus_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -18243,6 +18730,27 @@ CREATE UNIQUE INDEX idx_leaderboard_scores_lb_user_date ON public.gamification_l
 
 
 --
+-- Name: idx_mcp_active_authorizations_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_mcp_active_authorizations_unique ON public.mcp_oauth_authorizations USING btree (user_id, mcp_oauth_client_id, mcp_server_profile_id) WHERE (revoked_at IS NULL);
+
+
+--
+-- Name: idx_mcp_authorization_scopes_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_mcp_authorization_scopes_unique ON public.mcp_oauth_authorization_scopes USING btree (mcp_oauth_authorization_id, name);
+
+
+--
+-- Name: idx_mcp_profile_capabilities_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_mcp_profile_capabilities_unique ON public.mcp_server_profile_capabilities USING btree (mcp_server_profile_id, kind, identifier);
+
+
+--
 -- Name: idx_notifications_speedup_unread_count; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -18254,6 +18762,13 @@ CREATE INDEX idx_notifications_speedup_unread_count ON public.notifications USIN
 --
 
 CREATE UNIQUE INDEX idx_on_llm_model_id_feature_name_2b0b794b27 ON public.llm_feature_credit_costs USING btree (llm_model_id, feature_name);
+
+
+--
+-- Name: idx_on_mcp_oauth_authorization_id_d749d8a9de; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_on_mcp_oauth_authorization_id_d749d8a9de ON public.mcp_oauth_authorization_codes USING btree (mcp_oauth_authorization_id);
 
 
 --
@@ -20501,6 +21016,97 @@ CREATE UNIQUE INDEX index_llm_quotas_on_group_id_and_llm_model_id ON public.llm_
 --
 
 CREATE INDEX index_llm_quotas_on_llm_model_id ON public.llm_quotas USING btree (llm_model_id);
+
+
+--
+-- Name: index_mcp_audit_logs_on_mcp_server_profile_id_and_occurred_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mcp_audit_logs_on_mcp_server_profile_id_and_occurred_at ON public.mcp_audit_logs USING btree (mcp_server_profile_id, occurred_at);
+
+
+--
+-- Name: index_mcp_audit_logs_on_occurred_at_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mcp_audit_logs_on_occurred_at_and_id ON public.mcp_audit_logs USING btree (occurred_at, id);
+
+
+--
+-- Name: index_mcp_oauth_access_tokens_on_mcp_oauth_authorization_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mcp_oauth_access_tokens_on_mcp_oauth_authorization_id ON public.mcp_oauth_access_tokens USING btree (mcp_oauth_authorization_id);
+
+
+--
+-- Name: index_mcp_oauth_access_tokens_on_token_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_mcp_oauth_access_tokens_on_token_hash ON public.mcp_oauth_access_tokens USING btree (token_hash);
+
+
+--
+-- Name: index_mcp_oauth_access_tokens_on_user_id_and_revoked_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mcp_oauth_access_tokens_on_user_id_and_revoked_at ON public.mcp_oauth_access_tokens USING btree (user_id, revoked_at);
+
+
+--
+-- Name: index_mcp_oauth_authorization_codes_on_code_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_mcp_oauth_authorization_codes_on_code_hash ON public.mcp_oauth_authorization_codes USING btree (code_hash);
+
+
+--
+-- Name: index_mcp_oauth_authorizations_on_mcp_oauth_client_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mcp_oauth_authorizations_on_mcp_oauth_client_id ON public.mcp_oauth_authorizations USING btree (mcp_oauth_client_id);
+
+
+--
+-- Name: index_mcp_oauth_authorizations_on_mcp_server_profile_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mcp_oauth_authorizations_on_mcp_server_profile_id ON public.mcp_oauth_authorizations USING btree (mcp_server_profile_id);
+
+
+--
+-- Name: index_mcp_oauth_clients_on_client_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_mcp_oauth_clients_on_client_id ON public.mcp_oauth_clients USING btree (client_id);
+
+
+--
+-- Name: index_mcp_oauth_refresh_tokens_on_family_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mcp_oauth_refresh_tokens_on_family_id ON public.mcp_oauth_refresh_tokens USING btree (family_id);
+
+
+--
+-- Name: index_mcp_oauth_refresh_tokens_on_mcp_oauth_authorization_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mcp_oauth_refresh_tokens_on_mcp_oauth_authorization_id ON public.mcp_oauth_refresh_tokens USING btree (mcp_oauth_authorization_id);
+
+
+--
+-- Name: index_mcp_oauth_refresh_tokens_on_token_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_mcp_oauth_refresh_tokens_on_token_hash ON public.mcp_oauth_refresh_tokens USING btree (token_hash);
+
+
+--
+-- Name: index_mcp_server_profiles_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_mcp_server_profiles_on_slug ON public.mcp_server_profiles USING btree (slug);
 
 
 --
@@ -23384,6 +23990,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260810154331'),
 ('20260810012238'),
 ('20260807182856'),
+('20260807000920'),
 ('20260806074210'),
 ('20260806074204'),
 ('20260803015314'),
