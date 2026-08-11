@@ -71,8 +71,10 @@ describe("virtual:entrypoint", () => {
       },
     });
 
-    const compatModules = output
-      .slice(output.indexOf("const compatModules"), output.indexOf("const sharedModules"));
+    const compatModules = output.slice(
+      output.indexOf("const compatModules"),
+      output.indexOf("const sharedModules")
+    );
     const sharedModules = output.slice(output.indexOf("const sharedModules"));
 
     it("registers everything Discourse resolves by name", () => {
@@ -100,9 +102,13 @@ describe("virtual:entrypoint", () => {
     it("leaves invokables and lib code to be statically imported", () => {
       // Components, helpers, modifiers and lib are reached through `.gjs` imports under
       // staticModules, so they must not be registered — that is what lets them tree-shake.
-      expect(compatModules).not.toContain('"discourse/helpers/format-chat-date"');
+      expect(compatModules).not.toContain(
+        '"discourse/helpers/format-chat-date"'
+      );
       expect(compatModules).not.toContain('"discourse/lib/chat-utils"');
-      expect(compatModules).not.toContain('"discourse/components/chat-channel"');
+      expect(compatModules).not.toContain(
+        '"discourse/components/chat-channel"'
+      );
     });
 
     it("exports only the declared sharedModules as the cross-bundle API", () => {
