@@ -3,11 +3,14 @@
 .sidebar-section-wrapper {
   position: relative;
 
+  /* No outline: the insertion line already says where the link lands, and it
+     tracks the pointer, so a box around the section only repeats it. Row hover
+     and active backgrounds go quiet for the duration, since a row under a drag
+     is not one being clicked. */
+
   &.is-link-drop-active {
     --d-sidebar-highlight-background: transparent;
     --d-sidebar-active-background: transparent;
-    outline: 2px solid var(--token-color-border-accent);
-    outline-offset: -2px;
   }
 
   @include viewport.from(sm) {
@@ -170,8 +173,7 @@
   z-index: 1;
   inset-inline: var(--d-sidebar-row-horizontal-padding);
   pointer-events: none;
-  border-block-start: 2px solid var(--token-color-border-accent);
-  opacity: 0.65;
+  border-block-start: 2px solid var(--d-drag-indicator-color);
 }
 
 .sidebar-section-link-drop-indicator {

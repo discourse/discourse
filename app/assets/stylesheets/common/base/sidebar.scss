@@ -80,7 +80,7 @@
   pointer-events: none;
   color: var(--token-color-text-default);
   background: var(--token-color-surface-selected);
-  border: 1px dashed var(--token-color-border-accent);
+  border: 1px dashed var(--d-drag-indicator-color);
   border-radius: var(--d-border-radius);
   font-weight: var(--token-font-weight-semibold);
 }
@@ -123,9 +123,13 @@
     border-right: 1px solid var(--d-sidebar-border-color);
     overflow-x: hidden;
 
+    /* Marks the sections a link can land in, which is not every section: one
+       the user cannot edit refuses the drop and the sidebar claims it instead,
+       offering a new section. */
+
     &.is-link-drag-active {
       .sidebar-section.is-link-drop-enabled {
-        outline: 1px dashed var(--token-color-border-accent);
+        outline: 1px dashed var(--d-drag-indicator-color);
         outline-offset: -1px;
       }
     }
