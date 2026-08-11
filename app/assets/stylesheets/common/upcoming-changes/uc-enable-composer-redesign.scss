@@ -145,6 +145,7 @@
     .select-kit.multi-select .multi-select-header {
       border: 0;
       padding: var(--space-3) var(--space-4);
+      border-radius: 0;
 
       &:active {
         border: 0;
