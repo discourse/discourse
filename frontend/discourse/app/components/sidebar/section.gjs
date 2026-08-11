@@ -4,7 +4,7 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { next } from "@ember/runloop";
+import { cancel, later, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -31,6 +31,14 @@ import SectionHeader from "./section-header";
 /** Dropping a link here copies it into the section; it does not move anything. */
 const copyDropEffect = () => "copy";
 
+/**
+ * How long a link has to be held over a collapsed section before it opens.
+ *
+ * Long enough that crossing one on the way to another does not open it: each
+ * section opening under the cursor moves the one being aimed at.
+ */
+const OPEN_ON_HOVER_DELAY = 500;
+
 export default class SidebarSection extends Component {
   @service keyValueStore;
   @service router;
@@ -45,6 +53,12 @@ export default class SidebarSection extends Component {
     this.args.sectionName
   );
 
+  /** Pending open-on-hover, while a link dwells over this section closed. */
+  #openOnHoverTimer;
+
+  /** Whether this section is only open because a drag asked it to be. */
+  #openedForDrag = false;
+
   constructor() {
     super(...arguments);
 
@@ -54,6 +68,7 @@ export default class SidebarSection extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
 
+    this.#cancelOpenOnHover();
     this.router.off("routeDidChange", this, this.expandIfActive);
 
     this.args.willDestroy?.();
@@ -195,7 +210,19 @@ export default class SidebarSection extends Component {
     this.linkDropActive = webLinkPayload(source).containsURLs();
 
     if (!this.linkDropActive) {
+      this.#cancelOpenOnHover();
       this.linkDropIndex = undefined;
+      return;
+    }
+
+    if (!this.displaySectionContent) {
+      // Reporting a position here would be inventing one: there is nothing on
+      // screen for the pointer to be above or below, and an index of 0 would
+      // put the link ahead of links the user cannot see. Leaving it unset
+      // appends, until dwelling opens the section and the rows can be measured.
+      this.linkDropIndex = undefined;
+      this.linkDropLinkCount = 0;
+      this.#openOnHover();
       return;
     }
 
@@ -214,6 +241,7 @@ export default class SidebarSection extends Component {
 
   @action
   clearLinkDrop() {
+    this.#cancelOpenOnHover();
     this.linkDropLinkCount = 0;
     this.linkDropActive = false;
     this.linkDropIndex = undefined;
@@ -222,6 +250,10 @@ export default class SidebarSection extends Component {
   @action
   dropLink({ source }) {
     const linkDropIndex = this.linkDropIndex;
+    // The drag opened this section to be dropped into, so it stays open: the
+    // link the user just added is in there, and closing it again would hide the
+    // result of their own drop.
+    this.#openedForDrag = false;
     this.clearLinkDrop();
     // Unwrapped here so `onLinkDrop` keeps taking a decorated payload whichever
     // target reported the drop, and the section model needs no change.
@@ -246,6 +278,45 @@ export default class SidebarSection extends Component {
     }
 
     return this.args.displaySection;
+  }
+
+  /**
+   * Opens this section once a link has dwelled over it long enough, the way a
+   * folder opens under a file held over it.
+   *
+   * Uses the transient active-expansion rather than the collapse toggle, so a
+   * drag that wanders off again leaves no trace in the stored collapsed state.
+   * A pending timer is left alone rather than restarted: restarting it on every
+   * `dragover` would push the deadline out for as long as the pointer keeps
+   * moving, so it would never fire.
+   */
+  #openOnHover() {
+    if (this.#openOnHoverTimer) {
+      return;
+    }
+
+    this.#openOnHoverTimer = later(() => {
+      this.#openOnHoverTimer = undefined;
+
+      if (!this.linkDropActive || this.displaySectionContent) {
+        return;
+      }
+
+      this.#openedForDrag = true;
+      this.activeExpanded = true;
+    }, OPEN_ON_HOVER_DELAY);
+  }
+
+  #cancelOpenOnHover() {
+    if (this.#openOnHoverTimer) {
+      cancel(this.#openOnHoverTimer);
+      this.#openOnHoverTimer = undefined;
+    }
+
+    if (this.#openedForDrag) {
+      this.#openedForDrag = false;
+      this.activeExpanded = false;
+    }
   }
 
   <template>

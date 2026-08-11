@@ -302,4 +302,82 @@ module("Integration | Component | Sidebar | Section", function (hooks) {
       .doesNotHaveClass("is-link-drop-active", "does not show a drop state");
     assert.verifySteps([], "does not invoke the drop handler");
   });
+
+  module("dragging over a collapsed section", function () {
+    const collapsedSection = <template>
+      <Section
+        @sectionName="test"
+        @headerLinkText="test header"
+        @collapsable={{true}}
+        @linkDropEnabled={{true}}
+        @onLinkDrop={{@onLinkDrop}}
+      >
+        <li data-sidebar-custom-link="true">First link</li>
+        <li data-sidebar-custom-link="true">Second link</li>
+      </Section>
+    </template>;
+
+    async function renderCollapsed(onLinkDrop) {
+      await render(
+        <template><collapsedSection @onLinkDrop={{onLinkDrop}} /></template>
+      );
+      await click(".sidebar-section-header-caret");
+    }
+
+    test("opens under a link held over it", async function (assert) {
+      await renderCollapsed();
+
+      assert
+        .dom(".sidebar-section-content")
+        .doesNotExist("starts collapsed, so there is nothing to aim at");
+
+      await externalDragOver(".sidebar-section", {
+        dataTransfer: urlTransfer(),
+      });
+
+      assert
+        .dom(".sidebar-section-content")
+        .exists(
+          "holding a link over a collapsed section opens it, so the drop can be aimed at a row"
+        );
+    });
+
+    /**
+     * Dispatches one drag event and waits a single frame, deliberately without
+     * settling. The section opens on a runloop timer, and `settled()` runs
+     * pending timers out, so anything asserted through the usual helpers would
+     * be asserted against an already-open section. One frame is enough for the
+     * drag library's own batched callback to land.
+     */
+    async function dragEventBeforeItOpens(type, dataTransfer) {
+      find(".sidebar-section").dispatchEvent(
+        new DragEvent(type, {
+          bubbles: true,
+          cancelable: true,
+          dataTransfer,
+          ...centerOf(".sidebar-section"),
+          ...belowAllLinks(),
+        })
+      );
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+    }
+
+    test("appends rather than claiming the top while still closed", async function (assert) {
+      let index = "not called";
+      await renderCollapsed((_source, linkDropIndex) => {
+        index = linkDropIndex;
+      });
+
+      const dataTransfer = urlTransfer();
+      await dragEventBeforeItOpens("dragenter", dataTransfer);
+      await dragEventBeforeItOpens("dragover", dataTransfer);
+      await dragEventBeforeItOpens("drop", dataTransfer);
+
+      assert.strictEqual(
+        index,
+        undefined,
+        "a section showing no rows has no position to report, so the link goes to the end rather than ahead of links the user cannot see"
+      );
+    });
+  });
 });
