@@ -84,6 +84,16 @@ module ::PostVoting
     invalidate_category_caches
   end
 
+  def self.backfill_missing_category_overrides!
+    return if SiteSetting.post_voting_category_mode == CategoryModeSiteSetting::ALL_CATEGORIES
+
+    missing_ids = ::Category.pluck(:id) - resolve_category_overrides.keys
+    return if missing_ids.blank?
+
+    write_category_overrides(missing_ids, mode_default)
+    invalidate_category_caches
+  end
+
   def self.write_category_override(category, value)
     category.upsert_custom_fields(ALLOW_POST_VOTING => value)
   end
@@ -413,6 +423,12 @@ after_initialize do
 
   on(:site_setting_changed) do |name, _old_value, _new_value|
     PostVoting.reset_category_overrides! if name == :post_voting_category_mode
+  end
+
+  # `on` only fires while the plugin is enabled, so anything that happened
+  # while it was off has to be reconciled when it comes back on.
+  on_enabled_change do |_old_value, new_value|
+    PostVoting.backfill_missing_category_overrides! if new_value
   end
 
   add_model_callback(:post, :before_create) do

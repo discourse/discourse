@@ -114,6 +114,54 @@ RSpec.describe PostVoting do
     end
   end
 
+  describe "enabling the plugin" do
+    it "fills in categories missed by a mode change made while it was disabled" do
+      SiteSetting.post_voting_enabled = false
+      SiteSetting.post_voting_category_mode = "opt_out"
+
+      expect(override_for(category)).to eq(nil)
+
+      SiteSetting.post_voting_enabled = true
+      PostVoting.clear_category_overrides_cache(after_commit: false)
+
+      expect(override_for(category)).to eq(true)
+      expect(override_for(subcategory)).to eq(true)
+    end
+
+    it "fills in categories created while it was disabled" do
+      SiteSetting.post_voting_category_mode = "opt_in"
+      SiteSetting.post_voting_enabled = false
+      fresh = Fabricate(:category)
+
+      expect(override_for(fresh)).to eq(nil)
+
+      SiteSetting.post_voting_enabled = true
+      PostVoting.clear_category_overrides_cache(after_commit: false)
+
+      expect(override_for(fresh)).to eq(false)
+    end
+
+    it "does not discard per-category choices when it is toggled off and on" do
+      SiteSetting.post_voting_category_mode = "opt_in"
+      set_override(category, true)
+
+      SiteSetting.post_voting_enabled = false
+      SiteSetting.post_voting_enabled = true
+      PostVoting.clear_category_overrides_cache(after_commit: false)
+
+      expect(override_for(category)).to eq(true)
+      expect(override_for(other_category)).to eq(false)
+    end
+
+    it "writes nothing while every category is allowed" do
+      SiteSetting.post_voting_category_mode = "all_categories"
+      SiteSetting.post_voting_enabled = false
+      SiteSetting.post_voting_enabled = true
+
+      expect(override_for(category)).to eq(nil)
+    end
+  end
+
   describe "applying to subcategories" do
     fab!(:nested_subcategory) do
       SiteSetting.max_category_nesting = 3
