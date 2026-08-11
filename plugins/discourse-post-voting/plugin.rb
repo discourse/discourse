@@ -18,7 +18,6 @@ module ::PostVoting
   PLUGIN_NAME = "discourse-post-voting"
   ALLOW_POST_VOTING = "allow_post_voting"
   APPLY_TO_SUBCATEGORIES = "apply_post_voting_to_subcategories"
-  RECONCILED_MODE = "reconciled_category_mode"
 
   def self.overrides_cache
     @overrides_cache ||= ::DistributedCache.new("post_voting_category_overrides")
@@ -91,23 +90,10 @@ module ::PostVoting
   # setting always shows the value in force rather than a blank that means
   # something different in each mode.
   def self.reset_category_overrides!
-    ::PluginStore.set(PLUGIN_NAME, RECONCILED_MODE, SiteSetting.post_voting_category_mode)
     return if SiteSetting.post_voting_category_mode == CategoryModeSiteSetting::ALL_CATEGORIES
 
     write_category_overrides(::Category.pluck(:id), mode_default)
     invalidate_category_caches
-  end
-
-  def self.reconciled_mode
-    ::PluginStore.get(PLUGIN_NAME, RECONCILED_MODE)
-  end
-
-  def self.reconcile_category_overrides!
-    if reconciled_mode == SiteSetting.post_voting_category_mode
-      backfill_missing_category_overrides!
-    else
-      reset_category_overrides!
-    end
   end
 
   def self.backfill_missing_category_overrides!
@@ -447,12 +433,12 @@ after_initialize do
     PostVoting.write_category_override(category, inherited)
   end
 
-  on(:site_setting_changed) do |name, _old_value, _new_value|
+  DiscourseEvent.on(:site_setting_changed) do |name, _old_value, _new_value| # rubocop:disable Discourse/Plugins/UsePluginInstanceOn
     PostVoting.reset_category_overrides! if name == :post_voting_category_mode
   end
 
   on_enabled_change do |_old_value, new_value|
-    PostVoting.reconcile_category_overrides! if new_value
+    PostVoting.backfill_missing_category_overrides! if new_value
   end
 
   add_model_callback(:post, :before_create) do

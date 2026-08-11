@@ -142,18 +142,21 @@ RSpec.describe PostVoting do
       expect(override_for(category)).to eq(nil)
     end
 
-    it "applies a mode chosen while the plugin was disabled once it is enabled" do
+    it "resets existing values for a mode chosen while the plugin is disabled" do
       SiteSetting.post_voting_category_mode = "opt_in"
 
       expect(override_for(category)).to eq(false)
 
       SiteSetting.post_voting_enabled = false
       SiteSetting.post_voting_category_mode = "opt_out"
+
+      expect(override_for(category)).to eq(true)
+      expect(override_for(subcategory)).to eq(true)
+
       SiteSetting.post_voting_enabled = true
       PostVoting.clear_category_overrides_cache(after_commit: false)
 
       expect(override_for(category)).to eq(true)
-      expect(override_for(subcategory)).to eq(true)
       expect(PostVoting.post_voting_enabled_for?(category.id)).to eq(true)
     end
 
@@ -162,10 +165,12 @@ RSpec.describe PostVoting do
       SiteSetting.post_voting_enabled = false
       SiteSetting.post_voting_category_mode = "all_categories"
       SiteSetting.post_voting_category_mode = "opt_in"
+
+      expect(override_for(category)).to eq(false)
+
       SiteSetting.post_voting_enabled = true
       PostVoting.clear_category_overrides_cache(after_commit: false)
 
-      expect(override_for(category)).to eq(false)
       expect(PostVoting.post_voting_enabled_for?(category.id)).to eq(false)
     end
   end
