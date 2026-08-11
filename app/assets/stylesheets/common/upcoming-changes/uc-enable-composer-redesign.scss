@@ -164,20 +164,21 @@
   }
 
   .title-input {
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--primary-low);
+
     #reply-title {
       border: 0;
       padding: var(--space-4);
-      font-size: var(--font-up-4);
-      font-weight: bold;
+      font-weight: 600;
       margin-bottom: 0 !important;
       padding-bottom: var(--space-3) !important;
+      padding-right: var(--space-3) !important;
+      flex-basis: unset !important;
 
       &::placeholder {
         color: var(--primary-medium);
-      }
-
-      @include viewport.until(sm) {
-        font-size: var(--font-up-2);
       }
 
       &:focus {
@@ -187,10 +188,11 @@
 
     // TODO move to plugin css when UC is removed
     .suggest-titles-button {
-      right: var(--space-4) !important;
-      top: var(--space-4);
+      position: relative;
       bottom: unset !important;
+      right: unset !important;
       transform: none !important;
+      margin-inline-end: var(--space-3);
     }
   }
 
