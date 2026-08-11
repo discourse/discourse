@@ -243,7 +243,12 @@ module(
       );
 
       assert.dom(".workflows-context-panel__title-meta").doesNotExist();
-      assert.dom(".workflows-context-panel__empty").hasText("No output data");
+      assert
+        .dom(".workflows-context-panel__empty")
+        .hasText(
+          "This node produced no output data, so it did not pass any items to connected nodes. To pass an empty item instead, turn on Always output data in this node's Settings tab.",
+          "the empty state explains how to continue the execution"
+        );
     });
 
     test("shows item count and field-empty state for real empty output items", async function (assert) {
@@ -315,7 +320,12 @@ module(
       );
 
       assert.dom(".workflows-schema-field__key-title").doesNotExist();
-      assert.dom(".workflows-context-panel__empty").hasText("No output data");
+      assert
+        .dom(".workflows-context-panel__empty")
+        .hasText(
+          "This node produced no output data, so it did not pass any items to connected nodes. To pass an empty item instead, turn on Always output data in this node's Settings tab.",
+          "the latest zero-item run explains how to continue the execution"
+        );
     });
 
     test("merges fields across output items without rendering item rows", async function (assert) {
