@@ -4,26 +4,12 @@ import {
   type ExternalDropTargetEventBasePayload,
   type ExternalDropTargetGetFeedbackArgs,
 } from "@atlaskit/pragmatic-drag-and-drop/external/adapter";
-import {
-  containsFiles,
-  getFiles,
-} from "@atlaskit/pragmatic-drag-and-drop/external/file";
-import {
-  containsHTML,
-  getHTML,
-} from "@atlaskit/pragmatic-drag-and-drop/external/html";
-import {
-  containsText,
-  getText,
-} from "@atlaskit/pragmatic-drag-and-drop/external/text";
-import {
-  containsURLs,
-  getURLs,
-} from "@atlaskit/pragmatic-drag-and-drop/external/url";
 import { modifier } from "ember-modifier";
-import type {
-  ExternalDragKind,
-  ExternalDragPayload,
+import {
+  decorateExternalSource,
+  type ExternalDragKind,
+  type ExternalDragPayload,
+  matchesExternalKind,
 } from "discourse/services/drag-and-drop";
 import {
   createEnterLeavePairing,
@@ -33,7 +19,6 @@ import {
   type DropPosition,
   isDeepestTarget,
   resolveDropPosition,
-  toAcceptList,
 } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 
 /** The pointer position as the underlying library reports it. */
@@ -81,70 +66,6 @@ export interface ExternalDropTargetEvent {
  * at different resolutions.
  */
 const INDICATOR_CLASS = "--drag-over-external";
-
-/**
- * Vocabulary the modifier accepts under its `accepts` arg. Each key
- * maps to PDND's matching predicate / extractor pair so consumers
- * never import from `@atlaskit/pragmatic-drag-and-drop` themselves.
- */
-const KIND_HANDLERS = Object.freeze({
-  files: { contains: containsFiles, get: getFiles },
-  html: { contains: containsHTML, get: getHTML },
-  text: { contains: containsText, get: getText },
-  urls: { contains: containsURLs, get: getURLs },
-});
-
-/**
- * Whether an incoming external drag is one of the named kinds.
- *
- * An empty or missing filter matches every external drag, mirroring how the
- * element target treats an absent `accepts`. Shared so anything filtering on the
- * external vocabulary — a drop target, an auto-scroll registration — agrees on
- * what a kind name means; the element-side counterpart is `matchesDragType`.
- *
- * @param accepts - The kind filter as the consumer supplied it.
- * @param source - The raw payload the underlying library reports.
- */
-export function matchesExternalKind(
-  accepts: ExternalDragKind | ExternalDragKind[] | undefined,
-  source: NativeExternalDragPayload
-) {
-  const kinds = toAcceptList(accepts);
-  if (kinds.length === 0) {
-    return true;
-  }
-  return kinds.some((kind) => {
-    const handler = KIND_HANDLERS[kind];
-    // Unknown kind names fail closed — better than silently matching.
-    return handler ? handler.contains({ source }) : false;
-  });
-}
-
-/**
- * Builds the decorated source object exposed to consumer callbacks.
- * Wraps PDND's raw payload (`{types, items, getStringData}`) with the
- * `contains*` / `get*` helpers bound to that payload, so the
- * consumer's call site reads `source.getFiles()` instead of
- * `getFiles({source})`. Keeps the library wall intact: PDND helpers
- * are imported here, not in plugin code.
- */
-function decorateSource(
-  payload: NativeExternalDragPayload
-): ExternalDragPayload {
-  return {
-    types: payload.types,
-    items: payload.items,
-    getStringData: (mediaType) => payload.getStringData(mediaType),
-    containsFiles: () => containsFiles({ source: payload }),
-    getFiles: () => getFiles({ source: payload }),
-    containsHTML: () => containsHTML({ source: payload }),
-    getHTML: () => getHTML({ source: payload }),
-    containsText: () => containsText({ source: payload }),
-    getText: () => getText({ source: payload }),
-    containsURLs: () => containsURLs({ source: payload }),
-    getURLs: () => getURLs({ source: payload }),
-  };
-}
 
 interface DDragAndDropExternalTargetSignature {
   /** The element to register as a drop target. */
@@ -311,7 +232,7 @@ export function registerDragAndDropExternalTarget(
   ) =>
     pairing.leave(() =>
       getArgsRef().onDragLeave?.({
-        source: decorateSource(source),
+        source: decorateExternalSource(source),
         position: null,
         location,
         element,
@@ -333,7 +254,7 @@ export function registerDragAndDropExternalTarget(
       }
       return (
         args.canDrop({
-          source: decorateSource(source),
+          source: decorateExternalSource(source),
           input,
           element,
         }) !== false
@@ -342,7 +263,7 @@ export function registerDragAndDropExternalTarget(
     getDropEffect: ({ source, input }) => {
       const args = getArgsRef();
       return args.getDropEffect?.({
-        source: decorateSource(source),
+        source: decorateExternalSource(source),
         input,
         element,
       });
@@ -363,7 +284,7 @@ export function registerDragAndDropExternalTarget(
       }
       pairing.enter(() =>
         args.onDragEnter?.({
-          source: decorateSource(source),
+          source: decorateExternalSource(source),
           position,
           location,
           element,
@@ -385,14 +306,14 @@ export function registerDragAndDropExternalTarget(
       // target, which pairs the same way.
       pairing.enter(() =>
         args.onDragEnter?.({
-          source: decorateSource(source),
+          source: decorateExternalSource(source),
           position,
           location,
           element,
         })
       );
       args.onDrag?.({
-        source: decorateSource(source),
+        source: decorateExternalSource(source),
         position,
         location,
         element,
@@ -409,7 +330,7 @@ export function registerDragAndDropExternalTarget(
         return;
       }
       getArgsRef().onDrop?.({
-        source: decorateSource(source),
+        source: decorateExternalSource(source),
         position: resolvePosition(location.current.input),
         location,
         element,

@@ -9,8 +9,10 @@ import {
   autoScrollWindowForExternal,
 } from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/external";
 import { modifier } from "ember-modifier";
-import type { ExternalDragKind } from "discourse/services/drag-and-drop";
-import { matchesExternalKind } from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
+import {
+  ExternalDragKind,
+  matchesExternalKind,
+} from "discourse/services/drag-and-drop";
 import { matchesDragType } from "discourse/ui-kit/modifiers/d-drag-and-drop-monitor";
 
 /** Which direction the container is allowed to scroll while a drag is in flight. */

@@ -90,6 +90,63 @@ const EXTERNAL_KIND_PREDICATES = Object.freeze({
 export type ExternalDragKind = keyof typeof EXTERNAL_KIND_PREDICATES;
 
 /**
+ * Wraps the underlying library's raw external payload
+ * (`{types, items, getStringData}`) with the `contains*` / `get*` helpers bound
+ * to it, so a consumer calls `source.getFiles()` rather than importing the
+ * library's helpers itself.
+ *
+ * Lives here rather than beside either drop target because both targets and this
+ * service need it, and the external target already imports from the element one
+ * — a copy in either would close an import cycle the moment a third reader
+ * appeared.
+ *
+ * @param source - The raw payload the library reports.
+ */
+export function decorateExternalSource(
+  source: NativeExternalDragPayload
+): ExternalDragPayload {
+  return {
+    types: source.types,
+    items: source.items,
+    getStringData: (mediaType) => source.getStringData(mediaType),
+    containsFiles: () => containsFiles({ source }),
+    getFiles: () => getFiles({ source }),
+    containsHTML: () => containsHTML({ source }),
+    getHTML: () => getHTML({ source }),
+    containsText: () => containsText({ source }),
+    getText: () => getText({ source }),
+    containsURLs: () => containsURLs({ source }),
+    getURLs: () => getURLs({ source }),
+  };
+}
+
+/**
+ * Whether an incoming external drag is one of the named kinds.
+ *
+ * An empty or missing filter matches every external drag, mirroring how the
+ * element target treats an absent `accepts`. Shared so everything filtering on
+ * this vocabulary agrees on what a kind name means; the element-side
+ * counterpart is `matchesDragType`.
+ *
+ * @param accepts - The kind filter as the consumer supplied it.
+ * @param source - The raw payload the underlying library reports.
+ */
+export function matchesExternalKind(
+  accepts: ExternalDragKind | ExternalDragKind[] | undefined,
+  source: NativeExternalDragPayload
+) {
+  const kinds = accepts ? (Array.isArray(accepts) ? accepts : [accepts]) : [];
+  if (kinds.length === 0) {
+    return true;
+  }
+  return kinds.some((kind) => {
+    const predicate = EXTERNAL_KIND_PREDICATES[kind];
+    // Unknown kind names fail closed — better than silently matching.
+    return predicate ? predicate({ source }) : false;
+  });
+}
+
+/**
  * Tracks the in-flight drag — both for the `dDragAndDropSource` /
  * `dDragAndDropTarget` element pair AND for OS-level external drags
  * (files, URLs, HTML, text entering the window from outside) wired
@@ -118,15 +175,16 @@ export default class DragAndDropService extends Service {
 
   constructor(...args: ConstructorParameters<typeof Service>) {
     super(...args);
-    // Registering a monitor subscribes to PDND's drag streams; the element
-    // adapter mounts its window-level listeners through usage registration
-    // rather than at module import, so this is what brings it up.
+    // Registering a monitor subscribes to the library's drag streams. It does
+    // NOT mount the element adapter: only registering a draggable does that, so
+    // a page with targets and monitors but no draggable has no element drag
+    // listener bound at all.
     //
     // The element monitor is the sole observer of in-flight element drags — the
     // source modifier does not push state here, the service derives it
-    // first-hand, mirroring the external monitor below. We only track our
-    // own drags (those whose `source.data.type` is set by `dDragAndDropSource`),
-    // so a foreign PDND draggable doesn't populate `currentDrag`.
+    // first-hand, mirroring the external monitor below. Only drags carrying a
+    // `type` are tracked, so a foreign draggable with none of its own stays
+    // invisible here.
     const cleanupElements = monitorForElements({
       canMonitor: ({ source }) =>
         !this.isDestroying && !this.isDestroyed && source.data?.type != null,
@@ -159,7 +217,7 @@ export default class DragAndDropService extends Service {
         if (this.isDestroying || this.isDestroyed) {
           return;
         }
-        this.currentExternalDrag = this.#decorateExternalSource(source);
+        this.currentExternalDrag = decorateExternalSource(source);
       },
       onDrop: () => {
         if (this.isDestroying || this.isDestroyed) {
@@ -233,31 +291,6 @@ export default class DragAndDropService extends Service {
       const predicate = EXTERNAL_KIND_PREDICATES[kind];
       return predicate ? this.#callExternalPredicate(predicate) : false;
     });
-  }
-
-  /**
-   * Wraps PDND's raw external source (`{types, items, getStringData}`)
-   * with the `contains*` / `get*` helpers bound to that source so
-   * consumers can call `service.currentExternalDrag.getFiles()`
-   * directly instead of importing PDND helpers. Library wall stays
-   * intact — PDND imports live here, not in consumer code.
-   */
-  #decorateExternalSource(
-    source: NativeExternalDragPayload
-  ): ExternalDragPayload {
-    return {
-      types: source.types,
-      items: source.items,
-      getStringData: (mediaType) => source.getStringData(mediaType),
-      containsFiles: () => containsFiles({ source }),
-      getFiles: () => getFiles({ source }),
-      containsHTML: () => containsHTML({ source }),
-      getHTML: () => getHTML({ source }),
-      containsText: () => containsText({ source }),
-      getText: () => getText({ source }),
-      containsURLs: () => containsURLs({ source }),
-      getURLs: () => getURLs({ source }),
-    };
   }
 
   /**
