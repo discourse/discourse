@@ -506,6 +506,7 @@ export default class WorkflowCanvas extends Component {
     await this.#queueSync();
     this.isLoading = false;
     element.focus();
+    this.args.onReady?.();
   }
 
   // Left clicks are trapped on the canvas and never reach the document

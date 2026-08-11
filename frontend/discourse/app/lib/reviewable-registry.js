@@ -40,18 +40,6 @@ function legacyComponentName(owner, type) {
 }
 
 /**
- * Checks whether a component is available to render the given reviewable type,
- * without triggering the load of a lazily-registered component.
- *
- * @param {import("@ember/owner").default} owner
- * @param {string} type - The reviewable type class name (e.g. "ReviewableUser")
- * @returns {boolean}
- */
-export function reviewableComponentExists(owner, type) {
-  return Boolean(registeredLoaderFor(type) ?? legacyComponentName(owner, type));
-}
-
-/**
  * Resolves the component used to render the given reviewable type.
  *
  * Returns the component class directly when it is available synchronously, or
