@@ -234,6 +234,18 @@
         border-top-left-radius: var(--d-border-radius-large);
         border-top-right-radius: var(--d-border-radius-large);
         padding-top: var(--space-4);
+
+        &::before {
+          content: "";
+          position: absolute;
+          inset-block-start: var(--space-2);
+          inset-inline-start: 50%;
+          transform: translateX(-50%);
+          width: 15vw;
+          height: 5px;
+          background: var(--primary-medium);
+          border-radius: var(--d-border-radius-pill);
+        }
       }
     }
   }
