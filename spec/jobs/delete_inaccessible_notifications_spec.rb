@@ -51,4 +51,32 @@ RSpec.describe Jobs::DeleteInaccessibleNotifications do
       expect(Notification.exists?(third_notification.id)).to eq(true)
     end
   end
+
+  it "resolves PM access without an SQL query per user" do
+    group = Fabricate(:group)
+    group_pm =
+      Fabricate(
+        :private_message_topic,
+        user: admin,
+        topic_allowed_groups: [Fabricate.build(:topic_allowed_group, group: group)],
+      )
+    users = 5.times.map { Fabricate(:user) }
+    users.each { |u| Fabricate(:notification, user: u, topic: group_pm) }
+
+    access_queries = 0
+    subscriber =
+      ActiveSupport::Notifications.subscribe("sql.active_record") do |*args|
+        event = ActiveSupport::Notifications::Event.new(*args)
+        # Guardian's per-PM access check hits topic_allowed_users/topic_allowed_groups.
+        access_queries += 1 if event.payload[:sql] =~ /topic_allowed_(users|groups)/
+      end
+
+    begin
+      described_class.new.execute(topic_id: group_pm.id)
+    ensure
+      ActiveSupport::Notifications.unsubscribe(subscriber)
+    end
+
+    expect(access_queries).to be <= 2
+  end
 end
