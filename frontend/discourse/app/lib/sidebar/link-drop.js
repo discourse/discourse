@@ -86,8 +86,10 @@ export function extractDroppedWebLink(source) {
 
   return {
     icon: "link",
+    // Named from the absolute URL, since the hostname is the fallback name and
+    // stripping it first would leave nothing to fall back to.
     name: suitableName(candidate.name) || defaultName(value),
-    value,
+    value: withoutOwnHost(value),
     segment: "primary",
   };
 }
@@ -145,6 +147,23 @@ function validWebUrl(value) {
   } catch {
     return;
   }
+}
+
+/**
+ * Reduces a link to this same site to a path.
+ *
+ * The server does this on save regardless, so leaving it absolute would only
+ * mean showing the user a URL in the form and storing a different one. A path
+ * also keeps working when the site is reached by another hostname.
+ */
+function withoutOwnHost(value) {
+  const url = new URL(value);
+
+  if (url.host !== window.location.host) {
+    return value;
+  }
+
+  return `${url.pathname}${url.search}${url.hash}`;
 }
 
 function suitableName(value) {

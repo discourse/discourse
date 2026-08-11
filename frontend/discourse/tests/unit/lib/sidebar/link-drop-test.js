@@ -126,4 +126,31 @@ module("Unit | Lib | Sidebar | link-drop", function () {
       "HTTP URLs are accepted"
     );
   });
+
+  test("stores a link to this very site as a path", function (assert) {
+    const link = extractDroppedWebLink(
+      externalSource({
+        urls: [`${window.location.origin}/t/a-topic/12?u=someone#post-3`],
+        html: `<a href="${window.location.origin}/t/a-topic/12">A topic</a>`,
+      })
+    );
+
+    assert.strictEqual(
+      link.value,
+      "/t/a-topic/12?u=someone#post-3",
+      "the hostname is dropped so the link survives the site moving, and the query and fragment are kept because they are part of where it points"
+    );
+  });
+
+  test("leaves a link to somewhere else absolute", function (assert) {
+    const link = extractDroppedWebLink(
+      externalSource({ urls: ["https://example.com/t/a-topic/12"] })
+    );
+
+    assert.strictEqual(
+      link.value,
+      "https://example.com/t/a-topic/12",
+      "another site's URL is not ours to shorten"
+    );
+  });
 });

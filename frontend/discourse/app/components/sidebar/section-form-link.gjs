@@ -156,6 +156,12 @@ export default class SectionFormLink extends Component {
             <div role="alert" aria-live="assertive" class="value warning">
               {{@link.invalidValueMessage}}
             </div>
+          {{else if @duplicateValue}}
+            {{! Not announced assertively: nothing is wrong yet, and the row
+                still saves. }}
+            <div class="value warning duplicate-link">
+              {{i18n "sidebar.sections.custom.links.value.duplicate"}}
+            </div>
           {{/if}}
         </div>
 

@@ -6335,6 +6335,7 @@ en:
                   other: "Name must be shorter than %{count} characters"
             value:
               label: "Link"
+              duplicate: "Another link in this section already points here"
               validation:
                 blank: "Link cannot be blank"
                 maximum:

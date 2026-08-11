@@ -162,6 +162,26 @@ acceptance("Sidebar web link drop", function (needs) {
       .dom(".sidebar-link-drop-target")
       .doesNotExist("does not also create a new section");
   });
+
+  test("points out a dropped link the section already has", async function (assert) {
+    await visit("/");
+
+    const section = '.sidebar-section[data-section-name="reading"]';
+    const dataTransfer = new DataTransfer();
+    dataTransfer.setData("text/uri-list", "https://example.org/existing");
+
+    await simulateExternalDrag(section, { dataTransfer });
+
+    assert
+      .dom(".sidebar-section-form-modal")
+      .exists("still opens the form, since a repeat is allowed");
+    assert
+      .dom(".sidebar-section-form-link-wrapper .duplicate-link")
+      .exists({ count: 1 }, "marks the repeat, and only the repeat");
+    assert
+      .dom("#save-section")
+      .isNotDisabled("a repeated link is a warning, not a refusal");
+  });
 });
 
 /**
