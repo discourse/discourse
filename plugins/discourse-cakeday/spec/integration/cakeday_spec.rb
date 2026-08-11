@@ -71,6 +71,7 @@ RSpec.describe "Anniversaries and Birthdays" do
       end
 
       it "accounts for the current user's timezone" do
+        # Asia/Kolkata is +5.5 hours from UTC
         current_user.user_option.update!(timezone: "Asia/Kolkata")
 
         freeze_time(time) do
