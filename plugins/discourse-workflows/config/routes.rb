@@ -14,6 +14,11 @@ DiscourseWorkflows::Engine.routes.draw do
       get "/credentials" => "admin#index"
       get "/workflows/new" => "admin#index"
       get "/workflows/:id" => "admin#index", :constraints => { id: /\d+/ }
+      get "/workflows/:id/nodes/:node_id" => "admin#index",
+          :constraints => {
+            id: /\d+/,
+            node_id: %r{[^/]+},
+          }
       get "/workflows/:id/executions" => "admin#index", :constraints => { id: /\d+/ }
       get "/workflows/:id/executions/:execution_id" => "admin#index",
           :constraints => {
