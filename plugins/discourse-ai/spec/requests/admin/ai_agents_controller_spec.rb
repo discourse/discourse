@@ -78,6 +78,8 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
             id: llm_model.id,
             name: llm_model.display_name,
             vision_enabled: llm_model.vision_enabled,
+            vision_mode: "disabled",
+            agent_image_capable: false,
             supported_native_tools: [],
           }.stringify_keys,
         ],

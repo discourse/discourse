@@ -3,6 +3,7 @@ import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
 import UserMenuItemsList from "discourse/components/user-menu/items-list";
+import UserMenuNotificationsListEmptyState from "discourse/components/user-menu/notifications-list-empty-state";
 import { ajax } from "discourse/lib/ajax";
 import { MAX_NOTIFICATIONS_LIMIT_PARAMS } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
@@ -101,7 +102,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
 
   get emptyStateComponent() {
     if (this.constructor === UserMenuNotificationsList) {
-      return "user-menu/notifications-list-empty-state";
+      return UserMenuNotificationsListEmptyState;
     } else {
       return super.emptyStateComponent;
     }

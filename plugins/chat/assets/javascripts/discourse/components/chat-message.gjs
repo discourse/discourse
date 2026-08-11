@@ -450,6 +450,10 @@ export default class ChatMessage extends Component {
   get hideUserInfo() {
     const message = this.args.message;
 
+    if (message.isAction) {
+      return true;
+    }
+
     if (message.pinned) {
       return false;
     }
@@ -470,6 +474,10 @@ export default class ChatMessage extends Component {
     }
 
     if (previousMessage.deletedAt) {
+      return false;
+    }
+
+    if (previousMessage.isAction) {
       return false;
     }
 

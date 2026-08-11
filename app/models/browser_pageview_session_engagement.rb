@@ -15,6 +15,13 @@ class BrowserPageviewSessionEngagement < ActiveRecord::Base
 
   GREATEST_COLUMNS = INTERACTION_COLUMNS + %i[engaged_seconds time_to_first_interaction_ms]
 
+  MIN_DISTINCT_INTERACTIONS = 2
+
+  def self.engaged_sql(table)
+    signals = INTERACTION_COLUMNS.map { |column| "(#{table}.#{column} > 0)::int" }.join(" + ")
+    "(#{signals}) >= #{MIN_DISTINCT_INTERACTIONS}"
+  end
+
   def self.upsert_from_payload(
     session_id:,
     mouse_move_events:,

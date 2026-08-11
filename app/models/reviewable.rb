@@ -70,6 +70,12 @@ class Reviewable < ActiveRecord::Base
     where("score >= ?", min_score_for_priority)
   end
 
+  def self.sti_class_for(type_name)
+    super
+  rescue ActiveRecord::SubclassNotFound
+    Reviewable::UnknownType
+  end
+
   def self.valid_type?(type)
     type.to_s.safe_constantize.in?(types)
   end

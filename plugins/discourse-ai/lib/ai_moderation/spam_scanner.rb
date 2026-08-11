@@ -185,9 +185,9 @@ module DiscourseAi
             history << "\n"
           end
 
-        used_llm = bot.model
+        used_model = bot.model
         spam_agent = bot.agent
-        used_prompt = spam_agent.craft_prompt(ctx, llm: used_llm).system_message_text
+        used_prompt = spam_agent.craft_prompt(ctx, llm: used_model.to_llm).system_message_text
 
         text_content =
           if target_msg[:content].is_a?(Array)
@@ -202,7 +202,7 @@ module DiscourseAi
         {
           is_spam: is_spam,
           reason: reasoning,
-          llm_name: used_llm.name,
+          llm_name: used_model.name,
           system_prompt: used_prompt,
           sent_message: text_content,
           scan_history: history,

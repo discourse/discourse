@@ -66,6 +66,83 @@ RSpec.describe DiscourseWorkflows::Nodes::PostButton::V1 do
     end
   end
 
+  describe ".normalized_post_number" do
+    it "normalizes positive integer values" do
+      expect(described_class.normalized_post_number("post_number" => post.post_number)).to eq(
+        post.post_number,
+      )
+      expect(described_class.normalized_post_number("post_number" => post.post_number.to_s)).to eq(
+        post.post_number,
+      )
+    end
+
+    it "returns nil for missing, blank, malformed, and nonpositive values" do
+      [
+        {},
+        { "post_number" => "" },
+        { "post_number" => "invalid" },
+        { "post_number" => 0 },
+        { "post_number" => -1 },
+      ].each { |parameters| expect(described_class.normalized_post_number(parameters)).to be_nil }
+    end
+  end
+
+  describe ".resolved_post_number" do
+    it "returns nil when the parameter is missing or blank" do
+      [
+        {},
+        { "post_number" => nil },
+        { "post_number" => "" },
+        { "post_number" => " " },
+      ].each { |parameters| expect(described_class.resolved_post_number(parameters)).to be_nil }
+    end
+
+    it "returns an integer for numeric values" do
+      expect(described_class.resolved_post_number("post_number" => post.post_number)).to eq(
+        post.post_number,
+      )
+      expect(described_class.resolved_post_number("post_number" => post.post_number.to_s)).to eq(
+        post.post_number,
+      )
+    end
+
+    it "returns the invalid sentinel for malformed and nonpositive values" do
+      ["invalid", "1.5", 0, -1].each do |post_number|
+        expect(described_class.resolved_post_number("post_number" => post_number)).to eq(
+          described_class::INVALID_POST_NUMBER,
+        )
+      end
+    end
+  end
+
+  describe ".matches_post_number?" do
+    it "matches any post when the parameter is missing or blank" do
+      expect(described_class.matches_post_number?(post, {})).to eq(true)
+      expect(described_class.matches_post_number?(post, "post_number" => "")).to eq(true)
+      expect(described_class.matches_post_number?(post, "post_number" => " ")).to eq(true)
+    end
+
+    it "matches positive integer and numeric string values" do
+      expect(described_class.matches_post_number?(post, "post_number" => post.post_number)).to eq(
+        true,
+      )
+      expect(
+        described_class.matches_post_number?(post, "post_number" => post.post_number.to_s),
+      ).to eq(true)
+      expect(
+        described_class.matches_post_number?(post, "post_number" => post.post_number + 1),
+      ).to eq(false)
+    end
+
+    it "rejects malformed and nonpositive nonblank values" do
+      ["invalid", "1.5", 0, -1].each do |post_number|
+        expect(described_class.matches_post_number?(post, "post_number" => post_number)).to eq(
+          false,
+        )
+      end
+    end
+  end
+
   describe ".resolved_position" do
     it "defaults to last" do
       expect(described_class.resolved_position({})).to eq("last")

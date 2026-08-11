@@ -62,6 +62,12 @@ export default abstract class FloatKitInstance {
 
   declare openedByDelayedHover: boolean;
 
+  /** The pending grace-period close, if one is scheduled. */
+  #hoverCloseTimer: ReturnType<typeof discourseLater> | null = null;
+
+  /** Whether focus inside the content is currently suppressing the grace-period close. */
+  #hoverFocusLocked = false;
+
   /** Whether THIS instance renders in a mobile modal (see {@link resolveRenderInModal}). */
   get renderInModal(): boolean {
     return FloatKitInstance.resolveRenderInModal(
@@ -82,6 +88,26 @@ export default abstract class FloatKitInstance {
   /** The element the rendered float body is portalled into. */
   abstract get portalOutletElement(): HTMLElement | null;
 
+  /**
+   * How long, in milliseconds, the float stays open after the pointer leaves it.
+   *
+   * @returns The configured grace period, or `0` when the feature is off.
+   */
+  get hoverGracePeriod(): number {
+    return this.options?.hoverGracePeriod ?? 0;
+  }
+
+  /**
+   * Whether a grace period is configured. When it is, the trigger keeps its
+   * `pointerleave` listener even on an interactive float, because the delayed close
+   * replaces the immediate one rather than being skipped.
+   *
+   * @returns `true` when the grace period is greater than zero.
+   */
+  get hasHoverGracePeriod(): boolean {
+    return this.hoverGracePeriod > 0;
+  }
+
   abstract onClick(event: MouseEvent): Promise<void>;
   abstract onPointerMove(event: PointerEvent): Promise<void>;
   abstract onPointerLeave(event: PointerEvent): Promise<void>;
@@ -97,7 +123,67 @@ export default abstract class FloatKitInstance {
   // refocus its trigger); the base close has no trigger to refocus, so it ignores it.
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async close(options?: { focusTrigger?: boolean }) {
+    this.resetHoverCloseState();
     await this.options.onClose?.();
+  }
+
+  /** Drops any pending grace-period close, so the float stays open. */
+  @action
+  cancelHoverClose() {
+    cancel(this.#hoverCloseTimer);
+    this.#hoverCloseTimer = null;
+  }
+
+  /**
+   * Clears both the pending close and the focus lock. Called whenever the float
+   * closes, so a lock taken while focus was inside the content cannot outlive it and
+   * suppress a later close.
+   */
+  resetHoverCloseState() {
+    this.cancelHoverClose();
+    this.#hoverFocusLocked = false;
+  }
+
+  /**
+   * Starts the grace period after which the float closes. Re-entering the trigger or
+   * the content cancels it, which is what lets the pointer cross the gap between them
+   * without the float closing underneath it.
+   *
+   * Does nothing when no grace period is configured, or while focus is held inside the
+   * content: a keyboard user is not "hovering away" and must not be closed out.
+   */
+  @action
+  scheduleHoverClose() {
+    if (!this.hasHoverGracePeriod || this.#hoverFocusLocked) {
+      return;
+    }
+
+    this.cancelHoverClose();
+    this.#hoverCloseTimer = discourseLater(() => {
+      this.#hoverCloseTimer = null;
+      if (!this.#hoverFocusLocked) {
+        this.close();
+      }
+    }, this.hoverGracePeriod);
+  }
+
+  /** Cancels a pending close when the pointer returns to the trigger. */
+  @action
+  onPointerEnterTrigger() {
+    this.cancelHoverClose();
+  }
+
+  /** Holds the float open while focus is inside its content, regardless of the pointer. */
+  @action
+  lockHoverCloseForFocus() {
+    this.#hoverFocusLocked = true;
+    this.cancelHoverClose();
+  }
+
+  /** Releases the focus lock, letting the pointer govern closing again. */
+  @action
+  unlockHoverCloseForFocus() {
+    this.#hoverFocusLocked = false;
   }
 
   @action
@@ -164,6 +250,7 @@ export default abstract class FloatKitInstance {
   @action
   onDelayedHoverEnter(event: PointerEvent) {
     cancel(this.delayedHoverTimeout);
+    this.cancelHoverClose();
     this.delayedHoverTimeout = discourseLater(() => {
       if (this.expanded) {
         return;
@@ -176,6 +263,9 @@ export default abstract class FloatKitInstance {
   @action
   onDelayedHoverLeave() {
     cancel(this.delayedHoverTimeout);
+    if (this.expanded && this.hasHoverGracePeriod) {
+      this.scheduleHoverClose();
+    }
   }
 
   @bind
@@ -193,6 +283,8 @@ export default abstract class FloatKitInstance {
   }
 
   tearDownListeners() {
+    this.resetHoverCloseState();
+
     const element = this.triggerElement;
     if (element) {
       element.removeEventListener("pointerdown", this.trapPointerDown);
@@ -219,8 +311,14 @@ export default abstract class FloatKitInstance {
             break;
           case "hover":
             element.removeEventListener("pointermove", this.onPointerMove);
-            if (!this.options.interactive) {
+            if (this.hasHoverGracePeriod || !this.options.interactive) {
               element.removeEventListener("pointerleave", this.onPointerLeave);
+            }
+            if (this.hasHoverGracePeriod) {
+              element.removeEventListener(
+                "pointerenter",
+                this.onPointerEnterTrigger
+              );
             }
 
             break;
@@ -285,10 +383,17 @@ export default abstract class FloatKitInstance {
             element.addEventListener("pointermove", this.onPointerMove, {
               passive: true,
             });
-            if (!this.options.interactive) {
+            if (this.hasHoverGracePeriod || !this.options.interactive) {
               element.addEventListener("pointerleave", this.onPointerLeave, {
                 passive: true,
               });
+            }
+            if (this.hasHoverGracePeriod) {
+              element.addEventListener(
+                "pointerenter",
+                this.onPointerEnterTrigger,
+                { passive: true }
+              );
             }
 
             break;

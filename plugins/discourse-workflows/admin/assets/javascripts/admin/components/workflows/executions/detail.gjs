@@ -13,6 +13,10 @@ import {
 } from "../../../lib/workflows/property-engine";
 
 function formatJson(data) {
+  if (Array.isArray(data) && data.length === 0) {
+    return "[]";
+  }
+
   if (!data || Object.keys(data).length === 0) {
     return "{}";
   }
@@ -171,6 +175,14 @@ function stepSummary(step) {
     return null;
   }
   return String(step.error);
+}
+
+function hasNoOutput(step) {
+  return (
+    step.status === "success" &&
+    Array.isArray(step.output) &&
+    step.output.length === 0
+  );
 }
 
 function isFilterStep(step) {
@@ -401,6 +413,14 @@ export default class ExecutionDetail extends Component {
             {{/if}}
 
             <div class="workflows-execution-detail__step-body">
+              {{#if (hasNoOutput step)}}
+                <div
+                  class="alert alert-info workflows-execution-detail__no-output"
+                >
+                  {{i18n "discourse_workflows.executions.no_output_data"}}
+                </div>
+              {{/if}}
+
               {{#if step.metadata.conditions}}
                 <div class="workflows-execution-detail__conditions">
                   {{#each step.metadata.conditions as |condition|}}

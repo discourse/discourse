@@ -1932,6 +1932,7 @@ content_localization:
       - all
     default: none
     client: true
+    refresh: true
     area: "localization"
     validator: "LanguageSwitcherSettingValidator"
     depends_on:
@@ -3127,10 +3128,10 @@ security:
     hidden: true
     default: "cubot|MetaIAB"
   # 38365/55967=Baidu, 140577=Ahrefs, 210743=Babbar, 7941=Internet Archive,
-  # 13238=Yandex
+  # 13238=Yandex, 45102=Alibaba
   crawler_asns:
     hidden: true
-    default: "38365|55967|140577|210743|7941|13238"
+    default: "38365|55967|140577|210743|7941|13238|45102"
     type: list
     list_type: compact
   # 16509/14618=AWS, 16276=OVH, 136907/55990=Huawei Cloud,

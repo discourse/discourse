@@ -10,6 +10,7 @@ import {
   fieldShowDescription,
   fieldShowLabel,
   fieldSupportsExpression,
+  fieldType,
   findNodeType,
   isExpression,
   propertyDescription,
@@ -118,6 +119,9 @@ export default class Field extends Component {
     const rules = [];
     if (schema.required) {
       rules.push("required");
+    }
+    if (fieldType(schema) === "integer" && !this.supportsExpression) {
+      rules.push("integer");
     }
     if (schema.min != null || schema.max != null) {
       const min = schema.min ?? Number.MIN_SAFE_INTEGER;

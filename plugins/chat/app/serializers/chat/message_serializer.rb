@@ -31,6 +31,7 @@ module Chat
             channel
             thread_title
             pinned
+            is_action
           ]
       ),
     )
@@ -60,6 +61,10 @@ module Chat
 
     def excerpt
       object.excerpt || object.build_excerpt
+    end
+
+    def is_action
+      object.action?
     end
 
     def reactions

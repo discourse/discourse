@@ -1,4 +1,5 @@
 import UserMenuNotificationsList from "discourse/components/user-menu/notifications-list";
+import UserMenuNotificationsListEmptyState from "discourse/components/user-menu/notifications-list-empty-state";
 
 export default class UserMenuRepliesNotificationsList extends UserMenuNotificationsList {
   get dismissTypes() {
@@ -10,6 +11,6 @@ export default class UserMenuRepliesNotificationsList extends UserMenuNotificati
   }
 
   get emptyStateComponent() {
-    return "user-menu/notifications-list-empty-state";
+    return UserMenuNotificationsListEmptyState;
   }
 }

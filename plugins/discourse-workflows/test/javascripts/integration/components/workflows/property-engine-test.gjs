@@ -73,6 +73,111 @@ module("Integration | Component | workflows property engine", function (hooks) {
     assert.dom("input").isFocused();
   });
 
+  test("validates optional integer fields that do not support expressions", async function (assert) {
+    this.setProperties({
+      configuration: { post_number: "" },
+      formApi: null,
+      nodeType: "trigger:post_button",
+      schema: {
+        post_number: {
+          type: "integer",
+          required: false,
+          min: 1,
+          no_data_expression: true,
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    await this.formApi.submit();
+    assert
+      .form()
+      .field("post_number")
+      .hasNoErrors("the optional field is valid while blank");
+
+    await fillIn("input[name='post_number']", "1.5");
+    await this.formApi.submit();
+    assert
+      .form()
+      .field("post_number")
+      .hasError(
+        i18n("form_kit.errors.not_an_integer"),
+        "a fractional value shows the integer validation error"
+      );
+
+    await fillIn("input[name='post_number']", "2");
+    await this.formApi.submit();
+    assert
+      .form()
+      .field("post_number")
+      .hasNoErrors("an integer value clears the validation error");
+  });
+
+  test("expression-enabled integer fields accept expressions", async function (assert) {
+    this.setProperties({
+      configuration: { post_number: "={{ $json.post_number }}" },
+      formApi: null,
+      nodeType: "trigger:post_button",
+      schema: {
+        post_number: {
+          type: "integer",
+          min: 1,
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".workflows-variable-input").includesText("post_number");
+
+    await this.formApi.submit();
+    assert
+      .form()
+      .field("post_number")
+      .hasNoErrors("the expression is not treated as a literal integer");
+  });
+
   test("renders an inline description and a tooltip independently", async function (assert) {
     I18n.translations[I18n.locale].js.discourse_workflows.post.raw_tooltip =
       "Only visible to the agent";

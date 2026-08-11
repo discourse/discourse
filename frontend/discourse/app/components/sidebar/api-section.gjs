@@ -1,3 +1,5 @@
+import { hash } from "@ember/helper";
+import curryComponent from "ember-curry-component";
 import { and, eq, not } from "discourse/truth-helpers";
 import Section from "./section";
 import SectionLink from "./section-link";
@@ -53,9 +55,11 @@ const SidebarApiSection = <template>
           @didInsert={{link.didInsert}}
           @willDestroy={{link.willDestroy}}
           @content={{link.text}}
-          @contentComponent={{component
+          @contentComponent={{if
             link.contentComponent
-            status=link.contentComponentArgs
+            (curryComponent
+              link.contentComponent (hash status=link.contentComponentArgs)
+            )
           }}
           @suffixComponent={{link.suffixComponent}}
           @suffixArgs={{link.suffixArgs}}
