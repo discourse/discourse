@@ -496,10 +496,6 @@ class DiscourseURL extends EmberObject {
     return this.container.lookup("service:app-events");
   }
 
-  controllerFor(name) {
-    return this.container.lookup("controller:" + name);
-  }
-
   /**
     Be wary of looking up the router. In this case, we have links in our
     HTML, say form compiled markdown posts, that need to be routed.
