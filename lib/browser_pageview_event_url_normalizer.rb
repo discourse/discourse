@@ -1,7 +1,18 @@
 # frozen_string_literal: true
 
+# Normalizes referrer URLs captured by browser pageview events so the same
+# logical referrer groups consistently in the top-referrers report. It strips
+# scheme, `www.`, port, fragment, trailing slashes, and common tracking query
+# params, converts the host to lowercase punycode, and truncates the result to
+# 2,000 bytes. It also normalizes pageview URLs to canonical site-relative
+# paths for the Site Traffic Explorer.
 class BrowserPageviewEventUrlNormalizer
+  # Bump when referrer normalization changes significantly to re-backfill rows
+  # stamped with an older version.
   REFERRER_VERSION = 1
+
+  # Bump when site-path normalization changes significantly to re-backfill rows
+  # stamped with an older version.
   SITE_PATH_VERSION = 1
 
   # TODO: consider vendoring DuckDuckGo's Tracker Radar tracking-parameter list
