@@ -1,28 +1,17 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import { LinkTo } from "@ember/routing";
-import { dasherize } from "@ember/string";
 import ReviewableItem from "discourse/components/reviewable/item";
+import { reviewableComponentExists } from "discourse/lib/reviewable-registry";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class extends Component {
-  // TODO plugins are still using `reviewable-refresh/` path. Once they are fixed, it can be remove.
   get reviewableComponentExists() {
-    const owner = getOwner(this);
-    let dasherized = dasherize(this.args.controller.reviewable.type).replace(
-      "reviewable-",
-      "reviewable-refresh/"
+    return reviewableComponentExists(
+      getOwner(this),
+      this.args.controller.reviewable.type
     );
-    if (owner.hasRegistration(`component:${dasherized}`)) {
-      return true;
-    }
-
-    dasherized = dasherize(this.args.controller.reviewable.type).replace(
-      "reviewable-",
-      "reviewable/"
-    );
-    return owner.hasRegistration(`component:${dasherized}`);
   }
 
   <template>

@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ReviewableItem from "discourse/components/reviewable/item";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { APPROVED, PENDING } from "discourse/models/reviewable";
 import { CLAIMED, UNCLAIMED } from "discourse/models/reviewable-history";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -206,5 +207,74 @@ module("Integration | Component | Reviewable | Item", function (hooks) {
       [],
       "the server only logs claims on pending reviewables"
     );
+  });
+
+  test("renders a component registered via the plugin API", async function (assert) {
+    const CustomComponent = <template>
+      <div class="custom-reviewable">{{@reviewable.type}}</div>
+    </template>;
+
+    withPluginApi((api) => {
+      api.registerReviewableComponent(
+        "ReviewableCustomThing",
+        () => CustomComponent
+      );
+    });
+
+    const customReviewable = {
+      id: 987,
+      type: "ReviewableCustomThing",
+      topic: null,
+      reviewable_scores: [],
+    };
+
+    await render(
+      <template><ReviewableItem @reviewable={{customReviewable}} /></template>
+    );
+
+    assert.dom(".custom-reviewable").hasText("ReviewableCustomThing");
+  });
+
+  test("shows an error when no component exists for the reviewable type", async function (assert) {
+    const unknownReviewable = {
+      id: 988,
+      type: "ReviewableMissingThing",
+      topic: null,
+      reviewable_scores: [],
+    };
+
+    await render(
+      <template><ReviewableItem @reviewable={{unknownReviewable}} /></template>
+    );
+
+    assert
+      .dom(".review-item__no-component")
+      .hasText("No component found for ReviewableMissingThing");
+  });
+
+  test("renders a lazily loaded component registered via the plugin API", async function (assert) {
+    const CustomComponent = <template>
+      <div class="custom-reviewable">{{@reviewable.type}}</div>
+    </template>;
+
+    withPluginApi((api) => {
+      api.registerReviewableComponent(
+        "ReviewableCustomThing",
+        async () => CustomComponent
+      );
+    });
+
+    const customReviewable = {
+      id: 987,
+      type: "ReviewableCustomThing",
+      topic: null,
+      reviewable_scores: [],
+    };
+
+    await render(
+      <template><ReviewableItem @reviewable={{customReviewable}} /></template>
+    );
+
+    assert.dom(".custom-reviewable").hasText("ReviewableCustomThing");
   });
 });

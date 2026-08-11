@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
-import { dasherize } from "@ember/string";
 import ReviewFilters from "discourse/components/review-filters";
 import ReviewableItem from "discourse/components/reviewable/item";
 import { bind } from "discourse/lib/decorators";
+import { reviewableComponentExists } from "discourse/lib/reviewable-registry";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
@@ -11,21 +11,7 @@ import { i18n } from "discourse-i18n";
 export default class ReviewIndexRefresh extends Component {
   @bind
   reviewableComponentExists(reviewable) {
-    const owner = getOwner(this);
-    // TODO plugins are still using `reviewable-refresh/` path. Once they are fixed, it can be remove.
-    let dasherized = dasherize(reviewable.type).replace(
-      "reviewable-",
-      "reviewable-refresh/"
-    );
-    if (owner.hasRegistration(`component:${dasherized}`)) {
-      return true;
-    }
-
-    dasherized = dasherize(reviewable.type).replace(
-      "reviewable-",
-      "reviewable/"
-    );
-    return owner.hasRegistration(`component:${dasherized}`);
+    return reviewableComponentExists(getOwner(this), reviewable.type);
   }
 
   <template>
