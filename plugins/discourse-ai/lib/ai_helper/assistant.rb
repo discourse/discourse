@@ -148,8 +148,7 @@ module DiscourseAi
               structured_output = partial
 
               if schema_type == "string"
-                helper_chunk = partial.read_buffered_property(schema_key)
-                if helper_chunk.present?
+                partial.read_buffered_property_chunk(schema_key) do |helper_chunk|
                   helper_response << helper_chunk
                   block.call(helper_chunk) if block
                 end
