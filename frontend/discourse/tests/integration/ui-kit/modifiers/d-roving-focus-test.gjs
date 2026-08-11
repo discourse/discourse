@@ -2099,6 +2099,25 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       .hasAttribute("tabindex", "-1", "and the first item is not");
   });
 
+  test("focus mode: the tab stop prefers the checked radio over the first", async function (assert) {
+    await render(
+      <template>
+        <div role="radiogroup" {{dRovingFocus itemSelector="[role=radio]"}}>
+          <button class="a" role="radio" aria-checked="false">A</button>
+          <button class="b" role="radio" aria-checked="true">B</button>
+          <button class="c" role="radio" aria-checked="false">C</button>
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".b")
+      .hasAttribute("tabindex", "0", "the checked radio is the tab stop");
+    assert
+      .dom(".a")
+      .hasAttribute("tabindex", "-1", "and the first radio is not");
+  });
+
   test("focus mode: an item inside a disabled fieldset is not a target", async function (assert) {
     await render(
       <template>
@@ -2122,6 +2141,280 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       .isFocused(
         "a button disabled through its fieldset cannot take focus, so it is skipped"
       );
+  });
+
+  test("focus mode: an inert item is not a target", async function (assert) {
+    await render(
+      <template>
+        <div {{dRovingFocus itemSelector=".opt"}}>
+          <button class="opt a" type="button">A</button>
+          <button class="opt b" type="button" inert>B</button>
+          <button class="opt c" type="button">C</button>
+        </div>
+      </template>
+    );
+
+    await focus(".a");
+    await triggerKeyEvent(".a", "keydown", "ArrowRight");
+
+    assert
+      .dom(".c")
+      .isFocused("an inert button cannot take focus, so it is skipped");
+  });
+
+  test("focus mode: clicking an item moves the tab stop onto it", async function (assert) {
+    await render(
+      <template>
+        <div role="listbox" {{dRovingFocus itemSelector="[role=option]"}}>
+          <button class="a" role="option">A</button>
+          <button class="b" role="option">B</button>
+          <button class="c" role="option">C</button>
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".a")
+      .hasAttribute("tabindex", "0", "the first item starts as the tab stop");
+
+    await click(".c");
+
+    assert
+      .dom(".c")
+      .hasAttribute("tabindex", "0", "the clicked item becomes the tab stop");
+    assert
+      .dom(".a")
+      .hasAttribute("tabindex", "-1", "and the previous holder gives it up");
+  });
+
+  test("focus mode: focus arriving without a pointer also moves the tab stop", async function (assert) {
+    await render(
+      <template>
+        <div role="listbox" {{dRovingFocus itemSelector="[role=option]"}}>
+          <button class="a" role="option">A</button>
+          <button class="b" role="option">B</button>
+          <button class="c" role="option">C</button>
+        </div>
+      </template>
+    );
+
+    await focus(".c");
+
+    // Programmatic focus, with no pointer event at all: a fix that only widened the pointer
+    // handler would leave the tab stop behind here.
+    assert
+      .dom(".c")
+      .hasAttribute("tabindex", "0", "the focused item becomes the tab stop");
+    assert.dom(".a").hasAttribute("tabindex", "-1");
+  });
+
+  // Focus persistence. Removals are driven straight through tracked state rather than by
+  // clicking a button, because clicking one moves focus onto it and would hide the very
+  // condition these tests turn on: focus falling to the body.
+  class RemovableItems {
+    @tracked items = ["a", "b", "c"];
+    @tracked key = 0;
+
+    remove(name) {
+      this.items = this.items.filter((item) => item !== name);
+      this.key++;
+    }
+  }
+
+  test("focus mode: removing the focused item moves focus to the one that follows", async function (assert) {
+    const state = new RemovableItems();
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus itemSelector="[role=option]" itemsKey=state.key}}
+        >
+          {{#each state.items key="@identity" as |item|}}
+            <button class="opt-{{item}}" role="option">{{item}}</button>
+          {{/each}}
+        </div>
+      </template>
+    );
+
+    await focus(".opt-b");
+    state.remove("b");
+    await settled();
+
+    assert
+      .dom(".opt-c")
+      .isFocused("focus lands on the item that took the removed one's place");
+  });
+
+  test("focus mode: removing the focused last item falls back to the previous one", async function (assert) {
+    const state = new RemovableItems();
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus itemSelector="[role=option]" itemsKey=state.key}}
+        >
+          {{#each state.items key="@identity" as |item|}}
+            <button class="opt-{{item}}" role="option">{{item}}</button>
+          {{/each}}
+        </div>
+      </template>
+    );
+
+    await focus(".opt-c");
+    state.remove("c");
+    await settled();
+
+    assert
+      .dom(".opt-b")
+      .isFocused("there is no following item, so the cursor steps back");
+  });
+
+  test("focus mode: a removal does not reclaim focus the reader moved away", async function (assert) {
+    const state = new RemovableItems();
+
+    await render(
+      <template>
+        <button class="outside" type="button">outside</button>
+        <div
+          role="listbox"
+          {{dRovingFocus itemSelector="[role=option]" itemsKey=state.key}}
+        >
+          {{#each state.items key="@identity" as |item|}}
+            <button class="opt-{{item}}" role="option">{{item}}</button>
+          {{/each}}
+        </div>
+      </template>
+    );
+
+    await focus(".opt-b");
+    await focus(".outside");
+    state.remove("b");
+    await settled();
+
+    // The whole feature turns on focus having been LOST, not merely on an item disappearing.
+    // Without that condition this steals focus back out of wherever the reader went.
+    assert
+      .dom(".outside")
+      .isFocused("focus deliberately moved out of the group is left alone");
+  });
+
+  test("focus mode: removing an item the reader is not on leaves focus where it is", async function (assert) {
+    const state = new RemovableItems();
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus itemSelector="[role=option]" itemsKey=state.key}}
+        >
+          {{#each state.items key="@identity" as |item|}}
+            <button class="opt-{{item}}" role="option">{{item}}</button>
+          {{/each}}
+        </div>
+      </template>
+    );
+
+    await focus(".opt-c");
+    state.remove("a");
+    await settled();
+
+    assert
+      .dom(".opt-c")
+      .isFocused("an unrelated removal is not an occasion to move the cursor");
+  });
+
+  test("focus mode: replacing the whole item set does not move focus", async function (assert) {
+    class State {
+      @tracked items = ["a", "b", "c"];
+      @tracked key = 0;
+    }
+    const state = new State();
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus itemSelector="[role=option]" itemsKey=state.key}}
+        >
+          {{#each state.items key="@identity" as |item|}}
+            <button class="opt-{{item}}" role="option">{{item}}</button>
+          {{/each}}
+        </div>
+      </template>
+    );
+
+    await focus(".opt-b");
+    state.items = ["x", "y", "z"];
+    state.key++;
+    await settled();
+
+    // Every previous item is gone, so this is a new question rather than a deletion. Seeding
+    // never yanks focus on a re-render, and restoring here would drop the reader into a result
+    // set they never navigated to.
+    assert
+      .dom(".opt-x")
+      .isNotFocused("a wholesale replacement is not a removal to recover from");
+    assert
+      .dom(".opt-y")
+      .isNotFocused("and no other member of the new set takes focus either");
+  });
+
+  test("active mode with no focus indicator at all warns", async function (assert) {
+    const warn = sinon.stub(console, "warn");
+
+    await render(
+      <template>
+        <input class="search" role="combobox" />
+        <div
+          role="listbox"
+          {{dRovingFocus
+            selectionMode="active"
+            controllerElement=".search"
+            itemSelector="[role=option]"
+          }}
+        >
+          <button class="a" role="option">A</button>
+        </div>
+      </template>
+    );
+
+    // In active mode DOM focus stays on the controller, so with neither activeClass nor
+    // onActiveChange there is nothing drawing a focus indicator anywhere.
+    assert.true(
+      warn.called,
+      "a group that can render no focus indicator says so"
+    );
+  });
+
+  test("active mode does not warn when the consumer renders its own indicator", async function (assert) {
+    const warn = sinon.stub(console, "warn");
+    const noop = () => {};
+
+    await render(
+      <template>
+        <input class="search" role="combobox" />
+        <div
+          role="listbox"
+          {{dRovingFocus
+            selectionMode="active"
+            controllerElement=".search"
+            itemSelector="[role=option]"
+            onActiveChange=noop
+          }}
+        >
+          <button class="a" role="option">A</button>
+        </div>
+      </template>
+    );
+
+    // Reporting the cursor is the other legitimate way to draw the indicator, so only the
+    // absence of both is a problem.
+    assert.false(
+      warn.called,
+      "reporting the cursor is indicator enough; only the absence of both is a problem"
+    );
   });
 
   test("active mode: a changed activeClass is removed from the row that had it", async function (assert) {
