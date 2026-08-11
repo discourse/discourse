@@ -10,6 +10,7 @@ import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import Category from "discourse/models/category";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -29,6 +30,7 @@ export default class AiTranslations extends Component {
   @service aiCredits;
   @service router;
   @service siteSettings;
+  @service toasts;
 
   @tracked overviewGeneration = 0;
   @tracked expandedTargetType = null;
@@ -98,6 +100,15 @@ export default class AiTranslations extends Component {
 
   get creditLimitReached() {
     return this.creditStatus?.hard_limit_reached === true;
+  }
+
+  get maxLocaleWarning() {
+    return applyValueTransformer(
+      "ai-translation-max-locales-warning",
+      i18n("discourse_ai.translations.max_locales_reached", {
+        max: this.siteSettings.content_localization_max_locales,
+      })
+    );
   }
 
   get creditLimitWarningMessage() {
@@ -206,6 +217,18 @@ export default class AiTranslations extends Component {
 
   @action
   updateSelectedLocales(locales) {
+    if (
+      this.siteSettings.content_localization_max_locales &&
+      locales.length > this.siteSettings.content_localization_max_locales
+    ) {
+      this.toasts.error({
+        duration: "short",
+        data: {
+          message: this.maxLocaleWarning,
+        },
+      });
+      return;
+    }
     this.selectedLocales = locales;
   }
 
