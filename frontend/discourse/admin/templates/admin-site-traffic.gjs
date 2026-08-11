@@ -10,7 +10,7 @@ export default <template>
     @startDate={{@controller.startDate}}
     @endDate={{@controller.endDate}}
     @activeFilters={{@controller.activeFilters}}
-    @trafficType={{@controller.traffic_type}}
+    @trafficTypes={{@controller.selectedTrafficTypes}}
     @setPeriod={{@controller.setPeriod}}
     @setCustomDateRange={{@controller.setCustomDateRange}}
     @setFilter={{@controller.setFilter}}

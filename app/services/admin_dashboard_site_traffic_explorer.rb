@@ -63,9 +63,11 @@ class AdminDashboardSiteTrafficExplorer
 
       case key
       when :traffic_type
-        traffic_type = value.to_s
-        raise Discourse::InvalidParameters.new(key) if !TRAFFIC_TYPE_VALUES.include?(traffic_type)
-        traffic_type
+        traffic_types = value.to_s.split(",").uniq
+        if traffic_types.empty? || (traffic_types - TRAFFIC_TYPE_VALUES).any?
+          raise Discourse::InvalidParameters.new(key)
+        end
+        TRAFFIC_TYPE_VALUES.select { |traffic_type| traffic_types.include?(traffic_type) }
       when :top_url, :entry_url
         BrowserPageviewReferrerInspector.normalize_site_path(value) ||
           raise(Discourse::InvalidParameters.new(key))
@@ -139,7 +141,10 @@ class AdminDashboardSiteTrafficExplorer
       network_asn: filters[:network],
       browser: filters[:browser],
       ip_address: filters[:ip],
-      traffic_type: filters[:traffic_type],
+      traffic_type_filtered: filters[:traffic_type].present?,
+      include_logged_in: filters[:traffic_type]&.include?("logged_in"),
+      include_anonymous: filters[:traffic_type]&.include?("anonymous"),
+      include_likely_crawler: filters[:traffic_type]&.include?("likely_crawler"),
       current_hostname: BrowserPageviewReferrerInspector.normalize_host(Discourse.current_hostname),
       crawler_detection_enabled: UpcomingChanges.enabled?(:improved_crawler_detection),
       crawler_threshold: CrawlerScorer::BOT_SCORE_THRESHOLD,
@@ -288,19 +293,19 @@ class AdminDashboardSiteTrafficExplorer
           AND (:browser IS NULL OR browser = :browser)
           AND (:ip_address IS NULL OR host(ip_address) = :ip_address)
           AND (
-            :traffic_type IS NULL
+            NOT :traffic_type_filtered
             OR (
-              :traffic_type = 'logged_in'
+              :include_logged_in
               AND NOT likely_crawler
               AND user_id IS NOT NULL
             )
             OR (
-              :traffic_type = 'anonymous'
+              :include_anonymous
               AND NOT likely_crawler
               AND user_id IS NULL
             )
             OR (
-              :traffic_type = 'likely_crawler'
+              :include_likely_crawler
               AND likely_crawler
             )
           )
@@ -325,7 +330,7 @@ class AdminDashboardSiteTrafficExplorer
       traffic_summary AS (
         SELECT
           COUNT(*) FILTER (
-            WHERE :traffic_type IS NOT NULL OR NOT likely_crawler
+            WHERE :traffic_type_filtered OR NOT likely_crawler
           )::integer AS pageviews,
           COUNT(*) FILTER (
             WHERE NOT likely_crawler AND user_id IS NOT NULL
@@ -336,7 +341,7 @@ class AdminDashboardSiteTrafficExplorer
         SELECT
           created_at::date AS date,
           COUNT(*) FILTER (
-            WHERE :traffic_type IS NOT NULL OR NOT likely_crawler
+            WHERE :traffic_type_filtered OR NOT likely_crawler
           )::integer AS pageviews,
           COUNT(*) FILTER (
             WHERE NOT likely_crawler AND user_id IS NOT NULL
@@ -570,18 +575,30 @@ class AdminDashboardSiteTrafficExplorer
   end
 
   def decorate_active_filters(representative_ips, filters:)
-    filters.filter_map do |key, value|
-      next if value.nil?
+    filters.flat_map do |key, value|
+      next [] if value.nil?
+
+      if key == :traffic_type
+        next(
+          value.map do |traffic_type|
+            {
+              key: key,
+              value: traffic_type,
+              label: I18n.t("admin_site_traffic_explorer.traffic_types.#{traffic_type}"),
+            }
+          end
+        )
+      end
 
       canonical_value = key == :network ? "AS#{value}" : value
-      label =
-        if key == :traffic_type
-          I18n.t("admin_site_traffic_explorer.traffic_types.#{canonical_value}")
-        else
-          dimension = FILTER_DIMENSIONS.fetch(key)
-          dimension_label(dimension, canonical_value, representative_ips[key.to_s])
-        end
-      { key: key, value: canonical_value, label: label }
+      dimension = FILTER_DIMENSIONS.fetch(key)
+      [
+        {
+          key: key,
+          value: canonical_value,
+          label: dimension_label(dimension, canonical_value, representative_ips[key.to_s]),
+        },
+      ]
     end
   end
 

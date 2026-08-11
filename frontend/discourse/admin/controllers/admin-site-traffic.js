@@ -22,6 +22,13 @@ const FILTER_KEYS = [
   "ip",
 ];
 
+const TRAFFIC_TYPES = ["logged_in", "anonymous", "likely_crawler"];
+const TRAFFIC_TYPE_LABEL_KEYS = {
+  logged_in: "logged_in_human",
+  anonymous: "anonymous_human",
+  likely_crawler: "likely_crawler",
+};
+
 const DIMENSION_KEYS = {
   top_url: "top_urls",
   entry_url: "entry_urls",
@@ -83,25 +90,51 @@ export default class AdminSiteTrafficController extends Controller {
   }
 
   get activeFilters() {
-    return FILTER_KEYS.filter((key) => this[key] !== null).map((key) => {
-      const value = this[key];
-      const rows = this.traffic?.dimensions?.[DIMENSION_KEYS[key]] ?? [];
-      const activeFilter = this.traffic?.active_filters?.find(
-        (filter) => filter.key === key && filter.value === value
-      );
-      const label =
-        activeFilter?.label ?? rows.find((row) => row.value === value)?.label;
+    return FILTER_KEYS.flatMap((key) => {
+      const values =
+        key === "traffic_type"
+          ? this.traffic_type === null
+            ? []
+            : this.selectedTrafficTypes
+          : [this[key]];
 
-      return {
-        key,
-        value,
-        label:
-          label ??
-          (key === "referrer" && value === ""
-            ? i18n("admin.site_traffic_explorer.direct_or_unknown")
-            : value),
-      };
+      return values
+        .filter((value) => value !== null)
+        .map((value) => {
+          const rows = this.traffic?.dimensions?.[DIMENSION_KEYS[key]] ?? [];
+          const activeFilter = this.traffic?.active_filters?.find(
+            (filter) => filter.key === key && filter.value === value
+          );
+          const label =
+            activeFilter?.label ??
+            rows.find((row) => row.value === value)?.label;
+
+          return {
+            key,
+            value,
+            label:
+              label ??
+              (key === "traffic_type"
+                ? i18n(
+                    `admin.site_traffic_explorer.series.${TRAFFIC_TYPE_LABEL_KEYS[value]}`
+                  )
+                : key === "referrer" && value === ""
+                  ? i18n("admin.site_traffic_explorer.direct_or_unknown")
+                  : value),
+          };
+        });
     });
+  }
+
+  get selectedTrafficTypes() {
+    if (this.traffic_type === null) {
+      return TRAFFIC_TYPES;
+    }
+
+    const selected = this.traffic_type.split(",");
+    return TRAFFIC_TYPES.filter((trafficType) =>
+      selected.includes(trafficType)
+    );
   }
 
   #customDate(value, edge) {
@@ -204,12 +237,26 @@ export default class AdminSiteTrafficController extends Controller {
 
   @action
   toggleTrafficType(trafficType) {
-    this.traffic_type = this.traffic_type === trafficType ? null : trafficType;
+    const selectedTrafficTypes = this.selectedTrafficTypes;
+    const nextTrafficTypes = selectedTrafficTypes.includes(trafficType)
+      ? selectedTrafficTypes.filter((selected) => selected !== trafficType)
+      : [...selectedTrafficTypes, trafficType];
+
+    this.#setTrafficTypes(nextTrafficTypes);
     this.fetchTraffic();
   }
 
   @action
-  removeFilter(key) {
+  removeFilter(key, value) {
+    if (key === "traffic_type") {
+      const remainingTrafficTypes = this.selectedTrafficTypes.filter(
+        (trafficType) => trafficType !== value
+      );
+      this.#setTrafficTypes(remainingTrafficTypes);
+      this.fetchTraffic();
+      return;
+    }
+
     this[key] = null;
     this.fetchTraffic();
   }
@@ -226,5 +273,17 @@ export default class AdminSiteTrafficController extends Controller {
     this.traffic = null;
     this.loading = false;
     this.fetchError = null;
+  }
+
+  #setTrafficTypes(trafficTypes) {
+    const orderedTrafficTypes = TRAFFIC_TYPES.filter((trafficType) =>
+      trafficTypes.includes(trafficType)
+    );
+
+    this.traffic_type =
+      orderedTrafficTypes.length === 0 ||
+      orderedTrafficTypes.length === TRAFFIC_TYPES.length
+        ? null
+        : orderedTrafficTypes.join(",");
   }
 }

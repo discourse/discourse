@@ -7265,6 +7265,7 @@ en:
           one: "Filter by %{label}, %{count} pageview"
           other: "Filter by %{label}, %{count} pageviews"
         remove_filter: "Remove %{filter} filter"
+        remove_traffic_type_filter: "Remove %{value} traffic filter"
         view_more: "View more"
         no_dimension_data: "No data for this breakdown."
         direct_or_unknown: "Direct / unknown"

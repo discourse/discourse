@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { concat, fn } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -13,9 +13,15 @@ export default class SiteTrafficFilterPills extends Component {
   }
 
   @action
-  removeLabel(key) {
+  removeLabel(filter) {
+    if (filter.key === "traffic_type") {
+      return i18n("admin.site_traffic_explorer.remove_traffic_type_filter", {
+        value: filter.label,
+      });
+    }
+
     return i18n("admin.site_traffic_explorer.remove_filter", {
-      filter: this.filterLabel(key),
+      filter: this.filterLabel(filter.key),
     });
   }
 
@@ -25,6 +31,12 @@ export default class SiteTrafficFilterPills extends Component {
       filter: escapeExpression(this.filterLabel(filter.key)),
       value: escapeExpression(filter.label),
     });
+  }
+
+  @action
+  filterId(filter) {
+    const suffix = filter.key === "traffic_type" ? `-${filter.value}` : "";
+    return `site-traffic-filter-pill-${filter.key}${suffix}`;
   }
 
   <template>
@@ -37,7 +49,7 @@ export default class SiteTrafficFilterPills extends Component {
         {{#each @filters as |filter|}}
           <span
             class="site-traffic-explorer__filter-pill"
-            id={{concat "site-traffic-filter-pill-" filter.key}}
+            id={{this.filterId filter}}
             data-test-site-traffic-filter-pill={{filter.key}}
           >
             <span>
@@ -46,8 +58,8 @@ export default class SiteTrafficFilterPills extends Component {
             <DButton
               class="btn-flat site-traffic-explorer__filter-remove"
               @icon="xmark"
-              @translatedAriaLabel={{this.removeLabel filter.key}}
-              @action={{fn @removeFilter filter.key}}
+              @translatedAriaLabel={{this.removeLabel filter}}
+              @action={{fn @removeFilter filter.key filter.value}}
             />
           </span>
         {{/each}}

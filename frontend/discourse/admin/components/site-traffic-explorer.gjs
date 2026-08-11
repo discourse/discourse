@@ -92,17 +92,13 @@ export default class SiteTrafficExplorer extends Component {
   }
 
   get chartOptions() {
-    const activeSeries = Object.entries(TRAFFIC_TYPE_BY_SERIES).find(
-      ([, trafficType]) => trafficType === this.args.trafficType
-    )?.[0];
-
     return {
       hideYAxisGridLines: true,
-      hiddenLabels: activeSeries
-        ? Object.keys(TRAFFIC_TYPE_BY_SERIES).filter(
-            (series) => series !== activeSeries
-          )
-        : [],
+      hiddenLabels: Object.entries(TRAFFIC_TYPE_BY_SERIES)
+        .filter(
+          ([, trafficType]) => !this.args.trafficTypes.includes(trafficType)
+        )
+        .map(([series]) => series),
       onLegendClick: this.toggleTrafficType,
     };
   }

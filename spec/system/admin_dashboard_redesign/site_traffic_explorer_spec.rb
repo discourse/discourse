@@ -190,6 +190,30 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(traffic).to have_series_total(label: "likely-crawler", value: "1")
     expect(traffic).to have_no_partial_data_warning
 
+    traffic.visit(
+      start_date: "2026-05-01",
+      end_date: "2026-05-12",
+      traffic_type: "logged_in,anonymous",
+    )
+    expect(traffic).to have_filter_pill(dimension: "traffic_type", label: "Logged in")
+    expect(traffic).to have_filter_pill(dimension: "traffic_type", label: "Anonymous")
+    expect(traffic).to have_metric(label: "Pageviews", value: "3")
+    expect(traffic).to have_metric(label: "Distinct sessions", value: "2")
+    expect(traffic).to have_series_total(label: "logged-in-human", value: "2")
+    expect(traffic).to have_series_total(label: "anonymous-human", value: "1")
+    expect(traffic).to have_series_total(label: "likely-crawler", value: "0")
+    expect(page).to have_current_path(
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&start_date=2026-05-01&traffic_type=logged_in%2Canonymous",
+    )
+
+    traffic.remove_filter("traffic_type", label: "Logged in")
+    expect(traffic).to have_filter_pill(dimension: "traffic_type", label: "Anonymous")
+    expect(traffic).to have_metric(label: "Pageviews", value: "1")
+
+    traffic.remove_filter("traffic_type", label: "Anonymous")
+    expect(traffic).to have_no_filter_pills
+    expect(traffic).to have_metric(label: "Pageviews", value: "3")
+
     traffic.visit(start_date: "2026-05-01", end_date: "2026-05-12", traffic_type: "likely_crawler")
     expect(traffic).to have_filter_pill(dimension: "traffic_type", label: "Likely crawlers")
     expect(traffic).to have_metric(label: "Pageviews", value: "1")
@@ -200,7 +224,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     expect(page).to have_current_path(
       "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&range=custom&start_date=2026-05-01&traffic_type=likely_crawler",
     )
-    traffic.remove_filter("traffic_type")
+    traffic.remove_filter("traffic_type", label: "Likely crawlers")
     expect(traffic).to have_metric(label: "Pageviews", value: "3")
 
     expect(traffic).to have_card_tabs(card: "acquisition", tabs: %w[Referrers Countries Networks])

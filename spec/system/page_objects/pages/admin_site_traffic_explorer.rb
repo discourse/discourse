@@ -110,19 +110,29 @@ module PageObjects
 
       def has_filter_pill?(dimension:, label:)
         selector = "[data-test-site-traffic-filter-pill='#{dimension}']"
+        remove_label =
+          if dimension == "traffic_type"
+            "Remove #{label} traffic filter"
+          else
+            "Remove #{FILTER_LABELS.fetch(dimension)} filter"
+          end
 
         has_css?(selector, text: "#{FILTER_LABELS.fetch(dimension)} is #{label}", count: 1) &&
-          has_css?(
-            "#{selector} button[aria-label='Remove #{FILTER_LABELS.fetch(dimension)} filter']",
-          )
+          has_css?("#{selector} button[aria-label='#{remove_label}']")
       end
 
       def has_no_filter_pills?
         has_no_css?("[data-test-site-traffic-filter-pill]")
       end
 
-      def remove_filter(name)
-        find("button[aria-label='Remove #{FILTER_LABELS.fetch(name)} filter']").click
+      def remove_filter(name, label: nil)
+        remove_label =
+          if name == "traffic_type"
+            "Remove #{label} traffic filter"
+          else
+            "Remove #{FILTER_LABELS.fetch(name)} filter"
+          end
+        find("button[aria-label='#{remove_label}']").click
         self
       end
 
