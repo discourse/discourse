@@ -120,7 +120,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         user_id: admin.id,
         session_id: "logged-in-session",
         normalized_referrer: "search.example/results?token=secret",
-        normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
+        normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
         created_at: "2026-05-10 10:00:00",
       },
       {
@@ -132,7 +132,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         user_id: admin.id,
         session_id: "logged-in-session",
         normalized_referrer: "test.localhost/latest",
-        normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
+        normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
         created_at: "2026-05-10 10:01:00",
       },
       {

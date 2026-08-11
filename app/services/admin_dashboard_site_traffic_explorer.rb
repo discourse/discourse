@@ -69,7 +69,7 @@ class AdminDashboardSiteTrafficExplorer
         end
         TRAFFIC_TYPE_VALUES.select { |traffic_type| traffic_types.include?(traffic_type) }
       when :top_url, :entry_url
-        BrowserPageviewReferrerInspector.normalize_site_path(value) ||
+        BrowserPageviewEventUrlNormalizer.normalize_site_path(value) ||
           raise(Discourse::InvalidParameters.new(key))
       when :country
         country = value.to_s.upcase
@@ -86,8 +86,10 @@ class AdminDashboardSiteTrafficExplorer
       when :ip
         IPAddr.new(value.to_s).to_s
       when :referrer
-        BrowserPageviewReferrerInspector.normalize("https://#{value}")&.split("/", 2)&.first ||
-          raise(Discourse::InvalidParameters.new(key))
+        BrowserPageviewEventUrlNormalizer
+          .normalize_referrer("https://#{value}")
+          &.split("/", 2)
+          &.first || raise(Discourse::InvalidParameters.new(key))
       end
     rescue IPAddr::Error
       raise Discourse::InvalidParameters.new(key)
@@ -147,7 +149,8 @@ class AdminDashboardSiteTrafficExplorer
       include_logged_in: filters[:traffic_type]&.include?("logged_in"),
       include_anonymous: filters[:traffic_type]&.include?("anonymous"),
       include_likely_crawler: filters[:traffic_type]&.include?("likely_crawler"),
-      current_hostname: BrowserPageviewReferrerInspector.normalize_host(Discourse.current_hostname),
+      current_hostname:
+        BrowserPageviewEventUrlNormalizer.normalize_host(Discourse.current_hostname),
       crawler_detection_enabled: UpcomingChanges.enabled?(:improved_crawler_detection),
       crawler_threshold: CrawlerScorer::BOT_SCORE_THRESHOLD,
       bounce_threshold:

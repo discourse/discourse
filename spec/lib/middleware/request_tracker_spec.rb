@@ -968,7 +968,7 @@ RSpec.describe Middleware::RequestTracker do
           }
         end
 
-        it "populates normalized_referrer via BrowserPageviewReferrerInspector" do
+        it "populates normalized_referrer via BrowserPageviewEventUrlNormalizer" do
           session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
 
           data =
@@ -989,7 +989,9 @@ RSpec.describe Middleware::RequestTracker do
           event = BrowserPageviewEvent.last
           expect(event.referrer).to eq("https://www.example.com/path?utm_source=x")
           expect(event.normalized_referrer).to eq("example.com/path")
-          expect(event.normalized_referrer_version).to eq(BrowserPageviewReferrerInspector::VERSION)
+          expect(event.normalized_referrer_version).to eq(
+            BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
+          )
         end
 
         it "stores nil normalized_referrer when the referrer is blank" do

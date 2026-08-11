@@ -94,7 +94,7 @@ module Jobs
     end
 
     def next_batch
-      params = { version: BrowserPageviewReferrerInspector::VERSION, limit: batch_size }
+      params = { version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION, limit: batch_size }
 
       retention_clause = ""
       if SiteSetting.clean_up_browser_pageview_events
@@ -121,7 +121,8 @@ module Jobs
 
     def store_normalized_referrers(rows)
       ids = rows.map(&:id)
-      normalized = rows.map { |row| BrowserPageviewReferrerInspector.normalize(row.referrer) }
+      normalized =
+        rows.map { |row| BrowserPageviewEventUrlNormalizer.normalize_referrer(row.referrer) }
 
       DB.exec(<<~SQL, ids: ids, normalized: normalized)
         UPDATE browser_pageview_events AS e
@@ -136,7 +137,7 @@ module Jobs
     end
 
     def recomputable_dates(ids)
-      params = { ids: ids, version: BrowserPageviewReferrerInspector::VERSION }
+      params = { ids: ids, version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION }
 
       retention_clause = ""
       if SiteSetting.clean_up_browser_pageview_events
@@ -177,7 +178,7 @@ module Jobs
     end
 
     def stamp_version(ids)
-      DB.exec(<<~SQL, version: BrowserPageviewReferrerInspector::VERSION, ids: ids)
+      DB.exec(<<~SQL, version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION, ids: ids)
         UPDATE browser_pageview_events
         SET normalized_referrer_version = :version
         WHERE id IN (:ids)
@@ -189,7 +190,7 @@ module Jobs
       return if rows.empty?
 
       ids = rows.map(&:id)
-      normalized = rows.map { |row| BrowserPageviewReferrerInspector.normalize_site_path(row.url) }
+      normalized = rows.map { |row| BrowserPageviewEventUrlNormalizer.normalize_site_path(row.url) }
 
       DB.exec(
         <<~SQL,
@@ -205,7 +206,7 @@ module Jobs
         SQL
         ids: ids,
         normalized: normalized,
-        version: BrowserPageviewReferrerInspector::SITE_PATH_VERSION,
+        version: BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
       )
     end
 
@@ -224,7 +225,7 @@ module Jobs
           LIMIT :limit
         SQL
         retention_cutoff: BrowserPageviewEvent.retention_cutoff,
-        version: BrowserPageviewReferrerInspector::SITE_PATH_VERSION,
+        version: BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
         limit: batch_size,
       )
     end

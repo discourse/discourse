@@ -169,19 +169,19 @@ class BrowserPageviewEvent < ActiveRecord::Base
     end
 
     def attributes_from_payload(payload)
-      normalized_referrer = BrowserPageviewReferrerInspector.normalize(payload[:referrer])
-      normalized_url = BrowserPageviewReferrerInspector.normalize_site_path(payload[:url])
+      normalized_referrer = BrowserPageviewEventUrlNormalizer.normalize_referrer(payload[:referrer])
+      normalized_url = BrowserPageviewEventUrlNormalizer.normalize_site_path(payload[:url])
 
       {
         url: payload[:url]&.slice(0, MAX_URL_LENGTH),
         normalized_url: normalized_url&.slice(0, MAX_NORMALIZED_URL_LENGTH),
-        normalized_url_version: BrowserPageviewReferrerInspector::SITE_PATH_VERSION,
+        normalized_url_version: BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
         ip_address: payload[:ip_address],
         country_code: payload[:country_code]&.slice(0, 2),
         asn: payload[:asn],
         referrer: payload[:referrer]&.slice(0, MAX_REFERRER_LENGTH),
         normalized_referrer: normalized_referrer&.slice(0, MAX_NORMALIZED_REFERRER_LENGTH),
-        normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
+        normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
         user_agent: payload[:user_agent]&.slice(0, MAX_USER_AGENT_LENGTH),
         session_id: payload[:session_id]&.slice(0, MAX_SESSION_ID_LENGTH),
         user_id: payload[:user_id],

@@ -1435,7 +1435,7 @@ RSpec.describe Admin::DashboardController do
           user_id: admin.id,
           session_id: "admin-session",
           normalized_referrer: "search.example/results?token=private",
-          normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
+          normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
           source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: "2026-05-10 10:00:00",
         )
@@ -1452,7 +1452,7 @@ RSpec.describe Admin::DashboardController do
           user_id: admin.id,
           session_id: "admin-session",
           normalized_referrer: "ignored.example/return?token=private",
-          normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
+          normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
           source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: "2026-05-10 10:01:00",
         )

@@ -257,9 +257,11 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         job.execute({})
 
         expect(event.reload.normalized_referrer).to eq(
-          BrowserPageviewReferrerInspector.normalize(raw),
+          BrowserPageviewEventUrlNormalizer.normalize_referrer(raw),
         )
-        expect(event.normalized_referrer_version).to eq(BrowserPageviewReferrerInspector::VERSION)
+        expect(event.normalized_referrer_version).to eq(
+          BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
+        )
       end
 
       it "only backfills referrers from the source that applies on the event's date" do
@@ -299,7 +301,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         expect(post_cutover_piggyback.reload.normalized_referrer_version).to be_nil
         expect(post_cutover_beacon.reload.normalized_referrer).to eq("reddit.com")
         expect(post_cutover_beacon.normalized_referrer_version).to eq(
-          BrowserPageviewReferrerInspector::VERSION,
+          BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
         )
       end
 
@@ -315,7 +317,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
 
         expect(direct_visit.reload.normalized_referrer_version).to be_nil
         expect(referred.reload.normalized_referrer_version).to eq(
-          BrowserPageviewReferrerInspector::VERSION,
+          BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
         )
         expect { job.execute({}) }.not_to change { referred.reload.normalized_referrer_version }
       end
@@ -327,7 +329,9 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
 
         event.reload
         expect(event.normalized_referrer).to be_nil
-        expect(event.normalized_referrer_version).to eq(BrowserPageviewReferrerInspector::VERSION)
+        expect(event.normalized_referrer_version).to eq(
+          BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
+        )
       end
 
       it "is a no-op once every referrer row is current" do
@@ -409,7 +413,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         expect(prunable.normalized_referrer_version).to be_nil
         expect(near_cutoff.reload.normalized_referrer_version).to be_nil
         expect(recent.reload.normalized_referrer_version).to eq(
-          BrowserPageviewReferrerInspector::VERSION,
+          BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
         )
       end
 
@@ -425,7 +429,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         job.execute({})
 
         expect(event.reload.normalized_referrer_version).to eq(
-          BrowserPageviewReferrerInspector::VERSION,
+          BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
         )
       end
 
@@ -476,7 +480,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         job.execute({})
 
         expect(event.reload.normalized_referrer_version).to eq(
-          BrowserPageviewReferrerInspector::VERSION,
+          BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
         )
         expect(
           BrowserPageviewReferrerDailyRollup.where(date:).pluck(:normalized_referrer, :count),
@@ -491,20 +495,24 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
             :browser_pageview_event,
             referrer: raw,
             normalized_referrer: "google.com/?utm_source=newsletter",
-            normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
+            normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
             created_at: date,
           )
 
         stub_const(
-          BrowserPageviewReferrerInspector,
-          "VERSION",
-          BrowserPageviewReferrerInspector::VERSION + 1,
+          BrowserPageviewEventUrlNormalizer,
+          "REFERRER_VERSION",
+          BrowserPageviewEventUrlNormalizer::REFERRER_VERSION + 1,
         ) do
           job.execute({})
 
           event.reload
-          expect(event.normalized_referrer).to eq(BrowserPageviewReferrerInspector.normalize(raw))
-          expect(event.normalized_referrer_version).to eq(BrowserPageviewReferrerInspector::VERSION)
+          expect(event.normalized_referrer).to eq(
+            BrowserPageviewEventUrlNormalizer.normalize_referrer(raw),
+          )
+          expect(event.normalized_referrer_version).to eq(
+            BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
+          )
         end
 
         expect(BrowserPageviewReferrerDailyRollup.where(date:).pluck(:normalized_referrer)).to eq(
@@ -527,7 +535,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         event.reload
         expect(event.normalized_url).to eq("/latest")
         expect(event.normalized_url_version).to eq(
-          BrowserPageviewReferrerInspector::SITE_PATH_VERSION,
+          BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
         )
       end
 
@@ -555,18 +563,18 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         event = Fabricate(:browser_pageview_event, url: raw)
 
         stub_const(
-          BrowserPageviewReferrerInspector,
+          BrowserPageviewEventUrlNormalizer,
           "SITE_PATH_VERSION",
-          BrowserPageviewReferrerInspector::SITE_PATH_VERSION + 1,
+          BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION + 1,
         ) do
           job.execute({})
 
           event.reload
           expect(event.normalized_url).to eq(
-            BrowserPageviewReferrerInspector.normalize_site_path(raw),
+            BrowserPageviewEventUrlNormalizer.normalize_site_path(raw),
           )
           expect(event.normalized_url_version).to eq(
-            BrowserPageviewReferrerInspector::SITE_PATH_VERSION,
+            BrowserPageviewEventUrlNormalizer::SITE_PATH_VERSION,
           )
         end
       end

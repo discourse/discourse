@@ -1,14 +1,7 @@
 # frozen_string_literal: true
 
-# Normalizes referrer URLs captured by the browser pageview middleware so the
-# same logical referrer groups consistently in the top-referrers report. It
-# strips scheme, `www.`, port, fragment, trailing slashes, and common tracking
-# query params, converts the host to lowercase punycode, and truncates the
-# result to 200 bytes.
-class BrowserPageviewReferrerInspector
-  # Bump when the normalization logic changes significantly to trigger a
-  # re-backfill of rows stamped with an older version.
-  VERSION = 1
+class BrowserPageviewEventUrlNormalizer
+  REFERRER_VERSION = 1
   SITE_PATH_VERSION = 1
 
   # TODO: consider vendoring DuckDuckGo's Tracker Radar tracking-parameter list
@@ -31,7 +24,7 @@ class BrowserPageviewReferrerInspector
 
   MAX_LENGTH = 2000
 
-  def self.normalize(raw)
+  def self.normalize_referrer(raw)
     uri = parse_uri(raw)
     return nil if uri.nil?
 

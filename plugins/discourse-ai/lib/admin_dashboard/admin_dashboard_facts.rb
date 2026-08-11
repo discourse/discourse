@@ -417,7 +417,7 @@ module DiscourseAi
       end
 
       def external_referrer?(referrer)
-        site_host = BrowserPageviewReferrerInspector.normalize_host(Discourse.current_hostname)
+        site_host = BrowserPageviewEventUrlNormalizer.normalize_host(Discourse.current_hostname)
         referrer = referrer.to_s
         return false if referrer.blank? || site_host.blank?
 
