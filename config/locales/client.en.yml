@@ -931,6 +931,7 @@ en:
       date_filter: "Posted between"
       in_reply_to: "in reply to"
       filtered_flagged_by: "Flagged by"
+      no_component_found: "No component found for %{type}"
       unknown:
         title:
           one: "You have pending review queue items from disabled plugin:"
