@@ -598,6 +598,25 @@ export default class AiTranslations extends Component {
                 }}</label>
             </div>
             <div class="setting-value">
+              {{#if this.siteSettings.content_localization_max_locales}}
+                <div class="ai-translations__locale-info">
+                  <p class="ai-translations__locale-count">
+                    {{i18n
+                      "discourse_ai.translations.locale_count"
+                      count=this.selectedLocales.length
+                      max=this.siteSettings.content_localization_max_locales
+                    }}
+                  </p>
+                  <PluginOutlet
+                    @name="ai-translations-locale-info"
+                    @connectorTagName="div"
+                    @outletArgs={{lazyHash
+                      localesCount=this.selectedLocales.length
+                      maxLocales=this.siteSettings.content_localization_max_locales
+                    }}
+                  />
+                </div>
+              {{/if}}
               <div class="ai-translations__locale-input-row">
                 <MultiSelect
                   @value={{this.selectedLocales}}
@@ -633,30 +652,14 @@ export default class AiTranslations extends Component {
                   />
                 {{/if}}
               </div>
-              {{#if this.siteSettings.content_localization_max_locales}}
-                <div class="ai-translations__locale-info">
-                  <p class="ai-translations__locale-count">
-                    {{i18n
-                      "discourse_ai.translations.locale_count"
-                      count=this.selectedLocales.length
-                      max=this.siteSettings.content_localization_max_locales
-                    }}
-                  </p>
-                  <PluginOutlet
-                    @name="ai-translations-locale-info"
-                    @connectorTagName="div"
-                    @outletArgs={{lazyHash
-                      localesCount=this.selectedLocales.length
-                      maxLocales=this.siteSettings.content_localization_max_locales
-                    }}
-                  />
-                </div>
-              {{/if}}
             </div>
           </div>
           <div class="setting">
             <div class="setting-label">
               <label>{{i18n "discourse_ai.translations.category_scope"}}</label>
+              <div class="desc ai-translations__category-scope-desc">{{i18n
+                  "discourse_ai.translations.category_scope_description"
+                }}</div>
             </div>
             <div class="setting-value">
               <div class="ai-translations__category-input-row">
@@ -730,9 +733,6 @@ export default class AiTranslations extends Component {
                   </div>
                 {{/if}}
               </div>
-              <div class="desc">{{i18n
-                  "discourse_ai.translations.category_scope_description"
-                }}</div>
             </div>
           </div>
         </div>
