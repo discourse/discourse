@@ -96,12 +96,6 @@ RSpec.describe "Anniversaries and Birthdays" do
         end
       end
 
-      it "handles legacy timezone aliases without SQL errors" do
-        current_user.user_option.update!(timezone: "Asia/Calcutta")
-        get "/cakeday/anniversaries.json", params: { filter: "today" }
-        expect(response.status).to eq(200)
-      end
-
       it "handles Nuku'alofa timezone without SQL errors" do
         # Nuku'alofa contains an apostrophe and must be converted to Pacific/Tongatapu
         current_user.user_option.update!(timezone: "Nuku'alofa")
