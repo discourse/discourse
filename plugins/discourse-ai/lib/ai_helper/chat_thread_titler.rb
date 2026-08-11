@@ -46,7 +46,7 @@ module DiscourseAi
         bot.reply(context) do |partial, _, type|
           if type == :structured_output
             title = partial.read_buffered_property(:title)
-            result << title if title.present?
+            result << title if !title.nil? && !title.empty?
           elsif type.blank?
             result << partial
           end

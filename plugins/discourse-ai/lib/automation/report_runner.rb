@@ -156,7 +156,7 @@ module DiscourseAi
               read_chunk = partial.read_buffered_property(json_summary_schema_key["key"]&.to_sym)
 
               print read_chunk if Rails.env.development? && @debug_mode
-              result << read_chunk if read_chunk.present?
+              result << read_chunk if !read_chunk.nil? && !read_chunk.empty?
             elsif type.blank?
               # Assume response is a regular completion.
               print partial if Rails.env.development? && @debug_mode

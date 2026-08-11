@@ -149,7 +149,10 @@ module DiscourseAi
 
               if schema_type == "string"
                 helper_chunk = partial.read_buffered_property(schema_key)
-                if helper_chunk.present?
+                # read_buffered_property consumes the buffer, so whitespace-only
+                # chunks (e.g. a "\n\n" delta between paragraphs) must still be
+                # appended — present? would drop them permanently.
+                if !helper_chunk.nil? && !helper_chunk.empty?
                   helper_response << helper_chunk
                   block.call(helper_chunk) if block
                 end
