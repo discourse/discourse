@@ -12430,7 +12430,6 @@ ALTER SEQUENCE public.web_hook_events_daily_aggregates_id_seq OWNED BY public.we
 --
 
 CREATE SEQUENCE public.web_hook_events_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -23051,6 +23050,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260728150000'),
 ('20260728071552'),
 ('20260728045008'),
 ('20260727085824'),
