@@ -2246,6 +2246,87 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     });
   });
 
+  module("auto-scroll for an adopted drag", function () {
+    const WEB_LINK = {
+      type: "web-link",
+      match: ({ element }) => Boolean(element.closest("a[href]")),
+    };
+
+    function linkTransfer() {
+      const dataTransfer = new DataTransfer();
+      dataTransfer.setData("text/uri-list", "https://example.com/adopted");
+      return dataTransfer;
+    }
+
+    /**
+     * Starts a drag on an element nothing registered and holds it against the
+     * container's bottom edge, the way dragging a link down a sidebar does.
+     * Auto-scroll eases in across its own frames, so one event moves nothing.
+     */
+    async function hoverAdoptedNearBottomEdge(sourceSelector, dataTransfer) {
+      await dragEvent(sourceSelector, "dragstart", {
+        dataTransfer,
+        ...centerOf(sourceSelector),
+      });
+
+      const { left, bottom, width } = find("#scroller").getBoundingClientRect();
+      const point = { clientX: left + width / 2, clientY: bottom - 2 };
+
+      await dragEvent("#scroller", "dragenter", { dataTransfer, ...point });
+      for (let frame = 0; frame < 12; frame++) {
+        await dragEvent("#scroller", "dragover", { dataTransfer, ...point });
+      }
+    }
+
+    const scroller = <template>
+      <a id="anchor" href="https://example.com/adopted">a link</a>
+      <div id="row" {{dDragAndDropSource type="row"}}>a registered row</div>
+      <div
+        id="scroller"
+        style="height: 100px; overflow-y: auto"
+        {{dDragAndDropTarget adopts=WEB_LINK}}
+        {{dDragAndDropAutoScroll types=@types}}
+      >
+        <div style="height: 600px">tall</div>
+      </div>
+    </template>;
+
+    test("auto-scroll engages for an adopted drag named by its adoption type", async function (assert) {
+      await render(<template><scroller @types="web-link" /></template>);
+
+      await hoverAdoptedNearBottomEdge("#anchor", linkTransfer());
+
+      assert.true(
+        find("#scroller").scrollTop > 0,
+        "a container naming the adoption's own type scrolls for a drag adopted under it, which is the only filter a consumer can write"
+      );
+    });
+
+    test("auto-scroll named a type ignores an adopted drag of another", async function (assert) {
+      await render(<template><scroller @types="card" /></template>);
+
+      await hoverAdoptedNearBottomEdge("#anchor", linkTransfer());
+
+      assert.strictEqual(
+        find("#scroller").scrollTop,
+        0,
+        "matching an adopted drag is still matching a type, not a licence to engage on every adoption"
+      );
+    });
+
+    test("auto-scroll named an adoption type ignores an ordinary drag", async function (assert) {
+      await render(<template><scroller @types="web-link" /></template>);
+
+      await hoverAdoptedNearBottomEdge("#row", linkTransfer());
+
+      assert.strictEqual(
+        find("#scroller").scrollTop,
+        0,
+        "a registered source's own drag is not adopted, so a filter written for the adoption leaves it alone"
+      );
+    });
+  });
+
   module("nested external targets", function () {
     test("an ancestor drops its indicator once a child becomes deepest", async function (assert) {
       await render(

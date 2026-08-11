@@ -27,8 +27,10 @@ interface DDragAndDropAutoScrollSignature {
   Args: {
     Named: {
       /**
-       * Only drags whose source `type` matches engage the auto-scroll. Omit to
-       * engage on any drag (rare).
+       * Only drags whose `type` matches engage the auto-scroll. For a drag a
+       * target adopted that is the adoption's own type, so a container scrolls
+       * for one without naming anything about adoption. Omit to engage on any
+       * drag (rare).
        */
       types?: string | string[];
 

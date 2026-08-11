@@ -8,6 +8,8 @@ import {
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { modifier } from "ember-modifier";
 import {
+  ADOPTED_AS,
+  ADOPTED_DRAG_TYPE,
   decorateExternalSource,
   type ExternalDragPayload,
 } from "discourse/services/drag-and-drop";
@@ -230,20 +232,6 @@ export function createEnterLeavePairing() {
   };
 }
 
-/**
- * The `type` every adopted drag carries, so a target can tell one apart from a
- * drag a `dDragAndDropSource` registered.
- *
- * Namespaced because it occupies the same slot as a consumer's own `type`: a
- * plugin stamping this literal on a real source would be misrouted into the
- * adoption branch. It cannot be a symbol — the drag service and `matchesDragType`
- * both treat `type` as a string.
- */
-export const ADOPTED_DRAG_TYPE = "discourse:adopted-native-drag";
-
-/** Where an adoption's declared type travels, since `type` is the sentinel. */
-const ADOPTED_AS = "adoptedAs";
-
 /** What an adoption gate is asked about, and handed if it accepts. */
 export interface NativeDragAdoptionFeedback {
   /** The element the browser chose to drag. */
@@ -266,8 +254,10 @@ export interface NativeDragAdoptionFeedback {
  */
 export interface NativeDragAdoption {
   /**
-   * Names this kind of adopted drag. Travels beside the sentinel rather than as
-   * `source.type`, and is what a target's `adopts` is matched against.
+   * Names this kind of adopted drag: what `adopts` is matched against, what a
+   * target reports as `source.type`, and what a monitor or auto-scroll filters
+   * on. Carried beside the sentinel on the wire, since the sentinel occupies
+   * `type` there, but nothing downstream has to know that.
    */
   type: string;
 

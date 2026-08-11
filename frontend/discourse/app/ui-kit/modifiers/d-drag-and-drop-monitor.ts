@@ -4,15 +4,18 @@ import {
   monitorForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { modifier } from "ember-modifier";
+import { dragTypeOf } from "discourse/services/drag-and-drop";
 
 /**
- * Whether a drag's source `type` is one the consumer asked for.
+ * Whether a drag's type is one the consumer asked for.
  *
  * Shared because the monitor and the auto-scroll ask the same question in the
  * same way, and a copy of it in each drifted once already elsewhere in this set.
  *
  * @param types - One type, several, or nothing at all to match every drag.
- * @param source - The dragged source, whose `data.type` is compared.
+ * @param source - The dragged source, compared by the type it answers to
+ *   ({@link dragTypeOf}) rather than the raw `data.type`, so an adopted drag is
+ *   reachable by the adoption's own vocabulary.
  */
 export function matchesDragType(
   types: string | string[] | undefined,
@@ -22,7 +25,7 @@ export function matchesDragType(
   if (list.length === 0) {
     return true;
   }
-  return list.includes(source.data?.type as string);
+  return list.includes(dragTypeOf(source.data) as string);
 }
 
 /** What a monitor callback is told: the dragged source and where it has been. */
@@ -37,8 +40,8 @@ interface DDragAndDropMonitorSignature {
   Args: {
     Named: {
       /**
-       * Only drags whose source `type` matches are observed. Omit to observe any
-       * drag.
+       * Only drags whose `type` matches are observed — the adoption's own type
+       * for a drag a target adopted. Omit to observe any drag.
        */
       types?: string | string[];
 

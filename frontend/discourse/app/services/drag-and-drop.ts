@@ -26,7 +26,7 @@ import {
 
 /** The in-flight element drag, as the source described it. */
 export interface DragPayload {
-  /** Discriminator string set by the source. */
+  /** Discriminator string set by the source, or by the adoption that took it. */
   type: string;
 
   /** Arbitrary payload the source attached to the drag. */
@@ -38,6 +38,38 @@ export interface DragPayload {
    * driving the service by hand may not.
    */
   element: HTMLElement | null;
+}
+
+/**
+ * The `type` every adopted drag carries, so a target can tell one apart from a
+ * drag a `dDragAndDropSource` registered.
+ *
+ * Namespaced because it occupies the same slot as a consumer's own `type`: a
+ * plugin stamping this literal on a real source would be misrouted into the
+ * adoption branch. It cannot be a symbol — `type` is a string everywhere it is
+ * read.
+ */
+export const ADOPTED_DRAG_TYPE = "discourse:adopted-native-drag";
+
+/** Where an adoption's declared type travels, since `type` is the sentinel. */
+export const ADOPTED_AS = "adoptedAs";
+
+/**
+ * The type a drag answers to in an `accepts` / `types` filter.
+ *
+ * For an adopted drag that is the adoption's own declared type rather than the
+ * sentinel in `type`, so a consumer filters on the vocabulary it wrote
+ * (`"web-link"`) and never has to know a drag was adopted. Without this every
+ * filter would miss an adopted drag, leaving an omitted filter — which matches
+ * everything — as the only way to catch one.
+ *
+ * @param data - A drag payload's `data`, as PDND carries it.
+ */
+export function dragTypeOf(data?: Record<string, unknown>) {
+  if (data?.type === ADOPTED_DRAG_TYPE) {
+    return data[ADOPTED_AS] as string | undefined;
+  }
+  return data?.type as string | undefined;
 }
 
 /**
@@ -196,7 +228,7 @@ export default class DragAndDropService extends Service {
           // `source.data` is PDND's `Record<string, unknown>`; our own
           // `dDragAndDropSource` always stamps `type` as a string, and
           // `canMonitor` above only admits sources whose `type` is set.
-          type: source.data.type as string,
+          type: dragTypeOf(source.data) as string,
           data: source.data,
           element: source.element,
         });
