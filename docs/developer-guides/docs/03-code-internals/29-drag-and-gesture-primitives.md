@@ -112,6 +112,31 @@ direction.
 Use the service to **read**, the monitor to **respond**. Rendering from the
 monitor's callbacks means hand-maintaining state the service already keeps.
 
+## What the cursor says
+
+Two separate things decide it, and reaching for the wrong one is why the badge
+under the pointer is hard to shift.
+
+**What the drag permits** is `effectAllowed`, written once at `dragstart` and not
+touched again. Left unwritten it means "anything", which the browser renders as
+its standing offer to copy, so `dDragAndDropSource` declares `"move"` — what a
+drag between two places in the same page almost always is.
+
+That default is a real constraint, not just a cursor: `getDropEffect` may only
+return an effect the source permits, so a target asking for `"copy"` under it
+shows the pointer as **refused**. A source whose drop genuinely duplicates rather
+than relocates passes `effectAllowed="copyMove"`, which permits both.
+
+**Whether anything wants the drop** is `dropEffect`, and a sourced drag answers
+for itself everywhere no target accepts it. That is about the ending rather than
+the pointer: releasing over dead space finishes the drag where it is, instead of
+playing the browser's snap-back animation.
+
+A drag this suite **adopted** is excluded from both. The browser started it and
+it carries a real payload, so dropping it on a text field or any other surface on
+the page is something that surface should still be able to handle. Adopted drags
+keep whatever the browser decided, its copy cursor included.
+
 # Resize: which of the three
 
 `DResizeSeparator` and `dResizeEdge` are the same gesture at two levels, and

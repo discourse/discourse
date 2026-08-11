@@ -32,6 +32,9 @@ const Negatives = <template>
   {{! @glint-expect-error - the discriminator is required, since targets filter on it and the service identifies its own drags by it }}
   <li {{dDragAndDropSource data=payload}}></li>
 
+  {{! @glint-expect-error - a drag permits a fixed set of operations, and move-copy is not one of their spellings }}
+  <li {{dDragAndDropSource type="link" effectAllowed="moveCopy"}}></li>
+
   {{! @glint-expect-error - the axis vocabulary is x and y }}
   <li {{dDragAndDropTarget accepts="link" axis="z"}}></li>
 

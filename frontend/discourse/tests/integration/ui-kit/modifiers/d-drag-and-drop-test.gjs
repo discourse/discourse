@@ -2189,6 +2189,254 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
     });
   });
 
+  module("a drag held over nothing", function () {
+    /**
+     * Dispatches a drag event and hands the event back, which `triggerEvent`
+     * cannot: what is being asserted is whether something claimed the event.
+     *
+     * `dataTransfer.dropEffect` would be the more direct reading, and it is not
+     * available — a synthetic drag leaves it at `"none"` however it is set, even
+     * over a target that asked for `"copy"`. `defaultPrevented` is the half that
+     * carries the meaning anyway: it is what tells the browser the drag was
+     * handled here, and the cursor follows from it.
+     */
+    async function dragOverAndReturnEvent(selector, dataTransfer) {
+      const event = new DragEvent("dragover", {
+        bubbles: true,
+        cancelable: true,
+        dataTransfer,
+        ...centerOf(selector),
+      });
+      find(selector).dispatchEvent(event);
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      return event;
+    }
+
+    test("a sourced drag claims the space no target wants", async function (assert) {
+      await render(
+        <template>
+          <div id="row" {{dDragAndDropSource type="row"}}>row</div>
+          <div id="nowhere">not a drop target</div>
+        </template>
+      );
+
+      const dataTransfer = new DataTransfer();
+      await dragEvent("#row", "dragstart", {
+        dataTransfer,
+        ...centerOf("#row"),
+      });
+
+      const event = await dragOverAndReturnEvent("#nowhere", dataTransfer);
+
+      assert.true(
+        event.defaultPrevented,
+        "the drag answers for itself over dead space, so the browser stops offering to copy something it has no way to take"
+      );
+    });
+
+    test("a drag the browser started is left alone", async function (assert) {
+      const WEB_LINK = {
+        type: "web-link",
+        match: ({ element }) => Boolean(element.closest("a[href]")),
+      };
+      const dataTransfer = new DataTransfer();
+      dataTransfer.setData("text/uri-list", "https://example.com/adopted");
+
+      await render(
+        <template>
+          <a id="anchor" href="https://example.com/adopted">a link</a>
+          <div id="zone" {{dDragAndDropTarget adopts=WEB_LINK}}>zone</div>
+          <div id="nowhere">not a drop target</div>
+        </template>
+      );
+
+      await dragEvent("#anchor", "dragstart", {
+        dataTransfer,
+        ...centerOf("#anchor"),
+      });
+
+      const event = await dragOverAndReturnEvent("#nowhere", dataTransfer);
+
+      assert.false(
+        event.defaultPrevented,
+        "an adopted drag carries a payload the page can still use, so dropping it somewhere else stays the browser's business"
+      );
+    });
+  });
+
+  module("what a drag permits", function () {
+    /**
+     * A real `DataTransfer` whose `effectAllowed` keeps what is written to it.
+     *
+     * The native property is a no-op here — its setter requires a drag data
+     * store in a mode only a browser-driven drag puts it in, so a synthetic
+     * event silently discards every write, the test's own included. An own
+     * property shadows the accessor and leaves the rest of the object real,
+     * which makes what the source declares readable at all.
+     */
+    function recordingTransfer(effectAllowed = "none") {
+      const dataTransfer = new DataTransfer();
+      Object.defineProperty(dataTransfer, "effectAllowed", {
+        value: effectAllowed,
+        writable: true,
+        configurable: true,
+      });
+      return dataTransfer;
+    }
+
+    test("a sourced drag permits a move, and nothing else", async function (assert) {
+      await render(
+        <template>
+          <div id="row" {{dDragAndDropSource type="row"}}>row</div>
+        </template>
+      );
+
+      const dataTransfer = recordingTransfer();
+      await dragEvent("#row", "dragstart", {
+        dataTransfer,
+        ...centerOf("#row"),
+      });
+
+      assert.strictEqual(
+        dataTransfer.effectAllowed,
+        "move",
+        "the drag says what it permits, so the pointer stops carrying the browser's standing offer to copy"
+      );
+    });
+
+    test("a source can permit a copy as well", async function (assert) {
+      await render(
+        <template>
+          <div
+            id="row"
+            {{dDragAndDropSource type="row" effectAllowed="copyMove"}}
+          >row</div>
+        </template>
+      );
+
+      const dataTransfer = recordingTransfer();
+      await dragEvent("#row", "dragstart", {
+        dataTransfer,
+        ...centerOf("#row"),
+      });
+
+      assert.strictEqual(
+        dataTransfer.effectAllowed,
+        "copyMove",
+        "a source whose drop duplicates rather than relocates keeps the copy available to its targets"
+      );
+    });
+
+    test("the innermost source is the one that answers", async function (assert) {
+      await render(
+        <template>
+          <div id="outer" {{dDragAndDropSource type="outer"}}>
+            <div
+              id="inner"
+              {{dDragAndDropSource type="inner" effectAllowed="copyMove"}}
+            >inner</div>
+          </div>
+        </template>
+      );
+
+      const dataTransfer = recordingTransfer();
+      await dragEvent("#inner", "dragstart", {
+        dataTransfer,
+        ...centerOf("#inner"),
+      });
+
+      assert.strictEqual(
+        dataTransfer.effectAllowed,
+        "copyMove",
+        "a drag begun on a nested source passes through its ancestor on the way out, which must not answer over it"
+      );
+    });
+
+    test("a source still registered keeps answering after a sibling detaches", async function (assert) {
+      const state = new (class {
+        @tracked disabled = false;
+      })();
+
+      await render(
+        <template>
+          <div
+            id="going"
+            {{dDragAndDropSource type="going" disabled=state.disabled}}
+          >going</div>
+          <div id="staying" {{dDragAndDropSource type="staying"}}>staying</div>
+        </template>
+      );
+
+      state.disabled = true;
+      await settled();
+
+      const dataTransfer = recordingTransfer();
+      await dragEvent("#staying", "dragstart", {
+        dataTransfer,
+        ...centerOf("#staying"),
+      });
+
+      assert.strictEqual(
+        dataTransfer.effectAllowed,
+        "move",
+        "one source going away takes only its own share of the shared listener"
+      );
+    });
+
+    test("the last source to go takes the shared listener with it", async function (assert) {
+      // White-box, because the only thing a leak costs is an idle listener and
+      // a map entry per registration — nothing a drag can observe.
+      const state = new (class {
+        @tracked disabled = false;
+      })();
+
+      await render(
+        <template>
+          <div
+            id="row"
+            {{dDragAndDropSource type="row" disabled=state.disabled}}
+          >row</div>
+        </template>
+      );
+
+      const released = sinon.spy(window, "removeEventListener");
+      state.disabled = true;
+      await settled();
+
+      assert.true(
+        released.calledWith("dragstart", sinon.match.func, { capture: true }),
+        "nothing stays bound to a page with no drag sources left on it"
+      );
+    });
+
+    test("a drag the browser started is left alone", async function (assert) {
+      const WEB_LINK = {
+        type: "web-link",
+        match: ({ element }) => Boolean(element.closest("a[href]")),
+      };
+      const dataTransfer = recordingTransfer("all");
+      dataTransfer.setData("text/uri-list", "https://example.com/adopted");
+
+      await render(
+        <template>
+          <a id="anchor" href="https://example.com/adopted">a link</a>
+          <div id="zone" {{dDragAndDropTarget adopts=WEB_LINK}}>zone</div>
+        </template>
+      );
+
+      await dragEvent("#anchor", "dragstart", {
+        dataTransfer,
+        ...centerOf("#anchor"),
+      });
+
+      assert.strictEqual(
+        dataTransfer.effectAllowed,
+        "all",
+        "an adopted drag carries a payload the rest of the page can still take, so what it permits stays the browser's decision"
+      );
+    });
+  });
+
   module("external auto-scroll", function () {
     function textTransfer() {
       const dataTransfer = new DataTransfer();

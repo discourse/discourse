@@ -68,6 +68,7 @@ const Positives = <template>
       data=payload
       dragHandle=handle
       dragPreviewOffset=(hash x="1rem" y="0.5rem")
+      effectAllowed="copyMove"
       disabled=false
       onDragStart=noop
       onDragEnd=noop

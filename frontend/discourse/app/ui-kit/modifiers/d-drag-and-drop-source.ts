@@ -8,6 +8,7 @@ import {
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { pointerOutsideOfPreview } from "@atlaskit/pragmatic-drag-and-drop/element/pointer-outside-of-preview";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
+import { preventUnhandled } from "@atlaskit/pragmatic-drag-and-drop/prevent-unhandled";
 import Modifier, { type ArgsFor } from "ember-modifier";
 
 /** The pointer position as the underlying library reports it. */
@@ -84,6 +85,19 @@ interface DDragAndDropSourceSignature {
        * whose hotspot the browser clamps to within the image.
        */
       dragPreviewOffset?: { x: string; y: string };
+
+      /**
+       * Which drop operations this drag permits, written onto the native
+       * `dataTransfer` at `dragstart`. Defaults to `"move"`, which is what a
+       * drag between places in the same page almost always is, and which stops
+       * the browser badging the pointer with its standing offer to copy.
+       *
+       * A source whose drop genuinely duplicates rather than relocates wants
+       * `"copyMove"` — a target's `getDropEffect` may only return an effect
+       * this permits, and asking for one it does not shows the pointer as
+       * refused.
+       */
+      effectAllowed?: DataTransfer["effectAllowed"];
 
       /** Returning `false` blocks the drag from starting. */
       canDrag?: (feedback: {
@@ -196,6 +210,90 @@ export type DragAndDropSourceArgs =
   DDragAndDropSourceSignature["Args"]["Named"];
 
 /**
+ * Where to read a registered source element's current args. Weak because it
+ * outlives no registration it should: a module-level strong reference to an
+ * element keeps a removed subtree alive for the life of the tab, and a
+ * registration this never hears the end of would be exactly that.
+ */
+const effectDeclarers = new WeakMap<Element, () => DragAndDropSourceArgs>();
+
+/**
+ * How many sources are registered, which a weak map cannot report and the
+ * listener below is bound and unbound on.
+ */
+let liveSourceCount = 0;
+
+/** Unbinds the shared listener below. Null while no source is registered. */
+let stopDeclaringEffects: (() => void) | null = null;
+
+/**
+ * Says what the drag that is starting permits, which nothing else does — left
+ * unwritten, `effectAllowed` means "anything", which the browser renders as its
+ * standing offer to copy.
+ *
+ * A native listener because the drag callbacks are never handed the event. It
+ * runs during the `dragstart` dispatch, which is all the browser asks: it reads
+ * the value once that dispatch has finished.
+ */
+function declareEffectAllowed(event: DragEvent) {
+  const target = event.target as HTMLElement | null;
+  // The innermost registered source, so a drag begun inside a nested one is
+  // answered by that source rather than by whichever ancestor also registered.
+  const source = target?.closest?.("[data-drag-source]");
+  const getArgsRef = source && effectDeclarers.get(source);
+  if (getArgsRef && event.dataTransfer) {
+    event.dataTransfer.effectAllowed = getArgsRef().effectAllowed ?? "move";
+  }
+}
+
+/**
+ * Puts a source on the shared listener rather than giving it one of its own: a
+ * long list registers a row per item, and the event it needs is one the whole
+ * page dispatches anyway.
+ *
+ * @returns Cleanup, which unbinds the listener once the last source has gone.
+ */
+function declareEffectFor(
+  element: Element,
+  getArgsRef: () => DragAndDropSourceArgs
+) {
+  effectDeclarers.set(element, getArgsRef);
+  liveSourceCount += 1;
+  if (!stopDeclaringEffects) {
+    window.addEventListener("dragstart", declareEffectAllowed, {
+      capture: true,
+    });
+    stopDeclaringEffects = () =>
+      window.removeEventListener("dragstart", declareEffectAllowed, {
+        capture: true,
+      });
+  }
+
+  return () => {
+    // Only the release that finds the entry still there counts. A teardown is
+    // expected to be idempotent, and a second one decrementing again would take
+    // the listener out from under a source that is still registered.
+    if (!effectDeclarers.delete(element)) {
+      return;
+    }
+    // Clamped because a reset zeroes the count while live registrations are
+    // still holding a release, and a negative count would never reach zero.
+    liveSourceCount = Math.max(0, liveSourceCount - 1);
+    if (liveSourceCount === 0) {
+      stopDeclaringEffects?.();
+      stopDeclaringEffects = null;
+    }
+  };
+}
+
+/** Test-only: forget every source and unbind the listener between tests. */
+export function resetDragSourcesForTesting() {
+  liveSourceCount = 0;
+  stopDeclaringEffects?.();
+  stopDeclaringEffects = null;
+}
+
+/**
  * Wraps PDND's `draggable()` with the source-payload normalisation, the
  * `--dragging` class on the source element, and the end-of-drag deferral
  * that hides PDND's source-before-target dispatch ordering. Used by the
@@ -240,6 +338,8 @@ export function registerDragAndDropSource(
   /** A teardown waiting for the drag in flight to finish, if there is one. */
   let teardownWhenIdle: (() => void) | null = null;
 
+  const stopDeclaringEffect = declareEffectFor(element, getArgsRef);
+
   const cleanup = draggable({
     element,
     // Read once, here: the underlying library keeps this in the config captured
@@ -261,6 +361,23 @@ export function registerDragAndDropSource(
     },
     onGenerateDragPreview: ({ nativeSetDragImage }) => {
       const args = getArgsRef();
+
+      // Answers for the drag everywhere no target accepts it, so releasing over
+      // dead space ends the drag where the pointer is instead of playing the
+      // browser's snap-back animation. Started here rather than from
+      // `onDragStart`, which the library defers by a frame: bound a frame late,
+      // the first moments of every drag would go unanswered.
+      //
+      // Deliberately never stopped. The utility binds its own drop, dragend and
+      // broken-drag cleanup, so it releases itself however the drag ends —
+      // including one whose source was destroyed mid-flight, where our own
+      // teardown callbacks are cancelled and would never run.
+      //
+      // Only sourced drags. One this suite adopted was started by the browser
+      // and carries a real payload, so what the rest of the page does with it
+      // stays the browser's business.
+      preventUnhandled.start();
+
       if (!nativeSetDragImage) {
         return;
       }
@@ -373,6 +490,7 @@ export function registerDragAndDropSource(
 
   const teardown = () => {
     cleanup();
+    stopDeclaringEffect();
     element.classList.remove("--dragging");
     element.removeAttribute("data-drag-source");
   };
