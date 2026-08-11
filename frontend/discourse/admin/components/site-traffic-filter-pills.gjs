@@ -31,6 +31,7 @@ export default class SiteTrafficFilterPills extends Component {
     {{#if @filters.length}}
       <div
         class="site-traffic-explorer__filters"
+        role="group"
         aria-label={{i18n "admin.site_traffic_explorer.active_filters"}}
       >
         {{#each @filters as |filter|}}

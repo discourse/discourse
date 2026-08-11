@@ -32,7 +32,7 @@ export default class SiteTrafficBreakdownModal extends Component {
       class="site-traffic-breakdown-modal"
     >
       <:body>
-        <table class="d-table site-traffic-breakdown-modal__table">
+        <table class="d-table">
           <thead class="d-table__header">
             <tr class="d-table__row">
               <th class="d-table__header-cell" scope="col">

@@ -50,16 +50,14 @@ export default class SiteTrafficExplorer extends Component {
           "admin.site_traffic_explorer.metrics.logged_in_share.label"
         ),
         tooltip: i18n(
-          "admin.site_traffic_explorer.metrics.logged_in_share.tooltip"
+          "admin.dashboard.site_traffic.kpi.logged_in_share.tooltip"
         ),
         value: `${this.#number(this.summary.logged_in_share)}%`,
       },
       {
         name: "bounce_rate",
         label: i18n("admin.site_traffic_explorer.metrics.bounce_rate.label"),
-        tooltip: i18n(
-          "admin.site_traffic_explorer.metrics.bounce_rate.tooltip"
-        ),
+        tooltip: i18n("admin.dashboard.site_traffic.kpi.bounce_rate.tooltip"),
         value: `${this.#number(this.summary.bounce_rate)}%`,
       },
       {
@@ -68,7 +66,7 @@ export default class SiteTrafficExplorer extends Component {
           "admin.site_traffic_explorer.metrics.average_session_duration.label"
         ),
         tooltip: i18n(
-          "admin.site_traffic_explorer.metrics.average_session_duration.tooltip"
+          "admin.dashboard.site_traffic.kpi.average_session_duration.tooltip"
         ),
         value: formatMinutesSeconds(
           this.summary.average_session_duration_seconds ?? 0

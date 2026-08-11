@@ -25,7 +25,7 @@ export default <template>
           class="db-section__metric-label site-traffic-explorer__metric-label"
         >{{@label}}</span>
         <DTooltip
-          class="db-section__info site-traffic-explorer__metric-tooltip"
+          class="db-section__info"
           @identifier={{concat "site-traffic-explorer-" @name "-tooltip"}}
           @icon="far-circle-question"
           @title={{i18n "admin.site_traffic_explorer.metric_information"}}

@@ -79,7 +79,7 @@ class Admin::DashboardController < Admin::StaffController
     ) do
       on_success { |traffic:| render json: traffic }
       on_failed_contract { raise Discourse::InvalidParameters }
-      on_exceptions(ActiveRecord::QueryCanceled, PG::QueryCanceled) do
+      on_exceptions do
         render json: { error_type: "traffic_query_timeout" }, status: :service_unavailable
       end
     end

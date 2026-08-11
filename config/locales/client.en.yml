@@ -7307,13 +7307,10 @@ en:
             tooltip: "Sessions represented in the matching raw pageviews."
           logged_in_share:
             label: "Logged-in share"
-            tooltip: "The share of matching human pageviews from logged-in members."
           bounce_rate:
             label: "Bounce rate"
-            tooltip: "The share of sessions with one pageview and less than 10 seconds of engaged time."
           average_session_duration:
             label: "Average session duration"
-            tooltip: "Average engaged time across sessions represented in the matching raw pageviews."
         series:
           logged_in_human: "Logged in"
           anonymous_human: "Anonymous"

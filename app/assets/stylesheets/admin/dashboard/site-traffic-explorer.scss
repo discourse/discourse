@@ -42,7 +42,6 @@
 
   &__error,
   &__empty {
-    margin: 0;
     border-radius: var(--d-border-radius);
     padding: var(--space-3) var(--space-4);
   }
@@ -193,10 +192,6 @@
     overflow-wrap: anywhere;
   }
 
-  &__chart {
-    box-sizing: border-box;
-  }
-
   &__empty {
     border: 1px dashed var(--content-border-color);
     background: var(--primary-very-low);
@@ -212,7 +207,6 @@
     flex-direction: column;
     gap: var(--space-3);
     min-width: 0;
-    background: var(--secondary);
   }
 
   &__tabs {
@@ -275,7 +269,6 @@
     color: var(--primary);
     font: inherit;
     text-align: start;
-    text-decoration: none;
 
     > span:not(.site-traffic-explorer__row-count) {
       overflow: hidden;
@@ -387,10 +380,6 @@
 }
 
 .site-traffic-breakdown-modal {
-  &__table {
-    width: 100%;
-  }
-
   &__pageviews {
     text-align: end;
 
