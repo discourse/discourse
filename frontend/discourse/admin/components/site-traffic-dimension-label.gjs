@@ -6,7 +6,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const BROWSER_ICONS = {
   edge: "fab-microsoft",
-  firefox: "globe",
+  firefox: "fab-firefox-browser",
   chrome: "fab-chrome",
   safari: "fab-apple",
   unknown: "globe",
