@@ -6079,7 +6079,7 @@ zh_CN:
             apple_touch_icon:
               title: "Apple 触控图标"
               description: "用于 Apple 触控设备的图标。如果留空，将使用 large_icon。"
-              help_text: "建议尺寸为 180 x 180 像素。请勿使用SVG图像，不建议使用透明背景。"
+              help_text: "建议尺寸为 180 x 180 像素。请勿使用SVG 图片，不建议使用透明背景。"
             digest_logo:
               title: "摘要徽标"
               description: "您的站点的电子邮件摘要顶部使用的备用徽标图片。如果留空，将使用 `logo` 设置中的图片。"
@@ -9070,7 +9070,7 @@ zh_CN:
         select_to_export: "选择以导出"
         import: "导入"
         import_heading: "导入表情符号"
-        import_description: "上传包含 emojis.csv 清单和图像文件的 ZIP 文件。"
+        import_description: "上传包含 emojis.csv 清单和图片文件的 ZIP 文件。"
         import_download_sample: "下载示例模板。"
         import_preview_heading: "检查导入"
         import_summary: "%{new} 个新增 · %{conflicts} 个冲突 · %{unchanged} 个未更改 · %{invalid} 个错误"

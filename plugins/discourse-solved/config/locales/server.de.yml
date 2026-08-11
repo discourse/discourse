@@ -50,6 +50,7 @@ de:
     prioritize_solved_topics_in_search: "Gelöste Themen in den Suchergebnissen priorisieren."
     enable_support_category_type_setup: "Aktiviert die Option „Support“ als Kategorietyp bei der Einrichtung der Kategorieerstellung."
     enable_solved_shared_issues: "Fügt ungelösten Themen in Supportkategorien eine Schaltfläche „Ich auch“ hinzu, mit der Mitglieder signalisieren können, dass sie das gleiche Problem haben, und sich für Benachrichtigungen über die Lösung des Themas anmelden können."
+    enable_solved_badges: "Aktiviert die „Gelöst“-Abzeichen, die Mitgliedern verliehen werden, wenn sie Lösungen für die Fragen anderer bereitstellen."
     show_who_marked_solved: "Zeige an, wer das Thema als gelöst markiert hat. Dies wird im ersten Beitrag des Themas und im Antwortbeitrag in einem Tooltipp angezeigt."
     keywords:
       accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"

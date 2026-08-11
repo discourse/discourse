@@ -2090,7 +2090,7 @@ ar:
       silenced_permanently: "تم إسكات هذا المستخدم."
       silenced_reason: "السبب: "
       github_profile: "Github"
-      email_activity_summary: "خلاصة النشاط"
+      email_activity_summary: "ملخص النشاط"
       mailing_list_mode:
         label: "وضع القائمة البريدية"
         enabled: "تفعيل وضع القائمة البريدية"
@@ -4723,7 +4723,7 @@ ar:
         bookmarks: "لم تضع إشارة مرجعية على أي موضوع بعد."
         category: "لا توجد موضوعات في الفئة %{category}."
         top: "لا توجد موضوعات في الأكثر نشاطًا."
-        hot: "لا توجد موضوعات ساخنة."
+        hot: "لا توجد موضوعات رائجة."
         filter: "لا توجد موضوعات."
         education:
           topic_tracking_preferences: 'يمكنك عرض إعدادات تتبُّع الموضوعات الجديدة وتغييرها في <a href="%{basePath}/my/preferences/tracking">تفضيلاتك</a>.'
@@ -5601,7 +5601,11 @@ ar:
           language_notice: "حدِّد لغة المنشور الأصلي حتى يتمكن النظام من عرض الترجمة للقرَّاء."
           post_language: "لغة المنشور"
           topic_language: "لغة عنوان الموضوع"
+          save_post_language: "حفظ لغة المنشور"
+          save_topic_language: "حفظ لغة عنوان الموضوع"
           discard_language_change: "تجاهل التغيير"
+          post_language_updated: "تم تحديث لغة المنشور"
+          topic_language_updated: "تم تحديث لغة عنوان الموضوع"
         success: "تم تحديث الترجمات بنجاح"
         post_language_selector:
           title: "لغة المنشور"
@@ -5785,6 +5789,8 @@ ar:
           many: "هل تريد بالتأكيد دمج تلك المنشورات البالغ عددها %{count}؟"
           other: "هل تريد بالتأكيد دمج تلك المنشورات البالغ عددها %{count}؟"
       revisions:
+        diff_too_complex: "أدى هذا التعديل إلى تغيير جزء كبير من المنشور دفعة واحدة، ولا يمكن عرضه."
+        diff_hidden: "تم إخفاء جزء من سجل تعديلات هذا المنشور، لذا لا يمكن عرض هذا التعديل."
         locale:
           no_locale_set: "لم تُحدد أي لغة بعد"
           locale_removed: "تمت إزالة اللغة"
@@ -5936,6 +5942,7 @@ ar:
       unsaved_changes: "لديك تغييرات غير محفوظة"
       slug: "مسار الفئة"
       parent: "الفئة الرئيسية"
+      slug_placeholder: "يتم إنشاؤه تلقائيًا إذا تُرك فارغًا"
       creation_error: حدث خطأ في أثناء إنشاء الفئة.
       save_error: حدث خطأ في أثناء حفظ الفئة.
       errors:
@@ -6362,8 +6369,8 @@ ar:
         lower_title: "غير المُشاهَدة"
         help: "الموضوعات الجديدة والموضوعات التي تراقبها أو تتتبَّعها حاليًا وبها منشورات غير مقروءة"
       hot:
-        title: "ساخن"
-        lower_title: "ساخن"
+        title: "رائج"
+        lower_title: "رائج"
         help: "أهم الموضوعات الحديثة"
       new:
         lower_title_with_count:
@@ -6656,6 +6663,7 @@ ar:
       selector_no_tags: "لا توجد وسوم"
       selector_remove_filter: "إزالة التصفية"
       tags: "الوسوم"
+      choose_for_topic: "الوسوم الاختيارية…"
       choose_for_topic_required:
         zero: "تحديد %{count} وسم على الأقل…"
         one: "تحديد وسم واحد (%{count}) على الأقل…"
@@ -6991,7 +6999,12 @@ ar:
             title: "الترجمات"
             locale: "اللغة"
             title_label: "عنوان القسم"
+            link_label: "اسم الرابط"
+            add_section: "إضافة ترجمة عنوان القسم"
+            add_link: "إضافة ترجمة اسم الرابط"
+            remove: "إزالة الترجمة"
           links:
+            title: "روابط القسم"
             add: "إضافة رابط آخر"
             delete: "حذف الرابط"
             reset: "إعادة الضبط إلى الإعداد الافتراضي"
@@ -7358,6 +7371,7 @@ ar:
         title: "قائمة التقارير المتاحة"
         sidebar_title: "التقارير"
         back: "العودة إلى جميع التقارير"
+        back_to_dashboard: "العودة إلى لوحة المعلومات"
         all_groups: "جميع المجموعات"
         group_engagement: "التفاعل"
         group_traffic: "الزيارات"
@@ -7404,6 +7418,7 @@ ar:
         enabled_for_throttle: "لقد قمت بتغيير الأشخاص المفعَّلة لديهم هذه الميزة بسرعة كبيرة. يرجى الانتظار لبضع ثوانٍ قبل المحاولة مرة أخرى."
         change_enabled_for_success: "لقد فعلت هذا التغيير لـ %{enabledFor}"
         change_disabled: "تم إلغاء اشتراكك في هذا التغيير"
+        depends_on_notice: "يتطلَّب هذا التغيير تفعيل %{dependencyLinks}."
         permanent_notice: "أصبح هذا التغيير دائمًا وسيتم إزالته قريبًا. لم يعد بإمكانك إلغاء الاشتراك."
         permanent_soon_notice: "سيصبح هذا التغيير دائمًا في أقرب وقت. لن تتمكن بعد الآن من إلغاء الاشتراك."
         permanent_no_group_selection: "لا ينطبق؛ حيث تسري التغييرات الدائمة على كافة المجموعات"
@@ -7579,6 +7594,7 @@ ar:
             apple_touch_icon:
               title: "أيقونة Apple Touch"
               description: "الأيقونة المستخدمة لأجهزة Apple Touch. إذا تُركت فارغة، سيتم استخدام large_icon."
+              help_text: "الحجم الموصى به هو 180 × 180 بكسل. لا تستخدم صورة SVG، ويُفضَّل تجنُّب استخدام خلفية شفافة."
             digest_logo:
               title: "شعار مختصر"
               description: "صورة الشعار البديلة المستخدمة في رأس ملخص البريد الإلكتروني لموقعك. إذا تُركت فارغة، سيتم استخدام الصورة المحدَّدة في إعدادات \"الشعار\"."
@@ -7734,7 +7750,7 @@ ar:
           header_description: "إنشاء المجموعات وإدارتها، وتعيين أذونات المجموعة، وعرض نشاط المجموعة، وصناديق الوارد"
         site_settings:
           title: "جميع إعدادات الموقع"
-          header_description: "ضبط كل إعدادات موقع Discourse لتخصيص مظهره ووظائفه وتجربة المستخدم."
+          header_description: "ضبط جميع إعدادات موقع Discourse لتخصيص مظهره ووظائفه وتجربة المستخدم"
         whats_new:
           title: "ما الجديد؟"
           header_description: "ابقَ على اطلاع بأحدث الميزات والتحسينات في Discourse"
@@ -7791,21 +7807,31 @@ ar:
             stats_and_thresholds:
               title: "الإحصائيات والحدود"
         category_management:
+          title: "إدارة الفئة"
+          header_description: "راجع أنواع الفئات، وتسلسلها، والفئات المُعيَّنة حاليًا إلى كل نوع."
+          keywords: "الفئات|أنواع الفئات|المناقشة|إدارة الفئات"
           create_category: "إنشاء فئة"
           tabs:
             settings: "الإعدادات"
           types:
+            unavailable: "نوع الفئة %{categoryType} غير متوفر."
             all:
               title: "جميع الفئات"
+              description: "جميع الفئات ضمن كل نوع من أنواع الفئات المهيَّئة."
           filter_placeholder: "تصفية الفئات"
+          no_results: "لم يتم العثور على فئات %{type}."
+          open_settings: "فتح الإعدادات"
           table:
             category: "الفئة"
             visibility: "الرؤية"
             topics: "الموضوعات"
           visibility:
             public: "عام"
+            restricted: "مقيَّد"
           visibility_filter:
             all: "جميع الفئات"
+            public: "الفئات العامة"
+            restricted: "الفئات المقيَّدة"
         permalinks:
           title: "الروابط الثابتة"
           header_description: "عمليات إعادة التوجيه التي تُطبَّق على عناوين URL التي لا يعرفها المنتدى"
@@ -7922,8 +7948,8 @@ ar:
         overridden_by: "تم استبداله بواسطة"
         default_value: "افتراضي"
         overridden_value: "القيمة المستبدلة: %{value}"
-        select_setting: "اختر إعدادًا من الموقع لعرض القيم الحالية للسمة"
-        add: "اذهب إلى إعدادات سمة الموقع"
+        select_setting: "تحديد أحد إعدادات الموقع لعرض القيم الحالية للسمة"
+        add: "الانتقال إلى إعدادات سمة الموقع"
         help: "السمة التي تستخدمها حاليًا هي <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. انتقل إلى <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>صفحة إعدادات السمة</a> لتعديل إعدادات موقع السمة، أو انقر على أي سمة مرتبطة في الجدول أدناه لتعديل إعداداته."
         filter: "تصفية إعدادات موقع السمة حسب اسم الإعداد، أو الوصف، أو اسم السمة..."
         filter_no_results: "لا توجد إعدادات لموقع السمة تتطابق مع عامل التصفية"
@@ -8035,12 +8061,14 @@ ar:
         not_found_error: عذرًا، هذا التقرير غير موجود
         custom_date_range: نطاق مخصَّص للتاريخ
         loading: "جارٍ تحميل لوحة المعلومات…"
+        fetch_error: "تعذَّر تحميل لوحة المعلومات. حاول تحديث الصفحة."
         stable: "مستقر"
         sections:
           highlights:
             title: "التمييزات"
           reports:
             title: "التقريران"
+            fetch_error: "تعذَّر تحميل التقارير. حاول تحديث الصفحة."
           traffic:
             title: "حركة زيارات الموقع"
           engagement:
@@ -8056,12 +8084,14 @@ ar:
               share: "مشاركة"
               vs_prior: "مقارنةً بالفترة السابقة"
               empty: "لا يوجد نشاط خلال الفترة المحدَّدة."
+              save_error: "تعذَّر حفظ تحديدك للمرة القادمة."
             whos_posting:
               title: "مَن القائم بالنشر؟"
               new_members: "أعضاء جُدد"
               returning: "أعضاء عائدون"
               staff: "فريق العمل"
               empty: "لا يوجد منشورات خلال الفترة المحدَّدة."
+              save_error: "تعذَّر حفظ تحديدك للمرة القادمة."
             trust_level_pipeline:
               title: "تدرُّج مستويات الثقة"
               trust_levels:
@@ -8085,6 +8115,29 @@ ar:
                   few: "-%{count} هبطوا إلى مستوى أقل"
                   many: "-%{count} هبطوا إلى مستوى أقل"
                   other: "-%{count} هبطوا إلى مستوى أقل"
+              signups:
+                zero: "+ %{formattedCount} اشتراك"
+                one: "+ اشتراك واحد (%{formattedCount})"
+                two: "+ اشتراكان (%{formattedCount})"
+                few: "+ %{formattedCount} اشتراكات"
+                many: "+ %{formattedCount} اشتراكًا"
+                other: "+ %{formattedCount} اشتراك"
+              signups_title: "عدد المشتركين الجُدد الذين وصلوا إلى مستوى الثقة هذا"
+              count_title: "إجمالي عدد الأعضاء في مستوى الثقة هذا"
+              arrivals_aria:
+                zero: "لم تتم ترقية أي عضو إلى مستوى الثقة هذا"
+                one: "تمت ترقية عضو واحد (%{count}) إلى مستوى الثقة هذا"
+                two: "تمت ترقية عضوين (%{count}) إلى مستوى الثقة هذا"
+                few: "تمت ترقية %{count} أعضاء إلى مستوى الثقة هذا"
+                many: "تمت ترقية %{count} عضوًا إلى مستوى الثقة هذا"
+                other: "تمت ترقية %{count} عضو إلى مستوى الثقة هذا"
+              demotions_in_aria:
+                zero: "لم يتم خفض رتبة أي عضو إلى مستوى الثقة هذا"
+                one: "تم خفض رتبة عضو واحد (%{count}) إلى مستوى الثقة هذا"
+                two: "تم خفض رتبة عضوين (%{count}) إلى مستوى الثقة هذا"
+                few: "تم خفض رتبة %{count} أعضاء إلى مستوى الثقة هذا"
+                many: "تم خفض رتبة %{count} عضوًا إلى مستوى الثقة هذا"
+                other: "تم خفض رتبة %{count} عضو إلى مستوى الثقة هذا"
               stable_aria: "لا حركة"
             headline:
               healthy_growth:
@@ -8273,6 +8326,14 @@ ar:
             direct_traffic:
               label: "زيارات مباشرة"
               tooltip: "نسبة مشاهدات الصفحة التي أتت مباشرةً إلى مجتمعك، مثل من خلال كتابة عنوان URL الخاص بك أو استخدام إشارة مرجعية للمتصفح."
+            bounce_rate:
+              label: "معدَّل الارتداد"
+              tooltip: "عدد الجلسات التي تضمَّنت عرض صفحة واحدة ووقت تفاعل أقل من 10 ثوانٍ."
+            average_session_duration:
+              label: "متوسط مدة الجلسة"
+              tooltip: "متوسط الوقت الذي قضاه الزائرون في مجتمعك خلال الفترة المحدَّدة."
+            session_metrics:
+              empty_tooltip: "يتم عرضها بمجرد تسجيل زيارات خلال هذه الفترة."
           top_countries:
             title: "أبرز البلدان"
             empty: "لا توجد بيانات عن البلدان لهذه الفترة."
@@ -8404,6 +8465,7 @@ ar:
             effects: التأثيرات
             trust_levels_none: "لا يوجد"
             automatic_membership_email_domains: "ستتم إضافة المستخدمين الذين يسجِّلون بنطاق بريد إلكتروني مطابق لنطاق في هذه القائمة إلى هذه المجموعة تلقائيًا:"
+            automatic_membership_email_domains_instructions: "أدخل كل نطاق على حدة، مثل discourse.org."
             automatic_membership_user_count:
               zero: "يوجد %{count} مستخدم لديه نطاقات البريد الإلكتروني الجديدة وستتم إضافته إلى المجموعة."
               one: "يوجد مستخدم واحد (%{count}) لديه نطاقات البريد الإلكتروني الجديدة وستتم إضافته إلى المجموعة."
@@ -9033,7 +9095,11 @@ ar:
         sidebar: "الشريط الجانبي"
         header_dropdown: "القائمة المنسدلة للرأس"
         legacy: "القائمة القديمة"
+      homepage:
+        top_menu_default: "أول عنصر في القائمة الرئيسية"
       duplicate_topic_titles:
+        disallowed: "غير مسموح به"
+        allowed_across_categories: "مسموح به عبر الفئات"
         allowed: "السماح"
       backups:
         title: "النسخ الاحتياطية"
@@ -9202,6 +9268,8 @@ ar:
           default: "السمة الافتراضية"
           settings_editor: "محرر الإعدادات"
           show_advanced: "عرض الخيارات المتقدمة"
+          maximize_editor: "تكبير المحرر"
+          minimize_editor: "تصغير المحرر"
           is_default: "السمة مفعَّلة بشكلٍ افتراضي"
           user_selectable: "يمكن للمستخدمين تحديد السمة"
           user_selectable_badge_label: "قابلة للاختيار من قِبل المستخدم"
@@ -9286,9 +9354,13 @@ ar:
           import_file_tip: "ملف بصيغة tar.gz أو zip يحتوي على السمة"
           is_private: "السمة موجودة في مستودع Git خاص"
           finish_install: "إنهاء تثبيت السمة"
+          placeholder_description: "هذه سمة خاصة تتطلَّب تثبيت مفتاح نشر في تكوين المستودع. بمجرد إجراء ذلك، انقر على الزر أدناه لإتمام التثبيت."
           last_attempt: "لم تنتهِ عملية التثبيت، آخر محاولة:"
           remote_branch: "اسم الفرع (اختياري)"
           remote_branch_placeholder: "لا تُعرَض سوى الحقول القابلة للترجمة في صفحة \"نبذة\"."
+          public_key: "امنح المفتاح العام التالي إذن الوصول \"للقراءة فقط\" إلى المستودع:"
+          public_key_github: "امنح المفتاح العام التالي إذن الوصول \"للقراءة فقط\" إلى المستودع. راجع %{link} للاطِّلاع على التعليمات."
+          deploy_key_instructions: "تعليمات مفتاح نشر GitHub"
           install: "تثبيت"
           installed: "مثبَّت"
           screenshot: "لقطة شاشة لـ %{name}"
@@ -10535,21 +10607,21 @@ ar:
         not_found: "تعذَّر العثور على الإعدادات"
       site_settings:
         title: "إعدادات الموقع"
-        description: "قم بتكوين الإعدادات لموقع Discourse الخاص بك لتخصيص مظهره ووظائفه وتجربة المستخدم."
+        description: "ضبط الإعدادات لموقع Discourse الخاص بك لتخصيص مظهره ووظائفه وتجربة المستخدم"
         depends_on_notice:
-          zero: "لا يُطبق هذا الإعداد إلا عند تفعيل %{dependencyLinks}."
-          one: "لا يُطبق هذا الإعداد إلا عند تفعيل %{dependencyLinks}."
-          two: "لا يُطبق هذا الإعداد إلا عند تفعيل %{dependencyLinks}."
-          few: "لا يُطبق هذا الإعداد إلا عند تفعيل %{dependencyLinks}."
-          many: "لا يُطبق هذا الإعداد إلا عند تفعيل %{dependencyLinks}."
-          other: "لا يُطبق هذا الإعداد إلا عند تفعيل %{dependencyLinks}."
+          zero: "تطبيق هذا الإعداد فقط عند تفعيل %{dependencyLinks}"
+          one: "تطبيق هذا الإعداد فقط عند تفعيل %{dependencyLinks}"
+          two: "تطبيق هذا الإعداد فقط عند تفعيل %{dependencyLinks}"
+          few: "تطبيق هذا الإعداد فقط عند تفعيل %{dependencyLinks}"
+          many: "تطبيق هذا الإعداد فقط عند تفعيل %{dependencyLinks}"
+          other: "تطبيق هذا الإعداد فقط عند تفعيل %{dependencyLinks}"
         depends_on_values_notice:
-          zero: "ينطبق هذا الإعداد فقط عند ضبط %{dependencyLinks} على قيمة متوافقة."
-          one: "ينطبق هذا الإعداد فقط عند ضبط %{dependencyLinks} على قيمة متوافقة."
-          two: "ينطبق هذا الإعداد فقط عند ضبط %{dependencyLinks} على قيمتين متوافقتين."
-          few: "ينطبق هذا الإعداد فقط عند ضبط %{dependencyLinks} على قيم متوافقة."
-          many: "ينطبق هذا الإعداد فقط عند ضبط %{dependencyLinks} على قيم متوافقة."
-          other: "ينطبق هذا الإعداد فقط عند ضبط %{dependencyLinks} على قيم متوافقة."
+          zero: "تطبيق هذا الإعداد فقط عند ضبط %{dependencyLinks} على قيمة متوافقة"
+          one: "تطبيق هذا الإعداد فقط عند ضبط %{dependencyLinks} على قيمة متوافقة"
+          two: "تطبيق هذا الإعداد فقط عند ضبط %{dependencyLinks} على قيمتين متوافقتين"
+          few: "تطبيق هذا الإعداد فقط عند ضبط %{dependencyLinks} على قيم متوافقة"
+          many: "تطبيق هذا الإعداد فقط عند ضبط %{dependencyLinks} على قيم متوافقة"
+          other: "تطبيق هذا الإعداد فقط عند ضبط %{dependencyLinks} على قيم متوافقة"
         discard:
           zero: "تجاهل التغييرات"
           one: "تجاهل التغيير"
@@ -10828,7 +10900,7 @@ ar:
         export: "تصدير"
         export_count: "تصدير (تم تحديد %{count})"
         export_failed: "فشلت عملية التصدير. يُرجى إعادة المحاولة."
-        select_to_export: "تحديد للتصدير"
+        select_to_export: "التحديد للتصدير"
         import: "استيراد"
         import_heading: "استيراد الرموز التعبيرية"
         import_description: "حمِّل ملف ZIP يحتوي على ملف بيان emojis.csv وملفات الصور."

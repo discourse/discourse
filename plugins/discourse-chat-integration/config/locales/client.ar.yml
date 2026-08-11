@@ -136,6 +136,8 @@ ar:
             webhook_setup_failed: "تعذر تسجيل رابط خطاف الويب مع Telegram. يُرجى التحقق من الرمز والمحاولة مرة أخرى."
             channel_not_found: "القناة المحدَّدة غير موجودة على Telegram"
             forbidden: "لا يملك برنامج الروبوت إذن النشر في هذه القناة"
+            invalid_api_base_url: "إعداد الموقع الخاص بعنوان URL الأساسي لواجهة برمجة تطبيقات Telegram ليس عنوان URL صالحًا لبروتوكول HTTPS."
+            api_base_url_blocked: "تم حظر الطلبات إلى عنوان URL الأساسي لواجهة برمجة تطبيقات Telegram. يجب إضافة المضيفين على الشبكات الخاصة إلى إعداد الموقع `allowed_internal_hosts`."
         discord:
           title: "Discord"
           param:
@@ -274,6 +276,12 @@ ar:
             provider:
               label: مقدِّم الخدمة
     discourse_workflows:
+      node_unavailable:
+        requires_chat_integration: "يتطلَّب تفعيل المكوِّن الإضافي لتكامل الدردشة"
+      nodes:
+        "action:send_chat_integration_message": "إرسال رسالة تكامل الدردشة"
+      node_descriptions:
+        "action:send_chat_integration_message": "إرسال إشعار إلى قناة تكامل الدردشة (Slack، وDiscord، وTelegram، إلى آخره)"
       send_chat_integration_message:
         channel_id: "القناة"
         configure: "التكوين"

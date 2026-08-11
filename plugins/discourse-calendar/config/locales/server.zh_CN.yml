@@ -75,7 +75,7 @@ zh_CN:
     sidebar_show_upcoming_events: "在边栏中的“更多”下显示近期活动链接。"
     calendar_first_day_of_week: "为日历显示设置一周的第一天。选项为星期六、星期日或星期一。"
     enable_events_category_type_setup: "在创建类别设置期间启用“活动”类别类型选项。"
-    livestream_allowed_hosts: "可用作活动直播的主机。"
+    livestream_allowed_hosts: "可以用作活动直播的主机。"
     livestream_allowed_hosts_invalid: "这些条目不是主机：%{hosts}。请输入单独的主机名（例如 zoom.us），这将允许访问该主机及其所有子域名下的每个 URL。"
     livestream_zoom_enabled: "为直播话题启用 Zoom 视频嵌入。"
     livestream_zoom_sdk_key: "Zoom Meeting SDK 客户端 ID。"
@@ -110,7 +110,7 @@ zh_CN:
     invite_user_notification: "%{username} 邀请您加入：%{description}"
     livestream:
       chat:
-        topic_reference_message: "此频道用于活动 [%{title}](%{url}) — 访问话题了解详情并确认参与活动。"
+        topic_reference_message: "此频道用于活动 [%{title}](%{url}) — 访问话题了解详情并回复参与活动。"
     calendar_must_be_in_first_post: "日历标签仅可用于话题的第一个帖子。"
     more_than_one_calendar: "一个帖子中不能有多个日历。"
     more_than_two_dates: "日历话题的帖子不能包含两个以上的日期。"
@@ -124,7 +124,7 @@ zh_CN:
       separator: " · "
       date_range: "%{from} → %{to}"
       date_with_timezone: "%{date} (%{timezone})"
-      date_format: "%Y 年%-m 月 %-d 日"
+      date_format: "%Y 年 %B %-d 日"
       datetime_format: "%Y 年 %B %-d 日，-I:%M %p"
     notifications:
       before_event_reminder: "%{title} 即将开始。"

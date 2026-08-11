@@ -11,3 +11,8 @@ de:
       verification_failed: "Captcha-Verifizierung fehlgeschlagen. Bitte versuche es erneut."
       placeholder: Platzhalter
       contact_system_administrator: "Es ist ein Problem mit deinem Captcha-Anbieter aufgetreten. Falls dieses Problem weiterhin besteht, kontaktiere bitte einen Systemadministrator"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_captcha: "Discourse Captcha"

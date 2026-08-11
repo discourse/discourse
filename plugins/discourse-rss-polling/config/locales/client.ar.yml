@@ -9,24 +9,101 @@ ar:
     admin:
       site_settings:
         categories:
-          discourse_rss_polling: "استطلاع الرأي RSS في Discourse"
+          discourse_rss_polling: "فحص RSS في Discourse"
   js:
     rss_polling:
-      title: استطلاع الرأي RSS
+      title: فحص RSS
     admin:
+      logs:
+        staff_actions:
+          actions:
+            create_rss_polling_feed: إنشاء موجز RSS
+            update_rss_polling_feed: تحديث موجز RSS
+            destroy_rss_polling_feed: حذف موجز RSS
+            enable_rss_polling_feed: تفعيل موجز RSS
+            disable_rss_polling_feed: تعطيل موجز RSS
+            poll_rss_polling_feed: استطلاع موجز RSS الآن
       rss_polling:
+        feed_settings: إعدادات الموجز
+        discourse_settings: إعدادات Discourse
         author: المؤلف
         feed_url: عنوان URL
+        feed_url_must_be_http: أدخل عنوان URL صالحًا للموجز يبدأ بـ http:// أو https://.
         discourse_category: الفئة
         discourse_tags: الوسوم
+        required_tags_hint: "تتطلَّب هذه الفئة أحد هذه الوسوم — أضِف واحدًا وإلا سيتم رفض الموضوعات المستوردة:"
+        required_tag_error: 'أضِف على الأقل %{count} من الوسوم من المجموعة "%{tag_group}"، وإلا سيتم رفض الموضوعات المستوردة.'
+        feed_category_filter: عامل تصفية الفئات
+        feed_category_filter_description: استورد فقط العناصر التي تحتوي فئة موجزها على هذا النص (حساس لحالة الأحرف). اترك الحقل فارغًا لاستيراد كل شيء.
+        showing: "يتم عرض أول %{count} من إجمالي %{total} من العناصر."
         feeds:
+          title: الموجزات
+          nav_description: إدارة موجزات RSS/Atom التي يتم استيرادها إلى Discourse
+          description: تهيئة موجزات RSS/Atom التي يتم استطلاعها واستيرادها كموضوعات
+          add: إضافة موجز
+          add_header: إضافة موجز
+          edit_header: تعديل موجز
+          empty: لم تقم بتهيئة أي موجزات بعد.
           edit: تعديل
           delete: حذف
+          enable: تفعيل الموجز
+          disable: تعطيل الموجز
+          back: العودة إلى الموجزات
           save: حفظ
           confirm_delete: "هل تريد بالتأكيد حذف هذا الموجز؟"
+          delete_success: تم حذف الموجز
+          save_success: تم حفظ الموجز
+          enable_success: تم تفعيل الموجز
+          disable_success: تم تعطيل الموجز
         test:
+          button: اختبار الموجز
           title: معاينة
+          empty: لم يُرجِع هذا الموجز أي عناصر.
           dismiss: تجاهل
+          would_import: سيتم استيراده
+          summary:
+            would_import: "سيتم استيرادها: %{count}"
+            already_imported: "تم استيرادها بالفعل: %{count}"
+            skipped: "سيتم تخطيها: %{count}"
+          already_imported: "تم استيراده بالفعل — سيؤدي الاستطلاع إلى تحديث <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>الموضوع الحالي</a>."
+          already_imported_plain: "تم استيراده بالفعل — سيؤدي الاستطلاع إلى تحديث الموضوع الحالي."
+          skip_reasons:
+            missing_content: تم التخطي — العنصر لا يحتوي على محتوى.
+            missing_title: تم التخطي — العنصر لا يحتوي على عنوان.
+            invalid_url: تم التخطي — العنصر لا يحتوي على رابط صالح للاستيراد منه.
+            category_filter_mismatch: "تم التخطي — فئات العناصر: %{categories}"
+            category_filter_mismatch_none: تم التخطي — العنصر لا يحتوي على فئات.
+          errors:
+            fetch_failed: تعذَّر جلب الموجز. تحقَّق من أن عنوان URL صحيح ويمكن الوصول إليه.
+            parse_failed: الاستجابة لا تبدو كموجز RSS أو Atom صالح.
+            invalid_feed: تعذَّرت قراءة الموجز لأنه تالف.
+            blank_feed_url: أدخل عنوان URL لموجز لاختباره.
+            category_deleted: لم تعُد الفئة التي يتم استيراد هذا الموجز إليها موجودة. عدِّل الموجز واختر فئة جديدة.
+            unknown: تعذَّرت قراءة هذا الموجز. قد يكون غير متوفر مؤقتًا أو أنه يرجع محتوى غير متوقَّع. اختبر الموجز للتشخيص، أو تحقَّق من السجلات لمعرفة التفاصيل.
         status:
           enabled: مفعَّلة
           disabled: متوقفة
+          disabled_note: لن يتم إجراء الاستطلاع في الوقت المحدَّد
+        history:
+          recent: عمليات الاستطلاع الحديثة
+          show_older: "عرض %{count} أقدم"
+          poll_now: استطلاع الآن
+          poll_now_dirty: احفظ تغييراتك قبل إجراء الاستطلاع.
+          poll_now_disabled: فعِّل الموجز قبل إجراء الاستطلاع.
+          poll_confirm: سيؤدي إجراء الاستطلاع الآن إلى جلب هذا الموجز واستيراد الموضوعات أو تحديثها. هل تريد المتابعة؟
+          poll_started: بدأ الاستطلاع — ستظهر أحدث محاولة هنا قريبًا.
+          empty: لم يتم استطلاع هذا الموجز بعد.
+          no_items: لا توجد عناصر تمت معالجتها في هذا الاستطلاع.
+          no_changes: لا تغييرات
+          imported_count: "تم استيراد %{count}"
+          updated_count: "تم تحديث %{count}"
+          skipped_count: "تم تخطي %{count}"
+          failed_count: "فشل %{count}"
+          imported: "تم استيراده <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>كموضوع</a> جديد."
+          imported_plain: "تم استيراده كموضوع جديد."
+          updated: "تم تحديث <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>الموضوع الحالي</a>."
+          updated_plain: "تم تحديث الموضوع الحالي."
+          failed: فشل الاستيراد.
+          failed_reasons:
+            import_rejected: "تعذَّر الاستيراد — العنصر لا يحتوي على رابط صالح للاستيراد منه."
+            import_error: "تعذَّر الاستيراد: %{error}"

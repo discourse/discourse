@@ -42,11 +42,11 @@ zh_CN:
           too_early: "您可以在临近活动开始时间加入网络研讨会"
           view_topic: "查看活动的话题"
           not_started_retrying:
-            other: "One\n网络研讨会尚未开始。正在重新尝试在 %{count} 秒后加入…\nOther\n网络研讨会尚未开始。正在重新尝试在 %{count} 秒后加入…"
-          not_started_trying_again: "目前正在尝试重新加入网络研讨会..."
+            other: "该网络研讨会尚未开始。正在重新尝试在 %{count} 秒后加入…"
+          not_started_trying_again: "目前正在尝试重新加入网络研讨会…"
         chat:
-          rsvp_to_event: "确认参与活动以开始聊天"
-          rsvp_to_event_with_link: "确认参与<a href='%{url}'>活动</a>以开始聊天"
+          rsvp_to_event: "回复参加活动以开始聊天"
+          rsvp_to_event_with_link: "回复参加<a href='%{url}'>活动</a>以开始聊天"
           rsvp_body: "在活动开始前、进行中和结束后与其他与会者建立联系。"
       invite_user_notification: "%{username} 邀请您加入：%{description}"
       preferences:
