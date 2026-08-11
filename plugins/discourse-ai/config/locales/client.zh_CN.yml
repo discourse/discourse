@@ -640,7 +640,6 @@ zh_CN:
         compression_threshold: "上下文压缩阈值"
         compression_threshold_help: "上下文使用百分比（20-99%），超过该百分比时自动压缩开始生效。数值越低，压缩触发越早，从而保留更多空间。"
         vision_enabled: 包含图片上传
-        vision_enabled_help: 如果启用，当所选模型支持图片输入时，此智能体可以包含帖子和聊天中的图片
         vision_max_pixels: 最大图片尺寸
         vision_max_pixel_sizes:
           low: 低品质 - 最便宜 (256x256)
@@ -947,6 +946,9 @@ zh_CN:
         url: "托管模型的服务的 URL"
         api_key: "托管模型的服务的 API 密钥"
         vision_enabled: "支持图片输入"
+        vision_modes:
+          disabled:
+            title: "已禁用"
         allowed_attachment_types: "允许的文档附件"
         attachment_types_placeholder: "选择或输入扩展名（例如，pdf、txt、csv、docx、xlsx）"
         ai_bot_user: "AI 机器人用户"

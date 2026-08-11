@@ -40,3 +40,8 @@ zh_TW:
       custom_range_from: "來自"
       admin:
         name: "名稱"
+    discourse_workflows:
+      gamification_score:
+        username: "使用者"
+        date: "日期"
+        description: "描述"

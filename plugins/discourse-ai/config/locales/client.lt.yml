@@ -370,6 +370,9 @@ lt:
           required: "Privalomi"
       llms:
         display_name: "Vardas"
+        vision_modes:
+          disabled:
+            title: "Uždrausta"
         save: "Saugoti"
         edit: "Redaguoti"
         delete: Pašalinti

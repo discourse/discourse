@@ -163,6 +163,9 @@ lv:
           required: "Nepieciešams"
       llms:
         display_name: "Vārds"
+        vision_modes:
+          disabled:
+            title: "Atslēgt"
         save: "Saglabāt"
         edit: "Labot"
         delete: Dzēst

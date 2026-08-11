@@ -547,6 +547,9 @@ sk:
         max_output_tokens: "Maximálny počet výstupných tokenov"
         url: "URL adresa služby, ktorá je hostiteľom modelu"
         api_key: "Kľúč API služby, ktorá je hostiteľom modelu"
+        vision_modes:
+          disabled:
+            title: "Vypnuté"
         ai_bot_user: "AI bot Používateľ"
         cost_input: "Vstupné náklady"
         cost_cached_input: "Cena vstupu uložená v vyrovnávacej pamäti"

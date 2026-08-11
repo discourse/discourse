@@ -222,6 +222,9 @@ ro:
       llms:
         display_name: "Nume"
         provider: "Furnizor"
+        vision_modes:
+          disabled:
+            title: "Dezactivate"
         save: "Salvează"
         edit: "Editează"
         delete: Șterge

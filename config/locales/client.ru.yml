@@ -6702,7 +6702,6 @@ ru:
         discourse_last_updated: "Discourse обновлён:"
         version: "Версия"
         up_to_date: "Обновлений нет"
-        critical_available: "Доступно критическое обновление."
         updates_available: "Доступны обновления."
         please_update: "Обновитесь!"
         no_check_performed: "Проверка обновлений не производится. Убедитесь, что запущен процесс sidekiq."

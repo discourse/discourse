@@ -164,6 +164,9 @@ bs_BA:
           required: "Required"
       llms:
         display_name: "Ime"
+        vision_modes:
+          disabled:
+            title: "Neomogućen"
         save: "Sačuvaj"
         edit: "Izmijeni"
         delete: Delete

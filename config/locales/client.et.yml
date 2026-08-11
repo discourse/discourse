@@ -2947,7 +2947,6 @@ et:
         last_updated: "Töölauda on uuendatud:"
         version: "Versioon"
         up_to_date: "Oled ajakohane!"
-        critical_available: "Kriitiline uuendus on saadaval."
         updates_available: "Uuendused on saadaval."
         no_check_performed: "Uuenduste kontrolli pole tehtud. Kontrolli, et Sidekiq töötab."
         stale_data: "Uuenduste kontrolli pole ammu tehtud. Kontrolli, et Sidekiq töötab."

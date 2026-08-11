@@ -664,7 +664,6 @@ fr:
         compression_threshold: "Seuil de compression"
         compression_threshold_help: "Pourcentage d'utilisation du contexte (20 à 99) à partir duquel la compression automatique se déclenche. Une valeur plus faible déclenche la compression plus tôt et conserve davantage de marge disponible."
         vision_enabled: Inclure les images téléversées
-        vision_enabled_help: Lorsque cette option est activée, cet agent peut inclure des images provenant de publications et de chats si le modèle sélectionné prend en charge les images en entrée.
         vision_max_pixels: Taille maximale des images
         vision_max_pixel_sizes:
           low: Qualité faible - moins cher (256x256)
@@ -976,6 +975,9 @@ fr:
         url: "URL du service hébergeant le modèle"
         api_key: "Clé d'API du service hébergeant le modèle"
         vision_enabled: "Prend en charge l'entrée d'images"
+        vision_modes:
+          disabled:
+            title: "Désactivées"
         allowed_attachment_types: "Pièces jointes autorisées"
         attachment_types_placeholder: "Sélectionnez ou saisissez les extensions (par exemple, pdf, txt, csv, docx, xlsx)"
         ai_bot_user: "Utilisateur robot IA"

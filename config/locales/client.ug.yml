@@ -5954,7 +5954,6 @@ ug:
         discourse_last_updated: "Discourse يېڭىلاندى:"
         version: "نەشرى"
         up_to_date: "سىزنىڭ ئەڭ يېڭى نەشرى!"
-        critical_available: "ھالقىلىق يېڭىلانما بار."
         updates_available: "يېڭىلانما بار."
         please_update: "يېڭىلاڭ!"
         no_check_performed: "يېڭىلانما تەكشۈرۈش ئىجرا قىلىنمىدى. Sidekiq ئىجرا قىلىنىۋاتقانلىقىنى جەزملەڭ."

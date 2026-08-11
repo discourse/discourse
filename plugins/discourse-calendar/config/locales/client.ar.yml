@@ -35,7 +35,24 @@ ar:
     discourse_calendar:
       livestream:
         zoom:
+          join: "الانضمام إلى Zoom"
           chat: "الدردشة"
+          open_in_zoom: "الفتح في Zoom"
+          load_error: "لقد غادرت الندوة عبر الإنترنت أو يتعذَّر علينا تحميل Zoom في هذه الصفحة."
+          too_early: "يمكنك الانضمام إلى الندوة عبر الإنترنت عند اقتراب وقت بدء الحدث."
+          view_topic: "عرض موضوع الحدث"
+          not_started_retrying:
+            zero: "لم تبدأ الندوة عبر الإنترنت بعد. جارٍ إعادة محاولة الانضمام بعد %{count} ثانية..."
+            one: "لم تبدأ الندوة عبر الإنترنت بعد. جارٍ إعادة محاولة الانضمام بعد ثانية واحدة (%{count})..."
+            two: "لم تبدأ الندوة عبر الإنترنت بعد. جارٍ إعادة محاولة الانضمام بعد ثانيتين (%{count})..."
+            few: "لم تبدأ الندوة عبر الإنترنت بعد. جارٍ إعادة محاولة الانضمام بعد %{count} ثوانٍ..."
+            many: "لم تبدأ الندوة عبر الإنترنت بعد. جارٍ إعادة محاولة الانضمام بعد %{count} ثانيةً..."
+            other: "لم تبدأ الندوة عبر الإنترنت بعد. جارٍ إعادة محاولة الانضمام بعد %{count} ثانية..."
+          not_started_trying_again: "جارٍ محاولة الانضمام إلى الندوة عبر الإنترنت مرة أخرى الآن..."
+        chat:
+          rsvp_to_event: "أكِّد حضورك للحدث لبدء الدردشة"
+          rsvp_to_event_with_link: "أكِّد حضورك <a href='%{url}'>للحدث</a> لبدء الدردشة"
+          rsvp_body: "تواصل مع الحضور الآخرين قبل الحدث وأثنائه وبعده."
       invite_user_notification: "دعاك %{username} إلى: %{description}"
       preferences:
         all_events: "تقويم Discourse - جميع الأحداث"
@@ -336,6 +353,7 @@ ar:
       search: "بحث..."
       group_availability: "توافر %{group}"
     discourse_post_event:
+      new_event: "حدث جديد"
       notifications:
         before_event_reminder: "هناك حدث على وشك البدء"
         after_event_reminder: "هناك حدث انتهى"
@@ -405,6 +423,7 @@ ar:
       upcoming_events_list:
         title: "الأحداث القادمة"
         empty: "لا توجد أحداث قادمة"
+        all_day: "طوال اليوم"
         error: "فشل استرداد الأحداث"
         try_again: "إعادة المحاولة"
         view_all: "عرض الكل"
@@ -418,9 +437,12 @@ ar:
       models:
         invitee:
           no_users: "لم يتم العثور على المستخدمين"
+          this_event: "هذا الحدث"
+          this_and_following: "هذا الحدث وجميع الأحداث اللاحقة"
           leave_event: "مغادرة الحدث"
           status:
             going: "ذاهب"
+            not_going: "لن أحضر"
             interested: "مهتم"
             going_count:
               zero: "%{count} ذاهبون"
@@ -466,11 +488,22 @@ ar:
               description: "لا يمكن إلا للمستخدمين المدعوين الانضمام إلى حدثٍ خاص."
       composer:
         name_placeholder: "اسم الحدث"
+        end_date_placeholder: "تاريخ الانتهاء"
         location_placeholder: "أضف الموقع أو عنوان URL"
+        max_attendees_placeholder: "عدد غير محدود من الحضور"
+        max_attendees_display:
+          zero: "أقصى عدد من الحضور: %{count}"
+          one: "أقصى عدد من الحضور: %{count}"
+          two: "أقصى عدد من الحضور: %{count}"
+          few: "أقصى عدد من الحضور: %{count}"
+          many: "أقصى عدد من الحضور: %{count}"
+          other: "أقصى عدد من الحضور: %{count}"
+        no_rsvps_label: "لا يسجِّل الحضور"
         description_placeholder: "أضف وصفًا للحدث"
         event_title_placeholder: "اسم الحدث"
         create_event_button: "إنشاء حدث"
         action_title: "إنشاء حدث جديد"
+        all_day: "طوال اليوم"
         livestream: "بث مباشر"
         livestream_chat_disabled: "فعِّل الدردشة لإنشاء قنوات بث مباشر."
         reminder:
@@ -503,6 +536,11 @@ ar:
               few: "أسابيع"
               many: "أسبوعًا"
               other: "أسبوع"
+          before: "%{unit} قبل"
+          after: "%{unit} بعد"
+          notification_title: "إرسال إشعار إلى الحضور"
+          bump_topic_title: "رفع الموضوع تلقائيًا"
+          remove: "إزالة التذكير"
       composer_actions:
         create_event:
           label: "إنشاء حدث"
@@ -533,10 +571,16 @@ ar:
           remove_timezone: لا توجد منطقة زمنية (UTC)
         starts_at:
           label: "تاريخ البدء"
+        ends_at:
+          label: "تاريخ الانتهاء"
         all_day:
           label: "حدث يستمر طوال اليوم"
+          description: "لن يتضمَّن الحدث الذي يستمر طوال اليوم أوقاتًا محدَّدة، بل تاريخًا فقط. وسيستمر الحدث من بداية اليوم حتى نهايته."
         reminders:
           label: "التذكيرات"
+          types:
+            bump_topic: "رفع الموضوع تلقائيًا"
+            notification: "إرسال إشعار إلى الحضور"
           units:
             minutes: "دقائق"
             hours: "الساعات"
@@ -545,17 +589,30 @@ ar:
           periods:
             before: "قبل"
             after: "بعد"
+        recurrence_until:
+          label: "حتى (يشمل هذا التاريخ)"
         recurrence:
           label: "التكرار"
           none: "بلا تكرار"
           every_day: "كل يوم"
           every_weekday: "كل أيام الأسبوع"
+          every_week: "كل %{weekday}"
+          every_two_weeks: "%{weekday} كل أسبوعين"
+          every_four_weeks: "%{weekday} كل أربعة أسابيع"
+          every_month: "%{ordinal} %{weekday} من كل شهر"
           ordinals:
+            first: "أول"
+            second: "ثاني"
+            third: "ثالث"
+            fourth: "رابع"
             last: "آخر"
         max_attendees:
           label: "الحد الأقصى للحضور"
           placeholder: "لا يوجد حد"
         attendance:
+          label: "كم عدد الأعضاء الذين يمكنهم تأكيد حضور هذا الحدث؟"
+          unlimited: "غير محدود"
+          up_to: "حتى..."
           none: "لا يوجد"
         allow_chat:
           label: "تكامل الدردشة"
@@ -575,8 +632,13 @@ ar:
         invitees:
           label: "المجموعات المدعوة"
         event_type:
+          label: "نوع الحضور"
           public:
             title: "عام"
+            description: "يمكن لأي شخص الحضور"
+          private:
+            title: "بدعوة فقط"
+            description: "يمكن فقط لأعضاء المجموعات المحدَّدة الحضور."
         delete_confirmation_message: "هل تريد حذف هذا الحدث؟"
         image:
           label: "صورة الحدث"

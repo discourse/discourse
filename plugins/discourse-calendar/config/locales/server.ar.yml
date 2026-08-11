@@ -9,9 +9,10 @@ ar:
     events:
       name: "الأحداث"
       title: "الأحداث"
+      description: "مكان عثور الأعضاء على الأحداث القادمة ومناقشتها في تقويم مشترك"
   user_api_key:
     scopes:
-      "discourse-calendar:events_calendar": "قراءة خلاصة أحداث التقويم"
+      "discourse-calendar:events_calendar": "قراءة موجز أحداث التقويم"
   reports:
     currently_away:
       title: المستخدمون الغائبون حاليًا
@@ -74,19 +75,42 @@ ar:
     sidebar_show_upcoming_events: "عرض رابط الأحداث القادمة في الشريط الجانبي ضمن \"المزيد\"."
     calendar_first_day_of_week: "حدد اليوم الأول من الأسبوع لعرض التقويم. الخيارات المتاحة هي السبت، أو الأحد، أو الاثنين."
     enable_events_category_type_setup: "تفعيل خيار نوع الفئة \"الأحداث\" خلال إعداد إنشاء الفئة"
+    livestream_allowed_hosts: "المضيفات التي يمكن استخدامها كمصادر بث مباشر للحدث"
+    livestream_allowed_hosts_invalid: "هذه الإدخالات ليست مضيفات: %{hosts}. أدخل المضيف بمفرده (مثل zoom.us)، مما يسمح بجميع عناوين URL عليه وعلى نطاقاته الفرعية."
+    livestream_zoom_enabled: "تفعيل تضمين فيديو Zoom لموضوعات البث المباشر"
+    livestream_zoom_sdk_key: "معرِّف عميل Zoom Meeting SDK"
+    livestream_zoom_sdk_secret: "سر عميل Zoom Meeting SDK"
     livestream_embeddable_chat_allowed_paths: "المسارات المسموح بها لدردشة البث المباشر القابلة للتضمين"
     livestream_enable_modal_chat_on_mobile: "عرض دردشة البث المباشر في نافذة منبثقة على الجوَّال"
   discourse_calendar:
     category_type:
       default_calendar_view:
+        label: "عرض التقويم الافتراضي"
         day: "اليوم"
         week: "الأسبوع"
         month: "الشهر"
         year: "العام"
+      display_weekends:
+        label: "عرض أيام عطلة نهاية الأسبوع"
+      discourse_post_event_allowed_on_groups:
+        label: "المجموعات التي يمكنها إنشاء الأحداث"
+      use_local_event_date:
+        label: "تنسيق تاريخ الحدث"
+        local: "التاريخ المحلي (مثال: 20 أبريل)"
+        relative: "الوقت النسبي (مثال: بعد يومين)"
+      sort_categories_by_event_start_date_enabled:
+        label: "ترتيب الموضوعات"
+        event_date: "تاريخ الحدث"
+        latest_post: "آخر نشاط على المنشور"
+      sidebar_show_upcoming_events:
+        label: 'عرض رابط "الأحداث القادمة" في قائمة التنقل'
     calendar_subscriptions:
       all_events_feed_name: "%{site_title} - جميع الأحداث"
       my_events_feed_name: "%{site_title} - أحداثي"
     invite_user_notification: "دعاك %{username} إلى: %{description}"
+    livestream:
+      chat:
+        topic_reference_message: "هذه القناة مخصَّصة للحدث [%{title}](%{url}) — انتقل إلى الموضوع للاطِّلاع على التفاصيل وتأكيد الحضور."
     calendar_must_be_in_first_post: "لا يمكن استخدام علامة التقويم إلا في المنشور الأول في الموضوع."
     more_than_one_calendar: "لا يمكن أن يكون لديك أكثر من تقويم واحد في المنشور."
     more_than_two_dates: "لا يمكن أن يحتوي منشور ضمن موضوع في التقويم على أكثر من تاريخين."
@@ -96,7 +120,12 @@ ar:
       description: "في عطلة"
   discourse_post_event:
     event_excerpt:
+      summary: "📅 %{summary}"
+      separator: " · "
+      date_range: "%{from} ← %{to}"
+      date_with_timezone: "%{date} (%{timezone})"
       date_format: "%-d %B %Y"
+      datetime_format: "%B %-d، %Y %-I:%M %p"
     notifications:
       before_event_reminder: "%{title} على وشك البدء."
       after_event_reminder: "انتهى %{title}."

@@ -6775,7 +6775,6 @@ fr:
         up_to_date_newer_commits:
           one: "Vous utilisez la version la plus récente, mais %{count} nouvelle modification est disponible."
           other: "Vous utilisez la version la plus récente, mais %{count} nouvelles modifications sont disponibles."
-        critical_available: "Une mise à jour critique est disponible."
         updates_available: "Des mises à jour sont disponibles."
         please_update: "Veuillez mettre à jour !"
         no_check_performed: "Une vérification de mises à jour n'a pas été effectuée. Vérifiez que sidekiq est en cours d'exécution."

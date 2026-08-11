@@ -269,6 +269,9 @@ pt:
       llms:
         display_name: "Nome"
         provider: "Provedor"
+        vision_modes:
+          disabled:
+            title: "Desativado"
         save: "Guardar"
         edit: "Editar"
         delete: Eliminar

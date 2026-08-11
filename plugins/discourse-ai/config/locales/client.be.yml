@@ -152,6 +152,9 @@ be:
           required: "Абавязкова"
       llms:
         display_name: "Імя"
+        vision_modes:
+          disabled:
+            title: "Адключаныя"
         save: "Захаваць"
         edit: "Рэдагаваць"
         delete: Выдаліць

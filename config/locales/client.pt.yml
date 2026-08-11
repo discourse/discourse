@@ -4826,7 +4826,6 @@ pt:
         discourse_last_updated: "Discourse atualizado:"
         version: "Versão"
         up_to_date: "Está atualizado!"
-        critical_available: "Uma atualização crítica está disponível."
         updates_available: "Há atualizações disponíveis."
         no_check_performed: "Não foi feita nenhuma verificação por atualizações. Certifique-se que o sidekiq está em execução."
         stale_data: "Não foi feita verificação por atualizações ultimamente. Certifique-se de que o sidekiq está em execução."

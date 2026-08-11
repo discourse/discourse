@@ -7472,7 +7472,6 @@ pl_PL:
           few: "Korzystasz z najnowszej wersji, ale dostępne są %{count} nowe zmiany."
           many: "Korzystasz z najnowszej wersji, ale dostępnych jest %{count} nowych zmian."
           other: "Korzystasz z najnowszej wersji, ale dostępnych jest %{count} nowych zmian."
-        critical_available: "Ważna aktualizacja jest dostępna."
         updates_available: "Aktualizacje są dostępne."
         please_update: "Koniecznie zaktualizuj!"
         no_check_performed: "Sprawdzanie aktualizacji nie zostało przeprowadzone. Upewnij się, że sidekiq jest uruchomiony."

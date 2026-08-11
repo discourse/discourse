@@ -862,6 +862,9 @@ es:
         max_output_tokens: "Máximo de tokens de salida"
         url: "URL del servicio que aloja el modelo"
         api_key: "Clave API del servicio que aloja el modelo"
+        vision_modes:
+          disabled:
+            title: "Desactivado"
         ai_bot_user: "Usuario de bot de IA"
         cost_input: "Coste de entrada"
         cost_cached_input: "Coste de entrada en caché"

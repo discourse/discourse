@@ -176,6 +176,9 @@ zh_TW:
           required: "必要設定"
       llms:
         display_name: "名稱"
+        vision_modes:
+          disabled:
+            title: "停用"
         save: "儲存"
         edit: "編輯"
         delete: 刪除

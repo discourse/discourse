@@ -228,6 +228,9 @@ ur:
       llms:
         display_name: "نام"
         provider: "پرووَائیڈر"
+        vision_modes:
+          disabled:
+            title: "غیر فعال"
         save: "محفوظ کریں"
         edit: "ترمیم کریں"
         delete: مٹائیں

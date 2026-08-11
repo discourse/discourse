@@ -34,3 +34,8 @@ id:
       custom_range_from: "Dari"
       admin:
         name: "Nama"
+    discourse_workflows:
+      gamification_score:
+        username: "Pengguna"
+        date: "Tanggal"
+        description: "Deskripsi"

@@ -218,6 +218,9 @@ cs:
           required: "Povinné"
       llms:
         display_name: "Název"
+        vision_modes:
+          disabled:
+            title: "Vypnuto"
         save: "Uložit"
         edit: "Upravit"
         delete: Smazat

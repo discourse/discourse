@@ -650,6 +650,9 @@ ja:
         max_output_tokens: "最大出力トークン"
         url: "モデルをホストするサービスの URL"
         api_key: "モデルをホストするサービスの API キー"
+        vision_modes:
+          disabled:
+            title: "無効"
         ai_bot_user: "AI ボットユーザー"
         cost_input: "入力コスト"
         cost_cached_input: "キャッシュ入力コスト"

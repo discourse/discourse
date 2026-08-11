@@ -5835,7 +5835,6 @@ hr:
         discourse_last_updated: "Ažuriran Discourse:"
         version: "Verzija"
         up_to_date: "Imate ažurnu verziju!"
-        critical_available: "Dostupna je kritična dopuna."
         updates_available: "Dopune su dostupne."
         please_update: "Molimo ažurirajte!"
         no_check_performed: "Nije učinjena provjera za nadogradnje. Provjerite radi li pomoćnik."

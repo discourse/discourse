@@ -194,6 +194,9 @@ ko:
       llms:
         display_name: "그룹명"
         provider: "공급자"
+        vision_modes:
+          disabled:
+            title: "비활성"
         save: "저장"
         edit: "편집"
         delete: 삭제

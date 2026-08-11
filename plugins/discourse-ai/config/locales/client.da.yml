@@ -197,6 +197,9 @@ da:
           required: "Obligatoriske"
       llms:
         display_name: "Navn"
+        vision_modes:
+          disabled:
+            title: "Deaktiveret"
         save: "Gem"
         edit: "Rediger"
         delete: Slet

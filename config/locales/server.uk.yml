@@ -2968,7 +2968,6 @@ uk:
       invalid_uncategorized_category_setting: 'Категорію «Без категорії» неможливо вибрати, якщо не ввімкнено «дозволити теми без категорії».'
       invalid_search_ranking_weights: "Значення є недійсним для параметра search_ranking_weights сайту. Приклад: '{0.1,0.2,0.3,1.0}'. Зверніть увагу, що максимальне значення для кожної ваги дорівнює 1.0."
       content_localization_locale_limit: "Кількість підтримуваних локалізацій не може перевищувати %{max}."
-      content_localization_language_switcher_requirements: "Для перемикача мов потрібно, щоб {{setting:set_locale_from_cookie}} та {{setting:allow_user_locale}} були ввімкнені, а {{setting:content_localization_supported_locales}} мала принаймні одну мову. {{settings:content_localization_language_switcher,set_locale_from_cookie,allow_user_locale,content_localization_supported_locales|All required settings}}"
       content_localization_crawler_param_requirements: "Перш ніж увімкнути цей параметр, потрібно спочатку ввімкнути «встановити локаль з параметра»."
       mediaconvert_role_arn_required: "Роль AWS IAM ARN необхідна при використанні AWS MediaConvert для конвертації відео."
       mediaconvert_output_subdirectory_required: "Підкаталог виводу MediaConvert обов'язковий."

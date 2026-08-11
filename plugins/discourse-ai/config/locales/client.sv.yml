@@ -185,6 +185,9 @@ sv:
       llms:
         display_name: "Namn"
         provider: "Leverantör"
+        vision_modes:
+          disabled:
+            title: "Inaktiverad"
         save: "Spara"
         edit: "Redigera"
         delete: Ta bort

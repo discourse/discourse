@@ -216,6 +216,9 @@ fa_IR:
       llms:
         display_name: "نام"
         provider: "ارائه‌دهنده"
+        vision_modes:
+          disabled:
+            title: "غیرفعال"
         save: "ذخیره"
         edit: "ویرایش"
         delete: حذف

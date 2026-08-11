@@ -34,3 +34,7 @@ be:
       custom_range_from: "ад"
       admin:
         name: "Імя"
+    discourse_workflows:
+      gamification_score:
+        username: "Карыстальнік"
+        description: "Апісанне"

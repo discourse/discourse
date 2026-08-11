@@ -108,3 +108,8 @@ tr_TR:
         title: "Oyunlaştırma"
         name: "Ad"
         period: "Dönem"
+    discourse_workflows:
+      gamification_score:
+        username: "Kullanıcı"
+        date: "Tarih"
+        description: "Açıklama"

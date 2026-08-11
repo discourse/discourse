@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 en_GB:
+  js:
+    discourse_workflows:
+      gamification_score:
+        description: "Description"

@@ -72,3 +72,8 @@ ur:
       custom_range_from: "سے"
       admin:
         name: "نام"
+    discourse_workflows:
+      gamification_score:
+        username: "رکن"
+        date: "تاریخ"
+        description: "تفصیل"

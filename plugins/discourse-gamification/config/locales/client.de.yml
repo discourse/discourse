@@ -108,3 +108,8 @@ de:
         title: "Gamifizierung"
         name: "Name"
         period: "Zeitraum"
+    discourse_workflows:
+      gamification_score:
+        username: "Nutzer"
+        date: "Datum"
+        description: "Beschreibung"

@@ -112,3 +112,8 @@ ar:
         title: "التلعيب"
         name: "الاسم"
         period: "الفترة"
+    discourse_workflows:
+      gamification_score:
+        username: "المستخدم"
+        date: "التاريخ"
+        description: "الوصف"

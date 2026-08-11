@@ -5,6 +5,15 @@
 # https://translate.discourse.org/
 
 ar:
+  site_settings:
+    rss_polling_enabled: "تفعيل استيراد المنشورات المضمَّنة من موجزات RSS متعددة"
+    rss_polling_frequency: "معدَّل تكرار استطلاع الموجز، بالدقائق"
+    rss_polling_feed_request_timeout: "الحد الأقصى للوقت، بالثواني، للانتظار حتى يستجيب مصدر البيانات عند جلبه"
+    rss_polling_verbose_logging: "تسجيل معلومات مُفصَّلة لكل محاولة استطلاع، بما في ذلك العناصر التي تم استيرادها وتخطيها وسبب ذلك"
+    rss_polling_use_pubdate: "تحديد تاريخ إنشاء الموضوع إلى PubDate الذي تم العثور عليه في موجز RSS"
+    rss_polling_update_tags: "تحديث وسوم الموضوع عند تعديل الموضوع. يؤدي إيقاف هذه الميزة إلى استيراد الوسوم الأولية فقط، مع منع أي تغييرات لاحقة عليها."
   rss_polling:
     errors:
+      feed_url_must_be_http: "يجب أن يبدأ عنوان URL للموجز بـ http:// أو https://."
       unknown_author_username: "لم يتم العثور على مستخدم باسم \"%{username}\"."
+      required_tag_group: "تتطلَّب الموضوعات في \"%{category}\" %{count} من الوسوم على الأقل من مجموعة \"%{tag_group}\" (%{tags}). أضِف أحد هذه الوسوم حتى لا يتم رفض العناصر المستوردة."

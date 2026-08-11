@@ -170,6 +170,9 @@ bg:
           required: "Задъжителни"
       llms:
         display_name: "Име"
+        vision_modes:
+          disabled:
+            title: "Деактивирани"
         save: "Запази"
         edit: "Редактирай"
         delete: Изтрий

@@ -3309,7 +3309,6 @@ ca:
         discourse_last_updated: "Discourse actualitzat"
         version: "Versió"
         up_to_date: "Esteu al dia!"
-        critical_available: "Hi ha una actualització crítica."
         updates_available: "Hi ha actualitzacions disponibles."
         no_check_performed: "No s'ha executat la comprovació d'actualitzacions. Assegureu-vos que funciona Sidekiq."
         stale_data: "Darrerament no s'ha executat la comprovació d'actualitzacions. Assegureu-vos que funciona Sidekiq."

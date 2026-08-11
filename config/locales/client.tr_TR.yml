@@ -6359,7 +6359,6 @@ tr_TR:
         discourse_last_updated: "Discourse güncellendi:"
         version: "Sürüm"
         up_to_date: "Güncelsiniz!"
-        critical_available: "Kritik bir güncelleme mevcut."
         updates_available: "Güncellemeler mevcut."
         please_update: "Lütfen güncelleyin!"
         no_check_performed: "Güncellemeler için bir kontrol yapılmadı. Sidekiq'in çalıştığından emin olun."

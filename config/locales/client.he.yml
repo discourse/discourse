@@ -6696,7 +6696,6 @@ he:
         discourse_last_updated: "עדכון Discourse:"
         version: "גירסה"
         up_to_date: "הכול עדכני!"
-        critical_available: "עדכון קריטי מוכן להתקנה."
         updates_available: "עדכונים מוכנים."
         please_update: "נא לעדכן!"
         no_check_performed: "לא בוצעה בדיקה לעדכונים. וודא ש-sidekiq פועל."

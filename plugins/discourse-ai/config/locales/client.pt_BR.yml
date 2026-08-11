@@ -684,6 +684,9 @@ pt_BR:
         max_output_tokens: "Máximo de tokens de saída"
         url: "URL do serviço da hospedagem do modelo"
         api_key: "Chave de API do serviço da hospedagem do modelo"
+        vision_modes:
+          disabled:
+            title: "Desativados"
         ai_bot_user: "Usuário(a) de bot de IA"
         cost_input: "Custo de entrada"
         cost_cached_input: "Custo de entrada em cache"

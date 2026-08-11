@@ -1442,7 +1442,6 @@ vi:
       pop3_polling_authentication_failed: "Chứng thực POP3 thất bại, xin hãy kiểm tra lại thông tin."
       reply_by_email_address_is_empty: "Bạn phải thiết lập 'reply by email address' trước khi kích hoạt trả lời bằng email."
       user_locale_not_enabled: "Bạn phải bật 'allow user locale' trước khi kích hoạt thiết lập này."
-      content_localization_language_switcher_requirements: "Bộ chuyển đổi ngôn ngữ yêu cầu phải bật {{setting:set_locale_from_cookie}} cùng {{setting:allow_user_locale}}, đồng thời {{setting:content_localization_supported_locales}} phải có ít nhất một ngôn ngữ. {{settings:content_localization_language_switcher,set_locale_from_cookie,allow_user_locale,content_localization_supported_locales|Tất cả cài đặt bắt buộc}}"
       content_localization_crawler_param_requirements: "Bạn cần bật tùy chọn 'Đặt ngôn ngữ từ tham số' trước khi kích hoạt cài đặt này."
   search:
     within_post: "#%{post_number} bởi %{username}"

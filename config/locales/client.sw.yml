@@ -2610,7 +2610,6 @@ sw:
         title: "Ubao"
         version: "Toleo"
         up_to_date: "Una toleo la sasa!"
-        critical_available: "Sasisho muhimu linapatikana."
         updates_available: "Masashisho yanapatikana."
         no_check_performed: "Utafutaji wa toleo la sasa haujafanywa. Hakikisha sidekiq inafanya kazi."
         stale_data: "Utafutaji wa toleo la sasa haujafanyika hivi karibuni. Hakikisha sidekiq inafanya kazi."
