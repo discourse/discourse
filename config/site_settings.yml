@@ -1932,6 +1932,7 @@ content_localization:
       - all
     default: none
     client: true
+    refresh: true
     area: "localization"
     validator: "LanguageSwitcherSettingValidator"
     depends_on:
